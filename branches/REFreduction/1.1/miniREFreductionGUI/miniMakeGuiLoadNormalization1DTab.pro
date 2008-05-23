@@ -7,9 +7,9 @@ PRO miniMakeGuiLoadNormalization1DTab, D_DD_Tab, $
 ;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
 
 BackPeakRescaleTabSize = [4, $
-                          305, $;610
                           310, $
-                          242] ;253
+                          310, $
+                          242] 
 
 ;###############################################################################
 ;############################ TAB #1 ###########################################
@@ -39,8 +39,8 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Norm1DSelectionList    = ['Select Back.   ',$
-                          'Select Peak    ',$
+Norm1DSelectionList    = ['Select Back. ',$
+                          'Select Peak  ',$
                           'Zoom ']
 Norm1DSelectionBaseSize = [5, $
                            0, $
@@ -210,12 +210,15 @@ Load_Normalization_D_TAB_BASE = $
 
 load_normalization_D_draw = $
   WIDGET_DRAW(load_normalization_D_tab_base,$
-              XOFFSET   = GlobalLoadGraphs[0],$
-              YOFFSET   = GlobalLoadGraphs[1],$
-              SCR_XSIZE = GlobalLoadGraphs[2],$
-              SCR_YSIZE = GlobalLoadGraphs[3],$
-              UNAME     = 'load_normalization_D_draw',$
-              RETAIN    = 2,$
+              XOFFSET       = 0,$
+              YOFFSET       = 0,$
+              X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
+              Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
+              XSIZE         = GlobalLoadGraphs[2]-20,$
+              YSIZE         = GlobalLoadGraphs[3]-24,$
+              UNAME         = 'load_normalization_D_draw',$
+              RETAIN        = 2,$
+              /SCROLL,$
               /BUTTON_EVENTS,$
               /MOTION_EVENTS)
 
@@ -252,8 +255,8 @@ Norm1DSelection = CW_BGROUP(Norm1DSelectionBase,$
                             XOFFSET   = Norm1DSelectionSize[0],$
                             YOFFSET   = Norm1DSelectionSize[1],$
                             SET_VALUE = 0.0,$
-                            row       = 1,$
-                            FONT      = 'lucidasans-10',$
+                            ROW       = 1,$
+;                            FONT      = 'lucidasans-10',$
                             UNAME     = 'normalization_1d_selection')
 
 NormYminLabel = WIDGET_LABEL(BackPeakBase,$
