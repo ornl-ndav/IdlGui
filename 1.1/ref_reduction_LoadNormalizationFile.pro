@@ -9,16 +9,20 @@ widget_control,id,get_uvalue=global
 PROCESSING = (*global).processing_message ;processing message
 
 ;get Data Run Number from DataTextField
-NormalizationRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
+NormalizationRunNumber = $
+  getTextFieldValue(Event, $
+                    'load_normalization_run_number_text_field')
 NormalizationRunNumber = strcompress(NormalizationRunNumber)
 isNeXusFound = 0                ;by default, NeXus not found
 
-if (NormalizationRunNumber NE '') then begin ;normalization run number is not empty
+if (NormalizationRunNumber NE '') then BEGIN $
+;normalization run number is not empty
 
 ;check if user wants archive dor all nexus runs
     if (~isArchivedNormNexusDesired(Event)) then begin ;get full list of Nexus
 
-        LogBookText = '-> Retrieving full list of NORMALIZATION Run Number: ' +$
+        LogBookText = '-> Retrieving full list of ' + $
+          'NORMALIZATION Run Number: ' +$
           NormalizationRunNumber
         text = getLogBookText(Event)
         if (text[0] EQ '') then begin
@@ -32,7 +36,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if at least one NeXus file can be found ..... '
+        LogBookText = '----> Checking if at least one NeXus file ' + $
+          'can be found ..... '
         LogBookText += PROCESSING
         putLogBookMessage, Event, LogBookText, Append=1
 
@@ -51,7 +56,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 ;get log book full text
             LogBookText = getLogBookText(Event)
             Message = 'FAILED - No NeXus can be found'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
+              PROCESSING
 ;get data log book full text
             NormalizationLogBookText = getNormalizationLogBookText(Event)
             putTextAtEndOfNormalizationLogBookLastLine,$
@@ -83,7 +89,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 ;display info in log book
                 LogBookText = getLogBookText(Event)        
                 Message = 'OK'
-                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+                putTextAtEndOfLogBookLastLine, Event, LogBookText, $
+                  Message, PROCESSING
                 LogText = '----> Found ' + strcompress(sz,/remove_all)
                 LogText += ' NeXus files:'
                 putLogBookMessage,Event, LogText,Append=1
@@ -91,7 +98,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                     text = '       ' + full_list_of_nexus_name[i]
                     putLogBookMessage, Event,text,Append=1
                 endfor
-                LogText = '----> Selecting one NeXus file from the list ..... ' $
+                LogText = '----> Selecting one NeXus file from ' + $
+                  'the list ..... ' $
                   + PROCESSING
                 putLogBookMessage, Event, LogText, Append=1
                 
@@ -102,7 +110,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                   NormalizationLogBookText,$
                   'OK',$
                   PROCESSING
-                text = ' --> Please select one of the ' + strcompress(sz,/remove_all)
+                text = ' --> Please select one of the ' + $
+                  strcompress(sz,/remove_all)
                 text += ' NeXus file found .....'
                 putNormalizationLogBookMessage, Event, text, Append=1
                                 
@@ -115,7 +124,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 
             endif else begin    ;proceed as before
 
-                OpenNormNexusFile, Event, NormalizationRunNumber, full_list_of_nexus_name
+                OpenNormNexusFile, Event, NormalizationRunNumber, $
+                  full_list_of_nexus_name
 
             endelse             ;end of list is only 1 element long
 
@@ -123,7 +133,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 
     endif else begin            ;we just want the archived one
 
-        LogBookText = '-> Openning Archived NORMALIZATION Run Number: ' + NormalizationRunNumber
+        LogBookText = '-> Openning Archived NORMALIZATION Run Number: ' + $
+          NormalizationRunNumber
         text = getLogBookText(Event)
         if (text[0] EQ '') then begin
             putLogBookMessage, Event, LogBookText
@@ -136,7 +147,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING
+        LogBookText = '----> Checking if NeXus run number exist ..... ' + $
+          PROCESSING
         putLogBookMessage, Event, LogBookText, Append=1
         
 ;check if nexus exist and if it does, returns the full path
@@ -162,7 +174,8 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 ;get log book full text
             LogBookText = getLogBookText(Event)
             Message = 'FAILED - NeXus file does not exist'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
+              PROCESSING
 
 ;get norm log book full text
             NormalizationLogBookText = getNormalizationLogBookText(Event)
@@ -216,12 +229,11 @@ Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
 putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 ;display info about nexus file selected
 LogBookText = $
-  '----> Displaying information about run number using nxsummary ..... ' + PROCESSING
+  '----> Displaying information about run number using nxsummary ..... ' + $
+  PROCESSING
 putLogBookMessage, Event, LogBookText, Append=1
 RefReduction_NXsummary, Event, full_nexus_name, 'normalization_file_info_text'
-LogBookText = getLogBookText(Event)        
-Message = 'OK'
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
     LogBookText = '----> Is format of NeXus hdf5 ? YES'
@@ -265,12 +277,14 @@ instrument = (*global).instrument
 (*global).norm_run_number = NormRunNumber
 ;store full path to NeXus
 (*global).norm_full_nexus_name = full_nexus_name
-RefReduction_NXsummaryBatch, Event, full_nexus_name, 'normalization_file_info_text'
+RefReduction_NXsummaryBatch, Event, full_nexus_name, $
+  'normalization_file_info_text'
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
 ;dump binary data into local directory of user
     working_path = (*global).working_path
-    REFReduction_DumpBinaryNormalization_batch, Event, full_nexus_name, working_path
+    REFReduction_DumpBinaryNormalization_batch, Event, full_nexus_name, $
+      working_path
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
     REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $

@@ -26,21 +26,18 @@ ENDIF ELSE BEGIN
 ;    ENDCASE
 ENDELSE
 logText = '-----> cmd : ' + cmd + ' ... ' + PROCESSING
-putLogBookMessage,Event,LogText,Append=1
+putLogBookMessage,Event,LogText,APPEND=1
 
 ;run nxsummary command
 spawn, cmd, listening, err_listening
-LogBookText = getLogBookText(Event)
 IF (err_listening[0] EQ '') THEN BEGIN
     listeningSize = (size(listening))(1)
     if (listeningSize GE 1) then begin
         putTextFieldArray, Event, TextFieldUname, listening, listeningSize,0
     ENDIF
-    Message = 'OK'
-    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+    AppendReplaceLogBookMessage, Event, 'OK', PROCESSING
 ENDIF ELSE BEGIN
-    Message = 'FAILED'
-    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+    AppendReplaceLogBookMessage, Event, 'FAILED', PROCESSING
 ENDELSE
 END
 

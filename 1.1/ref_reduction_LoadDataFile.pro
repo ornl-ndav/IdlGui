@@ -19,7 +19,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 
 ;check if user wants archived or all nexus runs
     if (~isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus
-        LogBookText = '-> Retrieving full list of DATA Run Number: ' + DataRunNumber
+        LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
+          DataRunNumber
         text = getLogBookText(Event)
         if (text[0] EQ '') then begin
             putLogBookMessage, Event, LogBookText
@@ -32,7 +33,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if at least one NeXus file can be found ..... '
+        LogBookText = '----> Checking if at least one NeXus file can be found ' + $
+          '..... '
         LogBookText += PROCESSING
         putLogBookMessage, Event, LogBookText, Append=1
 
@@ -112,7 +114,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                   DataLogBookText,$
                   'OK',$
                   PROCESSING
-                text = ' --> Please select one of the ' + strcompress(sz,/remove_all)
+                text = ' --> Please select one of the ' + $
+                  strcompress(sz,/remove_all)
                 text += ' NeXus file found .....'
                 putDataLogBookMessage, Event, text, Append=1
 
@@ -139,7 +142,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING  ;REMOVE_ME YEAH!
+        LogBookText = '----> Checking if NeXus run number exist ..... ' + $
+          PROCESSING    
         putLogBookMessage, Event, LogBookText, Append=1  
         
 ;check if nexus exist and if it does, returns the full path
@@ -230,12 +234,10 @@ putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
                                 ;display info about nexus file selected
 LogBookText = $
-  '----> Displaying information about run number using nxsummary ..... ' + PROCESSING
+  '----> Displaying information about run number using nxsummary ..... ' $
+  + PROCESSING
 putLogBookMessage, Event, LogBookText, Append=1
 RefReduction_NXsummary, Event, full_nexus_name, 'data_file_info_text'
-LogBookText = getLogBookText(Event)        
-Message = 'OK'
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
 ;check format of NeXus file
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
