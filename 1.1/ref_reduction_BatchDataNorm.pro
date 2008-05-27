@@ -32,7 +32,7 @@ ENDIF ELSE BEGIN
 ;retrieve main table
     BatchTable = (*(*global).BatchTable)
 ;cmd string is
-    cmd = BatchTable[7,RowSelected]
+    cmd = BatchTable[8,RowSelected]
 ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
     split1      = 'reflect_reduction'
     part1_array = strsplit(cmd,split1,/extract,/regex)
@@ -267,7 +267,7 @@ RowSelected = (*global).PrevBatchRowSelected
 ;retrieve main table
 BatchTable = (*(*global).BatchTable)
 ;cmd string is
-cmd = BatchTable[7,RowSelected]
+cmd = BatchTable[8,RowSelected]
 
 ;start working with the NORMALIZATION runs
 ;get first part of cmd, before --norm=
@@ -406,7 +406,7 @@ new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
 ;new_cmd = UpdateOutputFlag(Event, new_cmd, NormRunsJoined[0])
 ;put new_cmd back in the BatchTable
-BatchTable[7,RowSelected] = new_cmd
+BatchTable[8,RowSelected] = new_cmd
 ;update DATE field with new date/time stamp
 NewDate = GenerateDateStamp2()
 BatchTable[6,RowSelected] = NewDate

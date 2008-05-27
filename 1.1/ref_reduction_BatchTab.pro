@@ -505,7 +505,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 BatchTable  = (*(*global).BatchTable)
 SelectedRow = getCurrentRowSelected(Event)
-cmd         = BatchTable[7,SelectedRow]
+cmd         = BatchTable[8,SelectedRow]
 IF (cmd NE '') THEN BEGIN
     activateButtonStatus = 1
 ENDIF ELSE BEGIN
