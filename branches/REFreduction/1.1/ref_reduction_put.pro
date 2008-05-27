@@ -77,8 +77,11 @@ putTextFieldValue, Event, $
 END
 
 
-;display message in Normalization Log Book (default is to not append the new text)
-PRO putNormalizationLogBookMessage, Event, NormalizationLogBookText, Append=Append
+;display message in Normalization Log Book (default is to not append
+;the new text
+PRO putNormalizationLogBookMessage, Event, $
+                                    NormalizationLogBookText, $
+                                    Append=Append
 if (n_elements(append) EQ 0) then begin
     Append = 0
 endif else begin
@@ -96,11 +99,15 @@ END
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
 ;removed before adding the new MessageToAdd
-PRO putTextAtEndOfLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
+PRO putTextAtEndOfLogBookLastLine, Event, $
+                                   InitialStrarr, $
+                                   MessageToAdd, $
+                                   RemoveString
 
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(RemoveString) EQ 0) then begin 
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -109,7 +116,8 @@ if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last 
     endelse
 endif else begin ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           RemoveString)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
@@ -128,7 +136,8 @@ PRO AppendReplaceLogBookMessage, Event, MessageToAdd, RemoveString
 InitialStrarr = getLogBookText(Event)
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(RemoveString) EQ 0) then begin 
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -137,7 +146,8 @@ if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last 
     endelse
 endif else begin ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           RemoveString)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
@@ -153,11 +163,15 @@ END
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the DataLogBook text field given
-PRO putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
+PRO putTextAtEndOfDataLogBookLastLine, Event, $
+                                       InitialStrarr, $
+                                       MessageToAdd, $
+                                       RemoveString
 
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(RemoveString) EQ 0) then begin 
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -166,7 +180,8 @@ if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last 
     endelse
 endif else begin ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           RemoveString)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
@@ -190,7 +205,8 @@ PRO putTextAtEndOfNormalizationLogBookLastLine, $
 
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(RemoveString) EQ 0) then begin 
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -199,7 +215,8 @@ if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last 
     endelse
 endif else begin ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           RemoveString)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
@@ -247,7 +264,8 @@ CASE (BackSelection[0]) OF
                 Ymax = BackSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_background_ymax_cw_field', Ymax/coeff
             end
         endcase
     end
@@ -257,7 +275,8 @@ CASE (BackSelection[0]) OF
                 Ymin = BackSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_background_ymin_cw_field', Ymin/coeff
             end
             else:begin
                 Ymin = Min(BackSelection,max=Ymax)
@@ -281,7 +300,8 @@ CASE (BackSelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
-ActivateWidget, Event, 'data_background_selection_file_text_field', ValidateSaveButton
+ActivateWidget, Event, 'data_background_selection_file_text_field', $
+  ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).data_peak_selection)
@@ -295,7 +315,9 @@ CASE (PeakSelection[0]) OF
                 Ymax = PeakSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_peak_ymax_cw_field', $
+                  Ymax/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_high_bin_text', $
@@ -310,7 +332,9 @@ CASE (PeakSelection[0]) OF
                 Ymin = PeakSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_peak_ymin_cw_field', $
+                  Ymin/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_low_bin_text', $
@@ -323,7 +347,9 @@ CASE (PeakSelection[0]) OF
                 (*(*global).data_peak_selection) = [Ymin,Ymax]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_peak_ymin_cw_field', $
+                  Ymin/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_low_bin_text', $
@@ -332,7 +358,9 @@ CASE (PeakSelection[0]) OF
                 
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/coeff
+                putCWFieldValue, event, $
+                  'data_d_selection_peak_ymax_cw_field', $
+                  Ymax/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_high_bin_text', $
@@ -389,7 +417,8 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', Ymin/coeff
+                  'normalization_d_selection_background_ymin_cw_field', $
+                  Ymin/coeff
             end
             else:begin
                 Ymin = Min(BackSelection,max=Ymax)
@@ -397,11 +426,13 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', Ymin/coeff
+                  'normalization_d_selection_background_ymin_cw_field', $
+                  Ymin/coeff
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymax_cw_field', Ymax/coeff
+                  'normalization_d_selection_background_ymax_cw_field', $
+                  Ymax/coeff
                 ValidateSaveButton = 1 ;enable SAVE button
             end
         endcase
