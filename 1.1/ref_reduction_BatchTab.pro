@@ -1086,8 +1086,8 @@ IF (NbrProcess NE 0) THEN BEGIN
     FOR i=0,NbrRow DO BEGIN
         IF (BatchTable[0,i] EQ '> YES <' OR $
             BatchTable[0,i] EQ 'YES') THEN BEGIN
-            info = '(' + strcompress(ProcessToRun,/remove_all) + $
-              '/' + strcompress(NbrProcess,/remove_all) + ')'
+            info = 'Working on ' + strcompress(ProcessToRun,/remove_all) + $
+              '/' + strcompress(NbrProcess,/remove_all)
             putTextFieldValue, Event, 'progress_bar_label', info, 0
 
             LogText = '-> Running command ' + $
@@ -1117,7 +1117,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                       (*global).processing_message
                 ENDELSE
             ENDELSE
-            x2 = ProcessToRun*x_step
+            x2 = (ProcessToRun)*(x_step)
             polyfill, [0,0,x2,x2,0],[0,35,35,0,0],/Device, Color=200
             ++ProcessToRun
         ENDIF

@@ -243,10 +243,10 @@ dRunBackgroundButton = { size      : [dRunButton.size[0]+ $
                          sensitive : 0}
 
 ;Progress bar base
-XYoff = [10,0]
+XYoff = [5,0]
 dProgressBarBase = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
-                             dRunButton.size[1]+XYoff[1],$
-                             250,35],$
+                              dRunButton.size[1]+XYoff[1],$
+                              250,35],$
                      uname : 'progress_bar_base',$
                      map   : 0}
 XYoff = [0,2]
