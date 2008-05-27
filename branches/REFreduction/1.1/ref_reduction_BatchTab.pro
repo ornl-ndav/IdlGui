@@ -430,8 +430,8 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 RowIndexes = getGlobalVariable('RowIndexes')
 FOR i=0,RowIndexes DO BEGIN
-    IF (BatchTable[7,i] NE 'N/A' AND $
-        BatchTable[7,i] NE '') THEN BEGIN
+    IF (BatchTable[8,i] NE 'N/A' AND $
+        BatchTable[8,i] NE '') THEN BEGIN
         RETURN,1
     ENDIF
 ENDFOR
@@ -693,6 +693,7 @@ IF (isThereAnyDataInBatchTable(Event)) THEN BEGIN
 ENDIF ELSE BEGIN
     activateStatus = 0
 ENDELSE
+
 activateDeleteSelectionButton, Event, activateStatus
 
 END
