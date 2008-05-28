@@ -1238,7 +1238,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                     AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
                 ENDIF ELSE BEGIN
 ;create the XML file
-                    oXML = OBJ_NEW('IDLcreateXML',$
+                    oXML = OBJ_NEW('IDLcreateXMLJobFile',$
                                    APPLICATION       = application,$
                                    INSTRUMENT        = instrument,$
                                    UCAMS             = ucams,$
