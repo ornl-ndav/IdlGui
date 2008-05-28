@@ -338,7 +338,14 @@ END
 ;***** Class constructor ******************************************************
 FUNCTION IDLgetMetadata::init, nexus_full_path
 ;open hdf5 nexus file
-fileID = h5f_open(nexus_full_path)
+error_file = 0
+CATCH, error_file
+IF (error_file NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN,0
+ENDIF ELSE BEGIN
+    fileID = h5f_open(nexus_full_path)
+ENDELSE
 ;get angle (theta)
 self.angle     = get_theta_degree(fileID)
 ;get s1
