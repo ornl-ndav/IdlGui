@@ -36,16 +36,14 @@ PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-PlotsDropListSize         = [0,0]
-
-PlotsErrorMessageBaseSize = [300, $
+PlotsErrorMessageBaseSize = [150, $
                              2, $
-                             481, $
+                             600, $
                              30]
 
 PlotsErrorMessageSize     = [0, $
                              0, $
-                             481, $
+                             600, $
                              30]
 
 MainPlotBaseSize          = [150, $
@@ -67,15 +65,6 @@ PlotTextFieldSize         = [0, $
 ;############################### Create GUI ####################################
 ;###############################################################################
 
-;droplist
-PlotsDropList = widget_droplist(PLOTS_BASE,$
-                                UNAME     = 'plots_droplist',$
-                                XOFFSET   = PlotsDropListSize[0],$
-                                YOFFSET   = PlotsDropListSize[1],$
-                                VALUE     = PlotsTitle,$
-                                SENSITIVE = 0)
-
-
 ;error message base/label
 PLOTS_ERROR_BASE = WIDGET_BASE(PLOTS_BASE,$
                                XOFFSET   = PlotsErrorMessageBaseSize[0],$
@@ -83,7 +72,7 @@ PLOTS_ERROR_BASE = WIDGET_BASE(PLOTS_BASE,$
                                SCR_XSIZE = PlotsErrorMessageBaseSize[2],$
                                SCR_YSIZE = PlotsErrorMessageBaseSize[3],$
                                UNAME     = 'plots_error_base',$
-                               MAP       = 0,$
+                               MAP       = 1,$
                                FRAME     = 1)
 
 PlotsErrorMessage = WIDGET_LABEL(PLOTS_ERROR_BASE,$
@@ -92,7 +81,7 @@ PlotsErrorMessage = WIDGET_LABEL(PLOTS_ERROR_BASE,$
                                  SCR_XSIZE = PlotsErrorMessageSize[2],$
                                  SCR_YSIZE = PlotsErrorMessageSize[3],$
                                  VALUE     = 'ERROR: not enough data to plot',$
-                                 FRAME     = 1,$
+                                 FRAME     = 0,$
                                  UNAME     = 'plots_error_message')
 
 MainPlotBase = Widget_base(PLOTS_BASE,$

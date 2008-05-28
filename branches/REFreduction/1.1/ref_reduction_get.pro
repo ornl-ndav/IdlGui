@@ -64,10 +64,18 @@ widget_control, id, get_value=value
 RETURN, value
 END
 
+
+FUNCTION getXmlFileName, FullOutputFileName
+file_name_base = STRSPLIT(FullOutputFileName,'.txt',/EXTRACT)
+xml_file_name  = file_name_base[0] + '.rmd'
+RETURN, STRING(xml_file_name[0])
+END
+
+
 FUNCTION getOutputFileName, Event
 id = widget_info(Event.top,find_by_uname='of_text')
 widget_control, id, get_value=value
-RETURN, value
+RETURN, STRING(value)
 END
 
 

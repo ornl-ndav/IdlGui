@@ -5,11 +5,13 @@ PRO RefReduction_DisplayMainDataReductionMetadataFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-fltPreview_ptr = (*global).fltPreview_ptr
-info_array = *fltPreview_ptr[0]
+info_array = (*(*global).fltPreview_ptr)
 
 ;put the metadata in the text field of the Plots tab
-putTextFieldArray, Event, 'plots_text_field', info_array, (*global).PreviewFileNbrLine, 0
+putTextFieldArray, Event, $
+  'plots_text_field', $
+  info_array, $
+  (*global).PreviewFileNbrLine, 0
 
 END
 
@@ -21,8 +23,7 @@ PRO RefReduction_DisplayXmlFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-fltPreview_ptr = (*global).fltPreview_ptr
-info_array = *fltPreview_ptr[1]
+info_array = (*(*global).fltPreview_xml_ptr)
 sz = (size(info_array))(1)
 
 ;put the metadata in the text field of the Plots tab
