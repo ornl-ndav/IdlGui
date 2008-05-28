@@ -145,10 +145,11 @@ FUNCTION IDLcreateXMLJobFile::init, APPLICATION = application,$
                      COMMAND_LINE        = command_line
 
 ;Create unique full xml file name
-full_xml_file_name = IDLcreateXMLJobFile_CreateFullXmlFileName(XML_FILE_LOCATION,$
-                                                        INSTRUMENT,$
-                                                        APPLICATION,$
-                                                        UCAMS)
+full_xml_file_name = $
+  IDLcreateXMLJobFile_CreateFullXmlFileName(XML_FILE_LOCATION,$
+                                            INSTRUMENT,$
+                                            APPLICATION,$
+                                            UCAMS)
 self.full_xml_file_name = full_xml_file_name
 
 ;Create XML file text

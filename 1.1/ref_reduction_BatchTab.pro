@@ -790,6 +790,7 @@ PRO PopulateBatchTableWithClassInfo, Table, instance
 Table[3,0] = strcompress(instance->getAngle(),/remove_all)
 Table[4,0] = strcompress(instance->getS1(),/remove_all)
 Table[5,0] = strcompress(instance->getS2(),/remove_all)
+Table[1,0] = strcompress(instance->getRunNumber(),/REMOVE_ALL)
 END
 
 
@@ -801,7 +802,6 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 DataRunNumber   = (*global).DataRunNumber
 TimeBatch       = GenerateDateStamp()
-BatchTable[1,0] = strcompress(DataRunNumber,/remove_all)
 BatchTable[6,0] = strcompress(TimeBatch,/remove_all)
 END
 

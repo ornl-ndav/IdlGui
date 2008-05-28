@@ -98,11 +98,11 @@ ENDIF ELSE BEGIN
     putTextFieldValue, event, 'data_reduction_status_text_field', $
       status_text, 0
     
-    IF ((*global).debugger) THEN BEGIN
+ ;   IF ((*global).debugger) THEN BEGIN
 ;We can retrieve info for Batch Tab
         RetrieveBatchInfoAtLoading, Event
-    ENDIF
-    PopulateBatchTableWithCMDinfo, Event, cmd
+ ;   ENDIF
+    PopulateBatchTableWithCMDinfo, Event, cmd ;_BatchTab
     
 ENDELSE
 
