@@ -127,8 +127,14 @@ FUNCTION IDLcreateXML_ChangeFilePermission, full_xml_file_name
 cmd = 'chmod 755 ' + full_xml_file_name
 spawn, cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN RETURN,0
-
 RETURN,1
+END
+
+;******************************************************************************
+;This function returns the Full File Name (path and name) of the XML
+;file created
+FUNCTION IDLcreateXML::getFullXmlFileName
+RETURN, self.full_xml_file_name
 END
 
 ;******************************************************************************
@@ -143,6 +149,7 @@ full_xml_file_name = IDLcreateXML_CreateFullXmlFileName(XML_FILE_LOCATION,$
                                                         INSTRUMENT,$
                                                         APPLICATION,$
                                                         UCAMS)
+self.full_xml_file_name = full_xml_file_name
 
 ;Create XML file text
 xml_file_text = IDLcreateXML_CreateXMLtext(APPLICATION,$
@@ -164,6 +171,7 @@ END
 ;******************************************************************************
 PRO IDLcreateXML__define
 struct = {IDLcreateXML,$
-          var: ''}
+          full_xml_file_name: '',$
+          var:                ''}
 END
 ;******************************************************************************

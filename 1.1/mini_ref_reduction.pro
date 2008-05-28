@@ -51,6 +51,7 @@ APPLICATION        = 'REFreductionLow'
 VERSION            = '1.1.1'
 DEBUGGING_VERSION  = 'no'
 WITH_LAUNCH_SWITCH = 'no'
+WITH_JOB_MANAGER   = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -74,7 +75,11 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$ 
+global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
+                    with_job_manager:  WITH_JOB_MANAGER,$
+                    application:       APPLICATION,$
+                    xml_file_location: '~/',$
+                    instrument: strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                     CurrentBatchDataInput: '',$
                     CurrentBatchNormInput: '',$
@@ -174,6 +179,7 @@ global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$
 ;failed message to display
                    processing_message : '(PROCESSING)',$ 
 ;processing message to display
+                   ok: 'OK',$
                    data_tmp_dat_file : 'tmp_data.dat',$ 
 ;default name of tmp binary data file
                    full_data_tmp_dat_file : '',$ 
