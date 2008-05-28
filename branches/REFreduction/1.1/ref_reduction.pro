@@ -15,6 +15,7 @@ APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.1.1'
 DEBUGGING_VERSION  = 'no'
 WITH_LAUNCH_SWITCH = 'no'
+WITH_JOB_MANAGER   = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -37,7 +38,10 @@ ENDELSE
 debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
-global = PTR_NEW ({$ 
+global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
+                    with_job_manager:  WITH_JOB_MANAGER,$
+                    application:       APPLICATION,$
+                    xml_file_location: '~/',$
                     CurrentBatchDataInput: '',$
                     CurrentBatchNormInput: '',$
                     instrument: strcompress(instrument,/remove_all),$ 
@@ -138,6 +142,7 @@ global = PTR_NEW ({$
 ;failed message to display
                    processing_message: '(PROCESSING)',$ 
 ;processing message to display
+                   ok: 'OK',$
                    data_tmp_dat_file: 'tmp_data.dat',$ 
 ;default name of tmp binary data file
                    full_data_tmp_dat_file: '',$ 
