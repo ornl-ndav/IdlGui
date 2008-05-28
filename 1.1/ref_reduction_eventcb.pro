@@ -345,43 +345,32 @@ RefReduction_RunCommandLine, Event
 IF ((*global).DataReductionStatus EQ 'OK') then begin 
 ;data reduction was successful
     
-;    instrument      = (*global).instrument
-;    IntermPlots     = (*global).IntermPlots
-;    ExtOfAllPlots   = (*(*global).ExtOfAllPlots)
-;    data_run_number = (*global).data_run_number
-;    IsoTimeStamp    = (*global).IsoTimeStamp
-
-;creates array of all files to plot
-;    FilesToPlotList = $
-;      getListOfFilesToPlot(Event,$
-;                           IntermPlots,$ ;[0,0,1,1,0,0,1]
-;                           ExtOfAllPlots,$ ;[.txt,.sdc,.....]
-;                           IsoTimeStamp,$ ;2007-08-31T09:24:45-04:00
-;                           instrument,$ ;REF_L
-;                           data_run_number) ;3454
-    
-;    (*(*global).FilesToPlotList) = FilesToPlotList
+;get name of .txt file
+    output_file_path   = getOutputPathFromButton(Event)
+    output_file_name   = getOutputFileName(Event)
+    FullOutputFileName = output_file_path + output_file_name
+    FullXmlFileName    = getXmlFileName(FullOutputFileName)
 
 ;get metadata
-;    NbrLine = (*global).PreviewFileNbrLine
-;    RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
-;    RefReduction_SaveXmlInfo, Event, FilesToPlotList[1]
+    NbrLine = (*global).PreviewFileNbrLine
+    RefReduction_SaveFileInfo, Event, FullOutputFileName, NbrLine
+    RefReduction_SaveXmlInfo, Event,  FullXmlFileName
     
 ;Display main data reduction metadata in Plots tab
 ;and XML file in Reduce tab
-;    RefReduction_DisplayMainDataReductionMetadataFile, Event
-;    REfReduction_DisplayXmlFile, Event
+    RefReduction_DisplayMainDataReductionMetadataFile, Event
+    REfReduction_DisplayXmlFile, Event
     
 ;Load main data reduction and all intermediate files (if any)
 ;get flt0, flt1 and flt2 and put them into array
-;    RefReduction_LoadMainOutputFile, Event, FilesToPlotList[0]
+    RefReduction_LoadMainOutputFile, Event, FullOutputFileName
 ;;    RefReduction_LoadXmlOutputFile, Event, FilesToPlotList[1]
 ;;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
     
 ;    RefReduction_UpdatePlotsGui, Event
 
 ;;Plot main data reduction plot for the first time
-;    RefReduction_PlotMainDataReductionFileFirstTime, Event
+    RefReduction_PlotMainDataReductionFileFirstTime, Event
     
 ENDIF
         
@@ -420,22 +409,22 @@ PrevTabSelect = (*global).PrevTabSelect
 
 IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-    1: BEGIN ;if REDUCE tab is now selected
-        REFreduction_CommandLineGenerator, Event
-    END
-;    2: BEGIN ;if PLOTS tab is now selected
-;        IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN 
-;;data reduction was successful
-;            RefReduction_PlotMainIntermediateFiles, Event
-;        ENDIF
-;    END
-    2: BEGIN ;if BATCH tab is now selected
+        1: BEGIN                ;if REDUCE tab is now selected
+            REFreduction_CommandLineGenerator, Event
+        END
+        2: BEGIN                ;if PLOTS tab is now selected
+            IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN 
+;data reduction was successful
+                RefReduction_PlotMainDataReductionFileFirstTime, Event
+            ENDIF
+        END
+        3: BEGIN                ;if BATCH tab is now selected
 ;retrieve info for batch mode
-        IF ((*global).debugger) THEN BEGIN
-            UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
-        ENDIF
-    END
-    ELSE:
+            IF ((*global).debugger) THEN BEGIN
+                UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
+            ENDIF
+        END
+        ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
 ENDIF

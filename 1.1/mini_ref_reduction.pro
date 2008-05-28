@@ -244,8 +244,10 @@ global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-ma
 ;arrays of all the y-axis
                    flt2_ptr : ptrarr(8,/allocate_heap),$ 
 ;arrays of all the y-error data
-                   fltPreview_ptr : ptrarr(8,/allocate_heap),$
-;metadata of all files
+                   fltPreview_ptr: ptr_new(0L),$
+;metadata of main data reduction file
+                   fltPreview_xml_ptr: ptr_new(0L),$
+;metadata of xml file
                    InstrumentGeometryPath : '',$
 ;default path where to get the instrument geometry to overwrite
                    InstrumentDataGeometryFileName : '',$

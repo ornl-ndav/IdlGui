@@ -33,43 +33,40 @@
 ;==============================================================================
 
 ;This functions save the metadata of the files
-PRO RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
+PRO RefReduction_SaveFileInfo, Event, file_name, NbrLine
 ;get global structure
 id = WIDGET_INFO(EVENT.TOP, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
 
-sz = SIZE(FilesToPLotList)
-FileNbr = sz(1)
+fltPreview_ptr = (*(*global).fltPreview_ptr)
 
-fltPreview_ptr = (*global).fltPreview_ptr
-
-FOR j=0,(FileNbr-1) DO BEGIN
-    WriteError = 0
-    CATCH, WriteError
-    IF (WriteError NE 0) THEN BEGIN
+WriteError = 0
+CATCH, WriteError ;remove_comments
+IF (WriteError NE 0) THEN BEGIN
+    ;did not work
+    info_array = STRARR(1)
+ENDIF ELSE BEGIN
+    no_file = 0
+    catch, no_file
+    IF (no_file NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        plot_file_found = 0    
     ENDIF ELSE BEGIN
-        no_file = 0
-        catch, no_file
-        IF (no_file NE 0) THEN BEGIN
-            CATCH,/CANCEL
-            plot_file_found = 0    
-        ENDIF ELSE BEGIN
-            OPENR,u,FilesToPlotList[j],/GET
-            fs = FSTAT(u)
+        OPENR,u,file_name,/GET
+        fs = FSTAT(u)
 ;define an empty string variable to hold results from reading the file
-            tmp = ''
-            info_array = STRARR(NbrLine)
-            FOR i=0,((*global).PreviewFileNbrLine-1) DO BEGIN
-                READF,u,tmp
-                info_array[i] = tmp
-            ENDFOR
-            CLOSE,u
-            FREE_LUN,u
-        ENDELSE
-        *fltPreview_ptr[j] = info_array
-    ENDELSE ;end of Catch if statement
-ENDFOR
-(*global).fltPreview_ptr = fltPreview_ptr
+        tmp = ''
+        info_array = STRARR(NbrLine)
+        FOR i=0,((*global).PreviewFileNbrLine-1) DO BEGIN
+            READF,u,tmp
+            info_array[i] = tmp
+        ENDFOR
+        CLOSE,u
+        FREE_LUN,u
+    ENDELSE
+
+ENDELSE                         ;end of Catch if statement
+(*(*global).fltPreview_ptr) = info_array
 END
 
 
@@ -81,10 +78,11 @@ PRO RefReduction_SaveXmlInfo, Event, xmlFile
 id = WIDGET_INFO(EVENT.TOP, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
 
-fltPreview_ptr = (*global).fltPreview_ptr
+fltPreview_xml_ptr = (*(*global).fltPreview_xml_ptr)
 
 no_file = 0
-catch, no_file
+CATCH, no_file ;remove_comments
+info_array = STRARR(1) 
 IF (no_file NE 0) THEN BEGIN
     CATCH,/CANCEL
     plot_file_found = 0    
@@ -92,7 +90,7 @@ ENDIF ELSE BEGIN
     OPENR,u,xmlFile,/GET
 ;define an empty string variable to hold results from reading the file
     tmp = ''
-    info_array = STRARR(1) 
+
     WHILE (NOT EOF(u)) DO BEGIN
         READF,u,tmp
         info_array = [info_array,tmp]
@@ -100,6 +98,5 @@ ENDIF ELSE BEGIN
     CLOSE,u
     FREE_LUN,u
 ENDELSE
-*fltPreview_ptr[1] = info_array
-(*global).fltPreview_ptr = fltPreview_ptr
+(*(*global).fltPreview_xml_ptr) = info_array
 END
