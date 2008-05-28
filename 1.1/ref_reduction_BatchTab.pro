@@ -1249,7 +1249,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                     LogText = '-> XML file is : ' + xml_file_name
                     putLogBookMessage, Event, LogText, APPEND=1
 ;Launch the job
-                    cmd = job_manager_cmd + xml_file_name + ' > /dev/null'
+                    cmd = job_manager_cmd + xml_file_name + ' 2> /dev/null'
                     LogText = '--> Launch job using cmd : ' + cmd
                     putLogBookMessage, Event, LogText, APPEND=1
                     LogText = '---> Launching cmd ... ' + PROCESSING
