@@ -263,3 +263,19 @@ ENDELSE
 File = FullArray[length-1]
 RETURN, ['/' + Path + '/', File]
 END
+
+;----------------------------------------------------------------------------------
+;This function gives the runs from the list of full nexus file names
+FUNCTION get_runs_from_NeXus_full_path, list_OF_nexus_file_name
+step1      = STRSPLIT(list_OF_nexus_file_name,',',/EXTRACT,COUNT=length)
+ListOfRuns = STRARR(length)
+FOR i=0,(length-1) DO BEGIN
+    iRunNumber = OBJ_NEW('IDLgetMetadata',step1[i])
+    IF (OBJ_VALID(iRunNumber)) THEN BEGIN
+        ListOfRuns[i] = STRCOMPRESS(iRunNumber->getRunNumber(),/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        ListOfRuns[i] = STRCOMPRESS(step1[i],/REMOVE_ALL)
+    ENDELSE
+ENDFOR
+RETURN, ListOfRuns
+END

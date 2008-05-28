@@ -827,10 +827,7 @@ FOR i=0,RowIndexes DO BEGIN
     ENDCASE
 ENDFOR
 BatchTable[0,0] = '> YES <'
-norm_run_number = (*global).norm_run_number
-IF (norm_run_number EQ 0) THEN norm_run_number = ''
-BatchTable[2,0] = strcompress(norm_run_number,/remove_all)
-BatchTable[8,0] = 'N/A'
+BatchTable[8,0] = 'N/A'  ;cmd
 END
 
 
@@ -845,6 +842,36 @@ IF (workingRow NE -1) THEN BEGIN
     BatchTable[8,workingRow]=cmd
 ENDIF
 (*(*global).BatchTable) = BatchTable
+END
+
+
+;------------------------------------------------------------------------------
+;This function takes a strarr and return a string list of runs comma
+;separated
+FUNCTION create_list_OF_runs, run_array
+sz = (size(run_array))(1)
+
+
+END
+;------------------------------------------------------------------------------
+;populate index 0 with all Data and Norm run numbers
+PRO PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
+;get Data Nexus files
+DataRuns        = getTextFieldValue(Event,'reduce_data_runs_text_field')
+IF (DataRuns NE '') THEN BEGIN
+    DataRunsArray   = get_runs_from_NeXus_full_path(DataRuns)
+    DataRunsString  = create_list_OF_runs(DataRunsArray)
+    BatchTable[1,0] = STRCOMPRESS(DataRunsString,/REMOVE_ALL)
+ENDIF
+
+;get Norm Nexus Files
+NormRuns        = getTextFieldValue(Event, $
+                                    'reduce_normalization_runs_text_field')
+IF (NormRuns NE '') THEN BEGIN
+    NormRunsArray   = get_runs_from_NeXus_full_path(NormRuns)
+    NormRunsString  = create_list_OF_runs(NormRunsArray)
+    BatchTable[2,0] = STRCOMPRESS(NormRunsString,/REMOVE_ALL)
+ENDIF
 END
 
 
@@ -1474,6 +1501,8 @@ PopulateBatchTableWithClassInfo, BatchTable, ClassInstance
 PopulateBatchTableWithGuiInfo, Event, BatchTable
 ;populate index 0 with missing infos (NORM and command line)
 PopulateBatchTableWithOthersInfo, Event, BatchTable
+;populate index 0 with all Data and Norm run numbers
+PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
 
 (*(*global).BatchTable) = BatchTable
 ;display new BatchTable
