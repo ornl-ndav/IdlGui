@@ -33,7 +33,7 @@
 ;==============================================================================
 ;This class creates the XML file that is used to run the Job Manager
 ;******************************************************************************
-Function IDLcreateXML_GenerateIsoTimeStamp
+Function IDLcreateXMLJobFile_GenerateIsoTimeStamp
 dateUnformated = SYSTIME()    
 DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
 DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
@@ -64,12 +64,12 @@ END
 
 ;******************************************************************************
 ;Create unique full xml file name
-FUNCTION IDLcreateXML_CreateFullXmlFileName, XML_FILE_LOCATION,$
+FUNCTION IDLcreateXMLJobFile_CreateFullXmlFileName, XML_FILE_LOCATION,$
                                              INSTRUMENT,$
                                              APPLICATION,$
                                              UCAMS
 ;get time stamp
-DateIso = IDLcreateXML_GenerateIsoTimeStamp()
+DateIso = IDLcreateXMLJobFile_GenerateIsoTimeStamp()
 FullFileName  = XML_FILE_LOCATION + '/' + APPLICATION
 FullFileName += '_' + UCAMS + '_' + DateIso
 FullFileName += '.xml'
@@ -78,7 +78,7 @@ END
 
 ;******************************************************************************
 ;This function creates the XML file text
-FUNCTION IDLcreateXML_CreateXMLtext, APPLICATION,$
+FUNCTION IDLcreateXMLJobFile_CreateXMLtext, APPLICATION,$
                                      UCAMS,$
                                      COMMAND_LINE,$
                                      INSTRUMENT
@@ -104,7 +104,7 @@ END
 
 ;******************************************************************************
 ;This function create the XML file
-FUNCTION IDLcreateXML_CreateXMLfile, xml_file_text, full_xml_file_name
+FUNCTION IDLcreateXMLJobFile_CreateXMLfile, xml_file_text, full_xml_file_name
 file_error = 0
 ;CATCH, file_error   ;REMOVE COMMA
 IF (file_error NE 0) THEN BEGIN
@@ -123,7 +123,7 @@ RETURN,1
 END
 
 ;******************************************************************************
-FUNCTION IDLcreateXML_ChangeFilePermission, full_xml_file_name
+FUNCTION IDLcreateXMLJobFile_ChangeFilePermission, full_xml_file_name
 cmd = 'chmod 755 ' + full_xml_file_name
 spawn, cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN RETURN,0
@@ -133,44 +133,44 @@ END
 ;******************************************************************************
 ;This function returns the Full File Name (path and name) of the XML
 ;file created
-FUNCTION IDLcreateXML::getFullXmlFileName
+FUNCTION IDLcreateXMLJobFile::getFullXmlFileName
 RETURN, self.full_xml_file_name
 END
 
 ;******************************************************************************
-FUNCTION IDLcreateXML::init, APPLICATION = application,$
+FUNCTION IDLcreateXMLJobFile::init, APPLICATION = application,$
                      INSTRUMENT          = instrument,$
                      UCAMS               = ucams,$
                      XML_FILE_LOCATION   = xml_file_location,$
                      COMMAND_LINE        = command_line
 
 ;Create unique full xml file name
-full_xml_file_name = IDLcreateXML_CreateFullXmlFileName(XML_FILE_LOCATION,$
+full_xml_file_name = IDLcreateXMLJobFile_CreateFullXmlFileName(XML_FILE_LOCATION,$
                                                         INSTRUMENT,$
                                                         APPLICATION,$
                                                         UCAMS)
 self.full_xml_file_name = full_xml_file_name
 
 ;Create XML file text
-xml_file_text = IDLcreateXML_CreateXMLtext(APPLICATION,$
+xml_file_text = IDLcreateXMLJobFile_CreateXMLtext(APPLICATION,$
                                            UCAMS,$
                                            COMMAND_LINE,$
                                            INSTRUMENT)
                                            
 ;Create File
-result1 = IDLcreateXML_CreateXMLfile(xml_file_text, $
+result1 = IDLcreateXMLJobFile_CreateXMLfile(xml_file_text, $
                                      full_xml_file_name)
 
 ;Change Permission on file
-result2 = IDLcreateXML_ChangeFilePermission(full_xml_file_name)
+result2 = IDLcreateXMLJobFile_ChangeFilePermission(full_xml_file_name)
 
 IF (result1 + result2 NE 2) THEN RETURN, 0
 RETURN,1
 END
 
 ;******************************************************************************
-PRO IDLcreateXML__define
-struct = {IDLcreateXML,$
+PRO IDLcreateXMLJobFile__define
+struct = {IDLcreateXMLJobFile,$
           full_xml_file_name: '',$
           var:                ''}
 END
