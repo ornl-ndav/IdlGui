@@ -94,7 +94,7 @@ CASE (INSTRUMENT) OF
     ELSE:    host='heaterq,heater.sns.gov,spare.sns.gov'
 ENDCASE
 text = [text,'        EXECHOSTS="' + host + '"']
-text = [text,'        RESOURCECONFIG="null"']
+text = [text,'        RESOURCECONFIG="null">']
 text = [text,'    <OPERATION NAME="stagein"/>']
 text = [text,'    <OPERATION NAME="compute"']
 text = [text,'             COMPUTATIONCMD="' + COMMAND_LINE + '"/>']
