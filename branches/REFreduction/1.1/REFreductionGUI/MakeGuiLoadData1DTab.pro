@@ -12,7 +12,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
 BackPeakRescaleTabSize = [4,615,D_DD_TabSize[2]-20,D_DD_TabSize[3]-645]
 BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
-BackPeakBaseTitle      = '  Background and Peak Selection  '
+BackPeakBaseTitle      = 'ROI, Peak/Background Selection  '
 ;Tab#2
 ContrastBaseSize       = BackPeakBaseSize
 ContrastBaseTitle      = '  Contrast Editor  '
@@ -21,8 +21,8 @@ RescaleBaseSize        = BackPeakBaseSize
 RescaleBaseTitle       = '   Range Displayed   '  
 
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['Select Background   ',$
-                          'Select Peak   ',$
+Data1DSelectionList    = ['ROI  ',$
+                          'Peak   ',$
                           'ZOOM mode  ']
 Data1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
 Data1DSelectionSize     = [5, 0]
@@ -44,17 +44,20 @@ BaseHeight = 35
 ;Ymin base and cw_field
 Data1DSelectionBackgroundLabelSize    = [3,40]
 Data1DSelectionBackgroundLabelTitle   = 'Background Range ......... ' 
-Data1DSelectionBackgroundYminBaseSize = [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
-                                         Data1DSelectionBackgroundLabelSize[1]-7,$
-                                         BaseLengthYmin,BaseHeight]
+Data1DSelectionBackgroundYminBaseSize = $
+  [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
+   Data1DSelectionBackgroundLabelSize[1]-7,$
+   BaseLengthYmin,BaseHeight]
 Data1DSelectionBackgroundYminCWFieldSize  = [5,25]
 Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 ;Ymax base and cw_field
-Data1DSelectionBackgroundYmaxBaseSize = [Data1DSelectionBackgroundYminBaseSize[0]+$
-                                         Data1DSelectionBackgroundYminBasesize[2],$
-                                         Data1DSelectionBackgroundYminBaseSize[1],$
-                                         BaseLengthYmax-4,BaseHeight]
-Data1DSelectionBackgroundYmaxCWFieldSize  = Data1DSelectionBackgroundYminCWFieldSize
+Data1DSelectionBackgroundYmaxBaseSize = $
+  [Data1DSelectionBackgroundYminBaseSize[0]+$
+   Data1DSelectionBackgroundYminBasesize[2],$
+   Data1DSelectionBackgroundYminBaseSize[1],$
+   BaseLengthYmax-4,BaseHeight]
+Data1DSelectionBackgroundYmaxCWFieldSize  = $
+  Data1DSelectionBackgroundYminCWFieldSize
 Data1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 
 ;SAVE and LOAD buttons
@@ -71,13 +74,15 @@ LoadButtonTitle     = 'L O A D'
 
 ;Background ROI file
 d_vertical_L_L = 70
-DataBackgroundSelectionFileLabelSize  = [3,Data1DSelectionBackgroundLabelSize[0]+$
-                                        d_vertical_L_L]
+DataBackgroundSelectionFileLabelSize  = $
+  [3,Data1DSelectionBackgroundLabelSize[0]+$
+   d_vertical_L_L]
 DataBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
 d_L_B_2 = 170
-DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
-                                            DataBackgroundSelectionFileLabelSize[1]-4,$
-                                            432,30]
+DataBackgroundSelectionFileTextFieldSize = $
+  [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
+   DataBackgroundSelectionFileLabelSize[1]-4,$
+   432,30]
 
 ;Peak Ymin and Ymax bases and cw_fields
 d_vertical_L_L = 58
@@ -171,14 +176,15 @@ OutputFileFolderTextFieldSize  = [OutputFileFolderButtonSize[0] + $
                                   200, $
                                   30]
 yoff_vertical = 35
-OutputFileNameLabelSize        = [OutputFileFolderButtonSize[0] + 2,$
-                                  OutputFileFolderButtonSize[1] + yoff_vertical]
+OutputFileNameLabelSize        = $
+  [OutputFileFolderButtonSize[0] + 2,$
+   OutputFileFolderButtonSize[1] + yoff_vertical]
 OutputFileNameLabelTitle       = 'Output File Name:'
-                                  
 
-;***********************************************************************************
+
+;******************************************************************************
 ;Build 1D tab
-;***********************************************************************************
+;******************************************************************************
 load_data_D_tab_base = widget_base(D_DD_Tab,$
                                    uname='load_data_d_tab_base',$
                                    title=D_DD_TabTitle[0],$

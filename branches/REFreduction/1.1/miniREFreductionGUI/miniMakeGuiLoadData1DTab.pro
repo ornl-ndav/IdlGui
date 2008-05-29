@@ -45,8 +45,8 @@ BackPeakRescaleTabSize = [4, $
                           310, $
                           242] ;253
 
-;###############################################################################
-;############################ TAB #1 ###########################################
+;##############################################################################
+;########################### TAB #1 ###########################################
 
 BackPeakBaseSize       = [0, $
                           0, $
@@ -73,8 +73,8 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['Select Back. ',$
-                          'Select Peak  ',$
+Data1DSelectionList    = ['ROI',$
+                          'Peak',$
                           'Zoom']
 Data1DSelectionBaseSize = [5, $
                            0, $
@@ -86,17 +86,20 @@ Data1DSelectionSize     = [5, 0]
 ;Ymin base and cw_field
 Data1DSelectionBackgroundLabelSize    = [5,80]
 Data1DSelectionBackgroundLabelTitle   = 'Back. range:' 
-Data1DSelectionBackgroundYminBaseSize = [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
-                                         Data1DSelectionBackgroundLabelSize[1]-9,$
-                                         BaseLengthYmin,BaseHeight]
+Data1DSelectionBackgroundYminBaseSize = $
+  [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
+   Data1DSelectionBackgroundLabelSize[1]-9,$
+   BaseLengthYmin,BaseHeight]
 Data1DSelectionBackgroundYminCWFieldSize  = [5,25]
 Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 ;Ymax base and cw_field
-Data1DSelectionBackgroundYmaxBaseSize = [Data1DSelectionBackgroundYminBaseSize[0]+$
-                                         Data1DSelectionBackgroundYminBasesize[2]+10,$
-                                         Data1DSelectionBackgroundYminBaseSize[1],$
-                                         BaseLengthYmax-9,BaseHeight]
-Data1DSelectionBackgroundYmaxCWFieldSize  = Data1DSelectionBackgroundYminCWFieldSize
+Data1DSelectionBackgroundYmaxBaseSize = $
+  [Data1DSelectionBackgroundYminBaseSize[0]+$
+   Data1DSelectionBackgroundYminBasesize[2]+10,$
+   Data1DSelectionBackgroundYminBaseSize[1],$
+   BaseLengthYmax-9,BaseHeight]
+Data1DSelectionBackgroundYmaxCWFieldSize  = $
+  Data1DSelectionBackgroundYminCWFieldSize
 Data1DSelectionBackgroundYmaxCWFieldTitle = ' Ymax:'
 
 ;SAVE and LOAD buttons
@@ -116,9 +119,10 @@ d_vertical_L_L = 70
 DataBackgroundSelectionFileLabelSize  = [5,150]
 DataBackgroundSelectionFileLabelTitle = 'File:'
 d_L_B_2 = 40
-DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
-                                            DataBackgroundSelectionFileLabelSize[1]-4,$
-                                            250,30]
+DataBackgroundSelectionFileTextFieldSize = $
+  [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
+   DataBackgroundSelectionFileLabelSize[1]-4,$
+   250,30]
 
 ;frame surrounding Background
 BackFrameSize = [2,65,298,115]
@@ -148,8 +152,8 @@ Data1DPixelTOFOutputButtonSize = [Data1DSelectionPeakYmaxBaseSize[0]+x1,$
                                   220,30]
 Data1DPixelTOFOutputButtonTitle = 'Output Pixel vs TOF ASCII file'
 
-;###############################################################################
-;################################## Tab #2 #####################################
+;##############################################################################
+;################################# Tab #2 #####################################
 
 ContrastBaseSize       = BackPeakBaseSize
 ContrastBaseTitle      = 'Contrast Editor'
@@ -175,8 +179,8 @@ ResetContrastButtonSize  = [ContrastDropListSize[0]+10,$
                             30]
 ResetContrastButtonTitle = ' RESET FULL CONTRAST SESSION '
 
-;###############################################################################
-;######################### Tab #3 ##############################################
+;##############################################################################
+;######################## Tab #3 ##############################################
 
 RescaleBaseSize        = BackPeakBaseSize
 RescaleBaseTitle       = 'Scale/Range'  
@@ -226,16 +230,14 @@ OutputFileFolderTextFieldSize  = [OutputFileFolderButtonSize[0] + $
                                   200, $
                                   30]
 yoff_vertical = 35
-OutputFileNameLabelSize        = [OutputFileFolderButtonSize[0] + 2,$
-                                  OutputFileFolderButtonSize[1] + yoff_vertical]
+OutputFileNameLabelSize        = $
+  [OutputFileFolderButtonSize[0] + 2,$
+   OutputFileFolderButtonSize[1] + yoff_vertical]
 OutputFileNameLabelTitle       = 'Output File Name:'
-                                  
 
-
-
-;*******************************************************************************
-;################################Build 1D tab###################################
-;*******************************************************************************
+;******************************************************************************
+;###############################Build 1D tab###################################
+;******************************************************************************
 
 load_data_D_tab_base = WIDGET_BASE(D_DD_Tab,$
                                    UNAME     = 'load_data_d_tab_base',$
@@ -444,10 +446,10 @@ Data1DSelectionPeakYmaxCWField = $
            UNAME         = 'data_d_selection_peak_ymax_cw_field',$
            /INTEGER)
 
-;###############################################################################
-;########################## Tab #2 #############################################
-;####################### contrast base #########################################
-;###############################################################################
+;##############################################################################
+;######################### Tab #2 #############################################
+;###################### contrast base #########################################
+;##############################################################################
 ContrastBase = WIDGET_BASE(BackPeakRescaleTab,$
                            UNAME     = 'data_contrast_base',$
                            XOFFSET   = ContrastBaseSize[0],$
@@ -473,9 +475,11 @@ ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
                                      SCR_YSIZE = ContrastBottomSliderSize[3],$
                                      MINIMUM   = ContrastBottomSliderMin,$
                                      MAXIMUM   = ContrastBottomSliderMax,$
-                                     UNAME     = 'data_contrast_bottom_slider',$
+                                     UNAME     = $
+                                     'data_contrast_bottom_slider',$
                                      TITLE     = ContrastBottomSliderTitle,$
-                                     VALUE     = ContrastBottomSliderDefaultValue,$
+                                     VALUE     = $
+                                     ContrastBottomSliderDefaultValue,$
                                      SENSITIVE = 0,$
                                      /TRACKING_EVENTS)
 
@@ -486,9 +490,11 @@ ContrastNumberSlider = WIDGET_SLIDER(ContrastBase,$
                                      SCR_YSIZE = ContrastNumberSliderSize[3],$
                                      MINIMUM   = ContrastNumberSliderMin,$
                                      MAXIMUM   = ContrastNumberSliderMax,$
-                                     UNAME     = 'data_contrast_number_slider',$
+                                     UNAME     = $
+                                     'data_contrast_number_slider',$
                                      TITLE     = ContrastNumberSliderTitle,$
-                                     VALUE     = ContrastNumberSliderDefaultValue,$
+                                     VALUE     = $
+                                     ContrastNumberSliderDefaultValue,$
                                      SENSITIVE = 0,$
                                      /TRACKING_EVENTS)
 
@@ -502,10 +508,10 @@ ResetContrastButton = WIDGET_BUTTON(ContrastBase,$
                                     UNAME     = 'data_reset_contrast_button')
 
 
-;###############################################################################
-;########################## Tab #3 #############################################
-;####################### Rescale Base  #########################################
-;###############################################################################
+;##############################################################################
+;########################## Tab #3 ############################################
+;####################### Rescale Base  ########################################
+;##############################################################################
 
 RescaleBase = WIDGET_BASE(BackPeakRescaleTab,$
                           UNAME     = 'data_rescale_base',$
@@ -561,8 +567,10 @@ RescaleXMaxCWField = CW_FIELD(RescaleXMaxcwfieldBase,$
 
 RescaleXScaleDroplist = WIDGET_DROPLIST(RescaleXBase,$
                                        VALUE     = RescaleScaleDroplist,$
-                                       XOFFSET   = RescaleScaleDroplistSize[0],$
-                                       YOFFSET   = RescaleScaleDroplistSize[1],$
+                                        XOFFSET   = $
+                                        RescaleScaleDroplistSize[0],$
+                                        YOFFSET   = $
+                                        RescaleScaleDroplistSize[1],$
                                        UNAME     = 'data_rescale_x_droplist',$
                                        SENSITIVE = 0)
 
@@ -675,8 +683,10 @@ RescaleZMaxCWField = CW_FIELD(RescaleZMaxcwfieldBase,$
 
 RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$
                                         VALUE     = RescaleScaleDroplist,$
-                                        XOFFSET   = RescaleScaleDroplistSize[0],$
-                                        YOFFSET   = RescaleScaleDroplistSize[1],$
+                                        XOFFSET   = $
+                                        RescaleScaleDroplistSize[0],$
+                                        YOFFSET   = $
+                                        RescaleScaleDroplistSize[1],$
                                         UNAME     = 'data_rescale_z_droplist',$
                                         SENSITIVE = 0)
 
