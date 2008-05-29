@@ -1,5 +1,37 @@
-;*******************************************************************************
-;WORK ON DATA FILE =============================================================
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+;WORK ON DATA FILE ============================================================
 FUNCTION UpdateMainDataRunNumber, Event, DataRunNumber
 no_error = 0
 CATCH,no_error
@@ -19,7 +51,7 @@ RETURN,1
 END
 
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateAllDataNexusFileName, Event, AllDataNexusFileName
 putTextFieldValue, Event, $
   'reduce_data_runs_text_field',$
@@ -27,12 +59,12 @@ putTextFieldValue, Event, $
   0
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
 REFreduction_OpenPlotDataNexus,Event, DataRunNumber, MainDataNexusFileName
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateDataRoiFileName, Event, DataRoiFileName
 putTextFieldValue, Event, $
   'data_background_selection_file_text_field',$
@@ -41,7 +73,7 @@ putTextFieldValue, Event, $
 REFreduction_LoadDataBackFile, Event, DataRoiFileName
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateDataPeakExclY, Event, Ymin, Ymax
 putTextFieldValue, Event, $
   'data_d_selection_peak_ymin_cw_field',$
@@ -54,7 +86,7 @@ putTextFieldValue, Event, $
 REFreduction_DataBackgroundPeakSelection, Event, ''
 END
 
-;WORK ON NORMALIZATION FILE ====================================================
+;WORK ON NORMALIZATION FILE ===================================================
 FUNCTION UpdateMainNormRunNumber, Event, NormRunNumber
 no_error = 0
 CATCH, no_error
@@ -73,7 +105,7 @@ ENDELSE
 RETURN,1
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateAllNormNexusFileName, Event, AllNormNexusFileName
 putTextFieldValue, Event, $
   'reduce_normalization_runs_text_field',$
@@ -81,12 +113,12 @@ putTextFieldValue, Event, $
   0
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateMainNormNexusFileName, Event, MainNormNexusFileName, NormRunNumber
 REFreduction_OpenPlotNormNexus, Event, NormRunNumber, MainNormNexusFileName
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateNormRoiFileName, Event, NormRoiFileName
 putTextFieldValue, Event, $
   'normalization_background_selection_file_text_field',$
@@ -95,7 +127,7 @@ putTextFieldValue, Event, $
 REFreduction_LoadNormBackgroundFile, Event, NormRoiFileName
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateNormPeakExclY, Event, Ymin, Ymax
 putTextFieldValue, Event, $
   'normalization_d_selection_peak_ymin_cw_field',$
@@ -108,7 +140,7 @@ putTextFieldValue, Event, $
 REFreduction_NormBackgroundPeakSelection, Event, ''
 END
 
-;WORK ON Qmin, Qmax, Qwidth and Qtype ;=========================================
+;WORK ON Qmin, Qmax, Qwidth and Qtype ;========================================
 PRO UpdateQ, Event, Qmin, Qmax, Qwidth, Qtype
 putTextFieldValue, Event, 'q_min_text_field', Qmin, 0
 putTextFieldValue, Event, 'q_max_text_field', Qmax, 0
@@ -121,7 +153,7 @@ ENDELSE
 SetCWBgroup, Event, 'q_scale_b_group', group_value
 END
 
-;WORK ON AngleValue and AngleError =============================================
+;WORK ON AngleValue and AngleError ============================================
 PRO UpdateAngle, Event, Value, Error, units
 putTextFieldValue, Event, 'detector_value_text_field', Value, 0
 putTextFieldValue, Event, 'detector_error_text_field', Error, 0
@@ -133,7 +165,7 @@ ENDELSE
 SetCWBgroup, Event, 'detector_units_b_group', group_value
 END
 
-;WORK on Filtering Data Flag ===================================================
+;WORK on Filtering Data Flag ==================================================
 PRO UpdateFilteringDataFlag, Event, FlagStatus
 IF (FlagStatus EQ 'yes') THEN BEGIN
     buttonValue = 0
@@ -143,7 +175,7 @@ ENDELSE
 SetCWBgroup, Event, 'filtering_data_cwbgroup', buttonValue
 END
 
-;WORK on dt/t Flag =============================================================
+;WORK on dt/t Flag ============================================================
 PRO UpdateDeltaToverTFlag, Event, DeltaToverTFlag
 IF (DeltaToverTFlag EQ 'yes') THEN BEGIN
     buttonValue = 0
@@ -153,7 +185,7 @@ ENDELSE
 SetCWBgroup, Event, 'delta_t_over_t_cwbgroup', buttonValue
 END
 
-;Work on OverwriteDataInstrumentGeometry =======================================
+;Work on OverwriteDataInstrumentGeometry ======================================
 PRO UpdateOverwriteDataInstrGeoFlag, $
                                      Event, $
                                      OverwriteDataInstrGeoFlag, $
@@ -185,7 +217,7 @@ ENDELSE
 MapBase, Event, 'overwrite_data_instrument_geometry_base', MapBaseStatus
 END
 
-;Work on OverwriteNormInstrumentGeometry =======================================
+;Work on OverwriteNormInstrumentGeometry ======================================
 PRO UpdateOverwriteNormInstrGeoFlag, $
                                      Event, $
                                      OverwriteNormInstrGeoFlag, $
@@ -217,17 +249,17 @@ ENDELSE
 MapBase, Event, 'overwrite_norm_instrument_geometry_base',MapBaseStatus
 END
 
-;Work on Output Path and output FileName =======================================
+;Work on Output Path and output FileName ======================================
 PRO UpdateOutputPath, Event, OutputPath
 setButtonValue, Event, 'of_button', OutputPath
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateOutputFileName, Event, OutputFileName
 putTextFieldValue, Event, 'of_text', OutputFileName, 0
 END
 
-;Work on Intermediate files ====================================================
+;Work on Intermediate files ===================================================
 ;DataNormCombinedSpecFlag
 PRO UpdateIntermediateFiles, Event, $
                              DataNormCombinedSpecFlag,$
@@ -282,8 +314,8 @@ setCWBgroup, Event, 'intermediate_plot_list', IntermPlots
 
 END
 
-;###############################################################################
-;******  Class constructor *****************************************************
+;##############################################################################
+;******  Class constructor ****************************************************
 FUNCTION IDLupdateGui::init, structure
 
 event = structure.Event
@@ -385,8 +417,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
 
     NormError  = 0
 ;work on MainNormRunNumber
-    text = '--> Display Main Normalization Run Number .................... ' + $
-      PROCESSING
+    text = '--> Display Main Normalization Run Number .................' + $
+      '... ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     IF (structure.MainNormRunNumber EQ '') THEN BEGIN
         AppendReplaceLogBookMessage, Event, NO, PROCESSING
@@ -402,8 +434,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     ENDELSE
 
 ;work on AllNormNexusFileName
-    text = '--> Display List of All Normalization Run .................... ' + $
-      PROCESSING
+    text = '--> Display List of All Normalization Run .................' + $
+      '... ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     IF (structure.AllNormNexusFileName EQ '') THEN BEGIN
         AppendReplaceLogBookMessage, Event, NO, PROCESSING
@@ -413,8 +445,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     ENDELSE
 
 ;work on MainNormNexusFileName
-    text = '--> Load and Plot Main Normalization Run Number .............. ' + $
-      PROCESSING
+    text = '--> Load and Plot Main Normalization Run Number ..........' + $
+      '.... ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     IF (structure.MainNormNexusFileName EQ '' OR $
         structure.MainNormRunNumber EQ '') THEN BEGIN
@@ -429,8 +461,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     ENDELSE
     
 ;work on NormRoiFileName
-    text = '--> Load Normalization ROI File .............................. ' + $
-      PROCESSING
+    text = '--> Load Normalization ROI File ..........................' + $
+      '.... ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     IF (structure.NormRoiFileName EQ '' OR $
         FILE_TEST(structure.NormRoiFilename) NE 1) THEN BEGIN
@@ -447,8 +479,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
 
 
 ;work on NormPeakExclYmin and NormPeakExclYmax
-    text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax ........... ' + $
-      PROCESSING
+    text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .........' + $
+      '.. ' + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     UpdateNormPeakExclY, Event, $
       structure.NormPeakExclYmin, $
@@ -543,11 +575,11 @@ RETURN, 1
 
 END
 
-;*******************************************************************************
-;******  Class Define **** *****************************************************
+;******************************************************************************
+;*****  Class Define **** *****************************************************
 PRO IDLupdateGui__define
 STRUCT = {IDLupdateGui,$
           var : ''}
 END
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************

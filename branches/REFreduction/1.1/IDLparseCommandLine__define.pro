@@ -80,7 +80,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getAllDataNexusFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, $
-                              'reflect_reduction',$
+                              'reflect_reduction ',$
                               1, $
                               '--data-roi-file', $
                               0)
