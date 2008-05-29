@@ -33,6 +33,9 @@
 ;==============================================================================
 PRO RepopulateGui, Event
 
+;desactivate REPOPULATE GUI button
+RepopulateButtonStatus, Event, 0
+
 message = 'REPOPULATING GUI using current selected Row ... (PROCESSING)'
 putLabelValue, Event, 'pro_top_label', message
 MapBase, Event, 'processing_base', 1
@@ -293,6 +296,9 @@ RepopulatedRowBecomesWorkingRow, Event
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
+
+;Activate REPOPULATE GUI button
+RepopulateButtonStatus, Event, 1
 
 END
 
