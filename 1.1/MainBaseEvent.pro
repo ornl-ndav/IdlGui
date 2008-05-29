@@ -965,7 +965,7 @@ CASE Event.id OF
 ;;Repopulate GUI
     widget_info(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
         DataNormFieldInput, Event
-        RepopulateGUI, Event ;_BatchRepopulateGui
+        RepopulateGUI, Event    ;_BatchRepopulateGui
     end    
 
 ;;Processing Base YES (continue)
