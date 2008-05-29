@@ -1,6 +1,6 @@
 FUNCTION retrieveFirstBankData, NexusFileName, $
                                 BankNumber
-path    = '/entry/bankB' + STRCOMPRESS(BankNumber,/REMOVE_ALL) + '/data'
+path    = '/entry/bank' + STRCOMPRESS(BankNumber,/REMOVE_ALL) + '/data'
 fileID  = H5F_OPEN(NexusFileName)
 fieldID = H5D_OPEN(fileID, path)
 data    = H5D_READ(fieldID)
@@ -18,7 +18,7 @@ FUNCTION retrieveBottomBankData, NexusFileName, $
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,38*8)
 FOR i=0,37 DO BEGIN
-    path          = '/entry/bankB' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
+    path          = '/entry/bank' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
     result[0,0,i*8] = data
@@ -41,40 +41,48 @@ FUNCTION retrieveMiddleBankData, NexusFileName, $
 
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,39*8)
-FOR i=0,37 DO BEGIN
-    IF (i EQ 31) THEN BEGIN
-        path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'A/data'
-        fieldID       = H5D_OPEN(fileID, path)
-        data          = H5D_READ(fieldID)
-        result[0,0,31*8] = data
-        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-            progressBarCancel = 1
-            RETURN,result
-        END
-        path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'B/data'
-        fieldID       = H5D_OPEN(fileID, path)
-        data          = H5D_READ(fieldID)
-        result[0,0,32*8] = data
-        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-            progressBarCancel = 1
-            RETURN,result
-        ENDIF
-    ENDIF ELSE BEGIN
-        path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
-        fieldID       = H5D_OPEN(fileID, path)
-        data          = H5D_READ(fieldID)
-        IF (i LT 31) THEN BEGIN
-            result[0,0,i*8] = data
-        ENDIF
-        IF (i GT 31) THEN BEGIN
-            result[0,0,(i+1)*8] = data
-        ENDIF
-        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-            progressBarCancel = 1
-            RETURN,result
-        ENDIF
-    ENDELSE
+FOR i=0,38 DO BEGIN
+    path     = '/entry/bank' + STRCOMPRESS(i+39,/REMOVE_ALL) + '/data'
+    fieldID  = H5D_OPEN(fileID, path)
+    data     = H5D_READ(fieldID)
+    result[0,0,i*8] = data
+    IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+        progressBarCancel = 1
+        RETURN,result
+    END
 ENDFOR
+;     IF (i EQ 31) THEN BEGIN
+;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'A/data'
+;         fieldID       = H5D_OPEN(fileID, path)
+;         data          = H5D_READ(fieldID)
+;         result[0,0,31*8] = data
+;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+;             progressBarCancel = 1
+;             RETURN,result
+;         END
+;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'B/data'
+;         fieldID       = H5D_OPEN(fileID, path)
+;         data          = H5D_READ(fieldID)
+;         result[0,0,32*8] = data
+;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+;             progressBarCancel = 1
+;             RETURN,result
+;         ENDIF
+;     ENDIF ELSE BEGIN
+;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
+;         fieldID       = H5D_OPEN(fileID, path)
+;         data          = H5D_READ(fieldID)
+;         IF (i LT 31) THEN BEGIN
+;             result[0,0,i*8] = data
+;         ENDIF
+;         IF (i GT 31) THEN BEGIN
+;             result[0,0,(i+1)*8] = data
+;         ENDIF
+;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+;             progressBarCancel = 1
+;             RETURN,result
+;         ENDIF
+;    ENDELSE
 H5F_CLOSE, fileID
 RETURN, result
 END
@@ -90,7 +98,7 @@ FUNCTION retrieveTopBankData, NexusFileName, $
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,38*8)
 FOR i=0,37 DO BEGIN
-    path          = '/entry/bankT' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
+    path          = '/entry/bank' + STRCOMPRESS(i+78,/REMOVE_ALL) + '/data'
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
     result[0,0,i*8] = data
@@ -396,8 +404,10 @@ color  = 150
 yoff   = Ycoeff + 2*off
 for i=0,(31-1) do begin
     plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, /continue
+    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, $
+      /continue
+    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, $
+      /continue
     plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
     plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
 endfor
@@ -426,8 +436,10 @@ Ycoeff = 128 * 2
 yoff   = Ycoeff + 2*off
 for i=32,(38-1) do begin
     plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, /continue
+    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, $
+      /continue
+    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, $
+      /continue
     plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
     plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
 endfor
@@ -645,22 +657,22 @@ PRO PlotMainPlot, histo_mapped_file
 wBase = ''
 MakeGuiMainPlot, wBase
 
-global1 = ptr_new({ histo_file_name : histo_mapped_file,$
-                    real_or_tof : 0,$;0:REAL das view, 1:tof view
-                    tof_scale_title : 'TOF scale',$
-                    Xfactor : 4,$
-                    Yfactor : 2,$
-                    Yfactor_untouched : 2,$
-                    Xcoeff  : 8 * 4,$
-                    Ycoeff  : 128L * 2,$
-                    Ytof    : 128L * 2,$
-                    Ytof_untouched : 128L*2,$
-                    off     : 5,$
-                    xoff    : 10,$
-                    img     : ptr_new(0L),$
-                    main_plot_real_title : 'Real View of Instrument (Y vs X integrated over TOF)',$
-                    main_plot_tof_title : 'TOF View (TOF vs X integrated over Y)',$
-                    wbase   : wbase})
+global1 = ptr_new({ histo_file_name:      histo_mapped_file,$
+                    real_or_tof:          0,$;0:REAL das view, 1:tof view
+                    tof_scale_title:      'TOF scale',$
+                    Xfactor:              4,$
+                    Yfactor:              2,$
+                    Yfactor_untouched:    2,$
+                    Xcoeff:               8 * 4,$
+                    Ycoeff:               128L * 2,$
+                    Ytof:                 128L * 2,$
+                    Ytof_untouched:       128L*2,$
+                    off:                  5,$
+                    xoff:                 10,$
+                    img:                  ptr_new(0L),$
+                    main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
+                    main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
+                    wbase:                wbase})
 
 file_ext = ' - File: ' + histo_mapped_file
 (*global1).main_plot_real_title += file_ext
@@ -705,22 +717,22 @@ PRO PlotMainPlotFromNexus, NexusFileName
 wBase = ''
 MakeGuiMainPlot, wBase
 
-global1 = ptr_new({ NexusFileName          : NexusFileName,$
-                    real_or_tof            : 0,$;0:REAL das view, 1:tof view
-                    tof_scale_title        : 'TOF scale',$
-                    Xfactor                : 4,$
-                    Yfactor                : 2,$
-                    Yfactor_untouched      : 2,$
-                    Xcoeff                 : 8 * 4,$
-                    Ycoeff                 : 128L * 2,$
-                    Ytof                   : 128L * 2,$
-                    Ytof_untouched         : 128L*2,$
-                    off                    : 5,$
-                    xoff                   : 10,$
-                    img                    : ptr_new(0L),$
-                    main_plot_real_title   : 'Real View of Instrument (Y vs X integrated over TOF)',$
-                    main_plot_tof_title    : 'TOF View (TOF vs X integrated over Y)',$
-                    wbase                  : wbase})
+global1 = ptr_new({ NexusFileName:         NexusFileName,$
+                    real_or_tof:           0,$;0:REAL das view, 1:tof view
+                    tof_scale_title:       'TOF scale',$
+                    Xfactor:               4,$
+                    Yfactor:               2,$
+                    Yfactor_untouched:     2,$
+                    Xcoeff:                8 * 4,$
+                    Ycoeff:                128L * 2,$
+                    Ytof:                  128L * 2,$
+                    Ytof_untouched:        128L*2,$
+                    off:                   5,$
+                    xoff:                  10,$
+                    img:                   ptr_new(0L),$
+                    main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
+                    main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
+                    wbase:                 wbase})
 
 file_ext = ' - File: ' + NexusFileName
 (*global1).main_plot_real_title += file_ext
