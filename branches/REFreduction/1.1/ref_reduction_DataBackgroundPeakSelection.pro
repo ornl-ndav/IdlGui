@@ -82,7 +82,8 @@ END
 
 
 ;This functions retrieves the value of ymin, ymax of Back and peak
-;text boxes and stores them in their global pointers
+;text boxes and stores them in their global pointers, and replot
+;the background region and peak exclusion region
 PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
 
 ;get global structure
@@ -98,8 +99,10 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     endelse
 
 ;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event,'data_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event,'data_d_selection_background_ymax_cw_field')
+    BackYmin = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymin_cw_field')
+    BackYmax = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymax_cw_field')
     
     if (BackYmin EQ '') then begin
         BackYmin = -1
@@ -121,8 +124,12 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     PeakYmax = getTextfieldValue(Event,'data_d_selection_peak_ymax_cw_field')
 
 ;update REDUCE tab
-    putTextFieldValue, Event, 'data_exclusion_low_bin_text', strcompress(PeakYmin),0
-    putTextFieldValue, Event, 'data_exclusion_high_bin_text', strcompress(PeakYmax),0
+    putTextFieldValue, Event, $
+      'data_exclusion_low_bin_text', $
+      strcompress(PeakYmin),0
+    putTextFieldValue, Event, $
+      'data_exclusion_high_bin_text', $
+      strcompress(PeakYmax),0
 
     if (PeakYmin EQ '') then begin
         PeakYmin = -1
