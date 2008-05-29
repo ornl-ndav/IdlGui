@@ -262,7 +262,7 @@ new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
 new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
 ;put new_cmd back in the BatchTable
-BatchTable[7,RowSelected] = new_cmd
+BatchTable[8,RowSelected] = new_cmd
 ;update command line
 putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
 ;update DATE field with new date/time stamp
@@ -480,7 +480,7 @@ IF (CurrentProcess eq 'data') THEN BEGIN
     part2       = (*global).batch_part2
     BatchTable  = (*(*global).BatchTable)
     new_cmd     = (*global).batch_new_cmd
-    
+
     Continue_ChangeDataRunNumber, Event, $
       RowSelected,$
       data_runs, $
