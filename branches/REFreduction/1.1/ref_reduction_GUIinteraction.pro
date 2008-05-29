@@ -121,3 +121,10 @@ WIDGET_CONTROL, id_group, SET_VALUE=group_value
 WIDGET_CONTROL, id_base, MAP=base_value
 
 END
+
+;------------------------------------------------------------------------------
+;This function activates or not the REPOPULATE GUI button
+PRO RepopulateButtonStatus, Event, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='repopulate_gui')
+WIDGET_CONTROL, id, sensitive=status
+END
