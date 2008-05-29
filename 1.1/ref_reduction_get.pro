@@ -266,8 +266,13 @@ END
 
 ;----------------------------------------------------------------------------------
 ;This function gives the runs from the list of full nexus file names
-FUNCTION get_runs_from_NeXus_full_path, list_OF_nexus_file_name
-step1      = STRSPLIT(list_OF_nexus_file_name,',',/EXTRACT,COUNT=length)
+FUNCTION get_runs_from_NeXus_full_path, list_OF_nexus_file_name, type
+IF (type EQ 'data') THEN BEGIN
+    split_type = ' '
+ENDIF ELSE BEGIN
+    split_type = ','
+ENDELSE
+step1      = STRSPLIT(list_OF_nexus_file_name,split_type,/EXTRACT,COUNT=length)
 ListOfRuns = STRARR(length)
 FOR i=0,(length-1) DO BEGIN
     iRunNumber = OBJ_NEW('IDLgetMetadata',step1[i])
@@ -279,3 +284,5 @@ FOR i=0,(length-1) DO BEGIN
 ENDFOR
 RETURN, ListOfRuns
 END
+
+
