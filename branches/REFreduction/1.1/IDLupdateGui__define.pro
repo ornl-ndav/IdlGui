@@ -487,8 +487,15 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
       structure.NormPeakExclYmax
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
+;show the norm step within the REUDCE tab
+    NormReducePartGuiStatus, Event, 'show'
+
 ENDIF ELSE BEGIN
+
     (*global).NormNexusFound = 0
+;hide the norm step within the REUDCE tab
+    NormReducePartGuiStatus, Event, 'hide'    
+
 ENDELSE
 
 ;Work on Qmin, Qmax, Qwidth and Qtype
