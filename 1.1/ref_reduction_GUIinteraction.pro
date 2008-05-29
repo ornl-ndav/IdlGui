@@ -37,43 +37,43 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, sensitive=ActivateStatus
 END
 
-
+;------------------------------------------------------------------------------
 PRO MapBase, Event, uname, MapStatus
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, map=MapStatus
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetCWBgroup, Event, uname, value
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=value
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetButtonValue, Event, uname, text
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=text
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetTabCurrent, Event, uname, TabIndex
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_tab_current=TabIndex
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetDropListValue, Event, uname, index
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_droplist_select=index
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetSliderValue, Event, uname, index
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=index
 END
 
-
+;------------------------------------------------------------------------------
 ;This procedure allows the text to show the last 2 lines of the Data
 ;log book
 PRO showLastDataLogBookLine, Event
@@ -83,7 +83,7 @@ id = widget_info(Event.top,find_by_uname='data_log_book_text_field')
 widget_control, id, set_text_top_line=(sz-2)
 END
 
-
+;------------------------------------------------------------------------------
 ;This procedure allows the text to show the last 2 lines of the Norm
 ;log book
 PRO showLastNormLogBookLine, Event
@@ -93,8 +93,31 @@ id = widget_info(Event.top,find_by_uname='normalization_log_book_text_field')
 widget_control, id, set_text_top_line=(sz-2)
 END
 
-
+;------------------------------------------------------------------------------
 PRO SetBaseYSize, Event, uname, y_size
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, YSIZE = y_size
+END
+
+;------------------------------------------------------------------------------
+;This function hide or not the Normalization base of the REDUCE tab
+PRO NormReducePartGuiStatus, Event, status
+id_group = WIDGET_INFO(Event.top,FIND_BY_UNAME='yes_no_normalization_bgroup')
+id_base  = WIDGET_INFO(Event.top,FIND_BY_UNAME='normalization_base')
+
+CASE (status) OF
+    'show': BEGIN
+        group_value = 0
+        base_value  = 1
+    END
+    'hide': BEGIN
+        group_value = 1
+        base_value  = 0
+    END
+ELSE:
+ENDCASE
+
+WIDGET_CONTROL, id_group, SET_VALUE=group_value
+WIDGET_CONTROL, id_base, MAP=base_value
+
 END
