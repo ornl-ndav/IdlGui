@@ -575,10 +575,8 @@ PRO DisplayBatchTable, Event, BatchTable
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;new BatchTable
 NewBatchTable = BatchTable
-
 id = widget_info(Event.top,find_by_uname='batch_table_widget')
 ;display only the first part of the cmd line
 NbrRow = getGlobalVariable('NbrRow')
@@ -830,7 +828,37 @@ BatchTable[0,0] = '> YES <'
 BatchTable[8,0] = 'N/A'  ;cmd
 END
 
+;------------------------------------------------------------------------------
+;This function gets the index of the row used to repopulate the GUI
+;and makes this row as the current working row
+PRO RepopulatedRowBecomesWorkingRow, Event
+;get global structure
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+RowIndexes = getGlobalVariable('RowIndexes')
+BatchTable = (*(*global).BatchTable)
+;get current working row and change its status
+CurrentWorkingRow = getCurrentWorkingRow(Event)
+IF (CurrentWorkingRow NE -1) THEN BEGIN
+    CASE (BatchTable[0,CurrentWorkingRow]) OF
+        '> YES <' : BatchTable[0,CurrentWorkingRow]='YES'
+        '> NO <'  : BatchTable[0,CurrentWorkingRow]='NO'
+        ELSE:
+    ENDCASE
+ENDIF
+;get current selected row
+CurrentSelectedRow = getCurrentRowSelected(Event)
+BatchTable[0,CurrentSelectedRow] = '> YES <'
+(*(*global).BatchTable) = BatchTable
+;This function updates the Batch tab GUI
+UpdateBatchTabGui, Event
+;This function repopulates the batch table with BatchTable
+DisplayBatchTable, Event, BatchTable
+;generate a new batch file name
+GenerateBatchFileName, Event
+END
 
+;------------------------------------------------------------------------------
 ;This function populate the working row with the command line 
 PRO PopulateBatchTableWithCMDinfo, Event, cmd
 ;get global structure
@@ -948,7 +976,7 @@ UpdateBatchTabGui, Event
 GenerateBatchFileName, Event
 END
 
-
+;------------------------------------------------------------------------------
 PRO BatchTab_MoveUpSelection, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

@@ -278,7 +278,6 @@ populate_error = 0
 CATCH, populate_error
 IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-;    print, 'error' ;remove_me
 ENDIF ELSE BEGIN
     guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
     text = '-> Repopulating GUI ... END'
@@ -289,9 +288,11 @@ MapBase, Event, 'processing_base', 0
 message = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
 putLabelValue, Event, 'pro_top_label', message
 
-;turn off hourglass
-widget_control,hourglass=0
+;Repopulated row becomes the active row
+RepopulatedRowBecomesWorkingRow, Event
 
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
 
 END
 
