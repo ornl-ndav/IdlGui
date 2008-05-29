@@ -849,9 +849,8 @@ END
 ;This function takes a strarr and return a string list of runs comma
 ;separated
 FUNCTION create_list_OF_runs, run_array
-sz = (size(run_array))(1)
-
-
+result = STRJOIN(run_array,',')
+RETURN, result        
 END
 ;------------------------------------------------------------------------------
 ;populate index 0 with all Data and Norm run numbers
@@ -859,7 +858,7 @@ PRO PopulateBatchTableWithDataNormRunNumbers, Event, BatchTable
 ;get Data Nexus files
 DataRuns        = getTextFieldValue(Event,'reduce_data_runs_text_field')
 IF (DataRuns NE '') THEN BEGIN
-    DataRunsArray   = get_runs_from_NeXus_full_path(DataRuns)
+    DataRunsArray   = get_runs_from_NeXus_full_path(DataRuns, 'data')
     DataRunsString  = create_list_OF_runs(DataRunsArray)
     BatchTable[1,0] = STRCOMPRESS(DataRunsString,/REMOVE_ALL)
 ENDIF
@@ -868,7 +867,7 @@ ENDIF
 NormRuns        = getTextFieldValue(Event, $
                                     'reduce_normalization_runs_text_field')
 IF (NormRuns NE '') THEN BEGIN
-    NormRunsArray   = get_runs_from_NeXus_full_path(NormRuns)
+    NormRunsArray   = get_runs_from_NeXus_full_path(NormRuns, 'norm')
     NormRunsString  = create_list_OF_runs(NormRunsArray)
     BatchTable[2,0] = STRCOMPRESS(NormRunsString,/REMOVE_ALL)
 ENDIF
