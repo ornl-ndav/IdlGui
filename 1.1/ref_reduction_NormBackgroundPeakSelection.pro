@@ -100,8 +100,12 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     endelse
     
 ;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event,'normalization_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event,'normalization_d_selection_background_ymax_cw_field')
+    BackYmin = $
+      getTextFieldValue(Event, $
+                        'normalization_d_selection_background_ymin_cw_field')
+    BackYmax = $
+      getTextFieldValue(Event, $
+                        'normalization_d_selection_background_ymax_cw_field')
 
     if (BackYmin EQ '') then begin
         BackYmin = -1
@@ -119,12 +123,20 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     (*(*global).norm_back_selection) = BackSelection
     
 ;get Peak Ymin and Ymax
-    PeakYmin = getTextFieldValue(Event,'normalization_d_selection_peak_ymin_cw_field')
-    PeakYmax = getTextFieldValue(Event,'normalization_d_selection_peak_ymax_cw_field')
+    PeakYmin = $
+      getTextFieldValue(Event, $
+                        'normalization_d_selection_peak_ymin_cw_field')
+    PeakYmax = $
+      getTextFieldValue(Event, $
+                        'normalization_d_selection_peak_ymax_cw_field')
 
 ;update REDUCE tab
-    putTextFieldValue, Event, 'norm_exclusion_low_bin_text', strcompress(PeakYmin),0
-    putTextFieldValue, Event, 'norm_exclusion_high_bin_text', strcompress(PeakYmax),0
+    putTextFieldValue, Event, $
+      'norm_exclusion_low_bin_text', $
+      strcompress(PeakYmin),0
+    putTextFieldValue, Event, $
+      'norm_exclusion_high_bin_text', $
+      strcompress(PeakYmax),0
 
     if (PeakYmin EQ '') then begin
         PeakYmin = -1

@@ -204,6 +204,9 @@ IF ((*global).isHDF5format) THEN BEGIN
         text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
         putDataLogBookMessage, Event, text, Append=1
         
+;replot the background and peak exclusion regions
+        REFreduction_DataBackgroundPeakSelection, Event, ''
+
     ENDIF
 
 ;to see the last line of the data log book
@@ -233,6 +236,7 @@ text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
 putDataLogBookMessage, Event, text, Append=1
 ;to see the last line of the data log book
 showLastDataLogBookLine, Event
+
 END
 
 
@@ -291,6 +295,9 @@ IF ((*global).isHDF5format) THEN BEGIN
     full_nexus_name = (*global).norm_full_nexus_name
     text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
     putNormalizationLogBookMessage, Event, text, Append=1
+
+;display back and peak exclusion regions
+    REFreduction_NormBackgroundPeakSelection, Event, ''
     
 ENDIF
 
@@ -530,7 +537,10 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
             text = '(Nexus path: ' + $
               strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
-            
+
+;replot the background and peak exclusion regions
+            REFreduction_DataBackgroundPeakSelection, Event, ''
+                        
         ENDIF
     ENDIF
     
@@ -562,6 +572,9 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             text = '(Nexus path: ' + $
               strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
+
+;replot the background and peak exclusion regions
+        REFreduction_DataBackgroundPeakSelection, Event, ''
             
         ENDIF
 
@@ -606,6 +619,9 @@ if (isArchivedNormNexusDesired(Event)) then begin
               strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
 
+;display back and peak exclusion regions
+            REFreduction_NormBackgroundPeakSelection, Event, ''
+
         ENDIF
 
     ENDIF 
@@ -637,6 +653,9 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             text = '(Nexus path: ' + $
               strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
+
+;display back and peak exclusion regions
+            REFreduction_NormBackgroundPeakSelection, Event, ''
 
         ENDIF
 
