@@ -91,16 +91,33 @@ sPeakBackGroup = {size:  [XYoff[0],$
                   value: 0,$
                   list:  ['Peak','Background']}
 
-XYoff = [0,30] ;PEAK base
+XYoff = [0,30] ;PEAK base ----------------------------------------------------
 sPeakBase = {size: [XYoff[0],$
                     XYoff[1],$
                     585,60],$
              frame: 1,$
              uname: 'peak_base_uname',$
-             map:   1}
+             map:   0}
 
+XYoff = [40,10] ;Ymin cw_field
+sPeakRoiYmin = { size:  [XYoff[0],$
+                         XYoff[1],$
+                         80,35],$
+                 base_uname: 'Data1SelectionPeakYminBase',$
+                 uname: 'data_d_selection_peak_ymin_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymin:'}
 
-XYoff = [0,30] ;Back base
+XYoff = [15,0] ;Ymax cw_field
+sPeakRoiYmax = { size:  [sPeakRoiYmin.size[0]+sPeakRoiYmin.size[2]+XYoff[0],$
+                         sPeakRoiYmin.size[1]+XYoff[1],$
+                         sPeakRoiYmin.size[2:3]],$
+                 base_uname: 'Data1SelectionPeakYmaxBase',$
+                 uname: 'data_d_selection_peak_ymax_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymax:'}
+
+XYoff = [0,30] ;Back base -----------------------------------------------------
 sBackBase = {size: [XYoff[0],$
                     XYoff[1],$
                     585,60],$
@@ -108,13 +125,56 @@ sBackBase = {size: [XYoff[0],$
              uname: 'back_base_uname',$
              map:   1}
 
+XYoff = [0,0]                   ;Ymin cw_field
+sBackRoiYmin = { size: [XYoff[0],$
+                        XYoff[1],$
+                        80,35],$
+                 base_uname: 'refm_back_ymin_base',$
+                 uname: 'refm_back_data_ymin_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymin:'}
 
+XYoff = [5,0]                   ;Ymax cw_field
+sBackRoiYmax = { size: [sBackRoiYmin.size[0]+sBackRoiYmin.size[2]+XYoff[0],$
+                        sBackRoiYmin.size[1]+XYoff[1],$
+                        sBackRoiYmin.size[2:3]],$
+                 base_uname: 'refm_back_ymax_base',$
+                 uname: 'refm_back_data_ymax_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymax:'}
 
+XYoff = [10,10]                 ;OR label
+sBackOrLabel = {size: [sBackRoiYmax.size[0]+sBackRoiYmax.size[2]+XYoff[0],$
+                       sBackRoiYmax.size[1]+XYoff[1]],$
+                value: 'OR'}
 
+XYoff = [30,-5]                 ;LOAD button
+sBackLoadButton = {size: [sOrLabel.size[0]+XYoff[0],$
+                          sOrLabel.size[1]+XYoff[1],$
+                          380,$
+                          30],$
+                   value: 'L O A D    R O I    F I L E',$
+                   uname: 'refm_back_data_load_button'}
 
+XYoff = [3,48]                  ;ROI file Name label
+sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
+                              sBackRoiYmin.size[1]+XYoff[1]],$
+                     value:  'ROI file Name:'}
 
+XYoff = [90,-8]                 ;roi file text
+sBackRoiFileText = {size:     [sBackRoiFileLabel.size[0]+XYoff[0],$
+                               sBackRoiFileLabel.size[1]+XYoff[1],$
+                               350],$
+                    uname:    'refm_back_data_file_text',$
+                    sensitive: 0}
 
-
+XYoff = [2,0]                   ;SAVE button
+sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
+                           sBackRoiFileText.size[2]+XYoff[0],$
+                           sBackRoiFileText.size[1]+XYoff[1],$
+                           140,sLoadButton.size[3]],$
+                   value: 'SAVE ROI FILE',$
+                   uname: 'refm_back_data_save_button'}
 
 
 ; Data1DSelection = cw_bgroup(Data1DSelectionBase,$
@@ -464,7 +524,7 @@ wPeakBackGroup = CW_BGROUP(wPeakBackBase,$
                            /RETURN_NAME,$
                            /NO_RELEASE)
                            
-;PEAK base
+;PEAK base --------------------------------------------------------------------
 wPeakBase = WIDGET_BASE(wPeakBackBase,$
                         XOFFSET   = sPeakBase.size[0],$
                         YOFFSET   = sPeakBase.size[1],$
@@ -474,8 +534,38 @@ wPeakBase = WIDGET_BASE(wPeakBackBase,$
                         FRAME     = sPeakBase.frame,$
                         MAP       = sPeakBase.map)
 
-;BACK base
-wBackBase = WIDGET_BASE(wBackBackBase,$
+;Ymin
+wPeakRoiYminBase = WIDGET_BASE(wPeakBase,$
+                               XOFFSET   = sPeakRoiYmin.size[0],$
+                               YOFFSET   = sPeakRoiYmin.size[1],$
+                               SCR_XSIZE = sPeakRoiYmin.size[2],$
+                               SCR_YSIZE = sPeakRoiYmin.size[3],$
+                               UNAME     = sPeakRoiYmin.base_uname,$
+                               TITLE     = sTab.list[0])
+
+wPeakRoiYminField = CW_FIELD(wPeakRoiYminBase,$
+                             XSIZE         = sPeakRoiYmin.xsize,$
+                             RETURN_EVENTS = 1,$
+                             UNAME         = sPeakRoiYmin.uname,$
+                             TITLE         = sPeakRoiYmin.title)
+
+;Ymax
+wPeakRoiYmaxBase = WIDGET_BASE(wPeakBase,$
+                               XOFFSET   = sPeakRoiYmax.size[0],$
+                               YOFFSET   = sPeakRoiYmax.size[1],$
+                               SCR_XSIZE = sPeakRoiYmax.size[2],$
+                               SCR_YSIZE = sPeakRoiYmax.size[3],$
+                               UNAME     = sPeakRoiYmax.base_uname,$
+                               TITLE     = sTab.list[0])
+
+wPeakRoiYmaxField = CW_FIELD(wPeakRoiYmaxBase,$
+                             XSIZE         = sPeakRoiYmax.xsize,$
+                             RETURN_EVENTS = 1,$
+                             UNAME         = sPeakRoiYmax.uname,$
+                             TITLE         = sPeakRoiYmax.title)
+
+;BACK base --------------------------------------------------------------------
+wBackBase = WIDGET_BASE(wPeakBackBase,$
                         XOFFSET   = sBackBase.size[0],$
                         YOFFSET   = sBackBase.size[1],$
                         SCR_XSIZE = sBackBase.size[2],$
@@ -484,6 +574,75 @@ wBackBase = WIDGET_BASE(wBackBackBase,$
                         FRAME     = sBackBase.frame,$
                         MAP       = sBackBase.map)
 
+;Ymin
+wRoiYminBase = WIDGET_BASE(wBackBase,$
+                           XOFFSET   = sBackRoiYmin.size[0],$
+                           YOFFSET   = sBackRoiYmin.size[1],$
+                           SCR_XSIZE = sBackRoiYmin.size[2],$
+                           SCR_YSIZE = sBackRoiYmin.size[3],$
+                           UNAME     = sBackRoiYmin.base_uname,$
+                           TITLE     = sTab.list[0])
+
+wRoiYminField = CW_FIELD(wRoiYminBase,$
+                         XSIZE         = sBackRoiYmin.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sBackRoiYmin.uname,$
+                         TITLE         = sBackRoiYmin.title)
+
+;Ymax
+wRoiYmaxBase = WIDGET_BASE(wBackBase,$
+                           XOFFSET   = sBackRoiYmax.size[0],$
+                           YOFFSET   = sBackRoiYmax.size[1],$
+                           SCR_XSIZE = sBackRoiYmax.size[2],$
+                           SCR_YSIZE = sBackRoiYmax.size[3],$
+                           UNAME     = sBackRoiYmax.base_uname,$
+                           TITLE     = sTab.list[0])
+
+wRoiYmaxField = CW_FIELD(wRoiYmaxBase,$
+                         XSIZE         = sBackRoiYmax.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sBackRoiYmax.uname,$
+                         TITLE         = sBackRoiYmax.title)
+
+;OR label
+wOrLabel = WIDGET_LABEL(wBackBase,$
+                        XOFFSET = sOrLabel.size[0],$
+                        YOFFSET = sOrLabel.size[1],$
+                        VALUE   = sOrLabel.value)
+
+;LOAD ROI button
+wLoadButton = WIDGET_BUTTON(wBackBase,$
+                            XOFFSET   = sBackLoadButton.size[0],$
+                            YOFFSET   = sBackLoadButton.size[1],$
+                            SCR_XSIZE = sBackLoadButton.size[2],$
+                            SCR_YSIZE = sBackLoadButton.size[3],$
+                            VALUE     = sBackLoadButton.value,$
+                            UNAME     = sBackLoadButton.uname)
+
+;Roi file label
+wRoiFileLabel = WIDGET_LABEL(wBackBase,$
+                             XOFFSET = sBackRoiFileLabel.size[0],$
+                             YOFFSET = sBackRoiFileLabel.size[1],$
+                             VALUE   = sBackRoiFileLabel.value)
+
+;ROI text file
+wRoiFileText = WIDGET_TEXT(wBackBase,$
+                           XOFFSET   = sBackRoiFileText.size[0],$
+                           YOFFSET   = sBackRoiFileText.size[1],$
+                           SCR_XSIZE = sBackRoiFileText.size[2],$
+                           UNAME     = sBackRoiFileText.uname,$
+                           SENSITIVE = sBackRoiFileText.sensitive,$
+                           /ALIGN_LEFT,$
+                           /EDITABLE)
+                           
+;SAVE ROI button
+wSaveButton = WIDGET_BUTTON(wBackBase,$
+                            XOFFSET   = sBackSaveButton.size[0],$
+                            YOFFSET   = sBackSaveButton.size[1],$
+                            SCR_XSIZE = sBackSaveButton.size[2],$
+                            SCR_YSIZE = sBackSaveButton.size[3],$
+                            VALUE     = sBackSaveButton.value,$
+                            UNAME     = sBackSaveButton.uname)
 
 
 
