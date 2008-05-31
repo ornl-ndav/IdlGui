@@ -399,7 +399,14 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,1200,885]
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   MainBaseSize  = [0,0,1200,885]
+ENDIF ELSE BEGIN
+   MainBaseSize  = [50,50,1200,885]
+ENDELSE
+debugger = 1 ;the world has access to the batch tab now
+
+
 MainBaseTitle = 'Reflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 

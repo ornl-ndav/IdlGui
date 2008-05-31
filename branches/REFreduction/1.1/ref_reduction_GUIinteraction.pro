@@ -128,3 +128,20 @@ PRO RepopulateButtonStatus, Event, status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='repopulate_gui')
 WIDGET_CONTROL, id, sensitive=status
 END
+
+;-------------------------------------------------------------------------------
+;This function switch the Peak and background bases of the data 1D data tab
+;according to the status of the cw_bgroup
+PRO SwitchPeakBackgroundBase, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_back_group')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN BEGIN ;show peak base
+   peak_base_status = 1
+   back_base_status = 0
+ENDIF ELSE BEGIN
+   peak_base_status = 0
+   back_base_status = 1
+ENDELSE
+MapBase, Event, 'peak_base_uname', peak_base_status
+MapBase, Event, 'back_base_uname', back_base_status
+END
