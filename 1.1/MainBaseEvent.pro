@@ -153,6 +153,11 @@ CASE Event.id OF
         REFreduction_LoadDataBackgroundSelection, Event
     end
 
+;Peak/Background tab (peak/background cw_bgroup)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_back_group'): BEGIN
+       SwitchPeakBackgroundBase, Event ;_GUI
+    END
+
 ;CONTRAST TAB
 ;Contrast editor of data 1D tab
     widget_info(wWidget, FIND_BY_UNAME='data_contrast_droplist'): begin

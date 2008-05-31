@@ -91,13 +91,13 @@ sPeakBackGroup = {size:  [XYoff[0],$
                   value: 0,$
                   list:  ['Peak','Background']}
 
-XYoff = [0,30] ;PEAK base ----------------------------------------------------
+XYoff = [0,28] ;PEAK base ----------------------------------------------------
 sPeakBase = {size: [XYoff[0],$
                     XYoff[1],$
-                    585,60],$
-             frame: 1,$
+                    585,65],$
+             frame: 0,$
              uname: 'peak_base_uname',$
-             map:   0}
+             map:   1}
 
 XYoff = [40,10] ;Ymin cw_field
 sPeakRoiYmin = { size:  [XYoff[0],$
@@ -117,13 +117,13 @@ sPeakRoiYmax = { size:  [sPeakRoiYmin.size[0]+sPeakRoiYmin.size[2]+XYoff[0],$
                  xsize: 3,$
                  title: 'Ymax:'}
 
-XYoff = [0,30] ;Back base -----------------------------------------------------
+XYoff = [0,28] ;Back base -----------------------------------------------------
 sBackBase = {size: [XYoff[0],$
                     XYoff[1],$
-                    585,60],$
-             frame: 1,$
+                    585,65],$
+             frame: 0,$
              uname: 'back_base_uname',$
-             map:   1}
+             map:   0}
 
 XYoff = [0,0]                   ;Ymin cw_field
 sBackRoiYmin = { size: [XYoff[0],$
@@ -143,25 +143,25 @@ sBackRoiYmax = { size: [sBackRoiYmin.size[0]+sBackRoiYmin.size[2]+XYoff[0],$
                  xsize: 3,$
                  title: 'Ymax:'}
 
-XYoff = [10,10]                 ;OR label
+XYoff = [5,8]                 ;OR label
 sBackOrLabel = {size: [sBackRoiYmax.size[0]+sBackRoiYmax.size[2]+XYoff[0],$
                        sBackRoiYmax.size[1]+XYoff[1]],$
                 value: 'OR'}
 
-XYoff = [30,-5]                 ;LOAD button
-sBackLoadButton = {size: [sOrLabel.size[0]+XYoff[0],$
-                          sOrLabel.size[1]+XYoff[1],$
-                          380,$
+XYoff = [25,-5]                 ;LOAD button
+sBackLoadButton = {size: [sBackOrLabel.size[0]+XYoff[0],$
+                          sBackOrLabel.size[1]+XYoff[1],$
+                          390,$
                           30],$
-                   value: 'L O A D    R O I    F I L E',$
+                   value: 'LOAD BACKGROUND SELECTION FILE',$
                    uname: 'refm_back_data_load_button'}
 
-XYoff = [3,48]                  ;ROI file Name label
+XYoff = [3,43]                  ;ROI file Name label
 sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
                               sBackRoiYmin.size[1]+XYoff[1]],$
-                     value:  'ROI file Name:'}
+                     value:  'Back. File Name:'}
 
-XYoff = [90,-8]                 ;roi file text
+XYoff = [100,-8]                 ;roi file text
 sBackRoiFileText = {size:     [sBackRoiFileLabel.size[0]+XYoff[0],$
                                sBackRoiFileLabel.size[1]+XYoff[1],$
                                350],$
@@ -172,8 +172,8 @@ XYoff = [2,0]                   ;SAVE button
 sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
                            sBackRoiFileText.size[2]+XYoff[0],$
                            sBackRoiFileText.size[1]+XYoff[1],$
-                           140,sLoadButton.size[3]],$
-                   value: 'SAVE ROI FILE',$
+                           130,sLoadButton.size[3]],$
+                   value: 'SAVE BACK. FILE',$
                    uname: 'refm_back_data_save_button'}
 
 
@@ -605,10 +605,10 @@ wRoiYmaxField = CW_FIELD(wRoiYmaxBase,$
                          TITLE         = sBackRoiYmax.title)
 
 ;OR label
-wOrLabel = WIDGET_LABEL(wBackBase,$
-                        XOFFSET = sOrLabel.size[0],$
-                        YOFFSET = sOrLabel.size[1],$
-                        VALUE   = sOrLabel.value)
+wBackOrLabel = WIDGET_LABEL(wBackBase,$
+                            XOFFSET = sBackOrLabel.size[0],$
+                            YOFFSET = sBackOrLabel.size[1],$
+                            VALUE   = sbackOrLabel.value)
 
 ;LOAD ROI button
 wLoadButton = WIDGET_BUTTON(wBackBase,$
