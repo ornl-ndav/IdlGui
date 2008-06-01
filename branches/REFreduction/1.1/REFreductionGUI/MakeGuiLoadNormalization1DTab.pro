@@ -54,82 +54,168 @@ ContrastBaseTitle      = '  Contrast Editor  '
 RescaleBaseSize        = BackPeakBaseSize
 RescaleBaseTitle       = '   Range Displayed   '  
 
-;cw_bgroup of selection (back or signal)
-Norm1DSelectionList = ['Select Background   ',$
-                       'Select Peak   ',$
-                       'ZOOM mode  ']
-Norm1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
-Norm1DSelectionSize     = [5, 0]
+;------------------------------------------------------------------------------
+;-TAB #1 ----------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
-NormYminLabelSize  = [385,0,100,25]
-NormYminLabelTitle = '  Ymin  '
-NormYmaxLabelSize  = [NormYminLabelSize[0]+109,$
-                      0,$
-                      NormYminLabelSize[2],$
-                      NormYminLabelSize[3]]
-NormYmaxLabelTitle = '  Ymax  '
- 
-d_L_B= 170
-BaseLengthYmin = 90
-BaseLengthYmax = 120
-BaseHeight = 35
-;Background Ymin and Ymax bases and cw_fields
-;Ymin base and cw_field
-Norm1DSelectionBackgroundLabelSize    = [3,40]
-Norm1DSelectionBackgroundLabelTitle   = 'Background Range ......... ' 
-Norm1DSelectionBackgroundYminBaseSize = [Norm1DSelectionBackgroundLabelSize[0]+d_L_B,$
-                                         Norm1DSelectionBackgroundLabelSize[1]-7,$
-                                         BaseLengthYmin,BaseHeight]
-Norm1DSelectionBackgroundYminCWFieldSize  = [5,25]
-Norm1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
-;Ymax base and cw_field
-Norm1DSelectionBackgroundYmaxBaseSize     = [Norm1DSelectionBackgroundYminBaseSize[0]+$
-                                             Norm1DSelectionBackgroundYminBasesize[2],$
-                                             Norm1DSelectionBackgroundYminBaseSize[1],$
-                                             BaseLengthYmax-3,BaseHeight]
-Norm1DSelectionBackgroundYmaxCWFieldSize  = Norm1DSelectionBackgroundYminCWFieldSize
-Norm1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
+sTab = { size:  [5,5,D_DD_TabSize[2]-35,120],$
+         list:  ['Region Of Interest (ROI)',$
+                 'Peak / Background',$
+                 'ZOOM mode'],$
+         uname: 'roi_peak_background_tab'}
 
-;SAVE and LOAD buttons
-SaveLoadButtonSize = [110,30]
-SaveButtonSize      = [381,Norm1DselectionBackgroundYmaxBaseSize[1]+3,$
-                       SaveLoadButtonSize[0],$
-                       SaveLoadButtonSize[1]]
-SaveButtonTitle     = 'S A V E'  
-LoadButtonSize      = [SaveButtonSize[0]+SaveLoadButtonSize[0],$
-                       SaveButtonSize[1],$
-                       SaveLoadButtonSize[0],$
-                       SaveLoadButtonSize[1]]
-LoadButtonTitle     = 'L O A D'
+;;TAB ROI ---------------------------------------------------------------------
+sRoiBase = { size: [0,0,D_DD_TabSize[2],100] }
+             
+XYoff = [0,10] ;Ymin cw_field
+sRoiYmin = { size: [XYoff[0],$
+                    XYoff[1],$
+                    80,35],$
+             base_uname: 'Data1SelectionBackgroundYminBase',$
+             uname: 'data_d_selection_background_ymin_cw_field',$
+             xsize: 3,$
+             title: 'Ymin:'}
 
-;Background ROI file
-d_vertical_L_L = 70
-NormBackgroundSelectionFileLabelSize = [3,Norm1DSelectionBackgroundLabelSize[0]+$
-                                        d_vertical_L_L]
-NormBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
-d_L_B_2 = 170
-NormBackgroundSelectionFileTextFieldSize = [NormBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
-                                            NormBackgroundSelectionFileLabelSize[1]-4,$
-                                            432,30]
-                                    
-;Peak Ymin and Ymax bases and cw_fields
-d_vertical_L_L = 60
-Norm1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
-Norm1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
-Norm1DSelectionPeakYminBaseSize = [Norm1DSelectionPeakLabelSize[0]+d_L_B,$
-                                   Norm1DSelectionPeakLabelSize[1]-7,$
-                                   BaseLengthYmin,BaseHeight]
-Norm1DSelectionPeakYminCWFieldSize  = Norm1DSelectionBackgroundYmaxCWFieldSize
-Norm1DSelectionPeakYminCWFieldTitle = 'Ymin:'
-;Ymax base and cw_field
-Norm1DSelectionPeakYmaxBaseSize = [Norm1DSelectionPeakYminBaseSize[0]+$
-                                   Norm1DSelectionPeakYminBasesize[2],$
-                                   Norm1DSelectionPeakYminBaseSize[1],$
-                                   BaseLengthYmax,BaseHeight]
-Norm1DSelectionPeakYmaxCWFieldSize = Norm1DSelectionPeakYminCWFieldSize
-Norm1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
+XYoff = [5,0] ;Ymax cw_field
+sRoiYmax = { size: [sRoiYmin.size[0]+sRoiYmin.size[2]+XYoff[0],$
+                    sRoiYmin.size[1]+XYoff[1],$
+                    sRoiYmin.size[2:3]],$
+             base_uname: 'Data1SelectionBackgroundYmaxBase',$
+             uname: 'data_d_selection_background_ymax_cw_field',$
+             xsize: 3,$
+             title: 'Ymax:'}
 
-;TAB #2 (Contrast Editor)
+XYoff = [10,10] ;OR label
+sOrLabel = {size: [sRoiYmax.size[0]+sRoiYmax.size[2]+XYoff[0],$
+                   sRoiYmax.size[1]+XYoff[1]],$
+            value: 'OR'}
+                  
+XYoff = [30,-5] ;LOAD button
+sLoadButton = {size: [sOrLabel.size[0]+XYoff[0],$
+                      sOrLabel.size[1]+XYoff[1],$
+                      380,$
+                      30],$
+               value: 'L O A D    R O I    F I L E',$
+               uname: 'data_roi_load_button'}
+
+XYoff = [3,48] ;ROI file Name label
+sRoiFileLabel = {size:   [sRoiYmin.size[0]+XYoff[0],$
+                          sRoiYmin.size[1]+XYoff[1]],$
+                 value:  'ROI file Name:'}
+                         
+XYoff = [90,-8] ;roi file text
+sRoiFileText = {size:     [sRoiFileLabel.size[0]+XYoff[0],$
+                           sRoiFileLabel.size[1]+XYoff[1],$
+                           350],$
+                uname:    'data_background_selection_file_text_field',$
+                sensitive: 0}
+
+XYoff = [2,0] ;SAVE button
+sSaveButton = {size:  [sRoiFileText.size[0]+sRoiFileText.size[2]+XYoff[0],$
+                       sRoiFileText.size[1]+XYoff[1],$
+                       140,sLoadButton.size[3]],$
+               value: 'SAVE ROI FILE',$
+               uname: 'data_roi_save_button'}
+               
+;TAB Peak/Back ---------------------------------------------------------------
+sPeakBackBase = sRoiBase
+
+XYoff = [0,0] ;Peak or Back cw_bgroup
+sPeakBackGroup = {size:  [XYoff[0],$
+                          XYoff[1]],$
+                  uname: 'peak_norm_back_group',$
+                  value: 0,$
+                  list:  ['Peak','Background']}
+
+XYoff = [0,28] ;PEAK base ----------------------------------------------------
+sPeakBase = {size: [XYoff[0],$
+                    XYoff[1],$
+                    585,65],$
+             frame: 0,$
+             uname: 'peak_norm_base_uname',$
+             map:   1}
+
+XYoff = [40,10] ;Ymin cw_field
+sPeakRoiYmin = { size:  [XYoff[0],$
+                         XYoff[1],$
+                         80,35],$
+                 base_uname: 'Norm1SelectionPeakYminBase',$
+                 uname: 'normalization_d_selection_peak_ymin_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymin:'}
+
+XYoff = [15,0] ;Ymax cw_field
+sPeakRoiYmax = { size:  [sPeakRoiYmin.size[0]+sPeakRoiYmin.size[2]+XYoff[0],$
+                         sPeakRoiYmin.size[1]+XYoff[1],$
+                         sPeakRoiYmin.size[2:3]],$
+                 base_uname: 'Norm1SelectionPeakYmaxBase',$
+                 uname: 'normalization_d_selection_peak_ymax_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymax:'}
+
+XYoff = [0,28] ;Back base -----------------------------------------------------
+sBackBase = {size: [XYoff[0],$
+                    XYoff[1],$
+                    585,65],$
+             frame: 0,$
+             uname: 'back_norm_base_uname',$
+             map:   0}
+
+XYoff = [0,0]                   ;Ymin cw_field
+sBackRoiYmin = { size: [XYoff[0],$
+                        XYoff[1],$
+                        80,35],$
+                 base_uname: 'refm_back_ymin_base',$
+                 uname: 'refm_back_norm_ymin_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymin:'}
+
+XYoff = [5,0]                   ;Ymax cw_field
+sBackRoiYmax = { size: [sBackRoiYmin.size[0]+sBackRoiYmin.size[2]+XYoff[0],$
+                        sBackRoiYmin.size[1]+XYoff[1],$
+                        sBackRoiYmin.size[2:3]],$
+                 base_uname: 'refm_back_ymax_base',$
+                 uname: 'refm_back_norm_ymax_cw_field',$
+                 xsize: 3,$
+                 title: 'Ymax:'}
+
+XYoff = [5,8]                 ;OR label
+sBackOrLabel = {size: [sBackRoiYmax.size[0]+sBackRoiYmax.size[2]+XYoff[0],$
+                       sBackRoiYmax.size[1]+XYoff[1]],$
+                value: 'OR'}
+
+XYoff = [25,-5]                 ;LOAD button
+sBackLoadButton = {size: [sBackOrLabel.size[0]+XYoff[0],$
+                          sBackOrLabel.size[1]+XYoff[1],$
+                          390,$
+                          30],$
+                   value: 'LOAD BACKGROUND SELECTION FILE',$
+                   uname: 'refm_back_norm_load_button'}
+
+XYoff = [3,43]                  ;ROI file Name label
+sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
+                              sBackRoiYmin.size[1]+XYoff[1]],$
+                     value:  'Back. File Name:'}
+
+XYoff = [100,-8]                 ;roi file text
+sBackRoiFileText = {size:     [sBackRoiFileLabel.size[0]+XYoff[0],$
+                               sBackRoiFileLabel.size[1]+XYoff[1],$
+                               350],$
+                    uname:    'refm_back_norm_file_text',$
+                    sensitive: 0}
+
+XYoff = [2,0]                   ;SAVE button
+sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
+                           sBackRoiFileText.size[2]+XYoff[0],$
+                           sBackRoiFileText.size[1]+XYoff[1],$
+                           130,sLoadButton.size[3]],$
+                   value: 'SAVE BACK. FILE',$
+                   uname: 'refm_back_norm_save_button'}
+
+;TAB Zoom ---------------------------------------------------------------------
+sZoomBase = sRoiBase
+
+;TAB #2 (Contrast Editor) -----------------------------------------------------
 ContrastDropListSize      = [5,13,200,30]
 
 ContrastBottomSliderSize  = [220,0,370,60]
@@ -184,206 +270,283 @@ ResetZScaleButtonTitle = 'RESET Z-AXIS'
 FullResetButtonSize = [515,5,85,128]
 FullResetButtonTitle= 'FULL RESET'
 
-;***********************************************************************************
+;******************************************************************************
 ;Build 1D tab
-;***********************************************************************************
-Load_Normalization_D_TAB_BASE = widget_base(D_DD_Tab,$
-                                            uname='load_normalization_d_tab_base',$
-                                            title=D_DD_TabTitle[0],$
-                                            xoffset=D_DD_TabSize[0],$
-                                            yoffset=D_DD_TabSize[1],$
-                                            scr_xsize=D_DD_TabSize[2],$
-                                            scr_ysize=D_DD_TabSize[3])
+;******************************************************************************
+Load_Normalization_D_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
+                                            UNAME     = $
+                                            'load_normalization_d_tab_base',$
+                                            TITLE     = D_DD_TabTitle[0],$
+                                            XOFFSET   = D_DD_TabSize[0],$
+                                            YOFFSET   = D_DD_TabSize[1],$
+                                            SCR_XSIZE = D_DD_TabSize[2],$
+                                            SCR_YSIZE = D_DD_TabSize[3])
 
-load_normalization_D_draw = widget_draw(load_normalization_D_tab_base,$
-                                        xoffset   = 0,$
-                                        yoffset   = 0,$
-                                        x_scroll_size = GlobalLoadGraphs[2]-20,$
-                                        y_scroll_size = GlobalLoadGraphs[3]-24,$
-                                        xsize     = GlobalLoadGraphs[2]-20,$
-                                        ysize     = GlobalLoadGraphs[3]-24,$
-                                        uname     = 'load_normalization_D_draw',$
-                                        retain    = 2,$
-                                        /scroll,$
-                                        /button_events,$
-                                        /motion_events)
+load_normalization_D_draw = WIDGET_DRAW(load_normalization_D_tab_base,$
+                                        XOFFSET       = 0,$
+                                        YOFFSET       = 0,$
+                                        X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
+                                        Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
+                                        XSIZE         = GlobalLoadGraphs[2]-20,$
+                                        YSIZE         = GlobalLoadGraphs[3]-24,$
+                                        UNAME         = $
+                                        'load_normalization_D_draw',$
+                                        RETAIN        = 2,$
+                                        /SCROLL,$
+                                        /BUTTON_EVENTS,$
+                                        /MOTION_EVENTS)
 
 ;create the back/peak and rescale tab
-BackPeakRescaleTab = widget_tab(load_normalization_D_tab_base,$
-                                uname='norm_back_peak_rescale_tab',$
-                                xoffset=BackPeakRescaleTabSize[0],$
-                                yoffset=BackPeakRescaleTabSize[1],$
-                                scr_xsize=BackPeakRescaleTabSize[2],$
-                                scr_ysize=BackPeakRescaleTabSize[3],$
-                                location=0)
+BackPeakRescaleTab = WIDGET_TAB(load_normalization_D_tab_base,$
+                                UNAME     = 'norm_back_peak_rescale_tab',$
+                                XOFFSET   = BackPeakRescaleTabSize[0],$
+                                YOFFSET   = BackPeakRescaleTabSize[1],$
+                                SCR_XSIZE = BackPeakRescaleTabSize[2],$
+                                SCR_YSIZE = BackPeakRescaleTabSize[3],$
+                                LOCATION  = 0)
+;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
+BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
+                            UNAME     = 'data_back_peak_base',$
+                            XOFFSET   = BackPeakBaseSize[0],$
+                            YOFFSET   = BackPeakBaseSize[1],$
+                            SCR_XSIZE = BackPeakBaseSize[2],$
+                            SCR_YSIZE = BackPeakBaseSize[3],$
+                            TITLE     = BackPeakBaseTitle)
 
-BackPeakBase = widget_base(BackPeakRescaleTab,$
-                           uname='norm_back_peak_base',$
-                           xoffset=BackPeakBaseSize[0],$
-                           yoffset=BackPeakBaseSize[1],$
-                           scr_xsize=BackPeakBaseSize[2],$
-                           scr_ysize=BackPeakBaseSize[3],$
-                           title=BackPeakBaseTitle)
+;TAB #1-1 (ROI) ***************************************************************
+wRoiTab = WIDGET_TAB(BackPeakBase,$
+                      UNAME     = sTab.uname,$
+                      XOFFSET   = sTab.size[0],$
+                      YOFFSET   = sTab.size[1],$
+                      SCR_XSIZE = sTab.size[2],$
+                      SCR_YSIZE = sTab.size[3],$
+                      FRAME     = 0)
 
-;create the widgets for the selection
-Norm1DselectionBase = widget_base(BackPeakBase,$
-                                  uname='normalization_1d_selection_base',$
-                                  xoffset=Norm1DSelectionBaseSize[0],$
-                                  yoffset=Norm1DSelectionBaseSize[1],$
-                                  scr_xsize=Norm1DSelectionBaseSize[2],$
-                                  scr_ysize=Norm1DSelectionBaseSize[3])
+;ROI base ====================================================================
+wRoiBase = WIDGET_BASE(wRoiTab,$
+                       XOFFSET   = sRoiBase.size[0],$
+                       YOFFSET   = sRoiBase.size[1],$
+                       SCR_XSIZE = sRoiBase.size[2],$
+                       SCR_YSIZE = sRoiBase.size[3],$
+                       TITLE     = sTab.list[0])
 
-Norm1DSelection = cw_bgroup(Norm1DSelectionBase,$
-                            Norm1DSelectionList,$
-                            /exclusive,$
-                            /RETURN_NAME,$
-                            XOFFSET=Norm1DSelectionSize[0],$
-                            YOFFSET=Norm1DSelectionSize[1],$
-                            SET_VALUE=0.0,$
-                            row=1,$
-                            UNAME='normalization_1d_selection')
+;Ymin
+wRoiYminBase = WIDGET_BASE(wRoiBase,$
+                           XOFFSET   = sRoiYmin.size[0],$
+                           YOFFSET   = sRoiYmin.size[1],$
+                           SCR_XSIZE = sRoiYmin.size[2],$
+                           SCR_YSIZE = sRoiYmin.size[3],$
+                           UNAME     = sRoiYmin.base_uname,$
+                           TITLE     = sTab.list[0])
 
-NormYminLabel = widget_label(Norm1DselectionBase,$
-                             uname='normalization_ymin_label_frame',$
-                             xoffset=NormYminLabelSize[0],$
-                             yoffset=NormYminLabelSize[1],$
-                             scr_xsize=NormYminLabelSize[2],$
-                             scr_ysize=NormYminLabelSize[3],$
-                             value=NormYminLabelTitle,$
-                             frame=2,$
-                             sensitive=0)
+wRoiYminField = CW_FIELD(wRoiYminBase,$
+                         XSIZE         = sRoiYmin.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sRoiYmin.uname,$
+                         TITLE         = sRoiYmin.title)
 
-NormYmaxLabel = widget_label(Norm1DSelectionBase,$
-                             uname='normalization_ymax_label_frame',$
-                             xoffset=NormYmaxLabelSize[0],$
-                             yoffset=NormYmaxLabelSize[1],$
-                             scr_xsize=NormYmaxLabelSize[2],$
-                             scr_ysize=NormYmaxLabelSize[3],$
-                             value=NormYmaxLabelTitle,$
-                             frame=2,$
-                             sensitive=0)
+;Ymax
+wRoiYmaxBase = WIDGET_BASE(wRoiBase,$
+                           XOFFSET   = sRoiYmax.size[0],$
+                           YOFFSET   = sRoiYmax.size[1],$
+                           SCR_XSIZE = sRoiYmax.size[2],$
+                           SCR_YSIZE = sRoiYmax.size[3],$
+                           UNAME     = sRoiYmax.base_uname,$
+                           TITLE     = sTab.list[0])
 
-;background selection
-Norm_1d_selection_background_label = $
-  widget_label(Norm1DSelectionBase,$
-               xoffset=Norm1DSelectionBackgroundLabelSize[0],$
-               yoffset=Norm1DSelectionBackgroundLabelSize[1],$
-               value=Norm1DSelectionBackgroundLabelTitle)
+wRoiYmaxField = CW_FIELD(wRoiYmaxBase,$
+                         XSIZE         = sRoiYmax.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sRoiYmax.uname,$
+                         TITLE         = sRoiYmax.title)
 
-Norm1DSelectionBackgroundYminBase = $
-  widget_base(Norm1DSelectionBase,$
-              xoffset=Norm1DSelectionBackgroundYminBaseSize[0],$
-              yoffset=Norm1DSelectionBackgroundYminBaseSize[1],$
-              scr_xsize=Norm1DSelectionBackgroundYminBaseSize[2],$
-              scr_ysize=Norm1DSelectionBackgroundYminBaseSize[3],$
-              uname='Norm1SelectionBackgroundYminBase')
+;OR label
+wOrLabel = WIDGET_LABEL(wRoiBase,$
+                        XOFFSET = sOrLabel.size[0],$
+                        YOFFSET = sOrLabel.size[1],$
+                        VALUE   = sOrLabel.value)
 
-Norm1DSelectionBackgroundYminCWField = $
-  CW_FIELD(Norm1DSelectionBackgroundYminBase,$
-           row=1,$
-           xsize=Norm1DSelectionBackgroundYminCWFieldSize[0],$
-           ysize=Norm1DSelectionBackgroundYminCWFieldSize[1],$
-           /integer,$
-           return_events=1,$
-           title=Norm1DSelectionBackgroundYminCWFieldTitle,$
-           uname='normalization_d_selection_background_ymin_cw_field')
+;LOAD ROI button
+wLoadButton = WIDGET_BUTTON(wRoiBase,$
+                            XOFFSET   = sLoadButton.size[0],$
+                            YOFFSET   = sLoadButton.size[1],$
+                            SCR_XSIZE = sLoadButton.size[2],$
+                            SCR_YSIZE = sLoadButton.size[3],$
+                            VALUE     = sLoadButton.value,$
+                            UNAME     = sLoadButton.uname)
 
-Norm1DSelectionBackgroundYmaxBase = $
-  widget_base(Norm1DSelectionBase,$
-              xoffset=Norm1DSelectionBackgroundYmaxBaseSize[0],$
-              yoffset=Norm1DSelectionBackgroundYmaxBaseSize[1],$
-              scr_xsize=Norm1DSelectionBackgroundYmaxBaseSize[2],$
-              scr_ysize=Norm1DSelectionBackgroundYmaxBaseSize[3],$
-              uname='Norm1SelectionBackgroundYmaxBase')
+;Roi file label
+wRoiFileLabel = WIDGET_LABEL(wRoiBase,$
+                             XOFFSET = sRoiFileLabel.size[0],$
+                             YOFFSET = sRoiFileLabel.size[1],$
+                             VALUE   = sRoiFileLabel.value)
 
-Norm1DSelectionBackgroundYmaxCWField = $
-  CW_FIELD(Norm1DSelectionBackgroundYmaxBase,$
-           row=1,$
-           xsize=Norm1DSelectionBackgroundYmaxCWFieldSize[0],$
-           ysize=Norm1DSelectionBackgroundYmaxCWFieldSize[1],$
-           /integer,$
-           return_events=1,$
-           title=Norm1DSelectionBackgroundYmaxCWFieldTitle,$
-           uname='normalization_d_selection_background_ymax_cw_field')
-
-SaveButton = widget_button(Norm1DSelectionBase,$,$
-                           xoffset=SaveButtonSize[0],$
-                           yoffset=SaveButtonSize[1],$
-                           scr_xsize=SaveButtonSize[2],$
-                           scr_ysize=SaveButtonSize[3],$
-                           value=SaveButtonTitle,$
-                           uname='normalization_roi_save_button',$
-                           sensitive=0)
+;ROI text file
+wRoiFileText = WIDGET_TEXT(wRoiBase,$
+                           XOFFSET   = sRoiFileText.size[0],$
+                           YOFFSET   = sRoiFileText.size[1],$
+                           SCR_XSIZE = sRoiFileText.size[2],$
+                           UNAME     = sRoiFileText.uname,$
+                           SENSITIVE = sRoiFileText.sensitive,$
+                           /ALIGN_LEFT,$
+                           /EDITABLE)
                            
-LoadButton = widget_button(Norm1DSelectionBase,$,$
-                           xoffset=LoadButtonSize[0],$
-                           yoffset=LoadButtonSize[1],$
-                           scr_xsize=LoadButtonSize[2],$
-                           scr_ysize=LoadButtonSize[3],$
-                           value=LoadButtonTitle,$
-                           uname='normalization_roi_load_button',$
-                           sensitive=0)
+;SAVE ROI button
+wSaveButton = WIDGET_BUTTON(wRoiBase,$
+                            XOFFSET   = sSaveButton.size[0],$
+                            YOFFSET   = sSaveButton.size[1],$
+                            SCR_XSIZE = sSaveButton.size[2],$
+                            SCR_YSIZE = sSaveButton.size[3],$
+                            VALUE     = sSaveButton.value,$
+                            UNAME     = sSaveButton.uname)
+
+;TAB #1-2 Peak/Back base =======================================================
+wPeakBackBase = WIDGET_BASE(wRoiTab,$
+                            XOFFSET   = sPeakBackBase.size[0],$
+                            YOFFSET   = sPeakBackBase.size[1],$
+                            SCR_XSIZE = sPeakBackBase.size[2],$
+                            SCR_YSIZE = sPeakBackBase.size[3],$
+                            TITLE     = sTab.list[1])
+
+;Peak/Background CW_BGROUP
+wPeakBackGroup = CW_BGROUP(wPeakBackBase,$
+                           sPeakBackGroup.list,$
+                           XOFFSET   = sPeakBackGroup.size[0],$
+                           YOFFSET   = sPeakBackGroup.size[1],$
+                           UNAME     = sPeakBackGroup.uname,$
+                           SET_VALUE = sPeakBackGroup.value,$
+                           ROW       = 1,$
+                           /EXCLUSIVE,$
+                           /RETURN_NAME,$
+                           /NO_RELEASE)
                            
-NormBackgroundSelectionFileLabel = $
-  widget_label(Norm1DSelectionBase,$
-               xoffset=NormBackgroundSelectionFileLabelSize[0],$
-               yoffset=NormBackgroundSelectionFileLabelSize[1],$ 
-               value=NormBackgroundSelectionFileLabelTitle)
+;PEAK base --------------------------------------------------------------------
+wPeakBase = WIDGET_BASE(wPeakBackBase,$
+                        XOFFSET   = sPeakBase.size[0],$
+                        YOFFSET   = sPeakBase.size[1],$
+                        SCR_XSIZE = sPeakBase.size[2],$
+                        SCR_YSIZE = sPeakBase.size[3],$
+                        UNAME     = sPeakBase.uname,$
+                        FRAME     = sPeakBase.frame,$
+                        MAP       = sPeakBase.map)
 
-NormBackgroundSelectionFileTextField = $
-  widget_Text(Norm1DSelectionBase,$
-              xoffset=NormBackgroundSelectionFileTextFieldSize[0],$
-              yoffset=NormBackgroundSelectionFileTextFieldSize[1],$
-              scr_xsize=NormBackgroundSelectionFileTextFieldSize[2],$
-              scr_ysize=NormBackgroundSelectionFileTextFieldSize[3],$
-              uname='normalization_background_selection_file_text_field',$
-              /align_left,$
-              /editable,$
-              sensitive=0)
+;Ymin
+wPeakRoiYminBase = WIDGET_BASE(wPeakBase,$
+                               XOFFSET   = sPeakRoiYmin.size[0],$
+                               YOFFSET   = sPeakRoiYmin.size[1],$
+                               SCR_XSIZE = sPeakRoiYmin.size[2],$
+                               SCR_YSIZE = sPeakRoiYmin.size[3],$
+                               UNAME     = sPeakRoiYmin.base_uname,$
+                               TITLE     = sTab.list[0])
 
-;Peak exclusion
-norm_1d_selection_peak_label = $
-  widget_label(Norm1DSelectionBase,$
-               xoffset=Norm1DSelectionPeakLabelSize[0],$
-               yoffset=Norm1DSelectionPeakLabelSize[1],$
-               value=Norm1DSelectionPeakLabelTitle)
+wPeakRoiYminField = CW_FIELD(wPeakRoiYminBase,$
+                             XSIZE         = sPeakRoiYmin.xsize,$
+                             RETURN_EVENTS = 1,$
+                             UNAME         = sPeakRoiYmin.uname,$
+                             TITLE         = sPeakRoiYmin.title)
 
-Norm1DSelectionPeakYminBase = $
-  widget_base(Norm1DSelectionBase,$
-              xoffset=Norm1DSelectionPeakYminBaseSize[0],$
-              yoffset=Norm1DSelectionPeakYminBaseSize[1],$
-              scr_xsize=Norm1DSelectionPeakYminBaseSize[2],$
-              scr_ysize=Norm1DSelectionPeakYminBaseSize[3],$
-              uname='Norm1SelectionPeakYminBase')
+;Ymax
+wPeakRoiYmaxBase = WIDGET_BASE(wPeakBase,$
+                               XOFFSET   = sPeakRoiYmax.size[0],$
+                               YOFFSET   = sPeakRoiYmax.size[1],$
+                               SCR_XSIZE = sPeakRoiYmax.size[2],$
+                               SCR_YSIZE = sPeakRoiYmax.size[3],$
+                               UNAME     = sPeakRoiYmax.base_uname,$
+                               TITLE     = sTab.list[0])
 
-Norm1DSelectionPeakYminCWField = $
-  CW_FIELD(Norm1DSelectionPeakYminBase,$
-           row=1,$
-           xsize=Norm1DSelectionPeakYminCWFieldSize[0],$
-           ysize=Norm1DSelectionPeakYminCWFieldSize[1],$
-           /integer,$
-           return_events=1,$
-           title=Norm1DSelectionPeakYminCWFieldTitle,$
-           uname='normalization_d_selection_peak_ymin_cw_field')
+wPeakRoiYmaxField = CW_FIELD(wPeakRoiYmaxBase,$
+                             XSIZE         = sPeakRoiYmax.xsize,$
+                             RETURN_EVENTS = 1,$
+                             UNAME         = sPeakRoiYmax.uname,$
+                             TITLE         = sPeakRoiYmax.title)
 
-Norm1DSelectionPeakYmaxBase = $
-  widget_base(Norm1DSelectionBase,$
-              xoffset=Norm1DSelectionPeakYmaxBaseSize[0],$
-              yoffset=Norm1DSelectionPeakYmaxBaseSize[1],$
-              scr_xsize=Norm1DSelectionPeakYmaxBaseSize[2],$
-              scr_ysize=Norm1DSelectionPeakYmaxBaseSize[3],$
-              uname='Norm1SelectionPeakYmaxBase')
+;BACK base --------------------------------------------------------------------
+wBackBase = WIDGET_BASE(wPeakBackBase,$
+                        XOFFSET   = sBackBase.size[0],$
+                        YOFFSET   = sBackBase.size[1],$
+                        SCR_XSIZE = sBackBase.size[2],$
+                        SCR_YSIZE = sBackBase.size[3],$
+                        UNAME     = sBackBase.uname,$
+                        FRAME     = sBackBase.frame,$
+                        MAP       = sBackBase.map)
 
-Norm1DSelectionPeakYmaxCWField = $
-  CW_FIELD(Norm1DSelectionPeakYmaxBase,$
-           row=1,$
-           xsize=Norm1DSelectionPeakYmaxCWFieldSize[0],$
-           ysize=Norm1DSelectionPeakYmaxCWFieldSize[1],$
-           /integer,$
-           return_events=1,$
-           title=Norm1DSelectionPeakYmaxCWFieldTitle,$
-           uname='normalization_d_selection_peak_ymax_cw_field')
+;Ymin
+wRoiYminBase = WIDGET_BASE(wBackBase,$
+                           XOFFSET   = sBackRoiYmin.size[0],$
+                           YOFFSET   = sBackRoiYmin.size[1],$
+                           SCR_XSIZE = sBackRoiYmin.size[2],$
+                           SCR_YSIZE = sBackRoiYmin.size[3],$
+                           UNAME     = sBackRoiYmin.base_uname,$
+                           TITLE     = sTab.list[0])
 
+wRoiYminField = CW_FIELD(wRoiYminBase,$
+                         XSIZE         = sBackRoiYmin.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sBackRoiYmin.uname,$
+                         TITLE         = sBackRoiYmin.title)
+
+;Ymax
+wRoiYmaxBase = WIDGET_BASE(wBackBase,$
+                           XOFFSET   = sBackRoiYmax.size[0],$
+                           YOFFSET   = sBackRoiYmax.size[1],$
+                           SCR_XSIZE = sBackRoiYmax.size[2],$
+                           SCR_YSIZE = sBackRoiYmax.size[3],$
+                           UNAME     = sBackRoiYmax.base_uname,$
+                           TITLE     = sTab.list[0])
+
+wRoiYmaxField = CW_FIELD(wRoiYmaxBase,$
+                         XSIZE         = sBackRoiYmax.xsize,$
+                         RETURN_EVENTS = 1,$
+                         UNAME         = sBackRoiYmax.uname,$
+                         TITLE         = sBackRoiYmax.title)
+
+;OR label
+wBackOrLabel = WIDGET_LABEL(wBackBase,$
+                            XOFFSET = sBackOrLabel.size[0],$
+                            YOFFSET = sBackOrLabel.size[1],$
+                            VALUE   = sbackOrLabel.value)
+
+;LOAD ROI button
+wLoadButton = WIDGET_BUTTON(wBackBase,$
+                            XOFFSET   = sBackLoadButton.size[0],$
+                            YOFFSET   = sBackLoadButton.size[1],$
+                            SCR_XSIZE = sBackLoadButton.size[2],$
+                            SCR_YSIZE = sBackLoadButton.size[3],$
+                            VALUE     = sBackLoadButton.value,$
+                            UNAME     = sBackLoadButton.uname)
+
+;Roi file label
+wRoiFileLabel = WIDGET_LABEL(wBackBase,$
+                             XOFFSET = sBackRoiFileLabel.size[0],$
+                             YOFFSET = sBackRoiFileLabel.size[1],$
+                             VALUE   = sBackRoiFileLabel.value)
+
+;ROI text file
+wRoiFileText = WIDGET_TEXT(wBackBase,$
+                           XOFFSET   = sBackRoiFileText.size[0],$
+                           YOFFSET   = sBackRoiFileText.size[1],$
+                           SCR_XSIZE = sBackRoiFileText.size[2],$
+                           UNAME     = sBackRoiFileText.uname,$
+                           SENSITIVE = sBackRoiFileText.sensitive,$
+                           /ALIGN_LEFT,$
+                           /EDITABLE)
+                           
+;SAVE ROI button
+wSaveButton = WIDGET_BUTTON(wBackBase,$
+                            XOFFSET   = sBackSaveButton.size[0],$
+                            YOFFSET   = sBackSaveButton.size[1],$
+                            SCR_XSIZE = sBackSaveButton.size[2],$
+                            SCR_YSIZE = sBackSaveButton.size[3],$
+                            VALUE     = sBackSaveButton.value,$
+                            UNAME     = sBackSaveButton.uname)
+
+;TAB #1-3 Zoom base ============================================================
+wZoomBase = WIDGET_BASE(wRoiTab,$
+                        XOFFSET   = sZoomBase.size[0],$
+                        YOFFSET   = sZoomBase.size[1],$
+                        SCR_XSIZE = sZoomBase.size[2],$
+                        SCR_YSIZE = sZoomBase.size[3],$
+                        TITLE     = sTab.list[2])
 
 ;Tab #2 (contrast base)
 ContrastBase = widget_base(BackPeakRescaleTab,$

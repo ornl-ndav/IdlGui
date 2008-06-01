@@ -79,22 +79,21 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
         if ((*global).DataNeXusFound) then BEGIN $
 ;only if there is a NeXus loaded
-
                                 ;put focus on DataHiddenWidgetText
-            Widget_control, (*global).DataHiddenWidgetTextId, /INPUT_FOCUS
-            
-            if( Event.type EQ 0 )then begin
-                if (Event.press EQ 1) then $
-                  REFreduction_DataSelectionPressLeft, Event ;left button
-                if (Event.press EQ 4) then $
-                  REFreduction_DataselectionPressRight, Event ;right button
-            endif
-            if (Event.type EQ 1) then $ ;release
+           Widget_control, (*global).DataHiddenWidgetTextId, /INPUT_FOCUS
+           
+           if( Event.type EQ 0 )then begin
+              if (Event.press EQ 1) then $
+                 REFreduction_DataSelectionPressLeft, Event ;left button
+              if (Event.press EQ 4) then $
+                 REFreduction_DataselectionPressRight, Event ;right button
+           endif
+           if (Event.type EQ 1) then $ ;release
               REFreduction_DataSelectionRelease, Event
-            if (Event.type EQ 2) then $ ;move
+           if (Event.type EQ 2) then $ ;move
               REFreduction_DataSelectionMove, Event
         endif
-    end
+     end
     
 ;hidden data widget_text
     widget_info(wWidget, $
@@ -154,8 +153,8 @@ CASE Event.id OF
     end
 
 ;Peak/Background tab (peak/background cw_bgroup)
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_back_group'): BEGIN
-       SwitchPeakBackgroundBase, Event ;_GUI
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
+       SwitchPeakBackgroundDataBase, Event ;_GUI
     END
 
 ;CONTRAST TAB
@@ -536,6 +535,11 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='normalization_roi_load_button'): begin
         REFreduction_LoadNormBackgroundSelection, Event
     end
+
+;Peak/Background tab (peak/background cw_bgroup)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
+       SwitchPeakBackgroundNormBase, Event ;_GUI
+    END
 
 ;CONTRAST TAB
 ;Contrast editor of data 1D tab
