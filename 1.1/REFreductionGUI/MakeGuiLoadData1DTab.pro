@@ -25,7 +25,9 @@ RescaleBaseTitle       = '   Range Displayed   '
 ;------------------------------------------------------------------------------
 
 sTab = { size:  [5,5,D_DD_TabSize[2]-35,120],$
-         list:  ['Region Of Interest (ROI)','Peak / Background'],$
+         list:  ['Region Of Interest (ROI)',$
+                 'Peak / Background',$
+                 'ZOOM mode'],$
          uname: 'roi_peak_background_tab'}
 
 ;;TAB ROI ---------------------------------------------------------------------
@@ -176,125 +178,8 @@ sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
                    value: 'SAVE BACK. FILE',$
                    uname: 'refm_back_data_save_button'}
 
-
-; Data1DSelection = cw_bgroup(Data1DSelectionBase,$
-;                             Data1DSelectionList,$
-;                             /exclusive,$
-;                             /RETURN_NAME,$
-;                             XOFFSET=Data1DSelectionSize[0],$
-;                             YOFFSET=Data1DSelectionSize[1],$
-;                             SET_VALUE=0.0,$
-;                             row=1,$
-;                             UNAME='data_1d_selection')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['ROI  ',$
-                          'Peak   ',$
-                          'ZOOM mode  ']
-Data1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
-Data1DSelectionSize     = [5, 0]
-
-;Y_min and Y_max labels
-dataYminLabelSize  = [385,0,100,25]
-dataYminLabelTitle = '  Ymin  '
-dataYmaxLabelSize  = [dataYminLabelSize[0]+109,$
-                      0,$
-                      dataYminLabelSize[2],$
-                      dataYminLabelSize[3]]
-dataYmaxLabelTitle = '  Ymax  '
- 
-d_L_B= 170
-BaseLengthYmin = 90
-BaseLengthYmax = 120
-BaseHeight = 35
-;Background Ymin and Ymax bases and cw_fields
-;Ymin base and cw_field
-Data1DSelectionBackgroundLabelSize    = [3,40]
-Data1DSelectionBackgroundLabelTitle   = 'Background Range ......... ' 
-Data1DSelectionBackgroundYminBaseSize = $
-  [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
-   Data1DSelectionBackgroundLabelSize[1]-7,$
-   BaseLengthYmin,BaseHeight]
-Data1DSelectionBackgroundYminCWFieldSize  = [5,25]
-Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
-;Ymax base and cw_field
-Data1DSelectionBackgroundYmaxBaseSize = $
-  [Data1DSelectionBackgroundYminBaseSize[0]+$
-   Data1DSelectionBackgroundYminBasesize[2],$
-   Data1DSelectionBackgroundYminBaseSize[1],$
-   BaseLengthYmax-4,BaseHeight]
-Data1DSelectionBackgroundYmaxCWFieldSize  = $
-  Data1DSelectionBackgroundYminCWFieldSize
-Data1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
-
-;SAVE and LOAD buttons
-SaveLoadButtonSize  = [110,30]
-SaveButtonSize      = [381,Data1DselectionBackgroundYmaxBaseSize[1]+3,$
-                       SaveLoadButtonSize[0],$
-                       SaveLoadButtonSize[1]]
-SaveButtonTitle     = 'S A V E'  
-LoadButtonSize      = [SaveButtonSize[0]+SaveLoadButtonSize[0],$
-                       SaveButtonSize[1],$
-                       SaveLoadButtonSize[0],$
-                       SaveLoadButtonSize[1]]
-LoadButtonTitle     = 'L O A D'
-
-;Background ROI file
-d_vertical_L_L = 70
-DataBackgroundSelectionFileLabelSize  = $
-  [3,Data1DSelectionBackgroundLabelSize[0]+$
-   d_vertical_L_L]
-DataBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
-d_L_B_2 = 170
-DataBackgroundSelectionFileTextFieldSize = $
-  [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
-   DataBackgroundSelectionFileLabelSize[1]-4,$
-   432,30]
-
-;Peak Ymin and Ymax bases and cw_fields
-d_vertical_L_L = 58
-Data1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
-Data1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
-Data1DSelectionPeakYminBaseSize = [Data1DSelectionPeakLabelSize[0]+d_L_B,$
-                                   Data1DSelectionPeakLabelSize[1]-7,$
-                                   BaseLengthYmin,BaseHeight]
-Data1DSelectionPeakYminCWFieldSize  = Data1DSelectionBackgroundYmaxCWFieldSize
-Data1DSelectionPeakYminCWFieldTitle = 'Ymin:'
-
-;Ymax base and cw_field
-Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
-                                   Data1DSelectionPeakYminBasesize[2],$
-                                   Data1DSelectionPeakYminBaseSize[1],$
-                                   BaseLengthYmax,BaseHeight]
-Data1DSelectionPeakYmaxCWFieldSize  = Data1DSelectionPeakYminCWFieldSize
-Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
-
-;Save Pixel vs TOF (using uncombined format)
-x1 = 120
-Data1DPixelTOFOutputButtonSize = [Data1DSelectionPeakYmaxBaseSize[0]+x1,$
-                                  Data1DSelectionPeakYmaxBaseSize[1]+3,$
-                                  220,30]
-Data1DPixelTOFOutputButtonTitle = 'Output Pixel vs TOF ASCII file'
+;TAB Zoom ---------------------------------------------------------------------
+sZoomBase = sRoiBase
 
 ;------------------------------------------------------------------------------
 ;-TAB #2 (Contrast Editor) ----------------------------------------------------
@@ -504,7 +389,7 @@ wSaveButton = WIDGET_BUTTON(wRoiBase,$
                             VALUE     = sSaveButton.value,$
                             UNAME     = sSaveButton.uname)
 
-;Peak/Back base ===============================================================
+;TAB #1-2 Peak/Back base =======================================================
 wPeakBackBase = WIDGET_BASE(wRoiTab,$
                             XOFFSET   = sPeakBackBase.size[0],$
                             YOFFSET   = sPeakBackBase.size[1],$
@@ -644,169 +529,15 @@ wSaveButton = WIDGET_BUTTON(wBackBase,$
                             VALUE     = sBackSaveButton.value,$
                             UNAME     = sBackSaveButton.uname)
 
+;TAB #1-3 Zoom base ============================================================
+wZoomBase = WIDGET_BASE(wRoiTab,$
+                        XOFFSET   = sZoomBase.size[0],$
+                        YOFFSET   = sZoomBase.size[1],$
+                        SCR_XSIZE = sZoomBase.size[2],$
+                        SCR_YSIZE = sZoomBase.size[3],$
+                        TITLE     = sTab.list[2])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-; DataBackgroundSelectionFileTextField = $
-;   widget_Text(Data1DSelectionBase,$
-;               xoffset=DataBackgroundSelectionFileTextFieldSize[0],$
-;               yoffset=DataBackgroundSelectionFileTextFieldSize[1],$
-;               scr_xsize=DataBackgroundSelectionFileTextFieldSize[2],$
-;               scr_ysize=DataBackgroundSelectionFileTextFieldSize[3],$
-;               uname=
-;               /align_left,$
-;               /editable,$
-;               sensitive=0)
-
-
-
-;  Data1DSelectionBackgroundYmaxBase = $
-;    widget_base(Data1DSelectionBase,$
-;                xoffset=Data1DSelectionBackgroundYmaxBaseSize[0],$
-;                yoffset=Data1DSelectionBackgroundYmaxBaseSize[1],$
-;                scr_xsize=Data1DSelectionBackgroundYmaxBaseSize[2],$
-;                scr_ysize=Data1DSelectionBackgroundYmaxBaseSize[3],$
-;                uname='Data1SelectionBackgroundYmaxBase')
-
-;  Data1DSelectionBackgroundYmaxCWField = $
-;    CW_FIELD(Data1DSelectionBackgroundYmaxBase,$
-;             row=1,$
-;             xsize=Data1DSelectionBackgroundYmaxCWFieldSize[0],$
-;             ysize=Data1DSelectionBackgroundYmaxCWFieldSize[1],$
-;             /integer,$
-;             return_events=1,$
-;             title=Data1DSelectionBackgroundYmaxCWFieldTitle,$
-;             uname='data_d_selection_background_ymax_cw_field')
-
-
-
-
-
-
-; ;create the widgets for the selection
-; Data1DselectionBase = widget_base(BackPeakBase,$
-;                                   uname='data_1d_selection_base',$
-;                                   xoffset=Data1DSelectionBaseSize[0],$
-;                                   yoffset=Data1DSelectionBaseSize[1],$
-;                                   scr_xsize=Data1DSelectionBaseSize[2],$
-;                                   scr_ysize=Data1DSelectionBaseSize[3])
-
-; Data1DSelection = cw_bgroup(Data1DSelectionBase,$
-;                             Data1DSelectionList,$
-;                             /exclusive,$
-;                             /RETURN_NAME,$
-;                             XOFFSET=Data1DSelectionSize[0],$
-;                             YOFFSET=Data1DSelectionSize[1],$
-;                             SET_VALUE=0.0,$
-;                             row=1,$
-;                             UNAME='data_1d_selection')
-
-; dataYminLabel = widget_label(Data1DselectionBase,$
-;                              uname='data_ymin_label_frame',$
-;                              xoffset=dataYminLabelSize[0],$
-;                              yoffset=dataYminLabelSize[1],$
-;                              scr_xsize=dataYminLabelSize[2],$
-;                              scr_ysize=dataYminLabelSize[3],$
-;                              value=dataYminLabelTitle,$
-;                              frame=2,$
-;                              sensitive=0)
-
-; dataYmaxLabel = widget_label(Data1DSelectionBase,$
-;                              uname='data_ymax_label_frame',$
-;                              xoffset=dataYmaxLabelSize[0],$
-;                              yoffset=dataYmaxLabelSize[1],$
-;                              scr_xsize=dataYmaxLabelSize[2],$
-;                              scr_ysize=dataYmaxLabelSize[3],$
-;                              value=dataYmaxLabelTitle,$
-;                              frame=2,$
-;                              sensitive=0)
-
-
-
-; SaveButton = widget_button(Data1DSelectionBase,$,$
-;                            xoffset=SaveButtonSize[0],$
-;                            yoffset=SaveButtonSize[1],$
-;                            scr_xsize=SaveButtonSize[2],$
-;                            scr_ysize=SaveButtonSize[3],$
-;                            value=SaveButtonTitle,$
-;                            uname=
-;                            sensitive=0)
-                           
-; LoadButton = widget_button(Data1DSelectionBase,$,$
-;                            xoffset=LoadButtonSize[0],$
-;                            yoffset=LoadButtonSize[1],$
-;                            scr_xsize=LoadButtonSize[2],$
-;                            scr_ysize=LoadButtonSize[3],$
-;                            value=LoadButtonTitle,$
-;                            uname=
-;                            sensitive=0)
-                           
-; DataBackgroundSelectionFileLabel = $
-;   widget_label(Data1DSelectionBase,$
-;                xoffset=DataBackgroundSelectionFileLabelSize[0],$
-;                yoffset=DataBackgroundSelectionFileLabelSize[1],$ 
-;                value=DataBackgroundSelectionFileLabelTitle)
-
-
-; ;Peak exclusion
-; Data_1d_selection_peak_label = $
-;   widget_label(Data1DSelectionBase,$
-;                xoffset=Data1DSelectionPeakLabelSize[0],$
-;                yoffset=Data1DSelectionPeakLabelSize[1],$
-;                value=Data1DSelectionPeakLabelTitle)
-
-; Data1DSelectionPeakYminBase = $
-;   widget_base(Data1DSelectionBase,$
-;               xoffset=Data1DSelectionPeakYminBaseSize[0],$
-;               yoffset=Data1DSelectionPeakYminBaseSize[1],$
-;               scr_xsize=Data1DSelectionPeakYminBaseSize[2],$
-;               scr_ysize=Data1DSelectionPeakYminBaseSize[3],$
-;               uname='Data1SelectionPeakYminBase')
-
-; Data1DSelectionPeakYminCWField = $
-;   CW_FIELD(Data1DSelectionPeakYminBase,$
-;            row=1,$
-;            xsize=Data1DSelectionPeakYminCWFieldSize[0],$
-;            ysize=Data1DSelectionPeakYminCWFieldSize[1],$
-;            /integer,$
-;            return_events=1,$
-;            title=Data1DSelectionPeakYminCWFieldTitle,$
-;            uname='data_d_selection_peak_ymin_cw_field')
-
-; Data1DSelectionPeakYmaxBase = $
-;   widget_base(Data1DSelectionBase,$
-;               xoffset=Data1DSelectionPeakYmaxBaseSize[0],$
-;               yoffset=Data1DSelectionPeakYmaxBaseSize[1],$
-;               scr_xsize=Data1DSelectionPeakYmaxBaseSize[2],$
-;               scr_ysize=Data1DSelectionPeakYmaxBaseSize[3],$
-;               uname='Data1SelectionPeakYmaxBase')
-
-; Data1DSelectionPeakYmaxCWField = $
-;   CW_FIELD(Data1DSelectionPeakYmaxBase,$
-;            row=1,$
-;            xsize=Data1DSelectionPeakYmaxCWFieldSize[0],$
-;            ysize=Data1DSelectionPeakYmaxCWFieldSize[1],$
-;            /integer,$
-;            return_events=1,$
-;            title=Data1DSelectionPeakYmaxCWFieldTitle,$
-;            uname='data_d_selection_peak_ymax_cw_field')
-
-;Tab #2 (contrast base)
+;Tab #2 (contrast base) --------------------------------------------------------
 ContrastBase = widget_base(BackPeakRescaleTab,$
                           uname='data_contrast_base',$
                           xoffset=ContrastBaseSize[0],$
