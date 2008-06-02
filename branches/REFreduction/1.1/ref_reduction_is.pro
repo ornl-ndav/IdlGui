@@ -60,11 +60,16 @@ END
 
 ;------------------------------------------------------------------------------
 Function isDataYminSelected, Event
-id = widget_info(Event.top,find_by_uname='data_ymin_label_frame')
-return, widget_info(id,/sensitive)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_ymin_ymax_label')
+WIDGET_CONTROL, id, GET_VALUE = value
+IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
 END
 
-
+;------------------------------------------------------------------------------
 Function isNormBackPeakZoomSelected, Event
 id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
 widget_control, id, get_value=SelectionStatus

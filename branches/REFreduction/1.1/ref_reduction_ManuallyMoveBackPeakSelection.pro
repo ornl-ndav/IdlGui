@@ -53,7 +53,6 @@ REFreduction_ManuallyMoveNormBackPeak, Event, -coefficient
 END
 
 
-
 ;############# D A T A #########################################
 PRO REFreduction_ManuallyMoveDataBackPeak, Event, coefficient
 ;get global structure
@@ -62,95 +61,125 @@ widget_control,id,get_uvalue=global
 
 MiniVersion = (*global).miniVersion ;1 for miniVersion, 0 for normal version
 
-if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
+IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
     
 ;check what we need to move
 
-;Back or Peak
-    BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
-    CASE (BackSignalZoomStatus) OF
-        0: begin                ;back
-            type = 'back_'
-        end
-        1: begin                ;signal
+;ROI, peak or back
+    ROISignalBackZoomStatus = isDataBackPeakZoomSelected(Event)
+    CASE (ROISignalBackZoomStatus) OF
+        0: BEGIN                ;back or ROI
+            type = 'roi_'
+        END
+        1: BEGIN                ;signal
             type = 'peak_'
-        end
-        2: begin                ;zoom
+        END
+        2: BEGIN                ;back
+            type = 'back_'
+        END
+        3: BEGIN                ;zoom
             type = 'zoom'
-        end
-        ELSE:
+        END
     ENDCASE
     
 ;Ymin or Ymax
     YminStatus = isDataYminSelected(Event)
     CASE (YminStatus) OF
-        0: begin
+        0: BEGIN
             type += 'ymax'
-        end
-        1: begin
+        END
+        1: BEGIN
             type += 'ymin'
-        end
-    else:
+        END
+    ELSE:
     ENDCASE
     
-;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event,'data_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event,'data_d_selection_background_ymax_cw_field')
-
-    if (BackYmin EQ '') then begin
-        BackYmin = -1
-    endif else begin
+;get ROI Ymin, Ymax
+    ROIYmin = getTextFieldValue(Event,'data_d_selection_roi_ymin_cw_field')
+    ROIYmax = getTextFieldValue(Event,'data_d_selection_roi_ymax_cw_field')
+    IF (RoiYmin EQ '') THEN BEGIN
+        RoiYmin = -1
+    ENDIF ELSE BEGIN
         IF (MiniVersion EQ 0) THEN BEGIN
-            BackYmin *= 2
+            RoiYmin *= 2
         ENDIF
-    endelse
-    if (BackYmax EQ '') then begin
-        BackYmax = -1
-    endif else begin
+    ENDELSE
+    IF (RoiYmax EQ '') THEN BEGIN
+        RoiYmax = -1
+    ENDIF ELSE BEGIN
         IF (MiniVersion EQ 0) THEN BEGIN
-            BackYmax *= 2
+            RoiYmax *= 2
         ENDIF
-    endelse
+    ENDELSE
 
 ;get Peak Ymin, Ymax
     PeakYmin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
     PeakYmax = getTextfieldValue(Event,'data_d_selection_peak_ymax_cw_field')
-    
-    if (PeakYmin EQ '') then begin
+    IF (PeakYmin EQ '') THEN BEGIN
         PeakYmin = -1
-    endif else begin
+    ENDIF ELSE BEGIN
         IF (MiniVersion EQ 0) THEN BEGIN
             PeakYmin *= 2
         ENDIF
-    endelse
-
-    if (PeakYmax EQ '') then begin
+    ENDELSE
+    IF (PeakYmax EQ '') THEN BEGIN
         PeakYmax = -1
-    endif else begin
+    ENDIF ELSE BEGIN
         IF (MiniVersion EQ 0) THEN BEGIN
             PeakYmax *= 2
         ENDIF
-    endelse
+    ENDELSE
+
+;get Background Ymin, Ymax
+    BackYmin = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymin_cw_field')
+    BackYmax = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymax_cw_field')
+    IF (BackYmin EQ '') THEN BEGIN
+        BackYmin = -1
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmin *= 2
+        ENDIF
+    ENDELSE
+    IF (BackYmax EQ '') THEN BEGIN
+        BackYmax = -1
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmax *= 2
+        ENDIF
+    ENDELSE
 
     CASE (TYPE) OF
-        'back_ymin' : begin
+        'roi_ymin' : BEGIN
+            DataYMouseSelection = RoiYmin
+            RoiYmin += coefficient
+        END
+        'roi_ymax' : BEGIN
+            DataYMouseSelection = RoiYmax
+            RoiYmax += coefficient
+        END
+        'back_ymin' : BEGIN
             DataYMouseSelection = BackYmin
             BackYmin += coefficient
-        end
-        'back_ymax' : begin
+        END
+        'back_ymax' : BEGIN
             DataYMouseSelection = BackYmax
             BackYmax += coefficient
-        end
-        'peak_ymin' : begin
+        END
+        'peak_ymin' : BEGIN
             DataYMouseSelection = PeakYmin
             PeakYmin += coefficient
-        end
-        'peak_ymax' : begin
+        END
+        'peak_ymax' : BEGIN
             DataYMouseSelection = PeakYmax
             PeakYmax += coefficient
-        end
-        else        : DataYMouseSelection = 0
+        END
+        ELSE        : DataYMouseSelection = 0
     ENDCASE
+
+    ROISelection = [ROIYmin,ROIYmax]
+    (*(*global).data_roi_selection) = ROISelection
 
     BackSelection = [BackYmin,BackYmax]
     (*(*global).data_back_selection) = BackSelection
@@ -158,25 +187,24 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).data_peak_selection) = PeakSelection
 
+;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
-
-    ReplotDataBackPeakSelection, Event, BackSelection, PeakSelection
+;replot selection selected
+    RePlot1DDataFile, Event
+    ReplotAllSelection, Event
 
 ;display zoom if zomm tab is selected
-    if (isDataZoomTabSelected(Event)) then begin
-
+    IF (isDataZoomTabSelected(Event)) THEN BEGIN
         DataXMouseSelection = (*global).DataXMouseSelection
-        
         RefReduction_zoom, $
           Event, $
-          MouseX=DataXMouseSelection, $
-          MouseY=DataYMouseSelection, $
-          fact=(*global).DataZoomFactor,$
-          uname='data_zoom_draw'
-
-    endif
+          MouseX = DataXMouseSelection, $
+          MouseY = DataYMouseSelection, $
+          fact   = (*global).DataZoomFactor,$
+          uname  = 'data_zoom_draw'
+    ENDIF
     
-endif
+ENDIF
 
 END
 
