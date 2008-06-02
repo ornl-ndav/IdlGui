@@ -36,17 +36,17 @@
 
 pro RefReduction_zoom, $
                        Event,$
-                       MouseX=MouseX,$
-                       MouseY=MouseY,$
-                       xsize=xs, $
-                       ysize=ys, $
-                       fact = fact, $
-                       interp = interp, $
-                       continuous = cont, $
-                       keep=keep, $
-                       zoom_window=zoom_win, $
-                       new_window=new_win,$
-                       uname=uname
+                       MouseX      = MouseX,$
+                       MouseY      = MouseY,$
+                       xsize       = xs, $
+                       ysize       = ys, $
+                       fact        = fact, $
+                       interp      = interp, $
+                       continuous  = cont, $
+                       keep        = keep, $
+                       zoom_window = zoom_win, $
+                       new_window  = new_win,$
+                       uname       = uname
 ;+
 ; NAME:
 ;	ZOOM
