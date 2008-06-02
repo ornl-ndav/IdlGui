@@ -152,25 +152,25 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     
 ;update Back and Peak Ymin and Ymax cw_fields of Data
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
-    
+
 ENDIF ELSE BEGIN                ;Zoom selected
     
     ;validate zoom display
-    SetTabCurrent, $
-      Event, $
-      'data_nxsummary_zoom_tab', $
-      1
+     SetTabCurrent, $
+       Event, $
+       'data_nxsummary_zoom_tab', $
+       1
     
-    RefReduction_zoom, $
-      Event, $
-      MouseX=event.x, $
-      MouseY=event.y, $
-      fact=(*global).DataZoomFactor,$
-      uname='data_zoom_draw'
-    
-    (*global).select_zoom_status = 1
-    
+     RefReduction_zoom, $
+       Event, $
+       MouseX=event.x, $
+       MouseY=event.y, $
+       fact=(*global).DataZoomFactor,$
+       uname='data_zoom_draw'
+ 
 ENDELSE
+
+(*global).select_zoom_status = 1
 
 END
 
@@ -281,6 +281,10 @@ END
 
 
 
+
+
+
+
 ;this function is reached when the mouse moved into the widget_draw
 PRO REFreduction_DataSelectionMove, event
 
@@ -371,20 +375,22 @@ IF (ROISignalBackZoomStatus NE 3) then begin
 
 ENDIF ELSE BEGIN                ;Zoom selected
     
-    ;validate zoom display
-    SetTabCurrent, $
-      Event, $
-      'data_nxsummary_zoom_tab', $
-      1
-    
-    RefReduction_zoom, $
-      Event, $
-      MouseX=event.x, $
-      MouseY=event.y, $
-      fact=(*global).DataZoomFactor,$
-      uname='data_zoom_draw'
-    
-    (*global).select_zoom_status = 1
+    IF ((*global).select_zoom_status) THEN BEGIN
+        
+;      validate zoom display
+        SetTabCurrent, $
+          Event, $
+          'data_nxsummary_zoom_tab', $
+          1
+        
+        RefReduction_zoom, $
+          Event, $
+          MouseX=event.x, $
+          MouseY=event.y, $
+          fact=(*global).DataZoomFactor,$
+          uname='data_zoom_draw'
+        
+    ENDIF
     
 ENDELSE
 
@@ -417,12 +423,14 @@ CASE (ROISignalBackZoomStatus) OF
     END
 ENDCASE
 
+mouse_status_new = (*global).select_data_status
+mouse_status     = mouse_status_new
+
 IF (ROISignalBackZoomStatus NE 3) then begin
 
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_DATA-1
     
-    mouse_status = (*global).select_data_status
 ;print, 'Release mouse_status: ' + strcompress(mouse_status)
     CASE (mouse_status) OF
         0:mouse_status_new = mouse_status
@@ -444,7 +452,7 @@ IF (ROISignalBackZoomStatus NE 3) then begin
             
             y_array = [y,y2]
         END
-        2:mouse_status_new = mouse_status
+        2: mouse_status_new = mouse_status
         3: mouse_status_new = mouse_status
         4: Begin
             RePlot1DDataFile, Event
@@ -463,11 +471,11 @@ IF (ROISignalBackZoomStatus NE 3) then begin
             mouse_status_new = 5
         END
         5:mouse_status_new = mouse_status
-    endcase
+    ENDCASE
+
+    (*global).select_zoom_status = 0
 
 ENDIF
-    
-
 
 CASE (ROISignalBackZoomStatus) OF
     0: BEGIN                    ;ROI
@@ -527,21 +535,21 @@ CASE (ROISignalBackZoomStatus) OF
 ;             PLOTS, xsize_1d_draw, y_array[1], /DEVICE, /CONTINUE, COLOR=color
 ;         ENDIF
     END
-    3: BEGIN zoom
-        RefReduction_zoom, $
-          Event, $
-          MouseX=event.x, $
-          MouseY=event.y, $
-          fact=(*global).DataZoomFactor,$
-          uname='data_zoom_draw'
-        (*global).select_zoom_status = 0
+    3: BEGIN
+        IF ((*global).select_zoom_status) THEN BEGIN
+            RefReduction_zoom, $
+              Event, $
+              MouseX=event.x, $
+              MouseY=event.y, $
+              fact=(*global).DataZoomFactor,$
+              uname='data_zoom_draw'
+            (*global).select_zoom_status = 0
+        ENDIF
     END
 ENDCASE
 
 ReplotOtherSelection, Event, ROIsignalBackZoomStatus
-
 (*global).select_data_status = mouse_status_new
-
 ;update Back and Peak Ymin and Ymax cw_fields
 putDataBackgroundPeakYMinMaxValueInTextFields, Event
 
@@ -582,16 +590,18 @@ CASE (ROISignalBackZoomStatus) OF
         replot_peak = 0
         replot_back = 0
     END
-    3: BEGIN                    ;display zoom if zomm tab is selected
+    3: BEGIN                    ;display zoom if zoom tab is selected
         replot_roi  = 0
         replot_peak = 0
         replot_back = 0
-        RefReduction_zoom, $
-          Event, $
-          MouseX=event.x, $
-          MouseY=event.y, $
-          fact=(*global).DataZoomFactor,$
-          uname ='data_zoom_draw'
+        IF ((*global).select_zoom_status) THEN BEGIN
+            RefReduction_zoom, $
+              Event, $
+              MouseX=event.x, $
+              MouseY=event.y, $
+              fact=(*global).DataZoomFactor,$
+              uname ='data_zoom_draw'
+        ENDIF
     END
 ENDCASE
 
@@ -652,6 +662,18 @@ IF (replot_back) THEN BEGIN
     ENDIF
 ENDIF
 
+;plot zoom if zoom tab is selected
+IF (isDataZoomTabSelected(Event) AND $
+    ROISignalBackZoomStatus NE 3 AND $
+    (*global).select_zoom_status) THEN BEGIN
+    RefReduction_zoom, $
+      Event, $
+      MouseX = event.x, $
+      MouseY = event.y, $
+      fact   = (*global).DataZoomFactor,$
+      uname  = 'data_zoom_draw'
+ENDIF
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -719,5 +741,18 @@ ENDIF ELSE BEGIN
           COLOR=color
     ENDIF
 ENDELSE
+
+ROISignalBackZoomStatus = isDataBackPeakZoomSelected(Event)
+;plot zoom if zoom tab is selected
+IF (isDataZoomTabSelected(Event) AND $
+    ROIsignalBackZoomStatus NE 3 AND $
+    (*global).select_zoom_status) THEN BEGIN
+    RefReduction_zoom, $
+      Event, $
+      MouseX = event.x, $
+      MouseY = event.y, $
+      fact   = (*global).DataZoomFactor,$
+      uname  = 'data_zoom_draw'
+ENDIF
 
 END
