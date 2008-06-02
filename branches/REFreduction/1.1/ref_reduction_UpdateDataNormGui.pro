@@ -36,29 +36,7 @@
 ;if no NeXus has been found
 PRO updateDataWidget, Event, isNeXusFound
 ActivateWidget, Event, 'data_back_peak_rescale_tab', isNeXusFound
-; ActivateWidget, Event, 'data_1d_selection', isNeXusFound
-; ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', $
-;   isNeXusFound
-; ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', isNeXusFound
-; ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', $
-;   isNeXusFound
-; ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', isNeXusFound
-; ActivateWidget, Event, 'data_roi_load_button', isNeXusFound
-; ActivateWidget, Event, 'data_contrast_droplist', isNeXusFound
-; ActivateWidget, Event, 'data_contrast_bottom_slider', isNeXusFound
-; ActivateWidget, Event, 'data_contrast_number_slider', isNeXusFound
-; ActivateWidget, Event, 'data_reset_contrast_button', isNeXusFound
-; ActivateWidget, Event, 'data_reset_xaxis_button', isNeXusFound
-; ActivateWidget, Event, 'data_reset_yaxis_button', isNeXusFound
-; ActivateWidget, Event, 'data_reset_zaxis_button', isNeXusFound
-; ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
-; ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
-; ActivateWidget, Event, 'data1d_rescale_tab1_base', isNeXusFound
-; ActivateWidget, Event, 'data1d_rescale_tab2_base', isNeXusFound
-; ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
-; ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
 END
-
 
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
@@ -85,8 +63,6 @@ ActivateWidget, Event, 'normalization2d_rescale_tab1_base', isNeXusFound
 ActivateWidget, Event, 'normalization2d_rescale_tab2_base', isNeXusFound
 END
 
-
-
 ;this function will clear the text field if no nexus has been found
 PRO updateDataTextFields, Event, isNeXusFound
 if (isNeXusFound) then begin ;NeXus has been found
@@ -95,7 +71,6 @@ endif else begin ;Nexus not found
     putTextFieldValue, event, 'DATA_left_interaction_help_text','',0
 endelse
 END
-
 
 ;this function will clear the text field if no nexus has been found
 PRO updateNormTextFields, Event, isNeXusFound
@@ -106,11 +81,9 @@ endif else begin ;Nexus not found
 endelse
 END
 
-
 ;This function will clear the 1D and 2D Data draw if no NeXus found
 PRO clearOffDatadisplay, Event, isNeXusFound
 if (~isNexusFound) then begin   ;NeXus not found
-    
     id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
     widget_control, id_draw, get_value=id_value
     wset,id_value
@@ -119,11 +92,9 @@ if (~isNexusFound) then begin   ;NeXus not found
     id_draw = widget_info(Event.top, find_by_uname='load_data_DD_draw')
     widget_control, id_draw, get_value=id_value
     wset,id_value
-    erase
-    
-endif 
+    erase    
+ENDIF 
 END
-
 
 ;This function will clear the 1D and 2D Normalization draw if no NeXus found
 PRO clearOffNormdisplay, Event, isNeXusFound
@@ -134,41 +105,34 @@ if (~isNexusFound) then begin   ;NeXus not found
     wset,id_value
     erase
     
-    id_draw = widget_info(Event.top, find_by_uname='load_normalization_DD_draw')
+    id_draw = widget_info(Event.top, find_by_uname= $
+                          'load_normalization_DD_draw')
     widget_control, id_draw, get_value=id_value
     wset,id_value
     erase
-    
-endif 
+ENDIF 
 END
-
 
 ;****************************** M A I N ****************************
 ;This function updates the GUI according to the result of Data NeXus
 ;found or not
 PRO RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
-
 updateDataWidget, Event, isNeXusFound ;update cw_fields and buttons
 updateDataTextFields, Event, isNeXusFound ;update text_fields contain
 clearOffDatadisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
-
 END
 
 ;This function updates the GUI according to the result of Norm NeXus
 ;found or not
 PRO RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
-
 updateNormWidget, Event, isNeXusFound ;update cw_fields and buttons
 updateNormTextFields, Event, isNeXusFound ;update text_fields contain
 clearOffNormdisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
-
 END
-
 
 ;This function checks if the zoom option has been selected for the
 ;Data tab
 PRO REFreduction_DataBackPeakZoomEvent, Event
-
 value = getCWBgroupValue(Event, 'data_1d_selection')
 if (value EQ 2) then begin
 ;erase display only if this one is only 1 line long
@@ -178,16 +142,11 @@ if (value EQ 2) then begin
         putTextFieldValue, event, 'DATA_left_interaction_help_text', '', 0
     endif
 endif
-
 END
-
-
-
 
 ;This function checks if the zoom option has been selected for the
 ;Normalization tab
 PRO REFreduction_NormBackPeakZoomEvent, Event
-
 value = getCWBgroupValue(Event, 'normalization_1d_selection')
 if (value EQ 2) then begin
 ;erase display only if this one is only 1 line long
@@ -197,119 +156,85 @@ if (value EQ 2) then begin
         putTextFieldValue, event, 'NORM_left_interaction_help_text', '', 0
     endif
 endif
-
 END
-
-
 
 ;This function populate the 1D_3D tab of DATA
 PRO REFreduction_UpdateData1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
-
 ;z_min
 putTextFieldValue, event, $
   'data1d_z_axis_min_cwfield', $
   strcompress(zmin,/remove_all), 0
-
 ;z_max
 putTextFieldValue, event, $
   'data1d_z_axis_max_cwfield', $
   strcompress(zmax,/remove_all), 0
-
 ;XYangle
 putTextFieldValue, event, $
   'data1d_xy_axis_angle_cwfield', $
   strcompress(XYangle,/remove_all), 0
-
 ;ZZangle
 putTextFieldValue, event, $
   'data1d_zz_axis_angle_cwfield', $
   strcompress(ZZangle,/remove_all), 0
-
 END
-
-
 
 ;This function populate the 2D_3D tab of DATA
 PRO REFreduction_UpdateData2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
-
 ;z_min
 putTextFieldValue, event, $
   'data2d_z_axis_min_cwfield', $
   strcompress(zmin,/remove_all), 0
-
 ;z_max
 putTextFieldValue, event, $
   'data2d_z_axis_max_cwfield', $
   strcompress(zmax,/remove_all), 0
-
 ;XYangle
 putTextFieldValue, event, $
   'data2d_xy_axis_angle_cwfield', $
   strcompress(XYangle,/remove_all), 0
-
 ;ZZangle
 putTextFieldValue, event, $
   'data2d_zz_axis_angle_cwfield', $
   strcompress(ZZangle,/remove_all), 0
-
 END
-
-
-
-
-
 
 ;This function populate the 1D_3D tab of Normalization
 PRO REFreduction_UpdateNorm1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
-
 ;z_min
 putTextFieldValue, event, $
   'normalization1d_z_axis_min_cwfield', $
   strcompress(zmin,/remove_all), 0
-
 ;z_max
 putTextFieldValue, event, $
   'normalization1d_z_axis_max_cwfield', $
   strcompress(zmax,/remove_all), 0
-
 ;XYangle
 putTextFieldValue, event, $
   'normalization1d_xy_axis_angle_cwfield', $
   strcompress(XYangle,/remove_all), 0
-
 ;ZZangle
 putTextFieldValue, event, $
   'normalization1d_zz_axis_angle_cwfield', $
   strcompress(ZZangle,/remove_all), 0
-
 END
-
-
-
-
 
 ;This function populate the 2D_3D tab of NORMALIZATION
 PRO REFreduction_UpdateNorm2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
-
 ;z_min
 putTextFieldValue, event, $
   'normalization2d_z_axis_min_cwfield', $
   strcompress(zmin,/remove_all), 0
-
 ;z_max
 putTextFieldValue, event, $
   'normalization2d_z_axis_max_cwfield', $
   strcompress(zmax,/remove_all), 0
-
 ;XYangle
 putTextFieldValue, event, $
   'normalization2d_xy_axis_angle_cwfield', $
   strcompress(XYangle,/remove_all), 0
-
 ;ZZangle
 putTextFieldValue, event, $
   'normalization2d_zz_axis_angle_cwfield', $
   strcompress(ZZangle,/remove_all), 0
-
 END
 
