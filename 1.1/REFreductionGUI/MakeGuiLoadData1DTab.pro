@@ -58,6 +58,11 @@ RescaleBaseTitle       = '   Range Displayed   '
 ;-TAB #1 ----------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 
+;Ymin and Ymax working
+sYMinMaxLabel = { size: [360,5],$
+                  value: 'Current working selection -> Ymin',$
+                  uname: 'data_ymin_ymax_label'}
+
 sTab = { size:  [5,5,D_DD_TabSize[2]-35,120],$
          list:  ['Region Of Interest (ROI)',$
                  'Peak / Background',$
@@ -71,8 +76,8 @@ XYoff = [0,10] ;Ymin cw_field
 sRoiYmin = { size: [XYoff[0],$
                     XYoff[1],$
                     80,35],$
-             base_uname: 'Data1SelectionBackgroundYminBase',$
-             uname: 'data_d_selection_background_ymin_cw_field',$
+             base_uname: 'Data1SelectionROIYminBase',$
+             uname: 'data_d_selection_roi_ymin_cw_field',$
              xsize: 3,$
              title: 'Ymin:'}
 
@@ -80,8 +85,8 @@ XYoff = [5,0] ;Ymax cw_field
 sRoiYmax = { size: [sRoiYmin.size[0]+sRoiYmin.size[2]+XYoff[0],$
                     sRoiYmin.size[1]+XYoff[1],$
                     sRoiYmin.size[2:3]],$
-             base_uname: 'Data1SelectionBackgroundYmaxBase',$
-             uname: 'data_d_selection_background_ymax_cw_field',$
+             base_uname: 'Data1SelectionROIYmaxBase',$
+             uname: 'data_d_selection_roi_ymax_cw_field',$
              xsize: 3,$
              title: 'Ymax:'}
 
@@ -107,7 +112,7 @@ XYoff = [90,-8] ;roi file text
 sRoiFileText = {size:     [sRoiFileLabel.size[0]+XYoff[0],$
                            sRoiFileLabel.size[1]+XYoff[1],$
                            350],$
-                uname:    'data_background_selection_file_text_field',$
+                uname:    'data_roi_selection_file_text_field',$
                 sensitive: 0}
 
 XYoff = [2,0] ;SAVE button
@@ -166,7 +171,7 @@ sBackRoiYmin = { size: [XYoff[0],$
                         XYoff[1],$
                         80,35],$
                  base_uname: 'refm_back_ymin_base',$
-                 uname: 'refm_back_data_ymin_cw_field',$
+                 uname: 'data_d_selection_background_ymin_cw_field',$
                  xsize: 3,$
                  title: 'Ymin:'}
 
@@ -175,7 +180,7 @@ sBackRoiYmax = { size: [sBackRoiYmin.size[0]+sBackRoiYmin.size[2]+XYoff[0],$
                         sBackRoiYmin.size[1]+XYoff[1],$
                         sBackRoiYmin.size[2:3]],$
                  base_uname: 'refm_back_ymax_base',$
-                 uname: 'refm_back_data_ymax_cw_field',$
+                 uname: 'data_d_selection_background_ymax_cw_field',$
                  xsize: 3,$
                  title: 'Ymax:'}
 
@@ -190,7 +195,7 @@ sBackLoadButton = {size: [sBackOrLabel.size[0]+XYoff[0],$
                           390,$
                           30],$
                    value: 'LOAD BACKGROUND SELECTION FILE',$
-                   uname: 'refm_back_data_load_button'}
+                   uname: 'data_d_selection_background_load_button'}
 
 XYoff = [3,43]                  ;ROI file Name label
 sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
@@ -210,7 +215,7 @@ sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
                            sBackRoiFileText.size[1]+XYoff[1],$
                            130,sLoadButton.size[3]],$
                    value: 'SAVE BACK. FILE',$
-                   uname: 'refm_back_data_save_button'}
+                   uname: 'data_background_save_button'}
 
 ;TAB Zoom ---------------------------------------------------------------------
 sZoomBase = sRoiBase
@@ -324,6 +329,7 @@ BackPeakRescaleTab = WIDGET_TAB(load_data_D_tab_base,$
                                 YOFFSET   = BackPeakRescaleTabSize[1],$
                                 SCR_XSIZE = BackPeakRescaleTabSize[2],$
                                 SCR_YSIZE = BackPeakRescaleTabSize[3],$
+                                SENSITIVE = 0,$
                                 LOCATION  = 0)
 
 ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
@@ -334,6 +340,13 @@ BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
                             SCR_XSIZE = BackPeakBaseSize[2],$
                             SCR_YSIZE = BackPeakBaseSize[3],$
                             TITLE     = BackPeakBaseTitle)
+
+;Ymin and Ymax working label
+wYminMaxLabel = WIDGET_LABEL(BackPeakBase,$
+                             XOFFSET = sYminMaxLabel.size[0],$
+                             YOFFSET = sYminMaxLabel.size[1],$
+                             VALUE   = sYminMaxLabel.value,$
+                             UNAME   = sYminMaxLabel.uname)
 
 ;TAB #1-1 (ROI) ***************************************************************
 wRoiTab = WIDGET_TAB(BackPeakBase,$

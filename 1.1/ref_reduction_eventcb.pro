@@ -539,7 +539,8 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
             putDataLogBookMessage, Event, text, Append=1
 
 ;replot the background and peak exclusion regions
-            REFreduction_DataBackgroundPeakSelection, Event, ''
+            REFreduction_DataBackgroundPeakSelection, Event, '' 
+;in _databackgroundpeakselection
                         
         ENDIF
     ENDIF

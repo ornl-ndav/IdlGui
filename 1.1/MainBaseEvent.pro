@@ -156,6 +156,9 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
        SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
        SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
+;replot the selection activated
+       RePlot1DDataFile, Event
+       ReplotAllSelection, Event
     END
 
 ;CONTRAST TAB

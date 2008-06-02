@@ -35,26 +35,28 @@
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateDataWidget, Event, isNeXusFound
-ActivateWidget, Event, 'data_ymin_label_frame', isNeXusFound
-ActivateWidget, Event, 'data_1d_selection', isNeXusFound
-ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', isNeXusFound
-ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', isNeXusFound
-ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', isNeXusFound
-ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', isNeXusFound
-ActivateWidget, Event, 'data_roi_load_button', isNeXusFound
-ActivateWidget, Event, 'data_contrast_droplist', isNeXusFound
-ActivateWidget, Event, 'data_contrast_bottom_slider', isNeXusFound
-ActivateWidget, Event, 'data_contrast_number_slider', isNeXusFound
-ActivateWidget, Event, 'data_reset_contrast_button', isNeXusFound
-ActivateWidget, Event, 'data_reset_xaxis_button', isNeXusFound
-ActivateWidget, Event, 'data_reset_yaxis_button', isNeXusFound
-ActivateWidget, Event, 'data_reset_zaxis_button', isNeXusFound
-ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
-ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
-ActivateWidget, Event, 'data1d_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'data1d_rescale_tab2_base', isNeXusFound
-ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'data_back_peak_rescale_tab', isNeXusFound
+; ActivateWidget, Event, 'data_1d_selection', isNeXusFound
+; ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', $
+;   isNeXusFound
+; ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', isNeXusFound
+; ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', $
+;   isNeXusFound
+; ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', isNeXusFound
+; ActivateWidget, Event, 'data_roi_load_button', isNeXusFound
+; ActivateWidget, Event, 'data_contrast_droplist', isNeXusFound
+; ActivateWidget, Event, 'data_contrast_bottom_slider', isNeXusFound
+; ActivateWidget, Event, 'data_contrast_number_slider', isNeXusFound
+; ActivateWidget, Event, 'data_reset_contrast_button', isNeXusFound
+; ActivateWidget, Event, 'data_reset_xaxis_button', isNeXusFound
+; ActivateWidget, Event, 'data_reset_yaxis_button', isNeXusFound
+; ActivateWidget, Event, 'data_reset_zaxis_button', isNeXusFound
+; ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
+; ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
+; ActivateWidget, Event, 'data1d_rescale_tab1_base', isNeXusFound
+; ActivateWidget, Event, 'data1d_rescale_tab2_base', isNeXusFound
+; ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
+; ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
 END
 
 
@@ -159,36 +161,6 @@ PRO RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
 updateNormWidget, Event, isNeXusFound ;update cw_fields and buttons
 updateNormTextFields, Event, isNeXusFound ;update text_fields contain
 clearOffNormdisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
-
-END
-
-
-;this function insenstive the Y label framed selected and sensitive
-;the other one in Data world
-PRO RefReduction_UpdateDataNormGui_reverseDataYminYmaxLabelsFrame, Event
-
-if (isWidgetSensitive(Event, 'data_ymin_label_frame')) then begin
-    ActivateWidget, Event, 'data_ymin_label_frame', 0
-    ActivateWidget, Event, 'data_ymax_label_frame', 1
-endif else begin
-    ActivateWidget, Event, 'data_ymin_label_frame', 1
-    ActivateWidget, Event, 'data_ymax_label_frame', 0
-endelse
-
-END
-
-
-;this function insenstive the Y label framed selected and sensitive
-;the other one in Norm world
-PRO RefReduction_UpdateDataNormGui_reverseNormYminYmaxLabelsFrame, Event
-
-if (isWidgetSensitive(Event, 'normalization_ymin_label_frame')) then begin
-    ActivateWidget, Event, 'normalization_ymin_label_frame', 0
-    ActivateWidget, Event, 'normalization_ymax_label_frame', 1
-endif else begin
-    ActivateWidget, Event, 'normalization_ymin_label_frame', 1
-    ActivateWidget, Event, 'normalization_ymax_label_frame', 0
-endelse
 
 END
 
