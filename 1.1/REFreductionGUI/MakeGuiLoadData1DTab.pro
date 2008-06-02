@@ -247,37 +247,39 @@ ResetContrastButtonTitle = ' RESET FULL CONTRAST SESSION '
 ;------------------------------------------------------------------------------
 ;TAB #3 (Rescale Base) --------------------------------------------------------
 ;------------------------------------------------------------------------------
+yoff = 10
 RescaleXBaseSize  = [5,8,500,35]
-RescaleXLabelSize = [10,0]
+RescaleXLabelSize = [10,yoff]
 RescaleXLabelTitle= 'X-axis' 
 
-Y_base_offset = 43
+Y_base_offset = 40
 RescaleYBaseSize  = [5,8+Y_base_offset,RescaleXBaseSize[2],35]
-RescaleYLabelSize = [10,0+Y_base_offset]
+RescaleYLabelSize = [10,0+Y_base_offset+yoff]
 RescaleYLabelTitle= 'Y-axis' 
 
 RescaleZBaseSize  = [5,8+2*Y_base_offset,RescaleXBaseSize[2],35]
-RescaleZLabelSize = [10,0+2*Y_base_offset]
+RescaleZLabelSize = [10,0+2*Y_base_offset+yoff]
 RescaleZLabelTitle= 'Z-axis' 
 
-RescaleMincwfieldBaseSize = [30,0,100,35]
+xoff = 10
+RescaleMincwfieldBaseSize = [35+xoff,0,100,35]
 RescaleMincwfieldSize = [8,1]
 RescaleMincwfieldLabel = 'Min:'
 
-RescaleMaxcwfieldBaseSize = [135,0,100,35]
+RescaleMaxcwfieldBaseSize = [135+xoff,0,100,35]
 RescaleMaxcwfieldSize = [8,1]
 RescaleMaxcwfieldLabel = 'Max:'
 
-RescaleScaleDroplistSize = [240,0]
+RescaleScaleDroplistSize = [235+xoff,0]
 RescaleScaleDropList     = [' linear ',' log '] 
 
-ResetScaleButtonSize  = [350,3,140,30]
+ResetScaleButtonSize  = [345+xoff,3,140,30]
 ResetXScaleButtonTitle = 'RESET X-AXIS'
 ResetYScaleButtonTitle = 'RESET Y-AXIS'
 ResetZScaleButtonTitle = 'RESET Z-AXIS'
 
 ;full reset
-FullResetButtonSize = [515,5,85,128]
+FullResetButtonSize = [515,5,85,122]
 FullResetButtonTitle= 'FULL RESET'
 
 ;TAB #4 (output file)
@@ -422,7 +424,6 @@ wRoiFileText = WIDGET_TEXT(wRoiBase,$
                            YOFFSET   = sRoiFileText.size[1],$
                            SCR_XSIZE = sRoiFileText.size[2],$
                            UNAME     = sRoiFileText.uname,$
-                           SENSITIVE = sRoiFileText.sensitive,$
                            /ALIGN_LEFT,$
                            /EDITABLE)
                            
@@ -562,7 +563,6 @@ wRoiFileText = WIDGET_TEXT(wBackBase,$
                            YOFFSET   = sBackRoiFileText.size[1],$
                            SCR_XSIZE = sBackRoiFileText.size[2],$
                            UNAME     = sBackRoiFileText.uname,$
-                           SENSITIVE = sBackRoiFileText.sensitive,$
                            /ALIGN_LEFT,$
                            /EDITABLE)
                            
@@ -599,8 +599,7 @@ ContrastDropList = widget_droplist(ContrastBase,$
                                    scr_xsize=ContrastDropListSize[2],$
                                    scr_ysize=ContrastDropListSize[3],$
                                    /tracking_events,$
-                                   uname='data_contrast_droplist',$
-                                   sensitive=0)
+                                   uname='data_contrast_droplist')
 
 ContrastBottomSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastBottomSliderSize[0],$
@@ -612,8 +611,7 @@ ContrastBottomSlider = widget_slider(ContrastBase,$
                                      uname='data_contrast_bottom_slider',$
                                      /tracking_events,$
                                      title=ContrastBottomSliderTitle,$
-                                     value=ContrastBottomSliderDefaultValue,$
-                                     sensitive=0)
+                                     value=ContrastBottomSliderDefaultValue)
 
 ContrastNumberSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastNumberSliderSize[0],$
@@ -625,8 +623,7 @@ ContrastNumberSlider = widget_slider(ContrastBase,$
                                      uname='data_contrast_number_slider',$
                                      /tracking_events,$
                                      title=ContrastNumberSliderTitle,$
-                                     value=ContrastNumberSliderDefaultValue,$
-                                     sensitive=0)
+                                     value=ContrastNumberSliderDefaultValue)
 
 ResetContrastButton = widget_button(ContrastBase,$
                                     xoffset=ResetContrastButtonSize[0],$
@@ -634,7 +631,6 @@ ResetContrastButton = widget_button(ContrastBase,$
                                     scr_xsize=ResetContrastButtonSize[2],$
                                     scr_ysize=ResetContrastButtonSize[3],$
                                     value=ResetContrastButtonTitle,$
-                                    sensitive=0,$
                                     uname='data_reset_contrast_button')
 
 
@@ -695,8 +691,7 @@ RescaleXScaleDroplist = widget_droplist(RescaleXBase,$
                                        value=RescaleScaleDroplist,$
                                        xoffset=RescaleScaleDroplistSize[0],$
                                        yoffset=RescaleScaleDroplistSize[1],$
-                                       uname='data_rescale_x_droplist',$
-                                       sensitive=0)
+                                       uname='data_rescale_x_droplist')
 
 ResetXScaleButton = widget_button(RescaleXBase,$
                                   xoffset=ResetScaleButtonSize[0],$
@@ -704,8 +699,7 @@ ResetXScaleButton = widget_button(RescaleXBase,$
                                   scr_xsize=ResetScaleButtonSize[2],$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetXScaleButtonTitle,$
-                                  uname='data_reset_xaxis_button',$
-                                  sensitive=0)
+                                  uname='data_reset_xaxis_button')
 
 ;Y base
 RescaleYLabel = widget_label(RescaleBase,$
@@ -757,8 +751,7 @@ ResetYScaleButton = widget_button(RescaleYBase,$
                                   scr_xsize=ResetScaleButtonSize[2],$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetYScaleButtonTitle,$
-                                  uname='data_reset_yaxis_button',$
-                                  sensitive=0)
+                                  uname='data_reset_yaxis_button')
 
 ;Z base
 RescaleZLabel = widget_label(RescaleBase,$
@@ -809,8 +802,7 @@ RescaleZScaleDroplist = widget_droplist(RescaleZBase,$
                                         value=RescaleScaleDroplist,$
                                         xoffset=RescaleScaleDroplistSize[0],$
                                         yoffset=RescaleScaleDroplistSize[1],$
-                                        uname='data_rescale_z_droplist',$
-                                        sensitive=0)
+                                        uname='data_rescale_z_droplist')
 
 ResetZScaleButton = widget_button(RescaleZBase,$
                                   xoffset=ResetScaleButtonSize[0],$
@@ -818,8 +810,7 @@ ResetZScaleButton = widget_button(RescaleZBase,$
                                   scr_xsize=ResetScaleButtonSize[2],$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetZScaleButtonTitle,$
-                                  uname='data_reset_zaxis_button',$
-                                  sensitive=0)
+                                  uname='data_reset_zaxis_button')
 
 ;full reset
 FullResetButton = widget_button(RescaleBase,$
@@ -828,9 +819,7 @@ FullResetButton = widget_button(RescaleBase,$
                                 scr_xsize=FullResetButtonSize[2],$
                                 scr_ysize=FullResetButtonSize[3],$
                                 uname='data_full_reset_button',$
-                                value=FullResetButtonTitle,$
-                                sensitive=0)
-
+                                value=FullResetButtonTitle)
 
 END
 

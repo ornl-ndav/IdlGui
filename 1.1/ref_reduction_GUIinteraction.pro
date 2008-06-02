@@ -129,7 +129,7 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='repopulate_gui')
 WIDGET_CONTROL, id, sensitive=status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function switch the Peak and background bases of the data 1D data tab
 ;according to the status of the cw_bgroup
 PRO SwitchPeakBackgroundDataBase, Event
@@ -146,7 +146,7 @@ MapBase, Event, 'peak_data_base_uname', peak_base_status
 MapBase, Event, 'back_data_base_uname', back_base_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function switch the Peak and background bases of the Data Reduce tab
 ;according to the status of the cw_bgroup
 PRO SwitchPeakBackgroundReduceDataBase, Event
@@ -163,7 +163,7 @@ MapBase, Event, 'data_peak_base', peak_base_status
 MapBase, Event, 'data_background_base', back_base_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function switch the Peak and background bases of the norm. 1D norm tab
 ;according to the status of the cw_bgroup
 PRO SwitchPeakBackgroundNormBase, Event
@@ -180,7 +180,7 @@ MapBase, Event, 'peak_norm_base_uname', peak_base_status
 MapBase, Event, 'back_norm_base_uname', back_base_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function switch the Peak and background bases of the Reduce tab
 ;according to the status of the cw_bgroup
 PRO SwitchPeakBackgroundReduceNormBase, Event
