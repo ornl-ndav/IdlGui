@@ -47,7 +47,6 @@ BackPeakRescaleTabSize = [4, $
 
 ;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
 ;Tab#1
-;BackPeakRescaleTabSize = [4,615,D_DD_TabSize[2]-20,D_DD_TabSize[3]-645]
 BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
 BackPeakBaseTitle      = 'ROI/Peak/Background'

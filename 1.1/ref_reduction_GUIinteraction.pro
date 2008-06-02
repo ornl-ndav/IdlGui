@@ -147,6 +147,23 @@ MapBase, Event, 'back_data_base_uname', back_base_status
 END
 
 ;-------------------------------------------------------------------------------
+;This function switch the Peak and background bases of the Data Reduce tab
+;according to the status of the cw_bgroup
+PRO SwitchPeakBackgroundReduceDataBase, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_data_back_group')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN BEGIN ;show peak base
+   peak_base_status = 1
+   back_base_status = 0
+ENDIF ELSE BEGIN
+   peak_base_status = 0
+   back_base_status = 1
+ENDELSE
+MapBase, Event, 'data_peak_base', peak_base_status
+MapBase, Event, 'data_background_base', back_base_status
+END
+
+;-------------------------------------------------------------------------------
 ;This function switch the Peak and background bases of the norm. 1D norm tab
 ;according to the status of the cw_bgroup
 PRO SwitchPeakBackgroundNormBase, Event
@@ -161,4 +178,21 @@ ENDIF ELSE BEGIN
 ENDELSE
 MapBase, Event, 'peak_norm_base_uname', peak_base_status
 MapBase, Event, 'back_norm_base_uname', back_base_status
+END
+
+;-------------------------------------------------------------------------------
+;This function switch the Peak and background bases of the Reduce tab
+;according to the status of the cw_bgroup
+PRO SwitchPeakBackgroundReduceNormBase, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_norm_back_group')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN BEGIN ;show peak base
+   peak_base_status = 1
+   back_base_status = 0
+ENDIF ELSE BEGIN
+   peak_base_status = 0
+   back_base_status = 1
+ENDELSE
+MapBase, Event, 'norm_peak_base', peak_base_status
+MapBase, Event, 'norm_background_base', back_base_status
 END

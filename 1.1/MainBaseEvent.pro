@@ -154,7 +154,8 @@ CASE Event.id OF
 
 ;Peak/Background tab (peak/background cw_bgroup)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_data_back_group'): BEGIN
-       SwitchPeakBackgroundDataBase, Event ;_GUI
+       SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
+       SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
     END
 
 ;CONTRAST TAB
@@ -539,6 +540,7 @@ CASE Event.id OF
 ;Peak/Background tab (peak/background cw_bgroup)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
        SwitchPeakBackgroundNormBase, Event ;_GUI
+       SwitchPeakBackgroundReduceNormBase, Event ;_GUI
     END
 
 ;CONTRAST TAB
