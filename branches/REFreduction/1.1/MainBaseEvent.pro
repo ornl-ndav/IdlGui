@@ -122,13 +122,23 @@ CASE Event.id OF
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'data_d_selection_roi_ymin_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
+        REFreduction_DataROISelection, Event, 'roi_ymin'
     end
 
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'data_d_selection_roi_ymax_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
+        REFreduction_DataROISelection, Event, 'roi_ymax'
+    end
+
+;SAVE ROI Selection into a file -----------------------------------------------
+    widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
+        REFreduction_CreateDataROIFile, Event
+    end
+
+;LOAD ROI selection
+    widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
+        REFreduction_LoadDataROISelection, Event
     end
 
 ;Peak Ymin and Ymax -----------------------------------------------------------
