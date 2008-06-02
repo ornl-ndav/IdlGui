@@ -56,153 +56,194 @@ RegionOfInterestLabelTitle = 'Region of interest (ROI) file:'
 RegionOfInterestTextFieldSize = [230,$
                                  RegionOfInterestLabelSize[1]-5,$
                                  453,30]
-                             
-;Exclusion peak region
-ExclusionPeakRegionLabelSize = [RunsLabelSize[0],$
-                                RegionOfInterestLabelSize[1]+d_vertical_L_L]
-ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region:'
+              
+;Exclusion peak region / Background -------------------------------------------
 
-;low bin
-ExclusionLowBinLabelSize = [ExclusionPeakRegionLabelSize[0]+200,$
-                            ExclusionPeakRegionLabelSize[1]]
-ExclusionLowBinLabelTitle = 'Low bin:'
-d_L_T_2 = d_L_T + 10
-ExclusionLowBinTextFieldSize = [ExclusionLowBinLabelSize[0]+d_L_T_2,$
-                                ExclusionLowBinLabelSize[1]-5,$
-                                70,30]
+XYoff = [0,52] ;Peak Base and labels
+sPeakBase = { size:  [RunsLabelSize[0]+XYoff[0],$
+                      RunsLabelSize[1]+XYoff[1],$
+                      500,30],$
+              frame: 0,$
+              uname: 'data_peak_base',$
+              map:   1}
 
-;high bin
-ExclusionHighBinLabelSize = [ExclusionLowBinLabelSize[0]+180,$
-                             ExclusionPeakRegionLabelSize[1]]
-ExclusionHighBinLabelTitle = 'High bin:'
-ExclusionHighBinTextFieldSize = [ExclusionHighBinLabelSize[0]+d_L_T_2,$
-                                 ExclusionLowBinTextFieldSize[1],$
-                                 ExclusionLowBinTextFieldSize[2],$
-                                 ExclusionLowBinTextFieldSize[3]]
-                                
-;background
-BackgroundLabelSize = [ExclusionPeakRegionLabelSize[0],$
-                       ExclusionHighBinLabelSize[1]+d_vertical_L_L]
+XYoff = [0,7] ;Main label
+sPeakMainLabel = { size:  XYoff,$
+                   value: 'Peak Exclusion Region:'}
+XYoff = [200,0]
+sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
+                          sPeakMainLabel.size[1]+XYoff[1]],$
+                   value: 'Ymin:'}
+XYoff = [50,0]
+sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
+                          sPeakYminLabel.size[1]+XYoff[1],$
+                          50],$
+                   value: '',$
+                   uname: 'data_exclusion_low_bin_text'}
+XYoff = [100,0]
+sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
+                          sPeakYminValue.size[1]+XYoff[1]],$
+                   value: 'Ymax:'}
+XYoff = [50,0]
+sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
+                          sPeakYmaxLabel.size[1]+XYoff[1],$
+                          50],$
+                   value: '',$
+                   uname: 'data_exclusion_high_bin_text'}
+
+;Background Base, label and text_field
+sBackBase = { size:  sPeakBase.size,$
+              frame: 0,$
+              uname: 'data_background_base',$
+              map:   0}
+
+XYoff = [0,7]                   ;Main label
+sBackMainLabel = { size:  XYoff,$
+                   value: 'Background Selection File:'}
+XYoff = [170,0]
+sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
+                          sBackMainLabel.size[1]+XYoff[1]],$
+                   value: '',$
+                   uname: 'data_back_selection_file_value'}
+                
+;background flag
+XYoff = [0,7]
+BackgroundLabelSize = [sPeakBase.size[0]+XYoff[0],$
+                       sPeakBase.size[1]+sPeakBase.size[3]+XYoff[1]]
 BackgroundLabelTitle = 'Background:'
-d_L_T_3 = d_L_T_2 + 40
+d_L_T_3 = 100
 BackgroundBGroupSize = [BackgroundLabelSize[0]+d_L_T_3,$
                         BackgroundLabelSize[1]-5]
 BackgroundBGroupList = [' Yes    ',' No    ']
-
 
 ;*********************************************************
 ;Create GUI
 
 ;base
-data_base = widget_base(REDUCE_BASE,$
-                        xoffset=DataBaseSize[0],$
-                        yoffset=DataBaseSize[1],$
-                        scr_xsize=DataBaseSize[2],$
-                        scr_ysize=DataBaseSize[3])
+data_base = WIDGET_BASE(REDUCE_BASE,$
+                        XOFFSET   = DataBaseSize[0],$
+                        YOFFSET   = DataBaseSize[1],$
+                        SCR_XSIZE = DataBaseSize[2],$
+                        SCR_YSIZE = DataBaseSize[3])
 
 ;Data main label
-DataLabel = widget_label(data_base,$
-                         xoffset=DataLabelSize[0],$
-                         yoffset=DataLabelSize[1],$
-                         value=DataLabelTitle)
+DataLabel = WIDGET_LABEL(data_base,$
+                         XOFFSET = DataLabelSize[0],$
+                         YOFFSET = DataLabelSize[1],$
+                         VALUE   = DataLabelTitle)
 
 ;runs label
-RunsLabel = widget_label(data_base,$
-                         xoffset=RunsLabelSize[0],$
-                         yoffset=RunsLabelSize[1],$
-                         value=RunsLabelTitle)
+RunsLabel = WIDGET_LABEL(data_base,$
+                         XOFFSET = RunsLabelSize[0],$
+                         YOFFSET = RunsLabelSize[1],$
+                         VALUE   = RunsLabelTitle)
 
 ;runs text field
-RunsTextField = widget_text(data_base,$
-                            xoffset=RunsTextFieldSize[0],$
-                            yoffset=RunsTextFieldSize[1],$
-                            scr_xsize=RunsTextFieldSize[2],$
-                            scr_ysize=RunsTextFieldSize[3],$
-                            /editable,$
-                            /align_left,$
-                            /all_events,$
-                            uname='reduce_data_runs_text_field')
+RunsTextField = WIDGET_TEXT(data_base,$
+                            XOFFSET   = RunsTextFieldSize[0],$
+                            YOFFSET   = RunsTextFieldSize[1],$
+                            SCR_XSIZE = RunsTextFieldSize[2],$
+                            SCR_YSIZE = RunsTextFieldSize[3],$
+                            UNAME='reduce_data_runs_text_field',$
+                            /EDITABLE,$
+                            /ALIGN_LEFT,$
+                            /ALL_EVENTS)
 
 ;region of interest label
-RegionOfInterestLabel = widget_label(data_base,$
-                                     xoffset=RegionOfInterestLabelSize[0],$
-                                     yoffset=RegionOfInterestLabelSize[1],$
-                                     value=RegionOfInterestLabelTitle)
+RegionOfInterestLabel = WIDGET_LABEL(data_base,$
+                                     XOFFSET = RegionOfInterestLabelSize[0],$
+                                     YOFFSET = RegionOfInterestLabelSize[1],$
+                                     VALUE   = RegionOfInterestLabelTitle)
 
 ;region of interest text field
-RegionOfInterestTextField = widget_text(data_base,$
-                                        xoffset=RegionOfInterestTextFieldSize[0],$
-                                        yoffset=RegionOfInterestTextFieldSize[1],$
-                                        scr_xsize=RegionOfInterestTextFieldSize[2],$
-                                        scr_ysize=RegionOfInterestTextFieldSize[3],$
-                                        /align_left,$
-                                        uname='reduce_data_region_of_interest_file_name')
+RegionOfInterestTextField = $
+   WIDGET_LABEL(data_base,$
+                XOFFSET   = RegionOfInterestTextFieldSize[0],$
+                YOFFSET   = RegionOfInterestTextFieldSize[1],$
+                SCR_XSIZE = RegionOfInterestTextFieldSize[2],$
+                VALUE     = 'please remove me',$
+                UNAME     = 'reduce_data_region_of_interest_file_name',$
+                /ALIGN_LEFT)
+          
+;Peak exlusion Base -----------------------------------------------------------
+wPeakBase = WIDGET_BASE(data_base,$
+                        XOFFSET   = sPeakBase.size[0],$
+                        YOFFSET   = sPeakBase.size[1],$
+                        SCR_XSIZE = sPeakBase.size[2],$
+                        SCR_YSIZE = sPeakBase.size[3],$
+                        FRAME     = sPeakBase.frame,$
+                        UNAME     = sPeakBase.uname,$
+                        MAP       = sPeakBase.map)
 
-;exclusion peak region
-ExclusionPeakRegionLabel = widget_label(data_base,$
-                                        xoffset=ExclusionPeakRegionLabelSize[0],$
-                                        yoffset=ExclusionPeakRegionLabelSize[1],$
-                                        value=ExclusionPeakRegionLabelTitle)
+wPeakMainLabel = WIDGET_LABEL(wPeakBase,$
+                              XOFFSET = sPeakMainLabel.size[0],$
+                              YOFFSET = sPeakMainLabel.size[1],$
+                              VALUE   = sPeakMainLabel.VALUE)
+                              
+wPeakYminLabel = WIDGET_LABEL(wPeakBase,$
+                              XOFFSET = sPeakYminLabel.size[0],$
+                              YOFFSET = sPeakYminLabel.size[1],$
+                              VALUE   = sPeakYminLabel.VALUE)
 
-;exclusion low bin
-ExclusionLowBinLabel = widget_label(data_base,$
-                                    xoffset=ExclusionLowBinLabelSize[0],$
-                                    yoffset=ExclusionLowBinLabelSize[1],$
-                                    value=ExclusionLowBinLabelTitle)
+wPeakYminVALUE = WIDGET_LABEL(wPeakBase,$
+                              XOFFSET = sPeakYminVALUE.size[0],$
+                              YOFFSET = sPeakYminVALUE.size[1],$
+                              VALUE   = sPeakYminVALUE.VALUE)
 
-;exclusion low bin text field
-ExclusionLowBinTextField = widget_text(data_base,$
-                                       uname='data_exclusion_low_bin_text',$
-                                       xoffset=ExclusionLowBinTextFieldSize[0],$
-                                       yoffset=ExclusionLowBinTextFieldSize[1],$
-                                       scr_xsize=ExclusionLowBinTExtFieldSize[2],$
-                                       scr_ysize=ExclusionLowBinTextFieldSize[3],$
-                                       /align_left)
+wPeakYmaxLabel = WIDGET_LABEL(wPeakBase,$
+                              XOFFSET = sPeakYmaxLabel.size[0],$
+                              YOFFSET = sPeakYmaxLabel.size[1],$
+                              VALUE   = sPeakYmaxLabel.VALUE)
 
+wPeakYmaxVALUE = WIDGET_LABEL(wPeakBase,$
+                              XOFFSET = sPeakYmaxVALUE.size[0],$
+                              YOFFSET = sPeakYmaxVALUE.size[1],$
+                              VALUE   = sPeakYmaxVALUE.VALUE)
 
-;exclusion high bin
-ExclusionHighBinLabel = widget_label(data_base,$
-                                     xoffset=ExclusionHighBinLabelSize[0],$
-                                     yoffset=ExclusionHighBinLabelSize[1],$
-                                     value=ExclusionHighBinLabelTitle)
+;Background exlusion Base -----------------------------------------------------
+wBackBase = WIDGET_BASE(data_base,$
+                        XOFFSET   = sBackBase.size[0],$
+                        YOFFSET   = sBackBase.size[1],$
+                        SCR_XSIZE = sBackBase.size[2],$
+                        SCR_YSIZE = sBackBase.size[3],$
+                        FRAME     = sBackBase.frame,$
+                        UNAME     = sBackBase.uname,$
+                        MAP       = sBackBase.map)
 
-;exclusion High bin text field
-ExclusionHighBinTextField = widget_text(data_base,$
-                                        uname='data_exclusion_high_bin_text',$
-                                        xoffset=ExclusionHighBinTextFieldSize[0],$
-                                        yoffset=ExclusionHighBinTextFieldSize[1],$
-                                        scr_xsize=ExclusionHighBinTExtFieldSize[2],$
-                                        scr_ysize=ExclusionHighBinTextFieldSize[3],$
-                                        /align_left)
+wBackMainLabel = WIDGET_LABEL(wBackBase,$
+                              XOFFSET = sBackMainLabel.size[0],$
+                              YOFFSET = sBackMainLabel.size[1],$
+                              VALUE   = sBackMainLabel.VALUE)
+
+wBackFileVALUE = WIDGET_LABEL(wBackBase,$
+                              XOFFSET = sBackFileVALUE.size[0],$
+                              YOFFSET = sBackFileVALUE.size[1],$
+                              VALUE   = sBackFileVALUE.VALUE,$
+                              UNAME   = sBackFileVALUE.uname,$
+                              /ALIGN_LEFT)
 
 ;background
-BackgroundLabel = widget_label(data_base,$
-                               xoffset=BackgroundLabelSize[0],$
-                               yoffset=BackgroundLabelSize[1],$
-                               value=BackgroundLabelTitle)
+BackgroundLabel = WIDGET_LABEL(data_base,$
+                               XOFFSET = BackgroundLabelSize[0],$
+                               YOFFSET = BackgroundLabelSize[1],$
+                               VALUE   = BackgroundLabelTitle)
 
-BackgroundBGroup = cw_bgroup(data_base,$
+BackgroundBGroup = CW_BGROUP(data_base,$
                              BackgroundBGroupList,$
-                             /exclusive,$
-                             xoffset=BackgroundBGroupSize[0],$
-                             yoffset=BackgroundBGroupSize[1],$
-                             set_value=0,$
-                             uname='data_background_cw_bgroup',$
-                             row=1)
-
-
+                             XOFFSET   = BackgroundBGroupSize[0],$
+                             YOFFSET   = BackgroundBGroupSize[1],$
+                             SET_VALUE = 0,$
+                             UNAME     = 'data_background_cw_bgroup',$
+                             ROW       = 1,$
+                             /EXCLUSIVE)
 
 ;frame
-DataFrame = widget_label(data_base,$
-                         xoffset=DataFrameSize[0],$
-                         yoffset=DataFrameSize[1],$
-                         scr_xsize=DataFrameSize[2],$
-                         scr_ysize=DataFrameSize[3],$
-                         frame=1,$
-                         value='')
-
-
-
-
+DataFrame = WIDGET_LABEL(data_base,$
+                         XOFFSET   = DataFrameSize[0],$
+                         YOFFSET   = DataFrameSize[1],$
+                         SCR_XSIZE = DataFrameSize[2],$
+                         SCR_YSIZE = DataFrameSize[3],$
+                         frame     = 1,$
+                         VALUE     = '')
 
 END
