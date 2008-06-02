@@ -175,18 +175,22 @@ global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-man
 ;rebin data img
                    tvimg_norm_ptr: ptr_new(0L),$ 
 ;rebin norm img
-                   back_selection_color: 250L,$ 
-;color of background selection
+                   roi_selection_color: 250L,$ 
+;color of ROI selection
                    peak_selection_color: 100L,$
 ;color of peak exclusion
-                   data_back_selection: ptr_new(0L),$ 
-;Ymin and Ymax for data background
+                   back_selection_color: 50L,$
+;color of background selection
+                   data_roi_selection: ptr_new(0L),$ 
+;Ymin and Ymax for data ROI
                    norm_back_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for norm background
                    data_peak_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for data peak
                    norm_peak_selection: ptr_new(0L),$
 ;Ymin and Ymax for norm peak
+                   data_back_selection: ptr_new(0L),$
+;Ymin and Ymax for Back Data Roi                   
                    data_back_roi_ext: '_data_roi.dat',$ 
 ;extension file name of back data ROI
                    norm_back_roi_ext: '_norm_roi.dat',$
@@ -358,6 +362,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).data_peak_selection) = [-1,-1]
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
+(*(*global).data_roi_selection) = [-1,-1]
+(*(*global).data_roi_selection) = [-1,-1]
 
 (*global).UpDownMessage = 'Use U(up) or D(down) to move selection' + $
   ' vertically pixel per pixel.' 
@@ -527,7 +533,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 1 ;REDUCE
+    widget_control, id1, set_tab_current = 0 ;REDUCE
 
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')

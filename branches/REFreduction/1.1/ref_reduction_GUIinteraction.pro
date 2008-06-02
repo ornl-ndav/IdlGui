@@ -196,3 +196,16 @@ ENDELSE
 MapBase, Event, 'norm_peak_base', peak_base_status
 MapBase, Event, 'norm_background_base', back_base_status
 END
+
+;------------------------------------------------------------------------------
+;This function switches the data Ymin and Ymax labels
+PRO SwitchDataYminYmaxLabel, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_ymin_ymax_label')
+WIDGET_CONTROL, id, GET_VALUE = value
+IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+    value = 'Current working selection -> Ymax'
+ENDIF ELSE BEGIN
+    value = 'Current working selection -> Ymin'
+ENDELSE
+WIDGET_CONTROL, id, SET_VALUE = value
+END

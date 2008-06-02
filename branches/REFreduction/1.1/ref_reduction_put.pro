@@ -275,21 +275,72 @@ END
 PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 xsize_1d_draw = (*global).xsize_1d_draw
 
-if ((*global).miniVersion) then begin
+IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
-endif else begin
+ENDIF ELSE BEGIN
     coeff = 2
-endelse
+ENDELSE
 
-;get Background Ymin, Ymax
+;get ROI Ymin, Ymax ===========================================================
+ROISelection = (*(*global).data_roi_selection)
+ValidateSaveButton = 0
+;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
+CASE (ROISelection[0]) OF
+    -1:begin
+        case (ROISelection[1]) OF
+            -1:                 ;do nothing
+            else:begin
+                Ymax = ROISelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, $
+                  'data_d_selection_roi_ymax_cw_field', Ymax/coeff
+            end
+        endcase
+    end
+    else:begin
+        case (ROISelection[1]) OF
+            -1: begin
+                Ymin = ROISelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, $
+                  'data_d_selection_roi_ymin_cw_field', Ymin/coeff
+            end
+            else:begin
+                Ymin = Min(ROISelection,max=Ymax)
+                (*(*global).data_roi_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, $
+                  event, $
+                  'data_d_selection_roi_ymin_cw_field', $
+                  Ymin/coeff
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, $
+                  event, $
+                  'data_d_selection_roi_ymax_cw_field', $
+                  Ymax/coeff
+                ValidateSaveButton = 1 ;enable SAVE button
+            end
+        endcase
+    end
+endcase
+
+ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'data_background_selection_file_text_field', $
+  ValidateSaveButton
+
+;get Background Ymin, Ymax ====================================================
 BackSelection = (*(*global).data_back_selection)
 ValidateSaveButton = 0
-;check all cases -1,-1 -1,value value,-1 and value,value
+;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
 CASE (BackSelection[0]) OF
     -1:begin
         case (BackSelection[1]) OF
@@ -333,11 +384,11 @@ CASE (BackSelection[0]) OF
     end
 endcase
 
-ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'data_background_save_button', ValidateSaveButton
 ActivateWidget, Event, 'data_background_selection_file_text_field', $
   ValidateSaveButton
 
-;get Peak Ymin and Ymax
+;get Peak Ymin and Ymax =======================================================
 PeakSelection = (*(*global).data_peak_selection)
 
 ;check all cases -1,-1 and -1,value value,-1 and value,value
@@ -352,11 +403,6 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, event, $
                   'data_d_selection_peak_ymax_cw_field', $
                   Ymax/coeff
-                putTextFieldValue, $
-                  event, $
-                  'data_exclusion_high_bin_text', $
-                  strcompress(Ymax/coeff), $
-                  0
             end
         endcase
     end
@@ -369,11 +415,6 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, event, $
                   'data_d_selection_peak_ymin_cw_field', $
                   Ymin/coeff
-                putTextFieldValue, $
-                  event, $
-                  'data_exclusion_low_bin_text', $
-                  strcompress(Ymin/coeff), $
-                  0
                 
             end
             else: begin
@@ -384,22 +425,11 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, event, $
                   'data_d_selection_peak_ymin_cw_field', $
                   Ymin/coeff
-                putTextFieldValue, $
-                  event, $
-                  'data_exclusion_low_bin_text', $
-                  strcompress(Ymin/coeff), $
-                  0
-                
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
                   'data_d_selection_peak_ymax_cw_field', $
                   Ymax/coeff
-                putTextFieldValue, $
-                  event, $
-                  'data_exclusion_high_bin_text', $
-                  strcompress(Ymax/coeff), $
-                  0
             end
         endcase
     end
