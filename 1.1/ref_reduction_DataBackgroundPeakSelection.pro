@@ -33,7 +33,7 @@
 ;==============================================================================
 ;this function takes two arrays of 2 elements and replot the 
 ;Background and Peak selection on top of Data 1D
-PRO ReplotDataBackPeakSelection, Event, BackArray, PeakArray
+PRO ReplotDataBackPeakSelection, Event, ROIArray, BackArray, PeakArray
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -48,19 +48,8 @@ erase
 RePlot1DDataFile, Event
 
 xsize_1d_draw = (*global).Ntof_DATA-1
-;back
-color = (*global).back_selection_color
-y_array = (*(*global).data_back_selection)
 
-if (y_array[0] NE -1) then begin
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-endif
 
-if (y_array[1] NE -1) then begin
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-endif
 
 ;peak
 color = (*global).peak_selection_color
@@ -75,6 +64,21 @@ if (y_array[1] NE -1) then begin
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 endif
 
+;back
+color = (*global).back_selection_color
+y_array = (*(*global).data_back_selection)
+
+if (y_array[0] NE -1) then begin
+    plots, 0, y_array[0], /device, color=color
+    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+endif
+
+if (y_array[1] NE -1) then begin
+    plots, 0, y_array[1], /device, color=color
+    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+endif
+
+
 END
 
 
@@ -87,37 +91,40 @@ END
 PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
+;reset plot
+RePlot1DDataFile, Event
 
-    if ((*global).miniVersion) then begin
+IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
+
+    IF ((*global).miniVersion) THEN BEGIN
         coeff = 1
-    endif else begin
+    ENDIF ELSE BEGIN
         coeff = 2
-    endelse
+    ENDELSE
 
-;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event, $
-                                 'data_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event, $
-                                 'data_d_selection_background_ymax_cw_field')
+;get ROI Ymin, Ymax
+    ROIYmin = getTextFieldValue(Event, $
+                                 'data_d_selection_roi_ymin_cw_field')
+    ROIYmax = getTextFieldValue(Event, $
+                                 'data_d_selection_roi_ymax_cw_field')
     
-    if (BackYmin EQ '') then begin
-        BackYmin = -1
-    endif else begin
-        BackYmin *= coeff
-    endelse
+    IF (ROIYmin EQ '') THEN BEGIN
+        ROIYmin = -1
+    ENDIF ELSE BEGIN
+        ROIYmin *= coeff
+    ENDELSE
 
-    if (BackYmax EQ '') then begin
-        BackYmax = -1
-    endif else begin
-        BackYmax *= coeff
-    endelse
+    IF (ROIYmax EQ '') THEN BEGIN
+        ROIYmax = -1
+    ENDIF ELSE BEGIN
+        ROIYmax *= coeff
+    ENDELSE
 
-    BackSelection = [BackYmin,BackYmax]
-    (*(*global).data_back_selection) = BackSelection
+    ROISelection = [ROIYmin,ROIYmax]
+    (*(*global).data_roi_selection) = ROISelection
 
 ;get Peak Ymin, Ymax
     PeakYmin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
@@ -131,50 +138,72 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
 ;      'data_exclusion_high_bin_text', $
 ;      strcompress(PeakYmax),0
 
-    if (PeakYmin EQ '') then begin
+    IF (PeakYmin EQ '') THEN BEGIN
         PeakYmin = -1
-    endif else begin
+    ENDIF ELSE BEGIN
         PeakYmin *= coeff
-    endelse
+    ENDELSE
 
-    if (PeakYmax EQ '') then begin
+    IF (PeakYmax EQ '') THEN BEGIN
         PeakYmax = -1
-    endif else begin
+    ENDIF ELSE BEGIN
         PeakYmax *= coeff
-    endelse
+    ENDELSE
 
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).data_peak_selection) = PeakSelection
+
+;get Background Ymin, Ymax
+    BackYmin = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymin_cw_field')
+    BackYmax = getTextFieldValue(Event, $
+                                 'data_d_selection_background_ymax_cw_field')
     
+    IF (BackYmin EQ '') THEN BEGIN
+        BackYmin = -1
+    ENDIF ELSE BEGIN
+        BackYmin *= coeff
+    ENDELSE
+
+    IF (BackYmax EQ '') THEN BEGIN
+        BackYmax = -1
+    ENDIF ELSE BEGIN
+        BackYmax *= coeff
+    ENDELSE
+
+    BackSelection = [BackYmin,BackYmax]
+    (*(*global).data_back_selection) = BackSelection
+
+;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
-    ReplotDataBackPeakSelection, Event, BackSelection, PeakSelection
 
-    if (n_elements(TYPE) EQ 1) then begin
+;Replot selection selected
+    ReplotAllSelection, Event
 
+    IF (n_elements(TYPE) EQ 1) THEN BEGIN
         CASE (TYPE) OF
-            'back_ymin' : DataYMouseSelection = BackYmin
-            'back_ymax' : DataYMouseSelection = BackYmax
+            'roi_ymin'  : DataYMouseSelection = ROIYmin
+            'roi_ymax'  : DataYMouseSelection = ROIYmax
             'peak_ymin' : DataYMouseSelection = PeakYmin
             'peak_ymax' : DataYMouseSelection = PeakYmax
-            else        : DataYMouseSelection = 0
+            'back_ymin' : DataYMouseSelection = BackYmin
+            'back_ymax' : DataYMouseSelection = BackYmax
+            ELSE        : DataYMouseSelection = 0
         ENDCASE
-
-    endif else begin
-
+    ENDIF ELSE BEGIN
         DataYMouseSelection = 0
-
-    endelse
+    ENDELSE
         
-;display zoom if zomm tab is selected
+;display zoom if zoom tab is selected
     if (isDataZoomTabSelected(Event)) then begin
 
         DataXMouseSelection = (*global).DataXMouseSelection
         RefReduction_zoom, $
           Event, $
-          MouseX=DataXMouseSelection, $
-          MouseY=DataYMouseSelection, $
-          fact=(*global).DataZoomFactor,$
-          uname='data_zoom_draw'
+          MouseX = DataXMouseSelection, $
+          MouseY = DataYMouseSelection, $
+          fact   = (*global).DataZoomFactor,$
+          uname  = 'data_zoom_draw'
 
     endif
 

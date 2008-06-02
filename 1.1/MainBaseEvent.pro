@@ -118,7 +118,31 @@ CASE Event.id OF
         REFreduction_ZoomRescaleData, Event
     end
 
-;Background Ymin and Ymax
+;ROI Ymin and Ymax ------------------------------------------------------------
+    widget_info(wWidget, $
+                FIND_BY_UNAME= $
+                'data_d_selection_roi_ymin_cw_field'): begin
+        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
+    end
+
+    widget_info(wWidget, $
+                FIND_BY_UNAME= $
+                'data_d_selection_roi_ymax_cw_field'): begin
+        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
+    end
+
+;Peak Ymin and Ymax -----------------------------------------------------------
+    widget_info(wWidget, $
+                FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
+        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
+    end
+
+    widget_info(wWidget, $
+                FIND_BY_UNAME='data_d_selection_peak_ymax_cw_field'): begin
+        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
+    end
+
+;Background Ymin and Ymax -----------------------------------------------------
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'data_d_selection_background_ymin_cw_field'): begin
@@ -131,18 +155,7 @@ CASE Event.id OF
         REFreduction_DataBackgroundPeakSelection, Event, 'back_ymax'
     end
 
-;Peak Ymin and Ymax
-    widget_info(wWidget, $
-                FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
-    end
-
-    widget_info(wWidget, $
-                FIND_BY_UNAME='data_d_selection_peak_ymax_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
-    end
-
-;SAVE Background Selection into a file
+;SAVE Background Selection into a file ----------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
         REFreduction_CreateDataBackgroundROIFile, Event
     end
