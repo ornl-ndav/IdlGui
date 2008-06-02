@@ -106,65 +106,65 @@ Ymax = ParseBackgroundFileString(Event, last_line)
 return, [Ymin-1,Ymax+1]
 END
 
-;*******************************************************************************
-;*******************************************************************************
-PRO REFreduction_LoadDataBackgroundSelection, Event
+;******************************************************************************
+;******************************************************************************
+PRO REFreduction_LoadDataROISelection, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;define filter
 instrument = (*global).instrument
-load_back_roi_ext = (*global).load_back_roi_ext
-filter = instrument + '_*' + load_back_roi_ext
+load_roi_ext = (*global).load_roi_ext
+filter = instrument + '_*' + load_roi_ext
 ;get default path 
 WorkingPath = (*global).working_path
-title = instrument + ' Data Background Selection File' ;title of pickfile
+title = instrument + ' Data ROI Selection File' ;title of pickfile
 ;open file
-BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
-                                      get_path=path,$
-                                      title=title,$
-                                      filter=filter,$
-                                      default_extension='.dat',$
-                                      /fix_filter)
-if (BackROIFullFileName NE '') then begin
+ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
+                                  GET_PATH          = path,$
+                                  TITLE             = title,$
+                                  FILTER            = filter,$
+                                  DEFAULT_EXTENSION = '.dat',$
+                                  /FIX_FILTER)
+IF (ROIFullFileName NE '') THEN BEGIN
 ;put info in logbook
-    text = '-> Loading Data Background Selection File '
-    text += BackROIFullFileName
+    text = '-> Loading Data ROI Selection File '
+    text += ROIFullFileName
     PROCESSING = (*global).processing_message
     text += '..... ' + PROCESSING
     putLogBookMessage, Event, Text, Append=1
 ;display name of new file name in text field
     putTextFieldValue,$
       Event,$
-      'data_background_selection_file_text_field',$
-      BackROIFullFileName,$
+      'data_roi_selection_file_text_field',$
+      ROIFullFileName,$
       0                         ;do not append
 ;update REDUCE gui with name of data background roi file
     putTextFieldValue,$
       Event,$
       'reduce_data_region_of_interest_file_name',$
-      BackROIFullFileName,$
-      0 ;do not append
+      ROIFullFileName,$
+      0                         ;do not append
 ;display preview message in help data box
-    Message = 'Preview of ' + BackROIFullFileName
+    Message = 'Preview of ' + ROIFullFileName
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
-
-    YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
+    
+    YMinYMaxArray = retrieveYMinMaxFromFile(Event, ROIFullFileName)
 ;put Ymin and Ymax in their text fields
     putTextFieldValue, $
       Event,$
-      'data_d_selection_background_ymin_cw_field',$
+      'data_d_selection_roi_ymin_cw_field',$
       strcompress(YMinYMaxArray[0],/remove_all),$
       0 
     putTextFieldValue, $
       Event,$
-      'data_d_selection_background_ymax_cw_field',$
+      'data_d_selection_roi_ymax_cw_field',$
       strcompress(YMinYMaxArray[1],/remove_all),$
       0 
 ;replot
     REFreduction_DataBackgroundPeakSelection, Event    
 ;display 20 first data and last 20 in HELP text data box
-    DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
+    DisplayHeadTailROIDataFile, Event, ROIFullFileName
 ;put info in logbook
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
@@ -172,11 +172,11 @@ if (BackROIFullFileName NE '') then begin
 endif
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function is reached by the UpdateDataRoiFileName of the
 ;IDLupdateGUI class
-PRO REFreduction_LoadDataBackFile, Event, DataRoiFileName
+PRO REFreduction_LoadDataROIFile, Event, DataRoiFileName
 BackROIFullFileName = DataRoiFileName
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -209,8 +209,8 @@ DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
 END
 
 
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
 
 PRO REFreduction_LoadNormBackgroundSelection, Event
 
