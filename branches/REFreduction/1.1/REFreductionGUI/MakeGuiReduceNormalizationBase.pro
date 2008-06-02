@@ -68,15 +68,15 @@ RegionOfInterestLabelSize     = [RunsLabelSize[0],$
                                  RunsLabelSize[1]+d_vertical_L_L]
 RegionOfInterestLabelTitle    = 'Region of interest (ROI) file:'
 RegionOfInterestTextFieldSize = [230,$
-                                 RegionOfInterestLabelSize[1]-5,$
+                                 RegionOfInterestLabelSize[1],$
                                  453,30]
 
 ;Exclusion peak region / Background -------------------------------------------
 
-XYoff = [0,52] ;Peak Base and labels
+XYoff = [-1,60] ;Peak Base and labels
 sPeakBase = { size:  [RunsLabelSize[0]+XYoff[0],$
                       RunsLabelSize[1]+XYoff[1],$
-                      500,30],$
+                      650,30],$
               frame: 0,$
               uname: 'norm_peak_base',$
               map:   1}
@@ -84,7 +84,7 @@ sPeakBase = { size:  [RunsLabelSize[0]+XYoff[0],$
 XYoff = [0,7] ;Main label
 sPeakMainLabel = { size:  XYoff,$
                    value: 'Peak Exclusion Region:'}
-XYoff = [200,0]
+XYoff = [250,0]
 sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
                           sPeakMainLabel.size[1]+XYoff[1]],$
                    value: 'Ymin:'}
@@ -121,7 +121,7 @@ sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
                    uname: 'norm_back_selection_file_value'}
 
 ;Background Flag  
-XYoff = [0,7]             
+XYoff = [0,10]             
 BackgroundLabelSize = [sPeakBase.size[0]+XYoff[0],$
                        sPeakBase.size[1]+sPeakBase.size[3]+XYoff[1]]
 BackgroundLabelTitle = 'Background:'
