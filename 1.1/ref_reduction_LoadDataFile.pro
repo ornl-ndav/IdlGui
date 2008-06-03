@@ -66,7 +66,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if at least one NeXus file can be found ' + $
+        LogBookText = $
+          '----> Checking if at least one NeXus file can be found ' + $
           '..... '
         LogBookText += PROCESSING
         putLogBookMessage, Event, LogBookText, Append=1
@@ -86,7 +87,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;get log book full text
             LogBookText = getLogBookText(Event)
             Message = 'FAILED - No NeXus can be found'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
+              PROCESSING
 ;get data log book full text
             DataLogBookText = getDataLogBookText(Event)
             putTextAtEndOfDataLogBookLastLine,$
@@ -136,7 +138,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                   'data_list_nexus_nxsummary_text_field'
                 
 ;Inform user that program is waiting for his action
-                LogText = '----> Selecting one NeXus file from the list ..... ' $
+                LogText = $
+                  '----> Selecting one NeXus file from the list ..... ' $
                   + PROCESSING
                 putLogBookMessage,Event,LogText,Append=1
 
@@ -154,7 +157,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 
             endif else begin    ;proceed as before
                 
-                OpenDataNexusFile, Event, DataRunNumber, full_list_of_nexus_name
+                OpenDataNexusFile, Event, DataRunNumber, $
+                  full_list_of_nexus_name
                 
             endelse             ;end of list is only 1 element long
             
@@ -202,7 +206,9 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;get log book full text
             LogBookText = getLogBookText(Event)
             Message = 'FAILED - NeXus file does not exist'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, LogBookText, $
+              Message, $
+              PROCESSING
 ;get data log book full text
             DataLogBookText = getDataLogBookText(Event)
             putTextAtEndOfDataLogBookLastLine,$
@@ -283,7 +289,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     putLogBookMessage, Event, LogBookText, Append=1
     REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
     IF ((*global).isHDF5format) THEN BEGIN
-;create name of BackgroundROIFile and put it in its box
+;create name of BackgroundROIFiles and and put it in its box
         REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
           instrument, $
           working_path, $

@@ -208,6 +208,8 @@ RegionOfInterestTextField = $
                RegionOfInterestTextFieldSize[1],$
                SCR_XSIZE = $
                RegionOfInterestTextFieldSize[2],$
+               SCR_YSIZE = $
+               RegionOfInterestTextFieldSize[3],$
                UNAME     = $
                'reduce_normalization_region_of_interest_file_name',$
                VALUE     = '',$

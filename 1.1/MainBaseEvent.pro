@@ -122,13 +122,13 @@ CASE Event.id OF
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'data_d_selection_roi_ymin_cw_field'): begin
-        REFreduction_DataROISelection, Event, 'roi_ymin'
+        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
     end
 
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'data_d_selection_roi_ymax_cw_field'): begin
-        REFreduction_DataROISelection, Event, 'roi_ymax'
+        REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
     end
 
 ;SAVE ROI Selection into a file -----------------------------------------------
@@ -166,13 +166,14 @@ CASE Event.id OF
     end
 
 ;SAVE Background Selection into a file ----------------------------------------
-    widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
+    widget_info(wWidget, FIND_BY_UNAME='data_back_save_button'): begin
         REFreduction_CreateDataBackgroundROIFile, Event
     end
 
 ;LOAD background selection
-    widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
-        REFreduction_LoadDataBackgroundSelection, Event
+    widget_info(wWidget, FIND_BY_UNAME= $
+                'data_d_selection_back_load_button'): begin
+        REFreduction_LoadDataBackSelection, Event ;_LoadBackgroundSelection
     end
 
 ;Peak/Background tab (peak/background cw_bgroup)

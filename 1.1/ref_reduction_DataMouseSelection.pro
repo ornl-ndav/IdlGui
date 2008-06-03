@@ -163,10 +163,10 @@ ENDIF ELSE BEGIN                ;Zoom selected
     
      RefReduction_zoom, $
        Event, $
-       MouseX=event.x, $
-       MouseY=event.y, $
-       fact=(*global).DataZoomFactor,$
-       uname='data_zoom_draw'
+       MouseX = event.x, $
+       MouseY = event.y, $
+       fact   = (*global).DataZoomFactor,$
+       uname  = 'data_zoom_draw'
  
 ENDELSE
 
@@ -385,10 +385,10 @@ ENDIF ELSE BEGIN                ;Zoom selected
         
         RefReduction_zoom, $
           Event, $
-          MouseX=event.x, $
-          MouseY=event.y, $
-          fact=(*global).DataZoomFactor,$
-          uname='data_zoom_draw'
+          MouseX = event.x, $
+          MouseY = event.y, $
+          fact   = (*global).DataZoomFactor,$
+          uname  = 'data_zoom_draw'
         
     ENDIF
     
@@ -539,10 +539,10 @@ CASE (ROISignalBackZoomStatus) OF
         IF ((*global).select_zoom_status) THEN BEGIN
             RefReduction_zoom, $
               Event, $
-              MouseX=event.x, $
-              MouseY=event.y, $
-              fact=(*global).DataZoomFactor,$
-              uname='data_zoom_draw'
+              MouseX = event.x, $
+              MouseY = event.y, $
+              fact   = (*global).DataZoomFactor,$
+              uname  = 'data_zoom_draw'
             (*global).select_zoom_status = 0
         ENDIF
     END
