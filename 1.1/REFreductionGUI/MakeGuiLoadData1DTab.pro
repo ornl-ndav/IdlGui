@@ -67,7 +67,7 @@ sTab = { size:  [5,5,D_DD_TabSize[2]-35,120],$
          list:  ['Region Of Interest (ROI)',$
                  'Peak / Background',$
                  'ZOOM mode'],$
-         uname: 'roi_peak_background_tab'}
+         uname: 'data_roi_peak_background_tab'}
 
 ;;TAB ROI ---------------------------------------------------------------------
 sRoiBase = { size: [0,0,D_DD_TabSize[2],100] }

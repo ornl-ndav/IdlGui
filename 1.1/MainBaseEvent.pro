@@ -528,40 +528,62 @@ CASE Event.id OF
         REFreduction_ZoomRescaleNormalization, Event
     end
 
-;Background Ymin and Ymax
+;ROI Ymin and Ymax ------------------------------------------------------------
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
-                'normalization_d_selection_background_ymin_cw_field'): begin
+                'nom_d_selection_roi_ymin_cw_field'): begin
+        REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymin'
+    end
+
+    widget_info(wWidget, $
+                FIND_BY_UNAME= $
+                'norm_d_selection_roi_ymax_cw_field'): begin
+        REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymax'
+    end
+
+;SAVE ROI Selection into a file -----------------------------------------------
+    widget_info(wWidget, FIND_BY_UNAME='norm_roi_save_button'): begin
+        REFreduction_CreateNormBackgroundROIFile, Event, 'roi'
+    end
+
+;LOAD ROI selection
+    widget_info(wWidget, FIND_BY_UNAME='norm_roi_load_button'): begin
+        REFreduction_LoadNormROISelection, Event
+    end
+
+;Peak Ymin and Ymax -----------------------------------------------------------
+    widget_info(wWidget, $
+                FIND_BY_UNAME='norm_d_selection_peak_ymin_cw_field'): begin
+        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymin'
+    end
+
+    widget_info(wWidget, $
+                FIND_BY_UNAME='norm_d_selection_peak_ymax_cw_field'): begin
+        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymax'
+    end
+
+;Background Ymin and Ymax -----------------------------------------------------
+    widget_info(wWidget, $
+                FIND_BY_UNAME= $
+                'norm_d_selection_background_ymin_cw_field'): begin
         REFreduction_NormBackgroundPeakSelection, Event, 'back_ymin'
     end
 
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
-                'normalization_d_selection_background_ymax_cw_field'): begin
+                'norm_d_selection_background_ymax_cw_field'): begin
         REFreduction_NormBackgroundPeakSelection, Event, 'back_ymax'
     end
 
-;Peak Ymin and Ymax
-    widget_info(wWidget, $
-                FIND_BY_UNAME= $
-                'normalization_d_selection_peak_ymin_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymin'
-    end
-
-    widget_info(wWidget, $
-                FIND_BY_UNAME= $
-                'normalization_d_selection_peak_ymax_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymax'
-    end
-
-;SAVE Background Selection into a file
-    widget_info(wWidget, FIND_BY_UNAME='normalization_roi_save_button'): begin
-        REFreduction_CreateNormBackgroundROIFile, Event
+;SAVE Background Selection into a file ----------------------------------------
+    widget_info(wWidget, FIND_BY_UNAME='norm_back_save_button'): begin
+        REFreduction_CreateNormBackgroundROIFile, Event, 'back'
     end
 
 ;LOAD background selection
-    widget_info(wWidget, FIND_BY_UNAME='normalization_roi_load_button'): begin
-        REFreduction_LoadNormBackgroundSelection, Event
+    widget_info(wWidget, FIND_BY_UNAME= $
+                'norm_d_selection_norm_load_button'): begin
+        REFreduction_LoadDataBackSelection, Event ;_LoadBackgroundSelection
     end
 
 ;Peak/Background tab (peak/background cw_bgroup)
@@ -569,6 +591,8 @@ CASE Event.id OF
        SwitchPeakBackgroundNormBase, Event ;_GUI
        SwitchPeakBackgroundReduceNormBase, Event ;_GUI
     END
+    
+;******************************************************************************
 
 ;CONTRAST TAB
 ;Contrast editor of data 1D tab

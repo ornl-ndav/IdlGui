@@ -442,22 +442,72 @@ END
 PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE') 
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE') 
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 xsize_1d_draw = (*global).xsize_1d_draw
 
-if ((*global).miniVersion) then begin
+IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
-endif else begin
+ENDIF ELSE BEGIN
     coeff = 2
-endelse
+ENDELSE
 
-;get Background Ymin, Ymax
-BackSelection = (*(*global).norm_back_selection)
-
+;get ROI Ymin, Ymax ============================================================
+ROISelection = (*(*global).norm_roi_selection)
 ValidateSaveButton = 0
-;check all cases -1,-1 -1,value value,-1 and value,value
+;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
+CASE (ROISelection[0]) OF
+    -1:begin
+        case (ROISelection[1]) OF
+            -1:                 ;do nothing
+            else:begin
+                Ymax = ROISelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, $
+                  'norm_d_selection_roi_ymax_cw_field', Ymax/coeff
+            end
+        endcase
+    end
+    else:begin
+        case (ROISelection[1]) OF
+            -1: begin
+                Ymin = ROISelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, $
+                  'norm_d_selection_roi_ymin_cw_field', Ymin/coeff
+            end
+            else:begin
+                Ymin = Min(ROISelection,max=Ymax)
+                (*(*global).norm_roi_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, $
+                  event, $
+                  'norm_d_selection_roi_ymin_cw_field', $
+                  Ymin/coeff
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, $
+                  event, $
+                  'norm_d_selection_roi_ymax_cw_field', $
+                  Ymax/coeff
+                ValidateSaveButton = 1 ;enable SAVE button
+            end
+        endcase
+    end
+endcase
+
+ActivateWidget, Event, 'norm_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'norm_background_selection_file_text_field', $
+  ValidateSaveButton
+
+;get Background Ymin, Ymax ====================================================
+BackSelection = (*(*global).norm_back_selection)
+ValidateSaveButton = 0
+;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
 CASE (BackSelection[0]) OF
     -1:begin
         case (BackSelection[1]) OF
@@ -468,7 +518,7 @@ CASE (BackSelection[0]) OF
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
-                  'normalization_d_selection_background_ymax_cw_field', $
+                  'norm_d_selection_background_ymax_cw_field', $
                   Ymax/coeff
             end
         endcase
@@ -480,7 +530,7 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', $
+                  'norm_d_selection_background_ymin_cw_field', $
                   Ymin/coeff
             end
             else:begin
@@ -489,12 +539,12 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', $
+                  'norm_d_selection_background_ymin_cw_field', $
                   Ymin/coeff
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymax_cw_field', $
+                  'norm_d_selection_background_ymax_cw_field', $
                   Ymax/coeff
                 ValidateSaveButton = 1 ;enable SAVE button
             end
@@ -502,15 +552,14 @@ CASE (BackSelection[0]) OF
     end
 endcase
 
-ActivateWidget, Event, 'normalization_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'norm_roi_save_button', ValidateSaveButton
 ActivateWidget, Event, $
-  'normalization_background_selection_file_text_field', $
+  'norm_background_selection_file_text_field', $
   ValidateSaveButton
 
-;get Peak Ymin and Ymax
+;get Peak Ymin and Ymax =======================================================
 PeakSelection = (*(*global).norm_peak_selection)
-
-;check all cases -1,-1 -1,value value,-1 and value,value
+;check all cases -1,-1 and -1,value value,-1 and value,value
 CASE (PeakSelection[0]) OF
     -1:begin
         case (PeakSelection[1]) OF
@@ -521,13 +570,8 @@ CASE (PeakSelection[0]) OF
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
-                  'normalization_d_selection_peak_ymax_cw_field', $
+                  'norm_d_selection_peak_ymax_cw_field', $
                   Ymax/coeff
-                 putTextFieldValue, $
-                   event, $
-                   'norm_exclusion_high_bin_text', $
-                   strcompress(Ymax/coeff), $
-                   0
              end
         endcase
     end
@@ -539,14 +583,8 @@ CASE (PeakSelection[0]) OF
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
-                  'normalization_d_selection_peak_ymin_cw_field', $
+                  'norm_d_selection_peak_ymin_cw_field', $
                   Ymin/coeff
-                putTextFieldValue, $
-                  event, $
-                  'norm_exclusion_low_bin_text', $
-                  strcompress(Ymin/coeff), $
-                  0
-
             end
             else: begin
                 Ymin = Min(PeakSelection,max=Ymax)
@@ -555,31 +593,22 @@ CASE (PeakSelection[0]) OF
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
-                  'normalization_d_selection_peak_ymin_cw_field', $
+                  'norm_d_selection_peak_ymin_cw_field', $
                   Ymin/coeff
-                
-                putTextFieldValue, $
-                  event, $
-                  'norm_exclusion_low_bin_text', $
-                  strcompress(Ymin/coeff), $
-                  0
-                
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
-                  'normalization_d_selection_peak_ymax_cw_field', $
+                  'norm_d_selection_peak_ymax_cw_field', $
                   Ymax/coeff
-                 putTextFieldValue, $
-                   event, $
-                   'norm_exclusion_high_bin_text', $
-                   strcompress(Ymax/coeff), $
-                   0
             END
         ENDCASE
     END
 ENDCASE
 END
+
+
+
 
 ;Put the given string in the Reduction status text field
 PRO putInfoInReductionStatus, Event, string, append

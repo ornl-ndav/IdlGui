@@ -183,6 +183,8 @@ global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-man
 ;color of background selection
                    data_roi_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for data ROI
+                   norm_roi_selection: ptr_new(0L),$ 
+;Ymin and Ymax for Norm. ROI
                    norm_back_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for norm background
                    data_peak_selection: ptr_new(0L),$ 
@@ -191,6 +193,8 @@ global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-man
 ;Ymin and Ymax for norm peak
                    data_back_selection: ptr_new(0L),$
 ;Ymin and Ymax for Back Data Roi                   
+                   norm_back_selection: ptr_new(0L),$
+;Ymin and Ymax for Back Norm. Roi                   
                    data_roi_ext: '_data_roi.dat',$ 
 ;extension file name of data ROI
                    data_back_ext: '_data_back.dat',$ 
@@ -209,6 +213,8 @@ global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-man
 ;Status of the norm selection (see below)
                    select_zoom_status: 0,$
 ;Status of the zoom (0=no zoom; 1=zoom)
+                   select_norm_zoom_status: 0,$
+;Status of the normalization zoom (0=no zoom; 1=zoom)
                    flt0_ptr: ptrarr(8,/allocate_heap),$ 
 ;arrays of all the x-axis
                    flt1_ptr: ptrarr(8,/allocate_heap),$ 
@@ -536,15 +542,15 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; default tabs shown
-    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 0 ;REDUCE
+;    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;    widget_control, id1, set_tab_current = 0 ;REDUCE
 
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
 ;    widget_control, id1, set_tab_current = 1 ;peak/background
     
-;    id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-;    widget_control, id2, set_tab_current = 1 ;NORMALIZATION
+    id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+    widget_control, id2, set_tab_current = 1 ;NORMALIZATION
     
 ;change default location of Batch file
 ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'

@@ -154,58 +154,68 @@ END
 
 ;------------------------------------------------------------------------------
 ;NORMALIZATION SIDE OF LOAD TAB
-PRO REFreduction_CreateNormBackgroundROIFile, Event
+PRO REFreduction_CreateNormBackgroundROIFile, Event, type
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-if ((*global).miniVersion) then begin
+;get Ymin and Ymax
+IF (type EQ 'back') THEN BEGIN
+    SelectionArray = (*(*global).norm_back_selection)
+ENDIF ELSE BEGIN
+    SelectionArray = (*(*global).norm_roi_selection)
+ENDELSE
+
+IF ((*global).miniVersion) THEN BEGIN
     coeff = 1
-endif else begin
+ENDIF ELSE BEGIN
     coeff = 2
-endelse
+ENDELSE
 
-;get Background Ymin and Ymax
-SelectionBackArray = (*(*global).norm_back_selection)
 Ymin = SelectionBackArray[0]/coeff
 Ymax = SelectionBackArray[1]/coeff
 YNbr = (Ymax-Ymin)
 
-if (YNbr LE 1) then begin
+IF (YNbr LE 1) THEN BEGIN
     
 ;display error message saying that selection is invalid
-Message = '* E R R O R *'
-putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
-  Message
+    Message = '* E R R O R *'
+    putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+      Message
 
-Message = 'Normalization Background Selection is invalid !'
-putTextFieldValue, $
-  Event, $
-  'NORM_left_interaction_help_text',$
-  Message, $
-  0
+    IF (type EQ 'back') THEN BEGIN
+        Message = 'Normalization Background Selection is Invalid !'
+    ENDIF ELSE BEGIN
+        Message = 'Normalization ROI Selection is Invalid !'
+    ENDELSE
 
-endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
+    putTextFieldValue, $
+      Event, $
+      'NORM_left_interaction_help_text',$
+      Message, $
+      0
 
-;get name of roi file to create
-    file_name = $
-      getTextFieldValue(Event,$
-                        'normalization_background_selection_file_text_field')
+ENDIF ELSE BEGIN ;enough Y between Ymax and Ymin to create outpur roi file
+
+;get name of file to create
+    IF (type EQ 'back') THEN BEGIN
+        file_name = $
+          getTextFieldValue(Event,$
+                            'norm_back_d_selection_file_text_field')
+
+    ENDIF ELSE BEGIN
+        file_name = $
+          getTextFieldValue(Event,$
+                            'norm_roi_selection_file_text_field')
+    ENDELSE
     file_name = file_name[0]
-
-;update REDUCE gui with name of data background roi file
-    putTextFieldValue,$
-      Event,$
-      'reduce_normalization_region_of_interest_file_name',$
-      file_name,$
-      0 ;do not append
 
 ;display preview message
     Message = 'Preview of ' + file_name
     putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
       Message
-
+    
 ;get instrument
     instrument = (*global).instrument
     
@@ -217,58 +227,52 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         message = 'ERROR: The ROI file can not be saved at this location ('
         message += file_name + ')'
         putLogbookMessage, Event, message, Append=1
-        norm_message = 'ERROR saving the Normalization ROI file ' + $
-          '(check LogBook)'
+        IF (type EQ 'back') THEN BEGIN
+            norm_message = 'ERROR saving the Normalization Background File ' + $
+              '(check LogBook)'
+        ENDIF ELSE BEGIN
+            norm_message = 'ERROR saving the Normalization ROI file (check ' + $
+              'LogBook)'
+        ENDELSE
         putNormalizationLogBookMessage, Event, norm_message, Append=1
     ENDIF ELSE BEGIN
-        
-        openw, 1, file_name
-    
-        if (instrument EQ (*global).REF_L) then begin ;REF_L
-            
-            i=0L
+        OPENW, 1, file_name
+        IF (instrument EQ (*global).REF_L) THEN BEGIN ;REF_L
+            i     =0L
             NxMax = (*global).Nx_REF_L
-            YNbr = YNbr+1
-            OutputArray = strarr(NxMax*YNbr)
-            for y=(Ymin),(Ymax) do begin
-                for x=0,(NxMax-1) do begin
-                    text = 'bank1_' + strcompress(x,/remove_all)
-                    text += '_' + strcompress(y,/remove_all)
-                    printf,1,text
+            YNbr  = YNbr+1
+            OutputArray = STRARR(NxMax*YNbr)
+            FOR y=(Ymin),(Ymax) DO BEGIN
+                FOR x=0,(NxMax-1) DO BEGIN
+                    text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)
+                    text += '_' + STRCOMPRESS(y,/REMOVE_ALL)
+                    PRINTF,1,text
                     OutputArray[i] = text
                     i++
-                endfor
-            endfor
-            
-        endif else begin        ;REF_M
-            
-            i=0L
+                ENDFOR
+            ENDFOR
+        ENDIF ELSE BEGIN        ;REF_M
+            i     =0L
             NyMax = (*global).Ny_REF_M
-            YNbr = YNbr+1
-            OutputArray = strarr((NyMax)*YNbr)	
-            for y=(Ymin),(Ymax) do begin
-                for x=0,(NyMax-1) do begin
-                    text = 'bank1_' + strcompress(y,/remove_all)
-                    text += '_' + strcompress(x,/remove_all)
-                    printf,1,text
+            YNbr  = YNbr+1
+            OutputArray = STRARR((NyMax)*YNbr)	
+            FOR y=(Ymin),(Ymax) DO BEGIN
+                FOR x=0,(NyMax-1) DO BEGIN
+                    text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
+                    text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
+                    PRINTF,1,text
                     OutputArray[i] = text
                     i++
-                endfor
-            endfor
-            
-        endelse                 ;end of (instrument is REF_L)
-        
-        close, 1
-        free_lun, 1
-        
+                ENDFOR
+            ENDFOR
+        ENDELSE                 ;end of (instrument is REF_L)
+        CLOSE, 1
+        FREE_LUN, 1
 ;display file_name in info box (display x first lines)
         REFreduction_DisplayPreviewOfNormRoiFile, $
           Event, $
           OutputArray, $
           (*global).roi_file_preview_nbr_line
-
     ENDELSE
-
-endelse                         ;end of (Ynbr LE 1)
-
+ENDELSE                         ;end of (Ynbr LE 1)
 END
