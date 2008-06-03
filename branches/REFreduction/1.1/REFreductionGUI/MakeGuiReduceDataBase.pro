@@ -161,6 +161,7 @@ RegionOfInterestTextField = $
                 XOFFSET   = RegionOfInterestTextFieldSize[0],$
                 YOFFSET   = RegionOfInterestTextFieldSize[1],$
                 SCR_XSIZE = RegionOfInterestTextFieldSize[2],$
+                SCR_YSIZE = RegionOfInterestTextFieldSize[3],$
                 VALUE     = '',$
                 UNAME     = 'reduce_data_region_of_interest_file_name',$
                 /ALIGN_LEFT)

@@ -53,7 +53,7 @@ END
 ;Put the contain of the string array in the specified text field
 PRO putTextFieldArray, Event, uname, array, NbrToDisplay, iteration
 if (iteration EQ 0) then begin  ;no append
-    putTextFieldValue, Event, uname,array[0],0
+    putTextFieldValue, Event, uname, array[0],0
     if (NbrToDisplay LE (size(array))(1)) then begin
         NbrLines = NbrToDisplay
     endif else begin

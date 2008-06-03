@@ -191,8 +191,10 @@ global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-man
 ;Ymin and Ymax for norm peak
                    data_back_selection: ptr_new(0L),$
 ;Ymin and Ymax for Back Data Roi                   
-                   data_back_roi_ext: '_data_roi.dat',$ 
-;extension file name of back data ROI
+                   data_roi_ext: '_data_roi.dat',$ 
+;extension file name of data ROI
+                   data_back_ext: '_data_back.dat',$ 
+;extension file name of data Back
                    norm_back_roi_ext: '_norm_roi.dat',$
 ;extension file name of back norm ROI
                    load_roi_ext: '_roi.dat',$

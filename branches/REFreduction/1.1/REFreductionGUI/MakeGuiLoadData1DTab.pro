@@ -95,7 +95,7 @@ sOrLabel = {size: [sRoiYmax.size[0]+sRoiYmax.size[2]+XYoff[0],$
                    sRoiYmax.size[1]+XYoff[1]],$
             value: 'OR'}
                   
-XYoff = [30,-5] ;LOAD button
+XYoff = [30,-7] ;LOAD button
 sLoadButton = {size: [sOrLabel.size[0]+XYoff[0],$
                       sOrLabel.size[1]+XYoff[1],$
                       380,$
@@ -195,7 +195,7 @@ sBackLoadButton = {size: [sBackOrLabel.size[0]+XYoff[0],$
                           390,$
                           30],$
                    value: 'LOAD BACKGROUND SELECTION FILE',$
-                   uname: 'data_d_selection_background_load_button'}
+                   uname: 'data_d_selection_back_load_button'}
 
 XYoff = [3,43]                  ;ROI file Name label
 sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
@@ -206,7 +206,7 @@ XYoff = [100,-8]                 ;roi file text
 sBackRoiFileText = {size:     [sBackRoiFileLabel.size[0]+XYoff[0],$
                                sBackRoiFileLabel.size[1]+XYoff[1],$
                                350],$
-                    uname:    'refm_back_data_file_text',$
+                    uname:    'data_back_d_selection_file_text_field',$
                     sensitive: 0}
 
 XYoff = [2,0]                   ;SAVE button

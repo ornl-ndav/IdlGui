@@ -32,19 +32,15 @@
 ;
 ;==============================================================================
 
-PRO DisplayHeadTailBackgroundFile, Event, FileName, uname
+PRO DisplayHeadTailFile, Event, FileName, uname
 ;get the first 20 elements
 cmd = 'head ' + FileName + ' -n 20'
-spawn, cmd, First20Lines
-
+SPAWN, cmd, First20Lines
 FinalArray = [First20Lines,'...']
-
 ;get the last 20 elements
 cmd = 'tail ' + FileName + ' -n 20'
-spawn, cmd, Last20Lines
-
+SPAWN, cmd, Last20Lines
 FinalArray = [FinalArray, Last20Lines]
-
 ;display result in HELP text field
 sz=(size(FinalArray))(1)
 putTextFieldArray,$
@@ -55,70 +51,61 @@ putTextFieldArray,$
   0
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
 uname = 'DATA_left_interaction_help_text'
-DisplayHeadTailBackgroundFile, Event, BackROIFullFileName, uname
+DisplayHeadTailFile, Event, BackROIFullFileName, uname
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
 uname = 'NORM_left_interaction_help_text'
-DisplayHeadTailBackgroundFile, Event, BackROIFullFileName, uname
+DisplayHeadTailFile, Event, BackROIFullFileName, uname
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION ParseBackgroundFileString, Event, StringText
-
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 result_array = strsplit(StringText,'_',/extract)
-
-if ((*global).instrument EQ 'REF_L') then begin
+IF ((*global).instrument EQ 'REF_L') THEN BEGIN
     Y = result_array[2]
-endif else begin
+ENDIF ELSE BEGIN
     Y = result_array[1]
-endelse
-
-return, Y
+ENDELSE
+RETURN, Y
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION retrieveYMinMaxFromFile, Event, FileName
-
 ;to get the first line of the file
 cmd = 'head ' + FileName + ' -n 1'
-spawn, cmd, first_line
-
+SPAWN, cmd, first_line
 ;to get the last line of the file
 cmd = 'tail ' + FileName + ' -n 1'
-spawn, cmd, last_line
-
+SPAWN, cmd, last_line
 Ymin = ParseBackgroundFileString(Event, first_line)
 Ymax = ParseBackgroundFileString(Event, last_line)
-
-return, [Ymin-1,Ymax+1]
+RETURN, [Ymin-1,Ymax+1]
 END
 
 ;******************************************************************************
 ;******************************************************************************
 PRO REFreduction_LoadDataROISelection, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;define filter
-instrument = (*global).instrument
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+;define Parameters
+instrument   = (*global).instrument
 load_roi_ext = (*global).load_roi_ext
-filter = instrument + '_*' + load_roi_ext
+filter       = instrument + '_*' + load_roi_ext
+PROCESSING   = (*global).processing_message
 ;get default path 
-WorkingPath = (*global).working_path
-title = instrument + ' Data ROI Selection File' ;title of pickfile
+WorkingPath  = (*global).working_path
+title        = instrument + ' Data ROI Selection File' ;title of pickfile
+
 ;open file
 ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
                                   GET_PATH          = path,$
@@ -126,25 +113,29 @@ ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
                                   FILTER            = filter,$
                                   DEFAULT_EXTENSION = '.dat',$
                                   /FIX_FILTER)
+
 IF (ROIFullFileName NE '') THEN BEGIN
 ;put info in logbook
-    text = '-> Loading Data ROI Selection File '
+    text  = '-> Loading Data ROI Selection File '
     text += ROIFullFileName
-    PROCESSING = (*global).processing_message
-    text += '..... ' + PROCESSING
+
+    text += ' ... ' + PROCESSING
     putLogBookMessage, Event, Text, Append=1
+
 ;display name of new file name in text field
     putTextFieldValue,$
       Event,$
       'data_roi_selection_file_text_field',$
       ROIFullFileName,$
       0                         ;do not append
+
 ;update REDUCE gui with name of data background roi file
     putTextFieldValue,$
       Event,$
       'reduce_data_region_of_interest_file_name',$
       ROIFullFileName,$
       0                         ;do not append
+
 ;display preview message in help data box
     Message = 'Preview of ' + ROIFullFileName
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
@@ -161,14 +152,101 @@ IF (ROIFullFileName NE '') THEN BEGIN
       'data_d_selection_roi_ymax_cw_field',$
       strcompress(YMinYMaxArray[1],/remove_all),$
       0 
+
 ;replot
     REFreduction_DataBackgroundPeakSelection, Event    
+
 ;display 20 first data and last 20 in HELP text data box
-    DisplayHeadTailROIDataFile, Event, ROIFullFileName
+    DisplayHeadTailFile, $
+      Event, $
+      ROIFullFileName, $
+      'DATA_left_interaction_help_text'
+
 ;put info in logbook
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
+endif
+END
+
+;******************************************************************************
+;******************************************************************************
+PRO REFreduction_LoadDataBackSelection, Event
+;get global structure
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+;define Parameters
+instrument    = (*global).instrument
+load_back_ext = (*global).load_roi_ext
+filter        = instrument + '_*' + load_back_ext
+PROCESSING    = (*global).processing_message
+;get default path 
+WorkingPath   = (*global).working_path
+;title of pickfile
+title         = instrument + ' Data Background Selection File' 
+
+;open file
+BackFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
+                                  GET_PATH          = path,$
+                                  TITLE             = title,$
+                                  FILTER            = filter,$
+                                  DEFAULT_EXTENSION = '.dat',$
+                                  /FIX_FILTER)
+
+IF (BackFullFileName NE '') THEN BEGIN
+;put info in logbook
+    text  = '-> Loading Data Background Selection File '
+    text += BackFullFileName
+
+    text += ' ... ' + PROCESSING
+    putLogBookMessage, Event, Text, Append=1
+
+;display name of new file name in text field
+    putTextFieldValue,$
+      Event,$
+      'data_back_d_selection_file_text_field',$
+      BackFullFileName,$
+      0                         ;do not append
+
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'data_back_selection_file_value',$
+      BackFullFileName,$
+      0                         ;do not append
+
+;display preview message in help data box
+    Message = 'Preview of ' + BackFullFileName
+    putLabelValue, Event, 'left_data_interaction_help_message_help', Message
+    
+    YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackFullFileName)
+;put Ymin and Ymax in their text fields
+    putTextFieldValue, $
+      Event,$
+      'data_d_selection_background_ymin_cw_field',$
+      strcompress(YMinYMaxArray[0],/remove_all),$
+      0 
+    putTextFieldValue, $
+      Event,$
+      'data_d_selection_background_ymax_cw_field',$
+      strcompress(YMinYMaxArray[1],/remove_all),$
+      0 
+
+;replot
+    REFreduction_DataBackgroundPeakSelection, Event    
+
+;display 20 first data and last 20 in HELP text data box
+    DisplayHeadTailFile, $
+      Event, $
+      BackFullFileName, $
+      'DATA_left_interaction_help_text'
+
+;put info in logbook
+    LogBookText = getLogBookText(Event)
+    Message = 'OK  '
+    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
 endif
 END
 
@@ -226,7 +304,8 @@ filter = instrument + '_*' + load_back_roi_ext
 ;get default path 
 WorkingPath = (*global).working_path
 
-title = instrument + ' Normalization Background Selection File' ;title of pickfile
+;title of pickfile
+title = instrument + ' Normalization Background Selection File' 
 
 ;open file
 BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
@@ -261,7 +340,9 @@ if (BackROIFullFileName NE '') then begin
 
 ;display preview message in help norm. box
     Message = 'Preview of ' + BackROIFullFileName
-    putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
+    putLabelValue, Event, $
+      'left_normalization_interaction_help_message_help', $
+      Message
 
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
     
@@ -294,8 +375,8 @@ endif
 
 END
 
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
 
 PRO REFreduction_LoadNormBackgroundFile, Event, NormRoiFileName
 BackROIFullFileName = NormRoiFileName

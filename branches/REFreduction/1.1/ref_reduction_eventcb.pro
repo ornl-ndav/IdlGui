@@ -236,7 +236,6 @@ text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
 putDataLogBookMessage, Event, text, Append=1
 ;to see the last line of the data log book
 showLastDataLogBookLine, Event
-
 END
 
 
