@@ -133,7 +133,7 @@ CASE Event.id OF
 
 ;SAVE ROI Selection into a file -----------------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
-        REFreduction_CreateDataROIFile, Event
+        REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
 
 ;LOAD ROI selection
@@ -167,7 +167,7 @@ CASE Event.id OF
 
 ;SAVE Background Selection into a file ----------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='data_back_save_button'): begin
-        REFreduction_CreateDataBackgroundROIFile, Event
+        REFreduction_CreateDataBackgroundROIFile, Event, 'back'
     end
 
 ;LOAD background selection

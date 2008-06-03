@@ -384,13 +384,12 @@ CASE (BackSelection[0]) OF
     end
 endcase
 
-ActivateWidget, Event, 'data_background_save_button', ValidateSaveButton
+ActivateWidget, Event, 'data_back_save_button', ValidateSaveButton
 ActivateWidget, Event, 'data_background_selection_file_text_field', $
   ValidateSaveButton
 
 ;get Peak Ymin and Ymax =======================================================
 PeakSelection = (*(*global).data_peak_selection)
-
 ;check all cases -1,-1 and -1,value value,-1 and value,value
 CASE (PeakSelection[0]) OF
     -1:begin

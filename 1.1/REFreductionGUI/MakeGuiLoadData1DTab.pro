@@ -215,7 +215,7 @@ sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
                            sBackRoiFileText.size[1]+XYoff[1],$
                            130,sLoadButton.size[3]],$
                    value: 'SAVE BACK. FILE',$
-                   uname: 'data_background_save_button'}
+                   uname: 'data_back_save_button'}
 
 ;TAB Zoom ---------------------------------------------------------------------
 sZoomBase = sRoiBase

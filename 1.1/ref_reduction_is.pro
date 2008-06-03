@@ -156,7 +156,8 @@ END
 
 
 Function isWithDataInstrumentGeometryOverwrite, Event
-id = widget_info(Event.top,find_by_uname='overwrite_data_instrument_geometry_cwbgroup')
+id = widget_info(Event.top, $
+                 find_by_uname='overwrite_data_instrument_geometry_cwbgroup')
 widget_control, id, get_value=isWithIGOverwrite
 if (isWithIGOverwrite EQ 0) then begin
     return, 1
@@ -167,7 +168,8 @@ END
 
 
 Function isWithNormInstrumentGeometryOverwrite, Event
-id = widget_info(Event.top,find_by_uname='overwrite_norm_instrument_geometry_cwbgroup')
+id = widget_info(Event.top, $
+                 find_by_uname='overwrite_norm_instrument_geometry_cwbgroup')
 widget_control, id, get_value=isWithIGOverwrite
 if (isWithIGOverwrite EQ 0) then begin
     return, 1
@@ -192,7 +194,8 @@ END
 
 
 Function isNormZoomTabSelected, Event
-tab_id = widget_info(Event.top,find_by_uname='normalization_nxsummary_zoom_tab')
+tab_id = widget_info(Event.top, $
+                     find_by_uname='normalization_nxsummary_zoom_tab')
 CurrTabSelect = widget_info(tab_id,/tab_current)
 return, CurrTabSelect
 END
@@ -217,7 +220,8 @@ END
 
 
 Function isArchivedNormNexusDesired, Event
-id = widget_info(Event.top,find_by_uname='normalization_archived_or_full_cwbgroup')
+id = widget_info(Event.top, $
+                 find_by_uname='normalization_archived_or_full_cwbgroup')
 widget_control,id,get_value=status
 if (status EQ 0) then begin
     return, 1
@@ -302,4 +306,10 @@ id = widget_info(Event.top,find_by_uname='normalization2d_z_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isPeakBaseMap, Event
+RETURN, isBaseMap(Event, 'data_peak_base')
+END
+
 

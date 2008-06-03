@@ -54,7 +54,7 @@ RegionOfInterestLabelSize = [RunsLabelSize[0],$
                              RunsLabelSize[1]+d_vertical_L_L]
 RegionOfInterestLabelTitle = 'Region of interest (ROI) file:'
 RegionOfInterestTextFieldSize = [230,$
-                                 RegionOfInterestLabelSize[1],$
+                                 RegionOfInterestLabelSize[1]-7,$
                                  453,30]
               
 ;Exclusion peak region / Background -------------------------------------------
@@ -74,20 +74,20 @@ XYoff = [250,0]
 sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
                           sPeakMainLabel.size[1]+XYoff[1]],$
                    value: 'Ymin:'}
-XYoff = [50,0]
+XYoff = [50,-7]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
-                          50],$
+                          50,30],$
                    value: '',$
                    uname: 'data_exclusion_low_bin_text'}
 XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
-                          sPeakYminValue.size[1]+XYoff[1]],$
+                          sPeakYminLabel.size[1]+XYoff[1]],$
                    value: 'Ymax:'}
-XYoff = [50,0]
+XYoff = [50,-7]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYmaxLabel.size[1]+XYoff[1],$
-                          50],$
+                          50,30],$
                    value: '',$
                    uname: 'data_exclusion_high_bin_text'}
 
@@ -102,7 +102,8 @@ sBackMainLabel = { size:  XYoff,$
                    value: 'Background Selection File:'}
 XYoff = [170,0]
 sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
-                          sBackMainLabel.size[1]+XYoff[1]],$
+                          sBackMainLabel.size[1]+XYoff[1]-7,$
+                          453,30],$
                    value: '',$
                    uname: 'data_back_selection_file_value'}
                 
@@ -179,27 +180,35 @@ wPeakBase = WIDGET_BASE(data_base,$
 wPeakMainLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakMainLabel.size[0],$
                               YOFFSET = sPeakMainLabel.size[1],$
-                              VALUE   = sPeakMainLabel.VALUE)
+                              VALUE   = sPeakMainLabel.value)
                               
 wPeakYminLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakYminLabel.size[0],$
                               YOFFSET = sPeakYminLabel.size[1],$
-                              VALUE   = sPeakYminLabel.VALUE)
+                              VALUE   = sPeakYminLabel.value)
 
 wPeakYminVALUE = WIDGET_LABEL(wPeakBase,$
-                              XOFFSET = sPeakYminVALUE.size[0],$
-                              YOFFSET = sPeakYminVALUE.size[1],$
-                              VALUE   = sPeakYminVALUE.VALUE)
+                              XOFFSET   = sPeakYminValue.size[0],$
+                              YOFFSET   = sPeakYminValue.size[1],$
+                              SCR_XSIZE = sPeakYminValue.size[2],$
+                              SCR_YSIZE = sPeakYminValue.size[3],$
+                              VALUE     = sPeakYminValue.value,$
+                              UNAME     = sPeakYminValue.uname,$
+                              /ALIGN_LEFT)
 
 wPeakYmaxLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakYmaxLabel.size[0],$
                               YOFFSET = sPeakYmaxLabel.size[1],$
-                              VALUE   = sPeakYmaxLabel.VALUE)
+                              VALUE   = sPeakYmaxLabel.Value)
 
 wPeakYmaxVALUE = WIDGET_LABEL(wPeakBase,$
-                              XOFFSET = sPeakYmaxVALUE.size[0],$
-                              YOFFSET = sPeakYmaxVALUE.size[1],$
-                              VALUE   = sPeakYmaxVALUE.VALUE)
+                              XOFFSET   = sPeakYmaxValue.size[0],$
+                              YOFFSET   = sPeakYmaxValue.size[1],$
+                              SCR_XSIZE = sPeakYmaxValue.size[2],$
+                              SCR_YSIZE = sPeakYmaxValue.size[3],$
+                              VALUE     = sPeakYmaxValue.value,$
+                              UNAME     = sPeakYmaxValue.uname,$
+                              /ALIGN_LEFT)
 
 ;Background exlusion Base -----------------------------------------------------
 wBackBase = WIDGET_BASE(data_base,$
@@ -214,13 +223,15 @@ wBackBase = WIDGET_BASE(data_base,$
 wBackMainLabel = WIDGET_LABEL(wBackBase,$
                               XOFFSET = sBackMainLabel.size[0],$
                               YOFFSET = sBackMainLabel.size[1],$
-                              VALUE   = sBackMainLabel.VALUE)
+                              VALUE   = sBackMainLabel.value)
 
 wBackFileVALUE = WIDGET_LABEL(wBackBase,$
-                              XOFFSET = sBackFileVALUE.size[0],$
-                              YOFFSET = sBackFileVALUE.size[1],$
-                              VALUE   = sBackFileVALUE.VALUE,$
-                              UNAME   = sBackFileVALUE.uname,$
+                              XOFFSET   = sBackFileValue.size[0],$
+                              YOFFSET   = sBackFileValue.size[1],$
+                              SCR_XSIZE = sBackFileValue.size[2],$
+                              SCR_YSIZE = sBackFileValue.size[3],$
+                              VALUE     = sBackFileValue.value,$
+                              UNAME     = sBackFileValue.uname,$
                               /ALIGN_LEFT)
 
 ;background
