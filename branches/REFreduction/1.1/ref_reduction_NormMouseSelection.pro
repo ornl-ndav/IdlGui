@@ -36,37 +36,40 @@
 PRO REFreduction_NormSelectionPressLeft, event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 (*global).NormXMouseSelection = event.x
 
-;signal or peak selection
-BackSignalZoomStatus = isNormBackPeakZoomSelected(Event)
-CASE (BackSignalZoomStatus) OF
-    0: begin ;back
-        color = (*global).back_selection_color
+;ROI, peak, back or zoom selection
+ROISignalBackZoomStatus = isNormBackPeakZoomSelected(Event)
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                   ;ROI
+        color   = (*global).roi_selection_color
+        y_array = (*(*global).norm_roi_selection)
+    END
+    1: BEGIN                    ;signal
+        color   = (*global).peak_selection_color
+        y_array = (*(*global).norm_peak_selection)
+    END
+    2: BEGIN                    ;back
+        color   = (*global).back_selection_color
         y_array = (*(*global).norm_back_selection)
-    end
-    1: begin ;signal
-    color = (*global).peak_selection_color
-    y_array = (*(*global).norm_peak_selection)
-    end
-    2: begin ;zoom
+    END
+    3: BEGIN                    ;zoom
 ;be sure the data draw has been selected
-        id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
-        widget_control, id_draw, get_value=id_value
-        wset,id_value
-    end
+        id_draw = WIDGET_INFO(Event.top, $
+                              FIND_BY_UNAME='load_normalization_D_draw')
+        WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+        WSET,id_value
+    END
 ENDCASE
 
-if (BackSignalZoomStatus NE 2) then begin
-
-    isPeakSelected = isNormPeakSelectionSelected(Event)
+if (ROISignalBackZoomStatus NE 3) then begin
 
 ;where to stop the plot of the lines
-    xsize_1d_draw = (*global).Ntof_NORM - 1
-    
+    xsize_1d_draw = (*global).Ntof_NORM-1
+
     mouse_status = (*global).select_norm_status
 ;print, 'PressLeft mouse_status: ' + strcompress(mouse_status)
     CASE (mouse_status) OF
@@ -89,7 +92,8 @@ if (BackSignalZoomStatus NE 2) then begin
             mouse_status_new = 1
 
             UpDownMessage = (*global).UpDownMessage
-            putTextFieldValue, event, 'NORM_left_interaction_help_text', UpDownMessage, 0
+            putTextFieldValue, event, 'NORM_left_interaction_help_text', $
+              UpDownMessage, 0
 
         END
         1:  mouse_status_new = mouse_status
@@ -111,7 +115,8 @@ if (BackSignalZoomStatus NE 2) then begin
             mouse_status_new = 4
 
             UpDownMessage = (*global).UpDownMessage
-            putTextFieldValue, event, 'NORM_left_interaction_help_text', UpDownMessage, 0
+            putTextFieldValue, event, 'NORM_left_interaction_help_text', $
+              UpDownMessage, 0
 
         end
         4:mouse_status_new = mouse_status
@@ -133,57 +138,22 @@ if (BackSignalZoomStatus NE 2) then begin
             mouse_status_new = 4
 
             UpDownMessage = (*global).UpDownMessage
-            putTextFieldValue, event, 'NORM_left_interaction_help_text', UpDownMessage, 0
+            putTextFieldValue, event, $
+              'NORM_left_interaction_help_text', $
+              UpDownMessage, 0
 
-        end
-    endcase
+        END
+    ENDCASE
     
-    if (isPeakSelected) then begin ;peak selection
-        color = (*global).back_selection_color
-        y_array = (*(*global).norm_back_selection)
-        
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
+;This function replot the other selection 
+    ReplotNormOtherSelection, Event, ROIsignalBackZoomStatus
 
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-
-    endif else begin            ;background selection
-        color = (*global).peak_selection_color
-        y_array = (*(*global).norm_peak_selection)
-
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
-
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-
-    endelse
-    
-;display zoom if zomm tab is selected
-    if (isNormZoomTabSelected(Event)) then begin
-        RefReduction_zoom, $
-          Event, $
-          MouseX=event.x, $
-          MouseY=event.y, $
-          fact=(*global).NormalizationZoomFactor,$
-          uname='normalization_zoom_draw'
-    endif
-    
     (*global).select_norm_status = mouse_status_new
     
-;update Back and Peak Ymin and Ymax cw_fields
+;update Back and Peak Ymin and Ymax cw_fields of Data
     putNormBackgroundPeakYMinMaxValueInTextFields, Event
-    
-endif else begin ;zoom selected
+
+ENDIF ELSE BEGIN ;zoom selected
 
     ;validate zoom display
     SetTabCurrent, $
@@ -193,14 +163,14 @@ endif else begin ;zoom selected
     
     RefReduction_zoom, $
       Event, $
-      MouseX=event.x, $
-      MouseY=event.y, $
-      fact=(*global).NormalizationZoomFactor,$
-      uname='normalization_zoom_draw'
+      MouseX = event.x, $
+      MouseY = event.y, $
+      fact   = (*global).NormalizationZoomFactor,$
+      uname  = 'normalization_zoom_draw'
     
-    (*global).select_zoom_status = 1
-    
-endelse
+ENDELSE
+
+(*global).select_norm_zoom_status = 1
 
 END
 
@@ -210,27 +180,34 @@ END
 PRO REFreduction_NormSelectionPressRight, event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-;signal or peak selection
-BackSignalZoomStatus = isNormBackPeakZoomSelected(Event)
-CASE (BackSignalZoomStatus) OF
-    0: begin ;back
-        color = (*global).back_selection_color
+;ROI, peak, back or zoom selection
+ROISignalBackZoomStatus = isNormBackPeakZoomSelected(Event)
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                   ;ROI
+        color   = (*global).roi_selection_color
+        y_array = (*(*global).norm_roi_selection)
+    END
+    1: BEGIN                    ;signal
+        color   = (*global).peak_selection_color
+        y_array = (*(*global).norm_peak_selection)
+    END
+    2: BEGIN                    ;back
+        color   = (*global).back_selection_color
         y_array = (*(*global).norm_back_selection)
-    end
-    1: begin ;signal
-    color = (*global).peak_selection_color
-    y_array = (*(*global).norm_peak_selection)
-    end
-    2: begin ;zoom
-    end
+    END
+    3: BEGIN                    ;zoom
+;be sure the data draw has been selected
+        id_draw = WIDGET_INFO(Event.top, $
+                              FIND_BY_UNAME='load_normalization_D_draw')
+        WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+        WSET,id_value
+    END
 ENDCASE
 
-if (BackSignalZoomStatus NE 2) then begin
-
-    isPeakSelected = isNormPeakSelectionSelected(Event)
+IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
 
     RePlot1DNormFile, Event
     
@@ -240,89 +217,59 @@ if (BackSignalZoomStatus NE 2) then begin
     mouse_status = (*global).select_norm_status
 ;print, 'PressRight mouse_status: ' + strcompress(mouse_status)
     CASE (mouse_status) OF
-        0: begin
+        0: BEGIN
             mouse_status_new = 3
-        end
+        END
         1:  mouse_status_new = mouse_status
         2: mouse_status_new = mouse_status
         3: mouse_status_new = 0
         4: mouse_status_new = mouse_status
         5: mouse_status_new = 0
-    endcase
+    ENDCASE
     
-    isPeakSelected = isNormPeakSelectionSelected(Event)
+;Replot other selections
+    ReplotNormAllSelection, Event
     
-;back
-    color = (*global).back_selection_color
-    y_array = (*(*global).norm_back_selection)
+;Switch Ymin and Ymax message label
+    SwitchNormYminYmaxLabel, Event ;_GUI
 
-    if (y_array[0] NE -1) then begin
-        plots, 0, y_array[0], /device, color=color
-        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    endif
-
-    if (y_array[1] NE -1) then begin
-        plots, 0, y_array[1], /device, color=color
-        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-    endif
-    
-;peak
-    color = (*global).peak_selection_color
-    y_array = (*(*global).norm_peak_selection)
-
-    if (y_array[0] NE -1) then begin
-        plots, 0, y_array[0], /device, color=color
-        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    endif
-
-    if (y_array[1] NE -1) then begin
-        plots, 0, y_array[1], /device, color=color
-        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-    endif
-    
     (*global).select_norm_status = mouse_status_new
-    
-;reverse Ymin and Ymax label frame
-    RefReduction_UpdateDataNormGui_reverseNormYminYmaxLabelsFrame, Event
     
 ;update Back and Peak Ymin and Ymax cw_fields
     putNormBackgroundPeakYMinMaxValueInTextFields, Event
-    
-endif ;end of not zoom selected
+
+ENDIF
 
 END
-
 
 
 ;this function is reached when the mouse moved into the widget_draw
 PRO REFreduction_NormSelectionMove, event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-;signal or peak selection
-BackSignalZoomStatus = isNormBackPeakZoomSelected(Event)
-CASE (BackSignalZoomStatus) OF
-    0: begin ;back
-        color = (*global).back_selection_color
+;ROI, peak, back or zoom selection
+ROISignalBackZoomStatus = isNormBackPeakZoomSelected(Event)
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;back or ROI
+        color   = (*global).roi_selection_color
+        y_array = (*(*global).norm_roi_selection)
+    END
+    1: BEGIN                    ;signal
+        color   = (*global).peak_selection_color
+        y_array = (*(*global).norm_peak_selection)
+    END
+    2: BEGIN                    ;back
+        color   = (*global).back_selection_color
         y_array = (*(*global).norm_back_selection)
-    end
-    1: begin ;signal
-    color = (*global).peak_selection_color
-    y_array = (*(*global).norm_peak_selection)
-    end
-    2: begin ;zoom
-;be sure the data draw has been selected
-        id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
-        widget_control, id_draw, get_value=id_value
-        wset,id_value
-    end
+    END
+    3: BEGIN                    ;zoom
+    END
 ENDCASE
 
-if (BackSignalZoomStatus NE 2) then begin
-
-    isPeakSelected = isNormPeakSelectionSelected(Event)
+IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
 
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_NORM - 1
@@ -375,70 +322,29 @@ if (BackSignalZoomStatus NE 2) then begin
         5:mouse_status_new = mouse_status
     endcase
 
-    if (isPeakSelected) then begin ;peak selection
-        color = (*global).back_selection_color
-        y_array = (*(*global).norm_back_selection)
-      
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
+;This function replot the other selection 
+    ReplotNormOtherSelection, Event, ROIsignalBackZoomStatus
 
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-
-    endif else begin            ;background selection
-        color = (*global).peak_selection_color
-        y_array = (*(*global).norm_peak_selection)
-
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
-
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-
-    endelse
+ENDIF ELSE BEGIN                ;Zoom selected
     
-    switch (mouse_status) OF
-        1:
-        4:begin
-;display zoom if zomm tab is selected
-            if (isNormZoomTabSelected(Event)) then begin
-                RefReduction_zoom, $
-                  Event, $
-                  MouseX=event.x, $
-                  MouseY=event.y, $
-                  fact=(*global).NormalizationZoomFactor,$
-                  uname='normalization_zoom_draw'
-            endif
-        end
-        else:
-    endswitch
+    IF ((*global).select_norm_zoom_status) THEN BEGIN
+        
+;      validate zoom display
+        SetTabCurrent, $
+          Event, $
+          'norm_nxsummary_zoom_tab', $
+          1
+        
+        RefReduction_zoom, $
+          Event, $
+          MouseX = event.x, $
+          MouseY = event.y, $
+          fact   = (*global).DataZoomFactor,$
+          uname  = 'norm_zoom_draw'
+        
+    ENDIF
     
-;update Back and Peak Ymin and Ymax cw_fields
-    putNormBackgroundPeakYMinMaxValueInTextFields, Event
-
-endif else begin ;zoom selected
-
-    CASE ((*global).select_zoom_status) OF
-        1: begin
-            RefReduction_zoom, $
-              Event, $
-              MouseX=event.x, $
-              MouseY=event.y, $
-              fact=(*global).NormalizationZoomFactor,$
-              uname='normalization_zoom_draw'
-        end
-        else:
-    ENDCASE
-    
-endelse
+ENDELSE
 
 END
 
@@ -447,32 +353,36 @@ END
 
 PRO REFreduction_NormSelectionRelease, event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-;signal or peak selection
-BackSignalZoomStatus = isNormBackPeakZoomSelected(Event)
-CASE (BackSignalZoomStatus) OF
-    0: begin ;back
-        color = (*global).back_selection_color
-        y_array = (*(*global).norm_back_selection)
-    end
-    1: begin ;signal
-        color = (*global).peak_selection_color
+;ROI, peak, back or zoom selection
+ROISignalBackZoomStatus = isNormBackPeakZoomSelected(Event)
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;back or ROI
+        color   = (*global).roi_selection_color
+        y_array = (*(*global).norm_roi_selection)
+    END
+    1: BEGIN                    ;signal
+        color   = (*global).peak_selection_color
         y_array = (*(*global).norm_peak_selection)
-    end
-    2: begin                    ;zoom
-    end
+    END
+    2: BEGIN                    ;back
+        color   = (*global).back_selection_color
+        y_array = (*(*global).norm_back_selection)
+    END
+    3: BEGIN                    ;zoom
+    END
 ENDCASE
 
-if (BackSignalZoomStatus NE 2) then begin
+mouse_status_new = (*global).select_norm_status
+mouse_status     = mouse_status_new
 
-    isPeakSelected = isNormPeakSelectionSelected(Event)
-    
+IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
+
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_NORM - 1
-    
-    mouse_status = (*global).select_norm_status
+
 ;print, 'Release mouse_status: ' + strcompress(mouse_status)
     CASE (mouse_status) OF
         0:mouse_status_new = mouse_status
@@ -512,73 +422,253 @@ if (BackSignalZoomStatus NE 2) then begin
         END
         5:mouse_status_new = mouse_status
     endcase
-    
-;signal or peak selection
-    if (isPeakSelected) then begin ;peak selection
+
+    (*global).select_norm_zoom_status = 0
+
+ENDIF
+
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;ROI
+         (*(*global).norm_roi_selection) = y_array
+    END
+    1: BEGIN                    ;signal
         (*(*global).norm_peak_selection) = y_array
-        
         ymin = min(y_array,max=ymax)
-        
-                                ;populate exclusion peak low and high bin
+;populate exclusion peak low and high bin
         putTextFieldValue,$
           Event,$
-          'norm_exclusion_low_bin_text',$
+          'norm_d_selection_peak_ymin_cw_field',$
           strcompress(ymin/2,/remove_all),$
           0                     ;do not append
-        
         putTextFieldValue,$
           Event,$
-          'norm_exclusion_high_bin_text',$
+          'norm_d_selection_peak_ymax_cw_field',$
           strcompress(ymax/2,/remove_all),$
           0                     ;do not append
-        
-        color = (*global).back_selection_color
-        y_array = (*(*global).norm_back_selection)
-        
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
+    END
+    2: BEGIN                    ;back
+         (*(*global).norm_back_selection) = y_array
+    END
+    3: BEGIN
+        IF ((*global).select_norm_zoom_status) THEN BEGIN
+            RefReduction_zoom, $
+              Event, $
+              MouseX = event.x, $
+              MouseY = event.y, $
+              fact   = (*global).NormalizationZoomFactor,$
+              uname  = 'norm_zoom_draw'
+            (*global).select_norm_zoom_status = 0
+        ENDIF
+    END
+ENDCASE
 
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-        
-    endif else begin            ;background selection
-        (*(*global).norm_back_selection) = y_array
-        color = (*global).peak_selection_color
-        y_array = (*(*global).norm_peak_selection)
+ReplotNormOtherSelection, Event, ROIsignalBackZoomStatus
+(*global).select_norm_status = mouse_status_new
 
-        if (y_array[0] NE -1) then begin
-            plots, 0, y_array[0], /device, color=color
-            plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-        endif
-
-        if (y_array[1] NE -1) then begin
-            plots, 0, y_array[1], /device, color=color
-            plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
-        endif
-
-    endelse
-    
-    (*global).select_norm_status = mouse_status_new
-    
 ;update Back and Peak Ymin and Ymax cw_fields
-    putNormBackgroundPeakYMinMaxValueInTextFields, Event
+putNormBackgroundPeakYMinMaxValueInTextFields, Event
 
-endif else begin ;zoom selected
+END
 
+
+;------------------------------------------------------------------------------
+;This function replot all the other selection
+PRO ReplotNormOtherSelection, Event, ROIsignalBackZoomStatus
+;get global structure
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+;where to stop the plot of the lines
+xsize_1d_draw = (*global).Ntof_NORM-1
+
+;check if user wants peak or background
+isPeakSelected = isNormPeakSelected(Event) 
+
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;roi
+        replot_roi  = 0
+        IF (isPeakSelected) THEN BEGIN
+            replot_peak = 1
+            replot_back = 0
+        ENDIF ELSE BEGIN
+            replot_peak = 0
+            replot_back = 1
+        ENDELSE
+    END
+    1: BEGIN                    ;peak
+        replot_roi  = 1
+        replot_peak = 0
+        replot_back = 0
+    END
+    2: BEGIN                    ;background
+        replot_roi  = 1
+        replot_peak = 0
+        replot_back = 0
+    END
+    3: BEGIN                    ;display zoom if zoom tab is selected
+        replot_roi  = 0
+        replot_peak = 0
+        replot_back = 0
+        IF ((*global).select_norm_zoom_status) THEN BEGIN
+            RefReduction_zoom, $
+              Event, $
+              MouseX = event.x, $
+              MouseY = event.y, $
+              fact   = (*global).NormalizationZoomFactor,$
+              uname  = 'norm_zoom_draw'
+        ENDIF
+    END
+ENDCASE
+
+IF (replot_roi) THEN BEGIN
+    color   = (*global).roi_selection_color
+    y_array = (*(*global).norm_roi_selection)
+    IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+    IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+ENDIF
+
+IF (replot_peak) THEN BEGIN
+    color = (*global).peak_selection_color
+    y_array = (*(*global).norm_peak_selection)
+    IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+    IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+ENDIF
+
+IF (replot_back) THEN BEGIN
+    color = (*global).back_selection_color
+    y_array = (*(*global).norm_back_selection)
+    IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+    IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+ENDIF
+
+;plot zoom if zoom tab is selected
+IF (isNormZoomTabSelected(Event) AND $
+    ROISignalBackZoomStatus NE 3 AND $
+    (*global).select_norm_zoom_status) THEN BEGIN
     RefReduction_zoom, $
       Event, $
-      MouseX=event.x, $
-      MouseY=event.y, $
-      fact=(*global).NormalizationZoomFactor,$
-      uname='normalization_zoom_draw'
+      MouseX = event.x, $
+      MouseY = event.y, $
+      fact   = (*global).NormalizationZoomFactor,$
+      uname  = 'norm_zoom_draw'
+ENDIF
+    
+END
 
-    (*global).select_zoom_status = 0
+;------------------------------------------------------------------------------
+PRO ReplotNormAllSelection, Event
 
-endelse
+;get global structure
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+;where to stop the plot of the lines
+xsize_1d_draw = (*global).Ntof_NORM-1
+
+;check if user wants peak or background
+isPeakSelected = isNormPeakSelected(Event) 
+
+color   = (*global).roi_selection_color
+y_array = (*(*global).norm_roi_selection)
+IF (y_array[0] NE -1) THEN BEGIN
+    PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+    PLOTS, xsize_1d_draw, y_array[0], $
+      /DEVICE, $
+      /CONTINUE, $
+      COLOR=color
+ENDIF
+IF (y_array[1] NE -1) THEN BEGIN
+    PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+    PLOTS, xsize_1d_draw, y_array[1], $
+      /DEVICE, $
+      /CONTINUE, $
+      COLOR=color
+ENDIF
+
+IF (isPeakSelected) THEN BEGIN
+    color = (*global).peak_selection_color
+    y_array = (*(*global).norm_peak_selection)
+    IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+    IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+ENDIF ELSE BEGIN
+    color = (*global).back_selection_color
+    y_array = (*(*global).norm_back_selection)
+    IF (y_array[0] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[0], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[0], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+    IF (y_array[1] NE -1) THEN BEGIN
+        PLOTS, 0, y_array[1], /DEVICE, COLOR=color
+        PLOTS, xsize_1d_draw, y_array[1], $
+          /DEVICE, $
+          /CONTINUE, $
+          COLOR=color
+    ENDIF
+ENDELSE
+
+ROISignalBackZoomStatus = isNormBackPeakZoomSelected(Event)
+;plot zoom if zoom tab is selected
+IF (isNormZoomTabSelected(Event) AND $
+    ROIsignalBackZoomStatus NE 3 AND $
+    (*global).select_norm_zoom_status) THEN BEGIN
+    RefReduction_zoom, $
+      Event, $
+      MouseX = event.x, $
+      MouseY = event.y, $
+      fact   = (*global).NormalizationZoomFactor,$
+      uname  = 'norm_zoom_draw'
+ENDIF
 
 END
 

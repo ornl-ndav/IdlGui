@@ -74,7 +74,7 @@ XYoff = [250,0]
 sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
                           sPeakMainLabel.size[1]+XYoff[1]],$
                    value: 'Ymin:'}
-XYoff = [50,-7]
+XYoff = [50,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
                           50,30],$
@@ -84,7 +84,7 @@ XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1]],$
                    value: 'Ymax:'}
-XYoff = [50,-7]
+XYoff = [50,-6]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYmaxLabel.size[1]+XYoff[1],$
                           50,30],$
@@ -102,7 +102,7 @@ sBackMainLabel = { size:  XYoff,$
                    value: 'Background Selection File:'}
 XYoff = [170,0]
 sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
-                          sBackMainLabel.size[1]+XYoff[1]-7,$
+                          sBackMainLabel.size[1]+XYoff[1]-6,$
                           453,30],$
                    value: '',$
                    uname: 'data_back_selection_file_value'}
@@ -255,7 +255,7 @@ DataFrame = WIDGET_LABEL(data_base,$
                          YOFFSET   = DataFrameSize[1],$
                          SCR_XSIZE = DataFrameSize[2],$
                          SCR_YSIZE = DataFrameSize[3],$
-                         frame     = 1,$
+                         FRAME     = 1,$
                          VALUE     = '')
 
 END

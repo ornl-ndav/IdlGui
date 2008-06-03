@@ -209,3 +209,16 @@ ENDIF ELSE BEGIN
 ENDELSE
 WIDGET_CONTROL, id, SET_VALUE = value
 END
+
+;------------------------------------------------------------------------------
+;This function switches the normalization Ymin and Ymax labels
+PRO SwitchNormYminYmaxLabel, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='norm_ymin_ymax_label')
+WIDGET_CONTROL, id, GET_VALUE = value
+IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+    value = 'Current working selection -> Ymax'
+ENDIF ELSE BEGIN
+    value = 'Current working selection -> Ymin'
+ENDELSE
+WIDGET_CONTROL, id, SET_VALUE = value
+END

@@ -39,18 +39,45 @@ return, isPeakSelected
 END
 
 ;------------------------------------------------------------------------------
+Function isNormPeakSelectionSelected, Event
+id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
+widget_control, id, get_value=isPeakSelected
+return, isPeakSelected
+END
+
+;------------------------------------------------------------------------------
 ;This function returns:
 ; 0: if Region Of Interest (ROI)
 ; 1: if Peak 
 ; 2: if Backround
 ; 3: if Zoom
 Function isDataBackPeakZoomSelected, Event
-tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='roi_peak_background_tab')
+tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_roi_peak_background_tab')
 CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
 CASE (CurrTabSelect) OF
     0: RETURN, 0
     1: BEGIN
         id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_data_back_group')
+        WIDGET_CONTROL, id, GET_VALUE = SelectionStatus
+        RETURN, SelectionSTatus+1
+    END
+    2: RETURN, 3
+ENDCASE
+END
+
+;------------------------------------------------------------------------------
+;This function returns:
+; 0: if Region Of Interest (ROI)
+; 1: if Peak 
+; 2: if Backround
+; 3: if Zoom
+Function isNormBackPeakZoomSelected, Event
+tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='norm_roi_peak_background_tab')
+CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+CASE (CurrTabSelect) OF
+    0: RETURN, 0
+    1: BEGIN
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_norm_back_group')
         WIDGET_CONTROL, id, GET_VALUE = SelectionStatus
         RETURN, SelectionSTatus+1
     END
@@ -70,17 +97,18 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-Function isNormBackPeakZoomSelected, Event
-id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
-widget_control, id, get_value=SelectionStatus
-return, selectionStatus
-END
-
-
 Function isNormYminSelected, Event
-id = widget_info(Event.top,find_by_uname='normalization_ymin_label_frame')
-return, widget_info(id,/sensitive)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='norm_ymin_ymax_label')
+WIDGET_CONTROL, id, GET_VALUE = value
+IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
 END
+
+
+
 
 
 Function isDataWithBackground, Event

@@ -88,20 +88,20 @@ XYoff = [250,0]
 sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
                           sPeakMainLabel.size[1]+XYoff[1]],$
                    value: 'Ymin:'}
-XYoff = [50,0]
+XYoff = [50,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
-                          50],$
+                          50,30],$
                    value: '',$
                    uname: 'norm_exclusion_low_bin_text'}
 XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
                           sPeakYminValue.size[1]+XYoff[1]],$
                    value: 'Ymax:'}
-XYoff = [50,0]
+XYoff = [50,-6]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYmaxLabel.size[1]+XYoff[1],$
-                          50],$
+                          50,30],$
                    value: '',$
                    uname: 'norm_exclusion_high_bin_text'}
 
@@ -116,7 +116,8 @@ sBackMainLabel = { size:  XYoff,$
                    value: 'Background Selection File:'}
 XYoff = [170,0]
 sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
-                          sBackMainLabel.size[1]+XYoff[1]],$
+                          sBackMainLabel.size[1]+XYoff[1]-6,$
+                          453,30],$
                    value: '',$
                    uname: 'norm_back_selection_file_value'}
 
@@ -229,16 +230,20 @@ wPeakMainLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakMainLabel.size[0],$
                               YOFFSET = sPeakMainLabel.size[1],$
                               VALUE   = sPeakMainLabel.value)
-                              
+
 wPeakYminLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakYminLabel.size[0],$
                               YOFFSET = sPeakYminLabel.size[1],$
                               VALUE   = sPeakYminLabel.value)
 
 wPeakYminValue = WIDGET_LABEL(wPeakBase,$
-                              XOFFSET = sPeakYminValue.size[0],$
-                              YOFFSET = sPeakYminValue.size[1],$
-                              VALUE   = sPeakYminValue.value)
+                              XOFFSET   = sPeakYminValue.size[0],$
+                              YOFFSET   = sPeakYminValue.size[1],$
+                              SCR_XSIZE = sPeakYminValue.size[2],$
+                              SCR_YSIZE = sPeakYminValue.size[3],$
+                              VALUE     = sPeakYminValue.value,$
+                              UNAME     = sPeakYminValue.uname,$
+                              /ALIGN_LEFT)
 
 wPeakYmaxLabel = WIDGET_LABEL(wPeakBase,$
                               XOFFSET = sPeakYmaxLabel.size[0],$
@@ -246,9 +251,13 @@ wPeakYmaxLabel = WIDGET_LABEL(wPeakBase,$
                               VALUE   = sPeakYmaxLabel.value)
 
 wPeakYmaxValue = WIDGET_LABEL(wPeakBase,$
-                              XOFFSET = sPeakYmaxValue.size[0],$
-                              YOFFSET = sPeakYmaxValue.size[1],$
-                              VALUE   = sPeakYmaxValue.value)
+                              XOFFSET   = sPeakYmaxValue.size[0],$
+                              YOFFSET   = sPeakYmaxValue.size[1],$
+                              SCR_XSIZE = sPeakYmaxValue.size[2],$
+                              SCR_YSIZE = sPeakYmaxValue.size[3],$
+                              UNAME     = sPeakYmaxValue.uname,$
+                              VALUE     = sPeakYmaxValue.value,$
+                              /ALIGN_LEFT)
 
 ;Background exlusion Base -----------------------------------------------------
 wBackBase = WIDGET_BASE(normalization_base,$
@@ -266,10 +275,12 @@ wBackMainLabel = WIDGET_LABEL(wBackBase,$
                               VALUE   = sBackMainLabel.value)
 
 wBackFileValue = WIDGET_LABEL(wBackBase,$
-                              XOFFSET = sBackFileValue.size[0],$
-                              YOFFSET = sBackFileValue.size[1],$
-                              VALUE   = sBackFileValue.value,$
-                              UNAME   = sBackFileValue.uname,$
+                              XOFFSET   = sBackFileValue.size[0],$
+                              YOFFSET   = sBackFileValue.size[1],$
+                              SCR_XSIZE = sBackFileValue.size[2],$
+                              SCR_YSIZE = sBackFileValue.size[3],$
+                              VALUE     = sBackFileValue.value,$
+                              UNAME     = sBackFileValue.uname,$
                               /ALIGN_LEFT)
 
 ;background flag
@@ -295,6 +306,5 @@ NormalizationFrame = WIDGET_LABEL(normalization_base,$
                                   SCR_YSIZE = NormalizationFrameSize[3],$
                                   FRAME     = 1,$
                                   VALUE     = '')
-
 
 END
