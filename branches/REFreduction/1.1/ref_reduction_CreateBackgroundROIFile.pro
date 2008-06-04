@@ -148,6 +148,15 @@ ENDIF ELSE BEGIN ;enough Y between Ymax and Ymin to create outpur roi file
           Event, $
           OutputArray, $
           (*global).roi_file_preview_nbr_line
+
+        IF (type EQ 'back') THEN BEGIN
+            uname = 'data_back_selection_file_value'
+        ENDIF ELSE BEGIN
+            uname = 'reduce_data_region_of_interest_file_name'
+        ENDELSE
+;copy file name into reduce tab
+        putTextFieldValue, Event, uname, file_name,0
+
     ENDELSE
 ENDELSE ;end of (Ynbr LE 1)
 END
@@ -273,6 +282,15 @@ ENDIF ELSE BEGIN ;enough Y between Ymax and Ymin to create outpur roi file
           Event, $
           OutputArray, $
           (*global).roi_file_preview_nbr_line
+
+        IF (type EQ 'back') THEN BEGIN
+            uname = 'norm_back_selection_file_value'
+        ENDIF ELSE BEGIN
+            uname = 'reduce_normalization_region_of_interest_file_name'
+        ENDELSE
+;copy file name into reduce tab
+        putTextFieldValue, Event, uname, file_name,0
+
     ENDELSE
 ENDELSE                         ;end of (Ynbr LE 1)
 END

@@ -66,11 +66,8 @@ endelse
 
 ;get data ROI file
 data_roi_file = getTextFieldValue(Event, $
-                                  'data_roi_selection_file_text_field')
+                                  'reduce_data_region_of_interest_file_name')
 data_roi_file = data_roi_file[0]
-putTextFieldValue, Event, $
-  'reduce_data_region_of_interest_file_name',$
-  data_roi_file, 0
 
 cmd += ' --data-roi-file=' 
 IF (data_roi_file NE '') THEN BEGIN
@@ -177,9 +174,8 @@ IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
 ENDIF ELSE BEGIN ;background file
     
 ;get value of back file from data base
-    BackFile = getTextFieldValue(Event,'data_back_d_selection_file_text_field')
+    BackFile = getTextFieldValue(Event,'data_back_selection_file_value')
     BackFile = BackFile[0]
-    putTextFieldValue, Event, 'data_back_selection_file_value',BackFile,0
     cmd += ' --dbkg-roi-file='
 ;get data ROI file
     data_roi_file = $
@@ -244,13 +240,10 @@ if (isReductionWithNormalization(Event)) then begin
     endelse
     
 ;get normalization ROI file
-    norm_roi_file = getTextFieldValue(Event,$
-                                      'norm_roi_selection_file_text_field')
+    norm_roi_file = $
+      getTextFieldValue(Event,$
+                        'reduce_normalization_region_of_interest_file_name')
     norm_roi_file = norm_roi_file[0]
-    putTextFieldValue, Event,$
-      'reduce_normalization_region_of_interest_file_name',$
-      norm_roi_file, 0
-
     cmd += '  --norm-roi-file='
     IF (norm_roi_file NE '') THEN BEGIN
         cmd += strcompress(norm_roi_file,/remove_all)
@@ -361,10 +354,8 @@ if (isReductionWithNormalization(Event)) then begin
     ENDIF ELSE BEGIN            ;background file
         
 ;get value of back file from norm base
-        BackFile = getTextFieldValue(Event,'norm_back_d_selection_file_' + $
-                                     'text_field')
+        BackFile = getTextFieldValue(Event,'norm_back_selection_file_value')
         BackFile = BackFile[0]
-        putTextFieldValue, Event, 'norm_back_selection_file_value',BackFile,0
         cmd += ' --nbkg-roi-file='
 ;get norm ROI file
         norm_roi_file = $
