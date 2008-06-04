@@ -68,7 +68,7 @@ RegionOfInterestLabelSize     = [RunsLabelSize[0],$
                                  RunsLabelSize[1]+d_vertical_L_L]
 RegionOfInterestLabelTitle    = 'Region of interest (ROI) file:'
 RegionOfInterestTextFieldSize = [230,$
-                                 RegionOfInterestLabelSize[1],$
+                                 RegionOfInterestLabelSize[1]-7,$
                                  453,30]
 
 ;Exclusion peak region / Background -------------------------------------------
@@ -92,17 +92,17 @@ XYoff = [50,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '?',$
                    uname: 'norm_exclusion_low_bin_text'}
 XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
-                          sPeakYminValue.size[1]+XYoff[1]],$
+                          sPeakYminLabel.size[1]+XYoff[1]],$
                    value: 'Ymax:'}
-XYoff = [50,-6]
+XYoff = [50,0]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
-                          sPeakYmaxLabel.size[1]+XYoff[1],$
+                          sPeakYminValue.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '?',$
                    uname: 'norm_exclusion_high_bin_text'}
 
 ;Background Base, label and text_field
@@ -188,8 +188,9 @@ RunsTextField = WIDGET_TEXT(normalization_base,$
                             YOFFSET   = RunsTextFieldSize[1],$
                             SCR_XSIZE = RunsTextFieldSize[2],$
                             SCR_YSIZE = RunsTextFieldSize[3],$
-                            UNAME     =  $
+                            UNAME     = $
                             'reduce_normalization_runs_text_field',$
+                            VALUE     = 'N/A',$
                             /EDITABLE,$
                             /ALIGN_LEFT,$
                             /ALL_EVENTS)

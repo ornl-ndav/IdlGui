@@ -583,15 +583,19 @@ CASE Event.id OF
 ;LOAD background selection
     widget_info(wWidget, FIND_BY_UNAME= $
                 'norm_d_selection_norm_load_button'): begin
-        REFreduction_LoadDataBackSelection, Event ;_LoadBackgroundSelection
+        REFreduction_LoadNormBackgroundSelection, Event 
+;_LoadBackgroundSelection
     end
 
 ;Peak/Background tab (peak/background cw_bgroup)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='peak_norm_back_group'): BEGIN
        SwitchPeakBackgroundNormBase, Event ;_GUI
        SwitchPeakBackgroundReduceNormBase, Event ;_GUI
+;replot the selection activated
+       RePlot1DNormFile, Event
+       ReplotNormAllSelection, Event
     END
-    
+
 ;******************************************************************************
 
 ;CONTRAST TAB

@@ -51,6 +51,7 @@ ENDCASE
 
 cmd += 'reflect_reduction' ;name of function to call
 
+;*****DATA*********************************************************************
 ;get Data run numbers text field
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
 if (data_run_numbers NE '') then begin
@@ -214,6 +215,7 @@ endif else begin
     MapBase, Event, 'reduce_plot3_base', 1
 end
 
+;*****NORMALIZATION************************************************************
 ;check if user wants to use normalization or not
 if (isReductionWithNormalization(Event)) then begin
     
@@ -241,126 +243,167 @@ if (isReductionWithNormalization(Event)) then begin
         StatusMessage += 1
     endelse
     
-;get normalization roi file
-    norm_roi_file = getTextFieldValue(Event, $
-                                      'reduce_normalization_region_of_' + $
-                                      'interest_file_name')
+;get normalization ROI file
+    norm_roi_file = getTextFieldValue(Event,$
+                                      'norm_roi_selection_file_text_field')
+    norm_roi_file = norm_roi_file[0]
+    putTextFieldValue, Event,$
+      'reduce_normalization_region_of_interest_file_name',$
+      norm_roi_file, 0
+
     cmd += '  --norm-roi-file='
-    if (norm_roi_file NE '') then begin
+    IF (norm_roi_file NE '') THEN BEGIN
         cmd += strcompress(norm_roi_file,/remove_all)
-    endif else begin
+    ENDIF ELSE BEGIN
         cmd += '?'
         status_text = '- Please provide a normalization region of interest' + $
           ' file.'
         status_text += ' Go to NORMALIZATION, select a background ROI and' + $
           ' save it.'
-        if (StatusMessage GT 0) then begin
+        IF (StatusMessage GT 0) THEN BEGIN
             append = 1
-        endif else begin
+        ENDIF ELSE BEGIN
             append = 0
-        endelse
+        ENDELSE
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
+    ENDELSE
+    
+;get Peak or Background
+    PeakBaseStatus = isNormPeakBaseMap(Event)
+    IF (PeakBaseStatus EQ 1) THEN BEGIN ;exclusion peak
+        
+;bring values of ymin and ymax from norm base
+        ymin = getTextFieldValue(Event,'norm_d_selection_peak_ymin_cw_field')
+        ymax = getTextFieldValue(Event,'norm_d_selection_peak_ymax_cw_field')
+        putTextFieldValue, Event, $
+          'norm_exclusion_low_bin_text', $
+          STRCOMPRESS(ymin[0],/REMOVE_ALL), 0
+        putTextFieldValue, Event, $
+          'norm_exclusion_high_bin_text', $
+          STRCOMPRESS(ymax[0],/REMOVE_ALL), 0
+        
+        cmd += ' --norm-peak-excl='
+;get norm peak exclusion
+        norm_peak_exclusion_min = $
+          STRCOMPRESS(getTextFieldValue(Event,'norm_exclusion_low_bin_text'), $
+                      /REMOVE_ALL)
+        IF (norm_peak_exclusion_min NE '') THEN BEGIN
+            cmd += STRCOMPRESS(norm_peak_exclusion_min,/REMOVE_ALL)
+        ENDIF ELSE BEGIN
+            cmd         += '?'
+            status_text  = '- Please provide a normalization low range ' + $
+              'Peak of Exclusion.'
+            status_text += ' Go to NORMALIZATION, and select a low ' + $
+              'value for the normalization peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDELSE
+        
+        norm_peak_exclusion_max = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+                                        'norm_exclusion_high_bin_text'),$ $
+                      /REMOVE_ALL)
+        IF (norm_peak_exclusion_max NE '') THEN BEGIN
+            cmd += ' ' + STRCOMPRESS(norm_peak_exclusion_max,/REMOVE_ALL)
+        ENDIF ELSE BEGIN
+            cmd         += ' ?'
+            status_text  = '- Please provide a normalization high ' + $
+              'range Peak of Exclusion.'
+            status_text += ' Go to NORMALIZATION, and select a high ' + $
+              'value for the normalization peak exclusion.'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDELSE
+        
+;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+        Ymin_peak = norm_peak_exclusion_min
+        Ymax_peak = norm_peak_exclusion_max
+        Ymin_back = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+                                        'norm_d_selection_background_' + $
+                                        'ymin_cw_field'), $
+                      /REMOVE_all)
+        Ymax_back = $
+          STRCOMPRESS(getTextFieldValue(Event, $
+                                        'norm_d_selection_background_ymax_' + $
+                                        'cw_field'), $
+                      /REMOVE_ALL)
+        IF (Ymin_peak NE '' AND $
+            Ymax_peak NE '' AND $
+            Ymin_back NE '' AND $
+            Ymax_back NE '') THEN BEGIN
+            IF ((Ymin_peak EQ Ymin_back) AND $
+                (Ymax_peak EQ Ymax_back)) THEN BEGIN
+                StatusMessage += 1
+                status_text = '- Normalization Background and Peak ' + $
+                  'have the same Ymin and Ymax values.'
+                status_text += ' Please changes at least 1 of the selection!'
+                IF (StatusMessage GT 0) THEN BEGIN
+                    append = 1
+                ENDIF ELSE BEGIN
+                    append = 0
+                ENDELSE
+                putInfoInReductionStatus, Event, status_text, append
+            ENDIF
+        ENDIF
+        
+    ENDIF ELSE BEGIN            ;background file
+        
+;get value of back file from norm base
+        BackFile = getTextFieldValue(Event,'norm_back_d_selection_file_' + $
+                                     'text_field')
+        BackFile = BackFile[0]
+        putTextFieldValue, Event, 'norm_back_selection_file_value',BackFile,0
+        cmd += ' --nbkg-roi-file='
+;get norm ROI file
+        norm_roi_file = $
+          getTextFieldValue(Event, $
+                            'norm_back_selection_file_value')
+        IF (norm_roi_file NE '') THEN BEGIN
+            cmd += norm_roi_file
+        ENDIF ELSE BEGIN
+            cmd        += '?'
+            status_text = '- Please provide a normalization background ' + $
+              'file. Go to NORMALIZATION, Peak/Background and '
+            status_text += 'select a ROI and save it.'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInReductionStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDELSE
+        
+    ENDELSE
+    
+;check if user wants normalization background or not
+    if (isNormWithBackground(Event)) then begin ;yes, with background
+        MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
+    endif else begin
+        cmd += ' --no-norm-bkg'
+        MapBase, Event, 'reduce_plot5_base', 1 ;back. norm. is not available
     endelse
     
-
-
-;;get norm peak exclusion
-;     norm_peak_exclusion_min = $
-;       strcompress(getTextFieldValue(Event,'norm_exclusion_low_bin_text'),$
-;                   /remove_all)
-;     norm_peak_exclusion_max = $
-;       strcompress(getTextFieldValue(Event,'norm_exclusion_high_bin_text'),$
-;                   /remove_all)
-;     cmd += ' --norm-peak-excl='
-;     if (norm_peak_exclusion_min NE '') then begin
-;         cmd += strcompress(norm_peak_exclusion_min,/remove_all)
-;     endif else begin
-;         cmd += '?'
-;         status_text = '- Please provide a normalization low range Peak' + $
-;           ' of Exclusion.'
-;         status_text += ' Go to NORMALIZATION, and select a low'
-;         status_text += ' value for the normalization peak exclusion.'
-;         if (StatusMessage GT 0) then begin
-;             append = 1
-;         endif else begin
-;             append = 0
-;         endelse
-;         putInfoInReductionStatus, Event, status_text, append
-;         StatusMessage += 1
-;     endelse
-
-;     if (norm_peak_exclusion_max NE '') then begin
-;         cmd += ' ' + strcompress(norm_peak_exclusion_max,/remove_all)
-;     endif else begin
-;         cmd += '?'
-;         status_text = '- Please provide a normalization high range Peak ' + $
-;           'of Exclusion.'
-;         status_text += ' Go to NORMALIZATION, and select a high value'
-;         status_text += ' for the normalization peak exclusion.'
-;         if (StatusMessage GT 0) then begin
-;             append = 1
-;         endif else begin
-;             append = 0
-;         endelse
-;         putInfoInReductionStatus, Event, status_text, append
-;         StatusMessage += 1
-;      endelse
+endif else begin                ;no normalization file
     
-;     if (StatusMessage GT 0) then begin
-;         append = 1
-;     endif else begin
-;         append = 0
-;     endelse
-
-;;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
-; Ymin_peak = norm_peak_exclusion_min
-; Ymax_peak = norm_peak_exclusion_max
-; Ymin_back = $
-;   strcompress(getTextFieldValue(Event, $
-;                                 'normalization_d_selection_background_' + $
-;                                 'ymin_cw_field'), $
-;               /remove_all)
-; Ymax_back = $
-;   strcompress(getTextFieldValue(Event, $
-;                                 'normalization_d_selection_background_' + $
-;                                 'ymax_cw_field'),$
-;               /remove_all)
-
-; IF (Ymin_peak NE '' AND $
-;     Ymax_peak NE '' AND $
-;     Ymin_back NE '' AND $
-;     Ymax_back NE '') THEN BEGIN
-;     IF ((Ymin_peak EQ Ymin_back) AND (Ymax_peak EQ Ymax_back)) THEN BEGIN
-;         StatusMessage += 1
-;         status_text = '- Normalization Background and Peak have the same' + $
-;           ' Ymin and Ymax values.'
-;         status_text += ' Please changes at least 1 of the data.'
-;         if (StatusMessage GT 0) then begin
-;             append = 1
-;         endif else begin
-;             append = 0
-;         endelse
-;         putInfoInReductionStatus, Event, status_text, append
-;     ENDIF
-; ENDIF
-
-;check if user wants normalization background or not
-     if (isNormWithBackground(Event)) then begin ;yes, with background
-         MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
-     endif else begin
-         cmd += ' --no-norm-bkg'
-         MapBase, Event, 'reduce_plot5_base', 1 ;back. norm. is not available
-     endelse
-
- endif else begin ;no normalization file
-
 ;remove Normalization Intermediate Plots
-     MapBase, Event, 'reduce_plot4_base', 1
-     MapBase, Event, 'reduce_plot5_base', 1
-     MapBase, Event, 'reduce_plot6_base', 1
-     
- endelse                        ;end of (~isWithoutNormalization)
+    MapBase, Event, 'reduce_plot4_base', 1
+    MapBase, Event, 'reduce_plot5_base', 1
+    MapBase, Event, 'reduce_plot6_base', 1
+    
+endelse                         ;end of (~isWithoutNormalization)
 
 ;get name of instrument
 cmd += ' --inst=' + (*global).instrument
