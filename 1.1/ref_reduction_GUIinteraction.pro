@@ -222,3 +222,18 @@ ENDIF ELSE BEGIN
 ENDELSE
 WIDGET_CONTROL, id, SET_VALUE = value
 END
+
+;------------------------------------------------------------------------------
+;This function activate or not the Q manual base
+PRO ActivateOrNotAutoQmode, Event 
+;get value of auto/manual mode
+AutoModeStatus = getCWBgroupValue(Event,'q_mode_group')
+IF (AutoModeStatus EQ 0) THEN BEGIN
+;auto mode
+    ManualBaseStatus = 0
+ENDIF ELSE BEGIN
+;manual mode
+    ManualBaseStatus = 1
+ENDELSE
+ActivateWidget, Event, 'q_manual_base', ManualBaseStatus
+END

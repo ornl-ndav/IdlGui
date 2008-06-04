@@ -954,6 +954,14 @@ CASE Event.id OF
         REFreduction_OverwriteNormInstrumentGeometry, Event
     end
 
+    ;Q Auto/Manual
+    widget_info(wWidget, $
+                FIND_BY_UNAME= $
+                'q_mode_group'): begin
+        ActivateOrNotAutoQmode, Event ;_GUI
+        REFreduction_CommandLineGenerator, Event
+    end
+
     ;output path/file
     widget_info(wWidget, FIND_BY_UNAME='of_button'): begin
         REFreduction_DefineOutputPath, Event ;in ref_reduction_OutputPath.pro
