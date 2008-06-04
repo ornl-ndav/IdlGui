@@ -219,6 +219,11 @@ sBackSaveButton = {size:  [sBackRoiFileText.size[0]+ $
 
 ;TAB Zoom ---------------------------------------------------------------------
 sZoomBase = sRoiBase
+XYoff = [70,40]
+sZoomLabel = { size: [XYoff[0],$
+                      XYoff[1]],$
+               value: 'Left click (without releasing) in the PLOT to zoom ' + $
+               'this part of the display. '}
 
 ;TAB #2 (Contrast Editor) -----------------------------------------------------
 ContrastDropListSize      = [5,13,200,30]
@@ -561,6 +566,11 @@ wZoomBase = WIDGET_BASE(wRoiTab,$
                         SCR_XSIZE = sZoomBase.size[2],$
                         SCR_YSIZE = sZoomBase.size[3],$
                         TITLE     = sTab.list[2])
+
+wZoomLabel = WIDGET_LABEL(wZoomBase,$
+                          XOFFSET = sZoomLabel.size[0],$
+                          YOFFSET = sZoomLabel.size[1],$
+                          VALUE   = sZoomLabel.value)
 
 ;Tab #2 (contrast base)
 ContrastBase = widget_base(BackPeakRescaleTab,$
