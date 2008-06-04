@@ -95,6 +95,11 @@ text = '--> Data Peak Exclusion Ymax (DataPeakExclYArray[1]) .............' + $
   '..... ' + DataPeakExclYArray[1]
 putLogBookMessage, Event, text, APPEND=1
 
+DataBackFileName = ClassInstance->getDatabackFileName()
+text = '--> Data Back Full File Name (DataBackFileName) ..................' + $
+  '..... ' + DataBackFileName
+putLogBookMessage, Event, text, APPEND=1
+
 MainNormNexusFileName = ClassInstance->getMainNormNexusFileName()
 text = '--> Main Normalization File Name (MainNormNexusFileName) .........' + $
   '..... ' + MainNormNexusFileName
@@ -121,6 +126,11 @@ text = '--> Norm Peak Exclusion Ymin (NormPeakExclYArray[0]) .............' + $
 putLogBookMessage, Event, text, APPEND=1
 text = '--> Norm Peak Exclusion Ymax (NormPeakExclYArray[1]) .............' + $
   '..... ' + NormPeakExclYArray[1]
+putLogBookMessage, Event, text, APPEND=1
+
+NormBackFileName = ClassInstance->getNormBackFileName()
+text = '--> Normalization Back Full File Name (NormBackFileName) .........' + $
+  '..... ' + NormBackFileName
 putLogBookMessage, Event, text, APPEND=1
 
 DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
@@ -245,12 +255,14 @@ sRepopulateGui = {Event                     : Event,$
                   DataRoiFileName           : DataRoiFileName,$
                   DataPeakExclYmin          : DataPeakExclYArray[0],$
                   DataPeakExclYmax          : DataPeakExclYArray[1],$
+                  DataBackFileName          : DataBackFileName,$
                   MainNormNexusFileName     : MainNormNexusFileName,$
                   MainNormRunNumber         : MainNormRunNumber,$
                   AllNormNexusFileName      : AllNormNexusFileName,$
                   NormRoiFileName           : NormRoiFileName,$
                   NormPeakExclYmin          : NormPeakExclYArray[0],$
                   NormPeakExclYmax          : NormPeakExclYArray[1],$
+                  NormBackFileName          : NormBackFileName,$
                   DataBackgroundFlag        : DataBackgroundFlag,$
                   NormBackgroundFlag        : NormBackgroundFlag,$
                   Qmin                      : Qmin,$
