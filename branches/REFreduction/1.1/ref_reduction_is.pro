@@ -109,8 +109,6 @@ END
 
 
 
-
-
 Function isDataWithBackground, Event
 id = widget_info(Event.top,find_by_uname='data_background_cw_bgroup')
 widget_control, id, get_value=isWithBackground
@@ -122,7 +120,7 @@ endelse
 END
 
 ;------------------------------------------------------------------------------
-;This function checks which cw_bgroup is selected (PEAK or BACKGROUND)
+;This function checks which cw_bgroup is selected for data (PEAK or BACKGROUND)
 FUNCTION isDataPeakSelected, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_data_back_group')
 WIDGET_CONTROL, id, GET_VALUE=value
@@ -130,8 +128,16 @@ IF (value EQ 0) THEN RETURN,1
 RETURN,0
 END
 
+;------------------------------------------------------------------------------
+;This function checks which cw_bgroup is selected for Norm. (PEAK or BACKGROUND)
+FUNCTION isNormPeakSelected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_norm_back_group')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN RETURN,1
+RETURN,0
+END
 
-
+;------------------------------------------------------------------------------
 Function isNormPeakSelectionSelected, Event
 id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
 widget_control, id, get_value=isPeakSelected

@@ -70,10 +70,15 @@ widget_control,id,get_uvalue=global
 
 DefaultBackRoiFileName = working_path + strcompress(instrument,/remove_all)
 DefaultBackRoiFileName += '_' + strcompress(run_number,/remove_all)
-DefaultBackRoiFileName += (*global).norm_back_roi_ext
+DefaultBackFileName = DefaultBackRoiFileName + (*global).norm_back_ext
+DefaultROIFileName  = DefaultBackRoiFileName + (*global).norm_roi_ext 
 
 putTextFieldValue, Event,$
-  'normalization_background_selection_file_text_field',$
-  DefaultBackRoiFileName,0
+  'norm_roi_selection_file_text_field',$
+  DefaultROIFileName,0
+
+putTextFieldValue, Event,$
+  'norm_back_d_selection_file_text_field',$
+  DefaultBackFileName,0
 
 END
