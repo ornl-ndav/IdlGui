@@ -62,7 +62,7 @@ XYoff = [20,8] ;label
 QminLabelSize     = [XYoff[0],XYoff[1]]
 QminLabelTitle    = 'Min:'
 
-XYoff = [27,-5] ;text_field
+XYoff = [28,-5] ;text_field
 QminTextFieldSize = [QminLabelSize[0]+XYoff[0],$
                      QminLabelSize[1]+XYoff[1], $
                      70, $
@@ -75,7 +75,7 @@ QmaxLabelSize     = [QminTextFieldSize[0]+ $
                      XYoff[0],$
                      QminLabelSize[1]+XYoff[1]]
 QmaxLabelTitle    = 'Max:'
-XYoff = [27,0] ;text field
+XYoff = [28,0] ;text field
 QmaxTextFieldSize = [QmaxLabelSize[0]+XYoff[0],$
                      QminTextFieldSize[1],$
                      QminTextFieldSize[2],$
