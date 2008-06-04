@@ -222,7 +222,7 @@ sZoomBase = sRoiBase
 XYoff = [70,40]
 sZoomLabel = { size: [XYoff[0],$
                       XYoff[1]],$
-               value: 'Left click (without releasing) the PLOT to zoom ' + $
+               value: 'Left click (without releasing) in the PLOT to zoom ' + $
                'this part of the display. '}
 
 ;------------------------------------------------------------------------------
