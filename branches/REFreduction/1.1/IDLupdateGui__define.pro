@@ -511,52 +511,52 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     ActivateWidget, Event, 'norm_roi_load_button', 1
 
 ;check if user wanted peak exclusion or background file
-text = '--> Check status of PEAK or BACKGROUND ?'
-putLogBookMessage, Event, text, APPEND=1
-IF (structure.NormPeakExclYmin EQ '') THEN BEGIN
-    text = '---> BACKGROUND'
-    normPeakStatus = 1
-ENDIF ELSE BEGIN
-    text = '---> PEAK EXCLUSION'
-    normPeakStatus = 0
-ENDELSE
-putLogBookMessage, Event, text, APPEND=1
-
-;activate peak or background cw_bgroup
-SetCWBgroup, Event, 'peak_norm_back_group', normPeakStatus
-SwitchPeakBackgroundNormBase, Event
-
-IF (normPeakStatus EQ 0) THEN BEGIN
-;work on NormPeakExclYmin and NormPeakExclYmax
-    text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .........' + $
-      '.. ' + PROCESSING
+    text = '--> Check status of PEAK or BACKGROUND ?'
     putLogBookMessage, Event, text, APPEND=1
-    UpdateNormPeakExclY, Event, $
-      structure.NormPeakExclYmin, $
-      structure.NormPeakExclYmax
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-ENDIF ELSE BEGIN
-    text = '--> Load Norm. BACK File ..................................... ' $
-      + PROCESSING
-    putLogBookMessage, Event, text, APPEND=1
-    IF (structure.NormBackFilename EQ '' OR $
-        FILE_TEST(structure.NormBackFilename) NE 1) THEN BEGIN
-        AppendReplaceLogBookMessage, Event, NO, PROCESSING
-        ++NbrError
-        ++NormError
+    IF (structure.NormPeakExclYmin EQ '') THEN BEGIN
+        text = '---> BACKGROUND'
+        normPeakStatus = 1
     ENDIF ELSE BEGIN
-        UpdateNormBackFileName, Event, structure.NormBackFileName
-        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+        text = '---> PEAK EXCLUSION'
+        normPeakStatus = 0
     ENDELSE
-ENDELSE    
+    putLogBookMessage, Event, text, APPEND=1
+    
+;activate peak or background cw_bgroup
+    SetCWBgroup, Event, 'peak_norm_back_group', normPeakStatus
+    SwitchPeakBackgroundNormBase, Event
+    
+    IF (normPeakStatus EQ 0) THEN BEGIN
+;work on NormPeakExclYmin and NormPeakExclYmax
+        text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .........' + $
+          '.. ' + PROCESSING
+        putLogBookMessage, Event, text, APPEND=1
+        UpdateNormPeakExclY, Event, $
+          structure.NormPeakExclYmin, $
+          structure.NormPeakExclYmax
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDIF ELSE BEGIN
+        text = '--> Load Norm. BACK File ..................................... ' $
+          + PROCESSING
+        putLogBookMessage, Event, text, APPEND=1
+        IF (structure.NormBackFilename EQ '' OR $
+            FILE_TEST(structure.NormBackFilename) NE 1) THEN BEGIN
+            AppendReplaceLogBookMessage, Event, NO, PROCESSING
+            ++NbrError
+            ++NormError
+        ENDIF ELSE BEGIN
+            UpdateNormBackFileName, Event, structure.NormBackFileName
+            AppendReplaceLogBookMessage, Event, OK, PROCESSING
+        ENDELSE
+    ENDELSE    
 ;replot Data (main and selections)
-REFreduction_NormBackgroundPeakSelection, Event, ''
-
+    REFreduction_NormBackgroundPeakSelection, Event, ''
+    
 ;show the norm step within the REUDCE tab
     NormReducePartGuiStatus, Event, 'show'
 
 ENDIF ELSE BEGIN
-
+    
     (*global).NormNexusFound = 0
 ;hide the norm step within the REUDCE tab
     NormReducePartGuiStatus, Event, 'hide'    
@@ -567,7 +567,7 @@ ENDELSE
 text = '--> Activate Norm Widgets .................................... ' $
   + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-IF (DataError EQ 0) THEN BEGIN
+IF (NormError EQ 0) THEN BEGIN
     updateNormWidget, Event, 1
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
