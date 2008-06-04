@@ -77,14 +77,6 @@ IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
     PeakYmin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
     PeakYmax = getTextfieldValue(Event,'data_d_selection_peak_ymax_cw_field')
 
-;update REDUCE tab
-;    putTextFieldValue, Event, $
-;      'data_exclusion_low_bin_text', $
-;      strcompress(PeakYmin),0
-;    putTextFieldValue, Event, $
-;      'data_exclusion_high_bin_text', $
-;      strcompress(PeakYmax),0
-
     IF (PeakYmin EQ '') THEN BEGIN
         PeakYmin = -1
     ENDIF ELSE BEGIN

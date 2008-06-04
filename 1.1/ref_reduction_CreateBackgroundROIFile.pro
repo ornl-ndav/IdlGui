@@ -173,8 +173,8 @@ ENDIF ELSE BEGIN
     coeff = 2
 ENDELSE
 
-Ymin = SelectionBackArray[0]/coeff
-Ymax = SelectionBackArray[1]/coeff
+Ymin = SelectionArray[0]/coeff
+Ymax = SelectionArray[1]/coeff
 YNbr = (Ymax-Ymin)
 
 IF (YNbr LE 1) THEN BEGIN

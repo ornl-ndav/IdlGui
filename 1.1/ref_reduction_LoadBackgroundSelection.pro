@@ -87,7 +87,7 @@ cmd = 'tail ' + FileName + ' -n 1'
 SPAWN, cmd, last_line
 Ymin = ParseBackgroundFileString(Event, first_line)
 Ymax = ParseBackgroundFileString(Event, last_line)
-RETURN, [Ymin-1,Ymax+1]
+RETURN, [Ymin,Ymax]
 END
 
 ;******************************************************************************
@@ -247,7 +247,7 @@ IF (BackFullFileName NE '') THEN BEGIN
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
-endif
+ENDIF
 END
 
 ;******************************************************************************
@@ -290,6 +290,86 @@ END
 ;******************************************************************************
 ;******************************************************************************
 
+PRO REFreduction_LoadNormROISelection, Event
+;get global structure
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+;define Parameters
+instrument   = (*global).instrument
+load_roi_ext = (*global).load_roi_ext
+filter       = instrument + '_*' + load_roi_ext
+PROCESSING   = (*global).processing_message
+;get default path 
+WorkingPath  = (*global).working_path
+title        = instrument + ' Normalization ROI Selection File' ;title of pickfile
+
+;open file
+ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
+                                  GET_PATH          = path,$
+                                  TITLE             = title,$
+                                  FILTER            = filter,$
+                                  DEFAULT_EXTENSION = '.dat',$
+                                  /FIX_FILTER)
+
+IF (ROIFullFileName NE '') THEN BEGIN
+;put info in logbook
+    text  = '-> Loading Normalization ROI Selection File '
+    text += ROIFullFileName
+    
+    text += ' ... ' + PROCESSING
+    putLogBookMessage, Event, Text, Append=1
+    
+;display name of new file name in text field
+    putTextFieldValue,$
+      Event,$
+      'norm_roi_selection_file_text_field',$
+      ROIFullFileName,$
+      0                         ;do not append
+
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'reduce_normalization_region_of_interest_file_name',$
+      ROIFullFileName,$
+      0                         ;do not append
+
+;display preview message in help data box
+    Message = 'Preview of ' + ROIFullFileName
+    putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+      Message
+    
+    YMinYMaxArray = retrieveYMinMaxFromFile(Event, ROIFullFileName)
+;put Ymin and Ymax in their text fields
+    putTextFieldValue, $
+      Event,$
+      'norm_d_selection_roi_ymin_cw_field',$
+      strcompress(YMinYMaxArray[0],/remove_all),$
+      0 
+    putTextFieldValue, $
+      Event,$
+      'norm_d_selection_roi_ymax_cw_field',$
+      strcompress(YMinYMaxArray[1],/remove_all),$
+      0 
+
+;replot
+    REFreduction_NormBackgroundPeakSelection, Event    
+
+;display 20 first data and last 20 in HELP text data box
+    DisplayHeadTailFile, $
+      Event, $
+      ROIFullFileName, $
+      'NORM_left_interaction_help_text'
+
+;put info in logbook
+    LogBookText = getLogBookText(Event)
+    Message = 'OK  '
+    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
+ENDIF
+END
+
+;------------------------------------------------------------------------------
 PRO REFreduction_LoadNormBackgroundSelection, Event
 
 ;get global structure
@@ -297,31 +377,29 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;define filter
-instrument = (*global).instrument
+instrument        = (*global).instrument
 load_back_roi_ext = (*global).load_back_roi_ext
-filter = instrument + '_*' + load_back_roi_ext
-
+filter            = instrument + '_*' + load_back_roi_ext
+PROCESSING        = (*global).processing_message
 ;get default path 
-WorkingPath = (*global).working_path
-
+WorkingPath       = (*global).working_path
 ;title of pickfile
-title = instrument + ' Normalization Background Selection File' 
+title             = instrument + ' Normalization Background Selection File' 
 
 ;open file
-BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
-                                      get_path=path,$
-                                      title=title,$
-                                      filter=filter,$
-                                      default_extension='.dat',$
-                                      /fix_filter)
+BackROIFullFileName = DIALOG_PICKFILE(PATH=WorkingPath,$
+                                      GET_PATH          = path,$
+                                      TITLE             = title,$
+                                      FILTER            = filter,$
+                                      DEFAULT_EXTENSION = '.dat',$
+                                      /FIX_FILTER)
 
-if (BackROIFullFileName NE '') then begin
+IF (BackROIFullFileName NE '') THEN BEGIN
 
 ;put info in logbook
     text = '-> Loading Normalization Background Selection File '
     text += BackROIFullFileName
-    PROCESSING = (*global).processing_message
-    text += '..... ' + PROCESSING
+    text += ' ... ' + PROCESSING
     putLogBookMessage, Event, Text, Append=1
 
 ;display name of new file name in text field
@@ -356,23 +434,21 @@ if (BackROIFullFileName NE '') then begin
     putTextFieldValue, $
       Event,$
       'normalization_d_selection_background_ymax_cw_field',$
-  strcompress(YMinYMaxArray[1],/remove_all),$
+      strcompress(YMinYMaxArray[1],/remove_all),$
       0 
-
+    
 ;replot
     REFreduction_NormBackgroundPeakSelection, Event
     
 ;display 20 first data and last 20 in HELP text data box
     DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
-
+    
 ;put info in logbook
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
-
-endif
-
+ENDIF
 END
 
 ;******************************************************************************

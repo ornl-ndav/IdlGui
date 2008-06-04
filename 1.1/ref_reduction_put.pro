@@ -334,7 +334,7 @@ CASE (ROISelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
-ActivateWidget, Event, 'data_background_selection_file_text_field', $
+ActivateWidget, Event, 'data_roi_selection_file_text_field', $
   ValidateSaveButton
 
 ;get Background Ymin, Ymax ====================================================
@@ -385,7 +385,7 @@ CASE (BackSelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'data_back_save_button', ValidateSaveButton
-ActivateWidget, Event, 'data_background_selection_file_text_field', $
+ActivateWidget, Event, 'data_back_d_selection_file_text_field', $
   ValidateSaveButton
 
 ;get Peak Ymin and Ymax =======================================================
@@ -501,7 +501,7 @@ CASE (ROISelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'norm_roi_save_button', ValidateSaveButton
-ActivateWidget, Event, 'norm_background_selection_file_text_field', $
+ActivateWidget, Event, 'norm_roi_selection_file_text_field', $
   ValidateSaveButton
 
 ;get Background Ymin, Ymax ====================================================
@@ -552,9 +552,9 @@ CASE (BackSelection[0]) OF
     end
 endcase
 
-ActivateWidget, Event, 'norm_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'norm_back_save_button', ValidateSaveButton
 ActivateWidget, Event, $
-  'norm_background_selection_file_text_field', $
+  'norm_back_d_selection_file_text_field', $
   ValidateSaveButton
 
 ;get Peak Ymin and Ymax =======================================================

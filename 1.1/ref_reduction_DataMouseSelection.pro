@@ -487,6 +487,10 @@ xsize_1d_draw = (*global).Ntof_DATA-1
 ;check if user wants peak or background
 isPeakSelected = isDataPeakSelected(Event) 
 
+id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
 CASE (ROISignalBackZoomStatus) OF
     0: BEGIN                    ;roi
         replot_roi  = 0
@@ -606,6 +610,10 @@ xsize_1d_draw = (*global).Ntof_DATA-1
 
 ;check if user wants peak or background
 isPeakSelected = isDataPeakSelected(Event) 
+
+id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
 
 color   = (*global).roi_selection_color
 y_array = (*(*global).data_roi_selection)

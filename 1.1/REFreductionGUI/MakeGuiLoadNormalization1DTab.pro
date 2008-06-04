@@ -112,7 +112,7 @@ XYoff = [90,-8] ;roi file text
 sRoiFileText = {size:     [sRoiFileLabel.size[0]+XYoff[0],$
                            sRoiFileLabel.size[1]+XYoff[1],$
                            350],$
-                uname:    'norm_background_selection_file_text_field',$
+                uname:    'norm_roi_selection_file_text_field',$
                 sensitive: 0}
 
 XYoff = [2,0] ;SAVE button

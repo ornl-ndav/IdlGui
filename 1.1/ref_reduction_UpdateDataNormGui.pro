@@ -41,26 +41,7 @@ END
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateNormWidget, Event, isNeXusFound
-ActivateWidget, Event, 'normalization_ymin_label_frame', isNeXusFound
-ActivateWidget, Event, 'normalization_1d_selection', isNeXusFound
-ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', isNeXusFound
-ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', isNeXusFound
-ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', isNeXusFound
-ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', isNeXusFound
-ActivateWidget, Event, 'normalization_roi_load_button', isNeXusFound
-ActivateWidget, Event, 'normalization_contrast_droplist', isNeXusFound
-ActivateWidget, Event, 'normalization_contrast_bottom_slider', isNeXusFound
-ActivateWidget, Event, 'normalization_contrast_number_slider', isNeXusFound
-ActivateWidget, Event, 'normalization_reset_contrast_button', isNeXusFound
-ActivateWidget, Event, 'normalization_reset_xaxis_button', isNeXusFound
-ActivateWidget, Event, 'normalization_reset_yaxis_button', isNeXusFound
-ActivateWidget, Event, 'normalization_reset_zaxis_button', isNeXusFound
-ActivateWidget, Event, 'normalization_full_reset_button', isNeXusFound
-ActivateWidget, Event, 'normalization_rescale_z_droplist', isNeXusFound
-ActivateWidget, Event, 'normalization1d_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'normalization1d_rescale_tab2_base', isNeXusFound
-ActivateWidget, Event, 'normalization2d_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'normalization2d_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'norm_back_peak_rescale_tab', isNexusFound
 END
 
 ;this function will clear the text field if no nexus has been found
