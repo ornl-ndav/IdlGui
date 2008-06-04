@@ -378,8 +378,8 @@ widget_control,id,get_uvalue=global
 
 ;define filter
 instrument        = (*global).instrument
-load_back_roi_ext = (*global).load_back_roi_ext
-filter            = instrument + '_*' + load_back_roi_ext
+load_back_ext     = (*global).load_back_ext
+filter            = instrument + '_*' + load_back_ext
 PROCESSING        = (*global).processing_message
 ;get default path 
 WorkingPath       = (*global).working_path
@@ -405,17 +405,10 @@ IF (BackROIFullFileName NE '') THEN BEGIN
 ;display name of new file name in text field
     putTextFieldValue,$
       Event,$
-      'normalization_background_selection_file_text_field',$
+      'norm_back_d_selection_file_text_field',$
       BackROIFullFileName,$
       0                         ;do not append
     
-;update REDUCE gui with name of data background roi file
-    putTextFieldValue,$
-      Event,$
-      'reduce_normalization_region_of_interest_file_name',$
-      BackROIFullFileName,$
-      0 ;do not append
-
 ;display preview message in help norm. box
     Message = 'Preview of ' + BackROIFullFileName
     putLabelValue, Event, $
@@ -427,13 +420,13 @@ IF (BackROIFullFileName NE '') THEN BEGIN
 ;put Ymin and Ymax in their text fields
     putTextFieldValue, $
       Event,$
-      'normalization_d_selection_background_ymin_cw_field',$
+      'norm_d_selection_background_ymin_cw_field',$
       strcompress(YMinYMaxArray[0],/remove_all),$
       0 
     
     putTextFieldValue, $
       Event,$
-      'normalization_d_selection_background_ymax_cw_field',$
+      'norm_d_selection_background_ymax_cw_field',$
       strcompress(YMinYMaxArray[1],/remove_all),$
       0 
     

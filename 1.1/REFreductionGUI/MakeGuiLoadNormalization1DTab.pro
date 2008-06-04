@@ -308,7 +308,9 @@ BackPeakRescaleTab = WIDGET_TAB(load_normalization_D_tab_base,$
                                 YOFFSET   = BackPeakRescaleTabSize[1],$
                                 SCR_XSIZE = BackPeakRescaleTabSize[2],$
                                 SCR_YSIZE = BackPeakRescaleTabSize[3],$
+                                SENSITIVE = 0,$
                                 LOCATION  = 0)
+
 ;TAB #1 (ROI and Peak/Background Selection) -----------------------------------
 BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
                             UNAME     = 'data_back_peak_base',$

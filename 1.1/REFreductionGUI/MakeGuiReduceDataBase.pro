@@ -78,7 +78,7 @@ XYoff = [50,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '?',$
                    uname: 'data_exclusion_low_bin_text'}
 XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
@@ -88,7 +88,7 @@ XYoff = [50,-6]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYmaxLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '?',$
                    uname: 'data_exclusion_high_bin_text'}
 
 ;Background Base, label and text_field
@@ -145,7 +145,8 @@ RunsTextField = WIDGET_TEXT(data_base,$
                             YOFFSET   = RunsTextFieldSize[1],$
                             SCR_XSIZE = RunsTextFieldSize[2],$
                             SCR_YSIZE = RunsTextFieldSize[3],$
-                            UNAME='reduce_data_runs_text_field',$
+                            UNAME     ='reduce_data_runs_text_field',$
+                            VALUE     = 'N/A',$
                             /EDITABLE,$
                             /ALIGN_LEFT,$
                             /ALL_EVENTS)

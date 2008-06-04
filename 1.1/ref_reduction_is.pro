@@ -346,4 +346,8 @@ FUNCTION isPeakBaseMap, Event
 RETURN, isBaseMap(Event, 'data_peak_base')
 END
 
+;------------------------------------------------------------------------------
+FUNCTION isNormPeakBaseMap, Event
+RETURN, isBaseMap(Event, 'norm_peak_base')
+END
 
