@@ -330,7 +330,7 @@ ENDIF ELSE BEGIN                ;Zoom selected
 ;      validate zoom display
         SetTabCurrent, $
           Event, $
-          'norm_nxsummary_zoom_tab', $
+          'normalization_nxsummary_zoom_tab', $
           1
         
         RefReduction_zoom, $
@@ -338,7 +338,7 @@ ENDIF ELSE BEGIN                ;Zoom selected
           MouseX = event.x, $
           MouseY = event.y, $
           fact   = (*global).DataZoomFactor,$
-          uname  = 'norm_zoom_draw'
+          uname  = 'normalization_zoom_draw'
         
     ENDIF
     
@@ -454,7 +454,7 @@ CASE (ROISignalBackZoomStatus) OF
               MouseX = event.x, $
               MouseY = event.y, $
               fact   = (*global).NormalizationZoomFactor,$
-              uname  = 'norm_zoom_draw'
+              uname  = 'normalization_zoom_draw'
             (*global).select_norm_zoom_status = 0
         ENDIF
     END
@@ -518,7 +518,7 @@ CASE (ROISignalBackZoomStatus) OF
               MouseX = event.x, $
               MouseY = event.y, $
               fact   = (*global).NormalizationZoomFactor,$
-              uname  = 'norm_zoom_draw'
+              uname  = 'normalization_zoom_draw'
         ENDIF
     END
 ENDCASE
@@ -589,7 +589,7 @@ IF (isNormZoomTabSelected(Event) AND $
       MouseX = event.x, $
       MouseY = event.y, $
       fact   = (*global).NormalizationZoomFactor,$
-      uname  = 'norm_zoom_draw'
+      uname  = 'normalization_zoom_draw'
 ENDIF
     
 END
@@ -677,7 +677,7 @@ IF (isNormZoomTabSelected(Event) AND $
       MouseX = event.x, $
       MouseY = event.y, $
       fact   = (*global).NormalizationZoomFactor,$
-      uname  = 'norm_zoom_draw'
+      uname  = 'normalization_zoom_draw'
 ENDIF
 
 END
