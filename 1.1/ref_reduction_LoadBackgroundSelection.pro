@@ -280,6 +280,40 @@ YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
 ;put Ymin and Ymax in their text fields
 putTextFieldValue, $
   Event,$
+  'data_d_selection_roi_ymin_cw_field',$
+  strcompress(YMinYMaxArray[0],/remove_all),$
+  0 
+putTextFieldValue, $
+  Event,$
+  'data_d_selection_roi_ymax_cw_field',$
+  strcompress(YMinYMaxArray[1],/remove_all),$
+  0 
+;display 20 first data and last 20 in HELP text data box
+DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
+END
+
+;******************************************************************************
+
+;This function is reached by the UpdateDataRoiFileName of the
+;IDLupdateGUI class
+PRO REFreduction_LoadDataBackFile, Event, DataRoiFileName
+BackROIFullFileName = DataRoiFileName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;update REDUCE gui with name of data background roi file
+putTextFieldValue,$
+  Event,$
+  'data_back_selection_file_value',$
+  BackROIFullFileName,$
+  0                             ;do not append
+;display preview message in help data box
+Message = 'Preview of ' + BackROIFullFileName
+putLabelValue, Event, 'left_data_interaction_help_message_help', Message
+YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
+;put Ymin and Ymax in their text fields
+putTextFieldValue, $
+  Event,$
   'data_d_selection_background_ymin_cw_field',$
   strcompress(YMinYMaxArray[0],/remove_all),$
   0 
@@ -288,8 +322,6 @@ putTextFieldValue, $
   'data_d_selection_background_ymax_cw_field',$
   strcompress(YMinYMaxArray[1],/remove_all),$
   0 
-;replot
-REFreduction_DataBackgroundPeakSelection, Event
 ;display 20 first data and last 20 in HELP text data box
 DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
 END
@@ -310,7 +342,8 @@ filter       = instrument + '_*' + load_roi_ext
 PROCESSING   = (*global).processing_message
 ;get default path 
 WorkingPath  = (*global).working_path
-title        = instrument + ' Normalization ROI Selection File' ;title of pickfile
+title        = instrument + ' Normalization ROI Selection File' 
+;title of pickfile
 
 ;open file
 ROIFullFileName = DIALOG_PICKFILE(PATH              = WorkingPath,$
@@ -464,7 +497,7 @@ END
 ;******************************************************************************
 ;******************************************************************************
 
-PRO REFreduction_LoadNormBackgroundFile, Event, NormRoiFileName
+PRO REFreduction_LoadNormROIFile, Event, NormRoiFileName
 BackROIFullFileName = NormRoiFileName
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -472,7 +505,7 @@ widget_control,id,get_uvalue=global
 ;display name of new file name in text field
 putTextFieldValue,$
   Event,$
-  'normalization_background_selection_file_text_field',$
+  'norm_roi_selection_file_text_field',$
   BackROIFullFileName,$
   0                             ;do not append
 ;update REDUCE gui with name of data background roi file
@@ -489,16 +522,52 @@ YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
 ;put Ymin and Ymax in their text fields
 putTextFieldValue, $
   Event,$
-  'normalization_d_selection_background_ymin_cw_field',$
+  'norm_d_selection_roi_ymin_cw_field',$
   strcompress(YMinYMaxArray[0],/remove_all),$
   0 
 putTextFieldValue, $
   Event,$
-  'normalization_d_selection_background_ymax_cw_field',$
+  'norm_d_selection_roi_ymax_cw_field',$
   strcompress(YMinYMaxArray[1],/remove_all),$
   0 
-;replot
-REFreduction_NormBackgroundPeakSelection, Event
+;display 20 first data and last 20 in HELP text data box
+DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
+END
+
+;------------------------------------------------------------------------------
+PRO REFreduction_LoadNormBackFile, Event, NormRoiFileName
+BackROIFullFileName = NormRoiFileName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;display name of new file name in text field
+putTextFieldValue,$
+  Event,$
+  'norm_back_d_selection_file_text_field',$
+  BackROIFullFileName,$
+  0                             ;do not append
+;update REDUCE gui with name of data background roi file
+putTextFieldValue,$
+  Event,$
+  'norm_back_selection_file_value',$
+  BackROIFullFileName,$
+  0                             ;do not append
+;display preview message in help norm. box
+Message = 'Preview of ' + BackROIFullFileName
+putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+  Message
+YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
+;put Ymin and Ymax in their text fields
+putTextFieldValue, $
+  Event,$
+  'norm_d_selection_background_ymin_cw_field',$
+  strcompress(YMinYMaxArray[0],/remove_all),$
+  0 
+putTextFieldValue, $
+  Event,$
+  'norm_d_selection_background_ymax_cw_field',$
+  strcompress(YMinYMaxArray[1],/remove_all),$
+  0 
 ;display 20 first data and last 20 in HELP text data box
 DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
 END

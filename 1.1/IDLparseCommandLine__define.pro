@@ -105,6 +105,13 @@ RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getDataBackFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, '--dbkg-roi-file=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getMainNormNexusFileName, cmd
 result  = ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
 IF (result EQ '') THEN RETURN, ''
@@ -144,6 +151,13 @@ IF (Ymin EQ '') THEN Ymin=''
 Ymax = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 1)
 IF (Ymax EQ '') THEN Ymax=''
 RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getNormBackFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, '--nbkg-roi-file=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
+RETURN, result
 END
 
 ;------------------------------------------------------------------------------
@@ -369,6 +383,11 @@ RETURN, self.DataPeakExclYArray
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine::getDataBackFileName
+RETURN, self.DataBackFileName
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getMainNormNexusFileName
 RETURN, self.MainNormNexusFileName
 END
@@ -391,6 +410,11 @@ END
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLparseCommandLine::getNormPeakExclYArray
 RETURN, self.NormPeakExclYArray
+END
+
+;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+FUNCTION IDLparseCommandLine::getNormBackFileName
+RETURN, self.NormBackFileName
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -523,6 +547,7 @@ ENDIF ELSE BEGIN
     self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
     self.DataRoiFileName        = getDataRoiFileName(cmd)
     self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
+    self.DataBackFileName       = getDataBackFileName(cmd)
     
 ;Work on Normalization
     self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
@@ -535,6 +560,7 @@ ENDIF ELSE BEGIN
     self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
     self.NormRoiFileName       = getNormRoiFileName(cmd)
     self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
+    self.NormBackFileName      = getNormBackFileName(cmd)
     
 ;;Reduce Tab
 ;Background flags
@@ -584,11 +610,13 @@ STRUCT = {IDLparseCommandLine,$
           AllDataNexusFileName      : '',$
           DataRoiFileName           : '',$
           DataPeakExclYArray        : ['',''],$
+          DataBackFileName          : '',$
           MainNormNexusFileName     : '',$
           MainNormRunNumber         : '',$
           AllNormNexusFileName      : '',$
           NormRoiFileName           : '',$
           NormPeakExclYArray        : ['',''],$
+          NormBackFileName          : '',$
           DataBackgroundFlag        : 'yes',$
           NormBackgroundFlag        : 'yes',$
           Qmin                      : '',$
