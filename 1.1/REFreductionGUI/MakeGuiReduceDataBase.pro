@@ -100,9 +100,9 @@ sBackBase = { size:  sPeakBase.size,$
 XYoff = [0,7]                   ;Main label
 sBackMainLabel = { size:  XYoff,$
                    value: 'Background Selection File:'}
-XYoff = [170,0]
+XYoff = [170,-6]
 sBackFileValue = { size: [sBackMainLabel.size[0]+XYoff[0],$
-                          sBackMainLabel.size[1]+XYoff[1]-6,$
+                          sBackMainLabel.size[1]+XYoff[1],$
                           453,30],$
                    value: '',$
                    uname: 'data_back_selection_file_value'}

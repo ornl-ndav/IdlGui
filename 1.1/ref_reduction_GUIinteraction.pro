@@ -200,12 +200,23 @@ END
 ;------------------------------------------------------------------------------
 ;This function switches the data Ymin and Ymax labels
 PRO SwitchDataYminYmaxLabel, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='data_ymin_ymax_label')
 WIDGET_CONTROL, id, GET_VALUE = value
-IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
-    value = 'Current working selection -> Ymax'
+IF ((*global).miniVersion EQ 0) THEN BEGIN
+    IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+        value = 'Current working selection -> Ymax'
+    ENDIF ELSE BEGIN
+        value = 'Current working selection -> Ymin'
+    ENDELSE
 ENDIF ELSE BEGIN
-    value = 'Current working selection -> Ymin'
+    IF (value EQ 'Working with -> Ymin') THEN BEGIN
+        value = 'Working with -> Ymax'
+    ENDIF ELSE BEGIN
+        value = 'Working with -> Ymin'
+    ENDELSE
 ENDELSE
 WIDGET_CONTROL, id, SET_VALUE = value
 END
@@ -213,12 +224,23 @@ END
 ;------------------------------------------------------------------------------
 ;This function switches the normalization Ymin and Ymax labels
 PRO SwitchNormYminYmaxLabel, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='norm_ymin_ymax_label')
 WIDGET_CONTROL, id, GET_VALUE = value
-IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
-    value = 'Current working selection -> Ymax'
+IF ((*global).miniVersion EQ 0) THEN BEGIN
+    IF (value EQ 'Current working selection -> Ymin') THEN BEGIN
+        value = 'Current working selection -> Ymax'
+    ENDIF ELSE BEGIN
+        value = 'Current working selection -> Ymin'
+    ENDELSE
 ENDIF ELSE BEGIN
-    value = 'Current working selection -> Ymin'
+    IF (value EQ 'Working with -> Ymin') THEN BEGIN
+        value = 'Working with -> Ymax'
+    ENDIF ELSE BEGIN
+        value = 'Working with -> Ymin'
+    ENDELSE
 ENDELSE
 WIDGET_CONTROL, id, SET_VALUE = value
 END

@@ -49,7 +49,6 @@ sModeGroup = {size:  [XYoff[0],$
                   value: 1,$
                   list:  ['Auto.','Manual']}
 
-
 ;Qmanual base
 XYoff = [145,13]
 sQmanualBase = {size: [XYoff[0],$

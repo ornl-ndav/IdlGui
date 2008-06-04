@@ -60,12 +60,16 @@ RescaleBaseTitle       = 'Range Displayed'
 ;------------------------------------------------------------------------------
 ;-TAB #1 ----------------------------------------------------------------------
 ;------------------------------------------------------------------------------
+;Ymin and Ymax working
+sYMinMaxLabel = { size: [175,5],$
+                  value: 'Working with -> Ymin',$
+                  uname: 'data_ymin_ymax_label'}
 
 sTab = { size:  [5,5,D_DD_TabSize[2]-35,155],$
          list:  ['ROI',$
                  'Peak/Background',$
                  'ZOOM'],$
-         uname: 'roi_peak_background_tab'}
+         uname: 'data_roi_peak_background_tab'}
 
 ;;TAB ROI ---------------------------------------------------------------------
 sRoiBase = { size: [0,0,D_DD_TabSize[2],160] }
@@ -75,7 +79,7 @@ sRoiYmin = { size: [XYoff[0],$
                     XYoff[1],$
                     80,35],$
              base_uname: 'Data1SelectionBackgroundYminBase',$
-             uname: 'data_d_selection_background_ymin_cw_field',$
+             uname: 'data_d_selection_roi_ymin_cw_field',$
              xsize: 3,$
              title: 'Ymin:'}
 
@@ -84,7 +88,7 @@ sRoiYmax = { size: [sRoiYmin.size[0]+sRoiYmin.size[2]+XYoff[0],$
                     sRoiYmin.size[1]+XYoff[1],$
                     sRoiYmin.size[2:3]],$
              base_uname: 'Data1SelectionBackgroundYmaxBase',$
-             uname: 'data_d_selection_background_ymax_cw_field',$
+             uname: 'data_d_selection_roi_ymax_cw_field',$
              xsize: 3,$
              title: 'Ymax:'}
 
@@ -110,7 +114,7 @@ XYoff = [60,-8] ;roi file text
 sRoiFileText = {size:     [sRoiFileLabel.size[0]+XYoff[0],$
                            sRoiFileLabel.size[1]+XYoff[1],$
                            220],$
-                uname:    'data_background_selection_file_text_field',$
+                uname:    'data_roi_selection_file_text_field',$
                 sensitive: 0}
 
 XYoff = [0,30] ;SAVE button
@@ -169,7 +173,7 @@ sBackRoiYmin = { size: [XYoff[0],$
                         XYoff[1],$
                         80,35],$
                  base_uname: 'refm_back_ymin_base',$
-                 uname: 'refm_back_data_ymin_cw_field',$
+                 uname: 'data_d_selection_background_ymin_cw_field',$
                  xsize: 3,$
                  title: 'Ymin:'}
 
@@ -178,7 +182,7 @@ sBackRoiYmax = { size: [sBackRoiYmin.size[0]+sBackRoiYmin.size[2]+XYoff[0],$
                         sBackRoiYmin.size[1]+XYoff[1],$
                         sBackRoiYmin.size[2:3]],$
                  base_uname: 'refm_back_ymax_base',$
-                 uname: 'refm_back_data_ymax_cw_field',$
+                 uname: 'data_d_selection_background_ymax_cw_field',$
                  xsize: 3,$
                  title: 'Ymax:'}
 
@@ -193,7 +197,7 @@ sBackLoadButton = {size: [sBackOrLabel.size[0]+XYoff[0],$
                           100,$
                           30],$
                    value: 'LOAD BACK. FILE',$
-                   uname: 'refm_back_data_load_button'}
+                   uname: 'data_d_selection_back_load_button'}
 
 XYoff = [3,43]                  ;ROI file Name label
 sBackRoiFileLabel = {size:   [sBackRoiYmin.size[0]+XYoff[0],$
@@ -204,7 +208,7 @@ XYoff = [70,-8]                 ;roi file text
 sBackRoiFileText = {size:     [sBackRoiFileLabel.size[0]+XYoff[0],$
                                sBackRoiFileLabel.size[1]+XYoff[1],$
                                212],$
-                    uname:    'refm_back_data_file_text',$
+                    uname:    'data_back_d_selection_file_text_field',$
                     sensitive: 0}
 
 XYoff = [0,26]                   ;SAVE button
@@ -212,10 +216,18 @@ sBackSaveButton = {size:  [sBackRoiFileLabel.size[0]+XYoff[0],$
                            sBackRoiFileLabel.size[1]+XYoff[1],$
                            283,sLoadButton.size[3]],$
                    value: 'SAVE BACKGROUND FILE',$
-                   uname: 'refm_back_data_save_button'}
+                   uname: 'data_back_save_button'}
 
 ;TAB Zoom ---------------------------------------------------------------------
 sZoomBase = sRoiBase
+XYoff = [20,30]
+sZoomLabel1 = { size: [XYoff[0],$
+                      XYoff[1]],$
+               value: 'Left click (without releasing) in the PLOT '}
+XYoff = [15,30]
+sZoomLabel2 = { size: [sZoomLabel1.size[0]+XYoff[0],$
+                       sZoomLabel1.size[1]+XYoff[1]],$
+               value: 'to zoom this part of the display. '}
 
 ;##############################################################################
 ;################################# Tab #2 #####################################
@@ -342,6 +354,13 @@ BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
                             SCR_XSIZE = BackPeakBaseSize[2],$
                             SCR_YSIZE = BackPeakBaseSize[3],$
                             TITLE     = BackPeakBaseTitle)
+
+;Ymin and Ymax working label
+wYminMaxLabel = WIDGET_LABEL(BackPeakBase,$
+                             XOFFSET = sYminMaxLabel.size[0],$
+                             YOFFSET = sYminMaxLabel.size[1],$
+                             VALUE   = sYminMaxLabel.value,$
+                             UNAME   = sYminMaxLabel.uname)
 
 ;TAB #1-1 (ROI) ***************************************************************
 wRoiTab = WIDGET_TAB(BackPeakBase,$
@@ -577,6 +596,15 @@ wZoomBase = WIDGET_BASE(wRoiTab,$
                         SCR_XSIZE = sZoomBase.size[2],$
                         SCR_YSIZE = sZoomBase.size[3],$
                         TITLE     = sTab.list[2])
+
+wZoomLabel = WIDGET_LABEL(wZoomBase,$
+                          XOFFSET = sZoomLabel1.size[0],$
+                          YOFFSET = sZoomLabel1.size[1],$
+                          VALUE   = sZoomLabel1.value)
+wZoomLabel = WIDGET_LABEL(wZoomBase,$
+                          XOFFSET = sZoomLabel2.size[0],$
+                          YOFFSET = sZoomLabel2.size[1],$
+                          VALUE   = sZoomLabel2.value)
 
 ;##############################################################################
 ;######################### Tab #2 #############################################
