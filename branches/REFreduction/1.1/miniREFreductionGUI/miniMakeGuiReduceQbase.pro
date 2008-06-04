@@ -41,35 +41,61 @@ QLabelSize  = [20,2]
 QLabelTitle = 'Q'
 QFrameSize  = [10,10,IndividualBaseWidth-30,40]
 
+;Auto/manual mode
+XYoff = [15,18]
+sModeGroup = {size:  [XYoff[0],$
+                      XYoff[1]],$
+                  uname: 'q_mode_group',$
+                  value: 1,$
+                  list:  ['Auto.','Manual']}
+
+;Qmanual base
+XYoff = [145,13]
+sQmanualBase = {size: [XYoff[0],$
+                       XYoff[1],$
+                       412,35],$
+                frame: 1,$
+                uname: 'q_manual_base'}
+
 ;Qmin
-QminLabelSize     = [15,23]
-QminLabelTitle    = 'Minimum:'
-d_L_T = 60
-QminTextFieldSize = [QminLabelSize[0]+d_L_T,$
-                     QminLabelSize[1]-5,70,30]
-d_L_L = 145
+XYoff = [0,8] ;label
+QminLabelSize     = [XYoff[0],XYoff[1]]
+QminLabelTitle    = 'Min:'
+
+XYoff = [28,-5] ;text_field
+QminTextFieldSize = [QminLabelSize[0]+XYoff[0],$
+                     QminLabelSize[1]+XYoff[1], $
+                     60, $
+                     30]
+
 ;Qmax
-QmaxLabelSize     = [QminLabelSize[0]+d_L_L,$
-                     QminLabelSize[1]]
-QmaxLabelTitle    = 'Maximum:'
-QmaxTextFieldSize = [QmaxLabelSize[0]+d_L_T,$
+XYoff = [5,0] ;label
+QmaxLabelSize     = [QminTextFieldSize[0]+ $
+                     QminTextFieldSize[2]+ $
+                     XYoff[0],$
+                     QminLabelSize[1]+XYoff[1]]
+QmaxLabelTitle    = 'Max:'
+XYoff = [28,0] ;text field
+QmaxTextFieldSize = [QmaxLabelSize[0]+XYoff[0],$
                      QminTextFieldSize[1],$
                      QminTextFieldSize[2],$
                      QminTextFieldSize[3]]
+
 ;Qwidth
-QwidthLabelSize     = [QmaxLabelSize[0]+d_L_L,$
-                       QmaxLabelSize[1]]
+XYoff = [5,0]
+QwidthLabelSize     = [QmaxTextFieldSize[0]+QmaxTextFieldSize[2]+XYoff[0],$
+                       QmaxLabelSize[1]+XYoff[1]]
 QwidthLabelTitle    = 'Width:'
-d_L_T_2 = d_L_T - 10
-QwidthTextFieldSize = [QwidthLabelSize[0]+d_L_T_2,$
+XYoff = [45,0]
+QwidthTextFieldSize = [QwidthLabelSize[0]+XYoff[0],$
                        QminTextFieldSize[1],$
                        QminTextFieldSize[2],$
                        QminTextFieldSize[3]]
 
 ;Qscale
 QScaleBGroupList = ['linear','log' ]
-d_L_T_3 = d_L_T + 30
-QScaleBGroupSize = [QwidthTextFieldSize[0]+d_L_T_3,$
+XYOff = [5,0]
+QScaleBGroupSize = [QwidthTextFieldSize[0]+QwidthTextFieldSize[2]+XYoff[0],$
                     QminTextFieldSize[1]]
                     
 ;###############################################################################
@@ -89,66 +115,88 @@ QLabel = WIDGET_LABEL(Q_base,$
                       YOFFSET = QLabelSize[1],$
                       VALUE   = QLabelTitle)
 
+;Auto/Manual mode
+wPeakBackGroup = CW_BGROUP(Q_base,$
+                           sModeGroup.list,$
+                           XOFFSET   = sModeGroup.size[0],$
+                           YOFFSET   = sModeGroup.size[1],$
+                           UNAME     = sModeGroup.uname,$
+                           SET_VALUE = sModeGroup.value,$
+                           ROW       = 1,$
+                           /EXCLUSIVE,$
+                           /RETURN_NAME,$
+                           /NO_RELEASE)
+
+;sQmanual base
+wBase = WIDGET_BASE(Q_base,$
+                    XOFFSET   = sQmanualBase.size[0],$
+                    YOFFSET   = sQmanualBase.size[1],$
+                    SCR_XSIZE = sQmanualBase.size[2],$
+                    SCR_YSIZE = sQmanualBase.size[3],$
+                    UNAME     = sQmanualBase.uname,$
+                    FRAME     = sQmanualBase.frame)
+
+
 ;Qmin label
-QMinLabel = WIDGET_LABEL(Q_base,$
-                         XOFFSET = QMinLabelSize[0],$
-                         YOFFSET = QMinLabelSize[1],$
-                         VALUE   = QMinLabelTitle)
+QMinLabel = widget_label(wBase,$
+                         xoffset=QMinLabelSize[0],$
+                         yoffset=QMinLabelSize[1],$
+                         value=QMinLabelTitle)
 
 ;Qmin Text Field
-QMinTextField = WIDGET_TEXT(Q_base,$
-                            XOFFSET   = QMinTextFieldSize[0],$
-                            YOFFSET   = QMinTextFieldSize[1],$
-                            SCR_XSIZE = QMinTextFieldSize[2],$
-                            SCR_YSIZE = QMinTextFieldSize[3],$
-                            UNAME     = 'q_min_text_field',$
-                            /ALIGN_LEFT,$
-                            /ALL_EVENTS,$
-                            /EDITABLE)
+QMinTextField = widget_text(wBase,$
+                            xoffset=QMinTextFieldSize[0],$
+                            yoffset=QMinTextFieldSize[1],$
+                            scr_xsize=QMinTextFieldSize[2],$
+                            scr_ysize=QMinTextFieldSize[3],$
+                            /align_left,$
+                            /all_events,$
+                            /editable,$
+                            uname='q_min_text_field')
 
 ;Qmax label
-QMaxLabel = WIDGET_LABEL(Q_base,$
-                         XOFFSET = QMaxLabelSize[0],$
-                         YOFFSET = QMaxLabelSize[1],$
-                         VALUE   = QMaxLabelTitle)
+QMaxLabel = widget_label(wBase,$
+                         xoffset=QMaxLabelSize[0],$
+                         yoffset=QMaxLabelSize[1],$
+                         value=QMaxLabelTitle)
 
 ;Qmax Text Field
-QMaxTextField = WIDGET_TEXT(Q_base,$
-                            XOFFSET   = QMaxTextFieldSize[0],$
-                            YOFFSET   = QMaxTextFieldSize[1],$
-                            SCR_XSIZE = QMaxTextFieldSize[2],$
-                            SCR_YSIZE = QMaxTextFieldSize[3],$
-                            UNAME     = 'q_max_text_field',$
-                            /ALIGN_LEFT,$
-                            /EDITABLE,$
-                            /ALL_EVENTS)
+QMaxTextField = widget_text(wBase,$
+                            xoffset=QMaxTextFieldSize[0],$
+                            yoffset=QMaxTextFieldSize[1],$
+                            scr_xsize=QMaxTextFieldSize[2],$
+                            scr_ysize=QMaxTextFieldSize[3],$
+                            /align_left,$
+                            /editable,$
+                            /all_events,$
+                            uname='q_max_text_field')
 
 ;Qwidth label
-QwidthLabel = WIDGET_LABEL(Q_base,$
-                           XOFFSET = QwidthLabelSize[0],$
-                           YOFFSET = QwidthLabelSize[1],$
-                           VALUE   = QwidthLabelTitle)
+QwidthLabel = widget_label(wBase,$
+                           xoffset=QwidthLabelSize[0],$
+                           yoffset=QwidthLabelSize[1],$
+                           value=QwidthLabelTitle)
 
 ;Qwidth Text Field
-QwidthTextField = WIDGET_TEXT(Q_base,$
-                              XOFFSET   = QwidthTextFieldSize[0],$
-                              YOFFSET   = QwidthTextFieldSize[1],$
-                              SCR_XSIZE = QwidthTextFieldSize[2],$
-                              SCR_YSIZE = QwidthTextFieldSize[3],$
-                              UNAME     = 'q_width_text_field',$
-                              /ALIGN_LEFT,$
-                              /EDITABLE,$
-                              /ALL_EVENTS)
+QwidthTextField = widget_text(wBase,$
+                              xoffset=QwidthTextFieldSize[0],$
+                              yoffset=QwidthTextFieldSize[1],$
+                              scr_xsize=QwidthTextFieldSize[2],$
+                              scr_ysize=QwidthTextFieldSize[3],$
+                              /align_left,$
+                              /editable,$
+                              /all_events,$
+                              uname='q_width_text_field')
 
 ;QScale label
-QScaleBGroup = CW_BGROUP(Q_base,$
+QScaleBGroup = cw_bgroup(wBase,$
                          QScaleBGroupList,$
-                         XOFFSET=QScaleBGroupSize[0],$
-                         YOFFSET=QScaleBGroupSize[1],$
-                         SET_VALUE=0,$
-                         UNAME='q_scale_b_group',$
-                         ROW=1,$
-                         /EXCLUSIVE)
+                         /exclusive,$
+                         xoffset=QScaleBGroupSize[0],$
+                         yoffset=QScaleBGroupSize[1],$
+                         set_value=0,$
+                         uname='q_scale_b_group',$
+                         row=1)
 
 ;frame
 QFrame = WIDGET_LABEL(Q_base,$

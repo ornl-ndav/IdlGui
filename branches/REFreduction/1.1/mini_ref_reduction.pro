@@ -212,10 +212,16 @@ global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-ma
 ;rebin data img
                    tvimg_norm_ptr : ptr_new(0L),$ 
 ;rebin norm img
-                   back_selection_color : 250L,$ 
+                   roi_selection_color: 250L,$
+;color of roi selection
+                   back_selection_color : 50L,$ 
 ;color of background selection
                    peak_selection_color : 100L,$
 ;color of peak exclusion
+                   data_roi_selection : ptr_new(0L),$ 
+;Ymin and Ymax for data roi
+                   norm_roi_selection : ptr_new(0L),$ 
+;Ymin and Ymax for norm roi
                    data_back_selection : ptr_new(0L),$ 
 ;Ymin and Ymax for data background
                    norm_back_selection : ptr_new(0L),$ 
@@ -224,12 +230,18 @@ global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-ma
 ;Ymin and Ymax for data peak
                    norm_peak_selection : ptr_new(0L),$
 ;Ymin and Ymax for norm peak
-                   data_back_roi_ext : '_data_roi.dat',$ 
-;extension file name of back data ROI
-                   norm_back_roi_ext : '_norm_roi.dat',$
-;extension file name of back norm ROI
-                   load_back_roi_ext : '_roi.dat',$
-;filter used to load background ROI files for data and norm
+                   data_roi_ext : '_data_roi.dat',$ 
+;extension file name of data roi 
+                   data_back_ext: '_data_back.dat',$
+;extension file name of data back
+                   norm_roi_ext : '_norm_roi.dat',$
+;extension file name of norm roi
+                   norm_back_ext: '_norm_back.dat',$
+;extension file name of norm back
+                   load_roi_ext : '_roi.dat',$
+;filter used to load ROI files for data and norm
+                   load_back_ext : '_back.dat',$
+;filter used to load background files for data and norm
                    roi_file_preview_nbr_line : 20L,$ 
 ;nbr of line to display in preview
                    select_data_status : 0,$ 
@@ -238,6 +250,8 @@ global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-ma
 ;Status of the norm selection (see below)
                    select_zoom_status : 0,$
 ;Status of the zoom (0=no zoom; 1=zoom)
+                   select_norm_zoom_status: 0,$
+;Status of the normalization zoom (0=no zoom; 1=zoom)
                    flt0_ptr : ptrarr(8,/allocate_heap),$ 
 ;arrays of all the x-axis
                    flt1_ptr : ptrarr(8,/allocate_heap),$ 
@@ -561,7 +575,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 0 ;REDUCE
+    widget_control, id1, set_tab_current = 1 ;REDUCE
     
 ;change default location of Batch file
 ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
