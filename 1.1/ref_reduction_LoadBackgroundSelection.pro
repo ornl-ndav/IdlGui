@@ -167,7 +167,11 @@ IF (ROIFullFileName NE '') THEN BEGIN
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
-endif
+;copy file name into reduce tab
+        putTextFieldValue, Event, $
+          'reduce_data_region_of_interest_file_name', ROIFullFileName, 0
+
+ENDIF
 END
 
 ;******************************************************************************
@@ -246,6 +250,10 @@ IF (BackFullFileName NE '') THEN BEGIN
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
+;copy file name into reduce tab
+    putTextFieldValue, Event, 'data_back_selection_file_value', $
+      BackFullFileName , 0
 
 ENDIF
 END
@@ -366,6 +374,11 @@ IF (ROIFullFileName NE '') THEN BEGIN
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
+;copy file name into reduce tab
+        putTextFieldValue, Event, $
+          'reduce_normalization_region_of_interest_file_name', $
+          ROIFullFileName, 0
+
 ENDIF
 END
 
@@ -440,6 +453,10 @@ IF (BackROIFullFileName NE '') THEN BEGIN
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
+;copy file name into reduce tab
+    putTextFieldValue, Event, 'norm_back_selection_file_value', $
+      BackROIFullFileName , 0
 
 ENDIF
 END
