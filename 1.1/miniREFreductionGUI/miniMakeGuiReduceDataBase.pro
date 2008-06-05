@@ -78,7 +78,7 @@ XYoff = [50,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '?',$
+                   value: '',$
                    uname: 'data_exclusion_low_bin_text'}
 XYoff = [100,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
@@ -88,7 +88,7 @@ XYoff = [50,-6]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYmaxLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '?',$
+                   value: '',$
                    uname: 'data_exclusion_high_bin_text'}
 
 ;Background Base, label and text_field
