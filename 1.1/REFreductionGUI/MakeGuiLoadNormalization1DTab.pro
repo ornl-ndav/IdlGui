@@ -302,6 +302,7 @@ load_normalization_D_draw = WIDGET_DRAW(load_normalization_D_tab_base,$
                                         UNAME         = $
                                         'load_normalization_D_draw',$
                                         RETAIN        = 2,$
+                                        /KEYBOARD_EVENT,$
                                         /SCROLL,$
                                         /BUTTON_EVENTS,$
                                         /MOTION_EVENTS)

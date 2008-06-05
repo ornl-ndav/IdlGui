@@ -75,7 +75,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
+global = ptr_new ({ first_event: 1,$
+                    job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$
                     xml_file_location: '~/',$
@@ -374,14 +375,6 @@ global = ptr_new ({ job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-ma
 ;Previous x position of data left click
                    NormXMouseSelection : 0L,$
 ;Previous x position of normalization left click
-                   DataHiddenWidgetTextId : 0L, $
-;ID of Data Hidden Widget Text
-                   DataHiddenWidgetTextUname : '',$
-;uname of data hidden widget text
-                   NormHiddenWidgetTextId : 0L,$
-;ID of Norm Hidden Widget Text
-                   NormHiddenWidgetTextUname : '',$
-;uname of Norm hidden widget text
                    UpDownMessage : '',$
 ;Message to display when left click main plot
                    REFreductionVersion : ''$
@@ -505,24 +498,6 @@ miniMakeGuiMainTab, $
   instrument, $
   PlotsTitle,$
   structure
-
-;hidden widget_text
-DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
-                                   XOFFSET = 1,$
-                                   YOFFSET = 1,$
-                                   /ALL_EVENTS,$
-                                   UNAME='data_hidden_widget_text')
-
-(*global).DataHiddenWidgetTextId = DataHiddenWidgetText
-(*global).DataHiddenWidgetTextUname = 'data_hidden_widget_text'
-
-NormHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
-                                   XOFFSET = 1,$
-                                   YOFFSET = 1,$
-                                   /ALL_EVENTS,$
-                                   UNAME='norm_hidden_widget_text')
-(*global).NormHiddenWidgetTextId = NormHiddenWidgetText
-(*global).NormHiddenWidgetTextUname = 'norm_hidden_widget_text'
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

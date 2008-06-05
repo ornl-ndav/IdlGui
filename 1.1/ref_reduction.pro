@@ -38,7 +38,8 @@ ENDELSE
 debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
-global = PTR_NEW ({job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
+global = PTR_NEW ({ first_event: 1,$
+                    job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$
                     xml_file_location: '~/',$
