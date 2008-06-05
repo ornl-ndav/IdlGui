@@ -12,7 +12,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;=======================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
-VERSION            = '1.1.1'
+VERSION            = '1.1.2'
 DEBUGGING_VERSION  = 'no'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'yes'
