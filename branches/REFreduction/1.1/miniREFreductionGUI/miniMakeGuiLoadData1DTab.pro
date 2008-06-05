@@ -333,6 +333,7 @@ load_data_D_draw = WIDGET_DRAW(load_data_D_tab_base,$
                                YSIZE         = GLobalLoadGraphs[3]-24,$
                                UNAME         = 'load_data_D_draw',$
                                RETAIN        = 2,$
+                               /KEYBOARD_EVENT,$
                                /SCROLL,$
                                /BUTTON_EVENTS,$
                                /MOTION_EVENTS)

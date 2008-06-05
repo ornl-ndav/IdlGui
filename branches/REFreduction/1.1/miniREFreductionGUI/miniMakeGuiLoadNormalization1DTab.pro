@@ -336,6 +336,7 @@ load_normalization_D_draw = $
               YSIZE         = GlobalLoadGraphs[3]-24,$
               UNAME         = 'load_normalization_D_draw',$
               RETAIN        = 2,$
+              /KEYBOARD_EVENT,$
               /SCROLL,$
               /BUTTON_EVENTS,$
               /MOTION_EVENTS)

@@ -77,23 +77,35 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
-        if ((*global).DataNeXusFound) then BEGIN $
+        IF ((*global).DataNeXusFound) THEN BEGIN
+            IF ((*global).first_event) THEN BEGIN
 ;only if there is a NeXus loaded
-                                ;put focus on DataHiddenWidgetText
-           Widget_control, (*global).DataHiddenWidgetTextId, /INPUT_FOCUS
-           
-           if( Event.type EQ 0 )then begin
-              if (Event.press EQ 1) then $
-                 REFreduction_DataSelectionPressLeft, Event ;left button
-              if (Event.press EQ 4) then $
-                 REFreduction_DataselectionPressRight, Event ;right button
-           endif
-           if (Event.type EQ 1) then $ ;release
+                CASE (event.ch) OF ;u and d keys
+                    117: REFreduction_ManuallyMoveDataBackPeakUp, Event
+                    100: REFreduction_ManuallyMoveDataBackPeakDown, Event
+                    ELSE:
+                ENDCASE
+                CASE (event.key) OF ;Up and Down arrow keys
+                    7: REFreduction_ManuallyMoveDataBackPeakUp, Event
+                    8: REFreduction_ManuallyMoveDataBackPeakDown, Event
+                    ELSE:
+                ENDCASE
+                (*global).first_event = 0
+            ENDIF ELSE BEGIN
+                (*global).first_event = 1
+            ENDELSE
+            IF( Event.type EQ 0 )THEN BEGIN
+                IF (Event.press EQ 1) THEN $
+                  REFreduction_DataSelectionPressLeft, Event ;left button
+                IF (Event.press EQ 4) THEN $
+                  REFreduction_DataselectionPressRight, Event ;right button
+            ENDIF
+            IF (Event.type EQ 1) THEN $ ;release
               REFreduction_DataSelectionRelease, Event
-           if (Event.type EQ 2) then $ ;move
+            IF (Event.type EQ 2) THEN $ ;move
               REFreduction_DataSelectionMove, Event
-        endif
-     end
+        ENDIF
+     END
     
 ;hidden data widget_text
     widget_info(wWidget, $
@@ -484,45 +496,46 @@ CASE Event.id OF
 ;1D plot of NORM
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_D_draw'): begin
 
-        if ((*global).NormNeXusFound) then BEGIN $
+        IF ((*global).NormNeXusFound) THEN BEGIN
                                 ;only if there is a NeXus loaded
-
-            ;put focus on DataHiddenWidgetText
-            Widget_control, (*global).NormHiddenWidgetTextId, /INPUT_FOCUS
-
-            if( Event.type EQ 0 )then begin
-                if (Event.press EQ 1) then $
+            IF ((*global).first_event) THEN BEGIN
+                CASE (event.ch) OF ;u and d keys
+                    117: REFreduction_ManuallyMoveNormBackPeakUp, Event
+                    100: REFreduction_ManuallyMoveNormBackPeakDown, Event
+                    ELSE:
+                ENDCASE
+                CASE (event.key) OF ;Up and Down arrow keys
+                    7: REFreduction_ManuallyMoveNormBackPeakUp, Event
+                    8: REFreduction_ManuallyMoveNormBackPeakDown, Event
+                    ELSE:
+                ENDCASE
+                (*global).first_event = 0
+            ENDIF ELSE BEGIN
+                (*global).first_event = 1
+            ENDELSE
+            IF( Event.type EQ 0 )THEN BEGIN
+                IF (Event.press EQ 1) THEN $
                   REFreduction_NormSelectionPressLeft, Event ;left button
-                if (Event.press EQ 4) then $
+                IF (Event.press EQ 4) THEN $
                   REFreduction_NormselectionPressRight, Event ;right button
-            endif
-            if (Event.type EQ 1) then $ ;release
+            ENDIF
+            IF (Event.type EQ 1) THEN $ ;release
               REFreduction_NormSelectionRelease, Event
-            if (Event.type EQ 2) then $ ;move
-          REFreduction_NormSelectionMove, Event
-        endif
-    end
-
-;hidden data widget_text
-    widget_info(wWidget, $
-                FIND_BY_UNAME=(*global).NormHiddenWidgetTextUname): begin
-        CASE (event.ch) OF
-            117: REFreduction_ManuallyMoveNormBackPeakUp, Event
-            100: REFreduction_ManuallyMoveNormBackPeakDown, Event
-            ELSE:
-        ENDCASE
-    end
-
+            IF (Event.type EQ 2) THEN $ ;move
+              REFreduction_NormSelectionMove, Event
+        ENDIF
+    END
+    
     widget_info(wWidget, FIND_BY_UNAME='normalization_1d_selection'): begin
         REFreduction_NormBackPeakZoomEvent, Event
     end
-
+    
 ;zoom and nxsummary tab
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_nxsummary_zoom_tab'): begin
         REFreduction_NormNxsummaryZoomTab, Event
     end
-
+    
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_zoom_scale_cwfield'): begin
         REFreduction_ZoomRescaleNormalization, Event
