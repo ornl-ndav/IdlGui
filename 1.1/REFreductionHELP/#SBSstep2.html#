@@ -5,7 +5,6 @@
 <p>The selection of the Background and of the Peak Exclusion Regions are mandatory.</p><p>
 The Background selection will defined the region from where the average background willbe calculated and the Peak Exclusion region will be a region (inside the background region) that will not be taken into account in the calcuation of the background.</p>
 
-
 <center><img src='SbSstep2_1.png'></img></center>
 <center>Picture 1: Region Of Interest GUI</center>
 <br><br>
@@ -17,9 +16,6 @@ The Background selection will defined the region from where the average backgrou
 <center><img src='SbSstep2_3.png'></img></center>
 <center>Picture 1: Background Region</center>
 <br><br>
-
-
-
 
 <p>There are 4 ways to select the ROI and Background regions and 3 ways to select the Peak Exclusion region:
 <ul>
