@@ -9,18 +9,14 @@
 <ul><li><b>DATA</b> 
   <ul><li><u>Runs:</u> The full path of the Data NeXus file you loaded has been automatically added to the list of Runs. You can either replace this one or add other runs. To add other data run numbers, you can either enter just the run number of the full NeXus path. The list of runs must be comma separated.</li>
   <li><u>Region of interest (ROI) file</u>: This is where the name of the Background region of selection File you created or loaded is displayed.</li>
-  <li><u>Peak of Exclusion OR Background Region</u>: Displays the low and high pixel border of the peak exclusion region (see Picture 1) or the Background region file name (see Picture 2).<br><br>
-<center><img src='SbSstep3_peak.png'><br>
-Picture 1: Data Gui with Peak of Exclusion Region used</center><br><br>
-<center><img src='SbSstep3_back.png'><br>
-Picture 1: Data Gui with Background Region used</center><br><br></li>
+  <li><u>Exclusion Peak Region</u>: Displays the low and high pixel border of the peak exclusion region.</li>
   <li><u>Background</u>: Select if you want to consider the data background in the data reduction process</li><br><br></ul>
 <li><b>NORMALIZATION</b> Select first if you want to include a normalization in the data reduction process. If you select yes, the normalization base is displayed.
   <ul><li><u>Runs:</u> The full path of the Normalization NeXus file (if any) you loaded has been automatically added to the list of Runs. You can either replace this one or add other runs. To add other normalization run numbers, you can either enter just the run number of the full NeXus path. The list of runs must be comma separated.</li>
   <li><u>Region of interest (ROI) file</u>: This is where the name of the Background region of selection File you created or loaded is displayed.</li>
-  <li><u>Peak of Exclusion OR Background Region</u>: Displays the low and high pixel border of the peak exclusion region or the Background region file name.</li>
+  <li><u>Exclusion Peak Region</u>: Displays the low and high pixel border of the peak exclusion region.</li>
   <li><u>Background</u>: Select if you want to consider the data background in the normalization reduction process</li><br><br></ul>
-  <li><b>Q</b>: If the <b>Auto</b> mode is selected, the program will produce the output data reduction file using the full range of Q. If the <b>Manual</b> is used, you need to enter the range of Q (Q minimum, Q maximum, Q width and Q type) to be able to run the Data Reduction. The Data Reduction main output file (the one you can visualize in the <b>PLOT</b> tab is produced with this range of Qs.</li>
+  <li><b>Q</b>: Enter the range of Q (Q minimum, Q maximum, Q width and Q type) that the output file will displayed.<br><br></li>
 <li><b>ANGLE OFFSET</b>: Enter a value and error for the angle offset if you want to overwrite the value of the angle offset defined in the NeXus file. Don't forget to verify the units.<br><br></li>
 <li><b>FILTERING DATA</b>: select the type of filtering you want. By default, the data reduction will excluded all the data where the error is equal or greater to the value of the data.<br><br></li>
 <li><b>dt/t</b>: Select or not the dt/t.<br><br></li>
