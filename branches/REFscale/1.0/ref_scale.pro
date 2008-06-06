@@ -62,6 +62,7 @@ CurrentBranch =  VerArray + '.' + TagArray
 
 global = $
   PTR_NEW({ $
+            BatchExtension:         '.txt',$
             BatchTable:             ptr_new(0L),$
             BatchDefaultPath:       '~/',$
             BatchDefaultFileFilter: '*_Batch_Run*.txt',$
@@ -281,8 +282,11 @@ ENDIF
 ;------------------------------------------------------------------------------
 ;- DEBUGGER MODE ONLY ---------------------------------------------------------
 IF (DEBUGGER EQ 'yes') THEN BEGIN
-    id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
-    widget_control, id1, set_tab_current = 4
+;default tab
+    id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
+;change default path of batch file
+    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
 ENDIF
 ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
 ;------------------------------------------------------------------------------
