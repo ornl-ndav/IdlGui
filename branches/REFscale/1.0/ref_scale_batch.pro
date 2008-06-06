@@ -98,24 +98,21 @@ IF (BatchFileName NE '') THEN BEGIN
 ;put name of batch file in text field
     putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
 ;retrieve BatchTable
-    iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
+    iTable     = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
     BatchTable = iTable->getBatchTable()
     (*(*global).BatchTable) = BatchTable
 ;Update Batch Tab and put BatchTable there
     UpdateBatchTable, Event, BatchTable
 ;Retrieve List of Data Reduction files
     DRfiles = retrieveDRfiles(Event,BatchTable)
-    print, DRfiles              ;REMOVE_ME
-;enable 'REFRESH BASH FILE'
+;enable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 1
-;put file name loaded
-    putValueInTextField, Event, 'ref_scale_bash_file_name', BatchFileName
 ENDIF ELSE BEGIN
-;disable 'REFRESH BASH FILE'
+;disable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 0
 ENDELSE
-ActivateWidget, Event, 'ref_scale_refresh_bash_file', refresh_bash_file_status
-ActivateWidget, Event, 'ref_scale_bash_file_name', refresh_bash_file_status
+ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
+ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
 END
 
 ;==============================================================================
@@ -125,6 +122,30 @@ WIDGET_CONTROL,id,GET_UVALUE=global
 ;retrieve BatchFileName
 BatchFileName = getBatchFileName(Event)
 XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
+END
+
+;==============================================================================
+PRO ref_scale_refresh_batch_file, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+LogText = '> Refresh Batch File:'
+idl_send_to_geek_addLogBookText, Event, LogText
+BatchFileName = (*global).BatchFileName
+LogText = '-> Batch File Name: ' + BatchFileName
+idl_send_to_geek_addLogBookText, Event, LogText
+
+iFile = OBJ_NEW('idl_create_batch_file', $
+                Event, $
+                BatchFileName, $
+                (*(*global).BatchTable))
+
+END
+
+;==============================================================================
+PRO ref_scale_save_as_batch_file, Event
+
+
 END
 
 ;==============================================================================
