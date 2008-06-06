@@ -33,13 +33,6 @@
       <section ref="SBSstep5.html" title="Using the Batch Mode ">
          <keyword ref="SBSstep5.html">Using the Batch Mode </keyword>
       </section>
-
-
-
-
-
-
-
    </DCF>
 <!-- OVERVIEW MENU -->
    <DCF ref="Overview.html" title="Overview">
