@@ -92,22 +92,23 @@ dTable = { size      : [XYoff[0], $
 
 ;Refresh bash file button -----------------------------------------------------
 XYoff = [0,5]
-sRefreshButton = { size:       [XYoff[0],$
-                                dTable.size[1]+dTable.size[3]+XYoff[1],$
-                                140],$
+sRefreshButton = { size:      [XYoff[0],$
+                               dTable.size[1]+dTable.size[3]+XYoff[1],$
+                               140,30],$
                    uname:     'ref_scale_refresh_bash_file',$
                    value:     'REFRESH BASH FILE',$
                    sensitive: 0}
 
-;Bash File Name ---------------------------------------------------------------
-XYoff = [5,3]
-sBashFileName = { size:   [sRefreshButton.size[0]+ $
-                           sRefreshButton.size[2]+XYoff[0],$
-                           sRefreshButton.size[1]+XYoff[1],$
-                           375],$
-                  frame:   1,$
-                  value:   'dfdfddffdfdfdfdfddfdfdf',$
-                  uname:   'ref_scale_bash_file_name'}
+;SAVE AS bash file button
+XYOff = [5,0]
+sSaveAsButton = { size:      [sRefreshButton.size[0]+sRefreshButton.size[2]+ $
+                              XYoff[0],$
+                              sRefreshButton.size[1]+XYoff[1],$
+                              sRefreshButton.size[2:3]],$
+                  uname:     'ref_scale_save_as_bash_file',$
+                  value:     'SAVE AS ...',$
+                  sensitive: 0}
+
 
 ;******************************************************************************
 ;Build GUI
@@ -175,15 +176,14 @@ wRefreshButton = WIDGET_BUTTON(wLoadBatchBase,$
                                VALUE     = sRefreshButton.value,$
                                SENSITIVE = sRefreshButton.sensitive)
 
-;Bash File Name ---------------------------------------------------------------
-wBashFileName = WIDGET_LABEL(wLoadBatchBase,$
-                             XOFFSET = sBashFileName.size[0],$
-                             YOFFSET = sBashFileName.size[1],$
-                             SCR_XSIZE = sBashFileName.size[2],$
-                             UNAME     = sBashFileName.uname,$
-                             VALUE     = sBashFileName.value,$
-                             FRAME     = sBashFileName.frame,$
-                             /ALIGN_LEFT)
+;Save as Bash File Button -----------------------------------------------------
+wSaveAsButton = WIDGET_BUTTON(wLoadBatchBase,$
+                              XOFFSET   = sSaveAsButton.size[0],$
+                              YOFFSET   = sSaveAsButton.size[1],$
+                              SCR_XSIZE = sSaveAsButton.size[2],$
+                              UNAME     = sSaveAsButton.uname,$
+                              VALUE     = sSaveAsButton.value,$
+                              SENSITIVE = sSaveAsButton.sensitive)
 
 END
 
