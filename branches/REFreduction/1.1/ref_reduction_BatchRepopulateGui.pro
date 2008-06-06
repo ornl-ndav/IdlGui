@@ -193,7 +193,7 @@ text = '--> With Overwrite Data Instr. Geo. (OverwriteDataInstrGeoFlag) ..' + $
 putLogBookMessage, Event, text, APPEND=1
 
 DataInstrGeoFileName = ClassInstance->getDataInstrGeoFileName()
-text = '-- Data Instrument Geometry File Name (DataInstrGeoFileName) .....' + $
+text = '--> Data Instrument Geometry File Name (DataInstrGeoFileName) ....' + $
   '..... ' + DataInstrGeoFileName
 putLogBookMessage, Event, text, APPEND=1
 

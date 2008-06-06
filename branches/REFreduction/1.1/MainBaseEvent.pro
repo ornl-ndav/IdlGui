@@ -107,16 +107,6 @@ CASE Event.id OF
         ENDIF
      END
     
-;hidden data widget_text
-    widget_info(wWidget, $
-                FIND_BY_UNAME=(*global).DataHiddenWidgetTextUname): begin
-        CASE (event.ch) OF
-            117: REFreduction_ManuallyMoveDataBackPeakUp, Event
-            100: REFreduction_ManuallyMoveDataBackPeakDown, Event
-            ELSE:
-        ENDCASE
-    end
-
     widget_info(wWidget, FIND_BY_UNAME='data_1d_selection'): begin
         REFreduction_DataBackPeakZoomEvent, Event
     end

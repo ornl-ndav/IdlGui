@@ -549,6 +549,9 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
+;default path of Load Batch files
+    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+    
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
 ;    widget_control, id1, set_tab_current = 1 ;peak/background

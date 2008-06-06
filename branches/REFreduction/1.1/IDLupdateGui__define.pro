@@ -125,11 +125,11 @@ END
 ;------------------------------------------------------------------------------
 PRO UpdateNormPeakExclY, Event, Ymin, Ymax
 putTextFieldValue, Event, $
-  'normalization_d_selection_peak_ymin_cw_field',$
+  'norm_d_selection_peak_ymin_cw_field',$
   Ymin,$
   0
 putTextFieldValue, Event, $
-  'normalization_d_selection_peak_ymax_cw_field',$
+  'norm_d_selection_peak_ymax_cw_field',$
   Ymax,$
   0
 REFreduction_NormBackgroundPeakSelection, Event, ''
@@ -528,16 +528,16 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     
     IF (normPeakStatus EQ 0) THEN BEGIN
 ;work on NormPeakExclYmin and NormPeakExclYmax
-        text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .........' + $
-          '.. ' + PROCESSING
+        text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax .......' + $
+          '.... ' + PROCESSING
         putLogBookMessage, Event, text, APPEND=1
         UpdateNormPeakExclY, Event, $
           structure.NormPeakExclYmin, $
           structure.NormPeakExclYmax
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDIF ELSE BEGIN
-        text = '--> Load Norm. BACK File ..................................... ' $
-          + PROCESSING
+        text = '--> Load Norm. BACK File ................................' + $
+          '..... ' + PROCESSING
         putLogBookMessage, Event, text, APPEND=1
         IF (structure.NormBackFilename EQ '' OR $
             FILE_TEST(structure.NormBackFilename) NE 1) THEN BEGIN
