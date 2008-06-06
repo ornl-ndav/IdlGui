@@ -144,6 +144,37 @@ END
 
 ;==============================================================================
 PRO ref_scale_save_as_batch_file, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+
+path            = (*global).BatchDefaultPath
+filter          = (*global).BatchDefaultFileFilter
+new_path        = ''
+batch_extension = (*global).BatchExtension
+
+BatchFileName   = DIALOG_PICKFILE(FILTER            = filter,$
+                                  GET_PATH          = new_path,$
+                                  PATH              = path,$
+                                  DEFAULT_EXTENSION = batch_extension,$
+                                  /OVERWRITE_PROMPT,$
+                                  /WRITE)
+
+IF (BatchFileName NE '') THEN BEGIN
+    LogText = '> Save Batch File:'
+    idl_send_to_geek_addLogBookText, Event, LogText
+    (*global).BatchFileName = BatchFileName
+    LogText = '-> Batch File Name: ' + BatchFileName
+    idl_send_to_geek_addLogBookText, Event, LogText
+;put new name of BatchFile in LoadBatchFile text field
+    putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
+;Create batch file    
+    iFile = OBJ_NEW('idl_create_batch_file', $
+                    Event, $
+                    BatchFileName, $
+                    (*(*global).BatchTable))
+;reset the path
+    (*global).BatchDefaultPath = new_path
+ENDIF
 
 
 END
