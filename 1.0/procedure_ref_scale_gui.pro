@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,11 +30,11 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;-------------------------------------------------------------------------------
-;***** GUI MANAGER FUNCTIONS ***************************************************
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;**** GUI MANAGER FUNCTIONS ***************************************************
+;------------------------------------------------------------------------------
 ;this function activate (if validateMap=1) or desactive-hide(if validateMap=0)
 ;the RescaleBase
 PRO ActivateRescaleBase, Event, validateMap
@@ -42,15 +42,15 @@ RescaleBaseId = widget_info(Event.top,find_by_uname='RescaleBase')
 widget_control, RescaleBaseId, map=validateMap
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO ActivateWidget, Event, uname, validate
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SENSITIVE=validate
 END
 
-;###############################################################################
-;#FUNCTION - PROCEDURE #########################################################
-;###############################################################################
+;##############################################################################
+;#FUNCTION - PROCEDURE ########################################################
+;##############################################################################
 
 ;Check if step3 can be validated (if step2 has been run with sucess)
 FUNCTION CheckStep2Status, Event
@@ -69,8 +69,8 @@ ENDELSE
 RETURN, activate_status
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This function checks the Input File Format GUI
 ;and returns:
 ; 0  : distance ok and angle ok
@@ -141,8 +141,8 @@ ENDIF
 RETURN,Status
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function will check if the LOAD button can be validated or no
 PRO CheckOpenButtonStatus, Event
@@ -193,8 +193,8 @@ ActivateButton, Event, 'ok_load_button', validateLoadButton
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function moves the color slider by the index given as an input
 ;parameter (>0 will move it to the right, <0 to move it to the left)
@@ -217,7 +217,7 @@ IF (ColorIndex EQ PreviouscolorIndex) THEN BEGIN
 ENDIF
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function moves the color index to the right position
 PRO MoveColorIndex,Event
@@ -225,7 +225,7 @@ index = + 25
 MoveColorIndex_by_index, Event, index ;_Gui
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function moves back the color index when the loading process failed
 PRO MoveColorIndexBack,Event
@@ -233,8 +233,8 @@ index = - 25
 MoveColorIndex_by_index, Event, index ;_Gui
  END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function refresh the list displays in all the droplist (step1-2 and 3)
 PRO updateDropList, Event, ListOfFiles
@@ -256,22 +256,22 @@ widget_control, id, set_value=ListOfFiles
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO PopulateCELabelStep2, Event, CE_short_name
 id = widget_info(Event.top,find_by_uname='short_ce_file_name')
 widget_control, id, set_value=CE_short_name
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO EnableStep1ClearFile, Event, validate
 id = widget_info(Event.top, find_by_uname='clear_button')
 widget_control, id, sensitive=validate
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function sets the selected index of the 'uname' droplist
 PRO SetSelectedIndex, Event, uname, index
@@ -279,7 +279,7 @@ id = widget_info(Event.top, find_by_uname=uname)
 widget_control, id, set_droplist_select = index
 END
 
-;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 ;This function automatically selects the last loaded file
 PRO SelectLastLoadedFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -289,7 +289,7 @@ NbrOfFiles  = getSizeOfArray(ListOfFiles)
 SetSelectedIndex, Event, 'list_of_files_droplist', (NbrOfFiles-1) ;_gui
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;this function enables the main base buttons (refresh and reset all)
 PRO EnableMainBaseButtons, Event, validate
@@ -299,7 +299,7 @@ id = widget_info(Event.top,find_by_uname='refresh_plot_button')
 widget_control, id, sensitive=validate
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function activates or not the CLEAR file button
 PRO ActivateClearFileButton, Event, ValidateButton
@@ -307,7 +307,7 @@ id = widget_info(Event.top,find_by_uname='clear_button')
 widget_control, id, sensitive=ValidateButton
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function enable the color slider
 PRO ActivateColorSlider, Event, ValidateSlider
@@ -315,14 +315,14 @@ id = widget_info(Event.top, find_by_uname='list_of_color_slider')
 widget_control, id, sensitive=ValidateSlider
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO ActivatePrintFileButton, Event, validate
 id = widget_info(Event.top, find_by_uname='print_button')
 widget_control, id, sensitive=validate
 END
 
-;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 
 ;This function updates the GUI (droplist, buttons...)
 PRO updateGUI, Event, ListOfFiles
@@ -350,8 +350,8 @@ ActivatePrintFileButton, Event, Validate ;_gui
 ActivateSettingsBase, Event, Validate ;_gui
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This functions populates the various droplist boxes.
 ;It also checks if the newly file loaded is not already 
@@ -395,8 +395,8 @@ ENDELSE
 updateGUI,Event, ListOfFiles    ;_gui
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This functions displays the first few lines of the newly loaded file
 PRO display_info_about_selected_file, Event, LongFileName
@@ -435,8 +435,8 @@ putArrayInTextField, Event, 'file_info', info_array ;_put
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO populateColorLabel, Event, LongFileName
 
@@ -453,8 +453,8 @@ widget_control, ColorLabelIndex, set_value=fileName
 END
 
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function creates the default xmin/max and ymin/max values
 ;that will be used if one of the input is invalid
@@ -478,8 +478,8 @@ XYMinMax[3] = max_yaxis
 (*(*global).XYMinMax) = XYMinMax
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;this function clear the info text box
 PRO clear_info_about_selected_file, Event
@@ -487,7 +487,7 @@ TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
 widget_control, TextBoxId, set_value=''
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function clear the contain of the color label 
 PRO ClearColorLabel, Event
@@ -495,7 +495,7 @@ id = widget_info(Event.top,find_by_uname='ColorFileLabel')
 widget_control, id, set_value=''
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO displayAngleValue, Event, angleValue
 ;get angle value for that index
@@ -504,7 +504,7 @@ text = '(Angle: ' + strcompress(angleValue) + ' degrees)'
 widget_control, angleTextFieldId, set_value=text
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;droplist of files in step 1
 PRO display_info_about_file, Event
@@ -533,8 +533,8 @@ LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist') ;_get
   ENDELSE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function assign to the current selected file the current
 ;selected color
@@ -550,8 +550,8 @@ color_array[fileIndex] = colorIndex
 (*(*global).color_array) = color_array
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This procedure just put the given value in the text field
 ;specified by the uname after doing a strcompression of the 
@@ -562,7 +562,7 @@ TFid = widget_info(Event.top,find_by_uname=uname)
 widget_control, TFid, set_value=strcompress(value,/remove_all)
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function displays in the Qmin and Qmax text fields the 
 ;Qmin and Qmax of the CE file
@@ -583,8 +583,8 @@ ENDIF
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function will enable (editable) or not the text fields of tab3
 PRO enableStep3Widgets,Event,sensitiveBoolean
@@ -599,8 +599,8 @@ FOR i=0,(uname_size-1) DO BEGIN
 ENDFOR
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;this function hide or not the base hidden base of the manual scaling
 ;mode of step 3
@@ -609,8 +609,8 @@ widget_id = widget_info(Event.top,find_by_uname=uname)
 widget_control, widget_id, map=mapBoolean
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function activate or not the button given by uname
 PRO ActivateButton, Event, uname, validate
@@ -618,8 +618,8 @@ unameId = widget_info(Event.top,find_by_uname=uname)
 widget_control, unameId, sensitive=validate
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO ClearCElabelStep2, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -632,8 +632,8 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_qminqmax_error_label')
 WIDGET_CONTROL, id, SET_VALUE=(*global).qminmax_label
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function clears the contain of all the text boxes
 PRO ClearAllTextBoxes, Event
@@ -658,8 +658,8 @@ putValueInLabel, Event, 'Step3ManualModeLowQFileName','' ;_put
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function removes the contain of the info file found in Step1
 PRO ClearFileInfoStep1, Event
@@ -670,8 +670,8 @@ TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
 widget_control, TextBoxId, set_Value=''
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;clear main plot window
 PRO ClearMainPlot, Event   
@@ -681,8 +681,8 @@ wset,view_plot_id
 erase
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;reset the position of the color slider
 PRO ResetPositionOfSlider, Event 
@@ -697,8 +697,8 @@ widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
 (*global).PreviousColorIndex = defaultColorSliderPosition
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function displays the error message in the error message label
 PRO displayErrorMessage, Event, text
@@ -706,8 +706,8 @@ ErrorMessageLabelid = widget_info(Event.top,find_by_uname='ErrorMessageLabel')
 widget_control, ErrorMessageLabelid, set_value=text
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;this function map or not the ErrorBase
 PRO activateErrorMessageBaseFunction, Event, activateErrorBase
@@ -715,21 +715,21 @@ ErrorMessageBaseId = widget_info(Event.top,find_by_uname='ErrorMessageBase')
 widget_control, ErrorMessageBaseid, map = activateErrorBase
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ActivateStep2, Event, validate
 ActivateWidget, Event, 'step2', validate
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ActivateStep3, Event, validate
 ActivateWidget, Event, 'step3', validate
 ActivateWidget, Event, 'Step3ManualModeFrame', validate
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ActivateOutputFileTab, Event, validate
 ActivateWidget, Event, 'output_file_base', validate
 ;clear contain of preview file
@@ -762,7 +762,7 @@ ActivatePrintFileButton, Event, Validate ;_gui
 ActivateSettingsBase, Event, Validate ;_gui
 END
 
-;*******************************************************************************
+;******************************************************************************
 ;This function activate first Q, second Q or any of them
 ;0: none; 1: Qmin; 2: Qmax
 PRO ActivateQSelection, Event, value
@@ -786,8 +786,8 @@ id2 = WIDGET_INFO(Event.top,FIND_BY_UNAME='Qmax_select')
 WIDGET_CONTROL, id2, SET_VALUE=qmax_value
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;Check if Automatic Button can be validated or not
 PRO CheckAutoModeStep2Button, Event
 Q1 = getValue(Event,'step2_q1_text_field')
@@ -800,8 +800,8 @@ ENDELSE
 ActivateWidget, Event, 'step2_button', activate_status
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;Check if manual buttons (widget_text and button) can be validated
 ;according to result of automatic mode
 PRO CheckManualModeStep2Buttons, Event
@@ -810,19 +810,19 @@ ActivateWidget, Event, 'step2_sf_text_field', activate_status
 ActivateWidget, Event, 'step2_manual_scaling_button', activate_status
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ActivateBase, Event, uname, status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, MAP = status
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ActivateSettingsBase, Event, Validate
 ActivateBase, Event, 'settings_base', Validate
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO procedure_ref_scale_gui
 END

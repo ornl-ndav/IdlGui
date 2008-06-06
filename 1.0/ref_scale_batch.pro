@@ -31,6 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION retrieveDRfiles, Event, BatchTable
+;Get Nbr of non-empty rows
+NbrRow         = getGlobalVariable('NbrRow')
+NbrRowNotEmpty = 0
+FOR i=0,(NbrRow-1) DO BEGIN
+    IF (BatchTable[1,i] NE '') THEN ++NbrRowNotEmpty
+ENDFOR
+;Create array of list of files
+DRfiles = STRARR(NbrRowNotEmpty)
+;get for each row the path/output_file_name
+FOR i=0,(NbrRowNotEmpty-1) DO BEGIN
+    iRow = OBJ_NEW('idl_parse_command_line',BatchTable[8,i])
+    outputPath     = iRow->getOutputPath()
+    outputFileName = iRow->getOutputFileName()
+    DRfiles[i] = outputPath + outputFileName
+ENDFOR
+RETURN,DRfiles
+END
+
+;==============================================================================
 ;This function put the BatchTable in the table of the Batch Tab
 PRO DisplayBatchTable, Event, NewTable
 ;new BatchTable
@@ -80,31 +100,22 @@ IF (BatchFileName NE '') THEN BEGIN
 ;retrieve BatchTable
     iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
     BatchTable = iTable->getBatchTable()
-     (*(*global).BatchTable) = BatchTable
+    (*(*global).BatchTable) = BatchTable
 ;Update Batch Tab and put BatchTable there
-     UpdateBatchTable, Event, BatchTable
-
-
-;     DisplayBatchTable, Event, BatchTable
-;     (*global).BatchFileName = BatchFileName
-; ;this function updates the widgets (button) of the tab
-;     UpdateBatchTabGui, Event
-;     RowSelected = (*global).PrevBatchRowSelected
-; ;Update info of selected row
-;     DisplayInfoOfSelectedRow, Event, RowSelected
-; ;display path and file name of file in SAVE AS widgets
-;     FileArray = getFilePathAndName(BatchFileName)
-;     FilePath  = FileArray[0]
-;     FileName  = FileArray[1]
-; ;put path in PATH button
-;     (*global).BatchDefaultPath = FilePath
-;     ;change name of button
-;     putBatchFolderName, Event, FilePath
-; ;put name of file in widget_text
-;     putBatchFileName, Event, FileName
-; ;enable or not the REPOPULATE Button
-;     CheckRepopulateButton, Event
-ENDIF 
+    UpdateBatchTable, Event, BatchTable
+;Retrieve List of Data Reduction files
+    DRfiles = retrieveDRfiles(Event,BatchTable)
+    print, DRfiles              ;REMOVE_ME
+;enable 'REFRESH BASH FILE'
+    refresh_bash_file_status = 1
+;put file name loaded
+    putValueInTextField, Event, 'ref_scale_bash_file_name', BatchFileName
+ENDIF ELSE BEGIN
+;disable 'REFRESH BASH FILE'
+    refresh_bash_file_status = 0
+ENDELSE
+ActivateWidget, Event, 'ref_scale_refresh_bash_file', refresh_bash_file_status
+ActivateWidget, Event, 'ref_scale_bash_file_name', refresh_bash_file_status
 END
 
 ;==============================================================================

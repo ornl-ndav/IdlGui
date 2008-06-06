@@ -271,8 +271,8 @@ IF (BatchMode EQ 'yes') THEN BEGIN
         WIDGET_CONTROL, id, SET_VALUE=BatchFile
     ENDIF
 ;Show step 4
-    id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
-    widget_control, id1, set_tab_current = 4
+    id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;batch tab
 ENDIF
 ;- END OF BATCH MODE ONLY -----------------------------------------------------
 ;------------------------------------------------------------------------------

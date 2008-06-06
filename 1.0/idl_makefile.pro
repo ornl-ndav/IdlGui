@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
@@ -78,8 +78,9 @@ cd, CurrentFolder
 .run procedure_ref_scale_tabs.pro
 
 ;Batch
-.run ref_scale_batch.pro
 .run idl_load_batch_file__define.pro
+.run ref_scale_batch.pro
+.run idl_parse_command_line__define.pro
 
 .run procedure_main_base_event.pro
 .run ref_scale_eventcb.pro
