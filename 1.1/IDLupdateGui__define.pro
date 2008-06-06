@@ -374,6 +374,18 @@ ENDIF ELSE BEGIN
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
 ENDELSE
 
+;Activate Data Widgets
+text = '--> Activate Data Widgets .................................... ' $
+  + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
+IF (DataError EQ 0) THEN BEGIN
+    updateDataWidget, Event, 1
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+ENDIF ELSE BEGIN
+    updateDataWidget, Event, 0
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+ENDELSE
+
 ;work on DataRoiFileName
 text = '--> Load Data ROI File ....................................... ' $
   + PROCESSING
@@ -433,18 +445,6 @@ ENDELSE
 ;replot Data (main and selections)
 REFreduction_DataBackgroundPeakSelection, Event, ''
 
-;Activate Data Widgets
-text = '--> Activate Data Widgets .................................... ' $
-  + PROCESSING
-putLogBookMessage, Event, text, APPEND=1
-IF (DataError EQ 0) THEN BEGIN
-    updateDataWidget, Event, 1
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-ENDIF ELSE BEGIN
-    updateDataWidget, Event, 0
-    AppendReplaceLogBookMessage, Event, NO, PROCESSING
-ENDELSE
-
 ;Work on Normalization data files
 IF (structure.MainNormRunNumber NE '') THEN BEGIN
 
@@ -493,6 +493,18 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
     
+;Activate Norm Widgets
+    text = '--> Activate Norm Widgets .................................... ' $
+      + PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
+    IF (NormError EQ 0) THEN BEGIN
+        updateNormWidget, Event, 1
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDIF ELSE BEGIN
+        updateNormWidget, Event, 0
+        AppendReplaceLogBookMessage, Event, NO, PROCESSING
+    ENDELSE
+
 ;work on NormRoiFileName
     text = '--> Load Normalization ROI File ..........................' + $
       '.... ' + PROCESSING
@@ -561,18 +573,6 @@ ENDIF ELSE BEGIN
 ;hide the norm step within the REUDCE tab
     NormReducePartGuiStatus, Event, 'hide'    
 
-ENDELSE
-
-;Activate Data Widgets
-text = '--> Activate Norm Widgets .................................... ' $
-  + PROCESSING
-putLogBookMessage, Event, text, APPEND=1
-IF (NormError EQ 0) THEN BEGIN
-    updateNormWidget, Event, 1
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
-ENDIF ELSE BEGIN
-    updateNormWidget, Event, 0
-    AppendReplaceLogBookMessage, Event, NO, PROCESSING
 ENDELSE
 
 ;Work on Qmin, Qmax, Qwidth and Qtype
