@@ -64,6 +64,19 @@ REFreduction_OpenPlotDataNexus,Event, DataRunNumber, MainDataNexusFileName
 END
 
 ;------------------------------------------------------------------------------
+PRO ClearDataRoiFields, Event
+putTextFieldValue, Event, $
+  'data_d_selection_roi_ymin_cw_field',$
+  '',$
+  0
+putTextFieldValue, Event, $
+  'data_d_selection_roi_ymax_cw_field',$
+  '',$
+  0
+REFreduction_NormBackgroundPeakSelection, Event, ''
+END
+
+;------------------------------------------------------------------------------
 PRO UpdateDataRoiFileName, Event, DataRoiFileName
 REFreduction_LoadDataROIFile, Event, DataRoiFileName
 END
@@ -78,6 +91,19 @@ putTextFieldValue, Event, $
   'data_d_selection_peak_ymax_cw_field',$
   Ymax,$
   0
+END
+
+;------------------------------------------------------------------------------
+PRO ClearDataBackFields, Event
+putTextFieldValue, Event, $
+  'data_d_selection_background_ymin_cw_field',$
+  '',$
+  0
+putTextFieldValue, Event, $
+  'data_d_selection_background_ymax_cw_field',$
+  '',$
+  0
+REFreduction_NormBackgroundPeakSelection, Event, ''
 END
 
 ;------------------------------------------------------------------------------
@@ -118,6 +144,19 @@ REFreduction_OpenPlotNormNexus, Event, NormRunNumber, MainNormNexusFileName
 END
 
 ;------------------------------------------------------------------------------
+PRO ClearNormRoiFields, Event
+putTextFieldValue, Event, $
+  'norm_d_selection_roi_ymin_cw_field',$
+  '',$
+  0
+putTextFieldValue, Event, $
+  'norm_d_selection_roi_ymax_cw_field',$
+  '',$
+  0
+REFreduction_NormBackgroundPeakSelection, Event, ''
+END
+
+;------------------------------------------------------------------------------
 PRO UpdateNormRoiFileName, Event, NormRoiFileName
 REFreduction_LoadNormROIFile, Event, NormRoiFileName
 END
@@ -131,6 +170,19 @@ putTextFieldValue, Event, $
 putTextFieldValue, Event, $
   'norm_d_selection_peak_ymax_cw_field',$
   Ymax,$
+  0
+REFreduction_NormBackgroundPeakSelection, Event, ''
+END
+
+;------------------------------------------------------------------------------
+PRO ClearNormBackFields, Event
+putTextFieldValue, Event, $
+  'norm_d_selection_background_ymin_cw_field',$
+  '',$
+  0
+putTextFieldValue, Event, $
+  'norm_d_selection_background_ymax_cw_field',$
+  '',$
   0
 REFreduction_NormBackgroundPeakSelection, Event, ''
 END
@@ -395,6 +447,7 @@ IF (structure.DataRoiFilename EQ '' OR $
     AppendReplaceLogBookMessage, Event, NO, PROCESSING
     ++NbrError
     ++DataError
+    ClearDataRoiFields, Event
 ENDIF ELSE BEGIN
     UpdateDataRoiFileName, Event, structure.DataRoiFileName
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -437,6 +490,7 @@ ENDIF ELSE BEGIN
         AppendReplaceLogBookMessage, Event, NO, PROCESSING
         ++NbrError
         ++DataError
+        ClearDataBackFields, Event
     ENDIF ELSE BEGIN
         UpdateDataBackFileName, Event, structure.DataBackFileName
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -514,6 +568,7 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
         AppendReplaceLogBookMessage, Event, NO, PROCESSING
         ++NbrError
         ++NormError
+        ClearNormRoiFields, Event
     ENDIF ELSE BEGIN
         UpdateNormRoiFileName, Event, structure.NormRoiFileName
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
@@ -556,6 +611,7 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
             AppendReplaceLogBookMessage, Event, NO, PROCESSING
             ++NbrError
             ++NormError
+            ClearNormBackFields, Event
         ENDIF ELSE BEGIN
             UpdateNormBackFileName, Event, structure.NormBackFileName
             AppendReplaceLogBookMessage, Event, OK, PROCESSING
