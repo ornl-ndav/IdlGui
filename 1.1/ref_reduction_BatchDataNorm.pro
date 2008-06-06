@@ -37,8 +37,8 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 error = 0
 CATCH, error
@@ -216,7 +216,7 @@ new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
 new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
 ;put new_cmd back in the BatchTable
-BatchTable[7,RowSelected] = new_cmd
+BatchTable[8,RowSelected] = new_cmd
 ;update command line
 putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
 ;update DATE field with new date/time stamp
@@ -300,8 +300,6 @@ RowSelected = (*global).PrevBatchRowSelected
 BatchTable = (*(*global).BatchTable)
 ;cmd string is
 cmd = BatchTable[8,RowSelected]
-
-print, cmd ;remove_me
 
 ;start working with the NORMALIZATION runs
 ;get first part of cmd, before --norm=
