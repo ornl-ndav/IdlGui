@@ -48,7 +48,8 @@ IF (error NE 0) THEN BEGIN
     result = DIALOG_MESSAGE(message,$
                             /ERROR)
     ;Hide processing base
-    MapBase, Event, 'processing_base', 0
+ 
+   MapBase, Event, 'processing_base', 0
     SetBaseYSize, Event, 'processing_base', 50
     value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
     putLabelValue, Event, 'pro_top_label', value
@@ -299,6 +300,8 @@ RowSelected = (*global).PrevBatchRowSelected
 BatchTable = (*(*global).BatchTable)
 ;cmd string is
 cmd = BatchTable[8,RowSelected]
+
+print, cmd ;remove_me
 
 ;start working with the NORMALIZATION runs
 ;get first part of cmd, before --norm=
