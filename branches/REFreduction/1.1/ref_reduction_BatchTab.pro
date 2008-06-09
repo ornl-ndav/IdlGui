@@ -135,7 +135,14 @@ ENDIF ELSE BEGIN
                     '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
                     '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
                     '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
-                    '#SF'        : BatchTable[7,BatchIndex] = SplitArray[1]
+                    '#SF'        : BEGIN
+                        sz = (size(SplitArray))(1)
+                        IF (sz GT 1) THEN BEGIN
+                            BatchTable[7,BatchIndex] = SplitArray[1]
+                        ENDIF ELSE BEGIN
+                            BatchTable[7,BatchIndex] = ''
+                        ENDELSE
+                    END
                     ELSE         : BEGIN
                         CommentArray= strsplit(SplitArray[0],'#', $
                                                /extract, $
