@@ -69,32 +69,33 @@ text      = [text,'']
 
 FOR i=0,(NbrRow-1) DO BEGIN
 ;add information only if row is not blank
-IF (BatchTable[0,i] NE '') THEN BEGIN
-
-    IF (BatchTable[0,i] EQ 'NO' OR $
-        BatchTable[0,i] EQ '> NO <') THEN BEGIN
-        FP     = '#'
-        active = 'NO'
-    ENDIF ELSE BEGIN
-        FP     = ''
-        active = 'YES'
-    ENDELSE
-    
-    text    = [text,'#Active : ' + active]
-    k=1
-    text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
-    text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
-    text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
-    text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
-    text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
-    text    = [text,'#Date : '       + BatchTable[k++,i]]
-    text    = [text,'#SF : '         + BatchTable[k++,i]]
-
-    cmd     = BatchTable[k++,i]
-    text    = [text, FP+cmd]
-    text    = [text, '']
-
-ENDIF
+    IF (BatchTable[0,i] NE '') THEN BEGIN
+        
+        IF (BatchTable[0,i] EQ 'NO' OR $
+            BatchTable[0,i] EQ '> NO <') THEN BEGIN
+            FP     = '#'
+            active = 'NO'
+        ENDIF ELSE BEGIN
+            FP     = ''
+            active = 'YES'
+        ENDELSE
+        
+        text    = [text,'#Active : ' + active]
+        k=1
+        text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
+        text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
+        text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
+        text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
+        text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
+        text    = [text,'#Date : '       + BatchTable[k++,i]]
+        text    = [text,'#SF : '         + BatchTable[k++,i]]
+;add --batch flag to command line
+        cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
+        cmd       = 'srun --batch -o none' + cmd_array[0]
+        text      = [text, FP+cmd]
+        text      = [text, '']
+        
+    ENDIF
 ENDFOR
 
 ;put message about process
@@ -130,15 +131,23 @@ IF (file_error EQ 0) THEN BEGIN
     CATCH, permission_error
     IF (permission_error NE 0) THEN BEGIN
         CATCH,/CANCEL
-        LogText = '-> Give execute permission to file created ... FAILED'
+        LogText = '-> Change file permission (->755) ... FAILED'
     ENDIF ELSE BEGIN
 ;give execute permission to file created
         cmd = 'chmod 755 ' + FullFileName
-        spawn, cmd, listening
-        LogText = '-> Give execute permission to file created ... OK'
-        (*global).BatchFileName = FullFileName
+        spawn, cmd, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            LogText = '-> Change file permission (->755) ... FAILED'
+            idl_send_to_geek_addLogBookText, Event, LogText
+            spawn, 'ls -l ' + FullFileName, listening
+            LogText = '-> ls -l <FileName> : ' + listening
+            idl_send_to_geek_addLogBookText, Event, LogText
+        ENDIF ELSE BEGIN
+            LogText = '-> Change file permission (->755) ... OK'
+            idl_send_to_geek_addLogBookText, Event, LogText
+            (*global).BatchFileName = FullFileName
+        ENDELSE
     ENDELSE
-    idl_send_to_geek_addLogBookText, Event, LogText
 ENDIF
 RETURN, 1
 END
