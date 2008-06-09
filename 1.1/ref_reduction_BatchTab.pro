@@ -117,7 +117,9 @@ ENDIF ELSE BEGIN
                 ++BatchIndex
                 ++FileIndex
             ENDIF ELSE BEGIN
-                SplitArray = strsplit(FileArray[FileIndex],' : ',/extract)
+                SplitArray = strsplit(FileArray[FileIndex],' : ', $
+                                      /extract,$
+                                      COUNT=length)
                 CASE (SplitArray[0]) OF
                     '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
                     '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
@@ -134,7 +136,8 @@ ENDIF ELSE BEGIN
                     '#Angle(deg)': BatchTable[3,BatchIndex] = SplitArray[1]
                     '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
                     '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
-                    '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+                    '#Date'      : BatchTable[6,BatchIndex] = $
+                      STRJOIN(SplitArray[1:length-1],':')
                     '#SF'        : BEGIN
                         sz = (size(SplitArray))(1)
                         IF (sz GT 1) THEN BEGIN
@@ -213,6 +216,7 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
     text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
+    print, BatchTable[k,i] ;remove-me
     text    = [text,'#Date : ' + BatchTable[k++,i]]
     text    = [text,'#SF : ' + BatchTable[k++,i]]
 ;add --batch flag to command line
