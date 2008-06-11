@@ -259,3 +259,26 @@ ENDIF ELSE BEGIN
 ENDELSE
 ActivateWidget, Event, 'q_manual_base', ManualBaseStatus
 END
+
+
+;------------------------------------------------------------------------------
+;This procedure changes the size of the top and bottom progress bar in
+;the batch tab and reset the color of these ones.
+PRO ChangeSizeOfDraw, Event, uname, x2, color
+;fill base with Color
+id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+wset,id_value
+WIDGET_CONTROL, id_draw, DRAW_XSIZE=x2
+;get xsize of widget_draw
+geometry = WIDGET_INFO(id_draw, /GEOMETRY)
+;xsize = geometry.xsize
+ysize = geometry.ysize
+polyfill, [0,0,x2,x2,0], $
+  [0,ysize,ysize,0,0], $
+  /Device, $
+  Color= color
+END
+   
+
+

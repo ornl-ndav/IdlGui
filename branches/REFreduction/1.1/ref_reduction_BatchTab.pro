@@ -1148,22 +1148,33 @@ PRO BatchTab_RunActive, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;Parameters --------------------------
+progress_bar_1_color = long(0.75 * !D.N_COLORS) ;blue bright
+progress_bar_2_color = long(0.5 * !D.N_COLORS)  ;blue dark
+;-------------------------------------
+
 LogText = '> Running Active Fields of Batch Table: '
 putLogBookMessage, Event, LogText, APPEND=1
 
 BatchTable = (*(*global).BatchTable)
 NbrRow = getGlobalVariable('RowIndexes')
 ;select progress bar widget_draw
-id_draw = widget_info(Event.top, find_by_uname='progress_bar_draw')
+;background of previous work
+id_draw = widget_info(Event.top, find_by_uname='progress_bar_draw_1')
 widget_control, id_draw, get_value=id_value
-wset,id_value
-erase
+
+;background of current work
+id_draw2 = widget_info(Event.top, find_by_uname='progress_bar_draw_2')
+widget_control, id_draw2, get_value=id_value2
+
 ;display Progress Bar base
 MapBase, Event, 'progress_bar_base',1
+
 ;turn on hourglass
 widget_control,/hourglass
 ;change label of RUN ACTIVE button
-PutTextFieldValue, Event, 'run_active_button', (*global).processing_message + $
+PutTextFieldValue, Event, 'run_active_button', $
+  (*global).processing_message + $
   ' ... ', 0
 ActivateWidget, Event, 'run_active_button', 0
 ;determine the number of process to run
@@ -1176,15 +1187,26 @@ FOR i=0,NbrRow DO BEGIN
 ENDFOR
 ProcessToRun = 1 ;++1 for only the active processes
 IF (NbrProcess NE 0) THEN BEGIN
-    IF ((*global).miniVersion) THEN BEGIN
-        xmax = 100.
-    ENDIF ELSE BEGIN
-        xmax = 150.
-    ENDELSE
-    x_step = (xmax/float(NbrProcess))
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='progress_bar_draw')
+    geometry = WIDGET_INFO(id, /GEOMETRY)
+    xmax     = geometry.xsize
+    x_step   = (xmax/float(NbrProcess))
+    x2       = (x_step)
+    ChangeSizeOfDraw, Event, $
+      'progress_bar_draw_1', $
+      1,$
+      progress_bar_1_color
+
+;middle progress bar
+    ChangeSizeOfDraw, Event, $
+      'progress_bar_draw_2', $
+      x2,$
+      progress_bar_2_color
+
     FOR i=0,NbrRow DO BEGIN
         IF (BatchTable[0,i] EQ '> YES <' OR $
             BatchTable[0,i] EQ 'YES') THEN BEGIN
+
             info = 'Working on ' + strcompress(ProcessToRun,/remove_all) + $
               '/' + strcompress(NbrProcess,/remove_all)
             putTextFieldValue, Event, 'progress_bar_label', info, 0
@@ -1216,9 +1238,23 @@ IF (NbrProcess NE 0) THEN BEGIN
                       (*global).processing_message
                 ENDELSE
             ENDELSE
+
+;top progress bar
             x2 = (ProcessToRun)*(x_step)
-            polyfill, [0,0,x2,x2,0],[0,35,35,0,0],/Device, Color=200
+            ChangeSizeOfDraw, Event, $
+              'progress_bar_draw_1', $
+              x2,$
+              progress_bar_1_color
+            
             ++ProcessToRun
+            
+;middle progress bar
+            x2 = (ProcessToRun)*(x_step)
+            ChangeSizeOfDraw, Event, $
+              'progress_bar_draw_2', $
+              x2,$
+              progress_bar_2_color
+
         ENDIF
     ENDFOR
 ;turn off hourglass

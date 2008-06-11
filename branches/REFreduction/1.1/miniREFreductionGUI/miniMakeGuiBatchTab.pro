@@ -290,10 +290,23 @@ dProgressBarBase = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
                      map   : 0,$
                      frame : 0}
 XYoff = [0,2]
+;black background
 dProgressBarBackground = { size  : [XYoff[0],$
                                    XYoff[1],$
                                    100,30],$
                           uname : 'progress_bar_draw'}
+
+;red background
+dProgressBarBackground1 = { size  : [XYoff[0],$
+                                     XYoff[1],$
+                                     150,30],$
+                            uname : 'progress_bar_draw_1'}
+;yellow background
+dProgressBarBackground2 = { size  : [XYoff[0],$
+                                     XYoff[1],$
+                                     150,30],$
+                            uname : 'progress_bar_draw_2'}
+
 XYoff = [0,8]
 dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+ $
                                dProgressBarBackground.size[2]+XYoff[0],$
@@ -670,17 +683,41 @@ wProgressBarBase = WIDGET_BASE(BATCH_BASE,$
                                FRAME     = dProgressBarBase.frame,$
                                MAP       = dProgressBarBase.map)
 
-wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
+wProgressBarBackground1 = WIDGET_DRAW(wProgressBarBase,$
                                      XOFFSET   = $
-                                     dProgressBarBackground.size[0],$
+                                     dProgressBarBackground1.size[0],$
                                      YOFFSET   = $
-                                     dProgressBarBackground.size[1],$
+                                     dProgressBarBackground1.size[1],$
                                      SCR_XSIZE = $
-                                     dProgressBarBackground.size[2],$
+                                     dProgressBarBackground1.size[2],$
                                      SCR_YSIZE = $
-                                     dProgressBarBackground.size[3],$
+                                     dProgressBarBackground1.size[3],$
                                      UNAME     = $
-                                     dProgressBarBackground.uname)
+                                     dProgressBarBackground1.uname)
+                                     
+wProgressBarBackground2 = WIDGET_DRAW(wProgressBarBase,$
+                                      XOFFSET   = $
+                                      dProgressBarBackground2.size[0],$
+                                      YOFFSET   = $
+                                      dProgressBarBackground2.size[1],$
+                                      SCR_XSIZE = $
+                                      dProgressBarBackground2.size[2],$
+                                      SCR_YSIZE = $
+                                      dProgressBarBackground2.size[3],$
+                                      UNAME     = $
+                                      dProgressBarBackground2.uname)
+
+ wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
+                                      XOFFSET   = $
+                                      dProgressBarBackground.size[0],$
+                                      YOFFSET   = $
+                                      dProgressBarBackground.size[1],$
+                                      SCR_XSIZE = $
+                                      dProgressBarBackground.size[2],$
+                                      SCR_YSIZE = $
+                                      dProgressBarBackground.size[3],$
+                                      UNAME     = $
+                                      dProgressBarBackground.uname)
                                      
 wProgressBarLabel = WIDGET_LABEL(wProgressBarBase,$
                                  XOFFSET   = dProgressBarLabel.size[0],$
