@@ -427,9 +427,14 @@ cmd = 'TS_merge_preNeXus.sh ' + CNstruct.translation_file + ' ' $
 cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, cmd_text
 spawn, cmd, listening, merging_error
-IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN 
+;.nxt file should be
+nxt_file_name  = CNstruct.stagingArea + CNstruct.instrument
+nxt_file_name += '_' + CNstruct.RunNumber + '.nxt'
+IF (strmatch(merging_error[0],'*java.lang.Error*') OR $
+    ~FILE_TEST(nxt_file_name)) THEN BEGIN 
 ;problem during merging
     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
+    AppendMyLogBook, Event, listening
     AppendMyLogBook, Event, merging_error
     error_status = 1
 ENDIF ELSE BEGIN
