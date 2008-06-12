@@ -428,7 +428,7 @@ cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, cmd_text
 spawn, cmd, listening, merging_error
 ;.nxt file should be
-nxt_file_name  = CNstruct.stagingArea + CNstruct.instrument
+nxt_file_name  = CNstruct.stagingArea + '/' + CNstruct.instrument
 nxt_file_name += '_' + CNstruct.RunNumber + '.nxt'
 IF (strmatch(merging_error[0],'*java.lang.Error*') OR $
     ~FILE_TEST(nxt_file_name)) THEN BEGIN 
