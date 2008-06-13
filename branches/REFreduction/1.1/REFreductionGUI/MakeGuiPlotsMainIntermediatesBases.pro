@@ -36,15 +36,13 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-PlotsErrorMessageBaseSize = [200, $
-                             2, $
-                             780, $
-                             30]
-
-PlotsErrorMessageSize     = [0, $
-                             0, $
-                             780, $
-                             30]
+PlotsFileNameButton = {size: [200,$
+                              2,$
+                              780,$
+                              30],$
+                       value: 'N/A',$
+                       uname: 'plot_file_name_button',$
+                       sensitive: 0}
 
 MainPlotBaseSize          = [200, $
                              40, $
@@ -88,23 +86,14 @@ PlotTextField = widget_text(MainPlotBase,$
                             /SCROLL,$
                             /WRAP)
 
-;error message base/label
-PLOTS_ERROR_BASE = WIDGET_BASE(PLOTS_BASE,$
-                               XOFFSET   = PlotsErrorMessageBaseSize[0],$
-                               YOFFSET   = PlotsErrorMessageBaseSize[1],$
-                               SCR_XSIZE = PlotsErrorMessageBaseSize[2],$
-                               SCR_YSIZE = PlotsErrorMessageBaseSize[3],$
-                               UNAME     = 'plots_error_base',$
-                               MAP       = 1,$
-                               FRAME     = 1)
-
-PlotsErrorMessage = WIDGET_LABEL(PLOTS_ERROR_BASE,$
-                                 XOFFSET   = PlotsErrorMessageSize[0],$
-                                 YOFFSET   = PlotsErrorMessageSize[1],$
-                                 SCR_XSIZE = PlotsErrorMessageSize[2],$
-                                 SCR_YSIZE = PlotsErrorMessageSize[3],$
-                                 VALUE     = 'ERROR: not enough data to plot',$
-                                 FRAME     = 0,$
-                                 UNAME     = 'plots_error_message')
+;Plot output File name button
+wPlotFileNameButton = WIDGET_BUTTON(PLOTS_BASE,$
+                                    XOFFSET   = PlotsFileNameButton.size[0],$
+                                    YOFFSET   = PlotsFileNameButton.size[1],$
+                                    SCR_XSIZE = PlotsFileNameButton.size[2],$
+                                    SCR_YSIZE = PlotsFileNameButton.size[3],$
+                                    VALUE     = PlotsFileNameButton.value,$
+                                    UNAME     = PlotsFileNameButton.uname,$
+                                    SENSITIVE = PlotsFileNameButton.sensitive)
                                                             
 END
