@@ -35,17 +35,27 @@ FUNCTION retrieveDRfiles, Event, BatchTable
 ;Get Nbr of non-empty rows
 NbrRow         = getGlobalVariable('NbrRow')
 NbrRowNotEmpty = 0
+NbrDrFiles     = 0
 FOR i=0,(NbrRow-1) DO BEGIN
-    IF (BatchTable[1,i] NE '') THEN ++NbrRowNotEmpty
+    IF (BatchTable[1,i] NE '') THEN BEGIN
+        ++NbrRowNotEmpty
+        IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
+            ++NbrDrFiles
+        ENDIF
+    ENDIF
 ENDFOR
+
 ;Create array of list of files
-DRfiles = STRARR(NbrRowNotEmpty)
+DRfiles = STRARR(NbrDrFiles)
 ;get for each row the path/output_file_name
+j=0
 FOR i=0,(NbrRowNotEmpty-1) DO BEGIN
     iRow = OBJ_NEW('idl_parse_command_line',BatchTable[8,i])
-    outputPath     = iRow->getOutputPath()
-    outputFileName = iRow->getOutputFileName()
-    DRfiles[i] = outputPath + outputFileName
+    IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
+        outputPath     = iRow->getOutputPath()
+        outputFileName = iRow->getOutputFileName()
+        DRfiles[j++] = outputPath + outputFileName
+    ENDIF
 ENDFOR
 RETURN,DRfiles
 END
@@ -71,6 +81,55 @@ NewTable[2,*] = BatchTable[7,*]
 NewTable[3,*] = BatchTable[6,*]
 ;repopulate Table
 DisplayBatchTable, Event, NewTable
+END
+
+;==============================================================================
+;This function checks if all the output data reduction file exist or not
+FUNCTION CheckFilesExist, Event, DRfiles
+sz = (size(DRfiles))(1)
+LogText = '-> Check if all Intermediate files exist or not:'
+idl_send_to_geek_addLogBookText, Event, LogText
+file_status = 1
+FOR i=0,(sz-1) DO BEGIN
+    IF(FILE_TEST(DRfiles[i])) THEN BEGIN
+        LogText = '--> ' + DRfiles[i] + ' ... FOUND'
+    ENDIF ELSE BEGIN
+        LogText = '--> ' + DRfiles[i] + ' ... NOT FOUND !!'
+        file_status = 0
+    ENDELSE
+    idl_send_to_geek_addLogBookText, Event, LogText
+ENDFOR
+RETURN, file_status
+END
+
+;==============================================================================
+PRO batch_repopulate_gui, Event, DRfiles
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+;retrieve parameters
+(*global).NbrFilesLoaded = 0
+loading_error            = 0
+;Nbr of files to load
+sz = (size(DRfiles))(1)
+
+FOR i=0,(sz-1) DO BEGIN
+    index = (*global).NbrFilesLoaded 
+    SuccessStatus = StoreFlts(Event, DRfiles[i], index)
+    IF (SuccessStatus) THEN BEGIN
+        ShortFileName = get_file_name_only(DRfiles[i]) ;_get
+        LongFileName  = DRfiles[i]
+        AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+    ENDIF ELSE BEGIN
+        loading_error = 1
+        BREAK ;leave the for loop
+    ENDELSE
+ENDFOR
+
+IF (loading_error EQ 0) THEN BEGIN
+;plot all loaded files
+    PlotLoadedFiles, Event      ;_Plot
+ENDIF
+
 END
 
 ;==============================================================================
@@ -104,9 +163,25 @@ IF (BatchFileName NE '') THEN BEGIN
 ;Update Batch Tab and put BatchTable there
     UpdateBatchTable, Event, BatchTable
 ;Retrieve List of Data Reduction files
-    DRfiles = retrieveDRfiles(Event,BatchTable)
-;enable REFRESH and SAVE AS Bash File
-    refresh_bash_file_status = 1
+    DRfiles = retrieveDRfiles(Event, BatchTable)
+;Check that all the files exist
+    FileStatus = CheckFilesExist(Event, DRfiles)
+    IF (FileStatus EQ 1) THEN BEGIN ;continue loading process
+;Repopulate GUI
+        batch_repopulate_gui, Event, DRfiles
+
+
+        LogText = '> Loading Batch File ' + BatchFileName + ' ... OK'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        refresh_bash_file_status = 1
+    ENDIF ELSE BEGIN            ;stop loading process
+        LogText = '> Loading Batch File ' + BatchFileName + ' ... FAILED'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        LogText = '-> This can be due to the fact that 1 or more of the ' + $
+          ' DR files does not exist !'
+        idl_send_to_geek_addLogBookText, Event, LogText
+        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
+    ENDELSE
 ENDIF ELSE BEGIN
 ;disable REFRESH and SAVE AS Bash File
     refresh_bash_file_status = 0
