@@ -1692,11 +1692,11 @@ make_gui_log_book
 
 ;Build main procedures
 cd, CurrentFolder
+ref_scale_get
 procedure_array_delete
 procedure_ref_scale_arrays
 procedure_number_formatter
 procedure_get_numeric
-ref_scale_get
 ref_scale_put
 ref_scale_is
 procedure_idl_send_to_geek
