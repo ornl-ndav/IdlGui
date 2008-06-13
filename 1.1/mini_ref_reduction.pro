@@ -49,7 +49,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow'
 VERSION            = '1.1.4'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -541,19 +541,22 @@ ENDIF
 
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
+; Default Main Tab Shown
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
+
+;default path of Load Batch files
+    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+    
 ; default tabs shown
 ;   id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
 ;   widget_control, id1, set_tab_current = 1 ;peak/background
    
 ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ;   widget_control, id2, set_tab_current = 0 ;DATA
-
-; default tabs shown
-    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 3 ;Batch
-    
-;change default location of Batch file
-    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
