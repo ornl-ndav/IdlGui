@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,10 +30,10 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function plots the selected file
 PRO plot_loaded_file, Event, index
@@ -67,7 +67,8 @@ IF (nbr_elements GT 0) THEN BEGIN
         
         'all': BEGIN            ;plot all the plots
             nbr_elements = $
-              getNbrElementsInDropList(Event,'step3_work_on_file_droplist') ;_get
+              getNbrElementsInDropList(Event,'step3_work_on_file_droplist') 
+;_get
             index_to_plot = indgen(nbr_elements)
         END
         
@@ -285,8 +286,8 @@ ENDELSE
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function plot all the files loaded
 ;This function is only reached by the LOAD button
@@ -299,7 +300,15 @@ widget_control,id,get_uvalue=global
 ListLongFileName = (*(*global).ListOfLongFileName)
 
 ;1 if first load, 0 otherwise
-FirstTimePlotting = (*global).FirstTimePlotting
+XYMinMax = retrieveXYMinMax(Event) ;_get
+IF  (XYMinMax[0] NE '' AND $
+     XYMinMax[1] NE '' AND $
+     XYMinMax[2] NE '' AND $
+     XYMinMax[3] NE '') THEN BEGIN
+    FirstTimePlotting = 1
+ENDIF ELSE BEGIN
+    FirstTimePlotting = 1
+ENDELSE
 
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
@@ -334,23 +343,23 @@ ENDIF ELSE BEGIN
 
     for i=0,(size-1) do begin
 
-    color_array = (*(*global).color_array)
-    colorIndex = color_array[i]
-    IF (ErrorBarStatus EQ 0) THEN BEGIN
-        IF (i EQ 0) THEN BEGIN
-            MainPlotColor = 100
+        color_array = (*(*global).color_array)
+        colorIndex  = color_array[i]
+        IF (ErrorBarStatus EQ 0) THEN BEGIN
+            IF (i EQ 0) THEN BEGIN
+                MainPlotColor = 100
+            ENDIF ELSE BEGIN
+                MainPlotColor = 255
+            ENDELSE
         ENDIF ELSE BEGIN
-            MainPlotColor = 255
+            MainPlotColor = colorIndex
         ENDELSE
-    ENDIF ELSE BEGIN
-        MainPlotColor = colorIndex
-    ENDELSE
-
+        
         error_plot_status = 0
         CATCH, error_plot_status
-
+        
         IF (error_plot_status NE 0) THEN BEGIN
-
+            
             CATCH,/CANCEL
             text = 'ERROR plotting data'
             displayErrorMessage, Event, text ;_Gui
@@ -364,13 +373,12 @@ ENDIF ELSE BEGIN
             DEVICE, DECOMPOSED = 0
             loadct,5,/SILENT
             
-
             IF (FirstPass EQ 1) THEN BEGIN
-                
+                print, '#1'
                 flt1_first = flt1
                 
                 IF (FirstTimePlotting EQ 1) THEN BEGIN
-                    
+                    print, '#2'
                     CASE (IsXlin) OF
                         0:BEGIN
                             CASE (IsYlin) OF
@@ -405,7 +413,7 @@ ENDIF ELSE BEGIN
                             ENDCASE
                         END
                     ENDCASE
-
+                    print, '#3'
                     IF (ErrorBarStatus EQ 0) THEN BEGIN
                         errplot, $
                           flt0, $
@@ -426,6 +434,8 @@ ENDIF ELSE BEGIN
                     max_xaxis_display = NUMBER_FORMATTER(max_xaxis)
                     min_yaxis_display = NUMBER_FORMATTER(min_yaxis)
                     max_yaxis_display = NUMBER_FORMATTER(max_yaxis)
+
+                    print, min_xaxis_display ;remove_me
 
                     PopulateXYScaleAxis, Event, $ ;_put
                       min_xaxis_display, $
@@ -593,8 +603,8 @@ endelse
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO replot_main_plot, Event
 
@@ -608,8 +618,8 @@ ENDIF
 
 end
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function plots the selected file
 PRO plot_rescale_CE_file, Event
@@ -690,7 +700,8 @@ CASE (IsXlin) OF
                 plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
             END
             1: BEGIN
-                plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax], $
+                  yrange=[ymin,ymax]
             END
         ENDCASE
     END
@@ -710,8 +721,8 @@ ENDIF
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function takes care of launching the plot function in the right mode
 PRO DoPlot, Event
@@ -725,7 +736,7 @@ CASE (CurrTabSelect) OF
    0: BEGIN                     ;if the first tab is selected
        plot_loaded_file, Event, 'all' ;_Plot
    END
-   1: BEGIN               ;if the second tab is selected, plot index 0 (CE file)
+   1: BEGIN   ;if the second tab is selected, plot index 0 (CE file)
        plot_loaded_file, Event, 'CE' ;_Plot
    END
    2: BEGIN       ;if the third tab is selected plot index and index-1
@@ -735,8 +746,8 @@ CASE (CurrTabSelect) OF
 ENDCASE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;Plot Qmin and Qmax
 PRO PlotQs, Event, X1, X2
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -759,8 +770,8 @@ IF (X2 GT xmin AND $
 ENDIF
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;Plot Qmin or Qmax
 PRO PlotQ, Event, X1
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -777,8 +788,8 @@ IF (X1 GE xmin AND $
 ENDIF
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO procedure_ref_scale_plot
 END

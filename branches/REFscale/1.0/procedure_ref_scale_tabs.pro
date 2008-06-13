@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,11 +30,11 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;-------------------------------------------------------------------------------
-;***** GENERAL FUNCTION ********************************************************
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;***** GENERAL FUNCTION *******************************************************
+;------------------------------------------------------------------------------
 ;This procedure is reached by : - when a new tab is reached 
 ;                               - by the refresh plot button
 
@@ -54,7 +54,7 @@ list_of_files_size  = (size(list_of_files))(1)
 IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
    
 ;do something only if it's a new tab or refresh button has been clicked
-   IF ((PrevTabSelect NE CurrTabSelect) OR (isRefresh EQ 1)) THEN BEGIN          
+   IF ((PrevTabSelect NE CurrTabSelect) OR (isRefresh EQ 1)) THEN BEGIN
 
       (*global).PrevTabSelect = CurrTabSelect
 
@@ -88,7 +88,8 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
                  validate_status = 0
              ENDELSE
              ActivateStep3, Event, validate_status
-             ActivateButton, Event, 'Step3_automatic_rescale_button', validate_status
+             ActivateButton, Event, 'Step3_automatic_rescale_button', $
+               validate_status
  ;activate or not AUTOMATIC SCALLING
 
             indexSelected = $
@@ -114,14 +115,26 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
             
                                 ;display the SF of the selected file
             Step3_display_SF_values, Event, indexSelected ;_Step3
+        END
 
-         END
+        3: BEGIN ;output file
+            plot_loaded_file, Event, 'all' ;_Plot
+        END
+
+        4: BEGIN ;Batch
+            plot_loaded_file, Event, 'all' ;_Plot
+        END
+
+        5: BEGIN ;LogBook
+            plot_loaded_file, Event, 'all' ;_Plot
+        END
+
          ELSE:                  ;if fourth tab (settings tab) is selected
       ENDCASE
    ENDIF
 ENDIF
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO procedure_ref_scale_tabs
 END
