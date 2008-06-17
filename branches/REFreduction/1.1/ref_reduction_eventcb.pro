@@ -740,16 +740,18 @@ END
 
 
 PRO REFreduction_refreshDataPlot, Event
-;get droplist index
-LoadctIndex = getDropListSelectedIndex(Event,'data_contrast_droplist')
-;get bottom value of color
-BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
-;get number of color
-NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
+REFReduction_RescaleDataPlot, Event
 
-loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue
-RePlot1DDAtaFile, Event
-REFreduction_DataBackgroundPeakSelection, Event
+;;get droplist index
+;LoadctIndex = getDropListSelectedIndex(Event,'data_contrast_droplist')
+;;get bottom value of color
+;BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
+;;get number of color
+;NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
+
+;loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue
+;RePlot1DDAtaFile, Event
+;REFreduction_DataBackgroundPeakSelection, Event
 END
 
 

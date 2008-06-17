@@ -1168,7 +1168,6 @@ ENDSWITCH
 SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmin_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmax_cwfield'): 
-    widget_info(wWidget, FIND_BY_UNAME='data_rescale_x_droplist')  : 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymin_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymax_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmin_cwfield'): 

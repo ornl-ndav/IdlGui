@@ -129,18 +129,24 @@ if ((*global).DataNexusFound) then begin
     endif
     
 ;if z-axis is linear
-    if (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) then begin ;log
+    IF (getDropListSelectedIndex(Event,'data_rescale_z_droplist') EQ 1) $
+      THEN BEGIN                ;log
         tvimg = alog(tvimg)
-    endif
-    
+        index = WHERE(tvimg GE 0, nbr)
+        sz = size(tvimg)
+        new_tvimg = INTARR(sz[1],sz[2])
+        IF (nbr GT 0) THEN BEGIN
+            new_tvimg(index) = tvimg(index)
+        ENDIF
+        tvimg = new_tvimg
+    ENDIF
+
     REFreduction_Rescale_PlotData, Event, tvimg
 
+;save back new array
+;    (*(*global).tvimg_data_ptr) = tvimg
+
     ;if Zoom window visible update zoom drawing
-
-
-
-
-
 
 endif ;end of if(DataNexusFound)
 
@@ -227,33 +233,34 @@ END
 
 PRO REFreduction_Rescale_resetXaxis, Event, DataXYZminmaxARray
 ;reset x-droplist
-SetDropListValue, Event, 'data_rescale_x_droplist',0
+;SetDropListValue, Event, 'data_rescale_x_droplist',0
 putTextfieldValue,Event, 'data_rescale_xmin_cwfield',DataXYZminmaxArray[0],0
 putTextfieldValue,Event, 'data_rescale_xmax_cwfield',DataXYZminmaxArray[1],0
 END
 
 
-
-
-
-
-
-
-
-
-
+;------------------------------------------------------------------------------
 PRO REFreduction_Rescale_PlotData, Event, tvimg
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-Device, decomposed=0
-
 id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
-erase
-tvscl, tvimg, /device,/t3D
+;erase
+
+;Device, decomposed=0
+;get droplist index
+LoadctIndex = getDropListSelectedIndex(Event,'data_contrast_droplist')
+;get bottom value of color
+BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
+;get number of color
+NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
+loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
+
+tvscl, tvimg
+
 END
 
 

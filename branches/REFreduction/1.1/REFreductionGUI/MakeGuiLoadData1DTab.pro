@@ -698,11 +698,11 @@ RescaleXMaxCWField = cw_field(RescaleXMaxcwfieldBase,$
                               title=RescaleMaxcwfieldLabel,$
                               uname='data_rescale_xmax_cwfield')
 
-RescaleXScaleDroplist = widget_droplist(RescaleXBase,$
-                                       value=RescaleScaleDroplist,$
-                                       xoffset=RescaleScaleDroplistSize[0],$
-                                       yoffset=RescaleScaleDroplistSize[1],$
-                                       uname='data_rescale_x_droplist')
+;RescaleXScaleDroplist = widget_droplist(RescaleXBase,$
+;                                       value=RescaleScaleDroplist,$
+;                                       xoffset=RescaleScaleDroplistSize[0],$
+;                                       yoffset=RescaleScaleDroplistSize[1],$
+;                                       uname='data_rescale_x_droplist')
 
 ResetXScaleButton = widget_button(RescaleXBase,$
                                   xoffset=ResetScaleButtonSize[0],$
