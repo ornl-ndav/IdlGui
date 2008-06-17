@@ -51,12 +51,12 @@ IF (err_plot NE 0) THEN BEGIN
 ;something
     message = 'ERROR: ' + FullFileName[0]
     message += ': not enough data to plot !'
-    putTextFieldValue, event, 'plots_error_message', message, 0
+;    putTextFieldValue, event, 'plots_error_message', message, 0
 
 ENDIF ELSE BEGIN
 
     message = 'File currently displayed: ' + FullFileName[0]
-    putTextFieldValue, event, 'plots_error_message', message[0], 0
+;    putTextFieldValue, event, 'plots_error_message', message[0], 0
 
 ;Show error message base    
     MapStatus = 1
@@ -66,6 +66,21 @@ ENDIF ELSE BEGIN
 
 ENDELSE
 
-MapBase, Event, 'plots_error_base', MapStatus
+putLabelValue, Event, 'plot_file_name_button', FullFileName[0]
+ActivateWidget, Event, 'plot_file_name_button', MapStatus
+
+;MapBase, Event, 'plots_error_base', MapStatus
 
 END
+
+
+;------------------------------------------------------------------------------
+;This function display a preview of the output file
+PRO DisplayPreviewOfFile, Event
+;get full path name of file to display
+FullFileName = getTextFieldValue(Event, 'plot_file_name_button')
+Title        = FullFileName
+XDISPLAYFILE, FullFileName, TITLE=title
+END
+
+

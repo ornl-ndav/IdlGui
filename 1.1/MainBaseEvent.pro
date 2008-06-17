@@ -651,7 +651,7 @@ CASE Event.id OF
         REFreduction_ResetFullNormPlot, Event
     end
 
-;############################### 1D_3D PLOT TAB ################################
+;############################### 1D_3D PLOT TAB ###############################
 ;reset z-axis
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization1d_z_axis_reset_button'): begin
@@ -779,7 +779,7 @@ CASE Event.id OF
         endif
     end
 
-;############################### 2D_3D PLOT TAB ################################
+;############################## 2D_3D PLOT TAB ################################
 ;reset z-axis
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization2d_z_axis_reset_button'): begin
@@ -1007,12 +1007,13 @@ CASE Event.id OF
         CL_outputButton, Event
     end
 
-
+;******************************************************************************
 ;**PLOTS TAB**
+;******************************************************************************
 
-    ;droplist of plots to plot
-    widget_info(wWidget, FIND_BY_UNAME='plots_droplist'): begin
-         RefReduction_PlotMainIntermediateFiles, Event
+    ;PREVIEW of file
+    widget_info(wWidget, FIND_BY_UNAME='plot_file_name_button'): begin
+        DisplayPreviewOfFile, Event ;_PlotOutputFiles
     end
     
 ;******************************************************************************
