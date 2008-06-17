@@ -109,8 +109,10 @@ if ((*global).NormNexusFound) then begin
         putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield',ymax,0
     endif
     
-    ymin *= 2
-    ymax *= 2
+    if (~(*global).miniVersion) then begin
+        ymin *= 2
+        ymax *= 2
+    endif
     new_tvimg(*,ymin:ymax) = tvimg(*,ymin:ymax)
     tvimg=new_tvimg
     
@@ -125,10 +127,17 @@ if ((*global).NormNexusFound) then begin
     endif
     
 ;if z-axis is linear
-    if (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') EQ 1) then begin ;log
+    if (getDropListSelectedIndex(Event,'normalization_rescale_z_droplist') $
+        EQ 1) then begin        ;log
         tvimg = alog(tvimg)
-    endif
-    
+        index = WHERE(tvimg GE 0, nbr)
+        sz = size(tvimg)
+        new_tvimg = INTARR(sz[1],sz[2])
+        IF (nbr GT 0) THEN BEGIN
+            new_tvimg(index) = tvimg(index)
+        ENDIF
+        tvimg = new_tvimg
+    ENDIF
     
     REFreduction_Rescale_PlotNorm, Event, tvimg
 
@@ -203,33 +212,29 @@ END
 PRO REFreduction_Rescale_resetNormZaxis, Event, NormXYZminmaxARray
 ;reset z-droplist
 SetDropListValue, Event, 'normalization_rescale_z_droplist',0
-putTextfieldValue,Event, 'normalization_rescale_zmin_cwfield',NormXYZminmaxArray[4],0
-putTextfieldValue,Event, 'normalization_rescale_zmax_cwfield',NormXYZminmaxArray[5],0
+putTextfieldValue,Event, 'normalization_rescale_zmin_cwfield', $
+  NormXYZminmaxArray[4],0
+putTextfieldValue,Event, 'normalization_rescale_zmax_cwfield', $
+  NormXYZminmaxArray[5],0
 END
 
 
 PRO REFreduction_Rescale_resetNormYaxis, Event, NormXYZminmaxArray
 ;reset y-droplist
-putTextfieldValue,Event, 'normalization_rescale_ymin_cwfield',NormXYZminmaxArray[2],0
-putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield',NormXYZminmaxArray[3],0
+putTextfieldValue,Event, 'normalization_rescale_ymin_cwfield', $
+  NormXYZminmaxArray[2],0
+putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield', $
+  NormXYZminmaxArray[3],0
 END
 
 
 PRO REFreduction_Rescale_resetNormXaxis, Event, NormXYZminmaxARray
 ;reset x-droplist
-SetDropListValue, Event, 'normalization_rescale_x_droplist',0
-putTextfieldValue,Event, 'normalization_rescale_xmin_cwfield',NormXYZminmaxArray[0],0
-putTextfieldValue,Event, 'normalization_rescale_xmax_cwfield',NormXYZminmaxArray[1],0
+putTextfieldValue,Event, 'normalization_rescale_xmin_cwfield', $
+  NormXYZminmaxArray[0],0
+putTextfieldValue,Event, 'normalization_rescale_xmax_cwfield', $
+  NormXYZminmaxArray[1],0
 END
-
-
-
-
-
-
-
-
-
 
 
 PRO REFreduction_Rescale_PlotNorm, Event, tvimg
@@ -237,12 +242,19 @@ PRO REFreduction_Rescale_PlotNorm, Event, tvimg
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-Device, decomposed=0
-
 id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
-erase
-tvscl, tvimg, /device 
+
+;Device, decomposed=0
+;get droplist index
+LoadctIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
+;get bottom value of color
+BottomColorValue = getSliderValue(Event,'normalization_contrast_bottom_slider')
+;get number of color
+NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
+loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
+
+tvscl, tvimg
 END
 
