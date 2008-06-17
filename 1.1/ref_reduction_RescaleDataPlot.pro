@@ -143,9 +143,6 @@ if ((*global).DataNexusFound) then begin
 
     REFreduction_Rescale_PlotData, Event, tvimg
 
-;save back new array
-;    (*(*global).tvimg_data_ptr) = tvimg
-
     ;if Zoom window visible update zoom drawing
 
 endif ;end of if(DataNexusFound)
@@ -233,7 +230,6 @@ END
 
 PRO REFreduction_Rescale_resetXaxis, Event, DataXYZminmaxARray
 ;reset x-droplist
-;SetDropListValue, Event, 'data_rescale_x_droplist',0
 putTextfieldValue,Event, 'data_rescale_xmin_cwfield',DataXYZminmaxArray[0],0
 putTextfieldValue,Event, 'data_rescale_xmax_cwfield',DataXYZminmaxArray[1],0
 END

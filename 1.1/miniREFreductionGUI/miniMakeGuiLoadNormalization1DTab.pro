@@ -52,13 +52,13 @@ BackPeakRescaleTabSize = [4, $
 ;Tab#1
 BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
-BackPeakBaseTitle      = '  Background and Peak Selection  '
+BackPeakBaseTitle      = 'ROI/Peak/Background'
 ;Tab#2
 ContrastBaseSize       = BackPeakBaseSize
-ContrastBaseTitle      = '  Contrast Editor  '
+ContrastBaseTitle      = 'Contrast Editor'
 ;Tab#3
 RescaleBaseSize        = BackPeakBaseSize
-RescaleBaseTitle       = '   Range Displayed   '  
+RescaleBaseTitle       = 'Scale/Range'  
 
 ;------------------------------------------------------------------------------
 ;-TAB #1 ----------------------------------------------------------------------
@@ -232,8 +232,8 @@ sZoomLabel2 = { size: [sZoomLabel1.size[0]+XYoff[0],$
                        sZoomLabel1.size[1]+XYoff[1]],$
                value: 'to zoom this part of the display. '}
 
-;###############################################################################
-;################################## Tab #2 #####################################
+;##############################################################################
+;################################# Tab #2 #####################################
 
 ContrastBaseSize       = BackPeakBaseSize
 ContrastBaseTitle      = 'Contrast Editor'
@@ -259,8 +259,8 @@ ResetContrastButtonSize  = [ContrastDropListSize[0]+10,$
                             30]
 ResetContrastButtonTitle = ' RESET FULL CONTRAST SESSION '
 
-;###############################################################################
-;######################### Tab #3 ##############################################
+;##############################################################################
+;######################## Tab #3 ##############################################
 
 RescaleBaseSize        = BackPeakBaseSize
 RescaleBaseTitle       = 'Scale/Range'  
@@ -311,12 +311,13 @@ OutputFileFolderTextFieldSize  = [OutputFileFolderButtonSize[0] + $
                                   30]
 yoff_vertical = 35
 OutputFileNameLabelSize        = [OutputFileFolderButtonSize[0] + 2,$
-                                  OutputFileFolderButtonSize[1] + yoff_vertical]
+                                  OutputFileFolderButtonSize[1] + $
+                                  yoff_vertical]
 OutputFileNameLabelTitle       = 'Output File Name:'
                                   
-;*******************************************************************************
+;******************************************************************************
 ;Build 1D tab
-;*******************************************************************************
+;******************************************************************************
 Load_Normalization_D_TAB_BASE = $
   WIDGET_BASE(D_DD_Tab,$
               UNAME     = 'load_normalization_d_tab_base',$
@@ -453,7 +454,7 @@ wSaveButton = WIDGET_BUTTON(wRoiBase,$
                             VALUE     = sSaveButton.value,$
                             UNAME     = sSaveButton.uname)
 
-;TAB #1-2 Peak/Back base =======================================================
+;TAB #1-2 Peak/Back base ======================================================
 wPeakBackBase = WIDGET_BASE(wRoiTab,$
                             XOFFSET   = sPeakBackBase.size[0],$
                             YOFFSET   = sPeakBackBase.size[1],$
@@ -593,7 +594,7 @@ wSaveButton = WIDGET_BUTTON(wBackBase,$
                             VALUE     = sBackSaveButton.value,$
                             UNAME     = sBackSaveButton.uname)
 
-;TAB #1-3 Zoom base ============================================================
+;TAB #1-3 Zoom base ===========================================================
 wZoomBase = WIDGET_BASE(wRoiTab,$
                         XOFFSET   = sZoomBase.size[0],$
                         YOFFSET   = sZoomBase.size[1],$
@@ -626,8 +627,9 @@ ContrastDropList = WIDGET_DROPLIST(ContrastBase,$
                                    SCR_XSIZE = ContrastDropListSize[2],$
                                    SCR_YSIZE = ContrastDropListSize[3],$
                                    /TRACKING_EVENTS,$
-                                   UNAME     = 'normalization_contrast_droplist',$
-                                   SENSITIVE = 0)
+                                   UNAME     = $
+                                   'normalization_contrast_droplist',$
+                                   SENSITIVE = 1)
 
 ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
                                      XOFFSET   = ContrastBottomSliderSize[0],$
@@ -636,11 +638,13 @@ ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
                                      SCR_YSIZE = ContrastBottomSliderSize[3],$
                                      MINIMUM   = ContrastBottomSliderMin,$
                                      MAXIMUM   = ContrastBottomSliderMax,$
-                                     UNAME     = 'normalization_contrast_bottom_slider',$
+                                     UNAME     = $
+                                     'normalization_contrast_bottom_slider',$
                                      /TRACKING_EVENTS,$
                                      TITLE     = ContrastBottomSliderTitle,$
-                                     VALUE     = ContrastBottomSliderDefaultValue,$
-                                     SENSITIVE = 0)
+                                     VALUE     = $
+                                     ContrastBottomSliderDefaultValue,$
+                                     SENSITIVE = 1)
 
 ContrastNumberSlider = WIDGET_SLIDER(ContrastBase,$
                                      XOFFSET   = ContrastNumberSliderSize[0],$
@@ -649,11 +653,13 @@ ContrastNumberSlider = WIDGET_SLIDER(ContrastBase,$
                                      SCR_YSIZE = ContrastNumberSliderSize[3],$
                                      MINIMUM   = ContrastNumberSliderMin,$
                                      MAXIMUM   = ContrastNumberSliderMax,$
-                                     UNAME     = 'normalization_contrast_number_slider',$
+                                     UNAME     = $
+                                     'normalization_contrast_number_slider',$
                                      /TRACKING_EVENTS,$
                                      TITLE     = ContrastNumberSliderTitle,$
-                                     VALUE     = ContrastNumberSliderDefaultValue,$
-                                     SENSITIVE = 0)
+                                     VALUE     = $
+                                     ContrastNumberSliderDefaultValue,$
+                                     SENSITIVE = 1)
 
 ResetContrastButton = WIDGET_BUTTON(ContrastBase,$
                                     XOFFSET   = ResetContrastButtonSize[0],$
@@ -661,8 +667,9 @@ ResetContrastButton = WIDGET_BUTTON(ContrastBase,$
                                     SCR_XSIZE = ResetContrastButtonSize[2],$
                                     SCR_YSIZE = ResetContrastButtonSize[3],$
                                     VALUE     = ResetContrastButtonTitle,$
-                                    UNAME     = 'normalization_reset_contrast_button',$
-                                    SENSITIVE = 0)
+                                    UNAME     = $
+                                    'normalization_reset_contrast_button',$
+                                    SENSITIVE = 1)
 
 
 ;Tab #3 (rescale base)
@@ -701,7 +708,8 @@ RescaleXMinCWField = CW_FIELD(RescaleXMincwfieldBase,$
                               /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMincwfieldLabel,$
-                              UNAME         = 'normalization_rescale_xmin_cwfield')
+                              UNAME         = $
+                              'normalization_rescale_xmin_cwfield')
 
 RescaleXMaxcwfieldBase = WIDGET_BASE(RescaleXBase,$
                                      XOFFSET   = RescaleMaxcwfieldBaseSize[0],$
@@ -716,14 +724,8 @@ RescaleXMaxCWField = CW_FIELD(RescaleXMaxcwfieldBase,$
                              /FLOAT,$
                              RETURN_EVENTS = 1,$
                              TITLE         = RescaleMaxcwfieldLabel,$
-                             UNAME         = 'normalization_rescale_xmax_cwfield')
-
-RescaleXScaleDroplist = WIDGET_DROPLIST(RescaleXBase,$
-                                        VALUE     = RescaleScaleDroplist,$
-                                        XOFFSET   = RescaleScaleDroplistSize[0],$
-                                        YOFFSET   = RescaleScaleDroplistSize[1],$
-                                        UNAME     = 'normalization_rescale_x_droplist',$
-                                        SENSITIVE = 0)
+                              UNAME         = $
+                              'normalization_rescale_xmax_cwfield')
 
 ResetXScaleButton = WIDGET_BUTTON(RescaleXBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
@@ -731,8 +733,9 @@ ResetXScaleButton = WIDGET_BUTTON(RescaleXBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetXScaleButtonTitle,$
-                                  UNAME     = 'normalization_reset_xaxis_button',$
-                                  SENSITIVE = 0)
+                                  UNAME     = $
+                                  'normalization_reset_xaxis_button',$
+                                  SENSITIVE = 1)
 
 ;Y base
 RescaleYLabel = WIDGET_LABEL(RescaleBase,$
@@ -761,7 +764,8 @@ RescaleYMinCWField = CW_FIELD(RescaleYMincwfieldBase,$
                               /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMincwfieldLabel,$
-                              UNAME         = 'normalization_rescale_ymin_cwfield')
+                              UNAME         = $
+                              'normalization_rescale_ymin_cwfield')
                              
 RescaleYMaxcwfieldBase = WIDGET_BASE(RescaleYBase,$
                                      XOFFSET   = RescaleMaxcwfieldBaseSize[0],$
@@ -776,7 +780,8 @@ RescaleYMaxCWField = CW_FIELD(RescaleYMaxcwfieldBase,$
                               /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMaxcwfieldLabel,$
-                              UNAME         ='normalization_rescale_ymax_cwfield')
+                              UNAME         = $
+                              'normalization_rescale_ymax_cwfield')
 
 ResetYScaleButton = WIDGET_BUTTON(RescaleYBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
@@ -784,8 +789,9 @@ ResetYScaleButton = WIDGET_BUTTON(RescaleYBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetYScaleButtonTitle,$
-                                  UNAME     = 'normalization_reset_yaxis_button',$
-                                  SENSITIVE = 0)
+                                  UNAME     = $
+                                  'normalization_reset_yaxis_button',$
+                                  SENSITIVE = 1)
 
 ;Z base
 RescaleZLabel = WIDGET_LABEL(RescaleBase,$
@@ -814,7 +820,8 @@ RescaleZMinCWField = CW_FIELD(RescaleZMincwfieldBase,$
                               /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMincwfieldLabel,$
-                              UNAME         = 'normalization_rescale_zmin_cwfield')
+                              UNAME         = $
+                              'normalization_rescale_zmin_cwfield')
 
 RescaleZMaxcwfieldBase = WIDGET_BASE(RescaleZBase,$
                                      XOFFSET   = RescaleMaxcwfieldBaseSize[0],$
@@ -829,14 +836,18 @@ RescaleZMaxCWField = CW_FIELD(RescaleZMaxcwfieldBase,$
                               /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMaxcwfieldLabel,$
-                              UNAME         = 'normalization_rescale_zmax_cwfield')
+                              UNAME         = $
+                              'normalization_rescale_zmax_cwfield')
 
 RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$
                                         VALUE     = RescaleScaleDroplist,$
-                                        XOFFSET   = RescaleScaleDroplistSize[0],$
-                                        YOFFSET   = RescaleScaleDroplistSize[1],$
-                                        UNAME     = 'normalization_rescale_z_droplist',$
-                                        SENSITIVE = 0)
+                                        XOFFSET   = $
+                                        RescaleScaleDroplistSize[0],$
+                                        YOFFSET   = $
+                                        RescaleScaleDroplistSize[1],$
+                                        UNAME     = $
+                                        'normalization_rescale_z_droplist',$
+                                        SENSITIVE = 1)
 
 ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
@@ -844,8 +855,9 @@ ResetZScaleButton = WIDGET_BUTTON(RescaleZBase,$
                                   SCR_XSIZE = ResetScaleButtonSize[2],$
                                   SCR_YSIZE = ResetScaleButtonSize[3],$
                                   VALUE     = ResetZScaleButtonTitle,$
-                                  UNAME     = 'normalization_reset_zaxis_button',$
-                                  SENSITIVE = 0)
+                                  UNAME     = $
+                                  'normalization_reset_zaxis_button',$
+                                  SENSITIVE = 1)
 
 ;full reset
 FullResetButton = WIDGET_BUTTON(RescaleBase,$
@@ -853,8 +865,9 @@ FullResetButton = WIDGET_BUTTON(RescaleBase,$
                                 YOFFSET   = FullResetButtonSize[1],$
                                 SCR_XSIZE = FullResetButtonSize[2],$
                                 SCR_YSIZE = FullResetButtonSize[3],$
-                                UNAME     = 'normalization_full_reset_button',$
+                                UNAME     = $
+                                'normalization_full_reset_button',$
                                 VALUE     = FullResetButtonTitle,$
-                                SENSITIVE = 0)
+                                SENSITIVE = 1)
 
 END

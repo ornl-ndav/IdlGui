@@ -295,10 +295,14 @@ Load_Normalization_D_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
 load_normalization_D_draw = WIDGET_DRAW(load_normalization_D_tab_base,$
                                         XOFFSET       = 0,$
                                         YOFFSET       = 0,$
-                                        X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
-                                        Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
-                                        XSIZE         = GlobalLoadGraphs[2]-20,$
-                                        YSIZE         = GlobalLoadGraphs[3]-24,$
+                                        X_SCROLL_SIZE = $
+                                        GlobalLoadGraphs[2]-20,$
+                                        Y_SCROLL_SIZE = $
+                                        GlobalLoadGraphs[3]-24,$
+                                        XSIZE         = $
+                                        GlobalLoadGraphs[2]-20,$
+                                        YSIZE         = $
+                                        GlobalLoadGraphs[3]-24,$
                                         UNAME         = $
                                         'load_normalization_D_draw',$
                                         RETAIN        = 2,$
@@ -420,7 +424,7 @@ wSaveButton = WIDGET_BUTTON(wRoiBase,$
                             VALUE     = sSaveButton.value,$
                             UNAME     = sSaveButton.uname)
 
-;TAB #1-2 Peak/Back base =======================================================
+;TAB #1-2 Peak/Back base ======================================================
 wPeakBackBase = WIDGET_BASE(wRoiTab,$
                             XOFFSET   = sPeakBackBase.size[0],$
                             YOFFSET   = sPeakBackBase.size[1],$
@@ -560,7 +564,7 @@ wSaveButton = WIDGET_BUTTON(wBackBase,$
                             VALUE     = sBackSaveButton.value,$
                             UNAME     = sBackSaveButton.uname)
 
-;TAB #1-3 Zoom base ============================================================
+;TAB #1-3 Zoom base ===========================================================
 wZoomBase = WIDGET_BASE(wRoiTab,$
                         XOFFSET   = sZoomBase.size[0],$
                         YOFFSET   = sZoomBase.size[1],$
@@ -590,7 +594,7 @@ ContrastDropList = widget_droplist(ContrastBase,$
                                    scr_ysize=ContrastDropListSize[3],$
                                    /tracking_events,$
                                    uname='normalization_contrast_droplist',$
-                                   sensitive=0)
+                                   sensitive=1)
 
 ContrastBottomSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastBottomSliderSize[0],$
@@ -599,11 +603,12 @@ ContrastBottomSlider = widget_slider(ContrastBase,$
                                      scr_ysize=ContrastBottomSliderSize[3],$
                                      minimum=ContrastBottomSliderMin,$
                                      maximum=ContrastBottomSliderMax,$
-                                     uname='normalization_contrast_bottom_slider',$
+                                     uname= $
+                                     'normalization_contrast_bottom_slider',$
                                      /tracking_events,$
                                      title=ContrastBottomSliderTitle,$
                                      value=ContrastBottomSliderDefaultValue,$
-                                     sensitive=0)
+                                     sensitive=1)
 
 ContrastNumberSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastNumberSliderSize[0],$
@@ -612,11 +617,12 @@ ContrastNumberSlider = widget_slider(ContrastBase,$
                                      scr_ysize=ContrastNumberSliderSize[3],$
                                      minimum=ContrastNumberSliderMin,$
                                      maximum=ContrastNumberSliderMax,$
-                                     uname='normalization_contrast_number_slider',$
+                                     uname= $
+                                     'normalization_contrast_number_slider',$
                                      /tracking_events,$
                                      title=ContrastNumberSliderTitle,$
                                      value=ContrastNumberSliderDefaultValue,$
-                                     sensitive=0)
+                                     sensitive=1)
 
 ResetContrastButton = widget_button(ContrastBase,$
                                     xoffset=ResetContrastButtonSize[0],$
@@ -624,8 +630,9 @@ ResetContrastButton = widget_button(ContrastBase,$
                                     scr_xsize=ResetContrastButtonSize[2],$
                                     scr_ysize=ResetContrastButtonSize[3],$
                                     value=ResetContrastButtonTitle,$
-                                    uname='normalization_reset_contrast_button',$
-                                    sensitive=0)
+                                    uname= $
+                                    'normalization_reset_contrast_button',$
+                                    sensitive=1)
 
 
 ;Tab #3 (rescale base)
@@ -681,13 +688,6 @@ RescaleXMaxCWField = cw_field(RescaleXMaxcwfieldBase,$
                              title=RescaleMaxcwfieldLabel,$
                              uname='normalization_rescale_xmax_cwfield')
 
-RescaleXScaleDroplist = widget_droplist(RescaleXBase,$
-                                        value=RescaleScaleDroplist,$
-                                        xoffset=RescaleScaleDroplistSize[0],$
-                                        yoffset=RescaleScaleDroplistSize[1],$
-                                        uname='normalization_rescale_x_droplist',$
-                                        sensitive=0)
-
 ResetXScaleButton = widget_button(RescaleXBase,$
                                   xoffset=ResetScaleButtonSize[0],$
                                   yoffset=ResetScaleButtonSize[1],$
@@ -695,7 +695,7 @@ ResetXScaleButton = widget_button(RescaleXBase,$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetXScaleButtonTitle,$
                                   uname='normalization_reset_xaxis_button',$
-                                  sensitive=0)
+                                  sensitive=1)
 
 ;Y base
 RescaleYLabel = widget_label(RescaleBase,$
@@ -748,7 +748,7 @@ ResetYScaleButton = widget_button(RescaleYBase,$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetYScaleButtonTitle,$
                                   uname='normalization_reset_yaxis_button',$
-                                  sensitive=0)
+                                  sensitive=1)
 
 ;Z base
 RescaleZLabel = widget_label(RescaleBase,$
@@ -798,8 +798,9 @@ RescaleZScaleDroplist = widget_droplist(RescaleZBase,$
                                         value=RescaleScaleDroplist,$
                                         xoffset=RescaleScaleDroplistSize[0],$
                                         yoffset=RescaleScaleDroplistSize[1],$
-                                        uname='normalization_rescale_z_droplist',$
-                                        sensitive=0)
+                                        uname= $
+                                        'normalization_rescale_z_droplist',$
+                                        sensitive=1)
 
 ResetZScaleButton = widget_button(RescaleZBase,$
                                   xoffset=ResetScaleButtonSize[0],$
@@ -808,7 +809,7 @@ ResetZScaleButton = widget_button(RescaleZBase,$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetZScaleButtonTitle,$
                                   uname='normalization_reset_zaxis_button',$
-                                  sensitive=0)
+                                  sensitive=1)
 
 ;full reset
 FullResetButton = widget_button(RescaleBase,$
@@ -818,6 +819,6 @@ FullResetButton = widget_button(RescaleBase,$
                                 scr_ysize=FullResetButtonSize[3],$
                                 uname='normalization_full_reset_button',$
                                 value=FullResetButtonTitle,$
-                                sensitive=0)
+                                sensitive=1)
 
 END
