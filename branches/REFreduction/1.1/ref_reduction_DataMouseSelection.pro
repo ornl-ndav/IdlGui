@@ -74,7 +74,8 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     CASE (mouse_status) OF
         0: Begin
 ;refresh plot
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             
 ;plot y1
             y=event.y
@@ -99,7 +100,8 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
         1:  mouse_status_new = mouse_status
         2:  mouse_status_new = mouse_status
         3: Begin
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             
             y1 = y_array[0]
 ;plot only if y1 is not -1
@@ -122,7 +124,8 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
         end
         4:mouse_status_new = mouse_status
         5:  Begin
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             
             y1 = y_array[0]
 ;plot only if y1 is not -1
@@ -204,7 +207,8 @@ ENDCASE
 
 IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
 
-    RePlot1DDataFile, Event
+    REFReduction_RescaleDataPlot, Event
+;    RePlot1DDataFile, Event
     
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_DATA-1
@@ -275,7 +279,8 @@ IF (ROISignalBackZoomStatus NE 3) then begin
     CASE (mouse_status) OF
         0:mouse_status_new = mouse_status
         1: Begin
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             mouse_status_new = mouse_status
             
 ;check if y2 is not -1
@@ -294,7 +299,8 @@ IF (ROISignalBackZoomStatus NE 3) then begin
         2:mouse_status_new = mouse_status
         3: Begin
 ;refresh plot
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             mouse_status_new = mouse_status
             
 ;check if y1 is not -1
@@ -306,7 +312,8 @@ IF (ROISignalBackZoomStatus NE 3) then begin
             
         END
         4: Begin
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;           RePlot1DDataFile, Event
             
 ;check if y1 is not -1
             y1 = y_array[0]
@@ -390,7 +397,8 @@ IF (ROISignalBackZoomStatus NE 3) then begin
         0:mouse_status_new = mouse_status
         1: Begin
 ;refresh plot
-            RePlot1DDataFile, Event
+            REFReduction_RescaleDataPlot, Event
+;            RePlot1DDataFile, Event
             mouse_status_new = 0
 ;get y mouse
             y=event.y
@@ -409,7 +417,8 @@ IF (ROISignalBackZoomStatus NE 3) then begin
         2: mouse_status_new = mouse_status
         3: mouse_status_new = mouse_status
         4: Begin
-            RePlot1DDataFile, Event
+             REFReduction_RescaleDataPlot, Event
+;           RePlot1DDataFile, Event
             
 ;check if y1 is not -1
             y1 = y_array[0]
