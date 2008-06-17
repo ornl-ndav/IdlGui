@@ -40,6 +40,9 @@ PRO REFreduction_NormBackgroundPeakSelection, Event, type
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;reset plot
+REFReduction_RescaleNormalizationPlot,Event
+
 if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
 
     if ((*global).miniVersion) then begin

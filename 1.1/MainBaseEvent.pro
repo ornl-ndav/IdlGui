@@ -183,7 +183,8 @@ CASE Event.id OF
        SwitchPeakBackgroundDataBase, Event ;_GUIinteraction
        SwitchPeakBackgroundReduceDatabase, Event ;_GUIinteraction
 ;replot the selection activated
-       RePlot1DDataFile, Event
+       REFReduction_RescaleDataPlot,Event
+;       RePlot1DDataFile, Event
        ReplotAllSelection, Event
     END
 
@@ -595,7 +596,8 @@ CASE Event.id OF
        SwitchPeakBackgroundNormBase, Event ;_GUI
        SwitchPeakBackgroundReduceNormBase, Event ;_GUI
 ;replot the selection activated
-       RePlot1DNormFile, Event
+       REFReduction_RescaleNormalizationPlot,Event
+;       RePlot1DNormFile, Event
        ReplotNormAllSelection, Event
     END
 
