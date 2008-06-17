@@ -212,6 +212,9 @@ ENDCASE
 
 IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     
+;replot main plot
+    REFReduction_RescaleNormalizationPlot,Event
+
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_NORM - 1
     
@@ -619,9 +622,6 @@ id_draw = WIDGET_INFO(Event.top, $
                       FIND_BY_UNAME='load_normalization_D_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
-;replot main plot
-REFReduction_RescaleNormalizationPlot,Event
-;RePlot1DNormFile, Event
 
 color   = (*global).roi_selection_color
 y_array = (*(*global).norm_roi_selection)
