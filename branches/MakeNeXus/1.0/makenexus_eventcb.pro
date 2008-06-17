@@ -36,13 +36,13 @@ PRO populateHistogrammingBase, Event, RunNumber, Instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-prenexus_full_path = (*(*global).prenexus_path_array)[0]
-runinfoFullPath  = prenexus_full_path + '/' + Instrument
-runinfoFullPath  += '_' + strcompress(RunNumber,/remove_all)
-runinfoFullPath  += (*global).runinfo_ext
+prenexus_full_path  = (*(*global).prenexus_path_array)[0]
+runinfoFullPath     = prenexus_full_path + '/' + Instrument
+runinfoFullPath    += '_' + strcompress(RunNumber,/remove_all)
+runinfoFullPath    += (*global).runinfo_ext
 
 ;bin type
-BinType = getBinTypeFromDas(Event, runinfoFullPath)
+BinType = getBinTypeFromDas(Event, runinfoFullath)
 (*global).BinType = BinType
 IF (BinType EQ 'linear') THEN BEGIN
     index = 0
@@ -52,6 +52,7 @@ ENDELSE
 setHistogrammingTypeValue, Event, index
 
 ;bin offset
+
 BinOffset = getBinOffsetFromDas(Event, runinfoFullPath)
 (*global).BinOffset = BinOffset
 putTextField, Event, 'time_offset', BinOffset

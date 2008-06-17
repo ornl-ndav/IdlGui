@@ -139,12 +139,15 @@ FUNCTION getNbrPolaState, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 0
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        return, 0
+        appendMyLogBook, Event, 'ERROR in getNbrPolaState: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('States')
@@ -163,12 +166,15 @@ FUNCTION getBinTypeFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 'linear'
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        return, 0
+        appendMyLogBook, Event, 'ERROR in getBinTypeFromDas: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('Scattering')
@@ -189,12 +195,15 @@ FUNCTION getBinOffsetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '0'
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        return, 0
+        appendMyLogBook, Event, 'ERROR in getBinOffsetFromDas: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('Scattering')
@@ -215,12 +224,15 @@ FUNCTION getBinMaxSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '100000'
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        return, 0
+        appendMyLogBook, Event, 'ERROR in getBinMaxSetFromDas: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('Scattering')
@@ -241,12 +253,15 @@ FUNCTION getBinWidthSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '200'
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        return, 0
+        appendMyLogBook, Event, 'ERROR in getBinWidthFromDas: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('Scattering')
@@ -269,12 +284,15 @@ file_name = base_file_name + '_runinfo.xml'
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     RETURN, '77824' ;REF_L
 ENDIF ELSE BEGIN
-    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0
     CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
-        RETURN, 0
+        appendMyLogBook, Event, 'ERROR in getTotalNbrPixel: ' + $
+          !ERROR_STATE.MSG
+        CATCH,/CANCEL
+        RETURN, '0'
     ENDIF ELSE BEGIN
+        oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
         obj1 = oDocList->item(0)
         obj2=obj1->GetElementsByTagName('MaxScatPixelID')
