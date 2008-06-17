@@ -402,6 +402,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).data_peak_selection) = [-1,-1]
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
+(*(*global).data_roi_selection)  = [-1,-1]
+(*(*global).norm_roi_selection)  = [-1,-1]
 
 (*global).UpDownMessage = 'Use U(up) or D(down) to move selection ' + $
   'vertically pixel per pixel.' 

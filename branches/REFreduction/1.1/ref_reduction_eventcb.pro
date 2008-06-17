@@ -199,7 +199,7 @@ IF ((*global).isHDF5format) THEN BEGIN
           ' Done', $
           (*global).processing_message
         
-;display full path to NeXus in Norm log book
+;display full path to NeXus in data log book
         full_nexus_name = (*global).data_full_nexus_name
         text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
         putDataLogBookMessage, Event, text, Append=1
