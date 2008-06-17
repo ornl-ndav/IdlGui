@@ -66,7 +66,7 @@ MainPlotBase = Widget_base(PLOTS_BASE,$
                            YOFFSET   = MainPlotBaseSize[1],$
                            SCR_XSIZE = MainPlotBaseSize[2],$
                            SCR_YSIZE = MainPlotBaseSize[3],$
-                           FRAME     = 3)
+                           FRAME     = 0)
                           
 ;drawing region
 MainPlotDraw = widget_draw(MainPlotBase,$
@@ -75,16 +75,6 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            YOFFSET   = MainPlotDrawSize[1],$
                            SCR_XSIZE = MainPlotDrawSize[2],$
                            SCR_YSIZE = MainPlotDrawSize[3])
-
-;text field
-PlotTextField = widget_text(MainPlotBase,$
-                            XOFFSET   = PlotTextFieldSize[0],$
-                            YOFFSET   = PlotTextFieldSize[1],$
-                            SCR_XSIZE = PlotTextFieldSize[2],$
-                            SCR_YSIZE = PlotTextFieldSize[3],$
-                            UNAME     ='plots_text_field',$
-                            /SCROLL,$
-                            /WRAP)
 
 ;Plot output File name button
 wPlotFileNameButton = WIDGET_BUTTON(PLOTS_BASE,$

@@ -358,23 +358,15 @@ IF ((*global).DataReductionStatus EQ 'OK') then begin
     FullXmlFileName    = getXmlFileName(FullOutputFileName)
 
 ;get metadata
-    NbrLine = (*global).PreviewFileNbrLine
-    RefReduction_SaveFileInfo, Event, FullOutputFileName, NbrLine
     RefReduction_SaveXmlInfo, Event,  FullXmlFileName
     
-;Display main data reduction metadata in Plots tab
-;and XML file in Reduce tab
-    RefReduction_DisplayMainDataReductionMetadataFile, Event
+;Display XML file in Reduce tab
     REfReduction_DisplayXmlFile, Event
     
-;Load main data reduction and all intermediate files (if any)
+;Load main data reduction File and 
 ;get flt0, flt1 and flt2 and put them into array
     RefReduction_LoadMainOutputFile, Event, FullOutputFileName
-;;    RefReduction_LoadXmlOutputFile, Event, FilesToPlotList[1]
-;;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
     
-;    RefReduction_UpdatePlotsGui, Event
-
 ;;Plot main data reduction plot for the first time
     RefReduction_PlotMainDataReductionFileFirstTime, Event
     
