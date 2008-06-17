@@ -88,15 +88,4 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            SCR_XSIZE = MainPlotDrawSize[2],$
                            SCR_YSIZE = MainPlotDrawSize[3])
 
-;text field
-PlotTextField = widget_text(MainPlotBase,$
-                            XOFFSET   = PlotTextFieldSize[0],$
-                            YOFFSET   = PlotTextFieldSize[1],$
-                            SCR_XSIZE = PlotTextFieldSize[2],$
-                            SCR_YSIZE = PlotTextFieldSize[3],$
-                            UNAME     ='plots_text_field',$
-                            /SCROLL,$
-                            /WRAP)
-
-                                                            
 END
