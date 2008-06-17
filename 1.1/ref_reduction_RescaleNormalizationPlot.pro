@@ -256,5 +256,9 @@ NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
 loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
 
 tvscl, tvimg
+
+;Replot all selection if any
+ReplotNormAllSelection, Event
+
 END
 
