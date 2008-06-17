@@ -726,14 +726,14 @@ RescaleXMaxCWField = CW_FIELD(RescaleXMaxcwfieldBase,$
                               UNAME         = 'data_rescale_xmax_cwfield',$
                               /FLOAT)
 
-RescaleXScaleDroplist = WIDGET_DROPLIST(RescaleXBase,$
-                                       VALUE     = RescaleScaleDroplist,$
-                                        XOFFSET   = $
-                                        RescaleScaleDroplistSize[0],$
-                                        YOFFSET   = $
-                                        RescaleScaleDroplistSize[1],$
-                                       UNAME     = 'data_rescale_x_droplist',$
-                                       SENSITIVE = 0)
+;RescaleXScaleDroplist = WIDGET_DROPLIST(RescaleXBase,$
+;                                       VALUE     = RescaleScaleDroplist,$
+;                                        XOFFSET   = $
+;                                        RescaleScaleDroplistSize[0],$
+;                                        YOFFSET   = $
+;                                        RescaleScaleDroplistSize[1],$
+;                                       UNAME     = 'data_rescale_x_droplist',$
+;                                       SENSITIVE = 0)
 
 ResetXScaleButton = WIDGET_BUTTON(RescaleXBase,$
                                   XOFFSET   = ResetScaleButtonSize[0],$
