@@ -285,8 +285,6 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     putLogBookMessage, Event, LogBookText, Append=1
 ;dump binary data into local directory of user
     working_path = (*global).working_path
-    LogBookText = '----> Dump binary data at this location: ' + working_path
-    putLogBookMessage, Event, LogBookText, Append=1
     REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFiles and and put it in its box

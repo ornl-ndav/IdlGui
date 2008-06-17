@@ -131,8 +131,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 PROCESSING = (*global).processing_message ;processing message
 ;display in log book what is going on
-cmd = 'Retrieving data ... ' + PROCESSING
-cmd_text = '        > ' + cmd
+cmd_text = '----> Retrieving data ... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 retrieveBanksData, Event, full_nexus_name, type
 ;tells user that dump is done
