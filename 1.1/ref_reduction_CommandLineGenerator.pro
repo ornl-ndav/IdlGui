@@ -578,7 +578,14 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN $
 endif
 
 ;get name from output path and name
-outputPath        = (*global).dr_output_path
+outputPath        = getOutputPathFromButton(Event)
+;check that user have access to that folder
+IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
+    StatusMessage += 1
+    status_text    = '- PERMISSION ERROR : you do not have the permission to '
+    status_text   += 'write in this folder. Please select another folder !'
+    putInfoInReductionStatus, Event, status_text, append
+ENDIF
 outputFileName    = getOutputFileName(Event)
 NewOutputFileName = outputPath + outputFileName
 cmd              += ' --output=' + NewOutputFileName
