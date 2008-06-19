@@ -12,6 +12,7 @@ resolve_routine, "errplot",/either
 resolve_routine, "uniq",/either
 resolve_routine, "ZOOM",/either
 resolve_routine, "CW_FIELD",/either
+resolve_routine, "XDISPLAYFILE",/either
 
 save,/routines,filename = 'ref_reduction.sav'
 exit
