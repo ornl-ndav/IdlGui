@@ -36,6 +36,16 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
+MainPlotBaseSize          = [200, $
+                             40, $
+                             780, $
+                             800]
+
+RefreshButton = { size: [0,2,150,30],$
+                  uname: 'refresh_plot_button',$
+                  value: 'REFRESH PLOT',$
+                  sensitive: 0}
+
 PlotsFileNameButton = {size: [200,$
                               2,$
                               780,$
@@ -44,20 +54,15 @@ PlotsFileNameButton = {size: [200,$
                        uname: 'plot_file_name_button',$
                        sensitive: 0}
 
-MainPlotBaseSize          = [200, $
-                             40, $
-                             780, $
-                             800]
+MainPlotDrawSize = [0, $
+                    0, $
+                    MainPlotBaseSize[2], $
+                    MainPlotBasesize[3]-190]
 
-MainPlotDrawSize          = [0, $
-                             0, $
-                             MainPlotBaseSize[2], $
-                             MainPlotBasesize[3]-190]
-
-PlotTextFieldSize         = [0, $
-                             MainPlotDrawSize[1]+MainPlotDrawSize[3],$
-                             MainPlotBaseSize[2], $
-                             190]
+PlotTextFieldSize = [0, $
+                     MainPlotDrawSize[1]+MainPlotDrawSize[3],$
+                     MainPlotBaseSize[2], $
+                     190]
 
 ;############### BUILD WIDGETS ##########################################
 MainPlotBase = Widget_base(PLOTS_BASE,$
@@ -67,6 +72,16 @@ MainPlotBase = Widget_base(PLOTS_BASE,$
                            SCR_XSIZE = MainPlotBaseSize[2],$
                            SCR_YSIZE = MainPlotBaseSize[3],$
                            FRAME     = 0)
+
+;Refresh plot button
+wRefreshButton =  WIDGET_BUTTON(PLOTS_BASE,$
+                                XOFFSET   = RefreshButton.size[0],$
+                                YOFFSET   = RefreshButton.size[1],$
+                                SCR_XSIZE = RefreshButton.size[2],$
+                                SCR_YSIZE = RefreshButton.size[3],$
+                                UNAME     = RefreshButton.uname,$
+                                VALUE     = RefreshButton.value,$
+                                SENSITIVE = RefreshButton.sensitive)
                           
 ;drawing region
 MainPlotDraw = widget_draw(MainPlotBase,$

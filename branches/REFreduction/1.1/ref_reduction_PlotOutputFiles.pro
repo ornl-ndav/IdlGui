@@ -23,7 +23,7 @@ WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
 DEVICE, DECOMPOSED = 0
-loadct,5
+loadct,5, /SILENT
 
 file_path    = getOutputPathFromButton(Event)
 file_name    = getOutputFileName(Event)
@@ -60,7 +60,7 @@ ENDIF ELSE BEGIN
 
 ;Show error message base    
     MapStatus = 1
-
+    
     plot,flt0,flt1
     errplot, flt0,flt1-flt2,flt1+flt2
 
@@ -68,6 +68,7 @@ ENDELSE
 
 putLabelValue, Event, 'plot_file_name_button', FullFileName[0]
 ActivateWidget, Event, 'plot_file_name_button', MapStatus
+ActivateWidget, Event, 'refresh_plot_button', MapStatus
 
 ;MapBase, Event, 'plots_error_base', MapStatus
 

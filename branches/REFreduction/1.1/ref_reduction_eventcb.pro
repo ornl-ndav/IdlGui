@@ -394,7 +394,7 @@ endelse
 
 END
 
-
+;==============================================================================
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
 ;get global structure
@@ -427,7 +427,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     (*global).PrevTabSelect = CurrTabSelect
 ENDIF
 END
-
+;==============================================================================
 
 ;This function is trigerred each time the user changes the NXsummary
 ;and zoom tab of the data tab
