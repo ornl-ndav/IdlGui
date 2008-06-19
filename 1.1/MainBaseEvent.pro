@@ -1181,6 +1181,7 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmax_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_z_droplist')  : BEGIN
         REFreduction_RescaleDataPlot, Event
+        ReplotAllSelection, Event
     END
     ELSE:
 ENDSWITCH
