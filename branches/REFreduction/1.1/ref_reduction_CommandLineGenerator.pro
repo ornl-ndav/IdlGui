@@ -581,9 +581,14 @@ endif
 outputPath        = getOutputPathFromButton(Event)
 ;check that user have access to that folder
 IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
-    StatusMessage += 1
     status_text    = '- PERMISSION ERROR : you do not have the permission to '
     status_text   += 'write in this folder. Please select another folder !'
+    IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+    ENDIF ELSE BEGIN
+        append = 0
+    ENDELSE
+    StatusMessage += 1
     putInfoInReductionStatus, Event, status_text, append
 ENDIF
 outputFileName    = getOutputFileName(Event)
