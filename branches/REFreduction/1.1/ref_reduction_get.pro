@@ -57,20 +57,19 @@ FUNCTION getNormalizationLogBookText, Event
 return, getTextFieldValue(Event, 'normalization_log_book_text_field')
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION getOutputPathFromButton, Event
-id = widget_info(Event.top,find_by_uname='of_button')
-widget_control, id, get_value=value
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='of_button')
+WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION getXmlFileName, FullOutputFileName
 file_name_base = STRSPLIT(FullOutputFileName,'.txt',/EXTRACT)
 xml_file_name  = file_name_base[0] + '.rmd'
 RETURN, STRING(xml_file_name[0])
 END
-
 
 FUNCTION getOutputFileName, Event
 id = widget_info(Event.top,find_by_uname='of_text')
@@ -126,7 +125,7 @@ widget_control, id, get_value=list
 return, list[index_selected]
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;This function returns the full path name of all the file to plot
 FUNCTION getListOfFilestoPlot, Event, $
@@ -264,7 +263,7 @@ File = FullArray[length-1]
 RETURN, ['/' + Path + '/', File]
 END
 
-;----------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function gives the runs from the list of full nexus file names
 FUNCTION get_runs_from_NeXus_full_path, list_OF_nexus_file_name, type
 IF (type EQ 'data') THEN BEGIN

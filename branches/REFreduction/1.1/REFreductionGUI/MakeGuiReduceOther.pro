@@ -112,7 +112,8 @@ StartDRButtonSize = [XYoff[0], $
                      OIGlabelSize[1]+d_vertical_L_L+30,$
                      462, $
                      40]
-StartDRButtonTitle = '  >  > >> S T A R T    D A T A    R E D U C T I O N << <  <'
+StartDRButtonTitle = '  >  > >> S T A R T    D A T A   ' + $
+  ' R E D U C T I O N << <  <'
 
 ;command line preview/generator
 d_vertical_L_L_2       = d_vertical_L_L + 10
@@ -306,7 +307,8 @@ text = WIDGET_TEXT(REDUCE_BASE,$
 
 ;Start data reduction button
 StartDataReductionButton = WIDGET_BUTTON(REDUCE_BASE,$
-                                         UNAME     = 'start_data_reduction_button',$
+                                         UNAME     = $
+                                         'start_data_reduction_button',$
                                          XOFFSET   = StartDRButtonSize[0],$
                                          YOFFSET   = StartDRButtonSize[1],$
                                          SCR_XSIZE = StartDRButtonSize[2],$
