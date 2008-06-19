@@ -48,7 +48,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;=======================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow'
-VERSION            = '1.1.4'
+VERSION            = '1.1.5'
 DEBUGGING_VERSION  = 'no'
 MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
