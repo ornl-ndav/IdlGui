@@ -44,6 +44,11 @@ PlotsFileNameButton = {size: [150,$
                        uname: 'plot_file_name_button',$
                        sensitive: 0}
 
+RefreshButton = { size: [0,2,150,30],$
+                  uname: 'refresh_plot_button',$
+                  value: 'REFRESH PLOT',$
+                  sensitive: 0}
+
 MainPlotBaseSize          = [150, $
                              5, $
                              600, $
@@ -79,8 +84,18 @@ MainPlotBase = Widget_base(PLOTS_BASE,$
                            YOFFSET   = MainPlotBaseSize[1],$
                            SCR_XSIZE = MainPlotBaseSize[2],$
                            SCR_YSIZE = MainPlotBaseSize[3])
+
+;Refresh plot button
+wRefreshButton =  WIDGET_BUTTON(PLOTS_BASE,$
+                                XOFFSET   = RefreshButton.size[0],$
+                                YOFFSET   = RefreshButton.size[1],$
+                                SCR_XSIZE = RefreshButton.size[2],$
+                                SCR_YSIZE = RefreshButton.size[3],$
+                                UNAME     = RefreshButton.uname,$
+                                VALUE     = RefreshButton.value,$
+                                SENSITIVE = RefreshButton.sensitive)
                           
-                          ;drawing region
+;Drawing region
 MainPlotDraw = widget_draw(MainPlotBase,$
                            UNAME     = 'main_plot_draw',$
                            XOFFSET   = MainPlotDrawSize[0],$

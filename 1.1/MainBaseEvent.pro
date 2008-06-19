@@ -1018,6 +1018,11 @@ CASE Event.id OF
         DisplayPreviewOfFile, Event ;_PlotOutputFiles
     end
     
+    ;REFRESH plot
+    widget_info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
+        RefReduction_PlotMainDataReductionFileFirstTime, Event
+    end
+
 ;******************************************************************************
 ; BATCH MODE TAB
 ;******************************************************************************
