@@ -14,6 +14,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.1.4'
 DEBUGGING_VERSION  = 'yes'
+MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -39,6 +40,7 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    mouse_debugging: MOUSE_DEBUGGING,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$

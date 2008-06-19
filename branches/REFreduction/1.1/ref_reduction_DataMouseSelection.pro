@@ -70,17 +70,19 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     xsize_1d_draw = (*global).Ntof_DATA-1
     
     mouse_status = (*global).select_data_status
-;print, 'PressLeft mouse_status: ' + strcompress(mouse_status)
+    IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
+        print, 'PressLeft mouse_status: ' + strcompress(mouse_status)
+    ENDIF
+
     CASE (mouse_status) OF
         0: Begin
 ;refresh plot
             REFReduction_RescaleDataPlot, Event
-;            RePlot1DDataFile, Event
             
 ;plot y1
-            y=event.y
-            plots, 0, y, /device, color=color
-            plots, xsize_1d_draw, y, /device, /continue, color=color
+            y1=event.y
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
             
             y2=y_array[1]
 ;plot only if y2 is not -1         
@@ -111,9 +113,9 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
             endif
             
 ;plot y2
-            y=event.y
-            plots, 0, y, /device, color=color
-            plots, xsize_1d_draw, y, /device, /continue, color=color
+            y2=event.y
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
             mouse_status_new = 4
 
             UpDownMessage = (*global).UpDownMessage
@@ -134,9 +136,9 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
                 plots, xsize_1d_draw, y1, /device, /continue, color=color
             endif
             
-            y=event.y
-            plots, 0, y, /device, color=color
-            plots, xsize_1d_draw, y, /device, /continue, color=color
+            y2=event.y
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
             
             mouse_status_new = 4
 
@@ -147,6 +149,19 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
 
         end
     endcase
+
+CASE (ROISignalBackZoomStatus) OF
+    0: BEGIN                    ;ROI
+        (*(*global).data_roi_selection) = [y1,y2]
+    END
+    1: BEGIN                    ;signal
+        (*(*global).data_peak_selection) = [y1,y2]
+    END
+    2: BEGIN                    ;back
+        (*(*global).data_back_selection) = [y1,y2]
+    END
+        ELSE:
+ENDCASE
 
 ;This function replot the other selection 
     ReplotOtherSelection, Event, ROIsignalBackZoomStatus
@@ -214,7 +229,9 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     xsize_1d_draw = (*global).Ntof_DATA-1
     
     mouse_status = (*global).select_data_status
-;print, 'PressRight mouse_status: ' + strcompress(mouse_status)
+IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
+    print, 'PressRight mouse_status: ' + strcompress(mouse_status)
+ENDIF
     CASE (mouse_status) OF
         0: BEGIN
             mouse_status_new = 3
@@ -226,6 +243,9 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
         5: mouse_status_new = 0
     ENDCASE
     
+;update Back and Peak Ymin and Ymax cw_fields
+    putDataBackgroundPeakYMinMaxValueInTextFields, Event
+
 ;replot other selections    
     ReplotAllSelection, Event
     
@@ -234,8 +254,6 @@ IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
     
     (*global).select_data_status = mouse_status_new
     
-;update Back and Peak Ymin and Ymax cw_fields
-    putDataBackgroundPeakYMinMaxValueInTextFields, Event
     
 ENDIF                           ;end of not zoom selected
 
@@ -275,7 +293,9 @@ IF (ROISignalBackZoomStatus NE 3) then begin
     xsize_1d_draw = (*global).Ntof_DATA-1
     
     mouse_status = (*global).select_data_status
-;print, 'Move mouse_status: ' + strcompress(mouse_status)
+IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
+    print, 'Move mouse_status: ' + strcompress(mouse_status)
+ENDIF
     CASE (mouse_status) OF
         0:mouse_status_new = mouse_status
         1: Begin
@@ -291,9 +311,9 @@ IF (ROISignalBackZoomStatus NE 3) then begin
             endif
             
 ;refresh plot
-            y=event.y
-            plots, 0, y, /device, color=color
-            plots, xsize_1d_draw, y, /device, /continue, color=color
+            y1=event.y
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
             
         END
         2:mouse_status_new = mouse_status
@@ -322,9 +342,9 @@ IF (ROISignalBackZoomStatus NE 3) then begin
                 plots, xsize_1d_draw, y1, /device, /continue, color=color
             endif
             
-            y=event.y
-            plots, 0, y, /device, color=color
-            plots, xsize_1d_draw, y, /device, /continue, color=color
+            y2=event.y
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
             mouse_status_new = mouse_status
             
         END
@@ -392,7 +412,9 @@ IF (ROISignalBackZoomStatus NE 3) then begin
 ;where to stop the plot of the lines
     xsize_1d_draw = (*global).Ntof_DATA-1
     
-;print, 'Release mouse_status: ' + strcompress(mouse_status)
+IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
+    print, 'Release mouse_status: ' + strcompress(mouse_status)
+ENDIF
     CASE (mouse_status) OF
         0:mouse_status_new = mouse_status
         1: Begin
@@ -626,6 +648,7 @@ WSET,id_value
 
 color   = (*global).roi_selection_color
 y_array = (*(*global).data_roi_selection)
+
 IF (y_array[0] NE -1) THEN BEGIN
     PLOTS, 0, y_array[0], /DEVICE, COLOR=color
     PLOTS, xsize_1d_draw, y_array[0], $

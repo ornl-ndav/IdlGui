@@ -50,6 +50,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'REFreductionLow'
 VERSION            = '1.1.4'
 DEBUGGING_VERSION  = 'no'
+MOUSE_DEBUGGING    = 'yes'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -76,6 +77,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    mouse_debugging: MOUSE_DEBUGGING,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$
