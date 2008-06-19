@@ -152,6 +152,8 @@ END
 PRO REFreduction_ResetXNormPlot, Event
 REFreduction_Rescale_ResetNormGui,Event,x=1,y=0,z=0
 REFReduction_RescaleNormalizationPlot,Event
+;Replot all selection if any
+ReplotNormAllSelection, Event
 END
 
 
@@ -160,6 +162,8 @@ END
 PRO REFreduction_ResetYNormPlot, Event
 REFreduction_Rescale_ResetNormGui,Event,x=0,y=1,z=0
 REFReduction_RescaleNormalizationPlot,Event
+;Replot all selection if any
+ReplotNormAllSelection, Event
 END
 
 
@@ -168,6 +172,8 @@ END
 PRO REFreduction_ResetZNormPlot, Event
 REFreduction_Rescale_ResetNormGui,Event,x=0,y=0,z=1
 REFReduction_RescaleNormalizationPlot,Event
+;Replot all selection if any
+ReplotNormAllSelection, Event
 END
 
 
@@ -179,9 +185,10 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 tvimg = (*(*global).tvimg_norm_ptr)
 REFreduction_Rescale_PlotNorm, Event, tvimg
-
 ;reset Data Rescale Gui
 REFreduction_Rescale_ResetNormGui,Event,x=1,y=1,z=1
+;Replot all selection if any
+ReplotNormAllSelection, Event
 END
 
 
@@ -256,9 +263,6 @@ NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
 loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
 
 tvscl, tvimg
-
-;Replot all selection if any
-ReplotNormAllSelection, Event
 
 END
 

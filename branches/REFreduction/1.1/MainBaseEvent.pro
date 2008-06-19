@@ -1197,6 +1197,7 @@ SWITCH Event.id OF
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_rescale_z_droplist'): begin
         REFreduction_RescaleNormalizationPlot, Event
+        ReplotNormAllSelection, Event
     end
     Else:
 ENDSWITCH
