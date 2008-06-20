@@ -79,6 +79,11 @@ CASE Event.id OF
         validateOrNotGoButton, Event
     end
 
+;Preview of Runinfo file
+    widget_info(wWidget, FIND_BY_UNAME='preview_button'): begin
+        PreviewOfRunInfoFile, Event
+    end
+
 ;Run Number 
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
         run_number, Event       ;in _eventcb
