@@ -159,8 +159,16 @@ ENDIF ELSE BEGIN
     
     close,u
     free_lun,u
+
+    sz = (size(flt1))(1)  
+    IF (sz LE 1) THEN BEGIN
+        message_text = ['ERROR loading ' + LongFileName,$
+                        'File is probably empty !']
+        title        = 'ERROR !'
+        result = DIALOG_MESSAGE(message_text,TITLE=title)
+        RETURN, 0
+    ENDIF
     
-    ;CATCH,/CANCEL
     DEVICE, DECOMPOSED = 0
     loadct,5,/SILENT
     
