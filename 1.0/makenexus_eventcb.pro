@@ -31,7 +31,22 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO PreviewOfRunInfoFile, Event
+runinfo_filename = getRuninfoFileName(Event)
+runinfo_filename = STRCOMPRESS(runinfo_filename,/REMOVE_ALL)
+index            = getSelectedPreviewIndex(Event)
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+;/REF_M-DAS-FS/IPTS-558/REF_M_3890
+prenexus_path  = (*(*global).prenexus_path_array) 
 
+full_file_name = prenexus_path[index] + '/' + runinfo_filename
+
+title = 'Preview of ' + full_file_name
+XDISPLAYFILE, full_file_name, TITLE = title
+END
+
+;------------------------------------------------------------------------------
 PRO populateHistogrammingBase, Event, RunNumber, Instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -224,6 +239,10 @@ binWidth = getBinWidth(Event)
 binMax   = getBinMax(Event)
 binMin   = getBinOffset(Event)
 
+IF (validate_go EQ 1) THEN BEGIN
+    populateRunInfoDroplist, Event
+ENDIF
+
 IF (validate_go EQ 1 AND $
     (binWidth EQ '0' OR $
      binMax EQ binMin)) THEN BEGIN
@@ -231,7 +250,10 @@ IF (validate_go EQ 1 AND $
     appendLogBook, Event, text
     text = 'Please enter Time Min, Time Max and Bin Size'
     appendLogBook, Event, text
-ENDIF
+ENDIF 
+
+;validate or not the histo base
+validateHistoBase, Event, validate_go
 
 (*global).validate_go = validate_go
 END

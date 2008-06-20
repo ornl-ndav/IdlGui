@@ -142,10 +142,10 @@ instrumentShortList = ['',$
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
-    MainBaseSize  = [700,500,450,410]
+    MainBaseSize  = [700,500,450,430]
     MainBaseTitle = 'Make NeXus - ' + VERSION
 ENDIF ELSE BEGIN
-    MainBaseSize  = [100,50,850,630]
+    MainBaseSize  = [100,50,850,640]
     MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
 ENDELSE
 

@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO MakeGui, MAIN_BASE, $
              MainBaseSize, $
@@ -69,9 +69,10 @@ instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
 XYoff = [10,40]
 BinningBase = { size  : [base.size[0]+XYoff[0],$
                          run_number_base.size[1]+XYoff[1],$
-                         430,40],$
+                         430,70],$
                 uname : 'binning_base',$
-                frame : 1}
+                frame : 1,$
+                sensitive : 0}
                          
 XYoff = [5,10]
 offsetLabel = { size  : [XYoff[0],$
@@ -109,9 +110,22 @@ binTypeDroplist = { size  : [binText.size[0]+binText.size[2]+XYoff[0],$
                     uname : 'bin_type_droplist',$
                     list  : ['Linear','Log.']}
 
+XYoff     = [0,25]
+sPreviewDroplist = { size: [XYoff[0],$
+                            offsetLabel.size[1]+XYOff[1]],$
+                     value: ['                                 '],$
+                     uname: 'preview_droplist'}
+
+XYoff     = [255,3]                            
+sPreview  = { size: [sPreviewDroplist.size[0]+XYoff[0],$
+                     sPreviewDroplist.size[1]+XYoff[1],$
+                     170,29],$
+              uname: 'preview_button',$
+              value: '-> PREVIEW OF RUNINFO FILE'}
+
 ;------------------------------------------------------------------------------
 
-XYoff = [0,48]
+XYoff = [0,80]
 output_button = { size  : [BinningBase.size[0]+XYoff[0],$
                            BinningBase.size[1]+XYoff[1],$
                            130,35],$
@@ -136,7 +150,7 @@ button_list = { list : ['Copy -> Instrument Shared Folder',$
 
 ;------------------------------------------------------------------------------
 
-XYoff = [0,45]
+XYoff = [0,35]
 IF (ArchivedUser) THEN BEGIN
     XSIZE = 300
 ENDIF ELSE BEGIN
@@ -163,7 +177,7 @@ ENDIF
 
 ;------------------------------------------------------------------------------
 
-XYOFF = [0,45]
+XYOFF = [0,40]
 log_book = { size  : [go_button.size[0]+XYoff[0],$
                       go_button.size[1]+XYoff[1],$
                       430,150],$
@@ -237,7 +251,8 @@ BinningBase = WIDGET_BASE(base,$
                           SCR_XSIZE  = BinningBase.size[2],$
                           SCR_YSIZE  = BinningBase.size[3],$
                           UNAME      = BinningBase.uname,$
-                          FRAME      = BinningBase.frame)
+                          FRAME      = BinningBase.frame,$
+                          SENSITIVE  = BinningBase.sensitive)
 
 wOffsetLabel = WIDGET_LABEL(BinningBase,$
                             XOFFSET = offsetLabel.size[0],$
@@ -292,7 +307,21 @@ wDroplist2 = WIDGET_DROPLIST(BinningBase,$
                              SENSITIVE = 1,$
                              /DYNAMIC_RESIZE)
 
-;- Main Output Path ------------------------------------------------------------
+wPreviewDroplist = WIDGET_DROPLIST(BinningBase,$
+                                   VALUE   = sPreviewDroplist.value,$
+                                   XOFFSET = sPreviewDroplist.size[0],$
+                                   YOFFSET = sPreviewDroplist.size[1],$
+                                   UNAME   = sPreviewDroplist.uname)
+
+wPreview = WIDGET_BUTTON(BinningBase,$
+                         VALUE     = sPreview.value,$
+                         XOFFSET   = sPreview.size[0],$
+                         YOFFSET   = sPreview.size[1],$
+                         SCR_XSIZE = sPreview.size[2],$
+                         SCR_YSIZE = sPreview.size[3],$
+                         UNAME     = sPreview.uname)
+
+;- Main Output Path -----------------------------------------------------------
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = output_button.size[0],$

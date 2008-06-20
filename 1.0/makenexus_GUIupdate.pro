@@ -96,3 +96,54 @@ PRO setProposalDroplistIndex, Event, index
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 WIDGET_CONTROL, id, SET_DROPLIST_SELECT=index
 END
+
+;------------------------------------------------------------------------------
+;This function validate the histogramming base
+PRO validateHistoBase, Event, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='binning_base')
+WIDGET_CONTROL, id, SENSITIVE=status
+END
+
+;------------------------------------------------------------------------------
+PRO UpdateRunInfoDroplist, Event, prenexus_path_array
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='preview_droplist')
+WIDGET_CONTROL, id, SET_VALUE=prenexus_path_array
+END
+
+;------------------------------------------------------------------------------
+PRO populateRunInfoDroplist, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+;_runinfo.xml
+runinfo_ext    = (*global).runinfo_ext
+;3890                   
+run_number     = (*(*global).RunNumber_array)
+sz             = (size(run_number))(1)
+;instrument
+instrument     = getInstrument(Event)
+
+prenexus_path = STRARR(sz)
+prenexus_path += instrument
+prenexus_path += '_'
+prenexus_path += run_number
+prenexus_path += runinfo_ext
+
+;determine which string is longer
+max = 0
+FOR i=0,(sz-1) DO BEGIN
+    IF (strlen(prenexus_path[i]) GE max) THEN BEGIN
+        max = strlen(prenexus_path[i])
+    ENDIF
+ENDFOR
+
+spc_size = 33
+IF (max LT spc_size) THEN BEGIN
+    spc = ''
+    FOR i=0,(spc_size-max) DO BEGIN
+        spc += ' '
+    ENDFOR
+    prenexus_path += spc
+ENDIF
+
+UpdateRunInfoDroplist, Event, prenexus_path
+END

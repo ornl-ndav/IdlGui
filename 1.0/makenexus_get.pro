@@ -388,4 +388,19 @@ ENDELSE
 RETURN, 0
 END
 
+;------------------------------------------------------------------------------
+;Get the selected runinfo from the droplist
+FUNCTION getRunInfoFileName, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='preview_droplist')
+index = WIDGET_INFO(id, /DROPLIST_SELECT)
+WIDGET_CONTROL, id, GET_VALUE=list
+RETURN, list[index]
+END
 
+;------------------------------------------------------------------------------
+;Get the selected runinfo index
+FUNCTION getSelectedPreviewIndex, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='preview_droplist')
+index = WIDGET_INFO(id, /DROPLIST_SELECT)
+RETURN, index
+END
