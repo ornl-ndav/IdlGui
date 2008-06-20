@@ -68,9 +68,10 @@ sPreviewBatch = { size:  [sLoadBatchText.size[0]+$
 
 ;Batch Table ------------------------------------------------------------------
 XYoff = [0,5]
-NbrRow = 20
-RowAlign   = [0,0,1,1]
-TableAlign = INTARR(4,NbrRow)
+NbrRow     = 20
+NbrColumn  = 5
+RowAlign   = [0,0,0,1,1]
+TableAlign = INTARR(NbrColumn,NbrRow)
 FOR i=0,(NbrRow-1) DO BEGIN
     TableAlign(*,i)=RowAlign
 ENDFOR
@@ -79,16 +80,17 @@ dTable = { size      : [XYoff[0], $
                         XYoff[1], $
                         StepsTabSize[2]-5, $
                         300, $
-                        4, $
+                        NbrColumn, $
                         NbrRow],$
            uname     : 'ref_scale_batch_table_widget',$
            sensitive : 1,$
-           label     : ['DATA RUNS', $
+           label     : ['ACTIVE',$
+                        'DATA RUNS', $
                         'NORM. RUNS',$
                         'SF',$
                         'DATE'],$
            align        : TableAlign,$
-           column_width : [140,140,60,160]}
+           column_width : [40,140,140,60,160]}
 
 ;Refresh bash file button -----------------------------------------------------
 XYoff = [0,5]
