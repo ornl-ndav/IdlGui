@@ -290,6 +290,7 @@ ENDIF ELSE BEGIN
         appendMyLogBook, Event, 'ERROR in getTotalNbrPixel: ' + $
           !ERROR_STATE.MSG
         CATCH,/CANCEL
+        OBJ_DESTROY, oDocList
         RETURN, '0'
     ENDIF ELSE BEGIN
         oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)

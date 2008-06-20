@@ -68,6 +68,17 @@ CASE Event.id OF
         ENDELSE
     END
 
+;Histogramming parameters
+    widget_info(wWidget, FIND_BY_UNAME='time_offset'): begin
+        validateOrNotGoButton, Event
+    end
+    widget_info(wWidget, FIND_BY_UNAME='time_max'): begin
+        validateOrNotGoButton, Event
+    end
+    widget_info(wWidget, FIND_BY_UNAME='time_bin'): begin
+        validateOrNotGoButton, Event
+    end
+
 ;Run Number 
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
         run_number, Event       ;in _eventcb
