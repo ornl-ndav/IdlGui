@@ -224,8 +224,9 @@ binWidth = getBinWidth(Event)
 binMax   = getBinMax(Event)
 binMin   = getBinOffset(Event)
 
-IF (binWidth EQ '0' OR $
-    binMax EQ binMin) THEN BEGIN
+IF (validate_go EQ 1 AND $
+    (binWidth EQ '0' OR $
+     binMax EQ binMin)) THEN BEGIN
     text = 'ERROR during parsing of preNeXus runinfo file !'
     appendLogBook, Event, text
     text = 'Please enter Time Min, Time Max and Bin Size'
