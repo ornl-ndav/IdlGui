@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 CD, CURRENT=current_folder
 
 APPLICATION = 'MakeNeXus'
-VERSION     = '1.0.12'
+VERSION     = '1.0.13'x
 
 ;define initial global values - these could be input via external file or
 ;other means
