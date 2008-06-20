@@ -217,6 +217,21 @@ ENDIF ELSE BEGIN
         validate_go = 0               
     ENDELSE
 ENDELSE
+
+;check than time_max is not equal to time_min
+;and that size is not 0
+binWidth = getBinWidth(Event)
+binMax   = getBinMax(Event)
+binMin   = getBinOffset(Event)
+
+IF (binWidth EQ '0' OR $
+    binMax EQ binMin) THEN BEGIN
+    text = 'ERROR during parsing of preNeXus runinfo file !'
+    appendLogBook, Event, text
+    text = 'Please enter Time Min, Time Max and Bin Size'
+    appendLogBook, Event, text
+ENDIF
+
 (*global).validate_go = validate_go
 END
 
@@ -258,6 +273,18 @@ folder_status = folder1_status + folder2_status + folder3_status
 IF (folder_status EQ 0) THEN BEGIN
     validate_status = 0
 ENDIF
+
+;check than time_max is not equal to time_min
+;and that size is not 0
+binWidth = getBinWidth(Event)
+binMax   = getBinMax(Event)
+binMin   = getBinOffset(Event)
+
+IF (binWidth EQ '0' OR $
+    binMax EQ binMin) THEN BEGIN
+    validate_status = 0
+ENDIF
+
 ;validate go button
 validateCreateNexusButton, Event, validate_status
 validateSendToGeek, Event, validate_status
