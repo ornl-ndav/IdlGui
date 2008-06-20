@@ -42,7 +42,7 @@ runinfoFullPath    += '_' + strcompress(RunNumber,/remove_all)
 runinfoFullPath    += (*global).runinfo_ext
 
 ;bin type
-BinType = getBinTypeFromDas(Event, runinfoFullath)
+BinType = getBinTypeFromDas(Event, runinfoFullPath)
 (*global).BinType = BinType
 IF (BinType EQ 'linear') THEN BEGIN
     index = 0

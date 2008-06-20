@@ -167,12 +167,12 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 'linear'
 ENDIF ELSE BEGIN
     no_error = 0
-    CATCH, no_error
+    ;CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
         appendMyLogBook, Event, 'ERROR in getBinTypeFromDas: ' + $
           !ERROR_STATE.MSG
         CATCH,/CANCEL
-        RETURN, '0'
+        RETURN, 'linear'
     ENDIF ELSE BEGIN
         oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
         oDocList = oDoc->GetElementsByTagName('DetectorInfo')
