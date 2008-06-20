@@ -74,11 +74,12 @@ END
 ;==============================================================================
 PRO UpdateBatchTable, Event, BatchTable
 ;display information from column 2/3/8/7 (in this order)
-NewTable = STRARR(4,20)
-NewTable[0,*] = BatchTable[1,*]
-NewTable[1,*] = BatchTable[2,*]
-NewTable[2,*] = BatchTable[7,*]
-NewTable[3,*] = BatchTable[6,*]
+NewTable = STRARR(5,20)
+NewTable[0,*] = BatchTable[0,*]
+NewTable[1,*] = BatchTable[1,*]
+NewTable[2,*] = BatchTable[2,*]
+NewTable[3,*] = BatchTable[7,*]
+NewTable[4,*] = BatchTable[6,*]
 ;repopulate Table
 DisplayBatchTable, Event, NewTable
 END
@@ -169,8 +170,6 @@ IF (BatchFileName NE '') THEN BEGIN
     IF (FileStatus EQ 1) THEN BEGIN ;continue loading process
 ;Repopulate GUI
         batch_repopulate_gui, Event, DRfiles
-
-
         LogText = '> Loading Batch File ' + BatchFileName + ' ... OK'
         idl_send_to_geek_addLogBookText, Event, LogText
         refresh_bash_file_status = 1
