@@ -80,7 +80,9 @@ CASE (hostname) OF
 ENDCASE 
 
 ;define global variables
-global = ptr_new ({ EnteringProposal:       1,$
+global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
+                    my_help_mac_path:   '/Users/',$
+                    EnteringProposal:       1,$
                     program_name:           'MakeNeXus',$
                     branch:                 '1.0',$
                     ArchivedCommand:        '/usr/local/bin/sns-nexus-live-catalog',$

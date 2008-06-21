@@ -672,8 +672,14 @@ PRO start_my_help, Event          ;_eventcb
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 BRANCH = (*global).branch
-ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/MakeNeXus/' + $
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   root_path = (*global).my_help_mac_path
+ENDIF ELSE BEGIN
+   root_path = (*global).my_help_linux_path
+ENDELSE
+full_path = root_path + 'j35/SVN/IdlGui/branches/MakeNeXus/' + $
   BRANCH + '/makenexusHELP/makenexus.adp'
+ONLINE_HELP, book= full_path
 END
 
 ;------------------------------------------------------------------------------
