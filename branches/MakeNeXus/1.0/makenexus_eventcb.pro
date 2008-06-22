@@ -646,17 +646,18 @@ END
 ;------------------------------------------------------------------------------
 
 PRO refreshProposalList, Event
+  AppendMyLogBook, Event, '> Refresh List of Proposal:'
 ;get current proposal selected
-currentProposalSelected = getProposalSelected(Event)
-instrument              = getInstrument(Event)
-ListOfProposal          = getListOfProposal(instrument)
-IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
-    ListOfProposal = ['INSTRUMENT NOT VISIBLE']
-ENDIF
+  currentProposalSelected = getProposalSelected(Event)
+  instrument              = getInstrument(Event)
+  ListOfProposal          = getListOfProposal(instrument)
+  IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
+     ListOfProposal = ['INSTRUMENT NOT VISIBLE']
+  ENDIF
 ;find new index of proposal
-index = getIndexOfProposalInNewList(ListOfProposal,currentProposalSelected)
+  index = getIndexOfProposalInNewList(ListOfProposal,currentProposalSelected)
 ;refresh list of proposal
-putListOfProposal, Event, ListOfProposal
+  putListOfProposal, Event, ListOfProposal
 END
 
 ;------------------------------------------------------------------------------
