@@ -39,7 +39,6 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
 ;/REF_M-DAS-FS/IPTS-558/REF_M_3890
 prenexus_path  = (*(*global).prenexus_path_array) 
-
 full_file_name = prenexus_path[index] + '/' + runinfo_filename
 
 title = 'Preview of ' + full_file_name
@@ -48,8 +47,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO populateHistogrammingBase, Event, RunNumber, Instrument
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 prenexus_full_path  = (*(*global).prenexus_path_array)[0]
 runinfoFullPath     = prenexus_full_path + '/' + Instrument
@@ -122,7 +121,7 @@ failed     = (*global).failed
 validateOrNotGoButton, Event
 
 ;first thing to do, clear off mylogbook
-PutMyLogBook, Event, ''
+AppendMyLogBook, Event, ''
 putTextField, Event, 'send_to_geek_text',''
 
 ;get run number
@@ -180,6 +179,7 @@ ENDIF ELSE BEGIN
             message_array[0] = message
             at_least_one_found = 0 ;by default, no prenexus found
             validate_go        = 0
+            index              = 0 ;nbr of run that have been found
             FOR i=0,(sz-1) DO BEGIN
                 RunNumber = RunNumberArray[i]
                 message = "Does Run Number " + $
@@ -191,25 +191,22 @@ ENDIF ELSE BEGIN
                                             RunNumber, $
                                             Instrument, $
                                             ProposalFolder)
-                IF (i EQ 0) THEN BEGIN
-                    (*(*global).prenexus_path_array)[0] = $
-                      (*global).prenexus_path
-                    (*(*global).RunNumber_array)[0]     = RunNumber
-
-                    IF (result) THEN BEGIN
+                IF (result) THEN BEGIN
+                    IF (index EQ 0) THEN BEGIN
+                        (*(*global).prenexus_path_array)[0] = $
+                          (*global).prenexus_path
+                        (*(*global).RunNumber_array)[0]     = RunNumber
 ;populate histogramming base using parameters from first run number
                         populateHistogrammingBase, Event, RunNumber, Instrument
-                    ENDIF
-
-                ENDIF ELSE BEGIN
-                    (*(*global).prenexus_path_array) = $
-                      [(*(*global).prenexus_path_array), $
-                       (*global).prenexus_path]
-                    (*(*global).RunNumber_array)     = $
-                      [(*(*global).RunNumber_array),$
-                       RunNumber]
-                ENDELSE
-                IF(result) THEN BEGIN 
+                        ++index
+                    ENDIF ELSE BEGIN
+                        (*(*global).prenexus_path_array) = $
+                          [(*(*global).prenexus_path_array), $
+                           (*global).prenexus_path]
+                        (*(*global).RunNumber_array)     = $
+                          [(*(*global).RunNumber_array),$
+                           RunNumber]
+                    ENDELSE
                     at_least_one_found = 1
                     putTextAtEndOfLogBook, Event, ok, processing
                 ENDIF ELSE BEGIN
