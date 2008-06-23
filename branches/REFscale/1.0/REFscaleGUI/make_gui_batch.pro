@@ -98,7 +98,7 @@ sRefreshButton = { size:      [XYoff[0],$
                                dTable.size[1]+dTable.size[3]+XYoff[1],$
                                260,30],$
                    uname:     'ref_scale_refresh_batch_file',$
-                   value:     'REFRESH BASH FILE',$
+                   value:     'SAVE',$
                    sensitive: 0}
 
 ;SAVE AS bash file button
