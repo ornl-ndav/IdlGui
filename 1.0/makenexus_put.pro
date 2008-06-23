@@ -64,6 +64,12 @@ PRO putMyLogBook, Event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
 WIDGET_CONTROL, id, SET_VALUE = text
 END
+;------------------------------------------------------------------------------
+
+PRO putMyLogBook_MainBase, MAIN_BASE, text
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='my_log_book')
+WIDGET_CONTROL, id, SET_VALUE = text
+END
 
 ;------------------------------------------------------------------------------
 
@@ -76,6 +82,12 @@ END
 
 PRO appendMyLogBook, Event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
+WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
+END
+;------------------------------------------------------------------------------
+
+PRO appendMyLogBook_MainBase, MAIN_BASE, text
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='my_log_book')
 WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
 END
 

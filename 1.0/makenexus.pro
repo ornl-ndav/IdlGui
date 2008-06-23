@@ -205,7 +205,9 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
 ENDIF 
 
 ;populate the Instrument Droplist
-ListOfProposal = getListOfProposal(instrumentShortList[InstrumentIndex])
+putMyLogBook_MainBase, MAIN_BASE, '> Get list of proposals:'
+ListOfProposal = getListOfProposal(instrumentShortList[InstrumentIndex], $
+                                   MAIN_BASE)
 id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='proposal_droplist')
 WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
 
