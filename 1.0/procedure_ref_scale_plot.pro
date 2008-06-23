@@ -374,12 +374,10 @@ ENDIF ELSE BEGIN
             loadct,5,/SILENT
             
             IF (FirstPass EQ 1) THEN BEGIN
-                print, '#1'
-                flt1_first = flt1
+               flt1_first = flt1
                 
                 IF (FirstTimePlotting EQ 1) THEN BEGIN
-                    print, '#2'
-                    CASE (IsXlin) OF
+                   CASE (IsXlin) OF
                         0:BEGIN
                             CASE (IsYlin) OF
                                 0: BEGIN
@@ -413,8 +411,7 @@ ENDIF ELSE BEGIN
                             ENDCASE
                         END
                     ENDCASE
-                    print, '#3'
-                    IF (ErrorBarStatus EQ 0) THEN BEGIN
+                   IF (ErrorBarStatus EQ 0) THEN BEGIN
                         errplot, $
                           flt0, $
                           flt1-flt2, $
@@ -434,8 +431,6 @@ ENDIF ELSE BEGIN
                     max_xaxis_display = NUMBER_FORMATTER(max_xaxis)
                     min_yaxis_display = NUMBER_FORMATTER(min_yaxis)
                     max_yaxis_display = NUMBER_FORMATTER(max_yaxis)
-
-                    print, min_xaxis_display ;remove_me
 
                     PopulateXYScaleAxis, Event, $ ;_put
                       min_xaxis_display, $
