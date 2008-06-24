@@ -88,7 +88,8 @@ FOR i=0,(NbrRow-1) DO BEGIN
         text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
         text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
         text    = [text,'#Date : '       + BatchTable[k++,i]]
-        text    = [text,'#SF : '         + BatchTable[k++,i]]
+        text    = [text,'#SF : '         + $
+                   STRCOMPRESS(BatchTable[k++,i],/REMOVE_ALL)]
 ;add --batch flag to command line
         cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
         cmd       = 'srun --batch -o none' + cmd_array[0]

@@ -283,8 +283,8 @@ ENDIF
 IF (DEBUGGER EQ 'yes') THEN BEGIN
 ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
 ;change default path of batch file
     (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     (*global).input_path       = '~/local'   

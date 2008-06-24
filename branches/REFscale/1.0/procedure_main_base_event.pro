@@ -263,7 +263,7 @@ PRO MAIN_BASE_ref_scale_event, Event
           ref_scale_PreviewBatchFile, Event ;_batch
       END
 
-;REFRESH Batch File button
+;SAVE Batch File button
       Widget_Info(wWidget, FIND_BY_UNAME='ref_scale_refresh_batch_file'): BEGIN
           ref_scale_refresh_batch_file, Event ;_batch
       END
