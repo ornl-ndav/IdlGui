@@ -374,10 +374,10 @@ ENDIF ELSE BEGIN
             loadct,5,/SILENT
             
             IF (FirstPass EQ 1) THEN BEGIN
-               flt1_first = flt1
+                flt1_first = flt1
                 
                 IF (FirstTimePlotting EQ 1) THEN BEGIN
-                   CASE (IsXlin) OF
+                    CASE (IsXlin) OF
                         0:BEGIN
                             CASE (IsYlin) OF
                                 0: BEGIN
@@ -411,7 +411,7 @@ ENDIF ELSE BEGIN
                             ENDCASE
                         END
                     ENDCASE
-                   IF (ErrorBarStatus EQ 0) THEN BEGIN
+                    IF (ErrorBarStatus EQ 0) THEN BEGIN
                         errplot, $
                           flt0, $
                           flt1-flt2, $

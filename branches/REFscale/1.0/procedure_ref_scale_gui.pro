@@ -736,6 +736,12 @@ ActivateWidget, Event, 'output_file_base', validate
 putValueInTextField, Event, 'output_file_text_field',''
 END
 
+;##############################################################################
+;******************************************************************************
+PRO ActivateFullPreviewButton, Event, Validate
+ActivateWidget, Event, 'full_preview_button', validate
+END
+
 ;******************************************************************************
 ;This function updates the GUI (droplist, buttons...)
 PRO StepsUpdateGUI, Event
@@ -760,6 +766,7 @@ ActivateClearFileButton, Event, validate ;_gui
 ActivateColorSlider, Event, Validate ;_gui
 ActivatePrintFileButton, Event, Validate ;_gui
 ActivateSettingsBase, Event, Validate ;_gui
+ActivateFullPreviewButton, Event, Validate ;_gui
 END
 
 ;******************************************************************************

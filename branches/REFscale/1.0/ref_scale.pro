@@ -167,7 +167,6 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
 ENDIF ELSE BEGIN
     (*global).input_path = '~' + ucams
-    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
 ENDELSE
 
 MainBaseSize         = [50 , 50, 1200, 600]
@@ -271,7 +270,7 @@ IF (BatchMode EQ 'yes') THEN BEGIN
                          FIND_BY_UNAME='load_batch_file_text_field')
         WIDGET_CONTROL, id, SET_VALUE=BatchFile
     ENDIF
-;Show step 4
+;Show defined tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;batch tab
 ENDIF
@@ -284,9 +283,10 @@ ENDIF
 IF (DEBUGGER EQ 'yes') THEN BEGIN
 ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
 ;change default path of batch file
-    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+    (*global).BatchDefaultPath = '~/local/'
+    (*global).input_path       = '~/local'   
 ENDIF
 ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
 ;------------------------------------------------------------------------------
@@ -302,7 +302,7 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
-end
+END
 
 ;
 ; Empty stub procedure used for autoloading.
