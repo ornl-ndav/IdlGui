@@ -152,7 +152,8 @@ FOR i=1,(nbrFile-1) DO BEGIN
     STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;Update the SF value in the BatchTable
-    BatchTable[7,i] = STRCOMPRESS(SF,/REMOVE_ALL)
+    index_array = getIndexArrayOfActiveBatchRow(Event)
+    BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;store the SF
     SF_array = (*(*global).SF_array)

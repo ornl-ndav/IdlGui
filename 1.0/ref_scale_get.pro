@@ -414,5 +414,26 @@ END
 
 ;##############################################################################
 ;******************************************************************************
+FUNCTION getIndexArrayOfActiveBatchRow, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+BatchTable = (*(*global).BatchTable)
+NbrRow = (size(BatchTable))(2)
+NbrIndex = 0
+FOR i=0,(NbrRow-1) DO BEGIN
+    IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
+        IF (NbrIndex EQ 0) THEN BEGIN
+            IndexArray = [i]
+        ENDIF ELSE BEGIN
+            IndexArray = [IndexArray,i]
+        ENDELSE
+        NbrIndex++
+    ENDIF
+ENDFOR
+RETURN, IndexArray
+END
+
+;##############################################################################
+;******************************************************************************
 PRO ref_scale_get
 END
