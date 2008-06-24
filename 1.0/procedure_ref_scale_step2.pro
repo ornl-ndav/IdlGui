@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,10 +30,10 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO LoadCEFile, Event, CE_file_name, Q1, Q2
 ;retrieve global structure
@@ -73,7 +73,7 @@ putValueInTextField, Event, $
   STRCOMPRESS(cooef[0],/REMOVE_ALL)         ;_put
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;this function will calculate the average Y value between Q1 and Q2 of
 ;the fitted function for CE only
@@ -101,7 +101,7 @@ putValueInTextField, Event, $
   STRCOMPRESS(AverageValue,/REMOVE_ALL)     ;_put
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function save Q1, Q2 and SF of the Critical Edge file selected
 PRO Step2_fitCE, Event
@@ -147,7 +147,7 @@ ENDELSE
 putValueInTextField, Event,'step2_sf_text_field', scaling_factor
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function is the next step (after the fitting) to
 ;bring to 1 the average Q1 to Q2 part of CE
@@ -162,7 +162,7 @@ plot_rescale_CE_file, Event ;_Plot
 END
 
 
-;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 
 ;when using automatic fitting and scaling of CE (step2)
 PRO run_full_step2, Event
@@ -228,9 +228,16 @@ IF (YbeforeIsNumeric EQ 1 AND $
     
 ;display SF in the log book
     SF = getTextFieldValue(Event, 'step2_sf_text_field')
-    idl_send_to_geek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
+    idl_send_to_geek_addLogBookText, Event, $
+      '-> Scaling Factor (SF) of Critcal ' + $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
     
+;update the BatchTable
+    BatchTable      = (*(*global).BatchTable)
+    BatchTable[7,0] = STRCOMPRESS(SF,/REMOVE_ALL)
+    (*(*global).BatchTable) = BatchTable
+    UpdateBatchTable, Event, BatchTable ;_batch
+
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
 ;automatic mode can be performed.
 ;display message in Q1 and Q2 boxe saying that auto stopped
@@ -248,8 +255,8 @@ CheckManualModeStep2Buttons, Event
 idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO manualCEscaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -292,9 +299,17 @@ IF (YbeforeIsNumeric EQ 1 AND $
     ENDELSE
 ;display SF in the log book
     SF = getTextFieldValue(Event, 'step2_sf_text_field')
-    idl_send_to_geek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
+    idl_send_to_geek_addLogBookText, Event, $
+      '-> Scaling Factor (SF) of Critcal ' + $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
     
+;update the BatchTable
+    BatchTable = (*(*global).BatchTable)
+    print, BatchTable           ;remove_me
+    BatchTable[3,0] = STRCOMPRESS(SF,/REMOVE_ALL)
+    print, BatchTable           ;remove_me
+    (*(*global).BatchTable) = BatchTable
+
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
 ;automatic mode can be performed.
 ;display message in Q1 and Q2 boxe saying that auto stopped
@@ -306,8 +321,8 @@ ENDELSE
 idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function is the next step (after the fitting) to
 ;bring to 1 the average Q1 to Q2 part of CE
@@ -324,8 +339,8 @@ ScalingFactor = getTextFieldValue(Event,'step2_sf_text_field')
 plot_rescale_CE_file, Event ;_Plot
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function is reached each time the SF text Field is edited
 PRO manual_sf_editing, Event ;_Step2
@@ -348,8 +363,8 @@ ENDELSE
 putValueInTextField, Event, 'step2_y_after_text_field', newYafter ;_put
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This is reach when the user left click on the plot of step2
 PRO Step2LeftClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -405,8 +420,8 @@ CASE ((*global).Q_selection) OF
 ENDCASE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This is reach when the user right click on the plot of step2
 PRO Step2RightClick, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -426,8 +441,8 @@ CASE ((*global).Q_selection) OF
 ENDCASE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This is reach when the user released the button on the plot of step2
 PRO Step2ReleaseClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -472,8 +487,8 @@ SortQs, Event ;_Step2
 CheckAutoModeStep2Button, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This is reach when the user moves the mouse on the plot of step2
 PRO Step2MoveClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -528,8 +543,8 @@ ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
 ENDELSE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO saveQ,  Event, Q_NUMBER = Q_NUMBER, x, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -552,8 +567,8 @@ IF (x GE draw_xmin AND $
 ENDIF
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This function determine what is the Qx (widget_draw x position ) of
 ;the Q given
 PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
@@ -591,8 +606,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This function only reach during step2 when Qmin and Qmax are edited
 PRO ManualNewQ, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -624,8 +639,8 @@ ENDELSE
 CheckAutoModeStep2Button, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO ClearStep2GlobalVariable, Event 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
@@ -640,8 +655,8 @@ widget_control,id,get_uvalue=global
 (*global).Y   = 0
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This function retrieves Q1 and Q2 and replaces Qmin by the min of
 ;Q1,Q2 and replaces Qmax by the max of Q1,Q2
 PRO SortQs, Event
@@ -650,14 +665,16 @@ Q1 = getValue(Event,'step2_q1_text_field')
 Q2 = getValue(Event,'step2_q2_text_field')
 IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
     Qmin = MIN([Q1,Q2],MAX=Qmax)
-    putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Qmin,/REMOVE_ALL)
-    putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Qmax,/REMOVE_ALL)
+    putValueInTextField, Event, 'step2_q1_text_field', $
+      STRCOMPRESS(Qmin,/REMOVE_ALL)
+    putValueInTextField, Event, 'step2_q2_text_field', $
+      STRCOMPRESS(Qmax,/REMOVE_ALL)
     ManualNewQ, Event
 ENDIF
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO procedure_ref_scale_step2
 END
