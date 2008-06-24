@@ -54,6 +54,9 @@ nbrFile = (*global).NbrFilesLoaded
 idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
   STRCOMPRESS(nbrFile,/REMOVE_ALL)
 
+;Get BatchTable
+BatchTable = (*(*global).BatchTable)
+
 FOR i=1,(nbrFile-1) DO BEGIN
 
     idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
@@ -148,6 +151,9 @@ FOR i=1,(nbrFile-1) DO BEGIN
     idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
     STRCOMPRESS(SF,/REMOVE_ALL)
 
+;Update the SF value in the BatchTable
+    BatchTable[7,i] = STRCOMPRESS(SF,/REMOVE_ALL)
+
 ;store the SF
     SF_array = (*(*global).SF_array)
     SF_array[i] = SF
@@ -170,6 +176,10 @@ FOR i=1,(nbrFile-1) DO BEGIN
     (*global).flt2_rescale_ptr = flt2_rescale_ptr
 
 ENDFOR
+
+;update the batch table
+(*(*global).BatchTable) = BatchTable
+UpdateBatchTable, Event, BatchTable ;_batch
 
 plot_loaded_file, Event, '2plots' ;_Plot
 idl_send_to_geek_showLastLineLogBook, Event
