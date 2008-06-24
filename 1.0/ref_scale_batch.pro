@@ -66,7 +66,7 @@ PRO DisplayBatchTable, Event, NewTable
 ;new BatchTable
 NewBatchTable = NewTable
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ref_scale_batch_table_widget')
-widget_control, id, set_value=NewBatchTable
+WIDGET_CONTROL, id, SET_VALUE=NewBatchTable
 END
 
 ;This function retrieves from the big BatchTable, only the information
