@@ -111,6 +111,10 @@ IF (file_error NE 0) THEN BEGIN
       Event, $
       (*global).processing, $
       (*global).failed
+    msg = ['SAVE ' + FullFileName + ' FAILED !',$
+           '>> Please Check LogBook <<']
+    title = 'SAVE PROCESS FAILED'
+    result = DIALOG_MESSAGE(msg,/ERROR, TITLE=title)
     RETURN, 0
 ENDIF ELSE BEGIN
 ;create output file
