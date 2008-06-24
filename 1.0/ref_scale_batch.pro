@@ -127,6 +127,11 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 
 IF (loading_error EQ 0) THEN BEGIN
+;define color_array
+    index_array = getIndexArrayOfActiveBatchRow(Event)
+    sz          = (size(index_array))(1)
+    color_array = (float(225)/sz)*indgen(sz)+25 
+    (*(*global).color_array) = color_array
 ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
 ENDIF

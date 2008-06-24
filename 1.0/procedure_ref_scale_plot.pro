@@ -345,6 +345,7 @@ ENDIF ELSE BEGIN
 
         color_array = (*(*global).color_array)
         colorIndex  = color_array[i]
+
         IF (ErrorBarStatus EQ 0) THEN BEGIN
             IF (i EQ 0) THEN BEGIN
                 MainPlotColor = 100
