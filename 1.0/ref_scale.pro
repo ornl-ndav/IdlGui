@@ -170,8 +170,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 MainBaseSize         = [50 , 50, 1200, 600]
-PlotWindowSize       = [5  , 5  , 650 , 590]
-StepsTabSize         = [660, 5  , 530 , 400]
+PlotWindowSize       = [5  , 5 , 650 , 590]
+StepsTabSize         = [660, 5 , 530 , 400]
 
 ;general variables
 distance_L_TB        = 35
@@ -283,9 +283,9 @@ ENDIF
 IF (DEBUGGER EQ 'yes') THEN BEGIN
 ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4
 ;change default path of batch file
-    (*global).BatchDefaultPath = '~/local/'
+    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     (*global).input_path       = '~/local'   
 ENDIF
 ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
