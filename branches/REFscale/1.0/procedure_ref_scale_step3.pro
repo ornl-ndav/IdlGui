@@ -57,126 +57,139 @@ idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
 ;Get BatchTable
 BatchTable = (*(*global).BatchTable)
 
-FOR i=1,(nbrFile-1) DO BEGIN
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
 
-    idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
-      STRCOMPRESS(i,/REMOVE_ALL)
-    
-    CurrentFileName = getFileFromIndex(Event, i)
-    idl_send_to_geek_addLogBookText, Event, '---> Name of File : ' + $
-      CurrentFileName
+    CATCH,/CANCEL
+    idl_send_to_geek_addLogBookText, Event, '-> Automatic Rescaling ' + $
+      'FAILED - Switch to manual mode !'
+    text  = 'Switch to Manual Mode.         '
+    title = 'Automatic Rescaling FAILED !'
+    result = DIALOG_MESSAGE(text,/ERROR,TITLE=title)
 
+ENDIF ELSE BEGIN
+
+    FOR i=1,(nbrFile-1) DO BEGIN
+
+        idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
+          STRCOMPRESS(i,/REMOVE_ALL)
+        
+        CurrentFileName = getFileFromIndex(Event, i)
+        idl_send_to_geek_addLogBookText, Event, '---> Name of File : ' + $
+          CurrentFileName
+        
 ;get Qmin and Qmax
-    Qmin = float(Qmin_array[i])
-    Qmax = float(Qmax_array[i-1])
-    idl_send_to_geek_addLogBookText, Event, '---> Qmin : ' + $
-      STRCOMPRESS(Qmin,/REMOVE_ALL)
-    idl_send_to_geek_addLogBookText, Event, '---> Qmax : ' + $
-      STRCOMPRESS(Qmax,/REMOVE_ALL)
-    
+        Qmin = float(Qmin_array[i])
+        Qmax = float(Qmax_array[i-1])
+        idl_send_to_geek_addLogBookText, Event, '---> Qmin : ' + $
+          STRCOMPRESS(Qmin,/REMOVE_ALL)
+        idl_send_to_geek_addLogBookText, Event, '---> Qmax : ' + $
+          STRCOMPRESS(Qmax,/REMOVE_ALL)
+        
 ;Number of data to exclude from auto-fitting
-    Ncrap = getTextFieldValue(Event,'min_crap_text_field') ;_get
-    Ncrap = fix(Ncrap)
-
+        Ncrap = getTextFieldValue(Event,'min_crap_text_field') ;_get
+        Ncrap = fix(Ncrap)
+        
 ;HIGH Q file
 ;get flt0 of high Q file
-    flt0_highQ = *flt0_rescale_ptr[i]
-    flt1_highQ = *flt1_rescale_ptr[i]
-    flt2_highQ = *flt2_rescale_ptr[i]
-
+        flt0_highQ = *flt0_rescale_ptr[i]
+        flt1_highQ = *flt1_rescale_ptr[i]
+        flt2_highQ = *flt2_rescale_ptr[i]
+        
 ;determine the working indexes of flt0, flt1 and flt2 for high Q file
-    RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
-    left_index   = RangeIndexes[0]
-    right_index  = RangeIndexes[1]
-    idl_send_to_geek_addLogBookText, Event, '---> left_index  : ' + $
-      STRCOMPRESS(left_index,/REMOVE_ALL)
-    idl_send_to_geek_addLogBookText, Event, '---> right_index : ' + $
-      STRCOMPRESS(right_index,/REMOVE_ALL)
-    
+        RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
+        left_index   = RangeIndexes[0]
+        right_index  = RangeIndexes[1]
+        idl_send_to_geek_addLogBookText, Event, '---> left_index  : ' + $
+          STRCOMPRESS(left_index,/REMOVE_ALL)
+        idl_send_to_geek_addLogBookText, Event, '---> right_index : ' + $
+          STRCOMPRESS(right_index,/REMOVE_ALL)
+        
 ;determine working range of low Q file
-    flt0_highQ_new = flt0_highQ[left_index:right_index]
-    flt1_highQ_new = flt1_highQ[left_index:right_index]
-    flt2_highQ_new = flt2_highQ[left_index:right_index]
-
+        flt0_highQ_new = flt0_highQ[left_index:right_index]
+        flt1_highQ_new = flt1_highQ[left_index:right_index]
+        flt2_highQ_new = flt2_highQ[left_index:right_index]
+        
 ;set to 0 the indefined data 
-    flt1_highQ_new = getArrayOfInfValues(flt1_highQ_new) ;_get
-    
+        flt1_highQ_new = getArrayOfInfValues(flt1_highQ_new) ;_get
+        
 ;remove points that have error GE than their values
-    RangeIndexes   = GEValue(flt1_highQ_new, flt2_highQ_new) ;_get
-    flt0_highQ_new = flt0_highQ_new(RangeIndexes)
-    flt1_highQ_new = flt1_highQ_new(RangeIndexes)
-    flt2_highQ_new = flt2_highQ_new(RangeIndexes)
-
+        RangeIndexes   = GEValue(flt1_highQ_new, flt2_highQ_new) ;_get
+        flt0_highQ_new = flt0_highQ_new(RangeIndexes)
+        flt1_highQ_new = flt1_highQ_new(RangeIndexes)
+        flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+        
 ;LOW Q file
 ;get flt0 of low Q file
-    flt0_lowQ = *flt0_rescale_ptr[i-1]
-    flt1_lowQ = *flt1_rescale_ptr[i-1]
-    flt2_lowQ = *flt2_rescale_ptr[i-1]
-
+        flt0_lowQ = *flt0_rescale_ptr[i-1]
+        flt1_lowQ = *flt1_rescale_ptr[i-1]
+        flt2_lowQ = *flt2_rescale_ptr[i-1]
+        
 ;determine the working indexes of flt0, flt1 and flt2 for low Q file
-    RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax) ;_get
-    left_index   = RangeIndexes[0]
-    right_index  = RangeIndexes[1]
-    
+        RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax) ;_get
+        left_index   = RangeIndexes[0]
+        right_index  = RangeIndexes[1]
+        
 ;determine working range of high Q file
-    flt0_lowQ_new = flt0_lowQ[left_index:right_index]
-    flt1_lowQ_new = flt1_lowQ[left_index:right_index]
-    flt2_lowQ_new = flt2_lowQ[left_index:right_index]
-
+        flt0_lowQ_new = flt0_lowQ[left_index:right_index]
+        flt1_lowQ_new = flt1_lowQ[left_index:right_index]
+        flt2_lowQ_new = flt2_lowQ[left_index:right_index]
+        
 ;set to 0 the indefined data 
-    flt1_lowQ_new = getArrayOfInfValues(flt1_lowQ_new) ;_get
-
+        flt1_lowQ_new = getArrayOfInfValues(flt1_lowQ_new) ;_get
+        
 ;remove the non defined and inf values from flt0_lowQ, flt1_lowQ and flt2_lowQ
-    RangeIndexes  = getArrayRangeOfNotNanValues(flt1_lowQ_new) ;_get
-    flt0_lowQ_new = flt0_lowQ_new(RangeIndexes)
-    flt1_lowQ_new = flt1_lowQ_new(RangeIndexes)
-    flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
-
+        RangeIndexes  = getArrayRangeOfNotNanValues(flt1_lowQ_new) ;_get
+        flt0_lowQ_new = flt0_lowQ_new(RangeIndexes)
+        flt1_lowQ_new = flt1_lowQ_new(RangeIndexes)
+        flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
+        
 ;remove points that have error GE than their values
-    RangeIndexes  = GEvalue(flt1_LowQ_new, flt2_LowQ_new) ;_get
-    flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
-    flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
-    flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
-
+        RangeIndexes  = GEvalue(flt1_LowQ_new, flt2_LowQ_new) ;_get
+        flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
+        flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
+        flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
+        
 ;Calculate the data totals
-    TLowQflt1  = total(flt1_LowQ_new[Ncrap:*])
-    THighQflt1 = total(flt1_highQ_new[Ncrap:*])
-
+        TLowQflt1  = total(flt1_LowQ_new[Ncrap:*])
+        THighQflt1 = total(flt1_highQ_new[Ncrap:*])
+        
 ;Calculate the Q totals
-    TLowQflt0  = total(flt0_LowQ_new[Ncrap:*])
-    THighQflt0 = total(flt0_HighQ_new[Ncrap:*])
-
+        TLowQflt0  = total(flt0_LowQ_new[Ncrap:*])
+        THighQflt0 = total(flt0_HighQ_new[Ncrap:*])
+        
 ;SF
-    SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
-    idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
-    STRCOMPRESS(SF,/REMOVE_ALL)
-
+        SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
+        idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
+          STRCOMPRESS(SF,/REMOVE_ALL)
+        
 ;Update the SF value in the BatchTable
-    index_array = getIndexArrayOfActiveBatchRow(Event)
-    BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
-
+        index_array = getIndexArrayOfActiveBatchRow(Event)
+        BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
+        
 ;store the SF
-    SF_array = (*(*global).SF_array)
-    SF_array[i] = SF
-    (*(*global).SF_array) = SF_array
-
+        SF_array = (*(*global).SF_array)
+        SF_array[i] = SF
+        (*(*global).SF_array) = SF_array
+        
 ;Rescale the initial data
-    flt1_rescale_ptr = (*global).flt1_rescale_ptr
-    flt2_rescale_ptr = (*global).flt2_rescale_ptr
-
-    flt1_highQ = *flt1_rescale_ptr[i]
-    flt2_highQ = *flt2_rescale_ptr[i]
-
-    flt1_highQ = flt1_highQ / SF
-    flt2_highQ = flt2_highQ / SF
-
-    *flt1_rescale_ptr[i] = flt1_highQ
-    *flt2_rescale_ptr[i] = flt2_HighQ
-
-    (*global).flt1_rescale_ptr = flt1_rescale_ptr
-    (*global).flt2_rescale_ptr = flt2_rescale_ptr
-
-ENDFOR
+        flt1_rescale_ptr = (*global).flt1_rescale_ptr
+        flt2_rescale_ptr = (*global).flt2_rescale_ptr
+        
+        flt1_highQ = *flt1_rescale_ptr[i]
+        flt2_highQ = *flt2_rescale_ptr[i]
+        
+        flt1_highQ = flt1_highQ / SF
+        flt2_highQ = flt2_highQ / SF
+        
+        *flt1_rescale_ptr[i] = flt1_highQ
+        *flt2_rescale_ptr[i] = flt2_HighQ
+        
+        (*global).flt1_rescale_ptr = flt1_rescale_ptr
+        (*global).flt2_rescale_ptr = flt2_rescale_ptr
+    ENDFOR
+ENDELSE
 
 ;update the batch table
 (*(*global).BatchTable) = BatchTable
