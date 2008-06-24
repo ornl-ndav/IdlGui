@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,10 +30,10 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
@@ -41,7 +41,7 @@ PRO Step3AutomaticRescaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
-IDLsendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Automatic Rescaling :' 
 
 flt0_rescale_ptr = (*global).flt0_rescale_ptr
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
@@ -51,24 +51,24 @@ Qmax_array       = (*(*global).Qmax_array)
 
 ;get number of files loaded
 nbrFile = (*global).NbrFilesLoaded
-IDLsendToGeek_addLogBookText, Event, '-> Number of files loaded : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
   STRCOMPRESS(nbrFile,/REMOVE_ALL)
 
 FOR i=1,(nbrFile-1) DO BEGIN
 
-    IDLsendToGeek_addLogBookText, Event, '--> Working with File # ' + $
+    idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
       STRCOMPRESS(i,/REMOVE_ALL)
     
     CurrentFileName = getFileFromIndex(Event, i)
-    IDLsendToGeek_addLogBookText, Event, '---> Name of File : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> Name of File : ' + $
       CurrentFileName
 
 ;get Qmin and Qmax
     Qmin = float(Qmin_array[i])
     Qmax = float(Qmax_array[i-1])
-    IDLsendToGeek_addLogBookText, Event, '---> Qmin : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> Qmin : ' + $
       STRCOMPRESS(Qmin,/REMOVE_ALL)
-    IDLsendToGeek_addLogBookText, Event, '---> Qmax : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> Qmax : ' + $
       STRCOMPRESS(Qmax,/REMOVE_ALL)
     
 ;Number of data to exclude from auto-fitting
@@ -85,9 +85,9 @@ FOR i=1,(nbrFile-1) DO BEGIN
     RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
     left_index   = RangeIndexes[0]
     right_index  = RangeIndexes[1]
-    IDLsendToGeek_addLogBookText, Event, '---> left_index  : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> left_index  : ' + $
       STRCOMPRESS(left_index,/REMOVE_ALL)
-    IDLsendToGeek_addLogBookText, Event, '---> right_index : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> right_index : ' + $
       STRCOMPRESS(right_index,/REMOVE_ALL)
     
 ;determine working range of low Q file
@@ -145,7 +145,7 @@ FOR i=1,(nbrFile-1) DO BEGIN
 
 ;SF
     SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
-    IDLsendToGeek_addLogBookText, Event, '---> SF : ' + $
+    idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
     STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;store the SF
@@ -172,12 +172,12 @@ FOR i=1,(nbrFile-1) DO BEGIN
 ENDFOR
 
 plot_loaded_file, Event, '2plots' ;_Plot
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function displays the flt0, flt1 array of the low Q file and the flt1
 ;array of the high Q file
@@ -264,22 +264,21 @@ FOR i=0,(max_number-1) DO BEGIN
        appendValueInTextField,Event,'step3_flt_text_field',text  ;_put
    ENDELSE
 ENDFOR
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
-
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 ;This function rescale manually the working file using the new SF 
 PRO Step3RescaleFile, Event, delta_SF
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
-IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling :' 
 
 index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 CurrentFileName = getFileFromIndex(Event, index)
-IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling of : ' + $
   CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
@@ -294,7 +293,8 @@ if (SF LE 0) then begin
     SF = float(0.001)
 endif
 
-IDLsendToGeek_addLogBookText, Event, '-> SF : ' + STRCOMPRESS(SF,/REMOVE_ALL)
+idl_send_to_geek_addLogBookText, Event, '-> SF : ' + $
+  STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;put new SF value in text box
 putValueInTextField, Event,'Step3SFTextField',SF ;_put
@@ -330,11 +330,11 @@ IF (displayData EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN ;clear text box
     putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function rescale manually the working file using the new SF 
 PRO Step3RescaleFile2, Event, delta_SF
@@ -342,12 +342,12 @@ PRO Step3RescaleFile2, Event, delta_SF
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
-IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling :' 
 
 ;get selected index of droplist
 index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 CurrentFileName = getFileFromIndex(Event, index)
-IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling of : ' + $
   CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
@@ -368,7 +368,8 @@ flt2 = *flt2_ptr[index]
 
 SF = SF[0]
 
-IDLsendToGeek_addLogBookText, Event, '-> SF : ' + STRCOMPRESS(SF,/REMOVE_ALL)
+idl_send_to_geek_addLogBookText, Event, '-> SF : ' + $
+  STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;rescale data
 flt1 = flt1 / SF
@@ -393,11 +394,11 @@ IF (displayData EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN ;clear text box
     putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function will disable the widgets of step3 if
 ;the first file (CE file) is selected 
@@ -414,8 +415,8 @@ endelse
 
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function is reached only when the CE file of step 3 has been
 ;selected in the droplist. In this case, all the widgets of the manual
@@ -424,8 +425,8 @@ PRO Step3DisableManualScalingBox, Event
 HideBase, Event, 'Step3ManualModeHiddenFrame', 0
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function is reached only when the selected file in the step 3
 ;droplist is any of the file except the first one (CE file). In this
@@ -434,8 +435,8 @@ PRO Step3EnableManualScalingBox, Event
 HideBase, Event, 'Step3ManualModeHiddenFrame', 1
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function displays the base file name unless the first file is
 ;selected, in this case, it shows that the working file is the CE file
@@ -461,8 +462,8 @@ putValueInLabel, Event, 'Step3ManualModeHighQFileLabel',textHighQ ;_put
 putValueInLabel, Event, 'Step3ManualModeLowQFileName',text ;_put
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;This function displays the SF of the selected file
 PRO Step3_display_SF_values, Event,index
@@ -480,7 +481,7 @@ ENDELSE
 GuisetValue, Event, 'Step3SFTextField', SF ;_Gui
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 PRO procedure_ref_scale_step3
 END
