@@ -115,7 +115,7 @@ sz = (size(DRfiles))(1)
 
 FOR i=0,(sz-1) DO BEGIN
     index = (*global).NbrFilesLoaded 
-    SuccessStatus = StoreFlts(Event, DRfiles[i], index)
+    SuccessStatus = StoreFlts(Event, DRfiles[i], i)
     IF (SuccessStatus) THEN BEGIN
         ShortFileName = get_file_name_only(DRfiles[i]) ;_get
         LongFileName  = DRfiles[i]
@@ -132,6 +132,9 @@ IF (loading_error EQ 0) THEN BEGIN
     sz          = (size(index_array))(1)
     color_array = (float(225)/sz)*indgen(sz)+25 
     (*(*global).color_array) = color_array
+;reset Qmin and Qmax
+    (*(*global).Qmin_array) = intarr(sz)
+    (*(*global).Qmax_array) = intarr(sz)
 ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
 ENDIF
@@ -192,6 +195,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
 ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
+ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
 END
 
 ;==============================================================================

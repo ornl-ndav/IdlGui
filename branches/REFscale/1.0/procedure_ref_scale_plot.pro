@@ -301,6 +301,7 @@ ListLongFileName = (*(*global).ListOfLongFileName)
 
 ;1 if first load, 0 otherwise
 XYMinMax = retrieveXYMinMax(Event) ;_get
+print, XYMinMax ;remove_me
 IF  (XYMinMax[0] NE '' AND $
      XYMinMax[1] NE '' AND $
      XYMinMax[2] NE '' AND $
@@ -736,9 +737,9 @@ CASE (CurrTabSelect) OF
        plot_loaded_file, Event, 'CE' ;_Plot
    END
    2: BEGIN       ;if the third tab is selected plot index and index-1
-
        plot_loaded_file, Event, '2plots' ;_Plot
    END
+   ELSE: plot_loaded_file, Event, 'all' ;_Plot
 ENDCASE
 END
 
