@@ -110,6 +110,19 @@ END
 
 ;##############################################################################
 ;******************************************************************************
+;This function display the full contain of the DR file
+PRO DisplayFullPreviewOfButton, Event ;_eventcb
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+widget_control,id,GET_UVALUE=global
+index  = getSelectedIndex(Event, 'list_of_files_droplist')
+ListOfFiles = (*(*global).ListOfLongFileName)
+selected_file = ListOfFiles[index]
+title = 'PREVIEW of ' + selected_file
+XDISPLAYFILE, selected_file, TITLE=title
+END
+
+;##############################################################################
+;******************************************************************************
 
 PRO REF_SCALE_EVENTCB
 END

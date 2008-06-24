@@ -140,6 +140,11 @@ PRO MAIN_BASE_ref_scale_event, Event
           PlotLoadedFiles, Event ;_Plot
       END
       
+;Get Full Preview of DR file
+      Widget_Info(wWidget, FIND_BY_UNAME='full_preview_button'): BEGIN
+          DisplayFullPreviewOfButton, Event ;_eventcb
+      END
+
 ;------------------------------------------------------------------------------
 ;****** STEP 1 / In the LOAD TOF base *****************************************
 ;------------------------------------------------------------------------------
