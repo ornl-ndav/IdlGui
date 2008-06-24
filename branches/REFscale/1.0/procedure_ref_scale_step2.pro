@@ -233,8 +233,9 @@ IF (YbeforeIsNumeric EQ 1 AND $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
     
 ;update the BatchTable
+    index_array = getIndexArrayOfActiveBatchRow(Event)
     BatchTable      = (*(*global).BatchTable)
-    BatchTable[7,0] = STRCOMPRESS(SF,/REMOVE_ALL)
+    BatchTable[7,index_array[0]] = STRCOMPRESS(SF,/REMOVE_ALL)
     (*(*global).BatchTable) = BatchTable
     UpdateBatchTable, Event, BatchTable ;_batch
 
@@ -305,9 +306,7 @@ IF (YbeforeIsNumeric EQ 1 AND $
     
 ;update the BatchTable
     BatchTable = (*(*global).BatchTable)
-    print, BatchTable           ;remove_me
     BatchTable[3,0] = STRCOMPRESS(SF,/REMOVE_ALL)
-    print, BatchTable           ;remove_me
     (*(*global).BatchTable) = BatchTable
 
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
