@@ -34,6 +34,22 @@
 
 ;##############################################################################
 ;******************************************************************************
+;This function takes the new SF from the CW_FIELD and put it in the
+;right place in the BatchTable
+PRO SaveNewSFstep3, Event, SF, index
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+widget_control,id,get_uvalue=global
+;get the array of ACTIVE value ex: [0,1,3,4,5,6] if row 3 is inactive
+IndexArray = getIndexArrayOfActiveBatchRow(Event)
+;get BatchTable
+BatchTable = (*(*global).BatchTable)
+BatchTable[7,IndexArray[index]] = STRCOMPRESS(SF,/REMOVE_ALL)
+(*(*global).BatchTable) = BatchTable
+UpdateBatchTable, Event, BatchTable
+END
+
+
+;******************************************************************************
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
@@ -302,7 +318,7 @@ idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling :'
 
 index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 CurrentFileName = getFileFromIndex(Event, index)
-idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Manual Rescaling of : ' + $
   CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
@@ -317,6 +333,11 @@ if (SF LE 0) then begin
     SF = float(0.001)
 endif
 
+SF = SF[0]
+
+;save new value of SF in BatchTable
+SaveNewSFstep3, Event, SF, index
+
 idl_send_to_geek_addLogBookText, Event, '-> SF : ' + $
   STRCOMPRESS(SF,/REMOVE_ALL)
 
@@ -328,6 +349,10 @@ index = getSelectedIndex(Event,'step3_work_on_file_droplist') ;_get
 
 flt1 = *flt1_ptr[index]
 flt2 = *flt2_ptr[index]
+
+;rescale data
+flt1 = flt1 / SF
+flt2 = flt2 / SF
 
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
 flt2_rescale_ptr = (*global).flt2_rescale_ptr
@@ -365,7 +390,7 @@ idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling :'
 ;get selected index of droplist
 index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 CurrentFileName = getFileFromIndex(Event, index)
-idl_send_to_geek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Manual Rescaling of : ' + $
   CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
@@ -385,6 +410,9 @@ flt1 = *flt1_ptr[index]
 flt2 = *flt2_ptr[index]
 
 SF = SF[0]
+
+;save new value of SF in BatchTable
+SaveNewSFstep3, Event, SF, index
 
 idl_send_to_geek_addLogBookText, Event, '-> SF : ' + $
   STRCOMPRESS(SF,/REMOVE_ALL)
