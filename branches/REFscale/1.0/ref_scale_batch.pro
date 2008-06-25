@@ -31,6 +31,8 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;This function creates the SF array when loading the batch file, and
+;populate the angle values in the same time.
 PRO create_SF_array, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
@@ -38,17 +40,21 @@ BatchTable       = (*(*global).BatchTable)
 NbrRowMax        = (size(batchTable))(2)
 index            = 0
 SF_array         = FLTARR(1)
+angle_array      = FLTARR(1)
 FOR i=0,(NbrRowMax-1) DO BEGIN
     IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
         IF (index EQ 0) THEN BEGIN
             SF_array[0] = BatchTable[7,i]
+            angle_array[0] = BatchTable[3,i]
         ENDIF ELSE BEGIN
             SF_array = [SF_array,BatchTable[7,i]]
+            angle_array = [angle_array,BatchTable[3,i]]
         ENDELSE
         index++
     ENDIF
 ENDFOR
-(*(*global).SF_array) = SF_array
+(*(*global).SF_array)    = SF_array
+(*(*global).angle_array) = angle_array
 END
 
 ;==============================================================================
@@ -64,6 +70,7 @@ flt2_rescale_ptr = (*global).flt2_rescale_ptr
 flt_index        = 0
 
 FOR i=0,(NbrRowMax-1) DO BEGIN
+
     SF_value = BatchTable[7,i]
     IF (SF_value EQ '') THEN BEGIN
         CONTINUE
