@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
 
@@ -125,9 +125,9 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
 RefreshPlotButtonTitle = 'REFRESH PLOT'
 printButtonTitle = 'OUTPUT FILE'
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;Settings Base
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 XYoff = [660,525]
 sSettingsBase = { size  : [XYoff[0],$
                            XYoff[1],$
@@ -137,14 +137,14 @@ sSettingsBase = { size  : [XYoff[0],$
                   uname : 'settings_base',$
                   map   : 0}
 
-;Settings Label ----------------------------------------------------------------
+;Settings Label ---------------------------------------------------------------
 XYoff = [320,38]
 sSettingsLabel = { size  : [XYoff[0],$
                             XYoff[1]],$
                    value : 'S   E   T   T   I   N   G   S ',$
                    frame : 2}
 
-;Show Error Bars ---------------------------------------------------------------
+;Show Error Bars --------------------------------------------------------------
 XYoff = [5,0]
 sShowError = { size  : [XYoff[0],$
                         XYoff[1]],$
@@ -152,7 +152,7 @@ sShowError = { size  : [XYoff[0],$
                uname : 'show_error_bar_group',$
                list  : ['Yes','No']}
 
-;Data to display ---------------------------------------------------------------
+;Data to display --------------------------------------------------------------
 XYoff = [245,8]
 sDataToDisplayLabel = { size  : [XYoff[0],$
                                 sShowError.size[1]+XYoff[1]],$
@@ -164,7 +164,7 @@ sDataToDisplayText = { size  : [XYoff[0],$
                        value : STRCOMPRESS(100,/REMOVE_ALL),$
                        uname : 'nbrDataTextField' }
 
-;Data to Remove ----------------------------------------------------------------
+;Data to Remove ---------------------------------------------------------------
 XYoff = [8,40]
 sDataToRemoveLabel = { size  : [XYoff[0],$
                                 XYoff[1]],$
@@ -176,9 +176,9 @@ sDataToRemoveText = { size  : [XYoff[0],$
                       value : STRCOMPRESS(1,/REMOVE_ALL),$
                       uname : 'min_crap_text_field'}
                       
-;///////////////////////////////////////////////////////////////////////////////
+;//////////////////////////////////////////////////////////////////////////////
 ;                               Build GUI
-;///////////////////////////////////////////////////////////////////////////////
+;//////////////////////////////////////////////////////////////////////////////
 
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                  UNAME     = 'reset_all_button',$
@@ -323,9 +323,9 @@ YaxisLinLog = CW_BGROUP(RescaleBase,$
                         /EXCLUSIVE,$
                         /RETURN_NAME)
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;Settings Base
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 wSettingsBase = WIDGET_BASE(MAIN_BASE,$
                             UNAME     = sSettingsBase.uname,$
                             XOFFSET   = sSettingsBase.size[0],$
@@ -335,14 +335,14 @@ wSettingsBase = WIDGET_BASE(MAIN_BASE,$
                             FRAME     = sSettingsBase.frame,$
                             MAP       = sSettingsBase.map)
                         
-;Settings Label ----------------------------------------------------------------
+;Settings Label ---------------------------------------------------------------
 wSettingsLabel = WIDGET_LABEL(wSettingsBase,$
                               XOFFSET = sSettingsLabel.size[0],$
                               YOFFSET = sSettingsLabel.size[1],$
                               VALUE   = sSettingsLabel.value,$
                               FRAME   = sSettingsLabel.frame)
 
-;Show Error Bars ---------------------------------------------------------------
+;Show Error Bars --------------------------------------------------------------
 wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
                                sShowError.list,$
                                XOFFSET    = sShowError.size[0],$
@@ -354,7 +354,7 @@ wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
                                /EXCLUSIVE,$
                                /NO_RELEASE)
 
-;Data to display ---------------------------------------------------------------
+;Data to display --------------------------------------------------------------
 wDataToDisplayLabel = WIDGET_LABEL(wSettingsBase,$
                                   XOFFSET = sDataToDisplayLabel.size[0],$
                                   YOFFSET = sDataToDisplayLabel.size[1],$
@@ -368,7 +368,7 @@ wDataToDisplayText = WIDGET_TEXT(wSettingsBase,$
                                 /EDITABLE,$
                                 /ALIGN_LEFT)
 
-;Data to Remove ----------------------------------------------------------------
+;Data to Remove ---------------------------------------------------------------
 wDataToRemoveLabel = WIDGET_LABEL(wSettingsBase,$
                                   XOFFSET = sDataToRemoveLabel.size[0],$
                                   YOFFSET = sDataToRemoveLabel.size[1],$
@@ -384,6 +384,6 @@ wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
 
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO make_gui_main_base_components
 END

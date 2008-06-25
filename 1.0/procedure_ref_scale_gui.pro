@@ -830,6 +830,23 @@ PRO ActivateSettingsBase, Event, Validate
 ActivateBase, Event, 'settings_base', Validate
 END
 
+;##############################################################################
+;******************************************************************************
+;This function checks if there is at least one file in the droplist,
+;if yes, it activates the Full Preview button
+PRO UpdateFullPreviewButton, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+widget_control,id,get_uvalue=global
+
+NbrFilesLoaded = (*global).NbrFilesLoaded
+IF (NbrFilesLoaded GT 0) THEN BEGIN
+    validate = 1
+ENDIF ELSE BEGIN
+    validate = 0
+ENDELSE
+ActivateFullPreviewButton, Event, Validate
+END
+
 ;******************************************************************************
 PRO procedure_ref_scale_gui
 END
