@@ -239,6 +239,8 @@ IF (YbeforeIsNumeric EQ 1 AND $
     (*(*global).BatchTable) = BatchTable
     UpdateBatchTable, Event, BatchTable ;_batch
 
+    (*global).force_activation_step2 = 0 ;no need to force activation of step2
+
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
 ;automatic mode can be performed.
 ;display message in Q1 and Q2 boxe saying that auto stopped
@@ -308,6 +310,8 @@ IF (YbeforeIsNumeric EQ 1 AND $
     BatchTable = (*(*global).BatchTable)
     BatchTable[3,0] = STRCOMPRESS(SF,/REMOVE_ALL)
     (*(*global).BatchTable) = BatchTable
+
+    (*global).force_activation_step2 = 0 ;no need to force activation of step2
 
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
 ;automatic mode can be performed.
