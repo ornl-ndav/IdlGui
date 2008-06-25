@@ -66,6 +66,7 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
             angleValue = getAngleValue(Event) ;_get
             displayAngleValue, Event, angleValue ;_Gui
             UpdateFullPreviewButton, Event ;_Gui
+            display_info_about_file, Event ;_Gui
         END
 
          1: BEGIN               ;if second tab plot only CE plot
