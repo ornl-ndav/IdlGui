@@ -175,13 +175,12 @@ END
 ;This function outputs the value of the angle of the current selected
 ;file (degrees)
 FUNCTION getAngleValue, Event
-
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
-
 angle_array = (*(*global).angle_array)
 fileIndex   = getSelectedIndex(Event,'list_of_files_droplist')
 angleValue  = angle_array[fileIndex]
+print, angle_array ;remove_me
 RETURN, angleValue
 END
 
@@ -431,6 +430,35 @@ FOR i=0,(NbrRow-1) DO BEGIN
     ENDIF
 ENDFOR
 RETURN, IndexArray
+END
+
+;##############################################################################
+;******************************************************************************
+FUNCTION getDataNexusFileNamePreviewed, Event
+FullPreviewText = getTextFieldValue(Event, 'file_info')
+sz = (size(FullPreviewText))(1)
+FOR i=0,(sz-1) DO BEGIN
+    IF (STRMATCH(FullPreviewText[i],'#F data: *')) THEN BEGIN
+        str_array = STRSPLIT(FullPreviewText[i],'#F data: ', $
+                             /EXTRACT, $
+                             /REGEX)
+        RETURN, STRCOMPRESS(str_array[0],/REMOVE_ALL)
+    ENDIF
+ENDFOR
+RETURN, ''
+END
+
+;##############################################################################
+;******************************************************************************
+PRO SaveAngleValueFromNexus, Event, index
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+DataNexusFileName = getDataNexusFileNamePreviewed(Event) 
+iNexus      = OBJ_NEW("idl_get_metadata",DataNexusFileName)
+angle_value = iNexus->getAngle()
+angle_array = (*(*global).angle_array)
+angle_array[index] = angle_value
+(*(*global).angle_array) = angle_array
 END
 
 ;##############################################################################

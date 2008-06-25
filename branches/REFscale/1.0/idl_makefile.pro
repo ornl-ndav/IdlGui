@@ -61,6 +61,7 @@ cd, CurrentFolder
 .run ref_scale_put.pro
 .run ref_scale_is.pro
 .run procedure_idl_send_to_geek.pro
+.run idl_get_metadata__define.pro
 
 .run ref_scale_utility.pro
 .run procedure_ref_scale_gui.pro

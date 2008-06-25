@@ -114,6 +114,8 @@ ENDIF ELSE BEGIN
 ;add all files to step1 and step3 droplist
             AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
             display_info_about_selected_file, Event, LongFileName ;_Gui
+;retrieve angle value from First data nexus file listed
+            SaveAngleValueFromNexus, Event, index ;_get
             populateColorLabel, Event, LongFileName ;_Gui
 ;plot all loaded files
             PlotLoadedFiles, Event ;_Plot
