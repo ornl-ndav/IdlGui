@@ -178,8 +178,15 @@ IF (loading_error EQ 0) THEN BEGIN
 ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
     plot_loaded_file, Event, 'all' ;_Plot
-ENDIF
-
+;activate step2
+    (*global).force_activation_step2 = 1
+;activate step3
+    step3_status = 1
+ENDIF ELSE BEGIN
+    (*global).force_activation_step2 = 0
+    step3_status = 0
+ENDELSE
+ActivateStep3_fromBatch, Event, step3_status
 END
 
 ;==============================================================================

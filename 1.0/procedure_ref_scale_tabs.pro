@@ -88,9 +88,13 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
              ENDIF ELSE BEGIN
                  validate_status = 0
              ENDELSE
-             ActivateStep3, Event, validate_status
-             ActivateButton, Event, 'Step3_automatic_rescale_button', $
-               validate_status
+             IF ((*global).force_activation_step2) THEN BEGIN
+                 ActivateStep3_fromBatch, Event, validate_status          
+             ENDIF ELSE BEGIN
+                 ActivateStep3, Event, validate_status
+                 ActivateButton, Event, 'Step3_automatic_rescale_button', $
+                   validate_status
+             ENDELSE
  ;activate or not AUTOMATIC SCALLING
 
             indexSelected = $
