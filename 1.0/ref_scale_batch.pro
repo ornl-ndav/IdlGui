@@ -31,6 +31,44 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO apply_sf_to_data, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+BatchTable       = (*(*global).BatchTable)
+NbrRowMax        = (size(batchTable))(2)
+flt1_ptr         = (*global).flt1_ptr
+flt2_ptr         = (*global).flt2_ptr
+flt1_rescale_ptr = (*global).flt1_rescale_ptr
+flt2_rescale_ptr = (*global).flt2_rescale_ptr
+flt_index        = 0
+
+FOR i=0,(NbrRowMax-1) DO BEGIN
+    SF_value = BatchTable[7,i]
+    IF (SF_value EQ '') THEN BEGIN
+        CONTINUE
+    ENDIF ELSE BEGIN
+        SF = FLOAT(SF_value)
+    ENDELSE
+    flt1 = *flt1_ptr[flt_index]
+    flt2 = *flt2_ptr[flt_index]
+
+;rescale data
+    flt1 = flt1 / SF
+    flt2 = flt2 / SF
+    
+    *flt1_rescale_ptr[i] = flt1
+    *flt2_rescale_ptr[i] = flt2
+    
+    flt_index++ ;move on to next data ploted
+    
+ENDFOR
+
+(*global).flt1_rescale_ptr = flt1_rescale_ptr
+(*global).flt2_rescale_ptr = flt2_rescale_ptr
+    
+END
+
+;==============================================================================
 FUNCTION retrieveDRfiles, Event, BatchTable
 ;Get Nbr of non-empty rows
 NbrRow         = getGlobalVariable('NbrRow')
@@ -135,8 +173,11 @@ IF (loading_error EQ 0) THEN BEGIN
 ;reset Qmin and Qmax
     (*(*global).Qmin_array) = intarr(sz)
     (*(*global).Qmax_array) = intarr(sz)
+;apply the SF to the data
+    apply_sf_to_data, Event
 ;plot all loaded files
     PlotLoadedFiles, Event      ;_Plot
+    plot_loaded_file, Event, 'all' ;_Plot
 ENDIF
 
 END

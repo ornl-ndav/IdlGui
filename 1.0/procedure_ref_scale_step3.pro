@@ -329,12 +329,6 @@ index = getSelectedIndex(Event,'step3_work_on_file_droplist') ;_get
 flt1 = *flt1_ptr[index]
 flt2 = *flt2_ptr[index]
 
-SF = SF[0]
-
-;rescale data
-flt1 = flt1 / SF
-flt2 = flt2 / SF
-
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
 flt2_rescale_ptr = (*global).flt2_rescale_ptr
 
