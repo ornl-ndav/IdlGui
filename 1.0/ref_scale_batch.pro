@@ -31,6 +31,27 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO create_SF_array, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+BatchTable       = (*(*global).BatchTable)
+NbrRowMax        = (size(batchTable))(2)
+index            = 0
+SF_array         = FLTARR(1)
+FOR i=0,(NbrRowMax-1) DO BEGIN
+    IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
+        IF (index EQ 0) THEN BEGIN
+            SF_array[0] = BatchTable[7,i]
+        ENDIF ELSE BEGIN
+            SF_array = [SF_array,BatchTable[7,i]]
+        ENDELSE
+        index++
+    ENDIF
+ENDFOR
+(*(*global).SF_array) = SF_array
+END
+
+;==============================================================================
 PRO apply_sf_to_data, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
@@ -173,6 +194,8 @@ IF (loading_error EQ 0) THEN BEGIN
 ;reset Qmin and Qmax
     (*(*global).Qmin_array) = intarr(sz)
     (*(*global).Qmax_array) = intarr(sz)
+;create SF_array
+    create_SF_array, Event
 ;apply the SF to the data
     apply_sf_to_data, Event
 ;plot all loaded files
