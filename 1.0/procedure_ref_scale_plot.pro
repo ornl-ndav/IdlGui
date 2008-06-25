@@ -301,7 +301,6 @@ ListLongFileName = (*(*global).ListOfLongFileName)
 
 ;1 if first load, 0 otherwise
 XYMinMax = retrieveXYMinMax(Event) ;_get
-print, XYMinMax ;remove_me
 IF  (XYMinMax[0] NE '' AND $
      XYMinMax[1] NE '' AND $
      XYMinMax[2] NE '' AND $
