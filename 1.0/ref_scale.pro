@@ -288,7 +288,7 @@ IF (DEBUGGER EQ 'yes') THEN BEGIN
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
 ;change default path of batch file
     (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
-    (*global).input_path       = '~/local'   
+    (*global).input_path       = '~/'   
 ENDIF
 ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
 ;------------------------------------------------------------------------------

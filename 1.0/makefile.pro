@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -47,6 +47,7 @@ resolve_routine, "uniq",/either
 resolve_routine, "ref_scale", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
+resolve_routine, "XDISPLAYFILE", /either
 
 save,/routines,filename = CurrentFolder + '/ref_scale.sav'
 exit
