@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,10 +30,10 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 ;this function create the output file name
 ;if CE file name is REF_L_2893.txt
@@ -53,7 +53,7 @@ output_file_name = full_ce_name_1[0] + '_CE_scaling.txt'
 RETURN, output_file_name
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 ;This function create the output file
 PRO createOutputFile, Event, output_file_name, MasterText
@@ -72,7 +72,7 @@ free_lun, 1
 
 END
 
-;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 
 ;Main function that will produce and display the output file.
 PRO ProduceOutputFile, Event
@@ -177,16 +177,19 @@ CATCH, output_error
 IF (output_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    activate_output_file = 0
 ENDIF ELSE BEGIN
 ;create output file name
     createOutputFile, Event, outputFileName, MasterText ;_produce_output
     idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+    activate_output_file = 1
 ENDELSE
+ActivateWidget, Event, 'output_file_base', activate_output_file
 idl_send_to_geek_showLastLineLogBook, Event
 END
 
-;###############################################################################
-;*******************************************************************************
+;##############################################################################
+;******************************************************************************
 
 PRO ref_scale_produce_output
 END
