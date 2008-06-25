@@ -88,6 +88,7 @@ global = $
             angleDisplayPrecision:  1000L,$ ;the precision of the angle value displayed
             replot_me: 1,$ ;to replot main plot will be 0 just after being replot
             replotQnew: 0,$
+            force_activation_step2: 0,$
             flt0_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
             flt1_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
             flt2_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis

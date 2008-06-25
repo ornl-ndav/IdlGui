@@ -54,17 +54,23 @@ END
 
 ;Check if step3 can be validated (if step2 has been run with sucess)
 FUNCTION CheckStep2Status, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+widget_control,id,get_uvalue=global
 ;retrieve values of fitting equation (a and b)
 a = getValue(Event,'step2_fitting_equation_a_text_field')
 b = getValue(Event,'step2_fitting_equation_b_text_field')
 ;check a and b values
-IF (a NE '-NaN' AND $
-    a NE 'a' AND $
-    b NE '-NaN' AND $
-    b NE 'b') THEN BEGIN
+IF ((*global).force_activation_step2) THEN BEGIN
     activate_status = 1
 ENDIF ELSE BEGIN
-    activate_status = 0
+    IF (a NE '-NaN' AND $
+        a NE 'a' AND $
+        b NE '-NaN' AND $
+        b NE 'b') THEN BEGIN
+        activate_status = 1
+    ENDIF ELSE BEGIN
+        activate_status = 0
+    ENDELSE
 ENDELSE
 RETURN, activate_status
 END
@@ -725,6 +731,13 @@ END
 ;******************************************************************************
 PRO ActivateStep3, Event, validate
 ActivateWidget, Event, 'step3', validate
+ActivateWidget, Event, 'Step3ManualModeFrame', validate
+END
+
+;##############################################################################
+;******************************************************************************
+PRO ActivateStep3_fromBatch, Event, validate
+ActivateWidget, Event, 'Step3_automatic_rescale_button', 0
 ActivateWidget, Event, 'Step3ManualModeFrame', validate
 END
 
