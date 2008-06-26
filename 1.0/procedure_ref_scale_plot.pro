@@ -583,6 +583,8 @@ ENDIF ELSE BEGIN
 
 ;determine Qmin and Qmax
 
+        print, flt0 ;remove_me
+
         QminQmax = getQminQmaxValue(flt0, flt1) ;_get
         Qmin = QminQmax[0]
         Qmax = QminQmax[1]

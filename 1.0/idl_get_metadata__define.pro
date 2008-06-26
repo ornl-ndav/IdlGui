@@ -32,6 +32,22 @@
 ;
 ;==============================================================================
 
+;This function converts an angle from radian to degree
+FUNCTION convert_rad_to_deg, RadValue
+value1 = float(RadValue)*(float(180))
+value  = value1 / float(!PI)
+return, value
+END
+
+;This function converts a lenght from various units to millimetre
+FUNCTION convert_to_mm, value, units
+CASE (units) OF
+    'metre': coefficient = long(1./1000)
+    ELSE   : coefficient = 1
+ENDCASE
+RETURN, value*coefficient
+END
+    
 ;------------------------------------------------------------------------------
 ;This class method returns the theta angle units
 FUNCTION get_theta_units, fileID
@@ -91,7 +107,7 @@ END
 FUNCTION idl_get_metadata::init, nexus_full_path
 ;open hdf5 nexus file
 error_file = 0
-CATCH, error_file
+;CATCH, error_file
 IF (error_file NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN,0
@@ -100,6 +116,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 ;get angle (theta)
 self.angle  = get_theta_degree(fileID)
+print, self.angle ;remove_me
 ;close hdf5 nexus file
 h5f_close, fileID
 IF (self.angle NE '') THEN BEGIN

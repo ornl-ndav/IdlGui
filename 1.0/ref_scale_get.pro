@@ -180,7 +180,6 @@ widget_control,id,get_uvalue=global
 angle_array = (*(*global).angle_array)
 fileIndex   = getSelectedIndex(Event,'list_of_files_droplist')
 angleValue  = angle_array[fileIndex]
-print, angle_array ;remove_me
 RETURN, angleValue
 END
 
@@ -370,11 +369,11 @@ widget_control,id,get_uvalue=global
 angleDisplayPrecision = (*global).angleDisplayPrecision
 
 step1Variable = float(angleValue)*angleDisplayPrecision
-print, step1Variable 
+;print, step1Variable 
 step2Variable = floor(step1Variable)
-print, step2Variable
+;print, step2Variable
 step3Variable = float(step2Variable) / angleDisplayPrecision
-print, step3Variable
+;print, step3Variable
 RETURN, step3Variable
 END
 
