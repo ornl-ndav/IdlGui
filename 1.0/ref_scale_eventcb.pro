@@ -53,7 +53,6 @@ ResetAllOtherParameters, Event
 ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
-ClearColorLabel, Event          ;_Gui
 ClearCElabelStep2, Event        ;_Gui
 ClearStep2GlobalVariable, Event ;_Step2
 ActivatePrintFileButton, Event, 0

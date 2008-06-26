@@ -136,15 +136,6 @@ sListOfColors = { size  : [sColorSlider.size[0]+XYoff[0],$
                            sColorSlider.size[1]+XYoff[1]],$
                   value : 'Black  Blue  Red  Oran.  Yel.  Whit.'}
                            
-;***** Current File displayed Name ********************************************
-XYoff          = [10,15]
-sColorFileName = { size  : [sColorSlider.size[0]+ $
-                            sColorSlider.size[2]+XYoff[0],$
-                            sColorSlider.size[1]+XYoff[1],$
-                            240],$
-                   value : ' ',$
-                   uname : 'ColorFileLabel'}
-
 ;***** TOF Base ***************************************************************
 sTOFbase   = { size  : [5,5,StepsTabSize[2]-20,105],$
                uname : 'dMD_angle_base',$
@@ -335,14 +326,6 @@ wListOfColors = WIDGET_LABEL(STEP1_BASE,$
                              XOFFSET = sListOfColors.size[0],$
                              YOFFSET = sListOfColors.size[1],$
                              VALUE   = sListOfColors.value)
-
-;***** Current File Displayed Name ********************************************
-wColorFileName = WIDGET_LABEL(STEP1_BASE,$
-                              XOFFSET   = sColorFileName.size[0],$
-                              YOFFSET   = sColorFileName.size[1],$
-                              SCR_XSIZE = sColorFileName.size[2],$
-                              UNAME     = sColorFileName.uname,$
-                              VALUE     = sColorFileName.value)
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** TOF files base *********************************************************
