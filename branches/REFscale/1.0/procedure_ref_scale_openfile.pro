@@ -160,6 +160,7 @@ ENDIF ELSE BEGIN
     close,u
     free_lun,u
 
+;check that flt1 is not empty
     sz = (size(flt1))(1)  
     IF (sz LE 1) THEN BEGIN
         message_text = ['ERROR loading ' + LongFileName,$
@@ -167,7 +168,17 @@ ENDIF ELSE BEGIN
         title        = 'ERROR !'
         result = DIALOG_MESSAGE(message_text,TITLE=title)
         RETURN, 0
-    ENDIF
+    ENDIF 
+
+;check that flt1 is not only 0 or NAN
+    real_data_array = WHERE(flt1 GT 0, nbr)
+    IF (nbr EQ 0) THEN BEGIN
+        message_text = ['ERROR loading ' + LongFileName,$
+                        'File is probably empty !']
+        title        = 'ERROR !'
+        result = DIALOG_MESSAGE(message_text,TITLE=title)
+        RETURN, 0
+    ENDIF 
     
     DEVICE, DECOMPOSED = 0
     loadct,5,/SILENT

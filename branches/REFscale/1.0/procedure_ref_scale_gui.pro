@@ -495,14 +495,6 @@ END
 
 ;******************************************************************************
 
-;This function clear the contain of the color label 
-PRO ClearColorLabel, Event
-id = widget_info(Event.top,find_by_uname='ColorFileLabel')
-widget_control, id, set_value=''
-END
-
-;******************************************************************************
-
 PRO displayAngleValue, Event, angleValue
 ;get angle value for that index
 angleTextFieldId = widget_info(Event.top,find_by_uname='dMD_angle_info_label')
@@ -525,13 +517,11 @@ LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist') ;_get
 
       clear_info_about_selected_file, Event ;_Gui
       ActivateClearFileButton, Event, 0 ;_Gui
-      ClearColorLabel, Event ;_Gui
       ActivateColorSlider, Event, 0 ;_Gui
 
   ENDIF ELSE BEGIN
 
       display_info_about_selected_file, Event, LongFileName ;_Gui
-      populateColorLabel, Event, LongFileName ;_Gui
       ActivateColorSlider,Event,1 ;_Gui
       angleValue = getAngleValue(Event) ;_get
       displayAngleValue, Event, angleValue ;_Gui
