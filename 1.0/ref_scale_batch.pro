@@ -156,7 +156,8 @@ PRO ResetBatch, Event
 NewTable = STRARR(5,20)
 ;repopulate Table
 DisplayBatchTable, Event, NewTable
-
+;reset batch file name loaded
+putValueInTextField, Event, 'load_batch_file_text_field', ''
 END
 
 ;==============================================================================
@@ -286,7 +287,8 @@ IF (BatchFileName NE '') THEN BEGIN
         LogText = '-> This can be due to the fact that 1 or more of the ' + $
           ' DR files does not exist !'
         idl_send_to_geek_addLogBookText, Event, LogText
-        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash File
+        refresh_bash_file_status = 0 ;enable REFRESH and SAVE AS Bash Fil
+        reset_all_button, Event
     ENDELSE
 ENDIF ELSE BEGIN
 ;disable REFRESH and SAVE AS Bash File
