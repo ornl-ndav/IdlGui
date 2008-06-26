@@ -454,7 +454,11 @@ id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
 DataNexusFileName = getDataNexusFileNamePreviewed(Event) 
 iNexus      = OBJ_NEW("idl_get_metadata",DataNexusFileName)
-angle_value = iNexus->getAngle()
+IF (OBJ_VALID(iNexus)) THEN BEGIN
+    angle_value = iNexus->getAngle()
+ENDIF ELSE BEGIN
+    angle_value = 0.0
+ENDELSE
 angle_array = (*(*global).angle_array)
 angle_array[index] = angle_value
 (*(*global).angle_array) = angle_array

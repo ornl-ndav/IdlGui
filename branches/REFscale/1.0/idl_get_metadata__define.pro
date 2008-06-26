@@ -107,7 +107,7 @@ END
 FUNCTION idl_get_metadata::init, nexus_full_path
 ;open hdf5 nexus file
 error_file = 0
-;CATCH, error_file
+CATCH, error_file
 IF (error_file NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN,0
@@ -116,7 +116,6 @@ ENDIF ELSE BEGIN
 ENDELSE
 ;get angle (theta)
 self.angle  = get_theta_degree(fileID)
-print, self.angle ;remove_me
 ;close hdf5 nexus file
 h5f_close, fileID
 IF (self.angle NE '') THEN BEGIN
