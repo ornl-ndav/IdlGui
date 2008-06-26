@@ -31,7 +31,8 @@ FUNCTION find_full_nexus_name, Event, $
                                proposal
 
 ;cmd = "findnexus --archive -i" + instrument 
-cmd  = '~/SVN/ASGIntegration/trunk/python/findnexus '
+cmd  = 'findnexus '
+;cmd  = '~/SVN/ASGIntegration/trunk/python/findnexus '
 cmd += '--archive -i' + instrument 
 IF (proposal_index NE 0) THEN BEGIN
     cmd += ' --proposal=' + proposal
