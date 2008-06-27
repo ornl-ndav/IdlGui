@@ -59,7 +59,7 @@ ActivatePrintFileButton, Event, 0
 (*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
 ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
 ActivateStep3, Event, 0 ;_Gui, desactivate base of step3
-ActivateOutputFileTab, Event, 0 ;_Gui, desactivate Output File tab
+putValueInLabel, Event, 'output_file_name_label_dynmaic', '';_put
 ActivateSettingsBase, Event, 0 ;_gui
 ResetBatch, Event ;_batch
 idl_send_to_geek_addLogBookText, Event, '> Reset Full Session' 

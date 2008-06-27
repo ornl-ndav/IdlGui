@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,15 +30,15 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO MakeGuiOutputFile, STEPS_TAB, Step1Size
                        
-OutputFileNameLabelStaticSize = [5,8]
-OutputfileNameLabelDynamicSize = [150,3,400,30]
+OutputFileNameLabelStaticSize  = [5,8]
+OutputfileNameLabelDynamicSize = [115,3,400]
 
-OutputFileTextFieldsize = [ 5, 5+30, 515, 365-30]
-OutputFileTitle = 'OUTPUT FILE'
+OutputFileTextFieldsize        = [ 5, 5+38, 515, 365-35]
+OutputFileTitle                = 'OUTPUT FILE'
 OutputFileNameLabelStaticTitle = 'Output file name:'
 
 ;Build GUI
@@ -49,7 +49,7 @@ OutputFile_BASE = WIDGET_BASE(STEPS_TAB,$
                               YOFFSET   = Step1Size[1],$
                               SCR_XSIZE = Step1Size[2],$
                               SCR_YSIZE = Step1Size[3],$
-                              MAP       = 0)
+                              MAP       = 1)
 
 OutputFileNameLabelStatic = $
   WIDGET_LABEL(OutputFile_base,$
@@ -58,14 +58,15 @@ OutputFileNameLabelStatic = $
                VALUE   = OutputFileNameLabelStaticTitle)
 
 OutputFileNameLabelDynamic = $
-  WIDGET_LABEL(OutputFile_base,$
-               XOFFSET   = OutputFileNameLabelDynamicSize[0],$
-               YOFFSET   = OutputFileNameLabelDynamicSize[1],$
-               SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
-               SCR_YSIZE = OutputFileNameLabelDynamicSize[3],$
-               UNAME     = 'output_file_name_label_dynmaic',$
-               VALUE     = '',$
-               /ALIGN_LEFT)
+  WIDGET_TEXT(OutputFile_base,$
+              XOFFSET   = OutputFileNameLabelDynamicSize[0],$
+              YOFFSET   = OutputFileNameLabelDynamicSize[1],$
+              SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
+              UNAME     = 'output_file_name_label_dynmaic',$
+              VALUE     = '',$
+              FRAME     = 1,$
+              /EDITABLE,$
+              /ALIGN_LEFT)
 
 OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
                                   UNAME     = 'output_file_text_field',$
@@ -77,7 +78,6 @@ OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
                                   
 END
 
-
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO make_gui_output_file
 END
