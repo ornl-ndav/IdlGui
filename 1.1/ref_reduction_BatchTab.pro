@@ -559,7 +559,22 @@ id = widget_info(Event.top,find_by_uname='repopulate_gui')
 widget_control, id, sensitive=activateButtonStatus
 END
 
+;-----------------------------------------------------------------------------
+;This function check if the Batch file (from the text field) exist and
+;if it does, make the refresh button enabled
+PRO  CheckRefreshButton, Event
+BatchFilePath = getBatchPath(Event)
+BatchFileName = getTextFieldValue(Event,'save_as_file_name')
+IF (FILE_TEST(BatchFilePath + BatchFileName) AND $
+    BatchFileName NE '') THEN BEGIN
+    status = 1
+ENDIF ELSE BEGIN
+    status = 0
+ENDELSE
+ActivateWidget, Event, 'refresh_batch_file_button', status
+END
 
+;-----------------------------------------------------------------------------
 ;This function retrieves the row of the selected cell and select the
 ;full row
 PRO SelectFullRow, Event, RowSelected
@@ -568,13 +583,13 @@ id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
 widget_control, id, set_table_select=[0,RowSelected,ColumnIndexes,RowSelected]
 END
 
-
+;-----------------------------------------------------------------------------
 PRO ValidateActive, Event, value
 id = widget_info(Event.top,find_by_uname='batch_run_active_status')
 widget_control, id, set_value=value
 END
 
-
+;-----------------------------------------------------------------------------
 FUNCTION ValueOfActive, Event
 id = widget_info(Event.top,find_by_uname='batch_run_active_status')
 widget_control, id, get_value=value
@@ -1409,6 +1424,24 @@ BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
                                 FILTER   = (*global).BatchDefaultFileFilter,$
                                 GET_PATH = new_path,$
                                 /MUST_EXIST)
+BatchTab_LoadBatchFile_step2, Event, $
+  BatchFileName, $
+  new_path
+END
+
+
+PRO BatchTab_ReloadBatchFile, Event
+BatchFilePath = getBatchPath(Event)
+BatchFileName = getTextFieldValue(Event,'save_as_file_name')
+BatchTab_LoadBatchFile_step2, Event, BatchFilePath+BatchFileName, ''
+END
+
+
+
+PRO BatchTab_LoadBatchFile_step2, Event, BatchFileName, new_path
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 IF (BatchFileName NE '') THEN BEGIN
     batch_error = 0
     CATCH, batch_error
@@ -1424,7 +1457,9 @@ IF (BatchFileName NE '') THEN BEGIN
         putLogBookMessage, Event, LogText, APPEND=1
         LogText = '-> File Name : ' + BatchFileName
         putLogBookMessage, Event, LogText, APPEND=1
-        (*global).BatchDefaultPath = new_path
+        IF (new_path NE '') THEN BEGIN
+            (*global).BatchDefaultPath = new_path
+        ENDIF
         LogText = '-> Populate Batch Table ... ' + (*global).processing_message
         putLogBookMessage, Event, LogText, APPEND=1
         BatchTable = PopulateBatchTable(Event, BatchFileName)
@@ -1448,6 +1483,8 @@ IF (BatchFileName NE '') THEN BEGIN
         putBatchFileName, Event, FileName
 ;enable or not the REPOPULATE Button
         CheckRepopulateButton, Event
+;enable or not the REFRESH Button
+        CheckRefreshButton, Event
     ENDELSE
 ENDIF 
 END
@@ -1700,6 +1737,7 @@ procedure_get_numeric
 ref_scale_put
 ref_scale_is
 procedure_idl_send_to_geek
+idl_get_metadata__define
 
 procedure_main_base_event
 ref_scale_utility
@@ -1709,8 +1747,8 @@ procedure_ref_scale_step3
 ref_scale_math
 ref_scale_file_utility
 procedure_ref_scale_tof_to_q
-ref_scale_batch
 idl_load_batch_file__define
+idl_create_batch_file__define
 idl_parse_command_line__define
 
 procedure_ref_scale_openfile
@@ -1718,10 +1756,11 @@ procedure_ref_scale_plot
 procedure_ref_scale_load
 procedure_ref_scale_step2
 ref_scale_produce_output
+ref_scale_batch
 procedure_ref_scale_tabs
 ref_scale_eventcb
 
 ;get name of batch file
-ref_scale, BatchMode='yes', BatchFile=(*global).BatchFileName
+ref_scale, BatchMode=(*global).main_base, BatchFile=(*global).BatchFileName
 
 END

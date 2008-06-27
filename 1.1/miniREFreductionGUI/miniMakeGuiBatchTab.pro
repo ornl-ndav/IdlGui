@@ -364,6 +364,16 @@ dLaunchREFscaleButton = { size  : [dLoadBatchButton.size[0]+ $
                           uname : 'launch_refscale_button',$
                           value : 'LAUNCH REFscale'}
 
+;Refresh Batch button
+XYoff = [0,0]
+dRefreshREFscaleButton = { size:     [dLoadBatchButton.size[0]+ $
+                                      dLoadBatchButton.size[2]+XYoff[0],$
+                                      dLoadBatchButton.size[1]+XYoff[1],$
+                                      dLoadBatchButton.size[2:3]],$
+                          uname:     'refresh_batch_file_button',$
+                          sensitive: 0,$
+                          value:     'REFRESH BATCH FILE'}
+
 ;******************************************************************************
 ;                                Build GUI
 ;******************************************************************************
@@ -752,6 +762,19 @@ IF (with_launch_button EQ 'yes') THEN BEGIN
                     UNAME     = dLaunchREFscalebutton.uname,$
                     VALUE     = dLaunchREFscalebutton.value)
 ENDIF
+
+;\\\\\\\\\\\\\\\\\\\\\
+;Refresh Batch Button\
+;\\\\\\\\\\\\\\\\\\\\\
+wRefreshREFscalebutton = $
+  WIDGET_BUTTON(BATCH_BASE,$
+                XOFFSET   = dRefreshREFscalebutton.size[0],$
+                YOFFSET   = dRefreshREFscalebutton.size[1],$
+                SCR_XSIZE = dRefreshREFscalebutton.size[2],$
+                SCR_YSIZE = dRefreshREFscalebutton.size[3],$
+                UNAME     = dRefreshREFscalebutton.uname,$
+                VALUE     = dRefreshREFscalebutton.value,$
+                SENSITIVE = dRefreshREFscalebutton.sensitive)
     
 ;\\\\\\\\\\\\\\
 ;save as label\
@@ -782,7 +805,8 @@ wSAfileText = WIDGET_TEXT(BATCH_BASE,$
                           SCR_YSIZE = dSAfileText.size[3],$
                           VALUE     = dSAfileText.value,$ 
                           UNAME     = dSAfileText.uname,$
-                          /EDITABLE)
+                          /EDITABLE,$
+                          /ALL_EVENTS)
                             
 
 ;\\\\\\\\\\\\
@@ -796,5 +820,6 @@ wSaveButton = WIDGET_BUTTON(BATCH_BASE,$
                             UNAME     = dSaveButton.uname,$
                             VALUE     = dSaveButton.value,$
                             SENSITIVE = dSaveButton.sensitive)
+                            
 
 END
