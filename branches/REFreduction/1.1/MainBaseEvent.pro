@@ -1107,6 +1107,12 @@ CASE Event.id OF
         SaveDataNormInputValues, Event
     end
 
+;;Refresh Batch File
+    widget_info(wWidget, FIND_BY_UNAME='refresh_batch_file_button'): begin
+        BatchTab_ReloadBatchFile, Event ;_tab
+        SaveDataNormInputValues, Event
+    end
+
 ;;Launch REFscale
     widget_info(wWidget, FIND_BY_UNAME='launch_refscale_button'): BEGIN
         BatchTab_LaunchREFscale, Event ;_BatchTab
@@ -1120,6 +1126,12 @@ CASE Event.id OF
 ;;Save set of command lines
     widget_info(wWidget, FIND_BY_UNAME='save_as_file_button'): begin
         BatchTab_SaveCommands, Event
+    end
+
+;;Reach each time something change in the save_as text_field (name of
+;;the batch file)
+    widget_info(wWidget, FIND_BY_UNAME='save_as_file_name'): begin
+        CheckRefreshButton, Event
     end
 
 ;**LOG_BOOK TAB**

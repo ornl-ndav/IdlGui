@@ -13,7 +13,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.1.6'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
@@ -40,6 +40,7 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    main_base: 0L,$
                     mouse_debugging: MOUSE_DEBUGGING,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
@@ -442,6 +443,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          YPAD         = 2,$
                          MBAR         = WID_BASE_0_MBAR)
 
+(*global).main_base = MAIN_BASE
+
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
  
@@ -548,7 +551,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
 ;default path of Load Batch files
