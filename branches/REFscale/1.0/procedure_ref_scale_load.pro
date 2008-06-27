@@ -69,6 +69,8 @@ ENDIF ELSE BEGIN                ;Q
     LoadFile_Q, Event
 ENDELSE
 idl_send_to_geek_showLastLineLogBook, Event
+;this function updates the output file name
+update_output_file_name, Event ;_output
 END
 
 ;##############################################################################
