@@ -302,8 +302,11 @@ IF (refresh_bash_file_status) THEN BEGIN ;loading was successfull
     update_output_file_name_from_batch, Event ;_output
 ENDIF ELSE BEGIN
     putValueInLabel, Event, 'output_file_name_label_dynmaic', ''; _put
+    message = ['The loading of ' + BatchFileName + ' did not work !',$
+               'Check the Log Book !']
+    title   = 'Problem Loading the Batch File!'
+    result = DIALOG_MESSAGE(message,TITLE=title,/ERROR)
 ENDELSE
-
 END
 
 ;==============================================================================
