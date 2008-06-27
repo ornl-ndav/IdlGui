@@ -214,5 +214,17 @@ END
 
 ;##############################################################################
 ;******************************************************************************
+PRO update_output_file_name_from_batch, Event ;_output
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL, id, GET_UVALUE=global
+FileName = createOuputFileName(Event)
+;display the name of the output file name
+putValueInLabel, Event, $
+  'output_file_name_label_dynmaic', $
+  FileName                      ;_put
+END
+
+;##############################################################################
+;******************************************************************************
 PRO ref_scale_produce_output
 END
