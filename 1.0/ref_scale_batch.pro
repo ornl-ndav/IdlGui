@@ -297,6 +297,13 @@ ENDELSE
 ActivateWidget, Event, 'ref_scale_refresh_batch_file', refresh_bash_file_status
 ActivateWidget, Event, 'ref_scale_save_as_batch_file', refresh_bash_file_status
 ActivateWidget, Event, 'batch_preview_button', refresh_bash_file_status
+IF (refresh_bash_file_status) THEN BEGIN ;loading was successfull
+;this function updates the output file name
+    update_output_file_name_from_batch, Event ;_output
+ENDIF ELSE BEGIN
+    putValueInLabel, Event, 'output_file_name_label_dynmaic', ''; _put
+ENDELSE
+
 END
 
 ;==============================================================================

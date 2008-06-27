@@ -63,7 +63,6 @@ putValueInLabel, Event, 'output_file_name_label_dynmaic', '';_put
 ActivateSettingsBase, Event, 0 ;_gui
 ResetBatch, Event ;_batch
 idl_send_to_geek_addLogBookText, Event, '> Reset Full Session' 
-
 END
 
 ;##############################################################################
