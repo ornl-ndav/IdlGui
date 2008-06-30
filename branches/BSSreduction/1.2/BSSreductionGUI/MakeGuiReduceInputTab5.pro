@@ -20,7 +20,7 @@ sInputBase = { size: [XYoff[0],$
                       XYoff[1],$
                       720,150],$
                frame: 0,$
-               sensitive:   1,$
+               sensitive:   0,$
                uname: 'scale_constant_lambda_dependent_input_base'}
 
 ;Chopper Frequency

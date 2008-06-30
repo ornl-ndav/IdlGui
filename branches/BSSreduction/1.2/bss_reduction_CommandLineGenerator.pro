@@ -707,22 +707,97 @@ ENDIF
 TabName = 'Tab#5 - LAMBDA DEPENDENT BACKGROUND SUBTRACTION'
 tab5    = 0
 
+scale_constant = $
+  getTextFieldValue(Event, $
+                    'scale_constant_lambda_dependent_back_uname')
+IF (scale_constant NE '') THEN BEGIN
+    activate_base = 1
+    cmd += ' --ldb-const=' + STRCOMPRESS(scale_constant,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    activate_base = 0
+ENDELSE
+SensitiveBase, Event, $
+  'scale_constant_lambda_dependent_input_base', $
+  activate_base
 
+IF (activate_base) THEN BEGIN ;need the input information
 
+;Chopper Frequency
+    value = getTextFieldValue(Event,'chopper_frequency_value')
+    cmd += ' --chopper-freq='
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        status_text = '   -Please provide a Chopper Frequency'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all) + ',0.0'
+    ENDELSE
+    
+;Chopper Wavelength Center
+    value = getTextFieldValue(Event,'chopper_wavelength_value')
+    cmd += ' --chopper-lambda-cent='
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        status_text = '   -Please provide a Chopper Wavelength Center'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all) + ',0.0'
+    ENDELSE
 
+;TOF Least Background
+    value = getTextFieldValue(Event,'tof_least_background_value')
+    cmd += ' --tof-least-bkg='
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?,0.0'
+        status_text = '   -Please provide a TOF Least Background'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all) + ',0.0'
+    ENDELSE
 
-
-
-
-
-
-
-
-
-
-
-
-
+ENDIF
 
 ;*************TAB6*****************
 TabName = 'Tab#6 - SCALLING CONTROL'
