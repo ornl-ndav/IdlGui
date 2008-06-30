@@ -712,7 +712,8 @@ scale_constant = $
                     'scale_constant_lambda_dependent_back_uname')
 IF (scale_constant NE '') THEN BEGIN
     activate_base = 1
-    cmd += ' --ldb-const=' + STRCOMPRESS(scale_constant,/REMOVE_ALL)
+    cmd += ' --ldb-const=' + STRCOMPRESS(scale_constant,/REMOVE_ALL) + $
+      ',0.0'
 ENDIF ELSE BEGIN
     activate_base = 0
 ENDELSE
