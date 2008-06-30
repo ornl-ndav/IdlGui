@@ -335,9 +335,9 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
-;tab #7
+;tab #5
     id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-    widget_control, id1, set_tab_current = 5
+    widget_control, id1, set_tab_current = 4
 ENDIF
 
 ;give extra power to j35
