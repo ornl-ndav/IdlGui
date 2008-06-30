@@ -704,65 +704,86 @@ ENDIF
 ;putInfoInCommandLineStatus, Event, '', 1
 
 ;*************TAB5*****************
-TabName = 'Tab#5 - SCALLING CONTROL'
+TabName = 'Tab#5 - LAMBDA DEPENDENT BACKGROUND SUBTRACTION'
 tab5    = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;*************TAB6*****************
+TabName = 'Tab#6 - SCALLING CONTROL'
+tab6    = 0
 
 ;get constant to scale the back. spectra for subtraction from the
 ;sample data spectra
 IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.csbss_button = 1
+    (*global).Configuration.Reduce.tab6.csbss_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.csbss_button = 0
+    (*global).Configuration.Reduce.tab6.csbss_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
     cmd += ' --scale-bs='
 
     Value = getTextFieldValue(Event,'csbss_value_text')
-    (*global).Configuration.Reduce.tab5.csbss_value_text = Value
+    (*global).Configuration.Reduce.tab6.csbss_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale Background' + $
           ' for Subtraction from the Sample Data Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'csbss_error_text')
-    (*global).Configuration.Reduce.tab5.csbss_error_text = Error
+    (*global).Configuration.Reduce.tab6.csbss_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale Background' + $
           ' for Subtraction from the Sample Data Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
@@ -772,59 +793,59 @@ ENDIF
 ;get constant to scale the back. spectra for subtraction from the
 ;normalization data spectra
 IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.csn_button = 1
+    (*global).Configuration.Reduce.tab6.csn_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.csn_button = 0
+    (*global).Configuration.Reduce.tab6.csn_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
     cmd += ' --scale-bn='
 
     Value = getTextFieldValue(Event,'csn_value_text')
-    (*global).Configuration.Reduce.tab5.csn_value_text = Value
+    (*global).Configuration.Reduce.tab6.csn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale Background' + $
           ' for Subtraction from the normalization Data Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'csn_error_text')
-    (*global).Configuration.Reduce.tab5.csn_error_text = Error
+    (*global).Configuration.Reduce.tab6.csn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale Background' + $
           ' for Subtraction from the Normalization Data Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
@@ -834,59 +855,61 @@ ENDIF
 ;get constant to scale the back. spectra for subtraction from the
 ;sample data associated empty container spectra
 IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.bcs_button = 1
+    (*global).Configuration.Reduce.tab6.bcs_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.bcs_button = 0
+    (*global).Configuration.Reduce.tab6.bcs_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
     cmd += ' --scale-bcs='
 
     Value = getTextFieldValue(Event,'bcs_value_text')
-    (*global).Configuration.Reduce.tab5.bcs_value_text = Value
+    (*global).Configuration.Reduce.tab6.bcs_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale Background' + $
-          ' for Subtraction from the Sample Data Associated Empty Container Value'
-        IF (tab5 EQ 0) THEN BEGIN
+          ' for Subtraction from the Sample Data Associated Empty ' + $
+          'Container Value'
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'bcs_error_text')
-    (*global).Configuration.Reduce.tab5.bcs_error_text = Error
+    (*global).Configuration.Reduce.tab6.bcs_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale Background ' + $
-          'for Subtraction from the Sample Data Associated Empty Container Error'
-        IF (tab5 EQ 0) THEN BEGIN
+          'for Subtraction from the Sample Data Associated Empty ' + $
+          'Container Error'
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
@@ -896,61 +919,61 @@ ENDIF
 ;get constant to scale the back. spectra for subtraction from the
 ;normalization data associated empty container spectra
 IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.bcn_button = 1
+    (*global).Configuration.Reduce.tab6.bcn_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.bcn_button = 0
+    (*global).Configuration.Reduce.tab6.bcn_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
     cmd += ' --scale-bcn='
 
     Value = getTextFieldValue(Event,'bcn_value_text')
-    (*global).Configuration.Reduce.tab5.bcn_value_text = Value
+    (*global).Configuration.Reduce.tab6.bcn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale Background' + $
           ' for Subtraction from the Normalization Data Associated Empty ' + $
           'Container Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'bcn_error_text')
-    (*global).Configuration.Reduce.tab5.bcn_error_text = Error
+    (*global).Configuration.Reduce.tab6.bcn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale Background ' + $
           'for Subtraction from the Normalization Data Associated Empty ' + $
           'Container Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
@@ -960,59 +983,59 @@ ENDIF
 ;get constant to scale the Empty Container for subtraction from
 ;the sample data
 IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.cs_button = 1
+    (*global).Configuration.Reduce.tab6.cs_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.cs_button = 0
+    (*global).Configuration.Reduce.tab6.cs_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
     cmd += ' --scale-cs='
 
     Value = getTextFieldValue(Event,'cs_value_text')
-    (*global).Configuration.Reduce.tab5.cs_value_text = Value
+    (*global).Configuration.Reduce.tab6.cs_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale the Empty' + $
           ' Container for Subtraction from the Sample Data Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'cs_error_text')
-    (*global).Configuration.Reduce.tab5.cs_error_text = Error
+    (*global).Configuration.Reduce.tab6.cs_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale the Empty' + $
           ' Container for Subtraction from the Sample Data Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
@@ -1022,68 +1045,68 @@ ENDIF
 ;get constant to scale the Empty Container for subtraction from
 ;the normalization data
 IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab5.cn_button = 1
+    (*global).Configuration.Reduce.tab6.cn_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab5.cn_button = 0
+    (*global).Configuration.Reduce.tab6.cn_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
     cmd += ' --scale-cn='
 
     Value = getTextFieldValue(Event,'cn_value_text')
-    (*global).Configuration.Reduce.tab5.cn_value_text = Value
+    (*global).Configuration.Reduce.tab6.cn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant To Scale the Empty' + $
           ' Container for Subtraction from the Normalization Data Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
 
     Error = getTextFieldValue(Event,'cn_error_text')
-    (*global).Configuration.Reduce.tab5.cn_error_text = Error
+    (*global).Configuration.Reduce.tab6.cn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Constant To Scale the Empty' + $
           ' Container for Subtraction from the Normalization Data Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
 ENDIF
 
 
-;*************TAB6*****************
-TabName = 'Tab#6 - DATA CONTROL'
-tab6    = 0
+;*************TAB7*****************
+TabName = 'Tab#7 - DATA CONTROL'
+tab7    = 0
 
 ;constant for scaling the final data spectrum
 IF (isButtonSelected(Event,'csfds_button')) THEN BEGIN
@@ -1094,21 +1117,21 @@ IF (isButtonSelected(Event,'csfds_button')) THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Constant for Scaling the Final' + $
           ' Data Spectrum'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += strcompress(Value,/remove_all)
     ENDELSE
@@ -1116,58 +1139,58 @@ ENDIF
 
 ;get Time Zero Slope Parameter
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.tzsp_button = 1
+    (*global).Configuration.Reduce.tab7.tzsp_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.tzsp_button = 0
+    (*global).Configuration.Reduce.tab7.tzsp_button = 0
 ENDELSE
 
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     cmd += ' --time-zero-slope='
 
     TIBCV = getTextFieldValue(Event,'tzsp_value_text')
-    (*global).Configuration.Reduce.tab6.tzsp_value_text = TIBCV
+    (*global).Configuration.Reduce.tab7.tzsp_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Time Zero Slope Parameter Value'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tzsp_error_text')
-    (*global).Configuration.Reduce.tab6.tzsp_error_text = TIBCE
+    (*global).Configuration.Reduce.tab7.tzsp_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Slope Parameter Error'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -1176,57 +1199,57 @@ ENDIF
 
 ;get Time Zero Offset Parameter
 IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.tzop_button = 1
+    (*global).Configuration.Reduce.tab7.tzop_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.tzop_button = 0
+    (*global).Configuration.Reduce.tab7.tzop_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     cmd += ' --time-zero-offset='
 
     TIBCV = getTextFieldValue(Event,'tzop_value_text')
-    (*global).Configuration.Reduce.tab6.tzop_value_text = TIBCV
+    (*global).Configuration.Reduce.tab7.tzop_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Time Zero Offset Parameter Value'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'tzop_error_text')
-    (*global).Configuration.Reduce.tab6.tzop_error_text = TIBCE
+    (*global).Configuration.Reduce.tab7.tzop_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Offset Parameter Error'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -1237,132 +1260,132 @@ ENDIF
 cmd += ' --energy-bins='
 
 TIBCMin = getTextFieldValue(Event,'eha_min_text')
-(*global).Configuration.Reduce.tab6.eha_min_text= TIBCMin
+(*global).Configuration.Reduce.tab7.eha_min_text= TIBCMin
 IF (TIBCMin EQ '') THEN BEGIN
     cmd += '?'
     status_text = '   -Please provide a Energy Histogram Axis Min'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += strcompress(TIBCMin,/remove_all)
 ENDELSE
 
 TIBCMax = getTextFieldValue(Event,'eha_max_text')
-(*global).Configuration.Reduce.tab6.eha_max_text = TIBCMax
+(*global).Configuration.Reduce.tab7.eha_max_text = TIBCMax
 IF (TIBCMax EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Max'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCMax,/remove_all)
 ENDELSE
 
 TIBCBin = getTextFieldValue(Event,'eha_bin_text')
-(*global).Configuration.Reduce.tab6.eha_bin_text = TIBCBin
+(*global).Configuration.Reduce.tab7.eha_bin_text = TIBCBin
 IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Bin'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
 
 ;get Global Instrument Final Wavelength
 IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab6.gifw_button = 1
+    (*global).Configuration.Reduce.tab7.gifw_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab6.gifw_button = 0
+    (*global).Configuration.Reduce.tab7.gifw_button = 0
 ENDELSE
 IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     cmd += ' --final-wavelength='
 
     TIBCV = getTextFieldValue(Event,'gifw_value_text')
-    (*global).Configuration.Reduce.tab6.gifw_value_text = TIBCV
+    (*global).Configuration.Reduce.tab7.gifw_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Global Instrument Final ' + $
           'Wavelength Value'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
     
     TIBCE = getTextFieldValue(Event,'gifw_error_text')
-    (*global).Configuration.Reduce.tab6.gifw_error_text = TIBCE
+    (*global).Configuration.Reduce.tab7.gifw_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Global Instrument Final ' + $
           'Wavelength Error'
-        IF (tab6 EQ 0) THEN BEGIN
+        IF (tab7 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab6 EQ 0 AND $
+        IF (tab7 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab6
+        ++tab7
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -1372,73 +1395,73 @@ ENDIF
 cmd += ' --mom-trans-bin='
 
 TIBCMin = getTextFieldValue(Event,'mtha_min_text')
-(*global).Configuration.Reduce.tab6.mtha_min_text= TIBCMin
+(*global).Configuration.Reduce.tab7.mtha_min_text= TIBCMin
 IF (TIBCMin EQ '') THEN BEGIN
     cmd += '?'
     status_text = '   -Please provide a Momentum Transfer Histogram Axis Min'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += strcompress(TIBCMin,/remove_all)
 ENDELSE
 
 TIBCMax = getTextFieldValue(Event,'mtha_max_text')
-(*global).Configuration.Reduce.tab6.mtha_max_text = TIBCMax
+(*global).Configuration.Reduce.tab7.mtha_max_text = TIBCMax
 IF (TIBCMax EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Momentum Transfer Histogram Axis Max'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCMax,/remove_all)
 ENDELSE
 
 TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
-(*global).Configuration.Reduce.tab6.mtha_bin_text = TIBCBin
+(*global).Configuration.Reduce.tab7.mtha_bin_text = TIBCBin
 IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Momentum Transfer Histogram Axis Bin'
-    IF (tab6 EQ 0) THEN BEGIN
+    IF (tab7 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab6 EQ 0 AND $
+    IF (tab7 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab6
+    ++tab7
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
@@ -1446,45 +1469,45 @@ ENDELSE
 ;add a white space
 putInfoInCommandLineStatus, Event, '', 1
 
-;************TAB7******************
+;************TAB8******************
 
-TabName = 'Tab#7 - INTERMEDIATE OUTPUT'
-tab7    = 0
+TabName = 'Tab#8 - INTERMEDIATE OUTPUT'
+tab8    = 0
 
 ;Write all Intermediate Output
 IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
     cmd += ' --dump-all'
-    (*global).Configuration.Reduce.tab7.waio_button = 1
+    (*global).Configuration.Reduce.tab8.waio_button = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.waio_button = 0
+    (*global).Configuration.Reduce.tab8.waio_button = 0
 ENDELSE
 
-IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
 
 ;Write out Calculated Time-Independent Background
     IF (isButtonSelected(Event,'woctib_button') AND $
         isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
         cmd += ' --dump-tib'
-        (*global).Configuration.Reduce.tab7.woctib_button = 1
+        (*global).Configuration.Reduce.tab8.woctib_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.woctib_button = 0
+        (*global).Configuration.Reduce.tab8.woctib_button = 0
     ENDELSE
     
 ;Write out Pixel Wavelength Spectra
     IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
         cmd += ' --dump-wave'
-        (*global).Configuration.Reduce.tab7.wopws_button = 1
+        (*global).Configuration.Reduce.tab8.wopws_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.wopws_button = 0
+        (*global).Configuration.Reduce.tab8.wopws_button = 0
     ENDELSE
     
 ;Write out Monitor Wavelength Spectrum
     IF (isButtonSelected(Event,'womws_button') AND $
         isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-wave'
-        (*global).Configuration.Reduce.tab7.womws_button = 1
+        (*global).Configuration.Reduce.tab8.womws_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.womws_button = 0
+        (*global).Configuration.Reduce.tab8.womws_button = 0
     ENDELSE
     
 ;Write out Monitor Efficiency Spectrum
@@ -1492,33 +1515,33 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         isButtonUnselected(Event,'nmn_button') AND $
         isButtonUnselected(Event,'nmec_button')) THEN BEGIN
         cmd += ' --dump-mon-effc'
-        (*global).Configuration.Reduce.tab7.womes_button = 1
+        (*global).Configuration.Reduce.tab8.womes_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.womes_button = 0
+        (*global).Configuration.Reduce.tab8.womes_button = 0
     ENDELSE
     
 ;Write out Rebinned Monitor Spectra
     IF (isButtonSelected(Event,'worms_button') AND $
         isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-rebin'
-        (*global).Configuration.Reduce.tab7.worms_button = 1
+        (*global).Configuration.Reduce.tab8.worms_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.worms_button = 0
+        (*global).Configuration.Reduce.tab8.worms_button = 0
     ENDELSE
     
 ;Write out Combined Pixel Spectrum After Monitor Normalization
     IF (isButtonSelected(Event,'wocpsamn_button') AND $
         isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
-        (*global).Configuration.Reduce.tab7.wocpsamn_button = 1
+        (*global).Configuration.Reduce.tab8.wocpsamn_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
+        (*global).Configuration.Reduce.tab8.wocpsamn_button = 0
     ENDELSE
 ENDIF    
 
 IF (isButtonSelected(Event,'wocpsamn_button') AND $
     isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
     
-    IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
         cmd += ' --dump-wave-mnorm'
     ENDIF 
 
@@ -1526,9 +1549,9 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
     WAmax = getTextFieldValue(Event,'wa_max_text')
     WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
     
-    (*global).Configuration.Reduce.tab7.wa_min_text = WAmin
-    (*global).Configuration.Reduce.tab7.wa_max_text = WAmax
-    (*global).Configuration.Reduce.tab7.wa_bin_width_text = WABwidth
+    (*global).Configuration.Reduce.tab8.wa_min_text = WAmin
+    (*global).Configuration.Reduce.tab8.wa_max_text = WAmax
+    (*global).Configuration.Reduce.tab8.wa_bin_width_text = WABwidth
     
     IF (WAMIN NE '' OR $
         WAMAX NE '' OR $
@@ -1539,20 +1562,20 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
         IF (WAmin EQ '') THEN BEGIN
             cmd += '?'
             status_text = '   -Please provide a Wavelength Histogram Min Value'
-            IF (tab7 EQ 0) THEN BEGIN
+            IF (tab8 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab7
+            ++tab8
         ENDIF ELSE BEGIN
             cmd += strcompress(WAmin,/remove_all)
         ENDELSE
@@ -1561,20 +1584,20 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
         IF (WAmax EQ '') THEN BEGIN
             cmd += ',?'
             status_text = '   -Please provide a Wavelength Histogram Max Value'
-            IF (tab7 EQ 0) THEN BEGIN
+            IF (tab8 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab7
+            ++tab8
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WAmax,/remove_all)
         ENDELSE
@@ -1583,20 +1606,20 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
             cmd += ',?'
             status_text = '   -Please provide a Wavelength Histogram Bin ' + $
               'Width Value'
-            IF (tab7 EQ 0) THEN BEGIN
+            IF (tab8 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab7 EQ 0 AND $
+            IF (tab8 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab7
+            ++tab8
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WABwidth,/remove_all)
         ENDELSE
@@ -1605,15 +1628,15 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
 
 ENDIF
 
-IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
 
 ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
     IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
         cmd += ' --dump-dslin'
-        (*global).Configuration.Reduce.tab7.wolidsb_button = 1
+        (*global).Configuration.Reduce.tab8.wolidsb_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.wolidsb_button = 0
+        (*global).Configuration.Reduce.tab8.wolidsb_button = 0
     ENDELSE
     
 ENDIF

@@ -4,448 +4,657 @@ PRO MakeGuiReduceInputTab7, ReduceInputTab, ReduceInputTabSettings
 ;                           Define size arrays
 ;***********************************************************************************
 
-;//////////////////////////////
-;Write all intermediate output/
-;//////////////////////////////
-WAIOBase = { size  : [15,20,500,35],$
-             button : { uname : 'waio_button',$
-                        list : [' Write All Intermediate Output (WARNING: ' + $
-                                'VERGY LARGE FILES AND SLOW)']}}
+;/////////////////////////////////////////////
+;Constant for Scaling the Final Data Spectrum/
+;/////////////////////////////////////////////
+yoff = 15
+CSFDSframe = { size : [5,yoff,730,50],$
+               frame : 4}
+XYoff1 = [10,-14]
+CSFDSbase = { size : [CSFDSframe.size[0]+XYoff1[0],$
+                      CSFDSframe.size[1]+XYoff1[1],$
+                      295,$
+                      30],$
+              button : { uname : 'csfds_button',$
+                         list : ['Constant for Scaling the Final Data Spectrum'],$
+                         value : 0}}
 
-;/////////////////////////////////////////////////
-;Write out Calculated time-independent background/
-;/////////////////////////////////////////////////
-yoff = 40
-WOCTIBbase = { size  : [WAIOBase.size[0], $
-                        WAIOBase.size[1]+yoff, $
-                        WAIOBase.size[2:3]],$
-               button : { uname : 'woctib_button',$
-                          list : [' Write Out Calculated Time-Independent ' + $
-                                  'Background']}}
+XYoff2 = [10,25]
+CSFDSvalueLabel = { size : [CSFDSframe.size[0]+XYoff2[0],$
+                            CSFDSframe.size[1]+XYoff2[1]],$
+                    value : 'Value:',$
+                    uname : 'csfds_value_text_label',$
+                    sensitive : CSFDSbase.button.value}
+XYoff3 = [50,-5]
+CSFDSvalueText  = { size : [CSFDSvalueLabel.size[0]+XYoff3[0],$
+                            CSFDSvaluelabel.size[1]+XYoff3[1],$
+                            100,30],$
+                    uname : 'csfds_value_text',$
+                    sensitive : CSFDSbase.button.value}
 
-NA_WOCTIBbase = { size : [WOCTIBbase.size[0]+5,$
-                          WOCTIBbase.size[1]-5,$
-                          WOCTIBbase.size[2:3]],$
-                  value : 'Calculated Time-Independent Background - NOT AVAILABLE',$
-                  uname : 'na_woctibbase'}
-                          
-;///////////////////////////////////
-;Write Out Pixel Wavelength Spectra/
-;///////////////////////////////////
-WOPWSbase = { size  : [WOCTIBbase.size[0], $
-                       WOCTIBbase.size[1]+yoff, $
-                       WOCTIBbase.size[2:3]],$
-              button : { uname : 'wopws_button',$
-                         list : [' Write Out Pixel Wavelength Spectra ' + $
-                                 '(WARNING: VERGY LARGE FILE AND SLOW)']}}
+;///////////////////////////////////////////////////
+;Time Zero Slope Parameter (Angstroms/microseconds)/
+;///////////////////////////////////////////////////
+yoff = 80
+TZSPframe = { size : [CSFDSframe.size[0], $
+                      CSFDSframe.size[1]+yoff,$
+                      CSFDSframe.size[2:3]],$
+              frame : 4}
+XYoff1 = [10,-14]
+TZSPbase = { size : [TZSPframe.size[0]+XYoff1[0],$
+                     TZSPframe.size[1]+XYoff1[1],$
+                     330,$
+                     30],$
+             button : { uname : 'tzsp_button',$
+                        list : ['Time Zero Slope Parameter ' + $
+                                '(Angstroms/microSeconds)'],$
+                        value : 0}}
 
-;//////////////////////////////////////
-;Write Out Monitor Wavelength Spectrum/
-;//////////////////////////////////////
-WOMWSbase = { size  : [WOPWSbase.size[0], $
-                       WOPWSbase.size[1]+yoff, $
-                       WOPWSbase.size[2:3]],$
-              button : { uname : 'womws_button',$
-                         list : [' Write Out Monitor Wavelength Spectrum']}}
+XYoff2 = [10,25]
+TZSPvalueLabel = { size : [TZSPframe.size[0]+XYoff2[0],$
+                           TZSPframe.size[1]+XYoff2[1]],$
+                   value : 'Value:',$
+                   uname : 'tzsp_value_text_label',$
+                   sensitive : TZSPbase.button.value}
+XYoff3 = [50,-5]
+TZSPvalueText  = { size : [TZSPvalueLabel.size[0]+XYoff3[0],$
+                           TZSPvaluelabel.size[1]+XYoff3[1],$
+                           100,30],$
+                   uname : 'tzsp_value_text',$
+                   sensitive : TZSPbase.button.value}
 
-NA_WOMWSbase = { size : [WOMWSbase.size[0]+5,$
-                         WOMWSbase.size[1]-5,$
-                         WOMWSbase.size[2:3]],$
-                  value : 'Monitor Wavelength Spectrum - NOT AVAILABLE',$
-                  uname : 'na_womwsbase'}
+XYoff4 = [200,0]
+TZSPerrorLabel = { size : [TZSPvalueLabel.size[0]+XYoff4[0],$
+                           TZSPvalueLabel.size[1]+XYoff4[1]],$
+                   value : 'Error:',$
+                   uname : 'tzsp_error_text_label',$
+                   sensitive : TZSPbase.button.value}
+XYoff5 = [50,-5]
+TZSPerrorText  = { size : [TZSPerrorLabel.size[0]+XYoff5[0],$
+                           TZSPerrorlabel.size[1]+XYoff5[1],$
+                           100,30],$
+                   uname : 'tzsp_error_text',$
+                   sensitive : TZSPbase.button.value}
 
-;//////////////////////////////////////
-;Write Out Monitor Efficiency Spectrum/
-;//////////////////////////////////////
-WOMESbase = { size  : [WOMWSbase.size[0], $
-                       WOMWSbase.size[1]+yoff, $
-                       WOMWSbase.size[2:3]],$
-              button : { uname : 'womes_button',$
-                         list : [' Write Out Monitor Efficiency Spectrum']}}
+;//////////////////////////////////////////
+;Time Zero Offset Parameter (microseconds)/
+;//////////////////////////////////////////
+TZOPframe = { size : [TZSPframe.size[0],$
+                      TZSPframe.size[1]+yoff,$
+                      TZSPframe.size[2:3]],$
+              frame : TZSPframe.frame}
+XYoff1 = [10,-14]
+TZOPbase = { size : [TZOPframe.size[0]+XYoff1[0],$
+                     TZOPframe.size[1]+XYoff1[1],$
+                     260,$
+                     30],$
+             button : { uname : 'tzop_button',$
+                        list : ['Time Zero Offset Parameter (Angstroms)'],$
+                        value : 0}}
 
-NA_WOMESbase = { size : [WOMESbase.size[0]+5,$
-                         WOMESbase.size[1]-5,$
-                         WOMESbase.size[2:3]],$
-                  value : 'Monitor Efficiency Spectrum - NOT AVAILABLE',$
-                  uname : 'na_womesbase'}
+XYoff2 = [10,25]
+TZOPvalueLabel = { size : [TZOPframe.size[0]+XYoff2[0],$
+                           TZOPframe.size[1]+XYoff2[1]],$
+                   value : 'Value:',$
+                   uname : 'tzop_value_text_label',$
+                   sensitive : TZOPbase.button.value}
+XYoff3 = [50,-5]
+TZOPvalueText  = { size : [TZOPvalueLabel.size[0]+XYoff3[0],$
+                           TZOPvaluelabel.size[1]+XYoff3[1],$
+                           100,30],$
+                   uname : 'tzop_value_text',$
+                   sensitive : TZOPbase.button.value}
 
-;///////////////////////////////////
-;Write Out Rebinned Monitor Spectra/
-;///////////////////////////////////
-WORMSbase = { size  : [WOMESbase.size[0], $
-                       WOMESbase.size[1]+yoff, $
-                       WOMESbase.size[2:3]],$
-              button : { uname : 'worms_button',$
-                         list : [' Write Out Rebinned Monitor Spectra (WARNING:' + $
-                                 ' VERY LARGE FILE AND SLOW)']}}
+XYoff4 = [200,0]
+TZOPerrorLabel = { size : [TZOPvalueLabel.size[0]+XYoff4[0],$
+                           TZOPvalueLabel.size[1]+XYoff4[1]],$
+                   value : 'Error:',$
+                   uname : 'tzop_error_text_label',$
+                   sensitive : TZOPbase.button.value}
+XYoff5 = [50,-5]
+TZOPerrorText  = { size : [TZOPerrorLabel.size[0]+XYoff5[0],$
+                           TZOPerrorlabel.size[1]+XYoff5[1],$
+                           100,30],$
+                   uname : 'tzop_error_text',$
+                   sensitive : TZOPbase.button.value}
 
-NA_WORMSbase = { size : [WORMSbase.size[0]+5,$
-                         WORMSbase.size[1]-5,$
-                         WORMSbase.size[2:3]],$
-                  value : 'Rebinned Monitor Spectra - NOT AVAILABLE',$
-                  uname : 'na_wormsbase'}
+;////////////////////////////////
+;Energy Histogram Axis (mcro-eV)/
+;////////////////////////////////
+EHAframe = { size : [TZOPframe.size[0],$
+                     TZOPframe.size[1]+yoff,$
+                     TZOPframe.size[2:3]],$
+             frame : TZSPframe.frame}
+XYoff1 = [10,-8]
+EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
+                    EHaframe.size[1]+XYoff1[1],$
+                    205,$
+                    25],$
+            button : { uname : 'eha_button',$
+                       list : [' Energy Histogram Axis (micro-eV)'],$
+                       value : 1}}
 
-;//////////////////////////////////////////////////////////////
-;Write Out Combined Pixel Spectrum After Monitor Normalization/
-;//////////////////////////////////////////////////////////////
-WOCPSAMNbase = { size  : [WORMSbase.size[0], $
-                          WORMSbase.size[1]+yoff, $
-                          WORMSbase.size[2:3]],$
-              button : { uname : 'wocpsamn_button',$
-                         list : [' Write Out Combined Pixel Spectrum After ' + $
-                                 'Monitor Normalization']}}
+XYoff2 = [10,25]
+EHAminLabel = { size : [EHAframe.size[0]+XYoff2[0],$
+                        EHAframe.size[1]+XYoff2[1]],$
+                value : 'Min:',$
+                uname : 'eha_min_text_label',$
+                sensitive : EHAbase.button.value}
+XYoff3 = [50,-5]
+EHAminText  = { size : [EHAminLabel.size[0]+XYoff3[0],$
+                        EHAminlabel.size[1]+XYoff3[1],$
+                          100,30],$
+                uname : 'eha_min_text',$
+                sensitive : EHAbase.button.value}
 
-NA_WOCPSAMNbase = { size : [WOCPSAMNbase.size[0]+5,$
-                            WOCPSAMNbase.size[1]-5,$
-                            WOCPSAMNbase.size[2:3]],$
-                    value : 'Combined Pixel Spectrum After Monitor' + $
-                    ' Normalization - NOT AVAILABLE',$
-                  uname : 'na_wocpsamnbase'}
+XYoff4 = [200,0]
+EHAmaxLabel = { size : [EHAminLabel.size[0]+XYoff4[0],$
+                        EHAminLabel.size[1]+XYoff4[1]],$
+                value : 'Max:',$
+                uname : 'eha_max_text_label',$
+                sensitive : EHAbase.button.value}
+XYoff5 = [50,-5]
+EHAmaxText  = { size : [EHAmaxLabel.size[0]+XYoff5[0],$
+                        EHAmaxLabel.size[1]+XYoff5[1],$
+                        100,30],$
+                uname : 'eha_max_text',$
+                sensitive : EHAbase.button.value}
 
-;//////////////////////////
-;Wavelength Histogram Axis/
-;//////////////////////////
-;yoff = 50
-WHAbase = { size : [WOCPSAMNbase.size[0],$
-                    WOCPSAMNbase.size[1]+yoff,$
-                    700,$
-                    40]}
-XYoff = [5,5]
-WHAlabel = { size : [XYoff[0],$
-                     XYoff[1]],$
-             uname : 'wa_label',$
-             value : 'Wavelength Histogram (Angstroms)'}
-xoff = 230
-WHAlabel1 = { size : [WHAlabel.size[0]+xoff,$
-                      WHAlabel.size[1]],$
-              uname : 'wa_min_text_label',$
-              value : 'Min:'}
-xoff_LT = 30
-yoff = -5
-WHAtext1  = { size : [WHAlabel1.size[0]+xoff_LT,$
-                      WHAlabel1.size[1]+yoff,$
-                      70,30],$
-              uname : 'wa_min_text'}
+XYoff4 = [200,0]
+EHAbinLabel = { size : [EHAmaxLabel.size[0]+XYoff4[0],$
+                        EHAmaxLabel.size[1]+XYoff4[1]],$
+                value : '  Width:',$
+                uname : 'eha_bin_text_label',$
+                sensitive : EHAbase.button.value}
+XYoff5 = [85,-5]
+EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
+                        EHAbinLabel.size[1]+XYoff5[1],$
+                        100,30],$
+                uname : 'eha_bin_text',$
+                sensitive : EHAbase.button.value}
 
-xoff_LL = 140
-WHAlabel2 = { size : [WHAlabel1.size[0]+xoff_LL,$
-                      WHAlabel.size[1]],$
-              uname : 'wa_max_text_label',$
-              value : 'Max:'}
-WHAtext2  = { size : [WHAlabel2.size[0]+xoff_LT,$
-                      WHAlabel2.size[1]+yoff,$
-                      WHAtext1.size[2:3]],$
-              uname : 'wa_max_text'}
+;//////////////////////////////////////////////
+;Momentum Transfer Histogram Axis (1/Angstroms)
+;//////////////////////////////////////////////
+MTHAframe = { size : [EHAframe.size[0],$
+                      EHAframe.size[1]+yoff,$
+                      EHAframe.size[2:3]],$
+              frame : EHAframe.frame}
+XYoff1 = [10,-8]
+MTHAbase = { size : [MTHAframe.size[0]+XYoff1[0],$
+                     MTHAframe.size[1]+XYoff1[1],$
+                     290,$
+                     25],$
+             button : { uname : 'mtha_button',$
+                       list : [' Momentum Transfer Histogram Axis (1/Angstroms)'],$
+                       value : 1}}
 
-WHAlabel3 = { size : [WHAlabel2.size[0]+xoff_LL,$
-                      WHAlabel.size[1]],$
-              uname : 'wa_bin_width_text_label',$
-              value : 'Bin Width:'}
-xoff_LT = 68
-WHAtext3  = { size : [WHAlabel3.size[0]+xoff_LT,$
-                      WHAlabel3.size[1]+yoff,$
-                      WHAtext1.size[2:3]],$
-              uname : 'wa_bin_width_text'}
+XYoff2 = [10,25]
+MTHAminLabel = { size : [MTHAframe.size[0]+XYoff2[0],$
+                         MTHAframe.size[1]+XYoff2[1]],$
+                 value : 'Min:',$
+                 uname : 'mtha_min_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff3 = [50,-5]
+MTHAminText  = { size : [MTHAminLabel.size[0]+XYoff3[0],$
+                         MTHAminlabel.size[1]+XYoff3[1],$
+                         100,30],$
+                 uname : 'mtha_min_text',$
+                 sensitive : MTHAbase.button.value}
 
-;/////////////////////////////////////////////////////////////
-;Write Out Linearly Interpolated Direct Scattering Background/
-;Info. Summed over all Pixel                                 /
-;/////////////////////////////////////////////////////////////
-yoff = 50
-WOLIDSBbase = { size  : [WHAbase.size[0], $
-                        WHAbase.size[1]+yoff, $
-                        WHAbase.size[2:3]],$
-                button : { uname : 'wolidsb_button',$
-                           list : [' Write Out Linearly Interpolated Direct' + $
-                                   ' Scattering Background Information Summed' + $
-                                   ' over all Pixels']}}
+XYoff4 = [200,0]
+MTHAmaxLabel = { size : [MTHAminLabel.size[0]+XYoff4[0],$
+                         MTHAminLabel.size[1]+XYoff4[1]],$
+                 value : 'Max:',$
+                 uname : 'mtha_max_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff5 = [50,-5]
+MTHAmaxText  = { size : [MTHAmaxLabel.size[0]+XYoff5[0],$
+                         MTHAmaxLabel.size[1]+XYoff5[1],$
+                         100,30],$
+                 uname : 'mtha_max_text',$
+                 sensitive : MTHAbase.button.value}
 
-NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
-                           WOLIDSBbase.size[1]-5,$
-                           WOLIDSBbase.size[2:3]],$
-                   value : 'Linearly Interpolated Direct Scatt. Back. ' + $
-                   'Information Summed over all Pixels - NOT AVAILABLE',$
-                  uname : 'na_wolidsbbase'}
+XYoff4 = [200,0]
+MTHAbinLabel = { size : [MTHAmaxLabel.size[0]+XYoff4[0],$
+                         MTHAmaxLabel.size[1]+XYoff4[1]],$
+                 value : '  Width:',$
+                 uname : 'mtha_bin_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff5 = [85,-5]
+MTHAbinText  = { size : [MTHAbinLabel.size[0]+XYoff5[0],$
+                         MTHAbinLabel.size[1]+XYoff5[1],$
+                         100,30],$
+                 uname : 'mtha_bin_text',$
+                 sensitive : MTHAbase.button.value}
+
+;///////////////////////////////////////////////
+;Global Instrument Final Wavelength (Angstroms)/
+;///////////////////////////////////////////////
+GIFWframe = { size : [MTHAframe.size[0],$
+                      MTHAframe.size[1]+yoff,$
+                      MTHAframe.size[2:3]],$
+              frame : MTHAframe.frame}
+XYoff1 = [10,-14]
+GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
+                     GIFWframe.size[1]+XYoff1[1],$
+                     308,$
+                     30],$
+             button : { uname : 'gifw_button',$
+                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
+                        value : 0}}
+
+XYoff2 = [10,25]
+GIFWvalueLabel = { size : [GIFWframe.size[0]+XYoff2[0],$
+                          GIFWframe.size[1]+XYoff2[1]],$
+                   value : 'Value:',$
+                   uname : 'gifw_value_text_label',$
+                   sensitive : GIFWbase.button.value}
+XYoff3 = [50,-5]
+GIFWvalueText  = { size : [GIFWvalueLabel.size[0]+XYoff3[0],$
+                          GIFWvaluelabel.size[1]+XYoff3[1],$
+                          100,30],$
+                   uname : 'gifw_value_text',$
+                   sensitive : GIFWbase.button.value}
+
+XYoff4 = [200,0]
+GIFWerrorLabel = { size : [GIFWvalueLabel.size[0]+XYoff4[0],$
+                          GIFWvalueLabel.size[1]+XYoff4[1]],$
+                   value : 'Error:',$
+                   uname : 'gifw_error_text_label',$
+                   sensitive : GIFWbase.button.value}
+XYoff5 = [50,-5]
+GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
+                          GIFWerrorlabel.size[1]+XYoff5[1],$
+                           100,30],$
+                   uname : 'gifw_error_text',$
+                   sensitive : GIFWbase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab7_base = WIDGET_BASE(ReduceInputTab,$
+tab6_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
                         SCR_YSIZE = ReduceInputTabSettings.size[3],$
-                        TITLE     = ReduceInputTabSettings.title[4])
+                        TITLE     = ReduceInputTabSettings.title[3])
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write all intermediate output\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WAIOBase.size[0],$
-                   YOFFSET   = WAIOBase.size[1],$
-                   SCR_XSIZE = WAIOBase.size[2],$
-                   SCR_YSIZE = WAIOBase.size[3])
+;/////////////////////////////////////////////
+;Constant for Scaling the Final Data Spectrum/
+;/////////////////////////////////////////////
 
-group = CW_BGROUP(base,$
-                  WAIOBase.button.list,$
-                  UNAME      = WAIOBase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
-                  
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write out Calculated time-independent background\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WOCTIBbase.uname,$
-                      XOFFSET   = NA_WOCTIBbase.size[0],$
-                      YOFFSET   = NA_WOCTIBbase.size[1],$
-                      SCR_XSIZE = NA_WOCTIBbase.size[2],$
-                      SCR_YSIZE = NA_WOCTIBbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
-
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WOCTIBbase.value)
-
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOCTIBbase.size[0],$
-                   YOFFSET   = WOCTIBbase.size[1],$
-                   SCR_XSIZE = WOCTIBbase.size[2],$
-                   SCR_YSIZE = WOCTIBbase.size[3])
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = CSFDSbase.size[0],$
+                   YOFFSET   = CSFDSbase.size[1],$
+                   SCR_XSIZE = CSFDSbase.size[2],$
+                   SCR_YSIZE = CSFDSbase.size[3])
 
 group = CW_BGROUP(base,$
-                  WOCTIBbase.button.list,$
-                  UNAME      = WOCTIBbase.button.uname,$
-                  /NONEXCLUSIVE,$
+                  CSFDSbase.button.list,$
+                  UNAME      = CSFDSbase.button.uname,$
                   SET_VALUE  = 0,$
-                  ROW        = 1)
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write out Pixel Wavelength Spectra\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOPWSbase.size[0],$
-                   YOFFSET   = WOPWSbase.size[1],$
-                   SCR_XSIZE = WOPWSbase.size[2],$
-                   SCR_YSIZE = WOPWSbase.size[3])
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = CSFDSvalueLabel.size[0],$
+                     YOFFSET   = CSFDSvalueLabel.size[1],$
+                     VALUE     = CSFDSvalueLabel.value,$
+                     SENSITIVE = CSFDSbase.button.value,$
+                     UNAME     = CSFDSvalueLabel.uname)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = CSFDSvalueText.size[0],$
+                   YOFFSET   = CSFDSvalueText.size[1],$
+                   SCR_XSIZE = CSFDSvalueText.size[2],$
+                   SCR_YSIZE = CSFDSvalueText.size[3],$
+                   UNAME     = CSFDSvalueText.uname,$
+                   SENSITIVE = CSFDSbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = CSFDSframe.size[0],$
+                      YOFFSET   = CSFDSframe.size[1],$
+                      SCR_XSIZE = CSFDSframe.size[2],$
+                      SCR_YSIZE = CSFDSframe.size[3],$
+                      FRAME     = CSFDSframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Time Zero Slope Parameter (Angstroms/microseconds)\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = TZSPbase.size[0],$
+                   YOFFSET   = TZSPbase.size[1],$
+                   SCR_XSIZE = TZSPbase.size[2],$
+                   SCR_YSIZE = TZSPbase.size[3])
 
 group = CW_BGROUP(base,$
-                  WOPWSbase.button.list,$
-                  UNAME      = WOPWSbase.button.uname,$
-                  /NONEXCLUSIVE,$
+                  TZSPbase.button.list,$
+                  UNAME      = TZSPbase.button.uname,$
                   SET_VALUE  = 0,$
-                  ROW        = 1)
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write out Monitor Wavelength Spectrum\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WOMWSbase.uname,$
-                      XOFFSET   = NA_WOMWSbase.size[0],$
-                      YOFFSET   = NA_WOMWSbase.size[1],$
-                      SCR_XSIZE = NA_WOMWSbase.size[2],$
-                      SCR_YSIZE = NA_WOMWSbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TZSPvalueLabel.size[0],$
+                     YOFFSET   = TZSPvalueLabel.size[1],$
+                     VALUE     = TZSPvalueLabel.value,$
+                     SENSITIVE = TZSPbase.button.value,$
+                     UNAME     = TZSPvalueLabel.uname)
 
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WOMWSbase.value)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TZSPvalueText.size[0],$
+                   YOFFSET   = TZSPvalueText.size[1],$
+                   SCR_XSIZE = TZSPvalueText.size[2],$
+                   SCR_YSIZE = TZSPvalueText.size[3],$
+                   UNAME     = TZSPvalueText.uname,$
+                   SENSITIVE = TZSPbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOMWSbase.size[0],$
-                   YOFFSET   = WOMWSbase.size[1],$
-                   SCR_XSIZE = WOMWSbase.size[2],$
-                   SCR_YSIZE = WOMWSbase.size[3])
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TZSPerrorLabel.size[0],$
+                     YOFFSET   = TZSPerrorLabel.size[1],$
+                     VALUE     = TZSPerrorLabel.value,$
+                     UNAME     = TZSPerrorLabel.uname,$
+                     SENSITIVE = TZSPbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TZSPerrorText.size[0],$
+                   YOFFSET   = TZSPerrorText.size[1],$
+                   SCR_XSIZE = TZSPerrorText.size[2],$
+                   SCR_YSIZE = TZSPerrorText.size[3],$
+                   UNAME     = TZSPerrorText.uname,$
+                   SENSITIVE = TZSPbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = TZSPframe.size[0],$
+                      YOFFSET   = TZSPframe.size[1],$
+                      SCR_XSIZE = TZSPframe.size[2],$
+                      SCR_YSIZE = TZSPframe.size[3],$
+                      FRAME     = TZSPframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Time Zero Offset Parameter (Angstroms/microseconds)\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = TZOPbase.size[0],$
+                   YOFFSET   = TZOPbase.size[1],$
+                   SCR_XSIZE = TZOPbase.size[2],$
+                   SCR_YSIZE = TZOPbase.size[3])
 
 group = CW_BGROUP(base,$
-                  WOMWSbase.button.list,$
-                  UNAME      = WOMWSbase.button.uname,$
-                  /NONEXCLUSIVE,$
+                  TZOPbase.button.list,$
+                  UNAME      = TZOPbase.button.uname,$
                   SET_VALUE  = 0,$
-                  ROW        = 1)
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write out Monitor Efficiency Spectrum\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WOMESbase.uname,$
-                      XOFFSET   = NA_WOMESbase.size[0],$
-                      YOFFSET   = NA_WOMESbase.size[1],$
-                      SCR_XSIZE = NA_WOMESbase.size[2],$
-                      SCR_YSIZE = NA_WOMESbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TZOPvalueLabel.size[0],$
+                     YOFFSET   = TZOPvalueLabel.size[1],$
+                     VALUE     = TZOPvalueLabel.value,$
+                     UNAME     = TZOPvalueLabel.uname,$
+                     SENSITIVE = TZOPbase.button.value)
 
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WOMESbase.value)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TZOPvalueText.size[0],$
+                   YOFFSET   = TZOPvalueText.size[1],$
+                   SCR_XSIZE = TZOPvalueText.size[2],$
+                   SCR_YSIZE = TZOPvalueText.size[3],$
+                   UNAME     = TZOPvalueText.uname,$
+                   SENSITIVE = TZOPbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOMESbase.size[0],$
-                   YOFFSET   = WOMESbase.size[1],$
-                   SCR_XSIZE = WOMESbase.size[2],$
-                   SCR_YSIZE = WOMESbase.size[3])
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TZOPerrorLabel.size[0],$
+                     YOFFSET   = TZOPerrorLabel.size[1],$
+                     VALUE     = TZOPerrorLabel.value,$
+                     UNAME     = TZOPerrorLabel.uname,$
+                     SENSITIVE = TZOPbase.button.value)
 
-group = CW_BGROUP(base,$
-                  WOMESbase.button.list,$
-                  UNAME      = WOMESbase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TZOPerrorText.size[0],$
+                   YOFFSET   = TZOPerrorText.size[1],$
+                   SCR_XSIZE = TZOPerrorText.size[2],$
+                   SCR_YSIZE = TZOPerrorText.size[3],$
+                   UNAME     = TZOPerrorText.uname,$
+                   SENSITIVE = TZOPbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write out Rebinned Monitor Spectra\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WORMSbase.uname,$
-                      XOFFSET   = NA_WORMSbase.size[0],$
-                      YOFFSET   = NA_WORMSbase.size[1],$
-                      SCR_XSIZE = NA_WORMSbase.size[2],$
-                      SCR_YSIZE = NA_WORMSbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = TZOPframe.size[0],$
+                      YOFFSET   = TZOPframe.size[1],$
+                      SCR_XSIZE = TZOPframe.size[2],$
+                      SCR_YSIZE = TZOPframe.size[3],$
+                      FRAME     = TZOPframe.frame,$
+                      VALUE     = '')
 
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WORMSbase.value)
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Energy Histogram Axis (micro-eV)\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WORMSbase.size[0],$
-                   YOFFSET   = WORMSbase.size[1],$
-                   SCR_XSIZE = WORMSbase.size[2],$
-                   SCR_YSIZE = WORMSbase.size[3])
-
-group = CW_BGROUP(base,$
-                  WORMSbase.button.list,$
-                  UNAME      = WORMSbase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write Out Combined Pixel Spectrum After Monitor Normalization\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WOCPSAMNbase.uname,$
-                      XOFFSET   = NA_WOCPSAMNbase.size[0],$
-                      YOFFSET   = NA_WOCPSAMNbase.size[1],$
-                      SCR_XSIZE = NA_WOCPSAMNbase.size[2],$
-                      SCR_YSIZE = NA_WOCPSAMNbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
-
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WOCPSAMNbase.value)
-
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOCPSAMNbase.size[0],$
-                   YOFFSET   = WOCPSAMNbase.size[1],$
-                   SCR_XSIZE = WOCPSAMNbase.size[2],$
-                   SCR_YSIZE = WOCPSAMNbase.size[3])
-
-group = CW_BGROUP(base,$
-                  WOCPSAMNbase.button.list,$
-                  UNAME      = WOCPSAMNbase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Wavelength Histogram Axis\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WHAbase.size[0],$
-                   YOFFSET   = WHAbase.size[1],$
-                   SCR_XSIZE = WHAbase.size[2],$
-                   SCR_YSIZE = WHAbase.size[3])
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = EHAbase.size[0],$
+                   YOFFSET   = EHAbase.size[1],$
+                   SCR_XSIZE = EHAbase.size[2],$
+                   SCR_YSIZE = EHAbase.size[3])
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET   = WHAlabel.size[0],$
-                     YOFFSET   = WHAlabel.size[1],$
-                     VALUE     = WHAlabel.value,$
-                     UNAME     = WHAlabel.uname,$
-                     SENSITIVE = 0)
+                     VALUE = EHAbase.button.list[0],$
+                     UNAME = EHAbase.button.uname)
+                     
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = EHAminLabel.size[0],$
+                     YOFFSET   = EHAminLabel.size[1],$
+                     VALUE     = EHAminLabel.value,$
+                     UNAME     = EHAminLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
-label1 = WIDGET_LABEL(base,$
-                      XOFFSET   = WHAlabel1.size[0],$
-                      YOFFSET   = WHAlabel1.size[1],$
-                      SENSITIVE = 0,$
-                      UNAME     = WHAlabel1.uname,$
-                      VALUE     = WHAlabel1.value)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = EHAminText.size[0],$
+                   YOFFSET   = EHAminText.size[1],$
+                   SCR_XSIZE = EHAminText.size[2],$
+                   SCR_YSIZE = EHAminText.size[3],$
+                   UNAME     = EHAminText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-text1 = WIDGET_TEXT(base,$
-                    XOFFSET   = WHAtext1.size[0],$
-                    YOFFSET   = WHAtext1.size[1],$
-                    SCR_XSIZE = WHAtext1.size[2],$
-                    SCR_YSIZE = WHAtext1.size[3],$
-                    UNAME     = WHAtext1.uname,$
-                    SENSITIVE = 0,$
-                    /EDITABLE,$
-                    /ALL_EVENTS,$
-                    /ALIGN_LEFT)
-                    
-label2 = WIDGET_LABEL(base,$
-                      XOFFSET   = WHAlabel2.size[0],$
-                      YOFFSET   = WHAlabel2.size[1],$
-                      UNAME     = WHAlabel2.uname,$
-                      SENSITIVE = 0,$
-                      VALUE     = WHAlabel2.value)
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = EHAmaxLabel.size[0],$
+                     YOFFSET   = EHAmaxLabel.size[1],$
+                     VALUE     = EHAmaxLabel.value,$
+                     UNAME     = EHAmaxLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
-text2 = WIDGET_TEXT(base,$
-                    XOFFSET   = WHAtext2.size[0],$
-                    YOFFSET   = WHAtext2.size[1],$
-                    SCR_XSIZE = WHAtext2.size[2],$
-                    SCR_YSIZE = WHAtext2.size[3],$
-                    UNAME     = WHAtext2.uname,$
-                    SENSITIVE = 0,$
-                    /EDITABLE,$
-                    /ALL_EVENTS,$
-                    /ALIGN_LEFT)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = EHAmaxText.size[0],$
+                   YOFFSET   = EHAmaxText.size[1],$
+                   SCR_XSIZE = EHAmaxText.size[2],$
+                   SCR_YSIZE = EHAmaxText.size[3],$
+                   UNAME     = EHAmaxText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-label3 = WIDGET_LABEL(base,$
-                      XOFFSET   = WHAlabel3.size[0],$
-                      YOFFSET   = WHAlabel3.size[1],$
-                      SENSITIVE = 0,$
-                      UNAME     = WHAlabel3.uname,$
-                      VALUE     = WHAlabel3.value)
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = EHAbinLabel.size[0],$
+                     YOFFSET   = EHAbinLabel.size[1],$
+                     VALUE     = EHAbinLabel.value,$
+                     UNAME     = EHAbinLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
-text3 = WIDGET_TEXT(base,$
-                    XOFFSET   = WHAtext3.size[0],$
-                    YOFFSET   = WHAtext3.size[1],$
-                    SCR_XSIZE = WHAtext3.size[2],$
-                    SCR_YSIZE = WHAtext3.size[3],$
-                    UNAME     = WHAtext3.uname,$
-                    SENSITIVE = 0,$
-                    /EDITABLE,$
-                    /ALL_EVENTS,$
-                    /ALIGN_LEFT)
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = EHAbinText.size[0],$
+                   YOFFSET   = EHAbinText.size[1],$
+                   SCR_XSIZE = EHAbinText.size[2],$
+                   SCR_YSIZE = EHAbinText.size[3],$
+                   UNAME     = EHAbinText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write Out Linearly Interpolated Direct Scattering Background\
-;Info. Summed over all Pixel                                 \
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-NA_base = WIDGET_BASE(tab7_base,$
-                      UNAME     = NA_WOLIDSBbase.uname,$
-                      XOFFSET   = NA_WOLIDSBbase.size[0],$
-                      YOFFSET   = NA_WOLIDSBbase.size[1],$
-                      SCR_XSIZE = NA_WOLIDSBbase.size[2],$
-                      SCR_YSIZE = NA_WOLIDSBbase.size[3],$
-                      MAP       = 0,$
-                      ROW       = 1)
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = EHAframe.size[0],$
+                      YOFFSET   = EHAframe.size[1],$
+                      SCR_XSIZE = EHAframe.size[2],$
+                      SCR_YSIZE = EHAframe.size[3],$
+                      FRAME     = EHAframe.frame,$
+                      VALUE     = '')
 
-NA_label = WIDGET_LABEL(NA_base,$
-                        VALUE = NA_WOLIDSBbase.value)
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Global Instrument Final Wavelength (Angstroms)\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOLIDSBbase.size[0],$
-                   YOFFSET   = WOLIDSBbase.size[1],$
-                   SCR_XSIZE = WOLIDSBbase.size[2],$
-                   SCR_YSIZE = WOLIDSBbase.size[3])
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = GIFWbase.size[0],$
+                   YOFFSET   = GIFWbase.size[1],$
+                   SCR_XSIZE = GIFWbase.size[2],$
+                   SCR_YSIZE = GIFWbase.size[3])
 
 group = CW_BGROUP(base,$
-                  WOLIDSBbase.button.list,$
-                  UNAME      = WOLIDSBbase.button.uname,$
-                  /NONEXCLUSIVE,$
+                  GIFWbase.button.list,$
+                  UNAME      = GIFWbase.button.uname,$
                   SET_VALUE  = 0,$
-                  ROW        = 1)
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = GIFWvalueLabel.size[0],$
+                     YOFFSET   = GIFWvalueLabel.size[1],$
+                     VALUE     = GIFWvalueLabel.value,$
+                     UNAME     = GIFWvalueLabel.uname,$
+                     SENSITIVE = GIFWbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = GIFWvalueText.size[0],$
+                   YOFFSET   = GIFWvalueText.size[1],$
+                   SCR_XSIZE = GIFWvalueText.size[2],$
+                   SCR_YSIZE = GIFWvalueText.size[3],$
+                   UNAME     = GIFWvalueText.uname,$
+                   SENSITIVE = GIFWbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = GIFWerrorLabel.size[0],$
+                     YOFFSET   = GIFWerrorLabel.size[1],$
+                     VALUE     = GIFWerrorLabel.value,$
+                     UNAME     = GIFWerrorLabel.uname,$
+                     SENSITIVE = GIFWbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = GIFWerrorText.size[0],$
+                   YOFFSET   = GIFWerrorText.size[1],$
+                   SCR_XSIZE = GIFWerrorText.size[2],$
+                   SCR_YSIZE = GIFWerrorText.size[3],$
+                   UNAME     = GIFWerrorText.uname,$
+                   SENSITIVE = GIFWbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = GIFWframe.size[0],$
+                      YOFFSET   = GIFWframe.size[1],$
+                      SCR_XSIZE = GIFWframe.size[2],$
+                      SCR_YSIZE = GIFWframe.size[3],$
+                      FRAME     = GIFWframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Momentum Transfer Histogram Axis
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = MTHAbase.size[0],$
+                   YOFFSET   = MTHAbase.size[1],$
+                   SCR_XSIZE = MTHAbase.size[2],$
+                   SCR_YSIZE = MTHAbase.size[3])
+
+label = WIDGET_LABEL(base,$
+                     VALUE = MTHAbase.button.list[0],$
+                     UNAME = MTHAbase.button.uname)
+                     
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAminLabel.size[0],$
+                     YOFFSET   = MTHAminLabel.size[1],$
+                     VALUE     = MTHAminLabel.value,$
+                     UNAME     = MTHAminLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAminText.size[0],$
+                   YOFFSET   = MTHAminText.size[1],$
+                   SCR_XSIZE = MTHAminText.size[2],$
+                   SCR_YSIZE = MTHAminText.size[3],$
+                   UNAME     = MTHAminText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAmaxLabel.size[0],$
+                     YOFFSET   = MTHAmaxLabel.size[1],$
+                     VALUE     = MTHAmaxLabel.value,$
+                     UNAME     = MTHAmaxLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAmaxText.size[0],$
+                   YOFFSET   = MTHAmaxText.size[1],$
+                   SCR_XSIZE = MTHAmaxText.size[2],$
+                   SCR_YSIZE = MTHAmaxText.size[3],$
+                   UNAME     = MTHAmaxText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAbinLabel.size[0],$
+                     YOFFSET   = MTHAbinLabel.size[1],$
+                     VALUE     = MTHAbinLabel.value,$
+                     UNAME     = MTHAbinLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAbinText.size[0],$
+                   YOFFSET   = MTHAbinText.size[1],$
+                   SCR_XSIZE = MTHAbinText.size[2],$
+                   SCR_YSIZE = MTHAbinText.size[3],$
+                   UNAME     = MTHAbinText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = MTHAframe.size[0],$
+                      YOFFSET   = MTHAframe.size[1],$
+                      SCR_XSIZE = MTHAframe.size[2],$
+                      SCR_YSIZE = MTHAframe.size[3],$
+                      FRAME     = MTHAframe.frame,$
+                      VALUE     = '')
 END
