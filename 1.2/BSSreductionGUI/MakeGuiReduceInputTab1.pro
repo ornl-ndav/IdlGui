@@ -1,8 +1,8 @@
 PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
 
-;***********************************************************************************
+;******************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
+;******************************************************************************
 
 ;/////////////////////
 ;Raw Sample Data File/
@@ -32,8 +32,8 @@ RSDFbrowseButton  = { size  : [RSDFrunNumberBase.size[0]+XYoff[0],$
 XYoff             = [130,-4]
 RSDFNexusField    = { size : [RSDFbrowseButton.size[0]+XYoff[0],$
                               RSDFbrowseButton.size[1]+XYoff[1],$
-                              342,35],$
-                      xsize : 50,$
+                              430,35],$
+                      xsize : 65,$
                       title : 'or',$
                       uname : 'rsdf_nexus_cw_field'}
 XYoff             = [337,0]
@@ -209,9 +209,9 @@ DSBListOfRuns = { size : [XYoff[0],$
                           723,30],$
                   uname : 'dsb_list_of_runs_text'}
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 tab1_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
@@ -262,20 +262,20 @@ nexusField = CW_FIELD(nexusBase,$
                       ROW           = 1,$
                       XSIZE         = RSDFNexusField.xsize)
 
-base = WIDGET_BASE(tab1_base,$
-                   XOFFSET   = RSDFMultipleRun.base.size[0],$
-                   YOFFSET   = RSDFMultipleRun.base.size[1],$
-                   SCR_XSIZE = RSDFMultipleRun.base.size[2],$
-                   SCR_YSIZE = RSDFMultipleRun.base.size[3],$
-                   /NONEXCLUSIVE)
+; base = WIDGET_BASE(tab1_base,$
+;                    XOFFSET   = RSDFMultipleRun.base.size[0],$
+;                    YOFFSET   = RSDFMultipleRun.base.size[1],$
+;                    SCR_XSIZE = RSDFMultipleRun.base.size[2],$
+;                    SCR_YSIZE = RSDFMultipleRun.base.size[3],$
+;                    /NONEXCLUSIVE)
 
-MultipleRun = WIDGET_BUTTON(base,$
-                            XOFFSET   = RSDFMultipleRun.size[0],$
-                            YOFFSET   = RSDFMultipleRun.size[1],$
-                            SCR_XSIZE = RSDFMultipleRun.size[2],$
-                            SCR_YSIZE = RSDFMultipleRun.size[3],$
-                            UNAME     = RSDFMultipleRun.uname,$
-                            VALUE     = RSDFMultipleRun.value)
+; MultipleRun = WIDGET_BUTTON(base,$
+;                             XOFFSET   = RSDFMultipleRun.size[0],$
+;                             YOFFSET   = RSDFMultipleRun.size[1],$
+;                             SCR_XSIZE = RSDFMultipleRun.size[2],$
+;                             SCR_YSIZE = RSDFMultipleRun.size[3],$
+;                             UNAME     = RSDFMultipleRun.uname,$
+;                             VALUE     = RSDFMultipleRun.value)
 
 ListOfRuns = WIDGET_TEXT(tab1_base,$
                          XOFFSET   = RSDFListOfRuns.size[0],$
