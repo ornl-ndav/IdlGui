@@ -1,8 +1,8 @@
 PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceBaseTitle
 
-;***********************************************************************************
+;******************************************************************************
 ;                             Define size arrays
-;***********************************************************************************
+;******************************************************************************
 ReduceInputTabSettings       = {size : [0, $
                                         0, $
                                         750, $
@@ -77,9 +77,9 @@ clg = {text : {size : [0,$
 
 
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 ReduceBase = WIDGET_BASE(MAIN_TAB,$
                          XOFFSET   = 0,$
                          YOFFSET   = 0,$
@@ -93,15 +93,6 @@ MakeGuiReduceInputTab, ReduceBase, ReduceInputTabSettings
 
 ;tabs of 'CLG status' and 'XML reduce file'
 MakeGuiReduceClgXmlTab, ReduceBase, ReduceClgXmlTabSettings
-
-;;REMOVE ME REMOVE ME REMOVE ME REMOVE ME
-;;temp button
-; button = widget_button(ReduceBase,$
-;                        xoffset = SubmitButton.size[0],$
-;                        yoffset = SubmitButton.size[1],$
-;                        scr_xsize = 100,$
-;                        scr_ysize = 30,$
-;                        uname = 'temp_button')
 
 ;Submit Button
 button = WIDGET_BUTTON(ReduceBase,$
