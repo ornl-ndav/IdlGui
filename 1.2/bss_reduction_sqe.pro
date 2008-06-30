@@ -1,10 +1,17 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-APPLICATION     = 'BSSreductionSQE'
-VERSION         = '1.2.11'
-DeployedVersion = 'yes'
+;=======================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION        = 'BSSreductionSQE'
+VERSION            = '1.2.11'
+DeployedVersion    = 'yes'
+DEBUGGING_VERSION  = 'yes'
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;=======================================
 
-;define initial global values - these could be input via external file or other means
+
+;define initial global values - these could be input via external file or
+;other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -322,7 +329,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
 id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
-IF (DeployedVersion EQ 'no') THEN BEGIN
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
