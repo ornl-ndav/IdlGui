@@ -35,6 +35,14 @@ function format, init_str, tag
   pos = STRLEN(tag)
   ;make a string with the comment
   new_str = STRTRIM(strmid(init_str, pos), 2)
+  
+  ;Check if a semi-colon is in the ouput string
+  scolon = strpos(new_str, ':')
+  if scolon ne -1 then begin
+    pos = strlen(':')
+    new_str = STRTRIM(strmid(new_str, pos), 2)
+  endif
+  
   return, new_str
   
 end
@@ -44,21 +52,23 @@ Function find_it, init_str, tag
   ;get number of elements in array
   n = N_ELEMENTS(init_str)
   i = 0
+  flag = 1
   new_str = strarr(1)
   
   ; Go through the array and find all occurances of the tag
   while (i NE n) do begin
     pos = STRPOS(init_str[i], tag)
     if pos ne -1 then BEGIN
-      if i eq 0 then begin
-        new_str[i] = init_str[i]
+      if flag eq 1 then begin
+        new_str[0] = init_str[i]
+        flag = 0
       endif else begin
         new_str = [new_str,init_str[i]]
       endelse
     endif
     i = i+ 1
   endwhile
-
+  
   ;cut out the tag
   new_str = format(new_str, tag)
   return, new_str
@@ -69,7 +79,7 @@ end
 
 pro parseDRascii
   location = "/SNS/users/dfp/IDLWorkspace/Default/REF_L_4000_2008y_06m_24d_09h_55mn_08s.txt"
-  tag = "#F data"
+  tag = "#F data:"
   data = READ_DATA(location)
   output = find_it(data, tag)
   print, output
