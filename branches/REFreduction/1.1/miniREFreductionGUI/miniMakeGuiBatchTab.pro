@@ -364,15 +364,41 @@ dLaunchREFscaleButton = { size  : [dLoadBatchButton.size[0]+ $
                           uname : 'launch_refscale_button',$
                           value : 'LAUNCH REFscale'}
 
-;Refresh Batch button
+;Refresh Base
 XYoff = [0,0]
-dRefreshREFscaleButton = { size:     [dLoadBatchButton.size[0]+ $
-                                      dLoadBatchButton.size[2]+XYoff[0],$
-                                      dLoadBatchButton.size[1]+XYoff[1],$
-                                      dLoadBatchButton.size[2:3]],$
-                          uname:     'refresh_batch_file_button',$
-                          sensitive: 0,$
-                          value:     'REFRESH BATCH FILE'}
+dRefreshBase = { size: [dLoadBatchButton.size[0]+$
+                        dLoadBatchButton.size[2]+XYoff[0],$
+                        dLoadBatchButton.size[1]+XYoff[1],$
+                        740,$
+                        35],$
+                 frame: 0,$
+                 map:   0,$
+                 uname: 'refresh_bash_base' }
+
+;Refresh REFscale button
+XYoff = [0,0]
+dRefreshREFscaleButton = { size:      [XYoff[0],$
+                                       XYoff[1],$
+                                       dLoadBatchButton.size[2:3]],$
+                           uname:     'refresh_batch_file_button',$
+                           sensitive: 1,$
+                           value:     'REFRESH BATCH FILE'}
+
+;Static label
+XYoff = [10,10]
+dRefreshStaticLabel = { size: [dRefreshREFScaleButton.size[0]+$
+                               dRefreshREFscaleButton.size[2]+XYoff[0],$
+                               dRefreshREFscaleButton.size[1]+XYOff[1]],$
+                        value: 'Loaded File Name: '}
+
+;Name of current file opened
+XYoff = [110,0]
+dBatchFileLoadedLabel = { size: [dRefreshStaticLabel.size[0]+XYoff[0],$
+                                 dRefreshStaticLabel.size[1]+XYoff[1],$
+                                 400],$
+                          value: 'N/A',$
+                          frame: 0,$
+                          uname: 'loaded_batch_file_name'}
 
 ;******************************************************************************
 ;                                Build GUI
@@ -763,11 +789,24 @@ IF (with_launch_button EQ 'yes') THEN BEGIN
                     VALUE     = dLaunchREFscalebutton.value)
 ENDIF
 
+;------------------------------------------------------------------------------
+;\\\\\\\\\\\\\\\\\\\
+;Refresh Batch Base\
+;\\\\\\\\\\\\\\\\\\\
+wRefreshBase = WIDGET_BASE(BATCH_BASE,$
+                           XOFFSET   = dRefreshBase.size[0],$
+                           YOFFSET   = dRefreshBase.size[1],$
+                           SCR_XSIZE = dRefreshBase.size[2],$
+                           SCR_YSIZE = dRefreshBase.size[3],$
+                           UNAME     = dRefreshBase.uname,$
+                           FRAME     = dRefreshBase.frame,$
+                           MAP       = dRefreshBase.map)
+                           
 ;\\\\\\\\\\\\\\\\\\\\\
 ;Refresh Batch Button\
 ;\\\\\\\\\\\\\\\\\\\\\
 wRefreshREFscalebutton = $
-  WIDGET_BUTTON(BATCH_BASE,$
+  WIDGET_BUTTON(wRefreshBase,$
                 XOFFSET   = dRefreshREFscalebutton.size[0],$
                 YOFFSET   = dRefreshREFscalebutton.size[1],$
                 SCR_XSIZE = dRefreshREFscalebutton.size[2],$
@@ -775,6 +814,31 @@ wRefreshREFscalebutton = $
                 UNAME     = dRefreshREFscalebutton.uname,$
                 VALUE     = dRefreshREFscalebutton.value,$
                 SENSITIVE = dRefreshREFscalebutton.sensitive)
+
+
+;\\\\\\\\\\\\\
+;Static Label\
+;\\\\\\\\\\\\\
+wRefreshStaticLabel = WIDGET_LABEL(wRefreshBase,$
+                                   XOFFSET = dRefreshStaticLabel.size[0],$
+                                   YOFFSET = dRefreshStaticLabel.size[1],$
+                                   VALUE   = dRefreshStaticLabel.value)
+  
+
+;\\\\\\\\\\\\\\\\\\
+;Loaded Batch File\
+;\\\\\\\\\\\\\\\\\\
+wBatchFileLoadedLabel = $
+  WIDGET_LABEL(wRefreshBase,$
+               XOFFSET   = dBatchFileLoadedLabel.size[0],$
+               YOFFSET   = dBatchFileLoadedLabel.size[1],$
+               SCR_XSIZE = dBatchFileLoadedLabel.size[2],$
+               VALUE     = dBatchFileLoadedLabel.value,$
+               UNAME     = dBatchFileLoadedLabel.uname,$
+               FRAME     = dBatchFileLoadedLabel.frame,$
+               /ALIGN_LEFT)
+
+;------------------------------------------------------------------------------
     
 ;\\\\\\\\\\\\\\
 ;save as label\
