@@ -563,15 +563,14 @@ END
 ;This function check if the Batch file (from the text field) exist and
 ;if it does, make the refresh button enabled
 PRO  CheckRefreshButton, Event
-BatchFilePath = getBatchPath(Event)
-BatchFileName = getTextFieldValue(Event,'save_as_file_name')
-IF (FILE_TEST(BatchFilePath + BatchFileName) AND $
+BatchFileName = getTextFieldValue(Event,'loaded_batch_file_name')
+IF (FILE_TEST(BatchFileName) AND $
     BatchFileName NE '') THEN BEGIN
     status = 1
 ENDIF ELSE BEGIN
     status = 0
 ENDELSE
-ActivateWidget, Event, 'refresh_batch_file_button', status
+MapBase, Event, 'refresh_bash_base', status
 END
 
 ;-----------------------------------------------------------------------------
@@ -1414,7 +1413,7 @@ ENDIF
 END
 
 
-
+;------------------------------------------------------------------------------
 PRO BatchTab_LoadBatchFile, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1431,9 +1430,8 @@ END
 
 
 PRO BatchTab_ReloadBatchFile, Event
-BatchFilePath = getBatchPath(Event)
-BatchFileName = getTextFieldValue(Event,'save_as_file_name')
-BatchTab_LoadBatchFile_step2, Event, BatchFilePath+BatchFileName, ''
+BatchFileName = getTextFieldValue(Event,'loaded_batch_file_name')
+BatchTab_LoadBatchFile_step2, Event, BatchFileName, ''
 END
 
 
@@ -1481,6 +1479,8 @@ IF (BatchFileName NE '') THEN BEGIN
         putBatchFolderName, Event, FilePath
 ;put name of file in widget_text
         putBatchFileName, Event, FileName
+;put name of file in Refresh label
+        putTextFieldValue, event, 'loaded_batch_file_name', BatchFileName, 0
 ;enable or not the REPOPULATE Button
         CheckRepopulateButton, Event
 ;enable or not the REFRESH Button
@@ -1489,6 +1489,7 @@ IF (BatchFileName NE '') THEN BEGIN
 ENDIF 
 END
 
+;------------------------------------------------------------------------------
 
 ;Define where the Batch File will be created
 PRO BatchTab_BrowsePath, Event
