@@ -1,660 +1,655 @@
-PRO MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
+Pro MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
 ;***********************************************************************************
 
-;/////////////////////////////////////////////
-;Constant for Scaling the Final Data Spectrum/
-;/////////////////////////////////////////////
-yoff = 15
-CSFDSframe = { size : [5,yoff,730,50],$
+yoff = 20
+;//////////////////////////////////////////////////////////////////
+;Constant to Scale the Background Spectra for Subtraction from the/
+;sample data spectra                                              /        
+;//////////////////////////////////////////////////////////////////
+CSBSSframe = { size : [5, yoff,730,55],$
                frame : 4}
-XYoff1 = [10,-14]
-CSFDSbase = { size : [CSFDSframe.size[0]+XYoff1[0],$
-                      CSFDSframe.size[1]+XYoff1[1],$
-                      295,$
+
+XYoff = [10,-14]
+CSBSSbase = { size : [CSBSSframe.size[0]+XYoff[0],$
+                      CSBSSframe.size[1]+XYoff[1],$
+                      540,$
                       30],$
-              button : { uname : 'csfds_button',$
-                         list : ['Constant for Scaling the Final Data Spectrum'],$
-                         value : 0}}
+              button : { uname : 'csbss_button',$
+                         list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Spectra'],$
+              value : 0}}
 
-XYoff2 = [10,25]
-CSFDSvalueLabel = { size : [CSFDSframe.size[0]+XYoff2[0],$
-                            CSFDSframe.size[1]+XYoff2[1]],$
+
+XYoff10 = [15,25]   
+CSBSSvalueLabel = { size : [CSBSSframe.size[0]+XYoff10[0],$
+                            CSBSSframe.size[1]+XYoff10[1]],$
                     value : 'Value:',$
-                    uname : 'csfds_value_text_label',$
-                    sensitive : CSFDSbase.button.value}
-XYoff3 = [50,-5]
-CSFDSvalueText  = { size : [CSFDSvalueLabel.size[0]+XYoff3[0],$
-                            CSFDSvaluelabel.size[1]+XYoff3[1],$
+                    uname : 'csbss_value_text_label',$
+                    sensitive : CSBSSBase.button.value}
+XYoff11 = [50,-5]
+CSBSSvalueText  = { size : [CSBSSvalueLabel.size[0]+XYoff11[0],$
+                            CSBSSvaluelabel.size[1]+XYoff11[1],$
                             100,30],$
-                    uname : 'csfds_value_text',$
-                    sensitive : CSFDSbase.button.value}
+                    uname : 'csbss_value_text',$
+                    sensitive : CSBSSBase.button.value}
 
-;///////////////////////////////////////////////////
-;Time Zero Slope Parameter (Angstroms/microseconds)/
-;///////////////////////////////////////////////////
-yoff = 80
-TZSPframe = { size : [CSFDSframe.size[0], $
-                      CSFDSframe.size[1]+yoff,$
-                      CSFDSframe.size[2:3]],$
-              frame : 4}
-XYoff1 = [10,-14]
-TZSPbase = { size : [TZSPframe.size[0]+XYoff1[0],$
-                     TZSPframe.size[1]+XYoff1[1],$
-                     330,$
-                     30],$
-             button : { uname : 'tzsp_button',$
-                        list : ['Time Zero Slope Parameter ' + $
-                                '(Angstroms/microSeconds)'],$
-                        value : 0}}
+XYoff12 = [200,0]
+CSBSSerrorLabel = { size : [CSBSSvalueLabel.size[0]+XYoff12[0],$
+                            CSBSSvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'csbss_error_text_label',$
+                    sensitive : CSBSSBase.button.value}
+XYoff13 = [50,-5]
+CSBSSerrorText  = { size : [CSBSSerrorLabel.size[0]+XYoff13[0],$
+                            CSBSSerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'csbss_error_text',$
+                    sensitive : CSBSSBase.button.value}
 
-XYoff2 = [10,25]
-TZSPvalueLabel = { size : [TZSPframe.size[0]+XYoff2[0],$
-                           TZSPframe.size[1]+XYoff2[1]],$
-                   value : 'Value:',$
-                   uname : 'tzsp_value_text_label',$
-                   sensitive : TZSPbase.button.value}
-XYoff3 = [50,-5]
-TZSPvalueText  = { size : [TZSPvalueLabel.size[0]+XYoff3[0],$
-                           TZSPvaluelabel.size[1]+XYoff3[1],$
-                           100,30],$
-                   uname : 'tzsp_value_text',$
-                   sensitive : TZSPbase.button.value}
+;//////////////////////////////////////////////////////////////////
+;Constant to Scale the Background Spectra for Subtraction from the/
+;normalization data spectra                                       /        
+;//////////////////////////////////////////////////////////////////
+yoff = 90
+CSNframe = { size : [CSBSSframe.size[0], $
+                       CSBSSframe.size[1]+yoff,$
+                       CSBSSframe.size[2:3]],$
+               frame : CSBSSframe.frame}
 
-XYoff4 = [200,0]
-TZSPerrorLabel = { size : [TZSPvalueLabel.size[0]+XYoff4[0],$
-                           TZSPvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:',$
-                   uname : 'tzsp_error_text_label',$
-                   sensitive : TZSPbase.button.value}
-XYoff5 = [50,-5]
-TZSPerrorText  = { size : [TZSPerrorLabel.size[0]+XYoff5[0],$
-                           TZSPerrorlabel.size[1]+XYoff5[1],$
-                           100,30],$
-                   uname : 'tzsp_error_text',$
-                   sensitive : TZSPbase.button.value}
+XYoff = [10,-14]
+CSNbase = { size : [CSNframe.size[0]+XYoff[0],$
+                      CSNframe.size[1]+XYoff[1],$
+                      585,$
+                      30],$
+              button : { uname : 'csn_button',$
+                         list : ['Constant to Scale the Background Spectra for Subtraction from the Normalization Data Spectra'],$
+              value : 0}}
 
-;//////////////////////////////////////////
-;Time Zero Offset Parameter (microseconds)/
-;//////////////////////////////////////////
-TZOPframe = { size : [TZSPframe.size[0],$
-                      TZSPframe.size[1]+yoff,$
-                      TZSPframe.size[2:3]],$
-              frame : TZSPframe.frame}
-XYoff1 = [10,-14]
-TZOPbase = { size : [TZOPframe.size[0]+XYoff1[0],$
-                     TZOPframe.size[1]+XYoff1[1],$
-                     260,$
-                     30],$
-             button : { uname : 'tzop_button',$
-                        list : ['Time Zero Offset Parameter (Angstroms)'],$
-                        value : 0}}
+XYoff10 = [15,25]   
+CSNvalueLabel = { size : [CSNframe.size[0]+XYoff10[0],$
+                            CSNframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'csn_value_text_label',$
+                    sensitive : CSNBase.button.value}
+XYoff11 = [50,-5]
+CSNvalueText  = { size : [CSNvalueLabel.size[0]+XYoff11[0],$
+                            CSNvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'csn_value_text',$
+                    sensitive : CSNBase.button.value}
 
-XYoff2 = [10,25]
-TZOPvalueLabel = { size : [TZOPframe.size[0]+XYoff2[0],$
-                           TZOPframe.size[1]+XYoff2[1]],$
-                   value : 'Value:',$
-                   uname : 'tzop_value_text_label',$
-                   sensitive : TZOPbase.button.value}
-XYoff3 = [50,-5]
-TZOPvalueText  = { size : [TZOPvalueLabel.size[0]+XYoff3[0],$
-                           TZOPvaluelabel.size[1]+XYoff3[1],$
-                           100,30],$
-                   uname : 'tzop_value_text',$
-                   sensitive : TZOPbase.button.value}
+XYoff12 = [200,0]
+CSNerrorLabel = { size : [CSNvalueLabel.size[0]+XYoff12[0],$
+                            CSNvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'csn_error_text_label',$
+                    sensitive : CSNBase.button.value}
+XYoff13 = [50,-5]
+CSNerrorText  = { size : [CSNerrorLabel.size[0]+XYoff13[0],$
+                            CSNerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'csn_error_text',$
+                    sensitive : CSNBase.button.value}
 
-XYoff4 = [200,0]
-TZOPerrorLabel = { size : [TZOPvalueLabel.size[0]+XYoff4[0],$
-                           TZOPvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:',$
-                   uname : 'tzop_error_text_label',$
-                   sensitive : TZOPbase.button.value}
-XYoff5 = [50,-5]
-TZOPerrorText  = { size : [TZOPerrorLabel.size[0]+XYoff5[0],$
-                           TZOPerrorlabel.size[1]+XYoff5[1],$
-                           100,30],$
-                   uname : 'tzop_error_text',$
-                   sensitive : TZOPbase.button.value}
+;//////////////////////////////////////////////////////////////////
+;Constant to Scale the Background Spectra for Subtraction from the/
+;sample data associated empty container spectra                   /        
+;//////////////////////////////////////////////////////////////////
+yoff = 90
+BCSframe = { size : [CSNframe.size[0], $
+                     CSNframe.size[1]+yoff,$
+                     CSNframe.size[2:3]],$
+             frame : CSNframe.frame}
 
-;////////////////////////////////
-;Energy Histogram Axis (mcro-eV)/
-;////////////////////////////////
-EHAframe = { size : [TZOPframe.size[0],$
-                     TZOPframe.size[1]+yoff,$
-                     TZOPframe.size[2:3]],$
-             frame : TZSPframe.frame}
-XYoff1 = [10,-8]
-EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
-                    EHaframe.size[1]+XYoff1[1],$
-                    205,$
-                    25],$
-            button : { uname : 'eha_button',$
-                       list : [' Energy Histogram Axis (micro-eV)'],$
-                       value : 1}}
+XYoff = [10,-14]
+BCSbase = { size : [BCSframe.size[0]+XYoff[0],$
+                      BCSframe.size[1]+XYoff[1],$
+                      710,$
+                      30],$
+              button : { uname : 'bcs_button',$
+                         list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Associated Empty Container Spectra'],$
+              value : 0}}
 
-XYoff2 = [10,25]
-EHAminLabel = { size : [EHAframe.size[0]+XYoff2[0],$
-                        EHAframe.size[1]+XYoff2[1]],$
-                value : 'Min:',$
-                uname : 'eha_min_text_label',$
-                sensitive : EHAbase.button.value}
-XYoff3 = [50,-5]
-EHAminText  = { size : [EHAminLabel.size[0]+XYoff3[0],$
-                        EHAminlabel.size[1]+XYoff3[1],$
-                          100,30],$
-                uname : 'eha_min_text',$
-                sensitive : EHAbase.button.value}
+XYoff10 = [15,25]   
+BCSvalueLabel = { size : [BCSframe.size[0]+XYoff10[0],$
+                            BCSframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'bcs_value_text_label',$
+                    sensitive : BCSBase.button.value}
+XYoff11 = [50,-5]
+BCSvalueText  = { size : [BCSvalueLabel.size[0]+XYoff11[0],$
+                            BCSvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'bcs_value_text',$
+                    sensitive : BCSBase.button.value}
 
-XYoff4 = [200,0]
-EHAmaxLabel = { size : [EHAminLabel.size[0]+XYoff4[0],$
-                        EHAminLabel.size[1]+XYoff4[1]],$
-                value : 'Max:',$
-                uname : 'eha_max_text_label',$
-                sensitive : EHAbase.button.value}
-XYoff5 = [50,-5]
-EHAmaxText  = { size : [EHAmaxLabel.size[0]+XYoff5[0],$
-                        EHAmaxLabel.size[1]+XYoff5[1],$
-                        100,30],$
-                uname : 'eha_max_text',$
-                sensitive : EHAbase.button.value}
+XYoff12 = [200,0]
+BCSerrorLabel = { size : [BCSvalueLabel.size[0]+XYoff12[0],$
+                            BCSvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'bcs_error_text_label',$
+                    sensitive : BCSBase.button.value}
+XYoff13 = [50,-5]
+BCSerrorText  = { size : [BCSerrorLabel.size[0]+XYoff13[0],$
+                            BCSerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'bcs_error_text',$
+                    sensitive : BCSBase.button.value}
 
-XYoff4 = [200,0]
-EHAbinLabel = { size : [EHAmaxLabel.size[0]+XYoff4[0],$
-                        EHAmaxLabel.size[1]+XYoff4[1]],$
-                value : '  Width:',$
-                uname : 'eha_bin_text_label',$
-                sensitive : EHAbase.button.value}
-XYoff5 = [85,-5]
-EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
-                        EHAbinLabel.size[1]+XYoff5[1],$
-                        100,30],$
-                uname : 'eha_bin_text',$
-                sensitive : EHAbase.button.value}
+;//////////////////////////////////////////////////////////////////
+;Constant to Scale the Background Spectra for Subtraction from the/
+;normalization data associated empty container spectra            /        
+;//////////////////////////////////////////////////////////////////
+yoff = 90
+BCNframe = { size : [BCSframe.size[0], $
+                     BCSframe.size[1]+yoff,$
+                     BCSframe.size[2:3]],$
+             frame : BCSframe.frame}
 
-;//////////////////////////////////////////////
-;Momentum Transfer Histogram Axis (1/Angstroms)
-;//////////////////////////////////////////////
-MTHAframe = { size : [EHAframe.size[0],$
-                      EHAframe.size[1]+yoff,$
-                      EHAframe.size[2:3]],$
-              frame : EHAframe.frame}
-XYoff1 = [10,-8]
-MTHAbase = { size : [MTHAframe.size[0]+XYoff1[0],$
-                     MTHAframe.size[1]+XYoff1[1],$
-                     290,$
-                     25],$
-             button : { uname : 'mtha_button',$
-                       list : [' Momentum Transfer Histogram Axis (1/Angstroms)'],$
-                       value : 1}}
+XYoff = [10,-14]
+BCNbase = { size : [BCNframe.size[0]+XYoff[0],$
+                      BCNframe.size[1]+XYoff[1],$
+                      715,$
+                      30],$
+              button : { uname : 'bcn_button',$
+                         list : ['Constant to Scale the Back. Spectra for Subtraction from the Normalization Data Associated Empty Container Spectra'],$
+              value : 0}}
 
-XYoff2 = [10,25]
-MTHAminLabel = { size : [MTHAframe.size[0]+XYoff2[0],$
-                         MTHAframe.size[1]+XYoff2[1]],$
-                 value : 'Min:',$
-                 uname : 'mtha_min_text_label',$
-                 sensitive : MTHAbase.button.value}
-XYoff3 = [50,-5]
-MTHAminText  = { size : [MTHAminLabel.size[0]+XYoff3[0],$
-                         MTHAminlabel.size[1]+XYoff3[1],$
-                         100,30],$
-                 uname : 'mtha_min_text',$
-                 sensitive : MTHAbase.button.value}
+XYoff10 = [15,25]   
+BCNvalueLabel = { size : [BCNframe.size[0]+XYoff10[0],$
+                            BCNframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'bcn_value_text_label',$
+                    sensitive : BCNBase.button.value}
+XYoff11 = [50,-5]
+BCNvalueText  = { size : [BCNvalueLabel.size[0]+XYoff11[0],$
+                            BCNvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'bcn_value_text',$
+                    sensitive : BCNBase.button.value}
 
-XYoff4 = [200,0]
-MTHAmaxLabel = { size : [MTHAminLabel.size[0]+XYoff4[0],$
-                         MTHAminLabel.size[1]+XYoff4[1]],$
-                 value : 'Max:',$
-                 uname : 'mtha_max_text_label',$
-                 sensitive : MTHAbase.button.value}
-XYoff5 = [50,-5]
-MTHAmaxText  = { size : [MTHAmaxLabel.size[0]+XYoff5[0],$
-                         MTHAmaxLabel.size[1]+XYoff5[1],$
-                         100,30],$
-                 uname : 'mtha_max_text',$
-                 sensitive : MTHAbase.button.value}
+XYoff12 = [200,0]
+BCNerrorLabel = { size : [BCNvalueLabel.size[0]+XYoff12[0],$
+                            BCNvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'bcn_error_text_label',$
+                    sensitive : BCNBase.button.value}
+XYoff13 = [50,-5]
+BCNerrorText  = { size : [BCNerrorLabel.size[0]+XYoff13[0],$
+                            BCNerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'bcn_error_text',$
+                    sensitive : BCNBase.button.value}
 
-XYoff4 = [200,0]
-MTHAbinLabel = { size : [MTHAmaxLabel.size[0]+XYoff4[0],$
-                         MTHAmaxLabel.size[1]+XYoff4[1]],$
-                 value : '  Width:',$
-                 uname : 'mtha_bin_text_label',$
-                 sensitive : MTHAbase.button.value}
-XYoff5 = [85,-5]
-MTHAbinText  = { size : [MTHAbinLabel.size[0]+XYoff5[0],$
-                         MTHAbinLabel.size[1]+XYoff5[1],$
-                         100,30],$
-                 uname : 'mtha_bin_text',$
-                 sensitive : MTHAbase.button.value}
+;///////////////////////////////////////////////////////////////////
+;Constant to Scale the Empty Container Spectra for subtraction from/
+;the sample data                                                   /
+;///////////////////////////////////////////////////////////////////
+yoff = 90
+CSframe = { size : [BCNframe.size[0], $
+                     BCNframe.size[1]+yoff,$
+                     BCNframe.size[2:3]],$
+             frame : BCNframe.frame}
 
-;///////////////////////////////////////////////
-;Global Instrument Final Wavelength (Angstroms)/
-;///////////////////////////////////////////////
-GIFWframe = { size : [MTHAframe.size[0],$
-                      MTHAframe.size[1]+yoff,$
-                      MTHAframe.size[2:3]],$
-              frame : MTHAframe.frame}
-XYoff1 = [10,-14]
-GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
-                     GIFWframe.size[1]+XYoff1[1],$
-                     308,$
-                     30],$
-             button : { uname : 'gifw_button',$
-                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
-                        value : 0}}
+XYoff = [10,-14]
+CSbase = { size : [CSframe.size[0]+XYoff[0],$
+                   CSframe.size[1]+XYoff[1],$
+                   525,$
+                   30],$
+           button : { uname : 'cs_button',$
+                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Sample Data'],$
+                      value : 0}}
 
-XYoff2 = [10,25]
-GIFWvalueLabel = { size : [GIFWframe.size[0]+XYoff2[0],$
-                          GIFWframe.size[1]+XYoff2[1]],$
-                   value : 'Value:',$
-                   uname : 'gifw_value_text_label',$
-                   sensitive : GIFWbase.button.value}
-XYoff3 = [50,-5]
-GIFWvalueText  = { size : [GIFWvalueLabel.size[0]+XYoff3[0],$
-                          GIFWvaluelabel.size[1]+XYoff3[1],$
-                          100,30],$
-                   uname : 'gifw_value_text',$
-                   sensitive : GIFWbase.button.value}
+XYoff10 = [15,25]   
+CSvalueLabel = { size : [CSframe.size[0]+XYoff10[0],$
+                         CSframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'cs_value_text_label',$
+                    sensitive : CSBase.button.value}
+XYoff11 = [50,-5]
+CSvalueText  = { size : [CSvalueLabel.size[0]+XYoff11[0],$
+                            CSvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'cs_value_text',$
+                    sensitive : CSBase.button.value}
 
-XYoff4 = [200,0]
-GIFWerrorLabel = { size : [GIFWvalueLabel.size[0]+XYoff4[0],$
-                          GIFWvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:',$
-                   uname : 'gifw_error_text_label',$
-                   sensitive : GIFWbase.button.value}
-XYoff5 = [50,-5]
-GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
-                          GIFWerrorlabel.size[1]+XYoff5[1],$
-                           100,30],$
-                   uname : 'gifw_error_text',$
-                   sensitive : GIFWbase.button.value}
+XYoff12 = [200,0]
+CSerrorLabel = { size : [CSvalueLabel.size[0]+XYoff12[0],$
+                            CSvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'cs_error_text_label',$
+                    sensitive : CSBase.button.value}
+XYoff13 = [50,-5]
+CSerrorText  = { size : [CSerrorLabel.size[0]+XYoff13[0],$
+                            CSerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'cs_error_text',$
+                    sensitive : CSBase.button.value}
+
+;///////////////////////////////////////////////////////////////////
+;Constant to Scale the Empty Container Spectra for subtraction from/
+;the normalization data                                            /
+;///////////////////////////////////////////////////////////////////
+yoff = 90
+CNframe = { size : [CSframe.size[0], $
+                    CSframe.size[1]+yoff,$
+                    CSframe.size[2:3]],$
+            frame : CSframe.frame}
+
+XYoff = [10,-14]
+CNbase = { size : [CNframe.size[0]+XYoff[0],$
+                   CNframe.size[1]+XYoff[1],$
+                   565,$
+                   30],$
+           button : { uname : 'cn_button',$
+                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Normalization Data'],$
+                      value : 0}}
+
+XYoff10 = [15,25]   
+CNvalueLabel = { size : [CNframe.size[0]+XYoff10[0],$
+                         CNframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'cn_value_text_label',$
+                    sensitive : CNBase.button.value}
+XYoff11 = [50,-5]
+CNvalueText  = { size : [CNvalueLabel.size[0]+XYoff11[0],$
+                            CNvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'cn_value_text',$
+                    sensitive : CNBase.button.value}
+
+XYoff12 = [200,0]
+CNerrorLabel = { size : [CNvalueLabel.size[0]+XYoff12[0],$
+                            CNvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'cn_error_text_label',$
+                    sensitive : CNBase.button.value}
+XYoff13 = [50,-5]
+CNerrorText  = { size : [CNerrorLabel.size[0]+XYoff13[0],$
+                            CNerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'cn_error_text',$
+                    sensitive : CNBase.button.value}
+
 
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab6_base = WIDGET_BASE(ReduceInputTab,$
+tab5_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
                         SCR_YSIZE = ReduceInputTabSettings.size[3],$
-                        TITLE     = ReduceInputTabSettings.title[3])
+                        TITLE     = ReduceInputTabSettings.title[6])
 
-;/////////////////////////////////////////////
-;Constant for Scaling the Final Data Spectrum/
-;/////////////////////////////////////////////
-
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = CSFDSbase.size[0],$
-                   YOFFSET   = CSFDSbase.size[1],$
-                   SCR_XSIZE = CSFDSbase.size[2],$
-                   SCR_YSIZE = CSFDSbase.size[3])
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Background Spectra for Subtraction from the\
+;sample data spectra                                              \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CSBSSbase.size[0],$
+                   YOFFSET   = CSBSSbase.size[1],$
+                   SCR_XSIZE = CSBSSbase.size[2],$
+                   SCR_YSIZE = CSBSSbase.size[3])
 
 group = CW_BGROUP(base,$
-                  CSFDSbase.button.list,$
-                  UNAME      = CSFDSbase.button.uname,$
-                  SET_VALUE  = 0,$
+                  CSBSSbase.button.list,$
+                  UNAME      = CSBSSbase.button.uname,$
+                  SET_VALUE  = CSBSSbase.button.value,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = CSFDSvalueLabel.size[0],$
-                     YOFFSET   = CSFDSvalueLabel.size[1],$
-                     VALUE     = CSFDSvalueLabel.value,$
-                     SENSITIVE = CSFDSbase.button.value,$
-                     UNAME     = CSFDSvalueLabel.uname)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSBSSvalueLabel.size[0],$
+                     YOFFSET   = CSBSSvalueLabel.size[1],$
+                     VALUE     = CSBSSvalueLabel.value,$
+                     UNAME     = CSBSSvalueLabel.uname,$
+                     SENSITIVE = CSBSSvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = CSFDSvalueText.size[0],$
-                   YOFFSET   = CSFDSvalueText.size[1],$
-                   SCR_XSIZE = CSFDSvalueText.size[2],$
-                   SCR_YSIZE = CSFDSvalueText.size[3],$
-                   UNAME     = CSFDSvalueText.uname,$
-                   SENSITIVE = CSFDSbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSBSSvalueText.size[0],$
+                   YOFFSET   = CSBSSvalueText.size[1],$
+                   SCR_XSIZE = CSBSSvalueText.size[2],$
+                   SCR_YSIZE = CSBSSvalueText.size[3],$
+                   UNAME     = CSBSSvalueText.uname,$
+                   SENSITIVE = CSBSSvalueText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = CSFDSframe.size[0],$
-                      YOFFSET   = CSFDSframe.size[1],$
-                      SCR_XSIZE = CSFDSframe.size[2],$
-                      SCR_YSIZE = CSFDSframe.size[3],$
-                      FRAME     = CSFDSframe.frame,$
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSBSSerrorLabel.size[0],$
+                     YOFFSET   = CSBSSerrorLabel.size[1],$
+                     VALUE     = CSBSSerrorLabel.value,$
+                     UNAME     = CSBSSerrorLabel.uname,$
+                     SENSITIVE = CSBSSerrorLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSBSSerrorText.size[0],$
+                   YOFFSET   = CSBSSerrorText.size[1],$
+                   SCR_XSIZE = CSBSSerrorText.size[2],$
+                   SCR_YSIZE = CSBSSerrorText.size[3],$
+                   UNAME     = CSBSSerrorText.uname,$
+                   SENSITIVE = CSBSSerrorText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CSBSSframe.size[0],$
+                      YOFFSET   = CSBSSframe.size[1],$
+                      SCR_XSIZE = CSBSSframe.size[2],$
+                      SCR_YSIZE = CSBSSframe.size[3],$
+                      FRAME     = CSBSSframe.frame,$
                       VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Time Zero Slope Parameter (Angstroms/microseconds)\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = TZSPbase.size[0],$
-                   YOFFSET   = TZSPbase.size[1],$
-                   SCR_XSIZE = TZSPbase.size[2],$
-                   SCR_YSIZE = TZSPbase.size[3])
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Background Spectra for Subtraction from the\
+;Normalization data spectra                                       \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CSNbase.size[0],$
+                   YOFFSET   = CSNbase.size[1],$
+                   SCR_XSIZE = CSNbase.size[2],$
+                   SCR_YSIZE = CSNbase.size[3])
 
 group = CW_BGROUP(base,$
-                  TZSPbase.button.list,$
-                  UNAME      = TZSPbase.button.uname,$
-                  SET_VALUE  = 0,$
+                  CSNbase.button.list,$
+                  UNAME      = CSNbase.button.uname,$
+                  SET_VALUE  = CSNbase.button.value,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = TZSPvalueLabel.size[0],$
-                     YOFFSET   = TZSPvalueLabel.size[1],$
-                     VALUE     = TZSPvalueLabel.value,$
-                     SENSITIVE = TZSPbase.button.value,$
-                     UNAME     = TZSPvalueLabel.uname)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSNvalueLabel.size[0],$
+                     YOFFSET   = CSNvalueLabel.size[1],$
+                     VALUE     = CSNvalueLabel.value,$
+                     UNAME     = CSNvalueLabel.uname,$
+                     SENSITIVE = CSNvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = TZSPvalueText.size[0],$
-                   YOFFSET   = TZSPvalueText.size[1],$
-                   SCR_XSIZE = TZSPvalueText.size[2],$
-                   SCR_YSIZE = TZSPvalueText.size[3],$
-                   UNAME     = TZSPvalueText.uname,$
-                   SENSITIVE = TZSPbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSNvalueText.size[0],$
+                   YOFFSET   = CSNvalueText.size[1],$
+                   SCR_XSIZE = CSNvalueText.size[2],$
+                   SCR_YSIZE = CSNvalueText.size[3],$
+                   UNAME     = CSNvalueText.uname,$
+                   SENSITIVE = CSNvalueText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = TZSPerrorLabel.size[0],$
-                     YOFFSET   = TZSPerrorLabel.size[1],$
-                     VALUE     = TZSPerrorLabel.value,$
-                     UNAME     = TZSPerrorLabel.uname,$
-                     SENSITIVE = TZSPbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSNerrorLabel.size[0],$
+                     YOFFSET   = CSNerrorLabel.size[1],$
+                     VALUE     = CSNerrorLabel.value,$
+                     UNAME     = CSNerrorLabel.uname,$
+                     SENSITIVE = CSNerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = TZSPerrorText.size[0],$
-                   YOFFSET   = TZSPerrorText.size[1],$
-                   SCR_XSIZE = TZSPerrorText.size[2],$
-                   SCR_YSIZE = TZSPerrorText.size[3],$
-                   UNAME     = TZSPerrorText.uname,$
-                   SENSITIVE = TZSPbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSNerrorText.size[0],$
+                   YOFFSET   = CSNerrorText.size[1],$
+                   SCR_XSIZE = CSNerrorText.size[2],$
+                   SCR_YSIZE = CSNerrorText.size[3],$
+                   UNAME     = CSNerrorText.uname,$
+                   SENSITIVE = CSNerrorText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = TZSPframe.size[0],$
-                      YOFFSET   = TZSPframe.size[1],$
-                      SCR_XSIZE = TZSPframe.size[2],$
-                      SCR_YSIZE = TZSPframe.size[3],$
-                      FRAME     = TZSPframe.frame,$
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CSNframe.size[0],$
+                      YOFFSET   = CSNframe.size[1],$
+                      SCR_XSIZE = CSNframe.size[2],$
+                      SCR_YSIZE = CSNframe.size[3],$
+                      FRAME     = CSNframe.frame,$
                       VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Time Zero Offset Parameter (Angstroms/microseconds)\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = TZOPbase.size[0],$
-                   YOFFSET   = TZOPbase.size[1],$
-                   SCR_XSIZE = TZOPbase.size[2],$
-                   SCR_YSIZE = TZOPbase.size[3])
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Background Spectra for Subtraction from the\
+;sample data associated empty container spectra                   \        
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = BCSbase.size[0],$
+                   YOFFSET   = BCSbase.size[1],$
+                   SCR_XSIZE = BCSbase.size[2],$
+                   SCR_YSIZE = BCSbase.size[3])
 
 group = CW_BGROUP(base,$
-                  TZOPbase.button.list,$
-                  UNAME      = TZOPbase.button.uname,$
-                  SET_VALUE  = 0,$
+                  BCSbase.button.list,$
+                  UNAME      = BCSbase.button.uname,$
+                  SET_VALUE  = BCSbase.button.value,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = TZOPvalueLabel.size[0],$
-                     YOFFSET   = TZOPvalueLabel.size[1],$
-                     VALUE     = TZOPvalueLabel.value,$
-                     UNAME     = TZOPvalueLabel.uname,$
-                     SENSITIVE = TZOPbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCSvalueLabel.size[0],$
+                     YOFFSET   = BCSvalueLabel.size[1],$
+                     VALUE     = BCSvalueLabel.value,$
+                     UNAME     = BCSvalueLabel.uname,$
+                     SENSITIVE = BCSvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = TZOPvalueText.size[0],$
-                   YOFFSET   = TZOPvalueText.size[1],$
-                   SCR_XSIZE = TZOPvalueText.size[2],$
-                   SCR_YSIZE = TZOPvalueText.size[3],$
-                   UNAME     = TZOPvalueText.uname,$
-                   SENSITIVE = TZOPbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCSvalueText.size[0],$
+                   YOFFSET   = BCSvalueText.size[1],$
+                   SCR_XSIZE = BCSvalueText.size[2],$
+                   SCR_YSIZE = BCSvalueText.size[3],$
+                   UNAME     = BCSvalueText.uname,$
+                   SENSITIVE = BCSvalueText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = TZOPerrorLabel.size[0],$
-                     YOFFSET   = TZOPerrorLabel.size[1],$
-                     VALUE     = TZOPerrorLabel.value,$
-                     UNAME     = TZOPerrorLabel.uname,$
-                     SENSITIVE = TZOPbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCSerrorLabel.size[0],$
+                     YOFFSET   = BCSerrorLabel.size[1],$
+                     VALUE     = BCSerrorLabel.value,$
+                     UNAME     = BCSerrorLabel.uname,$
+                     SENSITIVE = BCSerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = TZOPerrorText.size[0],$
-                   YOFFSET   = TZOPerrorText.size[1],$
-                   SCR_XSIZE = TZOPerrorText.size[2],$
-                   SCR_YSIZE = TZOPerrorText.size[3],$
-                   UNAME     = TZOPerrorText.uname,$
-                   SENSITIVE = TZOPbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCSerrorText.size[0],$
+                   YOFFSET   = BCSerrorText.size[1],$
+                   SCR_XSIZE = BCSerrorText.size[2],$
+                   SCR_YSIZE = BCSerrorText.size[3],$
+                   UNAME     = BCSerrorText.uname,$
+                   SENSITIVE = BCSerrorText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = TZOPframe.size[0],$
-                      YOFFSET   = TZOPframe.size[1],$
-                      SCR_XSIZE = TZOPframe.size[2],$
-                      SCR_YSIZE = TZOPframe.size[3],$
-                      FRAME     = TZOPframe.frame,$
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = BCSframe.size[0],$
+                      YOFFSET   = BCSframe.size[1],$
+                      SCR_XSIZE = BCSframe.size[2],$
+                      SCR_YSIZE = BCSframe.size[3],$
+                      FRAME     = BCSframe.frame,$
                       VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Energy Histogram Axis (micro-eV)\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = EHAbase.size[0],$
-                   YOFFSET   = EHAbase.size[1],$
-                   SCR_XSIZE = EHAbase.size[2],$
-                   SCR_YSIZE = EHAbase.size[3])
-
-label = WIDGET_LABEL(base,$
-                     VALUE = EHAbase.button.list[0],$
-                     UNAME = EHAbase.button.uname)
-                     
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = EHAminLabel.size[0],$
-                     YOFFSET   = EHAminLabel.size[1],$
-                     VALUE     = EHAminLabel.value,$
-                     UNAME     = EHAminLabel.uname,$
-                     SENSITIVE = EHAbase.button.value)
-
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = EHAminText.size[0],$
-                   YOFFSET   = EHAminText.size[1],$
-                   SCR_XSIZE = EHAminText.size[2],$
-                   SCR_YSIZE = EHAminText.size[3],$
-                   UNAME     = EHAminText.uname,$
-                   SENSITIVE = EHAbase.button.value,$
-                   /EDITABLE,$
-                   /ALL_EVENTS,$
-                   /ALIGN_LEFT)
-
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = EHAmaxLabel.size[0],$
-                     YOFFSET   = EHAmaxLabel.size[1],$
-                     VALUE     = EHAmaxLabel.value,$
-                     UNAME     = EHAmaxLabel.uname,$
-                     SENSITIVE = EHAbase.button.value)
-
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = EHAmaxText.size[0],$
-                   YOFFSET   = EHAmaxText.size[1],$
-                   SCR_XSIZE = EHAmaxText.size[2],$
-                   SCR_YSIZE = EHAmaxText.size[3],$
-                   UNAME     = EHAmaxText.uname,$
-                   SENSITIVE = EHAbase.button.value,$
-                   /EDITABLE,$
-                   /ALL_EVENTS,$
-                   /ALIGN_LEFT)
-
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = EHAbinLabel.size[0],$
-                     YOFFSET   = EHAbinLabel.size[1],$
-                     VALUE     = EHAbinLabel.value,$
-                     UNAME     = EHAbinLabel.uname,$
-                     SENSITIVE = EHAbase.button.value)
-
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = EHAbinText.size[0],$
-                   YOFFSET   = EHAbinText.size[1],$
-                   SCR_XSIZE = EHAbinText.size[2],$
-                   SCR_YSIZE = EHAbinText.size[3],$
-                   UNAME     = EHAbinText.uname,$
-                   SENSITIVE = EHAbase.button.value,$
-                   /EDITABLE,$
-                   /ALL_EVENTS,$
-                   /ALIGN_LEFT)
-
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = EHAframe.size[0],$
-                      YOFFSET   = EHAframe.size[1],$
-                      SCR_XSIZE = EHAframe.size[2],$
-                      SCR_YSIZE = EHAframe.size[3],$
-                      FRAME     = EHAframe.frame,$
-                      VALUE     = '')
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Global Instrument Final Wavelength (Angstroms)\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = GIFWbase.size[0],$
-                   YOFFSET   = GIFWbase.size[1],$
-                   SCR_XSIZE = GIFWbase.size[2],$
-                   SCR_YSIZE = GIFWbase.size[3])
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Background Spectra for Subtraction from the\
+;normalization data associated empty container spectra            \        
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = BCNbase.size[0],$
+                   YOFFSET   = BCNbase.size[1],$
+                   SCR_XSIZE = BCNbase.size[2],$
+                   SCR_YSIZE = BCNbase.size[3])
 
 group = CW_BGROUP(base,$
-                  GIFWbase.button.list,$
-                  UNAME      = GIFWbase.button.uname,$
-                  SET_VALUE  = 0,$
+                  BCNbase.button.list,$
+                  UNAME      = BCNbase.button.uname,$
+                  SET_VALUE  = BCNbase.button.value,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = GIFWvalueLabel.size[0],$
-                     YOFFSET   = GIFWvalueLabel.size[1],$
-                     VALUE     = GIFWvalueLabel.value,$
-                     UNAME     = GIFWvalueLabel.uname,$
-                     SENSITIVE = GIFWbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCNvalueLabel.size[0],$
+                     YOFFSET   = BCNvalueLabel.size[1],$
+                     VALUE     = BCNvalueLabel.value,$
+                     UNAME     = BCNvalueLabel.uname,$
+                     SENSITIVE = BCNvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = GIFWvalueText.size[0],$
-                   YOFFSET   = GIFWvalueText.size[1],$
-                   SCR_XSIZE = GIFWvalueText.size[2],$
-                   SCR_YSIZE = GIFWvalueText.size[3],$
-                   UNAME     = GIFWvalueText.uname,$
-                   SENSITIVE = GIFWbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCNvalueText.size[0],$
+                   YOFFSET   = BCNvalueText.size[1],$
+                   SCR_XSIZE = BCNvalueText.size[2],$
+                   SCR_YSIZE = BCNvalueText.size[3],$
+                   UNAME     = BCNvalueText.uname,$
+                   SENSITIVE = BCNvalueText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = GIFWerrorLabel.size[0],$
-                     YOFFSET   = GIFWerrorLabel.size[1],$
-                     VALUE     = GIFWerrorLabel.value,$
-                     UNAME     = GIFWerrorLabel.uname,$
-                     SENSITIVE = GIFWbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCNerrorLabel.size[0],$
+                     YOFFSET   = BCNerrorLabel.size[1],$
+                     VALUE     = BCNerrorLabel.value,$
+                     UNAME     = BCNerrorLabel.uname,$
+                     SENSITIVE = BCNerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = GIFWerrorText.size[0],$
-                   YOFFSET   = GIFWerrorText.size[1],$
-                   SCR_XSIZE = GIFWerrorText.size[2],$
-                   SCR_YSIZE = GIFWerrorText.size[3],$
-                   UNAME     = GIFWerrorText.uname,$
-                   SENSITIVE = GIFWbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCNerrorText.size[0],$
+                   YOFFSET   = BCNerrorText.size[1],$
+                   SCR_XSIZE = BCNerrorText.size[2],$
+                   SCR_YSIZE = BCNerrorText.size[3],$
+                   UNAME     = BCNerrorText.uname,$
+                   SENSITIVE = BCNerrorText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = GIFWframe.size[0],$
-                      YOFFSET   = GIFWframe.size[1],$
-                      SCR_XSIZE = GIFWframe.size[2],$
-                      SCR_YSIZE = GIFWframe.size[3],$
-                      FRAME     = GIFWframe.frame,$
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = BCNframe.size[0],$
+                      YOFFSET   = BCNframe.size[1],$
+                      SCR_XSIZE = BCNframe.size[2],$
+                      SCR_YSIZE = BCNframe.size[3],$
+                      FRAME     = BCNframe.frame,$
                       VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Momentum Transfer Histogram Axis
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Empty Container Spectra for subtraction from\
+;the sample data                                                   \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CSbase.size[0],$
+                   YOFFSET   = CSbase.size[1],$
+                   SCR_XSIZE = CSbase.size[2],$
+                   SCR_YSIZE = CSbase.size[3])
 
-base = WIDGET_BASE(tab6_base,$
-                   XOFFSET   = MTHAbase.size[0],$
-                   YOFFSET   = MTHAbase.size[1],$
-                   SCR_XSIZE = MTHAbase.size[2],$
-                   SCR_YSIZE = MTHAbase.size[3])
+group = CW_BGROUP(base,$
+                  CSbase.button.list,$
+                  UNAME      = CSbase.button.uname,$
+                  SET_VALUE  = CSbase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(base,$
-                     VALUE = MTHAbase.button.list[0],$
-                     UNAME = MTHAbase.button.uname)
-                     
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = MTHAminLabel.size[0],$
-                     YOFFSET   = MTHAminLabel.size[1],$
-                     VALUE     = MTHAminLabel.value,$
-                     UNAME     = MTHAminLabel.uname,$
-                     SENSITIVE = MTHAbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSvalueLabel.size[0],$
+                     YOFFSET   = CSvalueLabel.size[1],$
+                     VALUE     = CSvalueLabel.value,$
+                     UNAME     = CSvalueLabel.uname,$
+                     SENSITIVE = CSvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = MTHAminText.size[0],$
-                   YOFFSET   = MTHAminText.size[1],$
-                   SCR_XSIZE = MTHAminText.size[2],$
-                   SCR_YSIZE = MTHAminText.size[3],$
-                   UNAME     = MTHAminText.uname,$
-                   SENSITIVE = MTHAbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSvalueText.size[0],$
+                   YOFFSET   = CSvalueText.size[1],$
+                   SCR_XSIZE = CSvalueText.size[2],$
+                   SCR_YSIZE = CSvalueText.size[3],$
+                   UNAME     = CSvalueText.uname,$
+                   SENSITIVE = CSvalueText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = MTHAmaxLabel.size[0],$
-                     YOFFSET   = MTHAmaxLabel.size[1],$
-                     VALUE     = MTHAmaxLabel.value,$
-                     UNAME     = MTHAmaxLabel.uname,$
-                     SENSITIVE = MTHAbase.button.value)
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSerrorLabel.size[0],$
+                     YOFFSET   = CSerrorLabel.size[1],$
+                     VALUE     = CSerrorLabel.value,$
+                     UNAME     = CSerrorLabel.uname,$
+                     SENSITIVE = CSerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = MTHAmaxText.size[0],$
-                   YOFFSET   = MTHAmaxText.size[1],$
-                   SCR_XSIZE = MTHAmaxText.size[2],$
-                   SCR_YSIZE = MTHAmaxText.size[3],$
-                   UNAME     = MTHAmaxText.uname,$
-                   SENSITIVE = MTHAbase.button.value,$
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSerrorText.size[0],$
+                   YOFFSET   = CSerrorText.size[1],$
+                   SCR_XSIZE = CSerrorText.size[2],$
+                   SCR_YSIZE = CSerrorText.size[3],$
+                   UNAME     = CSerrorText.uname,$
+                   SENSITIVE = CSerrorText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab6_base,$
-                     XOFFSET   = MTHAbinLabel.size[0],$
-                     YOFFSET   = MTHAbinLabel.size[1],$
-                     VALUE     = MTHAbinLabel.value,$
-                     UNAME     = MTHAbinLabel.uname,$
-                     SENSITIVE = MTHAbase.button.value)
-
-text = WIDGET_TEXT(tab6_base,$
-                   XOFFSET   = MTHAbinText.size[0],$
-                   YOFFSET   = MTHAbinText.size[1],$
-                   SCR_XSIZE = MTHAbinText.size[2],$
-                   SCR_YSIZE = MTHAbinText.size[3],$
-                   UNAME     = MTHAbinText.uname,$
-                   SENSITIVE = MTHAbase.button.value,$
-                   /EDITABLE,$
-                   /ALL_EVENTS,$
-                   /ALIGN_LEFT)
-
-frame  = WIDGET_LABEL(tab6_base,$
-                      XOFFSET   = MTHAframe.size[0],$
-                      YOFFSET   = MTHAframe.size[1],$
-                      SCR_XSIZE = MTHAframe.size[2],$
-                      SCR_YSIZE = MTHAframe.size[3],$
-                      FRAME     = MTHAframe.frame,$
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CSframe.size[0],$
+                      YOFFSET   = CSframe.size[1],$
+                      SCR_XSIZE = CSframe.size[2],$
+                      SCR_YSIZE = CSframe.size[3],$
+                      FRAME     = CSframe.frame,$
                       VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Empty Container Spectra for subtraction from\
+;the normalization data                                            \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CNbase.size[0],$
+                   YOFFSET   = CNbase.size[1],$
+                   SCR_XSIZE = CNbase.size[2],$
+                   SCR_YSIZE = CNbase.size[3])
+
+group = CW_BGROUP(base,$
+                  CNbase.button.list,$
+                  UNAME      = CNbase.button.uname,$
+                  SET_VALUE  = CNbase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CNvalueLabel.size[0],$
+                     YOFFSET   = CNvalueLabel.size[1],$
+                     VALUE     = CNvalueLabel.value,$
+                     UNAME     = CNvalueLabel.uname,$
+                     SENSITIVE = CNvalueLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CNvalueText.size[0],$
+                   YOFFSET   = CNvalueText.size[1],$
+                   SCR_XSIZE = CNvalueText.size[2],$
+                   SCR_YSIZE = CNvalueText.size[3],$
+                   UNAME     = CNvalueText.uname,$
+                   SENSITIVE = CNvalueText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CNerrorLabel.size[0],$
+                     YOFFSET   = CNerrorLabel.size[1],$
+                     VALUE     = CNerrorLabel.value,$
+                     UNAME     = CNerrorLabel.uname,$
+                     SENSITIVE = CNerrorLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CNerrorText.size[0],$
+                   YOFFSET   = CNerrorText.size[1],$
+                   SCR_XSIZE = CNerrorText.size[2],$
+                   SCR_YSIZE = CNerrorText.size[3],$
+                   UNAME     = CNerrorText.uname,$
+                   SENSITIVE = CNerrorText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CNframe.size[0],$
+                      YOFFSET   = CNframe.size[1],$
+                      SCR_XSIZE = CNframe.size[2],$
+                      SCR_YSIZE = CNframe.size[3],$
+                      FRAME     = CNframe.frame,$
+                      VALUE     = '')
+
+
 END

@@ -7,13 +7,14 @@ ReduceInputTabSettings       = {size : [0, $
                                         0, $
                                         750, $
                                         575],$
-                                title : ['1) Input Data', $
-                                         '3) Process Setup', $
+                                title : ['1) Input', $
+                                         '3) Setup', $
                                          '4) Time-Indep. Back.', $ 
-                                         '6) Data Control', $
-                                         '7) Inter. Output',$
-                                         '2) Input Data',$
-                                         '5) Scaling Cst.'], $
+                                         '7) Data Control', $
+                                         '8) Output',$
+                                         '2) Input',$
+                                         '6) Scaling Cst.',$
+                                         '5) Lambda-Dep. Back.'], $
                                 tab1 : {size : [0, $
                                                 0, $
                                                 750, $

@@ -22,6 +22,7 @@ cd, CurrentFolder + '/BSSreductionGUI/'
 .run MakeGuiReduceInputTab5.pro
 .run MakeGuiReduceInputTab6.pro
 .run MakeGuiReduceInputTab7.pro
+.run MakeGuiReduceInputTab8.pro
 .run MakeGuiReduceClgXmlTab.pro
 .run MakeGuiReduceClgXmlTab1.pro
 .run MakeGuiReduceClgXmlTab2.pro
