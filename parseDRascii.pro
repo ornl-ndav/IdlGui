@@ -30,41 +30,46 @@ FUNCTION READ_DATA, file
   
 END
 
-function format, init_str, tag, pos
-  pos = pos + STRLEN(tag)
+function format, init_str, tag
+  ;find out where tag ends
+  pos = STRLEN(tag)
+  ;make a string with the comment
   new_str = STRTRIM(strmid(init_str, pos), 2)
   return, new_str
   
 end
 
 Function find_it, init_str, tag
-  
+
+  ;get number of elements in array
   n = N_ELEMENTS(init_str)
   i = 0
+  new_str = strarr(1)
   
-  pos = STRPOS(init_str, tag)
-  ; new_str = ''
+  ; Go through the array and find all occurances of the tag
   while (i NE n) do begin
     pos = STRPOS(init_str[i], tag)
-    ; print, pos
     if pos ne -1 then BEGIN
-    
-      new_str = init_str[i]
-      break
-    ENDIF
+      if i eq 0 then begin
+        new_str[i] = init_str[i]
+      endif else begin
+        new_str = [new_str,init_str[i]]
+      endelse
+    endif
     i = i+ 1
   endwhile
-  ; print, new_str
-  new_str = format(new_str, tag, pos)
+
+  ;cut out the tag
+  new_str = format(new_str, tag)
   return, new_str
-;return, 1
+  
 end
 
 
 
 pro parseDRascii
   location = "/SNS/users/dfp/IDLWorkspace/Default/REF_L_4000_2008y_06m_24d_09h_55mn_08s.txt"
-  tag = "#F data:"
+  tag = "#F data"
   data = READ_DATA(location)
   output = find_it(data, tag)
   print, output
