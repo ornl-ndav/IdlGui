@@ -1,4 +1,54 @@
-
+function modtag, init_str
+  ;remove any spaces on ends
+  init_str = STRTRIM(init_str, 2)
+  ;locate semicolon
+  colon_pos = strpos(init_str, ':')
+  ;find size of the array
+  arrsize = N_ELEMENTS(init_str)
+  ;make sure to return something
+  new_str = init_str
+  
+  ;if input is an array, remove semicolons form ends of each element
+  if arrsize ne 1 then begin
+  
+    for i = 0, arrsize - 1 do begin
+    
+      colon_pos = strpos(init_str[i], ':')
+      length = strlen(init_str[i])
+      
+      if colon_pos ne -1 then begin
+        if colon_pos eq (length-1) then begin
+          new_str[i] = strmid(init_str[i], 0, colon_pos)
+        endif
+        if colon_pos eq 0 then begin
+          new_str[i] = strmid(init_str[i], colon_pos + 1)
+        endif
+      endif
+      
+    endfor
+  
+  ;if input is just a string, do the same  
+  endif else begin
+  
+    length = strlen(init_str)
+    
+    if colon_pos ne -1 then begin
+      if colon_pos eq (length-1) then begin
+        new_str = strmid(init_str, 0, colon_pos)
+      endif
+      if colon_pos eq 0 then begin
+        new_str = strmid(init_str, colon_pos + 1)
+      endif
+      
+    endif
+  endelse
+  
+  ;trim any spaces on ends
+  new_str = strtrim(new_str, 2)
+  return, new_str
+  
+  
+end
 
 FUNCTION READ_DATA, file
 
@@ -34,14 +84,9 @@ function format, init_str, tag
   ;find out where tag ends
   pos = STRLEN(tag)
   ;make a string with the comment
-  new_str = STRTRIM(strmid(init_str, pos), 2)
-  
-  ;Check if a semi-colon is in the ouput string
-  scolon = strpos(new_str, ':')
-  if scolon ne -1 then begin
-    pos = strlen(':')
-    new_str = STRTRIM(strmid(new_str, pos), 2)
-  endif
+  new_str = strmid(init_str, pos)
+  ;call modtag to remove semicolons
+  new_str = modtag(new_str)
   
   return, new_str
   
@@ -77,12 +122,20 @@ end
 
 
 
+
 pro parseDRascii
   location = "/SNS/users/dfp/IDLWorkspace/Default/REF_L_4000_2008y_06m_24d_09h_55mn_08s.txt"
   tag = "#F data:"
+  ;remove semicolon from tag
+  tag = modtag(tag)
+  ;read data into array
   data = READ_DATA(location)
+  ;find and format data
   output = find_it(data, tag)
-  print, output
+  ; print the array
+  for i = 0, N_ELEMENTS(output) -1 do begin
+    print, output[i]
+  endfor
 End
 
 
