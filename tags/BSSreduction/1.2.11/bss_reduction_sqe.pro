@@ -333,7 +333,7 @@ ENDIF
 
 ;give extra power to j35, 2zr and mid
 IF (ucams EQ 'j35' OR $
-    ucams EQ '2zr'OR $
+    ucams EQ '2zr' OR $
     ucams EQ 'mid') THEN BEGIN
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME= 'command_line_generator_text')
     WIDGET_CONTROL, id, /EDITABLE
