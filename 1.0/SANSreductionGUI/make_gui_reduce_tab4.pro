@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,31 +30,32 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab4, REDUCE_TAB, tab_size, tab_title
 
-;- Define Main Base of Reduce Tab 1 --------------------------------------------
-sBaseTab3 = { size:  tab_size,$
-              uname: 'reduce_tab3_base',$
-              title: tab_title}
+;- Define Main Base of Reduce Tab 1 -------------------------------------------
+sBaseTab = { size:  tab_size,$
+             uname: 'reduce_tab4_base',$
+             title: tab_title}
 
-;- Intermediate plot list ------------------------------------------------------
+;- Intermediate plot list -----------------------------------------------------
 XYoff = [0,10]
-sInterPlot = { size:  [XYoff[0],$
-                       XYoff[1]],$
-               list: ['Beam Monitor after Conversion To Wavelength',$
-                      'Beam Monitor in Wavelength after Efficiency Correction',$
-                      'Data of Each Pixel after Wavelength Conversion' + $
-                      ' (WARNING: HUGE FILE!)',$
-                      'Monitor Spectrum after Rebin to Detector Wavelength' + $
-                      ' Axis (WARNING: HUGE FILE!)',$
-                      'Combined Spectrum of Data after Beam Monitor' + $
-                      ' Normalization'],$
-               uname : 'intermediate_group_uname',$
-               value : [0,0,0,0,0]}
+sInterPlot = $
+  { size:  [XYoff[0],$
+            XYoff[1]],$
+    list: ['Beam Monitor after Conversion To Wavelength',$
+           'Beam Monitor in Wavelength after Efficiency Correction',$
+           'Data of Each Pixel after Wavelength Conversion' + $
+           ' (WARNING: HUGE FILE!)',$
+           'Monitor Spectrum after Rebin to Detector Wavelength' + $
+           ' Axis (WARNING: HUGE FILE!)',$
+           'Combined Spectrum of Data after Beam Monitor' + $
+           ' Normalization'],$
+    uname : 'intermediate_group_uname',$
+    value : [0,0,0,0,0]}
 
-;- inter#2 hidding base --------------------------------------------------------
+;- inter#2 hidding base -------------------------------------------------------
 XYoff = [5,43]
 sInter2HiddingBase = { size:  [XYoff[0],$
                                XYoff[1],$
@@ -70,7 +71,7 @@ sInter2HiddingLabel = { size:  [XYoff[0],$
                                 XYoff[1]],$
                         value: sInterPlot.list[1]+NotAvailableMessage}
 
-;- Base of --dump-wave-bmmom about lambda --------------------------------------
+;- Base of --dump-wave-bmmom about lambda -------------------------------------
 XYoff = [0,150]
 sBaseLambda = { size:  [XYoff[0],$
                         XYoff[1],$
@@ -137,18 +138,18 @@ sLambdascaleGroup = { size:  [sLambdawidthText.size[0]+ $
                       value: 1.0,$
                       uname: 'lambda_scale_group'}
 
-;===============================================================================
-;= Build Widgets ===============================================================
-BaseTab3 = WIDGET_BASE(REDUCE_TAB,$
-                       UNAME     = sBaseTab3.uname,$
-                       XOFFSET   = sBaseTab3.size[0],$
-                       YOFFSET   = sBaseTab3.size[1],$
-                       SCR_XSIZE = sBaseTab3.size[2],$
-                       SCR_YSIZE = sBaseTab3.size[3],$
-                       TITLE     = sBaseTab3.title)
+;==============================================================================
+;= Build Widgets ==============================================================
+Basetab = WIDGET_BASE(REDUCE_TAB,$
+                       UNAME     = sBaseTab.uname,$
+                       XOFFSET   = sBaseTab.size[0],$
+                       YOFFSET   = sBaseTab.size[1],$
+                       SCR_XSIZE = sBaseTab.size[2],$
+                       SCR_YSIZE = sBaseTab.size[3],$
+                       TITLE     = sBaseTab.title)
 
 ;- Inter#2 hidding base
-wInter2Hiddingbase = WIDGET_BASE(BaseTab3,$
+wInter2Hiddingbase = WIDGET_BASE(Basetab,$
                                  XOFFSET   = sInter2HiddingBase.size[0],$
                                  YOFFSET   = sInter2HiddingBase.size[1],$
                                  SCR_XSIZE = sInter2HiddingBase.size[2],$
@@ -162,8 +163,8 @@ wInter2HiddingLabel = WIDGET_LABEL(wInter2HiddingBase,$
                                    YOFFSET = sInter2HiddingLabel.size[1],$
                                    VALUE   = sInter2HiddingLabel.value)
 
-;- Intermediate plot list ------------------------------------------------------
-InterGroup = CW_BGROUP(BaseTab3,$
+;- Intermediate plot list -----------------------------------------------------
+InterGroup = CW_BGROUP(Basetab,$
                        sInterPlot.list,$
                        XOFFSET   = sInterPlot.size[0],$
                        YOFFSET   = sInterPlot.size[1],$
@@ -171,8 +172,8 @@ InterGroup = CW_BGROUP(BaseTab3,$
                        SET_VALUE = sInterPlot.value,$
                        /NONEXCLUSIVE)
 
-;- Base of --dump-wave-bmmon about lambda --------------------------------------
-LambdaBase = WIDGET_BASE(BaseTab3,$
+;- Base of --dump-wave-bmmon about lambda -------------------------------------
+LambdaBase = WIDGET_BASE(Basetab,$
                          XOFFSET   = sBaseLambda.size[0],$
                          YOFFSET   = sBaseLambda.size[1],$
                          SCR_XSIZE = sBaseLambda.size[2],$
