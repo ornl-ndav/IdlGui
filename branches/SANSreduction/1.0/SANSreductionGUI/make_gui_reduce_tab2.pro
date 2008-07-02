@@ -163,6 +163,28 @@ sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
                   uname: 'verbose_mode_group',$
                   title: '-> Verbose Mode '}
 
+;- Minimum Lambda Cut OFF -----------------------------------------------------
+XYoff = [6,40]
+sMinLambdaGroup = { size:  [XYoff[0],$
+                     sVerboseGroup.size[1]+XYoff[1]],$
+             list:  ['ON','OFF'],$
+             value: 0.0,$
+             uname: 'minimum_lambda_cut_off_group',$
+             title: '-> Minimum Lambda Cut-Off '}
+
+XYoff    = [280,10]
+sMLlabel = { size: [XYoff[0],sMinLambdaGroup.size[1]+XYoff[1]],$
+             value: '--> Value:',$
+             uname: 'minimum_lambda_cut_off_label',$
+             sensitive: 1}
+XYoff    = [80,-6]
+sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
+                    sMLlabel.size[1]+XYoff[1],$
+                    50],$
+             value: '4.0',$
+             uname: 'minimum_lambda_cut_off_value',$
+             sensitive: 1}
+             
 ;===============================================================================
 ;= Build Widgets ===============================================================
 BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
@@ -338,4 +360,36 @@ group = CW_BGROUP(BaseTab2,$
                   UNAME      = sVerboseGroup.uname,$
                   LABEL_LEFT = sVerboseGroup.title,$
                   /EXCLUSIVE)
+
+;- Minimum Lambda Cut Off -----------------------------------------------------
+group = CW_BGROUP(BaseTab2,$
+                  sMinLambdaGroup.list,$
+                  XOFFSET    = sMinLambdaGroup.size[0],$
+                  YOFFSET    = sMinLambdaGroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sMinLambdaGroup.value,$
+                  UNAME      = sMinLambdaGroup.uname,$
+                  LABEL_LEFT = sMinLambdaGroup.title,$
+                  /EXCLUSIVE)
+
+;label and value
+wLabel = WIDGET_LABEL(BaseTab2,$
+                      XOFFSET   = sMLlabel.size[0],$
+                      YOFFSET   = sMLlabel.size[1],$
+                      VALUE     = sMLlabel.value,$
+                      SENSITIVE = sMLlabel.sensitive,$
+                      UNAME     = sMLlabel.uname)
+
+wValue = WIDGET_TEXT(BaseTab2,$
+                     XOFFSET   = sMLvalue.size[0],$
+                     YOFFSET   = sMLvalue.size[1],$
+                     SCR_XSIZE = sMLvalue.size[2],$
+                     UNAME     = sMLvalue.uname,$
+                     SENSITIVE = sMLvalue.sensitive,$
+                     VALUE     = sMLvalue.value,$
+                     /EDITABLE,$
+                     /ALL_EVENTS,$
+                     /ALIGN_LEFT)
+                  
+
 END
