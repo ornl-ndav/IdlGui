@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO CheckCommandLine, Event
 ;get global structure
@@ -45,7 +45,7 @@ missing_argument_counter = 0
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
 
-;- LOAD FILES TAB --------------------------------------------------------------
+;- LOAD FILES TAB -------------------------------------------------------------
 
 ;-Data File-
 file_run = getTextFieldValue(Event,'data_file_name_text_field')
@@ -99,7 +99,7 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
-;- PARAMETERS  -----------------------------------------------------------------
+;- PARAMETERS  ----------------------------------------------------------------
 
 ;-geometry file to overwrite
 IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
@@ -124,7 +124,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Detector Offset (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, '- Detector Offset ' + $
+                              '(PARAMETERS)']
 ENDELSE
 
 beamTO = getTextFieldValue(Event,'time_zero_offset_beam_monitor_uname')
@@ -135,7 +136,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Beam Monitor Offset (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, '- Beam Monitor ' + $
+                              'Offset (PARAMETERS)']
 ENDELSE
 
 ;-monitor efficiency
@@ -155,7 +157,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q minimum (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, '- Q minimum ' + $
+                              '(PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qmax NE '') THEN BEGIN
@@ -164,7 +167,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q maximum (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, '- Q maximum ' + $
+                              '(PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qwidth NE '') THEN BEGIN
@@ -173,7 +177,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q width (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, '- Q width ' + $
+                              '(PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qunits EQ 0) THEN BEGIN
@@ -182,7 +187,13 @@ ENDIF ELSE BEGIN
     cmd += 'log'
 ENDELSE
 
-;- INTERMEDIATE ----------------------------------------------------------------
+;-verbose mode
+IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.verbose
+ENDIF
+
+
+;- INTERMEDIATE ---------------------------------------------------------------
 IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
 ;beam monitor after conversion to Wavelength
 IF (IntermPlots[0] EQ 1) THEN BEGIN 
@@ -216,7 +227,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda minimum ' + $
+        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
+                                  'minimum ' + $
                                   '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','
@@ -226,7 +238,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda maximum ' + $
+        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
+                                  'maximum ' + $
                                   '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','
@@ -236,7 +249,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda width ' + $
+        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
+                                  'width ' + $
                                   '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','

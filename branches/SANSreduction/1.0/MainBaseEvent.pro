@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO MAIN_BASE_event, Event
  
@@ -49,28 +49,28 @@ CASE Event.id OF
         tab_event, Event ;_eventcb
     END
 
-;= TAB1 (LOAD DATA) ============================================================
+;= TAB1 (LOAD DATA) ===========================================================
 
-;- Run Number cw_field ---------------------------------------------------------
+;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
     END
 
-;- Browse Button ---------------------------------------------------------------
+;- Browse Button --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
         browse_nexus, Event ;_eventcb
     END
 
-;= TAB2 (REDUCE) ===============================================================
+;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
         RunCommandLine, Event ;_run_commandline
     END
 
-;==== tab1 (LOAD FILES) ========================================================
+;==== tab1 (LOAD FILES) =======================================================
 
-;----Data File -----------------------------------------------------------------
+;----Data File ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'data_run_number_cw_field', $
@@ -103,7 +103,7 @@ CASE Event.id OF
           'solvant_file_name_text_field'
     END
 
-;----Empty Can  ----------------------------------------------------------------
+;----Empty Can  ---------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'empty_run_number_cw_field',$
@@ -116,7 +116,7 @@ CASE Event.id OF
           'empty_file_name_text_field'
     END
 
-;----Open Beam  ----------------------------------------------------------------
+;----Open Beam  ---------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='open_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'open_run_number_cw_field',$
@@ -129,7 +129,7 @@ CASE Event.id OF
           'open_file_name_text_field'
     END
 
-;----Dark Current  -------------------------------------------------------------
+;----Dark Current  ------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'dark_run_number_cw_field',$
@@ -142,19 +142,19 @@ CASE Event.id OF
           'dark_file_name_text_field'
     END
 
-;==== tab2 (PARAMETERS) ========================================================
+;==== tab2 (PARAMETERS) =======================================================
 
-;---- YES or NO geometry cw_bgroup ---------------------------------------------
+;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
         GeometryGroupInteraction, Event ;_reduce_tab2
     END
 
-;---- Browse button of the overwrite geometry button ---------------------------
+;---- Browse button of the overwrite geometry button --------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
         BrowseGeometry, Event ;_reduce_tab2
     END
 
-;= TAB3 (LOG BOOK) =============================================================
+;= TAB3 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek
     END
