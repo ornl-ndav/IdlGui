@@ -87,6 +87,8 @@ global = PTR_NEW ({version:         VERSION,$
                                                      '--mon-effc',$
                                                      default: $
                                                      1},$ ;on/OFF
+                                verbose: $
+                                '--verbose',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 roi_file: $

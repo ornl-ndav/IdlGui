@@ -154,6 +154,15 @@ sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
                  value: 1.0,$
                  uname: 'q_scale_group'}
 
+;- Verbose Mode ---------------------------------------------------------------
+XYoff = [0,10]
+sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
+                          sQFrame.size[1]+sQFrame.size[3]+XYoff[1]],$
+                  list:  ['ON','OFF'],$
+                  value: 0.0,$
+                  uname: 'verbose_mode_group',$
+                  title: '-> Verbose Mode '}
+
 ;===============================================================================
 ;= Build Widgets ===============================================================
 BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
@@ -318,4 +327,15 @@ wQFrame = WIDGET_LABEL(BaseTab2,$
                        SCR_YSIZE = sQFrame.size[3],$
                        VALUE     = '',$
                        FRAME     = sQFrame.frame)
+
+;- Verbose Mode ---------------------------------------------------------------
+group = CW_BGROUP(BaseTab2,$
+                  sVerboseGroup.list,$
+                  XOFFSET    = sVerboseGroup.size[0],$
+                  YOFFSET    = sVerboseGroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sVerboseGroup.value,$
+                  UNAME      = sVerboseGroup.uname,$
+                  LABEL_LEFT = sVerboseGroup.title,$
+                  /EXCLUSIVE)
 END
