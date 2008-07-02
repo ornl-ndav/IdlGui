@@ -204,7 +204,7 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
 ;show tab inside REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;Load_files_2
 ENDIF
 
 END
