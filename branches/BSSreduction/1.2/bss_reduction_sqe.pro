@@ -340,9 +340,13 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     widget_control, id1, set_tab_current = 4
 ENDIF
 
-;give extra power to j35
+;give extra power to j35, 2zr, ele, z3i, eg9
 IF (ucams EQ 'j35' OR $
-    ucams EQ '2zr') THEN BEGIN
+    ucams EQ '2zr' OR $
+    ucams EQ 'ele' OR $
+    ucams EQ 'z3i' OR $
+    ucams EQ 'eg9' OR $
+    ucams EQ 'mid') THEN BEGIN
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME= 'command_line_generator_text')
     WIDGET_CONTROL, id, /EDITABLE
 ENDIF
