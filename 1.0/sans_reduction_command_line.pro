@@ -192,6 +192,22 @@ IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
     cmd += ' ' + (*global).ReducePara.verbose
 ENDIF
 
+;-lambda cut-off mode
+IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.lambda_cut_off + '='
+    value = getTextFieldValue(Event, 'minimum_lambda_cut_off_value')
+    IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+    ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, '- Lambda Cut-Off ' + $
+                                  '(PARAMETERS)']
+    ENDELSE
+ENDIF
+
 
 ;- INTERMEDIATE ---------------------------------------------------------------
 IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')

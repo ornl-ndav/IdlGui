@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.1'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 
 ;define initial global values - these could be input via external
 ;file or other means
@@ -89,6 +89,8 @@ global = PTR_NEW ({version:         VERSION,$
                                                      1},$ ;on/OFF
                                 verbose: $
                                 '--verbose',$
+                                lambda_cut_off:$
+                                '--lambda-cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 roi_file: $
@@ -156,8 +158,8 @@ MainBaseTitle  = 'SANS Data Reduction GUI'
 MainBaseSize   = [30,25,695,550]
 MainBaseTitle += ' - ' + VERSION
 
-;===============================================================================
-;Build Main Base ===============================================================
+;==============================================================================
+;Build Main Base ==============================================================
 MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
                          SCR_XSIZE    = MainBaseSize[2],$
@@ -178,8 +180,8 @@ make_gui_main_tab, MAIN_BASE, MainBaseSize
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;===============================================================================
-;===============================================================================
+;==============================================================================
+;==============================================================================
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
@@ -192,20 +194,20 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
-;Debugging only ----------------------------------------------------------------
+;Debugging only ---------------------------------------------------------------
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
 ;show tab #2 'REDUCE'
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
-;show tab #1
+;show tab inside REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
 ENDIF
 
 END
 
-;===============================================================================
+;==============================================================================
 ; Empty stub procedure used for autoloading.
 PRO sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
