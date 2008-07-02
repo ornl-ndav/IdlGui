@@ -143,6 +143,20 @@ ENDELSE
 ;-monitor efficiency
 IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
     cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
+    cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
+    value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
+    IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+    ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- Monitor Efficiency Value ' + $
+                                  '(PARAMETERS)']
+    ENDELSE
+
 ENDIF
 
 ;-Q min, max, width and unit
@@ -203,7 +217,8 @@ IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
         cmd += '?,0.0'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda Cut-Off ' + $
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- Lambda Cut-Off ' + $
                                   '(PARAMETERS)']
     ENDELSE
 ENDIF

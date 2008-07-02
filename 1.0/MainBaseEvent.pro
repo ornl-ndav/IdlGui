@@ -83,14 +83,14 @@ CASE Event.id OF
           'data_file_name_text_field'
     END
 
-;----ROI FIle ------------------------------------------------------------------
+;----ROI FIle -----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='roi_browse_button'): BEGIN
         BrowseNexus, Event, $
           'roi_browse_button',$
           'roi_file_name_text_field'
     END
 
-;----Solvant Buffer Only File --------------------------------------------------
+;----Solvant Buffer Only File -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'solvant_run_number_cw_field',$
@@ -152,6 +152,11 @@ CASE Event.id OF
 ;---- Browse button of the overwrite geometry button --------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
         BrowseGeometry, Event ;_reduce_tab2
+    END
+
+;---- Monitor Efficiency ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='monitor_efficiency_group'): BEGIN
+        monitor_efficiency_constant_gui, Event ;_reduce_tab2
     END
 
 ;---- Lambda Cut off ----------------------------------------------------------
