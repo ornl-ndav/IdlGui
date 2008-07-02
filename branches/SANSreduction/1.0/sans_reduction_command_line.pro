@@ -45,12 +45,12 @@ missing_argument_counter = 0
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
 
-;- LOAD FILES TAB -------------------------------------------------------------
+;- LOAD FILES TAB (1) ---------------------------------------------------------
 
 ;-Data File-
 file_run = getTextFieldValue(Event,'data_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     cmd += ' ' + file_run
 ENDIF ELSE BEGIN
     cmd += ' ?'
@@ -62,7 +62,7 @@ END
 ;-ROI File-
 file_run = getTextFieldValue(Event,'roi_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
@@ -70,7 +70,7 @@ ENDIF
 ;-Solvant Buffer Only-
 file_run = getTextFieldValue(Event,'solvant_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.solv_buffer.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
@@ -78,7 +78,7 @@ ENDIF
 ;-Emtpy Can-
 file_run = getTextFieldValue(Event,'empty_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.empty_can.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
@@ -86,7 +86,7 @@ ENDIF
 ;-Open Beam-
 file_run = getTextFieldValue(Event,'open_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.open_beam.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
@@ -94,8 +94,28 @@ ENDIF
 ;-Dark Current-
 file_run = getTextFieldValue(Event,'dark_file_name_text_field')
 IF (file_run NE '' AND $
-    FILE_TEST(file_run)) THEN BEGIN
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.dark_current.flag
+    cmd += ' ' + flag + '=' + file_run
+ENDIF 
+
+;- LOAD FILES TAB (2) ---------------------------------------------------------
+
+;-Sample Data Transmission-
+file_run = getTextFieldValue(Event, $
+                             'sample_data_transmission_file_name_text_field')
+IF (file_run NE '' AND $
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
+    flag = (*global).CorrectPara.sample_data_trans.flag
+    cmd += ' ' + flag + '=' + file_run
+ENDIF 
+
+;-Emtpy Can transmisison-
+file_run = getTextFieldValue(Event, $
+                             'empty_can_transmission_file_name_text_field')
+IF (file_run NE '' AND $
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
+    flag = (*global).CorrectPara.empty_can_trans.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
