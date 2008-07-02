@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,16 +30,16 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
 
-;- Define Main Base of Reduce Tab 1 --------------------------------------------
+;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab2 = { size:  tab_size,$
               uname: 'reduce_tab2_base',$
               title: tab_title}
 
-;- Overwrite Geometry ----------------------------------------------------------
+;- Overwrite Geometry ---------------------------------------------------------
 XYoff    = [10,20]
 sOG      = {size:  [XYoff[0],$
                     XYoff[1]],$
@@ -63,7 +63,7 @@ sOGbutton = {size:  [XYoff[0],$
              value: 'Select a Geometry File ...',$
              uname: 'overwrite_geometry_button'}
 
-;- Time Zero offset (microS) ---------------------------------------------------
+;- Time Zero offset (microS) --------------------------------------------------
 XYoff = [0,45]
 sTZO  = {size:  [sOG.size[0]+XYoff[0],$
                  sOG.size[1]+XYoff[1]],$
@@ -98,7 +98,20 @@ sMEgroup = { size:  [XYoff[0],$
              uname: 'monitor_efficiency_group',$
              title: '-> Monitor Efficiency '}
 
-;- Q ---------------------------------------------------------------------------
+XYoff    = [250,10]
+sMElabel = { size: [XYoff[0],sMEgroup.size[1]+XYoff[1]],$
+             value: '--> Value:',$
+             uname: 'monitor_efficiency_constant_label',$
+             sensitive: 1}
+XYoff    = [80,-6]
+sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
+                    sMElabel.size[1]+XYoff[1],$
+                    50],$
+             value: '',$
+             uname: 'monitor_efficiency_constant_value',$
+             sensitive: 1}
+
+;- Q --------------------------------------------------------------------------
 XYoff = [5,50]
 sQFrame = { size:  [XYoff[0],$
                     sMEgroup.size[1]+XYoff[1],$
@@ -185,8 +198,8 @@ sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
              uname: 'minimum_lambda_cut_off_value',$
              sensitive: 1}
              
-;===============================================================================
-;= Build Widgets ===============================================================
+;==============================================================================
+;= Build Widgets ==============================================================
 BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
                        UNAME     = sBaseTab2.uname,$
                        XOFFSET   = sBaseTab2.size[0],$
@@ -195,7 +208,7 @@ BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
                        SCR_YSIZE = sBaseTab2.size[3],$
                        TITLE     = sBaseTab2.title)
 
-;- Overwrite Geometry ----------------------------------------------------------
+;- Overwrite Geometry ---------------------------------------------------------
 label = WIDGET_LABEL(BaseTab2,$
                      XOFFSET = sOG.size[0],$
                      YOFFSET = sOG.size[1],$
@@ -228,7 +241,7 @@ button = WIDGET_BUTTON(base,$
                        VALUE     = sOGbutton.value,$
                        UNAME     = sOGbutton.uname)
 
-;- Time Zero offset (microS) ---------------------------------------------------
+;- Time Zero offset (microS) --------------------------------------------------
 label = WIDGET_LABEL(BaseTab2,$
                      XOFFSET = sTZO.size[0],$
                      YOFFSET = sTZO.size[1],$
@@ -275,7 +288,26 @@ group = CW_BGROUP(BaseTab2,$
                   LABEL_LEFT = sMEgroup.title,$
                   /EXCLUSIVE)
 
-;- Q ---------------------------------------------------------------------------
+;label and value
+wLabel = WIDGET_LABEL(BaseTab2,$
+                      XOFFSET   = sMElabel.size[0],$
+                      YOFFSET   = sMElabel.size[1],$
+                      VALUE     = sMElabel.value,$
+                      SENSITIVE = sMElabel.sensitive,$
+                      UNAME     = sMElabel.uname)
+
+wValue = WIDGET_TEXT(BaseTab2,$
+                     XOFFSET   = sMEvalue.size[0],$
+                     YOFFSET   = sMEvalue.size[1],$
+                     SCR_XSIZE = sMEvalue.size[2],$
+                     UNAME     = sMEvalue.uname,$
+                     SENSITIVE = sMEvalue.sensitive,$
+                     VALUE     = sMEvalue.value,$
+                     /EDITABLE,$
+                     /ALL_EVENTS,$
+                     /ALIGN_LEFT)
+                  
+;- Q --------------------------------------------------------------------------
 wQTitle = WIDGET_LABEL(BaseTab2,$
                        XOFFSET = sQTitle.size[0],$
                        YOFFSET = sQTitle.size[1],$
@@ -391,5 +423,4 @@ wValue = WIDGET_TEXT(BaseTab2,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
                   
-
 END

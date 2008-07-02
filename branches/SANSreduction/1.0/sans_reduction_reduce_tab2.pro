@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;This function checks if the user wants to overwrite the geometry or
 ;not and activate the gui accordingly
@@ -44,7 +44,7 @@ ENDELSE
 map_base, Event, 'overwrite_geometry_base', map_gui
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function is reached by the browse button of the overwrite
 ;geometry
 PRO BrowseGeometry, Event
@@ -83,6 +83,7 @@ ENDIF ELSE BEGIN
 ENDELSE    
 END
 
+;------------------------------------------------------------------------------
 ;This procedure is reached each time the user changes the ON/OFF
 ;switch of the Lambda Cut Off
 PRO lambda_cut_off_gui, Event
@@ -96,4 +97,16 @@ activate_widget, Event, 'minimum_lambda_cut_off_label', sensitive_status
 activate_widget, Event, 'minimum_lambda_cut_off_value', sensitive_status
 END
 
-
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user changes the ON/OFF
+;switch of the monitor efficiency
+PRO monitor_efficiency_constant_gui, Event
+value_OF_group = getCWBgroupValue(Event,'monitor_efficiency_group')
+IF (value_OF_group EQ 0) THEN BEGIN
+    sensitive_status = 1
+ENDIF ELSE BEGIN
+    sensitive_status = 0
+ENDELSE
+activate_widget, Event, 'monitor_efficiency_constant_label', sensitive_status
+activate_widget, Event, 'monitor_efficiency_constant_value', sensitive_status
+END

@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,27 +30,27 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO activate_widget, Event, uname, activate_status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SENSITIVE=activate_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function map or not the given base
 PRO map_base, Event, uname, map_status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, MAP=map_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function activates or not the GO DATA REDUCTION button
 PRO activate_go_data_reduction, Event, activate_status
 activate_widget, Event, 'go_data_reduction_button', activate_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function returns the select value of the CW_BGROUP
 FUNCTION getCWBgroupValue, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
@@ -58,14 +58,14 @@ WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function put the full path of the file as the new button label
 PRO putNewButtonValue, Event, uname, value
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=value
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function clear off the display of the main plot
 PRO ClearMainPlot, Event
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
