@@ -117,7 +117,11 @@ global = PTR_NEW ({version:         VERSION,$
                                                 'Dark Current (shutter ' + $
                                                 'closed)',$
                                                 flag: $
-                                                '--dkcur'}},$
+                                                '--dkcur'},$
+                                 sample_data_trans: {flag: $
+                                                     '--data-trans'},$
+                                 empty_can_trans: {flag: $
+                                                   '--ecan-trans'}},$
                    IntermPara: {bmon_wave: {title: $
                                             'Beam Monitor after ' + $
                                             'Conversion to Wavelength',$
