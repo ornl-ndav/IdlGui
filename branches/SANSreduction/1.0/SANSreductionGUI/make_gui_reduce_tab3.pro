@@ -32,12 +32,12 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
-sBaseTab2 = { size:  tab_size,$
-              uname: 'reduce_tab2_base',$
-              title: tab_title}
+sBaseTab = { size:  tab_size,$
+             uname: 'reduce_tab3_base',$
+             title: tab_title}
 
 ;- Overwrite Geometry ---------------------------------------------------------
 XYoff    = [10,20]
@@ -200,22 +200,22 @@ sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
              
 ;==============================================================================
 ;= Build Widgets ==============================================================
-BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
-                       UNAME     = sBaseTab2.uname,$
-                       XOFFSET   = sBaseTab2.size[0],$
-                       YOFFSET   = sBaseTab2.size[1],$
-                       SCR_XSIZE = sBaseTab2.size[2],$
-                       SCR_YSIZE = sBaseTab2.size[3],$
-                       TITLE     = sBaseTab2.title)
+Basetab = WIDGET_BASE(REDUCE_TAB,$
+                       UNAME     = sBaseTab.uname,$
+                       XOFFSET   = sBaseTab.size[0],$
+                       YOFFSET   = sBaseTab.size[1],$
+                       SCR_XSIZE = sBaseTab.size[2],$
+                       SCR_YSIZE = sBaseTab.size[3],$
+                       TITLE     = sBaseTab.title)
 
 ;- Overwrite Geometry ---------------------------------------------------------
-label = WIDGET_LABEL(BaseTab2,$
+label = WIDGET_LABEL(Basetab,$
                      XOFFSET = sOG.size[0],$
                      YOFFSET = sOG.size[1],$
                      VALUE   = sOG.value,$
                      /ALIGN_LEFT)
 
-group = CW_BGROUP(BaseTab2,$
+group = CW_BGROUP(Basetab,$
                   sOGgroup.list,$
                   XOFFSET   = sOGgroup.size[0],$
                   YOFFSET   = sOGgroup.size[1],$
@@ -225,7 +225,7 @@ group = CW_BGROUP(BaseTab2,$
                   /NO_RELEASE,$
                   /EXCLUSIVE)
 
-base = WIDGET_BASE(BaseTab2,$
+base = WIDGET_BASE(Basetab,$
                    XOFFSET   = sOGbase.size[0],$
                    YOFFSET   = sOGBase.size[1],$
                    SCR_XSIZE = sOGbase.size[2],$
@@ -242,17 +242,17 @@ button = WIDGET_BUTTON(base,$
                        UNAME     = sOGbutton.uname)
 
 ;- Time Zero offset (microS) --------------------------------------------------
-label = WIDGET_LABEL(BaseTab2,$
+label = WIDGET_LABEL(Basetab,$
                      XOFFSET = sTZO.size[0],$
                      YOFFSET = sTZO.size[1],$
                      VALUE   = sTZO.value)
 
-label = WIDGET_LABEL(BaseTab2,$
+label = WIDGET_LABEL(Basetab,$
                      XOFFSET = sTZO_detector_value.size[0],$
                      YOFFSET = sTZO_detector_value.size[1],$
                      VALUE   = sTZO_detector_value.value)
 
-text = WIDGET_TEXT(BaseTab2,$
+text = WIDGET_TEXT(Basetab,$
                    XOFFSET   = sTZO_detector_field.size[0],$
                    YOFFSET   = sTZO_detector_field.size[1],$
                    SCR_XSIZE = sTZO_detector_field.size[2],$
@@ -262,12 +262,12 @@ text = WIDGET_TEXT(BaseTab2,$
                    /ALL_EVENTS,$
                    /EDITABLE)
 
-label = WIDGET_LABEL(BaseTab2,$
+label = WIDGET_LABEL(Basetab,$
                      XOFFSET = sTZO_beam_value.size[0],$
                      YOFFSET = sTZO_beam_value.size[1],$
                      VALUE   = sTZO_beam_value.value)
 
-text = WIDGET_TEXT(BaseTab2,$
+text = WIDGET_TEXT(Basetab,$
                    XOFFSET   = sTZO_beam_field.size[0],$
                    YOFFSET   = sTZO_beam_field.size[1],$
                    SCR_XSIZE = sTZO_beam_field.size[2],$
@@ -278,7 +278,7 @@ text = WIDGET_TEXT(BaseTab2,$
                    /EDITABLE)
 
 ;- Monitor Efficiency ---------------------------------------------------------
-group = CW_BGROUP(BaseTab2,$
+group = CW_BGROUP(Basetab,$
                   sMEgroup.list,$
                   XOFFSET    = sMEgroup.size[0],$
                   YOFFSET    = sMEgroup.size[1],$
@@ -289,14 +289,14 @@ group = CW_BGROUP(BaseTab2,$
                   /EXCLUSIVE)
 
 ;label and value
-wLabel = WIDGET_LABEL(BaseTab2,$
+wLabel = WIDGET_LABEL(Basetab,$
                       XOFFSET   = sMElabel.size[0],$
                       YOFFSET   = sMElabel.size[1],$
                       VALUE     = sMElabel.value,$
                       SENSITIVE = sMElabel.sensitive,$
                       UNAME     = sMElabel.uname)
 
-wValue = WIDGET_TEXT(BaseTab2,$
+wValue = WIDGET_TEXT(Basetab,$
                      XOFFSET   = sMEvalue.size[0],$
                      YOFFSET   = sMEvalue.size[1],$
                      SCR_XSIZE = sMEvalue.size[2],$
@@ -308,17 +308,17 @@ wValue = WIDGET_TEXT(BaseTab2,$
                      /ALIGN_LEFT)
                   
 ;- Q --------------------------------------------------------------------------
-wQTitle = WIDGET_LABEL(BaseTab2,$
+wQTitle = WIDGET_LABEL(Basetab,$
                        XOFFSET = sQTitle.size[0],$
                        YOFFSET = sQTitle.size[1],$
                        VALUE   = sQTitle.value)
 ;Qmin
-wQminLabel = WIDGET_LABEL(BaseTab2,$
+wQminLabel = WIDGET_LABEL(Basetab,$
                           XOFFSET = sQminLabel.size[0],$
                           YOFFSET = sQminLabel.size[1],$
                           VALUE   = sQminLabel.value)
 
-wQminText = WIDGET_TEXT(BaseTab2,$
+wQminText = WIDGET_TEXT(Basetab,$
                         XOFFSET   = sQminText.size[0],$
                         YOFFSET   = sQminText.size[1],$
                         SCR_XSIZE = sQminText.size[2],$
@@ -330,12 +330,12 @@ wQminText = WIDGET_TEXT(BaseTab2,$
                         /ALIGN_LEFT)
 
 ;Qmax
-wQmaxLabel = WIDGET_LABEL(BaseTab2,$
+wQmaxLabel = WIDGET_LABEL(Basetab,$
                           XOFFSET = sQmaxLabel.size[0],$
                           YOFFSET = sQmaxLabel.size[1],$
                           VALUE   = sQmaxLabel.value)
 
-wQmaxText = WIDGET_TEXT(BaseTab2,$
+wQmaxText = WIDGET_TEXT(Basetab,$
                         XOFFSET   = sQmaxText.size[0],$
                         YOFFSET   = sQmaxText.size[1],$
                         SCR_XSIZE = sQmaxText.size[2],$
@@ -347,12 +347,12 @@ wQmaxText = WIDGET_TEXT(BaseTab2,$
                         /ALIGN_LEFT)
 
 ;Qwidth
-wQwidthLabel = WIDGET_LABEL(BaseTab2,$
+wQwidthLabel = WIDGET_LABEL(Basetab,$
                           XOFFSET = sQwidthLabel.size[0],$
                           YOFFSET = sQwidthLabel.size[1],$
                           VALUE   = sQwidthLabel.value)
 
-wQwidthText = WIDGET_TEXT(BaseTab2,$
+wQwidthText = WIDGET_TEXT(Basetab,$
                         XOFFSET   = sQwidthText.size[0],$
                         YOFFSET   = sQwidthText.size[1],$
                         SCR_XSIZE = sQwidthText.size[2],$
@@ -364,7 +364,7 @@ wQwidthText = WIDGET_TEXT(BaseTab2,$
                         /ALIGN_LEFT)
 
 ;Q scale
-wQscaleGroup =  CW_BGROUP(BaseTab2,$
+wQscaleGroup =  CW_BGROUP(Basetab,$
                           sQscaleGroup.list,$
                           XOFFSET    = sQscaleGroup.size[0],$
                           YOFFSET    = sQscaleGroup.size[1],$
@@ -374,7 +374,7 @@ wQscaleGroup =  CW_BGROUP(BaseTab2,$
                           /EXCLUSIVE)
 
 ;Q frame
-wQFrame = WIDGET_LABEL(BaseTab2,$
+wQFrame = WIDGET_LABEL(Basetab,$
                        XOFFSET   = sQFrame.size[0],$
                        YOFFSET   = sQFrame.size[1],$
                        SCR_XSIZE = sQFrame.size[2],$
@@ -383,7 +383,7 @@ wQFrame = WIDGET_LABEL(BaseTab2,$
                        FRAME     = sQFrame.frame)
 
 ;- Verbose Mode ---------------------------------------------------------------
-group = CW_BGROUP(BaseTab2,$
+group = CW_BGROUP(Basetab,$
                   sVerboseGroup.list,$
                   XOFFSET    = sVerboseGroup.size[0],$
                   YOFFSET    = sVerboseGroup.size[1],$
@@ -394,7 +394,7 @@ group = CW_BGROUP(BaseTab2,$
                   /EXCLUSIVE)
 
 ;- Minimum Lambda Cut Off -----------------------------------------------------
-group = CW_BGROUP(BaseTab2,$
+group = CW_BGROUP(Basetab,$
                   sMinLambdaGroup.list,$
                   XOFFSET    = sMinLambdaGroup.size[0],$
                   YOFFSET    = sMinLambdaGroup.size[1],$
@@ -405,14 +405,14 @@ group = CW_BGROUP(BaseTab2,$
                   /EXCLUSIVE)
 
 ;label and value
-wLabel = WIDGET_LABEL(BaseTab2,$
+wLabel = WIDGET_LABEL(Basetab,$
                       XOFFSET   = sMLlabel.size[0],$
                       YOFFSET   = sMLlabel.size[1],$
                       VALUE     = sMLlabel.value,$
                       SENSITIVE = sMLlabel.sensitive,$
                       UNAME     = sMLlabel.uname)
 
-wValue = WIDGET_TEXT(BaseTab2,$
+wValue = WIDGET_TEXT(Basetab,$
                      XOFFSET   = sMLvalue.size[0],$
                      YOFFSET   = sMLvalue.size[1],$
                      SCR_XSIZE = sMLvalue.size[2],$

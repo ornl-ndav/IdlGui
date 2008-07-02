@@ -68,7 +68,7 @@ CASE Event.id OF
         RunCommandLine, Event ;_run_commandline
     END
 
-;==== tab1 (LOAD FILES) =======================================================
+;==== tab1 (LOAD FILES (1)) ===================================================
 
 ;----Data File ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
@@ -142,7 +142,43 @@ CASE Event.id OF
           'dark_file_name_text_field'
     END
 
-;==== tab2 (PARAMETERS) =======================================================
+;==== tab2 (LOAD FILES (2) ====================================================
+
+;----Sample Data File ---------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'sample_data_transmission_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'sample_data_transmission_run_number_cw_field', $
+          'sample_data_transmission_file_name_text_field'
+    END
+    
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'sample_data_transmission_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'sample_data_transmission_browse_button',$
+          'sample_data_transmission_file_name_text_field'
+    END
+
+;----Empty Can Transmission ---------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_can_transmission_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'empty_can_transmission_run_number_cw_field', $
+          'empty_can_transmission_file_name_text_field'
+    END
+    
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_can_transmission_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'empty_can_transmission_browse_button',$
+          'empty_can_transmission_file_name_text_field'
+    END
+
+;==== tab3 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
@@ -164,7 +200,7 @@ CASE Event.id OF
         lambda_cut_off_gui, Event ;_reduce_tab2
     END
 
-;= TAB3 (LOG BOOK) ============================================================
+;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek
     END

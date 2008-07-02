@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,16 +30,16 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO make_gui_reduce_tab1, REDUCE_TAB, tab_size, tab_title
 
-;- Define Main Base of Reduce Tab 1 --------------------------------------------
+;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab1 = { size:  tab_size,$
               uname: 'reduce_tab1_base',$
               title: tab_title}
 
-;- Data File Frame -------------------------------------------------------------
+;- Data File Frame ------------------------------------------------------------
 sDataFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   main_base_uname: 'data_base_uname',$
                   xoff:            0,$
@@ -50,7 +50,7 @@ sDataFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   browse_uname:    'data_browse_button',$
                   file_name_uname: 'data_file_name_text_field'}
 
-;- ROI file --------------------------------------------------------------------
+;- ROI file -------------------------------------------------------------------
 XYoff = [0,70]
 sROIfileButton = { size:  [XYoff[0], $
                            XYoff[1], $
@@ -68,7 +68,7 @@ sROIfileTextField = { size:  [sROIfileButton.size[0]+ $
                       uname: 'roi_file_name_text_field'}
 
 yoff = 35
-;- Solvant Buffer Only ---------------------------------------------------------
+;- Solvant Buffer Only --------------------------------------------------------
 sSolvantFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      main_base_uname: 'solvant_base_uname',$
                      xoff:            0,$
@@ -80,7 +80,7 @@ sSolvantFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      file_name_uname: 'solvant_file_name_text_field'}
 
 yoff = 65
-;- Empty Can -------------------------------------------------------------------
+;- Empty Can ------------------------------------------------------------------
 sEmptyFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                    main_base_uname: 'empty_base_uname',$
                    xoff:            0,$
@@ -91,7 +91,7 @@ sEmptyFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                    browse_uname:    'empty_browse_button',$
                    file_name_uname: 'empty_file_name_text_field'}
 
-;- Open beam -------------------------------------------------------------------
+;- Open beam ------------------------------------------------------------------
 sOpenFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   main_base_uname: 'open_beam_base_uname',$
                   xoff:            0,$
@@ -102,7 +102,7 @@ sOpenFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   browse_uname:    'open_browse_button',$
                   file_name_uname: 'open_file_name_text_field'}
 
-;- Dark Current ----------------------------------------------------------------
+;- Dark Current ---------------------------------------------------------------
 sDarkFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   main_base_uname: 'dark_beam_base_uname',$
                   xoff:            0,$
@@ -113,8 +113,8 @@ sDarkFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   browse_uname:    'dark_browse_button',$
                   file_name_uname: 'dark_file_name_text_field'}
 
-;===============================================================================
-;= Build Widgets ===============================================================
+;==============================================================================
+;= Build Widgets ==============================================================
 BaseTab1 = WIDGET_BASE(REDUCE_TAB,$
                        UNAME     = sBaseTab1.uname,$
                        XOFFSET   = sBaseTab1.size[0],$
@@ -123,7 +123,7 @@ BaseTab1 = WIDGET_BASE(REDUCE_TAB,$
                        SCR_YSIZE = sBaseTab1.size[3],$
                        TITLE     = sBaseTab1.title)
 
-;- Data File Frame -------------------------------------------------------------
+;- Data File Frame ------------------------------------------------------------
 cDataFileFrame = OBJ_NEW('IDLnexusFrame',$
                          MAIN_BASE_ID    = BaseTab1,$
                          MAIN_BASE_XSIZE = sDataFileFrame.main_base_xsize,$
@@ -136,7 +136,7 @@ cDataFileFrame = OBJ_NEW('IDLnexusFrame',$
                          BROWSE_UNAME    = sDataFileFrame.browse_uname,$
                          FILE_NAME_UNAME = sDataFileFrame.file_name_uname)
 
-;- ROI file --------------------------------------------------------------------
+;- ROI file -------------------------------------------------------------------
 wROIfileButton = WIDGET_BUTTON(BaseTab1,$
                                XOFFSET   = sROIfileButton.size[0],$
                                YOFFSET   = sROIfileButton.size[1],$
@@ -154,20 +154,21 @@ wROIfileTextField = WIDGET_TEXT(BaseTab1,$
                                 /EDITABLE,$
                                 /ALL_EVENTS)
 
-;- Solvant Buffer Only ---------------------------------------------------------
-cSolvantFileFrame = OBJ_NEW('IDLnexusFrame',$
-                            MAIN_BASE_ID    = BaseTab1,$
-                            MAIN_BASE_XSIZE = sSolvantFileFrame.main_base_xsize,$
-                            MAIN_BASE_UNAME = sSolvantFileFrame.main_base_uname,$
-                            XOFF            = sSolvantFileFrame.xoff,$
-                            YOFF            = sSolvantFileFrame.yoff,$
-                            FRAME_TITLE     = sSolvantFileFrame.frame_title,$
-                            LABEL_1         = sSolvantFileFrame.label_1,$
-                            CWFIELD_UNAME   = sSolvantFileFrame.tf1_uname,$
-                            BROWSE_UNAME    = sSolvantFileFrame.browse_uname,$
-                            FILE_NAME_UNAME = sSolvantFileFrame.file_name_uname)
+;- Solvant Buffer Only --------------------------------------------------------
+cSolvantFileFrame = $
+  OBJ_NEW('IDLnexusFrame',$
+          MAIN_BASE_ID    = BaseTab1,$
+          MAIN_BASE_XSIZE = sSolvantFileFrame.main_base_xsize,$
+          MAIN_BASE_UNAME = sSolvantFileFrame.main_base_uname,$
+          XOFF            = sSolvantFileFrame.xoff,$
+          YOFF            = sSolvantFileFrame.yoff,$
+          FRAME_TITLE     = sSolvantFileFrame.frame_title,$
+          LABEL_1         = sSolvantFileFrame.label_1,$
+          CWFIELD_UNAME   = sSolvantFileFrame.tf1_uname,$
+          BROWSE_UNAME    = sSolvantFileFrame.browse_uname,$
+          FILE_NAME_UNAME = sSolvantFileFrame.file_name_uname)
 
-;- Empty Can -------------------------------------------------------------------
+;- Empty Can ------------------------------------------------------------------
 cEmptyFileFrame = OBJ_NEW('IDLnexusFrame',$
                           MAIN_BASE_ID    = BaseTab1,$
                           MAIN_BASE_XSIZE = sEmptyFileFrame.main_base_xsize,$
@@ -180,7 +181,7 @@ cEmptyFileFrame = OBJ_NEW('IDLnexusFrame',$
                           BROWSE_UNAME    = sEmptyFileFrame.browse_uname,$
                           FILE_NAME_UNAME = sEmptyFileFrame.file_name_uname)
 
-;- Open beam -------------------------------------------------------------------
+;- Open beam ------------------------------------------------------------------
 cOpenFileFrame = OBJ_NEW('IDLnexusFrame',$
                          MAIN_BASE_ID    = BaseTab1,$
                          MAIN_BASE_XSIZE = sOpenFileFrame.main_base_xsize,$
@@ -193,7 +194,7 @@ cOpenFileFrame = OBJ_NEW('IDLnexusFrame',$
                          BROWSE_UNAME    = sOpenFileFrame.browse_uname,$
                          FILE_NAME_UNAME = sOpenFileFrame.file_name_uname)
 
-;- Dark Current ----------------------------------------------------------------
+;- Dark Current ---------------------------------------------------------------
 cDarkFileFrame = OBJ_NEW('IDLnexusFrame',$
                          MAIN_BASE_ID    = BaseTab1,$
                          MAIN_BASE_XSIZE = sDarkFileFrame.main_base_xsize,$

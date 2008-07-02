@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 FUNCTION getTextFieldValue, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
@@ -38,13 +38,20 @@ WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value[0]
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function retrieves the run number of the First tab
 FUNCTION getRunNumber, Event
 RETURN, getTextFieldValue(Event,'run_number_cw_field')
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+FUNCTION getProposalIndex, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+index = WIDGET_INFO(id, /droplist_select)
+RETURN, index
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getProposalSelected, Event, index
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 index = WIDGET_INFO(id, /droplist_select)

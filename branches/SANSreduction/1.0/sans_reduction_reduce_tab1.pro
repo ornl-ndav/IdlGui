@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;This function is reached by all the cw_field of the load tab (first
 ;tab of the REDUCE tab)
@@ -58,6 +58,12 @@ CASE (cw_field_uname) OF
     'dark_run_number_cw_field':    BEGIN
         message = '-> Loading Dark Current (shutter closed) Run Number '
     END
+    'sample_data_transmission_run_number_cw_field': BEGIN
+        message = '-> Loading Sample Data Transmission Run Number '
+    END
+    'empty_can_transmission_run_number_cw_field': BEGIN
+        message = '-> Loading Empty Can Transmission Run Number '
+    END
     ELSE: message = ''
 ENDCASE
 IF (RunNumber NE 0) THEN BEGIN
@@ -65,10 +71,18 @@ IF (RunNumber NE 0) THEN BEGIN
     IDLsendToGeek_addLogBookText, Event, message
 ;look for NeXus file
     isNexusExist = 0
+    proposal_index = getProposalIndex(Event)
+    IF (proposal_index NE 0) THEN BEGIN
+        proposal = getProposalSelected(Event)
+    ENDIF ELSE BEGIN
+        proposal = 0
+    ENDELSE
     full_nexus_name = find_full_nexus_name(Event,$
                                            RunNumber,$
                                            'SANS',$
-                                           isNexusExist)
+                                           isNexusExist,$
+                                           proposal_index,$
+                                           proposal)
     full_nexus_name = full_nexus_name[0]
     IF (isNexusExist EQ 1 AND $ 
         full_nexus_name NE '') THEN BEGIN ;success
@@ -109,8 +123,13 @@ CASE (browse_button_uname) OF
     'solvant_browse_button': title1 = 'Solvant Buffer Only NeXus file'
     'empty_browse_button':   title1 = 'Empty Can NeXus file'
     'open_browse_button':    title1 = 'Open Beam (shutter open) NeXus file'
-    'dark_browse_button':    title1 = 'Dark Current (shutter closed) NeXus file'
-    ELSE: 
+    'dark_browse_button':    title1 = 'Dark Current (shutter closed) ' + $
+      'NeXus file'
+    'sample_data_transmission_browse_button': title1 = $
+      'Sample Data Transmission Nexus file'
+    'empty_can_transmission_browse_button': title1 = $
+      'Empty Can Transmission Nexus file'
+    ELSE: title1 = ''
 ENDCASE
 title += title1
 message = '-> Browsing for a ' + title1 + ' :'
