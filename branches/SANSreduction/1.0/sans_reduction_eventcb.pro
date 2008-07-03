@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,8 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
-
+;==============================================================================
 PRO retrieveNexus, Event, FullNexusName
 
 ;get global structure
@@ -117,7 +116,7 @@ ENDIF ELSE BEGIN
 ENDELSE    
 END
 
-;===============================================================================
+;==============================================================================
 PRO load_run_number, Event    
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -174,8 +173,7 @@ ENDIF
 widget_control,hourglass=0
 END
 
-
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
 ;get global structure
@@ -203,10 +201,15 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
 ENDIF
 END
 
+;------------------------------------------------------------------------------
+PRO selection_tool, Event
 
+data=indgen(50,50)
+my_xroi, data
 
+END
 
-;===============================================================================
+;==============================================================================
 PRO MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
@@ -215,8 +218,8 @@ widget_control,/hourglass
 widget_control,hourglass=0
 END
 
-;===============================================================================
+;==============================================================================
 PRO sans_reduction_eventcb, event
 END
 
-;===============================================================================
+;==============================================================================
