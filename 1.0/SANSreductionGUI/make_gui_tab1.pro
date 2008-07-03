@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,28 +30,37 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
 
-;- base ------------------------------------------------------------------------
+;- base -----------------------------------------------------------------------
 sTab1Base = { size  : MainTabSize,$
               title : TabTitles.tab1,$
               uname : 'base_tab1'}
 
-;- draw ------------------------------------------------------------------------
+;- draw -----------------------------------------------------------------------
 sDraw = { size  : [0,0,320,320],$
           uname : 'draw_uname'}
 
-;- nexus input -----------------------------------------------------------------
+
+;- selection ------------------------------------------------------------------
+XYoff = [0,0]
+sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
+                      XYoff[1],$
+                      300],$
+               value: 'SELECTION TOOL',$
+               uname: 'selection_tool_button'}
+
+;- nexus input ----------------------------------------------------------------
 sNexus = { size : [0,$
                    sDraw.size[1]+sDraw.size[3]+15]}
           
-;===============================================================================
-;= BUILD GUI ===================================================================
-;===============================================================================
+;==============================================================================
+;= BUILD GUI ==================================================================
+;==============================================================================
 
-;- base ------------------------------------------------------------------------
+;- base -----------------------------------------------------------------------
 wTab1Base = WIDGET_BASE(MAIN_TAB,$
                         UNAME     = sTab1Base.uname,$
                         XOFFSET   = sTab1Base.size[0],$
@@ -60,7 +69,7 @@ wTab1Base = WIDGET_BASE(MAIN_TAB,$
                         SCR_YSIZE = sTab1Base.size[3],$
                         TITLE     = sTab1Base.title)
 
-;- draw ------------------------------------------------------------------------
+;- draw -----------------------------------------------------------------------
 wDraw = WIDGET_DRAW(wTab1Base,$
                     UNAME     = sDraw.uname,$
                     XOFFSET   = sDraw.size[0],$
@@ -68,7 +77,15 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     SCR_XSIZE = sDraw.size[2],$
                     SCR_YSIZE = sDraw.size[3])
 
-;- nexus input -----------------------------------------------------------------
+;- Selection tool -------------------------------------------------------------
+wSelection = WIDGET_BUTTON(wTab1Base,$
+                           XOFFSET = sSelection.size[0],$
+                           YOFFSET = sSelection.size[1],$
+                           SCR_XSIZE = sSelection.size[2],$
+                           VALUE     = sSelection.value,$
+                           UNAME     = sSelection.uname)
+
+;- nexus input ----------------------------------------------------------------
 sNexus = {MainBase   : wTab1Base,$
           xoffset    : sNexus.size[0],$
           yoffset    : sNexus.size[1],$

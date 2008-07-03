@@ -39,6 +39,7 @@ cd, CurrentFolder
 .run sans_reduction_reduce_tab3.pro
 .run sans_reduction_command_line.pro
 .run sans_reduction_run_commandline.pro
+.run sans_reduction_xroi.pro
 
 ;main functions
 .run MainBaseEvent.pro

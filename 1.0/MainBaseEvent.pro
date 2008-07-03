@@ -61,6 +61,11 @@ CASE Event.id OF
         browse_nexus, Event ;_eventcb
     END
 
+;- Selection Button -----------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_tool_button'): BEGIN
+        selection_tool, Event ;_eventcb
+    END
+
 ;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button

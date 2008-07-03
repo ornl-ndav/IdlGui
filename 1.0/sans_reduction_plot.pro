@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 FUNCTION retrieveData, Event, FullNexusName, DataArray
 ;get global structure
@@ -59,7 +59,7 @@ ENDELSE
 RETURN,1
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function takes the histogram data from the NeXus file and plot it
 FUNCTION plotData, Event, DataArray, X, Y
 plotStatus = 1 ;by default, plot does work
@@ -90,7 +90,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO refresh_plot, Event ;_plot
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
