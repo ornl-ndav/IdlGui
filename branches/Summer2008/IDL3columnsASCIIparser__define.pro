@@ -51,7 +51,6 @@ function modtag, init_str
 end
 
 FUNCTION READ_DATA, file
-
   ;Open the data file.
   OPENR, 1, file
   
@@ -94,6 +93,7 @@ end
 
 Function find_it, init_str, tag
 
+
   ;get number of elements in array
   n = N_ELEMENTS(init_str)
   i = 0
@@ -127,6 +127,7 @@ function IDL3columnsASCIIparser::get_tag, tag
   tag = modtag(tag)
   ;read data into array
   data = READ_DATA(self.path)
+  
   ;find and format data
   output = find_it(data, tag)
   return, output
@@ -137,7 +138,7 @@ end
 function IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
-  return, 1
+  return, file_test(location, /read)
 End
 
 
