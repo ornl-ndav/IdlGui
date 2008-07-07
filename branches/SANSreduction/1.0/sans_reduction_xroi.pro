@@ -1113,8 +1113,8 @@ pro xroi__ButtonRelease, sEvent
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-;                    WIDGET_CONTROL, (*pState).wSaveToolButton, $
-;                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -2545,9 +2545,9 @@ pro xroiInfo_event, sEvent
 
             oROI = (*pParentState).oROIModel->Get(POSITION=sEvent.index)
             xroi__SetROI, pParentState, oROI
-
+            
             (*pParentState).oWindow->Draw, (*pParentState).oView
-
+            
         endcase
         'NAME': begin
             WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
@@ -2587,15 +2587,13 @@ pro xroiInfo_event, sEvent
         'HISTOGRAM': begin
             WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
             pParentState = sState.pParentState
-
+            
             xroi__HistogramSelectedROI, pParentState, GROUP=sEvent.top
-
-
         endcase
         'CLOSE': begin
             WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
             WIDGET_CONTROL, sEvent.top, /DESTROY
-            end
+        endcase
         else:
     endcase
 end
@@ -2605,7 +2603,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
 
     COMPILE_OPT idl2, hidden
 
-    ; Open the ROI Info dialog.
+    ; Open the ROI    WIDGET_CONTROL, sEvent.top, /DESTROY Info dialog.
 
     ; Check if already created.  If so, return.
     if (WIDGET_INFO((*pParentState).wROIInfo, /VALID_ID) NE 0) then begin
@@ -2687,6 +2685,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
     wRowBase = WIDGET_BASE(wBase, /ROW)
     wButton = WIDGET_BUTTON(wRowBase, VALUE='Close', UVALUE='CLOSE', $
         UNAME=prefix + 'close')
+
 ;     wHistButton = WIDGET_BUTTON( $
 ;         wRowBase, $
 ;         VALUE='Histogram', $
@@ -3081,6 +3080,15 @@ function xroi__Save, sEvent
     endif
 
     RETURN, 0 ; "Swallow" event.
+end
+
+;------------------------------------------------------------------------------
+function xroi__Save__exit, sEvent
+    COMPILE_OPT idl2, hidden
+
+result = xroi__save(sEvent)
+WIDGET_CONTROL, sEvent.top, /DESTROY
+
 end
 
 ;------------------------------------------------------------------------------
@@ -3572,15 +3580,22 @@ pro sans_reduction_xroi, $
 ;        )
     wSaveButton = WIDGET_BUTTON( $
         wFileMenu, $
-        VALUE='Save Selection and Create ROI file ...', $
+        VALUE='Create ROI file ...', $
         SENSITIVE=0, $
         UNAME='save_menu_bttn', $
         EVENT_FUNC='xroi__Save' $
         )
+    wSaveButtonAndExit = WIDGET_BUTTON( $
+        wFileMenu, $
+        VALUE='Create ROI file and Exit ...', $
+        SENSITIVE=0, $
+        UNAME='save_menu_bttn_and_exit', $
+        EVENT_FUNC='xroi__Save__exit' $
+        )
 ;CANCEL (does not validate the changes)
     wButton = WIDGET_BUTTON( $
         wFileMenu, $
-        VALUE='Cancel', $
+        VALUE='Exit', $
         UNAME=prefix + 'quit', $
         /SEPARATOR, $
         EVENT_PRO='xroi__Quit' $
@@ -3901,74 +3916,74 @@ pro sans_reduction_xroi, $
         WIDGET_CONTROL, wSaveButton, SENSITIVE=0
     endif
 
-    sState = {wBase: wBase, $
-              toolbar_xsize: toolbar_xsize, $
-              toolbar_ysize: toolbar_geom.scr_ysize, $
-              scr_xsize:base_geom.scr_xsize, $
-              scr_ysize:base_geom.scr_ysize, $
-              wDraw: wDraw, $
-              wROIContextMenu: wROIContextMenu, $
-              wROIInfo: -1L, $
-              wROIGrowProps: -1L, $
-              wSaveButton: wSaveButton, $
-;              wSaveToolButton: wSaveToolButton, $
-              image_is_8bit: image_is_8bit, $
-              wStatus: wStatus, $
-              oWindow: oWindow, $
-              oView: oView, $
-              oImage: oImage, $
-              oModel: oModel, $
-              oROIModel: oROIModel, $
-              oROIGroup: oROIGroup, $
-              oRegionsOut: oRegionsOut, $
-              oRegionsIn: oRegionsIn, $
-              oRejected: oRejected, $
-              oSelROI: OBJ_NEW(), $
-              oPickVisual: oPickVisual, $
-              oTransScaleVisual: oTransScaleVisual, $
-              oSelVisual: OBJ_NEW(), $
-              oSelHandle: OBJ_NEW(), $
-              pSavedROIData: PTR_NEW(), $
-              savedROIXRange: DBLARR(2), $
-              savedROIYRange: DBLARR(2), $
-              oCurrROI: OBJ_NEW(), $
-              oPalette: oPalette, $
-              pR: pR, $
-              pG: pG, $
-              pB: pB, $
-              pSelRGB: pSelRGB, $
-              pROIRGB: pROIRGB, $
-              sel_rgb: roi_select_color, $
-              roi_rgb: roi_color, $
-              growAllNeighbors: 0, $
-              growThreshMin: 0, $
-              growThreshMax: 255, $
-              growThreshROI: 1, $
-              growStdDevMult: 1.0, $
-              growMinArea: 0.0, $
-              growMaxCount: 2, $
-              growAcceptAll: 0, $
+    sState = {wBase:                wBase, $
+              toolbar_xsize:        toolbar_xsize, $
+              toolbar_ysize:        toolbar_geom.scr_ysize, $
+              scr_xsize:            base_geom.scr_xsize, $
+              scr_ysize:            base_geom.scr_ysize, $
+              wDraw:                wDraw, $
+              wROIContextMenu:      wROIContextMenu, $
+              wROIInfo:             -1L, $
+              wROIGrowProps:        -1L, $
+              wSaveButton:          wSaveButton, $
+              wSaveButtonAndExit:   wSaveButtonAndExit,$
+              image_is_8bit:        image_is_8bit, $
+              wStatus:              wStatus, $
+              oWindow:              oWindow, $
+              oView:                oView, $
+              oImage:               oImage, $
+              oModel:               oModel, $
+              oROIModel:            oROIModel, $
+              oROIGroup:            oROIGroup, $
+              oRegionsOut:          oRegionsOut, $
+              oRegionsIn:           oRegionsIn, $
+              oRejected:            oRejected, $
+              oSelROI:              OBJ_NEW(), $
+              oPickVisual:          oPickVisual, $
+              oTransScaleVisual:    oTransScaleVisual, $
+              oSelVisual:           OBJ_NEW(), $
+              oSelHandle:           OBJ_NEW(), $
+              pSavedROIData:        PTR_NEW(), $
+              savedROIXRange:       DBLARR(2), $
+              savedROIYRange:       DBLARR(2), $
+              oCurrROI:             OBJ_NEW(), $
+              oPalette:             oPalette, $
+              pR:                   pR, $
+              pG:                   pG, $
+              pB:                   pB, $
+              pSelRGB:              pSelRGB, $
+              pROIRGB:              pROIRGB, $
+              sel_rgb:              roi_select_color, $
+              roi_rgb:              roi_color, $
+              growAllNeighbors:     0, $
+              growThreshMin:        0, $
+              growThreshMax:        255, $
+              growThreshROI:        1, $
+              growStdDevMult:       1.0, $
+              growMinArea:          0.0, $
+              growMaxCount:         2, $
+              growAcceptAll:        0, $
               growRGBUseLuminosity: 1, $
-              growRGBChannel: 0, $
-              mode: _tools[0], $
-              bFirstROI: 1B, $
-              bButtonDown: 0B, $
-              bTempSegment: 0B, $
-              buttonXY: LONARR(2), $
-              floating: keyword_set(floating), $
-              pTitle: PTR_NEW(title), $
-              pTools: PTR_NEW(), $
-              wLoadCT: -1L, $
-              wLoadCTButton: wLoadCTButton, $
-              wPaletteEdit: -1L, $
-              wPickColor: -1l, $
-              pImg: pImg, $
-              modal: KEYWORD_SET(modal), $
-              demo_system: KEYWORD_SET(demo_system), $
+              growRGBChannel:       0, $
+              mode:                 _tools[0], $
+              bFirstROI:            1B, $
+              bButtonDown:          0B, $
+              bTempSegment:         0B, $
+              buttonXY:             LONARR(2), $
+              floating:             keyword_set(floating), $
+              pTitle:               PTR_NEW(title), $
+              pTools:               PTR_NEW(), $
+              wLoadCT:              -1L, $
+              wLoadCTButton:        wLoadCTButton, $
+              wPaletteEdit:         -1L, $
+              wPickColor:           -1l, $
+              pImg:                 pImg, $
+              modal:                KEYWORD_SET(modal), $
+              demo_system:          KEYWORD_SET(demo_system), $
               group_leader: $
-                N_ELEMENTS(group_leader) gt 0 ? group_leader : -1, $
-              draw_time: 0d, $
-              debug: KEYWORD_SET(debug) $
+              N_ELEMENTS(group_leader) gt 0 ? group_leader : -1, $
+              draw_time:            0d, $
+              debug:                KEYWORD_SET(debug) $
              }
 
     pState = PTR_NEW(sState, /NO_COPY)
