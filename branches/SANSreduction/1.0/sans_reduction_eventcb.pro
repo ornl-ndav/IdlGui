@@ -203,9 +203,36 @@ END
 
 ;------------------------------------------------------------------------------
 PRO selection_tool, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
-data=indgen(50,50)
-my_xroi, data
+DataArray = (*(*global).DataArray)
+DataXY    = TOTAL(DataArray,1)
+tDataXY   = TRANSPOSE(dataXY)
+X         = (size(tDataXY))(1)
+Y         = X
+IF (X EQ 80) THEN BEGIN
+    xysize = 4
+ENDIF ELSE BEGIN
+    xysize = 1
+ENDELSE
+rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+
+;change format to png file
+thisDevice = !D.NAME
+SET_PLOT, 'Z'
+LOADCT, 5
+TVLCT, red, green, blue, /GET
+set_plot, thisDevice
+ThisImage = BYTSCL(rtDataXY)
+s = size(ThisImage)
+image3d = BYTARR(3,s(1),s(2))
+image3d(0,*,*) = red(ThisImage)
+image3d(1,*,*) = green(ThisImage)
+image3d(2,*,*) = blue(ThisImage)
+
+sans_reduction_xroi, image3d ;launch sans_reduction_xroi
 
 END
 
