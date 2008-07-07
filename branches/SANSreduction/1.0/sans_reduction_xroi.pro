@@ -370,7 +370,7 @@ pro xroi__BaseResize, sEvent
 
 end
 
-
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 pro xroi_event, sEvent
 
@@ -718,6 +718,8 @@ pro xroi_event, sEvent
 end
 
 ;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+
 pro xroi__ButtonPress, sEvent
     COMPILE_OPT idl2, hidden
 
@@ -992,8 +994,10 @@ COMPILE_OPT hidden
 end
 
 ;------------------------------------------------------------------------------
-pro xroi__ButtonRelease, sEvent
-    COMPILE_OPT idl2, hidden
+;This function is reached each time the user select a region and
+;release the click in the main widget_draw
+PRO xroi__ButtonRelease, sEvent
+COMPILE_OPT idl2, hidden
 
     WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 
@@ -1098,6 +1102,22 @@ pro xroi__ButtonRelease, sEvent
 
             ; Ensure that the ellipse has at least 4 vertices.
             oROI->GetProperty, DATA=roiData
+
+            
+;??????????????????????????????????????????????????????????????????????
+;REMOVE_ME
+            point1 = [145,165]
+            point2 = [83,106]
+            point3 = [274,266]
+            print, 'test with point1: '
+            print, oROI->ContainsPoints(point1[0],point1[1])
+            print, 'test with point2: '
+            print, oROI->ContainsPoints(point2[0],point2[1])
+            print, 'test with point3: '
+            print, oROI->ContainsPoints(point3[0],point3[1])
+
+;??????????????????????????????????????????????????????????????????????
+
             if ((N_ELEMENTS(roiData)/3) ge 4) then begin
                 ; The ellipse region is valid.  Give it a name
                 ; and add it to the appropriate containers.
@@ -3055,6 +3075,7 @@ pro xroiGrowProps, pParentState, GROUP_LEADER=group
     XMANAGER, "xroiGrowProps", wBase, /NO_BLOCK
 end
 
+;##############################################################################
 ;------------------------------------------------------------------------------
 function xroi__Save, sEvent
     COMPILE_OPT idl2, hidden
@@ -3082,6 +3103,7 @@ function xroi__Save, sEvent
     RETURN, 0 ; "Swallow" event.
 end
 
+;##############################################################################
 ;------------------------------------------------------------------------------
 function xroi__Save__exit, sEvent
     COMPILE_OPT idl2, hidden
@@ -3091,6 +3113,7 @@ WIDGET_CONTROL, sEvent.top, /DESTROY
 
 end
 
+;##############################################################################
 ;------------------------------------------------------------------------------
 pro xroi__Quit, sEvent
     COMPILE_OPT idl2, hidden
