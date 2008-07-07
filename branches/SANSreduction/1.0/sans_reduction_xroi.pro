@@ -1102,7 +1102,6 @@ COMPILE_OPT idl2, hidden
 
             ; Ensure that the ellipse has at least 4 vertices.
             oROI->GetProperty, DATA=roiData
-
             
 ;??????????????????????????????????????????????????????????????????????
 ;REMOVE_ME
@@ -2564,8 +2563,9 @@ pro xroiInfo_event, sEvent
             endif
 
             oROI = (*pParentState).oROIModel->Get(POSITION=sEvent.index)
+            (*pParentState).currentROIselectedIndex = sEvent.index
             xroi__SetROI, pParentState, oROI
-            
+
             (*pParentState).oWindow->Draw, (*pParentState).oView
             
         endcase
@@ -3084,19 +3084,44 @@ function xroi__Save, sEvent
 
     WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 
+                                ; Get current list of ROI names.
     oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
     if (nROIs gt 0) then begin
-        fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='regions.sav', $
-                                 FILTER='*.sav', /WRITE)
-       if (STRLEN(fname) gt 0) then begin
-           xroi__SetROI, pState, OBJ_NEW()
-           (*pState).oROIModel->Remove, oROIs
-           (*pState).oROIGroup->Remove, oROIs
-           SAVE, oROIs, FILENAME=fname
-           (*pState).oROIModel->Add, oROIs
-           (*pState).oROIGroup->Add, oROIs
-           if OBJ_VALID((*pState).oSelROI) then $
-            xroi__SetROI, pState, oSelROI, /SET_LIST_SELECT
+        fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
+                                FILTER='*.txt', /WRITE)
+        if (STRLEN(fname) gt 0) then begin
+            
+; Determine which ROI, if any, is currently selected.
+            oSelROI = (*pState).oSelROI
+            pos = -1L
+            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
+                result = $
+                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
+            ENDIF ELSE BEGIN
+                result = -1
+            ENDELSE
+            print, result       ;remove_me
+            
+
+
+
+
+
+
+
+
+
+
+
+
+;           xroi__SetROI, pState, OBJ_NEW()
+;           (*pState).oROIModel->Remove, oROIs
+;           (*pState).oROIGroup->Remove, oROIs
+;           SAVE, oROIs, FILENAME=fname
+;           (*pState).oROIModel->Add, oROIs
+;           (*pState).oROIGroup->Add, oROIs
+;           if OBJ_VALID((*pState).oSelROI) then $
+;            xroi__SetROI, pState, oSelROI, /SET_LIST_SELECT
        endif
     endif
 
@@ -3940,6 +3965,7 @@ pro sans_reduction_xroi, $
     endif
 
     sState = {wBase:                wBase, $
+              currentROIselectedIndex: 0L,$
               toolbar_xsize:        toolbar_xsize, $
               toolbar_ysize:        toolbar_geom.scr_ysize, $
               scr_xsize:            base_geom.scr_xsize, $
