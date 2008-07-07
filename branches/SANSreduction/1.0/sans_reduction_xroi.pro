@@ -3572,7 +3572,7 @@ pro sans_reduction_xroi, $
 ;        )
     wSaveButton = WIDGET_BUTTON( $
         wFileMenu, $
-        VALUE='Save ROIs...', $
+        VALUE='Save Selection and Create ROI file ...', $
         SENSITIVE=0, $
         UNAME='save_menu_bttn', $
         EVENT_FUNC='xroi__Save' $
@@ -3586,13 +3586,13 @@ pro sans_reduction_xroi, $
         EVENT_PRO='xroi__Quit' $
         )
 ;OK (validate selection)
-    wButton = WIDGET_BUTTON( $
-        wFileMenu, $
-        VALUE='Validate Selection',$
+;    wButton = WIDGET_BUTTON( $
+;        wFileMenu, $
+;        VALUE='Validate Selection',$
 ;        /SEPARATOR, $
-        UNAME=prefix + 'validate', $
-        EVENT_PRO='xroi__Quit' $
-        )
+;        UNAME=prefix + 'validate', $
+;        EVENT_PRO='xroi__Quit' $
+;        )
 
     wEditMenu = WIDGET_BUTTON(wMenuBase, VALUE='Edit', /MENU)
 ;    wButton = WIDGET_BUTTON( $
@@ -3645,6 +3645,18 @@ pro sans_reduction_xroi, $
 ;         UNAME=prefix + 'save_tool_bttn', $
 ;         EVENT_FUNC='xroi__Save' $
 ;         )
+
+;SAVE ROI FILE
+    void = WIDGET_BUTTON( $
+        wToolbarBase, $
+        VALUE='/SNS/software/idltools/images/save.bmp',$
+        /BITMAP, $
+        TOOLTIP='Save ROI File ...', $
+        UNAME=prefix + 'save_roi_bttn', $
+        UVALUE='SAVE_ROI' $
+        )
+
+;ROI FILE INFO
     void = WIDGET_BUTTON( $
         wToolbarBase, $
         VALUE=FILEPATH('prop.bmp', SUBDIR=subdir), $
