@@ -633,26 +633,28 @@ pro xroi_event, sEvent
         ; Shrink the viewport if the image is smaller.
         draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
         newXsize = (query.dimensions[0] < draw_geom.xsize)
-        ; If new image is bigger than toolbar, make sure draw window is also that big.
+                                ; If new image is bigger than toolbar,
+                                ; make sure draw window is also
+                                ; that big.
         if (query.dimensions[0] gt (*pState).toolbar_xsize) then $
-            newXsize = newXsize > (*pState).toolbar_xsize
+          newXsize = newXsize > (*pState).toolbar_xsize
         newYsize = query.dimensions[1] < draw_geom.ysize
-
-        ; Change the viewport.
+        
+                                ; Change the viewport.
         WIDGET_CONTROL, (*pState).wDraw, XSIZE=newXsize, YSIZE=newYsize
-
-
-        ; Retrieve the new base size and cache it.
+        
+        
+                                ; Retrieve the new base size and cache it.
         base_geom = WIDGET_INFO(sEvent.top, /GEOMETRY)
         (*pState).xsize = base_geom.xsize
         (*pState).ysize = base_geom.ysize
-
-        ; Get the new geometry.
+        
+                                ; Get the new geometry.
         draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
-
+        
         ; Set the new viewplane rect, depending upon the new viewport.
         WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
-
+        
         (*pState).oView->SetProperty, $
             VIEWPLANE_RECT=[viewport[0], viewport[1], $
                 draw_geom.xsize < draw_geom.draw_xsize, draw_geom.ysize]
@@ -2301,6 +2303,7 @@ pro xroi__DeleteSelectedROI, pState
         xroi__SetROI, pState, oROI, /SET_LIST_SELECT, /UPDATE_LIST
     endelse
 end
+
 ;------------------------------------------------------------------------------
 pro xroi__ScaleROI, pState, oROI, sEventX, sEventY
 
@@ -3336,7 +3339,7 @@ pro xroi__cleanup, wID
 end
 
 ;------------------------------------------------------------------------------
-pro my_xroi, $
+pro sans_reduction_xroi, $
     img, $                  ; IN/OUT: (opt) image data
     r, $                    ; IN/OUT: (opt) Red.  256-element byte array.
     g, $                    ; IN/OUT: (opt) Green. 256-element byte array.
