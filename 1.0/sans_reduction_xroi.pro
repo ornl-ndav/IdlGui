@@ -183,6 +183,55 @@
 ;   SM, June 2003: For histograms change LIVE_PLOT to iPlot
 ;   CT, Sept 2003: Destroy iPlots when widget exits
 ;-
+
+;==============================================================================
+FUNCTION xroi__Save, sEvent
+    COMPILE_OPT idl2, hidden
+
+    ; Save the current ROIs to a user-selected file.
+
+    WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+
+                                ; Get current list of ROI names.
+    oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+    if (nROIs gt 0) then begin
+        fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
+                                FILTER='*.txt', /WRITE)
+        if (STRLEN(fname) gt 0) then begin
+            
+; Determine which ROI, if any, is currently selected.
+            oSelROI = (*pState).oSelROI
+            pos = -1L
+            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
+                result = $
+                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
+            ENDIF ELSE BEGIN
+                result = -1
+            ENDELSE
+
+            CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+            CurrentSelectionSettings = (*pState).currentSelectedSettings
+
+;initialize the selection of pixels
+;1 for a pixel that has been selected
+;0 for a pixel that is not part of the selection
+            PixelSelectedArray = INTARR(80,80)
+;Determine which pixels have been selected
+            CreateArrayOfPixelSelected, $
+              PixelSelectedArray, $
+              oROIs[CurrentROIselectedIndex],$
+              CurrentSelectionSettings
+            
+;Create ROI file 
+            CreateROIfile, fname, PixelSelectedArray
+
+       endif
+    endif
+
+    RETURN, 0 ; "Swallow" event.
+end
+
+;==============================================================================
 pro xroiLoadct__Cleanup, wID
     COMPILE_OPT hidden
 
@@ -673,6 +722,10 @@ pro xroi_event, sEvent
     'PICKCOLOR': begin
         xroiPickColor, sEvent.top
     end
+
+    'SAVE_ROI': BEGIN
+        result = xroi__Save(sEvent)
+    END
 
     'ROI_INFO': begin
         ; ROI Info menu item selected.  Open the ROI Info dialog.
@@ -3269,63 +3322,6 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION xroi__Save, sEvent
-    COMPILE_OPT idl2, hidden
-
-    ; Save the current ROIs to a user-selected file.
-
-    WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-
-                                ; Get current list of ROI names.
-    oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
-    if (nROIs gt 0) then begin
-        fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
-                                FILTER='*.txt', /WRITE)
-        if (STRLEN(fname) gt 0) then begin
-            
-; Determine which ROI, if any, is currently selected.
-            oSelROI = (*pState).oSelROI
-            pos = -1L
-            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
-                result = $
-                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
-            ENDIF ELSE BEGIN
-                result = -1
-            ENDELSE
-
-            CurrentROISelectedIndex = (*pState).currentROIselectedIndex
-            CurrentSelectionSettings = (*pState).currentSelectedSettings
-
-;initialize the selection of pixels
-;1 for a pixel that has been selected
-;0 for a pixel that is not part of the selection
-            PixelSelectedArray = INTARR(80,80)
-;Determine which pixels have been selected
-            CreateArrayOfPixelSelected, $
-              PixelSelectedArray, $
-              oROIs[CurrentROIselectedIndex],$
-              CurrentSelectionSettings
-            
-;Create ROI file 
-            CreateROIfile, fname, PixelSelectedArray
-
-
-
-
-;           xroi__SetROI, pState, OBJ_NEW()
-;           (*pState).oROIModel->Remove, oROIs
-;           (*pState).oROIGroup->Remove, oROIs
-;           SAVE, oROIs, FILENAME=fname
-;           (*pState).oROIModel->Add, oROIs
-;           (*pState).oROIGroup->Add, oROIs
-;           if OBJ_VALID((*pState).oSelROI) then $
-;            xroi__SetROI, pState, oSelROI, /SET_LIST_SELECT
-       endif
-    endif
-
-    RETURN, 0 ; "Swallow" event.
-end
-
 ;##############################################################################
 ;------------------------------------------------------------------------------
 function xroi__Save__exit, sEvent
@@ -3909,14 +3905,14 @@ pro sans_reduction_xroi, $
 
 ;SAVE ROI FILE
     void = WIDGET_BUTTON( $
-        wToolbarBase, $
-        VALUE='images/save.bmp',$
-        /BITMAP, $
-        TOOLTIP='Save ROI File ...', $
-        UNAME=prefix + 'save_roi_bttn', $
-        UVALUE='SAVE_ROI' $
-        )
+                          wToolbarBase, $
+                          VALUE='images/save.bmp',$
+                          /BITMAP, $
+                          TOOLTIP='Save ROI File ...', $
+                          UNAME=prefix + 'save_roi_bttn', $
+                          UVALUE='SAVE_ROI')
 
+                        
 ;ROI FILE INFO
     void = WIDGET_BUTTON( $
         wToolbarBase, $
