@@ -1058,8 +1058,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-;                    WIDGET_CONTROL, (*pState).wSaveToolButton, $
-;                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1181,9 +1181,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-;                    WIDGET_CONTROL, $
-;                        (*pState).wSaveToolButton, $
-;                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1258,9 +1257,10 @@ COMPILE_OPT idl2, hidden
 
                 ; Activate appropriate tool buttons.
                 if not lmgr(/demo) then begin
-                    WIDGET_CONTROL, (*pState).wSaveButton, SENSITIVE=1
-;                    WIDGET_CONTROL, (*pState).wSaveToolButton, $
-;                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -2300,9 +2300,11 @@ pro xroi__DeleteSelectedROI, pState
 
     ; Pick a new selected region.
     if (nROIs eq 1) then begin
-        WIDGET_CONTROL, (*pState).wSaveButton, SENSITIVE=0
-;        WIDGET_CONTROL, (*pState).wSaveToolButton, SENSITIVE=0
-        xroi__SetROI, pState, OBJ_NEW(), /UPDATE_LIST
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=0
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                      SENSITIVE=0
+                    xroi__SetROI, pState, OBJ_NEW(), /UPDATE_LIST
     endif else begin
         oROI = (*pState).oROIModel->Get(POSITION=((pos-1) > 0))
         xroi__SetROI, pState, oROI, /SET_LIST_SELECT, /UPDATE_LIST
