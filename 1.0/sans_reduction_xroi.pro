@@ -2519,10 +2519,47 @@ pro xroi__TranslateROI, pState, oROI, sEventX, sEventY
     (*pTSState).oScaleURModel->GetProperty, UVALUE=oldXY
     (*pTSState).oScaleURModel->SetProperty, UVALUE=oldXY+[dx,dy]
 end
+
 ;------------------------------------------------------------------------------
 pro xroiHistPlot_event, event
 end
+
+
 ;------------------------------------------------------------------------------
+PRO xroiInfo_selection_GUI, sEvent, index=index
+
+UNAME_ARRAY = ['half_in',$
+               'half_out',$
+               'outside_in',$
+               'outside_out']
+
+sz = (size(UNAME_ARRAY))(1)
+FOR i=0,(sz-1) DO BEGIN
+
+    IF (index EQ i) THEN BEGIN
+        left_value = '>'
+        right_value = '<'
+    ENDIF ELSE BEGIN
+        left_value = ' '
+        right_value = ' '
+    ENDELSE
+
+    id = WIDGET_INFO(sEvent.top,FIND_BY_UNAME=UNAME_ARRAY[i]+'_left')
+    WIDGET_CONTROL, id, SET_VALUE=left_value
+    id = WIDGET_INFO(sEvent.top,FIND_BY_UNAME=UNAME_ARRAY[i]+'_right')
+    WIDGET_CONTROL, id, SET_VALUE=right_value
+
+ENDFOR
+
+END
+
+
+
+
+
+
+
+
 pro xroiInfo_event, sEvent
     COMPILE_OPT idl2, hidden
 
@@ -2596,7 +2633,19 @@ pro xroiInfo_event, sEvent
             pParentState = sState.pParentState
             
             xroi__HistogramSelectedROI, pParentState, GROUP=sEvent.top
-        endcase
+        ENDCASE
+        'selection_half_in': BEGIN
+            xroiInfo_selection_GUI, sEvent, index=0
+        ENDCASE
+        'selection_half_out': BEGIN
+            xroiInfo_selection_GUI, sEvent, index=1
+        ENDCASE
+        'selection_outside_in': BEGIN
+            xroiInfo_selection_GUI, sEvent, index=2
+        ENDCASE
+        'selection_outside_out': BEGIN
+            xroiInfo_selection_GUI, sEvent, index=3
+        ENDCASE
         'CLOSE': begin
             WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
             WIDGET_CONTROL, sEvent.top, /DESTROY
@@ -2689,29 +2738,83 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
     wDeleteButton = WIDGET_BUTTON(wRowBase, VALUE='Delete ROI', $
                                   UNAME=prefix + 'delete', $
                                   UVALUE='DELETE', SENSITIVE=(pos ge 0))
+
+;selection button
+    selection_outside_in_tool_tip = 'Detector Pixel is part of the ' + $
+      'selection if at least one Screen Pixel is touching the selection'
+    selection_outside_out_tool_tip = 'Detector Pixel is part of the ' + $
+      'selection only if all the Screen Pixel are touching the selection'
+    selection_half_in_tool_tip = 'Detector Pixel is part of the ' + $
+      'selection if at least half of the Screen Pixels are part of the ' + $
+      'selection.
+    selection_half_out_tool_tip = 'Detector Pixel is part of the ' + $
+      'selection if more than half of the Screen Pixels are part of the ' + $
+      'selection.
+
+    wRowBase1 = WIDGET_BASE(wBase, /ROW, /FRAME)
+
+
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = '>',$
+                           UNAME = 'half_in_left')
+    wButton = WIDGET_BUTTON(wRowBase1,$
+                            VALUE   = 'images/selection_half_in.bmp',$
+                            UNAME   = 'selection_half_in',$
+                            UVALUE  = 'selection_half_in',$
+                            TOOLTIP = selection_half_in_tool_tip,$
+                            /BITMAP)
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = '<',$
+                           UNAME = 'half_in_right')
+
+
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'half_out_left')
+    wButton = WIDGET_BUTTON(wRowBase1,$
+                            VALUE   = 'images/selection_half_out.bmp',$
+                            UNAME   = 'selection_half_out',$
+                            UVALUE  = 'selection_half_out',$
+                            TOOLTIP = selection_half_out_tool_tip,$
+                            /BITMAP)
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'half_out_right')
+
+
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'outside_in_left')
+    wButton = WIDGET_BUTTON(wRowBase1,$
+                            VALUE   = 'images/selection_outside_in.bmp',$
+                            UNAME   = 'selection_outside_in',$
+                            UVALUE  = 'selection_outside_in',$
+                            TOOLTIP = selection_outside_in_tool_tip,$
+                            /BITMAP)
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'outside_in_right')
+
+
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'outside_out_left')
+    wButton = WIDGET_BUTTON(wRowBase1,$
+                            VALUE   = 'images/selection_outside_out.bmp',$
+                            UNAME   = 'selection_outside_out',$
+                            UVALUE  = 'selection_outside_out',$
+                            TOOLTIP = selection_outside_out_tool_tip,$
+                            /BITMAP)
+    wlabel = WIDGET_LABEL(wRowBase1,$
+                           VALUE = ' ',$
+                           UNAME = 'outside_out_right')
+
+
+
+;Close button
     wRowBase = WIDGET_BASE(wBase, /ROW)
     wButton = WIDGET_BUTTON(wRowBase, VALUE='Close', UVALUE='CLOSE', $
         UNAME=prefix + 'close')
-
-;selection button
-;    wButton = WIDGET_BUTTON(wRowBase,$
-;                            VALUE = 'Selection_
-
-
-
-
-;    void = WIDGET_BUTTON( $
-;        wToolbarBase, $
-;        VALUE='/SNS/software/idltools/images/save.bmp',$
-;        /BITMAP, $
-;        TOOLTIP='Save ROI File ...', $
-;        UNAME=prefix + 'save_roi_bttn', $
-;        UVALUE='SAVE_ROI' $
-;        )
-
-
-
-
 
 ;     wHistButton = WIDGET_BUTTON( $
 ;         wRowBase, $
@@ -3733,7 +3836,7 @@ pro sans_reduction_xroi, $
 ;SAVE ROI FILE
     void = WIDGET_BUTTON( $
         wToolbarBase, $
-        VALUE='/SNS/software/idltools/images/save.bmp',$
+        VALUE='images/save.bmp',$
         /BITMAP, $
         TOOLTIP='Save ROI File ...', $
         UNAME=prefix + 'save_roi_bttn', $
