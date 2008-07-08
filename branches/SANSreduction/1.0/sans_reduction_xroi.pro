@@ -3186,7 +3186,52 @@ end
 
 ;##############################################################################
 ;------------------------------------------------------------------------------
-function xroi__Save, sEvent
+;This procedure will go screen pixel by screen pixel to check if the
+;pixel is part of the selection and the result will depend on the
+;settings of the selection
+PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
+                                 oROI,$
+                                 CurrentSelectionSettings
+
+tmp_array = INTARR(80,80)
+Xsize = 320
+Ysize = 320
+FOR i=0,(Xsize-1) DO BEGIN
+    FOR j=0,(Ysize-1) DO BEGIN
+        IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
+            x = FIX(i/4)
+            y = FIX(j/4)
+            ++tmp_array[x,y]
+        ENDIF
+    ENDFOR
+ENDFOR
+
+CASE (CurrentSelectionSettings) OF
+;half in
+    0: BEGIN
+        IndexArray = WHERE(tmp_array GE 8) 
+    END
+;half ou
+    1: BEGIN
+        IndexArray = WHERE(tmp_array GT 8) 
+    END
+;out in
+    2: BEGIN
+        IndexArray = WHERE(tmp_array GT 0) 
+    END
+;out out
+    3: BEGIN
+        IndexArray = WHERE(tmp_array EQ 8) 
+    END
+    ELSE:
+ENDCASE
+
+PixelSelectedArray(IndexArray) = 1
+
+END
+
+;------------------------------------------------------------------------------
+FUNCTION xroi__Save, sEvent
     COMPILE_OPT idl2, hidden
 
     ; Save the current ROIs to a user-selected file.
@@ -3212,26 +3257,20 @@ function xroi__Save, sEvent
 
             CurrentROISelectedIndex = (*pState).currentROIselectedIndex
             CurrentSelectionSettings = (*pState).currentSelectedSettings
-            print, CurrentSelectionSettings ;remove_me
 
-
-;??????????????????????????????????????????????????????????????????????
-;REMOVE_ME
-;            point1 = [145,165]
-;            point2 = [83,106]
-;            point3 = [274,266]
-;            print, 'test with point1: '
-;            print, oROI->ContainsPoints(point1[0],point1[1])
-;            print, 'test with point2: '
-;            print, oROI->ContainsPoints(point2[0],point2[1])
-;            print, 'test with point3: '
-;            print, oROI->ContainsPoints(point3[0],point3[1])
-
-;??????????????????????????????????????????????????????????????????????
-
-
-
-
+;initialize the selection of pixels
+;1 for a pixel that has been selected
+;0 for a pixel that is not part of the selection
+            PixelSelectedArray = INTARR(80,80)
+;Determine which pixels have been selected
+            CreateArrayOfPixelSelected, $
+              PixelSelectedArray, $
+              oROIs[CurrentROIselectedIndex],$
+              CurrentSelectionSettings
+            
+            ;REMOVE_ME
+            tmp_index = WHERE(PixelSelectedArray GT 0)
+            print, tmp_index
 
 
 
