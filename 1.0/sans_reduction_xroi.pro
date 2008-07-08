@@ -3211,7 +3211,7 @@ CASE (CurrentSelectionSettings) OF
     0: BEGIN
         IndexArray = WHERE(tmp_array GE 8) 
     END
-;half ou
+;half out
     1: BEGIN
         IndexArray = WHERE(tmp_array GT 8) 
     END
@@ -3227,6 +3227,44 @@ CASE (CurrentSelectionSettings) OF
 ENDCASE
 
 PixelSelectedArray(IndexArray) = 1
+
+END
+
+;------------------------------------------------------------------------------
+;This procedure create the ROI file 
+PRO CreateROIfile, file_name, PixelSelectedArray
+
+;get ROI array
+pixel_excluded = PixelSelectedArray
+sz1 = (size(pixel_excluded))(1) ;X
+sz2 = (size(pixel_excluded))(2) ;Y
+
+print, file_name
+error = 0
+;CATCH, error
+
+IF (error NE 0) then begin
+
+    CATCH, /CANCEL
+
+ENDIF ELSE BEGIN
+    
+;open output file
+    openw, 1, file_name
+    
+    index_array = WHERE(pixel_excluded GT 0, nbr)
+    FOR i=0,(nbr-1) DO BEGIN
+        x    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
+        y    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
+        bank = 'bank1_'
+        text = bank + x + '_' + y
+        printf, 1, text
+    ENDFOR
+    
+    close, 1
+    free_lun, 1
+
+ENDELSE
 
 END
 
@@ -3268,10 +3306,8 @@ FUNCTION xroi__Save, sEvent
               oROIs[CurrentROIselectedIndex],$
               CurrentSelectionSettings
             
-            ;REMOVE_ME
-            tmp_index = WHERE(PixelSelectedArray GT 0)
-            print, tmp_index
-
+;Create ROI file 
+            CreateROIfile, fname, PixelSelectedArray
 
 
 
