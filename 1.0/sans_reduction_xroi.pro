@@ -2524,7 +2524,6 @@ end
 pro xroiHistPlot_event, event
 end
 
-
 ;------------------------------------------------------------------------------
 PRO xroiInfo_selection_GUI, sEvent, index=index
 
@@ -2532,6 +2531,10 @@ UNAME_ARRAY = ['half_in',$
                'half_out',$
                'outside_in',$
                'outside_out']
+
+WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+pParentState = sState.pParentState
+(*pParentState).currentSelectedSettings = index
 
 sz = (size(UNAME_ARRAY))(1)
 FOR i=0,(sz-1) DO BEGIN
@@ -2547,19 +2550,13 @@ FOR i=0,(sz-1) DO BEGIN
     id = WIDGET_INFO(sEvent.top,FIND_BY_UNAME=UNAME_ARRAY[i]+'_left')
     WIDGET_CONTROL, id, SET_VALUE=left_value
     id = WIDGET_INFO(sEvent.top,FIND_BY_UNAME=UNAME_ARRAY[i]+'_right')
-    WIDGET_CONTROL, id, SET_VALUE=right_value
+    WIDGET_CONTROL , id, SET_VALUE=right_value
 
 ENDFOR
 
 END
 
-
-
-
-
-
-
-
+;------------------------------------------------------------------------------
 pro xroiInfo_event, sEvent
     COMPILE_OPT idl2, hidden
 
@@ -2755,8 +2752,8 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
 
 
     wlabel = WIDGET_LABEL(wRowBase1,$
-                           VALUE = '>',$
-                           UNAME = 'half_in_left')
+                          VALUE = '>',$
+                          UNAME = 'half_in_left')
     wButton = WIDGET_BUTTON(wRowBase1,$
                             VALUE   = 'images/selection_half_in.bmp',$
                             UNAME   = 'selection_half_in',$
@@ -3211,9 +3208,9 @@ function xroi__Save, sEvent
                 result = -1
             ENDELSE
 
-            CurrentROISelectedIndex = (*pState).currentROIselectedIndexq
-
-            
+            CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+            CurrentSelectionSettings = (*pState).currentSelectedSettings
+            print, CurrentSelectionSettings ;remove_me
 
 
 ;??????????????????????????????????????????????????????????????????????
@@ -4090,6 +4087,7 @@ pro sans_reduction_xroi, $
 
     sState = {wBase:                wBase, $
               currentROIselectedIndex: 0L,$
+              currentSelectedSettings: 0,$
               toolbar_xsize:        toolbar_xsize, $
               toolbar_ysize:        toolbar_geom.scr_ysize, $
               scr_xsize:            base_geom.scr_xsize, $
