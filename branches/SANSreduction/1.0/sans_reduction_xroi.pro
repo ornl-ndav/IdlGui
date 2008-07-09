@@ -3292,7 +3292,6 @@ pixel_excluded = PixelSelectedArray
 sz1 = (size(pixel_excluded))(1) ;X
 sz2 = (size(pixel_excluded))(2) ;Y
 
-print, file_name
 error = 0
 ;CATCH, error
 
@@ -3535,6 +3534,10 @@ pro xroi__cleanup, wID
         endfor
     endif
 
+;reactivate the Selection Tool Button from main base
+    Event = (*pState).Event
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='selection_tool_button')
+    WIDGET_CONTROL, id, SENSITIVE=1
 ;
 ;   Clean up (*pState).pImg, if appropriate.
 ;
@@ -3589,8 +3592,9 @@ pro xroi__cleanup, wID
 end
 
 ;------------------------------------------------------------------------------
-pro sans_reduction_xroi, $
+PRO sans_reduction_xroi, $
     img, $                  ; IN/OUT: (opt) image data
+    Event,$
     r, $                    ; IN/OUT: (opt) Red.  256-element byte array.
     g, $                    ; IN/OUT: (opt) Green. 256-element byte array.
     b, $                    ; IN/OUT: (opt) Blue. 256-element byte array.
@@ -4159,6 +4163,7 @@ pro sans_reduction_xroi, $
     endif
 
     sState = {wBase:                wBase, $
+              Event:                Event,$ ;event from main gui
               currentROIselectedIndex: 0L,$
               currentSelectedSettings: 0,$
               toolbar_xsize:        toolbar_xsize, $

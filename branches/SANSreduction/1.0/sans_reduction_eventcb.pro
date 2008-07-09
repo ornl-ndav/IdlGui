@@ -232,8 +232,12 @@ image3d(0,*,*) = red(ThisImage)
 image3d(1,*,*) = green(ThisImage)
 image3d(2,*,*) = blue(ThisImage)
 
-sans_reduction_xroi, image3d ;launch sans_reduction_xroi
+;hide the Selection Tool Button
+id = widget_info(Event.top,find_by_uname='selection_tool_button')
+widget_control, id, sensitive=0
 
+;Start the selection tool
+sans_reduction_xroi, image3d, Event ;launch sans_reduction_xroi
 END
 
 ;==============================================================================
