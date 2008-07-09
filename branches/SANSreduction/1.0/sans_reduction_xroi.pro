@@ -245,7 +245,9 @@ if (OBJ_VALID(oSelROI) ne 0) then BEGIN
 ENDIF ELSE BEGIN
     result = -1
 ENDELSE
-CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+
+(*pState).currentROIselectedIndex = pos
+CurrentROIselectedIndex = pos
 CurrentSelectionSettings = (*pState).currentSelectedSettings
 
 ;initialize the selection of pixels
@@ -259,7 +261,34 @@ CreateArrayOfPixelSelected, $
   CurrentSelectionSettings
 
 ;plot selection
+Event = (*pState).Event
+view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
 
+x_coeff = 4
+color   = 150
+FOR i=0,(80L-1) DO BEGIN
+    FOR j=0,(80L-1) DO BEGIN
+        IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+            plots, i*x_coeff, j*x_coeff, $
+              /DEVICE, $
+              COLOR=color
+            plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+        ENDIF
+    ENDFOR
+ENDFOR
 
 END
 
@@ -1222,6 +1251,10 @@ COMPILE_OPT idl2, hidden
                     (*pState).bFirstROI = 0b
                     xroiInfo, pState, GROUP_LEADER=sEvent.top
                 endif
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
+
             endif else begin
                 ; Fewer than 4 vertices; delete.
                 (*pState).oModel->Remove, oROI
@@ -1236,6 +1269,7 @@ COMPILE_OPT idl2, hidden
 
                 (*pState).oWindow->Draw, (*pState).oView
             endelse
+
         end
 
         ; Freehand ROI
@@ -1289,6 +1323,9 @@ COMPILE_OPT idl2, hidden
                     xroiInfo, pState, GROUP_LEADER=sEvent.top
                 endif
 
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
+
             endif else begin
                 ; Fewer than 3 vertices; delete.
                 (*pState).oModel->Remove, oROI
@@ -1304,6 +1341,7 @@ COMPILE_OPT idl2, hidden
                 (*pState).oWindow->Draw, (*pState).oView
 
             endelse
+
         end  ; FREEHAND DRAW
 
         ; Segmented ROI
@@ -1369,6 +1407,9 @@ COMPILE_OPT idl2, hidden
 
                 ; Reset state.
                 (*pState).bTempSegment = 0b
+
+;plot Selection in Main Widget_draw (main gui)
+                plot_selection_in_main_gui, sEvent
 
             endif else begin
                 ; Fewer than 3 vertices; delete.
@@ -1918,10 +1959,16 @@ pro xroi__SetROI, pState, oROI, $
 
             ; Update selected list item.
             if (KEYWORD_SET(set_list_select) NE 0) then begin
+
                 result = (*pState).oROIModel->IsContained(oROI, $
                                                           POSITION=pos)
-                if (result ne 0) then $
+                IF (result NE 0) THEN BEGIN
                     WIDGET_CONTROL, sState.wList, SET_LIST_SELECT=pos
+                ENDIF ELSE BEGIN
+                    pos = 0
+                ENDELSE
+                (*pState).currentROIselectedIndex = pos
+
             endif
 
             ; Update delete and histogram button sensitivity.
