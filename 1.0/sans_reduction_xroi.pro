@@ -232,6 +232,39 @@ FUNCTION xroi__Save, sEvent
 end
 
 ;==============================================================================
+;This procedure plot in the main gui the current selected selection
+PRO plot_selection_in_main_gui, sEvent
+WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+; Determine which ROI, if any, is currently selected.
+oSelROI = (*pState).oSelROI
+pos = -1L
+if (OBJ_VALID(oSelROI) ne 0) then BEGIN
+    result = $
+      (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
+ENDIF ELSE BEGIN
+    result = -1
+ENDELSE
+CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+CurrentSelectionSettings = (*pState).currentSelectedSettings
+
+;initialize the selection of pixels
+;1 for a pixel that has been selected
+;0 for a pixel that is not part of the selection
+PixelSelectedArray = INTARR(80,80)
+;Determine which pixels have been selected
+CreateArrayOfPixelSelected, $
+  PixelSelectedArray, $
+  oROIs[CurrentROIselectedIndex],$
+  CurrentSelectionSettings
+
+;plot selection
+
+
+END
+
+
+;==============================================================================
 pro xroiLoadct__Cleanup, wID
     COMPILE_OPT hidden
 
@@ -1140,6 +1173,9 @@ COMPILE_OPT idl2, hidden
 
                 (*pState).oWindow->Draw, (*pState).oView
             endelse
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
 
         end
 
