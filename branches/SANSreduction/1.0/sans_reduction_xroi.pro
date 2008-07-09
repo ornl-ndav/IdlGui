@@ -232,6 +232,79 @@ FUNCTION xroi__Save, sEvent
 end
 
 ;==============================================================================
+PRO plot_moved_selection_in_main_gui, sEvent
+WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+
+IF (nROIs GE 1) THEN BEGIN
+
+    CurrentSelectionSettings = (*pState).currentSelectedSettings
+
+;    oSelROI = (*pState).oSelROI
+;    pos = -1L
+;    if (OBJ_VALID(oSelROI) ne 0) then BEGIN
+;        result = $
+;          (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
+;    ENDIF ELSE BEGIN
+;        result = -1
+;    ENDELSE
+ 
+;plot selection
+    Event = (*pState).Event
+    view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    ERASE
+    
+;plot main plot
+    DataArray = (*pState).DataArray
+    X = 80
+    Y = 80
+    result = plotData(Event, DataArray, X, Y)
+
+    FOR k=0,(nROIs-1) DO BEGIN
+        
+;initialize the selection of pixels
+;1 for a pixel that has been selected
+;0 for a pixel that is not part of the selection
+        PixelSelectedArray = INTARR(80,80)
+;Determine which pixels have been selected
+        CreateArrayOfPixelSelected, $
+          PixelSelectedArray, $
+          oROIs[k],$
+          CurrentSelectionSettings
+        
+        x_coeff = 4
+        color   = 150
+        FOR i=0,(80L-1) DO BEGIN
+            FOR j=0,(80L-1) DO BEGIN
+                IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+                    plots, i*x_coeff, j*x_coeff, $
+                      /DEVICE, $
+                      COLOR=color
+                    plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                ENDIF
+            ENDFOR
+        ENDFOR
+
+    ENDFOR
+
+ENDIF
+
+END
+
+;==============================================================================
 ;This procedure plot in the main gui the current selected selection
 PRO plot_selection_in_main_gui, sEvent
 WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
@@ -291,7 +364,6 @@ FOR i=0,(80L-1) DO BEGIN
 ENDFOR
 
 END
-
 
 ;==============================================================================
 pro xroiLoadct__Cleanup, wID
@@ -1144,6 +1216,10 @@ COMPILE_OPT idl2, hidden
 
             ; Restore button state.
             (*pState).bButtonDown = 0b
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_moved_selection_in_main_gui, sEvent
+
         end
 
         'RECTANGLE': begin
@@ -1437,6 +1513,7 @@ COMPILE_OPT idl2, hidden
         ; Pick ROI.
         'SELECTION': begin
             (*pState).bButtonDown = 0b
+
         end
     endcase
 
@@ -3678,6 +3755,7 @@ end
 PRO sans_reduction_xroi, $
     img, $                  ; IN/OUT: (opt) image data
     Event,$
+    DataArray, $            ; DataArray from main plot                         
     r, $                    ; IN/OUT: (opt) Red.  256-element byte array.
     g, $                    ; IN/OUT: (opt) Green. 256-element byte array.
     b, $                    ; IN/OUT: (opt) Blue. 256-element byte array.
@@ -4247,6 +4325,7 @@ PRO sans_reduction_xroi, $
 
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
+              DataArray:            DataArray,$
               currentROIselectedIndex: 0L,$
               currentSelectedSettings: 0,$
               toolbar_xsize:        toolbar_xsize, $
