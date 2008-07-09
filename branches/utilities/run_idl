@@ -4,4 +4,4 @@
 
 .compile IvsTOFmaker
 
-IvsTOFmaker, ROIfilename='/dfdfdfd', NeXusRuns='1618-1620',instrument='BSS',proposal='IPTS-746'
+IvsTOFmaker, ROIfilename='/dfdfdfd', NeXusRuns='1618-1620',instrument='BSS',proposal='IPTS-746', output='~/SVN/IdlGui/branches/utilities/'

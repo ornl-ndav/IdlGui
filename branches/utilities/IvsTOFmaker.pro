@@ -124,6 +124,8 @@ X    = Fix(RoiStringArray[2])
 END
 
 
+
+
 FUNCTION retrievePixelExcludedArray, ROIFileName
 
 ;put each line of the file into a strarray
