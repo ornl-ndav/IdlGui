@@ -237,7 +237,7 @@ id = widget_info(Event.top,find_by_uname='selection_tool_button')
 widget_control, id, sensitive=0
 
 ;Start the selection tool
-sans_reduction_xroi, image3d, Event ;launch sans_reduction_xroi
+sans_reduction_xroi, image3d, Event, DataArray ;launch sans_reduction_xroi
 END
 
 ;==============================================================================
