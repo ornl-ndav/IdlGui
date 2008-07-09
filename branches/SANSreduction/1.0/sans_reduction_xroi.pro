@@ -304,6 +304,69 @@ ENDIF
 
 END
 
+;------------------------------------------------------------------------------
+PRO plot_removed_selection_in_main_gui, pState
+oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+
+;plot selection
+Event = (*pState).Event
+view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+ERASE
+
+;plot main plot
+DataArray = (*pState).DataArray
+X = 80
+Y = 80
+result = plotData(Event, DataArray, X, Y)
+
+IF (nROIs GE 1) THEN BEGIN
+    
+    CurrentSelectionSettings = (*pState).currentSelectedSettings
+    
+    FOR k=0,(nROIs-1) DO BEGIN
+        
+;initialize the selection of pixels
+;1 for a pixel that has been selected
+;0 for a pixel that is not part of the selection
+        PixelSelectedArray = INTARR(80,80)
+;Determine which pixels have been selected
+        CreateArrayOfPixelSelected, $
+          PixelSelectedArray, $
+          oROIs[k],$
+          CurrentSelectionSettings
+        
+        x_coeff = 4
+        color   = 150
+        FOR i=0,(80L-1) DO BEGIN
+            FOR j=0,(80L-1) DO BEGIN
+                IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+                    plots, i*x_coeff, j*x_coeff, $
+                      /DEVICE, $
+                      COLOR=color
+                    plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                    plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+                      /CONTINUE, $
+                      COLOR=color
+                ENDIF
+            ENDFOR
+        ENDFOR
+
+    ENDFOR
+
+ENDIF
+
+END
+
 ;==============================================================================
 ;This procedure plot in the main gui the current selected selection
 PRO plot_selection_in_main_gui, sEvent
@@ -2521,7 +2584,10 @@ pro xroi__DeleteSelectedROI, pState
     endif else begin
         oROI = (*pState).oROIModel->Get(POSITION=((pos-1) > 0))
         xroi__SetROI, pState, oROI, /SET_LIST_SELECT, /UPDATE_LIST
-    endelse
+    ENDELSE
+
+    plot_removed_selection_in_main_gui, pState
+
 end
 
 ;------------------------------------------------------------------------------
@@ -2949,7 +3015,8 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                          UNAME=prefix + 'name_text')
     wDeleteButton = WIDGET_BUTTON(wRowBase, VALUE='Delete ROI', $
                                   UNAME=prefix + 'delete', $
-                                  UVALUE='DELETE', SENSITIVE=(pos ge 0))
+                                  UVALUE='DELETE', $
+                                  SENSITIVE=(pos ge 0))
 
 ;selection button
     selection_outside_in_tool_tip = 'Detector Pixel is part of the ' + $
