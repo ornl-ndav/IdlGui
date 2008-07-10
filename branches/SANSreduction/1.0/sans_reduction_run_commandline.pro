@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO RunCommandLine, Event
 ;get global structure
@@ -58,6 +58,7 @@ IDLsendToGeek_addLogBookText, Event, cmd_text
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;running command
+print, cmd
 spawn, cmd, listening, err_listening 
 IF (err_listening[0] NE '') THEN BEGIN
 ;in log book
@@ -72,6 +73,9 @@ ENDIF ELSE BEGIN
 ;in status dr frame
     status_text = 'Data Reduction ... DONE WITH SUCCESS!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+    status_text = 'Information from Verbose Mode:'
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+    putTextFieldValue, Event, 'data_reduction_status_frame', listening
 ENDELSE
 ;turn off hourglass
 widget_control,hourglass=0
