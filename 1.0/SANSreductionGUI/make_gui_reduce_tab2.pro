@@ -64,6 +64,18 @@ sEmptyCanTransmissionFileFrame = $
    browse_uname:    'empty_can_transmission_browse_button',$
    file_name_uname: 'empty_can_transmission_file_name_text_field'}
 
+;- Output Folder --------------------------------------------------------------
+XYoff = [10,100]
+sOutputFolderlabel = { size: [XYoff[0],$
+                              sEmptyCanTransmissionFileFrame.yoff+XYoff[1]],$
+                       value: 'Output Folder:'}
+XYoff = [100,-5]                       
+sOutputFolder = { size: [XYoff[0],$
+                         sOutputFolderLabel.size[1]+XYoff[1],$
+                         580],$
+                  value: '~/',$
+                  uname: 'output_folder'}
+                                           
 ;==============================================================================
 ;= Build Widgets ==============================================================
 BaseTab = WIDGET_BASE(REDUCE_TAB,$
@@ -101,5 +113,18 @@ cEmptyCanTransmissionFileFrame = $
           CWFIELD_UNAME   = sEmptyCanTransmissionFileFrame.tf1_uname,$
           BROWSE_UNAME    = sEmptyCanTransmissionFileFrame.browse_uname,$
           FILE_NAME_UNAME = sEmptyCanTransmissionFileFrame.file_name_uname)
+
+;- Output Folder --------------------------------------------------------------
+wOutputFolderLabel = WIDGET_LABEL(BaseTab,$
+                                  XOFFSET   = sOutputFolderLabel.size[0],$
+                                  YOFFSET   = sOutputFolderLabel.size[1],$
+                                  VALUE     = sOutputFolderLabel.value)
+
+wOutputFolder = WIDGET_BUTTON(BaseTab,$
+                              XOFFSET   = sOutputFolder.size[0],$
+                              YOFFSET   = sOutputFolder.size[1],$
+                              SCR_XSIZE = sOutputFolder.size[2],$
+                              VALUE     = sOutputFolder.value,$
+                              UNAME     = sOutputFolder.uname)
 
 END

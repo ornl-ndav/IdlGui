@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,29 +30,29 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 PRO putTextFieldValue, Event, uname, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
-;===============================================================================
+;==============================================================================
 ;This function put the command line in the command line text box
 PRO putCommandLine, Event, cmd
 putTextFieldValue, Event, 'comamnd_line_preview', cmd
 END
 
-;===============================================================================
+;==============================================================================
 PRO putTab1NexusFileName, Event, FileName
 putTextFieldValue, Event, 'archived_text_field', FileName
 END
 
-;===============================================================================
+;==============================================================================
 PRO putMissingArguments, Event, text
 putTextFieldValue, Event, 'data_reduction_missing_arguments', text
 END
 
-;===============================================================================
+;==============================================================================
 ;This function tells in the title of the missing arguments text_field
 ;the number of missing arguments
 PRO putMissingArgNumber, Event, missing_argument_counter
@@ -69,9 +69,15 @@ ENDELSE
 putTextFieldValue, Event, 'missing_arguments_label', text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function put the list of proposal in the proposal droplist
 PRO putProposalList, Event, ProposalList
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 WIDGET_CONTROL, id, SET_VALUE=ProposalList
+END
+
+;------------------------------------------------------------------------------
+PRO putNewButtonValue, Event, uname, string
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=string
 END

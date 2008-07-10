@@ -58,12 +58,15 @@ IDLsendToGeek_addLogBookText, Event, cmd_text
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;running command
-print, cmd
+
+IF ((*global).TESTING EQ 'yes') THEN BEGIN
+    cmd = '~/bin/runenv ' + cmd
+ENDIF
 spawn, cmd, listening, err_listening 
 IF (err_listening[0] NE '') THEN BEGIN
 ;in log book
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
-    IDLsendToGeek_addLogBookText, Event, err_listening
+    IDLsendToGeek_addLogBookText, Event, err_listenign
 ;in status dr frame
     status_text = 'Data Reduction ... FAILED (check log book)!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
@@ -73,9 +76,9 @@ ENDIF ELSE BEGIN
 ;in status dr frame
     status_text = 'Data Reduction ... DONE WITH SUCCESS!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-    status_text = 'Information from Verbose Mode:'
-    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-    putTextFieldValue, Event, 'data_reduction_status_frame', listening
+    logbook_text = 'Information from Verbose Mode:'
+    IDLsendToGeek_addLogBookText, Event, logbook_text
+    IDLsendToGeek_addLogBookText, Event, listening
 ENDELSE
 ;turn off hourglass
 widget_control,hourglass=0

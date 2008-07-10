@@ -183,6 +183,12 @@ CASE Event.id OF
           'empty_can_transmission_file_name_text_field'
     END
 
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'output_folder'): BEGIN
+        BrowseOutputFolder, Event ;_reduce_tab2
+    END
+
 ;==== tab3 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------

@@ -40,6 +40,8 @@ CD, CURRENT = current_folder
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.1'
 DEBUGGING   = 'yes' ;yes/no
+TESTING     = 'yes'  
+;works only on dev and pick up ~/bin/runenv before the command line
 
 ;define initial global values - these could be input via external
 ;file or other means
@@ -55,6 +57,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   TESTING:         TESTING,$
                    application:     APPLICATION,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
@@ -159,13 +162,6 @@ global = PTR_NEW ({version:         VERSION,$
                                               '--dump-bmon-rebin'}}$
                                  })
 
-;debugging version of program
-IF (DEBUGGING EQ 'yes' AND $
-    ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
-    (*global).nexus_path = nexus_path
-ENDIF
-
 MainBaseTitle  = 'SANS Data Reduction GUI'
 MainBaseSize   = [30,25,695,550]
 MainBaseTitle += ' - ' + VERSION
@@ -193,6 +189,44 @@ Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ;==============================================================================
+;debugging version of program
+IF (DEBUGGING EQ 'yes' AND $
+    ucams EQ 'j35') THEN BEGIN
+    nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    (*global).nexus_path = nexus_path
+
+;populate the REDUCE tab to be able to run right away
+;Data File text field (Load Files)
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
+;Time Zero Offset (Parameters)
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='time_zero_offset_detector_uname')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='500'
+    id = WIDGET_INFO(MAIN_BASE, $
+                     FIND_BY_UNAME='time_zero_offset_beam_monitor_uname')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='500'
+;Q range (Parameters)
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmin_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='0.1'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmax_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='5'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='0.1'
+
+;show tab #2 'REDUCE'
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;show tab inside REDUCE
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;Load_files_2
+
+ENDIF
 ;==============================================================================
 
 ;logger message
@@ -205,17 +239,6 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
-
-;Debugging only ---------------------------------------------------------------
-IF (DEBUGGING EQ 'yes' AND $
-    ucams EQ 'j35') THEN BEGIN
-;show tab #2 'REDUCE'
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
-;show tab inside REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;Load_files_2
-ENDIF
 
 END
 
