@@ -32,3 +32,10 @@
 ;
 ;==============================================================================
 
+PRO BrowseOutputFolder, Event
+path  = getButtonValue(Event, 'output_folder')
+title = 'Select an output folder'
+new_path = DIALOG_PICKFILE(/DIRECTORY,PATH=path,TITLE=title,/MUST_EXIST)
+new_path_string = STRJOIN(new_path,'/')
+putNewButtonValue, Event, 'output_folder', new_path_string
+END

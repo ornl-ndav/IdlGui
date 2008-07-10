@@ -119,6 +119,19 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
+;-Output Path-
+output_path = getButtonValue(Event,'output_folder')
+cmd += ' --output='
+IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+    cmd += output_path
+ENDIF ELSE BEGIN
+    cmd += '?'
+    ++missing_argument_counter
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Select an existing outupt folder' + $
+                              ' (LOAD FILES)']
+ENDELSE
+
 ;- PARAMETERS  ----------------------------------------------------------------
 
 ;-geometry file to overwrite
