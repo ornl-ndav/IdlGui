@@ -219,36 +219,41 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 DataArray = (*(*global).DataArray)
-DataXY    = TOTAL(DataArray,1)
-tDataXY   = TRANSPOSE(dataXY)
-X         = (size(tDataXY))(1)
-Y         = X
-IF (X EQ 80) THEN BEGIN
-    xysize = 4
-ENDIF ELSE BEGIN
-    xysize = 1
-ENDELSE
-rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
 
+IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
+    
+    DataXY    = TOTAL(DataArray,1)
+    tDataXY   = TRANSPOSE(dataXY)
+    X         = (size(tDataXY))(1)
+    Y         = X
+    IF (X EQ 80) THEN BEGIN
+        xysize = 4
+    ENDIF ELSE BEGIN
+        xysize = 1
+    ENDELSE
+    rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+    
 ;change format to png file
-thisDevice = !D.NAME
-SET_PLOT, 'Z'
-LOADCT, 5
-TVLCT, red, green, blue, /GET
-set_plot, thisDevice
-ThisImage = BYTSCL(rtDataXY)
-s = size(ThisImage)
-image3d = BYTARR(3,s(1),s(2))
-image3d(0,*,*) = red(ThisImage)
-image3d(1,*,*) = green(ThisImage)
-image3d(2,*,*) = blue(ThisImage)
-
+    thisDevice = !D.NAME
+    SET_PLOT, 'Z'
+    LOADCT, 5
+    TVLCT, red, green, blue, /GET
+    set_plot, thisDevice
+    ThisImage = BYTSCL(rtDataXY)
+    s = size(ThisImage)
+    image3d = BYTARR(3,s(1),s(2))
+    image3d(0,*,*) = red(ThisImage)
+    image3d(1,*,*) = green(ThisImage)
+    image3d(2,*,*) = blue(ThisImage)
+    
 ;hide the Selection Tool Button
-id = widget_info(Event.top,find_by_uname='selection_tool_button')
-widget_control, id, sensitive=0
-
+    id = widget_info(Event.top,find_by_uname='selection_tool_button')
+    widget_control, id, sensitive=0
+    
 ;Start the selection tool
-sans_reduction_xroi, image3d, Event, DataArray ;launch sans_reduction_xroi
+    sans_reduction_xroi, image3d, Event, DataArray ;launch sans_reduction_xroi
+
+ENDIF
 END
 
 ;==============================================================================
