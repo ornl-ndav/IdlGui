@@ -262,8 +262,12 @@ ENDIF
 IF (IntermPlots[3] EQ 1) THEN BEGIN
     cmd += ' ' + (*global).IntermPara.bmon_rebin.flag
 ENDIF
-;combined spectrum of data after beam monitor normalization
+;Fractional Counts and Area after Q Rebinning
 IF (IntermPlots[4] EQ 1) THEN BEGIN
+    cmd += ' ' + (*global).IntermPara.fract_counts.flag
+ENDIF
+;combined spectrum of data after beam monitor normalization
+IF (IntermPlots[5] EQ 1) THEN BEGIN
     cmd += ' ' + (*global).IntermPara.bmnon_wave.flag
     map_status = 1
 ;-Q min, max, width and unit

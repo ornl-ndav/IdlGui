@@ -205,7 +205,7 @@ CASE Event.id OF
         lambda_cut_off_gui, Event ;_reduce_tab2
     END
 
-;= TAB4 (LOG BOOK) ============================================================
+;= TAB3 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek
     END
