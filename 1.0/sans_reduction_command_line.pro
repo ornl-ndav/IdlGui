@@ -232,9 +232,8 @@ IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
     value = getTextFieldValue(Event, 'minimum_lambda_cut_off_value')
     IF (value NE '') THEN BEGIN
         cmd += STRCOMPRESS(value,/REMOVE_ALL)
-        cmd += ',0.0'
     ENDIF ELSE BEGIN
-        cmd += '?,0.0'
+        cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
         missing_arguments_text = [missing_arguments_text, $
