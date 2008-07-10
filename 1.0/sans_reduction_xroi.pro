@@ -251,9 +251,9 @@ IF (nROIs GE 1) THEN BEGIN
  
 ;plot selection
     Event = (*pState).Event
-    view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
+    view_info = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_uname')
     WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
+    WSET, id
     ERASE
     
 ;plot main plot
@@ -310,9 +310,9 @@ oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 
 ;plot selection
 Event = (*pState).Event
-view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
+view_info = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_uname')
 WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
+WSET, id
 ERASE
 
 ;plot main plot
@@ -2913,16 +2913,28 @@ pro xroiInfo_event, sEvent
             xroi__HistogramSelectedROI, pParentState, GROUP=sEvent.top
         ENDCASE
         'selection_half_in': BEGIN
+            WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+            pParentState = sState.pParentState
             xroiInfo_selection_GUI, sEvent, index=0
+            plot_removed_selection_in_main_gui, pParentState
         ENDCASE
         'selection_half_out': BEGIN
+            WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+            pParentState = sState.pParentState
             xroiInfo_selection_GUI, sEvent, index=1
+            plot_removed_selection_in_main_gui, pParentState
         ENDCASE
         'selection_outside_in': BEGIN
+            WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+            pParentState = sState.pParentState
             xroiInfo_selection_GUI, sEvent, index=2
+            plot_removed_selection_in_main_gui, pParentState
         ENDCASE
         'selection_outside_out': BEGIN
+            WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+            pParentState = sState.pParentState
             xroiInfo_selection_GUI, sEvent, index=3
+            plot_removed_selection_in_main_gui, pParentState
         ENDCASE
         'CLOSE': begin
             WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
@@ -3501,12 +3513,15 @@ CASE (CurrentSelectionSettings) OF
     END
 ;out out
     3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 8) 
+        IndexArray = WHERE(tmp_array EQ 16) 
     END
     ELSE:
 ENDCASE
 
-PixelSelectedArray(IndexArray) = 1
+;only if IndexArray is not empty
+IF (SIZE(IndexArray,/N_DIMENSION) EQ 1) THEN BEGIN 
+    PixelSelectedArray(IndexArray) = 1
+ENDIF
 
 END
 
