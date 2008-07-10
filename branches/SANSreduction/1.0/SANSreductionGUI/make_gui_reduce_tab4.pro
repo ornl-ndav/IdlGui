@@ -50,10 +50,11 @@ sInterPlot = $
            ' (WARNING: HUGE FILE!)',$
            'Monitor Spectrum after Rebin to Detector Wavelength' + $
            ' Axis (WARNING: HUGE FILE!)',$
+           'Fractional Counts and Area after Q Rebinning (Two Files)',$
            'Combined Spectrum of Data after Beam Monitor' + $
            ' Normalization'],$
     uname : 'intermediate_group_uname',$
-    value : [0,0,0,0,0]}
+    value : [0,0,0,0,0,0]}
 
 ;- inter#2 hidding base -------------------------------------------------------
 XYoff = [5,43]
@@ -72,7 +73,7 @@ sInter2HiddingLabel = { size:  [XYoff[0],$
                         value: sInterPlot.list[1]+NotAvailableMessage}
 
 ;- Base of --dump-wave-bmmom about lambda -------------------------------------
-XYoff = [0,150]
+XYoff = [0,180]
 sBaseLambda = { size:  [XYoff[0],$
                         XYoff[1],$
                         tab_size[2],$

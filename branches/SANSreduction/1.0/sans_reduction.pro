@@ -144,6 +144,12 @@ global = PTR_NEW ({version:         VERSION,$
                                               ' (WARNING: HUGE FILE !)',$
                                               flag: $
                                               '--dump-wave'},$
+                                fract_counts: {title: $
+                                              'Fractional Counts and Area' + $
+                                               ' after Q Rebinning (Two ' + $
+                                               'Files)',$
+                                              flag: $
+                                              '--dump-frac-rebin'},$
                                 bmon_rebin : {title: $
                                               'Monitor Spectrum after' + $
                                               ' Rebin to Detector' + $
