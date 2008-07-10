@@ -91,7 +91,7 @@ global = PTR_NEW ({version:         VERSION,$
                                                      default: $
                                                      1},$ ;on/OFF
                                 monitor_efficiency_constant: $
-                                '--mon_eff_const',$
+                                '--mon-eff-const',$
                                 verbose: $
                                 '--verbose',$
                                 lambda_cut_off:$
