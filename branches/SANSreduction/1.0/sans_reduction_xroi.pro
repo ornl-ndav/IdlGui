@@ -4136,8 +4136,6 @@ PRO sans_reduction_xroi, $
     ; Create the toolbar.
     wToolbars = WIDGET_BASE(wBase, /ROW, /FRAME)
 
-    subdir = ['resource','bitmaps']
-
     wToolbarBase = WIDGET_BASE(wToolbars, /ROW, SPACE=0, /TOOLBAR)
 ;     wSaveToolButton = WIDGET_BUTTON( $
 ;         wToolbarBase, $
@@ -4162,14 +4160,15 @@ PRO sans_reduction_xroi, $
                         
 ;ROI FILE INFO
     void = WIDGET_BUTTON( $
-        wToolbarBase, $
-        VALUE=FILEPATH('prop.bmp', SUBDIR=subdir), $
-        /BITMAP, $
-        TOOLTIP='Open ROI Information window', $
-        UNAME=prefix + 'info_tool_bttn', $
-        UVALUE='ROI_INFO' $
-        )
+                          wToolbarBase, $
+                          VALUE='images/prop.bmp',$
+                          /BITMAP, $
+                          TOOLTIP='Open ROI Information window', $
+                          UNAME=prefix + 'info_tool_bttn', $
+                          UVALUE='ROI_INFO' $
+                        )
     void = WIDGET_LABEL(wToolbarBase, VALUE=' ')
+
 ;     void = WIDGET_BUTTON( $
 ;         wToolbarBase, $
 ;         VALUE=FILEPATH('copy.bmp', SUBDIR=subdir), $
@@ -4199,7 +4198,8 @@ PRO sans_reduction_xroi, $
                 'TRANSLATE-SCALE': begin
                     wTransScale = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('arrow.bmp', SUBDIR=subdir), $
+                                                 
+                        VALUE='images/arrow.bmp',$
                         /BITMAP, $
                         TOOLTIP='Translate/Scale ROIs', $
                         UNAME=prefix + 'translate-scale_mode', $
@@ -4209,7 +4209,7 @@ PRO sans_reduction_xroi, $
                 'RECTANGLE': begin
                     wRectangle = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('rectangl.bmp', SUBDIR=subdir), $
+                        VALUE='images/rectangl.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Rectangle ROIs', $
                         UNAME=prefix + 'rectangle_mode', $
@@ -4219,7 +4219,7 @@ PRO sans_reduction_xroi, $
                 'ELLIPSE': begin
                     wEllipse = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('ellipse.bmp', SUBDIR=subdir), $
+                        VALUE='images/ellipse.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Ellipse ROIs', $
                         UNAME=prefix + 'ellipse_mode', $
@@ -4229,7 +4229,7 @@ PRO sans_reduction_xroi, $
                 'FREEHAND DRAW': begin
                     wFreePoly = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('freepoly.bmp', SUBDIR=subdir), $
+                        VALUE='images/freepoly.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Freehand ROIs', $
                         UNAME=prefix + 'freehand_mode', $
@@ -4239,7 +4239,7 @@ PRO sans_reduction_xroi, $
                 'POLYGON DRAW': begin
                     wSegPoly = WIDGET_BUTTON($
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('segpoly.bmp', SUBDIR=subdir), $
+                        VALUE='images/segpoly.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Polygon ROIs', $
                         UNAME=prefix + 'polygon_mode', $
@@ -4249,7 +4249,7 @@ PRO sans_reduction_xroi, $
                 'SELECTION': begin
                     wPick = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE=FILEPATH('select.bmp', SUBDIR=subdir), $
+                        VALUE='images/select.bmp',$
                         /BITMAP, $
                         TOOLTIP='Select ROI', $
                         UNAME=prefix + 'selection_mode', $
