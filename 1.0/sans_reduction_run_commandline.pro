@@ -66,7 +66,7 @@ spawn, cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN BEGIN
 ;in log book
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
-    IDLsendToGeek_addLogBookText, Event, err_listenign
+    IDLsendToGeek_addLogBookText, Event, err_listening
 ;in status dr frame
     status_text = 'Data Reduction ... FAILED (check log book)!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
