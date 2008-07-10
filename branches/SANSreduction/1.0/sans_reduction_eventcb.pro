@@ -108,6 +108,10 @@ IF (FullNexusName NE '') THEN BEGIN
 ;change default path
     (*global).nexus_path = new_path
     retrieveNexus, Event, FullNexusName
+;put full path of nexus in reduce tab1
+        putTextFieldValue, Event, $
+          'data_file_name_text_field', $
+          FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
