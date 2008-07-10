@@ -143,7 +143,8 @@ IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Instrument' + $
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- Instrument' + $
                                   ' Geometry File (LOAD FILES)']
     ENDELSE
 ENDIF
@@ -157,7 +158,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Detector Offset ' + $
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Detector Offset ' + $
                               '(PARAMETERS)']
 ENDELSE
 
@@ -169,8 +171,9 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Beam Monitor ' + $
-                              'Offset (PARAMETERS)']
+    missing_arguments_text = [missing_arguments_text, $
+                                  '- Beam Monitor ' + $
+                                  'Offset (PARAMETERS)']
 ENDELSE
 
 ;-monitor efficiency

@@ -49,6 +49,9 @@ END
 
 ;==============================================================================
 PRO putMissingArguments, Event, text
+IF ((SIZE(text))(1) GT 1 AND text[0] EQ '') THEN BEGIN
+    text = text[1:*]
+ENDIF
 putTextFieldValue, Event, 'data_reduction_missing_arguments', text
 END
 

@@ -39,8 +39,8 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.1'
-DEBUGGING   = 'yes' ;yes/no
-TESTING     = 'yes'  
+DEBUGGING   = 'no' ;yes/no
+TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
 
 ;define initial global values - these could be input via external
