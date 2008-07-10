@@ -37,6 +37,9 @@ PRO retrieveNexus, Event, FullNexusName
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 ;retrieve infos
 PROCESSING = (*global).processing
 OK         = (*global).ok
@@ -76,6 +79,10 @@ ENDIF ELSE BEGIN
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
 ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+
 END
 
 
