@@ -241,62 +241,6 @@ ENDIF
 IF (IntermPlots[3] EQ 1) THEN BEGIN
     cmd += ' ' + (*global).IntermPara.bmon_rebin.flag
 ENDIF
-;Fractional Counts and Area after Q Rebinning
-IF (IntermPlots[4] EQ 1) THEN BEGIN
-    cmd += ' ' + (*global).IntermPara.fract_counts.flag
-ENDIF
-;combined spectrum of data after beam monitor normalization
-IF (IntermPlots[5] EQ 1) THEN BEGIN
-    cmd += ' ' + (*global).IntermPara.bmnon_wave.flag
-    map_status = 1
-;-Q min, max, width and unit
-    Lambdamin   = getTextFieldValue(Event,'lambda_min_text_field')
-    Lambdamax   = getTextFieldValue(Event,'lambda_max_text_field')
-    Lambdawidth = getTextFieldValue(Event,'lambda_width_text_field')
-    Lambdaunits = getCWBgroupValue(Event,'lambda_scale_group')
-    cmd += ' ' + (*global).IntermPara.bmnon_wave.flag1 + '='
-    IF (Lambdamin NE '') THEN BEGIN
-        cmd += STRCOMPRESS(Lambdamin,/REMOVE_ALL)
-    ENDIF ELSE BEGIN
-        cmd += '?'
-        cmd_status = 0
-        ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
-                                  'minimum ' + $
-                                  '(INTERMEDIATE FILES)']
-    ENDELSE
-    cmd += ','
-    IF (Lambdamax NE '') THEN BEGIN
-        cmd += STRCOMPRESS(Lambdamax,/REMOVE_ALL)
-    ENDIF ELSE BEGIN
-        cmd += '?'
-        cmd_status = 0
-        ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
-                                  'maximum ' + $
-                                  '(INTERMEDIATE FILES)']
-    ENDELSE
-    cmd += ','
-    IF (Lambdawidth NE '') THEN BEGIN
-        cmd += STRCOMPRESS(Lambdawidth,/REMOVE_ALL)
-    ENDIF ELSE BEGIN
-        cmd += '?'
-        cmd_status = 0
-        ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda ' + $
-                                  'width ' + $
-                                  '(INTERMEDIATE FILES)']
-    ENDELSE
-    cmd += ','
-    IF (Lambdaunits EQ 0) THEN BEGIN
-        cmd += 'linear'
-    ENDIF ELSE BEGIN
-        cmd += 'log'
-    ENDELSE
-ENDIF ELSE BEGIN
-    map_status = 0
-ENDELSE
-map_base, Event, 'lambda_base', map_status
 
 ;- Put cmd in the text box -
 putCommandLine, Event, cmd

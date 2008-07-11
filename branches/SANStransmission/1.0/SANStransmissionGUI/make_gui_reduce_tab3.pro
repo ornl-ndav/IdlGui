@@ -49,12 +49,9 @@ sInterPlot = $
            'Data of Each Pixel after Wavelength Conversion' + $
            ' (WARNING: HUGE FILE!)',$
            'Monitor Spectrum after Rebin to Detector Wavelength' + $
-           ' Axis (WARNING: HUGE FILE!)',$
-           'Fractional Counts and Area after Q Rebinning (Two Files)',$
-           'Combined Spectrum of Data after Beam Monitor' + $
-           ' Normalization'],$
-    uname : 'intermediate_group_uname',$
-    value : [0,0,0,0,0,0]}
+           ' Axis (WARNING: HUGE FILE!)'],$
+           uname : 'intermediate_group_uname',$
+    value : [0,0,0,0]}
 
 ;- inter#2 hidding base -------------------------------------------------------
 XYoff = [5,43]
