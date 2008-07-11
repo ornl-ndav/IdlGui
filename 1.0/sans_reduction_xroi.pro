@@ -370,6 +370,10 @@ END
 ;==============================================================================
 ;This procedure plot in the main gui the current selected selection
 PRO plot_selection_in_main_gui, sEvent
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 ; Determine which ROI, if any, is currently selected.
@@ -425,6 +429,9 @@ FOR i=0,(80L-1) DO BEGIN
         ENDIF
     ENDFOR
 ENDFOR
+
+;turn off hourglass
+widget_control,hourglass=0
 
 END
 
@@ -712,6 +719,23 @@ pro xroi_event, sEvent
     end
 
     'ELLIPSE': begin
+        ; Ellipse ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'ELLIPSE' then begin
+            (*pState).mode = 'ELLIPSE'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'ELLIPSE_EMPTY': begin
         ; Ellipse ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
         if (*pState).mode ne 'ELLIPSE' then begin
@@ -1152,6 +1176,32 @@ pro xroi__ButtonPress, sEvent
             endif
         end
 
+        'ELLIPSE_EMPTY': begin
+            if (sEvent.press eq 1) then begin  ; Left mouse button.
+                ; Change the color of the previously selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
+
+                 ; Create a new ellipse region.
+                 oROI = OBJ_NEW('IDLgrROI', $
+                        COLOR=(*pState).sel_rgb, $
+                        STYLE=0 $
+                        )
+
+                 (*pState).oCurrROI = oROI
+                 (*pState).oModel->Add, oROI
+
+                 ; Initialize the ellipse as a single point.
+                 oROI->AppendData, [xImage, yImage, 0]
+
+                 (*pState).oWindow->Draw, (*pState).oView
+
+                 (*pState).bButtonDown = 1b
+                 (*pState).buttonXY = [xImage, yImage]
+            endif
+        end
+
         'FREEHAND DRAW': begin
             if (sEvent.press eq 1) then begin
                 oROI = (*pState).oCurrROI
@@ -1452,6 +1502,69 @@ COMPILE_OPT idl2, hidden
         end
 
         'ELLIPSE': begin
+            if (sEvent.release ne 1) then break  ; Left mouse button only.
+            if ((*pState).bButtonDown ne 1) then break  ; button was down
+
+            ; Reset button down state.
+            (*pState).bButtonDown = 0b
+
+            oROI = (*pState).oCurrROI
+            if (not OBJ_VALID(oROI)) then break
+
+            ; Ensure that the ellipse has at least 4 vertices.
+            oROI->GetProperty, DATA=roiData
+            
+            if ((N_ELEMENTS(roiData)/3) ge 4) then begin
+                ; The ellipse region is valid.  Give it a name
+                ; and add it to the appropriate containers.
+                oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+                (*pState).oModel->Remove, oROI
+                (*pState).oROIModel->Add, oROI
+                (*pState).oROIGroup->Add, oROI
+                if OBJ_VALID((*pState).oRegionsOut) then $
+                    (*pState).oRegionsOut->Add, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Activate appropriate tool buttons.
+                if lmgr(/demo) ne 1 then begin
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
+                endif
+
+                ; Set the region as current.
+                xroi__SetROI, pState, oROI, /UPDATE_LIST, $
+                    /SET_LIST_SELECT
+
+                ; If this is the first region, bring up the
+                ; region information dialog.
+                if ((*pState).bFirstROI eq 1b) then begin
+                    WIDGET_CONTROL, /HOURGLASS
+                    (*pState).bFirstROI = 0b
+                    xroiInfo, pState, GROUP_LEADER=sEvent.top
+                endif
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
+
+            endif else begin
+                ; Fewer than 4 vertices; delete.
+                (*pState).oModel->Remove, oROI
+                OBJ_DESTROY, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Reset color of formerly selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, $
+                        COLOR=(*pState).sel_rgb
+
+                (*pState).oWindow->Draw, (*pState).oView
+            endelse
+
+        end
+        'ELLIPSE_EMPTY': begin
             if (sEvent.release ne 1) then break  ; Left mouse button only.
             if ((*pState).bButtonDown ne 1) then break  ; button was down
 
@@ -1910,6 +2023,63 @@ pro xroi__Motion, sEvent
         end
 
         'ELLIPSE': begin
+            oROI = (*pState).oCurrROI
+            if (OBJ_VALID(oROI) EQ 0) then return
+
+            ; If button down, reposition radii.
+            if ((*pState).bButtonDown NE 0) then begin
+
+                style_point = 0
+                style_line = 1
+                style_closed = 2
+
+                x0 = (*pState).buttonXY[0]
+                y0 = (*pState).buttonXY[1]
+                x1 = xImage
+                y1 = yImage
+
+                if (x0 eq x1) then begin
+                    if (y0 eq y1) then begin
+                        newX = [x0]
+                        newY = [y0]
+                        newZ = [0.0]
+                        style = style_point
+                    endif else begin
+                        vertRad = (y1 gt y0) ? (y1-y0) : (y0-y1)
+                        newX = [x0,x0]
+                        newY = [y0-vertRad,y0+vertRad]
+                        newZ = [0.0,0.0]
+                        style = style_line
+                    endelse
+                endif else if (y0 eq y1) then begin
+                    horizRad = (x1 gt x0) ? (x1-x0) : (x0-x1)
+                    newX = [x0-horizRad,x0+horizRad]
+                    newY = [y0,y0]
+                    newZ = [0.0,0.0]
+                    style = style_line
+                endif else begin
+                    horizRad = (x1 gt x0) ? (x1-x0) : (x0-x1)
+                    vertRad = (y1 gt y0) ? (y1-y0) : (y0-y1)
+
+                    ; Number of vertices is dependent upon the greater
+                    ; of the two radii.
+                    nPts = (horizRad > vertRad) * 4
+                    a = FINDGEN(nPts) * ( (2 * !PI) / (nPts-1) )
+                    newX = COS(a) * horizRad + x0
+                    newY = SIN(a) * vertRad + y0
+                    newZ = REPLICATE(0.0, nPts)
+                    style = style_closed
+                endelse
+
+                oROI->GetProperty, N_VERTS=nVerts
+                oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+                oROI->SetProperty, STYLE=style
+
+                (*pState).oWindow->Draw, (*pState).oView
+            endif
+        end
+
+        'ELLIPSE_EMPTY': begin
             oROI = (*pState).oCurrROI
             if (OBJ_VALID(oROI) EQ 0) then return
 
