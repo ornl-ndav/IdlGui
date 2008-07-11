@@ -3878,21 +3878,29 @@ PRO sans_reduction_xroi, $
     demo_system = ARG_PRESENT(wBase)
 
     if N_ELEMENTS(tools) eq 0 then begin
-        _tools = STRUPCASE(['Translate-Scale', 'Rectangle', 'Ellipse', $
-            'Freehand Draw', 'Polygon Draw', 'Selection'])
+        _tools = STRUPCASE(['Translate-Scale', $
+                            'Rectangle', $
+                            'Rectangle_empty',$
+                            'Ellipse', $
+                            'Ellipse_empty',$
+                            'Freehand Draw', $
+                            'Polygon Draw', $
+                            'Selection'])
     endif else begin
         _tools = STRUPCASE(tools)
     endelse
 
     if SIZE(_tools, /TNAME) ne 'STRING' then $
         MESSAGE, 'TOOLS must be a string or string array.'
-    if N_ELEMENTS(_tools) gt 6 then $
+    if N_ELEMENTS(_tools) gt 8 then $
         MESSAGE, 'TOOLS cannot have more than six elements.'
     for i=0,N_ELEMENTS(_tools)-1 do begin
         case STRUPCASE(_tools[i]) of
             'TRANSLATE-SCALE':
             'RECTANGLE':
+            'RECTANGLE_EMPTY':
             'ELLIPSE':
+            'ELLIPSE_EMPTY':
             'FREEHAND DRAW':
             'POLYGON DRAW':
             'SELECTION':
@@ -4215,7 +4223,18 @@ PRO sans_reduction_xroi, $
                         UNAME=prefix + 'rectangle_mode', $
                         UVALUE='RECTANGLE' $
                         )
-                end
+                END
+                'RECTANGLE_EMPTY': begin
+                    wRectangle = $
+                      WIDGET_BUTTON( $
+                                     wExcToolbarBase, $
+                                     VALUE='images/rectangle_empty.bmp',$
+                                     /BITMAP, $
+                                     TOOLTIP='Draw Rectangle ROIs', $
+                                     UNAME=prefix + 'outside_rectangle_mode', $
+                                     UVALUE='RECTANGLE_EMPTY' $
+                                   )
+                END
                 'ELLIPSE': begin
                     wEllipse = WIDGET_BUTTON( $
                         wExcToolbarBase, $
@@ -4225,7 +4244,18 @@ PRO sans_reduction_xroi, $
                         UNAME=prefix + 'ellipse_mode', $
                         UVALUE='ELLIPSE' $
                         )
-                end
+                END
+                'ELLIPSE_EMPTY': begin
+                    wEllipse = $
+                      WIDGET_BUTTON( $
+                                     wExcToolbarBase, $
+                                     VALUE='images/ellipse_empty.bmp',$
+                                     /BITMAP, $
+                                     TOOLTIP='Draw Ellipse ROIs', $
+                                     UNAME=prefix + 'outside_ellipse_mode', $
+                                     UVALUE='ELLIPSE_EMPTY' $
+                                   )
+                END
                 'FREEHAND DRAW': begin
                     wFreePoly = WIDGET_BUTTON( $
                         wExcToolbarBase, $
