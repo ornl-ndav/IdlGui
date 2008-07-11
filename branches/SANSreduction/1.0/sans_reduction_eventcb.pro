@@ -194,6 +194,12 @@ IF (RunNumber NE 0) THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           full_nexus_name
+;predefined default reduce output file name
+        defaultReduceFileName = getDefaultReduceFileName(full_nexus_name[0])
+        putTextFieldValue, $
+          Event, $
+          'output_file_name', $
+          defaultReduceFileName
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
