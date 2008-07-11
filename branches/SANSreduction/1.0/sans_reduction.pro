@@ -140,7 +140,9 @@ global = PTR_NEW ({version:         VERSION,$
                                              ' after Beam Monitor ' + $
                                              'Normalization',$
                                              flag: $
-                                             '--dump-wave-bmnom'},$
+                                             '--dump-wave-bmnom',$
+                                             flag1: $
+                                             '--lambda-bins'},$
                                 wave:        {title: $
                                               'Data of Each Pixel after' + $
                                               ' Wavelength Conversion' + $

@@ -299,7 +299,7 @@ IF (IntermPlots[5] EQ 1) THEN BEGIN
     Lambdamax   = getTextFieldValue(Event,'lambda_max_text_field')
     Lambdawidth = getTextFieldValue(Event,'lambda_width_text_field')
     Lambdaunits = getCWBgroupValue(Event,'lambda_scale_group')
-    cmd += ' ' + (*global).ReducePara.monitor_rebin + '='
+    cmd += ' ' + (*global).IntermPara.bmnon_wave.flag1 + '='
     IF (Lambdamin NE '') THEN BEGIN
         cmd += STRCOMPRESS(Lambdamin,/REMOVE_ALL)
     ENDIF ELSE BEGIN
