@@ -694,6 +694,23 @@ pro xroi_event, sEvent
         endif
     end
 
+    'RECTANGLE_EMPTY': begin
+        ; Rectangle ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'RECTANGLE_EMPTY' then begin
+            (*pState).mode = 'RECTANGLE_EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
     'ELLIPSE': begin
         ; Ellipse ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
@@ -1083,6 +1100,32 @@ pro xroi__ButtonPress, sEvent
             endif
         end
 
+        'RECTANGLE_EMPTY': begin
+            if (sEvent.press eq 1) then begin  ; Left mouse button.
+                ; Change the color of the previously selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
+
+                 ; Create a new rectangle region.
+                 oROI = OBJ_NEW('IDLgrROI', $
+                        COLOR=(*pState).sel_rgb, $
+                        STYLE=0 $
+                        )
+
+                 (*pState).oCurrROI = oROI
+                 (*pState).oModel->Add, oROI
+
+                 ; Set initial corner for the rectangle.
+                 oROI->AppendData, [xImage, yImage, 0]
+
+                 (*pState).oWindow->Draw, (*pState).oView
+
+                 (*pState).bButtonDown = 1b
+                 (*pState).buttonXY = [xImage, yImage]
+            endif
+        end
+
         'ELLIPSE': begin
             if (sEvent.press eq 1) then begin  ; Left mouse button.
                 ; Change the color of the previously selected ROI.
@@ -1286,6 +1329,67 @@ COMPILE_OPT idl2, hidden
         end
 
         'RECTANGLE': begin
+            if (sEvent.release ne 1) then break  ; Left mouse button.
+            if ((*pState).bButtonDown ne 1) then break  ; button was down
+
+            ; Reset button down state.
+            (*pState).bButtonDown = 0b
+
+            oROI = (*pState).oCurrROI
+            if (not OBJ_VALID(oROI)) then break
+
+            ; Ensure that the rectangle has at 4 vertices.
+            oROI->GetProperty, DATA=roiData
+            if ((N_ELEMENTS(roiData)/3) eq 4) then begin
+                ; The rectangle region is valid.  Give it a name
+                ; and add it to the appropriate containers.
+                oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+                (*pState).oModel->Remove, oROI
+                (*pState).oROIModel->Add, oROI
+                (*pState).oROIGroup->Add, oROI
+                if OBJ_VALID((*pState).oRegionsOut) then $
+                    (*pState).oRegionsOut->Add, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Activate appropriate tool buttons.
+                if lmgr(/demo) ne 1 then begin
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
+                endif
+
+                ; Set the region as current.
+                xroi__SetROI, pState, oROI, /UPDATE_LIST, $
+                    /SET_LIST_SELECT
+
+                ; If this is the first region, bring up the
+                ; region information dialog.
+                if ((*pState).bFirstROI eq 1b) then begin
+                    WIDGET_CONTROL, /HOURGLASS
+                    (*pState).bFirstROI = 0b
+                    xroiInfo, pState, GROUP_LEADER=sEvent.top
+                endif
+            endif else begin
+                ; Fewer than 4 vertices; delete.
+                (*pState).oModel->Remove, oROI
+                OBJ_DESTROY, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Reset color of formerly selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, $
+                        COLOR=(*pState).sel_rgb
+
+                (*pState).oWindow->Draw, (*pState).oView
+            endelse
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
+
+        end
+        'RECTANGLE_EMPTY': begin
             if (sEvent.release ne 1) then break  ; Left mouse button.
             if ((*pState).bButtonDown ne 1) then break  ; button was down
 
@@ -1728,6 +1832,45 @@ pro xroi__Motion, sEvent
         end
 
         'RECTANGLE': begin
+            oROI = (*pState).oCurrROI
+            if (OBJ_VALID(oROI) EQ 0) then return
+
+            ; If button down, reposition rectangle corner.
+            if ((*pState).bButtonDown NE 0) then begin
+
+                style_point = 0
+                style_line = 1
+                style_closed = 2
+
+                x0 = (*pState).buttonXY[0]
+                y0 = (*pState).buttonXY[1]
+                x1 = xImage
+                y1 = yImage
+                if (x0 eq x1) then begin
+                    if (y0 eq y1) then begin
+                        newBox = [[x0,y0,0.0]]
+                        style = style_point
+                    endif else begin
+                        newBox = [[x0,y0,0.0], [x0,y1,0.0]]
+                        style = style_line
+                    endelse
+                endif else if (y0 eq y1) then begin
+                    newBox = [[x0,y0,0.0], [x1,y0,0.0]]
+                    style = style_line
+                endif else begin
+                    newBox = [[x0,y0,0.0],[x1,y0,0.0],[x1,y1,0.0],[x0,y1,0.0]]
+                    style = style_closed
+                endelse
+
+                oROI->GetProperty, N_VERTS=nVerts
+                oROI->ReplaceData, newBox, START=0, FINISH=nVerts-1
+                oROI->SetProperty, STYLE=style
+
+                (*pState).oWindow->Draw, (*pState).oView
+            endif
+        end
+
+        'RECTANGLE_EMPTY': begin
             oROI = (*pState).oCurrROI
             if (OBJ_VALID(oROI) EQ 0) then return
 
@@ -4516,7 +4659,7 @@ PRO sans_reduction_xroi, $
         X: 0, Y: (ydim - yScrollSize) > 0}
 
     XMANAGER, $
-        'xroi', $
+        'xroi', $  ;name of event to run
         wBase, $
         NO_BLOCK=KEYWORD_SET(block) EQ 0, $
         CLEANUP='xroi__cleanup'
