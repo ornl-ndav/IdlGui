@@ -32,11 +32,11 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab4, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$
-             uname: 'reduce_tab4_base',$
+             uname: 'reduce_tab3_base',$
              title: tab_title}
 
 ;- Intermediate plot list -----------------------------------------------------

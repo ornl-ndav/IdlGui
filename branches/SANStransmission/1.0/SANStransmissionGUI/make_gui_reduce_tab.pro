@@ -43,10 +43,9 @@ sReduceBase = { size:  MainTabSize,$
 sReduceTab = { size:   [sReduceBase.size[0:2],$
                         sReduceBase.size[3]-160],$
                uname:  'reduce_tab',$
-               title:  {tab1: ' LOAD FILES (1)',$
-                        tab2: ' LOAD FILES (2)',$
-                        tab3: ' PARAMETERS ',$
-                        tab4: ' INTERMEDIATE FILES'}}
+               title:  {tab1: ' LOAD FILES ',$
+                        tab2: ' PARAMETERS ',$
+                        tab3: ' INTERMEDIATE FILES'}}
 
 ;- data reduction status ------------------------------------------------------
 XYoff = [160,3]
@@ -120,14 +119,11 @@ make_gui_reduce_tab1, REDUCE_TAB, $
                       sReduceTab.title.tab1, $
                       global
 
-;- Build LOAD FILES tab (tab #2) ----------------------------------------------
+;- Build PARAMETERS tab (tab #2) ----------------------------------------------
 make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
 
-;- Build PARAMETERS tab (tab #4) ----------------------------------------------
+;- Build INTERMEDIATE FILES tab (tab #3) --------------------------------------
 make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3
-
-;- Build INTERMEDIATE FILES tab (tab #4) --------------------------------------
-make_gui_reduce_tab4, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab4
 
 ;- data reduction status ------------------------------------------------------
 wDRstatus = WIDGET_LABEL(wReduceBase,$

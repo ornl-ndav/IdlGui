@@ -45,7 +45,7 @@ missing_argument_counter = 0
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
 
-;- LOAD FILES TAB (1) ---------------------------------------------------------
+;- LOAD FILES TAB -------------------------------------------------------------
 
 ;-Data File-
 file_run = getTextFieldValue(Event,'data_file_name_text_field')
@@ -72,26 +72,6 @@ file_run = getTextFieldValue(Event,'transm_back_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.transm_back.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
-
-;- LOAD FILES TAB (2) ---------------------------------------------------------
-
-;-Sample Data Transmission-
-file_run = getTextFieldValue(Event, $
-                             'sample_data_transmission_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.sample_data_trans.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
-
-;-Emtpy Can transmisison-
-file_run = getTextFieldValue(Event, $
-                             'empty_can_transmission_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.empty_can_trans.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
