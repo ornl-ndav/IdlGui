@@ -37,8 +37,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 CD, CURRENT = current_folder
 
-APPLICATION = 'SANSreduction'
-VERSION     = '1.0.1'
+APPLICATION = 'SANStranslation'
+VERSION     = '1.0.0'
 DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
@@ -164,7 +164,7 @@ global = PTR_NEW ({version:         VERSION,$
                                               '--dump-bmon-rebin'}}$
                                  })
 
-MainBaseTitle  = 'SANS Data Reduction GUI'
+MainBaseTitle  = 'SANS Data Transmission GUI'
 MainBaseSize   = [30,25,695,550]
 MainBaseTitle += ' - ' + VERSION
 
@@ -194,7 +194,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;debugging version of program
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    nexus_path           = '~/SVN/IdlGui/branches/SANStransmission/1.0'
     (*global).nexus_path = nexus_path
 
 ;populate the REDUCE tab to be able to run right away
@@ -246,7 +246,7 @@ END
 
 ;==============================================================================
 ; Empty stub procedure used for autoloading.
-PRO sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO sans_transmission, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 

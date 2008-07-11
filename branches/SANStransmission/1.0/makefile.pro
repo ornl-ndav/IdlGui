@@ -8,6 +8,6 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "loadct",/either
 resolve_routine, "errplot",/either
 
-save,/routines,filename = CurrentFolder + '/sans_reduction.sav'
+save,/routines,filename = CurrentFolder + '/sans_transmission.sav'
 exit
 
