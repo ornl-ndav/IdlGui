@@ -31,6 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+        RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+        RunNumber = ''
+    ENDELSE
+ENDIF
+default_name = 'SANS' 
+IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+ENDIF
+DateIso = GenerateIsoTimeStamp()
+default_name += '_' + DateIso
+default_name += '.txt'
+RETURN, default_name
+END
+
+;------------------------------------------------------------------------------
 PRO retrieveNexus, Event, FullNexusName
 
 ;get global structure
@@ -119,6 +139,12 @@ IF (FullNexusName NE '') THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           FullNexusName
+;predefined default reduce output file name
+        defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
+        putTextFieldValue, $
+          Event, $
+          'output_file_name', $
+          defaultReduceFileName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''

@@ -26,12 +26,14 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run IDLgetMetadata__define.pro
 .run sans_reduction_put.pro
 .run sans_reduction_get.pro
 .run IDLsendToGeek__define.pro
 .run IDLgetNexusData__define.pro
 .run sans_reduction_plot.pro
 .run sans_reduction_gui.pro
+.run sans_reduction_time.pro
 
 ;procedures
 .run sans_reduction_reduce_tab1.pro

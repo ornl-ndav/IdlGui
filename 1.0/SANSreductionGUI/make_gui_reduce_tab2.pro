@@ -69,12 +69,24 @@ XYoff = [10,100]
 sOutputFolderlabel = { size: [XYoff[0],$
                               sEmptyCanTransmissionFileFrame.yoff+XYoff[1]],$
                        value: 'Output Folder:'}
-XYoff = [100,-5]                       
+XYoff = [120,-5]                       
 sOutputFolder = { size: [XYoff[0],$
                          sOutputFolderLabel.size[1]+XYoff[1],$
-                         580],$
+                         560],$
                   value: '~/',$
                   uname: 'output_folder'}
+
+;- Output File Name ----------------------------------------------------------
+XYoff = [10,30]
+sOutputFileLabel = { size: [XYoff[0],$
+                            sOutputFolderLabel.size[1]+XYoff[1]],$
+                     value: 'Output File Name:'}
+XYoff = [120,-5]
+sOutputFile = { size: [XYoff[0],$
+                       sOutputFileLabel.size[1]+XYoff[1],$
+                       560],$
+                value: '',$
+                uname: 'output_file_name'}
                                            
 ;==============================================================================
 ;= Build Widgets ==============================================================
@@ -127,4 +139,22 @@ wOutputFolder = WIDGET_BUTTON(BaseTab,$
                               VALUE     = sOutputFolder.value,$
                               UNAME     = sOutputFolder.uname)
 
+;- Output File --------------------------------------------------------------
+wOutputFileLabel = WIDGET_LABEL(BaseTab,$
+                                  XOFFSET   = sOutputFileLabel.size[0],$
+                                  YOFFSET   = sOutputFileLabel.size[1],$
+                                  VALUE     = sOutputFileLabel.value)
+
+
+wOutputFile = WIDGET_TEXT(BaseTab,$
+                          XOFFSET = sOutputFile.size[0],$
+                          YOFFSET = sOutputFile.size[1],$
+                          SCR_XSIZE = sOutputFile.size[2],$
+                          VALUE     = sOutputFile.value,$
+                          UNAME     = sOutputFile.uname,$
+                          /EDITABLE,$
+                          /ALL_EVENTS,$
+                          /ALIGN_LEFT)
+
 END
+
