@@ -79,6 +79,30 @@ sTransmBackFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      browse_uname:    'transm_back_browse_button',$
                      file_name_uname: 'transm_back_file_name_text_field'}
 
+;- Output Folder --------------------------------------------------------------
+XYoff = [10,80]
+sOutputFolderlabel = { size: [XYoff[0],$
+                              sTransmBackFileFrame.yoff+XYoff[1]],$
+                       value: 'Output Folder:'}
+XYoff = [120,-5]                       
+sOutputFolder = { size: [XYoff[0],$
+                         sOutputFolderLabel.size[1]+XYoff[1],$
+                         560],$
+                  value: '~/',$
+                  uname: 'output_folder'}
+
+;- Output File Name ----------------------------------------------------------
+XYoff = [10,30]
+sOutputFileLabel = { size: [XYoff[0],$
+                            sOutputFolderLabel.size[1]+XYoff[1]],$
+                     value: 'Output File Name:'}
+XYoff = [120,-5]
+sOutputFile = { size: [XYoff[0],$
+                       sOutputFileLabel.size[1]+XYoff[1],$
+                       560],$
+                value: '',$
+                uname: 'output_file_name'}
+
 ;==============================================================================
 ;= Build Widgets ==============================================================
 BaseTab1 = WIDGET_BASE(REDUCE_TAB,$
@@ -133,4 +157,35 @@ cTransmBackFileFrame = $
           CWFIELD_UNAME   = sTransmBackFileFrame.tf1_uname,$
           BROWSE_UNAME    = sTransmBackFileFrame.browse_uname,$
           FILE_NAME_UNAME = sTransmBackFileFrame.file_name_uname)
+
+;- Output Folder --------------------------------------------------------------
+wOutputFolderLabel = WIDGET_LABEL(BaseTab1,$
+                                  XOFFSET   = sOutputFolderLabel.size[0],$
+                                  YOFFSET   = sOutputFolderLabel.size[1],$
+                                  VALUE     = sOutputFolderLabel.value)
+
+wOutputFolder = WIDGET_BUTTON(BaseTab1,$
+                              XOFFSET   = sOutputFolder.size[0],$
+                              YOFFSET   = sOutputFolder.size[1],$
+                              SCR_XSIZE = sOutputFolder.size[2],$
+                              VALUE     = sOutputFolder.value,$
+                              UNAME     = sOutputFolder.uname)
+
+;- Output File --------------------------------------------------------------
+wOutputFileLabel = WIDGET_LABEL(BaseTab1,$
+                                  XOFFSET   = sOutputFileLabel.size[0],$
+                                  YOFFSET   = sOutputFileLabel.size[1],$
+                                  VALUE     = sOutputFileLabel.value)
+
+
+wOutputFile = WIDGET_TEXT(BaseTab1,$
+                          XOFFSET = sOutputFile.size[0],$
+                          YOFFSET = sOutputFile.size[1],$
+                          SCR_XSIZE = sOutputFile.size[2],$
+                          VALUE     = sOutputFile.value,$
+                          UNAME     = sOutputFile.uname,$
+                          /EDITABLE,$
+                          /ALL_EVENTS,$
+                          /ALIGN_LEFT)
+
 END
