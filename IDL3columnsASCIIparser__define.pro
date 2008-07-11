@@ -50,12 +50,15 @@ function modtag, init_str
   
 end
 
-FUNCTION READ_DATA, file
+FUNCTION READ_DATA, file, half
   ;Open the data file.
   OPENR, 1, file
   
+  print, "READING"
+  
   ;Set up variables
   line = strarr(1)
+  line2 = strarr(1)
   tmp = ''
   i = 0
   
@@ -63,7 +66,22 @@ FUNCTION READ_DATA, file
   WHILE(~EOF(1)) DO BEGIN
     READF,1,tmp
     ;Check for blank line
-    if (tmp EQ '') then break
+    if (tmp EQ '') then begin
+      if half eq 2 then begin
+        i = 0
+        WHILE(~EOF(1)) DO BEGIN
+          READF,1,tmp
+          if (i eq 0) then begin
+            line2[i] = tmp
+            i = 1
+          endif else begin
+            line2 = [line2, tmp]
+          endelse
+        ENDWHILE
+      endif else begin
+        break
+      endelse
+    endif
     ;Put data in a string array
     if (i eq 0) then begin
       line[i] = tmp
@@ -73,10 +91,14 @@ FUNCTION READ_DATA, file
     endelse
   ENDWHILE
   
+  
+  print, "DONE"
+  
+  
   ;Close file and return the string
   close, 1
-  return, line
-  
+  if half eq 1 then return, line
+  if half eq 2 then return, line2
 END
 
 function format, init_str, tag
@@ -122,12 +144,164 @@ end
 
 
 
+function arrange, data
+
+  ;seperate comments from actual data
+  n = N_ELEMENTS(data)
+  comments = data[0 : 2]
+  just_data = data[3 : n-1]
+  
+  
+  ;put data into a float array
+  lines = n_elements(just_data)-1
+  array = fltarr(lines, 3)
+  for i = 0, lines-1 do begin
+    temp = just_data[i]
+    limit = n_elements(temp)
+    for b = 0, limit- 1 do begin
+      array[i,b] = temp[b]
+    endfor
+  endfor
+  
+  
+  
+  
+  
+  ;parse the comments
+  tmp = ptrarr(3, /allocate_heap)
+  for i = 0, 2 do begin
+    *tmp[i] =  strtrim(STRSPLIT(comments[i], '(,)', /extract, /PRESERVE_NULL), 2)
+  endfor
+  
+  
+  ;  *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
+  ; strtrim(STRSPLIT(all_data[2], '()', /extract), 2)
+  
+  ; lines = n_elements(comments)-1
+  
+  ; for i = 3, lines do begin
+  ;   temp =  float(STRSPLIT(comments[start], /extract, /PRESERVE_NULL))
+  ;   print, temp
+  ;   print, double(temp)
+  ;   new[i] = temp
+  ; endfor
+  
+  
+  ;Put it all into a structure
+  Struct = { Value: array,$
+    x: (*tmp[0])[3],$
+    y: (*tmp[0])[4],$
+    bank: (*tmp[0])[1]}
+    
+    
+  return, Struct
+end
+
+function break_off, data
+
+  print, "STARTING BREAK_OFF"
+  cntblanks = 0
+  data_size = n_elements(data)
+  
+  ;count the blank lines in the file
+  for i = 0, data_size-1 do begin
+    if data[i] eq '' then begin
+      cntblanks++
+    endif
+  endfor
+  
+  ;Divide the text into datasets
+  pntr = ptrarr(cntblanks, /allocate_heap)
+  temp = strarr(1)
+  start_at = 1
+  b = 0
+  i = 0
+  While i ne cntblanks do begin
+    while b ne data_size do begin
+      if data[b] ne '' then begin
+        temp = [temp,data[b]]
+      endif else begin
+        break
+      endelse
+      b++
+    endwhile
+    end_at = n_elements(temp) - 1
+    *pntr[i] = temp[start_at : end_at]
+    start_at = end_at +1
+    b++
+    i++
+  endwhile
+  print, "DONE"
+  print, "=============================================="
+  return, pntr
+end
+
+
+function IDL3columnsASCIIparser::getData
+  all_data = READ_DATA(self.path, 2)
+  ; for i = 0, n_elements(all_data) - 1 do begin
+  ; print, all_data[i]
+  ; endfor
+  
+  ;break off into an array of pointers
+  data = break_off(all_data)
+  n = n_elements(data)
+  
+  ; Organize the data into structures instead of arrays
+  for i = 0, n-1 do begin
+    *data[i] = arrange(*data[i])
+  endfor
+ 
+  
+  ;value = parseData(all_data)
+  ;n_arrays = 10
+  ;tmp = ptrarr(3, /allocate_heap)
+  ;for i = 0, 2 do begin
+  ; *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
+  ;endfor
+  
+  ; *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
+  ;strtrim(STRSPLIT(all_data[2], '()', /extract), 2)
+  
+  ;print, (*tmp[0])
+  ;print, (*tmp[0])[1]
+  ;print, (*tmp[1])
+  ;print, (*tmp[2])
+  ;print, (*tmp[2])[3]
+  ;*tmp[1] = STRSPLIT((*tmp[1])[0],/extract)
+  ;print, (*tmp[1])[1]
+  
+  
+  ;Put variables in a structure
+  MyStruct = { NbrArray:    n,$
+    xaxis:       '', $
+    xaxis_units: '',$
+    yaxis:       '', $
+    yaxis_units: '',$
+    sigma_yaxis: '',$
+    sigma_yaxis_units: '',$
+    Data:        data}
+    
+    
+    
+    
+    
+    
+  ;title:       (*tmp[0])[0], $
+  ;bank:        (*tmp[0])[1], $
+    
+    
+    
+   print, (*MyStruct.data[0]).bank
+   return, MyStruct
+end
+
+
 function IDL3columnsASCIIparser::get_tag, tag
   ;remove semicolon from tag
   tag = modtag(tag)
   ;read data into array
-  data = READ_DATA(self.path)
-  
+  data = READ_DATA(self.path, 1)
   ;find and format data
   output = find_it(data, tag)
   return, output
