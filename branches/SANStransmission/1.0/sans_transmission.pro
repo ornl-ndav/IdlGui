@@ -112,10 +112,10 @@ global = PTR_NEW ({version:         VERSION,$
                                                      '--data-trans'},$
                                  empty_can_trans: {flag: $
                                                    '--ecan-trans'},$
-                                 q_range: {title:$
-                                           'Q Range',$
-                                           flag: $
-                                           '--lambda-range'}},$
+                                 wavelength_range: {title:$
+                                                    'Wavelength Range',$
+                                                    flag: $
+                                                    '--lambda-range'}},$
                    IntermPara: {bmon_wave: {title: $
                                             'Beam Monitor after ' + $
                                             'Conversion to Wavelength',$
@@ -201,14 +201,14 @@ IF (DEBUGGING EQ 'yes' AND $
                      FIND_BY_UNAME='time_zero_offset_beam_monitor_uname')
     WIDGET_CONTROL, id, $
       SET_VALUE='500'
-;Q range (Parameters)
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmin_text_field')
+;Wavlength range (Parameters)
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='wave_min_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmax_text_field')
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='wave_max_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='5'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='wave_width_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 

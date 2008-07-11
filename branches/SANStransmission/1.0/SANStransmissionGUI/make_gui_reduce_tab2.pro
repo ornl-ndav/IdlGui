@@ -133,7 +133,7 @@ sWavelengthminText = {  size:  [sWavelengthminLabel.size[0]+XYoff[0],$
                                 sWavelengthminLabel.size[1]+XYoff[1],$
                                 70,30],$
                         value: '',$
-                        uname: 'qmin_text_field'}
+                        uname: 'wave_min_text_field'}
 
 ;Wavelengthmax
 XYoff = [WavelengthXoff+5,0]
@@ -146,7 +146,7 @@ sWavelengthmaxText = {  size:  [sWavelengthmaxLabel.size[0]+XYoff[0],$
                                 sWavelengthminText.size[1]+XYoff[1],$
                                 sWavelengthminText.size[2:3]],$
                         value: '',$
-                        uname: 'qmax_text_field'}
+                        uname: 'wave_max_text_field'}
 
 ;Wavelengthwidth
 XYoff = [Wavelengthxoff+5,0]
@@ -159,7 +159,7 @@ sWavelengthwidthText = {  size:  [sWavelengthwidthLabel.size[0]+XYoff[0],$
                                   sWavelengthminText.size[1]+XYoff[1],$
                                   sWavelengthminText.size[2:3]],$
                           value: '',$
-                          uname: 'qwidth_text_field'}
+                          uname: 'wave_width_text_field'}
 
 ;Wavelength scale
 XYoff = [Wavelengthxoff+5,0]
@@ -168,12 +168,13 @@ sWavelengthscaleGroup = { size:  [sWavelengthwidthText.size[0]+$
                                   sWavelengthwidthText.size[1]+XYoff[1]],$
                           list:  ['Linear','Logarithmic'],$
                           value: 1.0,$
-                          uname: 'q_scale_group'}
+                          uname: 'wave_scale_group'}
 
 ;- Verbose Mode ---------------------------------------------------------------
 XYoff = [0,10]
 sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
-                          sQFrame.size[1]+sQFrame.size[3]+XYoff[1]],$
+                          sWavelengthFrame.size[1]+$
+                          sWavelengthFrame.size[3]+XYoff[1]],$
                   list:  ['ON','OFF'],$
                   value: 0.0,$
                   uname: 'verbose_mode_group',$

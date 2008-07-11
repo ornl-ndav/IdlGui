@@ -160,43 +160,43 @@ ENDIF ELSE BEGIN
 ENDELSE
 map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
 
-;-Q min, max, width and unit
-Qmin   = getTextFieldValue(Event,'qmin_text_field')
-Qmax   = getTextFieldValue(Event,'qmax_text_field')
-Qwidth = getTextFieldValue(Event,'qwidth_text_field')
-Qunits = getCWBgroupValue(Event,'q_scale_group')
-cmd += ' ' + (*global).ReducePara.monitor_rebin + '='
-IF (Qmin NE '') THEN BEGIN
-    cmd += STRCOMPRESS(Qmin,/REMOVE_ALL)
+;-Wavelength min, max, width and unit
+Valuemin   = getTextFieldValue(Event,'wave_min_text_field')
+Valuemax   = getTextFieldValue(Event,'wave_max_text_field')
+Valuewidth = getTextFieldValue(Event,'wave_width_text_field')
+Valueunits = getCWBgroupValue(Event,'wave_scale_group')
+cmd += ' ' + (*global).CorrectPara.wavelength_range.flag + '='
+IF (Valuemin NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Valuemin,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q minimum ' + $
+    missing_arguments_text = [missing_arguments_text, '- Wavelength minimum ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
-IF (Qmax NE '') THEN BEGIN
-    cmd += STRCOMPRESS(Qmax,/REMOVE_ALL)
+IF (Valuemax NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Valuemax,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q maximum ' + $
+    missing_arguments_text = [missing_arguments_text, '- Wavelength maximum ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
-IF (Qwidth NE '') THEN BEGIN
-    cmd += STRCOMPRESS(Qwidth,/REMOVE_ALL)
+IF (Valuewidth NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Valuewidth,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q width ' + $
+    missing_arguments_text = [missing_arguments_text, '- Wavelength width ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
-IF (Qunits EQ 0) THEN BEGIN
+IF (Valueunits EQ 0) THEN BEGIN
     cmd += 'linear'
 ENDIF ELSE BEGIN
     cmd += 'log'
@@ -222,7 +222,6 @@ IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
                                   '(PARAMETERS)']
     ENDELSE
 ENDIF
-
 
 ;- INTERMEDIATE ---------------------------------------------------------------
 IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
