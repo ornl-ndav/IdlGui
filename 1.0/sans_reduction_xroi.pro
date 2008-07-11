@@ -1133,10 +1133,9 @@ pro xroi__ButtonPress, sEvent
 
                  ; Create a new rectangle region.
                  oROI = OBJ_NEW('IDLgrROI', $
-                        COLOR=(*pState).sel_rgb, $
-                        STYLE=0 $
-                        )
-
+                                COLOR=(*pState).sel_rgb, $
+                                STYLE=0)
+                 
                  (*pState).oCurrROI = oROI
                  (*pState).oModel->Add, oROI
 
@@ -1147,6 +1146,7 @@ pro xroi__ButtonPress, sEvent
 
                  (*pState).bButtonDown = 1b
                  (*pState).buttonXY = [xImage, yImage]
+
             endif
         end
 
@@ -1454,6 +1454,10 @@ COMPILE_OPT idl2, hidden
             if ((N_ELEMENTS(roiData)/3) eq 4) then begin
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
+
+                oROI->SetProperty, INTERIOR=0b ;remove_me
+
+
                 oROI->SetProperty, NAME=xroi__GenerateName(*pState)
                 (*pState).oModel->Remove, oROI
                 (*pState).oROIModel->Add, oROI
