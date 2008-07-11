@@ -79,7 +79,7 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_path:      '/LENS/',$
                    inst_geom:       '',$
                    ReducePara: {driver_name: $
-                                'sas_reduction1',$
+                                'sas_transmission1',$
                                 overwrite_geo: $
                                 '--inst-geom',$
                                 detect_time_offset: $
