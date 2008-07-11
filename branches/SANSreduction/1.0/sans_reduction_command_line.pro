@@ -132,6 +132,12 @@ ENDIF ELSE BEGIN
                               ' (LOAD FILES)']
 ENDELSE
 
+;-Output File-
+output_file = getTextfieldValue(Event, 'output_file_name')
+IF (output_file NE '') THEN BEGIN
+    cmd += output_file
+ENDIF
+
 ;- PARAMETERS  ----------------------------------------------------------------
 
 ;-geometry file to overwrite
