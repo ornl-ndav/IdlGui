@@ -184,6 +184,7 @@ ENDELSE
 
 ;-monitor efficiency
 IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
+    activate_intermediate_base = 0
     cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
     cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
     value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
@@ -198,8 +199,10 @@ IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
                                   '- Monitor Efficiency Value ' + $
                                   '(PARAMETERS)']
     ENDELSE
-
-ENDIF
+ENDIF ELSE BEGIN
+    activate_intermediate_base = 1
+ENDELSE
+map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
 
 ;-Q min, max, width and unit
 Qmin   = getTextFieldValue(Event,'qmin_text_field')
