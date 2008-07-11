@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title, global
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$
@@ -111,61 +111,64 @@ sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
              uname: 'monitor_efficiency_constant_value',$
              sensitive: 0}
 
-;- Q --------------------------------------------------------------------------
+;- Wavelength -----------------------------------------------------------------
 XYoff = [5,50]
-sQFrame = { size:  [XYoff[0],$
-                    sMEgroup.size[1]+XYoff[1],$
-                    tab_size[2]-20,$
-                    45],$
-            frame: 2}
+sWavelengthFrame = { size:  [XYoff[0],$
+                             sMEgroup.size[1]+XYoff[1],$
+                             tab_size[2]-20,$
+                             45],$
+                     frame: 2}
 XYoff = [20,-8]
-sQTitle = { size:  [sQFrame.size[0]+XYoff[0],$
-                    sQFrame.size[1]+XYoff[1]],$
-            value: 'Q range'}
-;Qmin
-QXoff = 30
-XYoff = [QXoff,15]
-sQminLabel = { size:  [sQFrame.size[0]+XYoff[0],$
-                       sQFrame.size[1]+XYoff[1]],$
-               value: 'Min:'}
+sWavelengthTitle = { size:  [sWavelengthFrame.size[0]+XYoff[0],$
+                             sWavelengthFrame.size[1]+XYoff[1]],$
+                     value: (*global).CorrectPara.wavelength_range.title}
+;Wavelengthmin
+WavelengthXoff = 30
+XYoff = [WavelengthXoff,15]
+sWavelengthminLabel = { size:  [sWavelengthFrame.size[0]+XYoff[0],$
+                                sWavelengthFrame.size[1]+XYoff[1]],$
+                        value: 'Min:'}
 XYoff = [30,-5]
-sQminText = {  size:  [sQminLabel.size[0]+XYoff[0],$
-                       sQminLabel.size[1]+XYoff[1],$
-                       70,30],$
-               value: '',$
-               uname: 'qmin_text_field'}
+sWavelengthminText = {  size:  [sWavelengthminLabel.size[0]+XYoff[0],$
+                                sWavelengthminLabel.size[1]+XYoff[1],$
+                                70,30],$
+                        value: '',$
+                        uname: 'qmin_text_field'}
 
-;Qmax
-XYoff = [QXoff+5,0]
-sQmaxLabel = { size:  [sQminText.size[0]+sQminText.size[2]+XYoff[0],$
-                       sQminLabel.size[1]+XYoff[1]],$
-               value: 'Max:'}
+;Wavelengthmax
+XYoff = [WavelengthXoff+5,0]
+sWavelengthmaxLabel = { size:  [sWavelengthminText.size[0]+$
+                                sWavelengthminText.size[2]+XYoff[0],$
+                                sWavelengthminLabel.size[1]+XYoff[1]],$
+                        value: 'Max:'}
 XYoff = [30,0]
-sQmaxText = {  size:  [sQmaxLabel.size[0]+XYoff[0],$
-                       sQminText.size[1]+XYoff[1],$
-                       sQminText.size[2:3]],$
-               value: '',$
-               uname: 'qmax_text_field'}
+sWavelengthmaxText = {  size:  [sWavelengthmaxLabel.size[0]+XYoff[0],$
+                                sWavelengthminText.size[1]+XYoff[1],$
+                                sWavelengthminText.size[2:3]],$
+                        value: '',$
+                        uname: 'qmax_text_field'}
 
-;Qwidth
-XYoff = [Qxoff+5,0]
-sQwidthLabel = { size:  [sQmaxText.size[0]+sQminText.size[2]+XYoff[0],$
-                         sQminLabel.size[1]+XYoff[1]],$
-               value: 'Width:'}
+;Wavelengthwidth
+XYoff = [Wavelengthxoff+5,0]
+sWavelengthwidthLabel = { size:  [sWavelengthmaxText.size[0]+$
+                                  sWavelengthminText.size[2]+XYoff[0],$
+                                  sWavelengthminLabel.size[1]+XYoff[1]],$
+                          value: 'Width:'}
 XYoff = [45,0]
-sQwidthText = {  size:  [sQwidthLabel.size[0]+XYoff[0],$
-                         sQminText.size[1]+XYoff[1],$
-                         sQminText.size[2:3]],$
-                 value: '',$
-               uname: 'qwidth_text_field'}
+sWavelengthwidthText = {  size:  [sWavelengthwidthLabel.size[0]+XYoff[0],$
+                                  sWavelengthminText.size[1]+XYoff[1],$
+                                  sWavelengthminText.size[2:3]],$
+                          value: '',$
+                          uname: 'qwidth_text_field'}
 
-;Q scale
-XYoff = [Qxoff+5,0]
-sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
-                         sQwidthText.size[1]+XYoff[1]],$
-                 list:  ['Linear','Logarithmic'],$
-                 value: 1.0,$
-                 uname: 'q_scale_group'}
+;Wavelength scale
+XYoff = [Wavelengthxoff+5,0]
+sWavelengthscaleGroup = { size:  [sWavelengthwidthText.size[0]+$
+                                  sWavelengthwidthText.size[2]+XYoff[0],$
+                                  sWavelengthwidthText.size[1]+XYoff[1]],$
+                          list:  ['Linear','Logarithmic'],$
+                          value: 1.0,$
+                          uname: 'q_scale_group'}
 
 ;- Verbose Mode ---------------------------------------------------------------
 XYoff = [0,10]
@@ -307,80 +310,80 @@ wValue = WIDGET_TEXT(Basetab,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
                   
-;- Q --------------------------------------------------------------------------
-wQTitle = WIDGET_LABEL(Basetab,$
-                       XOFFSET = sQTitle.size[0],$
-                       YOFFSET = sQTitle.size[1],$
-                       VALUE   = sQTitle.value)
-;Qmin
-wQminLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQminLabel.size[0],$
-                          YOFFSET = sQminLabel.size[1],$
-                          VALUE   = sQminLabel.value)
+;- Wavelength --------------------------------------------------------------------------
+wWavelengthTitle = WIDGET_LABEL(Basetab,$
+                       XOFFSET = sWavelengthTitle.size[0],$
+                       YOFFSET = sWavelengthTitle.size[1],$
+                       VALUE   = sWavelengthTitle.value)
+;Wavelengthmin
+wWavelengthminLabel = WIDGET_LABEL(Basetab,$
+                          XOFFSET = sWavelengthminLabel.size[0],$
+                          YOFFSET = sWavelengthminLabel.size[1],$
+                          VALUE   = sWavelengthminLabel.value)
 
-wQminText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQminText.size[0],$
-                        YOFFSET   = sQminText.size[1],$
-                        SCR_XSIZE = sQminText.size[2],$
-                        SCR_YSIZE = sQminText.size[3],$
-                        VALUE     = sQminText.value,$
-                        UNAME     = sQminText.uname,$
+wWavelengthminText = WIDGET_TEXT(Basetab,$
+                        XOFFSET   = sWavelengthminText.size[0],$
+                        YOFFSET   = sWavelengthminText.size[1],$
+                        SCR_XSIZE = sWavelengthminText.size[2],$
+                        SCR_YSIZE = sWavelengthminText.size[3],$
+                        VALUE     = sWavelengthminText.value,$
+                        UNAME     = sWavelengthminText.uname,$
                         /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
-;Qmax
-wQmaxLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQmaxLabel.size[0],$
-                          YOFFSET = sQmaxLabel.size[1],$
-                          VALUE   = sQmaxLabel.value)
+;Wavelengthmax
+wWavelengthmaxLabel = WIDGET_LABEL(Basetab,$
+                          XOFFSET = sWavelengthmaxLabel.size[0],$
+                          YOFFSET = sWavelengthmaxLabel.size[1],$
+                          VALUE   = sWavelengthmaxLabel.value)
 
-wQmaxText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQmaxText.size[0],$
-                        YOFFSET   = sQmaxText.size[1],$
-                        SCR_XSIZE = sQmaxText.size[2],$
-                        SCR_YSIZE = sQmaxText.size[3],$
-                        VALUE     = sQmaxText.value,$
-                        UNAME     = sQmaxText.uname,$
+wWavelengthmaxText = WIDGET_TEXT(Basetab,$
+                        XOFFSET   = sWavelengthmaxText.size[0],$
+                        YOFFSET   = sWavelengthmaxText.size[1],$
+                        SCR_XSIZE = sWavelengthmaxText.size[2],$
+                        SCR_YSIZE = sWavelengthmaxText.size[3],$
+                        VALUE     = sWavelengthmaxText.value,$
+                        UNAME     = sWavelengthmaxText.uname,$
                         /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
-;Qwidth
-wQwidthLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQwidthLabel.size[0],$
-                          YOFFSET = sQwidthLabel.size[1],$
-                          VALUE   = sQwidthLabel.value)
+;Wavelengthwidth
+wWavelengthwidthLabel = WIDGET_LABEL(Basetab,$
+                          XOFFSET = sWavelengthwidthLabel.size[0],$
+                          YOFFSET = sWavelengthwidthLabel.size[1],$
+                          VALUE   = sWavelengthwidthLabel.value)
 
-wQwidthText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQwidthText.size[0],$
-                        YOFFSET   = sQwidthText.size[1],$
-                        SCR_XSIZE = sQwidthText.size[2],$
-                        SCR_YSIZE = sQwidthText.size[3],$
-                        VALUE     = sQwidthText.value,$
-                        UNAME     = sQwidthText.uname,$
+wWavelengthwidthText = WIDGET_TEXT(Basetab,$
+                        XOFFSET   = sWavelengthwidthText.size[0],$
+                        YOFFSET   = sWavelengthwidthText.size[1],$
+                        SCR_XSIZE = sWavelengthwidthText.size[2],$
+                        SCR_YSIZE = sWavelengthwidthText.size[3],$
+                        VALUE     = sWavelengthwidthText.value,$
+                        UNAME     = sWavelengthwidthText.uname,$
                         /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
-;Q scale
-wQscaleGroup =  CW_BGROUP(Basetab,$
-                          sQscaleGroup.list,$
-                          XOFFSET    = sQscaleGroup.size[0],$
-                          YOFFSET    = sQscaleGroup.size[1],$
+;Wavelength scale
+wWavelengthscaleGroup =  CW_BGROUP(Basetab,$
+                          sWavelengthscaleGroup.list,$
+                          XOFFSET    = sWavelengthscaleGroup.size[0],$
+                          YOFFSET    = sWavelengthscaleGroup.size[1],$
                           ROW        = 1,$
-                          SET_VALUE  = sQscaleGroup.value,$
-                          UNAME      = sQscaleGroup.uname,$
+                          SET_VALUE  = sWavelengthscaleGroup.value,$
+                          UNAME      = sWavelengthscaleGroup.uname,$
                           /EXCLUSIVE)
 
-;Q frame
-wQFrame = WIDGET_LABEL(Basetab,$
-                       XOFFSET   = sQFrame.size[0],$
-                       YOFFSET   = sQFrame.size[1],$
-                       SCR_XSIZE = sQFrame.size[2],$
-                       SCR_YSIZE = sQFrame.size[3],$
+;Wavelength frame
+wWavelengthFrame = WIDGET_LABEL(Basetab,$
+                       XOFFSET   = sWavelengthFrame.size[0],$
+                       YOFFSET   = sWavelengthFrame.size[1],$
+                       SCR_XSIZE = sWavelengthFrame.size[2],$
+                       SCR_YSIZE = sWavelengthFrame.size[3],$
                        VALUE     = '',$
-                       FRAME     = sQFrame.frame)
+                       FRAME     = sWavelengthFrame.frame)
 
 ;- Verbose Mode ---------------------------------------------------------------
 group = CW_BGROUP(Basetab,$

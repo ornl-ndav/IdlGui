@@ -111,7 +111,11 @@ global = PTR_NEW ({version:         VERSION,$
                                  sample_data_trans: {flag: $
                                                      '--data-trans'},$
                                  empty_can_trans: {flag: $
-                                                   '--ecan-trans'}},$
+                                                   '--ecan-trans'},$
+                                 q_range: {title:$
+                                           'Q Range',$
+                                           flag: $
+                                           '--lambda-range'}},$
                    IntermPara: {bmon_wave: {title: $
                                             'Beam Monitor after ' + $
                                             'Conversion to Wavelength',$
