@@ -67,35 +67,11 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
-;-Solvant Buffer Only-
-file_run = getTextFieldValue(Event,'solvant_file_name_text_field')
+;-Transmission Background-
+file_run = getTextFieldValue(Event,'transm_back_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.solv_buffer.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
-
-;-Emtpy Can-
-file_run = getTextFieldValue(Event,'empty_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.empty_can.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
-
-;-Open Beam-
-file_run = getTextFieldValue(Event,'open_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.open_beam.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
-
-;-Dark Current-
-file_run = getTextFieldValue(Event,'dark_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.dark_current.flag
+    flag = (*global).CorrectPara.transm_back.flag
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 

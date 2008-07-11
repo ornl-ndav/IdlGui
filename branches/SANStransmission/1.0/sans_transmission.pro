@@ -100,27 +100,14 @@ global = PTR_NEW ({version:         VERSION,$
                                 '--mom-trans-bins',$
                                 roi_file: $
                                 '--roi-file'},$
-                   CorrectPara: {solv_buffer: {title: $
-                                               'Solvant Buffer Only',$
+                   CorrectPara: {transm_back: {title: $
+                                               'Transmission Background',$
                                                flag: $
-                                               '--solv'},$
+                                               '--trans_back'},$
                                  roi:         {title: $
                                                'ROI File',$
                                                flag: $
                                                '--roi-file'},$
-                                 empty_can:    {title: $
-                                                'Empty Can',$
-                                                flag: $
-                                                '--ecan'},$
-                                 open_beam:    {title: $
-                                                'Open Beam (shutter open)',$
-                                                flag: $
-                                                '--open'},$
-                                 dark_current: {title: $
-                                                'Dark Current (shutter ' + $
-                                                'closed)',$
-                                                flag: $
-                                                '--dkcur'},$
                                  sample_data_trans: {flag: $
                                                      '--data-trans'},$
                                  empty_can_trans: {flag: $
@@ -185,7 +172,7 @@ MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, SET_UVALUE=global
 
 ;Build Tab1
-make_gui_main_tab, MAIN_BASE, MainBaseSize
+make_gui_main_tab, MAIN_BASE, MainBaseSize, global
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

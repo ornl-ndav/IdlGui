@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
+PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles, global
 
 ;- base -----------------------------------------------------------------------
 sReduceBase = { size:  MainTabSize,$
@@ -115,7 +115,10 @@ REDUCE_TAB = WIDGET_TAB(wReduceBase,$
                         /TRACKING_EVENTS)
 
 ;- Build LOAD FILES tab (tab #1) ----------------------------------------------
-make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
+make_gui_reduce_tab1, REDUCE_TAB, $
+                      sReduceTab.size, $
+                      sReduceTab.title.tab1, $
+                      global
 
 ;- Build LOAD FILES tab (tab #2) ----------------------------------------------
 make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2

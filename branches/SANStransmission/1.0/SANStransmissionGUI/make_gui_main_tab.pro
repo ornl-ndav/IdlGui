@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_main_tab, MAIN_BASE, MainBaseSize
+PRO make_gui_main_tab, MAIN_BASE, MainBaseSize, global
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -59,7 +59,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build REDUCE tab
-make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles
+make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;Build LogBook
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
