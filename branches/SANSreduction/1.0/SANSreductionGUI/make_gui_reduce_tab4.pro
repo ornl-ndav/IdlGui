@@ -64,7 +64,7 @@ sInter2HiddingBase = { size:  [XYoff[0],$
                                20],$
                        frame:  0,$
                        uname:  'beam_monitor_hidding_base',$
-                       map:    0}
+                       map:    1}
 
 XYoff = [17,0]
 NotAvailableMessage = ' is NOT AVAILABLE !'

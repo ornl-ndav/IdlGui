@@ -102,14 +102,14 @@ XYoff    = [250,10]
 sMElabel = { size: [XYoff[0],sMEgroup.size[1]+XYoff[1]],$
              value: '--> Value:',$
              uname: 'monitor_efficiency_constant_label',$
-             sensitive: 1}
+             sensitive: 0}
 XYoff    = [80,-6]
 sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
                     sMElabel.size[1]+XYoff[1],$
                     50],$
              value: '',$
              uname: 'monitor_efficiency_constant_value',$
-             sensitive: 1}
+             sensitive: 0}
 
 ;- Q --------------------------------------------------------------------------
 XYoff = [5,50]
