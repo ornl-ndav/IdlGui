@@ -92,6 +92,7 @@ ENDCASE
 
 END
 
+;-------------------------------------------------------------------------------
 function format, init_str, tag
   ;find out where tag ends
   pos = STRLEN(tag)
@@ -104,8 +105,8 @@ function format, init_str, tag
   
 end
 
+;-------------------------------------------------------------------------------
 Function find_it, init_str, tag
-
 
   ;get number of elements in array
   n = N_ELEMENTS(init_str)
@@ -133,8 +134,7 @@ Function find_it, init_str, tag
   
 end
 
-
-
+;-------------------------------------------------------------------------------
 function arrange, data
 
   ;seperate comments from actual data
@@ -154,16 +154,11 @@ function arrange, data
     endfor
   endfor
   
-  
-  
-  
-  
   ;parse the comments
   tmp = ptrarr(3, /allocate_heap)
   for i = 0, 2 do begin
     *tmp[i] =  strtrim(STRSPLIT(comments[i], '(,)', /extract, /PRESERVE_NULL), 2)
   endfor
-  
   
   ;  *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
   ; strtrim(STRSPLIT(all_data[2], '()', /extract), 2)
@@ -188,6 +183,40 @@ function arrange, data
   return, Struct
 end
 
+;------------------------------------------------------------------------------
+PRO getGeneralInformation, all_data, MyStruct
+;find where is the first blank line (we do not want anything from the line 
+;below that point
+blk_line_index = WHERE(all_data EQ '', nbr)
+;get our new interesting array of data
+all_data = all_data[blk_line_index[0]+1:*]
+;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
+;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
+
+;WORK TO DO
+
+;get how many array we have here
+blk_line_index = WHERE(all_data EQ '', new_nbr)
+print, 'Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
+;make sure the last one is not the last element of the array
+IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
+   --new_nbr
+ENDIF
+print, 'Real Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
+END
+
+;create the array of structure here
+;first the structure that will be used for each set of data
+data_structure = { bank: '',$
+                   X:    '',$
+                   Y:    '',$
+                   data: ptr_new(0L)}
+;then create the array of structures according to the number of array (new_nbr)
+;and put this general array of structures inside MyStruct.data
+
+;WORK TO DO
+
+END
 
 ;------------------------------------------------------------------------------
 FUNCTION break_off, data
@@ -199,7 +228,7 @@ FUNCTION break_off, data
   ;count the blank lines in the file
   index = WHERE(data EQ '',cntblanks)
   print, 'cntblanks: ' + STRCOMPRESS(cntblanks) ;remove_me
-stop 
+
   ;Divide the text into datasets
   pntr = ptrarr(cntblanks, /allocate_heap)
   temp = strarr(1)
@@ -229,19 +258,37 @@ end
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::getData
   all_data = READ_DATA(self.path, 2)
-  ; for i = 0, n_elements(all_data) - 1 do begin
-  ; print, all_data[i]
-  ; endfor
+  
+;Define the Structure
+  MyStruct = { NbrArray:          0L,$
+               xaxis:             '', $
+               xaxis_units:       '',$
+               yaxis:             '', $
+               yaxis_units:       '',$
+               sigma_yaxis:       '',$
+               sigma_yaxis_units: '',$
+               Data:              ptr_new(0L)}
+  
+;Populate structure with general information (NbrArray, xaxis....etc)
+  getGeneralInformation, all_data, MyStruct
 
-  ;break off into an array of pointers
-  data = break_off(all_data)
-  n = n_elements(data)
+;start going through all the array and populates the MyStruct.Data[i] structures
+
+RETURN, MyStruct
+END
+
+
+
+function a
+
+;;break off into an array of pointers
+;  data = break_off(all_data)
+;  n = n_elements(data)
   
   ; Organize the data into structures instead of arrays
   for i = 0, n-1 do begin
     *data[i] = arrange(*data[i])
   endfor
- 
   
   ;value = parseData(all_data)
   ;n_arrays = 10
@@ -261,27 +308,9 @@ FUNCTION IDL3columnsASCIIparser2::getData
   ;*tmp[1] = STRSPLIT((*tmp[1])[0],/extract)
   ;print, (*tmp[1])[1]
   
-  
-  ;Put variables in a structure
-  MyStruct = { NbrArray:    n,$
-    xaxis:       '', $
-    xaxis_units: '',$
-    yaxis:       '', $
-    yaxis_units: '',$
-    sigma_yaxis: '',$
-    sigma_yaxis_units: '',$
-    Data:        data}
-    
-    
-    
-    
-    
-    
   ;title:       (*tmp[0])[0], $
   ;bank:        (*tmp[0])[1], $
-    
-    
-    
+      
    print, (*MyStruct.data[0]).bank
    return, MyStruct
 end
