@@ -184,7 +184,7 @@ function arrange, data
 end
 
 ;------------------------------------------------------------------------------
-PRO getGeneralInformation, all_data, MyStruct
+PRO populate_structure, all_data, MyStruct
 ;find where is the first blank line (we do not want anything from the line 
 ;below that point
 blk_line_index = WHERE(all_data EQ '', nbr)
@@ -203,18 +203,50 @@ IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
    --new_nbr
 ENDIF
 print, 'Real Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
-END
 
 ;create the array of structure here
 ;first the structure that will be used for each set of data
-data_structure = { bank: '',$
-                   X:    '',$
-                   Y:    '',$
-                   data: ptr_new(0L)}
-;then create the array of structures according to the number of array (new_nbr)
-;and put this general array of structures inside MyStruct.data
+general_data_structure = { single_data_structure,$
+                           bank: '',$
+                           X:    '',$
+                           Y:    '',$
+                           data: ptr_new(0L)}
+;                         data: STRARR(1000L)}
 
-;WORK TO DO
+
+;then create the array of structures according to the number of array (new_nbr)
+data_structure = REPLICATE({single_data_structure},new_nbr)
+
+;and put this general array of structures inside MyStruct.data
+array_nbr   = 0
+i           = 0
+array_index = 0
+WHILE (array_nbr NE new_nbr) DO BEGIN
+   line = all_data[i]
+   IF (~STRMATCH(line,'#*')) THEN BEGIN
+      IF (line EQ '') THEN BEGIN
+         array_index = 0
+         help, data_structure[array_nbr]
+         help, data_structure[array_nbr].data
+         (*data_structure[array_nbr].data) = my_data_array ;PROBLEM HERE !
+         ++array_nbr
+      ENDIF ELSE BEGIN
+         print, line ;remove_me
+         array = STRSPLIT(line,' ',/EXTRACT)
+         IF (N_ELEMENTS(array) GT 1) THEN BEGIN
+            IF (array_index EQ 0) THEN BEGIN
+               my_data_array = [array[0],array[1],array[2]]
+               ++array_index
+            ENDIF ELSE BEGIN
+               my_data_array = [my_data_array,array[0],array[1],array[2]]
+            ENDELSE
+         ENDIF
+      ENDELSE
+   ENDIF
+   ++i
+ENDWHILE   
+
+;print, 'data_structure[0].data: ' + data_structure[0].data
 
 END
 
@@ -270,9 +302,7 @@ FUNCTION IDL3columnsASCIIparser2::getData
                Data:              ptr_new(0L)}
   
 ;Populate structure with general information (NbrArray, xaxis....etc)
-  getGeneralInformation, all_data, MyStruct
-
-;start going through all the array and populates the MyStruct.Data[i] structures
+  populate_structure, all_data, MyStruct
 
 RETURN, MyStruct
 END
