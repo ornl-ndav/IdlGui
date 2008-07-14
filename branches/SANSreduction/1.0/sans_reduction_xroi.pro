@@ -339,11 +339,16 @@ IF (nROIs GE 1) THEN BEGIN
 ;1 for a pixel that has been selected
 ;0 for a pixel that is not part of the selection
         PixelSelectedArray = INTARR(80,80)
+
+;type of selection
+        insideSelection = oROIs[k]->getInsideFlag()
+
 ;Determine which pixels have been selected
         CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
-          CurrentSelectionSettings
+          CurrentSelectionSettings,$
+          insideSelection
         
         x_coeff = 4
         color   = 150
@@ -402,11 +407,16 @@ CurrentSelectionSettings = (*pState).currentSelectedSettings
 ;1 for a pixel that has been selected
 ;0 for a pixel that is not part of the selection
 PixelSelectedArray = INTARR(80,80)
+
+;Is selection an outside or outside selection region
+insideSelectionType = oROIs[CurrentROIselectedIndex]->getInsideFlag()
+
 ;Determine which pixels have been selected
 CreateArrayOfPixelSelected, $
   PixelSelectedArray, $
   oROIs[CurrentROIselectedIndex],$
-  CurrentSelectionSettings
+  CurrentSelectionSettings,$
+  insideSelectionType
 
 ;plot selection
 Event = (*pState).Event
@@ -1399,11 +1409,11 @@ COMPILE_OPT idl2, hidden
 
             ; Ensure that the rectangle has at 4 vertices.
             oROI->GetProperty, DATA=roiData
-            print, oROI->getInsideFlag() ;remove_me
             if ((N_ELEMENTS(roiData)/3) eq 4) then begin
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
                 oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+                oROI->SetProperty, INTERIOR=1b ;it's an inside selection
                 (*pState).oModel->Remove, oROI
                 (*pState).oROIModel->Add, oROI
                 (*pState).oROIGroup->Add, oROI
@@ -1457,7 +1467,6 @@ COMPILE_OPT idl2, hidden
             (*pState).bButtonDown = 0b
 
             oROI = (*pState).oCurrROI
-            print, oROI->getInsideFlag() ;remove_me
             if (not OBJ_VALID(oROI)) then break
 
             ; Ensure that the rectangle has at 4 vertices.
@@ -1466,8 +1475,7 @@ COMPILE_OPT idl2, hidden
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
 
-                oROI->SetProperty, INTERIOR=0b ;remove_me
-
+                oROI->SetProperty, INTERIOR=0b ;it's an outside selection
 
                 oROI->SetProperty, NAME=xroi__GenerateName(*pState)
                 (*pState).oModel->Remove, oROI
@@ -3811,18 +3819,27 @@ end
 ;settings of the selection
 PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
                                  oROI,$
-                                 CurrentSelectionSettings
+                                 CurrentSelectionSettings,$
+                                 insideSelectionType
 
 tmp_array = INTARR(80,80)
 Xsize = 320
 Ysize = 320
 FOR i=0,(Xsize-1) DO BEGIN
     FOR j=0,(Ysize-1) DO BEGIN
-        IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-            x = FIX(i/4)
-            y = FIX(j/4)
-            ++tmp_array[x,y]
-        ENDIF
+        IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
+            IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
+                x = FIX(i/4)
+                y = FIX(j/4)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                x = FIX(i/4)
+                y = FIX(j/4)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDELSE
     ENDFOR
 ENDFOR
 
