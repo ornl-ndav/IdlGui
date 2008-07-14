@@ -276,11 +276,16 @@ IF (nROIs GE 1) THEN BEGIN
 ;1 for a pixel that has been selected
 ;0 for a pixel that is not part of the selection
         PixelSelectedArray = INTARR(80,80)
+
+;type of selection
+        insideSelection = oROIs[k]->getInsideFlag()
+
 ;Determine which pixels have been selected
         CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
-          CurrentSelectionSettings
+          CurrentSelectionSettings,$
+          insideSelection
         
         x_coeff = 4
         color   = 150
