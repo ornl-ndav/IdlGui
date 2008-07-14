@@ -1253,10 +1253,11 @@ pro xroi__ButtonPress, sEvent
                     if (OBJ_VALID(oOldSelROI) ne 0) then $
                         oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
-                     oROI = OBJ_NEW('IDLgrROI', $
+                     oROI = OBJ_NEW('myIDLgrROI', $
                         COLOR=(*pState).sel_rgb, $
                         STYLE=1 $
                         )
+                     oROI->setInsideFlag, 1b ;it's an inside region
 
                      (*pState).oCurrROI = oROI
                      (*pState).oModel->Add, oROI
