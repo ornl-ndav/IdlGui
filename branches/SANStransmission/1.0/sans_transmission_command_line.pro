@@ -197,7 +197,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 cmd += ','
 IF (Valueunits EQ 0) THEN BEGIN
-    cmd += 'linear'
+    cmd += 'lin'
 ENDIF ELSE BEGIN
     cmd += 'log'
 ENDELSE

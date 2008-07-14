@@ -115,7 +115,7 @@ global = PTR_NEW ({version:         VERSION,$
                                  wavelength_range: {title:$
                                                     'Wavelength Range',$
                                                     flag: $
-                                                    '--lambda-range'}},$
+                                                    '--lambda-bins'}},$
                    IntermPara: {bmon_wave: {title: $
                                             'Beam Monitor after ' + $
                                             'Conversion to Wavelength',$
