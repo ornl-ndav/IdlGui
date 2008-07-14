@@ -46,50 +46,50 @@ function modtag, init_str
   ;trim any spaces on ends
   new_str = strtrim(new_str, 2)
   return, new_str
-
+  
 end
 
 ;------------------------------------------------------------------------------
 FUNCTION READ_DATA, file, half
-;Open the data file.
+  ;Open the data file.
   OPENR, 1, file
   
-;Set up variables
+  ;Set up variables
   line = STRARR(1)
   tmp = ''
   i = 0
   
-CASE (half) OF
-   1: BEGIN                     ;first half
-;Read the comments from the file until blank line
+  CASE (half) OF
+    1: BEGIN                     ;first half
+      ;Read the comments from the file until blank line
       WHILE(~EOF(1)) DO BEGIN
-         READF,1,tmp
-;Check for blank line
-         IF (tmp EQ '') THEN BEGIN
-            BREAK
-         ENDIF ELSE BEGIN
-            IF (i EQ 0) THEN BEGIN
-               line[i] = tmp
-               i = 1
-            ENDIF ELSE BEGIN
-               line = [line, tmp]
-            ENDELSE
-         ENDELSE
+        READF,1,tmp
+        ;Check for blank line
+        IF (tmp EQ '') THEN BEGIN
+          BREAK
+        ENDIF ELSE BEGIN
+          IF (i EQ 0) THEN BEGIN
+            line[i] = tmp
+            i = 1
+          ENDIF ELSE BEGIN
+            line = [line, tmp]
+          ENDELSE
+        ENDELSE
       ENDWHILE
       close, 1
       RETURN, line
-   END
-   2: BEGIN                     ;second half
+    END
+    2: BEGIN                     ;second half
       WHILE (~EOF(1)) DO BEGIN
-         nbr_lines = FILE_LINES(file)
-         my_array = STRARR(1,nbr_lines)
-         READF,1, my_array
+        nbr_lines = FILE_LINES(file)
+        my_array = STRARR(1,nbr_lines)
+        READF,1, my_array
       ENDWHILE
       close,1
       RETURN, my_array
-   END
-ENDCASE
-
+    END
+  ENDCASE
+  
 END
 
 ;-------------------------------------------------------------------------------
@@ -185,69 +185,70 @@ end
 
 ;------------------------------------------------------------------------------
 PRO populate_structure, all_data, MyStruct
-;find where is the first blank line (we do not want anything from the line 
-;below that point
-blk_line_index = WHERE(all_data EQ '', nbr)
-;get our new interesting array of data
-all_data = all_data[blk_line_index[0]+1:*]
-;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
-;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
-
-;WORK TO DO
-
-;get how many array we have here
-blk_line_index = WHERE(all_data EQ '', new_nbr)
-print, 'Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
-;make sure the last one is not the last element of the array
-IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
-   --new_nbr
-ENDIF
-print, 'Real Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
-
-;create the array of structure here
-;first the structure that will be used for each set of data
-general_data_structure = { single_data_structure,$
-                           bank: '',$
-                           X:    '',$
-                           Y:    '',$
-                           data: ptr_new(0L)}
-;                         data: STRARR(1000L)}
-
-
-;then create the array of structures according to the number of array (new_nbr)
-data_structure = REPLICATE({single_data_structure},new_nbr)
-
-;and put this general array of structures inside MyStruct.data
-array_nbr   = 0
-i           = 0
-array_index = 0
-WHILE (array_nbr NE new_nbr) DO BEGIN
-   line = all_data[i]
-   IF (~STRMATCH(line,'#*')) THEN BEGIN
+  ;find where is the first blank line (we do not want anything from the line
+  ;below that point
+  blk_line_index = WHERE(all_data EQ '', nbr)
+  ;get our new interesting array of data
+  all_data = all_data[blk_line_index[0]+1:*]
+  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
+  ;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
+  
+  ;WORK TO DO
+  
+  ;get how many array we have here
+  blk_line_index = WHERE(all_data EQ '', new_nbr)
+  print, 'Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
+  ;make sure the last one is not the last element of the array
+  IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
+    --new_nbr
+  ENDIF
+  print, 'Real Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
+  
+  ;create the array of structure here
+  ;first the structure that will be used for each set of data
+  general_data_structure = { single_data_structure,$
+    bank: '',$
+    X:    '',$
+    Y:    '',$
+    data: ptr_new(0L, /ALLOCATE_HEAP)}
+ 
+  
+  
+  ;then create the array of structures according to the number of array (new_nbr)
+  data_structure = REPLICATE(general_data_structure,new_nbr)
+  ;and put this general array of structures inside MyStruct.data
+  array_nbr   = 0
+  i           = 0
+  array_index = 0
+  
+  
+  WHILE (array_nbr NE new_nbr) DO BEGIN
+    line = all_data[i]
+    IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
-         array_index = 0
-         help, data_structure[array_nbr]
-         help, data_structure[array_nbr].data
-         (*data_structure[array_nbr].data) = my_data_array ;PROBLEM HERE !
-         ++array_nbr
+        array_index = 0
+        help, data_structure[array_nbr]
+        help, data_structure[array_nbr].data
+        *(data_structure[array_nbr]).data = my_data_array ;PROBLEM HERE !
+        ++array_nbr
       ENDIF ELSE BEGIN
-         print, line ;remove_me
-         array = STRSPLIT(line,' ',/EXTRACT)
-         IF (N_ELEMENTS(array) GT 1) THEN BEGIN
-            IF (array_index EQ 0) THEN BEGIN
-               my_data_array = [array[0],array[1],array[2]]
-               ++array_index
-            ENDIF ELSE BEGIN
-               my_data_array = [my_data_array,array[0],array[1],array[2]]
-            ENDELSE
-         ENDIF
+        print, line ;remove_me
+        array = STRSPLIT(line,' ',/EXTRACT)
+        IF (N_ELEMENTS(array) GT 1) THEN BEGIN
+          IF (array_index EQ 0) THEN BEGIN
+            my_data_array = [array[0],array[1],array[2]]
+            ++array_index
+          ENDIF ELSE BEGIN
+            my_data_array = [my_data_array,array[0],array[1],array[2]]
+          ENDELSE
+        ENDIF
       ENDELSE
-   ENDIF
-   ++i
-ENDWHILE   
-
+    ENDIF
+    ++i
+  ENDWHILE
+  
 ;print, 'data_structure[0].data: ' + data_structure[0].data
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -260,7 +261,7 @@ FUNCTION break_off, data
   ;count the blank lines in the file
   index = WHERE(data EQ '',cntblanks)
   print, 'cntblanks: ' + STRCOMPRESS(cntblanks) ;remove_me
-
+  
   ;Divide the text into datasets
   pntr = ptrarr(cntblanks, /allocate_heap)
   temp = strarr(1)
@@ -291,30 +292,30 @@ end
 FUNCTION IDL3columnsASCIIparser2::getData
   all_data = READ_DATA(self.path, 2)
   
-;Define the Structure
+  ;Define the Structure
   MyStruct = { NbrArray:          0L,$
-               xaxis:             '', $
-               xaxis_units:       '',$
-               yaxis:             '', $
-               yaxis_units:       '',$
-               sigma_yaxis:       '',$
-               sigma_yaxis_units: '',$
-               Data:              ptr_new(0L)}
-  
-;Populate structure with general information (NbrArray, xaxis....etc)
+    xaxis:             '', $
+    xaxis_units:       '',$
+    yaxis:             '', $
+    yaxis_units:       '',$
+    sigma_yaxis:       '',$
+    sigma_yaxis_units: '',$
+    Data:              ptr_new(0L)}
+    
+  ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
-
-RETURN, MyStruct
+  
+  RETURN, MyStruct
 END
 
 
 
 function a
 
-;;break off into an array of pointers
-;  data = break_off(all_data)
-;  n = n_elements(data)
-  
+  ;;break off into an array of pointers
+  ;  data = break_off(all_data)
+  ;  n = n_elements(data)
+
   ; Organize the data into structures instead of arrays
   for i = 0, n-1 do begin
     *data[i] = arrange(*data[i])
@@ -340,25 +341,25 @@ function a
   
   ;title:       (*tmp[0])[0], $
   ;bank:        (*tmp[0])[1], $
-      
-   print, (*MyStruct.data[0]).bank
-   return, MyStruct
+  
+  print, (*MyStruct.data[0]).bank
+  return, MyStruct
 end
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::get_tag, tag
-;remove semicolon from tag
+  ;remove semicolon from tag
   tag = modtag(tag)
-;read data into array
+  ;read data into array
   data = READ_DATA(self.path, 1)
-;find and format data
+  ;find and format data
   output = find_it(data, tag)
   RETURN, output
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::init, location
-;set up the path
+  ;set up the path
   self.path = location
   RETURN, FILE_TEST(location, /READ)
 END
@@ -366,7 +367,7 @@ END
 ;------------------------------------------------------------------------------
 PRO IDL3columnsASCIIparser2__define
   struct = {IDL3columnsASCIIparser2,$
-            path: ''}
+    path: ''}
 END
 
 ;------------------------------------------------------------------------------
