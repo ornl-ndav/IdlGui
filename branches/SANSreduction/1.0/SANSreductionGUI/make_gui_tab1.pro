@@ -78,12 +78,12 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     SCR_YSIZE = sDraw.size[3])
 
 ;- Selection tool -------------------------------------------------------------
-wSelection = WIDGET_BUTTON(wTab1Base,$
-                           XOFFSET = sSelection.size[0],$
-                           YOFFSET = sSelection.size[1],$
-                           SCR_XSIZE = sSelection.size[2],$
-                           VALUE     = sSelection.value,$
-                           UNAME     = sSelection.uname)
+;wSelection = WIDGET_BUTTON(wTab1Base,$
+;                           XOFFSET = sSelection.size[0],$
+;                           YOFFSET = sSelection.size[1],$
+;                           SCR_XSIZE = sSelection.size[2],$
+;                           VALUE     = sSelection.value,$
+;                           UNAME     = sSelection.uname)
 
 ;- nexus input ----------------------------------------------------------------
 sNexus = {MainBase   : wTab1Base,$
