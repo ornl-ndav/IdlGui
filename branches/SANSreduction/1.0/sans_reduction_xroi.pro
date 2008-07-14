@@ -792,6 +792,23 @@ pro xroi_event, sEvent
         endif
     end
 
+    'FREEPOLY_EMPTY': begin
+        ; Freehand ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'FREEHAND DRAW EMPTY' then begin
+            (*pState).mode = 'FREEHAND DRAW EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
     'SEGPOLY': begin
         ; Segmented ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
@@ -1270,6 +1287,31 @@ pro xroi__ButtonPress, sEvent
             endif
         end
 
+        'FREEHAND DRAW EMPTY': begin
+            if (sEvent.press eq 1) then begin
+                oROI = (*pState).oCurrROI
+                if (OBJ_VALID(oROI) eq 0) then begin
+                    oOldSelROI = (*pState).oSelROI
+                    if (OBJ_VALID(oOldSelROI) ne 0) then $
+                        oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
+
+                     oROI = OBJ_NEW('myIDLgrROI', $
+                        COLOR=(*pState).sel_rgb, $
+                        STYLE=1 $
+                        )
+                     oROI->setInsideFlag, 0b ;it's an inside region
+
+                     (*pState).oCurrROI = oROI
+                     (*pState).oModel->Add, oROI
+                 endif
+
+                 oROI->AppendData, [xImage, yImage, 0]
+
+                 (*pState).oWindow->Draw, (*pState).oView
+                 (*pState).bButtonDown = sEvent.clicks
+            endif
+        end
+
         ; Segmented ROI
         'POLYGON DRAW': begin
             if (sEvent.press eq 1) then begin
@@ -1708,6 +1750,78 @@ COMPILE_OPT idl2, hidden
 
         ; Freehand ROI
         'FREEHAND DRAW': begin
+            if (sEvent.release ne 1) then break
+            if ((*pState).bButtonDown ne 1) then break  ; Left mouse button.
+
+            ; Reset button down state.
+            (*pState).bButtonDown = 0b
+            (*pState).bTempSegment = 0b
+
+            ; End ROI
+            oROI = (*pState).oCurrROI
+            if (not OBJ_VALID(oROI)) then break
+
+            ; Ensure that the region has at 3 vertices.
+            oROI->GetProperty, DATA=roiData
+            if ((N_ELEMENTS(roiData)/3) ge 3) then begin
+
+                ; The region is valid.  Give it a name and add
+                ; it to the appropriate containers.
+                oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+                (*pState).oModel->Remove, oROI
+                (*pState).oROIModel->Add, oROI
+                (*pState).oROIGroup->Add, oROI
+                if OBJ_VALID((*pState).oRegionsOut) then begin
+                    (*pState).oRegionsOut->Add, oROI
+                end
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Activate appropriate tool buttons.
+                if lmgr(/demo) ne 1 then begin
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
+                endif
+
+                ; Set the region as current.
+                xroi__SetROI, pState, oROI, /UPDATE_LIST, $
+                                /SET_LIST_SELECT
+
+                oROI->SetProperty, STYLE=2
+                (*pState).oWindow->Draw, (*pState).oView
+
+                ; If this is the first region, bring up the
+                ; region information dialog.
+                if ((*pState).bFirstROI eq 1b) then begin
+                    WIDGET_CONTROL, /HOURGLASS
+                    (*pState).bFirstROI = 0b
+                    xroiInfo, pState, GROUP_LEADER=sEvent.top
+                endif
+
+;plot Selection in Main Widget_draw (main gui)
+            plot_selection_in_main_gui, sEvent
+
+            endif else begin
+                ; Fewer than 3 vertices; delete.
+                (*pState).oModel->Remove, oROI
+                OBJ_DESTROY, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Reset color of formerly selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, $
+                    COLOR=(*pState).sel_rgb
+
+                (*pState).oWindow->Draw, (*pState).oView
+
+            endelse
+
+        end  ; FREEHAND DRAW
+
+        ; Freehand ROI
+        'FREEHAND DRAW EMPTY': begin
             if (sEvent.release ne 1) then break
             if ((*pState).bButtonDown ne 1) then break  ; Left mouse button.
 
@@ -2306,6 +2420,19 @@ pro xroi__Motion, sEvent
 
         ; Freehand ROI
         'FREEHAND DRAW': begin
+            oROI = (*pState).oCurrROI
+            if (OBJ_VALID(oROI) EQ 0) then return
+
+            ; If button down, append a vertex.
+            if ((*pState).bButtonDown NE 0) then begin
+                oROI->AppendData, [xImage, yImage]
+                (*pState).oWindow->Draw, (*pState).oView
+                (*pState).bTempSegment = 1b
+            endif
+        end
+
+        ; Freehand ROI
+        'FREEHAND DRAW EMPTY': begin
             oROI = (*pState).oCurrROI
             if (OBJ_VALID(oROI) EQ 0) then return
 
@@ -4391,6 +4518,7 @@ PRO sans_reduction_xroi, $
                             'Ellipse', $
                             'Ellipse_empty',$
                             'Freehand Draw', $
+                            'Freehand Draw EMPTY', $
                             'Polygon Draw', $
                             'Polygon Draw Empty', $
                             'Selection'])
@@ -4400,7 +4528,7 @@ PRO sans_reduction_xroi, $
 
     if SIZE(_tools, /TNAME) ne 'STRING' then $
         MESSAGE, 'TOOLS must be a string or string array.'
-    if N_ELEMENTS(_tools) gt 9 then $
+    if N_ELEMENTS(_tools) gt 10 then $
         MESSAGE, 'TOOLS cannot have more than six elements.'
     for i=0,N_ELEMENTS(_tools)-1 do begin
         case STRUPCASE(_tools[i]) of
@@ -4410,6 +4538,7 @@ PRO sans_reduction_xroi, $
             'ELLIPSE':
             'ELLIPSE_EMPTY':
             'FREEHAND DRAW':
+            'FREEHAND DRAW EMPTY':
             'POLYGON DRAW':
             'POLYGON DRAW EMPTY':
             'SELECTION':
@@ -4775,6 +4904,16 @@ PRO sans_reduction_xroi, $
                         TOOLTIP='Draw Freehand ROIs', $
                         UNAME=prefix + 'freehand_mode', $
                         UVALUE='FREEPOLY' $
+                        )
+                end
+                'FREEHAND DRAW EMPTY': begin
+                    wFreePoly = WIDGET_BUTTON( $
+                        wExcToolbarBase, $
+                        VALUE='images/freepoly_empty.bmp',$
+                        /BITMAP, $
+                        TOOLTIP='Draw Freehand ROIs', $
+                        UNAME=prefix + 'outside_freehand_mode', $
+                        UVALUE='FREEPOLY_EMPTY' $
                         )
                 end
                 'POLYGON DRAW': begin
