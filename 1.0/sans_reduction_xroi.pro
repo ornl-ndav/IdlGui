@@ -185,6 +185,16 @@
 ;-
 
 ;==============================================================================
+FUNCTION myIDLgrModel::getInsideFlag
+RETURN, self.inside_flag
+END
+
+;==============================================================================
+PRO myIDLgrModel::setInsideFlag, value
+self.inside_flag = value
+END
+
+;==============================================================================
 FUNCTION xroi__Save, sEvent
     COMPILE_OPT idl2, hidden
 
@@ -4171,6 +4181,7 @@ PRO sans_reduction_xroi, $
     X_SCROLL_SIZE=xScrollSizeIn, $
     Y_SCROLL_SIZE=yScrollSizeIn
 
+
     ON_ERROR, KEYWORD_SET(debug) ? 0 : 2
 
     if N_ELEMENTS(group_leader) ne 0 then begin
@@ -4326,8 +4337,10 @@ PRO sans_reduction_xroi, $
     pSelRGB = PTR_NEW(roi_select_color)
     pROIRGB = PTR_NEW(roi_color)
 
-    oImage = OBJ_NEW('IDLgrImage', img, PALETTE=oPalette, $
-        INTERLEAVE=iInterleave)
+    oImage = OBJ_NEW('IDLgrImage', $
+                     img, $
+                     PALETTE=oPalette, $
+                     INTERLEAVE=iInterleave)
 
     xdim = dimensions[0]
     ydim = dimensions[1]
@@ -4682,6 +4695,13 @@ PRO sans_reduction_xroi, $
     oModel = OBJ_NEW('IDLgrModel')
     oView->Add, oModel
     oModel->Add, oImage
+
+    struct = {myIDLgrModel, inside_flag: 1b, INHERITS IDLgrModel} ;REMOVE_ME
+    oMyModel = OBJ_NEW('myIDLgrModel') ;REMOVE_ME
+    print, OBJ_VALID(oMyModel)
+    oMyModel->setInsideFlag, 1 ;REMOVE_ME
+    print, oMyModel->getInsideFlag()
+    
 
     ; Add a container for ROIs.
     oROIModel = OBJ_NEW('IDLgrModel')
