@@ -804,6 +804,23 @@ pro xroi_event, sEvent
         endif
     end
 
+    'SEGPOLY_EMPTY': begin
+        ; Segmented ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'POLYGON DRAW EMPTY' then begin
+            (*pState).mode = 'POLYGON DRAW EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
     'PICK': begin
         ; Pick tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
@@ -1256,10 +1273,43 @@ pro xroi__ButtonPress, sEvent
                     if (OBJ_VALID(oOldSelROI) ne 0) then $
                         oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
-                    oROI = OBJ_NEW('IDLgrROI', $
+                    oROI = OBJ_NEW('myIDLgrROI', $
                         COLOR=(*pState).sel_rgb, $
                         STYLE=1 $
                         )
+                    oROI->setInsideFlag, 1b ;it's an inside region
+                    (*pState).oCurrROI = oROI
+                    (*pState).oModel->Add, oROI
+                    (*pState).oWindow->Draw, (*pState).oView
+                endif
+
+                if (sEvent.clicks eq 1) then begin
+                    ; If dragging a temporary segment, start a new one.
+                    ; Otherwise, append a new vertex.
+                    if ((*pState).bTempSegment eq 1) then $
+                        (*pState).bTempSegment = 0 $
+                    else $
+                        oROI->AppendData, [xImage, yImage, 0]
+                endif
+
+                (*pState).bButtonDown = sEvent.clicks
+            endif
+        end
+
+        ; Segmented ROI
+        'POLYGON DRAW EMPTY': begin
+            if (sEvent.press eq 1) then begin
+                oROI = (*pState).oCurrROI
+                if (OBJ_VALID(oROI) eq 0) then begin
+                    oOldSelROI = (*pState).oSelROI
+                    if (OBJ_VALID(oOldSelROI) ne 0) then $
+                        oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
+
+                    oROI = OBJ_NEW('myIDLgrROI', $
+                        COLOR=(*pState).sel_rgb, $
+                        STYLE=1 $
+                        )
+                    oROI->setInsideFlag, 0b ;it's an inside region
                     (*pState).oCurrROI = oROI
                     (*pState).oModel->Add, oROI
                     (*pState).oWindow->Draw, (*pState).oView
@@ -1812,6 +1862,96 @@ COMPILE_OPT idl2, hidden
 
         end   ; POLYGON DRAW
 
+        ; Segmented ROI
+        'POLYGON DRAW EMPTY': begin
+            ; Double-click or right mouse-button up.
+            if not ((sEvent.release eq 1 and (*pState).bButtonDown eq 2) or $
+                (sEvent.release eq 4)) then break
+
+            ; Reset button down state.
+            (*pState).bButtonDown = 0b
+
+            oROI = (*pState).oCurrROI
+            if (not OBJ_VALID(oROI)) then break
+
+            value = $
+                'x:' + STRING(xImage, FORMAT='(i5)') + '  ' + $
+                'y:' + STRING(yImage, FORMAT='(i5)')
+            if (*pState).image_is_8bit then begin
+                value = value + '  z:' + STRING( $
+                    (*(*pState).pImg)[xImage, yImage], $
+                    FORMAT='(i4)' $
+                    )
+            endif
+
+            WIDGET_CONTROL, (*pState).wStatus, SET_VALUE=value
+
+            ; Ensure that the region has at 3 vertices.
+            oROI->GetProperty, DATA=roiData
+            if ((N_ELEMENTS(roiData)/3) ge 3) then begin
+                ; The region is valid.  Give it a name and add it
+                ; to the appropriate containers.
+                oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+                (*pState).oModel->Remove, oROI
+                (*pState).oROIModel->Add, oROI
+                (*pState).oROIGroup->Add, oROI
+                if OBJ_VALID((*pState).oRegionsOut) then begin
+                    (*pState).oRegionsOut->Add, oROI
+                end
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Activate appropriate tool buttons.
+                if not lmgr(/demo) then begin
+                    WIDGET_CONTROL, (*pState).wSaveButton, $
+                        SENSITIVE=1
+                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+                        SENSITIVE=1
+                endif
+
+                ; Set the region as current.
+                xroi__SetROI, pState, oROI, /UPDATE_LIST, $
+                                /SET_LIST_SELECT
+
+                oROI->SetProperty, STYLE=2
+                (*pState).oWindow->Draw, (*pState).oView
+
+                ; If this is the first region, bring up the
+                ; region information dialog.
+                if ((*pState).bFirstROI eq 1b) then begin
+                    WIDGET_CONTROL, /HOURGLASS
+                    (*pState).bFirstROI = 0b
+                    xroiInfo, pState, GROUP_LEADER=sEvent.top
+                endif
+
+                ; Reset state.
+                (*pState).bTempSegment = 0b
+
+;plot Selection in Main Widget_draw (main gui)
+                plot_selection_in_main_gui, sEvent
+
+            endif else begin
+                ; Fewer than 3 vertices; delete.
+                (*pState).oModel->Remove, oROI
+                OBJ_DESTROY, oROI
+                (*pState).oCurrROI = OBJ_NEW()
+
+                ; Reset color of formerly selected ROI.
+                oOldSelROI = (*pState).oSelROI
+                if (OBJ_VALID(oOldSelROI) ne 0) then $
+                    oOldSelROI->SetProperty, COLOR=(*pState).sel_rgb
+                (*pState).oWindow->Draw, (*pState).oView
+
+                ; Reset state.
+                (*pState).bTempSegment = 0b
+            endelse
+
+            ; This is a special case. For a segmented polygon, we don't want
+            ; to check for the right mouse button below because this will
+            ; pop up the context menu. So just bail out here.
+            return
+
+        end   ; POLYGON DRAW
+
         ; Pick ROI.
         'SELECTION': begin
             (*pState).bButtonDown = 0b
@@ -2173,6 +2313,22 @@ pro xroi__Motion, sEvent
 
         ; Segmented ROI
         'POLYGON DRAW': begin
+            oROI = (*pState).oCurrROI
+            if (OBJ_VALID(oROI) EQ 0) then return
+
+            ; Replace the final vertex with current mouse location.
+            if ((*pState).bTempSegment eq 0) then begin
+                oROI->AppendData, [xImage, yImage]
+                (*pState).oWindow->Draw, (*pState).oView
+                (*pState).bTempSegment = 1b
+            endif else begin
+                oROI->ReplaceData, [xImage, yImage]
+                (*pState).oWindow->Draw, (*pState).oView
+            endelse
+        end
+
+        ; Segmented ROI
+        'POLYGON DRAW EMPTY': begin
             oROI = (*pState).oCurrROI
             if (OBJ_VALID(oROI) EQ 0) then return
 
@@ -4230,6 +4386,7 @@ PRO sans_reduction_xroi, $
                             'Ellipse_empty',$
                             'Freehand Draw', $
                             'Polygon Draw', $
+                            'Polygon Draw Empty', $
                             'Selection'])
     endif else begin
         _tools = STRUPCASE(tools)
@@ -4237,7 +4394,7 @@ PRO sans_reduction_xroi, $
 
     if SIZE(_tools, /TNAME) ne 'STRING' then $
         MESSAGE, 'TOOLS must be a string or string array.'
-    if N_ELEMENTS(_tools) gt 8 then $
+    if N_ELEMENTS(_tools) gt 9 then $
         MESSAGE, 'TOOLS cannot have more than six elements.'
     for i=0,N_ELEMENTS(_tools)-1 do begin
         case STRUPCASE(_tools[i]) of
@@ -4248,6 +4405,7 @@ PRO sans_reduction_xroi, $
             'ELLIPSE_EMPTY':
             'FREEHAND DRAW':
             'POLYGON DRAW':
+            'POLYGON DRAW EMPTY':
             'SELECTION':
             else: MESSAGE, 'Unknown TOOLS value: ' + _tools[i]
         endcase
@@ -4621,6 +4779,16 @@ PRO sans_reduction_xroi, $
                         TOOLTIP='Draw Polygon ROIs', $
                         UNAME=prefix + 'polygon_mode', $
                         UVALUE='SEGPOLY' $
+                        )
+                end
+                'POLYGON DRAW EMPTY': begin
+                    wSegPoly = WIDGET_BUTTON($
+                        wExcToolbarBase, $
+                        VALUE='images/segpoly_empty.bmp',$
+                        /BITMAP, $
+                        TOOLTIP='Draw Polygon ROIs', $
+                        UNAME=prefix + 'outside_polygon_mode', $
+                        UVALUE='SEGPOLY_EMPTY' $
                         )
                 end
                 'SELECTION': begin
