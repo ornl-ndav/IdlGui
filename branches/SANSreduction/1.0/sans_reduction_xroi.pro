@@ -217,36 +217,71 @@ FUNCTION xroi__Save, sEvent
         if (STRLEN(fname) gt 0) then begin
             
 ; Determine which ROI, if any, is currently selected.
-            oSelROI = (*pState).oSelROI
-            pos = -1L
-            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
-                result = $
-                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
-            ENDIF ELSE BEGIN
-                result = -1
-            ENDELSE
+;            oSelROI = (*pState).oSelROI
+;            pos = -1L
+;            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
+;                result = $
+;                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
+;            ENDIF ELSE BEGIN
+;                result = -1
+;            ENDELSE
 
-            CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+;Selection settings (in if half is in, in if more than half in ...)
+;will be the same for all the selection
             CurrentSelectionSettings = (*pState).currentSelectedSettings
 
 ;initialize the selection of pixels
 ;1 for a pixel that has been selected
 ;0 for a pixel that is not part of the selection
-            PixelSelectedArray = INTARR(80,80)
+                PixelSelectedArray = INTARR(80,80)
+            
+            IF (nROIS EQ 1) THEN BEGIN
+                
+                CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+                
+;type of selection
+                insideSelection = oROIs[0]->getInsideFlag()
+                
 ;Determine which pixels have been selected
-            CreateArrayOfPixelSelected, $
-              PixelSelectedArray, $
-              oROIs[CurrentROIselectedIndex],$
-              CurrentSelectionSettings
+                CreateArrayOfPixelSelected_FOR_RoiFile, $
+                  PixelSelectedArray, $
+                  oROIs[CurrentROIselectedIndex],$
+                  CurrentSelectionSettings, $
+                  insideSelection
+
+            ENDIF ELSE BEGIN
+
+                FOR i=0,(nROIS -1) DO BEGIN
+                    
+;type of selection
+                    insideSelection = oROIs[i]->getInsideFlag()
+                    
+;tmp pixel array
+                    tmpPixelSelectedArray = INTARR(80,80)
+                    
+;Determine which pixels have been selected
+                    CreateArrayOfPixelSelected_FOR_RoiFile, $
+                      tmpPixelSelectedArray, $
+                      oROIs[i],$
+                      CurrentSelectionSettings, $
+                      insideSelection
+                    
+                    PixelSelectedArray += tmpPixelSelectedArray
+                    index = WHERE(PixelSelectedArray GT 0)
+                    PixelSelectedArray[index] = 1
+                    
+                ENDFOR
+                
+            ENDELSE
             
 ;Create ROI file 
             CreateROIfile, fname, PixelSelectedArray
 
-       endif
-    endif
+        ENDIF
+    ENDIF
 
     RETURN, 0 ; "Swallow" event.
-end
+END
 
 ;==============================================================================
 PRO plot_moved_selection_in_main_gui, sEvent
@@ -4123,6 +4158,67 @@ FOR i=0,(Xsize-1) DO BEGIN
             ENDIF
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                x = FIX(i/4)
+                y = FIX(j/4)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDELSE
+    ENDFOR
+ENDFOR
+
+CASE (CurrentSelectionSettings) OF
+;half in
+    0: BEGIN
+        IndexArray = WHERE(tmp_array GE 8) 
+    END
+;half out
+    1: BEGIN
+        IndexArray = WHERE(tmp_array GT 8) 
+    END
+;out in
+    2: BEGIN
+        IndexArray = WHERE(tmp_array GT 0) 
+    END
+;out out
+    3: BEGIN
+        IndexArray = WHERE(tmp_array EQ 16) 
+    END
+    ELSE:
+ENDCASE
+
+;only if IndexArray is not empty
+IF (SIZE(IndexArray,/N_DIMENSION) EQ 1) THEN BEGIN 
+    PixelSelectedArray(IndexArray) = 1
+ENDIF
+
+END
+
+;##############################################################################
+;------------------------------------------------------------------------------
+;This procedure will go screen pixel by screen pixel to check if the
+;pixel is part of the selection and the result will depend on the
+;settings of the selection. This procedure creates the array that will
+;be used to create the ROI file. Selection is like an inverse image of
+;what you can find in the ROI file. A pixel highlighted means that
+;this pixel will not be in the ROI file because not selected
+PRO  CreateArrayOfPixelSelected_FOR_RoiFile, PixelSelectedArray,$
+                                             oROI,$
+                                             CurrentSelectionSettings,$
+                                             insideSelectionType
+
+tmp_array = INTARR(80,80)
+Xsize = 320
+Ysize = 320
+FOR i=0,(Xsize-1) DO BEGIN
+    FOR j=0,(Ysize-1) DO BEGIN
+        IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
+            IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                x = FIX(i/4)
+                y = FIX(j/4)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
                 x = FIX(i/4)
                 y = FIX(j/4)
                 ++tmp_array[x,y]
