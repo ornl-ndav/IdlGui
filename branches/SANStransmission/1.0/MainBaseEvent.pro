@@ -73,7 +73,7 @@ CASE Event.id OF
         RunCommandLine, Event ;_run_commandline
     END
 
-;==== tab1 (LOAD FILES (1)) ===================================================
+;==== tab1 ====================================================================
 
 ;----Data File ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
@@ -95,101 +95,27 @@ CASE Event.id OF
           'roi_file_name_text_field'
     END
 
-;----Solvant Buffer Only File -------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
+;----Transmission Background --------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='transm_back_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
-          'solvant_run_number_cw_field',$
-          'solvant_file_name_text_field'
+          'transm_back_run_number_cw_field',$
+          'transm_back_file_name_text_field'
     END
 
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_browse_button'): BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='transm_back_browse_button'): BEGIN
         BrowseNexus, Event, $
-          'solvant_browse_button',$
-          'solvant_file_name_text_field'
+          'transm_back_browse_button',$
+          'transm_back_file_name_text_field'
     END
 
-;----Empty Can  ---------------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'empty_run_number_cw_field',$
-          'empty_file_name_text_field'
-    END
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_browse_button'): BEGIN
-        BrowseNexus, Event, $
-          'empty_browse_button',$
-          'empty_file_name_text_field'
-    END
-
-;----Open Beam  ---------------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='open_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'open_run_number_cw_field',$
-          'open_file_name_text_field'
-    END
-
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='open_browse_button'): BEGIN
-        BrowseNexus, Event, $
-          'open_browse_button',$
-          'open_file_name_text_field'
-    END
-
-;----Dark Current  ------------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'dark_run_number_cw_field',$
-          'dark_file_name_text_field'
-    END
-
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_browse_button'): BEGIN
-        BrowseNexus, Event, $
-          'dark_browse_button',$
-          'dark_file_name_text_field'
-    END
-
-;==== tab2 (LOAD FILES (2) ====================================================
-
-;----Sample Data File ---------------------------------------------------------
-    WIDGET_INFO(wWidget, $
-                FIND_BY_UNAME= $
-                'sample_data_transmission_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'sample_data_transmission_run_number_cw_field', $
-          'sample_data_transmission_file_name_text_field'
-    END
-    
-    WIDGET_INFO(wWidget, $
-                FIND_BY_UNAME= $
-                'sample_data_transmission_browse_button'): BEGIN
-        BrowseNexus, Event, $
-          'sample_data_transmission_browse_button',$
-          'sample_data_transmission_file_name_text_field'
-    END
-
-;----Empty Can Transmission ---------------------------------------------------
-    WIDGET_INFO(wWidget, $
-                FIND_BY_UNAME= $
-                'empty_can_transmission_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'empty_can_transmission_run_number_cw_field', $
-          'empty_can_transmission_file_name_text_field'
-    END
-    
-    WIDGET_INFO(wWidget, $
-                FIND_BY_UNAME= $
-                'empty_can_transmission_browse_button'): BEGIN
-        BrowseNexus, Event, $
-          'empty_can_transmission_browse_button',$
-          'empty_can_transmission_file_name_text_field'
-    END
-
+;----Output folder ------------------------------------------------------------
     WIDGET_INFO(wWidget,$
                 FIND_BY_UNAME= $
                 'output_folder'): BEGIN
         BrowseOutputFolder, Event ;_reduce_tab2
     END
 
-;==== tab3 (PARAMETERS) =======================================================
+;==== tab2 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
