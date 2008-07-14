@@ -185,15 +185,22 @@
 ;-
 
 ;==============================================================================
-FUNCTION myIDLgrModel::getInsideFlag
+;This method of the new class myIDLgrROI returns the inside_flag 
+;1 means the ROI is inside the selection
+;0 means the ROI is outside the selection
+FUNCTION myIDLgrROI::getInsideFlag
 RETURN, self.inside_flag
 END
 
 ;==============================================================================
-PRO myIDLgrModel::setInsideFlag, value
+;This method of the new class myIDLgrROI sets the inside_flag
+;1 means the ROI is inside the selection
+;0 means the ROI is outside the selection
+PRO myIDLgrROI::setInsideFlag, value
 self.inside_flag = value
 END
 
+;==============================================================================
 ;==============================================================================
 FUNCTION xroi__Save, sEvent
     COMPILE_OPT idl2, hidden
@@ -1107,10 +1114,10 @@ pro xroi__ButtonPress, sEvent
                     oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
                  ; Create a new rectangle region.
-                 oROI = OBJ_NEW('IDLgrROI', $
+                 oROI = OBJ_NEW('myIDLgrROI', $
                         COLOR=(*pState).sel_rgb, $
-                        STYLE=0 $
-                        )
+                        STYLE=0)
+                 oROI->setInsideFlag, 1b ;it's an inside region
 
                  (*pState).oCurrROI = oROI
                  (*pState).oModel->Add, oROI
@@ -1133,9 +1140,10 @@ pro xroi__ButtonPress, sEvent
                     oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
                  ; Create a new rectangle region.
-                 oROI = OBJ_NEW('IDLgrROI', $
+                 oROI = OBJ_NEW('myIDLgrROI', $
                                 COLOR=(*pState).sel_rgb, $
                                 STYLE=0)
+                 oROI->setInsideFlag, 0b ;it's an outside region
                  
                  (*pState).oCurrROI = oROI
                  (*pState).oModel->Add, oROI
@@ -1391,6 +1399,7 @@ COMPILE_OPT idl2, hidden
 
             ; Ensure that the rectangle has at 4 vertices.
             oROI->GetProperty, DATA=roiData
+            print, oROI->getInsideFlag() ;remove_me
             if ((N_ELEMENTS(roiData)/3) eq 4) then begin
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
@@ -1448,6 +1457,7 @@ COMPILE_OPT idl2, hidden
             (*pState).bButtonDown = 0b
 
             oROI = (*pState).oCurrROI
+            print, oROI->getInsideFlag() ;remove_me
             if (not OBJ_VALID(oROI)) then break
 
             ; Ensure that the rectangle has at 4 vertices.
@@ -4696,11 +4706,11 @@ PRO sans_reduction_xroi, $
     oView->Add, oModel
     oModel->Add, oImage
 
-    struct = {myIDLgrModel, inside_flag: 1b, INHERITS IDLgrModel} ;REMOVE_ME
-    oMyModel = OBJ_NEW('myIDLgrModel') ;REMOVE_ME
-    print, OBJ_VALID(oMyModel)
-    oMyModel->setInsideFlag, 1 ;REMOVE_ME
-    print, oMyModel->getInsideFlag()
+    struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
+;    MyROI = OBJ_NEW('myIDLgrROI') ;REMOVE_ME
+;    print, OBJ_VALID(oMyROI)
+;    oMyROI->setInsideFlag, 1 ;REMOVE_ME
+;    print, oMyModel->getInsideFlag()
     
 
     ; Add a container for ROIs.
