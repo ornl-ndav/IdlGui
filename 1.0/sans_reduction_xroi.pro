@@ -240,15 +240,6 @@ IF (nROIs GE 1) THEN BEGIN
 
     CurrentSelectionSettings = (*pState).currentSelectedSettings
 
-;    oSelROI = (*pState).oSelROI
-;    pos = -1L
-;    if (OBJ_VALID(oSelROI) ne 0) then BEGIN
-;        result = $
-;          (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
-;    ENDIF ELSE BEGIN
-;        result = -1
-;    ENDELSE
- 
 ;plot selection
     Event = (*pState).Event
     view_info = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_uname')
@@ -629,20 +620,20 @@ pro xroi_event, sEvent
 
     COMPILE_OPT idl2, hidden
 
-    if (TAG_NAMES(sEvent, /STRUC) eq 'WIDGET_BASE') then begin
+    IF (TAG_NAMES(sEvent, /STRUC) EQ 'WIDGET_BASE') THEN BEGIN
         xroi__BaseResize, sEvent
         ; We're done with this event.
-        return
-    endif
+        RETURN
+    ENDIF
 
     WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
 
-    case uval of
+    CASE uval OF
 
-    'DRAW': begin
+    'DRAW': BEGIN
         ; Handle all events in the draw area.
 
-        case sEvent.type of
+        CASE sEvent.type OF
             ; Button Press
             0: xroi__ButtonPress, sEvent
 
@@ -658,50 +649,50 @@ pro xroi_event, sEvent
             ; Expose
             4: xroi__Expose, sEvent
 
-            else: begin
-            end
-        endcase
-    end
+            ELSE: BEGIN
+            END
+        ENDCASE
+    END
 
-    'TRANSLATE-SCALE': begin
+    'TRANSLATE-SCALE': BEGIN
         ; Translate/Scale tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'TRANSLATE-SCALE' then begin
+        IF (*pState).mode NE 'TRANSLATE-SCALE' THEN BEGIN
             (*pState).mode = 'TRANSLATE-SCALE'
 
             ; Disable old selection visual, if any.
             oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
+            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
                  oSelVisual->SetProperty, /HIDE
                 (*pState).oSelVisual = OBJ_NEW()
-            endif
+            ENDIF
 
             ; Set the translate/scale selection visual as current.
             (*pState).oSelVisual = (*pState).oTransScaleVisual
             xroi__ReshapeSelectionVisual, pState, (*pState).oSelROI
 
             (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
+        ENDIF
+    END
 
-    'RECTANGLE': begin
+    'RECTANGLE': BEGIN
         ; Rectangle ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'RECTANGLE' then begin
+        IF (*pState).mode NE 'RECTANGLE' THEN BEGIN
             (*pState).mode = 'RECTANGLE'
 
             ; Disable old selection visual, if any.
             oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
+            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
                  oSelVisual->SetProperty, /HIDE
                 (*pState).oSelVisual = OBJ_NEW()
-            endif
+            ENDIF
 
             (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
+        ENDIF
+    END
 
-    'RECTANGLE_EMPTY': begin
+    'RECTANGLE_EMPTY': BEGIN
         ; Rectangle ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
         if (*pState).mode ne 'RECTANGLE_EMPTY' then begin
@@ -4613,21 +4604,20 @@ PRO sans_reduction_xroi, $
 
     ; Create draw area.
     wDraw = WIDGET_DRAW( $
-        wBase, $
-        /APP_SCROLL, $
-        X_SCROLL_SIZE=xScrollSize, $
-        Y_SCROLL_SIZE=yScrollSize, $
-        XSIZE=xdim, $
-        YSIZE=ydim, $
-        UVALUE='DRAW', $
-        GRAPHICS_LEVEL=2, $
-        RENDERER=renderer, $
-        /BUTTON_EVENTS, $
-        /EXPOSE_EVENTS, $
-        /VIEWPORT_EVENTS, $
-        UNAME=prefix + 'draw', $
-        /MOTION_EVENTS $
-        )
+                         wBase, $
+                         X_SCROLL_SIZE  = xScrollSize, $
+                         Y_SCROLL_SIZE  = yScrollSize, $
+                         XSIZE          = xdim, $
+                         YSIZE          = ydim, $
+                         UVALUE         = 'DRAW', $
+                         GRAPHICS_LEVEL = 2, $
+                         RENDERER       = renderer, $
+                         UNAME          = prefix + 'draw', $
+                         /APP_SCROLL, $
+                         /BUTTON_EVENTS, $
+                         /EXPOSE_EVENTS, $
+                         /VIEWPORT_EVENTS, $
+                         /MOTION_EVENTS)
 
     ; Create a context menu.
     wROIContextMenu = WIDGET_BASE(wDraw, /CONTEXT_MENU)
@@ -4688,7 +4678,7 @@ PRO sans_reduction_xroi, $
     WIDGET_CONTROL, wDraw, GET_VALUE=oWindow
 
     ; Create the graphics hierarchy.
-    oView = OBJ_NEW('IDLgrView', VIEWPLANE_RECT=[0,0,xdim,ydim])
+    oView  = OBJ_NEW('IDLgrView', VIEWPLANE_RECT=[0,0,xdim,ydim])
     oModel = OBJ_NEW('IDLgrModel')
     oView->Add, oModel
     oModel->Add, oImage
@@ -4706,9 +4696,9 @@ PRO sans_reduction_xroi, $
     oTransScaleVisual = xroi__CreateTransScaleVisual(COLOR=roi_select_color)
     oModel->Add, oTransScaleVisual
 
-    oRejected = OBJ_NEW('IDL_Container')
+    oRejected   = OBJ_NEW('IDL_Container')
     oRegionsOut = OBJ_NEW('IDL_Container')
-    oRegionsIn = OBJ_NEW('IDLgrModel')
+    oRegionsIn  = OBJ_NEW('IDLgrModel')
 
     ; The following "if" conditions used on REGIONS_IN are intended
     ; to casue XROI to silently ignore REGIONS_IN when REGIONS_IN=-1
