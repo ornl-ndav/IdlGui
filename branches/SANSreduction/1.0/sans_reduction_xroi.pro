@@ -756,8 +756,8 @@ pro xroi_event, sEvent
     'ELLIPSE_EMPTY': begin
         ; Ellipse ROI tool selected.
         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'ELLIPSE' then begin
-            (*pState).mode = 'ELLIPSE'
+        if (*pState).mode ne 'ELLIPSE_EMPTY' then begin
+            (*pState).mode = 'ELLIPSE_EMPTY'
 
             ; Disable old selection visual, if any.
             oSelVisual = (*pState).oSelVisual
@@ -1177,10 +1177,11 @@ pro xroi__ButtonPress, sEvent
                     oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
                  ; Create a new ellipse region.
-                 oROI = OBJ_NEW('IDLgrROI', $
+                 oROI = OBJ_NEW('myIDLgrROI', $
                         COLOR=(*pState).sel_rgb, $
                         STYLE=0 $
                         )
+                 oROI->setInsideFlag, 1b ;it's an inside region
 
                  (*pState).oCurrROI = oROI
                  (*pState).oModel->Add, oROI
@@ -1203,10 +1204,11 @@ pro xroi__ButtonPress, sEvent
                     oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
                  ; Create a new ellipse region.
-                 oROI = OBJ_NEW('IDLgrROI', $
+                 oROI = OBJ_NEW('myIDLgrROI', $
                         COLOR=(*pState).sel_rgb, $
                         STYLE=0 $
                         )
+                 oROI->setInsideFlag, 0b ;it's an outside region
 
                  (*pState).oCurrROI = oROI
                  (*pState).oModel->Add, oROI
@@ -1413,7 +1415,6 @@ COMPILE_OPT idl2, hidden
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
                 oROI->SetProperty, NAME=xroi__GenerateName(*pState)
-                oROI->SetProperty, INTERIOR=1b ;it's an inside selection
                 (*pState).oModel->Remove, oROI
                 (*pState).oROIModel->Add, oROI
                 (*pState).oROIGroup->Add, oROI
@@ -1474,8 +1475,6 @@ COMPILE_OPT idl2, hidden
             if ((N_ELEMENTS(roiData)/3) eq 4) then begin
                 ; The rectangle region is valid.  Give it a name
                 ; and add it to the appropriate containers.
-
-                oROI->SetProperty, INTERIOR=0b ;it's an outside selection
 
                 oROI->SetProperty, NAME=xroi__GenerateName(*pState)
                 (*pState).oModel->Remove, oROI
@@ -1587,7 +1586,7 @@ COMPILE_OPT idl2, hidden
             endelse
 
         end
-        'ELLIPSE_EMPTY': begin
+        'ELLIPSE_EMPTY': BEGIN
             if (sEvent.release ne 1) then break  ; Left mouse button only.
             if ((*pState).bButtonDown ne 1) then break  ; button was down
 
