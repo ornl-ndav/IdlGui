@@ -1939,9 +1939,12 @@ COMPILE_OPT idl2, hidden
             oROI = (*pState).oCurrROI
             if (not OBJ_VALID(oROI)) then break
 
+            PixelX = FIX(Ximage / 4)
+            PixelY = FIX(Yimage / 4)
+
             value = $
-                'x:' + STRING(xImage, FORMAT='(i5)') + '  ' + $
-                'y:' + STRING(yImage, FORMAT='(i5)')
+                'Pixel X:' + STRING(PixelX, FORMAT='(i5)') + '  ' + $
+                'Pixel Y:' + STRING(PixelY, FORMAT='(i5)')
             if (*pState).image_is_8bit then begin
                 value = value + '  z:' + STRING( $
                     (*(*pState).pImg)[xImage, yImage], $
@@ -2029,9 +2032,12 @@ COMPILE_OPT idl2, hidden
             oROI = (*pState).oCurrROI
             if (not OBJ_VALID(oROI)) then break
 
+            PixelX = FIX(Ximage / 4)
+            PixelY = FIX(Yimage / 4)
+
             value = $
-                'x:' + STRING(xImage, FORMAT='(i5)') + '  ' + $
-                'y:' + STRING(yImage, FORMAT='(i5)')
+                'Pixel X:' + STRING(PixelX, FORMAT='(i5)') + '  ' + $
+                'Pixel Y:' + STRING(PixelY, FORMAT='(i5)')
             if (*pState).image_is_8bit then begin
                 value = value + '  z:' + STRING( $
                     (*(*pState).pImg)[xImage, yImage], $
@@ -2181,9 +2187,15 @@ pro xroi__Motion, sEvent
         xImage lt dimensions[0] and $
         yImage lt dimensions[1]
 
+    PixelX = FIX(Ximage / 4)
+    PixelY = FIX(Yimage / 4)
+
+    Counts = FIX(((*pState).SumDataArray)[PixelY,PixelX])
+
     value = $
-        'x:' + STRING(xImage, FORMAT='(i5)') + '  ' + $
-        'y:' + STRING(yImage, FORMAT='(i5)')
+        'Pixel X:' + STRING(PixelX, FORMAT='(i3)') + '    ' + $
+        'Pixel Y:' + STRING(PixelY, FORMAT='(i3)') + '    ' + $
+        'Counts : ' + STRCOMPRESS(Counts,/REMOVE_ALL)
     if (*pState).image_is_8bit then begin
         if event_is_in_image then begin
             value = value + '  z:' + STRING( $
@@ -5200,6 +5212,7 @@ PRO sans_reduction_xroi, $
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
               DataArray:            DataArray,$
+              SumDataArray:         total(DataArray,1),$
               currentROIselectedIndex: 0L,$
               currentSelectedSettings: 0,$
               toolbar_xsize:        toolbar_xsize, $
