@@ -223,7 +223,6 @@ pro populate_structure, all_data, MyStruct
     line = all_data[i]
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
-        ;print, "==========================" remove
         array_index = 0
         data_structure[array_nbr].data = ptr_new(my_data_array)
         data_structure[array_nbr].bank = bank
@@ -242,16 +241,24 @@ pro populate_structure, all_data, MyStruct
         ENDIF
       ENDELSE
     ENDIF else begin
-      ;print, "the line: " + line remove
+      ;populate data stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN
         temp = strsplit(line, /PRESERVE_NULL, /extract)
-        ;  = strsplit(temp, " '  ( ) , ", /EXTRACT)
-        ;print, strjoin(temp, "|")
         bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
         x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
-        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
-        
+        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)       
       endif
+      
+      ;populate the rest of MyStruct structure
+      if array_nbr eq 0 then begin
+        IF (STRMATCH(line,'#L*')) THEN BEGIN
+          temp = strsplit(line, /extract)
+          x_all = strsplit(temp[1], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+          y_all = strsplit(temp[2], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+          sigma_all = strsplit(temp[3], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+        endif
+      endif
+      
     endelse
     
     ++i
@@ -263,13 +270,14 @@ pro populate_structure, all_data, MyStruct
   ;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
   
   MyStruct.NbrArray = new_nbr
+  MyStruct.xaxis = x_all[0]
+  MyStruct.xaxis_units = x_all[1]
+  MyStruct.yaxis = y_all[0]
+  MyStruct.yaxis_units = y_all[1]
+  MyStruct.sigma_yaxis = sigma_all[0]
+  MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
-  
-
-;  print, (*(data_structure[index]).data)[x]
-  
-  
-  
+    
 END
 
 ;------------------------------------------------------------------------------
