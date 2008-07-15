@@ -4629,14 +4629,15 @@ PRO sans_reduction_xroi, $
                             'Freehand Draw EMPTY', $
                             'Polygon Draw', $
                             'Polygon Draw Empty', $
-                            'Selection'])
+                            'Selection', $
+                            'Circle'])
     endif else begin
         _tools = STRUPCASE(tools)
     endelse
 
     if SIZE(_tools, /TNAME) ne 'STRING' then $
         MESSAGE, 'TOOLS must be a string or string array.'
-    if N_ELEMENTS(_tools) gt 10 then $
+    if N_ELEMENTS(_tools) gt 11 then $
         MESSAGE, 'TOOLS cannot have more than six elements.'
     for i=0,N_ELEMENTS(_tools)-1 do begin
         case STRUPCASE(_tools[i]) of
@@ -4650,6 +4651,7 @@ PRO sans_reduction_xroi, $
             'POLYGON DRAW':
             'POLYGON DRAW EMPTY':
             'SELECTION':
+            'CIRCLE':
             else: MESSAGE, 'Unknown TOOLS value: ' + _tools[i]
         endcase
     endfor
@@ -5052,6 +5054,16 @@ PRO sans_reduction_xroi, $
                         TOOLTIP='Select ROI', $
                         UNAME=prefix + 'selection_mode', $
                         UVALUE='PICK' $
+                        )
+                end
+                'CIRCLE': begin
+                    wPick = WIDGET_BUTTON( $
+                        wExcToolbarBase, $
+                        VALUE='images/circle.bmp',$
+                        /BITMAP, $
+                        TOOLTIP='Select ROI', $
+                        UNAME=prefix + 'circle_mode', $
+                        UVALUE='CIRCLE' $
                         )
                 end
             endcase
