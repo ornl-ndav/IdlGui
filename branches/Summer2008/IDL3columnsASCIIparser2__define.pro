@@ -210,29 +210,33 @@ PRO populate_structure, all_data, MyStruct
     bank: '',$
     X:    '',$
     Y:    '',$
-    data: ptr_new(0L, /ALLOCATE_HEAP)}
- 
-  
-  
+   ; DATA: PTR_NEW(0L, /ALLOCATE_HEAP)}
+  ;  data: PTRARR(0L, /ALLOCATE_HEAP)}
+    data: ptr_new()}
+    
+  ;  STRUCT_ASSIGN, /VERBOSE,general_data_structure, struct
+    
   ;then create the array of structures according to the number of array (new_nbr)
   data_structure = REPLICATE(general_data_structure,new_nbr)
+  
   ;and put this general array of structures inside MyStruct.data
   array_nbr   = 0
   i           = 0
   array_index = 0
   
   
+ 
+  
   WHILE (array_nbr NE new_nbr) DO BEGIN
     line = all_data[i]
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
         array_index = 0
-        help, data_structure[array_nbr]
-        help, data_structure[array_nbr].data
-        *(data_structure[array_nbr]).data = my_data_array ;PROBLEM HERE !
+        ;        print, "-------------------------  "
+        (data_structure[array_nbr].data) = ptr_new(my_data_array)
         ++array_nbr
       ENDIF ELSE BEGIN
-        print, line ;remove_me
+        ;       print, "line: " +  line ;remove_me
         array = STRSPLIT(line,' ',/EXTRACT)
         IF (N_ELEMENTS(array) GT 1) THEN BEGIN
           IF (array_index EQ 0) THEN BEGIN
@@ -247,7 +251,19 @@ PRO populate_structure, all_data, MyStruct
     ++i
   ENDWHILE
   
-;print, 'data_structure[0].data: ' + data_structure[0].data
+  
+index = 2
+ending = n_elements(*(data_structure[index]).data)-1
+for x = 0, n_elements(*(data_structure[index]).data)-1 do  begin
+  print, (*(data_structure[index]).data)[x]
+endfor
+  
+; *(data_structure[0].data) = ''
+  
+; help, *(data_structure[0].data)
+; help, *(data_structure[1].data)
+; help, *data_structure[2].data
+; help, *data_structure[3].data
   
 END
 
