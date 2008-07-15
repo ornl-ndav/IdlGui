@@ -1109,6 +1109,7 @@ end
 ;------------------------------------------------------------------------------
 
 pro xroi__ButtonPress, sEvent
+
     COMPILE_OPT idl2, hidden
 
     WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
@@ -1117,6 +1118,17 @@ pro xroi__ButtonPress, sEvent
     WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
     xImage = sEvent.x + viewport[0]
     yImage = sEvent.y + viewport[1]
+
+    ;If the Selection Circle Base is shown, display the X, Y (mm and pixel)
+    IF (WIDGET_INFO((*pState).wCircleInfo, /VALID_ID) NE 0) THEN BEGIN
+        
+        PixelX = FIX(Ximage/4)
+        PixelY = FIX(Yimage/4)
+
+        Widget_control, (*pState).wTextPixelXo, SET_VALUE=STRCOMPRESS(PixelX)
+        Widget_control, (*pState).wTextPixelYo, SET_VALUE=STRCOMPRESS(PixelY)
+
+    ENDIF
 
     case (*pState).mode of
         'TRANSLATE-SCALE': begin
@@ -2231,12 +2243,7 @@ pro xroi__Motion, sEvent
     endif
 
     WIDGET_CONTROL, (*pState).wStatus, SET_VALUE=value
-    
-    ;If the Selection Circle Base is shown, display the X, Y (mm and pixel)
-    IF (WIDGET_INFO((*pState).wCircleInfo, /VALID_ID) NE 0) THEN BEGIN
-        print, 'show'
-    ENDIF
-        
+            
     case (*pState).mode of
         'TRANSLATE-SCALE': begin
             if ((*pState).bButtonDown ne 0) then begin
@@ -4600,6 +4607,14 @@ WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
 print, uval
 
 CASE uval OF
+    'cancel_circle_selection': BEGIN
+        WIDGET_CONTROL, sEvent.top, /DESTROY
+    END
+    
+    'validate_circle_selection': BEGIN
+    END
+
+
 
 ELSE:
 ENDCASE
@@ -4644,6 +4659,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                          UVALUE = 'pixel_xo',$
                          /ALIGN_LEFT,$
                          /EDITABLE)
+    (*pParentState).wTextPixelXo = wTextPixelXo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = '  or   Offset')
     wTextOffsetXo = WIDGET_TEXT(wRowBase,$
@@ -4653,6 +4669,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                          UVALUE = 'offset_xo',$
                          /ALIGN_LEFT,$
                          /EDITABLE)
+    (*pParentState).wTextOffsetXo = wTextOffsetXo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'mm')
 
@@ -4671,6 +4688,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                          UVALUE = 'pixel_yo',$
                          /ALIGN_LEFT,$
                          /EDITABLE)
+    (*pParentState).wTextPixelYo = wTextPixelYo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = '  or   Offset')
     wTextOffsetYo = WIDGET_TEXT(wRowBase,$
@@ -4680,6 +4698,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                          UVALUE = 'offset_yo',$
                          /ALIGN_LEFT,$
                          /EDITABLE)
+    (*pParentState).wTextOffsetyo = wTextOffsetYo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'mm')
 
@@ -4689,17 +4708,20 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                           VALUE = 'Radius: ')
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = ' ')
+;    wLabel = WIDGET_LABEL(wRowBase,$
+;                          VALUE = 'Nbr of Pixels')
+;     wTextNbrPixelRadius = WIDGET_TEXT(wRowBase,$
+;                                       VALUE = '',$
+;                                       XSIZE = 5,$
+;                                       UNAME = 'nbr_pixel_radius',$
+;                                       UVALUE = 'nbr_pixel_radius',$
+;                                       /ALIGN_LEFT,$
+;                                       /EDITABLE)
+;     (*pParentState).wTextNbrPixelRadius = wTextNbrPixelRadius
+;    wLabel = WIDGET_LABEL(wRowBase,$
+;                          VALUE = ' or Distance')
     wLabel = WIDGET_LABEL(wRowBase,$
-                          VALUE = 'Nbr of Pixels')
-    wTextNbrPixelRadius = WIDGET_TEXT(wRowBase,$
-                                      VALUE = '',$
-                                      XSIZE = 5,$
-                                      UNAME = 'nbr_pixel_radius',$
-                                      UVALUE = 'nbr_pixel_radius',$
-                                      /ALIGN_LEFT,$
-                                      /EDITABLE)
-    wLabel = WIDGET_LABEL(wRowBase,$
-                          VALUE = ' or Distance')
+                          VALUE = ' Distance')
     wTextDistPixelRadius = WIDGET_TEXT(wRowBase,$
                                        VALUE  = '',$
                                        XSIZE  = 5,$
@@ -4707,6 +4729,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                                        UVALUE = 'dist_pixel_radius',$
                                        /ALIGN_LEFT,$
                                        /EDITABLE)
+    (*pParentState).wTextDistPixelRadius = wTextDistPixelRadius
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'mm')
     
@@ -4764,7 +4787,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
               wTextOffsetXo: wTextOffsetXo,$
               wTextPixelYo:  wTextPixelYo, $
               wTextOffsetYo: wTextOffsetYo, $
-              wTextNbrPixelRadius: wTextNbrPixelRadius,$
+;              wTextNbrPixelRadius: wTextNbrPixelRadius,$
               wTextDistPixelRadius: wTextDistPixelRadius,$
               wInsideSelectionButton: wInsideSelectionButton,$
               wOutsideSelectionButton: wOutsideSelectionButton,$
@@ -5545,6 +5568,12 @@ PRO sans_reduction_xroi, $
               group_leader: $
               N_ELEMENTS(group_leader) gt 0 ? group_leader : -1, $
               draw_time:            0d, $
+              wTextPixelXo:         1L, $
+              wTextOffsetXo:        1L,$
+              wTextPixelYo:         1L,$
+              wTextOffsetYo:        1L,$
+              wTextNbrPixelRadius:  1L,$
+              wTextDistPixelRadius: 1L,$
               debug:                KEYWORD_SET(debug) $
              }
 
