@@ -1127,11 +1127,13 @@ pro xroi__ButtonPress, sEvent
         Widget_control, (*pState).wTextPixelXo, SET_VALUE=STRCOMPRESS(PixelX)
         Widget_control, (*pState).wTextPixelYo, SET_VALUE=STRCOMPRESS(PixelY)
 
-        Xmax = 800L ;(mm) will have to be read from the NeXus file
-        Ymax = 800L ;(mm) will have to be read from the NeXus file
+        Xmax = 800. ;(mm) will have to be read from the NeXus file
+        Ymax = 800. ;(mm) will have to be read from the NeXus file
 
-        xoffset = FLOAT(xImage) * (FLOAT(Xmax)/(FLOAT(4)*FLOAT(80)))
-        yoffset = FLOAT(yImage) * (FLOAT(Ymax)/(FLOAT(4)*FLOAT(80)))
+        xoffset1 = FLOAT(xImage+1) * (FLOAT(Xmax)/(FLOAT(4)*FLOAT(80)))
+        xoffset  = xoffset1 - (FLOAT(Xmax)/FLOAT(2))
+        yoffset1 = FLOAT(yImage+1) * (FLOAT(Ymax)/(FLOAT(4)*FLOAT(80)))
+        yoffset  = yoffset1 - (FLOAT(Ymax)/FLOAT(2))
         Widget_control, (*pState).wTextOffsetXo, $
           SET_VALUE=STRCOMPRESS(xoffset)
         Widget_control, (*pState).wTextOffsetYo, $
