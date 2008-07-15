@@ -397,19 +397,19 @@ IF (nROIs GE 1) THEN BEGIN
                 IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
                     plots, i*x_coeff, j*x_coeff, $
                       /DEVICE, $
-                      COLOR=color
-                    plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
-                      /CONTINUE, $
-                      COLOR=color
-                    plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
-                      /CONTINUE, $
-                      COLOR=color
-                    plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
-                      /CONTINUE, $
-                      COLOR=color
-                    plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
-                      /CONTINUE, $
-                      COLOR=color
+                       COLOR=color
+                     plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                       /CONTINUE, $
+                       COLOR=color
+                     plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                       /CONTINUE, $
+                       COLOR=color
+                     plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+                       /CONTINUE, $
+                       COLOR=color
+                     plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+                       /CONTINUE, $
+                       COLOR=color
                 ENDIF
             ENDFOR
         ENDFOR
@@ -2231,7 +2231,12 @@ pro xroi__Motion, sEvent
     endif
 
     WIDGET_CONTROL, (*pState).wStatus, SET_VALUE=value
-
+    
+    ;If the Selection Circle Base is shown, display the X, Y (mm and pixel)
+    IF (WIDGET_INFO((*pState).wCircleInfo, /VALID_ID) NE 0) THEN BEGIN
+        print, 'show'
+    ENDIF
+        
     case (*pState).mode of
         'TRANSLATE-SCALE': begin
             if ((*pState).bButtonDown ne 0) then begin
@@ -4580,6 +4585,28 @@ pro xroi__cleanup, wID
 end
 
 ;------------------------------------------------------------------------------
+pro xCircleBase_event,  sEvent
+
+COMPILE_OPT idl2, hidden
+
+if (TAG_NAMES(sEvent, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') $
+  then begin
+    WIDGET_CONTROL, sEvent.top, /DESTROY
+    RETURN
+endif
+
+WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
+
+print, uval
+
+CASE uval OF
+
+ELSE:
+ENDCASE
+
+END
+
+;------------------------------------------------------------------------------
 pro xCircleBase, pParentState, GROUP_LEADER=group
 
     COMPILE_OPT idl2, hidden
@@ -4857,15 +4884,14 @@ PRO sans_reduction_xroi, $
                             'Freehand Draw EMPTY', $
                             'Polygon Draw', $
                             'Polygon Draw Empty', $
-                            'Selection', $
-                            'Circle'])
+                            'Selection'])
     endif else begin
         _tools = STRUPCASE(tools)
     endelse
 
     if SIZE(_tools, /TNAME) ne 'STRING' then $
         MESSAGE, 'TOOLS must be a string or string array.'
-    if N_ELEMENTS(_tools) gt 11 then $
+    if N_ELEMENTS(_tools) gt 10 then $
         MESSAGE, 'TOOLS cannot have more than six elements.'
     for i=0,N_ELEMENTS(_tools)-1 do begin
         case STRUPCASE(_tools[i]) of
@@ -4879,7 +4905,6 @@ PRO sans_reduction_xroi, $
             'POLYGON DRAW':
             'POLYGON DRAW EMPTY':
             'SELECTION':
-            'CIRCLE':
             else: MESSAGE, 'Unknown TOOLS value: ' + _tools[i]
         endcase
     endfor
@@ -5284,24 +5309,22 @@ PRO sans_reduction_xroi, $
                         UVALUE='PICK' $
                         )
                 end
-                'CIRCLE': begin
-                    wPick = WIDGET_BUTTON( $
-                        wExcToolbarBase, $
-                        VALUE='images/circle.bmp',$
-                        /BITMAP, $
-                        TOOLTIP='Select ROI', $
-                        UNAME=prefix + 'circle_mode', $
-                        UVALUE='CIRCLE' $
-                        )
-                end
             endcase
         endfor
-
 
         WIDGET_CONTROL,  WIDGET_INFO(wExcToolbarBase, /CHILD), /SET_BUTTON
 
     endif
 
+    void  = WIDGET_BUTTON( $
+                           wToolbarBase, $
+                           VALUE='images/circle.bmp',$
+                           /BITMAP, $
+                           TOOLTIP='Select ROI', $
+                           UNAME=prefix + 'circle_mode', $
+                           UVALUE='CIRCLE' $
+                         )
+        
     ; Create draw area.
     wDraw = WIDGET_DRAW( $
                          wBase, $
