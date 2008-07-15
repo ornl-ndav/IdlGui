@@ -103,7 +103,7 @@ global = PTR_NEW ({version:         VERSION,$
                    CorrectPara: {transm_back: {title: $
                                                'Transmission Background',$
                                                flag: $
-                                               '--trans_back'},$
+                                               '--back'},$
                                  roi:         {title: $
                                                'ROI File',$
                                                flag: $
