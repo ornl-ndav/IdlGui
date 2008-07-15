@@ -211,6 +211,26 @@ CASE Event.id OF
         lambda_cut_off_gui, Event ;_reduce_tab2
     END
 
+;---- Wavelength dependent background subtraction -----------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_help_button'): BEGIN
+        id = WIDGET_INFO(wWidget, $
+                         FIND_BY_UNAME='wave_dependent_back_sub_text_field')
+        id1 = WIDGET_INFO(wWidget, $
+                         FIND_BY_UNAME='wave_para_label_uname')
+
+        IF (Event.select EQ 1) THEN BEGIN ;button pressed
+            WIDGET_CONTROL, id, GET_VALUE = value
+            (*global).wave_para_value = value
+            WIDGET_CONTROL, id1, SET_VALUE = (*global).wave_para_help_label
+            WIDGET_CONTROL, id, SET_VALUE = (*global).wave_para_help_value
+        ENDIF ELSE BEGIN
+            value = (*global).wave_para_value
+            WIDGET_CONTROL, id1, SET_VALUE = (*global).wave_para_label
+            WIDGET_CONTROL, id, SET_VALUE = value
+        ENDELSE
+    END
+
+
 ;= TAB3 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek

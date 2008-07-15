@@ -55,6 +55,9 @@ ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
 
+wave_para_label = 'Comma-delimited List of Increasing Coefficients'
+wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
+wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
                    TESTING:         TESTING,$
@@ -78,6 +81,10 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
                    inst_geom:       '',$
+                   wave_para_value: '',$
+                   wave_para_label: wave_para_label,$               
+                   wave_para_help_label: wave_para_help_label,$
+                   wave_para_help_value: wave_para_help_value,$
                    ReducePara: {driver_name: $
                                 'sas_reduction1',$
                                 overwrite_geo: $
@@ -98,6 +105,8 @@ global = PTR_NEW ({version:         VERSION,$
                                 '--lambda-cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
+                                wave_dep_back_sub:$
+                                '--bkg-coeff',$
                                 roi_file: $
                                 '--roi-file'},$
                    CorrectPara: {solv_buffer: {title: $
@@ -221,12 +230,12 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 
-;show tab #2 'REDUCE'
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
-;show tab inside REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;Load_files_2
+;show tab #2 'REDUCE
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;show tab of the REDUCE tab
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PARAMETERS
 
 ENDIF
 ;==============================================================================

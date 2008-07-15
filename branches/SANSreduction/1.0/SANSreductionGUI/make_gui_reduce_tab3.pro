@@ -198,6 +198,41 @@ sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
              uname: 'minimum_lambda_cut_off_value',$
              sensitive: 1}
              
+;- Wavelength dependent background subtraction --------------------------------
+XYoff = [5,50]
+sWaveFrame = { size:  [XYoff[0],$
+                    sMinLambdaGroup.size[1]+XYoff[1],$
+                    tab_size[2]-20,$
+                    45],$
+            frame: 2}
+XYoff = [20,-8]
+sWaveTitle = { size:  [sWaveFrame.size[0]+XYoff[0],$
+                       sWaveFrame.size[1]+XYoff[1]],$
+               value: 'Wavelength Dependent Background Subtraction'}
+
+;Wave label
+WaveXoff = 10
+XYoff = [WaveXoff,16]
+sWaveLabel = { size:  [sWaveFrame.size[0]+XYoff[0],$
+                       sWaveFrame.size[1]+XYoff[1]],$
+               value: 'Comma-delimited List of Increasing Coefficients',$
+               uname: 'wave_para_label_uname'}
+
+XYoff = [290,-5]
+sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
+                     sWaveLabel.size[1]+XYoff[1],$
+                     300],$
+              VALUE: '',$
+              UNAME: 'wave_dependent_back_sub_text_field'}
+XYoff = [0,0]
+sWaveHelpButton = { size: [sWaveText.size[0]+$
+                           sWaveText.size[2]+XYoff[0],$
+                           sWaveText.size[1],$
+                           65,$
+                           30],$
+                    VALUE: 'HELP',$
+                    UNAME: 'wave_help_button'}
+                          
 ;==============================================================================
 ;= Build Widgets ==============================================================
 Basetab = WIDGET_BASE(REDUCE_TAB,$
@@ -422,5 +457,47 @@ wValue = WIDGET_TEXT(Basetab,$
                      /EDITABLE,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
-                  
+
+;- Wavelength dependent background subtraction --------------------------------
+wWaveTitle = WIDGET_LABEL(Basetab,$
+                       XOFFSET = sWaveTitle.size[0],$
+                       YOFFSET = sWaveTitle.size[1],$
+                       VALUE   = sWaveTitle.value)
+
+;Wave Label
+wWaveLabel = WIDGET_LABEL(Basetab,$
+                          XOFFSET = sWaveLabel.size[0],$
+                          YOFFSET = sWaveLabel.size[1],$
+                          VALUE   = sWaveLabel.value,$
+                          UNAME   = sWaveLabel.uname)
+
+wWaveText = WIDGET_TEXT(Basetab,$
+                        XOFFSET   = sWaveText.size[0],$
+                        YOFFSET   = sWaveText.size[1],$
+                        SCR_XSIZE = sWaveText.size[2],$
+                        VALUE     = sWaveText.value,$
+                        UNAME     = sWaveText.uname,$
+                        /ALL_EVENTS,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Wave Help Button
+wWaveButton = WIDGET_BUTTON(BaseTab,$
+                            XOFFSET   = sWaveHelpButton.size[0],$
+                            YOFFSET   = sWaveHelpButton.size[1],$
+                            SCR_XSIZE = sWaveHelpButton.size[2],$
+                            SCR_YSIZE = sWaveHelpButton.size[3],$
+                            VALUE     = sWaveHelpButton.value,$
+                            UNAME     = sWaveHelpButton.UNAME,$
+                            /PUSHBUTTON_EVENTS)
+
+;Wave frame
+wWaveFrame = WIDGET_LABEL(Basetab,$
+                       XOFFSET   = sWaveFrame.size[0],$
+                       YOFFSET   = sWaveFrame.size[1],$
+                       SCR_XSIZE = sWaveFrame.size[2],$
+                       SCR_YSIZE = sWaveFrame.size[3],$
+                       VALUE     = '',$
+                       FRAME     = sWaveFrame.frame)
+
 END
