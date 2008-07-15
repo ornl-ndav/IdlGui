@@ -4614,7 +4614,9 @@ CASE uval OF
     'validate_circle_selection': BEGIN
     END
 
-
+    'close_circle_selection': BEGIN
+        WIDGET_CONTROL, sEvent.top, /DESTROY
+    END
 
 ELSE:
 ENDCASE
@@ -4766,19 +4768,25 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                                   /ROW)
 
     wLabel = WIDGET_LABEL(wValidationBase,$
-                          VALUE = ' ')
+                          VALUE = '  ')
+
+    wClose = WIDGET_BUTTON(wValidationBase,$
+                           VALUE = 'CLOSE',$
+                           UNAME = 'close_circle_selection',$
+                           UVALUE = 'close_circle_selection',$
+                           SCR_XSIZE = 70)
 
     wCancel = WIDGET_BUTTON(wValidationBase,$
-                        VALUE = 'CANCEL SELECTION',$
+                        VALUE = 'CANCEL',$
                         UNAME = 'cancle_circle_selection',$
                         UVALUE = 'cancel_circle_selection',$
-                        SCR_XSIZE = 130)
+                        SCR_XSIZE = 70)
 
     wOk = WIDGET_BUTTON(wValidationBase,$
-                        VALUE = 'VALIDATE SELECTION',$
+                        VALUE = 'PLOT',$
                         UNAME = 'validate_circle_selection',$
                         UVALUE = 'validate_circle_selection',$
-                        SCR_XSIZE = 130)
+                        SCR_XSIZE = 70)
                         
     (*pParentState).wCircleInfo = wBase
 
