@@ -184,25 +184,21 @@ function arrange, data
 end
 
 ;------------------------------------------------------------------------------
-PRO populate_structure, all_data, MyStruct
+pro populate_structure, all_data, MyStruct
   ;find where is the first blank line (we do not want anything from the line
   ;below that point
   blk_line_index = WHERE(all_data EQ '', nbr)
   ;get our new interesting array of data
   all_data = all_data[blk_line_index[0]+1:*]
-  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
-  ;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
   
-  ;WORK TO DO
   
   ;get how many array we have here
   blk_line_index = WHERE(all_data EQ '', new_nbr)
-  print, 'Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
+  
   ;make sure the last one is not the last element of the array
   IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
     --new_nbr
   ENDIF
-  print, 'Real Nbr of empty lines is : ' + STRCOMPRESS(new_nbr) ;REMOVE_ME
   
   ;create the array of structure here
   ;first the structure that will be used for each set of data
@@ -210,11 +206,7 @@ PRO populate_structure, all_data, MyStruct
     bank: '',$
     X:    '',$
     Y:    '',$
-   ; DATA: PTR_NEW(0L, /ALLOCATE_HEAP)}
-  ;  data: PTRARR(0L, /ALLOCATE_HEAP)}
     data: ptr_new()}
-    
-  ;  STRUCT_ASSIGN, /VERBOSE,general_data_structure, struct
     
   ;then create the array of structures according to the number of array (new_nbr)
   data_structure = REPLICATE(general_data_structure,new_nbr)
@@ -225,18 +217,20 @@ PRO populate_structure, all_data, MyStruct
   array_index = 0
   
   
- 
+  
   
   WHILE (array_nbr NE new_nbr) DO BEGIN
     line = all_data[i]
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
+        ;print, "==========================" remove
         array_index = 0
-        ;        print, "-------------------------  "
-        (data_structure[array_nbr].data) = ptr_new(my_data_array)
+        data_structure[array_nbr].data = ptr_new(my_data_array)
+        data_structure[array_nbr].bank = bank
+        data_structure[array_nbr].x = x
+        data_structure[array_nbr].y = y
         ++array_nbr
       ENDIF ELSE BEGIN
-        ;       print, "line: " +  line ;remove_me
         array = STRSPLIT(line,' ',/EXTRACT)
         IF (N_ELEMENTS(array) GT 1) THEN BEGIN
           IF (array_index EQ 0) THEN BEGIN
@@ -247,62 +241,73 @@ PRO populate_structure, all_data, MyStruct
           ENDELSE
         ENDIF
       ENDELSE
-    ENDIF
+    ENDIF else begin
+      ;print, "the line: " + line remove
+      IF (STRMATCH(line,'#S*')) THEN BEGIN
+        temp = strsplit(line, /PRESERVE_NULL, /extract)
+        ;  = strsplit(temp, " '  ( ) , ", /EXTRACT)
+        ;print, strjoin(temp, "|")
+        bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
+        x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
+        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
+        
+      endif
+    endelse
+    
     ++i
+    
   ENDWHILE
   
   
-index = 2
-ending = n_elements(*(data_structure[index]).data)-1
-for x = 0, n_elements(*(data_structure[index]).data)-1 do  begin
-  print, (*(data_structure[index]).data)[x]
-endfor
+  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
+  ;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
   
-; *(data_structure[0].data) = ''
+  MyStruct.NbrArray = new_nbr
+  *MyStruct.data = data_structure
   
-; help, *(data_structure[0].data)
-; help, *(data_structure[1].data)
-; help, *data_structure[2].data
-; help, *data_structure[3].data
+
+;  print, (*(data_structure[index]).data)[x]
+  
+  
   
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION break_off, data
-
-  print, "STARTING BREAK_OFF"
-  cntblanks = 0
-  data_size = n_elements(data)
-  
-  ;count the blank lines in the file
-  index = WHERE(data EQ '',cntblanks)
-  print, 'cntblanks: ' + STRCOMPRESS(cntblanks) ;remove_me
-  
-  ;Divide the text into datasets
-  pntr = ptrarr(cntblanks, /allocate_heap)
-  temp = strarr(1)
-  start_at = 1
-  b = 0
-  i = 0
-  While i ne cntblanks do begin
-    while b ne data_size do begin
-      if data[b] ne '' then begin
-        temp = [temp,data[b]]
-      endif else begin
-        break
-      endelse
-      b++
-    endwhile
-    end_at = n_elements(temp) - 1
-    *pntr[i] = temp[start_at : end_at]
-    start_at = end_at +1
-    b++
-    i++
-  endwhile
-  print, "DONE"
-  print, "=============================================="
-  return, pntr
-end
+;FUNCTION break_off, data
+;
+;  print, "STARTING BREAK_OFF"
+;  cntblanks = 0
+;  data_size = n_elements(data)
+;
+;  ;count the blank lines in the file
+;  index = WHERE(data EQ '',cntblanks)
+;  print, 'cntblanks: ' + STRCOMPRESS(cntblanks) ;remove_me
+;
+;  ;Divide the text into datasets
+;  pntr = ptrarr(cntblanks, /allocate_heap)
+;  temp = strarr(1)
+;  start_at = 1
+;  b = 0
+;  i = 0
+;  While i ne cntblanks do begin
+;    while b ne data_size do begin
+;      if data[b] ne '' then begin
+;        temp = [temp,data[b]]
+;      endif else begin
+;        break
+;      endelse
+;      b++
+;    endwhile
+;    end_at = n_elements(temp) - 1
+;    *pntr[i] = temp[start_at : end_at]
+;    start_at = end_at +1
+;    b++
+;    i++
+;  endwhile
+;  print, "DONE"
+;  print, "=============================================="
+;  return, pntr
+;end
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::getData
@@ -320,7 +325,7 @@ FUNCTION IDL3columnsASCIIparser2::getData
     
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
-  
+  help, Mystruct, /structure
   RETURN, MyStruct
 END
 
