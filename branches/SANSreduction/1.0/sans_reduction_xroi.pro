@@ -1094,6 +1094,11 @@ pro xroi_event, sEvent
         xroiGrowProps, pState, GROUP_LEADER=sEvent.top
     end
 
+    'CIRCLE': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xCircleBase, pState, GROUP_LEADER=sEvent.top
+    END
+
     else: begin
     end
 
@@ -4575,6 +4580,229 @@ pro xroi__cleanup, wID
 end
 
 ;------------------------------------------------------------------------------
+pro xCircleBase, pParentState, GROUP_LEADER=group
+
+    COMPILE_OPT idl2, hidden
+
+    ; Open the ROI    WIDGET_CONTROL, sEvent.top, /DESTROY Info dialog.
+
+    ; Check if already created.  If so, return.
+    if (WIDGET_INFO((*pParentState).wCircleInfo, /VALID_ID) NE 0) then begin
+        WIDGET_CONTROL,(*pParentState).wCircleInfo, /SHOW
+        return
+    endif
+
+    title = 'CIRCLE SELECTION by COORDINATES'
+    wBase = WIDGET_BASE( $
+                         TITLE        = title, $
+                         GROUP_LEADER = group, $
+                         FLOATING     = (*pParentState).floating, $
+                         UNAME        = 'cirlce_base', $
+                         MODAL        = (*pParentState).modal, $
+                         /COLUMN, $
+                         /TLB_KILL_REQUEST_EVENTS)
+
+;First row
+    wRowBase = WIDGET_BASE(wBase, /ROW)
+    wLabel = WIDGET_LABEL(wRowBase, $
+                          VALUE = 'Xo: ')
+    wLabel = WIDGET_LABEL(wRowBase, $
+                          VALUE = ' ')
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'Pixel')
+    wTextPixelXo = WIDGET_TEXT(wRowBase,$
+                         VALUE  = '',$
+                         XSIZE  = 7,$
+                         UNAME  = 'pixel_xo',$
+                         UVALUE = 'pixel_xo',$
+                         /ALIGN_LEFT,$
+                         /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = '  or   Offset')
+    wTextOffsetXo = WIDGET_TEXT(wRowBase,$
+                         VALUE  = '',$
+                         XSIZE  = 7,$
+                         UNAME  = 'offset_xo',$
+                         UVALUE = 'offset_xo',$
+                         /ALIGN_LEFT,$
+                         /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'mm')
+
+;Second row
+    wRowBase = WIDGET_BASE(wBase, /ROW)
+    wLabel = WIDGET_LABEL(wRowBase, $
+                          VALUE = 'Yo: ')
+    wLabel = WIDGET_LABEL(wRowBase, $
+                          VALUE = ' ')
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'Pixel')
+    wTextPixelYo = WIDGET_TEXT(wRowBase,$
+                         VALUE  = '',$
+                         XSIZE  = 7,$
+                         UNAME  = 'pixel_yo',$
+                         UVALUE = 'pixel_yo',$
+                         /ALIGN_LEFT,$
+                         /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = '  or   Offset')
+    wTextOffsetYo = WIDGET_TEXT(wRowBase,$
+                         VALUE  = '',$
+                         XSIZE  = 7,$
+                         UNAME  = 'offset_yo',$
+                         UVALUE = 'offset_yo',$
+                         /ALIGN_LEFT,$
+                         /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'mm')
+
+;Third row
+    wRowBase = WIDGET_BASE(wBase, /ROW)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'Radius: ')
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = ' ')
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'Nbr of Pixels')
+    wTextNbrPixelRadius = WIDGET_TEXT(wRowBase,$
+                                      VALUE = '',$
+                                      XSIZE = 5,$
+                                      UNAME = 'nbr_pixel_radius',$
+                                      UVALUE = 'nbr_pixel_radius',$
+                                      /ALIGN_LEFT,$
+                                      /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = ' or Distance')
+    wTextDistPixelRadius = WIDGET_TEXT(wRowBase,$
+                                       VALUE  = '',$
+                                       XSIZE  = 5,$
+                                       UNAME  = 'dist_pixel_radius',$
+                                       UVALUE = 'dist_pixel_radius',$
+                                       /ALIGN_LEFT,$
+                                       /EDITABLE)
+    wLabel = WIDGET_LABEL(wRowBase,$
+                          VALUE = 'mm')
+    
+;Fourth row
+    wRowBase = WIDGET_BASE(wBase, /ROW)
+
+;part of row about type of selection (inside or outside)
+    wSelectionBase = WIDGET_BASE(wRowBase, $
+                                 /ROW, $
+                                 /EXCLUSIVE, $
+                                 SPACE=0, $
+                                 /TOOLBAR)
+    
+    wInsideSelectionButton = $
+      WIDGET_BUTTON(wSelectionBase,$
+                    UNAME = 'select_inside',$
+                    UVALUE = 'select_inside',$
+                    VALUE='images/inside_circle_button.bmp',$
+                    /BITMAP,$
+                    TOOLTIP = 'Inside of cirlce is selected')
+                    
+    wOutsideSelectionButton = $
+      WIDGET_BUTTON(wSelectionBase,$
+                    UNAME = 'select_outside',$
+                    UVALUE = 'select_outside',$
+                    VALUE='images/outside_circle_button.bmp',$
+                    /BITMAP,$
+                    TOOLTIP = 'Outside of cirlce is selected')
+                    
+    WIDGET_CONTROL,  WIDGET_INFO(wSelectionBase, /CHILD), /SET_BUTTON
+
+;part of row that validate or cancel the selection    
+    wValidationBase = WIDGET_BASE(wRowBase,$
+                                  /ROW)
+
+    wLabel = WIDGET_LABEL(wValidationBase,$
+                          VALUE = ' ')
+
+    wCancel = WIDGET_BUTTON(wValidationBase,$
+                        VALUE = 'CANCEL SELECTION',$
+                        UNAME = 'cancle_circle_selection',$
+                        UVALUE = 'cancel_circle_selection',$
+                        SCR_XSIZE = 130)
+
+    wOk = WIDGET_BUTTON(wValidationBase,$
+                        VALUE = 'VALIDATE SELECTION',$
+                        UNAME = 'validate_circle_selection',$
+                        UVALUE = 'validate_circle_selection',$
+                        SCR_XSIZE = 130)
+                        
+    (*pParentState).wCircleInfo = wBase
+
+    sState = {pParentState:  pParentState, $
+              wTextPixelXo:  wTextPixelXo, $
+              wTextOffsetXo: wTextOffsetXo,$
+              wTextPixelYo:  wTextPixelYo, $
+              wTextOffsetYo: wTextOffsetYo, $
+              wTextNbrPixelRadius: wTextNbrPixelRadius,$
+              wTextDistPixelRadius: wTextDistPixelRadius,$
+              wInsideSelectionButton: wInsideSelectionButton,$
+              wOutsideSelectionButton: wOutsideSelectionButton,$
+              wCancel: wCancel,$
+              wOk: wOk $
+             }
+
+    WIDGET_CONTROL, wBase, SET_UVALUE=sState
+
+;    IF NOT (*pParentState).modal then $
+;        WIDGET_CONTROL, wBase, MAP=0
+
+    if not (*pParentState).modal then begin
+        wbase_geom = WIDGET_INFO(wBase, /GEOMETRY)
+        leader_geom = WIDGET_INFO(group, /GEOMETRY)
+        DEVICE, GET_SCREEN_SIZE=screen_size
+
+        x = leader_geom.scr_xsize[0] + leader_geom.xoffset
+        x = x < (screen_size[0] - wBase_geom.scr_xsize)
+        x = x > 0
+
+        y = leader_geom.yoffset
+        y = y < (screen_size[1] - wBase_geom.scr_xsize)
+        y = y > 0
+
+        WIDGET_CONTROL, wBase, TLB_SET_XOFFSET=x, TLB_SET_YOFFSET=y
+        WIDGET_CONTROL, wBase, MAP=1
+    endif
+
+    WIDGET_CONTROL, wBase, /REALIZE
+
+    XMANAGER, "xCircleBase", wBase, /NO_BLOCK
+
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;------------------------------------------------------------------------------
 PRO sans_reduction_xroi, $
     img, $                  ; IN/OUT: (opt) image data
     Event,$
@@ -5234,6 +5462,7 @@ PRO sans_reduction_xroi, $
               wDraw:                wDraw, $
               wROIContextMenu:      wROIContextMenu, $
               wROIInfo:             -1L, $
+              wCircleInfo:          -1L, $
               wROIGrowProps:        -1L, $
               wSaveButton:          wSaveButton, $
               wSaveButtonAndExit:   wSaveButtonAndExit,$
@@ -5453,3 +5682,6 @@ PRO sans_reduction_xroi, $
     end
 
  end
+
+
+
