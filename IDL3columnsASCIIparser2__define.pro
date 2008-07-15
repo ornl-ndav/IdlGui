@@ -1,3 +1,20 @@
+; Copyright (c) 1999-2005, Research Systems, Inc.  All rights reserved.
+;   Unauthorized reproduction prohibited.
+;+
+; NAME:
+;   IDL3columsASCIIparser2
+;
+; PURPOSE:
+;   Parses a given 3 columns ASCII file.
+;
+; CATEGORY:
+;   Libraries
+;
+; CALLING SEQUENCE:
+;   XROI, [ImageData] [,r] [,g] [,b]
+;
+
+
 function modtag, init_str
   ;remove any spaces on ends
   init_str = STRTRIM(init_str, 2)
@@ -134,55 +151,6 @@ Function find_it, init_str, tag
   
 end
 
-;-------------------------------------------------------------------------------
-function arrange, data
-
-  ;seperate comments from actual data
-  n = N_ELEMENTS(data)
-  comments = data[0 : 2]
-  just_data = data[3 : n-1]
-  
-  
-  ;put data into a float array
-  lines = n_elements(just_data)-1
-  array = fltarr(lines, 3)
-  for i = 0, lines-1 do begin
-    temp = just_data[i]
-    limit = n_elements(temp)
-    for b = 0, limit- 1 do begin
-      array[i,b] = temp[b]
-    endfor
-  endfor
-  
-  ;parse the comments
-  tmp = ptrarr(3, /allocate_heap)
-  for i = 0, 2 do begin
-    *tmp[i] =  strtrim(STRSPLIT(comments[i], '(,)', /extract, /PRESERVE_NULL), 2)
-  endfor
-  
-  ;  *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
-  ; strtrim(STRSPLIT(all_data[2], '()', /extract), 2)
-  
-  ; lines = n_elements(comments)-1
-  
-  ; for i = 3, lines do begin
-  ;   temp =  float(STRSPLIT(comments[start], /extract, /PRESERVE_NULL))
-  ;   print, temp
-  ;   print, double(temp)
-  ;   new[i] = temp
-  ; endfor
-  
-  
-  ;Put it all into a structure
-  Struct = { Value: array,$
-    x: (*tmp[0])[3],$
-    y: (*tmp[0])[4],$
-    bank: (*tmp[0])[1]}
-    
-    
-  return, Struct
-end
-
 ;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
   ;find where is the first blank line (we do not want anything from the line
@@ -194,11 +162,16 @@ pro populate_structure, all_data, MyStruct
   
   ;get how many array we have here
   blk_line_index = WHERE(all_data EQ '', new_nbr)
+  num_elnts = N_ELEMENTS(all_data)
   
-  ;make sure the last one is not the last element of the array
-  IF (blk_line_index[new_nbr-1] EQ (N_ELEMENTS(all_data)-1)) THEN BEGIN
-    --new_nbr
-  ENDIF
+  if new_nbr ne 0 then begin
+    ;make sure the last one is not the last element of the array
+    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
+      --new_nbr
+    ENDIF
+  endif else begin
+    new_nbr = 1
+  endelse
   
   ;create the array of structure here
   ;first the structure that will be used for each set of data
@@ -216,11 +189,13 @@ pro populate_structure, all_data, MyStruct
   i           = 0
   array_index = 0
   
-  
-  
-  
   WHILE (array_nbr NE new_nbr) DO BEGIN
-    line = all_data[i]
+    if i  ne num_elnts then begin
+      line = all_data[i]
+    endif else begin
+      line = ''
+    endelse
+    
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
         array_index = 0
@@ -241,12 +216,12 @@ pro populate_structure, all_data, MyStruct
         ENDIF
       ENDELSE
     ENDIF else begin
-      ;populate data stracture
+      ;populate data_stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN
         temp = strsplit(line, /PRESERVE_NULL, /extract)
         bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
         x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
-        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)       
+        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
       endif
       
       ;populate the rest of MyStruct structure
@@ -267,7 +242,7 @@ pro populate_structure, all_data, MyStruct
   
   
   ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
-  ;and put them inot MyStruct.xaxis, Mystruct.xaxis_units ....
+  ;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
   
   MyStruct.NbrArray = new_nbr
   MyStruct.xaxis = x_all[0]
@@ -277,45 +252,10 @@ pro populate_structure, all_data, MyStruct
   MyStruct.sigma_yaxis = sigma_all[0]
   MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
-    
+  
+
 END
 
-;------------------------------------------------------------------------------
-;FUNCTION break_off, data
-;
-;  print, "STARTING BREAK_OFF"
-;  cntblanks = 0
-;  data_size = n_elements(data)
-;
-;  ;count the blank lines in the file
-;  index = WHERE(data EQ '',cntblanks)
-;  print, 'cntblanks: ' + STRCOMPRESS(cntblanks) ;remove_me
-;
-;  ;Divide the text into datasets
-;  pntr = ptrarr(cntblanks, /allocate_heap)
-;  temp = strarr(1)
-;  start_at = 1
-;  b = 0
-;  i = 0
-;  While i ne cntblanks do begin
-;    while b ne data_size do begin
-;      if data[b] ne '' then begin
-;        temp = [temp,data[b]]
-;      endif else begin
-;        break
-;      endelse
-;      b++
-;    endwhile
-;    end_at = n_elements(temp) - 1
-;    *pntr[i] = temp[start_at : end_at]
-;    start_at = end_at +1
-;    b++
-;    i++
-;  endwhile
-;  print, "DONE"
-;  print, "=============================================="
-;  return, pntr
-;end
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::getData
@@ -333,47 +273,9 @@ FUNCTION IDL3columnsASCIIparser2::getData
     
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
-  help, Mystruct, /structure
+  
   RETURN, MyStruct
 END
-
-
-
-function a
-
-  ;;break off into an array of pointers
-  ;  data = break_off(all_data)
-  ;  n = n_elements(data)
-
-  ; Organize the data into structures instead of arrays
-  for i = 0, n-1 do begin
-    *data[i] = arrange(*data[i])
-  endfor
-  
-  ;value = parseData(all_data)
-  ;n_arrays = 10
-  ;tmp = ptrarr(3, /allocate_heap)
-  ;for i = 0, 2 do begin
-  ; *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
-  ;endfor
-  
-  ; *tmp[i] =  strtrim(STRSPLIT(all_data[i], '(,)', /extract), 2)
-  ;strtrim(STRSPLIT(all_data[2], '()', /extract), 2)
-  
-  ;print, (*tmp[0])
-  ;print, (*tmp[0])[1]
-  ;print, (*tmp[1])
-  ;print, (*tmp[2])
-  ;print, (*tmp[2])[3]
-  ;*tmp[1] = STRSPLIT((*tmp[1])[0],/extract)
-  ;print, (*tmp[1])[1]
-  
-  ;title:       (*tmp[0])[0], $
-  ;bank:        (*tmp[0])[1], $
-  
-  print, (*MyStruct.data[0]).bank
-  return, MyStruct
-end
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser2::get_tag, tag
