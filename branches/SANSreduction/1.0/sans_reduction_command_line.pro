@@ -267,6 +267,12 @@ IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
     ENDELSE
 ENDIF
 
+;- Wavelength dependent background subtraction
+value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
+IF (value NE '') THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.wave_dep_back_sub + '='
+    cmd += value
+ENDIF
 
 ;- INTERMEDIATE ---------------------------------------------------------------
 IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')

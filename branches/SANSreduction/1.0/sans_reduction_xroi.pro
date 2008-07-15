@@ -2428,6 +2428,8 @@ pro xroi__Motion, sEvent
                     style = style_closed
                 endelse
 
+                print, newX
+
                 oROI->GetProperty, N_VERTS=nVerts
                 oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
                 oROI->SetProperty, STYLE=style
@@ -2490,6 +2492,8 @@ pro xroi__Motion, sEvent
                 oROI->SetProperty, STYLE=style
 
                 (*pState).oWindow->Draw, (*pState).oView
+                print, (*pState).oView ;remove_me
+
             endif
         end
 
@@ -3799,8 +3803,6 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                            VALUE = ' ',$
                            UNAME = 'outside_out_right')
 
-
-
 ;Close button
     wRowBase = WIDGET_BASE(wBase, /ROW)
     wButton = WIDGET_BUTTON(wRowBase, VALUE='Close', UVALUE='CLOSE', $
@@ -4603,7 +4605,80 @@ pro xroi__cleanup, wID
 end
 
 ;------------------------------------------------------------------------------
-pro xCircleBase_event,  sEvent
+;------------------------------------------------------------------------------
+PRO CIRCLE, xcenter, ycenter, radius, newX, newY
+points = (2* !PI / 99.0) * FINDGEN(200)
+x = xcenter + radius * COS(points)
+NewX = [x]
+y = ycenter + radius * SIN(points)
+NewY = [Y]
+END
+
+;------------------------------------------------------------------------------
+PRO plot_xCircle, sEvent
+WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+pState = sState.pParentState
+
+oOldSelROI = (*pState).oSelROI
+IF (OBJ_VALID(oOldSelROI) ne 0) then $
+  oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
+
+                                ; Create a new rectangle region.
+oROI = OBJ_NEW('myIDLgrROI', $
+               COLOR=(*pState).sel_rgb, $
+               STYLE=0)
+
+;check status of inside or outside region
+InsideSelectionBoolean = (*pState).CircleInsideSelection
+IF (InsideSelectionBoolean) THEN BEGIN
+    oROI->setInsideFlag, 1b     ;it's an inside region
+ENDIF ELSE BEGIN
+    oROI->setInsideFlag, 0b     ;it's an inside region
+ENDELSE
+
+(*pState).oCurrROI = oROI
+(*pState).oModel->Add, oROI
+
+
+WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
+
+
+;plot circonference of circle
+style_point  = 0
+style_line   = 1
+style_closed = 2
+
+NewX = intarr(1)
+NewY = intarr(1)
+CIRCLE, 200, 200, 100, NewX, NewY
+NewZ = INTARR(N_ELEMENTS(NewX))
+
+print, NewX
+print, NewY
+
+oROI->GetProperty, N_VERTS=nVerts
+oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+;oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+oROI->SetProperty, STYLE=style
+
+(*pState).oWindow->Draw, (*pState).oView
+
+print, (*pState).oView           ;remove_me
+
+
+
+; oROI->AppendData, [xImage, yImage, 0]
+
+; (*pState).oWindow->Draw, (*pState).oView
+
+; (*pState).bButtonDown = 1b
+; (*pState).buttonXY = [xImage, yImage]
+
+END
+
+
+;------------------------------------------------------------------------------
+PRO xCircleBase_event,  sEvent
 
 COMPILE_OPT idl2, hidden
 
@@ -4623,10 +4698,23 @@ CASE uval OF
     END
     
     'validate_circle_selection': BEGIN
+        plot_xCircle, sEvent
     END
 
     'close_circle_selection': BEGIN
         WIDGET_CONTROL, sEvent.top, /DESTROY
+    END
+    
+    'select_inside': BEGIN
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pParentState = sState.pParentState
+        (*pParentState).CircleInsideSelection = 1b
+    END
+
+    'select_outside': BEGIN
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pParentState = sState.pParentState
+        (*pParentState).CircleInsideSelection = 0b
     END
 
 ELSE:
@@ -5593,6 +5681,7 @@ PRO sans_reduction_xroi, $
               wTextOffsetYo:        1L,$
               wTextNbrPixelRadius:  1L,$
               wTextDistPixelRadius: 1L,$
+              CircleInsideSelection:1b,$
               debug:                KEYWORD_SET(debug) $
              }
 
