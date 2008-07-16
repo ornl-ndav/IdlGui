@@ -80,6 +80,7 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
+                   data_nexus_file_name: '',$
                    inst_geom:       '',$
                    wave_para_value: '',$
                    wave_para_label: wave_para_label,$               
