@@ -221,17 +221,19 @@ END
 FUNCTION xroi__Save, sEvent
     COMPILE_OPT idl2, hidden
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
     ; Save the current ROIs to a user-selected file.
 
-    WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 
                                 ; Get current list of ROI names.
-    oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
-    if (nROIs gt 0) then begin
-        fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
-                                FILTER='*.txt', /WRITE)
-        if (STRLEN(fname) gt 0) then begin
-            
+oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+if (nROIs gt 0) then begin
+    fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
+                            FILTER='*.txt', /WRITE)
+    if (STRLEN(fname) gt 0) then begin
+        
 ; Determine which ROI, if any, is currently selected.
 ;            oSelROI = (*pState).oSelROI
 ;            pos = -1L
@@ -244,65 +246,71 @@ FUNCTION xroi__Save, sEvent
 
 ;Selection settings (in if half is in, in if more than half in ...)
 ;will be the same for all the selection
-            CurrentSelectionSettings = (*pState).currentSelectedSettings
-
+        CurrentSelectionSettings = (*pState).currentSelectedSettings
+        
 ;initialize the selection of pixels
 ;1 for a pixel that has been selected
 ;0 for a pixel that is not part of the selection
-                PixelSelectedArray = INTARR(80,80)
+        PixelSelectedArray = INTARR(80,80)
+        
+        IF (nROIS EQ 1) THEN BEGIN
             
-            IF (nROIS EQ 1) THEN BEGIN
-                
-                CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+            CurrentROISelectedIndex = (*pState).currentROIselectedIndex
+            
+;type of selection
+            insideSelection = oROIs[0]->getInsideFlag()
+            
+;Determine which pixels have been selected
+            CreateArrayOfPixelSelected_FOR_RoiFile, $
+              PixelSelectedArray, $
+              oROIs[CurrentROIselectedIndex],$
+              CurrentSelectionSettings, $
+              insideSelection
+            
+        ENDIF ELSE BEGIN
+            
+            FOR i=0,(nROIS -1) DO BEGIN
                 
 ;type of selection
-                insideSelection = oROIs[0]->getInsideFlag()
+                insideSelection = oROIs[i]->getInsideFlag()
+                
+;tmp pixel array
+                tmpPixelSelectedArray = INTARR(80,80)
                 
 ;Determine which pixels have been selected
                 CreateArrayOfPixelSelected_FOR_RoiFile, $
-                  PixelSelectedArray, $
-                  oROIs[CurrentROIselectedIndex],$
+                  tmpPixelSelectedArray, $
+                  oROIs[i],$
                   CurrentSelectionSettings, $
                   insideSelection
-
-            ENDIF ELSE BEGIN
-
-                FOR i=0,(nROIS -1) DO BEGIN
-                    
-;type of selection
-                    insideSelection = oROIs[i]->getInsideFlag()
-                    
-;tmp pixel array
-                    tmpPixelSelectedArray = INTARR(80,80)
-                    
-;Determine which pixels have been selected
-                    CreateArrayOfPixelSelected_FOR_RoiFile, $
-                      tmpPixelSelectedArray, $
-                      oROIs[i],$
-                      CurrentSelectionSettings, $
-                      insideSelection
-                    
-                    PixelSelectedArray += tmpPixelSelectedArray
-                    index = WHERE(PixelSelectedArray GT 0)
-                    PixelSelectedArray[index] = 1
-                    
-                ENDFOR
                 
-            ENDELSE
+                PixelSelectedArray += tmpPixelSelectedArray
+                index = WHERE(PixelSelectedArray GT 0)
+                PixelSelectedArray[index] = 1
+                
+            ENDFOR
             
+        ENDELSE
+        
 ;Create ROI file 
-            CreateROIfile, fname, PixelSelectedArray
-
-        ENDIF
+        CreateROIfile, fname, PixelSelectedArray
+        
     ENDIF
+ENDIF
 
-    RETURN, 0 ; "Swallow" event.
+;turn off hourglass
+widget_control,hourglass=0
+
+RETURN, 0                       ; "Swallow" event.
 END
 
 ;==============================================================================
 PRO plot_moved_selection_in_main_gui, sEvent
 WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
 
 IF (nROIs GE 1) THEN BEGIN
 
@@ -366,10 +374,17 @@ IF (nROIs GE 1) THEN BEGIN
 
 ENDIF
 
+;turn off hourglass
+widget_control,hourglass=0
+
 END
 
 ;------------------------------------------------------------------------------
 PRO plot_removed_selection_in_main_gui, pState
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 
 ;plot selection
@@ -433,6 +448,9 @@ IF (nROIs GE 1) THEN BEGIN
     ENDFOR
 
 ENDIF
+
+;turn off hourglass
+widget_control,hourglass=0
 
 END
 
@@ -4717,6 +4735,10 @@ endif
 
 ; Reset state.
 (*pState).bTempSegment = 0b
+
+;plot Selection in Main Widget_draw (main gui)
+plot_removed_selection_in_main_gui, pState
+
 
 END
 
