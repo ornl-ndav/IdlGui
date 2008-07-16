@@ -223,27 +223,17 @@ FUNCTION xroi__Save, sEvent
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
-    ; Save the current ROIs to a user-selected file.
+; Save the current ROIs to a user-selected file.
 
 WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 
-                                ; Get current list of ROI names.
+; Get current list of ROI names.
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 if (nROIs gt 0) then begin
     fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
                             FILTER='*.txt', /WRITE)
     if (STRLEN(fname) gt 0) then begin
         
-; Determine which ROI, if any, is currently selected.
-;            oSelROI = (*pState).oSelROI
-;            pos = -1L
-;            if (OBJ_VALID(oSelROI) ne 0) then BEGIN
-;                result = $
-;                  (*pState).oROIModel->IsContained(oSelROI, POSITION=pos)
-;            ENDIF ELSE BEGIN
-;                result = -1
-;            ENDELSE
-
 ;Selection settings (in if half is in, in if more than half in ...)
 ;will be the same for all the selection
         CurrentSelectionSettings = (*pState).currentSelectedSettings
@@ -4516,6 +4506,22 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                         UVALUE = 'validate_circle_selection',$
                         SCR_XSIZE = 115)
                         
+
+;Fith row (help information)
+    wRowBase = Widget_base(wBase,/ROW,/FRAME)
+    help_text = ['#1 Left Click on the Selection Plotting Area to ' + $
+                 'select the Center of the circle, or enter the position ' + $
+                 '(Pixel or mm)',$
+                 '#2 Enter the Radius of the circle (mm)',$
+                 '#3 Select the type of selection (Inside or Outside)',$
+                 '#4 Click PLOT']
+    wTEXT = WIDGET_TEXT(wRowBase,$
+                        VALUE = help_text,$
+                        XSIZE = 50,$
+                        YSIZE = 7,$
+                        /SCROLL,$
+                        /WRAP)
+
     (*pParentState).wCircleInfo = wBase
 
     sState = {pParentState:  pParentState, $
