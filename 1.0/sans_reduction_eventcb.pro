@@ -105,7 +105,7 @@ widget_control,hourglass=0
 
 END
 
-
+;==============================================================================
 ;This function browse a nexus file
 PRO browse_nexus, Event
 
@@ -200,6 +200,7 @@ IF (RunNumber NE 0) THEN BEGIN
           Event, $
           'output_file_name', $
           defaultReduceFileName
+        (*global).data_nexus_file_name = full_nexus_name
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
@@ -210,6 +211,7 @@ IF (RunNumber NE 0) THEN BEGIN
           ''
 ;clear display
         ClearMainPlot, Event ;_gui
+        (*global).data_nexus_file_name = ''
     ENDELSE
 ENDIF
 ;turn off hourglass

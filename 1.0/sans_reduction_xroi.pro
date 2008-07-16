@@ -183,6 +183,22 @@
 ;   SM, June 2003: For histograms change LIVE_PLOT to iPlot
 ;   CT, Sept 2003: Destroy iPlots when widget exits
 ;-
+;==============================================================================
+FUNCTION getDetectorSize, file_name
+error_file = 0
+CATCH, error_file
+IF (error_file NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['','','']
+ENDIF ELSE BEGIN
+    fileID = h5f_open(file_name)
+    path = '/entry/instrument/bank1/origin/shape/size/'
+    pathID = h5d_open(fileID,path)
+    DetectorSize = h5d_read(pathID)
+    RETURN, DetectorSize
+ENDELSE
+RETURN, ['','','']
+END
 
 ;==============================================================================
 ;This method of the new class myIDLgrROI returns the inside_flag 
@@ -4607,7 +4623,7 @@ end
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO CIRCLE, xcenter, ycenter, radius, newX, newY
-points = (2* !PI / 99.0) * FINDGEN(200)
+points = (2* !PI / 199.0) * FINDGEN(200)
 x = xcenter + radius * COS(points)
 NewX = [x]
 y = ycenter + radius * SIN(points)
@@ -4623,7 +4639,7 @@ oOldSelROI = (*pState).oSelROI
 IF (OBJ_VALID(oOldSelROI) ne 0) then $
   oOldSelROI->SetProperty, COLOR=(*pState).roi_rgb
 
-                                ; Create a new rectangle region.
+;Create a new ROI region
 oROI = OBJ_NEW('myIDLgrROI', $
                COLOR=(*pState).sel_rgb, $
                STYLE=0)
@@ -4639,9 +4655,7 @@ ENDELSE
 (*pState).oCurrROI = oROI
 (*pState).oModel->Add, oROI
 
-
 WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
-
 
 ;plot circonference of circle
 style_point  = 0
@@ -4650,11 +4664,20 @@ style_closed = 2
 
 NewX = intarr(1)
 NewY = intarr(1)
-CIRCLE, 200, 200, 100, NewX, NewY
-NewZ = INTARR(N_ELEMENTS(NewX))
 
-print, NewX
-print, NewY
+;get Xo, Yo and Radius
+WIDGET_CONTROl, (*pState).wTextPixelXo, GET_VALUE=Xo
+Xo *= 4
+WIDGET_CONTROl, (*pState).wTextPixelYo, GET_VALUE=Yo
+Yo *= 4
+WIDGET_CONTROl, (*pState).wTextDistPixelRadius, GET_VALUE=dR
+;do conversion distance(mm) -> pixels
+Width = (*pState).DetectorWidth * 1000 ;in mm
+Radius = ((4.*80.)*FLOAT(dR))/(Width)
+
+CIRCLE, FIX(Xo[0]), FIX(Yo[0]), FIX(Radius[0]), NewX, NewY
+;CIRCLE, 200, 200, 100, NewX, NewY
+NewZ = INTARR(N_ELEMENTS(NewX))
 
 oROI->GetProperty, N_VERTS=nVerts
 oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
@@ -4662,17 +4685,6 @@ oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
 oROI->SetProperty, STYLE=style
 
 (*pState).oWindow->Draw, (*pState).oView
-
-print, (*pState).oView           ;remove_me
-
-
-
-; oROI->AppendData, [xImage, yImage, 0]
-
-; (*pState).oWindow->Draw, (*pState).oView
-
-; (*pState).bButtonDown = 1b
-; (*pState).buttonXY = [xImage, yImage]
 
 END
 
@@ -5598,12 +5610,20 @@ PRO sans_reduction_xroi, $
     pImg = PTR_NEW(img, /NO_COPY)
 
     if lmgr(/demo) then begin
-;        WIDGET_CONTROL, wSaveToolButton, SENSITIVE=0
         WIDGET_CONTROL, wSaveButton, SENSITIVE=0
     endif
-
+    
+;Retrieve here the file name then the width and height of detector
+;get global structure
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    WIDGET_CONTROL, id, GET_UVALUE=global
+    file_name = (*global).data_nexus_file_name
+    DetectorSizeArray = getDetectorSize(file_name)
+    
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
+              DetectorWidth:        FLOAT(DetectorSizeArray[0]),$
+              DetectorHeight:       FLOAT(DetectorSizeArray[1]),$
               DataArray:            DataArray,$
               SumDataArray:         total(DataArray,1),$
               currentROIselectedIndex: 0L,$
