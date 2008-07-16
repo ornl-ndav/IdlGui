@@ -717,430 +717,6 @@ end
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-pro xroi_event, sEvent
-
-    COMPILE_OPT idl2, hidden
-
-    IF (TAG_NAMES(sEvent, /STRUC) EQ 'WIDGET_BASE') THEN BEGIN
-        xroi__BaseResize, sEvent
-        ; We're done with this event.
-        RETURN
-    ENDIF
-
-    WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
-
-    CASE uval OF
-
-    'DRAW': BEGIN
-        ; Handle all events in the draw area.
-
-        CASE sEvent.type OF
-            ; Button Press
-            0: xroi__ButtonPress, sEvent
-
-            ; Button Release
-            1: xroi__ButtonRelease, sEvent
-
-            ; Motion
-            2: xroi__Motion, sEvent
-
-            ; Viewport moved (scrollbars)
-            3: xroi__Viewport, sEvent
-
-            ; Expose
-            4: xroi__Expose, sEvent
-
-            ELSE: BEGIN
-            END
-        ENDCASE
-    END
-
-    'TRANSLATE-SCALE': BEGIN
-        ; Translate/Scale tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        IF (*pState).mode NE 'TRANSLATE-SCALE' THEN BEGIN
-            (*pState).mode = 'TRANSLATE-SCALE'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            ENDIF
-
-            ; Set the translate/scale selection visual as current.
-            (*pState).oSelVisual = (*pState).oTransScaleVisual
-            xroi__ReshapeSelectionVisual, pState, (*pState).oSelROI
-
-            (*pState).oWindow->Draw, (*pState).oView
-        ENDIF
-    END
-
-    'RECTANGLE': BEGIN
-        ; Rectangle ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        IF (*pState).mode NE 'RECTANGLE' THEN BEGIN
-            (*pState).mode = 'RECTANGLE'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            ENDIF
-
-            (*pState).oWindow->Draw, (*pState).oView
-        ENDIF
-    END
-
-    'RECTANGLE_EMPTY': BEGIN
-        ; Rectangle ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'RECTANGLE_EMPTY' then begin
-            (*pState).mode = 'RECTANGLE_EMPTY'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'ELLIPSE': begin
-        ; Ellipse ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'ELLIPSE' then begin
-            (*pState).mode = 'ELLIPSE'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'ELLIPSE_EMPTY': begin
-        ; Ellipse ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'ELLIPSE_EMPTY' then begin
-            (*pState).mode = 'ELLIPSE_EMPTY'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'FREEPOLY': begin
-        ; Freehand ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'FREEHAND DRAW' then begin
-            (*pState).mode = 'FREEHAND DRAW'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'FREEPOLY_EMPTY': begin
-        ; Freehand ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'FREEHAND DRAW EMPTY' then begin
-            (*pState).mode = 'FREEHAND DRAW EMPTY'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'SEGPOLY': begin
-        ; Segmented ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'POLYGON DRAW' then begin
-            (*pState).mode = 'POLYGON DRAW'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'SEGPOLY_EMPTY': begin
-        ; Segmented ROI tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'POLYGON DRAW EMPTY' then begin
-            (*pState).mode = 'POLYGON DRAW EMPTY'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-    'PICK': begin
-        ; Pick tool selected.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        if (*pState).mode ne 'SELECTION' then begin
-            (*pState).mode = 'SELECTION'
-
-            ; Disable old selection visual, if any.
-            oSelVisual = (*pState).oSelVisual
-            if (OBJ_VALID(oSelVisual) ne 0) then begin
-                 oSelVisual->SetProperty, /HIDE
-                (*pState).oSelVisual = OBJ_NEW()
-            endif
-
-            ; Set the vertex picking visual as the current selection visual.
-            (*pState).oSelVisual = (*pState).oPickVisual
-            xroi__ReshapeSelectionVisual, pState, (*pState).oSelROI
-
-            (*pState).oWindow->Draw, (*pState).oView
-        endif
-    end
-
-;     'FLIP': begin
-;         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-;         (*pState).oImage->GetProperty, ORDER=order
-;         (*pState).oImage->SetProperty, ORDER=1-KEYWORD_SET(order)
-;         (*pState).oWindow->Draw, (*pState).oView
-;     end
-
-    'IMPORT': begin
-        nDims = 0
-        while nDims eq 0 do begin
-            if not DIALOG_READ_IMAGE( $
-                RED=red, $
-                GREEN=green, $
-                BLUE=blue, $
-                DIALOG_PARENT=sEvent.top, $
-                IMAGE=image, $
-                QUERY=query, $
-                TITLE='Import Image File' $
-                ) $
-            then $
-                RETURN
-            if image[0] eq -1 then $
-                RETURN ; User "opened" non-image file or directory.
-
-            ; Verify that the selected image has valid dimensions.
-            nDims = SIZE(image, /N_DIMENSIONS)
-            case nDims of
-                2: begin ; 8-bit image
-                    dimensions = SIZE(image, /DIMENSIONS)
-                    image_is_8bit = 1b
-                end
-
-                3: begin ; RGB image
-                    allDims = SIZE(image, /DIMENSIONS)
-                    iInterleave = (WHERE(allDims eq 3))[0]
-                    case iInterleave of
-                        0: dimensions = allDims[1:2]
-                        1: dimensions = [allDims[0],allDims[2]]
-                        2: dimensions = allDims[0:1]
-                        else: begin
-                            void = DIALOG_MESSAGE(/INFORM, $
-                                ['Image must have dimensions', $
-                                 '[3,m,n], [m,3,n], or [m,n,3].'], $
-                                DIALOG_PARENT=sEvent.top)
-                            nDims = 0
-                            image = 0
-                        end
-                    endcase
-                    image_is_8bit = 0b
-                end
-
-                else: begin
-                    void = DIALOG_MESSAGE(/INFORM, $
-                        'Image data must have 2 or 3 dimensions.', $
-                        DIALOG_PARENT=sEvent.top)
-                    nDims = 0
-                    image = 0
-                end
-            endcase
-        endwhile
-
-        ; The imported image has been accepted.  Store it and update.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        (*pState).oModel->Remove, (*pState).oImage
-        OBJ_DESTROY, (*pState).oImage
-        (*pState).image_is_8bit = image_is_8bit
-        if image_is_8bit then $
-            *(*pState).pImg = image
-        (*pState).oImage = OBJ_NEW('IDLgrImage', TEMPORARY(image), $
-                                   INTERLEAVE=iInterleave)
-
-        if (image_is_8bit and (query.has_palette eq 0)) then begin
-            query.has_palette = 1
-            red = BINDGEN(256)
-            green = red
-            blue = red
-        endif
-
-        if query.has_palette then begin
-            (*pState).oPalette->SetProperty, $
-                RED_VALUES=red, $
-                GREEN_VALUES=green, $
-                BLUE_VALUES=blue
-            if (image_is_8bit and $
-                WIDGET_INFO((*pState).wLoadCT, /VALID_ID)) then begin
-                WIDGET_CONTROL, (*pState).wPaletteEdit, $
-                        SET_VALUE=(*pState).oPalette
-                WIDGET_CONTROL, (*pState).wLoadCT, GET_UVALUE=p
-                (*p).red_values = red
-                (*p).green_values = green
-                (*p).blue_values = blue
-            endif
-        endif
-        (*pState).oImage->SetProperty, PALETTE=(*pState).oPalette
-
-        if image_is_8bit then begin
-            WIDGET_CONTROL, (*pState).wLoadCTButton, SENSITIVE=1
-        endif else begin
-            if WIDGET_INFO((*pState).wLoadCT, /VALID) then $
-                WIDGET_CONTROL, (*pState).wLoadCT, /DESTROY
-            WIDGET_CONTROL, (*pState).wLoadCTButton, SENSITIVE=0
-        endelse
-
-
-        ; Change the virtual canvas.
-        WIDGET_CONTROL, (*pState).wDraw, $
-            DRAW_XSIZE=query.dimensions[0], $
-            DRAW_YSIZE=query.dimensions[1]
-
-
-        ; Shrink the viewport if the image is smaller.
-        draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
-        newXsize = (query.dimensions[0] < draw_geom.xsize)
-                                ; If new image is bigger than toolbar,
-                                ; make sure draw window is also
-                                ; that big.
-        if (query.dimensions[0] gt (*pState).toolbar_xsize) then $
-          newXsize = newXsize > (*pState).toolbar_xsize
-        newYsize = query.dimensions[1] < draw_geom.ysize
-        
-                                ; Change the viewport.
-        WIDGET_CONTROL, (*pState).wDraw, XSIZE=newXsize, YSIZE=newYsize
-        
-        
-                                ; Retrieve the new base size and cache it.
-        base_geom = WIDGET_INFO(sEvent.top, /GEOMETRY)
-        (*pState).xsize = base_geom.xsize
-        (*pState).ysize = base_geom.ysize
-        
-                                ; Get the new geometry.
-        draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
-        
-        ; Set the new viewplane rect, depending upon the new viewport.
-        WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
-        
-        (*pState).oView->SetProperty, $
-            VIEWPLANE_RECT=[viewport[0], viewport[1], $
-                draw_geom.xsize < draw_geom.draw_xsize, draw_geom.ysize]
-
-        (*pState).oModel->Add, (*pState).oImage, POSITION=0
-        (*pState).oWindow->Draw, (*pState).oView
-        if OBJ_VALID((*pState).oSelROI) then begin
-            xroi__SetROI, pState, (*pState).oSelROI
-        endif
-    end
-
-    'LOADCT': begin
-        xroiLoadCT, sEvent.top
-    end
-
-    'PICKCOLOR': begin
-        xroiPickColor, sEvent.top
-    end
-
-    'SAVE_ROI': BEGIN
-        result = xroi__Save(sEvent)
-    END
-
-    'ROI_INFO': begin
-        ; ROI Info menu item selected.  Open the ROI Info dialog.
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroiInfo, pState, GROUP_LEADER=sEvent.top
-    end
-
-    'ROI_DELETE': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroi__DeleteSelectedROI, pState
-
-        (*pState).oWindow->Draw, (*pState).oView
-    end
-
-    'ROI_HISTOGRAM': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroi__HistogramSelectedROI, pState, GROUP=sEvent.top
-    end
-
-    'ROI_GROW_BY_THRESHOLD': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroi__GrowSelectedROI, pState
-
-        (*pState).oWindow->Draw, (*pState).oView
-    end
-
-    'ROI_GROW_BY_STDDEV': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroi__GrowSelectedROI, pState, /STDDEV
-
-        (*pState).oWindow->Draw, (*pState).oView
-    end
-
-    'ROI_GROW_PROPERTIES': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xroiGrowProps, pState, GROUP_LEADER=sEvent.top
-    end
-
-    'CIRCLE': begin
-        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
-        xCircleBase, pState, GROUP_LEADER=sEvent.top
-    END
-
-    else: begin
-    end
-
-    endcase
-end
-
-;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
 
 pro xroi__ButtonPress, sEvent
 
@@ -4983,6 +4559,433 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
 END
 
 ;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+pro xroi_event, sEvent
+
+    COMPILE_OPT idl2, hidden
+
+    IF (TAG_NAMES(sEvent, /STRUC) EQ 'WIDGET_BASE') THEN BEGIN
+        xroi__BaseResize, sEvent
+        ; We're done with this event.
+        RETURN
+    ENDIF
+
+    WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
+
+    CASE uval OF
+
+    'DRAW': BEGIN
+        ; Handle all events in the draw area.
+
+        CASE sEvent.type OF
+            ; Button Press
+            0: xroi__ButtonPress, sEvent
+
+            ; Button Release
+            1: xroi__ButtonRelease, sEvent
+
+            ; Motion
+            2: xroi__Motion, sEvent
+
+            ; Viewport moved (scrollbars)
+            3: xroi__Viewport, sEvent
+
+            ; Expose
+            4: xroi__Expose, sEvent
+
+            ELSE: BEGIN
+            END
+        ENDCASE
+    END
+
+    'TRANSLATE-SCALE': BEGIN
+        ; Translate/Scale tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        IF (*pState).mode NE 'TRANSLATE-SCALE' THEN BEGIN
+            (*pState).mode = 'TRANSLATE-SCALE'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            ENDIF
+
+            ; Set the translate/scale selection visual as current.
+            (*pState).oSelVisual = (*pState).oTransScaleVisual
+            xroi__ReshapeSelectionVisual, pState, (*pState).oSelROI
+
+            (*pState).oWindow->Draw, (*pState).oView
+        ENDIF
+    END
+
+    'RECTANGLE': BEGIN
+        ; Rectangle ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        IF (*pState).mode NE 'RECTANGLE' THEN BEGIN
+            (*pState).mode = 'RECTANGLE'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            IF (OBJ_VALID(oSelVisual) NE 0) THEN BEGIN
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            ENDIF
+
+            (*pState).oWindow->Draw, (*pState).oView
+        ENDIF
+    END
+
+    'RECTANGLE_EMPTY': BEGIN
+        ; Rectangle ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'RECTANGLE_EMPTY' then begin
+            (*pState).mode = 'RECTANGLE_EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'ELLIPSE': begin
+        ; Ellipse ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'ELLIPSE' then begin
+            (*pState).mode = 'ELLIPSE'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'ELLIPSE_EMPTY': begin
+        ; Ellipse ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'ELLIPSE_EMPTY' then begin
+            (*pState).mode = 'ELLIPSE_EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'FREEPOLY': begin
+        ; Freehand ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'FREEHAND DRAW' then begin
+            (*pState).mode = 'FREEHAND DRAW'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'FREEPOLY_EMPTY': begin
+        ; Freehand ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'FREEHAND DRAW EMPTY' then begin
+            (*pState).mode = 'FREEHAND DRAW EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'SEGPOLY': begin
+        ; Segmented ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'POLYGON DRAW' then begin
+            (*pState).mode = 'POLYGON DRAW'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'SEGPOLY_EMPTY': begin
+        ; Segmented ROI tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'POLYGON DRAW EMPTY' then begin
+            (*pState).mode = 'POLYGON DRAW EMPTY'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+    'PICK': begin
+        ; Pick tool selected.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        if (*pState).mode ne 'SELECTION' then begin
+            (*pState).mode = 'SELECTION'
+
+            ; Disable old selection visual, if any.
+            oSelVisual = (*pState).oSelVisual
+            if (OBJ_VALID(oSelVisual) ne 0) then begin
+                 oSelVisual->SetProperty, /HIDE
+                (*pState).oSelVisual = OBJ_NEW()
+            endif
+
+            ; Set the vertex picking visual as the current selection visual.
+            (*pState).oSelVisual = (*pState).oPickVisual
+            xroi__ReshapeSelectionVisual, pState, (*pState).oSelROI
+
+            (*pState).oWindow->Draw, (*pState).oView
+        endif
+    end
+
+;     'FLIP': begin
+;         WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+;         (*pState).oImage->GetProperty, ORDER=order
+;         (*pState).oImage->SetProperty, ORDER=1-KEYWORD_SET(order)
+;         (*pState).oWindow->Draw, (*pState).oView
+;     end
+
+    'IMPORT': begin
+        nDims = 0
+        while nDims eq 0 do begin
+            if not DIALOG_READ_IMAGE( $
+                RED=red, $
+                GREEN=green, $
+                BLUE=blue, $
+                DIALOG_PARENT=sEvent.top, $
+                IMAGE=image, $
+                QUERY=query, $
+                TITLE='Import Image File' $
+                ) $
+            then $
+                RETURN
+            if image[0] eq -1 then $
+                RETURN ; User "opened" non-image file or directory.
+
+            ; Verify that the selected image has valid dimensions.
+            nDims = SIZE(image, /N_DIMENSIONS)
+            case nDims of
+                2: begin ; 8-bit image
+                    dimensions = SIZE(image, /DIMENSIONS)
+                    image_is_8bit = 1b
+                end
+
+                3: begin ; RGB image
+                    allDims = SIZE(image, /DIMENSIONS)
+                    iInterleave = (WHERE(allDims eq 3))[0]
+                    case iInterleave of
+                        0: dimensions = allDims[1:2]
+                        1: dimensions = [allDims[0],allDims[2]]
+                        2: dimensions = allDims[0:1]
+                        else: begin
+                            void = DIALOG_MESSAGE(/INFORM, $
+                                ['Image must have dimensions', $
+                                 '[3,m,n], [m,3,n], or [m,n,3].'], $
+                                DIALOG_PARENT=sEvent.top)
+                            nDims = 0
+                            image = 0
+                        end
+                    endcase
+                    image_is_8bit = 0b
+                end
+
+                else: begin
+                    void = DIALOG_MESSAGE(/INFORM, $
+                        'Image data must have 2 or 3 dimensions.', $
+                        DIALOG_PARENT=sEvent.top)
+                    nDims = 0
+                    image = 0
+                end
+            endcase
+        endwhile
+
+        ; The imported image has been accepted.  Store it and update.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        (*pState).oModel->Remove, (*pState).oImage
+        OBJ_DESTROY, (*pState).oImage
+        (*pState).image_is_8bit = image_is_8bit
+        if image_is_8bit then $
+            *(*pState).pImg = image
+        (*pState).oImage = OBJ_NEW('IDLgrImage', TEMPORARY(image), $
+                                   INTERLEAVE=iInterleave)
+
+        if (image_is_8bit and (query.has_palette eq 0)) then begin
+            query.has_palette = 1
+            red = BINDGEN(256)
+            green = red
+            blue = red
+        endif
+
+        if query.has_palette then begin
+            (*pState).oPalette->SetProperty, $
+                RED_VALUES=red, $
+                GREEN_VALUES=green, $
+                BLUE_VALUES=blue
+            if (image_is_8bit and $
+                WIDGET_INFO((*pState).wLoadCT, /VALID_ID)) then begin
+                WIDGET_CONTROL, (*pState).wPaletteEdit, $
+                        SET_VALUE=(*pState).oPalette
+                WIDGET_CONTROL, (*pState).wLoadCT, GET_UVALUE=p
+                (*p).red_values = red
+                (*p).green_values = green
+                (*p).blue_values = blue
+            endif
+        endif
+        (*pState).oImage->SetProperty, PALETTE=(*pState).oPalette
+
+        if image_is_8bit then begin
+            WIDGET_CONTROL, (*pState).wLoadCTButton, SENSITIVE=1
+        endif else begin
+            if WIDGET_INFO((*pState).wLoadCT, /VALID) then $
+                WIDGET_CONTROL, (*pState).wLoadCT, /DESTROY
+            WIDGET_CONTROL, (*pState).wLoadCTButton, SENSITIVE=0
+        endelse
+
+
+        ; Change the virtual canvas.
+        WIDGET_CONTROL, (*pState).wDraw, $
+            DRAW_XSIZE=query.dimensions[0], $
+            DRAW_YSIZE=query.dimensions[1]
+
+
+        ; Shrink the viewport if the image is smaller.
+        draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
+        newXsize = (query.dimensions[0] < draw_geom.xsize)
+                                ; If new image is bigger than toolbar,
+                                ; make sure draw window is also
+                                ; that big.
+        if (query.dimensions[0] gt (*pState).toolbar_xsize) then $
+          newXsize = newXsize > (*pState).toolbar_xsize
+        newYsize = query.dimensions[1] < draw_geom.ysize
+        
+                                ; Change the viewport.
+        WIDGET_CONTROL, (*pState).wDraw, XSIZE=newXsize, YSIZE=newYsize
+        
+        
+                                ; Retrieve the new base size and cache it.
+        base_geom = WIDGET_INFO(sEvent.top, /GEOMETRY)
+        (*pState).xsize = base_geom.xsize
+        (*pState).ysize = base_geom.ysize
+        
+                                ; Get the new geometry.
+        draw_geom = WIDGET_INFO((*pState).wDraw, /GEOM)
+        
+        ; Set the new viewplane rect, depending upon the new viewport.
+        WIDGET_CONTROL, (*pState).wDraw, GET_DRAW_VIEW=viewport
+        
+        (*pState).oView->SetProperty, $
+            VIEWPLANE_RECT=[viewport[0], viewport[1], $
+                draw_geom.xsize < draw_geom.draw_xsize, draw_geom.ysize]
+
+        (*pState).oModel->Add, (*pState).oImage, POSITION=0
+        (*pState).oWindow->Draw, (*pState).oView
+        if OBJ_VALID((*pState).oSelROI) then begin
+            xroi__SetROI, pState, (*pState).oSelROI
+        endif
+    end
+
+    'LOADCT': begin
+        xroiLoadCT, sEvent.top
+    end
+
+    'PICKCOLOR': begin
+        xroiPickColor, sEvent.top
+    end
+
+    'SAVE_ROI': BEGIN
+        result = xroi__Save(sEvent)
+    END
+
+    'ROI_INFO': begin
+        ; ROI Info menu item selected.  Open the ROI Info dialog.
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroiInfo, pState, GROUP_LEADER=sEvent.top
+    end
+
+    'ROI_DELETE': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroi__DeleteSelectedROI, pState
+
+        (*pState).oWindow->Draw, (*pState).oView
+    end
+
+    'ROI_HISTOGRAM': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroi__HistogramSelectedROI, pState, GROUP=sEvent.top
+    end
+
+    'ROI_GROW_BY_THRESHOLD': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroi__GrowSelectedROI, pState
+
+        (*pState).oWindow->Draw, (*pState).oView
+    end
+
+    'ROI_GROW_BY_STDDEV': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroi__GrowSelectedROI, pState, /STDDEV
+
+        (*pState).oWindow->Draw, (*pState).oView
+    end
+
+    'ROI_GROW_PROPERTIES': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        xroiGrowProps, pState, GROUP_LEADER=sEvent.top
+    end
+
+    'CIRCLE': begin
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
+        WIDGET_CONTROL,  $
+          WIDGET_INFO((*pState).wExcToolbarBase, $
+                      /CHILD), SET_BUTTON=0
+        xCircleBase, pState, GROUP_LEADER=sEvent.top
+    END
+
+    else: begin
+    end
+
+    endcase
+end
+
+;------------------------------------------------------------------------------
 PRO sans_reduction_xroi, $
     img, $                  ; IN/OUT: (opt) image data
     Event,$
@@ -5645,6 +5648,7 @@ PRO sans_reduction_xroi, $
               wROIGrowProps:        -1L, $
               wSaveButton:          wSaveButton, $
               wSaveButtonAndExit:   wSaveButtonAndExit,$
+              wExcToolbarBase:      wExcToolbarBase,$
               image_is_8bit:        image_is_8bit, $
               wStatus:              wStatus, $
               oWindow:              oWindow, $
