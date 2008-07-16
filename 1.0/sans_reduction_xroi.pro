@@ -4322,6 +4322,18 @@ endif
 WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
 
 CASE uval OF
+    'pixel_xo': BEGIN
+        print, 'in pixel xo'
+    END
+    'offset_xo': BEGIN
+        print, 'in offset xo'
+    END
+    'pixel_yo': BEGIN
+        print, 'in pixel yo'
+    END
+    'offset_yo': BEGIN
+        print, 'in offset yo'
+    END
     'validate_circle_selection': BEGIN
         plot_xCircle, sEvent
     END
@@ -4379,26 +4391,28 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'Pixel')
     wTextPixelXo = WIDGET_TEXT(wRowBase,$
-                         VALUE  = '',$
-                         XSIZE  = 7,$
-                         UNAME  = 'pixel_xo',$
-                         UVALUE = 'pixel_xo',$
-                         /ALIGN_LEFT,$
-                         /EDITABLE)
+                               VALUE  = '',$
+                               XSIZE  = 7,$
+                               UNAME  = 'pixel_xo',$
+                               UVALUE = 'pixel_xo',$
+                               /ALIGN_LEFT,$
+                               /ALL_EVENTS,$
+                               /EDITABLE)
     (*pParentState).wTextPixelXo = wTextPixelXo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = '  or   Offset')
     wTextOffsetXo = WIDGET_TEXT(wRowBase,$
-                         VALUE  = '',$
-                         XSIZE  = 7,$
-                         UNAME  = 'offset_xo',$
-                         UVALUE = 'offset_xo',$
-                         /ALIGN_LEFT,$
-                         /EDITABLE)
+                                VALUE  = '',$
+                                XSIZE  = 7,$
+                                UNAME  = 'offset_xo',$
+                                UVALUE = 'offset_xo',$
+                                /ALIGN_LEFT,$
+                                /ALL_EVENTS,$
+                                /EDITABLE)
     (*pParentState).wTextOffsetXo = wTextOffsetXo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'mm')
-
+    
 ;Second row
     wRowBase = WIDGET_BASE(wBase, /ROW)
     wLabel = WIDGET_LABEL(wRowBase, $
@@ -4408,26 +4422,28 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'Pixel')
     wTextPixelYo = WIDGET_TEXT(wRowBase,$
-                         VALUE  = '',$
-                         XSIZE  = 7,$
-                         UNAME  = 'pixel_yo',$
-                         UVALUE = 'pixel_yo',$
-                         /ALIGN_LEFT,$
-                         /EDITABLE)
+                               VALUE  = '',$
+                               XSIZE  = 7,$
+                               UNAME  = 'pixel_yo',$
+                               UVALUE = 'pixel_yo',$
+                               /ALIGN_LEFT,$
+                               /ALL_EVENTS,$
+                               /EDITABLE)
     (*pParentState).wTextPixelYo = wTextPixelYo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = '  or   Offset')
     wTextOffsetYo = WIDGET_TEXT(wRowBase,$
-                         VALUE  = '',$
-                         XSIZE  = 7,$
-                         UNAME  = 'offset_yo',$
-                         UVALUE = 'offset_yo',$
-                         /ALIGN_LEFT,$
-                         /EDITABLE)
+                                VALUE  = '',$
+                                XSIZE  = 7,$
+                                UNAME  = 'offset_yo',$
+                                UVALUE = 'offset_yo',$
+                                /ALIGN_LEFT,$
+                                /ALL_EVENTS,$
+                                /EDITABLE)
     (*pParentState).wTextOffsetyo = wTextOffsetYo
     wLabel = WIDGET_LABEL(wRowBase,$
                           VALUE = 'mm')
-
+    
 ;Third row
     wRowBase = WIDGET_BASE(wBase, /ROW)
     wLabel = WIDGET_LABEL(wRowBase,$
