@@ -66,6 +66,11 @@ CASE Event.id OF
         selection_tool, Event ;_eventcb
     END
 
+;- Clear Selection Button -----------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
+        clear_selection_tool, Event ;_eventcb
+    END
+
 ;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button

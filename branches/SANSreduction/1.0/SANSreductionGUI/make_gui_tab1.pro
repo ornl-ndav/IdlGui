@@ -45,13 +45,24 @@ sDraw = { size  : [0,0,320,320],$
 
 
 ;- selection ------------------------------------------------------------------
-XYoff = [0,0]
+XYoff = [5,0]
 sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
                       XYoff[1],$
-                      300],$
-               value: 'SELECTION TOOL',$
-               uname: 'selection_tool_button'}
+                      360,$
+                      35],$
+               value: 'S E L E C T I O N     D E S I G N E R',$
+               uname: 'selection_tool_button',$
+               sensitive: 0}
 
+;- Clear Selection ------------------------------------------------------------
+XYoff = [0,0]
+sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
+                           sSelection.size[1]+sSelection.size[3]+XYoff[1],$
+                           sSelection.size[2]],$
+                    value: 'RESET SELECTION',$
+                    uname: 'clear_selection_button',$
+                    sensitive: 0}
+                           
 ;- nexus input ----------------------------------------------------------------
 sNexus = { size : [0,$
                    sDraw.size[1]+sDraw.size[3]+15]}
@@ -79,18 +90,29 @@ wDraw = WIDGET_DRAW(wTab1Base,$
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
-                           XOFFSET = sSelection.size[0],$
-                           YOFFSET = sSelection.size[1],$
+                           XOFFSET   = sSelection.size[0],$
+                           YOFFSET   = sSelection.size[1],$
                            SCR_XSIZE = sSelection.size[2],$
+                           SCR_YSIZE = sSelection.size[3],$
                            VALUE     = sSelection.value,$
-                           UNAME     = sSelection.uname)
+                           UNAME     = sSelection.uname,$
+                           SENSITIVE = sSelection.sensitive)
+
+;- Clear Selection ------------------------------------------------------------
+wClearSelection = WIDGET_BUTTON(wTab1Base,$
+                                XOFFSET   = sClearSelection.size[0],$
+                                YOFFSET   = sClearSelection.size[1],$
+                                SCR_XSIZE = sClearSelection.size[2],$
+                                VALUE     = sClearSelection.value,$
+                                UNAME     = sClearSelection.uname,$
+                                SENSITIVE = sClearSelection.sensitive)
 
 ;- nexus input ----------------------------------------------------------------
-sNexus = {MainBase   : wTab1Base,$
-          xoffset    : sNexus.size[0],$
-          yoffset    : sNexus.size[1],$
-          instrument : 'SANS',$
-          facility   : 'LENS'}
+sNexus = {MainBase:    wTab1Base,$
+          xoffset:     sNexus.size[0],$
+          yoffset:     sNexus.size[1],$
+          instrument:  'SANS',$
+          facility:    'LENS'}
 nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
 
 
