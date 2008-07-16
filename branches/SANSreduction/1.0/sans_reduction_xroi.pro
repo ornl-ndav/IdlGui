@@ -347,7 +347,7 @@ IF (nROIs GE 1) THEN BEGIN
           insideSelection
         
         x_coeff = 4
-        color   = 150
+        color   = 250
         FOR i=0,(80L-1) DO BEGIN
             FOR j=0,(80L-1) DO BEGIN
                 IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
@@ -422,7 +422,7 @@ IF (nROIs GE 1) THEN BEGIN
           insideSelection
         
         x_coeff = 4
-        color   = 150
+        color   = 250
         FOR i=0,(80L-1) DO BEGIN
             FOR j=0,(80L-1) DO BEGIN
                 IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
@@ -499,7 +499,7 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 x_coeff = 4
-color   = 150
+color   = 250
 FOR i=0,(80L-1) DO BEGIN
     FOR j=0,(80L-1) DO BEGIN
         IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
