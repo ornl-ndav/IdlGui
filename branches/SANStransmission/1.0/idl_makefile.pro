@@ -15,6 +15,7 @@ cd, CurrentFolder + '/SANStransmissionGUI/'
 .run make_gui_main_tab.pro
 .run make_gui_tab1.pro
 .run make_gui_reduce_tab.pro
+.run make_gui_fitting.pro
 .run IDLnexusFrame__define.pro
 .run make_gui_reduce_tab1.pro
 .run make_gui_reduce_tab2.pro
