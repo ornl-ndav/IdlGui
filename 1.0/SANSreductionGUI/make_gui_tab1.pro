@@ -54,8 +54,48 @@ sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
                uname: 'selection_tool_button',$
                sensitive: 0}
 
+;- Load Selection -------------------------------------------------------------
+XYoff = [0,15] ;frame
+sSelectionFrame = { size:  [sSelection.size[0]+XYoff[0],$
+                            sSelection.size[1]+sSelection.size[3]+XYoff[1],$
+                            sSelection.size[2],105],$
+                    frame: 1}
+XYoff = [10,-8] ;title
+sSelectionLabel = { size: [sSelectionFrame.size[0]+XYoff[0],$
+                           sSelectionFrame.size[1]+XYoff[1]],$
+                    value: 'Load Selection',$
+                    sensitive: 0}
+XYoff = [5,10] ;browse button
+sSelectionBrowse = { size: [sSelectionFrame.size[0]+XYoff[0],$
+                            sSelectionFrame.size[1]+XYoff[1],$
+                            250],$
+                     value: 'BROWSE ...',$
+                     uname: 'selection_browse_button',$
+                     sensitive: 0}
+XYoff = [0,0] ;preview button
+sSelectionPreview = { size: [sSelectionBrowse.size[0]+$
+                             sSelectionBrowse.size[2]+XYoff[0],$
+                             sSelectionBrowse.size[1]+XYoff[1],$
+                             102],$
+                      value: 'PREVIEW',$
+                      uname: 'selection_preview_button',$
+                      sensitive: 0}
+XYoff = [0,30] ;file name text field
+sSelectionFileName = { size: [sSelectionBrowse.size[0]+XYoff[0],$
+                              sSelectionBrowse.size[1]+XYoff[1],$
+                              352],$
+                       value: '',$
+                       uname: 'selection_file_name_text_field'}
+XYoff = [0,35] ;load selection button
+sSelectionLoad = { size: [sSelectionBrowse.size[0]+XYoff[0],$
+                          sSelectionFileName.size[1]+XYoff[1],$
+                          sSelectionFileName.size[2]],$
+                   uname: 'selection_load_button',$
+                   value: 'L O A D  /  P L O T',$
+                   sensitive: 0 }
+                       
 ;- Clear Selection ------------------------------------------------------------
-XYoff = [0,0]
+XYoff = [0,250]
 sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            sSelection.size[1]+sSelection.size[3]+XYoff[1],$
                            sSelection.size[2]],$
@@ -98,6 +138,60 @@ wSelection = WIDGET_BUTTON(wTab1Base,$
                            UNAME     = sSelection.uname,$
                            SENSITIVE = sSelection.sensitive)
 
+;- Load Selection -------------------------------------------------------------
+;Title
+wSelectionLabel = WIDGET_LABEL(wTab1Base,$
+                               XOFFSET   = sSelectionLabel.size[0],$
+                               YOFFSET   = sSelectionLabel.size[1],$
+                               VALUE     = sSelectionLabel.value,$
+                               SENSITIVE = sSelectionLabel.sensitive)
+
+;Browse button
+wSelectionBrowse = WIDGET_BUTTON(wTab1Base,$
+                                 XOFFSET   = sSelectionBrowse.size[0],$
+                                 YOFFSET   = sSelectionBrowse.size[1],$
+                                 SCR_XSIZE = sSelectionBrowse.size[2],$
+                                 VALUE     = sSelectionBrowse.value,$
+                                 UNAME     = sSelectionBrowse.uname,$
+                                 SENSITIVE = sSelectionBrowse.sensitive)
+
+;Preview button
+wSelectionPreview = WIDGET_BUTTON(wTab1Base,$
+                                  XOFFSET   = sSelectionPreview.size[0],$
+                                  YOFFSET   = sSelectionPreview.size[1],$
+                                  SCR_XSIZE = sSelectionPreview.size[2],$
+                                  VALUE     = sSelectionPreview.value,$
+                                  UNAME     = sSelectionPreview.uname,$
+                                  SENSITIVE = sSelectionPreview.sensitive)
+
+;Selection File Name
+wSelectionFileName = WIDGET_TEXT(wTab1Base,$
+                                 XOFFSET   = sSelectionFileName.size[0],$
+                                 YOFFSET   = sSelectionFileName.size[1],$
+                                 SCR_XSIZE = sSelectionFileName.size[2],$
+                                 UNAME     = sSelectionFileName.uname,$
+                                 VALUE     = sSelectionFileName.value,$
+                                 /EDITABLE,$
+                                 /ALIGN_LEFT,$
+                                 /ALL_EVENTS)
+
+;Load Button
+wSelectionLoad = WIDGET_BUTTON(wTab1Base,$
+                               XOFFSET   = sSelectionLoad.size[0],$
+                               YOFFSET   = sSelectionLoad.size[1],$
+                               SCR_XSIZE = sSelectionLoad.size[2],$
+                               VALUE     = sSelectionLoad.value,$
+                               UNAME     = sSelectionLoad.uname,$
+                               SENSITIVE = sSelectionLoad.sensitive)
+;Frame
+wSelectionFrame = WIDGET_LABEL(wTab1Base,$
+                               XOFFSET   = sSelectionFrame.size[0],$
+                               YOFFSET   = sSelectionFrame.size[1],$
+                               SCR_XSIZE = sSelectionFrame.size[2],$
+                               SCR_YSIZe = sSelectionFrame.size[3],$
+                               FRAME     = sSelectionFrame.frame,$
+                               VALUE     = '')
+
 ;- Clear Selection ------------------------------------------------------------
 wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 XOFFSET   = sClearSelection.size[0],$
@@ -107,6 +201,7 @@ wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 UNAME     = sClearSelection.uname,$
                                 SENSITIVE = sClearSelection.sensitive)
 
+;------------------------------------------------------------------------------
 ;- nexus input ----------------------------------------------------------------
 sNexus = {MainBase:    wTab1Base,$
           xoffset:     sNexus.size[0],$
