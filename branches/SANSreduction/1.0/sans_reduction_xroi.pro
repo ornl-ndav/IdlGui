@@ -4303,10 +4303,55 @@ endif
 
 ;plot Selection in Main Widget_draw (main gui)
 plot_removed_selection_in_main_gui, pState
+END
 
+;------------------------------------------------------------------------------
+PRO PixelToDistanceConversion, pState, bXaxis, PixelValue, dest_uname
+
+ON_IOERROR, io_error
+
+IF (bXaxis) THEN BEGIN
+    DetectorSize = (*pState).DetectorWidth
+ENDIF ELSE BEGIN
+    DetectorSize = (*pState).DetectorHeight
+ENDELSE
+
+NbrPixel = FLOAT(80)
+CenterDetectorSize = (PixelValue+1) - NbrPixel/2.
+DistancePerPixel = (CenterDetectorSize*FLOAT(1000)*DetectorSize)/(NbrPixel)
+
+;put value back
+WIDGET_CONTROl, dest_uname, $
+  SET_VALUE=STRCOMPRESS(DistancePerPixel,/REMOVE_ALL)
+
+io_error:
 
 END
 
+;------------------------------------------------------------------------------
+PRO DistanceToPixelConversion, pState, bXaxis, DistanceValue, dest_uname
+
+ON_IOERROR, io_error
+
+IF (bXaxis) THEN BEGIN
+    DetectorSize = (*pState).DetectorWidth
+ENDIF ELSE BEGIN
+    DetectorSize = (*pState).DetectorHeight
+ENDELSE
+
+NbrPixel = FLOAT(80)
+a = NbrPixel / (FLOAT(DetectorSize)*(FLOAT(1000)))
+a *= FLOAT(DistanceValue[0])
+a += 39
+a = FIX(a)
+
+;put value back
+WIDGET_CONTROl, dest_uname, $
+  SET_VALUE=STRCOMPRESS(a,/REMOVE_ALL)
+
+io_error:
+
+END
 
 ;------------------------------------------------------------------------------
 PRO xCircleBase_event,  sEvent
@@ -4323,16 +4368,44 @@ WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
 
 CASE uval OF
     'pixel_xo': BEGIN
-        print, 'in pixel xo'
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pState = sState.pParentState
+        WIDGET_CONTROl, (*pState).wTextPixelXo, GET_VALUE=pXo
+        PixelToDistanceConversion, $
+          pState,$
+          1b,$
+          pXo,$
+          (*pState).wTextOffsetXo
     END
     'offset_xo': BEGIN
-        print, 'in offset xo'
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pState = sState.pParentState
+        WIDGET_CONTROl, (*pState).wTextOffsetXo, GET_VALUE=dXo
+        DistanceToPixelConversion, $
+          pState,$
+          1b,$
+          dXo,$
+          (*pState).wTextPixelXo
     END
     'pixel_yo': BEGIN
-        print, 'in pixel yo'
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pState = sState.pParentState
+        WIDGET_CONTROl, (*pState).wTextPixelYo, GET_VALUE=pYo
+        PixelToDistanceConversion, $
+          pState,$
+          0b,$
+          pYo,$
+          (*pState).wTextOffsetYo
     END
     'offset_yo': BEGIN
-        print, 'in offset yo'
+        WIDGET_CONTROL, sEvent.top, GET_UVALUE=sState
+        pState = sState.pParentState
+        WIDGET_CONTROl, (*pState).wTextOffsetYo, GET_VALUE=dYo
+        DistanceToPixelConversion, $
+          pState,$
+          0b,$
+          dYo,$
+          (*pState).wTextPixelYo
     END
     'validate_circle_selection': BEGIN
         plot_xCircle, sEvent
@@ -5653,8 +5726,8 @@ PRO sans_reduction_xroi, $
     
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
-              DetectorWidth:        FLOAT(DetectorSizeArray[0]),$
-              DetectorHeight:       FLOAT(DetectorSizeArray[1]),$
+              DetectorWidth:        FLOAT(DetectorSizeArray[0]),$ ;m
+              DetectorHeight:       FLOAT(DetectorSizeArray[1]),$ ;m
               DataArray:            DataArray,$
               SumDataArray:         total(DataArray,1),$
               currentROIselectedIndex: 0L,$
