@@ -64,6 +64,7 @@ XYoff = [10,-8] ;title
 sSelectionLabel = { size: [sSelectionFrame.size[0]+XYoff[0],$
                            sSelectionFrame.size[1]+XYoff[1]],$
                     value: 'Load Selection',$
+                    uname: 'load_selection_label',$
                     sensitive: 0}
 XYoff = [5,10] ;browse button
 sSelectionBrowse = { size: [sSelectionFrame.size[0]+XYoff[0],$
@@ -144,7 +145,8 @@ wSelectionLabel = WIDGET_LABEL(wTab1Base,$
                                XOFFSET   = sSelectionLabel.size[0],$
                                YOFFSET   = sSelectionLabel.size[1],$
                                VALUE     = sSelectionLabel.value,$
-                               SENSITIVE = sSelectionLabel.sensitive)
+                               SENSITIVE = sSelectionLabel.sensitive,$
+                               UNAME     = sSelectionLabel.uname)
 
 ;Browse button
 wSelectionBrowse = WIDGET_BUTTON(wTab1Base,$
