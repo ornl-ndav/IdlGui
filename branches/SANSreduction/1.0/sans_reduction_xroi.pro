@@ -2526,7 +2526,6 @@ pro xroi__Motion, sEvent
                 oROI->SetProperty, STYLE=style
 
                 (*pState).oWindow->Draw, (*pState).oView
-                print, (*pState).oView ;remove_me
 
             endif
         end
@@ -4756,13 +4755,7 @@ endif
 
 WIDGET_CONTROL, sEvent.id, GET_UVALUE=uval
 
-print, uval
-
 CASE uval OF
-    'cancel_circle_selection': BEGIN
-        WIDGET_CONTROL, sEvent.top, /DESTROY
-    END
-    
     'validate_circle_selection': BEGIN
         plot_xCircle, sEvent
     END
@@ -4939,19 +4932,13 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
                            VALUE = 'CLOSE',$
                            UNAME = 'close_circle_selection',$
                            UVALUE = 'close_circle_selection',$
-                           SCR_XSIZE = 70)
-
-    wCancel = WIDGET_BUTTON(wValidationBase,$
-                        VALUE = 'CANCEL',$
-                        UNAME = 'cancle_circle_selection',$
-                        UVALUE = 'cancel_circle_selection',$
-                        SCR_XSIZE = 70)
+                           SCR_XSIZE = 115)
 
     wOk = WIDGET_BUTTON(wValidationBase,$
                         VALUE = 'PLOT',$
                         UNAME = 'validate_circle_selection',$
                         UVALUE = 'validate_circle_selection',$
-                        SCR_XSIZE = 70)
+                        SCR_XSIZE = 115)
                         
     (*pParentState).wCircleInfo = wBase
 
@@ -4964,7 +4951,6 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
               wTextDistPixelRadius: wTextDistPixelRadius,$
               wInsideSelectionButton: wInsideSelectionButton,$
               wOutsideSelectionButton: wOutsideSelectionButton,$
-              wCancel: wCancel,$
               wOk: wOk $
              }
 
@@ -4995,35 +4981,6 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
     XMANAGER, "xCircleBase", wBase, /NO_BLOCK
 
 END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;------------------------------------------------------------------------------
 PRO sans_reduction_xroi, $
@@ -5603,11 +5560,6 @@ PRO sans_reduction_xroi, $
     oModel->Add, oImage
 
     struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
-;    MyROI = OBJ_NEW('myIDLgrROI') ;REMOVE_ME
-;    print, OBJ_VALID(oMyROI)
-;    oMyROI->setInsideFlag, 1 ;REMOVE_ME
-;    print, oMyModel->getInsideFlag()
-    
 
     ; Add a container for ROIs.
     oROIModel = OBJ_NEW('IDLgrModel')
