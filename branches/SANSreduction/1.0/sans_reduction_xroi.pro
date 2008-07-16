@@ -4681,10 +4681,42 @@ NewZ = INTARR(N_ELEMENTS(NewX))
 
 oROI->GetProperty, N_VERTS=nVerts
 oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
-;oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
 oROI->SetProperty, STYLE=style
 
 (*pState).oWindow->Draw, (*pState).oView
+
+oROI->SetProperty, NAME=xroi__GenerateName(*pState)
+(*pState).oModel->Remove, oROI
+(*pState).oROIModel->Add, oROI
+(*pState).oROIGroup->Add, oROI
+if OBJ_VALID((*pState).oRegionsOut) then $
+  (*pState).oRegionsOut->Add, oROI
+(*pState).oCurrROI = OBJ_NEW()
+
+; Activate appropriate tool buttons.
+if lmgr(/demo) ne 1 then begin
+    WIDGET_CONTROL, (*pState).wSaveButton, $
+      SENSITIVE=1
+    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+      SENSITIVE=1
+endif
+
+; Set the region as current.
+xroi__SetROI, pState, $
+  oROI, $
+  /UPDATE_LIST, $
+  /SET_LIST_SELECT
+
+; If this is the first region, bring up the
+; region information dialog.
+if ((*pState).bFirstROI eq 1b) then begin
+    WIDGET_CONTROL, /HOURGLASS
+    (*pState).bFirstROI = 0b
+    xroiInfo, pState, GROUP_LEADER=sEvent.top
+endif
+
+; Reset state.
+(*pState).bTempSegment = 0b
 
 END
 
