@@ -94,8 +94,10 @@ global = PTR_NEW ({version:         VERSION,$
                                 '--mon-eff-const',$
                                 verbose: $
                                 '--verbose',$
-                                lambda_cut_off:$
-                                '--lambda-cut',$
+                                min_lambda_cut_off:$
+                                '--lambda-low_cut',$
+                                max_lambda_cut_off:$
+                                '--lambda-high_cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 roi_file: $
@@ -213,11 +215,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0.1'
 
 ;show tab #2 'REDUCE'
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;Load_files_2
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
 
 ENDIF
 ;==============================================================================

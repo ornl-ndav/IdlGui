@@ -132,9 +132,14 @@ CASE Event.id OF
         monitor_efficiency_constant_gui, Event ;_reduce_tab2
     END
 
-;---- Lambda Cut off ----------------------------------------------------------
+;---- min Lambda Cut off ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
-        lambda_cut_off_gui, Event ;_reduce_tab2
+        min_lambda_cut_off_gui, Event ;_reduce_tab2
+    END
+
+;---- max Lambda Cut off ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_group'): BEGIN
+        max_lambda_cut_off_gui, Event ;_reduce_tab2
     END
 
 ;= TAB3 (LOG BOOK) ============================================================

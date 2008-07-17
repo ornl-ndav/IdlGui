@@ -183,7 +183,7 @@ sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
 ;- Minimum Lambda Cut OFF -----------------------------------------------------
 XYoff = [6,40]
 sMinLambdaGroup = { size:  [XYoff[0],$
-                     sVerboseGroup.size[1]+XYoff[1]],$
+                            sVerboseGroup.size[1]+XYoff[1]],$
              list:  ['ON','OFF'],$
              value: 0.0,$
              uname: 'minimum_lambda_cut_off_group',$
@@ -202,6 +202,28 @@ sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
              uname: 'minimum_lambda_cut_off_value',$
              sensitive: 1}
              
+;- Maximum Lambda Cut Off -----------------------------------------------------
+XYoff = [6,40]
+sMaxLambdaGroup = { size:  [XYoff[0],$
+                            sMinLambdaGroup.size[1]+XYoff[1]],$
+                            list:  ['ON','OFF'],$
+                            value: 1.0,$
+                            uname: 'maximum_lambda_cut_off_group',$
+                            title: '-> Maximum Lambda Cut-Off '}
+
+XYoff    = [280,10]
+sMaxLlabel = { size: [XYoff[0],sMaxLambdaGroup.size[1]+XYoff[1]],$
+               value: '--> Value:',$
+               uname: 'maximum_lambda_cut_off_label',$
+               sensitive: 0}
+XYoff    = [80,-6]
+sMaxLvalue = { size: [sMaxLlabel.size[0]+XYoff[0],$
+                      sMaxLlabel.size[1]+XYoff[1],$
+                      50],$
+               value: '',$
+               uname: 'maximum_lambda_cut_off_value',$
+               sensitive: 0}
+
 ;==============================================================================
 ;= Build Widgets ==============================================================
 Basetab = WIDGET_BASE(REDUCE_TAB,$
@@ -427,4 +449,35 @@ wValue = WIDGET_TEXT(Basetab,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
                   
+;- Maximum Lambda Cut Off -----------------------------------------------------
+group = CW_BGROUP(Basetab,$
+                  sMaxLambdaGroup.list,$
+                  XOFFSET    = sMaxLambdaGroup.size[0],$
+                  YOFFSET    = sMaxLambdaGroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sMaxLambdaGroup.value,$
+                  UNAME      = sMaxLambdaGroup.uname,$
+                  LABEL_LEFT = sMaxLambdaGroup.title,$
+                  /EXCLUSIVE)
+
+;label and value
+wLabel = WIDGET_LABEL(Basetab,$
+                      XOFFSET   = sMaxLlabel.size[0],$
+                      YOFFSET   = sMaxLlabel.size[1],$
+                      VALUE     = sMaxLlabel.value,$
+                      SENSITIVE = sMaxLlabel.sensitive,$
+                      UNAME     = sMaxLlabel.uname)
+
+wValue = WIDGET_TEXT(Basetab,$
+                     XOFFSET   = sMaxLvalue.size[0],$
+                     YOFFSET   = sMaxLvalue.size[1],$
+                     SCR_XSIZE = sMaxLvalue.size[2],$
+                     UNAME     = sMaxLvalue.uname,$
+                     SENSITIVE = sMaxLvalue.sensitive,$
+                     VALUE     = sMaxLvalue.value,$
+                     /EDITABLE,$
+                     /ALL_EVENTS,$
+                     /ALIGN_LEFT)
+                  
+
 END
