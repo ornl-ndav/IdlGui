@@ -109,8 +109,10 @@ global = PTR_NEW ({version:         VERSION,$
                                 '--mon-eff-const',$
                                 verbose: $
                                 '--verbose',$
-                                lambda_cut_off:$
-                                '--lambda-cut',$
+                                min_lambda_cut_off:$
+                                '--lambda-low_cut',$
+                                max_lambda_cut_off:$
+                                '--lambda-high_cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 wave_dep_back_sub:$
@@ -244,11 +246,11 @@ IF (DEBUGGING EQ 'yes' AND $
 
 
 ;show tab #2 'REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PARAMETERS
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PARAMETERS
 
 ENDIF
 ;==============================================================================

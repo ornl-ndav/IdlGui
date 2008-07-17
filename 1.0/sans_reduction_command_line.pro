@@ -251,9 +251,9 @@ IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
     cmd += ' ' + (*global).ReducePara.verbose
 ENDIF
 
-;-lambda cut-off mode
+;-min_lambda cut-off mode
 IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
-    cmd += ' ' + (*global).ReducePara.lambda_cut_off + '='
+    cmd += ' ' + (*global).ReducePara.min_lambda_cut_off + '='
     value = getTextFieldValue(Event, 'minimum_lambda_cut_off_value')
     IF (value NE '') THEN BEGIN
         cmd += STRCOMPRESS(value,/REMOVE_ALL)
@@ -262,7 +262,23 @@ IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
         cmd_status = 0
         ++missing_argument_counter
         missing_arguments_text = [missing_arguments_text, $
-                                  '- Lambda Cut-Off ' + $
+                                  '- Low Lambda Cut-Off ' + $
+                                  '(PARAMETERS)']
+    ENDELSE
+ENDIF
+
+;-max_lambda cut-off mode
+IF (getCWBgroupValue(Event, 'maximum_lambda_cut_off_group') EQ 0) THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.max_lambda_cut_off + '='
+    value = getTextFieldValue(Event, 'maximum_lambda_cut_off_value')
+    IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- High Lambda Cut-Off ' + $
                                   '(PARAMETERS)']
     ENDELSE
 ENDIF

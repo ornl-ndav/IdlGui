@@ -176,28 +176,38 @@ sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
                   uname: 'verbose_mode_group',$
                   title: '-> Verbose Mode '}
 
-;- Minimum Lambda Cut OFF -----------------------------------------------------
+;- Minimum Lambda Cut Off -----------------------------------------------------
 XYoff = [6,40]
 sMinLambdaGroup = { size:  [XYoff[0],$
-                     sVerboseGroup.size[1]+XYoff[1]],$
-             list:  ['ON','OFF'],$
-             value: 0.0,$
-             uname: 'minimum_lambda_cut_off_group',$
-             title: '-> Minimum Lambda Cut-Off '}
-
-XYoff    = [280,10]
-sMLlabel = { size: [XYoff[0],sMinLambdaGroup.size[1]+XYoff[1]],$
-             value: '--> Value:',$
-             uname: 'minimum_lambda_cut_off_label',$
-             sensitive: 1}
-XYoff    = [80,-6]
-sMLvalue = { size: [sMLlabel.size[0]+XYoff[0],$
-                    sMLlabel.size[1]+XYoff[1],$
+                            sVerboseGroup.size[1]+XYoff[1]],$
+                    list:  ['ON','OFF'],$
+                    value: 0.0,$
+                    uname: 'minimum_lambda_cut_off_group',$
+                    title: '-> Minimum Lambda Cut-Off '}
+XYoff    = [265,3]
+sMLvalue = { size: [sMinLambdaGroup.size[0]+XYoff[0],$
+                    sMinLambdaGroup.size[1]+XYoff[1],$
                     50],$
              value: '4.0',$
              uname: 'minimum_lambda_cut_off_value',$
              sensitive: 1}
              
+;- Maximum Lambda Cut Off -----------------------------------------------------
+XYoff = [20,0]
+sMaxLambdaGroup = { size:  [sMLvalue.size[0]+sMLvalue.size[2]+XYoff[0],$
+                            sMinLambdaGroup.size[1]],$
+                    list:  ['ON','OFF'],$
+                    value: 1.0,$
+                    uname: 'maximum_lambda_cut_off_group',$
+                    title: '-> Maximum Lambda Cut-Off '}
+XYoff = [265,3]
+sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
+                     sMaxLambdaGroup.size[1]+XYoff[1],$
+                     sMLvalue.size[2]],$
+              value: '',$
+              uname: 'maximum_lambda_cut_off_value',$
+              sensitive: 0}
+
 ;- Wavelength dependent background subtraction --------------------------------
 XYoff = [5,50]
 sWaveFrame = { size:  [XYoff[0],$
@@ -439,14 +449,6 @@ group = CW_BGROUP(Basetab,$
                   LABEL_LEFT = sMinLambdaGroup.title,$
                   /EXCLUSIVE)
 
-;label and value
-wLabel = WIDGET_LABEL(Basetab,$
-                      XOFFSET   = sMLlabel.size[0],$
-                      YOFFSET   = sMLlabel.size[1],$
-                      VALUE     = sMLlabel.value,$
-                      SENSITIVE = sMLlabel.sensitive,$
-                      UNAME     = sMLlabel.uname)
-
 wValue = WIDGET_TEXT(Basetab,$
                      XOFFSET   = sMLvalue.size[0],$
                      YOFFSET   = sMLvalue.size[1],$
@@ -454,6 +456,28 @@ wValue = WIDGET_TEXT(Basetab,$
                      UNAME     = sMLvalue.uname,$
                      SENSITIVE = sMLvalue.sensitive,$
                      VALUE     = sMLvalue.value,$
+                     /EDITABLE,$
+                     /ALL_EVENTS,$
+                     /ALIGN_LEFT)
+
+;- Maximum Lambda Cut Off -----------------------------------------------------
+group = CW_BGROUP(Basetab,$
+                  sMaxLambdaGroup.list,$
+                  XOFFSET    = sMaxLambdaGroup.size[0],$
+                  YOFFSET    = sMaxLambdaGroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sMaxLambdaGroup.value,$
+                  UNAME      = sMaxLambdaGroup.uname,$
+                  LABEL_LEFT = sMaxLambdaGroup.title,$
+                  /EXCLUSIVE)
+
+wValue = WIDGET_TEXT(Basetab,$
+                     XOFFSET   = sMaxvalue.size[0],$
+                     YOFFSET   = sMaxvalue.size[1],$
+                     SCR_XSIZE = sMaxvalue.size[2],$
+                     UNAME     = sMaxvalue.uname,$
+                     SENSITIVE = sMaxvalue.sensitive,$
+                     VALUE     = sMaxvalue.value,$
                      /EDITABLE,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
