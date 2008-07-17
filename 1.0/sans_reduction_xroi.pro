@@ -234,6 +234,17 @@ if (nROIs gt 0) then begin
                             FILTER='*.txt', /WRITE)
     if (STRLEN(fname) gt 0) then begin
         
+;put filename in Main Gui (reduce tab#1)
+        Event = (*pState).Event
+        id = WIDGET_INFO(Event.top, $
+                                FIND_BY_UNAME='roi_file_name_text_field')
+        WIDGET_CONTROL, id, SET_VALUE=fname
+
+;put filename of roi in Main Gui (first tab)
+        id = WIDGET_INFO(Event.top, $
+                                FIND_BY_UNAME='selection_file_name_text_field')
+        WIDGET_CONTROL, id, SET_VALUE=fname
+
 ;Selection settings (in if half is in, in if more than half in ...)
 ;will be the same for all the selection
         CurrentSelectionSettings = (*pState).currentSelectedSettings
@@ -2027,8 +2038,6 @@ pro xroi__Motion, sEvent
                     newZ = REPLICATE(0.0, nPts)
                     style = style_closed
                 endelse
-
-                print, newX
 
                 oROI->GetProperty, N_VERTS=nVerts
                 oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
