@@ -110,9 +110,9 @@ global = PTR_NEW ({version:         VERSION,$
                                 verbose: $
                                 '--verbose',$
                                 min_lambda_cut_off:$
-                                '--lambda-low_cut',$
+                                '--lambda-low-cut',$
                                 max_lambda_cut_off:$
-                                '--lambda-high_cut',$
+                                '--lambda-high-cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 wave_dep_back_sub:$
