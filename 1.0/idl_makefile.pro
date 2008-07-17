@@ -34,6 +34,7 @@ cd, CurrentFolder
 .run sans_reduction_plot.pro
 .run sans_reduction_gui.pro
 .run sans_reduction_time.pro
+.run sans_reduction_selection.pro
 
 ;procedures
 .run sans_reduction_reduce_tab1.pro

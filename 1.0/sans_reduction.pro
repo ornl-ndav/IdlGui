@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.2'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
 
@@ -60,6 +60,9 @@ wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
 wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   ROIcolor:        250,$
+                   DrawXcoeff:      4,$
+                   DrawYcoeff:      4,$
                    TESTING:         TESTING,$
                    application:     APPLICATION,$
                    ucams:           ucams,$
@@ -80,6 +83,10 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
+                   selection_extension: 'txt',$
+                   selection_filter: '*.txt',$
+                   selection_title:  'Browse for a ROI file',$
+                   selection_path:   '~/',$
                    data_nexus_file_name: '',$
                    inst_geom:       '',$
                    wave_para_value: '',$
@@ -206,7 +213,11 @@ IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
     (*global).nexus_path = nexus_path
-
+    (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
+;put run 45 in the Run Number Data (first tab)
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='run_number_cw_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='45'
 ;populate the REDUCE tab to be able to run right away
 ;Data File text field (Load Files)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
@@ -231,12 +242,13 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 
+
 ;show tab #2 'REDUCE
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PARAMETERS
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PARAMETERS
 
 ENDIF
 ;==============================================================================
