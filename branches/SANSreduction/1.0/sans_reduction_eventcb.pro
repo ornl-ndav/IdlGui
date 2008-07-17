@@ -206,9 +206,7 @@ IF (RunNumber NE 0) THEN BEGIN
                       'clear_selection_button',$
                       'load_selection_label',$
                       'selection_browse_button',$
-                      'selection_preview_button',$
-                      'selection_file_name_text_field',$
-                      'selection_load_button']
+                      'selection_file_name_text_field']
         activate_widget_list, Event, uname_list, 1
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
@@ -297,19 +295,6 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     sans_reduction_xroi, image3d, Event, DataArray ;launch sans_reduction_xroi
 
 ENDIF
-END
-
-;==============================================================================
-PRO clear_selection_tool, Event
-;get global structure
-id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL,id,GET_UVALUE=global
-
-DataArray = (*(*global).DataArray)
-X         = (*global).X
-Y         = (*global).Y
-plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
-
 END
 
 ;==============================================================================

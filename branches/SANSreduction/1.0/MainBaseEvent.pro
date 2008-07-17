@@ -66,6 +66,26 @@ CASE Event.id OF
         selection_tool, Event ;_eventcb
     END
 
+;- Browse Selection File ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
+        browse_selection_file, Event ;_selection
+    END
+    
+;- Preview Selection File -----------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_preview_button'): BEGIN
+        preview_selection_file, Event ;_selection
+    END
+
+;- Selection File Name Text Field ---------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_file_name_text_field'): BEGIN
+        selection_text_field, Event ;_selection
+    END
+
+;- Selection Load Button ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
+        LoadPlotSelection, Event ;_selection
+    END
+
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
         clear_selection_tool, Event ;_eventcb
