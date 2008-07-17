@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.2'
-DEBUGGING   = 'yes' ;yes/no
+DEBUGGING   = 'no' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
 
