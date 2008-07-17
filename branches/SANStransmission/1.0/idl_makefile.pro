@@ -42,6 +42,7 @@ cd, CurrentFolder
 .run sans_transmission_command_line.pro
 .run sans_transmission_run_commandline.pro
 .run sans_transmission_xroi.pro
+.run sans_transmission_fitting.pro
 
 ;main functions
 .run MainBaseEvent.pro

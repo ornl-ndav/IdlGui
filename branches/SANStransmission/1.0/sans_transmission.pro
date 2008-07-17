@@ -95,9 +95,9 @@ global = PTR_NEW ({version:         VERSION,$
                                 verbose: $
                                 '--verbose',$
                                 min_lambda_cut_off:$
-                                '--lambda-low_cut',$
+                                '--lambda-low-cut',$
                                 max_lambda_cut_off:$
-                                '--lambda-high_cut',$
+                                '--lambda-high-cut',$
                                 monitor_rebin: $
                                 '--mom-trans-bins',$
                                 roi_file: $
@@ -214,12 +214,12 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 
-;show tab #2 'REDUCE'
+;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;fitting
 ;show tab inside REDUCE
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
 
 ENDIF
 ;==============================================================================

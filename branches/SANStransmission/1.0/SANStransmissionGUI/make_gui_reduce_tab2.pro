@@ -333,7 +333,7 @@ wValue = WIDGET_TEXT(Basetab,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
                   
-;- Wavelength --------------------------------------------------------------------------
+;- Wavelength -----------------------------------------------------------------
 wWavelengthTitle = WIDGET_LABEL(Basetab,$
                        XOFFSET = sWavelengthTitle.size[0],$
                        YOFFSET = sWavelengthTitle.size[1],$

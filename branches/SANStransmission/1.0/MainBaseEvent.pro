@@ -142,7 +142,22 @@ CASE Event.id OF
         max_lambda_cut_off_gui, Event ;_reduce_tab2
     END
 
-;= TAB3 (LOG BOOK) ============================================================
+;= TAB3 (FITTING) =============================================================
+
+;---- degree of the fitting group ---------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='fitting_polynomial_degree_cw_group'): BEGIN
+        ChangeDegreeOfPolynome, Event ;_fitting
+    END
+
+;---- Alternate Wavelength Axis -----------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='alternate_wavelength_axis_cw_group'): BEGIN
+        ChangeAlternateAxisOption, Event ;_fitting
+    END
+
+
+;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek
     END
