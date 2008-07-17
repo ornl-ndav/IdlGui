@@ -218,22 +218,27 @@ CASE Event.id OF
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
-        GeometryGroupInteraction, Event ;_reduce_tab2
+        GeometryGroupInteraction, Event ;_reduce_tab3
     END
 
 ;---- Browse button of the overwrite geometry button --------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
-        BrowseGeometry, Event ;_reduce_tab2
+        BrowseGeometry, Event ;_reduce_tab3
     END
 
 ;---- Monitor Efficiency ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='monitor_efficiency_group'): BEGIN
-        monitor_efficiency_constant_gui, Event ;_reduce_tab2
+        monitor_efficiency_constant_gui, Event ;_reduce_tab3
     END
 
-;---- Lambda Cut off ----------------------------------------------------------
+;---- Min Lambda Cut off ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
-        lambda_cut_off_gui, Event ;_reduce_tab2
+        min_lambda_cut_off_gui, Event ;_reduce_tab3
+    END
+
+;---- Max Lambda Cut off ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_group'): BEGIN
+        max_lambda_cut_off_gui, Event ;_reduce_tab3
     END
 
 ;---- Wavelength dependent background subtraction -----------------------------

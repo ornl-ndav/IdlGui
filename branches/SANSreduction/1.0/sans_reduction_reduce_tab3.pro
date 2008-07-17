@@ -85,16 +85,28 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedure is reached each time the user changes the ON/OFF
-;switch of the Lambda Cut Off
-PRO lambda_cut_off_gui, Event
+;switch of the min Lambda Cut Off
+PRO min_lambda_cut_off_gui, Event
 value_OF_group = getCWBgroupValue(Event, 'minimum_lambda_cut_off_group')
 IF (value_OF_group EQ 0) THEN BEGIN
     sensitive_status = 1
 ENDIF ELSE BEGIN
     sensitive_status = 0
 ENDELSE
-activate_widget, Event, 'minimum_lambda_cut_off_label', sensitive_status
 activate_widget, Event, 'minimum_lambda_cut_off_value', sensitive_status
+END
+
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user changes the ON/OFF
+;switch of the max Lambda Cut Off
+PRO max_lambda_cut_off_gui, Event
+value_OF_group = getCWBgroupValue(Event, 'maximum_lambda_cut_off_group')
+IF (value_OF_group EQ 0) THEN BEGIN
+    sensitive_status = 1
+ENDIF ELSE BEGIN
+    sensitive_status = 0
+ENDELSE
+activate_widget, Event, 'maximum_lambda_cut_off_value', sensitive_status
 END
 
 ;------------------------------------------------------------------------------
