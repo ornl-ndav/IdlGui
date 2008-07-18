@@ -68,7 +68,7 @@ sROIfileTextField = { size:  [sROIfileButton.size[0]+ $
                       uname: 'roi_file_name_text_field'}
 
 yoff = 37
-;- Transmission Background -----------------------------------------------------
+;- Transmission Background ----------------------------------------------------
 sTransmBackFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      main_base_uname: 'transm_back_base_uname',$
                      xoff:            0,$
@@ -102,6 +102,23 @@ sOutputFile = { size: [XYoff[0],$
                        700],$
                 value: '',$
                 uname: 'output_file_name'}
+
+;- Clear File Name
+XYoff = [0,0]
+sClear = { size: [sOutputFile.size[0]+sOutputFile.size[2]+XYoff[0],$
+                  sOutputFile.size[1]+XYoff[1],$
+                  30,30],$
+           value: 'X',$
+           uname: 'clear_output_file_name_button'}
+
+;- Reset File Name
+XYoff = [0,0]
+sReset = { size: [sClear.size[0]+sClear.size[2]+XYoff[0],$
+                  sClear.size[1]+XYoff[1],$
+                  145,$
+                  sClear.size[3]],$
+           value: 'RESET FILE NAME',$
+           uname: 'reset_output_file_name_button'}
 
 ;==============================================================================
 ;= Build Widgets ==============================================================
@@ -187,5 +204,22 @@ wOutputFile = WIDGET_TEXT(BaseTab1,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
+
+wClear = WIDGET_BUTTON(BaseTab1,$
+                       XOFFSET   = sClear.size[0],$
+                       YOFFSET   = sClear.size[1],$
+                       SCR_XSIZE = sClear.size[2],$
+                       SCR_YSIZE = sClear.size[3],$
+                       VALUE     = sClear.value,$
+                       UNAME     = sClear.uname)
+
+wReset = WIDGET_BUTTON(BaseTab1,$
+                       XOFFSET   = sReset.size[0],$
+                       YOFFSET   = sReset.size[1],$
+                       SCR_XSIZE = sReset.size[2],$
+                       SCR_YSIZE = sReset.size[3],$
+                       VALUE     = sReset.value,$
+                       UNAME     = sReset.uname)
+
 
 END

@@ -77,7 +77,7 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     SCR_XSIZE = sDraw.size[2],$
                     SCR_YSIZE = sDraw.size[3])
 
-;;- Selection tool -------------------------------------------------------------
+;;- Selection tool ------------------------------------------------------------
 ;wSelection = WIDGET_BUTTON(wTab1Base,$
 ;                           XOFFSET = sSelection.size[0],$
 ;                           YOFFSET = sSelection.size[1],$

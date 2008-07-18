@@ -96,7 +96,8 @@ CASE Event.id OF
     END
 
 ;----Transmission Background --------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='transm_back_run_number_cw_field'): BEGIN
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='transm_back_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
           'transm_back_run_number_cw_field',$
           'transm_back_file_name_text_field'
@@ -112,7 +113,21 @@ CASE Event.id OF
     WIDGET_INFO(wWidget,$
                 FIND_BY_UNAME= $
                 'output_folder'): BEGIN
-        BrowseOutputFolder, Event ;_reduce_tab2
+        BrowseOutputFolder, Event ;_reduce_tab1
+    END
+
+;Clear File Name text field button --------------------------------------------
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'clear_output_file_name_button'): BEGIN
+       clearOutputFileName, Event ;_reduce_tab1
+    END
+    
+;Reset File Name --------------------------------------------------------------
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'reset_output_file_name_button'): BEGIN
+       ResetOutputFileName, Event ;_reduce_tab1
     END
 
 ;==== tab2 (PARAMETERS) =======================================================
