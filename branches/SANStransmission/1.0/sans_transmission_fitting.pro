@@ -54,3 +54,30 @@ map_base, Event, 'alternate_base', status
 END
 
 ;==============================================================================
+PRO BrowseInputAsciiFile, Event 
+;get global structure
+;id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve parameters
+OK         = (*global).ok
+PROCESSING = (*global).processing
+FAILED     = (*global).failed
+filter     = (*global).ascii_filter
+extension  = (*global).ascii_extension
+path       = (*global).ascii_path
+title      = (*global).ascii_title
+
+ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+                                  FILTER            = filter,$
+                                  GET_PATH          = new_path,$
+                                  PATH              = path,$
+                                  TITLE             = title,$
+                                  /MUST_EXIST)
+
+IF (ascii_file_name NE '') THEN BEGIN ;get one
+    (*global).ascii_path = new_path
+    putTextFieldValue, Event, 'input_file_text_field',ascii_file_name
+ENDIF
+
+END

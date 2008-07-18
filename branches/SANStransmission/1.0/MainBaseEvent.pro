@@ -159,6 +159,12 @@ CASE Event.id OF
 
 ;= TAB3 (FITTING) =============================================================
 
+;---- Browse Input Ascii file button ------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='input_file_browse_button'): BEGIN
+        BrowseInputAsciiFile, Event ;_fitting
+    END
+
 ;---- degree of the fitting group ---------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='fitting_polynomial_degree_cw_group'): BEGIN

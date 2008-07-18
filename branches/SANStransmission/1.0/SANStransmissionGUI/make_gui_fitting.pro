@@ -63,7 +63,7 @@ sInputFileTextField = { size: [sInputBrowse.size[0]+ $
                                sInputBrowse.size[2]+ XYoff[0],$
                                sInputFileLabel.size[1]+XYoff[1],$
                                570],$
-                        uname: 'Input_file_text_field',$
+                        uname: 'input_file_text_field',$
                         value: ''}
 XYoff = [5,0]
 sInputFileSaveButton = { size: [sInputFileTextField.size[0]+$

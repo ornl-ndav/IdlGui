@@ -77,6 +77,10 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
+                   ascii_extension: '.txt',$
+                   ascii_filter:    '*.txt',$
+                   ascii_path:      '~/',$
+                   ascii_title:     'Browse for a Transmission ASCII File',$
                    data_nexus_file_name: '',$
                    inst_geom:       '',$
                    ReducePara: {driver_name: $
@@ -217,7 +221,7 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;fitting
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
