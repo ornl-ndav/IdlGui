@@ -32,217 +32,113 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab4, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$
-             uname: 'reduce_tab3_base',$
+             uname: 'reduce_tab4_base',$
              title: tab_title}
 
-;- Overwrite Geometry ---------------------------------------------------------
-XYoff    = [10,20]
-sOG      = {size:  [XYoff[0],$
-                    XYoff[1]],$
-            value: '-> Overwrite Geometry'}
-XYoff    = [150,-6]
-sOGgroup = {size:  [XYoff[0],$
-                    sOG.size[1]+XYoff[1]],$
-            list:  ['YES','NO'],$
-            uname: 'overwrite_geometry_group'}
-XYoff    = [105,-3]
-sOGbase  = {size:  [sOGgroup.size[0]+XYoff[0],$
-                    sOGgroup.size[1]+XYoff[1],$
-                    420,35],$
-            uname: 'overwrite_geometry_base',$
-            map  : 0}
-XYoff     = [0,0]
-sOGbutton = {size:  [XYoff[0],$
-                     XYoff[1],$
-                     sOGbase.size[2],$
-                     sOGbase.size[3]],$
-             value: 'Select a Geometry File ...',$
-             uname: 'overwrite_geometry_button'}
-
-;- Time Zero offset (microS) --------------------------------------------------
-XYoff = [0,45]
-sTZO  = {size:  [sOG.size[0]+XYoff[0],$
-                 sOG.size[1]+XYoff[1]],$
-         value: '-> Time Zero Offset (microS)  _________'}
-XYoff = [250,0]
-sTZO_detector_value = {size:  [sTZO.size[0]+XYoff[0],$
-                               sTZO.size[1]+XYoff[1]],$
-                       value: 'Detector:'}
-XYoff = [65,-5]
-sTZO_detector_field = {size:  [sTZO_detector_value.size[0]+XYoff[0],$
-                               sTZO_detector_value.size[1]+XYoff[1],$
-                               70,30],$
-                       value: '',$
-                       uname: 'time_zero_offset_detector_uname'}
-XYoff = [80,0]
-sTZO_beam_value = {size:  [sTZO_detector_field.size[0]+XYoff[0],$
-                           sTZO_detector_value.size[1]+XYoff[1]],$
-                       value: '_______  Beam Monitor:'}
-XYoff = [140,0]
-sTZO_beam_field = {size:  [sTZO_beam_value.size[0]+XYoff[0],$
-                           sTZO_detector_field.size[1]+XYoff[1],$
-                           sTZO_detector_field.size[2:3]],$
-                   value: '',$
-                   uname: 'time_zero_offset_beam_monitor_uname'}
-
-;- Monitor Efficiency ---------------------------------------------------------
-XYoff = [6,40]
-sMEgroup = { size:  [XYoff[0],$
-                     sTZO_detector_value.size[1]+XYoff[1]],$
-             list:  ['ON','OFF'],$
-             value: 1.0,$
-             uname: 'monitor_efficiency_group',$
-             title: '-> Monitor Efficiency '}
-
-XYoff    = [250,10]
-sMElabel = { size: [XYoff[0],sMEgroup.size[1]+XYoff[1]],$
-             value: '--> Value:',$
-             uname: 'monitor_efficiency_constant_label',$
-             sensitive: 0}
-XYoff    = [80,-6]
-sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
-                    sMElabel.size[1]+XYoff[1],$
-                    50],$
-             value: '',$
-             uname: 'monitor_efficiency_constant_value',$
-             sensitive: 0}
-
-;- Q --------------------------------------------------------------------------
-XYoff = [5,50]
-sQFrame = { size:  [XYoff[0],$
-                    sMEgroup.size[1]+XYoff[1],$
-                    tab_size[2]-20,$
-                    45],$
-            frame: 2}
-XYoff = [20,-8]
-sQTitle = { size:  [sQFrame.size[0]+XYoff[0],$
-                    sQFrame.size[1]+XYoff[1]],$
-            value: 'Q range'}
-;Qmin
-QXoff = 30
-XYoff = [QXoff,15]
-sQminLabel = { size:  [sQFrame.size[0]+XYoff[0],$
-                       sQFrame.size[1]+XYoff[1]],$
-               value: 'Min:'}
-XYoff = [30,-5]
-sQminText = {  size:  [sQminLabel.size[0]+XYoff[0],$
-                       sQminLabel.size[1]+XYoff[1],$
-                       70,30],$
-               value: '',$
-               uname: 'qmin_text_field'}
-
-;Qmax
-XYoff = [QXoff+5,0]
-sQmaxLabel = { size:  [sQminText.size[0]+sQminText.size[2]+XYoff[0],$
-                       sQminLabel.size[1]+XYoff[1]],$
-               value: 'Max:'}
-XYoff = [30,0]
-sQmaxText = {  size:  [sQmaxLabel.size[0]+XYoff[0],$
-                       sQminText.size[1]+XYoff[1],$
-                       sQminText.size[2:3]],$
-               value: '',$
-               uname: 'qmax_text_field'}
-
-;Qwidth
-XYoff = [Qxoff+5,0]
-sQwidthLabel = { size:  [sQmaxText.size[0]+sQminText.size[2]+XYoff[0],$
-                         sQminLabel.size[1]+XYoff[1]],$
-               value: 'Width:'}
-XYoff = [45,0]
-sQwidthText = {  size:  [sQwidthLabel.size[0]+XYoff[0],$
-                         sQminText.size[1]+XYoff[1],$
-                         sQminText.size[2:3]],$
-                 value: '',$
-               uname: 'qwidth_text_field'}
-
-;Q scale
-XYoff = [Qxoff+5,0]
-sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
-                         sQwidthText.size[1]+XYoff[1]],$
-                 list:  ['Linear','Logarithmic'],$
-                 value: 1.0,$
-                 uname: 'q_scale_group'}
-
-;- Verbose Mode ---------------------------------------------------------------
+;- Intermediate plot list -----------------------------------------------------
 XYoff = [0,10]
-sVerboseGroup = { size:  [sMEgroup.size[0]+XYoff[0],$
-                          sQFrame.size[1]+sQFrame.size[3]+XYoff[1]],$
-                  list:  ['ON','OFF'],$
-                  value: 0.0,$
-                  uname: 'verbose_mode_group',$
-                  title: '-> Verbose Mode '}
+sInterPlot = $
+  { size:  [XYoff[0],$
+            XYoff[1]],$
+    list: ['Beam Monitor after Conversion To Wavelength',$
+           'Beam Monitor in Wavelength after Efficiency Correction',$
+           'Data of Each Pixel after Wavelength Conversion' + $
+           ' (WARNING: HUGE FILE!)',$
+           'Monitor Spectrum after Rebin to Detector Wavelength' + $
+           ' Axis (WARNING: HUGE FILE!)',$
+           'Fractional Counts and Area after Q Rebinning (Two Files)',$
+           'Combined Spectrum of Data after Beam Monitor' + $
+           ' Normalization'],$
+    uname : 'intermediate_group_uname',$
+    value : [0,0,0,0,0,0]}
 
-;- Minimum Lambda Cut Off -----------------------------------------------------
-XYoff = [6,40]
-sMinLambdaGroup = { size:  [XYoff[0],$
-                            sVerboseGroup.size[1]+XYoff[1]],$
-                    list:  ['ON','OFF'],$
-                    value: 0.0,$
-                    uname: 'minimum_lambda_cut_off_group',$
-                    title: '-> Minimum Lambda Cut-Off '}
-XYoff    = [265,3]
-sMLvalue = { size: [sMinLambdaGroup.size[0]+XYoff[0],$
-                    sMinLambdaGroup.size[1]+XYoff[1],$
-                    50],$
-             value: '4.0',$
-             uname: 'minimum_lambda_cut_off_value',$
-             sensitive: 1}
-             
-;- Maximum Lambda Cut Off -----------------------------------------------------
-XYoff = [20,0]
-sMaxLambdaGroup = { size:  [sMLvalue.size[0]+sMLvalue.size[2]+XYoff[0],$
-                            sMinLambdaGroup.size[1]],$
-                    list:  ['ON','OFF'],$
-                    value: 1.0,$
-                    uname: 'maximum_lambda_cut_off_group',$
-                    title: '-> Maximum Lambda Cut-Off '}
-XYoff = [265,3]
-sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
-                     sMaxLambdaGroup.size[1]+XYoff[1],$
-                     sMLvalue.size[2]],$
-              value: '',$
-              uname: 'maximum_lambda_cut_off_value',$
-              sensitive: 0}
+;- inter#2 hidding base -------------------------------------------------------
+XYoff = [5,43]
+sInter2HiddingBase = { size:  [XYoff[0],$
+                               XYoff[1],$
+                               tab_size[2],$
+                               20],$
+                       frame:  0,$
+                       uname:  'beam_monitor_hidding_base',$
+                       map:    1}
 
-;- Wavelength dependent background subtraction --------------------------------
-XYoff = [5,50]
-sWaveFrame = { size:  [XYoff[0],$
-                    sMinLambdaGroup.size[1]+XYoff[1],$
-                    tab_size[2]-20,$
-                    45],$
-            frame: 2}
+XYoff = [17,0]
+NotAvailableMessage = ' is NOT AVAILABLE !'
+sInter2HiddingLabel = { size:  [XYoff[0],$
+                                XYoff[1]],$
+                        value: sInterPlot.list[1]+NotAvailableMessage}
+
+;- Base of --dump-wave-bmmom about lambda -------------------------------------
+XYoff = [0,180]
+sBaseLambda = { size:  [XYoff[0],$
+                        XYoff[1],$
+                        tab_size[2],$
+                        60],$
+                uname: 'lambda_base',$
+                map:   0}
+
+XYoff = [5,10]
+sLambdaFrame = { size:  [XYoff[0],$
+                         XYoff[1],$
+                         tab_size[2]-20,$
+                         45],$
+                 frame: 2}
 XYoff = [20,-8]
-sWaveTitle = { size:  [sWaveFrame.size[0]+XYoff[0],$
-                       sWaveFrame.size[1]+XYoff[1]],$
-               value: 'Wavelength Dependent Background Subtraction'}
+sLambdaTitle = { size:  [sLambdaFrame.size[0]+XYoff[0],$
+                         sLambdaFrame.size[1]+XYoff[1]],$
+                 value: 'Lambda'}
+;Lambda min
+LambdaXoff = 30
+XYoff = [LambdaXoff,15]
+sLambdaminLabel = { size:  [sLambdaFrame.size[0]+XYoff[0],$
+                            sLambdaFrame.size[1]+XYoff[1]],$
+                    value: 'Min:'}
+XYoff = [30,-5]
+sLambdaminText = {  size:  [sLambdaminLabel.size[0]+XYoff[0],$
+                            sLambdaminLabel.size[1]+XYoff[1],$
+                            70,30],$
+                    value: '',$
+                    uname: 'lambda_min_text_field'}
 
-;Wave label
-WaveXoff = 10
-XYoff = [WaveXoff,16]
-sWaveLabel = { size:  [sWaveFrame.size[0]+XYoff[0],$
-                       sWaveFrame.size[1]+XYoff[1]],$
-               value: 'Comma-delimited List of Increasing Coefficients',$
-               uname: 'wave_para_label_uname'}
+;Lambdamax
+XYoff = [LambdaXoff+5,0]
+sLambdamaxLabel = { size:  [sLambdaminText.size[0]+ $
+                            sLambdaminText.size[2]+XYoff[0],$
+                            sLambdaminLabel.size[1]+XYoff[1]],$
+                    value: 'Max:'}
+XYoff = [30,0]
+sLambdamaxText = {  size:  [sLambdamaxLabel.size[0]+XYoff[0],$
+                            sLambdaminText.size[1]+XYoff[1],$
+                            sLambdaminText.size[2:3]],$
+                    value: '',$
+                    uname: 'lambda_max_text_field'}
 
-XYoff = [290,-5]
-sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
-                     sWaveLabel.size[1]+XYoff[1],$
-                     300],$
-              VALUE: '',$
-              UNAME: 'wave_dependent_back_sub_text_field'}
-XYoff = [0,0]
-sWaveHelpButton = { size: [sWaveText.size[0]+$
-                           sWaveText.size[2]+XYoff[0],$
-                           sWaveText.size[1],$
-                           65,$
-                           30],$
-                    VALUE: 'HELP',$
-                    UNAME: 'wave_help_button'}
-                          
+;Lambdawidth
+XYoff = [Lambdaxoff+5,0]
+sLambdawidthLabel = { size:  [sLambdamaxText.size[0]+ $
+                              sLambdaminText.size[2]+XYoff[0],$
+                              sLambdaminLabel.size[1]+XYoff[1]],$
+                      value: 'Width:'}
+XYoff = [45,0]
+sLambdawidthText = {  size:  [sLambdawidthLabel.size[0]+XYoff[0],$
+                              sLambdaminText.size[1]+XYoff[1],$
+                              sLambdaminText.size[2:3]],$
+                      value: '',$
+                      uname: 'lambda_width_text_field'}
+
+;Lambda scale
+XYoff = [Lambdaxoff+5,0]
+sLambdascaleGroup = { size:  [sLambdawidthText.size[0]+ $
+                              sLambdawidthText.size[2]+XYoff[0],$
+                              sLambdawidthText.size[1]+XYoff[1]],$
+                      list:  ['Linear','Logarithmic'],$
+                      value: 1.0,$
+                      uname: 'lambda_scale_group'}
+
 ;==============================================================================
 ;= Build Widgets ==============================================================
 Basetab = WIDGET_BASE(REDUCE_TAB,$
@@ -253,275 +149,112 @@ Basetab = WIDGET_BASE(REDUCE_TAB,$
                        SCR_YSIZE = sBaseTab.size[3],$
                        TITLE     = sBaseTab.title)
 
-;- Overwrite Geometry ---------------------------------------------------------
-label = WIDGET_LABEL(Basetab,$
-                     XOFFSET = sOG.size[0],$
-                     YOFFSET = sOG.size[1],$
-                     VALUE   = sOG.value,$
-                     /ALIGN_LEFT)
+;- Inter#2 hidding base
+wInter2Hiddingbase = WIDGET_BASE(Basetab,$
+                                 XOFFSET   = sInter2HiddingBase.size[0],$
+                                 YOFFSET   = sInter2HiddingBase.size[1],$
+                                 SCR_XSIZE = sInter2HiddingBase.size[2],$
+                                 SCR_YSIZE = sInter2HiddingBase.size[3],$
+                                 UNAME     = sInter2HiddingBase.uname,$
+                                 FRAME     = sInter2HiddingBase.frame,$
+                                 MAP       = sInter2HiddingBase.map)
 
-group = CW_BGROUP(Basetab,$
-                  sOGgroup.list,$
-                  XOFFSET   = sOGgroup.size[0],$
-                  YOFFSET   = sOGgroup.size[1],$
-                  ROW       = 1,$
-                  SET_VALUE = 1,$
-                  UNAME     = sOGgroup.uname,$
-                  /NO_RELEASE,$
-                  /EXCLUSIVE)
+wInter2HiddingLabel = WIDGET_LABEL(wInter2HiddingBase,$
+                                   XOFFSET = sInter2HiddingLabel.size[0],$
+                                   YOFFSET = sInter2HiddingLabel.size[1],$
+                                   VALUE   = sInter2HiddingLabel.value)
 
-base = WIDGET_BASE(Basetab,$
-                   XOFFSET   = sOGbase.size[0],$
-                   YOFFSET   = sOGBase.size[1],$
-                   SCR_XSIZE = sOGbase.size[2],$
-                   SCR_YSIZE = sOGbase.size[3],$
-                   UNAME     = sOGbase.uname,$
-                   MAP       = sOGbase.map)
+;- Intermediate plot list -----------------------------------------------------
+InterGroup = CW_BGROUP(Basetab,$
+                       sInterPlot.list,$
+                       XOFFSET   = sInterPlot.size[0],$
+                       YOFFSET   = sInterPlot.size[1],$
+                       UNAME     = sInterPlot.uname,$
+                       SET_VALUE = sInterPlot.value,$
+                       /NONEXCLUSIVE)
 
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = sOGbutton.size[0],$
-                       YOFFSET   = sOGbutton.size[1],$
-                       SCR_XSIZE = sOGbutton.size[2],$
-                       SCR_YSIZE = sOGbutton.size[3],$
-                       VALUE     = sOGbutton.value,$
-                       UNAME     = sOGbutton.uname)
+;- Base of --dump-wave-bmmon about lambda -------------------------------------
+LambdaBase = WIDGET_BASE(Basetab,$
+                         XOFFSET   = sBaseLambda.size[0],$
+                         YOFFSET   = sBaseLambda.size[1],$
+                         SCR_XSIZE = sBaseLambda.size[2],$
+                         SCR_YSIZE = sBaseLambda.size[3],$
+                         UNAME     = sBaseLambda.uname,$
+                         MAP       = sBaseLambda.map)
 
-;- Time Zero offset (microS) --------------------------------------------------
-label = WIDGET_LABEL(Basetab,$
-                     XOFFSET = sTZO.size[0],$
-                     YOFFSET = sTZO.size[1],$
-                     VALUE   = sTZO.value)
+wQTitle = WIDGET_LABEL(LambdaBase,$
+                       XOFFSET = sLambdaTitle.size[0],$
+                       YOFFSET = sLambdaTitle.size[1],$
+                       VALUE   = sLambdaTitle.value)
+;Lambdamin
+wLambdaminLabel = WIDGET_LABEL(LambdaBase,$
+                               XOFFSET = sLambdaminLabel.size[0],$
+                               YOFFSET = sLambdaminLabel.size[1],$
+                               VALUE   = sLambdaminLabel.value)
 
-label = WIDGET_LABEL(Basetab,$
-                     XOFFSET = sTZO_detector_value.size[0],$
-                     YOFFSET = sTZO_detector_value.size[1],$
-                     VALUE   = sTZO_detector_value.value)
+wLambdaminText = WIDGET_TEXT(LambdaBase,$
+                             XOFFSET   = sLambdaminText.size[0],$
+                             YOFFSET   = sLambdaminText.size[1],$
+                             SCR_XSIZE = sLambdaminText.size[2],$
+                             SCR_YSIZE = sLambdaminText.size[3],$
+                             VALUE     = sLambdaminText.value,$
+                             UNAME     = sLambdaminText.uname,$
+                             /EDITABLE,$
+                             /ALL_EVENTS,$
+                             /ALIGN_LEFT)
 
-text = WIDGET_TEXT(Basetab,$
-                   XOFFSET   = sTZO_detector_field.size[0],$
-                   YOFFSET   = sTZO_detector_field.size[1],$
-                   SCR_XSIZE = sTZO_detector_field.size[2],$
-                   SCR_YSIZE = sTZO_detector_field.size[3],$
-                   VALUE     = sTZO_detector_field.value,$
-                   UNAME     = sTZO_detector_field.uname,$
-                   /ALL_EVENTS,$
-                   /EDITABLE)
+;Lambdamax
+wLambdamaxLabel = WIDGET_LABEL(LambdaBase,$
+                               XOFFSET = sLambdamaxLabel.size[0],$
+                               YOFFSET = sLambdamaxLabel.size[1],$
+                               VALUE   = sLambdamaxLabel.value)
 
-label = WIDGET_LABEL(Basetab,$
-                     XOFFSET = sTZO_beam_value.size[0],$
-                     YOFFSET = sTZO_beam_value.size[1],$
-                     VALUE   = sTZO_beam_value.value)
+wLambdamaxText = WIDGET_TEXT(LambdaBase,$
+                             XOFFSET   = sLambdamaxText.size[0],$
+                             YOFFSET   = sLambdamaxText.size[1],$
+                             SCR_XSIZE = sLambdamaxText.size[2],$
+                             SCR_YSIZE = sLambdamaxText.size[3],$
+                             VALUE     = sLambdamaxText.value,$
+                             UNAME     = sLambdamaxText.uname,$
+                             /EDITABLE,$
+                             /ALL_EVENTS,$
+                             /ALIGN_LEFT)
 
-text = WIDGET_TEXT(Basetab,$
-                   XOFFSET   = sTZO_beam_field.size[0],$
-                   YOFFSET   = sTZO_beam_field.size[1],$
-                   SCR_XSIZE = sTZO_beam_field.size[2],$
-                   SCR_YSIZE = sTZO_beam_field.size[3],$
-                   VALUE     = sTZO_beam_field.value,$
-                   UNAME     = sTZO_beam_field.uname,$
-                   /ALL_EVENTS,$
-                   /EDITABLE)
+;Lambdawidth
+wLambdawidthLabel = WIDGET_LABEL(LambdaBase,$
+                                 XOFFSET = sLambdawidthLabel.size[0],$
+                                 YOFFSET = sLambdawidthLabel.size[1],$
+                                 VALUE   = sLambdawidthLabel.value)
 
-;- Monitor Efficiency ---------------------------------------------------------
-group = CW_BGROUP(Basetab,$
-                  sMEgroup.list,$
-                  XOFFSET    = sMEgroup.size[0],$
-                  YOFFSET    = sMEgroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sMEgroup.value,$
-                  UNAME      = sMEgroup.uname,$
-                  LABEL_LEFT = sMEgroup.title,$
-                  /EXCLUSIVE)
+wLambdawidthText = WIDGET_TEXT(LambdaBase,$
+                               XOFFSET   = sLambdawidthText.size[0],$
+                               YOFFSET   = sLambdawidthText.size[1],$
+                               SCR_XSIZE = sLambdawidthText.size[2],$
+                               SCR_YSIZE = sLambdawidthText.size[3],$
+                               VALUE     = sLambdawidthText.value,$
+                               UNAME     = sLambdawidthText.uname,$
+                               /EDITABLE,$
+                               /ALL_EVENTS,$
+                               /ALIGN_LEFT)
 
-;label and value
-wLabel = WIDGET_LABEL(Basetab,$
-                      XOFFSET   = sMElabel.size[0],$
-                      YOFFSET   = sMElabel.size[1],$
-                      VALUE     = sMElabel.value,$
-                      SENSITIVE = sMElabel.sensitive,$
-                      UNAME     = sMElabel.uname)
+;Lambda scale
+wLambdascaleGroup =  CW_BGROUP(LambdaBase,$
+                               sLambdascaleGroup.list,$
+                               XOFFSET    = sLambdascaleGroup.size[0],$
+                               YOFFSET    = sLambdascaleGroup.size[1],$
+                               ROW        = 1,$
+                               SET_VALUE  = sLambdascaleGroup.value,$
+                               UNAME      = sLambdascaleGroup.uname,$
+                               /EXCLUSIVE)
 
-wValue = WIDGET_TEXT(Basetab,$
-                     XOFFSET   = sMEvalue.size[0],$
-                     YOFFSET   = sMEvalue.size[1],$
-                     SCR_XSIZE = sMEvalue.size[2],$
-                     UNAME     = sMEvalue.uname,$
-                     SENSITIVE = sMEvalue.sensitive,$
-                     VALUE     = sMEvalue.value,$
-                     /EDITABLE,$
-                     /ALL_EVENTS,$
-                     /ALIGN_LEFT)
-                  
-;- Q --------------------------------------------------------------------------
-wQTitle = WIDGET_LABEL(Basetab,$
-                       XOFFSET = sQTitle.size[0],$
-                       YOFFSET = sQTitle.size[1],$
-                       VALUE   = sQTitle.value)
-;Qmin
-wQminLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQminLabel.size[0],$
-                          YOFFSET = sQminLabel.size[1],$
-                          VALUE   = sQminLabel.value)
+;Lambda frame
+wLambdaFrame = WIDGET_LABEL(LambdaBase,$
+                            XOFFSET   = sLambdaFrame.size[0],$
+                            YOFFSET   = sLambdaFrame.size[1],$
+                            SCR_XSIZE = sLambdaFrame.size[2],$
+                            SCR_YSIZE = sLambdaFrame.size[3],$
+                            VALUE     = '',$
+                            FRAME     = sLambdaFrame.frame)
 
-wQminText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQminText.size[0],$
-                        YOFFSET   = sQminText.size[1],$
-                        SCR_XSIZE = sQminText.size[2],$
-                        SCR_YSIZE = sQminText.size[3],$
-                        VALUE     = sQminText.value,$
-                        UNAME     = sQminText.uname,$
-                        /ALL_EVENTS,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
-
-;Qmax
-wQmaxLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQmaxLabel.size[0],$
-                          YOFFSET = sQmaxLabel.size[1],$
-                          VALUE   = sQmaxLabel.value)
-
-wQmaxText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQmaxText.size[0],$
-                        YOFFSET   = sQmaxText.size[1],$
-                        SCR_XSIZE = sQmaxText.size[2],$
-                        SCR_YSIZE = sQmaxText.size[3],$
-                        VALUE     = sQmaxText.value,$
-                        UNAME     = sQmaxText.uname,$
-                        /ALL_EVENTS,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
-
-;Qwidth
-wQwidthLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sQwidthLabel.size[0],$
-                          YOFFSET = sQwidthLabel.size[1],$
-                          VALUE   = sQwidthLabel.value)
-
-wQwidthText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sQwidthText.size[0],$
-                        YOFFSET   = sQwidthText.size[1],$
-                        SCR_XSIZE = sQwidthText.size[2],$
-                        SCR_YSIZE = sQwidthText.size[3],$
-                        VALUE     = sQwidthText.value,$
-                        UNAME     = sQwidthText.uname,$
-                        /ALL_EVENTS,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
-
-;Q scale
-wQscaleGroup =  CW_BGROUP(Basetab,$
-                          sQscaleGroup.list,$
-                          XOFFSET    = sQscaleGroup.size[0],$
-                          YOFFSET    = sQscaleGroup.size[1],$
-                          ROW        = 1,$
-                          SET_VALUE  = sQscaleGroup.value,$
-                          UNAME      = sQscaleGroup.uname,$
-                          /EXCLUSIVE)
-
-;Q frame
-wQFrame = WIDGET_LABEL(Basetab,$
-                       XOFFSET   = sQFrame.size[0],$
-                       YOFFSET   = sQFrame.size[1],$
-                       SCR_XSIZE = sQFrame.size[2],$
-                       SCR_YSIZE = sQFrame.size[3],$
-                       VALUE     = '',$
-                       FRAME     = sQFrame.frame)
-
-;- Verbose Mode ---------------------------------------------------------------
-group = CW_BGROUP(Basetab,$
-                  sVerboseGroup.list,$
-                  XOFFSET    = sVerboseGroup.size[0],$
-                  YOFFSET    = sVerboseGroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sVerboseGroup.value,$
-                  UNAME      = sVerboseGroup.uname,$
-                  LABEL_LEFT = sVerboseGroup.title,$
-                  /EXCLUSIVE)
-
-;- Minimum Lambda Cut Off -----------------------------------------------------
-group = CW_BGROUP(Basetab,$
-                  sMinLambdaGroup.list,$
-                  XOFFSET    = sMinLambdaGroup.size[0],$
-                  YOFFSET    = sMinLambdaGroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sMinLambdaGroup.value,$
-                  UNAME      = sMinLambdaGroup.uname,$
-                  LABEL_LEFT = sMinLambdaGroup.title,$
-                  /EXCLUSIVE)
-
-wValue = WIDGET_TEXT(Basetab,$
-                     XOFFSET   = sMLvalue.size[0],$
-                     YOFFSET   = sMLvalue.size[1],$
-                     SCR_XSIZE = sMLvalue.size[2],$
-                     UNAME     = sMLvalue.uname,$
-                     SENSITIVE = sMLvalue.sensitive,$
-                     VALUE     = sMLvalue.value,$
-                     /EDITABLE,$
-                     /ALL_EVENTS,$
-                     /ALIGN_LEFT)
-
-;- Maximum Lambda Cut Off -----------------------------------------------------
-group = CW_BGROUP(Basetab,$
-                  sMaxLambdaGroup.list,$
-                  XOFFSET    = sMaxLambdaGroup.size[0],$
-                  YOFFSET    = sMaxLambdaGroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sMaxLambdaGroup.value,$
-                  UNAME      = sMaxLambdaGroup.uname,$
-                  LABEL_LEFT = sMaxLambdaGroup.title,$
-                  /EXCLUSIVE)
-
-wValue = WIDGET_TEXT(Basetab,$
-                     XOFFSET   = sMaxvalue.size[0],$
-                     YOFFSET   = sMaxvalue.size[1],$
-                     SCR_XSIZE = sMaxvalue.size[2],$
-                     UNAME     = sMaxvalue.uname,$
-                     SENSITIVE = sMaxvalue.sensitive,$
-                     VALUE     = sMaxvalue.value,$
-                     /EDITABLE,$
-                     /ALL_EVENTS,$
-                     /ALIGN_LEFT)
-
-;- Wavelength dependent background subtraction --------------------------------
-wWaveTitle = WIDGET_LABEL(Basetab,$
-                       XOFFSET = sWaveTitle.size[0],$
-                       YOFFSET = sWaveTitle.size[1],$
-                       VALUE   = sWaveTitle.value)
-
-;Wave Label
-wWaveLabel = WIDGET_LABEL(Basetab,$
-                          XOFFSET = sWaveLabel.size[0],$
-                          YOFFSET = sWaveLabel.size[1],$
-                          VALUE   = sWaveLabel.value,$
-                          UNAME   = sWaveLabel.uname)
-
-wWaveText = WIDGET_TEXT(Basetab,$
-                        XOFFSET   = sWaveText.size[0],$
-                        YOFFSET   = sWaveText.size[1],$
-                        SCR_XSIZE = sWaveText.size[2],$
-                        VALUE     = sWaveText.value,$
-                        UNAME     = sWaveText.uname,$
-                        /ALL_EVENTS,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
-
-;Wave Help Button
-wWaveButton = WIDGET_BUTTON(BaseTab,$
-                            XOFFSET   = sWaveHelpButton.size[0],$
-                            YOFFSET   = sWaveHelpButton.size[1],$
-                            SCR_XSIZE = sWaveHelpButton.size[2],$
-                            SCR_YSIZE = sWaveHelpButton.size[3],$
-                            VALUE     = sWaveHelpButton.value,$
-                            UNAME     = sWaveHelpButton.UNAME,$
-                            /PUSHBUTTON_EVENTS)
-
-;Wave frame
-wWaveFrame = WIDGET_LABEL(Basetab,$
-                       XOFFSET   = sWaveFrame.size[0],$
-                       YOFFSET   = sWaveFrame.size[1],$
-                       SCR_XSIZE = sWaveFrame.size[2],$
-                       SCR_YSIZE = sWaveFrame.size[3],$
-                       VALUE     = '',$
-                       FRAME     = sWaveFrame.frame)
 
 END
