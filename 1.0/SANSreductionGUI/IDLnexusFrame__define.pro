@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,9 +30,9 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;= This function builds the Main Base ==========================================
+;= This function builds the Main Base =========================================
 FUNCTION IDLnexusFrame_make_base, MAIN_BASE, $
                                   MAIN_BASE_UNAME, $
                                   MAIN_BASE_XSIZE, $
@@ -49,7 +49,7 @@ base = WIDGET_BASE(MAIN_BASE,$
 RETURN, base
 END
 
-;= This Function builds the frame and put the title of the frame ===============
+;= This Function builds the frame and put the title of the frame ==============
 PRO IDLnexusFrame_make_frame, BaseID, frame_title, main_base_xsize
 title = WIDGET_LABEL(BaseID,$
                      XOFFSET = 20,$
@@ -65,7 +65,7 @@ frame = WIDGET_LABEL(BaseID,$
 END
 
 
-;= Make Run Number cw_field ====================================================
+;= Make Run Number cw_field ===================================================
 PRO IDLnexusFrame_make_run_number, BaseID, label, cw_field_uname
 base1 = WIDGET_BASE(BaseID,$
                     XOFFSET   = 10,$
@@ -82,7 +82,7 @@ field = CW_FIELD(base1,$
                  /ROW)
 END
 
-;= Make 'OR' label and BROWSE button ==========================================
+;= Make 'OR' label and BROWSE button =========================================
 PRO IDLnexusFrame_make_browse_button, BaseID, browse_uname
 label = WIDGET_LABEL(BaseID,$
                      XOFFSET = 155,$
@@ -102,15 +102,15 @@ PRO IDLnexusFrame_make_text_field, BaseID, text_field_uname
 text_field = WIDGET_TEXT(BaseID,$
                          XOFFSET   = 265,$
                          YOFFSET   = 20,$
-                         SCR_XSIZE = 410,$
+                         SCR_XSIZE = 730,$
                          SCR_YSIZE = 35,$
                          UNAME     = text_field_uname,$
                          /EDITABLE,$
                          /ALL_EVENTS)
 END
 
-;*******************************************************************************
-;***** Class constructor *******************************************************
+;******************************************************************************
+;***** Class constructor ******************************************************
 FUNCTION IDLnexusFrame::init, $
                       MAIN_BASE_ID    = main_base_id,$
                       MAIN_BASE_XSIZE = main_base_xsize,$
@@ -145,7 +145,7 @@ IDLnexusFrame_make_frame, BaseID, FRAME_TITLE, MAIN_BASE_XSIZE
 RETURN, 1
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO IDLnexusFrame__define
 struct = {IDLnexusFrame,$
           var: 0}

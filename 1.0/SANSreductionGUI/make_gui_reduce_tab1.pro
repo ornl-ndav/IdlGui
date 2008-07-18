@@ -63,7 +63,7 @@ sROIfileTextField = { size:  [sROIfileButton.size[0]+ $
                               sROIfileButton.size[2]+ $
                               XYoff[0],$
                               sROIfileButton.size[1]+XYoff[1],$
-                              535, $
+                              845, $
                               35],$
                       uname: 'roi_file_name_text_field'}
 
@@ -113,19 +113,83 @@ sDarkFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   browse_uname:    'dark_browse_button',$
                   file_name_uname: 'dark_file_name_text_field'}
 
+;- Sample Data transmission File ----------------------------------------------
+sSampleDataFileFrame = $
+  {main_base_xsize: sBaseTab1.size[2],$
+   main_base_uname: 'sample_data_transmission_base_uname',$
+   xoff:            0,$
+   yoff:            sDarkFileFrame.yoff+yoff,$
+   frame_title:     'Sample Data Transmission',$
+   label_1:         'Run Number:',$
+   tf1_uname:       'sample_data_transmission_run_number_cw_field',$
+   browse_uname:    'sample_data_transmission_browse_button',$
+   file_name_uname: 'sample_data_transmission_file_name_text_field'}
+
+;- Empty Can Transmission -----------------------------------------------------
+sEmptyCanTransmissionFileFrame = $
+  {main_base_xsize: sBaseTab1.size[2],$
+   main_base_uname: 'empty_can_transmission_base_uname',$
+   xoff:            0,$
+   yoff:            sSampleDataFileFrame.yoff+yoff,$
+   frame_title:     'Empty Can Transmission',$
+   label_1:         'Run Number:',$
+   tf1_uname:       'empty_can_transmission_run_number_cw_field',$
+   browse_uname:    'empty_can_transmission_browse_button',$
+   file_name_uname: 'empty_can_transmission_file_name_text_field'}
+
+;- Output Folder --------------------------------------------------------------
+XYoff = [10,100]
+sOutputFolderlabel = { size: [XYoff[0],$
+                              sEmptyCanTransmissionFileFrame.yoff+XYoff[1]],$
+                       value: 'Output Folder:'}
+XYoff = [120,-8]                       
+sOutputFolder = { size: [XYoff[0],$
+                         sOutputFolderLabel.size[1]+XYoff[1],$
+                         880,30],$
+                  value: '~/',$
+                  uname: 'output_folder'}
+
+;- Output File Name ----------------------------------------------------------
+XYoff = [10,30]
+sOutputFileLabel = { size: [XYoff[0],$
+                            sOutputFolderLabel.size[1]+XYoff[1]],$
+                     value: 'Output File Name:'}
+XYoff = [120,-5]
+sOutputFile = { size: [XYoff[0],$
+                       sOutputFileLabel.size[1]+XYoff[1],$
+                       750],$
+                value: '',$
+                uname: 'output_file_name'}
+;- Clear File Name
+XYoff = [0,0]
+sClear = { size: [sOutputFile.size[0]+sOutputFile.size[2]+XYoff[0],$
+                  sOutputFile.size[1]+XYoff[1],$
+                  30,30],$
+           value: 'X',$
+           uname: 'clear_output_file_name_button'}
+
+;- Reset File Name
+XYoff = [0,0]
+sReset = { size: [sClear.size[0]+sClear.size[2]+XYoff[0],$
+                  sClear.size[1]+XYoff[1],$
+                  100,$
+                  sClear.size[3]],$
+           value: 'RESET FILE NAME',$
+           uname: 'reset_output_file_name_button'}
+
 ;==============================================================================
 ;= Build Widgets ==============================================================
-BaseTab1 = WIDGET_BASE(REDUCE_TAB,$
-                       UNAME     = sBaseTab1.uname,$
-                       XOFFSET   = sBaseTab1.size[0],$
-                       YOFFSET   = sBaseTab1.size[1],$
-                       SCR_XSIZE = sBaseTab1.size[2],$
-                       SCR_YSIZE = sBaseTab1.size[3],$
-                       TITLE     = sBaseTab1.title)
+BaseTab = WIDGET_BASE(REDUCE_TAB,$
+                      UNAME     = sBaseTab1.uname,$
+                      XOFFSET   = sBaseTab1.size[0],$
+                      YOFFSET   = sBaseTab1.size[1],$
+                      SCR_XSIZE = sBaseTab1.size[2],$
+                      SCR_YSIZE = sBaseTab1.size[3],$
+                      TITLE     = sBaseTab1.title)
 
 ;- Data File Frame ------------------------------------------------------------
 cDataFileFrame = OBJ_NEW('IDLnexusFrame',$
-                         MAIN_BASE_ID    = BaseTab1,$
+                         MAIN_BASE_ID    = BaseTab,$
                          MAIN_BASE_XSIZE = sDataFileFrame.main_base_xsize,$
                          MAIN_BASE_UNAME = sDataFileFrame.main_base_uname,$
                          XOFF            = sDataFileFrame.xoff,$
@@ -137,14 +201,14 @@ cDataFileFrame = OBJ_NEW('IDLnexusFrame',$
                          FILE_NAME_UNAME = sDataFileFrame.file_name_uname)
 
 ;- ROI file -------------------------------------------------------------------
-wROIfileButton = WIDGET_BUTTON(BaseTab1,$
+wROIfileButton = WIDGET_BUTTON(BaseTab,$
                                XOFFSET   = sROIfileButton.size[0],$
                                YOFFSET   = sROIfileButton.size[1],$
                                SCR_XSIZE = sROIfileButton.size[2],$
                                SCR_YSIZE = sROIfileButton.size[3],$
                                UNAME     = sROIfileButton.uname,$
                                VALUE     = sROIfileButton.value)
-wROIfileTextField = WIDGET_TEXT(BaseTab1,$
+wROIfileTextField = WIDGET_TEXT(BaseTab,$
                                 XOFFSET   = sROIfileTextField.size[0],$
                                 YOFFSET   = sROIfileTextField.size[1],$
                                 SCR_XSIZE = sROIfileTextField.size[2],$
@@ -157,7 +221,7 @@ wROIfileTextField = WIDGET_TEXT(BaseTab1,$
 ;- Solvant Buffer Only --------------------------------------------------------
 cSolvantFileFrame = $
   OBJ_NEW('IDLnexusFrame',$
-          MAIN_BASE_ID    = BaseTab1,$
+          MAIN_BASE_ID    = BaseTab,$
           MAIN_BASE_XSIZE = sSolvantFileFrame.main_base_xsize,$
           MAIN_BASE_UNAME = sSolvantFileFrame.main_base_uname,$
           XOFF            = sSolvantFileFrame.xoff,$
@@ -170,7 +234,7 @@ cSolvantFileFrame = $
 
 ;- Empty Can ------------------------------------------------------------------
 cEmptyFileFrame = OBJ_NEW('IDLnexusFrame',$
-                          MAIN_BASE_ID    = BaseTab1,$
+                          MAIN_BASE_ID    = BaseTab,$
                           MAIN_BASE_XSIZE = sEmptyFileFrame.main_base_xsize,$
                           MAIN_BASE_UNAME = sEmptyFileFrame.main_base_uname,$
                           XOFF            = sEmptyFileFrame.xoff,$
@@ -183,7 +247,7 @@ cEmptyFileFrame = OBJ_NEW('IDLnexusFrame',$
 
 ;- Open beam ------------------------------------------------------------------
 cOpenFileFrame = OBJ_NEW('IDLnexusFrame',$
-                         MAIN_BASE_ID    = BaseTab1,$
+                         MAIN_BASE_ID    = BaseTab,$
                          MAIN_BASE_XSIZE = sOpenFileFrame.main_base_xsize,$
                          MAIN_BASE_UNAME = sOpenFileFrame.main_base_uname,$
                          XOFF            = sOpenFileFrame.xoff,$
@@ -196,7 +260,7 @@ cOpenFileFrame = OBJ_NEW('IDLnexusFrame',$
 
 ;- Dark Current ---------------------------------------------------------------
 cDarkFileFrame = OBJ_NEW('IDLnexusFrame',$
-                         MAIN_BASE_ID    = BaseTab1,$
+                         MAIN_BASE_ID    = BaseTab,$
                          MAIN_BASE_XSIZE = sDarkFileFrame.main_base_xsize,$
                          MAIN_BASE_UNAME = sDarkFileFrame.main_base_uname,$
                          XOFF            = sDarkFileFrame.xoff,$
@@ -207,7 +271,80 @@ cDarkFileFrame = OBJ_NEW('IDLnexusFrame',$
                          BROWSE_UNAME    = sDarkFileFrame.browse_uname,$
                          FILE_NAME_UNAME = sDarkFileFrame.file_name_uname)
 
+;- Sample Data transmission File ----------------------------------------------
+cSampleDataFileFrame = $
+  OBJ_NEW('IDLnexusFrame',$
+          MAIN_BASE_ID    = BaseTab,$
+          MAIN_BASE_XSIZE = sSampleDataFileFrame.main_base_xsize,$
+          MAIN_BASE_UNAME = sSampleDataFileFrame.main_base_uname,$
+          XOFF            = sSampleDataFileFrame.xoff,$
+          YOFF            = sSampleDataFileFrame.yoff,$
+          FRAME_TITLE     = sSampleDataFileFrame.frame_title,$
+          LABEL_1         = sSampleDataFileFrame.label_1,$
+          CWFIELD_UNAME   = sSampleDataFileFrame.tf1_uname,$
+          BROWSE_UNAME    = sSampleDataFileFrame.browse_uname,$
+          FILE_NAME_UNAME = sSampleDataFileFrame.file_name_uname)
 
+;- Empty Can Transmission -----------------------------------------------------
+cEmptyCanTransmissionFileFrame = $
+  OBJ_NEW('IDLnexusFrame',$
+          MAIN_BASE_ID    = BaseTab,$
+          MAIN_BASE_XSIZE = sEmptyCanTransmissionFileFrame.main_base_xsize,$
+          MAIN_BASE_UNAME = sEmptyCanTransmissionFileFrame.main_base_uname,$
+          XOFF            = sEmptyCanTransmissionFileFrame.xoff,$
+          YOFF            = sEmptyCanTransmissionFileFrame.yoff,$
+          FRAME_TITLE     = sEmptyCanTransmissionFileFrame.frame_title,$
+          LABEL_1         = sEmptyCanTransmissionFileFrame.label_1,$
+          CWFIELD_UNAME   = sEmptyCanTransmissionFileFrame.tf1_uname,$
+          BROWSE_UNAME    = sEmptyCanTransmissionFileFrame.browse_uname,$
+          FILE_NAME_UNAME = sEmptyCanTransmissionFileFrame.file_name_uname)
+
+;- Output Folder --------------------------------------------------------------
+wOutputFolderLabel = WIDGET_LABEL(BaseTab,$
+                                  XOFFSET = sOutputFolderLabel.size[0],$
+                                  YOFFSET = sOutputFolderLabel.size[1],$
+                                  VALUE   = sOutputFolderLabel.value)
+
+wOutputFolder = WIDGET_BUTTON(BaseTab,$
+                              XOFFSET   = sOutputFolder.size[0],$
+                              YOFFSET   = sOutputFolder.size[1],$
+                              SCR_XSIZE = sOutputFolder.size[2],$
+                              SCR_YSIZE = sOutputFolder.size[3],$
+                              VALUE     = sOutputFolder.value,$
+                              UNAME     = sOutputFolder.uname)
+
+;- Output File --------------------------------------------------------------
+wOutputFileLabel = WIDGET_LABEL(BaseTab,$
+                                  XOFFSET = sOutputFileLabel.size[0],$
+                                  YOFFSET = sOutputFileLabel.size[1],$
+                                  VALUE   = sOutputFileLabel.value)
+
+
+wOutputFile = WIDGET_TEXT(BaseTab,$
+                          XOFFSET   = sOutputFile.size[0],$
+                          YOFFSET   = sOutputFile.size[1],$
+                          SCR_XSIZE = sOutputFile.size[2],$
+                          VALUE     = sOutputFile.value,$
+                          UNAME     = sOutputFile.uname,$
+                          /EDITABLE,$
+                          /ALL_EVENTS,$
+                          /ALIGN_LEFT)
+
+wClear = WIDGET_BUTTON(BaseTab,$
+                       XOFFSET   = sClear.size[0],$
+                       YOFFSET   = sClear.size[1],$
+                       SCR_XSIZE = sClear.size[2],$
+                       SCR_YSIZE = sClear.size[3],$
+                       VALUE     = sClear.value,$
+                       UNAME     = sClear.uname)
+
+wReset = WIDGET_BUTTON(BaseTab,$
+                       XOFFSET   = sReset.size[0],$
+                       YOFFSET   = sReset.size[1],$
+                       SCR_XSIZE = sReset.size[2],$
+                       SCR_YSIZE = sReset.size[3],$
+                       VALUE     = sReset.value,$
+                       UNAME     = sReset.uname)
 
 
 END
