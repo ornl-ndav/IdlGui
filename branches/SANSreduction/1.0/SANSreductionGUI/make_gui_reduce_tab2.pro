@@ -84,10 +84,26 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [120,-5]
 sOutputFile = { size: [XYoff[0],$
                        sOutputFileLabel.size[1]+XYoff[1],$
-                       560],$
+                       430],$
                 value: '',$
                 uname: 'output_file_name'}
-                                           
+;- Clear File Name
+XYoff = [0,0]
+sClear = { size: [sOutputFile.size[0]+sOutputFile.size[2]+XYoff[0],$
+                  sOutputFile.size[1]+XYoff[1],$
+                  30,30],$
+           value: 'X',$
+           uname: 'clear_output_file_name_button'}
+
+;- Reset File Name
+XYoff = [0,0]
+sReset = { size: [sClear.size[0]+sClear.size[2]+XYoff[0],$
+                  sClear.size[1]+XYoff[1],$
+                  100,$
+                  sClear.size[3]],$
+           value: 'RESET FILE NAME',$
+           uname: 'reset_output_file_name_button'}
+
 ;==============================================================================
 ;= Build Widgets ==============================================================
 BaseTab = WIDGET_BASE(REDUCE_TAB,$
@@ -147,14 +163,30 @@ wOutputFileLabel = WIDGET_LABEL(BaseTab,$
 
 
 wOutputFile = WIDGET_TEXT(BaseTab,$
-                          XOFFSET = sOutputFile.size[0],$
-                          YOFFSET = sOutputFile.size[1],$
+                          XOFFSET   = sOutputFile.size[0],$
+                          YOFFSET   = sOutputFile.size[1],$
                           SCR_XSIZE = sOutputFile.size[2],$
                           VALUE     = sOutputFile.value,$
                           UNAME     = sOutputFile.uname,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
+
+wClear = WIDGET_BUTTON(BaseTab,$
+                       XOFFSET   = sClear.size[0],$
+                       YOFFSET   = sClear.size[1],$
+                       SCR_XSIZE = sClear.size[2],$
+                       SCR_YSIZE = sClear.size[3],$
+                       VALUE     = sClear.value,$
+                       UNAME     = sClear.uname)
+
+wReset = WIDGET_BUTTON(BaseTab,$
+                       XOFFSET   = sReset.size[0],$
+                       YOFFSET   = sReset.size[1],$
+                       SCR_XSIZE = sReset.size[2],$
+                       SCR_YSIZE = sReset.size[3],$
+                       VALUE     = sReset.value,$
+                       UNAME     = sReset.uname)
 
 END
 

@@ -214,6 +214,20 @@ CASE Event.id OF
         BrowseOutputFolder, Event ;_reduce_tab2
     END
 
+;Clear File Name text field button --------------------------------------------
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'clear_output_file_name_button'): BEGIN
+       clearOutputFileName, Event ;_reduce_tab2
+    END
+    
+;Reset File Name --------------------------------------------------------------
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'reset_output_file_name_button'): BEGIN
+       ResetOutputFileName, Event ;_reduce_tab2
+    END
+
 ;==== tab3 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
