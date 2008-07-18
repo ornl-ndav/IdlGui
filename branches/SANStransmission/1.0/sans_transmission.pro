@@ -83,6 +83,9 @@ global = PTR_NEW ({version:         VERSION,$
                    ascii_title:     'Browse for a Transmission ASCII File',$
                    data_nexus_file_name: '',$
                    inst_geom:       '',$
+                   Xarray:          ptr_new(0L),$
+                   Yarray:          ptr_new(0L),$
+                   SigmaYarray:     ptr_new(0L),$
                    ReducePara: {driver_name: $
                                 'sas_transmission1',$
                                 overwrite_geo: $

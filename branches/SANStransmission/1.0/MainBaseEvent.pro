@@ -189,6 +189,12 @@ CASE Event.id OF
         ChangeDegreeOfPolynome, Event ;_fitting
     END
 
+;---- Launch the Automatic Fitting --------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='auto_fitting_button'): BEGIN
+        AutoFit, Event ;_fitting
+    END
+
 ;---- Alternate Wavelength Axis -----------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='alternate_wavelength_axis_cw_group'): BEGIN

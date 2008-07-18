@@ -31,6 +31,41 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO FittingFunction, Event, Xarray, Yarray, SigmaYarray
+;get degree of poly selected
+value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
+IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
+    degree = 1
+ENDIF ELSE BEGIN
+    degree = 2
+ENDELSE
+
+; Compute the second degree polynomial fit to the data:
+coeff = POLY_FIT(Xarray, $
+                 Yarray, $
+                 degree,$
+                 MEASURE_ERRORS = sigmaYarray, $
+                 SIGMA          = sigma, $
+                 STATUS         = status,$
+                 /double)
+
+draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+print, coeff[0]
+print, coeff[1]
+
+;polynome of degree 1 for CE 
+IF (coeff[0] NE 0 AND $
+    coeff[1] NE 0) THEN BEGIN
+    newXarray = coeff(1)*Xarray + coeff(0)
+    oplot,Xarray,newXarray,color=400,thick=1.5
+ENDIF
+
+END
+
+;==============================================================================
 ;This method parse the 1 column string array into 3 columns string array
 PRO ParseDataStringArray, DataStringArray, Xarray, Yarray, SigmaYarray
 Nbr = N_ELEMENTS(DataStringArray)
@@ -164,7 +199,7 @@ IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
 iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
 IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
     no_error = 0
-    CATCH,no_error   
+    ;CATCH,no_error   
     IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -185,9 +220,13 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
 ;Remove all rows with NaN, -inf, +inf ...
             CleanUpData, Xarray, Yarray, SigmaYarray
 ;Change format of array (string -> float)
-            Xarray = FLOAT(Xarray)
-            Yarray = FLOAT(Yarray)
+            Xarray      = FLOAT(Xarray)
+            Yarray      = FLOAT(Yarray)
             SigmaYarray = FLOAT(SigmaYarray)
+;Store the data in the global structure
+            (*(*global).Xarray)      = Xarray
+            (*(*global).Yarray)      = Yarray
+            (*(*global).SigmaYarray) = SigmaYarray
 ;Plot Data in widget_draw
             PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
         ENDIF 
@@ -197,6 +236,17 @@ ENDIF ELSE BEGIN
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDELSE
     
+END
+
+;==============================================================================
+;This procedure is reached by the Automatic fitting button
+PRO  AutoFit, Event 
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+Xarray = (*(*global).Xarray)
+Yarray = (*(*global).Yarray)
+SigmaYarray = (*(*global).SigmaYarray)
+FittingFunction, Event, Xarray, Yarray, SigmaYarray
 END
 
 ;==============================================================================
