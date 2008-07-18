@@ -43,18 +43,26 @@ sTabBase = { size  : MainTabSize,$
 XYoff = [0,0]
 sDraw = { size: [XYoff[0],$
                  XYoff[1],$
-                 MainTabSize[2],300],$
+                 MainTabSize[2], $
+                 630],$
           uname: 'fitting_draw_uname'}
 
 ;Loading Wavelength file ------------------------------------------------------
-XYoff = [5,10]
+XYoff = [5,15]
 sInputFileLabel = { size: [XYoff[0],$
                            sDraw.size[1]+sDraw.size[3]+XYoff[1]],$
                     value: 'Input File Name:'}
 XYoff = [115,-5]
-sInputFileTextField = { size: [XYoff[0],$
+sInputBrowse = { size: [XYoff[0],$
+                        sInputFileLabel.size[1]+XYoff[1],$
+                        105,30],$
+                 value: 'BROWSE ...',$
+                 uname: 'input_file_browse_button'}
+XYoff = [0,-5]
+sInputFileTextField = { size: [sInputBrowse.size[0]+ $
+                               sInputBrowse.size[2]+ XYoff[0],$
                                sInputFileLabel.size[1]+XYoff[1],$
-                               350],$
+                               570],$
                         uname: 'Input_file_text_field',$
                         value: ''}
 XYoff = [5,0]
@@ -62,8 +70,8 @@ sInputFileSaveButton = { size: [sInputFileTextField.size[0]+$
                                 sInputFileTextField.size[2]+XYoff[0],$
                                 sInputFileTextField.size[1]+XYoff[1],$
                                 105,30],$
-                         value: 'CREATE FILE',$
-                         uname: 'Input_file_save_button',$
+                         value: 'LOAD FILE',$
+                         uname: 'input_file_load_button',$
                          sensitive: 0}
 XYoff = [0,0]
 sInputFilePreviewButton = { size: [sInputFileSaveButton.size[0]+$
@@ -79,16 +87,16 @@ XYoff = [3,35]
 sDegreeGroup = { size:  [XYoff[0],$
                          sInputFileLabel.size[1]+ $
                          XYoff[1]],$
-                 list:  ['1','2'],$
+                 list:  ['1 (y=A+Bx)','2 (y=A+Bx+Cx^2)'],$
                  value: 0.0,$
                  uname: 'fitting_polynomial_degree_cw_group',$
                  title: 'Polynomial Fitting Degree: '}
 
 ;- Automatic Fitting Button ---------------------------------------------------
-XYoff = [270,5]
+XYoff = [390,5]
 sAutoFittingButton = { size: [XYoff[0],$
                               sDegreeGroup.size[1]+XYoff[1],$
-                              410],$
+                              615,30],$
                        uname: 'auto_fitting_button',$
                        value: 'A U T O M A T I C   F I T T I N G    ' + $
                        'with    Y = A + BX'}
@@ -97,27 +105,28 @@ sAutoFittingButton = { size: [XYoff[0],$
 XYOff = [0,35] ;base
 sResultFitBase = { size: [XYoff[0],$
                           sAutoFittingButton.size[1]+XYoff[1],$
-                          260,$
+                          380,$
                           40],$
                    frame: 0,$
                    map:   1,$
                    uname: 'result_fitting_base_uname'}
-XYoff = [5,10] ;labelq
+XYoff = [30,10] ;label
 sResultFitLabel = { size: [XYoff[0],$
                            XYoff[1]],$
-                    value: '=> Y =          +         X +         X^2'}
-XYOff = [50,-6] ;A text field
+                    value: '=> Y =              +              X +    ' + $
+                    '          X^2'}
+XYOff = [75,-6] ;A text field
 sResultFitA = { size: [XYoff[0],$
                        sResultFitLabel.size[1]+XYoff[1],$
-                       50],$
+                       70],$
                 value: '',$
                 uname: 'result_fit_a_text_field'}
-XYOff = [62,0] ;B text field
+XYOff = [92,0] ;B text field
 sResultFitB = { size: [sResultFitA.size[0]+XYoff[0],$
                        sResultFitA.size[1:2]],$
                 value: '',$
                 uname: 'result_fit_b_text_field'}
-XYOff = [72,0] ;C text field
+XYOff = [102,0] ;C text field
 sResultFitC = { size: [sResultFitB.size[0]+XYoff[0],$
                        sResultFitB.size[1:2]],$
                 value: '',$
@@ -127,7 +136,7 @@ sResultFitC = { size: [sResultFitB.size[0]+XYoff[0],$
 XYoff = [0,5]
 sManualFittingButton = { size: [sAutoFittingButton.size[0]+XYoff[0],$
                                 sResultFitBase.size[1]+XYoff[1],$
-                                sAutoFittingButton.size[2]],$
+                                sAutoFittingButton.size[2],30],$
                          uname: 'manual_fitting_button',$
                          value: 'M A N U A L  F I T T I N G'}
 
@@ -144,25 +153,25 @@ sAxisGroup = { size:  [XYoff[0],$
 XYoff = [270,0]
 sAltBase = { size: [XYoff[0],$
                     sAxisGroup.size[1]+XYoff[1],$
-                    410,35],$
+                    730,35],$
              uname: 'alternate_base',$
              frame: 1,$
-             map:   0}
+             map:   1}
 
 ;Wavelengthmin
-XYoff = [0,5]
+XYoff = [25,8]
 sWavelengthminLabel = { size:  [XYoff[0],$
                                 XYoff[1]],$
                         value: 'Min:'}
-XYoff = [30,-5]
+XYoff = [30,-6]
 sWavelengthminText = {  size:  [sWavelengthminLabel.size[0]+XYoff[0],$
                                 sWavelengthminLabel.size[1]+XYoff[1],$
-                                60],$
+                                100],$
                         value: '',$
                         uname: 'alternate_wave_min_text_field'}
 
 ;Wavelengthmax
-XYoff = [5,0]
+XYoff = [25,0]
 sWavelengthmaxLabel = { size:  [sWavelengthminText.size[0]+$
                                 sWavelengthminText.size[2]+XYoff[0],$
                                 sWavelengthminLabel.size[1]+XYoff[1]],$
@@ -175,7 +184,7 @@ sWavelengthmaxText = {  size:  [sWavelengthmaxLabel.size[0]+XYoff[0],$
                         uname: 'alternate_wave_max_text_field'}
 
 ;Wavelengthwidth
-XYoff = [+5,0]
+XYoff = [25,0]
 sWavelengthwidthLabel = { size:  [sWavelengthmaxText.size[0]+$
                                   sWavelengthminText.size[2]+XYoff[0],$
                                   sWavelengthminLabel.size[1]+XYoff[1]],$
@@ -188,11 +197,11 @@ sWavelengthwidthText = {  size:  [sWavelengthwidthLabel.size[0]+XYoff[0],$
                           uname: 'alternate_wave_width_text_field'}
 
 ;Wavelength scale
-XYoff = [5,0]
+XYoff = [25,0]
 sWavelengthscaleGroup = { size:  [sWavelengthwidthText.size[0]+$
                                   sWavelengthwidthText.size[2]+XYoff[0],$
                                   sWavelengthwidthText.size[1]+XYoff[1]],$
-                          list:  ['Lin','Log'],$
+                          list:  ['Linear','Logarithmic'],$
                           value: 1.0,$
                           uname: 'alternate_wave_scale_group'}
 
@@ -204,7 +213,7 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [115,-5]
 sOutputFileTextField = { size: [XYoff[0],$
                                 sOutputFileLabel.size[1]+XYoff[1],$
-                                350],$
+                                675],$
                          uname: 'output_file_text_field',$
                          value: ''}
 XYoff = [5,0]
@@ -251,6 +260,16 @@ wLabel = WIDGET_LABEL(wTabBase,$
                       XOFFSET = sInputFileLabel.size[0],$
                       YOFFSET = sInputFileLabel.size[1],$
                       VALUE   = sInputFileLabel.value)
+
+;browse button
+wButton = WIDGET_BUTTON(wTabBase,$
+                        XOFFSET   = sInputBrowse.size[0],$
+                        YOFFSET   = sInputBrowse.size[1],$
+                        SCR_XSIZE = sInputBrowse.size[2],$
+                        SCR_YSIZE = sInputBrowse.size[3],$
+                        VALUE     = sInputBrowse.value,$
+                        UNAME     = sInputBrowse.uname)
+
 ;file name input
 wTextField = WIDGET_TEXT(wTabBase,$
                          XOFFSET   = sInputFileTextField.size[0],$
@@ -295,6 +314,7 @@ wButton = WIDGET_BUTTON(wTabBase,$
                         XOFFSET   = sAutoFittingButton.size[0],$
                         YOFFSET   = sAutoFittingButton.size[1],$
                         SCR_XSIZE = sAutoFittingButton.size[2],$
+                        SCR_YSIZE = sAutoFittingButton.size[3],$
                         VALUE     = sAutoFittingButton.value,$
                         UNAME     = sAutoFittingButton.uname)
 
@@ -347,6 +367,7 @@ wButton = WIDGET_BUTTON(wTabBase,$
                         XOFFSET   = sManualFittingButton.size[0],$
                         YOFFSET   = sManualFittingButton.size[1],$
                         SCR_XSIZE = sManualFittingButton.size[2],$
+                        SCR_YSIZE = sManualFittingButton.size[3],$
                         VALUE     = sManualFittingButton.value,$
                         UNAME     = sManualFittingButton.uname)
 

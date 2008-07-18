@@ -81,7 +81,7 @@ ENDIF ELSE BEGIN
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
 ;plot data
     DEVICE, DECOMPOSED = 0
-    LOADCT,5
+    LOADCT,5,/SILENT
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
     WIDGET_CONTROL, id, GET_VALUE = id_value
     WSET, id_value

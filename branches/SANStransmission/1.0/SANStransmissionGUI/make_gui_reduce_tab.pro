@@ -51,16 +51,16 @@ sReduceTab = { size:   [sReduceBase.size[0:2],$
 XYoff = [160,3]
 sDRstatus = { size:  [XYoff[0],$
                       sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                      270,22],$
+                      370,22],$
               uname: 'data_reduction_status_frame',$
               value: 'DR status:',$
               frame: 2}
 
 ;- GO DATA REDUCTION button ---------------------------------------------------
-XYoff = [450,0]
+XYoff = [550,0]
 sGobutton = { size:      [XYoff[0],$
                           sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                          240,30],$
+                          455,30],$
               uname:     'go_data_reduction_button',$
               value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
               sensitive: 0}
@@ -69,7 +69,7 @@ sGobutton = { size:      [XYoff[0],$
 XYoff = [2,30]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                         500,$
+                         700,$
                          100],$
                  uname: 'comamnd_line_preview'}
 XYoff = [5,-18]
@@ -81,10 +81,10 @@ sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
 XYoff = [5,20]
 sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
                          sCommandLine.size[1]+XYoff[1],$
-                         180,$
+                         295,$
                          sCommandLine.size[3]-XYoff[1]],$
                  uname: 'data_reduction_missing_arguments'}
-sDRguiLabel  = { size:  [sDRguiStatus.size[0]+20,$
+sDRguiLabel  = { size:  [sDRguiStatus.size[0]+70,$
                          sDRguiStatus.size[1]-XYoff[1]],$
                  uname: 'missing_arguments_label',$
                  value: '   Missing Arguments   '}
