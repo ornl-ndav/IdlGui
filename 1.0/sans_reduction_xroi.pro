@@ -347,7 +347,7 @@ IF (nROIs GE 1) THEN BEGIN
           CurrentSelectionSettings,$
           insideSelection
         
-        x_coeff = 4
+        x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
             FOR j=0,(80L-1) DO BEGIN
@@ -422,7 +422,7 @@ IF (nROIs GE 1) THEN BEGIN
           CurrentSelectionSettings,$
           insideSelection
         
-        x_coeff = 4
+        x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
             FOR j=0,(80L-1) DO BEGIN
@@ -499,7 +499,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='draw_uname')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-x_coeff = 4
+x_coeff = 8
 color   = 250
 FOR i=0,(80L-1) DO BEGIN
     FOR j=0,(80L-1) DO BEGIN
