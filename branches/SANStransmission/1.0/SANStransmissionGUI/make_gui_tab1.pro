@@ -40,7 +40,7 @@ sTab1Base = { size  : MainTabSize,$
               uname : 'base_tab1'}
 
 ;- draw -----------------------------------------------------------------------
-sDraw = { size  : [0,0,320,320],$
+sDraw = { size  : [0,0,640,640],$
           uname : 'draw_uname'}
 
 
@@ -53,7 +53,7 @@ sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
                uname: 'selection_tool_button'}
 
 ;- nexus input ----------------------------------------------------------------
-sNexus = { size : [0,$
+sNexus = { size : [100,$
                    sDraw.size[1]+sDraw.size[3]+15]}
           
 ;==============================================================================

@@ -158,7 +158,7 @@ global = PTR_NEW ({version:         VERSION,$
                                  })
 
 MainBaseTitle  = 'SANS Data Transmission GUI'
-MainBaseSize   = [30,25,695,550]
+MainBaseSize   = [30,25,695+320,550+320]
 MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
@@ -215,8 +215,8 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0.1'
 
 ;show main tab # ?
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;fitting
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;fitting
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters

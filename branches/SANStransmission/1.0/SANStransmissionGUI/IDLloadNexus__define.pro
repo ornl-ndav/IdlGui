@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,12 +30,12 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;-------------------------------------------------------------------------------
-;--- UTILITIES - UTILITIES - UTILITIES - UTILITIES - UTILITIES - UTILITIES -----
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;--- UTILITIES - UTILITIES - UTILITIES - UTILITIES - UTILITIES - UTILITIES ----
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function returns the list of proposal number of the given
 ;instrument
 FUNCTION  getListOfProposal, facility, instrument
@@ -50,7 +50,7 @@ FOR i=1,(length) DO BEGIN
 ENDFOR
 RETURN, ProposalList
 END
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;This is the function launched by the BROWSE NeXus file
 FUNCTION BrowseRunNumber, Event, $
@@ -69,14 +69,14 @@ full_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
 RETURN, full_file_name
 END
 
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This procedure builds the Input frame (instrument..., proposal..., run
 ;number..., Arhived or ListAll, OR Browse button) 
 PRO MakeNexusInputGui, sInput
 
-;===============================================================================
-;===== Define Structures =======================================================
+;==============================================================================
+;===== Define Structures ======================================================
 
 ;FRAME and main title
 XYoff     = [sInput.xoffset, sInput.yoffset]
@@ -88,7 +88,7 @@ sTitle    = { size  : [sFrame.size[0]+20,$
                        sFrame.size[1]-8],$
               value : 'NeXus Input'}
 
-;Define Proposal Number ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Define Proposal Number ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff           = [sInput.xoffset+10, $
                    sInput.yoffset+15]
 ListOfProposal  = getListOfProposal(sInput.facility, sInput.instrument)
@@ -97,7 +97,7 @@ PropNbrDroplist = { size  : [XYoff[0],$
                     value : ListOfProposal,$
                     uname : 'proposal_droplist'}
 
-;Run Number Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Run Number Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff             = [210,0]
 RunNumberCwField  = { base_size   : [PropNbrDroplist.size[0]+XYoff[0],$
                                      PropNbrDroplist.size[1]+XYoff[1],$
@@ -107,7 +107,7 @@ RunNumberCwField  = { base_size   : [PropNbrDroplist.size[0]+XYoff[0],$
                       field_size  : [15],$
                       field_uname : 'run_number_cw_field'}
  
-;Archived or List All ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Archived or List All ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff            = [5,5]
 sArchivedListAll = { base_size  : [RunNumberCwField.base_size[0]+ $
                                    RunNumberCwField.base_size[2]+XYoff[0],$
@@ -119,14 +119,14 @@ sArchivedListAll = { base_size  : [RunNumberCwField.base_size[0]+ $
                      sensitive  : 0,$
                      uname      : 'archived_or_list_all'}
 
-;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff    = [sInput.xoffset+300, $
             sInput.yoffset+55]
 sOrLabel = { size  : [XYoff[0],$
                       XYoff[1]],$
              value : 'OR'}
 
-;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff         = [10,25]
 sBrowseButton = { size  : [XYoff[0],$
                            sOrLabel.size[1]+XYoff[1],$
@@ -134,8 +134,8 @@ sBrowseButton = { size  : [XYoff[0],$
                   uname : 'browse_nexus_button',$
                   VALUE : 'B R O W S E . . .'}
                       
-;===============================================================================
-;====== Make GUI ===============================================================
+;==============================================================================
+;====== Make GUI ==============================================================
 
 MainBase = sInput.MainBase
 
@@ -147,7 +147,7 @@ wProposalDroplist = WIDGET_DROPLIST(MainBase,$
                                     YOFFSET = PropNbrDroplist.size[1],$
                                     /ALIGN_LEFT)
 
-;Run Number Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Run Number Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wRunNumberBase = WIDGET_BASE(MainBase,$
                              XOFFSET   = RunNumberCwField.base_size[0],$
                              YOFFSET   = RunNumberCwField.base_size[1],$
@@ -163,7 +163,7 @@ wRunNumberField = CW_FIELD(wRunNumberBase,$
                            /RETURN_EVENTS)
 
 
-;Archived or List All ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Archived or List All ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wArchivedListAll = WIDGET_BASE(MainBase,$
                                XOFFSET   = sArchivedListAll.base_size[0],$
                                YOFFSET   = sArchivedListAll.base_size[1],$
@@ -179,13 +179,13 @@ wArchivedGroup = CW_BGROUP(wArchivedListAll,$
                            SET_VALUE = sArchivedListAll.deft_value,$
                            /EXCLUSIVE)
 
-;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wOrLabel = WIDGET_LABEL(MainBase,$
                         XOFFSET = sOrLabel.size[0],$
                         YOFFSET = sOrLabel.size[1],$
                         VALUE   = sOrLabel.value)
 
-;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wBrowseButton = WIDGET_BUTTON(MainBase,$
                               XOFFSET   = sBrowseButton.size[0],$
                               YOFFSET   = sBrowseButton.size[1],$
@@ -194,7 +194,7 @@ wBrowseButton = WIDGET_BUTTON(MainBase,$
                               UNAME     = sBrowseButton.uname,$
                               VALUE     = sBrowseButton.value)
 
-;Frame and Main Title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+;Frame and Main Title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wTitle = WIDGET_LABEL(MainBase,$
                       XOFFSET = sTitle.size[0],$
                       YOFFSET = sTitle.size[1],$
@@ -210,11 +210,11 @@ wFrame = WIDGET_LABEL(MainBase,$
 
 END
 
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO MakeStatusGui, sInput
-;===============================================================================
-;===== Define Structures =======================================================
+;==============================================================================
+;===== Define Structures ======================================================
 XYoff     = [3,145]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
@@ -225,8 +225,8 @@ sTitle    = { size  : [sFrame.size[0]+20,$
                        sFrame.size[1]-8],$
               value : 'Status'}
 
-;===============================================================================
-;====== Make GUI ===============================================================
+;==============================================================================
+;====== Make GUI ==============================================================
 MainBase = sInput.MainBase
 wTitle = WIDGET_LABEL(MainBase,$
                       XOFFSET = sTitle.size[0],$
@@ -238,20 +238,20 @@ wFrame = WIDGET_LABEL(MainBase,$
                       YOFFSET   = sFrame.size[1],$
                       SCR_XSIZE = sFrame.size[2],$
                       SCR_YSIZE = sFrame.size[3],$
-                      VALUE     = '                                         ' + $
-                                  '                                         ' + $
-                                  '                                           ',$
+                      VALUE     = '                                    ' + $
+                      '                                              ' + $
+                      '                                           ',$
                       FRAME     = sFrame.frame,$
                       UNAME     = sFrame.uname)
 END
 
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This is where the nexus found is going to be displayed
 PRO MakeNexusFileNameGui, sInput
 
-;===============================================================================
-;===== Define Structures =======================================================
+;==============================================================================
+;===== Define Structures ======================================================
 XYoff     = [sInput.xoffset,sInput.yoffset+140]
 sBase     = { size  : [XYoff[0],$
                        XYoff[1],$
@@ -265,7 +265,7 @@ sLabel   = { size  : [XYoff[0],$
                       XYoff[1]],$
              value : 'NeXus File Name:'}
 
-;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff         = [105,-8]
 sArchivedBase = { size  :  [sLabel.size[0]+XYoff[0],$
                             sLabel.size[1]+XYoff[1],$
@@ -277,11 +277,12 @@ sArchivedLabel = { size  : [XYoff[0],$
                             XYoff[1],$
                             sArchivedBase.size[2],$
                             sArchivedBase.size[3]],$
-                   value : '                                                ' + $
-                   '                                                         ',$
+                   value : '                             ' + $
+                   '                                               ' + $
+                   '                             ',$
                    uname : 'archived_text_field'}
 
-;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sListAllBase = { size  : sArchivedBase.size,$
                  uname : 'list_all_base',$
                  map   : 0}
@@ -291,13 +292,14 @@ sListallDroplist = { size  : [XYoff[0],$
                               350,$
                               sArchivedBase.size[3]],$
                      uname : 'list_all_droplist',$
-                     value : ['                                             ' + $
-                              '                                      ']}
+                     value : ['                                 ' + $
+                              '                                    ' + $
+                              '              ']}
                               
-;===============================================================================
-;====== Make GUI ===============================================================
+;==============================================================================
+;====== Make GUI ==============================================================
 MainBase = sInput.MainBase
-;Base ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Base ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wBase = WIDGET_BASE(MainBase,$
                     XOFFSET   = sBase.size[0],$
                     YOFFSET   = sBase.size[1],$
@@ -312,7 +314,7 @@ wLabel = WIDGET_LABEL(wBase,$
                       YOFFSET = sLabel.size[1],$
                       VALUE   = sLabel.value)
 
-;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wArchivedBase = WIDGET_BASE(wBase,$
                             XOFFSET   = sArchivedBase.size[0],$
                             YOFFSET   = sArchivedBase.size[1],$
@@ -330,7 +332,7 @@ wArchivedLabel = WIDGET_LABEL(wArchivedBase,$
                              VALUE     = sArchivedLabel.value,$
                              /ALIGN_LEFT)
 
-;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wListAllBase = WIDGET_BASE(wBase,$
                            XOFFSET   = sListAllBase.size[0],$
                            YOFFSET   = sListAllBase.size[1],$
@@ -347,16 +349,16 @@ wListAllDroplist = WIDGET_DROPLIST(wListAllBase,$
 
 END
 
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;sInput = { MainBase   : MAIN_BASE,$
 ;           xoffset    : xoff,$
 ;           yoffset    : yoff,$
 ;           instrument : instrument}
 PRO MakeNxSummaryGui, sInput
 
-;===============================================================================
-;===== Define Structures =======================================================
+;==============================================================================
+;===== Define Structures ======================================================
 XYoff = [sInput.xoffset, sInput.yoffset]
 sBase = { size  : [XYoff[0],XYoff[1],685,160],$
           uname : 'nxsummary_base',$
@@ -364,8 +366,8 @@ sBase = { size  : [XYoff[0],XYoff[1],685,160],$
 sText = { size  : [0,0,sBase.size[2],sBase.size[3]],$
           uname : 'nxsummary_text_field'}
 
-;===============================================================================
-;====== Make GUI ===============================================================
+;==============================================================================
+;====== Make GUI ==============================================================
 MainBase = sInput.MainBase
 wBase = WIDGET_BASE(MainBase,$
                     XOFFSET   = sBase.size[0],$
@@ -385,8 +387,8 @@ wTextField = WIDGET_TEXT(wBase,$
                          /WRAP)
 END
 
- ;*******************************************************************************
-;***** Class constructor *******************************************************
+ ;*****************************************************************************
+;***** Class constructor ******************************************************
 FUNCTION IDLloadNexus::init, sInput
 
 ;Design First Part of GUI (NeXus input)
@@ -401,11 +403,11 @@ MakeNexusFileNameGui, sInput
 RETURN,1
 END
 
-;*******************************************************************************
-;******  Class Define **********************************************************
+;******************************************************************************
+;******  Class Define *********************************************************
 PRO IDLloadNexus__define
 struct = {IDLloadNexus,$
           var : ''}
 END
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
