@@ -156,7 +156,7 @@ sAltBase = { size: [XYoff[0],$
                     730,35],$
              uname: 'alternate_base',$
              frame: 1,$
-             map:   1}
+             map:   0}
 
 ;Wavelengthmin
 XYoff = [25,8]
