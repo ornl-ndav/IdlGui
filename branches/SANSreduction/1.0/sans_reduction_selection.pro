@@ -31,7 +31,19 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO PlotROI, Event, NbrElements, Xarray, Yarray
+FUNCTION getListOfPixelExcluded, Xarray, Yarray
+Xsize = 80L
+Ysize = 80L
+RoiPixelArrayExcluded = INTARR(Xisze,Ysize)
+nbrElements           = N_ELEMENTS(Xarray)
+FOR i=0,(nbrElements-1) DO BEGIN
+    RoiPixelArrayExcluded[Xarray[i],Yarray[i]]=1
+ENDFOR
+RETURN, RoiPixelArrayExcluded
+END
+
+;------------------------------------------------------------------------------
+PRO PlotROI, Event, RoiPixelArrayExcluded
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
@@ -188,7 +200,8 @@ ENDIF ELSE BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
         ENDIF ELSE BEGIN
-            PlotROI, Event, NbrElements, Xarray, Yarray    
+            RoiPixelArrayExcluded = getListOfPixelExcluded(Xarray, Yarray)
+            PlotROI, Event, RoiPixelArrayExcluded
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         ENDELSE
     ENDELSE
