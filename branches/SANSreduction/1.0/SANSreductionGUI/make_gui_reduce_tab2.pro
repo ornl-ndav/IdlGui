@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$
@@ -115,7 +115,7 @@ sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
 XYoff = [5,50]
 sQFrame = { size:  [XYoff[0],$
                     sMEgroup.size[1]+XYoff[1],$
-                    tab_size[2]-20,$
+                    700,$
                     45],$
             frame: 2}
 XYoff = [20,-8]
@@ -209,10 +209,10 @@ sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
               sensitive: 0}
 
 ;- Wavelength dependent background subtraction --------------------------------
-XYoff = [5,50]
+XYoff = [5,55]
 sWaveFrame = { size:  [XYoff[0],$
                     sMinLambdaGroup.size[1]+XYoff[1],$
-                    tab_size[2]-20,$
+                    700,$
                     45],$
             frame: 2}
 XYoff = [20,-8]
@@ -231,7 +231,7 @@ sWaveLabel = { size:  [sWaveFrame.size[0]+XYoff[0],$
 XYoff = [290,-5]
 sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
                      sWaveLabel.size[1]+XYoff[1],$
-                     300],$
+                     335],$
               VALUE: '',$
               UNAME: 'wave_dependent_back_sub_text_field'}
 XYoff = [0,0]

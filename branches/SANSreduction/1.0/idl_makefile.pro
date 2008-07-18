@@ -19,7 +19,6 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run make_gui_reduce_tab1.pro
 .run make_gui_reduce_tab2.pro
 .run make_gui_reduce_tab3.pro
-.run make_gui_reduce_tab4.pro
 .run make_gui_log_book.pro
 
 ;Build all procedures

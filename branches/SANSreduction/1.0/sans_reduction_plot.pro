@@ -74,9 +74,9 @@ ENDIF ELSE BEGIN
     tDataXY  = TRANSPOSE(dataXY)
 ;Check if rebin is necessary or not
     IF (X EQ 80) THEN BEGIN
-        xysize = 4
+        xysize = 8
     ENDIF ELSE BEGIN
-        xysize = 1
+        xysize = 2
     ENDELSE
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
 ;plot data
