@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_reduce_tab4, REDUCE_TAB, tab_size, tab_title
+PRO make_gui_reduce_tab3, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$

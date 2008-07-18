@@ -43,10 +43,9 @@ sReduceBase = { size:  MainTabSize,$
 sReduceTab = { size:   [sReduceBase.size[0:2],$
                         sReduceBase.size[3]-160],$
                uname:  'reduce_tab',$
-               title:  {tab1: ' LOAD FILES (1)',$
-                        tab2: ' LOAD FILES (2)',$
-                        tab3: ' PARAMETERS ',$
-                        tab4: ' INTERMEDIATE FILES'}}
+               title:  {tab1: ' LOAD FILES ',$
+                        tab2: ' PARAMETERS ',$
+                        tab3: ' INTERMEDIATE FILES'}}
 
 ;- data reduction status ------------------------------------------------------
 XYoff = [160,3]
@@ -61,7 +60,7 @@ sDRstatus = { size:  [XYoff[0],$
 XYoff = [450,0]
 sGobutton = { size:      [XYoff[0],$
                           sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                          240,30],$
+                          310,30],$
               uname:     'go_data_reduction_button',$
               value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
               sensitive: 0}
@@ -70,7 +69,7 @@ sGobutton = { size:      [XYoff[0],$
 XYoff = [2,30]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                         500,$
+                         750,$
                          100],$
                  uname: 'comamnd_line_preview'}
 XYoff = [5,-18]
@@ -79,14 +78,14 @@ sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
                       value: 'Command Line Status' }
 
 ;- DR gui status --------------------------------------------------------------
-XYoff = [5,20]
+XYoff = [5,0]
 sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
                          sCommandLine.size[1]+XYoff[1],$
-                         180,$
+                         240,$
                          sCommandLine.size[3]-XYoff[1]],$
                  uname: 'data_reduction_missing_arguments'}
-sDRguiLabel  = { size:  [sDRguiStatus.size[0]+20,$
-                         sDRguiStatus.size[1]-XYoff[1]],$
+sDRguiLabel  = { size:  [sDRguiStatus.size[0]+50,$
+                         sDRguiStatus.size[1]-23],$
                  uname: 'missing_arguments_label',$
                  value: '   Missing Arguments   '}
                  
@@ -117,14 +116,12 @@ REDUCE_TAB = WIDGET_TAB(wReduceBase,$
 ;- Build LOAD FILES tab (tab #1) ----------------------------------------------
 make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
 
-;- Build LOAD FILES tab (tab #2) ----------------------------------------------
+;- Build PARAMETERS tab (tab #4) ----------------------------------------------
 make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
 
-;- Build PARAMETERS tab (tab #4) ----------------------------------------------
+;- Build INTERMEDIATE FILES tab (tab #4) --------------------------------------
 make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3
 
-;- Build INTERMEDIATE FILES tab (tab #4) --------------------------------------
-make_gui_reduce_tab4, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab4
 
 ;- data reduction status ------------------------------------------------------
 wDRstatus = WIDGET_LABEL(wReduceBase,$

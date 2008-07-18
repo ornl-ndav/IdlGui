@@ -184,7 +184,7 @@ global = PTR_NEW ({version:         VERSION,$
                                  })
 
 MainBaseTitle  = 'SANS Data Reduction GUI'
-MainBaseSize   = [30,25,695,550]
+MainBaseSize   = [30,25,695+320,550+320]
 MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
