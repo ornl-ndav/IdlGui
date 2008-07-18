@@ -40,7 +40,7 @@ sTab1Base = { size  : MainTabSize,$
               uname : 'base_tab1'}
 
 ;- draw -----------------------------------------------------------------------
-sDraw = { size  : [0,0,320,320],$
+sDraw = { size  : [0,0,640,640],$
           uname : 'draw_uname'}
 
 

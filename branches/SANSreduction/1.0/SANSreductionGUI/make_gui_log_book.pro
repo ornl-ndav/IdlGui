@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,20 +30,20 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO make_gui_log_book, MAIN_TAB, MainTabSize, TabTitles
 
-;- base ------------------------------------------------------------------------
+;- base -----------------------------------------------------------------------
 sLogBookBase = { size  : MainTabSize,$
                  title : TabTitles.log_book,$
                  uname : 'base_log_book'}
 
-;- log book text ---------------------------------------------------------------
-sLogBook = { size  : [0,0,MainTabSize[2]-10,450],$
+;- log book text --------------------------------------------------------------
+sLogBook = { size  : [0,0,MainTabSize[2]-10,770],$
              uname : 'log_book_text'} 
 
-;- Log Book instance -----------------------------------------------------------
+;- Log Book instance ----------------------------------------------------------
 sLogBookInstance = { size : [0,$
                              sLogBook.size[3]+10,$
                              MainTabSize[2]-15],$
@@ -51,11 +51,11 @@ sLogBookInstance = { size : [0,$
                      frame : 5,$
                      title : 'Send To Geek'}
                                                   
-;===============================================================================
-;= BUILD GUI ===================================================================
-;===============================================================================
+;==============================================================================
+;= BUILD GUI ==================================================================
+;==============================================================================
 
-;- base ------------------------------------------------------------------------
+;- base -----------------------------------------------------------------------
 wLogBookBase = WIDGET_BASE(MAIN_TAB,$
                            UNAME     = sLogBookBase.uname,$
                            XOFFSET   = sLogBookBase.size[0],$
@@ -64,7 +64,7 @@ wLogBookBase = WIDGET_BASE(MAIN_TAB,$
                            SCR_YSIZE = sLogBookBase.size[3],$
                            TITLE     = sLogBookBase.title)
 
-;- log book text ---------------------------------------------------------------
+;- log book text --------------------------------------------------------------
 wLogBookText = WIDGET_TEXT(wLogBookBase,$
                            UNAME     = sLogBook.uname,$
                            XOFFSET   = sLogBook.size[0],$
@@ -74,7 +74,7 @@ wLogBookText = WIDGET_TEXT(wLogBookBase,$
                            /SCROLL,$
                            /WRAP)
                        
-;- Send To Geek ----------------------------------------------------------------
+;- Send To Geek ---------------------------------------------------------------
 LogBookInstace = OBJ_NEW('IDLsendToGeek',$
                          XOFFSET   = sLogBookInstance.size[0],$
                          YOFFSET   = sLogBookInstance.size[1],$
