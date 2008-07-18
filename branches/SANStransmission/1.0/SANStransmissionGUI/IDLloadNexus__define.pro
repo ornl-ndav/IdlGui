@@ -128,7 +128,7 @@ sOrLabel = { size  : [XYoff[0],$
 
 ;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff         = [10,25]
-sBrowseButton = { size  : [XYoff[0],$
+sBrowseButton = { size  : [sFrame.size[0]+XYoff[0],$
                            sOrLabel.size[1]+XYoff[1],$
                            660,30],$
                   uname : 'browse_nexus_button',$

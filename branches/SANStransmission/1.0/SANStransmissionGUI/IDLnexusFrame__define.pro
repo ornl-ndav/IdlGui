@@ -102,7 +102,7 @@ PRO IDLnexusFrame_make_text_field, BaseID, text_field_uname
 text_field = WIDGET_TEXT(BaseID,$
                          XOFFSET   = 265,$
                          YOFFSET   = 20,$
-                         SCR_XSIZE = 410,$
+                         SCR_XSIZE = 730,$
                          SCR_YSIZE = 35,$
                          UNAME     = text_field_uname,$
                          /EDITABLE,$

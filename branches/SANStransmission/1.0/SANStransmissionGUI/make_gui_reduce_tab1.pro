@@ -63,7 +63,7 @@ sROIfileTextField = { size:  [sROIfileButton.size[0]+ $
                               sROIfileButton.size[2]+ $
                               XYoff[0],$
                               sROIfileButton.size[1]+XYoff[1],$
-                              535, $
+                              845, $
                               35],$
                       uname: 'roi_file_name_text_field'}
 
@@ -87,7 +87,7 @@ sOutputFolderlabel = { size: [XYoff[0],$
 XYoff = [120,-5]                       
 sOutputFolder = { size: [XYoff[0],$
                          sOutputFolderLabel.size[1]+XYoff[1],$
-                         560],$
+                         875],$
                   value: '~/',$
                   uname: 'output_folder'}
 
@@ -99,7 +99,7 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [120,-5]
 sOutputFile = { size: [XYoff[0],$
                        sOutputFileLabel.size[1]+XYoff[1],$
-                       560],$
+                       700],$
                 value: '',$
                 uname: 'output_file_name'}
 

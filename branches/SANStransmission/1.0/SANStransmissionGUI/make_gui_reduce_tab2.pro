@@ -115,7 +115,7 @@ sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
 XYoff = [5,50]
 sWavelengthFrame = { size:  [XYoff[0],$
                              sMEgroup.size[1]+XYoff[1],$
-                             tab_size[2]-20,$
+                             650,$
                              45],$
                      frame: 2}
 XYoff = [20,-8]
