@@ -171,6 +171,12 @@ CASE Event.id OF
         AsciiInputTextField, Event ;_fitting
     END
 
+;---- Input Ascii text field --------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='input_file_load_button'): BEGIN
+        LoadAsciiFile, Event ;_fitting
+    END
+
 ;---- Previw Ascii text file --------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_preview_button'): BEGIN

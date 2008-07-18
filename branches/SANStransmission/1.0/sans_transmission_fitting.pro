@@ -31,6 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;This method parse the 1 column string array into 3 columns string array
+PRO ParseDataStringArray, DataStringArray, Xarray, Yarray, SigmaYarray
+Nbr = N_ELEMENTS(DataStringArray)
+j=0
+i=0
+WHILE (i LE Nbr-2) DO BEGIN
+    IF (j EQ 0) THEN BEGIN
+        Xarray[j]      = DataStringArray[i++]
+        Yarray[j]      = DataStringArray[i++]
+        SigmaYarray[j] = DataStringArray[i++]
+    ENDIF ELSE BEGIN
+        Xarray      = [Xarray,DataStringArray[i++]]
+        Yarray      = [Yarray,DataStringArray[i++]]
+        SigmaYarray = [SigmaYarray,DataStringArray[i++]]
+    ENDELSE
+    j++
+ENDWHILE
+END
+
+;------------------------------------------------------------------------------
 ;change the label of the automatic button
 PRO ChangeDegreeOfPolynome, Event
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
@@ -109,10 +129,46 @@ END
 ;==============================================================================
 ;Load data
 PRO LoadAsciiFile, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;retrieve parameters
+OK         = (*global).ok
+PROCESSING = (*global).processing
+FAILED     = (*global).failed
+
 file_name = getTextFieldValue(Event, 'input_file_text_field')
+IDLsendToGeek_addLogBookText, Event, 'Loading ASCII file ' + $
+  file_name
+IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
 iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
-sAscii = iAsciiFile->getData()
-help, sAscii,/Structure
+IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+    no_error = 0
+   ; CATCH,no_error ;REMOVE_ME
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        sAscii = iAsciiFile->getData()
+        DataStringArray = *(*sAscii.data)[0].data
+;this method will creates a 3 columns array (x,y,sigma_y)
+        Nbr = N_ELEMENTS(DataStringArray)
+        IF (Nbr GT 1) THEN BEGIN
+            Xarray      = STRARR(1)
+            Yarray      = STRARR(1)
+            SigmaYarray = STRARR(1)
+            ParseDataStringArray, $
+              DataStringArray,$
+              Xarray,$
+              Yarray,$
+              SigmaYarray
+        help, Xarray ;remove-me
+        ENDIF 
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    ENDELSE
+ENDIF ELSE BEGIN
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+ENDELSE
+    
 END
 
 ;==============================================================================

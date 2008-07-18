@@ -195,6 +195,14 @@ IF (DEBUGGING EQ 'yes' AND $
     nexus_path           = '~/SVN/IdlGui/branches/SANStransmission/1.0'
     (*global).nexus_path = nexus_path
     (*global).ascii_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
+;populate the FITTING tab (ascii file name)
+   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='~/SVN/IdlGui/branches/SANStransmission/1.0/SANS_175.txt'
+;activate load button
+   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_load_button')
+    WIDGET_CONTROL, id, $
+      SENSITIVE = 1
 ;populate the REDUCE tab to be able to run right away
 ;Data File text field (Load Files)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
