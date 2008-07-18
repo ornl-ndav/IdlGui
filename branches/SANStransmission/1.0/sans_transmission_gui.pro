@@ -38,6 +38,14 @@ WIDGET_CONTROL, id, SENSITIVE=activate_status
 END
 
 ;------------------------------------------------------------------------------
+PRO activate_widget_list, Event, uname_list, activate_status
+sz = N_ELEMENTS(uname_list)
+FOR i=0,(sz-1) DO BEGIN
+    activate_widget, Event, uname_list[i], activate_status
+ENDFOR
+END
+
+;------------------------------------------------------------------------------
 ;This function map or not the given base
 PRO map_base, Event, uname, map_status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)

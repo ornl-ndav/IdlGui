@@ -68,6 +68,9 @@ extension  = (*global).ascii_extension
 path       = (*global).ascii_path
 title      = (*global).ascii_title
 
+text = 'Browsing for an ASCII file ... ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, text
+
 ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   FILTER            = filter,$
                                   GET_PATH          = new_path,$
@@ -77,7 +80,44 @@ ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
 
 IF (ascii_file_name NE '') THEN BEGIN ;get one
     (*global).ascii_path = new_path
-    putTextFieldValue, Event, 'input_file_text_field',ascii_file_name
-ENDIF
+    putTextFieldValue, Event, 'input_file_text_field', ascii_file_name
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    text = '-> Ascii file loaded: ' + ascii_file_name
+    IDLsendToGeek_addLogBookText, Event, text
+ENDIF ELSE BEGIN
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, 'INCOMPLETE!'
+ENDELSE
+;check if we can activate or not the preview and load button
+AsciiInputTextField, Event 
+;Load File
+LoadAsciiFile, Event
+END
 
+;==============================================================================
+PRO AsciiInputTextField, Event 
+file_name = getTextFieldValue(Event, 'input_file_text_field')
+IF (FILE_TEST(file_name)) THEN BEGIN
+    activate = 1
+ENDIF ELSE BEGIN
+    activate = 0
+ENDELSE
+uname_list = ['input_file_load_button',$
+              'input_file_preview_button']
+activate_widget_list, Event, uname_list, activate
+END
+
+;==============================================================================
+;Load data
+PRO LoadAsciiFile, Event
+file_name = getTextFieldValue(Event, 'input_file_text_field')
+iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
+sAscii = iAsciiFile->getData()
+help, sAscii,/Structure
+END
+
+;==============================================================================
+;PREVIEW ascii file
+PRO PreviewAsciiFile, Event
+file_name = getTextFieldValue(Event, 'input_file_text_field')
+XDISPLAYFILE, file_name
 END

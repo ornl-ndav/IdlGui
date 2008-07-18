@@ -165,6 +165,18 @@ CASE Event.id OF
         BrowseInputAsciiFile, Event ;_fitting
     END
 
+;---- Input Ascii text field --------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='input_file_text_field'): BEGIN
+        AsciiInputTextField, Event ;_fitting
+    END
+
+;---- Previw Ascii text file --------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='input_file_preview_button'): BEGIN
+        PreviewAsciiFile, Event ;_fitting
+    END
+
 ;---- degree of the fitting group ---------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='fitting_polynomial_degree_cw_group'): BEGIN

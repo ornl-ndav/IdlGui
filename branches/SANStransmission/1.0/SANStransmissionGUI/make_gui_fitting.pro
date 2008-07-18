@@ -79,7 +79,7 @@ sInputFilePreviewButton = { size: [sInputFileSaveButton.size[0]+$
                                    sInputFileSaveButton.size[1]+XYoff[1],$
                                    sInputFileSaveButton.size[2:3]],$
                             value: 'PREVIEW',$
-                            uname: 'Input_file_preview_button',$
+                            uname: 'input_file_preview_button',$
                             sensitive: 0}
 
 ;- Fitting Degree group -------------------------------------------------------
@@ -277,6 +277,7 @@ wTextField = WIDGET_TEXT(wTabBase,$
                          SCR_XSIZE = sInputFileTextField.size[2],$
                          VALUE     = sInputFileTextField.value,$
                          UNAME     = sInputFileTextField.uname,$
+                         /ALL_EVENTS,$
                          /EDITABLE)
 ;save button
 wSaveButton = WIDGET_BUTTON(wTabBase,$

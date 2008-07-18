@@ -27,6 +27,7 @@ cd, CurrentFolder
 
 ;utils functions
 .run IDLgetMetadata__define.pro
+.run IDL3columnsASCIIparser__define.pro
 .run sans_transmission_put.pro
 .run sans_transmission_get.pro
 .run IDLsendToGeek__define.pro

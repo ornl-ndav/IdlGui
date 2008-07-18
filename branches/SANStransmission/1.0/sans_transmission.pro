@@ -194,7 +194,7 @@ IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     nexus_path           = '~/SVN/IdlGui/branches/SANStransmission/1.0'
     (*global).nexus_path = nexus_path
-
+    (*global).ascii_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
 ;populate the REDUCE tab to be able to run right away
 ;Data File text field (Load Files)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
