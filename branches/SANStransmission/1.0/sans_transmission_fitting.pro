@@ -51,6 +51,15 @@ ENDWHILE
 END
 
 ;------------------------------------------------------------------------------
+PRO CleanUpData, Xarray, Yarray, SigmaYarray
+;remove -Inf, Inf and NaN
+RealMinIndex = WHERE(FINITE(Yarray))
+Xarray = Xarray(RealMinIndex)
+Yarray = Yarray(RealMinIndex)
+SigmaYarray = SigmaYarray(RealMinIndex)
+END
+
+;------------------------------------------------------------------------------
 ;change the label of the automatic button
 PRO ChangeDegreeOfPolynome, Event
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
@@ -127,6 +136,18 @@ activate_widget_list, Event, uname_list, activate
 END
 
 ;==============================================================================
+;Plot Data in widget_draw
+PRO PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
+draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+DEVICE, DECOMPOSED = 0
+loadct,5,/SILENT
+plot, Xarray, Yarray, color=250
+errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+END
+
+;==============================================================================
 ;Load data
 PRO LoadAsciiFile, Event
 ;get global structure
@@ -143,7 +164,7 @@ IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
 iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
 IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
     no_error = 0
-   ; CATCH,no_error ;REMOVE_ME
+    CATCH,no_error   
     IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -161,7 +182,14 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
               Xarray,$
               Yarray,$
               SigmaYarray
-        help, Xarray ;remove-me
+;Remove all rows with NaN, -inf, +inf ...
+            CleanUpData, Xarray, Yarray, SigmaYarray
+;Change format of array (string -> float)
+            Xarray = FLOAT(Xarray)
+            Yarray = FLOAT(Yarray)
+            SigmaYarray = FLOAT(SigmaYarray)
+;Plot Data in widget_draw
+            PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
         ENDIF 
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
