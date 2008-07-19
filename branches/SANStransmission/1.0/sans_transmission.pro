@@ -191,6 +191,13 @@ make_gui_main_tab, MAIN_BASE, MainBaseSize, global
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+;give superpower to j35 and 2zr
+IF (ucams EQ 'j35' OR $
+    ucams EQ '2zr') THEN BEGIN
+   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='command_line_preview')
+   WIDGET_CONTROL, id, /EDITABLE
+ENDIF
+
 ;==============================================================================
 ;debugging version of program
 IF (DEBUGGING EQ 'yes' AND $

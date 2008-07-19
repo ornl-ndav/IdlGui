@@ -39,7 +39,7 @@ END
 ;==============================================================================
 ;This function put the command line in the command line text box
 PRO putCommandLine, Event, cmd
-putTextFieldValue, Event, 'comamnd_line_preview', cmd
+putTextFieldValue, Event, 'command_line_preview', cmd
 END
 
 ;==============================================================================

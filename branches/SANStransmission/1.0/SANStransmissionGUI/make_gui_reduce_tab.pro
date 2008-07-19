@@ -71,7 +71,7 @@ sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
                          700,$
                          100],$
-                 uname: 'comamnd_line_preview'}
+                 uname: 'command_line_preview'}
 XYoff = [5,-18]
 sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
                               sCommandLine.size[1]+XYoff[1]],$
