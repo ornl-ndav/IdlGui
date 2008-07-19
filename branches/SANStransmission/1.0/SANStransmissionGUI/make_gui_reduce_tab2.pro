@@ -167,7 +167,7 @@ sWavelengthscaleGroup = { size:  [sWavelengthwidthText.size[0]+$
                                   sWavelengthwidthText.size[2]+XYoff[0],$
                                   sWavelengthwidthText.size[1]+XYoff[1]],$
                           list:  ['Linear','Logarithmic'],$
-                          value: 1.0,$
+                          value: 0.0,$
                           uname: 'wave_scale_group'}
 
 ;- Verbose Mode ---------------------------------------------------------------
