@@ -54,11 +54,13 @@ CASE Event.id OF
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
+        CheckCommandLine, Event    ;_command_line
     END
 
 ;- Browse Button --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
         browse_nexus, Event ;_eventcb
+        CheckCommandLine, Event ;_command_line
     END
 
 ;- Selection Button -----------------------------------------------------------
@@ -80,12 +82,18 @@ CASE Event.id OF
         LoadNeXus, Event, $
           'data_run_number_cw_field', $
           'data_file_name_text_field'
+        CheckCommandLine, Event ;_command_line
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_file_name_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_browse_button'): BEGIN
         BrowseNexus, Event, $
           'data_browse_button',$
           'data_file_name_text_field'
+        CheckCommandLine, Event ;_command_line
     END
 
 ;----ROI FIle -----------------------------------------------------------------
@@ -93,6 +101,11 @@ CASE Event.id OF
         BrowseNexus, Event, $
           'roi_browse_button',$
           'roi_file_name_text_field'
+        CheckCommandLine, Event ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='roi_file_name_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
 
 ;----Transmission Background --------------------------------------------------
@@ -101,12 +114,19 @@ CASE Event.id OF
         LoadNeXus, Event, $
           'transm_back_run_number_cw_field',$
           'transm_back_file_name_text_field'
+        CheckCommandLine, Event ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+                'transm_back_file_name_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='transm_back_browse_button'): BEGIN
         BrowseNexus, Event, $
           'transm_back_browse_button',$
           'transm_back_file_name_text_field'
+        CheckCommandLine, Event ;_command_line
     END
 
 ;----Output folder ------------------------------------------------------------
@@ -114,13 +134,19 @@ CASE Event.id OF
                 FIND_BY_UNAME= $
                 'output_folder'): BEGIN
         BrowseOutputFolder, Event ;_reduce_tab1
-    END
+        CheckCommandLine, Event   ;_command_line    
+     END
 
 ;Clear File Name text field button --------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='output_file_name'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+
     WIDGET_INFO(wWidget,$
                 FIND_BY_UNAME= $
                 'clear_output_file_name_button'): BEGIN
        clearOutputFileName, Event ;_reduce_tab1
+       CheckCommandLine, Event    ;_command_line
     END
     
 ;Reset File Name --------------------------------------------------------------
@@ -128,6 +154,7 @@ CASE Event.id OF
                 FIND_BY_UNAME= $
                 'reset_output_file_name_button'): BEGIN
        ResetOutputFileName, Event ;_reduce_tab1
+       CheckCommandLine, Event    ;_command_line
     END
 
 ;==== tab2 (PARAMETERS) =======================================================
@@ -135,26 +162,81 @@ CASE Event.id OF
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
         GeometryGroupInteraction, Event ;_reduce_tab2
+        CheckCommandLine, Event         ;_command_line
     END
 
 ;---- Browse button of the overwrite geometry button --------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
         BrowseGeometry, Event ;_reduce_tab2
+        CheckCommandLine, Event ;_command_line
     END
 
+;---- Time Zero Offset --------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='time_zero_offset_detector_uname'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+                'time_zero_offset_beam_monitor_uname'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+    
 ;---- Monitor Efficiency ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='monitor_efficiency_group'): BEGIN
-        monitor_efficiency_constant_gui, Event ;_reduce_tab2
+       monitor_efficiency_constant_gui, Event  ;_reduce_tab2
+       CheckCommandLine, Event                 ;_command_line
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+                'monitor_efficiency_constant_value'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+    
+;---- Wavelength Range --------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_min_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_max_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_width_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_scale_group'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+    
+;---- Verbose Mode ------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='verbose_mode_group'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
 
 ;---- min Lambda Cut off ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
         min_lambda_cut_off_gui, Event ;_reduce_tab2
+        CheckCommandLine, Event       ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_value'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
 
 ;---- max Lambda Cut off ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_group'): BEGIN
         max_lambda_cut_off_gui, Event ;_reduce_tab2
+        CheckCommandLine, Event       ;_command_line
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_value'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+
+;==== tab2 (INTERMEDIATE FILE) ================================================
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='intermediate_group_uname'): BEGIN
+       CheckCommandLine, Event  ;_command_line
     END
 
 ;= TAB3 (FITTING) =============================================================
@@ -169,7 +251,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_text_field'): BEGIN
         AsciiInputTextField, Event ;_fitting
-    END
+     END
 
 ;---- Input Ascii text field --------------------------------------------------
     WIDGET_INFO(wWidget, $
@@ -211,6 +293,6 @@ CASE Event.id OF
     
 ENDCASE
 
-CheckCommandLine, Event         ;_command_line
+
 
 END
