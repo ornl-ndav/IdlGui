@@ -95,7 +95,37 @@ ENDELSE
 putTextFieldValue, Event, 'result_fit_a_text_field', sA
 putTextFieldValue, Event, 'result_fit_b_text_field', sB
 putTextFieldValue, Event, 'result_fit_c_text_field', sC
+END
 
+;==============================================================================
+;Manual fitting of data. Plot fit using data from text_field
+PRO ManualFitting, Event
+;replot ASCII file
+rePlotAsciiData, Event
+;plot fit data
+draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+sA = getTextFieldValue(Event, 'result_fit_a_text_field')
+sB = getTextFieldValue(Event, 'result_fit_b_text_field')
+sC = getTextFieldValue(Event, 'result_fit_c_text_field')
+ON_IOERROR, bad_parameters
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   RETURN
+ENDIF ELSE BEGIN
+   dA = DOUBLE(sA)
+   dB = DOUBLE(sB)
+   dC = DOUBLE(sC)
+;get global structure
+   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   Xarray = (*(*global).Xarray)
+   newXarray = dC*Xarray*Xarray + dB*Xarray + dA
+   oplot,Xarray,newXarray,COLOR=150,THICK=1.5
+ENDELSE
+bad_parameters:
 END
 
 ;==============================================================================
@@ -153,7 +183,6 @@ END
 ;==============================================================================
 PRO BrowseInputAsciiFile, Event 
 ;get global structure
-;id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;retrieve parameters

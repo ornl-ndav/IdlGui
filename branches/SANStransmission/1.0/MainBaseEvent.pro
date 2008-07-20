@@ -286,7 +286,7 @@ CASE Event.id OF
 ;---- Show error bars group ---------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='plot_error_bars_group'): BEGIN
-       rePlotAsciiData, Event
+       ManualFitting, Event     ;replot ascii and fitting 
     END
 
 ;---- Hide/close settings base ------------------------------------------------
