@@ -146,23 +146,23 @@ sResultFitBase = { size: [XYoff[0],$
                    frame: 0,$
                    map:   1,$
                    uname: 'result_fitting_base_uname'}
-XYoff = [30,10] ;label
+XYoff = [5,10] ;label
 sResultFitLabel = { size: [XYoff[0],$
                            XYoff[1]],$
-                    value: '=> Y =              +              X +    ' + $
-                    '          X^2'}
-XYOff = [75,-6] ;A text field
+                    value: '=> Y =                +                X +    ' + $
+                    '            X^2'}
+XYOff = [45,-6] ;A text field
 sResultFitA = { size: [XYoff[0],$
                        sResultFitLabel.size[1]+XYoff[1],$
-                       70],$
+                       90],$
                 value: '',$
                 uname: 'result_fit_a_text_field'}
-XYOff = [92,0] ;B text field
+XYOff = [102,0] ;B text field
 sResultFitB = { size: [sResultFitA.size[0]+XYoff[0],$
                        sResultFitA.size[1:2]],$
                 value: '',$
                 uname: 'result_fit_b_text_field'}
-XYOff = [102,0] ;C text field
+XYOff = [115,0] ;C text field
 sResultFitC = { size: [sResultFitB.size[0]+XYoff[0],$
                        sResultFitB.size[1:2]],$
                 value: '',$
