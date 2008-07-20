@@ -44,7 +44,7 @@ ENDELSE
 coeff = POLY_FIT(Xarray, $
                  Yarray, $
                  degree,$
-                 MEASURE_ERRORS = sigmaYarray, $
+                 ;MEASURE_ERRORS = sigmaYarray, $
                  SIGMA          = sigma, $
                  STATUS         = status,$
                  /double)
@@ -53,15 +53,32 @@ draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
-print, coeff[0]
-print, coeff[1]
-
-;polynome of degree 1 for CE 
-IF (coeff[0] NE 0 AND $
-    coeff[1] NE 0) THEN BEGIN
-    newXarray = coeff(1)*Xarray + coeff(0)
-    oplot,Xarray,newXarray,color=400,thick=1.5
-ENDIF
+IF (status EQ 0) THEN BEGIN
+   A = coeff[0]
+   B = coeff[1]
+   IF (degree EQ 1) THEN BEGIN
+      C = 0
+      newXarray = B*Xarray + A
+   ENDIF ELSE BEGIN
+      C = coeff[2]
+      newXarray = C*Xarray*Xarray + B*Xarray + A
+   ENDELSE
+   oplot,Xarray,newXarray,COLOR=250,THICK=1.5
+   sA = STRCOMPRESS(A,/REMOVE_ALL)
+   sB = STRCOMPRESS(B,/REMOVE_ALL)
+   sC = STRCOMPRESS(C,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+   sA = 'N/A'
+   sB = 'N/A'
+   IF (degree EQ 1) THEN BEGIN
+      sC = '0'
+   ENDIF ELSE BEGIN
+      sC = 'N/A'
+   ENDELSE
+ENDELSE
+putTextFieldValue, Event, 'result_fit_a_text_field', sA
+putTextFieldValue, Event, 'result_fit_b_text_field', sB
+putTextFieldValue, Event, 'result_fit_c_text_field', sC
 
 END
 
