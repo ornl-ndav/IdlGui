@@ -79,7 +79,7 @@ IF (status EQ 0) THEN BEGIN
       C = coeff[2]
       newXarray = C*Xarray*Xarray + B*Xarray + A
    ENDELSE
-   oplot,Xarray,newXarray,COLOR=250,THICK=1.5
+   oplot,Xarray,newXarray,COLOR=150,THICK=1.5
    sA = STRCOMPRESS(A,/REMOVE_ALL)
    sB = STRCOMPRESS(B,/REMOVE_ALL)
    sC = STRCOMPRESS(C,/REMOVE_ALL)
