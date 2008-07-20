@@ -205,22 +205,6 @@ END
 
 ;==============================================================================
 ;Plot Data in widget_draw
-PRO PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
-draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
-WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
-wset,view_plot_id
-DEVICE, DECOMPOSED = 0
-loadct,5,/SILENT
-plot, Xarray, Yarray, color=250
-;plot with error bars or not
-WithErrorBars = getCWBgroupValue(Event,'plot_error_bars_group')
-IF (WithErrorBars EQ 0) THEN BEGIN ;yes, with error bars
-   errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
-ENDIF
-END
-
-;==============================================================================
-;Plot Data in widget_draw
 PRO rePlotAsciiData, Event
 draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
@@ -239,13 +223,24 @@ IF (plot_error NE 0) THEN BEGIN
    RETURN
 ENDIF ELSE BEGIN
 ;plot
-   plot, Xarray, Yarray, color=250
+   plot, Xarray, Yarray, color=250, PSYM=2
 ;plot with error bars or not
    WithErrorBars = getCWBgroupValue(Event,'plot_error_bars_group')
    IF (WithErrorBars EQ 0) THEN BEGIN ;yes, with error bars
       errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
    ENDIF
 ENDELSE
+END
+
+;==============================================================================
+;Plot Data in widget_draw
+PRO PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).Xarray)      = Xarray
+(*(*global).Yarray)      = Yarray
+(*(*global).SigmaYarray) = SigmaYarray
+replotAsciiData, Event
 END
 
 ;==============================================================================
