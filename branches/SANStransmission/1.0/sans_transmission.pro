@@ -166,7 +166,11 @@ global = PTR_NEW ({version:         VERSION,$
                                  })
 
 MainBaseTitle  = 'SANS Data Transmission GUI'
-MainBaseSize   = [30,25,695+320,550+320]
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   MainBaseSize   = [850,0,695+320,550+320]
+ENDIF ELSE BEGIN
+   MainBaseSize   = [30,25,695+320,550+320]
+ENDELSE
 MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================

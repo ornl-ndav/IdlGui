@@ -96,10 +96,46 @@ sDegreeGroup = { size:  [XYoff[0],$
 XYoff = [390,5]
 sAutoFittingButton = { size: [XYoff[0],$
                               sDegreeGroup.size[1]+XYoff[1],$
-                              615,30],$
+                              510,30],$
                        uname: 'auto_fitting_button',$
                        value: 'A U T O M A T I C   F I T T I N G    ' + $
                        'with    Y = A + BX'}
+
+;- Settings -------------------------------------------------------------------
+XYoff = [0,0]
+sSettingsButton = { size: [sAutoFittingButton.size[0]+$
+                           sAutoFittingButton.size[2]+XYoff[0],$
+                           sAutoFittingButton.size[1]+XYoff[1],$
+                           105,30],$
+                    value: 'SETTINGS ...',$
+                    uname: 'settings_button'}
+
+;- Settings Base --------------------------------------------------------------
+XYoff = [0,-10]
+sSettingsBase = { size: [sAutoFittingButton.size[0]+XYoff[0],$
+                         sAutoFittingButton.size[1]+XYoff[1],$
+                         sAutoFittingButton.size[2]+sSettingsButton.size[2],$
+                         30],$
+                  uname: 'settings_base',$
+                  frame: 1,$
+                  map:   0}
+
+;- Fitting with error bars group ----------------------------------------------
+sErrorBarsFitting = { uname: 'fitting_error_bars_group',$
+                      list:  ['YES','NO'],$
+                      value: 1.0,$
+                      title: 'Fit using Error Bars:'}
+
+;- Plot with error bars group -------------------------------------------------
+sErrorBarsPlot = { uname: 'plot_error_bars_group',$
+                   list:  ['YES','NO'],$
+                   value: 0.0,$
+                   title: 'Show Error Bars in Plot:'}
+
+;- close settings button ------------------------------------------------------
+sCloseSettings = { uname: 'close_fitting_settings_button',$
+                   xsize: 105,$
+                   value: 'CLOSE SETTINGS'}
 
 ;- Result of Auto fitting (base and widgets)
 XYOff = [0,35] ;base
@@ -310,6 +346,50 @@ wDegreegroup = CW_BGROUP(wTabBase,$
                          LABEL_LEFT = sDegreeGroup.title,$
                          /EXCLUSIVE)
 
+;- Settings Base --------------------------------------------------------------
+wSettingsBase = WIDGET_BASE(wTabBase,$
+                            XOFFSET = sSettingsBase.size[0],$
+                            YOFFSET = sSettingsBase.size[1],$
+                            SCR_XSIZE = sSettingsBase.size[2],$
+                            UNAME     = sSettingsBase.uname,$
+                            FRAME     = sSettingsBase.frame,$
+                            MAP       = sSettingsBase.map,$
+                            /ROW)
+
+;- Fitting with error bars group ----------------------------------------------
+wErrorBarsFitting = CW_BGROUP(wSettingsBase,$
+                              sErrorBarsFitting.list,$
+                              ROW        = 1,$
+                              SET_VALUE  = sErrorBarsFitting.value,$
+                              UNAME      = sErrorBarsFitting.uname,$
+                              LABEL_LEFT = sErrorBarsFitting.title,$
+                              /NO_RELEASE,$
+                              /EXCLUSIVE)
+
+;- white space
+wSpace = WIDGET_LABEL(wSettingsBase,$
+                      VALUE = '  ')
+
+;- Plot with error bars group ----------------------------------------------
+wErrorBarsPlot = CW_BGROUP(wSettingsBase,$
+                              sErrorBarsPlot.list,$
+                              ROW        = 1,$
+                              SET_VALUE  = sErrorBarsPlot.value,$
+                              UNAME      = sErrorBarsPlot.uname,$
+                              LABEL_LEFT = sErrorBarsPlot.title,$
+                              /NO_RELEASE,$
+                              /EXCLUSIVE)
+
+;- white space
+wSpace = WIDGET_LABEL(wSettingsBase,$
+                      VALUE = '')
+
+;- Close settings Button ------------------------------------------------------
+wCloseSettings = WIDGET_BUTTON(wSettingsBase,$
+                               SCR_XSIZE = sCloseSettings.xsize,$
+                               UNAME = sCloseSettings.uname,$
+                               VALUE = sCloseSettings.value)
+
 ;- Automatic Fitting Button ---------------------------------------------------
 wButton = WIDGET_BUTTON(wTabBase,$
                         XOFFSET   = sAutoFittingButton.size[0],$
@@ -318,6 +398,15 @@ wButton = WIDGET_BUTTON(wTabBase,$
                         SCR_YSIZE = sAutoFittingButton.size[3],$
                         VALUE     = sAutoFittingButton.value,$
                         UNAME     = sAutoFittingButton.uname)
+
+;- Settings -------------------------------------------------------------------
+wSettingsButton = WIDGET_BUTTON(wTabBase,$
+                                XOFFSET   = sSettingsButton.size[0],$
+                                YOFFSET   = sSettingsButton.size[1],$
+                                SCR_XSIZE = sSettingsButton.size[2],$
+                                SCR_YSIZE = sSettingsButton.size[3],$
+                                VALUE     = sSettingsButton.value,$
+                                UNAME     = sSettingsButton.uname)
 
 ;- Result of Auto fitting (base and widgets) ----------------------------------
 wBase = WIDGET_BASE(wTabBase,$

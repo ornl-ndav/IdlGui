@@ -40,15 +40,31 @@ ENDIF ELSE BEGIN
     degree = 2
 ENDELSE
 
-; Compute the second degree polynomial fit to the data:
-coeff = POLY_FIT(Xarray, $
-                 Yarray, $
-                 degree,$
-                 ;MEASURE_ERRORS = sigmaYarray, $
-                 SIGMA          = sigma, $
-                 STATUS         = status,$
-                 /double)
+;with error bars or not
+WithErrorBars = getCWBgroupValue(Event,'fitting_error_bars_group')
 
+; Compute the polynomial fit to the data:
+IF (WithErrorBars EQ 0) THEN BEGIN ;with Error bars
+   coeff = POLY_FIT(Xarray, $
+                    Yarray, $
+                    degree,$
+                    MEASURE_ERRORS = sigmaYarray, $
+                    SIGMA          = sigma, $
+                    STATUS         = status,$
+                    /double)
+ENDIF ELSE BEGIN
+   coeff = POLY_FIT(Xarray, $
+                    Yarray, $
+                    degree,$
+                    SIGMA          = sigma, $
+                    STATUS         = status,$
+                    /double)
+ENDELSE
+
+;replot ASCII file
+rePlotAsciiData, Event
+
+;plot fit data
 draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
@@ -196,7 +212,40 @@ wset,view_plot_id
 DEVICE, DECOMPOSED = 0
 loadct,5,/SILENT
 plot, Xarray, Yarray, color=250
-errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+;plot with error bars or not
+WithErrorBars = getCWBgroupValue(Event,'plot_error_bars_group')
+IF (WithErrorBars EQ 0) THEN BEGIN ;yes, with error bars
+   errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+ENDIF
+END
+
+;==============================================================================
+;Plot Data in widget_draw
+PRO rePlotAsciiData, Event
+draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+DEVICE, DECOMPOSED = 0
+loadct,5,/SILENT
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+Xarray      = (*(*global).Xarray)
+Yarray      = (*(*global).Yarray)
+SigmaYarray = (*(*global).SigmaYarray)
+plot_error = 0
+CATCH, plot_error
+IF (plot_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   RETURN
+ENDIF ELSE BEGIN
+;plot
+   plot, Xarray, Yarray, color=250
+;plot with error bars or not
+   WithErrorBars = getCWBgroupValue(Event,'plot_error_bars_group')
+   IF (WithErrorBars EQ 0) THEN BEGIN ;yes, with error bars
+      errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+   ENDIF
+ENDELSE
 END
 
 ;==============================================================================

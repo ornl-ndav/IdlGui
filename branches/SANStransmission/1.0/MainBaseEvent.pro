@@ -276,6 +276,24 @@ CASE Event.id OF
                 FIND_BY_UNAME='auto_fitting_button'): BEGIN
         AutoFit, Event ;_fitting
     END
+    
+;---- Show settings base ------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='settings_button'): BEGIN
+        map_base, Event, 'settings_base', 1
+    END
+
+;---- Show error bars group ---------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_error_bars_group'): BEGIN
+       rePlotAsciiData, Event
+    END
+
+;---- Hide/close settings base ------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='close_fitting_settings_button'): BEGIN
+        map_base, Event, 'settings_base', 0
+    END
 
 ;---- Alternate Wavelength Axis -----------------------------------------------
     WIDGET_INFO(wWidget, $
