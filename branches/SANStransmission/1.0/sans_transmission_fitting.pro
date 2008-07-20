@@ -185,6 +185,8 @@ END
 ;==============================================================================
 ;Load data
 PRO LoadAsciiFile, Event
+;indicate initialization with hourglass icon
+widget_control,/hourglass
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;retrieve parameters
@@ -235,7 +237,8 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
 ENDIF ELSE BEGIN
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDELSE
-    
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 ;==============================================================================
