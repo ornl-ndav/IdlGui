@@ -249,7 +249,7 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [115,-5]
 sOutputFileTextField = { size: [XYoff[0],$
                                 sOutputFileLabel.size[1]+XYoff[1],$
-                                675],$
+                                595],$
                          uname: 'output_file_text_field',$
                          value: ''}
 XYoff = [5,0]
@@ -260,14 +260,15 @@ sOutputFileSaveButton = { size: [sOutputFileTextField.size[0]+$
                           value: 'CREATE FILE',$
                           uname: 'output_file_save_button',$
                           sensitive: 0}
-XYoff = [0,0]
-sOutputFilePreviewButton = { size: [sOutputFileSaveButton.size[0]+$
-                                    sOutputFileSaveButton.size[2]+XYoff[0],$
-                                    sOutputFileSaveButton.size[1]+XYoff[1],$
-                                    sOutputFileSaveButton.size[2:3]],$
-                             value: 'PREVIEW',$
-                             uname: 'output_file_preview_button',$
-                             sensitive: 0}
+XYoff = [5,0]
+sOutputFileEditSaveButton = { size: [sOutputFileSaveButton.size[0]+$
+                                     sOutputFileSaveButton.size[2]+XYoff[0],$
+                                     sOutputFileSaveButton.size[1],$
+                                     180,$
+                                     sOutputFileSaveButton.size[3]],$
+                              value: 'PREVIEW/EDIT/CREATE FILE',$
+                              uname: 'output_file_edit_save_button',$
+                              sensitive: 0}
                           
 ;==============================================================================
 ;= BUILD GUI ==================================================================
@@ -564,13 +565,13 @@ wSaveButton = WIDGET_BUTTON(wTabBase,$
                             SENSITIVE = sOutputFileSaveButton.sensitive)
 
 ;preview button
-wPreviewButton = WIDGET_BUTTON(wTabBase,$
-                               XOFFSET   = sOutputFilePreviewButton.size[0],$
-                               YOFFSET   = sOutputFilePreviewButton.size[1],$
-                               SCR_XSIZE = sOutputFilePreviewButton.size[2],$
-                               SCR_YSIZE = sOutputFilePreviewButton.size[3],$
-                               VALUE     = sOutputFilePreviewButton.value,$
-                               UNAME     = sOutputFilePreviewButton.uname,$
-                               SENSITIVE = sOutputFilePreviewButton.sensitive)
+wOutputFileEditSaveButton = WIDGET_BUTTON(wTabBase,$
+                               XOFFSET   = sOutputFileEditSaveButton.size[0],$
+                               YOFFSET   = sOutputFileEditSaveButton.size[1],$
+                               SCR_XSIZE = sOutputFileEditSaveButton.size[2],$
+                               SCR_YSIZE = sOutputFileEditSaveButton.size[3],$
+                               VALUE     = sOutputFileEditSaveButton.value,$
+                               UNAME     = sOutputFileEditSaveButton.uname,$
+                               SENSITIVE = sOutputFileEditSaveButton.sensitive)
 
 END
