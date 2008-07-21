@@ -333,7 +333,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO IDL3columnsASCIIparser__define
-  struct = {IDL3columnsASCIIparser2,$
+  struct = {IDL3columnsASCIIparser,$
     path: ''}
 END
 
