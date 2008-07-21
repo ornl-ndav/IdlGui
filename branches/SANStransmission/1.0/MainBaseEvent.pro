@@ -269,6 +269,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='fitting_polynomial_degree_cw_group'): BEGIN
         ChangeDegreeOfPolynome, Event ;_fitting
+        redefinedOutputFileNameOnly, Event ;_fitting
     END
 
 ;---- Launch the Automatic Fitting --------------------------------------------

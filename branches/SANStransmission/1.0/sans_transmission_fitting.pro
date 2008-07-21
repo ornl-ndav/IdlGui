@@ -273,6 +273,53 @@ replotAsciiData, Event
 END
 
 ;==============================================================================
+;Populate output folder/file name with path and default file name
+PRO DefineOutputFileName, Event
+;get name of input file name
+FullFileName = getTextFieldValue(Event,'input_file_text_field')
+;isolate path from file name only
+aPathName = STRSPLIT(FullFileName,'/',/EXTRACT,COUNT=nbr)
+FileNameOnly = aPathName[nbr-1]
+IF (nbr GT 2) THEN BEGIN
+   Path = STRJOIN(aPathName[0:nbr-2],'/')
+ENDIF ELSE BEGIN
+   Path = aPathName[0]
+ENDELSE
+putNewButtonValue, Event, 'output_folder_button', Path + '/'
+;get new file name (ex: input: SANS_175.txt -> SANS_175_p1.txt)
+aFileNameOnly = STRSPLIT(FileNameOnly,'.',/EXTRACT)
+;get polynomial degree
+value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
+IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
+   sAdd = '_p1'
+ENDIF ELSE BEGIN
+   sAdd = '_p2'
+ENDELSE
+FileName = aFileNameOnly[0]+sAdd+'.'+aFileNameOnly[1]
+putTextFieldValue, Event, 'output_file_text_field', FileName
+END
+
+;==============================================================================
+PRO redefinedOutputFileNameOnly, Event
+;get name of input file name
+FullFileName = getTextFieldValue(Event,'input_file_text_field')
+;isolate path from file name only
+aPathName = STRSPLIT(FullFileName,'/',/EXTRACT,COUNT=nbr)
+FileNameOnly = aPathName[nbr-1]
+;get new file name (ex: input: SANS_175.txt -> SANS_175_p1.txt)
+aFileNameOnly = STRSPLIT(FileNameOnly,'.',/EXTRACT)
+;get polynomial degree
+value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
+IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
+   sAdd = '_p1'
+ENDIF ELSE BEGIN
+   sAdd = '_p2'
+ENDELSE
+FileName = aFileNameOnly[0]+sAdd+'.'+aFileNameOnly[1]
+putTextFieldValue, Event, 'output_file_text_field', FileName
+END
+
+;==============================================================================
 ;Load data
 PRO LoadAsciiFile, Event
 ;indicate initialization with hourglass icon
@@ -321,6 +368,8 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
             (*(*global).SigmaYarray) = SigmaYarray
 ;Plot Data in widget_draw
             PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
+;Populate output folder/file name with path and default file name
+            DefineOutputFileName, Event
         ENDIF 
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
