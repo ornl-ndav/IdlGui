@@ -295,6 +295,12 @@ CASE Event.id OF
         map_base, Event, 'settings_base', 0
     END
 
+;---- Launch the Manual Fitting --------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='manual_fitting_button'): BEGIN
+        ManualFitting, Event ;_fitting
+    END
+
 ;---- Alternate Wavelength Axis -----------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='alternate_wavelength_axis_cw_group'): BEGIN
