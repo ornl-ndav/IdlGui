@@ -45,6 +45,12 @@
 ;    Y               STRING    '127'                 ; y value
 ;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string array of 3 
 ;                                                    ; columns with data
+;                                                    
+;   How To retrieve information
+;
+; print, (*struct.data[0]).x
+; print, (struct.xaxis)
+;
 ; *<=========================================>*
 ; Author: dfp <prakapenkadv@ornl.gov>
 ; ============================================>>>    
@@ -54,7 +60,7 @@
 FUNCTION get_up_to_blank_line, data
 index_blank = WHERE(data EQ '',nbr)
 IF (nbr GT 0) THEN BEGIN
-    RETURN, data[0:index_blank[0]]
+    RETURN, data[0:index_blank[0]-1]
 ENDIF
 END
 
@@ -240,24 +246,31 @@ pro populate_structure, all_data, MyStruct
     endelse
     
     IF (~STRMATCH(line,'#*')) THEN BEGIN
-      IF (line EQ '') THEN BEGIN
-        array_index = 0
-        data_structure[array_nbr].data = ptr_new(my_data_array)
-        data_structure[array_nbr].bank = bank
-        data_structure[array_nbr].x = x
-        data_structure[array_nbr].y = y
-        ++array_nbr
-      ENDIF ELSE BEGIN
-        array = STRSPLIT(line,' ',/EXTRACT)
-        IF (N_ELEMENTS(array) GT 1) THEN BEGIN
-          IF (array_index EQ 0) THEN BEGIN
-            my_data_array = [array[0],array[1],array[2]]
+        IF (line EQ '') THEN BEGIN
+            array_index = 0
+            data_structure[array_nbr].data = ptr_new(my_data_array)
+            data_structure[array_nbr].bank = bank
+            data_structure[array_nbr].x = x
+            data_structure[array_nbr].y = y
+            ++array_nbr
+        ENDIF ELSE BEGIN
+            array = STRSPLIT(line,' ',/EXTRACT, COUNT=nbr)
+            CASE (array_index) OF
+                0: BEGIN
+                    my_data_array = [array[0],array[1],array[2]]
+                END
+                ELSE: BEGIN
+                    IF (nbr EQ 1) THEN BEGIN
+                        my_data_array = [my_data_array,array[0],'','']
+                    ENDIF ELSE BEGIN
+                        my_data_array = $
+                          [my_data_array,array[0],array[1],array[2]]
+                    ENDELSE
+                END
+            ENDCASE
             ++array_index
-          ENDIF ELSE BEGIN
-            my_data_array = [my_data_array,array[0],array[1],array[2]]
-          ENDELSE
-        ENDIF
-      ENDELSE
+        ENDELSE
+        
     ENDIF else begin
       ;populate data_stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN

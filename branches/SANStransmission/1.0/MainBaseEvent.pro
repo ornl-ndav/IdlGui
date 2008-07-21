@@ -313,6 +313,12 @@ CASE Event.id OF
         ChangeAlternateAxisOption, Event ;_fitting
     END
 
+;---- CREATE FILE BUTTON ------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='output_file_save_button'): BEGIN
+        OutputFileSave, Event ;_fitting
+    END
+
 
 ;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN

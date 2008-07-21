@@ -31,7 +31,117 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION calculateValue, A=A, B=B, C=C, x
+step1 = A + x * B
+step2 = step1 + x * x * C
+RETURN, step2
+END
+
+;==============================================================================
+FUNCTION createDataArray, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+Xarray = (*(*global).Xarray_untouched)
+nbr = N_ELEMENTS(Xarray)
+output_data_array = STRARR(nbr)
+;retrieve polynome used
+A = getTextFieldValue(Event,'result_fit_a_text_field')
+B = getTextFieldValue(Event,'result_fit_b_text_field')
+C = getTextFieldValue(Event,'result_fit_c_text_field')
+fA = DOUBLE(A)
+fB = DOUBLE(B)
+fC = DOUBLE(C)
+FOR i=0,(nbr-2) DO BEGIN
+    xleft  = DOUBLE(Xarray[i])
+    xright = DOUBLE(Xarray[i+1])
+    new_value = calculateValue(A=fA, B=fB, C=fC, (xleft+xright)/2.)
+    output_data_array[i] = STRCOMPRESS(Xarray[i]) + ' '
+    output_data_array[i] += STRCOMPRESS(new_value) + ' 0.0'
+ENDFOR
+output_data_array[nbr-1] = STRCOMPRESS(Xarray[nbr-1])
+RETURN, output_data_array
+END
+
+;==============================================================================
+FUNCTION getPolyString, Event
+A = getTextFieldValue(Event,'result_fit_a_text_field')
+B = getTextFieldValue(Event,'result_fit_b_text_field')
+C = getTextFieldValue(Event,'result_fit_c_text_field')
+poly_string = '#C fitting function '
+poly_string += STRCOMPRESS(A,/REMOVE_ALL) + ' '
+poly_string += STRCOMPRESS(B,/REMOVE_ALL) + '.X + '
+poly_string += STRCOMPRESS(C,/REMOVE_ALL) + '.X^2 '
+RETURN, poly_string
+END
+
+;==============================================================================
+FUNCTION createOutputArray, Event
+;retrieve list of #X tags from the input ascii file
+file_name = getTextFieldValue(Event,'input_file_text_field')
+iClass = OBJ_NEW('IDL3columnsASCIIparser',file_name)
+output_array = iClass->getAllTag()
+;add information about polynome used
+poly_string = getPolyString(Event)
+output_array = [output_array,poly_string]
+;add emtpy line, and scale informations
+output_array = [output_array,'']
+outputStructure = iClass->getData()
+;#S 1 Spectrum ID ('bank1',(38,38))
+bank = (*outputStructure.data[0]).bank
+x    = (*outputStructure.data[0]).x
+y    = (*outputStructure.data[0]).y
+new_line  = "#S 1 Spectrum ID ('" + bank + "',(" + x
+new_line += ',' + y + '))'  
+output_array = [output_array, new_line]
+;#N #
+output_array = [output_array, '#N 3']
+;#L wavelength(Angstroms) Intensity(Counts/A) Sigma(Counts/A)
+xaxis             = outputStructure.xaxis
+xaxis_units       = outputStructure.xaxis_units
+yaxis             = outputStructure.yaxis
+yaxis_units       = outputStructure.yaxis_units
+sigma_yaxis       = outputStructure.sigma_yaxis
+sigma_yaxis_units = outputStructure.sigma_yaxis_units
+new_line  = '#L ' + xaxis + '(' + xaxis_units + ') '
+new_line += yaxis + '(' + yaxis_units + ') '
+new_line += sigma_yaxis + '(' + sigma_yaxis_units + ')'
+output_array = [output_array, new_line]
+;Data
+DataArray = createDataArray(Event)
+output_array = [output_array, DataArray]
+RETURN, output_array
+END
+
+;==============================================================================
+;This procedure created the output file
+PRO OutputFileSave, Event
+;create the output string array
+output_array = createOutputArray(Event)
+;get name of new output file
+output_path = getButtonValue(Event, 'output_folder_button')
+output_name = getTextFieldValue(Event, 'output_file_text_field')
+output_file_name = output_path + output_name
+;write file
+no_error = 0
+;CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    status = DIALOG_MESSAGE('CREATE OUTPUT FILE: ERROR !',/ERROR)
+ENDIF ELSE BEGIN
+    OPENW, 1, output_file_name
+    sz = N_ELEMENTS(output_array)
+    FOR i=0,(sz-1) DO BEGIN
+        PRINTF, 1, output_array[i]
+    ENDFOR
+    CLOSE, 1
+    FREE_LUN, 1
+ENDELSE
+END
+
+;==============================================================================
 PRO UpdateFittingGui_save, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;Activate or not the SAVE buttons
 fitting_status = (*global).fitting_status
 A = getTextFieldValue(Event,'result_fit_a_text_field')
@@ -176,22 +286,33 @@ END
 
 ;==============================================================================
 ;This method parse the 1 column string array into 3 columns string array
-PRO ParseDataStringArray, DataStringArray, Xarray, Yarray, SigmaYarray
+PRO ParseDataStringArray, Event, DataStringArray, Xarray, Yarray, SigmaYarray
 Nbr = N_ELEMENTS(DataStringArray)
 j=0
 i=0
-WHILE (i LE Nbr-2) DO BEGIN
-    IF (j EQ 0) THEN BEGIN
-        Xarray[j]      = DataStringArray[i++]
-        Yarray[j]      = DataStringArray[i++]
-        SigmaYarray[j] = DataStringArray[i++]
-    ENDIF ELSE BEGIN
-        Xarray      = [Xarray,DataStringArray[i++]]
-        Yarray      = [Yarray,DataStringArray[i++]]
-        SigmaYarray = [SigmaYarray,DataStringArray[i++]]
-    ENDELSE
-    j++
+WHILE (i LE Nbr-1) DO BEGIN
+    CASE j OF
+        0: BEGIN
+            Xarray[j]      = DataStringArray[i++]
+            Yarray[j]      = DataStringArray[i++]
+            SigmaYarray[j] = DataStringArray[i++]
+        END
+        ELSE: BEGIN
+            Xarray      = [Xarray,DataStringArray[i++]]
+            Yarray      = [Yarray,DataStringArray[i++]]
+            SigmaYarray = [SigmaYarray,DataStringArray[i++]]
+        END
+    ENDCASE
+        j++
 ENDWHILE
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).Xarray_untouched) = Xarray
+;remove last element of each array
+sz = N_ELEMENTS(Xarray)
+Xarray = Xarray[0:sz-2]
+Yarray = Yarray[0:sz-2]
+SigmaYarray = SigmaYarray[0:sz-2]
 END
 
 ;------------------------------------------------------------------------------
@@ -398,6 +519,7 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
             Yarray      = STRARR(1)
             SigmaYarray = STRARR(1)
             ParseDataStringArray, $
+              Event,$
               DataStringArray,$
               Xarray,$
               Yarray,$

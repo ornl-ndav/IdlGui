@@ -50,7 +50,7 @@ TESTING     = 'no'
 ;and set ucams to 'j35' if running on darwin
 
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-   ucams = 'j35'
+   ucams = 'j35'x
 ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
@@ -84,9 +84,10 @@ global = PTR_NEW ({version:         VERSION,$
                    ascii_title:     'Browse for a Transmission ASCII File',$
                    data_nexus_file_name: '',$
                    inst_geom:       '',$
-                   Xarray:          ptr_new(0L),$
-                   Yarray:          ptr_new(0L),$
-                   SigmaYarray:     ptr_new(0L),$
+                   Xarray:           ptr_new(0L),$
+                   Xarray_untouched: ptr_new(0L),$
+                   Yarray:           ptr_new(0L),$
+                   SigmaYarray:      ptr_new(0L),$
                    ReducePara: {driver_name: $
                                 'sas_transmission1',$
                                 overwrite_geo: $
