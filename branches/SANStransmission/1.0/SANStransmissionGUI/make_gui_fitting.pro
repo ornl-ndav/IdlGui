@@ -247,9 +247,17 @@ sOutputFileLabel = { size: [XYoff[0],$
                             sAxisGroup.size[1]+XYoff[1]],$
                      value: 'Output File Name:'}
 XYoff = [115,-5]
-sOutputFileTextField = { size: [XYoff[0],$
-                                sOutputFileLabel.size[1]+XYoff[1],$
-                                595],$
+sOutputFolderButton = { size: [XYoff[0],$
+                               sOutputFileLabel.size[1]+XYoff[1],$
+                               380,30],$
+                        value: '',$
+                        sensitive: 1,$
+                        uname: 'output_folder_button'}
+XYoff = [0,0]
+sOutputFileTextField = { size: [sOutputFolderButton.size[0]+$
+                                sOutputFolderButton.size[2]+XYoff[0],$
+                                sOutputFolderButton.size[1]+XYoff[1],$
+                                215],$
                          uname: 'output_file_text_field',$
                          value: ''}
 XYoff = [5,0]
@@ -546,6 +554,16 @@ wLabel = WIDGET_LABEL(wTabBase,$
                       XOFFSET = sOutputFileLabel.size[0],$
                       YOFFSET = sOutputFileLabel.size[1],$
                       VALUE   = sOutputFileLabel.value)
+;output folder button
+wOutputFolderButton = WIDGET_BUTTON(wTabBase,$
+                                    XOFFSET = sOutputFolderButton.size[0],$
+                                    YOFFSET = sOutputFolderButton.size[1],$
+                                    SCR_XSIZE = sOutputFolderButton.size[2],$
+                                    SCR_YSIZE = sOutputFolderButton.size[3],$
+                                    UNAME     = sOutputFolderButton.uname,$
+                                    VALUE     = sOutputFolderButton.value,$
+                                    SENSITIVE = sOutputFolderButton.sensitive)
+
 ;file name input
 wTextField = WIDGET_TEXT(wTabBase,$
                          XOFFSET   = sOutputFileTextField.size[0],$
