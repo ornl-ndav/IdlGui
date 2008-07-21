@@ -31,9 +31,8 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO UpdateFittingGui, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PRO UpdateFittingGui_save, Event
+;Activate or not the SAVE buttons
 fitting_status = (*global).fitting_status
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
@@ -57,6 +56,17 @@ bad_parameters: IF (no_error EQ 0) THEN BEGIN
 ENDIF
 activate_widget, Event, 'output_file_save_button', activate_save_button
 activate_widget, Event, 'output_file_edit_save_button', activate_save_button
+END
+
+;==============================================================================
+PRO UpdateFittingGui_preview, Event
+ascii_file_name = getTextFieldValue(Event,'input_file_text_field')
+IF (FILE_TEST(ascii_file_name,/READ)) THEN BEGIN
+    activate_button = 1
+ENDIF ELSE BEGIN
+    activate_button = 0
+ENDELSE
+activate_widget, Event, 'input_file_preview_button', activate_button
 END
 
 ;==============================================================================

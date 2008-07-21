@@ -245,18 +245,21 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_browse_button'): BEGIN
         BrowseInputAsciiFile, Event ;_fitting
+        UpdateFittingGui_preview, Event ;_fittign
     END
 
 ;---- Input Ascii text field --------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_text_field'): BEGIN
         AsciiInputTextField, Event ;_fitting
+        UpdateFittingGui_preview, Event ;_fitting
      END
 
 ;---- Input Ascii text field --------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_load_button'): BEGIN
         LoadAsciiFile, Event ;_fitting
+        UpdateFittingGui_preview, Event ;_fitting
     END
 
 ;---- Previw Ascii text file --------------------------------------------------
@@ -276,7 +279,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='auto_fitting_button'): BEGIN
         AutoFit, Event ;_fitting
-        UpdateFittingGui, Event ;_fitting
+        UpdateFittingGui_save, Event ;_fitting
     END
     
 ;---- Show settings base ------------------------------------------------------
@@ -301,7 +304,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='manual_fitting_button'): BEGIN
         ManualFitting, Event ;_fitting
-        UpdateFittingGui, Event ;_fitting
+        UpdateFittingGui_save, Event ;_fitting
     END
 
 ;---- Alternate Wavelength Axis -----------------------------------------------
