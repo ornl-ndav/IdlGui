@@ -51,6 +51,14 @@
 
 
 ;------------------------------------------------------------------------------
+FUNCTION get_up_to_blank_line, data
+index_blank = WHERE(data EQ '',nbr)
+IF (nbr GT 0) THEN BEGIN
+    RETURN, data[0:index_blank[0]]
+ENDIF
+END
+
+;------------------------------------------------------------------------------
 function modtag, init_str
   ;remove any spaces on ends
   init_str = STRTRIM(init_str, 2)
@@ -113,36 +121,35 @@ FUNCTION READ_DATA, file, half
   i = 0
   
   CASE (half) OF
-    1: BEGIN                     ;first half
-      ;Read the comments from the file until blank line
-      WHILE(~EOF(1)) DO BEGIN
-        READF,1,tmp
-        ;Check for blank line
-        IF (tmp EQ '') THEN BEGIN
-          BREAK
-        ENDIF ELSE BEGIN
-          IF (i EQ 0) THEN BEGIN
-            line[i] = tmp
-            i = 1
-          ENDIF ELSE BEGIN
-            line = [line, tmp]
-          ENDELSE
-        ENDELSE
-      ENDWHILE
-      close, 1
-      RETURN, line
-    END
-    2: BEGIN                     ;second half
-      WHILE (~EOF(1)) DO BEGIN
-        nbr_lines = FILE_LINES(file)
-        my_array = STRARR(1,nbr_lines)
-        READF,1, my_array
-      ENDWHILE
-      close,1
-      RETURN, my_array
-    END
+      1: BEGIN                  ;first half
+;Read the comments from the file until blank line
+          WHILE(~EOF(1)) DO BEGIN
+              READF,1,tmp
+                                ;Check for blank line
+              IF (tmp EQ '') THEN BEGIN
+                  BREAK
+              ENDIF ELSE BEGIN
+                  IF (i EQ 0) THEN BEGIN
+                      line[i] = tmp
+                      i = 1
+                  ENDIF ELSE BEGIN
+                      line = [line, tmp]
+                  ENDELSE
+              ENDELSE
+          ENDWHILE
+          close, 1
+          RETURN, line
+      END
+      2: BEGIN                  ;second half
+          WHILE (~EOF(1)) DO BEGIN
+              nbr_lines = FILE_LINES(file)
+              my_array = STRARR(1,nbr_lines)
+              READF,1, my_array
+          ENDWHILE
+          close,1
+          RETURN, my_array
+      END
   ENDCASE
-  
 END
 
 ;-------------------------------------------------------------------------------
@@ -322,6 +329,13 @@ FUNCTION IDL3columnsASCIIparser::get_tag, tag
   ;find and format data
   output = find_it(data, tag)
   RETURN, output
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparser::getAllTag
+data = READ_DATA(self.path, 2)
+output = get_up_to_blank_line(data)
+RETURN, output
 END
 
 ;------------------------------------------------------------------------------
