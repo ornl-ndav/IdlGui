@@ -44,7 +44,7 @@ Min    = getTextFieldValue(Event,'alternate_wave_min_text_field')
 Max    = getTextFieldValue(Event,'alternate_wave_max_text_field')
 Width  = getTextFieldValue(Event,'alternate_wave_width_text_field')
 linear = getCWBgroupValue(Event, $
-                          'alternate_wavelength_axis_cw_group')
+                          'alternate_wave_scale_group')
 dMin = DOUBLE(Min)
 dMax = DOUBLE(Max)
 dWidth = DOUBLE(Width)
@@ -52,14 +52,17 @@ Xarray = [STRCOMPRESS(dMin)]
 index  = 0
 min    = dMin
 value  = dMin
+NbrData = 0
 WHILE(value LT dMax) DO BEGIN
     IF (linear EQ 0) THEN BEGIN
         value = dMin + dWidth
     ENDIF ELSE BEGIN
-        value = (dMin+1) * dWidth
+        value = dMin * (1+ dWidth)
+        IF (value EQ dMin) THEN value += 0.001
     ENDELSE
     dMin = value
     Xarray = [Xarray,STRCOMPRESS(value)]
+    NbrData++
 ENDWHILE
 RETURN, Xarray
 END
