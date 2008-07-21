@@ -38,10 +38,44 @@ RETURN, step2
 END
 
 ;==============================================================================
+FUNCTION getUserDefinedXaxis, Event
+;get Min, Max, Width and scale values
+Min    = getTextFieldValue(Event,'alternate_wave_min_text_field')
+Max    = getTextFieldValue(Event,'alternate_wave_max_text_field')
+Width  = getTextFieldValue(Event,'alternate_wave_width_text_field')
+linear = getCWBgroupValue(Event, $
+                          'alternate_wavelength_axis_cw_group')
+dMin = DOUBLE(Min)
+dMax = DOUBLE(Max)
+dWidth = DOUBLE(Width)
+Xarray = [STRCOMPRESS(dMin)]
+index  = 0
+min    = dMin
+value  = dMin
+WHILE(value LT dMax) DO BEGIN
+    IF (linear EQ 0) THEN BEGIN
+        value = dMin + dWidth
+    ENDIF ELSE BEGIN
+        value = (dMin+1) * dWidth
+    ENDELSE
+    dMin = value
+    Xarray = [Xarray,STRCOMPRESS(value)]
+ENDWHILE
+RETURN, Xarray
+END
+
+;==============================================================================
 FUNCTION createDataArray, Event
+;check if user wants default or defined x-axis
+alternate_wave_axis = getCWBgroupValue(Event, $
+                                       'alternate_wavelength_axis_cw_group')
+IF (alternate_wave_axis EQ 0) THEN BEGIN
+    Xarray = getUserDefinedXaxis(Event)
+ENDIF ELSE BEGIN
 ;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-Xarray = (*(*global).Xarray_untouched)
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    Xarray = (*(*global).Xarray_untouched)
+ENDELSE
 nbr = N_ELEMENTS(Xarray)
 output_data_array = STRARR(nbr)
 ;retrieve polynome used

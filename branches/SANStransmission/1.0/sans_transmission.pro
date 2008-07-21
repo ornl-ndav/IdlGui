@@ -215,6 +215,14 @@ IF (DEBUGGING EQ 'yes' AND $
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='~/SVN/IdlGui/branches/SANStransmission/1.0/SANS_175.txt'
+;min,max and width
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_min_text_field')
+    WIDGET_CONTROL, id, SET_VALUE='0'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_max_text_field')
+    WIDGET_CONTROL, id, SET_VALUE='25'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_width_text_field')
+    WIDGET_CONTROL, id, SET_VALUE='0.5'
+
 ;activate load button
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_load_button')
     WIDGET_CONTROL, id, $
