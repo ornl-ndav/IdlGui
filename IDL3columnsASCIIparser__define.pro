@@ -1,4 +1,4 @@
-; <<<============================================
+; <<<==========================================================================
 ; NAME:
 ;    IDL3columsASCIIparser
 ;
@@ -35,7 +35,8 @@
 ;    YAXIS_UNITS        STRING    ''                 ; y-axis units
 ;    SIGMA_YAXIS        STRING    'Sigma'            ; title of sigma y-axis
 ;    SIGMA_YAXIS_UNITS  STRING    ''                 ; sigma y-axis units
-;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array of structures
+;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array 
+;                                                    ; of structures
 ;    
 ;    help, (*struct.data)[0], /structure
 ;    ------------------- returns the first dataset
@@ -43,8 +44,9 @@
 ;    BANK            STRING    'bank1'               ; bank number
 ;    X               STRING    '137'                 ; x value
 ;    Y               STRING    '127'                 ; y value
-;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string array of 3 
-;                                                    ; columns with data
+;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string  
+;                                                    ; data array of 3 columns
+;
 ; USING CLASS:
 ;    To make an instance called myobj:
 ;    myobj = obj_new('IDL3columnsASCIIparser', location)
@@ -54,10 +56,19 @@
 ;    myArray = *(*struct.data[0]).data
 ;
 ;
-; *<=========================================>*
-; Author: dfp <prakapenkadv@ornl.gov>
-; ============================================>>>    
+;                 *<=========================================>*
+;                      Author: dfp <prakapenkadv@ornl.gov>
+; ==========================================================================>>>    
 
+
+
+;------------------------------------------------------------------------------
+FUNCTION get_up_to_blank_line, data
+index_blank = WHERE(data EQ '',nbr)
+IF (nbr GT 0) THEN BEGIN
+    RETURN, data[0:index_blank[0]-1]
+ENDIF
+END
 
 ;------------------------------------------------------------------------------
 function modtag, init_str
@@ -331,6 +342,13 @@ FUNCTION IDL3columnsASCIIparser::get_tag, tag
   ;find and format data
   output = find_it(data, tag)
   RETURN, output
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparser::getAllTag
+data = READ_DATA(self.path, 2)
+output = get_up_to_blank_line(data)
+RETURN, output
 END
 
 ;------------------------------------------------------------------------------
