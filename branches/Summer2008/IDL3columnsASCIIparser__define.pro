@@ -1,12 +1,12 @@
 ; <<<============================================
 ; NAME:
-;   IDL3columsASCIIparser
+;    IDL3columsASCIIparser
 ;
 ; PURPOSE:
-;   Parses a given 3 columns ASCII file.
+;    Parses a given 3 columns ASCII file.
 ;
 ; CATEGORY:
-;   ASCII parser
+;    ASCII parser
 ;
 ; EXAMPLE:
 ;    Construct an object where loc is the string with the location of the
@@ -19,7 +19,7 @@
 ;    Parse the rest of the data into a structure
 ;    struct = myobj ->getData()
 ;    
-; OUTPUT
+; OUTPUT:
 ;    help, comment
 ;    ------------------- returns:
 ;    COMMENT         STRING    = Array[11]
@@ -45,6 +45,15 @@
 ;    Y               STRING    '127'                 ; y value
 ;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string array of 3 
 ;                                                    ; columns with data
+; USING CLASS:
+;    To make an instance called myobj:
+;    myobj = obj_new('IDL3columnsASCIIparser', location)
+;    To get the structure with all the data:
+;    struct = myobj ->getData()
+;    To get an array of data from the structure:
+;    myArray = *(*struct.data[0]).data
+;
+;
 ; *<=========================================>*
 ; Author: dfp <prakapenkadv@ornl.gov>
 ; ============================================>>>    
