@@ -31,6 +31,35 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO UpdateFittingGui, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+fitting_status = (*global).fitting_status
+A = getTextFieldValue(Event,'result_fit_a_text_field')
+B = getTextFieldValue(Event,'result_fit_b_text_field')
+C = getTextFieldValue(Event,'result_fit_c_text_field')
+no_error = 0
+ON_IOERROR, bad_parameters
+fA = FLOAT(A)
+fB = FLOAT(B)
+fC = FLOAT(C)
+IF (fitting_status EQ 0 AND $   ;then activate button
+    FINITE(fA) AND $
+    FINITE(fB) AND $
+    FINITE(fC)) THEN BEGIN
+    activate_save_button = 1
+ENDIF ELSE BEGIN
+    activate_save_button = 0
+ENDELSE
+no_error = 1
+bad_parameters: IF (no_error EQ 0) THEN BEGIN
+    activate_save_button = 0
+ENDIF
+activate_widget, Event, 'output_file_save_button', activate_save_button
+activate_widget, Event, 'output_file_edit_save_button', activate_save_button
+END
+
+;==============================================================================
 PRO FittingFunction, Event, Xarray, Yarray, SigmaYarray
 ;get degree of poly selected
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
@@ -61,6 +90,10 @@ ENDIF ELSE BEGIN
                     /double)
 ENDELSE
 
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*global).fitting_status = status
+
 ;replot ASCII file
 rePlotAsciiData, Event
 
@@ -69,28 +102,31 @@ draw_id = widget_info(Event.top, find_by_uname='fitting_draw_uname')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
-IF (status EQ 0) THEN BEGIN
-   A = coeff[0]
-   B = coeff[1]
-   IF (degree EQ 1) THEN BEGIN
-      C = 0
-      newXarray = B*Xarray + A
-   ENDIF ELSE BEGIN
-      C = coeff[2]
-      newXarray = C*Xarray*Xarray + B*Xarray + A
-   ENDELSE
-   oplot,Xarray,newXarray,COLOR=150,THICK=1.5
-   sA = STRCOMPRESS(A,/REMOVE_ALL)
-   sB = STRCOMPRESS(B,/REMOVE_ALL)
-   sC = STRCOMPRESS(C,/REMOVE_ALL)
+A = coeff[0]
+B = coeff[1]
+
+IF (status EQ 0 AND $
+    FINITE(A) AND $
+    FINITE(B)) THEN BEGIN
+    IF (degree EQ 1) THEN BEGIN
+        C = 0
+        newXarray = B*Xarray + A
+    ENDIF ELSE BEGIN
+        C = coeff[2]
+        newXarray = C*Xarray*Xarray + B*Xarray + A
+    ENDELSE
+    oplot,Xarray,newXarray,COLOR=150,THICK=1.5
+    sA = STRCOMPRESS(A,/REMOVE_ALL)
+    sB = STRCOMPRESS(B,/REMOVE_ALL)
+    sC = STRCOMPRESS(C,/REMOVE_ALL)
 ENDIF ELSE BEGIN
-   sA = 'N/A'
-   sB = 'N/A'
-   IF (degree EQ 1) THEN BEGIN
-      sC = '0'
-   ENDIF ELSE BEGIN
-      sC = 'N/A'
-   ENDELSE
+    sA = 'N/A'
+    sB = 'N/A'
+    IF (degree EQ 1) THEN BEGIN
+        sC = '0'
+    ENDIF ELSE BEGIN
+        sC = 'N/A'
+    ENDELSE
 ENDELSE
 putTextFieldValue, Event, 'result_fit_a_text_field', sA
 putTextFieldValue, Event, 'result_fit_b_text_field', sB
