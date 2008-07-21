@@ -63,7 +63,7 @@
 
 
 ;------------------------------------------------------------------------------
-FUNCTION get_up_to_blank_line, data
+FUNCTION readToBlank, data
 index_blank = WHERE(data EQ '',nbr)
 IF (nbr GT 0) THEN BEGIN
     RETURN, data[0:index_blank[0]-1]
@@ -123,7 +123,7 @@ function modtag, init_str
 end
 
 ;------------------------------------------------------------------------------
-FUNCTION READ_DATA, file, half
+FUNCTION readData, file, half
   ;Open the data file.
   OPENR, 1, file
   
@@ -179,7 +179,7 @@ function format, init_str, tag
 end
 
 ;-------------------------------------------------------------------------------
-Function find_it, init_str, tag
+Function findIt, init_str, tag
 
   ;get number of elements in array
   n = N_ELEMENTS(init_str)
@@ -315,7 +315,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
-  all_data = READ_DATA(self.path, 2)
+  all_data = readData(self.path, 2)
   
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
@@ -334,20 +334,20 @@ FUNCTION IDL3columnsASCIIparser::getData
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::get_tag, tag
+FUNCTION IDL3columnsASCIIparser::getTag, tag
   ;remove semicolon from tag
   tag = modtag(tag)
   ;read data into array
-  data = READ_DATA(self.path, 1)
+  data = readData(self.path, 1)
   ;find and format data
-  output = find_it(data, tag)
+  output = findIt(data, tag)
   RETURN, output
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getAllTag
-data = READ_DATA(self.path, 2)
-output = get_up_to_blank_line(data)
+data = readData(self.path, 2)
+output = readToBlank(data)
 RETURN, output
 END
 
