@@ -84,7 +84,7 @@ ENDIF ELSE BEGIN
     output_folder = getButtonValue(Event,'output_folder')
     output_file = getTextfieldValue(Event, 'output_file_name')
     full_output_file_name = output_folder + output_file
-    IF (FILE_TEST(full_output_file_name,/READ) THEN BEGIN
+    IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
         putTextFieldValue, Event, 'input_file_text_field'
 ;move to fitting tab
 

@@ -566,13 +566,17 @@ PRO DefineOutputFileName, Event
 ;get name of input file name
 FullFileName = getTextFieldValue(Event,'input_file_text_field')
 ;isolate path from file name only
-aPathName = STRSPLIT(FullFileName,'/',/EXTRACT,COUNT=nbr)
+aPathNameIndex = STRSPLIT(FullFileName,'/') ;to check if '/' is first ot not
+aPathName      = STRSPLIT(FullFileName,'/',/EXTRACT,COUNT=nbr)
 FileNameOnly = aPathName[nbr-1]
 IF (nbr GT 2) THEN BEGIN
    Path = STRJOIN(aPathName[0:nbr-2],'/')
 ENDIF ELSE BEGIN
    Path = aPathName[0]
 ENDELSE
+IF (aPathNameIndex[0] EQ 1) THEN BEGIN
+    Path = '/' + Path
+ENDIF
 putNewButtonValue, Event, 'output_folder_button', Path + '/'
 ;get new file name (ex: input: SANS_175.txt -> SANS_175_p1.txt)
 aFileNameOnly = STRSPLIT(FileNameOnly,'.',/EXTRACT)
@@ -626,7 +630,7 @@ IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
 iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
 IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
     no_error = 0
-    ;CATCH,no_error   
+    CATCH,no_error   
     IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
