@@ -2,7 +2,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'TSrebinGUI'
-VERSION     = '1.0.1'
+VERSION     = '1.0.2'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
