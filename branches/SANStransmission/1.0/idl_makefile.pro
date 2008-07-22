@@ -44,6 +44,7 @@ cd, CurrentFolder
 .run sans_transmission_run_commandline.pro
 .run sans_transmission_xroi.pro
 .run sans_transmission_xdisplayfile.pro
+.run sans_transmission_selection.pro
 .run sans_transmission_fitting.pro
 
 ;main functions

@@ -61,6 +61,9 @@ global = PTR_NEW ({version:         VERSION,$
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failed
                    application:     APPLICATION,$
+                   ROIcolor:        250,$
+                   DrawXcoeff:      8,$
+                   DrawYcoeff:      8,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
                    X:               0L,$
@@ -79,6 +82,10 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
+                   selection_extension: 'txt',$
+                   selection_filter: '*.txt',$
+                   selection_title:  'Browse for a ROI file',$
+                   selection_path:   '~/',$
                    ascii_extension: '.txt',$
                    ascii_filter:    '*.txt',$
                    ascii_path:      '~/',$

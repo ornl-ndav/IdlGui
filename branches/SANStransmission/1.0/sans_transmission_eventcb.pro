@@ -201,6 +201,13 @@ IF (RunNumber NE 0) THEN BEGIN
           'output_file_name', $
           defaultReduceFileName
         (*global).data_nexus_file_name = full_nexus_name
+;activate selection buttons 
+        uname_list = ['selection_tool_button',$
+                      'clear_selection_button',$
+                      'load_selection_label',$
+                      'selection_browse_button',$
+                      'selection_file_name_text_field']
+        activate_widget_list, Event, uname_list, 1
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
