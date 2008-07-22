@@ -61,8 +61,8 @@ wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
                    ROIcolor:        250,$
-                   DrawXcoeff:      4,$
-                   DrawYcoeff:      4,$
+                   DrawXcoeff:      8,$
+                   DrawYcoeff:      8,$
                    TESTING:         TESTING,$
                    application:     APPLICATION,$
                    ucams:           ucams,$
