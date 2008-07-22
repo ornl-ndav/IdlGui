@@ -100,7 +100,6 @@ PRO XDISPLAYFILE_event, event
 ;turn off hourglass
                         widget_control,hourglass=0
 		ENDIF
-
 		RETURN
   	END
 	"EXIT": BEGIN
