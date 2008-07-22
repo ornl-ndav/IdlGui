@@ -51,6 +51,8 @@ spawn, 'hostname',listening
 CASE (listening) OF
     'lrac': instrument = 'REF_L'
     'mrac': instrument = 'REF_M'
+    'bac2': instrument = 'BSS'
+    'bac.sns.gov': instrument = 'BSS'
     'heater': instrument = ''
     else: instrument = ''
 ENDCASE
