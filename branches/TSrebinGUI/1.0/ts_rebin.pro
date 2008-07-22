@@ -11,9 +11,9 @@ loadct,5
 ;and set ucams to 'j35' if running on darwin
 
 if (!VERSION.os EQ 'darwin') then begin
-   ucams = 'j35'
+    ucams = 'j35'
 endif else begin
-   ucams = get_ucams()
+    ucams = get_ucams()
 endelse
 
 ;define global variables
@@ -21,7 +21,7 @@ global = ptr_new ({instrument : '',$
                    output_path : '',$
                    staging_area : '',$
                    ts_rebin_batch : $ $
-                   '/SNS/users/j35/SVN/ASGIntegration/trunk/python/TS_rebin_batch',$
+                   'TS_rebin_batch',$
                    PROCESSING : 'Processing ..... '$
                   })
 ;define Main Base variables
