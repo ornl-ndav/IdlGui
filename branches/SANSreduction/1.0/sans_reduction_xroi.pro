@@ -230,8 +230,8 @@ WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 ; Get current list of ROI names.
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 if (nROIs gt 0) then begin
-    fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.txt', $
-                            FILTER='*.txt', /WRITE)
+    fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.dat', $
+                            FILTER='*.dat', /WRITE)
     if (STRLEN(fname) gt 0) then begin
         
 ;put filename in Main Gui (reduce tab#1)
