@@ -116,6 +116,14 @@ if (proposal_field NE '') then begin
     cmd += ' --proposal=' + strcompress(proposal_field, /remove_all) ;proposal
 endif
 
+IF (time_offset_field NE '') THEN BEGIN
+    cmd += ' --time-offset=' + STRCOMPRESS(time_offset_field,/REMOVE_ALL)
+ENDIF
+
+IF (max_time_field NE '') THEN BEGIN
+    cmd += ' --max-time-bin=' + STRCOMPRESS(max_time_field,/REMOVE_ALL)
+ENDIF
+
 cmd += ' --time-width=' + strcompress(bin_width_field, /remove_all) ;bin_width
 cmd += ' --hist-type=' + strcompress(bin_type,/remove_all) ;bin_type
 cmd += ' --output-path=' + strcompress(output_path_field,/remove_all) ;output_path
@@ -149,10 +157,10 @@ CASE (listening) OF
     'lrac': 
     'mrac': 
     'heater':
+    'bac2':
+    'bac.sns.gov':
     else: cmd = 'srun ' + cmd
 ENDCASE
-
-print, cmd
 
 spawn, cmd, listening
 
