@@ -50,7 +50,7 @@ TESTING     = 'no'
 ;and set ucams to 'j35' if running on darwin
 
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-   ucams = 'j35'x
+   ucams = 'j35'
 ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
@@ -215,6 +215,7 @@ IF (DEBUGGING EQ 'yes' AND $
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='~/SVN/IdlGui/branches/SANStransmission/1.0/SANS_175.txt'
+
 ;min,max and width
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_min_text_field')
     WIDGET_CONTROL, id, SET_VALUE='0'

@@ -179,7 +179,11 @@ END
 PRO UpdateFittingGui_save, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;Activate or not the SAVE buttons
+;Activate or not the SAVE buttons 
+activate_save_button = 0
+;*************************************
+;if fitting has been done with success
+;and if min, max and width are real foat values and min<max
 fitting_status = (*global).fitting_status
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
@@ -189,14 +193,29 @@ ON_IOERROR, bad_parameters
 fA = FLOAT(A)
 fB = FLOAT(B)
 fC = FLOAT(C)
+IF (getCWBgroupValue(Event,'alternate_wavelength_axis_cw_group') EQ 0) THEN BEGIN
+   ON_IOERROR, bad_parameters
+   Min    = getTextFieldValue(Event,'alternate_wave_min_text_field')
+   Max    = getTextFieldValue(Event,'alternate_wave_max_text_field')
+   Width  = getTextFieldValue(Event,'alternate_wave_width_text_field')
+   dMin   = FLOAT(Min)
+   dMax   = FLOAT(Max)
+   dWidth = FLOAT(Width)
+ENDIF
 IF (fitting_status EQ 0 AND $   ;then activate button
     FINITE(fA) AND $
     FINITE(fB) AND $
     FINITE(fC)) THEN BEGIN
-    activate_save_button = 1
-ENDIF ELSE BEGIN
-    activate_save_button = 0
-ENDELSE
+   IF (getCWBgroupValue(Event,$
+                        'alternate_wavelength_axis_cw_group') EQ 0) THEN BEGIN
+      IF (dMin LT dMax AND $
+          dWidth NE '') THEN BEGIN
+         activate_save_button = 1
+      ENDIF
+   ENDIF ELSE BEGIN
+      activate_save_button = 1
+   ENDELSE
+ENDIF
 no_error = 1
 bad_parameters: IF (no_error EQ 0) THEN BEGIN
     activate_save_button = 0

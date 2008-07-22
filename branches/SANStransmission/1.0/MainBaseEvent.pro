@@ -311,6 +311,25 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='alternate_wavelength_axis_cw_group'): BEGIN
         ChangeAlternateAxisOption, Event ;_fitting
+        UpdateFittingGui_save, Event
+    END
+    
+;---- Wave min ----------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='alternate_wave_min_text_field'): BEGIN
+        UpdateFittingGui_save, Event
+    END
+
+;---- Wave max ----------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='alternate_wave_max_text_field'): BEGIN
+        UpdateFittingGui_save, Event
+    END
+
+;---- Wave width --------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='alternate_wave_width_text_field'): BEGIN
+        UpdateFittingGui_save, Event
     END
 
 ;---- CREATE FILE BUTTON ------------------------------------------------------
