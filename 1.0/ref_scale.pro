@@ -187,13 +187,13 @@ ListOfFiles = ['                                                   ']
 MainTitle   = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
-MAIN_BASE_ref_scale = WIDGET_BASE(GROUP_LEADER = wGroup, $
-                        UNAME        = 'MAIN_BASE_ref_scale',$
-                        XOFFSET      = MainBaseSize[0],$
-                        YOFFSET      = MainBaseSize[1],$
-                        SCR_XSIZE    = MainBaseSize[2], $
-                        SCR_YSIZE    = MainBaseSize[3], $
-                        TITLE        = MainTitle)
+MAIN_BASE_ref_scale = WIDGET_BASE(GROUP_LEADER = BatchMode, $
+                                  UNAME        = 'MAIN_BASE_ref_scale',$
+                                  XOFFSET      = MainBaseSize[0],$
+                                  YOFFSET      = MainBaseSize[1],$
+                                  SCR_XSIZE    = MainBaseSize[2], $
+                                  SCR_YSIZE    = MainBaseSize[3], $
+                                  TITLE        = MainTitle)
 ;                        MBAR      = WID_BASE_0_MBAR)
 
 PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE_ref_scale,$
@@ -265,7 +265,7 @@ XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
 ;------------------------------------------------------------------------------
 ;- BATCH MODE ONLY ------------------------------------------------------------
 ;Show BATCH Tab if Batch Mode is used
-IF (BatchMode EQ 'yes') THEN BEGIN
+IF (BatchMode NE '') THEN BEGIN
     IF (BatchFile NE '') THEN BEGIN
         id = WIDGET_INFO(MAIN_BASE_ref_scale, $
                          FIND_BY_UNAME='load_batch_file_text_field')
@@ -315,10 +315,10 @@ PRO ref_scale, BatchMode    = BatchMode, $
                GROUP_LEADER = wGroup, $
                _EXTRA       = _VWBExtra_
 IF (N_ELEMENTS(BatchMode) EQ 0) THEN BEGIN
-    BatchMode = 'no'
+    BatchMode = ''
     BatchFile = ''
 ENDIF ELSE BEGIN
-    BatchMode = 'yes'
+    BatchMode = BatchMode
 ENDELSE
 Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 END
