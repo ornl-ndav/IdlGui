@@ -60,6 +60,8 @@ wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
 wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   fitting_status:  1,$ ;0:succes, 1:failed
+                   ascii_file_load_status: 0,$ ;1:success, 0:failedxs
                    ROIcolor:        250,$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
@@ -87,6 +89,7 @@ global = PTR_NEW ({version:         VERSION,$
                    selection_filter: '*.txt',$
                    selection_title:  'Browse for a ROI file',$
                    selection_path:   '~/',$
+                   RoiPixelArrayExcluded: ptr_new(0L),$
                    data_nexus_file_name: '',$
                    inst_geom:       '',$
                    wave_para_value: '',$

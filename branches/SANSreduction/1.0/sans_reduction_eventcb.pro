@@ -219,6 +219,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
     0: BEGIN ;first tab
         refresh_plot, Event ;_plot
+        RefreshRoiPlot, Event ;_selection
     END
     1: BEGIN ;reduce tab
 
