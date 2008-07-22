@@ -86,6 +86,7 @@ global = PTR_NEW ({version:         VERSION,$
                    selection_filter: '*.txt',$
                    selection_title:  'Browse for a ROI file',$
                    selection_path:   '~/',$
+                   RoiPixelArrayExcluded: ptr_new(0L),$
                    ascii_extension: '.txt',$
                    ascii_filter:    '*.txt',$
                    ascii_path:      '~/',$
