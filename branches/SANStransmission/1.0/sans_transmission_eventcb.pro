@@ -291,7 +291,8 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     widget_control, id, sensitive=0
     
 ;Start the selection tool
-    sans_reduction_xroi, image3d, Event, DataArray ;launch sans_reduction_xroi
+    sans_reduction_xroi, image3d, Event, DataArray
+
 
 ENDIF
 END

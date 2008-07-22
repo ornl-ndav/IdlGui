@@ -136,7 +136,8 @@ wSelection = WIDGET_BUTTON(wTab1Base,$
                            SCR_XSIZE = sSelection.size[2],$
                            SCR_YSIZE = sSelection.size[3],$
                            VALUE     = sSelection.value,$
-                           UNAME     = sSelection.uname)
+                           UNAME     = sSelection.uname,$
+                           SENSITIVE = sSelection.sensitive)
 
 ;- Load Selection -------------------------------------------------------------
 ;Title
