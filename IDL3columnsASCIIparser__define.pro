@@ -369,11 +369,18 @@ FUNCTION IDL3columnsASCIIparser::getAllTag
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparser::CLEANUP
+ptr_free, self.all_data
+ptr_free, MyStruct.Data
+help, self.all_data
+print, 'clean!'
+END
+
+;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
   self.all_data = ptr_new(readData(self.path))
-  
   RETURN, FILE_TEST(location, /READ)
 END
 
