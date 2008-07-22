@@ -164,7 +164,7 @@ XYoff = [Qxoff+5,0]
 sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
                          sQwidthText.size[1]+XYoff[1]],$
                  list:  ['Linear','Logarithmic'],$
-                 value: 1.0,$
+                 value: 0.0,$
                  uname: 'q_scale_group'}
 
 ;- Verbose Mode ---------------------------------------------------------------
