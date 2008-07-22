@@ -38,6 +38,7 @@ RoiPixelArrayExcluded = INTARR(Xsize * Ysize)
 nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
     RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
+;    RoiPixelArrayExcluded[80*Xarray[i]+ Yarray[i]]=1
 ENDFOR
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')

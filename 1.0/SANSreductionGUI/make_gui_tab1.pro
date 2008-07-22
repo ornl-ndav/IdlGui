@@ -104,6 +104,33 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                     uname: 'clear_selection_button',$
                     sensitive: 0}
                            
+;- X and Y position of cursor -------------------------------------------------
+XYoff = [0,597]
+XYbase = { size: [sDraw.size[0]+$
+                  sDraw.size[2]+XYoff[0],$
+                  sDraw.size[1]+XYoff[1],$
+                  80,40],$
+           frame: 1,$
+           uname: 'x_y_base'}
+XYoff = [5,0] ;x label
+xLabel = { size: [XYoff[0],$
+                  XYoff[1]],$
+           value: 'X:'}
+XYoff = [20,0] ;x value
+xValue = { size: [XYoff[0],$
+                  XYoff[1]],$
+           value: '   ',$
+           uname: 'x_value'}
+XYoff = [0,20] ;y label
+yLabel = { size: [xLabel.size[0]+XYoff[0],$
+                  xLabel.size[1]+XYoff[1]],$
+           value: 'Y:'}
+XYoff = [0,0] ;y value
+yValue = { size: [xValue.size[0]+XYoff[0],$
+                  ylabel.size[1]+XYoff[1]],$
+           value: '   ',$
+           uname: 'y_value'}
+
 ;- nexus input ----------------------------------------------------------------
 sNexus = { size : [0,$
                    sDraw.size[1]+sDraw.size[3]+15]}
@@ -127,7 +154,8 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     XOFFSET   = sDraw.size[0],$
                     YOFFSET   = sDraw.size[1],$
                     SCR_XSIZE = sDraw.size[2],$
-                    SCR_YSIZE = sDraw.size[3])
+                    SCR_YSIZE = sDraw.size[3],$
+                    /MOTION_EVENTS)
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
@@ -202,6 +230,38 @@ wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 VALUE     = sClearSelection.value,$
                                 UNAME     = sClearSelection.uname,$
                                 SENSITIVE = sClearSelection.sensitive)
+
+
+;- X/Y base -------------------------------------------------------------------
+wXYbase = WIDGET_BASE(wTab1Base,$
+                      XOFFSET   = XYbase.size[0],$
+                      YOFFSET   = XYbase.size[1],$
+                      SCR_XSIZE = XYbase.size[2],$
+                      SCR_YSIZE = XYbase.size[3],$
+                      UNAME     = XYbase.uname,$
+                      FRAME     = XYbase.frame)
+
+;x (label and value)
+wXlabel = WIDGET_LABEL(wXYbase,$
+                       XOFFSET = xLabel.size[0],$
+                       YOFFSET = xLabel.size[1],$
+                       VALUE   = xLabel.value)
+wXvalue = WIDGET_LABEL(wXYbase,$
+                       XOFFSET = xValue.size[0],$
+                       YOFFSET = xValue.size[1],$
+                       VALUE   = xValue.value,$
+                       UNAME   = xValue.uname)
+
+;y (label and value)
+wYlabel = WIDGET_LABEL(wXYbase,$
+                       XOFFSET = yLabel.size[0],$
+                       YOFFSET = yLabel.size[1],$
+                       VALUE   = yLabel.value)
+wYvalue = WIDGET_LABEL(wXYbase,$
+                       XOFFSET = yValue.size[0],$
+                       YOFFSET = yValue.size[1],$
+                       VALUE   = yValue.value,$
+                       UNAME   = yValue.uname)
 
 ;------------------------------------------------------------------------------
 ;- nexus input ----------------------------------------------------------------

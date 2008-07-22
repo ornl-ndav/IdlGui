@@ -51,6 +51,11 @@ CASE Event.id OF
 
 ;= TAB1 (LOAD DATA) ===========================================================
 
+;- Main Plot ------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
+        getXYposition, Event ;_get
+    END
+
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
