@@ -1,7 +1,8 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = '(VERSION: TSrebin1.0.0)'
+APPLICATION = 'TSrebinGUI'
+VERSION     = '1.0.1'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -27,7 +28,7 @@ global = ptr_new ({instrument : '',$
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 MainBaseSize  = [50,50,550,305]
-MainBaseTitle = 'Translation Service Rebin Tool ' + VERSION
+MainBaseTitle = 'Translation Service Rebin Tool - ' + VERSION
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
@@ -70,6 +71,18 @@ MakeGui, MAIN_BASE, WidgetInit
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
