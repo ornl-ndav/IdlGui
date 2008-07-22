@@ -67,3 +67,16 @@ RETURN, value
 END
 
 ;------------------------------------------------------------------------------
+PRO getXYposition, Event
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+    x = Event.x
+    y = Event.y
+    ScreenX = x / (*global).DrawXcoeff
+    ScreenY = y / (*global).DrawXcoeff
+    putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
+    putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+ENDIF
+END
