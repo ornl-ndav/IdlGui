@@ -82,8 +82,8 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
-                   selection_extension: 'txt',$
-                   selection_filter: '*.txt',$
+                   selection_extension: 'dat',$
+                   selection_filter: '*.dat',$
                    selection_title:  'Browse for a ROI file',$
                    selection_path:   '~/',$
                    RoiPixelArrayExcluded: ptr_new(0L),$
