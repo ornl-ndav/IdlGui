@@ -114,7 +114,7 @@ FUNCTION getPolyString, Event
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
 C = getTextFieldValue(Event,'result_fit_c_text_field')
-poly_string = '#C fitting function '
+poly_string = '#C fitting function: '
 poly_string += STRCOMPRESS(A,/REMOVE_ALL) + ' '
 poly_string += STRCOMPRESS(B,/REMOVE_ALL) + '.X + '
 poly_string += STRCOMPRESS(C,/REMOVE_ALL) + '.X^2 '
