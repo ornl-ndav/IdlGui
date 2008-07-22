@@ -248,9 +248,9 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     X         = (size(tDataXY))(1)
     Y         = X
     IF (X EQ 80) THEN BEGIN
-        xysize = 4
+        xysize = 8
     ENDIF ELSE BEGIN
-        xysize = 1
+        xysize = 2
     ENDELSE
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
     
