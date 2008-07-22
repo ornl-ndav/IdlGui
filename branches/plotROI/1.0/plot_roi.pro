@@ -36,7 +36,8 @@ ListOFInstruments = ['BSS',$
                      'SNAP',$
                      'REF_L',$
                      'REF_M',$
-                     'ARCS']
+                     'ARCS',$
+                     'LENS']
 
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$

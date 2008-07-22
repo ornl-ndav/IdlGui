@@ -23,7 +23,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO BrowseNexusFile, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -49,7 +49,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO ListOfInstrument, Event
 index = getDropListSelectedIndex(Event, 'list_of_instrument')
 IF (index EQ 0) THEN BEGIN
@@ -60,7 +60,7 @@ ENDELSE
 MapBase, Event, 'nexus_run_number_base', activateStatus
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO PreviewRoiFile, Event 
 ;get RoiFileName
 RoiFileName = getRoiFileName(Event) 
@@ -69,13 +69,13 @@ title       = FileName
 XDISPLAYFILE, FileName, TITLE = title
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO DisplayBankSelected, Event 
 value = getDropListSelectedValue(Event, 'bank_droplist')
 putTextFieldValue, Event, 'bank_text', value
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
