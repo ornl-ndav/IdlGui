@@ -344,6 +344,12 @@ CASE Event.id OF
         OutputFileSave, Event ;_fitting
     END
 
+;---- PREVIEW/EDIT/CREATE FILE BUTTON -----------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='output_file_edit_save_button'): BEGIN
+        OutputFileEditSave, Event ;_fitting
+    END
+
 ;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek

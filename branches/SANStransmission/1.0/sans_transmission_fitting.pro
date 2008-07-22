@@ -186,6 +186,21 @@ ENDELSE
 END
 
 ;==============================================================================
+PRO OutputFileEditSave, Event ;_fitting
+;create the output string array
+output_array = createOutputArray(Event)
+;get name of new output file
+output_path = getButtonValue(Event, 'output_folder_button')
+output_name = getTextFieldValue(Event, 'output_file_text_field')
+output_file_name = output_path + output_name
+sans_transmission_xdisplayfile, $
+  output_file_name,$
+  TEXT = output_array,$
+  /EDITABLE,$
+  /GROW_TO_SCREEN
+END
+
+;==============================================================================
 PRO UpdateFittingGui_save, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
