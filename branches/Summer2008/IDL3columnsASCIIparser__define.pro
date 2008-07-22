@@ -12,19 +12,19 @@
 ;    Construct an object where loc is the string with the location of the
 ;    ascii file
 ;    myobj = obj_new('IDL3columnsASCIIparser', loc)
-;    
+;
 ;    Get the comments for a particular tag (e.g. #F data)
 ;    comment = myobj->getTag(#F data)
-;    
+;
 ;    Parse the rest of the data into a structure
 ;    struct = myobj ->getData()
-;    
+;
 ; OUTPUT:
 ;    help, comment
 ;    ------------------- returns:
 ;    COMMENT         STRING    = Array[11]
 ;    The array contains the comments that follow the tag provided by the user
-;    
+;
 ;    help, struct, /structure
 ;    ------------------- returns
 ;     ** Structure <af6b98>, 8 tags, length=112, data length=104, refs=1:
@@ -35,16 +35,16 @@
 ;    YAXIS_UNITS        STRING    ''                 ; y-axis units
 ;    SIGMA_YAXIS        STRING    'Sigma'            ; title of sigma y-axis
 ;    SIGMA_YAXIS_UNITS  STRING    ''                 ; sigma y-axis units
-;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array 
+;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array
 ;                                                    ; of structures
-;    
+;
 ;    help, (*struct.data)[0], /structure
 ;    ------------------- returns the first dataset
 ;     ** Structure SINGLE_DATA_STRUCTURE, 4 tags, length=56, data length=52:
 ;    BANK            STRING    'bank1'               ; bank number
 ;    X               STRING    '137'                 ; x value
 ;    Y               STRING    '127'                 ; y value
-;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string  
+;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string
 ;                                                    ; data array of 3 columns
 ;
 ; USING CLASS:
@@ -58,16 +58,16 @@
 ;
 ;                 *<=========================================>*
 ;                      Author: dfp <prakapenkadv@ornl.gov>
-; ==========================================================================>>>    
+; ==========================================================================>>>
 
 
 
 ;------------------------------------------------------------------------------
 FUNCTION readToBlank, data
-index_blank = WHERE(data EQ '',nbr)
-IF (nbr GT 0) THEN BEGIN
+  index_blank = WHERE(data EQ '',nbr)
+  IF (nbr GT 0) THEN BEGIN
     RETURN, data[0:index_blank[0]-1]
-ENDIF
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ FUNCTION readData, file, half
   
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 function format, init_str, tag
   ;find out where tag ends
   pos = STRLEN(tag)
@@ -178,7 +178,7 @@ function format, init_str, tag
   
 end
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 Function findIt, init_str, tag
 
   ;get number of elements in array
@@ -237,7 +237,8 @@ pro populate_structure, all_data, MyStruct
     Y:    '',$
     data: ptr_new()}
     
-  ;then create the array of structures according to the number of array (new_nbr)
+  ;then create the array of structures according to the number
+  ;of array (new_nbr)
   data_structure = REPLICATE(general_data_structure,new_nbr)
   
   ;and put this general array of structures inside MyStruct.data
@@ -286,10 +287,9 @@ pro populate_structure, all_data, MyStruct
           temp = strsplit(line, /extract)
           x_all = strsplit(temp[1], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
           y_all = strsplit(temp[2], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
-          sigma_all = strsplit(temp[3], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+          sigma_all = strsplit(temp[3]," '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
         endif
       endif
-      
     endelse
     
     ++i
@@ -297,8 +297,8 @@ pro populate_structure, all_data, MyStruct
   ENDWHILE
   
   
-  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
-  ;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
+  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis,
+  ;sigma_axis_units and put them in MyStruct.xaxis, Mystruct.xaxis_units ...
   
   MyStruct.NbrArray = new_nbr
   MyStruct.xaxis = x_all[0]
@@ -309,7 +309,7 @@ pro populate_structure, all_data, MyStruct
   MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
   
-
+  
 END
 
 
@@ -346,9 +346,9 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getAllTag
-data = readData(self.path, 2)
-output = readToBlank(data)
-RETURN, output
+  data = readData(self.path, 2)
+  output = readToBlank(data)
+  RETURN, output
 END
 
 ;------------------------------------------------------------------------------
