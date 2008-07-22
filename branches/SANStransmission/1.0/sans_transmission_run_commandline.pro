@@ -45,7 +45,7 @@ status_text = 'Data Reduction ... ' + PROCESSING
 putTextFieldValue, Event, 'data_reduction_status_frame', status_text
 
 ;get command line to generate
-cmd = getTextFieldValue(Event,'comamnd_line_preview')
+cmd = getTextFieldValue(Event,'command_line_preview')
 
 ;display command line in log-book
 cmd_text = '> Command Line:'
