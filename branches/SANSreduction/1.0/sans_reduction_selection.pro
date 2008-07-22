@@ -34,10 +34,10 @@
 FUNCTION getListOfPixelExcluded, Xarray, Yarray
 Xsize = 80L
 Ysize = 80L
-RoiPixelArrayExcluded = INTARR(Xisze,Ysize)
+RoiPixelArrayExcluded = INTARR(Xsize * Ysize)
 nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
-    RoiPixelArrayExcluded[Xarray[i],Yarray[i]]=1
+    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
 ENDFOR
 RETURN, RoiPixelArrayExcluded
 END
@@ -56,17 +56,24 @@ ROIcolor = (*global).ROIcolor
 x_coeff  = (*global).DrawXcoeff
 y_coeff  = (*global).DrawYcoeff
 
-;plot in x-direction
+NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
+
+print, 'here'
+
 FOR i=0,(NbrElements-1) DO BEGIN
-    PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, COLOR=color
-    PLOTS, Xarray[i] * x_coeff, (Yarray[i]+1) * y_coeff, /DEVICE, /CONTINUE, $
-      COLOR=color
-    PLOTS, (Xarray[i]+1) * x_coeff, (Yarray[i]+1) * y_coeff, /DEVICE, $
-      /CONTINUE, COLOR=color
-    PLOTS, (Xarray[i]+1) * x_coeff, Yarray[i] * y_coeff, /DEVICE, /CONTINUE, $
-      COLOR=color
-    PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, /CONTINUE, $
-      COLOR=color
+    IF (RoiPixelArrayExcluded[i] EQ 0) THEN BEGIN
+        X = FIX(i/80)
+        Y = i MOD 80
+        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
+        PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
+          COLOR=color
+        PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
+          /CONTINUE, COLOR=color
+        PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+          COLOR=color
+        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+          COLOR=color
+    ENDIF
 ENDFOR    
 END
 
@@ -195,7 +202,7 @@ ENDIF ELSE BEGIN
         IDLsendToGeek_addLogBookText, Event, $
           '-> Plotting ROI ... ' + PROCESSING
         plot_error = 0
-        CATCH, plot_error
+;        CATCH, plot_error
         IF (plot_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
