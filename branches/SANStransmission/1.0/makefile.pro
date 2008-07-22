@@ -7,6 +7,8 @@ resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 resolve_routine, "loadct",/either
 resolve_routine, "errplot",/either
+resolve_routine, "poly_fit",/either
+resolve_routine, "GET_SCREEN_SIZE",/either
 
 save,/routines,filename = CurrentFolder + '/sans_transmission.sav'
 exit
