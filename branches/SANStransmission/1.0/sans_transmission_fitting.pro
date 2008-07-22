@@ -271,6 +271,17 @@ ENDIF ELSE BEGIN
     activate_button = 0
 ENDELSE
 activate_widget, Event, 'input_file_preview_button', activate_button
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+load_status = (*global).ascii_file_load_status
+IF (load_status EQ 1) THEN BEGIN
+    activate_fitting_button = 1
+ENDIF ELSE BEGIN
+    activate_fitting_button = 0
+ENDELSE
+uname_list = ['auto_fitting_button',$
+              'manual_fitting_button']
+activate_widget_list, Event, uname_list, activate_fitting_button
 END
 
 ;==============================================================================
@@ -633,6 +644,8 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
 ;Populate output folder/file name with path and default file name
             DefineOutputFileName, Event
         ENDIF 
+;file has been loaded with success
+        (*global).ascii_file_load_status = 1
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
 ENDIF ELSE BEGIN

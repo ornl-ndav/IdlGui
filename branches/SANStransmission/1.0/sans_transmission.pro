@@ -59,6 +59,7 @@ ENDELSE
 global = PTR_NEW ({version:         VERSION,$
                    TESTING:         TESTING,$
                    fitting_status:  1,$ ;0:succes, 1:failed
+                   ascii_file_load_status: 0,$ ;1:success, 0:failed
                    application:     APPLICATION,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$

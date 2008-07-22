@@ -98,6 +98,7 @@ sAutoFittingButton = { size: [XYoff[0],$
                               sDegreeGroup.size[1]+XYoff[1],$
                               510,30],$
                        uname: 'auto_fitting_button',$
+                       sensitive: 0,$
                        value: 'A U T O M A T I C   F I T T I N G    ' + $
                        'with    Y = A + BX'}
 
@@ -173,6 +174,7 @@ XYoff = [0,5]
 sManualFittingButton = { size: [sAutoFittingButton.size[0]+XYoff[0],$
                                 sResultFitBase.size[1]+XYoff[1],$
                                 sAutoFittingButton.size[2],30],$
+                         sensitive: 0,$
                          uname: 'manual_fitting_button',$
                          value: 'M A N U A L  F I T T I N G'}
 
@@ -416,6 +418,7 @@ wButton = WIDGET_BUTTON(wTabBase,$
                         SCR_XSIZE = sAutoFittingButton.size[2],$
                         SCR_YSIZE = sAutoFittingButton.size[3],$
                         VALUE     = sAutoFittingButton.value,$
+                        SENSITIVE = sAutoFittingButton.sensitive,$
                         UNAME     = sAutoFittingButton.uname)
 
 ;- Settings -------------------------------------------------------------------
@@ -478,6 +481,7 @@ wButton = WIDGET_BUTTON(wTabBase,$
                         SCR_XSIZE = sManualFittingButton.size[2],$
                         SCR_YSIZE = sManualFittingButton.size[3],$
                         VALUE     = sManualFittingButton.value,$
+                        SENSITIVE = sManualFittingButton.sensitive,$
                         UNAME     = sManualFittingButton.uname)
 
 
