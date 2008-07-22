@@ -123,45 +123,58 @@ function modtag, init_str
 end
 
 ;------------------------------------------------------------------------------
-FUNCTION readData, file, half
+FUNCTION readData, file
   ;Open the data file.
   OPENR, 1, file
   
-  ;Set up variables
-  line = STRARR(1)
-  tmp = ''
-  i = 0
   
-  CASE (half) OF
-    1: BEGIN                     ;first half
-      ;Read the comments from the file until blank line
-      WHILE(~EOF(1)) DO BEGIN
-        READF,1,tmp
-        ;Check for blank line
-        IF (tmp EQ '') THEN BEGIN
-          BREAK
-        ENDIF ELSE BEGIN
-          IF (i EQ 0) THEN BEGIN
-            line[i] = tmp
-            i = 1
-          ENDIF ELSE BEGIN
-            line = [line, tmp]
-          ENDELSE
-        ENDELSE
-      ENDWHILE
-      close, 1
-      RETURN, line
-    END
-    2: BEGIN                     ;second half
-      WHILE (~EOF(1)) DO BEGIN
-        nbr_lines = FILE_LINES(file)
-        my_array = STRARR(1,nbr_lines)
-        READF,1, my_array
-      ENDWHILE
-      close,1
-      RETURN, my_array
-    END
-  ENDCASE
+  
+  WHILE (~EOF(1)) DO BEGIN
+    nbr_lines = FILE_LINES(file)
+    my_array = STRARR(nbr_lines)
+    READF,1, my_array
+  ENDWHILE
+  close,1
+  
+  RETURN, my_array
+  
+  
+  
+;  ;Set up variables
+;  line = STRARR(1)
+;  tmp = ''
+;  i = 0
+  
+;  CASE (half) OF
+;    1: BEGIN                     ;first half
+;      ;Read the comments from the file until blank line
+;      WHILE(~EOF(1)) DO BEGIN
+;        READF,1,tmp
+;        ;Check for blank line
+;        IF (tmp EQ '') THEN BEGIN
+;          BREAK
+;        ENDIF ELSE BEGIN
+;          IF (i EQ 0) THEN BEGIN
+;            line[i] = tmp
+;            i = 1
+;          ENDIF ELSE BEGIN
+;            line = [line, tmp]
+;          ENDELSE
+;        ENDELSE
+;      ENDWHILE
+;      close, 1
+;      RETURN, line
+;    END
+;    2: BEGIN                     ;second half
+;      WHILE (~EOF(1)) DO BEGIN
+;        nbr_lines = FILE_LINES(file)
+;        my_array = STRARR(1,nbr_lines)
+;        READF,1, my_array
+;      ENDWHILE
+;      close,1
+;      RETURN, my_array
+;    END
+;  ENDCASE
   
 END
 
@@ -209,11 +222,7 @@ end
 
 ;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
-  ;find where is the first blank line (we do not want anything from the line
-  ;below that point
-  blk_line_index = WHERE(all_data EQ '', nbr)
-  ;get our new interesting array of data
-  all_data = all_data[blk_line_index[0]+1:*]
+
   
   
   ;get how many array we have here
@@ -315,8 +324,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
-  all_data = readData(self.path, 2)
-  
+ 
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
     xaxis:             '', $
@@ -326,6 +334,15 @@ FUNCTION IDL3columnsASCIIparser::getData
     sigma_yaxis:       '',$
     sigma_yaxis_units: '',$
     Data:              ptr_new(0L)}
+    
+    
+    
+  ;find where is the first blank line (we do not want anything from the line
+  ;below that point)
+  all_data = *self.all_data
+  blk_line_index = WHERE((all_data) EQ '', nbr)
+  ;get our new interesting array of data
+  all_data = all_data[blk_line_index[0]+1:*]
     
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
@@ -338,7 +355,7 @@ FUNCTION IDL3columnsASCIIparser::getTag, tag
   ;remove semicolon from tag
   tag = modtag(tag)
   ;read data into array
-  data = readData(self.path, 1)
+  data = *self.all_data
   ;find and format data
   output = findIt(data, tag)
   RETURN, output
@@ -346,8 +363,8 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getAllTag
-  data = readData(self.path, 2)
-  output = readToBlank(data)
+  help, self.all_data, /heap_variables
+  output = readToBlank(*self.all_data)
   RETURN, output
 END
 
@@ -355,13 +372,16 @@ END
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
+  self.all_data = ptr_new(readData(self.path))
+  
   RETURN, FILE_TEST(location, /READ)
 END
 
 ;------------------------------------------------------------------------------
 PRO IDL3columnsASCIIparser__define
   struct = {IDL3columnsASCIIparser,$
-    path: ''}
+    path: '', $
+    all_data: ptr_new()}
 END
 
 ;------------------------------------------------------------------------------
