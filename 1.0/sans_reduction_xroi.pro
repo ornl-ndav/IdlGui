@@ -230,8 +230,11 @@ WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 ; Get current list of ROI names.
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 if (nROIs gt 0) then begin
-    fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.dat', $
-                            FILTER='*.dat', /WRITE)
+    fname = DIALOG_PICKFILE(GROUP=sEvent.top, $
+                            FILE='SANS_ROI.dat', $
+                            FILTER='*.dat', $
+                            /WRITE)
+
     if (STRLEN(fname) gt 0) then begin
         
 ;put filename in Main Gui (reduce tab#1)
@@ -733,8 +736,8 @@ pro xroi__ButtonPress, sEvent
     ;If the Selection Circle Base is shown, display the X, Y (mm and pixel)
     IF (WIDGET_INFO((*pState).wCircleInfo, /VALID_ID) NE 0) THEN BEGIN
         
-        PixelX = FIX(Ximage/4)
-        PixelY = FIX(Yimage/4)
+        PixelX = FIX(Ximage/8)
+        PixelY = FIX(Yimage/8)
         Widget_control, (*pState).wTextPixelXo, SET_VALUE=STRCOMPRESS(PixelX)
         Widget_control, (*pState).wTextPixelYo, SET_VALUE=STRCOMPRESS(PixelY)
 
@@ -1826,8 +1829,8 @@ pro xroi__Motion, sEvent
         xImage lt dimensions[0] and $
         yImage lt dimensions[1]
 
-    PixelX = FIX(Ximage / 4)
-    PixelY = FIX(Yimage / 4)
+    PixelX = FIX(Ximage / 8)
+    PixelY = FIX(Yimage / 8)
 
     Counts = FIX(((*pState).SumDataArray)[PixelY,PixelX])
 
@@ -3796,20 +3799,20 @@ PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
                                  insideSelectionType
 
 tmp_array = INTARR(80,80)
-Xsize = 320
-Ysize = 320
+Xsize = 320*2
+Ysize = 320*2
 FOR i=0,(Xsize-1) DO BEGIN
     FOR j=0,(Ysize-1) DO BEGIN
         IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
             IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDELSE
@@ -3819,11 +3822,11 @@ ENDFOR
 CASE (CurrentSelectionSettings) OF
 ;half in
     0: BEGIN
-        IndexArray = WHERE(tmp_array GE 8) 
+        IndexArray = WHERE(tmp_array GE 32) 
     END
 ;half out
     1: BEGIN
-        IndexArray = WHERE(tmp_array GT 8) 
+        IndexArray = WHERE(tmp_array GT 32) 
     END
 ;out in
     2: BEGIN
@@ -3831,7 +3834,7 @@ CASE (CurrentSelectionSettings) OF
     END
 ;out out
     3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 16) 
+        IndexArray = WHERE(tmp_array EQ 64) 
     END
     ELSE:
 ENDCASE
@@ -3857,20 +3860,20 @@ PRO  CreateArrayOfPixelSelected_FOR_RoiFile, PixelSelectedArray,$
                                              insideSelectionType
 
 tmp_array = INTARR(80,80)
-Xsize = 320
-Ysize = 320
+Xsize = 320*2
+Ysize = 320*2
 FOR i=0,(Xsize-1) DO BEGIN
     FOR j=0,(Ysize-1) DO BEGIN
         IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDELSE
@@ -3880,11 +3883,11 @@ ENDFOR
 CASE (CurrentSelectionSettings) OF
 ;half in
     0: BEGIN
-        IndexArray = WHERE(tmp_array GE 8) 
+        IndexArray = WHERE(tmp_array GE 32) 
     END
 ;half out
     1: BEGIN
-        IndexArray = WHERE(tmp_array GT 8) 
+        IndexArray = WHERE(tmp_array GT 32) 
     END
 ;out in
     2: BEGIN
@@ -3892,7 +3895,7 @@ CASE (CurrentSelectionSettings) OF
     END
 ;out out
     3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 16) 
+        IndexArray = WHERE(tmp_array EQ 64) 
     END
     ELSE:
 ENDCASE
@@ -4259,13 +4262,13 @@ NewY = intarr(1)
 
 ;get Xo, Yo and Radius
 WIDGET_CONTROl, (*pState).wTextPixelXo, GET_VALUE=Xo
-Xo *= 4
+Xo *= 8
 WIDGET_CONTROl, (*pState).wTextPixelYo, GET_VALUE=Yo
-Yo *= 4
+Yo *= 8
 WIDGET_CONTROl, (*pState).wTextDistPixelRadius, GET_VALUE=dR
 ;do conversion distance(mm) -> pixels
 Width = (*pState).DetectorWidth * 1000 ;in mm
-Radius = ((4.*80.)*FLOAT(dR))/(Width)
+Radius = ((8.*80.)*FLOAT(dR))/(Width)
 
 CIRCLE, FIX(Xo[0]), FIX(Yo[0]), FIX(Radius[0]), NewX, NewY
 ;CIRCLE, 200, 200, 100, NewX, NewY
@@ -5118,7 +5121,6 @@ PRO sans_reduction_xroi, $
     DEBUG=debug, $
     X_SCROLL_SIZE=xScrollSizeIn, $
     Y_SCROLL_SIZE=yScrollSizeIn
-
 
     ON_ERROR, KEYWORD_SET(debug) ? 0 : 2
 
