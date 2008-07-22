@@ -50,7 +50,7 @@ sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
                       XYoff[1],$
                       360,$
                       35],$
-               value: 'S E L E C T I O N     D E S I G N E R',$
+               value: 'ADVANCED SELECTION TOOL',$
                uname: 'selection_tool_button',$
                sensitive: 0}
 

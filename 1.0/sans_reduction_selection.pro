@@ -31,7 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-FUNCTION getListOfPixelExcluded, Xarray, Yarray
+FUNCTION getListOfPixelExcluded, Event, Xarray, Yarray
 Xsize = 80L
 Ysize = 80L
 RoiPixelArrayExcluded = INTARR(Xsize * Ysize)
@@ -39,6 +39,10 @@ nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
     RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
 ENDFOR
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
 RETURN, RoiPixelArrayExcluded
 END
 
@@ -57,8 +61,6 @@ x_coeff  = (*global).DrawXcoeff
 y_coeff  = (*global).DrawYcoeff
 
 NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
-
-print, 'here'
 
 FOR i=0,(NbrElements-1) DO BEGIN
     IF (RoiPixelArrayExcluded[i] EQ 0) THEN BEGIN
@@ -207,13 +209,26 @@ ENDIF ELSE BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
         ENDIF ELSE BEGIN
-            RoiPixelArrayExcluded = getListOfPixelExcluded(Xarray, Yarray)
+            RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
+                                                           Xarray, $
+                                                           Yarray)
             PlotROI, Event, RoiPixelArrayExcluded
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         ENDELSE
     ENDELSE
 ENDELSE
+END
 
+;- Refresh ROI Plot -----------------------------------------------------------
+PRO RefreshRoiPlot, Event
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+RoiFileName = getTextFieldValue(Event,'selection_file_name_text_field')
+IF (FILE_TEST(RoiFileName,/READ)) THEN BEGIN
+    RoiPixelArrayExcluded = (*(*global).RoiPixelArrayExcluded)
+    PlotROI, Event, RoiPixelArrayExcluded
+ENDIF
 END
 
 ;- Clear Selection Button -----------------------------------------------------
