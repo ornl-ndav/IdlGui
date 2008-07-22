@@ -1198,8 +1198,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1260,8 +1260,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1323,8 +1323,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1386,8 +1386,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1454,8 +1454,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1526,8 +1526,8 @@ COMPILE_OPT idl2, hidden
                 if lmgr(/demo) ne 1 then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1611,8 +1611,8 @@ COMPILE_OPT idl2, hidden
                 if not lmgr(/demo) then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -1704,8 +1704,8 @@ COMPILE_OPT idl2, hidden
                 if not lmgr(/demo) then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=1
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                        SENSITIVE=1
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                        SENSITIVE=1
                 endif
 
                 ; Set the region as current.
@@ -2889,8 +2889,8 @@ pro xroi__DeleteSelectedROI, pState
     if (nROIs eq 1) then begin
                     WIDGET_CONTROL, (*pState).wSaveButton, $
                         SENSITIVE=0
-                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-                      SENSITIVE=0
+;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;                      SENSITIVE=0
                     xroi__SetROI, pState, OBJ_NEW(), /UPDATE_LIST
     endif else begin
         oROI = (*pState).oROIModel->Get(POSITION=((pos-1) > 0))
@@ -4289,8 +4289,8 @@ if OBJ_VALID((*pState).oRegionsOut) then $
 if lmgr(/demo) ne 1 then begin
     WIDGET_CONTROL, (*pState).wSaveButton, $
       SENSITIVE=1
-    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
-      SENSITIVE=1
+;    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
+;      SENSITIVE=1
 endif
 
 ; Set the region as current.
@@ -5345,13 +5345,13 @@ PRO sans_reduction_xroi, $
         UNAME='save_menu_bttn', $
         EVENT_FUNC='xroi__Save' $
         )
-    wSaveButtonAndExit = WIDGET_BUTTON( $
-        wFileMenu, $
-        VALUE='Create ROI file and Exit ...', $
-        SENSITIVE=0, $
-        UNAME='save_menu_bttn_and_exit', $
-        EVENT_FUNC='xroi__Save__exit' $
-        )
+;    wSaveButtonAndExit = WIDGET_BUTTON( $
+;        wFileMenu, $
+;        VALUE='Create ROI file and Exit ...', $
+;        SENSITIVE=0, $
+;        UNAME='save_menu_bttn_and_exit', $
+;        EVENT_FUNC='xroi__Save__exit' $
+;        )
 ;CANCEL (does not validate the changes)
     wButton = WIDGET_BUTTON( $
         wFileMenu, $
@@ -5751,7 +5751,7 @@ PRO sans_reduction_xroi, $
               wCircleInfo:          -1L, $
               wROIGrowProps:        -1L, $
               wSaveButton:          wSaveButton, $
-              wSaveButtonAndExit:   wSaveButtonAndExit,$
+;              wSaveButtonAndExit:   wSaveButtonAndExit,$
               wExcToolbarBase:      wExcToolbarBase,$
               image_is_8bit:        image_is_8bit, $
               wStatus:              wStatus, $
