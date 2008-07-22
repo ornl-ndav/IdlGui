@@ -14,7 +14,7 @@
 ;    myobj = obj_new('IDL3columnsASCIIparser', loc)
 ;    
 ;    Get the comments for a particular tag (e.g. #F data)
-;    comment = myobj->get_tag(#F data)
+;    comment = myobj->getTag(#F data)
 ;    
 ;    Parse the rest of the data into a structure
 ;    struct = myobj ->getData()
