@@ -195,7 +195,7 @@ sAltBase = { size: [XYoff[0],$
              map:   0}
 
 ;Wavelengthmin
-XYoff = [25,8]
+XYoff = [5,8]
 sWavelengthminLabel = { size:  [XYoff[0],$
                                 XYoff[1]],$
                         value: 'Min:'}
@@ -207,7 +207,7 @@ sWavelengthminText = {  size:  [sWavelengthminLabel.size[0]+XYoff[0],$
                         uname: 'alternate_wave_min_text_field'}
 
 ;Wavelengthmax
-XYoff = [25,0]
+XYoff = [15,0]
 sWavelengthmaxLabel = { size:  [sWavelengthminText.size[0]+$
                                 sWavelengthminText.size[2]+XYoff[0],$
                                 sWavelengthminLabel.size[1]+XYoff[1]],$
@@ -220,7 +220,7 @@ sWavelengthmaxText = {  size:  [sWavelengthmaxLabel.size[0]+XYoff[0],$
                         uname: 'alternate_wave_max_text_field'}
 
 ;Wavelengthwidth
-XYoff = [25,0]
+XYoff = [15,0]
 sWavelengthwidthLabel = { size:  [sWavelengthmaxText.size[0]+$
                                   sWavelengthminText.size[2]+XYoff[0],$
                                   sWavelengthminLabel.size[1]+XYoff[1]],$
@@ -233,13 +233,23 @@ sWavelengthwidthText = {  size:  [sWavelengthwidthLabel.size[0]+XYoff[0],$
                           uname: 'alternate_wave_width_text_field'}
 
 ;Wavelength scale
-XYoff = [25,0]
+XYoff = [15,0]
 sWavelengthscaleGroup = { size:  [sWavelengthwidthText.size[0]+$
                                   sWavelengthwidthText.size[2]+XYoff[0],$
                                   sWavelengthwidthText.size[1]+XYoff[1]],$
                           list:  ['Linear','Logarithmic'],$
                           value: 0.0,$
                           uname: 'alternate_wave_scale_group'}
+
+;Wavelength axis preview
+XYoff = [170,0]
+sWaveAxisPreview = { size: [sWavelengthscaleGroup.size[0]+XYoff[0],$
+                            sWavelengthscaleGroup.size[1]+XYoff[1],$
+                            100,30],$
+                     value: 'AXIS PREVIEW',$
+                     uname: 'wavelength_axis_preview_button',$
+                     tooltip: 'Preview of the x-axis',$
+                     sensitive: 1}
 
 ;output file name -------------------------------------------------------------
 XYoff = [5,50]
@@ -547,6 +557,17 @@ wWavelengthscaleGroup =  CW_BGROUP(wWaveBase,$
                           SET_VALUE  = sWavelengthscaleGroup.value,$
                           UNAME      = sWavelengthscaleGroup.uname,$
                           /EXCLUSIVE)
+
+;Wavelength Axis preview
+wWavelengthAxisPreview = WIDGET_BUTTON(wWaveBase,$
+                                       XOFFSET   = sWaveAxisPreview.size[0],$
+                                       YOFFSET   = sWaveAxisPreview.size[1],$
+                                       SCR_XSIZE = sWaveAxisPreview.size[2],$
+                                       SCR_YSIZE = sWaveAxisPreview.size[3],$
+                                       VALUE     = sWaveAxisPreview.value,$
+                                       UNAME     = sWaveAxisPreview.uname,$
+                                       TOOLTIP   = sWaveAxisPreview.tooltip,$
+                                       SENSITIVE = sWaveAxisPreview.sensitive)
 
 ;output file name -------------------------------------------------------------
 ;label

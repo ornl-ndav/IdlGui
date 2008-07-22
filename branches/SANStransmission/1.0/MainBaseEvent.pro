@@ -332,12 +332,17 @@ CASE Event.id OF
         UpdateFittingGui_save, Event
     END
 
+;---- Wave Axis Preview -------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='wavelength_axis_preview_button'): BEGIN
+       WaveUserDefinedAxisPreview, Event
+    END
+
 ;---- CREATE FILE BUTTON ------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='output_file_save_button'): BEGIN
         OutputFileSave, Event ;_fitting
     END
-
 
 ;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN

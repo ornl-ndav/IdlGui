@@ -68,6 +68,16 @@ RETURN, Xarray
 END
 
 ;==============================================================================
+PRO WaveUserDefinedAxisPreview, Event
+Xarray = getUserDefinedXaxis(Event)
+title = 'Preview of the X-axis that will be used in the output file.'
+XDISPLAYFILE, 'no_file_here', $
+              TEXT        = Xarray, $
+              TITLE       = title, $
+              DONE_BUTTON = 'Done with Preview of x-axis'
+END
+
+;==============================================================================
 FUNCTION createDataArray, Event
 ;check if user wants default or defined x-axis
 alternate_wave_axis = getCWBgroupValue(Event, $
@@ -181,6 +191,7 @@ PRO UpdateFittingGui_save, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;Activate or not the SAVE buttons 
 activate_save_button = 0
+activate_wave_preview_button = 0
 ;*************************************
 ;if fitting has been done with success
 ;and if min, max and width are real foat values and min<max
@@ -211,17 +222,29 @@ IF (fitting_status EQ 0 AND $   ;then activate button
       IF (dMin LT dMax AND $
           dWidth NE '') THEN BEGIN
          activate_save_button = 1
+         activate_wave_preview_button = 1
       ENDIF
    ENDIF ELSE BEGIN
       activate_save_button = 1
    ENDELSE
-ENDIF
+ENDIF ELSE BEGIN
+   IF (getCWBgroupValue(Event,$
+                        'alternate_wavelength_axis_cw_group') EQ 0) THEN BEGIN
+      IF (dMin LT dMax AND $
+          dWidth NE '') THEN BEGIN
+         activate_wave_preview_button = 1
+      ENDIF
+   ENDIF
+ENDELSE
 no_error = 1
 bad_parameters: IF (no_error EQ 0) THEN BEGIN
     activate_save_button = 0
+    activate_wave_preview_button = 0
 ENDIF
 activate_widget, Event, 'output_file_save_button', activate_save_button
 activate_widget, Event, 'output_file_edit_save_button', activate_save_button
+activate_widget, Event, 'wavelength_axis_preview_button', $
+                 activate_wave_preview_button
 END
 
 ;==============================================================================
