@@ -162,6 +162,8 @@ END
 ;==============================================================================
 ;This procedure created the output file
 PRO OutputFileSave, Event
+;indicate initialization with hourglass icon
+widget_control,/hourglass
 ;create the output string array
 output_array = createOutputArray(Event)
 ;get name of new output file
@@ -170,10 +172,17 @@ output_name = getTextFieldValue(Event, 'output_file_text_field')
 output_file_name = output_path + output_name
 ;write file
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_file_save_button')
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    status = DIALOG_MESSAGE('CREATE OUTPUT FILE: ERROR !',/ERROR)
+    message = ['CREATE OUTPUT FILE FAILED !',$
+               'FILE NAME : ' + output_file_name]
+;turn off hourglass
+    widget_control,hourglass=0
+    status = DIALOG_MESSAGE(message, $
+                            /ERROR,$
+                            DIALOG_PARENT = id)
 ENDIF ELSE BEGIN
     OPENW, 1, output_file_name
     sz = N_ELEMENTS(output_array)
@@ -182,6 +191,13 @@ ENDIF ELSE BEGIN
     ENDFOR
     CLOSE, 1
     FREE_LUN, 1
+;turn off hourglass
+    widget_control,hourglass=0
+    message = ['OUTPUT FILE HAS BEEN CREATED WITH SUCCESS',$
+               'FILE NAME : ' + output_file_name]
+    status = DIALOG_MESSAGE(message,$
+                            /INFORMATION,$
+                            DIALOG_PARENT = id)
 ENDELSE
 END
 

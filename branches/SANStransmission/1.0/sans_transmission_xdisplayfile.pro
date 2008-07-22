@@ -91,29 +91,18 @@ PRO XDISPLAYFILE_event, event
 			state.filename = DIALOG_PICKFILE(/WRITE)
 		ENDIF
 		IF (STRLEN(state.filename) GT 0) THEN BEGIN
+;indicate initialization with hourglass icon
+                    widget_control,/hourglass
 			XDISPLAYFILE_write, state.filetext, state.filename
 			WIDGET_CONTROL, event.top, SET_UVALUE=state
 			IF state.notitle THEN WIDGET_CONTROL, event.top, $
 				TLB_SET_TITLE=state.filename
+;turn off hourglass
+                        widget_control,hourglass=0
 		ENDIF
 
 		RETURN
   	END
-	"SAVE_AS": BEGIN
-               if (LMGR(/DEMO)) then begin
-                  tmp = DIALOG_MESSAGE( /ERROR, $
-                        'Save As: Feature disabled for demo mode.')
-                  return
-                endif
-		state.filename = DIALOG_PICKFILE(/WRITE)
-		IF (STRLEN(state.filename) GT 0) THEN BEGIN
-			XDISPLAYFILE_write, state.filetext, state.filename
-			WIDGET_CONTROL, event.top, SET_UVALUE=state
-			IF state.notitle THEN WIDGET_CONTROL, event.top, $
-				TLB_SET_TITLE=state.filename
-		ENDIF
-		RETURN
-	END
 	"EXIT": BEGIN
 		WIDGET_CONTROL, event.top, /DESTROY
 		IF (WIDGET_INFO(state.ourGroup, /VALID)) THEN $
@@ -342,8 +331,6 @@ PRO sans_transmission_xdisplayFile, FILENAME, $
   IF (editable) THEN BEGIN
     ; add 'Save', 'Save as...' buttons here
     saveButton = WIDGET_BUTTON(menu_bar, VALUE = extra+'Save', UVALUE = "SAVE")
-;    saveAsButton = WIDGET_BUTTON(menu_bar, $
-;		VALUE = 'Save '+extra+'As...', UVALUE = "SAVE_AS")
 
   ENDIF
 
