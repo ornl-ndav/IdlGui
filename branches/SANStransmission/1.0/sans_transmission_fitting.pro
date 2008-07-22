@@ -172,7 +172,7 @@ output_name = getTextFieldValue(Event, 'output_file_text_field')
 output_file_name = output_path + output_name
 ;write file
 no_error = 0
-CATCH, no_error
+;CATCH, no_error
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_file_save_button')
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
