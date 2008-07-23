@@ -35,10 +35,12 @@ FUNCTION getListOfPixelExcluded, Event, Xarray, Yarray
 Xsize = 80L
 Ysize = 80L
 RoiPixelArrayExcluded = INTARR(Xsize * Ysize)
+RoiPixelArrayExcluded = INTARR(Xsize,Ysize)
 nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
-    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
+;    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
 ;    RoiPixelArrayExcluded[80*Xarray[i]+ Yarray[i]]=1
+    RoiPixelArrayExcluded[Xarray[i],Yarray[i]]=1
 ENDFOR
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -63,20 +65,35 @@ y_coeff  = (*global).DrawYcoeff
 
 NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
 
-FOR i=0,(NbrElements-1) DO BEGIN
-    IF (RoiPixelArrayExcluded[i] EQ 0) THEN BEGIN
-        X = FIX(i/80)
-        Y = i MOD 80
-        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
-        PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
-        PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
-          /CONTINUE, COLOR=color
-        PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
-        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
-    ENDIF
+FOR i=0,(80-1) DO BEGIN
+;     IF (RoiPixelArrayExcluded[i] EQ 0) THEN BEGIN
+;         Y = FIX(i/80)
+;         X = i MOD 80
+;         PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
+;         PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
+;           COLOR=color
+;         PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
+;           /CONTINUE, COLOR=color
+;         PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+;           COLOR=color
+;         PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+;           COLOR=color
+;     ENDIF
+    FOR j=0,(80-1) DO BEGIN
+        IF (RoiPixelArrayExcluded[i,j] EQ 0) THEN BEGIN
+            x = i
+            y = j
+            PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
+            PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
+              COLOR=color
+            PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
+              /CONTINUE, COLOR=color
+            PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+              COLOR=color
+            PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+              COLOR=color
+        ENDIF
+    ENDFOR
 ENDFOR    
 END
 
