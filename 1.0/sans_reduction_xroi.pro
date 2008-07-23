@@ -3930,8 +3930,8 @@ ENDIF ELSE BEGIN
     
     index_array = WHERE(pixel_excluded GT 0, nbr)
     FOR i=0,(nbr-1) DO BEGIN
-        x    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
-        y    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
+        y    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
+        x    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
         bank = 'bank1_'
         text = bank + x + '_' + y
         printf, 1, text
