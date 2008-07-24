@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANStranslation'
 VERSION     = '1.0.0'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
 
@@ -97,6 +97,10 @@ global = PTR_NEW ({version:         VERSION,$
                    Xarray_untouched: ptr_new(0L),$
                    Yarray:           ptr_new(0L),$
                    SigmaYarray:      ptr_new(0L),$
+                   xaxis:            '',$
+                   xaxis_units:      '',$
+                   yaxis:            '',$
+                   yaxis_units:      '',$
                    ReducePara: {driver_name: $
                                 'sas_transmission1',$
                                 overwrite_geo: $
@@ -178,7 +182,8 @@ global = PTR_NEW ({version:         VERSION,$
 
 MainBaseTitle  = 'SANS Data Transmission GUI'
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-   MainBaseSize   = [1150,0,695+320,550+320]
+;   MainBaseSize   = [1150,0,695+320,550+320]
+   MainBaseSize   = [30,25,695+320,550+320]
 ENDIF ELSE BEGIN
    MainBaseSize   = [30,25,695+320,550+320]
 ENDELSE
@@ -186,16 +191,30 @@ MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
 ;Build Main Base ==============================================================
-MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                         UNAME        = 'MAIN_BASE',$
-                         SCR_XSIZE    = MainBaseSize[2],$
-                         SCR_YSIZE    = MainBaseSize[3],$
-                         XOFFSET      = MainBaseSize[0],$
-                         YOFFSET      = MainBaseSize[1],$
-                         TITLE        = MainBaseTitle,$
-                         SPACE        = 0,$
-                         XPAD         = 0,$
-                         YPAD         = 2)
+IF (DEBUGGING EQ 'yes') THEN BEGIN
+   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                            UNAME        = 'MAIN_BASE',$
+                            SCR_XSIZE    = MainBaseSize[2],$
+                            XOFFSET      = MainBaseSize[0],$
+                            YOFFSET      = MainBaseSize[1],$
+                            TITLE        = MainBaseTitle,$
+                            SPACE        = 0,$
+                            XPAD         = 0,$
+                            YPAD         = 2,$
+                            X_SCROLL_SIZE = 500,$
+                            Y_SCROLL_SIZE = 500)
+ENDIF ELSE BEGIN
+  MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                            UNAME        = 'MAIN_BASE',$
+                            SCR_XSIZE    = MainBaseSize[2],$
+                            SCR_YSIZE    = MainBaseSize[3],$
+                            XOFFSET      = MainBaseSize[0],$
+                            YOFFSET      = MainBaseSize[1],$
+                            TITLE        = MainBaseTitle,$
+                            SPACE        = 0,$
+                            XPAD         = 0,$
+                            YPAD         = 2)
+ENDELSE
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global

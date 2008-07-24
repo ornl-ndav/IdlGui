@@ -539,8 +539,16 @@ IF (plot_error NE 0) THEN BEGIN
    CATCH,/CANCEL
    RETURN
 ENDIF ELSE BEGIN
+   ;get global structure
+   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   xaxis = (*global).xaxis
+   xaxis_units = (*global).xaxis_units
+   yaxis = (*global).yaxis
+   yaxis_units = (*global).yaxis_units
+   xLabel = xaxis + ' (' + xaxis_units + ')'
+   yLabel = yaxis + ' (' + yaxis_units + ')'
 ;plot
-   plot, Xarray, Yarray, color=250, PSYM=2
+   plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel
 ;plot with error bars or not
    WithErrorBars = getCWBgroupValue(Event,'plot_error_bars_group')
    IF (WithErrorBars EQ 0) THEN BEGIN ;yes, with error bars
@@ -636,6 +644,11 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
+        (*global).xaxis       = sAscii.xaxis
+        (*global).xaxis_units = sAScii.xaxis_units
+        (*global).yaxis       = sAscii.yaxis
+        (*global).yaxis_units = sAscii.yaxis_units
+        
         DataStringArray = *(*sAscii.data)[0].data
 ;this method will creates a 3 columns array (x,y,sigma_y)
         Nbr = N_ELEMENTS(DataStringArray)
