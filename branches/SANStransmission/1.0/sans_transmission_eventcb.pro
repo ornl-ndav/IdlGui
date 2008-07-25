@@ -244,7 +244,10 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     1: BEGIN ;reduce tab
 
     END
-    2: BEGIN ;log book
+    2: BEGIN ;fitting
+       ManualFitting, Event
+    END
+    3: BEGIN                    ;log book
 
     END
     ELSE:

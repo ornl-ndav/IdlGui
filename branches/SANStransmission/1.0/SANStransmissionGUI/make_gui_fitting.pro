@@ -39,6 +39,12 @@ sTabBase = { size  : MainTabSize,$
               title : TabTitles.fitting,$
               uname : 'base_fitting'}
 
+;- Refresh Plot ---------------------------------------------------------------
+sRefreshButton = { size: [10,10,150],$
+                   uname: 'refresh_fitting_button',$
+                   value: 'REFRESH PLOT',$
+                   sensitive: 0}
+
 ;- Plot -----------------------------------------------------------------------
 XYoff = [0,0]
 sDraw = { size: [XYoff[0],$
@@ -302,6 +308,16 @@ wTabBase = WIDGET_BASE(MAIN_TAB,$
                         SCR_XSIZE = sTabBase.size[2],$
                         SCR_YSIZE = sTabBase.size[3],$
                         TITLE     = sTabBase.title)
+
+;- Refresh Button -------------------------------------------------------------
+wRefresh = WIDGET_BUTTON(wTabBase,$
+                         XOFFSET   = sRefreshButton.size[0],$
+                         YOFFSET   = sRefreshButton.size[1],$
+                         SCR_XSIZE = sRefreshButton.size[2],$
+                         VALUE     = sRefreshButton.value,$
+                         UNAME     = sRefreshButton.uname,$
+                         SENSITIVE = sRefreshButton.sensitive)
+
 
 ;- Draw -----------------------------------------------------------------------
 wDraw = WIDGET_DRAW(wTabBase,$

@@ -266,6 +266,12 @@ CASE Event.id OF
 
 ;= TAB3 (FITTING) =============================================================
 
+;----- Refresh Plot -----------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='refresh_fitting_button'): BEGIN
+       ManualFitting, Event     ;_fitting
+    END
+
 ;---- Browse Input Ascii file button ------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='input_file_browse_button'): BEGIN

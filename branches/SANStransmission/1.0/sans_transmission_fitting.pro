@@ -235,7 +235,8 @@ ON_IOERROR, bad_parameters
 fA = FLOAT(A)
 fB = FLOAT(B)
 fC = FLOAT(C)
-IF (getCWBgroupValue(Event,'alternate_wavelength_axis_cw_group') EQ 0) THEN BEGIN
+IF (getCWBgroupValue(Event,'alternate_wavelength_axis_cw_group') EQ 0) $
+THEN BEGIN
    ON_IOERROR, bad_parameters
    Min    = getTextFieldValue(Event,'alternate_wave_min_text_field')
    Max    = getTextFieldValue(Event,'alternate_wave_max_text_field')
@@ -296,7 +297,8 @@ ENDIF ELSE BEGIN
     activate_fitting_button = 0
 ENDELSE
 uname_list = ['auto_fitting_button',$
-              'manual_fitting_button']
+              'manual_fitting_button',$
+              'refresh_fitting_button']
 activate_widget_list, Event, uname_list, activate_fitting_button
 END
 
