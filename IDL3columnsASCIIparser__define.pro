@@ -19,6 +19,9 @@
 ;    Parse the rest of the data into a structure
 ;    struct = myobj ->getData()
 ;
+;    Get the data sets in a number format (double)
+;    dataSet = myobj->getDataNbr()
+;
 ; OUTPUT:
 ;    help, comment
 ;    ------------------- returns:
@@ -46,6 +49,8 @@
 ;    Y               STRING    '127'                 ; y value
 ;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string
 ;                                                    ; data array of 3 columns
+;    help, dataSet
+;    dataSet          DOUBLE    = Array[3, 248]
 ;
 ; USING CLASS:
 ;    To make an instance called myobj:
@@ -223,8 +228,8 @@ end
 ;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
 
-  
-  
+
+
   ;get how many array we have here
   blk_line_index = WHERE(all_data EQ '', new_nbr)
   num_elnts = N_ELEMENTS(all_data)
@@ -254,6 +259,7 @@ pro populate_structure, all_data, MyStruct
   array_nbr   = 0
   i           = 0
   array_index = 0
+  my_data_array = strarr(1)
   
   WHILE (array_nbr NE new_nbr) DO BEGIN
     if i  ne num_elnts then begin
@@ -265,22 +271,31 @@ pro populate_structure, all_data, MyStruct
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
         array_index = 0
+        n = n_elements(my_data_array)/3
+        my_data_array = reform(my_data_array, 3, n, /OVERWRITE)
         data_structure[array_nbr].data = ptr_new(my_data_array)
         data_structure[array_nbr].bank = bank
         data_structure[array_nbr].x = x
         data_structure[array_nbr].y = y
         ++array_nbr
       ENDIF ELSE BEGIN
-        array = STRSPLIT(line,' ',/EXTRACT)
-        IF (N_ELEMENTS(array) GT 1) THEN BEGIN
-          IF (array_index EQ 0) THEN BEGIN
+        array = STRSPLIT(line,' ',/EXTRACT, COUNT=nbr)
+        CASE (array_index) OF
+          0: BEGIN
             my_data_array = [array[0],array[1],array[2]]
-            ++array_index
-          ENDIF ELSE BEGIN
-            my_data_array = [my_data_array,array[0],array[1],array[2]]
-          ENDELSE
-        ENDIF
+          END
+          ELSE: BEGIN
+            IF (nbr EQ 1) THEN BEGIN
+              my_data_array = [my_data_array,array[0],'','']
+            ENDIF ELSE BEGIN
+              my_data_array = $
+                [my_data_array,array[0],array[1],array[2]]
+            ENDELSE
+          END
+        ENDCASE
+        ++array_index
       ENDELSE
+      
     ENDIF else begin
       ;populate data_stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN
@@ -296,9 +311,10 @@ pro populate_structure, all_data, MyStruct
           temp = strsplit(line, /extract)
           x_all = strsplit(temp[1], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
           y_all = strsplit(temp[2], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
-          sigma_all = strsplit(temp[3]," '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+          sigma_all = strsplit(temp[3], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
         endif
       endif
+      
     endelse
     
     ++i
@@ -324,7 +340,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
- 
+
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
     xaxis:             '', $
@@ -343,7 +359,7 @@ FUNCTION IDL3columnsASCIIparser::getData
   blk_line_index = WHERE((all_data) EQ '', nbr)
   ;get our new interesting array of data
   all_data = all_data[blk_line_index[0]+1:*]
-    
+  
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
   
@@ -363,17 +379,88 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getAllTag
-  help, self.all_data, /heap_variables
+  ;help, self.all_data, /heap_variables
   output = readToBlank(*self.all_data)
   RETURN, output
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::CLEANUP
-ptr_free, self.all_data
-ptr_free, MyStruct.Data
-help, self.all_data
-print, 'clean!'
+FUNCTION IDL3columnsASCIIparser::getDataNbr, number
+  all_data = *self.all_data
+  blk_line_index = WHERE((all_data) EQ '', nbr)
+  ;get our new interesting array of data
+  all_data = all_data[blk_line_index[0]+1:*]
+  
+  
+  ;get how many array we have here
+  blk_line_index = WHERE(all_data EQ '', new_nbr)
+  num_elnts = N_ELEMENTS(all_data)
+  
+  if new_nbr ne 0 then begin
+    ;make sure the last one is not the last element of the array
+    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
+      --new_nbr
+    ENDIF
+  endif else begin
+    new_nbr = 1
+  endelse
+  
+  array_nbr = 0
+  i = 0
+  array_index = 0
+  output = ptrarr(new_nbr, /allocate_heap)
+  
+  
+  ;Extract the data and covert to double
+  WHILE (array_nbr NE new_nbr) DO BEGIN
+    if i  ne num_elnts then begin
+      line = all_data[i]
+    endif else begin
+      line = ''
+    endelse
+    
+    IF (~STRMATCH(line,'#*')) THEN BEGIN
+      IF (line EQ '') THEN BEGIN
+      
+        *output[array_nbr] = my_data_array
+        array_index = 0
+        
+        ++array_nbr
+      ENDIF ELSE BEGIN
+        array = double(STRSPLIT(line,' ',/EXTRACT, COUNT=nbr))
+        CASE (array_index) OF
+          0: my_data_array = [array[0],array[1],array[2]]
+          ELSE: BEGIN
+            IF (nbr EQ 1) THEN BEGIN
+              my_data_array = [my_data_array,array[0],'','']
+            ENDIF ELSE BEGIN
+              my_data_array = $
+                [my_data_array,array[0],array[1],array[2]]
+            ENDELSE
+          END
+        ENDCASE
+        ;help, my_data_array
+        ++array_index
+      ENDELSE
+    endif
+    i++
+  endwhile
+  if ~(number gt n_elements(output)-1) then begin
+    array = *output[number]
+    n = n_elements(array)/3
+    array = reform(array, 3, n, /OVERWRITE)
+    RETURN, array
+  endif else begin
+    print, "subscript out of range"
+    RETURN, 0
+  endelse
+  
+END
+
+;------------------------------------------------------------------------------
+pro IDL3columnsASCIIparser::CLEANUP
+  ptr_free, self.all_data
+;help, self.all_data, /heap_variables
 END
 
 ;------------------------------------------------------------------------------
