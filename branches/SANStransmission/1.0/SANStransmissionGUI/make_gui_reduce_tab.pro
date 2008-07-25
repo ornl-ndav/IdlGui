@@ -62,7 +62,7 @@ sGobutton = { size:      [XYoff[0],$
                           sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
                           455,30],$
               uname:     'go_data_reduction_button',$
-              value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
+              value:     '> >> >>> RUN DATA TRANSMISSION <<< << <',$
               sensitive: 0}
 
 ;- Command Line status --------------------------------------------------------
