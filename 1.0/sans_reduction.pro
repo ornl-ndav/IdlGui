@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.2'
-DEBUGGING   = 'yes' ;yes/no
+DEBUGGING   = 'no' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
 
@@ -192,17 +192,30 @@ MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
 ;Build Main Base ==============================================================
-MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                         UNAME        = 'MAIN_BASE',$
-                         SCR_XSIZE    = MainBaseSize[2],$
-                         SCR_YSIZE    = MainBaseSize[3],$
-                         XOFFSET      = MainBaseSize[0],$
-                         YOFFSET      = MainBaseSize[1],$
-                         TITLE        = MainBaseTitle,$
-                         SPACE        = 0,$
-                         XPAD         = 0,$
-                         YPAD         = 2)
-
+IF (DEBUGGING EQ 'yes') THEN BEGIN
+   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                            UNAME        = 'MAIN_BASE',$
+                            SCR_XSIZE    = MainBaseSize[2],$
+                            XOFFSET      = MainBaseSize[0],$
+                            YOFFSET      = MainBaseSize[1],$
+                            TITLE        = MainBaseTitle,$
+                            SPACE        = 0,$
+                            XPAD         = 0,$
+                            YPAD         = 2,$
+                            X_SCROLL_SIZE = 500,$
+                            Y_SCROLL_SIZE = 500)
+ENDIF ELSE BEGIN
+   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                            UNAME        = 'MAIN_BASE',$
+                            SCR_XSIZE    = MainBaseSize[2],$
+                            SCR_YSIZE    = MainBaseSize[3],$
+                            XOFFSET      = MainBaseSize[0],$
+                            YOFFSET      = MainBaseSize[1],$
+                            TITLE        = MainBaseTitle,$
+                            SPACE        = 0,$
+                            XPAD         = 0,$
+                            YPAD         = 2)
+ENDELSE
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
 

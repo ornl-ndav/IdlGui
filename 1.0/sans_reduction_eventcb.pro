@@ -124,6 +124,13 @@ IF (FullNexusName NE '') THEN BEGIN
           Event, $
           'output_file_name', $
           defaultReduceFileName
+;activate selection buttons 
+        uname_list = ['selection_tool_button',$
+                      'clear_selection_button',$
+                      'load_selection_label',$
+                      'selection_browse_button',$
+                      'selection_file_name_text_field']
+        activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
