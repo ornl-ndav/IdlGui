@@ -39,8 +39,9 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.3'
-DEBUGGING   = 'no' ;yes/no
-TESTING     = 'no'  
+DEBUGGING   = 'yes' ;yes/no
+TESTING     = 'no' 
+SCROLLING   = 'no' 
 ;works only on dev and pick up ~/bin/runenv before the command line
 
 ;define initial global values - these could be input via external
@@ -60,6 +61,7 @@ wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
 wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   sys_color_face_3d: INTARR(3),$
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
                    ROIcolor:        250,$
@@ -187,12 +189,12 @@ global = PTR_NEW ({version:         VERSION,$
                                  })
 
 MainBaseTitle  = 'SANS Data Reduction GUI'
-MainBaseSize   = [30,25,695+320,550+320]
+MainBaseSize   = [30,25,695+320,530+320]
 MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
 ;Build Main Base ==============================================================
-IF (DEBUGGING EQ 'yes') THEN BEGIN
+IF (SCROLLING EQ 'yes') THEN BEGIN
    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                             UNAME        = 'MAIN_BASE',$
                             SCR_XSIZE    = MainBaseSize[2],$
@@ -216,6 +218,11 @@ ENDIF ELSE BEGIN
                             XPAD         = 0,$
                             YPAD         = 2)
 ENDELSE
+
+;get the color of the GUI to hide the widget_draw that will label the draw
+sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
+(*global).sys_color_face_3d = sys_color.face_3d
+
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
 
@@ -224,6 +231,8 @@ make_gui_main_tab, MAIN_BASE, MainBaseSize
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+
 
 ;==============================================================================
 ;debugging version of program
@@ -260,7 +269,6 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 
-
 ;show tab #2 'REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
@@ -270,6 +278,26 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ENDIF
 ;==============================================================================
+
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
+
+plot, randomn(s,80), $
+  XRANGE     = [0,80],$
+  YRANGE     = [0,80],$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb(sys_color.face_3d),$
+  THICK      = 1, $
+  TICKLEN    = -0.015, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = 8,$
+  YTICKS      = 8,$
+  XMARGIN     = [5,5],$
+  /NODATA
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
