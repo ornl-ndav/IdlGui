@@ -180,6 +180,10 @@ IF (RunNumber NE 0) THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           full_nexus_name
+;put name in first tab
+        putTextFieldValue, Event, $
+          'data_nexus_file_name',$
+          full_nexus_name[0]
 ;predefined default reduce output file name
         defaultReduceFileName = getDefaultReduceFileName(full_nexus_name[0])
         putTextFieldValue, $

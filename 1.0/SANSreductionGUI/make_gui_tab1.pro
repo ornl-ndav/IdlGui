@@ -39,16 +39,24 @@ sTab1Base = { size  : MainTabSize,$
               title : TabTitles.tab1,$
               uname : 'base_tab1'}
 
+;- label draw -----------------------------------------------------------------
+sLabelDraw = { size: [0,0,700,700],$
+               uname: 'label_draw_uname'}
+
+;- nexus input ----------------------------------------------------------------
+sNexus = { size : [10,$
+                   sLabelDraw.size[1]+sLabelDraw.size[3]]}
+          
 ;- draw -----------------------------------------------------------------------
-sDraw = { size  : [0,0,640,640],$
+XYoff = [30,20]
+sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
           uname : 'draw_uname'}
 
-
 ;- selection ------------------------------------------------------------------
-XYoff = [5,0]
-sSelection = { size: [sDraw.size[0]+sDraw.size[2]+XYoff[0],$
+XYoff = [0,10]
+sSelection = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
                       XYoff[1],$
-                      360,$
+                      300,$
                       35],$
                value: 'ADVANCED SELECTION TOOL',$
                uname: 'selection_tool_button',$
@@ -69,7 +77,7 @@ sSelectionLabel = { size: [sSelectionFrame.size[0]+XYoff[0],$
 XYoff = [5,10] ;browse button
 sSelectionBrowse = { size: [sSelectionFrame.size[0]+XYoff[0],$
                             sSelectionFrame.size[1]+XYoff[1],$
-                            250],$
+                            193],$
                      value: 'BROWSE ...',$
                      uname: 'selection_browse_button',$
                      sensitive: 0}
@@ -77,14 +85,14 @@ XYoff = [0,0] ;preview button
 sSelectionPreview = { size: [sSelectionBrowse.size[0]+$
                              sSelectionBrowse.size[2]+XYoff[0],$
                              sSelectionBrowse.size[1]+XYoff[1],$
-                             102],$
+                             100],$
                       value: 'PREVIEW',$
                       uname: 'selection_preview_button',$
                       sensitive: 0}
 XYoff = [0,30] ;file name text field
 sSelectionFileName = { size: [sSelectionBrowse.size[0]+XYoff[0],$
                               sSelectionBrowse.size[1]+XYoff[1],$
-                              352],$
+                              295],$
                        value: '',$
                        uname: 'selection_file_name_text_field'}
 XYoff = [0,35] ;load selection button
@@ -106,9 +114,9 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            
 ;- X and Y position of cursor -------------------------------------------------
 XYoff = [0,597]
-XYbase = { size: [sDraw.size[0]+$
-                  sDraw.size[2]+XYoff[0],$
-                  sDraw.size[1]+XYoff[1],$
+XYbase = { size: [sLabelDraw.size[0]+$
+                  sLabelDraw.size[2]+XYoff[0],$
+                  sLabelDraw.size[1]+XYoff[1],$
                   80,40],$
            frame: 1,$
            uname: 'x_y_base'}
@@ -131,10 +139,6 @@ yValue = { size: [xValue.size[0]+XYoff[0],$
            value: '   ',$
            uname: 'y_value'}
 
-;- nexus input ----------------------------------------------------------------
-sNexus = { size : [0,$
-                   sDraw.size[1]+sDraw.size[3]+15]}
-          
 ;==============================================================================
 ;= BUILD GUI ==================================================================
 ;==============================================================================
@@ -148,6 +152,15 @@ wTab1Base = WIDGET_BASE(MAIN_TAB,$
                         SCR_YSIZE = sTab1Base.size[3],$
                         TITLE     = sTab1Base.title)
 
+;------------------------------------------------------------------------------
+;- nexus input ----------------------------------------------------------------
+sNexus = {MainBase:    wTab1Base,$
+          xoffset:     sNexus.size[0],$
+          yoffset:     sNexus.size[1],$
+          instrument:  'SANS',$
+          facility:    'LENS'}
+nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
+
 ;- draw -----------------------------------------------------------------------
 wDraw = WIDGET_DRAW(wTab1Base,$
                     UNAME     = sDraw.uname,$
@@ -156,6 +169,14 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     SCR_XSIZE = sDraw.size[2],$
                     SCR_YSIZE = sDraw.size[3],$
                     /MOTION_EVENTS)
+
+;- Label draw -----------------------------------------------------------------
+wLabelDraw = WIDGET_DRAW(wTab1Base,$
+                         UNAME     = sLabelDraw.uname,$
+                         XOFFSET   = sLabelDraw.size[0],$
+                         YOFFSET   = sLabelDraw.size[1],$
+                         SCR_XSIZE = sLabelDraw.size[2],$
+                         SCR_YSIZE = sLabelDraw.size[3])
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
@@ -262,15 +283,6 @@ wYvalue = WIDGET_LABEL(wXYbase,$
                        YOFFSET = yValue.size[1],$
                        VALUE   = yValue.value,$
                        UNAME   = yValue.uname)
-
-;------------------------------------------------------------------------------
-;- nexus input ----------------------------------------------------------------
-sNexus = {MainBase:    wTab1Base,$
-          xoffset:     sNexus.size[0],$
-          yoffset:     sNexus.size[1],$
-          instrument:  'SANS',$
-          facility:    'LENS'}
-nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
 
 
 END

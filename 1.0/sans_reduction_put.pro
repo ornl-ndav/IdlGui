@@ -44,7 +44,7 @@ END
 
 ;==============================================================================
 PRO putTab1NexusFileName, Event, FileName
-putTextFieldValue, Event, 'archived_text_field', FileName
+putTextFieldValue, Event, 'data_nexus_file_name', FileName
 END
 
 ;==============================================================================
