@@ -122,12 +122,15 @@ END
 PRO ExclusionRegionCircle, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+IF ((*global).data_nexus_file_name EQ '') THEN RETURN
+
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
 struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
 
 coeff = FLOAT((*global).DrawXcoeff)
+PixelSelectedArray = INTARR(80,80)
 
 ;get x_center, y_center
 x_center = getTextFieldValue(Event,'x_center_value')
@@ -138,6 +141,7 @@ Display_y_center = FLOAT(y_center) * coeff
 ;get R1
 r1 = getTextFieldValue(Event,'r1_radii')
 DisplayR1 = FLOAT(r1) * coeff
+
 IF (getCWBgroupValue(Event,'radii_r1_group') EQ 0) THEN BEGIN
     bR1Inside = 1
 ENDIF ELSE BEGIN
@@ -156,82 +160,94 @@ ENDELSE
 ;get type of selection
 selection_type = (*global).exclusion_type_index
 
+IF (DisplayR1 NE 0) THEN BEGIN    
 ;work on R1
-oROI = OBJ_NEW('myIDLgrROI',$
-               COLOR = 200,$
-               STYLE = 0)
-oROI->setInsideFlag, bR1Inside
+    oROI = OBJ_NEW('myIDLgrROI',$
+                   COLOR = 200,$
+                   STYLE = 0)
+    oROI->setInsideFlag, bR1Inside
+    
+    NewX = FLTARR(1)
+    NewY = FLTARR(1)
+    CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR1, NewX, NewY
+    newZ = INTARR(N_ELEMENTS(NewX))
+    
+    oROI->GetProperty, N_VERTS=nVerts
+    oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+    oROI->SetProperty, STYLE=style
+    
+    CreateArrayOfPixelSelected, $
+      PixelSelectedArray,$
+      oROI,$
+      selection_type,$
+      bR1Inside
 
-NewX = FLTARR(1)
-NewY = FLTARR(1)
-CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR1, NewX, NewY
-newZ = INTARR(N_ELEMENTS(NewX))
+ENDIF
 
-oROI->GetProperty, N_VERTS=nVerts
-oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
-oROI->SetProperty, STYLE=style
-
-PixelSelectedArray = INTARR(80,80)
-
-CreateArrayOfPixelSelected, $
-  PixelSelectedArray,$
-  oROI,$
-  selection_type,$
-  bR1Inside
-
+IF (DisplayR2 NE 0) THEN BEGIN
+    
 ;work on R2
-oROI = OBJ_NEW('myIDLgrROI',$
-               COLOR = 200,$
-               STYLE = 0)
-oROI->setInsideFlag, bR2Inside
-
-NewX = FLTARR(1)
-NewY = FLTARR(1)
-CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR2, NewX, NewY
-newZ = INTARR(N_ELEMENTS(NewX))
-
-oROI->GetProperty, N_VERTS=nVerts
-oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
-oROI->SetProperty, STYLE=style
-
-CreateArrayOfPixelSelected, $
-  PixelSelectedArray,$
-  oROI,$
-  selection_type,$
-  bR2Inside
+    oROI = OBJ_NEW('myIDLgrROI',$
+                   COLOR = 200,$
+                   STYLE = 0)
+    oROI->setInsideFlag, bR2Inside
+    
+    NewX = FLTARR(1)
+    NewY = FLTARR(1)
+    CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR2, NewX, NewY
+    newZ = INTARR(N_ELEMENTS(NewX))
+    
+    oROI->GetProperty, N_VERTS=nVerts
+    oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+    oROI->SetProperty, STYLE=style
+    
+    CreateArrayOfPixelSelected, $
+      PixelSelectedArray,$
+      oROI,$
+      selection_type,$
+      bR2Inside
+    
+ENDIF
 
 ;refresh plot
 refresh_main_plot, Event
 
-x_coeff = coeff
-y_coeff = coeff
-color   = 250
-FOR i=0,(80L-1) DO BEGIN
-    FOR j=0,(80L-1) DO BEGIN
-        IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
-            plots, i*x_coeff, j*x_coeff, $
-              /DEVICE, $
-              COLOR=color
-            plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
-              /CONTINUE, $
-              COLOR=color
-            plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
-              /CONTINUE, $
-              COLOR=color
-            plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
-              /CONTINUE, $
-              COLOR=color
-            plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
-              /CONTINUE, $
-              COLOR=color
-        ENDIF
+IF (DisplayR1 NE 0 OR $
+    DisplayR2 NE 0) THEN BEGIN
+    
+    x_coeff = coeff
+    y_coeff = coeff
+    color   = 250
+    FOR i=0,(80L-1) DO BEGIN
+        FOR j=0,(80L-1) DO BEGIN
+            IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+                plots, i*x_coeff, j*x_coeff, $
+                  /DEVICE, $
+                  COLOR=color
+                plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                  /CONTINUE, $
+                  COLOR=color
+                plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+                  /CONTINUE, $
+                  COLOR=color
+                plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+                  /CONTINUE, $
+                  COLOR=color
+                plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+                  /CONTINUE, $
+                  COLOR=color
+            ENDIF
+        ENDFOR
     ENDFOR
-ENDFOR
-
-OBJ_DESTROY, oROI
+    
+    OBJ_DESTROY, oROI
+    
+ENDIF
 
 ;turn off hourglass
 widget_control,hourglass=0
+
+
 
 END
 
