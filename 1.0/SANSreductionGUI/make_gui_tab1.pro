@@ -557,22 +557,26 @@ wButton1 = WIDGET_BUTTON(wSelectionTypeBase,$
                          VALUE   = sButton1.value,$
                          TOOLTIP = sButton1.tooltip,$
                          UNAME   = sButton1.uname,$
-                         /BITMAP)
+                         /BITMAP,$
+                         /NO_RELEASE)
 wButton2 = WIDGET_BUTTON(wSelectionTypeBase,$
                          VALUE   = sButton2.value,$
                          TOOLTIP = sButton2.tooltip,$
                          UNAME   = sButton2.uname,$
-                         /BITMAP)
+                         /BITMAP,$
+                         /NO_RELEASE)
 wButton3 = WIDGET_BUTTON(wSelectionTypeBase,$
                          VALUE   = sButton3.value,$
                          TOOLTIP = sButton3.tooltip,$
                          UNAME   = sButton3.uname,$
-                         /BITMAP)
+                         /BITMAP,$
+                         /NO_RELEASE)
 wButton4 = WIDGET_BUTTON(wSelectionTypeBase,$
                          VALUE   = sButton4.value,$
                          TOOLTIP = sButton4.tooltip,$
                          UNAME   = sButton4.uname,$
-                         /BITMAP)
+                         /BITMAP,$
+                         /NO_RELEASE)
 
 WIDGET_CONTROL,  WIDGET_INFO(wSelectionTypeBase, /CHILD), /SET_BUTTON
 

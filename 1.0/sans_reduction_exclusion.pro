@@ -118,6 +118,9 @@ END
 PRO ExclusionRegionCircle, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
 
 coeff = FLOAT((*global).DrawXcoeff)
@@ -165,10 +168,34 @@ oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
 oROI->SetProperty, STYLE=style
 
 PixelSelectedArray = INTARR(80,80)
+
 CreateArrayOfPixelSelected, PixelSelectedArray,$
   oROI,$
   selection_type,$
   bR1Inside
+
+;work on R2
+oROI = OBJ_NEW('myIDLgrROI',$
+               COLOR = 200,$
+               STYLE = 0)
+oROI->setInsideFlag, bR2Inside
+
+NewX = FLTARR(1)
+NewY = FLTARR(1)
+CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR2, NewX, NewY
+newZ = INTARR(N_ELEMENTS(NewX))
+
+oROI->GetProperty, N_VERTS=nVerts
+oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+oROI->SetProperty, STYLE=style
+
+CreateArrayOfPixelSelected, PixelSelectedArray,$
+  oROI,$
+  selection_type,$
+  bR2Inside
+
+;refresh plot
+refresh_main_plot, Event
 
 x_coeff = coeff
 y_coeff = coeff
@@ -195,6 +222,8 @@ FOR i=0,(80L-1) DO BEGIN
     ENDFOR
 ENDFOR
 
+;turn off hourglass
+widget_control,hourglass=0
 
 END
 

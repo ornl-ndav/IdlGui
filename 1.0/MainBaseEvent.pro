@@ -112,16 +112,20 @@ CASE Event.id OF
 
 ;- Type of selection
     WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_in'): BEGIN
-        exclusion_type, Event, INDEX=0
+        exclusion_type, Event, INDEX=0 ;_exclusion
+        ExclusionRegionCircle, Event ;_exclusion
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_out'): BEGIN
-        exclusion_type, Event, INDEX=1
+        exclusion_type, Event, INDEX=1 ;_exclusion
+        ExclusionRegionCircle, Event ;_exclusion
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_in'): BEGIN
-        exclusion_type, Event, INDEX=2
+        exclusion_type, Event, INDEX=2 ;_exclusion
+        ExclusionRegionCircle, Event ;_exclusion
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_out'): BEGIN
-        exclusion_type, Event, INDEX=3
+        exclusion_type, Event, INDEX=3 ;_exclusion
+        ExclusionRegionCircle, Event ;_exclusion
     END
 
 ;- Clear Selection Button -----------------------------------------------------
