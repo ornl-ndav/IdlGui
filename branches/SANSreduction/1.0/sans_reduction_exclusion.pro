@@ -40,3 +40,22 @@ uname_array = ['x_center_value',$
                'r2_radii']
 putArrayTextFieldValue, Event, uname_array, ''
 END
+
+;------------------------------------------------------------------------------
+PRO ExclusionRegionCircle, Event
+
+;get x_center, y_center
+x_center = getTextFieldValue(Event,'x_center_value')
+y_center = getTextFieldValue(Event,'y_center_value')
+
+;get R1
+r1 = getTextFieldValue(Event,'r1_radii')
+bR1Inside = getCWBgroupValue(Event,'radii_r1_group')
+
+;get R2
+r2 = getTextFieldValue(Event,'r2_radii')
+bR2Inside = getCWBgroupValue(Event,'radii_r2_group')
+
+
+
+END
