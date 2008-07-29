@@ -312,7 +312,7 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            sSelection.size[2]],$
                     value: 'RESET SELECTION',$
                     uname: 'clear_selection_button',$
-                    sensitive: 0}
+                    sensitive: 1}
                            
 ;- X and Y position of cursor -------------------------------------------------
 XYoff = [0,597]

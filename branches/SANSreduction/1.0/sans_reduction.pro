@@ -273,16 +273,16 @@ IF (DEBUGGING EQ 'yes' AND $
 ;exclusion tool
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
     WIDGET_CONTROL, id, $
-      SET_VALUE='37.5'
+      SET_VALUE='37.25'
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='y_center_value')
     WIDGET_CONTROL, id, $
-      SET_VALUE='41.375'
+      SET_VALUE='41.625'
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r1_radii')
     WIDGET_CONTROL, id, $
-      SET_VALUE='20'
+      SET_VALUE='5'
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r2_radii')
     WIDGET_CONTROL, id, $
-      SET_VALUE='40'
+      SET_VALUE='0'
 
 ;show tab #2 'REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
