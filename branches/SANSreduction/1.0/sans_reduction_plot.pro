@@ -131,3 +131,19 @@ result = plotData(Event, DataArray, X, Y)
 widget_control,hourglass=0
 
 END
+
+;------------------------------------------------------------------------------
+PRO refresh_main_plot, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;clear previous selection
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+WIDGET_CONTROL, id, GET_VALUE = id_value
+WSET, id_value
+;retrieve parameters from global pointer
+X         = (*global).X
+IF (X NE 0) THEN BEGIN
+    DataArray = (*(*global).DataArray)
+    Y         = (*global).Y
+ENDIF
+result = plotData(Event, DataArray, X, Y)
+END
