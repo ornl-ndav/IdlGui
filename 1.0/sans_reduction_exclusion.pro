@@ -402,27 +402,19 @@ END
 ;------------------------------------------------------------------------------
 ;This procedure create the ROI file 
 PRO CreateROIfileFromExclusionArray, file_name, PixelExcludedArray
-
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
-
 ;get ROI array
 pixel_excluded = PixelExcludedArray
 sz1 = (size(pixel_excluded))(1) ;X
 sz2 = (size(pixel_excluded))(2) ;Y
-
 error = 0
-;CATCH, error
-
+CATCH, error
 IF (error NE 0) then begin
-
     CATCH, /CANCEL
-
 ENDIF ELSE BEGIN
-    
 ;open output file
     openw, 1, file_name
-    
     index_array = WHERE(pixel_excluded EQ 0, nbr)
     FOR i=0,(nbr-1) DO BEGIN
         y    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
@@ -431,15 +423,11 @@ ENDIF ELSE BEGIN
         text = bank + x + '_' + y
         printf, 1, text
     ENDFOR
-    
     close, 1
     free_lun, 1
-
 ENDELSE
-
 ;turn off hourglass
 widget_control,hourglass=0
-
 END
 
 ;------------------------------------------------------------------------------
