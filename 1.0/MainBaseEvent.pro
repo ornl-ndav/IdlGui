@@ -100,11 +100,15 @@ CASE Event.id OF
     END
 
 ;-Exclusion Region Selection Tool ---------------------------------------------
+;- Plot button 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_exclusion_region'): BEGIN
+        ExclusionRegionCircle, Event ;_exclusion
+    END
+
 ;- Clear Input Boxed
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_exclusion_input_boxes'): BEGIN
         ClearInputBoxes, Event ;_exclusion
     END
-
 
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN

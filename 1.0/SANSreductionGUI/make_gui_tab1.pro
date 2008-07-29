@@ -110,7 +110,7 @@ sExclusionBase = { size: [sLabelDraw.size[0]+$
                           sLabelDraw.size[2]+XYoff[0],$
                           sSelectionFrame.size[1]+$
                           sSelectionFrame.size[3]+XYoff[1],$
-                          300,150],$
+                          300,195],$
                    frame: 1,$
                    uname: 'exclusion_base'}
 
@@ -210,6 +210,55 @@ sRadiiR2group = { size: [XYoff[0],$
                   list : ['Inside','Outside'],$
                   uname: 'radii_r2_group',$
                   value: 0.0}
+
+;- Type of selection button ---------------------------------------------------
+XYoff = [115,45]
+sExclusionTypeBase = { size: [sRadiiLabel.size[0]+XYoff[0],$
+                              sRadiiR2Value.size[1]+XYoff[1],$
+                              165],$
+                       uname: 'exclusion_type_base',$
+                       frame: 0}
+                       
+XYoff = [0,5]
+sTypeLabel = { size: [sradiiLabel.size[0]+XYoff[0],$
+                      sExclusionTypeBase.size[1]+XYoff[1]],$
+               value: 'Type of Selection:'}
+
+XYoff = [-3,-9]
+SFrame = { size: [sRadiiLabel.size[0]+XYoff[0],$
+                  sTypeLabel.size[1]+XYoff[1],$
+                  285,35],$
+           frame: 1,$
+           value: ''}
+
+tooltip_array = ['Detector Pixel is part of the ' + $
+                 'selection if at least one Screen Pixel is touching ' + $
+                 'the selection',$
+                 'Detector Pixel is part of the ' + $
+                 'selection only if all the Screen Pixel are touching ' + $
+                 'the selection',$
+                 'Detector Pixel is part of the ' + $
+                 'selection if at least half of the Screen Pixels are ' + $
+                 'part of the selection.',$
+                 'Detector Pixel is part of the ' + $
+                 'selection if more than half of the Screen Pixels are ' + $
+                 'part of the selection.']
+
+sButton1 = { uname:   'exclusion_half_in',$
+             tooltip: tooltip_array[0],$
+             value:   'images/selection_half_in.bmp'}
+                    
+sButton2 = { uname:   'exclusion_half_out',$
+             tooltip: tooltip_array[1],$
+             value:   'images/selection_half_out.bmp'}
+
+sButton3 = { uname:   'exclusion_outside_in',$
+             tooltip: tooltip_array[2],$
+             value:   'images/selection_outside_in.bmp'}
+
+sButton4 = { uname:   'exclusion_outside_out',$
+             tooltip: tooltip_array[3],$
+             value:   'images/selection_outside_out.bmp'}
 
 ;- Clear Selection ------------------------------------------------------------
 XYoff = [0,50]
@@ -485,6 +534,56 @@ wRadiiR2Group = CW_BGROUP(wRadiiR2Base,$
                           UNAME     = sRadiiR2group.uname,$
                           /NO_RELEASE,$
                           /EXCLUSIVE)
+
+;Type of selection base and buttons -------------------------------------------
+wSelectionTypeBase = WIDGET_BASE(wExclusionBase,$
+                                 SPACE     = 20,$
+                                 UNAME     = sExclusionTypeBase.uname,$
+                                 XOFFSET   = sExclusionTypeBase.size[0],$
+                                 YOFFSET   = sExclusionTypeBase.size[1],$
+                                 SCR_XSIZE = sExclusionTypeBase.size[2],$
+                                 FRAME     = sExclusionTypeBase.frame,$
+                                 /EXCLUSIVE,$
+                                 /TOOLBAR,$
+                                 /ROW)
+
+;label
+wTypeLabel = WIDGET_LABEL(wExclusionBase,$
+                          XOFFSET = sTypeLabel.size[0],$
+                          YOFFSET = sTypeLabel.size[1],$
+                          VALUE   = sTypeLabel.value)
+
+wButton1 = WIDGET_BUTTON(wSelectionTypeBase,$
+                         VALUE   = sButton1.value,$
+                         TOOLTIP = sButton1.tooltip,$
+                         UNAME   = sButton1.uname,$
+                         /BITMAP)
+wButton2 = WIDGET_BUTTON(wSelectionTypeBase,$
+                         VALUE   = sButton2.value,$
+                         TOOLTIP = sButton2.tooltip,$
+                         UNAME   = sButton2.uname,$
+                         /BITMAP)
+wButton3 = WIDGET_BUTTON(wSelectionTypeBase,$
+                         VALUE   = sButton3.value,$
+                         TOOLTIP = sButton3.tooltip,$
+                         UNAME   = sButton3.uname,$
+                         /BITMAP)
+wButton4 = WIDGET_BUTTON(wSelectionTypeBase,$
+                         VALUE   = sButton4.value,$
+                         TOOLTIP = sButton4.tooltip,$
+                         UNAME   = sButton4.uname,$
+                         /BITMAP)
+
+WIDGET_CONTROL,  WIDGET_INFO(wSelectionTypeBase, /CHILD), /SET_BUTTON
+
+;frame
+wFrame = WIDGET_LABEL(wExclusionBase,$
+                      XOFFSET   = sFrame.size[0],$
+                      YOFFSET   = sFrame.size[1],$
+                      SCR_XSIZE = sFrame.size[2],$
+                      SCR_YSIZE = sFrame.size[3],$
+                      VALUE     = sFrame.value,$
+                      FRAME     = sFrame.frame)
 
 ;- Clear Selection ------------------------------------------------------------
 wClearSelection = WIDGET_BUTTON(wTab1Base,$
