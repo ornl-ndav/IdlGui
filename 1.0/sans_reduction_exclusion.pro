@@ -32,6 +32,22 @@
 ;
 ;==============================================================================
 
+;This method of the new class myIDLgrROI returns the inside_flag 
+;1 means the ROI is inside the selection
+;0 means the ROI is outside the selection
+FUNCTION myIDLgrROI::getInsideFlag
+RETURN, self.inside_flag
+END
+
+;==============================================================================
+;This method of the new class myIDLgrROI sets the inside_flag
+;1 means the ROI is inside the selection
+;0 means the ROI is outside the selection
+PRO myIDLgrROI::setInsideFlag, value
+self.inside_flag = value
+END
+
+;------------------------------------------------------------------------------
 ;This procedure clears the Exclusion Region Selection Tool fields
 PRO ClearInputBoxes, Event 
 uname_array = ['x_center_value',$
@@ -42,20 +58,149 @@ putArrayTextFieldValue, Event, uname_array, ''
 END
 
 ;------------------------------------------------------------------------------
+;This procedure will go screen pixel by screen pixel to check if the
+;pixel is part of the selection and the result will depend on the
+;settings of the selection
+PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
+                                 oROI,$
+                                 CurrentSelectionSettings,$
+                                 insideSelectionType
+
+tmp_array = INTARR(80,80)
+Xsize = 320*2
+Ysize = 320*2
+FOR i=0,(Xsize-1) DO BEGIN
+    FOR j=0,(Ysize-1) DO BEGIN
+        IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
+            IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
+                x = FIX(i/8)
+                y = FIX(j/8)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                x = FIX(i/8)
+                y = FIX(j/8)
+                ++tmp_array[x,y]
+            ENDIF
+        ENDELSE
+    ENDFOR
+ENDFOR
+
+CASE (CurrentSelectionSettings) OF
+;half in
+    0: BEGIN
+        IndexArray = WHERE(tmp_array GE 32) 
+    END
+;half out
+    1: BEGIN
+        IndexArray = WHERE(tmp_array GT 32) 
+    END
+;out in
+    2: BEGIN
+        IndexArray = WHERE(tmp_array GT 0) 
+    END
+;out out
+    3: BEGIN
+        IndexArray = WHERE(tmp_array EQ 64) 
+    END
+    ELSE:
+ENDCASE
+
+;only if IndexArray is not empty
+IF (SIZE(IndexArray,/N_DIMENSION) EQ 1) THEN BEGIN 
+    PixelSelectedArray(IndexArray) = 1
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
 PRO ExclusionRegionCircle, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
+
+coeff = FLOAT((*global).DrawXcoeff)
 
 ;get x_center, y_center
 x_center = getTextFieldValue(Event,'x_center_value')
+Display_x_center = FLOAT(x_center) * coeff
 y_center = getTextFieldValue(Event,'y_center_value')
+Display_y_center = FLOAT(y_center) * coeff
 
 ;get R1
 r1 = getTextFieldValue(Event,'r1_radii')
-bR1Inside = getCWBgroupValue(Event,'radii_r1_group')
+DisplayR1 = FLOAT(r1) * coeff
+IF (getCWBgroupValue(Event,'radii_r1_group') EQ 0) THEN BEGIN
+    bR1Inside = 1
+ENDIF ELSE BEGIN
+    bR1Inside = 0
+ENDELSE
 
 ;get R2
 r2 = getTextFieldValue(Event,'r2_radii')
-bR2Inside = getCWBgroupValue(Event,'radii_r2_group')
+DisplayR2 = FLOAT(r2) * coeff
+IF (getCWBgroupValue(Event,'radii_r2_group') EQ 0) THEN BEGIN
+    bR2Inside = 1
+ENDIF ELSE BEGIN
+    bR2Inside = 0
+ENDELSE
+
+;get type of selection
+selection_type = (*global).exclusion_type_index
+
+;work on R1
+oROI = OBJ_NEW('myIDLgrROI',$
+               COLOR = 200,$
+               STYLE = 0)
+oROI->setInsideFlag, bR1Inside
+
+NewX = FLTARR(1)
+NewY = FLTARR(1)
+CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR1, NewX, NewY
+newZ = INTARR(N_ELEMENTS(NewX))
+
+oROI->GetProperty, N_VERTS=nVerts
+oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+oROI->SetProperty, STYLE=style
+
+PixelSelectedArray = INTARR(80,80)
+CreateArrayOfPixelSelected, PixelSelectedArray,$
+  oROI,$
+  selection_type,$
+  bR1Inside
+
+x_coeff = coeff
+y_coeff = coeff
+color   = 250
+FOR i=0,(80L-1) DO BEGIN
+    FOR j=0,(80L-1) DO BEGIN
+        IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+            plots, i*x_coeff, j*x_coeff, $
+              /DEVICE, $
+              COLOR=color
+            plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+        ENDIF
+    ENDFOR
+ENDFOR
 
 
+END
 
+;------------------------------------------------------------------------------
+;Type of selection (0:half_in, 1:half_out, 2:outside_in, 3:outside_out)
+PRO exclusion_type, Event, INDEX=index
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*global).exclusion_type_index = index
 END

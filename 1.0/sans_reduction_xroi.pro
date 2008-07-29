@@ -291,12 +291,8 @@ if (nROIs gt 0) then begin
 ;                PixelSelectedArray += tmpPixelSelectedArray
 ;                index = WHERE(PixelSelectedArray GT 0)
                 index = WHERE(tmpPixelSelectedArray GT 0)
-                print, index
                 PixelSelectedArray[index] = 1
-                
 
-                print
-                print
             ENDFOR
             
         ENDELSE

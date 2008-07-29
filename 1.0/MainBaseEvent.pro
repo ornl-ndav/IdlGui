@@ -110,6 +110,20 @@ CASE Event.id OF
         ClearInputBoxes, Event ;_exclusion
     END
 
+;- Type of selection
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_in'): BEGIN
+        exclusion_type, Event, INDEX=0
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_out'): BEGIN
+        exclusion_type, Event, INDEX=1
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_in'): BEGIN
+        exclusion_type, Event, INDEX=2
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_out'): BEGIN
+        exclusion_type, Event, INDEX=3
+    END
+
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
         clear_selection_tool, Event ;_eventcb

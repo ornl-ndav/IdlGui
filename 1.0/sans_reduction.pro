@@ -62,6 +62,7 @@ wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
                    sys_color_face_3d: INTARR(3),$
+                   exclusion_type_index: 0,$ ;0,1,2 or 3
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
                    ROIcolor:        250,$
@@ -268,6 +269,20 @@ IF (DEBUGGING EQ 'yes' AND $
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
+
+;exclusion tool
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='37.5'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='y_center_value')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='41.375'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r1_radii')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='20'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r2_radii')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='40'
 
 ;show tab #2 'REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
