@@ -31,26 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
-IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
-    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
-    IF (OBJ_VALID(iObject)) THEN BEGIN
-        RunNumber = iObject->getRunNumber()
-    ENDIF ELSE BEGIN
-        RunNumber = ''
-    ENDELSE
-ENDIF
-default_name = 'SANS' 
-IF (RunNumber NE '') THEN BEGIN
-    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-ENDIF
-DateIso = GenerateIsoTimeStamp()
-default_name += '_' + DateIso
-default_name += '.txt'
-RETURN, default_name
-END
 
-;------------------------------------------------------------------------------
 PRO BrowseOutputFolder, Event
 path  = getButtonValue(Event, 'output_folder')
 title = 'Select an output folder'

@@ -80,3 +80,48 @@ IF ((*global).data_nexus_file_name NE '') THEN BEGIN
     putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
 ENDIF
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+        RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+        RunNumber = ''
+    ENDELSE
+ENDIF
+default_name = 'SANS' 
+IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+ENDIF
+DateIso = GenerateIsoTimeStamp()
+default_name += '_' + DateIso
+default_name += '.txt'
+RETURN, default_name
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultROIFileName, Event, FullFileName, RunNumber = RunNumber
+IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+        RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+        RunNumber = ''
+    ENDELSE
+ENDIF
+default_name = 'SANS' 
+IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+ENDIF
+DateIso = GenerateIsoTimeStamp()
+default_name += '_' + DateIso
+default_name += 'ROI.dat
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+roi_path = (*global).selection_path
+default_name = roi_path + default_name
+
+RETURN, default_name
+END

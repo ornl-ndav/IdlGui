@@ -25,6 +25,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run sans_reduction_time.pro
 .run IDLgetMetadata__define.pro
 .run sans_reduction_put.pro
 .run sans_reduction_get.pro
@@ -32,7 +33,6 @@ cd, CurrentFolder
 .run IDLgetNexusData__define.pro
 .run sans_reduction_plot.pro
 .run sans_reduction_gui.pro
-.run sans_reduction_time.pro
 .run sans_reduction_xroi.pro
 .run sans_reduction_selection.pro
 .run sans_reduction_exclusion.pro
