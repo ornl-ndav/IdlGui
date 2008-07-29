@@ -54,6 +54,14 @@ CASE Event.id OF
 ;- Main Plot ------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
         getXYposition, Event ;_get
+        IF (Event.press EQ 1) THEN BEGIN
+            putTextFieldValue, Event, $
+              'x_center_value', $
+              STRCOMPRESS(Event.x/8.)
+            putTextFieldValue, Event, $
+              'y_center_value', $
+              STRCOMPRESS(Event.y/8.)
+        ENDIF
     END
 
 ;- Run Number cw_field --------------------------------------------------------
@@ -90,6 +98,13 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
         LoadPlotSelection, Event ;_selection
     END
+
+;-Exclusion Region Selection Tool ---------------------------------------------
+;- Clear Input Boxed
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_exclusion_input_boxes'): BEGIN
+        ClearInputBoxes, Event ;_exclusion
+    END
+
 
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
