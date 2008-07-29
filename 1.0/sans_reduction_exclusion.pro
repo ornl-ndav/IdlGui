@@ -212,6 +212,8 @@ ENDIF
 ;refresh plot
 refresh_main_plot, Event
 
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+
 IF (DisplayR1 NE 0 OR $
     DisplayR2 NE 0) THEN BEGIN
     
@@ -246,8 +248,6 @@ ENDIF
 
 ;turn off hourglass
 widget_control,hourglass=0
-
-
 
 END
 
@@ -332,5 +332,126 @@ oROI->SetProperty, STYLE=style
 draw_roi, oROI, /line_fill, thick=2, linestyle=0, orientation=315,/device
 
 OBJ_DESTROY, oROI
+
+END
+
+;------------------------------------------------------------------------------
+PRO SaveAsExclusionRoi, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve infos
+extension  = (*global).selection_extension
+filter     = (*global).selection_filter
+title      = (*global).selection_title
+path       = (*global).selection_path
+
+RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+                              FILTER            = filter,$
+                              GET_PATH          = new_path,$
+                              PATH              = path,$
+                              TITLE             = title,$
+                              /READ,$
+                              /MUST_EXIST)
+
+IF (RoiFileName NE '') THEN BEGIN
+    length = 35
+    folder = FILE_DIRNAME(RoiFileName,/MARK_DIRECTORY)
+    (*global).selection_path = folder
+    ;display only the last part of path
+    sz = STRLEN(folder)
+    IF (sz GT length) THEN BEGIN
+        folder = '... ' + STRMID(folder,sz-length,length)
+    ENDIF
+    putNewButtonValue, Event, 'save_roi_folder_button',folder
+    file   = FILE_BASENAME(RoiFileName)
+    putTextFieldValue, Event, 'save_roi_text_field', file
+
+;create roi file
+    SaveExclusionFile, Event
+
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO SaveExclusionRoiFolderButton, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve infos
+path  = (*global).selection_path
+title = 'Select a Folder' 
+folder = DIALOG_PICKFILE(GET_PATH          = new_path,$
+                         PATH              = path,$
+                         TITLE             = title,$
+                         /DIRECTORY,$
+                         /READ,$
+                         /MUST_EXIST)
+
+IF (folder NE '') THEN BEGIN
+    (*global).selection_path = folder
+    length = 35
+;display only the last part of path
+    sz = STRLEN(folder)
+    IF (sz GT length) THEN BEGIN
+        folder = '... ' + STRMID(folder,sz-length,length)
+    ENDIF
+    putNewButtonValue, Event, 'save_roi_folder_button',folder
+ENDIF
+END
+
+;------------------------------------------------------------------------------
+;This procedure create the ROI file 
+PRO CreateROIfileFromExclusionArray, file_name, PixelExcludedArray
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;get ROI array
+pixel_excluded = PixelExcludedArray
+sz1 = (size(pixel_excluded))(1) ;X
+sz2 = (size(pixel_excluded))(2) ;Y
+
+error = 0
+;CATCH, error
+
+IF (error NE 0) then begin
+
+    CATCH, /CANCEL
+
+ENDIF ELSE BEGIN
+    
+;open output file
+    openw, 1, file_name
+    
+    index_array = WHERE(pixel_excluded EQ 0, nbr)
+    FOR i=0,(nbr-1) DO BEGIN
+        y    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
+        x    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
+        bank = 'bank1_'
+        text = bank + x + '_' + y
+        printf, 1, text
+    ENDFOR
+    
+    close, 1
+    free_lun, 1
+
+ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+
+END
+
+;------------------------------------------------------------------------------
+PRO SaveExclusionFile, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+folder         = (*global).selection_path
+file_name      = getTextfieldValue(Event,'save_roi_text_field')
+full_file_name = folder + file_name
+
+PixelExcludedArray = (*(*global).RoiPixelArrayExcluded)
+
+CreateROIfileFromExclusionArray, full_file_name, PixelExcludedArray
 
 END

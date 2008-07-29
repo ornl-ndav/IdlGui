@@ -133,6 +133,23 @@ CASE Event.id OF
         ExclusionRegionCircle, Event ;_exclusion
     END
 
+;- SAVE AS ...
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
+        SaveAsExclusionRoi, Event  ;_exclusion
+    END
+
+;- SAVE 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
+        SaveExclusionFile, Event ;_exclusion
+    END
+
+;- SAVE AS folder button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_folder_button'): BEGIN
+        SaveExclusionRoiFolderButton, Event ;_exclusion
+    END    
+
+;-END of Exclusion Region Selection Tool --------------------------------------
+
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
         clear_selection_tool, Event ;_eventcb
