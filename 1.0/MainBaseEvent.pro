@@ -148,6 +148,16 @@ CASE Event.id OF
         SaveExclusionRoiFolderButton, Event ;_exclusion
     END    
 
+;- ROI text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_text_field'): BEGIN
+        SaveRoiTextFieldInteraction, Event ;_exclusion
+    END    
+
+;- Preview Roi button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_roi_exclusion_file'): BEGIN
+        PreviewRoiExclusionFile, Event ;_exclusion
+    END    
+
 ;-END of Exclusion Region Selection Tool --------------------------------------
 
 ;- Clear Selection Button -----------------------------------------------------

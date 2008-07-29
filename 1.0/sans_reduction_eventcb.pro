@@ -125,11 +125,10 @@ IF (FullNexusName NE '') THEN BEGIN
           'output_file_name', $
           defaultReduceFileName
 ;activate selection buttons 
-        uname_list = ['selection_tool_button',$
-                      'clear_selection_button',$
-                      'load_selection_label',$
+        uname_list = ['clear_selection_button',$
                       'selection_browse_button',$
-                      'selection_file_name_text_field']
+                      'selection_file_name_text_field',$
+                      'exclusion_base']
         activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
 ;display name of nexus file name
@@ -192,11 +191,10 @@ IF (RunNumber NE 0) THEN BEGIN
           defaultReduceFileName
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
-        uname_list = ['selection_tool_button',$
-                      'clear_selection_button',$
-                      'load_selection_label',$
+        uname_list = ['clear_selection_button',$
                       'selection_browse_button',$
-                      'selection_file_name_text_field']
+                      'selection_file_name_text_field',$
+                      'exclusion_base']
         activate_widget_list, Event, uname_list, 1
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
