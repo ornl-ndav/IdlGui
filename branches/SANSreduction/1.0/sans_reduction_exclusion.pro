@@ -445,14 +445,12 @@ END
 ;------------------------------------------------------------------------------
 PRO SaveExclusionFile, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
 folder         = (*global).selection_path
 file_name      = getTextfieldValue(Event,'save_roi_text_field')
 full_file_name = folder + file_name
-
 PixelExcludedArray = (*(*global).RoiPixelArrayExcluded)
-
 CreateROIfileFromExclusionArray, full_file_name, PixelExcludedArray
+putTextFieldValue, Event, 'roi_file_name_text_field', full_file_name
 
 END
 
