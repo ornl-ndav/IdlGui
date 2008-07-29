@@ -73,7 +73,7 @@ sSelectionLabel = { size: [sSelectionFrame.size[0]+XYoff[0],$
                            sSelectionFrame.size[1]+XYoff[1]],$
                     value: 'Load Selection',$
                     uname: 'load_selection_label',$
-                    sensitive: 0}
+                    sensitive: 1}
 XYoff = [5,10] ;browse button
 sSelectionBrowse = { size: [sSelectionFrame.size[0]+XYoff[0],$
                             sSelectionFrame.size[1]+XYoff[1],$
@@ -110,8 +110,9 @@ sExclusionBase = { size: [sLabelDraw.size[0]+$
                           sLabelDraw.size[2]+XYoff[0],$
                           sSelectionFrame.size[1]+$
                           sSelectionFrame.size[3]+XYoff[1],$
-                          300,280],$
+                          300,310],$
                    frame: 1,$
+                   sensitive: 0,$
                    uname: 'exclusion_base'}
 
 XYoff = [10,-8]
@@ -304,6 +305,15 @@ sSaveRoiTextField = { size: [sSaveRoiFolderButton.size[0]+XYoff[0],$
                       uname: 'save_roi_text_field',$
                       sensitive: 1}
 
+;Preview Roi button
+XYoff = [0,35]
+sPreviewRoiButton = { size: [sSaveRoiTextField.size[0]+XYoff[0],$
+                             sSaveRoiTextField.size[1]+XYoff[1],$
+                             285],$
+                      value: 'PREVIEW ...',$
+                      uname: 'preview_roi_exclusion_file',$
+                      sensitive: 1}
+
 ;- Clear Selection ------------------------------------------------------------
 XYoff = [0,50]
 sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
@@ -459,6 +469,7 @@ wExclusionBase = WIDGET_BASE(wTab1Base,$
                              SCR_XSIZE = sExclusionBase.size[2],$
                              SCR_YSIZE = sExclusionBase.size[3],$
                              FRAME     = sExclusionBase.frame,$
+                             SENSITIVE = sExclusionBase.sensitive,$
                              UNAME     = sExclusionBase.uname)
 
 ;PREVIEW Exclusion Button
@@ -679,6 +690,14 @@ wSaveFileName = WIDGET_TEXT(wExclusionBase,$
                             /ALIGN_LEFT,$
                             /ALL_EVENTS)
 
+;Preview
+wPreviewRoiButton = WIDGET_BUTTON(wExclusionBase,$
+                                  XOFFSET   = spreviewroibutton.size[0],$
+                                  YOFFSET   = spreviewroibutton.size[1],$
+                                  SCR_XSIZE = spreviewroibutton.size[2],$
+                                  VALUE     = spreviewroibutton.value,$
+                                  UNAME     = spreviewroibutton.uname,$
+                                  SENSITIVE = spreviewroibutton.sensitive)
 
 
 
