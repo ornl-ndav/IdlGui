@@ -100,6 +100,11 @@ CASE Event.id OF
     END
 
 ;-Exclusion Region Selection Tool ---------------------------------------------
+;- Preview button 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_exclusion_region'): BEGIN
+        PreviewExclusionRegionCircle, Event ;_exclusion
+    END
+
 ;- Plot button 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_exclusion_region'): BEGIN
         ExclusionRegionCircle, Event ;_exclusion

@@ -118,27 +118,36 @@ XYoff = [10,-8]
 sExclusionTitle = { size: [sExclusionBase.size[0]+XYoff[0],$
                            sExclusionBase.size[1]+XYoff[1]],$
                     value: 'Exclusion Region Selection Tool'}
-                    
-XYoff = [8,10] ;PLOT button
-sPlotExclusion = { size: [XYoff[0],$
+
+XYoff = [8,10]                  ;PREVIEW button
+sPreviewExclusion = { size: [XYoff[0],$
+                             XYoff[1],$
+                             80],$
+                      value: 'PREVIEW',$
+                      uname: 'preview_exclusion_region',$
+                      sensitive: 0}
+
+XYoff = [0,10]                  ;PLOT button
+sPlotExclusion = { size: [sPreviewExclusion.size[0]+$
+                          sPreviewExclusion.size[2]+XYoff[0],$
                           XYoff[1],$
-                          140],$
+                          sPreviewExclusion.size[2]],$
                    value: 'PLOT',$
                    uname: 'plot_exclusion_region'}
-                   
+
 XYoff = [5,0] ;CLEAR button
 sClearExclusion = { size: [sPlotExclusion.size[0]+$
                            sPlotExclusion.size[2]+$
                            XYoff[0],$
                            sPlotExclusion.size[1]+$
                            XYoff[1],$
-                           sPlotExclusion.size[2]],$
+                           sPlotExclusion.size[2]+40],$
                     value: 'CLEAR INPUT BOXES',$
                     uname: 'clear_exclusion_input_boxes'}
 
 XYoff = [0,35] ;Center pixels title
-sCenterPixelTitle = { size: [sPlotExclusion.size[0]+XYoff[0],$
-                             sPlotExclusion.size[1]+XYoff[1]],$
+sCenterPixelTitle = { size: [sPreviewExclusion.size[0]+XYoff[0],$
+                             sPreviewExclusion.size[1]+XYoff[1]],$
                       value: 'Center (Pix.)'}
 XYoff = [90,0] ;X: label
 sCenterXLabel = { size: [sCenterPixelTitle.size[0]+XYoff[0],$
@@ -417,6 +426,14 @@ wExclusionBase = WIDGET_BASE(wTab1Base,$
                              FRAME     = sExclusionBase.frame,$
                              UNAME     = sExclusionBase.uname)
 
+;PREVIEW Exclusion Button
+wPreviewExclusion = WIDGET_BUTTON(wExclusionBase,$
+                                  XOFFSET   = sPreviewExclusion.size[0],$
+                                  YOFFSET   = sPreviewExclusion.size[1],$
+                                  SCR_XSIZE = sPreviewExclusion.size[2],$
+                                  VALUE     = sPreviewExclusion.value,$
+                                  UNAME     = sPreviewExclusion.uname,$
+                                  SENSITIVE = sPreviewExclusion.sensitive)
 ;PLOT Exclusion Button
 wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
                                XOFFSET   = sPlotExclusion.size[0],$
