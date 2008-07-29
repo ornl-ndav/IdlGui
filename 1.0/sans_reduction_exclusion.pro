@@ -70,13 +70,17 @@ tmp_array = INTARR(80,80)
 Xsize = 320*2
 Ysize = 320*2
 FOR i=0,(Xsize-1) DO BEGIN
+    state_changed = 0 ;0,1,0 for inside selection and 1,0,1 for outside
     FOR j=0,(Ysize-1) DO BEGIN
         IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
             IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
                 x = FIX(i/8)
                 y = FIX(j/8)
                 ++tmp_array[x,y]
-            ENDIF
+                state_changed = 1
+            ENDIF ELSE BEGIN
+                IF (state_changed EQ 1) THEN BREAK
+            ENDELSE
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
                 x = FIX(i/8)
@@ -169,7 +173,8 @@ oROI->SetProperty, STYLE=style
 
 PixelSelectedArray = INTARR(80,80)
 
-CreateArrayOfPixelSelected, PixelSelectedArray,$
+CreateArrayOfPixelSelected, $
+  PixelSelectedArray,$
   oROI,$
   selection_type,$
   bR1Inside
@@ -189,7 +194,8 @@ oROI->GetProperty, N_VERTS=nVerts
 oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
 oROI->SetProperty, STYLE=style
 
-CreateArrayOfPixelSelected, PixelSelectedArray,$
+CreateArrayOfPixelSelected, $
+  PixelSelectedArray,$
   oROI,$
   selection_type,$
   bR2Inside
@@ -222,6 +228,8 @@ FOR i=0,(80L-1) DO BEGIN
     ENDFOR
 ENDFOR
 
+OBJ_DESTROY, oROI
+
 ;turn off hourglass
 widget_control,hourglass=0
 
@@ -232,4 +240,81 @@ END
 PRO exclusion_type, Event, INDEX=index
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 (*global).exclusion_type_index = index
+END
+
+;------------------------------------------------------------------------------
+PRO PreviewExclusionRegionCircle, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;refresh plot
+refresh_main_plot, Event
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
+coeff = FLOAT((*global).DrawXcoeff)
+;get x_center, y_center
+x_center = getTextFieldValue(Event,'x_center_value')
+Display_x_center = FLOAT(x_center) * coeff
+y_center = getTextFieldValue(Event,'y_center_value')
+Display_y_center = FLOAT(y_center) * coeff
+
+;get R1
+r1 = getTextFieldValue(Event,'r1_radii')
+DisplayR1 = FLOAT(r1) * coeff
+IF (getCWBgroupValue(Event,'radii_r1_group') EQ 0) THEN BEGIN
+    bR1Inside = 1
+ENDIF ELSE BEGIN
+    bR1Inside = 0
+ENDELSE
+
+;get R2
+r2 = getTextFieldValue(Event,'r2_radii')
+DisplayR2 = FLOAT(r2) * coeff
+IF (getCWBgroupValue(Event,'radii_r2_group') EQ 0) THEN BEGIN
+    bR2Inside = 1
+ENDIF ELSE BEGIN
+    bR2Inside = 0
+ENDELSE
+
+;get type of selection
+selection_type = (*global).exclusion_type_index
+
+;work on R1
+oROI = OBJ_NEW('myIDLgrROI',$
+               COLOR = 200,$
+               STYLE = 0)
+oROI->setInsideFlag, bR1Inside
+
+NewX = FLTARR(1)
+NewY = FLTARR(1)
+CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR1, NewX, NewY
+newZ = INTARR(N_ELEMENTS(NewX))
+
+oROI->GetProperty, N_VERTS=nVerts
+oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+oROI->SetProperty, STYLE=style
+
+draw_roi, oROI, /line_fill, thick=2, linestyle=0, orientation=90,/device
+
+;work on R2
+oROI = OBJ_NEW('myIDLgrROI',$
+               COLOR = 200,$
+               STYLE = 0)
+oROI->setInsideFlag, bR2Inside
+
+NewX = FLTARR(1)
+NewY = FLTARR(1)
+CIRCLE, FIX(Display_x_center), FIX(Display_y_center), DisplayR2, NewX, NewY
+newZ = INTARR(N_ELEMENTS(NewX))
+
+oROI->GetProperty, N_VERTS=nVerts
+oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+oROI->SetProperty, STYLE=style
+
+draw_roi, oROI, /line_fill, thick=2, linestyle=0, orientation=315,/device
+
+OBJ_DESTROY, oROI
+
 END
