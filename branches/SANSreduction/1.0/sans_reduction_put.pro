@@ -37,6 +37,15 @@ WIDGET_CONTROL, id, SET_VALUE=text
 END
 
 ;==============================================================================
+PRO putArrayTextFieldValue, Event, uname_array, text
+sz = N_ELEMENTS(uname_array)
+FOR i=0,(sz-1) DO BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname_array[i])
+    WIDGET_CONTROL, id, SET_VALUE=text
+ENDFOR
+END
+
+;==============================================================================
 ;This function put the command line in the command line text box
 PRO putCommandLine, Event, cmd
 putTextFieldValue, Event, 'comamnd_line_preview', cmd

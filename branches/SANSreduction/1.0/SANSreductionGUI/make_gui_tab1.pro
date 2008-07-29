@@ -134,23 +134,23 @@ sClearExclusion = { size: [sPlotExclusion.size[0]+$
                            XYoff[1],$
                            sPlotExclusion.size[2]],$
                     value: 'CLEAR INPUT BOXES',$
-                    uname: 'clear_exclusion_region'}
+                    uname: 'clear_exclusion_input_boxes'}
 
 XYoff = [0,35] ;Center pixels title
 sCenterPixelTitle = { size: [sPlotExclusion.size[0]+XYoff[0],$
                              sPlotExclusion.size[1]+XYoff[1]],$
                       value: 'Center (Pix.)'}
-XYoff = [120,0] ;X: label
+XYoff = [90,0] ;X: label
 sCenterXLabel = { size: [sCenterPixelTitle.size[0]+XYoff[0],$
                          sCenterPixelTitle.size[1]+XYoff[1]],$
-                  value: 'X:'}
-XYoff = [15,-6] ;X value
+                  value: 'X'}
+XYoff = [18,-6] ;X value
 sCenterXValue = { size: [sCenterXLabel.size[0]+XYoff[0],$
                          sCenterXLabel.size[1]+XYoff[1],$
-                         40],$
+                         60],$
                   value: '',$
                   uname: 'x_center_value'}
-XYoff = [30,0] ;Y: label
+XYoff = [20,0] ;Y: label
 sCenterYLabel = { size: [sCenterXValue.size[0]+$
                          sCenterXValue.size[2]+XYoff[0],$
                          sCenterPixelTitle.size[1]+XYoff[1]],$
@@ -210,15 +210,6 @@ sRadiiR2group = { size: [XYoff[0],$
                   list : ['Inside','Outside'],$
                   uname: 'radii_r2_group',$
                   value: 0.0}
-
-
-
-
-
-
-
-
-
 
 ;- Clear Selection ------------------------------------------------------------
 XYoff = [0,50]
@@ -286,6 +277,7 @@ wDraw = WIDGET_DRAW(wTab1Base,$
                     YOFFSET   = sDraw.size[1],$
                     SCR_XSIZE = sDraw.size[2],$
                     SCR_YSIZE = sDraw.size[3],$
+                    /BUTTON_EVENTS,$
                     /MOTION_EVENTS)
 
 ;- Label draw -----------------------------------------------------------------
@@ -494,9 +486,6 @@ wRadiiR2Group = CW_BGROUP(wRadiiR2Base,$
                           /NO_RELEASE,$
                           /EXCLUSIVE)
 
-
-
-
 ;- Clear Selection ------------------------------------------------------------
 wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 XOFFSET   = sClearSelection.size[0],$
@@ -505,7 +494,6 @@ wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 VALUE     = sClearSelection.value,$
                                 UNAME     = sClearSelection.uname,$
                                 SENSITIVE = sClearSelection.sensitive)
-
 
 ;- X/Y base -------------------------------------------------------------------
 wXYbase = WIDGET_BASE(wTab1Base,$
