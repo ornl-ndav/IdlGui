@@ -110,7 +110,7 @@ sExclusionBase = { size: [sLabelDraw.size[0]+$
                           sLabelDraw.size[2]+XYoff[0],$
                           sSelectionFrame.size[1]+$
                           sSelectionFrame.size[3]+XYoff[1],$
-                          300,195],$
+                          300,280],$
                    frame: 1,$
                    uname: 'exclusion_base'}
 
@@ -268,6 +268,41 @@ sButton3 = { uname:   'exclusion_outside_in',$
 sButton4 = { uname:   'exclusion_outside_out',$
              tooltip: tooltip_array[3],$
              value:   'images/selection_outside_out.bmp'}
+
+;SAVE AS 
+XYoff = [0,40]
+sSaveAsSelection = { size: [sPreviewExclusion.size[0]+XYoff[0],$
+                            sExclusionTypeBase.size[1]+XYoff[1],$
+                            140],$
+                     value: 'SAVE AS ...',$
+                     uname: 'save_as_roi_button',$
+                     sensitive: 1}
+;SAVE
+XYoff = [5,0]
+sSaveSelection = { size: [sSaveAsSelection.size[0]+$
+                          sSaveAsSelection.size[2]+XYoff[0],$
+                          sSaveAsSelection.size[1]+XYoff[1],$
+                          sSaveAsSelection.size[2]],$
+                   value: 'SAVE',$
+                   uname: 'save_roi_button',$
+                   sensitive: 1}
+;SAVE folder button
+XYoff = [0,25]
+sSaveRoiFolderButton = { size: [sSaveAsSelection.size[0]+XYoff[0],$
+                                sSaveAsSelection.size[1]+XYoff[1],$
+                                285],$
+                         value: '~/',$
+                         uname: 'save_roi_folder_button',$
+                         sensitive: 1}
+              
+;SAVE text Field                 
+XYoff = [0,25]
+sSaveRoiTextField = { size: [sSaveRoiFolderButton.size[0]+XYoff[0],$
+                             sSaveRoiFolderButton.size[1]+XYoff[1],$
+                             285],$
+                      value: '',$
+                      uname: 'save_roi_text_field',$
+                      sensitive: 1}
 
 ;- Clear Selection ------------------------------------------------------------
 XYoff = [0,50]
@@ -605,6 +640,50 @@ wFrame = WIDGET_LABEL(wExclusionBase,$
                       SCR_YSIZE = sFrame.size[3],$
                       VALUE     = sFrame.value,$
                       FRAME     = sFrame.frame)
+
+;SAVE AS
+wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
+                                 XOFFSET   = sSaveAsSelection.size[0],$
+                                 YOFFSET   = sSaveAsSelection.size[1],$
+                                 SCR_XSIZE = sSaveAsSelection.size[2],$
+                                 VALUE     = sSaveAsSelection.value,$
+                                 UNAME     = sSaveAsSelection.uname,$
+                                 SENSITIVE = sSaveAsSelection.sensitive)
+                                 
+;SAVE
+wSaveSelection = WIDGET_BUTTON(wExclusionBase,$
+                                 XOFFSET   = sSaveSelection.size[0],$
+                                 YOFFSET   = sSaveSelection.size[1],$
+                                 SCR_XSIZE = sSaveSelection.size[2],$
+                                 VALUE     = sSaveSelection.value,$
+                                 UNAME     = sSaveSelection.uname,$
+                                 SENSITIVE = sSaveSelection.sensitive)
+;SAVE Folder
+wSaveroifolderbutton = WIDGET_BUTTON(wExclusionBase,$
+                                 XOFFSET   = sSaveroifolderbutton.size[0],$
+                                 YOFFSET   = sSaveroifolderbutton.size[1],$
+                                 SCR_XSIZE = sSaveroifolderbutton.size[2],$
+                                 VALUE     = sSaveroifolderbutton.value,$
+                                 UNAME     = sSaveroifolderbutton.uname,$
+                                 SENSITIVE = sSaveroifolderbutton.sensitive)
+
+;Filename                                 
+wSaveFileName = WIDGET_TEXT(wExclusionBase,$
+                            XOFFSET = sSaveRoiTextField.size[0],$
+                            YOFFSET = sSaveRoiTextField.size[1],$
+                            SCR_XSIZE = sSaveRoiTextField.size[2],$
+                            VALUE     = sSaveRoiTextfield.value,$
+                            UNAME     = sSaveRoiTextField.uname,$
+                            SENSITIVE = sSaveRoiTextField.sensitive,$
+                            /EDITABLE,$
+                            /ALIGN_LEFT,$
+                            /ALL_EVENTS)
+
+
+
+
+
+
 
 ;- Clear Selection ------------------------------------------------------------
 wClearSelection = WIDGET_BUTTON(wTab1Base,$
