@@ -62,6 +62,9 @@ wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
                    sys_color_face_3d: INTARR(3),$
+                   DisplayR1:        0.,$
+                   DisplayR2:        0.,$
+                   there_is_a_selection: 0,$
                    exclusion_type_index: 0,$ ;0,1,2 or 3
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs

@@ -117,7 +117,7 @@ IF (RunNumber NE '') THEN BEGIN
 ENDIF
 DateIso = GenerateIsoTimeStamp()
 default_name += '_' + DateIso
-default_name += 'ROI.dat
+default_name += 'ROI.dat'
 
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 roi_path = (*global).selection_path

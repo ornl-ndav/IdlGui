@@ -253,14 +253,14 @@ PrevTabSelect = (*global).PrevTabSelect
 IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
     0: BEGIN ;first tab
-        refresh_plot, Event ;_plot
-        RefreshRoiPlot, Event ;_selection
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event   ;_selection
     END
-    1: BEGIN ;reduce tab
-
+    1: BEGIN                    ;reduce tab
+        
     END
-    2: BEGIN ;log book
-
+    2: BEGIN                    ;log book
+        
     END
     ELSE:
     ENDCASE

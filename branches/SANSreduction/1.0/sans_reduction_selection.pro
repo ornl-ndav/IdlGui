@@ -260,5 +260,7 @@ X         = (*global).X
 Y         = (*global).Y
 plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
 
+(*global).there_is_a_selection = 0
+
 END
 

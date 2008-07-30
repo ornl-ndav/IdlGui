@@ -147,3 +147,16 @@ IF (X NE 0) THEN BEGIN
 ENDIF
 result = plotData(Event, DataArray, X, Y)
 END
+
+;------------------------------------------------------------------------------
+PRO refreshROIExclusionPlot, Event
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;refresh_main_plot, Event
+IF ((*global).there_is_a_selection EQ 1) THEN BEGIN
+    plotROI, Event
+ENDIF
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+END
