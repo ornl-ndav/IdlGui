@@ -293,6 +293,29 @@ CASE Event.id OF
         BrowseOutputFolder, Event ;_reduce_tab2
     END
 
+;--- Solvent Transmission ---------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'solvent_transmission_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'solvent_transmission_run_number_cw_field', $
+          'solvent_transmission_file_name_text_field'
+    END
+    
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'solvent_transmission_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'solvent_transmission_browse_button',$
+          'solvent_transmission_file_name_text_field'
+    END
+
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'output_folder'): BEGIN
+        BrowseOutputFolder, Event ;_reduce_tab2
+    END
+
 ;Clear File Name text field button --------------------------------------------
     WIDGET_INFO(wWidget,$
                 FIND_BY_UNAME= $

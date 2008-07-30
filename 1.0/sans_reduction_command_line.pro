@@ -119,6 +119,15 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
+;-Solvent transmisison-
+file_run = getTextFieldValue(Event, $
+                             'solvent_transmission_file_name_text_field')
+IF (file_run NE '' AND $
+    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
+    flag = (*global).CorrectPara.solvent.flag
+    cmd += ' ' + flag + '=' + file_run
+ENDIF 
+
 ;-Output Path-
 output_path = getButtonValue(Event,'output_folder')
 cmd += ' --output='

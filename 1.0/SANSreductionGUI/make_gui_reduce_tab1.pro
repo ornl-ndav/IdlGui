@@ -137,10 +137,22 @@ sEmptyCanTransmissionFileFrame = $
    browse_uname:    'empty_can_transmission_browse_button',$
    file_name_uname: 'empty_can_transmission_file_name_text_field'}
 
+;- Solvent Transmission -----------------------------------------------------
+sSolventTransmissionFileFrame = $
+  {main_base_xsize: sBaseTab1.size[2],$
+   main_base_uname: 'solvent_transmission_base_uname',$
+   xoff:            0,$
+   yoff:            sEmptyCanTransmissionFileFrame.yoff+yoff,$
+   frame_title:     'Solvent Transmission',$
+   label_1:         'Run Number:',$
+   tf1_uname:       'solvent_transmission_run_number_cw_field',$
+   browse_uname:    'solvent_transmission_browse_button',$
+   file_name_uname: 'solvent_transmission_file_name_text_field'}
+
 ;- Output Folder --------------------------------------------------------------
-XYoff = [10,100]
+XYoff = [10,80]
 sOutputFolderlabel = { size: [XYoff[0],$
-                              sEmptyCanTransmissionFileFrame.yoff+XYoff[1]],$
+                              sSolventTransmissionFileFrame.yoff+XYoff[1]],$
                        value: 'Output Folder:'}
 XYoff = [120,-8]                       
 sOutputFolder = { size: [XYoff[0],$
@@ -299,7 +311,21 @@ cEmptyCanTransmissionFileFrame = $
           BROWSE_UNAME    = sEmptyCanTransmissionFileFrame.browse_uname,$
           FILE_NAME_UNAME = sEmptyCanTransmissionFileFrame.file_name_uname)
 
-;- Output Folder --------------------------------------------------------------
+;- Solvent Transmission -----------------------------------------------------
+cSolventTransmissionFileFrame = $
+  OBJ_NEW('IDLnexusFrame',$
+          MAIN_BASE_ID    = BaseTab,$
+          MAIN_BASE_XSIZE = sSolventTransmissionFileFrame.main_base_xsize,$
+          MAIN_BASE_UNAME = sSolventTransmissionFileFrame.main_base_uname,$
+          XOFF            = sSolventTransmissionFileFrame.xoff,$
+          YOFF            = sSolventTransmissionFileFrame.yoff,$
+          FRAME_TITLE     = sSolventTransmissionFileFrame.frame_title,$
+          LABEL_1         = sSolventTransmissionFileFrame.label_1,$
+          CWFIELD_UNAME   = sSolventTransmissionFileFrame.tf1_uname,$
+          BROWSE_UNAME    = sSolventTransmissionFileFrame.browse_uname,$
+          FILE_NAME_UNAME = sSolventTransmissionFileFrame.file_name_uname)
+
+;- Output Folder -------------------------------------------------------------
 wOutputFolderLabel = WIDGET_LABEL(BaseTab,$
                                   XOFFSET = sOutputFolderLabel.size[0],$
                                   YOFFSET = sOutputFolderLabel.size[1],$
