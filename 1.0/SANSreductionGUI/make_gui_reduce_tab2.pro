@@ -308,7 +308,7 @@ sOGbase  = {size:  [sOGgroup.size[0]+XYoff[0],$
                     sOGgroup.size[1]+XYoff[1],$
                     700,30],$
             uname: 'overwrite_geometry_base',$
-            map:   1}
+            map:   0}
 XYoff     = [0,0]
 sOGbutton = {size:  [XYoff[0],$
                      XYoff[1],$
