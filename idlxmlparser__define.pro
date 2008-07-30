@@ -13,15 +13,18 @@ PRO IDLXMLParser::startElement, URI, local, strName, attr, value
   ENDCASE
 END
 
+
 PRO IDLXMLParser::characters, char
   self.saveto = self.saveto + char
 END
 
-PRO IDLXMLParser::getValue, TAG
+
+FUNCTION IDLXMLParser::getValue, TAG=tag
   self.elements = n_elements(tag)
   self.tag = ptr_new(tag)
   self.count = 0
-  SELF -> ParseFile, file_name
+  print, SELF->ParseFile, 
+  RETURN, 'bonjour'
 END
 
 FUNCTION IDLXMLParser::init
