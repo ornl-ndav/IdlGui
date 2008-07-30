@@ -140,6 +140,10 @@ global = PTR_NEW ({version:         VERSION,$
                                                 'Empty Can',$
                                                 flag: $
                                                 '--ecan'},$
+                                 solvent:    {title: $
+                                              'Solvent Transmission',$
+                                              flag: $
+                                              '--solv-trans'},$
                                  open_beam:    {title: $
                                                 'Open Beam (shutter open)',$
                                                 flag: $
@@ -293,7 +297,7 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;PARAMETERS
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
 
 ENDIF
 ;==============================================================================

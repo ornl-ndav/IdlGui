@@ -64,6 +64,9 @@ CASE (cw_field_uname) OF
     'empty_can_transmission_run_number_cw_field': BEGIN
         message = '-> Loading Empty Can Transmission Run Number '
     END
+    'solvent_transmission_run_number_cw_field': BEGIN
+        message = '-> Loading Solvent Transmission Run Number '
+    END
     ELSE: message = ''
 ENDCASE
 IF (RunNumber NE 0) THEN BEGIN
@@ -129,6 +132,8 @@ CASE (browse_button_uname) OF
       'Sample Data Transmission Nexus file'
     'empty_can_transmission_browse_button': title1 = $
       'Empty Can Transmission Nexus file'
+    'solvent_transmission_browse_button': title1 = $
+      'Solvent Transmission Nexus file'
     ELSE: title1 = ''
 ENDCASE
 title += title1
