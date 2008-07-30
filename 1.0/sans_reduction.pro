@@ -255,23 +255,24 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
 ;Time Zero Offset (Parameters)
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='time_zero_offset_detector_uname')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='500'
-    id = WIDGET_INFO(MAIN_BASE, $
-                     FIND_BY_UNAME='time_zero_offset_beam_monitor_uname')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='500'
+;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=$
+;    'time_zero_offset_detector_uname')
+;    WIDGET_CONTROL, id, $
+;      SET_VALUE='500'
+;    id = WIDGET_INFO(MAIN_BASE, $
+;                     FIND_BY_UNAME='time_zero_offset_beam_monitor_uname')
+;    WIDGET_CONTROL, id, $
+;      SET_VALUE='500'
 ;Q range (Parameters)
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmin_text_field')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='0.1'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmax_text_field')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='5'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='0.1'
+;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmin_text_field')
+;    WIDGET_CONTROL, id, $
+;      SET_VALUE='0.1'
+;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmax_text_field')
+;    WIDGET_CONTROL, id, $
+;      SET_VALUE='5'
+;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
+;    WIDGET_CONTROL, id, $
+;      SET_VALUE='0.1'
 
 ;exclusion tool
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
@@ -288,11 +289,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show tab #2 'REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;LOAD TAB#2
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;PARAMETERS
 
 ENDIF
 ;==============================================================================
