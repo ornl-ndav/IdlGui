@@ -255,8 +255,8 @@ sScaleBase = { size:  [sWavebase.size[0]+XYoff[0],$
 XYoff = [20,-8]
 sScaleTitle = { size:  [sScaleBase.size[0]+XYoff[0],$
                         sScaleBase.size[1]+XYoff[1]],$
-                value: 'Scaling Constant'}
-XYoff = [0,15]
+                value: 'Scale Factor for Final Spectrum'}
+XYoff = [5,15]
 sScaleLabel = { size: [sWaveLabel.size[0]+XYoff[0],$
                        XYoff[1]],$
                 uname: 'scaling_constant_label',$
@@ -267,6 +267,11 @@ sScalevalue = { size: [sScaleLabel.size[0]+XYoff[0],$
                        sTZO_detector_field.size[2:3]],$
                 value: '',$
                 uname: 'scaling_constant_value'}
+XYoff = [150,5]
+sScaleHelp = { size: [sScaleValue.size[0]+XYoff[0],$
+                      sScaleValue.size[1]+XYoff[1]],$
+               value: '(Specify the constant with which to scale (multiply)' + $
+               ' the final data)'}
 
 ;- Flags ----------------------------------------------------------------------
 XYoff = [0,20]
@@ -685,9 +690,8 @@ wScaleText = WIDGET_TEXT(Base,$
                          /EDITABLE,$
                          /ALIGN_LEFT)
 
-
-
-
-
-
+wScaleHelp = WIDGET_LABEL(Base,$
+                          XOFFSET = sScaleHelp.size[0],$
+                          YOFFSET = sScaleHelp.size[1],$
+                          VALUE   = sScaleHelp.value)
 END
