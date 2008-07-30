@@ -315,7 +315,7 @@ sPreviewRoiButton = { size: [sSaveRoiTextField.size[0]+XYoff[0],$
                       sensitive: 1}
 
 ;- Clear Selection ------------------------------------------------------------
-XYoff = [0,50]
+XYoff = [0,20]
 sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            sExclusionBase.size[1]+sExclusionBase.size[3]+ $
                            XYoff[1],$
@@ -324,6 +324,15 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                     uname: 'clear_selection_button',$
                     sensitive: 1}
                            
+;- REFRESH Plot ---------------------------------------------------------------
+XYoff = [0,30]
+sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
+                        sClearSelection.size[1]+XYoff[1],$
+                        sClearSelection.size[2]],$
+                 value: 'REFRESH PLOT',$
+                 uname: 'refresh_plot_button',$
+                 sensitive: 1}
+
 ;- X and Y position of cursor -------------------------------------------------
 XYoff = [0,597]
 XYbase = { size: [sLabelDraw.size[0]+$
@@ -699,11 +708,6 @@ wPreviewRoiButton = WIDGET_BUTTON(wExclusionBase,$
                                   UNAME     = spreviewroibutton.uname,$
                                   SENSITIVE = spreviewroibutton.sensitive)
 
-
-
-
-
-
 ;- Clear Selection ------------------------------------------------------------
 wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 XOFFSET   = sClearSelection.size[0],$
@@ -712,6 +716,15 @@ wClearSelection = WIDGET_BUTTON(wTab1Base,$
                                 VALUE     = sClearSelection.value,$
                                 UNAME     = sClearSelection.uname,$
                                 SENSITIVE = sClearSelection.sensitive)
+
+;- Refresh Plot ---------------------------------------------------------------
+wRefreshplot = WIDGET_BUTTON(wTab1Base,$
+                                XOFFSET   = sRefreshplot.size[0],$
+                                YOFFSET   = sRefreshplot.size[1],$
+                                SCR_XSIZE = sRefreshplot.size[2],$
+                                VALUE     = sRefreshplot.value,$
+                                UNAME     = sRefreshplot.uname,$
+                                SENSITIVE = sRefreshplot.sensitive)
 
 ;- X/Y base -------------------------------------------------------------------
 wXYbase = WIDGET_BASE(wTab1Base,$

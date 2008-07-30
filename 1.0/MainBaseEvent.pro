@@ -162,7 +162,12 @@ CASE Event.id OF
 
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
-        clear_selection_tool, Event ;_eventcb
+        clear_selection_tool, Event ;_selection
+    END
+
+;- Refresh Plot ---------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
+        refresh_main_plot_AND_selection, Event ;_plot
     END
 
 ;= TAB2 (REDUCE) ==============================================================

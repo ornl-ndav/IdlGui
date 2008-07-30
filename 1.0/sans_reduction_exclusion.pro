@@ -141,6 +141,7 @@ Display_y_center = FLOAT(y_center) * coeff
 ;get R1
 r1 = getTextFieldValue(Event,'r1_radii')
 DisplayR1 = FLOAT(r1) * coeff
+(*global).DisplayR1 = DisplayR1
 
 IF (getCWBgroupValue(Event,'radii_r1_group') EQ 0) THEN BEGIN
     bR1Inside = 1
@@ -151,6 +152,7 @@ ENDELSE
 ;get R2
 r2 = getTextFieldValue(Event,'r2_radii')
 DisplayR2 = FLOAT(r2) * coeff
+(*global).DisplayR2 = DisplayR2
 IF (getCWBgroupValue(Event,'radii_r2_group') EQ 0) THEN BEGIN
     bR2Inside = 1
 ENDIF ELSE BEGIN
@@ -216,38 +218,70 @@ refresh_main_plot, Event
 
 IF (DisplayR1 NE 0 OR $
     DisplayR2 NE 0) THEN BEGIN
-    
-    x_coeff = coeff
-    y_coeff = coeff
-    color   = 250
-    FOR i=0,(80L-1) DO BEGIN
-        FOR j=0,(80L-1) DO BEGIN
-            IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
-                plots, i*x_coeff, j*x_coeff, $
-                  /DEVICE, $
-                  COLOR=color
-                plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
-                  /CONTINUE, $
-                  COLOR=color
-                plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
-                  /CONTINUE, $
-                  COLOR=color
-                plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
-                  /CONTINUE, $
-                  COLOR=color
-                plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
-                  /CONTINUE, $
-                  COLOR=color
-            ENDIF
-        ENDFOR
-    ENDFOR
-    
+
     OBJ_DESTROY, oROI
+    (*global).there_is_a_selection = 1    
+
+;plot ROI
+    plotRoi, Event, $
+      DisplayR1 = DisplayR1, $
+      DisplayR2 = DisplayR2, $
+      COEFF =     coeff
     
-ENDIF
+ENDIF ELSE BEGIN
+    
+    (*global).there_is_a_selection = 0
+    
+ENDELSE
 
 ;turn off hourglass
 widget_control,hourglass=0
+  
+END
+
+;------------------------------------------------------------------------------
+;This procedure is in charged of only plotting the ROI
+PRO plotROI, Event, $
+             DisplayR1=DisplayR1, $
+             DisplayR2=DisplayR2, $
+             COEFF=coeff
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+WIDGET_CONTROL, id, GET_VALUE = id_value
+WSET, id_value
+
+IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).DrawXcoeff)
+IF (N_ELEMENTS(DisplayR1) EQ 0) THEN DisplayR1 = (*global).DisplayR1
+IF (N_ELEMENTS(DisplayR2) EQ 0) THEN DisplayR2 = (*global).DisplayR2
+
+PixelSelectedArray = (*(*global).RoiPixelArrayExcluded)
+
+x_coeff = coeff
+y_coeff = coeff
+color   = 250
+FOR i=0,(80L-1) DO BEGIN
+    FOR j=0,(80L-1) DO BEGIN
+        IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
+            plots, i*x_coeff, j*x_coeff, $
+              /DEVICE, $
+              COLOR=color
+            plots, i*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j+1)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i+1)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+            plots, (i)*x_coeff, (j)*x_coeff, /DEVICE, $
+              /CONTINUE, $
+              COLOR=color
+        ENDIF
+    ENDFOR
+ENDFOR
 
 END
 
