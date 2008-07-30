@@ -251,8 +251,6 @@ CASE Event.id OF
           'dark_file_name_text_field'
     END
 
-;==== tab2 (LOAD FILES (2) ====================================================
-
 ;----Sample Data File ---------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
@@ -330,7 +328,7 @@ CASE Event.id OF
        ResetOutputFileName, Event ;_reduce_tab2
     END
 
-;==== tab3 (PARAMETERS) =======================================================
+;==== tab2 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
@@ -357,6 +355,11 @@ CASE Event.id OF
         max_lambda_cut_off_gui, Event ;_reduce_tab3
     END
 
+;---- Scaling Constant --------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_constant_group'): BEGIN
+        scaling_constant_gui, Event ;_reduce_tab3
+    END
+
 ;---- Wavelength dependent background subtraction -----------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_help_button'): BEGIN
         id = WIDGET_INFO(wWidget, $
@@ -375,7 +378,6 @@ CASE Event.id OF
             WIDGET_CONTROL, id, SET_VALUE = value
         ENDELSE
     END
-
 
 ;= TAB3 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN

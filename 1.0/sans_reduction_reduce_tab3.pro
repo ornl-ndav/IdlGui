@@ -122,3 +122,18 @@ ENDELSE
 activate_widget, Event, 'monitor_efficiency_constant_label', sensitive_status
 activate_widget, Event, 'monitor_efficiency_constant_value', sensitive_status
 END
+
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user changes the YES/NO
+;switch of the scaling constant
+PRO scaling_constant_gui, Event 
+value_OF_group = getCWBgroupValue(Event,'scaling_constant_group')
+IF (value_OF_group EQ 0) THEN BEGIN
+    sensitive_status = 1
+ENDIF ELSE BEGIN
+    sensitive_status = 0
+ENDELSE
+activate_widget, Event, 'scaling_constant_label', sensitive_status
+activate_widget, Event, 'scaling_constant_value', sensitive_status
+
+END
