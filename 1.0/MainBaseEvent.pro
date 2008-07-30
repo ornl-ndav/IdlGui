@@ -167,7 +167,8 @@ CASE Event.id OF
 
 ;- Refresh Plot ---------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
-        refresh_main_plot_AND_selection, Event ;_plot
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event   ;_selection
     END
 
 ;= TAB2 (REDUCE) ==============================================================
