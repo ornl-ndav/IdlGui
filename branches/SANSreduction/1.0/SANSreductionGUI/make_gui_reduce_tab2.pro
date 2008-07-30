@@ -256,19 +256,27 @@ XYoff = [20,-8]
 sScaleTitle = { size:  [sScaleBase.size[0]+XYoff[0],$
                         sScaleBase.size[1]+XYoff[1]],$
                 value: 'Scale Factor for Final Spectrum'}
-XYoff = [5,15]
-sScaleLabel = { size: [sWaveLabel.size[0]+XYoff[0],$
+XYoff = [50,10]
+sScalegroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
                        XYoff[1]],$
+                uname: 'scaling_constant_group',$
+                list: ['YES','NO'],$
+                value: 1.0}
+XYoff = [0,5]
+sScaleLabel = { size: [sTZO_beam_value.size[0]+XYoff[0],$
+                       sScalegroup.size[1]+XYoff[1]],$
                 uname: 'scaling_constant_label',$
-                value: 'Value:'}
+                value: 'Value:',$
+                sensitive: 0}
 XYoff = [50,-6]
-sScalevalue = { size: [sScaleLabel.size[0]+XYoff[0],$
+sScaleValue = { size: [sScaleLabel.size[0]+XYoff[0],$
                        sScaleLabel.size[1]+XYoff[1],$
                        sTZO_detector_field.size[2:3]],$
                 value: '',$
-                uname: 'scaling_constant_value'}
-XYoff = [150,5]
-sScaleHelp = { size: [sScaleValue.size[0]+XYoff[0],$
+                uname: 'scaling_constant_value',$
+                sensitive: 0}
+XYoff = [0,5]
+sScaleHelp = { size: [sTZOhelp.size[0]+XYoff[0],$
                       sScaleValue.size[1]+XYoff[1]],$
                value: '(Specify the constant with which to scale ' + $
                '(multiply) the final data)'}
@@ -602,6 +610,53 @@ wWaveButton = WIDGET_BUTTON(Base,$
                             UNAME     = sWaveHelpButton.UNAME,$
                             /PUSHBUTTON_EVENTS)
 
+;- Scaling Constant -----------------------------------------------------------
+wScaleTitle = WIDGET_LABEL(Basetab,$
+                           XOFFSET = sScaleTitle.size[0],$
+                           YOFFSET = sScaleTitle.size[1],$
+                           VALUE   = sScaleTitle.value)
+
+;Wave frame
+Base = WIDGET_Base(Basetab,$
+                   XOFFSET   = sScaleBase.size[0],$
+                   YOFFSET   = sScaleBase.size[1],$
+                   SCR_XSIZE = sScaleBase.size[2],$
+                   SCR_YSIZE = sScaleBase.size[3],$
+                   FRAME     = sScaleBase.frame)
+
+group = CW_BGROUP(Base,$
+                  sScaleGroup.list,$
+                  XOFFSET    = sScaleGroup.size[0],$
+                  YOFFSET    = sScaleGroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sScaleGroup.value,$
+                  UNAME      = sScaleGroup.uname,$
+                  /EXCLUSIVE)
+
+;label and value
+label = WIDGET_LABEL(Base,$
+                     XOFFSET   = sScaleLabel.size[0],$
+                     YOFFSET   = sScaleLabel.size[1],$
+                     VALUE     = sScaleLabel.value,$
+                     UNAME     = sScaleLabel.uname,$
+                     SENSITIVE = sScaleLabel.sensitive)
+
+wScaleText = WIDGET_TEXT(Base,$
+                         XOFFSET   = sScaleValue.size[0],$
+                         YOFFSET   = sScaleValue.size[1],$
+                         SCR_XSIZE = sScaleValue.size[2],$
+                         VALUE     = sScaleValue.value,$
+                         UNAME     = sScaleValue.uname,$
+                         SENSITIVE = sScaleValue.sensitive,$
+                         /ALL_EVENTS,$
+                         /EDITABLE,$
+                         /ALIGN_LEFT)
+
+wScaleHelp = WIDGET_LABEL(Base,$
+                          XOFFSET = sScaleHelp.size[0],$
+                          YOFFSET = sScaleHelp.size[1],$
+                          VALUE   = sScaleHelp.value)
+
 ;- Flags ----------------------------------------------------------------------
 wFlagTitle = WIDGET_LABEL(Basetab,$
                        XOFFSET = sFlagsTitle.size[0],$
@@ -660,38 +715,4 @@ group = CW_BGROUP(Base,$
                   LABEL_LEFT = sVerboseGroup.title,$
                   /EXCLUSIVE)
 
-;- Scaling Constant -----------------------------------------------------------
-wScaleTitle = WIDGET_LABEL(Basetab,$
-                           XOFFSET = sScaleTitle.size[0],$
-                           YOFFSET = sScaleTitle.size[1],$
-                           VALUE   = sScaleTitle.value)
-
-;Wave frame
-Base = WIDGET_Base(Basetab,$
-                   XOFFSET   = sScaleBase.size[0],$
-                   YOFFSET   = sScaleBase.size[1],$
-                   SCR_XSIZE = sScaleBase.size[2],$
-                   SCR_YSIZE = sScaleBase.size[3],$
-                   FRAME     = sScaleBase.frame)
-
-;label and value
-label = WIDGET_LABEL(Base,$
-                     XOFFSET = sScaleLabel.size[0],$
-                     YOFFSET = sScaleLabel.size[1],$
-                     VALUE   = sScaleLabel.value)
-
-wScaleText = WIDGET_TEXT(Base,$
-                         XOFFSET   = sScaleValue.size[0],$
-                         YOFFSET   = sScaleValue.size[1],$
-                         SCR_XSIZE = sScaleValue.size[2],$
-                         VALUE     = sScaleValue.value,$
-                         UNAME     = sScaleValue.uname,$
-                         /ALL_EVENTS,$
-                         /EDITABLE,$
-                         /ALIGN_LEFT)
-
-wScaleHelp = WIDGET_LABEL(Base,$
-                          XOFFSET = sScaleHelp.size[0],$
-                          YOFFSET = sScaleHelp.size[1],$
-                          VALUE   = sScaleHelp.value)
 END

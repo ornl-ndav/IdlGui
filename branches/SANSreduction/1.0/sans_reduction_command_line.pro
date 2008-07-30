@@ -299,6 +299,23 @@ IF (value NE '') THEN BEGIN
     cmd += value
 ENDIF
 
+;-scaling constant
+IF (getCWBgroupValue(Event, 'scaling_constant_group') EQ 0) THEN BEGIN
+    activate_intermediate_base = 0
+    cmd += ' ' + (*global).CorrectPara.scale.flag + '='
+    value = getTextFieldValue(Event, 'scaling_constant_value')
+    IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- Scaling Constant Value ' + $
+                                  '(PARAMETERS)']
+    ENDELSE
+ENDIF
+
 ;- INTERMEDIATE ---------------------------------------------------------------
 IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
 ;beam monitor after conversion to Wavelength
