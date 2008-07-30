@@ -153,6 +153,8 @@ global = PTR_NEW ({version:         VERSION,$
                                                 'closed)',$
                                                 flag: $
                                                 '--dkcur'},$
+                                 scale: {flag: $
+                                         '--rescale-final'},$
                                  sample_data_trans: {flag: $
                                                      '--data-trans'},$
                                  empty_can_trans: {flag: $
