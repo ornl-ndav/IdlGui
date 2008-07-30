@@ -259,8 +259,7 @@ DataArray = (*(*global).DataArray)
 X         = (*global).X
 Y         = (*global).Y
 plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
-
 (*global).there_is_a_selection = 0
-
+putTextFieldValue, Event, 'roi_file_name_text_field', ''
 END
 
