@@ -270,8 +270,8 @@ sScalevalue = { size: [sScaleLabel.size[0]+XYoff[0],$
 XYoff = [150,5]
 sScaleHelp = { size: [sScaleValue.size[0]+XYoff[0],$
                       sScaleValue.size[1]+XYoff[1]],$
-               value: '(Specify the constant with which to scale (multiply)' + $
-               ' the final data)'}
+               value: '(Specify the constant with which to scale ' + $
+               '(multiply) the final data)'}
 
 ;- Flags ----------------------------------------------------------------------
 XYoff = [0,20]
@@ -298,9 +298,9 @@ sOGgroup = {size:  [XYoff[0],$
 XYoff    = [105,-3]
 sOGbase  = {size:  [sOGgroup.size[0]+XYoff[0],$
                     sOGgroup.size[1]+XYoff[1],$
-                    420,35],$
+                    700,30],$
             uname: 'overwrite_geometry_base',$
-            map  : 0}
+            map:   1}
 XYoff     = [0,0]
 sOGbutton = {size:  [XYoff[0],$
                      XYoff[1],$
