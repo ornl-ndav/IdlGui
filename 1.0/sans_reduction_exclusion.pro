@@ -228,6 +228,8 @@ IF (DisplayR1 NE 0 OR $
       DisplayR2 = DisplayR2, $
       COEFF =     coeff
     
+    resetROIfileName, Event
+
 ENDIF ELSE BEGIN
     
     (*global).there_is_a_selection = 0
@@ -505,4 +507,32 @@ ENDIF ELSE BEGIN
     activate_preview = 0
 ENDELSE
 activate_widget, Event, 'preview_roi_exclusion_file', activate_preview
+END
+
+;------------------------------------------------------------------------------
+;This procedure reset the name of the ROI file:
+;    - when the user selects a new ROI
+;    - ... (to be defined if necessary)
+PRO resetROIfileName, Event
+FullFileName = getTextFieldValue(Event,'data_file_name_text_field')
+IF (FILE_TEST(FullFileName)) THEN BEGIN
+    IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+        iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+        IF (OBJ_VALID(iObject)) THEN BEGIN
+            RunNumber = iObject->getRunNumber()
+        ENDIF ELSE BEGIN
+            RunNumber = ''
+        ENDELSE
+    ENDIF
+    default_name = 'SANS' 
+    IF (RunNumber NE '') THEN BEGIN
+        default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+    ENDIF
+    DateIso = GenerateIsoTimeStamp()
+    default_name += '_' + DateIso
+    default_name += '_ROI.dat'
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    new_name = default_name
+    putTextFieldValue, Event, 'save_roi_text_field', new_name
+ENDIF
 END
