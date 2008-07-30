@@ -244,12 +244,12 @@ PRO clear_selection_tool, Event
 ;get global structure
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
-
 DataArray = (*(*global).DataArray)
 X         = (*global).X
 Y         = (*global).Y
 plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
 (*global).there_is_a_selection = 0
 putTextFieldValue, Event, 'roi_file_name_text_field', ''
+(*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
 END
 

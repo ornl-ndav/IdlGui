@@ -440,6 +440,8 @@ PRO CreateROIfileFromExclusionArray, file_name, PixelExcludedArray
 widget_control,/hourglass
 ;get ROI array
 pixel_excluded = PixelExcludedArray
+help, pixel_excluded
+
 sz1 = (size(pixel_excluded))(1) ;X
 sz2 = (size(pixel_excluded))(2) ;Y
 error = 0

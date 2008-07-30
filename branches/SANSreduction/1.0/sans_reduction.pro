@@ -202,6 +202,8 @@ MainBaseTitle  = 'SANS Data Reduction GUI'
 MainBaseSize   = [30,25,695+320,530+320]
 MainBaseTitle += ' - ' + VERSION
 
+(*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
+
 ;==============================================================================
 ;Build Main Base ==============================================================
 IF (SCROLLING EQ 'yes') THEN BEGIN
