@@ -473,7 +473,13 @@ full_file_name = folder + file_name
 PixelExcludedArray = (*(*global).RoiPixelArrayExcluded)
 CreateROIfileFromExclusionArray, full_file_name, PixelExcludedArray
 putTextFieldValue, Event, 'roi_file_name_text_field', full_file_name
-
+;enable PREVIEW button if file exist
+IF (FILE_TEST(full_file_name)) THEN BEGIN
+    activate_widget = 1
+ENDIF ELSE BEGIN
+    activate_widget = 0
+ENDELSE
+activate_widget, Event, 'preview_roi_exclusion_file', activate_widget
 END
 
 ;------------------------------------------------------------------------------

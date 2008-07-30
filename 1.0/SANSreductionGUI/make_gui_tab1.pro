@@ -312,7 +312,7 @@ sPreviewRoiButton = { size: [sSaveRoiTextField.size[0]+XYoff[0],$
                              285],$
                       value: 'PREVIEW ...',$
                       uname: 'preview_roi_exclusion_file',$
-                      sensitive: 1}
+                      sensitive: 0}
 
 ;- Clear Selection ------------------------------------------------------------
 XYoff = [0,20]
