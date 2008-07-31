@@ -122,7 +122,7 @@ filter     = (*global).nexus_filter
 title      = (*global).nexus_title
 path       = (*global).nexus_path
 
-IDLsendToGeek_putLogBookText, Event, '> Browsing and Plotting a NeXus file :'
+IDLsendToGeek_addLogBookText, Event, '> Browsing and Plotting a NeXus file :'
 
 FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
                                 extension, $
@@ -166,7 +166,7 @@ IF (FullNexusName NE '') THEN BEGIN
         activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
 ;display name of nexus file name
-    putTab1NexusFileName, Event, ''
+;    putTab1NexusFileName, Event, ''
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
 ENDELSE    
@@ -193,7 +193,7 @@ proposal   = getProposalSelected(Event, proposal_index)
 RunNumber  = getRunNumber(Event)
 
 IF (RunNumber NE 0) THEN BEGIN
-    IDLsendToGeek_putLogBookText, Event, '> Looking for Run Number ' + $
+    IDLsendToGeek_addLogBookText, Event, '> Looking for Run Number ' + $
     STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
     
     isNexusExist = 0
