@@ -140,11 +140,30 @@ IF (FullNexusName NE '') THEN BEGIN
           'data_file_name_text_field', $
           FullNexusName
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
+        defaultReduceFileName = getDefaultReduceFileName(Event, FullNexusName)
         putTextFieldValue, $
           Event, $
           'output_file_name', $
           defaultReduceFileName
+;predefined default roi file name
+        defaultROIfileName = getDefaultROIFileName(full_nexus_name[0])
+        length = 35
+        folder = FILE_DIRNAME(defaultRoiFileName,/MARK_DIRECTORY)
+        (*global).selection_path = folder
+;display only the last part of path
+        sz = STRLEN(folder)
+        IF (sz GT length) THEN BEGIN
+            folder = '... ' + STRMID(folder,sz-length,length)
+        ENDIF
+        putNewButtonValue, Event, 'save_roi_folder_button',folder
+        file   = FILE_BASENAME(defaultRoiFileName)
+        putTextFieldValue, Event, 'save_roi_text_field', file
+;activate selection buttons 
+        uname_list = ['clear_selection_button',$
+                      'selection_browse_button',$
+                      'selection_file_name_text_field',$
+                      'exclusion_base']
+        activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
@@ -202,11 +221,10 @@ IF (RunNumber NE 0) THEN BEGIN
           defaultReduceFileName
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
-        uname_list = ['selection_tool_button',$
-                      'clear_selection_button',$
-                      'load_selection_label',$
+        uname_list = ['clear_selection_button',$
                       'selection_browse_button',$
-                      'selection_file_name_text_field']
+                      'selection_file_name_text_field',$
+                      'exclusion_base']
         activate_widget_list, Event, uname_list, 1
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
@@ -239,7 +257,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
     0: BEGIN ;first tab
         refresh_plot, Event ;_plot
-        RefreshRoiPlot, Event ;_selection
+        RefreshRoiExclusionPlot, Event   ;_selection
     END
     1: BEGIN ;reduce tab
 

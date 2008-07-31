@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 CD, CURRENT = current_folder
 
 APPLICATION = 'SANStranslation'
-VERSION     = '1.0.1'
+VERSION     = '1.0.0'
 DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
@@ -57,6 +57,11 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   sys_color_face_3d: INTARR(3),$
+                   DisplayR1:        0.,$
+                   DisplayR2:        0.,$
+                   there_is_a_selection: 0,$
+                   exclusion_type_index: 0,$ ;0,1,2 or 3
                    TESTING:         TESTING,$
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failed
@@ -181,40 +186,41 @@ global = PTR_NEW ({version:         VERSION,$
                                  })
 
 MainBaseTitle  = 'SANS Data Transmission GUI'
-IF (!VERSION.os EQ 'darwin') THEN BEGIN
-;   MainBaseSize   = [1150,0,695+320,550+320]
-   MainBaseSize   = [30,25,695+320,550+320]
-ENDIF ELSE BEGIN
-   MainBaseSize   = [30,25,695+320,550+320]
-ENDELSE
+MainBaseSize   = [30,25,695+320,530+320]
 MainBaseTitle += ' - ' + VERSION
+
+(*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
 
 ;==============================================================================
 ;Build Main Base ==============================================================
-IF (DEBUGGING EQ 'yes') THEN BEGIN
-   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                            UNAME        = 'MAIN_BASE',$
-                            SCR_XSIZE    = MainBaseSize[2],$
-                            XOFFSET      = MainBaseSize[0],$
-                            YOFFSET      = MainBaseSize[1],$
-                            TITLE        = MainBaseTitle,$
-                            SPACE        = 0,$
-                            XPAD         = 0,$
-                            YPAD         = 2,$
-                            X_SCROLL_SIZE = 500,$
-                            Y_SCROLL_SIZE = 500)
-ENDIF ELSE BEGIN
-  MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                            UNAME        = 'MAIN_BASE',$
-                            SCR_XSIZE    = MainBaseSize[2],$
-                            SCR_YSIZE    = MainBaseSize[3],$
-                            XOFFSET      = MainBaseSize[0],$
-                            YOFFSET      = MainBaseSize[1],$
-                            TITLE        = MainBaseTitle,$
-                            SPACE        = 0,$
-                            XPAD         = 0,$
-                            YPAD         = 2)
-ENDELSE
+; IF (DEBUGGING EQ 'yes') THEN BEGIN
+;    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+;                             UNAME        = 'MAIN_BASE',$
+;                             SCR_XSIZE    = MainBaseSize[2],$
+;                             XOFFSET      = MainBaseSize[0],$
+;                             YOFFSET      = MainBaseSize[1],$
+;                             TITLE        = MainBaseTitle,$
+;                             SPACE        = 0,$
+;                             XPAD         = 0,$
+;                             YPAD         = 2,$
+;                             X_SCROLL_SIZE = 500,$
+;                             Y_SCROLL_SIZE = 500)
+; ENDIF ELSE BEGIN
+MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                         UNAME        = 'MAIN_BASE',$
+                         SCR_XSIZE    = MainBaseSize[2],$
+                         SCR_YSIZE    = MainBaseSize[3],$
+                         XOFFSET      = MainBaseSize[0],$
+                         YOFFSET      = MainBaseSize[1],$
+                         TITLE        = MainBaseTitle,$
+                         SPACE        = 0,$
+                         XPAD         = 0,$
+                         YPAD         = 2)
+;ENDELSE
+
+;get the color of the GUI to hide the widget_draw that will label the draw
+sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
+(*global).sys_color_face_3d = sys_color.face_3d
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
@@ -239,6 +245,7 @@ IF (DEBUGGING EQ 'yes' AND $
     nexus_path           = '~/SVN/IdlGui/branches/SANStransmission/1.0'
     (*global).nexus_path = nexus_path
     (*global).ascii_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
+    (*global).selection_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
 ;populate the FITTING tab (ascii file name)
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
@@ -280,15 +287,49 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id, $
       SET_VALUE='0.1'
 
+;exclusion tool
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='37.25'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='y_center_value')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='41.625'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r1_radii')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='5'
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r2_radii')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='0'
+
 ;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;fitting
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;parameters
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================
+
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
+
+plot, randomn(s,80), $
+  XRANGE     = [0,80],$
+  YRANGE     = [0,80],$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb(sys_color.face_3d),$
+  THICK      = 1, $
+  TICKLEN    = -0.015, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = 8,$
+  YTICKS      = 8,$
+  XMARGIN     = [5,5],$
+  /NODATA
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '

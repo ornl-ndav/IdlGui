@@ -51,10 +51,23 @@ CASE Event.id OF
 
 ;= TAB1 (LOAD DATA) ===========================================================
 
+;- Main Plot ------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
+        getXYposition, Event ;_get
+        IF (Event.press EQ 1) THEN BEGIN
+            putTextFieldValue, Event, $
+              'x_center_value', $
+              STRCOMPRESS(Event.x/8.)
+            putTextFieldValue, Event, $
+              'y_center_value', $
+              STRCOMPRESS(Event.y/8.)
+        ENDIF
+    END
+
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
-        CheckCommandLine, Event    ;_command_line
+        CheckCommandLine, Event ;_command_line
     END
 
 ;- Browse Button --------------------------------------------------------------
@@ -88,9 +101,79 @@ CASE Event.id OF
         LoadPlotSelection, Event ;_selection
     END
 
+;-Exclusion Region Selection Tool ---------------------------------------------
+;- Preview button 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_exclusion_region'): BEGIN
+        PreviewExclusionRegionCircle, Event ;_exclusion
+    END
+
+;- Plot button 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_exclusion_region'): BEGIN
+        ExclusionRegionCircle, Event ;_exclusion
+    END
+
+;- Clear Input Boxed
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_exclusion_input_boxes'): BEGIN
+        ClearInputBoxes, Event ;_exclusion
+    END
+
+;- Type of selection
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_in'): BEGIN
+        exclusion_type, Event, INDEX=0 ;_exclusion
+;        ExclusionRegionCircle, Event ;_exclusion
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_half_out'): BEGIN
+        exclusion_type, Event, INDEX=1 ;_exclusion
+;        ExclusionRegionCircle, Event ;_exclusion
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_in'): BEGIN
+        exclusion_type, Event, INDEX=2 ;_exclusion
+;        ExclusionRegionCircle, Event ;_exclusion
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='exclusion_outside_out'): BEGIN
+        exclusion_type, Event, INDEX=3 ;_exclusion
+;        ExclusionRegionCircle, Event ;_exclusion
+    END
+
+;- SAVE AS ...
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
+        SaveAsExclusionRoi, Event  ;_exclusion
+        CheckCommandLine, Event ;_command_line
+    END
+
+;- SAVE 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
+        SaveExclusionFile, Event ;_exclusion
+        CheckCommandLine, Event ;_command_line
+    END
+
+;- SAVE AS folder button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_folder_button'): BEGIN
+        SaveExclusionRoiFolderButton, Event ;_exclusion
+    END    
+
+;- ROI text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_text_field'): BEGIN
+        SaveRoiTextFieldInteraction, Event ;_exclusion
+    END    
+
+;- Preview Roi button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_roi_exclusion_file'): BEGIN
+        PreviewRoiExclusionFile, Event ;_exclusion
+    END    
+
+;-END of Exclusion Region Selection Tool --------------------------------------
+
 ;- Clear Selection Button -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
-        clear_selection_tool, Event ;_eventcb
+        clear_selection_tool, Event ;_selection
+        CheckCommandLine, Event ;_command_line
+    END
+
+;- Refresh Plot ---------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event   ;_selection
     END
 
 ;= TAB2 (REDUCE) ==============================================================
@@ -100,7 +183,7 @@ CASE Event.id OF
         RunCommandLine, Event ;_run_commandline
     END
 
-;==== tab1 ====================================================================
+;==== tab2 ====================================================================
 
 ;----Data File ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN

@@ -67,3 +67,61 @@ RETURN, value
 END
 
 ;------------------------------------------------------------------------------
+PRO getXYposition, Event
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+    x = Event.x
+    y = Event.y
+    ScreenX = x / (*global).DrawXcoeff
+    ScreenY = y / (*global).DrawXcoeff
+    putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
+    putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+ENDIF
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+        RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+        RunNumber = ''
+    ENDELSE
+ENDIF
+default_name = 'SANS' 
+IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+ENDIF
+DateIso = GenerateIsoTimeStamp()
+default_name += '_' + DateIso
+default_name += '.txt'
+RETURN, default_name
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultROIFileName, Event, FullFileName, RunNumber = RunNumber
+IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+        RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+        RunNumber = ''
+    ENDELSE
+ENDIF
+default_name = 'SANS' 
+IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+ENDIF
+DateIso = GenerateIsoTimeStamp()
+default_name += '_' + DateIso
+default_name += '_ROI.dat'
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+roi_path = (*global).selection_path
+default_name = roi_path + default_name
+
+RETURN, default_name
+END

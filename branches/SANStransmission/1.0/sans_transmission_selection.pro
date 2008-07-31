@@ -34,10 +34,10 @@
 FUNCTION getListOfPixelExcluded, Event, Xarray, Yarray
 Xsize = 80L
 Ysize = 80L
-RoiPixelArrayExcluded = INTARR(Xsize * Ysize)
+RoiPixelArrayExcluded = INTARR(Xsize,Ysize)+1
 nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
-    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
+    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=0
 ENDFOR
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -213,7 +213,8 @@ ENDIF ELSE BEGIN
             RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
                                                            Xarray, $
                                                            Yarray)
-            PlotROI, Event, RoiPixelArrayExcluded
+            (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded 
+            PlotROI, Event
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         ENDELSE
     ENDELSE
@@ -238,11 +239,11 @@ PRO clear_selection_tool, Event
 ;get global structure
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
-
 DataArray = (*(*global).DataArray)
 X         = (*global).X
 Y         = (*global).Y
 plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
-
+(*global).there_is_a_selection = 0
+putTextFieldValue, Event, 'roi_file_name_text_field', ''
+(*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
 END
-

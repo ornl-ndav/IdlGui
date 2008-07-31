@@ -26,6 +26,7 @@ cd, CurrentFolder + '/SANStransmissionGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run sans_transmission_time.pro
 .run IDLgetMetadata__define.pro
 .run IDL3columnsASCIIparser__define.pro
 .run sans_transmission_put.pro
@@ -34,7 +35,6 @@ cd, CurrentFolder
 .run IDLgetNexusData__define.pro
 .run sans_transmission_plot.pro
 .run sans_transmission_gui.pro
-.run sans_transmission_time.pro
 
 ;procedures
 .run sans_transmission_reduce_tab1.pro
@@ -45,6 +45,7 @@ cd, CurrentFolder
 .run sans_transmission_xroi.pro
 .run sans_transmission_xdisplayfile.pro
 .run sans_transmission_selection.pro
+.run sans_transmission_exclusion.pro
 .run sans_transmission_fitting.pro
 
 ;main functions

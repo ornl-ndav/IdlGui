@@ -122,8 +122,7 @@ make_gui_reduce_tab1, REDUCE_TAB, $
 ;- Build PARAMETERS tab (tab #2) ----------------------------------------------
 make_gui_reduce_tab2, REDUCE_TAB, $
                       sReduceTab.size, $
-                      sReduceTab.title.tab2, $
-                      global
+                      sReduceTab.title.tab2
 
 ;- Build INTERMEDIATE FILES tab (tab #3) --------------------------------------
 make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3

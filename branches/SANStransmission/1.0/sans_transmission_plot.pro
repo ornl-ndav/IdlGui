@@ -97,6 +97,28 @@ widget_control,/hourglass
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
+
+;change color of background    
+id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+
+LOADCT,0,/SILENT
+
+plot, randomn(s,80), $
+  XRANGE     = [0,80],$
+  YRANGE     = [0,80],$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb((*global).sys_color_face_3d),$
+  THICK      = 1, $
+  TICKLEN    = -0.015, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = 8,$
+  YTICKS      = 8,$
+  XMARGIN     = [5,5],$
+  /NODATA
+
 ;retrieve parameters from global pointer
 X         = (*global).X
 IF (X NE 0) THEN BEGIN
@@ -106,4 +128,33 @@ ENDIF
 result = plotData(Event, DataArray, X, Y)
 ;turn off hourglass
 widget_control,hourglass=0
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_main_plot, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;clear previous selection
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+WIDGET_CONTROL, id, GET_VALUE = id_value
+WSET, id_value
+;retrieve parameters from global pointer
+X         = (*global).X
+IF (X NE 0) THEN BEGIN
+    DataArray = (*(*global).DataArray)
+    Y         = (*global).Y
+ENDIF
+result = plotData(Event, DataArray, X, Y)
+END
+
+;------------------------------------------------------------------------------
+PRO refreshROIExclusionPlot, Event
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;refresh_main_plot, Event
+IF ((*global).there_is_a_selection EQ 1) THEN BEGIN
+    plotROI, Event
+ENDIF
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
 END

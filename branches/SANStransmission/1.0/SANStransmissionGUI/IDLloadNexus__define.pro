@@ -82,7 +82,7 @@ PRO MakeNexusInputGui, sInput
 XYoff     = [sInput.xoffset, sInput.yoffset]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
-                       680,120],$
+                       980,100],$
               frame : 5}
 sTitle    = { size  : [sFrame.size[0]+20,$
                        sFrame.size[1]-8],$
@@ -120,20 +120,33 @@ sArchivedListAll = { base_size  : [RunNumberCwField.base_size[0]+ $
                      uname      : 'archived_or_list_all'}
 
 ;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XYoff    = [sInput.xoffset+300, $
-            sInput.yoffset+55]
+XYoff    = [sArchivedListAll.base_size[0]+180,$
+            sArchivedListAll.base_size[1]+5]
 sOrLabel = { size  : [XYoff[0],$
                       XYoff[1]],$
              value : 'OR'}
 
 ;Browse Button ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XYoff         = [10,25]
-sBrowseButton = { size  : [sFrame.size[0]+XYoff[0],$
-                           sOrLabel.size[1]+XYoff[1],$
-                           660,30],$
+XYoff         = [50,0]
+sBrowseButton = { size  : [sOrLabel.size[0]+XYoff[0],$
+                           PropNbrDroplist.size[1]+XYoff[1],$
+                           310,30],$
                   uname : 'browse_nexus_button',$
                   VALUE : 'B R O W S E . . .'}
                       
+
+;Nexus file name label --------------------------------------------------------
+XYoff = [10,50]
+sNexusLabel = { size: [PropNbrDroplist.size[0]+XYoff[0],$
+                       PropNbrDroplist.size[1]+XYoff[1]],$
+                value: 'Nexus File Name:'}
+XYoff = [110,0]
+sNexusNameValue = { size: [sNexusLabel.size[0]+XYoff[0],$
+                           sNexusLabel.size[1]+XYoff[1],$
+                           835],$
+                    value : 'N/A',$
+                    uname : 'data_nexus_file_name'}
+
 ;==============================================================================
 ;====== Make GUI ==============================================================
 
@@ -193,6 +206,21 @@ wBrowseButton = WIDGET_BUTTON(MainBase,$
                               SCR_YSIZE = sBrowseButton.size[3],$
                               UNAME     = sBrowseButton.uname,$
                               VALUE     = sBrowseButton.value)
+                                 
+;Nexus file name label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wNexusLabel = WIDGET_LABEL(MainBase,$
+                           XOFFSET = sNexusLabel.size[0],$
+                           YOFFSET = sNexusLabel.size[1],$
+                           VALUE   = sNexusLabel.value)
+
+;Nexus file name value ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wNexusValue = WIDGET_LABEL(MainBase,$
+                           XOFFSET   = sNexusNameValue.size[0],$
+                           YOFFSET   = sNexusNameValue.size[1],$
+                           SCR_XSIZE = sNexusNameValue.size[2],$
+                           VALUE     = sNexusNameValue.value,$
+                           UNAME     = sNexusNameValue.uname,$
+                           /ALIGN_LEFT)
 
 ;Frame and Main Title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wTitle = WIDGET_LABEL(MainBase,$
@@ -207,6 +235,7 @@ wFrame = WIDGET_LABEL(MainBase,$
                       SCR_YSIZE = sFrame.size[3],$
                       VALUE     = '',$
                       FRAME     = sFrame.frame)
+
 
 END
 
@@ -238,9 +267,12 @@ wFrame = WIDGET_LABEL(MainBase,$
                       YOFFSET   = sFrame.size[1],$
                       SCR_XSIZE = sFrame.size[2],$
                       SCR_YSIZE = sFrame.size[3],$
-                      VALUE     = '                                    ' + $
-                      '                                              ' + $
-                      '                                           ',$
+                      VALUE     = '                                     ' + $
+                      '    ' + $
+                      '                                    ' + $
+                      '     ' + $
+                      '                                     ' + $
+                      '      ',$
                       FRAME     = sFrame.frame,$
                       UNAME     = sFrame.uname)
 END
@@ -277,9 +309,10 @@ sArchivedLabel = { size  : [XYoff[0],$
                             XYoff[1],$
                             sArchivedBase.size[2],$
                             sArchivedBase.size[3]],$
-                   value : '                             ' + $
-                   '                                               ' + $
-                   '                             ',$
+                   value : '                                          ' + $
+                   '      ' + $
+                   '                                                    ' + $
+                   '     ',$
                    uname : 'archived_text_field'}
 
 ;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -292,9 +325,9 @@ sListallDroplist = { size  : [XYoff[0],$
                               350,$
                               sArchivedBase.size[3]],$
                      uname : 'list_all_droplist',$
-                     value : ['                                 ' + $
-                              '                                    ' + $
-                              '              ']}
+                     value : ['                                         ' + $
+                              '    ' + $
+                              '                                      ']}
                               
 ;==============================================================================
 ;====== Make GUI ==============================================================
@@ -396,7 +429,7 @@ MakeNexusInputGui, sInput
 ;;Design Status box (not used here because of duplication of status message
 ;MakeStatusGui, sInput
 ;Design Name of nexus test_field or droplist
-MakeNexusFileNameGui, sInput
+;MakeNexusFileNameGui, sInput
 ;Design NXsummary text_field
 ;MakeNxSummaryGui, sInput
 
