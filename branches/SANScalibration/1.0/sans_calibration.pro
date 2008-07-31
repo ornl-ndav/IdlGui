@@ -309,14 +309,21 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================
+
+;Put date/time when user started application in first line of log book
+time_stamp = GenerateIsoTimeStamp()
+message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='log_book_text')
+WIDGET_CONTROL, id, $
+  SET_VALUE=message
 
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
