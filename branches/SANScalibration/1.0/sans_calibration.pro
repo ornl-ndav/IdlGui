@@ -256,7 +256,7 @@ IF (DEBUGGING EQ 'yes' AND $
 ;populate the FITTING tab (ascii file name)
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
-      SET_VALUE='~/SVN/IdlGui/branches/SANScalibration/1.0/SANS_175.txt'
+      SET_VALUE='~/SVN/IdlGui/branches/SANScalibration/1.0/SANS_175_new.txt'
 
 ;min,max and width
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_min_text_field')
@@ -309,8 +309,8 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1

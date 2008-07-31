@@ -451,11 +451,12 @@ END
 ;change the label of the automatic button
 PRO ChangeDegreeOfPolynome, Event
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
-IF (value_OF_group EQ 0) THEN BEGIN
-    label = 'AUTOMATIC FITTING with Y = A + BX'
-ENDIF ELSE BEGIN
-    label = 'AUTOMATIC FITTING with Y = A + BX + CX^2'
-ENDELSE
+CASE (value_OF_group) OF
+    0: label = 'AUTOMATIC FITTING with Y = A + BX'
+    1: label = 'AUTOMATIC FITTING with Y = A + BX + CX^2'
+    2: label = 'AUTOMATIC FITTING with Y = A + BX + CX^2 + DX^3'
+ELSE: label = ''
+ENDCASE
 putNewButtonValue, Event, 'auto_fitting_button', label
 END
 
