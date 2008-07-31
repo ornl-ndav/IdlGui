@@ -249,14 +249,14 @@ ENDIF
 ;debugging version of program
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANStransmission/1.0'
+    nexus_path           = '~/SVN/IdlGui/branches/SANScalibration/1.0'
     (*global).nexus_path = nexus_path
-    (*global).ascii_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
-    (*global).selection_path = '~/SVN/IdlGui/branches/SANStransmission/1.0/'
+    (*global).ascii_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
+    (*global).selection_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
 ;populate the FITTING tab (ascii file name)
    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
-      SET_VALUE='~/SVN/IdlGui/branches/SANStransmission/1.0/SANS_175.txt'
+      SET_VALUE='~/SVN/IdlGui/branches/SANScalibration/1.0/SANS_175.txt'
 
 ;min,max and width
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_min_text_field')
