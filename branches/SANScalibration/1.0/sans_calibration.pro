@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 CD, CURRENT = current_folder
 
 APPLICATION = 'SANScalibration'
-VERSION     = '1.0.0'
+VERSION     = '1.0.1'
 DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;works only on dev and pick up ~/bin/runenv before the command line
@@ -57,6 +57,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   MainBaseTitle: '',$
                    sys_color_face_3d: INTARR(3),$
                    DisplayR1:        0.,$
                    DisplayR2:        0.,$
@@ -185,7 +186,9 @@ global = PTR_NEW ({version:         VERSION,$
                                               '--dump-bmon-rebin'}}$
                                  })
 
-MainBaseTitle  = 'SANS Data Calibration GUI  ( Background and Transmission ) '
+MainBaseTitle  = 'SANS Data Calibration GUI '
+(*global).MainBaseTitle = MainBaseTitle
+MainBaseTitle += '( Mode: Transmission ) '
 MainBaseSize   = [30,25,695+320,550+320]
 MainBaseTitle += ' - ' + VERSION
 
@@ -302,11 +305,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================

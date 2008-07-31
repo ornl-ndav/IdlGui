@@ -125,3 +125,12 @@ default_name = roi_path + default_name
 
 RETURN, default_name
 END
+
+;------------------------------------------------------------------------------
+;This function returns the select value of the CW_BGROUP
+FUNCTION getCWBgroupValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
