@@ -209,7 +209,7 @@ output_array = createOutputArray(Event)
 output_path = getButtonValue(Event, 'output_folder_button')
 output_name = getTextFieldValue(Event, 'output_file_text_field')
 output_file_name = output_path + output_name
-sans_transmission_xdisplayfile, $
+sans_calibration_xdisplayfile, $
   output_file_name,$
   TEXT = output_array,$
   /EDITABLE,$

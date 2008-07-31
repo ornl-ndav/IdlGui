@@ -185,8 +185,8 @@ global = PTR_NEW ({version:         VERSION,$
                                               '--dump-bmon-rebin'}}$
                                  })
 
-MainBaseTitle  = 'SANS Data Calibration GUI (background and transmission)'
-MainBaseSize   = [30,25,695+320,530+320]
+MainBaseTitle  = 'SANS Data Calibration GUI  ( Background and Transmission ) '
+MainBaseSize   = [30,25,695+320,550+320]
 MainBaseTitle += ' - ' + VERSION
 
 (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)

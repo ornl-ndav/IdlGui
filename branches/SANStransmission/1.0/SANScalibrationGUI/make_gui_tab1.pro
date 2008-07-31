@@ -44,8 +44,9 @@ sLabelDraw = { size: [0,0,700,700],$
                uname: 'label_draw_uname'}
 
 ;- nexus input ----------------------------------------------------------------
+XYoff = [0,15]
 sNexus = { size : [10,$
-                   sLabelDraw.size[1]+sLabelDraw.size[3]]}
+                   sLabelDraw.size[1]+sLabelDraw.size[3]+XYOff[1]]}
           
 ;- draw -----------------------------------------------------------------------
 XYoff = [30,20]
