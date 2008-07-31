@@ -93,20 +93,21 @@ XYoff = [3,35]
 sDegreeGroup = { size:  [XYoff[0],$
                          sInputFileLabel.size[1]+ $
                          XYoff[1]],$
-                 list:  ['1 (y=A+Bx)','2 (y=A+Bx+Cx^2)'],$
+                 list:  ['1 (y=A+BX)', $
+                         '2 (y=A+BX+CX^2)', $
+                         '3 (y=A+BX+CX^2+DX^3'],$
                  value: 0.0,$
                  uname: 'fitting_polynomial_degree_cw_group',$
-                 title: 'Polynomial Fitting Degree: '}
+                 title: 'Poly. Fitting Degree: '}
 
 ;- Automatic Fitting Button ---------------------------------------------------
-XYoff = [390,5]
+XYoff = [500,5]
 sAutoFittingButton = { size: [XYoff[0],$
                               sDegreeGroup.size[1]+XYoff[1],$
-                              510,30],$
+                              400,30],$
                        uname: 'auto_fitting_button',$
                        sensitive: 0,$
-                       value: 'A U T O M A T I C   F I T T I N G    ' + $
-                       'with    Y = A + BX'}
+                       value: 'AUTOMATIC FITTING with Y = A + BX'}
 
 ;- Settings -------------------------------------------------------------------
 XYoff = [0,0]
@@ -148,7 +149,7 @@ sCloseSettings = { uname: 'close_fitting_settings_button',$
 XYOff = [0,35] ;base
 sResultFitBase = { size: [XYoff[0],$
                           sAutoFittingButton.size[1]+XYoff[1],$
-                          380,$
+                          480,$
                           40],$
                    frame: 0,$
                    map:   1,$
@@ -157,7 +158,7 @@ XYoff = [5,10] ;label
 sResultFitLabel = { size: [XYoff[0],$
                            XYoff[1]],$
                     value: '=> Y =                +                X +    ' + $
-                    '            X^2'}
+                    '            X^2 +                         X^3'}
 XYOff = [45,-6] ;A text field
 sResultFitA = { size: [XYoff[0],$
                        sResultFitLabel.size[1]+XYoff[1],$
@@ -174,6 +175,11 @@ sResultFitC = { size: [sResultFitB.size[0]+XYoff[0],$
                        sResultFitB.size[1:2]],$
                 value: '',$
                 uname: 'result_fit_c_text_field'}
+XYOff = [125,0] ;D text field
+sResultFitD = { size: [sResultFitC.size[0]+XYoff[0],$
+                       sResultFitC.size[1:2]],$
+                value: '',$
+                uname: 'result_fit_d_text_field'}
 
 ;Manual fitting button
 XYoff = [0,5]
@@ -484,11 +490,23 @@ wC = WIDGET_TEXT(wBase,$
                  UNAME     = sResultFitC.uname,$
                  /EDITABLE,$
                  /ALIGN_LEFT)
+
+;D text field
+wD = WIDGET_TEXT(wBase,$
+                 XOFFSET   = sResultFitD.size[0],$
+                 YOFFSET   = sResultFitD.size[1],$
+                 SCR_XSIZE = sResultFitD.size[2],$
+                 VALUE     = sResultFitD.value,$
+                 UNAME     = sResultFitD.uname,$
+                 /EDITABLE,$
+                 /ALIGN_LEFT)
+
 ;label
 wLabel = WIDGET_LABEL(wBase,$
                       XOFFSET = sResultFitLabel.size[0],$
                       YOFFSET = sResultFitLabel.size[1],$
-                      VALUE   = sResultFitLabel.value)
+                      VALUE   = sResultFitLabel.value,$
+                      /ALIGN_LEFT)
 
 ;- Manual Fitting Button ------------------------------------------------------
 wButton = WIDGET_BUTTON(wTabBase,$
