@@ -15,6 +15,12 @@ PRO IDLXMLParser::startElement, URI, local, strName, attr, value
   ENDIF ELSE BEGIN
     self.buffer = ''
   ENDELSE
+  print, strName
+END
+
+;---------------------------------------------------------------------------
+PRO IDLXMLParser::cleanup
+PTR_FREE, self.tag
 END
 
 ;---------------------------------------------------------------------------
@@ -22,7 +28,8 @@ PRO IDLXMLParser::endElement, URI, local, strName
   IF (strName EQ (*self.tag)[self.elements]) THEN BEGIN
     CASE (self.mode) OF
       0: BEGIN  ;search defined by only tag
-        self -> IDLffXMLSAX::StopParsing
+        self -> StopParsing
+        print, '======== done'
         self.output = self.buffer
       END
       1: BEGIN  ;search defined by tag and attribute
