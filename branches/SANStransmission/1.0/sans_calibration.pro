@@ -37,7 +37,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 CD, CURRENT = current_folder
 
-APPLICATION = 'SANStranslation'
+APPLICATION = 'SANScalibration'
 VERSION     = '1.0.0'
 DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
@@ -185,7 +185,7 @@ global = PTR_NEW ({version:         VERSION,$
                                               '--dump-bmon-rebin'}}$
                                  })
 
-MainBaseTitle  = 'SANS Data Transmission GUI'
+MainBaseTitle  = 'SANS Data Calibration GUI (background and transmission)'
 MainBaseSize   = [30,25,695+320,530+320]
 MainBaseTitle += ' - ' + VERSION
 
@@ -346,7 +346,7 @@ END
 
 ;==============================================================================
 ; Empty stub procedure used for autoloading.
-PRO sans_transmission, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO sans_calibration, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 

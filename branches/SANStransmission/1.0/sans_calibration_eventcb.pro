@@ -329,7 +329,7 @@ widget_control,hourglass=0
 END
 
 ;==============================================================================
-PRO sans_reduction_eventcb, event
+PRO sans_calibration_eventcb, event
 END
 
 ;==============================================================================

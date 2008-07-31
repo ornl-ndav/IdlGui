@@ -160,7 +160,7 @@ end
 
 
 
-PRO sans_transmission_xdisplayFile, FILENAME, $
+PRO sans_calibration_xdisplayFile, FILENAME, $
                                     TITLE          = TITLE, $
                                     GROUP          = GROUP, $
                                     WIDTH          = WIDTH, $
