@@ -107,8 +107,10 @@ global = PTR_NEW ({version:         VERSION,$
                    xaxis_units:      '',$
                    yaxis:            '',$
                    yaxis_units:      '',$
-                   ReducePara: {driver_name: $
+                   ReducePara: {transmission_driver_name: $
                                 'sas_transmission1',$
+                                background_driver_name: $
+                                'sas_background',$
                                 overwrite_geo: $
                                 '--inst-geom',$
                                 detect_time_offset: $
@@ -123,6 +125,8 @@ global = PTR_NEW ({version:         VERSION,$
                                 '--mon-eff-const',$
                                 verbose: $
                                 '--verbose',$
+                                acc_down_time: $
+                                '--acc-down-time',$
                                 min_lambda_cut_off:$
                                 '--lambda-low-cut',$
                                 max_lambda_cut_off:$
@@ -305,11 +309,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================

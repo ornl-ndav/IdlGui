@@ -322,6 +322,12 @@ CASE Event.id OF
        CheckCommandLine, Event  ;_command_line
     END
     
+;---- ADT ---------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'accelerator_down_time_text_field'): BEGIN
+       CheckCommandLine, Event  ;_command_line
+    END
+
 ;---- Verbose Mode ------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='verbose_mode_group'): BEGIN
        CheckCommandLine, Event  ;_command_line

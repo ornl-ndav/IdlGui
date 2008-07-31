@@ -36,7 +36,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
 
 ;- Define Main Base of Reduce Tab 1 -------------------------------------------
 sBaseTab = { size:  tab_size,$
-             uname: 'reduce_tab3_base',$
+             uname: 'reduce_tab2_base',$
              title: tab_title}
 
 ;- Time Zero offset (microS) --------------------------------------------------
@@ -84,11 +84,12 @@ sMEbase = { size: [sTZOBase.size[0]+XYoff[0],$
                    sTZObase.size[1]+sTZObase.size[3]+XYoff[1],$
                    sTZObase.size[2:3]], $
              frame: 1,$
-             uname: 'time_zero_offset_base'}
+             uname: 'monitor_efficiency_base'}
 XYoff = [20,-8]
 sMEtitle = { size: [sMEbase.size[0]+XYoff[0],$
                     sMEbase.size[1]+XYoff[1]],$
-             value: 'Monitor Efficiency'}
+             value: 'Monitor Efficiency',$
+             uname: 'monitor_efficiency_title'}
 
 XYoff = [50,10]
 sMEgroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
@@ -212,47 +213,36 @@ sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
               uname: 'maximum_lambda_cut_off_value',$
               sensitive: 0}
 
-;- Wavelength dependent background subtraction --------------------------------
+;- Accelerator down time ------------------------------------------------------
 XYoff = [0,20]
-sWaveBase = { size:  [sQLbase.size[0]+XYoff[0],$
-                      sQLbase.size[1]+sQLbase.size[3]+XYoff[1],$
-                      sQLbase.size[2:3]],$
-              frame: sQLbase.frame}
+sADTbase = { size: [sQLbase.size[0]+XYoff[0],$
+                   sQLbase.size[1]+sQLbase.size[3]+XYoff[1],$
+                   sQLbase.size[2:3]],$
+            frame: sMEbase.frame,$
+            uname: 'accelerator_down_time_base'}
 XYoff = [20,-8]
-sWaveTitle = { size:  [sWaveBase.size[0]+XYoff[0],$
-                       sWaveBase.size[1]+XYoff[1]],$
-               value: 'Wavelength Dependent Background Subtraction'}
-
-;Wave label
-WaveXoff = 10
+sADTTitle = { size:  [sADTbase.size[0]+XYoff[0],$
+                      sADTbase.size[1]+XYoff[1]],$
+              uname: 'accelerator_down_time_title',$
+              value: 'Accelerator Down Time (seconds)'}
 XYoff = [50,15]
-sWaveLabel = { size:  [XYoff[0],$
-                       XYoff[1]],$
-               value: 'Comma-delimited List of Increasing Coefficients',$
-               uname: 'wave_para_label_uname'}
+sADTvalue = {size:  [XYoff[0],$
+                     XYoff[1]],$
+             value: 'Value:'}
+XYoff = [45,-5]
+sADT_field = {size:  [sADTvalue.size[0]+XYoff[0],$
+                      sADTvalue.size[1]+XYoff[1],$
+                      70,30],$
+              value: '',$
+              uname: 'accelerator_down_time_text_field'}
 
-XYoff = [320,-8]
-sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
-                     sWaveLabel.size[1]+XYoff[1],$
-                     335],$
-              VALUE: '',$
-              UNAME: 'wave_dependent_back_sub_text_field'}
-XYoff = [30,0]
-sWaveHelpButton = { size: [sWaveText.size[0]+$
-                           sWaveText.size[2]+XYoff[0],$
-                           sWaveText.size[1],$
-                           65,$
-                           30],$
-                    VALUE: 'HELP',$
-                    UNAME: 'wave_help_button'}
-                          
 ;- Flags ----------------------------------------------------------------------
 XYoff = [0,20]
-sFlagsBase = { size: [sWavebase.size[0]+XYoff[0],$
-                      sWaveBase.size[1]+sWaveBase.size[3]+XYoff[1],$
-                      sWaveBase.size[2],$
+sFlagsBase = { size: [sADTbase.size[0]+XYoff[0],$
+                      sADTBase.size[1]+sADTBase.size[3]+XYoff[1],$
+                      sADTBase.size[2],$
                       80],$
-               frame: sWaveBase.frame}
+               frame: sQLBase.frame}
 XYoff = [20,-8]
 sFlagsTitle = { size:  [sFlagsBase.size[0]+XYoff[0],$
                         sFlagsBase.size[1]+XYoff[1]],$
@@ -354,7 +344,8 @@ help = WIDGET_LABEL(Base,$
 label = WIDGET_LABEL(Basetab,$
                      XOFFSET = sMEtitle.size[0],$
                      YOFFSET = sMEtitle.size[1],$
-                     VALUE   = sMEtitle.value)
+                     VALUE   = sMEtitle.value,$
+                     UNAME   = sMEtitle.uname)
 
 base = WIDGET_BASE(BaseTab,$
                    XOFFSET   = sMEbase.size[0],$
@@ -533,47 +524,36 @@ wValue = WIDGET_TEXT(Base,$
                      /ALL_EVENTS,$
                      /ALIGN_LEFT)
 
+;- Accelerator down time ------------------------------------------------------
+wTitle = WIDGET_LABEL(Basetab,$
+                      XOFFSET = sADTTitle.size[0],$
+                      YOFFSET = sADTTitle.size[1],$
+                      UNAME   = sADTTitle.uname,$
+                      VALUE   = sADtTitle.value)
 
-;- Wavelength dependent background subtraction --------------------------------
-wWaveTitle = WIDGET_LABEL(Basetab,$
-                       XOFFSET = sWaveTitle.size[0],$
-                       YOFFSET = sWaveTitle.size[1],$
-                       VALUE   = sWaveTitle.value)
+;ADT base
+Base = WIDGET_BASE(Basetab,$
+                   XOFFSET   = sADTbase.size[0],$
+                   YOFFSET   = sADTbase.size[1],$
+                   SCR_XSIZE = sADTbase.size[2],$
+                   SCR_YSIZE = sADTbase.size[3],$
+                   FRAME     = sADTbase.frame,$
+                   UNAME     = sADTbase.uname)
 
-;Wave frame
-Base = WIDGET_Base(Basetab,$
-                   XOFFSET   = sWaveBase.size[0],$
-                   YOFFSET   = sWaveBase.size[1],$
-                   SCR_XSIZE = sWaveBase.size[2],$
-                   SCR_YSIZE = sWaveBase.size[3],$
-                   FRAME     = sWaveBase.frame)
+label = WIDGET_LABEL(Base,$
+                     XOFFSET = sADTvalue.size[0],$
+                     YOFFSET = sADTvalue.size[1],$
+                     VALUE   = sADTvalue.value)
 
-;Wave Label
-wWaveLabel = WIDGET_LABEL(Base,$
-                          XOFFSET = sWaveLabel.size[0],$
-                          YOFFSET = sWaveLabel.size[1],$
-                          VALUE   = sWaveLabel.value,$
-                          UNAME   = sWaveLabel.uname)
-
-wWaveText = WIDGET_TEXT(Base,$
-                        XOFFSET   = sWaveText.size[0],$
-                        YOFFSET   = sWaveText.size[1],$
-                        SCR_XSIZE = sWaveText.size[2],$
-                        VALUE     = sWaveText.value,$
-                        UNAME     = sWaveText.uname,$
-                        /ALL_EVENTS,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
-
-;Wave Help Button
-wWaveButton = WIDGET_BUTTON(Base,$
-                            XOFFSET   = sWaveHelpButton.size[0],$
-                            YOFFSET   = sWaveHelpButton.size[1],$
-                            SCR_XSIZE = sWaveHelpButton.size[2],$
-                            SCR_YSIZE = sWaveHelpButton.size[3],$
-                            VALUE     = sWaveHelpButton.value,$
-                            UNAME     = sWaveHelpButton.UNAME,$
-                            /PUSHBUTTON_EVENTS)
+text = WIDGET_TEXT(Base,$
+                   XOFFSET   = sADT_field.size[0],$
+                   YOFFSET   = sADT_field.size[1],$
+                   SCR_XSIZE = sADT_field.size[2],$
+                   SCR_YSIZE = sADT_field.size[3],$
+                   VALUE     = sADT_field.value,$
+                   UNAME     = sADT_field.uname,$
+                   /ALL_EVENTS,$
+                   /EDITABLE)
 
 ;- Flags ----------------------------------------------------------------------
 wFlagTitle = WIDGET_LABEL(Basetab,$
