@@ -143,13 +143,11 @@ CASE Event.id OF
 ;- SAVE AS ...
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
         SaveAsExclusionRoi, Event  ;_exclusion
-        CheckCommandLine, Event ;_command_line
     END
 
 ;- SAVE 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
         SaveExclusionFile, Event ;_exclusion
-        CheckCommandLine, Event ;_command_line
     END
 
 ;- SAVE AS folder button
