@@ -41,14 +41,14 @@ sReduceBase = { size:  MainTabSize,$
 
 ;- Tab titles -----------------------------------------------------------------
 sReduceTab = { size:   [sReduceBase.size[0:2],$
-                        sReduceBase.size[3]-160],$
+                        sReduceBase.size[3]-200],$
                uname:  'reduce_tab',$
                title:  {tab1: ' LOAD FILES ',$
                         tab2: ' PARAMETERS ',$
                         tab3: ' INTERMEDIATE FILES'}}
 
 ;- data reduction status ------------------------------------------------------
-XYoff = [160,3]
+XYoff = [160,5]
 sDRstatus = { size:  [XYoff[0],$
                       sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
                       370,22],$
@@ -57,7 +57,7 @@ sDRstatus = { size:  [XYoff[0],$
               frame: 2}
 
 ;- GO DATA REDUCTION button ---------------------------------------------------
-XYoff = [550,0]
+XYoff = [550,3]
 sGobutton = { size:      [XYoff[0],$
                           sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
                           455,30],$
@@ -66,11 +66,11 @@ sGobutton = { size:      [XYoff[0],$
               sensitive: 0}
 
 ;- Command Line status --------------------------------------------------------
-XYoff = [2,30]
+XYoff = [2,35]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
                          700,$
-                         100],$
+                         135],$
                  uname: 'command_line_preview'}
 XYoff = [5,-18]
 sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
