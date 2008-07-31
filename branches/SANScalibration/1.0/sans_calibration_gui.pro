@@ -86,16 +86,25 @@ ModeIndex = getCWBgroupValue(Event, 'mode_group_uname')
 
 IF (ModeIndex EQ 0) THEN BEGIN ;transmission
     Title = MainBaseTitle + ' ( Mode: Transmission ) ' + ' - ' + VERSION
-
-
-
+    monitor_efficiency_flag = 1
+    acc_down_time_flag      = 0
+    intermediate_files_flag = 1
 ENDIF ELSE BEGIN
     Title = MainBaseTitle + ' ( Mode: Background ) ' + ' - ' + VERSION
-
-
-
+    monitor_efficiency_flag = 0
+    acc_down_time_flag      = 1
+    intermediate_files_flag = 0
 ENDELSE
 WIDGET_CONTROL, Event.top, BASE_SET_TITLE=title
-
-
+uname_list = ['monitor_efficiency_title',$
+              'monitor_efficiency_base']
+activate_widget_list, Event, uname_list, monitor_efficiency_flag
+uname_list = ['accelerator_down_time_title',$
+              'accelerator_down_time_base']
+activate_widget_list, Event, uname_list, acc_down_time_flag
+;uname_list = ['intermediate_group_uname',$
+;              'beam_monitor_hidding_base',$
+;              'lambda_base']
+uname_list = ['reduce_tab3_base']
+activate_widget_list, Event, uname_list, intermediate_files_flag
 END

@@ -260,7 +260,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         RefreshRoiExclusionPlot, Event   ;_selection
     END
     1: BEGIN ;reduce tab
-
+        CheckCommandLine, Event ;_command_line
     END
     2: BEGIN ;fitting
        ManualFitting, Event

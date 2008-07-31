@@ -43,7 +43,12 @@ missing_arguments_text   = ['']   ;list of missing arguments
 missing_argument_counter = 0
 
 ;Check first tab
-cmd = (*global).ReducePara.driver_name ;driver to launch
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+;transmission mode
+    cmd = (*global).ReducePara.transmission_driver_name ;driver to launch
+ENDIF ELSE BEGIN ;background mode
+    cmd = (*global).ReducePara.background_driver_name ;driver to launch
+ENDELSE
 
 ;- LOAD FILES TAB -------------------------------------------------------------
 
@@ -138,27 +143,32 @@ ENDIF ELSE BEGIN
                                   'Offset (PARAMETERS)']
 ENDELSE
 
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+;transmission mode
+
 ;-monitor efficiency
-IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
-    activate_intermediate_base = 0
-    cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
-    cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
-    value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
-    IF (value NE '') THEN BEGIN
-        cmd += STRCOMPRESS(value,/REMOVE_ALL)
-        cmd += ',0.0'
+    IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
+        activate_intermediate_base = 0
+        cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
+        cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
+        value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
+        IF (value NE '') THEN BEGIN
+            cmd += STRCOMPRESS(value,/REMOVE_ALL)
+            cmd += ',0.0'
+        ENDIF ELSE BEGIN
+            cmd += '?,0.0'
+            cmd_status = 0
+            ++missing_argument_counter
+            missing_arguments_text = [missing_arguments_text, $
+                                      '- Monitor Efficiency Value ' + $
+                                      '(PARAMETERS)']
+        ENDELSE
     ENDIF ELSE BEGIN
-        cmd += '?,0.0'
-        cmd_status = 0
-        ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, $
-                                  '- Monitor Efficiency Value ' + $
-                                  '(PARAMETERS)']
+        activate_intermediate_base = 1
     ENDELSE
-ENDIF ELSE BEGIN
-    activate_intermediate_base = 1
-ENDELSE
-map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
+    map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
+ENDIF
+
 
 ;-Wavelength min, max, width and unit
 Valuemin   = getTextFieldValue(Event,'wave_min_text_field')
@@ -172,7 +182,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Wavelength minimum ' + $
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Wavelength minimum ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
@@ -182,7 +193,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Wavelength maximum ' + $
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Wavelength maximum ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
@@ -192,7 +204,8 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Wavelength width ' + $
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Wavelength width ' + $
                               '(PARAMETERS)']
 ENDELSE
 cmd += ','
@@ -201,6 +214,25 @@ IF (Valueunits EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN
     cmd += 'log'
 ENDELSE
+
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 1) THEN BEGIN
+;background mode
+
+;Accelerator Down Time
+    Value   = getTextFieldValue(Event,'accelerator_down_time_text_field')
+    cmd += ' ' + (*global).ReducePara.acc_down_time + '='
+    IF (Value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(Value,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+                                  '- Accelerator Down Time ' + $
+                                  '(PARAMETERS)']
+    ENDELSE
+    cmd += ',0.0'
+ENDIF    
 
 ;-verbose mode
 IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
@@ -239,23 +271,28 @@ IF (getCWBgroupValue(Event, 'maximum_lambda_cut_off_group') EQ 0) THEN BEGIN
     ENDELSE
 ENDIF
 
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+;transmission mode
+    
 ;- INTERMEDIATE ---------------------------------------------------------------
-IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
+    IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
 ;beam monitor after conversion to Wavelength
-IF (IntermPlots[0] EQ 1) THEN BEGIN 
-    cmd += ' ' + (*global).IntermPara.bmon_wave.flag
-ENDIF
+    IF (IntermPlots[0] EQ 1) THEN BEGIN 
+        cmd += ' ' + (*global).IntermPara.bmon_wave.flag
+    ENDIF
 ;beam monitor in Wavelength after efficiency correction
-IF (IntermPlots[1] EQ 1) THEN BEGIN
-    cmd += ' ' + (*global).IntermPara.bmon_effc.flag
-ENDIF
+    IF (IntermPlots[1] EQ 1) THEN BEGIN
+        cmd += ' ' + (*global).IntermPara.bmon_effc.flag
+    ENDIF
 ;data of each pixel after wavelength conversion
-IF (IntermPlots[2] EQ 1) THEN BEGIN
-    cmd += ' ' + (*global).IntermPara.wave.flag
-ENDIF
+    IF (IntermPlots[2] EQ 1) THEN BEGIN
+        cmd += ' ' + (*global).IntermPara.wave.flag
+    ENDIF
 ;monitor spectrum after rebin to detector wavelength axis
-IF (IntermPlots[3] EQ 1) THEN BEGIN
-    cmd += ' ' + (*global).IntermPara.bmon_rebin.flag
+    IF (IntermPlots[3] EQ 1) THEN BEGIN
+        cmd += ' ' + (*global).IntermPara.bmon_rebin.flag
+    ENDIF
+
 ENDIF
 
 ;- Put cmd in the text box -
