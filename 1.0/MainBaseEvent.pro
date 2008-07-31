@@ -51,6 +51,11 @@ CASE Event.id OF
 
 ;= TAB1 (LOAD DATA) ===========================================================
 
+;- MODE GROUP selection -------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='mode_group_uname'): BEGIN
+        ModeGuiUpdate, Event ;_gui
+    END
+
 ;- Main Plot ------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
         getXYposition, Event ;_get

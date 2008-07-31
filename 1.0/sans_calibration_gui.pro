@@ -59,14 +59,6 @@ activate_widget, Event, 'go_data_reduction_button', activate_status
 END
 
 ;------------------------------------------------------------------------------
-;This function returns the select value of the CW_BGROUP
-FUNCTION getCWBgroupValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
-END
-
-;------------------------------------------------------------------------------
 ;This function put the full path of the file as the new button label
 PRO putNewButtonValue, Event, uname, value
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
@@ -80,4 +72,30 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
 WIDGET_CONTROL, id, GET_VALUE = id_value
 WSET, id_value
 ERASE
+END
+
+;------------------------------------------------------------------------------
+;This procedure updates the GUI according to the mode selected:
+;transmission or background
+PRO ModeGuiUpdate, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+VERSION       = (*global).version
+MainBaseTitle = (*global).MainBaseTitle
+
+ModeIndex = getCWBgroupValue(Event, 'mode_group_uname')
+
+IF (ModeIndex EQ 0) THEN BEGIN ;transmission
+    Title = MainBaseTitle + ' ( Mode: Transmission ) ' + ' - ' + VERSION
+
+
+
+ENDIF ELSE BEGIN
+    Title = MainBaseTitle + ' ( Mode: Background ) ' + ' - ' + VERSION
+
+
+
+ENDELSE
+WIDGET_CONTROL, Event.top, BASE_SET_TITLE=title
+
+
 END

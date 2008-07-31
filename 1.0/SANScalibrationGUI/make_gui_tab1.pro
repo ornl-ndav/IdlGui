@@ -53,11 +53,25 @@ XYoff = [30,20]
 sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
           uname : 'draw_uname'}
 
-;- selection ------------------------------------------------------------------
+;Transmission or Background mode ----------------------------------------------
 XYoff = [0,10]
-sSelection = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
-                      XYoff[1],$
-                      300,$
+sModeBase = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
+                     XYoff[1],$
+                     300,45],$
+              frame: 4}
+XYoff = [0,5] ;cw_bgroup
+sModeGroup = { size: [XYoff[0],$
+                      XYoff[1]],$
+               value: 0.0,$
+               uname: 'mode_group_uname',$
+               title: 'Operation Mode:',$
+               list:  ['Transmission','Background']}
+
+;- selection ------------------------------------------------------------------
+XYoff = [0,15]
+sSelection = { size: [sModeBase.size[0]+XYoff[0],$
+                      sModeBase.size[1]+sModeBase.size[3]+XYoff[1],$
+                      305,$
                       35],$
                value: 'ADVANCED SELECTION TOOL',$
                uname: 'selection_tool_button',$
@@ -335,10 +349,10 @@ sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
                  sensitive: 1}
 
 ;- X and Y position of cursor -------------------------------------------------
-XYoff = [0,597]
+XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
-                  sLabelDraw.size[1]+XYoff[1],$
+                  sRefreshPlot.size[1]+XYoff[1],$
                   80,40],$
            frame: 1,$
            uname: 'x_y_base'}
@@ -400,6 +414,25 @@ wLabelDraw = WIDGET_DRAW(wTab1Base,$
                          YOFFSET   = sLabelDraw.size[1],$
                          SCR_XSIZE = sLabelDraw.size[2],$
                          SCR_YSIZE = sLabelDraw.size[3])
+
+;Transmission or Background mode ----------------------------------------------
+wTBase = WIDGET_BASE(wTab1Base,$
+                     XOFFSET   = sModeBase.size[0],$
+                     YOFFSET   = sModeBase.size[1],$
+                     SCR_XSIZE = sModeBase.size[2],$
+                     SCR_YSIZE = sModeBase.size[3],$
+                     FRAME     = sModeBase.frame)
+
+wModeGroup = CW_BGROUP(wTBase,$ ;cw_bgroup
+                       sModeGroup.list,$
+                       XOFFSET    = sModeGroup.size[0],$
+                       YOFFSET    = sModeGroup.size[1],$
+                       ROW        = 1,$
+                       SET_VALUE  = sModeGroup.value,$
+                       UNAME      = sModeGroup.uname,$
+                       LABEL_LEFT = sModeGroup.title,$
+                       /NO_RELEASE,$
+                       /EXCLUSIVE)
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
