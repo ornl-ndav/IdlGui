@@ -138,27 +138,33 @@ sExclusionTitle = { size: [sExclusionBase.size[0]+XYoff[0],$
 XYoff = [8,10]                  ;PREVIEW button
 sPreviewExclusion = { size: [XYoff[0],$
                              XYoff[1],$
-                             80],$
+                             60],$
                       value: 'PREVIEW',$
                       uname: 'preview_exclusion_region',$
                       sensitive: 0}
 
-XYoff = [0,10]                  ;PLOT button
+XYoff = [0,0]                  ;PLOT button (Fast)
 sPlotExclusion = { size: [sPreviewExclusion.size[0]+$
                           sPreviewExclusion.size[2]+XYoff[0],$
-                          XYoff[1],$
-                          sPreviewExclusion.size[2]],$
-                   value: 'PLOT',$
-                   uname: 'plot_exclusion_region'}
+                          sPreviewExclusion.size[1]+XYoff[1]],$
+                   value: 'images/fast_selection.bmp',$
+                   tooltip: 'Fast Selection/Plot',$
+                   uname: 'plot_fast_exclusion_region'}
 
-XYoff = [5,0] ;CLEAR button
+XYoff = [67,0]                  ;PLOT button (Accurate)
+sPlotAccurateExclusion = { size: [sPlotExclusion.size[0]+XYoff[0],$
+                                  sPlotExclusion.size[1]+XYoff[1]],$
+                           value: 'images/accurate_selection.bmp',$
+                           tooltip: 'Accurate Selection/Plot',$
+                           uname: 'plot_accurate_exclusion_region'}
+
+XYoff = [135,0] ;CLEAR button
 sClearExclusion = { size: [sPlotExclusion.size[0]+$
-                           sPlotExclusion.size[2]+$
                            XYoff[0],$
                            sPlotExclusion.size[1]+$
                            XYoff[1],$
-                           sPlotExclusion.size[2]+40],$
-                    value: 'CLEAR INPUT BOXES',$
+                           90],$
+                    value: 'CLEAR INPUTS',$
                     uname: 'clear_exclusion_input_boxes'}
 
 XYoff = [0,35] ;Center pixels title
@@ -523,13 +529,24 @@ wPreviewExclusion = WIDGET_BUTTON(wExclusionBase,$
                                   VALUE     = sPreviewExclusion.value,$
                                   UNAME     = sPreviewExclusion.uname,$
                                   SENSITIVE = sPreviewExclusion.sensitive)
-;PLOT Exclusion Button
+;PLOT Fast Exclusion Button
 wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
                                XOFFSET   = sPlotExclusion.size[0],$
                                YOFFSET   = sPlotExclusion.size[1],$
-                               SCR_XSIZE = sPlotExclusion.size[2],$
                                VALUE     = sPlotExclusion.value,$
-                               UNAME     = sPlotExclusion.uname)
+                               UNAME     = sPlotExclusion.uname,$
+                               TOOLTIP   = sPlotExclusion.tooltip,$
+                               /BITMAP,$
+                               /NO_RELEASE)
+;PLOT Accurate Exclusion Button
+wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
+                               XOFFSET   = sPlotAccurateExclusion.size[0],$
+                               YOFFSET   = sPlotAccurateExclusion.size[1],$
+                               VALUE     = sPlotAccurateExclusion.value,$
+                               UNAME     = sPlotAccurateExclusion.uname,$
+                               TOOLTIP   = sPlotAccurateExclusion.tooltip,$
+                               /BITMAP,$
+                               /NO_RELEASE)
 
 ;CLEAR Exclusion Button
 wClearExclusion = WIDGET_BUTTON(wExclusionBase,$

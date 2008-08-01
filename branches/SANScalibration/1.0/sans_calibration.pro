@@ -41,7 +41,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION = 'SANScalibration'
 VERSION     = '1.0.1'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no'  
 ;LIST_OF_REQUIREMENTS = ['findnexus',$
 ;                        'sas_transmission',$
@@ -330,8 +330,8 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
@@ -342,73 +342,80 @@ ENDIF
 ;Put date/time when user started application in first line of log book
 time_stamp = GenerateIsoTimeStamp()
 message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', message
+IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+  message
 
+IF (DEBUGGING NE 'yes') THEN BEGIN
 ;Check that the necessary packages are present
-message = '> Checking For Required Software: '
-IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', message
-
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-NbrSpc     = 25 ;minimum value 4
-
-sz = (size(my_package))(1)
-
-IF (sz GT 0) THEN BEGIN
-    max = 0                    ;find the longer required software name
-    pack_list = STRARR(sz)     ;initialize the list of driver
-    missing_packages = STRARR(sz) ;initialize the list of missing packages
-    nbr_missing_packages = 0
-    FOR k=0,(sz-1) DO BEGIN
-        pack_list[k] = my_package[k].driver
-        length = STRLEN(pack_list[k])
-        IF (length GT max) THEN max = length
-    ENDFOR
+    message = '> Checking For Required Software: '
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+      message
     
-    FOR i=0,(sz-1) DO BEGIN
-        message = '-> ' + pack_list[i]
-;this part is to make sure the PROCESSING string starts at the same column
-        length = STRLEN(message)
-        str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
-        new_string = STRJOIN(str_array)
-        message += ' ' + new_string + ' ' + PROCESSING
+    PROCESSING = (*global).processing
+    OK         = (*global).ok
+    FAILED     = (*global).failed
+    NbrSpc     = 25             ;minimum value 4
+    
+    sz = (size(my_package))(1)
+    
+    IF (sz GT 0) THEN BEGIN
+        max = 0                ;find the longer required software name
+        pack_list = STRARR(sz)  ;initialize the list of driver
+        missing_packages = STRARR(sz) ;initialize the list of missing packages
+        nbr_missing_packages = 0
+        FOR k=0,(sz-1) DO BEGIN
+            pack_list[k] = my_package[k].driver
+            length = STRLEN(pack_list[k])
+            IF (length GT max) THEN max = length
+        ENDFOR
         
-        IDLsendToGeek_addLogBookText_fromMainBase, $
-          MAIN_BASE, $
-          'log_book_text', $
-          message
-        cmd = pack_list[i] + ' --version'
-        spawn, cmd, listening, err_listening
-        IF (err_listening[0] EQ '') THEN BEGIN ;found
-            IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+        FOR i=0,(sz-1) DO BEGIN
+            message = '-> ' + pack_list[i]
+;this part is to make sure the PROCESSING string starts at the same column
+            length = STRLEN(message)
+            str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
+            new_string = STRJOIN(str_array)
+            message += ' ' + new_string + ' ' + PROCESSING
+            
+            IDLsendToGeek_addLogBookText_fromMainBase, $
               MAIN_BASE, $
               'log_book_text', $
-              PROCESSING,$
-              OK + ' (Current Version: ' + $
-              listening[N_ELEMENTS(listening)-1] + ')'
+              message
+            cmd = pack_list[i] + ' --version'
+            spawn, cmd, listening, err_listening
+            IF (err_listening[0] EQ '') THEN BEGIN ;found
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book_text', $
+                  PROCESSING,$
+                  OK + ' (Current Version: ' + $
+                  listening[N_ELEMENTS(listening)-1] + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
-        ENDIF ELSE BEGIN        ;missing program
-            IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
-              MAIN_BASE, $
-              'log_book_text', $
-              PROCESSING,$
-              FAILED
+            ENDIF ELSE BEGIN    ;missing program
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book_text', $
+                  PROCESSING,$
+                  FAILED
 ;              + ' (Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
-            missing_packages[i] = my_package[i].driver
-            ++nbr_missing_packages
-        ENDELSE
-    ENDFOR
-
+                missing_packages[i] = my_package[i].driver
+                ++nbr_missing_packages
+            ENDELSE
+        ENDFOR
+        
 ;pop up window that show that they are missing packages
-    message = ['They are ' + STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
-              ' missing packages you need to fully used this application.']
-    message = [message,'Check Log Book For More Information !']
-    result = DIALOG_MESSAGE(message,/INFORMATION,DIALOG_PARENT=MAIN_BASE)
-    
-ENDIF ;end of 'if (sz GT 0)'
+        message = ['They are ' + $
+                   STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+                   ' missing packages you need to ' + $
+                   'fully used this application.']
+        message = [message,'Check Log Book For More Information !']
+        result = DIALOG_MESSAGE(message,/INFORMATION,DIALOG_PARENT=MAIN_BASE)
+        
+    ENDIF                       ;end of 'if (sz GT 0)'
+
+ENDIF
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
 WIDGET_CONTROL, id, GET_VALUE=id_value

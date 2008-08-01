@@ -113,9 +113,14 @@ CASE Event.id OF
         PreviewExclusionRegionCircle, Event ;_exclusion
     END
 
-;- Plot button 
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_exclusion_region'): BEGIN
-        ExclusionRegionCircle, Event ;_exclusion
+;- Plot button (fast)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_fast_exclusion_region'): BEGIN
+        FastExclusionRegionCircle, Event ;_exclusion
+    END
+
+;- Plot button (accurate)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_accurate_exclusion_region'): BEGIN
+        AccurateExclusionRegionCircle, Event ;_exclusion
     END
 
 ;- Clear Input Boxed
