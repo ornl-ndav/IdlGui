@@ -306,11 +306,11 @@ END
 PRO FittingFunction, Event, Xarray, Yarray, SigmaYarray
 ;get degree of poly selected
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
-IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
-    degree = 1
-ENDIF ELSE BEGIN
-    degree = 2
-ENDELSE
+CASE (value_OF_group) OF
+    0: degree = 1 
+    1: degree = 2 
+    2: degree = 3
+ENDCASE
 
 ;with error bars or not
 WithErrorBars = getCWBgroupValue(Event,'fitting_error_bars_group')
@@ -351,29 +351,50 @@ B = coeff[1]
 IF (status EQ 0 AND $
     FINITE(A) AND $
     FINITE(B)) THEN BEGIN
-    IF (degree EQ 1) THEN BEGIN
-        C = 0
-        newXarray = B*Xarray + A
-    ENDIF ELSE BEGIN
-        C = coeff[2]
-        newXarray = C*Xarray*Xarray + B*Xarray + A
-    ENDELSE
+    CASE (degree) OF
+        1: BEGIN
+            C = 0
+            D = 0
+            newXarray = B*Xarray + A
+        END
+        2: BEGIN
+            C = coeff[2]
+            D = 0
+            newXarray = C*Xarray*Xarray + B*Xarray + A
+        END
+        3: BEGIN
+            C = coeff[2]
+            D = coeff[3]
+            newXarray = D*Xarray^3 + C*Xarray^2+ B*Xarray + A
+        END
+    ENDCASE
     oplot,Xarray,newXarray,COLOR=150,THICK=1.5
     sA = STRCOMPRESS(A,/REMOVE_ALL)
     sB = STRCOMPRESS(B,/REMOVE_ALL)
     sC = STRCOMPRESS(C,/REMOVE_ALL)
+    sD = STRCOMPRESS(D,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     sA = 'N/A'
     sB = 'N/A'
-    IF (degree EQ 1) THEN BEGIN
-        sC = '0'
-    ENDIF ELSE BEGIN
-        sC = 'N/A'
-    ENDELSE
+    CASE (degree) OF
+        1: BEGIN
+            sC = '0'
+            sD = '0'
+        END
+        2: BEGIN
+            sC = 'N/A'
+            sD = '0'
+        END
+        3: BEGIN
+            sC = 'N/A'
+            sD = 'N/A'
+        END
+    ENDCASe
 ENDELSE
 putTextFieldValue, Event, 'result_fit_a_text_field', sA
 putTextFieldValue, Event, 'result_fit_b_text_field', sB
 putTextFieldValue, Event, 'result_fit_c_text_field', sC
+putTextFieldValue, Event, 'result_fit_d_text_field', sD
 END
 
 ;==============================================================================
@@ -388,6 +409,7 @@ wset,view_plot_id
 sA = getTextFieldValue(Event, 'result_fit_a_text_field')
 sB = getTextFieldValue(Event, 'result_fit_b_text_field')
 sC = getTextFieldValue(Event, 'result_fit_c_text_field')
+sD = getTextFieldValue(Event, 'result_fit_d_text_field')
 ON_IOERROR, bad_parameters
 no_error = 0
 CATCH, no_error
@@ -398,10 +420,11 @@ ENDIF ELSE BEGIN
    dA = DOUBLE(sA)
    dB = DOUBLE(sB)
    dC = DOUBLE(sC)
+   dD = DOUBLE(sD)
 ;get global structure
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
    Xarray = (*(*global).Xarray)
-   newXarray = dC*Xarray*Xarray + dB*Xarray + dA
+   newXarray = dD*Xarray^3 + dC*Xarray^2 + dB*Xarray + dA
    oplot,Xarray,newXarray,COLOR=150,THICK=1.5
 ENDELSE
 bad_parameters:
