@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.3'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 TESTING     = 'no' 
 SCROLLING   = 'no' 
 ;works only on dev and pick up ~/bin/runenv before the command line
@@ -102,6 +102,7 @@ global = PTR_NEW ({version:         VERSION,$
                    wave_para_label: wave_para_label,$               
                    wave_para_help_label: wave_para_help_label,$
                    wave_para_help_value: wave_para_help_value,$
+                   wave_dep_back_sub_path: '~/',$
                    ReducePara: {driver_name: $
                                 'sas_reduction1',$
                                 overwrite_geo: $
@@ -253,6 +254,8 @@ IF (DEBUGGING EQ 'yes' AND $
     nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
+    (*global).wave_dep_back_sub_path = $
+      '~/SVN/IdlGui/branches/SANScalibration/1.0/'
 ;put run 45 in the Run Number Data (first tab)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='run_number_cw_field')
     WIDGET_CONTROL, id, $
@@ -297,11 +300,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show tab #2 'REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================
