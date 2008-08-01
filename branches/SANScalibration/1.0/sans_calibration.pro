@@ -112,8 +112,10 @@ global = PTR_NEW ({version:         VERSION,$
                    selection_title:  'Browse for a ROI file',$
                    selection_path:   '~/',$
                    RoiPixelArrayExcluded: ptr_new(0L),$
-                   ascii_extension: '.txt',$
-                   ascii_filter:    '*.txt',$
+                   ascii_trans_extension: '.txt',$
+                   ascii_back_extension: '.bkg',$
+                   ascii_trans_filter: '*.txt',$
+                   ascii_back_filter:  '*.bkg',$
                    ascii_path:      '~/',$
                    ascii_title:     'Browse for a Transmission ASCII File',$
                    data_nexus_file_name: '',$
