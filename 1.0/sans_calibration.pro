@@ -41,7 +41,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION = 'SANScalibration'
 VERSION     = '1.0.1'
-DEBUGGING   = 'yes' ;yes/no
+DEBUGGING   = 'no' ;yes/no
 TESTING     = 'no'  
 ;LIST_OF_REQUIREMENTS = ['findnexus',$
 ;                        'sas_transmission',$
@@ -384,16 +384,17 @@ IF (sz GT 0) THEN BEGIN
               'log_book_text', $
               PROCESSING,$
               OK + ' (Current Version: ' + $
-              listening[N_ELEMENTS(listening)-1] + $
-              ' / Minimum Required Version: ' + $
-              my_package[i].version_required + ')'
+              listening[N_ELEMENTS(listening)-1] + ')'
+;              ' / Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
         ENDIF ELSE BEGIN        ;missing program
             IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
               MAIN_BASE, $
               'log_book_text', $
               PROCESSING,$
-              FAILED + ' (Minimum Required Version: ' + $
-              my_package[i].version_required + ')'
+              FAILED
+;              + ' (Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
             missing_packages[i] = my_package[i].driver
             ++nbr_missing_packages
         ENDELSE
