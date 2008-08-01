@@ -109,3 +109,13 @@ activate_widget_list, Event, uname_list, intermediate_files_flag
 uname_list = ['transm_back_base_uname']
 activate_widget_list, Event, uname_list, transm_back_flag
 END
+
+;------------------------------------------------------------------------------
+;This function reset the output file name
+PRO RenewOutputFileName, Event
+FullFileName = getTextFieldValue(Event,'data_nexus_file_name')
+defaultReduceFileName = getDefaultReduceFileName(Event, $
+                                                 FullFileName)
+putTextFieldValue, Event, 'output_file_name', defaultReduceFileName
+
+END

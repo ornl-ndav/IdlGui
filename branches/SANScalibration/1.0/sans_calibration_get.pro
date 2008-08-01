@@ -39,6 +39,14 @@ RETURN, value[0]
 END
 
 ;------------------------------------------------------------------------------
+;This function returns the select value of the CW_BGROUP
+FUNCTION getCWBgroupValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;This function retrieves the run number of the First tab
 FUNCTION getRunNumber, Event
 RETURN, getTextFieldValue(Event,'run_number_cw_field')
@@ -82,7 +90,10 @@ ENDIF
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+FUNCTION getDefaultReduceFileName, Event, $
+                                   FullFileName, $
+                                   RunNumber = RunNumber
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
     iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
     IF (OBJ_VALID(iObject)) THEN BEGIN
@@ -97,7 +108,12 @@ IF (RunNumber NE '') THEN BEGIN
 ENDIF
 DateIso = GenerateIsoTimeStamp()
 default_name += '_' + DateIso
-default_name += '.txt'
+;Check mode used
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans
+    default_name += (*global).ascii_trans_extension
+ENDIF ELSE BEGIN ;back
+    default_name += (*global).ascii_back_extension
+ENDELSE
 RETURN, default_name
 END
 
@@ -124,13 +140,5 @@ roi_path = (*global).selection_path
 default_name = roi_path + default_name
 
 RETURN, default_name
-END
-
-;------------------------------------------------------------------------------
-;This function returns the select value of the CW_BGROUP
-FUNCTION getCWBgroupValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
 END
 
