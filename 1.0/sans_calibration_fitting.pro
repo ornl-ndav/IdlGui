@@ -31,10 +31,11 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-FUNCTION calculateValue, A=A, B=B, C=C, x
+FUNCTION calculateValue, A=A, B=B, C=C, D=D, x
 step1 = A + x * B
 step2 = step1 + x * x * C
-RETURN, step2
+step3 = step1 + x * x * x * D
+RETURN, step3
 END
 
 ;==============================================================================
@@ -95,13 +96,15 @@ output_data_array = STRARR(nbr)
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
 C = getTextFieldValue(Event,'result_fit_c_text_field')
+D = getTextFieldValue(Event,'result_fit_d_text_field')
 fA = DOUBLE(A)
 fB = DOUBLE(B)
 fC = DOUBLE(C)
+fD = DOUBLE(D)
 FOR i=0,(nbr-2) DO BEGIN
     xleft  = DOUBLE(Xarray[i])
     xright = DOUBLE(Xarray[i+1])
-    new_value = calculateValue(A=fA, B=fB, C=fC, (xleft+xright)/2.)
+    new_value = calculateValue(A=fA, B=fB, C=fC, D=fD, (xleft+xright)/2.)
     output_data_array[i] = STRCOMPRESS(Xarray[i]) + ' '
     output_data_array[i] += STRCOMPRESS(new_value) + ' 0.0'
 ENDFOR
@@ -114,48 +117,62 @@ FUNCTION getPolyString, Event
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
 C = getTextFieldValue(Event,'result_fit_c_text_field')
+D = getTextFieldValue(Event,'result_fit_d_text_field')
 poly_string = '#C fitting function: '
 poly_string += STRCOMPRESS(A,/REMOVE_ALL) + ' '
 poly_string += STRCOMPRESS(B,/REMOVE_ALL) + '.X + '
 poly_string += STRCOMPRESS(C,/REMOVE_ALL) + '.X^2 '
+poly_string += STRCOMPRESS(D,/REMOVE_ALL) + '.X^3 '
 RETURN, poly_string
 END
 
 ;==============================================================================
 FUNCTION createOutputArray, Event
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans. mode
 ;retrieve list of #X tags from the input ascii file
-file_name = getTextFieldValue(Event,'input_file_text_field')
-iClass = OBJ_NEW('IDL3columnsASCIIparser',file_name)
-output_array = iClass->getAllTag()
+    file_name = getTextFieldValue(Event,'input_file_text_field')
+    iClass = OBJ_NEW('IDL3columnsASCIIparser',file_name)
+    output_array = iClass->getAllTag()
 ;add information about polynome used
-poly_string = getPolyString(Event)
-output_array = [output_array,poly_string]
+    poly_string = getPolyString(Event)
+    output_array = [output_array,poly_string]
 ;add emtpy line, and scale informations
-output_array = [output_array,'']
-outputStructure = iClass->getData()
+    output_array = [output_array,'']
+    outputStructure = iClass->getData()
 ;#S 1 Spectrum ID ('bank1',(38,38))
-bank = (*outputStructure.data[0]).bank
-x    = (*outputStructure.data[0]).x
-y    = (*outputStructure.data[0]).y
-new_line  = "#S 1 Spectrum ID ('" + bank + "',(" + x
-new_line += ',' + y + '))'  
-output_array = [output_array, new_line]
+    bank = (*outputStructure.data[0]).bank
+    x    = (*outputStructure.data[0]).x
+    y    = (*outputStructure.data[0]).y
+    new_line  = "#S 1 Spectrum ID ('" + bank + "',(" + x
+    new_line += ',' + y + '))'  
+    output_array = [output_array, new_line]
 ;#N #
-output_array = [output_array, '#N 3']
+    output_array = [output_array, '#N 3']
 ;#L wavelength(Angstroms) Intensity(Counts/A) Sigma(Counts/A)
-xaxis             = outputStructure.xaxis
-xaxis_units       = outputStructure.xaxis_units
-yaxis             = outputStructure.yaxis
-yaxis_units       = outputStructure.yaxis_units
-sigma_yaxis       = outputStructure.sigma_yaxis
-sigma_yaxis_units = outputStructure.sigma_yaxis_units
-new_line  = '#L ' + xaxis + '(' + xaxis_units + ') '
-new_line += yaxis + '(' + yaxis_units + ') '
-new_line += sigma_yaxis + '(' + sigma_yaxis_units + ')'
-output_array = [output_array, new_line]
+    xaxis             = outputStructure.xaxis
+    xaxis_units       = outputStructure.xaxis_units
+    yaxis             = outputStructure.yaxis
+    yaxis_units       = outputStructure.yaxis_units
+    sigma_yaxis       = outputStructure.sigma_yaxis
+    sigma_yaxis_units = outputStructure.sigma_yaxis_units
+    new_line  = '#L ' + xaxis + '(' + xaxis_units + ') '
+    new_line += yaxis + '(' + yaxis_units + ') '
+    new_line += sigma_yaxis + '(' + sigma_yaxis_units + ')'
+    output_array = [output_array, new_line]
 ;Data
-DataArray = createDataArray(Event)
-output_array = [output_array, DataArray]
+    DataArray = createDataArray(Event)
+    output_array = [output_array, DataArray]
+ENDIF ELSE BEGIN
+    output_array = STRARR(4)
+    A = getTextFieldValue(Event,'result_fit_a_text_field')
+    output_array[0] = 'A: ' + A
+    B = getTextFieldValue(Event,'result_fit_b_text_field')
+    output_array[1] = 'B: ' + B
+    C = getTextFieldValue(Event,'result_fit_c_text_field')
+    output_array[2] = 'C: ' + C
+    D = getTextFieldValue(Event,'result_fit_d_text_field')
+    output_array[3] = 'D: ' + D
+ENDELSE
 RETURN, output_array
 END
 
@@ -230,11 +247,13 @@ fitting_status = (*global).fitting_status
 A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
 C = getTextFieldValue(Event,'result_fit_c_text_field')
+D = getTextFieldValue(Event,'result_fit_d_text_field')
 no_error = 0
 ON_IOERROR, bad_parameters
 fA = FLOAT(A)
 fB = FLOAT(B)
 fC = FLOAT(C)
+fD = FLOAT(D)
 IF (getCWBgroupValue(Event,'alternate_wavelength_axis_cw_group') EQ 0) $
 THEN BEGIN
    ON_IOERROR, bad_parameters
@@ -248,7 +267,8 @@ ENDIF
 IF (fitting_status EQ 0 AND $   ;then activate button
     FINITE(fA) AND $
     FINITE(fB) AND $
-    FINITE(fC)) THEN BEGIN
+    FINITE(fC) AND $
+    FINITE(fD)) THEN BEGIN
    IF (getCWBgroupValue(Event,$
                         'alternate_wavelength_axis_cw_group') EQ 0) THEN BEGIN
       IF (dMin LT dMax AND $
@@ -628,6 +648,8 @@ IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
 ENDIF ELSE BEGIN
    sAdd = '_p2'
 ENDELSE
+;timeStamp = GenerateIsoTimeStamp()
+;sAdd += timeStamp
 FileName = aFileNameOnly[0]+sAdd+'.'+aFileNameOnly[1]
 putTextFieldValue, Event, 'output_file_text_field', FileName
 END
