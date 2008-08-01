@@ -95,16 +95,16 @@ sDegreeGroup = { size:  [XYoff[0],$
                          XYoff[1]],$
                  list:  ['1 (y=A+BX)', $
                          '2 (y=A+BX+CX^2)', $
-                         '3 (y=A+BX+CX^2+DX^3'],$
+                         '3 (y=A+BX+CX^2+DX^3)'],$
                  value: 0.0,$
                  uname: 'fitting_polynomial_degree_cw_group',$
                  title: 'Poly. Fitting Degree: '}
 
 ;- Automatic Fitting Button ---------------------------------------------------
-XYoff = [500,5]
+XYoff = [505,5]
 sAutoFittingButton = { size: [XYoff[0],$
                               sDegreeGroup.size[1]+XYoff[1],$
-                              400,30],$
+                              395,30],$
                        uname: 'auto_fitting_button',$
                        sensitive: 0,$
                        value: 'AUTOMATIC FITTING with Y = A + BX'}
@@ -132,24 +132,24 @@ sSettingsBase = { size: [sAutoFittingButton.size[0]+XYoff[0],$
 sErrorBarsFitting = { uname: 'fitting_error_bars_group',$
                       list:  ['YES','NO'],$
                       value: 1.0,$
-                      title: 'Fit using Error Bars:'}
+                      title: 'Fit with Error Bars:'}
 
 ;- Plot with error bars group -------------------------------------------------
 sErrorBarsPlot = { uname: 'plot_error_bars_group',$
                    list:  ['YES','NO'],$
                    value: 0.0,$
-                   title: 'Show Error Bars in Plot:'}
+                   title: 'Show Error Bars:'}
 
 ;- close settings button ------------------------------------------------------
 sCloseSettings = { uname: 'close_fitting_settings_button',$
-                   xsize: 105,$
-                   value: 'CLOSE SETTINGS'}
+                   xsize: 45,$
+                   value: 'CLOSE'}
 
 ;- Result of Auto fitting (base and widgets)
 XYOff = [0,35] ;base
 sResultFitBase = { size: [XYoff[0],$
                           sAutoFittingButton.size[1]+XYoff[1],$
-                          480,$
+                          500,$
                           40],$
                    frame: 0,$
                    map:   1,$
@@ -158,7 +158,7 @@ XYoff = [5,10] ;label
 sResultFitLabel = { size: [XYoff[0],$
                            XYoff[1]],$
                     value: '=> Y =                +                X +    ' + $
-                    '            X^2 +                         X^3'}
+                    '            X^2 +                X^3'}
 XYOff = [45,-6] ;A text field
 sResultFitA = { size: [XYoff[0],$
                        sResultFitLabel.size[1]+XYoff[1],$
