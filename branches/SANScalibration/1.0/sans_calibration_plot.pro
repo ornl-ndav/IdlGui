@@ -65,7 +65,7 @@ FUNCTION plotData, Event, DataArray, X, Y
 plotStatus = 1 ;by default, plot does work
 plot_error = 0
 
-;CATCH, plot_error
+CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0

@@ -90,12 +90,14 @@ IF (ModeIndex EQ 0) THEN BEGIN ;transmission
     acc_down_time_flag      = 0
     intermediate_files_flag = 1
     transm_back_flag        = 1
-ENDIF ELSE BEGIN
+    run_button              = '> >> >>> RUN TRANSMISSION <<< << <'
+ENDIF ELSE BEGIN ;background
     Title = MainBaseTitle + ' ( Mode: Background ) ' + ' - ' + VERSION
     monitor_efficiency_flag = 0
     acc_down_time_flag      = 1
     intermediate_files_flag = 0
     transm_back_flag        = 0
+    run_button              = '> >> >>> RUN BACKGROUND <<< << <'
 ENDELSE
 WIDGET_CONTROL, Event.top, BASE_SET_TITLE=title
 uname_list = ['monitor_efficiency_title',$
@@ -108,6 +110,7 @@ uname_list = ['reduce_tab3_base']
 activate_widget_list, Event, uname_list, intermediate_files_flag
 uname_list = ['transm_back_base_uname']
 activate_widget_list, Event, uname_list, transm_back_flag
+putNewButtonValue, Event, 'go_data_reduction_button', run_button
 END
 
 ;------------------------------------------------------------------------------
