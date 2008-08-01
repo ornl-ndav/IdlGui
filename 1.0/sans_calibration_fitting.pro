@@ -503,8 +503,15 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 OK         = (*global).ok
 PROCESSING = (*global).processing
 FAILED     = (*global).failed
-filter     = (*global).ascii_filter
-extension  = (*global).ascii_extension
+
+;Check mode (trans or back)
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans
+    extension  = (*global).ascii_trans_extension
+    filter     = (*global).ascii_trans_filter
+ENDIF ELSE BEGIN ;back
+    extension  = (*global).ascii_back_extension
+    filter     = (*global).ascii_back_filter
+ENDELSE
 path       = (*global).ascii_path
 title      = (*global).ascii_title
 
