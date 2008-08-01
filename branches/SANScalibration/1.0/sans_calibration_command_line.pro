@@ -72,13 +72,16 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
+;Check first tab (check only if transmission mode is used)
+IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
 ;-Transmission Background-
-file_run = getTextFieldValue(Event,'transm_back_file_name_text_field')
-IF (file_run NE '' AND $
-    FILE_TEST(file_run,/REGULAR)) THEN BEGIN
-    flag = (*global).CorrectPara.transm_back.flag
-    cmd += ' ' + flag + '=' + file_run
-ENDIF 
+    file_run = getTextFieldValue(Event,'transm_back_file_name_text_field')
+    IF (file_run NE '' AND $
+        FILE_TEST(file_run,/REGULAR)) THEN BEGIN
+        flag = (*global).CorrectPara.transm_back.flag
+        cmd += ' ' + flag + '=' + file_run
+    ENDIF 
+ENDIF    
 
 ;-Output Path-
 output_path = getButtonValue(Event,'output_folder')
