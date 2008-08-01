@@ -135,5 +135,61 @@ ENDIF ELSE BEGIN
 ENDELSE
 activate_widget, Event, 'scaling_constant_label', sensitive_status
 activate_widget, Event, 'scaling_constant_value', sensitive_status
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isolate_coeff, file_coeff
+split_error = 0
+;CATCH, split_error
+IF (split_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN,['']
+ENDIF ELSE BEGIN
+    sz = N_ELEMENTS(file_coeff)
+    result_array = STRARR(sz)
+    FOR i=0,(sz-1) DO BEGIN
+        step1 = STRSPLIT(file_coeff[i],' ',/EXTRACT)
+        result_array[i] = step1[1]
+    ENDFOR
+ENDELSE
+RETURN, result_array    
+END
+
+;------------------------------------------------------------------------------
+PRO BrowseLoadWaveFile, Event ;_reduce_tab3
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+title     = 'Please select a fitting Polynome File'
+extension = 'bkg'
+filter    = '*.bkg'
+path      = (*global).wave_dep_back_sub_path
+poly_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+                            FILTER            = filter,$
+                            GET_PATH          = new_path,$
+                            PATH              = path,$
+                            TITLE             = title,$
+                            /MUST_EXIST)
+IF (poly_file NE '') THEN BEGIN
+    (*global).wave_dep_back_sub_path = new_path
+    file_coeff = STRARR(4)
+;read file and extract string array
+    OPENR, u, poly_file, /GET_LUN
+    READF, u, file_coeff
+    CLOSE, U
+    FREE_LUN, u
+    PRINT, file_coeff
+;isolate coefficient    
+    list_OF_coeff = isolate_coeff(file_coeff)
+;put list of coeff in text box
+    coeff_string = STRJOIN(list_OF_coeff,',')
+    putTextFieldValue, Event, $
+      'wave_dependent_back_sub_text_field', $
+      coeff_string
+;put name of file in button (just last part)
+    file_name_only = FILE_BASENAME(poly_file)
+    putNewButtonValue, Event, $
+      'wave_dependent_back_browse_button', $
+      file_name_only
+ENDIF
 
 END

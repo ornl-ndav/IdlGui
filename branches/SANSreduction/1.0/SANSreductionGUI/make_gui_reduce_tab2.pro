@@ -225,19 +225,19 @@ sWaveTitle = { size:  [sWaveBase.size[0]+XYoff[0],$
 
 ;Wave label
 WaveXoff = 10
-XYoff = [50,15]
+XYoff = [20,15]
 sWaveLabel = { size:  [XYoff[0],$
                        XYoff[1]],$
                value: 'Comma-delimited List of Increasing Coefficients',$
                uname: 'wave_para_label_uname'}
 
-XYoff = [320,-8]
+XYoff = [300,-8]
 sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
                      sWaveLabel.size[1]+XYoff[1],$
-                     335],$
+                     340],$
               VALUE: '',$
               UNAME: 'wave_dependent_back_sub_text_field'}
-XYoff = [30,0]
+XYoff = [0,0]
 sWaveHelpButton = { size: [sWaveText.size[0]+$
                            sWaveText.size[2]+XYoff[0],$
                            sWaveText.size[1],$
@@ -245,6 +245,14 @@ sWaveHelpButton = { size: [sWaveText.size[0]+$
                            30],$
                     VALUE: 'HELP',$
                     UNAME: 'wave_help_button'}
+XYoff = [0,0]
+sBrowseWave = { size: [sWaveHelpButton.size[0]+$
+                       sWaveHelpButton.size[2]+XYoff[0],$
+                       sWaveHelpButton.size[1]+XYoff[1],$
+                       250,$
+                       sWaveHelpButton.size[3]],$
+                value : 'BROWSE ...',$
+                uname: 'wave_dependent_back_browse_button'}
                           
 ;- scaling constant -----------------------------------------------------------
 XYoff = [0,20]
@@ -607,8 +615,17 @@ wWaveButton = WIDGET_BUTTON(Base,$
                             SCR_XSIZE = sWaveHelpButton.size[2],$
                             SCR_YSIZE = sWaveHelpButton.size[3],$
                             VALUE     = sWaveHelpButton.value,$
-                            UNAME     = sWaveHelpButton.UNAME,$
+                            UNAME     = sWaveHelpButton.uname,$
                             /PUSHBUTTON_EVENTS)
+
+;Wave browse
+wWaveBrowseButton = WIDGET_BUTTON(Base,$
+                                  XOFFSET   = sBrowseWave.size[0],$
+                                  YOFFSET   = sBrowseWave.size[1],$
+                                  SCR_XSIZE = sBrowseWave.size[2],$
+                                  SCR_YSIZE = sBrowseWave.size[3],$
+                                  VALUE     = sBrowseWave.value,$
+                                  UNAME     = sBrowseWave.uname)
 
 ;- Scaling Constant -----------------------------------------------------------
 wScaleTitle = WIDGET_LABEL(Basetab,$

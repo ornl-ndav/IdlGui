@@ -380,6 +380,12 @@ CASE Event.id OF
         ENDELSE
     END
 
+;---- Browse button of Wavelength Dependent Back. subtraction -----------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='wave_dependent_back_browse_button'): BEGIN
+        BrowseLoadWaveFile, Event ;_reduce_tab3
+    END
+
 ;= TAB3 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek

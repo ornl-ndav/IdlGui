@@ -34,12 +34,10 @@
 FUNCTION getListOfPixelExcluded, Event, Xarray, Yarray
 Xsize = 80L
 Ysize = 80L
-RoiPixelArrayExcluded = INTARR(Xsize * Ysize)+1
+;RoiPixelArrayExcluded = INTARR(Xsize * Ysize)+1
 RoiPixelArrayExcluded = INTARR(Xsize,Ysize)+1
 nbrElements           = N_ELEMENTS(Xarray)
 FOR i=0,(nbrElements-1) DO BEGIN
-;    RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=1
-;    RoiPixelArrayExcluded[80*Xarray[i]+ Yarray[i]]=1
     RoiPixelArrayExcluded[Xarray[i],Yarray[i]]=0
 ENDFOR
 ;get global structure
@@ -209,7 +207,7 @@ ENDIF ELSE BEGIN
         IDLsendToGeek_addLogBookText, Event, $
           '-> Plotting ROI ... ' + PROCESSING
         plot_error = 0
-;        CATCH, plot_error
+        CATCH, plot_error
         IF (plot_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
