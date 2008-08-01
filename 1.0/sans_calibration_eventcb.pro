@@ -31,25 +31,6 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
-IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
-    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
-    IF (OBJ_VALID(iObject)) THEN BEGIN
-        RunNumber = iObject->getRunNumber()
-    ENDIF ELSE BEGIN
-        RunNumber = ''
-    ENDELSE
-ENDIF
-default_name = 'SANS' 
-IF (RunNumber NE '') THEN BEGIN
-    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-ENDIF
-DateIso = GenerateIsoTimeStamp()
-default_name += '_' + DateIso
-default_name += '.txt'
-RETURN, default_name
-END
-
 ;------------------------------------------------------------------------------
 PRO retrieveNexus, Event, FullNexusName
 
@@ -140,7 +121,8 @@ IF (FullNexusName NE '') THEN BEGIN
           'data_file_name_text_field', $
           FullNexusName
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(Event, FullNexusName)
+        defaultReduceFileName = getDefaultReduceFileName(Event, $
+                                                         FullFileName)
         putTextFieldValue, $
           Event, $
           'output_file_name', $
@@ -214,7 +196,10 @@ IF (RunNumber NE 0) THEN BEGIN
           'data_file_name_text_field', $
           full_nexus_name
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(full_nexus_name[0])
+        defaultReduceFileName = $
+          getDefaultReduceFileName(Event, $
+                                   full_nexus_name[0],$
+                                   RUNNUMBER = RunNumber)
         putTextFieldValue, $
           Event, $
           'output_file_name', $

@@ -32,26 +32,6 @@
 ;
 ;==============================================================================
 
-FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
-IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
-    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
-    IF (OBJ_VALID(iObject)) THEN BEGIN
-        RunNumber = iObject->getRunNumber()
-    ENDIF ELSE BEGIN
-        RunNumber = ''
-    ENDELSE
-ENDIF
-default_name = 'SANS' 
-IF (RunNumber NE '') THEN BEGIN
-    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-ENDIF
-DateIso = GenerateIsoTimeStamp()
-default_name += '_' + DateIso
-default_name += '.txt'
-RETURN, default_name
-END
-
-;------------------------------------------------------------------------------
 ;This function is reached by all the cw_field of the load tab (first
 ;tab of the REDUCE tab)
 PRO LoadNeXus, Event, cw_field_uname, text_field_uname
@@ -191,12 +171,3 @@ PRO clearOutputFileName, Event
 putTextFieldValue, Event, 'output_file_name', ''
 END
 
-;------------------------------------------------------------------------------
-PRO ResetOutputFileName, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-FullFileName = (*global).data_nexus_file_name
-FileName = getDefaultReduceFileName(FullFileName)
-putTextFieldValue, Event, 'output_file_name', FileName
-END
