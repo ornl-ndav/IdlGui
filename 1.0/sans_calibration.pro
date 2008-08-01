@@ -329,7 +329,7 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1

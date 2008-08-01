@@ -216,13 +216,15 @@ sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
 ;- Accelerator down time ------------------------------------------------------
 XYoff = [0,20]
 sADTbase = { size: [sQLbase.size[0]+XYoff[0],$
-                   sQLbase.size[1]+sQLbase.size[3]+XYoff[1],$
-                   sQLbase.size[2:3]],$
-            frame: sMEbase.frame,$
-            uname: 'accelerator_down_time_base'}
+                    sQLbase.size[1]+sQLbase.size[3]+XYoff[1],$
+                    sQLbase.size[2:3]],$
+             frame: sMEbase.frame,$
+             sensitive: 0,$
+             uname: 'accelerator_down_time_base'}
 XYoff = [20,-8]
 sADTTitle = { size:  [sADTbase.size[0]+XYoff[0],$
                       sADTbase.size[1]+XYoff[1]],$
+              sensitive: 0,$
               uname: 'accelerator_down_time_title',$
               value: 'Accelerator Down Time (seconds)'}
 XYoff = [50,15]
@@ -526,10 +528,11 @@ wValue = WIDGET_TEXT(Base,$
 
 ;- Accelerator down time ------------------------------------------------------
 wTitle = WIDGET_LABEL(Basetab,$
-                      XOFFSET = sADTTitle.size[0],$
-                      YOFFSET = sADTTitle.size[1],$
-                      UNAME   = sADTTitle.uname,$
-                      VALUE   = sADtTitle.value)
+                      XOFFSET   = sADTTitle.size[0],$
+                      YOFFSET   = sADTTitle.size[1],$
+                      UNAME     = sADTTitle.uname,$
+                      SENSITIVE = sADTTitle.sensitive,$
+                      VALUE     = sADtTitle.value)
 
 ;ADT base
 Base = WIDGET_BASE(Basetab,$
@@ -538,12 +541,13 @@ Base = WIDGET_BASE(Basetab,$
                    SCR_XSIZE = sADTbase.size[2],$
                    SCR_YSIZE = sADTbase.size[3],$
                    FRAME     = sADTbase.frame,$
+                   SENSITIVE = sADTbase.sensitive,$
                    UNAME     = sADTbase.uname)
 
 label = WIDGET_LABEL(Base,$
-                     XOFFSET = sADTvalue.size[0],$
-                     YOFFSET = sADTvalue.size[1],$
-                     VALUE   = sADTvalue.value)
+                     XOFFSET   = sADTvalue.size[0],$
+                     YOFFSET   = sADTvalue.size[1],$
+                     VALUE     = sADTvalue.value)
 
 text = WIDGET_TEXT(Base,$
                    XOFFSET   = sADT_field.size[0],$
