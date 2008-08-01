@@ -187,6 +187,12 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
+;Linear/Log
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='z_axis_scale'): BEGIN
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event   ;_selection
+    END
+
 ;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button
