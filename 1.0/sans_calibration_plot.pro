@@ -64,7 +64,8 @@ END
 FUNCTION plotData, Event, DataArray, X, Y
 plotStatus = 1 ;by default, plot does work
 plot_error = 0
-CATCH, plot_error
+
+;CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
@@ -72,6 +73,25 @@ ENDIF ELSE BEGIN
 ;Integrate over TOF
     dataXY   = TOTAL(DataArray,1)
     tDataXY  = TRANSPOSE(dataXY)
+;check linear or log scale type
+;     IF (getCWBgroupValue(Event,'z_axis_scale') EQ 1) THEN BEGIN ;log
+;         index = WHERE(tDataXY GT 0, nbr)
+;         help, index ;remove_me
+;         sz = SIZE(tDataXY)
+;         help, sz ;remove_me
+;         new_tDataXY = FLTARR(sz[1],sz[2])
+;         help, new_tdataxy ;remove_me
+;         IF (nbr GT 0) THEN BEGIN
+;             new_tDataXY(index) = tDataXY(index)
+;             help, new_tdataxy ;remove_me
+;         ENDIF
+;         tDataXY = new_tDataXY
+;         help, tdataxy ;remove_me
+;         tDataXY = ALOG10(tDataXY)
+;         help, tdataxy ;remove_me
+;         print, max(tdataxy) ;remove_me
+;     ENDIF
+    
 ;Check if rebin is necessary or not
     IF (X EQ 80) THEN BEGIN
         xysize = 8
@@ -79,14 +99,16 @@ ENDIF ELSE BEGIN
         xysize = 2
     ENDELSE
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+    
 ;plot data
-    DEVICE, DECOMPOSED = 0
-    LOADCT,5,/SILENT
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
     WIDGET_CONTROL, id, GET_VALUE = id_value
     WSET, id_value
+    DEVICE, DECOMPOSED = 0
+    LOADCT,5,/SILENT
     TVSCL, rtDataXY, /DEVICE
     RETURN, plotStatus
+
 ENDELSE
 END
 

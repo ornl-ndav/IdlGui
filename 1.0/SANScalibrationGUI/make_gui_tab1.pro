@@ -192,7 +192,7 @@ sCenterYValue = { size: [sCenterYLabel.size[0]+XYoff[0],$
                          sCenterXValue.size[2]],$
                   value: '',$
                   uname: 'y_center_value'}
-                         
+
 ;Radii label ------------------------------------------------------------------
 XYoff = [0,35]
 sRadiiLabel = { size: [sCenterPixelTitle.size[0]+XYoff[0],$
@@ -359,10 +359,10 @@ XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
                   sRefreshPlot.size[1]+XYoff[1],$
-                  80,40],$
+                  175,43],$  ;68
            frame: 1,$
            uname: 'x_y_base'}
-XYoff = [5,0] ;x label
+XYoff = [5,3] ;x label
 xLabel = { size: [XYoff[0],$
                   XYoff[1]],$
            value: 'X:'}
@@ -381,6 +381,14 @@ yValue = { size: [xValue.size[0]+XYoff[0],$
            value: '   ',$
            uname: 'y_value'}
 
+XYoff = [0,35]
+sScaleType = { size: [xLabel.size[0]+XYoff[0],$
+                      xValue.size[1]+XYoff[1]],$
+               title: 'Z-axis:',$
+               value: 0.0,$
+               list: ['linear','log'],$
+               uname: 'z_axis_scale'}
+                                               
 ;==============================================================================
 ;= BUILD GUI ==================================================================
 ;==============================================================================
@@ -807,6 +815,18 @@ wYvalue = WIDGET_LABEL(wXYbase,$
                        YOFFSET = yValue.size[1],$
                        VALUE   = yValue.value,$
                        UNAME   = yValue.uname)
+
+;linear/log scale
+;wGroup = CW_BGROUP(wXYbase,$
+;                   sScaleType.list,$
+;                   XOFFSET    = sScaleType.size[0],$
+;                   YOFFSET    = sScaleType.size[1],$
+;                   ROW        = 1,$
+;                   SET_VALUE  = sScaleType.value,$
+;                   UNAME      = sScaleType.uname,$
+;                   LABEL_LEFT = sScaleType.title,$
+;                   /NO_RELEASE,$
+;                   /EXCLUSIVE)
 
 
 END
