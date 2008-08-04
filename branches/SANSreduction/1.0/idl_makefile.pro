@@ -25,6 +25,9 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run error_message.pro
+.run pickcolorname.pro
+.run fsc_color.pro
 .run sans_reduction_time.pro
 .run IDLgetMetadata__define.pro
 .run sans_reduction_put.pro

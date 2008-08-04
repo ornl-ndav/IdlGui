@@ -176,6 +176,16 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
+;- Selection Color Button -----------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_color_button'): BEGIN
+        change_color_OF_selection, Event ;_selection
+    END
+
+;- Plot Color Button ----------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_color_button'): BEGIN
+    END
+
+
 ;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button

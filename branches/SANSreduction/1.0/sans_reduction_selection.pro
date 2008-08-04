@@ -48,39 +48,38 @@ RETURN, RoiPixelArrayExcluded
 END
 
 ;------------------------------------------------------------------------------
-PRO PlotROI, Event, RoiPixelArrayExcluded
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
+; PRO PlotROI, Event, RoiPixelArrayExcluded
+; ;get global structure
+; id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+; WIDGET_CONTROL, id, GET_UVALUE=global
 
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-WIDGET_CONTROL, id, GET_VALUE = id_value
-WSET, id_value
+; id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+; WIDGET_CONTROL, id, GET_VALUE = id_value
+; WSET, id_value
 
-ROIcolor = (*global).ROIcolor
-x_coeff  = (*global).DrawXcoeff
-y_coeff  = (*global).DrawYcoeff
+; ROIcolor = convert_rgb((*global).ROIcolor)
+; x_coeff  = (*global).DrawXcoeff
+; y_coeff  = (*global).DrawYcoeff
+; NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
 
-NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
-
-FOR i=0,(80-1) DO BEGIN
-    FOR j=0,(80-1) DO BEGIN
-        IF (RoiPixelArrayExcluded[i,j] EQ 1) THEN BEGIN
-            x = i
-            y = j
-            PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
-            PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
-              COLOR=color
-            PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
-              /CONTINUE, COLOR=color
-            PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-              COLOR=color
-            PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-              COLOR=color
-        ENDIF
-    ENDFOR
-ENDFOR    
-END
+; FOR i=0,(80-1) DO BEGIN
+;     FOR j=0,(80-1) DO BEGIN
+;         IF (RoiPixelArrayExcluded[i,j] EQ 1) THEN BEGIN
+;             x = i
+;             y = j
+;             PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
+;             PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
+;               COLOR=color
+;             PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
+;               /CONTINUE, COLOR=color
+;             PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+;               COLOR=color
+;             PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+;               COLOR=color
+;         ENDIF
+;     ENDFOR
+; ENDFOR    
+; END
 
 ;------------------------------------------------------------------------------
 ;This function returns the X and Y array of the ROI file
@@ -251,3 +250,11 @@ putTextFieldValue, Event, 'roi_file_name_text_field', ''
 (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
 END
 
+;------------------------------------------------------------------------------
+PRO change_color_OF_selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+color=FSC_COLOR(/SELECTCOLOR,/TRIPLE)
+(*global).ROIcolor = color
+refresh_plot, Event             ;_plot
+RefreshRoiExclusionPlot, Event  ;_selection
+END

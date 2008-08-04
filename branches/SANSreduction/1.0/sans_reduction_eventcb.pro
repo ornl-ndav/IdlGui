@@ -141,6 +141,9 @@ IF (FullNexusName NE '') THEN BEGIN
         uname_list = ['clear_selection_button',$
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
+                      'refresh_plot_button',$
+                      'clear_selection_button',$
+;                      'color_base_uname',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
@@ -220,7 +223,10 @@ IF (RunNumber NE 0) THEN BEGIN
         uname_list = ['clear_selection_button',$
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
-                      'exclusion_base']
+                      'exclusion_base',$
+;                      'color_base_uname',$
+                      'refresh_plot_button',$
+                      'clear_selection_button']
         activate_widget_list, Event, uname_list, 1
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
