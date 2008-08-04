@@ -32,7 +32,7 @@ copy_folders()
 {  
 for folder in $FOLDERS
 do
-   echo -n "Copying folder" $folder "to" $1 "........."
+   echo -n "Copying folder" $folder "to" $1 "...."
    cp -rf $folder $1
    echo " Done"
 done
@@ -44,7 +44,7 @@ copy_files()
 {  
 for file in $FILES
 do 
-   echo -n "Copying file" $file "to" $1 ".........."	
+   echo -n "Copying file" $file "to" $1 "...."	
    cp $file $1
    echo " Done"
 done
@@ -54,7 +54,12 @@ done
 # This function create the executable file
 create_exec()
 {
+echo -n "Create executable file" $2 "...."
 echo "idl -vm=$1$EXECUTABLE" > $2
+echo " Done"
+echo -n "Change permission of $2 to 755 ...."
+chmod 755 $2
+echo " Done"
 }
 
 #------------------------------------------------------------------------------
