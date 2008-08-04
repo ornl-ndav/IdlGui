@@ -320,12 +320,9 @@ IF (N_ELEMENTS(DisplayR2) EQ 0) THEN DisplayR2 = (*global).DisplayR2
 
 PixelSelectedArray = (*(*global).RoiPixelArrayExcluded)
 
-;device,decomposed=2 ;remove_me
-
 x_coeff = coeff
 y_coeff = coeff
 color   = (*global).ROIcolor
-
 FOR i=0,(80L-1) DO BEGIN
     FOR j=0,(80L-1) DO BEGIN
         IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
