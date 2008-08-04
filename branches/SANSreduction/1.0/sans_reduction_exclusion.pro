@@ -64,52 +64,109 @@ END
 PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
                                  oROI,$
                                  CurrentSelectionSettings,$
-                                 insideSelectionType
+                                 insideSelectionType,$
+                                 TYPE=type
 
 tmp_array = INTARR(80,80)
+IF (N_ELEMENTS(TYPE) EQ 0) THEN type = 'accurate' ;default type
+
 Xsize = 320*2
 Ysize = 320*2
-FOR i=0,(Xsize-1) DO BEGIN
-    state_changed = 0 ;0,1,0 for inside selection and 1,0,1 for outside
-    FOR j=0,(Ysize-1) DO BEGIN
-        IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
-            IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                x = FIX(i/8)
-                y = FIX(j/8)
-                ++tmp_array[x,y]
-                state_changed = 1
+IF (type EQ 'accurate') THEN BEGIN ;accurate
+    FOR i=0,(Xsize-1) DO BEGIN
+        state_changed = 0 ;0,1,0 for inside selection and 1,0,1 for outside
+        FOR j=0,(Ysize-1) DO BEGIN
+;if inside selection region
+            IF (insideSelectionType EQ 1b) THEN BEGIN 
+                IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
+                    x = FIX(i/8)
+                    y = FIX(j/8)
+                    ++tmp_array[x,y]
+                    state_changed = 1
+                ENDIF ELSE BEGIN
+                    IF (state_changed EQ 1) THEN BREAK
+                ENDELSE
             ENDIF ELSE BEGIN
-                IF (state_changed EQ 1) THEN BREAK
+                IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                    x = FIX(i/8)
+                    y = FIX(j/8)
+                    ++tmp_array[x,y]
+                ENDIF
             ENDELSE
-        ENDIF ELSE BEGIN
-            IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                x = FIX(i/8)
-                y = FIX(j/8)
-                ++tmp_array[x,y]
-            ENDIF
-        ENDELSE
+        ENDFOR
     ENDFOR
-ENDFOR
+ENDIF ELSE BEGIN                ;fast
+    Xsize = 320*2
+    Ysize = 320*2
+    FOR i=0,(Xsize-1),4 DO BEGIN
+        state_changed = 0 ;0,1,0 for inside selection and 1,0,1 for outside
+        FOR j=0,(Ysize-1) DO BEGIN
+;if inside selection region
+            IF (insideSelectionType EQ 1b) THEN BEGIN
+                IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
+                    x = FIX(i/8)
+                    y = FIX(j/8)
+                    ++tmp_array[x,y]
+                    state_changed = 1
+                ENDIF ELSE BEGIN
+                    IF (state_changed EQ 1) THEN BREAK
+                ENDELSE
+            ENDIF ELSE BEGIN
+                IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
+                    x = FIX(i/8)
+                    y = FIX(j/8)
+                    ++tmp_array[x,y]
+                ENDIF
+            ENDELSE
+        ENDFOR
+    ENDFOR
+ENDELSE
 
-CASE (CurrentSelectionSettings) OF
+IF (type EQ 'accurate') THEN BEGIN ;accurate
+
+    CASE (CurrentSelectionSettings) OF
 ;half in
-    0: BEGIN
-        IndexArray = WHERE(tmp_array GE 32) 
-    END
+        0: BEGIN
+            IndexArray = WHERE(tmp_array GE 32) 
+        END
 ;half out
-    1: BEGIN
-        IndexArray = WHERE(tmp_array GT 32) 
-    END
+        1: BEGIN
+            IndexArray = WHERE(tmp_array GT 32) 
+        END
 ;out in
-    2: BEGIN
-        IndexArray = WHERE(tmp_array GT 0) 
-    END
+        2: BEGIN
+            IndexArray = WHERE(tmp_array GT 0) 
+        END
 ;out out
-    3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 64) 
-    END
-    ELSE:
-ENDCASE
+        3: BEGIN
+            IndexArray = WHERE(tmp_array EQ 64) 
+        END
+        ELSE:
+    ENDCASE
+
+ENDIF ELSE BEGIN ;fast
+
+    CASE (CurrentSelectionSettings) OF
+;half in
+        0: BEGIN
+            IndexArray = WHERE(tmp_array GE 4) 
+        END
+;half out
+        1: BEGIN
+            IndexArray = WHERE(tmp_array GT 4) 
+        END
+;out in
+        2: BEGIN
+            IndexArray = WHERE(tmp_array GT 0) 
+        END
+;out out
+        3: BEGIN
+            IndexArray = WHERE(tmp_array EQ 8) 
+        END
+        ELSE:
+    ENDCASE
+
+ENDELSE
 
 ;only if IndexArray is not empty
 IF (SIZE(IndexArray,/N_DIMENSION) EQ 1) THEN BEGIN 
@@ -118,8 +175,7 @@ ENDIF
 
 END
 
-;------------------------------------------------------------------------------
-PRO ExclusionRegionCircle, Event
+PRO ExclusionRegionCircle, Event, TYPE=type
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 IF ((*global).data_nexus_file_name EQ '') THEN RETURN
@@ -182,7 +238,8 @@ IF (DisplayR1 NE 0) THEN BEGIN
       PixelSelectedArray,$
       oROI,$
       selection_type,$
-      bR1Inside
+      bR1Inside, $
+      TYPE=type
 
 ENDIF
 
@@ -207,7 +264,9 @@ IF (DisplayR2 NE 0) THEN BEGIN
       PixelSelectedArray,$
       oROI,$
       selection_type,$
-      bR2Inside
+      bR2Inside,$
+      TYPE=type
+      
     
 ENDIF
 
@@ -534,4 +593,14 @@ IF (FILE_TEST(FullFileName)) THEN BEGIN
     new_name = default_name
     putTextFieldValue, Event, 'save_roi_text_field', new_name
 ENDIF
+END
+
+;------------------------------------------------------------------------------
+PRO FastExclusionRegionCircle, Event 
+ExclusionRegionCircle, Event, TYPE='fast'
+END
+
+;------------------------------------------------------------------------------
+PRO AccurateExclusionRegionCircle, Event 
+ExclusionRegionCircle, Event, TYPE='accurate'
 END

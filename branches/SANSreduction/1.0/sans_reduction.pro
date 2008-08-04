@@ -44,7 +44,7 @@ VERSION           = '1.0.3'
 DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'yes'
+CHECKING_PACKAGES = 'no'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
@@ -53,6 +53,9 @@ my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
 my_package[1].driver           = 'sas_reduction'
 my_package[1].version_required = '1.0'
+
+;************************************************************************
+;************************************************************************
 
 ;works only on dev and pick up ~/bin/runenv before the command line
 
@@ -312,11 +315,11 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show tab #2 'REDUCE
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================

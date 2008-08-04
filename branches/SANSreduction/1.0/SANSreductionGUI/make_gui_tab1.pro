@@ -44,19 +44,34 @@ sLabelDraw = { size: [0,0,700,700],$
                uname: 'label_draw_uname'}
 
 ;- nexus input ----------------------------------------------------------------
+XYoff = [0,15]
 sNexus = { size : [10,$
-                   sLabelDraw.size[1]+sLabelDraw.size[3]]}
+                   sLabelDraw.size[1]+sLabelDraw.size[3]+XYOff[1]]}
           
 ;- draw -----------------------------------------------------------------------
 XYoff = [30,20]
 sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
           uname : 'draw_uname'}
 
-;- selection ------------------------------------------------------------------
+;Transmission or Background mode ----------------------------------------------
 XYoff = [0,10]
-sSelection = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
-                      XYoff[1],$
-                      300,$
+sModeBase = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
+                     XYoff[1],$
+                     300,45],$
+              frame: 4}
+XYoff = [0,5] ;cw_bgroup
+sModeGroup = { size: [XYoff[0],$
+                      XYoff[1]],$
+               value: 0.0,$
+               uname: 'mode_group_uname',$
+               title: 'Operation Mode:',$
+               list:  ['Transmission','Background']}
+
+;- selection ------------------------------------------------------------------
+XYoff = [0,15]
+sSelection = { size: [sModeBase.size[0]+XYoff[0],$
+                      sModeBase.size[1]+sModeBase.size[3]+XYoff[1],$
+                      305,$
                       35],$
                value: 'ADVANCED SELECTION TOOL',$
                uname: 'selection_tool_button',$
@@ -123,27 +138,33 @@ sExclusionTitle = { size: [sExclusionBase.size[0]+XYoff[0],$
 XYoff = [8,10]                  ;PREVIEW button
 sPreviewExclusion = { size: [XYoff[0],$
                              XYoff[1],$
-                             80],$
+                             60],$
                       value: 'PREVIEW',$
                       uname: 'preview_exclusion_region',$
                       sensitive: 0}
 
-XYoff = [0,10]                  ;PLOT button
+XYoff = [0,0]                  ;PLOT button (Fast)
 sPlotExclusion = { size: [sPreviewExclusion.size[0]+$
                           sPreviewExclusion.size[2]+XYoff[0],$
-                          XYoff[1],$
-                          sPreviewExclusion.size[2]],$
-                   value: 'PLOT',$
-                   uname: 'plot_exclusion_region'}
+                          sPreviewExclusion.size[1]+XYoff[1]],$
+                   value: 'images/fast_selection.bmp',$
+                   tooltip: 'Fast Selection/Plot',$
+                   uname: 'plot_fast_exclusion_region'}
 
-XYoff = [5,0] ;CLEAR button
+XYoff = [67,0]                  ;PLOT button (Accurate)
+sPlotAccurateExclusion = { size: [sPlotExclusion.size[0]+XYoff[0],$
+                                  sPlotExclusion.size[1]+XYoff[1]],$
+                           value: 'images/accurate_selection.bmp',$
+                           tooltip: 'Accurate Selection/Plot',$
+                           uname: 'plot_accurate_exclusion_region'}
+
+XYoff = [135,0] ;CLEAR button
 sClearExclusion = { size: [sPlotExclusion.size[0]+$
-                           sPlotExclusion.size[2]+$
                            XYoff[0],$
                            sPlotExclusion.size[1]+$
                            XYoff[1],$
-                           sPlotExclusion.size[2]+40],$
-                    value: 'CLEAR INPUT BOXES',$
+                           90],$
+                    value: 'CLEAR INPUTS',$
                     uname: 'clear_exclusion_input_boxes'}
 
 XYoff = [0,35] ;Center pixels title
@@ -171,7 +192,7 @@ sCenterYValue = { size: [sCenterYLabel.size[0]+XYoff[0],$
                          sCenterXValue.size[2]],$
                   value: '',$
                   uname: 'y_center_value'}
-                         
+
 ;Radii label ------------------------------------------------------------------
 XYoff = [0,35]
 sRadiiLabel = { size: [sCenterPixelTitle.size[0]+XYoff[0],$
@@ -334,14 +355,14 @@ sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
                  sensitive: 1}
 
 ;- X and Y position of cursor -------------------------------------------------
-XYoff = [0,597]
+XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
-                  sLabelDraw.size[1]+XYoff[1],$
-                  80,40],$
+                  sRefreshPlot.size[1]+XYoff[1],$
+                  175,43],$  ;68
            frame: 1,$
            uname: 'x_y_base'}
-XYoff = [5,0] ;x label
+XYoff = [5,3] ;x label
 xLabel = { size: [XYoff[0],$
                   XYoff[1]],$
            value: 'X:'}
@@ -360,6 +381,14 @@ yValue = { size: [xValue.size[0]+XYoff[0],$
            value: '   ',$
            uname: 'y_value'}
 
+XYoff = [0,35]
+sScaleType = { size: [xLabel.size[0]+XYoff[0],$
+                      xValue.size[1]+XYoff[1]],$
+               title: 'Z-axis:',$
+               value: 0.0,$
+               list: ['linear','log'],$
+               uname: 'z_axis_scale'}
+                                               
 ;==============================================================================
 ;= BUILD GUI ==================================================================
 ;==============================================================================
@@ -399,6 +428,25 @@ wLabelDraw = WIDGET_DRAW(wTab1Base,$
                          YOFFSET   = sLabelDraw.size[1],$
                          SCR_XSIZE = sLabelDraw.size[2],$
                          SCR_YSIZE = sLabelDraw.size[3])
+
+;Transmission or Background mode ----------------------------------------------
+wTBase = WIDGET_BASE(wTab1Base,$
+                     XOFFSET   = sModeBase.size[0],$
+                     YOFFSET   = sModeBase.size[1],$
+                     SCR_XSIZE = sModeBase.size[2],$
+                     SCR_YSIZE = sModeBase.size[3],$
+                     FRAME     = sModeBase.frame)
+
+wModeGroup = CW_BGROUP(wTBase,$ ;cw_bgroup
+                       sModeGroup.list,$
+                       XOFFSET    = sModeGroup.size[0],$
+                       YOFFSET    = sModeGroup.size[1],$
+                       ROW        = 1,$
+                       SET_VALUE  = sModeGroup.value,$
+                       UNAME      = sModeGroup.uname,$
+                       LABEL_LEFT = sModeGroup.title,$
+                       /NO_RELEASE,$
+                       /EXCLUSIVE)
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
@@ -489,13 +537,24 @@ wPreviewExclusion = WIDGET_BUTTON(wExclusionBase,$
                                   VALUE     = sPreviewExclusion.value,$
                                   UNAME     = sPreviewExclusion.uname,$
                                   SENSITIVE = sPreviewExclusion.sensitive)
-;PLOT Exclusion Button
+;PLOT Fast Exclusion Button
 wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
                                XOFFSET   = sPlotExclusion.size[0],$
                                YOFFSET   = sPlotExclusion.size[1],$
-                               SCR_XSIZE = sPlotExclusion.size[2],$
                                VALUE     = sPlotExclusion.value,$
-                               UNAME     = sPlotExclusion.uname)
+                               UNAME     = sPlotExclusion.uname,$
+                               TOOLTIP   = sPlotExclusion.tooltip,$
+                               /BITMAP,$
+                               /NO_RELEASE)
+;PLOT Accurate Exclusion Button
+wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
+                               XOFFSET   = sPlotAccurateExclusion.size[0],$
+                               YOFFSET   = sPlotAccurateExclusion.size[1],$
+                               VALUE     = sPlotAccurateExclusion.value,$
+                               UNAME     = sPlotAccurateExclusion.uname,$
+                               TOOLTIP   = sPlotAccurateExclusion.tooltip,$
+                               /BITMAP,$
+                               /NO_RELEASE)
 
 ;CLEAR Exclusion Button
 wClearExclusion = WIDGET_BUTTON(wExclusionBase,$
@@ -756,6 +815,18 @@ wYvalue = WIDGET_LABEL(wXYbase,$
                        YOFFSET = yValue.size[1],$
                        VALUE   = yValue.value,$
                        UNAME   = yValue.uname)
+
+;linear/log scale
+;wGroup = CW_BGROUP(wXYbase,$
+;                   sScaleType.list,$
+;                   XOFFSET    = sScaleType.size[0],$
+;                   YOFFSET    = sScaleType.size[1],$
+;                   ROW        = 1,$
+;                   SET_VALUE  = sScaleType.value,$
+;                   UNAME      = sScaleType.uname,$
+;                   LABEL_LEFT = sScaleType.title,$
+;                   /NO_RELEASE,$
+;                   /EXCLUSIVE)
 
 
 END
