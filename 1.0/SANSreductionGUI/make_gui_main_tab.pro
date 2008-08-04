@@ -40,9 +40,10 @@ sMainTabSize = {size : [0,0,MainBaseSize[2],MainBaseSize[3]],$
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { tab1     : ' LOAD DATA ',$
-              log_book : ' LOG BOOK ',$
-              reduce   : ' REDUCE '}
+TabTitles = { tab1:     ' LOAD DATA ',$
+              log_book: ' LOG BOOK ',$
+              plot:     ' PLOT',$
+              reduce:   ' REDUCE '}
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
@@ -60,6 +61,9 @@ make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build REDUCE tab
 make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles
+
+;Build PLOT tab
+make_gui_plot, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build LogBook
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles

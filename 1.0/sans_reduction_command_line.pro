@@ -140,6 +140,7 @@ ENDIF ELSE BEGIN
                               '- Select an existing outupt folder' + $
                               ' (LOAD FILES)']
 ENDELSE
+(*global).ascii_path = output_path
 
 ;-Output File-
 output_file = getTextfieldValue(Event, 'output_file_name')
