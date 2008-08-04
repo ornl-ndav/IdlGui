@@ -125,34 +125,35 @@ sSampleDataFileFrame = $
    browse_uname:    'sample_data_transmission_browse_button',$
    file_name_uname: 'sample_data_transmission_file_name_text_field'}
 
-;- Empty Can Transmission -----------------------------------------------------
-sEmptyCanTransmissionFileFrame = $
-  {main_base_xsize: sBaseTab1.size[2],$
-   main_base_uname: 'empty_can_transmission_base_uname',$
-   xoff:            0,$
-   yoff:            sSampleDataFileFrame.yoff+yoff,$
-   frame_title:     'Empty Can Transmission',$
-   label_1:         'Run Number:',$
-   tf1_uname:       'empty_can_transmission_run_number_cw_field',$
-   browse_uname:    'empty_can_transmission_browse_button',$
-   file_name_uname: 'empty_can_transmission_file_name_text_field'}
-
 ;- Solvent Transmission -----------------------------------------------------
 sSolventTransmissionFileFrame = $
   {main_base_xsize: sBaseTab1.size[2],$
    main_base_uname: 'solvent_transmission_base_uname',$
    xoff:            0,$
-   yoff:            sEmptyCanTransmissionFileFrame.yoff+yoff,$
+   yoff:            sSampleDataFileFrame.yoff+yoff,$
    frame_title:     'Solvent Transmission',$
    label_1:         'Run Number:',$
    tf1_uname:       'solvent_transmission_run_number_cw_field',$
    browse_uname:    'solvent_transmission_browse_button',$
    file_name_uname: 'solvent_transmission_file_name_text_field'}
 
+;- Empty Can Transmission -----------------------------------------------------
+sEmptyCanTransmissionFileFrame = $
+  {main_base_xsize: sBaseTab1.size[2],$
+   main_base_uname: 'empty_can_transmission_base_uname',$
+   xoff:            0,$
+   yoff:            sSolventTransmissionFileFrame.yoff+yoff,$
+   frame_title:     'Empty Can Transmission',$
+   label_1:         'Run Number:',$
+   tf1_uname:       'empty_can_transmission_run_number_cw_field',$
+   browse_uname:    'empty_can_transmission_browse_button',$
+   file_name_uname: 'empty_can_transmission_file_name_text_field'}
+
+
 ;- Output Folder --------------------------------------------------------------
 XYoff = [10,80]
 sOutputFolderlabel = { size: [XYoff[0],$
-                              sSolventTransmissionFileFrame.yoff+XYoff[1]],$
+                              sEmptyCanTransmissionFileFrame.yoff+XYoff[1]],$
                        value: 'Output Folder:'}
 XYoff = [120,-8]                       
 sOutputFolder = { size: [XYoff[0],$
