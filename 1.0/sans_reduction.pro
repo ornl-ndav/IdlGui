@@ -37,11 +37,23 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 CD, CURRENT = current_folder
 
-APPLICATION = 'SANSreduction'
-VERSION     = '1.0.3'
-DEBUGGING   = 'yes' ;yes/no
-TESTING     = 'no' 
-SCROLLING   = 'no' 
+;************************************************************************
+;************************************************************************
+APPLICATION       = 'SANSreduction'
+VERSION           = '1.0.3'
+DEBUGGING         = 'yes' ;yes/no
+TESTING           = 'no' 
+SCROLLING         = 'no' 
+CHECKING_PACKAGES = 'yes'
+
+PACKAGE_REQUIRED_BASE = { driver:           '',$
+                          version_required: ''}
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
+my_package[0].driver           = 'findnexus'
+my_package[0].version_required = '1.5'
+my_package[1].driver           = 'sas_reduction'
+my_package[1].version_required = '1.0'
+
 ;works only on dev and pick up ~/bin/runenv before the command line
 
 ;define initial global values - these could be input via external
@@ -104,7 +116,7 @@ global = PTR_NEW ({version:         VERSION,$
                    wave_para_help_value: wave_para_help_value,$
                    wave_dep_back_sub_path: '~/',$
                    ReducePara: {driver_name: $
-                                'sas_reduction1',$
+                                'sas_reduction',$
                                 overwrite_geo: $
                                 '--inst-geom',$
                                 detect_time_offset: $
@@ -308,6 +320,89 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ENDIF
 ;==============================================================================
+
+;Put date/time when user started application in first line of log book
+time_stamp = GenerateIsoTimeStamp()
+message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+  message
+
+IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+;Check that the necessary packages are present
+    message = '> Checking For Required Software: '
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+      message
+    
+    PROCESSING = (*global).processing
+    OK         = (*global).ok
+    FAILED     = (*global).failed
+    NbrSpc     = 25             ;minimum value 4
+    
+    sz = (size(my_package))(1)
+    
+    IF (sz GT 0) THEN BEGIN
+        max = 0                ;find the longer required software name
+        pack_list = STRARR(sz)  ;initialize the list of driver
+        missing_packages = STRARR(sz) ;initialize the list of missing packages
+        nbr_missing_packages = 0
+        FOR k=0,(sz-1) DO BEGIN
+            pack_list[k] = my_package[k].driver
+            length = STRLEN(pack_list[k])
+            IF (length GT max) THEN max = length
+        ENDFOR
+        
+        FOR i=0,(sz-1) DO BEGIN
+            message = '-> ' + pack_list[i]
+;this part is to make sure the PROCESSING string starts at the same column
+            length = STRLEN(message)
+            str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
+            new_string = STRJOIN(str_array)
+            message += ' ' + new_string + ' ' + PROCESSING
+            
+            IDLsendToGeek_addLogBookText_fromMainBase, $
+              MAIN_BASE, $
+              'log_book_text', $
+              message
+            cmd = pack_list[i] + ' --version'
+            spawn, cmd, listening, err_listening
+            IF (err_listening[0] EQ '') THEN BEGIN ;found
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book_text', $
+                  PROCESSING,$
+                  OK + ' (Current Version: ' + $
+                  listening[N_ELEMENTS(listening)-1] + ')'
+;              ' / Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
+            ENDIF ELSE BEGIN    ;missing program
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book_text', $
+                  PROCESSING,$
+                  FAILED
+;              + ' (Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
+                missing_packages[i] = my_package[i].driver
+                ++nbr_missing_packages
+            ENDELSE
+        ENDFOR
+        
+;pop up window that show that they are missing packages
+        message = ['They are ' + $
+                   STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+                   ' missing package(s) you need to ' + $
+                   'fully used this application.']
+        message = [message,'Check Log Book For More Information !']
+        result = DIALOG_MESSAGE(message,/INFORMATION,DIALOG_PARENT=MAIN_BASE)
+        
+        message = '=================================================' + $
+          '========================'
+        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+          'log_book_text', message
+            
+    ENDIF                       ;end of 'if (sz GT 0)'
+
+ENDIF
 
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
