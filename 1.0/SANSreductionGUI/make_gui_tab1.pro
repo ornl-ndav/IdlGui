@@ -53,24 +53,10 @@ XYoff = [30,20]
 sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
           uname : 'draw_uname'}
 
-;Transmission or Background mode ----------------------------------------------
-XYoff = [0,10]
-sModeBase = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
-                     XYoff[1],$
-                     300,45],$
-              frame: 4}
-XYoff = [0,5] ;cw_bgroup
-sModeGroup = { size: [XYoff[0],$
-                      XYoff[1]],$
-               value: 0.0,$
-               uname: 'mode_group_uname',$
-               title: 'Operation Mode:',$
-               list:  ['Transmission','Background']}
-
 ;- selection ------------------------------------------------------------------
 XYoff = [0,15]
-sSelection = { size: [sModeBase.size[0]+XYoff[0],$
-                      sModeBase.size[1]+sModeBase.size[3]+XYoff[1],$
+sSelection = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
+                      XYoff[1],$
                       305,$
                       35],$
                value: 'ADVANCED SELECTION TOOL',$
@@ -343,7 +329,7 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            sSelection.size[2]],$
                     value: 'RESET SELECTION',$
                     uname: 'clear_selection_button',$
-                    sensitive: 1}
+                    sensitive: 0}
                            
 ;- REFRESH Plot ---------------------------------------------------------------
 XYoff = [0,30]
@@ -352,23 +338,23 @@ sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
                         sClearSelection.size[2]],$
                  value: 'REFRESH PLOT',$
                  uname: 'refresh_plot_button',$
-                 sensitive: 1}
+                 sensitive: 0}
 
 ;- X and Y position of cursor -------------------------------------------------
-XYoff = [0,30]
+XYoff = [0,35]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
                   sRefreshPlot.size[1]+XYoff[1],$
-                  175,43],$  ;68
+                  50,43],$  ;2:175, 3:68
            frame: 1,$
            uname: 'x_y_base'}
 XYoff = [5,3] ;x label
 xLabel = { size: [XYoff[0],$
                   XYoff[1]],$
            value: 'X:'}
-XYoff = [20,0] ;x value
-xValue = { size: [XYoff[0],$
-                  XYoff[1]],$
+XYoff = [15,0] ;x value
+xValue = { size: [xLabel.size[0]+XYoff[0],$
+                  xLabel.size[1]+XYoff[1]],$
            value: '   ',$
            uname: 'x_value'}
 XYoff = [0,20] ;y label
@@ -388,7 +374,31 @@ sScaleType = { size: [xLabel.size[0]+XYoff[0],$
                value: 0.0,$
                list: ['linear','log'],$
                uname: 'z_axis_scale'}
-                                               
+                                     
+;Selection and Plot color base ------------------------------------------------
+XYoff = [65,-2]
+sColorBase = { size: [XYbase.size[0]+XYoff[0],$
+                      XYbase.size[1]+XYoff[1],$
+                      240,50],$
+               uname: 'color_base_uname',$
+               frame: 0,$
+               sensitive: 0}
+XYoff = [0,0]
+sSelectionColor = { size: [XYoff[0],$
+                           XYoff[1],$
+                           237],$
+                    value: 'Selection Color Tool ...',$
+                    uname: 'selection_color_button',$
+                    sensitive: 1}
+
+XYoff = [0,25]
+sPlotColor = { size: [sSelectionColor.size[0]+XYoff[0],$
+                      sSelectionColor.size[1]+XYoff[1],$
+                      sSelectionColor.size[2]],$
+               value: 'Plot Color Tool ...',$
+               uname: 'plot_color_button',$
+               sensitive: 0}
+
 ;==============================================================================
 ;= BUILD GUI ==================================================================
 ;==============================================================================
@@ -428,25 +438,6 @@ wLabelDraw = WIDGET_DRAW(wTab1Base,$
                          YOFFSET   = sLabelDraw.size[1],$
                          SCR_XSIZE = sLabelDraw.size[2],$
                          SCR_YSIZE = sLabelDraw.size[3])
-
-;Transmission or Background mode ----------------------------------------------
-wTBase = WIDGET_BASE(wTab1Base,$
-                     XOFFSET   = sModeBase.size[0],$
-                     YOFFSET   = sModeBase.size[1],$
-                     SCR_XSIZE = sModeBase.size[2],$
-                     SCR_YSIZE = sModeBase.size[3],$
-                     FRAME     = sModeBase.frame)
-
-wModeGroup = CW_BGROUP(wTBase,$ ;cw_bgroup
-                       sModeGroup.list,$
-                       XOFFSET    = sModeGroup.size[0],$
-                       YOFFSET    = sModeGroup.size[1],$
-                       ROW        = 1,$
-                       SET_VALUE  = sModeGroup.value,$
-                       UNAME      = sModeGroup.uname,$
-                       LABEL_LEFT = sModeGroup.title,$
-                       /NO_RELEASE,$
-                       /EXCLUSIVE)
 
 ;- Selection tool -------------------------------------------------------------
 wSelection = WIDGET_BUTTON(wTab1Base,$
@@ -828,5 +819,28 @@ wYvalue = WIDGET_LABEL(wXYbase,$
 ;                   /NO_RELEASE,$
 ;                   /EXCLUSIVE)
 
+;Selection Color Tool
+wColorBase = WIDGET_BASE(wTab1Base,$
+                         XOFFSET   = sColorBase.size[0],$
+                         YOFFSET   = sColorBase.size[1],$
+                         SCR_XSIZE = sColorBase.size[2],$
+                         SCR_YSIZE = sColorBase.size[3],$
+                         FRAME     = sColorBase.frame,$
+                         SENSITIVE = sColorBase.sensitive,$
+                         UNAME     = sColorBase.uname)
 
+wSelectionColor = WIDGET_BUTTON(wcolorBase,$
+                                XOFFSET   = sSelectionColor.size[0],$
+                                YOFFSET   = sSelectionColor.size[1],$
+                                SCR_XSIZE = sSelectionColor.size[2],$
+                                UNAME     = sSelectionColor.uname,$
+                                VALUE     = sSelectionColor.value)
+
+; wPlotColor = WIDGET_BUTTON(wcolorBase,$
+;                                 XOFFSET   = sPlotColor.size[0],$
+;                                 YOFFSET   = sPlotColor.size[1],$
+;                                 SCR_XSIZE = sPlotColor.size[2],$
+;                                 UNAME     = sPlotColor.uname,$
+;                                 VALUE     = sPlotColor.value)
+                                
 END

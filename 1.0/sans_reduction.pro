@@ -83,7 +83,8 @@ global = PTR_NEW ({version:         VERSION,$
                    exclusion_type_index: 0,$ ;0,1,2 or 3
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
-                   ROIcolor:        250,$
+                   ROIcolor:        [250L,50L,0L],$
+;                   ROIcolor:        250L,$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
                    TESTING:         TESTING,$
