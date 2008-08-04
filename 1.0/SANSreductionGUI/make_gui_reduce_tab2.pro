@@ -84,6 +84,7 @@ sMEbase = { size: [sTZOBase.size[0]+XYoff[0],$
                    sTZObase.size[1]+sTZObase.size[3]+XYoff[1],$
                    sTZObase.size[2:3]], $
              frame: 1,$
+            sensitive: 1,$
              uname: 'time_zero_offset_base'}
 XYoff = [20,-8]
 sMEtitle = { size: [sMEbase.size[0]+XYoff[0],$
@@ -95,7 +96,7 @@ sMEgroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
                     XYoff[1]],$
              uname: 'monitor_efficiency_group',$
              list: ['YES','NO'],$
-             value: 0.0}
+             value: 1.0}
 XYoff = [0,5]
 sMElabel = { size: [sTZO_beam_value.size[0]+XYoff[0],$
                     sMEgroup.size[1]+XYoff[1]],$
@@ -405,6 +406,7 @@ base = WIDGET_BASE(BaseTab,$
                    SCR_XSIZE = sMEbase.size[2],$
                    SCR_YSIZE = sMEbase.size[3],$
                    FRAME     = sMEbase.frame,$
+                   SENSITIVE = sMEbase.sensitive,$
                    UNAME     = sMEbase.uname)
                    
 group = CW_BGROUP(Base,$
