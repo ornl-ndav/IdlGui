@@ -83,6 +83,18 @@ global = PTR_NEW ({version:         VERSION,$
                    exclusion_type_index: 0,$ ;0,1,2 or 3
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
+                   ascii_extension: 'txt',$
+                   ascii_filter:    '*.txt',$
+                   ascii_path:      '~/',$
+                   ascii_title:     'Browse for an ASCII data file',$
+                   xaxis:           '',$
+                   xaxis_units:     '',$
+                   yaxis:           '',$
+                   yaxis_units:     '',$
+                   Xarray:          ptr_new(0L),$
+                   Xarray_untouched: ptr_new(0L),$
+                   Yarray:          ptr_new(0L),$
+                   SigmaYarray:     ptr_new(0L),$
                    ROIcolor:        [250L,50L,0L],$
 ;                   ROIcolor:        250L,$
                    DrawXcoeff:      8,$
@@ -316,8 +328,8 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show tab #2 'REDUCE
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
 ;show tab of the REDUCE tab
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1

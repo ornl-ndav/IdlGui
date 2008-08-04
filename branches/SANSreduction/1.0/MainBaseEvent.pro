@@ -401,7 +401,38 @@ CASE Event.id OF
         BrowseLoadWaveFile, Event ;_reduce_tab3
     END
 
-;= TAB3 (LOG BOOK) ============================================================
+;= TAB3 (PLOT) ================================================================
+
+;---- Refresh plot ------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_refresh_plot_ascii_button'): BEGIN
+    END
+
+;---- Browse ASCII file -------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_input_file_browse_button'): BEGIN
+        BrowseInputAsciiFile, Event ;_tab_plot
+    END
+
+;---- Input text field --------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_input_file_text_field'): BEGIN
+        check_IF_file_exist, Event ;_tab_plot
+    END
+
+;---- Load File Button --------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_input_file_load_button'): BEGIN
+    END
+
+;---- Preview button ----------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='plot_input_file_preview_button'): BEGIN
+        preview_ascii_file, event ;_tab_plot
+    END
+
+
+;= TAB4 (LOG BOOK) ============================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event       ;_IDLsendToGeek
     END
