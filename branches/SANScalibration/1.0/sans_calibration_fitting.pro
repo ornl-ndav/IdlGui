@@ -143,8 +143,8 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans. mode
     bank = (*outputStructure.data[0]).bank
     x    = (*outputStructure.data[0]).x
     y    = (*outputStructure.data[0]).y
-    new_line  = "#S 1 Spectrum ID ('" + bank + "',(" + x
-    new_line += ',' + y + '))'  
+    new_line  = "#S 1 Spectrum ID ('" + bank + "', (" + x
+    new_line += ', ' + y + '))'  
     output_array = [output_array, new_line]
 ;#N #
     output_array = [output_array, '#N 3']
