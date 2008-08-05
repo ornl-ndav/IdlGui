@@ -125,3 +125,9 @@ default_name = roi_path + default_name
 
 RETURN, default_name
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getRoiFileName, Event
+FileName = getTextFieldValue(Event,'roi_file_name_text_field')
+RETURN, FileName
+END
