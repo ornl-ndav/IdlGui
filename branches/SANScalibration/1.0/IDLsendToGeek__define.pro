@@ -274,17 +274,21 @@ If (no_error NE 0) THEN BEGIN
       'Please email j35@ornl.gov!'
     IDLsendToGeek_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
+    ROIfileName = getRoiFileName(Event)
     application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
-      FullFileName + ' j35@ornl.gov'
+      FullFileName
+    IF (ROIFileName NE '') THEN BEGIN
+        cmd += ' -a ' + RoiFileName 
+    ENDIF
+    cmd += ' j35@ornl.gov'
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
     IDLsendToGeek_addLogBookText, Event, LogBookText
 ;remove log book
     spawn, 'rm ' + FullFileName,listening
-    print, listening
 ENDELSE
 END
 
