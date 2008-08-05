@@ -39,13 +39,12 @@ CD, CURRENT = current_folder
 
 ;************************************************************************
 ;************************************************************************
-APPLICATION = 'SANScalibration'
-VERSION     = '1.0.1'
-DEBUGGING   = 'yes' ;yes/no
-TESTING     = 'no'  
-;LIST_OF_REQUIREMENTS = ['findnexus',$
-;                        'sas_transmission',$
-;                        'sas_background']
+APPLICATION       = 'SANScalibration'
+VERSION           = '1.0.1'
+DEBUGGING         = 'yes' ;yes/no
+TESTING           = 'no'  
+CHECKING_PACKAGES = 'no'
+
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
@@ -75,6 +74,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   current_output_file_name: '',$
                    MainBaseTitle: '',$
                    sys_color_face_3d: INTARR(3),$
                    DisplayR1:        0.,$
@@ -345,7 +345,7 @@ message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
 IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
   message
 
-IF (DEBUGGING NE 'yes') THEN BEGIN
+IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
 ;Check that the necessary packages are present
     message = '> Checking For Required Software: '
     IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
@@ -408,11 +408,16 @@ IF (DEBUGGING NE 'yes') THEN BEGIN
 ;pop up window that show that they are missing packages
         message = ['They are ' + $
                    STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
-                   ' missing packages you need to ' + $
+                   ' missing package(s) you need to ' + $
                    'fully used this application.']
         message = [message,'Check Log Book For More Information !']
         result = DIALOG_MESSAGE(message,/INFORMATION,DIALOG_PARENT=MAIN_BASE)
         
+        message = '=================================================' + $
+          '========================'
+        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+          'log_book_text', message
+            
     ENDIF                       ;end of 'if (sz GT 0)'
 
 ENDIF

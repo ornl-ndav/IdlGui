@@ -83,11 +83,14 @@ ENDIF ELSE BEGIN
 ;tab
     full_output_file_name = (*global).current_output_file_name
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
-        putTextFieldValue, Event, 'input_file_text_field'
+        putTextFieldValue, Event, $
+          'input_file_text_field', $
+          full_output_file_name
+;load ascii file and plot it
+        LoadAsciiFile, Event        
 ;move to fitting tab
-
-
-
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+        WIDGET_CONTROL, id, SET_TAB_CURRENT=2
     ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
                    'FILE NAME : ' + full_output_file_name]
@@ -96,10 +99,6 @@ ENDIF ELSE BEGIN
         status = DIALOG_MESSAGE(message, $
                                 /ERROR,$
                                 DIALOG_PARENT = id)
-        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
-        WIDGET_CONTROL, id, SET_TAB_CURRENT=2
-;LoadAsciiFile (to get the Plot)
-        LoadAsciiFile, Event
     ENDELSE
 ENDELSE
 ;turn off hourglass
