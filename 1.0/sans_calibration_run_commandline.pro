@@ -94,8 +94,6 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
                    'FILE NAME : ' + full_output_file_name]
-;turn off hourglass
-        widget_control,hourglass=0
         status = DIALOG_MESSAGE(message, $
                                 /ERROR,$
                                 DIALOG_PARENT = id)
