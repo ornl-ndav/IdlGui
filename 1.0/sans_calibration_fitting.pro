@@ -665,11 +665,11 @@ FileNameOnly = aPathName[nbr-1]
 aFileNameOnly = STRSPLIT(FileNameOnly,'.',/EXTRACT)
 ;get polynomial degree
 value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
-IF (value_OF_group EQ 0) THEN BEGIN ;degree 1
-   sAdd = '_p1'
-ENDIF ELSE BEGIN
-   sAdd = '_p2'
-ENDELSE
+CASE (value_OF_group) OF
+    0: sAdd = '_p1' ;degree 1
+    1: sAdd = '_p2' ;degree 2
+    2: sADD = '_p3' ;degree 3
+ENDCASE
 FileName = aFileNameOnly[0]+sAdd+'.'+aFileNameOnly[1]
 putTextFieldValue, Event, 'output_file_text_field', FileName
 END
@@ -739,6 +739,7 @@ IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
 ENDIF ELSE BEGIN
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDELSE
+UpdateFittingGui_preview, Event
 ;turn off hourglass
 widget_control,hourglass=0
 END
