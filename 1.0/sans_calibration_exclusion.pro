@@ -754,7 +754,6 @@ plots, X1, Y0, /DEVICE, COLOR=color, /CONTINUE
 plots, X1, Y1, /DEVICE, COLOR=color, /CONTINUE
 plots, X0, Y1, /DEVICE, COLOR=color, /CONTINUE
 plots, X0, Y0, /DEVICE, COLOR=color, /CONTINUE
-
 (*global).rectangle_XY1_mouse = [X1,Y1]
 END
 

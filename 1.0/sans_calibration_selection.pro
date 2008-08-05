@@ -139,6 +139,9 @@ IF (RoiFileName NE '') THEN BEGIN
     uname_list = ['selection_load_button',$
                   'selection_preview_button']
     activate_widget_list, Event, uname_list, 1
+;refresh main plot
+    refresh_main_plot, Event
+
 ;Load ROI button (Load, extract and plot)
     LoadPlotSelection, Event
 ENDIF ELSE BEGIN
