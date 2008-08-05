@@ -148,6 +148,8 @@ IF (output_file NE '') THEN BEGIN
     cmd += output_file
 ENDIF
 
+(*global).current_output_file_name = output_path + output_file
+
 ;- PARAMETERS  ----------------------------------------------------------------
 
 ;-geometry file to overwrite

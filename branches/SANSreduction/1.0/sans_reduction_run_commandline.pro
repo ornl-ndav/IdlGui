@@ -79,6 +79,25 @@ ENDIF ELSE BEGIN
     logbook_text = 'Information from Verbose Mode:'
     IDLsendToGeek_addLogBookText, Event, logbook_text
     IDLsendToGeek_addLogBookText, Event, listening
+;make sure the output file exist and put its full name in the fitting
+;tab
+    full_output_file_name = (*global).current_output_file_name
+    IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
+        putTextFieldValue, Event, $
+          'input_file_text_field', $
+          full_output_file_name
+;load ascii file and plot it
+        LoadAsciiFile, Event        
+;move to fitting tab
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+        WIDGET_CONTROL, id, SET_TAB_CURRENT=2
+    ENDIF ELSE BEGIN
+        message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
+                   'FILE NAME : ' + full_output_file_name]
+        status = DIALOG_MESSAGE(message, $
+                                /ERROR,$
+                                DIALOG_PARENT = id)
+    ENDELSE
 ENDELSE
 ;turn off hourglass
 widget_control,hourglass=0
