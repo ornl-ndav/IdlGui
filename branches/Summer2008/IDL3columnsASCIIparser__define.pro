@@ -279,7 +279,7 @@ pro populate_structure, all_data, MyStruct
         data_structure[array_nbr].y = y
         ++array_nbr
       ENDIF ELSE BEGIN
-        array = STRSPLIT(line,' ',/EXTRACT, COUNT=nbr)
+        array = double(STRSPLIT(line,' ',/EXTRACT, COUNT=nbr))
         CASE (array_index) OF
           0: BEGIN
             my_data_array = [array[0],array[1],array[2]]
@@ -382,79 +382,6 @@ FUNCTION IDL3columnsASCIIparser::getAllTag
   ;help, self.all_data, /heap_variables
   output = readToBlank(*self.all_data)
   RETURN, output
-END
-
-;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getDataNbr, number
-  all_data = *self.all_data
-  blk_line_index = WHERE((all_data) EQ '', nbr)
-  ;get our new interesting array of data
-  all_data = all_data[blk_line_index[0]+1:*]
-  
-  
-  ;get how many array we have here
-  blk_line_index = WHERE(all_data EQ '', new_nbr)
-  num_elnts = N_ELEMENTS(all_data)
-  
-  if new_nbr ne 0 then begin
-    ;make sure the last one is not the last element of the array
-    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
-      --new_nbr
-    ENDIF
-  endif else begin
-    new_nbr = 1
-  endelse
-  
-  array_nbr = 0
-  i = 0
-  array_index = 0
-  output = ptrarr(new_nbr, /allocate_heap)
-  
-  
-  ;Extract the data and covert to double
-  WHILE (array_nbr NE new_nbr) DO BEGIN
-    if i  ne num_elnts then begin
-      line = all_data[i]
-    endif else begin
-      line = ''
-    endelse
-    
-    IF (~STRMATCH(line,'#*')) THEN BEGIN
-      IF (line EQ '') THEN BEGIN
-      
-        *output[array_nbr] = my_data_array
-        array_index = 0
-        
-        ++array_nbr
-      ENDIF ELSE BEGIN
-        array = double(STRSPLIT(line,' ',/EXTRACT, COUNT=nbr))
-        CASE (array_index) OF
-          0: my_data_array = [array[0],array[1],array[2]]
-          ELSE: BEGIN
-            IF (nbr EQ 1) THEN BEGIN
-              my_data_array = [my_data_array,array[0],'','']
-            ENDIF ELSE BEGIN
-              my_data_array = $
-                [my_data_array,array[0],array[1],array[2]]
-            ENDELSE
-          END
-        ENDCASE
-        ;help, my_data_array
-        ++array_index
-      ENDELSE
-    endif
-    i++
-  endwhile
-  if ~(number gt n_elements(output)-1) then begin
-    array = *output[number]
-    n = n_elements(array)/3
-    array = reform(array, 3, n, /OVERWRITE)
-    RETURN, array
-  endif else begin
-    print, "subscript out of range"
-    RETURN, 0
-  endelse
-  
 END
 
 ;------------------------------------------------------------------------------
