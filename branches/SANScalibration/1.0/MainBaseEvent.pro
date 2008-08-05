@@ -60,14 +60,22 @@ CASE Event.id OF
 ;- Main Plot ------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
         getXYposition, Event ;_get
-        IF (Event.press EQ 1) THEN BEGIN
-            putTextFieldValue, Event, $
-              'x_center_value', $
-              STRCOMPRESS(Event.x/8.)
-            putTextFieldValue, Event, $
-              'y_center_value', $
+;check if user wants circle or rectangle
+        id = WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_in_out_button')
+        IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BEGIN ;circle
+            IF (Event.press EQ 1) THEN BEGIN
+                putTextFieldValue, Event, $
+                  'x_center_value', $
+                  STRCOMPRESS(Event.x/8.)
+                putTextFieldValue, Event, $
+                  'y_center_value', $
               STRCOMPRESS(Event.y/8.)
-        ENDIF
+            ENDIF
+        ENDIF ELSE BEGIN ;rectangle
+            IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+                select_rectangle, Event ;_exclusion
+            ENDIF
+        ENDELSE
     END
 
 ;- Run Number cw_field --------------------------------------------------------
@@ -126,6 +134,14 @@ CASE Event.id OF
 ;- Clear Input Boxed
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_exclusion_input_boxes'): BEGIN
         ClearInputBoxes, Event ;_exclusion
+    END
+
+;- Rectangle or Circle selection ----------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_in_out_button'): BEGIN
+        EnableCircleBase, Event ;_exclusion
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='rectangle_in_out_button'): BEGIN
+        EnableRectangleBase, Event ;_exclusion
     END
 
 ;- Type of selection
