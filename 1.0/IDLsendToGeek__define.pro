@@ -42,7 +42,7 @@ FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
-    'LogBookPath'     : RETURN, '/SNS/users/LogBook/'
+    'LogBookPath'     : RETURN, '~/'
     'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
@@ -141,7 +141,7 @@ PRO IDLsendToGeek_ReplaceLogBookText, Event, OLD_STRING, NEW_STRING
 
 InitialStrarr = IDLsendToGeek_getLogBookText(Event)
 ArrSize       = (SIZE(InitialStrarr))(1)
-IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN $
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN 
 ;do not remove anything from last line
     IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
@@ -256,7 +256,6 @@ message   = IDLsendToGeek_getMessage(Event)
 text = "'Log Book of plotROI "
 text += version + " sent by " + ucams
 text += " from " + hostname + "."
-text += " Log Book is: " + FullFileName 
 text += ". Message is: "
 
 IF (message NE '') THEN BEGIN
@@ -277,11 +276,15 @@ If (no_error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
     subject        = application + " LogBook"
-    cmd  =  'echo ' + text + '| mail -s "' + subject + '" j35@ornl.gov'
+    cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
+      FullFileName + ' j35@ornl.gov'
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
     IDLsendToGeek_addLogBookText, Event, LogBookText
+;remove log book
+    spawn, 'rm ' + FullFileName,listening
+    print, listening
 ENDELSE
 END
 
