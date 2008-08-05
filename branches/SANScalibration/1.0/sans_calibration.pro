@@ -43,7 +43,7 @@ APPLICATION       = 'SANScalibration'
 VERSION           = '1.0.1'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no'  
-CHECKING_PACKAGES = 'no'
+CHECKING_PACKAGES = 'yes'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
