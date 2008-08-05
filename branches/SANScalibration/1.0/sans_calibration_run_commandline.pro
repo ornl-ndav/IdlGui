@@ -81,12 +81,12 @@ ENDIF ELSE BEGIN
     IDLsendToGeek_addLogBookText, Event, listening
 ;make sure the output file exist and put its full name in the fitting
 ;tab
-    output_folder = getButtonValue(Event,'output_folder')
-    output_file = getTextfieldValue(Event, 'output_file_name')
-    full_output_file_name = output_folder + output_file
+    full_output_file_name = (*global).current_output_file_name
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
         putTextFieldValue, Event, 'input_file_text_field'
 ;move to fitting tab
+
+
 
     ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
