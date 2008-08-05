@@ -136,6 +136,7 @@ IF (RoiFileName NE '') THEN BEGIN
     IDLsendToGeek_addLogBookText, Event, '-> File Browsed: ' + RoiFileName
     (*global).selection_path = new_path
     putTextFieldValue, Event, 'selection_file_name_text_field', RoiFileName
+    putTextFieldValue, Event, 'roi_file_name_text_field', RoiFileName
 ;activate preview and load/plot buttons
     uname_list = ['selection_load_button',$
                   'selection_preview_button']
