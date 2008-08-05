@@ -1,0 +1,25 @@
+SANScalibration is a Graphical User Interface on top of the LENS Data Reduction 
+program for background and transmission files. 
+
+Requirements:
+	install the IDL Virtual Machine for your system
+	(http://www.ittvis.com/download/download.asp?urlProductCode=13)
+
+To install this application, just run install_SANScalibration. This program will 
+copy the necessary folders and the .sav (IDL Virtual Machine executable file) 
+to the final location.
+
+> ./install_SANScalibration -d <where to intall the software> 
+                                           -n <full name of executable file>
+
+ex: 
+> ./install_SANScalibration -d /usr/local/bin/ -n  ~/bin/mySANScalibration
+
+To run the application, launch the executable file you defined
+> ~/bin/mySANScalibration
+
+You can get help about how to install this software by doing
+> ./install_SANScalibration -h
+or send an email to 
+bilheuxjm@ornl.gov
+
