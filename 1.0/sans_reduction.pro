@@ -41,10 +41,10 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANSreduction'
 VERSION           = '1.0.3'
-DEBUGGING         = 'yes' ;yes/no
+DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'no'
+CHECKING_PACKAGES = 'yes'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}

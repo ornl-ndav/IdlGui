@@ -406,6 +406,7 @@ CASE Event.id OF
 ;---- Refresh plot ------------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='plot_refresh_plot_ascii_button'): BEGIN
+        rePlotAsciiData, Event ;_tab_plot
     END
 
 ;---- Browse ASCII file -------------------------------------------------------
@@ -423,6 +424,7 @@ CASE Event.id OF
 ;---- Load File Button --------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='plot_input_file_load_button'): BEGIN
+        LoadAsciiFile, Event ;_tab_plot
     END
 
 ;---- Preview button ----------------------------------------------------------
