@@ -235,10 +235,10 @@ pro populate_structure, all_data, MyStruct
   num_elnts = N_ELEMENTS(all_data)
   
   if new_nbr ne 0 then begin
-    ;make sure the last one is not the last element of the array
-    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
-      --new_nbr
-    ENDIF
+    ;make sure the last one is for the last element of the array
+    IF (blk_line_index[new_nbr-1] NE (num_elnts-1)) THEN BEGIN
+      ++new_nbr
+    ENDIF 
   endif else begin
     new_nbr = 1
   endelse
@@ -394,7 +394,9 @@ END
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
+  IF (FILE_TEST(location, /READ)) THEN BEGIN
   self.all_data = ptr_new(readData(self.path))
+  END
   RETURN, FILE_TEST(location, /READ)
 END
 
