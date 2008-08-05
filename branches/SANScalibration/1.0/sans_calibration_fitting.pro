@@ -189,7 +189,7 @@ output_name = getTextFieldValue(Event, 'output_file_text_field')
 output_file_name = output_path + output_name
 ;write file
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_file_save_button')
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
@@ -690,56 +690,69 @@ file_name = getTextFieldValue(Event, 'input_file_text_field')
 IDLsendToGeek_addLogBookText, Event, 'Loading ASCII file ' + $
   file_name
 IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
-iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
-IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
-    no_error = 0
-    CATCH,no_error   
-    IF (no_error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-    ENDIF ELSE BEGIN
-        sAscii = iAsciiFile->getData()
-        (*global).xaxis       = sAscii.xaxis
-        (*global).xaxis_units = sAScii.xaxis_units
-        (*global).yaxis       = sAscii.yaxis
-        (*global).yaxis_units = sAscii.yaxis_units
-        
-        DataStringArray = *(*sAscii.data)[0].data
-;this method will creates a 3 columns array (x,y,sigma_y)
-        Nbr = N_ELEMENTS(DataStringArray)
-        IF (Nbr GT 1) THEN BEGIN
-            Xarray      = STRARR(1)
-            Yarray      = STRARR(1)
-            SigmaYarray = STRARR(1)
-            ParseDataStringArray, $
-              Event,$
-              DataStringArray,$
-              Xarray,$
-              Yarray,$
-              SigmaYarray
-;Remove all rows with NaN, -inf, +inf ...
-            CleanUpData, Xarray, Yarray, SigmaYarray
-;Change format of array (string -> float)
-            Xarray      = FLOAT(Xarray)
-            Yarray      = FLOAT(Yarray)
-            SigmaYarray = FLOAT(SigmaYarray)
-;Store the data in the global structure
-            (*(*global).Xarray)      = Xarray
-            (*(*global).Yarray)      = Yarray
-            (*(*global).SigmaYarray) = SigmaYarray
-;Plot Data in widget_draw
-            PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
-;Populate output folder/file name with path and default file name
-            DefineOutputFileName, Event
-        ENDIF 
-;file has been loaded with success
-        (*global).ascii_file_load_status = 1
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-    ENDELSE
-ENDIF ELSE BEGIN
+loading_error = 0
+CATCH,loading_error
+IF (loading_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    text = 'Error while loading ' + file_name
+    result = DIALOG_MESSAGE(text,/ERROR)
+ENDIF ELSE BEGIN
+    iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
+    IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
+        no_error = 0
+        CATCH,no_error   
+        IF (no_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+            text = 'Error while loading ' + file_name
+            result = DIALOG_MESSAGE(text,/ERROR)
+        ENDIF ELSE BEGIN
+            sAscii = iAsciiFile->getData()
+            (*global).xaxis       = sAscii.xaxis
+            (*global).xaxis_units = sAScii.xaxis_units
+            (*global).yaxis       = sAscii.yaxis
+            (*global).yaxis_units = sAscii.yaxis_units
+            
+            DataStringArray = *(*sAscii.data)[0].data
+;this method will creates a 3 columns array (x,y,sigma_y)
+            Nbr = N_ELEMENTS(DataStringArray)
+            IF (Nbr GT 1) THEN BEGIN
+                Xarray      = STRARR(1)
+                Yarray      = STRARR(1)
+                SigmaYarray = STRARR(1)
+                ParseDataStringArray, $
+                  Event,$
+                  DataStringArray,$
+                  Xarray,$
+                  Yarray,$
+                  SigmaYarray
+;Remove all rows with NaN, -inf, +inf ...
+                CleanUpData, Xarray, Yarray, SigmaYarray
+;Change format of array (string -> float)
+                Xarray      = FLOAT(Xarray)
+                Yarray      = FLOAT(Yarray)
+                SigmaYarray = FLOAT(SigmaYarray)
+;Store the data in the global structure
+                (*(*global).Xarray)      = Xarray
+                (*(*global).Yarray)      = Yarray
+                (*(*global).SigmaYarray) = SigmaYarray
+;Plot Data in widget_draw
+                PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
+;Populate output folder/file name with path and default file name
+                DefineOutputFileName, Event
+            ENDIF 
+;file has been loaded with success
+            (*global).ascii_file_load_status = 1
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        ENDELSE
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        text = 'Error while loading ' + file_name
+        result = DIALOG_MESSAGE(text,/ERROR)
+    ENDELSE
+    UpdateFittingGui_preview, Event
 ENDELSE
-UpdateFittingGui_preview, Event
 ;turn off hourglass
 widget_control,hourglass=0
 END
