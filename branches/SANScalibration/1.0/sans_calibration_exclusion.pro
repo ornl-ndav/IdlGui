@@ -533,9 +533,7 @@ RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                               FILTER            = filter,$
                               GET_PATH          = new_path,$
                               PATH              = path,$
-                              TITLE             = title,$
-                              /READ,$
-                              /MUST_EXIST)
+                              TITLE             = title)
 
 IF (RoiFileName NE '') THEN BEGIN
     length = 35
