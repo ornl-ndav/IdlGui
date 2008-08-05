@@ -262,19 +262,19 @@ tooltip_array = ['Detector Pixel is part of the ' + $
                  'part of the selection.']
 
 sButton1 = { uname:   'exclusion_half_in',$
-             tooltip: tooltip_array[0],$
+             tooltip: tooltip_array[2],$
              value:   'images/selection_half_in.bmp'}
                     
 sButton2 = { uname:   'exclusion_half_out',$
-             tooltip: tooltip_array[1],$
+             tooltip: tooltip_array[3],$
              value:   'images/selection_half_out.bmp'}
 
 sButton3 = { uname:   'exclusion_outside_in',$
-             tooltip: tooltip_array[2],$
+             tooltip: tooltip_array[0],$
              value:   'images/selection_outside_in.bmp'}
 
 sButton4 = { uname:   'exclusion_outside_out',$
-             tooltip: tooltip_array[3],$
+             tooltip: tooltip_array[1],$
              value:   'images/selection_outside_out.bmp'}
 
 ;SAVE AS 
