@@ -167,6 +167,46 @@ sClearExclusion = { size: [sPlotExclusion.size[0]+$
                     value: 'CLEAR INPUTS',$
                     uname: 'clear_exclusion_input_boxes'}
 
+;- Rectangle Selection tool ---------------------------------------------------
+XYoff = [83,30]
+sRectangleBase1 = { size: [sPreviewExclusion.size[0]+XYoff[0],$
+                          sPreviewExclusion.size[1]+XYoff[1],$
+                          200,105],$
+                   frame: 0,$
+                   uname: 'rectangle_base_part_1',$
+                   map:   0}
+XYoff = [0,0] ;label of rectangle selection
+message = 'Left click first corner of rectangle and whithout releasing' + $
+           ' the mouse, move mouse to opposite corner.'
+sRectangleText = { size: [XYoff[0],$
+                          XYoff[1],$
+                          200,$
+                          70],$
+                   value: message}
+XYoff = [20,0]
+sRectangleInOutBase = { size: [sRectangleText.size[0]+XYoff[0],$
+                               sRectangleText.size[1]+$
+                               sRectangleText.size[3]+XYoff[1],$
+                               150,30],$
+                        frame: 0}
+
+sRectangleInOutGroup =  {list: ['Inside','Outside'],$
+                         uname: 'rectangle_in_out_group',$
+                         value: 0.0}
+
+XYoff = [0,30]
+sRectangleBase2 = { size: [sPreviewExclusion.size[0]+XYoff[0],$
+                           sPreviewExclusion.size[1]+XYoff[1],$
+                           80,60],$
+                    frame: 0,$
+                    uname: 'rectangle_base_part_2',$
+                    map:   0}
+XYoff = [20,20]
+sRectangleHelp = { size: [XYoff[0],$
+                          XYoff[1]],$
+                   value: 'HELP ->'}
+
+;- Circle selection tool ------------------------------------------------------
 XYoff = [0,35] ;Center pixels title
 sCenterPixelTitle = { size: [sPreviewExclusion.size[0]+XYoff[0],$
                              sPreviewExclusion.size[1]+XYoff[1]],$
@@ -241,6 +281,20 @@ sRadiiR2group = { size: [XYoff[0],$
                   list : ['Inside','Outside'],$
                   uname: 'radii_r2_group',$
                   value: 0.0}
+
+;Rectangle or Circle selection ------------------------------------------------
+XYoff = [0,-5]
+sRectCircleBase = { size: [sRadiiLabel.size[0]+XYoff[0],$
+                           sRadiiR2Value.size[1]+XYoff[1],$
+                           77,35],$
+                    frame: 1}
+sCircleButton = { value: 'images/circle_in_out.bmp',$
+                  uname: 'circle_in_out_button',$
+                  tooltip: 'Circle Selection Tool'}
+
+sRectButton = { value: 'images/rectangle_in_out.bmp',$
+                uname: 'rectangle_in_out_button',$
+                tooltip: 'Rectangle Selection Tool'}
 
 ;- Type of selection button ---------------------------------------------------
 XYoff = [115,45]
@@ -359,14 +413,14 @@ XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
                   sRefreshPlot.size[1]+XYoff[1],$
-                  175,43],$  ;68
+                  50,43],$  ;68
            frame: 1,$
            uname: 'x_y_base'}
 XYoff = [5,3] ;x label
 xLabel = { size: [XYoff[0],$
                   XYoff[1]],$
            value: 'X:'}
-XYoff = [20,0] ;x value
+XYoff = [20,3] ;x value
 xValue = { size: [XYoff[0],$
                   XYoff[1]],$
            value: '   ',$
@@ -563,6 +617,87 @@ wClearExclusion = WIDGET_BUTTON(wExclusionBase,$
                                SCR_XSIZE = sClearExclusion.size[2],$
                                VALUE     = sClearExclusion.value,$
                                UNAME     = sClearExclusion.uname)
+
+
+;Circle and Rectangle Buttons
+wCircleRectBase = WIDGET_BASE(wExclusionBase,$
+                              SPACE     = 15,$
+                              XOFFSET   = sRectCircleBase.size[0],$
+                              YOFFSET   = sRectCircleBase.size[1],$
+                              SCR_XSIZE = sRectCircleBase.size[2],$
+                              SCR_YSIZE = sRectCircleBase.size[3],$
+                              FRAME     = sRectCircleBase.frame,$
+                              /EXCLUSIVE,$
+                              /TOOLBAR,$
+                              /ROW)
+                              
+;Circle
+wButton1 = WIDGET_BUTTON(wCircleRectBase,$
+                         VALUE   = sCircleButton.value,$
+                         TOOLTIP = sCircleButton.tooltip,$
+                         UNAME   = sCircleButton.uname,$
+                         /BITMAP,$
+                         /NO_RELEASE)
+
+;Rect
+wButton2 = WIDGET_BUTTON(wCircleRectBase,$
+                         VALUE   = sRectButton.value,$
+                         TOOLTIP = sRectButton.tooltip,$
+                         UNAME   = sRectButton.uname,$
+                         /BITMAP,$
+                         /NO_RELEASE)
+
+WIDGET_CONTROL,  WIDGET_INFO(wCircleRectBase, /CHILD), /SET_BUTTON
+
+;- Rectangle Selection tool ---------------------------------------------------
+wRectangleBase1 = WIDGET_BASE(wExclusionBase,$
+                              XOFFSET   = sRectangleBase1.size[0],$
+                              YOFFSET   = sRectangleBase1.size[1],$
+                              SCR_XSIZE = sRectangleBase1.size[2],$
+                              SCR_YSIZE = sRectangleBase1.size[3],$
+                              FRAME     = sRectangleBase1.frame,$
+                              UNAME     = sRectangleBase1.uname,$
+                              MAP       = sRectangleBase1.map)
+
+;label
+wLabel = WIDGET_TEXT(wRectangleBase1,$
+                     XOFFSET   = sRectangleText.size[0],$
+                     YOFFSET   = sRectangleText.size[1],$
+                     SCR_XSIZE = sRectangleText.size[2],$
+                     SCR_YSIZE = sRectangleText.size[3],$
+                     VALUE     = sRectangleText.value,$
+                     /WRAP,$
+                     /SCROLL)
+
+;group base
+wRectGroupBase = WIDGET_BASE(wRectangleBase1,$
+                             XOFFSET   = sRectangleInOutBase.size[0],$
+                             YOFFSET   = sRectangleInOutBase.size[1],$
+                             SCR_XSIZE = sRectangleInOutBase.size[2],$
+                             SCR_YSIZE = sRectangleInOutBase.size[3],$
+                             FRAME     = sRectangleInOutBase.frame)
+wRectGroup = CW_BGROUP(wRectGroupBase,$
+                       sRectangleInOutGroup.list,$
+                       ROW       = 1,$
+                       SET_VALUE = sRectangleInOutGroup.value,$
+                       UNAME     = sRectangleInOutGroup.uname,$
+                       /NO_RELEASE,$
+                       /EXCLUSIVE)
+
+wRectangleBase2 = WIDGET_BASE(wExclusionBase,$
+                              XOFFSET   = sRectangleBase2.size[0],$
+                              YOFFSET   = sRectangleBase2.size[1],$
+                              SCR_XSIZE = sRectangleBase2.size[2],$
+                              SCR_YSIZE = sRectangleBase2.size[3],$
+                              FRAME     = sRectangleBase2.frame,$
+                              UNAME     = sRectangleBase2.uname,$
+                              MAP       = sRectangleBase2.map)
+
+;help label
+wRectangleHelp = WIDGET_LABEL(wRectangleBase2,$
+                              XOFFSET = sRectangleHelp.size[0],$
+                              YOFFSET = sRectangleHelp.size[1],$
+                              VALUE   = sRectangleHelp.value)
 
 ;Center (Pixels) label
 wCenterPixelTitle = WIDGET_LABEL(wExclusionBase,$

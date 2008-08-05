@@ -53,6 +53,15 @@ WIDGET_CONTROL, id, MAP=map_status
 END
 
 ;------------------------------------------------------------------------------
+;This function map or not the given base
+PRO map_base_list, Event, uname_list, map_status
+sz = N_ELEMENTS(uname_list)
+FOR i=0,(sz-1) DO BEGIN
+    map_base, Event, uname_list[i], map_status
+ENDFOR
+END
+
+;------------------------------------------------------------------------------
 ;This function activates or not the GO DATA REDUCTION button
 PRO activate_go_data_reduction, Event, activate_status
 activate_widget, Event, 'go_data_reduction_button', activate_status

@@ -149,11 +149,11 @@ ENDIF ELSE BEGIN ;fast
     CASE (CurrentSelectionSettings) OF
 ;half in
         0: BEGIN
-            IndexArray = WHERE(tmp_array GE 4) 
+            IndexArray = WHERE(tmp_array GE 8) 
         END
 ;half out
         1: BEGIN
-            IndexArray = WHERE(tmp_array GT 4) 
+            IndexArray = WHERE(tmp_array GT 8) 
         END
 ;out in
         2: BEGIN
@@ -161,7 +161,7 @@ ENDIF ELSE BEGIN ;fast
         END
 ;out out
         3: BEGIN
-            IndexArray = WHERE(tmp_array EQ 8) 
+            IndexArray = WHERE(tmp_array EQ 16) 
         END
         ELSE:
     ENDCASE
@@ -293,6 +293,94 @@ IF (DisplayR1 NE 0 OR $
 ENDIF ELSE BEGIN
     
     (*global).there_is_a_selection = 0
+    
+ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+  
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO ExclusionRegionRectangle, Event, TYPE=type
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).data_nexus_file_name EQ '') THEN RETURN
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
+
+coeff = FLOAT((*global).DrawXcoeff)
+PixelSelectedArray = INTARR(80,80)
+
+;get X0, Y0, X1 and Y1
+XY0 = (*global).Rectangle_XY0_mouse
+X0 = XY0[0] 
+Y0 = XY0[1]
+XY1 = (*global).Rectangle_XY1_mouse
+X1 = XY1[0]
+Y1 = XY1[1]
+
+X0 = MIN([X0,X1],MAX=X1)
+Y0 = MIN([Y0,Y1],MAX=Y1)
+
+;check if in or out
+IF (getCWBgroupValue(Event,'rectangle_in_out_group') EQ 0) THEN BEGIN ;inside
+    inside_selection = 1b
+ENDIF ELSE BEGIN ;outside
+    inside_selection = 0b
+ENDELSE
+
+;get type of selection
+selection_type = (*global).exclusion_type_index
+
+IF (X0 NE 0 AND $
+    Y0 NE 0 AND $
+    X1 NE 0 AND $
+    Y1 NE 0) THEN BEGIN
+
+    oROI = OBJ_NEW('myIDLgrROI',$
+                   COLOR = (*global).rectangle_selection_color,$
+                   STYLE = 0)
+    oROI->setInsideFlag, inside_selection
+    
+    NewX = [X0,X1,X1,X0,X0]
+    NewY = [Y0,Y0,Y1,Y1,Y0]
+    newZ = INTARR(N_ELEMENTS(NewX))
+    
+    oROI->GetProperty, N_VERTS=nVerts
+    oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
+    oROI->SetProperty, STYLE=style
+    
+    CreateArrayOfPixelSelected, $
+      PixelSelectedArray,$
+      oROI,$
+      selection_type,$
+      inside_selection, $
+      TYPE=type
+
+;refresh plot
+    refresh_main_plot, Event
+    
+    (*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+    
+    OBJ_DESTROY, oROI
+    (*global).there_is_a_selection = 1    
+    
+;plot ROI
+    plotRoi, Event, $
+      DisplayR1 = DisplayR1, $
+      DisplayR2 = DisplayR2, $
+      COEFF =     coeff
+    
+    resetROIfileName, Event
+    
+ENDIF ELSE BEGIN
+    
+;    (*global).there_is_a_selection = 0
     
 ENDELSE
 
@@ -598,10 +686,92 @@ END
 
 ;------------------------------------------------------------------------------
 PRO FastExclusionRegionCircle, Event 
-ExclusionRegionCircle, Event, TYPE='fast'
+;check if user wants circle or rectangle
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='circle_in_out_button')
+IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BEGIN ;circle
+    ExclusionRegionCircle, Event, TYPE='fast'
+ENDIF ELSE BEGIN ;rectangle
+    ExclusionRegionRectangle, Event, TYPE='fast'
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
 PRO AccurateExclusionRegionCircle, Event 
-ExclusionRegionCircle, Event, TYPE='accurate'
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='circle_in_out_button')
+IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BEGIN ;circle
+    ExclusionRegionCircle, Event, TYPE='accurate'
+ENDIF ELSE BEGIN ;rectangle
+    ExclusionRegionRectangle, Event, TYPE='accurate'
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO EnableCircleBase, Event
+uname_list = ['rectangle_base_part_1',$
+              'rectangle_base_part_2']
+map_base_list, Event, uname_list, 0
+END
+
+;------------------------------------------------------------------------------
+PRO EnableRectangleBase, Event
+uname_list = ['rectangle_base_part_1',$
+              'rectangle_base_part_2']
+map_base_list, Event, uname_list, 1
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+
+PRO RectangleLeftClick, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+XY0 = (*global).rectangle_XY0_mouse
+XY0[0] = Event.x
+XY0[1] = Event.y
+(*global).rectangle_XY0_mouse = XY0
+END
+
+;------------------------------------------------------------------------------
+PRO RectangleReleased, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+XY0 = (*global).rectangle_XY0_mouse
+XY1 = (*global).rectangle_XY1_mouse
+END
+
+;------------------------------------------------------------------------------
+PRO RectangleMoving, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+refresh_main_plot, Event ;refresh main plot (without selection)
+;plot selection borders
+XY0 = (*global).rectangle_XY0_mouse
+X0 = XY0[0]
+Y0 = XY0[1]
+X1 = Event.x
+Y1 = Event.y
+color = (*global).rectangle_selection_color
+plots, X0, Y0, /DEVICE, COLOR=color
+plots, X1, Y0, /DEVICE, COLOR=color, /CONTINUE
+plots, X1, Y1, /DEVICE, COLOR=color, /CONTINUE
+plots, X0, Y1, /DEVICE, COLOR=color, /CONTINUE
+plots, X0, Y0, /DEVICE, COLOR=color, /CONTINUE
+
+(*global).rectangle_XY1_mouse = [X1,Y1]
+END
+
+;------------------------------------------------------------------------------
+PRO select_rectangle, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+IF(Event.type EQ 0 AND $
+   Event.press EQ 1) THEN BEGIN ;left press button
+    (*global).mouse_status = 1
+    RectangleLeftClick, Event
+ENDIF
+IF (Event.type EQ 1) THEN BEGIN ;released left button
+    (*global).mouse_status = 0
+    RectangleReleased, Event
+ENDIF
+IF (Event.type EQ 2 AND $
+    (*global).mouse_status EQ 1) THEN BEGIN ;moving left button
+    RectangleMoving, Event
+ENDIF
 END
