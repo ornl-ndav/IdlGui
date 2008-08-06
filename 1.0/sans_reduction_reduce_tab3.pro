@@ -177,7 +177,6 @@ IF (poly_file NE '') THEN BEGIN
     READF, u, file_coeff
     CLOSE, U
     FREE_LUN, u
-    PRINT, file_coeff
 ;isolate coefficient    
     list_OF_coeff = isolate_coeff(file_coeff)
 ;put list of coeff in text box
