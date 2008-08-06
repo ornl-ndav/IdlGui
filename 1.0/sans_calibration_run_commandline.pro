@@ -91,6 +91,7 @@ ENDIF ELSE BEGIN
 ;move to fitting tab
         id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
         WIDGET_CONTROL, id, SET_TAB_CURRENT=2
+        AsciiInputTextField, Event 
     ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
                    'FILE NAME : ' + full_output_file_name]
