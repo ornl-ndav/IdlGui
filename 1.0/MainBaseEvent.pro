@@ -401,6 +401,13 @@ CASE Event.id OF
         BrowseLoadWaveFile, Event ;_reduce_tab3
     END
 
+;---- Clear Wavelength coefficient text field ---------------------------------
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'wave_clear_text_field'): BEGIN
+        putTextFieldValue, Event, 'wave_dependent_back_sub_text_field',''
+    END
+
 ;= TAB3 (PLOT) ================================================================
 
 ;---- Refresh plot ------------------------------------------------------------
