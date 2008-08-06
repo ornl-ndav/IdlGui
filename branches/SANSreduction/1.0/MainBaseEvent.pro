@@ -49,6 +49,10 @@ CASE Event.id OF
         tab_event, Event ;_eventcb
     END
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
+        start_help, Event ;_eventcb
+    END
+
 ;= TAB1 (LOAD DATA) ===========================================================
 
 ;- Main Plot ------------------------------------------------------------------
