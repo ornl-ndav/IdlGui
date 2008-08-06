@@ -97,7 +97,6 @@ global = PTR_NEW ({version:         VERSION,$
                    Yarray:          ptr_new(0L),$
                    SigmaYarray:     ptr_new(0L),$
                    ROIcolor:        [50L,50L,0L],$
-;                   ROIcolor:        250L,$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
                    TESTING:         TESTING,$
@@ -126,8 +125,8 @@ global = PTR_NEW ({version:         VERSION,$
                    selection_path:   '~/',$
                    RoiPixelArrayExcluded: ptr_new(0L),$
                    data_nexus_file_name: '',$
-                     short_data_nexus_file_name: '',$
-                     path_data_nexus_file: '',$
+                   short_data_nexus_file_name: '',$
+                   path_data_nexus_file: '',$
                    inst_geom:       '',$
                    wave_para_value: '',$
                    wave_para_label: wave_para_label,$               
