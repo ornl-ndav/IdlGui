@@ -404,18 +404,22 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
             ENDELSE
         ENDFOR
         
+        IF (nbr_missing_packages GT 0) THEN BEGIN
 ;pop up window that show that they are missing packages
-        message = ['They are ' + $
-                   STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
-                   ' missing package(s) you need to ' + $
-                   'fully used this application.']
-        message = [message,'Check Log Book For More Information !']
-        result = DIALOG_MESSAGE(message,/INFORMATION,DIALOG_PARENT=MAIN_BASE)
-        
-        message = '=================================================' + $
-          '========================'
-        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
-          'log_book_text', message
+            message = ['They are ' + $
+                       STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+                       ' missing package(s) you need to ' + $
+                       'fully used this application.']
+            message = [message,'Check Log Book For More Information !']
+            result = DIALOG_MESSAGE(message, $
+                                    /INFORMATION, $
+                                    DIALOG_PARENT=MAIN_BASE)
+            
+            message = '=================================================' + $
+              '========================'
+            IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+              'log_book_text', message
+        ENDIF
             
     ENDIF                       ;end of 'if (sz GT 0)'
 
