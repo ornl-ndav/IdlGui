@@ -66,10 +66,12 @@ END
 ;------------------------------------------------------------------------------
 PRO CleanUpData, Xarray, Yarray, SigmaYarray
 ;remove -Inf, Inf and NaN
-RealMinIndex = WHERE(FINITE(Yarray))
-Xarray = Xarray(RealMinIndex)
-Yarray = Yarray(RealMinIndex)
-SigmaYarray = SigmaYarray(RealMinIndex)
+RealMinIndex = WHERE(FINITE(Yarray),nbr)
+IF (nbr GT 0) THEN BEGIN
+    Xarray = Xarray(RealMinIndex)
+    Yarray = Yarray(RealMinIndex)
+    SigmaYarray = SigmaYarray(RealMinIndex)
+ENDIF    
 END
 
 ;------------------------------------------------------------------------------
