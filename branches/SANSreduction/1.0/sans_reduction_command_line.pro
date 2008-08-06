@@ -148,7 +148,9 @@ IF (output_file NE '') THEN BEGIN
     cmd += output_file
 ENDIF
 
-(*global).current_output_file_name = output_path + output_file
+(*global).current_output_file_name   = output_path + output_file
+(*global).short_data_nexus_file_name = output_file
+(*global).path_data_nexus_file       = output_path
 
 ;- PARAMETERS  ----------------------------------------------------------------
 
