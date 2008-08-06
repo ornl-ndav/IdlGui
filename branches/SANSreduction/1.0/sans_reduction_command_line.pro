@@ -253,7 +253,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 cmd += ','
 IF (Qunits EQ 0) THEN BEGIN
-    cmd += 'linear'
+    cmd += 'lin'
 ENDIF ELSE BEGIN
     cmd += 'log'
 ENDELSE
@@ -345,7 +345,7 @@ ENDIF
 IF (IntermPlots[5] EQ 1) THEN BEGIN
     cmd += ' ' + (*global).IntermPara.bmnon_wave.flag
     map_status = 1
-;-Q min, max, width and unit
+;-wavelength min, max, width and unit
     Lambdamin   = getTextFieldValue(Event,'lambda_min_text_field')
     Lambdamax   = getTextFieldValue(Event,'lambda_max_text_field')
     Lambdawidth = getTextFieldValue(Event,'lambda_width_text_field')
@@ -385,7 +385,7 @@ IF (IntermPlots[5] EQ 1) THEN BEGIN
     ENDELSE
     cmd += ','
     IF (Lambdaunits EQ 0) THEN BEGIN
-        cmd += 'linear'
+        cmd += 'lin'
     ENDIF ELSE BEGIN
         cmd += 'log'
     ENDELSE
