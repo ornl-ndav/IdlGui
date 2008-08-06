@@ -81,7 +81,19 @@ ENDIF ELSE BEGIN
     IDLsendToGeek_addLogBookText, Event, listening
 ;make sure the output file exist and put its full name in the fitting
 ;tab
-    full_output_file_name = (*global).current_output_file_name
+    short_output_file_name = (*global).short_data_nexus_file_name
+    IF (short_output_file_name NE '') THEN BEGIN
+        full_output_file_name = (*global).current_output_file_name
+    ENDIF ELSE BEGIN
+        DataFiles = getTextFieldValue(Event,'data_file_name_text_field')
+        DataFilesArray = STRSPLIT(DataFiles,' ',/EXTRACT)
+        DataFile1 = DataFilesArray[0]
+        iObject = OBJ_NEW('IDLgetMetadata',DataFile1)
+        RunNumber = iObject->getRunNumber()
+        full_output_file_name = (*global).path_data_nexus_file
+        full_output_file_name += 'SANS_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        full_output_file_name += '.txt'
+    ENDELSE
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
         putTextFieldValue, Event, $
           'input_file_text_field', $
@@ -91,6 +103,7 @@ ENDIF ELSE BEGIN
 ;move to fitting tab
         id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
         WIDGET_CONTROL, id, SET_TAB_CURRENT=2
+;update fitting tab gui
         AsciiInputTextField, Event 
     ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$

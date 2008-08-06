@@ -123,6 +123,8 @@ global = PTR_NEW ({version:         VERSION,$
                    ascii_path:      '~/',$
                    ascii_title:     'Browse for a Transmission ASCII File',$
                    data_nexus_file_name: '',$
+                   short_data_nexus_file_name: '',$
+                   path_data_nexus_file: '',$
                    inst_geom:       '',$
                    Xarray:           ptr_new(0L),$
                    Xarray_untouched: ptr_new(0L),$
