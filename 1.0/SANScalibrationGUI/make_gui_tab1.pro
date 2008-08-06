@@ -316,16 +316,16 @@ SFrame = { size: [sRadiiLabel.size[0]+XYoff[0],$
            frame: 1,$
            value: ''}
 
-tooltip_array = ['Detector Pixel is part of the ' + $
+tooltip_array = ['A detector Pixel is part of the ' + $
                  'selection if at least one Screen Pixel is touching ' + $
                  'the selection',$
-                 'Detector Pixel is part of the ' + $
-                 'selection only if all the Screen Pixel are touching ' + $
+                 'A detector Pixel is part of the ' + $
+                 'selection only if all the Screen Pixels are touching ' + $
                  'the selection',$
-                 'Detector Pixel is part of the ' + $
+                 'A detector Pixel is part of the ' + $
                  'selection if at least half of the Screen Pixels are ' + $
                  'part of the selection.',$
-                 'Detector Pixel is part of the ' + $
+                 'A Detector Pixel is part of the ' + $
                  'selection if more than half of the Screen Pixels are ' + $
                  'part of the selection.']
 
