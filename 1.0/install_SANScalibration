@@ -56,7 +56,7 @@ done
 create_exec()
 {
 echo -n "Create executable file" $2 "...."
-echo "idl -vm=$1$EXECUTABLE" > $2
+echo "idl -vm=$1/$EXECUTABLE" > $2
 echo " Done"
 echo -n "Change permission of $2 to 755 ...."
 chmod 755 $2
