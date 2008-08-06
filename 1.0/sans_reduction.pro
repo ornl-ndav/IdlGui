@@ -41,7 +41,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANSreduction'
 VERSION           = '1.0.3'
-DEBUGGING         = 'yes' ;yes/no
+DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
 CHECKING_PACKAGES = 'yes'
@@ -126,6 +126,8 @@ global = PTR_NEW ({version:         VERSION,$
                    selection_path:   '~/',$
                    RoiPixelArrayExcluded: ptr_new(0L),$
                    data_nexus_file_name: '',$
+                     short_data_nexus_file_name: '',$
+                     path_data_nexus_file: '',$
                    inst_geom:       '',$
                    wave_para_value: '',$
                    wave_para_label: wave_para_label,$               
