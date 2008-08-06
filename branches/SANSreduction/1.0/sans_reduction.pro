@@ -41,7 +41,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANSreduction'
 VERSION           = '1.0.3'
-DEBUGGING         = 'no' ;yes/no
+DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
 CHECKING_PACKAGES = 'yes'
@@ -330,10 +330,10 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
 ;==============================================================================

@@ -217,7 +217,8 @@ sMaxValue = { size: [sMaxLambdaGroup.size[0]+XYoff[0],$
 XYoff = [0,20]
 sWaveBase = { size:  [sQLbase.size[0]+XYoff[0],$
                       sQLbase.size[1]+sQLbase.size[3]+XYoff[1],$
-                      sQLbase.size[2:3]],$
+                      sQLbase.size[2],$
+                      80],$
               frame: sQLbase.frame}
 XYoff = [20,-8]
 sWaveTitle = { size:  [sWaveBase.size[0]+XYoff[0],$
@@ -235,22 +236,29 @@ sWaveLabel = { size:  [XYoff[0],$
 XYoff = [300,-8]
 sWaveText = { size: [sWaveLabel.size[0]+XYoff[0],$
                      sWaveLabel.size[1]+XYoff[1],$
-                     340],$
+                     560],$
               VALUE: '',$
               UNAME: 'wave_dependent_back_sub_text_field'}
 XYoff = [0,0]
-sWaveHelpButton = { size: [sWaveText.size[0]+$
+sWaveClearField = { size: [sWaveText.size[0]+$
                            sWaveText.size[2]+XYoff[0],$
-                           sWaveText.size[1],$
-                           65,$
+                           sWaveText.size[1]+XYoff[1],$
+                           30,$
+                           30],$
+                    value: 'X',$
+                    uname: 'wave_clear_text_field'}
+XYoff = [0,0]
+sWaveHelpButton = { size: [sWaveClearField.size[0]+$
+                           sWaveClearField.size[2]+XYoff[0],$
+                           sWaveText.size[1]+XYoff[1],$
+                           60,$
                            30],$
                     VALUE: 'HELP',$
                     UNAME: 'wave_help_button'}
-XYoff = [0,0]
-sBrowseWave = { size: [sWaveHelpButton.size[0]+$
-                       sWaveHelpButton.size[2]+XYoff[0],$
-                       sWaveHelpButton.size[1]+XYoff[1],$
-                       250,$
+XYoff = [0,25]
+sBrowseWave = { size: [sWaveLabel.size[0]+XYoff[0],$
+                       sWaveLabel.size[1]+XYoff[1],$
+                       950,$
                        sWaveHelpButton.size[3]],$
                 value : 'BROWSE ...',$
                 uname: 'wave_dependent_back_browse_button'}
@@ -259,7 +267,8 @@ sBrowseWave = { size: [sWaveHelpButton.size[0]+$
 XYoff = [0,20]
 sScaleBase = { size:  [sWavebase.size[0]+XYoff[0],$
                        sWavebase.size[1]+sWavebase.size[3]+XYoff[1],$
-                       sWavebase.size[2:3]],$
+                       sWavebase.size[2],$
+                       sQLbase.size[3]],$
                frame: sWavebase.frame}
 XYoff = [20,-8]
 sScaleTitle = { size:  [sScaleBase.size[0]+XYoff[0],$
@@ -609,6 +618,15 @@ wWaveText = WIDGET_TEXT(Base,$
                         /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
+
+;Wave Clear Text Field
+wWaveClearField = WIDGET_BUTTON(Base,$
+                                XOFFSET   = sWaveClearField.size[0],$
+                                YOFFSET   = sWaveClearField.size[1],$
+                                SCR_XSIZE = sWaveClearField.size[2],$
+                                SCR_YSIZE = sWaveClearField.size[3],$
+                                VALUE     = sWaveClearField.value,$
+                                UNAME     = sWaveClearField.uname)
 
 ;Wave Help Button
 wWaveButton = WIDGET_BUTTON(Base,$
