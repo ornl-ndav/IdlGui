@@ -89,7 +89,7 @@ global = PTR_NEW ({version:         VERSION,$
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failed
                    application:     APPLICATION,$
-                   ROIcolor:        250,$
+                   ROIcolor:        [50L,50L,0L],$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
                    ucams:           ucams,$

@@ -222,7 +222,7 @@ selection_type = (*global).exclusion_type_index
 IF (DisplayR1 NE 0) THEN BEGIN    
 ;work on R1
     oROI = OBJ_NEW('myIDLgrROI',$
-                   COLOR = 200,$
+                   COLOR = (*global).ROIcolor,$
                    STYLE = 0)
     oROI->setInsideFlag, bR1Inside
     
@@ -248,7 +248,7 @@ IF (DisplayR2 NE 0) THEN BEGIN
     
 ;work on R2
     oROI = OBJ_NEW('myIDLgrROI',$
-                   COLOR = 200,$
+                   COLOR = (*global).ROIcolor,$
                    STYLE = 0)
     oROI->setInsideFlag, bR2Inside
     
@@ -410,7 +410,7 @@ PixelSelectedArray = (*(*global).RoiPixelArrayExcluded)
 
 x_coeff = coeff
 y_coeff = coeff
-color   = 250
+color   = (*global).ROIcolor
 FOR i=0,(80L-1) DO BEGIN
     FOR j=0,(80L-1) DO BEGIN
         IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
