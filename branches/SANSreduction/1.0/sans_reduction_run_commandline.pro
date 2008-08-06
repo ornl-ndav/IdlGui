@@ -84,7 +84,7 @@ ENDIF ELSE BEGIN
     full_output_file_name = (*global).current_output_file_name
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
         putTextFieldValue, Event, $
-          'input_file_text_field', $
+          'plot_input_file_text_field', $
           full_output_file_name
 ;load ascii file and plot it
         LoadAsciiFile, Event        
