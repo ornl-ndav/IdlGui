@@ -283,14 +283,31 @@ pro populate_structure, all_data, MyStruct
       ;populate the rest of MyStruct structure
       if array_nbr eq 0 then begin
         IF (STRMATCH(line,'#L*')) THEN BEGIN
-          temp = strsplit(line, /extract)
-          x_all = strsplit(temp[1], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
-          y_all = strsplit(temp[2], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
-          sigma_all = strsplit(temp[3], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
-        endif
-      endif
+            no_error = 0
+            CATCH, no_error
+            IF (no_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                x_all = ['','']
+                y_all = ['','']
+                sigma_all = ['','']
+            ENDIF ELSE BEGIN
+                temp = strsplit(line,'#L',/extract)
+                temp1 = strsplit(temp[0],'()', /extract)
+                x_all = [temp1[0],temp1[1]]
+                y_all = [temp1[2],temp1[3]]
+                sigma_all = [temp1[4],temp1[5]]
+;          print, temp ;remove_me
+;          x_all = strsplit(temp[1], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+;          print, x_all ;remove_me
+;          y_all = strsplit(temp[2], " '  ( ) , ", /EXTRACT, /PRESERVE_NULL)
+;          print, y_all ;remove_me
+;          sigma_all = strsplit(temp[3], " '  ( ) , ", /EXTRACT,
+;          /PRESERVE_NULL
+            ENDELSE
+        ENDIF
+      ENDIF
       
-    endelse
+    ENDELSE
     
     ++i
     
