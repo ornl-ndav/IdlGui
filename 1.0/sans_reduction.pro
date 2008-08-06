@@ -96,7 +96,7 @@ global = PTR_NEW ({version:         VERSION,$
                    Xarray_untouched: ptr_new(0L),$
                    Yarray:          ptr_new(0L),$
                    SigmaYarray:     ptr_new(0L),$
-                   ROIcolor:        [250L,50L,0L],$
+                   ROIcolor:        [50L,50L,0L],$
 ;                   ROIcolor:        250L,$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
