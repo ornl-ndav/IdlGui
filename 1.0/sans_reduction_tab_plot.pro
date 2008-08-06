@@ -155,7 +155,7 @@ IDLsendToGeek_addLogBookText, Event, 'Loading ASCII file ' + $
   file_name
 IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
 loading_error = 0
-CATCH,loading_error
+;CATCH,loading_error
 IF (loading_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -166,7 +166,7 @@ ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
         no_error = 0
-        CATCH,no_error   
+        ;CATCH,no_error   
         IF (no_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -236,9 +236,6 @@ extension  = (*global).ascii_extension
 filter     = (*global).ascii_filter
 path       = (*global).ascii_path
 title      = (*global).ascii_title
-
-;remove_me
-path = '~/SVN/IdlGui/branches/SANScalibration/1.0'
 
 text = 'Browsing for an ASCII file ... ' + PROCESSING
 IDLsendToGeek_addLogBookText, Event, text
