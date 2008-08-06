@@ -1,10 +1,11 @@
 #!/bin/bash
 # install_SANSreduction.sh
 #
-# Usage: install_SANSreduction -d <where to install the software> -e <full name of executable file>   
+# Usage: install_SANSreduction -d <where to install the software> 
+#                              -e <full name of executable file>   
 #
 #
-FOLDERS="images"
+FOLDERS=("images" "SANSreductionHelp")
 FILES="sans_reduction.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE="sans_reduction.sav"
