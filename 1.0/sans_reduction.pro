@@ -350,6 +350,26 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ENDIF
 
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
+
+plot, randomn(s,80), $
+  XRANGE     = [0,80],$
+  YRANGE     = [0,80],$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb(sys_color.face_3d),$
+  THICK      = 1, $
+  TICKLEN    = -0.015, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = 8,$
+  YTICKS      = 8,$
+  XMARGIN     = [5,5],$
+  /NODATA
+
 ;==============================================================================
 ; Date and Checking Packages routines =========================================
 ;==============================================================================
@@ -443,25 +463,6 @@ ENDIF
 ;==============================================================================
 ;==============================================================================
 
-;change color of background    
-id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
-
-plot, randomn(s,80), $
-  XRANGE     = [0,80],$
-  YRANGE     = [0,80],$
-  COLOR      = convert_rgb([0B,0B,255B]), $
-  BACKGROUND = convert_rgb(sys_color.face_3d),$
-  THICK      = 1, $
-  TICKLEN    = -0.015, $
-  XTICKLAYOUT = 0,$
-  YTICKLAYOUT = 0,$
-  XTICKS      = 8,$
-  YTICKS      = 8,$
-  XMARGIN     = [5,5],$
-  /NODATA
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '

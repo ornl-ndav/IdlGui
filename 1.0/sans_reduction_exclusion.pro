@@ -178,6 +178,9 @@ END
 ;------------------------------------------------------------------------------
 PRO ExclusionRegionCircle, Event, TYPE=type
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
 
 IF ((*global).data_nexus_file_name EQ '') THEN RETURN
 
@@ -199,27 +202,50 @@ Display_y_center = FLOAT(y_center) * coeff
 r1 = getTextFieldValue(Event,'r1_radii')
 DisplayR1 = FLOAT(r1) * coeff
 (*global).DisplayR1 = DisplayR1
-
+text = '-> Getting information about circle #1:'
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> R1 (pixels)       : ' + STRCOMPRESS(r1,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> R1 (screen pixels): ' + STRCOMPRESS(DisplayR1,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> Type of selection : '
 IF (getCWBgroupValue(Event,'radii_r1_group') EQ 0) THEN BEGIN
     bR1Inside = 1
+    text += ' inside'
 ENDIF ELSE BEGIN
     bR1Inside = 0
+    text += ' outside'
 ENDELSE
+IDLsendToGeek_addLogBookText, Event, text
 
 ;get R2
 r2 = getTextFieldValue(Event,'r2_radii')
 DisplayR2 = FLOAT(r2) * coeff
 (*global).DisplayR2 = DisplayR2
+text = '-> Getting information about circle #2:'
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> R2 (pixels)       : ' + STRCOMPRESS(r2,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> R2 (screen pixels): ' + STRCOMPRESS(DisplayR2,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, text
+text = '--> Type of selection : '
 IF (getCWBgroupValue(Event,'radii_r2_group') EQ 0) THEN BEGIN
     bR2Inside = 1
+    text += ' inside'
 ENDIF ELSE BEGIN
     bR2Inside = 0
+    text += ' outside'
 ENDELSE
+IDLsendToGeek_addLogBookText, Event, text
 
 ;get type of selection
 selection_type = (*global).exclusion_type_index
+text = '-> Type of Selection : ' + STRCOMPRESS(selection_type,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, text
 
 IF (DisplayR1 NE 0) THEN BEGIN    
+    text = '-> Working on circle #1'
+    IDLsendToGeek_addLogBookText, Event, text
 ;work on R1
     oROI = OBJ_NEW('myIDLgrROI',$
                    COLOR = (*global).ROIcolor,$
@@ -235,17 +261,31 @@ IF (DisplayR1 NE 0) THEN BEGIN
     oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
     oROI->SetProperty, STYLE=style
     
-    CreateArrayOfPixelSelected, $
-      PixelSelectedArray,$
-      oROI,$
-      selection_type,$
-      bR1Inside, $
-      TYPE=type
-
-ENDIF
+    text = '-> Create array of pixel selected ... ' + PROCESSING
+    IDLsendToGeek_addLogBookText, Event, text
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        CreateArrayOfPixelSelected, $
+          PixelSelectedArray,$
+          oROI,$
+          selection_type,$
+          bR1Inside, $
+          TYPE=type
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    ENDELSE
+        
+ENDIF ELSE BEGIN
+    text = '-> Skipping circle #1'
+    IDLsendToGeek_addLogBookText, Event, text
+ENDELSE
 
 IF (DisplayR2 NE 0) THEN BEGIN
-    
+    text = '-> Working on circle #2'
+    IDLsendToGeek_addLogBookText, Event, text
 ;work on R2
     oROI = OBJ_NEW('myIDLgrROI',$
                    COLOR = (*global).ROIcolor,$
@@ -261,15 +301,27 @@ IF (DisplayR2 NE 0) THEN BEGIN
     oROI->ReplaceData, newX, newY, newZ, START=0, FINISH=nVerts-1
     oROI->SetProperty, STYLE=style
     
-    CreateArrayOfPixelSelected, $
-      PixelSelectedArray,$
-      oROI,$
-      selection_type,$
-      bR2Inside,$
-      TYPE=type
-      
-    
-ENDIF
+    text = '-> Create array of pixel selected ... ' + PROCESSING
+    IDLsendToGeek_addLogBookText, Event, text
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        CreateArrayOfPixelSelected, $
+          PixelSelectedArray,$
+          oROI,$
+          selection_type,$
+          bR2Inside,$
+          TYPE=type
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    ENDELSE
+          
+ENDIF ELSE BEGIN
+    text = '-> Skipping circle #2'
+    IDLsendToGeek_addLogBookText, Event, text
+ENDELSE
 
 ;refresh plot
 refresh_main_plot, Event
@@ -463,10 +515,8 @@ IF (RoiFileName NE '') THEN BEGIN
     putNewButtonValue, Event, 'save_roi_folder_button',folder
     file   = FILE_BASENAME(RoiFileName)
     putTextFieldValue, Event, 'save_roi_text_field', file
-
 ;create roi file
     SaveExclusionFile, Event
-
 ENDIF
 
 END
@@ -486,6 +536,8 @@ folder = DIALOG_PICKFILE(GET_PATH          = new_path,$
                          /MUST_EXIST)
 
 IF (folder NE '') THEN BEGIN
+    text = '> A new ROI folder has been selected: ' + folder
+    IDLsendToGeek_addLogBookText, Event, text
     (*global).selection_path = folder
     length = 35
 ;display only the last part of path
@@ -499,7 +551,12 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedure create the ROI file 
-PRO CreateROIfileFromExclusionArray, file_name, PixelExcludedArray
+PRO CreateROIfileFromExclusionArray, Event, file_name, PixelExcludedArray
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;get ROI array
@@ -507,10 +564,13 @@ pixel_excluded = PixelExcludedArray
 
 sz1 = (size(pixel_excluded))(1) ;X
 sz2 = (size(pixel_excluded))(2) ;Y
+text = '-> Writing file ... ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, text
 error = 0
 CATCH, error
 IF (error NE 0) then begin
     CATCH, /CANCEL
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
 ;open output file
     openw, 1, file_name
@@ -524,6 +584,9 @@ ENDIF ELSE BEGIN
     ENDFOR
     close, 1
     free_lun, 1
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    text = '--> Nbr of pixel in ROI: ' + STRCOMPRESS(nbr,/REMOVE_ALL)
+    IDLsendToGeek_addLogBookText, Event, text
 ENDELSE
 ;turn off hourglass
 widget_control,hourglass=0
@@ -536,7 +599,13 @@ folder         = (*global).selection_path
 file_name      = getTextfieldValue(Event,'save_roi_text_field')
 full_file_name = folder + file_name
 PixelExcludedArray = (*(*global).RoiPixelArrayExcluded)
-CreateROIfileFromExclusionArray, full_file_name, PixelExcludedArray
+
+text = '> Saving Exclusion Region:'
+IDLsendToGeek_addLogBookText, Event, text
+text = '-> ROI file name: ' + full_file_name
+IDLsendToGeek_addLogBookText, Event, text
+
+CreateROIfileFromExclusionArray, Event, full_file_name, PixelExcludedArray
 putTextFieldValue, Event, 'roi_file_name_text_field', full_file_name
 ;enable PREVIEW button if file exist
 IF (FILE_TEST(full_file_name)) THEN BEGIN
@@ -601,10 +670,14 @@ END
 
 ;------------------------------------------------------------------------------
 PRO FastExclusionRegionCircle, Event 
+text = '> Plot Circle Exclusion Region using Fast Plot:'
+IDLsendToGeek_addLogBookText, Event, text
 ExclusionRegionCircle, Event, TYPE='fast'
 END
 
 ;------------------------------------------------------------------------------
 PRO AccurateExclusionRegionCircle, Event 
+text = '> Plot Circle Exclusion Region using Accurate Plot:'
+IDLsendToGeek_addLogBookText, Event, text
 ExclusionRegionCircle, Event, TYPE='accurate'
 END
