@@ -149,11 +149,11 @@ ENDIF ELSE BEGIN ;fast
     CASE (CurrentSelectionSettings) OF
 ;half in
         0: BEGIN
-            IndexArray = WHERE(tmp_array GE 4) 
+            IndexArray = WHERE(tmp_array GE 8) 
         END
 ;half out
         1: BEGIN
-            IndexArray = WHERE(tmp_array GT 4) 
+            IndexArray = WHERE(tmp_array GT 8) 
         END
 ;out in
         2: BEGIN
@@ -161,7 +161,7 @@ ENDIF ELSE BEGIN ;fast
         END
 ;out out
         3: BEGIN
-            IndexArray = WHERE(tmp_array EQ 8) 
+            IndexArray = WHERE(tmp_array EQ 16) 
         END
         ELSE:
     ENDCASE
