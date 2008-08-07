@@ -410,6 +410,8 @@ oROI->SetProperty, STYLE=style
 
 draw_roi, oROI, /line_fill, thick=2, linestyle=0, orientation=90,/device
 
+OBJ_DESTROY, oROI
+
 ;work on R2
 oROI = OBJ_NEW('myIDLgrROI',$
                COLOR = 200,$
@@ -579,6 +581,7 @@ IF (FILE_TEST(FullFileName)) THEN BEGIN
         iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
         IF (OBJ_VALID(iObject)) THEN BEGIN
             RunNumber = iObject->getRunNumber()
+            OBJ_DESTROY, iObject
         ENDIF ELSE BEGIN
             RunNumber = ''
         ENDELSE
