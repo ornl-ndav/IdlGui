@@ -147,8 +147,6 @@ IF (FullNexusName NE '') THEN BEGIN
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
 ENDIF ELSE BEGIN
-;display name of nexus file name
-    putTab1NexusFileName, Event, ''
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
 ENDELSE    

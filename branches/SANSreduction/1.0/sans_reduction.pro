@@ -349,8 +349,10 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
-;==============================================================================
 
+;==============================================================================
+; Date and Checking Packages routines =========================================
+;==============================================================================
 ;Put date/time when user started application in first line of log book
 time_stamp = GenerateIsoTimeStamp()
 message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -437,6 +439,9 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     ENDIF                       ;end of 'if (sz GT 0)'
 
 ENDIF
+
+;==============================================================================
+;==============================================================================
 
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
