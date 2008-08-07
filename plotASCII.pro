@@ -8,11 +8,19 @@ pro MAIN_BASE_event, Event
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='button1'): begin
-      button1_Click, Event
+      loadASCII_Click, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='button2'): begin
+      plotData, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='txt1'): begin
-    txt1_Enter, Event
+      txt1_Enter, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='draw1'): begin
+      draw1_Enter, Event
     end
     
     else:
@@ -61,10 +69,13 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MBAR           = WID_BASE_0_MBAR)
     
   ;define initial global values
-  global = ptr_new({path: '/SNS/users/dfp/IdlGui/branches/Summer2008/REF_M_3769_2008y_05m_23d_17h_52mn_28s.rtof',$
-    MyStruct: ptr_new()})
+  global = ptr_new({path: $
+    '/SNS/users/dfp/IdlGui/branches/Summer2008/REF_M_3769_2008y_05m_23d_17h_52mn_28s.rtof',$
+    MyStruct: ptr_new(), $
+    zoomCrdBeg: [0D,0D], $
+    zoomCrdEnd: [0D,0D]})
     
-  wbutton = widget_button(MAIN_BASE,$
+  loadASCII = widget_button(MAIN_BASE,$
     xoffset = 2,$
     yoffset = 3,$
     scr_xsize = 100,$
@@ -72,14 +83,23 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     value = 'Load ASCII',$
     uname = 'button1')
     
-  wLabel = WIDGET_LABEL(MAIN_BASE,$
-    xoffset = 200,$
-    yoffset = 400,$
-    scr_xsize = 300,$
+  resetZoom = widget_button(MAIN_BASE,$
+    xoffset = 404,$
+    yoffset = 3,$
+    scr_xsize = 100,$
     scr_ysize = 35,$
-    /DYNAMIC_RESIZE, $
-    value = 'blank',$
-    uname = 'label1')
+    value = 'Reset Zoom',$
+    uname = 'button2')
+    
+  ;  wLabel = WIDGET_LABEL(MAIN_BASE,$
+  ;    xoffset = 200,$
+  ;    yoffset = 400,$
+  ;    scr_xsize = 300,$
+  ;    scr_ysize = 35,$
+  ;    /DYNAMIC_RESIZE, $
+  ;    value = 'blank',$
+  ;    uname = 'label1')
+    
   wTXT = WIDGET_TEXT(MAIN_BASE,$
     xoffset = 102,$
     yoffset = 3,$
@@ -92,8 +112,8 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   wDraw = WIDGET_DRAW(MAIN_BASE,$
     xoffset = 1,$
     yoffset = 40,$
-    scr_xsize = 300,$
-    scr_ysize = 200,$
+    scr_xsize = 700,$
+    scr_ysize = 500,$
     /BUTTON_EVENTS, $
     uname = 'draw1')
     
