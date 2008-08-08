@@ -792,6 +792,7 @@ IF (CNstruct.output_path NE '' OR $
     ENDELSE
     
     text = [text,'#### NEXUS FILES CREATED ####']
+    cmd_chmod = 'chmod 777 '
     
     FOR i=0,(sz-1) DO BEGIN
         
@@ -1007,6 +1008,7 @@ IF (CNstruct.output_path NE '' OR $
                 AppendMyLogBook, Event, ''
             ENDIF
             
+;copy Nexus file in local folder
             cmd1 = cmd + ' ' + CNstruct.NeXus_folder
             cmd1_text = 'cmd: ' + cmd1 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd1_text
@@ -1033,6 +1035,7 @@ IF (CNstruct.output_path NE '' OR $
             ENDELSE
         ENDIF
         
+;copy Nexus file in instrument shared folder
         IF (CNstruct.InstrSharedFolder NE '') THEN BEGIN
             cmd2 = cmd + ' ' + CNstruct.InstrSharedFolder
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
@@ -1044,20 +1047,39 @@ IF (CNstruct.output_path NE '' OR $
                         CNstruct.InstrSharedFolder + $
                         (*CNstruct.ShortNexusToMove)[i]]
             ENDIF ELSE BEGIN
-                spawn, cmd2, listening
-                IF (listening[0] EQ '') THEN BEGIN
+                spawn, cmd2, listening, err_listening
+                IF (err_listening[0] EQ '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                       CNstruct.PROCESSING
                     text = [text,'> ' + $
                             CNstruct.InstrSharedFolder + $
                             (*CNstruct.ShortNexusToMove)[i]]
+;change permission of file
+                    cmd_chmod_2 = cmd_chmod + CNstruct.ProposalSharedFolder + $
+                      (*CNstruct.ShortNeXusToMove)[i]   
+                    cmd_chmod_2_text = 'cmd: ' + cmd_chmod_2 + ' ... ' + $
+                      CNstruct.PROCESSING
+                    AppendMyLogBook, Event, cmd_chmod_2
+                    spawn, cmd_chmod_2, listening, err_listening
+                    IF (err_listening[0] EQ '') THEN BEGIN ;it worked
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                          CNstruct.PROCESSING
+                        AppendMyLogBook, Event, err_listening
+                    ENDELSE
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
                       CNstruct.PROCESSING
+                    AppendMyLogBook, Event, err_listening
+                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
+                            (*CNstruct.ShortNexusToMove)[i] + ' FAILED']
                 ENDELSE
             ENDELSE
         ENDIF
 
+;copy Nexus file in proposal shared folder
         IF (CNstruct.ProposalSharedFolder NE '') THEN BEGIN
             cmd3 = cmd +' ' + CNstruct.ProposalSharedFolder
             cmd3_text = 'cmd: ' + cmd3 + ' ... ' + CNstruct.PROCESSING
@@ -1068,16 +1090,34 @@ IF (CNstruct.output_path NE '' OR $
                 text = [text,'> ' + CNstruct.ProposalSharedFolder + $
                         (*CNstruct.ShortNexusToMove)[i]]
             ENDIF ELSE BEGIN
-                spawn, cmd3, listening
-                IF (listening[0] EQ '') THEN BEGIN ;it worked
+                spawn, cmd3, listening, err_listening
+                IF (err_listening[0] EQ '') THEN BEGIN ;it worked
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                       CNstruct.PROCESSING
                     text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
                             (*CNstruct.ShortNexusToMove)[i]]
+;change permission of file
+                    cmd_chmod_3 = cmd_chmod + CNstruct.ProposalSharedFolder + $
+                      (*CNstruct.ShortNeXusToMove)[i]   
+                    cmd_chmod_3_text = 'cmd: ' + cmd_chmod_3 + ' ... ' + $
+                      CNstruct.PROCESSING
+                    AppendMyLogBook, Event, cmd_chmod_3
+                    spawn, cmd_chmod_3, listening, err_listening
+                    IF (err_listening[0] EQ '') THEN BEGIN ;it worked
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                          CNstruct.PROCESSING
+                        AppendMyLogBook, Event, err_listening
+                    ENDELSE
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
                       CNstruct.PROCESSING
-		                ENDELSE
+                    AppendMyLogBook, Event, err_listening
+                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
+                            (*CNstruct.ShortNexusToMove)[i] + ' FAILED']   
+                ENDELSE
             ENDELSE
         ENDIF
         AppendMyLogBook, Event, ''
