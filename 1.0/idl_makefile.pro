@@ -3,6 +3,5 @@
 
 ;Build all procedures
 ;cd, CurrentFolder
-.run IDL3columnsASCIIparser__define.pro
-.run plotASCII_eventcb.pro
-.run plotASCII.pro
+.run GUIdesigner_eventcb.pro
+.run GUIdesigner.pro

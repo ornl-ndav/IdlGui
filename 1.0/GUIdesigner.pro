@@ -1,31 +1,19 @@
-pro MAIN_BASE_event, Event
+PRO MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
   
-  case Event.id of
+  CASE Event.id OF
   
-    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
-    end
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+    END
     
-    Widget_Info(wWidget, FIND_BY_UNAME='button1'): begin
-      button1_Click, Event
-    end
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='txt1'): begin
-    txt1_Enter, Event
-    end
-    
-    else:
-  endcase
+    ELSE:
+  ENDCASE
   
-end
+END
 
 
-
-
-
-
-pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;define parameters
   scr_x 	= 1100				;main window width
@@ -39,76 +27,43 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   plot_height = 150			;plot box height
   plot_length = 304			;plot box length
   
-  APPLICATION = 'plotASCII'
-  VERSION     = '1.0'
+  APPLICATION = 'GUIdesigner'
+  VERSION     = '1.0.0'
   
-  Resolve_Routine, 'plotASCII_eventcb',/COMPILE_FULL_FILE
+  Resolve_Routine, 'GUIdesigner_eventcb',/COMPILE_FULL_FILE
   ;Load event callback routines
   
   title = APPLICATION + ' - ' + VERSION
   
+ ;define initial global values
+  global = ptr_new({xoffset: 50,$
+                    yoffset: 50,$
+                    xsize: 200,$
+                    ysize: 200})
+ 
   MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
     UNAME          = 'MAIN_BASE',$
-    XOFFSET        = 500,$
-    YOFFSET        = 50,$
-    SCR_XSIZE      = scr_x,$
-    SCR_YSIZE      = scr_y,$
-    ;                         NOTIFY_REALIZE = 'MAIN_REALIZE',$
+    XOFFSET        = (*global).xoffset,$
+    YOFFSET        = (*global).yoffet,$
+    SCR_XSIZE      = (*global).xsize,$
+    SCR_YSIZE      = (*global).ysize,$
     TITLE          = title,$
     SPACE          = 3,$
     XPAD           = 3,$
-    YPAD           = 3,$
-    MBAR           = WID_BASE_0_MBAR)
-    
-  ;define initial global values
-  global = ptr_new({path: '/SNS/users/dfp/IdlGui/branches/Summer2008/REF_M_3769_2008y_05m_23d_17h_52mn_28s.rtof',$
-    MyStruct: ptr_new()})
-    
-  wbutton = widget_button(MAIN_BASE,$
-    xoffset = 2,$
-    yoffset = 3,$
-    scr_xsize = 100,$
-    scr_ysize = 35,$
-    value = 'Load ASCII',$
-    uname = 'button1')
-    
-  wLabel = WIDGET_LABEL(MAIN_BASE,$
-    xoffset = 200,$
-    yoffset = 400,$
-    scr_xsize = 300,$
-    scr_ysize = 35,$
-    /DYNAMIC_RESIZE, $
-    value = 'blank',$
-    uname = 'label1')
-  wTXT = WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 102,$
-    yoffset = 3,$
-    scr_xsize = 300,$
-    scr_ysize = 36,$
-    /NO_NEWLINE, $
-    /EDITABLE, $
-    uname = 'txt1')
-    
-  wDraw = WIDGET_DRAW(MAIN_BASE,$
-    xoffset = 1,$
-    yoffset = 40,$
-    scr_xsize = 300,$
-    scr_ysize = 200,$
-    /BUTTON_EVENTS, $
-    uname = 'draw1')
-    
-  ;attach global data structure with widget ID of widget main base widget ID
+    YPAD           = 3)
+ ;   MBAR           = WID_BASE_0_MBAR)
+     
+;attach global data structure with widget ID of widget main base widget ID
   widget_control,MAIN_BASE,set_uvalue=global
-  
-  
+    
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
-end
+END
 
 ;
 ; Empty stub procedure used for autoloading.
 ;
-pro plotASCII, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro GUIbuilder, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
