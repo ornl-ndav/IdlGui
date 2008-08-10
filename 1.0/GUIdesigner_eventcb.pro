@@ -42,7 +42,12 @@ PRO send_to_geek_email, Event
 ;get comment
   id = WIDGET_INFO(Event.top,find_by_Uname='comment_text')
   WIDGET_CONTROL, id, GET_VALUE=comments
-  IF (comments[0] EQ '') THEN comments = 'N/A'
+  IF (comments[0] EQ '') THEN BEGIN 
+     comments_text = 'N/A'
+  ENDIF ELSE BEGIN
+     sz = (size(comments))(1)
+     comments_text = STRJOIN(comments,' ')
+  ENDELSE
 
   no_error = 0
   CATCH, no_error
@@ -56,7 +61,7 @@ PRO send_to_geek_email, Event
      subject        = application + " (Size requirements)"
      text = 'xsize = ' + STRCOMPRESS(new_width,/REMOVE_ALL)
      text += '; ysize = ' + STRCOMPRESS(new_height,/REMOVE_ALL)
-     text += '; Comments: ' + comments
+     text += '; Comments: ' + comments_text
      cmd  =  'echo "' + text + '" | mail -s "' + subject + '" j35@ornl.gov'
      SPAWN, cmd
   ENDELSE
