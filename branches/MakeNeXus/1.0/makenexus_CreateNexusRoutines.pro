@@ -1037,6 +1037,27 @@ IF (CNstruct.output_path NE '' OR $
         
 ;copy Nexus file in instrument shared folder
         IF (CNstruct.InstrSharedFolder NE '') THEN BEGIN
+;first check if the file already exist in the final location
+            AppendMyLogBook, Event, $
+              '> User wants to copy file in InstrSharedFolder'
+            AppendMyLogBook, Event, '-> InstrSharedFolder: ' + $
+              CNstruct.InstrSharedFolder
+            file_name_to_check = CNstruct.InstrSharedFolder + $
+              (*CNstruct.NeXusToMove)[i] 
+            IF (FILE_TEST(file_name_to_check)) THEN BEGIN
+;file exist and we need to change its name
+            text = '-> Does file (' + file_name_to_check + ') already' + $
+              ' exist ... YES'
+            AppendMyLogBook, Event, text
+
+
+
+
+        ENDIF ELSE BEGIN
+            text = '-> Does file (' + file_name_to_check + ') already' + $
+              ' exist ... NO'
+            AppendMyLogBook, Event, text
+        ENDELSE
             cmd2 = cmd + ' ' + CNstruct.InstrSharedFolder
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd2_text

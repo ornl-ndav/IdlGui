@@ -633,7 +633,7 @@ END
 
 PRO repopulateProposalList, Event
 instrument      = getInstrument(Event)
-ListOfProposal  = getListOfProposal(instrument)
+ListOfProposal  = getListOfProposal_event(instrument, Event)
 IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
     ListOfProposal = ['INSTRUMENT NOT VISIBLE']
 ENDIF
