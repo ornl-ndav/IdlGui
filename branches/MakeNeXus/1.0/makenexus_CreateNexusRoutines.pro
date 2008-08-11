@@ -496,12 +496,14 @@ AppendMyLogBook, Event, message
 if (CNstruct.PolaIndex EQ 0) THEN BEGIN
     *CNstruct.NexusToMove = [CNstruct.nexus_file_name]
     *CNstruct.ShortNexusToMove = [CNstruct.ShortNexusName + '_p0.nxs']
+    *CNstruct.ShortNewNexus = ['']
 ENDIF ELSE BEGIN
     *CNstruct.NexusToMove = [*CNstruct.NexusToMove,CNstruct.nexus_file_name]
     *CNstruct.ShortNexusToMove = [*CNstruct.ShortNexusToMove, $
                                   CNstruct.ShortNexusName + '_p' + $
                                   strcompress(CNstruct.polaIndex,/remove_all) $
                                   + '.nxs']
+    *CNstruct.ShortNewNexus = [*CNstruct.ShortNewNexus,'']
 ENDELSE
 RETURN, error_status
 END
@@ -792,7 +794,8 @@ IF (CNstruct.output_path NE '' OR $
     ENDELSE
     
     text = [text,'#### NEXUS FILES CREATED ####']
-    cmd_chmod = 'chmod 777 '
+    cmd_chmod = 'chmod 666 '
+    cmd_chgrp = 'chgrp '
     
     FOR i=0,(sz-1) DO BEGIN
         
@@ -1042,22 +1045,69 @@ IF (CNstruct.output_path NE '' OR $
               '> User wants to copy file in InstrSharedFolder'
             AppendMyLogBook, Event, '-> InstrSharedFolder: ' + $
               CNstruct.InstrSharedFolder
-            file_name_to_check = CNstruct.InstrSharedFolder + $
-              (*CNstruct.NeXusToMove)[i] 
-            IF (FILE_TEST(file_name_to_check)) THEN BEGIN
+
+            file_name_to_copy = CNstruct.InstrSharedFolder + $
+              (*CNstruct.ShortNexusToMove)[i]
+            IF (FILE_TEST(file_name_to_copy)) THEN BEGIN
+
 ;file exist and we need to change its name
-            text = '-> Does file (' + file_name_to_check + ') already' + $
-              ' exist ... YES'
-            AppendMyLogBook, Event, text
+                text1 = '-> Does file (' + file_name_to_copy + ') already' + $
+                  ' exist ... YES'
+                AppendMyLogBook, Event, text1
+                text1 = '--> Changing NeXus file name:'
+                AppendMyLogBook, Event, text1
+                text1 = '---> Was: ' + (*CNstruct.shortNeXusToMove)[i] 
+                AppendMyLogBook, Event, text1
+                file_split = STRSPLIT((*CNstruct.shortNeXusToMove)[i], $
+                                      '.nxs', $
+                                      /REGEX,$
+                                      /EXTRACT)
+                old_full_nexus_name = (*CNstruct.NeXusToMove)[i]
+                file_split_2 = STRSPLIT((*CNstruct.NeXusToMove)[i],$
+                                        '.nxs',$
+                                        /REGEX,$
+                                        /EXTRACT)
+                time_stamp_ext = GenerateIsoTimeStamp() + '.nxs'
 
+;new file name (short and long)
+                short_new_file = file_split[0] + '_' + time_stamp_ext
+                long_new_file  = file_split_2[0] + '_' + time_stamp_ext
 
+;change file in .tmp folder
+                (*CNstruct.shortNewNexus)[i]  = file_split[0] + '_' + $
+                  time_stamp_ext
+                cmd_mv = 'mv ' + old_full_nexus_name + ' ' + long_new_file
+                spawn, cmd_mv, listening, err_listening
+                AppendMyLogBook, Event, '(----> cmd: ' + cmd_mv + ')'
+                text1 = '---> New: ' + short_new_file
+                AppendMyLogBook, Event, text1
+                cmd = 'cp ' + long_new_file
+            ENDIF ELSE BEGIN
+                text1 = '-> Does file (' + file_name_to_check + ') already' + $
+                  ' exist ... NO'
+                AppendMyLogBook, Event, text1
+                long_new_file = CNstruct.ProposalSharedFolder + $
+                  (*CNstruct.ShortNeXusToMove)[i]   
+                short_new_file = (*CNstruct.ShortNeXusToMove)[i]
+            ENDELSE
 
-
-        ENDIF ELSE BEGIN
-            text = '-> Does file (' + file_name_to_check + ') already' + $
-              ' exist ... NO'
-            AppendMyLogBook, Event, text
-        ENDELSE
+;; change group of file
+;             ProposalFolder       = getProposalSelected(Event)
+;             cmd_chgrp_2 = cmd_chgrp +  ProposalFolder + $
+;               ' ' + long_new_file
+;             cmd_chgrp_2_text = 'cmd: ' + cmd_chgrp_2 + ' ... ' + $
+;               CNstruct.PROCESSING
+;             AppendMyLogBook, Event, cmd_chgrp_2_text
+;             spawn, cmd_chgrp_2, listening, err_listening
+;             IF (err_listening[0] EQ '') THEN BEGIN it worked
+;                 putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+;                   CNstruct.PROCESSING
+;             ENDIF ELSE BEGIN
+;                 putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+;                   CNstruct.PROCESSING
+;                 AppendMyLogBook, Event, err_listening
+;             ENDELSE
+            
             cmd2 = cmd + ' ' + CNstruct.InstrSharedFolder
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd2_text
@@ -1072,15 +1122,15 @@ IF (CNstruct.output_path NE '' OR $
                 IF (err_listening[0] EQ '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                       CNstruct.PROCESSING
-                    text = [text,'> ' + $
-                            CNstruct.InstrSharedFolder + $
-                            (*CNstruct.ShortNexusToMove)[i]]
+                    text = [text,'> ' + CNstruct.InstrSharedFolder + $
+                            short_new_file]
+
 ;change permission of file
-                    cmd_chmod_2 = cmd_chmod + CNstruct.ProposalSharedFolder + $
-                      (*CNstruct.ShortNeXusToMove)[i]   
+                    cmd_chmod_2 = cmd_chmod + CNstruct.InstrSharedFolder + $
+                      short_new_file
                     cmd_chmod_2_text = 'cmd: ' + cmd_chmod_2 + ' ... ' + $
                       CNstruct.PROCESSING
-                    AppendMyLogBook, Event, cmd_chmod_2
+                    AppendMyLogBook, Event, cmd_chmod_2_text
                     spawn, cmd_chmod_2, listening, err_listening
                     IF (err_listening[0] EQ '') THEN BEGIN ;it worked
                         putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
@@ -1090,40 +1140,112 @@ IF (CNstruct.output_path NE '' OR $
                           CNstruct.PROCESSING
                         AppendMyLogBook, Event, err_listening
                     ENDELSE
+
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
                       CNstruct.PROCESSING
                     AppendMyLogBook, Event, err_listening
-                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
-                            (*CNstruct.ShortNexusToMove)[i] + ' FAILED']
+                    text = [text,'> ' + CNstruct.InstrSharedFolder + $
+                            short_new_file + ' FAILED']
                 ENDELSE
             ENDELSE
+
         ENDIF
 
 ;copy Nexus file in proposal shared folder
         IF (CNstruct.ProposalSharedFolder NE '') THEN BEGIN
-            cmd3 = cmd +' ' + CNstruct.ProposalSharedFolder
-            cmd3_text = 'cmd: ' + cmd3 + ' ... ' + CNstruct.PROCESSING
-            AppendMyLogBook, Event, cmd3_text
+;first check if the file already exist in the final location
+            AppendMyLogBook, Event, $
+              '> User wants to copy file in ProposalSharedFolder'
+            AppendMyLogBook, Event, '-> ProposalSharedFolder: ' + $
+              CNstruct.ProposalSharedFolder
+
+            file_name_to_copy = CNstruct.ProposalSharedFolder + $
+              (*CNstruct.ShortNexusToMove)[i]
+            IF (FILE_TEST(file_name_to_copy)) THEN BEGIN
+
+;file exist and we need to change its name
+                text1 = '-> Does file (' + file_name_to_copy + ') already' + $
+                  ' exist ... YES'
+                AppendMyLogBook, Event, text1
+                text1 = '--> Changing NeXus file name:'
+                AppendMyLogBook, Event, text1
+                text1 = '---> Was: ' + (*CNstruct.shortNeXusToMove)[i] 
+                AppendMyLogBook, Event, text1
+                file_split = STRSPLIT((*CNstruct.shortNeXusToMove)[i], $
+                                      '.nxs', $
+                                      /REGEX,$
+                                      /EXTRACT)
+                old_full_nexus_name = (*CNstruct.NeXusToMove)[i]
+                file_split_2 = STRSPLIT((*CNstruct.NeXusToMove)[i],$
+                                        '.nxs',$
+                                        /REGEX,$
+                                        /EXTRACT)
+                time_stamp_ext = GenerateIsoTimeStamp() + '.nxs'
+
+;new file name (short and long)
+                short_new_file = file_split[0] + '_' + time_stamp_ext
+                long_new_file  = file_split_2[0] + '_' + time_stamp_ext
+
+;change file in .tmp folder
+                (*CNstruct.shortNewNexus)[i]  = file_split[0] + '_' + $
+                  time_stamp_ext
+                cmd_mv = 'mv ' + old_full_nexus_name + ' ' + long_new_file
+                spawn, cmd_mv, listening, err_listening
+                AppendMyLogBook, Event, '(----> cmd: ' + cmd_mv + ')'
+                text1 = '---> New: ' + short_new_file
+                AppendMyLogBook, Event, text1
+                cmd = 'cp ' + long_new_file
+            ENDIF ELSE BEGIN
+                text1 = '-> Does file (' + file_name_to_check + ') already' + $
+                  ' exist ... NO'
+                AppendMyLogBook, Event, text1
+                long_new_file = CNstruct.ProposalSharedFolder + $
+                  (*CNstruct.ShortNeXusToMove)[i]   
+                short_new_file = (*CNstruct.ShortNeXusToMove)[i]
+            ENDELSE
+
+;; change group of file
+;             ProposalFolder       = getProposalSelected(Event)
+;             cmd_chgrp_2 = cmd_chgrp +  ProposalFolder + $
+;               ' ' + long_new_file
+;             cmd_chgrp_2_text = 'cmd: ' + cmd_chgrp_2 + ' ... ' + $
+;               CNstruct.PROCESSING
+;             AppendMyLogBook, Event, cmd_chgrp_2_text
+;             spawn, cmd_chgrp_2, listening, err_listening
+;             IF (err_listening[0] EQ '') THEN BEGIN it worked
+;                 putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+;                   CNstruct.PROCESSING
+;             ENDIF ELSE BEGIN
+;                 putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+;                   CNstruct.PROCESSING
+;                 AppendMyLogBook, Event, err_listening
+;             ENDELSE
+            
+            cmd2 = cmd + ' ' + CNstruct.ProposalSharedFolder
+            cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
+            AppendMyLogBook, Event, cmd2_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                   CNstruct.PROCESSING
-                text = [text,'> ' + CNstruct.ProposalSharedFolder + $
+                text = [text,'> ' + $
+                        CNstruct.ProposalSharedFolder + $
                         (*CNstruct.ShortNexusToMove)[i]]
             ENDIF ELSE BEGIN
-                spawn, cmd3, listening, err_listening
-                IF (err_listening[0] EQ '') THEN BEGIN ;it worked
+                spawn, cmd2, listening, err_listening
+                IF (err_listening[0] EQ '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                       CNstruct.PROCESSING
-                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
-                            (*CNstruct.ShortNexusToMove)[i]]
+                    text = [text,'> ' + CNstruct.ProposalSharedFolder + $
+                            short_new_file]
+
 ;change permission of file
-                    cmd_chmod_3 = cmd_chmod + CNstruct.ProposalSharedFolder + $
-                      (*CNstruct.ShortNeXusToMove)[i]   
-                    cmd_chmod_3_text = 'cmd: ' + cmd_chmod_3 + ' ... ' + $
+                    cmd_chmod_2 = cmd_chmod + CNstruct.ProposalSharedFolder + $
+                      short_new_file
+                    cmd_chmod_2_text = 'cmd: ' + cmd_chmod_2 + ' ... ' + $
                       CNstruct.PROCESSING
-                    AppendMyLogBook, Event, cmd_chmod_3
-                    spawn, cmd_chmod_3, listening, err_listening
+                    AppendMyLogBook, Event, cmd_chmod_2_text
+                    spawn, cmd_chmod_2, listening, err_listening
                     IF (err_listening[0] EQ '') THEN BEGIN ;it worked
                         putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
                           CNstruct.PROCESSING
@@ -1132,15 +1254,18 @@ IF (CNstruct.output_path NE '' OR $
                           CNstruct.PROCESSING
                         AppendMyLogBook, Event, err_listening
                     ENDELSE
+
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
                       CNstruct.PROCESSING
                     AppendMyLogBook, Event, err_listening
-                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
-                            (*CNstruct.ShortNexusToMove)[i] + ' FAILED']   
+                    text = [text,'> ' + CNstruct.ProposalSharedFolder + $
+                            short_new_file + ' FAILED']
                 ENDELSE
             ENDELSE
+
         ENDIF
+
         AppendMyLogBook, Event, ''
         
     ENDFOR

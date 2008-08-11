@@ -50,6 +50,7 @@ cd, CurrentFolder + '/makenexusGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run makenexus_time.pro
 .run makenexus_get.pro
 .run makenexus_put.pro
 .run makenexus_is.pro
