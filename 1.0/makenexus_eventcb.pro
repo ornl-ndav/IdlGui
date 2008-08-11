@@ -382,6 +382,7 @@ FOR j=0,(sz-1) DO BEGIN
                      polaIndex        : 0,$
                      NexusToMove      : ptr_new(0L),$
                      ShortNexusToMove : ptr_new(0L),$
+                     ShortNewNexus    : ptr_new(0L),$
                      multi_pola_state : 0,$
                      NexusFile        : '',$
                      output_path      : '',$
