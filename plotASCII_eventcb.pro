@@ -11,13 +11,13 @@ END
 ;PRO resetZoom_Click, Event
 ;  ;widget_control, Event.top, get_uvalue=global
 ;  plotData, Event, 0
-;  
+;
 ;END
 
 
 PRO draw1_Enter, Event
-;  print, 'draw'
-;  help, event, /structure
+  ;  print, 'draw'
+  ;  help, event, /structure
   widget_control, Event.top, get_uvalue=global
   
   CASE (Event.press) OF
@@ -46,7 +46,7 @@ PRO drawBox
 END
 
 PRO plotData, Event, resize
-print, "PLOTTING>>>"
+  print, "PLOTTING>>>"
   widget_control, Event.top, get_uvalue=global
   data = (*(*(*global).MyStruct).data)
   num = (*(*global).MyStruct).Nbrarray
@@ -95,6 +95,8 @@ PRO txt1_Enter, Event
   widget_control, id, get_value=tmp
   (*global).path = tmp
   print, (*global).path
+  getData,Event
+  plotData, Event, 0
 END
 
 

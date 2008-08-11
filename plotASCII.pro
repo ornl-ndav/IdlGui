@@ -50,7 +50,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = 'plotASCII'
   VERSION     = '1.0'
   
-  Resolve_Routine, 'plotASCII_eventcb',/COMPILE_FULL_FILE
+;  Resolve_Routine, 'plotASCII_eventcb',/COMPILE_FULL_FILE
   ;Load event callback routines
   
   title = APPLICATION + ' - ' + VERSION
