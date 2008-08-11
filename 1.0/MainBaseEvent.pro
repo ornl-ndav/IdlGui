@@ -59,7 +59,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='instrument_droplist'): BEGIN
         repopulateProposalList, Event ;in _eventcb
         instrument      = getInstrument(Event)
-        ListOfProposal  = getListOfProposal(instrument)
+        ListOfProposal  = getListOfProposal_event(instrument, Event)
         IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
             putLogBook, Event, 'Please Select another instrument !'
         ENDIF ELSE BEGIN
