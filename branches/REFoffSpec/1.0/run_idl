@@ -1,5 +1,6 @@
 @idl_makefile.pro
-plot_roi
+ref_off_spec
+
 
 
 
