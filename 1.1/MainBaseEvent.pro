@@ -45,7 +45,6 @@ CASE Event.id OF
         DefineDefaultOutputName, Event
     END
     
-
 ;LOAD DATA file cw_field
     widget_info(wWidget, $
                 FIND_BY_UNAME='load_data_run_number_text_field'): begin
@@ -451,9 +450,14 @@ CASE Event.id OF
         endif
     end
 
+;**LOAD TAB**NORMALIZATION**---------------------------------------------------
 
-;**LOAD TAB**NORMALIZATION**
-
+;Browse NeXus file
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='browse_norm_nexus_button'): begin
+        BrowseNormNexus, Event
+    END
+    
 ;LOAD NORMALIZATION file
     widget_info(wWidget, $
                 FIND_BY_UNAME= $

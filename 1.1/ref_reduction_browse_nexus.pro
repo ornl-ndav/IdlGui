@@ -40,7 +40,6 @@ filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
 path      = (*global).browse_data_path
-path = '/SNS/REF_M/IPTS-758/9/3981/NeXus/' ;remove_me
 nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   FILTER            = filter,$
                                   TITLE             = title, $
@@ -51,13 +50,13 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
 IF (nexus_file_name NE '') THEN BEGIN
     (*global).browse_data_path = new_path
 ;load browse nexus file
-    load_browse_nexus, Event, nexus_file_name
+    load_data_browse_nexus, Event, nexus_file_name
 ENDIF
 
 END
 
 ;------------------------------------------------------------------------------
-PRO load_browse_nexus, Event, nexus_file_name
+PRO load_data_browse_nexus, Event, nexus_file_name
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
@@ -80,8 +79,8 @@ endif else begin
 endelse
 putDataLogBookMessage, Event, LogBookText
         
-;indicate reading data with hourglass icon
-widget_control,/hourglass
+;;indicate reading data with hourglass icon
+;widget_control,/hourglass
 
 NbrNexus = 1
 OpenDataNexusFile, Event, DataRunNumber, nexus_file_name
@@ -101,5 +100,79 @@ putTextAtEndOfDataLogBookLastLine,$
   'OK',$
   PROCESSING
 
+
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+
+PRO BrowseNormNexus, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+filter    = '*.nxs'
+extension = 'nxs'
+title     = 'Select a NeXus file ...'
+path      = (*global).browse_data_path
+path = '/SNS/REF_M/IPTS-758/9/3981/NeXus/' ;remove_me
+nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+                                  FILTER            = filter,$
+                                  TITLE             = title, $
+                                  PATH              = path,$
+                                  GET_PATH          = new_path,$
+                                  /FIX_FILTER,$
+                                  /READ)
+IF (nexus_file_name NE '') THEN BEGIN
+    (*global).browse_data_path = new_path
+;load browse nexus file
+    load_norm_browse_nexus, Event, nexus_file_name
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO load_norm_browse_nexus, Event, nexus_file_name
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+PROCESSING = (*global).processing_message ;processing message
+
+;get run number
+iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
+RunNumber = iNexus->getRunNumber()
+OBJ_DESTROY, iNexus
+(*global).NormRunNumber = strcompress(RunNumber,/remove_all)
+;put run number in DATA RUN NUMBER cw_field
+
+LogBookText = '-> Openning Browsed NORMALIZATION Run Number: ' + RunNumber
+text = getLogBookText(Event)
+LogBookText += ' ... ' + PROCESSING 
+if (text[0] EQ '') then begin
+    putLogBookMessage, Event, LogBookText
+endif else begin
+    putLogBookMessage, Event, LogBookText, Append=1
+endelse
+putNormalizationLogBookMessage, Event, LogBookText
+        
+;;indicate reading data with hourglass icon
+;WIDGET_CONTROL,/HOURGLASS
+
+NbrNexus = 1
+OpenNormNexusFile, Event, RunNumber, nexus_file_name
+
+;plot data now
+REFreduction_Plot1D2DNormalizationFile, Event 
+
+(*global).NormNeXusFound = 1
+
+;update GUI according to result of NeXus found or not
+RefReduction_update_normalization_gui_if_NeXus_found, Event, 1
+
+LogBookText = getNormalizationLogBookText(Event)
+putTextAtEndOfNormalizationLogBookLastLine,$
+  Event,$
+  LogBookText,$
+  'OK',$
+  PROCESSING
 
 END

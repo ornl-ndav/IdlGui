@@ -69,33 +69,44 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE=LoadNormalizationTabSize[2],$
                                       SCR_YSIZE=LoadNormalizationTabSize[3])
 
-;Run Number base and inside CW_FIELD
-load_normalization_run_number_base = widget_base(LOAD_NORMALIZATION_BASE,$
-                                                 uname='load_normalization_run_number_base',$
-                                                 xoffset=GlobalRunNumber[0],$
-                                                 yoffset=GlobalRunNumber[1],$
-                                                 scr_xsize=GlobalRunNumber[2],$
-                                                 scr_ysize=globalRunNumber[3])
+;Browse Nexus File Button
+Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       XOFFSET   = 25,$
+                       YOFFSET   = 5,$
+                       SCR_XSIZE = 120,$
+                       VALUE     = 'BROWSE NeXus ...',$
+                       UNAME     = 'browse_norm_nexus_button')
 
-Load_data_run_number_text_field = CW_FIELD(load_normalization_run_number_base,$
-                                           row=1,$
-                                           xsize=GlobalRunNumber[4],$
-                                           ysize=GlobalRunNumber[5],$
-                                           /long,$
-                                           return_events=1,$
-                                           title=RunNumberTitles[1],$
-                                           uname='load_normalization_run_number_text_field')
+;Run Number base and inside CW_FIELD
+load_normalization_run_number_base = $
+  widget_base(LOAD_NORMALIZATION_BASE,$
+              uname='load_normalization_run_number_base',$
+              xoffset=GlobalRunNumber[0]+30,$
+              yoffset=GlobalRunNumber[1],$
+              scr_xsize=GlobalRunNumber[2]-50,$
+              scr_ysize=globalRunNumber[3])
+
+Load_data_run_number_text_field = $
+  CW_FIELD(load_normalization_run_number_base,$
+           row=1,$
+           xsize=GlobalRunNumber[4],$
+           ysize=GlobalRunNumber[5],$
+           /long,$
+           return_events=1,$
+           title='NORM. RUN NUMBER:',$
+           uname='load_normalization_run_number_text_field')
 
 
 ;Archived or All NeXus list
-NormArchivedOrAllCWBgroup = cw_bgroup(LOAD_NORMALIZATION_BASE,$
-                                      ArchivedOrAllCWBgroupList,$
-                                      uname='normalization_archived_or_full_cwbgroup',$
-                                      xoffset=ArchivedOrAllCWBgroupSize[0],$
-                                      yoffset=ArchivedOrAllCWBgroupSize[1],$
-                                      /exclusive,$
-                                      row=1,$
-                                      set_value=0)
+NormArchivedOrAllCWBgroup = $
+  cw_bgroup(LOAD_NORMALIZATION_BASE,$
+            ArchivedOrAllCWBgroupList,$
+            uname='normalization_archived_or_full_cwbgroup',$
+            xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
+            yoffset=ArchivedOrAllCWBgroupSize[1],$
+            /exclusive,$
+            row=1,$
+            set_value=0)
 
 ;Nexus list base/label/droplist and buttons
 NormListNexusBase = widget_base(LOAD_normalization_BaSE,$
