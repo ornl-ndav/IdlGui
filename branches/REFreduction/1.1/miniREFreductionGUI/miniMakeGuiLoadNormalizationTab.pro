@@ -60,9 +60,9 @@ LoadNormalizationTabSize = [0,0,$
                             DataNormalizationTabSize[2],$
                             DataNormalizationTabSize[3]]
 
-;###############################################################################
-;################################Build widgets##################################
-;###############################################################################
+;##############################################################################
+;###############################Build widgets##################################
+;##############################################################################
 
 LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       UNAME     = 'load_normalization_base',$
@@ -72,32 +72,40 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE = LoadNormalizationTabSize[2],$
                                       SCR_YSIZE = LoadNormalizationTabSize[3])
 
+;Browse Nexus File Button
+Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       XOFFSET   = 0,$
+                       YOFFSET   = 5,$
+                       SCR_XSIZE = 60,$
+                       VALUE     = 'BROWSE...',$
+                       UNAME     = 'browse_norm_nexus_button')
+
 ;Run Number base and inside CW_FIELD
 load_normalization_run_number_base = $
   WIDGET_BASE(LOAD_NORMALIZATION_BASE,$
               UNAME     = 'load_normalization_run_number_base',$
-              XOFFSET   = GlobalRunNumber[0],$
+              XOFFSET   = GlobalRunNumber[0]+50,$
               YOFFSET   = GlobalRunNumber[1],$
-              SCR_XSIZE = GlobalRunNumber[2]-50,$
+              SCR_XSIZE = GlobalRunNumber[2]-70,$
               SCR_YSIZE = globalRunNumber[3])
 
 Load_data_run_number_text_field = $
   CW_FIELD(load_normalization_run_number_base,$
            ROW           = 1,$
-           XSIZE         = GlobalRunNumber[4],$
+           XSIZE         = GlobalRunNumber[4]+2,$
            YSIZE         = GlobalRunNumber[5],$
            /LONG,$
            RETURN_EVENTS = 1,$
-           TITLE         = RunNumberTitles[1],$
+           TITLE         = 'Run #:',$
            UNAME         = 'load_normalization_run_number_text_field')
 
 
 ;Archived or All NeXus list
 NormArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_NORMALIZATION_BASE,$
-            ArchivedOrAllCWBgroupList,$
+            ['Archived','All'],$
             UNAME     = 'normalization_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+30,$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
             /EXCLUSIVE,$
             ROW       = 1,$
