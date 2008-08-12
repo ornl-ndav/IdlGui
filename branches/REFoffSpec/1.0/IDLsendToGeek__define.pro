@@ -241,7 +241,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
+;------------------------------------------------------------------------------
 ;This function send by email a copy of the logBook
 PRO IDLsendToGeek_EmailLogBook, Event, FullFileName
 version   = IDLsendToGeek_getGlobalVariable(Event,'version')
@@ -274,7 +274,7 @@ If (no_error NE 0) THEN BEGIN
       'Please email j35@ornl.gov!'
     IDLsendToGeek_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
-    ROIfileName = getRoiFileName(Event)
+    ROIFileName = ''
     application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
