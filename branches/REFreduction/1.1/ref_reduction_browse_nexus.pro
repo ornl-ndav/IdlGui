@@ -49,8 +49,12 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   /READ)
 IF (nexus_file_name NE '') THEN BEGIN
     (*global).browse_data_path = new_path
+;indicate initialization with hourglass icon
+    widget_control,/hourglass
 ;load browse nexus file
     load_data_browse_nexus, Event, nexus_file_name
+;turn off hourglass
+    widget_control,hourglass=0
 ENDIF
 
 END
@@ -123,9 +127,13 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   /FIX_FILTER,$
                                   /READ)
 IF (nexus_file_name NE '') THEN BEGIN
+;indicate initialization with hourglass icon
+    widget_control,/hourglass
     (*global).browse_data_path = new_path
 ;load browse nexus file
     load_norm_browse_nexus, Event, nexus_file_name
+;turn off hourglass
+    widget_control,hourglass=0
 ENDIF
 
 END
