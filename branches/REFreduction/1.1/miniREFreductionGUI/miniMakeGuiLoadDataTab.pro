@@ -1,3 +1,37 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
                             DataNormalizationTabSize,$
                             DataTitle,$
@@ -26,9 +60,9 @@ LoadDataTabSize = [0,0,$
                    DataNormalizationTabSize[2],$
                    DataNormalizationTabSize[3]]
 
-;###############################################################################
-;############################# Build widgets ###################################
-;###############################################################################
+;##############################################################################
+;############################# Build widgets ##################################
+;##############################################################################
 
 LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              UNAME     = 'load_data_base',$
@@ -39,30 +73,39 @@ LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              SCR_YSIZE = LoadDataTabSize[3])
 
 
+;Browse Nexus File Button
+Button = WIDGET_BUTTON(LOAD_DATA_BASE,$
+                       XOFFSET   = 0,$
+                       YOFFSET   = 5,$
+                       SCR_XSIZE = 60,$
+                       VALUE     = 'BROWSE...',$
+                       UNAME     = 'browse_data_nexus_button')
+
 ;Run Number base and inside CW_FIELD
 load_data_run_number_base = WIDGET_BASE(LOAD_DATA_BASE,$
-                                        UNAME     = 'load_data_run_number_base',$
-                                        XOFFSET   = GlobalRunNumber[0],$
+                                        UNAME     = $
+                                        'load_data_run_number_base',$
+                                        XOFFSET   = GlobalRunNumber[0]+50,$
                                         YOFFSET   = GlobalRunNumber[1],$
-                                        SCR_XSIZE = GlobalRunNumber[2]-50,$
+                                        SCR_XSIZE = GlobalRunNumber[2]-70,$
                                         SCR_YSIZE = GlobalRunNumber[3])
 
 Load_data_run_number_text_field = $
   CW_FIELD(load_data_run_number_base,$
            ROW           = 1,$
-           XSIZE         = GlobalRunNumber[4],$
+           XSIZE         = GlobalRunNumber[4]+2,$
            YSIZE         = GlobalRunNumber[5],$
            RETURN_EVENTS = 1,$
-           TITLE         = RunNumberTitles[0],$
+           TITLE         = 'Run #:',$
            UNAME         = 'load_data_run_number_text_field',$
            /LONG)
 
 ;Archived or All NeXus list
 DataArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_DATA_BASE,$
-            ArchivedOrAllCWBgroupList,$
+            ['Archived','All'],$
             UNAME     = 'data_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+30,$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
             ROW       = 1,$
             SET_VALUE = 0,$
