@@ -54,13 +54,13 @@ sProposalDroplist = { size:  [XYoff[0],$
 XYoff = [190,0]                      
 run_number_base = { size  : [XYoff[0],$
                              XYoff[1],$
-                             140,$
+                             220,$
                              35],$
                     uname : 'run_number_cw_field',$
-                    xsize : 14,$
+                    xsize : 28,$
                     title : 'Runs'}
 
-XYOff = [137,0]
+XYOff = [225,0]
 instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
                                run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}
@@ -69,7 +69,7 @@ instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
 XYoff = [10,40]
 BinningBase = { size  : [base.size[0]+XYoff[0],$
                          run_number_base.size[1]+XYoff[1],$
-                         430,70],$
+                         525,70],$
                 uname : 'binning_base',$
                 frame : 1,$
                 sensitive : 0}
@@ -81,7 +81,7 @@ offsetLabel = { size  : [XYoff[0],$
 XYoff = [65,-8]
 offsetText = { size  : [offsetLabel.size[0]+XYoff[0],$
                         offsetLabel.size[1]+XYoff[1],$
-                        60,35],$
+                        90,35],$
                uname : 'time_offset',$
                value : ''}
 XYoff = [5,0]
@@ -91,7 +91,7 @@ maxLabel = { size  : [offsetText.size[0]+offsetText.size[2]+XYoff[0],$
 XYoff = [35,-8]
 maxText = { size  : [maxLabel.size[0]+XYoff[0],$
                      maxLabel.size[1]+XYoff[1],$
-                     60,35],$
+                     90,35],$
             uname : 'time_max',$
             value : ''}
 XYoff = [10,0]
@@ -101,7 +101,7 @@ binLabel = { size  : [maxText.size[0]+offsetText.size[2]+XYoff[0],$
 XYoff = [35,-8]
 binText = { size  : [binLabel.size[0]+XYoff[0],$
                      binLabel.size[1]+XYoff[1],$
-                     60,35],$
+                     90,35],$
             uname : 'time_bin',$
             value : ''}
 XYoff      = [5,-8]
@@ -113,13 +113,13 @@ binTypeDroplist = { size  : [binText.size[0]+binText.size[2]+XYoff[0],$
 XYoff     = [0,25]
 sPreviewDroplist = { size: [XYoff[0],$
                             offsetLabel.size[1]+XYOff[1]],$
-                     value: ['                                 '],$
+                     value: ['                                          '],$
                      uname: 'preview_droplist'}
 
-XYoff     = [255,3]                            
+XYoff     = [305,3]                            
 sPreview  = { size: [sPreviewDroplist.size[0]+XYoff[0],$
                      sPreviewDroplist.size[1]+XYoff[1],$
-                     170,29],$
+                     210,29],$
               uname: 'preview_button',$
               value: '-> PREVIEW OF RUNINFO FILE'}
 
@@ -135,16 +135,16 @@ output_button = { size  : [BinningBase.size[0]+XYoff[0],$
 XYoff = [130,0]
 output_text = { size  : [output_button.size[0]+XYoff[0],$
                          output_button.size[1]+XYoff[1],$
-                         305,35],$
+                         395,35],$
                 uname : 'output_path_text',$
                 value : '~/'}
 
-XYoff = [0,40]
+XYoff = [30,40]
 shared_base = { size : [output_button.size[0]+XYoff[0],$
                         output_button.size[1]+XYoff[1],$
-                        460,35],$
+                        500,35],$
                 uname : 'shared_base'}
-button_list = { list : ['Copy -> Instrument Shared Folder',$
+button_list = { list : ['Copy -> Instrument Shared Folder       ',$
                         'Copy -> Proposal Shared Folder  '],$
                 uname : 'shared_button'}
 
@@ -152,11 +152,11 @@ button_list = { list : ['Copy -> Instrument Shared Folder',$
 
 XYoff = [0,35]
 IF (ArchivedUser) THEN BEGIN
-    XSIZE = 300
+    XSIZE = 390
 ENDIF ELSE BEGIN
-    XSIZE = 430
+    XSIZE = 525
 ENDELSE
-go_button = { size  : [shared_base.size[0]+XYoff[0],$
+go_button = { size  : [output_button.size[0]+XYoff[0],$
                        shared_base.size[1]+XYoff[1],$
                        XSIZE,30],$
               uname : 'create_nexus_button',$
@@ -180,7 +180,7 @@ ENDIF
 XYOFF = [0,40]
 log_book = { size  : [go_button.size[0]+XYoff[0],$
                       go_button.size[1]+XYoff[1],$
-                      430,150],$
+                      525,150],$
              uname : 'log_book'}
 
 XYoff = [0,Log_book.size[3]+10]
@@ -191,7 +191,7 @@ STGlabel = { size  : [log_book.size[0]+XYoff[0],$
 XYoff = [55,-5]
 STGtext = { size  : [STGlabel.size[0]+XYoff[0],$
                      STGlabel.size[1]+XYoff[1],$
-                     278,30],$
+                     370,30],$
             uname : 'send_to_geek_text'}
 XYoff = [STGtext.size[2],0]
 STGbutton = { size  : [STGtext.size[0]+XYoff[0],$
@@ -263,7 +263,7 @@ wOffsetText = WIDGET_TEXT(BinningBase,$
                           XOFFSET   = offsetText.size[0],$
                           YOFFSET   = offsetText.size[1],$
                           SCR_XSIZE = offsetText.size[2],$
-                          SCR_YSIZE = offsetText.size[3],$
+         ;                 SCR_YSIZE = offsetText.size[3],$
                           VALUE     = offsetText.value,$
                           UNAME     = offsetText.uname,$
                           /ALL_EVENTS,$
@@ -278,7 +278,7 @@ wMaxText = WIDGET_TEXT(BinningBase,$
                           XOFFSET   = maxText.size[0],$
                           YOFFSET   = maxText.size[1],$
                           SCR_XSIZE = maxText.size[2],$
-                          SCR_YSIZE = maxText.size[3],$
+          ;                SCR_YSIZE = maxText.size[3],$
                           VALUE     = maxText.value,$
                           UNAME     = maxText.uname,$
                           /ALL_EVENTS,$
@@ -293,7 +293,7 @@ wbinText = WIDGET_TEXT(BinningBase,$
                           XOFFSET   = binText.size[0],$
                           YOFFSET   = binText.size[1],$
                           SCR_XSIZE = binText.size[2],$
-                          SCR_YSIZE = binText.size[3],$
+           ;               SCR_YSIZE = binText.size[3],$
                           VALUE     = binText.value,$
                           UNAME     = binText.uname,$
                           /ALL_EVENTS,$
