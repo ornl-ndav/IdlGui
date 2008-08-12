@@ -1083,7 +1083,7 @@ IF (CNstruct.output_path NE '' OR $
                 AppendMyLogBook, Event, text1
                 cmd = 'cp ' + long_new_file
             ENDIF ELSE BEGIN
-                text1 = '-> Does file (' + file_name_to_check + ') already' + $
+                text1 = '-> Does file (' + file_name_to_copy + ') already' + $
                   ' exist ... NO'
                 AppendMyLogBook, Event, text1
                 long_new_file = CNstruct.ProposalSharedFolder + $
@@ -1197,7 +1197,7 @@ IF (CNstruct.output_path NE '' OR $
                 AppendMyLogBook, Event, text1
                 cmd = 'cp ' + long_new_file
             ENDIF ELSE BEGIN
-                text1 = '-> Does file (' + file_name_to_check + ') already' + $
+                text1 = '-> Does file (' + file_name_to_copy + ') already' + $
                   ' exist ... NO'
                 AppendMyLogBook, Event, text1
                 long_new_file = CNstruct.ProposalSharedFolder + $
