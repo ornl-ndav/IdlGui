@@ -108,6 +108,7 @@ CASE Event.id OF
         IF ((*global).ArchivedUser) THEN BEGIN
             ValidateArchivedButton, Event, status
         ENDIF
+        validateCreateNexusButton, Event, 1
     end
 
 ;Archived NeXus

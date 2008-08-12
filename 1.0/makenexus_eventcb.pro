@@ -253,6 +253,10 @@ ENDIF
 validateHistoBase, Event, validate_go
 
 (*global).validate_go = validate_go
+
+(*global).validate_go = 1
+validateOrNotGoButton, Event
+
 END
 
 ;------------------------------------------------------------------------------
@@ -293,7 +297,6 @@ folder_status = folder1_status + folder2_status + folder3_status
 IF (folder_status EQ 0) THEN BEGIN
     validate_status = 0
 ENDIF
-
 ;check than time_max is not equal to time_min
 ;and that size is not 0
 binWidth = getBinWidth(Event)
@@ -304,7 +307,6 @@ IF (binWidth EQ '0' OR $
     binMax EQ binMin) THEN BEGIN
     validate_status = 0
 ENDIF
-
 ;validate go button
 validateCreateNexusButton, Event, validate_status
 validateSendToGeek, Event, validate_status
