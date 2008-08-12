@@ -37,30 +37,36 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 CD, CURRENT = current_folder
 
-;************************************************************************
-;************************************************************************
+;******************************************************************************
+;******************************************************************************
 APPLICATION       = 'REFoffSpec'
 VERSION           = '1.0.0'
-DEBUGGING         = 'no' ;yes/no
+DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'no'
+CHECKING_PACKAGES = 'yes'
 
+;DEBUGGING
+sDEBUGGING = { tab: {main_tab: 1}} ;0:step1, 1:logBook
+
+;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,1)
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
 
-;************************************************************************
-;************************************************************************
+;******************************************************************************
+;******************************************************************************
 
-;define initial global values - these could be input via external file or other
-;means
+
+
+
+
+
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
-
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
 ENDIF ELSE BEGIN
@@ -68,13 +74,15 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ ucams:       ucams,$
-                    processing:  '(PROCESSING)',$
-                    ok:          'OK',$
-                    failed:      'FAILED',$
-                    version:     VERSION })
+global = ptr_new ({ ucams:        ucams,$
+                    application:  APPLICATION,$
+                    processing:   '(PROCESSING)',$
+                    ok:           'OK',$
+                    failed:       'FAILED',$                    
+                    version:      VERSION,$
+                    MainBaseSize: [30,25,1276,901]})
 
-MainBaseSize   = [30,25,1276,901]
+MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Reflectometer Off Specular Application'
 MainBaseTitle += ' - ' + VERSION
 ;Build Main Base
@@ -102,10 +110,10 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ; Date and Checking Packages routines =========================================
 ;==============================================================================
 ;Put date/time when user started application in first line of log book
-;time_stamp = GenerateIsoTimeStamp()
-;message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-;IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
-;  message
+time_stamp = GenerateIsoTimeStamp()
+message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+  message
 
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
 ;Check that the necessary packages are present
@@ -178,18 +186,32 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                                     /INFORMATION, $
                                     DIALOG_PARENT=MAIN_BASE)
             
-            message = '=================================================' + $
-              '========================'
-            IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
-              'log_book_text', message
         ENDIF
-            
+
+        message = '=================================================' + $
+          '========================'
+        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+          'log_book_text', message
+        
     ENDIF                       ;end of 'if (sz GT 0)'
+
+;==============================================================================
+;==============================================================================
+
+
+
+
+;??????????????????????????????????????????????????????????????????????????????
+IF (DEBUGGING EQ 'yes' ) THEN BEGIN
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+ENDIF
+;??????????????????????????????????????????????????????????????????????????????
 
 ENDIF
 
-;==============================================================================
-;==============================================================================
+
+
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '

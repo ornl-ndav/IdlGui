@@ -13,11 +13,14 @@ cd, IdlUtilitiesPath
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiMainBase.pro
+.run MakeGuiStep1.pro
+.run MakeGuiLogBook.pro
 
 ;Build all procedures
 cd, CurrentFolder
 
 ;procedures
+.run IDLsendToGeek__define.pro
 
 ;main functions
 .run MainBaseEvent.pro
