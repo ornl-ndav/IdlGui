@@ -1,4 +1,4 @@
-REFreduction (version 1.1.6)
+REFreduction (version 1.1.7)
 Oak Ridge National Laboratory (ORNL)
 Spallation Neutron Source (SNS)
 email : bilheuxjm@ornl.gov
