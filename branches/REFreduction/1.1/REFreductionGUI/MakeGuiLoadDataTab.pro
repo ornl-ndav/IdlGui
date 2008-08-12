@@ -70,10 +70,18 @@ LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              SCR_YSIZE=LoadDataTabSize[3])
 
 
+;Browse Nexus File Button
+Button = WIDGET_BUTTON(LOAD_DATA_BASE,$
+                       XOFFSET   = 25,$
+                       YOFFSET   = 5,$
+                       SCR_XSIZE = 120,$
+                       VALUE     = 'BROWSE NeXus ...',$
+                       UNAME     = 'browse_data_nexus_button')
+
 ;Run Number base and inside CW_FIELD
 load_data_run_number_base = widget_base(LOAD_DATA_BASE,$
                                         uname='load_data_run_number_base',$
-                                        xoffset=GlobalRunNumber[0],$
+                                        xoffset=GlobalRunNumber[0]+30,$
                                         yoffset=GlobalRunNumber[1],$
                                         scr_xsize=GlobalRunNumber[2]-50,$
                                         scr_ysize=globalRunNumber[3])

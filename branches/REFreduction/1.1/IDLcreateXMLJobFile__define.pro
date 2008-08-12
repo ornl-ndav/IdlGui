@@ -65,9 +65,9 @@ END
 ;******************************************************************************
 ;Create unique full xml file name
 FUNCTION IDLcreateXMLJobFile_CreateFullXmlFileName, XML_FILE_LOCATION,$
-                                             INSTRUMENT,$
-                                             APPLICATION,$
-                                             UCAMS
+                                                    INSTRUMENT,$
+                                                    APPLICATION,$
+                                                    UCAMS
 ;get time stamp
 DateIso = IDLcreateXMLJobFile_GenerateIsoTimeStamp()
 FullFileName  = XML_FILE_LOCATION + '/' + APPLICATION

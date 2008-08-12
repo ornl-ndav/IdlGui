@@ -825,8 +825,7 @@ endif
 
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO REFreduction_refreshNormPlot, Event
 REFReduction_RescaleNormalizationPlot,Event
 END

@@ -67,7 +67,7 @@ PRO RefReduction_DumpBinaryData, Event, full_nexus_name, destination_folder
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-tmp_file_name = (*global).data_tmp_dat_file
+;tmp_file_name = (*global).data_tmp_dat_file
 RefReduction_DumpBinary, $
   Event, $
   full_nexus_name, $

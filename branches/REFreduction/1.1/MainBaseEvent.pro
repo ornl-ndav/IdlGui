@@ -36,7 +36,15 @@ CASE Event.id OF
         REFreductionEventcb_InstrumentSelected, Event
     end
     
-;**LOAD TAB**DATA**
+;**LOAD TAB**DATA**------------------------------------------------------------
+
+;Browse NeXus file
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='browse_data_nexus_button'): begin
+        BrowseDataNexus, Event
+        DefineDefaultOutputName, Event
+    END
+    
 
 ;LOAD DATA file cw_field
     widget_info(wWidget, $

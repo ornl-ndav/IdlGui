@@ -52,7 +52,7 @@ VERSION            = '1.1.6'
 DEBUGGING_VERSION  = 'yes'
 MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
-WITH_JOB_MANAGER   = 'no'
+WITH_JOB_MANAGER   = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 

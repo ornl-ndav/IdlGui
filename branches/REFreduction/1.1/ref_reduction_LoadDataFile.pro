@@ -242,7 +242,7 @@ END
 
 
 
-
+;------------------------------------------------------------------------------
 PRO OpenDataNeXusFile, Event, DataRunNumber, full_nexus_name
 
 ;get global structure
