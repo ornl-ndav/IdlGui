@@ -105,6 +105,7 @@ global = ptr_new ({ first_event: 1,$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
                     BatchFileName : '',$
                     DataRunNumber : '',$
+                      NormRunNumber : '',$
                     PreviousRunReductionValidated : 0,$  
                     BatchTable : ptr_new(0L),$ ;big array of batch table
                     isHDF5format : 1,$
