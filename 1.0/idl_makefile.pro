@@ -4,6 +4,8 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
+.run time_utilities.pro
+.run IDLsendToGeek__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -14,9 +16,6 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 
 ;Build all procedures
 cd, CurrentFolder
-
-;utils functions
-.run IDLsendToGeek__define.pro
 
 ;procedures
 
