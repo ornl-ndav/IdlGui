@@ -78,7 +78,10 @@ global = ptr_new ({ ucams:        ucams,$
                     ascii_extension: 'txt',$
                     ascii_filter:    '*.txt',$
                     ascii_path:      '~/',$
-                    list_OF_ascii_files: ptr_new(0L)$
+                    list_OF_ascii_files: ptr_new(0L),$
+                    pData:               ptr_new(0L),$
+                    pData_y:             ptr_new(0L),$
+                    pData_x:             ptr_new(0L)$
                   })
 
 ;initialize variables

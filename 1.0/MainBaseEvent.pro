@@ -18,6 +18,10 @@ CASE Event.id OF
         browse_ascii_file, Event ;_browse_ascii
     END
 
+;Draw
+    Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
+    END
+
 
 
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 

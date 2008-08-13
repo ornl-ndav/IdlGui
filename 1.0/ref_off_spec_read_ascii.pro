@@ -41,12 +41,19 @@ i = 0
 nbr = N_ELEMENTS(list_OF_files)
 WHILE (i LT nbr) DO BEGIN
     iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
-    iStructure = iClass->getData()
-    print, iStructure.nbrarray ;remove_me
-
+    pData = iClass->getDataQuickly()
     OBJ_DESTROY, iClass
     ++i
 ENDWHILE
-
+;print, (*pData[0])[1,*] ;second column
+;keep only the second column
+new_pData_x = STRARR((SIZE(*pData[0]))(2))
+new_pData_x[*] = (*pData[i])[0,*] ;retrieve x-array
+new_pData   = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+FOR i=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array
+    new_pData[i,*] = (*pData[i])[1,*]
+ENDFOR
+(*(*global).pData_y) = new_pData
+(*(*global).pData_x) = new_pData_x
 END
 ;------------------------------------------------------------------------------
