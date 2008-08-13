@@ -33,53 +33,6 @@
 ;==============================================================================
 
 ;------------------------------------------------------------------------------
-PRO display_files_in_list, Event, ascii_file_name
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;get current list of files from widget_list
-current_list_OF_files = (*(*global).list_OF_ascii_files)
-;add new ascii file if only they are not already there
-NbrFiles = N_ELEMENTS(ascii_file_name)
-index    = 0
-WHILE (index LT NbrFiles) DO BEGIN
-    isThere = WHERE(ascii_file_name[index] EQ current_list_OF_files,nbr)
-    IF (nbr EQ 0) THEN BEGIN
-        sz = N_ELEMENTS(current_list_OF_files)
-        IF (sz EQ 1 AND $
-            current_list_OF_files[0] EQ '') THEN BEGIN
-        current_list_OF_Files = [ascii_file_name[index]]
-        ENDIF ELSE BEGIN
-            current_list_OF_Files = $
-              [current_list_OF_Files, ascii_file_name[index]]
-        ENDELSE
-    ENDIF
-    ++index
-ENDWHILE
-(*(*global).list_OF_ascii_files) = current_list_OF_files
-putAsciiFileList, Event, current_list_OF_files ;update list of files
-END
 
-;------------------------------------------------------------------------------
-PRO browse_ascii_file, Event
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-extension = (*global).ascii_extension
-filter    = (*global).ascii_filter
-path      = (*global).ascii_path
-title     = 'Select an ASCII file'
-ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
-                                  FILTER            = filter,$
-                                  GET_PATH          = new_path,$
-                                  TITLE             = title,$
-                                  PATH              = path,$
-                                  /MUST_EXIST,$                            
-                                  /MULTIPLE_FILES)
-
-IF (ascii_file_name[0] NE '') THEN BEGIN
-    (*global).ascii_path = new_path ;save new path
-    display_files_in_list, $    ;add the new files to the widget_list
-      Event,$
-      ascii_file_name
-    readAsciiData, Event ;read the ascii files and store value in big array
-ENDIF
-END
 ;------------------------------------------------------------------------------

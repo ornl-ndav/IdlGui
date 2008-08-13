@@ -77,8 +77,12 @@ global = ptr_new ({ ucams:        ucams,$
                     MainBaseSize: [30,25,1276,901],$
                     ascii_extension: 'txt',$
                     ascii_filter:    '*.txt',$
-                    ascii_path:      '~/'$
+                    ascii_path:      '~/',$
+                    list_OF_ascii_files: ptr_new(0L)$
                   })
+
+;initialize variables
+(*(*global).list_OF_ascii_files) = STRARR(1)
 
 MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Reflectometer Off Specular Application'
