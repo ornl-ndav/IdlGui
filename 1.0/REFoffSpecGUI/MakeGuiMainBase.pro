@@ -48,7 +48,7 @@ sMainTabSize = {size : [XYoff[0], $
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { step1:     ' STEP 1',$
+TabTitles = { step1:     ' STEP 1 - Load/Specular Pixel',$
               log_book:  ' LOG BOOK '}
 
 ;******************************************************************************
