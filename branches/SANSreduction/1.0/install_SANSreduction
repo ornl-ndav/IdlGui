@@ -14,7 +14,7 @@ EXECUTABLE="sans_reduction.sav"
 help_install()
 {
 #inform how to use program if user put -h 
-   echo "*************************************************************************"
+   echo "*********************************************************************"
    echo "This is the Help in How to use the SANSreduction installation program"
    echo "To install the software, do the following:"
    echo
@@ -28,12 +28,17 @@ help_install()
 }
 
 #------------------------------------------------------------------------------
+# This function creates the new output folder if this one does not exist yet
+create_new_folder
+
+#------------------------------------------------------------------------------
 # This function copy the folder(s) to their final location
 copy_folders()
 {  
 for folder in $FOLDERS
 do
    echo -n "Copying folder" $folder "to" $1 "...."
+   install -d $1
    cp -rf $folder $1
    echo " Done"
 done
@@ -68,19 +73,21 @@ echo " Done"
 # Start main procedure
 #
 if [ $# -ne $NBR_PARAMETERS ] 
-then    #continue only if we have 4 parameters
-   help_install
+    then    #continue only if we have 4 parameters
+    help_install
 else
-   case "$1" in
-      "-h") help_install;;
-      "-d")
-     	   copy_folders $2;
-     	   copy_files $2;
-	   create_exec $2 $4;;
-      "-e")
-    	   copy_folders $4;
-     	   copy_files $4;
-	   create_exec $4 $2;;
-   esac
+    case "$1" in
+	"-h") help_install;;
+	"-d")
+	    create_new_output_folder $2;
+	    copy_folders $2;
+	    copy_files $2;
+	    create_exec $2 $4;;
+	"-e")
+	    create_new_folder $2;
+	    copy_folders $4;
+	    copy_files $4;
+	    create_exec $4 $2;;
+    esac
 fi
 #------------------------------------------------------------------------------
