@@ -78,6 +78,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MBAR           = WID_BASE_0_MBAR)
     
   ;define initial global values
+  ;============================
   global = ptr_new({path: '',$
     data: ptr_new(), $
     x: '', $
@@ -154,9 +155,9 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     uname = 'txtY')
   wDraw = WIDGET_DRAW(MAIN_BASE,$
     xoffset = 1,$
-    yoffset = 200,$
-    scr_xsize = 700,$
-    scr_ysize = 200,$
+    yoffset = 100,$
+    scr_xsize = 600,$
+    scr_ysize = 600,$
     /BUTTON_EVENTS, $
     uname = 'draw1')
     
