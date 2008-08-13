@@ -15,19 +15,31 @@ END
 PRO getData, Event
   widget_control, Event.top, get_uvalue=global
   ; file = OBJ_NEW('IDL3columnsASCIIParser', (*global).path)
-  openr,1,(*global).path
-  print, (*global).path
-  fs=fstat(1)
-  N=fs.size   ; length of the file in bytes
-  Nbytes = 4  ; data are Uint32 = 4 bytes
-  N = fs.size/Nbytes
-  data = dblarr(N)    ; create a longword integer array of N elements
-  ;readu,1,data
-  data = READ_BINARY(1)
+
+  use_read_binary = 0b
+  IF (use_read_binary) THEN BEGIN
+      data1 = READ_BINARY((*global).path, $
+                          DATA_DIMS=[304L,256L],$
+                          DATA_TYPE = 2)
+      help, data1
+      print, data1
+  ENDIF ELSE BEGIN
+      openr,1,(*global).path
+      fs=fstat(1)
+      N=fs.size                 ; length of the file in bytes
+      Nbytes = 4L               ; data are Uint32 = 4 bytes
+      N = long(fs.size)/Nbytes
+      data = lonarr(N) ; create a longword integer array of N elements
+      readu,1,data
+      print, data
+  ENDELSE
   close,1
+
+
+
   ;data = REFORM(data, (*global).x, (*global).y, /OVERWRITE)
-  help, data
-  print, data
+;  help, data
+;  print, data
 ;(*global).MyStruct = ptr_new(file -> getData())
 END
 
