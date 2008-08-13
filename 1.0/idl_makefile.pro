@@ -6,6 +6,7 @@ cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run time_utilities.pro
 .run IDLsendToGeek__define.pro
+.run IDL3columnsASCIIparser__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -20,9 +21,14 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 ;Build all procedures
 cd, CurrentFolder
 
+;utilities functions
+.run ref_off_spec_get.pro
+.run ref_off_spec_put.pro
+
 ;procedures
 .run CheckPackages.pro
 .run ref_off_spec_browse_ascii.pro
+.run ref_off_spec_read_ascii.pro
 
 ;main functions
 .run MainBaseEvent.pro
