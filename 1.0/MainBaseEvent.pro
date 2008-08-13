@@ -13,6 +13,11 @@ CASE Event.id OF
     
 ;111111111111111111111111111111111111111111111111111111111111111111111111111111
 
+;Browse ASCII file button
+    Widget_Info(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
+        browse_ascii_file, Event ;_browse_ascii
+    END
+
 
 
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 

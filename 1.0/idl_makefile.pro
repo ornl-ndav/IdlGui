@@ -14,6 +14,7 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiMainBase.pro
 .run MakeGuiStep1.pro
+.run MakeGuiStep2.pro
 .run MakeGuiLogBook.pro
 
 ;Build all procedures
@@ -21,6 +22,7 @@ cd, CurrentFolder
 
 ;procedures
 .run CheckPackages.pro
+.run ref_off_spec_browse_ascii.pro
 
 ;main functions
 .run MainBaseEvent.pro
