@@ -29,6 +29,7 @@ cd, CurrentFolder
 .run CheckPackages.pro
 .run ref_off_spec_browse_ascii.pro
 .run ref_off_spec_read_ascii.pro
+.run ref_off_spec_plot.pro
 
 ;main functions
 .run MainBaseEvent.pro

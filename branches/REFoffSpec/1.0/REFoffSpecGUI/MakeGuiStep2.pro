@@ -86,7 +86,7 @@ sDraw = { size: [XYoff[0],$
                  304L*2],$
           scroll_size: [tab_size[2]-35,$
                         304L*2+2],$
-          uname: 'step1_draw'}
+          uname: 'step2_draw'}
           
 ;******************************************************************************
 ;            BUILD GUI
@@ -148,6 +148,7 @@ wDraw = WIDGET_DRAW(BaseTab,$
                     X_SCROLL_SIZE = sDraw.scroll_size[0],$
                     Y_SCROLL_SIZE = sDraw.scroll_size[1],$
                     UNAME         = sDraw.uname,$
+;                    /MOTION_EVENTS,$
                     /SCROLL)
 
 
