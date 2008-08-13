@@ -20,7 +20,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 cd, CurrentFolder
 
 ;procedures
-.run IDLsendToGeek__define.pro
+.run CheckPackages.pro
 
 ;main functions
 .run MainBaseEvent.pro
