@@ -34,6 +34,7 @@ copy_folders()
 for folder in $FOLDERS
 do
    echo -n "Copying folder" $folder "to" $1 "...."
+   install -d $1
    cp -rf $folder $1
    echo " Done"
 done
