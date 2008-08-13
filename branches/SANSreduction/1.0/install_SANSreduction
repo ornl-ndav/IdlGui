@@ -28,10 +28,6 @@ help_install()
 }
 
 #------------------------------------------------------------------------------
-# This function creates the new output folder if this one does not exist yet
-create_new_folder
-
-#------------------------------------------------------------------------------
 # This function copy the folder(s) to their final location
 copy_folders()
 {  
