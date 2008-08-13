@@ -48,7 +48,8 @@ sMainTabSize = {size : [XYoff[0], $
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { step1:     ' 1/ LOAD ',$
+TabTitles = { step1:     '1/ Reduction',$
+              step2:     ' 2/ LOAD ',$
               log_book:  ' LOG BOOK '}
 
 ;******************************************************************************
@@ -68,6 +69,9 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 
 ;step1
 make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
+
+;step2
+make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build LogBook
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
