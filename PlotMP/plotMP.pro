@@ -171,8 +171,8 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;remove, debug purpose
   tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/REF_L_TS_2006_12_01.dat'
   widget_control, txtPath, set_value = tmp
-  widget_control, txtX, set_value = '304'
-  widget_control, txtY, set_value = '256'
+  widget_control, txtX, set_value = '256'
+  widget_control, txtY, set_value = '304'
   widget_control, txtPath, /INPUT_FOCUS
   ;remove, debug purpose
   
