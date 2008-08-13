@@ -18,6 +18,10 @@
 ;    
 ;    Parse the rest of the data into a structure
 ;    struct = myobj ->getData()
+;
+;    To quickly get a PTRARR of an uncombined ascii file (more than 1
+;    set of data
+;    data = myobj->getDataQuickly()
 ;    
 ; OUTPUT
 ;    help, comment
@@ -213,14 +217,14 @@ pro populate_structure, all_data, MyStruct
   blk_line_index = WHERE(all_data EQ '', new_nbr)
   num_elnts = N_ELEMENTS(all_data)
   
-  if new_nbr ne 0 then begin
+ ; if new_nbr ne 0 then begin
     ;make sure the last one is not the last element of the array
-    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
-      --new_nbr
-    ENDIF
-  endif else begin
-    new_nbr = 1
-  endelse
+;    IF (blk_line_index[new_nbr-1] EQ (num_elnts-1)) THEN BEGIN
+ ;     --new_nbr
+ ;   ENDIF
+ ; endif else begin
+ ;   new_nbr = 1
+ ; endelse
   
   ;create the array of structure here
   ;first the structure that will be used for each set of data
@@ -235,10 +239,15 @@ pro populate_structure, all_data, MyStruct
   
   ;and put this general array of structures inside MyStruct.data
   array_nbr   = 0
-  i           = 0
+  i           = 0L
   array_index = 0
   
+;  print, 'new_nbr: ' + STRCOMPRESS(new_nbr) ;remov_me
+;  print, 'array_nbr: ' + STRCOMPRESS(array_nbr) ;remov_me
+
   WHILE (array_nbr NE new_nbr) DO BEGIN
+;      print, 'array_nbr: ' + STRCOMPRESS(array_nbr) ;remov_me
+;      print, 'i: ' + STRCOMPRESS(i)
     if i  ne num_elnts then begin
       line = all_data[i]
     endif else begin
@@ -320,6 +329,31 @@ pro populate_structure, all_data, MyStruct
   *MyStruct.data = data_structure
   
 
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparser::getDataQuickly
+data  = READ_DATA(self.path, 2)
+nLines = FILE_LINES(self.path)
+index = WHERE(data EQ '#N 3',nbr)
+pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
+FOR i=1,(nbr-1) DO BEGIN
+    *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]
+ENDFOR
+*pARRAY[nbr-1] = data[index[nbr-1]+2:nLines-1]
+;parse each array into 3 columns
+sz = N_ELEMENTS(pARRAY)
+n_lines = N_ELEMENTS(*pARRAY[0])
+new_pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
+FOR i=0,sz-1 DO BEGIN
+    array = STRARR(3,n_lines)
+    FOR j=0,n_lines-2 DO begin
+        array[*,j] = STRSPLIT((*pARRAY[i])[j],/EXTRACT)
+    ENDFOR
+    *new_pARRAY[i] = array
+ENDFOR
+PTR_FREE, pARRAY
+RETURN, new_pARRAY
 END
 
 
