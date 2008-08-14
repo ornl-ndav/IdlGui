@@ -453,6 +453,16 @@ sScaleType = { size: [xLabel.size[0]+XYoff[0],$
                value: 0.0,$
                list: ['linear','log'],$
                uname: 'z_axis_scale'}
+
+;- Counts vs tof button ------------------------------------------------------
+XYoff = [5,0]
+sCountsTofButton = { size: [XYbase.size[0]+$
+                            XYbase.size[2]+$
+                            XYoff[0],$
+                            XYbase.size[1]+XYoff[1],$
+                            190],$
+                     value: 'COUNTS VS TOF of SELECTION',$
+                     uname: 'counts_vs_tof_selection_button'}
                                                
 ;==============================================================================
 ;= BUILD GUI ==================================================================
@@ -974,7 +984,6 @@ wCountsvalue = WIDGET_LABEL(wXYbase,$
                             UNAME   = countsValue.uname,$
                             /ALIGN_LEFT)
 
-
 ;linear/log scale
 ;wGroup = CW_BGROUP(wXYbase,$
 ;                   sScaleType.list,$
@@ -987,5 +996,12 @@ wCountsvalue = WIDGET_LABEL(wXYbase,$
 ;                   /NO_RELEASE,$
 ;                   /EXCLUSIVE)
 
+;- Counts vs tof button -------------------------------------------------------
+wCountsTofButton = WIDGET_BUTTON(wTab1Base,$
+                                 XOFFSET   = sCountsTofButton.size[0],$
+                                 YOFFSET   = sCountsTofButton.size[1],$
+                                 SCR_XSIZE = sCountsTofButton.size[2],$
+                                 VALUE     = sCountsTofButton.value,$
+                                 UNAME     = sCountsTofButton.uname)
 
 END

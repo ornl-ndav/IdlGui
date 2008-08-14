@@ -223,6 +223,12 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
+;- Counts vs TOF button -------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_selection_button'): $
+      BEGIN
+        launch_counts_vs_tof_base, Event
+    END
+
 ;= TAB2 (REDUCE) ==============================================================
 
 ;---- GO DATA REDUCTION button
