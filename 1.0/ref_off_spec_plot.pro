@@ -61,4 +61,39 @@ rData = REBIN(tfpData,(size(tfpData))(1)*2,(size(tfpData))(2)*2,/SAMPLE)
 TVSCL, rData,/DEVICE
 
 END
+
 ;------------------------------------------------------------------------------
+;This procedure plots the scale that surround the plot
+PRO refresh_plot_scale, EVENT=Event, MAIN_BASE=MAIN_BASE
+IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;change color of background    
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
+ENDIF ELSE BEGIN
+    WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+;change color of background    
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
+ENDELSE    
+
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+
+LOADCT, 0,/SILENT
+
+plot, randomn(s,303L), $
+  XRANGE        = [0,80],$
+  YRANGE        = [0L,303L],$
+  COLOR         = convert_rgb([0B,0B,255B]), $
+  BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
+  THICK         = 1, $
+  TICKLEN       = -0.015, $
+  XTICKLAYOUT   = 0,$
+  YTICKLAYOUT   = 0,$
+  XTICKS        = 8,$
+  YTICKS        = 25,$
+  YSTYLE        = 1,$
+  YTICKINTERVAL = 10,$
+  XMARGIN       = [7,0],$
+  /NODATA
+
+END

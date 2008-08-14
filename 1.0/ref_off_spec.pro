@@ -68,20 +68,22 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ ucams:        ucams,$
-                    application:  APPLICATION,$
-                    processing:   '(PROCESSING)',$
-                    ok:           'OK',$
-                    failed:       'FAILED',$                    
-                    version:      VERSION,$
-                    MainBaseSize: [30,25,1276,901],$
-                    ascii_extension: 'txt',$
-                    ascii_filter:    '*.txt',$
-                    ascii_path:      '~/',$
+global = ptr_new ({ ucams:               ucams,$
+                    application:         APPLICATION,$
+                    processing:          '(PROCESSING)',$
+                    ok:                  'OK',$
+                    failed:              'FAILED',$                    
+                    version:             VERSION,$
+                    MainBaseSize:        [30,25,1276,901],$
+                    ascii_extension:     'txt',$
+                    ascii_filter:        '*.txt',$
+                    ascii_path:          '~/',$
+                    sys_color_face_3d:   INTARR(3),$
                     list_OF_ascii_files: ptr_new(0L),$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
-                    pData_x:             ptr_new(0L)$
+                    pData_x:             ptr_new(0L),$
+                    PrevTabSelect:       0$
                   })
 
 ;initialize variables
@@ -102,14 +104,42 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          XPAD         = 0,$
                          YPAD         = 2)
 
+;get the color of the GUI to hide the widget_draw that will draw the label
+sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
+(*global).sys_color_face_3d = sys_color.face_3d
+
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
+
+label = Widget_label(MAIN_BASe,$
+                     xoffset = 0,$
+                     yoffset = 0,$
+                     value = '')
 
 ;confirmation base
 MakeGuiMainBase, MAIN_BASE, global
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+
+;LOADCT, 0,/SILENT
+
+;??????????????????????????????????????????????????????????????????????????????
+IF (DEBUGGING EQ 'yes' ) THEN BEGIN
+;tab to show
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+;ascii default path
+    (*global).ascii_path = sDEBUGGING.ascii_path
+ENDIF
+;??????????????????????????????????????????????????????????????????????????????
+
+refresh_plot_scale, MAIN_BASE=MAIN_BASE ;_plot
 
 ;==============================================================================
 ; Date and Checking Packages routines =========================================
@@ -127,15 +157,6 @@ ENDIF
 ;==============================================================================
 ;==============================================================================
 
-;??????????????????????????????????????????????????????????????????????????????
-IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-;tab to show
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
-;ascii default path
-    (*global).ascii_path = sDEBUGGING.ascii_path
-ENDIF
-;??????????????????????????????????????????????????????????????????????????????
 
 
 
