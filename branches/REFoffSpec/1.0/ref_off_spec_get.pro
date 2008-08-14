@@ -33,6 +33,14 @@
 ;==============================================================================
 
 ;------------------------------------------------------------------------------
-
+;Return the index of the ascii file selected in the first tab (step1)
+FUNCTION getAsciiSelectedIndex, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ascii_file_list')
+index = WIDGET_INFO(id,/LIST_SELECT)
+RETURN, [index]
+END
 
 ;------------------------------------------------------------------------------
+
+
+
