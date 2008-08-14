@@ -128,7 +128,8 @@ IF (FullNexusName NE '') THEN BEGIN
           'output_file_name', $
           defaultReduceFileName
 ;predefined default roi file name
-        defaultROIfileName = getDefaultROIFileName(full_nexus_name[0])
+        defaultROIfileName = getDefaultROIFileName(Event, $
+                                                   FullNexusName)
         length = 35
         folder = FILE_DIRNAME(defaultRoiFileName,/MARK_DIRECTORY)
         (*global).selection_path = folder
@@ -146,6 +147,7 @@ IF (FullNexusName NE '') THEN BEGIN
                       'selection_file_name_text_field',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
+        (*global).data_nexus_file_name = FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
 ;    putTab1NexusFileName, Event, ''
