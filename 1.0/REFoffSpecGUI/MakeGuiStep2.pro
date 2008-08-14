@@ -124,7 +124,8 @@ wAsciiList = WIDGET_LIST(BaseTab,$
                          SCR_YSIZE = sAsciiList.size[3],$
                          VALUE     = sAsciiList.value,$
                          UNAME     = sAsciiList.uname,$
-                         SENSITIVE = sAsciiList.sensitive)
+                         SENSITIVE = sAsciiList.sensitive,$
+                         /MULTIPLE)
 
 ;Preview Button ---------------------------------------------------------------
 wPreviewButton = WIDGET_BUTTON(BaseTab,$
