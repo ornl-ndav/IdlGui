@@ -47,6 +47,7 @@ cd, CurrentFolder
 .run sans_calibration_selection.pro
 .run sans_calibration_exclusion.pro
 .run sans_calibration_fitting.pro
+.run sans_calibration_counts_vs_tof.pro
 
 ;main functions
 .run MainBaseEvent.pro
