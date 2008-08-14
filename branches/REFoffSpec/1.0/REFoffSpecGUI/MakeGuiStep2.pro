@@ -78,16 +78,23 @@ sDeleteButton = { size: [sPreviewButton.size[0]+XYoff[0],$
                   tooltip: 'Delete Selected ASCII file',$
                   sensitive: 1}
 
-XYOff = [0,10] ;Draw ----------------------------------------------------------
+XYOff = [43,10] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
                  sAsciiList.size[1]+$
                  sAsciiList.size[3]+XYoff[1],$
-                 tab_size[2],$
+                 tab_size[2]-45,$
                  304L*2],$
-          scroll_size: [tab_size[2]-35,$
-                        304L*2+2],$
+          scroll_size: [tab_size[2]-35-XYoff[0],$
+                        304L*2+40],$
           uname: 'step2_draw'}
           
+XYOff = [0,-18] ;Scale of Draw ------------------------------------------------
+sScale = { size: [XYoff[0],$
+                  sDraw.size[1]+XYoff[1],$
+                  tab_size[2],$
+                  sDraw.size[3]+57],$
+           uname: 'scale_draw_step2'}
+
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -145,11 +152,18 @@ wDraw = WIDGET_DRAW(BaseTab,$
                     YOFFSET       = sDraw.size[1],$
                     XSIZE         = sDraw.size[2],$
                     YSIZE         = sDraw.size[3],$
-                    X_SCROLL_SIZE = sDraw.scroll_size[0],$
-                    Y_SCROLL_SIZE = sDraw.scroll_size[1],$
-                    UNAME         = sDraw.uname,$
+;                    X_SCROLL_SIZE = sDraw.scroll_size[0],$
+;                    Y_SCROLL_SIZE = sDraw.scroll_size[1],$
+                    UNAME         = sDraw.uname)
 ;                    /MOTION_EVENTS,$
-                    /SCROLL)
+;                    /SCROLL)
 
+;Scale Draw -------------------------------------------------------------------
+wScale = WIDGET_DRAW(BaseTab,$
+                     XOFFSET       = sScale.size[0],$
+                     YOFFSET       = sScale.size[1],$
+                     SCR_XSIZE     = sScale.size[2],$
+                     SCR_YSIZE     = sScale.size[3],$
+                     UNAME         = sScale.uname)
 
 END

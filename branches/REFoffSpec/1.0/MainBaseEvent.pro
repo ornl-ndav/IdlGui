@@ -11,6 +11,10 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
+        tab_event, Event ;_eventcb
+    END
+
 ;111111111111111111111111111111111111111111111111111111111111111111111111111111
 
 ;Browse ASCII file button
