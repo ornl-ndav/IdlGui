@@ -62,6 +62,7 @@ END
 ;------------------------------------------------------------------------------
 ;This function takes the histogram data from the NeXus file and plot it
 FUNCTION plotData, Event, DataArray, X, Y
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 plotStatus = 1 ;by default, plot does work
 plot_error = 0
 
@@ -73,6 +74,7 @@ ENDIF ELSE BEGIN
 ;Integrate over TOF
     dataXY   = TOTAL(DataArray,1)
     tDataXY  = TRANSPOSE(dataXY)
+    (*(*global).img) = tDataXY
 ;check linear or log scale type
 ;     IF (getCWBgroupValue(Event,'z_axis_scale') EQ 1) THEN BEGIN ;log
 ;         index = WHERE(tDataXY GT 0, nbr)
@@ -95,9 +97,12 @@ ENDIF ELSE BEGIN
 ;Check if rebin is necessary or not
     IF (X EQ 80) THEN BEGIN
         xysize = 8
+        Xpixel = 80L
     ENDIF ELSE BEGIN
         xysize = 2
+        Xpixel = 320L
     ENDELSE
+    (*global).Xpixel = Xpixel
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
     
 ;plot data
@@ -107,8 +112,61 @@ ENDIF ELSE BEGIN
     DEVICE, DECOMPOSED = 0
     LOADCT,5,/SILENT
     TVSCL, rtDataXY, /DEVICE
+    refresh_scale, Event        ;_plot
     RETURN, plotStatus
 
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_scale, Event
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+
+;change color of background    
+id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+
+LOADCT,0,/SILENT
+
+IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+    xrange_max = 80
+    plot, randomn(s,xrange_max), $
+      XRANGE     = [0,xrange_max],$
+      YRANGE     = [0,xrange_max],$
+      COLOR      = convert_rgb([0B,0B,255B]), $
+      BACKGROUND = convert_rgb((*global).sys_color_face_3d),$
+      THICK      = 1, $
+      TICKLEN    = -0.015, $
+      XTICKLAYOUT = 0,$
+      YTICKLAYOUT = 0,$
+      XTICKS      = 8,$
+      YTICKS      = 8,$
+      XMARGIN     = [5,5],$
+      /NODATA
+ENDIF ELSE BEGIN
+    xrange_max = 320
+    plot, randomn(s,xrange_max), $
+      XRANGE        = [0,xrange_max],$
+      YRANGE        = [0,xrange_max],$
+      COLOR         = convert_rgb([0B,0B,255B]), $
+      BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
+      THICK         = 1, $
+      TICKLEN       = -0.015, $
+      XTICKLAYOUT   = 0,$
+      YTICKLAYOUT   = 0,$
+      XTICKS        = 8,$
+      YTICKINTERVAL = 32,$
+      XTICKINTERVAL = 32,$
+      YSTYLE        = 1,$
+      XSTYLE        = 1,$
+      YTICKS        = 8,$
+      XMARGIN       = [5,5],$
+      /NODATA
 ENDELSE
 END
 
