@@ -536,6 +536,10 @@ RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                               TITLE             = title)
 
 IF (RoiFileName NE '') THEN BEGIN
+    text = '> Saving Exclusion Region:'
+    IDLsendToGeek_addLogBookText, Event, text
+    text = '-> ROI file name: ' + RoiFileName
+    IDLsendToGeek_addLogBookText, Event, text
     length = 35
     folder = FILE_DIRNAME(RoiFileName,/MARK_DIRECTORY)
     (*global).selection_path = folder
@@ -547,10 +551,8 @@ IF (RoiFileName NE '') THEN BEGIN
     putNewButtonValue, Event, 'save_roi_folder_button',folder
     file   = FILE_BASENAME(RoiFileName)
     putTextFieldValue, Event, 'save_roi_text_field', file
-
 ;create roi file
     SaveExclusionFile, Event
-
 ENDIF
 
 END
@@ -583,7 +585,12 @@ END
 
 ;------------------------------------------------------------------------------
 ;This procedure create the ROI file 
-PRO CreateROIfileFromExclusionArray, file_name, PixelExcludedArray
+PRO CreateROIfileFromExclusionArray, Event, file_name, PixelExcludedArray
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;get ROI array
@@ -592,9 +599,12 @@ pixel_excluded = PixelExcludedArray
 sz1 = (size(pixel_excluded))(1) ;X
 sz2 = (size(pixel_excluded))(2) ;Y
 error = 0
+text = '-> Writing file ... ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, text
 CATCH, error
 IF (error NE 0) then begin
     CATCH, /CANCEL
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
 ;open output file
     openw, 1, file_name
@@ -608,6 +618,7 @@ ENDIF ELSE BEGIN
     ENDFOR
     close, 1
     free_lun, 1
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 ;turn off hourglass
 widget_control,hourglass=0
@@ -620,7 +631,7 @@ folder         = (*global).selection_path
 file_name      = getTextfieldValue(Event,'save_roi_text_field')
 full_file_name = folder + file_name
 PixelExcludedArray = (*(*global).RoiPixelArrayExcluded)
-CreateROIfileFromExclusionArray, full_file_name, PixelExcludedArray
+CreateROIfileFromExclusionArray, Event, full_file_name, PixelExcludedArray
 putTextFieldValue, Event, 'roi_file_name_text_field', full_file_name
 ;enable PREVIEW button if file exist
 IF (FILE_TEST(full_file_name)) THEN BEGIN

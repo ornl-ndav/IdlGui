@@ -43,7 +43,7 @@ APPLICATION       = 'SANScalibration'
 VERSION           = '1.0.2'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no'  
-CHECKING_PACKAGES = 'yes'
+CHECKING_PACKAGES = 'no'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
@@ -74,6 +74,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   Xpixel: 80L,$ ;320 or 80
                    mouse_status: 0,$  ;0:nothing, 1:has been pressed
                    rectangle_XY0_mouse: [0,0],$
                    rectangle_XY1_mouse: [0,0],$
@@ -94,6 +95,7 @@ global = PTR_NEW ({version:         VERSION,$
                    DrawYcoeff:      8,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
+                   img:             ptr_new(0L),$
                    X:               0L,$
                    Y:               0L,$
                    PrevTabSelect:   0,$
@@ -343,8 +345,30 @@ IF (DEBUGGING EQ 'yes' AND $
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 
 ENDIF
-;==============================================================================
 
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
+
+plot, randomn(s,80), $
+  XRANGE     = [0,80],$
+  YRANGE     = [0,80],$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb(sys_color.face_3d),$
+  THICK      = 1, $
+  TICKLEN    = -0.015, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = 8,$
+  YTICKS      = 8,$
+  XMARGIN     = [5,5],$
+  /NODATA
+
+;==============================================================================
+; Date and Checking Packages routines =========================================
+;==============================================================================
 ;Put date/time when user started application in first line of log book
 time_stamp = GenerateIsoTimeStamp()
 message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -431,25 +455,6 @@ ENDIF
     ENDIF                       ;end of 'if (sz GT 0)'
 
 ENDIF
-;change color of background    
-id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-;ERASE, COLOR=convert_rgb(sys_color.face_3d) 
-
-plot, randomn(s,80), $
-  XRANGE     = [0,80],$
-  YRANGE     = [0,80],$
-  COLOR      = convert_rgb([0B,0B,255B]), $
-  BACKGROUND = convert_rgb(sys_color.face_3d),$
-  THICK      = 1, $
-  TICKLEN    = -0.015, $
-  XTICKLAYOUT = 0,$
-  YTICKLAYOUT = 0,$
-  XTICKS      = 8,$
-  YTICKS      = 8,$
-  XMARGIN     = [5,5],$
-  /NODATA
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '

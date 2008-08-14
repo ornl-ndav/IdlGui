@@ -59,25 +59,39 @@ CASE Event.id OF
 
 ;- Main Plot ------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
-        getXYposition, Event ;_get
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+            getXYposition, Event ;_get
+            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+                putCountsValue, Event, Event.x/8., Event.y/8. ;_put
+            ENDIF ELSE BEGIN
+                putCountsValue, Event, Event.x/2., Event.y/2. ;_put
+            ENDELSE
 ;check if user wants circle or rectangle
-        id = WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_in_out_button')
-        IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BEGIN ;circle
-            IF (Event.press EQ 1) THEN BEGIN
-                putTextFieldValue, Event, $
-                  'x_center_value', $
-                  STRCOMPRESS(Event.x/8.)
-                putTextFieldValue, Event, $
-                  'y_center_value', $
-              STRCOMPRESS(Event.y/8.)
-            ENDIF
-        ENDIF ELSE BEGIN ;rectangle
-            IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-                select_rectangle, Event ;_exclusion
-            ENDIF
-        ENDELSE
-    END
-
+            id = WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_in_out_button')
+            IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BEGIN ;circle
+                IF (Event.press EQ 1) THEN BEGIN
+                    IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+                        X = Event.x/8.
+                        Y = Event.y/8.
+                    ENDIF ELSE BEGIN
+                        X = Event.x/2.
+                        Y = Event.y/2.
+                    ENDELSE                
+                    putTextFieldValue, Event, $
+                      'x_center_value', $
+                      STRCOMPRESS(X)
+                    putTextFieldValue, Event, $
+                      'y_center_value', $
+                      STRCOMPRESS(Y)
+                ENDIF
+            ENDIF ELSE BEGIN    ;rectangle
+                IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+                    select_rectangle, Event ;_exclusion
+                ENDIF
+            ENDELSE
+        ENDIF
+        END
+        
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
