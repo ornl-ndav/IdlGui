@@ -57,14 +57,28 @@ CASE Event.id OF
 
 ;- Main Plot ------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
-        getXYposition, Event ;_get
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+            getXYposition, Event ;_get
+            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+                putCountsValue, Event, Event.x/8., Event.y/8. ;_put
+            ENDIF ELSE BEGIN
+                putCountsValue, Event, Event.x/2., Event.y/2. ;_put
+            ENDELSE
+        ENDIF
         IF (Event.press EQ 1) THEN BEGIN
+            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+                X = Event.x/8.
+                Y = Event.y/8.
+            ENDIF ELSE BEGIN
+                X = Event.x/2.
+                Y = Event.y/2.
+            ENDELSE                
             putTextFieldValue, Event, $
               'x_center_value', $
-              STRCOMPRESS(Event.x/8.)
+              STRCOMPRESS(X)
             putTextFieldValue, Event, $
               'y_center_value', $
-              STRCOMPRESS(Event.y/8.)
+              STRCOMPRESS(Y)
         ENDIF
     END
 

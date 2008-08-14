@@ -319,7 +319,6 @@ END
 ;HELP -------------------------------------------------------------------------
 PRO start_help, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global 
-print, (*global).help
 ONLINE_HELP, book=(*global).help
 END
 

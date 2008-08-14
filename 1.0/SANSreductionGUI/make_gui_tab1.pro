@@ -345,7 +345,7 @@ XYoff = [0,35]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
                   sRefreshPlot.size[1]+XYoff[1],$
-                  50,43],$  ;2:175, 3:68
+                  110,68],$  ;2:175, 3:68
            frame: 1,$
            uname: 'x_y_base'}
 XYoff = [5,3] ;x label
@@ -367,7 +367,17 @@ yValue = { size: [xValue.size[0]+XYoff[0],$
            value: '   ',$
            uname: 'y_value'}
 
-XYoff = [0,35]
+XYoff = [0,20]
+countsLabel = { size: [xLabel.size[0]+XYoff[0],$
+                       yValue.size[1]+XYoff[1]],$
+                value: 'Counts:'}
+XYoff = [50,0]
+countsValue = { size: [countsLabel.size[0]+XYoff[0],$
+                       countsLabel.size[1]+XYoff[1]],$
+                value: '          ',$
+                uname: 'counts_value'}
+
+;NOT USED RIGHT NOW
 sScaleType = { size: [xLabel.size[0]+XYoff[0],$
                       xValue.size[1]+XYoff[1]],$
                title: 'Z-axis:',$
@@ -376,8 +386,8 @@ sScaleType = { size: [xLabel.size[0]+XYoff[0],$
                uname: 'z_axis_scale'}
                                      
 ;Selection and Plot color base ------------------------------------------------
-XYoff = [65,-2]
-sColorBase = { size: [XYbase.size[0]+XYoff[0],$
+XYoff = [5,-2]
+sColorBase = { size: [XYbase.size[0]+XYbase.size[2]+XYoff[0],$
                       XYbase.size[1]+XYoff[1],$
                       240,50],$
                uname: 'color_base_uname',$
@@ -386,7 +396,7 @@ sColorBase = { size: [XYbase.size[0]+XYoff[0],$
 XYoff = [0,0]
 sSelectionColor = { size: [XYoff[0],$
                            XYoff[1],$
-                           237],$
+                           190],$
                     value: 'Selection Color Tool ...',$
                     uname: 'selection_color_button',$
                     sensitive: 1}
@@ -806,6 +816,20 @@ wYvalue = WIDGET_LABEL(wXYbase,$
                        YOFFSET = yValue.size[1],$
                        VALUE   = yValue.value,$
                        UNAME   = yValue.uname)
+
+;Counts (label and value)
+wCountslabel = WIDGET_LABEL(wXYbase,$
+                            XOFFSET = countsLabel.size[0],$
+                            YOFFSET = countsLabel.size[1],$
+                            VALUE   = countsLabel.value)
+wCountsvalue = WIDGET_LABEL(wXYbase,$
+                            XOFFSET = countsValue.size[0],$
+                            YOFFSET = countsValue.size[1],$
+                            VALUE   = countsValue.value,$
+                            UNAME   = countsValue.uname,$
+                            /ALIGN_LEFT)
+
+
 
 ;linear/log scale
 ;wGroup = CW_BGROUP(wXYbase,$

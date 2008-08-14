@@ -62,6 +62,7 @@ END
 ;------------------------------------------------------------------------------
 ;This function takes the histogram data from the NeXus file and plot it
 FUNCTION plotData, Event, DataArray, X, Y
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 plotStatus = 1 ;by default, plot does work
 plot_error = 0
 CATCH, plot_error
@@ -72,12 +73,16 @@ ENDIF ELSE BEGIN
 ;Integrate over TOF
     dataXY   = TOTAL(DataArray,1)
     tDataXY  = TRANSPOSE(dataXY)
+    (*(*global).img) = tDataXY
 ;Check if rebin is necessary or not
     IF (X EQ 80) THEN BEGIN
         xysize = 8
+        Xpixel = 80L
     ENDIF ELSE BEGIN
         xysize = 2
+        Xpixel = 320L
     ENDELSE
+    (*global).Xpixel = Xpixel
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
 ;plot data
     DEVICE, DECOMPOSED = 0
@@ -86,12 +91,13 @@ ENDIF ELSE BEGIN
     WIDGET_CONTROL, id, GET_VALUE = id_value
     WSET, id_value
     TVSCL, rtDataXY, /DEVICE
+    refresh_scale, Event         ;_plot
     RETURN, plotStatus
 ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO refresh_plot, Event ;_plot
+PRO refresh_scale, Event
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;get global structure
@@ -105,19 +111,54 @@ WSET, id_value
 
 LOADCT,0,/SILENT
 
-plot, randomn(s,80), $
-  XRANGE     = [0,80],$
-  YRANGE     = [0,80],$
-  COLOR      = convert_rgb([0B,0B,255B]), $
-  BACKGROUND = convert_rgb((*global).sys_color_face_3d),$
-  THICK      = 1, $
-  TICKLEN    = -0.015, $
-  XTICKLAYOUT = 0,$
-  YTICKLAYOUT = 0,$
-  XTICKS      = 8,$
-  YTICKS      = 8,$
-  XMARGIN     = [5,5],$
-  /NODATA
+IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+    xrange_max = 80
+    plot, randomn(s,xrange_max), $
+      XRANGE     = [0,xrange_max],$
+      YRANGE     = [0,xrange_max],$
+      COLOR      = convert_rgb([0B,0B,255B]), $
+      BACKGROUND = convert_rgb((*global).sys_color_face_3d),$
+      THICK      = 1, $
+      TICKLEN    = -0.015, $
+      XTICKLAYOUT = 0,$
+      YTICKLAYOUT = 0,$
+      XTICKS      = 8,$
+      YTICKS      = 8,$
+      XMARGIN     = [5,5],$
+      /NODATA
+ENDIF ELSE BEGIN
+    xrange_max = 320
+    plot, randomn(s,xrange_max), $
+      XRANGE        = [0,xrange_max],$
+      YRANGE        = [0,xrange_max],$
+      COLOR         = convert_rgb([0B,0B,255B]), $
+      BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
+      THICK         = 1, $
+      TICKLEN       = -0.015, $
+      XTICKLAYOUT   = 0,$
+      YTICKLAYOUT   = 0,$
+      XTICKS        = 8,$
+      YTICKINTERVAL = 32,$
+      XTICKINTERVAL = 32,$
+      YSTYLE        = 1,$
+      XSTYLE        = 1,$
+      YTICKS        = 8,$
+      XMARGIN       = [5,5],$
+      /NODATA
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_plot, Event ;_plot
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;change color of background    
+id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
 
 ;retrieve parameters from global pointer
 X         = (*global).X

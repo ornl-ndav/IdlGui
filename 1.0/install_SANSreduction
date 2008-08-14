@@ -1,14 +1,18 @@
 #!/bin/bash
 # install_SANSreduction.sh
 #
-# Usage: install_SANSreduction -d <where to install the software> 
-#                              -e <full name of executable file>   
+# Usage: install_SANSreduction [-d <where to install the software>] 
+#                              [-e <full name of executable file>]   
 #
 #
 FOLDERS=("images" "SANSreductionHelp")
 FILES="sans_reduction.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE="sans_reduction.sav"
+PACKAGE_PATH='/usr/local/'
+FULL_PACKAGE_PATH=''
+EXECUTABLE_PATH='/usr/local/bin/'
+FULL_EXECUTABLE_PATH=''
 
 #------------------------------------------------------------------------------
 help_install()
@@ -18,11 +22,14 @@ help_install()
    echo "This is the Help in How to use the SANSreduction installation program"
    echo "To install the software, do the following:"
    echo
-   echo "./install_SANSreduction -d <where to intall the software> "
-   echo "                        -n <full name of executable file>"
+   echo "./install_SANSreduction [-d <where to intall the software>] "
+   echo "                        [-e <full name of executable file>]"
    echo
-   echo "Example:"
-   echo "       ./install_SANSreduction -d ~/usr/local/ -n ~/bin/mySANSreduction"
+   echo "Examples:"
+   echo "       ./install_SANSreduction"
+   echo "       ./install_SANSreduction -d ~/usr/local/"
+   echo "       ./install_SANSreduction -e ~/bin/mySANSreduction"
+   echo "       ./install_SANSreduction -d ~/usr/local/ -e ~/bin/mySANSreduction"
    echo
    exit 1
 }
@@ -31,59 +38,62 @@ help_install()
 # This function copy the folder(s) to their final location
 copy_folders()
 {  
-for folder in $FOLDERS
-do
-   echo -n "Copying folder" $folder "to" $1 "...."
-   install -d $1
-   cp -rf $folder $1
-   echo " Done"
-done
+    for folder in $FOLDERS
+      do
+      FULL_PACKAGE_PATH=$1'/idl/SANSreduction/'
+      echo -n "Copying folder" $folder "to" $FULL_PACKAGE_PATH "...."
+      install -d $FULL_PACKAGE_PATH
+      cp -rf $folder $FULL_PACKAGE_PATH
+      echo " Done"
+    done
 }
 
 #------------------------------------------------------------------------------
 # This function copy the file(s) to their final location
 copy_files()
 {  
-for file in $FILES
-do 
-   echo -n "Copying file" $file "to" $1 "...."	
-   cp $file $1
-   echo " Done"
-done
+    for file in $FILES
+      do 
+      echo -n "Copying file" $file "to" $FULL_PACKAGE_PATH "...."	
+      cp $file $FULL_PACKAGE_PATH
+      echo " Done"
+    done
 }
 
 #------------------------------------------------------------------------------
 # This function create the executable file
 create_exec()
 {
-echo -n "Create executable file" $2 "...."
-echo "idl -vm=$1/$EXECUTABLE" > $2
-echo " Done"
-echo -n "Change permission of $2 to 755 ...."
-chmod 755 $2
-echo " Done"
+    FULL_EXECUTABLE_PATH=$2'/SANSreduction'
+    echo $FULL_EXECUTABLE_PATH
+    echo -n "Create executable file" $FULL_EXECUTABLE_PATH "...."
+    install -d $2
+    echo "idl -vm=$FULL_PACKAGE_PATH/$EXECUTABLE" > $FULL_EXECUTABLE_PATH
+    echo " Done"
+    echo -n "Change permission of $2 to 755 ...."
+    chmod 755 $2
+    echo " Done"
 }
 
 #------------------------------------------------------------------------------
 #
 # Start main procedure
 #
-if [ $# -ne $NBR_PARAMETERS ] 
-    then    #continue only if we have 4 parameters
-    help_install
-else
-    case "$1" in
-	"-h") help_install;;
-	"-d")
-	    create_new_output_folder $2;
-	    copy_folders $2;
-	    copy_files $2;
-	    create_exec $2 $4;;
-	"-e")
-	    create_new_folder $2;
-	    copy_folders $4;
-	    copy_files $4;
-	    create_exec $4 $2;;
-    esac
-fi
+case "$1" in
+    "-h") help_install;;
+    "-d")
+	PACKAGE_PATH=$2
+	EXECUTABLE_PATH=$4
+	copy_folders $2;
+	copy_files $2;
+	create_exec $2 $4;;
+    "-e")
+	copy_folders $4;
+	copy_files $4;
+	create_exec $4 $2;;
+    *)
+	copy_folders $PACKAGE_PATH
+	copy_files $PACKAGE_PATH
+	create_exec $EXECUTABLE
+esac
 #------------------------------------------------------------------------------
