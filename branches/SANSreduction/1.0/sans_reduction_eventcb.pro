@@ -119,13 +119,13 @@ IF (FullNexusName NE '') THEN BEGIN
           'data_file_name_text_field', $
           FullNexusName
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(Event, FullNexusName)
+        defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
         putTextFieldValue, $
           Event, $
           'output_file_name', $
           defaultReduceFileName
 ;predefined default roi file name
-        defaultROIfileName = getDefaultROIFileName(full_nexus_name[0])
+        defaultROIfileName = getDefaultROIFileName(Event, FullNexusName)
         length = 35
         folder = FILE_DIRNAME(defaultRoiFileName,/MARK_DIRECTORY)
         (*global).selection_path = folder
@@ -146,6 +146,7 @@ IF (FullNexusName NE '') THEN BEGIN
 ;                      'color_base_uname',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
+        (*global).data_nexus_file_name = FullNexusName
 ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
