@@ -93,3 +93,12 @@ PRO putNewButtonValue, Event, uname, string
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=string
 END
+
+;------------------------------------------------------------------------------
+PRO putCountsValue, Event, x, y
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+img = (*(*global).img)
+putTextFieldValue, Event, 'counts_value', STRCOMPRESS(FIX(img[x,y]), $
+                                                      /REMOVE_ALL)
+END
+

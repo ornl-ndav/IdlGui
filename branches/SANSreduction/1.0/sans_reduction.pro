@@ -44,7 +44,7 @@ VERSION           = '1.0.4'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'yes'
+CHECKING_PACKAGES = 'no'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
@@ -76,6 +76,7 @@ wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
 wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   Xpixel: 80L,$ ;320 or 80
                    help: 'SANSreductionHelp/sans_reduction.adp',$
                    current_output_file_name: '',$
                    sys_color_face_3d: INTARR(3),$
@@ -104,6 +105,7 @@ global = PTR_NEW ({version:         VERSION,$
                    application:     APPLICATION,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
+                   img:             ptr_new(0L),$
                    X:               0L,$
                    Y:               0L,$
                    PrevTabSelect:   0,$
@@ -277,6 +279,7 @@ HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
 ;get the color of the GUI to hide the widget_draw that will label the draw
 sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
 (*global).sys_color_face_3d = sys_color.face_3d
+
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
