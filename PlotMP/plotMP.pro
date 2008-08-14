@@ -45,18 +45,18 @@ end
 pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;define parameters
-  scr_x 	= 1100				;main window width
-  scr_y 	= 700				;main window height
+  scr_x 	= 800				;main window width
+  scr_y 	= 750				;main window height
   ctrl_x	= 1				;width of left box - control
   ctrl_y	= scr_y				;height of lect box - control
   draw_x 	= 304				;main width of draw area
-  draw_y 	= 256				;main heigth of draw area
-  draw_offset_x = 10			;draw x offset within widget
-  draw_offset_y = 10			;draw y offset within widget
-  plot_height = 150			;plot box height
-  plot_length = 304			;plot box length
+  draw_y 	= 256				;main heigt of draw area
+;  draw_offset_x = 10			;draw x offset within widget
+;  draw_offset_y = 10			;draw y offset within widget
+;  plot_height = 150			;plot box height
+;  plot_length = 304			;plot box length
   
-  APPLICATION = 'plotASCII'
+  APPLICATION = 'plotMP'
   VERSION     = '1.0'
   
   Resolve_Routine, 'plotMP_eventcb',/COMPILE_FULL_FILE
@@ -66,15 +66,15 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
     UNAME          = 'MAIN_BASE',$
-    XOFFSET        = 500,$
-    YOFFSET        = 50,$
-    SCR_XSIZE      = scr_x,$
-    SCR_YSIZE      = scr_y,$
-    ;                         NOTIFY_REALIZE = 'MAIN_REALIZE',$
+;    XOFFSET        = 450,$
+;    YOFFSET        = 50,$
+    SCR_XSIZE      = 430,$
+    SCR_YSIZE      = 110,$
+    ;NOTIFY_REALIZE = 'MAIN_REALIZE',$
     TITLE          = title,$
-    SPACE          = 3,$
-    XPAD           = 3,$
-    YPAD           = 3,$
+   ; SPACE          = 3,$
+   ; XPAD           = 3,$
+   ; YPAD           = 3,$
     MBAR           = WID_BASE_0_MBAR)
     
   ;define initial global values
@@ -85,25 +85,25 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     y: ''})
     
   loadFile = widget_button(MAIN_BASE,$
-    xoffset = 444,$
-    yoffset = 4,$
-    scr_xsize = 100,$
-    scr_ysize = 26,$
+    xoffset = 300,$
+    yoffset = 40,$
+    scr_xsize = 120,$
+    scr_ysize = 29,$
     value = 'Browse',$
     uname = 'button1')
     
   graph = widget_button(MAIN_BASE,$
-    xoffset = 444,$
-    yoffset = 40,$
-    scr_xsize = 100,$
-    scr_ysize = 26,$
+    xoffset = 300,$
+    yoffset = 70,$
+    scr_xsize = 120,$
+    scr_ysize = 29,$
     value = 'Graph',$
     uname = 'graph')
     
   Label1 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 2,$
-    yoffset = 4,$
+    xoffset = 10,$
+    yoffset = 10,$
     scr_xsize = 140,$
     scr_ysize = 30,$
     value = 'Select mapping File:',$
@@ -111,7 +111,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   Label2 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 2,$
+    xoffset = 10,$
     yoffset = 40,$
     scr_xsize = 140,$
     scr_ysize = 30,$
@@ -120,7 +120,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   Label3 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 2,$
+    xoffset = 10,$
     yoffset = 70,$
     scr_xsize = 140,$
     scr_ysize = 30,$
@@ -128,40 +128,40 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     uname = 'label3')
     
   txtPath = WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 142,$
-    yoffset = 3,$
-    scr_xsize = 300,$
+    xoffset = 150,$
+    yoffset = 10,$
+    scr_xsize = 270,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtPath')
     
   txtX= WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 142,$
+    xoffset = 150,$
     yoffset = 40,$
-    scr_xsize = 300,$
+    scr_xsize = 140,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtX')
     
   txtY= WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 142,$
+    xoffset = 150,$
     yoffset = 70,$
-    scr_xsize = 300,$
+    scr_xsize = 140,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtY')
   wDraw = WIDGET_DRAW(MAIN_BASE,$
-    xoffset = 1,$
-    yoffset = 100,$
-    scr_xsize = 600,$
-    scr_ysize = 600,$
+    xoffset = 10,$
+    yoffset = 110,$
+    scr_xsize = 800,$
+    scr_ysize = 800,$
     /BUTTON_EVENTS, $
     uname = 'draw1')
     
-  ;attach global data structure with widget ID of widget main base widget ID
+  ;attach global da8ta structure with widget ID of widget main base widget ID
   widget_control,MAIN_BASE,set_uvalue=global
   
   
@@ -171,8 +171,8 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;remove, debug purpose
   tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/REF_L_TS_2006_12_01.dat'
   widget_control, txtPath, set_value = tmp
-  widget_control, txtX, set_value = '256'
-  widget_control, txtY, set_value = '304'
+  widget_control, txty, set_value = '304'
+  widget_control, txtx, set_value = '256'
   widget_control, txtPath, /INPUT_FOCUS
   ;remove, debug purpose
   
