@@ -118,11 +118,22 @@ A = getTextFieldValue(Event,'result_fit_a_text_field')
 B = getTextFieldValue(Event,'result_fit_b_text_field')
 C = getTextFieldValue(Event,'result_fit_c_text_field')
 D = getTextFieldValue(Event,'result_fit_d_text_field')
+;get degree of poly selected
+value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
+CASE (value_OF_group) OF
+    0: degree = 1 
+    1: degree = 2 
+    2: degree = 3
+ENDCASE
 poly_string = '#C fitting function: '
-poly_string += STRCOMPRESS(A,/REMOVE_ALL) + ' '
-poly_string += STRCOMPRESS(B,/REMOVE_ALL) + '.X + '
-poly_string += STRCOMPRESS(C,/REMOVE_ALL) + '.X^2 '
-poly_string += STRCOMPRESS(D,/REMOVE_ALL) + '.X^3 '
+poly_string += STRCOMPRESS(A,/REMOVE_ALL) + ' + '
+poly_string += STRCOMPRESS(B,/REMOVE_ALL) + '.X '
+IF (degree GE 2) THEN BEGIN
+    poly_string += '+ ' + STRCOMPRESS(C,/REMOVE_ALL) + '.X^2 '
+    IF (degree GE 3) THEN BEGIN
+        poly_string += '+ ' + STRCOMPRESS(D,/REMOVE_ALL) + '.X^3 '
+    ENDIF
+ENDIF
 RETURN, poly_string
 END
 
