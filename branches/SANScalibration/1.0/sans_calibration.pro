@@ -44,7 +44,7 @@ VERSION           = '1.0.2'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no'  
 CHECKING_PACKAGES = 'no'
-
+SCROLLING         = 'yes' 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
@@ -229,30 +229,32 @@ MainBaseTitle += ' - ' + VERSION
 
 ;==============================================================================
 ;Build Main Base ==============================================================
-; IF (DEBUGGING EQ 'yes') THEN BEGIN
-;    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-;                             UNAME        = 'MAIN_BASE',$
-;                             SCR_XSIZE    = MainBaseSize[2],$
-;                             XOFFSET      = MainBaseSize[0],$
-;                             YOFFSET      = MainBaseSize[1],$
-;                             TITLE        = MainBaseTitle,$
-;                             SPACE        = 0,$
-;                             XPAD         = 0,$
-;                             YPAD         = 2,$
-;                             X_SCROLL_SIZE = 500,$
-;                             Y_SCROLL_SIZE = 500)
-; ENDIF ELSE BEGIN
-MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                         UNAME        = 'MAIN_BASE',$
-                         SCR_XSIZE    = MainBaseSize[2],$
-                         SCR_YSIZE    = MainBaseSize[3],$
-                         XOFFSET      = MainBaseSize[0],$
-                         YOFFSET      = MainBaseSize[1],$
-                         TITLE        = MainBaseTitle,$
-                         SPACE        = 0,$
-                         XPAD         = 0,$
-                         YPAD         = 2)
-;ENDELSE
+IF (SCROLLING EQ 'yes') THEN BEGIN
+    MAIN_BASE = WIDGET_BASE( GROUP_LEADER  = wGroup,$
+                             UNAME         = 'MAIN_BASE',$
+                             SCR_XSIZE     = MainBaseSize[2],$
+                             XOFFSET       = MainBaseSize[0],$
+                             YOFFSET       = MainBaseSize[1],$
+                             TITLE         = MainBaseTitle,$
+                             SPACE         = 0,$
+                             XPAD          = 0,$
+                             YPAD          = 2,$
+                             X_SCROLL_SIZE = 500,$
+                             Y_SCROLL_SIZE = 500,$
+                             MBAR          = WID_BASE_0_MBAR)
+    
+ENDIF ELSE BEGIN
+    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+                             UNAME        = 'MAIN_BASE',$
+                             SCR_XSIZE    = MainBaseSize[2],$
+                             SCR_YSIZE    = MainBaseSize[3],$
+                             XOFFSET      = MainBaseSize[0],$
+                             YOFFSET      = MainBaseSize[1],$
+                             TITLE        = MainBaseTitle,$
+                             SPACE        = 0,$
+                             XPAD         = 0,$
+                             YPAD         = 2)
+ENDELSE
 
 ;get the color of the GUI to hide the widget_draw that will label the draw
 sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
