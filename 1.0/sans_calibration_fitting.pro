@@ -162,16 +162,27 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans. mode
 ;Data
     DataArray = createDataArray(Event)
     output_array = [output_array, DataArray]
-ENDIF ELSE BEGIN
-    output_array = STRARR(4)
+ENDIF ELSE BEGIN ;background mode
+;get degree of poly selected
+    value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
+    CASE (value_OF_group) OF
+        0: degree = 1 
+        1: degree = 2 
+        2: degree = 3
+    ENDCASE
+    output_array = STRARR(degree+1)
     A = getTextFieldValue(Event,'result_fit_a_text_field')
     output_array[0] = 'A: ' + A
     B = getTextFieldValue(Event,'result_fit_b_text_field')
     output_array[1] = 'B: ' + B
-    C = getTextFieldValue(Event,'result_fit_c_text_field')
-    output_array[2] = 'C: ' + C
-    D = getTextFieldValue(Event,'result_fit_d_text_field')
-    output_array[3] = 'D: ' + D
+    IF (degree GE 2) THEN BEGIN
+        C = getTextFieldValue(Event,'result_fit_c_text_field')
+        output_array[2] = 'C: ' + C
+        IF (degree GE 3) THEN BEGIN
+            D = getTextFieldValue(Event,'result_fit_d_text_field')
+            output_array[3] = 'D: ' + D
+        ENDIF
+    ENDIF
 ENDELSE
 RETURN, output_array
 END
