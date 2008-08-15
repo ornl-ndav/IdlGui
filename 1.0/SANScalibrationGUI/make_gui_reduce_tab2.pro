@@ -243,7 +243,7 @@ XYoff = [0,20]
 sFlagsBase = { size: [sADTbase.size[0]+XYoff[0],$
                       sADTBase.size[1]+sADTBase.size[3]+XYoff[1],$
                       sADTBase.size[2],$
-                      80],$
+                      45],$
                frame: sQLBase.frame}
 XYoff = [20,-8]
 sFlagsTitle = { size:  [sFlagsBase.size[0]+XYoff[0],$
@@ -251,7 +251,7 @@ sFlagsTitle = { size:  [sFlagsBase.size[0]+XYoff[0],$
                 value: 'Flags'}
 
 ;- Overwrite Geometry
-XYoff    = [20,20]
+XYoff    = [20,15]
 sOG      = {size:  [XYoff[0],$
                     XYoff[1]],$
             value: '* Overwrite Geometry'}
@@ -607,14 +607,14 @@ button = WIDGET_BUTTON(base1,$
                        UNAME     = sOGbutton.uname)
 
 ;- Verbose Mode ---------------------------------------------------------------
-group = CW_BGROUP(Base,$
-                  sVerboseGroup.list,$
-                  XOFFSET    = sVerboseGroup.size[0],$
-                  YOFFSET    = sVerboseGroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sVerboseGroup.value,$
-                  UNAME      = sVerboseGroup.uname,$
-                  LABEL_LEFT = sVerboseGroup.title,$
-                  /EXCLUSIVE)
+; group = CW_BGROUP(Base,$
+;                   sVerboseGroup.list,$
+;                   XOFFSET    = sVerboseGroup.size[0],$
+;                   YOFFSET    = sVerboseGroup.size[1],$
+;                   ROW        = 1,$
+;                   SET_VALUE  = sVerboseGroup.value,$
+;                   UNAME      = sVerboseGroup.uname,$
+;                   LABEL_LEFT = sVerboseGroup.title,$
+;                   /EXCLUSIVE)
 
 END
