@@ -242,9 +242,9 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 1) THEN BEGIN
 ENDIF    
 
 ;-verbose mode
-IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
-    cmd += ' ' + (*global).ReducePara.verbose
-ENDIF
+;IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN
+cmd += ' ' + (*global).ReducePara.verbose
+;ENDIF
 
 ;-min lambda cut-off mode
 IF (getCWBgroupValue(Event, 'minimum_lambda_cut_off_group') EQ 0) THEN BEGIN
