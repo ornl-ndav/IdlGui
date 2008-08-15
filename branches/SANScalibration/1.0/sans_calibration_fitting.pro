@@ -34,7 +34,7 @@
 FUNCTION calculateValue, A=A, B=B, C=C, D=D, x
 step1 = A + x * B
 step2 = step1 + x * x * C
-step3 = step1 + x * x * x * D
+step3 = step2 + x * x * x * D
 RETURN, step3
 END
 
@@ -173,6 +173,7 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans. mode
 ;Data
     DataArray = createDataArray(Event)
     output_array = [output_array, DataArray]
+    obj_destroy, iClass
 ENDIF ELSE BEGIN ;background mode
 ;get degree of poly selected
     value_OF_group = getCWBgroupValue(Event,'fitting_polynomial_degree_cw_group')
