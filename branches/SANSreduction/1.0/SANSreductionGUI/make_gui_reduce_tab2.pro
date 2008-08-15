@@ -304,7 +304,7 @@ XYoff = [0,20]
 sFlagsBase = { size: [sScaleBase.size[0]+XYoff[0],$
                       sScaleBase.size[1]+sScaleBase.size[3]+XYoff[1],$
                       sWaveBase.size[2],$
-                      80],$
+                      50],$
                frame: sWaveBase.frame}
 XYoff = [20,-8]
 sFlagsTitle = { size:  [sFlagsBase.size[0]+XYoff[0],$
@@ -742,14 +742,14 @@ button = WIDGET_BUTTON(base1,$
                        UNAME     = sOGbutton.uname)
 
 ;- Verbose Mode ---------------------------------------------------------------
-group = CW_BGROUP(Base,$
-                  sVerboseGroup.list,$
-                  XOFFSET    = sVerboseGroup.size[0],$
-                  YOFFSET    = sVerboseGroup.size[1],$
-                  ROW        = 1,$
-                  SET_VALUE  = sVerboseGroup.value,$
-                  UNAME      = sVerboseGroup.uname,$
-                  LABEL_LEFT = sVerboseGroup.title,$
-                  /EXCLUSIVE)
+; group = CW_BGROUP(Base,$
+;                   sVerboseGroup.list,$
+;                   XOFFSET    = sVerboseGroup.size[0],$
+;                   YOFFSET    = sVerboseGroup.size[1],$
+;                   ROW        = 1,$
+;                   SET_VALUE  = sVerboseGroup.value,$
+;                   UNAME      = sVerboseGroup.uname,$
+;                   LABEL_LEFT = sVerboseGroup.title,$
+;                   /EXCLUSIVE)
 
 END

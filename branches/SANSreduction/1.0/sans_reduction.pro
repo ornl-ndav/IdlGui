@@ -251,7 +251,8 @@ IF (SCROLLING EQ 'yes') THEN BEGIN
                             XPAD         = 0,$
                             YPAD         = 2,$
                             X_SCROLL_SIZE = 500,$
-                            Y_SCROLL_SIZE = 500)
+                            Y_SCROLL_SIZE = 500,$
+                            MBAR         = WID_BASE_0_MBAR)
 ENDIF ELSE BEGIN
    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                             UNAME        = 'MAIN_BASE',$
