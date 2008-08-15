@@ -61,13 +61,22 @@ END
 ;This procedure will go screen pixel by screen pixel to check if the
 ;pixel is part of the selection and the result will depend on the
 ;settings of the selection
-PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
+PRO  CreateArrayOfPixelSelected, Event, $
+                                 PixelSelectedArray,$
                                  oROI,$
                                  CurrentSelectionSettings,$
                                  insideSelectionType,$
                                  TYPE=type
 
-tmp_array = INTARR(80,80)
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+IF ((*global).Xpixel EQ 80L) THEN BEGIN
+    tmp_array = INTARR(80,80)
+    div_coeff = 8
+ENDIF ELSE BEGIN
+    tmp_array = INTARR(320L,320L)
+    div_coeff = 2
+ENDELSE
+
 IF (N_ELEMENTS(TYPE) EQ 0) THEN type = 'accurate' ;default type
 
 Xsize = 320*2
@@ -79,8 +88,8 @@ IF (type EQ 'accurate') THEN BEGIN ;accurate
 ;if inside selection region
             IF (insideSelectionType EQ 1b) THEN BEGIN 
                 IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                    x = FIX(i/8)
-                    y = FIX(j/8)
+                    x = FIX(i/div_coeff)
+                    y = FIX(j/div_coeff)
                     ++tmp_array[x,y]
                     state_changed = 1
                 ENDIF ELSE BEGIN
@@ -88,24 +97,22 @@ IF (type EQ 'accurate') THEN BEGIN ;accurate
                 ENDELSE
             ENDIF ELSE BEGIN
                 IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                    x = FIX(i/8)
-                    y = FIX(j/8)
+                    x = FIX(i/div_coeff)
+                    y = FIX(j/div_coeff)
                     ++tmp_array[x,y]
                 ENDIF
             ENDELSE
         ENDFOR
     ENDFOR
 ENDIF ELSE BEGIN                ;fast
-    Xsize = 320*2
-    Ysize = 320*2
     FOR i=0,(Xsize-1),4 DO BEGIN
         state_changed = 0 ;0,1,0 for inside selection and 1,0,1 for outside
         FOR j=0,(Ysize-1) DO BEGIN
 ;if inside selection region
             IF (insideSelectionType EQ 1b) THEN BEGIN
                 IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                    x = FIX(i/8)
-                    y = FIX(j/8)
+                    x = FIX(i/div_coeff)
+                    y = FIX(j/div_coeff)
                     ++tmp_array[x,y]
                     state_changed = 1
                 ENDIF ELSE BEGIN
@@ -113,14 +120,16 @@ ENDIF ELSE BEGIN                ;fast
                 ENDELSE
             ENDIF ELSE BEGIN
                 IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                    x = FIX(i/8)
-                    y = FIX(j/8)
+                    x = FIX(i/div_coeff)
+                    y = FIX(j/div_coeff)
                     ++tmp_array[x,y]
                 ENDIF
             ENDELSE
         ENDFOR
     ENDFOR
 ENDELSE
+
+print, tmp_array ;remove_me
 
 IF (type EQ 'accurate') THEN BEGIN ;accurate
 
@@ -190,7 +199,12 @@ widget_control,/hourglass
 struct = {myIDLgrROI, inside_flag: 1b, INHERITS IDLgrROI}
 
 coeff = FLOAT((*global).DrawXcoeff)
-PixelSelectedArray = INTARR(80,80)
+
+IF ((*global).Xpixel EQ 80L) THEN BEGIN
+    PixelSelectedArray = INTARR(80,80)
+ENDIF ELSE BEGIN
+    PixelSelectedArray = INTARR(320L,320L)
+ENDELSE
 
 ;get x_center, y_center
 x_center = getTextFieldValue(Event,'x_center_value')
@@ -270,6 +284,7 @@ IF (DisplayR1 NE 0) THEN BEGIN
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     ENDIF ELSE BEGIN
         CreateArrayOfPixelSelected, $
+          Event,$
           PixelSelectedArray,$
           oROI,$
           selection_type,$
@@ -310,6 +325,7 @@ IF (DisplayR2 NE 0) THEN BEGIN
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     ENDIF ELSE BEGIN
         CreateArrayOfPixelSelected, $
+          Event, $
           PixelSelectedArray,$
           oROI,$
           selection_type,$

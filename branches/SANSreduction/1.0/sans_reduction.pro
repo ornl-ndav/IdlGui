@@ -44,16 +44,18 @@ VERSION           = '1.0.4'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'no'
+CHECKING_PACKAGES = 'yes'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
-                          version_required: ''}
+                          version_required: '',$
+                          sub_pkg_version:   ''} 
+;sub_pkg_version: python program that gives pkg v.
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
 my_package[1].driver           = 'sas_reduction'
-my_package[1].version_required = '1.0'
-
+my_package[1].version_required = ''
+my_package[1].sub_pkg_version  = './drversion'
 ;************************************************************************
 ;************************************************************************
 
@@ -241,18 +243,18 @@ MainBaseTitle += ' - ' + VERSION
 ;==============================================================================
 ;Build Main Base ==============================================================
 IF (SCROLLING EQ 'yes') THEN BEGIN
-   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                            UNAME        = 'MAIN_BASE',$
-                            SCR_XSIZE    = MainBaseSize[2],$
-                            XOFFSET      = MainBaseSize[0],$
-                            YOFFSET      = MainBaseSize[1],$
-                            TITLE        = MainBaseTitle,$
-                            SPACE        = 0,$
-                            XPAD         = 0,$
-                            YPAD         = 2,$
+   MAIN_BASE = WIDGET_BASE( GROUP_LEADER  = wGroup,$
+                            UNAME         = 'MAIN_BASE',$
+                            SCR_XSIZE     = MainBaseSize[2],$
+                            XOFFSET       = MainBaseSize[0],$
+                            YOFFSET       = MainBaseSize[1],$
+                            TITLE         = MainBaseTitle,$
+                            SPACE         = 0,$
+                            XPAD          = 0,$
+                            YPAD          = 2,$
                             X_SCROLL_SIZE = 500,$
                             Y_SCROLL_SIZE = 500,$
-                            MBAR         = WID_BASE_0_MBAR)
+                            MBAR          = WID_BASE_0_MBAR)
 ENDIF ELSE BEGIN
    MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                             UNAME        = 'MAIN_BASE',$
@@ -311,25 +313,6 @@ IF (DEBUGGING EQ 'yes' AND $
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
-;Time Zero Offset (Parameters)
-;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=$
-;    'time_zero_offset_detector_uname')
-;    WIDGET_CONTROL, id, $
-;      SET_VALUE='500'
-;    id = WIDGET_INFO(MAIN_BASE, $
-;                     FIND_BY_UNAME='time_zero_offset_beam_monitor_uname')
-;    WIDGET_CONTROL, id, $
-;      SET_VALUE='500'
-;Q range (Parameters)
-;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmin_text_field')
-;    WIDGET_CONTROL, id, $
-;      SET_VALUE='0.1'
-;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qmax_text_field')
-;    WIDGET_CONTROL, id, $
-;      SET_VALUE='5'
-;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='qwidth_text_field')
-;    WIDGET_CONTROL, id, $
-;      SET_VALUE='0.1'
 
 ;exclusion tool
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
@@ -430,6 +413,27 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                   listening[N_ELEMENTS(listening)-1] + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
+                IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
+                    cmd = my_package[i].sub_pkg_version
+                    spawn, cmd, listening, err_listening
+                    IF (err_listening[0] EQ '') THEN BEGIN ;worked
+                        cmd_txt = '-> ' + cmd + ' ... OK'
+                        IDLsendToGeek_addLogBookText_fromMainBase, $
+                          MAIN_BASE, $
+                          'log_book_text', $
+                          cmd_text
+                        IDLsendToGeek_addLogBookText_fromMainBase, $
+                          MAIN_BASE, $
+                          'log_book_text', $
+                         '--> ' + listening
+                    ENDIF ELSE BEGIN
+                        cmd_txt = '-> ' + cmd + ' ... FAILED'
+                        IDLsendToGeek_addLogBookText_fromMainBase, $
+                          MAIN_BASE, $
+                          'log_book_text', $
+                          cmd_text
+                    ENDELSE
+                ENDIF
             ENDIF ELSE BEGIN    ;missing program
                 IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
                   MAIN_BASE, $
@@ -459,7 +463,7 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
             IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
               'log_book_text', message
         ENDIF
-            
+        
     ENDIF                       ;end of 'if (sz GT 0)'
 
 ENDIF

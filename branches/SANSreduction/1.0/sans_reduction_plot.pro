@@ -83,6 +83,7 @@ ENDIF ELSE BEGIN
         Xpixel = 320L
     ENDELSE
     (*global).Xpixel = Xpixel
+    (*global).DrawXcoeff = xysize
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
 ;plot data
     DEVICE, DECOMPOSED = 0
