@@ -93,7 +93,7 @@ IF (value_OF_group EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN
     sensitive_status = 0
 ENDELSE
-activate_widget, Event, 'minimum_lambda_cut_off_label', sensitive_status
+;activate_widget, Event, 'minimum_lambda_cut_off_label', sensitive_status
 activate_widget, Event, 'minimum_lambda_cut_off_value', sensitive_status
 END
 
@@ -107,7 +107,7 @@ IF (value_OF_group EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN
     sensitive_status = 0
 ENDELSE
-activate_widget, Event, 'maximum_lambda_cut_off_label', sensitive_status
+;activate_widget, Event, 'maximum_lambda_cut_off_label', sensitive_status
 activate_widget, Event, 'maximum_lambda_cut_off_value', sensitive_status
 END
 
