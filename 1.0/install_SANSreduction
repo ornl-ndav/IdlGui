@@ -10,9 +10,7 @@ FILES="sans_reduction.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE="sans_reduction.sav"
 PACKAGE_PATH='/usr/local/'
-FULL_PACKAGE_PATH=''
 EXECUTABLE_PATH='/usr/local/bin/'
-FULL_EXECUTABLE_PATH=''
 
 #------------------------------------------------------------------------------
 help_install()
@@ -79,21 +77,25 @@ create_exec()
 #
 # Start main procedure
 #
-case "$1" in
-    "-h") help_install;;
-    "-d")
-	PACKAGE_PATH=$2
-	EXECUTABLE_PATH=$4
-	copy_folders $2;
-	copy_files $2;
-	create_exec $2 $4;;
-    "-e")
-	copy_folders $4;
-	copy_files $4;
-	create_exec $4 $2;;
-    *)
-	copy_folders $PACKAGE_PATH
-	copy_files $PACKAGE_PATH
-	create_exec $EXECUTABLE
-esac
-#------------------------------------------------------------------------------
+if [ $# != 0 ] #not default case
+then
+    while [ "$1" != "" ] 
+    do
+	case $1 in
+	    -h) 
+		help_install;;
+	    -d) 
+		PACKAGE_PATH=$2;
+		shift;;
+	    -e) 
+		EXECUTABLE_PATH=$2;
+		shift;;
+	esac
+	shift
+    done
+fi
+echo $PACKAGE_PATH
+echo $EXECUTABLE_PATH
+
+
+
