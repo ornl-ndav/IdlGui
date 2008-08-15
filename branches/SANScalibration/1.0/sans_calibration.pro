@@ -43,18 +43,21 @@ APPLICATION       = 'SANScalibration'
 VERSION           = '1.0.2'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no'  
-CHECKING_PACKAGES = 'no'
+CHECKING_PACKAGES = 'yes'
 SCROLLING         = 'yes' 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
-                          version_required: ''}
+                          version_required: '',$
+                          sub_pkg_version:   ''}
+;sub_pkg_version: python program that gives pkg v.
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
 my_package[1].driver           = 'sas_transmission'
 my_package[1].version_required = '1.0'
+my_package[1].sub_pkg_version  = './drversion'
 my_package[2].driver           = 'sas_background'
 my_package[2].version_required = '1.0'
-
+my_package[1].sub_pkg_version  = './drversion'
 ;*************************************************************************
 ;*************************************************************************
 
@@ -401,6 +404,7 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
             IF (length GT max) THEN max = length
         ENDFOR
         
+        first_sub_packages_check = 1
         FOR i=0,(sz-1) DO BEGIN
             message = '-> ' + pack_list[i]
 ;this part is to make sure the PROCESSING string starts at the same column
@@ -424,6 +428,30 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                   listening[N_ELEMENTS(listening)-1] + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
+                IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
+                    IF (first_sub_packages_check EQ 1) THEN BEGIN
+                        first_sub_packages_check = 0
+                        cmd = my_package[i].sub_pkg_version
+                        spawn, cmd, listening, err_listening
+                        IF (err_listening[0] EQ '') THEN BEGIN ;worked
+                            cmd_txt = '-> ' + cmd + ' ... OK'
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book_text', $
+                              cmd_text
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book_text', $
+                              '--> ' + listening
+                        ENDIF ELSE BEGIN
+                            cmd_txt = '-> ' + cmd + ' ... FAILED'
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book_text', $
+                              cmd_text
+                        ENDELSE
+                    ENDIF
+                ENDIF
             ENDIF ELSE BEGIN    ;missing program
                 IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
                   MAIN_BASE, $
