@@ -41,10 +41,10 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANScalibration'
 VERSION           = '1.0.2'
-DEBUGGING         = 'no' ;yes/no
+DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no'  
 CHECKING_PACKAGES = 'yes'
-SCROLLING         = 'yes' 
+SCROLLING         = 'no' 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
                           sub_pkg_version:   ''}
@@ -242,8 +242,8 @@ IF (SCROLLING EQ 'yes') THEN BEGIN
                              SPACE         = 0,$
                              XPAD          = 0,$
                              YPAD          = 2,$
-                             X_SCROLL_SIZE = 500,$
-                             Y_SCROLL_SIZE = 500,$
+;                             X_SCROLL_SIZE = 1100,$
+                             Y_SCROLL_SIZE = 650,$
                              MBAR          = WID_BASE_0_MBAR)
     
 ENDIF ELSE BEGIN
