@@ -65,7 +65,9 @@ ENDIF
 spawn, cmd, listening, err_listening 
 IF (err_listening[0] NE '') THEN BEGIN
 ;in log book
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    logbook_text = 'Information from Verbose Mode:'
+    IDLsendToGeek_addLogBookText, Event, listening    
     IDLsendToGeek_addLogBookText, Event, err_listening
 ;in status dr frame
     status_text = 'Data Reduction ... FAILED (check log book)!'
