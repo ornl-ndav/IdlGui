@@ -338,7 +338,7 @@ nLines = FILE_LINES(self.path)
 index = WHERE(data EQ '#N 3',nbr)
 pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
 FOR i=1,(nbr-1) DO BEGIN
-    *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]
+    *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]  ;???? maybe 4 here
 ENDFOR
 *pARRAY[nbr-1] = data[index[nbr-1]+2:nLines-1]
 ;parse each array into 3 columns

@@ -7,6 +7,7 @@ cd, IdlUtilitiesPath
 .run time_utilities.pro
 .run IDLsendToGeek__define.pro
 .run IDL3columnsASCIIparser__define.pro
+.run xdisplayfile.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
