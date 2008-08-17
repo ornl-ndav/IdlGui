@@ -3,12 +3,13 @@
 #
 # Usage: install_SANSreduction [-d <where to install the software>] 
 #                              [-e <full name of executable file>]   
-#
+#                              [-h]
 #
 FOLDERS=("images" "SANSreductionHelp")
 FILES="sans_reduction.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
-EXECUTABLE="sans_reduction.sav"
+EXECUTABLE_SAV="sans_reduction.sav"
+EXECUTABLE='SANSreduction'
 PACKAGE_PATH='/usr/local/'
 EXECUTABLE_PATH='/usr/local/bin/'
 
@@ -20,13 +21,14 @@ help_install()
    echo "This is the Help in How to use the SANSreduction installation program"
    echo "To install the software, do the following:"
    echo
-   echo "./install_SANSreduction [-d <where to intall the software>] "
-   echo "                        [-e <full name of executable file>]"
+   echo "sudo ./install_SANSreduction [-d <where to intall the software>] "
+   echo "                             [-e <full name of executable file>] "
+   echo "                             [-h]"
    echo
    echo "Examples:"
-   echo "       ./install_SANSreduction"
-   echo "       ./install_SANSreduction -d ~/usr/local/"
-   echo "       ./install_SANSreduction -e ~/bin/mySANSreduction"
+   echo "       sudo ./install_SANSreduction"
+   echo "       sudo ./install_SANSreduction -d ~/usr/local/"
+   echo "       sudo ./install_SANSreduction -e ~/bin/mySANSreduction"
    echo "       ./install_SANSreduction -d ~/usr/local/ -e ~/bin/mySANSreduction"
    echo
    exit 1
@@ -36,13 +38,13 @@ help_install()
 # This function copy the folder(s) to their final location
 copy_folders()
 {  
+    PACKAGE_PATH=$PACKAGE_PATH'/idl/SANSreduction/'
+    install -d $PACKAGE_PATH
     for folder in $FOLDERS
-      do
-      FULL_PACKAGE_PATH=$1'/idl/SANSreduction/'
-      echo -n "Copying folder" $folder "to" $FULL_PACKAGE_PATH "...."
-      install -d $FULL_PACKAGE_PATH
-      cp -rf $folder $FULL_PACKAGE_PATH
-      echo " Done"
+    do
+	echo -n "Copying folder" $folder "to" $PACKAGE_PATH "... "
+	cp -rf $folder $PACKAGE_PATH
+	echo " Done"
     done
 }
 
@@ -52,8 +54,8 @@ copy_files()
 {  
     for file in $FILES
       do 
-      echo -n "Copying file" $file "to" $FULL_PACKAGE_PATH "...."	
-      cp $file $FULL_PACKAGE_PATH
+      echo -n "Copying file" $file "to" $PACKAGE_PATH "... "	
+      cp $file $PACKAGE_PATH
       echo " Done"
     done
 }
@@ -62,14 +64,13 @@ copy_files()
 # This function create the executable file
 create_exec()
 {
-    FULL_EXECUTABLE_PATH=$2'/SANSreduction'
-    echo $FULL_EXECUTABLE_PATH
-    echo -n "Create executable file" $FULL_EXECUTABLE_PATH "...."
-    install -d $2
-    echo "idl -vm=$FULL_PACKAGE_PATH/$EXECUTABLE" > $FULL_EXECUTABLE_PATH
+    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE
+    echo -n "Create executable file" $EXECUTABLE_PATH "...."
+    install -d $EXECUTABLE_PATH
+    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE
     echo " Done"
-    echo -n "Change permission of $2 to 755 ...."
-    chmod 755 $2
+    echo -n "Change permission of $EXECUTABLE to 755 ...."
+    chmod 755 $EXECUTABLE
     echo " Done"
 }
 
@@ -94,8 +95,7 @@ then
 	shift
     done
 fi
-echo $PACKAGE_PATH
-echo $EXECUTABLE_PATH
-
-
+copy_folders
+copy_files
+create_exec
 

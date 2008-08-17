@@ -1,2 +1,1 @@
-idl -vm="/SNS/software/idltools/sav/sans_reduction.sav"
-
+idl -vm=/usr/local//idl/SANSreduction//sans_reduction.sav
