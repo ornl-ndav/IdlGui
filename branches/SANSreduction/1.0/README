@@ -11,7 +11,11 @@ folders and the .sav (IDL Virtual Machine executable file) in this folder.
 In the same time, the execuable file (SANSreduction) will be created in
 /usr/local/bin/. 
 
-> ./install_SANSreduction
+> sudo ./install_SANSreduction
+
+You will need administrator privileges to install the software at the default
+location (/usr/local/). You won't need those priveleges if you want to install 
+it in your home directory (ex: ~/usr/local)
 
 It is possible to overwrite the folder where to install the package and the
 location of the executable, using the -d and -n flags
