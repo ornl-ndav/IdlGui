@@ -125,9 +125,11 @@ END
 ;------------------------------------------------------------------------------
 ;This function reset the output file name
 PRO RenewOutputFileName, Event
-FullFileName = getTextFieldValue(Event,'data_nexus_file_name')
-defaultReduceFileName = getDefaultReduceFileName(Event, $
-                                                 FullFileName)
-putTextFieldValue, Event, 'output_file_name', defaultReduceFileName
-
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
+    FullFileName = getTextFieldValue(Event,'data_nexus_file_name')
+    defaultReduceFileName = getDefaultReduceFileName(Event, $
+                                                     FullFileName)
+    putTextFieldValue, Event, 'output_file_name', defaultReduceFileName
+ENDIF
 END
