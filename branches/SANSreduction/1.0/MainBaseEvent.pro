@@ -289,15 +289,15 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'sample_data_transmission_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'sample_data_transmission_run_number_cw_field', $
-          'sample_data_transmission_file_name_text_field'
+ ;       LoadNeXus, Event, $
+ ;         'sample_data_transmission_run_number_cw_field', $
+ ;         'sample_data_transmission_file_name_text_field'
     END
     
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'sample_data_transmission_browse_button'): BEGIN
-        BrowseNexus, Event, $
+        BrowseTxt, Event, $
           'sample_data_transmission_browse_button',$
           'sample_data_transmission_file_name_text_field'
     END
@@ -306,15 +306,15 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'empty_can_transmission_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'empty_can_transmission_run_number_cw_field', $
-          'empty_can_transmission_file_name_text_field'
+;        LoadNeXus, Event, $
+;          'empty_can_transmission_run_number_cw_field', $
+;          'empty_can_transmission_file_name_text_field'
     END
     
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'empty_can_transmission_browse_button'): BEGIN
-        BrowseNexus, Event, $
+        BrowseTxt, Event, $
           'empty_can_transmission_browse_button',$
           'empty_can_transmission_file_name_text_field'
     END
@@ -329,15 +329,15 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'solvent_transmission_run_number_cw_field'): BEGIN
-        LoadNeXus, Event, $
-          'solvent_transmission_run_number_cw_field', $
-          'solvent_transmission_file_name_text_field'
+;        LoadNeXus, Event, $
+;          'solvent_transmission_run_number_cw_field', $
+;          'solvent_transmission_file_name_text_field'
     END
     
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $
                 'solvent_transmission_browse_button'): BEGIN
-        BrowseNexus, Event, $
+        BrowseTxt, Event, $
           'solvent_transmission_browse_button',$
           'solvent_transmission_file_name_text_field'
     END

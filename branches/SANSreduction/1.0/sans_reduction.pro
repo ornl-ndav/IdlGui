@@ -89,6 +89,10 @@ global = PTR_NEW ({version:         VERSION,$
                    exclusion_type_index: 0,$ ;0,1,2 or 3
                    fitting_status:  1,$ ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
+                   txt_extension:   'txt',$
+                   txt_filter:      '*.txt',$
+                   txt_title:       'Browse for an TXT file',$
+                   txt_path:        '~/',$
                    ascii_extension: 'txt',$
                    ascii_filter:    '*.txt',$
                    ascii_path:      '~/',$
