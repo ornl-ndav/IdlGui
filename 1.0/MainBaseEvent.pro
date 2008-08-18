@@ -362,6 +362,22 @@ CASE Event.id OF
        ResetOutputFileName, Event ;_reduce_tab2
     END
 
+;Auto or Manual File Name
+    WIDGET_INFO(wWidget,$
+                FIND_BY_UNAME= $
+                'auto_user_file_name_group'): BEGIN
+        IF (getCWBgroupValue(Event, $
+                             'auto_user_file_name_group') EQ 0) THEN BEGIN
+            auto_output_file_name = 1
+        ENDIF ELSE BEGIN
+            auto_output_file_name = 0
+        ENDELSE
+        (*global).auto_output_file_name = auto_output_file_name
+        activate_widget, Event, $
+          'reset_output_file_name_button', $
+          auto_output_file_name
+    END    
+
 ;==== tab2 (PARAMETERS) =======================================================
 
 ;---- YES or NO geometry cw_bgroup --------------------------------------------

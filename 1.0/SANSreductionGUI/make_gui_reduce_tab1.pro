@@ -390,6 +390,7 @@ group = CW_BGROUP(BaseTab,$
                   ROW        = 1,$
                   SET_VALUE  = sAUgroup.value,$
                   UNAME      = sAUgroup.uname,$
+                  /NO_RELEASE,$
                   /EXCLUSIVE)
 
 
