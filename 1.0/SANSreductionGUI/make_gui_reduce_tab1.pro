@@ -295,7 +295,7 @@ cDarkFileFrame = OBJ_NEW('IDLnexusFrame',$
 
 ;- Sample Data transmission File ----------------------------------------------
 cSampleDataFileFrame = $
-  OBJ_NEW('IDLnexusFrame',$
+  OBJ_NEW('IDLtxtFrame',$
           MAIN_BASE_ID    = BaseTab,$
           MAIN_BASE_XSIZE = sSampleDataFileFrame.main_base_xsize,$
           MAIN_BASE_UNAME = sSampleDataFileFrame.main_base_uname,$
@@ -303,13 +303,12 @@ cSampleDataFileFrame = $
           YOFF            = sSampleDataFileFrame.yoff,$
           FRAME_TITLE     = sSampleDataFileFrame.frame_title,$
           LABEL_1         = sSampleDataFileFrame.label_1,$
-          CWFIELD_UNAME   = sSampleDataFileFrame.tf1_uname,$
           BROWSE_UNAME    = sSampleDataFileFrame.browse_uname,$
           FILE_NAME_UNAME = sSampleDataFileFrame.file_name_uname)
 
 ;- Empty Can Transmission -----------------------------------------------------
 cEmptyCanTransmissionFileFrame = $
-  OBJ_NEW('IDLnexusFrame',$
+  OBJ_NEW('IDLtxtFrame',$
           MAIN_BASE_ID    = BaseTab,$
           MAIN_BASE_XSIZE = sEmptyCanTransmissionFileFrame.main_base_xsize,$
           MAIN_BASE_UNAME = sEmptyCanTransmissionFileFrame.main_base_uname,$
@@ -317,13 +316,12 @@ cEmptyCanTransmissionFileFrame = $
           YOFF            = sEmptyCanTransmissionFileFrame.yoff,$
           FRAME_TITLE     = sEmptyCanTransmissionFileFrame.frame_title,$
           LABEL_1         = sEmptyCanTransmissionFileFrame.label_1,$
-          CWFIELD_UNAME   = sEmptyCanTransmissionFileFrame.tf1_uname,$
           BROWSE_UNAME    = sEmptyCanTransmissionFileFrame.browse_uname,$
           FILE_NAME_UNAME = sEmptyCanTransmissionFileFrame.file_name_uname)
 
 ;- Solvent Transmission -----------------------------------------------------
 cSolventTransmissionFileFrame = $
-  OBJ_NEW('IDLnexusFrame',$
+  OBJ_NEW('IDLtxtFrame',$
           MAIN_BASE_ID    = BaseTab,$
           MAIN_BASE_XSIZE = sSolventTransmissionFileFrame.main_base_xsize,$
           MAIN_BASE_UNAME = sSolventTransmissionFileFrame.main_base_uname,$
@@ -331,7 +329,6 @@ cSolventTransmissionFileFrame = $
           YOFF            = sSolventTransmissionFileFrame.yoff,$
           FRAME_TITLE     = sSolventTransmissionFileFrame.frame_title,$
           LABEL_1         = sSolventTransmissionFileFrame.label_1,$
-          CWFIELD_UNAME   = sSolventTransmissionFileFrame.tf1_uname,$
           BROWSE_UNAME    = sSolventTransmissionFileFrame.browse_uname,$
           FILE_NAME_UNAME = sSolventTransmissionFileFrame.file_name_uname)
 
@@ -392,7 +389,5 @@ group = CW_BGROUP(BaseTab,$
                   UNAME      = sAUgroup.uname,$
                   /NO_RELEASE,$
                   /EXCLUSIVE)
-
-
 
 END

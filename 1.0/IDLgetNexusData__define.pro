@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,9 +30,9 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;*******************************************************************************
+;******************************************************************************
 FUNCTION getNumberOfBanks, fileID
 bank_nbr = 1
 no_more_banks = 0
@@ -51,7 +51,7 @@ WHILE (no_more_banks NE 1) DO BEGIN
 ENDWHILE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBankData, fileID, BankNbr
 banks_path = '/entry/' + BankNbr + '/data/'
 pathID     = h5d_open(fileID, banks_path)
@@ -60,17 +60,17 @@ h5d_close,pathID
 RETURN, data
 END
 
-;***** Class methods ***********************************************************
+;***** Class methods **********************************************************
 FUNCTION IDLgetNexusMetadata::getNbrBank
 RETURN, self.bank_number
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION IDLgetNexusMetadata::getData
 RETURN, self.data
 END
 
-;***** Class constructor *******************************************************
+;***** Class constructor ******************************************************
 FUNCTION IDLgetNexusMetadata::init, $
                             nexus_full_path, $
                             NbrBank    = NbrBank,$
@@ -110,7 +110,7 @@ h5f_close, fileID
 RETURN, 1
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO IDLgetNexusMetadata__define
 struct = {IDLgetNexusMetadata,$
           RunNumber       : '',$
