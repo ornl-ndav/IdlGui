@@ -2,10 +2,10 @@
 # install_SANScalibration.sh
 #
 # Usage: install_SANScalibration [-d <where to install the software>] 
-#                              [-e <full name of executable file>]   
-#                              [-h]
+#                                [-e <path to executable file>]   
+#                                [-h]
 #
-FOLDERS=("images" "SANScalibrationHelp")
+FOLDERS=("images")
 FILES="sans_calibration.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_calibration.sav"
@@ -23,14 +23,14 @@ help_install()
    echo "To install the software, do the following:"
    echo
    echo "sudo ./install_SANScalibration [-d <where to intall the software>] "
-   echo "                               [-e <full name of executable file>] "
+   echo "                               [-e <path to executable file>] "
    echo "                               [-h]"
    echo
    echo "Examples:"
    echo "  sudo ./install_SANScalibration"
    echo "  sudo ./install_SANScalibration -d ~/usr/local/"
-   echo "  sudo ./install_SANScalibration -e ~/bin/mySANScalibration"
-   echo "  ./install_SANScalibration -d ~/usr/local/ -e ~/bin/mySANScalibration"
+   echo "  sudo ./install_SANScalibration -e ~/bin/"
+   echo "  ./install_SANScalibration -d ~/usr/local/ -e ~/usr/local/bin/"
    echo
    exit 1
 }
@@ -41,7 +41,7 @@ copy_folders()
 {  
     PACKAGE_PATH=$PACKAGE_PATH'/idl/SANScalibration/'
     install -d $PACKAGE_PATH
-    for folder in $FOLDERS
+    for folder in ${FOLDERS[@]}
     do
 	echo -n "Copying folder" $folder "to" $PACKAGE_PATH "... "
 	cp -rf $folder $PACKAGE_PATH
@@ -53,7 +53,7 @@ copy_folders()
 # This function copy the file(s) to their final location
 copy_files()
 {  
-    for file in $FILES
+    for file in ${FILES[@]}
       do 
       echo -n "Copying file" $file "to" $PACKAGE_PATH "... "	
       cp $file $PACKAGE_PATH
