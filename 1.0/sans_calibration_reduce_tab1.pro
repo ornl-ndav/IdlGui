@@ -171,3 +171,46 @@ PRO clearOutputFileName, Event
 putTextFieldValue, Event, 'output_file_name', ''
 END
 
+;------------------------------------------------------------------------------
+;This function is reached by all the BROWSE buttons of the load tab (first
+;tab of the REDUCE tab)
+PRO BrowseTxt, Event, browse_button_uname, text_field_uname
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+;retrieve global parameters
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+extension  = (*global).txt_extension
+filter     = (*global).txt_filter
+path       = (*global).txt_path
+
+title = 'Browse for a '
+CASE (browse_button_uname) OF
+    'transm_back_browse_button': title1 = $
+      'Transmission Background file'
+    ELSE: title1 = ''
+ENDCASE
+title += title1
+message = '-> Browsing for a ' + title1 + ' :'
+IDLsendToGeek_addLogBookText, Event, message        
+FullTxtName = BrowseRunNumber(Event, $ ;IDLloadNexus__define
+                              extension, $
+                              filter, $
+                              title,$
+                              GET_PATH=new_path,$
+                              path)
+IF (FullTxtName NE '') THEN BEGIN
+;change default path
+    (*global).txt_path = new_path
+;display full path in text_field
+    putTextFieldValue, Event, text_field_uname, FullTxtName
+;inform user in log book of file loaded
+    message = '--> ' + title1 + ' is now ' + FullTxtName
+    IDLsendToGeek_addLogBookText, Event, message        
+ENDIF ELSE BEGIN
+    message = '--> No New ' + title1 + ' has been loaded'
+    IDLsendToGeek_addLogBookText, Event, message        
+ENDELSE
+END
