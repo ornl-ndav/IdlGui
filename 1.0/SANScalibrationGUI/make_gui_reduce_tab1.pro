@@ -99,7 +99,7 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [120,-5]
 sOutputFile = { size: [XYoff[0],$
                        sOutputFileLabel.size[1]+XYoff[1],$
-                       700],$
+                       535],$
                 value: '',$
                 uname: 'output_file_name'}
 
@@ -115,10 +115,19 @@ sClear = { size: [sOutputFile.size[0]+sOutputFile.size[2]+XYoff[0],$
 XYoff = [0,0]
 sReset = { size: [sClear.size[0]+sClear.size[2]+XYoff[0],$
                   sClear.size[1]+XYoff[1],$
-                  145,$
+                  100,$
                   sClear.size[3]],$
            value: 'RESET FILE NAME',$
            uname: 'reset_output_file_name_button'}
+
+;- Auto/user file name
+XYoff = [10,-3]
+sAUgroup = { size: [sReset.size[0]+sReset.size[2]+XYoff[0],$
+                    sReset.size[1]+XYoff[1]],$
+             list: ['Auto','User'],$
+             uname: 'auto_user_file_name_group',$
+             value: 0.0,$
+             title: 'File Name Mode:'}
 
 ;==============================================================================
 ;= Build Widgets ==============================================================
@@ -221,5 +230,15 @@ wReset = WIDGET_BUTTON(BaseTab1,$
                        VALUE     = sReset.value,$
                        UNAME     = sReset.uname)
 
+group = CW_BGROUP(BaseTab1,$
+                  sAUgroup.list,$
+                  XOFFSET    = sAUgroup.size[0],$
+                  YOFFSET    = sAUgroup.size[1],$
+                  LABEL_LEFT = sAUgroup.title,$
+                  ROW        = 1,$
+                  SET_VALUE  = sAUgroup.value,$
+                  UNAME      = sAUgroup.uname,$
+                  /NO_RELEASE,$
+                  /EXCLUSIVE)
 
 END

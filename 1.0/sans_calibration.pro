@@ -77,6 +77,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   auto_output_file_name: 1,$
                    Xpixel: 80L,$ ;320 or 80
                    mouse_status: 0,$  ;0:nothing, 1:has been pressed
                    rectangle_XY0_mouse: [0,0],$
@@ -343,8 +344,8 @@ IF (DEBUGGING EQ 'yes' AND $
       SET_VALUE='0'
 
 ;show main tab # ?
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
