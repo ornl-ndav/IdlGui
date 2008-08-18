@@ -41,10 +41,10 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANSreduction'
 VERSION           = '1.0.4'
-DEBUGGING         = 'no' ;yes/no
+DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'yes'
+CHECKING_PACKAGES = 'no'
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
@@ -333,7 +333,7 @@ IF (DEBUGGING EQ 'yes' AND $
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
 ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
 
 ENDIF
 
@@ -390,6 +390,7 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
             IF (length GT max) THEN max = length
         ENDFOR
         
+        first_sub_packages_check = 1
         FOR i=0,(sz-1) DO BEGIN
             message = '-> ' + pack_list[i]
 ;this part is to make sure the PROCESSING string starts at the same column
@@ -413,7 +414,9 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                   listening[N_ELEMENTS(listening)-1] + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
-                IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
+                IF (my_package[i].sub_pkg_version NE '' AND $
+                    first_sub_packages_check EQ 1) THEN BEGIN
+                    first_sub_packages_check = 0
                     cmd = my_package[i].sub_pkg_version
                     spawn, cmd, listening, err_listening
                     IF (err_listening[0] EQ '') THEN BEGIN ;worked
