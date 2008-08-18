@@ -118,12 +118,16 @@ IF (FullNexusName NE '') THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           FullNexusName
+        
+        IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
-        putTextFieldValue, $
-          Event, $
-          'output_file_name', $
-          defaultReduceFileName
+            defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
+            putTextFieldValue, $
+              Event, $
+              'output_file_name', $
+              defaultReduceFileName
+        ENDIF
+
 ;predefined default roi file name
         defaultROIfileName = getDefaultROIFileName(Event, FullNexusName)
         length = 35
@@ -211,12 +215,17 @@ IF (RunNumber NE 0) THEN BEGIN
         putNewButtonValue, Event, 'save_roi_folder_button',folder
         file   = FILE_BASENAME(defaultRoiFileName)
         putTextFieldValue, Event, 'save_roi_text_field', file
+
+        IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(full_nexus_name[0])
-        putTextFieldValue, $
-          Event, $
-          'output_file_name', $
-          defaultReduceFileName
+            defaultReduceFileName = $
+              getDefaultReduceFileName(full_nexus_name[0])
+            putTextFieldValue, $
+              Event, $
+              'output_file_name', $
+              defaultReduceFileName
+        ENDIF
+        
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
         uname_list = ['clear_selection_button',$
