@@ -170,7 +170,7 @@ sOutputFileLabel = { size: [XYoff[0],$
 XYoff = [120,-5]
 sOutputFile = { size: [XYoff[0],$
                        sOutputFileLabel.size[1]+XYoff[1],$
-                       550],$
+                       535],$
                 value: '',$
                 uname: 'output_file_name'}
 ;- Clear File Name
@@ -191,13 +191,13 @@ sReset = { size: [sClear.size[0]+sClear.size[2]+XYoff[0],$
            uname: 'reset_output_file_name_button'}
 
 ;- Auto/user file name
-XYoff = [0,0]
+XYoff = [10,-3]
 sAUgroup = { size: [sReset.size[0]+sReset.size[2]+XYoff[0],$
                     sReset.size[1]+XYoff[1]],$
              list: ['Auto','User'],$
              uname: 'auto_user_file_name_group',$
              value: 0.0,$
-             title: 'File Name Defined by:'}
+             title: 'File Name Mode:'}
 
 ;==============================================================================
 ;= Build Widgets ==============================================================
@@ -386,7 +386,7 @@ group = CW_BGROUP(BaseTab,$
                   sAUgroup.list,$
                   XOFFSET    = sAUgroup.size[0],$
                   YOFFSET    = sAUgroup.size[1],$
-                  TITLE      = sAUgroup.title,$
+                  LABEL_LEFT = sAUgroup.title,$
                   ROW        = 1,$
                   SET_VALUE  = sAUgroup.value,$
                   UNAME      = sAUgroup.uname,$
