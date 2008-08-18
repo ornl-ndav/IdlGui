@@ -100,7 +100,13 @@ ENDELSE
 output_file = getTextfieldValue(Event, 'output_file_name')
 IF (output_file NE '') THEN BEGIN
     cmd += output_file
-ENDIF
+ENDIF ELSE BEGIN
+    cmd += '?'
+    ++missing_argument_counter
+    missing_arguments_text = [missing_arguments_text, $
+                              '- Define an ouput file name' + $
+                              ' (LOAD FILES)']
+ENDELSE
 
 (*global).current_output_file_name   = output_path + output_file
 (*global).short_data_nexus_file_name = output_file

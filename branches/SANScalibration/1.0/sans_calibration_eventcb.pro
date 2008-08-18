@@ -120,13 +120,17 @@ IF (FullNexusName NE '') THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           FullNexusName
+
+        IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
 ;predefined default reduce output file name
-        defaultReduceFileName = getDefaultReduceFileName(Event, $
-                                                         FullFileName)
-        putTextFieldValue, $
-          Event, $
-          'output_file_name', $
-          defaultReduceFileName
+            defaultReduceFileName = getDefaultReduceFileName(Event, $
+                                                             FullFileName)
+            putTextFieldValue, $
+              Event, $
+              'output_file_name', $
+              defaultReduceFileName
+        ENDIF
+
 ;predefined default roi file name
         defaultROIfileName = getDefaultROIFileName(Event, $
                                                    FullNexusName)
@@ -197,15 +201,19 @@ IF (RunNumber NE 0) THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           full_nexus_name
+
+        IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
 ;predefined default reduce output file name
-        defaultReduceFileName = $
-          getDefaultReduceFileName(Event, $
-                                   full_nexus_name[0],$
-                                   RUNNUMBER = RunNumber)
-        putTextFieldValue, $
-          Event, $
-          'output_file_name', $
-          defaultReduceFileName
+            defaultReduceFileName = $
+              getDefaultReduceFileName(Event, $
+                                       full_nexus_name[0],$
+                                       RUNNUMBER = RunNumber)
+            putTextFieldValue, $
+              Event, $
+              'output_file_name', $
+              defaultReuceFileName
+        ENDIF
+
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
         uname_list = ['clear_selection_button',$
