@@ -77,6 +77,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   list_OF_files_to_send: ptr_new(0L),$
                    auto_output_file_name: 1,$
                    Xpixel: 80L,$ ;320 or 80
                    mouse_status: 0,$  ;0:nothing, 1:has been pressed
