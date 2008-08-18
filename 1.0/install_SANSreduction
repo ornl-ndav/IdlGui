@@ -2,7 +2,7 @@
 # install_SANSreduction.sh
 #
 # Usage: install_SANSreduction [-d <where to install the software>] 
-#                              [-e <full name of executable file>]   
+#                              [-e <path to executable file>]   
 #                              [-h]
 #
 FOLDERS=("images" "SANSreductionHelp")
@@ -22,14 +22,14 @@ help_install()
    echo "To install the software, do the following:"
    echo
    echo "sudo ./install_SANSreduction [-d <where to intall the software>] "
-   echo "                             [-e <full name of executable file>] "
+   echo "                             [-e <path to executable file>] "
    echo "                             [-h]"
    echo
    echo "Examples:"
    echo "       sudo ./install_SANSreduction"
    echo "       sudo ./install_SANSreduction -d ~/usr/local/"
-   echo "       sudo ./install_SANSreduction -e ~/bin/mySANSreduction"
-   echo "       ./install_SANSreduction -d ~/usr/local/ -e ~/bin/mySANSreduction"
+   echo "       sudo ./install_SANSreduction -e ~/bin/"
+   echo "       ./install_SANSreduction -d ~/usr/local/ -e ~/bin/"
    echo
    exit 1
 }
@@ -40,7 +40,7 @@ copy_folders()
 {  
     PACKAGE_PATH=$PACKAGE_PATH'/idl/SANSreduction/'
     install -d $PACKAGE_PATH
-    for folder in $FOLDERS
+    for folder in ${FOLDERS[@]}
     do
 	echo -n "Copying folder" $folder "to" $PACKAGE_PATH "... "
 	cp -rf $folder $PACKAGE_PATH
@@ -52,7 +52,7 @@ copy_folders()
 # This function copy the file(s) to their final location
 copy_files()
 {  
-    for file in $FILES
+    for file in ${FILES[@]}
       do 
       echo -n "Copying file" $file "to" $PACKAGE_PATH "... "	
       cp $file $PACKAGE_PATH
