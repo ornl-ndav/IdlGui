@@ -170,9 +170,9 @@ wROIfileTextField = WIDGET_TEXT(BaseTab1,$
                                 /EDITABLE,$
                                 /ALL_EVENTS)
 
-;- Solvant Buffer Only --------------------------------------------------------
+;- Transmission Bakcground  ---------------------------------------------------
 cTransmBackFileFrame = $
-  OBJ_NEW('IDLnexusFrame',$
+  OBJ_NEW('IDLtxtFrame',$
           MAIN_BASE_ID    = BaseTab1,$
           MAIN_BASE_XSIZE = sTransmBackFileFrame.main_base_xsize,$
           MAIN_BASE_UNAME = sTransmBackFileFrame.main_base_uname,$
@@ -180,7 +180,6 @@ cTransmBackFileFrame = $
           YOFF            = sTransmBackFileFrame.yoff,$
           FRAME_TITLE     = sTransmBackFileFrame.frame_title,$
           LABEL_1         = sTransmBackFileFrame.label_1,$
-          CWFIELD_UNAME   = sTransmBackFileFrame.tf1_uname,$
           BROWSE_UNAME    = sTransmBackFileFrame.browse_uname,$
           FILE_NAME_UNAME = sTransmBackFileFrame.file_name_uname)
 
@@ -197,7 +196,7 @@ wOutputFolder = WIDGET_BUTTON(BaseTab1,$
                               VALUE     = sOutputFolder.value,$
                               UNAME     = sOutputFolder.uname)
 
-;- Output File --------------------------------------------------------------
+;- Output File ----------------------------------------------------------------
 wOutputFileLabel = WIDGET_LABEL(BaseTab1,$
                                   XOFFSET   = sOutputFileLabel.size[0],$
                                   YOFFSET   = sOutputFileLabel.size[1],$
