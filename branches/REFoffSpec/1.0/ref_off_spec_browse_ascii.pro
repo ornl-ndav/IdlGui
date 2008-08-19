@@ -81,6 +81,7 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
       ascii_file_name
     readAsciiData, Event ;read the ascii files and store value in a pointer
     plotAsciiData, Event ;plot the ascii files (_plot.pro)
+    activate_less_more_xaxis_ticks, Event, 1 ;activate x-axis ticks base
 ENDIF
 END
 ;------------------------------------------------------------------------------

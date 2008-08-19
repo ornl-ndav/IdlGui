@@ -88,12 +88,42 @@ sDraw = { size: [XYoff[0],$
                         304L*2+40],$
           uname: 'step2_draw'}
           
-XYOff = [0,-18] ;Scale of Draw ------------------------------------------------
+XYoff = [0,-18] ;Scale of Draw ------------------------------------------------
 sScale = { size: [XYoff[0],$
                   sDraw.size[1]+XYoff[1],$
                   tab_size[2],$
                   sDraw.size[3]+57],$
            uname: 'scale_draw_step2'}
+
+XYoff = [-350,10] ;+/- number of x-axis ticks ---------------------------------
+sXaxisTicksBase = { size: [sScale.size[0]+$
+                           sScale.size[2]+$
+                           XYoff[0],$
+                           sScale.size[1]+$
+                           sScale.size[3]+$
+                           XYoff[1],$
+                           250,35],$
+                    uname: 'x_axis_ticks_base',$
+                    frame: 1,$
+                    sensitive: 0}
+
+XYoff= [2,8]                    ;label
+sXaxisTicksLabel = { size: [XYoff[0],$
+                            XYoff[1]],$
+                     value: 'Xaxis Range:'}
+XYoff=[80,5]                    ;- ticks
+sXaxisLessTicks = { size: [XYoff[0],$
+                           XYoff[1],$
+                           80],$
+                    value: ' <<< ',$
+                    uname: 'x_axis_less_ticks'}
+XYoff=[5,0]                     ;+ ticks
+sXaxisMoreTicks = { size: [sXaxisLessTicks.size[0]+$
+                           sXaxisLessTicks.size[2]+XYoff[0],$
+                           sXaxisLessTicks.size[1]+XYoff[1],$
+                           sXaxisLessTicks.size[2]],$
+                    value: ' >>> ',$
+                    uname: 'x_axis_more_ticks'}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -166,5 +196,36 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
+
+;More or Less number of ticks on the x-axis -----------------------------------
+wTicksBase = WIDGET_BASE(BaseTab,$
+                         XOFFSET   = sXaxisTicksBase.size[0],$
+                         YOFFSET   = sXaxisTicksBase.size[1],$
+                         SCR_XSIZE = sXaxisTicksBase.size[2],$
+                         SCR_YSIZE = sXaxisTicksBase.size[3],$
+                         UNAME     = sXaxisTicksBase.uname,$
+                         SENSITIVE = sXaxisTicksBase.sensitive,$
+                         FRAME     = sXaxisTicksBase.frame)
+
+;More/Less number of ticks
+label = WIDGET_LABEL(wTicksBase,$
+                     XOFFSET = sXaxisTicksLabel.size[0],$
+                     YOFFSET = sXaxisTicksLabel.size[1],$
+                     VALUE   = sXaxisTicksLabel.value)
+
+less = WIDGET_BUTTON(wTicksBase,$
+                     XOFFSET   = sXaxisLessTicks.size[0],$
+                     YOFFSET   = sXaxisLessTicks.size[1],$
+                     SCR_XSIZE = sXaxisLessTicks.size[2],$
+                     VALUE     = sXaxisLessTicks.value,$
+                     UNAME     = sXaxisLessTicks.uname)
+
+more = WIDGET_BUTTON(wTicksBase,$
+                     XOFFSET   = sXaxisMoreTicks.size[0],$
+                     YOFFSET   = sXaxisMoreTicks.size[1],$
+                     SCR_XSIZE = sXaxisMoreTicks.size[2],$
+                     VALUE     = sXaxisMoreTicks.value,$
+                     UNAME     = sXaxisMoreTicks.uname)
+
 
 END

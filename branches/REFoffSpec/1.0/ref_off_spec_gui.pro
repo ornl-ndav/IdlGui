@@ -32,56 +32,13 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
- 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+PRO activate_widget, Event, uname, activate_status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SENSITIVE=activate_status
+END
 
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
-        tab_event, Event ;_eventcb
-    END
-
-;111111111111111111111111111111111111111111111111111111111111111111111111111111
-
-;Browse ASCII file button
-    Widget_Info(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
-        browse_ascii_file, Event ;_browse_ascii
-    END
-
-;Preview ASCII file selected
-    Widget_Info(wWidget, FIND_BY_UNAME='ascii_preview_button'): BEGIN
-        preview_ascii_file, Event ;_eventcb
-    END
-
-;Draw
-    Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
-    END
-
-;less x-axis ticks
-    Widget_Info(wWidget, FIND_BY_UNAME='x_axis_less_ticks'): BEGIN
-        change_xaxis_ticks, Event, type='less' ;_plot
-    END
-    
-;more x-axis ticks
-    Widget_Info(wWidget, FIND_BY_UNAME='x_axis_more_ticks'): BEGIN
-        change_xaxis_ticks, Event, type='more' ;_plot
-    END
-
-;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
-    Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-        SendToGeek, Event ;_IDLsendToGeek
-    END
-
-    ELSE:
-    
-ENDCASE
-
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO activate_less_more_xaxis_ticks, Event, value
+activate_widget, Event, 'x_axis_ticks_base', value
 END
