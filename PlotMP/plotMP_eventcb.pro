@@ -34,13 +34,13 @@ PRO plotData, Event
   
   ;Plot grid  
   for y0 = 0, y+10, 5 do begin
-    Plots, [0,y0], /device, color = 200
-    Plots, [x+10,y0], /device , /continue, color = 200
+    Plots, [0,y0], /device, color = 0
+    Plots, [x+10,y0], /device , /continue, color = 0
   endfor
   
   for x0 = 0, x+10, 5 do begin
-    Plots, [x0,0], /device, color = 200
-    Plots, [x0,y+10], /device , /continue, color = 200
+    Plots, [x0,0], /device, color = 0
+    Plots, [x0,y+10], /device , /continue, color = 0
   endfor
  
 END
