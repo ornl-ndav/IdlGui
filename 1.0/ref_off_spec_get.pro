@@ -41,6 +41,12 @@ RETURN, [index]
 END
 
 ;------------------------------------------------------------------------------
+;This function returns the number of plot loaded
+FUNCTION getNbrFiles, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+list_OF_files = (*(*global).list_OF_ascii_files)
+sz = N_ELEMENTS(list_OF_files)
+RETURN, sz
+END
 
-
-
+;------------------------------------------------------------------------------

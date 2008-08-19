@@ -31,6 +31,7 @@ cd, CurrentFolder
 .run ref_off_spec_browse_ascii.pro
 .run ref_off_spec_read_ascii.pro
 .run ref_off_spec_plot.pro
+.run ref_off_spec_congrid_data.pro
 
 ;main functions
 .run MainBaseEvent.pro
