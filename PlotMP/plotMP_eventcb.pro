@@ -39,17 +39,36 @@ PRO plotData, Event
   ;Plot, x0,y[0], /device,color=200
   ;Plot, x1, y1,/device,/continue,color=200
   
-  x1 = 200
-  y1 = 200
   y0 = 0
-; for y0 = 2, 200 do begin
-;  for x0 = 2, 200 do begin
-;    print, x0
-;    Plots, [x0,0], /data
-;    Plots, [x0,fix((*global).x) *2], /data , /continue
+  x0 = 0
+  flag = 1
+  ; for y0 = 2, 200 do begin
+  while flag do begin
+    if x0 lt x+10 then begin
+      Plots, [x0,0], /device, color = 200
+      Plots, [x0,y+10], /device , /continue, color = 200
+      ; x0 = x0 + 2
+      x0 = x0 +3
+    endif else begin
+      done = 1
+    endelse
+    
+    if y0 lt y+10 then begin
+      Plots, [0,y0], /device, color = 200
+      Plots, [x+10,y0], /device , /continue, color = 200
+      ; x0 = x0 + 2
+      y0 = y0 +3
+    endif else begin
+      if done then flag = 0
+    endelse
+  endwhile
+  
+;  while y0 lt y + 10 do begin
+;    Plots, [0,y0], /device
+;    Plots, [x+10,y0], /device , /continue
 ;    ; x0 = x0 + 2
-;    x0++
-;  endfor
+;    y0 = y0 +3
+;  endwhile
 ;   y0 = y0 + 2
 ;  endfor
   
@@ -129,7 +148,7 @@ PRO draw, Event
   ;  y = fix(tmp[0]/2)
   x = fix(event.x)/2
   y = fix(event.y)/2
-  print, x, y
+  ;print, x, y
   
   id = widget_info(Event.top, find_by_uname = 'labX')
   widget_control, id, set_value= 'X: ' +string(x)
