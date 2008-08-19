@@ -277,11 +277,11 @@ CASE Event.id OF
 ;----Transmission Background --------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='transm_back_run_number_cw_field'): BEGIN
-;        LoadNeXus, Event, $
-;          'transm_back_run_number_cw_field',$
-;          'transm_back_file_name_text_field'
-;        RenewOutputFileName, Event
-;        CheckCommandLine, Event ;_command_line
+        LoadNeXus, Event, $
+          'transm_back_run_number_cw_field',$
+          'transm_back_file_name_text_field'
+        RenewOutputFileName, Event
+        CheckCommandLine, Event ;_command_line
     END
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME=$
@@ -291,7 +291,7 @@ CASE Event.id OF
     END
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='transm_back_browse_button'): BEGIN
-        BrowseTxt, Event, $
+        BrowseNexus, Event, $
           'transm_back_browse_button',$
           'transm_back_file_name_text_field'
         RenewOutputFileName, Event
