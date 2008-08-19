@@ -71,16 +71,21 @@ WHILE(index LT sz) DO BEGIN
 ENDWHILE
 
 ;congrid all data
-index = 0
-max_x_size = 0 ;xvalue maximum
+index       = 0
+max_x_size  = 0                 ;max number of elements
+max_x_value = 0                 ;maximum x value
 WHILE (index LT sz) DO BEGIN
     coeff = congrid_coeff_array[index]
-    current_x_max_value = (size(*pData_x[index]))(1)
-    IF (current_x_max_value GT max_x_size) THEN BEGIN
-        max_x_size = current_x_max_value
+    current_x_max_size  = (size(*pData_x[index]))(1)
+    current_max_x_value = MAX(FLOAT(*pData_x[index]))
+    IF (current_max_x_value GT max_x_value) THEN BEGIN
+        max_x_value = current_max_x_value
+    ENDIF
+    IF (current_x_max_size GT max_x_size) THEN BEGIN
+        max_x_size = current_x_max_size
     ENDIF
     IF (coeff NE 1) THEN BEGIN
-        congrid_x_coeff = current_x_max_value * congrid_coeff_array[index]
+        congrid_x_coeff = current_x_max_size * congrid_coeff_array[index]
         congrid_y_coeff = (size(*pData_y[index]))(2)
         new_y_array = CONGRID((*pData_y[index]), $
                               FIX(congrid_x_coeff),$
@@ -93,7 +98,8 @@ ENDWHILE
 (*(*global).pData_y) = pData_y
 
 ;define new x-axis
-x_axis = FINDGEN(max_x_size) * min_delta_x
+x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
+x_axis = FINDGEN(FIX(x_size)) * min_delta_x
 (*(*global).x_axis) = x_axis
 
 END
