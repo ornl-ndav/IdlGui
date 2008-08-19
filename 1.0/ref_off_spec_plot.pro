@@ -143,6 +143,11 @@ xoff = XYoff[0]+16
 ;get number of xvalue from bigger range
 position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
 
+;save parameters
+(*global).xscale.xrange   = xrange
+(*global).xscale.xticks   = xticks
+(*global).xscale.position = position
+
 refresh_plot_scale, $
   EVENT    = Event, $
   XSCALE   = xrange, $
@@ -205,5 +210,35 @@ plot, randomn(s,303L), $
   NOCLIP        = 0,$
   /NODATA,$
   /DEVICE
+
+END
+
+;------------------------------------------------------------------------------
+PRO change_xaxis_ticks, Event, TYPE=type
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xticks = (*global).xscale.xticks
+
+CASE TYPE OF
+    'less': xticks1 = xticks - 5
+    'more': xticks1 = xticks + 5
+    ELSE:
+ENDCASE
+
+IF (xticks1 GT 0 AND $
+    xticks1 LT 60) THEN BEGIN
+    xticks = xticks1
+ENDIF
+
+(*global).xscale.xticks = xticks
+
+;save parameters
+xrange   = (*global).xscale.xrange 
+position = (*global).xscale.position 
+
+refresh_plot_scale, $
+  EVENT    = Event, $
+  XSCALE   = xrange, $
+  XTICKS   = xticks, $
+  POSITION = position
 
 END
