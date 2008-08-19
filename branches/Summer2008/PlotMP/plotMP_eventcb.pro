@@ -32,52 +32,17 @@ PRO plotData, Event
   LOADCT, 5
   tvscl, plotdata
   
+  ;Plot grid  
+  for y0 = 0, y+10, 5 do begin
+    Plots, [0,y0], /device, color = 200
+    Plots, [x+10,y0], /device , /continue, color = 200
+  endfor
   
-  
-  ;x0 = [2,4,6,8,10]
-  ;y0 = [2,2,2,2,2]
-  ;Plot, x0,y[0], /device,color=200
-  ;Plot, x1, y1,/device,/continue,color=200
-  
-  y0 = 0
-  x0 = 0
-  flag = 1
-  ; for y0 = 2, 200 do begin
-  while flag do begin
-    if x0 lt x+10 then begin
-      Plots, [x0,0], /device, color = 200
-      Plots, [x0,y+10], /device , /continue, color = 200
-      ; x0 = x0 + 2
-      x0 = x0 +3
-    endif else begin
-      done = 1
-    endelse
-    
-    if y0 lt y+10 then begin
-      Plots, [0,y0], /device, color = 200
-      Plots, [x+10,y0], /device , /continue, color = 200
-      ; x0 = x0 + 2
-      y0 = y0 +3
-    endif else begin
-      if done then flag = 0
-    endelse
-  endwhile
-  
-;  while y0 lt y + 10 do begin
-;    Plots, [0,y0], /device
-;    Plots, [x+10,y0], /device , /continue
-;    ; x0 = x0 + 2
-;    y0 = y0 +3
-;  endwhile
-;   y0 = y0 + 2
-;  endfor
-  
-;  Plots, [2,0]
-;  Plots, [2,10], /continue
-;  Plots, [4, 0]
-;  Plots, [4, 10],/continue
-  
-  
+  for x0 = 0, x+10, 5 do begin
+    Plots, [x0,0], /device, color = 200
+    Plots, [x0,y+10], /device , /continue, color = 200
+  endfor
+ 
 END
 
 PRO getData, Event
