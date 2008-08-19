@@ -80,7 +80,7 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
       Event,$
       ascii_file_name
     readAsciiData, Event ;read the ascii files and store value in a pointer
-    plotAsciiData, Event ;plot the ascii files
+    plotAsciiData, Event ;plot the ascii files (_plot.pro)
 ENDIF
 END
 ;------------------------------------------------------------------------------

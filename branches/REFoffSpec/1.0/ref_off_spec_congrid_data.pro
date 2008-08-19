@@ -31,32 +31,69 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO determine_delta_x, sz, pData_x, delta_x
+index = 0
+WHILE (index LT sz) DO BEGIN
+    x0 = (*pData_x[index])[0]
+    x1 = (*pData_x[index])[1]
+    delta_x[index] = FLOAT(x1) - FLOAT(x0)
+    ++index
+ENDWHILE
+END
 
 ;------------------------------------------------------------------------------
-PRO readAsciiData, Event
+;create new x-axis and new pData_y
+PRO congrid_data, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;get list of files
-list_OF_files = (*(*global).list_OF_ascii_files)
-i = 0
-nbr = N_ELEMENTS(list_OF_files)
-final_new_pData   = PTRARR(nbr,/ALLOCATE_HEAP)
-final_new_pData_x = PTRARR(nbr,/ALLOCATE_HEAP)
-WHILE (i LT nbr) DO BEGIN
-    iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
-    pData = iClass->getDataQuickly()
-    OBJ_DESTROY, iClass
-;keep only the second column
-    new_pData_x    = STRARR((SIZE(*pData[0]))(2))
-    new_pData_x[*] = (*pData[i])[0,*] ;retrieve x-array
-    new_pData      = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
-    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array
-        new_pData[j,*] = (*pData[j])[1,*]
-    ENDFOR
-    *final_new_pData[i]   = new_pData
-    *final_new_pData_x[i] = new_pData_x
-    ++i
+
+pData_x = (*(*global).pData_x)
+pData_y = (*(*global).pData_y)
+
+;determine the delta_x of each set of data
+sz = (size(pData_y))(1)
+delta_x = FLTARR(sz)
+determine_delta_x, sz, pData_x, delta_x
+
+;get min delta_x and index
+min_delta_x = MIN(delta_x)
+min_index   = WHERE(delta_x EQ min_delta_x)
+;work on all the data that have delta_x GT than the delta_x found
+index = 0
+congrid_coeff_array = FLTARR(sz)
+WHILE(index LT sz) DO BEGIN
+    IF (index EQ min_index) THEN BEGIN
+        congrid_coeff_array[index] = 1
+        ++index
+        CONTINUE
+    ENDIF
+    congrid_coeff_array[index] = delta_x(index)/delta_x[min_index]
+    ++index
 ENDWHILE
-(*(*global).pData_y) = final_new_pData
-(*(*global).pData_x) = final_new_pData_x
+
+;congrid all data
+index = 0
+max_x_size = 0 ;xvalue maximum
+WHILE (index LT sz) DO BEGIN
+    coeff = congrid_coeff_array[index]
+    current_x_max_value = (size(*pData_x[index]))(1)
+    IF (current_x_max_value GT max_x_size) THEN BEGIN
+        max_x_size = current_x_max_value
+    ENDIF
+    IF (coeff NE 1) THEN BEGIN
+        congrid_x_coeff = current_x_max_value * congrid_coeff_array[index]
+        congrid_y_coeff = (size(*pData_y[index]))(2)
+        new_y_array = CONGRID((*pData_y[index]), $
+                              FIX(congrid_x_coeff),$
+                              congrid_y_coeff)
+        *pData_y[index] = new_y_array
+    ENDIF
+    ++index
+ENDWHILE
+
+(*(*global).pData_y) = pData_y
+
+;define new x-axis
+x_axis = FINDGEN(max_x_size) * min_delta_x
+(*(*global).x_axis) = x_axis
+
 END
-;------------------------------------------------------------------------------

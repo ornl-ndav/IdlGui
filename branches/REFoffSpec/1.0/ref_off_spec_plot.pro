@@ -32,25 +32,56 @@
 ;
 ;==============================================================================
 
-PRO plotBox, xy_coeff, xmin, xmax, COLOR=color
+PRO plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=color
 ymin = 0
 ymax = 303
-plots, xmin*xy_coeff, ymin*xy_coeff, $
+plots, xmin*x_coeff, ymin*y_coeff, $
   /DEVICE, $
   COLOR=color
-plots, xmax*xy_coeff, ymin*xy_coeff, /DEVICE, $
+plots, xmax*x_coeff, ymin*y_coeff, /DEVICE, $
   /CONTINUE, $
   COLOR=color
-plots, xmax*xy_coeff, ymax*xy_coeff, /DEVICE, $
+plots, xmax*x_coeff, ymax*y_coeff, /DEVICE, $
   /CONTINUE, $
   COLOR=color
-plots, xmin*xy_coeff, ymax*xy_coeff, /DEVICE, $
+plots, xmin*x_coeff, ymax*y_coeff, /DEVICE, $
   /CONTINUE, $
   COLOR=color
-plots, xmin*xy_coeff, ymin*xy_coeff, /DEVICE, $
+plots, xmin*x_coeff, ymin*y_coeff, /DEVICE, $
   /CONTINUE, $
   COLOR=color
 END
+
+;------------------------------------------------------------------------------
+PRO Cleanup_data, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;get number of files loaded
+nbr_plot = getNbrFiles(Event)
+
+;retrieve data
+pData = (*(*global).pData_y)
+j = 0
+WHILE (j  LT nbr_plot) DO BEGIN
+    
+    fpData = FLOAT(*pData[j])
+    tfpData = TRANSPOSE(fpData)
+    
+;remove undefined values
+    index = WHERE(~FINITE(tfpData),Nindex)
+    IF (Nindex GT 0) THEN BEGIN
+        tfpData[index] = 0
+    ENDIF
+
+    *pData[j] = tfpData
+    ++j
+
+ENDWHILE
+
+(*(*global).pData_y) = pData
+
+END
+
 
 ;------------------------------------------------------------------------------
 PRO plotAsciiData, Event
@@ -63,48 +94,60 @@ WSET,id_value
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
+;clean up data
+Cleanup_data, Event
+;create new x-axis and new pData_y
+congrid_data, Event
 ;retrieve data
-pData = (*(*global).pData_y)
-fpData = FLOAT(pData)
-tfpData = TRANSPOSE(fpData)
+tfpData = (*(*global).pData_y)
+xData   = (*(*global).pData_x)
+;get number of files loaded
+nbr_plot = getNbrFiles(Event)
 
-;remove undefined values
-index = WHERE(~FINITE(tfpData),Nindex)
-IF (Nindex GT 0) THEN BEGIN
-    tfpData[index] = 0
-ENDIF
+index = 0
+WHILE (index LT nbr_plot) DO BEGIN
+    
+    local_tfpData = *tfpData[index]
 
 ;rebin by 2 in y-axis
-xy_coeff = 2
-rData = REBIN(tfpData,(size(tfpData))(1)*xy_coeff, $
-              (size(tfpData))(2)*xy_coeff,/SAMPLE)
-
+    y_coeff = 2
+    x_coeff = 1
+    rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
+                  (size(local_tfpData))(2)*y_coeff,/SAMPLE)
+ 
 ;pData = indgen(200,300)
-TVSCL, rData,/DEVICE
-
+    TVSCL, rData,/DEVICE
+    
 ;plot box around
-xmin = 0
-xmax = (size(tfpData))(1)
-plotBox, xy_coeff, xmin, xmax, COLOR=200
+    xmin = 0
+    xmax = (size(tfpData))(1)
+    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=200
+    
+;print, xrange
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+    sDraw = WIDGET_INFO(id,/GEOMETRY)
+    XYoff = [42,40]
+    xoff = XYoff[0]+16
+
+;get number of xvalue
+    
+    sz = N_ELEMENTS(*xData[index])
+    position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
+    ++index
+    
+ENDWHILE
 
 ;plot xaxis
-xData = (*(*global).pData_x)
-sz = (size(xData))(1)
-xrange = [0,FLOAT(xData[sz-2])]
-xticks = 25
-;print, xrange
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
-sDraw = WIDGET_INFO(id,/GEOMETRY)
-clip = [0,0,xmax*2+7 ,sDraw.ysize]
+xaxis = (*(*global).x_axis)
+sz    = N_ELEMENTS(xaxis)
+xrange = [0,xaxis[sz-1]]
+xticks = 15
 
-clip = [0,0,0.5,0.5]
-
-print, clip
 refresh_plot_scale, $
   EVENT  = Event, $
   XSCALE = xrange, $
   XTICKS = xticks, $
-  CLIP   = clip
+  POSITION = position
 
 END
 
@@ -114,16 +157,18 @@ PRO refresh_plot_scale, EVENT     = Event, $
                         MAIN_BASE = MAIN_BASE, $
                         XSCALE    = xscale, $
                         XTICKS    = xticks, $
-                        CLIP      = clip
+                        POSITION  = position
 
 IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;change color of background    
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
 ENDIF ELSE BEGIN
     WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
 ;change color of background    
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='step2_draw')
+    id_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
 ENDELSE    
 
 WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -131,12 +176,15 @@ WSET, id_value
 
 LOADCT, 0,/SILENT
 
-IF (N_ELEMENTS(XSCALE) EQ 0) THEN BEGIN
-    xscale = [0,80]
-    xticks = 8
+IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
+IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
+IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
     sDraw = WIDGET_INFO(id,/GEOMETRY)
-    CLIP   = [0,0,sDraw.xsize, sDraw.ysize]
+    position = [42,40,sDraw.xsize-42, sDraw.ysize+36]
 ENDIF
+
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
 
 plot, randomn(s,303L), $
   XRANGE        = xscale,$
@@ -152,10 +200,10 @@ plot, randomn(s,303L), $
   YSTYLE        = 1,$
   XSTYLE        = 1,$
   YTICKINTERVAL = 10,$
-  CLIP          = clip,$
-  XMARGIN       = [7,0],$
+  ;XMARGIN       = [7,0],$
+  POSITION      = position,$
   NOCLIP        = 0,$
   /NODATA,$
-  /NORM
+  /DEVICE
 
 END

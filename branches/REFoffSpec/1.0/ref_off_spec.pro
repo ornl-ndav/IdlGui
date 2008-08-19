@@ -83,6 +83,7 @@ global = ptr_new ({ ucams:               ucams,$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
                     pData_x:             ptr_new(0L),$
+                    x_axis:              ptr_new(0L),$
                     PrevTabSelect:       0$
                   })
 
