@@ -94,13 +94,14 @@ WSET,id_value
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
-;clean up data
+;;clean up data
 Cleanup_data, Event
 ;create new x-axis and new pData_y
 congrid_data, Event
 ;retrieve data
 tfpData = (*(*global).pData_y)
 xData   = (*(*global).pData_x)
+xaxis   = (*(*global).x_axis)
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
@@ -120,33 +121,32 @@ WHILE (index LT nbr_plot) DO BEGIN
     
 ;plot box around
     xmin = 0
-    xmax = (size(tfpData))(1)
-    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=200
+    xmax = (size(*tfpData[index]))(1)
+    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=(*global).box_color
+    (*global).box_color += 50
     
-;print, xrange
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
-    sDraw = WIDGET_INFO(id,/GEOMETRY)
-    XYoff = [42,40]
-    xoff = XYoff[0]+16
-
-;get number of xvalue
-    
-    sz = N_ELEMENTS(*xData[index])
-    position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
     ++index
     
 ENDWHILE
 
 ;plot xaxis
-xaxis = (*(*global).x_axis)
 sz    = N_ELEMENTS(xaxis)
 xrange = [0,xaxis[sz-1]]
-xticks = 15
+xticks = (sz/50)
+
+;print, xrange
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+sDraw = WIDGET_INFO(id,/GEOMETRY)
+XYoff = [42,40]
+xoff = XYoff[0]+16
+
+;get number of xvalue from bigger range
+position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
 
 refresh_plot_scale, $
-  EVENT  = Event, $
-  XSCALE = xrange, $
-  XTICKS = xticks, $
+  EVENT    = Event, $
+  XSCALE   = xrange, $
+  XTICKS   = xticks, $
   POSITION = position
 
 END
