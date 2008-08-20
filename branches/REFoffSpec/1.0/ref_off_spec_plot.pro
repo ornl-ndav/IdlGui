@@ -265,6 +265,9 @@ ENDIF
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 
+xticks = (xticks GT 60) ? 55 : xticks
+(*global).xscale.xticks = xticks
+
 plot, randomn(s,303L), $
   XRANGE        = xscale,$
   YRANGE        = [0L,303L],$

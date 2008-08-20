@@ -95,6 +95,44 @@ sScale = { size: [XYoff[0],$
                   sDraw.size[3]+57],$
            uname: 'scale_draw_step2'}
 
+
+;Transparency factor-----------------------------------------------------------
+XYoff = [50,10]
+sTransBase = { size: [XYoff[0],$
+                      sScale.size[1]+$
+                      sScale.size[3]+$
+                      XYoff[1],$
+                      500,35],$
+               uname: 'transparency_base',$
+               frame: 1,$
+               sensitive: 1}
+XYoff = [2,8] ;label of list of files
+sTranLabel = { size: [XYoff[0],$
+                      XYoff[1]],$
+               value: 'File Name:'}
+XYoff = [60,0] ;droplist of list of files
+sTranList = { size: [XYoff[0],$
+                     XYoff[1],$
+                     300],$
+              list: ['List of files loaded                               '],$
+              uname: 'transparency_file_list'}
+XYoff = [65,0] ;transparency percentage
+sTranPercentage = { size: [sTranList.size[0]+$
+                           sTranList.size[2]+$
+                           XYoff[0],$
+                           sTranList.size[1]+$
+                           XYoff[1],$
+                           50],$
+                    uname: 'transparency_coeff',$
+                    value: '100'}
+XYoff = [5,5]
+sTranCoeffLabel = { size: [sTranPercentage.size[0]+$
+                           sTranPercentage.size[2]+$
+                           XYoff[0],$
+                           sTranPercentage.size[1]+$
+                           XYoff[1]],$
+                    value: '%'}
+                    
 XYoff = [-350,10] ;+/- number of x-axis ticks ---------------------------------
 sXaxisTicksBase = { size: [sScale.size[0]+$
                            sScale.size[2]+$
@@ -197,6 +235,46 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
+
+;Transparency coeff -----------------------------------------------------------
+TransBase = WIDGET_BASE(BaseTab,$
+                        XOFFSET   = sTransBase.size[0],$
+                        YOFFSET   = sTransBase.size[1],$
+                        SCR_XSIZE = sTransBase.size[2],$
+                        SCR_YSIZE = sTransBase.size[3],$
+                        UNAME     = sTransBase.uname,$
+                        FRAME     = sTransBase.frame,$
+                        SENSITIVE = sTransBase.sensitive)
+;label
+label = WIDGET_LABEL(TransBase,$
+                     XOFFSET = sTranLabel.size[0],$
+                     YOFFSET = sTranLabel.size[1],$
+                     VALUE   = sTranLabel.value)
+;droplist
+droplist = WIDGET_DROPLIST(TransBase,$
+                           VALUE   = sTranList.list,$
+                           XOFFSET = sTranList.size[0],$
+                           YOFFSET = sTranList.size[1],$
+                           UNAME   = StranList.uname,$
+                           /DYNAMIC_RESIZE)
+;text
+text = WIDGET_TEXT(TransBase,$
+                   XOFFSET   = sTranPercentage.size[0],$
+                   YOFFSET   = sTranPercentage.size[1],$
+                   SCR_XSIZE = sTranPercentage.size[2],$
+                   UNAME     = sTranPercentage.uname,$
+                   VALUE     = sTranPercentage.value,$
+                   /ALIGN_LEFT)
+;label
+label = WIDGET_LABEL(TransBase,$
+                     XOFFSET = sTranCoeffLabel.size[0],$
+                     YOFFSET = sTranCoeffLabel.size[1],$
+                     VALUE   = sTranCoeffLabel.value)
+
+
+
+
+
 
 ;More or Less number of ticks on the x-axis -----------------------------------
 wTicksBase = WIDGET_BASE(BaseTab,$
