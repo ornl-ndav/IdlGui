@@ -40,7 +40,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 ;************************************************************************
 APPLICATION       = 'SANSreduction'
-VERSION           = '1.0.5'
+VERSION           = '1.0.6'
 DEBUGGING         = 'no' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
