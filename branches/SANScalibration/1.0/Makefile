@@ -6,11 +6,8 @@
 all:
 	idl ./makefile.pro;
 install:
-	cp sans_reduction.sav /SNS/software/idltools/sav/
-	cp SANSreduction /SNS/software/idltools/
-	cp images/selection_half_in.bmp /SNS/software/idltools/images/
-	cp images/selection_half_out.bmp /SNS/software/idltools/images/
-	cp images/selection_inside_in.bmp /SNS/software/idltools/images/
-	cp images/selection_inside_out.bmp /SNS/software/idltools/images/
-	cp images/selection_outside_in.bmp /SNS/software/idltools/images/
-	cp images/selection_outside_out.bmp /SNS/software/idltools/images/
+	cp sans_calibration.sav /SNS/software/idltools/sav/
+	cp SANScalibration /SNS/software/idltools/
+	cp images/*.bmp /SNS/software/idltools/sav/images/
+	cp drversion /SNS/software/idltools/
+
