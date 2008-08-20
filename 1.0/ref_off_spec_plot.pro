@@ -88,20 +88,23 @@ PRO plotAsciiData, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;select plot
-id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
+;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
-DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
+;DEVICE, DECOMPOSED=0
+;LOADCT, 5, /SILENT
 
 ;;clean up data
 Cleanup_data, Event
 ;create new x-axis and new pData_y
 congrid_data, Event
 ;retrieve data
-tfpData = (*(*global).pData_y)
-xData   = (*(*global).pData_x)
-xaxis   = (*(*global).x_axis)
+tfpData   = (*(*global).pData_y)
+xData     = (*(*global).pData_x)
+xaxis     = (*(*global).x_axis)
+xmax_list = FLTARR(1)
+xmax      = 0
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
@@ -109,24 +112,101 @@ index = 0
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
-
 ;rebin by 2 in y-axis
     y_coeff = 2
     x_coeff = 1
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
- 
+    
+    grayPalette = OBJ_NEW('IDLgrPalette')
+    grayPalette->Loadct,5
+    colorTable = 5
+
+    CASE (index) OF
+        0: BEGIN
+            backgroundImage  = rData
+            xmax_local = (size(backgroundImage))(1)
+            xmax_list[0] = xmax_local
+            backgroundImgObj = $
+              OBJ_NEW('IDLgrImage', $
+                      backgroundImage, $
+                      Dimensions=[xmax_local,304], $
+                      Palette=grayPalette)
+            ;create a model for the images. Add images to model
+            thisModel = OBJ_NEW('IDLgrModel')
+            thisModel->Add, backgroundImgObj
+
+        END
+        ELSE: BEGIN
+            foregroundImage = rData
+            s = SIZE(foregroundImage,/DIMENSIONS)
+            alpha_image = BYTARR(4,s[0],s[1])
+            LOADCT, colorTable
+            TVLCT, r, g, b, /GET
+            alpha_image[0,*,*] = r[foregroundImage]
+            alpha_image[1,*,*] = g[foregroundImage]
+            alpha_image[2,*,*] = b[foregroundImage]
+
+;Pixels with value 0 will be totally transparent
+;Other pixels will start out half transparent        
+            blendMask = BytArr(s[0],s[1])
+            blendMask[WHERE(foregroundImage GT 0)] = 1B
+            alpha_image[3,*,*] = blendMask * 50B ;128B
+            
+            xmax_local = (size(foregroundImage))(1)
+            xmax_list = [xmax_list,xmax_local]
+            alphaImage = OBJ_NEW('IDLgrImage', alpha_image, $
+                                 Dimensions=[xmax_local,304],$
+                                 InterLeave=0,$
+                                 Blend_func=[3,4])
+            thisModel->Add, alphaImage
+            
+        END
+    ENDCASE
+
+    xmax = (xmax_local GT xmax) ? xmax_local : xmax
+;==============================================================================
+;==============================================================================
+    
 ;pData = indgen(200,300)
-    TVSCL, rData,/DEVICE
+;    TVSCL, rData,/DEVICE
     
 ;plot box around
-    xmin = 0
-    xmax = (size(*tfpData[index]))(1)
-    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=(*global).box_color
-    (*global).box_color += 50
-    
+;    xmin = 0
+;    xmax = (size(*tfpData[index]))(1)
+;    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=(*global).box_color
+;    (*global).box_color += 50
+
     ++index
     
+ENDWHILE
+
+;create a view
+viewRect = [0,0,xmax,304]
+thisView = OBJ_NEW('IDLgrView',Viewplane_Rect=viewRect)
+thisView->Add, thisModel
+
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+Widget_Control, id_draw, Get_Value=thisWindow
+thisWindow->Draw, thisView
+
+thisContainer = Obj_New('IDL_Container')
+thisContainer->Add, backgroundImgObj
+thisContainer->Add, thisWindow
+thisContainer->Add, thisModel
+thisContainer->Add, grayPalette
+thisContainer->Add, thisView
+
+;plot boxes
+nbr_box = N_ELEMENTS(xmax_list)
+i = 0
+WHILE (i LT nbr_box) DO BEGIN
+    xmin = 0
+    plotBox, x_coeff, y_coeff, $
+      xmin, xmax_list[i], $
+      COLOR=(*global).box_color
+    (*global).box_color += 50
+    ++i
 ENDWHILE
 
 ;plot xaxis
@@ -167,17 +247,17 @@ PRO refresh_plot_scale, EVENT     = Event, $
 IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;change color of background    
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+;    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
     id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
 ENDIF ELSE BEGIN
     WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
 ;change color of background    
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='step2_draw')
+;    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='step2_draw')
     id_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
 ENDELSE    
 
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
+;WIDGET_CONTROL, id, GET_VALUE=id_value
+;WSET, id_value
 
 LOADCT, 0,/SILENT
 
