@@ -88,12 +88,12 @@ PRO plotAsciiData, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;select plot
-id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
-;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
-;DEVICE, DECOMPOSED=0
-;LOADCT, 5, /SILENT
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
 
 ;;clean up data
 Cleanup_data, Event
@@ -103,101 +103,92 @@ congrid_data, Event
 tfpData   = (*(*global).pData_y)
 xData     = (*(*global).pData_x)
 xaxis     = (*(*global).x_axis)
+congrid_coeff_array = (*(*global).congrid_coeff_array)
 xmax_list = FLTARR(1)
-xmax      = 0
+xmax      = 0L
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
+;check which array is the biggest (index)
+max_coeff       = MAX(congrid_coeff_array)
+index_max_array = WHERE(congrid_coeff_array EQ max_coeff)
+
 index = 0
+max_size = 0
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
+    
 ;rebin by 2 in y-axis
     y_coeff = 2
     x_coeff = 1
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
     
-    grayPalette = OBJ_NEW('IDLgrPalette')
-    grayPalette->Loadct,5
-    colorTable = 5
+;    IF (index EQ index_max_array) THEN BEGIN
+;        total_array = rData
+;    ENDIF ELSE BEGIN
 
-    CASE (index) OF
-        0: BEGIN
-            backgroundImage  = rData
-            xmax_local = (size(backgroundImage))(1)
-            xmax_list[0] = xmax_local
-            backgroundImgObj = $
-              OBJ_NEW('IDLgrImage', $
-                      backgroundImage, $
-                      Dimensions=[xmax_local,304], $
-                      Palette=grayPalette)
-            ;create a model for the images. Add images to model
-            thisModel = OBJ_NEW('IDLgrModel')
-            thisModel->Add, backgroundImgObj
+    size = (size(total_array,/DIMENSIONS))[0]
+    max_size = (size GT max_size) ? size : max_size
+    
+    transparency_1 = .2; coeff transparency of new array
+    IF (index EQ 0) THEN BEGIN ;first pass
+        total_array = rData
+    ENDIF ELSE BEGIN ;other pass
+        size = (size(rData,/DIMENSIONS))[0]
+        IF (size GT max_size) THEN BEGIN ;if new array is bigger
+            new_total_array = rData
+            old_array = total_array
+;add old array to total_array
+;#1 make old array same size as new array
+            x = (size(rData,/DIMENSIONS))[0]
+            y = (size(rData,/DIMENSIONS))[1]
+            new_array = LONARR(x,y)
+;#2 find out where there are data
+            idx = WHERE(rData NE 0)
+            new_array[idx] = old_array[idx]
+;#3 add arrays together
+            total_array = BYTSCL(new_total_array + transparency_1*new_array, $
+                                 /NAN)
+        ENDIF ELSE BEGIN ;new array is smaller
+            x = (size(total_array,/DIMENSIONS))[0]
+            y = (size(total_array,/DIMENSIONS))[1]
+            new_array = LONARR(x,y)
+            idx = WHERE(rData NE 0)
+            ind = ARRAY_INDICES(rData,idx)
+            imax = (size(ind,/DIMENSIONS))[1]
+            FOR i=0L,imax-1 DO BEGIN
+                new_array(ind[0,i],ind[1,i]) = rData(ind[0,i],ind[1,i])
+            ENDFOR
+            total_array = BYTSCL(total_array + transparency_1*new_array,/NAN)
+        ENDELSE
+    ENDELSE
+    
+;    IF (index EQ 0) THEN BEGIN
+;        total_array = transparency_1* rData
+ ;   ENDIF ELSE BEGIN
+;        total_array = BYTSCL(total_array + transparency_2*rData)
+ ;   ENDELSE
 
-        END
-        ELSE: BEGIN
-            foregroundImage = rData
-            s = SIZE(foregroundImage,/DIMENSIONS)
-            alpha_image = BYTARR(4,s[0],s[1])
-            LOADCT, colorTable
-            TVLCT, r, g, b, /GET
-            alpha_image[0,*,*] = r[foregroundImage]
-            alpha_image[1,*,*] = g[foregroundImage]
-            alpha_image[2,*,*] = b[foregroundImage]
-
-;Pixels with value 0 will be totally transparent
-;Other pixels will start out half transparent        
-            blendMask = BytArr(s[0],s[1])
-            blendMask[WHERE(foregroundImage GT 0)] = 1B
-            alpha_image[3,*,*] = blendMask * 50B ;128B
-            
-            xmax_local = (size(foregroundImage))(1)
-            xmax_list = [xmax_list,xmax_local]
-            alphaImage = OBJ_NEW('IDLgrImage', alpha_image, $
-                                 Dimensions=[xmax_local,304],$
-                                 InterLeave=0,$
-                                 Blend_func=[3,4])
-            thisModel->Add, alphaImage
-            
-        END
-    ENDCASE
-
-    xmax = (xmax_local GT xmax) ? xmax_local : xmax
 ;==============================================================================
 ;==============================================================================
     
-;pData = indgen(200,300)
 ;    TVSCL, rData,/DEVICE
     
-;plot box around
+;    plot box around
 ;    xmin = 0
 ;    xmax = (size(*tfpData[index]))(1)
 ;    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=(*global).box_color
 ;    (*global).box_color += 50
-
+    
     ++index
     
 ENDWHILE
 
-;create a view
-viewRect = [0,0,xmax,304]
-thisView = OBJ_NEW('IDLgrView',Viewplane_Rect=viewRect)
-thisView->Add, thisModel
+TVSCL, total_array, /DEVICE
 
-id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
-Widget_Control, id_draw, Get_Value=thisWindow
-thisWindow->Draw, thisView
-
-thisContainer = Obj_New('IDL_Container')
-thisContainer->Add, backgroundImgObj
-thisContainer->Add, thisWindow
-thisContainer->Add, thisModel
-thisContainer->Add, grayPalette
-thisContainer->Add, thisView
-
-;plot boxes
+;  plot boxes
 nbr_box = N_ELEMENTS(xmax_list)
 i = 0
 WHILE (i LT nbr_box) DO BEGIN
@@ -217,12 +208,15 @@ xticks = (sz/50)
 ;print, xrange
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
 sDraw = WIDGET_INFO(id,/GEOMETRY)
-XYoff = [42,40]
+XYoff = [44,40]
 xoff = XYoff[0]+16
 
 ;get number of xvalue from bigger range
 position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
-
+;position = [XYoff[0], $
+;            XYoff[1], $
+;            XYoff[0]+sDraw.xsize-5, $
+;            sDraw.ysize+XYoff[1]-4]    
 ;save parameters
 (*global).xscale.xrange   = xrange
 (*global).xscale.xticks   = xticks

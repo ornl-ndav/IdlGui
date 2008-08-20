@@ -69,6 +69,7 @@ WHILE(index LT sz) DO BEGIN
     congrid_coeff_array[index] = delta_x(index)/delta_x[min_index]
     ++index
 ENDWHILE
+(*(*global).congrid_coeff_array) = congrid_coeff_array
 
 ;congrid all data
 index       = 0
