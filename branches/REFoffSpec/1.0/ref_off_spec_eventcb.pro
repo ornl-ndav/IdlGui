@@ -66,7 +66,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     0: BEGIN ;step1 (reduction)
     END
     1: BEGIN ;load
-        refresh_plot_scale, EVENT=Event ;_plot
+   ;     refresh_plot_scale, EVENT=Event ;_plot
     END
     2: BEGIN ;log book
         
