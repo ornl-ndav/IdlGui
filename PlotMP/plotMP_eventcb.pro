@@ -47,8 +47,8 @@ END
 
 PRO getData, Event
   widget_control, Event.top, get_uvalue=global
-  x = fix((*global).x)
-  y = fix((*global).y)
+  x = FLOOR(fix((*global).x))
+  y = FLOOR(fix((*global).y))
   
   use_read_binary = 1b
   IF (use_read_binary) THEN BEGIN
