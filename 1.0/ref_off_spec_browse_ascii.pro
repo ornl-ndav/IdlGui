@@ -76,6 +76,14 @@ ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
 
 IF (ascii_file_name[0] NE '') THEN BEGIN
     (*global).ascii_path = new_path ;save new path
+;check if current list is empty or not 
+;that will allow me to determine if this is the first load or not
+    current_list_OF_files = (*(*global).list_OF_ascii_files)
+    IF (current_list_OF_files[0] EQ '') THEN BEGIN
+        (*global).first_load = 1
+    ENDIF ELSE BEGIN
+        (*global).first_load = 0
+    ENDELSE
     display_files_in_list, $    ;add the new files to the widget_list
       Event,$
       ascii_file_name

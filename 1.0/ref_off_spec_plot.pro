@@ -121,13 +121,17 @@ index = 0
 max_size = 0
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
+    IF ((*global).first_load EQ 1) THEN BEGIN
 ;populate trans_coeff_list using default value of (1,1,...)
-    trans_coeff_list = FLTARR(nbr_plot) + 1.
+        trans_coeff_list = FLTARR(nbr_plot) + 1.
+    ENDIF ELSE BEGIN
+        trans_coeff_list = (*(*global).trans_coeff_list)
+        trans_coeff_list = [trans_coeff_list,1.]
+    ENDELSE
     (*(*global).trans_coeff_list) = trans_coeff_list
 ENDIF ELSE BEGIN
     trans_coeff_list = (*(*global).trans_coeff_list)
 ENDELSE
-
 
 WHILE (index LT nbr_plot) DO BEGIN
     
