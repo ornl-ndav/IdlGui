@@ -5,7 +5,7 @@
 #                              [-e <path to executable file>]   
 #                              [-h]
 #
-FOLDERS=("images" "SANSreductionHelp")
+FOLDERS=("images","SANSreductionHelp")
 FILES="sans_reduction.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_reduction.sav"
@@ -42,6 +42,7 @@ copy_folders()
     install -d $PACKAGE_PATH
     for folder in ${FOLDERS[@]}
     do
+	echo 'here'
 	echo -n "Copying folder" $folder "to" $PACKAGE_PATH "... "
 	cp -rf $folder $PACKAGE_PATH
 	echo " Done"
