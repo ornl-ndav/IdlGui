@@ -41,6 +41,7 @@ WIDGET_CONTROL, id, GET_UVALUE=global
 cmd_status               = 1      ;by default, cmd can be activated
 missing_arguments_text   = ['']   ;list of missing arguments 
 missing_argument_counter = 0
+list_OF_files_to_send    = STRARR(1)
 
 ;Check first tab
 IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
@@ -70,6 +71,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
+    list_OF_files_to_send[0] = file_run
 ENDIF 
 
 ;Check first tab (check only if transmission mode is used)
@@ -313,10 +315,13 @@ putCommandLine, Event, cmd
 
 ;- put list of  missing arguments
 putMissingArguments, Event, missing_arguments_text
+
 ;- tells how may missing arguments were found
 putMissingArgNumber, Event, missing_argument_counter
 
 ;- activate GO DATA REDUCTION BUTTON only if cmd_status is 1
 activate_go_data_reduction, Event, cmd_status
+
+(*(*global).list_OF_files_to_send) = list_OF_files_to_send
 
 END

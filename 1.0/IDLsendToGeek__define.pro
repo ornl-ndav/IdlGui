@@ -79,6 +79,7 @@ ENDELSE
 tar_cmd = 'tar cvf ' + FullTarFile
 nbr_files = N_ELEMENTS(final_list)
 i=0
+
 WHILE (i LT nbr_files) DO BEGIN
     tar_cmd += ' ' + final_list[i]
     ++i
@@ -278,7 +279,7 @@ LogBookText   = [ucamsText,LogBookText]
 
 ;output file
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 If (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
@@ -324,7 +325,7 @@ ENDELSE
 text += "'"
 
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 If (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ;tell the user that the email has not been sent
