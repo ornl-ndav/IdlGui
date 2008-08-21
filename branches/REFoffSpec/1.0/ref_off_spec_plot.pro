@@ -84,7 +84,7 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData, Event
+PRO plotAsciiData, Event, TYPE=type
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;select plot
@@ -95,17 +95,21 @@ WSET,id_value
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
+IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 ;;clean up data
-Cleanup_data, Event
+    Cleanup_data, Event
 ;create new x-axis and new pData_y
-congrid_data, Event
+    congrid_data, Event
+ENDIF
+
 ;retrieve data
-tfpData   = (*(*global).pData_y)
-xData     = (*(*global).pData_x)
-xaxis     = (*(*global).x_axis)
+tfpData             = (*(*global).pData_y)
+xData               = (*(*global).pData_x)
+xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
-xmax_list = FLTARR(1)
-xmax      = 0L
+xmax_list           = FLTARR(1)
+xmax                = 0L
+
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
@@ -115,6 +119,16 @@ index_max_array = WHERE(congrid_coeff_array EQ max_coeff)
 
 index = 0
 max_size = 0
+
+IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
+;populate trans_coeff_list using default value of (1,1,...)
+    trans_coeff_list = FLTARR(nbr_plot) + 1.
+    (*(*global).trans_coeff_list) = trans_coeff_list
+ENDIF ELSE BEGIN
+    trans_coeff_list = (*(*global).trans_coeff_list)
+ENDELSE
+
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -124,7 +138,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     x_coeff = 1
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
-    
+
 ;    IF (index EQ index_max_array) THEN BEGIN
 ;        total_array = rData
 ;    ENDIF ELSE BEGIN
@@ -132,7 +146,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     size = (size(total_array,/DIMENSIONS))[0]
     max_size = (size GT max_size) ? size : max_size
     
-    transparency_1 = .2; coeff transparency of new array
+    transparency_1 = trans_coeff_list[index]
     IF (index EQ 0) THEN BEGIN ;first pass
         total_array = rData
     ENDIF ELSE BEGIN ;other pass
@@ -149,9 +163,11 @@ WHILE (index LT nbr_plot) DO BEGIN
             idx = WHERE(rData NE 0)
             new_array[idx] = old_array[idx]
 ;#3 add arrays together
-            total_array = BYTSCL(new_total_array + transparency_1*new_array, $
+            total_array = BYTSCL(new_total_array + $
+                                 transparency_1* $
+                                 new_array, $
                                  /NAN)
-        ENDIF ELSE BEGIN ;new array is smaller
+        ENDIF ELSE BEGIN        ;new array is smaller
             x = (size(total_array,/DIMENSIONS))[0]
             y = (size(total_array,/DIMENSIONS))[1]
             new_array = LONARR(x,y)
@@ -200,33 +216,37 @@ WHILE (i LT nbr_box) DO BEGIN
     ++i
 ENDWHILE
 
+IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
+
 ;plot xaxis
-sz    = N_ELEMENTS(xaxis)
-xrange = [0,xaxis[sz-1]]
-xticks = (sz/50)
-
+    sz    = N_ELEMENTS(xaxis)
+    xrange = [0,xaxis[sz-1]]
+    xticks = (sz/50)
+    
 ;print, xrange
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
-sDraw = WIDGET_INFO(id,/GEOMETRY)
-XYoff = [44,40]
-xoff = XYoff[0]+16
-
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+    sDraw = WIDGET_INFO(id,/GEOMETRY)
+    XYoff = [44,40]
+    xoff = XYoff[0]+16
+    
 ;get number of xvalue from bigger range
-position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
+    position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
 ;position = [XYoff[0], $
 ;            XYoff[1], $
 ;            XYoff[0]+sDraw.xsize-5, $
 ;            sDraw.ysize+XYoff[1]-4]    
 ;save parameters
-(*global).xscale.xrange   = xrange
-(*global).xscale.xticks   = xticks
-(*global).xscale.position = position
+    (*global).xscale.xrange   = xrange
+    (*global).xscale.xticks   = xticks
+    (*global).xscale.position = position
+    
+    refresh_plot_scale, $
+      EVENT    = Event, $
+      XSCALE   = xrange, $
+      XTICKS   = xticks, $
+      POSITION = position
 
-refresh_plot_scale, $
-  EVENT    = Event, $
-  XSCALE   = xrange, $
-  XTICKS   = xticks, $
-  POSITION = position
+ENDIF
 
 END
 
@@ -318,4 +338,27 @@ refresh_plot_scale, $
   XTICKS   = xticks, $
   POSITION = position
 
+END
+
+;------------------------------------------------------------------------------
+PRO changeTransparencyCoeff, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+index_selected   = getTranFileSelected(Event)
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+IF (index_selected EQ 0) THEN BEGIN
+    putTextFieldValue, Event, 'transparency_coeff', 'N/A'
+ENDIF ELSE BEGIN
+    trans_value      = getTextFieldValue(Event,'transparency_coeff')
+    trans_coeff_list = (*(*global).trans_coeff_list)
+;make sure the value loaded is a valid coefficient
+    ON_IOERROR, done
+    fix_trans_value = FIX(trans_value)
+    trans_coeff_list[index_selected] = FLOAT(fix_trans_value)/100.
+    (*(*global).trans_coeff_list) = trans_coeff_list
+    plotASCIIdata, Event, TYPE='replot' ;_plot
+ENDELSE
+done:
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
 END

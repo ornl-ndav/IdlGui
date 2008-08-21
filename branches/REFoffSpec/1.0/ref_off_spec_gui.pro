@@ -32,13 +32,47 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+;- GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES
+;------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
 PRO activate_widget, Event, uname, activate_status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SENSITIVE=activate_status
 END
 
 ;------------------------------------------------------------------------------
+;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
+;------------------------------------------------------------------------------
+
 ;------------------------------------------------------------------------------
 PRO activate_less_more_xaxis_ticks, Event, value
 activate_widget, Event, 'x_axis_ticks_base', value
 END
+
+;------------------------------------------------------------------------------
+PRO display_file_names_transparency, Event, ascii_file_name
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get list of files
+list_OF_files = (*(*global).list_OF_ascii_files)
+;put list of files in droplist of transparency
+putListOfFilesTransparency, Event, list_OF_files 
+END
+
+;------------------------------------------------------------------------------
+PRO update_transparency_coeff_display, Event
+index_selected = getTranFileSelected(Event)
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF (index_selected EQ 0) THEN BEGIN
+    value = 'N/A'
+ENDIF ELSE BEGIN
+    trans_coeff_list = (*(*global).trans_coeff_list)
+    coeff = trans_coeff_list[index_selected]
+    coeff_percentage = 100*coeff
+    putTextFieldValue, Event, 'transparency_coeff', $
+      STRCOMPRESS(FIX(coeff_percentage),/REMOVE_ALL)
+ENDELSE
+END
+
+;------------------------------------------------------------------------------

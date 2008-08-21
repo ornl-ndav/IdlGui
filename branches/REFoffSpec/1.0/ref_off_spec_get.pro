@@ -33,6 +33,37 @@
 ;==============================================================================
 
 ;------------------------------------------------------------------------------
+;- GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES - GENERAL ROUTINES
+;------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
+;this function gives the droplist index
+FUNCTION getDropListSelectedIndex, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+return, widget_info(id, /droplist_select)
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTextFieldValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value[0]
+END
+
+;------------------------------------------------------------------------------
+;This function gives the value of the index selected
+FUNCTION getDropListSelectedValue, Event, uname
+index_selected = getDropListSelectedIndex(Event,uname)
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=list
+return, list[index_selected]
+END
+
+;------------------------------------------------------------------------------
+;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
+;------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
 ;Return the index of the ascii file selected in the first tab (step1)
 FUNCTION getAsciiSelectedIndex, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ascii_file_list')
@@ -50,3 +81,7 @@ RETURN, sz
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getTranFileSelected, Event
+index = getDropListSelectedIndex(Event,'transparency_file_list')
+RETURN, index
+END

@@ -79,6 +79,8 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     display_files_in_list, $    ;add the new files to the widget_list
       Event,$
       ascii_file_name
+;display list of ascii_file_name in transparency percentage button
+    display_file_names_transparency, Event, ascii_file_name ;_gui
     readAsciiData, Event ;read the ascii files and store value in a pointer
     plotAsciiData, Event ;plot the ascii files (_plot.pro)
     activate_less_more_xaxis_ticks, Event, 1 ;activate x-axis ticks base

@@ -65,6 +65,16 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
     END
 
+;transparency list of files droplist
+    Widget_Info(wWidget, FIND_BY_UNAME='transparency_file_list'): BEGIN
+        update_transparency_coeff_display, Event ;_gui
+    END
+
+;transparency percentage text box
+    Widget_Info(wWidget, FIND_BY_UNAME='transparency_coeff'): BEGIN
+        changeTransparencyCoeff, Event ;_plot
+    END
+
 ;less x-axis ticks
     Widget_Info(wWidget, FIND_BY_UNAME='x_axis_less_ticks'): BEGIN
         change_xaxis_ticks, Event, type='less' ;_plot

@@ -40,9 +40,29 @@ WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
+PRO putTextFieldValue, Event, uname, text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=text
+END
+
+;------------------------------------------------------------------------------
+PRO putArrayTextFieldValue, Event, uname_array, text
+sz = N_ELEMENTS(uname_array)
+FOR i=0,(sz-1) DO BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname_array[i])
+    WIDGET_CONTROL, id, SET_VALUE=text
+ENDFOR
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 ;Function that updates the list of the ascii file list found in the step2
 PRO putAsciiFileList, Event, value
 putList, Event, 'ascii_file_list', value
+END
+
+;------------------------------------------------------------------------------
+PRO putListOfFilesTransparency, Event, list_OF_files 
+putList, Event, 'transparency_file_list', list_OF_files
 END
