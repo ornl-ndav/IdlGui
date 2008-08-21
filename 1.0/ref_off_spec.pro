@@ -81,6 +81,7 @@ global = ptr_new ({ ucams:               ucams,$
                     ascii_path:          '~/',$
                     sys_color_face_3d:   INTARR(3),$
                     list_OF_ascii_files: ptr_new(0L),$
+                    trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
                     pData_x:             ptr_new(0L),$

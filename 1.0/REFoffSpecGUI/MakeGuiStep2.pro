@@ -54,7 +54,7 @@ XYoff = [0,0] ;List of ascii files --------------------------------------------
 sAsciiList = { size: [sBrowseButton.size[0]+$
                       sBrowseButton.size[2]+XYoff[0],$
                       sBrowseButton.size[1]+XYoff[1],$
-                      700,150],$
+                      700,110],$
                uname: 'ascii_file_list',$
                sensitive: 1,$
                value: ['']}
@@ -78,7 +78,7 @@ sDeleteButton = { size: [sPreviewButton.size[0]+XYoff[0],$
                   tooltip: 'Delete Selected ASCII file',$
                   sensitive: 1}
 
-XYOff = [43,10] ;Draw ---------------------------------------------------------
+XYOff = [43,30] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
                  sAsciiList.size[1]+$
                  sAsciiList.size[3]+XYoff[1],$
@@ -97,12 +97,12 @@ sScale = { size: [XYoff[0],$
 
 
 ;Transparency factor-----------------------------------------------------------
-XYoff = [50,10]
+XYoff = [30,10]
 sTransBase = { size: [XYoff[0],$
                       sScale.size[1]+$
                       sScale.size[3]+$
                       XYoff[1],$
-                      500,35],$
+                      730,35],$
                uname: 'transparency_base',$
                frame: 1,$
                sensitive: 1}
@@ -113,23 +113,28 @@ sTranLabel = { size: [XYoff[0],$
 XYoff = [60,0] ;droplist of list of files
 sTranList = { size: [XYoff[0],$
                      XYoff[1],$
-                     300],$
+                     500],$
               list: ['List of files loaded                               '],$
               uname: 'transparency_file_list'}
-XYoff = [65,0] ;transparency percentage
-sTranPercentage = { size: [sTranList.size[0]+$
-                           sTranList.size[2]+$
-                           XYoff[0],$
+XYoff = [0,0]
+sTLabel = { size: [sTranList.size[0]+$
+                   sTranList.size[2]+$
+                   XYoff[0],$
+                   sTranLabel.size[1]+XYoff[1]],$
+            value: 'Transparency:'}
+
+XYoff = [90,0] ;transparency percentage
+sTranPercentage = { size: [sTLabel.size[0]+XYoff[0],$
                            sTranList.size[1]+$
                            XYoff[1],$
-                           50],$
+                           40],$
                     uname: 'transparency_coeff',$
-                    value: '100'}
-XYoff = [5,5]
+                    value: 'N/A'}
+XYoff = [0,0]
 sTranCoeffLabel = { size: [sTranPercentage.size[0]+$
                            sTranPercentage.size[2]+$
                            XYoff[0],$
-                           sTranPercentage.size[1]+$
+                           sTLabel.size[1]+$
                            XYoff[1]],$
                     value: '%'}
                     
@@ -255,8 +260,13 @@ droplist = WIDGET_DROPLIST(TransBase,$
                            VALUE   = sTranList.list,$
                            XOFFSET = sTranList.size[0],$
                            YOFFSET = sTranList.size[1],$
-                           UNAME   = StranList.uname,$
-                           /DYNAMIC_RESIZE)
+                           UNAME   = StranList.uname)
+
+;label
+label = WIDGET_LABEL(TransBase,$
+                     XOFFSET = sTLabel.size[0],$
+                     YOFFSET = sTLabel.size[1],$
+                     VALUE   = sTLabel.value)
 ;text
 text = WIDGET_TEXT(TransBase,$
                    XOFFSET   = sTranPercentage.size[0],$
@@ -264,16 +274,13 @@ text = WIDGET_TEXT(TransBase,$
                    SCR_XSIZE = sTranPercentage.size[2],$
                    UNAME     = sTranPercentage.uname,$
                    VALUE     = sTranPercentage.value,$
+                   /EDITABLE,$
                    /ALIGN_LEFT)
 ;label
 label = WIDGET_LABEL(TransBase,$
                      XOFFSET = sTranCoeffLabel.size[0],$
                      YOFFSET = sTranCoeffLabel.size[1],$
                      VALUE   = sTranCoeffLabel.value)
-
-
-
-
 
 
 ;More or Less number of ticks on the x-axis -----------------------------------
