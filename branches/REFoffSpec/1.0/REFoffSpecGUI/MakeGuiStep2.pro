@@ -121,7 +121,7 @@ sTLabel = { size: [sTranList.size[0]+$
                    sTranList.size[2]+$
                    XYoff[0],$
                    sTranLabel.size[1]+XYoff[1]],$
-            value: 'Transparency:'}
+            value: 'Attenuator:'}
 
 XYoff = [90,0] ;transparency percentage
 sTranPercentage = { size: [sTLabel.size[0]+XYoff[0],$

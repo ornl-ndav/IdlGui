@@ -69,6 +69,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    first_load:          0,$
                     congrid_coeff_array: ptr_new(0L),$
                     application:         APPLICATION,$
                     processing:          '(PROCESSING)',$
