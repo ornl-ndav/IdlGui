@@ -107,8 +107,10 @@ tfpData             = (*(*global).pData_y)
 xData               = (*(*global).pData_x)
 xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
-xmax_list           = FLTARR(1)
 xmax                = 0L
+x_axis              = LONARR(1) ;max value of each x-axis
+y_coeff = 2
+x_coeff = 1
 
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
@@ -138,8 +140,6 @@ WHILE (index LT nbr_plot) DO BEGIN
     local_tfpData = *tfpData[index]
     
 ;rebin by 2 in y-axis
-    y_coeff = 2
-    x_coeff = 1
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
 
@@ -153,8 +153,10 @@ WHILE (index LT nbr_plot) DO BEGIN
     transparency_1 = trans_coeff_list[index]
     IF (index EQ 0) THEN BEGIN ;first pass
         total_array = rData
+        x_axis[0] = (size(rData,/DIMENSION))[0]
     ENDIF ELSE BEGIN ;other pass
         size = (size(rData,/DIMENSIONS))[0]
+        x_axis = [x_axis,size]
         IF (size GT max_size) THEN BEGIN ;if new array is bigger
             new_total_array = rData
             old_array = total_array
@@ -208,15 +210,14 @@ ENDWHILE
 
 TVSCL, total_array, /DEVICE
 
-;  plot boxes
-nbr_box = N_ELEMENTS(xmax_list)
 i = 0
-WHILE (i LT nbr_box) DO BEGIN
-    xmin = 0
-    plotBox, x_coeff, y_coeff, $
-      xmin, xmax_list[i], $
-      COLOR=(*global).box_color
-    (*global).box_color += 50
+box_color = (*global).box_color
+WHILE (i LT nbr_plot) DO BEGIN
+    plotBox, x_coeff, $
+      y_coeff, $
+      0, $
+      x_axis[i], $
+      COLOR=box_color[i]
     ++i
 ENDWHILE
 
