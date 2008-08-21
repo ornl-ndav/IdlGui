@@ -31,7 +31,15 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO Add_file_to_lis_OF_files, list_OF_files_to_send, new_file
+IF (list_OF_files_to_send[0] EQ '') THEN BEGIN
+    list_OF_files_to_send[0] = new_file
+ENDIF ELSE BEGIN
+    list_OF_files_to_send = [list_OF_files_to_send, new_file]
+ENDELSE
+END
 
+;------------------------------------------------------------------------------
 PRO CheckCommandLine, Event
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -41,6 +49,7 @@ WIDGET_CONTROL, id, GET_UVALUE=global
 cmd_status               = 1      ;by default, cmd can be activated
 missing_arguments_text   = ['']   ;list of missing arguments 
 missing_argument_counter = 0
+list_OF_files_to_send    = STRARR(1)
 
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
@@ -65,6 +74,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
+    Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
 ENDIF 
 
 ;-Solvant Buffer Only-
@@ -108,6 +118,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.sample_data_trans.flag
     cmd += ' ' + flag + '=' + file_run
+    Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
 ENDIF 
 
 ;-Emtpy Can transmisison-
@@ -117,6 +128,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.empty_can_trans.flag
     cmd += ' ' + flag + '=' + file_run
+    Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
 ENDIF 
 
 ;-Solvent transmisison-
@@ -126,6 +138,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.solvent.flag
     cmd += ' ' + flag + '=' + file_run
+    Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
 ENDIF 
 
 ;-Output Path-
@@ -165,6 +178,7 @@ IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
     cmd += ' --inst-geom='
     IF ((*global).inst_geom NE '') THEN BEGIN
         cmd += (*global).inst_geom
+        Add_file_to_lis_OF_files, list_OF_files_to_send, (*global).inst_geom
     ENDIF ELSE BEGIN
         cmd += '?'
         cmd_status = 0
@@ -412,5 +426,7 @@ putMissingArgNumber, Event, missing_argument_counter
 
 ;- activate GO DATA REDUCTION BUTTON only if cmd_status is 1
 activate_go_data_reduction, Event, cmd_status
+
+(*(*global).list_OF_files_to_send) = list_OF_files_to_send
 
 END
