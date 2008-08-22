@@ -76,7 +76,7 @@ sDeleteButton = { size: [sPreviewButton.size[0]+XYoff[0],$
                   value: 'DELETE SELECTED ASCII FILE ...',$
                   uname: 'ascii_delete_button',$
                   tooltip: 'Delete Selected ASCII file',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 XYOff = [43,30] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$

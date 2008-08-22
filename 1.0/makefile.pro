@@ -7,7 +7,10 @@ resolve_routine, "read_bmp", /either
 resolve_routine, "cw_field", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
+resolve_routine, "CONGRID", /either
+resolve_routine, "XDISPLAYFILE", /either
+resolve_routine, "ARRAY_INDICES", /either
 
-save,/routines,filename = CurrentFolder + '/plot_roi.sav'
+save,/routines,filename = CurrentFolder + '/ref_off_spec.sav'
 exit
 
