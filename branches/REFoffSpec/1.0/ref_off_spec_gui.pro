@@ -66,12 +66,13 @@ index_selected = getTranFileSelected(Event)
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 IF (index_selected EQ 0) THEN BEGIN
     value = 'N/A'
+    putTextFieldValue, Event, 'transparency_coeff', value
 ENDIF ELSE BEGIN
     trans_coeff_list = (*(*global).trans_coeff_list)
     coeff = trans_coeff_list[index_selected]
-    coeff_percentage = 100*coeff
+    coeff_percentage = 100.*coeff
     putTextFieldValue, Event, 'transparency_coeff', $
-      STRCOMPRESS(FIX(coeff_percentage),/REMOVE_ALL)
+      STRCOMPRESS(FLOAT(coeff_percentage),/REMOVE_ALL)
 ENDELSE
 END
 
