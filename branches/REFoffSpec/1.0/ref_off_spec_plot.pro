@@ -143,10 +143,6 @@ WHILE (index LT nbr_plot) DO BEGIN
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
 
-;    IF (index EQ index_max_array) THEN BEGIN
-;        total_array = rData
-;    ENDIF ELSE BEGIN
-
     size = (size(total_array,/DIMENSIONS))[0]
     max_size = (size GT max_size) ? size : max_size
     
@@ -187,23 +183,6 @@ WHILE (index LT nbr_plot) DO BEGIN
         ENDELSE
     ENDELSE
     
-;    IF (index EQ 0) THEN BEGIN
-;        total_array = transparency_1* rData
- ;   ENDIF ELSE BEGIN
-;        total_array = BYTSCL(total_array + transparency_2*rData)
- ;   ENDELSE
-
-;==============================================================================
-;==============================================================================
-    
-;    TVSCL, rData,/DEVICE
-    
-;    plot box around
-;    xmin = 0
-;    xmax = (size(*tfpData[index]))(1)
-;    plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=(*global).box_color
-;    (*global).box_color += 50
-    
     ++index
     
 ENDWHILE
@@ -235,11 +214,15 @@ IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
     xoff = XYoff[0]+16
     
 ;get number of xvalue from bigger range
-    position = [XYoff[0],XYoff[1],sz+XYoff[0],sDraw.ysize+XYoff[1]-4]    
-;position = [XYoff[0], $
-;            XYoff[1], $
-;            XYoff[0]+sDraw.xsize-5, $
-;            sDraw.ysize+XYoff[1]-4]    
+    position = [XYoff[0], $
+                XYoff[1], $
+                sz+XYoff[0], $
+                sDraw.ysize+XYoff[1]-4]    
+
+    IF (sz GT sDraw.xsize) THEN BEGIN
+        xRange = [0,xaxis[sDraw.xsize]]
+    ENDIF
+
 ;save parameters
     (*global).xscale.xrange   = xrange
     (*global).xscale.xticks   = xticks
