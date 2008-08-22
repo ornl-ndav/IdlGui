@@ -40,7 +40,7 @@ CD, CURRENT = current_folder
 ;******************************************************************************
 ;******************************************************************************
 APPLICATION       = 'REFoffSpec'
-VERSION           = '1.0.0'
+VERSION           = '1.0.1'
 DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
