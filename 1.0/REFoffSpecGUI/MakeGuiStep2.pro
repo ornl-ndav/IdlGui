@@ -127,7 +127,7 @@ XYoff = [90,0] ;transparency percentage
 sTranPercentage = { size: [sTLabel.size[0]+XYoff[0],$
                            sTranList.size[1]+$
                            XYoff[1],$
-                           40],$
+                           60],$
                     uname: 'transparency_coeff',$
                     value: 'N/A'}
 XYoff = [0,0]

@@ -341,7 +341,7 @@ ENDIF ELSE BEGIN
     trans_coeff_list = (*(*global).trans_coeff_list)
 ;make sure the value loaded is a valid coefficient
     ON_IOERROR, done
-    fix_trans_value = FIX(trans_value)
+    fix_trans_value = FLOAT(trans_value)
     trans_coeff_list[index_selected] = FLOAT(fix_trans_value)/100.
     (*(*global).trans_coeff_list) = trans_coeff_list
     plotASCIIdata, Event, TYPE='replot' ;_plot
