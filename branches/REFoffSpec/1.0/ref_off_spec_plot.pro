@@ -344,6 +344,7 @@ ENDIF ELSE BEGIN
     fix_trans_value = FLOAT(trans_value)
     trans_coeff_list[index_selected] = FLOAT(fix_trans_value)/100.
     (*(*global).trans_coeff_list) = trans_coeff_list
+
     plotASCIIdata, Event, TYPE='replot' ;_plot
 ENDELSE
 done:
