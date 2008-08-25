@@ -138,7 +138,17 @@ sTranCoeffLabel = { size: [sTranPercentage.size[0]+$
                            XYoff[1]],$
                     value: '%'}
                     
-XYoff = [-350,10] ;+/- number of x-axis ticks ---------------------------------
+;Lin/Log z-axis ---------------------------------------------------------------
+XYoff = [25,0]
+sLinLog = { size: [sTransBase.size[0]+$
+                   sTransBase.size[2]+XYoff[0],$
+                   sTransBase.size[1]+XYoff[1]],$
+            list: ['Linear','Log'],$
+            label: 'Z-axis:',$
+            uname: 'z_axis_linear_log',$
+            value: 0.0}
+                   
+XYoff = [-300,10] ;+/- number of x-axis ticks ---------------------------------
 sXaxisTicksBase = { size: [sScale.size[0]+$
                            sScale.size[2]+$
                            XYoff[0],$
@@ -282,6 +292,18 @@ label = WIDGET_LABEL(TransBase,$
                      YOFFSET = sTranCoeffLabel.size[1],$
                      VALUE   = sTranCoeffLabel.value)
 
+
+;Linear / Logarithmic ---------------------------------------------------------
+wLinLog = CW_BGROUP(BaseTab,$
+                    sLinLog.list,$
+                    XOFFSET    = sLinLog.size[0],$
+                    YOFFSET    = sLinLog.size[1],$
+                    SET_VALUE  = sLinLog.value,$
+                    UNAME      = sLinLog.uname,$
+                    LABEL_LEFT = sLinLog.label,$
+                    /EXCLUSIVE,$
+                    /ROW,$
+                    /NO_RELEASE)
 
 ;More or Less number of ticks on the x-axis -----------------------------------
 wTicksBase = WIDGET_BASE(BaseTab,$
