@@ -95,8 +95,7 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     display_file_names_transparency, Event, ascii_file_name ;_gui
     readAsciiData, Event ;read the ascii files and store value in a pointer
     plotAsciiData, Event ;plot the ascii files (_plot.pro)
-    activate_less_more_xaxis_ticks, Event, 1 ;activate x-axis ticks base
-
+    activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
 

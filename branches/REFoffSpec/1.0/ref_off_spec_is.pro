@@ -38,3 +38,9 @@ widget_control, id, get_value=isLogSelected
 return, isLogSelected
 END
 
+;------------------------------------------------------------------------------
+FUNCTION isThisIndexSelected, Event, index_selected, this_index
+bFoundList = WHERE(index_selected EQ this_index,nbr)
+IF (nbr GT 0) THEN RETURN, 1
+RETURN, 0
+END

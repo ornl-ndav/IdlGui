@@ -67,7 +67,7 @@ sPreviewButton = { size: [sAsciiList.size[0]+$
                    value: 'PREVIEW OF SELECTED ASCII FILE ...',$
                    uname: 'ascii_preview_button',$
                    tooltip: 'Preview of selected ASCII file',$
-                   sensitive: 1}
+                   sensitive: 0}
 
 XYoff = [0,30] ;Delete ascii file button --------------------------------------
 sDeleteButton = { size: [sPreviewButton.size[0]+XYoff[0],$
@@ -77,6 +77,25 @@ sDeleteButton = { size: [sPreviewButton.size[0]+XYoff[0],$
                   uname: 'ascii_delete_button',$
                   tooltip: 'Delete Selected ASCII file',$
                   sensitive: 0}
+
+;Up and Down selection button -------------------------------------------------
+XYoff = [0,60] ;UP button
+sUpSelection = { size: [sAsciiList.size[0]+$
+                        sAsciiList.size[2]+$
+                        XYoff[0],$
+                        sAsciiList.size[1]+$
+                        XYoff[1],$
+                        50],$
+                 value: 'UP',$
+                 uname: 'selection_up',$
+                 sensitive: 0}
+XYoff = [0,25] ;DOWN button
+sDownSelection = { size: [sUpSelection.size[0]+XYoff[0],$
+                          sUpSelection.size[1]+XYoff[1],$
+                          sUpSelection.size[2]],$
+                 value: 'DOWN',$
+                 uname: 'selection_down',$
+                 sensitive: 0}
 
 XYOff = [43,30] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
@@ -229,6 +248,24 @@ wDeleteButton = WIDGET_BUTTON(BaseTab,$
                               UNAME     = sDeleteButton.uname,$
                               SENSITIVE = sDeleteButton.sensitive,$
                               TOOLTIP   = sDeleteButton.tooltip)
+
+;UP Selection -----------------------------------------------------------------
+wUpSelection = WIDGET_BUTTON(BaseTab,$
+                             XOFFSET    = sUpSelection.size[0],$
+                             YOFFSET    = sUpSelection.size[1],$
+                             SCR_XSIZE  = sUpSelection.size[2],$
+                             UNAME      = sUpSelection.uname,$
+                             VALUE      = sUpSelection.value,$
+                             SENSITIVE  = sUpSelection.sensitive)
+
+;DOWN Selection ---------------------------------------------------------------
+wDownSelection = WIDGET_BUTTON(BaseTab,$
+                             XOFFSET    = sDownSelection.size[0],$
+                             YOFFSET    = sDownSelection.size[1],$
+                             SCR_XSIZE  = sDownSelection.size[2],$
+                             UNAME      = sDownSelection.uname,$
+                             VALUE      = sDownSelection.value,$
+                             SENSITIVE  = sDownSelection.sensitive)
 
 ;Draw -------------------------------------------------------------------------
 wDraw = WIDGET_DRAW(BaseTab,$

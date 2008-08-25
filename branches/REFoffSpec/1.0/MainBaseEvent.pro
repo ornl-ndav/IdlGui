@@ -56,9 +56,23 @@ CASE Event.id OF
         browse_ascii_file, Event ;_browse_ascii
     END
 
+;Ascii File list
+    Widget_Info(wWidget, FIND_BY_UNAME='ascii_file_list'): BEGIN
+    END
+    
 ;Preview ASCII file selected
     Widget_Info(wWidget, FIND_BY_UNAME='ascii_preview_button'): BEGIN
         preview_ascii_file, Event ;_eventcb
+    END
+
+;UP selection
+    Widget_Info(wWidget, FIND_BY_UNAME='selection_up'): BEGIN
+        move_selection, Event, TYPE='up' ;_gui
+    END
+
+;Down selection
+   Widget_Info(wWidget, FIND_BY_UNAME='selection_down'): BEGIN
+        move_selection, Event, TYPE='down' ;_gui
     END
 
 ;Draw
