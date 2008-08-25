@@ -5,10 +5,43 @@ PRO loadFile, Event
   check, Event
 END
 
+;FUNCTION getInfo, Event, tag, value
+;  print, 'INFO>>>>>>>>>>>>>>>>>>>>'
+;  widget_control, Event.top, get_uvalue=global
+;  command = '/SNS/software/sbin/mapinfo'
+;  command = command + ' -x ' + (*global).x + ' -y ' + (*global).y
+;  command = command + ' ' + (*global).path + ' --xml'
+;  ;SPAWN,  '/SNS/software/sbin/mapinfo -x 256 -y 304 REF_L_TS_2006_08_10.dat --xml', listen, erlisten
+;  print, command
+;  SPAWN,  command, listen, erlisten
+;  listen = STRCOMPRESS(listen, /REMOVE_ALL)
+;
+;  for i = 0, n_elements(listen) -1 do begin
+;    print, listen[i]
+;  endfor
+;
+;  if erlisten eq '' then begin
+;    ;print, listen
+;    use_tag = "<"  + tag + ">*</" +tag + ">"
+;    index = WHERE(STRMATCH(listen, use_tag, /FOLD_CASE) EQ 1, count)
+;    match = listen[index]
+;    ;if N_ELEMENTS(value) then begin
+;
+;    split = STRSPLIT(match, '<>', /EXTRACT)
+;    print, split
+;    RETURN,  split[1]
+;  endif else begin
+;    print, '[' + erlisten + ']'
+;    return, "error"
+;  endelse
+;END
+
 PRO plotData, Event
   widget_control, Event.top, get_uvalue=global
   x = fix((*global).x) *2
   y = fix((*global).y) *2
+  
+  
   
   id = widget_info(Event.top, find_by_uname = 'draw')
   
@@ -32,7 +65,7 @@ PRO plotData, Event
   LOADCT, 5
   tvscl, plotdata
   
-  ;Plot grid  
+  ;Plot grid
   for y0 = 0, y+10, 5 do begin
     Plots, [0,y0], /device, color = 0
     Plots, [x+10,y0], /device , /continue, color = 0
@@ -42,33 +75,47 @@ PRO plotData, Event
     Plots, [x0,0], /device, color = 0
     Plots, [x0,y+10], /device , /continue, color = 0
   endfor
- 
+  
 END
 
-PRO getData, Event
+;PRO populateDropList, Event
+
+PRO select, Event
+help, event, /structure
+END
+
+PRO getData, Event, filenum
   widget_control, Event.top, get_uvalue=global
   x = FLOOR(fix((*global).x))
   y = FLOOR(fix((*global).y))
+  info = obj_new('getMapInfo',(*global).path)
+  infStruct = info ->getInfo(x, y)
+  *(*global).file[filenum] = infStruct
+  
+  tmp = string(indgen(infStruct.numbanks + 1))
+  tmp[0] = '--'
+  id = widget_info(Event.top, find_by_uname = 'select')
+  widget_control, id, set_value = tmp
+  widget_control, id, sensitive = 1
+  
   
   use_read_binary = 1b
   IF (use_read_binary) THEN BEGIN
-    data = READ_BINARY((*global).path, $
-      DATA_DIMS=[x, y],$
+    all_data = READ_BINARY((*global).path, $
+      ; DATA_DIMS=[x, y],$
       DATA_TYPE = 3)
-    help, data
   ENDIF ELSE BEGIN
     openr,1,(*global).path
     fs=fstat(1)
     N=fs.size                 ; length of the file in bytes
     Nbytes = 4L               ; data are Unit32 = 4 bytes
     N = long(fs.size)/Nbytes
-    data = lonarr(N) ; create a longword integer array of N elements
-    readu,1,data
-    data = reform(data, x, y, /OVERWRITE)
+    all_data = lonarr(N) ; create a longword integer array of N elements
+    readu,1,all_data
+    all_data = reform(all_data, x, y, /OVERWRITE)
   ENDELSE
   close,1
-  (*global).data = ptr_new(data)
-  plotData, Event
+;plotData, Event
 END
 
 
@@ -93,8 +140,7 @@ PRO check, Event
       IF tmp NE '' THEN BEGIN
         (*global).y = fix(tmp)
         flag = 0
-        PRINT, "OK"
-        getData, Event
+        getData, Event, 0
       ENDIF
     ENDIF
   ENDIF
