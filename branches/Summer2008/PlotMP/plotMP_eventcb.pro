@@ -36,7 +36,7 @@ END
 ;  endelse
 ;END
 
-PRO plotData, Event
+PRO plotData, Event, index, filenum
   widget_control, Event.top, get_uvalue=global
   x = fix((*global).x) *2
   y = fix((*global).y) *2
@@ -47,19 +47,27 @@ PRO plotData, Event
   
   help, x, y
   
+  dt_start = ((*(*global).file[filenum]).banks[index-1]).offset
+  dt_end = ((*(*global).file[filenum]).banks[index]).offset - 1
+  data = (*(*global).all_data)
+  help, dt_start, dt_end
+  data = data[dt_start:dt_end]
+  data = reform(data, x/2, y/2, /OVERWRITE)
+  (*global).data = ptr_new(data)
+  
   base_x = x + 30
   base_y = y +130
   if base_x lt 530 then base_x = 530
   if base_y lt 150 then base_y = 150
   
-  widget_control, Event.top, XSIZE=base_x, YSIZE=base_y
-  WIDGET_CONTROL, id, GET_VALUE = index
+  widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
+  WIDGET_CONTROL, id, GET_VALUE = ind
   widget_control, id, XSIZE = x + 10, YSIZE = y + 10
   ;widget_control,/realize, Event.top
-  WSET, index
-  help, id, index
+  WSET, ind
+  help, id, ind
   
-  plotdata = rebin(*(*global).data, x , y)
+  plotdata = rebin(data, x , y)
   ;widget_control,/realize, Event.top
   DEVICE, DECOMPOSED=0
   LOADCT, 5
@@ -81,22 +89,15 @@ END
 ;PRO populateDropList, Event
 
 PRO select, Event
-help, event, /structure
+index = event.index
+if index gt 0 then plotData, Event, Index, 0
 END
 
 PRO getData, Event, filenum
   widget_control, Event.top, get_uvalue=global
   x = FLOOR(fix((*global).x))
   y = FLOOR(fix((*global).y))
-  info = obj_new('getMapInfo',(*global).path)
-  infStruct = info ->getInfo(x, y)
-  *(*global).file[filenum] = infStruct
-  
-  tmp = string(indgen(infStruct.numbanks + 1))
-  tmp[0] = '--'
-  id = widget_info(Event.top, find_by_uname = 'select')
-  widget_control, id, set_value = tmp
-  widget_control, id, sensitive = 1
+
   
   
   use_read_binary = 1b
@@ -115,6 +116,21 @@ PRO getData, Event, filenum
     all_data = reform(all_data, x, y, /OVERWRITE)
   ENDELSE
   close,1
+  (*global).all_data = ptr_new(all_data)
+  
+  
+    info = obj_new('getMapInfo',(*global).path)
+  infStruct = info ->getInfo(x, y)
+  *(*global).file[filenum] = infStruct
+  
+  tmp = string(indgen(infStruct.numbanks + 1))
+  tmp[0] = '--'
+  id = widget_info(Event.top, find_by_uname = 'select')
+  widget_control, id, set_value = tmp
+  widget_control, id, sensitive = 1  
+  widget_control, Event.top, YSIZE= 140
+  ;widget_control, id, /INPUT_FOCUS
+  
 ;plotData, Event
 END
 

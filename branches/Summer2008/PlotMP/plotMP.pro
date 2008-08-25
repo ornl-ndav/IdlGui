@@ -84,6 +84,8 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;============================
   global = ptr_new({path: '',$
     file: ptrarr(2, /allocate_heap), $
+    all_data: ptr_new(), $
+    data: ptr_new(), $
     x: '', $
     y: ''})
   ;============================
@@ -246,7 +248,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   widget_control, txtPath, /INPUT_FOCUS
   widget_control, select, sensitive = 0
-  widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 140
+  widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 80
   
 end
 
