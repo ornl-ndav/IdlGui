@@ -1,16 +1,13 @@
 pro MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
+  HELP, EVENT, /STRUCTURE
   
   case Event.id of
   
     Widget_Info(wWidget, FIND_BY_UNAME='loadFile'): begin
       loadFile, Event
     end
-    
-    ;    Widget_Info(wWidget, FIND_BY_UNAME='button'): begin
-    ;      button, Event
-    ;    end
     
     Widget_Info(wWidget, FIND_BY_UNAME='graph'): begin
       graph, Event
@@ -34,6 +31,10 @@ pro MAIN_BASE_event, Event
     
     Widget_Info(wWidget, FIND_BY_UNAME='select'): begin
       select, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='exit'): begin
+      WIDGET_CONTROL, wWidget, /DESTROY
     end
     
     else: print, "else"
@@ -83,95 +84,97 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;============================
   global = ptr_new({path: '',$
     file: ptrarr(2, /allocate_heap), $
-    ;   file2: ptr_new(), $
-    ;data: ptrarr(/ALLOCATE_HEAP), $
     x: '', $
     y: ''})
   ;============================
     
     
   loadFile = widget_button(MAIN_BASE,$
-    xoffset = 300,$
-    yoffset = 40,$
-    xsize = 120,$
-    ysize = 29,$
-    value = 'Browse',$
+    xoffset = 355,$
+    yoffset = 5,$
+    xsize = 35,$
+    ysize = 30,$
+    value = '...',$
     uname = 'loadFile')
     
-  select = WIDGET_COMBOBOX(MAIN_BASE,$
-    /sensitive, $
-    xoffset = 320,$
-    yoffset = 60,$
-    xsize = 120,$
-    ysize = 29,$
-    value = 'Select...',$
-    uname = 'select')
     
-  ;  button = widget_button(MAIN_BASE,$
-  ;    xoffset = 230,$
-  ;    yoffset = 55,$
+    
+  extend = widget_button(MAIN_BASE,$
+    xoffset = 395,$
+    yoffset = 5,$
+    xsize = 35,$
+    ysize = 30,$
+    value = '>>',$
+    uname = 'extend')
+    
+  exit = widget_button(MAIN_BASE,$
+    xoffset = 395,$
+    yoffset = 40,$
+    xsize = 35,$
+    ysize = 30,$
+    value = 'X',$
+    uname = 'exit')
+    
+  ;  graph = widget_button(MAIN_BASE,$
+  ;    xoffset = 300,$
+  ;    yoffset = 70,$
   ;    xsize = 120,$
   ;    ysize = 29,$
-  ;    value = 'Button',$
-  ;    uname = 'button')
-    
-  graph = widget_button(MAIN_BASE,$
-    xoffset = 300,$
-    yoffset = 70,$
-    xsize = 120,$
-    ysize = 29,$
-    value = 'Graph',$
-    uname = 'graph')
+  ;    value = 'Graph',$
+  ;    uname = 'graph')
     
   Label1 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 10,$
-    yoffset = 10,$
-    xsize = 140,$
-    ysize = 30,$
-    value = 'Select mapping File:',$
+    /DYNAMIC_RESIZE, $
+    xoffset = 5,$
+    yoffset = 15,$
+    ; xsize = 80,$
+    ;ysize = 30,$
+    value = 'Select file:',$
     uname = 'label1')
     
   Label2 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 10,$
-    yoffset = 40,$
-    xsize = 140,$
-    ysize = 30,$
+    /DYNAMIC_RESIZE, $
+    xoffset = 5,$
+    yoffset = 50,$
+    ;xsize = 140,$
+    ;ysize = 30,$
     value = '#X pixels/bank:',$
     uname = 'label2')
     
   Label3 = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 10,$
-    yoffset = 70,$
-    xsize = 140,$
-    ysize = 30,$
+    /DYNAMIC_RESIZE, $
+    xoffset = 210,$
+    yoffset = 50,$
+    ;xsize = 140,$
+    ;ysize = 30,$
     value = '#Y pixels/bank:',$
     uname = 'label3')
     
   txtPath = WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 150,$
-    yoffset = 10,$
-    scr_xsize = 270,$
+    xoffset = 90,$
+    yoffset = 5,$
+    scr_xsize = 260,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtPath')
     
   txtX= WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 150,$
+    xoffset = 110,$
     yoffset = 40,$
-    scr_xsize = 140,$
+    scr_xsize = 80,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtX')
     
   txtY= WIDGET_TEXT(MAIN_BASE,$
-    xoffset = 150,$
-    yoffset = 70,$
-    scr_xsize = 140,$
+    xoffset = 310,$
+    yoffset = 40,$
+    scr_xsize = 80,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
@@ -179,43 +182,54 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   wDraw = WIDGET_DRAW(MAIN_BASE,$
     xoffset = 10,$
-    yoffset = 110,$
+    yoffset = 140,$
     ;    xsize = 800,$
     ;    ysize = 900,$
     /MOTION_EVENTS, $
     uname = 'draw')
     
+  select = WIDGET_COMBOBOX(MAIN_BASE,$
+    /sensitive, $
+    xoffset = 5,$
+    yoffset = 80,$
+    xsize = 110,$
+    ysize = 25,$
+    value = 'Select...',$
+    uname = 'select')
+    
   statusX = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 430,$
-    yoffset = 10,$
-    xsize = 140,$
-    ysize = 30,$
+    /SUNKEN_FRAME, $
+    xoffset = 120,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
     value = 'X:',$
     uname = 'labX')
     
   statusY = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 430,$
-    yoffset = 40,$
-    xsize = 140,$
-    ysize = 30,$
+    /SUNKEN_FRAME, $
+    xoffset = 210,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
     value = 'Y:',$
     uname = 'labY')
     
   statusX = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
-    xoffset = 430,$
-    yoffset = 70,$
-    xsize = 140,$
-    ysize = 30,$
+    /SUNKEN_FRAME, $
+    xoffset = 300,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
     value = 'Z:',$
     uname = 'labZ')
     
     
   ;attach global da8ta structure with widget ID of widget main base widget ID
   widget_control,MAIN_BASE,set_uvalue=global
-  
   
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
@@ -226,13 +240,13 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   widget_control, txty, set_value = '128'
   widget_control, txtx, set_value = '8'
   ;widget_control, wDraw, XSIZE = 150, YSIZE = 150
-  help, wDraw
+  
   
   ;remove
   
   widget_control, txtPath, /INPUT_FOCUS
   widget_control, select, sensitive = 0
-  widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 110
+  widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 140
   
 end
 
