@@ -23,6 +23,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 cd, CurrentFolder
 
 ;utilities functions
+.run ref_off_spec_is.pro
 .run ref_off_spec_get.pro
 .run ref_off_spec_put.pro
 .run ref_off_spec_gui.pro

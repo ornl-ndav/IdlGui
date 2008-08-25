@@ -49,7 +49,7 @@ CASE Event.id OF
         tab_event, Event ;_eventcb
     END
 
-;111111111111111111111111111111111111111111111111111111111111111111111111111111
+;222222222222222222222222222222222222222222222222222222222222222222222222222222
 
 ;Browse ASCII file button
     Widget_Info(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
@@ -73,6 +73,14 @@ CASE Event.id OF
 ;transparency percentage text box
     Widget_Info(wWidget, FIND_BY_UNAME='transparency_coeff'): BEGIN
         changeTransparencyCoeff, Event ;_plot
+    END
+
+;lin/log z-azis scale
+    Widget_Info(wWidget, FIND_BY_UNAME='z_axis_linear_log'): BEGIN
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            plotASCIIdata, Event, TYPE='replot' ;_plot
+        ENDIF
     END
 
 ;less x-axis ticks
