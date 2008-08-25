@@ -72,6 +72,8 @@ WHILE (j  LT nbr_plot) DO BEGIN
     IF (Nindex GT 0) THEN BEGIN
         tfpData[index] = 0
     ENDIF
+    
+    print, max(tfpData) ;remove_me
 
     *pData[j] = tfpData
     ++j
@@ -138,7 +140,17 @@ ENDELSE
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
-    
+
+;check if user wants linear or logarithmic plot
+    bLogPlot = isLogZaxisSelected(Event)
+    IF (bLogPlot) THEN BEGIN
+        local_tfpData = ALOG10(local_tfpData)
+        index_inf = WHERE(local_tfpData LT 0, nIndex)
+        IF (nIndex GT 0) THEN BEGIN
+            local_tfpData[index_inf] = 0
+        ENDIF
+    ENDIF
+
 ;rebin by 2 in y-axis
     rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
                   (size(local_tfpData))(2)*y_coeff,/SAMPLE)
@@ -290,7 +302,6 @@ plot, randomn(s,303L), $
   YSTYLE        = 1,$
   XSTYLE        = 1,$
   YTICKINTERVAL = 10,$
-  ;XMARGIN       = [7,0],$
   POSITION      = position,$
   NOCLIP        = 0,$
   /NODATA,$
@@ -344,7 +355,6 @@ ENDIF ELSE BEGIN
     fix_trans_value = FLOAT(trans_value)
     trans_coeff_list[index_selected] = FLOAT(fix_trans_value)/100.
     (*(*global).trans_coeff_list) = trans_coeff_list
-
     plotASCIIdata, Event, TYPE='replot' ;_plot
 ENDELSE
 done:
