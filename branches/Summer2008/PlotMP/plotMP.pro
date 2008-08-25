@@ -4,9 +4,13 @@ pro MAIN_BASE_event, Event
   
   case Event.id of
   
-    Widget_Info(wWidget, FIND_BY_UNAME='button1'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='loadFile'): begin
       loadFile, Event
     end
+    
+    ;    Widget_Info(wWidget, FIND_BY_UNAME='button'): begin
+    ;      button, Event
+    ;    end
     
     Widget_Info(wWidget, FIND_BY_UNAME='graph'): begin
       graph, Event
@@ -28,7 +32,11 @@ pro MAIN_BASE_event, Event
       draw, Event
     end
     
-    else:
+    Widget_Info(wWidget, FIND_BY_UNAME='select'): begin
+      select, Event
+    end
+    
+    else: print, "else"
   endcase
   
 end
@@ -74,7 +82,9 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define initial global values
   ;============================
   global = ptr_new({path: '',$
-    data: ptr_new(), $
+    file: ptrarr(2, /allocate_heap), $
+    ;   file2: ptr_new(), $
+    ;data: ptrarr(/ALLOCATE_HEAP), $
     x: '', $
     y: ''})
   ;============================
@@ -86,7 +96,24 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     xsize = 120,$
     ysize = 29,$
     value = 'Browse',$
-    uname = 'button1')
+    uname = 'loadFile')
+    
+  select = WIDGET_COMBOBOX(MAIN_BASE,$
+    /sensitive, $
+    xoffset = 320,$
+    yoffset = 60,$
+    xsize = 120,$
+    ysize = 29,$
+    value = 'Select...',$
+    uname = 'select')
+    
+  ;  button = widget_button(MAIN_BASE,$
+  ;    xoffset = 230,$
+  ;    yoffset = 55,$
+  ;    xsize = 120,$
+  ;    ysize = 29,$
+  ;    value = 'Button',$
+  ;    uname = 'button')
     
   graph = widget_button(MAIN_BASE,$
     xoffset = 300,$
@@ -153,8 +180,8 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   wDraw = WIDGET_DRAW(MAIN_BASE,$
     xoffset = 10,$
     yoffset = 110,$
-;    xsize = 800,$
-;    ysize = 900,$
+    ;    xsize = 800,$
+    ;    ysize = 900,$
     /MOTION_EVENTS, $
     uname = 'draw')
     
@@ -194,16 +221,17 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   ;remove, debug purpose
-  tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/REF_L_TS_2006_12_01.dat'
+  tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
   widget_control, txtPath, set_value = tmp
-  widget_control, txty, set_value = '304'
-  widget_control, txtx, set_value = '256'
+  widget_control, txty, set_value = '128'
+  widget_control, txtx, set_value = '8'
   ;widget_control, wDraw, XSIZE = 150, YSIZE = 150
   help, wDraw
   
   ;remove
   
   widget_control, txtPath, /INPUT_FOCUS
+  widget_control, select, sensitive = 0
   widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 110
   
 end
