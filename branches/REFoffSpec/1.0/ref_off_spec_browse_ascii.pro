@@ -75,10 +75,8 @@ ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   /MULTIPLE_FILES)
 
 IF (ascii_file_name[0] NE '') THEN BEGIN
-
 ;indicate initialization with hourglass icon
     WIDGET_CONTROL,/HOURGLASS
-
     (*global).ascii_path = new_path ;save new path
 ;check if current list is empty or not 
 ;that will allow me to determine if this is the first load or not
@@ -98,7 +96,6 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
-
 ENDIF
 END
 ;------------------------------------------------------------------------------
