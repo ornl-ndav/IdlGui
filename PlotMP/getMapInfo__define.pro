@@ -14,7 +14,7 @@ FUNCTION getMapInfo::getInfo, x, y
     
     gen_struct = {number: 0, $
       type: '', $
-      offset: 0L}
+      offset: 0}
       
     all_struct = REPLICATE(gen_struct, numbanks)
     index_num = WHERE(STRMATCH(listen, '<number>*', /FOLD_CASE) EQ 1, count)
