@@ -47,8 +47,11 @@ END
 ;------------------------------------------------------------------------------
 
 ;------------------------------------------------------------------------------
-PRO activate_less_more_xaxis_ticks, Event, value
+PRO activate_browse_gui, Event, value
 activate_widget, Event, 'x_axis_ticks_base', value
+activate_widget, Event, 'selection_up', value
+activate_widget, Event, 'selection_down', value
+activate_widget, Event, 'ascii_preview_button', value
 END
 
 ;------------------------------------------------------------------------------
@@ -77,3 +80,66 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
+PRO select_list, Event, index_selected
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ascii_file_list')
+WIDGET_CONTROL, id, SET_LIST_SELECT=index_selected
+END
+
+;------------------------------------------------------------------------------
+PRO move_selection, Event, TYPE=type
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;get list of files
+list_OF_files  = (*(*global).list_OF_ascii_files)
+NbrFiles       = N_ELEMENTS(list_OF_Files)
+index_selected = getAsciiSelectedIndex(Event)
+;get list of file selected
+;list_OF_files_selected = list_OF_files[index_selected]
+sz = N_ELEMENTS(index_selected)
+
+CASE (type) OF
+    'up': BEGIN
+        i = 0
+        WHILE (i LT sz) DO BEGIN
+            IF (index_selected[i] GT 0) THEN BEGIN
+                bPrevSelected = isThisIndexSelected(Event, $
+                                                    index_selected, $
+                                                    index_selected[i]-1)
+                IF (~bPrevSelected) THEN BEGIN
+                    prev_name = list_OF_files[index_selected[i]-1]
+                    curr_name = list_OF_files[index_selected[i]]
+                    list_OF_Files[index_selected[i]]   = prev_name
+                    list_OF_Files[index_selected[i]-1] = curr_name
+                    index_selected[i] = index_selected[i]-1
+                ENDIF 
+            ENDIF
+            ++i
+        ENDWHILE
+    END
+    'down': BEGIN
+        i = sz-1
+        WHILE (i GE 0) DO BEGIN
+            IF (index_selected[i] LT NbrFiles-1) THEN BEGIN
+                bPrevSelected = isThisIndexSelected(Event, $
+                                                    index_selected, $
+                                                    index_selected[i]+1)
+                IF (~bPrevSelected) THEN BEGIN
+                    next_name = list_OF_files[index_selected[i]+1]
+                    curr_name = list_OF_files[index_selected[i]]
+                    list_OF_Files[index_selected[i]]   = next_name
+                    list_OF_Files[index_selected[i]+1] = curr_name
+                    index_selected[i] = index_selected[i]+1
+                ENDIF 
+            ENDIF
+            --i
+        ENDWHILE
+    END
+    ELSE:
+ENDCASE
+
+;repopulate list
+putAsciiFileList, Event, list_OF_files 
+;save list of files
+(*(*global).list_OF_ascii_files) = list_OF_Files
+;reset selection
+select_list, Event, index_selected
+END
