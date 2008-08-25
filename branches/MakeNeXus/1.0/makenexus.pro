@@ -110,7 +110,7 @@ global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 ['j35','pf9','2zr','mid'],$
+                    geek:                 ['j35','pf9','2zr','mid','ha9'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
