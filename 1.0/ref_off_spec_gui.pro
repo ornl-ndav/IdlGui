@@ -142,4 +142,14 @@ putAsciiFileList, Event, list_OF_files
 (*(*global).list_OF_ascii_files) = list_OF_Files
 ;reset selection
 select_list, Event, index_selected
+
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+;display list of ascii_file_name in transparency percentage button
+display_file_names_transparency, Event, ascii_file_name ;_gui
+readAsciiData, Event ;read the ascii files and store value in a pointer
+plotAsciiData, Event
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
 END
