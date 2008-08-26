@@ -29,6 +29,7 @@ cd, CurrentFolder
 .run ref_off_spec_gui.pro
 
 ;procedures
+.run IDLsendToGeek__define.pro
 .run colorbar.pro
 .run CheckPackages.pro
 .run ref_off_spec_browse_ascii.pro

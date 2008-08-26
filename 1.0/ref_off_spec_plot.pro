@@ -156,6 +156,8 @@ ENDELSE
 
 master_min = 0
 master_max = 0
+min_array = FLTARR(nbr_plot)
+max_array = FLTARR(nbr_plot)
 
 WHILE (index LT nbr_plot) DO BEGIN
     
@@ -186,9 +188,14 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (index EQ 0) THEN BEGIN ;first pass
         total_array = rData
         x_axis[0] = (size(rData,/DIMENSION))[0]
+        min_array[0] = local_min
+        max_array[0] = local_max
     ENDIF ELSE BEGIN ;other pass
         size = (size(rData,/DIMENSIONS))[0]
         x_axis = [x_axis,size]
+        min_array[index] = local_min
+        max_array[index] = local_max
+        print, max_array
         IF (size GT max_size) THEN BEGIN ;if new array is bigger
             new_total_array = rData
             old_array = total_array
@@ -223,11 +230,14 @@ WHILE (index LT nbr_plot) DO BEGIN
     
 ENDWHILE
 
+;put information in log book about min and max
+InformLogBook, Event, min_array, max_array
+
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
 ;plot color scale
-plotColorScale, Event, master_min, master_max
+plotColorScale, Event, master_min, master_max ;_gui
 
 ;select plot
 ;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
