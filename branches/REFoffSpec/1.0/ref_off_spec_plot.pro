@@ -73,8 +73,6 @@ WHILE (j  LT nbr_plot) DO BEGIN
         tfpData[index] = 0
     ENDIF
     
-    print, max(tfpData) ;remove_me
-
     *pData[j] = tfpData
     ++j
 
@@ -84,18 +82,24 @@ ENDWHILE
 
 END
 
+;------------------------------------------------------------------------------
+PRO plotColorScale, Event, master_min, master_max
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_color_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+ERASE
+
+colorbar, ncolors=255, $
+  position=[0.58,0.01,0.95,0.99],$
+  range=[master_min,master_max], $
+  /VERTICAL
+
+END
+
 
 ;------------------------------------------------------------------------------
 PRO plotAsciiData, Event, TYPE=type
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;select plot
-;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
-id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
-WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-WSET,id_value
-DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 ;;clean up data
@@ -137,6 +141,9 @@ ENDIF ELSE BEGIN
     trans_coeff_list = (*(*global).trans_coeff_list)
 ENDELSE
 
+master_min = 0
+master_max = 0
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -159,6 +166,10 @@ WHILE (index LT nbr_plot) DO BEGIN
     max_size = (size GT max_size) ? size : max_size
     
     transparency_1 = trans_coeff_list[index]
+    local_min = transparency_1 * MIN(rData)
+    local_max = transparency_1 * MAX(rData)
+    master_min = (local_min LT master_min) ? local_min : master_min
+    master_max = (local_max GT master_max) ? local_max : master_max
     IF (index EQ 0) THEN BEGIN ;first pass
         total_array = rData
         x_axis[0] = (size(rData,/DIMENSION))[0]
@@ -198,6 +209,18 @@ WHILE (index LT nbr_plot) DO BEGIN
     ++index
     
 ENDWHILE
+
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
+;plot color scale
+plotColorScale, Event, master_min, master_max
+
+;select plot
+;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
 
 TVSCL, total_array, /DEVICE
 
