@@ -89,9 +89,24 @@ WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 ERASE
 
-colorbar, ncolors=255, $
-  position=[0.58,0.01,0.95,0.99],$
-  range=[master_min,master_max], $
+help, master_max
+
+IF (isLogZaxisSelected(Event)) THEN BEGIN
+    divisions = 4
+    format = '(I0)'
+    range  = FLOAT([master_min,master_max])
+ENDIF ELSE BEGIN
+    divisions = 20
+    format = '(I0)'
+    range = [master_min,master_max]
+ENDELSE
+
+colorbar, $
+  NCOLORS   = 255, $
+  POSITION  = [0.58,0.01,0.95,0.99], $
+  RANGE     = range,$
+  DIVISIONS = divisions,$
+  FORMAT    = format,$
   /VERTICAL
 
 END
