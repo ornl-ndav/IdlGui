@@ -195,7 +195,6 @@ WHILE (index LT nbr_plot) DO BEGIN
         x_axis = [x_axis,size]
         min_array[index] = local_min
         max_array[index] = local_max
-        print, max_array
         IF (size GT max_size) THEN BEGIN ;if new array is bigger
             new_total_array = rData
             old_array = total_array
@@ -260,39 +259,48 @@ ENDWHILE
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 
-;plot xaxis
-    sz    = N_ELEMENTS(xaxis)
-    xrange = [0,xaxis[sz-1]]
-    xticks = (sz/50)
-    
-;print, xrange
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
-    sDraw = WIDGET_INFO(id,/GEOMETRY)
-    XYoff = [44,40]
-    xoff = XYoff[0]+16
-    
-;get number of xvalue from bigger range
-    position = [XYoff[0], $
-                XYoff[1], $
-                sz+XYoff[0], $
-                sDraw.ysize+XYoff[1]-4]    
-
-    IF (sz GT sDraw.xsize) THEN BEGIN
-        xRange = [0,xaxis[sDraw.xsize]]
-    ENDIF
-
-;save parameters
-    (*global).xscale.xrange   = xrange
-    (*global).xscale.xticks   = xticks
-    (*global).xscale.position = position
-    
-    refresh_plot_scale, $
-      EVENT    = Event, $
-      XSCALE   = xrange, $
-      XTICKS   = xticks, $
-      POSITION = position
+    contour_plot, Event, xaxis
 
 ENDIF
+
+END
+
+
+;------------------------------------------------------------------------------
+PRO contour_plot, Event, xaxis
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;plot xaxis
+sz    = N_ELEMENTS(xaxis)
+xrange = [0,xaxis[sz-1]]
+xticks = (sz/50)
+
+;print, xrange
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+sDraw = WIDGET_INFO(id,/GEOMETRY)
+XYoff = [44,40]
+xoff = XYoff[0]+16
+
+;get number of xvalue from bigger range
+position = [XYoff[0], $
+            XYoff[1], $
+            sz+XYoff[0], $
+            sDraw.ysize+XYoff[1]-4]    
+
+IF (sz GT sDraw.xsize) THEN BEGIN
+    xRange = [0,xaxis[sDraw.xsize]]
+ENDIF
+
+;save parameters
+(*global).xscale.xrange   = xrange
+(*global).xscale.xticks   = xticks
+(*global).xscale.position = position
+
+refresh_plot_scale, $
+  EVENT    = Event, $
+  XSCALE   = xrange, $
+  XTICKS   = xticks, $
+  POSITION = position
 
 END
 
