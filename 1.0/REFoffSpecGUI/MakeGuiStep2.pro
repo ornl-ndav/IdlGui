@@ -101,7 +101,7 @@ XYOff = [43,30] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
                  sAsciiList.size[1]+$
                  sAsciiList.size[3]+XYoff[1],$
-                 tab_size[2]-45,$
+                 tab_size[2]-125,$
                  304L*2],$
           scroll_size: [tab_size[2]-35-XYoff[0],$
                         304L*2+40],$
@@ -110,10 +110,18 @@ sDraw = { size: [XYoff[0],$
 XYoff = [0,-18] ;Scale of Draw ------------------------------------------------
 sScale = { size: [XYoff[0],$
                   sDraw.size[1]+XYoff[1],$
-                  tab_size[2],$
+                  tab_size[2]-80,$
+;                  sDraw.size[3]],$
                   sDraw.size[3]+57],$
            uname: 'scale_draw_step2'}
 
+XYoff = [5,0] ;Color Scale ----------------------------------------------------
+sColorScale = { size: [sScale.size[0]+$
+                       sScale.size[2]+XYoff[0],$
+                       sScale.size[1]+XYoff[1],$
+                       65,$
+                       sScale.size[3]],$
+                uname: 'scale_color_draw'}
 
 ;Transparency factor-----------------------------------------------------------
 XYoff = [30,10]
@@ -158,7 +166,7 @@ sTranCoeffLabel = { size: [sTranPercentage.size[0]+$
                     value: '%'}
                     
 ;Lin/Log z-axis ---------------------------------------------------------------
-XYoff = [25,0]
+XYoff = [30,0]
 sLinLog = { size: [sTransBase.size[0]+$
                    sTransBase.size[2]+XYoff[0],$
                    sTransBase.size[1]+XYoff[1]],$
@@ -167,7 +175,7 @@ sLinLog = { size: [sTransBase.size[0]+$
             uname: 'z_axis_linear_log',$
             value: 0.0}
                    
-XYoff = [-300,10] ;+/- number of x-axis ticks ---------------------------------
+XYoff = [-200,10] ;+/- number of x-axis ticks ---------------------------------
 sXaxisTicksBase = { size: [sScale.size[0]+$
                            sScale.size[2]+$
                            XYoff[0],$
@@ -287,6 +295,14 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
+
+;Color Scale Draw -------------------------------------------------------------
+wColorScale = WIDGET_DRAW(BaseTab,$
+                          XOFFSET   = sColorScale.size[0],$
+                          YOFFSET   = sColorScale.size[1],$
+                          SCR_XSIZE = sColorScale.size[2],$
+                          SCR_YSIZE = sColorScale.size[3],$
+                          UNAME     = sColorScale.uname)
 
 ;Transparency coeff -----------------------------------------------------------
 TransBase = WIDGET_BASE(BaseTab,$
