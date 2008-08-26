@@ -52,6 +52,7 @@ activate_widget, Event, 'x_axis_ticks_base', value
 activate_widget, Event, 'selection_up', value
 activate_widget, Event, 'selection_down', value
 activate_widget, Event, 'ascii_preview_button', value
+activate_widget, Event, 'transparency_base', value
 END
 
 ;------------------------------------------------------------------------------
@@ -59,8 +60,10 @@ PRO display_file_names_transparency, Event, ascii_file_name
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get list of files
 list_OF_files = (*(*global).list_OF_ascii_files)
+;get only short file name of all files
+short_list_OF_files = getShortName(list_OF_files)
 ;put list of files in droplist of transparency
-putListOfFilesTransparency, Event, list_OF_files 
+putListOfFilesTransparency, Event, short_list_OF_files 
 END
 
 ;------------------------------------------------------------------------------
