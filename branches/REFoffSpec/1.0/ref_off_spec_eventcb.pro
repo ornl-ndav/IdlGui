@@ -66,7 +66,11 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     0: BEGIN ;step1 (reduction)
     END
     1: BEGIN ;load
-   ;     refresh_plot_scale, EVENT=Event ;_plot
+        IF((*global).something_to_plot) THEN BEGIN
+            xaxis = (*(*global).x_axis)
+            contour_plot, Event, xaxis
+            plotAsciiData, Event, TYPE='replot' ;_plot
+        ENDIF
     END
     2: BEGIN ;log book
         

@@ -96,6 +96,8 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
+;loaded with success
+    (*global).something_to_plot = 1
 ENDIF
 END
 ;------------------------------------------------------------------------------
