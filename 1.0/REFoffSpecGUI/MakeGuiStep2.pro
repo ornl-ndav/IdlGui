@@ -129,10 +129,10 @@ sTransBase = { size: [XYoff[0],$
                       sScale.size[1]+$
                       sScale.size[3]+$
                       XYoff[1],$
-                      730,35],$
+                      650,35],$
                uname: 'transparency_base',$
                frame: 1,$
-               sensitive: 1}
+               sensitive: 0}
 XYoff = [2,8] ;label of list of files
 sTranLabel = { size: [XYoff[0],$
                       XYoff[1]],$
@@ -140,8 +140,8 @@ sTranLabel = { size: [XYoff[0],$
 XYoff = [60,0] ;droplist of list of files
 sTranList = { size: [XYoff[0],$
                      XYoff[1],$
-                     500],$
-              list: ['List of files loaded                               '],$
+                     300],$
+              list: ['List of files loaded                  '],$
               uname: 'transparency_file_list'}
 XYoff = [0,0]
 sTLabel = { size: [sTranList.size[0]+$
@@ -150,7 +150,7 @@ sTLabel = { size: [sTranList.size[0]+$
                    sTranLabel.size[1]+XYoff[1]],$
             value: 'Attenuator:'}
 
-XYoff = [90,0] ;transparency percentage
+XYoff = [90,2] ;transparency percentage
 sTranPercentage = { size: [sTLabel.size[0]+XYoff[0],$
                            sTranList.size[1]+$
                            XYoff[1],$
@@ -165,6 +165,14 @@ sTranCoeffLabel = { size: [sTranPercentage.size[0]+$
                            XYoff[1]],$
                     value: '%'}
                     
+XYoff = [25,3]
+sFullReset = { size: [sTranCoeffLabel.size[0]+$
+                      XYoff[0],$
+                      sTranList.size[1]+XYoff[1],$
+                      100],$
+               value: 'FULL RESET',$
+               uname: 'trans_full_reset'}
+
 ;Lin/Log z-axis ---------------------------------------------------------------
 XYoff = [30,0]
 sLinLog = { size: [sTransBase.size[0]+$
@@ -345,6 +353,13 @@ label = WIDGET_LABEL(TransBase,$
                      YOFFSET = sTranCoeffLabel.size[1],$
                      VALUE   = sTranCoeffLabel.value)
 
+;Full Reset Button
+button = WIDGET_BUTTON(TransBase,$
+                       XOFFSET   = sFullReset.size[0],$
+                       YOFFSET   = sFullReset.size[1],$
+                       SCR_XSIZE = sFullReset.size[2],$
+                       VALUE     = sFullReset.value,$
+                       UNAME     = sFullReset.uname)
 
 ;Linear / Logarithmic ---------------------------------------------------------
 wLinLog = CW_BGROUP(BaseTab,$

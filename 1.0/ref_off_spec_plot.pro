@@ -89,8 +89,6 @@ WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 ERASE
 
-help, master_max
-
 IF (isLogZaxisSelected(Event)) THEN BEGIN
     divisions = 4
     format = '(I0)'
@@ -399,3 +397,35 @@ done:
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
 END
+
+;------------------------------------------------------------------------------
+PRO changeTransparencyFullReset, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+trans_coeff_list = (*(*global).trans_coeff_list)
+sz = N_ELEMENTS(trans_coeff_list)
+index = 0
+WHILE (index LT sz) DO BEGIN
+    IF (index EQ 0) THEN BEGIN
+        trans_coeff_list[index] = 1
+    ENDIF ELSE BEGIN
+        trans_coeff_list[index] = 1
+    ENDELSE
+    ++index
+ENDWHILE
+(*(*global).trans_coeff_list) = trans_coeff_list
+index_selected   = getTranFileSelected(Event)
+IF (index_selected EQ 0) THEN BEGIN
+    putTextFieldValue, Event, 'transparency_coeff', 'N/A'
+ENDIF ELSE BEGIN
+    putTextFieldValue, Event, $
+      'transparency_coeff', $
+      STRCOMPRESS(trans_coeff_list[index_selected]*100,/REMOVE_ALL)
+ENDELSE
+plotASCIIdata, Event, TYPE='replot' ;_plot
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+END
+
+

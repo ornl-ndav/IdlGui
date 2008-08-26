@@ -85,3 +85,21 @@ FUNCTION getTranFileSelected, Event
 index = getDropListSelectedIndex(Event,'transparency_file_list')
 RETURN, index
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getShortName, list_OF_files
+sz = N_ELEMENTS(list_OF_files)
+IF (sz GT 0) THEN BEGIN
+    new_list_OF_files = STRARR(sz)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+        file_name  = list_OF_files[index]
+        short_name = FILE_BASENAME(file_name)
+        new_list_OF_files[index] = short_name
+        ++index
+    ENDWHILE
+ENDIF ELSE BEGIN
+    new_list_OF_files = ['']
+ENDELSE
+RETURN, new_list_OF_files
+END

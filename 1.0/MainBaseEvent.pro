@@ -89,6 +89,11 @@ CASE Event.id OF
         changeTransparencyCoeff, Event ;_plot
     END
 
+;Transparency Full Reset
+    Widget_Info(wWidget, FIND_BY_UNAME='trans_full_reset'): BEGIN
+        changeTransparencyFullReset, Event ;_plot
+    END
+
 ;lin/log z-azis scale
     Widget_Info(wWidget, FIND_BY_UNAME='z_axis_linear_log'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)
