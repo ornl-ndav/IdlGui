@@ -6,31 +6,68 @@ pro MAIN_BASE_event, Event
   case Event.id of
   
     Widget_Info(wWidget, FIND_BY_UNAME='loadFile'): begin
-      loadFile, Event
+      loadFile, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='graph'): begin
-      graph, Event
+      graph, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='txtPath'): begin
-      txtPath, Event
+      txtPath, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='txtX'): begin
-      txtX, Event
+      txtX, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='txtY'): begin
-      txtY, Event
+      txtY, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='draw'): begin
-      draw, Event
+      draw, Event, 0
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='select'): begin
-      select, Event
+      select, Event, 0
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='extend'): begin
+      extend, Event
+    end
+    
+    ;file_2
+        Widget_Info(wWidget, FIND_BY_UNAME='loadFile1'): begin
+      loadFile, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='graph1'): begin
+      graph, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='txtPath1'): begin
+      txtPath, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='txtX1'): begin
+      txtX, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='txtY1'): begin
+      txtY, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='draw1'): begin
+      draw, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='select1'): begin
+      select, Event, 1
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='extend'): begin
+      extend, Event
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='exit'): begin
@@ -86,6 +123,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     file: ptrarr(2, /allocate_heap), $
     all_data: ptr_new(), $
     data: ptr_new(), $
+    extended: 0, $
     x: '', $
     y: ''})
   ;============================
@@ -182,13 +220,13 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     /EDITABLE, $
     uname = 'txtY')
     
-  wDraw = WIDGET_DRAW(MAIN_BASE,$
-    xoffset = 10,$
-    yoffset = 140,$
-    ;    xsize = 800,$
-    ;    ysize = 900,$
-    /MOTION_EVENTS, $
-    uname = 'draw')
+  ;  wDraw = WIDGET_DRAW(MAIN_BASE,$
+  ;    xoffset = 5,$
+  ;    yoffset = 120,$
+  ;    ;    xsize = 800,$
+  ;    ;    ysize = 900,$
+  ;    /MOTION_EVENTS, $
+  ;    uname = 'draw')
     
   select = WIDGET_COMBOBOX(MAIN_BASE,$
     /sensitive, $
@@ -241,7 +279,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   widget_control, txtPath, set_value = tmp
   widget_control, txty, set_value = '128'
   widget_control, txtx, set_value = '8'
-  ;widget_control, wDraw, XSIZE = 150, YSIZE = 150
+  ; widget_control, wDraw, XSIZE = 150, YSIZE = 150
   
   
   ;remove
