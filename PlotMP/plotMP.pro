@@ -38,7 +38,7 @@ pro MAIN_BASE_event, Event
     end
     
     ;file_2
-        Widget_Info(wWidget, FIND_BY_UNAME='loadFile1'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='loadFile1'): begin
       loadFile, Event, 1
     end
     
@@ -121,6 +121,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;============================
   global = ptr_new({path: '',$
     file: ptrarr(2, /allocate_heap), $
+    pane: ptrarr(2, /allocate_heap), $
     all_data: ptr_new(), $
     data: ptr_new(), $
     extended: 0, $
@@ -257,7 +258,7 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     value = 'Y:',$
     uname = 'labY')
     
-  statusX = widget_label(MAIN_BASE,$
+  statusZ = widget_label(MAIN_BASE,$
     /ALIGN_LEFT, $
     /SUNKEN_FRAME, $
     xoffset = 300,$
@@ -275,10 +276,10 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   ;remove, debug purpose
-  tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
+  tmp = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/REF_L_TS_2006_12_01.dat'
   widget_control, txtPath, set_value = tmp
-  widget_control, txty, set_value = '128'
-  widget_control, txtx, set_value = '8'
+  widget_control, txty, set_value = '304'
+  widget_control, txtx, set_value = '256'
   ; widget_control, wDraw, XSIZE = 150, YSIZE = 150
   
   
@@ -288,6 +289,24 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   widget_control, select, sensitive = 0
   widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 80
   
+  *(*global).pane[0] = {Main: MAIN_BASE, $
+    txtPath: txtPath, $
+    txtX: txtX, $
+    txtY: txtY, $
+    statusX: statusX, $
+    statusY: statusY, $
+    statusZ: statusZ, $
+    label1: label1, $
+    label2: label2, $
+    label3: label3, $
+    select: select, $
+    exit: exit, $
+    extend: extend,$
+    loadFile: loadFile, $
+    draw: 0}
+    
+ ; print, (*(*global).pane[0]).txtPath, txtPath
+
 end
 
 ;
