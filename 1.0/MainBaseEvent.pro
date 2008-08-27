@@ -79,6 +79,13 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
     END
 
+;RefreshPlot
+    Widget_Info(wWidget, FIND_BY_UNAME='refresh_step2_plot'): BEGIN
+        xaxis = (*(*global).x_axis)
+        contour_plot, Event, xaxis ;_plot
+        plotASCIIdata, Event, TYPE='replot' ;_plot
+    END
+
 ;transparency list of files droplist
     Widget_Info(wWidget, FIND_BY_UNAME='transparency_file_list'): BEGIN
         update_transparency_coeff_display, Event ;_gui
