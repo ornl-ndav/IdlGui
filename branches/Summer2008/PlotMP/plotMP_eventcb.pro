@@ -1,8 +1,14 @@
-PRO loadFile, Event
-  id = widget_info(Event.top, find_by_uname = 'txtPath')
+PRO loadFile, Event, fn
+case fn of
+0: txtPath = 'txtPath'
+1: txtPath = 'txtPath1'
+endcase
+
+  id = widget_info(Event.top, find_by_uname = txtPath)
+  print, id
   tmp = dialog_pickfile(/must_exist, title = 'Select a binary file')
   widget_control, id, set_value = tmp
-  check, Event
+  check, Event, fn
 END
 
 ;FUNCTION getInfo, Event, tag, value
@@ -36,36 +42,53 @@ END
 ;  endelse
 ;END
 
-PRO plotData, Event, index, filenum
+PRO plotData, Event, index, fn
+
+  id = widget_info(Event.top, find_by_uname = 'draw')
+  if id ne 0 then begin
+    widget_control, id , /destroy
+  end
+  
   widget_control, Event.top, get_uvalue=global
   x = fix((*global).x) *2
   y = fix((*global).y) *2
   
+  base_x = x + 20
+  base_y = y +120
+  if base_x lt 430 then base_x = 430
+  if base_y lt 140 then base_y = 140
   
+  widget_control, Event.top, YSIZE=base_y
   
-  id = widget_info(Event.top, find_by_uname = 'draw')
-  
+  wDraw = WIDGET_DRAW(event.top,$
+    xoffset = 5,$
+    yoffset = 120,$
+    xsize = x+10,$
+    ysize = y+10,$
+    /MOTION_EVENTS, $
+    uname = 'draw')
+    
+    
   help, x, y
   
-  dt_start = ((*(*global).file[filenum]).banks[index-1]).offset
-  dt_end = ((*(*global).file[filenum]).banks[index]).offset - 1
+  dt_start = ((*(*global).file[fn]).banks[index-1]).offset
+  dt_end = ((*(*global).file[fn]).banks[index]).offset - 1
   data = (*(*global).all_data)
   help, dt_start, dt_end
   data = data[dt_start:dt_end]
   data = reform(data, x/2, y/2, /OVERWRITE)
   (*global).data = ptr_new(data)
   
-  base_x = x + 30
-  base_y = y +130
-  if base_x lt 530 then base_x = 530
-  if base_y lt 150 then base_y = 150
   
-  widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
-  WIDGET_CONTROL, id, GET_VALUE = ind
-  widget_control, id, XSIZE = x + 10, YSIZE = y + 10
+  
+  ;id = widget_info(Event.top, find_by_uname = 'draw')
+  
+  
+  WIDGET_CONTROL, wDraw, GET_VALUE = ind
+  ;widget_control, id, XSIZE = x + 10, YSIZE = y + 10
   ;widget_control,/realize, Event.top
   WSET, ind
-  help, id, ind
+  ;help, id, ind
   
   plotdata = rebin(data, x , y)
   ;widget_control,/realize, Event.top
@@ -83,21 +106,102 @@ PRO plotData, Event, index, filenum
     Plots, [x0,0], /device, color = 0
     Plots, [x0,y+10], /device , /continue, color = 0
   endfor
-  
+  widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
 END
 
 ;PRO populateDropList, Event
 
-PRO select, Event
-index = event.index
-if index gt 0 then plotData, Event, Index, 0
+PRO select, Event, fn
+  index = event.index
+  if index gt 0 then plotData, Event, Index, 0
 END
 
-PRO getData, Event, filenum
-  widget_control, Event.top, get_uvalue=global
-  x = FLOOR(fix((*global).x))
-  y = FLOOR(fix((*global).y))
+PRO extend, Event
+  widget_control, Event.top, XSIZE = 860
+  help, event, /structure
+  widget_control, event.id, xoffset = 795, set_value = '<<'
+  id = widget_info(Event.top, find_by_uname = 'exit')
+  widget_control, id, xoffset = 795
+  
+  
+  
+  loadFile = widget_button(Event.top,$
+    xoffset = 755,$
+    yoffset = 5,$
+    xsize = 35,$
+    ysize = 30,$
+    value = '...',$
+    uname = 'loadFile1')
+    
+  Label1 = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /DYNAMIC_RESIZE, $
+    xoffset = 400,$
+    yoffset = 15,$
+    ; xsize = 80,$
+    ;ysize = 30,$
+    value = 'Select file:',$
+    uname = 'label4')
+    
+  Label2 = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /DYNAMIC_RESIZE, $
+    xoffset = 400,$
+    yoffset = 50,$
+    ;xsize = 140,$
+    ;ysize = 30,$
+    value = '#X pixels/bank:',$
+    uname = 'label5')
+    
+  Label3 = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /DYNAMIC_RESIZE, $
+    xoffset = 610,$
+    yoffset = 50,$
+    ;xsize = 140,$
+    ;ysize = 30,$
+    value = '#Y pixels/bank:',$
+    uname = 'label6')
+    
+  txtPath = WIDGET_TEXT(Event.top,$
+    xoffset = 490,$
+    yoffset = 5,$
+    scr_xsize = 260,$
+    scr_ysize = 30,$
+    /NO_NEWLINE, $
+    /EDITABLE, $
+    uname = 'txtPath1')
+    
+  txtX= WIDGET_TEXT(Event.top,$
+    xoffset = 510,$
+    yoffset = 40,$
+    scr_xsize = 80,$
+    scr_ysize = 30,$
+    /NO_NEWLINE, $
+    /EDITABLE, $
+    uname = 'txtX1')
+    
+  txtY= WIDGET_TEXT(Event.top,$
+    xoffset = 710,$
+    yoffset = 40,$
+    scr_xsize = 80,$
+    scr_ysize = 30,$
+    /NO_NEWLINE, $
+    /EDITABLE, $
+    uname = 'txtY1')
+    
+    widget_control, txtPath, set_value = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
+    widget_control, txtX, set_value = '8'
+    widget_control, txtY, set_value = '128'
+    
+    widget_control, txtPath, /INPUT_FOCUS
+END
 
+PRO getData, Event, fn
+  widget_control, Event.top, get_uvalue=global
+  x = fix((*global).x)
+  y = fix((*global).y)
+  
   
   
   use_read_binary = 1b
@@ -119,44 +223,59 @@ PRO getData, Event, filenum
   (*global).all_data = ptr_new(all_data)
   
   
-    info = obj_new('getMapInfo',(*global).path)
+  info = obj_new('getMapInfo',(*global).path)
   infStruct = info ->getInfo(x, y)
-  *(*global).file[filenum] = infStruct
+  *(*global).file[fn] = infStruct
   
   tmp = string(indgen(infStruct.numbanks + 1))
   tmp[0] = '--'
   id = widget_info(Event.top, find_by_uname = 'select')
   widget_control, id, set_value = tmp
-  widget_control, id, sensitive = 1  
-  widget_control, Event.top, YSIZE= 140
-  ;widget_control, id, /INPUT_FOCUS
+  widget_control, id, sensitive = 1
+  widget_control, Event.top, YSIZE= 640
+  widget_control, id, /INPUT_FOCUS
   
 ;plotData, Event
 END
 
 
-PRO graph, Event
+PRO graph, Event, fn
   check, Event
 END
 
-PRO check, Event
+PRO check, Event, fn
+ 
+ case fn of
+0: begin
+txtPath = 'txtPath'
+txtX = 'txtX' 
+txtY =  'txtY'
+end
+1: begin
+txtPath = 'txtPath1'
+txtX = 'txtX1' 
+txtY =  'txtY1'
+end
+endcase
+ 
+ 
   widget_control, Event.top, get_uvalue=global
   
   flag= 1
-  id = widget_info(Event.top, find_by_uname = 'txtPath')
+  id = widget_info(Event.top, find_by_uname = txtPath)
   widget_control, id, get_value=tmp
   IF tmp NE '' THEN BEGIN
     (*global).path = tmp
-    id = widget_info(Event.top, find_by_uname = 'txtX')
+    id = widget_info(Event.top, find_by_uname = txtX)
     widget_control, id, get_value=tmp
     IF tmp NE '' THEN BEGIN
       (*global).x = fix(tmp)
-      id = widget_info(Event.top, find_by_uname = 'txtY')
+      id = widget_info(Event.top, find_by_uname = txtY)
       widget_control, id, get_value=tmp
       IF tmp NE '' THEN BEGIN
         (*global).y = fix(tmp)
         flag = 0
-        getData, Event, 0
+        getData, Event, fn
       ENDIF
     ENDIF
   ENDIF
@@ -167,7 +286,7 @@ PRO check, Event
   
 END
 
-PRO draw, Event
+PRO draw, Event, fn
   ;help, event, /structure
   ;  tmp = convert_coord(event.x, event.y, /normal, /to_data)
   ;  print, tmp
@@ -203,16 +322,16 @@ PRO draw, Event
   endelse
 END
 
-PRO txtPath, Event
-  check, Event
+PRO txtPath, Event, fn
+  check, Event, fn
 END
 
-PRO txtX, Event
-  check, Event
+PRO txtX, Event, fn
+  check, Event, fn
 END
 
-PRO txtY, Event
-  check, Event
+PRO txtY, Event, fn
+  check, Event, fn
 END
 
 
