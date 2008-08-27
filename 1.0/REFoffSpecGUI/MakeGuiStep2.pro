@@ -119,7 +119,7 @@ XYoff = [5,0] ;Color Scale ----------------------------------------------------
 sColorScale = { size: [sScale.size[0]+$
                        sScale.size[2]+XYoff[0],$
                        sScale.size[1]+XYoff[1],$
-                       65,$
+                       70,$
                        sScale.size[3]],$
                 uname: 'scale_color_draw'}
 
