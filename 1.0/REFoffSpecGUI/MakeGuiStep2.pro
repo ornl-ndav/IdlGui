@@ -123,6 +123,17 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw'}
 
+;X and Y of mouse over plot area ----------------------------------------------
+XYoff = [-160,-30]
+sXYdisplay = { size: [sColorScale.size[0]+$
+                      XYoff[0],$
+                      sColorScale.size[1]+$
+                      XYoff[1],$
+                      200],$
+               value: 'x: ?  |  y: ?',$
+               uname: 'xy_display_step2',$
+               frame: 1}
+
 ;Refresh Plot Button
 XYOff = [5,-30]
 sRefreshPlot = { size: [sScale.size[0]+XYoff[0],$
@@ -292,6 +303,15 @@ wDownSelection = WIDGET_BUTTON(BaseTab,$
                              VALUE      = sDownSelection.value,$
                              SENSITIVE  = sDownSelection.sensitive)
 
+;X and Y mouse over plot area information -------------------------------------
+wXYdisplay = WIDGET_LABEL(BaseTab,$
+                          XOFFSET   = sXYdisplay.size[0],$
+                          YOFFSET   = sXYdisplay.size[1],$
+                          SCR_XSIZE = sXYdisplay.size[2],$
+                          VALUE     = sXYdisplay.value,$
+                          FRAME     = sXYdisplay.frame,$
+                          UNAME     = sXYdisplay.uname)
+
 ;Refresh Plot -----------------------------------------------------------------
 wRefreshPlot = WIDGET_BUTTON(BaseTab,$
                              XOFFSET   = sRefreshPlot.size[0],$
@@ -307,12 +327,8 @@ wDraw = WIDGET_DRAW(BaseTab,$
                     YOFFSET       = sDraw.size[1],$
                     XSIZE         = sDraw.size[2],$
                     YSIZE         = sDraw.size[3],$
-;                    Graphics_level = 2,$
-;                    X_SCROLL_SIZE = sDraw.scroll_size[0],$
-;                    Y_SCROLL_SIZE = sDraw.scroll_size[1],$
-                    UNAME         = sDraw.uname)
-;                    /MOTION_EVENTS,$
-;                    /SCROLL)
+                    UNAME         = sDraw.uname,$
+                    /MOTION_EVENTS)
 
 ;Scale Draw -------------------------------------------------------------------
 wScale = WIDGET_DRAW(BaseTab,$

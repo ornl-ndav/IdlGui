@@ -77,6 +77,17 @@ CASE Event.id OF
 
 ;Draw
     Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            delta_x = (*global).delta_x
+            x = Event.x
+            x1 = FLOAT(delta_x) * FLOAT(x)
+            y = Event.y
+            y1 = y / 2
+            text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
+            text += '  |  y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'xy_display_step2', text
+        ENDIF
     END
 
 ;RefreshPlot
