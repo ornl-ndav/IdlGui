@@ -123,6 +123,15 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw'}
 
+;Refresh Plot Button
+XYOff = [5,-30]
+sRefreshPlot = { size: [sScale.size[0]+XYoff[0],$
+                        sScale.size[1]+XYoff[1],$
+                        100],$
+                 uname: 'refresh_step2_plot',$
+                 value: 'REFRESH',$
+                 sensitive: 0}
+
 ;Transparency factor-----------------------------------------------------------
 XYoff = [30,10]
 sTransBase = { size: [XYoff[0],$
@@ -282,6 +291,15 @@ wDownSelection = WIDGET_BUTTON(BaseTab,$
                              UNAME      = sDownSelection.uname,$
                              VALUE      = sDownSelection.value,$
                              SENSITIVE  = sDownSelection.sensitive)
+
+;Refresh Plot -----------------------------------------------------------------
+wRefreshPlot = WIDGET_BUTTON(BaseTab,$
+                             XOFFSET   = sRefreshPlot.size[0],$
+                             YOFFSET   = sRefreshPlot.size[1],$
+                             SCR_XSIZE = sRefreshPlot.size[2],$
+                             VALUE     = sRefreshPlot.value,$
+                             UNAME     = sRefreshPlot.uname,$
+                             SENSITIVE = sRefreshPlot.sensitive)
 
 ;Draw -------------------------------------------------------------------------
 wDraw = WIDGET_DRAW(BaseTab,$
