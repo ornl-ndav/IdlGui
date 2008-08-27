@@ -36,8 +36,11 @@ FUNCTION getMapInfo::getInfo, x, y
   file_struct = {path: self.path,$
     size_map: 0L, $
     size_bank: 0L, $
+    x: fix(x), $
+    y: fix(y), $
     numbanks: numbanks,$
     data: ptr_new(/allocate_heap), $
+    all_data: ptr_new(/allocate_heap), $
     banks: all_struct}
     
   RETURN, file_struct

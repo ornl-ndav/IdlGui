@@ -1,9 +1,9 @@
 PRO loadFile, Event, fn
-case fn of
-0: txtPath = 'txtPath'
-1: txtPath = 'txtPath1'
-endcase
-
+  case fn of
+    0: txtPath = 'txtPath'
+    1: txtPath = 'txtPath1'
+  endcase
+  
   id = widget_info(Event.top, find_by_uname = txtPath)
   print, id
   tmp = dialog_pickfile(/must_exist, title = 'Select a binary file')
@@ -11,47 +11,31 @@ endcase
   check, Event, fn
 END
 
-;FUNCTION getInfo, Event, tag, value
-;  print, 'INFO>>>>>>>>>>>>>>>>>>>>'
-;  widget_control, Event.top, get_uvalue=global
-;  command = '/SNS/software/sbin/mapinfo'
-;  command = command + ' -x ' + (*global).x + ' -y ' + (*global).y
-;  command = command + ' ' + (*global).path + ' --xml'
-;  ;SPAWN,  '/SNS/software/sbin/mapinfo -x 256 -y 304 REF_L_TS_2006_08_10.dat --xml', listen, erlisten
-;  print, command
-;  SPAWN,  command, listen, erlisten
-;  listen = STRCOMPRESS(listen, /REMOVE_ALL)
-;
-;  for i = 0, n_elements(listen) -1 do begin
-;    print, listen[i]
-;  endfor
-;
-;  if erlisten eq '' then begin
-;    ;print, listen
-;    use_tag = "<"  + tag + ">*</" +tag + ">"
-;    index = WHERE(STRMATCH(listen, use_tag, /FOLD_CASE) EQ 1, count)
-;    match = listen[index]
-;    ;if N_ELEMENTS(value) then begin
-;
-;    split = STRSPLIT(match, '<>', /EXTRACT)
-;    print, split
-;    RETURN,  split[1]
-;  endif else begin
-;    print, '[' + erlisten + ']'
-;    return, "error"
-;  endelse
-;END
-
 PRO plotData, Event, index, fn
-
-  id = widget_info(Event.top, find_by_uname = 'draw')
-  if id ne 0 then begin
+  widget_control, Event.top, get_uvalue=global
+  
+  case fn of
+    0: begin
+      x_offset = 5
+      name = 'draw'
+      print, 'pane_1'
+    end
+    1: begin
+      x_offset = 400
+      name = 'draw1'
+      print, 'pane_2'
+    end
+  endcase
+  
+  
+  ;id = widget_info(Event.top, find_by_uname = draw)
+  if (*(*global).pane[fn]).draw ne 0 then begin
     widget_control, id , /destroy
+    print, 'killed draw widget'
   end
   
-  widget_control, Event.top, get_uvalue=global
-  x = fix((*global).x) *2
-  y = fix((*global).y) *2
+  x = (*(*global).file[fn]).x *2
+  y = (*(*global).file[fn]).y *2
   
   base_x = x + 20
   base_y = y +120
@@ -61,23 +45,32 @@ PRO plotData, Event, index, fn
   widget_control, Event.top, YSIZE=base_y
   
   wDraw = WIDGET_DRAW(event.top,$
-    xoffset = 5,$
+    xoffset = x_offset,$
     yoffset = 120,$
     xsize = x+10,$
     ysize = y+10,$
     /MOTION_EVENTS, $
-    uname = 'draw')
+    uname = name)
+  
     
     
   help, x, y
   
+  data = *((*(*global).file[fn]).all_data)
+  
   dt_start = ((*(*global).file[fn]).banks[index-1]).offset
+  if n_elements((*(*global).file[fn]).banks) gt 1 then begin
   dt_end = ((*(*global).file[fn]).banks[index]).offset - 1
-  data = (*(*global).all_data)
-  help, dt_start, dt_end
   data = data[dt_start:dt_end]
+  endif else begin
+  data = data[dt_start:*]
+  endelse
+  
+  
+  print, data
+  print, n_elements(data)
   data = reform(data, x/2, y/2, /OVERWRITE)
-  (*global).data = ptr_new(data)
+  (*(*global).file[fn]).data = ptr_new(data)
   
   
   
@@ -85,13 +78,8 @@ PRO plotData, Event, index, fn
   
   
   WIDGET_CONTROL, wDraw, GET_VALUE = ind
-  ;widget_control, id, XSIZE = x + 10, YSIZE = y + 10
-  ;widget_control,/realize, Event.top
   WSET, ind
-  ;help, id, ind
-  
   plotdata = rebin(data, x , y)
-  ;widget_control,/realize, Event.top
   DEVICE, DECOMPOSED=0
   LOADCT, 5
   tvscl, plotdata
@@ -106,17 +94,20 @@ PRO plotData, Event, index, fn
     Plots, [x0,0], /device, color = 0
     Plots, [x0,y+10], /device , /continue, color = 0
   endfor
-  widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
+;widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
 END
 
 ;PRO populateDropList, Event
 
 PRO select, Event, fn
   index = event.index
-  if index gt 0 then plotData, Event, Index, 0
+  if index gt 0 then plotData, Event, Index, fn
 END
 
 PRO extend, Event
+  widget_control, Event.top, get_uvalue=global
+  
+  
   widget_control, Event.top, XSIZE = 860
   help, event, /structure
   widget_control, event.id, xoffset = 795, set_value = '<<'
@@ -190,11 +181,66 @@ PRO extend, Event
     /EDITABLE, $
     uname = 'txtY1')
     
-    widget_control, txtPath, set_value = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
-    widget_control, txtX, set_value = '8'
-    widget_control, txtY, set_value = '128'
+  select = WIDGET_COMBOBOX(Event.top,$
+    /sensitive, $
+    xoffset = 400,$
+    yoffset = 80,$
+    xsize = 110,$
+    ysize = 25,$
+    value = 'Select...',$
+    uname = 'select1')
     
-    widget_control, txtPath, /INPUT_FOCUS
+  statusX = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /SUNKEN_FRAME, $
+    xoffset = 520,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
+    value = 'X:',$
+    uname = 'labX1')
+    
+  statusY = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /SUNKEN_FRAME, $
+    xoffset = 610,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
+    value = 'Y:',$
+    uname = 'labY1')
+    
+  statusZ = widget_label(Event.top,$
+    /ALIGN_LEFT, $
+    /SUNKEN_FRAME, $
+    xoffset = 700,$
+    yoffset = 80,$
+    xsize = 80,$
+    ysize = 20,$
+    value = 'Z:',$
+    uname = 'labZ1')
+    
+    
+    
+  *(*global).pane[1] = {Main: Event.top, $
+    txtPath: txtPath, $
+    txtX: txtX, $
+    txtY: txtY, $
+    statusX: statusX, $
+    statusY: statusY, $
+    statusZ: statusZ, $
+    label1: label1, $
+    label2: label2, $
+    label3: label3, $
+    select: select, $
+    loadFile: loadFile, $
+    draw: 0}
+    
+  widget_control, txtPath, set_value = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
+  widget_control, txtX, set_value = '8'
+  widget_control, txtY, set_value = '128'
+  widget_control, select, sensitive = 0
+  widget_control, txtPath, /INPUT_FOCUS
 END
 
 PRO getData, Event, fn
@@ -220,57 +266,57 @@ PRO getData, Event, fn
     all_data = reform(all_data, x, y, /OVERWRITE)
   ENDELSE
   close,1
-  (*global).all_data = ptr_new(all_data)
+  
   
   
   info = obj_new('getMapInfo',(*global).path)
   infStruct = info ->getInfo(x, y)
   *(*global).file[fn] = infStruct
-  
+  (*(*global).file[fn]).all_data = ptr_new(all_data)
   tmp = string(indgen(infStruct.numbanks + 1))
   tmp[0] = '--'
-  id = widget_info(Event.top, find_by_uname = 'select')
-  widget_control, id, set_value = tmp
-  widget_control, id, sensitive = 1
+  
+  widget_control, (*(*global).pane[fn]).select, set_value = tmp
+  widget_control, (*(*global).pane[fn]).select, sensitive = 1
   widget_control, Event.top, YSIZE= 640
-  widget_control, id, /INPUT_FOCUS
+  widget_control, (*(*global).pane[fn]).select, /INPUT_FOCUS
   
 ;plotData, Event
 END
 
 
 PRO graph, Event, fn
-  check, Event
+  check, Event, fn
 END
 
 PRO check, Event, fn
- 
- case fn of
-0: begin
-txtPath = 'txtPath'
-txtX = 'txtX' 
-txtY =  'txtY'
-end
-1: begin
-txtPath = 'txtPath1'
-txtX = 'txtX1' 
-txtY =  'txtY1'
-end
-endcase
- 
- 
   widget_control, Event.top, get_uvalue=global
+
+  ;  case fn of
+  ;    0: begin
+  ;      txtPath = 'txtPath'
+  ;      txtX = 'txtX'
+  ;      txtY =  'txtY'
+  ;    end
+  ;    1: begin
+  ;      txtPath = 'txtPath1'
+  ;      txtX = 'txtX1'
+  ;      txtY =  'txtY1'
+  ;    end
+  ;  endcase
+
+
   
   flag= 1
-  id = widget_info(Event.top, find_by_uname = txtPath)
+  id = (*(*global).pane[fn]).txtPath
   widget_control, id, get_value=tmp
   IF tmp NE '' THEN BEGIN
     (*global).path = tmp
-    id = widget_info(Event.top, find_by_uname = txtX)
+    id = (*(*global).pane[fn]).txtX
     widget_control, id, get_value=tmp
     IF tmp NE '' THEN BEGIN
       (*global).x = fix(tmp)
-      id = widget_info(Event.top, find_by_uname = txtY)
+      id = (*(*global).pane[fn]).txtY
       widget_control, id, get_value=tmp
       IF tmp NE '' THEN BEGIN
         (*global).y = fix(tmp)
@@ -287,6 +333,9 @@ endcase
 END
 
 PRO draw, Event, fn
+
+  widget_control, Event.top, get_uvalue=global
+
   ;help, event, /structure
   ;  tmp = convert_coord(event.x, event.y, /normal, /to_data)
   ;  print, tmp
@@ -296,29 +345,31 @@ PRO draw, Event, fn
   y = fix(event.y)/2
   ;print, x, y
   
-  id = widget_info(Event.top, find_by_uname = 'labX')
-  widget_control, id, set_value= 'X: ' +string(x)
-  id = widget_info(Event.top, find_by_uname = 'labY')
-  widget_control, id, set_value= 'Y: ' +string(y)
-  id = widget_info(Event.top, find_by_uname = 'labZ')
   
-  id = widget_info(Event.top, find_by_uname = 'txtX')
-  widget_control, id, get_value=tmp
+  help, (*(*global).pane[fn]).statusX
+ ; id = widget_info(Event.top, find_by_uname = 'labX')
+  widget_control, (*(*global).pane[fn]).statusX, set_value= 'X: ' +string(x)
+ ; id = widget_info(Event.top, find_by_uname = 'labY')
+  widget_control, (*(*global).pane[fn]).statusY, set_value= 'Y: ' +string(y)
+ ; id = widget_info(Event.top, find_by_uname = 'labZ')
+  
+ ; id = widget_info(Event.top, find_by_uname = 'txtX')
+  widget_control, (*(*global).pane[fn]).txtX, get_value=tmp
   if (x lt fix(tmp)) then begin
-    id = widget_info(Event.top, find_by_uname = 'txtY')
-    widget_control, id, get_value=tmp
+  ;  id = widget_info(Event.top, find_by_uname = 'txtY')
+    widget_control, (*(*global).pane[fn]).txtY, get_value=tmp
     if (y lt fix(tmp)) then begin
       widget_control, Event.top, get_uvalue=global
-      data = *(*global).data
-      id = widget_info(Event.top, find_by_uname = 'labZ')
-      widget_control, id, set_value= 'Z: '+ string(data[x,y])
+      data = *(*(*global).file[fn]).data
+     ; id = widget_info(Event.top, find_by_uname = 'labZ')
+      widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ string(data[x,y])
     endif else begin
-      id = widget_info(Event.top, find_by_uname = 'labZ')
-      widget_control, id, set_value= 'Z: '+ 'Unknown'
+   ;   id = widget_info(Event.top, find_by_uname = 'labZ')
+      widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ 'Unknown'
     endelse
   endif else begin
-    id = widget_info(Event.top, find_by_uname = 'labZ')
-    widget_control, id, set_value= 'Z: '+ 'Unknown'
+   ; id = widget_info(Event.top, find_by_uname = 'labZ')
+    widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ 'Unknown'
   endelse
 END
 
