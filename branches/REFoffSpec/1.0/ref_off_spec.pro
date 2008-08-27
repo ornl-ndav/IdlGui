@@ -69,6 +69,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    delta_x:             0.,$
                     something_to_plot:   0,$
                     first_load:          0,$
                     congrid_coeff_array: ptr_new(0L),$

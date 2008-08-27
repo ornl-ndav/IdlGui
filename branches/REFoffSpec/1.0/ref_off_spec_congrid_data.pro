@@ -102,5 +102,6 @@ ENDWHILE
 x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
 x_axis = FINDGEN(FIX(x_size)) * min_delta_x
 (*(*global).x_axis) = x_axis
+(*global).delta_x = x_axis[1]-x_axis[0]
 
 END
