@@ -156,8 +156,10 @@ ENDELSE
 
 master_min = 0
 master_max = 0
-min_array = FLTARR(nbr_plot)
-max_array = FLTARR(nbr_plot)
+min_array  = FLTARR(nbr_plot)
+max_array  = FLTARR(nbr_plot)
+xmax_array = FLTARR(nbr_plot)
+ymax_array = FLTARR(nbr_plot)
 
 WHILE (index LT nbr_plot) DO BEGIN
     
@@ -183,14 +185,22 @@ WHILE (index LT nbr_plot) DO BEGIN
     transparency_1 = trans_coeff_list[index]
     local_min = transparency_1 * MIN(rData)
     local_max = transparency_1 * MAX(rData)
+
+;save position of max value  
+    idx1 = WHERE(transparency_1*rData EQ local_max)
+    ind1 = ARRAY_INDICES(rData,idx1)
+    delta_x = xaxis[1]-xaxis[0]
+    xmax_array[index] = ind1[0]*delta_x
+    ymax_array[index] = ind1[1]/2.
+
     master_min = (local_min LT master_min) ? local_min : master_min
     master_max = (local_max GT master_max) ? local_max : master_max
-    IF (index EQ 0) THEN BEGIN ;first pass
+    IF (index EQ 0) THEN BEGIN  ;first pass
         total_array = rData
         x_axis[0] = (size(rData,/DIMENSION))[0]
         min_array[0] = local_min
         max_array[0] = local_max
-    ENDIF ELSE BEGIN ;other pass
+    ENDIF ELSE BEGIN            ;other pass
         size = (size(rData,/DIMENSIONS))[0]
         x_axis = [x_axis,size]
         min_array[index] = local_min
@@ -230,7 +240,7 @@ WHILE (index LT nbr_plot) DO BEGIN
 ENDWHILE
 
 ;put information in log book about min and max
-InformLogBook, Event, min_array, max_array
+InformLogBook, Event, min_array, max_array, xmax_array, ymax_array ;_gui
 
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT

@@ -159,7 +159,7 @@ WIDGET_CONTROL,HOURGLASS=0
 END
 
 ;------------------------------------------------------------------------------
-PRO  InformLogBook, Event, min_array, max_array
+PRO  InformLogBook, Event, min_array, max_array, xmax_array, ymax_array
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 list_OF_files = (*(*global).list_OF_ascii_files)
 sz = N_ELEMENTS(list_OF_Files)
@@ -168,7 +168,11 @@ text = ['> Information about loaded files:']
 WHILE (index LT sz) DO BEGIN
     new_text  = '-> ' + list_OF_files[index]
     new_text += ' : MIN = ' + STRCOMPRESS(min_array[index],/REMOVE_ALL)
-    new_text += ' : MAX = ' + STRCOMPRESS(max_array[index],/REMOVE_ALL)
+    new_text += ' : MAX = ' + STRCOMPRESS(max_array[index],/REMOVE_ALL) 
+    new_text += ' (First Point at max value is at (' 
+    new_text += STRCOMPRESS(xmax_array[index],/REMOVE_ALL)
+    new_text += ',' + STRCOMPRESS(ymax_array[index],/REMOVE_ALL)
+    new_text += ')'
     text = [text,new_text]
     ++index
 ENDWHILE
