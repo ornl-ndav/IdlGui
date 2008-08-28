@@ -14,7 +14,7 @@ FUNCTION getMapInfo::getInfo, x, y
     
     gen_struct = {number: 0, $
       type: '', $
-      offset: 0}
+      offset: 0L}
       
     all_struct = REPLICATE(gen_struct, numbanks)
     index_num = WHERE(STRMATCH(listen, '<number>*', /FOLD_CASE) EQ 1, count)
@@ -36,13 +36,14 @@ FUNCTION getMapInfo::getInfo, x, y
   file_struct = {path: self.path,$
     size_map: 0L, $
     size_bank: 0L, $
-    x: fix(x), $
-    y: fix(y), $
+    x: 0S, $
+    y: 0S, $
     numbanks: numbanks,$
     data: ptr_new(/allocate_heap), $
     all_data: ptr_new(/allocate_heap), $
     banks: all_struct}
-    
+    file_struct.x  = fix(x)
+    file_struct.y  = fix(y)
   RETURN, file_struct
 END
 

@@ -27,15 +27,17 @@ PRO plotData, Event, index, fn
     end
   endcase
   
+  x = (*(*global).file[fn]).x *2
+  y = (*(*global).file[fn]).y *2
   
-  ;id = widget_info(Event.top, find_by_uname = draw)
   if (*(*global).pane[fn]).draw ne 0 then begin
-    widget_control, id , /destroy
+    widget_control, (*(*global).pane[fn]).draw , /destroy
     print, 'killed draw widget'
   end
   
-  x = (*(*global).file[fn]).x *2
-  y = (*(*global).file[fn]).y *2
+  
+  
+  help,(*(*global).file[fn]), /structure
   
   base_x = x + 20
   base_y = y +120
@@ -51,31 +53,26 @@ PRO plotData, Event, index, fn
     ysize = y+10,$
     /MOTION_EVENTS, $
     uname = name)
+    
+  print, wDraw
+  (*(*global).pane[fn]).draw = wDraw
   
-    
-    
   help, x, y
   
   data = *((*(*global).file[fn]).all_data)
   
   dt_start = ((*(*global).file[fn]).banks[index-1]).offset
   if n_elements((*(*global).file[fn]).banks) gt 1 then begin
-  dt_end = ((*(*global).file[fn]).banks[index]).offset - 1
-  data = data[dt_start:dt_end]
+    print, ((*(*global).file[fn]).banks[index]).offset
+    dt_end = long(((*(*global).file[fn]).banks[index]).offset) - 1
+    data = data[dt_start:dt_end]
   endif else begin
-  data = data[dt_start:*]
+    data = data[dt_start:*]
   endelse
   
-  
-  print, data
   print, n_elements(data)
   data = reform(data, x/2, y/2, /OVERWRITE)
   (*(*global).file[fn]).data = ptr_new(data)
-  
-  
-  
-  ;id = widget_info(Event.top, find_by_uname = 'draw')
-  
   
   WIDGET_CONTROL, wDraw, GET_VALUE = ind
   WSET, ind
@@ -94,10 +91,7 @@ PRO plotData, Event, index, fn
     Plots, [x0,0], /device, color = 0
     Plots, [x0,y+10], /device , /continue, color = 0
   endfor
-;widget_control, Event.top, XSIZE = base_x, YSIZE=base_y
 END
-
-;PRO populateDropList, Event
 
 PRO select, Event, fn
   index = event.index
@@ -107,6 +101,8 @@ END
 PRO extend, Event
   widget_control, Event.top, get_uvalue=global
   
+  if n_elements(*(*global).file[0]) ne 0 then begin
+  endif
   
   widget_control, Event.top, XSIZE = 860
   help, event, /structure
@@ -245,15 +241,22 @@ END
 
 PRO getData, Event, fn
   widget_control, Event.top, get_uvalue=global
-  x = fix((*global).x)
-  y = fix((*global).y)
+  
+  widget_control, (*(*global).pane[fn]).txtX, get_value=tmp
+  x = fix(tmp)
+  widget_control, (*(*global).pane[fn]).txtY, get_value=tmp
+  y = fix(tmp)
+  
+  if ~fn then begin
+  (*global).x = x
+  (*global).y = y
+  endif
   
   
-  
+  ;reads the mapping file with either method
   use_read_binary = 1b
   IF (use_read_binary) THEN BEGIN
     all_data = READ_BINARY((*global).path, $
-      ; DATA_DIMS=[x, y],$
       DATA_TYPE = 3)
   ENDIF ELSE BEGIN
     openr,1,(*global).path
@@ -263,19 +266,20 @@ PRO getData, Event, fn
     N = long(fs.size)/Nbytes
     all_data = lonarr(N) ; create a longword integer array of N elements
     readu,1,all_data
-    all_data = reform(all_data, x, y, /OVERWRITE)
+ ;   all_data = reform(all_data, x, y, /OVERWRITE)
   ENDELSE
   close,1
   
   
-  
+  ;get info about the mapping file
   info = obj_new('getMapInfo',(*global).path)
   infStruct = info ->getInfo(x, y)
   *(*global).file[fn] = infStruct
   (*(*global).file[fn]).all_data = ptr_new(all_data)
+  
+  ;set up the combo box
   tmp = string(indgen(infStruct.numbanks + 1))
   tmp[0] = '--'
-  
   widget_control, (*(*global).pane[fn]).select, set_value = tmp
   widget_control, (*(*global).pane[fn]).select, sensitive = 1
   widget_control, Event.top, YSIZE= 640
@@ -291,7 +295,7 @@ END
 
 PRO check, Event, fn
   widget_control, Event.top, get_uvalue=global
-
+  
   ;  case fn of
   ;    0: begin
   ;      txtPath = 'txtPath'
@@ -304,8 +308,8 @@ PRO check, Event, fn
   ;      txtY =  'txtY1'
   ;    end
   ;  endcase
-
-
+  
+  
   
   flag= 1
   id = (*(*global).pane[fn]).txtPath
@@ -315,11 +319,9 @@ PRO check, Event, fn
     id = (*(*global).pane[fn]).txtX
     widget_control, id, get_value=tmp
     IF tmp NE '' THEN BEGIN
-      (*global).x = fix(tmp)
       id = (*(*global).pane[fn]).txtY
       widget_control, id, get_value=tmp
       IF tmp NE '' THEN BEGIN
-        (*global).y = fix(tmp)
         flag = 0
         getData, Event, fn
       ENDIF
@@ -335,7 +337,7 @@ END
 PRO draw, Event, fn
 
   widget_control, Event.top, get_uvalue=global
-
+  
   ;help, event, /structure
   ;  tmp = convert_coord(event.x, event.y, /normal, /to_data)
   ;  print, tmp
@@ -346,29 +348,29 @@ PRO draw, Event, fn
   ;print, x, y
   
   
-  help, (*(*global).pane[fn]).statusX
- ; id = widget_info(Event.top, find_by_uname = 'labX')
+  ;help, (*(*global).pane[fn]).statusX
+  ; id = widget_info(Event.top, find_by_uname = 'labX')
   widget_control, (*(*global).pane[fn]).statusX, set_value= 'X: ' +string(x)
- ; id = widget_info(Event.top, find_by_uname = 'labY')
+  ; id = widget_info(Event.top, find_by_uname = 'labY')
   widget_control, (*(*global).pane[fn]).statusY, set_value= 'Y: ' +string(y)
- ; id = widget_info(Event.top, find_by_uname = 'labZ')
+  ; id = widget_info(Event.top, find_by_uname = 'labZ')
   
- ; id = widget_info(Event.top, find_by_uname = 'txtX')
+  ; id = widget_info(Event.top, find_by_uname = 'txtX')
   widget_control, (*(*global).pane[fn]).txtX, get_value=tmp
   if (x lt fix(tmp)) then begin
-  ;  id = widget_info(Event.top, find_by_uname = 'txtY')
+    ;  id = widget_info(Event.top, find_by_uname = 'txtY')
     widget_control, (*(*global).pane[fn]).txtY, get_value=tmp
     if (y lt fix(tmp)) then begin
       widget_control, Event.top, get_uvalue=global
       data = *(*(*global).file[fn]).data
-     ; id = widget_info(Event.top, find_by_uname = 'labZ')
+      ; id = widget_info(Event.top, find_by_uname = 'labZ')
       widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ string(data[x,y])
     endif else begin
-   ;   id = widget_info(Event.top, find_by_uname = 'labZ')
+      ;   id = widget_info(Event.top, find_by_uname = 'labZ')
       widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ 'Unknown'
     endelse
   endif else begin
-   ; id = widget_info(Event.top, find_by_uname = 'labZ')
+    ; id = widget_info(Event.top, find_by_uname = 'labZ')
     widget_control, (*(*global).pane[fn]).statusZ, set_value= 'Z: '+ 'Unknown'
   endelse
 END
