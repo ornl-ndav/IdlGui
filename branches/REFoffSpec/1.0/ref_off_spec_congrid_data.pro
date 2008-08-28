@@ -96,6 +96,8 @@ WHILE (index LT sz) DO BEGIN
     ++index
 ENDWHILE
 
+;each new array pData_y (with congrid in x direction to share the same
+;x-axis are store in pData_y
 (*(*global).pData_y) = pData_y
 
 ;define new x-axis
