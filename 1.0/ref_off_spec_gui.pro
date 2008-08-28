@@ -49,8 +49,6 @@ END
 ;------------------------------------------------------------------------------
 PRO activate_browse_gui, Event, value
 activate_widget, Event, 'x_axis_ticks_base', value
-activate_widget, Event, 'selection_up', value
-activate_widget, Event, 'selection_down', value
 activate_widget, Event, 'ascii_preview_button', value
 activate_widget, Event, 'transparency_base', value
 activate_widget, Event, 'refresh_step2_plot', value

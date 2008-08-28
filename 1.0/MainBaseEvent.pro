@@ -65,16 +65,6 @@ CASE Event.id OF
         preview_ascii_file, Event ;_eventcb
     END
 
-;UP selection
-    Widget_Info(wWidget, FIND_BY_UNAME='selection_up'): BEGIN
-        move_selection, Event, TYPE='up' ;_gui
-    END
-
-;Down selection
-   Widget_Info(wWidget, FIND_BY_UNAME='selection_down'): BEGIN
-        move_selection, Event, TYPE='down' ;_gui
-    END
-
 ;Draw
     Widget_Info(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)

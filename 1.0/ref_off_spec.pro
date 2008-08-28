@@ -168,9 +168,6 @@ ENDIF
 ;==============================================================================
 ;==============================================================================
 
-
-
-
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams

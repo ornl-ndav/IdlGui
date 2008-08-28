@@ -31,6 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;This function checks the last x-axis value of each file and order the
+;file starting with the maximum x-axis final value
+FUNCTION order_files, Event, list_OF_files, stop_status
+sz = N_ELEMENTS(list_OF_files)
+IF (sz GT 1) THEN BEGIN
+    ordered_list_OF_Files = STRARR(sz)
+    x_final               = FLTARR(sz)
+    FOR i=0,(sz-1) DO BEGIN
+        spawn, 'tail -n 1 ' + list_OF_files[i], listening
+        x_final[i] = FLOAT(listening)
+    ENDFOR
+    index_sorted_down = SORT(x_final) ;index des x_final sorted
+    index_sorted_up   = REVERSE(index_sorted_down)
+    ordered_list_OF_files = list_OF_files[index_sorted_up]
+
+ENDIF ELSE BEGIN
+    ordered_list_OF_files = list_OF_files
+ENDELSE
+RETURN, ordered_list_OF_files
+END
 
 ;------------------------------------------------------------------------------
 PRO display_files_in_list, Event, ascii_file_name
@@ -46,7 +66,7 @@ WHILE (index LT NbrFiles) DO BEGIN
         sz = N_ELEMENTS(current_list_OF_files)
         IF (sz EQ 1 AND $
             current_list_OF_files[0] EQ '') THEN BEGIN
-        current_list_OF_Files = [ascii_file_name[index]]
+            current_list_OF_Files = [ascii_file_name[index]]
         ENDIF ELSE BEGIN
             current_list_OF_Files = $
               [current_list_OF_Files, ascii_file_name[index]]
@@ -54,8 +74,11 @@ WHILE (index LT NbrFiles) DO BEGIN
     ENDIF
     ++index
 ENDWHILE
-(*(*global).list_OF_ascii_files) = current_list_OF_files
-putAsciiFileList, Event, current_list_OF_files ;update list of files
+;order files
+order_current_list_OF_files = order_files(Event, current_list_OF_files)
+;save ordered list of files
+(*(*global).list_OF_ascii_files) = order_current_list_OF_files
+putAsciiFileList, Event, order_current_list_OF_files ;update list of files
 END
 
 ;------------------------------------------------------------------------------
@@ -87,12 +110,14 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
         (*global).first_load = 0
     ENDELSE
     display_files_in_list, $    ;add the new files to the widget_list
-      Event,$
+      Event,$                   ;and order them
       ascii_file_name
-;display list of ascii_file_name in transparency percentage button
-    display_file_names_transparency, Event, ascii_file_name ;_gui
+;;display list of ascii_file_name in transparency percentage button
+    display_file_names_transparency, $
+      Event, $
+      (*(*global).list_OF_ascii_files) ;_gui
     readAsciiData, Event ;read the ascii files and store value in a pointer
-    plotAsciiData, Event ;plot the ascii files (_plot.pro)
+    plotAsciiData, Event        ;plot the ascii files (_plot.pro)
     activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
