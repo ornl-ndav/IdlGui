@@ -10,6 +10,7 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "CONGRID", /either
 resolve_routine, "XDISPLAYFILE", /either
 resolve_routine, "ARRAY_INDICES", /either
+resolve_routine, "REVERSE", /either
 
 save,/routines,filename = CurrentFolder + '/ref_off_spec.sav'
 exit
