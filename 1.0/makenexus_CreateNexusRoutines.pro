@@ -126,7 +126,7 @@ END
 
 
 
-FUNCTION RunmpFlags, Event, CNstruct
+FUNCTION RunmpFlags, Event, CNstruct, TRY_NBR=try_nbr
 
 ;retrieving parameters
 instrument     = CNstruct.instrument
@@ -145,27 +145,36 @@ error_status = 0
 ;name of event file
 event_file = base_file_name + '_neutron_event.dat'
 
-message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + $
-  processing
+IF (N_ELEMENTS(TRY_NBR) EQ 0) THEN BEGIN
+    message = '>(1/'+NbrSteps+') Creating Histo. ' + $
+      'Mapped Files .............. ' + $
+      processing
 appendLogBook, Event, message
+ENDIF
 cmd = (*global).Event_to_Histo_Mapped 
 cmd += ' -a ' + stagingArea + ' ' + event_file
-
-;NbrPhase
-NbrPolaStates = (*global).NbrPolaStates
-cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
 
 ;special case for REF_M
 TotalNbrPixel = 0
 IF (instrument EQ 'REF_M') THEN BEGIN
-    FOR i=0,(NbrPolaStates-1) DO BEGIN
-        cmd += ' -P ' + strcompress(TotalNbrPixel,/remove_all)
-        TotalNbrPixel += 77824
-    ENDFOR
+
+;NbrPhase
+    NbrPolaStates = (*global).NbrPolaStates
+    IF (NbrPolaStates GT 1) THEN BEGIN
+        cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
+        
+        FOR i=0,(NbrPolaStates-1) DO BEGIN
+            cmd += ' -P ' + strcompress(TotalNbrPixel,/remove_all)
+            TotalNbrPixel += 77824
+        ENDFOR
+    ENDIF
 ENDIF
 
 ;total number of pixels
 TotalNbrPixel = getTotalNbrPixel(base_file_name)
+IF (instrument EQ 'REF_M' AND N_ELEMENTS(TRY_NBR) EQ 1) THEN BEGIN
+    TotalNbrPixel = 77824
+ENDIF
 cmd += ' -p ' + strcompress(TotalNbrPixel,/remove_all)
 
 ;BinningType
@@ -216,11 +225,24 @@ ENDIF ELSE BEGIN
     cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
     AppendMyLogBook, Event, cmd_text
     spawn, cmd, listening, err_listening
-    IF (err_listening[0] NE '') THEN BEGIN
+    IF (err_listening[0] NE '' OR $ ;failed
+        listening[0] EQ '') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
         AppendMyLogBook, Event, err_listening
-        error_status = 1
-        putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+;try the same thing but with only 1 pola state (just in case) for
+;REF_M only
+        IF (instrument EQ 'REF_M') THEN BEGIN
+            IF (N_ELEMENTS(TRY_NBR) EQ 0) THEN BEGIN
+                (*global).NbrPolaStates = 1
+                error_status = RunmpFlags(Event, CNstruct, TRY_NBR=2)
+                putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+            ENDIF ELSE BEGIN
+                error_status =1
+            ENDELSE
+        ENDIF ELSE BEGIN
+            error_status = 1
+            putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+        ENDELSE
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         putTextAtEndOfLogBook, Event, OK, PROCESSING

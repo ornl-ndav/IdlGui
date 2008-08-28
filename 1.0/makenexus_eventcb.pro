@@ -611,7 +611,7 @@ RETURN, 1
 ;GOTO
 
 error: BEGIN
-    putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
+;   putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
     validateCreateNexusButton, Event, 0
     progressBar->Destroy
     Obj_Destroy, progressBar
