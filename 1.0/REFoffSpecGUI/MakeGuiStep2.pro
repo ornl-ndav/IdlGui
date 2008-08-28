@@ -105,13 +105,13 @@ sColorScale = { size: [sScale.size[0]+$
                 uname: 'scale_color_draw'}
 
 ;X and Y of mouse over plot area ----------------------------------------------
-XYoff = [-160,-30]
+XYoff = [-250,-30]
 sXYdisplay = { size: [sColorScale.size[0]+$
                       XYoff[0],$
                       sColorScale.size[1]+$
                       XYoff[1],$
-                      200],$
-               value: 'x: ?  |  y: ?',$
+                      300],$
+               value: 'x: ?  |  y: ?  |  counts: ?',$
                uname: 'xy_display_step2',$
                frame: 1}
 
