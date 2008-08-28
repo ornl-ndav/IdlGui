@@ -150,19 +150,15 @@ max_coeff       = MAX(congrid_coeff_array)
 index_max_array = WHERE(congrid_coeff_array EQ max_coeff)
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN ;from browse button
-    IF ((*global).first_load EQ 1) THEN BEGIN
+;    IF ((*global).first_load EQ 1) THEN BEGIN
 ;populate trans_coeff_list using default value of (1,1,...)
-        trans_coeff_list = FLTARR(nbr_plot) + 1.
-    ENDIF ELSE BEGIN
-        trans_coeff_list = (*(*global).trans_coeff_list)
-        trans_coeff_list = [trans_coeff_list,1.]
-
-;FIX_ME
-;if we added more than 1 file, the trans_coeff_list only adds
-;1. ..PROBLEM !!
-
-    ENDELSE
+    trans_coeff_list = FLTARR(nbr_plot) + 1.
     (*(*global).trans_coeff_list) = trans_coeff_list
+;    ENDIF ELSE BEGIN
+;        trans_coeff_list = (*(*global).trans_coeff_list)        
+;        trans_coeff_list = [trans_coeff_list,1.]
+;    ENDELSE
+;    (*(*global).trans_coeff_list) = trans_coeff_list
 ENDIF ELSE BEGIN ;when using 'replot'
     trans_coeff_list = (*(*global).trans_coeff_list)
 ENDELSE
