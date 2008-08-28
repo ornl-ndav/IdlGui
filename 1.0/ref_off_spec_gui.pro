@@ -94,10 +94,10 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 list_OF_files  = (*(*global).list_OF_ascii_files)
 NbrFiles       = N_ELEMENTS(list_OF_Files)
 index_selected = getAsciiSelectedIndex(Event)
+
 ;get list of file selected
 ;list_OF_files_selected = list_OF_files[index_selected]
 sz = N_ELEMENTS(index_selected)
-
 CASE (type) OF
     'up': BEGIN
         i = 0
@@ -175,4 +175,41 @@ WHILE (index LT sz) DO BEGIN
     ++index
 ENDWHILE
 IDLsendToGeek_addLogBookText, Event, text
+END
+
+;------------------------------------------------------------------------------
+PRO delete_ascii_file_from_list, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+activate_widget, Event, 'ascii_delete_button', 0
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+list_OF_files = (*(*global).list_OF_ascii_files)
+sz = N_ELEMENTS(list_OF_Files)
+index_selected = getAsciiSelectedIndex(Event)
+;index selected becomes blank lines
+list_OF_files[index_selected] = ''
+index = WHERE(list_OF_files NE '', nbr)
+IF (nbr GT 0) THEN BEGIN
+    new_list_OF_ascii_files = list_OF_files(index)
+ENDIF ELSE BEGIN
+    new_list_OF_ascii_files = STRARR(1)
+ENDELSE
+(*(*global).list_OF_ascii_files) = new_list_OF_ascii_files 
+;repopulate list
+putAsciiFileList, Event, new_list_OF_ascii_files 
+;display list of ascii_file_name in transparency percentage button
+display_file_names_transparency, Event, new_list_OF_ascii_files ;_gui
+IF (new_list_OF_ascii_files[0] EQ '') THEN BEGIN
+    (*global).something_to_plot = 0
+;clear plot
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
+    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    WSET,id_value
+    ERASE
+ENDIF ELSE BEGIN
+    readAsciiData, Event ;read the ascii files and store value in a pointer
+    plotAsciiData, Event        ;plot the ascii files (_plot.pro)
+ENDELSE
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
 END
