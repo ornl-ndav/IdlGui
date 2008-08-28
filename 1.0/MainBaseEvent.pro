@@ -87,6 +87,8 @@ CASE Event.id OF
             text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
             text += '  |  y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
             putTextFieldValue, Event, 'xy_display_step2', text
+            total_array = (*(*global).total_array)
+;            print, total_array(x,y)
         ENDIF
     END
 
