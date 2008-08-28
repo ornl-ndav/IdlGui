@@ -112,10 +112,13 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     display_files_in_list, $    ;add the new files to the widget_list
       Event,$                   ;and order them
       ascii_file_name
-;;display list of ascii_file_name in transparency percentage button
-    display_file_names_transparency, $
-      Event, $
-      (*(*global).list_OF_ascii_files) ;_gui
+    index = WHERE((*global).ucams EQ (*global).super_users)
+    IF (index NE -1) THEN BEGIN ;for super users only
+        ;;display list of ascii_file_name in transparency percentage button
+        display_file_names_transparency, $
+          Event, $
+          (*(*global).list_OF_ascii_files) ;_gui
+    ENDIF
     readAsciiData, Event ;read the ascii files and store value in a pointer
     plotAsciiData, Event        ;plot the ascii files (_plot.pro)
     activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui

@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_step2, REDUCE_TAB, tab_size, TabTitles
+PRO make_gui_step2, REDUCE_TAB, tab_size, TabTitles, global
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
@@ -309,54 +309,59 @@ wColorScale = WIDGET_DRAW(BaseTab,$
                           SCR_YSIZE = sColorScale.size[3],$
                           UNAME     = sColorScale.uname)
 
+index = WHERE((*global).ucams EQ (*global).super_users)
+IF (index NE -1) THEN BEGIN ;for super users
+
 ;Transparency coeff -----------------------------------------------------------
-TransBase = WIDGET_BASE(BaseTab,$
-                        XOFFSET   = sTransBase.size[0],$
-                        YOFFSET   = sTransBase.size[1],$
-                        SCR_XSIZE = sTransBase.size[2],$
-                        SCR_YSIZE = sTransBase.size[3],$
-                        UNAME     = sTransBase.uname,$
-                        FRAME     = sTransBase.frame,$
-                        SENSITIVE = sTransBase.sensitive)
+    TransBase = WIDGET_BASE(BaseTab,$
+                            XOFFSET   = sTransBase.size[0],$
+                            YOFFSET   = sTransBase.size[1],$
+                            SCR_XSIZE = sTransBase.size[2],$
+                            SCR_YSIZE = sTransBase.size[3],$
+                            UNAME     = sTransBase.uname,$
+                            FRAME     = sTransBase.frame,$
+                            SENSITIVE = sTransBase.sensitive)
 ;label
-label = WIDGET_LABEL(TransBase,$
-                     XOFFSET = sTranLabel.size[0],$
-                     YOFFSET = sTranLabel.size[1],$
-                     VALUE   = sTranLabel.value)
+    label = WIDGET_LABEL(TransBase,$
+                         XOFFSET = sTranLabel.size[0],$
+                         YOFFSET = sTranLabel.size[1],$
+                         VALUE   = sTranLabel.value)
 ;droplist
-droplist = WIDGET_DROPLIST(TransBase,$
-                           VALUE   = sTranList.list,$
-                           XOFFSET = sTranList.size[0],$
-                           YOFFSET = sTranList.size[1],$
-                           UNAME   = StranList.uname)
-
+    droplist = WIDGET_DROPLIST(TransBase,$
+                               VALUE   = sTranList.list,$
+                               XOFFSET = sTranList.size[0],$
+                               YOFFSET = sTranList.size[1],$
+                               UNAME   = StranList.uname)
+    
 ;label
-label = WIDGET_LABEL(TransBase,$
-                     XOFFSET = sTLabel.size[0],$
-                     YOFFSET = sTLabel.size[1],$
-                     VALUE   = sTLabel.value)
+    label = WIDGET_LABEL(TransBase,$
+                         XOFFSET = sTLabel.size[0],$
+                         YOFFSET = sTLabel.size[1],$
+                         VALUE   = sTLabel.value)
 ;text
-text = WIDGET_TEXT(TransBase,$
-                   XOFFSET   = sTranPercentage.size[0],$
-                   YOFFSET   = sTranPercentage.size[1],$
-                   SCR_XSIZE = sTranPercentage.size[2],$
-                   UNAME     = sTranPercentage.uname,$
-                   VALUE     = sTranPercentage.value,$
-                   /EDITABLE,$
-                   /ALIGN_LEFT)
+    text = WIDGET_TEXT(TransBase,$
+                       XOFFSET   = sTranPercentage.size[0],$
+                       YOFFSET   = sTranPercentage.size[1],$
+                       SCR_XSIZE = sTranPercentage.size[2],$
+                       UNAME     = sTranPercentage.uname,$
+                       VALUE     = sTranPercentage.value,$
+                       /EDITABLE,$
+                       /ALIGN_LEFT)
 ;label
-label = WIDGET_LABEL(TransBase,$
-                     XOFFSET = sTranCoeffLabel.size[0],$
-                     YOFFSET = sTranCoeffLabel.size[1],$
-                     VALUE   = sTranCoeffLabel.value)
-
+    label = WIDGET_LABEL(TransBase,$
+                         XOFFSET = sTranCoeffLabel.size[0],$
+                         YOFFSET = sTranCoeffLabel.size[1],$
+                         VALUE   = sTranCoeffLabel.value)
+    
 ;Full Reset Button
-button = WIDGET_BUTTON(TransBase,$
-                       XOFFSET   = sFullReset.size[0],$
-                       YOFFSET   = sFullReset.size[1],$
-                       SCR_XSIZE = sFullReset.size[2],$
-                       VALUE     = sFullReset.value,$
-                       UNAME     = sFullReset.uname)
+    button = WIDGET_BUTTON(TransBase,$
+                           XOFFSET   = sFullReset.size[0],$
+                           YOFFSET   = sFullReset.size[1],$
+                           SCR_XSIZE = sFullReset.size[2],$
+                           VALUE     = sFullReset.value,$
+                           UNAME     = sFullReset.uname)
+
+ENDIF
 
 ;Linear / Logarithmic ---------------------------------------------------------
 wLinLog = CW_BGROUP(BaseTab,$

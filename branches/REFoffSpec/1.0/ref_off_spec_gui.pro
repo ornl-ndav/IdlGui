@@ -50,7 +50,11 @@ END
 PRO activate_browse_gui, Event, value
 activate_widget, Event, 'x_axis_ticks_base', value
 activate_widget, Event, 'ascii_preview_button', value
-activate_widget, Event, 'transparency_base', value
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+index = WHERE((*global).ucams EQ (*global).super_users)
+IF (index NE -1) THEN BEGIN ;for super users
+    activate_widget, Event, 'transparency_base', value
+ENDIF
 activate_widget, Event, 'refresh_step2_plot', value
 END
 
@@ -198,7 +202,12 @@ ENDELSE
 ;repopulate list
 putAsciiFileList, Event, new_list_OF_ascii_files 
 ;display list of ascii_file_name in transparency percentage button
-display_file_names_transparency, Event, new_list_OF_ascii_files ;_gui
+
+index = WHERE((*global).ucams EQ (*global).super_users)
+IF (index NE -1) THEN BEGIN     ;for super users only
+    display_file_names_transparency, Event, new_list_OF_ascii_files ;_gui
+ENDIF
+
 IF (new_list_OF_ascii_files[0] EQ '') THEN BEGIN
     (*global).something_to_plot = 0
 ;clear plot
