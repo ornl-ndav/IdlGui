@@ -58,6 +58,7 @@ CASE Event.id OF
 
 ;Ascii File list
     Widget_Info(wWidget, FIND_BY_UNAME='ascii_file_list'): BEGIN
+        activate_widget, Event, 'ascii_delete_button', 1
     END
     
 ;Preview ASCII file selected
@@ -97,6 +98,11 @@ CASE Event.id OF
         xaxis = (*(*global).x_axis)
         contour_plot, Event, xaxis ;_plot
         plotASCIIdata, Event, TYPE='replot' ;_plot
+    END
+
+;delete ascii files
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='ascii_delete_button'): BEGIN
+        delete_ascii_file_from_list, Event ;_gui
     END
 
 ;transparency list of files droplist
