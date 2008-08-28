@@ -45,6 +45,7 @@ DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 SCROLLING         = 'no' 
 CHECKING_PACKAGES = 'yes'
+SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see
 sDEBUGGING = { tab: {main_tab: 1},$ ;0:step1, 1:step2, 2:logBook
@@ -69,6 +70,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    super_users:         SUPER_USERS,$
                     delta_x:             0.,$
                     something_to_plot:   0,$
                     first_load:          0,$

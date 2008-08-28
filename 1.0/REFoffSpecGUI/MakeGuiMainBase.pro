@@ -71,7 +71,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;step2
-make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles
+make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;Build LogBook
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
