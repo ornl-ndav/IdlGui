@@ -1,7 +1,6 @@
 pro MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
-  HELP, EVENT, /STRUCTURE
   
   case Event.id of
   
@@ -60,6 +59,7 @@ pro MAIN_BASE_event, Event
     
     Widget_Info(wWidget, FIND_BY_UNAME='draw1'): begin
       draw, Event, 1
+      print, 'status 2'
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='select1'): begin
@@ -124,9 +124,9 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pane: ptrarr(2, /allocate_heap), $
     all_data: ptr_new(), $
     data: ptr_new(), $
-    extended: 0, $
-    x: '', $
-    y: ''})
+    extended: 0S, $
+    x: 0S, $
+    y: 0S})
   ;============================
     
     
