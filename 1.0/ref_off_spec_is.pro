@@ -39,6 +39,13 @@ return, isLogSelected
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION isLogZaxisShiftingSelected, Event
+id = widget_info(Event.top,find_by_uname='z_axis_linear_log_shifting')
+widget_control, id, get_value=isLogSelected
+return, isLogSelected
+END
+
+;------------------------------------------------------------------------------
 FUNCTION isThisIndexSelected, Event, index_selected, this_index
 bFoundList = WHERE(index_selected EQ this_index,nbr)
 IF (nbr GT 0) THEN RETURN, 1

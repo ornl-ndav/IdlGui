@@ -76,6 +76,11 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     2: BEGIN ;shifting
+        IF((*global).something_to_plot) THEN BEGIN
+            xaxis = (*(*global).x_axis)
+            contour_plot_shifting, Event, xaxis
+            plotAsciiData_shifting, Event
+        ENDIF
     END
 
     3: BEGIN ;log book        

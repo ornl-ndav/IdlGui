@@ -42,7 +42,38 @@ sBaseTab = { size:  tab_size,$
              uname: 'step3_tab_base',$
              title: TabTitles.step3}
 
-XYOff = [43,30] ;Draw ---------------------------------------------------------
+;x/y and counts values --------------------------------------------------------
+XYoff = [50,10] ;X value
+sXlabel = { size: [XYoff[0],$
+                   XYOff[1],$
+                   100],$
+            value: 'X: ?',$
+            uname: 'x_value_shifting'}
+;Y value
+XYoff = [100,0]
+sYlabel = { size: [sXlabel.size[0]+XYoff[0],$
+                   sXlabel.size[1]+XYoff[1],$
+                   sXlabel.size[2]],$
+            value: 'Y: ?',$
+            uname: 'y_value_shifting'}
+;Counts value
+XYoff = [100,0]
+sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
+                        sYlabel.size[1]+XYoff[1],$
+                        sYlabel.size[2]],$
+                 value: 'Counts: ?',$
+                 uname: 'counts_value_shifting'}
+       
+;Lin/Log z-axis ---------------------------------------------------------------
+XYoff = [-175,0]
+sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
+                   XYoff[1]],$
+            list: ['Linear','Log'],$
+            label: 'Z-axis:',$
+            uname: 'z_axis_linear_log_shifting',$
+            value: 0.0}
+
+XYOff = [43,50] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
                  XYoff[1],$
                  tab_size[2]-125,$
@@ -78,6 +109,29 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       SCR_YSIZE = sBaseTab.size[3],$
                       TITLE     = sBaseTab.title)
 
+;x/y and counts values --------------------------------------------------------
+wXLabel = WIDGET_LABEL(BaseTab,$
+                       XOFFSET   = sXlabel.size[0],$
+                       YOFFSET   = sXlabel.size[1],$
+                       SCR_XSIZE = sXlabel.size[2],$
+                       VALUE     = sXlabel.value,$
+                       UNAME     = sXlabel.uname,$
+                       /ALIGN_LEFT)
+wXLabel = WIDGET_LABEL(BaseTab,$
+                       XOFFSET   = sYLabel.size[0],$
+                       YOFFSET   = sYLabel.size[1],$
+                       SCR_XSIZE = sYLabel.size[2],$
+                       VALUE     = sYLabel.value,$
+                       UNAME     = sYLabel.uname,$
+                       /ALIGN_LEFT)
+wCountsLabel = WIDGET_LABEL(BaseTab,$
+                       XOFFSET   = sCountsLabel.size[0],$
+                       YOFFSET   = sCountsLabel.size[1],$
+                       SCR_XSIZE = sCountsLabel.size[2],$
+                       VALUE     = sCountsLabel.value,$
+                       UNAME     = sCountsLabel.uname,$
+                       /ALIGN_LEFT)
+
 ;Draw -------------------------------------------------------------------------
 wDraw = WIDGET_DRAW(BaseTab,$
                     XOFFSET       = sDraw.size[0],$
@@ -102,5 +156,17 @@ wColorScale = WIDGET_DRAW(BaseTab,$
                           SCR_XSIZE = sColorScale.size[2],$
                           SCR_YSIZE = sColorScale.size[3],$
                           UNAME     = sColorScale.uname)
+
+;Linear / Logarithmic ---------------------------------------------------------
+wLinLog = CW_BGROUP(BaseTab,$
+                    sLinLog.list,$
+                    XOFFSET    = sLinLog.size[0],$
+                    YOFFSET    = sLinLog.size[1],$
+                    SET_VALUE  = sLinLog.value,$
+                    UNAME      = sLinLog.uname,$
+                    LABEL_LEFT = sLinLog.label,$
+                    /EXCLUSIVE,$
+                    /ROW,$
+                    /NO_RELEASE)
 
 END
