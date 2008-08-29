@@ -112,6 +112,10 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
     display_files_in_list, $    ;add the new files to the widget_list
       Event,$                   ;and order them
       ascii_file_name
+;display first file in step3/reference file and all of them in the 
+;droplist of 'activet file' (step3
+    updateStep3FileNames, Event;_shifting
+
     index = WHERE((*global).ucams EQ (*global).super_users)
     IF (index NE -1) THEN BEGIN ;for super users only
         ;;display list of ascii_file_name in transparency percentage button

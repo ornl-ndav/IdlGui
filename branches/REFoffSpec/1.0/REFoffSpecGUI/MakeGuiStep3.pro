@@ -116,6 +116,42 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw_step3'}
 
+;Reference File Base ----------------------------------------------------------
+XYoff = [5,5]
+sRefBase = { size: [XYoff[0],$
+                    sScale.size[1]+$
+                    sScale.size[3]+$
+                    XYoff[1],$
+                    535,$
+                    30],$
+             uname: 'reference_base_shifting',$
+             frame: 1}
+XYoff = [0,8]
+sRefLabel = { size: [XYoff[0],$
+                     XYoff[1]],$
+              value: 'Reference File:'}
+XYoff = [100,0]
+sRefFileName = { size: [sRefLabel.size[0]+XYoff[0],$
+                        sRefLabel.size[1]+XYoff[1],$
+                        200],$
+                 value: 'N/A',$
+                 uname: 'reference_file_name_shifting'}
+XYoff = [90,0]
+sRefPixelLabel = { size: [sRefFileName.size[0]+$
+                          sRefFileName.size[2]+$
+                          XYoff[0],$
+                          sRefFileName.size[1]+$
+                          XYoff[1]],$
+                   value: 'Reference Pixel:'}
+XYoff = [100,-8]
+sRefPixelValue = { size: [sRefPixelLabel.size[0]+$
+                          XYoff[0],$
+                          sRefPixelLabel.size[1]+$
+                          XYoff[1],$
+                          40],$
+                   value: '',$
+                   uname: 'reference_pixel_value_shifting'}
+                          
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -207,5 +243,41 @@ wLinLog = CW_BGROUP(BaseTab,$
                     /EXCLUSIVE,$
                     /ROW,$
                     /NO_RELEASE)
+
+;Reference File Base ----------------------------------------------------------
+wRefBase = WIDGET_BASE(BaseTab,$
+                       XOFFSET   = sRefBase.size[0],$
+                       YOFFSET   = sRefBase.size[1],$
+                       SCR_XSIZE = sRefBase.size[2],$
+                       SCR_YSIZE = sRefBase.size[3],$
+                       FRAME     = sRefBase.frame,$
+                       UNAME     = sRefBase.uname)
+
+wRefLabel = WIDGET_LABEL(wRefBase,$
+                         XOFFSET = sRefLabel.size[0],$
+                         YOFFSET = sRefLabel.size[1],$
+                         VALUE   = sRefLabel.value)
+
+wRefFileName = WIDGET_LABEL(wRefBase,$
+                            XOFFSET   = sRefFileName.size[0],$
+                            YOFFSET   = sRefFileName.size[1],$
+                            SCR_XSIZE = sRefFileName.size[2],$
+                            VALUE     = sRefFileName.value,$
+                            UNAME     = sRefFileName.uname,$
+                            /ALIGN_LEFT)
+
+wRefPixelLabel = WIDGET_LABEL(wRefBase,$
+                              XOFFSET = sRefPixelLabel.size[0],$
+                              YOFFSET = sRefPixelLabel.size[1],$
+                              VALUE   = sRefPixelLabel.value)
+                              
+wRefPixelValue = WIDGET_TEXT(wRefBase,$
+                             XOFFSET   = sRefPixelValue.size[0],$
+                             YOFFSET   = sRefPixelValue.size[1],$
+                             SCR_XSIZE = sRefPixelValue.size[2],$
+                             VALUE     = sRefPixelValue.value,$
+                             UNAME     = sRefPixelValue.uname,$
+                             /EDITABLE,$
+                             /ALIGN_LEFT)
 
 END
