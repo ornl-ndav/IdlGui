@@ -66,3 +66,8 @@ END
 PRO putListOfFilesTransparency, Event, list_OF_files 
 putList, Event, 'transparency_file_list', list_OF_files
 END
+
+;------------------------------------------------------------------------------
+PRO putListOfFilesShifting, Event, list_OF_files 
+putList, Event, '', list_OF_files
+END

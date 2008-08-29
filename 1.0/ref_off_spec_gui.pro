@@ -202,6 +202,7 @@ ENDELSE
 ;repopulate list
 putAsciiFileList, Event, new_list_OF_ascii_files 
 ;display list of ascii_file_name in transparency percentage button
+updateStep3FileNames, Event ;_shifting (update the files names in step3
 
 index = WHERE((*global).ucams EQ (*global).super_users)
 IF (index NE -1) THEN BEGIN     ;for super users only
