@@ -14,21 +14,62 @@ END
 PRO plotData, Event, index, fn
   widget_control, Event.top, get_uvalue=global
   
+  x = (*(*global).file[fn]).x *2
+  y = (*(*global).file[fn]).y *2
+  y_offset = 130
+  
   case fn of
     0: begin
       x_offset = 5
       name = 'draw'
-      print, 'pane_1'
+      if (*global).extended then begin
+      
+        start_draw = ((*global).x * 2) + 20
+        
+        if start_draw lt 415 then begin
+          start_draw = 415S
+        endif
+        
+        widget_control, Event.top, XSIZE = (start_draw + 470)
+        
+        id = widget_info(Event.top, find_by_uname = 'gen_buttons')
+        widget_control, id, xoffset = start_draw + 410
+        widget_control, (*(*global).pane[1]).pane, xoffset = start_draw
+        id = widget_info(Event.top, find_by_uname = 'draw1')
+        if id ne 0 then widget_control, id, xoffset = start_draw
+        id = widget_info(Event.top, find_by_uname = 'framePlotCtrl1')
+        if id ne 0 then widget_control, id, xoffset = start_draw
+        
+      endif else begin
+      
+        widget_control, Event.top, XSIZE= x + 20
+      endelse
+      
+      if (*global).y1 lt y then begin
+        widget_control, Event.top, YSIZE= y + y_offset + 20
+      endif
+      
+      
     end
+    
     1: begin
-      x_offset = 400
+      x_offset = (*global).x *2 +20
+      if x_offset lt 415 then begin
+        x_offset = 415S
+      endif
       name = 'draw1'
-      print, 'pane_2'
+      ;      base_y = y + 140
+      if (*global).y lt y then begin
+        widget_control, Event.top, YSIZE= y + y_offset + 10
+      endif
+      if x gt 440 then begin
+        widget_control, Event.top, XSIZE= ((*global).x *2) +30
+      endif
+      
     end
   endcase
   
-  x = (*(*global).file[fn]).x *2
-  y = (*(*global).file[fn]).y *2
+  
   
   if (*(*global).pane[fn]).draw ne 0 then begin
     widget_control, (*(*global).pane[fn]).draw , /destroy
@@ -36,19 +77,12 @@ PRO plotData, Event, index, fn
   end
   
   
+  ;  if base_x lt 430 then base_x = 430
   
-  help,(*(*global).file[fn]), /structure
-  
-  base_x = x + 20
-  base_y = y +120
-  if base_x lt 430 then base_x = 430
-  if base_y lt 140 then base_y = 140
-  
-  widget_control, Event.top, YSIZE=base_y
   
   wDraw = WIDGET_DRAW(event.top,$
     xoffset = x_offset,$
-    yoffset = 120,$
+    yoffset = y_offset,$
     xsize = x+10,$
     ysize = y+10,$
     /MOTION_EVENTS, $
@@ -101,143 +135,277 @@ END
 PRO extend, Event
   widget_control, Event.top, get_uvalue=global
   
-  if n_elements(*(*global).file[0]) ne 0 then begin
+  if (*global).extended then begin
+    widget_control, (*(*global).pane[1]).pane, /destroy
+    id = widget_info(Event.top, find_by_uname = 'draw1')
+    if id ne 0 then widget_control, id, /destroy
+    (*global).extended = 0
+    
+    end_draw = ((*global).x * 2) + 10
+    if end_draw lt 415 then begin
+      end_draw = 415S
+    endif
+    
+    widget_control, Event.top, XSIZE = end_draw + 50
+    
+    id = widget_info(Event.top, find_by_uname = 'gen_buttons')
+    widget_control, event.id, set_value = '>>'
+    widget_control, id, xoffset = end_draw
+    
+    id = widget_info(Event.top, find_by_uname = 'framePlotCtrl1')
+    if id ne 0 then widget_control, id, /destroy
+    
+  endif else begin
+  
+    start_draw = ((*global).x * 2) + 20
+    
+    if start_draw lt 415 then begin
+      start_draw = 415S
+    endif
+    
+    print, 'start at:', start_draw
+    widget_control, Event.top, XSIZE = (start_draw + 470)
+    help, event, /structure
+    
+    id = widget_info(Event.top, find_by_uname = 'gen_buttons')
+    widget_control, event.id, set_value = '<<'
+    widget_control, id, xoffset = start_draw + 410
+    
+    
+    id = widget_info(Event.top, find_by_uname = 'framePlotCtrl1')
+    if id ne 0 then widget_control, id, xoffset = end_draw
+    
+    
+    pane_2 = Widget_Base( Event.top,$
+      GROUP_LEADER=MAIN_BASE,$
+      UNAME          = 'pane_2',$
+      XOFFSET        = start_draw,$
+      YOFFSET        = 5,$
+      XSIZE      = 395,$
+      YSIZE      = 70,$
+      FRAME       = 4)
+      
+    loadFile = widget_button(pane_2,$
+      xoffset = 355,$
+      yoffset = 0,$
+      xsize = 35,$
+      ysize = 30,$
+      value = '...',$
+      uname = 'loadFile1')
+      
+    Label1 = widget_label(pane_2,$
+      /ALIGN_LEFT, $
+      /DYNAMIC_RESIZE, $
+      xoffset = 0,$
+      yoffset = 10,$
+      ; xsize = 80,$
+      ;ysize = 30,$
+      value = 'Select file:',$
+      uname = 'label4')
+      
+    Label2 = widget_label(pane_2,$
+      /ALIGN_LEFT, $
+      /DYNAMIC_RESIZE, $
+      xoffset = 0,$
+      yoffset = 45,$
+      ;xsize = 140,$
+      ;ysize = 30,$
+      value = '#X pixels/bank:',$
+      uname = 'label5')
+      
+    Label3 = widget_label(pane_2,$
+      /ALIGN_LEFT, $
+      /DYNAMIC_RESIZE, $
+      xoffset = 205,$
+      yoffset = 45,$
+      ;xsize = 140,$
+      ;ysize = 30,$
+      value = '#Y pixels/bank:',$
+      uname = 'label6')
+      
+    txtPath = WIDGET_TEXT(pane_2,$
+      xoffset = 90,$
+      yoffset = 0,$
+      scr_xsize = 260,$
+      scr_ysize = 30,$
+      /NO_NEWLINE, $
+      /EDITABLE, $
+      uname = 'txtPath1')
+      
+    txtX= WIDGET_TEXT(pane_2,$
+      xoffset = 110,$
+      yoffset = 35,$
+      scr_xsize = 80,$
+      scr_ysize = 30,$
+      /NO_NEWLINE, $
+      /EDITABLE, $
+      uname = 'txtX1')
+      
+    txtY= WIDGET_TEXT(pane_2,$
+      xoffset = 310,$
+      yoffset = 35,$
+      scr_xsize = 80,$
+      scr_ysize = 30,$
+      /NO_NEWLINE, $
+      /EDITABLE, $
+      uname = 'txtY1')
+      
+    ;    select = WIDGET_COMBOBOX(Event.top,$
+    ;      /sensitive, $
+    ;      xoffset = 400,$
+    ;      yoffset = 80,$
+    ;      xsize = 110,$
+    ;      ysize = 25,$
+    ;      value = 'Select...',$
+    ;      uname = 'select1')
+    ;
+    ;    statusX = widget_label(Event.top,$
+    ;      /ALIGN_LEFT, $
+    ;      /SUNKEN_FRAME, $
+    ;      xoffset = 520,$
+    ;      yoffset = 80,$
+    ;      xsize = 80,$
+    ;      ysize = 20,$
+    ;      value = 'X:',$
+    ;      uname = 'labX1')
+    ;
+    ;    statusY = widget_label(Event.top,$
+    ;      /ALIGN_LEFT, $
+    ;      /SUNKEN_FRAME, $
+    ;      xoffset = 610,$
+    ;      yoffset = 80,$
+    ;      xsize = 80,$
+    ;      ysize = 20,$
+    ;      value = 'Y:',$
+    ;      uname = 'labY1')
+    ;
+    ;    statusZ = widget_label(Event.top,$
+    ;      /ALIGN_LEFT, $
+    ;      /SUNKEN_FRAME, $
+    ;      xoffset = 700,$
+    ;      yoffset = 80,$
+    ;      xsize = 80,$
+    ;      ysize = 20,$
+    ;      value = 'Z:',$
+    ;      uname = 'labZ1')
+      
+      
+      
+    *(*global).pane[1] = {Main: Event.top, $
+      pane: pane_2, $
+      txtPath: txtPath, $
+      txtX: txtX, $
+      txtY: txtY, $
+      statusX: 0, $
+      statusY: 0, $
+      statusZ: 0, $
+      label1: label1, $
+      label2: label2, $
+      label3: label3, $
+      select: 0, $
+      loadFile: loadFile, $
+      draw: 0}
+      
+    widget_control, txtPath, set_value = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
+    widget_control, txtX, set_value = '8'
+    widget_control, txtY, set_value = '128'
+    ;    widget_control, select, sensitive = 0
+    widget_control, txtPath, /INPUT_FOCUS
+    (*global).extended = 1
+  endelse
+END
+
+
+PRO drawPlotCtrl, Event, fn
+  widget_control, Event.top, get_uvalue=global
+  
+  if ((*global).y lt 640) && ((*global).y lt 640) then begin
+    widget_control, Event.top, YSIZE= 640
   endif
   
-  widget_control, Event.top, XSIZE = 860
-  help, event, /structure
-  widget_control, event.id, xoffset = 795, set_value = '<<'
-  id = widget_info(Event.top, find_by_uname = 'exit')
-  widget_control, id, xoffset = 795
   
   
   
-  loadFile = widget_button(Event.top,$
-    xoffset = 755,$
-    yoffset = 5,$
-    xsize = 35,$
-    ysize = 30,$
-    value = '...',$
-    uname = 'loadFile1')
+  names = ['select', 'labX','labY','labZ', 'framePlotCtrl']
+  
+  case fn of
+    0: begin
+      start_draw = 5
+    end
+    1: begin
+      start_draw = ((*global).x * 2) + 20
+      help, start_draw
+      if start_draw lt 415 then begin
+        start_draw = 415S
+      endif
+      names = names + '1'
+    end
+  endcase
+  
+  id = widget_info(Event.top, find_by_uname = names[4])
+  if id ne 0 then begin
+    widget_control, id, /destroy
+  endif
+  
+  
+  frame = Widget_Base( Event.top,$
+    GROUP_LEADER = Event.top,$
+    UNAME          = names[4],$
+    XOFFSET        = start_draw,$
+    YOFFSET        = 90,$
+    XSIZE      = 395,$
+    YSIZE      = 25,$
+    FRAME       = 4 )
     
-  Label1 = widget_label(Event.top,$
-    /ALIGN_LEFT, $
-    /DYNAMIC_RESIZE, $
-    xoffset = 400,$
-    yoffset = 15,$
-    ; xsize = 80,$
-    ;ysize = 30,$
-    value = 'Select file:',$
-    uname = 'label4')
-    
-  Label2 = widget_label(Event.top,$
-    /ALIGN_LEFT, $
-    /DYNAMIC_RESIZE, $
-    xoffset = 400,$
-    yoffset = 50,$
-    ;xsize = 140,$
-    ;ysize = 30,$
-    value = '#X pixels/bank:',$
-    uname = 'label5')
-    
-  Label3 = widget_label(Event.top,$
-    /ALIGN_LEFT, $
-    /DYNAMIC_RESIZE, $
-    xoffset = 610,$
-    yoffset = 50,$
-    ;xsize = 140,$
-    ;ysize = 30,$
-    value = '#Y pixels/bank:',$
-    uname = 'label6')
-    
-  txtPath = WIDGET_TEXT(Event.top,$
-    xoffset = 490,$
-    yoffset = 5,$
-    scr_xsize = 260,$
-    scr_ysize = 30,$
-    /NO_NEWLINE, $
-    /EDITABLE, $
-    uname = 'txtPath1')
-    
-  txtX= WIDGET_TEXT(Event.top,$
-    xoffset = 510,$
-    yoffset = 40,$
-    scr_xsize = 80,$
-    scr_ysize = 30,$
-    /NO_NEWLINE, $
-    /EDITABLE, $
-    uname = 'txtX1')
-    
-  txtY= WIDGET_TEXT(Event.top,$
-    xoffset = 710,$
-    yoffset = 40,$
-    scr_xsize = 80,$
-    scr_ysize = 30,$
-    /NO_NEWLINE, $
-    /EDITABLE, $
-    uname = 'txtY1')
-    
-  select = WIDGET_COMBOBOX(Event.top,$
+  select = WIDGET_COMBOBOX(frame,$
     /sensitive, $
-    xoffset = 400,$
-    yoffset = 80,$
-    xsize = 110,$
+    xoffset = 0,$
+    yoffset = 0,$
+    xsize = 100,$
     ysize = 25,$
     value = 'Select...',$
-    uname = 'select1')
+    uname = names[0])
     
-  statusX = widget_label(Event.top,$
+  statusX = widget_label(frame,$
     /ALIGN_LEFT, $
     /SUNKEN_FRAME, $
-    xoffset = 520,$
-    yoffset = 80,$
+    xoffset = 115,$
+    yoffset = 0,$
     xsize = 80,$
     ysize = 20,$
     value = 'X:',$
-    uname = 'labX1')
+    uname = names[1])
     
-  statusY = widget_label(Event.top,$
+  statusY = widget_label(frame,$
     /ALIGN_LEFT, $
     /SUNKEN_FRAME, $
-    xoffset = 610,$
-    yoffset = 80,$
+    xoffset = 205,$
+    yoffset = 0,$
     xsize = 80,$
     ysize = 20,$
     value = 'Y:',$
-    uname = 'labY1')
+    uname = names[2])
     
-  statusZ = widget_label(Event.top,$
+  statusZ = widget_label(frame,$
     /ALIGN_LEFT, $
     /SUNKEN_FRAME, $
-    xoffset = 700,$
-    yoffset = 80,$
+    xoffset = 295,$
+    yoffset = 0,$
     xsize = 80,$
     ysize = 20,$
     value = 'Z:',$
-    uname = 'labZ1')
+    uname = names[3])
     
-    
-    
-  *(*global).pane[1] = {Main: Event.top, $
-    txtPath: txtPath, $
-    txtX: txtX, $
-    txtY: txtY, $
-    statusX: statusX, $
-    statusY: statusY, $
-    statusZ: statusZ, $
-    label1: label1, $
-    label2: label2, $
-    label3: label3, $
-    select: select, $
-    loadFile: loadFile, $
-    draw: 0}
-    
-  widget_control, txtPath, set_value = '/SNS/users/dfp/IdlGui/branches/Summer2008/PlotMP/ARCS_TS_2007_10_10.dat'
-  widget_control, txtX, set_value = '8'
-  widget_control, txtY, set_value = '128'
-  widget_control, select, sensitive = 0
-  widget_control, txtPath, /INPUT_FOCUS
+  (*(*global).pane[fn]).statusX = statusX
+  (*(*global).pane[fn]).statusY = statusY
+  (*(*global).pane[fn]).statusZ = statusZ
+  (*(*global).pane[fn]).select = select
+  
+  
+;   widget_control, select, sensitive = 0
 END
+
+
 
 PRO getData, Event, fn
   widget_control, Event.top, get_uvalue=global
@@ -248,9 +416,12 @@ PRO getData, Event, fn
   y = fix(tmp)
   
   if ~fn then begin
-  (*global).x = x
-  (*global).y = y
-  endif
+    (*global).x = x
+    (*global).y = y
+  endif else begin
+    (*global).x1 = x
+    (*global).y1 = y
+  endelse
   
   
   ;reads the mapping file with either method
@@ -266,7 +437,7 @@ PRO getData, Event, fn
     N = long(fs.size)/Nbytes
     all_data = lonarr(N) ; create a longword integer array of N elements
     readu,1,all_data
- ;   all_data = reform(all_data, x, y, /OVERWRITE)
+  ;   all_data = reform(all_data, x, y, /OVERWRITE)
   ENDELSE
   close,1
   
@@ -276,13 +447,11 @@ PRO getData, Event, fn
   infStruct = info ->getInfo(x, y)
   *(*global).file[fn] = infStruct
   (*(*global).file[fn]).all_data = ptr_new(all_data)
-  
+  drawPlotCtrl, Event, fn
   ;set up the combo box
   tmp = string(indgen(infStruct.numbanks + 1))
   tmp[0] = '--'
   widget_control, (*(*global).pane[fn]).select, set_value = tmp
-  widget_control, (*(*global).pane[fn]).select, sensitive = 1
-  widget_control, Event.top, YSIZE= 640
   widget_control, (*(*global).pane[fn]).select, /INPUT_FOCUS
   
 ;plotData, Event

@@ -126,95 +126,80 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     data: ptr_new(), $
     extended: 0S, $
     x: 0S, $
-    y: 0S})
+    y: 0S, $
+    x1: 0S, $
+    y1: 0S})
   ;============================
     
     
-  loadFile = widget_button(MAIN_BASE,$
+  pane_1 = Widget_Base( MAIN_BASE,$
+    GROUP_LEADER=MAIN_BASE,$
+    UNAME          = 'pane_1',$
+    XOFFSET        = 5,$
+    YOFFSET        = 5,$
+    XSIZE      = 395,$
+    YSIZE      = 70,$
+    FRAME       = 4)
+    
+  loadFile = widget_button(pane_1,$
     xoffset = 355,$
-    yoffset = 5,$
+    yoffset = 0,$
     xsize = 35,$
     ysize = 30,$
     value = '...',$
     uname = 'loadFile')
     
-    
-    
-  extend = widget_button(MAIN_BASE,$
-    xoffset = 395,$
-    yoffset = 5,$
-    xsize = 35,$
-    ysize = 30,$
-    value = '>>',$
-    uname = 'extend')
-    
-  exit = widget_button(MAIN_BASE,$
-    xoffset = 395,$
-    yoffset = 40,$
-    xsize = 35,$
-    ysize = 30,$
-    value = 'X',$
-    uname = 'exit')
-    
-  ;  graph = widget_button(MAIN_BASE,$
-  ;    xoffset = 300,$
-  ;    yoffset = 70,$
-  ;    xsize = 120,$
-  ;    ysize = 29,$
-  ;    value = 'Graph',$
-  ;    uname = 'graph')
-    
-  Label1 = widget_label(MAIN_BASE,$
+  Label1 = widget_label(pane_1,$
     /ALIGN_LEFT, $
     /DYNAMIC_RESIZE, $
     xoffset = 5,$
-    yoffset = 15,$
+    yoffset = 10,$
     ; xsize = 80,$
     ;ysize = 30,$
     value = 'Select file:',$
     uname = 'label1')
     
-  Label2 = widget_label(MAIN_BASE,$
+  Label2 = widget_label(pane_1,$
     /ALIGN_LEFT, $
     /DYNAMIC_RESIZE, $
     xoffset = 5,$
-    yoffset = 50,$
+    yoffset = 45,$
     ;xsize = 140,$
     ;ysize = 30,$
     value = '#X pixels/bank:',$
     uname = 'label2')
     
-  Label3 = widget_label(MAIN_BASE,$
+  Label3 = widget_label(pane_1,$
     /ALIGN_LEFT, $
     /DYNAMIC_RESIZE, $
-    xoffset = 210,$
-    yoffset = 50,$
+    xoffset = 205,$
+    yoffset = 45,$
     ;xsize = 140,$
     ;ysize = 30,$
     value = '#Y pixels/bank:',$
     uname = 'label3')
     
-  txtPath = WIDGET_TEXT(MAIN_BASE,$
+  txtPath = WIDGET_TEXT(pane_1,$
     xoffset = 90,$
-    yoffset = 5,$
+    yoffset = 0,$
     scr_xsize = 260,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtPath')
     
-  txtX= WIDGET_TEXT(MAIN_BASE,$
+  txtX= WIDGET_TEXT(pane_1,$
     xoffset = 110,$
-    yoffset = 40,$
+    yoffset = 35,$
     scr_xsize = 80,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
     /EDITABLE, $
     uname = 'txtX')
     
-  txtY= WIDGET_TEXT(MAIN_BASE,$
+  txtY= WIDGET_TEXT(pane_1,$
     xoffset = 310,$
-    yoffset = 40,$
+    yoffset = 35,$
     scr_xsize = 80,$
     scr_ysize = 30,$
     /NO_NEWLINE, $
@@ -229,44 +214,79 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;    /MOTION_EVENTS, $
   ;    uname = 'draw')
     
-  select = WIDGET_COMBOBOX(MAIN_BASE,$
-    /sensitive, $
-    xoffset = 5,$
-    yoffset = 80,$
-    xsize = 110,$
-    ysize = 25,$
-    value = 'Select...',$
-    uname = 'select')
+;  gen_buttons = Widget_Base( MAIN_BASE,$
+;    GROUP_LEADER = MAIN_BASE,$
+;    UNAME          = 'gen_buttons',$
+;    XOFFSET        = 415,$
+;    YOFFSET        = 5,$
+;    XSIZE      = 40,$
+;    YSIZE      = 70,$
+;    FRAME       = 4 )
+;        
+;  select = WIDGET_COMBOBOX(MAIN_BASE,$
+;    /sensitive, $
+;    xoffset = 5,$
+;    yoffset = 80,$
+;    xsize = 110,$
+;    ysize = 25,$
+;    value = 'Select...',$
+;    uname = 'select')
+;    
+;  statusX = widget_label(MAIN_BASE,$
+;    /ALIGN_LEFT, $
+;    /SUNKEN_FRAME, $
+;    xoffset = 120,$
+;    yoffset = 80,$
+;    xsize = 80,$
+;    ysize = 20,$
+;    value = 'X:',$
+;    uname = 'labX')
+;    
+;  statusY = widget_label(MAIN_BASE,$
+;    /ALIGN_LEFT, $
+;    /SUNKEN_FRAME, $
+;    xoffset = 210,$
+;    yoffset = 80,$
+;    xsize = 80,$
+;    ysize = 20,$
+;    value = 'Y:',$
+;    uname = 'labY')
+;    
+;  statusZ = widget_label(MAIN_BASE,$
+;    /ALIGN_LEFT, $
+;    /SUNKEN_FRAME, $
+;    xoffset = 300,$
+;    yoffset = 80,$
+;    xsize = 80,$
+;    ysize = 20,$
+;    value = 'Z:',$
+;    uname = 'labZ')
     
-  statusX = widget_label(MAIN_BASE,$
-    /ALIGN_LEFT, $
-    /SUNKEN_FRAME, $
-    xoffset = 120,$
-    yoffset = 80,$
-    xsize = 80,$
-    ysize = 20,$
-    value = 'X:',$
-    uname = 'labX')
     
-  statusY = widget_label(MAIN_BASE,$
-    /ALIGN_LEFT, $
-    /SUNKEN_FRAME, $
-    xoffset = 210,$
-    yoffset = 80,$
-    xsize = 80,$
-    ysize = 20,$
-    value = 'Y:',$
-    uname = 'labY')
+  gen_buttons = Widget_Base( MAIN_BASE,$
+    GROUP_LEADER = MAIN_BASE,$
+    UNAME          = 'gen_buttons',$
+    XOFFSET        = 415,$
+    YOFFSET        = 5,$
+    XSIZE          = 40,$
+    YSIZE          = 70,$
+    FRAME          = 4 )
     
-  statusZ = widget_label(MAIN_BASE,$
-    /ALIGN_LEFT, $
-    /SUNKEN_FRAME, $
-    xoffset = 300,$
-    yoffset = 80,$
-    xsize = 80,$
-    ysize = 20,$
-    value = 'Z:',$
-    uname = 'labZ')
+  extend = widget_button(gen_buttons,$
+    xoffset = 0,$
+    yoffset = 0,$
+    xsize = 37,$
+    ysize = 30,$
+    value = '>>',$
+    uname = 'extend')
+    
+  exit = widget_button(gen_buttons,$
+    xoffset = 0,$
+    yoffset = 35,$
+    xsize = 37,$
+    ysize = 30,$
+    value = 'X',$
+    uname = 'exit')
     
     
   ;attach global da8ta structure with widget ID of widget main base widget ID
@@ -286,27 +306,26 @@ pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;remove
   
   widget_control, txtPath, /INPUT_FOCUS
-  widget_control, select, sensitive = 0
-  widget_control, MAIN_BASE, XSIZE = 430, YSIZE = 80
+  widget_control, MAIN_BASE, XSIZE = 465, YSIZE = 100
   
   *(*global).pane[0] = {Main: MAIN_BASE, $
     txtPath: txtPath, $
     txtX: txtX, $
     txtY: txtY, $
-    statusX: statusX, $
-    statusY: statusY, $
-    statusZ: statusZ, $
+    statusX: 0, $
+    statusY: 0, $
+    statusZ: 0, $
     label1: label1, $
     label2: label2, $
     label3: label3, $
-    select: select, $
+    select: 0, $
     exit: exit, $
     extend: extend,$
     loadFile: loadFile, $
     draw: 0}
     
- ; print, (*(*global).pane[0]).txtPath, txtPath
-
+; print, (*(*global).pane[0]).txtPath, txtPath
+    
 end
 
 ;
