@@ -17,6 +17,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiMainBase.pro
 .run MakeGuiStep1.pro
 .run MakeGuiStep2.pro
+.run MakeGuiStep3.pro
 .run MakeGuiLogBook.pro
 
 ;Build all procedures
