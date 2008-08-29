@@ -64,6 +64,25 @@ sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
                  value: 'Counts: ?',$
                  uname: 'counts_value_shifting'}
        
+;More or Less axis ticks number ----------------------------------------------
+XYoff = [300,10]
+sXaxisTicksLabel = { size: [sCountsLabel.size[0]+XYoff[0],$
+                            XYoff[1]],$
+                     value: 'Xaxis Ticks Nbr:'}
+XYoff=[110,5]                    ;- ticks
+sXaxisLessTicks = { size: [sXaxisTicksLabel.size[0]+XYoff[0],$
+                           XYoff[1],$
+                           60],$
+                    value: ' <<< ',$
+                    uname: 'x_axis_less_ticks_shifting'}
+XYoff=[5,0]                     ;+ ticks
+sXaxisMoreTicks = { size: [sXaxisLessTicks.size[0]+$
+                           sXaxisLessTicks.size[2]+XYoff[0],$
+                           sXaxisLessTicks.size[1]+XYoff[1],$
+                           sXaxisLessTicks.size[2]],$
+                    value: ' >>> ',$
+                    uname: 'x_axis_more_ticks_shifting'}
+
 ;Lin/Log z-axis ---------------------------------------------------------------
 XYoff = [-175,0]
 sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
@@ -131,6 +150,26 @@ wCountsLabel = WIDGET_LABEL(BaseTab,$
                        VALUE     = sCountsLabel.value,$
                        UNAME     = sCountsLabel.uname,$
                        /ALIGN_LEFT)
+
+;More or Less number of ticks on the x-axis -----------------------------------
+label = WIDGET_LABEL(BaseTab,$
+                     XOFFSET = sXaxisTicksLabel.size[0],$
+                     YOFFSET = sXaxisTicksLabel.size[1],$
+                     VALUE   = sXaxisTicksLabel.value)
+
+less = WIDGET_BUTTON(BaseTab,$
+                     XOFFSET   = sXaxisLessTicks.size[0],$
+                     YOFFSET   = sXaxisLessTicks.size[1],$
+                     SCR_XSIZE = sXaxisLessTicks.size[2],$
+                     VALUE     = sXaxisLessTicks.value,$
+                     UNAME     = sXaxisLessTicks.uname)
+
+more = WIDGET_BUTTON(BaseTab,$
+                     XOFFSET   = sXaxisMoreTicks.size[0],$
+                     YOFFSET   = sXaxisMoreTicks.size[1],$
+                     SCR_XSIZE = sXaxisMoreTicks.size[2],$
+                     VALUE     = sXaxisMoreTicks.value,$
+                     UNAME     = sXaxisMoreTicks.uname)
 
 ;Draw -------------------------------------------------------------------------
 wDraw = WIDGET_DRAW(BaseTab,$

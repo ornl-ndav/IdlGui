@@ -199,7 +199,7 @@ sXaxisTicksBase = { size: [sScale.size[0]+$
 XYoff= [2,8]                    ;label
 sXaxisTicksLabel = { size: [XYoff[0],$
                             XYoff[1]],$
-                     value: 'Xaxis Range:'}
+                     value: 'Xaxis Ticks #:'}
 XYoff=[80,5]                    ;- ticks
 sXaxisLessTicks = { size: [XYoff[0],$
                            XYoff[1],$

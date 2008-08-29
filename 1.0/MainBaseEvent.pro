@@ -147,6 +147,16 @@ CASE Event.id OF
         ENDIF
     END
 
+;less x-axis ticks
+    Widget_Info(wWidget, FIND_BY_UNAME='x_axis_less_ticks_shifting'): BEGIN
+        change_xaxis_ticks_shifting, Event, type='less' ;_shifting
+    END
+    
+;more x-axis ticks
+    Widget_Info(wWidget, FIND_BY_UNAME='x_axis_more_ticks_shifting'): BEGIN
+        change_xaxis_ticks_shifting, Event, type='more' ;_shifting
+    END
+
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event ;_IDLsendToGeek
