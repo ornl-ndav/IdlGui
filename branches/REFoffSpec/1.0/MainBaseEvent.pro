@@ -138,6 +138,15 @@ CASE Event.id OF
         change_xaxis_ticks, Event, type='more' ;_plot
     END
 
+;333333333333333333333333333333333333333333333333333333333333333333333333333333
+;lin/log z-azis scale
+    Widget_Info(wWidget, FIND_BY_UNAME='z_axis_linear_log_shifting'): BEGIN
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            plotASCIIdata_shifting, Event ;_shifting
+        ENDIF
+    END
+
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event ;_IDLsendToGeek
