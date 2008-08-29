@@ -48,8 +48,9 @@ sMainTabSize = {size : [XYoff[0], $
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { step1:     '1/ Reduction',$
+TabTitles = { step1:     ' 1/ Reduction',$
               step2:     ' 2/ LOAD ',$
+              step3:     ' 3/ SHIFTING ',$
               log_book:  ' LOG BOOK '}
 
 ;******************************************************************************
@@ -72,6 +73,9 @@ make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;step2
 make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles, global
+
+;step3
+make_gui_step3, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;Build LogBook
 make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles

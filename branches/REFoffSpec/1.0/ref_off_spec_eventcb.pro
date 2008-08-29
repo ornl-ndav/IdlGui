@@ -63,8 +63,10 @@ PrevTabSelect = (*global).PrevTabSelect
 
 IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
+
     0: BEGIN ;step1 (reduction)
     END
+
     1: BEGIN ;load
         IF((*global).something_to_plot) THEN BEGIN
             xaxis = (*(*global).x_axis)
@@ -72,9 +74,13 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             plotAsciiData, Event, TYPE='replot' ;_plot
         ENDIF
     END
-    2: BEGIN ;log book
-        
+
+    2: BEGIN ;shifting
     END
+
+    3: BEGIN ;log book        
+    END
+
     ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
