@@ -434,6 +434,4 @@ index          = getDropListSelectedIndex(Event, $
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
-print, "event.x is: " + STRCOMPRESS(Event.x) ;remove_me
-
 END

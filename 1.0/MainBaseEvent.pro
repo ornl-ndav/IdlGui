@@ -205,6 +205,66 @@ CASE Event.id OF
         WIDGET_CONTROL,HOURGLASS=0
     END
 
+;Reference pixel value
+    Widget_Info(wWidget, FIND_BY_UNAME='reference_pixel_value_shifting'): BEGIN
+        WIDGET_CONTROL,/HOURGLASS
+        index = getDropListSelectedIndex(Event, $
+                                         'active_file_droplist_shifting')
+        ref_pixel_list = (*(*global).ref_pixel_list)
+        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
+        ref_pixel_list[index] = pixel_value
+        (*(*global).ref_pixel_list) = ref_pixel_list
+        plotAsciiData_shifting, Event ;_shifting
+        plotReferencedPixels, Event ;_shifting
+        WIDGET_CONTROL,HOURGLASS=0
+    END
+
+;Move Down selected reference pixel
+    Widget_Info(wWidget, FIND_BY_UNAME='pixel_down_selection_shifting'): BEGIN
+        WIDGET_CONTROL,/HOURGLASS
+        index = getDropListSelectedIndex(Event, $
+                                         'active_file_droplist_shifting')
+        ref_pixel_list = (*(*global).ref_pixel_list)
+        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
+        delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
+        new_pixel_value = FLOAT(pixel_value) - FLOAT(delta_x)
+        IF (new_pixel_value LT 0) THEN BEGIN
+            new_pixel_value = 0
+        ENDIF
+        ref_pixel_list[index] = new_pixel_value
+        putTextFieldValue, Event, $
+          'reference_pixel_value_shifting', $
+          STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
+        (*(*global).ref_pixel_list) = ref_pixel_list
+        plotAsciiData_shifting, Event ;_shifting
+        plotReferencedPixels, Event ;_shifting
+        WIDGET_CONTROL,HOURGLASS=0
+    END
+
+
+;Move Up selected reference pixel
+    Widget_Info(wWidget, FIND_BY_UNAME='pixel_up_selection_shifting'): BEGIN
+        WIDGET_CONTROL,/HOURGLASS
+        index = getDropListSelectedIndex(Event, $
+                                         'active_file_droplist_shifting')
+        ref_pixel_list = (*(*global).ref_pixel_list)
+        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
+        delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
+        new_pixel_value = FLOAT(pixel_value) + FLOAT(delta_x)
+        IF (new_pixel_value GT 303) THEN BEGIN
+            new_pixel_value = 303
+        ENDIF
+        ref_pixel_list[index] = new_pixel_value
+        putTextFieldValue, Event, $
+          'reference_pixel_value_shifting', $
+          STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
+        (*(*global).ref_pixel_list) = ref_pixel_list
+        plotAsciiData_shifting, Event ;_shifting
+        plotReferencedPixels, Event ;_shifting
+        WIDGET_CONTROL,HOURGLASS=0
+    END
+
+
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event ;_IDLsendToGeek
