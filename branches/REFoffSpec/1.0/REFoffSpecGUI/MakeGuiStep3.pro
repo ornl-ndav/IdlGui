@@ -116,31 +116,42 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw_step3'}
 
-;Reference File Base ----------------------------------------------------------
+;Reference and active File Base -----------------------------------------------
 XYoff = [5,5]
 sRefBase = { size: [XYoff[0],$
                     sScale.size[1]+$
                     sScale.size[3]+$
                     XYoff[1],$
-                    535,$
-                    30],$
+                    1258,$
+                    42],$
              uname: 'reference_base_shifting',$
              frame: 1}
-XYoff = [0,8]
+main_yoff = 5
+XYoff = [0,8+main_yoff]
 sRefLabel = { size: [XYoff[0],$
                      XYoff[1]],$
-              value: 'Reference File:'}
-XYoff = [100,0]
+              value: 'Reference File :'}
+XYoff = [105,0]
 sRefFileName = { size: [sRefLabel.size[0]+XYoff[0],$
                         sRefLabel.size[1]+XYoff[1],$
                         200],$
                  value: 'N/A',$
                  uname: 'reference_file_name_shifting'}
-XYoff = [90,0]
-sRefPixelLabel = { size: [sRefFileName.size[0]+$
-                          sRefFileName.size[2]+$
+XYoff = [0,0]
+sActiveLabel = { size: [sRefFileName.size[0]+$
+                        sRefFileName.size[2]+XYoff[0],$
+                        sRefLabel.size[1]+XYoff[1]],$
+                 value: 'Active File :'}
+XYoff = [80,3]
+sActiveDroplist = { size: [sActiveLabel.size[0]+XYoff[0],$
+                           XYoff[1]],$
+                    value: ['N/A                                         '],$
+                    uname: 'active_file_droplist_shifting'}
+
+XYoff = [390,0]
+sRefPixelLabel = { size: [sActiveDroplist.size[0]+$
                           XYoff[0],$
-                          sRefFileName.size[1]+$
+                          sRefLabel.size[1]+$
                           XYoff[1]],$
                    value: 'Reference Pixel:'}
 XYoff = [100,-8]
@@ -151,7 +162,38 @@ sRefPixelValue = { size: [sRefPixelLabel.size[0]+$
                           40],$
                    value: '',$
                    uname: 'reference_pixel_value_shifting'}
-                          
+XYoff = [50,0]
+sPixelDwButton = { size: [sRefPixelValue.size[0]+$
+                          sRefPixelValue.size[2]+$
+                          XYoff[0],$
+                          XYoff[1]],$
+                   uname: 'pixel_down_selection_shifting',$
+                   tooltip: 'To decrease reference pixel by 1 pixel',$
+                   value: 'images/selection_down.bmp'}
+XYoff = [50,0]
+sPixelUpButton = { size: [sPixelDwButton.size[0]+$
+                          XYoff[0],$
+                          sPixelDwButton.size[1]+$
+                          XYoff[1]],$
+                   tooltip: 'To increase reference pixel by 1 pixel',$
+                   uname: 'pixel_up_selection_shifting',$
+                   value: 'images/selection_up.bmp'}
+                         
+XYoff = [60,0]
+sMoveByLabel = { size: [sPixelUpButton.size[0]+$
+                        XYoff[0],$
+                        sRefPixelLabel.size[1]+$
+                        XYoff[1]],$
+                 value: 'Move by      pixels'}
+XYoff = [48,0]
+sMoveByValue = { size: [sMoveByLabel.size[0]+$
+                        XYoff[0],$
+                        sRefPixelValue.size[1]+$
+                        XYoff[1],$
+                        30],$
+                 uname: 'move_by_x_pixel_value_shifting',$
+                 value: '1'}
+                         
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -253,11 +295,13 @@ wRefBase = WIDGET_BASE(BaseTab,$
                        FRAME     = sRefBase.frame,$
                        UNAME     = sRefBase.uname)
 
+;reference file label
 wRefLabel = WIDGET_LABEL(wRefBase,$
                          XOFFSET = sRefLabel.size[0],$
                          YOFFSET = sRefLabel.size[1],$
                          VALUE   = sRefLabel.value)
 
+;reference file value
 wRefFileName = WIDGET_LABEL(wRefBase,$
                             XOFFSET   = sRefFileName.size[0],$
                             YOFFSET   = sRefFileName.size[1],$
@@ -266,11 +310,27 @@ wRefFileName = WIDGET_LABEL(wRefBase,$
                             UNAME     = sRefFileName.uname,$
                             /ALIGN_LEFT)
 
+;active label
+wActiveLabel = WIDGET_LABEL(wRefBase,$
+                            XOFFSET = sActiveLabel.size[0],$
+                            YOFFSET = sActiveLabel.size[1],$
+                            VALUE   = sActiveLabel.value)
+
+;active droplist
+wActiveDroplist = WIDGET_DROPLIST(wRefBase,$
+                                  XOFFSET = sActiveDroplist.size[0],$
+                                  YOFFSET = sActiveDroplist.size[1],$
+                                  VALUE   = sActiveDroplist.value,$
+                                  UNAME   = sActiveDroplist.uname,$
+                                  /DYNAMIC_RESIZE)
+
+;reference pixel label
 wRefPixelLabel = WIDGET_LABEL(wRefBase,$
                               XOFFSET = sRefPixelLabel.size[0],$
                               YOFFSET = sRefPixelLabel.size[1],$
                               VALUE   = sRefPixelLabel.value)
-                              
+                      
+;reference pixel value        
 wRefPixelValue = WIDGET_TEXT(wRefBase,$
                              XOFFSET   = sRefPixelValue.size[0],$
                              YOFFSET   = sRefPixelValue.size[1],$
@@ -279,5 +339,39 @@ wRefPixelValue = WIDGET_TEXT(wRefBase,$
                              UNAME     = sRefPixelValue.uname,$
                              /EDITABLE,$
                              /ALIGN_LEFT)
+
+;selection down button
+wPixelDown = WIDGET_BUTTON(wRefBase,$
+                           XOFFSET   = sPixelDwButton.size[0],$
+                           YOFFSET   = sPixelDwButton.size[1],$
+                           VALUE     = sPixelDwButton.value,$
+                           UNAME     = sPixelDwButton.uname,$
+                           TOOLTIP   = sPixelDwButton.tooltip,$
+                           /BITMAP)
+
+;selection down button
+wPixelUp = WIDGET_BUTTON(wRefBase,$
+                         XOFFSET   = sPixelUpButton.size[0],$
+                         YOFFSET   = sPixelUpButton.size[1],$
+                         VALUE     = sPixelUpButton.value,$
+                         UNAME     = sPixelUpButton.uname,$
+                         TOOLTIP   = sPixelUpButton.tooltip,$
+                         /BITMAP)
+
+;move by label and value
+wMoveByValue = WIDGET_TEXT(wRefBase,$
+                           XOFFSET   = sMoveByValue.size[0],$
+                           YOFFSET   = sMoveByValue.size[1],$
+                           SCR_XSIZE = sMoveByValue.size[2],$
+                           UNAME     = sMoveByValue.uname,$
+                           VALUE     = sMoveByValue.value,$
+                           /ALIGN_LEFT,$
+                           /EDITABLE)
+
+wMoveByLabel = WIDGET_LABEL(wRefBase,$
+                            XOFFSET = sMoveByLabel.size[0],$
+                            YOFFSET = sMoveByLabel.size[1],$
+                            VALUE   = sMoveByLabel.value)
+
 
 END
