@@ -69,5 +69,5 @@ END
 
 ;------------------------------------------------------------------------------
 PRO putListOfFilesShifting, Event, list_OF_files 
-putList, Event, '', list_OF_files
+putList, Event, 'active_file_droplist_shifting', list_OF_files
 END
