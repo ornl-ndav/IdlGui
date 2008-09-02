@@ -188,6 +188,8 @@ CASE Event.id OF
 
             IF (Event.press EQ 1) THEN BEGIN ;left click 
                 SavePlotReferencePixel, Event ;_shifting
+                plotAsciiData_shifting, Event ;_shifting
+                plotReferencedPixels, Event ;_shifting
             ENDIF
 
         ENDIF
@@ -199,6 +201,7 @@ CASE Event.id OF
         WIDGET_CONTROL,/HOURGLASS
         ActiveFileDroplist, Event ;_shifting
         plotAsciiData_shifting, Event ;_shifting
+        plotReferencedPixels, Event ;_shifting
         WIDGET_CONTROL,HOURGLASS=0
     END
 

@@ -184,7 +184,7 @@ sMoveByLabel = { size: [sPixelUpButton.size[0]+$
                         XYoff[0],$
                         sRefPixelLabel.size[1]+$
                         XYoff[1]],$
-                 value: 'Move by      pixels'}
+                 value: 'Move by      pixel(s)'}
 XYoff = [48,0]
 sMoveByValue = { size: [sMoveByLabel.size[0]+$
                         XYoff[0],$
