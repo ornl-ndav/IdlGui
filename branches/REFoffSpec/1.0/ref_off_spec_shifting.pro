@@ -362,4 +362,27 @@ id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 ERASE
+;display the value of the reference pixel for this file
+ref_pixel_list  = (*(*global).ref_pixel_list)
+ref_pixel_value = ref_pixel_list[index]
+IF (ref_pixel_value EQ 0) THEN BEGIN    
+    ref_pixel_value = 'N/A'
+ENDIF
+putTextFieldValue, Event, $
+  'reference_pixel_value_shifting', $
+  STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO SavePlotReferencePixel, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+pixel_value = FIX(FLOAT(Event.y)/2.)
+putTextFieldValue, Event, $
+  'reference_pixel_value_shifting', $
+  STRCOMPRESS(pixel_value,/REMOVE_ALL)
+index          = getDropListSelectedIndex(Event, $
+                                          'active_file_droplist_shifting')
+ref_pixel_list        = (*(*global).ref_pixel_list)
+ref_pixel_list[index] = pixel_value
+(*(*global).ref_pixel_list) = ref_pixel_list
 END

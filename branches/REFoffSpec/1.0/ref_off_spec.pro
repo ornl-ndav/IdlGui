@@ -70,6 +70,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    ref_pixel_list:      ptr_new(0L),$
                     super_users:         SUPER_USERS,$
                     delta_x:             0.,$
                     something_to_plot:   0,$
