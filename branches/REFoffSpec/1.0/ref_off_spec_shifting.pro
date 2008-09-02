@@ -32,6 +32,55 @@
 ;
 ;==============================================================================
 
+PRO plotLine, Event, pixel_value, color
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get xmin and xmax (to cover full plot)
+;get xmax
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
+sDraw = WIDGET_INFO(id,/GEOMETRY)
+xmax_plot = sDraw.xsize
+x_axis = (*(*global).x_axis)
+sz = N_ELEMENTS(x_axis)
+x_max = (xmax_plot LT sz) ? xmax_plot : sz
+;get xmin
+x_min = 0.
+NbrTicks = 40.
+delta_x = (FLOAT(x_max) - FLOAT(x_min)) / NbrTicks
+x_from = 0
+x_to   = delta_x
+WHILE (x_to LE x_max) DO BEGIN
+    plots, x_from, pixel_value * 2, $
+      /DEVICE, $
+      COLOR=color
+    plots, x_to, pixel_value * 2, $
+      /DEVICE, $
+      COLOR=color, $
+      /CONTINUE
+    x_from = x_to + delta_x
+    x_to   = x_from + delta_x
+ENDWHILE
+END
+
+
+
+
+;This function plots a line for each of the pixel referenced
+PRO plotReferencedPixels, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+ref_pixel_list  = (*(*global).ref_pixel_list)
+box_color       = (*global).box_color
+sz = N_ELEMENTS(ref_pixel_list)
+i   = 0
+WHILE (i LT sz) DO BEGIN
+    pixel_value = ref_pixel_list[i]
+    IF (pixel_value NE 0) THEN BEGIN
+        plotLine, Event, pixel_value, box_color[i]
+    ENDIF
+    ++i
+ENDWHILE
+
+END
+
 ;------------------------------------------------------------------------------
 PRO plotColorScale_shifting, Event, master_min, master_max
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_color_draw_step3')
@@ -385,4 +434,6 @@ index          = getDropListSelectedIndex(Event, $
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
+print, "event.x is: " + STRCOMPRESS(Event.x) ;remove_me
+
 END
