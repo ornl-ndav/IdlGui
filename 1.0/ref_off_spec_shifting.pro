@@ -61,9 +61,7 @@ WHILE (x_to LE x_max) DO BEGIN
 ENDWHILE
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;This function plots a line for each of the pixel referenced
 PRO plotReferencedPixels, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -78,6 +76,13 @@ WHILE (i LT sz) DO BEGIN
     ENDIF
     ++i
 ENDWHILE
+;add tool at the beginning of line to show which one is the active one
+index = getDropListSelectedIndex(Event, $
+                                 'active_file_droplist_shifting')
+XYOUTS, 5, 2*ref_pixel_list[index], $ ;x,y
+  'ACTIVE',$
+  COLOR=box_color[index],$
+  /DEVICE
 
 END
 
@@ -429,8 +434,8 @@ pixel_value = FIX(FLOAT(Event.y)/2.)
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(pixel_value,/REMOVE_ALL)
-index          = getDropListSelectedIndex(Event, $
-                                          'active_file_droplist_shifting')
+index = getDropListSelectedIndex(Event, $
+                                 'active_file_droplist_shifting')
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
