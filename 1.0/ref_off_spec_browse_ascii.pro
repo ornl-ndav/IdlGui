@@ -123,6 +123,10 @@ IF (ascii_file_name[0] NE '') THEN BEGIN
           Event, $
           (*(*global).list_OF_ascii_files) ;_gui
     ENDIF
+
+;initialize various arrays
+    initialize_arrays, Event ;_eventcb
+
     readAsciiData, Event ;read the ascii files and store value in a pointer
     plotAsciiData, Event        ;plot the ascii files (_plot.pro)
     activate_browse_gui, Event, 1 ;activate x-axis ticks base ;_gui

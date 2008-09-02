@@ -186,13 +186,20 @@ CASE Event.id OF
             CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
             putTextFieldValue, Event, 'counts_value_shifting', CountsText
 
+            IF (Event.press EQ 1) THEN BEGIN ;left click 
+                SavePlotReferencePixel, Event ;_shifting
+            ENDIF
+
         ENDIF
+
     END
 
 ;Active file droplist
     Widget_Info(wWidget, FIND_BY_UNAME='active_file_droplist_shifting'): BEGIN
+        WIDGET_CONTROL,/HOURGLASS
         ActiveFileDroplist, Event ;_shifting
         plotAsciiData_shifting, Event ;_shifting
+        WIDGET_CONTROL,HOURGLASS=0
     END
 
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 

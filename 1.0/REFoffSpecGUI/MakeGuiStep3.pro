@@ -256,6 +256,7 @@ wDraw = WIDGET_DRAW(BaseTab,$
                     XSIZE         = sDraw.size[2],$
                     YSIZE         = sDraw.size[3],$
                     UNAME         = sDraw.uname,$
+                    /BUTTON_EVENTS,$
                     /MOTION_EVENTS)
 
 ;Scale Draw -------------------------------------------------------------------
