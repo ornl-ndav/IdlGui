@@ -186,11 +186,25 @@ CASE Event.id OF
             CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
             putTextFieldValue, Event, 'counts_value_shifting', CountsText
 
-            IF (Event.press EQ 1) THEN BEGIN ;left click 
+            IF (Event.type EQ 2 AND $
+                (*global).left_mouse_pressed EQ 1) THEN BEGIN ;move mouse
                 SavePlotReferencePixel, Event ;_shifting
                 plotAsciiData_shifting, Event ;_shifting
                 plotReferencedPixels, Event ;_shifting
             ENDIF
+            
+            IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                (*global).left_mouse_pressed = 0
+            ENDIF
+
+            IF (Event.press EQ 1) THEN BEGIN ;left click 
+                (*global).left_mouse_pressed = 1
+                SavePlotReferencePixel, Event ;_shifting
+                plotAsciiData_shifting, Event ;_shifting
+                plotReferencedPixels, Event ;_shifting
+            ENDIF
+
+
 
         ENDIF
 
