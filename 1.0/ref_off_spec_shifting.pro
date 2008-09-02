@@ -327,7 +327,7 @@ list_OF_files = (*(*global).list_OF_ascii_files)
 ;get only short file name of all files
 short_list_OF_files = getShortName(list_OF_files)
 ;put list of files in droplist of step3
-;putListOfFilesShifting, Event, short_list_OF_files  ;remove comments
+putListOfFilesShifting, Event, short_list_OF_files  ;remove comments
 IF (short_list_OF_Files[0] EQ '') THEN BEGIN
     ref_file_name = 'N/A'
 ENDIF ELSE BEGIN
@@ -337,4 +337,29 @@ putTextFieldValue, Event, $
   'reference_file_name_shifting', $
   ref_file_name
 
+END
+
+;------------------------------------------------------------------------------
+PRO ActiveFileDroplist, Event ;_shifting
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get selected active file
+index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
+trans_coeff_list = (*(*global).trans_coeff_list)
+sz = N_ELEMENTS(trans_coeff_list)
+i = 0
+WHILE (i LT sz) DO BEGIN
+    IF (i EQ index) THEN BEGIN
+        new_value = 1
+    ENDIF ELSE BEGIN
+        new_value = 0.1
+    ENDELSE
+    trans_coeff_list[i] = new_value
+    ++i
+ENDWHILE
+(*(*global).trans_coeff_list) = trans_coeff_list
+;select plot
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+ERASE
 END

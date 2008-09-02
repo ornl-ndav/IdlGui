@@ -189,6 +189,12 @@ CASE Event.id OF
         ENDIF
     END
 
+;Active file droplist
+    Widget_Info(wWidget, FIND_BY_UNAME='active_file_droplist_shifting'): BEGIN
+        ActiveFileDroplist, Event ;_shifting
+        plotAsciiData_shifting, Event ;_shifting
+    END
+
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event ;_IDLsendToGeek
