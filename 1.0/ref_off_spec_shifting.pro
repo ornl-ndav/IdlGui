@@ -534,3 +534,17 @@ ENDCASE
 putTextFieldValue, Event, 'help_text_field_shifting', text
 
 END
+
+;------------------------------------------------------------------------------
+PRO realign_data, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+
+
+
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+END
