@@ -127,20 +127,37 @@ sRefBase = { size: [XYoff[0],$
              uname: 'reference_base_shifting',$
              frame: 1}
 main_yoff = 5
-XYoff = [0,8+main_yoff]
-sRefLabel = { size: [XYoff[0],$
+XYoff = [0,5]
+sRefLabelHelp = { size: [XYoff[0],$
+                         XYOff[1],$
+                         15],$
+                  value: '?',$
+                  uname: 'reference_file_name_shifting_help'}
+
+XYoff = [20,8+main_yoff]
+sRefLabel = { size: [sRefLabelHelp.size[0]+XYoff[0],$
                      XYoff[1]],$
               value: 'Reference File :'}
+
 XYoff = [105,0]
 sRefFileName = { size: [sRefLabel.size[0]+XYoff[0],$
                         sRefLabel.size[1]+XYoff[1],$
                         200],$
                  value: 'N/A',$
                  uname: 'reference_file_name_shifting'}
-XYoff = [0,0]
-sActiveLabel = { size: [sRefFileName.size[0]+$
-                        sRefFileName.size[2]+XYoff[0],$
-                        sRefLabel.size[1]+XYoff[1]],$
+
+XYoff = [0,5] ;help of ACTIVE FILE
+sActiveDroplistHelp = { size: [sRefFileName.size[0]+$
+                               sRefFileName.size[2]+XYoff[0],$
+                               sRefLabelHelp.size[1],$
+                               sRefLabelHelp.size[2]],$
+                        value: '?',$
+                        uname: 'active_file_droplist_shifting_help'}
+
+XYoff = [5,0]
+sActiveLabel = { size: [sActiveDroplistHelp.size[0]+$
+                        sActiveDroplistHelp.size[2]+XYoff[0],$
+                        sRefFileName.size[1]+XYoff[1]],$
                  value: 'Active File :'}
 XYoff = [80,3]
 sActiveDroplist = { size: [sActiveLabel.size[0]+XYoff[0],$
@@ -154,6 +171,14 @@ sRefPixelLabel = { size: [sActiveDroplist.size[0]+$
                           sRefLabel.size[1]+$
                           XYoff[1]],$
                    value: 'Reference Pixel:'}
+XYoff = [sRefPixelLabel.size[0]-20,$
+         sRefLabelHelp.size[1]] ;help for REFERENCE PIXEL
+sRefPixelHelp = { size: [XYoff[0],$
+                         XYOff[1],$
+                         sRefLabelHelp.size[2]],$
+                  value: '?',$
+                  uname: 'reference_pixel_help'}
+
 XYoff = [100,-8]
 sRefPixelValue = { size: [sRefPixelLabel.size[0]+$
                           XYoff[0],$
@@ -170,7 +195,16 @@ sPixelDwButton = { size: [sRefPixelValue.size[0]+$
                    uname: 'pixel_down_selection_shifting',$
                    tooltip: 'To decrease reference pixel by 1 pixel',$
                    value: 'images/selection_down.bmp'}
-XYoff = [50,0]
+
+XYOff = [42,0] ;Help on down and up buttons
+sPixelDwUpHelp = { size: [sPixelDwButton.size[0]+$
+                          XYoff[0],$
+                          sRefPixelHelp.size[1]+XYoff[1],$
+                          sRefPixelHelp.size[2]],$
+                   value: '?',$
+                   uname: 'pixel_down_up_help'}
+
+XYoff = [57,0]
 sPixelUpButton = { size: [sPixelDwButton.size[0]+$
                           XYoff[0],$
                           sPixelDwButton.size[1]+$
@@ -194,6 +228,27 @@ sMoveByValue = { size: [sMoveByLabel.size[0]+$
                  uname: 'move_by_x_pixel_value_shifting',$
                  value: '1'}
                          
+;Help text field
+XYoff = [0,20]
+sHelpBase = { size: [sRefBase.size[0]+XYOff[0],$
+                     sRefBase.size[1]+$
+                     sRefBase.size[3]+XYoff[1],$
+                     400,80],$
+              frame: 1,$
+              uname: 'help_base_shifting'}
+
+XYoff = [15,-8]
+sHelpLabel = { size: [sHelpBase.size[0]+XYoff[0],$
+                      sHelpBase.size[1]+XYoff[1]],$
+               value: 'H E L P'}
+XYoff = [5,7]
+sHelpTextField = { size: [XYOff[0],$
+                          XYoff[1],$
+                          sHelpBase.size[2]-2*XYoff[0],$
+                          sHelpBase.size[3]-2*XYoff[1]],$
+                   value: '',$
+                   uname: 'help_text_field_shifting'}
+
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -296,6 +351,15 @@ wRefBase = WIDGET_BASE(BaseTab,$
                        FRAME     = sRefBase.frame,$
                        UNAME     = sRefBase.uname)
 
+;reference file value help
+wRefHelp = WIDGET_BUTTON(wRefBase,$
+                         XOFFSET   = sRefLabelHelp.size[0],$
+                         YOFFSET   = sRefLabelHelp.size[1],$
+                         SCR_XSIZE = sRefLabelHelp.size[2],$
+                         VALUE     = sRefLabelHelp.value,$
+                         UNAME     = sRefLabelHelp.uname,$
+                         /PUSHBUTTON)
+
 ;reference file label
 wRefLabel = WIDGET_LABEL(wRefBase,$
                          XOFFSET = sRefLabel.size[0],$
@@ -311,6 +375,14 @@ wRefFileName = WIDGET_LABEL(wRefBase,$
                             UNAME     = sRefFileName.uname,$
                             /ALIGN_LEFT)
 
+;active file help
+wActiveHelp = WIDGET_BUTTON(wRefBase,$
+                            XOFFSET   = sActiveDroplistHelp.size[0],$
+                            YOFFSET   = sActiveDroplistHelp.size[1],$
+                            SCR_XSIZE = sActiveDroplistHelp.size[2],$
+                            VALUE     = sActiveDroplistHelp.value,$
+                            UNAME     = sActiveDroplistHelp.uname,$
+                            /PUSHBUTTON)
 ;active label
 wActiveLabel = WIDGET_LABEL(wRefBase,$
                             XOFFSET = sActiveLabel.size[0],$
@@ -324,6 +396,14 @@ wActiveDroplist = WIDGET_DROPLIST(wRefBase,$
                                   VALUE   = sActiveDroplist.value,$
                                   UNAME   = sActiveDroplist.uname,$
                                   /DYNAMIC_RESIZE)
+
+;Reference pixel help button
+wRefPixelHelp = WIDGET_BUTTON(wRefBase,$
+                              XOFFSET   = sRefPixelHelp.size[0],$
+                              YOFFSET   = sRefPixelHelp.size[1],$
+                              SCR_XSIZE = sRefPixelHelp.size[2],$
+                              VALUE     = sRefPixelHelp.value,$
+                              UNAME     = sRefPixelHelp.uname)
 
 ;reference pixel label
 wRefPixelLabel = WIDGET_LABEL(wRefBase,$
@@ -350,6 +430,14 @@ wPixelDown = WIDGET_BUTTON(wRefBase,$
                            TOOLTIP   = sPixelDwButton.tooltip,$
                            /BITMAP)
 
+;Help button
+wPixelHelp = WIDGET_BUTTON(wRefBase,$
+                           XOFFSET   = sPixelDwUpHelp.size[0],$
+                           YOFFSET   = sPixelDwUpHelp.size[1],$
+                           SCR_XSIZE = sPixelDwUpHelp.size[2],$
+                           VALUE     = sPixelDwUpHelp.value,$
+                           UNAME     = sPixelDwUpHelp.uname)
+
 ;selection down button
 wPixelUp = WIDGET_BUTTON(wRefBase,$
                          XOFFSET   = sPixelUpButton.size[0],$
@@ -374,5 +462,29 @@ wMoveByLabel = WIDGET_LABEL(wRefBase,$
                             YOFFSET = sMoveByLabel.size[1],$
                             VALUE   = sMoveByLabel.value)
 
+;help label
+wHelpLabel = WIDGET_LABEL(BaseTab,$
+                          XOFFSET = sHelpLabel.size[0],$
+                          YOFFSET = sHelpLabel.size[1],$
+                          VALUE   = sHelpLabel.value)
+;Help base
+wHelpBase = WIDGET_BASE(BaseTab,$
+                        XOFFSET   = sHelpBase.size[0],$
+                        YOFFSET   = sHelpBase.size[1],$
+                        SCR_XSIZE = sHelpBase.size[2],$
+                        SCR_YSIZE = sHelpBase.size[3],$
+                        FRAME     = sHelpBase.frame,$
+                        UNAME     = sHelpBase.uname)
+
+;Help text field
+wHelpTextField = WIDGET_TEXT(wHelpBase,$
+                             XOFFSET   = sHelpTextField.size[0],$
+                             YOFFSET   = sHelpTextField.size[1],$
+                             SCR_XSIZE = sHelpTextField.size[2],$
+                             SCR_YSIZE = sHelpTextField.size[3],$
+                             VALUE     = sHelpTextField.value,$
+                             UNAME     = sHelpTextField.uname,$
+                             /WRAP,$
+                             /SCROLL)
 
 END

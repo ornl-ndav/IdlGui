@@ -200,10 +200,10 @@ XYoff= [2,8]                    ;label
 sXaxisTicksLabel = { size: [XYoff[0],$
                             XYoff[1]],$
                      value: 'Xaxis Ticks #:'}
-XYoff=[80,5]                    ;- ticks
+XYoff=[95,5]                    ;- ticks
 sXaxisLessTicks = { size: [XYoff[0],$
                            XYoff[1],$
-                           80],$
+                           70],$
                     value: ' <<< ',$
                     uname: 'x_axis_less_ticks'}
 XYoff=[5,0]                     ;+ ticks

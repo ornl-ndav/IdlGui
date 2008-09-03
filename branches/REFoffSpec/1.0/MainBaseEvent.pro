@@ -278,6 +278,30 @@ CASE Event.id OF
         WIDGET_CONTROL,HOURGLASS=0
     END
 
+;help of 'Reference File'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='reference_file_name_shifting_help'): BEGIN
+        display_shifting_help, Event, 'reference_file' ;_shifting
+    END
+
+;help of 'active file'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='active_file_droplist_shifting_help'): BEGIN
+        display_shifting_help, Event, 'active_file' ;_shifting
+    END
+
+;help of 'reference pixel'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='reference_pixel_help'): BEGIN
+        display_shifting_help, Event, 'reference_pixel' ;_shifting
+    END
+
+;help of 'move down & up'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='pixel_down_up_help'): BEGIN
+        display_shifting_help, Event, 'pixel_down_up' ;_shifting
+    END
+
 
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
