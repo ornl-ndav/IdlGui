@@ -76,6 +76,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     2: BEGIN ;shifting
+        display_shifting_help, Event, ''
         IF((*global).something_to_plot) THEN BEGIN
             xaxis = (*(*global).x_axis)
             contour_plot_shifting, Event, xaxis
