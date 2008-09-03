@@ -51,3 +51,10 @@ bFoundList = WHERE(index_selected EQ this_index,nbr)
 IF (nbr GT 0) THEN RETURN, 1
 RETURN, 0
 END
+
+;------------------------------------------------------------------------------
+FUNCTION is_YandX_RefPixelSelected, Event
+id = widget_info(Event.top,find_by_uname='reference_pixel_shifting_options')
+widget_control, id, get_value=isYandXselected
+RETURN, isYandXselected
+END
