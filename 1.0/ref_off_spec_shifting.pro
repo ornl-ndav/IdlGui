@@ -405,7 +405,8 @@ WHILE (i LT sz) DO BEGIN
     IF (i EQ index) THEN BEGIN
         new_value = 1
     ENDIF ELSE BEGIN
-        new_value = 0.1
+        shifting_attenuator_coeff = getShiftingAttenuatorCoeff(Event)
+        new_value = shifting_attenuator_coeff
     ENDELSE
     trans_coeff_list[i] = new_value
     ++i
@@ -452,9 +453,12 @@ CASE (type) OF
           "This file can not be shifted."
     END
     'active_file': BEGIN
+        value = getShiftingAttenuatorPercentage(Event)
         text = "The file selected is the current active file. The " + $
           "intensity of all the other file is attenuated by a " + $
-          "configurable attenuator factor (see the tab OPTIONS). " + $
+          "configurable attenuator factor (see the tab OPTIONS/" + $
+          "Transparency coefficient). The current value is " + $
+          STRCOMPRESS(value,/REMOVE_ALL) + "% " + $
           "Left click will set the Refrence Pixel for this particular file."
     END
     'reference_pixel': BEGIN

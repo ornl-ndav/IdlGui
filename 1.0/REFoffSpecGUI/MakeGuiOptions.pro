@@ -64,7 +64,8 @@ sTransparencyCWfield = { size: [5,1],$
 ;Reference pixel selection ----------------------------------------------------
 sRefPixelSelection = { list: ['Y  ','X and Y'],$
                        title:   'Reference Pixel Selection        ',$
-                       uname: 'reference_pixel_shifting_options'}
+                       uname: 'reference_pixel_shifting_options',$
+                       value: 0.0}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -108,11 +109,8 @@ wRefPixelSelection = CW_BGROUP(wShiftingBase,$
                                sRefPixelSelection.list,$
                                LABEL_LEFT = sRefPixelSelection.title,$
                                UNAME      = sRefPixelSelection.uname,$
+                               SET_VALUE  = sRefPixelSelection.value,$
                                /ROW,$
                                /EXCLUSIVE)
-
-
-
-                              
 
 END

@@ -103,3 +103,19 @@ ENDIF ELSE BEGIN
 ENDELSE
 RETURN, new_list_OF_files
 END
+
+;------------------------------------------------------------------------------
+;This function returns the attenuator coefficient defined in the
+;OPTIONS tab
+FUNCTION getShiftingAttenuatorCoeff, Event
+percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
+RETURN, percentage_value/100.
+END
+
+;------------------------------------------------------------------------------
+;This function returns the attenuator coefficient in percentage
+;OPTIONS tab
+FUNCTION getShiftingAttenuatorPercentage, Event
+percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
+RETURN, percentage_value
+END
