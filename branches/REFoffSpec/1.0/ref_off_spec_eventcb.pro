@@ -78,6 +78,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     2: BEGIN ;shifting
         display_shifting_help, Event, ''
         IF((*global).something_to_plot) THEN BEGIN
+            ActiveFileDroplist, Event ;_shifting
             xaxis = (*(*global).x_axis)
             contour_plot_shifting, Event, xaxis
             plotAsciiData_shifting, Event
