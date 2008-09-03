@@ -440,3 +440,36 @@ ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
 END
+
+;------------------------------------------------------------------------------
+;This procedure displays the Help message at the bottom left of the
+;shifting tab
+PRO display_shifting_help, Event, type
+CASE (type) OF
+    'reference_file': BEGIN
+        text = "This file is used as the Reference file. It's usually the " + $
+          "first file loaded, the file with the wider wavelength range. " + $
+          "This file can not be shifted."
+    END
+    'active_file': BEGIN
+        text = "The file selected is the current active file. The " + $
+          "intensity of all the other file is attenuated by a " + $
+          "configurable attenuator factor (see the tab OPTIONS). " + $
+          "Left click will set the Refrence Pixel for this particular file."
+    END
+    'reference_pixel': BEGIN
+        text = "This pixel, defined using left click or by entering its" + $
+          " value in the text box next to the <Reference Pixel:> label " + $
+          "will be align with the Reference Pixel of the Reference File."
+    END
+    'pixel_down_up': BEGIN
+        text = "This buttons are used to move down and up the reference" + $
+          " pixel of the active file. Each click moves the pixel by" + $
+          " the number of pixels defined in the text field next to" + $
+          " the <Move by ...> label."
+    END
+    ELSE: text = ''
+ENDCASE
+putTextFieldValue, Event, 'help_text_field_shifting', text
+                        
+END
