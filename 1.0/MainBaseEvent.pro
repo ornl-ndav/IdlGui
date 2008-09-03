@@ -201,10 +201,8 @@ CASE Event.id OF
                 (*global).left_mouse_pressed = 1
                 SavePlotReferencePixel, Event ;_shifting
                 plotAsciiData_shifting, Event ;_shifting
-                plotReferencedPixels, Event ;_shifting
+                plotReferencedPixels, Event;_shifting
             ENDIF
-
-
 
         ENDIF
 
