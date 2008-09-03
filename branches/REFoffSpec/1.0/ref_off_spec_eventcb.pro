@@ -83,7 +83,10 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         ENDIF
     END
 
-    3: BEGIN ;log book        
+    3: BEGIN ;OPTIONS
+    END
+
+    4: BEGIN ;log book        
     END
 
     ELSE:
