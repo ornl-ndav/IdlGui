@@ -81,6 +81,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             xaxis = (*(*global).x_axis)
             contour_plot_shifting, Event, xaxis
             plotAsciiData_shifting, Event
+            plotReferencedPixels, Event ;_shifting
         ENDIF
     END
 

@@ -48,7 +48,7 @@ CHECKING_PACKAGES = 'yes'
 SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see
-sDEBUGGING = { tab: {main_tab: 3},$ ;0:step1, 1:step2, 2: Shifting, ....
+sDEBUGGING = { tab: {main_tab: 2},$ ;0:step1, 1:step2, 2: Shifting, ....
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$

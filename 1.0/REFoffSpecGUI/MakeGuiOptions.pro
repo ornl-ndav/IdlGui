@@ -46,7 +46,7 @@ sBaseTab = { size:  tab_size,$
 XYoff = [10,15] ;base
 sShiftingBase = { size: [XYoff[0],$
                          XYoff[1],$
-                         350,100],$
+                         602,110],$
                   uname: 'shifting_base_options',$
                   frame: 1}
 
@@ -55,15 +55,26 @@ sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
                           sShiftingBase.size[1]+XYoff[1]],$
                    value: '3/ Shifting'}
 
+;Use or not transparency coefficient ------------------------------------------
+sBase = { size: [sShiftingBase.size[2],$
+                 30]}
+sTransparencyGroup = { list: ['NO','YES'],$
+                       title: 'Use non-active file attenuator   ',$
+                       value: 1.0,$
+                       uname: 'transparency_attenuator_shifting_options'}
+
 ;Transparency coefficient -----------------------------------------------------
+sBase2 = { size: [300,25],$
+           uname: 'transparency_coeff_base',$
+           sensitive: 1}
 sTransparencyCWfield = { size: [5,1],$
                          value: 10,$
                          uname: 'transparency_shifting_options',$
-                         title: 'Transparency coefficient (%)     '}
+                         title: ' -> Transparency coefficient (%)     '}
 
 ;Reference pixel selection ----------------------------------------------------
 sRefPixelSelection = { list: ['Y  ','X and Y'],$
-                       title:   'Reference Pixel Selection        ',$
+                       title: 'Reference Pixel Selection        ',$
                        uname: 'reference_pixel_shifting_options',$
                        value: 0.0}
 
@@ -92,20 +103,44 @@ wShiftingBase = WIDGET_BASE(BaseTab,$
                             SCR_YSIZE = sShiftingBase.size[3],$
                             UNAME     = sShiftingBase.uname,$
                             FRAME     = sShiftingBase.frame,$
+                            /BASE_ALIGN_LEFT,$
                             /COLUMN)
 
+;Use or not transparency coefficient ------------------------------------------
+label = WIDGET_LABEL(wShiftingBase,$ ;just to make a vertical space
+                     value = '')
+
+sBase1 = WIDGET_BASE(wShiftingBase,$
+                     FRAME = 1,$
+                     /ROW)
+
+wTransparencyGroup = CW_BGROUP(sBase1,$
+                               sTransparencyGroup.list,$
+                               LABEL_LEFT = sTransparencyGroup.title,$
+                               UNAME      = sTransparencyGroup.uname,$
+                               SET_VALUE  = sTransparencyGroup.value,$
+                               /NO_RELEASE,$
+                               /ROW,$
+                               /EXCLUSIVE)
+
 ;Transparency coefficient -----------------------------------------------------
-wTransCWfield = CW_FIELD(wShiftingBase,$
-                         XSIZE   = sTransparencyCWfield.size[0],$
-                         YSIZE   = sTransparencyCWfield.size[1],$
-                         UNAME   = sTransparencyCWfield.uname,$
-                         VALUE   = sTransparencyCWfield.value,$
-                         TITLE   = sTransparencyCWfield.title,$
+wBase2 = WIDGET_BASE(sBase1,$
+                     UNAME     = sBase2.uname,$
+                     SENSITIVE = sBase2.sensitive)
+
+wTransCWfield = CW_FIELD(wBase2,$
+                         XSIZE     = sTransparencyCWfield.size[0],$
+                         YSIZE     = sTransparencyCWfield.size[1],$
+                         UNAME     = sTransparencyCWfield.uname,$
+                         VALUE     = sTransparencyCWfield.value,$
+                         TITLE     = sTransparencyCWfield.title,$
                          /FLOATING,$
                          /ROW)
                          
 ;Reference pixel selection ----------------------------------------------------
-wRefPixelSelection = CW_BGROUP(wShiftingBase,$
+wBase3 = WIDGET_BASE(wShiftingBase,$
+                     FRAME = 1)
+wRefPixelSelection = CW_BGROUP(wBase3,$
                                sRefPixelSelection.list,$
                                LABEL_LEFT = sRefPixelSelection.title,$
                                UNAME      = sRefPixelSelection.uname,$

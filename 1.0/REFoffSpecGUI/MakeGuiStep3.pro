@@ -233,7 +233,7 @@ XYoff = [0,20]
 sHelpBase = { size: [sRefBase.size[0]+XYOff[0],$
                      sRefBase.size[1]+$
                      sRefBase.size[3]+XYoff[1],$
-                     400,80],$
+                     500,100],$
               frame: 1,$
               uname: 'help_base_shifting'}
 
