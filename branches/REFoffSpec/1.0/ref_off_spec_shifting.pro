@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO plotLine, Event, pixel_value, x_value, color
+PRO plotLine, Event, pixel_value, color
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get xmin and xmax (to cover full plot)
 ;get xmax
@@ -48,51 +48,17 @@ NbrTicks = 40.
 delta_x = (FLOAT(x_max) - FLOAT(x_min)) / NbrTicks
 x_from = 0
 x_to   = delta_x
-
-IF (is_YandX_RefPixelSelected(Event) EQ 0) THEN BEGIN
-;this way, only y is displayed (- - - - - - - - -)
-    WHILE (x_to LE x_max) DO BEGIN
-        plots, x_from, pixel_value * 2, $
-          /DEVICE, $
-          COLOR=color
-        plots, x_to, pixel_value * 2, $
-          /DEVICE, $
-          COLOR=color, $
-          /CONTINUE
-        x_from = x_to + delta_x
-        x_to   = x_from + delta_x
-    ENDWHILE
-
-ENDIF ELSE BEGIN
-;this way, x and y are displayed (--- -- -|- -- ---)
-    dx    = 5 ;length of each '-'
-    dy    = 10 ;vertical length of central tick '|'
-    i     = 1  ;1 tick, then 2, then 3 ....
-    x     = x_value
-    y     = 2*pixel_value
-    xL    = x ;right coordinate of Left ticks
-    xR    = x ;left  coordinate of Right ticks
-    WHILE (xL GT 0 OR $
-           xR LT x_max) DO BEGIN
-        IF (xL GT 0) THEN BEGIN
-            plots, xL, y, /DEVICE, COLOR=color
-            plots, xL-i*dx, y, /DEVICE,/CONTINUE,COLOR=color
-        ENDIF
-        IF (xR LT x_max) THEN BEGIN
-            plots, xR, y, /DEVICE, COLOR=color
-            new_xR = (xR+i*dx GE x_max) ? x_max : xR+i*dx
-            plots, new_xR, y, /DEVICE,/CONTINUE,COLOR=color
-        ENDIF
-        xL -= (i+1)*dx
-        xR += (i+1)*dx
-        ++i
-    ENDWHILE
-;plot vertical tick
-    plots, x, y-dy, /DEVICE, COLOR=color
-    plots, x, y+dy, /DEVICE, /CONTINUE, COLOR=color
-
-ENDELSE
-
+WHILE (x_to LE x_max) DO BEGIN
+    plots, x_from, pixel_value * 2, $
+      /DEVICE, $
+      COLOR=color
+    plots, x_to, pixel_value * 2, $
+      /DEVICE, $
+      COLOR=color, $
+      /CONTINUE
+    x_from = x_to + delta_x
+    x_to   = x_from + delta_x
+ENDWHILE
 END
 
 ;------------------------------------------------------------------------------
@@ -100,15 +66,13 @@ END
 PRO plotReferencedPixels, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ref_pixel_list  = (*(*global).ref_pixel_list)
-ref_x_list      = (*(*global).ref_x_list)
 box_color       = (*global).box_color
 sz = N_ELEMENTS(ref_pixel_list)
 i   = 0
 WHILE (i LT sz) DO BEGIN
     pixel_value = ref_pixel_list[i]
-    x_value     = ref_x_list[i]
     IF (pixel_value NE 0) THEN BEGIN
-        plotLine, Event, pixel_value, x_value, box_color[i]
+        plotLine, Event, pixel_value, box_color[i]
     ENDIF
     ++i
 ENDWHILE
@@ -167,6 +131,9 @@ x_axis              = LONARR(nbr_plot)
 y_coeff = 2
 x_coeff = 1
 
+;applied or not transparency coeff ;0:no, 1:yes
+bTransCoeff = isWithAttenuatorCoeff(Event)
+
 ;check which array is the biggest (index)
 ;this array will be the base for the other array (xaxis will be based
 ;on this array
@@ -188,7 +155,11 @@ WHILE (index LT nbr_plot) DO BEGIN
     local_tfpData = *tfpData[index]
     
 ;Applied attenuator coefficient 
-    transparency_1 = trans_coeff_list[index]
+    IF (bTransCoeff EQ 1) THEN BEGIN ;yes
+        transparency_1 = trans_coeff_list[index]
+    ENDIF ELSE BEGIN
+        transparency_1 = 1.
+    ENDELSE
     local_tfpData = local_tfpData * transparency_1
     
 ;check if user wants linear or logarithmic plot
@@ -441,8 +412,7 @@ WHILE (i LT sz) DO BEGIN
     IF (i EQ index) THEN BEGIN
         new_value = 1
     ENDIF ELSE BEGIN
-        shifting_attenuator_coeff = getShiftingAttenuatorCoeff(Event)
-        new_value = shifting_attenuator_coeff
+        new_value = 0.1
     ENDELSE
     trans_coeff_list[i] = new_value
     ++i
@@ -468,20 +438,14 @@ END
 PRO SavePlotReferencePixel, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 pixel_value = FIX(FLOAT(Event.y)/2.)
-x_value     = Event.x
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(pixel_value,/REMOVE_ALL)
 index = getDropListSelectedIndex(Event, $
                                  'active_file_droplist_shifting')
-ref_pixel_list              = (*(*global).ref_pixel_list)
-ref_pixel_list[index]       = pixel_value
+ref_pixel_list        = (*(*global).ref_pixel_list)
+ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
-
-ref_x_list              = (*(*global).ref_x_list)
-ref_x_list[index]       = x_value
-(*(*global).ref_x_list) = ref_x_list
-
 END
 
 ;------------------------------------------------------------------------------
@@ -495,13 +459,21 @@ CASE (type) OF
           "This file can not be shifted."
     END
     'active_file': BEGIN
-        value = getShiftingAttenuatorPercentage(Event)
-        text = "The file selected is the current active file. The " + $
-          "intensity of all the other file is attenuated by a " + $
-          "configurable attenuator factor (see the tab OPTIONS/" + $
-          "Transparency coefficient). The current value is " + $
-          STRCOMPRESS(value,/REMOVE_ALL) + "% " + $
-          "Left click will set the Refrence Pixel for this particular file."
+        text = "The active file is the current file selected. According to" + $
+          " the settings of the USE NON-ACTIVE FILE ATTENUATOR switch" + $
+          " in the OPTIONS tab, "
+        index = getCWBgroupValue(Event, $
+                                 'transparency_attenuator_' + $
+                                 'shifting_options')
+        IF (index EQ 0) THEN BEGIN ;'no'
+            text += " all the data set have their original true intensity"
+        ENDIF ELSE BEGIN        ;'yes'
+            text += "the intensity of all the other file is attenuated " + $
+              "by a configurable attenuator factor (see the tab OPTIONS). "
+            coeff = getShiftingAttenuatorPercentage(Event)
+            text += " -> This factor is currently set to " + $
+              STRCOMPRESS(coeff,/REMOVE_ALL) + "%. "
+        ENDELSE
     END
     'reference_pixel': BEGIN
         text = "This pixel, defined using left click or by entering its" + $
@@ -517,5 +489,5 @@ CASE (type) OF
     ELSE: text = ''
 ENDCASE
 putTextFieldValue, Event, 'help_text_field_shifting', text
-                        
+
 END

@@ -201,7 +201,7 @@ CASE Event.id OF
                 (*global).left_mouse_pressed = 1
                 SavePlotReferencePixel, Event ;_shifting
                 plotAsciiData_shifting, Event ;_shifting
-                plotReferencedPixels, Event;_shifting
+                plotReferencedPixels, Event ;_shifting
             ENDIF
 
         ENDIF
@@ -300,7 +300,25 @@ CASE Event.id OF
         display_shifting_help, Event, 'pixel_down_up' ;_shifting
     END
 
+;------------------------------------------------------------------------------
+;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 
+;cw_bgroup of 'Use non active file attenuator'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME= $
+                'transparency_attenuator_shifting_options'): BEGIN
+        index = getCWBgroupValue(Event, $
+                                 'transparency_attenuator_' + $
+                                 'shifting_options')
+        IF (index EQ 0) THEN BEGIN
+            status = 0
+        ENDIF ELSE BEGIN
+            status = 1
+        ENDELSE
+        activate_widget, Event, 'transparency_coeff_base', status
+    END
+
+;------------------------------------------------------------------------------
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
     Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
         SendToGeek, Event ;_IDLsendToGeek

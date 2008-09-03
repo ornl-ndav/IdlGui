@@ -58,3 +58,11 @@ id = widget_info(Event.top,find_by_uname='reference_pixel_shifting_options')
 widget_control, id, get_value=isYandXselected
 RETURN, isYandXselected
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isWithAttenuatorCoeff, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
+                 'transparency_attenuator_shifting_options')
+WIDGET_CONTROL, id, GET_VALUE=index
+RETURN, index
+END
