@@ -300,6 +300,12 @@ CASE Event.id OF
         display_shifting_help, Event, 'pixel_down_up' ;_shifting
     END
 
+;Realign Data button
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='realign_data_button'): BEGIN
+        realign_data, Event ;_shifting
+    END    
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 

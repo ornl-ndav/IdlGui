@@ -249,6 +249,18 @@ sHelpTextField = { size: [XYOff[0],$
                    value: '',$
                    uname: 'help_text_field_shifting'}
 
+;Realign Data button ----------------------------------------------------------
+XYoff = [20,0]
+sRealignButton = { size: [sHelpBase.size[0]+$
+                          sHelpBase.size[2]+$
+                          XYoff[0],$
+                          sHelpBase.size[1]+$
+                          XYoff[1]],$
+                   uname: 'realign_data_button',$
+                   value: 'images/realign_data.bmp',$
+                   tooltip: 'Realign all the data according to the' + $
+                   ' refrence pixels defined'}
+
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -486,5 +498,15 @@ wHelpTextField = WIDGET_TEXT(wHelpBase,$
                              UNAME     = sHelpTextField.uname,$
                              /WRAP,$
                              /SCROLL)
+
+;Realign Data
+wRealignData = WIDGET_BUTTON(BaseTab,$
+                             XOFFSET   = sRealignButton.size[0],$
+                             YOFFSET   = sRealignButton.size[1],$
+                             VALUE     = sRealignButton.value,$
+                             UNAME     = sRealignButton.uname,$
+                             TOOLTIP   = sRealignButton.tooltip,$
+                             /BITMAP)
+
 
 END
