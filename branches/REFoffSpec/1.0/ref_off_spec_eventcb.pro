@@ -84,6 +84,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             plotAsciiData_shifting, Event
             plotReferencedPixels, Event ;_shifting
         ENDIF
+        CheckShiftingGui, Event ;_gui
     END
 
     3: BEGIN ;OPTIONS
