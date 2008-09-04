@@ -112,10 +112,6 @@ ref_x_list     = INTARR(sz)
 END
 
 
-
-
-
-
 ;------------------------------------------------------------------------------
 PRO MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)

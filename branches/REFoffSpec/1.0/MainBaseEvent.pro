@@ -322,6 +322,12 @@ CASE Event.id OF
         realign_data, Event ;_shifting
     END    
 
+;Cancel Realign Data button
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='cancel_realign_data_button'): BEGIN
+        cancel_realign_data, Event ;_shifting
+    END    
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 

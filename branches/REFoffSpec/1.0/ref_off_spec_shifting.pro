@@ -152,14 +152,22 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData_shifting, Event
+PRO plotAsciiData_shifting, Event, ARRAY=array
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
 ;retrieve data
-tfpData             = (*(*global).pData_y)
+IF (N_ELEMENTS(ARRAY) EQ 0) THEN BEGIN
+    IF ((*global).plot_realign_data EQ 1) THEN BEGIN
+        tfpData = (*(*global).realign_pData_y)
+    ENDIF ELSE BEGIN
+        tfpData = (*(*global).pData_y)
+    ENDELSE
+ENDIF ELSE BEGIN
+    tfpData = array
+ENDELSE
 xData               = (*(*global).pData_x)
 xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
@@ -540,11 +548,71 @@ PRO realign_data, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
+;retrieve arrays
+tfpData = (*(*global).pData_y)
+;array of realign data
+Nbr_array = (size(tfpData))(1)
+realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 
-tfpData             = (*(*global).pData_y)
+;retrieve pixel offset
+ref_pixel_list = (*(*global).ref_pixel_list)
 
+nbr = N_ELEMENTS(ref_pixel_list)
+IF (nbr GT 1) THEN BEGIN
+;copy the first array
+    realign_tfpData[0] = tfpData[0]
+    index = 1
+    WHILE (index LT nbr) DO BEGIN
+        pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+        array        = *tfpData[index]
+        IF (pixel_offset EQ 0 OR $
+            ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
+            realign_tfpData[index] = tfpData[index]
+        ENDIF ELSE BEGIN
+            IF (pixel_offset GT 0) THEN BEGIN ;needs to move up
+;move up each row by pixel_offset
+;needs to start from the top when the offset is positive
+                print, 'pixel_offset: ' + strcompress(pixel_offset) ;remove_me
+                FOR i=303,pixel_offset,-1 DO BEGIN
+                    array[*,i] = array[*,i-pixel_offset]
+                ENDFOR
+;bottom pixel_offset number of row are initialized to 0
+                FOR j=0,pixel_offset DO BEGIN
+                    array[*,j] = 0
+                ENDFOR
+            ENDIF ELSE BEGIN    ;needs to move down
+                pixel_offset = ABS(pixel_offset)
+                FOR i=0,(303-pixel_offset) DO BEGIN
+                    array[*,i] = array[*,i+pixel_offset]
+                ENDFOR
+                FOR j=303,303-pixel_offset,-1 DO BEGIN
+                    array[*,j] = 0
+                ENDFOR
+            ENDELSE
+        ENDELSE
+        *realign_tfpData[index] = array
+        ++index
+    ENDWHILE
+ENDIF
 
+(*global).plot_realign_data  = 1
+(*(*global).realign_pData_y) = realign_tfpData
 
+;plot realign Data
+plotAsciiData_shifting, Event, ARRAY=realign_tfpData
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+END
+
+;------------------------------------------------------------------------------
+PRO cancel_realign_data, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+(*global).plot_realign_data = 0
+;plot realign Data
+plotAsciiData_shifting, Event
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
 END
