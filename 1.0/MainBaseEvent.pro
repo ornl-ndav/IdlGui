@@ -202,6 +202,7 @@ CASE Event.id OF
                 SavePlotReferencePixel, Event ;_shifting
                 plotAsciiData_shifting, Event ;_shifting
                 plotReferencedPixels, Event ;_shifting
+                CheckShiftingGui, Event ;_gui
             ENDIF
 
         ENDIF
@@ -219,61 +220,76 @@ CASE Event.id OF
 
 ;Reference pixel value
     Widget_Info(wWidget, FIND_BY_UNAME='reference_pixel_value_shifting'): BEGIN
-        WIDGET_CONTROL,/HOURGLASS
-        index = getDropListSelectedIndex(Event, $
-                                         'active_file_droplist_shifting')
-        ref_pixel_list = (*(*global).ref_pixel_list)
-        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
-        ref_pixel_list[index] = pixel_value
-        (*(*global).ref_pixel_list) = ref_pixel_list
-        plotAsciiData_shifting, Event ;_shifting
-        plotReferencedPixels, Event ;_shifting
-        WIDGET_CONTROL,HOURGLASS=0
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            WIDGET_CONTROL,/HOURGLASS
+            index = getDropListSelectedIndex(Event, $
+                                             'active_file_droplist_shifting')
+            ref_pixel_list = (*(*global).ref_pixel_list)
+            pixel_value = getTextFieldValue(Event, $
+                                            'reference_pixel_value_shifting')
+            ref_pixel_list[index] = pixel_value
+            (*(*global).ref_pixel_list) = ref_pixel_list
+            plotAsciiData_shifting, Event ;_shifting
+            plotReferencedPixels, Event ;_shifting
+            WIDGET_CONTROL,HOURGLASS=0
+            CheckShiftingGui, Event ;_gui
+        ENDIF
     END
 
 ;Move Down selected reference pixel
     Widget_Info(wWidget, FIND_BY_UNAME='pixel_down_selection_shifting'): BEGIN
-        WIDGET_CONTROL,/HOURGLASS
-        index = getDropListSelectedIndex(Event, $
-                                         'active_file_droplist_shifting')
-        ref_pixel_list = (*(*global).ref_pixel_list)
-        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
-        delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
-        new_pixel_value = FLOAT(pixel_value) - FLOAT(delta_x)
-        IF (new_pixel_value LT 0) THEN BEGIN
-            new_pixel_value = 0
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            WIDGET_CONTROL,/HOURGLASS
+            index = getDropListSelectedIndex(Event, $
+                                             'active_file_droplist_shifting')
+            ref_pixel_list = (*(*global).ref_pixel_list)
+            pixel_value = getTextFieldValue(Event, $
+                                            'reference_pixel_value_shifting')
+            delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
+            new_pixel_value = FLOAT(pixel_value) - FLOAT(delta_x)
+            IF (new_pixel_value LT 0) THEN BEGIN
+                new_pixel_value = 0
+            ENDIF
+            ref_pixel_list[index] = new_pixel_value
+            putTextFieldValue, Event, $
+              'reference_pixel_value_shifting', $
+              STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
+            (*(*global).ref_pixel_list) = ref_pixel_list
+            plotAsciiData_shifting, Event ;_shifting
+            plotReferencedPixels, Event ;_shifting
+            WIDGET_CONTROL,HOURGLASS=0
+            CheckShiftingGui, Event ;_gui
         ENDIF
-        ref_pixel_list[index] = new_pixel_value
-        putTextFieldValue, Event, $
-          'reference_pixel_value_shifting', $
-          STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
-        (*(*global).ref_pixel_list) = ref_pixel_list
-        plotAsciiData_shifting, Event ;_shifting
-        plotReferencedPixels, Event ;_shifting
-        WIDGET_CONTROL,HOURGLASS=0
     END
 
 
 ;Move Up selected reference pixel
     Widget_Info(wWidget, FIND_BY_UNAME='pixel_up_selection_shifting'): BEGIN
-        WIDGET_CONTROL,/HOURGLASS
-        index = getDropListSelectedIndex(Event, $
-                                         'active_file_droplist_shifting')
-        ref_pixel_list = (*(*global).ref_pixel_list)
-        pixel_value = getTextFieldValue(Event,'reference_pixel_value_shifting')
-        delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
-        new_pixel_value = FLOAT(pixel_value) + FLOAT(delta_x)
-        IF (new_pixel_value GT 303) THEN BEGIN
-            new_pixel_value = 303
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            WIDGET_CONTROL,/HOURGLASS
+            index = getDropListSelectedIndex(Event, $
+                                             'active_file_droplist_shifting')
+            ref_pixel_list = (*(*global).ref_pixel_list)
+            pixel_value = getTextFieldValue(Event, $
+                                            'reference_pixel_value_shifting')
+            delta_x = getTextFieldValue(Event,'move_by_x_pixel_value_shifting')
+            new_pixel_value = FLOAT(pixel_value) + FLOAT(delta_x)
+            IF (new_pixel_value GT 303) THEN BEGIN
+                new_pixel_value = 303
+            ENDIF
+            ref_pixel_list[index] = new_pixel_value
+            putTextFieldValue, Event, $
+              'reference_pixel_value_shifting', $
+              STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
+            (*(*global).ref_pixel_list) = ref_pixel_list
+            plotAsciiData_shifting, Event ;_shifting
+            plotReferencedPixels, Event ;_shifting
+            WIDGET_CONTROL,HOURGLASS=0
+            CheckShiftingGui, Event ;_gui
         ENDIF
-        ref_pixel_list[index] = new_pixel_value
-        putTextFieldValue, Event, $
-          'reference_pixel_value_shifting', $
-          STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
-        (*(*global).ref_pixel_list) = ref_pixel_list
-        plotAsciiData_shifting, Event ;_shifting
-        plotReferencedPixels, Event ;_shifting
-        WIDGET_CONTROL,HOURGLASS=0
     END
 
 ;help of 'Reference File'
