@@ -259,7 +259,19 @@ sRealignButton = { size: [sHelpBase.size[0]+$
                    uname: 'realign_data_button',$
                    value: 'images/realign_data.bmp',$
                    tooltip: 'Realign all the data according to the' + $
-                   ' refrence pixels defined'}
+                   ' refrence pixels defined',$
+                   sensitive: 0}
+
+;Cancel Realign Data button ---------------------------------------------------
+XYoff = [0,45]
+sCancelRealignButton = { size: [sRealignButton.size[0]+$
+                                XYoff[0],$
+                                sRealignButton.size[1]+$
+                                XYoff[1]],$
+                         uname: 'cancel_realign_data_button',$
+                         value: 'images/cancel_realign_data.bmp',$
+                         tooltip: 'Cancel the realign process',$
+                         sensitive: 0}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -506,7 +518,18 @@ wRealignData = WIDGET_BUTTON(BaseTab,$
                              VALUE     = sRealignButton.value,$
                              UNAME     = sRealignButton.uname,$
                              TOOLTIP   = sRealignButton.tooltip,$
+                             SENSITIVE = sRealignButton.sensitive,$
                              /BITMAP)
+
+;Cancel Realign Data
+wCancelRealignData = WIDGET_BUTTON(BaseTab,$
+                                   XOFFSET   = sCancelRealignButton.size[0],$
+                                   YOFFSET   = sCancelRealignButton.size[1],$
+                                   VALUE     = sCancelRealignButton.value,$
+                                   UNAME     = sCancelRealignButton.uname,$
+                                   TOOLTIP   = sCancelRealignButton.tooltip,$
+                                   SENSITIVE = sCancelRealignButton.sensitive,$
+                                   /BITMAP)
 
 
 END

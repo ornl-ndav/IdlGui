@@ -541,7 +541,7 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
-
+tfpData             = (*(*global).pData_y)
 
 
 
