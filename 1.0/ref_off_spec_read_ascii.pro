@@ -58,5 +58,6 @@ WHILE (i LT nbr) DO BEGIN
 ENDWHILE
 (*(*global).pData_y) = final_new_pData
 (*(*global).pData_x) = final_new_pData_x
+(*global).plot_realign_data = 0
 END
 ;------------------------------------------------------------------------------

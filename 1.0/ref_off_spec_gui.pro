@@ -241,7 +241,10 @@ uname_list = ['realign_data_button',$
 ref_x_list = (*(*global).ref_x_list)
 index = WHERE(ref_x_list NE 0,nbr)
 current_list_OF_files = (*(*global).list_OF_ascii_files)
-IF (nbr NE 0 AND current_list_OF_files[0] NE '') THEN BEGIN
+sz = N_ELEMENTS(current_list_OF_files)
+IF (nbr GT 1 AND $
+    ref_x_list[0] NE 0 AND $
+    sz GE 2) THEN BEGIN
     activate_status = 1
 ENDIF ELSE BEGIN
     activate_status = 0
