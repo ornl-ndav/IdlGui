@@ -318,8 +318,8 @@ sManualModeFileLabel = { size: [XYoff[0],$
 XYoff = [25,0]
 sManualModeFileValue = { size: [XYoff[0],$
                                 sManualModeFileLabel.size[1]+XYoff[1],$
-                                200],$
-                         value: 'N/A',$
+                                300],$
+                         value: 'N/A                                     ',$
                          uname: 'manual_mode_file_value_shifting'}
 
 ;Buttons Up and Down
@@ -635,13 +635,13 @@ wManualModeLabel = WIDGET_LABEL(BaseTab,$
 
 ;Manual Mode Base -------------------------------------------------------------
 wManualModeBase = WIDGET_BASE(BaseTab,$
-                            XOFFSET   = sManualModeBase.size[0],$
-                            YOFFSET   = sManualModeBase.size[1],$
-                            SCR_XSIZE = sManualModeBase.size[2],$
-                            SCR_YSIZE = sManualModeBase.size[3],$
-                            UNAME     = sManualModeBase.uname,$
-                            FRAME     = sManualModeBase.frame,$
-                            SENSITIVE = sManualModeBase.sensitive)
+                              XOFFSET   = sManualModeBase.size[0],$
+                              YOFFSET   = sManualModeBase.size[1],$
+                              SCR_XSIZE = sManualModeBase.size[2],$
+                              SCR_YSIZE = sManualModeBase.size[3],$
+                              UNAME     = sManualModeBase.uname,$
+                              FRAME     = sManualModeBase.frame,$
+                              SENSITIVE = sManualModeBase.sensitive)
 
 ;Current working file label and value
 wManualModeFileLabel = WIDGET_LABEL(wManualModeBase,$
@@ -653,7 +653,8 @@ wManualModeFileValue = WIDGET_LABEL(wManualModeBase,$
                                     XOFFSET = sManualModeFileValue.size[0],$
                                     YOFFSET = sManualModeFileValue.size[1],$
                                     VALUE   = sManualModeFileValue.value,$
-                                    UNAME   = sManualModeFileValue.uname)
+                                    UNAME   = sManualModeFileValue.uname,$
+                                    /ALIGN_LEFT)
 
 ;data down button
 wDataDown = WIDGET_BUTTON(wManualModeBase,$
