@@ -193,8 +193,8 @@ sPixelDwButton = { size: [sRefPixelValue.size[0]+$
                           XYoff[0],$
                           XYoff[1]],$
                    uname: 'pixel_down_selection_shifting',$
-                   tooltip: 'To decrease reference pixel by 1 pixel',$
-                   value: 'images/selection_down.bmp'}
+                   tooltip: 'To decrease reference pixel by x pixel',$
+                   value: 'images/reference_down.bmp'}
 
 XYOff = [42,0] ;Help on down and up buttons
 sPixelDwUpHelp = { size: [sPixelDwButton.size[0]+$
@@ -209,9 +209,9 @@ sPixelUpButton = { size: [sPixelDwButton.size[0]+$
                           XYoff[0],$
                           sPixelDwButton.size[1]+$
                           XYoff[1]],$
-                   tooltip: 'To increase reference pixel by 1 pixel',$
+                   tooltip: 'To increase reference pixel by x pixel',$
                    uname: 'pixel_up_selection_shifting',$
-                   value: 'images/selection_up.bmp'}
+                   value: 'images/reference_up.bmp'}
                          
 XYoff = [60,0]
 sMoveByLabel = { size: [sPixelUpButton.size[0]+$
@@ -249,18 +249,35 @@ sHelpTextField = { size: [XYOff[0],$
                    value: '',$
                    uname: 'help_text_field_shifting'}
 
+;Auto base mode ---------------------------------------------------------------
+XYOff = [10,0]
+sAutoMode = { size: [sHelpBase.size[0]+$
+                     sHelpBase.size[2]+$
+                     XYoff[0],$
+                     sHelpBase.size[1]+$
+                     XYoff[1],$
+                     163,100],$
+              uname: 'auto_shifting_mode',$
+              frame: 1,$
+              sensitive: 1}
+
+;Automatic mode label ---------------------------------------------------------
+XYoff = [15,-8]
+sAutoModeLabel = { size: [sAutoMode.size[0]+$
+                           XYoff[0],$
+                           sAutoMode.size[1]+$
+                           XYoff[1]],$
+                   value: 'Automatic Mode'}
+
 ;Realign Data button ----------------------------------------------------------
-XYoff = [20,0]
-sRealignButton = { size: [sHelpBase.size[0]+$
-                          sHelpBase.size[2]+$
-                          XYoff[0],$
-                          sHelpBase.size[1]+$
+XYoff = [0,10]
+sRealignButton = { size: [XYoff[0],$
                           XYoff[1]],$
                    uname: 'realign_data_button',$
                    value: 'images/realign_data.bmp',$
                    tooltip: 'Realign all the data according to the' + $
                    ' refrence pixels defined',$
-                   sensitive: 0}
+                   sensitive: 1}
 
 ;Cancel Realign Data button ---------------------------------------------------
 XYoff = [0,45]
@@ -271,8 +288,71 @@ sCancelRealignButton = { size: [sRealignButton.size[0]+$
                          uname: 'cancel_realign_data_button',$
                          value: 'images/cancel_realign_data.bmp',$
                          tooltip: 'Cancel the realign process',$
-                         sensitive: 0}
+                         sensitive: 1}
 
+;Manual Mode ------------------------------------------------------------------
+XYoff = [10,0]
+sManualModeBase = { size: [sAutoMode.size[0]+$
+                           sAutoMode.size[2]+$
+                           XYoff[0],$
+                           sAutoMode.size[1]+$
+                           XYoff[1],$
+                           250,$
+                           sAutoMode.size[3]],$
+                    uname: 'manual_shifting_mode_base',$
+                    frame: 1,$
+                    sensitive: 1}
+
+;Manual Mode Label ------------------------------------------------------------
+XYoff = [15,-8]
+sManualModeLabel = { size: [sManualModeBase.size[0]+XYoff[0],$
+                            sManualModeBase.size[1]+XYoff[1]],$
+                     value: 'Manual Mode'}
+                            
+
+;Current working file label and value
+XYoff = [5,15]
+sManualModeFileLabel = { size: [XYoff[0],$
+                                XYoff[1]],$
+                         value: '-> '}
+XYoff = [25,0]
+sManualModeFileValue = { size: [XYoff[0],$
+                                sManualModeFileLabel.size[1]+XYoff[1],$
+                                200],$
+                         value: 'N/A',$
+                         uname: 'manual_mode_file_value_shifting'}
+
+;Buttons Up and Down
+XYoff = [5,30]
+sManualDownButton = { size: [XYoff[0],$
+                             sManualModeFileValue.size[1]+XYoff[1]],$
+                      tooltip: 'To move down the active file by x pixel',$
+                      uname: 'data_down_shifting',$
+                      value: 'images/selection_down.bmp'}
+
+
+XYoff = [50,0]
+sManualUpButton = { size: [sManualDownButton.size[0]+XYoff[0],$
+                           sManualDownButton.size[1]+XYoff[1]],$
+                    tooltip: 'To move up the active file by x pixel',$
+                    uname: 'data_up_shifting',$
+                    value: 'images/selection_up.bmp'}
+
+XYoff = [50,12]
+sMoveByManualLabel = { size: [sManualUpButton.size[0]+$
+                              XYoff[0],$
+                              sManualUpButton.size[1]+$
+                              XYoff[1]],$
+                       value: 'Move by      pixel(s)'}
+XYoff = [48,-7]
+sMoveByManualValue = { size: [sMoveByManualLabel.size[0]+$
+                              XYoff[0],$
+                              sMoveByManualLabel.size[1]+$
+                              XYoff[1],$
+                              30],$
+                       uname: 'move_by_x_pixel_value_manual_shifting',$
+                       value: '1'}
+                         
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -511,8 +591,24 @@ wHelpTextField = WIDGET_TEXT(wHelpBase,$
                              /WRAP,$
                              /SCROLL)
 
+;Auto mode base ---------------------------------------------------------------
+;label
+wAutoModeLabel = WIDGET_LABEL(BaseTab,$
+                              XOFFSET = sAutoModeLabel.size[0],$
+                              YOFFSET = sAutoModeLabel.size[1],$
+                              VALUE   = sAutoModeLabel.value)
+
+wAutoModeBase = WIDGET_BASE(BaseTab,$
+                            XOFFSET   = sAutoMode.size[0],$
+                            YOFFSET   = sAutoMode.size[1],$
+                            SCR_XSIZE = sAutoMode.size[2],$
+                            SCR_YSIZE = sAutoMode.size[3],$
+                            UNAME     = sAutoMode.uname,$
+                            FRAME     = sAutoMode.frame,$
+                            SENSITIVE = sAutoMode.sensitive)
+
 ;Realign Data
-wRealignData = WIDGET_BUTTON(BaseTab,$
+wRealignData = WIDGET_BUTTON(wAutoModeBase,$
                              XOFFSET   = sRealignButton.size[0],$
                              YOFFSET   = sRealignButton.size[1],$
                              VALUE     = sRealignButton.value,$
@@ -522,7 +618,7 @@ wRealignData = WIDGET_BUTTON(BaseTab,$
                              /BITMAP)
 
 ;Cancel Realign Data
-wCancelRealignData = WIDGET_BUTTON(BaseTab,$
+wCancelRealignData = WIDGET_BUTTON(wAutoModeBase,$
                                    XOFFSET   = sCancelRealignButton.size[0],$
                                    YOFFSET   = sCancelRealignButton.size[1],$
                                    VALUE     = sCancelRealignButton.value,$
@@ -531,5 +627,65 @@ wCancelRealignData = WIDGET_BUTTON(BaseTab,$
                                    SENSITIVE = sCancelRealignButton.sensitive,$
                                    /BITMAP)
 
+;Manual Mode Label ------------------------------------------------------------
+wManualModeLabel = WIDGET_LABEL(BaseTab,$
+                                XOFFSET = sManualModeLabel.size[0],$
+                                YOFFSET = sManualModeLabel.size[1],$
+                                VALUE   = sManualModeLabel.value)
+
+;Manual Mode Base -------------------------------------------------------------
+wManualModeBase = WIDGET_BASE(BaseTab,$
+                            XOFFSET   = sManualModeBase.size[0],$
+                            YOFFSET   = sManualModeBase.size[1],$
+                            SCR_XSIZE = sManualModeBase.size[2],$
+                            SCR_YSIZE = sManualModeBase.size[3],$
+                            UNAME     = sManualModeBase.uname,$
+                            FRAME     = sManualModeBase.frame,$
+                            SENSITIVE = sManualModeBase.sensitive)
+
+;Current working file label and value
+wManualModeFileLabel = WIDGET_LABEL(wManualModeBase,$
+                                    XOFFSET = sManualModeFileLabel.size[0],$
+                                    YOFFSET = sManualModeFileLabel.size[1],$
+                                    VALUE   = sManualModeFileLabel.value)
+
+wManualModeFileValue = WIDGET_LABEL(wManualModeBase,$
+                                    XOFFSET = sManualModeFileValue.size[0],$
+                                    YOFFSET = sManualModeFileValue.size[1],$
+                                    VALUE   = sManualModeFileValue.value,$
+                                    UNAME   = sManualModeFileValue.uname)
+
+;data down button
+wDataDown = WIDGET_BUTTON(wManualModeBase,$
+                          XOFFSET   = sManualDownButton.size[0],$
+                          YOFFSET   = sManualDownButton.size[1],$
+                          VALUE     = sManualDownButton.value,$
+                          UNAME     = sManualDownButton.uname,$
+                          TOOLTIP   = sManualDownButton.tooltip,$
+                          /BITMAP)
+
+;data up button
+wDataUp = WIDGET_BUTTON(wManualModeBase,$
+                          XOFFSET   = sManualUpButton.size[0],$
+                          YOFFSET   = sManualUpButton.size[1],$
+                          VALUE     = sManualUpButton.value,$
+                          UNAME     = sManualUpButton.uname,$
+                          TOOLTIP   = sManualUpButton.tooltip,$
+                          /BITMAP)
+
+;move by label and value
+wMoveByManualValue = WIDGET_TEXT(wManualModeBase,$
+                                 XOFFSET   = sMoveByManualValue.size[0],$
+                                 YOFFSET   = sMoveByManualValue.size[1],$
+                                 SCR_XSIZE = sMoveByManualValue.size[2],$
+                                 UNAME     = sMoveByManualValue.uname,$
+                                 VALUE     = sMoveByManualValue.value,$
+                                 /ALIGN_LEFT,$
+                                 /EDITABLE)
+
+wMoveByManualLabel = WIDGET_LABEL(wManualModeBase,$
+                            XOFFSET = sMoveByManualLabel.size[0],$
+                            YOFFSET = sMoveByManualLabel.size[1],$
+                            VALUE   = sMoveByManualLabel.value)
 
 END
