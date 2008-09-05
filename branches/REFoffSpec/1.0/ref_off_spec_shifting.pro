@@ -442,7 +442,9 @@ ENDELSE
 putTextFieldValue, Event, $
   'reference_file_name_shifting', $
   ref_file_name
-
+putTextfieldValue, Event, $
+  'manual_mode_file_value_shifting',$
+  ref_file_name
 END
 
 ;------------------------------------------------------------------------------
@@ -450,6 +452,11 @@ PRO ActiveFileDroplist, Event ;_shifting
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get selected active file
 index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
+;get name of file selected
+file_name =  getDropListSelectedValue(Event, 'active_file_droplist_shifting')
+;put file name in Manual Mode
+putTextFieldValue, Event,'manual_mode_file_value_shifting', file_name
+
 trans_coeff_list = (*(*global).trans_coeff_list)
 sz = N_ELEMENTS(trans_coeff_list)
 i = 0
