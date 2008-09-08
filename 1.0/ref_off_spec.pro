@@ -73,6 +73,7 @@ global = ptr_new ({ ucams:               ucams,$
                     left_mouse_pressed:  0,$
                     plot_realign_data:   0,$
                     ref_pixel_list:      ptr_new(0L),$
+                    ref_pixel_list_original: ptr_new(0L),$
                     ref_x_list:          ptr_new(0L),$
                     super_users:         SUPER_USERS,$
                     delta_x:             0.,$
