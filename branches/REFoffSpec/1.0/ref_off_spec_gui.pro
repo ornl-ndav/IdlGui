@@ -267,5 +267,15 @@ ENDIF ELSE BEGIN
 ENDELSE
 activate_widget_list, Event, uname_list, activate_status
 
+;activate down and up reference (first frame) when there is at least
+;one file plotted
+uname_list = ['reference_base_shifting']
+IF (current_list_OF_files[0] NE '') THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activate_widget_list, Event, uname_list, activate_status
+
 END
 
