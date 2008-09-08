@@ -76,7 +76,7 @@ sTransparencyCWfield = { size: [5,1],$
 sRefPixelSelection = { list: ['Y  ','X and Y'],$
                        title: 'Reference Pixel Selection        ',$
                        uname: 'reference_pixel_shifting_options',$
-                       value: 0.0}
+                       value: 1.0}
 
 ;******************************************************************************
 ;            BUILD GUI
