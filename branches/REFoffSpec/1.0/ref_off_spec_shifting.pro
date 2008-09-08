@@ -557,7 +557,13 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 ;retrieve arrays
-tfpData = (*(*global).pData_y)
+IF ((*global).first_realign) THEN BEGIN
+    tfpData = (*(*global).pData_y)
+    (*global).first_realign = 0
+ENDIF ELSE BEGIN
+    tfpData = (*(*global).realign_pData_y)
+ENDELSE
+
 ;array of realign data
 Nbr_array = (size(tfpData))(1)
 realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
@@ -653,6 +659,9 @@ putTextFieldValue, Event, $
 
 ;replot reference pixels
 plotReferencedPixels, Event 
+
+;reset realign data boolean
+(*global).first_realign = 1
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
