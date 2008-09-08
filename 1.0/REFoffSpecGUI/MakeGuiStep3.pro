@@ -90,7 +90,7 @@ sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
             list: ['Linear','Log'],$
             label: 'Z-axis:',$
             uname: 'z_axis_linear_log_shifting',$
-            value: 0.0}
+            value: 1.0}
 
 XYOff = [43,50] ;Draw ---------------------------------------------------------
 sDraw = { size: [XYoff[0],$
@@ -125,6 +125,7 @@ sRefBase = { size: [XYoff[0],$
                     1258,$
                     42],$
              uname: 'reference_base_shifting',$
+             sensitive: 0,$
              frame: 1}
 main_yoff = 5
 XYoff = [0,5]
@@ -453,6 +454,7 @@ wRefBase = WIDGET_BASE(BaseTab,$
                        SCR_XSIZE = sRefBase.size[2],$
                        SCR_YSIZE = sRefBase.size[3],$
                        FRAME     = sRefBase.frame,$
+                       SENSITIVE = sRefBase.sensitive,$
                        UNAME     = sRefBase.uname)
 
 ;reference file value help
