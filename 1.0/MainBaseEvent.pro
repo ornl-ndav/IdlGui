@@ -144,6 +144,7 @@ CASE Event.id OF
         current_list_OF_files = (*(*global).list_OF_ascii_files)
         IF (current_list_OF_files[0] NE '') THEN BEGIN
             plotASCIIdata_shifting, Event ;_shifting
+            plotReferencedPixels, Event ;_shifting
         ENDIF
     END
 

@@ -120,7 +120,6 @@ XYOUTS, 5, 2*ref_pixel_list[index], $ ;x,y
   'ACTIVE',$
   COLOR=box_color[index],$
   /DEVICE
-
 END
 
 ;------------------------------------------------------------------------------
