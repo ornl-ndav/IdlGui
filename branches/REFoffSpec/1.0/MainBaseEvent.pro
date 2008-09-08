@@ -332,6 +332,19 @@ CASE Event.id OF
         cancel_realign_data, Event ;_shifting
     END    
 
+;Manual Mode - Move UP
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='data_up_shifting'): BEGIN
+        manual_move_mode_shifting, Event, DIRECTION='up' ;_shifting
+    END    
+
+;Manual Mode - Move DOWN
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME='data_down_shifting'): BEGIN
+        manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
+    END    
+
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 

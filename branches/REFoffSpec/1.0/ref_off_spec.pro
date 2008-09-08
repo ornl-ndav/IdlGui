@@ -73,6 +73,7 @@ global = ptr_new ({ ucams:               ucams,$
                     left_mouse_pressed:  0,$
                     plot_realign_data:   0,$
                     ref_pixel_list:      ptr_new(0L),$
+                    ref_pixel_offset_list: ptr_new(0L),$
                     ref_pixel_list_original: ptr_new(0L),$
                     ref_x_list:          ptr_new(0L),$
                     super_users:         SUPER_USERS,$
@@ -97,6 +98,7 @@ global = ptr_new ({ ucams:               ucams,$
                     pData_y:             ptr_new(0L),$
                     realign_pData_y:     ptr_new(0L),$
                     first_realign:       1,$
+                    manual_ref_pixel:    0,$
                     pData_x:             ptr_new(0L),$
                     x_axis:              ptr_new(0L),$
                     total_array:         ptr_new(0L),$

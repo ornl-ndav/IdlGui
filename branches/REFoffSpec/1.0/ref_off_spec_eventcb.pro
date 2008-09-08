@@ -107,8 +107,9 @@ list_OF_files = (*(*global).list_OF_ascii_files)
 sz = N_ELEMENTS(list_OF_files)
 ref_pixel_list = INTARR(sz)
 ref_x_list     = INTARR(sz)
-(*(*global).ref_pixel_list) = ref_pixel_list
-(*(*global).ref_x_list)     = ref_x_list
+(*(*global).ref_pixel_list)        = ref_pixel_list
+(*(*global).ref_pixel_offset_list) = ref_pixel_list
+(*(*global).ref_x_list)            = ref_x_list
 END
 
 

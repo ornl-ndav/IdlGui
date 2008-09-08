@@ -569,6 +569,7 @@ realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 
 ;retrieve pixel offset
 ref_pixel_list = (*(*global).ref_pixel_list)
+ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
 
 nbr = N_ELEMENTS(ref_pixel_list)
 IF (nbr GT 1) THEN BEGIN
@@ -577,6 +578,7 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+        ref_pixel_offset_list[index] += pixel_offset
         array        = *tfpData[index]
         IF (pixel_offset EQ 0 OR $
             ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
@@ -603,12 +605,13 @@ IF (nbr GT 1) THEN BEGIN
             ENDELSE
         ENDELSE
         *realign_tfpData[index] = array
-;change reference pixel from old to new position
+;change reference pixel from old to neatew position
         ref_pixel_list[index] = ref_pixel_list[0]
         ++index
     ENDWHILE
 ENDIF
 
+(*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
 (*global).plot_realign_data  = 1
 (*(*global).realign_pData_y) = realign_tfpData
 (*(*global).ref_pixel_list)  = ref_pixel_list
@@ -664,4 +667,111 @@ plotReferencedPixels, Event
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
+END
+
+;------------------------------------------------------------------------------
+PRO manual_move_mode_shifting, Event, DIRECTION=direction
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+;get selected active file
+index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
+
+;get the increment value selected by user
+pixel_step = getTextFieldValue(Event, $
+                               'move_by_x_pixel_value_manual_shifting')
+
+;determine the new value of the reference pixel
+IF (DIRECTION EQ 'up') THEN BEGIN
+    pixel_step = ABS(pixel_step) ;<0 means that data will have to move up
+ENDIF ELSE BEGIN
+    pixel_step = -ABS(pixel_step)  ;>0 means that data will have to move down
+ENDELSE
+
+(*global).plot_realign_data = 1
+
+;run realign process
+manual_realign_data, Event, pixel_step, index
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
+END
+
+;------------------------------------------------------------------------------
+PRO manual_realign_data, Event, pixel_step, index_to_work
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve data
+IF ((*global).plot_realign_data EQ 1) THEN BEGIN
+    tfpData = (*(*global).pData_y)
+    ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+    manual_ref_pixel = ref_pixel_offset_list[index_to_work]
+ENDIF ELSE BEGIN
+    tfpData = (*(*global).pData_y)
+    manual_ref_pixel = (*global).manual_ref_pixel
+ENDELSE
+
+;data of active file
+array = *tfpData[index_to_work]
+
+pixel_step += manual_ref_pixel
+(*global).manual_ref_pixel = pixel_step
+
+;pixel_offset
+pixel_offset = pixel_step
+
+;array of realign data
+Nbr_array = (size(tfpData))(1)
+realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+
+;retrieve pixel offset
+ref_pixel_list = (*(*global).ref_pixel_list)
+nbr = N_ELEMENTS(ref_pixel_list)
+big_index = 0
+WHILE (big_index LT nbr) DO BEGIN
+    IF (big_index EQ index_to_work) THEN BEGIN
+        IF (pixel_offset GT 0) THEN BEGIN ;needs to move down
+;move up each row by pixel_offset
+;needs to start from the top when the offset is positive
+            FOR i=303,pixel_offset,-1 DO BEGIN
+                array[*,i] = array[*,i-pixel_offset]
+            ENDFOR
+;bottom pixel_offset number of row are initialized to 0
+            FOR j=0,pixel_offset DO BEGIN
+                array[*,j] = 0
+            ENDFOR
+        ENDIF ELSE BEGIN        ;needs to move up
+            IF (pixel_offset LT 0) THEN BEGIN
+                pixel_offset = ABS(pixel_offset)
+                FOR i=0,(303-pixel_offset) DO BEGIN
+                    array[*,i] = array[*,i+pixel_offset]
+                ENDFOR
+                FOR j=303,303-pixel_offset,-1 DO BEGIN
+                    array[*,j] = 0
+                ENDFOR
+            ENDIF
+        ENDELSE
+
+;put back new value in original array
+        *realign_tfpData[index_to_work] = array
+        
+    ENDIF ELSE BEGIN            ;end of 'if (i EQ index_work)'
+        
+        realign_tfpData[big_index] = tfpData[big_index]
+        
+    ENDELSE
+    ++big_index
+ENDWHILE
+
+(*(*global).realign_pData_y) = realign_tfpData
+ref_pixel_offset_list[index_to_work] = pixel_step
+(*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
+
+;plot realign Data
+plotAsciiData_shifting, Event, ARRAY=realign_tfpData
+plotReferencedPixels, Event 
+
 END
