@@ -579,7 +579,6 @@ IF (nbr GT 1) THEN BEGIN
             IF (pixel_offset GT 0) THEN BEGIN ;needs to move up
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
-                print, 'pixel_offset: ' + strcompress(pixel_offset) ;remove_me
                 FOR i=303,pixel_offset,-1 DO BEGIN
                     array[*,i] = array[*,i-pixel_offset]
                 ENDFOR
@@ -598,15 +597,31 @@ IF (nbr GT 1) THEN BEGIN
             ENDELSE
         ENDELSE
         *realign_tfpData[index] = array
+;change reference pixel from old to new position
+        ref_pixel_list[index] = ref_pixel_list[0]
         ++index
     ENDWHILE
 ENDIF
 
 (*global).plot_realign_data  = 1
 (*(*global).realign_pData_y) = realign_tfpData
+(*(*global).ref_pixel_list)  = ref_pixel_list
 
 ;plot realign Data
 plotAsciiData_shifting, Event, ARRAY=realign_tfpData
+plotReferencedPixels, Event 
+
+;put new value of Reference Pixel for current active file
+;get selected active file
+index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
+;display the value of the reference pixel for this file
+ref_pixel_value = ref_pixel_list[index]
+IF (ref_pixel_value EQ 0) THEN BEGIN    
+    ref_pixel_value = 'N/A'
+ENDIF
+putTextFieldValue, Event, $
+  'reference_pixel_value_shifting', $
+  STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
