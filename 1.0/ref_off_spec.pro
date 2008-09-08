@@ -96,6 +96,7 @@ global = ptr_new ({ ucams:               ucams,$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
                     realign_pData_y:     ptr_new(0L),$
+                    first_realign:       1,$
                     pData_x:             ptr_new(0L),$
                     x_axis:              ptr_new(0L),$
                     total_array:         ptr_new(0L),$
