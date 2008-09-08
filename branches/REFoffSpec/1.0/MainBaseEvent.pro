@@ -257,6 +257,7 @@ CASE Event.id OF
               'reference_pixel_value_shifting', $
               STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
             (*(*global).ref_pixel_list) = ref_pixel_list
+            (*(*global).ref_pixel_list_original) = ref_pixel_list
             plotAsciiData_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
             WIDGET_CONTROL,HOURGLASS=0
@@ -285,6 +286,7 @@ CASE Event.id OF
               'reference_pixel_value_shifting', $
               STRCOMPRESS(FIX(new_pixel_value),/REMOVE_ALL)
             (*(*global).ref_pixel_list) = ref_pixel_list
+            (*(*global).ref_pixel_list_original) = ref_pixel_list
             plotAsciiData_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
             WIDGET_CONTROL,HOURGLASS=0

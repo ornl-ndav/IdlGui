@@ -499,6 +499,7 @@ index = getDropListSelectedIndex(Event, $
 ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_list[index] = pixel_value
 (*(*global).ref_pixel_list) = ref_pixel_list
+(*(*global).ref_pixel_list_original) = ref_pixel_list
 
 ref_x_list              = (*(*global).ref_x_list)
 ref_x_list[index]       = x_value
@@ -635,6 +636,24 @@ WIDGET_CONTROL,/HOURGLASS
 (*global).plot_realign_data = 0
 ;plot realign Data
 plotAsciiData_shifting, Event
+
+ref_pixel_list = (*(*global).ref_pixel_list_original)
+(*(*global).ref_pixel_list) = ref_pixel_list
+;put new value of Reference Pixel for current active file
+;get selected active file
+index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
+;display the value of the reference pixel for this file
+ref_pixel_value = ref_pixel_list[index]
+IF (ref_pixel_value EQ 0) THEN BEGIN    
+    ref_pixel_value = 'N/A'
+ENDIF
+putTextFieldValue, Event, $
+  'reference_pixel_value_shifting', $
+  STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
+
+;replot reference pixels
+plotReferencedPixels, Event 
+
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
 END
