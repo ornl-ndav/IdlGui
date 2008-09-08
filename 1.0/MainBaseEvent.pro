@@ -216,6 +216,7 @@ CASE Event.id OF
         ActiveFileDroplist, Event ;_shifting
         plotAsciiData_shifting, Event ;_shifting
         plotReferencedPixels, Event ;_shifting
+        CheckShiftingGui, Event
         WIDGET_CONTROL,HOURGLASS=0
     END
 

@@ -235,8 +235,10 @@ END
 ;------------------------------------------------------------------------------
 PRO CheckShiftingGui, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-uname_list = ['realign_data_button',$
-              'cancel_realign_data_button']
+
+;activate if at least two files loaded and first and another pixel
+;selection has been made
+uname_list = ['auto_shifting_mode']
 ;check how many pixel have been selected
 ref_x_list = (*(*global).ref_x_list)
 index = WHERE(ref_x_list NE 0,nbr)
@@ -250,4 +252,20 @@ ENDIF ELSE BEGIN
     activate_status = 0
 ENDELSE
 activate_widget_list, Event, uname_list, activate_status
+
+;activate if there is at least two files loaded and file selected is
+;not the first one
+uname_list = ['manual_shifting_mode_base']
+index_selected = $
+  getDropListSelectedIndex(Event, $
+                           'active_file_droplist_shifting')
+IF (sz GT 1 AND $
+    index_selected NE 0) THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activate_widget_list, Event, uname_list, activate_status
+
 END
+

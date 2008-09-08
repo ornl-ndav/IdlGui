@@ -259,7 +259,7 @@ sAutoMode = { size: [sHelpBase.size[0]+$
                      163,100],$
               uname: 'auto_shifting_mode',$
               frame: 1,$
-              sensitive: 1}
+              sensitive: 0}
 
 ;Automatic mode label ---------------------------------------------------------
 XYoff = [15,-8]
@@ -301,7 +301,7 @@ sManualModeBase = { size: [sAutoMode.size[0]+$
                            sAutoMode.size[3]],$
                     uname: 'manual_shifting_mode_base',$
                     frame: 1,$
-                    sensitive: 1}
+                    sensitive: 0}
 
 ;Manual Mode Label ------------------------------------------------------------
 XYoff = [15,-8]
