@@ -66,3 +66,10 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
 WIDGET_CONTROL, id, GET_VALUE=index
 RETURN, index
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isPlot2DModeSelected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='two_d_selection_plot_mode')
+value = WIDGET_INFO(id, /BUTTON_SET)
+RETURN, value
+END

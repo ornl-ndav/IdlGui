@@ -199,11 +199,17 @@ CASE Event.id OF
             ENDIF
 
             IF (Event.press EQ 1) THEN BEGIN ;left click 
-                (*global).left_mouse_pressed = 1
-                SavePlotReferencePixel, Event ;_shifting
-                plotAsciiData_shifting, Event ;_shifting
-                plotReferencedPixels, Event ;_shifting
-                CheckShiftingGui, Event ;_gui
+                IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
+                    (*global).left_mouse_pressed = 1 ;selection mode
+                    SavePlotReferencePixel, Event ;_shifting
+                    plotAsciiData_shifting, Event ;_shifting
+                    plotReferencedPixels, Event ;_shifting
+                    CheckShiftingGui, Event ;_gui
+                ENDIF ELSE BEGIN ;plot2D mode
+
+
+
+                ENDELSE
             ENDIF
 
         ENDIF
