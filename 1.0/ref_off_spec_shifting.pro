@@ -157,16 +157,19 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
+tfpData = (*(*global).realign_pData_y)
+
 ;retrieve data
-IF (N_ELEMENTS(ARRAY) EQ 0) THEN BEGIN
-    IF ((*global).plot_realign_data EQ 1) THEN BEGIN
-        tfpData = (*(*global).realign_pData_y)
-    ENDIF ELSE BEGIN
-        tfpData = (*(*global).pData_y)
-    ENDELSE
-ENDIF ELSE BEGIN
-    tfpData = array
-ENDELSE
+; IF (N_ELEMENTS(ARRAY) EQ 0) THEN BEGIN
+;     IF ((*global).plot_realign_data EQ 1) THEN BEGIN
+;         tfpData = (*(*global).realign_pData_y)
+;     ENDIF ELSE BEGIN
+;         tfpData = (*(*global).pData_y)
+;     ENDELSE
+; ENDIF ELSE BEGIN
+;     tfpData = array
+; ENDELSE
+
 xData               = (*(*global).pData_x)
 xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
@@ -197,6 +200,11 @@ index      = 0 ;loop variable (nbr of array to add/plot
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
+
+;get only the central part of the data
+    IF (index NE 0) THEN BEGIN
+        local_tfpData = local_tfpData[*,304L:2*304L-1]
+    ENDIF
     
 ;Applied attenuator coefficient 
     IF (bTransCoeff EQ 1) THEN BEGIN ;yes
@@ -551,17 +559,21 @@ putTextFieldValue, Event, 'help_text_field_shifting', text
 END
 
 ;------------------------------------------------------------------------------
+;this is reach by the automatic realign button
 PRO realign_data, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 ;retrieve arrays
-IF ((*global).first_realign) THEN BEGIN
-    tfpData = (*(*global).pData_y)
-    (*global).first_realign = 0
-ENDIF ELSE BEGIN
-    tfpData = (*(*global).realign_pData_y)
-ENDELSE
+; IF ((*global).first_realign) THEN BEGIN
+;     tfpData = (*(*global).pData_y)
+;     (*global).first_realign = 0
+; ENDIF ELSE BEGIN
+;     tfpData = (*(*global).realign_pData_y)
+; ENDELSE
+
+tfpData = (*(*global).realign_pData_y)
+;local_tfpData = local_tfpData[*,304L:2*304L-1]
 
 ;array of realign data
 Nbr_array = (size(tfpData))(1)
@@ -580,6 +592,7 @@ IF (nbr GT 1) THEN BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
         ref_pixel_offset_list[index] += pixel_offset
         array        = *tfpData[index]
+        array        = array[*,304L:2*304L-1]
         IF (pixel_offset EQ 0 OR $
             ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
             realign_tfpData[index] = tfpData[index]
@@ -604,7 +617,12 @@ IF (nbr GT 1) THEN BEGIN
                 ENDFOR
             ENDELSE
         ENDELSE
-        *realign_tfpData[index] = array
+        
+        local_data   = array
+        dim2         = (size(local_data))(1)
+        big_array    = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1] = local_data
+        *realign_tfpData[index] = big_array
 ;change reference pixel from old to neatew position
         ref_pixel_list[index] = ref_pixel_list[0]
         ++index
@@ -642,6 +660,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 (*global).plot_realign_data = 0
+
+(*(*global).realign_pData_y) = (*(*global).untouched_realign_pData_y)
+
 ;plot realign Data
 plotAsciiData_shifting, Event
 
@@ -704,21 +725,26 @@ END
 PRO manual_realign_data, Event, pixel_step, index_to_work
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-;retrieve data
-IF ((*global).plot_realign_data EQ 1) THEN BEGIN
-    tfpData = (*(*global).pData_y)
-    ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
-    manual_ref_pixel = ref_pixel_offset_list[index_to_work]
-ENDIF ELSE BEGIN
-    tfpData = (*(*global).pData_y)
-    manual_ref_pixel = (*global).manual_ref_pixel
-ENDELSE
+;;retrieve data
+; IF ((*global).plot_realign_data EQ 1) THEN BEGIN
+;     tfpData = (*(*global).pData_y)
+;     ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+;     manual_ref_pixel = ref_pixel_offset_list[index_to_work]
+; ENDIF ELSE BEGIN
+;     tfpData = (*(*global).pData_y)
+;     manual_ref_pixel = (*global).manual_ref_pixel
+; ENDELSE
 
 ;data of active file
-array = *tfpData[index_to_work]
+tfpData = (*(*global).realign_pData_y)
+ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+manual_ref_pixel = ref_pixel_offset_list[index_to_work]
 
-pixel_step += manual_ref_pixel
-(*global).manual_ref_pixel = pixel_step
+array = *tfpData[index_to_work]
+array = array[*,304L:2*304L-1]
+
+;pixel_step += manual_ref_pixel
+;(*global).manual_ref_pixel = pixel_step
 
 ;pixel_offset
 pixel_offset = pixel_step
@@ -756,7 +782,11 @@ WHILE (big_index LT nbr) DO BEGIN
         ENDELSE
 
 ;put back new value in original array
-        *realign_tfpData[index_to_work] = array
+        local_data   = array
+        dim2         = (size(local_data))(1)
+        big_array    = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1] = local_data
+        *realign_tfpData[index_to_work] = big_array
         
     ENDIF ELSE BEGIN            ;end of 'if (i EQ index_work)'
         
@@ -775,3 +805,23 @@ plotAsciiData_shifting, Event, ARRAY=realign_tfpData
 plotReferencedPixels, Event 
 
 END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
