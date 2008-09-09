@@ -60,16 +60,26 @@ IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) NE 0) THEN BEGIN
     RETURN
 ENDIF
 
+xsize = 500
+ysize = 500
+
 ;Built base
 title = 'Counts vs Pixels'
 wBase = WIDGET_BASE(TITLE = title,$
-                    scr_xsize = 200,$
-                    scr_ysize = 200,$
+                    XOFFSET = 500,$
+                    YOFFSET = 50,$
                     GROUP_LEADER = group,$
                     /TLB_KILL_REQUEST_EVENTS,$
                     UNAME = 'plot_2d_shifting_base')
 
+wDraw = WIDGET_DRAW(wBase,$
+                    SCR_XSIZE = xsize,$
+                    SCR_YSIZE = ysize,$
+                    UNAME     = 'plot_2d_shifting_draw')
+
 (*global).w_shifting_plot2d_id = wBase
+uname = WIDGET_INFO(wDraw,/UNAME)
+(*global).w_shifting_plot2d_draw_uname = uname
 
 WIDGET_CONTROL, wBase, /REALIZE
 XMANAGER, "ref_off_spec_shifting_plot2d", wBase, /NO_BLOCK
@@ -86,19 +96,12 @@ ymin = (*global).plot2d_y_left
 xmax = Event.x
 ymax = Event.y
 
-color = 100
+color = 100 ;color of selection
 
 xaxis = (*(*global).x_axis)
 contour_plot_shifting, Event, xaxis
 replotAsciiData_shifting, Event
 plotReferencedPixels, Event     ;_shifting
-
-;; select plot
-; id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
-; WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-; WSET,id_value
-; shifting_image_draw = (*(*global).shifting_image_draw)
-; TVSCL, shifting_image_draw, /DEVICE
 
 plots, xmin, ymin, /DEVICE, COLOR=color
 plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
@@ -106,6 +109,23 @@ plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color
 plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color
 plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color
 
+;plot counts vs pixel of region selected
+id_draw = WIDGET_INFO((*global).w_shifting_plot2d_id, $
+                      FIND_BY_UNAME=(*global).w_shifting_plot2d_draw_uname)
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+total_array = (*(*global).total_array)
+
+xmin = MIN([xmin,xmax],MAX=xmax)
+ymin = MIN([ymin,ymax],MAX=ymax)
+
+IF (xmin NE xmax AND $
+    ymin NE ymax) THEN BEGIN
+    data_to_plot = total_array(xmin:xmax,ymin:ymax)
+    t_data_to_plot = total(data_to_plot,1)
+    plot, t_data_to_plot
+ENDIF
 
 
 
