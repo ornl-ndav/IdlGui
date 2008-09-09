@@ -91,10 +91,30 @@ WHILE (index LT sz) DO BEGIN
         new_y_array = CONGRID((*pData_y[index]), $
                               FIX(congrid_x_coeff),$
                               congrid_y_coeff)
-        *pData_y[index] = new_y_array
+        *pData_y[index] = new_y_array        
     ENDIF
     ++index
 ENDWHILE
+
+;triple the size of each array (except the first one)
+list_OF_files     = (*(*global).list_OF_ascii_files)
+nbr               = N_ELEMENTS(list_OF_files)
+realign_pData_y   = PTRARR(nbr,/ALLOCATE_HEAP)
+
+index  = 0
+WHILE(index LT sz) DO BEGIN
+    IF (index EQ 0) THEN BEGIN
+        *realign_pData_y[index] = *pData_y[index]
+    ENDIF ELSE BEGIN
+        local_data   = *pData_y[index]
+        dim2         = (size(local_data))(1)
+        big_array    = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1] = local_data
+        *realign_pData_y[index] = big_array
+    ENDELSE
+    ++index
+ENDWHILE
+
 
 ;each new array pData_y (with congrid in x direction to share the same
 ;x-axis are store in pData_y
@@ -105,5 +125,8 @@ x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
 x_axis = FINDGEN(FIX(x_size)) * min_delta_x
 (*(*global).x_axis) = x_axis
 (*global).delta_x = x_axis[1]-x_axis[0]
+(*(*global).realign_pData_y) = realign_pData_y
+(*(*global).untouched_realign_pData_y) = realign_pData_y
+
 
 END
