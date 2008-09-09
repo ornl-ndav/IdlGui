@@ -269,13 +269,21 @@ activate_widget_list, Event, uname_list, activate_status
 
 ;activate down and up reference (first frame) when there is at least
 ;one file plotted
-uname_list = ['reference_base_shifting']
+uname_list = ['reference_base_shifting',$
+              'selection_mode_base',$
+              'selection_mode_base_label',$
+              'x_axis_less_more_label',$
+              'x_axis_less_ticks_shifting',$
+              'x_axis_more_ticks_shifting',$
+              'z_axis_linear_log_shifting']
 IF (current_list_OF_files[0] NE '') THEN BEGIN
     activate_status = 1
 ENDIF ELSE BEGIN
     activate_status = 0
 ENDELSE
 activate_widget_list, Event, uname_list, activate_status
+
+
 
 END
 

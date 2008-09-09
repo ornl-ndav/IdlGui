@@ -43,7 +43,14 @@ sBaseTab = { size:  tab_size,$
              title: TabTitles.step3}
 
 ;x/y and counts values --------------------------------------------------------
-XYoff = [50,10] ;X value
+XYoff = [45,5]
+sXYIFrame = { size: [XYoff[0],$
+                     XYoff[1],$
+                     350,$
+                     20],$
+              frame: 1}
+
+XYoff = [50,8] ;X value
 sXlabel = { size: [XYoff[0],$
                    XYOff[1],$
                    100],$
@@ -63,13 +70,38 @@ sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
                         sYlabel.size[2]],$
                  value: 'Counts: ?',$
                  uname: 'counts_value_shifting'}
-       
+
+;Selection or 2D plot modes ---------------------------------------------------
+XYoff = [100,5]
+sModeLabel = { size: [sXYIFrame.size[0]+$
+                      sXYIFrame.size[2]+XYoff[0],$
+                      XYoff[1]],$
+               uname: 'selection_mode_base_label',$
+               value: 'Mouse Mode:'}
+
+XYoff = [70,0]
+sMode = { size: [sModeLabel.size[0]+$
+                 XYoff[0],$
+                 XYoff[1],$
+                 200,25],$
+          uname: 'selection_mode_base'}
+
+XYoff = [50,0]
+sSelectionMode = { uname: 'selection_mode',$
+                   value: 'images/selection_mode.bmp',$
+                   tooltip: 'Reference Pixel Selection Mode'}
+XYoff = [50,0]
+s2DplotMode = { uname: 'two_d_selection_plot_mode',$
+                value: 'images/twoD_selection_mode.bmp',$
+                tooltip: '2D Plot Selection Mode'}
+                         
 ;More or Less axis ticks number ----------------------------------------------
-XYoff = [300,10]
+XYoff = [550,5]
 sXaxisTicksLabel = { size: [sCountsLabel.size[0]+XYoff[0],$
                             XYoff[1]],$
+                     uname: 'x_axis_less_more_label',$
                      value: 'Xaxis Ticks Nbr:'}
-XYoff=[110,5]                    ;- ticks
+XYoff=[110,3]                    ;- ticks
 sXaxisLessTicks = { size: [sXaxisTicksLabel.size[0]+XYoff[0],$
                            XYoff[1],$
                            60],$
@@ -389,10 +421,52 @@ wCountsLabel = WIDGET_LABEL(BaseTab,$
                        UNAME     = sCountsLabel.uname,$
                        /ALIGN_LEFT)
 
+;X, Y, Intensity frame
+wXYIFrame = WIDGET_LABEL(BaseTab,$
+                         XOFFSET   = sXYIFrame.size[0],$
+                         YOFFSET   = sXYIFrame.size[1],$
+                         SCR_XSIZE = sXYIFrame.size[2],$
+                         SCR_YSIZE = sXYIFrame.size[3],$
+                         FRAME     = sXYIFrame.frame,$
+                         VALUE     = '')
+
+;Selection or 2D plot modes ---------------------------------------------------
+wMode = WIDGET_BASE(BaseTab,$
+                    SPACE   = 15,$
+                    UNAME   = sMode.uname,$
+                    XOFFSET = sMode.size[0],$
+                    YOFFSET = sMode.size[1],$
+                    SCR_XSIZE = sMode.size[2],$
+                    /EXCLUSIVE,$
+                    /ROW)
+
+wLabel = WIDGET_LABEL(BaseTab,$
+                      XOFFSET = sModeLabel.size[0],$
+                      YOFFSET = sModeLabel.size[1],$
+                      UNAME   = sModeLabel.uname,$
+                      VALUE   = sModeLabel.value)
+
+wButton1 = WIDGET_BUTTON(wMode,$
+                         VALUE   = sSelectionMode.value,$
+                         TOOLTIP = sSelectionMode.tooltip,$
+                         UNAME   = sSelectionMode.uname,$
+                         /BITMAP,$
+                         /NO_RELEASE)
+
+wButton2 = WIDGET_BUTTON(wMode,$
+                         VALUE   = s2DplotMode.value,$
+                         TOOLTIP = s2DplotMode.tooltip,$
+                         UNAME   = s2DplotMode.uname,$
+                         /BITMAP,$
+                         /NO_RELEASE)
+
+WIDGET_CONTROL,  WIDGET_INFO(wMode, /CHILD), /SET_BUTTON
+
 ;More or Less number of ticks on the x-axis -----------------------------------
 label = WIDGET_LABEL(BaseTab,$
                      XOFFSET = sXaxisTicksLabel.size[0],$
                      YOFFSET = sXaxisTicksLabel.size[1],$
+                     UNAME   = sXaxisTicksLabel.uname,$
                      VALUE   = sXaxisTicksLabel.value)
 
 less = WIDGET_BUTTON(BaseTab,$
