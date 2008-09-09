@@ -189,9 +189,11 @@ CASE Event.id OF
 
             IF (Event.type EQ 2 AND $
                 (*global).left_mouse_pressed EQ 1) THEN BEGIN ;move mouse
-                SavePlotReferencePixel, Event ;_shifting
-                plotAsciiData_shifting, Event ;_shifting
-                plotReferencedPixels, Event ;_shifting
+                IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
+                    SavePlotReferencePixel, Event ;_shifting
+                    plotAsciiData_shifting, Event ;_shifting
+                    plotReferencedPixels, Event ;_shifting
+                ENDIF
             ENDIF
             
 ;selection mode
@@ -210,19 +212,29 @@ CASE Event.id OF
             ENDIF ELSE BEGIN
 ;plot2D mode
                 IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                    (*global).left_mouse_pressed = 0
                 ENDIF
                 
                 IF (Event.press EQ 1) THEN BEGIN ;left click 
+                    (*global).left_mouse_pressed = 1
                     ref_off_spec_shifting_plot2d, $
                       Event, $
                       GROUP_LEADER=Event.top
+                    (*global).plot2d_x_left = Event.x
+                    (*global).plot2d_y_left = Event.y
                 ENDIF
-
+                
+                IF (Event.type EQ 2) THEN BEGIN ;move mouse
+                    IF ((*global).left_mouse_pressed) THEN BEGIN
+                        plot_selection_OF_2d_plot_mode, Event ;shifting_plot2d
+                    ENDIF
+                ENDIF
+                
             ENDELSE
         ENDIF
-
+        
     END
-
+    
 ;Active file droplist
     Widget_Info(wWidget, FIND_BY_UNAME='active_file_droplist_shifting'): BEGIN
         WIDGET_CONTROL,/HOURGLASS
