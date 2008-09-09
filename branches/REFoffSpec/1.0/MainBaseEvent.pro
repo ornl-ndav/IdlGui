@@ -191,7 +191,7 @@ CASE Event.id OF
                 (*global).left_mouse_pressed EQ 1) THEN BEGIN ;move mouse
                 IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
                     SavePlotReferencePixel, Event ;_shifting
-                    plotAsciiData_shifting, Event ;_shifting
+                    replotAsciiData_shifting, Event ;_shifting
                     plotReferencedPixels, Event ;_shifting
                 ENDIF
             ENDIF
@@ -205,7 +205,7 @@ CASE Event.id OF
                 IF (Event.press EQ 1) THEN BEGIN ;left click 
                     (*global).left_mouse_pressed = 1 ;selection mode
                     SavePlotReferencePixel, Event ;_shifting
-                    plotAsciiData_shifting, Event ;_shifting
+                    replotAsciiData_shifting, Event ;_shifting
                     plotReferencedPixels, Event ;_shifting
                     CheckShiftingGui, Event ;_gui
                 ENDIF

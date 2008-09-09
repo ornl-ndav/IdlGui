@@ -151,7 +151,7 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData_shifting, Event, ARRAY=array
+PRO plotAsciiData_shifting, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;get number of files loaded
@@ -201,7 +201,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
 
-;get only the central part of the data
+;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
@@ -308,6 +308,26 @@ WHILE (i LT nbr_plot) DO BEGIN
 ENDWHILE
 
 END
+
+;------------------------------------------------------------------------------
+PRO replotAsciiData_shifting, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+total_array = (*(*global).total_array)
+
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
+;select plot
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+;plot main plot
+TVSCL, total_array, /DEVICE
+
+END
+
 
 
 ;------------------------------------------------------------------------------
