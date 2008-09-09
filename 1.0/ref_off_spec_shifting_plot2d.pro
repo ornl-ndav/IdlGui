@@ -86,12 +86,19 @@ ymin = (*global).plot2d_y_left
 xmax = Event.x
 ymax = Event.y
 
-color = 50
+color = 100
 
 xaxis = (*(*global).x_axis)
 contour_plot_shifting, Event, xaxis
-plotAsciiData_shifting, Event
+replotAsciiData_shifting, Event
 plotReferencedPixels, Event     ;_shifting
+
+;; select plot
+; id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
+; WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+; WSET,id_value
+; shifting_image_draw = (*(*global).shifting_image_draw)
+; TVSCL, shifting_image_draw, /DEVICE
 
 plots, xmin, ymin, /DEVICE, COLOR=color
 plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
