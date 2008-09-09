@@ -74,3 +74,32 @@ wBase = WIDGET_BASE(TITLE = title,$
 WIDGET_CONTROL, wBase, /REALIZE
 XMANAGER, "ref_off_spec_shifting_plot2d", wBase, /NO_BLOCK
 END
+
+;------------------------------------------------------------------------------
+PRO plot_selection_OF_2d_plot_mode, Event
+
+WIDGET_CONTROL, Event.top,GET_UVALUE=global
+
+xmin = (*global).plot2d_x_left
+ymin = (*global).plot2d_y_left
+
+xmax = Event.x
+ymax = Event.y
+
+color = 50
+
+xaxis = (*(*global).x_axis)
+contour_plot_shifting, Event, xaxis
+plotAsciiData_shifting, Event
+plotReferencedPixels, Event     ;_shifting
+
+plots, xmin, ymin, /DEVICE, COLOR=color
+plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
+plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color
+plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color
+plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color
+
+
+
+
+END

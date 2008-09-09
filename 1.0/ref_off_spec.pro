@@ -107,6 +107,8 @@ global = ptr_new ({ ucams:               ucams,$
                                           xticks: 1L,$
                                           position: INTARR(4)},$
                     PrevTabSelect:       0,$
+                    plot2d_x_left:       0,$
+                    plot2d_y_left:       0,$
                     w_shifting_plot2d_id: 0$ ;id of plot2D widget_base
                   })
 
