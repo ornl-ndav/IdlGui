@@ -194,24 +194,31 @@ CASE Event.id OF
                 plotReferencedPixels, Event ;_shifting
             ENDIF
             
-            IF (Event.type EQ 1) THEN BEGIN ;release mouse
-                (*global).left_mouse_pressed = 0
-            ENDIF
-
-            IF (Event.press EQ 1) THEN BEGIN ;left click 
-                IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
+;selection mode
+            IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
+                IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                    (*global).left_mouse_pressed = 0
+                ENDIF
+                
+                IF (Event.press EQ 1) THEN BEGIN ;left click 
                     (*global).left_mouse_pressed = 1 ;selection mode
                     SavePlotReferencePixel, Event ;_shifting
                     plotAsciiData_shifting, Event ;_shifting
                     plotReferencedPixels, Event ;_shifting
                     CheckShiftingGui, Event ;_gui
-                ENDIF ELSE BEGIN ;plot2D mode
+                ENDIF
+            ENDIF ELSE BEGIN
+;plot2D mode
+                IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                ENDIF
+                
+                IF (Event.press EQ 1) THEN BEGIN ;left click 
+                    ref_off_spec_shifting_plot2d, $
+                      Event, $
+                      GROUP_LEADER=Event.top
+                ENDIF
 
-
-
-                ENDELSE
-            ENDIF
-
+            ENDELSE
         ENDIF
 
     END

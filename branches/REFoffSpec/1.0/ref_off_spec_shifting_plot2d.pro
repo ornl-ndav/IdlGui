@@ -32,44 +32,45 @@
 ;
 ;==============================================================================
 
-FUNCTION isLogZaxisSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
+PRO ref_off_spec_shifting_plot2d_event, Event
+COMPILE_OPT idl2, hidden
+
+IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') $
+  THEN BEGIN
+    WIDGET_CONTROL, Event.top, /DESTROY
+    RETURN
+ENDIF
+
+
+
 END
 
-;------------------------------------------------------------------------------
-FUNCTION isLogZaxisShiftingSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_shifting')
-WIDGET_CONTROL, id, GET_VALUE=isLogSelected
-RETURN, isLogSelected
-END
+
 
 ;------------------------------------------------------------------------------
-FUNCTION isThisIndexSelected, Event, index_selected, this_index
-bFoundList = WHERE(index_selected EQ this_index,nbr)
-IF (nbr GT 0) THEN RETURN, 1
-RETURN, 0
-END
+PRO ref_off_spec_shifting_plot2d, Event, GROUP_LEADER=group
 
-;------------------------------------------------------------------------------
-FUNCTION is_YandX_RefPixelSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reference_pixel_shifting_options')
-WIDGET_CONTROL, id, GET_VALUE=isYandXselected
-RETURN, isYandXselected
-END
+WIDGET_CONTROL, Event.top,GET_UVALUE=global
 
-;------------------------------------------------------------------------------
-FUNCTION isWithAttenuatorCoeff, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
-                 'transparency_attenuator_shifting_options')
-WIDGET_CONTROL, id, GET_VALUE=index
-RETURN, index
-END
+COMPILE_OPT idl2, hidden
 
-;------------------------------------------------------------------------------
-FUNCTION isPlot2DModeSelected, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='two_d_selection_plot_mode')
-value = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, value
+; Check if already created.  If so, return.
+IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) NE 0) THEN BEGIN
+    WIDGET_CONTROL,(*global).w_shifting_plot2d_id, /SHOW
+    RETURN
+ENDIF
+
+;Built base
+title = 'Counts vs Pixels'
+wBase = WIDGET_BASE(TITLE = title,$
+                    scr_xsize = 200,$
+                    scr_ysize = 200,$
+                    GROUP_LEADER = group,$
+                    /TLB_KILL_REQUEST_EVENTS,$
+                    UNAME = 'plot_2d_shifting_base')
+
+(*global).w_shifting_plot2d_id = wBase
+
+WIDGET_CONTROL, wBase, /REALIZE
+XMANAGER, "ref_off_spec_shifting_plot2d", wBase, /NO_BLOCK
 END
