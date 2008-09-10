@@ -655,7 +655,8 @@ ENDIF
 (*(*global).ref_pixel_list)  = ref_pixel_list
 
 ;plot realign Data
-plotAsciiData_shifting, Event, ARRAY=realign_tfpData
+plotAsciiData_shifting, Event
+;ARRAY=realign_tfpData
 plotReferencedPixels, Event 
 
 ;put new value of Reference Pixel for current active file
@@ -821,7 +822,7 @@ ref_pixel_offset_list[index_to_work] = pixel_step
 (*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
 
 ;plot realign Data
-plotAsciiData_shifting, Event, ARRAY=realign_tfpData
+plotAsciiData_shifting, Event
 plotReferencedPixels, Event 
 
 END
