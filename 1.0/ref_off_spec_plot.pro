@@ -91,20 +91,21 @@ ERASE
 
 IF (isLogZaxisSelected(Event)) THEN BEGIN
     divisions = 4
-    format = '(I0)'
+    perso_format = '(f6.2)'
     range  = FLOAT([master_min,master_max])
 ENDIF ELSE BEGIN
     divisions = 20
-    format = '(I0)'
+    perso_format = ''
     range = [master_min,master_max]
 ENDELSE
 
 colorbar, $
-  NCOLORS   = 255, $
-  POSITION  = [0.58,0.01,0.95,0.99], $
-  RANGE     = range,$
-  DIVISIONS = divisions,$
-  FORMAT    = format,$
+  NCOLORS      = 255, $
+  POSITION     = [0.58,0.01,0.95,0.99], $
+  RANGE        = range,$
+  DIVISIONS    = divisions,$
+  FORMAT       = '(I0)',$
+  PERSO_FORMAT = perso_format,$
   /VERTICAL
 
 END

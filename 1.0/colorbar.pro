@@ -224,12 +224,32 @@
 ;###########################################################################
 
 
-PRO COLORBAR, BOTTOM=bottom, CHARSIZE=charsize, COLOR=color, DIVISIONS=divisions, $
-   FORMAT=format, POSITION=position, MAXRANGE=maxrange, MINRANGE=minrange, NCOLORS=ncolors, $
-   TITLE=title, VERTICAL=vertical, TOP=top, RIGHT=right, MINOR=minor, $
-   RANGE=range, FONT=font, TICKLEN=ticklen, _EXTRA=extra, INVERTCOLORS=invertcolors, $
-   TICKNAMES=ticknames, REVERSE=reverse, ANNOTATECOLOR=annotatecolor, XLOG=xlog, YLOG=ylog, $
-   NODISPLAY=nodisplay
+PRO COLORBAR, BOTTOM        = bottom, $
+              CHARSIZE      = charsize, $
+              COLOR         = color, $
+              DIVISIONS     = divisions, $
+              FORMAT        = format, $
+              POSITION      = position, $
+              MAXRANGE      = maxrange, $
+              MINRANGE      = minrange, $
+              NCOLORS       = ncolors, $
+              TITLE         = title, $
+              VERTICAL      = vertical, $
+              TOP           = top, $
+              RIGHT         = right, $
+              MINOR         = minor, $
+              RANGE         = range, $
+              FONT          = font, $
+              TICKLEN       = ticklen, $
+              _EXTRA        = extra, $
+              INVERTCOLORS  = invertcolors, $
+              TICKNAMES     = ticknames, $
+              REVERSE       = reverse, $
+              ANNOTATECOLOR = annotatecolor, $
+              XLOG          = xlog, $
+              YLOG          = ylog, $
+              NODISPLAY     = nodisplay,$
+              PERSO_FORMAT  = perso_format
 
     compile_opt idl2
 
@@ -410,22 +430,59 @@ PRO COLORBAR, BOTTOM=bottom, CHARSIZE=charsize, COLOR=color, DIVISIONS=divisions
        IF KEYWORD_SET(right) THEN BEGIN
 
           PLOT, [minrange,maxrange], [minrange,maxrange], /NODATA, XTICKS=1, $
-             YTICKS=divisions, XSTYLE=1, YSTYLE=9, $
-             POSITION=position, COLOR=color, CHARSIZE=charsize, /NOERASE, $
-             XTICKFORMAT='(A1)', YTICKFORMAT='(A1)', YMINOR=minor, _EXTRA=extra, $
-             YTICKNAME=ticknames, FONT=font, YLOG=ylog
+            YTICKS=divisions, $
+            XSTYLE=1, $
+            YSTYLE=9, $
+            POSITION=position, $
+            COLOR=color, $
+            CHARSIZE=charsize, $
+            /NOERASE, $
+            XTICKFORMAT='(A1)', $
+            YTICKFORMAT='(A1)', $
+            YMINOR=minor, $
+            _EXTRA=extra, $
+            YTICKNAME=ticknames, $
+            FONT=font, $
+            YLOG=ylog
 
-          AXIS, YAXIS=1, YRANGE=[minrange, maxrange], YTICKFORMAT=format, YTICKS=divisions, $
-             YTICKLEN=ticklen, YSTYLE=1, COLOR=color, CHARSIZE=charsize, $
-             FONT=font, YTITLE=title, _EXTRA=extra, YMINOR=minor, YTICKNAME=ticknames, YLOG=ylog
+          AXIS, YAXIS=1, $
+            YRANGE=[minrange, maxrange], $
+            YTICKFORMAT=format, $
+            YTICKS=divisions, $
+            YTICKLEN=ticklen, $
+            YSTYLE=1, $
+            COLOR=color, $
+            CHARSIZE=charsize, $
+            FONT=font, $
+            YTITLE=title, $
+            _EXTRA=extra, $
+            YMINOR=minor, $
+            YTICKNAME=ticknames, $
+            YLOG=ylog
 
        ENDIF ELSE BEGIN
 
-          PLOT, [minrange,maxrange], [minrange,maxrange], /NODATA, XTICKS=1,  $
-             YTICKS=divisions, YSTYLE=1, XSTYLE=1, TITLE=title, $
-             POSITION=position, COLOR=color, CHARSIZE=charsize, /NOERASE, $
-             XTICKFORMAT='(A1)', YTICKFORMAT=format, YMinor=minor, _EXTRA=extra, $
-             YTICKNAME=ticknames, YLOG=ylog, YTICKLEN=ticklen
+           format = PERSO_FORMAT
+
+           PLOT, [minrange,maxrange], $
+             [minrange,maxrange], $
+             /NODATA, $
+             XTICKS=1,  $
+             YTICKS=divisions, $
+             YSTYLE=1, $
+             XSTYLE=1, $
+             TITLE=title, $
+             POSITION=position, $
+             COLOR=color, $
+             CHARSIZE=charsize, $
+             /NOERASE, $
+             XTICKFORMAT='(A1)',$
+             YTICKFORMAT=format, $
+             YMinor=minor, $
+             _EXTRA=extra, $
+             YTICKNAME=ticknames, $
+             YLOG=ylog, $
+             YTICKLEN=ticklen
 
        ENDELSE
 
