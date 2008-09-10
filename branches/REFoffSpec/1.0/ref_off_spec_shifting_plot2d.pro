@@ -93,8 +93,8 @@ WIDGET_CONTROL, Event.top,GET_UVALUE=global
 xmin = (*global).plot2d_x_left
 ymin = (*global).plot2d_y_left
 
-xmax = Event.x
-ymax = Event.y
+xmax = (*global).plot2d_x_right
+ymax = (*global).plot2d_y_right
 
 color = 100 ;color of selection
 
@@ -102,6 +102,16 @@ xaxis = (*(*global).x_axis)
 contour_plot_shifting, Event, xaxis
 replotAsciiData_shifting, Event
 plotReferencedPixels, Event     ;_shifting
+
+xmin = MIN([xmin,xmax],MAX=xmax)
+ymin = MIN([ymin,ymax],MAX=ymax)
+
+total_array = (*(*global).total_array)
+total_array_x_max = (size(total_array))(1)
+
+;plot only if xmin and xmin and xmax are inside the range of data
+IF (xmin GE total_array_x_max) THEN xmin = total_array_x_max-1
+IF (xmax GE total_array_x_max) THEN xmax = total_array_x_max-1
 
 plots, xmin, ymin, /DEVICE, COLOR=color
 plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
@@ -115,27 +125,26 @@ id_draw = WIDGET_INFO((*global).w_shifting_plot2d_id, $
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 
-total_array = (*(*global).total_array)
-
-xmin = MIN([xmin,xmax],MAX=xmax)
-ymin = MIN([ymin,ymax],MAX=ymax)
-
-IF (xmin NE xmax AND $
-    ymin NE ymax) THEN BEGIN
-    data_to_plot = total_array(xmin:xmax,ymin:ymax)
-    t_data_to_plot = total(data_to_plot,1)
-    sz = N_ELEMENTS(t_data_to_plot)
-    new_array = CONGRID(t_data_to_plot,sz/2)
-    help, new_array
-    xrange = INDGEN(sz) + ymin/2
-    xtitle = 'Pixel #'
-    ytitle = 'Counts'
-    plot, xrange, new_array, $
-      XRANGE=[ymin/2,ymax/2], $
-      XTITLE=xtitle, $
-      YTITLE=ytitle
-ENDIF
-
-
-
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+ENDIF ELSE BEGIN
+    IF (xmin NE xmax AND $
+        ymin NE ymax) THEN BEGIN
+        data_to_plot = total_array(xmin:xmax,ymin:ymax)
+        t_data_to_plot = total(data_to_plot,1)
+        sz = N_ELEMENTS(t_data_to_plot)
+        new_array = CONGRID(t_data_to_plot,sz/2)
+        help, new_array
+        xrange = INDGEN(sz) + ymin/2
+        xtitle = 'Pixel #'
+        ytitle = 'Counts'
+        plot, xrange, new_array, $
+          XRANGE=[ymin/2,ymax/2], $
+          XTITLE=xtitle, $
+          YTITLE=ytitle
+    ENDIF
+ENDELSE
 END
