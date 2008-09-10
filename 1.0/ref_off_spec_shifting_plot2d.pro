@@ -113,11 +113,13 @@ total_array_x_max = (size(total_array))(1)
 IF (xmin GE total_array_x_max) THEN xmin = total_array_x_max-1
 IF (xmax GE total_array_x_max) THEN xmax = total_array_x_max-1
 
+selection_type = getCWBgroupValue(Event,'plot_2d_selection_type')
+
 plots, xmin, ymin, /DEVICE, COLOR=color
-plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
 
 ; Check if already created.  If so, return.
 IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) EQ 0) THEN BEGIN
@@ -142,7 +144,6 @@ ENDIF ELSE BEGIN
         t_data_to_plot = total(data_to_plot,1)
         sz = N_ELEMENTS(t_data_to_plot)
         new_array = CONGRID(t_data_to_plot,sz/2)
-        help, new_array
         xrange = INDGEN(sz) + ymin/2
         xtitle = 'Pixel #'
         ytitle = 'Counts'
@@ -177,12 +178,18 @@ IF (xmin NE xmax AND $
     IF (xmin GE total_array_x_max) THEN xmin = total_array_x_max-1
     IF (xmax GE total_array_x_max) THEN xmax = total_array_x_max-1
     
+    selection_type = getCWBgroupValue(Event,'plot_2d_selection_type')
+    
     plots, xmin, ymin, /DEVICE, COLOR=color
-    plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-    plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-    plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-    plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
-
+    plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, $
+      LINESTYLE=selection_type
+    plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, $
+      LINESTYLE=selection_type
+    plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, $
+      LINESTYLE=selection_type
+    plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, $
+      LINESTYLE=selection_type
+    
 ENDIF
 
 END

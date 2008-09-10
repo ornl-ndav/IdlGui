@@ -46,7 +46,7 @@ sBaseTab = { size:  tab_size,$
 XYoff = [10,15] ;base
 sShiftingBase = { size: [XYoff[0],$
                          XYoff[1],$
-                         702,155],$
+                         702,200],$
                   uname: 'shifting_base_options',$
                   frame: 1}
 
@@ -86,6 +86,13 @@ sFastSelectionMode = { list: ['YES','NO'],$
 sFastSelectionModeLabel = { value: '-> User is in charge of changing ' + $
                             'the active file.            ',$
                             uname: 'fast_active_file_options_label'}
+
+;Type of Selection lines ------------------------------------------------------
+sTypeOfSelection = { list: ['_____  ','.  .  .  ','- - -  ',' -.-.-  ', $
+                            '--...--  ','--  -- '],$
+                     uname: 'plot_2d_selection_type',$
+                     value: 4.0,$
+                     title: 'Plot2D Selection Aspect            '}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -174,5 +181,14 @@ wLabel = WIDGET_LABEL(wBase4,$
                       VALUE = sFastSelectionModeLabel.value,$
                       /ALIGN_LEFT)
 
-
+;Type of Selection lines ------------------------------------------------------
+wBase5 = WIDGET_BASE(wShiftingBase,$
+                     FRAME = 1)
+wTypeOfSelection = CW_BGROUP(wBase5,$
+                             sTypeOfSelection.list,$
+                             LABEL_LEFT = sTypeOfSelection.title,$
+                             UNAME      = sTypeOfSelection.uname,$
+                             SET_VALUE  = sTypeOfSelection.value,$
+                             /ROW,$
+                             /EXCLUSIVE)
 END
