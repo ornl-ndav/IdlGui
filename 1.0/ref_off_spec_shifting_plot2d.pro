@@ -112,12 +112,6 @@ plots, [xmin, xmin, xmax, xmax, xmin],$
   COLOR =color,$
   LINESTYLE=selection_type
 
-; plots, xmin, ymin, /DEVICE, COLOR=color
-; plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-; plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-; plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-; plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-
 ; Check if already created.  If so, return.
 IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) EQ 0) THEN BEGIN
     RETURN
@@ -182,16 +176,6 @@ IF (xmin NE xmax AND $
       /DEVICE,$
       COLOR =color,$
       LINESTYLE=selection_type
-    
-;     plots, xmin, ymin, /DEVICE, COLOR=color
-;     plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, $
-;       LINESTYLE=selection_type
-;     plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, $
-;       LINESTYLE=selection_type
-;     plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, $
-;       LINESTYLE=selection_type
-;     plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, $
-;       LINESTYLE=selection_type
     
 ENDIF
 
