@@ -272,6 +272,7 @@ CASE Event.id OF
             (*(*global).ref_pixel_list) = ref_pixel_list
             plotAsciiData_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
+            refresh_plot_selection_OF_2d_plot_mode, Event
             WIDGET_CONTROL,HOURGLASS=0
             CheckShiftingGui, Event ;_gui
         ENDIF
@@ -300,6 +301,7 @@ CASE Event.id OF
             (*(*global).ref_pixel_list_original) = ref_pixel_list
             plotAsciiData_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
+            refresh_plot_selection_OF_2d_plot_mode, Event
             WIDGET_CONTROL,HOURGLASS=0
             CheckShiftingGui, Event ;_gui
         ENDIF
@@ -329,6 +331,7 @@ CASE Event.id OF
             (*(*global).ref_pixel_list_original) = ref_pixel_list
             plotAsciiData_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
+            refresh_plot_selection_OF_2d_plot_mode, Event
             WIDGET_CONTROL,HOURGLASS=0
             CheckShiftingGui, Event ;_gui
         ENDIF
