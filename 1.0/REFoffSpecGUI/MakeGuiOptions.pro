@@ -92,7 +92,7 @@ sTypeOfSelection = { list: ['_____  ','.  .  .  ','- - -  ',' -.-.-  ', $
                             '--...--  ','--  -- '],$
                      uname: 'plot_2d_selection_type',$
                      value: 4.0,$
-                     title: 'Plot2D Selection Aspect            '}
+                     title: 'Plot2D Selection Style              '}
 
 ;******************************************************************************
 ;            BUILD GUI
