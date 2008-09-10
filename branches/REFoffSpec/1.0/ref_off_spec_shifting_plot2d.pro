@@ -148,3 +148,36 @@ ENDIF ELSE BEGIN
     ENDIF
 ENDELSE
 END
+
+;------------------------------------------------------------------------------
+PRO refresh_plot_selection_OF_2d_plot_mode, Event
+
+WIDGET_CONTROL, Event.top,GET_UVALUE=global
+
+xmin = (*global).plot2d_x_left
+ymin = (*global).plot2d_y_left
+
+xmax = (*global).plot2d_x_right
+ymax = (*global).plot2d_y_right
+
+color = 100 ;color of selection
+
+total_array = (*(*global).total_array)
+total_array_x_max = (size(total_array))(1)
+
+IF (xmin NE xmax AND $
+    ymin NE ymax) THEN BEGIN
+
+;plot only if xmin and xmin and xmax are inside the range of data
+    IF (xmin GE total_array_x_max) THEN xmin = total_array_x_max-1
+    IF (xmax GE total_array_x_max) THEN xmax = total_array_x_max-1
+    
+    plots, xmin, ymin, /DEVICE, COLOR=color
+    plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+    plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+    plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+    plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+
+ENDIF
+
+END
