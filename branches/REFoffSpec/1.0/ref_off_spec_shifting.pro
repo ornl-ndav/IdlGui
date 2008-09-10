@@ -829,8 +829,28 @@ plot_selection_OF_2d_plot_mode, Event
 
 END
 
+;------------------------------------------------------------------------------
+PRO move_to_next_active_file, Event ;_shifting
 
+list_OF_files  = getDroplistValue(Event,$
+                                  'active_file_droplist_shifting')
+index_selected = getDropListSelectedIndex(Event,$
+                                          'active_file_droplist_shifting')
+sz = N_ELEMENTS(list_OF_files)
+IF (index_selected NE sz-1) THEN BEGIN ;move-up to next active file and replot
+    selectDroplistIndex, Event, $
+      'active_file_droplist_shifting', $
+      index_selected+1
+    WIDGET_CONTROL,/HOURGLASS
+    ActiveFileDroplist, Event   ;_shifting
+    plotAsciiData_shifting, Event ;_shifting
+    plotReferencedPixels, Event ;_shifting
+    CheckShiftingGui, Event
+    refresh_plot_selection_OF_2d_plot_mode, Event 
+    WIDGET_CONTROL,HOURGLASS=0
+ENDIF
 
+END
 
 
 
