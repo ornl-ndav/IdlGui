@@ -34,26 +34,17 @@
 
 PRO ref_off_spec_shifting_plot2d_event, Event
 COMPILE_OPT idl2, hidden
-
 IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') $
   THEN BEGIN
     WIDGET_CONTROL, Event.top, /DESTROY
     RETURN
 ENDIF
-
-
-
 END
-
-
 
 ;------------------------------------------------------------------------------
 PRO ref_off_spec_shifting_plot2d, Event, GROUP_LEADER=group
-
 WIDGET_CONTROL, Event.top,GET_UVALUE=global
-
 COMPILE_OPT idl2, hidden
-
 ; Check if already created.  If so, return.
 IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) NE 0) THEN BEGIN
     WIDGET_CONTROL,(*global).w_shifting_plot2d_id, /SHOW
@@ -115,11 +106,17 @@ IF (xmax GE total_array_x_max) THEN xmax = total_array_x_max-1
 
 selection_type = getCWBgroupValue(Event,'plot_2d_selection_type')
 
-plots, xmin, ymin, /DEVICE, COLOR=color
-plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
-plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+plots, [xmin, xmin, xmax, xmax, xmin],$
+  [ymin,ymax, ymax, ymin, ymin],$
+  /DEVICE,$
+  COLOR =color,$
+  LINESTYLE=selection_type
+
+; plots, xmin, ymin, /DEVICE, COLOR=color
+; plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+; plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+; plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
+; plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=selection_type
 
 ; Check if already created.  If so, return.
 IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) EQ 0) THEN BEGIN
@@ -180,15 +177,21 @@ IF (xmin NE xmax AND $
     
     selection_type = getCWBgroupValue(Event,'plot_2d_selection_type')
     
-    plots, xmin, ymin, /DEVICE, COLOR=color
-    plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, $
+    plots, [xmin, xmin, xmax, xmax, xmin],$
+      [ymin,ymax, ymax, ymin, ymin],$
+      /DEVICE,$
+      COLOR =color,$
       LINESTYLE=selection_type
-    plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, $
-      LINESTYLE=selection_type
-    plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, $
-      LINESTYLE=selection_type
-    plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, $
-      LINESTYLE=selection_type
+    
+;     plots, xmin, ymin, /DEVICE, COLOR=color
+;     plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, $
+;       LINESTYLE=selection_type
+;     plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, $
+;       LINESTYLE=selection_type
+;     plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, $
+;       LINESTYLE=selection_type
+;     plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, $
+;       LINESTYLE=selection_type
     
 ENDIF
 
