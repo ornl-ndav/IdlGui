@@ -104,10 +104,10 @@ replotAsciiData_shifting, Event
 plotReferencedPixels, Event     ;_shifting
 
 plots, xmin, ymin, /DEVICE, COLOR=color
-plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
-plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color
-plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color
-plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color
+plots, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
+plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
 
 ;plot counts vs pixel of region selected
 id_draw = WIDGET_INFO((*global).w_shifting_plot2d_id, $
@@ -124,7 +124,16 @@ IF (xmin NE xmax AND $
     ymin NE ymax) THEN BEGIN
     data_to_plot = total_array(xmin:xmax,ymin:ymax)
     t_data_to_plot = total(data_to_plot,1)
-    plot, t_data_to_plot
+    sz = N_ELEMENTS(t_data_to_plot)
+    new_array = CONGRID(t_data_to_plot,sz/2)
+    help, new_array
+    xrange = INDGEN(sz) + ymin/2
+    xtitle = 'Pixel #'
+    ytitle = 'Counts'
+    plot, xrange, new_array, $
+      XRANGE=[ymin/2,ymax/2], $
+      XTITLE=xtitle, $
+      YTITLE=ytitle
 ENDIF
 
 
