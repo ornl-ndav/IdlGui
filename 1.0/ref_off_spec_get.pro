@@ -39,8 +39,8 @@
 ;------------------------------------------------------------------------------
 ;this function gives the droplist index
 FUNCTION getDropListSelectedIndex, Event, uname
-id = widget_info(Event.top,find_by_uname=uname)
-return, widget_info(id, /droplist_select)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
 END
 
 ;------------------------------------------------------------------------------
@@ -54,8 +54,8 @@ END
 ;This function gives the value of the index selected
 FUNCTION getDropListSelectedValue, Event, uname
 index_selected = getDropListSelectedIndex(Event,uname)
-id = widget_info(Event.top,find_by_uname=uname)
-widget_control, id, get_value=list
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=list
 return, list[index_selected]
 END
 
@@ -64,6 +64,13 @@ FUNCTION getCWBgroupValue, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDroplistValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=list
+RETURN, list
 END
 
 ;------------------------------------------------------------------------------

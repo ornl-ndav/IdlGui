@@ -202,6 +202,13 @@ CASE Event.id OF
             IF (isPlot2DModeSelected(Event) EQ 0) THEN BEGIN
                 IF (Event.type EQ 1) THEN BEGIN ;release mouse
                     (*global).left_mouse_pressed = 0
+                    index = $
+                      getCWBgroupValue(Event, $
+                                       'fast_selection_pixel_selection_mode')
+                    IF (index EQ 0) THEN BEGIN ;automatic mode
+                        move_to_next_active_file, Event ;_shifting
+                    ENDIF
+                            
                 ENDIF
                 
                 IF (Event.press EQ 1) THEN BEGIN ;left click 
@@ -393,6 +400,25 @@ CASE Event.id OF
         ENDELSE
         activate_widget, Event, 'transparency_coeff_base', status
     END
+
+;cw_bgroup of 'Fast Reference Pixel Selection Mode'
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME= $
+                'fast_selection_pixel_selection_mode'): BEGIN
+        index = getCWBgroupValue(Event, $
+                                 'fast_selection_pixel_selection_mode')
+        IF (index EQ 0) THEN BEGIN
+            value = '-> Next file becomes active once the reference' + $
+              ' pixel is done.'
+        ENDIF ELSE BEGIN
+            value = '-> User is in charge of changing ' + $
+              'the active file.'
+        ENDELSE
+        putTextFieldValue, Event, $
+          'fast_active_file_options_label',$
+          value
+    END
+
 
 ;------------------------------------------------------------------------------
 ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 

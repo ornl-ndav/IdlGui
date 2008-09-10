@@ -46,7 +46,7 @@ sBaseTab = { size:  tab_size,$
 XYoff = [10,15] ;base
 sShiftingBase = { size: [XYoff[0],$
                          XYoff[1],$
-                         602,110],$
+                         702,155],$
                   uname: 'shifting_base_options',$
                   frame: 1}
 
@@ -59,12 +59,12 @@ sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
 sBase = { size: [sShiftingBase.size[2],$
                  30]}
 sTransparencyGroup = { list: ['NO','YES'],$
-                       title: 'Use non-active file attenuator   ',$
+                       title: 'Use non-active file attenuator     ',$
                        value: 1.0,$
                        uname: 'transparency_attenuator_shifting_options'}
 
 ;Transparency coefficient -----------------------------------------------------
-sBase2 = { size: [300,25],$
+sBase2 = { size: [300,30],$
            uname: 'transparency_coeff_base',$
            sensitive: 1}
 sTransparencyCWfield = { size: [5,1],$
@@ -74,9 +74,18 @@ sTransparencyCWfield = { size: [5,1],$
 
 ;Reference pixel selection ----------------------------------------------------
 sRefPixelSelection = { list: ['Y  ','X and Y'],$
-                       title: 'Reference Pixel Selection        ',$
+                       title: 'Reference Pixel Selection          ',$
                        uname: 'reference_pixel_shifting_options',$
                        value: 1.0}
+
+;Fast selection mode ----------------------------------------------------------
+sFastSelectionMode = { list: ['YES','NO'],$
+                       title: 'Fast Reference Pixel Selection Mode',$
+                       uname: 'fast_selection_pixel_selection_mode',$
+                       value: 1.0}
+sFastSelectionModeLabel = { value: '-> User is in charge of changing ' + $
+                            'the active file.            ',$
+                            uname: 'fast_active_file_options_label'}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -147,5 +156,23 @@ wRefPixelSelection = CW_BGROUP(wBase3,$
                                SET_VALUE  = sRefPixelSelection.value,$
                                /ROW,$
                                /EXCLUSIVE)
+
+;Fast selection mode ----------------------------------------------------------
+wBase4 = WIDGET_BASE(wShiftingBase,$
+                     FRAME = 1,$
+                     /ROW)
+wFastSelectionMode = CW_BGROUP(wBase4,$
+                               sFastSelectionMode.list,$
+                               LABEL_LEFT = sFastSelectionMode.title,$
+                               UNAME      = sFastSelectionMode.uname,$
+                               SET_VALUE  = sFastSelectionMode.value,$
+                               /ROW,$
+                               /EXCLUSIVE)
+
+wLabel = WIDGET_LABEL(wBase4,$
+                      UNAME = sFastSelectionModeLabel.uname,$
+                      VALUE = sFastSelectionModeLabel.value,$
+                      /ALIGN_LEFT)
+
 
 END

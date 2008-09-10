@@ -119,6 +119,11 @@ plots, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
 plots, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
 plots, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color, LINESTYLE=1
 
+; Check if already created.  If so, return.
+IF (WIDGET_INFO((*global).w_shifting_plot2d_id, /VALID_ID) EQ 0) THEN BEGIN
+    RETURN
+ENDIF
+
 ;plot counts vs pixel of region selected
 id_draw = WIDGET_INFO((*global).w_shifting_plot2d_id, $
                       FIND_BY_UNAME=(*global).w_shifting_plot2d_draw_uname)
