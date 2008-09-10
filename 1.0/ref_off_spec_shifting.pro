@@ -656,8 +656,8 @@ ENDIF
 
 ;plot realign Data
 plotAsciiData_shifting, Event
-;ARRAY=realign_tfpData
 plotReferencedPixels, Event 
+plot_selection_OF_2d_plot_mode, Event
 
 ;put new value of Reference Pixel for current active file
 ;get selected active file
@@ -703,6 +703,7 @@ putTextFieldValue, Event, $
 
 ;replot reference pixels
 plotReferencedPixels, Event 
+plot_selection_OF_2d_plot_mode, Event
 
 ;reset realign data boolean
 (*global).first_realign = 1
@@ -824,6 +825,7 @@ ref_pixel_offset_list[index_to_work] = pixel_step
 ;plot realign Data
 plotAsciiData_shifting, Event
 plotReferencedPixels, Event 
+plot_selection_OF_2d_plot_mode, Event
 
 END
 

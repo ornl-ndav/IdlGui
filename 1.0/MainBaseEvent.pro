@@ -145,7 +145,7 @@ CASE Event.id OF
         IF (current_list_OF_files[0] NE '') THEN BEGIN
             plotASCIIdata_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
-            refresh_plot_selection_OF_2d_plot_mode, Event ;_shifting_plot2d
+            plot_selection_OF_2d_plot_mode, Event
         ENDIF
     END
 
@@ -194,6 +194,7 @@ CASE Event.id OF
                     SavePlotReferencePixel, Event ;_shifting
                     replotAsciiData_shifting, Event ;_shifting
                     plotReferencedPixels, Event ;_shifting
+                    refresh_plot_selection_OF_2d_plot_mode, Event 
                 ENDIF
             ENDIF
             
@@ -209,6 +210,7 @@ CASE Event.id OF
                     replotAsciiData_shifting, Event ;_shifting
                     plotReferencedPixels, Event ;_shifting
                     CheckShiftingGui, Event ;_gui
+                    refresh_plot_selection_OF_2d_plot_mode, Event 
                 ENDIF
             ENDIF ELSE BEGIN
 ;plot2D mode
@@ -245,6 +247,7 @@ CASE Event.id OF
         plotAsciiData_shifting, Event ;_shifting
         plotReferencedPixels, Event ;_shifting
         CheckShiftingGui, Event
+        refresh_plot_selection_OF_2d_plot_mode, Event 
         WIDGET_CONTROL,HOURGLASS=0
     END
 
