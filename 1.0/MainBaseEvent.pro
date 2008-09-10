@@ -145,6 +145,7 @@ CASE Event.id OF
         IF (current_list_OF_files[0] NE '') THEN BEGIN
             plotASCIIdata_shifting, Event ;_shifting
             plotReferencedPixels, Event ;_shifting
+            refresh_plot_selection_OF_2d_plot_mode, Event ;_shifting_plot2d
         ENDIF
     END
 
@@ -226,6 +227,8 @@ CASE Event.id OF
                 
                 IF (Event.type EQ 2) THEN BEGIN ;move mouse
                     IF ((*global).left_mouse_pressed) THEN BEGIN
+                        (*global).plot2d_x_right = Event.x
+                        (*global).plot2d_y_right = Event.y
                         plot_selection_OF_2d_plot_mode, Event ;shifting_plot2d
                     ENDIF
                 ENDIF

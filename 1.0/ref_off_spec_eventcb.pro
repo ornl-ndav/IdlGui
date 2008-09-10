@@ -83,6 +83,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             contour_plot_shifting, Event, xaxis
             plotAsciiData_shifting, Event
             plotReferencedPixels, Event ;_shifting
+            refresh_plot_selection_OF_2d_plot_mode, Event
         ENDIF
         CheckShiftingGui, Event ;_gui
     END
