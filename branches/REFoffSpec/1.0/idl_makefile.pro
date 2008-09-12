@@ -18,6 +18,7 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiStep1.pro
 .run MakeGuiStep2.pro
 .run MakeGuiStep3.pro
+.run MakeGuiStep4.pro
 .run MakeGuiOptions.pro
 .run MakeGuiLogBook.pro
 
