@@ -162,9 +162,6 @@ x_axis              = LONARR(nbr_plot)
 y_coeff = 2
 x_coeff = 1
 
-;applied or not transparency coeff ;0:no, 1:yes
-bTransCoeff = isWithAttenuatorCoeff(Event)
-
 ;check which array is the biggest (index)
 ;this array will be the base for the other array (xaxis will be based
 ;on this array
@@ -190,12 +187,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
     
-;Applied attenuator coefficient 
-    IF (bTransCoeff EQ 1) THEN BEGIN ;yes
-        transparency_1 = trans_coeff_list[index]
-    ENDIF ELSE BEGIN
-        transparency_1 = 1.
-    ENDELSE
+    transparency_1 = 1.
     local_tfpData = local_tfpData * transparency_1
     
 ;check if user wants linear or logarithmic plot
