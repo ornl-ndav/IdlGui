@@ -33,23 +33,16 @@
 ;==============================================================================
 
 PRO plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=color
-ymin = 0
-ymax = 303
-plots, xmin*x_coeff, ymin*y_coeff, $
-  /DEVICE, $
-  COLOR=color
-plots, xmax*x_coeff, ymin*y_coeff, /DEVICE, $
-  /CONTINUE, $
-  COLOR=color
-plots, xmax*x_coeff, ymax*y_coeff, /DEVICE, $
-  /CONTINUE, $
-  COLOR=color
-plots, xmin*x_coeff, ymax*y_coeff, /DEVICE, $
-  /CONTINUE, $
-  COLOR=color
-plots, xmin*x_coeff, ymin*y_coeff, /DEVICE, $
-  /CONTINUE, $
-  COLOR=color
+ymin = 0 * y_coeff
+ymax = 303 * y_coeff
+xmin = xmin * x_coeff
+xmax = xmax * x_coeff
+
+plots, [xmin, xmin, xmax, xmax, xmin],$
+  [ymin,ymax, ymax, ymin, ymin],$
+  /DEVICE,$
+  COLOR =color
+
 END
 
 ;------------------------------------------------------------------------------

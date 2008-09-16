@@ -80,7 +80,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         IF((*global).something_to_plot) THEN BEGIN
             ActiveFileDroplist, Event ;_shifting
             xaxis = (*(*global).x_axis)
-            contour_plot_shifting, Event, xaxis
+            contour_plot_shifting, Event, xaxis ;_shifting
             plotAsciiData_shifting, Event
             plotReferencedPixels, Event ;_shifting
             refresh_plot_selection_OF_2d_plot_mode, Event
@@ -88,15 +88,56 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         CheckShiftingGui, Event ;_gui
     END
 
-    3: BEGIN ;OPTIONS
+    3: BEGIN ;scaling
+        tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
+        step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+        IF (step4CurrTabSelect EQ 0) THEN BEGIN ;Pixel Range Selection
+            IF((*global).something_to_plot) THEN BEGIN
+                refresh_step4_step1_tab, Event ;_scaling
+            ENDIF
+        ENDIF ELSE BEGIN ;scaling
+
+        ENDELSE
     END
 
-    4: BEGIN ;log book        
+    4: BEGIN ;options
+    END
+
+    5: BEGIN ;log book
     END
 
     ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
+ENDIF
+END
+
+;------------------------------------------------------------------------------
+;This function is trigerred each time the mouse move over the tab of step4
+PRO scaling_tab_event, Event
+
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
+CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+PrevTabSelect = (*global).PrevScalingTabSelect
+
+IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (CurrTabSelect) OF
+        
+        0: BEGIN ;step1 (pixel range selection)
+            IF((*global).something_to_plot) THEN BEGIN
+                refresh_step4_step1_tab, Event
+            ENDIF
+        END
+        
+        1: BEGIN ;step2 (scaling)
+        END
+
+        ELSE:
+    ENDCASE
+    (*global).PrevScalingTabSelect = CurrTabSelect
 ENDIF
 END
 

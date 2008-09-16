@@ -384,7 +384,12 @@ CASE Event.id OF
                 FIND_BY_UNAME='data_down_shifting'): BEGIN
         manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
     END    
+    
+;444444444444444444444444444444444444444444444444444444444444444444444444444444
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
+        scaling_tab_event, Event ;_eventcb
+    END
 
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
