@@ -390,6 +390,36 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
         scaling_tab_event, Event ;_eventcb
     END
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='step4_step1_draw'): BEGIN
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            
+            delta_x = (*global).delta_x
+            x = Event.x
+            x1 = FLOAT(delta_x) * FLOAT(x)
+            Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'x_value_scaling_step1', Xtext
+
+            y = Event.y
+            y1 = y / 2
+            Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'y_value_scaling_step1', Ytext
+
+            total_array = (*(*global).total_array)
+            size_x = (SIZE(total_array,/DIMENSION))[0]
+            size_y = (SIZE(total_array,/DIMENSION))[1]
+            IF (x LT size_x AND $
+                y LT size_y) THEN BEGIN
+                counts = total_array(x,y)
+                intensity = STRCOMPRESS(counts,/REMOVE_ALL)
+            ENDIF ELSE BEGIN
+                intensity = 'N/A'
+            ENDELSE
+            CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
+            putTextFieldValue, Event, 'counts_value_scaling_step1', CountsText
+        ENDIF
+    END
 
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
