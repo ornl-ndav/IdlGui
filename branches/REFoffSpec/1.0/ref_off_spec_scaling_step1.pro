@@ -309,4 +309,51 @@ refresh_step4_step1_plot, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO replotAsciiData_scaling_step1, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+total_array = (*(*global).total_array)
+
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
+;select plot
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step1_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+;plot main plot
+TVSCL, total_array, /DEVICE
+
+END
+
+;------------------------------------------------------------------------------
+;This procedure saves the left position (xmin and ymin) of the selection
+PRO save_selection_left_position_step4_step1, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position    = (*global).step4_step1_selection
+xy_position[0] = Event.x
+xy_position[1] = Event.y
+(*global).step4_step1_selection = xy_position
+END
+
+;------------------------------------------------------------------------------
+PRO plotStep4Step1Selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position = (*global).step4_step1_selection
+
+xy_position[2] = Event.x
+xy_position[3] = Event.y
+
+xmin = MIN([xy_position[0],xy_position[2]],MAX=xmax)
+ymin = MIN([xy_position[1],xy_position[3]],MAX=ymax)
+
+(*global).step4_step1_selection = xy_position
+color = 200
+
+plots, [xmin, xmin, xmax, xmax, xmin],$
+  [ymin,ymax, ymax, ymin, ymin],$
+  /DEVICE,$
+  COLOR =color
+
+END
