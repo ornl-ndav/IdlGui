@@ -32,28 +32,16 @@
 ;
 ;==============================================================================
 
-PRO make_gui_step4, REDUCE_TAB, tab_size, TabTitles, global
+PRO make_gui_scaling_step2, REDUCE_TAB, tab_size, TabTitles
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
 
 sBaseTab = { size:  tab_size,$
-             uname: 'step4_tab_base',$
-             title: TabTitles.step4}
+             uname: 'step4_step1_tab_base',$
+             title: TabTitles.scaling}
                          
-;TabTitles
-TabTitlesLocal = { range_selection: 'PIXEL RANGE SELECTION',$
-                   scaling:         'SCALING'}
-
-;Inside Tab (range selection, scaling...)
-XYoff = [0,0]
-sMainTab = { size: [XYoff[0],$
-                    XYoff[1],$
-                    sBaseTab.size[2],$
-                    sBaseTab.size[3]-XYoff[1]],$
-             uname: 'scaling_main_tab'}
-
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -65,22 +53,5 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       SCR_XSIZE = sBaseTab.size[2],$
                       SCR_YSIZE = sBaseTab.size[3],$
                       TITLE     = sBaseTab.title)
-
-;Main Tab inside base ---------------------------------------------------------
-MAIN_TAB = WIDGET_TAB(BaseTab,$
-                      UNAME     = sMainTab.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTab.size[0],$
-                      YOFFSET   = sMainTab.size[1],$
-                      SCR_XSIZE = sMainTab.size[2],$
-                      SCR_YSIZE = sMainTab.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
-
-;Pixel Range Selection --------------------------------------------------------
-make_gui_scaling_step1, MAIN_TAB, sMainTab.size, TabTitlesLocal
-
-;Scaling ----------------------------------------------------------------------
-make_gui_scaling_step2, MAIN_TAB, sMainTab.size, TabTitlesLocal
 
 END
