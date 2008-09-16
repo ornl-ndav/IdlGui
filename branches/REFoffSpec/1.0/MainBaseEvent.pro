@@ -391,6 +391,15 @@ CASE Event.id OF
         scaling_tab_event, Event ;_eventcb
     END
     
+;lin/log z-azis scale
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'z_axis_linear_log_scaling_step1'): BEGIN
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            refresh_step4_step1_plot, Event
+        ENDIF
+    END
+
     Widget_Info(wWidget, FIND_BY_UNAME='step4_step1_draw'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)
         IF (current_list_OF_files[0] NE '') THEN BEGIN

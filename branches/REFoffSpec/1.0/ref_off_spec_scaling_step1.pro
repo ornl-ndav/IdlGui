@@ -191,7 +191,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     local_tfpData = local_tfpData * transparency_1
     
 ;check if user wants linear or logarithmic plot
-    bLogPlot = isLogZaxisShiftingSelected(Event)
+    bLogPlot = isLogZaxisScalingStep1Selected(Event)
     IF (bLogPlot) THEN BEGIN
         local_tfpData = ALOG10(local_tfpData)
         index_inf = WHERE(local_tfpData LT 0, nIndex)
