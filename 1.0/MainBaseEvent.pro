@@ -396,7 +396,7 @@ CASE Event.id OF
                 'z_axis_linear_log_scaling_step1'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)
         IF (current_list_OF_files[0] NE '') THEN BEGIN
-            refresh_step4_step1_plot, Event
+            refresh_step4_step1_plot, Event ;_scaling_step1
         ENDIF
     END
 
@@ -409,7 +409,7 @@ CASE Event.id OF
             x1 = FLOAT(delta_x) * FLOAT(x)
             Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
             putTextFieldValue, Event, 'x_value_scaling_step1', Xtext
-
+            
             y = Event.y
             y1 = y / 2
             Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
@@ -419,7 +419,9 @@ CASE Event.id OF
             size_x = (SIZE(total_array,/DIMENSION))[0]
             size_y = (SIZE(total_array,/DIMENSION))[1]
             IF (x LT size_x AND $
-                y LT size_y) THEN BEGIN
+                y LT size_y AND $
+                x GE 0 AND $
+                y GE 0) THEN BEGIN
                 counts = total_array(x,y)
                 intensity = STRCOMPRESS(counts,/REMOVE_ALL)
             ENDIF ELSE BEGIN
@@ -427,6 +429,28 @@ CASE Event.id OF
             ENDELSE
             CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
             putTextFieldValue, Event, 'counts_value_scaling_step1', CountsText
+
+            ;left click -------------------------------------------------------
+            IF (Event.press EQ 1) THEN BEGIN ;left click 
+                (*global).step4_step1_left_mouse_pressed = 1
+                save_selection_left_position_step4_step1, Event ;_scaling_step1
+            ENDIF ;end of left click
+
+            ;move mouse -------------------------------------------------------
+            IF (Event.type EQ 2 AND $
+                (*global).step4_step1_left_mouse_pressed EQ 1) THEN BEGIN 
+                replotAsciiData_scaling_step1, Event ;scaling_step1
+                plotStep4Step1Selection, Event ;scaling_step1
+            ENDIF               ;end of move mouse
+
+            ;release mouse ----------------------------------------------------
+            IF (Event.type EQ 1 AND $
+                (*global).step4_step1_left_mouse_pressed EQ 1) THEN BEGIN
+                (*global).step4_step1_left_mouse_pressed = 0
+                replotAsciiData_scaling_step1, Event ;scaling_step1
+                plotStep4Step1Selection, Event ;scaling_step1
+            ENDIF               ;end of release mouse
+
         ENDIF
     END
 
