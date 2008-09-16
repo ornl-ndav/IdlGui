@@ -48,8 +48,11 @@ CHECKING_PACKAGES = 'yes'
 SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see)
-;0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options, 5:Log Book 
-sDEBUGGING = { tab: {main_tab: 3},$ 
+;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
+;5:Log Book 
+;scaling_tab: 0: pixel range selection, 1: scaling
+sDEBUGGING = { tab: {main_tab: 3,$
+                     scaling_tab: 0},$ 
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -108,6 +111,7 @@ global = ptr_new ({ ucams:               ucams,$
                                           xticks: 1L,$
                                           position: INTARR(4)},$
                     PrevTabSelect:       0,$
+                    PrevScalingTabSelect: 0,$
                     plot2d_x_left:       0,$
                     plot2d_y_left:       0,$
                     plot2d_x_right:      0,$
@@ -161,9 +165,12 @@ WSET, id_value
 
 ;??????????????????????????????????????????????????????????????????????????????
 IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-;tab to show
+;tab to show (main_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+;tab to show (scaling_tab)
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.scaling_tab
 ;ascii default path
     (*global).ascii_path = sDEBUGGING.ascii_path
 ENDIF

@@ -43,6 +43,7 @@ cd, CurrentFolder
 .run ref_off_spec_congrid_data.pro
 .run ref_off_spec_shifting.pro
 .run ref_off_spec_shifting_plot2d.pro
+.run ref_off_spec_scaling_step1.pro
 
 ;main functions
 .run MainBaseEvent.pro

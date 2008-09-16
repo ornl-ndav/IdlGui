@@ -43,8 +43,8 @@ sBaseTab = { size:  tab_size,$
              title: TabTitles.step4}
                          
 ;TabTitles
-TabTitlesLocal = { range_selection: 'PIXEL RANGE SELECTION',$
-                   scaling:         'SCALING'}
+TabTitlesLocal = { range_selection: '  PIXEL RANGE SELECTION  ',$
+                   scaling:         '  SCALING  '}
 
 ;Inside Tab (range selection, scaling...)
 XYoff = [0,0]
