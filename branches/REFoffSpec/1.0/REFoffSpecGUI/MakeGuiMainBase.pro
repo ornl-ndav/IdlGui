@@ -48,8 +48,8 @@ sMainTabSize = {size : [XYoff[0], $
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { step1:     ' 1/ Reduction',$
-              step2:     ' 2/ LOAD ',$
+TabTitles = { step1:     ' 1/ REDUCTION',$
+              step2:     ' 2/ LOADING ',$
               step3:     ' 3/ SHIFTING ',$
               step4:     ' 4/ SCALING ',$
               options:   ' OPTIONS ',$
