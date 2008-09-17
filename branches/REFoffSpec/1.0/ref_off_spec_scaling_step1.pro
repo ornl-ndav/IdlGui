@@ -305,10 +305,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO refresh_step4_step1_tab, Event
-
 ;refresh plot
 refresh_step4_step1_plot, Event
-
 END
 
 ;------------------------------------------------------------------------------
@@ -365,21 +363,84 @@ END
 PRO refresh_plotStep4Step1Selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 xy_position = (*global).step4_step1_selection
-
 xmin = xy_position[0]
 ymin = xy_position[1]
 xmax = xy_position[2]
 ymax = xy_position[3]
-
 IF (xmin NE 0 AND xmax NE 0) THEN BEGIN
-
     color = 200
-    
-    plots, [xmin, xmin, xmax, xmax, xmin],$
+    PLOTS, [xmin, xmin, xmax, xmax, xmin],$
       [ymin,ymax, ymax, ymin, ymin],$
       /DEVICE,$
-      COLOR =color
-
+      COLOR = color
 ENDIF
+END
 
+;------------------------------------------------------------------------------
+PRO move_step4_step1_selection, Event, DIRECTION=direction
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;refresh main plot
+plotAsciiData_scaling_step1, Event
+xy_position = (*global).step4_step1_selection
+xmin = MIN([xy_position[0],xy_position[2]],MAX=xmax)
+ymin = MIN([xy_position[1],xy_position[3]],MAX=ymax)
+
+delta_x = xmax-xmin
+delta_y = ymax-ymin
+
+step = getTextFieldValue(Event,'step4_step1_move_selection_step_value')
+;make sure xmin is GE 0, Xmax LT (size of base)
+;same thing for ymin and ymax
+id    = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step1_draw')
+sDraw = WIDGET_INFO(id,/GEOMETRY)
+xmax_plot = sDraw.xsize
+ymax_plot = sDraw.ysize
+
+CASE (direction) OF
+    'left': BEGIN
+        xmin -= step
+        IF (xmin LT 0) THEN BEGIN 
+           xmin = 0
+           xmax = delta_x
+       ENDIF ELSE BEGIN
+           xmax -= step
+       ENDELSE
+    END
+    'right': BEGIN
+        xmax += step
+        IF (xmax GT xmax_plot) THEN BEGIN
+            xmax = xmax_plot        
+            xmin = xmax - delta_x
+        ENDIF ELSE BEGIN
+            xmin += step
+        ENDELSE
+    END
+    'up': BEGIN
+        ymax += step        
+        IF (ymax GT ymax_plot) THEN BEGIN
+            ymax = ymax_plot
+            ymin = ymax - delta_y
+        ENDIF ELSE BEGIN
+            ymin += step
+        ENDELSE
+    END
+    'down': BEGIN
+        ymin -= step
+        IF (ymin LT 0) THEN BEGIN
+            ymin = 0
+            ymax = delta_y
+        ENDIF ELSE BEGIN
+            ymax -= step
+        ENDELSE
+    END
+ENDCASE
+
+;replot new selection
+color = 200
+PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+  [ymin,ymax, ymax, ymin, ymin],$
+  /DEVICE,$
+  COLOR = color
+
+(*global).step4_step1_selection = [xmin,ymin,xmax,ymax]
 END
