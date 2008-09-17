@@ -298,6 +298,9 @@ contour_plot_scaling_step1, Event, xaxis
 ;refresh main plot
 plotAsciiData_scaling_step1, Event
 
+;refresh the selection
+refresh_plotStep4Step1Selection, Event
+
 END
 
 ;------------------------------------------------------------------------------
@@ -355,5 +358,28 @@ plots, [xmin, xmin, xmax, xmax, xmin],$
   [ymin,ymax, ymax, ymin, ymin],$
   /DEVICE,$
   COLOR =color
+
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_plotStep4Step1Selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position = (*global).step4_step1_selection
+
+xmin = xy_position[0]
+ymin = xy_position[1]
+xmax = xy_position[2]
+ymax = xy_position[3]
+
+IF (xmin NE 0 AND xmax NE 0) THEN BEGIN
+
+    color = 200
+    
+    plots, [xmin, xmin, xmax, xmax, xmin],$
+      [ymin,ymax, ymax, ymin, ymin],$
+      /DEVICE,$
+      COLOR =color
+
+ENDIF
 
 END
