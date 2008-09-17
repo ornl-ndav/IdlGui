@@ -224,11 +224,11 @@ XYoff = [15,5]
 sSelectionStepLabel = { size: [sSelectionMoveUp.size[0]+XYoff[0],$
                                sSelectionMoveLeft.size[1]+XYoff[1]],$
                         value: 'STEP'}
-XYoff = [-2,18]
+XYoff = [-6,18]
 sSelectionStepValue = { size: [sSelectionStepLabel.size[0]+XYoff[0],$
                                sSelectionStepLabel.size[1]+XYoff[1],$
-                               2],$
-                        value: '1',$
+                               4],$
+                        value: '10',$
                         uname: 'step4_step1_move_selection_step_value'}
 
 ;******************************************************************************

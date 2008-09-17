@@ -454,6 +454,27 @@ CASE Event.id OF
         ENDIF
     END
 
+;Move Up, left, right and down button -----------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_step1_move_selection_left'): BEGIN
+        move_step4_step1_selection, Event, DIRECTION='left' ;_scaling_step1
+    END
+    
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_step1_move_selection_right'): BEGIN
+        move_step4_step1_selection, Event, DIRECTION='right' ;_scaling_step1
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_step1_move_selection_up'): BEGIN
+        move_step4_step1_selection, Event, DIRECTION='up' ;_scaling_step1
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_step1_move_selection_down'): BEGIN
+        move_step4_step1_selection, Event, DIRECTION='down' ;_scaling_step1
+    END
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 
