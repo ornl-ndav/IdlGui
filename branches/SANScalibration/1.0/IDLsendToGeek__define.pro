@@ -43,7 +43,7 @@ i = 0
 WHILE (i LT sz) DO BEGIN
     base_name = FILE_BASENAME(list_OF_files[i])
     new_list_OF_files[i] = tmp_path + base_name
-    spawn, 'cp ' + list_OF_files[i] + ' ' + tmp_path
+    spawn, 'cp ' + list_OF_files[i] + ' ' + tmp_path, listening, err_listening
     ++i
 ENDWHILE
 RETURN, new_list_OF_files
@@ -98,6 +98,7 @@ FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
+    'WorkingPath'     : RETURN, '~/'
     'LogBookPath'     : RETURN, './'
     'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
@@ -262,12 +263,14 @@ END
 PRO SendToGeek, Event
 ;create full name of log Book file
 LogBookPath   = IDLsendToGeek_getGlobalVariable(Event,'LogBookPath')
+WorkingPath   = IDLsendToGeek_getGlobalVariable(Event,'WorkingPath')
 TimeStamp     = IDLsendToGeek_GenerateIsoTimeStamp()
 application   = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
 FullFileName  = LogBookPath + application + '_' 
 FullTarFile   = application + '_' + TimeStamp + '.tar'
 FullFileName += TimeStamp + '.log'
 
+CD, '~/', CURRENT=current_path
 
 ;get full text of LogBook
 LogBookText   = IDLsendToGeek_getLogBookText(Event)
@@ -297,6 +300,10 @@ ENDIF ELSE BEGIN
     FREE_LUN,1
     IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
 ENDELSE
+
+;go back to initial folder
+CD, current_path
+
 END
 
 
@@ -336,6 +343,7 @@ ENDIF ELSE BEGIN
     application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
     list_OF_files = (*(*global).list_OF_files_to_send)
     create_tar_folder, Event, FullFileName, list_OF_files, FullTarFile
+
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
       FullTarFile
