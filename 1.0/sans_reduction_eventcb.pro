@@ -147,6 +147,7 @@ IF (FullNexusName NE '') THEN BEGIN
                       'selection_file_name_text_field',$
                       'refresh_plot_button',$
                       'clear_selection_button',$
+                      'selection_tool_button',$
 ;                      'color_base_uname',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
@@ -233,6 +234,7 @@ IF (RunNumber NE 0) THEN BEGIN
                       'selection_file_name_text_field',$
                       'exclusion_base',$
 ;                      'color_base_uname',$
+                      'selection_tool_button',$
                       'refresh_plot_button',$
                       'clear_selection_button']
         activate_widget_list, Event, uname_list, 1
