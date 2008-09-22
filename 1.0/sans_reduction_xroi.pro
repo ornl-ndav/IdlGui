@@ -351,6 +351,8 @@ IF (nROIs GE 1) THEN BEGIN
           CurrentSelectionSettings,$
           insideSelection
         
+        WSET, id
+
         x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
@@ -5737,6 +5739,8 @@ PRO sans_reduction_xroi, $
     WIDGET_CONTROL, id, GET_UVALUE=global
     file_name = (*global).data_nexus_file_name
     DetectorSizeArray = getDetectorSize(file_name)
+    (*global).advancedToolId = wBase
+    print, wBase
     
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
