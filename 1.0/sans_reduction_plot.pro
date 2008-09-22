@@ -166,7 +166,6 @@ X         = (*global).X
 IF (X NE 0) THEN BEGIN
     DataArray = (*(*global).DataArray)
     Y         = (*global).Y
-    
 ENDIF
 result = plotData(Event, DataArray, X, Y)
 ;turn off hourglass
@@ -197,7 +196,7 @@ WIDGET_CONTROL,/HOURGLASS
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;refresh_main_plot, Event
 IF ((*global).there_is_a_selection EQ 1) THEN BEGIN
-    plotROI, Event
+    plotROI, Event ;_exclusion
 ENDIF
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0

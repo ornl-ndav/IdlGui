@@ -40,6 +40,20 @@ WIDGET_CONTROL, id, GET_UVALUE=global
 
 wWidget = Event.top            ;widget id
 
+
+IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+    bAdvancedToolId = WIDGET_INFO((*global).advancedToolId, /VALID_ID)
+    IF (bAdvancedToolId) THEN BEGIN
+        status = 0
+    ENDIF ELSE BEGIN
+        status = 1
+    ENDELSE
+    uname_list = ['clear_selection_button',$
+                  'exclusion_base',$
+                  'clear_selection_button']
+    activate_widget_list, Event, uname_list, status
+ENDIF
+
 CASE Event.id OF
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
@@ -190,8 +204,8 @@ CASE Event.id OF
 
 ;- Refresh Plot ---------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
-        refresh_plot, Event     ;_plot
-        RefreshRoiExclusionPlot, Event   ;_selection
+        refresh_plot, Event ;_plot
+        RefreshRoiExclusionPlot, Event   ;_plot
     END
 
 ;- Selection Color Button -----------------------------------------------------

@@ -327,6 +327,11 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
       Event, $
       DataArray                 ;launch sans_reduction_xroi
 
+;disable exclusion region selection tool
+    uname_list = ['exclusion_base']
+    activate_widget_list, Event, uname_list, 0
+    
+
 ENDIF
 END
 

@@ -381,6 +381,10 @@ IF (nROIs GE 1) THEN BEGIN
 
 ENDIF
 
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
+
 ;turn off hourglass
 widget_control,hourglass=0
 
@@ -458,6 +462,10 @@ IF (nROIs GE 1) THEN BEGIN
 
 ENDIF
 
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
+
 ;turn off hourglass
 widget_control,hourglass=0
 
@@ -530,6 +538,10 @@ FOR i=0,(80L-1) DO BEGIN
         ENDIF
     ENDFOR
 ENDFOR
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -2900,6 +2912,10 @@ pro xroi__DeleteSelectedROI, pState
 ;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
 ;                      SENSITIVE=0
                     xroi__SetROI, pState, OBJ_NEW(), /UPDATE_LIST
+                    
+                    Event = (*pState).Event
+                    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+                    (*global).there_is_a_selection = 0
     endif else begin
         oROI = (*pState).oROIModel->Get(POSITION=((pos-1) > 0))
         xroi__SetROI, pState, oROI, /SET_LIST_SELECT, /UPDATE_LIST
