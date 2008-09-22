@@ -78,6 +78,7 @@ wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
 wave_para_help_value = '1,23,456,7890'
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$ 
+                   advancedToolId: 0,$
                    list_OF_files_to_send: ptr_new(0L),$
                    auto_output_file_name: 1,$
                    Xpixel: 80L,$ ;320 or 80

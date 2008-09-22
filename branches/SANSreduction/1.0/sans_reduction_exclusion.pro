@@ -129,8 +129,6 @@ ENDIF ELSE BEGIN                ;fast
     ENDFOR
 ENDELSE
 
-print, tmp_array ;remove_me
-
 IF (type EQ 'accurate') THEN BEGIN ;accurate
 
     CASE (CurrentSelectionSettings) OF
