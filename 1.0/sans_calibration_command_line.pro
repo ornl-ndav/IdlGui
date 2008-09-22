@@ -31,7 +31,15 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO Add_file_to_lis_OF_files, list_OF_files_to_send, new_file
+IF (list_OF_files_to_send[0] EQ '') THEN BEGIN
+    list_OF_files_to_send[0] = new_file
+ENDIF ELSE BEGIN
+    list_OF_files_to_send = [list_OF_files_to_send, new_file]
+ENDELSE
+END
 
+;------------------------------------------------------------------------------
 PRO CheckCommandLine, Event
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -71,7 +79,7 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
-    list_OF_files_to_send[0] = file_run
+    Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
 ENDIF 
 
 ;Check first tab (check only if transmission mode is used)
@@ -82,6 +90,7 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
         FILE_TEST(file_run,/REGULAR)) THEN BEGIN
         flag = (*global).CorrectPara.transm_back.flag
         cmd += ' ' + flag + '=' + file_run
+        Add_file_to_lis_OF_files, list_OF_files_to_send, file_run
     ENDIF 
 ENDIF    
 
