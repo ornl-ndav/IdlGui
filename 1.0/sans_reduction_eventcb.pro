@@ -156,6 +156,7 @@ ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
 ENDELSE    
+
 END
 
 ;==============================================================================

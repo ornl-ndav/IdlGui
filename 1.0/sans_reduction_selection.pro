@@ -133,6 +133,10 @@ RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                               /MUST_EXIST)
 
 IF (RoiFileName NE '') THEN BEGIN
+
+;indicate initialization with hourglass icon
+    widget_control,/hourglass
+
     IDLsendToGeek_addLogBookText, Event, '-> File Browsed: ' + RoiFileName
     (*global).selection_path = new_path
     putTextFieldValue, Event, 'selection_file_name_text_field', RoiFileName
@@ -143,6 +147,10 @@ IF (RoiFileName NE '') THEN BEGIN
     activate_widget_list, Event, uname_list, 1
 ;Load ROI button (Load, extract and plot)
     LoadPlotSelection, Event
+
+;turn off hourglass
+    widget_control,hourglass=0
+
 ENDIF ELSE BEGIN
     IDLsendToGeek_addLogBookText, Event, '-> Operation CANCELED'
 ENDELSE
