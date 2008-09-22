@@ -40,7 +40,6 @@ WIDGET_CONTROL, id, GET_UVALUE=global
 
 wWidget = Event.top            ;widget id
 
-
 IF ((*global).data_nexus_file_name NE '') THEN BEGIN
     bAdvancedToolId = WIDGET_INFO((*global).advancedToolId, /VALID_ID)
     IF (bAdvancedToolId) THEN BEGIN
