@@ -231,8 +231,9 @@ WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 if (nROIs gt 0) then begin
     fname = DIALOG_PICKFILE(GROUP=sEvent.top, $
-                            FILE='SANS_ROI.dat', $
+;                            FILE='SANS_ROI.dat', $
                             FILTER='*.dat', $
+                            PATH = '~/',$
                             /WRITE)
 
     if (STRLEN(fname) gt 0) then begin
@@ -460,7 +461,11 @@ IF (nROIs GE 1) THEN BEGIN
 
     ENDFOR
 
-ENDIF
+ENDIF ELSE BEGIN
+
+    PixelSelectedArray = INTARR(80,80)
+    
+ENDELSE
 
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 (*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
@@ -5756,7 +5761,6 @@ PRO sans_reduction_xroi, $
     file_name = (*global).data_nexus_file_name
     DetectorSizeArray = getDetectorSize(file_name)
     (*global).advancedToolId = wBase
-    print, wBase
     
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
