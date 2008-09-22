@@ -345,7 +345,7 @@ IF (nROIs GE 1) THEN BEGIN
         insideSelection = oROIs[k]->getInsideFlag()
 
 ;Determine which pixels have been selected
-        CreateArrayOfPixelSelected, $
+        xroi_CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
           CurrentSelectionSettings,$
@@ -420,12 +420,14 @@ IF (nROIs GE 1) THEN BEGIN
         insideSelection = oROIs[k]->getInsideFlag()
 
 ;Determine which pixels have been selected
-        CreateArrayOfPixelSelected, $
+        xroi_CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
           CurrentSelectionSettings,$
           insideSelection
         
+        WSET, id
+
         x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
@@ -491,7 +493,7 @@ PixelSelectedArray = INTARR(80,80)
 insideSelectionType = oROIs[CurrentROIselectedIndex]->getInsideFlag()
 
 ;Determine which pixels have been selected
-CreateArrayOfPixelSelected, $
+xroi_CreateArrayOfPixelSelected, $
   PixelSelectedArray, $
   oROIs[CurrentROIselectedIndex],$
   CurrentSelectionSettings,$
@@ -3794,10 +3796,10 @@ end
 ;This procedure will go screen pixel by screen pixel to check if the
 ;pixel is part of the selection and the result will depend on the
 ;settings of the selection
-PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
-                                 oROI,$
-                                 CurrentSelectionSettings,$
-                                 insideSelectionType
+PRO  xroi_CreateArrayOfPixelSelected, PixelSelectedArray,$
+                                      oROI,$
+                                      CurrentSelectionSettings,$
+                                      insideSelectionType
 
 tmp_array = INTARR(80,80)
 Xsize = 320*2
