@@ -147,6 +147,7 @@ IF (FullNexusName NE '') THEN BEGIN
         putTextFieldValue, Event, 'save_roi_text_field', file
 ;activate selection buttons 
         uname_list = ['clear_selection_button',$
+                      'selection_tool_button',$
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
                       'exclusion_base']
@@ -217,6 +218,7 @@ IF (RunNumber NE 0) THEN BEGIN
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
         uname_list = ['clear_selection_button',$
+                      'selection_tool_button',$
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
                       'exclusion_base']
@@ -279,14 +281,20 @@ DataArray = (*(*global).DataArray)
 
 IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     
+    ;if there is already a selection, removed it
+    IF ((*global).there_is_a_selection) THEN BEGIN
+        (*global).there_is_a_selection = 0
+        refresh_plot, Event     ;_plot
+    ENDIF        
+    
     DataXY    = TOTAL(DataArray,1)
     tDataXY   = TRANSPOSE(dataXY)
     X         = (size(tDataXY))(1)
     Y         = X
     IF (X EQ 80) THEN BEGIN
-        xysize = 4
+        xysize = 8
     ENDIF ELSE BEGIN
-        xysize = 1
+        xysize = 2
     ENDELSE
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
     
@@ -310,6 +318,9 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
 ;Start the selection tool
     sans_reduction_xroi, image3d, Event, DataArray
 
+;disable exclusion region selection tool
+    uname_list = ['exclusion_base']
+    activate_widget_list, Event, uname_list, 0
 
 ENDIF
 END

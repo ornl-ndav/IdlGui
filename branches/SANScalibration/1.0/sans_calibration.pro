@@ -77,6 +77,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   advancedToolId: 0,$
                    list_OF_files_to_send: ptr_new(0L),$
                    auto_output_file_name: 1,$
                    Xpixel: 80L,$ ;320 or 80
@@ -99,7 +100,7 @@ global = PTR_NEW ({version:         VERSION,$
                    txt_title:       'Browse for an TXT file',$
                    txt_path:        '~/',$
                    application:     APPLICATION,$
-                   ROIcolor:        [50L,50L,0L],$
+                   ROIcolor:        250L,$
                    DrawXcoeff:      8,$
                    DrawYcoeff:      8,$
                    ucams:           ucams,$
