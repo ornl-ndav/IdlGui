@@ -230,8 +230,12 @@ WIDGET_CONTROL, sEvent.top, GET_UVALUE=pState
 ; Get current list of ROI names.
 oROIs = (*pState).oROIModel->Get(/ALL, COUNT=nROIs)
 if (nROIs gt 0) then begin
-    fname = DIALOG_PICKFILE(GROUP=sEvent.top, FILE='SANS_ROI.dat', $
-                            FILTER='*.dat', /WRITE)
+    fname = DIALOG_PICKFILE(GROUP=sEvent.top, $
+;                            FILE='SANS_ROI.dat', $
+                            FILTER='*.dat', $
+                            PATH = '~/',$
+                            /WRITE)
+
     if (STRLEN(fname) gt 0) then begin
         
 ;put filename in Main Gui (reduce tab#1)
@@ -285,10 +289,11 @@ if (nROIs gt 0) then begin
                   CurrentSelectionSettings, $
                   insideSelection
                 
-                PixelSelectedArray += tmpPixelSelectedArray
-                index = WHERE(PixelSelectedArray GT 0)
+;                PixelSelectedArray += tmpPixelSelectedArray
+;                index = WHERE(PixelSelectedArray GT 0)
+                index = WHERE(tmpPixelSelectedArray GT 0)
                 PixelSelectedArray[index] = 1
-                
+
             ENDFOR
             
         ENDELSE
@@ -341,12 +346,14 @@ IF (nROIs GE 1) THEN BEGIN
         insideSelection = oROIs[k]->getInsideFlag()
 
 ;Determine which pixels have been selected
-        CreateArrayOfPixelSelected, $
+        xroi_CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
           CurrentSelectionSettings,$
           insideSelection
         
+        WSET, id
+
         x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
@@ -374,6 +381,10 @@ IF (nROIs GE 1) THEN BEGIN
     ENDFOR
 
 ENDIF
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -416,12 +427,14 @@ IF (nROIs GE 1) THEN BEGIN
         insideSelection = oROIs[k]->getInsideFlag()
 
 ;Determine which pixels have been selected
-        CreateArrayOfPixelSelected, $
+        xroi_CreateArrayOfPixelSelected, $
           PixelSelectedArray, $
           oROIs[k],$
           CurrentSelectionSettings,$
           insideSelection
         
+        WSET, id
+
         x_coeff = 8
         color   = 250
         FOR i=0,(80L-1) DO BEGIN
@@ -448,7 +461,15 @@ IF (nROIs GE 1) THEN BEGIN
 
     ENDFOR
 
-ENDIF
+ENDIF ELSE BEGIN
+
+    PixelSelectedArray = INTARR(80,80)
+    
+ENDELSE
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -487,7 +508,7 @@ PixelSelectedArray = INTARR(80,80)
 insideSelectionType = oROIs[CurrentROIselectedIndex]->getInsideFlag()
 
 ;Determine which pixels have been selected
-CreateArrayOfPixelSelected, $
+xroi_CreateArrayOfPixelSelected, $
   PixelSelectedArray, $
   oROIs[CurrentROIselectedIndex],$
   CurrentSelectionSettings,$
@@ -522,6 +543,10 @@ FOR i=0,(80L-1) DO BEGIN
         ENDIF
     ENDFOR
 ENDFOR
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*(*global).RoiPixelArrayExcluded) = PixelSelectedArray
+(*global).there_is_a_selection = 1
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -733,8 +758,8 @@ pro xroi__ButtonPress, sEvent
     ;If the Selection Circle Base is shown, display the X, Y (mm and pixel)
     IF (WIDGET_INFO((*pState).wCircleInfo, /VALID_ID) NE 0) THEN BEGIN
         
-        PixelX = FIX(Ximage/4)
-        PixelY = FIX(Yimage/4)
+        PixelX = FIX(Ximage/8)
+        PixelY = FIX(Yimage/8)
         Widget_control, (*pState).wTextPixelXo, SET_VALUE=STRCOMPRESS(PixelX)
         Widget_control, (*pState).wTextPixelYo, SET_VALUE=STRCOMPRESS(PixelY)
 
@@ -1826,8 +1851,8 @@ pro xroi__Motion, sEvent
         xImage lt dimensions[0] and $
         yImage lt dimensions[1]
 
-    PixelX = FIX(Ximage / 4)
-    PixelY = FIX(Yimage / 4)
+    PixelX = FIX(Ximage / 8)
+    PixelY = FIX(Yimage / 8)
 
     Counts = FIX(((*pState).SumDataArray)[PixelY,PixelX])
 
@@ -2892,6 +2917,10 @@ pro xroi__DeleteSelectedROI, pState
 ;                    WIDGET_CONTROL, (*pState).wSaveButtonAndExit, $
 ;                      SENSITIVE=0
                     xroi__SetROI, pState, OBJ_NEW(), /UPDATE_LIST
+                    
+                    Event = (*pState).Event
+                    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+                    (*global).there_is_a_selection = 0
     endif else begin
         oROI = (*pState).oROIModel->Get(POSITION=((pos-1) > 0))
         xroi__SetROI, pState, oROI, /SET_LIST_SELECT, /UPDATE_LIST
@@ -3790,26 +3819,26 @@ end
 ;This procedure will go screen pixel by screen pixel to check if the
 ;pixel is part of the selection and the result will depend on the
 ;settings of the selection
-PRO  CreateArrayOfPixelSelected, PixelSelectedArray,$
-                                 oROI,$
-                                 CurrentSelectionSettings,$
-                                 insideSelectionType
+PRO  xroi_CreateArrayOfPixelSelected, PixelSelectedArray,$
+                                      oROI,$
+                                      CurrentSelectionSettings,$
+                                      insideSelectionType
 
 tmp_array = INTARR(80,80)
-Xsize = 320
-Ysize = 320
+Xsize = 320*2
+Ysize = 320*2
 FOR i=0,(Xsize-1) DO BEGIN
     FOR j=0,(Ysize-1) DO BEGIN
         IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
             IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDELSE
@@ -3819,11 +3848,11 @@ ENDFOR
 CASE (CurrentSelectionSettings) OF
 ;half in
     0: BEGIN
-        IndexArray = WHERE(tmp_array GE 8) 
+        IndexArray = WHERE(tmp_array GE 32) 
     END
 ;half out
     1: BEGIN
-        IndexArray = WHERE(tmp_array GT 8) 
+        IndexArray = WHERE(tmp_array GT 32) 
     END
 ;out in
     2: BEGIN
@@ -3831,7 +3860,7 @@ CASE (CurrentSelectionSettings) OF
     END
 ;out out
     3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 16) 
+        IndexArray = WHERE(tmp_array EQ 64) 
     END
     ELSE:
 ENDCASE
@@ -3857,20 +3886,20 @@ PRO  CreateArrayOfPixelSelected_FOR_RoiFile, PixelSelectedArray,$
                                              insideSelectionType
 
 tmp_array = INTARR(80,80)
-Xsize = 320
-Ysize = 320
+Xsize = 320*2
+Ysize = 320*2
 FOR i=0,(Xsize-1) DO BEGIN
     FOR j=0,(Ysize-1) DO BEGIN
         IF (insideSelectionType EQ 1b) THEN BEGIN ;if inside selection region
             IF (oROI->ContainsPoints(i,j) EQ 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDIF ELSE BEGIN
             IF (oROI->ContainsPoints(i,j) GT 0) THEN BEGIN
-                x = FIX(i/4)
-                y = FIX(j/4)
+                x = FIX(i/8)
+                y = FIX(j/8)
                 ++tmp_array[x,y]
             ENDIF
         ENDELSE
@@ -3880,11 +3909,11 @@ ENDFOR
 CASE (CurrentSelectionSettings) OF
 ;half in
     0: BEGIN
-        IndexArray = WHERE(tmp_array GE 8) 
+        IndexArray = WHERE(tmp_array GE 32) 
     END
 ;half out
     1: BEGIN
-        IndexArray = WHERE(tmp_array GT 8) 
+        IndexArray = WHERE(tmp_array GT 32) 
     END
 ;out in
     2: BEGIN
@@ -3892,7 +3921,7 @@ CASE (CurrentSelectionSettings) OF
     END
 ;out out
     3: BEGIN
-        IndexArray = WHERE(tmp_array EQ 16) 
+        IndexArray = WHERE(tmp_array EQ 64) 
     END
     ELSE:
 ENDCASE
@@ -3927,8 +3956,8 @@ ENDIF ELSE BEGIN
     
     index_array = WHERE(pixel_excluded GT 0, nbr)
     FOR i=0,(nbr-1) DO BEGIN
-        x    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
-        y    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
+        y    = STRCOMPRESS(FIX(index_array[i]/sz1),/REMOVE_ALL)
+        x    = STRCOMPRESS(index_array[i] MOD sz1,/REMOVE_ALL)
         bank = 'bank1_'
         text = bank + x + '_' + y
         printf, 1, text
@@ -4259,13 +4288,13 @@ NewY = intarr(1)
 
 ;get Xo, Yo and Radius
 WIDGET_CONTROl, (*pState).wTextPixelXo, GET_VALUE=Xo
-Xo *= 4
+Xo *= 8
 WIDGET_CONTROl, (*pState).wTextPixelYo, GET_VALUE=Yo
-Yo *= 4
+Yo *= 8
 WIDGET_CONTROl, (*pState).wTextDistPixelRadius, GET_VALUE=dR
 ;do conversion distance(mm) -> pixels
 Width = (*pState).DetectorWidth * 1000 ;in mm
-Radius = ((4.*80.)*FLOAT(dR))/(Width)
+Radius = ((8.*80.)*FLOAT(dR))/(Width)
 
 CIRCLE, FIX(Xo[0]), FIX(Yo[0]), FIX(Radius[0]), NewX, NewY
 ;CIRCLE, 200, 200, 100, NewX, NewY
@@ -5119,7 +5148,6 @@ PRO sans_reduction_xroi, $
     X_SCROLL_SIZE=xScrollSizeIn, $
     Y_SCROLL_SIZE=yScrollSizeIn
 
-
     ON_ERROR, KEYWORD_SET(debug) ? 0 : 2
 
     if N_ELEMENTS(group_leader) ne 0 then begin
@@ -5732,6 +5760,7 @@ PRO sans_reduction_xroi, $
     WIDGET_CONTROL, id, GET_UVALUE=global
     file_name = (*global).data_nexus_file_name
     DetectorSizeArray = getDetectorSize(file_name)
+    (*global).advancedToolId = wBase
     
     sState = {wBase:                wBase, $
               Event:                Event,$ ;event from main gui
