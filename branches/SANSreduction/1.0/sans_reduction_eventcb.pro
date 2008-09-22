@@ -293,6 +293,12 @@ widget_control,id,get_uvalue=global
 DataArray = (*(*global).DataArray)
 
 IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
+
+    ;if there is already a selection, removed it
+    IF ((*global).there_is_a_selection) THEN BEGIN
+        (*global).there_is_a_selection = 0
+        refresh_plot, Event     ;_plot
+    ENDIF        
     
     DataXY    = TOTAL(DataArray,1)
     tDataXY   = TRANSPOSE(dataXY)
@@ -331,7 +337,6 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     uname_list = ['exclusion_base']
     activate_widget_list, Event, uname_list, 0
     
-
 ENDIF
 END
 
