@@ -876,12 +876,19 @@ PRO norm_plots_tab_event, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+info_base_status = 0
+
 IF ((*global).NormNexusFound EQ 1) THEN BEGIN
     
     tab_id = widget_info(Event.top,find_by_uname='load_normalization_d_dd_tab')
     CurrTabSelect = widget_info(tab_id,/tab_current)
     PrevTabSelect = (*global).PrevNormTabSelect
     
+    CASE (CurrTabSelect) OF
+        0: info_base_status = 1
+        ELSE:
+    ENDCASE
+
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         CASE (CurrTabSelect) OF
             2: BEGIN            ;Y vs X (2D)
@@ -896,6 +903,8 @@ IF ((*global).NormNexusFound EQ 1) THEN BEGIN
     ENDIF
 
 ENDIF
+
+MapBase, Event, 'info_norm_base', info_base_status
 
 END
 

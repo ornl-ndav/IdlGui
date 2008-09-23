@@ -103,7 +103,7 @@ CASE Event.id OF
             putLabelValue, Event, $
               'data_x_info_value', $
               STRCOMPRESS(Event.x,/REMOVE_ALL)
-            IF ((*global).miniVersion EQ 0) THEN BEGIN
+            IF ((*global).miniVersion EQ 1) THEN BEGIN
                 coeff = 1
             ENDIF ELSE BEGIN
                 coeff = 2
@@ -119,7 +119,6 @@ CASE Event.id OF
               'data_counts_info_value', $
               STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
 ;******************************************************************************
-
 
             IF ((*global).first_event) THEN BEGIN
 ;only if there is a NeXus loaded
@@ -554,6 +553,28 @@ CASE Event.id OF
 
         IF ((*global).NormNeXusFound) THEN BEGIN
                                 ;only if there is a NeXus loaded
+            
+;show x/y and counts **********************************************************
+            putLabelValue, Event, $
+              'norm_x_info_value', $
+              STRCOMPRESS(Event.x,/REMOVE_ALL)
+            IF ((*global).miniVersion EQ 1) THEN BEGIN
+                coeff = 1
+            ENDIF ELSE BEGIN
+                coeff = 2
+            ENDELSE
+            putLabelValue, $
+              Event, $
+              'norm_y_info_value', $
+            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+
+            tvimg = (*(*global).tvimg_norm_ptr) 
+            putLabelValue, $
+              Event, $
+              'norm_counts_info_value', $
+              STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+;******************************************************************************
+
             IF ((*global).first_event) THEN BEGIN
                 CASE (event.ch) OF ;u and d keys
                     117: REFreduction_ManuallyMoveNormBackPeakUp, Event
