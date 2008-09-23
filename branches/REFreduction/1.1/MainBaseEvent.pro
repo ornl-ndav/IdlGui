@@ -98,6 +98,29 @@ CASE Event.id OF
 ;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
         IF ((*global).DataNeXusFound) THEN BEGIN
+
+;show x/y and counts **********************************************************
+            putLabelValue, Event, $
+              'data_x_info_value', $
+              STRCOMPRESS(Event.x,/REMOVE_ALL)
+            IF ((*global).miniVersion EQ 0) THEN BEGIN
+                coeff = 1
+            ENDIF ELSE BEGIN
+                coeff = 2
+            ENDELSE
+            putLabelValue, $
+              Event, $
+              'data_y_info_value', $
+            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+
+            tvimg = (*(*global).tvimg_data_ptr) 
+            putLabelValue, $
+              Event, $
+              'data_counts_info_value', $
+              STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+;******************************************************************************
+
+
             IF ((*global).first_event) THEN BEGIN
 ;only if there is a NeXus loaded
                 CASE (event.ch) OF ;u and d keys

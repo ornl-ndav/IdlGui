@@ -837,12 +837,19 @@ PRO data_plots_tab_event, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+info_base_status = 0
+
 IF ((*global).DataNexusFound) THEN BEGIN
 
     tab_id = widget_info(Event.top,find_by_uname='load_data_d_dd_tab')
     CurrTabSelect = widget_info(tab_id,/tab_current)
     PrevTabSelect = (*global).PrevDataTabSelect
     
+    CASE (CurrTabSelect) OF
+        0: info_base_status = 1
+        ELSE:
+    ENDCASE
+
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         CASE (CurrTabSelect) OF
             2: BEGIN            ;Y vs X (2D)
@@ -857,6 +864,8 @@ IF ((*global).DataNexusFound) THEN BEGIN
     ENDIF
 
 ENDIF
+
+MapBase, Event, 'info_data_base', info_base_status
 
 END
 
