@@ -87,13 +87,13 @@ load_data_run_number_base = WIDGET_BASE(LOAD_DATA_BASE,$
                                         'load_data_run_number_base',$
                                         XOFFSET   = GlobalRunNumber[0]+50,$
                                         YOFFSET   = GlobalRunNumber[1],$
-                                        SCR_XSIZE = GlobalRunNumber[2]-70,$
+                                        SCR_XSIZE = GlobalRunNumber[2],$
                                         SCR_YSIZE = GlobalRunNumber[3])
 
 Load_data_run_number_text_field = $
   CW_FIELD(load_data_run_number_base,$
            ROW           = 1,$
-           XSIZE         = GlobalRunNumber[4]+2,$
+           XSIZE         = GlobalRunNumber[4],$
            YSIZE         = GlobalRunNumber[5],$
            RETURN_EVENTS = 1,$
            TITLE         = 'Run #:',$
@@ -105,7 +105,7 @@ DataArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_DATA_BASE,$
             ['Archived','All'],$
             UNAME     = 'data_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+30,$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+10,$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
             ROW       = 1,$
             SET_VALUE = 0,$

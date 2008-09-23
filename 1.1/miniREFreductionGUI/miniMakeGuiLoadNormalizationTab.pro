@@ -86,13 +86,13 @@ load_normalization_run_number_base = $
               UNAME     = 'load_normalization_run_number_base',$
               XOFFSET   = GlobalRunNumber[0]+50,$
               YOFFSET   = GlobalRunNumber[1],$
-              SCR_XSIZE = GlobalRunNumber[2]-70,$
+              SCR_XSIZE = GlobalRunNumber[2],$
               SCR_YSIZE = globalRunNumber[3])
 
 Load_data_run_number_text_field = $
   CW_FIELD(load_normalization_run_number_base,$
            ROW           = 1,$
-           XSIZE         = GlobalRunNumber[4]+2,$
+           XSIZE         = GlobalRunNumber[4],$
            YSIZE         = GlobalRunNumber[5],$
            /LONG,$
            RETURN_EVENTS = 1,$
