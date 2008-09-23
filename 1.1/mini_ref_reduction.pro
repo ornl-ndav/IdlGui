@@ -77,6 +77,8 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    norm_loadct_contrast_changed: 0,$
+                    data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
                     mouse_debugging: MOUSE_DEBUGGING,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 

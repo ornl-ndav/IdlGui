@@ -40,6 +40,8 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    norm_loadct_contrast_changed: 0,$
+                    data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
                     main_base: 0L,$
                     mouse_debugging: MOUSE_DEBUGGING,$
