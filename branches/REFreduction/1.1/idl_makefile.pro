@@ -72,9 +72,7 @@ cd, CurrentFolder + '/REFreductionGUI/'
 
 .run MakeGuiPlotsTab.pro
 .run MakeGuiPlotsMainIntermediatesBases.pro
-
 .run MakeGuiBatchTab.pro
-
 .run MakeGuiLogBookTab.pro
 
 ;Build main procedures
@@ -131,6 +129,7 @@ cd, CurrentFolder
 .run ref_reduction_OverwriteInstrumentGeometry.pro
 .run ref_reduction_CL.pro
 .run ref_reduction_OutputPath.pro
+.run ref_reduction_jpeg.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro

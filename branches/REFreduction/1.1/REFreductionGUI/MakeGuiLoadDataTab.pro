@@ -62,12 +62,12 @@ LoadDataTabSize = [0,0,$
 
 ;Build widgets
 LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
-                             UNAME='load_data_base',$
-                             TITLE=DataTitle,$
-                             XOFFSET=LoadDataTabSize[0],$
-                             YOFFSET=LoadDataTabSize[1],$
-                             SCR_XSIZE=LoadDataTabSize[2],$
-                             SCR_YSIZE=LoadDataTabSize[3])
+                             UNAME     = 'load_data_base',$
+                             TITLE     = DataTitle,$
+                             XOFFSET   = LoadDataTabSize[0],$
+                             YOFFSET   = LoadDataTabSize[1],$
+                             SCR_XSIZE = LoadDataTabSize[2],$
+                             SCR_YSIZE = LoadDataTabSize[3])
 
 
 ;Browse Nexus File Button
@@ -80,20 +80,22 @@ Button = WIDGET_BUTTON(LOAD_DATA_BASE,$
 
 ;Run Number base and inside CW_FIELD
 load_data_run_number_base = widget_base(LOAD_DATA_BASE,$
-                                        uname='load_data_run_number_base',$
-                                        xoffset=GlobalRunNumber[0]+30,$
-                                        yoffset=GlobalRunNumber[1],$
-                                        scr_xsize=GlobalRunNumber[2]-50,$
-                                        scr_ysize=globalRunNumber[3])
+                                        UNAME     = $
+                                        'load_data_run_number_base',$
+                                        XOFFSET   = GlobalRunNumber[0]+30,$
+                                        YOFFSET   = GlobalRunNumber[1],$
+                                        SCR_XSIZE = GlobalRunNumber[2]-50,$
+                                        SCR_YSIZE = GlobalRunNumber[3])
 
 Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
-                                           row=1,$
-                                           xsize=GlobalRunNumber[4],$
-                                           ysize=GlobalRunNumber[5],$
+                                           ROW           = 1,$
+                                           XSIZE         = GlobalRunNumber[4],$
+                                           YSIZE         = GlobalRunNumber[5],$
+                                           return_events = 1,$
+                                           title         = RunNumberTitles[0],$
+                                           uname         = $
+                                           'load_data_run_number_text_field',$
                                            /long,$
-                                           return_events=1,$
-                                           title=RunNumberTitles[0],$
-                                           uname='load_data_run_number_text_field')
 
 ;Archived or All NeXus list
 DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
