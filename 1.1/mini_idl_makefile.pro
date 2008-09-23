@@ -87,6 +87,7 @@ cd, CurrentFolder
 .run ref_reduction_put.pro
 .run ref_reduction_is.pro
 .run ref_reduction_time.pro
+.run tvread.pro
 
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_LoadDataFile.pro
