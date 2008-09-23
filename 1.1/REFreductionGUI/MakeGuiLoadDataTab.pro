@@ -180,6 +180,63 @@ MakeGuiLoadData1D2DTab,$
   GlobalLoadDataGraphs,$
   LoadctList
 
+;base about X, Y and counts value --------------------------------------------
+info_base = WIDGET_BASE(LOAD_DATA_BASE,$
+                        XOFFSET   = 910,$
+                        YOFFSET   = 3,$
+                        SCR_XSIZE = 275,$
+                        SCR_YSIZE = 25,$
+                        UNAME     = 'info_data_base',$
+                        MAP       = 0,$
+                        FRAME     = 1)
+
+;X label/value
+y_off = 5
+x_label = WIDGET_LABEL(info_base,$
+                       XOFFSET = 0,$
+                       YOFFSET = y_off,$
+                       VALUE   = 'X:')
+x_value = WIDGET_LABEL(info_base,$
+                       XOFFSET   = 15,$
+                       YOFFSET   = y_off,$
+                       SCR_XSIZE = 50,$
+                       VALUE     = 'N/A',$
+                       UNAME     = 'data_x_info_value',$
+                       /ALIGN_LEFT)
+                       
+;Y label/value
+y_label = WIDGET_LABEL(info_base,$
+                       XOFFSET = 70,$
+                       YOFFSET = y_off,$
+                       VALUE   = 'Y:')
+y_value = WIDGET_LABEL(info_base,$
+                       XOFFSET   = 85,$
+                       YOFFSET   = y_off,$
+                       SCR_XSIZE = 50,$
+                       VALUE     = 'N/A',$
+                       UNAME     = 'data_y_info_value',$
+                       /ALIGN_LEFT)
+                       
+;COUNTS label/value
+counts_label = WIDGET_LABEL(info_base,$
+                            XOFFSET = 140,$
+                            YOFFSET = y_off,$
+                            VALUE   = 'COUNTS:')
+counts_value = WIDGET_LABEL(info_base,$
+                            XOFFSET   = 185,$
+                            YOFFSET   = y_off,$
+                            SCR_XSIZE = 50,$
+                            VALUE     = 'N/A',$
+                            UNAME     = 'data_counts_info_value',$
+                            /ALIGN_LEFT)
+
+
+
+
+
+
+
+
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
                               uname='data_nxsummary_zoom_tab',$

@@ -455,7 +455,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
  
-;HELP MENU in Menu Bar
+;HELP MENU in Menu Bar --------------------------------------------------------
 HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
                           UNAME = 'help_menu',$
                           VALUE = 'HELP',$
