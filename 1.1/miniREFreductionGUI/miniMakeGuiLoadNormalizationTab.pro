@@ -116,7 +116,7 @@ button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
                        UNAME = 'save_as_jpeg_button_normalization',$
                        XOFFSET = 300,$
                        YOFFSET = 0,$
-                       VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
+                       VALUE   = 'images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
                        SENSITIVE = 0,$
                        /BITMAP)
