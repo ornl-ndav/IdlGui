@@ -846,7 +846,10 @@ IF ((*global).DataNexusFound) THEN BEGIN
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         CASE (CurrTabSelect) OF
             2: BEGIN            ;Y vs X (2D)
-                refreshPlot2DDataFile, Event
+                IF ((*global).data_loadct_contrast_changed) THEN BEGIN
+                    refreshPlot2DDataFile, Event
+                    (*global).data_loadct_contrast_changed = 0
+                ENDIF
             END
             ELSE:
         ENDCASE
@@ -864,7 +867,7 @@ PRO norm_plots_tab_event, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-IF ((*global).NormNexusFound) THEN BEGIN
+IF ((*global).NormNexusFound EQ 1) THEN BEGIN
     
     tab_id = widget_info(Event.top,find_by_uname='load_normalization_d_dd_tab')
     CurrTabSelect = widget_info(tab_id,/tab_current)
@@ -873,7 +876,10 @@ IF ((*global).NormNexusFound) THEN BEGIN
     IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         CASE (CurrTabSelect) OF
             2: BEGIN            ;Y vs X (2D)
-                refresh_Plot2DNormalizationFile, Event
+                IF ((*global).norm_loadct_contrast_changed) THEN BEGIN
+                    refresh_Plot2DNormalizationFile, Event
+                    (*global).norm_loadct_contrast_changed = 0
+                ENDIF
             END
             ELSE:
         ENDCASE

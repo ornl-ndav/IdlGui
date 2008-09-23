@@ -212,21 +212,25 @@ CASE Event.id OF
 ;Contrast editor of data 1D tab
     widget_info(wWidget, FIND_BY_UNAME='data_contrast_droplist'): begin
         REFreductionEventcb_DataContrastEditor, Event
+        (*global).data_loadct_contrast_changed = 1
     end
 
 ;Reset Contrast Editor
     widget_info(wWidget, FIND_BY_UNAME='data_reset_contrast_button'): begin
         REFreductionEventcb_DataResetContrastEditor, Event
+        (*global).data_loadct_contrast_changed = 1
     end
 
 ;bottom slider
     widget_info(wWidget, FIND_BY_UNAME='data_contrast_bottom_slider'): begin
         REFreductionEventcb_DataContrastBottomSlider, Event
+        (*global).data_loadct_contrast_changed = 1
     end
    
 ;Number color slider
     widget_info(wWidget, FIND_BY_UNAME='data_contrast_number_slider'): begin
         REFreductionEventcb_DataContrastNumberSlider, Event
+        (*global).data_loadct_contrast_changed = 1
     end
         
 ;RESCALE DATA TAB
@@ -646,24 +650,28 @@ CASE Event.id OF
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_contrast_droplist'): begin
         REFreductionEventcb_NormContrastEditor, Event
+        (*global).norm_loadct_contrast_changed = 1
     end
 
 ;Reset Contrast Editor
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_reset_contrast_button'): begin
         REFreductionEventcb_NormResetContrastEditor, Event
+        (*global).norm_loadct_contrast_changed = 1
     end
 
 ;bottom slider
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_contrast_bottom_slider'): begin
         REFreductionEventcb_NormContrastBottomSlider, Event
+        (*global).norm_loadct_contrast_changed = 1
     end
    
 ;Number color slider
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_contrast_number_slider'): begin
         REFreductionEventcb_NormContrastNumberSlider, Event
+        (*global).norm_loadct_contrast_changed = 1
     end
 
 ;RESCALE DATA TAB
