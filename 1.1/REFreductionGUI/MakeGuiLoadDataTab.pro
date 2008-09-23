@@ -95,8 +95,8 @@ Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
                                            title         = RunNumberTitles[0],$
                                            uname         = $
                                            'load_data_run_number_text_field',$
-                                           /long,$
-
+                                           /long)
+                                           
 ;Archived or All NeXus list
 DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
                                       ArchivedOrAllCWBgroupList,$
@@ -107,9 +107,20 @@ DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
                                       row=1,$
                                       set_value=0)
 
+;Save As Jpeg Button ----------------------------------------------------------
+button = WIDGET_BUTTON(LOAD_DATA_BASE,$
+                       UNAME = 'save_as_jpeg_button_data',$
+                       XOFFSET = 580,$
+                       YOFFSET = 0,$
+                       VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
+                       TOOLTIP = 'Create a JPEG of the plot',$
+                       SENSITIVE = 0,$
+                       /BITMAP)
+
+;------------------------------------------------------------------------------
 
 ;Nexus list base/label/droplist and buttons
-DataListNexusBase = widget_base(LOAD_DATA_BaSE,$
+DataListNexusBase = widget_base(LOAD_DATA_BASE,$
                                 uname='data_list_nexus_base',$
                                 xoffset=NexusListSizeGlobal[0],$
                                 yoffset=NexusListSizeGlobal[1],$

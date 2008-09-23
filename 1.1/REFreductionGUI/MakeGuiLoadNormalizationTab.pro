@@ -108,6 +108,18 @@ NormArchivedOrAllCWBgroup = $
             row=1,$
             set_value=0)
 
+;Save As Jpeg Button ----------------------------------------------------------
+button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       UNAME = 'save_as_jpeg_button_normalization',$
+                       XOFFSET = 580,$
+                       YOFFSET = 0,$
+                       VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
+                       TOOLTIP = 'Create a JPEG of the plot',$
+                       SENSITIVE = 0,$
+                       /BITMAP)
+
+;------------------------------------------------------------------------------
+
 ;Nexus list base/label/droplist and buttons
 NormListNexusBase = widget_base(LOAD_normalization_BaSE,$
                                 uname='norm_list_nexus_base',$

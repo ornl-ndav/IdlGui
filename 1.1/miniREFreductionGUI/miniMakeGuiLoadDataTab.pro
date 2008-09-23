@@ -118,6 +118,7 @@ button = WIDGET_BUTTON(LOAD_DATA_BASE,$
                        YOFFSET = 0,$
                        VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
+                       SENSITIVE = 0,$
                        /BITMAP)
 
 ;Nexus list base/label/droplist and buttons
