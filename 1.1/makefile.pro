@@ -13,6 +13,7 @@ resolve_routine, "uniq",/either
 resolve_routine, "ZOOM",/either
 resolve_routine, "CW_FIELD",/either
 resolve_routine, "XDISPLAYFILE",/either
+resolve_routine, "TVREAD",/either
 
 save,/routines,filename = 'ref_reduction.sav'
 exit
