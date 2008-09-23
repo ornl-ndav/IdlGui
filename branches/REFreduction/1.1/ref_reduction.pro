@@ -113,6 +113,10 @@ global = PTR_NEW ({ first_event: 1,$
 ;extension of all the files created
                    PrevTabSelect: 0,$ 
 ;name of previous main tab selected
+                   PrevDataTabSelect: 0,$
+;index of previous data tab selected
+                   PrevNormTabSelect: 0,$
+;index of previous normalization tab selected
                    PrevDataZoomTabSelect: 0,$
 ;name of previous zoom/NXsummary tab selected (data)
                    PrevNormZoomTabSelect: 0,$

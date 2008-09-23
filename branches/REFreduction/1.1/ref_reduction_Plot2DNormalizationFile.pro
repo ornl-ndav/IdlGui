@@ -210,3 +210,59 @@ zmin = MIN(img,MAX=zmax)
 (*(*global).Normalization_2d_3D_min_max) = [zmin,zmax]
 REFreduction_UpdateNorm2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
 END
+
+;==============================================================================
+;REFRESH of plots
+
+;This function plots the 2D view of the NORMALIZATION file only
+PRO refresh_Plot2DNormalizationFile, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;check instrument selected
+instrument = (*global).instrument
+
+;Device, decomposed=0
+;get droplist index
+LoadctIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
+;get bottom value of color
+BottomColorValue = getSliderValue(Event,'normalization_contrast_bottom_slider')
+;get number of color
+NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
+loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
+
+if (instrument EQ (*global).REF_L) then begin
+    refresh_Plot2DNormalizationFileForRefL, Event ;REF_L
+endif else begin
+    refresh_Plot2DNormalizationFileForRefM, EVENT ;REF_M
+endelse
+END
+
+;**********************************************************************
+;REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L*
+;**********************************************************************
+;Plots the 2D view of the normalization file for the REF_L
+PRO refresh_Plot2DNormalizationFileForRefL, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve parameters
+Nx         = (*global).Nx_REF_L ;256
+Ny         = (*global).Ny_REF_L ;304
+Plot2DNormalizationFile, Event, Nx, Ny
+END
+
+;**********************************************************************
+;REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M*
+;**********************************************************************
+;Plots the 2D view of the normalization file for the REF_M
+PRO refresh_Plot2DNormalizationFileForRefM, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve parameters
+Nx         = (*global).Nx_REF_M ;304
+Ny         = (*global).Ny_REF_M ;256
+Plot2DNormalizationFile, Event, Nx, Ny
+END
+

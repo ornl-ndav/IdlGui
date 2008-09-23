@@ -104,7 +104,7 @@ global = ptr_new ({ first_event: 1,$
                     BatchDefaultPath: '~/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
                     BatchFileName : '',$
-                    DataRunNumber : '',$
+                      DataRunNumber : '',$
                       NormRunNumber : '',$
                     PreviousRunReductionValidated : 0,$  
                     BatchTable : ptr_new(0L),$ ;big array of batch table
@@ -150,6 +150,10 @@ global = ptr_new ({ first_event: 1,$
 ;extension of all the files created
                    PrevTabSelect : 0,$ 
 ;name of previous main tab selected
+                   PrevDataTabSelect: 0,$
+;index of previous data tab selected
+                   PrevNormTabSelect: 0,$
+;index of previous normalization tab selected
                    PrevDataZoomTabSelect: 0,$
 ;name of previous zoom/NXsummary tab selected (data)
                    PrevNormZoomTabSelect: 0,$
