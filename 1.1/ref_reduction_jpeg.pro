@@ -41,11 +41,11 @@ DataNormalizationTab = WIDGET_INFO(id, /TAB_CURRENT)
 
 IF (DataNormalizationTab EQ 0) THEN BEGIN
     uname     = 'load_data_d_dd_tab'
-    RunNumber = (*global).DataRunNumber
+    RunNumber = STRCOMPRESS((*global).DataRunNumber,/REMOVE_ALL)
     tab       = 'Data'
 ENDIF ELSE BEGIN
     uname     = 'load_normalization_d_dd_tab'
-    RunNumber = (*global).NormRunNumber
+    RunNumber = STRCOMPRESS((*global).norm_run_number,/REMOVE_ALL)
     tab       = 'Normalization'
 ENDELSE
 id1 = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
