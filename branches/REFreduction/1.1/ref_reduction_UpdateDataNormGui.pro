@@ -36,12 +36,14 @@
 ;if no NeXus has been found
 PRO updateDataWidget, Event, isNeXusFound
 ActivateWidget, Event, 'data_back_peak_rescale_tab', isNeXusFound
+ACtivateWidget, Event, 'save_as_jpeg_button_data', isNeXusFound
 END
 
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateNormWidget, Event, isNeXusFound
 ActivateWidget, Event, 'norm_back_peak_rescale_tab', isNexusFound
+ACtivateWidget, Event, 'save_as_jpeg_button_normalization', isNeXusFound
 END
 
 ;this function will clear the text field if no nexus has been found
