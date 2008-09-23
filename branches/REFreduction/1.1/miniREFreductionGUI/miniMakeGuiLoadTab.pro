@@ -38,8 +38,8 @@ PRO miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [20,0,210,35]
-RunNumberCWFieldSize = [10,0]
+RunNumberBaseSize    = [20,0,170,35]
+RunNumberCWFieldSize = [5,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
 RunNumberTitles      =  ['RUN NUMBER:',$
