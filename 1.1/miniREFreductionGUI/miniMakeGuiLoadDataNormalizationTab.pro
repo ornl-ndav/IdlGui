@@ -24,7 +24,7 @@ NormalizationTitle = 'N O R M A L I Z A T I O N'
 
 ;Archived or Full NeXus list cw_bgroup
 ArchivedOrAllCWBgroupList = ['Archived ','All NeXus ']
-ArchivedOrAllCWBgroupSize = [230-50,2]
+ArchivedOrAllCWBgroupSize = [170,2]
 
 ;base that displays the full list of NeXus found
 NeXusListBaseSize          = [90,110,500,500]

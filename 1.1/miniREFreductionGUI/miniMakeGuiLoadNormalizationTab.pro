@@ -105,11 +105,20 @@ NormArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_NORMALIZATION_BASE,$
             ['Archived','All'],$
             UNAME     = 'normalization_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+30,$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
             /EXCLUSIVE,$
             ROW       = 1,$
             SET_VALUE = 0)
+
+;Save As Jpeg Button
+button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       UNAME = 'save_as_jpeg_button_normalization',$
+                       XOFFSET = 300,$
+                       YOFFSET = 0,$
+                       VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
+                       TOOLTIP = 'Create a JPEG of the plot',$
+                       /BITMAP)
 
 ;Nexus list base/label/droplist and buttons
 NormListNexusBase = $

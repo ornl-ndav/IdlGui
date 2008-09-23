@@ -105,11 +105,20 @@ DataArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_DATA_BASE,$
             ['Archived','All'],$
             UNAME     = 'data_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0]+10,$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
             ROW       = 1,$
             SET_VALUE = 0,$
             /EXCLUSIVE)
+
+;Save As Jpeg Button
+button = WIDGET_BUTTON(LOAD_DATA_BASE,$
+                       UNAME = 'save_as_jpeg_button_data',$
+                       XOFFSET = 300,$
+                       YOFFSET = 0,$
+                       VALUE   = 'miniREFreductionGUI/SaveAsJpeg.bmp',$
+                       TOOLTIP = 'Create a JPEG of the plot',$
+                       /BITMAP)
 
 ;Nexus list base/label/droplist and buttons
 DataListNexusBase = WIDGET_BASE(LOAD_DATA_BaSE,$

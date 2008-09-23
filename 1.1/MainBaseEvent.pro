@@ -46,12 +46,12 @@ CASE Event.id OF
     END
     
 ;LOAD DATA file cw_field
-    widget_info(wWidget, $
+    widget_info(wWidget, $  
                 FIND_BY_UNAME='load_data_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotDataFile, Event
         DefineDefaultOutputName, Event
     END
-
+    
 ;LOAD DATA file archived cwbgroup
     widget_info(wWidget, FIND_BY_UNAME='data_archived_or_full_cwbgroup'): BEGIN
         IF ((*global).archived_data_flag NE $
@@ -64,6 +64,12 @@ CASE Event.id OF
            ENDIF
         ENDIF
     end
+    
+;Save As JPEG button ----------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='save_as_jpeg_button_data'): BEGIN
+        save_as_jpeg, Event     ;_jpeg
+    END
     
 ;##In list of nexus base##
 ;droplist
@@ -476,6 +482,12 @@ CASE Event.id OF
                 REFreductionEventcb_LoadAndPlotNormFile, Event
             ENDIF
         ENDIF
+    END
+
+;Save As JPEG button ----------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='save_as_jpeg_button_normalization'): BEGIN
+        save_as_jpeg, Event ;_jpeg
     END
 
 ;##In list of nexus base##

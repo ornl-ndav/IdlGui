@@ -134,6 +134,7 @@ cd, CurrentFolder
 .run ref_reduction_OverwriteInstrumentGeometry.pro
 .run ref_reduction_CL.pro
 .run ref_reduction_OutputPath.pro
+.run ref_reduction_jpeg.pro
 
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
