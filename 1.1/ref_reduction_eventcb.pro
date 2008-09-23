@@ -395,7 +395,7 @@ endelse
 END
 
 ;==============================================================================
-;this function is trigerred each time the user changes tab
+;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -830,6 +830,60 @@ PRO REFreduction_refreshNormPlot, Event
 REFReduction_RescaleNormalizationPlot,Event
 END
 
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user changed a tab of the
+;plot in the data tab
+PRO data_plots_tab_event, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).DataNexusFound) THEN BEGIN
+
+    tab_id = widget_info(Event.top,find_by_uname='load_data_d_dd_tab')
+    CurrTabSelect = widget_info(tab_id,/tab_current)
+    PrevTabSelect = (*global).PrevDataTabSelect
+    
+    IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+        CASE (CurrTabSelect) OF
+            2: BEGIN            ;Y vs X (2D)
+                refreshPlot2DDataFile, Event
+            END
+            ELSE:
+        ENDCASE
+        (*global).PrevDataTabSelect = CurrTabSelect
+    ENDIF
+
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user changed a tab of the
+;plot in the normalization tab
+PRO norm_plots_tab_event, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).NormNexusFound) THEN BEGIN
+    
+    tab_id = widget_info(Event.top,find_by_uname='load_normalization_d_dd_tab')
+    CurrTabSelect = widget_info(tab_id,/tab_current)
+    PrevTabSelect = (*global).PrevNormTabSelect
+    
+    IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+        CASE (CurrTabSelect) OF
+            2: BEGIN            ;Y vs X (2D)
+                refresh_Plot2DNormalizationFile, Event
+            END
+            ELSE:
+        ENDCASE
+        (*global).PrevNormTabSelect = CurrTabSelect
+    ENDIF
+
+ENDIF
+
+END
+
 
 ;HELP -------------------------------------------------------------------------
 PRO start_help 
@@ -846,13 +900,11 @@ ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/REFreduction/' + $
   BRANCH + '/REFreductionHELP/ref_reduction.adp'
 END
 
-
-
-
+;------------------------------------------------------------------------------
 pro ref_reduction_eventcb
 end
 
-
+;------------------------------------------------------------------------------
 pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon

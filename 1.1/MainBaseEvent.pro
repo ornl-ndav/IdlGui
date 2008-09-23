@@ -36,7 +36,14 @@ CASE Event.id OF
         REFreductionEventcb_InstrumentSelected, Event
     end
     
+;==============================================================================
 ;**LOAD TAB**DATA**------------------------------------------------------------
+;==============================================================================
+
+;plots Tab --------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_d_dd_tab'): begin
+        data_plots_tab_event, Event ;_eventcb
+    END
 
 ;Browse NeXus file
     WIDGET_INFO(wWidget, $
@@ -456,7 +463,14 @@ CASE Event.id OF
         endif
     end
 
+;==============================================================================
 ;**LOAD TAB**NORMALIZATION**---------------------------------------------------
+;==============================================================================
+
+;plots Tab --------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_normalization_d_dd_tab'): begin
+        norm_plots_tab_event, Event ;_eventcb
+    END
 
 ;Browse NeXus file
     WIDGET_INFO(wWidget, $
