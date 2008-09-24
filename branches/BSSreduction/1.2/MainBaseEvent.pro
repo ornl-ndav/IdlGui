@@ -31,6 +31,12 @@ CASE Event.id OF
         bss_reduction_BrowseNexus, Event
     end
     
+;LIVE DATA STREAMING button
+    Widget_Info(wWidget, FIND_BY_UNAME='live_data_streaming_button'): begin
+        load_live_data_streaming, Event ;_LDS
+    end
+   
+
 ;Load ROI file
     Widget_Info(wWidget, FIND_BY_UNAME='load_roi_file_button'): begin
         BSSreduction_LoadRoiFile, Event

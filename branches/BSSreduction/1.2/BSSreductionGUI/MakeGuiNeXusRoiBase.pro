@@ -22,14 +22,22 @@ text   = CW_FIELD(fbase,$
                   RETURN_EVENTS  = 1,$
                   TITLE          = 'RUN NUMBER:',$
                   ROW            = 1,$
-                  XSIZE          = 30)
+                  XSIZE          = 10)
 ;                  /INTEGER)
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'B R O W S E ...',$
                        UNAME     = 'nexus_run_number_button',$
-                       SCR_XSIZE = 120,$
+                       SCR_XSIZE = 123,$
                        SCR_YSIZE = 30)
+
+;Live Data Streaming button ---------------------------------------------------
+button = WIDGET_BUTTON(fbase,$
+                       SCR_XSIZE = 123,$
+                       SCR_YSIZE = 30,$
+                       UNAME     = 'live_data_streaming_button',$
+                       VALUE     = 'LOAD LIVE DATA')
+
 
 ;full path of nexus file loaded
 ffbase = WIDGET_BASE(NeXusRoiTabBase,$
