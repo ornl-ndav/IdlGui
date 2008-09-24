@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;=======================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'BSSreductionSQE'
-VERSION            = '1.2.12'
+VERSION            = '1.2.13'
 DeployedVersion    = 'yes'
 DEBUGGING_VERSION  = 'no'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
@@ -24,6 +24,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+           
                     DeployedVersion : DeployedVersion,$
                     DriverName : 'amorphous_reduction_sqe',$
                     DRstatusOK : 'Data Reduction ... DONE',$
