@@ -27,7 +27,7 @@ ArchivedOrAllCWBgroupList = ['Archived ','All NeXus ']
 ArchivedOrAllCWBgroupSize = [170,2]
 
 ;base that displays the full list of NeXus found
-NeXusListBaseSize          = [90,110,500,500]
+NeXusListBaseSize          = [30,60,500,500]
 NexusListLabelSize         = [0,0,496,30]
 NexusListLabelTitle        = 'S E L E C T    A    N E X U S    F I L E' 
 NexusListDropListSize      = [5,35]

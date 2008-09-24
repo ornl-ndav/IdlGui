@@ -120,6 +120,7 @@ putTextAtEndOfDataLogBookLastLine,$
   Event,$
   DataLogBookText,$
   Message
+
 END
 
 
@@ -149,6 +150,7 @@ putTextAtEndOfNormalizationLogBookLastLine,$
   Event,$
   NormLogBookText,$
   Message
+
 END
 
 
@@ -185,29 +187,35 @@ OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
     
 IF ((*global).isHDF5format) THEN BEGIN
         
-        REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
-        
+    REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+    
 ;get global structure
-        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        widget_control,id,get_uvalue=global
-        
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+    
 ;tell the user that the load and plot process is done
-        InitialStrarr = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine, $
-          Event, $
-          InitialStrarr, $
-          ' Done', $
-          (*global).processing_message
-        
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      ' Done', $
+      (*global).processing_message
+    
 ;display full path to NeXus in data log book
-        full_nexus_name = (*global).data_full_nexus_name
-        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putDataLogBookMessage, Event, text, Append=1
-        
+    full_nexus_name = (*global).data_full_nexus_name
+    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+    putDataLogBookMessage, Event, text, Append=1
+    
 ;replot the background and peak exclusion regions
-        REFreduction_DataBackgroundPeakSelection, Event, ''
+    REFreduction_DataBackgroundPeakSelection, Event, ''
+    
+    (*global).DataNeXusFound = 1
+    
+ENDIF ELSE BEGIN
 
-    ENDIF
+    (*global).DataNeXusFound = 0
+
+ENDELSE
 
 ;to see the last line of the data log book
 showLastDataLogBookLine, Event
@@ -298,7 +306,13 @@ IF ((*global).isHDF5format) THEN BEGIN
 ;display back and peak exclusion regions
     REFreduction_NormBackgroundPeakSelection, Event, ''
     
-ENDIF
+    (*global).NormNeXusFound = 1
+
+ENDIF ELSE BEGIN
+
+    (*global).NormNeXusFound = 0
+
+ENDELSE
 
 ;to see the last line of the norm log book
 showLastNormLogBookLine, Event
@@ -507,7 +521,9 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
         
         IF ((*global).isHDF5format) THEN BEGIN 
 ;continue only if it's a HDF5 file
-            
+       
+            (*global).DataNeXusFound = isNeXusFound
+     
             REFreduction_Plot1D2DDataFile, Event 
 ;then plot data file (1D and 2D)
             
@@ -532,7 +548,9 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
 ;replot the background and peak exclusion regions
             REFreduction_DataBackgroundPeakSelection, Event, '' 
 ;in _databackgroundpeakselection
-                        
+
+            (*global).DataNeXusFound = isNeXusFound
+
         ENDIF
     ENDIF
     
@@ -566,8 +584,10 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             putDataLogBookMessage, Event, text, Append=1
 
 ;replot the background and peak exclusion regions
-        REFreduction_DataBackgroundPeakSelection, Event, ''
+            REFreduction_DataBackgroundPeakSelection, Event, ''
             
+            (*global).DataNeXusFound = isNeXusFound
+
         ENDIF
 
     ENDIF
@@ -614,6 +634,8 @@ if (isArchivedNormNexusDesired(Event)) then begin
 ;display back and peak exclusion regions
             REFreduction_NormBackgroundPeakSelection, Event, ''
 
+            (*global).NormNeXusFound = isNexusFound
+
         ENDIF
 
     ENDIF 
@@ -648,6 +670,8 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
 
 ;display back and peak exclusion regions
             REFreduction_NormBackgroundPeakSelection, Event, ''
+
+            (*global).NormNeXusFound = isNexusFound
 
         ENDIF
 
