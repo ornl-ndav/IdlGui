@@ -76,6 +76,7 @@ cd, CurrentFolder
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro
+.run bss_reduction_LDS.pro
 
 .run MainBaseEvent.pro
 .run bss_reduction_sqe_eventcb.pro
