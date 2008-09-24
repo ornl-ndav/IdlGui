@@ -230,8 +230,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
     
 endif                            ;end of if(DataRunNumber Ne '')
 
-(*global).DataNeXusFound = isNeXusFound
-
 ;update GUI according to result of NeXus found or not
 RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
 

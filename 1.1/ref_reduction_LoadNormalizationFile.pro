@@ -231,7 +231,6 @@ if (NormalizationRunNumber NE '') then BEGIN $
     
 endif                            ;end of if(NormalizationRunNumber Ne '')
 
-(*global).NormNeXusFound = isNeXusFound
 ;update GUI according to result of NeXus found or not
 RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
 

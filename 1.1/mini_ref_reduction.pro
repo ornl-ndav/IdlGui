@@ -463,8 +463,6 @@ MainBaseTitle += VERSION
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
                         UNAME         = 'MAIN_BASE',$
-                        ;SCR_XSIZE     = MainBaseSize[2],$
-                        ;SCR_YSIZE     = MainBaseSize[3],$
                         XOFFSET       = MainBaseSize[0],$
                         YOFFSET       = MainBaseSize[1],$
                         TITLE         = MainBaseTitle,$
