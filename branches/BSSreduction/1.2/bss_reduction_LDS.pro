@@ -34,4 +34,47 @@
 
 PRO load_live_data_streaming, Event
 
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+WIDGET_CONTROL,/HOURGLASS
+
+PROCESSING = (*global).processing
+OK         = 'OK'
+FAILED     = 'FAILED'
+
+findlivenexus = (*global).findlivenexus
+cmd = findlivenexus + ' -i BSS'
+cmd_text = '> Looking for current Live Nexus File (' + cmd + ') ... ' + $
+  PROCESSING
+AppendLogBookMessage, Event, cmd_text
+
+spawn, cmd, listening, err_listening
+
+IF (listening EQ '') THEN BEGIN ;no file found
+    putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+    putTextFieldValue, Event, 'nexus_full_path_label', $
+      ' No Live NeXus File Found !!!', 0
+ENDIF ELSE BEGIN
+    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+    ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
+    sz = N_ELEMENTS(ArraySplit)
+    ShortFileName = ArraySplit[sz-1]
+    putTextFieldValue, Event, 'nexus_full_path_label', $
+      ShortFileName, 0
+    LogBookText = '-> Full live NeXus name: ' + listening
+    AppendLogBookMessage, Event, LogBookText
+    iNexus = OBJ_NEW('IDLgetMetadata',listening)
+    sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
+    LogBookText = '-> Run Number: ' + sRunNumber
+    putTextFieldValue, Event,$
+      'nexus_run_number',$
+      sRunNumber, 0
+;load nexus file (retrieve data and plot)
+    load_live_nexus, Event, listening, sRunNumber ;_LoadNexus
+
+ENDELSE
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
 END
