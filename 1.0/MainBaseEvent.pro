@@ -430,30 +430,48 @@ CASE Event.id OF
             CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
             putTextFieldValue, Event, 'counts_value_scaling_step1', CountsText
 
-            ;left click -------------------------------------------------------
+;left click -------------------------------------------------------
             IF (Event.press EQ 1) THEN BEGIN ;left click 
+                bClick = $
+                  check_IF_click_OR_move_situation(Event) ;_scaling_step1
+                (*global).bClick_step4_step1 = bClick
                 (*global).step4_step1_left_mouse_pressed = 1
-                save_selection_left_position_step4_step1, Event ;_scaling_step1
-            ENDIF ;end of left click
-
-            ;move mouse -------------------------------------------------------
+                IF (bClick) THEN BEGIN
+                    save_selection_left_position_step4_step1, $
+                      Event     ;_scaling_step1
+                ENDIF
+            ENDIF               ;end of left click
+            
+;move mouse -------------------------------------------------------
             IF (Event.type EQ 2 AND $
-                (*global).step4_step1_left_mouse_pressed EQ 1) THEN BEGIN 
+                (*global).step4_step1_left_mouse_pressed) THEN BEGIN
+                bClick = (*global).bClick_step4_step1
                 replotAsciiData_scaling_step1, Event ;scaling_step1
-                plotStep4Step1Selection, Event ;scaling_step1
+                IF (bClick) THEN BEGIN
+                    plotStep4Step1Selection, Event ;scaling_step1
+;                    save_selection_left_position_step4_step1, $
+;                      Event     ;_scaling_step1
+                ENDIF ELSE BEGIN ;move region
+                    move_selection_step4_step1, Event ;scaling_step1
+                    refresh_plotStep4Step1Selection, Event
+                ENDELSE
             ENDIF               ;end of move mouse
-
-            ;release mouse ----------------------------------------------------
+            
+;release mouse ----------------------------------------------------
             IF (Event.type EQ 1 AND $
                 (*global).step4_step1_left_mouse_pressed EQ 1) THEN BEGIN
+                bClick = (*global).bClick_step4_step1
                 (*global).step4_step1_left_mouse_pressed = 0
                 replotAsciiData_scaling_step1, Event ;scaling_step1
-                plotStep4Step1Selection, Event ;scaling_step1
-            ENDIF               ;end of release mouse
-
+                IF (bClick) THEN BEGIN
+                    plotStep4Step1Selection, Event ;scaling_step1
+                ENDIF ELSE BEGIN
+                    refresh_plotStep4Step1Selection, Event
+                ENDELSE
+            ENDIF
         ENDIF
     END
-
+    
 ;Move Up, left, right and down button -----------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_left'): BEGIN
