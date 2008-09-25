@@ -342,8 +342,12 @@ PRO plotStep4Step1Selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 xy_position = (*global).step4_step1_selection
 
-xy_position[2] = Event.x
-xy_position[3] = Event.y
+x=Event.x
+y=Event.y
+physical_x_y, Event, x, y ;this make sure that we are not outside the window
+
+xy_position[2] = x
+xy_position[3] = y
 
 xmin = MIN([xy_position[0],xy_position[2]],MAX=xmax)
 ymin = MIN([xy_position[1],xy_position[3]],MAX=ymax)
@@ -454,6 +458,8 @@ xy_position    = (*global).step4_step1_selection
 pixel_range    = (*global).step4_step1_selection_pixel_range
 current_x      = Event.x
 current_y      = Event.y
+;this make sure that we are not outside the window
+physical_x_y, Event, current_x, current_y 
 
 diffxmin = ABS(xy_position[0]-current_x)
 diffxmax = ABS(xy_position[2]-current_x)
@@ -477,8 +483,13 @@ END
 ;------------------------------------------------------------------------------
 PRO save_position_to_move_selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-move_selection_position = [Event.x, Event.y]
+x = Event.x
+y = Event.y
+;this make sure that we are not outside the window
+physical_x_y, Event, x, y
+move_selection_position = [x, y]
 (*global).step4_step1_move_selection_position = move_selection_position
+display_x_y_min_max_step4_step1, Event, TYPE='move'
 END
 
 ;------------------------------------------------------------------------------
@@ -490,8 +501,10 @@ move_selection_position = (*global).step4_step1_move_selection_position
 old_x = move_selection_position[0]
 old_y = move_selection_position[1]
 ;retrieve current position of x,y
-current_x = Event.x
-current_y = Event.y
+current_x      = Event.x
+current_y      = Event.y
+;this make sure that we are not outside the window
+physical_x_y, Event, current_x, current_y 
 
 (*global).step4_step1_move_selection_position = [current_x,current_y]
 ;check differences
@@ -519,3 +532,49 @@ IF (new_ymin LE 0) THEN new_ymin = 0
 xy_position = [new_xmin, new_ymin, new_xmax, new_ymax]
 (*global).step4_step1_selection = xy_position
 END
+
+;------------------------------------------------------------------------------
+PRO display_x_y_min_max_step4_step1, Event, TYPE=type
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+IF (TYPE EQ 'left_click') THEN BEGIN
+    selection_position = (*global).step4_step1_move_selection_position
+    xmin = selection_position[0]
+    ymin = selection_position[1]/2
+    xmax = 'N/A'
+    ymax = 'N/A'
+ENDIF ELSE BEGIN
+    xy_position = (*global).step4_step1_selection
+    xmin = xy_position[0]
+    ymin = xy_position[1]/2
+    xmax = xy_position[2]
+    ymax = xy_position[3]/2
+    xmin = MIN([xmin,xmax],MAX=xmax)
+    ymin = MIN([ymin,ymax],MAX=ymax)
+ENDELSE
+
+sxmin = STRCOMPRESS(xmin,/REMOVE_ALL)
+symin = STRCOMPRESS(ymin,/REMOVE_ALL)
+sxmax = STRCOMPRESS(xmax,/REMOVE_ALL)
+symax = STRCOMPRESS(ymax,/REMOVE_ALL)
+
+putTextfieldValue, Event, 'selection_info_xmin_value', sxmin
+putTextfieldValue, Event, 'selection_info_ymin_value', symin
+putTextfieldValue, Event, 'selection_info_xmax_value', sxmax
+putTextfieldValue, Event, 'selection_info_ymax_value', symax
+
+END
+
+;------------------------------------------------------------------------------
+PRO physical_x_y, Event, x, y
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+total_array = (*(*global).total_array)
+x_size = (size(total_array))(1)
+y_size = (size(total_array))(2)
+
+IF (x LE 0) THEN x=0
+IF (x GE x_size) THEN x=x_size-1
+IF (y LE 0) THEN y=0
+IF (y GE y_size) THEN y=y_size-1
+
+END
+
