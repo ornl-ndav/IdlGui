@@ -51,7 +51,7 @@ SUPER_USERS       = ['j35']
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
 ;scaling_tab: 0: pixel range selection, 1: scaling
-sDEBUGGING = { tab: {main_tab: 3,$
+sDEBUGGING = { tab: {main_tab: 1,$
                      scaling_tab: 0},$ 
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
@@ -74,6 +74,9 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    bClick_step4_step1:  1,$
+                    step4_step1_selection_pixel_range: 5,$
+                    step4_step1_move_selection_position: INTARR(2),$
                     left_mouse_pressed:  0,$
                     step4_step1_left_mouse_pressed: 0,$
                     plot_realign_data:   0,$

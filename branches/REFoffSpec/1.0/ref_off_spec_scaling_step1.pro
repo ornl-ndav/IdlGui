@@ -286,7 +286,6 @@ ENDWHILE
 END
 
 ;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
 ;This procedure refreshes the plot
 PRO refresh_step4_step1_plot, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -380,7 +379,7 @@ END
 PRO move_step4_step1_selection, Event, DIRECTION=direction
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;refresh main plot
-plotAsciiData_scaling_step1, Event
+replotAsciiData_scaling_step1, Event
 xy_position = (*global).step4_step1_selection
 xmin = MIN([xy_position[0],xy_position[2]],MAX=xmax)
 ymin = MIN([xy_position[1],xy_position[3]],MAX=ymax)
@@ -443,4 +442,80 @@ PLOTS, [xmin, xmin, xmax, xmax, xmin],$
   COLOR = color
 
 (*global).step4_step1_selection = [xmin,ymin,xmax,ymax]
+END
+
+;------------------------------------------------------------------------------
+;This function checks if the left click is on a selection line (or
+;close to it) or not. If it does, then we will enter the
+;move_selection mode
+FUNCTION check_IF_click_OR_move_situation, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position    = (*global).step4_step1_selection
+pixel_range    = (*global).step4_step1_selection_pixel_range
+current_x      = Event.x
+current_y      = Event.y
+
+diffxmin = ABS(xy_position[0]-current_x)
+diffxmax = ABS(xy_position[2]-current_x)
+min_diffx = MIN([diffxmin,diffxmax])
+IF (min_diffx LE pixel_range) THEN BEGIN
+    save_position_to_move_selection, Event
+    RETURN, 0
+ENDIF
+
+diffymin = ABS(xy_position[1]-current_y)
+diffymax = ABS(xy_position[3]-current_y)
+min_diffy = MIN([diffymin,diffymax])
+IF (min_diffy LE pixel_range) THEN BEGIN
+    save_position_to_move_selection, Event
+    RETURN, 0
+ENDIF
+
+RETURN, 1
+END
+
+;------------------------------------------------------------------------------
+PRO save_position_to_move_selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+move_selection_position = [Event.x, Event.y]
+(*global).step4_step1_move_selection_position = move_selection_position
+END
+
+;------------------------------------------------------------------------------
+PRO move_selection_step4_step1, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve old position of x,y
+move_selection_position = (*global).step4_step1_move_selection_position
+old_x = move_selection_position[0]
+old_y = move_selection_position[1]
+;retrieve current position of x,y
+current_x = Event.x
+current_y = Event.y
+
+(*global).step4_step1_move_selection_position = [current_x,current_y]
+;check differences
+diff_x = current_x - old_x
+diff_y = current_y - old_y
+;define new x/y min and max
+xy_position = (*global).step4_step1_selection
+xmin = MIN([xy_position[0],xy_position[2]], MAX=xmax)
+ymin = MIN([xy_position[1],xy_position[3]], MAX=ymax)
+new_xmin = xmin+diff_x
+new_ymin = ymin+diff_y
+new_xmax = xmax+diff_x
+new_ymax = ymax+diff_y
+
+;check if we have to move the selection (not if we are going to be
+;outside the range)
+total_array = (*(*global).total_array)
+x_size = (size(total_array))(1)
+y_size = (size(total_array))(2)
+IF (new_xmax GE x_size) THEN new_xmax = x_size-1
+IF (new_xmin LE 0) THEN new_xmin = 0
+IF (new_ymax GE y_size) THEN new_ymax = y_size-1
+IF (new_ymin LE 0) THEN new_ymin = 0
+
+xy_position = [new_xmin, new_ymin, new_xmax, new_ymax]
+(*global).step4_step1_selection = xy_position
 END

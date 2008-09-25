@@ -8,4 +8,5 @@ all:
 install:
 	cp ref_off_spec.sav /SNS/software/idltools/sav/
 	cp REFoffSpec /SNS/software/idltools/
+	cp images/*.* /SNS/software/idltools/sav/images/
 
