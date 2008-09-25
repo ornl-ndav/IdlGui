@@ -85,7 +85,7 @@ Button = WIDGET_BUTTON(LOAD_DATA_BASE,$
 load_data_run_number_base = WIDGET_BASE(LOAD_DATA_BASE,$
                                         UNAME     = $
                                         'load_data_run_number_base',$
-                                        XOFFSET   = GlobalRunNumber[0]+50,$
+                                        XOFFSET   = GlobalRunNumber[0]+40,$
                                         YOFFSET   = GlobalRunNumber[1],$
                                         SCR_XSIZE = GlobalRunNumber[2],$
                                         SCR_YSIZE = GlobalRunNumber[3])
@@ -96,14 +96,14 @@ Load_data_run_number_text_field = $
            XSIZE         = GlobalRunNumber[4],$
            YSIZE         = GlobalRunNumber[5],$
            RETURN_EVENTS = 1,$
-           TITLE         = 'Run #:',$
+           TITLE         = 'Run#',$
            UNAME         = 'load_data_run_number_text_field',$
            /LONG)
 
 ;Archived or All NeXus list
 DataArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_DATA_BASE,$
-            ['Archived','All'],$
+            ['Arch.','All'],$
             UNAME     = 'data_archived_or_full_cwbgroup',$
             XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
@@ -111,15 +111,30 @@ DataArchivedOrAllCWBgroup = $
             SET_VALUE = 0,$
             /EXCLUSIVE)
 
-;Save As Jpeg Button
+;Save As Jpeg Button ----------------------------------------------------------
 button = WIDGET_BUTTON(LOAD_DATA_BASE,$
                        UNAME = 'save_as_jpeg_button_data',$
-                       XOFFSET = 300,$
+                       XOFFSET = 250,$
                        YOFFSET = 0,$
                        VALUE   = 'images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
                        SENSITIVE = 0,$
                        /BITMAP)
+
+;------------------------------------------------------------------------------
+;Advanced plot
+button = WIDGET_BUTTON(LOAD_DATA_BASE,$
+                       UNAME = 'advanced_plot_button_data',$
+                       XOFFSET = 305,$
+                       YOFFSET = 0,$
+                       VALUE   = 'images/advanced_plot.bmp',$
+                       TOOLTIP = 'Open the Advanced Plot Tool',$
+                       SENSITIVE = 0,$
+                       /BITMAP)
+
+;------------------------------------------------------------------------------
+
+
 
 ;Nexus list base/label/droplist and buttons
 DataListNexusBase = WIDGET_BASE(LOAD_DATA_BaSE,$

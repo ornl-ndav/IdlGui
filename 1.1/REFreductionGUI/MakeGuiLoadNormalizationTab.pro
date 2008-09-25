@@ -111,10 +111,21 @@ NormArchivedOrAllCWBgroup = $
 ;Save As Jpeg Button ----------------------------------------------------------
 button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
                        UNAME = 'save_as_jpeg_button_normalization',$
-                       XOFFSET = 580,$
+                       XOFFSET = 550,$
                        YOFFSET = 0,$
                        VALUE   = 'images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
+                       SENSITIVE = 0,$
+                       /BITMAP)
+
+;------------------------------------------------------------------------------
+;Advanced plot
+button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       UNAME = 'advanced_plot_button_normalization',$
+                       XOFFSET = 610,$
+                       YOFFSET = 0,$
+                       VALUE   = 'images/advanced_plot.bmp',$
+                       TOOLTIP = 'Open the Advanced Plot Tool',$
                        SENSITIVE = 0,$
                        /BITMAP)
 
