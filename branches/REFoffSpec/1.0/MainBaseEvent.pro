@@ -439,6 +439,7 @@ CASE Event.id OF
                 IF (bClick) THEN BEGIN
                     save_selection_left_position_step4_step1, $
                       Event     ;_scaling_step1
+                    display_x_y_min_max_step4_step1, Event, TYPE='left_click'
                 ENDIF
             ENDIF               ;end of left click
             
@@ -455,11 +456,12 @@ CASE Event.id OF
                     move_selection_step4_step1, Event ;scaling_step1
                     refresh_plotStep4Step1Selection, Event
                 ENDELSE
-            ENDIF               ;end of move mouse
+                display_x_y_min_max_step4_step1, Event, TYPE='move'
+            ENDIF
             
 ;release mouse ----------------------------------------------------
             IF (Event.type EQ 1 AND $
-                (*global).step4_step1_left_mouse_pressed EQ 1) THEN BEGIN
+                (*global).step4_step1_left_mouse_pressed) THEN BEGIN
                 bClick = (*global).bClick_step4_step1
                 (*global).step4_step1_left_mouse_pressed = 0
                 replotAsciiData_scaling_step1, Event ;scaling_step1
