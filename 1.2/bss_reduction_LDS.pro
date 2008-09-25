@@ -48,7 +48,8 @@ cmd_text = '> Looking for current Live Nexus File (' + cmd + ') ... ' + $
   PROCESSING
 AppendLogBookMessage, Event, cmd_text
 
-spawn, cmd, listening, err_listening
+;to grab the LDP NeXus file
+SPAWN, cmd, listening, err_listening
 
 IF (listening EQ '') THEN BEGIN ;no file found
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
@@ -71,6 +72,16 @@ ENDIF ELSE BEGIN
       sRunNumber, 0
 ;load nexus file (retrieve data and plot)
     load_live_nexus, Event, listening, sRunNumber ;_LoadNexus
+
+;load the geometry file
+    cmd += ' -g'
+    SPAWN, cmd, geometry_file, err_listening
+    putTextFieldValue, Event, $
+      'aig_list_of_runs_text',$
+      STRCOMPRESS(geometry_file,/REMOVE_ALL),0
+    LogBookText = '-> Live Data Geometry file is: ' + $
+      STRCOMPRESS(geometry_file,/REMOVE_ALL)
+    AppendLogBookMessage, Event, LogBookText
 
 ENDELSE
 

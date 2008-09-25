@@ -96,7 +96,6 @@ ListOfRuns = WIDGET_TEXT(tab2_base,$
                          XOFFSET   = PRoIFListOfRuns.size[0],$
                          YOFFSET   = PRoIFListOfRuns.size[1],$
                          SCR_XSIZE = PRoIFListOfRuns.size[2],$
-                         SCR_YSIZE = PRoIFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
                          UNAME     = PRoIFListOfRuns.uname,$
                          /EDITABLE)
@@ -130,7 +129,6 @@ ListOfRuns = WIDGET_TEXT(tab2_base,$
                          XOFFSET   = AIGListOfRuns.size[0],$
                          YOFFSET   = AIGListOfRuns.size[1],$
                          SCR_XSIZE = AIGListOfRuns.size[2],$
-                         SCR_YSIZE = AIGListOfRuns.size[3],$
                          /ALIGN_LEFT,$
                          /EDITABLE,$
                          UNAME     = AIGListOfRuns.uname)
