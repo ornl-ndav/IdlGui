@@ -84,7 +84,7 @@ Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
 load_normalization_run_number_base = $
   WIDGET_BASE(LOAD_NORMALIZATION_BASE,$
               UNAME     = 'load_normalization_run_number_base',$
-              XOFFSET   = GlobalRunNumber[0]+50,$
+              XOFFSET   = GlobalRunNumber[0]+40,$
               YOFFSET   = GlobalRunNumber[1],$
               SCR_XSIZE = GlobalRunNumber[2],$
               SCR_YSIZE = globalRunNumber[3])
@@ -111,15 +111,29 @@ NormArchivedOrAllCWBgroup = $
             ROW       = 1,$
             SET_VALUE = 0)
 
+;------------------------------------------------------------------------------
 ;Save As Jpeg Button
 button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
                        UNAME = 'save_as_jpeg_button_normalization',$
-                       XOFFSET = 300,$
+                       XOFFSET = 250,$
                        YOFFSET = 0,$
                        VALUE   = 'images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
                        SENSITIVE = 0,$
                        /BITMAP)
+
+;------------------------------------------------------------------------------
+;Advanced plot
+button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
+                       UNAME = 'advanced_plot_button_normalization',$
+                       XOFFSET = 305,$
+                       YOFFSET = 0,$
+                       VALUE   = 'images/advanced_plot.bmp',$
+                       TOOLTIP = 'Open the Advanced Plot Tool',$
+                       SENSITIVE = 0,$
+                       /BITMAP)
+
+;------------------------------------------------------------------------------
 
 ;Nexus list base/label/droplist and buttons
 NormListNexusBase = $

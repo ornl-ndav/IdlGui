@@ -23,8 +23,8 @@ DataTitle          = 'D A T A'
 NormalizationTitle = 'N O R M A L I Z A T I O N'
 
 ;Archived or Full NeXus list cw_bgroup
-ArchivedOrAllCWBgroupList = ['Archived ','All NeXus ']
-ArchivedOrAllCWBgroupSize = [170,2]
+ArchivedOrAllCWBgroupList = ['Arch.','All']
+ArchivedOrAllCWBgroupSize = [145,2]
 
 ;base that displays the full list of NeXus found
 NeXusListBaseSize          = [30,60,500,500]
