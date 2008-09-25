@@ -134,8 +134,6 @@ button = WIDGET_BUTTON(LOAD_DATA_BASE,$
 
 ;------------------------------------------------------------------------------
 
-
-
 ;Nexus list base/label/droplist and buttons
 DataListNexusBase = WIDGET_BASE(LOAD_DATA_BaSE,$
                                 UNAME     = 'data_list_nexus_base',$
