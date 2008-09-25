@@ -54,6 +54,7 @@ label = WIDGET_LABEL(ffbase,$
                      UNAME       = 'nexus_full_path_label',$
                      SCR_XSIZE   = 300,$
                      SCR_YSIZE   = 30,$
+                     /ALIGN_LEFT,$
                      FRAME       = 0)
 
 ;Create Load roi file
