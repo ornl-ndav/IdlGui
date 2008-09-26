@@ -474,6 +474,27 @@ CASE Event.id OF
         ENDIF
     END
     
+;Selection Info Text Fields ---------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='selection_info_xmin_value'): BEGIN
+        move_selection_manually_step4_step1, Event ;scaling_step1
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='selection_info_ymin_value'): BEGIN
+        move_selection_manually_step4_step1, Event ;scaling_step1
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='selection_info_xmax_value'): BEGIN
+        move_selection_manually_step4_step1, Event ;scaling_step1
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='selection_info_ymax_value'): BEGIN
+        move_selection_manually_step4_step1, Event ;scaling_step1
+    END
+
 ;Move Up, left, right and down button -----------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_left'): BEGIN

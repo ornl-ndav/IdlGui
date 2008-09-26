@@ -370,7 +370,7 @@ xmin = xy_position[0]
 ymin = xy_position[1]
 xmax = xy_position[2]
 ymax = xy_position[3]
-IF (xmin NE 0 AND xmax NE 0) THEN BEGIN
+IF (xmin + xmax NE 0) THEN BEGIN
     color = 200
     PLOTS, [xmin, xmin, xmax, xmax, xmin],$
       [ymin,ymax, ymax, ymin, ymin],$
@@ -578,3 +578,44 @@ IF (y GE y_size) THEN y=y_size-1
 
 END
 
+;------------------------------------------------------------------------------
+;This procedure is reached each time the user hits enter in one of the
+;four text field xmin, ymin, xmax and ymax
+PRO move_selection_manually_step4_step1, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;work on Min values
+xmin = FIX(getStep4Step1XminValue(Event))
+ymin = FIX(getStep4Step1YminValue(Event))
+ymin_to_test = 2*ymin
+
+;this make sure that we are not outside the window
+physical_x_y, Event, xmin, ymin_to_test
+ymin = ymin_to_test / 2
+
+;work on Max values
+xmax = getStep4Step1XmaxValue(Event)
+ymax = getStep4Step1YmaxValue(Event)
+ymax_to_test = 2*ymax
+
+;this make sure that we are not outside the window
+physical_x_y, Event, xmax, ymax_to_test
+ymax = ymax_to_test / 2
+
+xmin = MIN([xmin,xmax],MAX=xmax)
+ymin = MIN([ymin,ymax],MAX=ymax)
+
+(*global).step4_step1_selection = [xmin, ymin_to_test, xmax, ymax_to_test]
+
+;refresh plot
+replotAsciiData_scaling_step1, Event
+;refresh selection plot
+refresh_plotStep4Step1Selection, Event
+
+;put back the right values of xmin, ymin, xmax and ymax
+putXminStep4Step1Value, Event, xmin
+putYminStep4Step1Value, Event, Ymin
+putXmaxStep4Step1Value, Event, xmax
+putYmaxStep4Step1Value, Event, Ymax
+
+END
