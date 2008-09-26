@@ -634,34 +634,35 @@ step4_step1_plot2d, $           ;scaling_step1_plot2d
 xy_selection = (*global).step4_step1_selection
 total_array  = (*(*global).total_array)
 xmin = xy_selection[0]
-ymin = xy_selection[1]/2
+ymin = xy_selection[1]
 xmax = xy_selection[2]
-ymax = xy_selection[3]/2
+ymax = xy_selection[3]
 
 xmin = MIN([xmin,xmax],MAX=xmax)
 ymin = MIN([ymin,ymax],MAX=ymax)
 
+IF (xmin EQ xmax) THEN xmax += 1
+IF (ymin EQ ymax) THEN ymax += 1
+
 data_to_plot = total_array(xmin:xmax,ymin:ymax)
-t_data_to_plot = total(data_to_plot,1)
-help, t_data_to_plot
+t_data_to_plot = total(data_to_plot,2)
 sz = N_ELEMENTS(t_data_to_plot)
-xrange = INDGEN(sz) + ymin
+xrange = INDGEN(sz) + xmin
 
-;new_array = CONGRID(t_data_to_plot,sz/2)
-;xrange = INDGEN(sz) + ymin/2
-;xtitle = 'Pixel ID'
-;ytitle = 'Counts'
-; plot, xrange, new_array, $
-;   XRANGE=[ymin/2,ymax/2], $
-;   XTITLE=xtitle, $
-;   YTITLE=ytitle
-
-;plot counts vs pixel of region selected
+;plot counts vs tof of region selected
 id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
                       FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 
-plot, xrange, t_data_to_plot
+box_color = (*global).box_color
+xtitle = 'TOF bins'
+ytitle = 'Counts'
+plot, xrange, $
+  t_data_to_plot, $
+  XTITLE = xtitle, $
+  YTITLE = ytitle,$
+  COLOR=box_color[0],$
+  XSTYLE=1
 
 END
