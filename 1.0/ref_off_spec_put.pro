@@ -71,3 +71,27 @@ END
 PRO putListOfFilesShifting, Event, list_OF_files 
 putList, Event, 'active_file_droplist_shifting', list_OF_files
 END
+
+;------------------------------------------------------------------------------
+PRO putXminStep4Step1Value, Event, value
+putTextFieldValue, Event, 'selection_info_xmin_value', $
+  STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putYminStep4Step1Value, Event, value
+putTextFieldValue, Event, 'selection_info_ymin_value', $
+  STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putXmaxStep4Step1Value, Event, value
+putTextFieldValue, Event, 'selection_info_xmax_value', $
+  STRCOMPRESS(value,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO putYmaxStep4Step1Value, Event, value
+putTextFieldValue, Event, 'selection_info_ymax_value', $
+  STRCOMPRESS(value,/REMOVE_ALL)
+END

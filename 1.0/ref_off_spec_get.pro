@@ -133,3 +133,24 @@ FUNCTION getShiftingAttenuatorPercentage, Event
 percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
 RETURN, percentage_value
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step1XminValue, Event
+RETURN, getTextFieldValue(Event, 'selection_info_xmin_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step1YminValue, Event
+RETURN, getTextFieldValue(Event, 'selection_info_ymin_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step1XmaxValue, Event
+RETURN, getTextFieldValue(Event, 'selection_info_xmax_value')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step1YmaxValue, Event
+RETURN, getTextFieldValue(Event, 'selection_info_ymax_value')
+END
+
