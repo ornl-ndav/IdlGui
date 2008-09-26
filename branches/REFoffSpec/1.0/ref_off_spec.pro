@@ -76,6 +76,7 @@ ENDELSE
 global = ptr_new ({ ucams:               ucams,$
                     bClick_step4_step1:  1,$
                     step4_step1_selection_pixel_range: 5,$
+                    step4_step1_selection_resize_range: 5,$
                     step4_step1_move_selection_position: INTARR(2),$
                     left_mouse_pressed:  0,$
                     step4_step1_left_mouse_pressed: 0,$

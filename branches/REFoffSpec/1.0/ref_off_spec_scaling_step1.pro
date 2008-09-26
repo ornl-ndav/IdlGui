@@ -481,6 +481,22 @@ RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION check_IF_resize_OR_move_situation, Event, type
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position    = (*global).step4_step1_selection
+x1 = xy_position[0]
+y1 = ;FIX_ME
+pixel_range    = (*global).step4_step1_move_selection_position
+current_x      = Event.x
+current_y      = Event.y
+
+IF (current_x 
+
+
+RETURN, 0
+END
+
+;------------------------------------------------------------------------------
 PRO save_position_to_move_selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 x = Event.x
@@ -493,6 +509,7 @@ display_x_y_min_max_step4_step1, Event, TYPE='move'
 END
 
 ;------------------------------------------------------------------------------
+;this is reached when user wants to move or resize selection
 PRO move_selection_step4_step1, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
@@ -514,6 +531,10 @@ diff_y = current_y - old_y
 xy_position = (*global).step4_step1_selection
 xmin = MIN([xy_position[0],xy_position[2]], MAX=xmax)
 ymin = MIN([xy_position[1],xy_position[3]], MAX=ymax)
+
+;type is the corner clicked (0:tof/left 1:top/right 2:bottom/right....)
+bResize = check_IF_resize_OR_move_situation(Event,type)
+
 new_xmin = xmin+diff_x
 new_ymin = ymin+diff_y
 new_xmax = xmax+diff_x
@@ -620,49 +641,3 @@ putYmaxStep4Step1Value, Event, Ymax
 
 END
 
-;------------------------------------------------------------------------------
-;This procedure show the plot2d (if not there already) and display
-;counts vs tof for the given selection made
-PRO display_step4_step1_plot2d, Event
-WIDGET_CONTROL, Event.top,GET_UVALUE=global
-
-;show plot2d base
-step4_step1_plot2d, $           ;scaling_step1_plot2d
-  Event, $
-  GROUP_LEADER=Event.top
-;put value there
-xy_selection = (*global).step4_step1_selection
-total_array  = (*(*global).total_array)
-xmin = xy_selection[0]
-ymin = xy_selection[1]
-xmax = xy_selection[2]
-ymax = xy_selection[3]
-
-xmin = MIN([xmin,xmax],MAX=xmax)
-ymin = MIN([ymin,ymax],MAX=ymax)
-
-IF (xmin EQ xmax) THEN xmax += 1
-IF (ymin EQ ymax) THEN ymax += 1
-
-data_to_plot = total_array(xmin:xmax,ymin:ymax)
-t_data_to_plot = total(data_to_plot,2)
-sz = N_ELEMENTS(t_data_to_plot)
-xrange = INDGEN(sz) + xmin
-
-;plot counts vs tof of region selected
-id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
-                      FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
-WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-WSET,id_value
-
-box_color = (*global).box_color
-xtitle = 'TOF bins'
-ytitle = 'Counts'
-plot, xrange, $
-  t_data_to_plot, $
-  XTITLE = xtitle, $
-  YTITLE = ytitle,$
-  COLOR=box_color[0],$
-  XSTYLE=1
-
-END

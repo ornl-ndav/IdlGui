@@ -77,4 +77,49 @@ WIDGET_CONTROL, wBase, /REALIZE
 XMANAGER, "ref_off_spec_scaling_plot2d", wBase, /NO_BLOCK
 END
 
+;------------------------------------------------------------------------------
+;This procedure show the plot2d (if not there already) and display
+;counts vs tof for the given selection made
+PRO display_step4_step1_plot2d, Event
+WIDGET_CONTROL, Event.top,GET_UVALUE=global
 
+;show plot2d base
+step4_step1_plot2d, $           ;scaling_step1_plot2d
+  Event, $
+  GROUP_LEADER=Event.top
+;put value there
+xy_selection = (*global).step4_step1_selection
+total_array  = (*(*global).total_array)
+xmin = xy_selection[0]
+ymin = xy_selection[1]
+xmax = xy_selection[2]
+ymax = xy_selection[3]
+
+xmin = MIN([xmin,xmax],MAX=xmax)
+ymin = MIN([ymin,ymax],MAX=ymax)
+
+IF (xmin EQ xmax) THEN xmax += 1
+IF (ymin EQ ymax) THEN ymax += 1
+
+data_to_plot = total_array(xmin:xmax,ymin:ymax)
+t_data_to_plot = total(data_to_plot,2)
+sz = N_ELEMENTS(t_data_to_plot)
+xrange = INDGEN(sz) + xmin
+
+;plot counts vs tof of region selected
+id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
+                      FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+box_color = (*global).box_color
+xtitle = 'TOF bins'
+ytitle = 'Counts'
+plot, xrange, $
+  t_data_to_plot, $
+  XTITLE = xtitle, $
+  YTITLE = ytitle,$
+  COLOR=box_color[0],$
+  XSTYLE=1
+
+END
