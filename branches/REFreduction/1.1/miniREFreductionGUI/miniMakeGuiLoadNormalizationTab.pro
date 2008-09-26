@@ -96,14 +96,14 @@ Load_data_run_number_text_field = $
            YSIZE         = GlobalRunNumber[5],$
            /LONG,$
            RETURN_EVENTS = 1,$
-           TITLE         = 'Run #:',$
+           TITLE         = 'Run#',$
            UNAME         = 'load_normalization_run_number_text_field')
 
 
 ;Archived or All NeXus list
 NormArchivedOrAllCWBgroup = $
   CW_BGROUP(LOAD_NORMALIZATION_BASE,$
-            ['Archived','All'],$
+            ['Arch.','All'],$
             UNAME     = 'normalization_archived_or_full_cwbgroup',$
             XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
             YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
