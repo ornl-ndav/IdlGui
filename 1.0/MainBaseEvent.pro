@@ -457,6 +457,7 @@ CASE Event.id OF
                     refresh_plotStep4Step1Selection, Event
                 ENDELSE
                 display_x_y_min_max_step4_step1, Event, TYPE='move'
+                display_step4_step1_plot2d, Event                
             ENDIF
             
 ;release mouse ----------------------------------------------------
@@ -477,43 +478,75 @@ CASE Event.id OF
 ;Selection Info Text Fields ---------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='selection_info_xmin_value'): BEGIN
-        move_selection_manually_step4_step1, Event ;scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_selection_manually_step4_step1, Event ;scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
 
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='selection_info_ymin_value'): BEGIN
-        move_selection_manually_step4_step1, Event ;scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_selection_manually_step4_step1, Event ;scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
 
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='selection_info_xmax_value'): BEGIN
-        move_selection_manually_step4_step1, Event ;scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_selection_manually_step4_step1, Event ;scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
 
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='selection_info_ymax_value'): BEGIN
-        move_selection_manually_step4_step1, Event ;scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_selection_manually_step4_step1, Event ;scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
 
 ;Move Up, left, right and down button -----------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_left'): BEGIN
-        move_step4_step1_selection, Event, DIRECTION='left' ;_scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_step4_step1_selection, Event, DIRECTION='left' ;_scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
     
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_right'): BEGIN
-        move_step4_step1_selection, Event, DIRECTION='right' ;_scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_step4_step1_selection, Event, DIRECTION='right'
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
-
+    
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_up'): BEGIN
-        move_step4_step1_selection, Event, DIRECTION='up' ;_scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_step4_step1_selection, Event, DIRECTION='up' ;_scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
-
+    
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_step1_move_selection_down'): BEGIN
-        move_step4_step1_selection, Event, DIRECTION='down' ;_scaling_step1
+        current_list_OF_files = (*(*global).list_OF_ascii_files)
+        IF (current_list_OF_files[0] NE '') THEN BEGIN
+            move_step4_step1_selection, Event, DIRECTION='down' ;_scaling_step1
+            display_step4_step1_plot2d, Event                
+        ENDIF
     END
 
 ;------------------------------------------------------------------------------
