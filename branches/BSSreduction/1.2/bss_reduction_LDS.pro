@@ -49,40 +49,47 @@ cmd_text = '> Looking for current Live Nexus File (' + cmd + ') ... ' + $
 AppendLogBookMessage, Event, cmd_text
 
 ;to grab the LDP NeXus file
-SPAWN, cmd, listening, err_listening
-
-IF (listening EQ '') THEN BEGIN ;no file found
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
     putTextFieldValue, Event, 'nexus_full_path_label', $
       ' No Live NeXus File Found !!!', 0
 ENDIF ELSE BEGIN
-    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-    ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
-    sz = N_ELEMENTS(ArraySplit)
-    ShortFileName = ArraySplit[sz-1]
-    putTextFieldValue, Event, 'nexus_full_path_label', $
-      ShortFileName, 0
-    LogBookText = '-> Full live NeXus name: ' + listening
-    AppendLogBookMessage, Event, LogBookText
-    iNexus = OBJ_NEW('IDLgetMetadata',listening)
-    sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
-    LogBookText = '-> Run Number: ' + sRunNumber
-    putTextFieldValue, Event,$
-      'nexus_run_number',$
-      sRunNumber, 0
+    SPAWN, cmd, listening, err_listening
+    IF (listening EQ '') THEN BEGIN ;no file found
+        putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+        putTextFieldValue, Event, 'nexus_full_path_label', $
+          ' No Live NeXus File Found !!!', 0
+    ENDIF ELSE BEGIN
+        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+        ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
+        sz = N_ELEMENTS(ArraySplit)
+        ShortFileName = ArraySplit[sz-1]
+        putTextFieldValue, Event, 'nexus_full_path_label', $
+          ShortFileName, 0
+        LogBookText = '-> Full live NeXus name: ' + listening
+        AppendLogBookMessage, Event, LogBookText
+        iNexus = OBJ_NEW('IDLgetMetadata',listening)
+        sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
+        LogBookText = '-> Run Number: ' + sRunNumber
+        putTextFieldValue, Event,$
+          'nexus_run_number',$
+          sRunNumber, 0
 ;load nexus file (retrieve data and plot)
-    load_live_nexus, Event, listening, sRunNumber ;_LoadNexus
-
+        load_live_nexus, Event, listening, sRunNumber ;_LoadNexus
+        
 ;load the geometry file
-    cmd += ' -g'
-    SPAWN, cmd, geometry_file, err_listening
-    putTextFieldValue, Event, $
-      'aig_list_of_runs_text',$
-      STRCOMPRESS(geometry_file,/REMOVE_ALL),0
-    LogBookText = '-> Live Data Geometry file is: ' + $
-      STRCOMPRESS(geometry_file,/REMOVE_ALL)
-    AppendLogBookMessage, Event, LogBookText
-
+        cmd += ' -g'
+        SPAWN, cmd, geometry_file, err_listening
+        putTextFieldValue, Event, $
+          'aig_list_of_runs_text',$
+          STRCOMPRESS(geometry_file,/REMOVE_ALL),0
+        LogBookText = '-> Live Data Geometry file is: ' + $
+          STRCOMPRESS(geometry_file,/REMOVE_ALL)
+        AppendLogBookMessage, Event, LogBookText
+    ENDELSE
 ENDELSE
 
 ;turn off hourglass
