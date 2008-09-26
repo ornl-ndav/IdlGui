@@ -619,3 +619,49 @@ putXmaxStep4Step1Value, Event, xmax
 putYmaxStep4Step1Value, Event, Ymax
 
 END
+
+;------------------------------------------------------------------------------
+;This procedure show the plot2d (if not there already) and display
+;counts vs tof for the given selection made
+PRO display_step4_step1_plot2d, Event
+WIDGET_CONTROL, Event.top,GET_UVALUE=global
+
+;show plot2d base
+step4_step1_plot2d, $           ;scaling_step1_plot2d
+  Event, $
+  GROUP_LEADER=Event.top
+;put value there
+xy_selection = (*global).step4_step1_selection
+total_array  = (*(*global).total_array)
+xmin = xy_selection[0]
+ymin = xy_selection[1]/2
+xmax = xy_selection[2]
+ymax = xy_selection[3]/2
+
+xmin = MIN([xmin,xmax],MAX=xmax)
+ymin = MIN([ymin,ymax],MAX=ymax)
+
+data_to_plot = total_array(xmin:xmax,ymin:ymax)
+t_data_to_plot = total(data_to_plot,1)
+help, t_data_to_plot
+sz = N_ELEMENTS(t_data_to_plot)
+xrange = INDGEN(sz) + ymin
+
+;new_array = CONGRID(t_data_to_plot,sz/2)
+;xrange = INDGEN(sz) + ymin/2
+;xtitle = 'Pixel ID'
+;ytitle = 'Counts'
+; plot, xrange, new_array, $
+;   XRANGE=[ymin/2,ymax/2], $
+;   XTITLE=xtitle, $
+;   YTITLE=ytitle
+
+;plot counts vs pixel of region selected
+id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
+                      FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+plot, xrange, t_data_to_plot
+
+END
