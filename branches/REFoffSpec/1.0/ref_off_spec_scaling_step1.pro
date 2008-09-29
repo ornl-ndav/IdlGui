@@ -338,6 +338,33 @@ xy_position[1] = Event.y
 END
 
 ;------------------------------------------------------------------------------
+PRO save_fix_corner, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+xy_position    = (*global).step4_step1_selection
+xmin = MIN([xy_position[0],xy_position[2]],MAX=xmax)
+ymin = MIN([xy_position[1],xy_position[3]],MAX=ymax)
+
+IF ((*global).ResizeOrMove EQ 'resize') THEN BEGIN
+
+    fix_corner = INTARR(2)
+    corner_selected = (*global).corner_selected
+    IF (corner_selected[0] EQ 1) THEN BEGIN
+        fix_corner[0] = xmax
+    ENDIF ELSE BEGIN
+        fix_corner[0] = xmin
+    ENDELSE
+
+    IF (corner_selected[1] EQ 1) THEN BEGIN
+        fix_corner[1] = ymax
+    ENDIF ELSE BEGIN
+        fix_corner[1] = ymin
+    ENDELSE
+    (*global).fix_corner = fix_corner
+    
+ENDIF
+END
+
+;------------------------------------------------------------------------------
 PRO plotStep4Step1Selection, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 xy_position = (*global).step4_step1_selection
@@ -481,19 +508,48 @@ RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION check_IF_resize_OR_move_situation, Event, type
+FUNCTION check_IF_resize_OR_move_situation, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-xy_position    = (*global).step4_step1_selection
+xy_position = (*global).step4_step1_selection
 x1 = xy_position[0]
-y1 = ;FIX_ME
-pixel_range    = (*global).step4_step1_move_selection_position
+y1 = xy_position[1]
+x2 = xy_position[2]
+y2 = xy_position[3]
+
+pixel_range    = (*global).step4_step1_selection_resize_range
 current_x      = Event.x
 current_y      = Event.y
 
-IF (current_x 
+;define new x/y min and max
+xy_position = (*global).step4_step1_selection
+xmin = MIN([xy_position[0],xy_position[2]], MAX=xmax)
+ymin = MIN([xy_position[1],xy_position[3]], MAX=ymax)
 
+IF (ABS(current_x - x1) LE pixel_range OR $
+    ABS(current_x - x2) LE pixel_range) THEN BEGIN ;check for x values
 
-RETURN, 0
+    IF (ABS(current_y - y1) LE pixel_range OR $
+        ABS(current_y - y2) LE pixel_range) THEN BEGIN
+
+        corner_selected_xmin_ymin = [0,0]
+
+        IF (ABS(current_x - xmin) LE pixel_range) THEN BEGIN
+            corner_selected_xmin_ymin[0] = 1
+        ENDIF ELSE BEGIN
+            corner_selected_xmin_ymin[0] = 0
+        ENDELSE
+        
+        IF (ABS(current_y - ymin) LE pixel_range) THEN BEGIN
+            corner_selected_xmin_ymin[1] = 1
+        ENDIF ELSE BEGIN
+            corner_selected_xmin_ymin[1] = 0
+        ENDELSE
+        
+        (*global).corner_selected = corner_selected_xmin_ymin
+        RETURN, 'resize'
+    ENDIF
+ENDIF
+RETURN, 'move'
 END
 
 ;------------------------------------------------------------------------------
@@ -533,13 +589,39 @@ xmin = MIN([xy_position[0],xy_position[2]], MAX=xmax)
 ymin = MIN([xy_position[1],xy_position[3]], MAX=ymax)
 
 ;type is the corner clicked (0:tof/left 1:top/right 2:bottom/right....)
-bResize = check_IF_resize_OR_move_situation(Event,type)
+ResizeOrMove = (*global).ResizeOrMove
 
-new_xmin = xmin+diff_x
-new_ymin = ymin+diff_y
-new_xmax = xmax+diff_x
-new_ymax = ymax+diff_y
+IF (ResizeOrMove EQ 'move') THEN BEGIN
+    
+    new_xmin = xmin+diff_x
+    new_ymin = ymin+diff_y
+    new_xmax = xmax+diff_x
+    new_ymax = ymax+diff_y
 
+ENDIF ELSE BEGIN
+
+    pixel_range     = (*global).step4_step1_selection_pixel_range
+    fix_corner      = (*global).fix_corner
+    corner_selected = (*global).corner_selected
+
+    IF (corner_selected[0] EQ 1) THEN BEGIN ;xmin has been selected
+        new_xmax = fix_corner[0]
+        new_xmin = current_x
+    ENDIF ELSE BEGIN            ;xmax has been selected
+        new_xmin = fix_corner[0]
+        new_xmax = current_x
+    ENDELSE
+
+    IF (corner_selected[1] EQ 1) THEN BEGIN ;ymin selected
+        new_ymax = fix_corner[1]
+        new_ymin = current_y
+    ENDIF ELSE BEGIN ;ymax selected
+        new_ymin = fix_corner[1]
+        new_ymax = current_y
+    ENDELSE
+
+ENDELSE
+    
 ;check if we have to move the selection (not if we are going to be
 ;outside the range)
 total_array = (*(*global).total_array)
@@ -551,6 +633,7 @@ IF (new_ymax GE y_size) THEN new_ymax = y_size-1
 IF (new_ymin LE 0) THEN new_ymin = 0
 
 xy_position = [new_xmin, new_ymin, new_xmax, new_ymax]
+
 (*global).step4_step1_selection = xy_position
 END
 

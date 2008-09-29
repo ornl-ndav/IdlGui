@@ -436,11 +436,15 @@ CASE Event.id OF
                   check_IF_click_OR_move_situation(Event) ;_scaling_step1
                 (*global).bClick_step4_step1 = bClick
                 (*global).step4_step1_left_mouse_pressed = 1
-                IF (bClick) THEN BEGIN
+                    (*global).ResizeOrMove = $
+                      check_IF_resize_OR_move_situation(Event)
+                IF (bClick) THEN BEGIN ;left click (no resize)
                     save_selection_left_position_step4_step1, $
                       Event     ;_scaling_step1
                     display_x_y_min_max_step4_step1, Event, TYPE='left_click'
-                ENDIF
+                ENDIF ELSE BEGIN ;resize or move
+                    save_fix_corner, Event ;scaling_step1
+                ENDELSE
             ENDIF               ;end of left click
             
 ;move mouse -------------------------------------------------------
