@@ -89,7 +89,7 @@ step4_step1_plot2d, $           ;scaling_step1_plot2d
   GROUP_LEADER=Event.top
 ;put value there
 xy_selection = (*global).step4_step1_selection
-total_array  = (*(*global).total_array)
+
 xmin = xy_selection[0]
 ymin = xy_selection[1]
 xmax = xy_selection[2]
@@ -98,13 +98,11 @@ ymax = xy_selection[3]
 xmin = MIN([xmin,xmax],MAX=xmax)
 ymin = MIN([ymin,ymax],MAX=ymax)
 
+ymin = FIX(ymin/2)
+ymax = FIX(ymax/2)
+
 IF (xmin EQ xmax) THEN xmax += 1
 IF (ymin EQ ymax) THEN ymax += 1
-
-data_to_plot = total_array(xmin:xmax,ymin:ymax)
-t_data_to_plot = total(data_to_plot,2)
-sz = N_ELEMENTS(t_data_to_plot)
-xrange = INDGEN(sz) + xmin
 
 ;plot counts vs tof of region selected
 id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
@@ -112,14 +110,78 @@ id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 
-box_color = (*global).box_color
-xtitle = 'TOF bins'
-ytitle = 'Counts'
-plot, xrange, $
-  t_data_to_plot, $
-  XTITLE = xtitle, $
-  YTITLE = ytitle,$
-  COLOR=box_color[0],$
-  XSTYLE=1
+tfpData = (*(*global).realign_pData_y)
+nbr_plot = getNbrFiles(Event)
+
+;determine ymax
+index_ymax = 0
+ymax_value = 0
+WHILE (index_ymax LT nbr_plot) DO BEGIN
+    local_tfpData = *tfpData[index_ymax]
+    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
+    IF (bLogPlot) THEN BEGIN
+        local_tfpData = ALOG10(local_tfpData)
+        index_inf = WHERE(local_tfpData LT 0, nIndex)
+        IF (nIndex GT 0) THEN BEGIN
+            local_tfpData[index_inf] = 0
+        ENDIF
+    ENDIF
+    IF (index_ymax EQ 0) THEN BEGIN
+        data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
+    ENDIF ELSE BEGIN
+        data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
+                                             (304L+ymin):(304L+ymax)))
+    ENDELSE
+    t_data_to_plot = total(data_to_plot,2)
+    ymax_local     = MAX(t_data_to_plot)
+    ymax_value     = (ymax_local GT ymax_value) ? ymax_local : ymax_value
+    index_ymax++
+ENDWHILE
+
+index = 0
+WHILE (index LT nbr_plot) DO BEGIN
+    
+    box_color     = (*global).box_color
+    color         = box_color[index]
+    local_tfpData = *tfpData[index]
+
+    bLogPlot = isLogZaxisScalingStep1Selected(Event)
+    IF (bLogPlot) THEN BEGIN
+        local_tfpData = ALOG10(local_tfpData)
+        index_inf = WHERE(local_tfpData LT 0, nIndex)
+        IF (nIndex GT 0) THEN BEGIN
+            local_tfpData[index_inf] = 0
+        ENDIF
+    ENDIF
+
+    IF (index EQ 0) THEN BEGIN
+        data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
+        t_data_to_plot = total(data_to_plot,2)
+        sz = N_ELEMENTS(t_data_to_plot)
+        xrange = INDGEN(sz) + xmin
+        xtitle = 'Wavelength'
+        ytitle = 'Counts'
+        plot, xrange, $
+          t_data_to_plot, $
+          XTITLE = xtitle, $
+          YTITLE = ytitle,$
+          COLOR  = color,$
+          YRANGE = [0,ymax_value],$
+          XSTYLE = 1
+    ENDIF ELSE BEGIN
+        data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
+                                             (304L+ymin):(304L+ymax)))
+        t_data_to_plot = total(data_to_plot,2)
+        sz = N_ELEMENTS(t_data_to_plot)
+        xrange = INDGEN(sz) + xmin
+        oplot, t_data_to_plot, $
+          COLOR  = color
+
+    ENDELSE
+    index++
+ENDWHILE
+
+;total_array  = (*(*global).total_array)
+;data_to_plot = total_array(xmin:xmax,ymin:ymax)
 
 END
