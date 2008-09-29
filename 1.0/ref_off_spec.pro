@@ -74,6 +74,9 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    ResizeOrMove:        'move',$
+                    corner_selected:     INTARR(2),$
+                    fix_corner:          INTARR(2),$
                     bClick_step4_step1:  1,$
                     step4_step1_selection_pixel_range: 5,$
                     step4_step1_selection_resize_range: 5,$
