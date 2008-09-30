@@ -46,7 +46,7 @@ cmd_pwd = "pwd"
 spawn, cmd_pwd, listening
 array_listening=strsplit(listening,'/',count=length,/extract)
 ucams = array_listening[2]
-cd, path
+;cd, path
 RETURN, ucams
 
 end
