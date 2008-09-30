@@ -112,6 +112,8 @@ WSET,id_value
 
 tfpData = (*(*global).realign_pData_y)
 nbr_plot = getNbrFiles(Event)
+;array that will contain the counts vs wavelenght of each data file
+IvsLambda_selection = PTRARR(nbr_plot,/ALLOCATE_HEAP)
 
 ;determine ymax
 index_ymax = 0
@@ -133,10 +135,14 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
                                              (304L+ymin):(304L+ymax)))
     ENDELSE
     t_data_to_plot = total(data_to_plot,2)
+    *IvsLambda_selection[index_ymax] = t_data_to_plot
     ymax_local     = MAX(t_data_to_plot)
     ymax_value     = (ymax_local GT ymax_value) ? ymax_local : ymax_value
     index_ymax++
 ENDWHILE
+
+(*global).step4_step1_ymax_value = ymax_value
+(*(*global).IvsLambda_selection) = IvsLambda_selection
 
 index = 0
 WHILE (index LT nbr_plot) DO BEGIN
@@ -159,6 +165,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         t_data_to_plot = total(data_to_plot,2)
         sz = N_ELEMENTS(t_data_to_plot)
         xrange = INDGEN(sz) + xmin
+        (*(*global).step4_step2_step1_xrange) = xrange
         xtitle = 'Wavelength'
         ytitle = 'Counts'
         plot, xrange, $
@@ -172,8 +179,6 @@ WHILE (index LT nbr_plot) DO BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
                                              (304L+ymin):(304L+ymax)))
         t_data_to_plot = total(data_to_plot,2)
-        sz = N_ELEMENTS(t_data_to_plot)
-        xrange = INDGEN(sz) + xmin
         oplot, t_data_to_plot, $
           COLOR  = color
 
@@ -185,3 +190,6 @@ ENDWHILE
 ;data_to_plot = total_array(xmin:xmax,ymin:ymax)
 
 END
+
+
+
