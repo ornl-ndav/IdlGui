@@ -59,6 +59,7 @@ endelse
 ;define global variables
 global = ptr_new ({ $
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
+                    default_output_path: '~/',$
                     DeployedVersion : DeployedVersion,$
                     DriverName : 'amorphous_reduction_sqe',$
                     DRstatusOK : 'Data Reduction ... DONE',$

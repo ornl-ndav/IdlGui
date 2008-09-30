@@ -104,11 +104,14 @@ IF (AIGFile NE '') THEN BEGIN
     cmd += ' --inst-geom=' + AIGFile
 ENDIF
 
-;get Output File Name
+;get Output File Name and folder
 OFile = getTextFieldValue(Event,'of_list_of_runs_text')
 (*global).Configuration.Reduce.tab2.of_list_of_runs_text = OFile
-IF(OFile NE '') THEN BEGIN
-    cmd += ' --output=' + OFile
+;get output folder name
+output_folder = (*global).default_output_path
+cmd += ' --output=' + output_folder
+IF (OFile NE '') THEN BEGIN
+    cmd += OFile
 ENDIF
 
 ;****TAB3****
