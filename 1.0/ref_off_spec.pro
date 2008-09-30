@@ -51,8 +51,8 @@ SUPER_USERS       = ['j35']
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
 ;scaling_tab: 0: pixel range selection, 1: scaling
-sDEBUGGING = { tab: {main_tab: 1,$
-                     scaling_tab: 0},$ 
+sDEBUGGING = { tab: {main_tab: 3,$
+                     scaling_tab: 1},$ 
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -120,6 +120,7 @@ global = ptr_new ({ ucams:               ucams,$
                                           position: INTARR(4)},$
                     PrevTabSelect:       0,$
                     PrevScalingTabSelect: 0,$
+                    PrevScalingStep2TabSelect: 0,$
                     step4_step1_selection: [0,0,0,0],$
                     plot2d_x_left:       0,$
                     plot2d_y_left:       0,$

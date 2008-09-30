@@ -21,6 +21,8 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiStep4.pro
 .run MakeGuiStep4Step1.pro
 .run MakeGuiStep4Step2.pro
+.run MakeGuiStep4Step2Step1.pro
+.run MakeGuiStep4Step2Step2.pro
 .run MakeGuiOptions.pro
 .run MakeGuiLogBook.pro
 
@@ -45,6 +47,7 @@ cd, CurrentFolder
 .run ref_off_spec_shifting_plot2d.pro
 .run ref_off_spec_scaling_step1.pro
 .run ref_off_spec_scaling_step1_plot2d.pro
+.run ref_off_spec_scaling_step2_step1.pro
 
 ;main functions
 .run MainBaseEvent.pro
