@@ -33,7 +33,51 @@
 ;==============================================================================
 
 PRO display_step4_step2_step1_selection, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+;first check that there is something to plot (that a selection of
+;step1 of scaling has been done). If not, display a message asking for
+;a selection first.
+
+xy_position = (*global).step4_step1_selection
+IF (xy_position[0]+xy_position[2] NE 0 AND $
+    xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
+
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_step4_step2')
+    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    WSET,id_value
+
+    nbr_plot = getNbrFiles(Event)
+;array that will contain the counts vs wavelenght of each data file
+    IvsLambda_selection = (*(*global).IvsLambda_selection)
+
+    index = 0
+    box_color     = (*global).box_color
+    WHILE (index LT nbr_plot) DO BEGIN
+        
+        t_data_to_plot = *IvsLambda_selection[index]
+        color          = box_color[index]
+        
+        IF (index EQ 0) THEN BEGIN
+            xrange = (*(*global).step4_step2_step1_xrange)
+            xtitle = 'Wavelength'
+            ytitle = 'Counts'
+            ymax_value = (*global).step4_step1_ymax_value
+            plot, xrange, $
+              t_data_to_plot, $
+              XTITLE = xtitle, $
+              YTITLE = ytitle,$
+              COLOR  = color,$
+              YRANGE = [0,ymax_value],$
+              XSTYLE = 1
+        ENDIF ELSE BEGIN
+            oplot, t_data_to_plot, $
+              COLOR  = color
+        ENDELSE
+        index++
+    ENDWHILE
+ENDIF
 
 END
 
