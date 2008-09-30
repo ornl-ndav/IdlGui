@@ -260,6 +260,9 @@ ENDIF ELSE BEGIN
     text += ' ... OK'
     putMessageBoxInfo, Event, text
 
+;define default output file name
+    define_default_output_file_name, Event, TYPE='live' ;_eventcb
+
 ENDELSE
 
 ;activate or not 'save_roi_file_button', 'roi_path_button',
