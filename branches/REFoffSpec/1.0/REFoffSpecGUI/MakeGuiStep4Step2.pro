@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_scaling_step2, REDUCE_TAB, tab_size, TabTitles
+PRO make_gui_scaling_step3, REDUCE_TAB, tab_size, TabTitles
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
