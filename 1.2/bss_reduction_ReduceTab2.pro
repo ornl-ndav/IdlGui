@@ -32,47 +32,22 @@
 ;
 ;==============================================================================
 
-PRO activate_button, event, uname, activate_status
-id = widget_info(event.top,find_by_uname=uname)
-widget_control, id, sensitive=activate_status
-END
+PRO BSSreduction_output_folder_name, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+path  = (*global).default_output_path
+title = 'Select where the output files will be written'
 
-PRO activate_base, event, uname, activate_status
-id = widget_info(event.top,find_by_uname=uname)
-widget_control, id, map=activate_status
-END
+result = DIALOG_PICKFILE(/DIRECTORY,$
+                         TITLE    = title,$
+                         PATH     = path,$
+                         GET_PATH = new_path)
 
+IF (result NE '') THEN BEGIN
+    (*global).default_output_path = new_path
+;redefine label of button
+    PutTextInTextField, Event, 'output_folder_name', new_path
+    BSSreduction_CommandLineGenerator, Event
+ENDIF
 
-PRO SetButton, event, uname, valueStatus
-id = widget_info(Event.top,find_by_uname=uname)
-widget_control, id, set_value=valueStatus
-END
-
-
-PRO SetColorSliderValue, Event, index
-id = widget_info(Event.top,find_by_uname='color_slider')
-widget_control, id, set_value=index
-END
-
-
-PRO SetDropListIndex, Event, index
-id = widget_info(Event.top,find_by_uname='loadct_droplist')
-widget_control, id, set_droplist_select = index
-END
-
-
-PRO ActivateRefreshButton, event, activate_status
-id = widget_info(event.top,find_by_uname='full_counts_vs_tof_refresh_button')
-widget_control, id, sensitive=activate_status
-END
-
-
-PRO activate_output_couts_vs_tof_base, Event, activate_status
-id = widget_info(event.top,find_by_uname='output_couts_vs_tof_base')
-widget_control, id, map=activate_status
-END
-
-PRO SensitiveBase, Event, uname, status
-activate_button, event, uname, status
 END

@@ -67,6 +67,7 @@ cd, CurrentFolder
 
 .run bss_reduction_Reduce.pro
 .run bss_reduction_ReduceTab1.pro
+.run bss_reduction_ReduceTab2.pro
 .run bss_reduction_ReduceGui.pro
 .run bss_reduction_CommandLineGenerator.pro
 .run bss_reduction_RunCommandLine.pro

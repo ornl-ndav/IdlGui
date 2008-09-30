@@ -464,6 +464,11 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
+;output folder button
+    Widget_Info(wWidget, FIND_BY_UNAME='output_folder_name'): begin
+        BSSreduction_output_folder_name, Event ;ReduceTab2
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='of_list_of_runs_text'): begin
         BSSreduction_Reduce_of_list_of_runs_text, Event
         BSSreduction_CommandLineGenerator, Event
