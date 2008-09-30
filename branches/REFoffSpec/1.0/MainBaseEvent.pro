@@ -49,6 +49,10 @@ CASE Event.id OF
         tab_event, Event ;_eventcb
     END
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_tab'): BEGIN
+        tab_step4_step2_event, Event ;_eventcb
+    END
+
 ;222222222222222222222222222222222222222222222222222222222222222222222222222222
 
 ;Browse ASCII file button

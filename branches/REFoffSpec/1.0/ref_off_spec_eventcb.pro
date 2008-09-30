@@ -115,7 +115,6 @@ END
 ;------------------------------------------------------------------------------
 ;This function is trigerred each time the mouse move over the tab of step4
 PRO scaling_tab_event, Event
-
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
@@ -133,12 +132,46 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         END
         
         1: BEGIN ;step2 (scaling)
+            CASE ((*global).PrevScalingStep2TabSelect) OF
+                0: BEGIN ;CE
+                    display_step4_step2_step1_selection, $
+                      Event     ;scaling_step2_step1
+                END
+                1: BEGIN ;other files
+                END
+                ELSE:
+            ENDCASE
         END
-
         ELSE:
     ENDCASE
     (*global).PrevScalingTabSelect = CurrTabSelect
 ENDIF
+END
+
+;------------------------------------------------------------------------------
+PRO tab_step4_step2_event, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+PrevTabSelect = (*global).PrevScalingStep2TabSelect
+
+IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (CurrTabSelect) OF
+        
+        0: BEGIN                ;CE
+            display_step4_step2_step1_selection, Event ;scaling_step2_step1
+        END
+        
+        1: BEGIN                ;other files
+        END
+
+        ELSE:
+    ENDCASE
+    (*global).PrevScalingStep2TabSelect = CurrTabSelect
+ENDIF
+
 END
 
 ;------------------------------------------------------------------------------
@@ -167,6 +200,3 @@ END
 ;------------------------------------------------------------------------------
 PRO ref_off_spec_eventcb, event
 END
-
-;------------------------------------------------------------------------------
-
