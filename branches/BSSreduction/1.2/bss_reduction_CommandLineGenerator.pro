@@ -106,6 +106,15 @@ ENDIF
 
 ;get Output File Name and folder
 OFile = getTextFieldValue(Event,'of_list_of_runs_text')
+;make sure there is no leading /
+array_split = STRSPLIT(OFile,'/',COUNT=nbr)
+IF (nbr GE 1) THEN BEGIN
+    IF (array_split[0] EQ 1) THEN BEGIN ;remove first '/'
+        string_split = STRSPLIT(OFile,'/',/EXTRACT)
+        OFile = STRJOIN(string_split,'/')
+        putTextFieldValue, Event, 'of_list_of_runs_text', OFile, 0
+    ENDIF
+ENDIF
 (*global).Configuration.Reduce.tab2.of_list_of_runs_text = OFile
 ;get output folder name
 output_folder = (*global).default_output_path
