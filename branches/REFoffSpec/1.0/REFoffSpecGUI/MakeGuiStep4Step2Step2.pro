@@ -143,7 +143,7 @@ sB_AutoScalFit = { size      : [XYoff[0],$
                                 XYoff[1],$
                                 495,$
                                 30],$
-                   uname     : 'step2_button',$
+                   uname     : 'step4_2_2_auto_button',$
                    sensitive : 0,$
                    value     : '>     >   >  > >> >>> AUTOMATIC ' + $
                    'FITTING and RESCALING <<< << <  <   <    <'}
