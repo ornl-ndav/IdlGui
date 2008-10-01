@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_scaling_step3, REDUCE_TAB, tab_size, TabTitles
+PRO make_gui_scaling_step2_step3, REDUCE_TAB, tab_size, TabTitles
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
@@ -40,27 +40,8 @@ PRO make_gui_scaling_step3, REDUCE_TAB, tab_size, TabTitles
 
 sBaseTab = { size:  tab_size,$
              uname: 'step4_step2_base',$
-             title: TabTitles.scaling}
+             title: TabTitles.other_files}
                          
-;Main Draw of step 4 ----------------------------------------------------------
-XYoff = [5,5]
-sStep4Draw = { size: [XYoff[0],$
-                      XYoff[1],$
-                      700,700],$
-               uname: 'draw_step4_step2'}
-
-;tab of step4/step2 -----------------------------------------------------------
-XYoff = [5,5]
-sMainTab = { size: [sStep4Draw.size[0]+$
-                          sStep4Draw.size[2]+$
-                          XYoff[0],$
-                          XYoff[1],$
-                          555,800],$
-                   uname: 'step4_step2_tab'}
-                        
-TabTitles = { critical_edge: 'Critical Edge',$
-              other_files: 'Scaling of Other Files'}
-
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -72,33 +53,6 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       SCR_XSIZE = sBaseTab.size[2],$
                       SCR_YSIZE = sBaseTab.size[3],$
                       TITLE     = sBaseTab.title)
-
-;Main Draw of step 4 ----------------------------------------------------------
-wStep4Draw = WIDGET_DRAW(BaseTab,$
-                         XOFFSET   = sStep4Draw.size[0],$
-                         YOFFSET   = sStep4Draw.size[1],$
-                         SCR_XSIZE = sStep4Draw.size[2],$
-                         SCR_YSIZE = sStep4Draw.size[3],$
-                         UNAME     = sStep4Draw.uname,$
-                         /BUTTON_EVENTS,$
-                         /MOTION_EVENTS)
-
-;step4/step2 tab (CE and SF of all other files)                         
-MAIN_TAB = WIDGET_TAB(BaseTab,$
-                      UNAME     = sMainTab.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTab.size[0],$
-                      YOFFSET   = sMainTab.size[1],$
-                      SCR_XSIZE = sMainTab.size[2],$
-                      SCR_YSIZE = sMainTab.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
-
-;Critical Edge
-make_gui_scaling_step2_step1, MAIN_TAB, sMainTab.size, TabTitles
-
-;Other Files
-make_gui_scaling_step2_step2, MAIN_TAB, sMainTab.size, TabTitles
 
 
 END
