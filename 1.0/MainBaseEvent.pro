@@ -571,6 +571,7 @@ CASE Event.id OF
             tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
             CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
             IF (CurrTabSelect EQ 1) THEN BEGIN ;CE file
+
                 IF (Event.press EQ 1) THEN BEGIN ;left click 
                     (*global).step4_2_2_left_click = 1
                     step4_2_left_click, Event ;scaling_step2_step2
@@ -593,6 +594,9 @@ CASE Event.id OF
                     (*global).step4_2_2_left_click = 0
                 ENDIF
                 
+;check step4_step2_step2 gui
+                check_step4_step2_step2, Event ;scaling_step2_step2
+
             ENDIF
             
         ENDIF

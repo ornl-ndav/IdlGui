@@ -170,7 +170,7 @@ PRO display_lambda_selected, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-;display valur of Lambda min and max in boxes
+;display value of Lambda min and max in boxes
 step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
 
 gr_xmin = (*global).step4_2_2_draw_xmin
@@ -217,10 +217,34 @@ IF (sfLambda[0] NE fLambda[0]) THEN BEGIN
        step4_2_2_lambda_array[0]]
 ENDIF
 
-putTextFieldValue, Event, 'step4_2_2_lambda1_text_field',$
-  STRCOMPRESS(sfLambda[0],/REMOVE_ALL)
+IF (sfLambda[0] EQ FLOAT(0) ) THEN BEGIN
+    sLambdaMin = 'N/A'
+ENDIF ELSE BEGIN
+    sLambdaMin = STRCOMPRESS(sfLambda[0],/REMOVE_ALL)
+ENDELSE
+putTextFieldValue, Event, 'step4_2_2_lambda1_text_field', sLambdaMin
 
-putTextFieldValue, Event, 'step4_2_2_lambda2_text_field',$
-  STRCOMPRESS(sfLambda[1],/REMOVE_ALL)
+IF (sfLambda[1] EQ FLOAT(0)) THEN BEGIN
+    sLambdaMax = 'N/A'
+ENDIF ELSE BEGIN
+    sLambdaMax = STRCOMPRESS(sfLambda[1],/REMOVE_ALL)
+ENDELSE
+putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', sLambdaMax
 
+END
+
+;------------------------------------------------------------------------------
+PRO check_step4_step2_step2, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+
+IF (step4_2_2_lambda_array[0] NE 0 AND $
+    step4_2_2_lambda_array[1] NE 0) THEN BEGIN
+    status = 1
+ENDIF ELSE BEGIN
+    status = 0
+ENDELSE
+activate_widget, Event, 'step4_2_2_auto_button', status
 END
