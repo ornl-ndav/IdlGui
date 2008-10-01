@@ -34,6 +34,8 @@
 
 PRO make_gui_scaling_step2_step2, MAIN_TAB, tab_size, TabTitles
 
+!P.FONT = 0
+
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
@@ -78,7 +80,7 @@ sL_LambdaBaseTitle = { size  : [sB1_LambdaminLambdaMaxInput.size[0]+15, $
 XYoff  = [5,2]
 sLLambdamin = { size : [XYoff[0],$
                         XYoff[1],$
-                        132,35],$
+                        133,35],$
                 base_uname : 'step2_lambda1_base',$
                 uname      : 'step2_lambda1_text_field',$
                 title      : 'Lda Min:',$
@@ -91,7 +93,7 @@ sLLambdaminS = { size  : [sLLambdamin.size[0]+sLLambdamin.size[2]+XYoff[0],$
                           sLLambdamin.size[1]+XYoff[1],$
                           5],$
                  uname : 'Lambda_min_select',$
-                 value : ' '}
+                 value : '<'}
 
 ;***** Lambdamin base and cw_field ********************************************
 XYoff  = [15,0]
@@ -309,26 +311,26 @@ Step2LambdaBase = WIDGET_BASE(STEP_BASE,$
                          
 ;***** Lambdamin Selection Label '<' ******************************************
 wLLambdaminS = WIDGET_LABEL(Step2LambdaBase,$
-                       XOFFSET = sLLambdaminS.size[0],$
-                       YOFFSET = sLLambdaminS.size[1],$
-                       VALUE   = sLLambdaminS.value,$
-                       UNAME   = sLLambdaminS.uname)
+                            XOFFSET = sLLambdaminS.size[0],$
+                            YOFFSET = sLLambdaminS.size[1],$
+                            VALUE   = sLLambdaminS.value,$
+                            UNAME   = sLLambdaminS.uname)
 
 ;***** Lambdamin BASE and CW_FIELD ********************************************
 wLambdamin = WIDGET_BASE(Step2LambdaBase,$
-                    XOFFSET   = sLLambdamin.size[0],$
-                    YOFFSET   = sLLambdamin.size[1],$
-                    SCR_XSIZE = sLLambdamin.size[2],$
-                    SCR_YSIZE = sLLambdamin.size[3],$
-                    UNAME     = sLLambdamin.base_uname)
+                         XOFFSET   = sLLambdamin.size[0],$
+                         YOFFSET   = sLLambdamin.size[1],$
+                         SCR_XSIZE = sLLambdamin.size[2],$
+                         SCR_YSIZE = sLLambdamin.size[3],$
+                         UNAME     = sLLambdamin.base_uname)
 
 wLambdaminField = CW_FIELD(wLambdamin,$
-                      UNAME = sLLambdamin.uname,$
-                      XSIZE = sLLambdamin.xsize,$
-                      TITLE = sLLambdamin.title,$
-                      VALUE = sLLambdamin.value,$
-                      /RETURN_EVENTS,$
-                      /FLOAT)
+                           UNAME = sLLambdamin.uname,$
+                           XSIZE = sLLambdamin.xsize,$
+                           TITLE = sLLambdamin.title,$
+                           VALUE = sLLambdamin.value,$
+                           /RETURN_EVENTS,$
+                           /FLOAT)
 
 ;***** Lambdamax Selection Label '<' ******************************************
 wLLambdamaxS = WIDGET_LABEL(Step2LambdaBase,$

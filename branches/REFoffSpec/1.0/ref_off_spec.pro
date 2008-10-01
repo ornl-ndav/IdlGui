@@ -75,6 +75,13 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    step4_2_2_lambda_selected: 'min',$
+                    step4_2_2_left_click: 0,$
+                    step4_2_2_lambda_array: FLTARR(2),$
+                    step4_2_2_draw_xmin:    60L,$
+                    step4_2_2_draw_xmax:    681L,$
+                    step4_2_2_draw_ymin:    40L,$
+                    step4_2_2_draw_ymax:    678L,$
                     ResizeOrMove:        'move',$
                     corner_selected:     INTARR(2),$
                     fix_corner:          INTARR(2),$
