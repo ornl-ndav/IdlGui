@@ -132,12 +132,15 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         END
         
         1: BEGIN ;step2 (scaling)
+            print, ((*global).PrevScalingStep2TabSelect) ;remove_me
             CASE ((*global).PrevScalingStep2TabSelect) OF
-                0: BEGIN ;CE
+                0: BEGIN ;all files
                     display_step4_step2_step1_selection, $
                       Event     ;scaling_step2_step1
                 END
-                1: BEGIN ;other files
+                1: BEGIN ;CE files
+                    display_step4_step2_step2_selection, $
+                      Event     ;scaling_step2_step1
                 END
                 ELSE:
             ENDCASE
@@ -160,11 +163,11 @@ PrevTabSelect = (*global).PrevScalingStep2TabSelect
 IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
         
-        0: BEGIN                ;CE
+        0: BEGIN                ;all files
             display_step4_step2_step1_selection, Event ;scaling_step2_step1
         END
-        
-        1: BEGIN                ;other files
+        1: BEGIN                ;CE files
+            display_step4_step2_step2_selection, Event ;scaling_step2_step2
         END
 
         ELSE:
