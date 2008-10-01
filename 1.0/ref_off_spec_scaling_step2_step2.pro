@@ -248,3 +248,32 @@ ENDIF ELSE BEGIN
 ENDELSE
 activate_widget, Event, 'step4_2_2_auto_button', status
 END
+
+;------------------------------------------------------------------------------
+PRO manual_lambda_input, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;retrieve manual lambda min and max
+lambda_array = get_step4_step2_step2_lambda(Event)
+gr_xmin      = (*global).step4_2_2_draw_xmin
+gr_xmax      = (*global).step4_2_2_draw_xmax
+xrange       = (*(*global).step4_step2_step1_xrange)
+nbr_elements = N_ELEMENTS(xrange)
+xmax         = xrange[nbr_elements-1]
+xmin         = xrange[0]
+
+ratio        = (FLOAT(xmax) - FLOAT(xmin))/(FLOAT(gr_xmax) - FLOAT(gr_xmin))
+ratio        = 1/ratio
+Lambda_value_1 = (FLOAT(lambda_array[0]) - xmin) * ratio + gr_xmin
+Lambda_value_2 = (FLOAT(lambda_array[1]) - xmin) * ratio + gr_xmin
+
+(*global).step4_2_2_lambda_array = [FLOAT(Lambda_value_1),$
+                                    FLOAT(Lambda_value_2)]
+
+;refresh plot
+display_step4_step2_step2_selection, Event
+;plot lambda
+plotLambdaSelected, Event
+
+END

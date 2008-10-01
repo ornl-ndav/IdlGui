@@ -597,9 +597,19 @@ CASE Event.id OF
 ;check step4_step2_step2 gui
                 check_step4_step2_step2, Event ;scaling_step2_step2
 
-            ENDIF
-            
+            ENDIF            
         ENDIF
+    END
+
+;Lambda min and max text fields -----------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_2_lambda1_text_field'): BEGIN
+        manual_lambda_input, Event ;scaling_step4_step2
+    END
+
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_2_lambda2_text_field'): BEGIN
+        manual_lambda_input, Event ;scaling_step4_step2
     END
 
 ;------------------------------------------------------------------------------
