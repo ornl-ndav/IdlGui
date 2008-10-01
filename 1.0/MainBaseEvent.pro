@@ -583,15 +583,13 @@ CASE Event.id OF
                 ENDIF
                 
                 IF (Event.type EQ 2) THEN BEGIN ;move mouse
-                    print, 'x: ' + STRCOMPRESS(Event.x)
-                    print, 'y: ' + strcompress(event.y)
-                    print
                     IF ((*global).step4_2_2_left_click) THEN BEGIN
                         step4_2_move, Event ;scaling_step2_step2
                     ENDIF
                 ENDIF
 
                 IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                    reorder_step4_2_2_lambda, Event ;scaling_step2_step2
                     (*global).step4_2_2_left_click = 0
                 ENDIF
                 

@@ -95,3 +95,11 @@ PRO putYmaxStep4Step1Value, Event, value
 putTextFieldValue, Event, 'selection_info_ymax_value', $
   STRCOMPRESS(value,/REMOVE_ALL)
 END
+
+;------------------------------------------------------------------------------
+PRO put_step4_step2_step2_lambda, Event, lambda_min, lambda_max
+putTextFieldValue, Event,'step4_2_2_lambda1_text_field', $
+  STRCOMPRESS(lambda_min,/REMOVE_ALL)
+putTextFieldValue, Event,'step4_2_2_lambda2_text_field', $
+  STRCOMPRESS(lambda_max,/REMOVE_ALL)
+END

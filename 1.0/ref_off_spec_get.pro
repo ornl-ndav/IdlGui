@@ -154,3 +154,9 @@ FUNCTION getStep4Step1YmaxValue, Event
 RETURN, getTextFieldValue(Event, 'selection_info_ymax_value')
 END
 
+;------------------------------------------------------------------------------
+FUNCTION get_step4_step2_step2_lambda, Event
+lambda_left  = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
+lambda_right = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
+RETURN,[lambda_left,lambda_right]
+END
