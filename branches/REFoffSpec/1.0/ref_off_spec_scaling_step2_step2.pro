@@ -51,9 +51,9 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
 
 ;array that will contain the counts vs wavelenght of each data file
     IvsLambda_selection = (*(*global).IvsLambda_selection)
-    box_color      = (*global).box_color
-    t_data_to_plot = *IvsLambda_selection[0]
-    color          = box_color[0]
+    box_color           = (*global).box_color
+    t_data_to_plot      = *IvsLambda_selection[0]
+    color               = box_color[0]
     xrange = (*(*global).step4_step2_step1_xrange)
     xtitle = 'Wavelength'
     ytitle = 'Counts'
@@ -109,6 +109,9 @@ ENDCASE
 ;plot Lambda on top of plot
 plotLambdaSelected, Event
 
+;display lambda in boxes
+display_lambda_selected, Event
+
 END
 
 ;------------------------------------------------------------------------------
@@ -135,6 +138,9 @@ ENDCASE
 ;plot Lambda on top of plot
 plotLambdaSelected, Event
 
+;display lambda in boxes
+display_lambda_selected, Event
+
 END
 
 ;------------------------------------------------------------------------------
@@ -159,3 +165,62 @@ ENDFOR
 
 END
 
+;------------------------------------------------------------------------------
+PRO display_lambda_selected, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;display valur of Lambda min and max in boxes
+step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+
+gr_xmin = (*global).step4_2_2_draw_xmin
+gr_xmax = (*global).step4_2_2_draw_xmax
+
+xrange       = (*(*global).step4_step2_step1_xrange)
+nbr_elements = N_ELEMENTS(xrange)
+xmax         = xrange[nbr_elements-1]
+xmin         = xrange[0]
+
+ratio        = (FLOAT(xmax) - FLOAT(xmin))/(FLOAT(gr_xmax) - FLOAT(gr_xmin))
+Lambda_value = FLOAT(Event.x - gr_xmin) * ratio + xmin
+
+CASE ((*global).step4_2_2_lambda_selected) OF
+    'min': BEGIN
+        uname = 'step4_2_2_lambda1_text_field'
+    END
+    'max': BEGIN
+        uname = 'step4_2_2_lambda2_text_field'
+    END
+ELSE:
+ENDCASE
+
+putTextFieldValue, Event, uname, STRCOMPRESS(lambda_value,/REMOVE_ALL)
+
+END
+
+;------------------------------------------------------------------------------
+PRO reorder_step4_2_2_lambda, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;get lambda min and max values
+Lambda   = get_step4_step2_step2_lambda(Event)
+fLambda  = FLOAT(Lambda)
+sfLambda = fLambda(SORT(fLambda))
+IF (sfLambda[0] NE fLambda[0]) THEN BEGIN
+;reverse status
+    step4_2_reverse_status_OF_lambda_selected, Event 
+;reverse lambda_gr
+    step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+    (*global).step4_2_2_lambda_array = $
+      [step4_2_2_lambda_array[1],$
+       step4_2_2_lambda_array[0]]
+ENDIF
+
+putTextFieldValue, Event, 'step4_2_2_lambda1_text_field',$
+  STRCOMPRESS(sfLambda[0],/REMOVE_ALL)
+
+putTextFieldValue, Event, 'step4_2_2_lambda2_text_field',$
+  STRCOMPRESS(sfLambda[1],/REMOVE_ALL)
+
+END

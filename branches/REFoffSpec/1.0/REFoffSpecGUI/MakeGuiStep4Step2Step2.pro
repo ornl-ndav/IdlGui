@@ -82,7 +82,7 @@ sLLambdamin = { size : [XYoff[0],$
                         XYoff[1],$
                         133,35],$
                 base_uname : 'step2_lambda1_base',$
-                uname      : 'step2_lambda1_text_field',$
+                uname      : 'step4_2_2_lambda1_text_field',$
                 title      : 'Lda Min:',$
                 value      : '',$
                 xsize      : 9}
@@ -101,7 +101,7 @@ sLLambdamax = { size : [sLLambdaminS.size[0]+XYoff[0],$
                         sLLambdamin.size[1]+XYoff[1],$
                         sLLambdamin.size[2:3]],$
                 base_uname : 'step2_lambda2_base',$
-                uname      : 'step2_lambda2_text_field',$
+                uname      : 'step4_2_2_lambda2_text_field',$
                 title      : 'Lda Max:',$
                 value      : '',$
                 xsize      : 9}
