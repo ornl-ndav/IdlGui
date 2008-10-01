@@ -45,9 +45,10 @@ ffbase = WIDGET_BASE(NeXusRoiTabBase,$
                      /BASE_ALIGN_CENTER)
 
 label = WIDGET_LABEL(ffbase,$
-                     VALUE       = 'NeXus full path:',$
-                     SCR_XSIZE   = 110,$
-                     SCR_YSIZE   = 30)
+                     VALUE       = 'NeXus File:',$
+                     SCR_XSIZE   = 75,$
+                     SCR_YSIZE   = 30,$
+                     /ALIGN_LEFT)
 
 label = WIDGET_LABEL(ffbase,$
                      VALUE       = '',$

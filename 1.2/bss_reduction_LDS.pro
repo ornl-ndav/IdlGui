@@ -106,7 +106,7 @@ ENDIF ELSE BEGIN
                   sRunNumber, 0
 ;load nexus file (retrieve data and plot)
                 load_live_nexus, Event, LongFileName ;_LoadNexus
-                
+
 ;load the geometry file
                 cmd = findlivenexus + ' -i BSS'
                 cmd += ' -g'
@@ -114,7 +114,7 @@ ENDIF ELSE BEGIN
                   + cmd + ') ... ' + PROCESSING
                 AppendLogBookMessage, Event, cmd_text
                 geo_error = 0
-;                CATCH, geo_error
+                CATCH, geo_error
                 IF (geo_error NE 0) THEN BEGIN
                     CATCH,/CANCEL
                     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
@@ -148,12 +148,14 @@ ENDIF ELSE BEGIN
                         LogBookText = '-> Live Data Geometry file is: ' + $
                           STRCOMPRESS(FullGeoFileName,/REMOVE_ALL)
                         AppendLogBookMessage, Event, LogBookText
+
                     ENDELSE
                 ENDELSE
             ENDELSE
         ENDELSE
     ENDELSE
 ENDELSE
+
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
 
