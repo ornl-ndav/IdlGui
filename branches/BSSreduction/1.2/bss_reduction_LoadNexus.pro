@@ -162,12 +162,7 @@ putMessageBoxInfo, Event, text
 
 ;initialize pixeld_excluded
 (*(*global).pixel_excluded) = (*(*global).default_pixel_excluded)
-
-;(*global).RunNumber = RunNumber
-;(*global).Configuration.Input.nexus_run_number = RunNumber
         
-;putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-
 ;move on to step2 of loading nexus
 load_live_nexus_step2, Event, full_nexus_file_name
 (*global).NexusFullName = full_nexus_file_name
@@ -216,6 +211,11 @@ ENDIF ELSE BEGIN
     success = 0
 ENDELSE
 
+sRunNumber = STRCOMPRESS((*global).RunNumber,/REMOVE_ALL)
+IF (sRunNumber EQ '') THEN BEGIN
+    sRunNumber = 'N/A'
+ENDIF
+
 IF (success EQ 0) THEN BEGIN
 
     putTextAtEndOfLogBookLastLine, Event, FAILED + $
@@ -224,8 +224,8 @@ IF (success EQ 0) THEN BEGIN
     (*global).NexusFormatWrong = 1 ;wrong format
 ;desactivate button
     activate_status = 0
-
-    text = 'Loading Live NeXus file'
+    
+    text = 'Loading Live NeXus file of run ' + sRunNumber
     text += ' ... FAILED'
     putMessageBoxInfo, Event, text
 
@@ -256,7 +256,7 @@ ENDIF ELSE BEGIN
 ;activate button
     activate_status = 1
     
-    text = 'Loading Live NeXus file'
+    text = 'Loading Live NeXus file of run ' + sRunNumber
     text += ' ... OK'
     putMessageBoxInfo, Event, text
 
