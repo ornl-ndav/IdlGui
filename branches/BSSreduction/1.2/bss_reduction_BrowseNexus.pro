@@ -28,16 +28,21 @@ if (FullNexusFileName NE '') then begin
 ;nexus has been found and can be opened
     BSSreduction_LoadNexus_step2, Event, FullNexusFileName
     (*global).NeXusFound = 1
-
+    
+    IF ((*global).NeXusFound) THEN BEGIN 
+;turn off the NO MONITOR NORMALIZATION switch
+        SetButton, event, 'nmn_button', 0
+    ENDIF
+    
     (*global).RunNumber = ''
-
+    
 ;reset NeXus run number cw_field
     putRunNumberValue, Event, ''
     
 endif else begin
-
+    
 ;left browse box without doing anything
-
+    
 endelse
 
 ;turn off hourglass

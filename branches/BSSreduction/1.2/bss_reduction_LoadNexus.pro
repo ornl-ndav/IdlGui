@@ -136,8 +136,13 @@ ENDIF
 
 (*global).NeXusFound = isNexusExist
 
+IF ((*global).NeXusFound) THEN BEGIN 
+;turn off the NO MONITOR NORMALIZATION switch
+    SetButton, event, 'nmn_button', 0
+ENDIF
+
 ;turn off hourglass
-widget_control,hourglass=0
+WIDGET_CONTROL,HOURGLASS=0
 
 END
 
@@ -175,6 +180,13 @@ IF (N_ELEMENTS(config) EQ 0) THEN BEGIN
 ENDIF
 
 (*global).NeXusFound = 1
+
+IF ((*global).NeXusFound) THEN BEGIN 
+                                ;turn on the NO MONITOR NORMALIZATION switch
+    SetButton, event, 'nmn_button', 1
+ENDIF ELSE BEGIN
+    SetButton, event, 'nmn_button', 0
+ENDELSE
 
 END
 
