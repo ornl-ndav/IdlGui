@@ -59,73 +59,74 @@ sBFceFile      = { size      : [sBaseFileLabel.size[0]+XYoff[0], $
                    uname     : 'short_ce_file_name'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-;***** Base of Qmin and Qmax **************************************************
-sB1_QminQmaxInput = { size   : [5, $
+;***** Base of Lambda min and Lambda max **************************************
+sB1_LambdaminLambdamaxInput = { size   : [5, $
                                 y_base_off+15,$
                                 505, $
                                 40],$
-                      uname  : 'step2QinputBase',$
+                      uname  : 'step2LambdainputBase',$
                       frame  : 5}
 
-;***** Q title frame **********************************************************
-sL_QBaseTitle = { size  : [sB1_QminQMaxInput.size[0]+15, $
-                           sB1_QminQmaxInput.size[1]-8],$
-                  value : 'Range of Q used to calculate the Scaling ' + $
-                  'Factor (SF)'}
+;***** Lambda title frame *****************************************************
+sL_LambdaBaseTitle = { size  : [sB1_LambdaminLambdaMaxInput.size[0]+15, $
+                                sB1_LambdaminLambdamaxInput.size[1]-8],$
+                       value : 'Range of Lambda used to calculate ' + $
+                       'the Scaling ' + $
+                       'Factor (SF)'}
 
-;***** Qmin base and cw_field *************************************************
+;***** Lambda min base and cw_field *******************************************
 XYoff  = [5,2]
-sLQmin = { size : [XYoff[0],$
-                   XYoff[1],$
-                   115,35],$
-           base_uname : 'step2_q1_base',$
-           uname      : 'step2_q1_text_field',$
-           title      : 'Qmin:',$
-           value      : '',$
-           xsize      : 9}
+sLLambdamin = { size : [XYoff[0],$
+                        XYoff[1],$
+                        132,35],$
+                base_uname : 'step2_lambda1_base',$
+                uname      : 'step2_lambda1_text_field',$
+                title      : 'Lda Min:',$
+                value      : '',$
+                xsize      : 9}
 
-;***** Qselected **************************************************************
+;***** Lambdaselected *********************************************************
 XYoff   = [-3,8]
-sLQminS = { size  : [sLQmin.size[0]+sLQmin.size[2]+XYoff[0],$
-                     sLQmin.size[1]+XYoff[1],$
-                     5],$
-            uname : 'Qmin_select',$
-            value : ' '}
+sLLambdaminS = { size  : [sLLambdamin.size[0]+sLLambdamin.size[2]+XYoff[0],$
+                          sLLambdamin.size[1]+XYoff[1],$
+                          5],$
+                 uname : 'Lambda_min_select',$
+                 value : ' '}
 
-;***** Qmin base and cw_field *************************************************
-XYoff  = [20,0]
-sLQmax = { size : [sLQminS.size[0]+XYoff[0],$
-                   sLQmin.size[1]+XYoff[1],$
-                   sLQmin.size[2:3]],$
-           base_uname : 'step2_q2_base',$
-           uname      : 'step2_q2_text_field',$
-           title      : 'Qmax:',$
-           value      : '',$
-           xsize      : 9}
+;***** Lambdamin base and cw_field ********************************************
+XYoff  = [15,0]
+sLLambdamax = { size : [sLLambdaminS.size[0]+XYoff[0],$
+                        sLLambdamin.size[1]+XYoff[1],$
+                        sLLambdamin.size[2:3]],$
+                base_uname : 'step2_lambda2_base',$
+                uname      : 'step2_lambda2_text_field',$
+                title      : 'Lda Max:',$
+                value      : '',$
+                xsize      : 9}
 
-;***** Qselected **************************************************************
+;***** Lambdaselected *********************************************************
 XYoff   = [-3,8]
-sLQmaxS = { size  : [sLQmax.size[0]+sLQmax.size[2]+XYoff[0],$
-                     sLQmax.size[1]+XYoff[1],$
-                     sLQminS.size[2]],$
-            uname : 'Qmax_select',$
-            value : ' '}
+sLLambdamaxS = { size  : [sLLambdamax.size[0]+sLLambdamax.size[2]+XYoff[0],$
+                          sLLambdamax.size[1]+XYoff[1],$
+                          sLLambdaminS.size[2]],$
+                 uname : 'Lambda_max_select',$
+                 value : ' '}
 
-;***** Qmin/max message *******************************************************
-XYoff      = [15,0]
-sL_QMinMax = { size  : [sLQmaxS.size[0]+XYoff[0],$
-                        sLQmaxS.size[1]+XYoff[1],$
-                        220],$
-               value : 'Enter or Select Qmin and Qmax',$
-               uname : 'step2_qminqmax_error_label'}
+;***** Lambdamin/max message **************************************************
+XYoff      = [5,3]
+sL_LambdaMinMax = { size  : [sLLambdamaxS.size[0]+XYoff[0],$
+                             sLLambdamaxS.size[1]+XYoff[1],$
+                             220],$
+                    value : 'Enter or Select Lda min and max.',$
+                    uname : 'step2_lambda_min_lambda_max_error_label'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Auto Mode base *********************************************************
 XYoff        = [0,Y_base_off]
-sAutoBase    = { size   : [sB1_QminQmaxInput.size[0]+XYoff[0],$
-                           sB1_QminQmaxInput.size[1]+ $
-                           sB1_QminQmaxInput.size[3]+XYoff[1],$
-                           sB1_QminQmaxInput.size[2],40],$
+sAutoBase    = { size   : [sB1_LambdaminLambdamaxInput.size[0]+XYoff[0],$
+                           sB1_LambdaminLambdamaxInput.size[1]+ $
+                           sB1_LambdaminLambdamaxInput.size[3]+XYoff[1],$
+                           sB1_LambdaminLambdamaxInput.size[2],40],$
                  uname  : 'auto_mode_base',$
                  frame  : 5}
 
@@ -196,10 +197,10 @@ sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
 XYoff           = [0,35]
 sAverageYBefore = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
                              sManualFittingLabel.size[1]+XYoff[1]],$
-                    value : 'Average I[Qmin:Qmax] Before:'}
+                    value : 'Average I[Lda_min:Lda_max] Before:'}
 
 ;***** Average Y Before value *************************************************
-XYoff             = [178,-8]
+XYoff             = [210,-8]
 sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
                                sAverageYBefore.size[1]+XYoff[1],$
                                80,25],$
@@ -211,10 +212,10 @@ sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
 XYoff           = [0,35]
 sAverageYAfter  = { size  : [sAverageYBefore.size[0]+XYoff[0],$
                              sAverageYBefore.size[1]+XYoff[1]],$
-                    value : 'Average I[Qmin:Qmax] After :'}
+                    value : 'Average I[Lda_min:Lda_max] After :'}
 
 ;***** Average Y After value **************************************************
-XYoff            = [178,-6]
+XYoff            = [210,-6]
 sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
                               sAverageYAfter.size[1]+XYoff[1],$
                               80,25],$
@@ -223,7 +224,7 @@ sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
                      uname : 'step2_y_after_text_field'}
 
 ;***** SF base ****************************************************************
-XYoff            = [40,-2]
+XYoff            = [10,-8]
 sSFbase          = { size  : [sAverYAfterValue.size[0]+ $
                               sAverYAfterValue.size[2]+XYoff[0],$
                               sAverageYBefore.size[1]+XYoff[1],$
@@ -256,11 +257,18 @@ sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
 
+;**** Lambda shortcut name used ***********************************************
+XYoff = [-100,-60]
+sLambdaShortcut = { size: [tab_size[2]+XYoff[0],$
+                           tab_size[3]+XYoff[1]],$
+                    value: 'Lda = Lambda',$
+                    frame: 2}
+
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
 
-STEP1_BASE = WIDGET_BASE(MAIN_TAB,$
+STEP_BASE = WIDGET_BASE(MAIN_TAB,$
                          UNAME     = sBase.uname,$
                          XOFFSET   = sBase.size[0],$
                          YOFFSET   = sBase.size[1],$
@@ -269,13 +277,13 @@ STEP1_BASE = WIDGET_BASE(MAIN_TAB,$
                          TITLE     = sBase.title)
 
 ;***** Top label that presnt the name of the CE file **************************
-wBaseFile  = WIDGET_LABEL(STEP1_BASE,$
+wBaseFile  = WIDGET_LABEL(STEP_BASE,$
                           XOFFSET   = sBaseFileLabel.size[0],$
                           YOFFSET   = sBaseFileLabel.size[1],$
                           VALUE     = sBaseFileLabel.value)
 
 ;***** Top label that gives the name of the CE file ***************************
-wBFceFile  = WIDGET_LABEL(STEP1_BASE,$
+wBFceFile  = WIDGET_LABEL(STEP_BASE,$
                           UNAME     = sBFceFile.uname,$
                           XOFFSET   = sBFceFile.size[0],$
                           YOFFSET   = sBFceFile.size[1],$
@@ -284,84 +292,84 @@ wBFceFile  = WIDGET_LABEL(STEP1_BASE,$
                           /ALIGN_LEFT)
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-;***** Q base title ***********************************************************
-wL_QBaseTitle = WIDGET_LABEL(STEP1_BASE,$
-                             XOFFSET = sL_QBaseTitle.size[0],$
-                             YOFFSET = sL_QBaseTitle.size[1],$
-                             VALUE   = sL_QBaseTitle.value)
+;***** Lambda base title ******************************************************
+wL_LambdaBaseTitle = WIDGET_LABEL(STEP_BASE,$
+                             XOFFSET = sL_LambdaBaseTitle.size[0],$
+                             YOFFSET = sL_LambdaBaseTitle.size[1],$
+                             VALUE   = sL_LambdaBaseTitle.value)
 
-;***** Base of Qmin and Qmax **************************************************
-Step2QBase = WIDGET_BASE(STEP1_BASE,$
-                         UNAME     = sB1_QminQmaxInput.uname,$
-                         XOFFSET   = sB1_QminQmaxInput.size[0],$
-                         YOFFSET   = sB1_QminQmaxInput.size[1],$
-                         SCR_XSIZE = sB1_QminQmaxInput.size[2],$
-                         SCR_YSIZE = sB1_QminQmaxInput.size[3],$
-                         FRAME     = sB1_QminQmaxInput.frame)
+;***** Base of Lambdamin and Lambdamax ****************************************
+Step2LambdaBase = WIDGET_BASE(STEP_BASE,$
+                         UNAME     = sB1_LambdaminLambdamaxInput.uname,$
+                         XOFFSET   = sB1_LambdaminLambdamaxInput.size[0],$
+                         YOFFSET   = sB1_LambdaminLambdamaxInput.size[1],$
+                         SCR_XSIZE = sB1_LambdaminLambdamaxInput.size[2],$
+                         SCR_YSIZE = sB1_LambdaminLambdamaxInput.size[3],$
+                         FRAME     = sB1_LambdaminLambdamaxInput.frame)
                          
-;***** Qmin Selection Label '<' ***********************************************
-wLQminS = WIDGET_LABEL(Step2QBase,$
-                       XOFFSET = sLQminS.size[0],$
-                       YOFFSET = sLQminS.size[1],$
-                       VALUE   = sLQminS.value,$
-                       UNAME   = sLQminS.uname)
+;***** Lambdamin Selection Label '<' ******************************************
+wLLambdaminS = WIDGET_LABEL(Step2LambdaBase,$
+                       XOFFSET = sLLambdaminS.size[0],$
+                       YOFFSET = sLLambdaminS.size[1],$
+                       VALUE   = sLLambdaminS.value,$
+                       UNAME   = sLLambdaminS.uname)
 
-;***** Qmin BASE and CW_FIELD *************************************************
-wQmin = WIDGET_BASE(Step2QBase,$
-                    XOFFSET   = sLQmin.size[0],$
-                    YOFFSET   = sLQmin.size[1],$
-                    SCR_XSIZE = sLQmin.size[2],$
-                    SCR_YSIZE = sLQmin.size[3],$
-                    UNAME     = sLQmin.base_uname)
+;***** Lambdamin BASE and CW_FIELD ********************************************
+wLambdamin = WIDGET_BASE(Step2LambdaBase,$
+                    XOFFSET   = sLLambdamin.size[0],$
+                    YOFFSET   = sLLambdamin.size[1],$
+                    SCR_XSIZE = sLLambdamin.size[2],$
+                    SCR_YSIZE = sLLambdamin.size[3],$
+                    UNAME     = sLLambdamin.base_uname)
 
-wQminField = CW_FIELD(wQmin,$
-                      UNAME = sLQmin.uname,$
-                      XSIZE = sLQmin.xsize,$
-                      TITLE = sLQmin.title,$
-                      VALUE = sLQmin.value,$
+wLambdaminField = CW_FIELD(wLambdamin,$
+                      UNAME = sLLambdamin.uname,$
+                      XSIZE = sLLambdamin.xsize,$
+                      TITLE = sLLambdamin.title,$
+                      VALUE = sLLambdamin.value,$
                       /RETURN_EVENTS,$
                       /FLOAT)
 
-;***** Qmax Selection Label '<' ***********************************************
-wLQmaxS = WIDGET_LABEL(Step2QBase,$
-                       XOFFSET = sLQmaxS.size[0],$
-                       YOFFSET = sLQmaxS.size[1],$
-                       VALUE   = sLQmaxS.value,$
-                       UNAME   = sLQmaxS.uname)
+;***** Lambdamax Selection Label '<' ******************************************
+wLLambdamaxS = WIDGET_LABEL(Step2LambdaBase,$
+                       XOFFSET = sLLambdamaxS.size[0],$
+                       YOFFSET = sLLambdamaxS.size[1],$
+                       VALUE   = sLLambdamaxS.value,$
+                       UNAME   = sLLambdamaxS.uname)
 
-;***** Qmax BASE and CW_FIELD *************************************************
-wQmax = WIDGET_BASE(Step2QBase,$
-                    XOFFSET   = sLQmax.size[0],$
-                    YOFFSET   = sLQmax.size[1],$
-                    SCR_XSIZE = sLQmax.size[2],$
-                    SCR_YSIZE = sLQmax.size[3],$
-                    UNAME     = sLQmax.base_uname)
+;***** Lambdamax BASE and CW_FIELD ********************************************
+wLambdamax = WIDGET_BASE(Step2LambdaBase,$
+                    XOFFSET   = sLLambdamax.size[0],$
+                    YOFFSET   = sLLambdamax.size[1],$
+                    SCR_XSIZE = sLLambdamax.size[2],$
+                    SCR_YSIZE = sLLambdamax.size[3],$
+                    UNAME     = sLLambdamax.base_uname)
 
-wQmaxField = CW_FIELD(wQmax,$
-                      UNAME = sLQmax.uname,$
-                      XSIZE = sLQmax.xsize,$
-                      TITLE = sLQmax.title,$
-                      VALUE = sLQmax.value,$
+wLambdamaxField = CW_FIELD(wLambdamax,$
+                      UNAME = sLLambdamax.uname,$
+                      XSIZE = sLLambdamax.xsize,$
+                      TITLE = sLLambdamax.title,$
+                      VALUE = sLLambdamax.value,$
                       /RETURN_EVENTS,$
                       /FLOAT)
 
-;***** Qmin Qmax Error Label **************************************************
-wL_QMinMax = WIDGET_LABEL(Step2QBase,$
-                          XOFFSET   = sL_QMinMax.size[0],$
-                          YOFFSET   = sL_QMinMax.size[1],$
-                          SCR_XSIZE = sL_QMinMax.size[2],$
-                          UNAME     = sL_QMinMax.uname,$
-                          VALUE     = sL_QminMax.value)
+;***** Lambdamin Lambdamax Error Label ****************************************
+wL_LambdaMinMax = WIDGET_LABEL(Step2LambdaBase,$
+                          XOFFSET   = sL_LambdaMinMax.size[0],$
+                          YOFFSET   = sL_LambdaMinMax.size[1],$
+                          SCR_XSIZE = sL_LambdaMinMax.size[2],$
+                          UNAME     = sL_LambdaMinMax.uname,$
+                          VALUE     = sL_LambdaminMax.value)
 
 ;------------------------------------------------------------------------------
 ;***** Auto *******************************************************************
-wAutoBaseTitle = WIDGET_LABEL(STEP1_BASE,$
+wAutoBaseTitle = WIDGET_LABEL(STEP_BASE,$
                               XOFFSET = sAutoBaseTitle.size[0],$
                               YOFFSET = sAutoBaseTitle.size[1],$
                               VALUE   = sAutoBaseTitle.value)
 
 ;***** Auto Mode Base *********************************************************
-wAutoBase = WIDGET_BASE(STEP1_BASE,$
+wAutoBase = WIDGET_BASE(STEP_BASE,$
                         UNAME     = sAutoBase.uname,$
                         XOFFSET   = sAutoBase.size[0],$
                         YOFFSET   = sAutoBase.size[1],$
@@ -382,13 +390,13 @@ wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
 ;------------------------------------------------------------------------------
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual Mode Title ******************************************************
-wManualBaseTitle = WIDGET_LABEL(STEP1_BASE,$
+wManualBaseTitle = WIDGET_LABEL(STEP_BASE,$
                                 XOFFSET = sManualBaseTitle.size[0],$
                                 YOFFSET = sManualBaseTitle.size[1],$
                                 VALUE   = sManualBaseTitle.value)
 
 ;***** Manual Mode ************************************************************
-wManualBase = WIDGET_BASE(STEP1_BASE,$
+wManualBase = WIDGET_BASE(STEP_BASE,$
                           XOFFSET   = sManualBase.size[0],$
                           YOFFSET   = sManualBase.size[1],$
                           SCR_XSIZE = sManualBase.size[2],$
@@ -503,5 +511,13 @@ wManualScalingButton = WIDGET_BUTTON(wManualBase,$
                                      VALUE     = sManualScalingButton.value,$
                                      SENSITIVE = $
                                      sManualScalingButton.sensitive)
+
+;***** Lambda Shortcut name used **********************************************
+wLambdsShortcut = WIDGET_LABEL(STEP_BASE,$
+                               XOFFSET = sLambdaShortcut.size[0],$
+                               YOFFSET = sLambdaShortcut.size[1],$
+                               VALUE   = sLambdaShortcut.value,$
+                               FRAME   = sLambdaShortcut.frame)
+                               
 
 END
