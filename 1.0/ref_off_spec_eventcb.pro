@@ -140,6 +140,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
                 1: BEGIN ;CE files
                     display_step4_step2_step2_selection, $
                       Event     ;scaling_step2_step1
+                    plotLambdaSelected, Event ;scaling_step2_step2
                 END
                 ELSE:
             ENDCASE
@@ -167,6 +168,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         END
         1: BEGIN                ;CE files
             display_step4_step2_step2_selection, Event ;scaling_step2_step2
+            plotLambdaSelected, Event ;scaling_step2_step2
         END
 
         ELSE:

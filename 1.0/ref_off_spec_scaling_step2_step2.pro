@@ -69,3 +69,93 @@ ENDIF
 
 END
 
+;------------------------------------------------------------------------------
+PRO step4_2_reverse_status_OF_lambda_selected, Event 
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).step4_2_2_lambda_selected EQ 'min') THEN BEGIN
+    (*global).step4_2_2_lambda_selected = 'max'
+    putTextFieldValue, Event, 'Lambda_min_select', ''
+    putTextFieldValue, Event, 'Lambda_max_select', '<'
+ENDIF ELSE BEGIN
+    (*global).step4_2_2_lambda_selected = 'min'
+    putTextFieldValue, Event, 'Lambda_min_select', '<'
+    putTextFieldValue, Event, 'Lambda_max_select', ''
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO step4_2_left_click, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+
+;refresh plot 2d of step4_2_2
+display_step4_step2_step2_selection, Event
+
+CASE ((*global).step4_2_2_lambda_selected) OF
+    'min': BEGIN
+        step4_2_2_lambda_array[0] = Event.x
+    END
+    'max': BEGIN
+        step4_2_2_lambda_array[1] = Event.x
+    END
+ELSE:
+ENDCASE
+
+(*global).step4_2_2_lambda_array = step4_2_2_lambda_array
+
+;plot Lambda on top of plot
+plotLambdaSelected, Event
+
+END
+
+;------------------------------------------------------------------------------
+PRO step4_2_move, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+
+;refresh plot 2d of step4_2_2
+display_step4_step2_step2_selection, Event
+
+CASE ((*global).step4_2_2_lambda_selected) OF
+    'min': BEGIN
+        step4_2_2_lambda_array[0] = Event.x
+    END
+    'max': BEGIN
+        step4_2_2_lambda_array[1] = Event.x
+    END
+ELSE:
+ENDCASE
+
+(*global).step4_2_2_lambda_array = step4_2_2_lambda_array
+
+;plot Lambda on top of plot
+plotLambdaSelected, Event
+
+END
+
+;------------------------------------------------------------------------------
+PRO plotLambdaSelected, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+
+xmin = (*global).step4_2_2_draw_xmin
+ymin = (*global).step4_2_2_draw_ymin
+xmax = (*global).step4_2_2_draw_xmax
+ymax = (*global).step4_2_2_draw_ymax
+
+FOR i=0,1 DO BEGIN
+    lambda = step4_2_2_lambda_array[i]
+    IF (lambda GE xmin AND $
+        lambda LT xmax) THEN BEGIN
+        plots, lambda, ymin, /DEVICE, color=200
+        plots, lambda, ymax, /DEVICE, /CONTINUE, color=200
+    ENDIF
+ENDFOR
+
+END
+

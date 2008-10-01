@@ -572,19 +572,27 @@ CASE Event.id OF
             CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
             IF (CurrTabSelect EQ 1) THEN BEGIN ;CE file
                 IF (Event.press EQ 1) THEN BEGIN ;left click 
-                    print, 'left_click'
+                    (*global).step4_2_2_left_click = 1
+                    step4_2_left_click, Event ;scaling_step2_step2
                 ENDIF
 
                 IF (Event.press EQ 4) THEN BEGIN ;right click
-                    print, 'right click'
+;scaling_step2_step2
+                    step4_2_reverse_status_OF_lambda_selected, Event 
+                    
                 ENDIF
                 
                 IF (Event.type EQ 2) THEN BEGIN ;move mouse
-                    print, 'move'
+                    print, 'x: ' + STRCOMPRESS(Event.x)
+                    print, 'y: ' + strcompress(event.y)
+                    print
+                    IF ((*global).step4_2_2_left_click) THEN BEGIN
+                        step4_2_move, Event ;scaling_step2_step2
+                    ENDIF
                 ENDIF
 
                 IF (Event.type EQ 1) THEN BEGIN ;release mouse
-                    print, 'release_mouse'
+                    (*global).step4_2_2_left_click = 0
                 ENDIF
                 
             ENDIF
