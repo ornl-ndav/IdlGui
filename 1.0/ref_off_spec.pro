@@ -52,7 +52,8 @@ SUPER_USERS       = ['j35']
 ;5:Log Book 
 ;scaling_tab: 0: pixel range selection, 1: scaling
 sDEBUGGING = { tab: {main_tab: 3,$
-                     scaling_tab: 1},$ 
+                     step4_tab: 1,$
+                     scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -184,8 +185,11 @@ IF (DEBUGGING EQ 'yes' ) THEN BEGIN
 ;tab to show (main_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
-;tab to show (scaling_tab)
+;tab to show (pixel_range_selection/scaling_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.step4_tab
+;step4/step2 tabs
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='step4_step2_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.scaling_tab
 ;ascii default path
     (*global).ascii_path = sDEBUGGING.ascii_path
