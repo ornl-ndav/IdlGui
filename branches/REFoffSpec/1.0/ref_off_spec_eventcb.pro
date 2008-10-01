@@ -132,7 +132,6 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         END
         
         1: BEGIN ;step2 (scaling)
-            print, ((*global).PrevScalingStep2TabSelect) ;remove_me
             CASE ((*global).PrevScalingStep2TabSelect) OF
                 0: BEGIN ;all files
                     display_step4_step2_step1_selection, $
