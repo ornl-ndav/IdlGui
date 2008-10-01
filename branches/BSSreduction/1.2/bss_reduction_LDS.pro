@@ -66,37 +66,94 @@ ENDIF ELSE BEGIN
           ' No Live NeXus File Found !!!', 0
     ENDIF ELSE BEGIN
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-        ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
-        sz = N_ELEMENTS(ArraySplit)
-        ShortFileName = ArraySplit[sz-1]
-        putTextFieldValue, Event, 'nexus_full_path_label', $
-          ShortFileName, 0
-        LogBookText = '-> Full live NeXus name: ' + listening
-        AppendLogBookMessage, Event, LogBookText
-        iNexus = OBJ_NEW('IDLgetMetadata',listening[0])
-        sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
-        (*global).RunNumber = sRunNumber
-        (*global).Configuration.Input.nexus_run_number = sRunNumber
-        OBJ_DESTROY, iNexus
-        LogBookText = '-> Run Number: ' + sRunNumber
-        putTextFieldValue, Event,$
-          'nexus_run_number',$
-          sRunNumber, 0
-;load nexus file (retrieve data and plot)
-        load_live_nexus, Event, listening;_LoadNexus
+        ;first thing is to move that file to /SNS/BSS/shared/
+        cmd_copy = 'cp ' + listening + ' /SNS/BSS/shared/'
+        cmd_copy_text = '> ' + cmd_copy + ' ... ' + PROCESSING
         
+        AppendLogBookMessage, Event, cmd_copy_text
+        copy_error = 0
+        CATCH, copy_error
+        IF (copy_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+            putTextFieldValue, Event, 'nexus_full_path_label', $
+              ' Loading of Live NeXus Failed !!!', 0
+        ENDIF ELSE BEGIN
+            spawn, cmd_copy, listening1, err_listening1
+            IF (err_listening1[0] NE '') THEN BEGIN
+                putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+                putTextFieldValue, Event, 'nexus_full_path_label', $
+                  ' Loading of Live NeXus Failed !!!', 0
+            ENDIF ELSE BEGIN
+                putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+                ;new long file name
+                ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)
+                sz = N_ELEMENTS(ArraySplit)
+                ShortFileName = ArraySplit[sz-1]
+                LongFileName = '/SNS/BSS/shared/' + ShortFileName
+                putTextFieldValue, Event, 'nexus_full_path_label', $
+                  ShortFileName, 0
+                LogBookText = '-> Full live NeXus name: ' + LongFileName
+                AppendLogBookMessage, Event, LogBookText
+                iNexus = OBJ_NEW('IDLgetMetadata',LongFileName)
+                sRunNumber = STRCOMPRESS(iNexus->getRunNumber())
+                (*global).RunNumber = sRunNumber
+                (*global).Configuration.Input.nexus_run_number = sRunNumber
+                OBJ_DESTROY, iNexus
+                LogBookText = '-> Run Number: ' + sRunNumber
+                putTextFieldValue, Event,$
+                  'nexus_run_number',$
+                  sRunNumber, 0
+;load nexus file (retrieve data and plot)
+                load_live_nexus, Event, LongFileName ;_LoadNexus
+                
 ;load the geometry file
-        cmd += ' -g'
-        SPAWN, cmd, geometry_file, err_listening
-        putTextFieldValue, Event, $
-          'aig_list_of_runs_text',$
-          STRCOMPRESS(geometry_file,/REMOVE_ALL),0
-        LogBookText = '-> Live Data Geometry file is: ' + $
-          STRCOMPRESS(geometry_file,/REMOVE_ALL)
-        AppendLogBookMessage, Event, LogBookText
+                cmd = findlivenexus + ' -i BSS'
+                cmd += ' -g'
+                cmd_text = '> Looking for current Live Geoemtry File (' $
+                  + cmd + ') ... ' + PROCESSING
+                AppendLogBookMessage, Event, cmd_text
+                geo_error = 0
+;                CATCH, geo_error
+                IF (geo_error NE 0) THEN BEGIN
+                    CATCH,/CANCEL
+                    putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+                ENDIF ELSE BEGIN
+                    SPAWN, cmd, geometry_file, err_listening
+                    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+                    
+;copy the geo file now to /SNS/BSS/shared/
+                    cmd_geo_copy = 'cp ' + geometry_file + ' /SNS/BSS/shared/'
+                    cmd_geo_copy_text = '-> ' + cmd_geo_copy
+                    cmd_geo_copy_text += ' ... ' + PROCESSING
+                    AppendLogBookMessage, Event, cmd_geo_copy_text
+                    copy_geo_error = 0
+                    CATCH,copy_geo_error
+                    IF (copy_geo_error NE 0) THEN BEGIN
+                        CATCH,/CANCEL
+                        putTextAtEndOfLogBookLastLine, Event, FAILED, $
+                          PROCESSING
+                    ENDIF ELSE BEGIN
+                        spawn, cmd_geo_copy, listening2, err_listening2
+                        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+;get last part of name only to define new full name
+                        ArraySplit       = STRSPLIT(geometry_file,'/',/EXTRACT)
+                        sz               = N_ELEMENTS(ArraySplit)
+                        ShortGeoFileName = ArraySplit[sz-1]
+                        FullGeoFileName  = $
+                          '/SNS/BSS/shared/' + ShortGeoFileName
+                        putTextFieldValue, Event, $
+                          'aig_list_of_runs_text',$
+                          STRCOMPRESS(FullGeoFileName,/REMOVE_ALL),0
+                        LogBookText = '-> Live Data Geometry file is: ' + $
+                          STRCOMPRESS(FullGeoFileName,/REMOVE_ALL)
+                        AppendLogBookMessage, Event, LogBookText
+                    ENDELSE
+                ENDELSE
+            ENDELSE
+        ENDELSE
     ENDELSE
 ENDELSE
-
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
 
