@@ -389,7 +389,7 @@ CASE Event.id OF
         manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
     END    
     
-;444444444444444444444444444444444444444444444444444444444444444444444444444444
+;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
         scaling_tab_event, Event ;_eventcb
@@ -554,6 +554,41 @@ CASE Event.id OF
         IF (current_list_OF_files[0] NE '') THEN BEGIN
             move_step4_step1_selection, Event, DIRECTION='down' ;_scaling_step1
             display_step4_step1_plot2d, Event                
+        ENDIF
+    END
+
+;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_
+
+;Critical Edge Tab ------------------------------------------------------------
+
+;if mouse is over plot
+    Widget_Info(wWidget, $
+                FIND_BY_UNAME= $
+                'draw_step4_step2'): BEGIN
+        xy_position = (*global).step4_step1_selection
+        IF (xy_position[0]+xy_position[2] NE 0 AND $
+            xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
+            tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+            CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+            IF (CurrTabSelect EQ 1) THEN BEGIN ;CE file
+                IF (Event.press EQ 1) THEN BEGIN ;left click 
+                    print, 'left_click'
+                ENDIF
+
+                IF (Event.press EQ 4) THEN BEGIN ;right click
+                    print, 'right click'
+                ENDIF
+                
+                IF (Event.type EQ 2) THEN BEGIN ;move mouse
+                    print, 'move'
+                ENDIF
+
+                IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                    print, 'release_mouse'
+                ENDIF
+                
+            ENDIF
+            
         ENDIF
     END
 
