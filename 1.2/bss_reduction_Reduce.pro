@@ -383,32 +383,15 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;retrieve current activated flag
 ;0:momentum transfer/1:negative cosine polar
 ButtonValue = getButtonValue(Event) 
+MinMaxWidthArray = getMTorNCPvalues(Event)
 IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
 ;first save fields value of Negative Cosine Polar Axis
-    MinMaxWidthArray = getMTorNCPvalues(Event)
     (*global).negative_cosine_polar = MinMaxWidthArray
     putMTorNCPvalues, (*global).momentum_transfer_array
-
-
-
-
-;work to do here
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ENDIF ELSE BEGIN
+    (*global).momentum_transfer_array = MinMaxWidthArray
+    putMTorNCPvalues, (*global).negative_cosine_polar
+ENDELSE
 END
 
 ;This function is reached by the mtha_min_text

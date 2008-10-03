@@ -60,7 +60,7 @@ endelse
 global = ptr_new ({ $
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
                     default_output_path: '~/',$
-                    negative_cosine_polar_array: STRARR(3),$
+                    negative_cosine_polar_array: ["-1.0","1.0","0.05"],$
                     momentum_transfer_array:     STRARR(3),$
                     DeployedVersion : DeployedVersion,$
                     DriverName : 'amorphous_reduction_sqe',$

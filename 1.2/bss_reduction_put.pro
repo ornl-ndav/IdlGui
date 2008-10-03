@@ -345,3 +345,10 @@ endif else begin
 endelse
 END
 
+;------------------------------------------------------------------------------
+PRO putMTorNCPvalues, text_array
+PutTextInTextField, Event, 'mtha_min_text', text_array[0]
+PutTextInTextField, Event, 'mtha_max_text', text_array[1]
+PutTextInTextField, Event, 'mtha_bin_text', text_array[2]
+END
+
