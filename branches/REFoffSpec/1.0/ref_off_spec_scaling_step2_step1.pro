@@ -70,10 +70,12 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
               YTITLE = ytitle,$
               COLOR  = color,$
               YRANGE = [0,ymax_value],$
-              XSTYLE = 1
+              XSTYLE = 1,$
+              PSYM   = 1
         ENDIF ELSE BEGIN
             oplot, t_data_to_plot, $
-              COLOR  = color
+              COLOR  = color,$
+              PSYM   = 1
         ENDELSE
         index++
     ENDWHILE

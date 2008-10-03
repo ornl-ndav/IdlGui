@@ -303,12 +303,6 @@ refresh_plotStep4Step1Selection, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO refresh_step4_step1_tab, Event
-;refresh plot
-refresh_step4_step1_plot, Event
-END
-
-;------------------------------------------------------------------------------
 PRO replotAsciiData_scaling_step1, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 

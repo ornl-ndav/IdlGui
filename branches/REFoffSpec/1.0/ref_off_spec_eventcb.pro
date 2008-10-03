@@ -93,7 +93,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
         IF (step4CurrTabSelect EQ 0) THEN BEGIN ;Pixel Range Selection
             IF((*global).something_to_plot) THEN BEGIN
-                refresh_step4_step1_tab, Event ;_scaling
+                refresh_step4_step1_plot, Event ;_scaling
             ENDIF
         ENDIF ELSE BEGIN ;scaling
 
@@ -127,7 +127,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         
         0: BEGIN ;step1 (pixel range selection)
             IF((*global).something_to_plot) THEN BEGIN
-                refresh_step4_step1_tab, Event
+                refresh_step4_step1_plot, Event
             ENDIF
         END
         

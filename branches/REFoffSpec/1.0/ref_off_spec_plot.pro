@@ -53,25 +53,29 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 nbr_plot = getNbrFiles(Event)
 
 ;retrieve data
-pData = (*(*global).pData_y)
+pData       = (*(*global).pData_y)
+pData_error = (*(*global).pData_y_error)
 j = 0
 WHILE (j  LT nbr_plot) DO BEGIN
     
-    fpData = FLOAT(*pData[j])
-    tfpData = TRANSPOSE(fpData)
-    
+    fpData        = FLOAT(*pData[j])
+    tfpData       = TRANSPOSE(fpData)
+    tfpData_error = TRANSPOSE(*pData_error[j])
+
 ;remove undefined values
     index = WHERE(~FINITE(tfpData),Nindex)
     IF (Nindex GT 0) THEN BEGIN
         tfpData[index] = 0
     ENDIF
     
-    *pData[j] = tfpData
+    *pData[j]       = tfpData
+    *pData_error[j] = tfpData_error
     ++j
 
 ENDWHILE
 
-(*(*global).pData_y) = pData
+(*(*global).pData_y)       = pData
+(*(*global).pData_y_error) = pData_error
 
 END
 

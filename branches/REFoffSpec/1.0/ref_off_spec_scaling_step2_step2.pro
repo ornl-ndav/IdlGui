@@ -50,21 +50,28 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     WSET,id_value
 
 ;array that will contain the counts vs wavelenght of each data file
-    IvsLambda_selection = (*(*global).IvsLambda_selection)
-    box_color           = (*global).box_color
-    t_data_to_plot      = *IvsLambda_selection[0]
-    color               = box_color[0]
+    IvsLambda_selection       = (*(*global).IvsLambda_selection)
+    IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+    box_color            = (*global).box_color
+    t_data_to_plot       = *IvsLambda_selection[0]
+    t_data_to_plot_error = *IvsLambda_selection_error[0]
+    color                = box_color[0]
     xrange = (*(*global).step4_step2_step1_xrange)
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
-    plot, xrange, $
+    PLOT, xrange, $
       t_data_to_plot, $
       XTITLE = xtitle, $
       YTITLE = ytitle,$
       COLOR  = color,$
       YRANGE = [0,ymax_value],$
-      XSTYLE = 1
+      XSTYLE = 1,$
+      PSYM   = 1
+    ERRPLOT, xrange,$
+      t_data_to_plot-t_data_to_plot_error,$
+      t_data_to_plot+t_data_to_plot_error,$
+      COLOR = 250
 ENDIF
 
 END
