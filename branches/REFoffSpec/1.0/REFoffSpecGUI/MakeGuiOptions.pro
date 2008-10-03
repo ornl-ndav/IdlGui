@@ -117,7 +117,7 @@ sBase = { size: [sScalingBase.size[2],$
                  30]}
 sErrorGroup = { list: ['YES','NO'],$
                 title: 'Plot data with error bars ',$
-                value: 0.0,$
+                value: 1.0,$
                 uname: 'plot_error_scaling_options'}
 
 ;Coverage of the selection ----------------------------------------------------

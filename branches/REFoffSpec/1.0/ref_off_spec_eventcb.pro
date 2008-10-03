@@ -91,13 +91,15 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     3: BEGIN ;scaling
         tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-        IF (step4CurrTabSelect EQ 0) THEN BEGIN ;Pixel Range Selection
-            IF((*global).something_to_plot) THEN BEGIN
+        IF((*global).something_to_plot) THEN BEGIN
+            IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
                 refresh_step4_step1_plot, Event ;_scaling
-            ENDIF
-        ENDIF ELSE BEGIN ;scaling
-
-        ENDELSE
+            ENDIF ELSE BEGIN    ;scaling_step2
+                display_step4_step2_step2_selection, $
+                  Event         ;scaling_step2_step1
+                plotLambdaSelected, Event ;scaling_step2_step2
+            ENDELSE
+        ENDIF
     END
 
     4: BEGIN ;options
