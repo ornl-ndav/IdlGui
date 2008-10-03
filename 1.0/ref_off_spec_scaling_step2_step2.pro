@@ -293,7 +293,46 @@ END
 ;------------------------------------------------------------------------------
 ;Reach by the Automatic fitting and scaling of step4/step2/step2
 PRO step4_2_2_automatic_fitting_scaling, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+PROCESSING = (*global).processing
+FAILED     = (*global).failed
+OK         = (*global).ok
+
+text = '> Automatic Fitting and Scaling :' 
+IDLsendToGeek_addLogBookText, Event, text
+
+;Display Lambda min and max values selected
+Lda_array = get_step4_step2_step2_lambda(Event)
+Lda_min   = Lda_array[0]
+Lda_max   = Lda_array[1]
+idl_send_to_geek_addLogBookText, Event, '--> Lambda min : ' + $
+  STRCOMPRESS(Lda_min,/REMOVE_ALL)
+idl_send_to_geek_addLogBookText, Event, '--> Lambda max : ' + $
+  STRCOMPRESS(Lda_max,/REMOVE_ALL)
+
+idl_send_to_geek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
+fit_error = 0
+CATCH, fit_error
+IF (fit_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+ENDIF ELSE BEGIN
+    Step4_step3_step2_fitCE, Event          ;scaling_step2_step2
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+ENDELSE
+
+
+
+
+
 
 END
 
 
+
+;------------------------------------------------------------------------------
+PRO Step4_step3_step2_fitCE, Event 
+
+END
