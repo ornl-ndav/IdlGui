@@ -82,7 +82,7 @@ sRefPixelSelection = { list: ['Y  ','X and Y'],$
 sFastSelectionMode = { list: ['YES','NO'],$
                        title: 'Fast Reference Pixel Selection Mode',$
                        uname: 'fast_selection_pixel_selection_mode',$
-                       value: 1.0}
+                       value: 0.0}
 sFastSelectionModeLabel = { value: '-> User is in charge of changing ' + $
                             'the active file.            ',$
                             uname: 'fast_active_file_options_label'}

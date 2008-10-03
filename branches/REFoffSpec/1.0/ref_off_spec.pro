@@ -116,8 +116,11 @@ global = ptr_new ({ ucams:               ucams,$
                     trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
+                    pData_y_error:       ptr_new(0L),$
                     realign_pData_y:     ptr_new(0L),$
-                    untouched_realign_pData_y: ptr_new(0L),$
+                    realign_pData_y_error: ptr_new(0L),$
+                    untouched_realign_pData_y:       ptr_new(0L),$
+                    untouched_realign_pData_y_error: ptr_new(0L),$
                     first_realign:       1,$
                     manual_ref_pixel:    0,$
                     pData_x:             ptr_new(0L),$

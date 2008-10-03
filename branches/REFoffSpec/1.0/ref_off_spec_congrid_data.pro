@@ -46,11 +46,12 @@ END
 PRO congrid_data, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-pData_x = (*(*global).pData_x)
-pData_y = (*(*global).pData_y)
+pData_x        = (*(*global).pData_x)
+pData_y        = (*(*global).pData_y)
+pData_y_error  = (*(*global).pData_y_error)
 
 ;determine the delta_x of each set of data
-sz = (size(pData_y))(1)
+sz      = (size(pData_y))(1)
 delta_x = FLTARR(sz)
 determine_delta_x, sz, pData_x, delta_x
 
@@ -87,46 +88,60 @@ WHILE (index LT sz) DO BEGIN
     ENDIF
     IF (coeff NE 1) THEN BEGIN
         congrid_x_coeff = current_x_max_size * congrid_coeff_array[index]
+;work on y
         congrid_y_coeff = (size(*pData_y[index]))(2)
         new_y_array = CONGRID((*pData_y[index]), $
                               FIX(congrid_x_coeff),$
                               congrid_y_coeff)
         *pData_y[index] = new_y_array        
+;work on y_error
+        congrid_y_error_coeff = congrid_y_coeff
+        new_y_error_array = CONGRID((*pData_y_error[index]), $
+                                    FIX(congrid_x_coeff),$
+                                    congrid_y_error_coeff)
+        *pData_y_error[index] = new_y_error_array        
     ENDIF
     ++index
 ENDWHILE
 
 ;triple the size of each array (except the first one)
-list_OF_files     = (*(*global).list_OF_ascii_files)
-nbr               = N_ELEMENTS(list_OF_files)
-realign_pData_y   = PTRARR(nbr,/ALLOCATE_HEAP)
+list_OF_files         = (*(*global).list_OF_ascii_files)
+nbr                   = N_ELEMENTS(list_OF_files)
+realign_pData_y       = PTRARR(nbr,/ALLOCATE_HEAP)
+realign_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
 
 index  = 0
 WHILE(index LT sz) DO BEGIN
     IF (index EQ 0) THEN BEGIN
         *realign_pData_y[index] = *pData_y[index]
+        *realign_pData_y_error[index] = *pData_y_error[index]
     ENDIF ELSE BEGIN
-        local_data   = *pData_y[index]
-        dim2         = (size(local_data))(1)
-        big_array    = STRARR(dim2,3*304L)
-        big_array[*,304L:2*304L-1] = local_data
-        *realign_pData_y[index] = big_array
+        local_data       = *pData_y[index]
+        local_data_error = *pData_y_error[index]
+        dim2             = (size(local_data))(1)
+        big_array        = STRARR(dim2,3*304L)
+        big_array_error  = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1]       = local_data
+        big_array_error[*,304L:2*304L-1] = local_data_error
+        *realign_pData_y[index]          = big_array
+        *realign_pData_y_error[index]    = big_array_error
     ENDELSE
     ++index
 ENDWHILE
 
-
 ;each new array pData_y (with congrid in x direction to share the same
 ;x-axis are store in pData_y
-(*(*global).pData_y) = pData_y
+(*(*global).pData_y)       = pData_y
+(*(*global).pData_y_error) = pData_y_error
 
 ;define new x-axis
 x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
 x_axis = FINDGEN(FIX(x_size)) * min_delta_x
 (*(*global).x_axis) = x_axis
 (*global).delta_x = x_axis[1]-x_axis[0]
-(*(*global).realign_pData_y) = realign_pData_y
-(*(*global).untouched_realign_pData_y) = realign_pData_y
-
+(*(*global).realign_pData_y)       = realign_pData_y
+(*(*global).realign_pData_y_error) = realign_pData_y_error
+(*(*global).untouched_realign_pData_y)       = realign_pData_y
+(*(*global).untouched_realign_pData_y_error) = realign_pData_y_error
 
 END

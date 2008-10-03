@@ -158,7 +158,7 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
-tfpData = (*(*global).realign_pData_y)
+tfpData       = (*(*global).realign_pData_y)
 
 ;retrieve data
 ; IF (N_ELEMENTS(ARRAY) EQ 0) THEN BEGIN
@@ -200,11 +200,11 @@ max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
 WHILE (index LT nbr_plot) DO BEGIN
     
-    local_tfpData = *tfpData[index]
+    local_tfpData       = *tfpData[index]
 
 ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-        local_tfpData = local_tfpData[*,304L:2*304L-1]
+        local_tfpData      = local_tfpData[*,304L:2*304L-1]
     ENDIF
     
 ;Applied attenuator coefficient 
@@ -218,10 +218,10 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisShiftingSelected(Event)
     IF (bLogPlot) THEN BEGIN
-        local_tfpData = ALOG10(local_tfpData)
+        local_tfpData       = ALOG10(local_tfpData)
         index_inf = WHERE(local_tfpData LT 0, nIndex)
         IF (nIndex GT 0) THEN BEGIN
-            local_tfpData[index_inf] = 0
+            local_tfpData[index_inf]       = 0
         ENDIF
     ENDIF
     
@@ -594,11 +594,14 @@ WIDGET_CONTROL,/HOURGLASS
 ; ENDELSE
 
 tfpData = (*(*global).realign_pData_y)
+tfpData_error = (*(*global).realign_pData_y_error)
+
 ;local_tfpData = local_tfpData[*,304L:2*304L-1]
 
 ;array of realign data
 Nbr_array = (size(tfpData))(1)
-realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 
 ;retrieve pixel offset
 ref_pixel_list = (*(*global).ref_pixel_list)
@@ -607,43 +610,58 @@ ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
 nbr = N_ELEMENTS(ref_pixel_list)
 IF (nbr GT 1) THEN BEGIN
 ;copy the first array
-    realign_tfpData[0] = tfpData[0]
+    realign_tfpData[0]       = tfpData[0]
+    realign_tfpData_error[0] = tfpData_error[0]
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
         ref_pixel_offset_list[index] += pixel_offset
         array        = *tfpData[index]
         array        = array[*,304L:2*304L-1]
+        array_error  = *tfpData_error[index]
+        array_error  = array_error[*,304L:2*304L-1]
         IF (pixel_offset EQ 0 OR $
             ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
-            realign_tfpData[index] = tfpData[index]
+            realign_tfpData[index]       = tfpData[index]
+            realign_tfpData_error[index] = tfpData_error[index]
         ENDIF ELSE BEGIN
             IF (pixel_offset GT 0) THEN BEGIN ;needs to move up
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
                 FOR i=303,pixel_offset,-1 DO BEGIN
-                    array[*,i] = array[*,i-pixel_offset]
+                    array[*,i]       = array[*,i-pixel_offset]
+                    array_error[*,i] = array_error[*,i-pixel_offset]
                 ENDFOR
 ;bottom pixel_offset number of row are initialized to 0
                 FOR j=0,pixel_offset DO BEGIN
-                    array[*,j] = 0
+                    array[*,j]       = 0
+                    array_error[*,j] = 0
                 ENDFOR
             ENDIF ELSE BEGIN    ;needs to move down
                 pixel_offset = ABS(pixel_offset)
                 FOR i=0,(303-pixel_offset) DO BEGIN
-                    array[*,i] = array[*,i+pixel_offset]
+                    array[*,i]       = array[*,i+pixel_offset]
+                    array_error[*,i] = array_error[*,i+pixel_offset]
                 ENDFOR
                 FOR j=303,303-pixel_offset,-1 DO BEGIN
-                    array[*,j] = 0
+                    array[*,j]       = 0
+                    array_error[*,j] = 0
                 ENDFOR
             ENDELSE
         ENDELSE
         
-        local_data   = array
+        local_data       = array
+        local_data_error = array_error
         dim2         = (size(local_data))(1)
         big_array    = STRARR(dim2,3*304L)
         big_array[*,304L:2*304L-1] = local_data
         *realign_tfpData[index] = big_array
+
+        big_array_error    = STRARR(dim2,3*304L)
+        big_array_error[*,304L:2*304L-1] = local_data_error
+        *realign_tfpData_error[index] = big_array_error
+
+
 ;change reference pixel from old to neatew position
         ref_pixel_list[index] = ref_pixel_list[0]
         ++index
@@ -651,9 +669,10 @@ IF (nbr GT 1) THEN BEGIN
 ENDIF
 
 (*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
-(*global).plot_realign_data  = 1
-(*(*global).realign_pData_y) = realign_tfpData
-(*(*global).ref_pixel_list)  = ref_pixel_list
+(*global).plot_realign_data        = 1
+(*(*global).realign_pData_y)       = realign_tfpData
+(*(*global).realign_pData_y_error) = realign_tfpData_error
+(*(*global).ref_pixel_list)        = ref_pixel_list
 
 ;plot realign Data
 plotAsciiData_shifting, Event
@@ -683,7 +702,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 WIDGET_CONTROL,/HOURGLASS
 (*global).plot_realign_data = 0
 
-(*(*global).realign_pData_y) = (*(*global).untouched_realign_pData_y)
+(*(*global).realign_pData_y)       = (*(*global).untouched_realign_pData_y)
+(*(*global).realign_pData_y_error) = $
+  (*(*global).untouched_realign_pData_y_error)
 
 ;plot realign Data
 plotAsciiData_shifting, Event
@@ -759,12 +780,15 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ; ENDELSE
 
 ;data of active file
-tfpData = (*(*global).realign_pData_y)
+tfpData               = (*(*global).realign_pData_y)
+tfpData_error         = (*(*global).realign_pData_y_error)
 ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
-manual_ref_pixel = ref_pixel_offset_list[index_to_work]
+manual_ref_pixel      = ref_pixel_offset_list[index_to_work]
 
 array = *tfpData[index_to_work]
 array = array[*,304L:2*304L-1]
+array_error = *tfpData_error[index_to_work]
+array_error = array_error[*,304L:2*304L-1]
 
 ;pixel_step += manual_ref_pixel
 ;(*global).manual_ref_pixel = pixel_step
@@ -786,20 +810,24 @@ WHILE (big_index LT nbr) DO BEGIN
 ;move up each row by pixel_offset
 ;needs to start from the top when the offset is positive
             FOR i=303,pixel_offset,-1 DO BEGIN
-                array[*,i] = array[*,i-pixel_offset]
+                array[*,i]       = array[*,i-pixel_offset]
+                array_error[*,i] = array_error[*,i-pixel_offset]
             ENDFOR
 ;bottom pixel_offset number of row are initialized to 0
             FOR j=0,pixel_offset DO BEGIN
-                array[*,j] = 0
+                array[*,j]       = 0
+                array_error[*,j] = 0
             ENDFOR
         ENDIF ELSE BEGIN        ;needs to move up
             IF (pixel_offset LT 0) THEN BEGIN
                 pixel_offset = ABS(pixel_offset)
                 FOR i=0,(303-pixel_offset) DO BEGIN
-                    array[*,i] = array[*,i+pixel_offset]
+                    array[*,i]       = array[*,i+pixel_offset]
+                    array_error[*,i] = array_error[*,i+pixel_offset]
                 ENDFOR
                 FOR j=303,303-pixel_offset,-1 DO BEGIN
-                    array[*,j] = 0
+                    array[*,j]       = 0
+                    array_error[*,j] = 0
                 ENDFOR
             ENDIF
         ENDELSE
@@ -810,18 +838,24 @@ WHILE (big_index LT nbr) DO BEGIN
         big_array    = STRARR(dim2,3*304L)
         big_array[*,304L:2*304L-1] = local_data
         *realign_tfpData[index_to_work] = big_array
+
+        big_array_error    = STRARR(dim2,3*304L)
+        big_array_error[*,304L:2*304L-1] = local_data_error
+        *realign_tfpData_error[index_to_work] = big_array_error
         
     ENDIF ELSE BEGIN            ;end of 'if (i EQ index_work)'
         
-        realign_tfpData[big_index] = tfpData[big_index]
+        realign_tfpData[big_index]       = tfpData[big_index]
+        realign_tfpData_error[big_index] = tfpData_error[big_index]
         
     ENDELSE
     ++big_index
 ENDWHILE
 
-(*(*global).realign_pData_y) = realign_tfpData
+(*(*global).realign_pData_y)         = realign_tfpData
+(*(*global).realign_pData_y_error)   = realign_tfpData_error
 ref_pixel_offset_list[index_to_work] = pixel_step
-(*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
+(*(*global).ref_pixel_offset_list)   = ref_pixel_offset_list
 
 ;plot realign Data
 plotAsciiData_shifting, Event
