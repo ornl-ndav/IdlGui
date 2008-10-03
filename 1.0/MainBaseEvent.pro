@@ -480,6 +480,7 @@ CASE Event.id OF
                 ENDIF ELSE BEGIN
                     refresh_plotStep4Step1Selection, Event
                 ENDELSE
+                save_y_error_step4_step1_plot2d, Event ;scaling_step1_plot2d
             ENDIF
         ENDIF
     END

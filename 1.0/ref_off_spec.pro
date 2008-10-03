@@ -137,9 +137,10 @@ global = ptr_new ({ ucams:               ucams,$
                     plot2d_y_left:       0,$
                     plot2d_x_right:      0,$
                     plot2d_y_right:      0,$
-                    step4_step2_step1_xrange: PTR_NEW(0L),$
-                    step4_step2_data_to_plot: PTR_NEW(0L),$
-                    IvsLambda_selection: PTR_NEW(0L),$
+                    step4_step2_step1_xrange:  PTR_NEW(0L),$
+                    step4_step2_data_to_plot:  PTR_NEW(0L),$
+                    IvsLambda_selection:       PTR_NEW(0L),$
+                    IvsLambda_selection_error: PTR_NEW(0L),$
                     step4_step1_ymax_value: 0L,$
                     w_shifting_plot2d_draw_uname: '',$
                     w_scaling_plot2d_draw_uname: '',$
