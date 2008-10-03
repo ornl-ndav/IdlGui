@@ -68,10 +68,12 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
       YRANGE = [0,ymax_value],$
       XSTYLE = 1,$
       PSYM   = 1
-    ERRPLOT, xrange,$
-      t_data_to_plot-t_data_to_plot_error,$
-      t_data_to_plot+t_data_to_plot_error,$
-      COLOR = 250
+    IF (isWithScalingErrorBars(Event)) THEN BEGIN
+        ERRPLOT, xrange,$
+          t_data_to_plot-t_data_to_plot_error,$
+          t_data_to_plot+t_data_to_plot_error,$
+          COLOR = 250
+    ENDIF
 ENDIF
 
 END
