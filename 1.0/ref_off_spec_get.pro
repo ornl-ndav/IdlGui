@@ -160,3 +160,9 @@ lambda_left  = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
 lambda_right = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
 RETURN,[lambda_left,lambda_right]
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step1SelectionPixelRange, Event
+value = getTextFieldValue(Event,'selection_coverage_step4_step1')
+RETURN, FIX(value)
+END

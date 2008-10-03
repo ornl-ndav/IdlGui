@@ -276,7 +276,7 @@ wSelectionCoverage = CW_FIELD(wBase2,$
                          UNAME     = sSelectionCoverage.uname,$
                          VALUE     = sSelectionCoverage.value,$
                          TITLE     = sSelectionCoverage.title,$
-                         /FLOATING,$
+                         /INTEGER,$
                          /ROW)
 
 

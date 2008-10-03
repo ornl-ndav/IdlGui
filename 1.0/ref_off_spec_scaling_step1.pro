@@ -476,7 +476,7 @@ END
 FUNCTION check_IF_click_OR_move_situation, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 xy_position    = (*global).step4_step1_selection
-pixel_range    = (*global).step4_step1_selection_pixel_range
+pixel_range    = getStep4Step1SelectionPixelRange(Event)
 current_x      = Event.x
 current_y      = Event.y
 ;this make sure that we are not outside the window
@@ -510,7 +510,7 @@ y1 = xy_position[1]
 x2 = xy_position[2]
 y2 = xy_position[3]
 
-pixel_range    = (*global).step4_step1_selection_resize_range
+pixel_range    = getStep4Step1SelectionPixelRange(Event)
 current_x      = Event.x
 current_y      = Event.y
 
@@ -594,7 +594,7 @@ IF (ResizeOrMove EQ 'move') THEN BEGIN
 
 ENDIF ELSE BEGIN
 
-    pixel_range     = (*global).step4_step1_selection_pixel_range
+    pixel_range     = getStep4Step1SelectionPixelRange(Event)
     fix_corner      = (*global).fix_corner
     corner_selected = (*global).corner_selected
 
