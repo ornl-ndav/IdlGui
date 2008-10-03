@@ -376,6 +376,41 @@ END
 PRO BSSreduction_Reduce_gifw_error_text, Event
 END
 
+;Momentum Transfer Histogram Axis (1/Angstroms) and Negative Cosine -----------
+;Polar
+PRO BSSreduction_Reduce_mtha_button, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;retrieve current activated flag
+;0:momentum transfer/1:negative cosine polar
+ButtonValue = getButtonValue(Event) 
+IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
+;first save fields value of Negative Cosine Polar Axis
+    MinMaxWidthArray = getMTorNCPvalues(Event)
+    (*global).negative_cosine_polar = MinMaxWidthArray
+    putMTorNCPvalues, (*global).momentum_transfer_array
+
+
+
+
+;work to do here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END
+
 ;This function is reached by the mtha_min_text
 PRO BSSreduction_Reduce_mtha_min_text, Event
 END

@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.16'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -60,6 +60,8 @@ endelse
 global = ptr_new ({ $
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
                     default_output_path: '~/',$
+                    negative_cosine_polar_array: STRARR(3),$
+                    momentum_transfer_array:     STRARR(3),$
                     DeployedVersion : DeployedVersion,$
                     DriverName : 'amorphous_reduction_sqe',$
                     DRstatusOK : 'Data Reduction ... DONE',$
@@ -371,9 +373,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
-;tab #5
     id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-    widget_control, id1, set_tab_current = 4
+    widget_control, id1, set_tab_current = 6
 ENDIF
 
 ;give extra power to j35, 2zr, ele, z3i, eg9

@@ -1,8 +1,42 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO MakeGuiReduceInputTab7, ReduceInputTab, ReduceInputTabSettings
 
-;***********************************************************************************
+;******************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
+;******************************************************************************
 
 ;/////////////////////////////////////////////
 ;Constant for Scaling the Final Data Spectrum/
@@ -16,7 +50,8 @@ CSFDSbase = { size : [CSFDSframe.size[0]+XYoff1[0],$
                       295,$
                       30],$
               button : { uname : 'csfds_button',$
-                         list : ['Constant for Scaling the Final Data Spectrum'],$
+                         list : ['Constant for Scaling the Final' + $
+                                 ' Data Spectrum'],$
                          value : 0}}
 
 XYoff2 = [10,25]
@@ -173,20 +208,22 @@ EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
                 uname : 'eha_bin_text',$
                 sensitive : EHAbase.button.value}
 
-;//////////////////////////////////////////////
-;Momentum Transfer Histogram Axis (1/Angstroms)
-;//////////////////////////////////////////////
+;/////////////////////////////////////////////////////////////////////////
+;Momentum Transfer Histogram Axis (1/Angstroms) and Negative Cosine Polar/
+;/////////////////////////////////////////////////////////////////////////
 MTHAframe = { size : [EHAframe.size[0],$
                       EHAframe.size[1]+yoff,$
                       EHAframe.size[2:3]],$
               frame : EHAframe.frame}
-XYoff1 = [10,-8]
+XYoff1 = [10,-15]
 MTHAbase = { size : [MTHAframe.size[0]+XYoff1[0],$
                      MTHAframe.size[1]+XYoff1[1],$
-                     290,$
-                     25],$
+                     500,$
+                     30],$
              button : { uname : 'mtha_button',$
-                       list : [' Momentum Transfer Histogram Axis (1/Angstroms)'],$
+                        list : [' Momentum Transfer Histogram ' + $
+                                'Axis (1/Angstroms)',$
+                               ' Negative Cosine Polar Axis'],$
                        value : 1}}
 
 XYoff2 = [10,25]
@@ -241,7 +278,8 @@ GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
                      308,$
                      30],$
              button : { uname : 'gifw_button',$
-                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
+                        list : ['Global Instrument Final Wavelength ' + $
+                                '(Angstroms)'],$
                         value : 0}}
 
 XYoff2 = [10,25]
@@ -270,9 +308,9 @@ GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
                    uname : 'gifw_error_text',$
                    sensitive : GIFWbase.button.value}
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 tab6_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
@@ -582,9 +620,9 @@ frame  = WIDGET_LABEL(tab6_base,$
                       FRAME     = GIFWframe.frame,$
                       VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Momentum Transfer Histogram Axis
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;/////////////////////////////////////////////////////////////////////////
+;Momentum Transfer Histogram Axis (1/Angstroms) and Negative Cosine Polar/
+;/////////////////////////////////////////////////////////////////////////
 
 base = WIDGET_BASE(tab6_base,$
                    XOFFSET   = MTHAbase.size[0],$
@@ -592,10 +630,14 @@ base = WIDGET_BASE(tab6_base,$
                    SCR_XSIZE = MTHAbase.size[2],$
                    SCR_YSIZE = MTHAbase.size[3])
 
-label = WIDGET_LABEL(base,$
-                     VALUE = MTHAbase.button.list[0],$
-                     UNAME = MTHAbase.button.uname)
-                     
+group = CW_BGROUP(base,$
+                  MTHAbase.button.list,$
+                  UNAME      = MTHAbase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NO_RELEASE,$
+                  /EXCLUSIVE)
+
 label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = MTHAminLabel.size[0],$
                      YOFFSET   = MTHAminLabel.size[1],$
