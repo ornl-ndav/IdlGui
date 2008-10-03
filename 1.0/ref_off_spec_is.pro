@@ -80,3 +80,11 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='two_d_selection_plot_mode')
 value = WIDGET_INFO(id, /BUTTON_SET)
 RETURN, value
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isWithScalingErrorBars, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='plot_error_scaling_options')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN RETURN, 1
+RETURN, 0
+END

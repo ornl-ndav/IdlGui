@@ -53,7 +53,7 @@ sShiftingBase = { size: [XYoff[0],$
 XYoff = [15,-8] ;label
 sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
                           sShiftingBase.size[1]+XYoff[1]],$
-                   value: '3/ Shifting'}
+                   value: '3/ SHIFTING'}
 
 ;Use or not transparency coefficient ------------------------------------------
 sBase = { size: [sShiftingBase.size[2],$
@@ -93,6 +93,39 @@ sTypeOfSelection = { list: ['_____  ','.  .  .  ','- - -  ',' -.-.-  ', $
                      uname: 'plot_2d_selection_type',$
                      value: 4.0,$
                      title: 'Plot2D Selection Style              '}
+
+;Scaling base ----------------------------------------------------------------
+XYoff = [0,18] ;base
+sScalingBase = { size: [sShiftingBase.size[0]+XYoff[0],$
+                        sShiftingBase.size[1]+$
+                        sShiftingBase.size[3]+XYoff[1],$
+                        702,200],$
+                 uname: 'scaling_base_options',$
+                 frame: 1}
+
+XYoff = [15,-8]                 ;label
+sScalingLabel = { size: [sScalingBase.size[0]+XYoff[0],$
+                         sScalingBase.size[1]+XYoff[1]],$
+                  value: '4/ SCALING'}
+
+;main horizontal base ---------------------------------------------------------
+sBaseHorizontal = { size: [sScalingBase.size[2],$
+                           30]}
+
+;Plot data with or without error bars -----------------------------------------
+sBase = { size: [sScalingBase.size[2],$
+                 30]}
+sErrorGroup = { list: ['YES','NO'],$
+                title: 'Plot data with error bars ',$
+                value: 0.0,$
+                uname: 'plot_error_scaling_options'}
+
+;Coverage of the selection ----------------------------------------------------
+sSelectionCoverage = { size: [2,1],$
+                       value: 5,$
+                       uname: 'selection_coverage_step4_step1',$
+                       title: 'Precision in pixel of mouse click ' + $
+                       'selection (move/resize) '}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -191,4 +224,60 @@ wTypeOfSelection = CW_BGROUP(wBase5,$
                              SET_VALUE  = sTypeOfSelection.value,$
                              /ROW,$
                              /EXCLUSIVE)
+
+;==============================================================================
+;Scaling base and label -------------------------------------------------------
+wScalingLabel = WIDGET_LABEL(BaseTab,$
+                              XOFFSET = sScalingLabel.size[0],$
+                              YOFFSET = sScalingLabel.size[1],$
+                              VALUE   = sScalingLabel.value)
+
+wScalingBase = WIDGET_BASE(BaseTab,$
+                            XOFFSET   = sScalingBase.size[0],$
+                            YOFFSET   = sScalingBase.size[1],$
+                            SCR_XSIZE = sScalingBase.size[2],$
+                            SCR_YSIZE = sScalingBase.size[3],$
+                            UNAME     = sScalingBase.uname,$
+                            FRAME     = sScalingBase.frame,$
+                            /BASE_ALIGN_LEFT,$
+                            /COLUMN)
+
+label = WIDGET_LABEL(wScalingBase,$
+                     value = '')
+
+;main horizontal base ---------------------------------------------------------
+wBaseHorizontal = WIDGET_BASE(wScalingBase,$
+                              XOFFSET = sBaseHorizontal.size[0],$
+                              YOFFSET = sBaseHorizontal.size[1],$
+                              /ROW)
+
+;Plot data with or without error bars -----------------------------------------
+sBase1 = WIDGET_BASE(wBaseHorizontal,$
+                     FRAME = 1,$
+                     /ROW)
+
+wErrorGroup = CW_BGROUP(sBase1,$,$
+                        sErrorGroup.list,$
+                        LABEL_LEFT = sErrorGroup.title,$
+                        UNAME      = sErrorGroup.uname,$
+                        SET_VALUE  = sErrorGroup.value,$
+                        /NO_RELEASE,$
+                        /ROW,$
+                        /EXCLUSIVE)
+
+;Coverage of the selection ----------------------------------------------------
+wBase2 = WIDGET_BASE(wBaseHorizontal,$
+                     FRAME = 1,$
+                     /ROW)
+
+wSelectionCoverage = CW_FIELD(wBase2,$
+                         XSIZE     = sSelectionCoverage.size[0],$
+                         YSIZE     = sSelectionCoverage.size[1],$
+                         UNAME     = sSelectionCoverage.uname,$
+                         VALUE     = sSelectionCoverage.value,$
+                         TITLE     = sSelectionCoverage.title,$
+                         /FLOATING,$
+                         /ROW)
+
+
 END
