@@ -386,11 +386,11 @@ ButtonValue = getButtonValue(Event)
 MinMaxWidthArray = getMTorNCPvalues(Event)
 IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
 ;first save fields value of Negative Cosine Polar Axis
-    (*global).negative_cosine_polar = MinMaxWidthArray
-    putMTorNCPvalues, (*global).momentum_transfer_array
+    (*global).negative_cosine_polar_array = MinMaxWidthArray
+    putMTorNCPvalues, Event, (*global).momentum_transfer_array
 ENDIF ELSE BEGIN
     (*global).momentum_transfer_array = MinMaxWidthArray
-    putMTorNCPvalues, (*global).negative_cosine_polar
+    putMTorNCPvalues, Event, (*global).negative_cosine_polar_array
 ENDELSE
 END
 
