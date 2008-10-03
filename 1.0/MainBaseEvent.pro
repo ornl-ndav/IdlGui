@@ -449,6 +449,7 @@ CASE Event.id OF
                 ENDIF ELSE BEGIN ;resize or move
                     save_fix_corner, Event ;scaling_step1
                 ENDELSE
+                reset_step4_2_2_selection, Event ;scaling_step2_step2
             ENDIF               ;end of left click
             
 ;move mouse -------------------------------------------------------
@@ -610,6 +611,12 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_lambda2_text_field'): BEGIN
         manual_lambda_input, Event ;scaling_step4_step2
+    END
+
+;Automatic fitting and scaling of data ----------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_2_auto_button'): BEGIN
+        step4_2_2_automatic_fitting_scaling, Event ;scaling_step4_step2
     END
 
 ;------------------------------------------------------------------------------

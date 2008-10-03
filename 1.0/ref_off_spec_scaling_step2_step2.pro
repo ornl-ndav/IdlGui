@@ -263,8 +263,8 @@ nbr_elements = N_ELEMENTS(xrange)
 xmax         = xrange[nbr_elements-1]
 xmin         = xrange[0]
 
-ratio        = (FLOAT(xmax) - FLOAT(xmin))/(FLOAT(gr_xmax) - FLOAT(gr_xmin))
-ratio        = 1/ratio
+ratio          = (FLOAT(xmax) - FLOAT(xmin))/(FLOAT(gr_xmax) - FLOAT(gr_xmin))
+ratio          = 1/ratio
 Lambda_value_1 = (FLOAT(lambda_array[0]) - xmin) * ratio + gr_xmin
 Lambda_value_2 = (FLOAT(lambda_array[1]) - xmin) * ratio + gr_xmin
 
@@ -277,3 +277,23 @@ display_step4_step2_step2_selection, Event
 plotLambdaSelected, Event
 
 END
+
+;------------------------------------------------------------------------------
+;this function is reached each time the user changes the selection of step1
+PRO reset_step4_2_2_selection, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+(*global).step4_2_2_lambda_array = [0,0]
+putTextFieldValue, Event, 'step4_2_2_lambda1_text_field', ''
+putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', ''
+
+
+END
+
+;------------------------------------------------------------------------------
+;Reach by the Automatic fitting and scaling of step4/step2/step2
+PRO step4_2_2_automatic_fitting_scaling, Event
+
+END
+
+
