@@ -40,8 +40,8 @@ RETURN, TextFieldValue
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getButtonValue, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='mtha_button')
+FUNCTION getButtonValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=status
 RETURN, status
 END

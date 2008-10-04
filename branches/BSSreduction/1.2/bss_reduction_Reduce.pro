@@ -382,7 +382,7 @@ PRO BSSreduction_Reduce_mtha_button, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;retrieve current activated flag
 ;0:momentum transfer/1:negative cosine polar
-ButtonValue = getButtonValue(Event) 
+ButtonValue = getButtonValue(Event,'mtha_button')
 MinMaxWidthArray = getMTorNCPvalues(Event)
 IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
 ;first save fields value of Negative Cosine Polar Axis
