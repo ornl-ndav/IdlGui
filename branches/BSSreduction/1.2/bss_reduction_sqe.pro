@@ -376,7 +376,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
     id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-    widget_control, id1, set_tab_current = 6
+    widget_control, id1, set_tab_current = 7
 ENDIF
 
 ;give extra power to j35, 2zr, ele, z3i, eg9

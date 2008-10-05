@@ -916,6 +916,11 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
+;Pixel Wavelength Spectra After Vanadium Normalization -------------------------
+    Widget_Info(wWidget, FIND_BY_UNAME='pwsavn_button'): begin
+        BSSreduction_Reduce_pwsavn_button, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
     
 ;Start Data Reduction
     Widget_Info(wWidget, FIND_BY_UNAME='submit_button'): begin
