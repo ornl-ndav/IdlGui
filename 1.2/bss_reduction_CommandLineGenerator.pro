@@ -1714,37 +1714,45 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
             ++tab8
-        ENDIF ELSE BEGIN
+         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WABwidth,/remove_all)
-        ENDELSE
-        
-    ENDIF
-
-ENDIF
+         ENDELSE
+     ENDIF
+ ENDIF
 
 IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
 
 ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
-    IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
-        cmd += ' --dump-dslin'
-        (*global).Configuration.Reduce.tab8.wolidsb_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wolidsb_button = 0
-    ENDELSE
-    
+   IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
+      cmd += ' --dump-dslin'
+      (*global).Configuration.Reduce.tab8.wolidsb_button = 1
+   ENDIF ELSE BEGIN
+      (*global).Configuration.Reduce.tab8.wolidsb_button = 0
+   ENDELSE
+   
+ENDIF
+
+IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+; Write out Pixel Wavelength Spectra After Vanadium Normalization -------------
+   IF (isButtonSelected(Event,'pwsavn_button')) THEN BEGIN
+      cmd += ' --dump-norm'
+;      (*global).Configuration.Reduce.tab8.wolidsb_button = 1
+   ENDIF ELSE BEGIN
+;      (*global).Configuration.Reduce.tab8.wolidsb_button = 0
+   ENDELSE
 ENDIF
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
 
 ;validate or not Go data reduction button
-if (StatusMessage NE 0) then begin ;do not activate button
+IF (StatusMessage NE 0) THEN BEGIN ;do not activate button
     activate = 0
-endif else begin
+ ENDIF ELSE BEGIN
     activate = 1
-endelse
-
+ ENDELSE
+ 
 Activate_button, Event,'submit_button',activate
 
 END

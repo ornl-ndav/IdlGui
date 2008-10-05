@@ -417,12 +417,13 @@ button_array = ['woctib_button',$
                 'womes_button',$
                 'worms_button',$
                 'wocpsamn_button',$
-                'wopies_button',$
-                'wopets_button',$
-                'wolidsb_button']
+;                'wopies_button',$
+;                'wopets_button',$
+                'wolidsb_button',$
+                'pwsavn_button']
 sz = (size(button_array))(1)
 FOR i=0,(sz-1) DO BEGIN
-    SetButton, event, button_array[i], 1
+     SetButton, event, button_array[i], 1
 ENDFOR
 BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button'
 ENDIF
@@ -517,6 +518,15 @@ END
 ;This function is reached by wodwsm_button
 PRO BSSreduction_Reduce_wodwsm_button, Event
 IF (isButtonSelected(Event, 'wodwsm_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
+END
+
+;Pixel Wavelength Spectra After Vanadium Normalization -------------------------
+;This function is reached by the pwsavn_button
+PRO BSSreduction_Reduce_pwsavn_button, Event
+IF (isButtonSelected(Event, 'pwsavn_button') NE 1 AND $
     isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
     SetButton, event, 'waio_button', 0
 ENDIF

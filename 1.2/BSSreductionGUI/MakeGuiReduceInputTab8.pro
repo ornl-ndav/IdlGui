@@ -1,8 +1,42 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO MakeGuiReduceInputTab8, ReduceInputTab, ReduceInputTabSettings
 
-;***********************************************************************************
+;*******************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
+;*******************************************************************************
 
 ;//////////////////////////////
 ;Write all intermediate output/
@@ -26,7 +60,8 @@ WOCTIBbase = { size  : [WAIOBase.size[0], $
 NA_WOCTIBbase = { size : [WOCTIBbase.size[0]+5,$
                           WOCTIBbase.size[1]-5,$
                           WOCTIBbase.size[2:3]],$
-                  value : 'Calculated Time-Independent Background - NOT AVAILABLE',$
+                  value : 'Calculated Time-Independent Background - NOT ' + $
+                  'AVAILABLE',$
                   uname : 'na_woctibbase'}
                           
 ;///////////////////////////////////
@@ -76,7 +111,8 @@ WORMSbase = { size  : [WOMESbase.size[0], $
                        WOMESbase.size[1]+yoff, $
                        WOMESbase.size[2:3]],$
               button : { uname : 'worms_button',$
-                         list : [' Write Out Rebinned Monitor Spectra (WARNING:' + $
+                         list : [' Write Out Rebinned Monitor' + $
+                                 ' Spectra (WARNING:' + $
                                  ' VERY LARGE FILE AND SLOW)']}}
 
 NA_WORMSbase = { size : [WORMSbase.size[0]+5,$
@@ -157,7 +193,8 @@ WOLIDSBbase = { size  : [WHAbase.size[0], $
                         WHAbase.size[2:3]],$
                 button : { uname : 'wolidsb_button',$
                            list : [' Write Out Linearly Interpolated Direct' + $
-                                   ' Scattering Background Information Summed' + $
+                                   ' Scattering Background Information ' + $
+                                   'Summed' + $
                                    ' over all Pixels']}}
 
 NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
@@ -167,9 +204,29 @@ NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
                    'Information Summed over all Pixels - NOT AVAILABLE',$
                   uname : 'na_wolidsbbase'}
 
-;***********************************************************************************
+;/////////////////////////////////////////////////////////////
+;Pixel Wavelength Spectra After Vanadium Normalization -------
+;/////////////////////////////////////////////////////////////
+yoff = 50
+sPWSAVNbase = { size  : [wOLIDSBbase.size[0], $
+                         wOLIDSBbase.size[1]+yoff, $
+                         WOLIDSBbase.size[2:3]],$
+                button : { uname : 'pwsavn_button',$
+                           list : [' Write Out Pixel Wavelength Spectra' + $
+                                   ' after Vanadium Normalization ' + $
+                                   '(WARNING: ' + $
+                                   'VERGY LARGE FILES AND SLOW)']}}
+
+sNA_PWSAVNbase = { size : [sPWSAVNbase.size[0]+5,$
+                           sPWSAVNbase.size[1]-5,$
+                           sPWSAVNbase.size[2:3]],$
+                   value : 'Pixel Wavelength Spectra after Vanadium' + $
+                   ' Normalization - NOT AVAILABLE',$
+                uname : 'na_pwsavnbase'}
+
+;*******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;*******************************************************************************
 tab7_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
@@ -448,4 +505,31 @@ group = CW_BGROUP(base,$
                   SET_VALUE  = 0,$
                   ROW        = 1)
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Pixel Wavelength Spectra After Vanadium Normalization -------
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = sNA_PWSAVNbase.uname,$
+                      XOFFSET   = sNA_PWSAVNbase.size[0],$
+                      YOFFSET   = sNA_PWSAVNbase.size[1],$
+                      SCR_XSIZE = sNA_PWSAVNbase.size[2],$
+                      SCR_YSIZE = sNA_PWSAVNbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = sNA_PWSAVNbase.value)
+
+base = WIDGET_BASE(tab7_base,$
+                   XOFFSET   = sPWSAVNbase.size[0],$
+                   YOFFSET   = sPWSAVNbase.size[1],$
+                   SCR_XSIZE = sPWSAVNbase.size[2],$
+                   SCR_YSIZE = sPWSAVNbase.size[3])
+
+group = CW_BGROUP(base,$
+                  sPWSAVNbase.button.list,$
+                  UNAME      = sPWSAVNbase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1)
 END
