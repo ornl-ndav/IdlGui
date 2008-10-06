@@ -315,23 +315,33 @@ IDLsendToGeek_addLogBookText, Event, text
 Lda_array = get_step4_step2_step2_lambda(Event)
 Lda_min   = Lda_array[0]
 Lda_max   = Lda_array[1]
-idl_send_to_geek_addLogBookText, Event, '--> Lambda min : ' + $
+IDLsendToGeek_addLogBookText, Event, '--> Lambda min : ' + $
   STRCOMPRESS(Lda_min,/REMOVE_ALL)
-idl_send_to_geek_addLogBookText, Event, '--> Lambda max : ' + $
+IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
   STRCOMPRESS(Lda_max,/REMOVE_ALL)
 
-idl_send_to_geek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
+IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
-CATCH, fit_error
+;CATCH, fit_error ;REMOVE_ME (comments)
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
-    Step4_step3_step2_fitCE, Event          ;scaling_step2_step2
-    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
+    Step4_step3_step2_fitCE, Event, lda_min, lda_max ;scaling_step2_step2
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO Step4_step3_step2_fitCE, Event 
+PRO Step4_step3_step2_fitCE, Event, lda_min, lda_max
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get x-axis
+xaxis = (*(*global).x_axis)
+print, xaxis
+;get index where lda_min and lda_max are
+lda_index = getArrayRangeFromlda1lda2(xaxis, lda_min, lda_max)
+print, lda_index
+
+
 END
