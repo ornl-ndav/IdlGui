@@ -160,6 +160,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         ENDIF
     ENDIF
 
+    psym = getStep4Step2PSYMselected(Event)
     IF (index EQ 0) THEN BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
         t_data_to_plot = total(data_to_plot,2)
@@ -174,7 +175,7 @@ WHILE (index LT nbr_plot) DO BEGIN
           YTITLE = ytitle,$
           COLOR  = color,$
           YRANGE = [0,ymax_value],$
-          PSYM   = 1,$
+          PSYM   = psym,$
           XSTYLE = 1
     ENDIF ELSE BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
@@ -182,7 +183,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         t_data_to_plot = total(data_to_plot,2)
         oplot, t_data_to_plot, $
           COLOR  = color,$
-          PSYM   = 1
+          PSYM   = psym
     ENDELSE
     index++
 ENDWHILE

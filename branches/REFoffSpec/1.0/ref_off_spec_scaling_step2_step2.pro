@@ -60,6 +60,7 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
+    psym = getStep4Step2PSYMselected(Event)
     PLOT, xrange, $
       t_data_to_plot, $
       XTITLE = xtitle, $
@@ -67,7 +68,7 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
       COLOR  = color,$
       YRANGE = [0,ymax_value],$
       XSTYLE = 1,$
-      PSYM   = 1
+      PSYM   = psym
     IF (isWithScalingErrorBars(Event)) THEN BEGIN
         ERRPLOT, xrange,$
           t_data_to_plot-t_data_to_plot_error,$
@@ -75,7 +76,6 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
           COLOR = 250
     ENDIF
 ENDIF
-
 END
 
 ;------------------------------------------------------------------------------
@@ -296,7 +296,6 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 putTextFieldValue, Event, 'step4_2_2_lambda1_text_field', ''
 putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', ''
 
-
 END
 
 ;------------------------------------------------------------------------------
@@ -331,17 +330,8 @@ ENDIF ELSE BEGIN
     Step4_step3_step2_fitCE, Event          ;scaling_step2_step2
     idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
-
-
-
-
-
-
 END
-
-
 
 ;------------------------------------------------------------------------------
 PRO Step4_step3_step2_fitCE, Event 
-
 END
