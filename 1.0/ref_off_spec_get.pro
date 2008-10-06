@@ -172,3 +172,53 @@ FUNCTION getStep4Step2PSYMselected, Event
 value = getCWBgroupValue(Event,'plot_2d_symbol')
 RETURN, value+1
 END
+
+;------------------------------------------------------------------------------
+;This function takes array as an argument and will
+;return the first index  >= lda1 and the last one <=lda2
+;To determine in which order the search should be done (increasing
+;or decreasing order) the first and last argument will be checked first
+FUNCTION getArrayRangeFromlda1lda2, data, lda1, lda2
+
+FirstValue = data[0]
+data_size  = (size(data))[1]
+LastValue  = data[data_size-1]
+
+left_index  = 0
+right_index = (data_size-1)
+
+found_left_index = 0
+IF (FirstValue LT LastValue) THEN BEGIN ;increasing order
+    FOR i=0,(data_size-1) DO BEGIN
+        IF (found_left_index EQ 0) THEN BEGIN
+            IF (data[i] GE lda1) THEN BEGIN
+                left_index       = i
+                found_left_index = 1
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (data[i] GT lda2) THEN BEGIN
+                right_index = i-1
+                BREAK
+            ENDIF
+        ENDELSE
+    ENDFOR
+ENDIF ELSE BEGIN                ;decreasing order
+    FOR i=0,(data_size-1) DO BEGIN
+        IF (found_left_index EQ 0) THEN BEGIN
+            IF (data[i] LE lda2) THEN BEGIN
+                left_index       = i
+                found_left_index = 1
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (data[i] LT lda1) THEN BEGIN
+                right_index = i-1
+                BREAK
+            ENDIF
+        ENDELSE
+    ENDFOR
+ENDELSE          
+returnArray = [left_index, right_index]
+RETURN, returnArray
+END
+
+;------------------------------------------------------------------------------

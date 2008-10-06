@@ -165,7 +165,9 @@ WHILE (index LT nbr_plot) DO BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
         t_data_to_plot = total(data_to_plot,2)
         sz = N_ELEMENTS(t_data_to_plot)
-        xrange = INDGEN(sz) + xmin
+        xaxis = (*(*global).x_axis)
+        delta_x = xaxis[1]-xaxis[0]
+        xrange = (FINDGEN(sz)+ xmin) * delta_x
         (*(*global).step4_step2_step1_xrange) = xrange
         xtitle = 'Wavelength'
         ytitle = 'Counts'
