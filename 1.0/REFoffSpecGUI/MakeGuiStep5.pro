@@ -32,64 +32,26 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiMainBase, MAIN_BASE, global
-
-MainBaseSize = (*global).MainBaseSize
+PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
 
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
 
-XYoff = [0,0]
-sMainTabSize = {size : [XYoff[0], $
-                        XYoff[1],$
-                        MainBaseSize[2], $
-                        MainBaseSize[3]],$
-                uname : 'main_tab'}
-
-;Tab titles
-TabTitles = { step1:     ' 1/ REDUCTION',$
-              step2:     ' 2/ LOADING ',$
-              step3:     ' 3/ SHIFTING ',$
-              step4:     ' 4/ SCALING ',$
-              step5:     ' 5/ CREATE OUTPUT ',$
-              options:   ' OPTIONS ',$
-              log_book:  ' LOG BOOK '}
-
+sBaseTab = { size:  tab_size,$
+             uname: 'step5_tab_base',$
+             title: TabTitles.step5}
+                         
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
 
-;build widgets
-MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTabSize.size[0],$
-                      YOFFSET   = sMainTabSize.size[1],$
-                      SCR_XSIZE = sMainTabSize.size[2],$
-                      SCR_YSIZE = sMainTabSize.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
-
-;step1
-make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;step2
-make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step3
-make_gui_step3, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step4
-make_gui_step4, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;step5
-make_gui_step5, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;options
-make_gui_options, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;Build LogBook
-make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
+BaseTab = WIDGET_BASE(REDUCE_TAB,$
+                      UNAME     = sBaseTab.uname,$
+                      XOFFSET   = sBaseTab.size[0],$
+                      YOFFSET   = sBaseTab.size[1],$
+                      SCR_XSIZE = sBaseTab.size[2],$
+                      SCR_YSIZE = sBaseTab.size[3],$
+                      TITLE     = sBaseTab.title)
 
 END
