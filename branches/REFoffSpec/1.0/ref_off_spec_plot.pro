@@ -138,9 +138,6 @@ ENDELSE
 y_coeff = 2
 x_coeff = 1
 
-;help, *tfpData[0]  -> [1089,304]
-;help, *tfpData[1]  -> [565,304]
-
 ;check which array is the biggest (index)
 ;this array will be the base for the other array (xaxis will be based
 ;on this array
