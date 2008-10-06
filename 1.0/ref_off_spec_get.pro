@@ -166,3 +166,9 @@ FUNCTION getStep4Step1SelectionPixelRange, Event
 value = getTextFieldValue(Event,'selection_coverage_step4_step1')
 RETURN, FIX(value)
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep4Step2PSYMselected, Event
+value = getCWBgroupValue(Event,'plot_2d_symbol')
+RETURN, value+1
+END
