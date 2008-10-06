@@ -144,7 +144,4 @@ x_axis = FINDGEN(FIX(x_size)) * min_delta_x
 (*(*global).untouched_realign_pData_y)       = realign_pData_y
 (*(*global).untouched_realign_pData_y_error) = realign_pData_y_error
 
-help, *realign_pData_y_error[0] ;remove-me
-help, *realign_pData_y[0] ;remove-me
-
 END

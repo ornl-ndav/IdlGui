@@ -48,7 +48,7 @@ sShiftingBase = { size: [XYoff[0],$
                          XYoff[1],$
                          702,200],$
                   uname: 'shifting_base_options',$
-                  frame: 1}
+                  frame: 4}
 
 XYoff = [15,-8] ;label
 sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
@@ -101,7 +101,7 @@ sScalingBase = { size: [sShiftingBase.size[0]+XYoff[0],$
                         sShiftingBase.size[3]+XYoff[1],$
                         702,200],$
                  uname: 'scaling_base_options',$
-                 frame: 1}
+                 frame: sShiftingBase.frame}
 
 XYoff = [15,-8]                 ;label
 sScalingLabel = { size: [sScalingBase.size[0]+XYoff[0],$
@@ -126,6 +126,13 @@ sSelectionCoverage = { size: [2,1],$
                        uname: 'selection_coverage_step4_step1',$
                        title: 'Precision in pixel of mouse click ' + $
                        'selection (move/resize) '}
+
+;Type of plot symbols ---------------------------------------------------------
+sPlotSymbols = { list: ['Plus sign (+)','Asterix (*)','Period (.)','Diamond', $
+                        'Triange','Square','X'],$
+                 uname: 'plot_2d_symbol',$
+                 value: 0.0,$
+                 title: 'Plot2D Symbols       '}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -279,5 +286,15 @@ wSelectionCoverage = CW_FIELD(wBase2,$
                          /INTEGER,$
                          /ROW)
 
+;Type of Plot symbols ---------------------------------------------------------
+wBase3 = WIDGET_BASE(wScalingBase,$
+                     FRAME = 1)
+wPlotSymbols = CW_BGROUP(wBase3,$
+                         sPlotSymbols.list,$
+                         LABEL_LEFT = sPlotSymbols.title,$
+                         UNAME      = sPlotSymbols.uname,$
+                         SET_VALUE  = sPlotSymbols.value,$
+                         /ROW,$
+                         /EXCLUSIVE)
 
 END
