@@ -58,6 +58,7 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
         
         t_data_to_plot = *IvsLambda_selection[index]
         color          = box_color[index]
+        psym = getStep4Step2PSYMselected(Event)
         
         IF (index EQ 0) THEN BEGIN
             xrange = (*(*global).step4_step2_step1_xrange)
@@ -71,11 +72,11 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
               COLOR  = color,$
               YRANGE = [0,ymax_value],$
               XSTYLE = 1,$
-              PSYM   = 1
+              PSYM   = psym
         ENDIF ELSE BEGIN
             oplot, t_data_to_plot, $
               COLOR  = color,$
-              PSYM   = 1
+              PSYM   = psym
         ENDELSE
         index++
     ENDWHILE
