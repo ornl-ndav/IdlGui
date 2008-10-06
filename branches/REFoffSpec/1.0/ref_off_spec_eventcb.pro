@@ -102,10 +102,13 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         ENDIF
     END
 
-    4: BEGIN ;options
+    4: BEGIN ;create output file
     END
 
-    5: BEGIN ;log book
+    5: BEGIN ;options
+    END
+
+    6: BEGIN ;logbook
     END
 
     ELSE:
