@@ -49,6 +49,10 @@ IF (sz GT 1) THEN BEGIN
 ENDIF ELSE BEGIN
     ordered_list_OF_files = list_OF_files
 ENDELSE
+
+;this also defined the default output file name
+CreateDefaultOutputFileName, Event, ordered_list_OF_files
+
 RETURN, ordered_list_OF_files
 END
 

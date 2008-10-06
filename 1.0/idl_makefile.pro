@@ -51,6 +51,7 @@ cd, CurrentFolder
 .run ref_off_spec_scaling_step1_plot2d.pro
 .run ref_off_spec_scaling_step2_step1.pro
 .run ref_off_spec_scaling_step2_step2.pro
+.run ref_off_spec_step5.pro
 
 ;main functions
 .run MainBaseEvent.pro

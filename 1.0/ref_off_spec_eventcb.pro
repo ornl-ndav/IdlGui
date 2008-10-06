@@ -103,6 +103,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     4: BEGIN ;create output file
+        RefreshOutputFileName, Event ;_step5
     END
 
     5: BEGIN ;options
