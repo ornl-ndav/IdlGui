@@ -8,6 +8,7 @@ cd, IdlUtilitiesPath
 .run IDLsendToGeek__define.pro
 .run IDL3columnsASCIIparser__define.pro
 .run xdisplayfile.pro
+.run math_utilities.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
