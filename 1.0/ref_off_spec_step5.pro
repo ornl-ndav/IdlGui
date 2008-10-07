@@ -33,12 +33,10 @@
 ;==============================================================================
 ;this also defined the default output file name
 PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
-
 first_file_loaded = list_OF_files[0]
 ;get path
 path = FILE_DIRNAME(first_file_loaded,/MARK_DIRECTORY)
 putTextFieldValue, Event, 'create_output_file_path_button', path
-
 ;get short file name
 short_file_name = FILE_BASENAME(first_file_loaded,'.txt')
 time_stamp = GenerateIsoTimeStamp()
@@ -46,13 +44,11 @@ short_file_name += '_' + time_stamp
 short_file_name += '_scaling.txt'
 putTextFieldValue, Event, 'create_output_file_name_text_field', $
   short_file_name
-
 END
 
 ;------------------------------------------------------------------------------
 ;this is triggered each time the CREATE OUTPUT tab is reached
 PRO RefreshOutputFileName, Event
-
 ;get path
 path = getTextFieldValue(Event,'create_output_file_path_button')
 ;get base name
@@ -61,5 +57,21 @@ file_name = getTextFieldValue(Event,'create_output_file_name_text_field')
 full_file_name = path + file_name
 putTextfieldValue, Event, 'create_output_full_file_name_preview_value',$
   full_file_name
+END
 
+;------------------------------------------------------------------------------
+;This procedure is reached when the user click to define the output
+;file path
+PRO OutputFilePathButton, Event
+;get path (label of this button)
+path = getTextFieldValue(Event,'create_output_file_path_button')
+new_path = DIALOG_PICKFILE(/DIRECTORY,$
+                           PATH     = path,$
+                           GET_PATH = new_path,$
+                           /MUST_EXIST)
+
+IF (new_path NE '') THEN BEGIN
+    putTextFieldValue, Event, 'create_output_file_path_button', new_path
+    RefreshOutputFileName, Event
+ENDIF
 END

@@ -624,6 +624,12 @@ CASE Event.id OF
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------
 
+;output file path button
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='create_output_file_path_button'): BEGIN
+        OutputFilePathButton, Event ;step5
+    END
+
 ;File Name text field
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='create_output_file_name_text_field'): BEGIN
