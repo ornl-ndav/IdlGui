@@ -222,3 +222,7 @@ RETURN, returnArray
 END
 
 ;------------------------------------------------------------------------------
+
+FUNCTION getStep4Step2PlotType, Event
+RETURN, getCWBgroupValue(Event,'step4_step2_z_axis_linear_log')
+END

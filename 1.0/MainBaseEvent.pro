@@ -388,7 +388,16 @@ CASE Event.id OF
                 FIND_BY_UNAME='data_down_shifting'): BEGIN
         manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
     END    
-    
+
+;------------------------------------------------------------------------------
+;4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4
+;------------------------------------------------------------------------------
+
+;lin/log
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
+        display_step4_step2_step1_selection, Event ;scaling_step2_step1
+    END
+
 ;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
@@ -560,6 +569,9 @@ CASE Event.id OF
     END
 
 ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_
+
+
+
 
 ;Critical Edge Tab ------------------------------------------------------------
 
