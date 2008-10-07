@@ -621,6 +621,16 @@ CASE Event.id OF
     END
 
 ;------------------------------------------------------------------------------
+;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
+;------------------------------------------------------------------------------
+
+;File Name text field
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='create_output_file_name_text_field'): BEGIN
+        RefreshOutputFileName, Event ;step5
+    END
+
+;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 
 ;cw_bgroup of 'Use non active file attenuator'
