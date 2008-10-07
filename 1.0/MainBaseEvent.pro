@@ -630,6 +630,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_auto_button'): BEGIN
         step4_2_2_automatic_fitting_scaling, Event ;scaling_step4_step2
+        check_step4_2_2_gui, Event ;scaling_step4_step2
     END
 
 ;------------------------------------------------------------------------------

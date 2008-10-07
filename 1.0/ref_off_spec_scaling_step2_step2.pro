@@ -31,11 +31,25 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;re_plot the fittin 
+PRO re_plot_fitting, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+fitting_parameters = (*global).step4_2_2_fitting_parameters
+a = fitting_parameters[0]
+b = fitting_parameters[1]
+x_axis = (*(*global).step4_2_2_x_array_to_fit)
+IF (a EQ 0 AND $
+    b EQ 0) THEN BEGIN ;do nothing
+ENDIF ELSE BEGIN
+    plot_fitting, Event, x_axis=x_axis, A=a, B=b
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
 ;plot the fitting only
 PRO plot_fitting, Event, x_axis=x_axis, A=a, B=b
 y_new = FLOAT(b)*x_axis + FLOAT(a)
-print, x_axis
-print, y_new
 oplot, x_axis, y_new, COLOR=250, thick=1.5
 END
 
@@ -386,6 +400,7 @@ xrange = (*(*global).step4_step2_step1_xrange)
 lda_index = getArrayRangeFromlda1lda2(xrange, lda_min, lda_max)
 ;Isolate the X, Y and Y_error array between lda_min and lda_max
 x_array_to_fit            = xrange[lda_index[0]:lda_index[1]]
+(*(*global).step4_2_2_x_array_to_fit) = x_array_to_fit
 IvsLambda_selection       = (*(*global).IvsLambda_selection)
 IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
 y_array                   = *IvsLambda_selection[0]
@@ -398,17 +413,64 @@ fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
 (*global).step4_2_2_fitting_parameters = [a,b]
 
 IF (a EQ 0 AND $
-    b EQ 0) THEN BEGIN
+    b EQ 0) THEN BEGIN ;a and b not found
     a_value = 'N/A'
     b_value = 'N/A'
-ENDIF ELSE BEGIN
+ENDIF ELSE BEGIN ;found a and b
     a_value = STRCOMPRESS(a,/REMOVE_ALL)
     b_value = STRCOMPRESS(b,/REMOVE_ALL)
 ;plot_CE_fit
     x_range_fit = x_array_to_fit
     plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
+;Calculate the average value inside the lda range selected
+    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
+
 ENDELSE
-putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', a_value
-putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', b_value
+putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', b_value
+putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', a_value
    
+
+
+END
+
+;------------------------------------------------------------------------------
+PRO calculate_average_fitted_y, Event, a, b, lda_min, lda_max
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;create an array of Nbr_elements = 100 elements between lda_min and lda_max
+Nbr_elements = 100
+f_lda_min    = FLOAT(lda_min)
+f_lda_max    = FLOAT(lda_max)
+diff         = f_lda_max - f_lda_min
+delta        = diff / Nbr_elements
+;x_axis is composed (Nbr_elements+1)
+x_axis = (FINDGEN(Nbr_elements+1))*delta + f_lda_min
+;y_axis
+y_axis = b * x_axis + a
+AverageValue = total(y_axis)/(Nbr_elements+1)
+putTextFieldValue, Event, $
+  'step2_y_before_text_field',$
+  STRCOMPRESS(AverageValue,/REMOVE_ALL)
+putTextFieldValue, Event,$
+  'step2_sf_text_field',$
+  STRCOMPRESS(AverageValue,/REMOVE_ALL)
+END
+
+;------------------------------------------------------------------------------
+PRO check_step4_2_2_gui, Event ;scaling_step4_step2
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;check if a and b are not 'N/A', if yes, activate SF text_field
+a = getTextFieldValue(Event, 'step2_fitting_equation_a_text_field')
+b = getTextFieldValue(Event, 'step2_fitting_equation_b_text_field')
+IF (a EQ 'NaN' OR $
+    a EQ '-NaN' OR $
+    b EQ 'NaN' OR $
+    b EQ '-NaN') THEN BEGIN
+    sensitive_status = 0
+ENDIF ELSE BEGIN
+    sensitive_status = 1
+ENDELSE
+activate_widget, Event, 'step2_sf_text_field', sensitive_status
+
 END
