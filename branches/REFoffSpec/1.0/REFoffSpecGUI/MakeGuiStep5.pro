@@ -34,6 +34,10 @@
 
 PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
 
+;summary table settings
+NbrRows    = 6
+NbrColumns = 3
+
 ;******************************************************************************
 ;            DEFINE STRUCTURE
 ;******************************************************************************
@@ -84,8 +88,61 @@ sOutputFileValuePreview = { size: [sOutputFileNamePreview.size[0]+XYoff[0],$
                             'preview_value',$
                             value: '~/'}
 
-;Get preview of output file ---------------------------------------------------
+;Summary of Shifting/Scaling parameters used base -----------------------------
 XYoff = [0,15]
+sSummaryBase = { size: [sOutputFileBase.size[0]+XYoff[0],$
+                        sOutputFileBase.size[1]+$
+                        sOutputFileBase.size[3]+XYoff[1],$
+                        550,400],$
+                 uname: 'output_file_summary_base',$
+                 frame: 1}
+
+XYoff = [20,-8] ;title
+sSummaryTitle = { size: [sSummaryBase.size[0]+XYoff[0],$
+                         sSummaryBase.size[1]+XYoff[1]],$
+                  value: 'Summary of Shifting/Scaling Parameters Defined'}
+
+XYoff = [10,15] ;table
+
+TableAlign = INTARR(NbrColumns,NbrRows)+1
+sSummaryTable = { size: [XYoff[0],$
+                         XYoff[1],$
+                         sSummaryBase.size[2]-2*XYoff[0],$
+                         150,$
+                         NbrColumns,$
+                         NbrRows],$
+                  uname: 'output_file_summary_table',$
+                  sensitive: 1,$
+                  label: ['Name of files used',$
+                          'Shifting',$
+                          'Scaling'],$
+                  align: TableAlign,$
+                  width: [326,100,100]}
+
+;label of output file name (short file name) ----------------------------------
+XYoff = [0,5]
+sSummaryOutputFileLabel = { size: [sSummaryTable.size[0]+XYoff[0],$
+                                   sSummaryTable.size[1]+$
+                                   sSummaryTable.size[3]+XYoff[1]],$
+                            value: 'Output File Name:'}
+XYoff = [110,1]
+sSummaryOutputFileValue = { size: [sSummaryOutputFileLabel.size[0]+$
+                                   XYoff[0],$
+                                   sSummaryOutputFileLabel.size[1]+$
+                                   XYoff[1],$
+                                   500],$
+                            value: 'N/A',$
+                            uname: 'summary_output_file_name_value'}
+
+
+
+
+
+
+
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,500]
 sPreviewButton = { size: [sOutputFileBase.size[0]+XYoff[0],$
                           sOutputFileBase.size[1]+$
                           sOutputFileBase.size[3]+XYoff[1],$
@@ -178,6 +235,67 @@ wOutputFullFileValue = WIDGET_LABEL(wOutputFileBase,$
                                     UNAME      = $
                                     sOutputFileValuePreview.uname,$
                                     /ALIGN_LEFT)
+
+;Summary of Shifting/Scaling parameters used title ----------------------------
+wSummaryTitle = WIDGET_LABEL(BaseTab,$
+                             XOFFSET = sSummaryTitle.size[0],$
+                             YOFFSET = sSummaryTitle.size[1],$
+                             VALUE   = sSummaryTitle.value)
+
+;Summary of Shifting/Scaling parameters used base -----------------------------
+wSummaryBase = WIDGET_BASE(BaseTab,$
+                           XOFFSET   = sSummaryBase.size[0],$
+                           YOFFSET   = sSummaryBase.size[1],$
+                           SCR_XSIZE = sSummaryBase.size[2],$
+                           SCR_YSIZE = sSummaryBase.size[3],$
+                           UNAME     = sSummaryBase.uname,$
+                           FRAME     = sSummaryBase.frame)
+                           
+;Table that summarize the files used and the parameters defined ---------------
+wSummaryTable = WIDGET_TABLE(wSummaryBase,$
+                             XOFFSET       = sSummaryTable.size[0],$
+                             YOFFSET       = sSummaryTable.size[1],$
+                             SCR_XSIZE     = sSummaryTable.size[2],$
+                             SCR_YSIZE     = sSummaryTable.size[3],$
+                             XSIZE         = sSummaryTable.size[4],$
+                             YSIZE         = sSummaryTable.size[5],$
+                             UNAME         = sSummaryTable.uname,$
+                             SENSITIVE     = sSummaryTable.sensitive,$
+                             COLUMN_LABELS = sSummaryTable.label,$
+                             COLUMN_WIDTHS = sSummaryTable.width,$
+                             ALIGNMENT     = sSummaryTable.align,$
+                             /NO_ROW_HEADERS,$
+                             /ROW_MAJOR,$
+                             /RESIZEABLE_COLUMNS)
+
+;label of output file name (short file name) ----------------------------------
+wSummaryOutputFileLabel = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryOutputFileLabel.size[0],$
+               YOFFSET   = sSummaryOutputFileLabel.size[1],$
+               VALUE     = sSummaryOutputFileLabel.value)
+wSummaryOutputFileValue = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryOutputFileValue.size[0],$
+               YOFFSET   = sSummaryOutputFileValue.size[1],$
+               SCR_XSIZE = sSummaryOutputFileValue.size[2],$
+               VALUE     = sSummaryOutputFileValue.value,$
+               UNAME     = sSummaryOutputFileValue.uname,$
+               /ALIGN_LEFT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;Get preview of output file 
 wPreviewButton = WIDGET_BUTTON(BaseTab,$

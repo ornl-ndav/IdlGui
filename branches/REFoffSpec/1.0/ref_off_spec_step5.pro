@@ -57,6 +57,8 @@ file_name = getTextFieldValue(Event,'create_output_file_name_text_field')
 full_file_name = path + file_name
 putTextfieldValue, Event, 'create_output_full_file_name_preview_value',$
   full_file_name
+;put file name (short) into summary output file name
+putTextfieldValue, Event, 'summary_output_file_name_value', file_name
 END
 
 ;------------------------------------------------------------------------------
