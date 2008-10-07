@@ -46,7 +46,7 @@ sBaseTab = { size:  tab_size,$
 XYoff = [10,15] ;base
 sOutputFileBase = { size: [XYoff[0],$
                            XYoff[1],$
-                           800,110],$
+                           tab_size[2]-3*XYoff[0],110],$
                     uname: 'create_output_file_base',$
                     frame: 2}
 XYoff = [20,-8] ;title
@@ -67,7 +67,7 @@ sOutputFileNameLabel = { size: [XYoff[0],$
 XYoff = [80,-5] ;file name text field
 sOutputFileNameTF = { size: [XYoff[0],$
                              sOutputFileNameLabel.size[1]+XYoff[1],$
-                             715],$
+                             sOutputFolder.size[2]-XYoff[0]+5],$
                       value: '',$
                       uname: 'create_output_file_name_text_field'}
 XYoff = [0,35] ;full file name preview
@@ -79,7 +79,7 @@ sOutputFileNamePreview = { size: [sOutputFileNameLabel.size[0]+$
 XYoff = [130,0] ;full file name value
 sOutputFileValuePreview = { size: [sOutputFileNamePreview.size[0]+XYoff[0],$
                                    sOutputFileNamePreview.size[1]+XYoff[1],$
-                                   600],$
+                                   sOutputFilenameTF.size[2]],$
                             uname: 'create_output_full_file_name_' + $
                             'preview_value',$
                             value: '~/'}
@@ -155,6 +155,7 @@ wOutputFileNameTF = WIDGET_TEXT(wOutputFileBase,$
                                 VALUE     = sOutputFileNameTF.value,$
                                 UNAME     = sOutputFileNameTF.uname,$
                                 /EDITABLE,$
+                                /ALL_EVENTS,$
                                 /ALIGN_LEFT)
 
 ;full file name preview label
@@ -174,6 +175,8 @@ wOutputFullFileValue = WIDGET_LABEL(wOutputFileBase,$
                                     sOutputFileValuePreview.size[2],$
                                     VALUE      = $
                                     sOutputFileValuePreview.value,$
+                                    UNAME      = $
+                                    sOutputFileValuePreview.uname,$
                                     /ALIGN_LEFT)
 
 ;Get preview of output file 
