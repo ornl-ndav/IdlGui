@@ -120,14 +120,15 @@ index_ymax = 0
 ymax_value = 0
 WHILE (index_ymax LT nbr_plot) DO BEGIN
     local_tfpData       = *tfpData[index_ymax]
-    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
-    IF (bLogPlot) THEN BEGIN
-        local_tfpData       = ALOG10(local_tfpData)
-        index_inf = WHERE(local_tfpData LT 0, nIndex)
-        IF (nIndex GT 0) THEN BEGIN
-            local_tfpData[index_inf]       = 0
-        ENDIF
-    ENDIF
+;    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
+;    IF (bLogPlot) THEN BEGIN
+;        local_tfpData       = ALOG10(local_tfpData)
+;        index_inf = WHERE(local_tfpData LT 0, nIndex)
+;        IF (nIndex GT 0) THEN BEGIN
+;            local_tfpData[index_inf]       = 0
+;        ENDIF
+;    ENDIF
+
     IF (index_ymax EQ 0) THEN BEGIN
         data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
@@ -151,14 +152,14 @@ WHILE (index LT nbr_plot) DO BEGIN
     color         = box_color[index]
     local_tfpData = *tfpData[index]
 
-    bLogPlot = isLogZaxisScalingStep1Selected(Event)
-    IF (bLogPlot) THEN BEGIN
-        local_tfpData = ALOG10(local_tfpData)
-        index_inf = WHERE(local_tfpData LT 0, nIndex)
-        IF (nIndex GT 0) THEN BEGIN
-            local_tfpData[index_inf] = 0
-        ENDIF
-    ENDIF
+;    bLogPlot = isLogZaxisScalingStep1Selected(Event)
+;    IF (bLogPlot) THEN BEGIN
+;        local_tfpData = ALOG10(local_tfpData)
+;        index_inf = WHERE(local_tfpData LT 0, nIndex)
+;        IF (nIndex GT 0) THEN BEGIN
+;            local_tfpData[index_inf] = 0
+;        ENDIF
+;    ENDIF
 
     psym = getStep4Step2PSYMselected(Event)
     IF (index EQ 0) THEN BEGIN
@@ -176,8 +177,9 @@ WHILE (index LT nbr_plot) DO BEGIN
           XTITLE = xtitle, $
           YTITLE = ytitle,$
           COLOR  = color,$
-          YRANGE = [0,ymax_value],$
+          YRANGE = [0.001,ymax_value],$
           PSYM   = psym,$
+          /YLOG,$
           XSTYLE = 1
     ENDIF ELSE BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
@@ -185,6 +187,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         t_data_to_plot = total(data_to_plot,2)
         oplot, t_data_to_plot, $
           COLOR  = color,$
+          /YLOG,$
           PSYM   = psym
     ENDELSE
     index++
