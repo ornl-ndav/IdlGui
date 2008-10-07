@@ -31,7 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;plot the fitting only
+PRO plot_fitting, Event, x_axis=x_axis, A=a, B=b
+y_new = FLOAT(b)*x_axis + FLOAT(a)
+print, x_axis
+print, y_new
+oplot, x_axis, y_new, COLOR=250, thick=1.5
+END
 
+;------------------------------------------------------------------------------
+;refresh the plot and plot the fitting on top of it
+PRO plot_ce_fit, Event, _EXTRA=extra ;scaling_step2_step2
+;replot data
+display_step4_step2_step2_selection, Event
+;plot Lambda on top of plot
+plotLambdaSelected, Event
+;plot fitting
+plot_fitting, Event, _EXTRA=extra
+END
+
+;------------------------------------------------------------------------------
 ;plot only the CE file (the first one loaded)
 PRO display_step4_step2_step2_selection, Event
 ;get global structure
@@ -362,11 +381,34 @@ PRO Step4_step3_step2_fitCE, Event, lda_min, lda_max
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get x-axis
-xaxis = (*(*global).x_axis)
-print, xaxis
+xrange = (*(*global).step4_step2_step1_xrange)
 ;get index where lda_min and lda_max are
-lda_index = getArrayRangeFromlda1lda2(xaxis, lda_min, lda_max)
-print, lda_index
+lda_index = getArrayRangeFromlda1lda2(xrange, lda_min, lda_max)
+;Isolate the X, Y and Y_error array between lda_min and lda_max
+x_array_to_fit            = xrange[lda_index[0]:lda_index[1]]
+IvsLambda_selection       = (*(*global).IvsLambda_selection)
+IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+y_array                   = *IvsLambda_selection[0]
+y_error_array             = *IvsLambda_selection_error[0]
+y_array_to_fit            = y_array[lda_index[0]:lda_index[1]]
+y_error_array_to_fit      = y_error_array[lda_index[0]:lda_index[1]]
 
+;determine the fitting parameters of this data
+fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
+(*global).step4_2_2_fitting_parameters = [a,b]
 
+IF (a EQ 0 AND $
+    b EQ 0) THEN BEGIN
+    a_value = 'N/A'
+    b_value = 'N/A'
+ENDIF ELSE BEGIN
+    a_value = STRCOMPRESS(a,/REMOVE_ALL)
+    b_value = STRCOMPRESS(b,/REMOVE_ALL)
+;plot_CE_fit
+    x_range_fit = x_array_to_fit
+    plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
+ENDELSE
+putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', a_value
+putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', b_value
+   
 END
