@@ -133,7 +133,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         
         0: BEGIN ;step1 (pixel range selection)
             IF((*global).something_to_plot) THEN BEGIN
-                refresh_step4_step1_plot, Event
+                refresh_step4_step1_plot, Event ;scaling_step1
             ENDIF
         END
         

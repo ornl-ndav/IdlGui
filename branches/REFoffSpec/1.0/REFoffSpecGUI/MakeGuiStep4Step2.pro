@@ -49,6 +49,16 @@ sStep4Draw = { size: [XYoff[0],$
                       700,700],$
                uname: 'draw_step4_step2'}
 
+;lin/log plot -----------------------------------------------------------------
+XYoff = [0,5]
+sLinLog = { size: [sStep4Draw.size[0]+XYoff[0],$
+                   sStep4Draw.size[1]+$
+                   sStep4Draw.size[3]+XYoff[1]],$
+            list: ['Linear','Log'],$
+            label: 'Z-axis:',$
+            uname: 'step4_step2_z_axis_linear_log',$
+            value: 1.0}
+
 ;tab of step4/step2 -----------------------------------------------------------
 XYoff = [5,5]
 sMainTab = { size: [sStep4Draw.size[0]+$
@@ -83,6 +93,18 @@ wStep4Draw = WIDGET_DRAW(BaseTab,$
                          UNAMe     = sStep4Draw.uname,$
                          /BUTTON_EVENTS,$
                          /MOTION_EVENTS)
+
+;Linear / Logarithmic ---------------------------------------------------------
+wLinLog = CW_BGROUP(BaseTab,$
+                    sLinLog.list,$
+                    XOFFSET    = sLinLog.size[0],$
+                    YOFFSET    = sLinLog.size[1],$
+                    SET_VALUE  = sLinLog.value,$
+                    UNAME      = sLinLog.uname,$
+                    LABEL_LEFT = sLinLog.label,$
+                    /EXCLUSIVE,$
+                    /ROW,$
+                    /NO_RELEASE)
 
 ;step4/step2 tab (ce and SF of all other files)
 MAIN_TAB = WIDGET_TAB(BaseTab,$

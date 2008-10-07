@@ -61,19 +61,44 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
     psym = getStep4Step2PSYMselected(Event)
-    PLOT, xrange, $
-      t_data_to_plot, $
-      XTITLE = xtitle, $
-      YTITLE = ytitle,$
-      COLOR  = color,$
-      YRANGE = [0,ymax_value],$
-      XSTYLE = 1,$
-      PSYM   = psym
+  
+    isLog = getStep4Step2PlotType(Event)
+
+    IF (isLog) THEN BEGIN
+        PLOT, xrange, $
+          t_data_to_plot, $
+          XTITLE = xtitle, $
+          YTITLE = ytitle,$
+          COLOR  = color,$
+          YRANGE = [0,ymax_value],$
+          XSTYLE = 1,$
+          PSYM   = psym,$
+          /YLOG
+    ENDIF ELSE BEGIN
+        PLOT, xrange, $
+          t_data_to_plot, $
+          XTITLE = xtitle, $
+          YTITLE = ytitle,$
+          COLOR  = color,$
+          YRANGE = [0,ymax_value],$
+          XSTYLE = 1,$
+          PSYM   = psym
+    ENDELSE
+
     IF (isWithScalingErrorBars(Event)) THEN BEGIN
-        ERRPLOT, xrange,$
-          t_data_to_plot-t_data_to_plot_error,$
-          t_data_to_plot+t_data_to_plot_error,$
-          COLOR = 250
+        
+        IF (ylog) THEN BEGIN
+            ERRPLOT, xrange,$
+              t_data_to_plot-t_data_to_plot_error,$
+              t_data_to_plot+t_data_to_plot_error,$
+              COLOR = 250,$
+              /YLOG
+        ENDIF ELSE BEGIN
+            ERRPLOT, xrange,$
+              t_data_to_plot-t_data_to_plot_error,$
+              t_data_to_plot+t_data_to_plot_error,$
+              COLOR = 250
+        ENDELSE
     ENDIF
 ENDIF
 END

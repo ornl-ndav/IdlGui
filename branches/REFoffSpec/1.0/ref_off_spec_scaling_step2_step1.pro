@@ -60,23 +60,44 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
         color          = box_color[index]
         psym = getStep4Step2PSYMselected(Event)
         
+        isLog = getStep4Step2PlotType(Event)
+
         IF (index EQ 0) THEN BEGIN
             xrange = (*(*global).step4_step2_step1_xrange)
             xtitle = 'Wavelength'
             ytitle = 'Counts'
             ymax_value = (*global).step4_step1_ymax_value
-            plot, xrange, $
-              t_data_to_plot, $
-              XTITLE = xtitle, $
-              YTITLE = ytitle,$
-              COLOR  = color,$
-              YRANGE = [0,ymax_value],$
-              XSTYLE = 1,$
-              PSYM   = psym
+            IF (isLog) THEN BEGIN
+                plot, xrange, $
+                  t_data_to_plot, $
+                  XTITLE = xtitle, $
+                  YTITLE = ytitle,$
+                  COLOR  = color,$
+                  YRANGE = [0,ymax_value],$
+                  XSTYLE = 1,$
+                  PSYM   = psym,$
+                  /YLOG
+            ENDIF ELSE BEGIN
+                plot, xrange, $
+                  t_data_to_plot, $
+                  XTITLE = xtitle, $
+                  YTITLE = ytitle,$
+                  COLOR  = color,$
+                  YRANGE = [0,ymax_value],$
+                  XSTYLE = 1,$
+                  PSYM   = psym
+            ENDELSE
         ENDIF ELSE BEGIN
-            oplot, t_data_to_plot, $
-              COLOR  = color,$
-              PSYM   = psym
+            IF (isLog) THEN BEGIN
+                oplot, t_data_to_plot, $
+                  COLOR  = color,$
+                  PSYM   = psym,$
+                  /YLOG
+            ENDIF ELSE BEGIN
+                oplot, t_data_to_plot, $
+                  COLOR  = color,$
+                  PSYM   = psym
+            ENDELSE
         ENDELSE
         index++
     ENDWHILE
