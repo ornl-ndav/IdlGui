@@ -633,6 +633,13 @@ CASE Event.id OF
         check_step4_2_2_gui, Event ;scaling_step4_step2
     END
 
+;Manual scaling of data -------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
+       step4_2_2_manual_scaling, Event ;scaling_step4_step2
+    END
+
+
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------

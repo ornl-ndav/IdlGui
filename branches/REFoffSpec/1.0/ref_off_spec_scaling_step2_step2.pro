@@ -398,7 +398,7 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-;CATCH, scale_error ;remove_me comments
+CATCH, scale_error ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -530,4 +530,24 @@ ENDIF ELSE BEGIN
 ENDELSE
 activate_widget, Event, 'step2_sf_text_field', sensitive_status
 activate_widget, Event, 'step2_manual_scaling_button', sensitive_status
+END
+
+;-------------------------------------------------------------------------------
+PRO step4_2_2_manual_scaling, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+PROCESSING = (*global).processing
+FAILED     = (*global).failed
+OK         = (*global).ok
+
+IDLsendToGeek_addLogBookText, Event, '-> Manual Scaling ... ' + PROCESSING 
+scale_error = 0
+CATCH, scale_error
+IF (scale_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+ENDIF ELSE BEGIN
+   step4_step2_step2_scaleCE, Event ;scaling_step2_step2
+   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+ENDELSE
 END
