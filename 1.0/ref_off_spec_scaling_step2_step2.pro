@@ -472,5 +472,5 @@ ENDIF ELSE BEGIN
     sensitive_status = 1
 ENDELSE
 activate_widget, Event, 'step2_sf_text_field', sensitive_status
-
+activate_widget, Event, 'step2_manual_scaling_button', sensitive_status
 END
