@@ -85,10 +85,10 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
 ;array that will contain the counts vs wavelenght of each data file
     IvsLambda_selection       = (*(*global).IvsLambda_selection)
     IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
-    box_color            = (*global).box_color
-    t_data_to_plot       = *IvsLambda_selection[0]
-    t_data_to_plot_error = *IvsLambda_selection_error[0]
-    color                = box_color[0]
+    box_color                 = (*global).box_color
+    t_data_to_plot            = *IvsLambda_selection[0]
+    t_data_to_plot_error      = *IvsLambda_selection_error[0]
+    color                     = box_color[0]
     xrange = (*(*global).step4_step2_step1_xrange)
     xtitle = 'Wavelength'
     ytitle = 'Counts'
@@ -378,20 +378,76 @@ IDLsendToGeek_addLogBookText, Event, '--> Lambda min : ' + $
 IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
   STRCOMPRESS(Lda_max,/REMOVE_ALL)
 
+;Fitting --------------------------------------
 IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
-;CATCH, fit_error ;REMOVE_ME (comments)
+CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
-    Step4_step3_step2_fitCE, Event, lda_min, lda_max ;scaling_step2_step2
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    Step4_step2_step2_fitCE, Event, lda_min, lda_max ;scaling_step2_step2
+    IF ((*global).step4_2_2_fitting_status EQ 0) THEN BEGIN
+       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    ENDELSE
 ENDELSE
+
+IF ((*global).step4_2_2_fitting_status) THEN BEGIN
+;Scaling --------------------------------------
+   IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
+   scale_error = 0
+;CATCH, scale_error ;remove_me comments
+   IF (scale_error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+   ENDIF ELSE BEGIN
+      step4_step2_step2_scaleCE, Event ;scaling_step2_step2
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+   ENDELSE
+ENDIF
+
 END
 
 ;------------------------------------------------------------------------------
-PRO Step4_step3_step2_fitCE, Event, lda_min, lda_max
+PRO step4_step2_step2_scaleCE, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get scale factor (average value between lda_min and lda_max)
+s_scale_factor = getTextFieldValue(Event,'step2_y_before_text_field')
+f_scale_factor = FLOAT(s_scale_factor)
+;retrieve Y and Y_error of CE file and rescale them according to
+;scaling factor found
+IvsLambda_selection                    = (*(*global).IvsLambda_selection)
+IvsLambda_selection_error              = (*(*global).IvsLambda_selection_error)
+y_array                                = *IvsLambda_selection[0]
+y_error_array                          = *IvsLambda_selection_error[0]
+y_array_rescale                        = y_array/f_scale_factor
+y_error_array_rescale                  = y_error_array/f_scale_factor
+*IvsLambda_selection[0]                = y_array_rescale
+*IvsLambda_selection_error[0]          = y_error_array_rescale
+(*(*global).IvsLambda_selection)       = IvsLambda_selection
+(*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
+;we also need to rescale the fitting parameters to replot the fitting line
+;after rescalling
+fitting_parameters = (*global).step4_2_2_fitting_parameters
+a = fitting_parameters[0]
+b = fitting_parameters[1]
+a_rescale = a / f_scale_factor
+b_rescale = b / f_scale_factor
+(*global).step4_2_2_fitting_parameters = [a_rescale,b_rescale]
+;we can now replot CE file and fitting line too
+;replot data
+display_step4_step2_step2_selection, Event
+;plot Lambda on top of plot
+plotLambdaSelected, Event
+;replot fitting line
+re_plot_fitting, Event
+END
+
+;------------------------------------------------------------------------------
+PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get x-axis
@@ -411,26 +467,27 @@ y_error_array_to_fit      = y_error_array[lda_index[0]:lda_index[1]]
 ;determine the fitting parameters of this data
 fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
 (*global).step4_2_2_fitting_parameters = [a,b]
-
-IF (a EQ 0 AND $
-    b EQ 0) THEN BEGIN ;a and b not found
-    a_value = 'N/A'
-    b_value = 'N/A'
-ENDIF ELSE BEGIN ;found a and b
-    a_value = STRCOMPRESS(a,/REMOVE_ALL)
-    b_value = STRCOMPRESS(b,/REMOVE_ALL)
+IF ((a EQ 0 AND $
+     b EQ 0) OR $
+    a EQ 'NaN' OR $
+    a EQ '-NaN' OR $
+    b EQ 'NaN' OR $
+    b EQ '-NaN') THEN BEGIN     ;a and b not found
+   a_value = 'NaN'
+   b_value = 'NaN'
+   (*global).step4_2_2_fitting_status = 0
+ENDIF ELSE BEGIN                ;found a and b
+   a_value = STRCOMPRESS(a,/REMOVE_ALL)
+   b_value = STRCOMPRESS(b,/REMOVE_ALL)
 ;plot_CE_fit
-    x_range_fit = x_array_to_fit
-    plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
+   x_range_fit = x_array_to_fit
+   plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
 ;Calculate the average value inside the lda range selected
-    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
-
+   calculate_average_fitted_y, Event, a, b, lda_min, lda_max
+   (*global).step4_2_2_fitting_status = 1
 ENDELSE
 putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', b_value
 putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', a_value
-   
-
-
 END
 
 ;------------------------------------------------------------------------------
