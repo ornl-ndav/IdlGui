@@ -110,10 +110,11 @@ id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 
-tfpData       = (*(*global).realign_pData_y)
+tfpData  = (*(*global).realign_pData_y)
 nbr_plot = getNbrFiles(Event)
 ;array that will contain the counts vs wavelenght of each data file
-IvsLambda_selection       = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+IvsLambda_selection        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+IvsLambda_selection_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
 
 ;determine ymax
 index_ymax = 0
@@ -136,14 +137,16 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
                                                  (304L+ymin):(304L+ymax)))
     ENDELSE
     t_data_to_plot       = total(data_to_plot,2)
-    *IvsLambda_selection[index_ymax] = t_data_to_plot
+    *IvsLambda_selection[index_ymax]        = t_data_to_plot
+    *IvsLambda_selection_backup[index_ymax] = t_data_to_plot
     ymax_local     = MAX(t_data_to_plot)
     ymax_value     = (ymax_local GT ymax_value) ? ymax_local : ymax_value
     index_ymax++
 ENDWHILE
 
-(*global).step4_step1_ymax_value = ymax_value
-(*(*global).IvsLambda_selection) = IvsLambda_selection
+(*global).step4_step1_ymax_value        = ymax_value
+(*(*global).IvsLambda_selection)        = IvsLambda_selection
+(*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup
 
 index = 0
 WHILE (index LT nbr_plot) DO BEGIN
@@ -219,7 +222,8 @@ IF (ymin EQ ymax) THEN ymax += 1
 tfpData_error = (*(*global).realign_pData_y_error)
 nbr_plot = getNbrFiles(Event)
 ;array that will contain the counts vs wavelenght of each data file
-IvsLambda_selection_error = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+IvsLambda_selection_error        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+IvsLambda_selection_error_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
 
 ;determine ymax
 index      = 0
@@ -243,11 +247,14 @@ WHILE (index LT nbr_plot) DO BEGIN
                                     (304L+ymin):(304L+ymax)))
     ENDELSE
     t_data_to_plot_error = total(data_to_plot_error,2)
-    *IvsLambda_selection_error[index] = t_data_to_plot_error
+    *IvsLambda_selection_error[index]        = t_data_to_plot_error
+    *IvsLambda_selection_error_backup[index] = t_data_to_plot_error
     index++
 ENDWHILE
 
-(*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
+(*(*global).IvsLambda_selection_error)        = IvsLambda_selection_error
+(*(*global).IvsLambda_selection_error_backup) = $
+  IvsLambda_selection_error_backup
 
 END
 

@@ -31,6 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
 ;re_plot the fittin 
 PRO re_plot_fitting, Event
 ;get global structure
@@ -353,7 +354,6 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 (*global).step4_2_2_lambda_array = [0,0]
 putTextFieldValue, Event, 'step4_2_2_lambda1_text_field', ''
 putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', ''
-
 END
 
 ;------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-CATCH, scale_error ;remove_me comments
+;CATCH, scale_error ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -407,6 +407,12 @@ CATCH, scale_error ;remove_me comments
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
    ENDELSE
 ENDIF
+
+print,'#3'
+IvsLambda_selection                    = $
+  (*(*global).IvsLambda_selection_backup)
+y_array                                = *IvsLambda_selection[0]
+print, y_array ;remove_me
 
 END
 
@@ -419,16 +425,41 @@ s_scale_factor = getTextFieldValue(Event,'step2_y_before_text_field')
 f_scale_factor = FLOAT(s_scale_factor)
 ;retrieve Y and Y_error of CE file and rescale them according to
 ;scaling factor found
-IvsLambda_selection                    = (*(*global).IvsLambda_selection)
-IvsLambda_selection_error              = (*(*global).IvsLambda_selection_error)
+IvsLambda_selection                    = $
+  (*(*global).IvsLambda_selection_backup)
 y_array                                = *IvsLambda_selection[0]
+IvsLambda_selection_error              = $
+  (*(*global).IvsLambda_selection_error_backup)
 y_error_array                          = *IvsLambda_selection_error[0]
-y_array_rescale                        = y_array/f_scale_factor
-y_error_array_rescale                  = y_error_array/f_scale_factor
+
+help, y_array
+print, y_array
+
+;copy array by value
+sz = N_ELEMENTS(y_array)
+new_y_array       = FLTARR(sz)
+new_y_error_array = FLTARR(sz)
+FOR i=0,(sz-1) DO BEGIN
+    new_y_array[i]       = y_array[i]
+    new_y_error_array[i] = y_error_array[i]
+ENDFOR
+
+print, '#1'
+print, new_y_array ;remove_me
+
+y_array_rescale                        = new_y_array/f_scale_factor
+y_error_array_rescale                  = new_y_error_array/f_scale_factor
 *IvsLambda_selection[0]                = y_array_rescale
 *IvsLambda_selection_error[0]          = y_error_array_rescale
 (*(*global).IvsLambda_selection)       = IvsLambda_selection
 (*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
+
+print,'#2'
+IvsLambda_selection_backup                = $
+  (*(*global).IvsLambda_selection_backup)
+y_array_backup                            = *IvsLambda_selection_backup[0]
+print, y_array_backup ;remove_me
+
 ;we also need to rescale the fitting parameters to replot the fitting line
 ;after rescalling
 fitting_parameters = (*global).step4_2_2_fitting_parameters
@@ -457,8 +488,8 @@ lda_index = getArrayRangeFromlda1lda2(xrange, lda_min, lda_max)
 ;Isolate the X, Y and Y_error array between lda_min and lda_max
 x_array_to_fit            = xrange[lda_index[0]:lda_index[1]]
 (*(*global).step4_2_2_x_array_to_fit) = x_array_to_fit
-IvsLambda_selection       = (*(*global).IvsLambda_selection)
-IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+IvsLambda_selection       = (*(*global).IvsLambda_selection_backup)
+IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_backup)
 y_array                   = *IvsLambda_selection[0]
 y_error_array             = *IvsLambda_selection_error[0]
 y_array_to_fit            = y_array[lda_index[0]:lda_index[1]]
@@ -479,9 +510,8 @@ IF ((a EQ 0 AND $
 ENDIF ELSE BEGIN                ;found a and b
    a_value = STRCOMPRESS(a,/REMOVE_ALL)
    b_value = STRCOMPRESS(b,/REMOVE_ALL)
-;plot_CE_fit
-   x_range_fit = x_array_to_fit
-   plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
+;   x_range_fit = x_array_to_fit
+;;   plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
 ;Calculate the average value inside the lda range selected
    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
    (*global).step4_2_2_fitting_status = 1
@@ -501,9 +531,9 @@ f_lda_max    = FLOAT(lda_max)
 diff         = f_lda_max - f_lda_min
 delta        = diff / Nbr_elements
 ;x_axis is composed (Nbr_elements+1)
-x_axis = (FINDGEN(Nbr_elements+1))*delta + f_lda_min
+x_axis       = (FINDGEN(Nbr_elements+1))*delta + f_lda_min
 ;y_axis
-y_axis = b * x_axis + a
+y_axis       = b * x_axis + a
 AverageValue = total(y_axis)/(Nbr_elements+1)
 putTextFieldValue, Event, $
   'step2_y_before_text_field',$
@@ -532,7 +562,7 @@ activate_widget, Event, 'step2_sf_text_field', sensitive_status
 activate_widget, Event, 'step2_manual_scaling_button', sensitive_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO step4_2_2_manual_scaling, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
