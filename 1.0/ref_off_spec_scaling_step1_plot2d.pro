@@ -137,6 +137,7 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
                                                  (304L+ymin):(304L+ymax)))
     ENDELSE
     t_data_to_plot       = total(data_to_plot,2)
+
     *IvsLambda_selection[index_ymax]        = t_data_to_plot
     *IvsLambda_selection_backup[index_ymax] = t_data_to_plot
     ymax_local     = MAX(t_data_to_plot)
@@ -168,6 +169,8 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (index EQ 0) THEN BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
         t_data_to_plot = total(data_to_plot,2)
+        print, 'index 0'
+        print, t_data_to_plot    ;remove_me
         sz = N_ELEMENTS(t_data_to_plot)
         xaxis = (*(*global).x_axis)
         delta_x = xaxis[1]-xaxis[0]
@@ -188,7 +191,9 @@ WHILE (index LT nbr_plot) DO BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
                                              (304L+ymin):(304L+ymax)))
         t_data_to_plot = total(data_to_plot,2)
-        oplot, t_data_to_plot, $
+        print, 'index 1'
+        print, t_data_to_plot ;remove_me
+        oplot, xrange, t_data_to_plot, $
           COLOR  = color,$
           PSYM   = psym
     ENDELSE
