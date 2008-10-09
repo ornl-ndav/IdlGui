@@ -398,7 +398,7 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-;CATCH, scale_error ;remove_me comments
+CATCH, scale_error ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
       CATCH,/CANCEL
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
