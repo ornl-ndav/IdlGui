@@ -407,6 +407,10 @@ CASE Event.id OF
         re_display_step4_step2_step1_selection, Event ;scaling_step2
     END
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_reset_axis'): BEGIN
+        display_step4_step2_step1_selection, Event ;scaling_step2_step1
+    END        
+
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_y_min'): BEGIN
         re_display_step4_step2_step1_selection, Event ;scaling_step2
     END
