@@ -149,6 +149,11 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
                     plotLambdaSelected, Event ;scaling_step2_step2
                     re_plot_fitting, Event ;scaling_step2_step2
                 END
+                2: BEGIN ;other files
+                    check_step4_2_3_gui, Event ;scaling_step2_step3
+
+
+                END
                 ELSE:
             ENDCASE
         END
@@ -178,7 +183,9 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             plotLambdaSelected, Event ;scaling_step2_step2
             re_plot_fitting, Event ;scaling_step2_step2
         END
-
+        2: BEGIN                ;other files
+            check_step4_2_3_gui, Event ;scaling_step2_step3
+        END
         ELSE:
     ENDCASE
     (*global).PrevScalingStep2TabSelect = CurrTabSelect
