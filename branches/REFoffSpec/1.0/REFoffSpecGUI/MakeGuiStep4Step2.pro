@@ -50,11 +50,11 @@ sStep4Draw = { size: [XYoff[0],$
                uname: 'draw_step4_step2'}
 
 ;Zoom base (x-axis and y_axis) ------------------------------------------------
-XYoff = [60,25]
+XYoff = [30,25]
 sZoomBase = { size: [sStep4Draw.size[0]+XYoff[0],$
                      sStep4Draw.size[1]+$
                      sStep4Draw.size[3]+XYoff[1],$
-                     550,90],$
+                     650,90],$
               uname: 'step4_2_zoom_base',$
               frame: 3}
 
@@ -68,7 +68,7 @@ sXaxisLabel = { size: [XYoff[0],$
 XYoff = [50,-10]
 sXMinBaseField = { size: [sXaxisLabel.size[0]+XYoff[0],$
                           sXaxisLabel.size[1]+XYoff[1],$
-                          150,$
+                          125,$
                           10],$
                    label_left: 'Min:',$
                    value: '',$
@@ -83,6 +83,16 @@ sXMaxBaseField = { size: [sXMinBaseField.size[0]+$
                    value: '',$
                    uname: 'step4_2_zoom_x_max'}
                   
+;RESET x axis -----------------------------------------------------------------
+XYoff = [315,5]
+sResetXaxis = { size: [sXMaxBaseField.size[0]+$
+                       XYoff[0],$
+                       sXMaxBaseField.size[1]+$
+                       XYoff[1],$
+                       100],$
+                value: 'FULL RESET',$
+                uname: 'step4_2_zoom_reset_axis'}
+
 ;y-axis -----------------------------------------------------------------------
 XYoff= [0,40]
 sYaxisLabel = { size: [sXaxisLabel.size[0]+XYoff[0],$
@@ -196,6 +206,14 @@ wXmaxValue = CW_FIELD(wXmaxBase,$
                       /RETURN_EVENTS,$
                       /ROW)
 
+;RESET x axis -----------------------------------------------------------------
+wResetXaxis = WIDGET_BUTTON(wZoomBase,$
+                            XOFFSET   = sResetXaxis.size[0],$
+                            YOFFSET   = sResetXaxis.size[1],$
+                            SCR_XSIZE = sResetXaxis.size[2],$
+                            VALUE     = sResetXaxis.value,$
+                            UNAME     = sResetXaxis.uname)
+
 ;Y-axis -----------------------------------------------------------------------
 wYaxisLabel = WIDGET_LABEL(wZoomBase,$
                            XOFFSET = sYaxisLabel.size[0],$
@@ -244,7 +262,7 @@ wLinLog = CW_BGROUP(wZoomBase,$
                     /ROW,$
                     /NO_RELEASE)
 
-;step4/step2 tab (ce and SF of all other files)
+;step4/step2 tab (ce and SF of all other files) -------------------------------
 MAIN_TAB = WIDGET_TAB(BaseTab,$
                       UNAME = sMainTab.uname,$
                       LOCATION = 0,$
