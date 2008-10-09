@@ -78,6 +78,7 @@ global = ptr_new ({ ucams:               ucams,$
                     step4_2_2_fitting_status: 0,$
                     step4_2_2_lambda_selected: 'min',$
                     step4_2_2_fitting_parameters: FLTARR(2),$
+                    step4_2_2_fitting_parameters_backup: FLTARR(2),$
                     step4_2_2_x_array_to_fit: PTR_NEW(0L),$
                     step4_2_2_left_click: 0,$
                     step4_2_2_lambda_array: FLTARR(2),$

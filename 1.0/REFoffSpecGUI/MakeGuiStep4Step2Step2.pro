@@ -500,7 +500,6 @@ wSFtextField = WIDGET_TEXT(wSFbase,$
                            UNAME     = sSFtextField.uname,$
                            SENSITIVE = sSFtextField.sensitive,$
                            VALUE     = '',$
-                           /ALL_EVENTS,$
                            /EDITABLE)
                            
 ;***** Manual Scaling Button **************************************************
