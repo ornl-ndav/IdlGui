@@ -138,6 +138,9 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         END
         
         1: BEGIN ;step2 (scaling)
+
+            populate_zoom_widgets, Event ;scaling_step2
+
             CASE ((*global).PrevScalingStep2TabSelect) OF
                 0: BEGIN ;all files
                     display_step4_step2_step1_selection, $

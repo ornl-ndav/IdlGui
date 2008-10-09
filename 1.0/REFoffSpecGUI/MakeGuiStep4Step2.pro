@@ -176,6 +176,7 @@ wXminValue = CW_FIELD(wXminBase,$
                       VALUE = sXMinBaseField.value,$
                       TITLE = sXMinBaseField.label_left,$
                       XSIZE = sXMinBaseField.size[3],$
+                      UNAME = sXMinBaseField.uname,$
                       /FLOATING,$
                       /RETURN_EVENTS,$
                       /ROW)
@@ -190,6 +191,7 @@ wXmaxValue = CW_FIELD(wXmaxBase,$
                       VALUE = sXMaxBaseField.value,$
                       TITLE = sXMaxBaseField.label_left,$
                       XSIZE = sXMaxBaseField.size[3],$
+                      UNAME = sXMaxBaseField.uname,$
                       /FLOATING,$
                       /RETURN_EVENTS,$
                       /ROW)
@@ -210,6 +212,7 @@ wYminValue = CW_FIELD(wYminBase,$
                       VALUE = sYMinBaseField.value,$
                       TITLE = sYMinBaseField.label_left,$
                       XSIZE = sYMinBaseField.size[3],$
+                      UNAME = sYMinBaseField.uname,$
                       /FLOATING,$
                       /RETURN_EVENTS,$
                       /ROW)
@@ -223,6 +226,7 @@ wYmaxBase = WIDGET_BASE(wZoomBase,$
 wYmaxValue = CW_FIELD(wYmaxBase,$
                       VALUE = sYMaxBaseField.value,$
                       TITLE = sYMaxBaseField.label_left,$
+                      UNAME = sYMaxBaseField.uname,$
                       XSIZE = sYMaxBaseField.size[3],$
                       /FLOATING,$
                       /RETURN_EVENTS,$
