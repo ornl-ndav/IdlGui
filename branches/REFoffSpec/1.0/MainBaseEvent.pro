@@ -571,8 +571,6 @@ CASE Event.id OF
 ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_
 
 
-
-
 ;Critical Edge Tab ------------------------------------------------------------
 
 ;if mouse is over plot
@@ -643,6 +641,12 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step2_sf_text_field'): BEGIN
         step4_2_2_manual_scaling, Event ;scaling_step4_step2
+    END
+
+;Reset scaling of data --------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_2_reset_scaling_button'): BEGIN
+        step4_2_2_reset_scaling, Event ;scaling_step4_step2
     END
 
 ;------------------------------------------------------------------------------

@@ -411,12 +411,18 @@ ENDIF
 END
 
 ;------------------------------------------------------------------------------
-PRO step4_step2_step2_scaleCE, Event
+PRO step4_step2_step2_scaleCE, Event, RESET=reset
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get scale factor (average value between lda_min and lda_max)
-s_scale_factor = getTextFieldValue(Event,'step2_sf_text_field')
+IF (N_ELEMENTS(RESET) EQ 0) THEN BEGIN
+    s_scale_factor = getTextFieldValue(Event,'step2_sf_text_field')
+ENDIF ELSE BEGIN
+    s_scale_factor = getTextFieldValue(Event,'step2_y_before_text_field')
+    putTextFieldvalue, Event, 'step2_sf_text_field',s_scale_factor
+ENDELSE
 f_scale_factor = FLOAT(s_scale_factor)
+
 ;retrieve Y and Y_error of CE file and rescale them according to
 ;scaling factor found
 IvsLambda_selection                    = $
@@ -549,6 +555,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 activate_widget, Event, 'step2_sf_text_field', sensitive_status
 activate_widget, Event, 'step2_manual_scaling_button', sensitive_status
+activate_widget, Event, 'step4_2_2_reset_scaling_button', sensitive_status
 END
 
 ;------------------------------------------------------------------------------
@@ -569,4 +576,9 @@ ENDIF ELSE BEGIN
    step4_step2_step2_scaleCE, Event ;scaling_step2_step2
    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO step4_2_2_reset_scaling, Event
+step4_step2_step2_scaleCE, Event, RESET=1
 END
