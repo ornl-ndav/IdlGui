@@ -190,7 +190,6 @@ WHILE (index LT nbr_plot) DO BEGIN
         t_data_to_plot = total(data_to_plot,2)
         oplot, t_data_to_plot, $
           COLOR  = color,$
-          /YLOG,$
           PSYM   = psym
     ENDELSE
     index++

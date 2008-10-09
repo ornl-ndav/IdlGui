@@ -88,16 +88,9 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
                   PSYM   = psym
             ENDELSE
         ENDIF ELSE BEGIN
-            IF (isLog) THEN BEGIN
-                oplot, t_data_to_plot, $
-                  COLOR  = color,$
-                  PSYM   = psym,$
-                  /YLOG
-            ENDIF ELSE BEGIN
-                oplot, t_data_to_plot, $
-                  COLOR  = color,$
-                  PSYM   = psym
-            ENDELSE
+            oplot, t_data_to_plot, $
+              COLOR  = color,$
+              PSYM   = psym
         ENDELSE
         index++
     ENDWHILE
