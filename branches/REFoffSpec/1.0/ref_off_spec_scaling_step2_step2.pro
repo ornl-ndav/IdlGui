@@ -468,7 +468,7 @@ plotLambdaSelected, Event
 ;replot fitting line
 re_plot_fitting, Event
 
-PTR_FREE, new_IvsLambda_selection
+;PTR_FREE, new_IvsLambda_selection
 
 END
 
