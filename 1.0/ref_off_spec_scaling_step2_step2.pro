@@ -427,6 +427,11 @@ f_scale_factor = FLOAT(s_scale_factor)
 ;scaling factor found
 IvsLambda_selection                    = $
   (*(*global).IvsLambda_selection_backup)
+
+help, IvsLambda_selection
+print, size(IvsLambda_selection)
+
+
 y_array                                = *IvsLambda_selection[0]
 IvsLambda_selection_error              = $
   (*(*global).IvsLambda_selection_error_backup)
