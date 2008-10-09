@@ -32,7 +32,40 @@
 ;
 ;==============================================================================
 
-PRO display_step4_step2_step1_selection, Event
+PRO populate_zoom_widgets, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;check that xmax is not empty or equal to 0
+xmax_value = getTextFieldValue(Event,'step4_2_zoom_x_max')
+
+no_data = 0
+CATCH, no_data
+IF (no_data NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    IF (xmax_value EQ '' OR $
+        xmax_value EQ FLOAT(0)) THEN BEGIN
+        
+        xrange = (*(*global).step4_step2_step1_xrange)
+        sz = (size(xrange))(1)
+        sxmin = STRCOMPRESS(xrange[0],/REMOVE_ALL)
+        sxmax = STRCOMPRESS(xrange[sz-1],/REMOVE_ALL)
+        symin = STRCOMPRESS((*global).ymin_log_mode ,/REMOVE_ALL)
+        symax = STRCOMPRESS((*global).step4_step1_ymax_value,/REMOVE_ALL)
+        
+        putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
+        putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
+        putTextFieldValue, Event, 'step4_2_zoom_y_min', symin
+        putTextFieldValue, Event, 'step4_2_zoom_y_max', symax
+        
+    ENDIF
+ENDELSE
+
+END
+
+;------------------------------------------------------------------------------
+PRO re_display_step4_step2_step1_selection, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
@@ -63,17 +96,24 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
         isLog = getStep4Step2PlotType(Event)
 
         IF (index EQ 0) THEN BEGIN
+
+            xmin = getTextFieldValue(Event,'step4_2_zoom_x_min')
+            xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
+            ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
+            ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
+            
             xrange = (*(*global).step4_step2_step1_xrange)
             xtitle = 'Wavelength'
             ytitle = 'Counts'
-            ymax_value = (*global).step4_step1_ymax_value
+
             IF (isLog) THEN BEGIN
                 plot, xrange, $
                   t_data_to_plot, $
                   XTITLE = xtitle, $
                   YTITLE = ytitle,$
                   COLOR  = color,$
-                  YRANGE = [0,ymax_value],$
+                  XRANGE = [xmin,xmax],$
+                  YRANGE = [ymin,ymax],$
                   XSTYLE = 1,$
                   PSYM   = psym,$
                   /YLOG
@@ -83,7 +123,8 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
                   XTITLE = xtitle, $
                   YTITLE = ytitle,$
                   COLOR  = color,$
-                  YRANGE = [0,ymax_value],$
+                  XRANGE = [xmin,xmax],$
+                  YRANGE = [ymin,ymax],$
                   XSTYLE = 1,$
                   PSYM   = psym
             ENDELSE
@@ -99,4 +140,3 @@ ENDIF
 
 END
 
-;------------------------------------------------------------------------------
