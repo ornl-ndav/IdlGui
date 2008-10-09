@@ -57,7 +57,7 @@ XYoff          = [130,0]
 sBFceFile      = { size      : [sBaseFileLabel.size[0]+XYoff[0], $
                                 sBaseFileLabel.size[1]+XYoff[1],$
                                 370],$
-                   value     : ' ',$
+                   value     : 'N/A',$
                    uname     : 'short_ce_file_name'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
