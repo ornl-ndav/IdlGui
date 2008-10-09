@@ -569,8 +569,6 @@ CASE Event.id OF
     END
 
 ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_
-
-
 ;Critical Edge Tab ------------------------------------------------------------
 
 ;if mouse is over plot
@@ -647,6 +645,15 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_reset_scaling_button'): BEGIN
         step4_2_2_reset_scaling, Event ;scaling_step4_step2
+    END
+
+;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_
+;Scaling of Other Files
+
+;Automatic Rescaling button ---------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_automatic_rescale_button'): BEGIN
+        step4_2_3_auto_scaling, Event ;scaling_step4_step3
     END
 
 ;------------------------------------------------------------------------------
