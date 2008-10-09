@@ -38,6 +38,13 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 IdlSendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
 
+IvsLambda_selection = (*(*global).IvsLambda_selection)
+help, *IvsLambda_selection[0]
+help, *IvsLambda_selection[1] 
+
+
+
+
 END
 
 ;------------------------------------------------------------------------------
