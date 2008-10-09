@@ -415,7 +415,7 @@ PRO step4_step2_step2_scaleCE, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get scale factor (average value between lda_min and lda_max)
-s_scale_factor = getTextFieldValue(Event,'step2_y_before_text_field')
+s_scale_factor = getTextFieldValue(Event,'step2_sf_text_field')
 f_scale_factor = FLOAT(s_scale_factor)
 ;retrieve Y and Y_error of CE file and rescale them according to
 ;scaling factor found
@@ -439,6 +439,7 @@ IvsLambda_selection_error              = $
 y_error_array                          = *IvsLambda_selection_error[0]
 
 y_array_rescale                        = y_array/f_scale_factor
+
 y_error_array_rescale                  = y_error_array/f_scale_factor
 *new_IvsLambda_selection[0]            = y_array_rescale
 *IvsLambda_selection_error[0]          = y_error_array_rescale
@@ -447,7 +448,7 @@ y_error_array_rescale                  = y_error_array/f_scale_factor
 
 ;we also need to rescale the fitting parameters to replot the fitting line
 ;after rescalling
-fitting_parameters = (*global).step4_2_2_fitting_parameters
+fitting_parameters = (*global).step4_2_2_fitting_parameters_backup
 a = fitting_parameters[0]
 b = fitting_parameters[1]
 a_rescale = a / f_scale_factor
@@ -485,7 +486,7 @@ y_error_array_to_fit      = y_error_array[lda_index[0]:lda_index[1]]
 
 ;determine the fitting parameters of this data
 fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
-(*global).step4_2_2_fitting_parameters = [a,b]
+(*global).step4_2_2_fitting_parameters_backup = [a,b]
 IF ((a EQ 0 AND $
      b EQ 0) OR $
     a EQ 'NaN' OR $
