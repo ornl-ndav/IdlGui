@@ -88,7 +88,8 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
                   PSYM   = psym
             ENDELSE
         ENDIF ELSE BEGIN
-            oplot, t_data_to_plot, $
+            oplot, xrange,$
+              t_data_to_plot, $
               COLOR  = color,$
               PSYM   = psym
         ENDELSE
