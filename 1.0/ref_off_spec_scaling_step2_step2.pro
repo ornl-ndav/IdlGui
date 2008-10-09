@@ -408,12 +408,6 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
    ENDELSE
 ENDIF
 
-print,'#3'
-IvsLambda_selection                    = $
-  (*(*global).IvsLambda_selection_backup)
-y_array                                = *IvsLambda_selection[0]
-print, y_array ;remove_me
-
 END
 
 ;------------------------------------------------------------------------------
@@ -428,42 +422,28 @@ f_scale_factor = FLOAT(s_scale_factor)
 IvsLambda_selection                    = $
   (*(*global).IvsLambda_selection_backup)
 
-help, IvsLambda_selection
-print, size(IvsLambda_selection)
+;create new big array
+ sz = (size(IvsLambda_selection))(1)
+ new_IvsLambda_selection = PTRARR(sz,/ALLOCATE_HEAP)
+ index = 0
+ WHILE (index LT sz) DO BEGIN
+     *new_IvsLambda_selection[index] = *IvsLambda_selection[index]
+ index++
+ ENDWHILE
 
+;new_IvsLambda_selection = IvsLambda_selection ;BAD, change called pointer too
 
-y_array                                = *IvsLambda_selection[0]
+y_array                                = *new_IvsLambda_selection[0]
 IvsLambda_selection_error              = $
   (*(*global).IvsLambda_selection_error_backup)
 y_error_array                          = *IvsLambda_selection_error[0]
 
-help, y_array
-print, y_array
-
-;copy array by value
-sz = N_ELEMENTS(y_array)
-new_y_array       = FLTARR(sz)
-new_y_error_array = FLTARR(sz)
-FOR i=0,(sz-1) DO BEGIN
-    new_y_array[i]       = y_array[i]
-    new_y_error_array[i] = y_error_array[i]
-ENDFOR
-
-print, '#1'
-print, new_y_array ;remove_me
-
-y_array_rescale                        = new_y_array/f_scale_factor
-y_error_array_rescale                  = new_y_error_array/f_scale_factor
-*IvsLambda_selection[0]                = y_array_rescale
+y_array_rescale                        = y_array/f_scale_factor
+y_error_array_rescale                  = y_error_array/f_scale_factor
+*new_IvsLambda_selection[0]            = y_array_rescale
 *IvsLambda_selection_error[0]          = y_error_array_rescale
-(*(*global).IvsLambda_selection)       = IvsLambda_selection
+(*(*global).IvsLambda_selection)       = new_IvsLambda_selection
 (*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
-
-print,'#2'
-IvsLambda_selection_backup                = $
-  (*(*global).IvsLambda_selection_backup)
-y_array_backup                            = *IvsLambda_selection_backup[0]
-print, y_array_backup ;remove_me
 
 ;we also need to rescale the fitting parameters to replot the fitting line
 ;after rescalling
@@ -480,6 +460,9 @@ display_step4_step2_step2_selection, Event
 plotLambdaSelected, Event
 ;replot fitting line
 re_plot_fitting, Event
+
+PTR_FREE, new_IvsLambda_selection
+
 END
 
 ;------------------------------------------------------------------------------
