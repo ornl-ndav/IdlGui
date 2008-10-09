@@ -172,6 +172,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         sz = N_ELEMENTS(t_data_to_plot)
         xaxis = (*(*global).x_axis)
         delta_x = xaxis[1]-xaxis[0]
+        (*global).step4_1_plot2d_delta_x = delta_x
         xrange = (FINDGEN(sz)+ xmin) * delta_x
         (*(*global).step4_step2_step1_xrange) = xrange
         xtitle = 'Wavelength'

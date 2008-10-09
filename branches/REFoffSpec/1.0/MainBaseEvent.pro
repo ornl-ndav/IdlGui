@@ -395,7 +395,24 @@ CASE Event.id OF
 
 ;lin/log
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
-        display_step4_step2_step1_selection, Event ;scaling_step2_step1
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+    END
+
+;X/Y/Min/Max
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_x_min'): BEGIN
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_x_max'): BEGIN
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_y_min'): BEGIN
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_y_max'): BEGIN
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
     END
 
 ;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_
