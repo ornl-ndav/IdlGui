@@ -254,10 +254,21 @@ sSFtextField     = { size      : [XYoff[0],$
 XYoff                = [45,32]
 sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                                        sAverageYAfter.size[1]+XYoff[1],$
-                                       400,30],$ $
+                                       300,30],$ $
                          sensitive : 0,$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
+
+;***** Reset Scaling **********************************************************
+XYoff               = [5,0]
+sResetManualScaling = { size: [sManualScalingButton.size[0]+$
+                               sManualScalingButton.size[2]+XYoff[0],$
+                               sManualScalingButton.size[1]+XYoff[1],$
+                               100,$
+                               sManualScalingButton.size[3]],$
+                        sensitive: 0,$
+                        uname: 'step4_2_2_reset_scaling_button',$
+                        value: 'RESET SCALING'}
 
 ;**** Lambda shortcut name used ***********************************************
 XYoff = [-100,-60]
@@ -512,6 +523,20 @@ wManualScalingButton = WIDGET_BUTTON(wManualBase,$
                                      VALUE     = sManualScalingButton.value,$
                                      SENSITIVE = $
                                      sManualScalingButton.sensitive)
+
+;***** RESET SCALING Button ***************************************************
+wResetManualScaling = WIDGET_BUTTON(wManualBase,$
+                                     XOFFSET   = sResetManualScaling.size[0],$
+                                     YOFFSET   = sResetManualScaling.size[1],$
+                                     SCR_XSIZE = sResetManualScaling.size[2],$
+                                     SCR_YSIZE = sResetManualScaling.size[3],$
+                                     UNAME     = sResetManualScaling.uname,$
+                                     VALUE     = sResetManualScaling.value,$
+                                     SENSITIVE = $
+                                     sResetManualScaling.sensitive)
+
+
+
 
 ;***** Lambda Shortcut name used **********************************************
 wLambdsShortcut = WIDGET_LABEL(STEP_BASE,$
