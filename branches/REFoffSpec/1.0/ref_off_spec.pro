@@ -76,6 +76,7 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
                     step4_1_plot2d_delta_x: 0.0,$
+                    X_Y_min_max_backup: STRARR(4),$
                     ymin_log_mode: 0.001,$
                     step4_2_2_fitting_status: 0,$
                     step4_2_2_lambda_selected: 'min',$

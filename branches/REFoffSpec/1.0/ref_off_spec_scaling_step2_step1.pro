@@ -73,7 +73,7 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
                   XTITLE = xtitle, $
                   YTITLE = ytitle,$
                   COLOR  = color,$
-                  YRANGE = [0,ymax_value],$
+                  YRANGE = [(*global).ymin_log_mode,ymax_value],$
                   XSTYLE = 1,$
                   PSYM   = psym,$
                   /YLOG
