@@ -36,14 +36,42 @@ PRO step4_2_3_auto_scaling, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 IdlSendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
+nbr_plot = getNbrFiles(Event) ;number of files
 
 IvsLambda_selection = (*(*global).IvsLambda_selection)
 help, *IvsLambda_selection[0]
 help, *IvsLambda_selection[1] 
 
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
+      ' - Switch to Manual Mode!'
+ENDIF ELSE BEGIN
+
+    index = 1
+    WHILE (index NE nbr_plot) DO BEGIN
+
+        IdlSendToGeek_addLogBookText, Event, '--> Working with File # ' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
 
 
+
+        
+
+
+
+
+        index++
+    ENDWHILE
+
+ENDELSE
 
 END
 
