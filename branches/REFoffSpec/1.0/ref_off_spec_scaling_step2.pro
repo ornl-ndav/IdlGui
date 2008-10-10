@@ -216,3 +216,51 @@ ENDIF
     
 END
 
+;------------------------------------------------------------------------------
+PRO re_plot_lambda_selected, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;Lambda
+sLdaMin   = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
+sLdaMax   = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
+f_Lda_min = FLOAT(sLdaMin)
+f_lda_max = FLOAT(sLdaMax)
+
+;xmin/xmax (new)
+xmin_now   = getTextFieldValue(Event,'step4_2_zoom_x_min')
+xmax_now   = getTextFieldValue(Event,'step4_2_zoom_x_max')
+f_xmin_now = FLOAT(xmin_now)
+f_xmax_now = FLOAT(xmax_now)
+
+device_xmin = (*global).step4_2_2_draw_xmin
+device_xmax = (*global).step4_2_2_draw_xmax
+ratio       = (device_xmax - device_xmin)
+ratio      /= (f_xmax_now - f_xmin_now)
+
+device_ymin = (*global).step4_2_2_draw_ymin
+device_ymax = (*global).step4_2_2_draw_ymax
+
+;check if f_lda_min is inside the zoom region requested)
+IF (f_Lda_min GE f_xmin_now AND $
+    f_Lda_min LE f_xmax_now) THEN BEGIN
+
+    device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_min)
+    plots, device_lda, device_ymin, /DEVICE, COLOR=200
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+
+ENDIF
+
+;check if f_lda_max is inside the zoom region requested)
+IF (f_Lda_max GE f_xmin_now AND $
+    f_Lda_max LE f_xmax_now) THEN BEGIN
+
+    device_lda  = device_xmax - ratio * (f_xmax_now - f_Lda_max)
+    plots, device_lda, device_ymin, /DEVICE, COLOR=200
+    plots, device_lda, device_ymax, /DEVICE, /CONTINUE, COLOR=200
+
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
