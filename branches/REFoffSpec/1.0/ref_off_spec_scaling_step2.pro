@@ -85,27 +85,75 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
 ;array that will contain the counts vs wavelenght of each data file
     IvsLambda_selection = (*(*global).IvsLambda_selection)
 
-    index = 0
-    box_color     = (*global).box_color
-    WHILE (index LT nbr_plot) DO BEGIN
-        
-        t_data_to_plot = *IvsLambda_selection[index]
-        color          = box_color[index]
-        psym = getStep4Step2PSYMselected(Event)
-        
-        isLog = getStep4Step2PlotType(Event)
+    xmin = getTextFieldValue(Event,'step4_2_zoom_x_min')
+    xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
+    ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
+    ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
+            
+    tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+    CASE (CurrTabSelect) OF
+        0: BEGIN ;all_files
+            index = 0
+            box_color     = (*global).box_color
+            WHILE (index LT nbr_plot) DO BEGIN
+                
+                t_data_to_plot = *IvsLambda_selection[index]
+                color          = box_color[index]
+                psym = getStep4Step2PSYMselected(Event)
+                
+                isLog = getStep4Step2PlotType(Event)
+                
+                IF (index EQ 0) THEN BEGIN
+                    
+                    xrange = (*(*global).step4_step2_step1_xrange)
+                    xtitle = 'Wavelength'
+                    ytitle = 'Counts'
+                    
+                    IF (isLog) THEN BEGIN
+                        plot, xrange, $
+                          t_data_to_plot, $
+                          XTITLE = xtitle, $
+                          YTITLE = ytitle,$
+                          COLOR  = color,$
+                          XRANGE = [xmin,xmax],$
+                          YRANGE = [ymin,ymax],$
+                          XSTYLE = 1,$
+                          PSYM   = psym,$
+                          /YLOG
+                    ENDIF ELSE BEGIN
+                        plot, xrange, $
+                          t_data_to_plot, $
+                          XTITLE = xtitle, $
+                          YTITLE = ytitle,$
+                          COLOR  = color,$
+                          XRANGE = [xmin,xmax],$
+                          YRANGE = [ymin,ymax],$
+                          XSTYLE = 1,$
+                          PSYM   = psym
+                    ENDELSE
+                ENDIF ELSE BEGIN
+                    oplot, xrange,$
+                      t_data_to_plot, $
+                      COLOR  = color,$
+                      PSYM   = psym
+                ENDELSE
+                index++
+            ENDWHILE
+        END                     ;end of 0:
 
-        IF (index EQ 0) THEN BEGIN
-
-            xmin = getTextFieldValue(Event,'step4_2_zoom_x_min')
-            xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
-            ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
-            ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
+        1: BEGIN ;CE file only
+            index = 0
+            box_color     = (*global).box_color
+            t_data_to_plot = *IvsLambda_selection[index]
+            color          = box_color[index]
+            psym = getStep4Step2PSYMselected(Event)
+            isLog = getStep4Step2PlotType(Event)
             
             xrange = (*(*global).step4_step2_step1_xrange)
             xtitle = 'Wavelength'
             ytitle = 'Counts'
-
+            
             IF (isLog) THEN BEGIN
                 plot, xrange, $
                   t_data_to_plot, $
@@ -128,15 +176,13 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
                   XSTYLE = 1,$
                   PSYM   = psym
             ENDELSE
-        ENDIF ELSE BEGIN
-            oplot, xrange,$
-              t_data_to_plot, $
-              COLOR  = color,$
-              PSYM   = psym
-        ENDELSE
-        index++
-    ENDWHILE
-ENDIF
+        END ;end of 1:
 
+        2: BEGIN ;all files or only two files selected
+
+        END
+    ENDCASE
+ENDIF
+    
 END
 
