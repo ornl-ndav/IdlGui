@@ -179,14 +179,15 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
         
         0: BEGIN                ;all files
-            display_step4_step2_step1_selection, Event ;scaling_step2_step1
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
         END
         1: BEGIN                ;CE files
-            display_step4_step2_step2_selection, Event ;scaling_step2_step2
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
             plotLambdaSelected, Event ;scaling_step2_step2
             re_plot_fitting, Event ;scaling_step2_step2
         END
         2: BEGIN                ;other files
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
             check_step4_2_3_gui, Event ;scaling_step2_step3
         END
         ELSE:

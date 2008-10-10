@@ -51,8 +51,8 @@ SUPER_USERS       = ['j35']
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
 ;scaling_tab: 0: pixel range selection, 1: scaling
-sDEBUGGING = { tab: {main_tab: 3,$
-                     step4_tab: 1,$
+sDEBUGGING = { tab: {main_tab: 1,$
+                     step4_tab: 0,$
                      scaling_tab: 0},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
