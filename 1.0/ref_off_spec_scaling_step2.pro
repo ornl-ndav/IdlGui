@@ -54,12 +54,42 @@ ENDIF ELSE BEGIN
         symin = STRCOMPRESS((*global).ymin_log_mode ,/REMOVE_ALL)
         symax = STRCOMPRESS((*global).step4_step1_ymax_value,/REMOVE_ALL)
         
+        (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
+
         putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
         putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
         putTextFieldValue, Event, 'step4_2_zoom_y_min', symin
         putTextFieldValue, Event, 'step4_2_zoom_y_max', symax
         
     ENDIF
+ENDELSE
+
+END
+
+;------------------------------------------------------------------------------
+;When RESET zoom button is used
+PRO  reset_zoom_widgets, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;check that xmax is not empty or equal to 0
+xmax_value = getTextFieldValue(Event,'step4_2_zoom_x_max')
+no_data = 0
+CATCH, no_data
+IF (no_data NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    X_Y_min_max_array = (*global).X_Y_min_max_backup
+    sXmin = X_Y_min_max_array[0]
+    sYmin = X_Y_min_max_array[1]
+    sXmax = X_Y_min_max_array[2]
+    sYmax = X_Y_min_max_array[3]
+    
+    putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
+    putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
+    putTextFieldValue, Event, 'step4_2_zoom_y_min', symin
+    putTextFieldValue, Event, 'step4_2_zoom_y_max', symax
+        
 ENDELSE
 
 END
