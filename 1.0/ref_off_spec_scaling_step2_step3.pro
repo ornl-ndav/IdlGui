@@ -74,17 +74,18 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
 
-IdlSendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
+IdlSendToGeek_addLogBookText, Event, '> Automatic Scaling :' 
 nbr_plot    = getNbrFiles(Event) ;number of files
 ListOfFiles = (*(*global).list_OF_ascii_files)
 
 IvsLambda_selection       = (*(*global).IvsLambda_selection)
 IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+scaling_factor            = (*(*global).scaling_factor)
 
 auto_scale_status = 1 ;ok by default
 
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
@@ -158,6 +159,8 @@ ENDIF ELSE BEGIN
         SF = FLOAT(total_low_lda_y) / FLOAT(total_high_lda_y)
         IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
           STRCOMPRESS(SF,/REMOVE_ALL)
+
+        scaling_factor[index] = SF
         
 ;Apply SF to working file (data and error)
         new_low_lda_y_array = low_lda_y_array / SF
@@ -171,6 +174,7 @@ ENDIF ELSE BEGIN
 
     IF (auto_scale_status) THEN BEGIN ;auto scaling worked
         re_display_step4_step2_step1_selection, Event ;scaling_step2
+        (*(*global).scaling_factor) = scaling_factor
     ENDIF
     
 ENDELSE
@@ -231,4 +235,111 @@ index_selected = getDropListSelectedIndex(Event, $
 list_OF_files = (*(*global).short_list_OF_ascii_files)
 putTextFieldValue, Event, 'step4_2_3_manual_reference_value', $
   list_OF_files[index_selected]
+
+;display scaling factor for this file
+scaling_factor = (*(*global).scaling_factor)
+SF = scaling_factor[index_selected+1]
+putTextFieldValue, Event, 'step4_2_3_sf_text_field', $
+  STRCOMPRESS(SF,/REMOVE_ALL)
 END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO step4_2_3_manual_scaling, Event, FACTOR=factor
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+IdlSendToGeek_addLogBookText, Event, '> Manual Scaling :' 
+nbr_plot    = getNbrFiles(Event) ;number of files
+ListOfFiles = (*(*global).list_OF_ascii_files)
+
+IvsLambda_selection       = (*(*global).IvsLambda_selection)
+IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+scaling_factor            = (*(*global).scaling_factor)
+
+auto_scale_status = 1 ;ok by default
+
+no_error = 0
+;CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
+      ' - Switch to Manual Mode!'
+ENDIF ELSE BEGIN
+
+;get name of reference file
+    index = $
+      getDropListSelectedIndex(Event, $
+                               'step4_2_3_work_on_file_droplist')
+    IdlSendToGeek_addLogBookText, Event, '--> Reference File: ' + $
+      ListOfFiles[index]
+    IdlSendToGeek_addLogBookText, Event, '--> Working File  : ' + $
+      ListOfFiles[index+1]
+    
+;;get y and y_error of low and high lda data
+    low_lda_y_array        = *IvsLambda_selection[index+1]
+    low_lda_y_error_array  = *IvsLambda_selection_error[index+1]
+    high_lda_y_array       = *IvsLambda_selection[index]
+    high_lda_y_error_array = *IvsLambda_selection_error[index]
+
+    print, 'before:'
+    print, scaling_factor[index+1]
+
+    CASE (FACTOR) OF
+        '4': BEGIN
+            SF = (*global).manual_scaling_4 
+            SF = scaling_factor[index+1] * SF
+        END
+        '3': BEGIN
+            SF  = (*global).manual_scaling_3
+            SF  = scaling_factor[index+1] * SF
+        END
+        '2': BEGIN
+            SF = (*global).manual_scaling_2
+            SF = scaling_factor[index+1] * SF
+        END
+        '-4': BEGIN
+            SF = (*global).manual_scaling_4
+            SF = scaling_factor[index+1] / SF
+        END
+        '-3': BEGIN
+            SF = (*global).manual_scaling_3
+            SF = scaling_factor[index+1] / SF
+        END
+        '-2': BEGIN
+            SF = (*global).manual_scaling_2
+            SF = scaling_factor[index+1] / SF
+        END
+        ELSE: BEGIN
+            SF = getTextFieldValue(Event,'step4_2_3_sf_text_field')
+            fSF = FLOAT(SF)
+        END
+    ENDCASE
+    
+    scaling_factor[index+1] = SF
+    (*(*global).scaling_factor) = scaling_factor
+
+    print, 'after:'
+    print, SF
+
+;display scaling factor
+    IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
+      STRCOMPRESS(SF,/REMOVE_ALL)
+
+    new_low_lda_y_array = low_lda_y_array / SF
+    new_low_lda_y_error_array = low_lda_y_error_array / SF
+        
+    *IvsLambda_selection[index+1] = new_low_lda_y_array
+    *IvsLambda_selection_error[index+1] = new_low_lda_y_error_array
+
+    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    
+ENDELSE
+
+END
+
+;------------------------------------------------------------------------------

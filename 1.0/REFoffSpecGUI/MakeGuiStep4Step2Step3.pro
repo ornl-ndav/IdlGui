@@ -133,7 +133,7 @@ sScalingCWField = { size  : [XYoff[0],$
                              sScalingBase.size[2]-2*XYoff[0],$
                              40],$
                     xsize : 10,$
-                    ysize : 1,$
+                    ysize : 7,$
                     uname : 'step4_2_3_sf_text_field',$
                     value : '1'}
 

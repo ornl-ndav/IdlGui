@@ -711,26 +711,56 @@ CASE Event.id OF
 ;Automatic Rescaling button ---------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_3_automatic_rescale_button'): BEGIN
-        step4_2_3_auto_scaling, Event ;scaling_step4_step3
+        step4_2_3_auto_scaling, Event ;scaling_step2_step3
     END
 
 ;Working file droplist --------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_3_work_on_file_droplist'): BEGIN
-        step4_2_3_droplist, Event ;scaling_step4_step3
+        step4_2_3_droplist, Event ;scaling_step2_step3
     END
 
+;Moving up working file data by factor #4 -------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_3increase_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='-4' ;scaling_step2_step3
+    END
 
+;Moving up working file data by factor #3 -------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_2increase_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='-3' ;scaling_step2_step3
+    END
 
+;Moving up working file data by factor #2 -------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_1increase_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='-2' ;scaling_step2_step3
+    END
 
+;Moving down working file data by factor #4 -----------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_3decrease_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='4' ;scaling_step2_step3
+    END
 
+;Moving down working file data by factor #3 -----------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_2decrease_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='3' ;scaling_step2_step3
+    END
 
+;Moving down working file data by factor #2 -----------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_1decrease_button'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='2' ;scaling_step2_step3
+    END
 
-
-
-
-
-
+;SF manual cw_field -----------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_sf_text_field'): BEGIN
+        step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+    END
 
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
