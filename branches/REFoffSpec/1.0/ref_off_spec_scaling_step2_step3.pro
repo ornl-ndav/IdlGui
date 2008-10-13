@@ -189,4 +189,22 @@ SWITCH (sSF) OF
     ELSE:
 ENDSWITCH
 activate_widget, Event, 'step4_2_3_automatic_rescale_button', activate_status
+activate_widget, Event, 'step4_2_3_manual_mode_frame', activate_status
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step4_2_3_droplist, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get list of files
+list_OF_files = (*(*global).short_list_OF_ascii_files)
+sz = N_ELEMENTS(list_OF_files)
+;put by default the first file from the list as the reference file
+putTextFieldValue, Event, 'step4_2_3_manual_reference_value', list_OF_files[0]
+CASE (sz) OF
+    0: list = ['']
+    1: list = list_OF_files[1]
+    ELSE: list = list_OF_files[1:sz-1]
+ENDCASE
+SetDroplistValue, Event, 'step4_2_3_work_on_file_droplist', list
 END

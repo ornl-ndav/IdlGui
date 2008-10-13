@@ -460,6 +460,7 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 list_OF_files = (*(*global).list_OF_ascii_files)
 ;get only short file name of all files
 short_list_OF_files = getShortName(list_OF_files)
+(*(*global).short_list_OF_ascii_files) = short_list_OF_files
 ;put list of files in droplist of step3
 putListOfFilesShifting, Event, short_list_OF_files  ;remove comments
 IF (short_list_OF_Files[0] EQ '') THEN BEGIN

@@ -57,6 +57,12 @@ WIDGET_CONTROL, id, SET_DROPLIST_SELECT=index
 END
 
 ;------------------------------------------------------------------------------
+PRO SetDroplistValue, Event, uname, list
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=list
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 
@@ -288,6 +294,5 @@ ENDIF ELSE BEGIN
     activate_status = 0
 ENDELSE
 activate_widget_list, Event, uname_list, activate_status
-
 END
 
