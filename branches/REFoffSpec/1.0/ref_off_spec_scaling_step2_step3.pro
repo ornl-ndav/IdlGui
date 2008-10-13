@@ -78,9 +78,20 @@ IdlSendToGeek_addLogBookText, Event, '> Automatic Scaling :'
 nbr_plot    = getNbrFiles(Event) ;number of files
 ListOfFiles = (*(*global).list_OF_ascii_files)
 
-IvsLambda_selection       = (*(*global).IvsLambda_selection)
-IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+IvsLambda_selection       = (*(*global).IvsLambda_selection_step3_backup)
+IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_step3_backup)
 scaling_factor            = (*(*global).scaling_factor)
+
+;create new big array
+sz = (size(IvsLambda_selection))(1)
+new_IvsLambda_selection       = PTRARR(sz,/ALLOCATE_HEAP)
+new_IvsLambda_selection_error = PTRARR(sz,/ALLOCATE_HEAP)
+index = 0
+WHILE (index LT sz) DO BEGIN
+    *new_IvsLambda_selection[index] = *IvsLambda_selection[index]
+    *new_IvsLambda_selection_error[index] = *IvsLambda_selection_error[index]
+    index++
+ENDWHILE
 
 auto_scale_status = 1 ;ok by default
 
@@ -96,10 +107,10 @@ ENDIF ELSE BEGIN
     WHILE (index NE nbr_plot) DO BEGIN
 
 ;;get y and y_error of low and high lda data
-        low_lda_y_array        = *IvsLambda_selection[index]
-        low_lda_y_error_array  = *IvsLambda_selection_error[index]
-        high_lda_y_array       = *IvsLambda_selection[index-1]
-        high_lda_y_error_array = *IvsLambda_selection_error[index-1]
+        low_lda_y_array        = *new_IvsLambda_selection[index]
+        low_lda_y_error_array  = *new_IvsLambda_selection_error[index]
+        high_lda_y_array       = *new_IvsLambda_selection[index-1]
+        high_lda_y_error_array = *new_IvsLambda_selection_error[index-1]
 
         IdlSendToGeek_addLogBookText, Event, '--> Reference File: ' + $
           ListOfFiles[index-1]
@@ -173,6 +184,10 @@ ENDIF ELSE BEGIN
     ENDWHILE
 
     IF (auto_scale_status) THEN BEGIN ;auto scaling worked
+
+        (*(*global).IvsLambda_selection)       = IvsLambda_selection
+        (*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
+
         re_display_step4_step2_step1_selection, Event ;scaling_step2
         (*(*global).scaling_factor) = scaling_factor
     ENDIF

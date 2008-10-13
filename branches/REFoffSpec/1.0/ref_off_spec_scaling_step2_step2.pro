@@ -466,6 +466,10 @@ y_error_array_rescale                  = y_error_array/f_scale_factor
 (*(*global).IvsLambda_selection)       = new_IvsLambda_selection
 (*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
 
+(*(*global).IvsLambda_selection_step3_backpup) = new_IvsLambda_selection
+(*(*global).IvsLambda_selection_error_step3_backpup) = $
+  new_IvsLambda_selection_error
+
 ;we also need to rescale the fitting parameters to replot the fitting line
 ;after rescalling
 fitting_parameters = (*global).step4_2_2_fitting_parameters_backup
