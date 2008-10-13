@@ -714,6 +714,24 @@ CASE Event.id OF
         step4_2_3_auto_scaling, Event ;scaling_step4_step3
     END
 
+;Working file droplist --------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_work_on_file_droplist'): BEGIN
+        step4_2_3_droplist, Event ;scaling_step4_step3
+    END
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------

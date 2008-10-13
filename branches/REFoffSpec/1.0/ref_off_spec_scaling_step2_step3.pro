@@ -221,3 +221,14 @@ CASE (sz) OF
 ENDCASE
 SetDroplistValue, Event, 'step4_2_3_work_on_file_droplist', list
 END
+
+;------------------------------------------------------------------------------
+PRO step4_2_3_droplist, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+index_selected = getDropListSelectedIndex(Event, $
+                                          'step4_2_3_work_on_file_droplist')
+list_OF_files = (*(*global).short_list_OF_ascii_files)
+putTextFieldValue, Event, 'step4_2_3_manual_reference_value', $
+  list_OF_files[index_selected]
+END
