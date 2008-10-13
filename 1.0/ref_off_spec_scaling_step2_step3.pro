@@ -181,6 +181,7 @@ END
 PRO check_step4_2_3_gui, Event
 ;get value of SF from step4_2_2
 sSF = getTextFieldValue(Event,'step2_sf_text_field')
+list_OF_files = getDroplistValue(Event,'step4_2_3_work_on_file_droplist')
 activate_status = 1
 SWITCH (sSF) OF
     '-NaN':
@@ -188,8 +189,20 @@ SWITCH (sSF) OF
     '': activate_status = 0
     ELSE:
 ENDSWITCH
+
+;check if manual mode can be enabled or not
+sz = (size(list_OF_files))(1)
+IF (STRCOMPRESS(list_OF_files[0],/REMOVE_ALL) NE '') THEN BEGIN
+    map_status = 1
+ENDIF ELSE BEGIN
+    map_status = 0
+    activate_status = 0
+ENDELSE
+
 activate_widget, Event, 'step4_2_3_automatic_rescale_button', activate_status
 activate_widget, Event, 'step4_2_3_manual_mode_frame', activate_status
+MapBase, Event, 'step4_2_3_manual_hidden_frame', map_status
+
 END
 
 ;------------------------------------------------------------------------------

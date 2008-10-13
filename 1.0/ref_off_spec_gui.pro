@@ -63,6 +63,12 @@ WIDGET_CONTROL, id, SET_VALUE=list
 END
 
 ;------------------------------------------------------------------------------
+PRO MapBase, Event, uname, map_status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, MAP=map_status
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 
