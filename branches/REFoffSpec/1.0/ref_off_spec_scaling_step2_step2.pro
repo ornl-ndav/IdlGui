@@ -415,6 +415,7 @@ ENDIF
 
 IF (fit_scale_status) THEN BEGIN ;populate droplist of step3
     populate_step4_2_3_droplist, Event ;scaling_step2_step3
+    
 ENDIF
 
 END
@@ -431,6 +432,10 @@ ENDIF ELSE BEGIN
     putTextFieldvalue, Event, 'step2_sf_text_field',s_scale_factor
 ENDELSE
 f_scale_factor = FLOAT(s_scale_factor)
+nbr_files      = getNbrFiles(Event)
+scaling_factor = FLTARR(nbr_files) + 1
+scaling_factor[0] = f_scale_factor
+(*(*global).scaling_factor) = scaling_factor
 
 ;retrieve Y and Y_error of CE file and rescale them according to
 ;scaling factor found
