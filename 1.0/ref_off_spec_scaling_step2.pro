@@ -209,11 +209,56 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
         END ;end of 1:
 
         2: BEGIN ;all files or only two files selected
-
-        END
+            index = 0
+            box_color     = (*global).box_color
+            WHILE (index LT nbr_plot) DO BEGIN
+                
+                t_data_to_plot = *IvsLambda_selection[index]
+                color          = box_color[index]
+                psym = getStep4Step2PSYMselected(Event)
+                
+                isLog = getStep4Step2PlotType(Event)
+                
+                IF (index EQ 0) THEN BEGIN
+                    
+                    xrange = (*(*global).step4_step2_step1_xrange)
+                    xtitle = 'Wavelength'
+                    ytitle = 'Counts'
+                    
+                    IF (isLog) THEN BEGIN
+                        plot, xrange, $
+                          t_data_to_plot, $
+                          XTITLE = xtitle, $
+                          YTITLE = ytitle,$
+                          COLOR  = color,$
+                          XRANGE = [xmin,xmax],$
+                          YRANGE = [ymin,ymax],$
+                          XSTYLE = 1,$
+                          PSYM   = psym,$
+                          /YLOG
+                    ENDIF ELSE BEGIN
+                        plot, xrange, $
+                          t_data_to_plot, $
+                          XTITLE = xtitle, $
+                          YTITLE = ytitle,$
+                          COLOR  = color,$
+                          XRANGE = [xmin,xmax],$
+                          YRANGE = [ymin,ymax],$
+                          XSTYLE = 1,$
+                          PSYM   = psym
+                    ENDELSE
+                ENDIF ELSE BEGIN
+                    oplot, xrange,$
+                      t_data_to_plot, $
+                      COLOR  = color,$
+                      PSYM   = psym
+                ENDELSE
+                index++
+            ENDWHILE
+        END                     ;end of 0:
     ENDCASE
 ENDIF
-    
+
 END
 
 ;------------------------------------------------------------------------------
