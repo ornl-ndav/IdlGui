@@ -153,6 +153,8 @@ global = ptr_new ({ ucams:               ucams,$
                     IvsLambda_selection_error: PTR_NEW(0L),$
                     IvsLambda_selection_backup:       PTR_NEW(0L),$
                     IvsLambda_selection_error_backup: PTR_NEW(0L),$
+                    IvsLambda_selection_step3_backup:       PTR_NEW(0L),$
+                    IvsLambda_selection_error_step3_backup: PTR_NEW(0L),$
                     step4_step1_ymax_value: 0L,$
                     w_shifting_plot2d_draw_uname: '',$
                     w_scaling_plot2d_draw_uname: '',$
