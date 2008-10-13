@@ -61,7 +61,7 @@ sStep3ManualBase = { size      : [XYoff[0],$
                                   tab_size[2]-3*XYoff[0],705],$
                      uname     : 'step4_2_3_manual_mode_frame',$
                      frame     : 1,$
-                     sensitive : 1}
+                     sensitive : 0}
 
 ;**** Manual Mode Label *******************************************************
 XYoff             = [20,-8]
@@ -77,7 +77,7 @@ sLowLdaLabel = { size  : [XYoff[0],$
                  uname : 'step4_2_3_manual_reference_label'}
 
 ;**** Refernce lda File Name value ********************************************
-XYoff      = [78,0]
+XYoff      = [180,0]
 sLowLdaValue = { size  : [sLowLdaLabel.size[0]+XYoff[0],$
                           sLowLdaLabel.size[1]+XYoff[1],$
                           415],$
@@ -93,7 +93,7 @@ sHighLdaLabel = { size  : [sLowLdaLabel.size[0]+XYoff[0], $
 
 ;***** active lda file Droplist ***********************************************
 XYoff       = [67,-10]
-ListOfFiles = STRARR(1)
+ListOfFiles = ['                                         ']
 sHighLdaValue = { size  : [sHighLdaLabel.size[0]+XYoff[0],$
                            sHighLdaLabel.size[1]+XYoff[1],$
                            365,30],$
@@ -109,7 +109,7 @@ sHiddenBase = { size  : [XYoff[0],$
                          650],$
                 frame : 0,$
                 uname : 'step4_2_3_manual_hidden_frame',$
-                map   : 1}
+                map   : 0}
 
 ;------------------------------------------------------------------------------
 ;***** Scaling Factor Base ****************************************************

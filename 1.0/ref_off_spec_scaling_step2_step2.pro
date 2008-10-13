@@ -366,6 +366,8 @@ PROCESSING = (*global).processing
 FAILED     = (*global).failed
 OK         = (*global).ok
 
+fit_scale_status = 1 ;worked by default
+
 text = '> Automatic Fitting and Scaling :' 
 IDLsendToGeek_addLogBookText, Event, text
 
@@ -385,10 +387,12 @@ CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    fit_scale_status = 0
 ENDIF ELSE BEGIN
     Step4_step2_step2_fitCE, Event, lda_min, lda_max ;scaling_step2_step2
     IF ((*global).step4_2_2_fitting_status EQ 0) THEN BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+       fit_scale_status = 0
     ENDIF ELSE BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
@@ -398,14 +402,19 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-CATCH, scale_error ;remove_me comments
+   CATCH, scale_error           ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
-      CATCH,/CANCEL
-      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+       CATCH,/CANCEL
+       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+       fit_scale_status = 0
    ENDIF ELSE BEGIN
-      step4_step2_step2_scaleCE, Event ;scaling_step2_step2
-      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+       step4_step2_step2_scaleCE, Event ;scaling_step2_step2
+       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
    ENDELSE
+ENDIF
+
+IF (fit_scale_status) THEN BEGIN ;populate droplist of step3
+    populate_step4_2_3_droplist, Event ;scaling_step2_step3
 ENDIF
 
 END

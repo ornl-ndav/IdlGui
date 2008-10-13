@@ -50,10 +50,9 @@ SUPER_USERS       = ['j35']
 ;DEBUGGING (enter the tab you want to see)
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
-;scaling_tab: 0: pixel range selection, 1: scaling
 sDEBUGGING = { tab: {main_tab: 1,$
                      step4_tab: 0,$
-                     scaling_tab: 0},$
+                     scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -119,6 +118,7 @@ global = ptr_new ({ ucams:               ucams,$
                     ascii_path:          '~/',$
                     sys_color_face_3d:   INTARR(3),$
                     list_OF_ascii_files: ptr_new(0L),$
+                    short_list_OF_ascii_files: ptr_new(0L),$
                     trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
                     pData_y:             ptr_new(0L),$
