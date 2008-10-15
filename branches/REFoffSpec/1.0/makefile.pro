@@ -11,6 +11,7 @@ resolve_routine, "CONGRID", /either
 resolve_routine, "XDISPLAYFILE", /either
 resolve_routine, "ARRAY_INDICES", /either
 resolve_routine, "REVERSE", /either
+resolve_routine, "POLY_FIT", /either
 
 save,/routines,filename = CurrentFolder + '/ref_off_spec.sav'
 exit

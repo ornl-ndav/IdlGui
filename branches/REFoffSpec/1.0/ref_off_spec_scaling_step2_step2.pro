@@ -383,7 +383,7 @@ IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
 ;Fitting --------------------------------------
 IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
-CATCH, fit_error
+;CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -457,9 +457,6 @@ new_IvsLambda_selection_error = PTRARR(sz,/ALLOCATE_HEAP)
 
 y_array                                = *new_IvsLambda_selection[0]
 y_error_array                          = *new_IvsLambda_selection_error[0]
-
-help, y_array ;remove_me
-help, y_error_array ;remove_me
 
 y_array_rescale                        = y_array/f_scale_factor
 
