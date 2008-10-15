@@ -458,6 +458,9 @@ new_IvsLambda_selection_error = PTRARR(sz,/ALLOCATE_HEAP)
 y_array                                = *new_IvsLambda_selection[0]
 y_error_array                          = *new_IvsLambda_selection_error[0]
 
+help, y_array ;remove_me
+help, y_error_array ;remove_me
+
 y_array_rescale                        = y_array/f_scale_factor
 
 y_error_array_rescale                  = y_error_array/f_scale_factor

@@ -50,9 +50,9 @@ SUPER_USERS       = ['j35']
 ;DEBUGGING (enter the tab you want to see)
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
-sDEBUGGING = { tab: {main_tab: 3,$
-                     step4_tab: 1,$
-                     scaling_tab: 2},$
+sDEBUGGING = { tab: {main_tab: 1,$
+                     step4_tab: 0,$
+                     scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -74,9 +74,9 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
-                    manual_scaling_4: FLOAT(40.0),$
-                    manual_scaling_3: FLOAT(10.0),$
-                    manual_scaling_2: FLOAT(2.0),$
+                    manual_scaling_4: FLOAT(5),$
+                    manual_scaling_3: FLOAT(2),$
+                    manual_scaling_2: FLOAT(1.5),$
                     step4_1_plot2d_delta_x: 0.0,$
                     scaling_factor: ptr_new(0L),$
                     X_Y_min_max_backup: STRARR(4),$
