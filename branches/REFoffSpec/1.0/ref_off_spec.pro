@@ -150,7 +150,9 @@ global = ptr_new ({ ucams:               ucams,$
                     step4_step2_step1_xrange:  PTR_NEW(0L),$
                     step4_step2_data_to_plot:  PTR_NEW(0L),$
                     IvsLambda_selection:       PTR_NEW(0L),$
+                    new_IvsLambda_selection:   PTR_NEW(0L),$
                     IvsLambda_selection_error: PTR_NEW(0L),$
+                    new_IvsLambda_selection_error: PTR_NEW(0L),$
                     IvsLambda_selection_backup:       PTR_NEW(0L),$
                     IvsLambda_selection_error_backup: PTR_NEW(0L),$
                     IvsLambda_selection_step3_backup:       PTR_NEW(0L),$
