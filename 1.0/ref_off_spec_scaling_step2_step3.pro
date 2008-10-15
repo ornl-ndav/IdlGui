@@ -278,9 +278,22 @@ IdlSendToGeek_addLogBookText, Event, '> Manual Scaling :'
 nbr_plot    = getNbrFiles(Event) ;number of files
 ListOfFiles = (*(*global).list_OF_ascii_files)
 
-IvsLambda_selection       = (*(*global).IvsLambda_selection)
-IvsLambda_selection_error = (*(*global).IvsLambda_selection_error)
+IvsLambda_selection       = (*(*global).IvsLambda_selection_step3_backup)
+IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_step3_backup)
 scaling_factor            = (*(*global).scaling_factor)
+
+;create new big array
+sz = (size(*IvsLambda_selection[0]))(1)
+new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
+new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
+index = 0
+WHILE (index LT nbr_plot) DO BEGIN
+    new_IvsLambda_selection[index,*] = $
+      *IvsLambda_selection[index]
+    new_IvsLambda_selection_error[index,*] = $
+      *IvsLambda_selection_error[index]
+    index++
+ENDWHILE
 
 auto_scale_status = 1 ;ok by default
 
@@ -300,64 +313,80 @@ ENDIF ELSE BEGIN
       ListOfFiles[index]
     IdlSendToGeek_addLogBookText, Event, '--> Working File  : ' + $
       ListOfFiles[index+1]
-    
-;;get y and y_error of low and high lda data
-    low_lda_y_array        = *IvsLambda_selection[index+1]
-    low_lda_y_error_array  = *IvsLambda_selection_error[index+1]
-    high_lda_y_array       = *IvsLambda_selection[index]
-    high_lda_y_error_array = *IvsLambda_selection_error[index]
 
-    print, 'before:'
-    print, scaling_factor[index+1]
-
-    CASE (FACTOR) OF
-        '4': BEGIN
-            SF = (*global).manual_scaling_4 
-            SF = scaling_factor[index+1] * SF
-        END
-        '3': BEGIN
-            SF  = (*global).manual_scaling_3
-            SF  = scaling_factor[index+1] * SF
-        END
-        '2': BEGIN
-            SF = (*global).manual_scaling_2
-            SF = scaling_factor[index+1] * SF
-        END
-        '-4': BEGIN
-            SF = (*global).manual_scaling_4
-            SF = scaling_factor[index+1] / SF
-        END
-        '-3': BEGIN
-            SF = (*global).manual_scaling_3
-            SF = scaling_factor[index+1] / SF
-        END
-        '-2': BEGIN
-            SF = (*global).manual_scaling_2
-            SF = scaling_factor[index+1] / SF
-        END
-        ELSE: BEGIN
-            SF = getTextFieldValue(Event,'step4_2_3_sf_text_field')
-            fSF = FLOAT(SF)
-        END
-    ENDCASE
-    
-    scaling_factor[index+1] = SF
-    (*(*global).scaling_factor) = scaling_factor
-
-    print, 'after:'
-    print, SF
-
-;display scaling factor
-    IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
-      STRCOMPRESS(SF,/REMOVE_ALL)
-
-    new_low_lda_y_array = low_lda_y_array / SF
-    new_low_lda_y_error_array = low_lda_y_error_array / SF
+    file_index = 0
+    WHILE (file_index LT nbr_plot-1) DO BEGIN
         
-    *IvsLambda_selection[index+1] = new_low_lda_y_array
-    *IvsLambda_selection_error[index+1] = new_low_lda_y_error_array
+;;get y and y_error of low and high lda data
+        low_lda_y_array        = new_IvsLambda_selection[file_index+1,*]
+        low_lda_y_error_array  = new_IvsLambda_selection_error[file_index+1,*]
+        
+        IF (file_index EQ index) THEN BEGIN
+            
+            CASE (FACTOR) OF
+                '4': BEGIN
+                    SF = (*global).manual_scaling_4 
+                    SF = scaling_factor[index+1] * SF
+                END
+                '3': BEGIN
+                    SF  = (*global).manual_scaling_3
+                    SF  = scaling_factor[index+1] * SF
+                END
+                '2': BEGIN
+                    SF = (*global).manual_scaling_2
+                    SF = scaling_factor[index+1] * SF
+                END
+                '-4': BEGIN
+                    SF = (*global).manual_scaling_4
+                    SF = scaling_factor[index+1] / SF
+                END
+                '-3': BEGIN
+                    SF = (*global).manual_scaling_3
+                    SF = scaling_factor[index+1] / SF
+                END
+                '-2': BEGIN
+                    SF = (*global).manual_scaling_2
+                    SF = scaling_factor[index+1] / SF
+                END
+                ELSE: BEGIN
+                    SF = getTextFieldValue(Event,'step4_2_3_sf_text_field')
+                    fSF = FLOAT(SF)
+                END
+            ENDCASE
+            
+            scaling_factor[file_index+1] = SF
+            (*(*global).scaling_factor) = scaling_factor
+            
+;display new SF in cw_field
+            putTextFieldValue, Event, 'step4_2_3_sf_text_field',$
+              STRCOMPRESS(SF,/REMOVE_ALL)
 
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+        ENDIF ELSE BEGIN
+            
+            SF = scaling_factor[file_index+1]
+            
+        ENDELSE
+        
+;display scaling factor
+        IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
+          STRCOMPRESS(SF,/REMOVE_ALL)
+        
+        new_low_lda_y_array       = low_lda_y_array / SF
+        new_low_lda_y_error_array = low_lda_y_error_array / SF
+
+        new_IvsLambda_selection[file_index+1,*]       = new_low_lda_y_array
+        new_IvsLambda_selection_error[file_index+1,*] = $
+          new_low_lda_y_error_array
+        file_index++
+    ENDWHILE
+    
+    (*(*global).new_IvsLambda_selection)       = new_IvsLambda_selection
+    (*(*global).new_IvsLambda_selection_error) = $
+      new_IvsLambda_selection_error
+    
+    re_display_step4_step2_step1_selection, $
+      Event, $
+      MODE='AUTOSCALE'          ;scaling_step2
     
 ENDELSE
 
@@ -365,5 +394,15 @@ END
 
 ;------------------------------------------------------------------------------
 PRO step4_2_3_reset_scaling, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+nbr_plot       = getNbrFiles(Event) ;number of files
+scaling_factor = (*(*global).scaling_factor)
+index = 1
+WHILE (index LT nbr_plot) DO BEGIN
+    scaling_factor[index] = 1
+    index++
+ENDWHILE
+(*(*global).scaling_factor) = scaling_factor
 re_display_step4_step2_step1_selection, Event ;scaling_step2
 END
