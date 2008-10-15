@@ -402,7 +402,7 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-   CATCH, scale_error           ;remove_me comments
+;   CATCH, scale_error           ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
        CATCH,/CANCEL
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -441,33 +441,33 @@ scaling_factor[0] = f_scale_factor
 ;scaling factor found
 IvsLambda_selection                    = $
   (*(*global).IvsLambda_selection_backup)
+IvsLambda_selection_error              = $
+  (*(*global).IvsLambda_selection_error_backup)
 
 ;create new big array
- sz = (size(IvsLambda_selection))(1)
- new_IvsLambda_selection = PTRARR(sz,/ALLOCATE_HEAP)
+sz = (size(IvsLambda_selection))(1)
+new_IvsLambda_selection       = PTRARR(sz,/ALLOCATE_HEAP)
+new_IvsLambda_selection_error = PTRARR(sz,/ALLOCATE_HEAP)
  index = 0
  WHILE (index LT sz) DO BEGIN
-     *new_IvsLambda_selection[index] = *IvsLambda_selection[index]
+     *new_IvsLambda_selection[index]       = *IvsLambda_selection[index]
+     *new_IvsLambda_selection_error[index] = *IvsLambda_selection_error[index]
  index++
  ENDWHILE
 
-;new_IvsLambda_selection = IvsLambda_selection ;BAD, change called pointer too
-
 y_array                                = *new_IvsLambda_selection[0]
-IvsLambda_selection_error              = $
-  (*(*global).IvsLambda_selection_error_backup)
-y_error_array                          = *IvsLambda_selection_error[0]
+y_error_array                          = *new_IvsLambda_selection_error[0]
 
 y_array_rescale                        = y_array/f_scale_factor
 
 y_error_array_rescale                  = y_error_array/f_scale_factor
 *new_IvsLambda_selection[0]            = y_array_rescale
-*IvsLambda_selection_error[0]          = y_error_array_rescale
+*new_IvsLambda_selection_error[0]      = y_error_array_rescale
 (*(*global).IvsLambda_selection)       = new_IvsLambda_selection
-(*(*global).IvsLambda_selection_error) = IvsLambda_selection_error
+(*(*global).IvsLambda_selection_error) = new_IvsLambda_selection_error
 
-(*(*global).IvsLambda_selection_step3_backpup) = new_IvsLambda_selection
-(*(*global).IvsLambda_selection_error_step3_backpup) = $
+(*(*global).IvsLambda_selection_step3_backup) = new_IvsLambda_selection
+(*(*global).IvsLambda_selection_error_step3_backup) = $
   new_IvsLambda_selection_error
 
 ;we also need to rescale the fitting parameters to replot the fitting line

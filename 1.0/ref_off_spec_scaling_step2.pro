@@ -95,7 +95,7 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO re_display_step4_step2_step1_selection, Event
+PRO re_display_step4_step2_step1_selection, Event, MODE=mode
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
@@ -113,7 +113,11 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
 
     nbr_plot = getNbrFiles(Event)
 ;array that will contain the counts vs wavelenght of each data file
-    IvsLambda_selection = (*(*global).IvsLambda_selection)
+    IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
+        IvsLambda_selection = (*(*global).IvsLambda_selection)
+    ENDIF ELSE BEGIN
+        IvsLambda_selection = (*(*global).new_IvsLambda_selection)
+    ENDELSE
 
     xmin = getTextFieldValue(Event,'step4_2_zoom_x_min')
     xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
@@ -128,9 +132,14 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
             box_color     = (*global).box_color
             WHILE (index LT nbr_plot) DO BEGIN
                 
-                t_data_to_plot = *IvsLambda_selection[index]
-                color          = box_color[index]
-                psym = getStep4Step2PSYMselected(Event)
+                IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
+                    t_data_to_plot = *IvsLambda_selection[index]
+                ENDIF ELSE BEGIN
+                    t_data_to_plot = IvsLambda_selection[index,*]
+                ENDELSE
+
+                color = box_color[index]
+                psym  = getStep4Step2PSYMselected(Event)
                 
                 isLog = getStep4Step2PlotType(Event)
                 
@@ -175,9 +184,13 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
         1: BEGIN ;CE file only
             index = 0
             box_color     = (*global).box_color
-            t_data_to_plot = *IvsLambda_selection[index]
-            color          = box_color[index]
-            psym = getStep4Step2PSYMselected(Event)
+            IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
+                t_data_to_plot = *IvsLambda_selection[index]
+            ENDIF ELSE BEGIN
+                t_data_to_plot = IvsLambda_selection[index,*]
+            ENDELSE
+            color = box_color[index]
+            psym  = getStep4Step2PSYMselected(Event)
             isLog = getStep4Step2PlotType(Event)
             
             xrange = (*(*global).step4_step2_step1_xrange)
@@ -213,9 +226,14 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
             box_color     = (*global).box_color
             WHILE (index LT nbr_plot) DO BEGIN
                 
-                t_data_to_plot = *IvsLambda_selection[index]
-                color          = box_color[index]
-                psym = getStep4Step2PSYMselected(Event)
+                IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
+                    t_data_to_plot = *IvsLambda_selection[index]
+                ENDIF ELSE BEGIN
+                    t_data_to_plot = IvsLambda_selection[index,*]
+                ENDELSE
+                
+                color = box_color[index]
+                psym  = getStep4Step2PSYMselected(Event)
                 
                 isLog = getStep4Step2PlotType(Event)
                 
