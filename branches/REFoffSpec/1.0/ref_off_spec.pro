@@ -50,9 +50,9 @@ SUPER_USERS       = ['j35']
 ;DEBUGGING (enter the tab you want to see)
 ;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
 ;5:Log Book 
-sDEBUGGING = { tab: {main_tab: 1,$
-                     step4_tab: 0,$
-                     scaling_tab: 1},$
+sDEBUGGING = { tab: {main_tab: 3,$
+                     step4_tab: 1,$
+                     scaling_tab: 2},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$

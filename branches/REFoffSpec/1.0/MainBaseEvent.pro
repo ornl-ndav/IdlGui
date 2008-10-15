@@ -714,6 +714,12 @@ CASE Event.id OF
         step4_2_3_auto_scaling, Event ;scaling_step2_step3
     END
 
+;Reset Rescaling button -------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step4_2_3_reset_rescale_button'): BEGIN
+        step4_2_3_reset_scaling, Event ;scaling_step2_step3
+    END
+
 ;Working file droplist --------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_3_work_on_file_droplist'): BEGIN

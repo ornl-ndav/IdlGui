@@ -194,6 +194,7 @@ ENDIF ELSE BEGIN
           Event, $
           MODE='AUTOSCALE'      ;scaling_step2
         (*(*global).scaling_factor) = scaling_factor
+
     ENDIF
     
 ENDELSE
@@ -223,6 +224,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 activate_widget, Event, 'step4_2_3_automatic_rescale_button', activate_status
+activate_widget, Event, 'step4_2_3_reset_rescale_button', activate_status
 activate_widget, Event, 'step4_2_3_manual_mode_frame', activate_status
 MapBase, Event, 'step4_2_3_manual_hidden_frame', map_status
 
@@ -362,3 +364,6 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
+PRO step4_2_3_reset_scaling, Event
+re_display_step4_step2_step1_selection, Event ;scaling_step2
+END

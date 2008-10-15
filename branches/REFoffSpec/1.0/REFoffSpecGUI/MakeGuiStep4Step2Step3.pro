@@ -46,11 +46,21 @@ sBaseTab = { size:  [0,0,tab_size[2:3]],$
 XYoff              = [5,5]
 sAutoRescaleButton = { size      : [XYoff[0],$
                                     XYoff[1],$
-                                    tab_size[2]-3*XYoff[0],30],$
+                                    450,30],$
                        value     : '>     >    >   >  > >> >>> AUTOMATIC ' + $
                        'RESCALING <<< << <  <   <    <     <',$
                        uname     : 'step4_2_3_automatic_rescale_button',$
-                       sensitive : 1}
+                       sensitive : 0}
+
+;**** Reset Scaling button ****************************************************
+XYoff = [0,0]
+sResetScaleButton = { size: [sAutoRescaleButton.size[0]+$
+                             sAutoRescaleButton.size[2]+XYoff[0],$
+                             sAutoRescaleButton.size[1]+XYoff[1],$
+                             90,30],$
+                      value: 'FULL RESET',$
+                      sensitive: 1,$
+                      uname: 'step4_2_3_reset_rescale_button'}
 
 ;------------------------------------------------------------------------------
 ;***** Manual Mode Hidden Base ************************************************
@@ -245,6 +255,16 @@ wAutoRescaleButton = WIDGET_BUTTON(wMainBase,$
                                    SCR_YSIZE = sAutoRescaleButton.size[3],$
                                    VALUE     = sAutoRescaleButton.value,$
                                    SENSITIVE = sAutoRescaleButton.sensitive)
+
+;**** Reset Scaling button ****************************************************
+wResetRescaleButton = WIDGET_BUTTON(wMainBase,$
+                                    UNAME     = sResetScaleButton.uname,$
+                                    XOFFSET   = sResetScaleButton.size[0],$
+                                    YOFFSET   = sResetScaleButton.size[1],$
+                                    SCR_XSIZE = sResetScaleButton.size[2],$
+                                    SCR_YSIZE = sResetScaleButton.size[3],$
+                                    VALUE     = sResetScaleButton.value,$
+                                    SENSITIVE = sResetScaleButton.sensitive)
 
 ;------------------------------------------------------------------------------
 ;***** Manual Mode Label ******************************************************
