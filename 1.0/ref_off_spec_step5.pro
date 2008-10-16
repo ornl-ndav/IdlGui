@@ -172,6 +172,16 @@ IF (ListOfFiles[0] NE '') THEN BEGIN
         ++i
     ENDWHILE
     
+    xrange   = (*global).xscale.xrange
+    xticks   = (*global).xscale.xticks
+    position = (*global).xscale.position
+    
+    refresh_plot_scale_step5, $
+      EVENT    = Event, $
+      XSCALE   = xrange, $
+      XTICKS   = xticks, $
+      POSITION = position
+
 ENDIF
 END
 
@@ -203,3 +213,53 @@ colorbar, $
   /VERTICAL
 
 END
+
+;------------------------------------------------------------------------------
+;This procedure plots the scale that surround the plot
+PRO refresh_plot_scale_step5, EVENT     = Event, $
+                              XSCALE    = xscale, $
+                              XTICKS    = xticks, $
+                              POSITION  = position
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;change color of background    
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step5')
+
+LOADCT, 0,/SILENT
+
+IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
+IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
+IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
+    sDraw = WIDGET_INFO(id,/GEOMETRY)
+    position = [42,40,sDraw.xsize-42, sDraw.ysize+36]
+ENDIF
+
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+xticks = (xticks GT 60) ? 55 : xticks
+(*global).xscale.xticks = xticks
+
+plot, randomn(s,303L), $
+  XRANGE        = xscale,$
+  YRANGE        = [0L,303L],$
+  COLOR         = convert_rgb([0B,0B,255B]), $
+  BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
+  THICK         = 1, $
+  TICKLEN       = -0.015, $
+  XTICKLAYOUT   = 0,$
+  YTICKLAYOUT   = 0,$
+  XTICKS        = xticks,$
+  YTICKS        = 25,$
+  YSTYLE        = 1,$
+  XSTYLE        = 1,$
+  YTICKINTERVAL = 10,$
+  POSITION      = position,$
+  NOCLIP        = 0,$
+  /NODATA,$
+  /DEVICE
+
+END
+
+;------------------------------------------------------------------------------
