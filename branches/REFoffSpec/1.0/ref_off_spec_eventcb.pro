@@ -102,14 +102,17 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         ENDIF
     END
 
-    4: BEGIN ;create output file
+    4: BEGIN ;recap
+    END
+
+    5: BEGIN ;create output file
         RefreshOutputFileName, Event ;_step5
     END
 
-    5: BEGIN ;options
+    6: BEGIN ;options
     END
 
-    6: BEGIN ;logbook
+    7: BEGIN ;logbook
     END
 
     ELSE:

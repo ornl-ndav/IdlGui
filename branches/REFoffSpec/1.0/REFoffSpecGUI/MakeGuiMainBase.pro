@@ -52,7 +52,8 @@ TabTitles = { step1:     ' 1/ REDUCTION',$
               step2:     ' 2/ LOADING ',$
               step3:     ' 3/ SHIFTING ',$
               step4:     ' 4/ SCALING ',$
-              step5:     ' 5/ CREATE OUTPUT ',$
+              step5:     ' 5/ RECAP. ',$
+              step6:     ' 6/ CREATE OUTPUT ',$
               options:   ' OPTIONS ',$
               log_book:  ' LOG BOOK '}
 
@@ -85,6 +86,9 @@ make_gui_step4, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;step5
 make_gui_step5, MAIN_TAB, sMainTabSize.size, TabTitles, global
+
+;step6
+make_gui_step6, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;options
 make_gui_options, MAIN_TAB, sMainTabSize.size, TabTitles, global
