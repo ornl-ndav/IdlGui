@@ -507,9 +507,9 @@ ERASE
 ;display the value of the reference pixel for this file
 ref_pixel_list  = (*(*global).ref_pixel_list)
 ref_pixel_value = ref_pixel_list[index]
-IF (ref_pixel_value EQ 0) THEN BEGIN    
-    ref_pixel_value = 'N/A'
-ENDIF
+;IF (ref_pixel_value EQ 0) THEN BEGIN    
+;    ref_pixel_value = 'N/A'
+;ENDIF
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
@@ -606,7 +606,7 @@ realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 pixel_offset_array    = INTARR(Nbr_array)
 
 ;retrieve pixel offset
-ref_pixel_list = (*(*global).ref_pixel_list)
+ref_pixel_list        = (*(*global).ref_pixel_list)
 ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
 
 nbr = N_ELEMENTS(ref_pixel_list)
@@ -688,9 +688,9 @@ plot_selection_OF_2d_plot_mode, Event
 index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
 ;display the value of the reference pixel for this file
 ref_pixel_value = ref_pixel_list[index]
-IF (ref_pixel_value EQ 0) THEN BEGIN    
-    ref_pixel_value = 'N/A'
-ENDIF
+;IF (ref_pixel_value EQ 0) THEN BEGIN    
+;    ref_pixel_value = 'N/A'
+;ENDIF
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
@@ -720,9 +720,9 @@ ref_pixel_list = (*(*global).ref_pixel_list_original)
 index = getDropListSelectedIndex(Event,'active_file_droplist_shifting')
 ;display the value of the reference pixel for this file
 ref_pixel_value = ref_pixel_list[index]
-IF (ref_pixel_value EQ 0) THEN BEGIN    
-    ref_pixel_value = 'N/A'
-ENDIF
+;IF (ref_pixel_value EQ 0) THEN BEGIN    
+;    ref_pixel_value = 'N/A'
+;ENDIF
 putTextFieldValue, Event, $
   'reference_pixel_value_shifting', $
   STRCOMPRESS(ref_pixel_value,/REMOVE_ALL)
@@ -802,7 +802,8 @@ pixel_offset = pixel_step
 
 ;array of realign data
 Nbr_array = (size(tfpData))(1)
-realign_tfpData = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 
 ;retrieve pixel offset
 ref_pixel_list = (*(*global).ref_pixel_list)
@@ -837,7 +838,8 @@ WHILE (big_index LT nbr) DO BEGIN
         ENDELSE
 
 ;put back new value in original array
-        local_data   = array
+        local_data       = array
+        local_data_error = array_error
         dim2         = (size(local_data))(1)
         big_array    = STRARR(dim2,3*304L)
         big_array[*,304L:2*304L-1] = local_data
