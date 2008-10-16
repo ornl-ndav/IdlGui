@@ -135,7 +135,7 @@ sMainTab = { size: [sStep4Draw.size[0]+$
                     555,800],$
              uname: 'step4_step2_tab'}
 
-TabTitles = { critical_edge: 'Crittical Edge',$
+TabTitles = { critical_edge: 'Critical Edge',$
               other_files: 'Scaling of Other Files',$
               all_files: 'All Files'}
 

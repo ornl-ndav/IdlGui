@@ -48,9 +48,20 @@ CHECKING_PACKAGES = 'yes'
 SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see)
-;main_tab: 0:Reduction, 1:Loading, 2: Shifting, 3:Scaling, 4:Options,
-;5:Log Book 
-sDEBUGGING = { tab: {main_tab: 1,$
+;main_tab: 0: Reduction, 
+;          1: Loading, 
+;          2: Shifting, 
+;          3: Scaling, 
+;             0: Pixel range selection
+;             1: scaling
+;                0: all files
+;                1: Critical edge
+;                2: scaling of other files
+;          4: Recap,
+;          5: Create Output
+;          6: Options,
+;          7:Log Book 
+sDEBUGGING = { tab: {main_tab: 4,$
                      step4_tab: 0,$
                      scaling_tab: 0},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
