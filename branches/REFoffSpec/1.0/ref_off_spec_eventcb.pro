@@ -103,10 +103,11 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     4: BEGIN ;recap
+        refresh_recap_plot, Event ;_step5
     END
 
     5: BEGIN ;create output file
-        RefreshOutputFileName, Event ;_step5
+        RefreshOutputFileName, Event ;_step6
     END
 
     6: BEGIN ;options
@@ -157,8 +158,6 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
                 END
                 2: BEGIN ;other files
                     check_step4_2_3_gui, Event ;scaling_step2_step3
-
-
                 END
                 ELSE:
             ENDCASE

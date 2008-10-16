@@ -90,6 +90,7 @@ global = ptr_new ({ ucams:               ucams,$
                     manual_scaling_2: FLOAT(1.5),$
                     step4_1_plot2d_delta_x: 0.0,$
                     scaling_factor: ptr_new(0L),$
+                    pixel_offset_array: ptr_new(0L),$
                     X_Y_min_max_backup: STRARR(4),$
                     ymin_log_mode: 0.001,$
                     step4_2_2_fitting_status: 0,$
