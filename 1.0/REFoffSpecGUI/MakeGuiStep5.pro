@@ -55,41 +55,41 @@ sXlabel = { size: [XYoff[0],$
                    XYOff[1],$
                    100],$
             value: 'X: ?',$
-            uname: 'x_value_shifting'}
+            uname: 'x_value_step5'}
 ;Y value
 XYoff = [100,0]
 sYlabel = { size: [sXlabel.size[0]+XYoff[0],$
                    sXlabel.size[1]+XYoff[1],$
                    sXlabel.size[2]],$
             value: 'Y: ?',$
-            uname: 'y_value_shifting'}
+            uname: 'y_value_step5'}
 ;Counts value
 XYoff = [100,0]
 sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
                         sYlabel.size[1]+XYoff[1],$
                         sYlabel.size[2]],$
                  value: 'Counts: ?',$
-                 uname: 'counts_value_shifting'}
+                 uname: 'counts_value_step5'}
 
 ;More or Less axis ticks number ----------------------------------------------
 XYoff = [550,5]
 sXaxisTicksLabel = { size: [sCountsLabel.size[0]+XYoff[0],$
                             XYoff[1]],$
-                     uname: 'x_axis_less_more_label',$
+                     uname: 'x_axis_less_more_label_step5',$
                      value: 'Xaxis Ticks Nbr:'}
 XYoff=[110,3]                    ;- ticks
 sXaxisLessTicks = { size: [sXaxisTicksLabel.size[0]+XYoff[0],$
                            XYoff[1],$
                            60],$
                     value: ' <<< ',$
-                    uname: 'x_axis_less_ticks_shifting'}
+                    uname: 'x_axis_less_ticks_step5'}
 XYoff=[5,0]                     ;+ ticks
 sXaxisMoreTicks = { size: [sXaxisLessTicks.size[0]+$
                            sXaxisLessTicks.size[2]+XYoff[0],$
                            sXaxisLessTicks.size[1]+XYoff[1],$
                            sXaxisLessTicks.size[2]],$
                     value: ' >>> ',$
-                    uname: 'x_axis_more_ticks_shifting'}
+                    uname: 'x_axis_more_ticks_step5'}
 
 ;Lin/Log z-axis ---------------------------------------------------------------
 XYoff = [-175,0]
@@ -97,7 +97,7 @@ sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
                    XYoff[1]],$
             list: ['Linear','Log'],$
             label: 'Z-axis:',$
-            uname: 'z_axis_linear_log_shifting',$
+            uname: 'z_axis_linear_log_step5',$
             value: 1.0}
 
 XYOff = [43,50] ;Draw ---------------------------------------------------------
@@ -107,14 +107,14 @@ sDraw = { size: [XYoff[0],$
                  304L*2],$
           scroll_size: [tab_size[2]-35-XYoff[0],$
                         304L*2+40],$
-          uname: 'step3_draw'}
+          uname: 'step5_draw'}
 
 XYoff = [0,-18] ;Scale of Draw ------------------------------------------------
 sScale = { size: [XYoff[0],$
                   sDraw.size[1]+XYoff[1],$
                   tab_size[2]-80,$
                   sDraw.size[3]+57],$
-           uname: 'scale_draw_step3'}
+           uname: 'scale_draw_step5'}
 
 XYoff = [5,0] ;Color Scale ----------------------------------------------------
 sColorScale = { size: [sScale.size[0]+$
@@ -122,7 +122,7 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[1]+XYoff[1],$
                        70,$
                        sScale.size[3]],$
-                uname: 'scale_color_draw_step3'}
+                uname: 'scale_color_draw_step5'}
 
 ;******************************************************************************
 ;            BUILD GUI
