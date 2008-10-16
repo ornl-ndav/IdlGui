@@ -53,6 +53,13 @@ RETURN, isLogSelected
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION isLogZaxisStep5Selected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='z_axis_linear_log_step5')
+WIDGET_CONTROL, id, GET_VALUE=isLogSelected
+RETURN, isLogSelected
+END
+
+;------------------------------------------------------------------------------
 FUNCTION isThisIndexSelected, Event, index_selected, this_index
 bFoundList = WHERE(index_selected EQ this_index,nbr)
 IF (nbr GT 0) THEN RETURN, 1
