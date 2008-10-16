@@ -31,22 +31,49 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-;This procedure is reached each time the tab 'RECAP' is reached
-PRO refresh_recap_plot, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-ref_pixel_list = (*(*global).ref_pixel_list)
-nbr = N_ELEMENTS(ref_pixel_list)
+;this also defined the default output file name
+PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
+first_file_loaded = list_OF_files[0]
+;get path
+path = FILE_DIRNAME(first_file_loaded,/MARK_DIRECTORY)
+putTextFieldValue, Event, 'create_output_file_path_button', path
+;get short file name
+short_file_name = FILE_BASENAME(first_file_loaded,'.txt')
+time_stamp = GenerateIsoTimeStamp()
+short_file_name += '_' + time_stamp
+short_file_name += '_scaling.txt'
+putTextFieldValue, Event, 'create_output_file_name_text_field', $
+  short_file_name
+END
 
-;continue only if there is at least one file loaded
-IF (nbr GE 1) THEN BEGIN 
-    scaling_factor = (*(*global).scaling_factor)
-    pixel_offset   = (*(*global).pixel_offset_array)
+;------------------------------------------------------------------------------
+;this is triggered each time the CREATE OUTPUT tab is reached
+PRO RefreshOutputFileName, Event
+;get path
+path = getTextFieldValue(Event,'create_output_file_path_button')
+;get base name
+file_name = getTextFieldValue(Event,'create_output_file_name_text_field')
+;create full file name
+full_file_name = path + file_name
+putTextfieldValue, Event, 'create_output_full_file_name_preview_value',$
+  full_file_name
+;put file name (short) into summary output file name
+putTextfieldValue, Event, 'summary_output_file_name_value', file_name
+END
 
-    print, 'scaling_factor:'
-    print, scaling_factor
-    print, 'pixel_offset:'
-    print, pixel_offset
-    
+;------------------------------------------------------------------------------
+;This procedure is reached when the user click to define the output
+;file path
+PRO OutputFilePathButton, Event
+;get path (label of this button)
+path = getTextFieldValue(Event,'create_output_file_path_button')
+new_path = DIALOG_PICKFILE(/DIRECTORY,$
+                           PATH     = path,$
+                           GET_PATH = new_path,$
+                           /MUST_EXIST)
+
+IF (new_path NE '') THEN BEGIN
+    putTextFieldValue, Event, 'create_output_file_path_button', new_path
+    RefreshOutputFileName, Event
 ENDIF
 END

@@ -603,6 +603,7 @@ tfpData_error = (*(*global).realign_pData_y_error)
 Nbr_array = (size(tfpData))(1)
 realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+pixel_offset_array    = INTARR(Nbr_array)
 
 ;retrieve pixel offset
 ref_pixel_list = (*(*global).ref_pixel_list)
@@ -616,6 +617,7 @@ IF (nbr GT 1) THEN BEGIN
     index = 1
     WHILE (index LT nbr) DO BEGIN
         pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+        pixel_offset_array[index] = pixel_offset ;save pixel_offset
         ref_pixel_offset_list[index] += pixel_offset
         array        = *tfpData[index]
         array        = array[*,304L:2*304L-1]
@@ -669,6 +671,7 @@ IF (nbr GT 1) THEN BEGIN
     ENDWHILE
 ENDIF
 
+(*(*global).pixel_offset_array)    = pixel_offset_array
 (*(*global).ref_pixel_offset_list) = ref_pixel_offset_list
 (*global).plot_realign_data        = 1
 (*(*global).realign_pData_y)       = realign_tfpData

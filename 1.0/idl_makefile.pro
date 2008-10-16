@@ -56,6 +56,7 @@ cd, CurrentFolder
 .run ref_off_spec_scaling_step2_step2.pro
 .run ref_off_spec_scaling_step2_step3.pro
 .run ref_off_spec_step5.pro
+.run ref_off_spec_step6.pro
 
 ;main functions
 .run MainBaseEvent.pro
