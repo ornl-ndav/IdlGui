@@ -128,7 +128,7 @@ global = ptr_new ({ ucams:               ucams,$
                     ok:                  'OK',$
                     failed:              'FAILED',$                    
                     version:             VERSION,$
-                    MainBaseSize:        [30,25,1276,901],$
+                    MainBaseSize:        [30,150,1276,901],$
                     ascii_extension:     'txt',$
                     ascii_filter:        '*.txt',$
                     ascii_path:          '~/',$

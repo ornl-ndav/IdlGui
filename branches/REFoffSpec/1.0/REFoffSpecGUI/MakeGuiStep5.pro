@@ -47,20 +47,22 @@ sBaseTab = { size:  tab_size,$
 XYoff = [300,200]
 sSSbase = { size: [XYoff[0],$
                    XYoff[1],$
-                   300,60],$
+                   400,110],$
             uname: 'shifting_scaling_base_step5',$
             frame: 3,$
             map: 1}
 
 ;shifting button --------------------------------------------------------------
-sShiftingButton = { uname: 'step5_shifting_button',$
+sShiftingButton = { size: [0,0],$
+                    uname: 'step5_shifting_button',$
                     sensitive: 1,$
-                    value: 'images/step5_shifting.bmp'}
+                    value: 'images/RecapShifting.bmp'}
 
 ;scaling button --------------------------------------------------------------
-sScalingButton = { uname: 'step5_scaling_button',$
-                    sensitive: 1,$
-                    value: 'images/step5_scaling.bmp'}
+sScalingButton = { size: [0,55],$
+                   uname: 'step5_scaling_button',$
+                   sensitive: 1,$
+                   value: 'images/RecapScaling.bmp'}
 
 ;x/y and counts values --------------------------------------------------------
 XYoff = [45,5]
@@ -164,20 +166,25 @@ wSSbase = WIDGET_BASE(BaseTab,$
                       SCR_XSIZE = sSSbase.size[2],$
                       SCR_YSIZE = sSSbase.size[3],$
                       UNAME     = sSSbase.uname,$
-                      FRAME     = sSSbase.frame,$
-                      /COLUMN)
+                      FRAME     = sSSbase.frame)
                       
 ;Shifting button --------------------------------------------------------------
 wShiftingButton = WIDGET_BUTTON(wSSbase,$
+                                XOFFSET   = sShiftingButton.size[0],$
+                                YOFFSET   = sShiftingButton.size[1],$
                                 UNAME     = sShiftingButton.uname,$
                                 VALUE     = sShiftingButton.value,$
-                                SENSITIVE = sShiftingButton.sensitive)
+                                SENSITIVE = sShiftingButton.sensitive,$
+                                /BITMAP)
 
 ;Scaling button --------------------------------------------------------------
 wScalingButton = WIDGET_BUTTON(wSSbase,$
+                               XOFFSET   = sScalingButton.size[0],$
+                               YOFFSET   = sScalingButton.size[1],$
                                UNAME     = sScalingButton.uname,$
-                                VALUE     = sScalingButton.value,$
-                                SENSITIVE = sScalingButton.sensitive)
+                               VALUE     = sScalingButton.value,$
+                               SENSITIVE = sScalingButton.sensitive,$
+                               /BITMAP)
 
 ;x/y and counts values --------------------------------------------------------
 wXLabel = WIDGET_LABEL(BaseTab,$
