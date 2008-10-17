@@ -42,6 +42,25 @@ sBaseTab = { size:  tab_size,$
              uname: 'step5_tab_base',$
              title: TabTitles.step5}
                          
+;------------------------------------------------------------------------------
+;Scaling and Shifting buttons/base --------------------------------------------
+XYoff = [300,200]
+sSSbase = { size: [XYoff[0],$
+                   XYoff[1],$
+                   300,60],$
+            uname: 'shifting_scaling_base_step5',$
+            map: 1}
+
+;shifting button --------------------------------------------------------------
+sShiftingButton = { uname: 'step5_shifting_button',$
+                    sensitive: 1,$
+                    value: 'images/step5_shifting.bmp'}
+
+;scaling button --------------------------------------------------------------
+sScalingButton = { uname: 'step5_scaling_button',$
+                    sensitive: 1,$
+                    value: 'images/step5_scaling.bmp'}
+
 ;x/y and counts values --------------------------------------------------------
 XYoff = [45,5]
 sXYIFrame = { size: [XYoff[0],$
