@@ -45,28 +45,29 @@ sBaseTab = { size:  tab_size,$
 ;------------------------------------------------------------------------------
 ;Shifting base ----------------------------------------------------------------
 XYoff = [400,250]
-sSSbase = { size: [XYoff[0],$
-                   XYoff[1],$
-                   300,55],$
-            uname: 'shifting_base_step5',$
-            frame: 3,$
-            map: 1}
+sShiftBase = { size: [XYoff[0],$
+                      XYoff[1],$
+                      300,50],$
+               uname: 'shifting_base_step5',$
+               frame: 3,$
+               map: 1}
 
 ;shifting button --------------------------------------------------------------
 sShiftingDraw = { size: [0,0,300,50],$
                   uname: 'step5_shifting_draw'}
 
 ;Scaling base ----------------------------------------------------------------
-XYoff = [400,250]
-sSSbase = { size: [XYoff[0],$
-                   XYoff[1],$
-                   300,55],$
-            uname: 'scaling_base_step5',$
-            frame: 3,$
-            map: 1}
+XYoff = [0,70]
+sScalebase = { size: [sShiftBase.size[0]+XYoff[0],$
+                      sShiftBase.size[1]+$
+                      sShiftBase.size[3]+XYoff[1],$
+                      300,50],$
+               uname: 'scaling_base_step5',$
+               frame: 3,$
+               map: 1}
 
 ;scaling button --------------------------------------------------------------
-sScalingDraw = { size: [0,55,300,50],$
+sScalingDraw = { size: [0,0,300,50],$
                  uname: 'step5_scaling_draw'}
 ;x/y and counts values --------------------------------------------------------
 XYoff = [45,5]
@@ -163,32 +164,39 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       TITLE     = sBaseTab.title)
 
 ;------------------------------------------------------------------------------
-;Scaling and Shifting buttons/base --------------------------------------------
-wSSbase = WIDGET_BASE(BaseTab,$
-                      XOFFSET   = sSSbase.size[0],$
-                      YOFFSET   = sSSbase.size[1],$
-                      SCR_XSIZE = sSSbase.size[2],$
-                      SCR_YSIZE = sSSbase.size[3],$
-                      UNAME     = sSSbase.uname,$
-                      FRAME     = sSSbase.frame)
-                      
+;Scaling base -----------------------------------------------------------------
+wShiftbase = WIDGET_BASE(BaseTab,$
+                         XOFFSET   = sShiftBase.size[0],$
+                         YOFFSET   = sShiftBase.size[1],$
+                         SCR_XSIZE = sShiftBase.size[2],$
+                         SCR_YSIZE = sShiftBase.size[3],$
+                         UNAME     = sShiftBase.uname,$
+                         FRAME     = sShiftBase.frame)
+
 ;Shifting button --------------------------------------------------------------
-wShiftingDraw = WIDGET_DRAW(wSSbase,$
-                              XOFFSET   = sShiftingDraw.size[0],$
-                              YOFFSET   = sShiftingDraw.size[1],$
-                              SCR_XSIZE = sShiftingDraw.size[2],$
-                              SCR_YSIZE = sShiftingDraw.size[3],$
-                              UNAME     = sShiftingDraw.uname,$
-                              SENSITIVE = sShiftingDraw.sensitive)
+wShiftingDraw = WIDGET_DRAW(wShiftBase,$
+                            XOFFSET   = sShiftingDraw.size[0],$
+                            YOFFSET   = sShiftingDraw.size[1],$
+                            SCR_XSIZE = sShiftingDraw.size[2],$
+                            SCR_YSIZE = sShiftingDraw.size[3],$
+                            UNAME     = sShiftingDraw.uname)
+
+;Shifting base ----------------------------------------------------------------
+wScalebase = WIDGET_BASE(BaseTab,$
+                      XOFFSET   = sScaleBase.size[0],$
+                      YOFFSET   = sScaleBase.size[1],$
+                      SCR_XSIZE = sScaleBase.size[2],$
+                      SCR_YSIZE = sScaleBase.size[3],$
+                      UNAME     = sScaleBase.uname,$
+                      FRAME     = sScaleBase.frame)
 
 ;Scaling button --------------------------------------------------------------
-wScalingDraw = WIDGET_DRAW(wSSbase,$
-                             XOFFSET   = sScalingDraw.size[0],$
-                             YOFFSET   = sScalingDraw.size[1],$
-                             SCR_XSIZE = sScalingDraw.size[2],$
-                             SCR_YSIZE = sScalingDraw.size[3],$
-                             UNAME     = sScalingDraw.uname,$
-                             SENSITIVE = sScalingDraw.sensitive)
+wScalingDraw = WIDGET_DRAW(wScalebase,$
+                           XOFFSET   = sScalingDraw.size[0],$
+                           YOFFSET   = sScalingDraw.size[1],$
+                           SCR_XSIZE = sScalingDraw.size[2],$
+                           SCR_YSIZE = sScalingDraw.size[3],$
+                           UNAME     = sScalingDraw.uname)
 
 ;x/y and counts values --------------------------------------------------------
 wXLabel = WIDGET_LABEL(BaseTab,$
