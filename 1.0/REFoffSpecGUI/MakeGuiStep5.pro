@@ -49,6 +49,7 @@ sSSbase = { size: [XYoff[0],$
                    XYoff[1],$
                    300,60],$
             uname: 'shifting_scaling_base_step5',$
+            frame: 3,$
             map: 1}
 
 ;shifting button --------------------------------------------------------------
@@ -154,6 +155,29 @@ BaseTab = WIDGET_BASE(REDUCE_TAB,$
                       SCR_XSIZE = sBaseTab.size[2],$
                       SCR_YSIZE = sBaseTab.size[3],$
                       TITLE     = sBaseTab.title)
+
+;------------------------------------------------------------------------------
+;Scaling and Shifting buttons/base --------------------------------------------
+wSSbase = WIDGET_BASE(BaseTab,$
+                      XOFFSET   = sSSbase.size[0],$
+                      YOFFSET   = sSSbase.size[1],$
+                      SCR_XSIZE = sSSbase.size[2],$
+                      SCR_YSIZE = sSSbase.size[3],$
+                      UNAME     = sSSbase.uname,$
+                      FRAME     = sSSbase.frame,$
+                      /COLUMN)
+                      
+;Shifting button --------------------------------------------------------------
+wShiftingButton = WIDGET_BUTTON(wSSbase,$
+                                UNAME     = sShiftingButton.uname,$
+                                VALUE     = sShiftingButton.value,$
+                                SENSITIVE = sShiftingButton.sensitive)
+
+;Scaling button --------------------------------------------------------------
+wScalingButton = WIDGET_BUTTON(wSSbase,$
+                               UNAME     = sScalingButton.uname,$
+                                VALUE     = sScalingButton.value,$
+                                SENSITIVE = sScalingButton.sensitive)
 
 ;x/y and counts values --------------------------------------------------------
 wXLabel = WIDGET_LABEL(BaseTab,$
