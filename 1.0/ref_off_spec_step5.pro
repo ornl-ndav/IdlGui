@@ -62,8 +62,9 @@ IF (ListOfFiles[0] NE '') THEN BEGIN
     
     trans_coeff_list = (*(*global).trans_coeff_list)
     
-    master_min = 0
-    master_max = 0
+    max_thresold = FLOAT(-100)
+    master_min = FLOAT(0)
+    master_max = FLOAT(max_thresold)
     xmax_array = FLTARR(nbr_plot) ;x of max value per array
     ymax_array = FLTARR(nbr_plot) ;y of max value per array
     max_size   = 0              ;maximum x value
@@ -78,43 +79,42 @@ IF (ListOfFiles[0] NE '') THEN BEGIN
             local_tfpData = local_tfpData[*,304L:2*304L-1]
         ENDIF
 
+        IF (index EQ 1) THEN BEGIN
+;            print, local_tfpData
+;            print, 'scaling_factor: ' + strcompress(scaling_factor)
+        ENDIF
+
 ;applied scaling factor
         local_tfpData /= scaling_factor
-            
+        
 ;check if user wants linear or logarithmic plot
         bLogPlot = isLogZaxisStep5Selected(Event)
         IF (bLogPlot) THEN BEGIN
             local_tfpData = ALOG10(local_tfpData)
-            index_inf = WHERE(local_tfpData LT 0, nIndex)
+            index_inf = WHERE(local_tfpData LT max_thresold, nIndex)
             IF (nIndex GT 0) THEN BEGIN
-                local_tfpData[index_inf] = 0
+                local_tfpData[index_inf] = FLOAT(0)
             ENDIF
         ENDIF
-        
+
         IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
             base_array = local_tfpData 
-            size = (size(total_array,/DIMENSIONS))[0]
-            max_size = (size GT max_size) ? size : max_size
+            size       = (size(total_array,/DIMENSIONS))[0]
+            max_size   = (size GT max_size) ? size : max_size
         ENDIF
         
 ;determine min and max value (for this array only)
-        local_min = MIN(local_tfpData)
-        local_max = MAX(local_tfpData)
-        
-;;save position of max value (used for log book only)
-;        idx1 = WHERE(local_tfpData EQ local_max)
-;        ind1 = ARRAY_INDICES(local_tfpData,idx1)
-;        delta_x = xaxis[1]-xaxis[0]
-;        xmax_array[index] = ind1[0]*delta_x
-;        ymax_array[index] = ind1[1]/2.
+;        local_min = MIN(local_tfpData)            
+;        local_max = MAX(local_tfpData)
         
 ;store x-axis end value
         x_axis[index] = (size(local_tfpData,/DIMENSION))[0]
         
 ;determine max and min value of y (over all the data arrays)
-        master_min = (local_min LT master_min) ? local_min : master_min
-        master_max = (local_max GT master_max) ? local_max : master_max
+;        master_min = (local_min LT master_min) ? local_min : master_min
+        
+;        master_max = FLOAT((local_max GT master_max) ? local_max : master_max)
         
         IF (index NE 0) THEN BEGIN
             index_no_null = WHERE(local_tfpData NE 0,nbr)
@@ -141,6 +141,15 @@ IF (ListOfFiles[0] NE '') THEN BEGIN
         
     ENDWHILE
     
+    true_master_max = MAX(base_array,MIN=true_master_min) ;remove_me
+    IF (bLogPlot) THEN BEGIN
+;shift everything to +local_min to be able to plot it
+        base_array += FLOAT(ABS(true_master_min))
+    ENDIF
+    
+    master_max = true_master_max + ABS(true_master_min)
+    master_min = true_master_min + ABS(true_master_min)
+
 ;rebin by 2 in y-axis final array
     rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
                   (size(base_array))(2)*y_coeff,/SAMPLE)
@@ -202,6 +211,9 @@ ENDIF ELSE BEGIN
     perso_format = ''
     range = [master_min,master_max]
 ENDELSE
+
+print, '(in plotColorScale_step5: Range:' ;remove_me
+print, range ;remove_me
 
 colorbar, $
   NCOLORS      = 255, $
