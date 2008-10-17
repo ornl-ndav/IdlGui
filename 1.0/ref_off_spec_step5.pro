@@ -161,16 +161,16 @@ IF (ListOfFiles[0] NE '') THEN BEGIN
 ;plot main plot
     TVSCL, total_array, /DEVICE
     
-    i = 0
-    box_color = (*global).box_color
-    WHILE (i LT nbr_plot) DO BEGIN
-        plotBox, x_coeff, $
-          y_coeff, $
-          0, $
-          x_axis[i], $
-          COLOR=box_color[i]
-        ++i
-    ENDWHILE
+;    i = 0
+;    box_color = (*global).box_color
+;    WHILE (i LT nbr_plot) DO BEGIN
+;        plotBox, x_coeff, $
+;          y_coeff, $
+;          0, $
+;          x_axis[i], $
+;          COLOR=box_color[i]
+;        ++i
+;    ENDWHILE
     
     xrange   = (*global).xscale.xrange
     xticks   = (*global).xscale.xticks
