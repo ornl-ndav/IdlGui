@@ -594,13 +594,13 @@ WIDGET_CONTROL,/HOURGLASS
 ;     tfpData = (*(*global).realign_pData_y)
 ; ENDELSE
 
-tfpData = (*(*global).realign_pData_y)
+tfpData       = (*(*global).realign_pData_y)
 tfpData_error = (*(*global).realign_pData_y_error)
 
 ;local_tfpData = local_tfpData[*,304L:2*304L-1]
 
 ;array of realign data
-Nbr_array = (size(tfpData))(1)
+Nbr_array             = (size(tfpData))(1)
 realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
 pixel_offset_array    = INTARR(Nbr_array)
