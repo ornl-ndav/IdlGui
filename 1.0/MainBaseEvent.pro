@@ -769,6 +769,16 @@ CASE Event.id OF
     END
 
 ;------------------------------------------------------------------------------
+;- RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
+;------------------------------------------------------------------------------
+
+;lin/log ----------------------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
+        refresh_recap_plot, Event ;_step5
+    END
+
+;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------
 
