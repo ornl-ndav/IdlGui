@@ -76,6 +76,9 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
     
+    print, 'pixel 195, raw data' ;remove_me
+    print, local_tfpData[*,195] ;remove_me
+
     IF (index EQ 1) THEN BEGIN
 ;            print, local_tfpData
 ;            print, 'scaling_factor: ' + strcompress(scaling_factor)
@@ -84,6 +87,9 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;applied scaling factor
     local_tfpData /= scaling_factor
     
+    print, 'pixel 195, after scaling' ;remove_me
+    print, local_tfpData[*,195] ;remove_me
+
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisStep5Selected(Event)
     IF (bLogPlot) THEN BEGIN
