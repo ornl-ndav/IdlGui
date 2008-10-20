@@ -103,19 +103,12 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     4: BEGIN ;recap
-       id1 = widget_info(Event.top,find_by_uname='step5_shifting_draw')
-       widget_control, id1, get_value=id
-       wset, id
-       image = read_bmp('images/RecapShifting.bmp')
-       tv, image, 0,0,/true
-       
-       id2 = widget_info(Event.top,find_by_uname='step5_scaling_draw')
-       widget_control, id2, get_value=id
-       wset, id
-       image = read_bmp('images/RecapScaling.bmp')
-       tv, image, 0,0,/true
-
-        refresh_recap_plot, Event ;_step5
+        check_step5_gui, Event ;_step5
+        LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
+        ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+        IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
+            refresh_recap_plot, Event ;_step5
+        ENDIF
     END
 
     5: BEGIN ;create output file
