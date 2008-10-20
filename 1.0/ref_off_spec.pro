@@ -51,9 +51,9 @@ SUPER_USERS       = ['j35']
 ;main_tab: 0: Reduction, 
 ;          1: Loading, 
 ;          2: Shifting, 
-;          3: Scaling, 
+;          3: Scaling (step4_tab) 
 ;             0: Pixel range selection
-;             1: scaling
+;             1: scaling (scaling_tab)
 ;                0: all files
 ;                1: Critical edge
 ;                2: scaling of other files
@@ -63,7 +63,7 @@ SUPER_USERS       = ['j35']
 ;          7:Log Book 
 sDEBUGGING = { tab: {main_tab: 1,$
                      step4_tab: 0,$
-                     scaling_tab: 0},$
+                     scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
