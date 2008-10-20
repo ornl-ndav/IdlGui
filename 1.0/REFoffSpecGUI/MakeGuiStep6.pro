@@ -119,13 +119,38 @@ sSummaryTable = { size: [XYoff[0],$
                   align: TableAlign,$
                   width: [326,100,100]}
 
-;label of output file name (short file name) ----------------------------------
+;recap of polarization state used --------------------------------------------
 XYoff = [0,5]
+sSummaryWorkingPola = { size: [sSummaryTable.size[0]+XYoff[0],$
+                               sSummaryTable.size[1]+$
+                               sSummaryTable.size[3]+XYoff[1]],$
+                        value: 'Polarization state:'}
+XYoff = [130,1]
+sSummaryWorkingPolaValue = { size: [sSummaryWorkingPola.size[0]+XYoff[0],$
+                                    sSummaryWorkingPola.size[1]+XYoff[1],$
+                                    500],$
+                             value: 'N/A',$
+                             uname: 'summary_working_polar_value'}
+
+;label of input file path -----------------------------------------------------
+XYoff = [0,25]
+sSummaryInputPath = { size: [sSummaryWorkingPola.size[0]+XYoff[0],$
+                             sSummaryWorkingPola.size[1]+XYoff[1]],$
+                      value: 'Input File Path   :'}
+XYoff = [130,1]
+sSummaryInputPathValue = { size: [sSummaryInputPath.size[0]+XYoff[0],$
+                                  sSummaryInputPath.size[1]+$
+                                  XYoff[1],$
+                                  500],$
+                           value: 'N/A',$
+                            uname: 'summary_input_path_name_value'}
+
+;label of output file name (short file name) ----------------------------------
+XYoff = [0,25]
 sSummaryOutputFileLabel = { size: [sSummaryTable.size[0]+XYoff[0],$
-                                   sSummaryTable.size[1]+$
-                                   sSummaryTable.size[3]+XYoff[1]],$
-                            value: 'Output File Name:'}
-XYoff = [110,1]
+                                   sSummaryInputPath.size[1]+XYoff[1]],$
+                            value: 'Output File Name  :'}
+XYoff = [130,1]
 sSummaryOutputFileValue = { size: [sSummaryOutputFileLabel.size[0]+$
                                    XYoff[0],$
                                    sSummaryOutputFileLabel.size[1]+$
@@ -267,6 +292,36 @@ wSummaryTable = WIDGET_TABLE(wSummaryBase,$
                              /NO_ROW_HEADERS,$
                              /ROW_MAJOR,$
                              /RESIZEABLE_COLUMNS)
+
+;label of polarization state used ---------------------------------------------
+wSummaryWorkingPola = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryWorkingPola.size[0],$
+               YOFFSET   = sSummaryWorkingPola.size[1],$
+               VALUE     = sSummaryWorkingPola.value)
+wSummaryWorkingPolaValue = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryWorkingPolaValue.size[0],$
+               YOFFSET   = sSummaryWorkingPolaValue.size[1],$
+               SCR_XSIZE = sSummaryWorkingPolaValue.size[2],$
+               VALUE     = sSummaryWorkingPolaValue.value,$
+               UNAME     = sSummaryWorkingPolaValue.uname,$
+               /ALIGN_LEFT)
+
+;label of input file path -----------------------------------------------------
+wSummaryInputPath = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryInputPath.size[0],$
+               YOFFSET   = sSummaryInputPath.size[1],$
+               VALUE     = sSummaryInputPath.value)
+wSummaryInputPathValue = $
+  WIDGET_LABEL(wSummaryBase,$
+               XOFFSET   = sSummaryInputPathValue.size[0],$
+               YOFFSET   = sSummaryInputPathValue.size[1],$
+               SCR_XSIZE = sSummaryInputPathValue.size[2],$
+               VALUE     = sSummaryInputPathValue.value,$
+               UNAME     = sSummaryInputPathValue.uname,$
+               /ALIGN_LEFT)
 
 ;label of output file name (short file name) ----------------------------------
 wSummaryOutputFileLabel = $
