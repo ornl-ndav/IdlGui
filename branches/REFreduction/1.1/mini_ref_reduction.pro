@@ -103,7 +103,7 @@ global = ptr_new ({ first_event: 1,$
                     cmd_batch_length : 50,$
                     debugger : 1,$ ;give world access to batch
                     PrevBatchRowSelected : 0,$
-                    BatchDefaultPath: '~/',$
+                    BatchDefaultPath: '~/results/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
                     BatchFileName : '',$
                       DataRunNumber : '',$
@@ -111,7 +111,7 @@ global = ptr_new ({ first_event: 1,$
                     PreviousRunReductionValidated : 0,$  
                     BatchTable : ptr_new(0L),$ ;big array of batch table
                     isHDF5format : 1,$
-                    dr_output_path : '~/',$
+                    dr_output_path : '~/results/',$
                     archived_data_flag : 1,$
                     archived_norm_flag : 1,$
 ;output path define in the REDUCE tab
@@ -199,7 +199,7 @@ global = ptr_new ({ first_event: 1,$
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path : '~/',$ 
+                   working_path : '~/results/',$ 
 ;where the tmp file will be created
                    ucams : ucams, $ 
 ;ucams of the current user

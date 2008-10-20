@@ -581,15 +581,19 @@ endif
 outputPath        = getOutputPathFromButton(Event)
 ;check that user have access to that folder
 IF (FILE_TEST(outputPath,/WRITE) EQ 0) THEN BEGIN
-    status_text    = '- PERMISSION ERROR : you do not have the permission to '
-    status_text   += 'write in this folder. Please select another folder !'
-    IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-    ENDIF ELSE BEGIN
-        append = 0
-    ENDELSE
-    StatusMessage += 1
-    putInfoInReductionStatus, Event, status_text, append
+    spawn, 'mkdir ' + outputPath, listening, err_listening
+    IF (err_listening[0] NE '') THEN BEGIN
+        status_text    = '- PERMISSION ERROR : you do not have ' + $
+          'the permission to '
+        status_text   += 'write in this folder. Please select another folder !'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        StatusMessage += 1
+        putInfoInReductionStatus, Event, status_text, append
+    ENDIF
 ENDIF
 outputFileName    = getOutputFileName(Event)
 NewOutputFileName = outputPath + outputFileName

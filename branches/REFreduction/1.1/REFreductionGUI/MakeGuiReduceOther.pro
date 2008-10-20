@@ -93,7 +93,7 @@ XYoff    = [60,-5]
 OPbutton = { size  : [XYoff[0],$
                       OPFlabel.size[1]+XYoff[1],$
                       300,35],$
-             value : '~/',$
+             value : '~/results/',$
              uname : 'of_button'}
 XYoff    = [10,0]
 OFlabel  = { size  : [OPbutton.size[0]+OPbutton.size[2]+XYoff[0],$

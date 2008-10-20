@@ -61,7 +61,8 @@ MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create intermediate plot base
-MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
+MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, $
+  PlotsTitle
 
 ;create other component of base
 MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth

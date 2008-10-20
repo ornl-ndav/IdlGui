@@ -326,7 +326,7 @@ dSApathButton = { size  : [ dSaveasLabel.size[0]+XYoff[0],$
                             dSaveasLabel.size[1]+XYoff[1],$
                             320,35],$
                   uname : 'save_as_path',$
-                  value : '~/'}
+                  value : '~/results/'}
 
 XYoff = [0,0]
 dSAfileText = { size  : [dSApathButton.size[0]+ $
