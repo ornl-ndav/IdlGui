@@ -130,6 +130,10 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
 ;        ENDIF
 ;    ENDIF
 
+    sz = (size(local_tfpDAta))(1)
+    xmin = (xmin GE sz) ? (sz-1) : xmin
+    xmax = (xmax GE sz) ? (sz-1) : xmax
+
     IF (index_ymax EQ 0) THEN BEGIN
         data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
@@ -240,6 +244,11 @@ WHILE (index LT nbr_plot) DO BEGIN
             local_tfpData_error[index_inf] = 0
         ENDIF
     ENDIF
+
+    sz = (size(local_tfpDAta_error))(1)
+    xmin = (xmin GE sz) ? (sz-1) : xmin
+    xmax = (xmax GE sz) ? (sz-1) : xmax
+
     IF (index EQ 0) THEN BEGIN
         data_to_plot_error = FLOAT(local_tfpData_error(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
