@@ -207,18 +207,108 @@ sPolar2SummaryPolaValue = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
                             uname: 'summary_polar2_value'}
 
 
+;Recap of third Polarization state --------------------------------------------
+;Summary of Shifting/Scaling parameters used base -----------------------------
+XYoff = [10,20]
+sPolar3SummaryBase = { size: [sSummaryBase.size[0]+$
+                              sSummaryBase.size[2]+XYoff[0],$
+                              sPolar2SummaryBase.size[1]+ $
+                              sPolar2SummaryBase.size[3]+XYoff[1],$
+                              sSummaryBase.size[2],$
+                              200],$
+                       uname: 'polarization_state3_summary_base',$
+                       frame: 1}
 
+XYoff = [20,-8]                 ;title
+sPolar3SummaryTitle = { size: [sPolar3SummaryBase.size[0]+XYoff[0],$
+                               sPolar3SummaryBase.size[1]+XYoff[1]],$
+                        value: 'Recap. of parameters that will be used for' + $
+                        ' Polarization state #3'}
 
+XYoff = [10,15]                 ;table
+TableAlign = INTARR(NbrColumns,NbrRows)+1
+sPolar3SummaryTable = { size: [XYoff[0],$
+                               XYoff[1],$
+                               sPolar3SummaryBase.size[2]-2*XYoff[0],$
+                               150,$
+                               NbrColumns,$
+                               NbrRows],$
+                        uname: 'polarization_state3_summary_table',$
+                        sensitive: 1,$
+                        label: ['Name of files used',$
+                                'Shifting',$
+                                'Scaling'],$
+                        align: TableAlign,$
+                        width: sSummaryTable.width}
 
+;recap of polarization state used --------------------------------------------
+XYoff = [0,5]
+sPolar3SummaryPola = { size: [sPolar3SummaryTable.size[0]+XYoff[0],$
+                              sPolar3SummaryTable.size[1]+$
+                              sPolar3SummaryTable.size[3]+XYoff[1]],$
+                       value: 'Polarization state:'}
 
+XYoff = [130,1]
+sPolar3SummaryPolaValue = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
+                                   sPolar3SummaryPola.size[1]+XYoff[1],$
+                                   500],$
+                            value: 'N/A',$
+                            uname: 'summary_polar3_value'}
 
+;Recap of fourth Polarization state -------------------------------------------
+;Summary of Shifting/Scaling parameters used base -----------------------------
+XYoff = [10,20]
+sPolar4SummaryBase = { size: [sSummaryBase.size[0]+$
+                              sSummaryBase.size[2]+XYoff[0],$
+                              sPolar3SummaryBase.size[1]+ $
+                              sPolar3SummaryBase.size[3]+XYoff[1],$
+                              sSummaryBase.size[2],$
+                              200],$
+                       uname: 'polarization_state4_summary_base',$
+                       frame: 1}
+
+XYoff = [20,-8]                 ;title
+sPolar4SummaryTitle = { size: [sPolar4SummaryBase.size[0]+XYoff[0],$
+                               sPolar4SummaryBase.size[1]+XYoff[1]],$
+                        value: 'Recap. of parameters that will be used for' + $
+                        ' Polarization state #4'}
+
+XYoff = [10,15]                 ;table
+TableAlign = INTARR(NbrColumns,NbrRows)+1
+sPolar4SummaryTable = { size: [XYoff[0],$
+                               XYoff[1],$
+                               sPolar4SummaryBase.size[2]-2*XYoff[0],$
+                               150,$
+                               NbrColumns,$
+                               NbrRows],$
+                        uname: 'polarization_state4_summary_table',$
+                        sensitive: 1,$
+                        label: ['Name of files used',$
+                                'Shifting',$
+                                'Scaling'],$
+                        align: TableAlign,$
+                        width: sSummaryTable.width}
+
+;recap of polarization state used --------------------------------------------
+XYoff = [0,5]
+sPolar4SummaryPola = { size: [sPolar4SummaryTable.size[0]+XYoff[0],$
+                              sPolar4SummaryTable.size[1]+$
+                              sPolar4SummaryTable.size[3]+XYoff[1]],$
+                       value: 'Polarization state:'}
+
+XYoff = [130,1]
+sPolar4SummaryPolaValue = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
+                                   sPolar4SummaryPola.size[1]+XYoff[1],$
+                                   500],$
+                            value: 'N/A',$
+                            uname: 'summary_polar4_value'}
 
 ;Get preview of output file ---------------------------------------------------
 XYoff = [0,500]
 sPreviewButton = { size: [sOutputFileBase.size[0]+XYoff[0],$
                           sOutputFileBase.size[1]+$
                           sOutputFileBase.size[3]+XYoff[1],$
-                          300],$
+                          200],$
                    value: 'PREVIEW OF OUTPUT FILE',$
                    sensitive: 0,$
                    uname: 'create_output_file_preview_button'}
@@ -230,20 +320,10 @@ sCreateOutput = { size: [sPreviewButton.size[0]+$
                          XYoff[0],$
                          sPreviewButton.size[1]+$
                          XYoff[1],$
-                         500],$
+                         300],$
                   value: 'CREATE OUTPUT FILE',$
                   sensitive: 0,$
                   uname: 'create_output_file_create_button'}
-
-
-
-
-
-
-
-
-
-
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -443,16 +523,101 @@ wPolar2SummaryPolaValue = $
                UNAME     = sPolar2SummaryPolaValue.uname,$
                /ALIGN_LEFT)
 
+;Recap of third Polarization state --------------------------------------------
+;Summary of Shifting/Scaling parameters used base -----------------------------
+wPolar3SummaryTitle = WIDGET_LABEL(BaseTab,$
+                             XOFFSET = sPolar3SummaryTitle.size[0],$
+                             YOFFSET = sPolar3SummaryTitle.size[1],$
+                             VALUE   = sPolar3SummaryTitle.value)
 
+;Shifting/Scaling parameters used base ----------------------------------------
+wPolar3SummaryBase = WIDGET_BASE(BaseTab,$
+                           XOFFSET   = sPolar3SummaryBase.size[0],$
+                           YOFFSET   = sPolar3SummaryBase.size[1],$
+                           SCR_XSIZE = sPolar3SummaryBase.size[2],$
+                           SCR_YSIZE = sPolar3SummaryBase.size[3],$
+                           UNAME     = sPolar3SummaryBase.uname,$
+                           FRAME     = sPolar3SummaryBase.frame)
+                           
+;Table that summarize the files used and the parameters defined ---------------
+wPolar3SummaryTable = WIDGET_TABLE(wPolar3SummaryBase,$
+                             XOFFSET       = sPolar3SummaryTable.size[0],$
+                             YOFFSET       = sPolar3SummaryTable.size[1],$
+                             SCR_XSIZE     = sPolar3SummaryTable.size[2],$
+                             SCR_YSIZE     = sPolar3SummaryTable.size[3],$
+                             XSIZE         = sPolar3SummaryTable.size[4],$
+                             YSIZE         = sPolar3SummaryTable.size[5],$
+                             UNAME         = sPolar3SummaryTable.uname,$
+                             SENSITIVE     = sPolar3SummaryTable.sensitive,$
+                             COLUMN_LABELS = sPolar3SummaryTable.label,$
+                             COLUMN_WIDTHS = sPolar3SummaryTable.width,$
+                             ALIGNMENT     = sPolar3SummaryTable.align,$
+                             /NO_ROW_HEADERS,$
+                             /ROW_MAJOR,$
+                             /RESIZEABLE_COLUMNS)
 
+;label of polarization state used ---------------------------------------------
+wPolar3SummaryPola = $
+  WIDGET_LABEL(wPolar3SummaryBase,$
+               XOFFSET   = sPolar3SummaryPola.size[0],$
+               YOFFSET   = sPolar3SummaryPola.size[1],$
+               VALUE     = sPolar3SummaryPola.value)
+wPolar3SummaryPolaValue = $
+  WIDGET_LABEL(wPolar3SummaryBase,$
+               XOFFSET   = sPolar3SummaryPolaValue.size[0],$
+               YOFFSET   = sPolar3SummaryPolaValue.size[1],$
+               SCR_XSIZE = sPolar3SummaryPolaValue.size[2],$
+               VALUE     = sPolar3SummaryPolaValue.value,$
+               UNAME     = sPolar3SummaryPolaValue.uname,$
+               /ALIGN_LEFT)
 
+;Recap of fourth Polarization state -------------------------------------------
+;Summary of Shifting/Scaling parameters used base -----------------------------
+wPolar4SummaryTitle = WIDGET_LABEL(BaseTab,$
+                             XOFFSET = sPolar4SummaryTitle.size[0],$
+                             YOFFSET = sPolar4SummaryTitle.size[1],$
+                             VALUE   = sPolar4SummaryTitle.value)
 
+;Shifting/Scaling parameters used base ----------------------------------------
+wPolar4SummaryBase = WIDGET_BASE(BaseTab,$
+                           XOFFSET   = sPolar4SummaryBase.size[0],$
+                           YOFFSET   = sPolar4SummaryBase.size[1],$
+                           SCR_XSIZE = sPolar4SummaryBase.size[2],$
+                           SCR_YSIZE = sPolar4SummaryBase.size[3],$
+                           UNAME     = sPolar4SummaryBase.uname,$
+                           FRAME     = sPolar4SummaryBase.frame)
+                           
+;Table that summarize the files used and the parameters defined ---------------
+wPolar4SummaryTable = WIDGET_TABLE(wPolar4SummaryBase,$
+                             XOFFSET       = sPolar4SummaryTable.size[0],$
+                             YOFFSET       = sPolar4SummaryTable.size[1],$
+                             SCR_XSIZE     = sPolar4SummaryTable.size[2],$
+                             SCR_YSIZE     = sPolar4SummaryTable.size[3],$
+                             XSIZE         = sPolar4SummaryTable.size[4],$
+                             YSIZE         = sPolar4SummaryTable.size[5],$
+                             UNAME         = sPolar4SummaryTable.uname,$
+                             SENSITIVE     = sPolar4SummaryTable.sensitive,$
+                             COLUMN_LABELS = sPolar4SummaryTable.label,$
+                             COLUMN_WIDTHS = sPolar4SummaryTable.width,$
+                             ALIGNMENT     = sPolar4SummaryTable.align,$
+                             /NO_ROW_HEADERS,$
+                             /ROW_MAJOR,$
+                             /RESIZEABLE_COLUMNS)
 
-
-
-
-
-
+;label of polarization state used ---------------------------------------------
+wPolar4SummaryPola = $
+  WIDGET_LABEL(wPolar4SummaryBase,$
+               XOFFSET   = sPolar4SummaryPola.size[0],$
+               YOFFSET   = sPolar4SummaryPola.size[1],$
+               VALUE     = sPolar4SummaryPola.value)
+wPolar4SummaryPolaValue = $
+  WIDGET_LABEL(wPolar4SummaryBase,$
+               XOFFSET   = sPolar4SummaryPolaValue.size[0],$
+               YOFFSET   = sPolar4SummaryPolaValue.size[1],$
+               SCR_XSIZE = sPolar4SummaryPolaValue.size[2],$
+               VALUE     = sPolar4SummaryPolaValue.value,$
+               UNAME     = sPolar4SummaryPolaValue.uname,$
+               /ALIGN_LEFT)
 
 
 
