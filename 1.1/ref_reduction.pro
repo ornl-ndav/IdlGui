@@ -68,7 +68,7 @@ global = PTR_NEW ({ first_event: 1,$
                     cmd_batch_length: 60,$
                     debugger: debugger,$
                     PrevBatchRowSelected: 0,$
-                    BatchDefaultPath: '~/',$
+                    BatchDefaultPath: '~/results/',$
                     BatchDefaultFileFilter: '*_Batch_Run*.txt',$
                     BatchFileName: '',$
                     PreviousRunReductionValidated: 0,$  
@@ -78,7 +78,7 @@ global = PTR_NEW ({ first_event: 1,$
                     NormRunNumber: '',$
                     archived_data_flag: 1,$
                     archived_norm_flag: 1,$
-                    dr_output_path: '~/',$ ;output path define in the REDUCE tab
+                    dr_output_path: '~/results',$ ;output path define in the REDUCE tab
                     cl_output_path: '~/REFreduction_CL/',$ 
 ;default path where to put the command line output file
                     cl_file_ext1: 'REFreduction_CL_',$ 
@@ -162,7 +162,7 @@ global = PTR_NEW ({ first_event: 1,$
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file: '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path: '~/',$ 
+                   working_path: '~/results/',$ 
 ;where the tmp file will be created
                    ucams: ucams, $ 
 ;ucams of the current user
