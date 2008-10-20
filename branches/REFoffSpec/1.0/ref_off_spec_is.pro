@@ -95,3 +95,9 @@ WIDGET_CONTROL, id, GET_VALUE=value
 IF (value EQ 0) THEN RETURN, 1
 RETURN, 0
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isBaseMapped, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id,/MAP)
+END
