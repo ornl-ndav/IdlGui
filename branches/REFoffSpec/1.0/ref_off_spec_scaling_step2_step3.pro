@@ -241,7 +241,8 @@ sz = N_ELEMENTS(list_OF_files)
 putTextFieldValue, Event, 'step4_2_3_manual_reference_value', list_OF_files[0]
 CASE (sz) OF
     0: list = ['']
-    1: list = list_OF_files[1]
+    1: list = ['']
+    2: list = [list_OF_files[1]]
     ELSE: list = list_OF_files[1:sz-1]
 ENDCASE
 SetDroplistValue, Event, 'step4_2_3_work_on_file_droplist', list
