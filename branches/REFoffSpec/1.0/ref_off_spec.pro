@@ -61,7 +61,7 @@ SUPER_USERS       = ['j35']
 ;          5: Create Output
 ;          6: Options,
 ;          7:Log Book 
-sDEBUGGING = { tab: {main_tab: 4,$
+sDEBUGGING = { tab: {main_tab: 5,$
                      step4_tab: 0,$
                      scaling_tab: 0},$
                ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
