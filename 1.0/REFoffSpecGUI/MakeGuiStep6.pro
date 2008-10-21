@@ -213,7 +213,7 @@ sPolar2Button = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
                          420],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar2_repopulate_button',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 ;label of output file name (short file name) ----------------------------------
 XYoff = [0,25]
@@ -284,7 +284,7 @@ sPolar3Button = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
                          sPolar2Button.size[2]],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar3_repopulate_button',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 ;label of output file name (short file name) ----------------------------------
 XYoff = [0,25]
@@ -355,7 +355,7 @@ sPolar4Button = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
                          sPolar2Button.size[2]],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar4_repopulate_button',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 ;label of output file name (short file name) ----------------------------------
 XYoff = [0,25]
@@ -372,26 +372,26 @@ sPola4OutputFileValue = { size: [sPola4OutputFileLabel.size[0]+$
                           uname: 'pola4_output_file_name_value'}
 
 ;------------------------------------------------------------------------------
-;Get preview of output file ---------------------------------------------------
-XYoff = [0,10]
-sPreviewButton = { size: [sSummaryBase.size[0]+XYoff[0],$
-                          sSummaryBase.size[1]+$
-                          sSummaryBase.size[3]+XYoff[1],$
-                          620],$
-                   value: 'PREVIEW OF OUTPUT FILE',$
-                   sensitive: 0,$
-                   uname: 'create_output_file_preview_button'}
-
 ;Create output file button ----------------------------------------------------
-XYoff = [0,30]
-sCreateOutput = { size: [sPreviewButton.size[0]+$
-                         XYoff[0],$
-                         sPreviewButton.size[1]+$
-                         XYoff[1],$
-                         sPreviewButton.size[2]],$
+XYoff = [0,10]
+sCreateOutput = { size: [sSummaryBase.size[0]+XYoff[0],$
+                         sSummaryBase.size[1]+$
+                         sSummaryBase.size[3]+XYoff[1],$
+                         620],$
                   value: 'CREATE OUTPUT FILE',$
                   sensitive: 0,$
                   uname: 'create_output_file_create_button'}
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,30]
+sPreviewButton = { size: [sCreateOutput.size[0]+$
+                          XYoff[0],$
+                          sCreateOutput.size[1]+$
+                          XYoff[1],$
+                          sCreateOutput.size[2]],$
+                   value: 'PREVIEW OF OUTPUT FILE',$
+                   sensitive: 0,$
+                   uname: 'create_output_file_preview_button'}
 
 
 ;******************************************************************************
