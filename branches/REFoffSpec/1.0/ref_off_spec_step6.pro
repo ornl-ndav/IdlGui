@@ -278,6 +278,18 @@ CreateDefaultOutputFileNameForOtherStates, Event, $
 END
 
 ;------------------------------------------------------------------------------
+PRO CheckValidationOfCreateOutputButton, Event
+working_table = getTableValue(Event,'output_file_summary_table')
+IF (working_table[0,0] NE '') THEN BEGIN
+    validate_status = 1
+ENDIF ELSE BEGIN
+    validate_status = 0
+ENDELSE
+activate_widget, Event,'create_output_file_create_button',validate_status
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO UpdateStep6Gui, Event
 ;refresh the name of the default output file name
 RefreshOutputFileName, Event
@@ -288,9 +300,16 @@ PopulateWorkingFileFields, Event
 ;work on other polarization states -------
 ;determine other polarization states
 PopulateOtherPolaStates, Event
+;check if we can validate or not the CREATE OUTPUT FILE button
+CheckValidationOfCreateOutputButton, Event
+END
+
+;------------------------------------------------------------------------------
+PRO create_output_file, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
 
 
 
 END
-
 

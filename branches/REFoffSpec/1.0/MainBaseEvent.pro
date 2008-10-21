@@ -794,6 +794,12 @@ CASE Event.id OF
         RefreshOutputFileName, Event ;step5
     END
 
+;Create output file button
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='create_output_file_create_button'): BEGIN
+        create_output_file, Event ;step6
+    END
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 
