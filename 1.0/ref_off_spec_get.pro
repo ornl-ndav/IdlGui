@@ -74,6 +74,13 @@ RETURN, list
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getTableValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 
@@ -222,7 +229,16 @@ RETURN, returnArray
 END
 
 ;------------------------------------------------------------------------------
-
 FUNCTION getStep4Step2PlotType, Event
 RETURN, getCWBgroupValue(Event,'step4_step2_z_axis_linear_log')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getPolarizationState, file_name
+pola_states = ['p0','p1','p2','p3']
+FOR i=0,3 DO BEGIN
+    IF (STRPOS(file_name,'_' + pola_states[i]) NE -1) THEN $
+      RETURN, pola_states[i]
+ENDFOR
+RETURN, 'N/A'
 END

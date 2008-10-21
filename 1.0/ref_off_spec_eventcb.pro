@@ -112,7 +112,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     END
 
     5: BEGIN ;create output file
-        RefreshOutputFileName, Event ;_step6
+        UpdateStep6Gui, Event ;_step6
     END
 
     6: BEGIN ;options

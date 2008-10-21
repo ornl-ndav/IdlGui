@@ -62,7 +62,7 @@ XYoff = [5,10] ;folder button
 sOutputFolder = { size: [XYoff[0],$
                          XYoff[1],$
                          sOutputFileBase.size[2]-2*XYoff[0]],$
-                  value: '~/',$
+                  value: '~/results/',$
                   uname: 'create_output_file_path_button'}
 XYoff = [5,35] ;file name label
 sOutputFileNameLabel = { size: [XYoff[0],$
@@ -86,7 +86,7 @@ sOutputFileValuePreview = { size: [sOutputFileNamePreview.size[0]+XYoff[0],$
                                    sOutputFilenameTF.size[2]],$
                             uname: 'create_output_full_file_name_' + $
                             'preview_value',$
-                            value: '~/'}
+                            value: '~/results/'}
 
 ;Summary of Shifting/Scaling parameters used base -----------------------------
 XYoff = [0,15]
@@ -114,10 +114,10 @@ sSummaryTable = { size: [XYoff[0],$
                   uname: 'output_file_summary_table',$
                   sensitive: 1,$
                   label: ['Name of files used',$
-                          'Shifting',$
-                          'Scaling'],$
+                          'Shifting (# pixels)',$
+                          'Scaling Factor'],$
                   align: TableAlign,$
-                  width: [394,100,100]}
+                  width: [374,120,100]}
 
 ;recap of polarization state used --------------------------------------------
 XYoff = [0,5]
@@ -187,8 +187,8 @@ sPolar2SummaryTable = { size: [XYoff[0],$
                         uname: 'polarization_state2_summary_table',$
                         sensitive: 1,$
                         label: ['Name of files used',$
-                                'Shifting',$
-                                'Scaling'],$
+                                'Shifting (# pixels)',$
+                                'Scaling Factor'],$
                         align: TableAlign,$
                         width: sSummaryTable.width}
 
@@ -244,8 +244,8 @@ sPolar3SummaryTable = { size: [XYoff[0],$
                         uname: 'polarization_state3_summary_table',$
                         sensitive: 1,$
                         label: ['Name of files used',$
-                                'Shifting',$
-                                'Scaling'],$
+                                'Shifting (# pixels)',$
+                                'Scaling Factor'],$
                         align: TableAlign,$
                         width: sSummaryTable.width}
 
@@ -301,8 +301,8 @@ sPolar4SummaryTable = { size: [XYoff[0],$
                         uname: 'polarization_state4_summary_table',$
                         sensitive: 1,$
                         label: ['Name of files used',$
-                                'Shifting',$
-                                'Scaling'],$
+                                'Shifting (# pixels)',$
+                                'Scaling Factor'],$
                         align: TableAlign,$
                         width: sSummaryTable.width}
 
