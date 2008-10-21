@@ -55,6 +55,12 @@ ENDFOR
 END
 
 ;------------------------------------------------------------------------------
+PRO putValueInTable, Event, uname, TableArray
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=TableArray
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 ;Function that updates the list of the ascii file list found in the step2
@@ -103,3 +109,4 @@ putTextFieldValue, Event,'step4_2_2_lambda1_text_field', $
 putTextFieldValue, Event,'step4_2_2_lambda2_text_field', $
   STRCOMPRESS(lambda_max,/REMOVE_ALL)
 END
+

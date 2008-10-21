@@ -121,12 +121,11 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
 
     IF (isWithScalingErrorBars(Event)) THEN BEGIN
         
-        IF (ylog) THEN BEGIN
+        IF (isLog) THEN BEGIN
             ERRPLOT, xrange,$
-              t_data_to_plot-t_data_to_plot_error,$
-              t_data_to_plot+t_data_to_plot_error,$
-              COLOR = 250,$
-              /YLOG
+              t_data_to_plot-alog10(t_data_to_plot_error),$
+              t_data_to_plot+alog10(t_data_to_plot_error),$
+              COLOR = 250
         ENDIF ELSE BEGIN
             ERRPLOT, xrange,$
               t_data_to_plot-t_data_to_plot_error,$

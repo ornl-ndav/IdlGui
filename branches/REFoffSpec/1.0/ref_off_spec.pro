@@ -108,7 +108,6 @@ global = ptr_new ({ ucams:               ucams,$
                     corner_selected:     INTARR(2),$
                     fix_corner:          INTARR(2),$
                     bClick_step4_step1:  1,$
-;                    step4_step1_selection_pixel_range:  0L,$
                     step4_step1_move_selection_position: INTARR(2),$
                     left_mouse_pressed:  0,$
                     step4_step1_left_mouse_pressed: 0,$
@@ -133,7 +132,11 @@ global = ptr_new ({ ucams:               ucams,$
                     ascii_filter:        '*.txt',$
                     ascii_path:          '~/',$
                     sys_color_face_3d:   INTARR(3),$
+                    working_pola_state:  '',$
                     list_OF_ascii_files: ptr_new(0L),$
+                    list_OF_ascii_files_p1 : ptr_new(0L),$
+                    list_OF_ascii_files_p2 : ptr_new(0L),$
+                    list_OF_ascii_files_p3 : ptr_new(0L),$
                     short_list_OF_ascii_files: ptr_new(0L),$
                     trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
