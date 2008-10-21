@@ -37,7 +37,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;=======================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'BSSreductionSQE'
-VERSION            = '1.2.17'
+VERSION            = '1.2.18'
 DeployedVersion    = 'yes'
 DEBUGGING_VERSION  = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
