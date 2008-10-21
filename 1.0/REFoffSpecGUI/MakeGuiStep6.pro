@@ -199,21 +199,35 @@ sPolar2SummaryPola = { size: [sPolar2SummaryTable.size[0]+XYoff[0],$
                               sPolar2SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [130,1]
+XYoff = [120,1]
 sPolar2SummaryPolaValue = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
                                    sPolar2SummaryPola.size[1]+XYoff[1],$
-                                   500],$
+                                   60],$
                             value: 'N/A',$
                             uname: 'summary_polar2_value'}
 
 ;repopulate gui button --------------------------------------------------------
-XYoff = [0,20]
+XYoff = [180,-4]
 sPolar2Button = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
                          sPolar2SummaryPola.size[1]+XYoff[1],$
-                         600],$
+                         420],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar2_repopulate_button',$
                   sensitive: 1}
+
+;label of output file name (short file name) ----------------------------------
+XYoff = [0,25]
+sPola2OutputFileLabel = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
+                                 sPolar2SummaryPola.size[1]+XYoff[1]],$
+                            value: 'Output File Name  :'}
+XYoff = [130,1]
+sPola2OutputFileValue = { size: [sPola2OutputFileLabel.size[0]+$
+                                 XYoff[0],$
+                                 sPola2OutputFileLabel.size[1]+$
+                                 XYoff[1],$
+                                 500],$
+                          value: 'N/A',$
+                          uname: 'pola2_output_file_name_value'}
 
 ;Recap of third Polarization state --------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -256,21 +270,35 @@ sPolar3SummaryPola = { size: [sPolar3SummaryTable.size[0]+XYoff[0],$
                               sPolar3SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [130,1]
+XYoff = [120,1]
 sPolar3SummaryPolaValue = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
                                    sPolar3SummaryPola.size[1]+XYoff[1],$
-                                   500],$
+                                   60],$
                             value: 'N/A',$
                             uname: 'summary_polar3_value'}
 
 ;repopulate gui button --------------------------------------------------------
-XYoff = [0,20]
+XYoff = [180,-4]
 sPolar3Button = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
                          sPolar3SummaryPola.size[1]+XYoff[1],$
-                         600],$
+                         sPolar2Button.size[2]],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar3_repopulate_button',$
                   sensitive: 1}
+
+;label of output file name (short file name) ----------------------------------
+XYoff = [0,25]
+sPola3OutputFileLabel = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
+                                 sPolar3SummaryPola.size[1]+XYoff[1]],$
+                          value: 'Output File Name  :'}
+XYoff = [130,1]
+sPola3OutputFileValue = { size: [sPola3OutputFileLabel.size[0]+$
+                                 XYoff[0],$
+                                 sPola3OutputFileLabel.size[1]+$
+                                 XYoff[1],$
+                                 500],$
+                          value: 'N/A',$
+                          uname: 'pola3_output_file_name_value'}
 
 ;Recap of fourth Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -313,22 +341,37 @@ sPolar4SummaryPola = { size: [sPolar4SummaryTable.size[0]+XYoff[0],$
                               sPolar4SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [130,1]
+XYoff = [120,1]
 sPolar4SummaryPolaValue = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
                                    sPolar4SummaryPola.size[1]+XYoff[1],$
-                                   500],$
+                                   sPolar2SummaryPolaValue.size[2]],$
                             value: 'N/A',$
                             uname: 'summary_polar4_value'}
 
 ;repopulate gui button --------------------------------------------------------
-XYoff = [0,20]
+XYoff = [180,-4]
 sPolar4Button = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
                          sPolar4SummaryPola.size[1]+XYoff[1],$
-                         600],$
+                         sPolar2Button.size[2]],$
                   value: 'REPOPULATE GUI USING THIS POLARIZATION STATE',$
                   uname: 'summary_polar4_repopulate_button',$
                   sensitive: 1}
 
+;label of output file name (short file name) ----------------------------------
+XYoff = [0,25]
+sPola4OutputFileLabel = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
+                                 sPolar4SummaryPola.size[1]+XYoff[1]],$
+                          value: 'Output File Name  :'}
+XYoff = [130,1]
+sPola4OutputFileValue = { size: [sPola4OutputFileLabel.size[0]+$
+                                 XYoff[0],$
+                                 sPola4OutputFileLabel.size[1]+$
+                                 XYoff[1],$
+                                 500],$
+                          value: 'N/A',$
+                          uname: 'pola4_output_file_name_value'}
+
+;------------------------------------------------------------------------------
 ;Get preview of output file ---------------------------------------------------
 XYoff = [0,10]
 sPreviewButton = { size: [sSummaryBase.size[0]+XYoff[0],$
@@ -349,6 +392,7 @@ sCreateOutput = { size: [sPreviewButton.size[0]+$
                   value: 'CREATE OUTPUT FILE',$
                   sensitive: 0,$
                   uname: 'create_output_file_create_button'}
+
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -557,6 +601,21 @@ wPolar2Button = WIDGET_BUTTON(wPolar2SummaryBase,$
                               UNAME     = sPolar2Button.uname,$
                               SENSITIVE = sPolar2Button.sensitive)
 
+;label of output file name (short file name) ----------------------------------
+wSummaryOutputFileLabel = $
+  WIDGET_LABEL(wPolar2SummaryBase,$
+               XOFFSET   = sPola2OutputFileLabel.size[0],$
+               YOFFSET   = sPola2OutputFileLabel.size[1],$
+               VALUE     = sPola2OutputFileLabel.value)
+wSummaryOutputFileValue = $
+  WIDGET_LABEL(wPolar2SummaryBase,$
+               XOFFSET   = sPola2OutputFileValue.size[0],$
+               YOFFSET   = sPola2OutputFileValue.size[1],$
+               SCR_XSIZE = sPola2OutputFileValue.size[2],$
+               VALUE     = sPola2OutputFileValue.value,$
+               UNAME     = sPola2OutputFileValue.uname,$
+               /ALIGN_LEFT)
+
 ;Recap of third Polarization state --------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
 wPolar3SummaryTitle = WIDGET_LABEL(BaseTab,$
@@ -614,6 +673,21 @@ wPolar3Button = WIDGET_BUTTON(wPolar3SummaryBase,$
                               UNAME     = sPolar3Button.uname,$
                               SENSITIVE = sPolar3Button.sensitive)
 
+;label of output file name (short file name) ----------------------------------
+wSummaryOutputFileLabel = $
+  WIDGET_LABEL(wPolar3SummaryBase,$
+               XOFFSET   = sPola3OutputFileLabel.size[0],$
+               YOFFSET   = sPola3OutputFileLabel.size[1],$
+               VALUE     = sPola3OutputFileLabel.value)
+wSummaryOutputFileValue = $
+  WIDGET_LABEL(wPolar3SummaryBase,$
+               XOFFSET   = sPola3OutputFileValue.size[0],$
+               YOFFSET   = sPola3OutputFileValue.size[1],$
+               SCR_XSIZE = sPola3OutputFileValue.size[2],$
+               VALUE     = sPola3OutputFileValue.value,$
+               UNAME     = sPola3OutputFileValue.uname,$
+               /ALIGN_LEFT)
+
 ;Recap of fourth Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
 wPolar4SummaryTitle = WIDGET_LABEL(BaseTab,$
@@ -670,6 +744,21 @@ wPolar4Button = WIDGET_BUTTON(wPolar4SummaryBase,$
                               VALUE     = sPolar4Button.value,$
                               UNAME     = sPolar4Button.uname,$
                               SENSITIVE = sPolar4Button.sensitive)
+
+;label of output file name (short file name) ----------------------------------
+wSummaryOutputFileLabel = $
+  WIDGET_LABEL(wPolar4SummaryBase,$
+               XOFFSET   = sPola4OutputFileLabel.size[0],$
+               YOFFSET   = sPola4OutputFileLabel.size[1],$
+               VALUE     = sPola4OutputFileLabel.value)
+wSummaryOutputFileValue = $
+  WIDGET_LABEL(wPolar4SummaryBase,$
+               XOFFSET   = sPola4OutputFileValue.size[0],$
+               YOFFSET   = sPola4OutputFileValue.size[1],$
+               SCR_XSIZE = sPola4OutputFileValue.size[2],$
+               VALUE     = sPola4OutputFileValue.value,$
+               UNAME     = sPola4OutputFileValue.uname,$
+               /ALIGN_LEFT)
 
 ;------------------------------------------------------------------------------
 
