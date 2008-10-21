@@ -137,6 +137,7 @@ global = ptr_new ({ ucams:               ucams,$
                     list_OF_ascii_files_p1 : ptr_new(0L),$
                     list_OF_ascii_files_p2 : ptr_new(0L),$
                     list_OF_ascii_files_p3 : ptr_new(0L),$
+                    time_stamp           : '',$
                     short_list_OF_ascii_files: ptr_new(0L),$
                     trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
