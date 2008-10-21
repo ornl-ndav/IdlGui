@@ -75,6 +75,7 @@ END
 ;------------------------------------------------------------------------------
 ;this also defined the default output file name
 PRO CreateDefaultOutputFileName, Event, list_OF_files ;_output_file
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 first_file_loaded = list_OF_files[0]
 ;get path
 path = FILE_DIRNAME(first_file_loaded,/MARK_DIRECTORY)
@@ -82,10 +83,28 @@ putTextFieldValue, Event, 'create_output_file_path_button', path
 ;get short file name
 short_file_name = FILE_BASENAME(first_file_loaded,'.txt')
 time_stamp = GenerateIsoTimeStamp()
+(*global).time_stamp = time_stamp
 short_file_name += '_' + time_stamp
 short_file_name += '_scaling.txt'
 putTextFieldValue, Event, 'create_output_file_name_text_field', $
   short_file_name
+END
+
+;------------------------------------------------------------------------------
+;this also defined the default output file name
+PRO CreateDefaultOutputFileNameForOtherStates, Event, $
+                                               base_file_name, $
+                                               uname
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get short file name
+short_file_name = FILE_BASENAME(base_file_name,'.txt')
+time_stamp      = (*global).time_stamp
+short_file_name += '_' + time_stamp
+short_file_name += '_scaling.txt'
+IF (time_stamp EQ '') THEN BEGIN
+    short_file_name = ''
+ENDIF
+putTextFieldValue, Event, uname, short_file_name
 END
 
 ;------------------------------------------------------------------------------
@@ -222,6 +241,7 @@ ENDIF
 (*(*global).list_OF_ascii_files_p1) = list_OF_ascii_files_p1
 (*(*global).list_OF_ascii_files_p2) = list_OF_ascii_files_p2
 (*(*global).list_OF_ascii_files_p3) = list_OF_ascii_files_p3
+
 ;get short list of ascii files
 short_list_OF_ascii_files_p1 = $
   determine_short_list_OF_ascii_files(list_OF_ascii_files_p1)
@@ -229,6 +249,7 @@ short_list_OF_ascii_files_p2 = $
   determine_short_list_OF_ascii_files(list_OF_ascii_files_p2)
 short_list_OF_ascii_files_p3 = $
   determine_short_list_OF_ascii_files(list_OF_ascii_files_p3)
+
 ;populate table of the various polarization state
 working_table_array = getTableValue(Event,'output_file_summary_table')
 populateTableArray, Event, $
@@ -243,6 +264,17 @@ populateTableArray, Event, $
   working_table_array,$
   short_list_OF_ascii_files_p3, $
   POLA_STATE='p#4'
+
+;populate output file name for each polarization state
+CreateDefaultOutputFileNameForOtherStates, Event, $
+  short_list_OF_ascii_files_p1[0],$
+  'pola2_output_file_name_value'
+CreateDefaultOutputFileNameForOtherStates, Event, $
+  short_list_OF_ascii_files_p2[0],$
+  'pola3_output_file_name_value'
+CreateDefaultOutputFileNameForOtherStates, Event, $
+  short_list_OF_ascii_files_p3[0],$
+  'pola4_output_file_name_value'
 END
 
 ;------------------------------------------------------------------------------

@@ -199,10 +199,10 @@ sPolar2SummaryPola = { size: [sPolar2SummaryTable.size[0]+XYoff[0],$
                               sPolar2SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [120,1]
+XYoff = [130,1]
 sPolar2SummaryPolaValue = { size: [sPolar2SummaryPola.size[0]+XYoff[0],$
                                    sPolar2SummaryPola.size[1]+XYoff[1],$
-                                   60],$
+                                   50],$
                             value: 'N/A',$
                             uname: 'summary_polar2_value'}
 
@@ -270,10 +270,10 @@ sPolar3SummaryPola = { size: [sPolar3SummaryTable.size[0]+XYoff[0],$
                               sPolar3SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [120,1]
+XYoff = [130,1]
 sPolar3SummaryPolaValue = { size: [sPolar3SummaryPola.size[0]+XYoff[0],$
                                    sPolar3SummaryPola.size[1]+XYoff[1],$
-                                   60],$
+                                   50],$
                             value: 'N/A',$
                             uname: 'summary_polar3_value'}
 
@@ -341,7 +341,7 @@ sPolar4SummaryPola = { size: [sPolar4SummaryTable.size[0]+XYoff[0],$
                               sPolar4SummaryTable.size[3]+XYoff[1]],$
                        value: 'Polarization state:'}
 
-XYoff = [120,1]
+XYoff = [130,1]
 sPolar4SummaryPolaValue = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
                                    sPolar4SummaryPola.size[1]+XYoff[1],$
                                    sPolar2SummaryPolaValue.size[2]],$
