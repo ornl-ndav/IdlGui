@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.17'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -263,7 +263,10 @@ global = ptr_new ({ $
                                                 gifw_error_text: '',$
                                                 mtha_min_text: '',$
                                                 mtha_max_text:'',$
-                                                mtha_bin_text:''},$
+                                                mtha_bin_text:'',$
+                                                tof_cutting_button: 0,$
+                                                tof_cutting_min_text: '',$
+                                                tof_cutting_max_text: ''},$
                                        tab8 : { waio_button: 0,$
                                                 woctib_button: 0,$
                                                 wopws_button: 0,$
@@ -376,7 +379,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
     id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-    widget_control, id1, set_tab_current = 7
+    widget_control, id1, set_tab_current = 6
 ENDIF
 
 ;give extra power to j35, 2zr, ele, z3i, eg9

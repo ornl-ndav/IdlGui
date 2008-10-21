@@ -1,3 +1,37 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO BSSreduction_CommandLineGenerator, Event
 
 ;get global structure
@@ -1559,6 +1593,41 @@ IF (TIBCBin EQ '') THEN BEGIN
 ENDIF ELSE BEGIN
    cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
+
+
+
+
+
+
+
+
+
+
+
+;get time of flight range -----------------------------------------------------
+IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN
+    (*global).Configuration.Reduce.tab7.tof_cutting_button = 1
+ENDIF ELSE BEGIN
+    (*global).Configuration.Reduce.tab7.tof_cutting_button = 0
+ENDELSE
+
+IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN
+
+    MinValue = getTextFieldValue(Event,'tof_cutting_min_text')
+    (*global).Configuration.Reduce.tab7.tof_cutting_min_text = MinValue
+    IF (MinValue NE '') THEN BEGIN
+        cmd += ' --tof-cut-min='
+        cmd += STRCOMPRESS(MinValue,/REMOVE_ALL)
+    ENDIF
+
+    MaxValue = getTextFieldValue(Event,'tof_cutting_max_text')
+    (*global).Configuration.Reduce.tab7.tof_cutting_max_text = MaxValue
+    IF (MaxValue NE '') THEN BEGIN
+        cmd += ' --tof-cut-max='
+        cmd += STRCOMPRESS(MaxValue,/REMOVE_ALL)
+    ENDIF
+
+ENDIF
 
 ;add a white space
 putInfoInCommandLineStatus, Event, '', 1

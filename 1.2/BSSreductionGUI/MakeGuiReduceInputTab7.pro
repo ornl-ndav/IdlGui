@@ -70,7 +70,7 @@ CSFDSvalueText  = { size : [CSFDSvalueLabel.size[0]+XYoff3[0],$
 ;///////////////////////////////////////////////////
 ;Time Zero Slope Parameter (Angstroms/microseconds)/
 ;///////////////////////////////////////////////////
-yoff = 80
+yoff = 75
 TZSPframe = { size : [CSFDSframe.size[0], $
                       CSFDSframe.size[1]+yoff,$
                       CSFDSframe.size[2:3]],$
@@ -307,6 +307,51 @@ GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
                            100,30],$
                    uname : 'gifw_error_text',$
                    sensitive : GIFWbase.button.value}
+
+;/////////////////////
+;TOF cutting ability /
+;/////////////////////
+yoff = 80
+TOFcuttingFrame = { size : [GIFWframe.size[0], $
+                            GIFWframe.size[1]+yoff,$
+                            GIFWframe.size[2:3]],$
+                    frame : 4}
+XYoff1 = [10,-14]
+TOFcuttingbase = { size : [TOFcuttingFrame.size[0]+XYoff1[0],$
+                           TOFcuttingFrame.size[1]+XYoff1[1],$
+                           240,$
+                           30],$
+                   button : { uname : 'tof_cutting_button',$
+                              list : ['Time of Flight Range ' + $
+                                      '(microseconds)'],$
+                              value : 0}}
+
+XYoff2 = [10,25]
+TOFcuttingMinLabel = { size : [TOFcuttingframe.size[0]+XYoff2[0],$
+                               TOFcuttingframe.size[1]+XYoff2[1]],$
+                       value : 'Min:',$
+                       uname : 'tof_cutting_min_text_label',$
+                       sensitive : TOFcuttingbase.button.value}
+XYoff3 = [50,-5]
+TOFcuttingMinValueText  = { size : [TOFcuttingMinLabel.size[0]+XYoff3[0],$
+                                    TOFcuttingMinLabel.size[1]+XYoff3[1],$
+                                    100,30],$
+                            uname : 'tof_cutting_min_text',$
+                            sensitive : TOFcuttingbase.button.value}
+
+XYoff4 = [200,0]
+TOFcuttingMaxLabel = { size : [TOFcuttingMinLabel.size[0]+XYoff4[0],$
+                               TOFcuttingMinLabel.size[1]+XYoff4[1]],$
+                       value : 'Max:',$
+                       uname : 'tof_cutting_max_text_label',$
+                       sensitive : TOFcuttingbase.button.value}
+XYoff5 = [50,-5]
+TOFcuttingMaxValueText  = { size : [TOFcuttingMaxLabel.size[0]+XYoff5[0],$
+                                    TOFcuttingMaxLabel.size[1]+XYoff5[1],$
+                                    100,30],$
+                            uname : 'tof_cutting_max_text',$
+                            sensitive : TOFcuttingbase.button.value}
+
 
 ;******************************************************************************
 ;                                Build GUI
@@ -699,4 +744,66 @@ frame  = WIDGET_LABEL(tab6_base,$
                       SCR_YSIZE = MTHAframe.size[3],$
                       FRAME     = MTHAframe.frame,$
                       VALUE     = '')
+
+;/////////////////////
+;TOF cutting ability /
+;/////////////////////
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = TOFcuttingbase.size[0],$
+                   YOFFSET   = TOFcuttingbase.size[1],$
+                   SCR_XSIZE = TOFcuttingbase.size[2],$
+                   SCR_YSIZE = TOFcuttingbase.size[3])
+
+group = CW_BGROUP(base,$
+                  TOFcuttingbase.button.list,$
+                  UNAME      = TOFcuttingbase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TOFcuttingMinLabel.size[0],$
+                     YOFFSET   = TOFcuttingMinLabel.size[1],$
+                     VALUE     = TOFcuttingMinLabel.value,$
+                     SENSITIVE = TOFcuttingMinLabel.sensitive,$
+                     UNAME     = TOFcuttingMinLabel.uname)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TOFcuttingMinValueText.size[0],$
+                   YOFFSET   = TOFcuttingMinValueText.size[1],$
+                   SCR_XSIZE = TOFcuttingMinValueText.size[2],$
+                   SCR_YSIZE = TOFcuttingMinValueText.size[3],$
+                   UNAME     = TOFcuttingMinValueText.uname,$
+                   SENSITIVE = TOFcuttingbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = TOFcuttingMaxLabel.size[0],$
+                     YOFFSET   = TOFcuttingMaxLabel.size[1],$
+                     VALUE     = TOFcuttingMaxLabel.value,$
+                     UNAME     = TOFcuttingMaxLabel.uname,$
+                     SENSITIVE = TOFcuttingbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = TOFcuttingMaxValueText.size[0],$
+                   YOFFSET   = TOFcuttingMaxValueText.size[1],$
+                   SCR_XSIZE = TOFcuttingMaxValueText.size[2],$
+                   SCR_YSIZE = TOFcuttingMaxValueText.size[3],$
+                   UNAME     = TOFcuttingMaxValueText.uname,$
+                   SENSITIVE = TOFcuttingbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = TOFcuttingframe.size[0],$
+                      YOFFSET   = TOFcuttingframe.size[1],$
+                      SCR_XSIZE = TOFcuttingframe.size[2],$
+                      SCR_YSIZE = TOFcuttingframe.size[3],$
+                      FRAME     = TOFcuttingframe.frame,$
+                      VALUE     = '')
+
 END
