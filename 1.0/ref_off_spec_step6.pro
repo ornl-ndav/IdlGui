@@ -391,13 +391,19 @@ FAILED     = (*global).failed
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
-LogMessage = '> Working on Initial Polarization State'
+pola_state = getTextFieldValue(Event,'summary_working_polar_value')
+LogMessage = '> Working on Initial Polarization State (' + $
+  STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
 putMessageInCreateStatus, Event, LogMessage
 
 LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING 
 addMessageInCreateStatus, Event, LogMessage
 
 activate_status_pola1 = 0
+activate_status_pola2 = 0
+activate_status_pola3 = 0
+activate_status_pola4 = 0
+
 error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN
@@ -449,7 +455,7 @@ ENDIF ELSE BEGIN
                             'create_output_full_file_name_preview_value')
         
 ;write output file
-;        full_output_file_name = '~/remove_me.txt' ;remove_me
+        full_output_file_name = '~/remove_me.txt' ;remove_me
         OPENW, 1, full_output_file_name
         index = 0L
         WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
@@ -457,15 +463,46 @@ ENDIF ELSE BEGIN
         ENDWHILE
         CLOSE, 1
         FREE_LUN, 1
-        
+
 ;enable preview button of working pola state
         activate_status_pola1 = 1
         ReplaceTextInCreateStatus, Event, PROCESSING, OK
 
+
+;put code here ......................
+        
     ENDELSE
 ENDELSE
     
+;loop over the three other polarization states
+;pola#2
+        sStructure = { summary_table_uname: $
+                       'polarization_state2_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar2_value'}
+        run_full_process_with_other_pola, Event, sStructure
+        
+;pola#3
+        sStructure = { summary_table_uname: $
+                       'polarization_state3_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar3_value'}
+        run_full_process_with_other_pola, Event, sStructure
+        
+;pola#4
+        sStructure = { summary_table_uname: $
+                       'polarization_state4_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar4_value'}
+        run_full_process_with_other_pola, Event, sStructure
+
+
+
+;activate preview widgets
 activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1
+activate_widget, Event, 'step6_preview_pola_state2', activate_status_pola2
+activate_widget, Event, 'step6_preview_pola_state3', activate_status_pola3
+activate_widget, Event, 'step6_preview_pola_state4', activate_status_pola4
 
 LogMessage = ''
 addMessageInCreateStatus, Event, LogMessage
@@ -494,4 +531,313 @@ XDISPLAYFILE, full_file_name
 END
 
 ;------------------------------------------------------------------------------
+;loop over the three other polarization states
+PRO run_full_process_with_other_pola, Event, sStructure
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+pola_state = getTextFieldValue(Event,sStructure.pola_state_uname)
+LogMessage = '> Working on polarization state ' + $
+  STRCOMPRESS(pola_state,/REMOVE_ALL)
+addMessageInCreateStatus, Event, LogMessage
+LogMessage = '    Checking list of files .................. ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+;start recovering the name of the input files
+Table = getTableValue(Event, sStructure.summary_table_uname)
+nbr_plot = getNbrFiles(Event)
+ListOfInputFiles = Table[0,0:nbr_plot-1]
+path             = getTextFieldValue(Event,'create_output_file_path_button')
+ListOfInputFiles = path + ListOfInputFiles
+
+;check that all the file exist
+result = FIX(FILE_TEST(ListOfInputFiles,/READ))
+IF (TOTAL(result) NE nbr_plot) THEN BEGIN
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+ENDELSE
+
+LogMessage = '    Read data from input files .............. ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+error2 = 0
+CATCH, error2
+IF (error2 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+    ReadData, Event, ListOfInputFiles, pData_y, pData_y_error
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+;    help, *pData_y[0]
+ENDELSE
+CATCH, /CANCEL
+
+LogMessage = '    Reformat (rebin) data ................... ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+error4 = 0
+;CATCH, error4
+IF (error4 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+    print, 'before'
+    help, *pData_y[0]
+    help, *pData_y[1]
+    print
+    ReformatData, Event, pData_y, pData_y_error
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+    print, 'after'
+    help, *pData_y[0]
+    help, *pData_y[1]
+ENDELSE
+CATCH, /CANCEL
+
+
+LogMessage = '    Shift Data .............................. ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+error3 = 0
+;CATCH, error3
+IF (error3 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+    step6_realign_data, Event, $
+      pData_y, $
+      pData_y_error,$
+      realign_tfpData,$
+      realign_tfpData_error
+
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO  ReformatData, Event,pData_y, pData_y_error
+step6_cleanup_data, Event, pData_y, pData_y_error
+step6_congrid_data, Event, pData_y, pData_y_error
+END
+
+;------------------------------------------------------------------------------
+PRO step6_realign_data, Event, tfpData, $
+                        tfpData_error, $
+                        realign_tfpData, $
+                        realign_tfpData_error
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;array of realign data
+Nbr_array             = (size(tfpData))(1)
+realign_tfpData       = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+realign_tfpData_error = PTRARR(Nbr_array,/ALLOCATE_HEAP)
+pixel_offset_array    = INTARR(Nbr_array)
+
+;retrieve pixel offset
+ref_pixel_list        = (*(*global).ref_pixel_list)
+ref_pixel_offset_list = (*(*global).ref_pixel_offset_list)
+
+nbr = N_ELEMENTS(ref_pixel_list)
+IF (nbr GT 1) THEN BEGIN
+;copy the first array
+    realign_tfpData[0]       = tfpData[0]
+    realign_tfpData_error[0] = tfpData_error[0]
+    index = 1
+    WHILE (index LT nbr) DO BEGIN
+        pixel_offset = ref_pixel_list[0]-ref_pixel_list[index]
+        pixel_offset_array[index] = pixel_offset ;save pixel_offset
+        ref_pixel_offset_list[index] += pixel_offset
+        array        = *tfpData[index]
+        array        = array[*,304L:2*304L-1]
+        array_error  = *tfpData_error[index]
+        array_error  = array_error[*,304L:2*304L-1]
+        IF (pixel_offset EQ 0 OR $
+            ref_pixel_list[index] EQ 0) THEN BEGIN ;if no offset
+            realign_tfpData[index]       = tfpData[index]
+            realign_tfpData_error[index] = tfpData_error[index]
+        ENDIF ELSE BEGIN
+            IF (pixel_offset GT 0) THEN BEGIN ;needs to move up
+;move up each row by pixel_offset
+;needs to start from the top when the offset is positive
+                FOR i=303,pixel_offset,-1 DO BEGIN
+                    array[*,i]       = array[*,i-pixel_offset]
+                    array_error[*,i] = array_error[*,i-pixel_offset]
+                ENDFOR
+;bottom pixel_offset number of row are initialized to 0
+                FOR j=0,pixel_offset DO BEGIN
+                    array[*,j]       = 0
+                    array_error[*,j] = 0
+                ENDFOR
+            ENDIF ELSE BEGIN    ;needs to move down
+                pixel_offset = ABS(pixel_offset)
+                FOR i=0,(303-pixel_offset) DO BEGIN
+                    array[*,i]       = array[*,i+pixel_offset]
+                    array_error[*,i] = array_error[*,i+pixel_offset]
+                ENDFOR
+                FOR j=303,303-pixel_offset,-1 DO BEGIN
+                    array[*,j]       = 0
+                    array_error[*,j] = 0
+                ENDFOR
+            ENDELSE
+        ENDELSE
+        
+        local_data       = array
+        local_data_error = array_error
+        dim2         = (size(local_data))(1)
+        big_array    = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1] = local_data
+        *realign_tfpData[index] = big_array
+
+        big_array_error    = STRARR(dim2,3*304L)
+        big_array_error[*,304L:2*304L-1] = local_data_error
+        *realign_tfpData_error[index] = big_array_error
+
+
+;change reference pixel from old to neatew position
+        ref_pixel_list[index] = ref_pixel_list[0]
+        ++index
+    ENDWHILE
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO ReadData, Event, list_OF_files, pData_y, pData_y_error
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+i = 0
+nbr = N_ELEMENTS(list_OF_files)
+final_new_pData         = PTRARR(nbr,/ALLOCATE_HEAP)
+final_new_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
+WHILE (i LT nbr) DO BEGIN
+    iClass = OBJ_NEW('IDL3columnsASCIIparser',list_OF_files[i])
+    pData = iClass->getDataQuickly()
+    OBJ_DESTROY, iClass
+;keep only the second column
+;    new_pData_x       = STRARR((SIZE(*pData[0]))(2))
+;    new_pData_x[*]    = (*pData[i])[0,*] ;retrieve x-array
+    new_pData         = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+    new_pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
+        new_pData[j,*]         = (*pData[j])[1,*]
+        new_pData_y_error[j,*] = (*pData[j])[2,*]
+    ENDFOR
+    *final_new_pData[i]         = new_pData
+    *final_new_pData_y_error[i] = new_pData_y_error
+;    *final_new_pData_x[i]       = new_pData_x
+    ++i
+ENDWHILE
+pData_y       = final_new_pData
+pData_y_error = final_new_pData_y_error
+;(*(*global).pData_x)         = final_new_pData_x
+;(*global).plot_realign_data = 0
+
+END
+
+;------------------------------------------------------------------------------
+PRO step6_cleanup_data, Event, pData, pData_error
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;get number of files loaded
+nbr_plot = getNbrFiles(Event)
+;retrieve data
+j = 0
+WHILE (j  LT nbr_plot) DO BEGIN
+    fpData        = FLOAT(*pData[j])
+    tfpData       = TRANSPOSE(fpData)
+    tfpData_error = TRANSPOSE(*pData_error[j])
+;remove undefined values
+    index = WHERE(~FINITE(tfpData),Nindex)
+    IF (Nindex GT 0) THEN BEGIN
+        tfpData[index] = 0
+    ENDIF
+    *pData[j]       = tfpData
+    *pData_error[j] = tfpData_error
+    ++j
+ENDWHILE
+END
+
+;------------------------------------------------------------------------------
+PRO step6_congrid_data, Event, pData_y, pData_y_error
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+pData_x        = (*(*global).pData_x)
+
+;determine the delta_x of each set of data
+sz      = (size(pData_y))(1)
+delta_x = FLTARR(sz)
+determine_delta_x, sz, pData_x, delta_x
+
+;get min delta_x and index
+min_delta_x = MIN(delta_x)
+min_index   = WHERE(delta_x EQ min_delta_x)
+
+;work on all the data that have delta_x GT than the delta_x found
+congrid_coeff_array = (*(*global).congrid_coeff_array)
+
+;congrid all data
+index       = 0
+max_x_size  = 0                 ;max number of elements
+max_x_value = 0                 ;maximum x value
+WHILE (index LT sz) DO BEGIN
+    coeff = congrid_coeff_array[index]
+    current_x_max_size  = (size(*pData_x[index]))(1)
+    current_max_x_value = MAX(FLOAT(*pData_x[index]))
+    IF (current_max_x_value GT max_x_value) THEN BEGIN
+        max_x_value = current_max_x_value
+    ENDIF
+    IF (current_x_max_size GT max_x_size) THEN BEGIN
+        max_x_size = current_x_max_size
+    ENDIF
+    IF (coeff NE 1) THEN BEGIN
+        congrid_x_coeff = current_x_max_size * congrid_coeff_array[index]
+;work on y
+        congrid_y_coeff = (size(*pData_y[index]))(2)
+        new_y_array = CONGRID((*pData_y[index]), $
+                              FIX(congrid_x_coeff),$
+                              congrid_y_coeff)
+        *pData_y[index] = new_y_array        
+;work on y_error
+        congrid_y_error_coeff = congrid_y_coeff
+        new_y_error_array = CONGRID((*pData_y_error[index]), $
+                                    FIX(congrid_x_coeff),$
+                                    congrid_y_error_coeff)
+        *pData_y_error[index] = new_y_error_array        
+    ENDIF
+    ++index
+ENDWHILE
+
+;triple the size of each array (except the first one)
+list_OF_files         = (*(*global).list_OF_ascii_files)
+nbr                   = N_ELEMENTS(list_OF_files)
+realign_pData_y       = PTRARR(nbr,/ALLOCATE_HEAP)
+realign_pData_y_error = PTRARR(nbr,/ALLOCATE_HEAP)
+
+index  = 0
+WHILE(index LT sz) DO BEGIN
+    IF (index EQ 0) THEN BEGIN
+        *realign_pData_y[index] = *pData_y[index]
+        *realign_pData_y_error[index] = *pData_y_error[index]
+    ENDIF ELSE BEGIN
+        local_data       = *pData_y[index]
+        local_data_error = *pData_y_error[index]
+        dim2             = (size(local_data))(1)
+        big_array        = STRARR(dim2,3*304L)
+        big_array_error  = STRARR(dim2,3*304L)
+        big_array[*,304L:2*304L-1]       = local_data
+        big_array_error[*,304L:2*304L-1] = local_data_error
+        *realign_pData_y[index]          = big_array
+        *realign_pData_y_error[index]    = big_array_error
+    ENDELSE
+    ++index
+ENDWHILE
+
+pData_y       = realign_pData_y
+pData_y_error = realign_pData_y_error
+
+END
 
