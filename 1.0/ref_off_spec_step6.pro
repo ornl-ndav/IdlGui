@@ -397,6 +397,7 @@ putMessageInCreateStatus, Event, LogMessage
 LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING 
 addMessageInCreateStatus, Event, LogMessage
 
+activate_status_pola1 = 0
 error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN
@@ -448,7 +449,7 @@ ENDIF ELSE BEGIN
                             'create_output_full_file_name_preview_value')
         
 ;write output file
-        full_output_file_name = '~/remove_me.txt' ;remove_me
+;        full_output_file_name = '~/remove_me.txt' ;remove_me
         OPENW, 1, full_output_file_name
         index = 0L
         WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
@@ -457,11 +458,15 @@ ENDIF ELSE BEGIN
         CLOSE, 1
         FREE_LUN, 1
         
+;enable preview button of working pola state
+        activate_status_pola1 = 1
         ReplaceTextInCreateStatus, Event, PROCESSING, OK
 
     ENDELSE
 ENDELSE
     
+activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1
+
 LogMessage = ''
 addMessageInCreateStatus, Event, LogMessage
 LogMessage = '**** Create Output File process .... DONE ****'
@@ -471,3 +476,22 @@ addMessageInCreateStatus, Event, LogMessage
 WIDGET_CONTROL,HOURGLASS=0
 
 END
+
+;------------------------------------------------------------------------------
+PRO preview_OF_step6_file, Event, POLA_STATE=pola_state
+;get path
+path = getTextFieldValue(Event,'create_output_file_path_button')
+;get filename
+CASE (pola_state) OF
+    'p0': uname = 'summary_output_file_name_value'
+    'p1': uname = 'pola2_output_file_name_value'
+    'p2': uname = 'pola3_output_file_name_value'
+    'p3': uname = 'pola4_output_file_name_value'
+ENDCASE
+file_name = getTextFieldvalue(Event,uname)
+full_file_name = path + file_name
+XDISPLAYFILE, full_file_name
+END
+
+
+

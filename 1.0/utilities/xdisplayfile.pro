@@ -249,7 +249,7 @@ PRO XDisplayFile, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
       a = [ !error_state.msg, ' Unable to display ' + filename]
       nlines = n_elements(a)
     endif else BEGIN
-        nlines = MIN([FILE_LINES(filename), 1000000])
+        nlines = MIN([FILE_LINES(filename), 10000000])
       OPENR, unit, FILENAME, /GET_LUN
       a = strarr(nlines)
       readf, unit, a
