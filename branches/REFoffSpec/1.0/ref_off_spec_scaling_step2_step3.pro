@@ -82,121 +82,131 @@ IvsLambda_selection       = (*(*global).IvsLambda_selection_step3_backup)
 IvsLambda_selection_error = (*(*global).IvsLambda_selection_error_step3_backup)
 scaling_factor            = (*(*global).scaling_factor)
 
-;create new big array
-sz = (size(*IvsLambda_selection[0]))(1)
-new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
-new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
-index = 0
-WHILE (index LT nbr_plot) DO BEGIN
-    new_IvsLambda_selection[index,*] = $
-      *IvsLambda_selection[index]
-    new_IvsLambda_selection_error[index,*] = $
-      *IvsLambda_selection_error[index]
-    index++
-ENDWHILE
-
-auto_scale_status = 1           ;ok by default
-
-no_error = 0
-;CATCH, no_error
-IF (no_error NE 0) THEN BEGIN
+error1 = 0
+CATCH, error1
+IF (error1 NE 0) THEN BEGIN
     CATCH,/CANCEL
-    IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
-      ' - Switch to Manual Mode!'
+    message = 'Process Failed. Please repeat the Scaling Step!'
+    result = DIALOG_MESSAGE(message, /ERROR)
 ENDIF ELSE BEGIN
-
-    index = 1
-    WHILE (index NE nbr_plot) DO BEGIN
-
-;;get y and y_error of low and high lda data
-        low_lda_y_array        = new_IvsLambda_selection[index,*]
-        low_lda_y_error_array  = new_IvsLambda_selection_error[index,*]
-        high_lda_y_array       = new_IvsLambda_selection[index-1,*]
-        high_lda_y_error_array = new_IvsLambda_selection_error[index-1,*]
-        
-        IdlSendToGeek_addLogBookText, Event, '--> Reference File: ' + $
-          ListOfFiles[index-1]
-        IdlSendToGeek_addLogBookText, Event, '--> Working File  : ' + $
-          ListOfFiles[index]
-        
-;determine what is the first non-zero data of the high lda file
-;(reference file)        
-        IdlSendToGeek_addLogBookText, Event, '---> Retrieve First ' + $
-          'non-zero lda index of Reference File ... ' + PROCESSING
-        lda_min_index = RetrieveLdaMinIndex(high_lda_y_array)
-        IF (lda_min_index EQ -1) THEN BEGIN
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-            auto_scale_status = 0
-            BREAK
-        ENDIF ELSE BEGIN
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + $
-              ' (index: ' + STRCOMPRESS(lda_min_index,/REMOVE_ALL) + ')'
-        ENDELSE
-
-;determine what is the last non-zero data of the low lda file
-;(working file)        
-        IdlSendToGeek_addLogBookText, Event, '---> Retrieve Last ' + $
-          'non-zero lda index of Working File ... ' + PROCESSING
-        lda_max_index = RetrieveLdaMaxIndex(low_lda_y_array)
-        IF (lda_max_index EQ -1) THEN BEGIN
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-            auto_scale_status = 0
-            BREAK
-        ENDIF ELSE BEGIN
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + $
-              ' (index: ' + STRCOMPRESS(lda_max_index,/REMOVE_ALL) + ')'
-        ENDELSE
-
-;remove points in calculation that have error GE than their values
-        CleanupArray_1, low_lda_y_array[lda_min_index:lda_max_index], $
-          low_lda_y_error_array[lda_min_index:lda_max_index]
-
-        CleanupArray_1, high_lda_y_array[lda_min_index:lda_max_index], $
-          high_lda_y_error_array[lda_min_index:lda_max_index]
-        
-;calculate the data total
-        Total_low_lda_y = TOTAL(low_lda_y_array[lda_min_index:$
-                                                lda_max_index])
-        IdlSendToGeek_addLogBookText, Event, '---> Total of Working ' + $
-          'File: ' + STRCOMPRESS(total_low_lda_y,/REMOVE_ALL)
-        
-        Total_high_lda_y = TOTAL(high_lda_y_array[lda_min_index:$
-                                                  lda_max_index])
-        IdlSendToGeek_addLogBookText, Event, '---> Total of Reference ' + $
-          'File: ' + STRCOMPRESS(total_high_lda_y,/REMOVE_ALL)
-        Total_low_lda_y = TOTAL(low_lda_y_array[lda_min_index:$
-                                                lda_max_index])
-
-;Determine scaling factor
-        SF = FLOAT(total_low_lda_y) / FLOAT(total_high_lda_y)
-        IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
-          STRCOMPRESS(SF,/REMOVE_ALL)
-
-        scaling_factor[index] = SF
-        
-;Apply SF to working file (data and error)
-        new_low_lda_y_array = low_lda_y_array / SF
-        new_IvsLambda_selection[index,*] = new_low_lda_y_array
-
-        new_low_lda_y_error_array = low_lda_y_error_array / SF
-        new_IvsLambda_selection_error[index,*] = new_low_lda_y_error_array
-        
+;create new big array
+    sz = (size(*IvsLambda_selection[0]))(1)
+    new_IvsLambda_selection       = FLTARR(nbr_plot,sz)
+    new_IvsLambda_selection_error = FLTARR(nbr_plot,sz)
+    index = 0
+    WHILE (index LT nbr_plot) DO BEGIN
+        new_IvsLambda_selection[index,*] = $
+          *IvsLambda_selection[index]
+        new_IvsLambda_selection_error[index,*] = $
+          *IvsLambda_selection_error[index]
         index++
     ENDWHILE
-
-    IF (auto_scale_status) THEN BEGIN ;auto scaling worked
-
-        (*(*global).new_IvsLambda_selection)       = new_IvsLambda_selection
-        (*(*global).new_IvsLambda_selection_error) = $
-          new_IvsLambda_selection_error
-
-        re_display_step4_step2_step1_selection, $
-          Event, $
-          MODE='AUTOSCALE'      ;scaling_step2
-        (*(*global).scaling_factor) = scaling_factor
-
-    ENDIF
     
+    auto_scale_status = 1       ;ok by default
+    
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IdlSendToGeek_addLogBookText, Event, $
+          '-> Automatic Rescaling FAILED' + $
+          ' - Switch to Manual Mode!'
+    ENDIF ELSE BEGIN
+        
+        index = 1
+        WHILE (index NE nbr_plot) DO BEGIN
+            
+;;get y and y_error of low and high lda data
+            low_lda_y_array        = new_IvsLambda_selection[index,*]
+            low_lda_y_error_array  = new_IvsLambda_selection_error[index,*]
+            high_lda_y_array       = new_IvsLambda_selection[index-1,*]
+            high_lda_y_error_array = new_IvsLambda_selection_error[index-1,*]
+            
+            IdlSendToGeek_addLogBookText, Event, '--> Reference File: ' + $
+              ListOfFiles[index-1]
+            IdlSendToGeek_addLogBookText, Event, '--> Working File  : ' + $
+              ListOfFiles[index]
+            
+;determine what is the first non-zero data of the high lda file
+;(reference file)        
+            IdlSendToGeek_addLogBookText, Event, '---> Retrieve First ' + $
+              'non-zero lda index of Reference File ... ' + PROCESSING
+            lda_min_index = RetrieveLdaMinIndex(high_lda_y_array)
+            IF (lda_min_index EQ -1) THEN BEGIN
+                IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+                auto_scale_status = 0
+                BREAK
+            ENDIF ELSE BEGIN
+                IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + $
+                  ' (index: ' + STRCOMPRESS(lda_min_index,/REMOVE_ALL) + ')'
+            ENDELSE
+            
+;determine what is the last non-zero data of the low lda file
+;(working file)        
+            IdlSendToGeek_addLogBookText, Event, '---> Retrieve Last ' + $
+              'non-zero lda index of Working File ... ' + PROCESSING
+            lda_max_index = RetrieveLdaMaxIndex(low_lda_y_array)
+            IF (lda_max_index EQ -1) THEN BEGIN
+                IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+                auto_scale_status = 0
+                BREAK
+            ENDIF ELSE BEGIN
+                IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + $
+                  ' (index: ' + STRCOMPRESS(lda_max_index,/REMOVE_ALL) + ')'
+            ENDELSE
+            
+;remove points in calculation that have error GE than their values
+            CleanupArray_1, low_lda_y_array[lda_min_index:lda_max_index], $
+              low_lda_y_error_array[lda_min_index:lda_max_index]
+            
+            CleanupArray_1, high_lda_y_array[lda_min_index:lda_max_index], $
+              high_lda_y_error_array[lda_min_index:lda_max_index]
+            
+;calculate the data total
+            Total_low_lda_y = TOTAL(low_lda_y_array[lda_min_index:$
+                                                    lda_max_index])
+            IdlSendToGeek_addLogBookText, Event, '---> Total of Working ' + $
+              'File: ' + STRCOMPRESS(total_low_lda_y,/REMOVE_ALL)
+            
+            Total_high_lda_y = TOTAL(high_lda_y_array[lda_min_index:$
+                                                      lda_max_index])
+            IdlSendToGeek_addLogBookText, Event, '---> Total of Reference ' + $
+              'File: ' + STRCOMPRESS(total_high_lda_y,/REMOVE_ALL)
+            Total_low_lda_y = TOTAL(low_lda_y_array[lda_min_index:$
+                                                    lda_max_index])
+            
+;Determine scaling factor
+            SF = FLOAT(total_low_lda_y) / FLOAT(total_high_lda_y)
+            IdlSendToGeek_addLogBookText, Event, '---> SF is: ' + $
+              STRCOMPRESS(SF,/REMOVE_ALL)
+            
+            scaling_factor[index] = SF
+            
+;Apply SF to working file (data and error)
+            new_low_lda_y_array = low_lda_y_array / SF
+            new_IvsLambda_selection[index,*] = new_low_lda_y_array
+            
+            new_low_lda_y_error_array = low_lda_y_error_array / SF
+            new_IvsLambda_selection_error[index,*] = new_low_lda_y_error_array
+            
+            index++
+        ENDWHILE
+        
+        IF (auto_scale_status) THEN BEGIN ;auto scaling worked
+            
+            (*(*global).new_IvsLambda_selection) = new_IvsLambda_selection
+            (*(*global).new_IvsLambda_selection_error) = $
+              new_IvsLambda_selection_error
+            
+            re_display_step4_step2_step1_selection, $
+              Event, $
+              MODE='AUTOSCALE'  ;scaling_step2
+            (*(*global).scaling_factor) = scaling_factor
+            
+        ENDIF
+        
+    ENDELSE
+
 ENDELSE
 
 END
