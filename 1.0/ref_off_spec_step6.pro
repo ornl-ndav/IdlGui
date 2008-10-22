@@ -311,8 +311,6 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 create_final_array, Event
 ;write out final array
 create_output_array, Event
-
-
 END
 
 
@@ -379,140 +377,6 @@ final_array       = base_array
 final_error_array = base_error_array
 END
 
-;------------------------------------------------------------------------------
-PRO create_output_array, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-
-;indicate initialization with hourglass icon
-WIDGET_CONTROL,/HOURGLASS
-
-pola_state = getTextFieldValue(Event,'summary_working_polar_value')
-LogMessage = '> Working on Initial Polarization State (' + $
-  STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
-putMessageInCreateStatus, Event, LogMessage
-
-LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING 
-addMessageInCreateStatus, Event, LogMessage
-
-activate_status_pola1 = 0
-activate_status_pola2 = 0
-activate_status_pola3 = 0
-activate_status_pola4 = 0
-
-error = 0
-CATCH, error
-IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
-ENDIF ELSE BEGIN
-;retrieve x-axis
-    xaxis = (*(*global).x_axis)
-;get final array
-    create_final_array, Event, final_array, final_error_array
-    ReplaceTextInCreateStatus, Event, PROCESSING, OK
-
-    LogMessage = '    Write data to file ...................... ' + PROCESSING
-    addMessageInCreateStatus, Event, LogMessage
-
-    error1 = 0
-    CATCH, error1
-    IF (error1 NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
-    ENDIF ELSE BEGIN
-        nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;nbr of tof
-        nbr_y = DOUBLE((size(final_array))(2)) ;nbr of pixels
-        
-        index = 0L
-        output_strarray = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
-        output_strarray[index++] = $
-          '#F Scaling Data File created with REFoffSpec'
-        
-        FOR i=0,(nbr_y-1) DO BEGIN
-            output_strarray[index++] = ''
-            output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
-              STRCOMPRESS(i,/REMOVE_ALL) + $
-              ", 127))"
-            output_strarray[index++] = '#N 3'
-            output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
-              "Intensity(Counts/A)  Sigma(Counts/A)"
-            FOR j=0,(nbr_x-1) DO BEGIN
-                text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
-                text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
-                text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
-                output_strarray[index++] = text
-            ENDFOR
-        ENDFOR
-        
-;recover name of output file
-        full_output_file_name = $
-          getTextFieldValue(Event, $
-                            'create_output_full_file_name_preview_value')
-        
-;write output file
-        full_output_file_name = '~/remove_me.txt' ;remove_me
-        OPENW, 1, full_output_file_name
-        index = 0L
-        WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
-            PRINTF, 1, output_strarray[index++]
-        ENDWHILE
-        CLOSE, 1
-        FREE_LUN, 1
-
-;enable preview button of working pola state
-        activate_status_pola1 = 1
-        ReplaceTextInCreateStatus, Event, PROCESSING, OK
-
-
-;put code here ......................
-        
-    ENDELSE
-ENDELSE
-    
-;loop over the three other polarization states
-;pola#2
-        sStructure = { summary_table_uname: $
-                       'polarization_state2_summary_table',$
-                       pola_state_uname: $
-                       'summary_polar2_value'}
-        run_full_process_with_other_pola, Event, sStructure
-        
-;pola#3
-        sStructure = { summary_table_uname: $
-                       'polarization_state3_summary_table',$
-                       pola_state_uname: $
-                       'summary_polar3_value'}
-        run_full_process_with_other_pola, Event, sStructure
-        
-;pola#4
-        sStructure = { summary_table_uname: $
-                       'polarization_state4_summary_table',$
-                       pola_state_uname: $
-                       'summary_polar4_value'}
-        run_full_process_with_other_pola, Event, sStructure
-
-
-
-;activate preview widgets
-activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1
-activate_widget, Event, 'step6_preview_pola_state2', activate_status_pola2
-activate_widget, Event, 'step6_preview_pola_state3', activate_status_pola3
-activate_widget, Event, 'step6_preview_pola_state4', activate_status_pola4
-
-LogMessage = ''
-addMessageInCreateStatus, Event, LogMessage
-LogMessage = '**** Create Output File process .... DONE ****'
-addMessageInCreateStatus, Event, LogMessage
-
-;turn off hourglass
-WIDGET_CONTROL,HOURGLASS=0
-
-END
 
 ;------------------------------------------------------------------------------
 PRO preview_OF_step6_file, Event, POLA_STATE=pola_state
@@ -553,8 +417,16 @@ ListOfInputFiles = Table[0,0:nbr_plot-1]
 path             = getTextFieldValue(Event,'create_output_file_path_button')
 ListOfInputFiles = path + ListOfInputFiles
 
+print, ListOfInputFiles ;remove_me
+
+
 ;check that all the file exist
 result = FIX(FILE_TEST(ListOfInputFiles,/READ))
+
+print, TOTAL(result)
+print, nbr_plot
+
+
 IF (TOTAL(result) NE nbr_plot) THEN BEGIN
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
     RETURN
@@ -573,36 +445,27 @@ IF (error2 NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     ReadData, Event, ListOfInputFiles, pData_y, pData_y_error
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
-;    help, *pData_y[0]
 ENDELSE
-CATCH, /CANCEL
+CATCH,/CANCEL
 
 LogMessage = '    Reformat (rebin) data ................... ' + PROCESSING
 addMessageInCreateStatus, Event, LogMessage
 error4 = 0
-;CATCH, error4
+CATCH, error4
 IF (error4 NE 0) THEN BEGIN
     CATCH,/CANCEL
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
     RETURN
 ENDIF ELSE BEGIN
-    print, 'before'
-    help, *pData_y[0]
-    help, *pData_y[1]
-    print
     ReformatData, Event, pData_y, pData_y_error
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
-    print, 'after'
-    help, *pData_y[0]
-    help, *pData_y[1]
 ENDELSE
-CATCH, /CANCEL
-
+CATCH,/CANCEL
 
 LogMessage = '    Shift Data .............................. ' + PROCESSING
 addMessageInCreateStatus, Event, LogMessage
 error3 = 0
-;CATCH, error3
+CATCH, error3
 IF (error3 NE 0) THEN BEGIN
     CATCH,/CANCEL
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
@@ -613,10 +476,108 @@ ENDIF ELSE BEGIN
       pData_y_error,$
       realign_tfpData,$
       realign_tfpData_error
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+ENDELSE
+CATCH,/CANCEL
+
+LogMessage = '    Scale Data .............................. ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+error5 = 0
+CATCH, error5
+IF (error5 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+    step6_scale_data, Event, $
+      realign_tfpData, $
+      realign_tfpData_error, $
+      final_array, $
+      final_error_array
 
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
-
 ENDELSE
+CATCH,/CANCEL
+
+;create output file
+step6_create_output_file_other_pola, Event, $
+  sStructure, $
+  final_array, $
+  final_error_array
+
+END
+
+;------------------------------------------------------------------------------
+PRO step6_create_output_file_other_pola, Event, $
+                                         sStructure, $
+                                         final_array, $
+                                         final_error_array
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+LogMessage = '    Create output file ...................... ' + PROCESSING
+addMessageInCreateStatus, Event, LogMessage
+error7 = 0
+CATCH, error7
+IF (error7 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    RETURN
+ENDIF ELSE BEGIN
+;get path
+    path = getTextFieldValue(Event,'create_output_file_path_button')
+;output file name
+    file_name = getTextFieldValue(Event,sStructure.output_file_uname)
+;full output file name
+    full_file_name = path + file_name
+;x-axis
+    xaxis = (*(*global).x_axis)
+    
+    nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;nbr of tof
+    nbr_y = DOUBLE((size(final_array))(2)) ;nbr of pixels
+    
+    index = 0L
+    output_strarray = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
+    output_strarray[index++] = $
+      '#F Scaling Data File created with REFoffSpec'
+    
+    FOR i=0,(nbr_y-1) DO BEGIN
+        output_strarray[index++] = ''
+        output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
+          STRCOMPRESS(i,/REMOVE_ALL) + $
+          ", 127))"
+        output_strarray[index++] = '#N 3'
+        output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
+          "Intensity(Counts/A)  Sigma(Counts/A)"
+        FOR j=0,(nbr_x-1) DO BEGIN
+            text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
+            text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
+            text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
+            output_strarray[index++] = text
+        ENDFOR
+    ENDFOR
+    
+;recover name of output file
+    full_output_file_name = full_file_name
+    
+;write output file
+    OPENW, 1, full_output_file_name
+    index = 0L
+    WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
+        PRINTF, 1, output_strarray[index++]
+    ENDWHILE
+    CLOSE, 1
+    FREE_LUN, 1
+    
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+;enable preview button of working pola state
+    sStructure.activate_status_pola= 1
+ENDELSE
+CATCH,/CANCEL
+
 END
 
 ;------------------------------------------------------------------------------
@@ -841,3 +802,207 @@ pData_y_error = realign_pData_y_error
 
 END
 
+;------------------------------------------------------------------------------
+PRO  step6_scale_data, Event, tfpData, tfpData_error, $
+                       final_array, final_error_array
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+nbr_plot             = getNbrFiles(Event) ;number of files
+scaling_factor_array = (*(*global).scaling_factor)
+
+index      = 0                ;loop variable (nbr of array to add/plot
+WHILE (index LT nbr_plot) DO BEGIN
+    
+    local_tfpData       = *tfpData[index]
+    local_tfpData_error = *tfpData_error[index]
+    scaling_factor      = scaling_factor_array[index]
+    
+;get only the central part of the data (when it's not the first one)
+    IF (index NE 0) THEN BEGIN
+        local_tfpData      = local_tfpData[*,304L:2*304L-1]
+        local_tfpData_eror = local_tfpData_error[*,304L:2*304L-1] 
+    ENDIF
+    
+;applied scaling factor
+    local_tfpData       /= scaling_factor
+    local_tfpData_error /= scaling_factor
+    
+    IF (index EQ 0) THEN BEGIN
+;array that will serve as the background 
+        base_array       = local_tfpData
+        base_error_array = local_tfpData_error
+        size             = (size(total_array,/DIMENSIONS))[0]
+    ENDIF ELSE BEGIN
+        index_no_null = WHERE(local_tfpData NE 0,nbr)
+        IF (nbr NE 0) THEN BEGIN
+            index_indices = ARRAY_INDICES(local_tfpData,index_no_null)
+            sz = (size(index_indices,/DIMENSION))[1]
+;loop through all the not null values and add them to the background
+;array if their value is greater than the background one
+            i = 0L
+            WHILE(i LT sz) DO BEGIN
+                x = index_indices[0,i]
+                y = index_indices[1,i]
+                value_new       = local_tfpData(x,y)
+                value_old = base_array(x,y)
+                IF (value_new GT value_old) THEN BEGIN
+                    base_array(x,y)       = value_new
+                    base_error_array(x,y) = local_tfpData_error(x,y)
+                ENDIF
+                ++i
+            ENDWHILE
+        ENDIF
+    ENDELSE
+    
+    ++index
+    
+ENDWHILE
+
+;final_array is base_array
+final_array       = base_array
+final_error_array = base_error_array
+END
+
+
+;------------------------------------------------------------------------------
+PRO create_output_array, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+pola_state = getTextFieldValue(Event,'summary_working_polar_value')
+LogMessage = '> Working on Initial Polarization State (' + $
+  STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
+putMessageInCreateStatus, Event, LogMessage
+
+LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING 
+addMessageInCreateStatus, Event, LogMessage
+
+activate_status_pola1 = 0
+activate_status_pola2 = 0
+activate_status_pola3 = 0
+activate_status_pola4 = 0
+
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+ENDIF ELSE BEGIN
+;retrieve x-axis
+    xaxis = (*(*global).x_axis)
+;get final array
+    create_final_array, Event, final_array, final_error_array
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+
+    LogMessage = '    Write data to file ...................... ' + PROCESSING
+    addMessageInCreateStatus, Event, LogMessage
+
+    error1 = 0
+    CATCH, error1
+    IF (error1 NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;nbr of tof
+        nbr_y = DOUBLE((size(final_array))(2)) ;nbr of pixels
+        
+        index = 0L
+        output_strarray = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
+        output_strarray[index++] = $
+          '#F Scaling Data File created with REFoffSpec'
+        
+        FOR i=0,(nbr_y-1) DO BEGIN
+            output_strarray[index++] = ''
+            output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
+              STRCOMPRESS(i,/REMOVE_ALL) + $
+              ", 127))"
+            output_strarray[index++] = '#N 3'
+            output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
+              "Intensity(Counts/A)  Sigma(Counts/A)"
+            FOR j=0,(nbr_x-1) DO BEGIN
+                text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
+                text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
+                text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
+                output_strarray[index++] = text
+            ENDFOR
+        ENDFOR
+        
+;recover name of output file
+        full_output_file_name = $
+          getTextFieldValue(Event, $
+                            'create_output_full_file_name_preview_value')
+        
+;write output file
+        OPENW, 1, full_output_file_name
+        index = 0L
+        WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
+            PRINTF, 1, output_strarray[index++]
+        ENDWHILE
+        CLOSE, 1
+        FREE_LUN, 1
+
+;enable preview button of working pola state
+        activate_status_pola1 = 1
+        ReplaceTextInCreateStatus, Event, PROCESSING, OK
+
+;loop over the three other polarization states
+;pola#2
+        sStructure = { summary_table_uname: $
+                       'polarization_state2_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar2_value',$
+                       activate_status_pola: 0,$
+                       output_file_uname:$
+                       'pola2_output_file_name_value'}
+        run_full_process_with_other_pola, Event, sStructure
+        activate_status_pola2 = sStructure.activate_status_pola
+        
+;pola#3
+        sStructure = { summary_table_uname: $
+                       'polarization_state3_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar3_value',$
+                       activate_status_pola: 0,$
+                       output_file_uname:$
+                       'pola3_output_file_name_value'}
+        run_full_process_with_other_pola, Event, sStructure
+        activate_status_pola3 = sStructure.activate_status_pola
+        
+;pola#4
+        sStructure = { summary_table_uname: $
+                       'polarization_state4_summary_table',$
+                       pola_state_uname: $
+                       'summary_polar4_value',$
+                       activate_status_pola: 0,$
+                       output_file_uname:$
+                       'pola4_output_file_name_value'}
+        run_full_process_with_other_pola, Event, sStructure
+        activate_status_pola4 = sStructure.activate_status_pola
+        
+    ENDELSE
+    CATCH,/CANCEL
+ENDELSE
+    
+;activate preview widgets
+activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1
+activate_widget, Event, 'step6_preview_pola_state2', activate_status_pola2
+activate_widget, Event, 'step6_preview_pola_state3', activate_status_pola3
+activate_widget, Event, 'step6_preview_pola_state4', activate_status_pola4
+
+LogMessage = ''
+addMessageInCreateStatus, Event, LogMessage
+LogMessage = '**** Create Output File process .... DONE ****'
+addMessageInCreateStatus, Event, LogMessage
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
+END
