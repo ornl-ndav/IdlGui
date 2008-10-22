@@ -800,6 +800,30 @@ CASE Event.id OF
         create_output_file, Event ;step6
     END
 
+;get preview of working pola state
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step6_preview_pola_state1'): BEGIN
+        preview_OF_step6_file, Event, POLA_STATE='p0' ;step6
+    END
+
+;get preview of pola #2
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step6_preview_pola_state2'): BEGIN
+        preview_OF_step6_file, Event, POLA_STATE='p1' ;step6
+    END
+
+;get preview of pola #3
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step6_preview_pola_state3'): BEGIN
+        preview_OF_step6_file, Event, POLA_STATE='p2' ;step6
+    END
+
+;get preview of pola #4
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='step6_preview_pola_state4'): BEGIN
+        preview_OF_step6_file, Event, POLA_STATE='p3' ;step6
+    END
+
 ;------------------------------------------------------------------------------
 ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
 

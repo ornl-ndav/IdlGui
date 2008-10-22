@@ -155,9 +155,21 @@ sSummaryOutputFileValue = { size: [sSummaryOutputFileLabel.size[0]+$
                                    XYoff[0],$
                                    sSummaryOutputFileLabel.size[1]+$
                                    XYoff[1],$
-                                   500],$
+                                   370],$
                             value: 'N/A',$
                             uname: 'summary_output_file_name_value'}
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,-5]
+sPreviewPolar1Button = { size: [sSummaryOutputFileValue.size[0]+$
+                                sSummaryOutputFileValue.size[2]+$
+                                XYoff[0],$
+                                sSummaryOutputFileValue.size[1]+$
+                                XYoff[1],$
+                                100],$
+                         value: 'PREVIEW',$
+                         sensitive: 0,$
+                         uname: 'step6_preview_pola_state1'}
 
 ;Recap of Second Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -225,9 +237,21 @@ sPola2OutputFileValue = { size: [sPola2OutputFileLabel.size[0]+$
                                  XYoff[0],$
                                  sPola2OutputFileLabel.size[1]+$
                                  XYoff[1],$
-                                 500],$
+                                 370],$
                           value: 'N/A',$
                           uname: 'pola2_output_file_name_value'}
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,-2]
+sPreviewPolar2Button = { size: [sPola2OutputFileValue.size[0]+$
+                                sPola2OutputFileValue.size[2]+$
+                                XYoff[0],$
+                                sPola2OutputFileValue.size[1]+$
+                                XYoff[1],$
+                                sPreviewPolar1Button.size[2]],$
+                         value: 'PREVIEW',$
+                         sensitive: 0,$
+                         uname: 'step6_preview_pola_state2'}
 
 ;Recap of third Polarization state --------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -296,9 +320,21 @@ sPola3OutputFileValue = { size: [sPola3OutputFileLabel.size[0]+$
                                  XYoff[0],$
                                  sPola3OutputFileLabel.size[1]+$
                                  XYoff[1],$
-                                 500],$
+                                 370],$
                           value: 'N/A',$
                           uname: 'pola3_output_file_name_value'}
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,-2]
+sPreviewPolar3Button = { size: [sPola3OutputFileValue.size[0]+$
+                                sPola3OutputFileValue.size[2]+$
+                                XYoff[0],$
+                                sPola3OutputFileValue.size[1]+$
+                                XYoff[1],$
+                                sPreviewPolar1Button.size[2]],$
+                         value: 'PREVIEW',$
+                         sensitive: 0,$
+                         uname: 'step6_preview_pola_state3'}
 
 ;Recap of fourth Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -367,9 +403,21 @@ sPola4OutputFileValue = { size: [sPola4OutputFileLabel.size[0]+$
                                  XYoff[0],$
                                  sPola4OutputFileLabel.size[1]+$
                                  XYoff[1],$
-                                 500],$
+                                 370],$
                           value: 'N/A',$
                           uname: 'pola4_output_file_name_value'}
+
+;Get preview of output file ---------------------------------------------------
+XYoff = [0,-2]
+sPreviewPolar4Button = { size: [sPola4OutputFileValue.size[0]+$
+                                sPola4OutputFileValue.size[2]+$
+                                XYoff[0],$
+                                sPola4OutputFileValue.size[1]+$
+                                XYoff[1],$
+                                sPreviewPolar1Button.size[2]],$
+                         value: 'PREVIEW',$
+                         sensitive: 0,$
+                         uname: 'step6_preview_pola_state4'}
 
 ;------------------------------------------------------------------------------
 ;Create output file button ----------------------------------------------------
@@ -396,18 +444,6 @@ sStatusText = { size: [sCreateOutput.size[0]+XYoff[0],$
                 value: '',$
                 uname: 'step6_status_text_field'}
                 
-;Get preview of output file ---------------------------------------------------
-XYoff = [0,30]
-sPreviewButton = { size: [sCreateOutput.size[0]+$
-                          XYoff[0],$
-                          sCreateOutput.size[1]+$
-                          XYoff[1],$
-                          sCreateOutput.size[2]],$
-                   value: 'PREVIEW OF OUTPUT FILE',$
-                   sensitive: 0,$
-                   uname: 'create_output_file_preview_button'}
-
-
 ;******************************************************************************
 ;            BUILD GUI
 ;******************************************************************************
@@ -558,6 +594,15 @@ wSummaryOutputFileValue = $
                UNAME     = sSummaryOutputFileValue.uname,$
                /ALIGN_LEFT)
 
+; Get preview of output file 
+wPreviewButton = WIDGET_BUTTON(wSummaryBase,$
+                               XOFFSET   = sPreviewPolar1Button.size[0],$
+                               YOFFSET   = sPreviewPolar1Button.size[1],$
+                               SCR_XSIZE = sPreviewPolar1Button.size[2],$
+                               UNAME     = sPreviewPolar1Button.uname,$
+                               SENSITIVE = sPreviewPolar1Button.sensitive,$
+                               VALUE     = sPreviewPolar1Button.value)
+
 ;Recap of Second Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
 wPolar2SummaryTitle = WIDGET_LABEL(BaseTab,$
@@ -629,6 +674,15 @@ wSummaryOutputFileValue = $
                VALUE     = sPola2OutputFileValue.value,$
                UNAME     = sPola2OutputFileValue.uname,$
                /ALIGN_LEFT)
+
+; Get preview of output file 
+wPreviewButton = WIDGET_BUTTON(wPolar2SummaryBase,$
+                               XOFFSET   = sPreviewPolar2Button.size[0],$
+                               YOFFSET   = sPreviewPolar2Button.size[1],$
+                               SCR_XSIZE = sPreviewPolar2Button.size[2],$
+                               UNAME     = sPreviewPolar2Button.uname,$
+                               SENSITIVE = sPreviewPolar2Button.sensitive,$
+                               VALUE     = sPreviewPolar2Button.value)
 
 ;Recap of third Polarization state --------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
@@ -702,6 +756,15 @@ wSummaryOutputFileValue = $
                UNAME     = sPola3OutputFileValue.uname,$
                /ALIGN_LEFT)
 
+; Get preview of output file 
+wPreviewButton = WIDGET_BUTTON(wPolar3SummaryBase,$
+                               XOFFSET   = sPreviewPolar3Button.size[0],$
+                               YOFFSET   = sPreviewPolar3Button.size[1],$
+                               SCR_XSIZE = sPreviewPolar3Button.size[2],$
+                               UNAME     = sPreviewPolar3Button.uname,$
+                               SENSITIVE = sPreviewPolar3Button.sensitive,$
+                               VALUE     = sPreviewPolar3Button.value)
+
 ;Recap of fourth Polarization state -------------------------------------------
 ;Summary of Shifting/Scaling parameters used base -----------------------------
 wPolar4SummaryTitle = WIDGET_LABEL(BaseTab,$
@@ -774,6 +837,15 @@ wSummaryOutputFileValue = $
                UNAME     = sPola4OutputFileValue.uname,$
                /ALIGN_LEFT)
 
+; Get preview of output file 
+wPreviewButton = WIDGET_BUTTON(wPolar4SummaryBase,$
+                               XOFFSET   = sPreviewPolar4Button.size[0],$
+                               YOFFSET   = sPreviewPolar4Button.size[1],$
+                               SCR_XSIZE = sPreviewPolar4Button.size[2],$
+                               UNAME     = sPreviewPolar4Button.uname,$
+                               SENSITIVE = sPreviewPolar4Button.sensitive,$
+                               VALUE     = sPreviewPolar4Button.value)
+
 ;------------------------------------------------------------------------------
 
 ;Create output file button
@@ -806,14 +878,5 @@ wStatusTextField = WIDGET_TEXT(BaseTab,$
 
 
 
-
-; Get preview of output file 
-; wPreviewButton = WIDGET_BUTTON(BaseTab,$
-;                                XOFFSET   = sPreviewButton.size[0],$
-;                                YOFFSET   = sPreviewButton.size[1],$
-;                                SCR_XSIZE = sPreviewButton.size[2],$
-;                                UNAME     = sPreviewButton.uname,$
-;                                SENSITIVE = sPreviewButton.sensitive,$
-;                                VALUE     = sPreviewButton.value)
 
 END
