@@ -384,6 +384,9 @@ PRO create_output_array, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
 ;retrieve x-axis
 xaxis = (*(*global).x_axis)
 ;get final array
@@ -412,7 +415,20 @@ FOR i=0,(nbr_y-1) DO BEGIN
     ENDFOR
 ENDFOR
  
-FOR k=0,300 DO begin   
-    print, output_strarray[k] ;remove_me
-ENDFOR
+;recover name of output file
+full_output_file_name = $
+  getTextFieldValue(Event, 'create_output_full_file_name_preview_value')
+
+;write output file
+OPENW, 1, full_output_file_name
+index = 0L
+WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
+    PRINTF, 1, output_strarray[index++]
+ENDWHILE
+CLOSE, 1
+FREE_LUN, 1
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
 END
