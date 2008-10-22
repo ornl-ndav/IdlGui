@@ -67,10 +67,13 @@ WHILE(index LT sz) DO BEGIN
         ++index
         CONTINUE
     ENDIF
+    print, 'delta_x(index):' + strcompress(delta_x(index)) ;remove_me
+    print, 'delta_x[min_index]: ' + strcompress(delta_x[min_index]) ;remove_me
     congrid_coeff_array[index] = delta_x(index)/delta_x[min_index]
     ++index
 ENDWHILE
 (*(*global).congrid_coeff_array) = congrid_coeff_array
+print, congrid_coeff_array ;remove_me
 
 ;congrid all data
 index       = 0
@@ -104,6 +107,8 @@ WHILE (index LT sz) DO BEGIN
     ++index
 ENDWHILE
 
+help, *pData_y[0] ;remove_me
+
 ;triple the size of each array (except the first one)
 list_OF_files         = (*(*global).list_OF_ascii_files)
 nbr                   = N_ELEMENTS(list_OF_files)
@@ -124,10 +129,13 @@ WHILE(index LT sz) DO BEGIN
         big_array[*,304L:2*304L-1]       = local_data
         big_array_error[*,304L:2*304L-1] = local_data_error
         *realign_pData_y[index]          = big_array
+        help, big_array ;remove_me
         *realign_pData_y_error[index]    = big_array_error
     ENDELSE
     ++index
 ENDWHILE
+
+print, 'min_delta_x: ' + strcompress(min_delta_x) ;remove_me
 
 ;each new array pData_y (with congrid in x direction to share the same
 ;x-axis are store in pData_y
@@ -136,7 +144,9 @@ ENDWHILE
 
 ;define new x-axis
 x_size = FLOAT(max_x_value) / FLOAT(min_delta_x)
-x_axis = FINDGEN(FIX(x_size)) * min_delta_x
+x_axis = FINDGEN(FIX(x_size+1)) * min_delta_x
+help, x_axis
+
 (*(*global).x_axis) = x_axis
 (*global).delta_x = x_axis[1]-x_axis[0]
 (*(*global).realign_pData_y)       = realign_pData_y

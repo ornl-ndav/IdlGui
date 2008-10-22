@@ -50,11 +50,13 @@ WHILE (i LT nbr) DO BEGIN
     new_pData_x       = STRARR((SIZE(*pData[0]))(2))
     new_pData_x[*]    = (*pData[i])[0,*] ;retrieve x-array
     new_pData         = STRARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
+    help, new_pData ;remove_me
     new_pData_y_error = FLTARR(N_ELEMENTS(pData),(SIZE(*pData[0]))(2))
-    FOR j=0,(N_ELEMENTS(pData)-1) DO BEGIN ;retrieve y_array and error_y_array
+    FOR j=0,(N_ELEMENTS(pData)-2) DO BEGIN ;retrieve y_array and error_y_array
         new_pData[j,*]         = (*pData[j])[1,*]
         new_pData_y_error[j,*] = (*pData[j])[2,*]
     ENDFOR
+    help, new_pData ;remove_me
     *final_new_pData[i]         = new_pData
     *final_new_pData_y_error[i] = new_pData_y_error
     *final_new_pData_x[i]       = new_pData_x
