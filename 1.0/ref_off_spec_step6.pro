@@ -317,32 +317,37 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO create_final_array, Event, final_array
+PRO create_final_array, Event, final_array, final_error_array
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 nbr_plot             = getNbrFiles(Event) ;number of files
 scaling_factor_array = (*(*global).scaling_factor)
 tfpData              = (*(*global).realign_pData_y)
+tfpData_error        = (*(*global).realign_pData_y_error)
 
 index      = 0                ;loop variable (nbr of array to add/plot
 WHILE (index LT nbr_plot) DO BEGIN
     
-    local_tfpData  = *tfpData[index]
-    scaling_factor = scaling_factor_array[index]
+    local_tfpData       = *tfpData[index]
+    local_tfpData_error = *tfpData_error[index]
+    scaling_factor      = scaling_factor_array[index]
     
 ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-        local_tfpData = local_tfpData[*,304L:2*304L-1]
+        local_tfpData      = local_tfpData[*,304L:2*304L-1]
+        local_tfpData_eror = local_tfpData_error[*,304L:2*304L-1] 
     ENDIF
     
 ;applied scaling factor
-    local_tfpData /= scaling_factor
+    local_tfpData       /= scaling_factor
+    local_tfpData_error /= scaling_factor
     
     IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
-        base_array = local_tfpData 
-        size       = (size(total_array,/DIMENSIONS))[0]
+        base_array       = local_tfpData
+        base_error_array = local_tfpData_error
+        size             = (size(total_array,/DIMENSIONS))[0]
     ENDIF ELSE BEGIN
         index_no_null = WHERE(local_tfpData NE 0,nbr)
         IF (nbr NE 0) THEN BEGIN
@@ -354,10 +359,11 @@ WHILE (index LT nbr_plot) DO BEGIN
             WHILE(i LT sz) DO BEGIN
                 x = index_indices[0,i]
                 y = index_indices[1,i]
-                value_new = local_tfpData(x,y)
+                value_new       = local_tfpData(x,y)
                 value_old = base_array(x,y)
                 IF (value_new GT value_old) THEN BEGIN
-                    base_array(x,y) = value_new
+                    base_array(x,y)       = value_new
+                    base_error_array(x,y) = local_tfpData_error(x,y)
                 ENDIF
                 ++i
             ENDWHILE
@@ -369,8 +375,8 @@ WHILE (index LT nbr_plot) DO BEGIN
 ENDWHILE
 
 ;final_array is base_array
-final_array = base_array
-help, base_array ;remove_me
+final_array       = base_array
+final_error_array = base_error_array
 END
 
 ;------------------------------------------------------------------------------
@@ -379,7 +385,34 @@ PRO create_output_array, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;retrieve x-axis
-xaxis               = (*(*global).x_axis)
-help, xaxis ;remove_me
+xaxis = (*(*global).x_axis)
+;get final array
+create_final_array, Event, final_array, final_error_array
 
+nbr_x = DOUBLE(N_ELEMENTS(xaxis))       ;nbr of tof
+nbr_y = DOUBLE((size(final_array))(2))  ;nbr of pixels
+
+index = 0L
+output_strarray    = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
+output_strarray[index++] = '#F Scaling Data File created with REFoffSpec'
+
+FOR i=0,(nbr_y-1) DO BEGIN
+    output_strarray[index++] = ''
+    output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
+      STRCOMPRESS(i,/REMOVE_ALL) + $
+      ", 127))"
+    output_strarray[index++] = '#N 3'
+    output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
+      "Intensity(Counts/A)  Sigma(Counts/A)"
+    FOR j=0,(nbr_x-1) DO BEGIN
+        text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
+        text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
+        text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
+        output_strarray[index++] = text
+    ENDFOR
+ENDFOR
+ 
+FOR k=0,300 DO begin   
+    print, output_strarray[k] ;remove_me
+ENDFOR
 END
