@@ -148,6 +148,13 @@ WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getTextFromTextField, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
 ;==============================================================================
 FUNCTION IDLsendToGeek_getLogBookText_fromMainBase, MAIN_BASE, LogBookUname
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
@@ -162,6 +169,12 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
+;------------------------------------------------------------------------------
+PRO putTextInTextField, Event, uname, text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=text
+END
+
 ;==============================================================================
 PRO IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, LogBookUname, text
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
@@ -172,6 +185,12 @@ END
 PRO IDLsendToGeek_addLogBookText, Event, text
 LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
+;------------------------------------------------------------------------------
+PRO addTextInTextField, Event, uname, text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
 
@@ -217,6 +236,33 @@ ENDIF ELSE BEGIN ;remove given string from last line
     ENDELSE
 ENDELSE
 IDLsendToGeek_putLogBookText, Event, FinalStrarr
+END
+
+;------------------------------------------------------------------------------
+PRO ReplaceTextInTextField, Event, UNAME, OLD_STRING, NEW_STRING
+
+InitialStrarr = getTextFromTextField(Event, uname)
+ArrSize       = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN 
+;do not remove anything from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        FinalStrarr = InitialStrarr + NEW_STRING
+    ENDELSE
+ENDIF ELSE BEGIN                ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                            OLD_STRING)
+        NewLastLine += NEW_STRING
+        FinalStrarr  = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        NewInitialStrarr = removeStringFromText(InitialStrarr,OLD_STRING)
+        FinalStrarr      = NewInitialStrarr + NEW_STRING
+    ENDELSE
+ENDELSE
+putTextInTextField, Event, uname, FinalStrarr
 END
 
 ;==============================================================================

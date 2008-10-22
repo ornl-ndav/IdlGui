@@ -384,49 +384,88 @@ PRO create_output_array, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
+LogMessage = '> Working on Initial Polarization State'
+putMessageInCreateStatus, Event, LogMessage
+
+LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING 
+addMessageInCreateStatus, Event, LogMessage
+
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+ENDIF ELSE BEGIN
 ;retrieve x-axis
-xaxis = (*(*global).x_axis)
+    xaxis = (*(*global).x_axis)
 ;get final array
-create_final_array, Event, final_array, final_error_array
+    create_final_array, Event, final_array, final_error_array
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
 
-nbr_x = DOUBLE(N_ELEMENTS(xaxis))       ;nbr of tof
-nbr_y = DOUBLE((size(final_array))(2))  ;nbr of pixels
+    LogMessage = '    Write data to file ...................... ' + PROCESSING
+    addMessageInCreateStatus, Event, LogMessage
 
-index = 0L
-output_strarray    = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
-output_strarray[index++] = '#F Scaling Data File created with REFoffSpec'
-
-FOR i=0,(nbr_y-1) DO BEGIN
-    output_strarray[index++] = ''
-    output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
-      STRCOMPRESS(i,/REMOVE_ALL) + $
-      ", 127))"
-    output_strarray[index++] = '#N 3'
-    output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
-      "Intensity(Counts/A)  Sigma(Counts/A)"
-    FOR j=0,(nbr_x-1) DO BEGIN
-        text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
-        text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
-        text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
-        output_strarray[index++] = text
-    ENDFOR
-ENDFOR
- 
+    error1 = 0
+    CATCH, error1
+    IF (error1 NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        nbr_x = DOUBLE(N_ELEMENTS(xaxis)) ;nbr of tof
+        nbr_y = DOUBLE((size(final_array))(2)) ;nbr of pixels
+        
+        index = 0L
+        output_strarray = STRARR(DOUBLE(2+DOUBLE(nbr_y)*DOUBLE((nbr_x+4))))
+        output_strarray[index++] = $
+          '#F Scaling Data File created with REFoffSpec'
+        
+        FOR i=0,(nbr_y-1) DO BEGIN
+            output_strarray[index++] = ''
+            output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
+              STRCOMPRESS(i,/REMOVE_ALL) + $
+              ", 127))"
+            output_strarray[index++] = '#N 3'
+            output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
+              "Intensity(Counts/A)  Sigma(Counts/A)"
+            FOR j=0,(nbr_x-1) DO BEGIN
+                text = STRCOMPRESS(xaxis[j],/REMOVE_ALL)
+                text += '   ' + STRCOMPRESS(final_array[j,i],/REMOVE_ALL)
+                text += '   ' + STRCOMPRESS(final_error_array[j,i],/REMOVE_ALL)
+                output_strarray[index++] = text
+            ENDFOR
+        ENDFOR
+        
 ;recover name of output file
-full_output_file_name = $
-  getTextFieldValue(Event, 'create_output_full_file_name_preview_value')
-
+        full_output_file_name = $
+          getTextFieldValue(Event, $
+                            'create_output_full_file_name_preview_value')
+        
 ;write output file
-OPENW, 1, full_output_file_name
-index = 0L
-WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
-    PRINTF, 1, output_strarray[index++]
-ENDWHILE
-CLOSE, 1
-FREE_LUN, 1
+        full_output_file_name = '~/remove_me.txt' ;remove_me
+        OPENW, 1, full_output_file_name
+        index = 0L
+        WHILE (index LT N_ELEMENTS(output_strarray)) DO BEGIN
+            PRINTF, 1, output_strarray[index++]
+        ENDWHILE
+        CLOSE, 1
+        FREE_LUN, 1
+        
+        ReplaceTextInCreateStatus, Event, PROCESSING, OK
+
+    ENDELSE
+ENDELSE
+    
+LogMessage = ''
+addMessageInCreateStatus, Event, LogMessage
+LogMessage = '**** Create Output File process .... DONE ****'
+addMessageInCreateStatus, Event, LogMessage
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0

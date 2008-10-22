@@ -382,6 +382,20 @@ sCreateOutput = { size: [sSummaryBase.size[0]+XYoff[0],$
                   sensitive: 0,$
                   uname: 'create_output_file_create_button'}
 
+;------------------------------------------------------------------------------
+;Status of process (label and text_field)
+XYoff = [5,30]
+sStatusLabel = { size: [sCreateOutput.size[0]+XYoff[0],$
+                        sCreateOutput.size[1]+XYoff[1]],$
+                 value: 'S T A T U S'}
+XYoff = [0,20]
+sStatusText = { size: [sCreateOutput.size[0]+XYoff[0],$
+                       sStatusLabel.size[1]+XYoff[1],$
+                       sCreateOutput.size[2],$
+                       410],$
+                value: '',$
+                uname: 'step6_status_text_field'}
+                
 ;Get preview of output file ---------------------------------------------------
 XYoff = [0,30]
 sPreviewButton = { size: [sCreateOutput.size[0]+$
@@ -762,15 +776,6 @@ wSummaryOutputFileValue = $
 
 ;------------------------------------------------------------------------------
 
-;Get preview of output file 
-wPreviewButton = WIDGET_BUTTON(BaseTab,$
-                               XOFFSET   = sPreviewButton.size[0],$
-                               YOFFSET   = sPreviewButton.size[1],$
-                               SCR_XSIZE = sPreviewButton.size[2],$
-                               UNAME     = sPreviewButton.uname,$
-                               SENSITIVE = sPreviewButton.sensitive,$
-                               VALUE     = sPreviewButton.value)
-
 ;Create output file button
 wCreateButton = WIDGET_BUTTON(BaseTab,$
                               XOFFSET   = sCreateOutput.size[0],$
@@ -780,5 +785,35 @@ wCreateButton = WIDGET_BUTTON(BaseTab,$
                               SENSITIVE = sCreateOutput.sensitive,$
                               VALUE     = sCreateOutput.value)
 
+;------------------------------------------------------------------------------
+;Status of process (label and text_field)
+wStatusLabel = WIDGET_LABEL(BaseTab,$
+                            XOFFSET = sStatusLabel.size[0],$
+                            YOFFSET = sStatusLabel.size[1],$
+                            VALUE   = sStatusLabel.value)
+
+wStatusTextField = WIDGET_TEXT(BaseTab,$
+                               XOFFSET = sStatusText.size[0],$
+                               YOFFSET = sStatusText.size[1],$
+                               SCR_XSIZE = sStatusText.size[2],$
+                               SCR_YSIZE = sStatusText.size[3],$
+                               VALUE     = sStatusText.value,$
+                               UNAME     = sStatusText.uname,$
+                               /SCROLL,$
+                               /WRAP)
+                               
+
+
+
+
+
+; Get preview of output file 
+; wPreviewButton = WIDGET_BUTTON(BaseTab,$
+;                                XOFFSET   = sPreviewButton.size[0],$
+;                                YOFFSET   = sPreviewButton.size[1],$
+;                                SCR_XSIZE = sPreviewButton.size[2],$
+;                                UNAME     = sPreviewButton.uname,$
+;                                SENSITIVE = sPreviewButton.sensitive,$
+;                                VALUE     = sPreviewButton.value)
 
 END
