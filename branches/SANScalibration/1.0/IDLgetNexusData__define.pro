@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,9 +30,9 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;*******************************************************************************
+;******************************************************************************
 FUNCTION getNumberOfBanks, fileID
 bank_nbr = 1
 no_more_banks = 0
@@ -51,7 +51,7 @@ WHILE (no_more_banks NE 1) DO BEGIN
 ENDWHILE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBankData, fileID, BankNbr
 banks_path = '/entry/' + BankNbr + '/data/'
 pathID     = h5d_open(fileID, banks_path)
@@ -60,17 +60,31 @@ h5d_close,pathID
 RETURN, data
 END
 
-;***** Class methods ***********************************************************
+;------------------------------------------------------------------------------
+FUNCTION getBankTimeOfFlight, fileID, BankNbr
+banks_path = '/entry/' + BankNbr + '/time_of_flight/'
+pathID     = h5d_open(fileID, banks_path)
+tof        = h5d_read(pathID)
+h5d_close,pathID
+RETURN, tof
+END
+
+;***** Class methods **********************************************************
 FUNCTION IDLgetNexusMetadata::getNbrBank
 RETURN, self.bank_number
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION IDLgetNexusMetadata::getData
 RETURN, self.data
 END
 
-;***** Class constructor *******************************************************
+;------------------------------------------------------------------------------
+FUNCTION IDLgetNexusMetadata::getTof
+RETURN, self.tof
+END
+
+;***** Class constructor ******************************************************
 FUNCTION IDLgetNexusMetadata::init, $
                             nexus_full_path, $
                             NbrBank    = NbrBank,$
@@ -102,6 +116,9 @@ ENDELSE
 IF (n_elements(BankData) NE 0) THEN BEGIN
 ;get Bank data
     self.data = ptr_new(getBankData(fileID,STRCOMPRESS(BankData,/REMOVE_ALL)))
+;get tof data
+    self.tof  = ptr_new(getBankTimeOfFlight(fileID, $
+                                           STRCOMPRESS(BankData,/REMOVE_ALL)))
 ENDIF
 
 ;close hdf5 nexus file
@@ -110,11 +127,12 @@ h5f_close, fileID
 RETURN, 1
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO IDLgetNexusMetadata__define
 struct = {IDLgetNexusMetadata,$
           RunNumber       : '',$
           nexus_full_path : '',$
-          data            : ptr_new(),$
+          data            : ptr_new(0L),$
+          tof             : ptr_new(0L),$
           bank_number     : 0}
 END

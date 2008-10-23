@@ -44,7 +44,7 @@ sLabelDraw = { size: [0,0,700,700],$
                uname: 'label_draw_uname'}
 
 ;- nexus input ----------------------------------------------------------------
-XYoff = [0,15]
+XYoff = [0,60]
 sNexus = { size : [10,$
                    sLabelDraw.size[1]+sLabelDraw.size[3]+XYOff[1]]}
           
@@ -53,6 +53,55 @@ XYoff = [30,20]
 sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
           uname : 'draw_uname'}
 
+;range of tof plotted ---------------------------------------------------------
+XYoff = [10,5]
+sTofRangeBase = { size: [sLabelDraw.size[0]+XYoff[0],$
+                         sLabelDraw.size[1]+$
+                         sLabelDraw.size[3]+XYoff[1],$
+                         sLabelDraw.size[2]-3*XYoff[0],$
+                         40],$
+                  frame: 1,$
+                  uname: 'tof_range_base'}
+XYoff = [20,-8]
+sTofRangeLabel = { size: [sTofRangeBase.size[0]+XYoff[0],$
+                          sTofRangeBase.size[1]+XYoff[1]],$
+                   value: 'Range of TOF displayed'}
+
+;automatic or user defined mode -----------------------------------------------
+XYoff = [10,5]
+sTofCwbgroup = { size: [XYoff[0],$
+                        XYoff[1]],$
+                 list: ['Full Range  ',$
+                        'User Defined Range'],$
+                 uname: 'tof_range_cwbgroup',$
+                 value: 0}
+
+;manual tof mode base ---------------------------------------------------------
+XYoff = [240,2]
+sTofManualBase = { size: [XYoff[0],$
+                          XYoff[1],$
+                          500,40],$
+                   uname: 'tof_manual_base',$
+                   sensitive: 0,$
+                   frame: 0}
+
+;min tof (label/value)
+XYoff = [15,0]
+sTofMinCwfield = { xsize: 10,$
+                   uname: 'tof_range_min_cw_field',$
+                   label: 'Min TOF (microS):',$
+                   base: { size: [XYoff[0],$
+                                  XYoff[1]]}}
+
+;max tof (label/value)
+XYoff = [200,0]
+sTofMaxCwfield = { xsize: 10,$
+                   uname: 'tof_range_max_cw_field',$
+                   label: 'Max TOF (microS):',$
+                   base: { size: [sTofMinCwfield.base.size[0]+XYoff[0],$
+                                  XYoff[1]]}}
+
+;------------------------------------------------------------------------------
 ;Transmission or Background mode ----------------------------------------------
 XYoff = [0,10]
 sModeBase = { size: [sLabelDraw.size[0]+sLabelDraw.size[2]+XYoff[0],$
@@ -390,7 +439,7 @@ sPreviewRoiButton = { size: [sSaveRoiTextField.size[0]+XYoff[0],$
                       sensitive: 0}
 
 ;- Clear Selection ------------------------------------------------------------
-XYoff = [0,20]
+XYoff = [0,10]
 sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                            sExclusionBase.size[1]+sExclusionBase.size[3]+ $
                            XYoff[1],$
@@ -399,20 +448,12 @@ sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
                     uname: 'clear_selection_button',$
                     sensitive: 1}
                            
-;- REFRESH Plot ---------------------------------------------------------------
-XYoff = [0,30]
-sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
-                        sClearSelection.size[1]+XYoff[1],$
-                        sClearSelection.size[2]],$
-                 value: 'REFRESH PLOT',$
-                 uname: 'refresh_plot_button',$
-                 sensitive: 1}
 
 ;- X and Y position of cursor -------------------------------------------------
 XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
-                  sRefreshPlot.size[1]+XYoff[1],$
+                  sClearSelection.size[1]+XYoff[1],$
                   110,68],$  ;68
            frame: 1,$
            uname: 'x_y_base'}
@@ -464,6 +505,15 @@ sCountsTofButton = { size: [XYbase.size[0]+$
                      value: 'COUNTS VS TOF of SELECTION',$
                      uname: 'counts_vs_tof_selection_button'}
                                                
+;- REFRESH Plot ---------------------------------------------------------------
+XYoff = [0,130]
+sRefreshPlot = { size: [XYbase.size[0]+XYoff[0],$
+                        XYbase.size[1]+XYoff[1],$
+                        sClearSelection.size[2]],$
+                 value: 'REFRESH PLOT',$
+                 uname: 'refresh_plot_button',$
+                 sensitive: 1}
+
 ;==============================================================================
 ;= BUILD GUI ==================================================================
 ;==============================================================================
@@ -503,6 +553,77 @@ wLabelDraw = WIDGET_DRAW(wTab1Base,$
                          YOFFSET   = sLabelDraw.size[1],$
                          SCR_XSIZE = sLabelDraw.size[2],$
                          SCR_YSIZE = sLabelDraw.size[3])
+
+;range of tof plotted ---------------------------------------------------------
+wTofRangeLabel = WIDGET_LABEL(wTab1Base,$
+                              XOFFSET = sTofRangeLabel.size[0],$
+                              YOFFSET = sTofRangeLabel.size[1],$
+                              VALUE   = sTofRangeLabel.value)
+
+wTofRangeBase = WIDGET_BASE(wTab1Base,$
+                            XOFFSET = sTofRangeBase.size[0],$
+                            YOFFSET = sTofRangeBase.size[1],$
+                            SCR_XSIZE = sTofRangeBase.size[2],$
+                            SCR_YSIZE = sTofRangeBase.size[3],$
+                            FRAME     = sTofRangeBase.frame,$
+                            UNAME     = sTofRangeBase.uname)
+
+wTofCwbGroup = CW_BGROUP(wTofRangeBase,$
+                         sTofCwbGroup.list,$
+                         XOFFSET    = sTofCwbGroup.size[0],$
+                         YOFFSET    = sTofCwbGroup.size[1],$
+                         ROW        = 1,$
+                         SET_VALUE  = sTofCwbGroup.value,$
+                         UNAME      = sTofCwbGroup.uname,$
+                         /NO_RELEASE,$
+                         /EXCLUSIVE)
+
+;manual tof mode base ---------------------------------------------------------
+wTofManualBase = WIDGET_BASE(wTofRangeBase,$
+                             XOFFSET   = sTofManualBase.size[0],$
+                             YOFFSET   = sTofManualBase.size[1],$
+                             SCR_XSIZE = sTofManualBase.size[2],$
+                             SCR_YSIZE = sTofManualBase.size[3],$
+                             UNAME     = sTofManualBase.uname,$
+                             SENSITIVE = sTofManualBase.sensitive,$
+                             FRAME     = sTofManualBase.frame)
+
+;min tof (base/cw_field)
+wTofMinBase = WIDGET_BASE(wTofManualBase,$
+                          XOFFSET = sTofMinCwfield.base.size[0],$
+                          YOFFSET = sTofMinCwfield.base.size[1])
+
+wTofMinCwfield = CW_FIELD(wTofMinBase,$
+                          TITLE = sTofMinCwfield.label,$
+                          XSIZE = sTofMinCwfield.xsize,$
+                          VALUE = '',$
+                          UNAME = sTofMinCwfield.uname,$
+                          /LONG,$
+                          /RETURN_EVENTS)
+                          
+;max tof (base/cw_field)
+wTofMaxBase = WIDGET_BASE(wTofManualBase,$
+                          XOFFSET = sTofMaxCwfield.base.size[0],$
+                          YOFFSET = sTofMaxCwfield.base.size[1])
+
+wTofMaxCwfield = CW_FIELD(wTofMaxBase,$
+                          TITLE = sTofMaxCwfield.label,$
+                          XSIZE = sTofMaxCwfield.xsize,$
+                          VALUE = '',$
+                          UNAME = sTofMaxCwfield.uname,$
+                          /LONG,$
+                          /RETURN_EVENTS)
+                          
+
+
+
+
+
+
+
+
+
+
 
 ;Transmission or Background mode ----------------------------------------------
 wTBase = WIDGET_BASE(wTab1Base,$

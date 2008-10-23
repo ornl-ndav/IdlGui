@@ -105,6 +105,7 @@ global = PTR_NEW ({version:         VERSION,$
                    DrawYcoeff:      8,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
+                   tof_array:       ptr_new(0L),$
                    img:             ptr_new(0L),$
                    X:               0L,$
                    Y:               0L,$

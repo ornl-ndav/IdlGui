@@ -105,6 +105,25 @@ CASE Event.id OF
         ENDIF
         END
         
+;- Range of TOF displayed -----------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_range_cwbgroup'): BEGIN
+        value = getCWBgroupValue(Event,'tof_range_cwbgroup')
+        activate_widget, Event, 'tof_manual_base', value
+    END
+
+;- Tof min and max user defined cw_bgroup
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_range_min_cw_field'): BEGIN
+        checkTofRange, Event    ;gui
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event ;_selection
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_range_max_cw_field'): BEGIN
+        checkTofRange, Event    ;gui
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event   ;_selection
+    END
+
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb

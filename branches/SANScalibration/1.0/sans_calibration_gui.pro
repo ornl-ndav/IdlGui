@@ -133,3 +133,12 @@ IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
     putTextFieldValue, Event, 'output_file_name', defaultReduceFileName
 ENDIF
 END
+
+;------------------------------------------------------------------------------
+PRO checkTofRange, Event  
+
+
+
+
+
+END

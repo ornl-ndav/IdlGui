@@ -150,3 +150,12 @@ FUNCTION getRoiFileName, Event
 FileName = getTextFieldValue(Event,'roi_file_name_text_field')
 RETURN, FileName
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getIndexOfTof, array, value
+index_array = WHERE(array LE value, nbr)
+IF (nbr EQ 0) THEN RETURN, 0
+index = index_array[nbr-1]
+IF (index EQ N_ELEMENTS(array)) THEN index = index-1
+RETURN, index
+END
