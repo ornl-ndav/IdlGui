@@ -121,34 +121,44 @@ ENDIF ELSE BEGIN
                 ENDIF ELSE BEGIN
                     SPAWN, cmd, geometry_file, err_listening
                     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-                    
+;check if file realy exist
+                    IF (FILE_TEST(geometry_file)) THEN BEGIN
+                        text = '-> Checking if file exists ... OK'
+                        AppendLogBookMessage, Event, text
 ;copy the geo file now to /SNS/BSS/shared/
-                    cmd_geo_copy = 'cp ' + geometry_file + ' /SNS/BSS/shared/'
-                    cmd_geo_copy_text = '-> ' + cmd_geo_copy
-                    cmd_geo_copy_text += ' ... ' + PROCESSING
-                    AppendLogBookMessage, Event, cmd_geo_copy_text
-                    copy_geo_error = 0
-                    CATCH,copy_geo_error
-                    IF (copy_geo_error NE 0) THEN BEGIN
-                        CATCH,/CANCEL
-                        putTextAtEndOfLogBookLastLine, Event, FAILED, $
-                          PROCESSING
-                    ENDIF ELSE BEGIN
-                        spawn, cmd_geo_copy, listening2, err_listening2
-                        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+                        cmd_geo_copy = 'cp ' + geometry_file + $
+                          ' /SNS/BSS/shared/'
+                        cmd_geo_copy_text = '-> ' + cmd_geo_copy
+                        cmd_geo_copy_text += ' ... ' + PROCESSING
+                        AppendLogBookMessage, Event, cmd_geo_copy_text
+                        copy_geo_error = 0
+                        CATCH,copy_geo_error
+                        IF (copy_geo_error NE 0) THEN BEGIN
+                            CATCH,/CANCEL
+                            putTextAtEndOfLogBookLastLine, Event, FAILED, $
+                              PROCESSING
+                        ENDIF ELSE BEGIN
+                            spawn, cmd_geo_copy, listening2, err_listening2
+                            putTextAtEndOfLogBookLastLine, Event, $
+                              OK, $
+                              PROCESSING
 ;get last part of name only to define new full name
-                        ArraySplit       = STRSPLIT(geometry_file,'/',/EXTRACT)
-                        sz               = N_ELEMENTS(ArraySplit)
-                        ShortGeoFileName = ArraySplit[sz-1]
-                        FullGeoFileName  = $
-                          '/SNS/BSS/shared/' + ShortGeoFileName
-                        putTextFieldValue, Event, $
-                          'aig_list_of_runs_text',$
-                          STRCOMPRESS(FullGeoFileName,/REMOVE_ALL),0
-                        LogBookText = '-> Live Data Geometry file is: ' + $
-                          STRCOMPRESS(FullGeoFileName,/REMOVE_ALL)
-                        AppendLogBookMessage, Event, LogBookText
-
+                            ArraySplit       = $
+                              STRSPLIT(geometry_file,'/',/EXTRACT)
+                            sz               = N_ELEMENTS(ArraySplit)
+                            ShortGeoFileName = ArraySplit[sz-1]
+                            FullGeoFileName  = $
+                              '/SNS/BSS/shared/' + ShortGeoFileName
+                            putTextFieldValue, Event, $
+                              'aig_list_of_runs_text',$
+                              STRCOMPRESS(FullGeoFileName,/REMOVE_ALL),0
+                            LogBookText = '-> Live Data Geometry file is: ' + $
+                              STRCOMPRESS(FullGeoFileName,/REMOVE_ALL)
+                            AppendLogBookMessage, Event, LogBookText
+                        ENDELSE
+                    ENDIF ELSE BEGIN
+                        text = '-> Checking if file exists ... NO'
+                        AppendLogBookMessage, Event, text
                     ENDELSE
                 ENDELSE
             ENDELSE
