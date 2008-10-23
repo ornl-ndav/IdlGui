@@ -58,7 +58,7 @@ XYoff = [10,5]
 sTofRangeBase = { size: [sLabelDraw.size[0]+XYoff[0],$
                          sLabelDraw.size[1]+$
                          sLabelDraw.size[3]+XYoff[1],$
-                         sLabelDraw.size[2]-3*XYoff[0],$
+                         MainTabSize[2]-25,$
                          40],$
                   frame: 1,$
                   uname: 'tof_range_base'}
@@ -80,7 +80,7 @@ sTofCwbgroup = { size: [XYoff[0],$
 XYoff = [240,2]
 sTofManualBase = { size: [XYoff[0],$
                           XYoff[1],$
-                          500,40],$
+                          430,40],$
                    uname: 'tof_manual_base',$
                    sensitive: 0,$
                    frame: 0}
@@ -108,6 +108,62 @@ sTofReset = { size: [XYoff[0],$
                      100],$
               value: 'RESET RANGE',$
               uname: 'tof_reset_range'}
+
+;pause button
+XYoff = [5,0]
+sPauseButton = { size: [sTofManualBase.size[0]+$
+                        sTofManualBase.size[2]+$
+                        XYoff[0],$
+                        XYoff[1],$
+                        40,40],$
+                 value: '',$
+                 uname: 'tof_pause_button'}
+
+;play button
+XYoff = [5,0]
+sPlayButton = { size: [sPauseButton.size[0]+$
+                       sPauseButton.size[2]+$
+                       XYoff[0],$
+                       sPauseButton.size[1]+$
+                       XYoff[1],$
+                       sPauseButton.size[2:3]],$
+                value: '',$
+                uname: 'tof_play_button'}
+
+;time/frame label/value
+XYoff = [20,0]
+sTpFlabel = { size: [sPlayButton.size[0]+$
+                     sPlayButton.size[2]+$
+                     XYoff[0],$
+                     sPlayButton.size[1]+$
+                     XYoff[1]],$
+              value: 'Time/Frame (s)'}
+XYoff = [10,10]
+sTpFvalue = { size: [sTpFlabel.size[0]+XYoff[0],$
+                     sTpFlabel.size[1]+XYoff[1],$
+                     60],$
+              value: '0.5',$
+              uname: 'tof_time_per_frame_value'}
+                     
+;bin/frame label/value
+XYoff = [110,0]
+sBpFlabel = { size: [sTpFlabel.size[0]+$
+                     XYoff[0],$
+                     sTpFlabel.size[1]+$
+                     XYoff[1]],$
+              value: 'Bin/Frame'}
+XYoff = [0,0]
+sBpFvalue = { size: [sBpFlabel.size[0]+XYoff[0],$
+                     sTpFvalue.size[1]+XYoff[1],$
+                     60],$
+              value: '10',$
+              uname: 'tof_bin_per_frame_value'}
+
+
+
+
+
+
 
 ;------------------------------------------------------------------------------
 ;Transmission or Background mode ----------------------------------------------
@@ -514,7 +570,7 @@ sCountsTofButton = { size: [XYbase.size[0]+$
                      uname: 'counts_vs_tof_selection_button'}
                                                
 ;- REFRESH Plot ---------------------------------------------------------------
-XYoff = [0,130]
+XYoff = [0,80]
 sRefreshPlot = { size: [XYbase.size[0]+XYoff[0],$
                         XYbase.size[1]+XYoff[1],$
                         sClearSelection.size[2]],$
@@ -629,6 +685,60 @@ wTofReset = WIDGET_BUTTON(wTofMaxBase,$
                           SCR_XSIZE = sTofReset.size[2],$
                           VALUE     = sTofReset.value,$
                           UNAME     = sTofReset.uname)
+
+;pause button
+wPauseButton = WIDGET_BUTTON(wTofRangeBase,$
+                             XOFFSET   = sPauseButton.size[0],$
+                             YOFFSET   = sPauseButton.size[1],$
+                             SCR_XSIZE = sPauseButton.size[2],$
+                             SCR_YSIZE = sPauseButton.size[3],$
+                             VALUE     = sPauseButton.value,$
+                             UNAME     = sPauseButton.uname)
+;play button
+wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
+                             XOFFSET   = sPlayButton.size[0],$
+                             YOFFSET   = sPlayButton.size[1],$
+                             SCR_XSIZE = sPlayButton.size[2],$
+                             SCR_YSIZE = sPlayButton.size[3],$
+                             VALUE     = sPlayButton.value,$
+                             UNAME     = sPlayButton.uname)
+;time/frame label and value
+wTpFlabel = WIDGET_LABEL(wTofRangeBase,$
+                         XOFFSET = sTpFlabel.size[0],$
+                         YOFFSET = sTpFlabel.size[1],$
+                         VALUE   = sTpFlabel.value)
+
+wTpFvalue = WIDGET_TEXT(wTofRangeBase,$
+                        XOFFSET   = sTpFvalue.size[0],$
+                        YOFFSET   = sTpFvalue.size[1],$
+                        SCR_XSIZE = sTpFvalue.size[2],$
+                        VALUE     = sTpFvalue.value,$
+                        UNAME     = sTpFvalue.uname)
+
+;bin/frame label and value
+wBpFlabel = WIDGET_LABEL(wTofRangeBase,$
+                         XOFFSET = sBpFlabel.size[0],$
+                         YOFFSET = sBpFlabel.size[1],$
+                         VALUE   = sBpFlabel.value)
+
+wBpFvalue = WIDGET_TEXT(wTofRangeBase,$
+                        XOFFSET   = sBpFvalue.size[0],$
+                        YOFFSET   = sBpFvalue.size[1],$
+                        SCR_XSIZE = sBpFvalue.size[2],$
+                        VALUE     = sBpFvalue.value,$
+                        UNAME     = sBpFvalue.uname)
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;Transmission or Background mode ----------------------------------------------
 wTBase = WIDGET_BASE(wTab1Base,$

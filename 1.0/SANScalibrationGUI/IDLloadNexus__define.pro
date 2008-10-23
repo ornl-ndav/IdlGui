@@ -82,7 +82,7 @@ PRO MakeNexusInputGui, sInput
 XYoff     = [sInput.xoffset, sInput.yoffset]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
-                       980,70],$
+                       985,70],$
               frame : 5}
 sTitle    = { size  : [sFrame.size[0]+20,$
                        sFrame.size[1]-8],$
