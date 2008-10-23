@@ -65,7 +65,7 @@ sTofRangeBase = { size: [sLabelDraw.size[0]+XYoff[0],$
 XYoff = [20,-8]
 sTofRangeLabel = { size: [sTofRangeBase.size[0]+XYoff[0],$
                           sTofRangeBase.size[1]+XYoff[1]],$
-                   value: 'Range of TOF displayed'}
+                   value: 'Range of TOF displayed (microseconds)'}
 
 ;automatic or user defined mode -----------------------------------------------
 XYoff = [10,5]
@@ -89,17 +89,25 @@ sTofManualBase = { size: [XYoff[0],$
 XYoff = [15,0]
 sTofMinCwfield = { xsize: 10,$
                    uname: 'tof_range_min_cw_field',$
-                   label: 'Min TOF (microS):',$
+                   label: 'Min TOF :',$
                    base: { size: [XYoff[0],$
                                   XYoff[1]]}}
 
 ;max tof (label/value)
-XYoff = [200,0]
+XYoff = [150,0]
 sTofMaxCwfield = { xsize: 10,$
                    uname: 'tof_range_max_cw_field',$
-                   label: 'Max TOF (microS):',$
+                   label: 'Max TOF :',$
                    base: { size: [sTofMinCwfield.base.size[0]+XYoff[0],$
                                   XYoff[1]]}}
+
+;reset button
+XYoff = [155,5]
+sTofReset = { size: [XYoff[0],$
+                     XYoff[1],$
+                     100],$
+              value: 'RESET RANGE',$
+              uname: 'tof_reset_range'}
 
 ;------------------------------------------------------------------------------
 ;Transmission or Background mode ----------------------------------------------
@@ -614,16 +622,13 @@ wTofMaxCwfield = CW_FIELD(wTofMaxBase,$
                           /LONG,$
                           /RETURN_EVENTS)
                           
-
-
-
-
-
-
-
-
-
-
+;reset range of tof
+wTofReset = WIDGET_BUTTON(wTofMaxBase,$
+                          XOFFSET   = sTofReset.size[0],$
+                          YOFFSET   = sTofReset.size[1],$
+                          SCR_XSIZE = sTofReset.size[2],$
+                          VALUE     = sTofReset.value,$
+                          UNAME     = sTofReset.uname)
 
 ;Transmission or Background mode ----------------------------------------------
 wTBase = WIDGET_BASE(wTab1Base,$

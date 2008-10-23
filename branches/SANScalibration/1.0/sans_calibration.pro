@@ -106,6 +106,8 @@ global = PTR_NEW ({version:         VERSION,$
                    ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
                    tof_array:       ptr_new(0L),$
+                   tof_min:         0.0,$
+                   tof_max:         0.0,$
                    img:             ptr_new(0L),$
                    X:               0L,$
                    Y:               0L,$
