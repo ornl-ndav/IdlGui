@@ -57,8 +57,10 @@ retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
 ;retrieve information about tof
 tof_array = (*(*global).tof_array)
 tof_min = tof_array[0]
+(*global).tof_min = tof_min
 s_tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
 tof_max = tof_array[N_ELEMENTS(tof_array)-1]
+(*global).tof_max = tof_max
 s_tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
 putTextFieldValue, Event, 'tof_range_min_cw_field', s_tof_min
 putTextFieldValue, Event, 'tof_range_max_cw_field', s_tof_max

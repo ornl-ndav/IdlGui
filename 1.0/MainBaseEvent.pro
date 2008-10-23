@@ -124,6 +124,16 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
+;- TOF reset button -----------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_reset_range'): BEGIN
+        putTextFIeldValue, Event, 'tof_range_min_cw_field',$
+          STRCOMPRESS((*global).tof_min,/REMOVE_ALL)
+        putTextFIeldValue, Event, 'tof_range_max_cw_field',$
+          STRCOMPRESS((*global).tof_max,/REMOVE_ALL)
+        refresh_plot, Event     ;_plot
+        RefreshRoiExclusionPlot, Event ;_selection
+    END
+
 ;- Run Number cw_field --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
         load_run_number, Event     ;_eventcb
