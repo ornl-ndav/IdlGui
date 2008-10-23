@@ -54,6 +54,10 @@ ENDIF ELSE BEGIN
                          NbrBank = 1,$
                          BankData = 'bank1')
     DataArray = *(sInstance->getData())
+    TofArray  = *(sInstance->getTof())
+    sz = N_ELEMENTS(TofArray)
+    TofArray  = TofArray[0:sz-2]
+    (*(*global).tof_array) = TofArray
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 RETURN,1
@@ -71,9 +75,21 @@ IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
 ENDIF ELSE BEGIN
-;Integrate over TOF
-    dataXY   = TOTAL(DataArray,1)
-    tDataXY  = TRANSPOSE(dataXY)
+;Integrate over TOF or get specified range of tof
+    value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
+    
+    IF (value EQ 1) THEN BEGIN ;user wants user_defined range of tof
+        tof_min       = FLOAT(getTextFieldValue(Event, $
+                                                'tof_range_min_cw_field'))
+        tof_max       = FLOAT(getTextFieldValue(Event, $
+                                                'tof_range_max_cw_field'))
+        tof_array     = (*(*global).tof_array)
+        tof_min_index = getIndexOfTof(tof_array, tof_min)
+        tof_max_index = getIndexOfTof(tof_array, tof_max)
+        DataArray     = DataArray[tof_min_index:tof_max_index,*,*]
+    ENDIF
+    dataXY           = TOTAL(DataArray,1)
+    tDataXY          = TRANSPOSE(dataXY)
     (*(*global).img) = tDataXY
 ;check linear or log scale type
 ;     IF (getCWBgroupValue(Event,'z_axis_scale') EQ 1) THEN BEGIN ;log

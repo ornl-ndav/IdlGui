@@ -82,7 +82,7 @@ PRO MakeNexusInputGui, sInput
 XYoff     = [sInput.xoffset, sInput.yoffset]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
-                       980,100],$
+                       980,70],$
               frame : 5}
 sTitle    = { size  : [sFrame.size[0]+20,$
                        sFrame.size[1]-8],$
@@ -90,7 +90,7 @@ sTitle    = { size  : [sFrame.size[0]+20,$
 
 ;Define Proposal Number ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff           = [sInput.xoffset+10, $
-                   sInput.yoffset+15]
+                   sInput.yoffset+10]
 ListOfProposal  = getListOfProposal(sInput.facility, sInput.instrument)
 PropNbrDroplist = { size  : [XYoff[0],$
                              XYoff[1]],$
@@ -136,7 +136,7 @@ sBrowseButton = { size  : [sOrLabel.size[0]+XYoff[0],$
                       
 
 ;Nexus file name label --------------------------------------------------------
-XYoff = [10,50]
+XYoff = [10,40]
 sNexusLabel = { size: [PropNbrDroplist.size[0]+XYoff[0],$
                        PropNbrDroplist.size[1]+XYoff[1]],$
                 value: 'Nexus File Name:'}

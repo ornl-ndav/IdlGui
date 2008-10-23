@@ -54,6 +54,15 @@ message = '-> Retrieving Data : ' + PROCESSING
 IDLsendToGeek_addLogBookText, Event, message
 ;retrieving data from NeXus file
 retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
+;retrieve information about tof
+tof_array = (*(*global).tof_array)
+tof_min = tof_array[0]
+s_tof_min = STRCOMPRESS(tof_min,/REMOVE_ALL)
+tof_max = tof_array[N_ELEMENTS(tof_array)-1]
+s_tof_max = STRCOMPRESS(tof_max,/REMOVE_ALL)
+putTextFieldValue, Event, 'tof_range_min_cw_field', s_tof_min
+putTextFieldValue, Event, 'tof_range_max_cw_field', s_tof_max
+
 IF (retrieveStatus EQ 0) THEN BEGIN
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
 ENDIF ELSE BEGIN
