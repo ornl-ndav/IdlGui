@@ -544,7 +544,7 @@ XYoff = [0,30]
 XYbase = { size: [sLabelDraw.size[0]+$
                   sLabelDraw.size[2]+XYoff[0],$
                   sClearSelection.size[1]+XYoff[1],$
-                  110,68],$  ;68
+                  110,70],$  ;68
            frame: 1,$
            uname: 'x_y_base'}
 XYoff = [5,3] ;x label
@@ -586,14 +586,30 @@ sScaleType = { size: [xLabel.size[0]+XYoff[0],$
                uname: 'z_axis_scale'}
 
 ;- Counts vs tof button ------------------------------------------------------
-XYoff = [5,0]
-sCountsTofButton = { size: [XYbase.size[0]+$
-                            XYbase.size[2]+$
-                            XYoff[0],$
-                            XYbase.size[1]+XYoff[1],$
-                            190],$
-                     value: 'COUNTS VS TOF of SELECTION',$
-                     uname: 'counts_vs_tof_selection_button'}
+XYoff = [5,-1]
+sCountsTofButton1 = { size: [XYbase.size[0]+$
+                             XYbase.size[2]+$
+                             XYoff[0],$
+                             XYbase.size[1]+XYoff[1],$
+                             190],$
+                      sensitive: 0,$
+                      value: 'COUNTS VS TOF (full detector)',$
+                      uname: 'counts_vs_tof_full_detector_button'}
+                     
+XYoff = [0,25]
+sCountsTofButton2 = { size: [sCountsTofButton1.size[0]+XYoff[0],$
+                             sCountsTofButton1.size[1]+XYoff[1],$
+                             sCountsTofButton1.size[2]],$
+                      sensitive: 0,$
+                      value: 'COUNTS VS TOF (selection)',$
+                      uname: 'counts_vs_tof_selection_button'}
+
+sCountsTofButton3 = { size: [sCountsTofButton1.size[0]+XYoff[0],$
+                             sCountsTofButton2.size[1]+XYoff[1],$
+                             sCountsTofButton1.size[2]],$
+                      sensitive: 0,$
+                      value: 'COUNTS VS TOF (monitor)',$
+                      uname: 'counts_vs_tof_monitor_button'}
                                                
 ;- REFRESH Plot ---------------------------------------------------------------
 XYoff = [0,80]
@@ -1285,12 +1301,31 @@ wCountsvalue = WIDGET_LABEL(wXYbase,$
 ;                   /NO_RELEASE,$
 ;                   /EXCLUSIVE)
 
-;- Counts vs tof button -------------------------------------------------------
+;- Counts vs tof button (everything) ------------------------------------------
 wCountsTofButton = WIDGET_BUTTON(wTab1Base,$
-                                 XOFFSET   = sCountsTofButton.size[0],$
-                                 YOFFSET   = sCountsTofButton.size[1],$
-                                 SCR_XSIZE = sCountsTofButton.size[2],$
-                                 VALUE     = sCountsTofButton.value,$
-                                 UNAME     = sCountsTofButton.uname)
+                                 XOFFSET   = sCountsTofButton1.size[0],$
+                                 YOFFSET   = sCountsTofButton1.size[1],$
+                                 SCR_XSIZE = sCountsTofButton1.size[2],$
+                                 SENSITIVE = sCountsTofButton1.sensitive,$
+                                 VALUE     = sCountsTofButton1.value,$
+                                 UNAME     = sCountsTofButton1.uname)
+
+;- Counts vs tof button (selection) -------------------------------------------
+wCountsTofButton = WIDGET_BUTTON(wTab1Base,$
+                                 XOFFSET   = sCountsTofButton2.size[0],$
+                                 YOFFSET   = sCountsTofButton2.size[1],$
+                                 SCR_XSIZE = sCountsTofButton2.size[2],$
+                                 VALUE     = sCountsTofButton2.value,$
+                                 SENSITIVE = sCountsTofButton2.sensitive,$
+                                 UNAME     = sCountsTofButton2.uname)
+
+;- Counts vs tof button (monitor) ---------------------------------------------
+wCountsTofButton = WIDGET_BUTTON(wTab1Base,$
+                                 XOFFSET   = sCountsTofButton3.size[0],$
+                                 YOFFSET   = sCountsTofButton3.size[1],$
+                                 SCR_XSIZE = sCountsTofButton3.size[2],$
+                                 VALUE     = sCountsTofButton3.value,$
+                                 SENSITIVE = sCountsTofButton3.sensitive,$
+                                 UNAME     = sCountsTofButton3.uname)
 
 END

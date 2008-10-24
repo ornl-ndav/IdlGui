@@ -157,13 +157,7 @@ IF (FullNexusName NE '') THEN BEGIN
         file   = FILE_BASENAME(defaultRoiFileName)
         putTextFieldValue, Event, 'save_roi_text_field', file
 ;activate selection buttons 
-        uname_list = ['clear_selection_button',$
-                      'selection_tool_button',$
-                      'selection_browse_button',$
-                      'selection_file_name_text_field',$
-                      'tof_range_base',$
-                      'exclusion_base']
-        activate_widget_list, Event, uname_list, 1
+        update_tab1_gui, Event, STATUS=1 ;_gui
         (*global).data_nexus_file_name = FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
@@ -229,13 +223,7 @@ IF (RunNumber NE 0) THEN BEGIN
 
         (*global).data_nexus_file_name = full_nexus_name
 ;activate selection buttons 
-        uname_list = ['clear_selection_button',$
-                      'selection_tool_button',$
-                      'selection_browse_button',$
-                      'tof_range_base',$   
-                      'selection_file_name_text_field',$
-                      'exclusion_base']
-        activate_widget_list, Event, uname_list, 1
+        update_tab1_gui, Event, STATUS=1 ;_gui
     ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
