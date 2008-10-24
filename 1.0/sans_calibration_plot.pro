@@ -56,6 +56,8 @@ ENDIF ELSE BEGIN
     DataArray = *(sInstance->getData())
     TofArray  = *(sInstance->getTof())
     sz = N_ELEMENTS(TofArray)
+    putTextFieldValue, Event, 'tof_max_value', $
+      STRCOMPRESS(sz-2,/REMOVE_ALL)
     TofArray  = TofArray[0:sz-2]
     (*(*global).tof_array) = TofArray
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
@@ -131,6 +133,50 @@ ENDIF ELSE BEGIN
     refresh_scale, Event        ;_plot
     RETURN, plotStatus
 
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+;function is reached when playing movie over range of tof
+FUNCTION plot_range_OF_data, Event, tof_min_index, tof_max_index
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+DataArray = (*(*global).DataArray)
+
+plot_error = 0
+CATCH, plot_error
+IF (plot_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+ENDIF ELSE BEGIN
+    DataArray        = DataArray[tof_min_index:tof_max_index,*,*]
+    dataXY           = TOTAL(DataArray,1)
+    tDataXY          = TRANSPOSE(dataXY)
+    (*(*global).img) = tDataXY
+
+;;Check if rebin is necessary or not
+;    IF (X EQ 80) THEN BEGIN
+     X = 80L
+     Y = 80L
+     xysize = 8
+     Xpixel = 80L
+;    ENDIF ELSE BEGIN
+;        xysize = 2
+;        Xpixel = 320L
+;    ENDELSE
+    (*global).Xpixel = Xpixel
+    rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+    
+;plot data
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+    WIDGET_CONTROL, id, GET_VALUE = id_value
+    WSET, id_value
+    DEVICE, DECOMPOSED = 0
+    LOADCT,5,/SILENT
+    TVSCL, rtDataXY, /DEVICE
+    refresh_scale, Event        ;_plot
+    RETURN, 1
 ENDELSE
 END
 

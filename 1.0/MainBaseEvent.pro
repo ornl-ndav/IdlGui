@@ -105,6 +105,7 @@ CASE Event.id OF
         ENDIF
         END
         
+;------------------------------------------------------------------------------
 ;- Range of TOF displayed -----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_range_cwbgroup'): BEGIN
         value = getCWBgroupValue(Event,'tof_range_cwbgroup')
@@ -124,6 +125,12 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
+;- Play button ----------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_play_button'): BEGIN
+        play_tof, Event         ;_eventcb
+    END
+    
+;------------------------------------------------------------------------------
 ;- TOF reset button -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_reset_range'): BEGIN
         putTextFIeldValue, Event, 'tof_range_min_cw_field',$
@@ -132,6 +139,8 @@ CASE Event.id OF
           STRCOMPRESS((*global).tof_max,/REMOVE_ALL)
         refresh_plot, Event     ;_plot
         RefreshRoiExclusionPlot, Event ;_selection
+        putTextFieldValue, Event, 'bin_range_value', ''
+        putTextfieldValue, Event, 'tof_range_value', ''
     END
 
 ;- Run Number cw_field --------------------------------------------------------

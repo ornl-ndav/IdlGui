@@ -71,73 +71,62 @@ sTofRangeLabel = { size: [sTofRangeBase.size[0]+XYoff[0],$
 XYoff = [10,5]
 sTofCwbgroup = { size: [XYoff[0],$
                         XYoff[1]],$
-                 list: ['Full Range  ',$
+                 list: ['Full Range',$
                         'User Defined Range'],$
                  uname: 'tof_range_cwbgroup',$
                  value: 0}
 
 ;manual tof mode base ---------------------------------------------------------
-XYoff = [240,2]
+XYoff = [245,1]
 sTofManualBase = { size: [XYoff[0],$
                           XYoff[1],$
-                          430,40],$
+                          335,35],$
                    uname: 'tof_manual_base',$
                    sensitive: 0,$
-                   frame: 0}
+                   frame: 1}
 
 ;min tof (label/value)
-XYoff = [15,0]
-sTofMinCwfield = { xsize: 10,$
+XYoff = [0,0]
+sTofMinCwfield = { xsize: 6,$
                    uname: 'tof_range_min_cw_field',$
-                   label: 'Min TOF :',$
+                   label: 'Min TOF',$
                    base: { size: [XYoff[0],$
                                   XYoff[1]]}}
 
 ;max tof (label/value)
-XYoff = [150,0]
-sTofMaxCwfield = { xsize: 10,$
+XYoff = [110,0]
+sTofMaxCwfield = { xsize: 6,$
                    uname: 'tof_range_max_cw_field',$
-                   label: 'Max TOF :',$
+                   label: 'Max TOF',$
                    base: { size: [sTofMinCwfield.base.size[0]+XYoff[0],$
                                   XYoff[1]]}}
 
 ;reset button
-XYoff = [155,5]
+XYoff = [115,5]
 sTofReset = { size: [XYoff[0],$
                      XYoff[1],$
                      100],$
               value: 'RESET RANGE',$
               uname: 'tof_reset_range'}
 
-;pause button
-XYoff = [5,0]
-sPauseButton = { size: [sTofManualBase.size[0]+$
-                        sTofManualBase.size[2]+$
-                        XYoff[0],$
-                        XYoff[1],$
-                        40,40],$
-                 value: '',$
-                 uname: 'tof_pause_button'}
-
 ;play button
-XYoff = [5,0]
-sPlayButton = { size: [sPauseButton.size[0]+$
-                       sPauseButton.size[2]+$
+XYoff = [10,0]
+sPlayButton = { size: [sTofManualBase.size[0]+$
+                       sTofManualBase.size[2]+$
                        XYoff[0],$
-                       sPauseButton.size[1]+$
                        XYoff[1],$
-                       sPauseButton.size[2:3]],$
-                value: '',$
+                       40,40],$
+                value: 'images/play_button.bmp',$
                 uname: 'tof_play_button'}
 
 ;time/frame label/value
-XYoff = [20,0]
+XYoff = [5,0]
 sTpFlabel = { size: [sPlayButton.size[0]+$
                      sPlayButton.size[2]+$
                      XYoff[0],$
                      sPlayButton.size[1]+$
                      XYoff[1]],$
-              value: 'Time/Frame (s)'}
+              value: 'Time/Frame(s)'}
 XYoff = [10,10]
 sTpFvalue = { size: [sTpFlabel.size[0]+XYoff[0],$
                      sTpFlabel.size[1]+XYoff[1],$
@@ -146,7 +135,7 @@ sTpFvalue = { size: [sTpFlabel.size[0]+XYoff[0],$
               uname: 'tof_time_per_frame_value'}
                      
 ;bin/frame label/value
-XYoff = [110,0]
+XYoff = [90,0]
 sBpFlabel = { size: [sTpFlabel.size[0]+$
                      XYoff[0],$
                      sTpFlabel.size[1]+$
@@ -156,14 +145,50 @@ XYoff = [0,0]
 sBpFvalue = { size: [sBpFlabel.size[0]+XYoff[0],$
                      sTpFvalue.size[1]+XYoff[1],$
                      60],$
-              value: '10',$
+              value: '50',$
               uname: 'tof_bin_per_frame_value'}
 
+;Max Nbr bin
+XYoff = [75,0]
+sMaxBinLabel = { size: [sBpFlabel.size[0]+$
+                        XYoff[0],$
+                        sBpFlabel.size[1]+$
+                        XYoff[1]],$
+                 value: 'Max Bin'}
+XYoff = [0,7]
+sMaxBinValue = { size: [sMaxBinLabel.size[0]+$
+                        XYoff[0],$
+                        sBpFvalue.size[1]+$
+                        XYoff[1]],$
+                 uname: 'tof_max_value',$
+                 frame: 1,$
+                 value: '      '}
 
+;bin# (label/value)
+XYoff = [60,0]
+sBinNbr = { size: [sMaxBinLabel.size[0]+XYoff[0],$
+                   sMaxBinLabel.size[1]+XYoff[1]],$
+            value: 'Bins'}
+XYoff = [30,0]
+sBinNbrValue = { size: [sBinNbr.size[0]+XYoff[0],$
+                        sBinNbr.size[1]+XYoff[1],$
+                        95],$
+                 value: '0',$
+                 frame: 1,$
+                 uname: 'bin_range_value'}
 
-
-
-
+;tof range (label/value)
+XYoff = [0,20]
+sTOFrange = { size: [sBinNbr.size[0]+XYoff[0],$
+                     sBinNbr.size[1]+XYoff[1]],$
+              value: 'TOFs'}
+XYoff = [0,0]
+sTOFrangeValue = { size: [sBinNbrValue.size[0]+XYoff[0],$
+                          sTOFrange.size[1]+XYoff[1],$
+                          sBinNbrValue.size[2]],$
+                   value: '150,000-160,000',$
+                   frame: 1,$
+                   uname: 'tof_range_value'}
 
 ;------------------------------------------------------------------------------
 ;Transmission or Background mode ----------------------------------------------
@@ -686,22 +711,15 @@ wTofReset = WIDGET_BUTTON(wTofMaxBase,$
                           VALUE     = sTofReset.value,$
                           UNAME     = sTofReset.uname)
 
-;pause button
-wPauseButton = WIDGET_BUTTON(wTofRangeBase,$
-                             XOFFSET   = sPauseButton.size[0],$
-                             YOFFSET   = sPauseButton.size[1],$
-                             SCR_XSIZE = sPauseButton.size[2],$
-                             SCR_YSIZE = sPauseButton.size[3],$
-                             VALUE     = sPauseButton.value,$
-                             UNAME     = sPauseButton.uname)
 ;play button
 wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
-                             XOFFSET   = sPlayButton.size[0],$
-                             YOFFSET   = sPlayButton.size[1],$
-                             SCR_XSIZE = sPlayButton.size[2],$
-                             SCR_YSIZE = sPlayButton.size[3],$
-                             VALUE     = sPlayButton.value,$
-                             UNAME     = sPlayButton.uname)
+                            XOFFSET   = sPlayButton.size[0],$
+                            YOFFSET   = sPlayButton.size[1],$
+                            SCR_XSIZE = sPlayButton.size[2],$
+                            SCR_YSIZE = sPlayButton.size[3],$
+                            VALUE     = sPlayButton.value,$
+                            UNAME     = sPlayButton.uname,$
+                            /BITMAP)
 ;time/frame label and value
 wTpFlabel = WIDGET_LABEL(wTofRangeBase,$
                          XOFFSET = sTpFlabel.size[0],$
@@ -713,7 +731,8 @@ wTpFvalue = WIDGET_TEXT(wTofRangeBase,$
                         YOFFSET   = sTpFvalue.size[1],$
                         SCR_XSIZE = sTpFvalue.size[2],$
                         VALUE     = sTpFvalue.value,$
-                        UNAME     = sTpFvalue.uname)
+                        UNAME     = sTpFvalue.uname,$
+                        /EDITABLE)
 
 ;bin/frame label and value
 wBpFlabel = WIDGET_LABEL(wTofRangeBase,$
@@ -726,11 +745,51 @@ wBpFvalue = WIDGET_TEXT(wTofRangeBase,$
                         YOFFSET   = sBpFvalue.size[1],$
                         SCR_XSIZE = sBpFvalue.size[2],$
                         VALUE     = sBpFvalue.value,$
-                        UNAME     = sBpFvalue.uname)
+                        UNAME     = sBpFvalue.uname,$
+                        /EDITABLE)
 
+;Max Nbr bin
+wMaxBinLabel = WIDGET_LABEL(wTofRangeBase,$
+                            XOFFSET = sMaxBinLabel.size[0],$
+                            YOFFSET = sMaxBinLabel.size[1],$
+                            VALUE   = sMaxBinLabel.value)
 
+wMaxBinValue = WIDGET_LABEL(wTofRangeBase,$
+                            XOFFSET = sMaxBinValue.size[0],$
+                            YOFFSET = sMaxBinValue.size[1],$
+                            VALUE   = sMaxBinValue.value,$
+                            UNAME   = sMaxBinValue.uname,$
+                            FRAME   = sMaxBinValue.frame)
 
+;bin # (label/value)
+wBinNbr = WIDGET_LABEL(wTofRangeBase,$
+                       XOFFSET = sBinNbr.size[0],$
+                       YOFFSET = sBinNbr.size[1],$
+                       VALUE   = sBinNbr.value)
 
+wBinNbrValue = WIDGET_LABEL(wTofRangeBase,$
+                            XOFFSET   = sBinNbrValue.size[0],$
+                            YOFFSET   = sBinNbrValue.size[1],$
+                            SCR_XSIZE = sBinNbrValue.size[2],$
+                            VALUE     = sBinNbrValue.value,$
+                            FRAME     = sBinNbrValue.frame,$
+                            UNAME     = sBinNbrValue.uname,$
+                            /ALIGN_LEFT)
+
+;tof range (label/value)
+wTOFrange = WIDGET_LABEL(wTofRangeBase,$
+                         XOFFSET = sTOFrange.size[0],$
+                         YOFFSET = sTOFrange.size[1],$
+                         VALUE   = sTOFrange.value)
+
+wTOFrangeValue = WIDGET_LABEL(wTofRangeBase,$
+                              XOFFSET   = sTOFrangeValue.size[0],$
+                              YOFFSET   = sTOFrangeValue.size[1],$
+                              SCR_XSIZE = sTOFrangeValue.size[2],$
+                              VALUE     = sTOFrangeValue.value,$
+                              FRAME     = sTOFrangeValue.frame,$
+                              UNAME     = sTOFrangeValue.uname,$
+                              /ALIGN_LEFT)
 
 
 
