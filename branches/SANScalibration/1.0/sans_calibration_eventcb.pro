@@ -97,7 +97,7 @@ widget_control,hourglass=0
 
 END
 
-
+;------------------------------------------------------------------------------
 ;This function browse a nexus file
 PRO browse_nexus, Event
 
@@ -334,6 +334,72 @@ IF (SIZE(DataArray,/N_DIMENSIONS) NE 0) THEN BEGIN
     activate_widget_list, Event, uname_list, 0
 
 ENDIF
+END
+
+;------------------------------------------------------------------------------
+PRO play_tof, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+activate_widget, Event, 'tof_play_button', 0
+
+;get time/frame
+time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
+time_per_frame = FLOAT(time_per_frame)
+;get bin/frame
+bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
+bin_per_frame  = FIX(bin_per_frame)
+
+;Integrate over TOF or get specified range of tof
+value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
+IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
+;get bin min
+    tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
+ENDIF ELSE BEGIN
+    tof_min = 0.
+ENDELSE
+
+;get bin max
+tof_max            = FLOAT(getTextFieldValue(Event,'tof_range_max_cw_field'))
+tof_array          = (*(*global).tof_array)
+stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
+tof_min_index      = getIndexOfTof(tof_array, tof_min)
+tof_max_index      = tof_min_index + bin_per_frame
+
+WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
+    
+    print, 'tof_max_index ' + strcompress(tof_max_index)
+    print, 'stop_tof_max_index ' + strcompress(stop_tof_max_index)
+    print
+
+    bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
+    bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
+    putTextFieldValue, Event, 'bin_range_value', bins_range
+
+    tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
+    tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL) 
+    putTextFieldValue, Event, 'tof_range_value', tof_range
+
+    result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
+    IF (result EQ 0) THEN BEGIN
+        BREAK
+    ENDIF
+
+    IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
+        BREAK
+    ENDIF
+    tof_min_index = tof_max_index
+    tof_max_index += bin_per_frame
+    IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
+        tof_max_index = stop_tof_max_index
+    ENDIF
+
+    WAIT, time_per_frame
+
+ENDWHILE
+
+activate_widget, Event, 'tof_play_button', 1
+
 END
 
 ;==============================================================================
