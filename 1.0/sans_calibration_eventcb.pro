@@ -161,6 +161,7 @@ IF (FullNexusName NE '') THEN BEGIN
                       'selection_tool_button',$
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
+                      'tof_range_base',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
         (*global).data_nexus_file_name = FullNexusName
@@ -231,6 +232,7 @@ IF (RunNumber NE 0) THEN BEGIN
         uname_list = ['clear_selection_button',$
                       'selection_tool_button',$
                       'selection_browse_button',$
+                      'tof_range_base',$   
                       'selection_file_name_text_field',$
                       'exclusion_base']
         activate_widget_list, Event, uname_list, 1
