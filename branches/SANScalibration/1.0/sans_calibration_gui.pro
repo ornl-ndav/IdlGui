@@ -135,24 +135,20 @@ ENDIF
 END
 
 ;------------------------------------------------------------------------------
-PRO update_tab1_gui, Event, STATUS=1
+PRO update_tab1_gui, Event, STATUS=status
 uname_list = ['clear_selection_button',$
               'selection_tool_button',$
               'selection_browse_button',$
               'selection_file_name_text_field',$
               'tof_range_base',$
               'counts_vs_tof_full_detector_button',$
-              'counts_vs_tof_selection_detector_button',$
-              'counts_vs_tof_monitor_detector_button',$
+              'counts_vs_tof_selection_button',$
+              'counts_vs_tof_monitor_button',$
               'exclusion_base']
-activate_widget_list, Event, uname_list, 1
+activate_widget_list, Event, uname_list, status
 END
 
 ;------------------------------------------------------------------------------
 PRO checkTofRange, Event  
-
-
-
-
 
 END

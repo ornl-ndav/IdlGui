@@ -32,5 +32,38 @@
 ;
 ;==============================================================================
 
-PRO launch_counts_vs_tof_base, Event
+PRO launch_counts_vs_tof_full_detector_button, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;get parameters
+nexus_file_name = (*global).data_nexus_file_name
+tof_slicer_cmd  = (*global).tof_slicer
+
+;build command line
+cmd  = tof_slicer_cmd
+cmd += ' ' + nexus_file_name
+
+END
+
+;------------------------------------------------------------------------------
+PRO launch_counts_vs_tof_selection_button, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;get parameters
+nexus_file_name = (*global).data_nexus_file_name
+tof_slicer_cmd  = (*global).tof_slicer
+
+END
+
+;------------------------------------------------------------------------------
+PRO launch_counts_vs_tof_monitor_button, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+;get parameters
+nexus_file_name = (*global).data_nexus_file_name
+tof_slicer_cmd  = (*global).tof_slicer
+
 END
