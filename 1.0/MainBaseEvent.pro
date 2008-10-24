@@ -274,10 +274,23 @@ CASE Event.id OF
         RefreshRoiExclusionPlot, Event   ;_selection
     END
 
-;- Counts vs TOF button -------------------------------------------------------
+;------------------------------------------------------------------------------
+;- Counts vs TOF button of full detector --------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_full_detector_button'): $
+      BEGIN
+        launch_counts_vs_tof_full_detector_button, Event ;_tof
+    END
+
+;- Counts vs TOF button of selection ------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_selection_button'): $
       BEGIN
-        launch_counts_vs_tof_base, Event
+        launch_counts_vs_tof_selection_button, Event ;_tof
+    END
+
+;- Counts vs TOF button of monitor --------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_monitor_button'): $
+      BEGIN
+        launch_counts_vs_tof_monitor_button, Event ;_tof
     END
 
 ;= TAB2 (REDUCE) ==============================================================

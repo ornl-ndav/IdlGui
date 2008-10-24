@@ -358,10 +358,6 @@ tof_max_index      = tof_min_index + bin_per_frame
 
 WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
     
-    print, 'tof_max_index ' + strcompress(tof_max_index)
-    print, 'stop_tof_max_index ' + strcompress(stop_tof_max_index)
-    print
-
     bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
     bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
     putTextFieldValue, Event, 'bin_range_value', bins_range

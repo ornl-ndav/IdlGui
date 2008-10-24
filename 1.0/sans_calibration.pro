@@ -78,6 +78,7 @@ ENDELSE
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
                    advancedToolId: 0,$
+                   tof_slicer: 'tof_slicer',$
                    list_OF_files_to_send: ptr_new(0L),$
                    auto_output_file_name: 1,$
                    Xpixel: 80L,$ ;320 or 80
