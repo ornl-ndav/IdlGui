@@ -61,6 +61,7 @@ sTofRangeBase = { size: [sLabelDraw.size[0]+XYoff[0],$
                          MainTabSize[2]-25,$
                          40],$
                   frame: 1,$
+                  sensitive: 0,$
                   uname: 'tof_range_base'}
 XYoff = [20,-8]
 sTofRangeLabel = { size: [sTofRangeBase.size[0]+XYoff[0],$
@@ -173,7 +174,7 @@ XYoff = [30,0]
 sBinNbrValue = { size: [sBinNbr.size[0]+XYoff[0],$
                         sBinNbr.size[1]+XYoff[1],$
                         95],$
-                 value: '0',$
+                 value: '       ',$
                  frame: 1,$
                  uname: 'bin_range_value'}
 
@@ -186,7 +187,7 @@ XYoff = [0,0]
 sTOFrangeValue = { size: [sBinNbrValue.size[0]+XYoff[0],$
                           sTOFrange.size[1]+XYoff[1],$
                           sBinNbrValue.size[2]],$
-                   value: '150,000-160,000',$
+                   value: '             ',$
                    frame: 1,$
                    uname: 'tof_range_value'}
 
@@ -650,11 +651,12 @@ wTofRangeLabel = WIDGET_LABEL(wTab1Base,$
                               VALUE   = sTofRangeLabel.value)
 
 wTofRangeBase = WIDGET_BASE(wTab1Base,$
-                            XOFFSET = sTofRangeBase.size[0],$
-                            YOFFSET = sTofRangeBase.size[1],$
+                            XOFFSET   = sTofRangeBase.size[0],$
+                            YOFFSET   = sTofRangeBase.size[1],$
                             SCR_XSIZE = sTofRangeBase.size[2],$
                             SCR_YSIZE = sTofRangeBase.size[3],$
                             FRAME     = sTofRangeBase.frame,$
+                            SENSITIVE = sTOFRangeBase.sensitive,$
                             UNAME     = sTofRangeBase.uname)
 
 wTofCwbGroup = CW_BGROUP(wTofRangeBase,$
@@ -790,14 +792,6 @@ wTOFrangeValue = WIDGET_LABEL(wTofRangeBase,$
                               FRAME     = sTOFrangeValue.frame,$
                               UNAME     = sTOFrangeValue.uname,$
                               /ALIGN_LEFT)
-
-
-
-
-
-
-
-
 
 ;Transmission or Background mode ----------------------------------------------
 wTBase = WIDGET_BASE(wTab1Base,$
