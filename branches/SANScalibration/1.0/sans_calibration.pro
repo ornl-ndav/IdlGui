@@ -41,15 +41,16 @@ CD, CURRENT = current_folder
 ;************************************************************************
 APPLICATION       = 'SANScalibration'
 VERSION           = '1.0.7'
-DEBUGGING         = 'no' ;yes/no
+DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no'  
 CHECKING_PACKAGES = 'yes'
 SCROLLING         = 'no' 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
+                          found: 0,$
                           sub_pkg_version:   ''}
 ;sub_pkg_version: python program that gives pkg v.
-my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,4)
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
 my_package[1].driver           = 'sas_transmission'
@@ -57,7 +58,8 @@ my_package[1].version_required = '1.0'
 my_package[1].sub_pkg_version  = './drversion'
 my_package[2].driver           = 'sas_background'
 my_package[2].version_required = '1.0'
-my_package[1].sub_pkg_version  = './drversion'
+my_package[3].driver           = 'tof_slicer'
+
 ;*************************************************************************
 ;*************************************************************************
 
@@ -77,6 +79,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   package_required_base: ptr_new(0L),$
                    advancedToolId: 0,$
                    tof_slicer: 'tof_slicer',$
                    list_OF_files_to_send: ptr_new(0L),$
@@ -356,7 +359,7 @@ IF (DEBUGGING EQ 'yes' AND $
 
 ;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
 ;show tab inside REDUCE
 ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
@@ -429,6 +432,7 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
               MAIN_BASE, $
               'log_book_text', $
               message
+
             cmd = pack_list[i] + ' --version'
             spawn, cmd, listening, err_listening
             IF (err_listening[0] EQ '') THEN BEGIN ;found
@@ -455,12 +459,16 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                               MAIN_BASE, $
                               'log_book_text', $
                               '--> ' + listening
+;tell the structure that the correct version has been found
+                            my_package[i].found = 1
                         ENDIF ELSE BEGIN
                             cmd_txt = '-> ' + cmd + ' ... FAILED'
                             IDLsendToGeek_addLogBookText_fromMainBase, $
                               MAIN_BASE, $
                               'log_book_text', $
                               cmd_text
+;tell the structure that the correct version has been found
+                            my_package[i].found = 0
                         ENDELSE
                     ENDIF
                 ENDIF
@@ -473,8 +481,10 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
 ;              + ' (Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
                 missing_packages[i] = my_package[i].driver
+;tell the structure that the correct version has been found
+                my_package[i].found = 0
                 ++nbr_missing_packages
-            ENDELSE
+             ENDELSE
         ENDFOR
 
         IF (nbr_missing_packages GT 0) THEN BEGIN
@@ -491,12 +501,14 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
             message = '=================================================' + $
               '========================'
             IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
-              'log_book_text', message
-ENDIF
-            
-    ENDIF                       ;end of 'if (sz GT 0)'
+               'log_book_text', message
+         ENDIF
+        
+     ENDIF                      ;end of 'if (sz GT 0)'
+    
+ ENDIF
 
-ENDIF
+(*(*global).package_required_base) = my_package
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
@@ -504,9 +516,9 @@ logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
 error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
+   CATCH,/CANCEL
 ENDIF ELSE BEGIN
-    spawn, logger_message
+   spawn, logger_message
 ENDELSE
 
 END
