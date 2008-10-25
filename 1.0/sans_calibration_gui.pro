@@ -141,11 +141,23 @@ uname_list = ['clear_selection_button',$
               'selection_browse_button',$
               'selection_file_name_text_field',$
               'tof_range_base',$
-              'counts_vs_tof_full_detector_button',$
-              'counts_vs_tof_selection_button',$
-              'counts_vs_tof_monitor_button',$
               'exclusion_base']
 activate_widget_list, Event, uname_list, status
+
+;tof buttons
+uname_list = ['counts_vs_tof_full_detector_button',$
+              'counts_vs_tof_selection_button',$
+              'counts_vs_tof_monitor_button']
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+package_required_base = (*(*global).package_required_base)
+IF (package_required_base[2].found EQ 1 AND $
+    status EQ 1) THEN BEGIN
+   tof_status = 1
+ENDIF ELSE BEGIN
+   tof_status = 0
+ENDELSE
+activate_widget_list, Event, uname_list, tof_status
 END
 
 ;------------------------------------------------------------------------------
