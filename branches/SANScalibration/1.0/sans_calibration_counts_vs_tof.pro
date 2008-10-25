@@ -32,50 +32,46 @@
 ;
 ;==============================================================================
 
-PRO launch_counts_vs_tof_full_detector_button, Event
+;run the driver
+PRO run_driver, Event, cmd, FullOutputfileName, TYPE=type
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
 ;get parameters
 nexus_file_name = (*global).data_nexus_file_name
 tof_slicer_cmd  = (*global).tof_slicer
-
-;build command line
-cmd  = tof_slicer_cmd
-cmd += ' ' + nexus_file_name
-
-;Create the tof base
-launch_counts_vs_tof, Event
-
-END
-
-;------------------------------------------------------------------------------
-PRO launch_counts_vs_tof_selection_button, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;get parameters
-nexus_file_name = (*global).data_nexus_file_name
-tof_slicer_cmd  = (*global).tof_slicer
-
-END
-
-;------------------------------------------------------------------------------
-PRO launch_counts_vs_tof_monitor_button, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;get parameters
-nexus_file_name = (*global).data_nexus_file_name
-tof_slicer_cmd  = (*global).tof_slicer
+;build the command line
 
 END
 
 ;-------------------------------------------------------------------------------
-PRO launch_counts_vs_tof, Event
+PRO launch_counts_vs_tof_full_detector_button, Event
+;Create the tof base
+launch_counts_vs_tof, Event, FullOutputFileName
+;run the driver
+run_driver, Event, FullOutputfileName, TYPE='full'
+END
+
+;------------------------------------------------------------------------------
+PRO launch_counts_vs_tof_selection_button, Event
+;Create the tof base
+launch_counts_vs_tof, Event, FullOutputFileName
+;run the driver
+run_driver, Event, FullOutputfileName, TYPE='selection'
+END
+
+;------------------------------------------------------------------------------
+PRO launch_counts_vs_tof_monitor_button, Event
+;Create the tof base
+launch_counts_vs_tof, Event, FullOutputFileName
+;run the driver
+run_driver, Event, FullOutputfileName, TYPE='monitor'
+END
+
+;-------------------------------------------------------------------------------
+PRO launch_counts_vs_tof, Event, FullOutputFileName
 ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global		
-iBase = OBJ_NEW('IDLmakeTOFbase', $
-                GLOBAL = *global, $
-                TYPE   = 'all')
+  iBase = OBJ_NEW('IDLmakeTOFbase', $
+                  GLOBAL = *global, $
+                  TYPE   = 'all')
 END

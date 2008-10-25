@@ -76,14 +76,32 @@ ourGroup = WIDGET_BASE()
 ;define structures .............................................................
 sBase = { size: [0,$
                  0,$
-                 200,$
-                 60],$
+                 500,$
+                 105],$
           uname: 'tof_main_base',$
           title: sMainBase.title,$
           frame: 1}
-          
 ;determine position of application
 determinePositionOfApplication, sMainBase, sBase
+
+sPathLabel = { value: 'Path'}
+sPathButton = { value: '~/',$
+                xsize: 460,$
+                uname: 'tof_ascii_file_path'}
+
+sFileNameLabel = { value: 'File Name'}
+sFileNameText = { value: '',$
+                  xsize: 69,$
+                  uname: 'tof_ascii_file_name'}
+
+sCancelButton = { value: 'CANCEL',$
+                  xsize: FIX(sbase.size[2]/2)-5,$
+                  uname: 'tof_ascii_cancel'}
+sOKButton = { value: 'CREATE ASCII and VISUALIZE DATA',$
+              xsize: sCancelButton.xsize,$
+              uname: 'tof_ascii_validate'}
+
+;Build widgets ................................................................
 
 wBase = WIDGET_BASE(GROUP_LEADER = ourGroup,$
                     TITLE        = sBase.title,$
@@ -92,7 +110,39 @@ wBase = WIDGET_BASE(GROUP_LEADER = ourGroup,$
                     SCR_XSIZE    = sBase.size[2],$
                     SCR_YSIZE    = sBase.size[3],$
                     MAP          = 1,$
-                    UNAME        = sBase.uname)
+                    UNAME        = sBase.uname,$
+                    /COLUMN)
+;path base and button
+wPathBase = WIDGET_BASE(wBase,$
+                        /ROW)
+wPathLabel = WIDGET_LABEL(wPathBase,$
+                          VALUE = sPathLabel.value)
+wPathButton = WIDGET_BUTTON(wPathBase,$
+                            XSIZE = sPathButton.xsize,$
+                            VALUE = sPathButton.value,$
+                            UNAME = sPathButton.uname)
+
+wFileNameBase = WIDGET_BASE(wBase,$
+                            /ROW)
+wFileNameLabel = WIDGET_LABEL(wFileNameBase,$
+                              VALUE = sFileNameLabel.value)
+wFileNameText = WIDGET_TEXT(wFileNameBase,$
+                            UNAME = sFileNameText.uname,$
+                            XSIZE = sFileNameText.xsize,$
+                            VALUE = sFileNameText.value,$
+                            /EDITABLE,$
+                            /ALIGN_LEFT)
+
+wButtonsBase = WIDGET_BASE(wBase,$
+                           /ROW)
+wCancelButton = WIDGET_BUTTON(wButtonsBase,$
+                              VALUE = sCancelButton.value,$
+                              UNAME = sCancelButton.uname,$
+                              XSIZE = sCancelButton.xsize)
+wOKButton = WIDGET_BUTTON(wButtonsBase,$
+                          VALUE = sOKButton.value,$
+                          UNAME = sOKButton.uname,$
+                          XSIZE = sOKButton.xsize)
 
 Widget_Control, /REALIZE, wBase
 XManager, 'MAIN_BASE', wBase, /NO_BLOCK
