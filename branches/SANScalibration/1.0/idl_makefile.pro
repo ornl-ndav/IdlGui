@@ -22,6 +22,7 @@ cd, CurrentFolder + '/SANScalibrationGUI/'
 .run make_gui_reduce_tab2.pro
 .run make_gui_reduce_tab3.pro
 .run make_gui_log_book.pro
+.run IDLmakeTOFbase__define.pro
 
 ;Build all procedures
 cd, CurrentFolder

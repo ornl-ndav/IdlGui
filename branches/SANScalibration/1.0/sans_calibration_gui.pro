@@ -158,6 +158,7 @@ ENDIF ELSE BEGIN
    tof_status = 0
 ENDELSE
 activate_widget_list, Event, uname_list, tof_status
+activate_widget_list, Event, uname_list, 1 ;REMOVE_ME
 END
 
 ;------------------------------------------------------------------------------
