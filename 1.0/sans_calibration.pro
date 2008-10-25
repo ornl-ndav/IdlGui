@@ -49,7 +49,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
                           found: 0,$
                           sub_pkg_version:   ''}
-;sub_pkg_version: python program that gives pkg v.
+;sub_pkg_version: python program that gives pkg v. of common libraries...etc
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,4)
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = '1.5'
@@ -79,13 +79,14 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   MainBaseSize:    INTARR(4),$
                    package_required_base: ptr_new(0L),$
                    advancedToolId: 0,$
                    tof_slicer: 'tof_slicer',$
                    list_OF_files_to_send: ptr_new(0L),$
                    auto_output_file_name: 1,$
-                   Xpixel: 80L,$ ;320 or 80
-                   mouse_status: 0,$  ;0:nothing, 1:has been pressed
+                   Xpixel: 80L,$     ;320 or 80
+                   mouse_status: 0,$ ;0:nothing, 1:has been pressed
                    rectangle_XY0_mouse: [0,0],$
                    rectangle_XY1_mouse: [0,0],$
                    rectangle_selection_color: 50,$
@@ -97,7 +98,7 @@ global = PTR_NEW ({version:         VERSION,$
                    there_is_a_selection: 0,$
                    exclusion_type_index: 0,$ ;0,1,2 or 3
                    TESTING:         TESTING,$
-                   fitting_status:  1,$ ;0:succes, 1:failed
+                   fitting_status:  1,$        ;0:succes, 1:failed
                    ascii_file_load_status: 0,$ ;1:success, 0:failed
                    txt_extension:   'bkg',$
                    txt_filter:      ['*.txt','*.bkg'],$
@@ -241,6 +242,7 @@ MainBaseTitle  = 'SANS Data Calibration GUI '
 (*global).MainBaseTitle = MainBaseTitle
 MainBaseTitle += '( Mode: Transmission ) '
 MainBaseSize   = [30,25,695+320,550+320]
+(*global).MainBaseSize = MainBaseSize
 MainBaseTitle += ' - ' + VERSION
 
 (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)

@@ -1,4 +1,4 @@
-;==============================================================================
+ ;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -44,6 +44,9 @@ tof_slicer_cmd  = (*global).tof_slicer
 cmd  = tof_slicer_cmd
 cmd += ' ' + nexus_file_name
 
+;Create the tof base
+launch_counts_vs_tof, Event
+
 END
 
 ;------------------------------------------------------------------------------
@@ -66,4 +69,13 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 nexus_file_name = (*global).data_nexus_file_name
 tof_slicer_cmd  = (*global).tof_slicer
 
+END
+
+;-------------------------------------------------------------------------------
+PRO launch_counts_vs_tof, Event
+;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global		
+iBase = OBJ_NEW('IDLmakeTOFbase', $
+                GLOBAL = *global, $
+                TYPE   = 'all')
 END
