@@ -136,7 +136,7 @@ sBrowseButton = { size  : [sOrLabel.size[0]+XYoff[0],$
                       
 
 ;Nexus file name label --------------------------------------------------------
-XYoff = [10,40]
+XYoff = [10,43]
 sNexusLabel = { size: [PropNbrDroplist.size[0]+XYoff[0],$
                        PropNbrDroplist.size[1]+XYoff[1]],$
                 value: 'Nexus File Name:'}
