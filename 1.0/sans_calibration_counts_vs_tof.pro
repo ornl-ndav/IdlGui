@@ -40,7 +40,6 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 nexus_file_name = (*global).data_nexus_file_name
 tof_slicer_cmd  = (*global).tof_slicer
 ;build the command line
-
 END
 
 ;-------------------------------------------------------------------------------
@@ -74,6 +73,6 @@ activate_widget, Event, 'MAIN_BASE',0
 WIDGET_CONTROL, Event.top, GET_UVALUE=global		
 iBase = OBJ_NEW('IDLmakeTOFbase', $
                 EVENT  = Event,$
-                GLOBAL = *global, $
+                GLOBAL = global, $
                 TYPE   = type)
 END
