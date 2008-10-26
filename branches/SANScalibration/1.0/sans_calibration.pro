@@ -79,7 +79,10 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   main_base_uname: 'MAIN_BASE',$
                    MainBaseSize:    INTARR(4),$
+                   tof_ascii_path:  '~/',$
+                   tof_ascii_type:  '',$
                    package_required_base: ptr_new(0L),$
                    advancedToolId: 0,$
                    tof_slicer: 'tof_slicer',$
@@ -251,7 +254,7 @@ MainBaseTitle += ' - ' + VERSION
 ;Build Main Base ==============================================================
 IF (SCROLLING EQ 'yes') THEN BEGIN
     MAIN_BASE = WIDGET_BASE( GROUP_LEADER  = wGroup,$
-                             UNAME         = 'MAIN_BASE',$
+                             UNAME         = (*global).main_base_uname,$
                              SCR_XSIZE     = MainBaseSize[2],$
                              XOFFSET       = MainBaseSize[0],$
                              YOFFSET       = MainBaseSize[1],$
@@ -265,7 +268,7 @@ IF (SCROLLING EQ 'yes') THEN BEGIN
     
 ENDIF ELSE BEGIN
     MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
-                             UNAME        = 'MAIN_BASE',$
+                             UNAME        = (*global).main_base_uname,$
                              SCR_XSIZE    = MainBaseSize[2],$
                              SCR_YSIZE    = MainBaseSize[3],$
                              XOFFSET      = MainBaseSize[0],$

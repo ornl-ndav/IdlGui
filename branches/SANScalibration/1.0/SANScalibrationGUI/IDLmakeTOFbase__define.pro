@@ -32,6 +32,20 @@
 ;
 ;==============================================================================
 
+PRO putTOFbuttonValue, Event, uname, value
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;------------------------------------------------------------------------------
+PRO cancel_tof_ascii_base, Event
+WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
+WIDGET_CONTROL, id, /DESTROY
+END
+
+;------------------------------------------------------------------------------
 PRO determinePositionOfApplication, sMainBase, sBase
 
 ;size of MainBase
@@ -55,6 +69,26 @@ sBase.size[1] = tof_yoffset
 
 END
 
+;------------------------------------------------------------------------------
+PRO pick_tof_ascii_path, Event
+WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+path  = sMainBase.global.tof_ascii_path
+title = 'Path of ASCII File '
+CASE (sMainBase.global.tof_ascii_type) OF
+   'all': title += '(Full Detector)'
+   'selection': title += '(Selection Only)'
+   'monitor': title += '(Monitor)'
+ENDCASE
+new_path = DIALOG_PICKFILE(/DIRECTORY,$
+                           TITLE = title,$
+                           PATH  = path)
+IF (path NE '') THEN BEGIN
+   sMainBase.global.tof_ascii_path = new_path
+   putTOFButtonValue, Event, 'tof_ascii_file_path', new_path
+ENDIF
+
+END
+
 ;-------------------------------------------------------------------------------
 PRO DefineMainBase_event, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
@@ -62,7 +96,14 @@ wWidget =  Event.top            ;widget id
 
 CASE Event.id OF
 
-    Widget_Info(wWidget, FIND_BY_UNAME='draw'): BEGIN
+;button to select path
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_file_path'): BEGIN
+       pick_tof_ascii_path, Event ;_IDLmakeTOFbase
+    END
+
+;button to cancel base
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_cancel'): BEGIN
+       cancel_tof_ascii_base, Event ;_IDLmakeTOFbase
     END
 
     ELSE:
@@ -77,7 +118,7 @@ ourGroup = WIDGET_BASE()
 sBase = { size: [0,$
                  0,$
                  500,$
-                 105],$
+                 105		],$
           uname: 'tof_main_base',$
           title: sMainBase.title,$
           frame: 1}
@@ -85,7 +126,7 @@ sBase = { size: [0,$
 determinePositionOfApplication, sMainBase, sBase
 
 sPathLabel = { value: 'Path'}
-sPathButton = { value: '~/',$
+sPathButton = { value: sMainBase.global.tof_ascii_path,$
                 xsize: 460,$
                 uname: 'tof_ascii_file_path'}
 
@@ -150,8 +191,9 @@ END
 
 ;***** Class constructor *******************************************************
 FUNCTION IDLmakeTOFbase::init, $
+   EVENT  = event,$
    GLOBAL = global,$
-   TYPE   = type      ;'all','selection','monitor'
+   TYPE   = type                ;'all','selection','monitor'
 
 CASE (type) OF
   'all': BEGIN
@@ -168,7 +210,10 @@ ENDCASE
 
 ;design Main Base
 sMainBase = { global:   GLOBAL,$
+              main_base_event: event,$
               title:    title}
+
+sMainBase.global.tof_ascii_type = TYPE
 
 ;Design Main Base
 DefineMainBase, sMainBase, wBase
@@ -180,11 +225,5 @@ END
 ;*******************************************************************************
 PRO IDLmakeTOFbase__define
 struct = {IDLmakeTOFbase,$
-          x         : 0,$ ;width of each pixel
-          y         : 0,$ ;height of each pixel
-          xoff      : 0,$
-          yoff      : 0,$
-          title     : '',$
-          uname     : '',$
-          DrawUname : ''}
+          var : ''}
 END
