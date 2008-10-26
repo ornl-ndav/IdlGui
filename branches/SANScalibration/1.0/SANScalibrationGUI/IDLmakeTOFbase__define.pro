@@ -39,8 +39,14 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_tof_base_cleanup, MAIN_BASE
-WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=sMainBase		
-activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+ENDIF ELSE BEGIN
+   WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=sMainBase		
+   activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
@@ -53,7 +59,8 @@ IF (no_error NE 0) THEN BEGIN
    WIDGET_CONTROL, id, /DESTROY
 ENDIF ELSE BEGIN
    WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
-   activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+   activate_widget, sMainBase.main_base_event, $
+                    (*sMainBase.global).main_base_uname, 1
    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
    WIDGET_CONTROL, id, /DESTROY
 ENDELSE
@@ -63,7 +70,7 @@ END
 PRO determinePositionOfApplication, sMainBase, sBase
 
 ;size of MainBase
-MainBaseSize = sMainBase.global.MainBaseSize
+MainBaseSize = (*sMainBase.global).MainBaseSize
 xoffset = MainBaseSize[0]
 yoffset = MainBaseSize[1]
 xsize   = MainBaseSize[2]
@@ -86,9 +93,9 @@ END
 ;------------------------------------------------------------------------------
 PRO pick_tof_ascii_path, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
-path  = sMainBase.global.tof_ascii_path
+path  = (*sMainBase.global).tof_ascii_path
 title = 'Path of ASCII File '
-CASE (sMainBase.global.tof_ascii_type) OF
+CASE ((*sMainBase.global).tof_ascii_type) OF
    'all': title += '(Full Detector)'
    'selection': title += '(Selection Only)'
    'monitor': title += '(Monitor)'
@@ -97,7 +104,7 @@ new_path = DIALOG_PICKFILE(/DIRECTORY,$
                            TITLE = title,$
                            PATH  = path)
 IF (path NE '') THEN BEGIN
-   sMainBase.global.tof_ascii_path = new_path
+   (*sMainBase.global).tof_ascii_path = new_path
    putTOFButtonValue, Event, 'tof_ascii_file_path', new_path
 ENDIF
 
@@ -145,7 +152,7 @@ sBase = { size: [0,$
 determinePositionOfApplication, sMainBase, sBase
 
 sPathLabel = { value: 'Path'}
-sPathButton = { value: sMainBase.global.tof_ascii_path,$
+sPathButton = { value: (*sMainBase.global).tof_ascii_path,$
                 xsize: 460,$
                 uname: 'tof_ascii_file_path'}
 
@@ -250,13 +257,13 @@ CASE (type) OF
 ENDCASE
 
 ;design Main Base
-sMainBase = { global:   GLOBAL,$
+sMainBase = { global: GLOBAL,$
               Event: 0L,$
               type: type,$
               main_base_event: event,$
               title:    title}
 
-sMainBase.global.tof_ascii_type = TYPE
+(*sMainBase.global).tof_ascii_type = TYPE
 
 ;Design Main Base
 DefineMainBase, sMainBase, wBase
