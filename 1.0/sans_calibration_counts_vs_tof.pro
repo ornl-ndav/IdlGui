@@ -70,8 +70,10 @@ END
 ;-------------------------------------------------------------------------------
 PRO launch_counts_vs_tof, Event, FullOutputFileName
 ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global		
-  iBase = OBJ_NEW('IDLmakeTOFbase', $
-                  GLOBAL = *global, $
-                  TYPE   = 'all')
+activate_widget, Event, 'MAIN_BASE',0
+WIDGET_CONTROL, Event.top, GET_UVALUE=global		
+iBase = OBJ_NEW('IDLmakeTOFbase', $
+                EVENT  = Event,$
+                GLOBAL = *global, $
+                TYPE   = 'all')
 END
