@@ -38,11 +38,25 @@ WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
-PRO cancel_tof_ascii_base, Event
-WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+PRO make_tof_base_cleanup, MAIN_BASE
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=sMainBase		
 activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
-WIDGET_CONTROL, id, /DESTROY
+END
+
+;------------------------------------------------------------------------------
+PRO cancel_tof_ascii_base, Event
+no_error = 0
+CATCH,no_error
+IF (no_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
+   WIDGET_CONTROL, id, /DESTROY
+ENDIF ELSE BEGIN
+   WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+   activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
+   WIDGET_CONTROL, id, /DESTROY
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
@@ -115,10 +129,15 @@ PRO DefineMainBase, sMainBase, wBase
 ourGroup = WIDGET_BASE()
 
 ;define structures .............................................................
+IF (sMainBase.type EQ 'selection') THEN BEGIN
+   ysize = 130
+ENDIF ELSE BEGIN
+   ysize = 105
+ENDELSE
 sBase = { size: [0,$
                  0,$
                  500,$
-                 105		],$
+                 ysize],$
           uname: 'tof_main_base',$
           title: sMainBase.title,$
           frame: 1}
@@ -134,6 +153,13 @@ sFileNameLabel = { value: 'File Name'}
 sFileNameText = { value: '',$
                   xsize: 69,$
                   uname: 'tof_ascii_file_name'}
+
+IF (sMainBase.type EQ 'selection') THEN BEGIN
+   sROIlabel = { value: 'ROI File'}
+   sROIvalue = { value: '',$
+                 xsize: 460,$
+                 uname: 'tof_roi_file_name'}
+ENDIF
 
 sCancelButton = { value: 'CANCEL',$
                   xsize: FIX(sbase.size[2]/2)-5,$
@@ -174,6 +200,21 @@ wFileNameText = WIDGET_TEXT(wFileNameBase,$
                             /EDITABLE,$
                             /ALIGN_LEFT)
 
+IF (sMainBase.type EQ 'selection') THEN BEGIN
+   wROIBase = WIDGET_BASE(wBase,$
+                          /ROW)
+   wROIlabel = WIDGET_LABEL(wROIBase,$
+                            VALUE = sROIlabel.value)
+   wROIvalue = WIDGET_LABEL(wROIBase,$
+                            VALUE = sROIvalue.value,$
+                            XSIZE = sROIvalue.xsize,$
+                            UNAME = sROIvalue.uname)
+   sROIlabel = { value: 'ROI File'}
+   sROIvalue = { value: '',$
+                 uname: 'tof_roi_file_name'}
+ENDIF
+
+
 wButtonsBase = WIDGET_BASE(wBase,$
                            /ROW)
 wCancelButton = WIDGET_BUTTON(wButtonsBase,$
@@ -186,7 +227,7 @@ wOKButton = WIDGET_BUTTON(wButtonsBase,$
                           XSIZE = sOKButton.xsize)
 
 Widget_Control, /REALIZE, wBase
-XManager, 'MAIN_BASE', wBase, /NO_BLOCK
+XManager, 'MAIN_BASE', wBase, /NO_BLOCK, CLEANUP = 'make_tof_base_cleanup'
 END
 
 ;***** Class constructor *******************************************************
@@ -210,6 +251,8 @@ ENDCASE
 
 ;design Main Base
 sMainBase = { global:   GLOBAL,$
+              Event: 0L,$
+              type: type,$
               main_base_event: event,$
               title:    title}
 

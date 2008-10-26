@@ -290,7 +290,7 @@ widget_control, MAIN_BASE, SET_UVALUE=global
 make_gui_main_tab, MAIN_BASE, MainBaseSize, global
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='sans_calibration_cleanup' 
 
 ;give superpower to j35 and 2zr
 IF (ucams EQ 'j35' OR $
@@ -525,6 +525,12 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
    spawn, logger_message
 ENDELSE
+
+END
+
+;==============================================================================
+PRO sans_calibration_cleanup, global
+;if tof_base is active, close it here
 
 END
 

@@ -46,15 +46,15 @@ END
 ;-------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_full_detector_button, Event
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName
+launch_counts_vs_tof, Event, FullOutputFileName, TYPE='all'
 ;run the driver
-run_driver, Event, FullOutputfileName, TYPE='full'
+run_driver, Event, FullOutputfileName, TYPE='all'
 END
 
 ;------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_selection_button, Event
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName
+launch_counts_vs_tof, Event, FullOutputFileName, TYPE='selection'
 ;run the driver
 run_driver, Event, FullOutputfileName, TYPE='selection'
 END
@@ -62,18 +62,18 @@ END
 ;------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_monitor_button, Event
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName
+launch_counts_vs_tof, Event, FullOutputFileName, TYPE='monitor'
 ;run the driver
 run_driver, Event, FullOutputfileName, TYPE='monitor'
 END
 
 ;-------------------------------------------------------------------------------
-PRO launch_counts_vs_tof, Event, FullOutputFileName
+PRO launch_counts_vs_tof, Event, FullOutputFileName, TYPE=type
 ;get global structure
 activate_widget, Event, 'MAIN_BASE',0
 WIDGET_CONTROL, Event.top, GET_UVALUE=global		
 iBase = OBJ_NEW('IDLmakeTOFbase', $
                 EVENT  = Event,$
                 GLOBAL = *global, $
-                TYPE   = 'all')
+                TYPE   = type)
 END
