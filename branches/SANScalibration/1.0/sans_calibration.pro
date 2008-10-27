@@ -82,6 +82,7 @@ global = PTR_NEW ({version:         VERSION,$
                    main_base_uname: 'MAIN_BASE',$
                    MainBaseSize:    INTARR(4),$
                    tof_ascii_path:  '~/',$
+                   tof_ascii_path_backup:  '~/',$
                    tof_ascii_type:  '',$
                    package_required_base: ptr_new(0L),$
                    advancedToolId: 0,$
