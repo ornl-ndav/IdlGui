@@ -59,11 +59,20 @@ IF (no_error NE 0) THEN BEGIN
    WIDGET_CONTROL, id, /DESTROY
 ENDIF ELSE BEGIN
    WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+   (*sMainBase.global).tof_ascii_path = $
+      (*sMainBase.global).tof_ascii_path_backup
    activate_widget, sMainBase.main_base_event, $
                     (*sMainBase.global).main_base_uname, 1
    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
    WIDGET_CONTROL, id, /DESTROY
 ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO validate_tof, Event
+WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+(*sMainBase.global).tof_ascii_path_backup = $
+   (*sMainBase.global).tof_ascii_path
 END
 
 ;------------------------------------------------------------------------------
