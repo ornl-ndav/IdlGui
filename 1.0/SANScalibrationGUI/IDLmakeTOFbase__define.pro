@@ -1,4 +1,4 @@
- ;==============================================================================
+ ;=============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,13 +39,17 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_tof_base_cleanup, MAIN_BASE
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=sMainBase
+main_base_id = sMainBase.main_base_id
 no_error = 0
 CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
    CATCH,/CANCEL
+   WIDGET_CONTROL, main_base_id, /DESTROY
 ENDIF ELSE BEGIN
-   WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=sMainBase		
-   activate_widget, sMainBase.main_base_event, sMainBase.global.main_base_uname, 1
+   activate_widget, sMainBase.main_base_event, $
+     (*sMainBase.global).main_base_uname, 1
+   WIDGET_CONTROL, main_base_id, /DESTROY
 ENDELSE
 END
 
@@ -119,7 +123,7 @@ ENDIF
 
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO DefineMainBase_event, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
 wWidget =  Event.top            ;widget id
@@ -136,17 +140,29 @@ CASE Event.id OF
        cancel_tof_ascii_base, Event ;_IDLmakeTOFbase
     END
 
+;path or name of ROI file
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_roi_path_button'): BEGIN
+        path = FILE_DIRNAME(sMainBase.ROIfile)
+        IF (path EQ '.') THEN path = 'N/A'
+        putTextFieldValue, Event, 'tof_roi_file_name', path
+    END
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_roi_name_button'): BEGIN
+        name = FILE_BASENAME(sMainBase.ROIfile)
+        IF (name EQ '') THEN name = 'N/A'
+        putTextFieldValue, Event, 'tof_roi_file_name', name
+    END
+
     ELSE:
 ENDCASE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO DefineMainBase, sMainBase, wBase
 ourGroup = WIDGET_BASE()
 
-;define structures .............................................................
+;define structures ............................................................
 IF (sMainBase.type EQ 'selection') THEN BEGIN
-   ysize = 130
+   ysize = 145
 ENDIF ELSE BEGIN
    ysize = 105
 ENDELSE
@@ -166,15 +182,24 @@ sPathButton = { value: (*sMainBase.global).tof_ascii_path,$
                 uname: 'tof_ascii_file_path'}
 
 sFileNameLabel = { value: 'File Name'}
-sFileNameText = { value: '',$
+sFileNameText = { value: sMainBase.output_file_name,$
                   xsize: 69,$
                   uname: 'tof_ascii_file_name'}
 
 IF (sMainBase.type EQ 'selection') THEN BEGIN
-   sROIlabel = { value: 'ROI File'}
-   sROIvalue = { value: '',$
-                 xsize: 460,$
-                 uname: 'tof_roi_file_name'}
+
+    sROIlabel = { value: 'ROI'}
+    sROIpath  = { value: 'PATH',$
+                  uname: 'tof_roi_path_button'}
+    sROIname  = { value: 'NAME',$
+                  uname: 'tof_roi_name_button'}
+
+    file_name = FILE_BASENAME(sMainBase.ROIfile)
+    IF (file_name EQ '') THEN file_name = 'N/A'
+    sROIvalue = { value: file_name,$
+                  xsize: 350,$
+                  frame: 1,$
+                  uname: 'tof_roi_file_name'}
 ENDIF
 
 sCancelButton = { value: 'CANCEL',$
@@ -195,6 +220,8 @@ wBase = WIDGET_BASE(GROUP_LEADER = ourGroup,$
                     MAP          = 1,$
                     UNAME        = sBase.uname,$
                     /COLUMN)
+
+sMainBase.main_base_id = wBase
 ;path base and button
 wPathBase = WIDGET_BASE(wBase,$
                         /ROW)
@@ -221,13 +248,29 @@ IF (sMainBase.type EQ 'selection') THEN BEGIN
                           /ROW)
    wROIlabel = WIDGET_LABEL(wROIBase,$
                             VALUE = sROIlabel.value)
+
+;path and name of roi file
+   wROIBase2 = WIDGET_BASE(wROIbase,$
+                           /ROW,$
+                           /EXCLUSIVE)
+   wROIpath = WIDGET_BUTTON(wROIBase2,$
+                            VALUE = sROIpath.value,$
+                            UNAME = sROIpath.uname,$
+                            /NO_RELEASE)
+   wROIname = WIDGET_BUTTON(wROIBase2,$
+                            VALUE = sROIname.value,$
+                            UNAME = sROIname.uname,$
+                            /NO_RELEASE)
+
+   WIDGET_CONTROL, wROIname, /SET_BUTTON
+
+
    wROIvalue = WIDGET_LABEL(wROIBase,$
                             VALUE = sROIvalue.value,$
                             XSIZE = sROIvalue.xsize,$
-                            UNAME = sROIvalue.uname)
-   sROIlabel = { value: 'ROI File'}
-   sROIvalue = { value: '',$
-                 uname: 'tof_roi_file_name'}
+                            UNAME = sROIvalue.uname,$
+                            FRAME = sROIvalue.frame,$
+                            /ALIGN_LEFT)
 ENDIF
 
 
@@ -246,11 +289,13 @@ Widget_Control, /REALIZE, wBase
 XManager, 'MAIN_BASE', wBase, /NO_BLOCK, CLEANUP = 'make_tof_base_cleanup'
 END
 
-;***** Class constructor *******************************************************
+;***** Class constructor ******************************************************
 FUNCTION IDLmakeTOFbase::init, $
-   EVENT  = event,$
-   GLOBAL = global,$
-   TYPE   = type                ;'all','selection','monitor'
+                       EVENT   = event,$
+                       GLOBAL  = global,$
+                       ROIfile = ROIfile,$
+                       FILE    = file,$          
+                       TYPE    = type ;'all','selection','monitor'
 
 CASE (type) OF
   'all': BEGIN
@@ -267,8 +312,11 @@ ENDCASE
 
 ;design Main Base
 sMainBase = { global: GLOBAL,$
+              output_file_name: FILE,$
               Event: 0L,$
+              ROIfile: ROIfile,$
               type: type,$
+              main_base_id: 0L,$
               main_base_event: event,$
               title:    title}
 
@@ -281,7 +329,7 @@ XMANAGER, "DefineMainBase", wBase, /NO_BLOCK
 RETURN, 1
 END
 
-;*******************************************************************************
+;******************************************************************************
 PRO IDLmakeTOFbase__define
 struct = {IDLmakeTOFbase,$
           var : ''}
