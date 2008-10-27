@@ -1,4 +1,4 @@
- ;==============================================================================
+ ;=============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,8 +30,31 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
+;determine the default full output file name
 ;==============================================================================
+;determine the default full output file name
+FUNCTION DetermineTOFoutputFile, Event, TYPE=type
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+file_name  = 'SANS_'
+;get run number
+FullNexusName = (*global).data_nexus_file_name
+iNexus        = OBJ_NEW('IDLgetMetadata',FullNexusName)
+RunNumber     = iNexus->getRunNumber()
+OBJ_DESTROY, iNexus
+;add extension
+CASE (TYPE) OF
+    'all': ext1 = ''
+    'selection': ext1 = '_sel'
+    'monitor' : ext1 = '_mon'
+ENDCASE
+ext = ext1 + '.tof'
+output_file_name  = file_name + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+output_file_name += ext
+RETURN, output_file_name
+END
 
+;------------------------------------------------------------------------------
 ;run the driver
 PRO run_driver, Event, cmd, FullOutputfileName, TYPE=type
 ;get global structure
@@ -42,37 +65,54 @@ tof_slicer_cmd  = (*global).tof_slicer
 ;build the command line
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_full_detector_button, Event
+;determine the default full output file name
+FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='all')
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName, TYPE='all'
+launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='all'
 ;run the driver
 run_driver, Event, FullOutputfileName, TYPE='all'
 END
 
 ;------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_selection_button, Event
+;determine the default full output file name
+FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='selection')
+;get ROI file name
+ROIfile = getROIfileName(Event)
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName, TYPE='selection'
+launch_counts_vs_tof, Event, FullOutputFileName, $
+  ROIfile=ROIfile, $
+  TYPE='selection'
 ;run the driver
 run_driver, Event, FullOutputfileName, TYPE='selection'
 END
 
 ;------------------------------------------------------------------------------
 PRO launch_counts_vs_tof_monitor_button, Event
+;determine the default full output file name
+FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='monitor')
 ;Create the tof base
-launch_counts_vs_tof, Event, FullOutputFileName, TYPE='monitor'
+launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='monitor'
 ;run the driver
 run_driver, Event, FullOutputfileName, TYPE='monitor'
 END
 
-;-------------------------------------------------------------------------------
-PRO launch_counts_vs_tof, Event, FullOutputFileName, TYPE=type
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO launch_counts_vs_tof, Event, $
+                          FullOutputFileName, $
+                          ROIfile=ROIfile, $
+                          TYPE=type
 ;get global structure
 activate_widget, Event, 'MAIN_BASE',0
 WIDGET_CONTROL, Event.top, GET_UVALUE=global		
 iBase = OBJ_NEW('IDLmakeTOFbase', $
                 EVENT  = Event,$
                 GLOBAL = global, $
+                ROIfile = ROIfile,$
+                FILE   = FullOutputFileName,$
                 TYPE   = type)
 END
