@@ -35,7 +35,8 @@
 ;    YAXIS_UNITS        STRING    ''                 ; y-axis units
 ;    SIGMA_YAXIS        STRING    'Sigma'            ; title of sigma y-axis
 ;    SIGMA_YAXIS_UNITS  STRING    ''                 ; sigma y-axis units
-;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array of structures
+;    DATA               POINTER   <PtrHeapVar2225>   ; pointer to an array of
+;    structures
 ;    
 ;    help, (*struct.data)[0], /structure
 ;    ------------------- returns the first dataset
@@ -43,14 +44,15 @@
 ;    BANK            STRING    'bank1'               ; bank number
 ;    X               STRING    '137'                 ; x value
 ;    Y               STRING    '127'                 ; y value
-;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string array of 3 
+;    DATA            POINTER   <PtrHeapVar2462>      ; pointer to a string
+;                                                    ; array of 3 
 ;                                                    ; columns with data
 ;                                                    
 ;   How To retrieve information
 ;
 ; print, (*struct.data[0]).x
 ; print, (struct.xaxis)
-;
+; print, *(*struct.data)[0].data ;for the data
 ; *<=========================================>*
 ; Author: dfp <prakapenkadv@ornl.gov>
 ; ============================================>>>    
@@ -158,7 +160,7 @@ FUNCTION READ_DATA, file, half
   ENDCASE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 function format, init_str, tag
   ;find out where tag ends
   pos = STRLEN(tag)
@@ -171,7 +173,7 @@ function format, init_str, tag
   
 end
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 Function find_it, init_str, tag
 
   ;get number of elements in array
@@ -230,7 +232,8 @@ pro populate_structure, all_data, MyStruct
     Y:    '',$
     data: ptr_new()}
     
-  ;then create the array of structures according to the number of array (new_nbr)
+;then create the array of structures according to the number of 
+;array (new_nbr)
   data_structure = REPLICATE(general_data_structure,new_nbr)
   
   ;and put this general array of structures inside MyStruct.data
@@ -314,8 +317,9 @@ pro populate_structure, all_data, MyStruct
   ENDWHILE
   
   
-  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, sigma_axis_units
-  ;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
+;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, 
+;sigma_axis_units
+;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
   
   MyStruct.NbrArray = new_nbr
   MyStruct.xaxis = x_all[0]
@@ -326,9 +330,7 @@ pro populate_structure, all_data, MyStruct
   MyStruct.sigma_yaxis_units = sigma_all[1]
   *MyStruct.data = data_structure
   
-
 END
-
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
