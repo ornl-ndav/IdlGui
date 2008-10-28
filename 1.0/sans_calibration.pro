@@ -82,8 +82,13 @@ global = PTR_NEW ({version:         VERSION,$
                    main_base_uname: 'MAIN_BASE',$
                    MainBaseSize:    INTARR(4),$
                    tof_ascii_path:  '~/',$
+                   tof_ascii_name: '',$
                    tof_ascii_path_backup:  '~/',$
                    tof_ascii_type:  '',$
+                   tof_ascii_file_name: '',$
+                   tof_monitor_flag: '--data-paths',$
+                   tof_monitor_path: '/entry/monitor1,1',$
+                   tof_roi_flag: '--roi-file',$
                    package_required_base: ptr_new(0L),$
                    advancedToolId: 0,$
                    tof_slicer: 'tof_slicer',$
