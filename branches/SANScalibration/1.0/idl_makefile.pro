@@ -55,3 +55,7 @@ cd, CurrentFolder
 .run MainBaseEvent.pro
 .run sans_calibration_eventcb.pro
 .run sans_calibration.pro
+
+;to compile all the iTools procedures
+itResolve
+

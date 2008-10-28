@@ -61,6 +61,12 @@ PRO run_driver, Event, $
                 OUTPUT_FILE_NAME = output_file_name
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;retrieve infos
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
 ;get parameters
 nexus_file_name = (*global).data_nexus_file_name
 tof_slicer_cmd  = (*global).tof_slicer
@@ -72,16 +78,75 @@ CASE (TYPE) OF
     'monitor'  : BEGIN
         cmd += ' ' + (*global).tof_monitor_flag
         cmd += '=' + (*global).tof_monitor_path
+        text = ' monitor'
     END
     'selection': BEGIN
         cmd += ' ' + (*global).tof_roi_flag    
         ROIfile = getROIfileName(Event)
         cmd += '=' + ROIfile
+        text = ' selection (' + ROIfile + ')'
     END
-ELSE:
+    'all': BEGIN
+        text = ' full detector'
+    END
 ENDCASE
 cmd += ' -o ' + OUTPUT_FILE_NAME
-print, cmd ;remove_me
+cmd_text  = '> Create ASCII file of Counts vs TOF of' + text + ':'
+IDLsendToGeek_addLogBookText, Event, cmd_text
+cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, cmd_text1
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
+    result = DIALOG_MESSAGE(cmd_text + ' FAILED',/ERROR)
+ENDIF ELSE BEGIN
+    spawn, cmd, listening, error_listening
+    IF (listening[0] EQ '') THEN BEGIN ;worked
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        text = '-> Output File Name: ' + OUTPUT_FILE_NAME
+        IDLsendToGeek_addLogBookText, Event, text
+;plot data
+        plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED   
+    ENDELSE
+ENDELSE
+;turn off hourglass
+widget_control,hourglass=0
+END
+
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_tof_data, Event, output_file_name
+output_file_name = './SANS_200.tof' ;REMOVE_ME
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+;retrieve infos
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+text = '-> Parsing ASCII file ... ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, text
+iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
+sData = iASCII->getData()
+;print, (*(*sDAta.data)[0].data)[1] ;remove_me
+DataArray = (*(*sData.data)[0].data)
+nbr_column = FIX((size(DataArray))(1) / 3)
+newDataArray = REFORM(DAtaArray,3,nbr_column)
+
+title = ''
+
+IPLOT, newDataArray[0,*], $
+  newDataArray[1,*],$
+  /DISABLE_SPLASH_SCREEN,$
+  TITLE = title,$
+  VIEW_TITLE = view_title,$
+  SYM_INDEX = 1,$
+  XTITLE = 'TOF (microSeconds)',$
+  YTITLE = 'Counts'
+
 END
 
 ;------------------------------------------------------------------------------
