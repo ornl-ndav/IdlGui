@@ -163,6 +163,7 @@ CASE Event.id OF
 ;- Browse Selection File ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
         browse_selection_file, Event ;_selection
+        update_tof_counts_selection_button, Event ;_gui
     END
     
 ;- Preview Selection File -----------------------------------------------------
@@ -231,12 +232,14 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
         RenewOutputFileName, Event
         SaveAsExclusionRoi, Event ;_exclusion
+        update_tof_counts_selection_button, Event ;_gui
     END
 
 ;- SAVE 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
         RenewOutputFileName, Event
         SaveExclusionFile, Event ;_exclusion
+        update_tof_counts_selection_button, Event ;_gui
     END
 
 ;- SAVE AS folder button

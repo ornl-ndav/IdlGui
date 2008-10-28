@@ -450,6 +450,7 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
                   listening[N_ELEMENTS(listening)-1] + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
+                my_package[i].found = 1
                 IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
                     IF (first_sub_packages_check EQ 1) THEN BEGIN
                         first_sub_packages_check = 0
