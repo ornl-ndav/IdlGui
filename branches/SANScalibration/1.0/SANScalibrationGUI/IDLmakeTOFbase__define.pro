@@ -32,6 +32,13 @@
 ;
 ;==============================================================================
 
+FUNCTION getOutputFileName, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_ascii_file_name')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 PRO putTOFbuttonValue, Event, uname, value
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=value
@@ -124,6 +131,21 @@ ENDIF
 END
 
 ;------------------------------------------------------------------------------
+PRO validate_ascii_plot, Event
+WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+path = (*sMainBase.global).tof_ascii_path
+name = (*sMainBase.global).tof_ascii_name
+output_file_name = path + name
+(*sMainBase.global).tof_ascii_file_name = output_file_name
+;run the driver to produce the ascii file
+run_driver, $
+  sMainBase.Event, $
+  TYPE = sMainBase.TYPE,$
+  OUTPUT_FILE_NAME = output_file_name
+cancel_tof_ascii_base, Event
+END
+
+;------------------------------------------------------------------------------
 PRO DefineMainBase_event, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
 wWidget =  Event.top            ;widget id
@@ -134,6 +156,12 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_file_path'): BEGIN
        pick_tof_ascii_path, Event ;_IDLmakeTOFbase
     END
+
+;widget_text (file name)
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_file_name'): BEGIN
+        name = getOutputFileName(Event)
+        (*sMainBase.global).tof_ascii_name = name
+    END    
 
 ;button to cancel base
     Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_cancel'): BEGIN
@@ -150,6 +178,11 @@ CASE Event.id OF
         name = FILE_BASENAME(sMainBase.ROIfile)
         IF (name EQ '') THEN name = 'N/A'
         putTextFieldValue, Event, 'tof_roi_file_name', name
+    END
+
+;Create ASCII and Visualize Data
+    Widget_Info(wWidget, FIND_BY_UNAME='tof_ascii_validate'): BEGIN
+        validate_ascii_plot, Event
     END
 
     ELSE:
@@ -241,6 +274,7 @@ wFileNameText = WIDGET_TEXT(wFileNameBase,$
                             XSIZE = sFileNameText.xsize,$
                             VALUE = sFileNameText.value,$
                             /EDITABLE,$
+                            /ALL_EVENTS,$
                             /ALIGN_LEFT)
 
 IF (sMainBase.type EQ 'selection') THEN BEGIN
@@ -313,7 +347,7 @@ ENDCASE
 ;design Main Base
 sMainBase = { global: GLOBAL,$
               output_file_name: FILE,$
-              Event: 0L,$
+              Event: event,$
               ROIfile: ROIfile,$
               type: type,$
               main_base_id: 0L,$
@@ -321,6 +355,7 @@ sMainBase = { global: GLOBAL,$
               title:    title}
 
 (*sMainBase.global).tof_ascii_type = TYPE
+(*sMainBase.global).tof_ascii_name = FILE
 
 ;Design Main Base
 DefineMainBase, sMainBase, wBase

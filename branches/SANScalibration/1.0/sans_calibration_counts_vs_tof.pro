@@ -56,13 +56,32 @@ END
 
 ;------------------------------------------------------------------------------
 ;run the driver
-PRO run_driver, Event, cmd, FullOutputfileName, TYPE=type
+PRO run_driver, Event, $
+                TYPE = type, $
+                OUTPUT_FILE_NAME = output_file_name
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;get parameters
 nexus_file_name = (*global).data_nexus_file_name
 tof_slicer_cmd  = (*global).tof_slicer
-;build the command line
+
+;build cmd
+cmd  = tof_slicer_cmd
+cmd += ' ' + nexus_file_name
+CASE (TYPE) OF
+    'monitor'  : BEGIN
+        cmd += ' ' + (*global).tof_monitor_flag
+        cmd += '=' + (*global).tof_monitor_path
+    END
+    'selection': BEGIN
+        cmd += ' ' + (*global).tof_roi_flag    
+        ROIfile = getROIfileName(Event)
+        cmd += '=' + ROIfile
+    END
+ELSE:
+ENDCASE
+cmd += ' -o ' + OUTPUT_FILE_NAME
+print, cmd ;remove_me
 END
 
 ;------------------------------------------------------------------------------
@@ -72,8 +91,6 @@ PRO launch_counts_vs_tof_full_detector_button, Event
 FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='all')
 ;Create the tof base
 launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='all'
-;run the driver
-run_driver, Event, FullOutputfileName, TYPE='all'
 END
 
 ;------------------------------------------------------------------------------
@@ -86,8 +103,6 @@ ROIfile = getROIfileName(Event)
 launch_counts_vs_tof, Event, FullOutputFileName, $
   ROIfile=ROIfile, $
   TYPE='selection'
-;run the driver
-run_driver, Event, FullOutputfileName, TYPE='selection'
 END
 
 ;------------------------------------------------------------------------------
@@ -96,8 +111,6 @@ PRO launch_counts_vs_tof_monitor_button, Event
 FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='monitor')
 ;Create the tof base
 launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='monitor'
-;run the driver
-run_driver, Event, FullOutputfileName, TYPE='monitor'
 END
 
 ;------------------------------------------------------------------------------
