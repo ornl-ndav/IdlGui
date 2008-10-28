@@ -119,7 +119,6 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_counts_vs_tof_data, Event, output_file_name
-output_file_name = './SANS_200.tof' ;REMOVE_ME
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;retrieve infos
