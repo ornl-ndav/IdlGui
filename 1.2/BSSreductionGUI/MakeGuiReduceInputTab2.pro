@@ -176,7 +176,8 @@ ListOfRuns = WIDGET_TEXT(tab2_base,$
                          SCR_XSIZE = AIGListOfRuns.size[2],$
                          /ALIGN_LEFT,$
                          /EDITABLE,$
-                         UNAME     = AIGListOfRuns.uname)
+                         UNAME     = AIGListOfRuns.uname,$
+                         /ALL_EVENTS)
                         
 frame = WIDGET_LABEL(tab2_base,$
                      XOFFSET   = AIGframe.size[0],$

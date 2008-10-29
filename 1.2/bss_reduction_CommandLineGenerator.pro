@@ -128,15 +128,44 @@ ENDIF ELSE BEGIN
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab1
+    ++tab2
 ENDELSE
 
 ;get Alternate Instrument Geometry
-AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
-(*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
-IF (AIGFile NE '') THEN BEGIN
-    cmd += ' --inst-geom=' + AIGFile
-ENDIF
+IF ((*global).lds_mode) THEN BEGIN ;mandatory for LDS nexus files
+    cmd += ' --inst-geom='
+    AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
+    (*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
+    IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
+        AIGFile = '?'
+        IF (tab2 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        status_text = '   -Please provide a Valid Alternate Instrument' + $
+          ' Geometry'
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab2
+    ENDIF
+    cmd += AIGFile
+ENDIF ELSE BEGIN
+    AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
+    IF (AIGFile NE '') THEN BEGIN
+        cmd += ' --inst-geom='
+        IF (FILE_TEST(AIGFile) EQ 0) THEN AIGFile = '?'
+        IF (tab2 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        status_text = '   -Please provide a Valid Alternate Instrument' + $
+          ' Geometry'
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab2
+        cmd += AIGFIle 
+    ENDIF
+ENDELSE
 
 ;get Output File Name and folder
 OFile = getTextFieldValue(Event,'of_list_of_runs_text')
