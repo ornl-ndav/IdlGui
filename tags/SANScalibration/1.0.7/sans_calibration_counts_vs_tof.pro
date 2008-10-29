@@ -119,7 +119,6 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_counts_vs_tof_data, Event, output_file_name
-output_file_name = './SANS_200.tof' ;REMOVE_ME
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;retrieve infos
@@ -131,7 +130,6 @@ text = '-> Parsing ASCII file ... ' + PROCESSING
 IDLsendToGeek_addLogBookText, Event, text
 iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
 sData = iASCII->getData()
-;print, (*(*sDAta.data)[0].data)[1] ;remove_me
 DataArray = (*(*sData.data)[0].data)
 nbr_column = FIX((size(DataArray))(1) / 3)
 newDataArray = REFORM(DAtaArray,3,nbr_column)
