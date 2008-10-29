@@ -64,7 +64,7 @@ ENDIF ELSE BEGIN
         putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
         putTextFieldValue, Event, 'nexus_full_path_label', $
           ' No Live NeXus File Found !!!', 0
-    ENDIF ELSE BEGIN
+    ENDIF ELSE BEGIN ;file found
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
         ;first thing is to move that file to /SNS/BSS/shared/
         cmd_copy = 'cp ' + listening + ' /SNS/BSS/shared/'
@@ -73,18 +73,18 @@ ENDIF ELSE BEGIN
         AppendLogBookMessage, Event, cmd_copy_text
         copy_error = 0
         CATCH, copy_error
-        IF (copy_error NE 0) THEN BEGIN
+        IF (copy_error NE 0) THEN BEGIN ;loading failed
             CATCH,/CANCEL
             putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
             putTextFieldValue, Event, 'nexus_full_path_label', $
               ' Loading of Live NeXus Failed !!!', 0
-        ENDIF ELSE BEGIN
+        ENDIF ELSE BEGIN ;loading worked
             spawn, cmd_copy, listening1, err_listening1
-            IF (err_listening1[0] NE '') THEN BEGIN
+            IF (err_listening1[0] NE '') THEN BEGIN ;copy failed
                 putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
                 putTextFieldValue, Event, 'nexus_full_path_label', $
                   ' Loading of Live NeXus Failed !!!', 0
-            ENDIF ELSE BEGIN
+            ENDIF ELSE BEGIN ;copy worked
                 putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
                 ;new long file name
                 ArraySplit    = STRSPLIT(listening,'/',/EXTRACT)

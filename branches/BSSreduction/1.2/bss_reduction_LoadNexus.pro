@@ -51,9 +51,7 @@ fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
 
 END
 
-
-
-
+;------------------------------------------------------------------------------
 PRO bss_reduction_LoadNexus, Event, config
 
 ;indicate initialization with hourglass icon
@@ -147,7 +145,6 @@ WIDGET_CONTROL,HOURGLASS=0
 END
 
 ;------------------------------------------------------------------------------
-
 PRO load_live_nexus, Event, full_nexus_file_name
 
 ;get global structure
@@ -191,7 +188,6 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-
 PRO load_live_nexus_step2, Event, NexusFullName
 
 ;get global structure
@@ -274,6 +270,8 @@ ENDIF ELSE BEGIN
 
 ;define default output file name
     define_default_output_file_name, Event, TYPE='live' ;_eventcb
+
+    (*global).lds_mode = 1
 
 ENDELSE
 
