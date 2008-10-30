@@ -64,13 +64,20 @@ DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                      uname : 'output_file_data_text'}
                         
 ;get plot button -------------------------------------------------------------
-XYoff = [100,30]
-sPlotButton = { size: [DataText.size[0]+$
-                       DataText.size[2]+$
-                       XYoff[0],$
-                       DataText.size[1]+$
+XYoff = [120,30]
+sPlotButtonBase = { size: [DataText.size[0]+$
+                           DataText.size[2]+$
+                           XYoff[0],$
+                           DataText.size[1]+$
+                           XYoff[1],$
+                           400,$
+                           400],$
+                    uname: 'output_plot_data_base',$
+                    map: 0}
+XYoff = [0,0]
+sPlotButton = { size: [XYoff[0],$
                        XYoff[1]],$
-                value: 'images/bss_reduction_plot_data.bmp',$
+                value: 'BSSreduction_images/bss_reduction_plot_data.bmp',$
                 uname: 'output_plot_data',$
                 sensitive: 1}
 
@@ -122,7 +129,15 @@ Data = WIDGET_TEXT(OutputBase,$
                      UNAME     = DataText.uname)
 
 ;get plot button -------------------------------------------------------------
-wPlotButton = WIDGET_BUTTON(OutputBase,$
+wPlotBase = WIDGET_BASE(OutputBase,$
+                        XOFFSET   = sPlotButtonBase.size[0],$
+                        YOFFSET   = sPlotButtonBase.size[1],$
+                        SCR_XSIZE = sPlotButtonBase.size[2],$
+                        SCR_YSIZE = sPlotButtonBase.size[3],$
+                        UNAME     = sPlotButtonBase.uname,$
+                        MAP       = sPlotButtonBase.map)
+
+wPlotButton = WIDGET_BUTTON(wPlotBase,$
                             XOFFSET   = sPlotButton.size[0],$
                             YOFFSET   = sPlotButton.size[1],$
                             VALUE     = sPlotButton.value,$
