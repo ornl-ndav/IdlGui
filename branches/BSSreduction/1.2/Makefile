@@ -10,5 +10,5 @@ all:
 install:
 	cp bss_reduction_sqe.sav /SNS/software/idltools/sav/
 	cp BSSreduction_sqe /SNS/software/idltools/
-	cp images/*.bmp /SNS/software/idltools/sav/images/
+	cp BSSreduction_images/*.bmp /SNS/software/idltools/sav/BSSreduction_images/
 
