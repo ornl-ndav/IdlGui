@@ -76,16 +76,13 @@ nbrFile = (*global).NbrFilesLoaded
 idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
   STRCOMPRESS(nbrFile,/REMOVE_ALL)
 
+IF (isBatchFileLoaded(Event)) THEN BEGIN
 ;Get BatchTable
-BatchTable = (*(*global).BatchTable)
-print, 'in Step3AutomaticRescaling(step3)' ;remove_me
-print, BatchTable ;remove_me
-help, BatchTable ;remove_me
-print ;remove_me
-
+    BatchTable = (*(*global).BatchTable)
+ENDIF
 
 no_error = 0
-CATCH, no_error
+;CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
 
     CATCH,/CANCEL
@@ -94,7 +91,7 @@ IF (no_error NE 0) THEN BEGIN
     text  = 'Switch to Manual Mode.         '
     title = 'Automatic Rescaling FAILED !'
     result = DIALOG_MESSAGE(text,/ERROR,TITLE=title)
-
+    
 ENDIF ELSE BEGIN
 
     FOR i=1,(nbrFile-1) DO BEGIN
@@ -191,10 +188,11 @@ ENDIF ELSE BEGIN
         idl_send_to_geek_addLogBookText, Event, '---> SF : ' + $
           STRCOMPRESS(SF,/REMOVE_ALL)
         
+        IF (isBatchFileLoaded(Event)) THEN BEGIN
 ;Update the SF value in the BatchTable
-        index_array = getIndexArrayOfActiveBatchRow(Event)
-        print, '(Step3AutomaticRescaling) index_array: ' + STRCOMPRESS(index_array) ;remove_me
-        BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
+            index_array = getIndexArrayOfActiveBatchRow(Event)
+            BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
+        ENDIF
         
 ;store the SF
         SF_array = (*(*global).SF_array)
@@ -216,11 +214,13 @@ ENDIF ELSE BEGIN
         
         (*global).flt1_rescale_ptr = flt1_rescale_ptr
         (*global).flt2_rescale_ptr = flt2_rescale_ptr
-     ENDFOR
-
+    ENDFOR
+    
+    IF (isBatchFileLoaded(Event)) THEN BEGIN
 ;update the batch table
-    (*(*global).BatchTable) = BatchTable
-    UpdateBatchTable, Event, BatchTable ;_batch
+        (*(*global).BatchTable) = BatchTable
+        UpdateBatchTable, Event, BatchTable ;_batch
+    ENDIF
     
     plot_loaded_file, Event, '2plots' ;_Plot
     idl_send_to_geek_showLastLineLogBook, Event
