@@ -108,7 +108,7 @@ ENDIF ELSE BEGIN
         text = '-> Output File Name: ' + OUTPUT_FILE_NAME
         IDLsendToGeek_addLogBookText, Event, text
 ;plot data
-        plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME
+        plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
     ENDIF ELSE BEGIN
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED   
     ENDELSE
