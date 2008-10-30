@@ -41,6 +41,23 @@ FileNameDroplist = { size  : [5,5,150,40],$
                      list  : [''],$
                      uname : 'output_file_name_droplist'}
 
+;name of file plotted ---------------------------------------------------------
+XYoff = [380,0]
+sNameOfFile = { size: [FileNameDroplist.size[0]+XYoff[0],$
+                       FileNameDroplist.size[1]+XYoff[1],$
+                       800],$
+                value: '   ',$
+                frame: 1,$
+                uname: 'output_plot_file_name'}
+XYoff = [0,0]
+sHiddenBase = { size: [sNameOfFile.size[0]+XYoff[0],$
+                       sNameOfFile.size[1]+XYoff[1],$
+                       sNameOfFile.size[2]+30,$
+                       40],$
+                uname: 'output_plot_file_hidden_base',$
+                map: 1}
+
+;header of file ---------------------------------------------------------------
 XYoff = [220,40]
 HeaderLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                               FileNameDroplist.size[1]+XYoff[1]],$
@@ -99,6 +116,23 @@ FileNameDroplist = WIDGET_DROPLIST(OutputBase,$
                                    YOFFSET = FileNameDroplist.size[1],$
                                    VALUE   = FileNameDroplist.list,$
                                    UNAME   = FileNameDroplist.uname)
+
+;name of file plotted ---------------------------------------------------------
+wHiddenBase = WIDGET_BASE(OutputBase,$
+                          XOFFSET   = sHiddenBase.size[0],$
+                          YOFFSET   = sHiddenBase.size[1],$
+                          SCR_XSIZE = sHiddenBase.size[2],$
+                          SCR_YSIZE = sHiddenBase.size[3],$
+                          UNAME     = sHiddenBase.uname,$
+                          MAP       = sHiddenBase.map)
+
+wNameOfFile = WIDGET_LABEL(OutputBase,$
+                           XOFFSET   = sNameOfFile.size[0],$
+                           YOFFSET   = sNameOfFile.size[1],$
+                           SCR_XSIZE = sNameOfFile.size[2],$
+                           VALUE     = sNameOfFile.value,$
+                           UNAME     = sNameOfFile.uname,$
+                           FRAME     = sNameOfFile.frame)
 
 label = WIDGET_LABEL(OutputBase,$
                      XOFFSET = HeaderLabel.size[0],$
