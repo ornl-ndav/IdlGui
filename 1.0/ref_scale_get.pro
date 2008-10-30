@@ -418,16 +418,18 @@ WIDGET_CONTROL,id,GET_UVALUE=global
 BatchTable = (*(*global).BatchTable)
 NbrRow = (size(BatchTable))(2)
 NbrIndex = 0
+IndexArray = [0]
 FOR i=0,(NbrRow-1) DO BEGIN
-    IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
-        IF (NbrIndex EQ 0) THEN BEGIN
-            IndexArray = [i]
-        ENDIF ELSE BEGIN
-            IndexArray = [IndexArray,i]
-        ENDELSE
-        NbrIndex++
-    ENDIF
+   IF (STRCOMPRESS(BatchTable[0,i],/REMOVE_ALL) EQ 'YES') THEN BEGIN
+      IF (NbrIndex EQ 0) THEN BEGIN
+         IndexArray = [i]
+      ENDIF ELSE BEGIN
+         IndexArray = [IndexArray,i]
+      ENDELSE
+      NbrIndex++
+   ENDIF 
 ENDFOR
+print, indexArray               ;remove_me
 RETURN, IndexArray
 END
 

@@ -57,7 +57,8 @@ PRO Step3AutomaticRescaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
-idl_send_to_geek_addLogBookText, Event, '> Automatic Rescaling :' 
+idl_send_to_geek_addLogBookTe
+xt, Event, '> Automatic Rescaling :' 
 
 flt0_rescale_ptr = (*global).flt0_rescale_ptr
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
@@ -182,6 +183,7 @@ ENDIF ELSE BEGIN
         
 ;Update the SF value in the BatchTable
         index_array = getIndexArrayOfActiveBatchRow(Event)
+        print, 'index_array: ' + STRCOMPRESS(index_array) ;remove_me
         BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
         
 ;store the SF
@@ -204,15 +206,16 @@ ENDIF ELSE BEGIN
         
         (*global).flt1_rescale_ptr = flt1_rescale_ptr
         (*global).flt2_rescale_ptr = flt2_rescale_ptr
-    ENDFOR
-ENDELSE
+     ENDFOR
 
 ;update the batch table
-(*(*global).BatchTable) = BatchTable
-UpdateBatchTable, Event, BatchTable ;_batch
-
-plot_loaded_file, Event, '2plots' ;_Plot
-idl_send_to_geek_showLastLineLogBook, Event
+    (*(*global).BatchTable) = BatchTable
+    UpdateBatchTable, Event, BatchTable ;_batch
+    
+    plot_loaded_file, Event, '2plots' ;_Plot
+    idl_send_to_geek_showLastLineLogBook, Event
+    
+ENDELSE
 
 END
 

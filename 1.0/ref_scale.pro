@@ -51,7 +51,7 @@ ENDELSE
 ;===========================
 APPLICATION   = 'REFscale' 
 VERSION       = '1.0.9'
-DEBUGGER      = 'no'
+DEBUGGER      = 'yes'
 ;===========================
 
 StrArray      = strsplit(VERSION,'.',/extract)
@@ -289,7 +289,7 @@ IF (DEBUGGER EQ 'yes') THEN BEGIN
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;output_file
 ;change default path of batch file
     (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
-    (*global).input_path       = '~/'   
+    (*global).input_path       = '~/SVN/IdlGui/branches/REFscale/1.0/'   
 ENDIF
 ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
 ;------------------------------------------------------------------------------
