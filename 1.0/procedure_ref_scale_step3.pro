@@ -41,12 +41,6 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;get the array of ACTIVE value ex: [0,1,3,4,5,6] if row 3 is inactive
 IndexArray = getIndexArrayOfActiveBatchRow(Event)
-print, 'in SaveNewSFstep3' ;remove_me
-print, 'SF: ' + STRCOMPRESS(SF) ;remove_me
-print, 'index: ' + strcompress(index) ;remove_me
-print, IndexArray ;remove_me
-help, IndexArray ;remove_me
-print ;remove_me
 ;get BatchTable
 BatchTable = (*(*global).BatchTable)
 BatchTable[7,IndexArray[index]] = STRCOMPRESS(SF,/REMOVE_ALL)
