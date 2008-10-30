@@ -96,7 +96,7 @@ IDLsendToGeek_addLogBookText, Event, cmd_text
 cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
 IDLsendToGeek_addLogBookText, Event, cmd_text1
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
@@ -155,6 +155,10 @@ PRO launch_counts_vs_tof_full_detector_button, Event
 FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='all')
 ;Create the tof base
 launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='all'
+
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global		
+
 END
 
 ;------------------------------------------------------------------------------

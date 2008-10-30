@@ -80,13 +80,6 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO validate_tof, Event
-WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
-(*sMainBase.global).tof_ascii_path_backup = $
-   (*sMainBase.global).tof_ascii_path
-END
-
-;------------------------------------------------------------------------------
 PRO determinePositionOfApplication, sMainBase, sBase
 
 ;size of MainBase
@@ -136,6 +129,9 @@ WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
 ;disable counts_vs_tof gui
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
 WIDGET_CONTROL, id, SENSITIVE=0
+
+(*sMainBase.global).tof_ascii_path_backup = $
+  (*sMainBase.global).tof_ascii_path
 
 path = (*sMainBase.global).tof_ascii_path
 name = (*sMainBase.global).tof_ascii_name
