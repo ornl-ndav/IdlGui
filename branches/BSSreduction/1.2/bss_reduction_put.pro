@@ -61,6 +61,13 @@ endelse
 END
 
 ;--------------------------------------------------------------
+;set the value of the specified uname with text
+PRO putTextFieldValue_from_MainBase, MainBase, uname, text
+TextFieldId = WIDGET_INFO(MainBase,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, TextFieldId, SET_VALUE=text
+END
+
+;--------------------------------------------------------------
 ;--------------------------------------------------------------
 
 PRO PutLogBookMessage, Event, Message
