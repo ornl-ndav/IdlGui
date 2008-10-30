@@ -34,8 +34,8 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-;=======================================
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.19'
 DeployedVersion    = 'yes'
@@ -54,11 +54,31 @@ DEBUGGING_VERSION  = 'yes'
 ;               7: 8) Output
 ;            2: Output
 ;            3: Log Book 
-sDEBUGGING = { tab: {main_tab: 2,$
-                     reduce_input_tab: 0}}
+sDEBUGGING = { tab: {main_tab: 0,$
+                     reduce_input_tab: 0},$
+               reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
+                                  value: $
+                                  '/SNS/BSS/2008_1_2_SCI/6/350/' + $
+                                  'NeXus/BSS_350.nxs'},$
+                        input2: { uname: 'proif_text',$
+                                  value: $
+                                  '/SNS/users/j35/BASIS_100_2008y_09m_' + $
+                                  '30d_14h_09mn_ROI.dat'},$
+                        input3: { uname: 'eha_min_text',$
+                                  value: '-200'},$
+                        input4: { uname: 'eha_max_text',$
+                                  value: '200'},$
+                        input5: { uname: 'eha_bin_text',$
+                                  value: '.4'},$
+                        input6: { uname: 'mtha_min_text',$
+                                  value: '0'},$
+                        input7: { uname: 'mtha_max_text',$
+                                  value: '2'},$
+                        input8: { uname: 'mtha_bin_text',$
+                                  value: '.1'}}}
 
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-;=======================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
 
 ;define initial global values - these could be input via external file or
 ;other means
@@ -426,6 +446,17 @@ IF (DEBUGGING_VERSION EQ 'yes' ) THEN BEGIN
 ;tab to show (pixel_range_selection/scaling_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_input_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.reduce_input_tab
+
+;refill gui with information
+    nbr = (size(sDebugging.reduce))(2)
+    index =  0
+    WHILE (index LT nbr) DO BEGIN
+        putTextFieldValue_from_MainBase, MAIN_BASE, $
+          sDebugging.reduce.(index).uname,$
+          sDebugging.reduce.(index).value
+        index++
+    ENDWHILE
+
 ENDIF
 ;??????????????????????????????????????????????????????????????????????????????
 
