@@ -82,8 +82,9 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
              
 ;;get nbr of files loaded and activate gui accordingly
 ;also, be sure that the step2 has been run with success
-             IF (getNbrOfFiles(Event) GT 1 AND $
-                 CheckStep2Status(Event)) THEN BEGIN ;enable step3
+;             IF (getNbrOfFiles(Event) GT 1 AND $
+;                 CheckStep2Status(Event)) THEN BEGIN ;enable step3
+             IF (getNbrOfFiles(Event) GT 1) THEN BEGIN
                  validate_status = 1
              ENDIF ELSE BEGIN
                  validate_status = 0
