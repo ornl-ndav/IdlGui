@@ -369,7 +369,7 @@ dRefreshBase = { size: [dLoadBatchButton.size[0]+$
                         970,$
                         35],$
                  frame: 0,$
-                 map:   0,$
+                 map:   1,$
                  uname: 'refresh_bash_base' }
 
 ;Refresh REFscale button
