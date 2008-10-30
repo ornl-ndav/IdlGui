@@ -429,7 +429,6 @@ FOR i=0,(NbrRow-1) DO BEGIN
       NbrIndex++
    ENDIF 
 ENDFOR
-print, indexArray               ;remove_me
 RETURN, IndexArray
 END
 
