@@ -1,8 +1,42 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO MakeGuiOutputTab, MAIN_TAB, MainTabSize, OutputBaseTitle
 
-;***********************************************************************************
+;******************************************************************************
 ;                             Define size arrays
-;***********************************************************************************
+;******************************************************************************
 FileNameDroplist = { size  : [5,5,150,40],$
                      list  : [''],$
                      uname : 'output_file_name_droplist'}
@@ -15,7 +49,7 @@ HeaderLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
 XYoff = [0,19]
 HeaderText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                               HeaderLabel.size[1]+XYoff[1],$
-                              550,100],$
+                              MainTabSize[2]-20,100],$
                      uname : 'output_file_header_text'}
                              
 XYoff = [230,110]
@@ -28,22 +62,21 @@ DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             DataLabel.size[1]+XYoff[1],$
                             550,500],$
                      uname : 'output_file_data_text'}
-                             
-XYoff = [570,40]
-draw           = { size  : [XYoff[0],$
-                            XYoff[1],$
-                            610,550],$
-                   uname : 'output_file_plot'}
+                        
+;get plot button -------------------------------------------------------------
+XYoff = [100,30]
+sPlotButton = { size: [DataText.size[0]+$
+                       DataText.size[2]+$
+                       XYoff[0],$
+                       DataText.size[1]+$
+                       XYoff[1]],$
+                value: 'images/bss_reduction_plot_data.bmp',$
+                uname: 'output_plot_data',$
+                sensitive: 1}
 
-FileNameLabel  = { Size  : [draw.size[0],$
-                            5,200,30],$
-                   uname : 'output_file_name',$
-                   value : ''}
-
-
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 OutputBase = WIDGET_BASE(MAIN_TAB,$
                          XOFFSET   = 0,$
                          YOFFSET   = 0,$
@@ -88,20 +121,14 @@ Data = WIDGET_TEXT(OutputBase,$
                      SCR_YSIZE = DataText.size[3],$
                      UNAME     = DataText.uname)
 
-label = WIDGET_LABEL(OutputBase,$
-                     XOFFSET   = FileNameLabel.size[0],$
-                     YOFFSET   = FileNameLabel.size[1],$
-                     SCR_XSIZE = FileNameLabel.size[2],$
-                     SCR_YSIZE = FileNameLabel.size[3],$
-                     UNAME     = FileNameLabel.uname,$
-                     VALUE     = FileNameLabel.value)
-
-draw = WIDGET_DRAW(OutputBase,$
-                   XOFFSET = draw.size[0],$
-                   YOFFSET = draw.size[1],$
-                   SCR_XSIZE = draw.size[2],$
-                   SCR_YSIZE = draw.size[3],$
-                   UNAME     = draw.uname)
+;get plot button -------------------------------------------------------------
+wPlotButton = WIDGET_BUTTON(OutputBase,$
+                            XOFFSET   = sPlotButton.size[0],$
+                            YOFFSET   = sPlotButton.size[1],$
+                            VALUE     = sPlotButton.value,$
+                            UNAME     = sPlotButton.uname,$
+                            SENSITIVE = sPlotButton.sensitive,$
+                            /BITMAP)
 
 
 
