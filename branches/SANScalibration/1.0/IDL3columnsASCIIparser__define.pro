@@ -277,10 +277,19 @@ pro populate_structure, all_data, MyStruct
     ENDIF else begin
       ;populate data_stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN
-        temp = strsplit(line, /PRESERVE_NULL, /extract)
-        bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
-        x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
-        y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
+          parse_error = 0
+          CATCH, parse_error
+          IF (parse_error NE 0) THEN BEGIN
+              CATCH,/CANCEL
+              bank = '?'
+              x    = '?'
+              y    = '?'
+          ENDIF ELSE BEGIN
+              temp = strsplit(line, /PRESERVE_NULL, /extract)
+              bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
+              x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
+              y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
+          ENDELSE
       endif
       
       ;populate the rest of MyStruct structure
@@ -338,14 +347,14 @@ FUNCTION IDL3columnsASCIIparser::getData
   
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
-    xaxis:             '', $
-    xaxis_units:       '',$
-    yaxis:             '', $
-    yaxis_units:       '',$
-    sigma_yaxis:       '',$
-    sigma_yaxis_units: '',$
-    Data:              ptr_new(0L)}
-    
+               xaxis:             '', $
+               xaxis_units:       '',$
+               yaxis:             '', $
+               yaxis_units:       '',$
+               sigma_yaxis:       '',$
+               sigma_yaxis_units: '',$
+               Data:              ptr_new(0L)}
+  
   ;Populate structure with general information (NbrArray, xaxis....etc)
   populate_structure, all_data, MyStruct
   
