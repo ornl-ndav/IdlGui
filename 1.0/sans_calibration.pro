@@ -40,7 +40,7 @@ CD, CURRENT = current_folder
 ;************************************************************************
 ;************************************************************************
 APPLICATION       = 'SANScalibration'
-VERSION           = '1.0.8'
+VERSION           = '1.0.9'
 DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no'  
 CHECKING_PACKAGES = 'yes'
