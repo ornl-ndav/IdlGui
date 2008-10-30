@@ -41,6 +41,12 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;get the array of ACTIVE value ex: [0,1,3,4,5,6] if row 3 is inactive
 IndexArray = getIndexArrayOfActiveBatchRow(Event)
+print, 'in SaveNewSFstep3' ;remove_me
+print, 'SF: ' + STRCOMPRESS(SF) ;remove_me
+print, 'index: ' + strcompress(index) ;remove_me
+print, IndexArray ;remove_me
+help, IndexArray ;remove_me
+print ;remove_me
 ;get BatchTable
 BatchTable = (*(*global).BatchTable)
 BatchTable[7,IndexArray[index]] = STRCOMPRESS(SF,/REMOVE_ALL)
@@ -57,8 +63,7 @@ PRO Step3AutomaticRescaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
-idl_send_to_geek_addLogBookTe
-xt, Event, '> Automatic Rescaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Automatic Rescaling :' 
 
 flt0_rescale_ptr = (*global).flt0_rescale_ptr
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
@@ -73,6 +78,11 @@ idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
 
 ;Get BatchTable
 BatchTable = (*(*global).BatchTable)
+print, 'in Step3AutomaticRescaling(step3)' ;remove_me
+print, BatchTable ;remove_me
+help, BatchTable ;remove_me
+print ;remove_me
+
 
 no_error = 0
 CATCH, no_error
@@ -183,7 +193,7 @@ ENDIF ELSE BEGIN
         
 ;Update the SF value in the BatchTable
         index_array = getIndexArrayOfActiveBatchRow(Event)
-        print, 'index_array: ' + STRCOMPRESS(index_array) ;remove_me
+        print, '(Step3AutomaticRescaling) index_array: ' + STRCOMPRESS(index_array) ;remove_me
         BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
         
 ;store the SF
@@ -338,8 +348,10 @@ endif
 
 SF = SF[0]
 
-;save new value of SF in BatchTable
-SaveNewSFstep3, Event, SF, index
+IF (isBatchFileLoaded(Event)) THEN BEGIN
+;save new value of SF in BatchTable only if there is a file there
+    SaveNewSFstep3, Event, SF, index
+ENDIF
 
 idl_send_to_geek_addLogBookText, Event, '-> SF : ' + $
   STRCOMPRESS(SF,/REMOVE_ALL)
