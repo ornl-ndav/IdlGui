@@ -163,6 +163,7 @@ ListOfLongFileName = STRARR(1)
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*(*global).metadata_CE_file)   = metadata_CE_file
 (*global).ucams                 = ucams
+(*(*global).BatchTable)         = STRARR(8,20)
 
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
@@ -286,7 +287,7 @@ IF (DEBUGGER EQ 'yes') THEN BEGIN
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab') 
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;batch
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;output_file
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
 ;change default path of batch file
     (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     (*global).input_path       = '~/SVN/IdlGui/branches/REFscale/1.0/'   
