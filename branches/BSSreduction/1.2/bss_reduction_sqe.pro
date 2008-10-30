@@ -54,16 +54,16 @@ DEBUGGING_VERSION  = 'yes'
 ;               7: 8) Output
 ;            2: Output
 ;            3: Log Book 
-sDEBUGGING = { tab: {main_tab: 0,$
+sDEBUGGING = { tab: {main_tab: 2,$
                      reduce_input_tab: 0},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
-                                  '/SNS/BSS/2008_1_2_SCI/6/350/' + $
-                                  'NeXus/BSS_350.nxs'},$
+                                  '/SNS/BSS/IPTS-493/7/638/' + $
+                                  'NeXus/BSS_638.nxs'},$
                         input2: { uname: 'proif_text',$
                                   value: $
-                                  '/SNS/users/j35/BASIS_100_2008y_09m_' + $
-                                  '30d_14h_09mn_ROI.dat'},$
+                                  '/SNS/users/j35/BASIS_350_2008y_10m_30d_'+$
+                                  '16h_43mn_ROI.dat'},$
                         input3: { uname: 'eha_min_text',$
                                   value: '-200'},$
                         input4: { uname: 'eha_max_text',$
