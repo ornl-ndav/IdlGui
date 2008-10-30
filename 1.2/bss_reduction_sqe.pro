@@ -39,7 +39,24 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.19'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
+
+;DEBUGGING (enter the tab you want to see)
+;(main_tab): 0: Selection
+;            1: Reduce (reduce_input_tab)
+;               0: 1) Input
+;               1: 2) Input
+;               2: 3) Setup
+;               3: 4) Time-Index. Back.
+;               4: 5) Lambda-Dep. Back.
+;               5: 6) Scaling Cst.
+;               6: 7) Data Control
+;               7: 8) Output
+;            2: Output
+;            3: Log Book 
+sDEBUGGING = { tab: {main_tab: 2,$
+                     reduce_input_tab: 0}}
+
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -401,13 +418,16 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
 id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
-IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-;default tabs shown
-    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 1 ;reduce
-    id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-    widget_control, id1, set_tab_current = 6
+;??????????????????????????????????????????????????????????????????????????????
+IF (DEBUGGING_VERSION EQ 'yes' ) THEN BEGIN
+;tab to show (main_tab)
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+;tab to show (pixel_range_selection/scaling_tab)
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_input_tab')    
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.reduce_input_tab
 ENDIF
+;??????????????????????????????????????????????????????????????????????????????
 
 ;give extra power to j35, 2zr, ele, z3i, eg9
 IF (ucams EQ 'j35' OR $
