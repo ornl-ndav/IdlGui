@@ -933,7 +933,7 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
-;Pixel Wavelength Spectra After Vanadium Normalization -------------------------
+;Pixel Wavelength Spectra After Vanadium Normalization ------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='pwsavn_button'): begin
         BSSreduction_Reduce_pwsavn_button, Event
         BSSreduction_CommandLineGenerator, Event
@@ -944,9 +944,14 @@ CASE Event.id OF
         BSSreduction_RunCommandLine, Event
     end    
 
-;Output File Tab
+;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
         BSSreduction_DisplayOutputFiles, Event
+    end    
+    
+;Plot data (cow button)
+    Widget_Info(wWidget, FIND_BY_UNAME='output_plot_data'): begin
+        PlotOutputData, Event ;_IntermediatePlots
     end    
     
 ;LOG_BOOK
@@ -954,14 +959,6 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin
         BSSreduction_LogBook, Event
     end
-
-;;REMOVE-ME REMOVE_ME REMOVE_ME REMOVE_ME
-  ;   Widget_Info(wWidget, FIND_BY_UNAME='temp_button'): begin
-;         print, 'in MainBaseEvent: ' + strcompress((*global).unit)
-;         readf, (*global).unit, answer
-;         print, 'answer: ' + answer
-;     end
-
 
     ELSE:
     

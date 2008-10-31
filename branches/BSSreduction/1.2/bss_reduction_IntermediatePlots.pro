@@ -125,18 +125,32 @@ ListOfOutputPlots.wolidsb_button  = wolidsb_status
 (*global).ListOfOutputPlots = ListOfOutputPlots
 
 NameOfOutputPlots = (*global).NameOfOutputPlots
-FinalOutputPlotsList = ['S(E)','sigma(E)']
+OutputPlotsExt    = (*global).OutputPlotsExt
+FinalOutputPlotsList = ['Sq(E)']
+print, '(*global).MainDRPlotsExt.sqe: ' + $
+  (*global).MainDRPlotsExt.sqe  ;remove_me
+output_file_name     = getIntermediateFileName(Event, $
+                                               (*global).MainDRPlotsExt.sqe)
+                                               
+print, output_file_name ;remove_me
+FullNameOutputPlots  = [output_file_name]
 
+;create droplist list and name of output files
 sz = N_TAGS(ListOfOutputPlots)
 FOR I=0,(sz-1) DO BEGIN
     IF (ListOfOutputPlots.(i) EQ 1) THEN BEGIN
         FinalOutputPlotsList = [FinalOutputPlotsList,NameOfOutputPlots.(i)]
+        output_file_name     = getIntermediateFileName(Event, $
+                                                       outputPlotsExt.(i))
+        FullNameOutputPlots  = [FullNameOutputPlots,output_file_name]
     ENDIF
 ENDFOR
 
 ;update droplist of output tab
 id = widget_info(event.top,find_by_uname='output_file_name_droplist')
 widget_control, id, set_value=FinalOutputPlotsList
+
+(*(*global).FullNameOutputPlots) = FullNameOutputPlots
 
 END
 
@@ -151,70 +165,107 @@ widget_control,id,get_uvalue=global
 ;get reduce status message
 DRstatusText = getTextFieldValue(Event, 'data_reduction_status_text')
 
-IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
-    
-;get selected file name
-    SelectedFileName = getOutputDroplistFileName(Event)
-    
-    print, 'selectedFileName: ' + SelectedFileName ;remove_me
+;DRstatusText = 'Data Reduction ... DONE' ;REMOVE_ME
 
-;create instance of the IDLoutputFile class
-    SelectedFile = obj_new('IDLoutputFile', Event, SelectedFileName)
-    
-;display name of file plotted
-    PutTextInTextField, Event, 'output_plot_file_name', $
-      SelectedFile->getFullFileName()
-    
-;display metadata
-    IF (SelectedFile->getErrorStatus() NE 1) THEN BEGIN
-        Metadata = SelectedFile->GetMetadata()
-        PutUncompressedTextInTextField, Event, $
-          'output_file_header_text', Metadata
-;create data array for display
-        X     = SelectedFile->GetX()
-        Y     = SelectedFile->GetY()
-        Error = SelectedFile->GetError()
-        sz    = (size(X))(2)
-        
-        if (sz GT 41) then begin
-            data = strarr(41)
-            FOR i=0,20 DO BEGIN
-                str = strcompress(X[i],/remove_all)
-                str += '  ' + strcompress(Y[i],/remove_all)
-                str += '  ' + strcompress(Error[i],/remove_all)
-                data[i]=str
-            ENDFOR
-            data[20] = '...'
-            FOR i=0,19 DO BEGIN
-                str = strcompress(X[sz-21+i],/remove_all)
-                str += '  ' + strcompress(Y[sz-21+i],/remove_all)
-                str += '  ' + strcompress(Error[sz-21+i],/remove_all)
-                data[i+21]=str
-            ENDFOR
-        endif else begin
-            data  = strarr(sz)
-            FOR i=0,(sz-1) DO BEGIN
-                str = strcompress(X[i],/remove_all)
-                str += '  ' + strcompress(Y[i],/remove_all)
-                str += '  ' + strcompress(Error[i],/remove_all)
-                data[i]=str
-            ENDFOR
-        ENDELSE
-        
-        PutUncompressedTextInTextField, Event, 'output_file_data_text', data
-        
-;plot data
-;BSSreduction_PlotIntermediateFile, Event, X, Y, Error
-        
+IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
+    read_error = 0
+    CATCH, read_error
+    IF (read_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        activate_plot_button_status = 0
     ENDIF ELSE BEGIN
+;get full name of output files
+        FullNameOutputPlots = (*(*global).FullNameOutputPlots)
         
-        PutUncompressedTextInTextField, Event, $
-          'output_file_header_text', 'FILE NOT FOUND'
-        PutUncompressedTextInTextField, Event, $
-          'output_file_data_text', 'FILE NOT FOUND'
+;get selected index
+        index_selected = getDropListSelectedIndex(Event, $
+                                                  'output_file_name_droplist')
+;get selected file name
+        SelectedFileName = FullNameOutputPlots[index_selected]
+        
+;        SelectedFileName = '~/BSS_638.txt' ;REMOVE_ME
+        
+;put name of file label file name
+        putTextinTextField, Event, 'output_plot_file_name', selectedFileName
+        
+;create instance of data file
+        iData = OBJ_NEW('IDL3columnsASCIIparser', SelectedFileName)
+        
+;get preview of file
+        preview = iData->getFullFile()
+        OBJ_DESTROY, iData
+        
+;put data in preview text_field
+        putTextFieldValue, Event, 'output_file_data_text', preview, 0
+
+        activate_plot_button_status = 1
         
     ENDELSE
     
-ENDIF                   ;end of if(DRstatusText EQ 'Data Reduction ...
+;activate or not plot button
+    activate_base, Event, 'output_plot_data_base', activate_plot_button_status
+
+ENDIF ;end of if(DRstatusText EQ 'Data Reduction ...
                                 ;ERROR! (-> Check Log Book)') 
+
+END
+
+;------------------------------------------------------------------------------
+PRO PlotOutputData, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+;get selected index
+index_selected = getDropListSelectedIndex(Event, $
+                                          'output_file_name_droplist')
+output_file_name = getTextFieldValue(Event,'output_plot_file_name')
+
+output_file_name = '~/BSS_638_data.mxl' ;REMOVE_ME
+index_selected = 1 ;REMOVE_ME
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+IF (index_selected EQ 0) THEN BEGIN ;.txt file
+    
+ENDIF ELSE BEGIN ;other cases
+
+    iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
+    sData = iASCII->getDataQuickly()
+    sAxis = iASCII->get1Daxis()
+    OBJ_DESTROY, iASCII 
+
+    nbr_row = DOUBLE(N_ELEMENTS(sData) / 3.)
+    
+    ;try to keep the number of row below 2000
+    IF (nbr_row GT 2000.) THEN BEGIN
+        new_nbr_row = 2000.
+        factor = FIX(double(nbr_row) / double(new_nbr_row))
+        i = 0.
+        new_sData = STRARR(3,new_nbr_row)
+        WHILE (i*factor LT nbr_row) DO BEGIN
+           new_sData[*,i] = sData[*,i*factor]
+           i++
+       ENDWHILE
+        sData = new_sData
+        nbr_row = new_nbr_row
+    ENDIF
+
+    newDataArray = REFORM(sData,3,nbr_row)
+
+    title = getDropListSelectedValue(Event, 'output_file_name_droplist')
+    
+    IPLOT, newDataArray[0,*], $
+      newDataArray[1,*],$
+      /DISABLE_SPLASH_SCREEN,$
+      TITLE = title,$
+      SYM_INDEX = 1,$
+      XTITLE = sAxis[0],$
+      YTITLE = sAxis[1]
+      VIEW_TITLE = title
+    
+ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+
 END

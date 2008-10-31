@@ -34,9 +34,9 @@
 
 PRO MakeGuiReduceInputTab8, ReduceInputTab, ReduceInputTabSettings
 
-;*******************************************************************************
+;******************************************************************************
 ;                           Define size arrays
-;*******************************************************************************
+;******************************************************************************
 
 ;//////////////////////////////
 ;Write all intermediate output/
@@ -128,8 +128,8 @@ WOCPSAMNbase = { size  : [WORMSbase.size[0], $
                           WORMSbase.size[1]+yoff, $
                           WORMSbase.size[2:3]],$
               button : { uname : 'wocpsamn_button',$
-                         list : [' Write Out Combined Pixel Spectrum After ' + $
-                                 'Monitor Normalization']}}
+                         list : [' Write Out Combined Pixel ' + $
+                                 'Spectrum After Monitor Normalization']}}
 
 NA_WOCPSAMNbase = { size : [WOCPSAMNbase.size[0]+5,$
                             WOCPSAMNbase.size[1]-5,$
@@ -192,7 +192,8 @@ WOLIDSBbase = { size  : [WHAbase.size[0], $
                         WHAbase.size[1]+yoff, $
                         WHAbase.size[2:3]],$
                 button : { uname : 'wolidsb_button',$
-                           list : [' Write Out Linearly Interpolated Direct' + $
+                           list : [' Write Out Linearly Interpolated ' + $
+                                   'Direct' + $
                                    ' Scattering Background Information ' + $
                                    'Summed' + $
                                    ' over all Pixels']}}
@@ -215,7 +216,7 @@ sPWSAVNbase = { size  : [wOLIDSBbase.size[0], $
                            list : [' Write Out Pixel Wavelength Spectra' + $
                                    ' after Vanadium Normalization ' + $
                                    '(WARNING: ' + $
-                                   'VERGY LARGE FILES AND SLOW)']}}
+                                   'VERGY LARGE FILE AND SLOW)']}}
 
 sNA_PWSAVNbase = { size : [sPWSAVNbase.size[0]+5,$
                            sPWSAVNbase.size[1]-5,$
@@ -224,9 +225,9 @@ sNA_PWSAVNbase = { size : [sPWSAVNbase.size[0]+5,$
                    ' Normalization - NOT AVAILABLE',$
                 uname : 'na_pwsavnbase'}
 
-;*******************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;*******************************************************************************
+;******************************************************************************
 tab7_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$

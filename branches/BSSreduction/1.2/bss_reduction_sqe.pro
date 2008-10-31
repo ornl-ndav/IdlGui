@@ -54,7 +54,7 @@ DEBUGGING_VERSION  = 'yes'
 ;               7: 8) Output
 ;            2: Output
 ;            3: Log Book 
-sDEBUGGING = { tab: {main_tab: 1,$
+sDEBUGGING = { tab: {main_tab: 2,$
                      reduce_input_tab: 0},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
@@ -64,7 +64,7 @@ sDEBUGGING = { tab: {main_tab: 1,$
                                   value: $
                                   '/SNS/users/j35/BASIS_350_2008y_10m_30d_'+$
                                   '16h_43mn_ROI.dat'},$
-                        input3: { uname: 'eha_min_text',$
+                        input3: { uname: 'eha_min_text',$ ;7)Data Control
                                   value: '-200'},$
                         input4: { uname: 'eha_max_text',$
                                   value: '200'},$
@@ -76,6 +76,8 @@ sDEBUGGING = { tab: {main_tab: 1,$
                                   value: '2'},$
                         input8: { uname: 'mtha_bin_text',$
                                   value: '.1'}}}
+                        
+                        
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;==============================================================================
@@ -99,171 +101,171 @@ global = ptr_new ({ $
                     default_output_path: '~/',$
                     negative_cosine_polar_array: STRARR(3),$
                     momentum_transfer_array:     STRARR(3),$
-                    DeployedVersion : DeployedVersion,$
-                    DriverName : 'amorphous_reduction_sqe',$
-                    DRstatusOK : 'Data Reduction ... DONE',$
-                    DRstatusFAILED : 'Data Reduction ... ERROR! ' + $
+                    DeployedVersion: DeployedVersion,$
+                    DriverName: 'amorphous_reduction_sqe',$
+                    DRstatusOK: 'Data Reduction ... DONE',$
+                    DRstatusFAILED: 'Data Reduction ... ERROR! ' + $
                     '(-> Check Log Book)',$
-                    unit : 0,$
-                    BSSreductionVersion : VERSION,$
-                    DR_xml_config_ext : '.rmd',$
-                    DR_xml_config_file : '',$
-                    ListOfOutputPlots : {woctib_button   : 0,$
-                                         wopws_button    : 0,$
-                                         womws_button    : 0,$
-                                         womes_button    : 0,$
-                                         worms_button    : 0,$
-                                         wocpsamn_button : 0,$
-                                         wolidsb_button  : 0},$
-                    NameOfOutputPlots : {woctib_button   : $
+                    unit: 0,$
+                    BSSreductionVersion: VERSION,$
+                    DR_xml_config_ext: '.rmd',$
+                    DR_xml_config_file: '',$
+                    ListOfOutputPlots: {woctib_button: 0,$
+                                         wopws_button: 0,$
+                                         womws_button: 0,$
+                                         womes_button: 0,$
+                                         worms_button: 0,$
+                                         wocpsamn_button: 0,$
+                                         wolidsb_button: 0},$
+                    NameOfOutputPlots: {woctib_button: $
                                          'Calculated Time-Independent' + $
                                          ' Background', $
-                                         wopws_button    : $
+                                         wopws_button: $
                                          'Pixel Wavelength Spectrum',$
-                                         womws_button    : $
-                                         'Monitor Wavelngth Spectrum',$
-                                         womes_button    : $
+                                         womws_button: $
+                                         'Monitor Wavelength Spectrum',$
+                                         womes_button: $
                                          'Monitor Efficiency Spectrum',$
-                                         worms_button    : $
+                                         worms_button: $
                                          'Rebinned Monitor Spectrum',$
-                                         wocpsamn_button : $
+                                         wocpsamn_button: $
                                          'Combined Pixel Spectrum' + $
                                          ' After Monitor Normalization',$
-                                         wopies_button   : $
+                                         wopies_button: $
                                          'Pixel Initial Energy Spectrum',$
-                                         wopets_button   : $
+                                         wopets_button: $
                                          'Pixel Energy Transfer Spectrum',$
-                                         wolidsb_button  : $
+                                         wolidsb_button: $
                                          'linearly Interpolated Direct' + $
                                          ' Scattering Back. Info. ' + $
                                          'Summed over all Pixels'},$
-                    OutputPlotsExt : {woctib   : '_data.tib',$
-                                      wopws    : '_data.pxl',$
-                                      womws    : '_data.mxl',$
-                                      womes    : '_data.mel',$
-                                      worms    : '_data.mrl',$
-                                      wocpsamn : '_data.pml',$
-                                      wopies   : '_data.ixl',$
-                                      wopets   : '_data.exl',$
-                                      wolidsb  : '_data.lin'},$
-                    MainDRPlotsExt : { etr  : '.etr',$
-                                       setr : '.setr'},$
-                    WidgetsToActivate : ptr_new(0L),$
-                    LoadingConfig : 1,$ ;will be 1 after loading config file
-                    DefaultConfigFileName : '~/.bss_reduction.cfg',$ 
-                    instrument : 'BSS',$
-                    nexus_path : '/SNS/BSS/',$
-                    nexus_geometry_path : '/SNS/BSS/2006_1_2_CAL/' + $
+                    OutputPlotsExt: {woctib: '_data.tib',$
+                                     wopws: '_data.pxl',$
+                                     womws: '_data.mxl',$
+                                     womes: '_data.mel',$
+                                     worms: '_data.mrl',$
+                                     wocpsamn: '_data.pml',$
+                                     wopies: '_data.ixl',$
+                                     wopets: '_data.exl',$
+                                     wolidsb: '_data.lin'},$
+                    MainDRPlotsExt: { sqe: '.txt'},$
+                    FullNameOutputPlots: ptr_new(0L),$
+                    WidgetsToActivate: ptr_new(0L),$
+                    LoadingConfig: 1,$ ;will be 1 after loading config file
+                    DefaultConfigFileName: '~/.bss_reduction.cfg',$ 
+                    instrument: 'BSS',$
+                    nexus_path: '/SNS/BSS/',$
+                    nexus_geometry_path: '/SNS/BSS/2006_1_2_CAL/' + $
                     'calibrations/',$
-                    nexus_ext : '.nxs',$
-                    nexus_full_path : $
+                    nexus_ext: '.nxs',$
+                    nexus_full_path: $
                     '/Users/j35/SVN/HistoTool/branches/' + $
                     'BSSreductionBranch/NeXus/BSS/BSS_246.nxs',$
-                    processing : 'PROCESSING',$
-                    PrevLinLogValue : 0,$ ;previously saved lin
+                    processing: 'PROCESSING',$
+                    PrevLinLogValue: 0,$ ;previously saved lin
                                 ;or log counts vs tof scale
-                    PrevFullLinLogValue : 0,$       ;previously saved
+                    PrevFullLinLogValue: 0,$       ;previously saved
                                 ;lin or log full counts vs tof scale
-                    full_counts_vs_tof_data : ptr_new(0L),$ ;counts vs
+                    full_counts_vs_tof_data: ptr_new(0L),$ ;counts vs
                                 ;tof of full selected pixels
-                    output_full_counts_vs_tof_legend : '#TOF(microS) ' + $
+                    output_full_counts_vs_tof_legend: '#TOF(microS) ' + $
                       'Counts errCounts',$
-                    CountsVsTofAsciiArray : ptr_new(0L),$
-                    PreviewCountsVsTofAsciiArray : ptr_new(0L),$   
-                      OutputMessageToAdd : '',$ ;message to add in
+                    CountsVsTofAsciiArray: ptr_new(0L),$
+                    PreviewCountsVsTofAsciiArray: ptr_new(0L),$   
+                      OutputMessageToAdd: '',$ ;message to add in
                                 ;output counts vs tof ascii file
-                    PrevExcludedSymbol : 0,$
-                    ColorSelectedPixel : 100,$
-                    ColorVerticalGrid : 85,$
-                    ColorHorizontalGrid : 85,$
-                    ColorExcludedPixels : 150,$
-                    LoadctMainPlot : 5,$
-                    DefaultColorVerticalGrid : 85,$
-                    DefaultColorHorizontalGrid : 85,$
-                    DefaultColorExcludedPixels : 150,$
-                    DefaultLoadctMainPlot : 5,$
-                    BSSselectionVersion : version,$ ;version of current program
-                    ucams : ucams,$ ;ucams of user
-                    previous_tab : 0,$ ;default tab is 0 (Selection big tab)
-                      previous_counts_vs_tof_tab : 0,$ ;default counts
+                    PrevExcludedSymbol: 0,$
+                    ColorSelectedPixel: 100,$
+                    ColorVerticalGrid: 85,$
+                    ColorHorizontalGrid: 85,$
+                    ColorExcludedPixels: 150,$
+                    LoadctMainPlot: 5,$
+                    DefaultColorVerticalGrid: 85,$
+                    DefaultColorHorizontalGrid: 85,$
+                    DefaultColorExcludedPixels: 150,$
+                    DefaultLoadctMainPlot: 5,$
+                    BSSselectionVersion: version,$ ;version of current program
+                    ucams: ucams,$ ;ucams of user
+                    previous_tab: 0,$ ;default tab is 0 (Selection big tab)
+                      previous_counts_vs_tof_tab: 0,$ ;default counts
                                 ;vs tof tab is 0
-                    RunNumber : 0L, $ ;NeXus run number
-                    NexusFullName : '',$ ;Full nexus file name
-                    roi_path : '~/',$ ;path where to save the ROI file
-                    SavedRoiFullFileName : '',$ ;full file name of ROI file
-                      counts_vs_tof_path : '~/local/',$ ;path where to
+                    RunNumber: 0L, $ ;NeXus run number
+                    NexusFullName: '',$ ;Full nexus file name
+                    roi_path: '~/',$ ;path where to save the ROI file
+                    SavedRoiFullFileName: '',$ ;full file name of ROI file
+                      counts_vs_tof_path: '~/local/',$ ;path where to
                                 ;save the counts vs tof ascii file
-                    roi_ext : '_ROI.dat' ,$ ;extension of ROI files
-                      counts_vs_tof_ext : '_IvsTOF.txt' ,$ ;extension of
+                    roi_ext: '_ROI.dat' ,$ ;extension of ROI files
+                      counts_vs_tof_ext: '_IvsTOF.txt' ,$ ;extension of
                                 ;ROI files
-                    roi_default_file_name : '',$ ;default roi file name
-                    ROI_error_status : 0,$ ;error status of the ROI process
-                    RoiPreviewArray : [0,10,50,100],$ ;roi array
-                    counts_vs_tof_x : 0L,$ ;x of actual counts vs tof plotted
-                    counts_vs_tof_y : 0L,$ ;y of actual counts vs tof plotted
-                      counts_vs_tof_bank : 0,$ ;bank of actual counts vs
+                    roi_default_file_name: '',$ ;default roi file name
+                    ROI_error_status: 0,$ ;error status of the ROI process
+                    RoiPreviewArray: [0,10,50,100],$ ;roi array
+                    counts_vs_tof_x: 0L,$ ;x of actual counts vs tof plotted
+                    counts_vs_tof_y: 0L,$ ;y of actual counts vs tof plotted
+                      counts_vs_tof_bank: 0,$ ;bank of actual counts vs
                                 ;tof plotted
-                    true_x_min : 0.0000001,$ ;tof min for counts vs tof
+                    true_x_min: 0.0000001,$ ;tof min for counts vs tof
                                 ;zoom plot
-                    true_x_max : 0.0000001,$ ;tof max for counts vs tof
+                    true_x_max: 0.0000001,$ ;tof max for counts vs tof
                                 ;zoom plot
-                    true_full_x_min : 0.0000001,$ ;tof min for full counts
+                    true_full_x_min: 0.0000001,$ ;tof min for full counts
                                 ;vs tof zoom plot
-                    tmp_true_full_x_min : 0.00000001, $
-                      true_full_x_max : 0.0000001,$ ;tof max for full counts
+                    tmp_true_full_x_min: 0.00000001, $
+                      true_full_x_max: 0.0000001,$ ;tof max for full counts
                                 ;vs tof zoom plot
-                    NbTOF : 0L,$ ;number of tof for counts vs tof plot
-                      NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus
+                    NbTOF: 0L,$ ;number of tof for counts vs tof plot
+                      NeXusFound: 0,$ ;0: nexus has not been found, 1 nexus
                                 ;has been found
-                    NeXusFormatWrong : 0,$ ;if we are trying to open using hdf4
-                    ok : 'OK',$
-                    failed : 'FAILED',$
+                    NeXusFormatWrong: 0,$ ;if we are trying to open using hdf4
+                    ok: 'OK',$
+                    failed: 'FAILED',$
                     bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
                     bank1_sum: ptr_new(0L),$ ;array of bank1 data (Nx, Ny)
                     bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
                     bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
-                    pixel_excluded : ptr_new(0L),$ ;list of pixel excluded 
-                    pixel_excluded_base : ptr_new(0L),$
+                    pixel_excluded: ptr_new(0L),$ ;list of pixel excluded 
+                    pixel_excluded_base: ptr_new(0L),$
  ;list of pixel excluded without counts removing
-                    default_pixel_excluded : ptr_new(0L),$
-                    pixel_excluded_size : 64*2*64L,$ ; total number of pixels
-                    TotalPixels : 8192L,$ ;Total number of pixels
-                    TotalRows   : 128L,$ ;total number of rows
-                    TotalTubes  : 128L,$ ;total number of tubes
-                      nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path
+                    default_pixel_excluded: ptr_new(0L),$
+                    pixel_excluded_size: 64*2*64L,$ ; total number of pixels
+                    TotalPixels: 8192L,$ ;Total number of pixels
+                    TotalRows: 128L,$ ;total number of rows
+                    TotalTubes: 128L,$ ;total number of tubes
+                      nexus_bank1_path: '/entry/bank1/data',$ ;nxdir path
                                 ;to bank1 data
-                    nexus_bank2_path : '/entry/bank2/data',$ ;nxdir path
+                    nexus_bank2_path: '/entry/bank2/data',$ ;nxdir path
                                 ;to bank2 data
-                    tof_path : '/entry/bank1/time_of_flight',$ ;nxdir path $
+                    tof_path: '/entry/bank1/time_of_flight',$ ;nxdir path $
                       ;to tof data
-                    Nx : 56,$
-                    Ny : 64,$
-                    Xfactor : 13,$ ;coefficient in X direction for rebining img
-                    Yfactor : 5,$ ; coefficient in Y direction for rebining img
-                      LogBookPath : '/SNS/users/LogBook/',$ ;path where
+                    Nx: 56,$
+                    Ny: 64,$
+                    Xfactor: 13,$ ;coefficient in X direction for rebining img
+                    Yfactor: 5,$ ; coefficient in Y direction for rebining img
+                      LogBookPath: '/SNS/users/LogBook/',$ ;path where
                                 ;to put the log book
-                    DefaultPath : '~/local/BSS/',$ ;default path where
+                    DefaultPath: '~/local/BSS/',$ ;default path where
                                 ;to look for the file
-                    DefaultFilter : '*.nxs',$ ;default filter for the
+                    DefaultFilter: '*.nxs',$ ;default filter for the
                                 ;nexus file
-                    Configuration : { Input : {nexus_run_number    : '',$
-                                               ColorVerticalGrid   : 85,$
-                                               ColorHorizontalGrid : 85,$
-                                               ColorExcludedPixels : 150,$
-                                               ColorSelectedPixel  : 100,$
-                                               loadct_droplist     : 5,$
-                                               excluded_pixel_type : 0},$
-                                      Reduce : $
-                                      {tab1 : { rsdf_list_of_runs_text: '',$
+                    Configuration: { Input: {nexus_run_number: '',$
+                                               ColorVerticalGrid: 85,$
+                                               ColorHorizontalGrid: 85,$
+                                               ColorExcludedPixels: 150,$
+                                               ColorSelectedPixel: 100,$
+                                               loadct_droplist: 5,$
+                                               excluded_pixel_type: 0},$
+                                      Reduce: $
+                                      {tab1: { rsdf_list_of_runs_text: '',$
                                                 rsdf_multiple_runs_button: 0,$
                                                 bdf_list_of_runs_text: '',$
                                                 ndf_list_of_runs_text: '',$
                                                 ecdf_list_of_runs_text: '',$
                                                 dsb_list_of_runs_text: ''},$
-                                       tab2 : { proif_text: '',$
+                                       tab2: { proif_text: '',$
                                                 aig_list_of_runs_text: '',$
                                                 of_list_of_runs_text: ''},$
-                                       tab3 : { rmcnf_button: 0,$
+                                       tab3: { rmcnf_button: 0,$
                                                 verbose_button: 0,$
                                                 absm_button: 0,$
                                                 nmn_button: 0,$
@@ -274,7 +276,7 @@ global = ptr_new ({ $
                                                 te_button: 0,$
                                                 te_low_field: '',$
                                                 te_high_field: ''},$
-                                       tab4 : { tib_tof_button: 0,$
+                                       tab4: { tib_tof_button: 0,$
                                                 tibtof_channel1_text: '',$
                                                 tibtof_channel2_text: '',$
                                                 tibtof_channel3_text: '',$
@@ -294,8 +296,8 @@ global = ptr_new ({ $
                                                 tibc_for_scatd_button : 0,$
                                                 tibc_for_scatd_value_text: '',$
                                                 tibc_for_scatd_error_text: ''},$
-                                       tab5 : {a:0},$
-                                       tab6 : { csbss_button: 0,$
+                                       tab5: {a:0},$
+                                       tab6: { csbss_button: 0,$
                                                 csbss_value_text: '',$
                                                 csbss_error_text: '',$
                                                 csn_button: 0,$
@@ -313,7 +315,7 @@ global = ptr_new ({ $
                                                 cn_button: 0,$
                                                 cn_value_text: '',$
                                                 cn_error_text: ''},$
-                                       tab7 : { tzsp_button: 0,$ ;Data Control
+                                       tab7: { tzsp_button: 0,$ ;Data Control
                                                 tzsp_value_text: '',$
                                                 tzsp_error_text: '',$
                                                 tzop_button: 0,$
@@ -331,7 +333,7 @@ global = ptr_new ({ $
                                                 tof_cutting_button: 0,$
                                                 tof_cutting_min_text: '',$
                                                 tof_cutting_max_text: ''},$
-                                       tab8 : { waio_button: 0,$
+                                       tab8: { waio_button: 0,$
                                                 woctib_button: 0,$
                                                 wopws_button: 0,$
                                                 womws_button: 0,$

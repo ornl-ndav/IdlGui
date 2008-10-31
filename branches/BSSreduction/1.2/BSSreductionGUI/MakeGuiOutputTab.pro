@@ -55,33 +55,22 @@ sHiddenBase = { size: [sNameOfFile.size[0]+XYoff[0],$
                        sNameOfFile.size[2]+30,$
                        40],$
                 uname: 'output_plot_file_hidden_base',$
-                map: 1}
+                map: 0}
 
-;header of file ---------------------------------------------------------------
-XYoff = [220,40]
-HeaderLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
-                              FileNameDroplist.size[1]+XYoff[1]],$
-                     value : 'H  E  A  D  E  R'}
-                              
-XYoff = [0,19]
-HeaderText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
-                              HeaderLabel.size[1]+XYoff[1],$
-                              MainTabSize[2]-20,100],$
-                     uname : 'output_file_header_text'}
-                             
-XYoff = [230,110]
+;Preview of file --------------------------------------------------------------
+XYoff = [235,35]
 DataLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
-                            HeaderText.size[1]+XYoff[1]],$
-                   value : 'D  A  T  A'}
+                            FileNameDroplist.size[1]+XYoff[1]],$
+                   value : 'P R E V I E W'}
                               
-XYoff = [0,19]
+XYoff = [10,19]
 DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             DataLabel.size[1]+XYoff[1],$
-                            550,500],$
+                            600,630],$
                      uname : 'output_file_data_text'}
                         
 ;get plot button -------------------------------------------------------------
-XYoff = [120,30]
+XYoff = [80,100]
 sPlotButtonBase = { size: [DataText.size[0]+$
                            DataText.size[2]+$
                            XYoff[0],$
@@ -90,7 +79,7 @@ sPlotButtonBase = { size: [DataText.size[0]+$
                            400,$
                            400],$
                     uname: 'output_plot_data_base',$
-                    map: 0}
+                    map: 1}
 XYoff = [0,0]
 sPlotButton = { size: [XYoff[0],$
                        XYoff[1]],$
@@ -134,20 +123,8 @@ wNameOfFile = WIDGET_LABEL(OutputBase,$
                            UNAME     = sNameOfFile.uname,$
                            FRAME     = sNameOfFile.frame)
 
-label = WIDGET_LABEL(OutputBase,$
-                     XOFFSET = HeaderLabel.size[0],$
-                     YOFFSET = HeaderLabel.size[1],$
-                     VALUE   = HeaderLabel.value)
 
-Header = WIDGET_TEXT(OutputBase,$
-                     /WRAP,$
-                     /SCROLL,$
-                     XOFFSET = HeaderText.size[0],$
-                     YOFFSET = HeaderText.size[1],$
-                     SCR_XSIZE = HeaderText.size[2],$
-                     SCR_YSIZE = HeaderText.size[3],$
-                     UNAME     = HeaderText.uname)
-
+;Preview of file --------------------------------------------------------------
 label = WIDGET_LABEL(OutputBase,$
                      XOFFSET = DataLabel.size[0],$
                      YOFFSET = DataLabel.size[1],$
