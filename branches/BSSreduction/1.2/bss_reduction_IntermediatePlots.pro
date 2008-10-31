@@ -169,7 +169,7 @@ DRstatusText = getTextFieldValue(Event, 'data_reduction_status_text')
 
 IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
     read_error = 0
-    CATCH, read_error
+    ;CATCH, read_error
     IF (read_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         activate_plot_button_status = 0
@@ -219,8 +219,8 @@ index_selected = getDropListSelectedIndex(Event, $
                                           'output_file_name_droplist')
 output_file_name = getTextFieldValue(Event,'output_plot_file_name')
 
-output_file_name = '~/BSS_638_data.mxl' ;REMOVE_ME
-index_selected = 1 ;REMOVE_ME
+;output_file_name = '~/BSS_638_data.mxl' ;REMOVE_ME
+;index_selected = 1 ;REMOVE_ME
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
