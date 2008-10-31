@@ -156,11 +156,13 @@ IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
 ;get selected file name
     SelectedFileName = getOutputDroplistFileName(Event)
     
+    print, 'selectedFileName: ' + SelectedFileName ;remove_me
+
 ;create instance of the IDLoutputFile class
     SelectedFile = obj_new('IDLoutputFile', Event, SelectedFileName)
     
 ;display name of file plotted
-    PutTextInTextField, Event, 'output_file_name', $
+    PutTextInTextField, Event, 'output_plot_file_name', $
       SelectedFile->getFullFileName()
     
 ;display metadata

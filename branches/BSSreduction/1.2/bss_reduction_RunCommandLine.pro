@@ -1,17 +1,50 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO BSSreduction_RunCommandLine, Event
 
 activate_button, event, 'submit_button', 0
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+widget_control,Event.top,get_uvalue=global
 
 PROCESSING = (*global).processing
 
 ;get command line to generate
 cmd = getTextFieldValue(Event,'command_line_generator_text')
-;;add called to SLURM
 
+;add called to SLURM
 ;check instrument here
 spawn, 'hostname',listening
 CASE (listening) OF
@@ -36,14 +69,9 @@ putDRstatusInfo, Event, status_text
 widget_control,/hourglass
 
 spawn, cmd, listening, err_listening
-;spawn, cmd, unit=unit
-;(*global).unit = unit
-;print, 'unit is: ' + strcompress(unit)
-;err_listening = '' ;remove_me
-
 IF (err_listening[0] NE '') THEN BEGIN
     
-    MessageToAdd = (*global).FAILED
+    MessageToAdd    = (*global).FAILED
     MessageToRemove = PROCESSING
     putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
 
@@ -73,7 +101,7 @@ ENDIF ELSE BEGIN
     LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
     AppendLogBookMessage, Event, LogBookText
     
-                                ;display xml config file
+;display xml config file
     xmlConfigFile = getXmlConfigFileName(Event)
     LogBookText = '  XML data reduction config file: ' + $
       strcompress(xmlConfigFile,/remove_all)

@@ -357,15 +357,14 @@ RunNumber = FourthSplit[0]
 return, RunNumber
 end
 
-
-
-
+;------------------------------------------------------------------------------
 FUNCTION getXmlConfigFileName, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 output_file_name = getTextFieldValue(Event, 'of_list_of_runs_text')
+output_file_path = getButtonValue(Event, 'output_folder_name')
+
 IF (output_file_name EQ '') THEN BEGIN
 
 ;get run number used by Data Reduction
@@ -374,45 +373,21 @@ IF (output_file_name EQ '') THEN BEGIN
     output_file_name += (*global).DR_xml_config_ext
 
 ;get path
-    cd, CURRENT=current_path
+    current_path     = output_file_path
     output_file_name = current_path + '/' + output_file_name
-
-ENDIF ELSE BEGIN
     
-;get path (if any)
-    pathArray = strsplit(output_file_name,'/',/extract)
-    sz = (size(pathArray))(1)
-    if (sz GT 1) then begin     ;a path has been given
-        
-;if left part is '~' or '/' do not do anything
-        IF (pathArray[0] EQ '~' OR $
-            strmatch(output_file_name,'/*')) THEN BEGIN ;nothing to do here
-            
-        endif else begin
+ENDIF ELSE BEGIN
 
-;get current path
-            cd, CURRENT=current_path
-            output_file_name = current_path + '/' + output_file_name
-            
-        endelse
-        
-    endif else begin            ;just a file name
-        
-;get current path
-        cd, CURRENT=current_path
-        output_file_name = current_path + '/' + output_file_name
-        
-    endelse
-
-;remove '.' if any and put (*global).DR_xml_config_ext
-dotArray = strsplit(output_file_name,'.',/extract)
-output_file_name = dotArray[0]+ (*global).DR_xml_config_ext
+    dotArray = STRSPLIT(output_file_name,'.',/EXTRACT,COUNT=nbr)
+    output_file_name = dotArray[0]+ (*global).DR_xml_config_ext
+    output_file_name = output_file_path + output_file_name
     
 ENDELSE
 
 RETURN, output_file_name
 END
 
+;------------------------------------------------------------------------------
 ;these two functions are use by the Output tab
 FUNCTION getOutputFileNameSelectedIndex, Event
 id = widget_info(Event.top, find_by_uname = 'output_file_name_droplist')
