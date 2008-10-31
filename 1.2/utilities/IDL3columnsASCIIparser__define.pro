@@ -362,6 +362,11 @@ FUNCTION IDL3columnsASCIIparser::getData
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION IDL3columnsASCIIparser::getFullFile
+RETURN, READ_DATA(self.path,2)
+END
+
+;------------------------------------------------------------------------------
 ;this function returns a triplet [x_axis, y_axis, y_error_axis]
 FUNCTION IDL3columnsASCIIParser::get1Daxis
 data = READ_DATA(self.path,2)
