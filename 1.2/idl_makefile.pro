@@ -2,10 +2,14 @@
 spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = "/utilities/"
 
+;to compile all the iTools procedures
+itResolve
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
+.run IDL3columnsASCIIparser__define.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
@@ -84,3 +88,6 @@ cd, CurrentFolder
 .run MainBaseEvent.pro
 .run bss_reduction_sqe_eventcb.pro
 .run bss_reduction_sqe.pro
+
+
+

@@ -53,6 +53,23 @@ widget_control, id, get_value=text
 RETURN, text
 END
 
+;------------------------------------------------------------------------------
+;this function gives the droplist index
+FUNCTION getDropListSelectedIndex, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
+END
+
+;------------------------------------------------------------------------------
+;This function gives the value of the index selected
+FUNCTION getDropListSelectedValue, Event, uname
+index_selected = getDropListSelectedIndex(Event,uname)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=list
+return, list[index_selected]
+END
+
+;------------------------------------------------------------------------------
 
 ;This function returns the contain of the nexus run number
 FUNCTION getRunNumber, Event
@@ -380,6 +397,33 @@ ENDIF ELSE BEGIN
 
     dotArray = STRSPLIT(output_file_name,'.',/EXTRACT,COUNT=nbr)
     output_file_name = dotArray[0]+ (*global).DR_xml_config_ext
+    output_file_name = output_file_path + output_file_name
+    
+ENDELSE
+
+RETURN, output_file_name
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getIntermediateFileName, Event, ext
+output_file_name = getTextFieldValue(Event, 'of_list_of_runs_text')
+output_file_path = getButtonValue(Event, 'output_folder_name')
+
+IF (output_file_name EQ '') THEN BEGIN
+
+;get run number used by Data Reduction
+    run_number = getDRrunNumber(Event)
+    output_file_name = 'BSS_' + strcompress(run_number,/remove_all)
+    output_file_name += ext
+
+;get path
+    current_path     = output_file_path
+    output_file_name = current_path + output_file_name
+    
+ENDIF ELSE BEGIN
+
+    dotArray = STRSPLIT(output_file_name,'.',/EXTRACT,COUNT=nbr)
+    output_file_name = dotArray[0]+ ext
     output_file_name = output_file_path + output_file_name
     
 ENDELSE

@@ -53,9 +53,7 @@ IF ((*global).NeXusFound) THEN BEGIN
 ENDIF
 END
 
-
-
-
+;------------------------------------------------------------------------------
 PRO BSSreduction_TabRefresh, Event
 
 ;get global structure
@@ -77,6 +75,7 @@ IF (current_tab NE prev_tab) THEN BEGIN
             BSSreduction_CommandLineGenerator, Event
         END
         2: BEGIN ;output_tab
+
             BSSreduction_DisplayOutputFiles, Event 
 ;in bss_reduction_DisplayOutputFiles
         END
