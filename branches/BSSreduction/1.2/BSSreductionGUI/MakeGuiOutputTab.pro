@@ -42,7 +42,7 @@ FileNameDroplist = { size  : [5,5,150,40],$
                      uname : 'output_file_name_droplist'}
 
 ;name of file plotted ---------------------------------------------------------
-XYoff = [380,0]
+XYoff = [380,10]
 sNameOfFile = { size: [FileNameDroplist.size[0]+XYoff[0],$
                        FileNameDroplist.size[1]+XYoff[1],$
                        800],$

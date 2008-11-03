@@ -219,51 +219,71 @@ index_selected = getDropListSelectedIndex(Event, $
                                           'output_file_name_droplist')
 output_file_name = getTextFieldValue(Event,'output_plot_file_name')
 
-;output_file_name = '~/BSS_638_data.mxl' ;REMOVE_ME
-;index_selected = 1 ;REMOVE_ME
+output_file_name = '~/BSS_638.txt' ;REMOVE_ME
+index_selected   = 0 ;REMOVE_ME
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
-IF (index_selected EQ 0) THEN BEGIN ;.txt file
-    
-ENDIF ELSE BEGIN ;other cases
+plot_error = 0
+;CATCH, plot_error
+IF (plot_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    IF (index_selected EQ 0) THEN BEGIN ;.txt file
+        
+        
+        iASCII = OBJ_NEW('IDL3columnsASCIIparser', $
+                         output_file_name,$
+                         TYPE = 'Sq(E)')
+        sData = iASCII->getDataQuickly(ERange,QRange)
+        OBJ_DESTROY, iASCII
+        fData = getValueOnly(sData) ;_get
+        print, ERange
+        print, QRange
+        
+        
+        
+        
+    ENDIF ELSE BEGIN            ;other cases
+        
+        iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
+        sData = iASCII->getDataQuickly()
+        sAxis = iASCII->get1Daxis()
+        OBJ_DESTROY, iASCII 
+        
+        nbr_row = DOUBLE(N_ELEMENTS(sData) / 3.)
+        
+                                ;try to keep the number of row below 2000
+        IF (nbr_row GT 2000.) THEN BEGIN
+            new_nbr_row = 2000.
+            factor = FIX(double(nbr_row) / double(new_nbr_row))
+            i = 0.
+            new_sData = STRARR(3,new_nbr_row)
+            WHILE (i*factor LT nbr_row) DO BEGIN
+                new_sData[*,i] = sData[*,i*factor]
+                i++
+            ENDWHILE
+            sData = new_sData
+            nbr_row = new_nbr_row
+        ENDIF
+        
+        newDataArray = REFORM(sData,3,nbr_row)
+        
+        title = getDropListSelectedValue(Event, 'output_file_name_droplist')
+        
+        IPLOT, newDataArray[0,*], $
+          newDataArray[1,*],$
+          /DISABLE_SPLASH_SCREEN,$
+          TITLE = title,$
+          SYM_INDEX = 1,$
+          XTITLE = sAxis[0],$
+          YTITLE = sAxis[1]
+        VIEW_TITLE = title
+        
+    ENDELSE
 
-    iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
-    sData = iASCII->getDataQuickly()
-    sAxis = iASCII->get1Daxis()
-    OBJ_DESTROY, iASCII 
-
-    nbr_row = DOUBLE(N_ELEMENTS(sData) / 3.)
-    
-    ;try to keep the number of row below 2000
-    IF (nbr_row GT 2000.) THEN BEGIN
-        new_nbr_row = 2000.
-        factor = FIX(double(nbr_row) / double(new_nbr_row))
-        i = 0.
-        new_sData = STRARR(3,new_nbr_row)
-        WHILE (i*factor LT nbr_row) DO BEGIN
-           new_sData[*,i] = sData[*,i*factor]
-           i++
-       ENDWHILE
-        sData = new_sData
-        nbr_row = new_nbr_row
-    ENDIF
-
-    newDataArray = REFORM(sData,3,nbr_row)
-
-    title = getDropListSelectedValue(Event, 'output_file_name_droplist')
-    
-    IPLOT, newDataArray[0,*], $
-      newDataArray[1,*],$
-      /DISABLE_SPLASH_SCREEN,$
-      TITLE = title,$
-      SYM_INDEX = 1,$
-      XTITLE = sAxis[0],$
-      YTITLE = sAxis[1]
-      VIEW_TITLE = title
-    
-ENDELSE
+ENDELSE ;end of CATCH statement
 
 ;turn off hourglass
 widget_control,hourglass=0

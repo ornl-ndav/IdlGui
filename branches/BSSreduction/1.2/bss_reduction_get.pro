@@ -455,3 +455,22 @@ RETURN, [min_value,max_value,width_value]
 END
 
 ;------------------------------------------------------------------------------
+;input: ['1 2','3 4','5 6'] 
+;output:[1,3,5]
+FUNCTION getValueOnly, data
+nbr_column = (size(data))(1) ;nbr Energies (ex: 1000)
+nbr_row    = (size(data))(2) ;nbr Qs (ex: 20)
+new_data   = FLTARR(nbr_column, nbr_row)
+
+index_row = 0
+WHILE (index_row LT nbr_row) DO BEGIN
+    index_column = 0
+    WHILE (index_column LT nbr_column) DO BEGIN
+        value = STRSPLIT(data[index_column,index_row],' ',/EXTRACT)
+        new_data[index_column,index_row] = value[0]
+        index_column++
+    ENDWHILE
+    index_row++
+ENDWHILE
+RETURN, new_data
+END
