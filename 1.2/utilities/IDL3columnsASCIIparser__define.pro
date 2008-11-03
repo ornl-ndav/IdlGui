@@ -55,6 +55,7 @@
 ; print, *(*struct.data)[0].data ;for the data
 ; *<=========================================>*
 ; Author: dfp <prakapenkadv@ornl.gov>
+;         j35 <bilheuxjm@ornl.gov>
 ; ============================================>>>    
 
 
@@ -385,42 +386,74 @@ ENDELSE
 END
    
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getDataQuickly
+FUNCTION IDL3columnsASCIIparser::getDataQuickly, xaxis, yaxis
 data  = READ_DATA(self.path, 2)
 sz    = N_ELEMENTS(data)
-index = WHERE(data EQ '',nbr)
-new_data  = data[index[0]+4:sz-3] ;-3 to be sure we don't have an incomplete line
-
+CASE (self.type) OF
+    'Sq(E)': BEGIN
+;find out where is the in delimiter of Energy values
+        inEnergyIndex  = 5
+        EnergyLength   = STRCOMPRESS(data[1],/REMOVE_ALL)
+        outEnergyIndex = inEnergyIndex + FIX(EnergyLength) 
+;find out the delimiter indeces for Q
+        inQIndex   = outEnergyIndex + 1
+        QLength    = STRCOMPRESS(data[3],/REMOVE_ALL)
+        outQIndex  = inQIndex + FIX(QLength) 
+;create final array
+        FinalArray  = STRARR(EnergyLength,QLength)
+        EnergyRange = data[inEnergyIndex:outEnergyIndex-1]
+        xaxis       = EnergyRange
+        QRange      = data[inQIndex:outQIndex-1]
+        yaxis       = QRange
+;populate final array of values
+        Qindex  = 0
+        Eindex  = 0
+        LnStart = double(outQindex) + 1. ;2 lines after the max Q value
+        WHILE (Qindex LT QLength) DO BEGIN
+            LnStop = LnStart + EnergyLength - 1
+            FinalArray[*,Qindex] = data[LnStart-1:LnStop-1]
+            LnStart = LnStop + 2
+            Qindex++
+        ENDWHILE
+        RETURN, FinalArray
+    END
+    'REFoff' : BEGIN
+        nLines = FILE_LINES(self.path)
+        index = WHERE(data EQ '#N 3',nbr)
+        pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
+        FOR i=1,(nbr-1) DO BEGIN
+            *pARRAY[i-1] = data[index[i-1]+2:index[i]-3] ;???? maybe 4 here
+        ENDFOR
+        *pARRAY[nbr-1] = data[index[nbr-1]+2:nLines-1]
+                                ;parse each array into 3 columns
+        sz = N_ELEMENTS(pARRAY)
+        n_lines = N_ELEMENTS(*pARRAY[0])
+        new_pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
+        FOR i=0,sz-1 DO BEGIN
+            array = STRARR(3,n_lines)
+            FOR j=0,n_lines-2 DO begin
+                array[*,j] = STRSPLIT((*pARRAY[i])[j],/EXTRACT)
+            ENDFOR
+            *new_pARRAY[i] = array
+        ENDFOR
+        PTR_FREE, pARRAY
+        RETURN, new_pARRAY
+    END
+    ELSE: BEGIN
+        index = WHERE(data EQ '',nbr)
+        new_data  = $
+          data[index[0]+4:sz-3] ;-3 to be sure we don't have an incomplete line
 ;split the data into 3 columns
-nbr = N_ELEMENTS(new_data)
-final_array = STRARR(3,nbr)
-i = 0.
-WHILE (i LT nbr) DO BEGIN
-    final_array[*,i] = STRSPLIT(new_data[i],/EXTRACT)
-    ++i
-ENDWHILE
-RETURN, final_array
-
-; nLines = FILE_LINES(self.path)
-; index = WHERE(data EQ '#N 3',nbr)
-; pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
-; FOR i=1,(nbr-1) DO BEGIN
-;     *pARRAY[i-1] = data[index[i-1]+2:index[i]-3]  ;???? maybe 4 here
-; ENDFOR
-; *pARRAY[nbr-1] = data[index[nbr-1]+2:nLines-1]
-; ;parse each array into 3 columns
-; sz = N_ELEMENTS(pARRAY)
-; n_lines = N_ELEMENTS(*pARRAY[0])
-; new_pARRAY = PTRARR(nbr,/ALLOCATE_HEAP)
-; FOR i=0,sz-1 DO BEGIN
-;     array = STRARR(3,n_lines)
-;     FOR j=0,n_lines-2 DO begin
-;         array[*,j] = STRSPLIT((*pARRAY[i])[j],/EXTRACT)
-;     ENDFOR
-;     *new_pARRAY[i] = array
-; ENDFOR
-; PTR_FREE, pARRAY
-; RETURN, new_pARRAY
+        nbr = N_ELEMENTS(new_data)
+        final_array = STRARR(3,nbr)
+        i = 0.
+        WHILE (i LT nbr) DO BEGIN
+            final_array[*,i] = STRSPLIT(new_data[i],/EXTRACT)
+            ++i
+        ENDWHILE
+        RETURN, final_array
+    END
+ENDCASE
 END
 
 ;------------------------------------------------------------------------------
@@ -442,9 +475,10 @@ RETURN, output
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::init, location
+FUNCTION IDL3columnsASCIIparser::init, location, TYPE=type
   ;set up the path
   self.path = location
+  IF (N_ELEMENTS(type) NE 0) THEN self.type=type
   RETURN, FILE_TEST(location, /READ)
 END
 
@@ -452,6 +486,7 @@ END
 PRO IDL3columnsASCIIparser__define
   struct = {IDL3columnsASCIIparser,$
             data: ptr_new(),$
+            type: '',$
             path: ''}
 END
 
