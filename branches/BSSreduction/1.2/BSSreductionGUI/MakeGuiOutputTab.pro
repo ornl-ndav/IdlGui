@@ -79,7 +79,7 @@ sPlotButtonBase = { size: [DataText.size[0]+$
                            400,$
                            400],$
                     uname: 'output_plot_data_base',$
-                    map: 1}
+                    map: 0}
 XYoff = [0,0]
 sPlotButton = { size: [XYoff[0],$
                        XYoff[1]],$
