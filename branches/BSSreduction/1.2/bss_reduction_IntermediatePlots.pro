@@ -243,10 +243,14 @@ ENDIF ELSE BEGIN
         id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
         base_geometry = WIDGET_INFO(id,/GEOMETRY)
 
+        ERange = FLOAT(ERange)
+        QRange = FLOAT(QRange)
+
         sStructure = PTR_NEW({ base_geometry: base_geometry,$
                                fData: fData,$
                                ERange: ERange,$
                                QRange: QRange,$
+                               sys_color_face_3d: INTARR(3),$
                                output_file_name: output_file_name })
 
         iPlot = OBJ_NEW('IDLplotTxt', sStructure)

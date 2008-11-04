@@ -50,7 +50,7 @@ FUNCTION plotTxt_build_gui, sStructure, plot_xsize, plot_ysize
 xoffset = (*sStructure).base_geometry.xoffset
 yoffset = (*sStructure).base_geometry.yoffset
 xsize   = (*sStructure).base_geometry.xsize
-ysize   = (*sStructure).base_geometry.ysize
+ysize   = (*sStructure).base_geometry.ysize+10
 title   = 'Sq(E) : ' + (*sStructure).output_file_name
 
 main_base = WIDGET_BASE(XOFFSET   = xoffset,$
@@ -59,23 +59,74 @@ main_base = WIDGET_BASE(XOFFSET   = xoffset,$
                         SCR_YSIZE = ysize,$
                         TITLE     = title)
 
+sys_color = WIDGET_INFO(main_base,/SYSTEM_COLORS)
+(*sStructure).sys_color_face_3d = sys_color.face_3d
+
 ;build draw
-xoff = 40
-yoff = 40
+xoff = 55
+yoff = 45
 draw_xsize = xsize - 2*xoff
-draw_ysize = ysize - 2*yoff
+draw_ysize = ysize - 2*yoff - 10
+
 draw = WIDGET_DRAW(main_base,$
-                   XOFFSET   = xoff,$
-                   YOFFSET   = yoff,$
+                   XOFFSET   = xoff+10,$
+                   YOFFSET   = 40,$
                    SCR_XSIZE = draw_xsize,$
                    SCR_YSIZE = draw_ysize,$
-                   UNAME     = 'plot_text_draw')
+                   UNAME     = 'plot_txt_draw')
+
+scale_draw = WIDGET_DRAW(main_base,$
+                         XOFFSET = 10,$
+                         YOFFSET = 0,$
+                         SCR_XSIZE = xsize,$
+                         SCR_YSIZE = 720,$
+                         UNAME     = 'plot_txt_scale_draw')
 
 plot_xsize = draw_xsize
 plot_ysize = draw_ysize
 
 Widget_Control, /REALIZE, main_base
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+;change color of background    
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='plot_txt_scale_draw')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+
+;yrange
+QRange = (*sStructure).QRange
+nbr_y_value = N_ELEMENTS(QRange)
+Qmin   = MIN(FLOAT(QRange),MAX=Qmax)
+;add 1 yvalue
+Qmax +=  (QRange[1]-QRange[0])
+
+;xrange
+ERange = (*sStructure).ERange
+Emin   = MIN(ERange,MAX=EMax)
+nbr_x_value = N_ELEMENTS(ERange)
+WHILE (nbr_x_value GT 40) DO BEGIN
+    nbr_x_value /= 5
+ENDWHILE
+
+plot, randomn(s,draw_xsize), $
+  XRANGE     = [Emin,Emax],$
+  YRANGE     = [Qmin,Qmax],$
+  YSTYLE     = 1,$
+  XSTYLE     = 1,$
+  COLOR      = convert_rgb([0B,0B,255B]), $
+  BACKGROUND = convert_rgb(sys_color.face_3d),$
+  THICK      = 1, $
+  XTICKLAYOUT = 0,$
+  YTICKLAYOUT = 0,$
+  XTICKS      = nbr_x_value,$
+  YTICKS      = nbr_y_value,$
+  XMARGIN     = [9.0,9.3],$
+  YMARGIN     = [4,4],$
+  XTITLE      = 'Energy transfer (ueV)',$
+  YTITLE      = 'Q transfer (1/Angstroms)',$
+  YTICKLEN    = -0.01,$
+  XTICKLEN    = -0.015,$
+  /NODATA
 
 RETURN, main_base
 END
@@ -92,17 +143,12 @@ ysize = N_ELEMENTS((*sStructure).QRange)
 main_base = plotTxt_build_gui(sStructure, plot_xsize, plot_ysize)
 
 ;plot data
-id = WIDGET_INFO(main_base,FIND_BY_UNAME='plot_text_draw')
+id = WIDGET_INFO(main_base,FIND_BY_UNAME='plot_txt_draw')
 WIDGET_CONTROL, id, GET_VALUE = plot_id
 wset, plot_id
 
 ;remove NaN from data
-data = (*sStructure).fData
-;index_nan = WHERE(data EQ !VALUES.F_NAN, nbr)
-;IF (nbr GT 0) THEN BEGIN
-;    data[index_nan] = 0
-;ENDIF
-
+data  = (*sStructure).fData
 lDAta = ALOG10(data)
 
 index_inf = WHERE(lDAta EQ -!VALUES.F_INFINITY, nbr)
@@ -113,11 +159,11 @@ min_value = MIN(lData,/NAN)
 slData = lData - min_value
 
 ;cslData = REBIN(slData,1000,20*35)
-cslData = CONGRID(slData,plot_xsize,plot_ysize) ;give a much better realistic
-                                ;plot
+cslData = CONGRID(slData,plot_xsize,plot_ysize) 
+;give a much better realistic plot
 
 DEVICE, DECOMPOSED = 0
-tvscl, cslData,/NAN
+TVSCL, cslData,/NAN
 
 RETURN,1
 END
