@@ -238,15 +238,19 @@ ENDIF ELSE BEGIN
                          TYPE = 'Sq(E)')
         sData = iASCII->getDataQuickly(ERange,QRange)
         OBJ_DESTROY, iASCII
-        print, sData[*,19]
-stop
-
         fData = getValueOnly(sData) ;_get
-;        print, ERange
-;        print, QRange
         
-        
-        
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+        base_geometry = WIDGET_INFO(id,/GEOMETRY)
+
+        sStructure = PTR_NEW({ base_geometry: base_geometry,$
+                               fData: fData,$
+                               ERange: ERange,$
+                               QRange: QRange,$
+                               output_file_name: output_file_name })
+
+        iPlot = OBJ_NEW('IDLplotTxt', sStructure)
+                        
         
     ENDIF ELSE BEGIN            ;other cases
         

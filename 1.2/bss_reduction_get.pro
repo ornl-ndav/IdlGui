@@ -468,7 +468,6 @@ WHILE (index_row LT nbr_row) DO BEGIN
     WHILE (index_column LT nbr_column) DO BEGIN
         value = STRSPLIT(data[index_column,index_row],' ',/EXTRACT)
         IF (value[0] EQ 'nan') THEN value[0] = !VALUES.F_NAN
-;        print, value[0]
         new_data[index_column,index_row] = FLOAT(value[0])
         index_column++
     ENDWHILE
