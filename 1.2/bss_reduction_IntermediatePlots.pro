@@ -238,9 +238,12 @@ ENDIF ELSE BEGIN
                          TYPE = 'Sq(E)')
         sData = iASCII->getDataQuickly(ERange,QRange)
         OBJ_DESTROY, iASCII
+        print, sData[*,19]
+stop
+
         fData = getValueOnly(sData) ;_get
-        print, ERange
-        print, QRange
+;        print, ERange
+;        print, QRange
         
         
         

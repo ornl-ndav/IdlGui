@@ -408,7 +408,8 @@ CASE (self.type) OF
 ;populate final array of values
         Qindex  = 0
         Eindex  = 0
-        LnStart = double(outQindex) + 1. ;2 lines after the max Q value
+        LnStart = double(outQindex) + 2. ;2 lines after the max Q value
+        print, Lnstart
         WHILE (Qindex LT QLength) DO BEGIN
             LnStop = LnStart + EnergyLength - 1
             FinalArray[*,Qindex] = data[LnStart-1:LnStop-1]
