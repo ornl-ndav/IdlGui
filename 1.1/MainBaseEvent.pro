@@ -97,57 +97,64 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
-        IF ((*global).DataNeXusFound) THEN BEGIN
-
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+        ENDIF ELSE BEGIN
+            IF ((*global).DataNeXusFound) THEN BEGIN
+                
 ;show x/y and counts **********************************************************
-            putLabelValue, Event, $
-              'data_x_info_value', $
-              STRCOMPRESS(Event.x,/REMOVE_ALL)
-            IF ((*global).miniVersion EQ 1) THEN BEGIN
-                coeff = 1
-            ENDIF ELSE BEGIN
-                coeff = 2
-            ENDELSE
-            putLabelValue, $
-              Event, $
-              'data_y_info_value', $
-            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
-
-            tvimg = (*(*global).tvimg_data_ptr) 
-            putLabelValue, $
-              Event, $
-              'data_counts_info_value', $
-              STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+                putLabelValue, Event, $
+                  'data_x_info_value', $
+                  STRCOMPRESS(Event.x,/REMOVE_ALL)
+                IF ((*global).miniVersion EQ 1) THEN BEGIN
+                    coeff = 1
+                ENDIF ELSE BEGIN
+                    coeff = 2
+                ENDELSE
+                putLabelValue, $
+                  Event, $
+                  'data_y_info_value', $
+                  STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+                
+                tvimg = (*(*global).tvimg_data_ptr) 
+                
+                putLabelValue, $
+                  Event, $
+                  'data_counts_info_value', $
+                  STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
 ;******************************************************************************
-
-            IF ((*global).first_event) THEN BEGIN
+                
+                IF ((*global).first_event) THEN BEGIN
 ;only if there is a NeXus loaded
-                CASE (event.ch) OF ;u and d keys
-                    117: REFreduction_ManuallyMoveDataBackPeakUp, Event
-                    100: REFreduction_ManuallyMoveDataBackPeakDown, Event
-                    ELSE:
-                ENDCASE
-                CASE (event.key) OF ;Up and Down arrow keys
-                    7: REFreduction_ManuallyMoveDataBackPeakUp, Event
-                    8: REFreduction_ManuallyMoveDataBackPeakDown, Event
-                    ELSE:
-                ENDCASE
-                (*global).first_event = 0
-            ENDIF ELSE BEGIN
-                (*global).first_event = 1
-            ENDELSE
-            IF( Event.type EQ 0 )THEN BEGIN
-                IF (Event.press EQ 1) THEN $
-                  REFreduction_DataSelectionPressLeft, Event ;left button
-                IF (Event.press EQ 4) THEN $
-                  REFreduction_DataselectionPressRight, Event ;right button
+                    CASE (event.ch) OF ;u and d keys
+                        117: REFreduction_ManuallyMoveDataBackPeakUp, Event
+                        100: REFreduction_ManuallyMoveDataBackPeakDown, Event
+                        ELSE:
+                    ENDCASE
+                    CASE (event.key) OF ;Up and Down arrow keys
+                        7: REFreduction_ManuallyMoveDataBackPeakUp, Event
+                        8: REFreduction_ManuallyMoveDataBackPeakDown, Event
+                        ELSE:
+                    ENDCASE
+                    (*global).first_event = 0
+                ENDIF ELSE BEGIN
+                    (*global).first_event = 1
+                ENDELSE
+                IF( Event.type EQ 0 )THEN BEGIN
+                    IF (Event.press EQ 1) THEN $
+                      REFreduction_DataSelectionPressLeft, Event ;left button
+                    IF (Event.press EQ 4) THEN $
+                      REFreduction_DataselectionPressRight, Event ;right button
+                ENDIF
+                IF (Event.type EQ 1) THEN $ ;release
+                  REFreduction_DataSelectionRelease, Event
+                IF (Event.type EQ 2) THEN $ ;move
+                  REFreduction_DataSelectionMove, Event
             ENDIF
-            IF (Event.type EQ 1) THEN $ ;release
-              REFreduction_DataSelectionRelease, Event
-            IF (Event.type EQ 2) THEN $ ;move
-              REFreduction_DataSelectionMove, Event
-        ENDIF
-     END
+        ENDELSE
+    END
     
     widget_info(wWidget, FIND_BY_UNAME='data_1d_selection'): begin
         REFreduction_DataBackPeakZoomEvent, Event
@@ -550,57 +557,62 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D plot of NORM
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_D_draw'): begin
-
-        IF ((*global).NormNeXusFound) THEN BEGIN
+        error = 0 
+        CATCH, error
+        IF (error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+        ENDIF ELSE BEGIN
+            IF ((*global).NormNeXusFound) THEN BEGIN
                                 ;only if there is a NeXus loaded
-            
+                
 ;show x/y and counts **********************************************************
-            putLabelValue, Event, $
-              'norm_x_info_value', $
-              STRCOMPRESS(Event.x,/REMOVE_ALL)
-            IF ((*global).miniVersion EQ 1) THEN BEGIN
-                coeff = 1
-            ENDIF ELSE BEGIN
-                coeff = 2
-            ENDELSE
-            putLabelValue, $
-              Event, $
-              'norm_y_info_value', $
-            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
-
-            tvimg = (*(*global).tvimg_norm_ptr) 
-            putLabelValue, $
-              Event, $
-              'norm_counts_info_value', $
-              STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
+                putLabelValue, Event, $
+                  'norm_x_info_value', $
+                  STRCOMPRESS(Event.x,/REMOVE_ALL)
+                IF ((*global).miniVersion EQ 1) THEN BEGIN
+                    coeff = 1
+                ENDIF ELSE BEGIN
+                    coeff = 2
+                ENDELSE
+                putLabelValue, $
+                  Event, $
+                  'norm_y_info_value', $
+                  STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+                
+                tvimg = (*(*global).tvimg_norm_ptr) 
+                putLabelValue, $
+                  Event, $
+                  'norm_counts_info_value', $
+                  STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
 ;******************************************************************************
-
-            IF ((*global).first_event) THEN BEGIN
-                CASE (event.ch) OF ;u and d keys
-                    117: REFreduction_ManuallyMoveNormBackPeakUp, Event
-                    100: REFreduction_ManuallyMoveNormBackPeakDown, Event
-                    ELSE:
-                ENDCASE
-                CASE (event.key) OF ;Up and Down arrow keys
-                    7: REFreduction_ManuallyMoveNormBackPeakUp, Event
-                    8: REFreduction_ManuallyMoveNormBackPeakDown, Event
-                    ELSE:
-                ENDCASE
-                (*global).first_event = 0
-            ENDIF ELSE BEGIN
-                (*global).first_event = 1
-            ENDELSE
-            IF( Event.type EQ 0 )THEN BEGIN
-                IF (Event.press EQ 1) THEN $
-                  REFreduction_NormSelectionPressLeft, Event ;left button
-                IF (Event.press EQ 4) THEN $
-                  REFreduction_NormselectionPressRight, Event ;right button
+                
+                IF ((*global).first_event) THEN BEGIN
+                    CASE (event.ch) OF ;u and d keys
+                        117: REFreduction_ManuallyMoveNormBackPeakUp, Event
+                        100: REFreduction_ManuallyMoveNormBackPeakDown, Event
+                        ELSE:
+                    ENDCASE
+                    CASE (event.key) OF ;Up and Down arrow keys
+                        7: REFreduction_ManuallyMoveNormBackPeakUp, Event
+                        8: REFreduction_ManuallyMoveNormBackPeakDown, Event
+                        ELSE:
+                    ENDCASE
+                    (*global).first_event = 0
+                ENDIF ELSE BEGIN
+                    (*global).first_event = 1
+                ENDELSE
+                IF( Event.type EQ 0 )THEN BEGIN
+                    IF (Event.press EQ 1) THEN $
+                      REFreduction_NormSelectionPressLeft, Event ;left button
+                    IF (Event.press EQ 4) THEN $
+                      REFreduction_NormselectionPressRight, Event ;right button
+                ENDIF
+                IF (Event.type EQ 1) THEN $ ;release
+                  REFreduction_NormSelectionRelease, Event
+                IF (Event.type EQ 2) THEN $ ;move
+                  REFreduction_NormSelectionMove, Event
             ENDIF
-            IF (Event.type EQ 1) THEN $ ;release
-              REFreduction_NormSelectionRelease, Event
-            IF (Event.type EQ 2) THEN $ ;move
-              REFreduction_NormSelectionMove, Event
-        ENDIF
+        ENDELSE
     END
     
     widget_info(wWidget, FIND_BY_UNAME='normalization_1d_selection'): begin
