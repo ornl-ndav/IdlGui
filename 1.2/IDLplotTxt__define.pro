@@ -32,8 +32,20 @@
 ;
 ;==============================================================================
 
+PRO plotTxt_build_gui_event, Event
+ 
+wWidget =  Event.top            ;widget id
+
+CASE Event.id OF
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
+    end
+	
+ENDCASE
+END
+
 ;------------------------------------------------------------------------------
-PRO plotTxt_build_gui, sStructure
+FUNCTION plotTxt_build_gui, sStructure, plot_xsize, plot_ysize
 
 xoffset = (*sStructure).base_geometry.xoffset
 yoffset = (*sStructure).base_geometry.yoffset
@@ -47,13 +59,25 @@ main_base = WIDGET_BASE(XOFFSET   = xoffset,$
                         SCR_YSIZE = ysize,$
                         TITLE     = title)
 
+;build draw
+xoff = 40
+yoff = 40
+draw_xsize = xsize - 2*xoff
+draw_ysize = ysize - 2*yoff
+draw = WIDGET_DRAW(main_base,$
+                   XOFFSET   = xoff,$
+                   YOFFSET   = yoff,$
+                   SCR_XSIZE = draw_xsize,$
+                   SCR_YSIZE = draw_ysize,$
+                   UNAME     = 'plot_text_draw')
 
+plot_xsize = draw_xsize
+plot_ysize = draw_ysize
 
 Widget_Control, /REALIZE, main_base
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-
-
+RETURN, main_base
 END
 
 ;******************************************************************************
@@ -61,15 +85,39 @@ END
 FUNCTION IDLplotTxt::init, sStructure
 
 ;get number of X(E) and Y(Q) elements
-;xsize = N_ELEMENTS((*sStructure).Edata)
-;ysize = N_ELEMENTS((*sStructure).Qdata)
-
-xsize = 1000 ;remove_me
-ysize = 20 ;remove_me
+xsize = N_ELEMENTS((*sStructure).ERange)
+ysize = N_ELEMENTS((*sStructure).QRange)
 
 ;build gui
-plotTxt_build_gui, sStructure
+main_base = plotTxt_build_gui(sStructure, plot_xsize, plot_ysize)
 
+;plot data
+id = WIDGET_INFO(main_base,FIND_BY_UNAME='plot_text_draw')
+WIDGET_CONTROL, id, GET_VALUE = plot_id
+wset, plot_id
+
+;remove NaN from data
+data = (*sStructure).fData
+;index_nan = WHERE(data EQ !VALUES.F_NAN, nbr)
+;IF (nbr GT 0) THEN BEGIN
+;    data[index_nan] = 0
+;ENDIF
+
+lDAta = ALOG10(data)
+
+index_inf = WHERE(lDAta EQ -!VALUES.F_INFINITY, nbr)
+IF (nbr GT 0) THEN BEGIN
+    lDAta[index_inf] = !VALUES.F_NAN
+ENDIF
+min_value = MIN(lData,/NAN)
+slData = lData - min_value
+
+;cslData = REBIN(slData,1000,20*35)
+cslData = CONGRID(slData,plot_xsize,plot_ysize) ;give a much better realistic
+                                ;plot
+
+DEVICE, DECOMPOSED = 0
+tvscl, cslData,/NAN
 
 RETURN,1
 END
