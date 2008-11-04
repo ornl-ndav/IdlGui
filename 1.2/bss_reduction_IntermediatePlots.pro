@@ -127,12 +127,8 @@ ListOfOutputPlots.wolidsb_button  = wolidsb_status
 NameOfOutputPlots = (*global).NameOfOutputPlots
 OutputPlotsExt    = (*global).OutputPlotsExt
 FinalOutputPlotsList = ['Sq(E)']
-print, '(*global).MainDRPlotsExt.sqe: ' + $
-  (*global).MainDRPlotsExt.sqe  ;remove_me
 output_file_name     = getIntermediateFileName(Event, $
                                                (*global).MainDRPlotsExt.sqe)
-                                               
-print, output_file_name ;remove_me
 FullNameOutputPlots  = [output_file_name]
 
 ;create droplist list and name of output files
@@ -165,11 +161,12 @@ widget_control,id,get_uvalue=global
 ;get reduce status message
 DRstatusText = getTextFieldValue(Event, 'data_reduction_status_text')
 
-;DRstatusText = 'Data Reduction ... DONE' ;REMOVE_ME
+;indicate initialization with hourglass icon
+widget_control,/hourglass
 
 IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
     read_error = 0
-    ;CATCH, read_error
+    CATCH, read_error
     IF (read_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         activate_plot_button_status = 0
@@ -182,8 +179,6 @@ IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
                                                   'output_file_name_droplist')
 ;get selected file name
         SelectedFileName = FullNameOutputPlots[index_selected]
-        
-;        SelectedFileName = '~/BSS_638.txt' ;REMOVE_ME
         
 ;put name of file label file name
         putTextinTextField, Event, 'output_plot_file_name', selectedFileName
@@ -207,6 +202,8 @@ IF (DRstatusText EQ (*global).DRstatusOK) THEN BEGIN
 
 ENDIF ;end of if(DRstatusText EQ 'Data Reduction ...
                                 ;ERROR! (-> Check Log Book)') 
+;turn off hourglass
+widget_control,hourglass=0
 
 END
 
@@ -219,14 +216,11 @@ index_selected = getDropListSelectedIndex(Event, $
                                           'output_file_name_droplist')
 output_file_name = getTextFieldValue(Event,'output_plot_file_name')
 
-output_file_name = '~/BSS_638.txt' ;REMOVE_ME
-index_selected   = 0 ;REMOVE_ME
-
 ;indicate initialization with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
 plot_error = 0
-;CATCH, plot_error
+CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ENDIF ELSE BEGIN
@@ -297,6 +291,6 @@ ENDIF ELSE BEGIN
 ENDELSE ;end of CATCH statement
 
 ;turn off hourglass
-widget_control,hourglass=0
+WIDGET_CONTROL,HOURGLASS=0
 
 END

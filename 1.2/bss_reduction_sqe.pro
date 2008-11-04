@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.19'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'yes'
+DEBUGGING_VERSION  = 'no'
 
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
@@ -76,8 +76,6 @@ sDEBUGGING = { tab: {main_tab: 2,$
                                   value: '2'},$
                         input8: { uname: 'mtha_bin_text',$
                                   value: '.1'}}}
-                        
-                        
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;==============================================================================
