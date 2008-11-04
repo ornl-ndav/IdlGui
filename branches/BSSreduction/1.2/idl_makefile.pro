@@ -78,8 +78,10 @@ cd, CurrentFolder
 .run bss_reduction_IntermediatePlots.pro
 .run bss_reduction_DisplayDRxmlConfigFile.pro
 
+;classes
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro
+.run IDLplotTxt__define.pro
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro
