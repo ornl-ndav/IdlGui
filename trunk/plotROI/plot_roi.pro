@@ -3,9 +3,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.0)'
+APPLICATION = 'plotROI'
+VERSION     = '1.0.5'
 
-;define initial global values - these could be input via external file or other means
+;define initial global values - these could be input via external file or other
+;means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -19,50 +21,49 @@ endelse
 ;get hostname
 spawn, 'hostname', hostname
 CASE (hostname) OF
-    'heater': instrumentIndex = 0
-    'lrac'  : instrumentIndex = 2
-    'mrac'  : instrumentIndex = 3
+    'heater'       : instrumentIndex = 0
     'bac.sns.gov'  : instrumentIndex = 1
-    'bac2'  : instrumentIndex = 1
-    else    : instrumentIndex = 0
+    'bac2'         : instrumentIndex = 1
+    'snap'         : instrumentIndex = 2
+    'lrac'         : instrumentIndex = 3
+    'mrac'         : instrumentIndex = 4
+    'arcs1'        : instrumentIndex = 5
+    'arcs2'        : instrumentIndex = 5
+    ELSE           : instrumentIndex = 0
 ENDCASE 
 
+ListOFInstruments = ['BSS',$
+                     'SNAP',$
+                     'REF_L',$
+                     'REF_M',$
+                     'ARCS',$
+                     'LENS']
+
 ;define global variables
-global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
-                    stringFoundIteration  : 1,$
-                    geom_xml_file_title   : 'Geometry.xml file: ',$
-                    new_geo_xml_filename  : '',$
-                    TCompileMessage       : '*processing modified jar*',$
-                    error_log_book        : '',$
-                    error_list            : ['Failed',$ ;list of error found in SNSproblem_log
-                                             'Fatal error',$
-                                             'Error'],$
+global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
+                    LogBookPath           : '/SNS/users/LogBook/',$
+                    DeployedVersion       : 1,$
+                    InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
-                    ts_geom_calc_path     : 'TS_geom_calc.sh',$
-                    tmp_xml_file          : '~/local/tmp_gg_xml_file.xml',$
-                    leaf_array            : ptr_new(0L),$
-                    setpointStatus        : 'S',$
-                    userStatus            : 'U',$
-                    readbackStatus        : 'R',$
-                    cmd_command           : 'TS_geom_calc.sh ',$
-                    geek                  : 'j35',$
-                    output_default_geometry_path : '~/local',$
                     RunNumber             : '',$
-                    output_geometry_ext   : '_geom',$
-                    cvinfo_default_path   : '~/',$
-                    geometry_default_path : '~/',$
-                    geometry_xml_filtering: '*.xml',$
-                    cvinfo_xml_filtering  : '*_cvinfo.xml',$
-                    default_extension     : 'nxs',$
-                    motors                : ptr_new(0L),$ ;full xml
-                    untouched_motors      : ptr_new(0L),$ ;full untouched xml
-                    motor_group           : ptr_new(0L),$   ;xml of selected group only
-                    version : VERSION })
+                    BrowseNexusDefaultExt : '.nxs',$
+                    BrowseDefaultPath     : '~/',$
+                    BrowseFilter          : '*.nxs',$
+                    BrowseROIExt          : '.dat',$
+                    BrowseROIPath         : '~/',$
+                    BrowseROIFilter       : '*.dat',$
+                    ValidNexus            : 0,$
+                    version               : VERSION })
 
-MainBaseSize  = [30,25,700,530]
+IF (ucams EQ 'j35') THEN BEGIN
+    MainBaseSize  = [30,25,540,700]
+ENDIF ELSE BEGIN
+    MainBaseSize  = [30,25,540,445]
+ENDELSE
+
 MainBaseTitle = 'Plot NeXus and ROI files'
         
 MainBaseTitle += ' - ' + VERSION
@@ -82,10 +83,49 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;confirmation base
-MakeGuiMainBase, MAIN_BASE
+MakeGuiMainBase, MAIN_BASE, global
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+IF ((*global).DeployedVersion EQ 0) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+        instrumentIndex = 3    ;REMOVE_ME
+;put default nexus name in 'nexus_file_text_field'
+        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
+        nexus = '/Users/j35/REF_L_4493.nxs'
+        widget_control, id, set_value=nexus
+;put default nexus name of ROI file
+        id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
+        roi_file = '/Users/j35/REF_L_3000_data_roi.dat'
+        widget_control, id, set_value=roi_file
+    ENDIF ELSE BEGIN
+        instrumentIndex = 3     ;REMOVE_ME
+;put default nexus name in 'nexus_file_text_field'
+        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')        
+        nexus = '/SNS/REF_L/IPTS-231/2/4000/NeXus/REF_L_4000.nxs'
+        widget_control, id, set_value=nexus
+;put default nexus name of ROI file
+        id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
+        roi_file = '~/REF_L_2454_data_roi.dat'
+        widget_control, id, set_value=roi_file
+    ENDELSE
+ENDIF ELSE BEGIN
+
+ENDELSE
+id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
+widget_control, id, set_droplist_select=instrumentIndex
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
