@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.19'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'yes'
+DEBUGGING_VERSION  = 'no'
 
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
@@ -96,7 +96,7 @@ endelse
 global = ptr_new ({ $
                     lds_mode: 0,$
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
-                    default_output_path: '~/',$
+                    default_output_path: '~/result/',$
                     negative_cosine_polar_array: STRARR(3),$
                     momentum_transfer_array:     STRARR(3),$
                     DeployedVersion: DeployedVersion,$
@@ -189,9 +189,9 @@ global = ptr_new ({ $
                                 ;vs tof tab is 0
                     RunNumber: 0L, $ ;NeXus run number
                     NexusFullName: '',$ ;Full nexus file name
-                    roi_path: '~/',$ ;path where to save the ROI file
+                    roi_path: '~/result/',$ ;path where to save the ROI file
                     SavedRoiFullFileName: '',$ ;full file name of ROI file
-                      counts_vs_tof_path: '~/local/',$ ;path where to
+                      counts_vs_tof_path: '~/result/',$ ;path where to
                                 ;save the counts vs tof ascii file
                     roi_ext: '_ROI.dat' ,$ ;extension of ROI files
                       counts_vs_tof_ext: '_IvsTOF.txt' ,$ ;extension of
