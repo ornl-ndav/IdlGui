@@ -45,7 +45,11 @@ ENDCASE
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION plotTxt_build_gui, sStructure, plot_xsize, plot_ysize
+FUNCTION plotTxt_build_gui, sStructure, $
+                            plot_xsize, $
+                            plot_ysize, $
+                            min_z_value,$
+                            max_z_value
 
 xoffset = (*sStructure).base_geometry.xoffset
 yoffset = (*sStructure).base_geometry.yoffset
@@ -55,7 +59,7 @@ title   = 'Sq(E) : ' + (*sStructure).output_file_name
 
 main_base = WIDGET_BASE(XOFFSET   = xoffset,$
                         YOFFSET   = yoffset,$
-                        SCR_XSIZE = xsize,$
+                        SCR_XSIZE = xsize+150,$
                         SCR_YSIZE = ysize,$
                         TITLE     = title)
 
@@ -75,6 +79,15 @@ draw = WIDGET_DRAW(main_base,$
                    SCR_YSIZE = draw_ysize,$
                    UNAME     = 'plot_txt_draw')
 
+;z-axis scale plot
+s_scale_draw = WIDGET_DRAW(main_base,$
+                           XOFFSET   = xsize,$
+                           YOFFSET   = 10,$
+                           SCR_XSIZE = 120,$
+                           SCR_YSIZE = 720,$
+                           UNAME     = 'plot_txt_zaxis_scale_draw')
+
+;x-y scale plot
 scale_draw = WIDGET_DRAW(main_base,$
                          XOFFSET = 10,$
                          YOFFSET = 0,$
@@ -87,6 +100,28 @@ plot_ysize = draw_ysize
 
 Widget_Control, /REALIZE, main_base
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+;plot scale
+id_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='plot_txt_zaxis_scale_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+ERASE
+
+;z-axis scale
+
+divisions = 20
+perso_format = '(E11.3)'
+range  = [min_z_value,max_z_value]
+
+colorbar, $
+  /YLOG,$
+  NCOLORS      = 255, $
+  POSITION     = [0.58,0.01,0.95,0.99], $
+  RANGE        = range,$
+  DIVISIONS    = divisions,$
+;  FORMAT       = '(I0)',$
+  PERSO_FORMAT = perso_format,$
+  /VERTICAL
 
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='plot_txt_scale_draw')
@@ -139,16 +174,9 @@ FUNCTION IDLplotTxt::init, sStructure
 xsize = N_ELEMENTS((*sStructure).ERange)
 ysize = N_ELEMENTS((*sStructure).QRange)
 
-;build gui
-main_base = plotTxt_build_gui(sStructure, plot_xsize, plot_ysize)
-
-;plot data
-id = WIDGET_INFO(main_base,FIND_BY_UNAME='plot_txt_draw')
-WIDGET_CONTROL, id, GET_VALUE = plot_id
-wset, plot_id
-
 ;remove NaN from data
 data  = (*sStructure).fData
+min_z_value = MIN(data,/NAN,MAX=max_z_value)
 lDAta = ALOG10(data)
 
 index_inf = WHERE(lDAta EQ -!VALUES.F_INFINITY, nbr)
@@ -157,6 +185,19 @@ IF (nbr GT 0) THEN BEGIN
 ENDIF
 min_value = MIN(lData,/NAN)
 slData = lData - min_value
+
+;build gui
+main_base = plotTxt_build_gui(sStructure, $
+                              plot_xsize, $
+                              plot_ysize, $
+                              min_z_value,$
+                              max_z_value)
+
+;plot data
+id = WIDGET_INFO(main_base,FIND_BY_UNAME='plot_txt_draw')
+WIDGET_CONTROL, id, GET_VALUE = plot_id
+wset, plot_id
+
 
 ;cslData = REBIN(slData,1000,20*35)
 cslData = CONGRID(slData,plot_xsize,plot_ysize) 

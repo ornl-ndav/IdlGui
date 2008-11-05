@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreductionSQE'
 VERSION            = '1.2.19'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
