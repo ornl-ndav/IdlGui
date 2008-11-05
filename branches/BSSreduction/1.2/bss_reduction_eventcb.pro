@@ -107,7 +107,7 @@ putTextInTextField, Event, 'of_list_of_runs_text', file_name
 END
 
 ;------------------------------------------------------------------------------
-pro bss_reduction_sqe_eventcb, event
+pro bss_reduction_eventcb, event
 END
 
 ;------------------------------------------------------------------------------
