@@ -8,6 +8,7 @@ resolve_routine, "loadct",/either
 resolve_routine, "xloadct",/either
 resolve_routine, "xregistered",/either
 resolve_routine, "cw_field",/either
+resolve_routine, "colorbar",/either
 
 save,/routines,filename = CurrentFolder + '/bss_reduction_sqe.sav'
 exit

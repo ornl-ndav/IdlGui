@@ -175,6 +175,8 @@ FUNCTION IDLplotTxt::init, sStructure
 xsize = N_ELEMENTS((*sStructure).ERange)
 ysize = N_ELEMENTS((*sStructure).QRange)
 
+DEVICE, /DECOMPOSED
+
 ;remove NaN from data
 data  = (*sStructure).fData
 min_z_value = MIN(data,/NAN,MAX=max_z_value)
