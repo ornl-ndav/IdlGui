@@ -91,7 +91,7 @@ XYoff = [10,80]
 sOFbutton = { size: [XYoff[0],$
                      AIGframe.size[1]+XYoff[1],$
                      730],$
-              value: '~/',$
+              value: '~/result/',$
               uname: 'output_folder_name'}
 
 ;////////////////
