@@ -589,9 +589,9 @@ ENDIF ELSE BEGIN
         Qmin_array[i] = Qmin
         Qmax_array[i] = Qmax
  
-    endfor
-    
-endelse
+    ENDFOR
+
+ENDELSE
 
 ;store back the array of all the Qmin of the functions loaded
 (*(*global).Qmin_array) = Qmin_array

@@ -140,6 +140,7 @@ flt0_tmp = flt0(flt1_GE0_index)
 
 Qmin = min(flt0_tmp,max=Qmax,/nan)
 QminQmax = [Qmin,Qmax]
+
 return, QminQmax
 END
 
@@ -197,10 +198,10 @@ END
 
 ;This function gives a list of point to keep, for which the Y value is
 ;greater than the error bar
-FUNCTION GEValue, flt1, flt2
+FUNCTION GEValue, flt1, flt2, nbr
 new_flt2 = flt2 ^ 2
 new_flt1 = flt1 ^ 2
-index = WHERE(flt2 LT flt1)
+index = WHERE(flt2 LT flt1,nbr)
 RETURN, index
 END
 
