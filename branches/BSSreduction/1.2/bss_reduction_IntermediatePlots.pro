@@ -38,7 +38,7 @@ WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
 DEVICE, DECOMPOSED = 0
-loadct,5
+loadct,5, /SILENT
 
 err_plot = 0
 CATCH, err_plot

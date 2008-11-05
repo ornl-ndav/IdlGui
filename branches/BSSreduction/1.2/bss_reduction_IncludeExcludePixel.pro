@@ -1,3 +1,37 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 ;Only the sides of the excluded pixels are shown
 PRO PlotExcludedBoxEmpty, x, y, x_coeff, y_coeff, color
 plots, x*x_coeff, y*y_coeff, /device, color=color
@@ -11,7 +45,7 @@ plots, x*x_coeff,(y+1)*y_coeff, /device,color=color
 plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
 END
 
-
+;------------------------------------------------------------------------------
 
 ;The excluded pixels are shown as a rectangle area
 PRO PlotExcludedBoxFull, x, y, x_coeff, y_coeff, color
@@ -24,8 +58,7 @@ endfor
 
 END
 
-
-
+;------------------------------------------------------------------------------
 
 PRO PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
 ;check status of empty or full box
@@ -36,10 +69,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
-
-
+;------------------------------------------------------------------------------
 
 PRO BSSreduction_IncludeExcludePixel, Event
 ;get global structure
@@ -95,7 +125,8 @@ ENDIF ELSE BEGIN                ;include pixel
 ;replot all the pixelID excluded
     FOR i = 0, 3584L DO BEGIN
         pixel = pixelid_min + i
-        IF (pixel_excluded(pixel) EQ 1) THEN BEGIN ;plot lines around this pixel
+        IF (pixel_excluded(pixel) EQ 1) THEN BEGIN 
+;plot lines around this pixel
             XY = getXYfromPixelID(Event, pixel)
             PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
         ENDIF        
@@ -105,10 +136,7 @@ ENDELSE
 
 END
 
-
-
-
-
+;------------------------------------------------------------------------------
 
 PRO PlotExcludedPixels, Event
 ;get global structure
@@ -145,9 +173,7 @@ FOR i=0,3584L DO BEGIN
 ENDFOR
 END
 
-
-
-
+;------------------------------------------------------------------------------
 
 PRO PlotIncludedPixels, Event
 ;get global structure
@@ -159,13 +185,13 @@ y_coeff = (*global).Yfactor
 color   = (*global).ColorExcludedPixels
 
 DEVICE, DECOMPOSED = 0
-loadct, (*global).LoadctMainPlot
+loadct, (*global).LoadctMainPlot,/SILENT
 
 ;plot main plots + grid
 bss_reduction_PlotBank1, Event
 DEVICE, DECOMPOSED = 0
 PlotBank1Grid, Event
-loadct, (*global).LoadctMainPlot
+loadct, (*global).LoadctMainPlot, /SILENT
 bss_reduction_PlotBank2, Event
 DEVICE, DECOMPOSED = 0
 PlotBank2Grid, Event
@@ -196,9 +222,7 @@ FOR i=0,3584L DO BEGIN
 ENDFOR
 END
 
-
-
-
+;------------------------------------------------------------------------------
 
 PRO BSSreduction_FullResetButton, Event
 
@@ -220,8 +244,7 @@ putLoadedRoiFileName, Event, ''
 
 END
 
-
-
+;------------------------------------------------------------------------------
 
 PRO BSSreduction_ExcludedPixelType, Event
 ;get global structure
@@ -240,8 +263,7 @@ IF (currentSelectedSymbol NE previousSelectedSymbol) THEN BEGIN
 ENDIF
 END
 
-
-
+;------------------------------------------------------------------------------
 
 PRO BSSreduction_ExcludeEverything, Event
 ;get global structure
@@ -257,3 +279,5 @@ IF ((*global).NeXusFound) THEN BEGIN
 
 ENDIF
 END
+
+;------------------------------------------------------------------------------
