@@ -88,8 +88,8 @@ cd, CurrentFolder
 .run bss_reduction_LDS.pro
 
 .run MainBaseEvent.pro
-.run bss_reduction_sqe_eventcb.pro
-.run bss_reduction_sqe.pro
+.run bss_reduction_eventcb.pro
+.run bss_reduction.pro
 
 
 
