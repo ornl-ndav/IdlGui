@@ -206,6 +206,7 @@ cslData = CONGRID(slData,plot_xsize,plot_ysize)
 
 DEVICE, DECOMPOSED = 0
 TVSCL, cslData,/NAN
+DEVICE, /DECOMPOSED
 
 RETURN,1
 END
