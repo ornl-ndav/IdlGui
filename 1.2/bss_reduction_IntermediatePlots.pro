@@ -219,10 +219,11 @@ output_file_name = getTextFieldValue(Event,'output_plot_file_name')
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
-output_file_name = '~/BSS_638.txt' ;REMOVE_ME
+;output_file_name = '~/result/BSS_638_200811m5_133300_data.mxl' ;REMOVE_ME
+;index_selected = 1 ;REMOVE_ME
 
 plot_error = 0
-;CATCH, plot_error
+CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ENDIF ELSE BEGIN
@@ -250,7 +251,6 @@ ENDIF ELSE BEGIN
 
         iPlot = OBJ_NEW('IDLplotTxt', sStructure)
                         
-        
     ENDIF ELSE BEGIN            ;other cases
         
         iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
