@@ -133,10 +133,12 @@ ENDIF ELSE BEGIN
         flt1_highQ_new = getArrayOfInfValues(flt1_highQ_new) ;_get
         
 ;remove points that have error GE than their values
-        RangeIndexes   = GEValue(flt1_highQ_new, flt2_highQ_new) ;_get
-        flt0_highQ_new = flt0_highQ_new(RangeIndexes)
-        flt1_highQ_new = flt1_highQ_new(RangeIndexes)
-        flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+        RangeIndexes   = GEValue(flt1_highQ_new, flt2_highQ_new, nbr) ;_get
+        IF (nbr GT 0) THEN BEGIN
+            flt0_highQ_new = flt0_highQ_new(RangeIndexes)
+            flt1_highQ_new = flt1_highQ_new(RangeIndexes)
+            flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+        ENDIF
         
 ;LOW Q file
 ;get flt0 of low Q file
@@ -153,21 +155,23 @@ ENDIF ELSE BEGIN
         flt0_lowQ_new = flt0_lowQ[left_index:right_index]
         flt1_lowQ_new = flt1_lowQ[left_index:right_index]
         flt2_lowQ_new = flt2_lowQ[left_index:right_index]
-        
+
 ;set to 0 the indefined data 
         flt1_lowQ_new = getArrayOfInfValues(flt1_lowQ_new) ;_get
-        
+
 ;remove the non defined and inf values from flt0_lowQ, flt1_lowQ and flt2_lowQ
         RangeIndexes  = getArrayRangeOfNotNanValues(flt1_lowQ_new) ;_get
         flt0_lowQ_new = flt0_lowQ_new(RangeIndexes)
         flt1_lowQ_new = flt1_lowQ_new(RangeIndexes)
         flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
-        
+
 ;remove points that have error GE than their values
-        RangeIndexes  = GEvalue(flt1_LowQ_new, flt2_LowQ_new) ;_get
-        flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
-        flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
-        flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
+        RangeIndexes  = GEvalue(flt1_LowQ_new, flt2_LowQ_new, nbr) ;_get
+        IF (nbr GT 0) THEN BEGIN
+            flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
+            flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
+            flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
+        ENDIF
         
 ;Calculate the data totals
         TLowQflt1  = total(flt1_LowQ_new[Ncrap:*])

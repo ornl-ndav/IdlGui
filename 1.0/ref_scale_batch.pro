@@ -211,8 +211,8 @@ IF (loading_error EQ 0) THEN BEGIN
     color_array = (float(225)/sz)*indgen(sz)+25 
     (*(*global).color_array) = color_array
 ;reset Qmin and Qmax
-    (*(*global).Qmin_array) = intarr(sz)
-    (*(*global).Qmax_array) = intarr(sz)
+    (*(*global).Qmin_array) = FLTARR(sz)
+    (*(*global).Qmax_array) = FLTARR(sz)
 ;create SF_array
     create_SF_array, Event
 ;apply the SF to the data

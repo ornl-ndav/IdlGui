@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,35 +30,20 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-; \defgroup get_ucams
-; \{
-;;
-
-;;
-; \brief This function outputs the ucams of the user by
-; just parsing the home directory path
-;
-; \return ucams 
-; ucams of the active account
-function get_ucams
-
-cd , "~/"
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-
-return, ucams
-
-end
-; \}
-;;     //end of get_ucams group
-
-
-
-
+;This function returns the ucams of the user
+FUNCTION get_ucams
+ucams_error = 0
+CATCH, ucams_error
+IF (ucams_error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN, 'Undefined'
+ENDIF ELSE BEGIN
+    spawn, '/usr/bin/whoami', listening
+ENDELSE
+RETURN, listening[0]
+END
 
 ;;
 ; \defgroup get_file_name_only; \{
