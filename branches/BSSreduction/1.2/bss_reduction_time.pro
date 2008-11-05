@@ -104,7 +104,7 @@ Function GenerateIsoTimeStamp
 
 dateUnformated = SYSTIME()    
 DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
-DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
+DateIso        = STRCOMPRESS(DateArray[4])
 
 month = 0
 CASE (DateArray[1]) OF
@@ -122,14 +122,14 @@ CASE (DateArray[1]) OF
     'Dec':month='12m'
 ENDCASE
 
-DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '_'
-DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + 'd_'
+DateIso += STRCOMPRESS(month,/REMOVE_ALL)
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + '_'
 
 ;change format of time
 time     = STRSPLIT(DateArray[3],':',/EXTRACT)
-DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h_'
-DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn_'
-DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL)
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL)
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL)
 
 RETURN, DateIso
 END
