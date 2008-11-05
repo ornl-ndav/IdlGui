@@ -119,9 +119,10 @@ colorbar, $
   POSITION     = [0.58,0.01,0.95,0.99], $
   RANGE        = range,$
   DIVISIONS    = divisions,$
-;  FORMAT       = '(I0)',$
   PERSO_FORMAT = perso_format,$
-  /VERTICAL
+  /VERTICAL,$
+  COLOR        = 200
+;  FORMAT       = '(I0)',$
 
 ;change color of background    
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='plot_txt_scale_draw')
