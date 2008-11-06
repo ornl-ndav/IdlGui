@@ -175,25 +175,6 @@ ENDIF ELSE BEGIN
     ENDIF
 ENDELSE
 
-;get Output File Name and folder
-OFile = getTextFieldValue(Event,'of_list_of_runs_text')
-;make sure there is no leading /
-array_split = STRSPLIT(OFile,'/',COUNT=nbr)
-IF (nbr GE 1) THEN BEGIN
-    IF (array_split[0] EQ 1) THEN BEGIN ;remove first '/'
-        string_split = STRSPLIT(OFile,'/',/EXTRACT)
-        OFile = STRJOIN(string_split,'/')
-        putTextFieldValue, Event, 'of_list_of_runs_text', OFile, 0
-    ENDIF
-ENDIF
-(*global).Configuration.Reduce.tab2.of_list_of_runs_text = OFile
-;get output folder name
-output_folder = (*global).default_output_path
-cmd += ' --output=' + output_folder
-IF (OFile NE '') THEN BEGIN
-    cmd += OFile
-ENDIF
-
 ;****TAB3****
 
 TabName = 'Tab#3 - PROCESS SETUP'
@@ -2155,15 +2136,38 @@ IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
    ENDELSE
 ENDIF
 
+;get Output File Name and folder
+OFile = getTextFieldValue(Event,'of_list_of_runs_text')
+;make sure there is no leading /
+array_split = STRSPLIT(OFile,'/',COUNT=nbr)
+IF (nbr GE 1) THEN BEGIN
+    IF (array_split[0] EQ 1) THEN BEGIN ;remove first '/'
+        string_split = STRSPLIT(OFile,'/',/EXTRACT)
+        OFile = STRJOIN(string_split,'/')
+        putTextFieldValue, Event, 'of_list_of_runs_text', OFile, 0
+    ENDIF
+ENDIF
+;get output folder name
+output_folder = (*global).default_output_path
+
 ;check if we have only 1 job to launch or several ones
 IF (job_number GT 1) THEN BEGIN ;create the array of jobs
-    cmd_array = CreateArrayOfJobs(cmd, $ ;_iterative_back
-                                  Qaxis    = Qaxis, $
-                                  Qbin     = Qbin, $
-                                  NBR_JOBS = job_number, $
-                                  FLAG     = ' --mom-trans-bin=')
+    cmd_array = CreateArrayOfJobs(Event,$
+                                  cmd, $ ;_iterative_back
+                                  Qaxis       = Qaxis, $
+                                  output_path = output_folder,$
+                                  output_name = OFile,$
+                                  output_flag = ' --output=',$
+                                  Qbin        = Qbin, $
+                                  NBR_JOBS    = job_number, $
+                                  FLAG        = ' --mom-trans-bin=')
     cmd = cmd_array
-ENDIF
+ENDIF ELSE BEGIN
+    cmd += ' --output=' + output_folder
+    IF (OFile NE '') THEN BEGIN
+        cmd += OFile
+    ENDIF
+ENDELSE
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
