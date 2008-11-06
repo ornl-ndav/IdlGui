@@ -16,14 +16,14 @@ sIBSlabel = { value: '-->  USE ITERATIVE BACKGROUND SUBTRACTION',$
                      sIBScwBgroup.size[1]+XYoff[1]]}
               
 ;base that will hold all the widgets ------------------------------------------
-XYoff = [0,38]
+XYoff = [10,38]
 sBase = { size: [XYoff[0],$
                  XYoff[1],$
-                 ReduceInputTabSettings.size[2],$
-                 ReduceInputTabSettings.size[3]],$
-          frame: 0,$
+                 725,$
+                 130],$
+          frame: 1,$
           sensitive: 1,$ ;REMOVE 1 and put 0
-          uname: 'iterative_background_subtraction_base'}
+          uname: 'non_iterative_background_subtraction_base'}
 
 ;______________________________________________________________________________
 ;Scale constant for lambda dependent background -------------------------------
@@ -34,7 +34,7 @@ sSCframe = { size: [XYoff[0],$
              frame: 0}
 
 ;scale constant for lambda dependent background label and value
-XYoff = [20,50]
+XYoff = [10,50]
 sScaleConstant = { size: [XYoff[0],$
                           XYoff[1]],$
                    value: 'Scale Constant for Lambda Dependent Background'}
@@ -50,7 +50,7 @@ XYoff = [400,5]
 sInputBase = { size: [sScaleConstant.size[0]+XYoff[0],$
                       XYoff[1],$
                       310,120],$
-               frame: 1,$
+               frame: 0,$
                sensitive: 0,$
                uname: 'scale_constant_lambda_dependent_input_base'}
 
@@ -91,13 +91,23 @@ sTOFleastValue = { size: [sChopperFrequencyValue.size[0]+XYoff[0],$
                           sChopperFrequencyValue.size[2]],$
                    uname: 'tof_least_background_value'}
 
+;------------------------------------------------------------------------------
+;Base 2
+XYoff = [0,10]
+sBase2 = { size: [sBase.size[0]+XYoff[0],$
+                  sBase.size[1]+$
+                  sBase.size[3]+XYoff[1],$
+                  ReduceInputTabSettings.size[2],$
+                  530],$
+           frame: 0,$
+           sensitive: 0,$ 
+           uname: 'iterative_background_subtraction_base'}
 ;______________________________________________________________________________
 ;Positive transverse energy integration range ---------------------------------
-XYoff = [10, 5]
-sPTEbase = { size: [sSCframe.size[0]+XYoff[0],$
-                    sSCframe.size[1]+ $
-                    sSCframe.size[3]+XYoff[1],$
-                    715,$
+XYoff = [0, 10]
+sPTEbase = { size: [XYoff[0],$
+                    XYoff[1],$
+                    725,$
                     55],$
              frame: 1}
 
@@ -144,18 +154,101 @@ sPTEtypeLabel = { size: [sPTEbinLabel.size[0]+XYoff[0],$
 
 ;______________________________________________________________________________
 ;other flags ------------------------------------------------------------------
-XYoff = [0, 12]
+XYoff = [0, 20]
 sOtherBase = { size: [sPTEbase.size[0]+XYoff[0],$
                       sPTEbase.size[1]+$
                       sPTEbase.size[3]+XYoff[1],$
                       sPTEbase.size[2],$
-                      150],$
+                      260],$
                frame: 1}
 
 XYoff = [15,-8]                 ;title
 sOtherTitle = { size: [sOtherBase.size[0]+XYoff[0],$
                        sOtherBase.size[1]+XYoff[1]],$
                 value: 'Iterative Background Subtration Flags'}
+
+;Detailed balance temperature
+XYoff = [20,20] ;label
+sDBTlabel = { size: [XYoff[0],$
+                     XYoff[1]],$
+              value: 'Detailed Balance Temperature              K'}
+XYoff = [200,-5]                ;value
+sDBTvalue = { size: [XYoff[0],$
+                     sDBTlabel.size[1]+XYoff[1],$
+                     60],$
+              value: '',$
+              uname: 'detailed_balance_temperature_value'}
+         
+;Radio Tolerance
+XYoff = [0,35] ;label
+sRTlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
+                    sDBTlabel.size[1]+XYoff[1]],$
+              value: 'Radio Tolerance'}
+XYoff = [0,-5]                ;value
+sRTvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
+                    sRTlabel.size[1]+XYoff[1],$
+                    sDBTvalue.size[2]],$
+             value: '',$
+             uname: 'radio_tolerance_value'}
+
+;Number of iteration
+XYoff = [0,35] ;label
+sNIlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
+                    sRTlabel.size[1]+XYoff[1]],$
+              value: 'Number of Iteration'}
+XYoff = [0,-5]                  ;value
+sNIvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
+                    sNIlabel.size[1]+XYoff[1],$
+                    sDBTvalue.size[2]],$
+             value: '20',$
+             uname: 'number_of_iteration'}
+
+;minimum wavelength dependent background cst
+XYoff = [0,35] ;label
+sMinWDBlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
+                        sNIlabel.size[1]+XYoff[1]],$
+              value: 'Minimum Wavelength-Dependent Background Constant'}
+XYoff = [0,-5]                  ;value
+sMinWDBvalue = { size: [325+XYoff[0],$
+                        sMinWDBlabel.size[1]+XYoff[1],$
+                        80],$
+                 value: '0.0',$
+                 uname: 'min_wave_dependent_back'}
+
+;maximum wavelength dependent background cst
+XYoff = [0,35] ;label
+sMaxWDBlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
+                        sMinWDBlabel.size[1]+XYoff[1]],$
+                 value: 'Maximum Wavelength-Dependent Background Constant'}
+XYoff = [0,-5]                  ;value
+sMaxWDBvalue = { size: [sMinWDBvalue.size[0]+XYoff[0],$
+                        sMaxWDBlabel.size[1]+XYoff[1],$
+                        80],$
+                 value: '',$
+                 uname: 'max_wave_dependent_back'}
+
+;small wavelength dependent background cst
+XYoff = [0,35] ;label
+sSmallWDBlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
+                          sMaxWDBlabel.size[1]+XYoff[1]],$
+                   value: 'Small Wavelength-Dependent Background Constant'}
+XYoff = [0,-5]                  ;value
+sSmallWDBvalue = { size: [sMinWDBvalue.size[0]+XYoff[0],$
+                          sSmallWDBlabel.size[1]+XYoff[1],$
+                          80],$
+                   value: '1.0E-14',$
+                   uname: 'small_wave_dependent_back'}
+
+;Amorphous Reduction Verbosity cw_bgroup
+XYoff = [0,30]
+sARVgroup = { size: [sDBTlabel.size[0]+XYoff[0],$
+                     sSmallWDBlabel.size[1]+XYoff[1]],$
+              value: ['Amorphous Reduction Verbosity'],$
+              uname: 'amorphouse_reduction_verbosity_cw_bgroup'}
+
+
+
+
 
 ;******************************************************************************
 ;                                Build GUI
@@ -276,16 +369,27 @@ wSCframe = WIDGET_LABEL(base,$
                         SCR_YSIZE = sSCframe.size[3],$
                         FRAME     = sSCframe.frame,$
                         VALUE     = '')
+
+;base that will hold all the second part of widgets ---------------------------
+base2 = WIDGET_BASE(main_base,$
+                    XOFFSET   = sBase2.size[0],$
+                    YOFFSET   = sBase2.size[1],$
+                    SCR_XSIZE = sBase2.size[2],$
+                    SCR_YSIZE = sBase2.size[3],$
+                    UNAME     = sBase2.uname,$
+                    SENSITIVE = sBase2.sensitive,$
+                    FRAME     = sBase2.frame)
+
 ;______________________________________________________________________________
 ;Positive transverse energy integration range ---------------------------------
 ;title
-wPTEtitle = WIDGET_LABEL(base,$
+wPTEtitle = WIDGET_LABEL(base2,$
                          XOFFSET = sPTEtitle.size[0],$
                          YOFFSET = sPTEtitle.size[1],$
                          VALUE   = sPTEtitle.value)
 
 ;base
-wPTEbase = WIDGET_BASE(base,$
+wPTEbase = WIDGET_BASE(base2,$
                        XOFFSET   = sPTEbase.size[0],$
                        YOFFSET   = sPTEbase.size[1],$
                        SCR_XSIZE = sPTEbase.size[2],$
@@ -352,21 +456,117 @@ label = WIDGET_LABEL(wPTEbase,$
 ;______________________________________________________________________________
 ;other flags ------------------------------------------------------------------
 ;title
-wOthertitle = WIDGET_LABEL(base,$
+wOthertitle = WIDGET_LABEL(base2,$
                          XOFFSET = sOthertitle.size[0],$
                          YOFFSET = sOthertitle.size[1],$
                          VALUE   = sOthertitle.value)
 
 ;base
-wOtherbase = WIDGET_BASE(base,$
+wOtherbase = WIDGET_BASE(base2,$
                        XOFFSET   = sOtherbase.size[0],$
                        YOFFSET   = sOtherbase.size[1],$
                        SCR_XSIZE = sOtherbase.size[2],$
                        SCR_YSIZE = sOtherbase.size[3],$
                        frame = 1)
 
+;Detailed balance temperature
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sDBTvalue.size[0],$
+                    YOFFSET   = sDBTvalue.size[1],$
+                    SCR_XSIZE = sDBTvalue.size[2],$
+                    UNAME     = sDBTvalue.uname,$
+                    VALUE     = sDBTvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sDBTlabel.size[0],$
+                     YOFFSET = sDBTlabel.size[1],$
+                     VALUE   = sDBTlabel.value)
+                     
+;Radio Tolerance
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sRTvalue.size[0],$
+                    YOFFSET   = sRTvalue.size[1],$
+                    SCR_XSIZE = sRTvalue.size[2],$
+                    UNAME     = sRTvalue.uname,$
+                    VALUE     = sRTvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sRTlabel.size[0],$
+                     YOFFSET = sRTlabel.size[1],$
+                     VALUE   = sRTlabel.value)
 
-
+;Number of iteration
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sNIvalue.size[0],$
+                    YOFFSET   = sNIvalue.size[1],$
+                    SCR_XSIZE = sNIvalue.size[2],$
+                    UNAME     = sNIvalue.uname,$
+                    VALUE     = sNIvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sNIlabel.size[0],$
+                     YOFFSET = sNIlabel.size[1],$
+                     VALUE   = sNIlabel.value)
+                     
+;minimum wavelength dependent background cst
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sMinWDBvalue.size[0],$
+                    YOFFSET   = sMinWDBvalue.size[1],$
+                    SCR_XSIZE = sMinWDBvalue.size[2],$
+                    UNAME     = sMinWDBvalue.uname,$
+                    VALUE     = sMinWDBvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sMinWDBlabel.size[0],$
+                     YOFFSET = sMinWDBlabel.size[1],$
+                     VALUE   = sMinWDBlabel.value)
+                     
+;maximum wavelength dependent background cst
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sMaxWDBvalue.size[0],$
+                    YOFFSET   = sMaxWDBvalue.size[1],$
+                    SCR_XSIZE = sMaxWDBvalue.size[2],$
+                    UNAME     = sMaxWDBvalue.uname,$
+                    VALUE     = sMaxWDBvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sMaxWDBlabel.size[0],$
+                     YOFFSET = sMaxWDBlabel.size[1],$
+                     VALUE   = sMaxWDBlabel.value)
+                     
+;small wavelength dependent background cst
+value = WIDGET_TEXT(wOtherBase,$
+                    XOFFSET   = sSmallWDBvalue.size[0],$
+                    YOFFSET   = sSmallWDBvalue.size[1],$
+                    SCR_XSIZE = sSmallWDBvalue.size[2],$
+                    UNAME     = sSmallWDBvalue.uname,$
+                    VALUE     = sSmallWDBvalue.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT,$
+                    /ALL_EVENTS)
+label = WIDGET_LABEL(wOtherBase,$
+                     XOFFSET = sSmallWDBlabel.size[0],$
+                     YOFFSET = sSmallWDBlabel.size[1],$
+                     VALUE   = sSmallWDBlabel.value)
+                     
+;Amorphous Reduction Verbosity cw_bgroup
+group = CW_BGROUP(wOtherBase,$
+                  sARVgroup.value,$
+                  XOFFSET = sARVgroup.size[0],$
+                  YOFFSET = sARVgroup.size[1],$
+                  UNAME   = sARVgroup.uname,$
+                  /NONEXCLUSIVE,$
+                  /NO_RELEASE)
 
 
 END
