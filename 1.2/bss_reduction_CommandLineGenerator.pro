@@ -1913,8 +1913,6 @@ ENDIF ELSE BEGIN ;iterative mode is ON
         result = CreateQaxis(Qmin,Qmax,Qbin,Qaxis) ;_math
         IF (result EQ 1) THEN BEGIN ;success
             job_number = N_ELEMENTS(Qaxis)-1
-            print, 'Qaxis:'
-            print, Qaxis
         ENDIF ELSE BEGIN        ;failed to create the Qaxis
             status_text = '   -Please Check the format of the ' + $
               'Momentum Transfer Histogram Axis'
@@ -2157,16 +2155,26 @@ IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
    ENDELSE
 ENDIF
 
+;check if we have only 1 job to launch or several ones
+IF (job_number GT 1) THEN BEGIN ;create the array of jobs
+    cmd_array = CreateArrayOfJobs(cmd, $ ;_iterative_back
+                                  Qaxis    = Qaxis, $
+                                  Qbin     = Qbin, $
+                                  NBR_JOBS = job_number, $
+                                  FLAG     = ' --mom-trans-bin=')
+    cmd = cmd_array
+ENDIF
+
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
 
 ;validate or not Go data reduction button
 IF (StatusMessage NE 0) THEN BEGIN ;do not activate button
     activate = 0
- ENDIF ELSE BEGIN
+ENDIF ELSE BEGIN
     activate = 1
- ENDELSE
- 
+ENDELSE
+
 Activate_button, Event,'submit_button',activate
 
 END
