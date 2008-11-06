@@ -36,10 +36,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION        = 'BSSreductionSQE'
+APPLICATION        = 'BSSreduction'
 VERSION            = '1.2.20'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
@@ -54,8 +54,8 @@ DEBUGGING_VERSION  = 'no'
 ;               7: 8) Output
 ;            2: Output
 ;            3: Log Book 
-sDEBUGGING = { tab: {main_tab: 2,$
-                     reduce_input_tab: 0},$
+sDEBUGGING = { tab: {main_tab: 1,$
+                     reduce_input_tab: 4},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
