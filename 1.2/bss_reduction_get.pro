@@ -61,6 +61,13 @@ RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getCWBgroupValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;This function gives the value of the index selected
 FUNCTION getDropListSelectedValue, Event, uname
 index_selected = getDropListSelectedIndex(Event,uname)
