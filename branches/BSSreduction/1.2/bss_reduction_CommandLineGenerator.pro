@@ -35,8 +35,8 @@
 PRO BSSreduction_CommandLineGenerator, Event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(EVENT.TOP, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 ;this function update all the reduce widgets (validate or not)
 BSSreduction_ReduceUpdateGui, Event
@@ -778,82 +778,118 @@ ENDIF
 ;;add a white space
 ;putInfoInCommandLineStatus, Event, '', 1
 
-;*************TAB5*****************
+;*************TAB5*************************************************************
 TabName = 'Tab#5 - LAMBDA DEPENDENT BACKGROUND SUBTRACTION'
 tab5    = 0
 
-scale_constant = $
-  getTextFieldValue(Event, $
-                    'scale_constant_lambda_dependent_back_uname')
-IF (scale_constant NE '') THEN BEGIN
-    activate_base = 1
-    cmd += ' --ldb-const=' + STRCOMPRESS(scale_constant,/REMOVE_ALL) + $
-      ',0.0'
-ENDIF ELSE BEGIN
-    activate_base = 0
-ENDELSE
-SensitiveBase, Event, $
-  'scale_constant_lambda_dependent_input_base', $
-  activate_base
+;check if use iterative background subtraction is active or not
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
 
-IF (activate_base) THEN BEGIN ;need the input information
-
-;Chopper Frequency
-    value = getTextFieldValue(Event,'chopper_frequency_value')
-    cmd += ' --chopper-freq='
-    IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a Chopper Frequency'
-        IF (tab5 EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-            StatusMessage EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-            StatusMessage NE 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
+IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    scale_constant = $
+      getTextFieldValue(Event, $
+                        'scale_constant_lambda_dependent_back_uname')
+    IF (scale_constant NE '') THEN BEGIN
+        activate_base = 1
+        cmd += ' --ldb-const=' + STRCOMPRESS(scale_constant,/REMOVE_ALL) + $
+          ',0.0'
     ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all) + ',0.0'
+        activate_base = 0
     ENDELSE
+    SensitiveBase, Event, $
+      'scale_constant_lambda_dependent_input_base', $
+      activate_base
     
+    IF (activate_base) THEN BEGIN ;need the input information
+        
+;Chopper Frequency
+        value = getTextFieldValue(Event,'chopper_frequency_value')
+        cmd += ' --chopper-freq='
+        IF (Value EQ '') THEN BEGIN
+            cmd += '?,0.0'
+            status_text = '   -Please provide a Chopper Frequency'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+        ENDIF ELSE BEGIN
+            cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+        
 ;Chopper Wavelength Center
-    value = getTextFieldValue(Event,'chopper_wavelength_value')
-    cmd += ' --chopper-lambda-cent='
-    IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a Chopper Wavelength Center'
-        IF (tab5 EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab5 EQ 0 AND $
-            StatusMessage EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab5 EQ 0 AND $
-            StatusMessage NE 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab5
-    ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all) + ',0.0'
-    ENDELSE
-
+        value = getTextFieldValue(Event,'chopper_wavelength_value')
+        cmd += ' --chopper-lambda-cent='
+        IF (Value EQ '') THEN BEGIN
+            cmd += '?,0.0'
+            status_text = '   -Please provide a Chopper Wavelength Center'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+        ENDIF ELSE BEGIN
+            cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+        
 ;TOF Least Background
-    value = getTextFieldValue(Event,'tof_least_background_value')
-    cmd += ' --tof-least-bkg='
-    IF (Value EQ '') THEN BEGIN
-        cmd += '?,0.0'
-        status_text = '   -Please provide a TOF Least Background'
+        value = getTextFieldValue(Event,'tof_least_background_value')
+        cmd += ' --tof-least-bkg='
+        IF (Value EQ '') THEN BEGIN
+            cmd += '?,0.0'
+            status_text = '   -Please provide a TOF Least Background'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab5
+        ENDIF ELSE BEGIN
+            cmd += strcompress(Value,/remove_all) + ',0.0'
+        ENDELSE
+
+    ENDIF
+
+ENDIF ELSE BEGIN ;if Iterative Background Subtraction is ON
+
+;positive transverse energy integration range .................................
+    cmd += ' --et-int-range='
+;min value
+    min_value = getTextFieldValue(Event,'pte_min_text')
+    IF (min_value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Minimum Transverse Energy' + $
+          ' Integration Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -870,10 +906,163 @@ IF (activate_base) THEN BEGIN ;need the input information
         StatusMessage += 1
         ++tab5
     ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all) + ',0.0'
+        cmd += strcompress(min_value,/remove_all)
     ENDELSE
 
-ENDIF
+;max value
+    max_value = getTextFieldValue(Event,'pte_max_text')
+    IF (max_value EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Maximum Transverse Energy' + $
+          ' Integration Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(max_value,/remove_all)
+    ENDELSE
+
+;width value
+    width_value = getTextFieldValue(Event,'pte_bin_text')
+    IF (width_value EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Width Transverse Energy' + $
+          ' Integration Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(width_value,/remove_all)
+    ENDELSE
+
+    cmd += ',linear'
+
+;detailed balance temperature .................................................
+    cmd += ' --detbal-temp='
+    temp_value = getTextFieldValue(Event,'detailed_balance_temperature_value')
+    IF (temp_value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Detailed Balance Temperature ' + $
+          'Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(temp_value,/remove_all)
+    ENDELSE
+
+;Ratio Tolerance ..............................................................
+    cmd += ' --tol='
+    ratio_value = getTextFieldValue(Event,'ratio_tolerance_value')
+    IF (ratio_value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Ratio Tolerance Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(ratio_value,/remove_all)
+    ENDELSE
+
+;Number of Iteration ..........................................................
+    ni_value = getTextFieldValue(Event,'number_of_iteration')
+    IF (STRCOMPRESS(ni_value,/REMOVE_ALL) NE '20') THEN BEGIN
+        cmd += ' --niter=' + ni_value
+    ENDIF
+
+;Minimum Wavlength Dependent Background Constant ..............................
+    mw_value = getTextFieldValue(Event,'min_wave_dependent_back')
+    IF (STRCOMPRESS(mw_value,/REMOVE_ALL) NE '0.0') THEN BEGIN
+        cmd += ' --cwdb-min=' + mw_value
+    ENDIF
+
+;Maximum Wavlength Dependent Background Constant ..............................
+    cmd += ' --cwdb-max='
+    max_value = getTextFieldValue(Event,'max_wave_dependent_back')
+    IF (max_value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Maximum Wavelength-Dependent ' + $
+          'Background Constant Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(max_value,/remove_all)
+    ENDELSE
+
+;Small Wavlength Dependent Background Constant ................................
+    small_value = getTextFieldValue(Event,'small_wave_dependent_back')
+    IF (STRCOMPRESS(small_value,/REMOVE_ALL) NE '1.0E-14') THEN BEGIN
+        cmd += ' --cwdb-small=' + small_value
+    ENDIF
+
+    verbosity_value = getCWBgroupValue(Event, $
+                         'amorphous_reduction_verbosity_cw_bgroup')
+    IF(verbosity_value) THEN BEGIN
+        cmd += ' --amr-verbose'
+    ENDIF
+
+ENDELSE
 
 ;*************TAB6*****************
 TabName = 'Tab#6 - SCALLING CONTROL'
@@ -1622,16 +1811,6 @@ IF (TIBCBin EQ '') THEN BEGIN
 ENDIF ELSE BEGIN
    cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
-
-
-
-
-
-
-
-
-
-
 
 ;get time of flight range -----------------------------------------------------
 IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN

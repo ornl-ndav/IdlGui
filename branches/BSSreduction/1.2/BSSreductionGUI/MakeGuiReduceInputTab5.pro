@@ -125,7 +125,7 @@ XYoff3 = [40,-5]
 sPTEminText  = { size : [sPTEminLabel.size[0]+XYoff3[0],$
                          sPTEminlabel.size[1]+XYoff3[1],$
                          100,30],$
-                 uname : '[pte_min_text'}
+                 uname : 'pte_min_text'}
 
 XYoff4 = [180,0]
 sPTEmaxLabel = { size : [sPTEminLabel.size[0]+XYoff4[0],$
@@ -179,17 +179,17 @@ sDBTvalue = { size: [XYoff[0],$
               value: '',$
               uname: 'detailed_balance_temperature_value'}
          
-;Radio Tolerance
+;Ratio Tolerance
 XYoff = [0,35] ;label
 sRTlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
                     sDBTlabel.size[1]+XYoff[1]],$
-              value: 'Radio Tolerance'}
+              value: 'Ratio Tolerance'}
 XYoff = [0,-5]                ;value
 sRTvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
                     sRTlabel.size[1]+XYoff[1],$
                     sDBTvalue.size[2]],$
              value: '',$
-             uname: 'radio_tolerance_value'}
+             uname: 'ratio_tolerance_value'}
 
 ;Number of iteration
 XYoff = [0,35] ;label
@@ -244,11 +244,7 @@ XYoff = [0,30]
 sARVgroup = { size: [sDBTlabel.size[0]+XYoff[0],$
                      sSmallWDBlabel.size[1]+XYoff[1]],$
               value: ['Amorphous Reduction Verbosity'],$
-              uname: 'amorphouse_reduction_verbosity_cw_bgroup'}
-
-
-
-
+              uname: 'amorphous_reduction_verbosity_cw_bgroup'}
 
 ;******************************************************************************
 ;                                Build GUI
@@ -268,6 +264,7 @@ cwbgroup = CW_BGROUP(main_base,$
                      SET_VALUE = sIBScwBgroup.set_value,$
                      UNAME     = sIBScwBgroup.uname,$
                      /EXCLUSIVE,$
+                     /NO_RELEASE,$
                      /ROW)
 
 label = WIDGET_LABEL(main_base,$
@@ -565,8 +562,7 @@ group = CW_BGROUP(wOtherBase,$
                   XOFFSET = sARVgroup.size[0],$
                   YOFFSET = sARVgroup.size[1],$
                   UNAME   = sARVgroup.uname,$
-                  /NONEXCLUSIVE,$
-                  /NO_RELEASE)
+                  /NONEXCLUSIVE)
 
 
 END

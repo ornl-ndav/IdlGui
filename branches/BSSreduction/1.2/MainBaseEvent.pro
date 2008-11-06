@@ -631,6 +631,13 @@ CASE Event.id OF
     end    
 
 ;tab5
+;Use iteractive background subtraction ----------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'use_iterative_background_subtraction_cw_bgroup'): begin
+        BSSreduction_Reduce_use_iterative_back, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME= $
                 'scale_constant_lambda_dependent_back_uname'): begin
         BSSreduction_CommandLineGenerator, Event
@@ -651,7 +658,57 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
-;tab6
+;Positive transverse energy integration range ---------------------------------
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'pte_min_text'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'pte_max_text'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'pte_bin_text'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+;other flags ------------------------------------------------------------------
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'detailed_balance_temperature_value'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'ratio_tolerance_value'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'number_of_iteration'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'min_wave_dependent_back'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'max_wave_dependent_back'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'small_wave_dependent_back'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME= $
+                'amorphous_reduction_verbosity_cw_bgroup'): begin
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+;tab6 =========================================================================
     Widget_Info(wWidget, FIND_BY_UNAME='csbss_button'): begin
         BSSreduction_Reduce_csbss_button, Event
         BSSreduction_CommandLineGenerator, Event

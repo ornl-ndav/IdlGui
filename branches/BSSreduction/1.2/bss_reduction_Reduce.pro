@@ -265,6 +265,27 @@ PRO BSSreduction_Reduce_tibc_for_scatd_error_text, Event
 END
 
 ;****************** TAB 5 *************************
+
+;Use iteractive background subtraction ----------------------------------------
+PRO BSSreduction_Reduce_use_iterative_back, Event
+value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
+IF (value EQ 0) THEN BEGIN
+    base1_status = 0
+    base2_status = 1
+ENDIF ELSE BEGIN
+    base1_status = 1
+    base2_status = 0
+ENDELSE
+SensitiveBase, event, $
+  'non_iterative_background_subtraction_base', $
+  base1_status
+SensitiveBase, event, $
+  'iterative_background_subtraction_base', $
+  base2_status
+END
+
+;------------------------------------------------------------------------------
 ;This function is reached by csbss_button
 PRO BSSreduction_Reduce_csbss_button, Event
 BSSreduction_EnableOrNotFields, Event, 'csbss_button'
