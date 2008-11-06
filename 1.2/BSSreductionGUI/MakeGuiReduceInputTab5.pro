@@ -100,7 +100,7 @@ sBase2 = { size: [sBase.size[0]+XYoff[0],$
                   ReduceInputTabSettings.size[2],$
                   530],$
            frame: 0,$
-           sensitive: 0,$ 
+           sensitive: 1,$  ;remove 1 and put 0 back
            uname: 'iterative_background_subtraction_base'}
 ;______________________________________________________________________________
 ;Positive transverse energy integration range ---------------------------------
@@ -195,7 +195,7 @@ sRTvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
 XYoff = [0,35] ;label
 sNIlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
                     sRTlabel.size[1]+XYoff[1]],$
-              value: 'Number of Iteration'}
+              value: 'Number of Iteration                     (20)'}
 XYoff = [0,-5]                  ;value
 sNIvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
                     sNIlabel.size[1]+XYoff[1],$
@@ -207,7 +207,8 @@ sNIvalue = { size: [sDBTvalue.size[0]+XYoff[0],$
 XYoff = [0,35] ;label
 sMinWDBlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
                         sNIlabel.size[1]+XYoff[1]],$
-              value: 'Minimum Wavelength-Dependent Background Constant'}
+                 value: 'Minimum Wavelength-Dependent Background Constant' + $
+                 '                (0.0)'}
 XYoff = [0,-5]                  ;value
 sMinWDBvalue = { size: [325+XYoff[0],$
                         sMinWDBlabel.size[1]+XYoff[1],$
@@ -231,7 +232,8 @@ sMaxWDBvalue = { size: [sMinWDBvalue.size[0]+XYoff[0],$
 XYoff = [0,35] ;label
 sSmallWDBlabel = { size: [sDBTlabel.size[0]+XYoff[0],$
                           sMaxWDBlabel.size[1]+XYoff[1]],$
-                   value: 'Small Wavelength-Dependent Background Constant'}
+                   value: 'Small Wavelength-Dependent Background Constant' + $
+                   '                  (1.0E-14)'}
 XYoff = [0,-5]                  ;value
 sSmallWDBvalue = { size: [sMinWDBvalue.size[0]+XYoff[0],$
                           sSmallWDBlabel.size[1]+XYoff[1],$
