@@ -68,6 +68,7 @@ cd, CurrentFolder
 .run bss_reduction_LoadRoiFile.pro
 .run bss_reduction_LogBook.pro
 .run bss_reduction_ColorSelection.pro
+.run bss_reduction_math.pro
 
 .run bss_reduction_Reduce.pro
 .run bss_reduction_ReduceTab1.pro
