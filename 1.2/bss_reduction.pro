@@ -55,7 +55,7 @@ DEBUGGING_VERSION  = 'yes'
 ;            2: Output
 ;            3: Log Book 
 sDEBUGGING = { tab: {main_tab: 1,$
-                     reduce_input_tab: 4},$
+                     reduce_input_tab: 6},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
