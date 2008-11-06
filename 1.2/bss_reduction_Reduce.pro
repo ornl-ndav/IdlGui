@@ -270,9 +270,38 @@ END
 PRO BSSreduction_Reduce_use_iterative_back, Event
 value = getCWBgroupValue(Event, $
                          'use_iterative_background_subtraction_cw_bgroup')
-IF (value EQ 0) THEN BEGIN
-    base1_status = 0
-    base2_status = 1
+IF (value EQ 0) THEN BEGIN ;turn ON
+    ButtonValue = getButtonValue(Event,'mtha_button')
+    IF (ButtonValue EQ 1) THEN BEGIN ;negative cosine polar axis
+        message = ['The ITERATIVE BACKGROUND SUBTRACTION mode',$
+                   'can not be used with',$
+                   'the NEGATIVE COSINE POLAR AXIS mode.',$
+                   '',$
+                   '-- Do you want to confirm your selection ? --',$
+                   '',$
+                   '(The Negative Cosine Polar Axis mode will be turned off)']
+        result = DIALOG_MESSAGE(message,$
+                                TITLE = 'WARNING!',$
+                                /QUESTION)
+        IF (result EQ 'Yes') THEN BEGIN ;turn off cosine polar axis
+            WIDGET_CONTROL,Event.top,GET_UVALUE=global
+            MinMaxWidthArray = getMTorNCPvalues(Event)
+            (*global).negative_cosine_polar_array = MinMaxWidthArray
+            putMTorNCPvalues, Event, (*global).momentum_transfer_array
+            SetButton, Event,$
+              'mtha_button', 0
+            base1_status = 0
+            base2_status = 1
+        ENDIF ELSE BEGIN ;do not change button
+            setButton, Event, $
+              'use_iterative_background_subtraction_cw_bgroup', 1
+            base1_status = 1
+            base2_status = 0
+        ENDELSE
+    ENDIF ELSE BEGIN
+        base1_status = 0
+        base2_status = 1
+    ENDELSE
 ENDIF ELSE BEGIN
     base1_status = 1
     base2_status = 0
@@ -437,15 +466,42 @@ PRO BSSreduction_Reduce_mtha_button, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;retrieve current activated flag
 ;0:momentum transfer/1:negative cosine polar
-ButtonValue = getButtonValue(Event,'mtha_button')
+ButtonValue      = getButtonValue(Event,'mtha_button')
 MinMaxWidthArray = getMTorNCPvalues(Event)
 IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
 ;first save fields value of Negative Cosine Polar Axis
     (*global).negative_cosine_polar_array = MinMaxWidthArray
     putMTorNCPvalues, Event, (*global).momentum_transfer_array
 ENDIF ELSE BEGIN
-    (*global).momentum_transfer_array = MinMaxWidthArray
-    putMTorNCPvalues, Event, (*global).negative_cosine_polar_array
+;check if the Iterative background substraction mode is on or off
+    ibs_value = $
+      getCWBgroupValue(Event, $
+                       'use_iterative_background_subtraction_cw_bgroup')
+    IF (ibs_value EQ 0) THEN BEGIN ;ON
+        message = ['The NEGATIVE COSINE POLAR AXIS mode',$
+                   'can NOT be used with',$
+                   'the ITERATIVE BACKGROUND SUBTRACTION mode.',$
+                   '',$
+                   '-- Do you want to confirm your selection ? --',$
+                   '',$
+                   '(The Iterative Background Mode will be turned off)']
+        result = DIALOG_MESSAGE(message,$
+                                TITLE = 'WARNING!',$
+                                /QUESTION)
+        IF (result EQ 'Yes') THEN BEGIN
+            (*global).momentum_transfer_array = MinMaxWidthArray
+            putMTorNCPvalues, Event, (*global).negative_cosine_polar_array
+            SetButton, event, $
+              'use_iterative_background_subtraction_cw_bgroup', 1
+            BSSreduction_Reduce_use_iterative_back, Event
+        ENDIF ELSE BEGIN
+            SetButton, event, $
+              'mtha_button',0
+        ENDELSE
+    ENDIF ELSE BEGIN
+        (*global).momentum_transfer_array = MinMaxWidthArray
+        putMTorNCPvalues, Event, (*global).negative_cosine_polar_array
+    ENDELSE
 ENDELSE
 END
 

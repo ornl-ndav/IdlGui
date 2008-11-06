@@ -43,7 +43,15 @@ BSSreduction_ReduceUpdateGui, Event
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
-cmd = (*global).DriverName + ' ' ;name of function to call
+;check if use iterative background subtraction is active or not
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
+
+IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    cmd = (*global).DriverName + ' ' ;name of function to call
+ENDIF ELSE BEGIN
+    cmd = (*global).iterative_background_DriverName + ' '
+ENDELSE
 
 ;****TAB1****
 
