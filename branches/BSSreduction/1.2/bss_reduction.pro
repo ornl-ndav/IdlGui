@@ -101,6 +101,7 @@ global = ptr_new ({ $
                     momentum_transfer_array:     STRARR(3),$
                     DeployedVersion: DeployedVersion,$
                     DriverName: 'amorphous_reduction_sqe',$
+                    iterative_background_DriverName: 'find_ldb',$
                     DRstatusOK: 'Data Reduction ... DONE',$
                     DRstatusFAILED: 'Data Reduction ... ERROR! ' + $
                     '(-> Check Log Book)',$
