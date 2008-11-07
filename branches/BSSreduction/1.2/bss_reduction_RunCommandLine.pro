@@ -161,6 +161,9 @@ IF (ok_to_CONTINUE) THEN BEGIN
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
+
+
+
     ENDELSE
     
 ENDIF ELSE BEGIN 

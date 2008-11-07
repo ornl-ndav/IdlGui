@@ -69,6 +69,17 @@ DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             600,630],$
                      uname : 'output_file_data_text'}
                         
+;Browse for a file to plot ---------------------------------------------------
+XYoff = [15,0]
+sBrowseButton = { size: [DataText.size[0]+$
+                         DataText.size[2]+$
+                         XYoff[0],$
+                         DataText.size[1]+$
+                         XYoff[1],$
+                         550],$
+                  value: ' FILE BROWSER ... ',$
+                  uname: 'output_plot_browse_button'}
+
 ;get plot button -------------------------------------------------------------
 XYoff = [80,100]
 sPlotButtonBase = { size: [DataText.size[0]+$
@@ -138,6 +149,14 @@ Data = WIDGET_TEXT(OutputBase,$
                      SCR_XSIZE = DataText.size[2],$
                      SCR_YSIZE = DataText.size[3],$
                      UNAME     = DataText.uname)
+
+;Browse for a file to plot ---------------------------------------------------
+wBrowseButton = WIDGET_BUTTON(OutputBase,$
+                              XOFFSET   = sBrowseButton.size[0],$
+                              YOFFSET   = sBrowseButton.size[1],$
+                              SCR_XSIZE = sBrowseButton.size[2],$
+                              UNAME     = sBrowseButton.uname,$
+                              VALUE     = sBrowseButton.value)
 
 ;get plot button -------------------------------------------------------------
 wPlotBase = WIDGET_BASE(OutputBase,$

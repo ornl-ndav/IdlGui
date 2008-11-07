@@ -295,3 +295,69 @@ ENDELSE ;end of CATCH statement
 WIDGET_CONTROL,HOURGLASS=0
 
 END
+
+;------------------------------------------------------------------------------
+PRO display_metadata, Event, file_name
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+read_error = 0
+CATCH, read_error
+IF (read_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    activate_plot_button_status = 0
+ENDIF ELSE BEGIN
+
+;get selected file name
+    SelectedFileName = file_name
+    
+;put name of file label file name
+    putTextinTextField, Event, 'output_plot_file_name', selectedFileName
+    
+;create instance of data file
+    iData = OBJ_NEW('IDL3columnsASCIIparser', SelectedFileName)
+    
+;get preview of file
+    preview = iData->getFullFile()
+    OBJ_DESTROY, iData
+    
+;put data in preview text_field
+    putTextFieldValue, Event, 'output_file_data_text', preview, 0
+    
+    activate_plot_button_status = 1
+    
+ENDELSE
+
+;activate or not plot button
+activate_base, Event, 'output_plot_data_base', activate_plot_button_status
+
+END
+
+;------------------------------------------------------------------------------
+
+PRO BrowseOutputPlot, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+default_path = (*global).output_plot_path
+title         = 'Select a file to plot ... '
+
+file_name = DIALOG_PICKFILE(PATH  = default_path,$
+                            TITLE = title,$
+                            /READ,$
+                            /MUST_EXIST)
+
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+IF (file_name NE '') THEN BEGIN
+;put name of file in label box
+    putTextInTextField, Event, 'output_plot_file_name', file_name
+;display metadata of selected file
+    display_metadata, Event, file_name
+
+ENDIF
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
+END

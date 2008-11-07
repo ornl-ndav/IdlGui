@@ -1001,11 +1001,17 @@ CASE Event.id OF
         BSSreduction_RunCommandLine, Event
     end    
 
+;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
         BSSreduction_DisplayOutputFiles, Event
     end    
     
+;Browse Button 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='output_plot_browse_button'): begin
+        BrowseOutputPlot, Event ;_intermediatePlots
+    end    
+
 ;Plot data (cow button)
     Widget_Info(wWidget, FIND_BY_UNAME='output_plot_data'): begin
         PlotOutputData, Event ;_IntermediatePlots
