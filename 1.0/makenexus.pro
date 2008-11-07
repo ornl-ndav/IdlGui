@@ -76,6 +76,7 @@ CASE (hostname) OF
     'arcs1'       : instrumentIndex = 4
     'arcs2'       : instrumentIndex = 4
     'cncs'        : instrumentIndex = 5
+    'snap'        : instrumentIndex = 6
     else          : instrumentIndex = 0
 ENDCASE 
 
@@ -134,14 +135,16 @@ InstrumentList = ['Instrument ?',$
                   'REF_L',$
                   'REF_M',$
                   'ARCS',$
-                  'CNCS']
+                  'CNCS',$
+                  'SNAP']
 
 instrumentShortList = ['',$
                        'BSS',$
                        'REF_L',$
                        'REF_M',$
                        'ARCS',$
-                       'CNCS']
+                       'CNCS',$
+                       'SNAP']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
