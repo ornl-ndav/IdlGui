@@ -62,9 +62,11 @@ IF (FILE_TEST(output_path,/DIRECTORY) EQ 0) THEN BEGIN ;folder does not exist
 ENDIF
 
 IF (ok_to_CONTINUE) THEN BEGIN
-
-;get command line to generate
-    cmd = getTextFieldValue(Event,'command_line_generator_text')
+    
+;check if use iterative background subtraction is active or not
+    ibs_value = $
+      getCWBgroupValue(Event, $
+                       'use_iterative_background_subtraction_cw_bgroup')
     
 ;add called to SLURM
 ;check instrument here
@@ -74,73 +76,90 @@ IF (ok_to_CONTINUE) THEN BEGIN
         'bac2':        srun = 'bac2q'
         ELSE:          srun = 'bss'
     ENDCASE
-    cmd = 'srun -p ' + srun + ' ' + cmd
     
+;get command line to generate
+    cmd = getTextFieldValue(Event,'command_line_generator_text')
+    
+    IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+        
+        cmd = 'srun -p ' + srun + ' ' + cmd
+        
 ;display command line in log-book
-    cmd_text = 'Running Command Line:'
-    AppendLogBookMessage, Event, cmd_text
-    cmd_text = ' -> ' + cmd
-    AppendLogBookMessage, Event, cmd_text
-    cmd_text = ' ... ' + PROCESSING
-    AppendLogBookMessage, Event, cmd_text
-    
-    status_text = 'Data Reduction ... ' + PROCESSING
-    putDRstatusInfo, Event, status_text
-    
+        cmd_text = 'Running Command Line:'
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' -> ' + cmd
+        AppendLogBookMessage, Event, cmd_text
+        cmd_text = ' ... ' + PROCESSING
+        AppendLogBookMessage, Event, cmd_text
+        
+        status_text = 'Data Reduction ... ' + PROCESSING
+        putDRstatusInfo, Event, status_text
+        
 ;;indicate initialization with hourglass icon
-    widget_control,/hourglass
-    
-    spawn, cmd, listening, err_listening
-    IF (err_listening[0] NE '') THEN BEGIN
+        widget_control,/hourglass
         
-        MessageToAdd    = (*global).FAILED
-        MessageToRemove = PROCESSING
-        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-        
+        spawn, cmd, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            
+            MessageToAdd    = (*global).FAILED
+            MessageToRemove = PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+            
 ;display listening
-        AppendLogBookMessage, Event, listening
-        
+            AppendLogBookMessage, Event, listening
+            
 ;display err_listening
-        AppendLogBookMessage, Event, err_listening
+            AppendLogBookMessage, Event, err_listening
+            
+            status_text = (*global).DRstatusFAILED
+            putDRstatusInfo, Event, status_text
+            
+        ENDIF ELSE BEGIN
+            
+            MessageToAdd = 'DONE'
+            MessageToRemove = PROCESSING
+            putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
+            
+            status_text = (*global).DRstatusOK
+            putDRstatusInfo, Event, status_text
+            
+            IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
+;display listening
+                AppendLogBookMessage, Event, listening
+            ENDIF
+            
+            LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
+            AppendLogBookMessage, Event, LogBookText
+            
+;display xml config file
+            xmlConfigFile = getXmlConfigFileName(Event)
+            LogBookText = '  XML data reduction config file: ' + $
+              strcompress(xmlConfigFile,/remove_all)
+            AppendLogBookMessage, Event, LogBookText
+            
+            BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
+            
+;update list of intermediate plots in OUTPUT tab droplist
+            BSSreduction_IntermediatePlotsUpdateDroplist, Event
+            
+        ENDELSE
+        
+    ENDIF ELSE BEGIN
         
         status_text = (*global).DRstatusFAILED
         putDRstatusInfo, Event, status_text
         
-    ENDIF ELSE BEGIN
-        
-        MessageToAdd = 'DONE'
-        MessageToRemove = PROCESSING
-        putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-        
-        status_text = (*global).DRstatusOK
-        putDRstatusInfo, Event, status_text
-        
-        IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
-;display listening
-            AppendLogBookMessage, Event, listening
-        ENDIF
-        
-        LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
-        AppendLogBookMessage, Event, LogBookText
-        
-;display xml config file
-        xmlConfigFile = getXmlConfigFileName(Event)
-        LogBookText = '  XML data reduction config file: ' + $
-          strcompress(xmlConfigFile,/remove_all)
-        AppendLogBookMessage, Event, LogBookText
-        
-        BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
-        
-;update list of intermediate plots in OUTPUT tab droplist
-        BSSreduction_IntermediatePlotsUpdateDroplist, Event
-        
     ENDELSE
     
-ENDIF ELSE BEGIN
-    
-    status_text = (*global).DRstatusFAILED
-    putDRstatusInfo, Event, status_text
-    
+ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
+
+    print, cmd
+    help, cmd
+
+
+
+
+
 ENDELSE
 
 ;turn off hourglass

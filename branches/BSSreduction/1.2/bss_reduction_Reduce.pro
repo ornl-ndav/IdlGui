@@ -290,28 +290,70 @@ IF (value EQ 0) THEN BEGIN ;turn ON
             putMTorNCPvalues, Event, (*global).momentum_transfer_array
             SetButton, Event,$
               'mtha_button', 0
-            base1_status = 0
-            base2_status = 1
+
+            SensitiveBase, event, $
+              'non_iterative_background_subtraction_base', $
+              1
+            SensitiveBase, event, $
+              'scale_constant_lambda_dependent_back_uname', $
+              0
+            SensitiveBase, event, $
+              'scale_constant_lambda_depdendent_back_label', $
+              0
+            SensitiveBase, event, $
+              'scale_constant_lambda_dependent_input_base',$
+              1
+            SensitiveBase, event, $
+              'iterative_background_subtraction_base', $
+              1
+
         ENDIF ELSE BEGIN ;do not change button
             setButton, Event, $
               'use_iterative_background_subtraction_cw_bgroup', 1
-            base1_status = 1
-            base2_status = 0
+
+            SensitiveBase, event, $
+              'non_iterative_background_subtraction_base', $
+              1
+            SensitiveBase, event, $
+              'iterative_background_subtraction_base', $
+              0
+
         ENDELSE
     ENDIF ELSE BEGIN
-        base1_status = 0
-        base2_status = 1
+
+            SensitiveBase, event, $
+              'non_iterative_background_subtraction_base', $
+              1
+            SensitiveBase, event, $
+              'scale_constant_lambda_dependent_back_uname', $
+              0
+            SensitiveBase, event, $
+              'scale_constant_lambda_depdendent_back_label', $
+              0
+            SensitiveBase, event, $
+              'scale_constant_lambda_dependent_input_base',$
+              1
+            SensitiveBase, event, $
+              'iterative_background_subtraction_base', $
+              1
+
     ENDELSE
 ENDIF ELSE BEGIN
-    base1_status = 1
-    base2_status = 0
+
+    SensitiveBase, event, $
+      'non_iterative_background_subtraction_base', $
+      1
+    SensitiveBase, event, $
+      'scale_constant_lambda_dependent_back_uname', $
+      1
+    SensitiveBase, event, $
+      'scale_constant_lambda_depdendent_back_label', $
+      1
+    SensitiveBase, event, $
+      'iterative_background_subtraction_base', $
+      0
+
 ENDELSE
-SensitiveBase, event, $
-  'non_iterative_background_subtraction_base', $
-  base1_status
-SensitiveBase, event, $
-  'iterative_background_subtraction_base', $
-  base2_status
 END
 
 ;------------------------------------------------------------------------------

@@ -37,6 +37,7 @@ sSCframe = { size: [XYoff[0],$
 XYoff = [10,50]
 sScaleConstant = { size: [XYoff[0],$
                           XYoff[1]],$
+                   uname: 'scale_constant_lambda_depdendent_back_label',$
                    value: 'Scale Constant for Lambda Dependent Background'}
 XYoff = [285,-7]
 sScaleConstantInput = { size: [sScaleConstant.size[0]+XYoff[0],$
@@ -291,6 +292,7 @@ base = WIDGET_BASE(main_base,$
 wScaleConstant = WIDGET_LABEL(base,$
                               XOFFSET   = sScaleConstant.size[0],$
                               YOFFSET   = sScaleConstant.size[1],$ 
+                              UNAME     = sScaleConstant.uname,$
                               VALUE     = sScaleConstant.value)
 
 wScaleConstantInput = WIDGET_TEXT(base,$
