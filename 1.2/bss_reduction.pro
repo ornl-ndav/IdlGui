@@ -54,8 +54,9 @@ DEBUGGING_VERSION  = 'yes'
 ;               7: 8) Output
 ;            2: Output
 ;            3: Log Book 
+
 sDEBUGGING = { tab: {main_tab: 1,$
-                     reduce_input_tab: 6},$
+                     reduce_input_tab: 4},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
@@ -75,7 +76,26 @@ sDEBUGGING = { tab: {main_tab: 1,$
                         input7: { uname: 'mtha_max_text',$
                                   value: '2'},$
                         input8: { uname: 'mtha_bin_text',$
-                                  value: '.1'}}}
+                                  value: '.1'},$
+                        input9: { uname: 'pte_min_text',$
+                                  value: '180'},$
+                        input10: { uname: 'pte_max_text',$
+                                   value: '200'},$
+                        input11: { uname: 'pte_bin_text',$
+                                   value: '0.4'},$
+                        input12: { uname: $
+                                   'detailed_balance_temperature_value',$
+                                   value: '300'},$
+                        input13: { uname: 'ratio_tolerance_value',$
+                                   value: '0.001'},$
+                        input14: { uname: 'max_wave_dependent_back',$
+                                   value: '1E-10'},$
+                        input15: { uname: 'chopper_frequency_value',$
+                                   value: '30'},$
+                        input16: { uname: 'chopper_wavelength_value',$
+                                   value: '6.4'},$
+                        input17: { uname: 'tof_least_background_value',$
+                                   value: '154000'}}}
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;==============================================================================
@@ -449,7 +469,7 @@ IF (DEBUGGING_VERSION EQ 'yes' ) THEN BEGIN
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.reduce_input_tab
 
 ;refill gui with information
-    nbr = (size(sDebugging.reduce))(2)
+    nbr = N_TAGS(sDebugging.reduce)
     index =  0
     WHILE (index LT nbr) DO BEGIN
         putTextFieldValue_from_MainBase, MAIN_BASE, $
