@@ -215,6 +215,8 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 index_selected = getDropListSelectedIndex(Event, $
                                           'output_file_name_droplist')
 output_file_name = getTextFieldValue(Event,'output_plot_file_name')
+;get file extension
+file_ext = getFileExt(output_file_name)
 
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
@@ -227,7 +229,7 @@ CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ENDIF ELSE BEGIN
-    IF (index_selected EQ 0) THEN BEGIN ;.txt file
+    IF (file_ext EQ 'txt') THEN BEGIN ;'.txt'
         
         iASCII = OBJ_NEW('IDL3columnsASCIIparser', $
                          output_file_name,$
