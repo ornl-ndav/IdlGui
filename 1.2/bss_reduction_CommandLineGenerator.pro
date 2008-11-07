@@ -1511,33 +1511,40 @@ ENDIF
 TabName = 'Tab#7 - DATA CONTROL'
 tab7    = 0
 
-;constant for scaling the final data spectrum
-IF (isButtonSelected(Event,'csfds_button')) THEN BEGIN
-    cmd += ' --rescale-final='
+;check if use iterative background subtraction is active or not
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
 
-    Value = getTextFieldValue(Event,'csfds_value_text')
-    IF (Value EQ '') THEN BEGIN
-        cmd += '?'
-        status_text = '   -Please provide a Constant for Scaling the Final' + $
-          ' Data Spectrum'
-        IF (tab7 EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, '', 1
-        ENDIF
-        IF (tab7 EQ 0 AND $
-            StatusMessage EQ 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 0
-        ENDIF
-        IF (tab7 EQ 0 AND $
-            StatusMessage NE 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab7
-    ENDIF ELSE BEGIN
-        cmd += strcompress(Value,/remove_all)
-    ENDELSE
+IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+;constant for scaling the final data spectrum
+    IF (isButtonSelected(Event,'csfds_button')) THEN BEGIN
+        cmd += ' --rescale-final='
+        
+        Value = getTextFieldValue(Event,'csfds_value_text')
+        IF (Value EQ '') THEN BEGIN
+            cmd += '?'
+            status_text = '   -Please provide a Constant for Scaling' + $
+              ' the Final' + $
+              ' Data Spectrum'
+            IF (tab7 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab7 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab7 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab7
+        ENDIF ELSE BEGIN
+            cmd += strcompress(Value,/remove_all)
+        ENDELSE
+    ENDIF
 ENDIF
 
 ;get Time Zero Slope Parameter
@@ -2033,183 +2040,193 @@ putInfoInCommandLineStatus, Event, '', 1
 
 ;************TAB8******************
 
-TabName = 'Tab#8 - INTERMEDIATE OUTPUT'
-tab8    = 0
+;check if use iterative background subtraction is active or not
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
 
+IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    TabName = 'Tab#8 - INTERMEDIATE OUTPUT'
+    tab8    = 0
+    
 ;Write all Intermediate Output
-IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
-    cmd += ' --dump-all'
-    (*global).Configuration.Reduce.tab8.waio_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab8.waio_button = 0
-ENDELSE
-
-IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
-
-;Write out Calculated Time-Independent Background
-    IF (isButtonSelected(Event,'woctib_button') AND $
-        isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
-        cmd += ' --dump-tib'
-        (*global).Configuration.Reduce.tab8.woctib_button = 1
+    IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
+        cmd += ' --dump-all'
+        (*global).Configuration.Reduce.tab8.waio_button = 1
     ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.woctib_button = 0
+        (*global).Configuration.Reduce.tab8.waio_button = 0
     ENDELSE
-    
-;Write out Pixel Wavelength Spectra
-    IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
-        cmd += ' --dump-wave'
-        (*global).Configuration.Reduce.tab8.wopws_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wopws_button = 0
-    ENDELSE
-    
-;Write out Monitor Wavelength Spectrum
-    IF (isButtonSelected(Event,'womws_button') AND $
-        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
-        cmd += ' --dump-mon-wave'
-        (*global).Configuration.Reduce.tab8.womws_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.womws_button = 0
-    ENDELSE
-    
-;Write out Monitor Efficiency Spectrum
-    IF (isButtonSelected(Event,'womes_button') AND $
-        isButtonUnselected(Event,'nmn_button') AND $
-        isButtonUnselected(Event,'nmec_button')) THEN BEGIN
-        cmd += ' --dump-mon-effc'
-        (*global).Configuration.Reduce.tab8.womes_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.womes_button = 0
-    ENDELSE
-    
-;Write out Rebinned Monitor Spectra
-    IF (isButtonSelected(Event,'worms_button') AND $
-        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
-        cmd += ' --dump-mon-rebin'
-        (*global).Configuration.Reduce.tab8.worms_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.worms_button = 0
-    ENDELSE
-    
-;Write out Combined Pixel Spectrum After Monitor Normalization
-    IF (isButtonSelected(Event,'wocpsamn_button') AND $
-        isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
-        (*global).Configuration.Reduce.tab8.wocpsamn_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab8.wocpsamn_button = 0
-    ENDELSE
-ENDIF    
-
-IF (isButtonSelected(Event,'wocpsamn_button') AND $
-    isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
     
     IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
-        cmd += ' --dump-wave-mnorm'
-    ENDIF 
-
-    WAmin = getTextFieldValue(Event,'wa_min_text')
-    WAmax = getTextFieldValue(Event,'wa_max_text')
-    WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
-    
-    (*global).Configuration.Reduce.tab8.wa_min_text = WAmin
-    (*global).Configuration.Reduce.tab8.wa_max_text = WAmax
-    (*global).Configuration.Reduce.tab8.wa_bin_width_text = WABwidth
-    
-    IF (WAMIN NE '' OR $
-        WAMAX NE '' OR $
-        WABwidth NE '') THEN BEGIN
         
-        cmd += ' --lambda-bins='
-        
-        IF (WAmin EQ '') THEN BEGIN
-            cmd += '?'
-            status_text = '   -Please provide a Wavelength Histogram Min Value'
-            IF (tab8 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
+;Write out Calculated Time-Independent Background
+        IF (isButtonSelected(Event,'woctib_button') AND $
+            isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
+            cmd += ' --dump-tib'
+            (*global).Configuration.Reduce.tab8.woctib_button = 1
         ENDIF ELSE BEGIN
-            cmd += strcompress(WAmin,/remove_all)
+            (*global).Configuration.Reduce.tab8.woctib_button = 0
         ENDELSE
         
-        
-        IF (WAmax EQ '') THEN BEGIN
-            cmd += ',?'
-            status_text = '   -Please provide a Wavelength Histogram Max Value'
-            IF (tab8 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
+;Write out Pixel Wavelength Spectra
+        IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
+            cmd += ' --dump-wave'
+            (*global).Configuration.Reduce.tab8.wopws_button = 1
         ENDIF ELSE BEGIN
-            cmd += ',' + strcompress(WAmax,/remove_all)
+            (*global).Configuration.Reduce.tab8.wopws_button = 0
         ENDELSE
         
-        IF (WABwidth EQ '') THEN BEGIN
-            cmd += ',?'
-            status_text = '   -Please provide a Wavelength Histogram Bin ' + $
-              'Width Value'
-            IF (tab8 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab8 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab8
-         ENDIF ELSE BEGIN
-            cmd += ',' + strcompress(WABwidth,/remove_all)
-         ENDELSE
-     ENDIF
- ENDIF
-
-IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
-
+;Write out Monitor Wavelength Spectrum
+        IF (isButtonSelected(Event,'womws_button') AND $
+            isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+            cmd += ' --dump-mon-wave'
+            (*global).Configuration.Reduce.tab8.womws_button = 1
+        ENDIF ELSE BEGIN
+            (*global).Configuration.Reduce.tab8.womws_button = 0
+        ENDELSE
+        
+;Write out Monitor Efficiency Spectrum
+        IF (isButtonSelected(Event,'womes_button') AND $
+            isButtonUnselected(Event,'nmn_button') AND $
+            isButtonUnselected(Event,'nmec_button')) THEN BEGIN
+            cmd += ' --dump-mon-effc'
+            (*global).Configuration.Reduce.tab8.womes_button = 1
+        ENDIF ELSE BEGIN
+            (*global).Configuration.Reduce.tab8.womes_button = 0
+        ENDELSE
+        
+;Write out Rebinned Monitor Spectra
+        IF (isButtonSelected(Event,'worms_button') AND $
+            isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+            cmd += ' --dump-mon-rebin'
+            (*global).Configuration.Reduce.tab8.worms_button = 1
+        ENDIF ELSE BEGIN
+            (*global).Configuration.Reduce.tab8.worms_button = 0
+        ENDELSE
+        
+;Write out Combined Pixel Spectrum After Monitor Normalization
+        IF (isButtonSelected(Event,'wocpsamn_button') AND $
+            isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
+            (*global).Configuration.Reduce.tab8.wocpsamn_button = 1
+        ENDIF ELSE BEGIN
+            (*global).Configuration.Reduce.tab8.wocpsamn_button = 0
+        ENDELSE
+    ENDIF    
+    
+    IF (isButtonSelected(Event,'wocpsamn_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+        
+        IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+            cmd += ' --dump-wave-mnorm'
+        ENDIF 
+        
+        WAmin = getTextFieldValue(Event,'wa_min_text')
+        WAmax = getTextFieldValue(Event,'wa_max_text')
+        WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
+        
+        (*global).Configuration.Reduce.tab8.wa_min_text = WAmin
+        (*global).Configuration.Reduce.tab8.wa_max_text = WAmax
+        (*global).Configuration.Reduce.tab8.wa_bin_width_text = WABwidth
+        
+        IF (WAMIN NE '' OR $
+            WAMAX NE '' OR $
+            WABwidth NE '') THEN BEGIN
+            
+            cmd += ' --lambda-bins='
+            
+            IF (WAmin EQ '') THEN BEGIN
+                cmd += '?'
+                status_text = '   -Please provide a Wavelength Histogram' + $
+                  ' Min Value'
+                IF (tab8 EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, '', 1
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 0
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage NE 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 1
+                ENDIF
+                putInfoInCommandLineStatus, Event, status_text, 1
+                StatusMessage += 1
+                ++tab8
+            ENDIF ELSE BEGIN
+                cmd += strcompress(WAmin,/remove_all)
+            ENDELSE
+            
+            
+            IF (WAmax EQ '') THEN BEGIN
+                cmd += ',?'
+                status_text = '   -Please provide a Wavelength Histogram' + $
+                  ' Max Value'
+                IF (tab8 EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, '', 1
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 0
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage NE 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 1
+                ENDIF
+                putInfoInCommandLineStatus, Event, status_text, 1
+                StatusMessage += 1
+                ++tab8
+            ENDIF ELSE BEGIN
+                cmd += ',' + strcompress(WAmax,/remove_all)
+            ENDELSE
+            
+            IF (WABwidth EQ '') THEN BEGIN
+                cmd += ',?'
+                status_text = '   -Please provide a Wavelength Histogram' + $
+                  ' Bin ' + $
+                  'Width Value'
+                IF (tab8 EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, '', 1
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage EQ 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 0
+                ENDIF
+                IF (tab8 EQ 0 AND $
+                    StatusMessage NE 0) THEN BEGIN
+                    putInfoInCommandLineStatus, Event, TabName, 1
+                ENDIF
+                putInfoInCommandLineStatus, Event, status_text, 1
+                StatusMessage += 1
+                ++tab8
+            ENDIF ELSE BEGIN
+                cmd += ',' + strcompress(WABwidth,/remove_all)
+            ENDELSE
+        ENDIF
+    ENDIF
+    
+    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+        
 ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
-   IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
-      cmd += ' --dump-dslin'
-      (*global).Configuration.Reduce.tab8.wolidsb_button = 1
-   ENDIF ELSE BEGIN
-      (*global).Configuration.Reduce.tab8.wolidsb_button = 0
-   ENDELSE
-   
-ENDIF
-
-IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
+        IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
+            cmd += ' --dump-dslin'
+            (*global).Configuration.Reduce.tab8.wolidsb_button = 1
+        ENDIF ELSE BEGIN
+            (*global).Configuration.Reduce.tab8.wolidsb_button = 0
+        ENDELSE
+        
+    ENDIF
+    
+    IF ((*global).Configuration.Reduce.tab8.waio_button NE 1) THEN BEGIN
 ; Write out Pixel Wavelength Spectra After Vanadium Normalization -------------
-   IF (isButtonSelected(Event,'pwsavn_button')) THEN BEGIN
-      cmd += ' --dump-norm'
+        IF (isButtonSelected(Event,'pwsavn_button')) THEN BEGIN
+            cmd += ' --dump-norm'
 ;      (*global).Configuration.Reduce.tab8.wolidsb_button = 1
-   ENDIF ELSE BEGIN
+        ENDIF ELSE BEGIN
 ;      (*global).Configuration.Reduce.tab8.wolidsb_button = 0
-   ENDELSE
-ENDIF
+        ENDELSE
+    ENDIF
+
+ENDIF ;end of intermediate tab
 
 ;get Output File Name and folder
 OFile = getTextFieldValue(Event,'of_list_of_runs_text')
