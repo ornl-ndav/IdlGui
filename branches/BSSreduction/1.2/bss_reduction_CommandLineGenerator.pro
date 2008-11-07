@@ -995,7 +995,7 @@ ENDIF ELSE BEGIN ;if Iterative Background Subtraction is ON
         StatusMessage += 1
         ++tab5
     ENDIF ELSE BEGIN
-        cmd += strcompress(max_value,/remove_all)
+        cmd += ',' + strcompress(max_value,/remove_all)
     ENDELSE
 
 ;width value
@@ -1020,7 +1020,7 @@ ENDIF ELSE BEGIN ;if Iterative Background Subtraction is ON
         StatusMessage += 1
         ++tab5
     ENDIF ELSE BEGIN
-        cmd += strcompress(width_value,/remove_all)
+        cmd += ',' + strcompress(width_value,/remove_all)
     ENDELSE
 
     cmd += ',linear'

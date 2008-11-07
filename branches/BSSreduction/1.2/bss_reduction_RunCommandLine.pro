@@ -39,6 +39,9 @@ activate_button, event, 'submit_button', 0
 ;get global structure
 widget_control,Event.top,get_uvalue=global
 
+;;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 PROCESSING = (*global).processing
 
 ;first check that the output folder exist if not, create it
@@ -94,10 +97,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
         
         status_text = 'Data Reduction ... ' + PROCESSING
         putDRstatusInfo, Event, status_text
-        
-;;indicate initialization with hourglass icon
-        widget_control,/hourglass
-        
+                
         spawn, cmd, listening, err_listening
         IF (err_listening[0] NE '') THEN BEGIN
             
@@ -144,22 +144,30 @@ IF (ok_to_CONTINUE) THEN BEGIN
             
         ENDELSE
         
-    ENDIF ELSE BEGIN
+    ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
         
-        status_text = (*global).DRstatusFAILED
-        putDRstatusInfo, Event, status_text
-        
+        nbr_jobs = N_ELEMENTS(cmd)
+        cmd_text = 'BSSreduction is about to run ' + $
+          STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs in the background'
+        AppendLogBookMessage, Event, cmd_text
+        index = 0
+
+;add batch statement to all command lines
+        cmd = 'srun --batch -o none -Q -p ' + srun + ' ' + cmd
+
+        WHILE (index LT nbr_jobs) DO BEGIN
+            cmd_text = '-> ' + cmd[index]
+            spawn, cmd, listening, err_listening
+            AppendLogBookMessage, Event, cmd_text
+            index++
+        ENDWHILE
     ENDELSE
     
-ENDIF ELSE BEGIN ;Iterative background subtraction mode is ON
+ENDIF ELSE BEGIN 
 
-    print, cmd
-    help, cmd
-
-
-
-
-
+    status_text = (*global).DRstatusFAILED
+    putDRstatusInfo, Event, status_text
+        
 ENDELSE
 
 ;turn off hourglass
