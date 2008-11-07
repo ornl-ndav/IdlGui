@@ -43,6 +43,7 @@ widget_control,Event.top,get_uvalue=global
 widget_control,/hourglass
 
 PROCESSING = (*global).processing
+OK         = (*global).ok
 
 ;first check that the output folder exist if not, create it
 output_path = (*global).default_output_path
@@ -155,6 +156,10 @@ IF (ok_to_CONTINUE) THEN BEGIN
 ;add batch statement to all command lines
         cmd = 'srun --batch -o none -Q -p ' + srun + ' ' + cmd
 
+        status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
+        status_text += ' jobs in the back ... '
+        putDRstatusInfo, Event, status_text + PROCESSING
+
         WHILE (index LT nbr_jobs) DO BEGIN
             cmd_text = '-> ' + cmd[index]
             spawn, cmd, listening, err_listening
@@ -162,7 +167,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
             index++
         ENDWHILE
 
-
+        putDRstatusInfo, Event, status_text + OK
 
     ENDELSE
     
