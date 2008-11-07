@@ -84,6 +84,7 @@ cd, CurrentFolder
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro
 .run IDLplotTxt__define.pro
+.run IDLcreateLogFile__define.pro
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro

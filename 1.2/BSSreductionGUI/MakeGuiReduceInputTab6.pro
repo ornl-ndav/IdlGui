@@ -1,8 +1,42 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 Pro MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
 
-;***********************************************************************************
+;******************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
+;******************************************************************************
 
 yoff = 20
 ;//////////////////////////////////////////////////////////////////
@@ -18,7 +52,9 @@ CSBSSbase = { size : [CSBSSframe.size[0]+XYoff[0],$
                       540,$
                       30],$
               button : { uname : 'csbss_button',$
-                         list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Spectra'],$
+                         list : ['Constant to Scale the Background ' + $
+                                 'Spectra for Subtraction from the ' + $
+                                 'Sample Data Spectra'],$
               value : 0}}
 
 
@@ -64,7 +100,9 @@ CSNbase = { size : [CSNframe.size[0]+XYoff[0],$
                       585,$
                       30],$
               button : { uname : 'csn_button',$
-                         list : ['Constant to Scale the Background Spectra for Subtraction from the Normalization Data Spectra'],$
+                         list : ['Constant to Scale the Background' + $
+                                 ' Spectra for Subtraction from the' + $
+                                 ' Normalization Data Spectra'],$
               value : 0}}
 
 XYoff10 = [15,25]   
@@ -109,7 +147,10 @@ BCSbase = { size : [BCSframe.size[0]+XYoff[0],$
                       710,$
                       30],$
               button : { uname : 'bcs_button',$
-                         list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Associated Empty Container Spectra'],$
+                         list : ['Constant to Scale the Background ' + $
+                                 'Spectra for Subtraction from the' + $
+                                 ' Sample Data Associated Empty' + $
+                                 ' Container Spectra'],$
               value : 0}}
 
 XYoff10 = [15,25]   
@@ -154,7 +195,10 @@ BCNbase = { size : [BCNframe.size[0]+XYoff[0],$
                       715,$
                       30],$
               button : { uname : 'bcn_button',$
-                         list : ['Constant to Scale the Back. Spectra for Subtraction from the Normalization Data Associated Empty Container Spectra'],$
+                         list : ['Constant to Scale the Back. ' + $
+                                 'Spectra for Subtraction from the' + $
+                                 ' Normalization Data Associated Empty' + $
+                                 ' Container Spectra'],$
               value : 0}}
 
 XYoff10 = [15,25]   
@@ -199,7 +243,9 @@ CSbase = { size : [CSframe.size[0]+XYoff[0],$
                    525,$
                    30],$
            button : { uname : 'cs_button',$
-                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Sample Data'],$
+                      list : ['Constant to Scale the Empty Container' + $
+                              ' Spectra for Subtraction from the' + $
+                              ' Sample Data'],$
                       value : 0}}
 
 XYoff10 = [15,25]   
@@ -244,7 +290,9 @@ CNbase = { size : [CNframe.size[0]+XYoff[0],$
                    565,$
                    30],$
            button : { uname : 'cn_button',$
-                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Normalization Data'],$
+                      list : ['Constant to Scale the Empty Container' + $
+                              ' Spectra for Subtraction from the' + $
+                              ' Normalization Data'],$
                       value : 0}}
 
 XYoff10 = [15,25]   
@@ -274,9 +322,9 @@ CNerrorText  = { size : [CNerrorLabel.size[0]+XYoff13[0],$
                     sensitive : CNBase.button.value}
 
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 tab5_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
@@ -650,6 +698,5 @@ frame  = WIDGET_LABEL(tab5_base,$
                       SCR_YSIZE = CNframe.size[3],$
                       FRAME     = CNframe.frame,$
                       VALUE     = '')
-
 
 END

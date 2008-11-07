@@ -157,17 +157,19 @@ IF (ok_to_CONTINUE) THEN BEGIN
         cmd = 'srun --batch -o none -Q -p ' + srun + ' ' + cmd
 
         status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
-        status_text += ' jobs in the back ... '
+        status_text += ' batch jobs ... '
         putDRstatusInfo, Event, status_text + PROCESSING
 
         WHILE (index LT nbr_jobs) DO BEGIN
             cmd_text = '-> ' + cmd[index]
-            spawn, cmd, listening, err_listening
+;            spawn, cmd, listening, err_listening
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
 
         putDRstatusInfo, Event, status_text + OK
+
+        iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
 
     ENDELSE
     
