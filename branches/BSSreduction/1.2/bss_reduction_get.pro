@@ -482,3 +482,10 @@ WHILE (index_row LT nbr_row) DO BEGIN
 ENDWHILE
 RETURN, new_data
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getFileExt, file_name
+file_array = STRSPLIT(file_name,'.',/EXTRACT,COUNT=nbr)
+IF (nbr GT 1) THEN RETURN, file_array[nbr-1]
+RETURN, ''
+END
