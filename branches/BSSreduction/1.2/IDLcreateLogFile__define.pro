@@ -375,8 +375,266 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;---- tab8 ------------------------------------------------------------------
+;check if use iterative background subtraction is active or not
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
 
+IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+    IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
+        tab8Waio = 'ON'
+    ENDIF ELSE BEGIN
+        tab8Waio = 'OFF'
+    ENDELSE
 
+    IF (isButtonSelected(Event,'woctib_button') AND $
+        isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
+        tab8woctib = 'ON'
+    ENDIF ELSE BEGIN
+        tab8woctib = 'OFF'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
+        tab8wopws = 'ON'
+    ENDIF ELSE BEGIN
+        tab8wopws = 'OFF'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'womws_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+        tab8womws = 'ON'
+    ENDIF ELSE BEGIN
+        tab8womws = 'OFF'
+    ENDELSE
+    
+    IF (isButtonSelected(Event,'womes_button') AND $
+        isButtonUnselected(Event,'nmn_button') AND $
+        isButtonUnselected(Event,'nmec_button')) THEN BEGIN
+        tab8womes = 'ON'
+    ENDIF ELSE BEGIN
+        tab8womes = 'OFF'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'worms_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+        tab8worms = 'ON'
+    ENDIF ELSE BEGIN
+        tab8worms = 'OFF'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'wocpsamn_button') AND $
+        isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
+        tab8wocpsamn = 'ON'
+        tab8waMin    = getTextFieldValue(Event,'wa_min_text')
+        tab8waMax    = getTextFieldValue(Event,'wa_max_text')
+        tab8waBin    = getTextFieldValue(Event,'wa_bin_text')
+    ENDIF ELSE BEGIN
+        tab8wocpsamn = 'OFF'
+        tab8waMin    = 'N/A'
+        tab8waMax    = 'N/A'
+        tab8waBin    = 'N/A'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
+        tab8wolidsb = 'ON'
+    ENDIF ELSE BEGIN
+        tab8wolidsb = 'OFF'
+    ENDELSE
+
+    IF (isButtonSelected(Event,'pwsavn_button')) THEN BEGIN
+        tab8pwsavn = 'ON'
+    ENDIF ELSE BEGIN
+        tab8pwsavn = 'OFF'
+    ENDELSE
+
+ENDIF ELSE BEGIN
+
+    tab8Waio     = 'OFF'
+    tab8woctib   = 'OFF'
+    tab8wopws    = 'OFF'
+    tab8womws    = 'OFF'
+    tab8womes    = 'OFF'
+    tab8worms    = 'OFF'
+    tab8wocpsamn = 'OFF'
+    tab8waMin    = 'N/A'
+    tab8waMax    = 'N/A'
+    tab8waBin    = 'N/A'
+    tab8wolidsb  = 'OFF'
+    tab8pwsavn   = 'OFF'
+    
+ENDELSE
+
+;write value in structure
+sStructure = { field1: { title: 'Raw Sample Data File',$
+                         value: tab1Data},$
+               field2: { title: 'Background Data File',$
+                         value: tab1Back},$
+               field3: { title: 'Normalization Data file',$
+                         value: tab1Norm},$
+               field4: { title: 'Empty Can Data File',$
+                         value: tab1Empt},$
+               field5: { title: 'Direct Scattering Background (Sample Data' + $
+                         ' at Baseline T) File',$
+                         value: tab1Dire},$
+               field6: { title: 'Pixel Region of Interest File',$
+                         value: tab2Roi},$
+               field7: { title: 'Alternate Instrument Geometry',$
+                         value: tab2Alte},$
+               field8: { title: 'Output Path',$
+                         value: tab2path},$
+               field9: { title: 'Output File Name',$
+                         value: tab2name},$
+               field10: { title: 'Run McStas NeXus Files',$
+                          value: tab3RunMc},$
+               field11: { title: 'Verbose',$
+                          value: tab3Verbo},$
+               field12: { title: 'Alternate Background Subtraction Method',$
+                          value: tab3AltBa},$
+               field13: { title: 'No Monitor Normalization',$
+                          value: tab3NoMor},$
+               field14: { title: 'No Monitor Efficiency',$
+                          value: tab3NoMoE},$
+               field15: { title: 'Normalization Integration Start and ' + $
+                          'End Wavelength',$
+                          value: tab3NiwB},$
+               field16: { title: '-> Start',$
+                          value: tab3NiwS},$
+               field17: { title: '-> End',$
+                          value: tab3NiwE},$
+               field18: { title: 'Low and High Time-of-Flight Values that' + $
+                          ' Bracket the Elastic Peak (microSeconds)',$
+                          value: tab3TeB},$
+               field19: { title: '-> Low',$
+                          value: tab3TeL},$
+               field20: { title: '-> High',$
+                          value: tab3TeH},$
+               field21: { title: 'Time-Independent Background Time-of' + $
+                          'Flight Channels (microSeconds)',$
+                          value: tab4Tof},$
+               field22: { title: '-> #1',$
+                          value: tab4Tof1},$
+               field23: { title: '-> #2',$
+                          value: tab4Tof2},$
+               field24: { title: '-> #3',$
+                          value: tab4Tof3},$
+               field25: { title: '-> #4',$
+                          value: tab4Tof4},$
+               field26: { title: 'Time-Independent Background Constant' + $
+                          ' for Sample Data',$
+                          value: tab4TsdB},$
+               field27: { title: '-> Value',$
+                          value: tab4TsdV},$
+               field28: { title: '-> Error',$
+                          value: tab4TsdE},$
+               field29: { title: 'Time-Independent Background Constant' + $
+                          ' for Background Data',$
+                          value: tab4TbdB},$
+               field30: { title: '-> Value',$
+                          value: tab4TbdV},$
+               field31: { title: '-> Error',$
+                          value: tab4TbdE},$
+               field32: { title: 'Time-Independent Background Constant' + $
+                          ' for Normalization Data',$
+                          value: tab4TndB},$
+               field33: { title: '-> Value',$
+                          value: tab4TndV},$
+               field34: { title: '-> Error',$
+                          value: tab4TndE},$
+               field35: { title: 'Time-Independent Background Constant' + $
+                          ' for Empty Can Data',$
+                          value: tab4TecdB},$
+               field36: { title: '-> Value',$
+                          value: tab4TecdV},$
+               field37: { title: '-> Error',$
+                          value: tab4TecdE},$
+               field38: { title: 'Time-Independent Background Constant' + $
+                          ' for Scattering Data',$
+                          value: tab4TscatB},$
+               field39: { title: '-> Value',$
+                          value: tab4TscatV},$
+               field40: { title: '-> Error',$
+                          value: tab4TscatE},$
+               field41: { title: 'Use Iterative Background Subtraction',$
+                          value: tab5ibB},$
+               field42: { title: 'Scale Constant for Lambda Depedent' + $
+                          ' Background',$
+                          value: tab5scl},$
+               field43: { title: 'Chopper Frequency (Hz)',$
+                          value: tab5cf},$
+               field44: { title: 'Chopper Wavelength Center (Angstroms)',$
+                          value: tab5cwc},$
+               field45: { title: 'TOF Least Background (microS)',$
+                          value: tab5tof},$
+               field50: { title: 'Min Positive Transverse Energy Integration',$
+                          value: tab5PSmin},$
+               field51: { title: 'Max Positive Transverse Energy Integration',$
+                          value: tab5PSmax},$
+               field52: { title: 'Positive Transverse Energy Integration' + $
+                          ' Width',$
+                          value: tab5PSbin},$
+               field53: { title: 'Detailed Balance Temperature (K)',$
+                          value: tab5Dbt},$
+               field54: { title: 'Ratio Tolerance',$
+                          value: tab5Rt},$
+               field55: { title: 'Number of Iteration',$
+                          value: tab5Ni},$
+               field56: { title: 'Minimum Wavelength-Dependent Background' + $
+                          ' Constant',$
+                          value: tab5MinWbc},$
+               field57: { title: 'Maximum Wavelength-Dependent Background' + $
+                          ' Constant',$
+                          value: tab5MaxWbc},$
+               field58: { title: 'Small Wavelength-Dependent Background' + $
+                          ' Constant',$
+                          value: tab5SmaWbc},$
+               field59: { title: 'Amorphous Reduction Verbosity',$
+                          value: tab5Verbo},$
+               field60: { title: 'Constant to Scale the Background Spectra' + $
+                          ' for Subtraction from the Sample Data Spectra',$
+                          value: tab6CsbssB},$
+               field61: { title: '-> Value:',$
+                          value: tab6CsbssV},$
+               field62: { title: '-> Error',$
+                          value: tab6CsbssE},$
+               field63: { title: 'Constant to Scale the Background Spectra' + $
+                          ' for Subtraction from the Normalization Data' + $
+                          ' Spectra',$
+                          value: tab6CsnB},$
+               field64: { title: '-> Value',$
+                          value: tab6CsnV},$
+               field65: { title: '-> Error',$
+                          value: tab6CsnE},$
+               field66: { title: 'Constant to Scale the Background Spectra' + $
+                          ' for Subtraction from the Sample Data' + $
+                          ' Associatied Empty Container Spectra',$
+                          value: tab6BcsB},$
+               field67: { title: '-> Value',$
+                          value: tab6BcsV},$
+               field68: { title: '-> Error',$
+                          value: tab6BcsE},$
+               field79: { title: 'Constant to Scale the Back. Spectra' + $
+                          ' for Subtraction from the Normalizaiton Data' + $
+                          ' Associated Empty Container Spectra',$
+                          value: tab6BcnB},$
+               field80: { title: '-> Value',$
+                          value: tab6BcnV},$
+               field81: { title: '-> Error',$
+                          value: tab6BcnE},$
+               field82: { title: 'Constant to Scale the Empty Container' + $
+                          ' Spectra for Subtraction from the Sample Data',$
+                          value: tab6CsB},$
+               field83: { title: '-> Value',$
+                          value: tab6CsV},$
+               field84: { title: '-> Error',$
+                          value: tab6CsE},$
+               field85: { title: 'Constant to Scale the Empty Container' + $
+                          ' Spectra for Subtraction from the Normalization' + $
+                          ' Data',$
+                          value: tab6CnB},$
+               field86: { title: '-> Value',$
+                          value: tab6CnV},$
+               field87: { title: '-> Error',$
+                          value: tab6CnE}}
+               
 
 
 RETURN, ''
