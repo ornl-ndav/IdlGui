@@ -366,12 +366,12 @@ ENDELSE
 IF (getButtonValue(Event,'tof_cutting_button')) $
   THEN BEGIN
     tab7tofCB = 'ON'
-    tab7tofCV = getTextFieldValue(Event,'tof_cutting_min_text')
-    tab7tofCE = getTextFieldValue(Event,'tof_cutting_max_text')
+    tab7tofCMin = getTextFieldValue(Event,'tof_cutting_min_text')
+    tab7tofCMax = getTextFieldValue(Event,'tof_cutting_max_text')
 ENDIF ELSE BEGIN
     tab7tofCB = 'OFF'
-    tab7tofCV = 'N/A'
-    tab7tofCE = 'N/A'
+    tab7tofCMin = 'N/A'
+    tab7tofCMax = 'N/A'
 ENDELSE
 
 ;---- tab8 ------------------------------------------------------------------
@@ -633,7 +633,90 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
                field86: { title: '-> Value',$
                           value: tab6CnV},$
                field87: { title: '-> Error',$
-                          value: tab6CnE}}
+                          value: tab6CnE},$
+               field88: { title: 'Constant for Scaling the Final Data' + $
+                          ' Spectrum',$
+                          value: tab7CsfdsB},$
+               field89: { title: '-> Value',$
+                          value: tab7CsfdsV},$
+               field90: { title: 'Time Zero Slope Parameter (Angstroms' + $
+                          '/microSeconds)',$
+                          value: tab7tzspB},$
+               field91: { title: '-> Value',$
+                          value: tab7tzspV},$
+               field92: { title: '-> Error',$
+                          value: tab7tzspE},$
+               field93: { title: 'Time Zero Offset Parameters (Angstroms)',$
+                          value: tab7tzopB},$
+               field94: { title: '-> Value',$
+                          value: tab7tzopV},$
+               field95: { title: '-> Error',$
+                          value: tab7tzopE},$
+               field96: { title: 'Minimum Energy Histogram Axis (micro-eV)',$
+                          value: tab7Emin},$
+               field97: { title: 'Maximum Energy Histogram Axis (micro-eV)',$
+                          value: tab7Emax},$
+               field98: { title: 'Energy Histogram Axis Width (micro-eV)',$
+                          value: tab7Ebin},$
+               field99: { title: 'Momentum Transfer Histogram Axis' + $
+                          ' (1/Angstroms)',$
+                          value: tab7mthaB1},$
+               field100: { title: '-> Min',$
+                           value: tab7mthaB1min},$
+               field101: { title: '-> Max',$
+                           value: tab7mthaB1max},$
+               field102: { title: '-> Width',$
+                           value: tab7mthaB1bin},$
+               field103: { title: 'Negative Cosine Polar Axis',$
+                           value: tab7mthaB2},$
+               field104: { title: '-> Min',$
+                           value: tab7mthaB2min},$
+               field105: { title: '-> Max',$
+                           value: tab7mthaB2max},$
+               field106: { title: '-> Width',$
+                           value: tab7mthaB2bin},$
+               field107: { title: 'Global Instrument Final Wavelength' + $
+                           ' (Angstroms)',$
+                           value: tab7gifwB},$
+               field108: { title: '-> Value',$
+                           value: tab7gifwV},$
+               field109: { title: '-> Error',$
+                           value: tab7gifwE},$
+               field110: { title: 'Time of Flight Range (microseconds)',$
+                           value: tab7tofCB},$
+               field111: { title: '-> Min',$
+                           value: tab7tofCMin},$
+               field112: { title: '-> Max',$
+                           value: tab7tofCMax},$
+               field113: { title: 'Write all Intermediate Output',$
+                           value: tab8Waio},$
+               field114: { title: 'Write Out Time-Independent Background',$
+                           value: tab8woctib},$
+               fiedl115: { title: 'Write Out Pixel Wavelength Spectra',$
+                           value: tab8wopws},$
+               field116: { title: 'Write Out Monitor Wavelength Spectrum',$
+                           value: tab8womws},$
+               field117: { title: 'Write Out Monitor Efficiency Spectrum',$
+                           value: tab8womes},$
+               field118: { title: 'Write Out Rebinned Monitor Spectra',$
+                           value: tab8worms},$
+               field119: { title: 'Write Out Combined Pixel Spectrum After' + $
+                           ' Monitor Normalization',$
+                           value: tab8wocpsamn},$
+               field120: { title: '-> Min',$
+                           value: tab8waMin},$
+               field121: { title: '-> Max',$
+                           value: tab8waMax},$
+               field122: { title: '-> Width',$
+                           value: tab8WaBin},$
+               field123: { title: 'Write Out Linearly Interpolated Direct' + $
+                           ' Scattering Background Information Summed' + $
+                           ' over all Pixels',$
+                           value: tab8wolidsb},$
+               field124: { title: 'Write Out Pixel Wavelength Spectra ' + $
+                           ' after Vanadium Normalization',$
+                           value: tab8pwsavn}}
+               
                
 
 
