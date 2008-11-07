@@ -306,7 +306,9 @@ IF (value EQ 0) THEN BEGIN ;turn ON
             SensitiveBase, event, $
               'iterative_background_subtraction_base', $
               1
-
+            SensitiveBase, event, $
+              'reduce_tab8_base',$
+              0
         ENDIF ELSE BEGIN ;do not change button
             setButton, Event, $
               'use_iterative_background_subtraction_cw_bgroup', 1
@@ -317,26 +319,30 @@ IF (value EQ 0) THEN BEGIN ;turn ON
             SensitiveBase, event, $
               'iterative_background_subtraction_base', $
               0
-
+            SensitiveBase, event, $
+              'reduce_tab8_base',$
+              1
         ENDELSE
     ENDIF ELSE BEGIN
-
-            SensitiveBase, event, $
-              'non_iterative_background_subtraction_base', $
-              1
-            SensitiveBase, event, $
-              'scale_constant_lambda_dependent_back_uname', $
-              0
-            SensitiveBase, event, $
-              'scale_constant_lambda_depdendent_back_label', $
-              0
-            SensitiveBase, event, $
-              'scale_constant_lambda_dependent_input_base',$
-              1
-            SensitiveBase, event, $
-              'iterative_background_subtraction_base', $
-              1
-
+        
+        SensitiveBase, event, $
+          'non_iterative_background_subtraction_base', $
+          1
+        SensitiveBase, event, $
+          'scale_constant_lambda_dependent_back_uname', $
+          0
+        SensitiveBase, event, $
+          'scale_constant_lambda_depdendent_back_label', $
+          0
+        SensitiveBase, event, $
+          'scale_constant_lambda_dependent_input_base',$
+          1
+        SensitiveBase, event, $
+          'iterative_background_subtraction_base', $
+          1
+        SensitiveBase, event, $
+          'reduce_tab8_base',$
+          0
     ENDELSE
 ENDIF ELSE BEGIN
 
@@ -352,7 +358,9 @@ ENDIF ELSE BEGIN
     SensitiveBase, event, $
       'iterative_background_subtraction_base', $
       0
-
+    SensitiveBase, event, $
+      'reduce_tab8_base',$
+      1
 ENDELSE
 END
 

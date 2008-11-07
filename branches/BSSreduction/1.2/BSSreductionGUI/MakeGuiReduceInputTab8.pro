@@ -233,6 +233,7 @@ tab7_base = WIDGET_BASE(ReduceInputTab,$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
                         SCR_YSIZE = ReduceInputTabSettings.size[3],$
+                        UNAME     = 'reduce_tab8_base',$
                         TITLE     = ReduceInputTabSettings.title[4])
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
