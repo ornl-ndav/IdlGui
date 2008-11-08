@@ -730,9 +730,38 @@ sReduce = populateReduceStructure(Event)
 ;define current date
 DateTime = GenerateIsoTimeStamp()
 
+;retrieve name of all output files
+nbr_jobs = N_ELEMENTS(cmd)
+file_name_array = STRARR(nbr_jobs)
+index = 0
+WHILE (index LT nbr_jobs) DO BEGIN
+   match1 = STREGEX(cmd[index],' --output=.*',/EXTRACT)
+   match2 = STRSPLIT(match1,'=',/EXTRACT)
+   file_name_array[index++] = STRCOMPRESS(match2[1],/REMOVE_ALL)
+ENDWHILE
 
+;create string array of all information from this/these job(s)
+nbr_structure_tags = N_TAGS(sReduce) 
+final_array_size = 1 + Nbr_jobs + nbr_structure_tags
+final_array = STRARR(final_array_size)
 
+;write date
+final_array[0] = DateTime
+i = 0
+offset = 1
+WHILE (i LT nbr_jobs) DO BEGIN
+   final_array[i+offset] = 'Output File: ' + file_name_array[i]
+   i++
+ENDWHILE
 
+offset = i
+FOR j=0,(nbr_structure_tags-1) DO BEGIN
+   title = sReduce.(j).title
+   value = sReduce.(j).value
+   final_array[j+offset] = title + ': ' + value
+ENDFOR
+
+;print, final_array
 
 RETURN, 1
 END
