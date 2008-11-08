@@ -717,10 +717,7 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
                            ' after Vanadium Normalization',$
                            value: tab8pwsavn}}
                
-               
-
-
-RETURN, ''
+RETURN, sStructure
 END
 
 ;******************************************************************************
@@ -729,6 +726,13 @@ FUNCTION IDLcreateLogFile::init, Event, cmd
 
 ;retrieve value of fields from REDUCE tabs
 sReduce = populateReduceStructure(Event)
+
+;define current date
+DateTime = GenerateIsoTimeStamp()
+
+
+
+
 
 RETURN, 1
 END
