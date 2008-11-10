@@ -170,6 +170,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
         putDRstatusInfo, Event, status_text + OK
 
         iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
+        OBJ_DESTROY, iFile
 
     ENDELSE
     
