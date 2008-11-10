@@ -743,17 +743,25 @@ ENDWHILE
 
 ;create string array of all information from this/these job(s) ----------------
 nbr_structure_tags = N_TAGS(sReduce) 
-final_array_size = 1 + Nbr_jobs + nbr_structure_tags
+final_array_size = 5 + Nbr_jobs + nbr_structure_tags
+;Date 1
+;start and end list of output files 3
+;list of output files nbr_jobs
+;number of metadata nbr_structure_tags
+;'' 1
+
 final_array = STRARR(final_array_size)
 
 ;write date -------------------------------------------------------------------
-final_array[0] = DateTime
+final_array[0] = 'Date: ' + DateTime
 i = 0
-offset = 1
+final_array[1] = '***** Start List of Output Files *****'
+offset = 2
 WHILE (i LT nbr_jobs) DO BEGIN
    final_array[i+offset] = 'Output File: ' + file_name_array[i]
    i++
 ENDWHILE
+final_array[i++] = '***** End List of Output Files *****'
 
 offset = i
 FOR j=0,(nbr_structure_tags-1) DO BEGIN
@@ -761,6 +769,7 @@ FOR j=0,(nbr_structure_tags-1) DO BEGIN
    value = sReduce.(j).value
    final_array[j+offset] = title + ': ' + value
 ENDFOR
+final_array[j+offset] = ''
 
 ;check if config file already exists or not -----------------------------------
 config_file_name = (*global).config_file_name

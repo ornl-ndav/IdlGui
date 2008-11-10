@@ -1002,6 +1002,12 @@ CASE Event.id OF
     end    
 
 ;______________________________________________________________________________
+; JOBS STATUS TAB
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_list_of_jobs_button'): BEGIN
+        refresh_job_status, Event ;_job_status
+    END    
+
+;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
         BSSreduction_DisplayOutputFiles, Event
