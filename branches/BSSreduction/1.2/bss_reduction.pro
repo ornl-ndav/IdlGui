@@ -114,6 +114,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    config_file_name: '~/.bss_reduction.cfg',$
                     lds_mode: 0,$
                     output_plot_path: '~/result/',$ 
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$

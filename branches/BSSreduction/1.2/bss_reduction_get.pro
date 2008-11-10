@@ -40,6 +40,15 @@ RETURN, TextFieldValue
 END
 
 ;------------------------------------------------------------------------------
+;This function returns the contain of the Text Field for the config file
+FUNCTION getTextFieldValueForConfig, Event, uname
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = TextFieldValue
+IF (textFieldValue EQ '') THEN RETURN, 'N/A'
+RETURN, TextFieldValue
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getButtonValue, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=status
