@@ -31,6 +31,8 @@ cd, CurrentFolder + '/BSSreductionGUI/'
 .run MakeGuiReduceClgXmlTab1.pro
 .run MakeGuiReduceClgXmlTab2.pro
 
+.run MakeGuiJobsStatus.pro
+
 .run MakeGuiOutputTab.pro
 
 .run MakeGuiLogBookTab.pro
