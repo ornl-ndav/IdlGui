@@ -89,6 +89,7 @@ cd, CurrentFolder
 .run IDLplotTxt__define.pro
 .run IDLcreateLogFile__define.pro
 .run IDLreadLogFile__define.pro
+.run IDLmakeTree__define.pro
 .run IDLsendToGeek__define.pro
 
 .run bss_reduction_Cleanup.pro

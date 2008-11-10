@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiJobsStatus, MAIN_TAB, MainTabSize, JobManagerTitle
+PRO MakeGuiJobsStatus, MAIN_TAB, MainTabSize, JobManagerTitle, MAIN_BASE
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
 
 ;******************************************************************************
 ;                             Define size arrays
@@ -128,6 +129,7 @@ TreeBase = WIDGET_BASE(Base,$
                        SCR_YSIZE = sTreeBase.size[3],$
                        FRAME     = sTreeBase.frame,$
                        UNAME     = sTreeBase.uname)
+(*global).TreeBase = TreeBase
 
 ;Base that will contain the metadata for the selected jobs ....................
 MetadataBase = WIDGET_BASE(Base,$

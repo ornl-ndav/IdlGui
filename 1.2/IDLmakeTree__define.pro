@@ -32,51 +32,41 @@
 ;
 ;==============================================================================
 
-PRO refresh_job_status, Event
+;******************************************************************************
+;***** Class constructor ******************************************************
+FUNCTION IDLmakeTree::init, Event, TYPE=type, VALUE=value
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-iJob = OBJ_NEW('IDLreadLogFile',Event)
-IF (OBJ_VALID(iJob)) THEN BEGIN
-    pMetadata = iJob->getStructure()
-    nbr_jobs = (size(*pMetadata))(1)
-
-    iDesign = OBJ_NEW('IDLmakeTree', Event, TYPE='tree')
-    OBJ_DESTROY, iDesign
-
-    index = 0
-    WHILE (index LT nbr_jobs) DO BEGIN
-        
-;date[0] = (*pMetadata)[0].date
-;date[1] = (*pMetadata)[1].date
-;list_of_files = (*(*pMetadata)[0].files)
-        
-        iDesign = OBJ_NEW('IDLmakeTree', $
-                          Event, $
-                          TYPE='root', $
-                          VALUE=(*pMetadata)[index].date)
-        OBJ_DESTROY, iDesign
-       
-;create a leaf for each file
-        nbr_files = size((*(*pMetadata)[index].files))
-        i = 0
-        WHILE (i LT nbr_files) DO BEGIN
-;            iDesign = OBJ_NEW('IDLmakeTree', $
-;                              Event, $
-;                              TYPE='leaf',$
-;                              VALUE=(*(*pMetadata)[index].files[i]))
-            
-
-;            OBJ_DESTROY, iDesign
-            i++
-        ENDWHILE
-        
-        index++
-    ENDWHILE
-    
-    WIDGET_CONTROL, /REALIZE, Event.top
-    
-ENDIF ELSE BEGIN ;error refreshing the config file
-
-ENDELSE
-
+CASE (type) OF 
+    'tree': BEGIN
+        wTree = WIDGET_TREE((*global).TreeBase,$
+                            XOFFSET   = 0,$
+                            YOFFSET   = 0,$
+                            SCR_XSIZE = 500,$
+                            SCR_YSIZE = 660)
+        (*global).TreeID = wTree
+    END
+    'root': BEGIN
+        wRoot = WIDGET_TREE((*global).TreeID,$
+                            /FOLDER,$
+                            /EXPANDED,$
+                            VALUE = VALUE)
+        (*global).RootID = wRoot
+    END
+    'leaf': BEGIN
+        wTree = WIDGET_TREE((*global).RootID,$
+                            value = VALUE)
+    END
+ENDCASE
+                        
+RETURN, 1
 END
+
+;******************************************************************************
+;******  Class Define *********************************************************
+PRO IDLmakeTree__define
+struct = {IDLmakeTree,$
+          var: ''}
+END
+;******************************************************************************
+;******************************************************************************

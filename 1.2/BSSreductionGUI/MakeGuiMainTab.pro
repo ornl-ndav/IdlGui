@@ -29,7 +29,7 @@ MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor, MAIN_BASE
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle
 
 ;build JOB MANAGER tab
-MakeGuiJobsStatus, MAIN_TAB, MainTabsize, JobsStatusTitle
+MakeGuiJobsStatus, MAIN_TAB, MainTabsize, JobsStatusTitle, MAIN_BASE
 
 ;build OUTPUT tab
 MakeGuiOutputTab, MAIN_TAB, MainTabsize, OutputTitle
