@@ -60,7 +60,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 1,$
+sDEBUGGING = { tab: {main_tab: 2,$
                      reduce_input_tab: 4},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
