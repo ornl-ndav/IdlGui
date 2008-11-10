@@ -40,6 +40,11 @@ APPLICATION        = 'BSSreduction'
 VERSION            = '1.2.20'
 DeployedVersion    = 'yes'
 DEBUGGING_VERSION  = 'yes'
+CHECKING_PACKAGES  = 'yes'
+PACKAGE_REQUIRED_BASE = { driver:           '',$
+                          version_required: '',$
+                          found: 0,$
+                          sub_pkg_version:   ''}
 
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
@@ -370,6 +375,16 @@ global = ptr_new ({ $
                                                 wodwsm_button: 0}}}$
                       })
                     
+;sub_pkg_version: python program that gives pkg v. of common libraries...etc
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3);number of packages we need to check
+my_package[0].driver           = 'findnexus'
+my_package[0].version_required = '1.5'
+my_package[1].driver           = (*global).DriverName
+my_package[1].version_required = '1.0'
+my_package[1].sub_pkg_version  = './drversion'
+my_package[2].driver           = (*global).iterative_background_DriverName
+my_package[2].version_required = '1.0'
+
 (*global).negative_cosine_polar_array = ['-1.0','1.0','0.5']
 
 Device, /decomposed
@@ -494,6 +509,130 @@ IF (ucams EQ 'j35' OR $
     WIDGET_CONTROL, id, /EDITABLE
 ENDIF
 
+;==============================================================================
+; Date and Checking Packages routines =========================================
+;==============================================================================
+;Put date/time when user started application in first line of log book
+time_stamp = GenerateIsoTimeStamp()
+message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book', $
+  message
+
+IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+;Check that the necessary packages are present
+    message = '> Checking For Required Software: '
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book', $
+      message
+    
+    PROCESSING = (*global).processing
+    OK         = (*global).ok
+    FAILED     = (*global).failed
+    NbrSpc     = 25             ;minimum value 4
+    
+    sz = (size(my_package))(1)
+    
+    IF (sz GT 0) THEN BEGIN
+        max = 0                ;find the longer required software name
+        pack_list = STRARR(sz)  ;initialize the list of driver
+        missing_packages = STRARR(sz) ;initialize the list of missing packages
+        nbr_missing_packages = 0
+        FOR k=0,(sz-1) DO BEGIN
+            pack_list[k] = my_package[k].driver
+            length = STRLEN(pack_list[k])
+            IF (length GT max) THEN max = length
+        ENDFOR
+        
+        first_sub_packages_check = 1
+        FOR i=0,(sz-1) DO BEGIN
+            message = '-> ' + pack_list[i]
+;this part is to make sure the PROCESSING string starts at the same column
+            length = STRLEN(message)
+            str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
+            new_string = STRJOIN(str_array)
+            message += ' ' + new_string + ' ' + PROCESSING
+            
+            IDLsendToGeek_addLogBookText_fromMainBase, $
+              MAIN_BASE, $
+              'log_book', $
+              message
+
+            cmd = pack_list[i] + ' --version'
+            spawn, cmd, listening, err_listening
+            IF (err_listening[0] EQ '') THEN BEGIN ;found
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book', $
+                  PROCESSING,$
+                  OK + ' (Current Version: ' + $
+                  listening[N_ELEMENTS(listening)-1] + ')'
+;              ' / Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
+                my_package[i].found = 1
+                IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
+                    IF (first_sub_packages_check EQ 1) THEN BEGIN
+                        first_sub_packages_check = 0
+                        cmd = my_package[i].sub_pkg_version
+                        spawn, cmd, listening, err_listening
+                        IF (err_listening[0] EQ '') THEN BEGIN ;worked
+                            cmd_txt = '-> ' + cmd + ' ... OK'
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book', $
+                              cmd_text
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book', $
+                              '--> ' + listening
+;tell the structure that the correct version has been found
+                            my_package[i].found = 1
+                        ENDIF ELSE BEGIN
+                            cmd_txt = '-> ' + cmd + ' ... FAILED'
+                            IDLsendToGeek_addLogBookText_fromMainBase, $
+                              MAIN_BASE, $
+                              'log_book', $
+                              cmd_text
+;tell the structure that the correct version has been found
+                            my_package[i].found = 0
+                        ENDELSE
+                    ENDIF
+                ENDIF
+            ENDIF ELSE BEGIN    ;missing program
+                IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+                  MAIN_BASE, $
+                  'log_book', $
+                  PROCESSING,$
+                  FAILED
+;              + ' (Minimum Required Version: ' + $
+;              my_package[i].version_required + ')'
+                missing_packages[i] = my_package[i].driver
+;tell the structure that the correct version has been found
+                my_package[i].found = 0
+                ++nbr_missing_packages
+             ENDELSE
+        ENDFOR
+
+        IF (nbr_missing_packages GT 0) THEN BEGIN
+;pop up window that show that they are missing packages
+            message = ['They are ' + $
+                       STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+                       ' missing package(s) you need to ' + $
+                       'fully used this application.']
+            message = [message,'Check Log Book For More Information !']
+            result = DIALOG_MESSAGE(message, $
+                                    /INFORMATION, $
+                                    DIALOG_PARENT=MAIN_BASE)
+        ENDIF
+        
+     ENDIF                      ;end of 'if (sz GT 0)'
+
+     message = '=================================================' + $
+       '========================'
+     IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+       'log_book', message
+     
+ ENDIF
+
+;===============================================================================
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
