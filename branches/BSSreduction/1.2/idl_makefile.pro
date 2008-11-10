@@ -81,12 +81,14 @@ cd, CurrentFolder
 .run bss_reduction_RunCommandLine.pro
 .run bss_reduction_IntermediatePlots.pro
 .run bss_reduction_DisplayDRxmlConfigFile.pro
+.run bss_reduction_JobStatus.pro
 
 ;classes
 .run IDLoutputFile__define.pro
 .run IDLgetMetadata__define.pro
 .run IDLplotTxt__define.pro
 .run IDLcreateLogFile__define.pro
+.run IDLreadLogFile__define.pro
 .run IDLsendToGeek__define.pro
 
 .run bss_reduction_Cleanup.pro
