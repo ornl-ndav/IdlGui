@@ -35,17 +35,17 @@
 FUNCTION populateReduceStructure, Event
 
 ;---- tab1 ------------------------------------------------------------------
-tab1Data = getTextFieldValue(Event,'rsdf_list_of_runs_text')
-tab1Back = getTextFieldValue(Event,'bdf_list_of_runs_text')
-tab1Norm = getTextFieldValue(Event,'ndf_list_of_runs_text')
-tab1Empt = getTextFieldValue(Event,'ecdf_list_of_runs_text')
-tab1Dire = getTextFieldValue(Event,'dsb_list_of_runs_text')
+tab1Data = getTextFieldValueForConfig(Event,'rsdf_list_of_runs_text')
+tab1Back = getTextFieldValueForConfig(Event,'bdf_list_of_runs_text')
+tab1Norm = getTextFieldValueForConfig(Event,'ndf_list_of_runs_text')
+tab1Empt = getTextFieldValueForConfig(Event,'ecdf_list_of_runs_text')
+tab1Dire = getTextFieldValueForConfig(Event,'dsb_list_of_runs_text')
 
 ;---- tab2 ------------------------------------------------------------------
-tab2Roi  = getTextFieldValue(Event,'proif_text')
-tab2Alte = getTextFieldValue(Event,'aig_list_of_runs_text')
+tab2Roi  = getTextFieldValueForConfig(Event,'proif_text')
+tab2Alte = getTextFieldValueForConfig(Event,'aig_list_of_runs_text')
 tab2path = getButtonValue(Event,'output_folder_name')
-tab2name = getTextFieldValue(Event,'of_list_of_runs_text')
+tab2name = getTextFieldValueForConfig(Event,'of_list_of_runs_text')
 
 ;---- tab3 ------------------------------------------------------------------
 IF (getButtonValue(Event,'rmcnf_button')) THEN BEGIN
@@ -80,8 +80,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'niw_button')) THEN BEGIN
     tab3NiwB = 'ON'
-    tab3NiwS = getTextFieldValue(Event,'nisw_field')
-    tab3NiwE = getTextFieldValue(Event,'niew_field')
+    tab3NiwS = getTextFieldValueForConfig(Event,'nisw_field')
+    tab3NiwE = getTextFieldValueForConfig(Event,'niew_field')
 ENDIF ELSE BEGIN
     tab3NiwB = 'OFF'
     tab3NiwS = 'N/A'
@@ -90,8 +90,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'te_button')) THEN BEGIN
     tab3TeB = 'ON'
-    tab3TeL = getTextFieldValue(Event,'te_low_field')
-    tab3TeH = getTextFieldValue(Event,'te_high_field')
+    tab3TeL = getTextFieldValueForConfig(Event,'te_low_field')
+    tab3TeH = getTextFieldValueForConfig(Event,'te_high_field')
 ENDIF ELSE BEGIN
     tab3TeB = 'OFF'
     tab3TeL = 'N/A'
@@ -101,10 +101,10 @@ ENDELSE
 ;---- tab4 ------------------------------------------------------------------
 IF (getButtonValue(Event,'tib_tof_button')) THEN BEGIN
     tab4Tof  = 'ON'
-    tab4Tof1 = getTextFieldValue(Event,'tibtof_channel1_text')
-    tab4Tof2 = getTextFieldValue(Event,'tibtof_channel2_text')
-    tab4Tof3 = getTextFieldValue(Event,'tibtof_channel3_text')
-    tab4Tof4 = getTextFieldValue(Event,'tibtof_channel4_text')
+    tab4Tof1 = getTextFieldValueForConfig(Event,'tibtof_channel1_text')
+    tab4Tof2 = getTextFieldValueForConfig(Event,'tibtof_channel2_text')
+    tab4Tof3 = getTextFieldValueForConfig(Event,'tibtof_channel3_text')
+    tab4Tof4 = getTextFieldValueForConfig(Event,'tibtof_channel4_text')
 ENDIF ELSE BEGIN
     tab4Tof  = 'OFF'
     tab4Tof1 = 'N/A'
@@ -115,8 +115,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'tibc_for_sd_button')) THEN BEGIN
     tab4TsdB = 'ON'
-    tab4TsdV = getTextFieldValue(Event,'tibc_for_sd_value_text')
-    tab4TsdE = getTextFieldValue(Event,'tibc_for_sd_error_text')
+    tab4TsdV = getTextFieldValueForConfig(Event,'tibc_for_sd_value_text')
+    tab4TsdE = getTextFieldValueForConfig(Event,'tibc_for_sd_error_text')
 ENDIF ELSE BEGIN
     tab4TsdB = 'OFF'
     tab4TsdV = 'N/A'
@@ -125,8 +125,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'tibc_for_bd_button')) THEN BEGIN
     tab4TbdB = 'ON'
-    tab4TbdV = getTextFieldValue(Event,'tibc_for_bd_value_text')
-    tab4TbdE = getTextFieldValue(Event,'tibc_for_bd_error_text')
+    tab4TbdV = getTextFieldValueForConfig(Event,'tibc_for_bd_value_text')
+    tab4TbdE = getTextFieldValueForConfig(Event,'tibc_for_bd_error_text')
 ENDIF ELSE BEGIN
     tab4TbdB = 'OFF'
     tab4TbdV = 'N/A'
@@ -135,8 +135,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'tibc_for_nd_button')) THEN BEGIN
     tab4TndB = 'ON'
-    tab4TndV = getTextFieldValue(Event,'tibc_for_nd_value_text')
-    tab4TndE = getTextFieldValue(Event,'tibc_for_nd_error_text')
+    tab4TndV = getTextFieldValueForConfig(Event,'tibc_for_nd_value_text')
+    tab4TndE = getTextFieldValueForConfig(Event,'tibc_for_nd_error_text')
 ENDIF ELSE BEGIN
     tab4TndB = 'OFF'
     tab4TndV = 'N/A'
@@ -145,8 +145,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'tibc_for_ecd_button')) THEN BEGIN
     tab4TecdB = 'ON'
-    tab4TecdV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
-    tab4TecdE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
+    tab4TecdV = getTextFieldValueForConfig(Event,'tibc_for_ecd_value_text')
+    tab4TecdE = getTextFieldValueForConfig(Event,'tibc_for_ecd_error_text')
 ENDIF ELSE BEGIN
     tab4TecdB = 'OFF'
     tab4TecdV = 'N/A'
@@ -155,8 +155,8 @@ ENDELSE
 
 IF (getButtonValue(Event,'tibc_for_scatd_button')) THEN BEGIN
     tab4TscatB = 'ON'
-    tab4TscatV = getTextFieldValue(Event,'tibc_for_scatd_value_text')
-    tab4TscatE = getTextFieldValue(Event,'tibc_for_scatd_error_text')
+    tab4TscatV = getTextFieldValueForConfig(Event,'tibc_for_scatd_value_text')
+    tab4TscatE = getTextFieldValueForConfig(Event,'tibc_for_scatd_error_text')
 ENDIF ELSE BEGIN
     tab4TscatB = 'OFF'
     tab4TscatV = 'N/A'
@@ -172,19 +172,19 @@ IF (getButtonValue(Event, $
     tab5scl = 'N/A'
     tab5cf  = getTextFiledValue(Event, $
                                 'chopper_frequency_value')
-    tab5cwc = getTextFieldValue(Event, $
+    tab5cwc = getTextFieldValueForConfig(Event, $
                                 'chopper_wavelength_value')
-    tab5tof = getTextFieldValue(Event, $
+    tab5tof = getTextFieldValueForConfig(Event, $
                                 'tof_least_background_value')
-    tab5PSmin  = getTextFieldValue(Event,'pte_min_text')
-    tab5PSmax  = getTextFieldValue(Event,'pte_max_text')
-    tab5PSbin  = getTextFieldValue(Event,'pte_bin_text')
-    tab5Dbt    = getTextFieldValue(Event,'detailed_balance_temperature_value')
-    tab5Rt     = getTextFieldValue(Event,'ratio_tolerance_value')
-    tab5Ni     = getTextFieldValue(Event,'number_of_iteration')
-    tab5MinWbc = getTextFieldValue(Event,'min_wave_dependent_back')
-    tab5MaxWbc = getTextFieldValue(Event,'max_wave_dependent_back')
-    tab5SmaWbc = getTextFieldValue(Event,'small_wave_dependent_back')
+    tab5PSmin  = getTextFieldValueForConfig(Event,'pte_min_text')
+    tab5PSmax  = getTextFieldValueForConfig(Event,'pte_max_text')
+    tab5PSbin  = getTextFieldValueForConfig(Event,'pte_bin_text')
+    tab5Dbt    = getTextFieldValueForConfig(Event,'detailed_balance_temperature_value')
+    tab5Rt     = getTextFieldValueForConfig(Event,'ratio_tolerance_value')
+    tab5Ni     = getTextFieldValueForConfig(Event,'number_of_iteration')
+    tab5MinWbc = getTextFieldValueForConfig(Event,'min_wave_dependent_back')
+    tab5MaxWbc = getTextFieldValueForConfig(Event,'max_wave_dependent_back')
+    tab5SmaWbc = getTextFieldValueForConfig(Event,'small_wave_dependent_back')
 
     IF (getButtonValue(Event, $
                        'amorphous_reduction_verbosity_cw_bgroup')) THEN BEGIN
@@ -196,14 +196,14 @@ IF (getButtonValue(Event, $
 ENDIF ELSE BEGIN
 
     tab5ibB = 'OFF'
-    tab5scl = getTextFieldValue(Event, $
+    tab5scl = getTextFieldValueForConfig(Event, $
                                 'scale_constant_lambda_dependent_back_uname')
     IF (tab5scl NE '') THEN BEGIN
-        tab5cf  = getTextFiledValue(Event, $
+        tab5cf  = getTextFieldValueForConfig(Event, $
                                    'chopper_frequency_value')
-        tab5cwc = getTextFieldValue(Event, $
+        tab5cwc = getTextFieldValueForConfig(Event, $
                                     'chopper_wavelength_value')
-        tab5tof = getTextFieldValue(Event, $
+        tab5tof = getTextFieldValueForConfig(Event, $
                                     'tof_least_background_value')
     ENDIF ELSE BEGIN
         tab5cf  = 'N/A'
@@ -229,8 +229,8 @@ IF (getButtonValue(Event, $
                    'csbss_button')) $
   THEN BEGIN
     tab6CsbssB = 'ON'
-    tab6CsbssV = getTextFieldValue(Event,'csbss_value_text')
-    tab6CsbssE = getTextFieldValue(Event,'csbss_error_text')
+    tab6CsbssV = getTextFieldValueForConfig(Event,'csbss_value_text')
+    tab6CsbssE = getTextFieldValueForConfig(Event,'csbss_error_text')
 ENDIF ELSE BEGIN
     tab6CsbssB = 'OFF'
     tab6CsbssV = 'N/A'
@@ -241,8 +241,8 @@ IF (getButtonValue(Event, $
                    'csn_button')) $
   THEN BEGIN
     tab6CsnB = 'ON'
-    tab6CsnV = getTextFieldValue(Event,'csn_value_text')
-    tab6CsnE = getTextFieldValue(Event,'csn_error_text')
+    tab6CsnV = getTextFieldValueForConfig(Event,'csn_value_text')
+    tab6CsnE = getTextFieldValueForConfig(Event,'csn_error_text')
 ENDIF ELSE BEGIN
     tab6CsnB = 'OFF'
     tab6CsnV = 'N/A'
@@ -253,8 +253,8 @@ IF (getButtonValue(Event, $
                    'bcs_button')) $
   THEN BEGIN
     tab6BcsB = 'ON'
-    tab6BcsV = getTextFieldValue(Event,'bcs_value_text')
-    tab6BcsE = getTextFieldValue(Event,'bcs_error_text')
+    tab6BcsV = getTextFieldValueForConfig(Event,'bcs_value_text')
+    tab6BcsE = getTextFieldValueForConfig(Event,'bcs_error_text')
 ENDIF ELSE BEGIN
     tab6BcsB = 'OFF'
     tab6BcsV = 'N/A'
@@ -265,8 +265,8 @@ IF (getButtonValue(Event, $
                    'bcn_button')) $
   THEN BEGIN
     tab6BcnB = 'ON'
-    tab6BcnV = getTextFieldValue(Event,'bcn_value_text')
-    tab6BcnE = getTextFieldValue(Event,'bcn_error_text')
+    tab6BcnV = getTextFieldValueForConfig(Event,'bcn_value_text')
+    tab6BcnE = getTextFieldValueForConfig(Event,'bcn_error_text')
 ENDIF ELSE BEGIN
     tab6BcnB = 'OFF'
     tab6BcnV = 'N/A'
@@ -277,8 +277,8 @@ IF (getButtonValue(Event, $
                    'cs_button')) $
   THEN BEGIN
     tab6CsB = 'ON'
-    tab6CsV = getTextFieldValue(Event,'cs_value_text')
-    tab6CsE = getTextFieldValue(Event,'cs_error_text')
+    tab6CsV = getTextFieldValueForConfig(Event,'cs_value_text')
+    tab6CsE = getTextFieldValueForConfig(Event,'cs_error_text')
 ENDIF ELSE BEGIN
     tab6CsB = 'OFF'
     tab6CsV = 'N/A'
@@ -289,8 +289,8 @@ IF (getButtonValue(Event, $
                    'cn_button')) $
   THEN BEGIN
     tab6CnB = 'ON'
-    tab6CnV = getTextFieldValue(Event,'cn_value_text')
-    tab6CnE = getTextFieldValue(Event,'cn_error_text')
+    tab6CnV = getTextFieldValueForConfig(Event,'cn_value_text')
+    tab6CnE = getTextFieldValueForConfig(Event,'cn_error_text')
 ENDIF ELSE BEGIN
     tab6CnB = 'OFF'
     tab6CnV = 'N/A'
@@ -300,7 +300,7 @@ ENDELSE
 ;---- tab7 ------------------------------------------------------------------
 IF (getButtonValue(Event,'csfds_button')) THEN BEGIN
     tab7CsfdsB = 'ON'
-    tab7CsfdsV = getTextFieldValue(Event,'csfds_value_text')
+    tab7CsfdsV = getTextFieldValueForConfig(Event,'csfds_value_text')
 ENDIF ELSE BEGIN
     tab7CsfdsB = 'OFF'
     tab7CsfdsV = 'N/A'
@@ -309,8 +309,8 @@ ENDELSE
 IF (getButtonValue(Event,'tzsp_button')) $
   THEN BEGIN
     tab7tzspB = 'ON'
-    tab7tzspV = getTextFieldValue(Event,'tzsp_value_text')
-    tab7tzspE = getTextFieldValue(Event,'tzsp_error_text')
+    tab7tzspV = getTextFieldValueForConfig(Event,'tzsp_value_text')
+    tab7tzspE = getTextFieldValueForConfig(Event,'tzsp_error_text')
 ENDIF ELSE BEGIN
     tab7tzspB = 'OFF'
     tab7tzspV = 'N/A'
@@ -320,24 +320,24 @@ ENDELSE
 IF (getButtonValue(Event,'tzop_button')) $
   THEN BEGIN
     tab7tzopB = 'ON'
-    tab7tzopV = getTextFieldValue(Event,'tzop_value_text')
-    tab7tzopE = getTextFieldValue(Event,'tzop_error_text')
+    tab7tzopV = getTextFieldValueForConfig(Event,'tzop_value_text')
+    tab7tzopE = getTextFieldValueForConfig(Event,'tzop_error_text')
 ENDIF ELSE BEGIN
     tab7tzopB = 'OFF'
     tab7tzopV = 'N/A'
     tab7tzopE = 'N/A'
 ENDELSE
 
-tab7Emin = getTextFieldValue(Event,'eha_min_text')
-tab7Emax = getTextFieldValue(Event,'eha_max_text')
-tab7Ebin = getTextFieldValue(Event,'eha_bin_text')
+tab7Emin = getTextFieldValueForConfig(Event,'eha_min_text')
+tab7Emax = getTextFieldValueForConfig(Event,'eha_max_text')
+tab7Ebin = getTextFieldValueForConfig(Event,'eha_bin_text')
 
 IF (getButtonValue(Event,'mtha_button')) THEN BEGIN
     tab7mthaB1 = 'ON'
     tab7mthaB2 = 'OFF'
-    tab7mthaB1min = getTextFieldValue(Event,'mtha_min_text')
-    tab7mthaB1max = getTextFieldValue(Event,'mtha_max_text')
-    tab7mthaB1bin = getTextFieldValue(Event,'mtha_bin_text')
+    tab7mthaB1min = getTextFieldValueForConfig(Event,'mtha_min_text')
+    tab7mthaB1max = getTextFieldValueForConfig(Event,'mtha_max_text')
+    tab7mthaB1bin = getTextFieldValueForConfig(Event,'mtha_bin_text')
     tab7mthaB2min = 'N/A'
     tab7mthaB2max = 'N/A'
     tab7mthaB2bin = 'N/A'
@@ -347,16 +347,16 @@ ENDIF ELSE BEGIN
     tab7mthaB1min = 'N/A'
     tab7mthaB1max = 'N/A'
     tab7mthaB1bin = 'N/A'
-    tab7mthaB2min = getTextFieldValue(Event,'mtha_min_text')
-    tab7mthaB2max = getTextFieldValue(Event,'mtha_max_text')
-    tab7mthaB2bin = getTextFieldValue(Event,'mtha_bin_text')
+    tab7mthaB2min = getTextFieldValueForConfig(Event,'mtha_min_text')
+    tab7mthaB2max = getTextFieldValueForConfig(Event,'mtha_max_text')
+    tab7mthaB2bin = getTextFieldValueForConfig(Event,'mtha_bin_text')
 ENDELSE
 
 IF (getButtonValue(Event,'gifw_button')) $
   THEN BEGIN
     tab7gifwB = 'ON'
-    tab7gifwV = getTextFieldValue(Event,'gifw_value_text')
-    tab7gifwE = getTextFieldValue(Event,'gifw_error_text')
+    tab7gifwV = getTextFieldValueForConfig(Event,'gifw_value_text')
+    tab7gifwE = getTextFieldValueForConfig(Event,'gifw_error_text')
 ENDIF ELSE BEGIN
     tab7gifwB = 'OFF'
     tab7gifwV = 'N/A'
@@ -366,8 +366,8 @@ ENDELSE
 IF (getButtonValue(Event,'tof_cutting_button')) $
   THEN BEGIN
     tab7tofCB = 'ON'
-    tab7tofCMin = getTextFieldValue(Event,'tof_cutting_min_text')
-    tab7tofCMax = getTextFieldValue(Event,'tof_cutting_max_text')
+    tab7tofCMin = getTextFieldValueForConfig(Event,'tof_cutting_min_text')
+    tab7tofCMax = getTextFieldValueForConfig(Event,'tof_cutting_max_text')
 ENDIF ELSE BEGIN
     tab7tofCB = 'OFF'
     tab7tofCMin = 'N/A'
@@ -424,9 +424,9 @@ IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
     IF (isButtonSelected(Event,'wocpsamn_button') AND $
         isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
         tab8wocpsamn = 'ON'
-        tab8waMin    = getTextFieldValue(Event,'wa_min_text')
-        tab8waMax    = getTextFieldValue(Event,'wa_max_text')
-        tab8waBin    = getTextFieldValue(Event,'wa_bin_text')
+        tab8waMin    = getTextFieldValueForConfig(Event,'wa_min_text')
+        tab8waMax    = getTextFieldValueForConfig(Event,'wa_max_text')
+        tab8waBin    = getTextFieldValueForConfig(Event,'wa_bin_text')
     ENDIF ELSE BEGIN
         tab8wocpsamn = 'OFF'
         tab8waMin    = 'N/A'
@@ -714,7 +714,7 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
                            ' over all Pixels',$
                            value: tab8wolidsb},$
                field124: { title: 'Write Out Pixel Wavelength Spectra ' + $
-                           ' after Vanadium Normalization',$
+                           'after Vanadium Normalization',$
                            value: tab8pwsavn}}
                
 RETURN, sStructure
@@ -723,6 +723,7 @@ END
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION IDLcreateLogFile::init, Event, cmd
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;retrieve value of fields from REDUCE tabs
 sReduce = populateReduceStructure(Event)
@@ -740,12 +741,12 @@ WHILE (index LT nbr_jobs) DO BEGIN
    file_name_array[index++] = STRCOMPRESS(match2[1],/REMOVE_ALL)
 ENDWHILE
 
-;create string array of all information from this/these job(s)
+;create string array of all information from this/these job(s) ----------------
 nbr_structure_tags = N_TAGS(sReduce) 
 final_array_size = 1 + Nbr_jobs + nbr_structure_tags
 final_array = STRARR(final_array_size)
 
-;write date
+;write date -------------------------------------------------------------------
 final_array[0] = DateTime
 i = 0
 offset = 1
@@ -761,7 +762,25 @@ FOR j=0,(nbr_structure_tags-1) DO BEGIN
    final_array[j+offset] = title + ': ' + value
 ENDFOR
 
-;print, final_array
+;check if config file already exists or not -----------------------------------
+config_file_name = (*global).config_file_name
+
+IF (FILE_TEST(config_file_name)) THEN BEGIN ;file already exists
+;We gonna have to append the file from the top
+    current_config_file_size = FILE_LINES(config_file_name)
+    current_config_file_array = STRARR(current_config_file_size)
+    OPENR, 1, config_file_name
+    READF, 1, current_config_file_array
+    CLOSE, 1
+    final_array = [final_array, current_config_file_array]
+ENDIF 
+
+OPENW, 1, config_file_name
+FOR i=0,(N_ELEMENTS(final_array)-1) DO BEGIN
+    PRINTF, 1, final_array[i]
+ENDFOR
+CLOSE, 1
+FREE_LUN, 1
 
 RETURN, 1
 END
