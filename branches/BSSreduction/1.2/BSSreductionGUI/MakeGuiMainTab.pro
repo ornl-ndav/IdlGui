@@ -7,6 +7,7 @@ MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 ;Tab titles
 SelectionTitle   = '  S E L E C T I O N  '
 ReduceTitle      = '  R E D U C E  '
+JobsStatusTitle  = '  J O B S   S T A T U S '
 OutputTitle      = '  O U T P U T '
 LogBookTitle     = '  L O G   B O O K  '
 
@@ -26,6 +27,9 @@ MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor, MAIN_BASE
 
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle
+
+;build JOB MANAGER tab
+MakeGuiJobsStatus, MAIN_TAB, MainTabsize, JobsStatusTitle
 
 ;build OUTPUT tab
 MakeGuiOutputTab, MAIN_TAB, MainTabsize, OutputTitle

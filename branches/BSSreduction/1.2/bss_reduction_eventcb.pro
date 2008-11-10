@@ -74,8 +74,11 @@ IF (current_tab NE prev_tab) THEN BEGIN
         1: BEGIN                ;Reduce tab
             BSSreduction_CommandLineGenerator, Event
         END
-        2: BEGIN ;output_tab
+        2: BEGIN                ;job manager
 
+        END
+        3: BEGIN                ;output_tab
+            
             BSSreduction_DisplayOutputFiles, Event 
 ;in bss_reduction_DisplayOutputFiles
         END
