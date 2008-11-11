@@ -31,34 +31,64 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO make_main_tree, Event, wTree
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  wTree = WIDGET_TREE((*global).TreeBase,$
+                      XOFFSET   = 0,$
+                      YOFFSET   = 0,$
+                      SCR_XSIZE = 500,$
+                      SCR_YSIZE = 660)
+  (*global).TreeID = wTree
+END
+
+;------------------------------------------------------------------------------
+PRO make_root, Event, wTree, wRoot, date
+  wRoot = WIDGET_TREE(wTree,$
+                      /FOLDER,$
+                      /EXPANDED,$
+                      VALUE = date)
+END
+
+;------------------------------------------------------------------------------
+PRO make_leaf, Event, wRoot, file_name
+  wTree = WIDGET_TREE(wRoot,$
+                      value = file_name)
+END
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
-FUNCTION IDLmakeTree::init, Event, TYPE=type, VALUE=value
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
+FUNCTION IDLmakeTree::init, Event, pMetadata
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nbr_jobs = (size(*pMetadata))(1)
+  IF (nbr_jobs GT 0) THEN BEGIN
+     make_main_tree, Event, wTree
+  ENDIF
 
-CASE (type) OF 
-    'tree': BEGIN
-        wTree = WIDGET_TREE((*global).TreeBase,$
-                            XOFFSET   = 0,$
-                            YOFFSET   = 0,$
-                            SCR_XSIZE = 500,$
-                            SCR_YSIZE = 660)
-        (*global).TreeID = wTree
-    END
-    'root': BEGIN
-        wRoot = WIDGET_TREE((*global).TreeID,$
-                            /FOLDER,$
-                            /EXPANDED,$
-                            VALUE = VALUE)
-        (*global).RootID = wRoot
-    END
-    'leaf': BEGIN
-        wTree = WIDGET_TREE((*global).RootID,$
-                            value = VALUE)
-    END
-ENDCASE
-                        
+  index = 0
+  WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
+    
+;date[0] = (*pMetadata)[0].date
+;date[1] = (*pMetadata)[1].date
+;list_of_files = (*(*pMetadata)[0].files)
+     
+     make_root, Event, wTree, wRoot, (*pMetadata)[index].date
+     
+;create a leaf for each file
+     nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+     
+     i = 0
+     WHILE (i LT nbr_files) DO BEGIN
+         make_leaf, Event, wRoot, (*(*pMetadata)[index].files)[i]
+        i++
+     ENDWHILE
+     
+     index++
+  ENDWHILE
+
+  WIDGET_CONTROL, /REALIZE, Event.top
+
 RETURN, 1
 END
 
