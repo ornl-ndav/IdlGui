@@ -564,156 +564,156 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
                           value: tab5cwc},$
                field45: { title: 'TOF Least Background (microS)',$
                           value: tab5tof},$
-               field50: { title: 'Min Positive Transverse Energy Integration',$
+               field46: { title: 'Min Positive Transverse Energy Integration',$
                           value: tab5PSmin},$
-               field51: { title: 'Max Positive Transverse Energy Integration',$
+               field47: { title: 'Max Positive Transverse Energy Integration',$
                           value: tab5PSmax},$
-               field52: { title: 'Positive Transverse Energy Integration' + $
+               field48: { title: 'Positive Transverse Energy Integration' + $
                           ' Width',$
                           value: tab5PSbin},$
-               field53: { title: 'Detailed Balance Temperature (K)',$
+               field49: { title: 'Detailed Balance Temperature (K)',$
                           value: tab5Dbt},$
-               field54: { title: 'Ratio Tolerance',$
+               field50: { title: 'Ratio Tolerance',$
                           value: tab5Rt},$
-               field55: { title: 'Number of Iteration',$
+               field51: { title: 'Number of Iteration',$
                           value: tab5Ni},$
-               field56: { title: 'Minimum Wavelength-Dependent Background' + $
+               field52: { title: 'Minimum Wavelength-Dependent Background' + $
                           ' Constant',$
                           value: tab5MinWbc},$
-               field57: { title: 'Maximum Wavelength-Dependent Background' + $
+               field53: { title: 'Maximum Wavelength-Dependent Background' + $
                           ' Constant',$
                           value: tab5MaxWbc},$
-               field58: { title: 'Small Wavelength-Dependent Background' + $
+               field54: { title: 'Small Wavelength-Dependent Background' + $
                           ' Constant',$
                           value: tab5SmaWbc},$
-               field59: { title: 'Amorphous Reduction Verbosity',$
+               field55: { title: 'Amorphous Reduction Verbosity',$
                           value: tab5Verbo},$
-               field60: { title: 'Constant to Scale the Background Spectra' + $
+               field56: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Sample Data Spectra',$
                           value: tab6CsbssB},$
-               field61: { title: '-> Value:',$
+               field57: { title: '-> Value:',$
                           value: tab6CsbssV},$
-               field62: { title: '-> Error',$
+               field58: { title: '-> Error',$
                           value: tab6CsbssE},$
-               field63: { title: 'Constant to Scale the Background Spectra' + $
+               field59: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Normalization Data' + $
                           ' Spectra',$
                           value: tab6CsnB},$
-               field64: { title: '-> Value',$
+               field60: { title: '-> Value',$
                           value: tab6CsnV},$
-               field65: { title: '-> Error',$
+               field61: { title: '-> Error',$
                           value: tab6CsnE},$
-               field66: { title: 'Constant to Scale the Background Spectra' + $
+               field62: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Sample Data' + $
                           ' Associatied Empty Container Spectra',$
                           value: tab6BcsB},$
-               field67: { title: '-> Value',$
+               field63: { title: '-> Value',$
                           value: tab6BcsV},$
-               field68: { title: '-> Error',$
+               field64: { title: '-> Error',$
                           value: tab6BcsE},$
-               field79: { title: 'Constant to Scale the Back. Spectra' + $
+               field65: { title: 'Constant to Scale the Back. Spectra' + $
                           ' for Subtraction from the Normalizaiton Data' + $
                           ' Associated Empty Container Spectra',$
                           value: tab6BcnB},$
-               field80: { title: '-> Value',$
+               field66: { title: '-> Value',$
                           value: tab6BcnV},$
-               field81: { title: '-> Error',$
+               field67: { title: '-> Error',$
                           value: tab6BcnE},$
-               field82: { title: 'Constant to Scale the Empty Container' + $
+               field68: { title: 'Constant to Scale the Empty Container' + $
                           ' Spectra for Subtraction from the Sample Data',$
                           value: tab6CsB},$
-               field83: { title: '-> Value',$
+               field69: { title: '-> Value',$
                           value: tab6CsV},$
-               field84: { title: '-> Error',$
+               field70: { title: '-> Error',$
                           value: tab6CsE},$
-               field85: { title: 'Constant to Scale the Empty Container' + $
+               field71: { title: 'Constant to Scale the Empty Container' + $
                           ' Spectra for Subtraction from the Normalization' + $
                           ' Data',$
                           value: tab6CnB},$
-               field86: { title: '-> Value',$
+               field72: { title: '-> Value',$
                           value: tab6CnV},$
-               field87: { title: '-> Error',$
+               field73: { title: '-> Error',$
                           value: tab6CnE},$
-               field88: { title: 'Constant for Scaling the Final Data' + $
+               field74: { title: 'Constant for Scaling the Final Data' + $
                           ' Spectrum',$
                           value: tab7CsfdsB},$
-               field89: { title: '-> Value',$
+               field75: { title: '-> Value',$
                           value: tab7CsfdsV},$
-               field90: { title: 'Time Zero Slope Parameter (Angstroms' + $
+               field76: { title: 'Time Zero Slope Parameter (Angstroms' + $
                           '/microSeconds)',$
                           value: tab7tzspB},$
-               field91: { title: '-> Value',$
+               field77: { title: '-> Value',$
                           value: tab7tzspV},$
-               field92: { title: '-> Error',$
+               field78: { title: '-> Error',$
                           value: tab7tzspE},$
-               field93: { title: 'Time Zero Offset Parameters (Angstroms)',$
+               field79: { title: 'Time Zero Offset Parameters (Angstroms)',$
                           value: tab7tzopB},$
-               field94: { title: '-> Value',$
+               field80: { title: '-> Value',$
                           value: tab7tzopV},$
-               field95: { title: '-> Error',$
+               field81: { title: '-> Error',$
                           value: tab7tzopE},$
-               field96: { title: 'Minimum Energy Histogram Axis (micro-eV)',$
+               field82: { title: 'Minimum Energy Histogram Axis (micro-eV)',$
                           value: tab7Emin},$
-               field97: { title: 'Maximum Energy Histogram Axis (micro-eV)',$
+               field83: { title: 'Maximum Energy Histogram Axis (micro-eV)',$
                           value: tab7Emax},$
-               field98: { title: 'Energy Histogram Axis Width (micro-eV)',$
+               field84: { title: 'Energy Histogram Axis Width (micro-eV)',$
                           value: tab7Ebin},$
-               field99: { title: 'Momentum Transfer Histogram Axis' + $
+               field85: { title: 'Momentum Transfer Histogram Axis' + $
                           ' (1/Angstroms)',$
                           value: tab7mthaB1},$
-               field100: { title: '-> Min',$
-                           value: tab7mthaB1min},$
-               field101: { title: '-> Max',$
+               field86: { title: '-> Min',$
+                          value: tab7mthaB1min},$
+               field87: { title: '-> Max',$
                            value: tab7mthaB1max},$
-               field102: { title: '-> Width',$
+               field88: { title: '-> Width',$
                            value: tab7mthaB1bin},$
-               field103: { title: 'Negative Cosine Polar Axis',$
+               field89: { title: 'Negative Cosine Polar Axis',$
                            value: tab7mthaB2},$
-               field104: { title: '-> Min',$
+               field90: { title: '-> Min',$
                            value: tab7mthaB2min},$
-               field105: { title: '-> Max',$
+               field91: { title: '-> Max',$
                            value: tab7mthaB2max},$
-               field106: { title: '-> Width',$
+               field92: { title: '-> Width',$
                            value: tab7mthaB2bin},$
-               field107: { title: 'Global Instrument Final Wavelength' + $
+               field93: { title: 'Global Instrument Final Wavelength' + $
                            ' (Angstroms)',$
                            value: tab7gifwB},$
-               field108: { title: '-> Value',$
+               field94: { title: '-> Value',$
                            value: tab7gifwV},$
-               field109: { title: '-> Error',$
+               field95: { title: '-> Error',$
                            value: tab7gifwE},$
-               field110: { title: 'Time of Flight Range (microseconds)',$
+               field96: { title: 'Time of Flight Range (microseconds)',$
                            value: tab7tofCB},$
-               field111: { title: '-> Min',$
+               field97: { title: '-> Min',$
                            value: tab7tofCMin},$
-               field112: { title: '-> Max',$
+               field98: { title: '-> Max',$
                            value: tab7tofCMax},$
-               field113: { title: 'Write all Intermediate Output',$
+               field99: { title: 'Write all Intermediate Output',$
                            value: tab8Waio},$
-               field114: { title: 'Write Out Time-Independent Background',$
+               field100: { title: 'Write Out Time-Independent Background',$
                            value: tab8woctib},$
-               fiedl115: { title: 'Write Out Pixel Wavelength Spectra',$
+               fiedl101: { title: 'Write Out Pixel Wavelength Spectra',$
                            value: tab8wopws},$
-               field116: { title: 'Write Out Monitor Wavelength Spectrum',$
+               field102: { title: 'Write Out Monitor Wavelength Spectrum',$
                            value: tab8womws},$
-               field117: { title: 'Write Out Monitor Efficiency Spectrum',$
+               field103: { title: 'Write Out Monitor Efficiency Spectrum',$
                            value: tab8womes},$
-               field118: { title: 'Write Out Rebinned Monitor Spectra',$
+               field104: { title: 'Write Out Rebinned Monitor Spectra',$
                            value: tab8worms},$
-               field119: { title: 'Write Out Combined Pixel Spectrum After' + $
+               field105: { title: 'Write Out Combined Pixel Spectrum After' + $
                            ' Monitor Normalization',$
                            value: tab8wocpsamn},$
-               field120: { title: '-> Min',$
+               field106: { title: '-> Min',$
                            value: tab8waMin},$
-               field121: { title: '-> Max',$
+               field107: { title: '-> Max',$
                            value: tab8waMax},$
-               field122: { title: '-> Width',$
+               field108: { title: '-> Width',$
                            value: tab8WaBin},$
-               field123: { title: 'Write Out Linearly Interpolated Direct' + $
+               field109: { title: 'Write Out Linearly Interpolated Direct' + $
                            ' Scattering Background Information Summed' + $
                            ' over all Pixels',$
                            value: tab8wolidsb},$
-               field124: { title: 'Write Out Pixel Wavelength Spectra ' + $
+               field110: { title: 'Write Out Pixel Wavelength Spectra ' + $
                            'after Vanadium Normalization',$
                            value: tab8pwsavn}}
                
