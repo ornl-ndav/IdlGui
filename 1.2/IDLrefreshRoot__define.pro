@@ -45,6 +45,7 @@ wRoot = WIDGET_TREE(wTree,$
                     /EXPANDED,$
                     VALUE = date,$
                     UNAME = uname)
+;                    /TOP)
 END
 
 ;------------------------------------------------------------------------------
@@ -82,7 +83,7 @@ make_root, Event, $
   (*pMetadata)[index].date, $
   uname,$
   EXPANDED_STATUS = 1
-WIDGET_CONTROL, /REALIZE, Event.top     
+;WIDGET_CONTROL, /REALIZE, Event.top     
     
 job_status_root_id[index] = wRoot
 (*(*global).job_status_root_id) = job_status_root_id
@@ -92,7 +93,7 @@ i = 0
 WHILE (i LT nbr_files) DO BEGIN
     file_name = get_file_name((*(*pMetadata)[index].files)[i])
     make_leaf, Event, wRoot, file_name
-    WIDGET_CONTROL, /REALIZE, Event.top
+;    WIDGET_CONTROL, /REALIZE, Event.top
     i++
 ENDWHILE
 
