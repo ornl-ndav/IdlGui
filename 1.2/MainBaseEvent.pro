@@ -1049,6 +1049,9 @@ ENDIF
  WHILE (index LT sz) DO BEGIN
       uname = job_status_uname[index]
       IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
+
+          display_contain_OF_job_status, Event, index ;_Job_status
+
           id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
           expanded_status = WIDGET_INFO(id, /TREE_EXPANDED)
           

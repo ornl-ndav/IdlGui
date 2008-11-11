@@ -97,6 +97,10 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
 
     self.sStructure = PTR_NEW(sLocalInfo)
 
+;retrieve list of metadata
+
+
+
 ENDIF
 
 RETURN, 1
