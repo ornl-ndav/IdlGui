@@ -63,9 +63,6 @@ myIcon2 = bytarr(16,16,3,/nozero)
 myIcon2[*,*,0] = myIcon1[2,*,*]
 myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[0,*,*]
-;myIcon2[*,*,0] = myIcon1[0,*,*]
-;myIcon2[*,*,1] = myIcon1[1,*,*]
-;myIcon2[*,*,2] = myIcon1[2,*,*]
 wTree = WIDGET_TREE(wRoot,$
                     value = file_name,$
                     BITMAP = myIcon2)
@@ -79,6 +76,7 @@ FUNCTION IDLmakeTree::init, Event, pMetadata
   nbr_jobs = (size(*pMetadata))(1)
   IF (nbr_jobs GT 0) THEN BEGIN
      make_main_tree, Event, wTree
+     WIDGET_CONTROL, /REALIZE, Event.top
   ENDIF
 
   index = 0
@@ -89,20 +87,25 @@ FUNCTION IDLmakeTree::init, Event, pMetadata
 ;list_of_files = (*(*pMetadata)[0].files)
      
      make_root, Event, wTree, wRoot, (*pMetadata)[index].date
-     
+     WIDGET_CONTROL, /REALIZE, Event.top     
+
 ;create a leaf for each file
      nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
      
      i = 0
      WHILE (i LT nbr_files) DO BEGIN
-         make_leaf, Event, wRoot, (*(*pMetadata)[index].files)[i]
+         file_name_full  = (*(*pMetadata)[index].files)[i]
+         file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+         file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+         make_leaf, Event, wRoot, file_name
+         WIDGET_CONTROL, /REALIZE, Event.top
         i++
      ENDWHILE
      
      index++
   ENDWHILE
 
-  WIDGET_CONTROL, /REALIZE, Event.top
+;  WIDGET_CONTROL, /REALIZE, Event.top
 
 RETURN, 1
 END
