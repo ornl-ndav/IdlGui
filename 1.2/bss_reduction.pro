@@ -119,6 +119,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    ok_bmp: 'images/ok.bmp',$
+                    failed_bmp: 'images/failed.bmp',$
                     TreeBase: 0L,$
                     TreeID: 0L,$
                     RootID: 0L,$
@@ -473,7 +475,8 @@ widget_control, MAIN_BASE, set_uvalue=global
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup' 
+;XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup' 
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ; initialize slider (Grid: Vertical Lines)
 id = widget_info(Main_base,Find_by_Uname='color_slider')

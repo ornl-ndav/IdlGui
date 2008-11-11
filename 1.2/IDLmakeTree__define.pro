@@ -52,8 +52,23 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_leaf, Event, wRoot, file_name
-  wTree = WIDGET_TREE(wRoot,$
-                      value = file_name)
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF (FILE_TEST(file_name)) THEN BEGIN
+   file = (*global).ok_bmp
+ENDIF ELSE BEGIN
+   file = (*global).failed_bmp
+ENDELSE
+myIcon1 = READ_BMP(file)
+myIcon2 = bytarr(16,16,3,/nozero)
+myIcon2[*,*,0] = myIcon1[2,*,*]
+myIcon2[*,*,1] = myIcon1[1,*,*]
+myIcon2[*,*,2] = myIcon1[0,*,*]
+;myIcon2[*,*,0] = myIcon1[0,*,*]
+;myIcon2[*,*,1] = myIcon1[1,*,*]
+;myIcon2[*,*,2] = myIcon1[2,*,*]
+wTree = WIDGET_TREE(wRoot,$
+                    value = file_name,$
+                    BITMAP = myIcon2)
 END
 
 ;******************************************************************************
