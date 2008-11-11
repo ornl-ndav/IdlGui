@@ -31,6 +31,13 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION get_file_name, file_name_full
+file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+RETURN, file_name
+END
+
+;------------------------------------------------------------------------------
 PRO make_main_tree, Event, wTree
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
@@ -74,78 +81,63 @@ END
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
-FUNCTION IDLmakeTree::init, Event, pMetadata
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  nbr_jobs = (size(*pMetadata))(1)
-  IF (nbr_jobs GT 0) THEN BEGIN
-     make_main_tree, Event, wTree
-     WIDGET_CONTROL, /REALIZE, Event.top
-  ENDIF
+FUNCTION IDLrefreshTree::init, Event, pMetadata
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-  job_status_uname       = STRARR(nbr_jobs)
-  job_status_root_id     = INTARR(nbr_jobs)
-  
-;this strarr will keep record of all the uname of the various folders
-;  IF ((*global).job_status_first_plot) THEN BEGIN
-      job_status_root_status              = INTARR(nbr_jobs) + 1
-      (*global).job_status_first_plot     = 0
-      (*(*global).job_status_root_status) = job_status_root_status
-      
-;  ENDIF ELSE BEGIN
-;      job_status_root_status = (*(*global).job_status_root_status)
-;  ENDELSE
+widget_control, (*global).TreeID, /DESTROY
 
-  index = 0
-  WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
+nbr_jobs = (size(*pMetadata))(1)
+IF (nbr_jobs GT 0) THEN BEGIN
+    make_main_tree, Event, wTree
+    WIDGET_CONTROL, /REALIZE, Event.top
+ENDIF
 
-;date[0] = (*pMetadata)[0].date
-;date[1] = (*pMetadata)[1].date
-;list_of_files = (*(*pMetadata)[0].files)
+job_status_uname   = (*(*global).job_status_uname)
+job_status_root_id = (*(*global).job_status_root_id)
 
-      job_status_uname[index]   = $
-        STRCOMPRESS((*pMetadata)[index].date,/REMOVE_ALL)
-      
-      make_root, Event, $
-        wTree, $
-        wRoot, $
-        (*pMetadata)[index].date, $
-        job_status_uname[index], $
-        EXPANDED_STATUS = job_status_root_status[index]
+sz = N_ELEMENTS(job_status_uname)
+index = 0
+job_status_root_status = (*(*global).job_status_root_status)
+WHILE (index LT sz) DO BEGIN
+    uname = job_status_uname[index]
+    expanded_status = job_status_root_status[index]
+    
+    make_root, Event, $
+      wTree, $
+      wRoot, $
+      (*pMetadata)[index].date, $
+      job_status_uname[index],$
+      EXPANDED_STATUS = expanded_status
+    WIDGET_CONTROL, /REALIZE, Event.top     
+    
+    IF (expanded_status) THEN BEGIN
+        
+        nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+        i = 0
+        WHILE (i LT nbr_files) DO BEGIN
+            file_name = get_file_name((*(*pMetadata)[index].files)[i])
+            make_leaf, Event, wRoot, file_name
+            WIDGET_CONTROL, /REALIZE, Event.top
+            i++
+        ENDWHILE
+    ENDIF
 
-      WIDGET_CONTROL, /REALIZE, Event.top     
-      job_status_root_id[index] = wRoot
-     
-;     IF (job_status_root_status[index]) THEN BEGIN
-; create a leaf for each file
-          nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+    job_status_root_id[index] = wRoot
+    
+    index++
+ENDWHILE
 
-          i = 0
-          WHILE (i LT nbr_files) DO BEGIN
-              file_name_full  = (*(*pMetadata)[index].files)[i]
-              file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
-              file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-              make_leaf, Event, wRoot, file_name
-              WIDGET_CONTROL, /REALIZE, Event.top
-              i++
-          ENDWHILE
-;    ENDIF
-     
-     index++
- ENDWHILE
-
-(*(*global).job_status_uname)   = job_status_uname
 (*(*global).job_status_root_id) = job_status_root_id
 
-;  WIDGET_CONTROL, /REALIZE, Event.top
-
 RETURN, 1
+
 END
+
 
 ;******************************************************************************
 ;******  Class Define *********************************************************
-PRO IDLmakeTree__define
-struct = {IDLmakeTree,$
+PRO IDLrefreshTree__define
+struct = {IDLrefreshTree,$
           var: ''}
 END
 ;******************************************************************************

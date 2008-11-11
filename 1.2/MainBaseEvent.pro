@@ -1006,6 +1006,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_list_of_jobs_button'): BEGIN
         refresh_job_status, Event ;_job_status
     END    
+
 ;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
@@ -1038,17 +1039,34 @@ IF ((*global).LoadingConfig EQ 0) THEN BEGIN
     BSSreduction_CommandLineGenerator, Event
 ENDIF
 
+
+
 ;loop through all the jobs to find out which one the user clicked
-job_status_uname = (*(*global).job_status_uname)
-sz = N_ELEMENTS(job_status_uname)
-index = 0
-WHILE (index LT sz) DO BEGIN
-    uname = job_status_uname[index]
-    IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
-        display_leaves, Event, index
-        BREAK
-    ENDIF
-    index++
-ENDWHILE
+ job_status_uname = (*(*global).job_status_uname)
+ sz = N_ELEMENTS(job_status_uname)
+ index = 0
+ job_status_root_status = (*(*global).job_status_root_status)
+ WHILE (index LT sz) DO BEGIN
+      uname = job_status_uname[index]
+      IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
+          id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+          expanded_status = WIDGET_INFO(id, /TREE_EXPANDED)
+          
+          IF (job_status_root_status[index] NE expanded_status) THEN BEGIN
+              job_status_root_status[index] = expanded_status
+              IF (expanded_status EQ 1L) THEN BEGIN
+                  iRefresh = OBJ_NEW('IDLrefreshRoot', Event, index)
+                  OBJ_DESTROY, iRefresh
+              ENDIF
+          ENDIF
+
+; ;         job_status_root_status[index] = expanded_status
+; ;         create_job_status, Event
+; ;         BREAK
+
+      ENDIF
+      index++
+  ENDWHILE
+  (*(*global).job_status_root_status) = job_status_root_status
 
 END
