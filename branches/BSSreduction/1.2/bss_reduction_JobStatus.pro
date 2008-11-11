@@ -59,13 +59,8 @@ OBJ_DESTROY, iDesign
 END
 
 ;------------------------------------------------------------------------------
-PRO display_leaves, Event, index
+PRO display_contain_OF_job_status, Event, index
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
 pMetadata = (*(*global).pMetadata)
-
-iLeaves = OBJ_NEW('IDLmakeLeaves', Event, pMetadata, index)
-OBJ_DESTROY, iLeaves
-
 
 END
