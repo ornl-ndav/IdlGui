@@ -67,6 +67,26 @@ sMetadataBase = { size: [sTreeBase.size[0]+$
                   uname: 'metadata_base',$
                   frame: 1}
 
+XYoff      = [0,0]
+NbrColumn  = 2
+NbrRow     = 110
+RowAlign   = [0,0]
+TableAlign = INTARR(NbrColumn, NbrRow)
+FOR i=0,(NbrRow-1) DO BEGIN
+    TableAlign(*,i) = RowAlign
+ENDFOR
+sTable = { size: [XYoff[0],$
+                  XYoff[1],$
+                  sMetadataBase.size[2],$
+                  sMetadataBase.size[3],$
+                  NbrColumn,$
+                  NbrRow],$
+           uname: 'job_status_table',$
+           sensitive: 1,$
+           label: ['FIELD NAME','FIELD VALUE'],$
+           align: TableAlign,$
+           column_width: [300,400]}
+
 ;Base output file name ........................................................
 XYoff = [2,10]
 sOutputBase = { size: [sMetadataBase.size[0]+XYoff[0],$
@@ -139,6 +159,23 @@ MetadataBase = WIDGET_BASE(Base,$
                            SCR_YSIZE = sMetadataBase.size[3],$
                            UNAME     = sMetadataBase.uname,$
                            FRAME     = sMetadataBase.frame)
+
+wTable = WIDGET_TABLE(MetadataBase,$
+                      XOFFSET       = sTable.size[0],$
+                      YOFFSET       = sTable.size[1],$
+                      SCR_XSIZE     = sTable.size[2],$
+                      SCR_YSIZE     = sTable.size[3],$
+                      XSIZE         = sTable.size[4],$
+                      YSIZE         = sTable.size[5],$
+                      UNAME         = sTable.uname,$
+                      SENSITIVE     = sTable.sensitive,$
+                      COLUMN_LABELS = sTable.label,$
+                      COLUMN_WIDTHS = sTable.column_width,$
+                      ALIGNMENT     = sTable.align,$
+                      /NO_ROW_HEADERS,$
+                      /ROW_MAJOR,$
+                      /RESIZEABLE_COLUMNS,$
+                      /ALL_EVENTS)
 
 ;Base output file name ........................................................
 Outputbase = WIDGET_BASE(Base,$

@@ -38,10 +38,23 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
     pMetadata = iJob->getStructure()
+    (*(*global).pMetadata) = pMetadata
     iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
     OBJ_DESTROY, iDesign
 ENDIF ELSE BEGIN ;error refreshing the config file
 
 ENDELSE
+
+END
+
+;------------------------------------------------------------------------------
+PRO display_leaves, Event, index
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+pMetadata = (*(*global).pMetadata)
+
+iLeaves = OBJ_NEW('IDLmakeLeaves', Event, pMetadata, index)
+OBJ_DESTROY, iLeaves
+
 
 END

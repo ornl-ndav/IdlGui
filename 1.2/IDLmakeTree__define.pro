@@ -46,8 +46,9 @@ END
 PRO make_root, Event, wTree, wRoot, date
   wRoot = WIDGET_TREE(wTree,$
                       /FOLDER,$
-                      /EXPANDED,$
-                      VALUE = date)
+;                      /EXPANDED,$
+                      VALUE = date,$
+                      uname = date)
 END
 
 ;------------------------------------------------------------------------------
@@ -79,6 +80,10 @@ FUNCTION IDLmakeTree::init, Event, pMetadata
      WIDGET_CONTROL, /REALIZE, Event.top
   ENDIF
 
+;this strarr will keep record of all the uname of the various folders
+  job_status_uname   = STRARR(nbr_jobs)
+  job_status_root_id = INTARR(nbr_jobs)
+
   index = 0
   WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
     
@@ -88,22 +93,27 @@ FUNCTION IDLmakeTree::init, Event, pMetadata
      
      make_root, Event, wTree, wRoot, (*pMetadata)[index].date
      WIDGET_CONTROL, /REALIZE, Event.top     
-
-;create a leaf for each file
-     nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+     job_status_uname[index]   = (*pMetadata)[index].date
+     job_status_root_id[index] = wRoot
      
-     i = 0
-     WHILE (i LT nbr_files) DO BEGIN
-         file_name_full  = (*(*pMetadata)[index].files)[i]
-         file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
-         file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-         make_leaf, Event, wRoot, file_name
-         WIDGET_CONTROL, /REALIZE, Event.top
-        i++
-     ENDWHILE
+;create a leaf for each file
+;     nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+     
+;     i = 0
+;     WHILE (i LT nbr_files) DO BEGIN
+;         file_name_full  = (*(*pMetadata)[index].files)[i]
+;         file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+;         file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+;         make_leaf, Event, wRoot, file_name
+;         WIDGET_CONTROL, /REALIZE, Event.top
+;        i++
+;     ENDWHILE
      
      index++
   ENDWHILE
+
+(*(*global).job_status_uname)   = job_status_uname
+(*(*global).job_status_root_id) = job_status_root_id
 
 ;  WIDGET_CONTROL, /REALIZE, Event.top
 

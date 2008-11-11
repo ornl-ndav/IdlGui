@@ -119,6 +119,9 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    pMetadata: PTR_NEW(0L),$
+                    job_status_uname: PTR_NEW(0L),$
+                    job_status_root_id: PTR_NEW(0L),$
                     ok_bmp: 'images/ok.bmp',$
                     failed_bmp: 'images/failed.bmp',$
                     TreeBase: 0L,$
