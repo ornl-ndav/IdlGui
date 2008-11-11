@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO refresh_job_status, Event
+PRO create_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 iJob = OBJ_NEW('IDLreadLogFile',Event)
@@ -44,6 +44,17 @@ IF (OBJ_VALID(iJob)) THEN BEGIN
 ENDIF ELSE BEGIN ;error refreshing the config file
 
 ENDELSE
+OBJ_DESTROY, iJob
+
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_job_status, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+pMetadata = (*(*global).pMetadata)
+iDesign = OBJ_NEW('IDLrefreshTree', Event, pMetadata)
+OBJ_DESTROY, iDesign
 
 END
 

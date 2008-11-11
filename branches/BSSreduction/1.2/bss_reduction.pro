@@ -119,9 +119,13 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    icon_ok: PTR_NEW(0L),$
+                    icon_failed: PTR_NEW(0L),$
                     pMetadata: PTR_NEW(0L),$
                     job_status_uname: PTR_NEW(0L),$
                     job_status_root_id: PTR_NEW(0L),$
+                    job_status_first_plot: 1,$
+                    job_status_root_status: PTR_NEW(0L),$
                     ok_bmp: 'images/ok.bmp',$
                     failed_bmp: 'images/failed.bmp',$
                     TreeBase: 0L,$
@@ -383,6 +387,24 @@ global = ptr_new ({ $
                                                 wodwsm_button: 0}}}$
                       })
                     
+file_ok     = (*global).ok_bmp
+myIcon1     = READ_BMP(file_ok)
+myIcon2     = bytarr(16,16,3,/nozero)
+myIcon2[*,*,0] = myIcon1[2,*,*]
+myIcon2[*,*,1] = myIcon1[1,*,*]
+myIcon2[*,*,2] = myIcon1[0,*,*]
+(*(*global).icon_ok) = myIcon2
+
+file_failed = (*global).failed_bmp
+myIcon1     = READ_BMP(file_failed)
+myIcon2     = bytarr(16,16,3,/nozero)
+myIcon2[*,*,0] = myIcon1[2,*,*]
+myIcon2[*,*,1] = myIcon1[1,*,*]
+myIcon2[*,*,2] = myIcon1[0,*,*]
+(*(*global).icon_failed) = myIcon2
+
+
+
 ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
 my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3);number of packages we need to check
 my_package[0].driver           = 'findnexus'

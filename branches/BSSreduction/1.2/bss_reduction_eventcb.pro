@@ -75,7 +75,7 @@ IF (current_tab NE prev_tab) THEN BEGIN
             BSSreduction_CommandLineGenerator, Event
         END
         2: BEGIN                ;job manager
-
+            create_job_status, Event
         END
         3: BEGIN                ;output_tab
             
