@@ -93,6 +93,7 @@ cd, CurrentFolder
 .run IDLrefreshTree__define.pro
 .run IDLrefreshRoot__define.pro
 .run IDLsendToGeek__define.pro
+.run IDLextractMetadata__define.pro
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro

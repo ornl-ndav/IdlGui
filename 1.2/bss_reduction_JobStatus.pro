@@ -61,6 +61,7 @@ END
 ;------------------------------------------------------------------------------
 PRO display_contain_OF_job_status, Event, index
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-pMetadata = (*(*global).pMetadata)
+
+iMetadata = OBJ_NEW('IDLextractMetadata', Event)
 
 END
