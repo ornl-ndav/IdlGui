@@ -31,15 +31,17 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO make_main_tree, Event, wTree
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-  wTree = WIDGET_TREE((*global).TreeBase,$
-                      XOFFSET   = 0,$
-                      YOFFSET   = 0,$
-                      SCR_XSIZE = 500,$
-                      SCR_YSIZE = 660)
-  (*global).TreeID = wTree
+PRO make_main_tree_FOR_make_tree, Event, wTree
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF ((*global).TreeID NE 0) THEN BEGIN
+    WIDGET_CONTROL, (*global).TreeID, /DESTROY
+ENDIF
+wTree = WIDGET_TREE((*global).TreeBase,$
+                    XOFFSET   = 0,$
+                    YOFFSET   = 0,$
+                    SCR_XSIZE = 500,$
+                    SCR_YSIZE = 660)
+(*global).TreeID = wTree
 END
 
 ;------------------------------------------------------------------------------
@@ -53,12 +55,12 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_leaf_FOR_make_tree, Event, wRoot, file_name
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
- IF (FILE_TEST(file_name)) THEN BEGIN
-     icon = (*(*global).icon_ok)
- ENDIF ELSE BEGIN
-     icon = (*(*global).icon_failed)
- ENDELSE
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF (FILE_TEST(file_name)) THEN BEGIN
+    icon = (*(*global).icon_ok)
+ENDIF ELSE BEGIN
+    icon = (*(*global).icon_failed)
+ENDELSE
 wTree = WIDGET_TREE(wRoot,$
                     value = file_name,$
                     BITMAP = icon)
@@ -67,65 +69,65 @@ END
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION IDLmakeTree::init, Event, pMetadata
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  nbr_jobs = (size(*pMetadata))(1)
-  IF (nbr_jobs GT 0) THEN BEGIN
-     make_main_tree, Event, wTree
-;     WIDGET_CONTROL, /REALIZE, Event.top
-  ENDIF
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-  job_status_uname       = STRARR(nbr_jobs)
-  job_status_root_id     = INTARR(nbr_jobs)
-  
+nbr_jobs = (size(*pMetadata))(1)
+IF (nbr_jobs GT 0) THEN BEGIN
+    make_main_tree_FOR_make_tree, Event, wTree
+;     WIDGET_CONTROL, /REALIZE, Event.top
+ENDIF
+
+job_status_uname       = STRARR(nbr_jobs)
+job_status_root_id     = INTARR(nbr_jobs)
+
 ;this strarr will keep record of all the uname of the various folders
 ;  IF ((*global).job_status_first_plot) THEN BEGIN
-      job_status_root_status              = INTARR(nbr_jobs)
-      job_status_root_status[0]           = 1
-      (*global).job_status_first_plot     = 0
-      (*(*global).job_status_root_status) = job_status_root_status
-      
+job_status_root_status              = INTARR(nbr_jobs)
+job_status_root_status[0]           = 1
+(*global).job_status_first_plot     = 0
+(*(*global).job_status_root_status) = job_status_root_status
+
 ;  ENDIF ELSE BEGIN
 ;      job_status_root_status = (*(*global).job_status_root_status)
 ;  ENDELSE
 
-  index = 0
-  WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
-
+index = 0
+WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
+    
 ;date[0] = (*pMetadata)[0].date
 ;date[1] = (*pMetadata)[1].date
 ;list_of_files = (*(*pMetadata)[0].files)
-
-      job_status_uname[index]   = $
-        STRCOMPRESS((*pMetadata)[index].date,/REMOVE_ALL)
-      
-      make_root_FOR_make_tree, Event, $
-        wTree, $
-        wRoot, $
-        (*pMetadata)[index].date, $
-        job_status_uname[index],$
-        job_status_root_status[index]
-
+    
+    job_status_uname[index]   = $
+      STRCOMPRESS((*pMetadata)[index].date,/REMOVE_ALL)
+    
+    make_root_FOR_make_tree, Event, $
+      wTree, $
+      wRoot, $
+      (*pMetadata)[index].date, $
+      job_status_uname[index],$
+      job_status_root_status[index]
+    
 ;      WIDGET_CONTROL, /REALIZE, Event.top     
-      job_status_root_id[index] = wRoot
-     
-      IF (job_status_root_status[index]) THEN BEGIN
+    job_status_root_id[index] = wRoot
+    
+    IF (job_status_root_status[index]) THEN BEGIN
 ; create a leaf for each file
-          nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
-          
-          i = 0
-          WHILE (i LT nbr_files) DO BEGIN
-              file_name_full  = (*(*pMetadata)[index].files)[i]
-              file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
-              file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-              make_leaf_FOR_make_tree, Event, wRoot, file_name
+        nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+        
+        i = 0
+        WHILE (i LT nbr_files) DO BEGIN
+            file_name_full  = (*(*pMetadata)[index].files)[i]
+            file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+            file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+            make_leaf_FOR_make_tree, Event, wRoot, file_name
 ;              WIDGET_CONTROL, /REALIZE, Event.top
-              i++
-          ENDWHILE
-      ENDIF
-      
-     index++
- ENDWHILE
+            i++
+        ENDWHILE
+    ENDIF
+    
+    index++
+ENDWHILE
 
 (*(*global).job_status_uname)   = job_status_uname
 (*(*global).job_status_root_id) = job_status_root_id

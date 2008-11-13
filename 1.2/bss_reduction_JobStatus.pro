@@ -35,6 +35,8 @@
 PRO create_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+print, 'here'
+
 iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
     pMetadata = iJob->getStructure()
@@ -75,8 +77,6 @@ aTable = STRARR(2,Nbr_metadata)
 
 aTable[0,*] = aMetadataValue[0,*]
 aTable[1,*] = aMetadataValue[index+1,*]
-
-help, aTable
 
 putTableValue, Event, 'job_status_table', aTable
 

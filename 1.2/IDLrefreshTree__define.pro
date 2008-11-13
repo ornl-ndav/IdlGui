@@ -39,14 +39,13 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_main_tree, Event, wTree
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-  wTree = WIDGET_TREE((*global).TreeBase,$
-                      XOFFSET   = 0,$
-                      YOFFSET   = 0,$
-                      SCR_XSIZE = 500,$
-                      SCR_YSIZE = 660)
-  (*global).TreeID = wTree
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+wTree = WIDGET_TREE((*global).TreeBase,$
+                    XOFFSET   = 0,$
+                    YOFFSET   = 0,$
+                    SCR_XSIZE = 500,$
+                    SCR_YSIZE = 660)
+(*global).TreeID = wTree
 END
 
 ;------------------------------------------------------------------------------
@@ -68,12 +67,12 @@ END
 
 ;------------------------------------------------------------------------------
 PRO make_leaf, Event, wRoot, file_name
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
- IF (FILE_TEST(file_name)) THEN BEGIN
-     icon = (*(*global).icon_ok)
- ENDIF ELSE BEGIN
-     icon = (*(*global).icon_failed)
- ENDELSE
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF (FILE_TEST(file_name)) THEN BEGIN
+    icon = (*(*global).icon_ok)
+ENDIF ELSE BEGIN
+    icon = (*(*global).icon_failed)
+ENDELSE
 wTree = WIDGET_TREE(wRoot,$
                     value = file_name,$
                     BITMAP = icon)
@@ -84,7 +83,7 @@ END
 FUNCTION IDLrefreshTree::init, Event, pMetadata
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-widget_control, (*global).TreeID, /DESTROY
+WIDGET_CONTROL, (*global).TreeID, /DESTROY
 
 nbr_jobs = (size(*pMetadata))(1)
 IF (nbr_jobs GT 0) THEN BEGIN
