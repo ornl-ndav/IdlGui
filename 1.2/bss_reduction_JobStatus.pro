@@ -126,3 +126,23 @@ putTextinTextField, Event, $
   default_output_file_name
 
 END
+
+;------------------------------------------------------------------------------
+PRO job_status_folder_button, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+title = 'Select a default folder name'
+path  = (*global).output_plot_path
+
+result = DIALOG_PICKFILE(TITLE = title,$
+                         /DIRECTORY,$
+                         /MUST_EXIST,$
+                         PATH = path)
+
+IF (result NE '') THEN BEGIN
+    SetButton, event, 'job_status_output_path_button', result
+    (*global).output_plot_path = result
+ENDIF
+END
+                         
+

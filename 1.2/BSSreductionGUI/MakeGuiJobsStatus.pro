@@ -95,6 +95,7 @@ sOutputBase = { size: [sMetadataBase.size[0]+XYoff[0],$
                        sMetadataBase.size[2],$
                        75],$
                 uname: 'job_status_output_base',$
+                sensitive: 0,$
                 frame: 0}
 
 XYoff = [0,0] ;output path button
@@ -179,12 +180,13 @@ wTable = WIDGET_TABLE(MetadataBase,$
 
 ;Base output file name ........................................................
 Outputbase = WIDGET_BASE(Base,$
-                           XOFFSET   = sOutputbase.size[0],$
-                           YOFFSET   = sOutputbase.size[1],$
-                           SCR_XSIZE = sOutputbase.size[2],$
-                           SCR_YSIZE = sOutputbase.size[3],$
-                           UNAME     = sOutputbase.uname,$
-                           FRAME     = sOutputbase.frame)
+                         XOFFSET   = sOutputbase.size[0],$
+                         YOFFSET   = sOutputbase.size[1],$
+                         SCR_XSIZE = sOutputbase.size[2],$
+                         SCR_YSIZE = sOutputbase.size[3],$
+                         UNAME     = sOutputbase.uname,$
+                         SENSITIVE = sOutputBase.sensitive,$
+                         FRAME     = sOutputbase.frame)
 
 ;output path button
 wOutputPathB = WIDGET_BUTTON(OutputBase,$
