@@ -85,8 +85,14 @@ IF (OBJ_VALID(iJob)) THEN BEGIN
     select_first_node, Event ;Gui
     display_contain_OF_job_status, Event, 0
 
-ENDIF ELSE BEGIN ;error refreshing the config file
-
+ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+        WIDGET_CONTROL, (*global).TreeID, /DESTROY
+    ENDELSE
 ENDELSE
 OBJ_DESTROY, iJob
 
