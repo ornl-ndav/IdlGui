@@ -47,8 +47,32 @@ READF, 1, file_array
 CLOSE, 1
 
 result = WHERE(file_array EQ '', nbr_input)
-final_result = [0,result]
-final_array = file_array[final_result[index]:final_result[index+1]]
+IF (nbr_input EQ 1) THEN BEGIN
+    final_array = ['']
+ENDIF ELSE BEGIN
+    final_result = [0,result]
+    CASE (index) OF
+        0: BEGIN
+            print, 'in 0'
+            final_array = file_array[final_result[index+1]: $
+                                     final_result[nbr_input]-1]
+        END
+        (nbr_input-1): BEGIN
+            print, 'in nbr_input: ' + strcompress(nbr_input)
+            final_array = file_array[0: $
+                                     final_result[nbr_input-1]-1]
+        END
+        ELSE: BEGIN
+            print, 'in else (' + strcompress(index) + ')'
+            final_array_1 = file_array[0: $
+                                       final_result[index]-1]
+            final_array_2 = file_array[final_result[index+1]: $
+                                       final_result[index+2]-1]
+            final_array = [final_array_1,final_array_2]
+        END
+    ENDCASE
+    final_array = [final_array,'']    
+ENDELSE
 
 ;replace config file with new array
 OPENW, 1, config_file_name
