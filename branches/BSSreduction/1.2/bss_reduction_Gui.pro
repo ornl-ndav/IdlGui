@@ -91,3 +91,8 @@ wRoot = job_status_uname[0]
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=wRoot)
 WIDGET_CONTROL, id, SET_TREE_SELECT=1
 END
+
+;------------------------------------------------------------------------------
+PRO updateJobStatusOutputBase, Event, status
+SensitiveBase, Event, 'job_status_output_base', status
+END

@@ -74,22 +74,16 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 nbr_jobs = (size(*pMetadata))(1)
 IF (nbr_jobs GT 0) THEN BEGIN
     make_main_tree_FOR_make_tree, Event, wTree
-;     WIDGET_CONTROL, /REALIZE, Event.top
 ENDIF
 
 job_status_uname       = STRARR(nbr_jobs)
 job_status_root_id     = INTARR(nbr_jobs)
 
 ;this strarr will keep record of all the uname of the various folders
-;  IF ((*global).job_status_first_plot) THEN BEGIN
 job_status_root_status              = INTARR(nbr_jobs)
 job_status_root_status[0]           = 1
 (*global).job_status_first_plot     = 0
 (*(*global).job_status_root_status) = job_status_root_status
-
-;  ENDIF ELSE BEGIN
-;      job_status_root_status = (*(*global).job_status_root_status)
-;  ENDELSE
 
 index = 0
 WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
@@ -108,7 +102,6 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
       job_status_uname[index],$
       job_status_root_status[index]
     
-;      WIDGET_CONTROL, /REALIZE, Event.top     
     job_status_root_id[index] = wRoot
     
     IF (job_status_root_status[index]) THEN BEGIN
@@ -121,7 +114,6 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
             file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
             file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
             make_leaf_FOR_make_tree, Event, wRoot, file_name
-;              WIDGET_CONTROL, /REALIZE, Event.top
             i++
         ENDWHILE
     ENDIF

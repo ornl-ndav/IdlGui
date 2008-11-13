@@ -32,10 +32,45 @@
 ;
 ;==============================================================================
 
+FUNCTION AreAllFilesFound, Event, index
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+pMetadata       = (*(*global).pMetadata)
+nbr_files       = N_ELEMENTS(*(*pMetadata)[index].files)
+i = 0
+all_found = 1
+WHILE (i LT nbr_files) DO BEGIN
+    file_name_full  = (*(*pMetadata)[index].files)[i]
+    file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+    file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+    IF (~FILE_TEST(file_name)) THEN BEGIN
+        all_found = 0
+        BREAK
+    ENDIF
+    i++
+ENDWHILE
+RETURN, all_found
+END
+
+;------------------------------------------------------------------------------
+FUNCTION determine_default_output_file_name, Event, index
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+pMetadata       = (*(*global).pMetadata)
+file_name_full  = (*(*pMetadata)[index].files)[0]
+file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+;keep only first part of file name (BSS_623_Q00.txt)
+split_array     = STRSPLIT(file_name,'_',COUNT=nbr)
+file_name       = STRMID(file_name,0,split_array[nbr-1])
+;add new extension
+file_name      += (*global).iter_dependent_back_ext
+;file name only
+short_file_name = FILE_BASENAME(file_name)
+RETURN, short_file_name
+END
+
+;------------------------------------------------------------------------------
 PRO create_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-print, 'here'
 
 iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
@@ -79,5 +114,15 @@ aTable[0,*] = aMetadataValue[0,*]
 aTable[1,*] = aMetadataValue[index+1,*]
 
 putTableValue, Event, 'job_status_table', aTable
+FileFoundStatus = AreAllFilesFound(Event, index)
+
+updateJobStatusOutputBase, Event, FileFoundStatus
+
+;determine default output file name
+default_output_file_name = determine_default_output_file_name(Event,index)
+;put name in output text box
+putTextinTextField, Event, $
+  'job_status_output_file_name_text_field',$
+  default_output_file_name
 
 END
