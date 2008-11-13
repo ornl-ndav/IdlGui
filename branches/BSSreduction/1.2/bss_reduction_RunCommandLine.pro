@@ -44,6 +44,7 @@ widget_control,/hourglass
 
 PROCESSING = (*global).processing
 OK         = (*global).ok
+FAILED     = (*global).failed
 
 ;first check that the output folder exist if not, create it
 output_path = (*global).default_output_path

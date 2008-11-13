@@ -145,4 +145,93 @@ IF (result NE '') THEN BEGIN
 ENDIF
 END
                          
+;------------------------------------------------------------------------------
+PRO stitch_files, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+;;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+;build command line
+stitch_driver = (*global).stitch_driver
+
+;retrieve list of files
+index = (*global).igs_selected_index
+pMetadata       = (*(*global).pMetadata)
+nbr_files       = N_ELEMENTS(*(*pMetadata)[index].files)
+str_OF_files    = ''
+i = 0
+WHILE (i LT nbr_files) DO BEGIN
+    file_name_full  = (*(*pMetadata)[index].files)[i]
+    file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+    file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+    str_OF_files += file_name + ' '
+    i++
+ENDWHILE
+
+cmd = stitch_driver
+cmd += ' ' + str_OF_files
+
+;add output folder/file name
+output_path = getButtonValue(Event,'job_status_output_path_button')
+output_file = getTextFieldValue(Event, $
+                                'job_status_output_file_name_text_field')
+full_output_file_name = output_path + output_file 
+cmd += ' --output=' + full_output_file_name
+
+;check if there is a rescale factor added or not
+aMetadata = (*(*(*global).pMetadataValue))
+scaling_flag     = STRCOMPRESS(aMetadata[index+1,73],/REMOVE_ALL)
+scaling_constant = STRCOMPRESS(aMetadata[index+1,74],/REMOVE_ALL)
+IF (scaling_flag EQ 'ON' AND $
+    scaling_constant NE 'N/A') THEN BEGIN
+    cmd += ' --rescale=' + scaling_constant
+ENDIF
+
+text = '> Stitching the files:'
+AppendLogBookMessage, Event, text
+cmd_text = '-> ' + cmd + ' ... ' + PROCESSING
+AppendLogBookMessage, Event, cmd_text
+
+;spawn, cmd, listening, err_listening
+err_listening = ''
+IF (err_listening[0] NE '') THEN BEGIN
+    putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+ENDIF ELSE BEGIN
+    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+
+;    full_output_file_name = '~/BSS_638.txt' ;REMOVE_ME
+
+;plot data
+    IF (FILE_TEST(full_output_file_name)) THEN BEGIN
+        text = '-> Plotting ' + full_output_file_name
+        AppendLogBookMessage, Event, text
+
+;put name of file in text field 0f output tab
+        putTextInTextField, Event, 'output_plot_file_name', $
+          full_output_file_name
+;display metadata of selected file
+    display_metadata, Event, full_output_file_name
+        
+;select OUTPUT tab
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id, SET_TAB_CURRENT=3
+
+    ENDIF ELSE BEGIN
+        text = '-> File ' + full_output_file_name + ' can not be found !'
+        AppendLogBookMessage, Event, text
+        result = DIALOG_MESSAGE('ERROR PLOTTING ' + full_output_file_name,$
+                                /ERROR,$
+                                /CENTER)
+    ENDELSE
+
+ENDELSE
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
+END
