@@ -55,6 +55,14 @@ sTreeBase = { size: [sRefreshB.size[0]+XYoff[0],$
               frame: 1,$
               uname: 'list_of_jobs_tree_base'}
 
+XYoff = [0,627] ;remove folder button
+sRemoveFolder = { size: [XYoff[0],$
+                         XYoff[1],$
+                         sTreeBase.size[2]],$
+                  value: 'REMOVE SELECTED FOLDER',$
+                  uname: 'job_status_remove_folder',$
+                  sensitive: 1}
+
 ;Base that will contain the metadata for the selected jobs ....................
 XYoff  = [10,10]
 offset = -40
@@ -151,6 +159,15 @@ TreeBase = WIDGET_BASE(Base,$
                        FRAME     = sTreeBase.frame,$
                        UNAME     = sTreeBase.uname)
 (*global).TreeBase = TreeBase
+
+;Remove Folder Button 
+wRemoveButton = WIDGET_BUTTON(TreeBase,$
+                              XOFFSET   = sRemoveFolder.size[0],$
+                              YOFFSET   = sRemoveFolder.size[1],$
+                              SCR_XSIZE = sRemoveFolder.size[2],$
+                              VALUE     = sRemoveFolder.value,$
+                              UNAME     = sRemoveFolder.uname,$
+                              SENSITIVE = sRemoveFolder.sensitive)
 
 ;Base that will contain the metadata for the selected jobs ....................
 MetadataBase = WIDGET_BASE(Base,$

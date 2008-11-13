@@ -1015,6 +1015,11 @@ CASE Event.id OF
         stitch_files, Event ;_job_status
     END    
 
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='job_status_remove_folder'): BEGIN
+        remove_job_status_folder, Event     ;_job_status
+    END    
+
 ;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
