@@ -119,7 +119,7 @@ sCreatePlotB = { size: [sOutputFile.size[0]+$
                         sOutputFile.size[1]+$
                         XYoff[1],$
                         170,30],$
-                 value: 'CREATE / PLOT',$
+                 value: 'C R E A T E',$
                  sensitive: 1,$
                  uname: 'job_status_create_plot_button'}
 

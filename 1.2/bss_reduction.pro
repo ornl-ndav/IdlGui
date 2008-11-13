@@ -119,6 +119,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    igs_selected_index: 0,$
+                    stitch_driver: 'stitch_dave',$
                     iter_dependent_back_ext: 'ibs.txt',$
                     icon_ok: PTR_NEW(0L),$
                     icon_failed: PTR_NEW(0L),$
@@ -408,14 +410,17 @@ myIcon2[*,*,2] = myIcon1[0,*,*]
 
 
 ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
-my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3);number of packages we need to check
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,4)
+;number of packages we need to check
 my_package[0].driver           = 'findnexus'
-my_package[0].version_required = '1.5'
+my_package[0].version_required = ''
 my_package[1].driver           = (*global).DriverName
-my_package[1].version_required = '1.0'
+my_package[1].version_required = ''
 my_package[1].sub_pkg_version  = './drversion'
 my_package[2].driver           = (*global).iterative_background_DriverName
-my_package[2].version_required = '1.0'
+my_package[2].version_required = ''
+my_package[3].driver           = (*global).stitch_driver
+my_package[3].version_required = ''
 
 (*global).negative_cosine_polar_array = ['-1.0','1.0','0.5']
 

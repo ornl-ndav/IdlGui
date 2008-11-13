@@ -356,7 +356,6 @@ IF (file_name NE '') THEN BEGIN
     putTextInTextField, Event, 'output_plot_file_name', file_name
 ;display metadata of selected file
     display_metadata, Event, file_name
-
 ENDIF
 
 ;turn off hourglass

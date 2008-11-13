@@ -1011,6 +1011,10 @@ CASE Event.id OF
         job_status_folder_button, Event ;_job_status
     END    
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='job_status_create_plot_button'): BEGIN
+        stitch_files, Event ;_job_status
+    END    
+
 ;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
@@ -1055,6 +1059,7 @@ ENDIF
       IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
 
           display_contain_OF_job_status, Event, index ;_Job_status
+          (*global).igs_selected_index = index
 
           id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
           expanded_status = WIDGET_INFO(id, /TREE_EXPANDED)
