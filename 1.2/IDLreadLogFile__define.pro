@@ -52,6 +52,7 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
 
 ;read file --------------------------------------------------------------------
     file_size  = FILE_LINES(config_file_name)
+    IF (file_size LT 10) THEN RETURN, 0
     file_array = STRARR(file_size)
     OPENR, 1, config_file_name
     READF, 1, file_array
