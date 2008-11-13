@@ -41,6 +41,7 @@ END
 PRO make_main_tree, Event, wTree
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 wTree = WIDGET_TREE((*global).TreeBase,$
+                    UNAME     = 'job_status_tree',$
                     XOFFSET   = 0,$
                     YOFFSET   = 0,$
                     SCR_XSIZE = 500,$

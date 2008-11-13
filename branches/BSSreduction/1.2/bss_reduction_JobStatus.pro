@@ -235,3 +235,29 @@ ENDELSE
 WIDGET_CONTROL,HOURGLASS=0
 
 END
+
+;------------------------------------------------------------------------------
+PRO remove_job_status_folder, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='job_status_tree')
+IF (WIDGET_INFO(id, /TREE_SELECT) EQ -1) THEN BEGIN
+    result = DIALOG_MESSAGE('Please Select a Folder First!',$
+                            /INFORMATION,$
+                            /CENTER)
+ENDIF ELSE BEGIN
+    index_selected = (*global).igs_selected_index
+;remove given folder from config file
+    iRemove = OBJ_NEW('IDLremoveFolderFromConfig',Event,index_selected)
+    OBJ_DESTROY, iRemove
+;refresh widget_tree
+    create_job_status, Event
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO remove_folder_from_cfg_file, Event, index
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+
+
+END

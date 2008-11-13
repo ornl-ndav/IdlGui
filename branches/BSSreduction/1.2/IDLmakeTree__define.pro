@@ -37,10 +37,11 @@ IF ((*global).TreeID NE 0) THEN BEGIN
     WIDGET_CONTROL, (*global).TreeID, /DESTROY
 ENDIF
 wTree = WIDGET_TREE((*global).TreeBase,$
+                    UNAME     = 'job_status_tree',$
                     XOFFSET   = 0,$
                     YOFFSET   = 0,$
                     SCR_XSIZE = 500,$
-                    SCR_YSIZE = 660)
+                    SCR_YSIZE = 620)
 (*global).TreeID = wTree
 END
 
