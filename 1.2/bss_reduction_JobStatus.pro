@@ -39,8 +39,15 @@ iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
     pMetadata = iJob->getStructure()
     (*(*global).pMetadata) = pMetadata
+    pMetadataValue = iJob->getMetadata()
+    (*(*global).pMetadataValue) = pMetadataValue
     iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
     OBJ_DESTROY, iDesign
+
+;select the first one by default and display value of this one in table
+    select_first_node, Event ;Gui
+    display_contain_OF_job_status, Event, 0
+
 ENDIF ELSE BEGIN ;error refreshing the config file
 
 ENDELSE
@@ -62,6 +69,15 @@ END
 PRO display_contain_OF_job_status, Event, index
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-iMetadata = OBJ_NEW('IDLextractMetadata', Event)
+aMetadataValue = (*(*(*global).pMetadataValue))
+Nbr_metadata  = (size(aMetadataValue))(2)
+aTable = STRARR(2,Nbr_metadata)
+
+aTable[0,*] = aMetadataValue[0,*]
+aTable[1,*] = aMetadataValue[index+1,*]
+
+help, aTable
+
+putTableValue, Event, 'job_status_table', aTable
 
 END

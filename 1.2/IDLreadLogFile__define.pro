@@ -36,6 +36,11 @@ FUNCTION IDLreadLogFile::getStructure
 RETURN, self.sStructure
 END
 
+;------------------------------------------------------------------------------
+FUNCTION IDLreadLogFile::getMetadata
+RETURN, self.aMetadata
+END
+
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION IDLreadLogFile::init, Event
@@ -60,7 +65,11 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
                         '***** Start List of Output Files *****',count)
     end_point   = WHERE(file_array EQ $
                         '***** End List of Output Files *****')
-    
+
+;start and end points for the metadata
+    start_point_metadata = end_point
+    end_point_metadata   = result
+
 ;populate the structure -------------------------------------------------------
 
 ; sStructure = { info, date:'', files:PTR_NEW(0L)}
@@ -70,11 +79,15 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
 ; *mStructure[0].files = ['~/results/BSS_0_Q00.txt',$
 ;                         '~/results/BSS_0_Q01.txt']
 ;-----------------------------------------------------
-
     sInfo = { info, $
               date: '', $
               files: PTR_NEW()}
     sLocalInfo = REPLICATE({info}, count)
+
+;create big array aMetadata = STRARR(nbr of metadata, nbr folder + 1)
+;+1: because the first column will be for the NAME of the value
+    nbr_metadata = end_point_metadata[0] - start_point_metadata[0]
+    aMetadata    = STRARR(count+1,nbr_metadata-1) ;final array of metadata
     
     index = 0
     WHILE (index LT count) DO BEGIN
@@ -92,10 +105,27 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
         ENDWHILE
 ;put list of files into structure
         sLocalInfo[index].files = PTR_NEW(list_OF_files)
+
+;retrieve metadata
+        j = 0
+        offset = start_point_metadata[index] + 1
+        WHILE (j LT nbr_metadata-1) DO BEGIN
+            metadata_array = STRSPLIT(file_array[j+offset],': ', $
+                                      /REGEX, $
+                                      /EXTRACT)
+;keep record of name of field for the first index only
+            IF (index EQ 0) THEN BEGIN
+                aMetadata[index,j] = metadata_array[0]
+            ENDIF
+            aMetadata[index+1,j] = metadata_array[1]
+            j++
+        ENDWHILE
+        
         index++
     ENDWHILE
 
     self.sStructure = PTR_NEW(sLocalInfo)
+    self.aMetadata  = PTR_NEW(aMetadata)
 
 ENDIF
 
@@ -106,7 +136,8 @@ END
 ;******  Class Define *********************************************************
 PRO IDLreadLogFile__define
 struct = {IDLreadLogFile,$
-          sStructure: ptr_new(0L),$
+          sStructure: PTR_NEW(0L),$
+          aMetadata:  PTR_NEW(0L),$
           var: ''}
 END
 ;******************************************************************************

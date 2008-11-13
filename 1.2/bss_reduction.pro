@@ -122,6 +122,7 @@ global = ptr_new ({ $
                     icon_ok: PTR_NEW(0L),$
                     icon_failed: PTR_NEW(0L),$
                     pMetadata: PTR_NEW(0L),$
+                    pMetadataValue: PTR_NEW(0L),$
                     job_status_uname: PTR_NEW(0L),$
                     job_status_root_id: PTR_NEW(0L),$
                     job_status_first_plot: 1,$
