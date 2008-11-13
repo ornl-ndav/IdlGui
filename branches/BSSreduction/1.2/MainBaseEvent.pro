@@ -1007,6 +1007,10 @@ CASE Event.id OF
         refresh_job_status, Event ;_job_status
     END    
 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='job_status_output_path_button'): BEGIN
+        job_status_folder_button, Event ;_job_status
+    END    
+
 ;______________________________________________________________________________
 ;Output File Tab --------------------------------------------------------------
     Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
