@@ -119,6 +119,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    iter_dependent_back_ext: 'ibs.txt',$
                     icon_ok: PTR_NEW(0L),$
                     icon_failed: PTR_NEW(0L),$
                     pMetadata: PTR_NEW(0L),$
