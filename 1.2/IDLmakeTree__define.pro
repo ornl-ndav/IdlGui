@@ -42,7 +42,7 @@ wTree = WIDGET_TREE((*global).TreeBase,$
                     XOFFSET   = 0,$
                     YOFFSET   = 0,$
                     SCR_XSIZE = 500,$
-                    SCR_YSIZE = 620)
+                    SCR_YSIZE = 590)
 (*global).TreeID = wTree
 END
 

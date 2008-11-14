@@ -88,6 +88,7 @@ cd, CurrentFolder
 .run IDLgetMetadata__define.pro
 .run IDLplotTxt__define.pro
 .run IDLcreateLogFile__define.pro
+.run IDLaddBrowsedFilesToConfig__define.pro
 .run IDLreadLogFile__define.pro
 .run IDLmakeTree__define.pro
 .run IDLrefreshTree__define.pro

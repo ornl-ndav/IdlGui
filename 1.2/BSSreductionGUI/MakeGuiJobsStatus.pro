@@ -39,23 +39,31 @@ WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
 ;                             Define size arrays
 ;******************************************************************************
 
-;Refresh list of jobs button...................................................
-XYoff = [5,5]
+;Refresh list of jobs button ..................................................
+XYoff = [5,8]
 sRefreshB = { size: [XYoff[0],$
                      XYoff[1],$
                      505],$
               value: 'REFRESH LIST OF JOBS',$
               uname: 'refresh_list_of_jobs_button'}
 
+;Browse for list of jobs to add to list .......................................
+XYoff = [0,25]
+sBrowseB = { size: [sRefreshB.size[0]+XYoff[0],$
+                    sRefreshB.size[1]+XYoff[1],$
+                    sRefreshB.size[2]],$
+             value: 'BROWSE FOR LIST OF JOBS TO ADD ...',$
+             uname: 'job_status_browse_files'}
+
 ;Base that will contain the widget_tree .......................................
-XYoff = [0,30]
+XYoff = [0,60]
 sTreeBase = { size: [sRefreshB.size[0]+XYoff[0],$
                      sRefreshB.size[1]+XYoff[1],$
-                     500,660],$
+                     500,630],$
               frame: 1,$
               uname: 'list_of_jobs_tree_base'}
 
-XYoff = [0,627] ;remove folder button
+XYoff = [0,600] ;remove folder button
 sRemoveFolder = { size: [XYoff[0],$
                          XYoff[1],$
                          sTreeBase.size[2]],$
@@ -150,6 +158,15 @@ button = WIDGET_BUTTON(Base,$
                        VALUE     = sRefreshB.value,$
                        UNAME     = sRefreshB.uname)
                        
+;Browse for list of jobs to add to list .......................................
+button = WIDGET_BUTTON(Base,$
+                       XOFFSET   = sBrowseB.size[0],$
+                       YOFFSET   = sBrowseB.size[1],$
+                       SCR_XSIZE = sBrowseB.size[2],$
+                       VALUE     = sBrowseB.value,$
+                       UNAME     = sBrowseB.uname)
+
+
 ;Base that will contain the widget_tree .......................................
 TreeBase = WIDGET_BASE(Base,$
                        XOFFSET   = sTreeBase.size[0],$
