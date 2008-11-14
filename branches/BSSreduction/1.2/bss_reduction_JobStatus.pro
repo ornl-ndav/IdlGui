@@ -75,6 +75,9 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
+label = 'REFRESHING LIST OF JOBS ... '
+putButtonValue, Event, 'refresh_list_of_jobs_button', label
+
 iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
     pMetadata = iJob->getStructure()
@@ -83,12 +86,19 @@ IF (OBJ_VALID(iJob)) THEN BEGIN
     (*(*global).pMetadataValue) = pMetadataValue
     iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
     OBJ_DESTROY, iDesign
-
+    
 ;select the first one by default and display value of this one in table
-    select_first_node, Event ;Gui
+    select_first_node, Event    ;Gui
     display_contain_OF_job_status, Event, 0
+    
+;put time stamp
+    updateRefreshButtonLabel, Event ;_GUI
 
 ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
+
+    label = 'NO MORE JOBS TO LIST !'
+    putButtonValue, Event, 'refresh_list_of_jobs_button', label
+    
     error = 0
     CATCH, error
     IF (error NE 0) THEN BEGIN
@@ -96,6 +106,7 @@ ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
     ENDIF ELSE BEGIN
         WIDGET_CONTROL, (*global).TreeID, /DESTROY
     ENDELSE
+    
 ENDELSE
 OBJ_DESTROY, iJob
 
@@ -108,9 +119,15 @@ END
 PRO refresh_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+label = 'REFRESHING LIST OF JOBS ... '
+putButtonValue, Event, 'refresh_list_of_jobs_button', label
+
 pMetadata = (*(*global).pMetadata)
 iDesign = OBJ_NEW('IDLrefreshTree', Event, pMetadata)
 OBJ_DESTROY, iDesign
+
+;put time stamp
+updateRefreshButtonLabel, Event ;_GUI
 
 END
 

@@ -60,6 +60,12 @@ endif else begin
 endelse
 END
 
+;------------------------------------------------------------------------------
+PRO putButtonValue, Event, uname, value
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
+
 ;--------------------------------------------------------------
 ;set the value of the specified uname with text
 PRO putTextFieldValue_from_MainBase, MainBase, uname, text

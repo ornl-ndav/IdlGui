@@ -42,13 +42,13 @@ cd, CurrentFolder + '/BSSreductionGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
+.run bss_reduction_time.pro
 .run bss_reduction_put.pro
 .run bss_reduction_get.pro
 .run bss_reduction_is.pro
 .run bss_reduction_nexus.pro
 .run bss_reduction_utilities.pro
 .run bss_reduction_Gui.pro
-.run bss_reduction_time.pro
 
 .run bss_reduction_LoadNexus.pro
 .run bss_reduction_LoadNexusStep2.pro

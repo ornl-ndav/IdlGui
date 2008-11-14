@@ -136,6 +136,41 @@ END
 
 ;------------------------------------------------------------------------------
 
+FUNCTION GenerateTimeStamp
+
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+DateIso        = STRCOMPRESS(DateArray[4]) + '/';year
+
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01m'
+    'Feb':month='02m'
+    'Mar':month='03m'
+    'Apr':month='04m'
+    'May':month='05m'
+    'Jun':month='06m'
+    'Jul':month='07m'
+    'Aug':month='08m'
+    'Sep':month='09m'
+    'Oct':month='10m'
+    'Nov':month='11m'
+    'Dec':month='12m'
+ENDCASE
+
+DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '/' ;month 
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + ' : ' ;day
+
+;change format of time
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h ';hour
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn ';mn
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's';s
+
+RETURN, DateIso
+END
+
+;------------------------------------------------------------------------------
 
 
 

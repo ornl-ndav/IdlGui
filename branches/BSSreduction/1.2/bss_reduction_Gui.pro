@@ -96,3 +96,12 @@ END
 PRO updateJobStatusOutputBase, Event, status
 SensitiveBase, Event, 'job_status_output_base', status
 END
+
+;------------------------------------------------------------------------------
+PRO updateRefreshButtonLabel, Event
+label_base = 'REFRESH LIST OF JOBS (last update: '
+date_time  = GenerateTimeStamp()
+label = label_base + date_time + ')'
+putButtonValue, Event, 'refresh_list_of_jobs_button', label
+END
+
