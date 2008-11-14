@@ -31,6 +31,16 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+PRO retrieve_information_from_rmd, Event, file_name
+;remove .txt and put .rmd instead
+file    = STRSPLIT(file_name, '.', /EXTRACT)
+rmdFile = file[0] + '.rmd'
+
+
+
+END
+
+;------------------------------------------------------------------------------
 ;This function retrieves the values from the various Reduce Tab
 FUNCTION populateReduceStructure, Event
 
@@ -413,6 +423,9 @@ FUNCTION IDLaddBrowsedFilesToConfig::init, Event, list_OF_files
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 Nbr_jobs = N_ELEMENTS(list_OF_files)
+
+;try to get information from first .rmd file
+retrieve_information_from_rmd, Event, list_OF_files[0]
 
 ;retrieve value of fields from REDUCE tabs
 sReduce = populateReduceStructure(Event)

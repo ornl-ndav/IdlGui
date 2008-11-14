@@ -155,7 +155,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
         index = 0
 
 ;add batch statement to all command lines
-        cmd = 'srun --batch -o none -Q -p ' + srun + ' ' + cmd
+        cmd = 'srun --batch -o none -p ' + srun + ' ' + cmd
 
         status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
         status_text += ' batch jobs ... '
@@ -163,7 +163,8 @@ IF (ok_to_CONTINUE) THEN BEGIN
 
         WHILE (index LT nbr_jobs) DO BEGIN
             cmd_text = '-> ' + cmd[index]
-;            spawn, cmd, listening, err_listening
+            spawn, cmd[index], listening, err_listening
+            print, cmd[index] ;remove_me
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
