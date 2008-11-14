@@ -1007,6 +1007,11 @@ CASE Event.id OF
         refresh_job_status, Event ;_job_status
     END    
 
+;browse for list of jobs
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='job_status_browse_files'): BEGIN
+        browse_list_OF_job, Event ;_job_status
+    END    
+
     WIDGET_INFO(wWidget, FIND_BY_UNAME='job_status_output_path_button'): BEGIN
         job_status_folder_button, Event ;_job_status
     END    

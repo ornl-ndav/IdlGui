@@ -284,9 +284,27 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO remove_folder_from_cfg_file, Event, index
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
+PRO browse_list_OF_job, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+path  = (*global).output_plot_path
+title = 'Select all the files you want to stitch'
 
+list_OF_files = DIALOG_PICKFILE(TITLE  = title,$
+                                PATH   = path,$
+                                /MUST_EXIST,$
+                                FILTER = '*.txt',$
+                                /MULTIPLE_FILES)
+                         
+IF (list_OF_files[0] NE '') THEN BEGIN ;add these files to config file
+    
+    iFile = OBJ_NEW('IDLaddBrowsedFilesToConfig', Event, list_OF_files)
+    IF (OBJ_VALID(iFile)) THEN BEGIN
+        create_job_status, Event
+        OBJ_DESTROY, iFile
+    ENDIF
+    
+ENDIF
 
 END
+
