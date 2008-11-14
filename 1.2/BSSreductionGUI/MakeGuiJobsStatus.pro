@@ -44,7 +44,7 @@ XYoff = [5,5]
 sRefreshB = { size: [XYoff[0],$
                      XYoff[1],$
                      505],$
-              value: 'R E F R E S H   L I S T   O F   J O B S',$
+              value: 'REFRESH LIST OF JOBS',$
               uname: 'refresh_list_of_jobs_button'}
 
 ;Base that will contain the widget_tree .......................................

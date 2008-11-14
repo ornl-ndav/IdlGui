@@ -1063,6 +1063,9 @@ ENDIF
       uname = job_status_uname[index]
       IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
 
+          label = 'REFRESHING LIST OF JOBS ... '
+          putButtonValue, Event, 'refresh_list_of_jobs_button', label
+
           display_contain_OF_job_status, Event, index ;_Job_status
           (*global).igs_selected_index = index
 
@@ -1077,9 +1080,8 @@ ENDIF
               ENDIF
           ENDIF
 
-; ;         job_status_root_status[index] = expanded_status
-; ;         create_job_status, Event
-; ;         BREAK
+;put time stamp
+          updateRefreshButtonLabel, Event ;_GUI
 
       ENDIF
       index++
