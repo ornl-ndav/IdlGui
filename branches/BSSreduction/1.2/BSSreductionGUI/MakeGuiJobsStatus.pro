@@ -59,7 +59,7 @@ XYoff = [0,627] ;remove folder button
 sRemoveFolder = { size: [XYoff[0],$
                          XYoff[1],$
                          sTreeBase.size[2]],$
-                  value: 'REMOVE SELECTED FOLDER',$
+                  value: 'REMOVE SELECTED FOLDER FROM JOB STATUS LIST',$
                   uname: 'job_status_remove_folder',$
                   sensitive: 1}
 

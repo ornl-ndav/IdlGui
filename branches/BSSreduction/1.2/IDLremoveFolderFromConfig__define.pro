@@ -53,25 +53,22 @@ ENDIF ELSE BEGIN
     final_result = [0,result]
     CASE (index) OF
         0: BEGIN
-            print, 'in 0'
-            final_array = file_array[final_result[index+1]: $
-                                     final_result[nbr_input]-1]
+            final_array = file_array[final_result[index+1]+1: $
+                                     final_result[nbr_input]]
         END
         (nbr_input-1): BEGIN
-            print, 'in nbr_input: ' + strcompress(nbr_input)
             final_array = file_array[0: $
-                                     final_result[nbr_input-1]-1]
+                                     final_result[nbr_input-1]]
         END
         ELSE: BEGIN
-            print, 'in else (' + strcompress(index) + ')'
             final_array_1 = file_array[0: $
                                        final_result[index]-1]
             final_array_2 = file_array[final_result[index+1]: $
-                                       final_result[index+2]-1]
+                                       final_result[index+2]]
             final_array = [final_array_1,final_array_2]
         END
     ENDCASE
-    final_array = [final_array,'']    
+    final_array = [final_array]    
 ENDELSE
 
 ;replace config file with new array
