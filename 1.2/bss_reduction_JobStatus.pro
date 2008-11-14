@@ -72,6 +72,9 @@ END
 PRO create_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 iJob = OBJ_NEW('IDLreadLogFile',Event)
 IF (OBJ_VALID(iJob)) THEN BEGIN
     pMetadata = iJob->getStructure()
@@ -95,6 +98,9 @@ ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
     ENDELSE
 ENDELSE
 OBJ_DESTROY, iJob
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
 
 END
 
@@ -155,7 +161,7 @@ END
 PRO stitch_files, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-;;indicate initialization with hourglass icon
+;indicate initialization with hourglass icon
 widget_control,/hourglass
 
 PROCESSING = (*global).processing

@@ -776,11 +776,13 @@ config_file_name = (*global).config_file_name
 IF (FILE_TEST(config_file_name)) THEN BEGIN ;file already exists
 ;We gonna have to append the file from the top
     current_config_file_size = FILE_LINES(config_file_name)
-    current_config_file_array = STRARR(current_config_file_size)
-    OPENR, 1, config_file_name
-    READF, 1, current_config_file_array
-    CLOSE, 1
-    final_array = [final_array, current_config_file_array]
+    IF (current_config_file_size GT 20) THEN BEGIN
+        current_config_file_array = STRARR(current_config_file_size)
+        OPENR, 1, config_file_name
+        READF, 1, current_config_file_array
+        CLOSE, 1
+        final_array = [final_array, current_config_file_array]
+    ENDIF
 ENDIF 
 
 OPENW, 1, config_file_name

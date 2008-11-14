@@ -33,7 +33,8 @@
 ;==============================================================================
 PRO make_main_tree_FOR_make_tree, Event, wTree
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-IF ((*global).TreeID NE 0) THEN BEGIN
+;IF ((*global).TreeID NE 0) THEN BEGIN
+IF (WIDGET_INFO((*global).TreeID,/VALID_ID)) THEN BEGIN
     WIDGET_CONTROL, (*global).TreeID, /DESTROY
 ENDIF
 wTree = WIDGET_TREE((*global).TreeBase,$
