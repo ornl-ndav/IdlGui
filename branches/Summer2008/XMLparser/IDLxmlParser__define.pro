@@ -1,4 +1,4 @@
-; <<<==========================================================================
+; =============================================================================
 ; NAME:
 ;    IDLSXMLParser
 ;
@@ -19,13 +19,26 @@
 ;      text = file -> getValue(tag = ['cvlog'], ATTRIBUTE = 'name = THE_NAME')
 ;    To get the value of an attribute of a tag:
 ;      text = file -> getValue(tag = ['cvlog'], ATTRIBUTE = 'name')
+;
 ;  OUTPUT:
 ;    STRING format
 ;
-;                 *<=========================================>*
-;                      Author: dfp <prakapenkadv@ornl.gov>
-; ==========================================================================>>>
+; Author: 
+;           dfp <prakapenkadv@ornl.gov>
+;           j35 <bilheuxjm@ornl.gov>
+;
+; =============================================================================
 
+;remove string(10b) from the string (string(10b) = new line)
+FUNCTION reformat_output, output
+;try to find if there are new lines
+location = STREGEX(output,STRING(10b))
+WHILE (location NE -1) DO BEGIN ;loop as long as there is another string(10b)
+    output = STRMID(output,location[0]+1,STRLEN(output)-1)
+    location = STREGEX(output,STRING(10b))
+ENDWHILE
+RETURN, output
+END
 
 ;---------------------------------------------------------------------------
 PRO IDLXMLParser::startElement, URI, local, strName, attr, value
@@ -84,6 +97,7 @@ END
 
 ;---------------------------------------------------------------------------
 FUNCTION IDLXMLParser::getValue, TAG = tag, ATTRIBUTE = attr
+
   self.elements = n_elements(tag)-1
   self.tag = ptr_new(tag)
   self.mode = 0
@@ -100,22 +114,28 @@ FUNCTION IDLXMLParser::getValue, TAG = tag, ATTRIBUTE = attr
       self.attr = attr
     ENDELSE
   ENDIF
+
   self.count = 0
+
 ;start parsing
 ;  self -> IDLffxmlsax::ParseFile, self.path, /URL
   self -> IDLffxmlsax::ParseFile, self.path
-  RETURN, self.output
+  
+;reformat output
+  self.output = reformat_output(self.output)
+
+  RETURN, STRCOMPRESS(self.output,/REMOVE_ALL)
 END
 
 ;---------------------------------------------------------------------------
-FUNCTION IDLXMLParser::init, file_name
+FUNCTION IDLxmlParser::init, file_name
   self.path = file_name
   RETURN, self -> IDLffxmlsax::Init()
 END
 
 ;---------------------------------------------------------------------------
-PRO IDLXMLParser__define
-  void = {idlxmlParser, $
+PRO IDLxmlParser__define
+  void = {IDLxmlParser, $
     INHERITS IDLffXMLSAX, $
     tag: ptr_new(), $
     attr: '', $
