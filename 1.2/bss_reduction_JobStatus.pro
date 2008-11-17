@@ -32,6 +32,21 @@
 ;
 ;==============================================================================
 
+FUNCTION addTimeStamp, full_output_file_name
+timeStamp = GenerateIsoTimeStamp()
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, full_output_file_name
+ENDIF ELSE BEGIN
+;remove extension
+    file_array = STRSPLIT(full_output_file_name,'.',/EXTRACT)
+    new_file_name = file_array[0] + '_' + timeStamp + '.' + file_array[1]
+ENDELSE
+RETURN, new_file_name
+END
+
+;------------------------------------------------------------------------------
 FUNCTION AreAllFilesFound, Event, index
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 pMetadata       = (*(*global).pMetadata)
@@ -179,7 +194,7 @@ PRO stitch_files, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;indicate initialization with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
 PROCESSING = (*global).processing
 OK         = (*global).ok
@@ -195,10 +210,13 @@ nbr_files       = N_ELEMENTS(*(*pMetadata)[index].files)
 str_OF_files    = ''
 i = 0
 WHILE (i LT nbr_files) DO BEGIN
+    IF (i GT 0) THEN BEGIN
+        str_OF_files += ' '
+    ENDIF
     file_name_full  = (*(*pMetadata)[index].files)[i]
     file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
     file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-    str_OF_files += file_name + ' '
+    str_OF_files += file_name 
     i++
 ENDWHILE
 
@@ -210,18 +228,54 @@ output_path = getButtonValue(Event,'job_status_output_path_button')
 output_file = getTextFieldValue(Event, $
                                 'job_status_output_file_name_text_field')
 full_output_file_name = output_path + output_file 
+
+;add time_stamp to file_name
+full_output_file_name = addTimeStamp(full_output_file_name)
+
+(*global).job_status_full_output_file_name = full_output_file_name
 cmd += ' --output=' + full_output_file_name
 
 ;check if there is a rescale factor added or not
 aMetadata = (*(*(*global).pMetadataValue))
 scaling_flag     = STRCOMPRESS(aMetadata[index+1,73],/REMOVE_ALL)
 scaling_constant = STRCOMPRESS(aMetadata[index+1,74],/REMOVE_ALL)
-IF (scaling_flag EQ 'ON' AND $
-    scaling_constant NE 'N/A') THEN BEGIN
-    cmd += ' --rescale=' + scaling_constant
+IF (scaling_flag EQ 'ON') THEN BEGIN
+    IF (scaling_constant NE 'N/A') THEN BEGIN
+        cmd += ' --rescale=' + scaling_constant
+        stitch_files_step2, Event, cmd
+    ENDIF ELSE BEGIN ;popup base that ask for a scaling value
+        title = 'Scaling flag is ON but no value attributed to the ' + $
+          'scaling value'
+        iScaling = OBJ_NEW('IDscalingGUI',Event, scaling_constant,title, cmd)
+        OBJ_DESTROY, iScaling
+    ENDELSE
 ENDIF
 
+IF (scaling_flag EQ 'N/A') THEN BEGIN ;popup base that ask for a scaling value
+    title = 'The status of the Scaling Flag/Value is undefined !'
+    iScaling = OBJ_NEW('IDLscalingGUI',Event, scaling_constant,title, cmd)
+    OBJ_DESTROY, iScaling
+ENDIF
+
+;turn off hourglass
+WIDGET_CONTROL,HOURGLASS=0
+
+END
+
+;------------------------------------------------------------------------------
+PRO stitch_files_step2, Event, cmd
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+;indicate initialization with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+PROCESSING            = (*global).processing
+OK                    = (*global).ok
+FAILED                = (*global).failed
+full_output_file_name = (*global).job_status_full_output_file_name
+
 text = '> Stitching the files:'
+
 AppendLogBookMessage, Event, text
 cmd_text = '-> ' + cmd + ' ... ' + PROCESSING
 AppendLogBookMessage, Event, cmd_text
@@ -251,6 +305,7 @@ ENDIF ELSE BEGIN
     WIDGET_CONTROL, id, SET_TAB_CURRENT=3
 
     ENDIF ELSE BEGIN
+
         text = '-> File ' + full_output_file_name + ' can not be found !'
         AppendLogBookMessage, Event, text
         result = DIALOG_MESSAGE('ERROR PLOTTING ' + full_output_file_name,$
