@@ -206,7 +206,7 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
                           value: 'N/A'},$
                field41: { title: 'Use Iterative Background Subtraction',$
                           value: 'N/A'},$
-               field42: { title: 'Scale Constant for Lambda Depedent' + $
+               field42: { title: 'Scale Constant for Lambda Dependent' + $
                           ' Background',$
                           value: sValue.field42},$
                field43: { title: 'Chopper Frequency (Hz)',$

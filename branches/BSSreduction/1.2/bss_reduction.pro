@@ -60,7 +60,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 1,$
+sDEBUGGING = { tab: {main_tab: 2,$
                      reduce_input_tab: 0},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
@@ -119,6 +119,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    job_status_full_output_file_name: '',$
+                    MainBaseSize: INTARR(4),$
                     igs_selected_index: 0,$
                     stitch_driver: 'stitch_dave',$
                     iter_dependent_back_ext: 'ibs.txt',$
@@ -486,6 +488,7 @@ if (!VERSION.os EQ 'darwin') then begin
 endif else begin
     MainBaseSize  = [50,200,1200,730]
 endelse
+(*global).MainBaseSize = MainBasesize
 
 MainBaseTitle = 'BSS reduction tool - ' + VERSION
         

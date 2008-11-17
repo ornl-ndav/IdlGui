@@ -30,15 +30,12 @@ cd, CurrentFolder + '/BSSreductionGUI/'
 .run MakeGuiReduceClgXmlTab.pro
 .run MakeGuiReduceClgXmlTab1.pro
 .run MakeGuiReduceClgXmlTab2.pro
-
 .run MakeGuiJobsStatus.pro
-
 .run MakeGuiOutputTab.pro
-
 .run MakeGuiLogBookTab.pro
-
 .run MakeGuiNeXusRoiBase.pro
 .run MakeGuiSelectionBase.pro
+.run IDLscalingGUI__define.pro
 
 ;Build main procedures
 cd, CurrentFolder
