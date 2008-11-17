@@ -31,388 +31,342 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO retrieve_information_from_rmd, Event, file_name
+FUNCTION retrieve_information_from_rmd, file_name
 ;remove .txt and put .rmd instead
 file    = STRSPLIT(file_name, '.', /EXTRACT)
 rmdFile = file[0] + '.rmd'
+;retrieve various metadata from xml file
+iXML = OBJ_NEW('IDLxmlParser',rmdFile)
+IF (OBJ_VALID(iXML)) THEN BEGIN
+;create structure
+    sStructure = { field42: iXML->getValue(tag=['config','ldb_const', $
+                                                'value']),$
+                   field86: iXML->getValue(tag=['config','Q_bins','min']),$
+                   field87: iXML->getValue(tag=['config','Q_bins','max']),$
+                   field88: iXML->getValue(tag=['config','Q_bins','delta']),$
+                   field82: iXML->getValue(tag=['config','E_bins','min']),$
+                   field83: iXML->getValue(tag=['config','E_bins','max']),$
+                   field84: iXML->getValue(tag=['config','E_bins','delta']),$
+                   field16: iXML->getValue(tag=['config','norm_start']),$
+                   field17: iXML->getValue(tag=['config','norm_end']),$
+                   field8:  iXML->getValue(tag=['config','path_replacement']),$
+                   field49: iXML->getValue(tag=['config','detbal_temp']),$
+                   field50: iXML->getValue(tag=['config','tol']),$
+                   field45: iXML->getValue(tag=['config','tof_least', $
+                                                'value']),$
+                   field46: iXML->getValue(tag=['config','et_int_range', $
+                                                'min']),$
+                   field47: iXML->getValue(tag=['config','et_int_range', $
+                                                'max']),$
+                   field48: iXML->getValue(tag=['config','et_int_range', $
+                                                'delta']),$
+                   field1:  iXML->getValue(tag=['config','data']),$
+                   field6:  iXML->getValue(tag=['config','roi_file']),$
+                   field51: iXML->getValue(tag=['config','niter']),$
+                   field52: iXML->getValue(tag=['config','cwdb_min']),$
+                   field53: iXML->getValue(tag=['config','cwdb_max']),$
+                   field44: iXML->getValue(tag=['config','chopper_lambda', $
+                                                'value']),$
+                   field43: iXML->getValue(tag=['config','chopper_freq',$
+                                                'value']),$
+                   field54: iXML->getValue(tag=['config','cwdb_small']),$
+                   field9: ''}
+    
+    full_output_file_name = iXML->getValue(tag=['config','output'])
+    output_file_name = FILE_BASENAME(full_output_file_name)
+    sStructure.field9 = output_file_name
+    OBJ_DESTROY, iXML
 
+ENDIF ELSE BEGIN
 
+    sStructure = { field42: 'N/A',$
+                   field86: 'N/A',$
+                   field87: 'N/A',$
+                   field88: 'N/A',$
+                   field82: 'N/A',$
+                   field83: 'N/A',$
+                   field84: 'N/A',$
+                   field16: 'N/A',$
+                   field17: 'N/A',$
+                   field8:  'N/A',$
+                   field49: 'N/A',$
+                   field50: 'N/A',$
+                   field45: 'N/A',$
+                   field46: 'N/A',$
+                   field47: 'N/A',$
+                   field48: 'N/A',$
+                   field1:  'N/A',$
+                   field6:  'N/A',$
+                   field51: 'N/A',$
+                   field52: 'N/A',$
+                   field53: 'N/A',$
+                   field44: 'N/A',$
+                   field43: 'N/A',$
+                   field54: 'N/A',$
+                   field9:  'N/A'}
 
+ENDELSE
+
+RETURN, sStructure
 END
 
 ;------------------------------------------------------------------------------
 ;This function retrieves the values from the various Reduce Tab
-FUNCTION populateReduceStructure, Event
-
-;---- tab1 ------------------------------------------------------------------
-tab1Data = 'N/A'
-tab1Back = 'N/A'
-tab1Norm = 'N/A'
-tab1Empt = 'N/A'
-tab1Dire = 'N/A'
-
-;---- tab2 ------------------------------------------------------------------
-tab2Roi  = 'N/A'
-tab2Alte = 'N/A'
-tab2path = 'N/A'
-tab2name = 'N/A'
-
-;---- tab3 ------------------------------------------------------------------
-tab3RunMc = 'ON'
-tab3Verbo = 'ON'
-tab3AltBa = 'ON'
-tab3NoMor = 'ON'
-tab3NoMoE = 'ON'
-tab3NiwB = 'ON'
-tab3NiwS = 'N/A'
-tab3NiwE = 'N/A'
-tab3TeB = 'OFF'
-tab3TeL = 'N/A'
-tab3TeH = 'N/A'
-tab4Tof  = 'OFF'
-tab4Tof1 = 'N/A'
-tab4Tof2 = 'N/A'
-tab4Tof3 = 'N/A'
-tab4Tof4 = 'N/A'
-tab4TsdB = 'OFF'
-tab4TsdV = 'N/A'
-tab4TsdE = 'N/A'
-tab4TbdB = 'OFF'
-tab4TbdV = 'N/A'
-tab4TbdE = 'N/A'
-tab4TndB = 'OFF'
-tab4TndV = 'N/A'
-tab4TndE = 'N/A'
-tab4TecdB = 'OFF'
-tab4TecdV = 'N/A'
-tab4TecdE = 'N/A'
-tab4TscatB = 'OFF'
-tab4TscatV = 'N/A'
-tab4TscatE = 'N/A'
-tab5ibB = 'OFF'
-tab5scl = 'N/A'
-tab5cf  = 'N/A'
-tab5cwc = 'N/A'
-tab5tof = 'N/A'
-tab5PSmin  = 'N/A'
-tab5PSmax  = 'N/A'
-tab5PSbin  = 'N/A'
-tab5Dbt    = 'N/A'
-tab5Rt     = 'N/A'
-tab5Ni     = 'N/A'
-tab5MinWbc = 'N/A'
-tab5MaxWbc = 'N/A'
-tab5SmaWbc = 'N/A'
-tab5Verbo  = 'N/A'
-tab6CsbssB = 'OFF'
-tab6CsbssV = 'N/A'
-tab6CsbssE = 'N/A'
-tab6CsnB = 'OFF'
-tab6CsnV = 'N/A'
-tab6CsnE = 'N/A'
-tab6BcsB = 'OFF'
-tab6BcsV = 'N/A'
-tab6BcsE = 'N/A'
-tab6BcnB = 'OFF'
-tab6BcnV = 'N/A'
-tab6BcnE = 'N/A'
-tab6CsB = 'OFF'
-tab6CsV = 'N/A'
-tab6CsE = 'N/A'
-tab6CnB = 'OFF'
-tab6CnV = 'N/A'
-tab6CnE = 'N/A'
-tab7CsfdsB = 'OFF'
-tab7CsfdsV = 'N/A'
-tab7tzspB = 'OFF'
-tab7tzspV = 'N/A'
-tab7tzspE = 'N/A'
-tab7tzopB = 'OFF'
-tab7tzopV = 'N/A'
-tab7tzopE = 'N/A'
-tab7emin = 'N/A'
-tab7emax = 'N/A'
-tab7ebin = 'N/A'
-tab7mthaB1 = 'OFF'
-tab7mthaB2 = 'ON'
-tab7mthaB1min = 'N/A'
-tab7mthaB1max = 'N/A'
-tab7mthaB1bin = 'N/A'
-tab7mthaB2min = 'N/A'
-tab7mthaB2max = 'N/A'
-tab7mthaB2bin = 'N/A'
-tab7gifwB = 'OFF'
-tab7gifwV = 'N/A'
-tab7gifwE = 'N/A'
-tab7tofCB = 'OFF'
-tab7tofCMin = 'N/A'
-tab7tofCMax = 'N/A'
-tab8Waio     = 'OFF'
-tab8woctib   = 'OFF'
-tab8wopws    = 'OFF'
-tab8womws    = 'OFF'
-tab8womes    = 'OFF'
-tab8worms    = 'OFF'
-tab8wocpsamn = 'OFF'
-tab8waMin    = 'N/A'
-tab8waMax    = 'N/A'
-tab8waBin    = 'N/A'
-tab8wolidsb  = 'OFF'
-tab8pwsavn   = 'OFF'
+FUNCTION populateReduceStructure, sValue
 
 ;write value in structure
 sStructure = { field1: { title: 'Raw Sample Data File',$
-                         value: tab1Data},$
+                         value: sValue.field1},$
                field2: { title: 'Background Data File',$
-                         value: tab1Back},$
+                         value: 'N/A'},$
                field3: { title: 'Normalization Data file',$
-                         value: tab1Norm},$
+                         value: 'N/A'},$
                field4: { title: 'Empty Can Data File',$
-                         value: tab1Empt},$
+                         value: 'N/A'},$
                field5: { title: 'Direct Scattering Background (Sample Data' + $
                          ' at Baseline T) File',$
-                         value: tab1Dire},$
+                         value: 'N/A'},$
                field6: { title: 'Pixel Region of Interest File',$
-                         value: tab2Roi},$
+                         value: sValue.field6},$
                field7: { title: 'Alternate Instrument Geometry',$
-                         value: tab2Alte},$
+                         value: 'N/A'},$
                field8: { title: 'Output Path',$
-                         value: tab2path},$
+                         value: sValue.field8},$
                field9: { title: 'Output File Name',$
-                         value: tab2name},$
+                         value: sValue.field9},$
                field10: { title: 'Run McStas NeXus Files',$
-                          value: tab3RunMc},$
+                          value: 'N/A'},$
                field11: { title: 'Verbose',$
-                          value: tab3Verbo},$
+                          value: 'N/A'},$
                field12: { title: 'Alternate Background Subtraction Method',$
-                          value: tab3AltBa},$
+                          value: 'N/A'},$
                field13: { title: 'No Monitor Normalization',$
-                          value: tab3NoMor},$
+                          value: 'N/A'},$
                field14: { title: 'No Monitor Efficiency',$
-                          value: tab3NoMoE},$
+                          value: 'N/A'},$
                field15: { title: 'Normalization Integration Start and ' + $
                           'End Wavelength',$
-                          value: tab3NiwB},$
+                          value: 'N/A'},$
                field16: { title: '-> Start',$
-                          value: tab3NiwS},$
+                          value: sValue.field16},$
                field17: { title: '-> End',$
-                          value: tab3NiwE},$
+                          value: sValue.field17},$
                field18: { title: 'Low and High Time-of-Flight Values that' + $
                           ' Bracket the Elastic Peak (microSeconds)',$
-                          value: tab3TeB},$
+                          value: 'N/A'},$
                field19: { title: '-> Low',$
-                          value: tab3TeL},$
+                          value: 'N/A'},$
                field20: { title: '-> High',$
-                          value: tab3TeH},$
+                          value: 'N/A'},$
                field21: { title: 'Time-Independent Background Time-of' + $
                           'Flight Channels (microSeconds)',$
-                          value: tab4Tof},$
+                          value: 'N/A'},$
                field22: { title: '-> #1',$
-                          value: tab4Tof1},$
+                          value: 'N/A'},$
                field23: { title: '-> #2',$
-                          value: tab4Tof2},$
+                          value: 'N/A'},$
                field24: { title: '-> #3',$
-                          value: tab4Tof3},$
+                          value: 'N/A'},$
                field25: { title: '-> #4',$
-                          value: tab4Tof4},$
+                          value: 'N/A'},$
                field26: { title: 'Time-Independent Background Constant' + $
                           ' for Sample Data',$
-                          value: tab4TsdB},$
+                          value: 'N/A'},$
                field27: { title: '-> Value',$
-                          value: tab4TsdV},$
+                          value: 'N/A'},$
                field28: { title: '-> Error',$
-                          value: tab4TsdE},$
+                          value: 'N/A'},$
                field29: { title: 'Time-Independent Background Constant' + $
                           ' for Background Data',$
-                          value: tab4TbdB},$
+                          value: 'N/A'},$
                field30: { title: '-> Value',$
-                          value: tab4TbdV},$
+                          value: 'N/A'},$
                field31: { title: '-> Error',$
-                          value: tab4TbdE},$
+                          value: 'N/A'},$
                field32: { title: 'Time-Independent Background Constant' + $
                           ' for Normalization Data',$
-                          value: tab4TndB},$
+                          value: 'N/A'},$
                field33: { title: '-> Value',$
-                          value: tab4TndV},$
+                          value: 'N/A'},$
                field34: { title: '-> Error',$
-                          value: tab4TndE},$
+                          value: 'N/A'},$
                field35: { title: 'Time-Independent Background Constant' + $
                           ' for Empty Can Data',$
-                          value: tab4TecdB},$
+                          value: 'N/A'},$
                field36: { title: '-> Value',$
-                          value: tab4TecdV},$
+                          value: 'N/A'},$
                field37: { title: '-> Error',$
-                          value: tab4TecdE},$
+                          value: 'N/A'},$
                field38: { title: 'Time-Independent Background Constant' + $
                           ' for Scattering Data',$
-                          value: tab4TscatB},$
+                          value: 'N/A'},$
                field39: { title: '-> Value',$
-                          value: tab4TscatV},$
+                          value: 'N/A'},$
                field40: { title: '-> Error',$
-                          value: tab4TscatE},$
+                          value: 'N/A'},$
                field41: { title: 'Use Iterative Background Subtraction',$
-                          value: tab5ibB},$
+                          value: 'N/A'},$
                field42: { title: 'Scale Constant for Lambda Depedent' + $
                           ' Background',$
-                          value: tab5scl},$
+                          value: sValue.field42},$
                field43: { title: 'Chopper Frequency (Hz)',$
-                          value: tab5cf},$
+                          value: sValue.field43},$
                field44: { title: 'Chopper Wavelength Center (Angstroms)',$
-                          value: tab5cwc},$
+                          value: sValue.field44},$
                field45: { title: 'TOF Least Background (microS)',$
-                          value: tab5tof},$
+                          value: sValue.field45},$
                field46: { title: 'Min Positive Transverse Energy Integration',$
-                          value: tab5PSmin},$
+                          value: sValue.field46},$
                field47: { title: 'Max Positive Transverse Energy Integration',$
-                          value: tab5PSmax},$
+                          value: sValue.field47},$
                field48: { title: 'Positive Transverse Energy Integration' + $
                           ' Width',$
-                          value: tab5PSbin},$
+                          value: sValue.field48},$
                field49: { title: 'Detailed Balance Temperature (K)',$
-                          value: tab5Dbt},$
+                          value: sValue.field49},$
                field50: { title: 'Ratio Tolerance',$
-                          value: tab5Rt},$
+                          value: sValue.field50},$
                field51: { title: 'Number of Iteration',$
-                          value: tab5Ni},$
+                          value: sValue.field51},$
                field52: { title: 'Minimum Wavelength-Dependent Background' + $
                           ' Constant',$
-                          value: tab5MinWbc},$
+                          value: sValue.field52},$
                field53: { title: 'Maximum Wavelength-Dependent Background' + $
                           ' Constant',$
-                          value: tab5MaxWbc},$
+                          value: sValue.field53},$
                field54: { title: 'Small Wavelength-Dependent Background' + $
                           ' Constant',$
-                          value: tab5SmaWbc},$
+                          value: sValue.field54},$
                field55: { title: 'Amorphous Reduction Verbosity',$
-                          value: tab5Verbo},$
+                          value: 'N/A'},$
                field56: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Sample Data Spectra',$
-                          value: tab6CsbssB},$
+                          value: 'N/A'},$
                field57: { title: '-> Value:',$
-                          value: tab6CsbssV},$
+                          value: 'N/A'},$
                field58: { title: '-> Error',$
-                          value: tab6CsbssE},$
+                          value: 'N/A'},$
                field59: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Normalization Data' + $
                           ' Spectra',$
-                          value: tab6CsnB},$
+                          value: 'N/A'},$
                field60: { title: '-> Value',$
-                          value: tab6CsnV},$
+                          value: 'N/A'},$
                field61: { title: '-> Error',$
-                          value: tab6CsnE},$
+                          value: 'N/A'},$
                field62: { title: 'Constant to Scale the Background Spectra' + $
                           ' for Subtraction from the Sample Data' + $
                           ' Associatied Empty Container Spectra',$
-                          value: tab6BcsB},$
+                          value: 'N/A'},$
                field63: { title: '-> Value',$
-                          value: tab6BcsV},$
+                          value: 'N/A'},$
                field64: { title: '-> Error',$
-                          value: tab6BcsE},$
+                          value: 'N/A'},$
                field65: { title: 'Constant to Scale the Back. Spectra' + $
                           ' for Subtraction from the Normalizaiton Data' + $
                           ' Associated Empty Container Spectra',$
-                          value: tab6BcnB},$
+                          value: 'N/A'},$
                field66: { title: '-> Value',$
-                          value: tab6BcnV},$
+                          value: 'N/A'},$
                field67: { title: '-> Error',$
-                          value: tab6BcnE},$
+                          value: 'N/A'},$
                field68: { title: 'Constant to Scale the Empty Container' + $
                           ' Spectra for Subtraction from the Sample Data',$
-                          value: tab6CsB},$
+                          value: 'N/A'},$
                field69: { title: '-> Value',$
-                          value: tab6CsV},$
+                          value: 'N/A'},$
                field70: { title: '-> Error',$
-                          value: tab6CsE},$
+                          value: 'N/A'},$
                field71: { title: 'Constant to Scale the Empty Container' + $
                           ' Spectra for Subtraction from the Normalization' + $
                           ' Data',$
-                          value: tab6CnB},$
+                          value: 'N/A'},$
                field72: { title: '-> Value',$
-                          value: tab6CnV},$
+                          value: 'N/A'},$
                field73: { title: '-> Error',$
-                          value: tab6CnE},$
+                          value: 'N/A'},$
                field74: { title: 'Constant for Scaling the Final Data' + $
                           ' Spectrum',$
-                          value: tab7CsfdsB},$
+                          value: 'N/A'},$
                field75: { title: '-> Value',$
-                          value: tab7CsfdsV},$
+                          value: 'N/A'},$
                field76: { title: 'Time Zero Slope Parameter (Angstroms' + $
                           '/microSeconds)',$
-                          value: tab7tzspB},$
+                          value: 'N/A'},$
                field77: { title: '-> Value',$
-                          value: tab7tzspV},$
+                          value: 'N/A'},$
                field78: { title: '-> Error',$
-                          value: tab7tzspE},$
+                          value: 'N/A'},$
                field79: { title: 'Time Zero Offset Parameters (Angstroms)',$
-                          value: tab7tzopB},$
+                          value: 'N/A'},$
                field80: { title: '-> Value',$
-                          value: tab7tzopV},$
+                          value: 'N/A'},$
                field81: { title: '-> Error',$
-                          value: tab7tzopE},$
+                          value: 'N/A'},$
                field82: { title: 'Minimum Energy Histogram Axis (micro-eV)',$
-                          value: tab7Emin},$
+                          value: sValue.field82},$
                field83: { title: 'Maximum Energy Histogram Axis (micro-eV)',$
-                          value: tab7Emax},$
+                          value: sValue.field83},$
                field84: { title: 'Energy Histogram Axis Width (micro-eV)',$
-                          value: tab7Ebin},$
+                          value: sValue.field84},$
                field85: { title: 'Momentum Transfer Histogram Axis' + $
                           ' (1/Angstroms)',$
-                          value: tab7mthaB1},$
+                          value: 'N/A'},$
                field86: { title: '-> Min',$
-                          value: tab7mthaB1min},$
+                          value: sValue.field86},$
                field87: { title: '-> Max',$
-                           value: tab7mthaB1max},$
+                           value: sValue.field87},$
                field88: { title: '-> Width',$
-                           value: tab7mthaB1bin},$
+                           value: sValue.field88},$
                field89: { title: 'Negative Cosine Polar Axis',$
-                           value: tab7mthaB2},$
+                           value: 'N/A'},$
                field90: { title: '-> Min',$
-                           value: tab7mthaB2min},$
+                           value: 'N/A'},$
                field91: { title: '-> Max',$
-                           value: tab7mthaB2max},$
+                           value: 'N/A'},$
                field92: { title: '-> Width',$
-                           value: tab7mthaB2bin},$
+                           value: 'N/A'},$
                field93: { title: 'Global Instrument Final Wavelength' + $
                            ' (Angstroms)',$
-                           value: tab7gifwB},$
+                           value: 'N/A'},$
                field94: { title: '-> Value',$
-                           value: tab7gifwV},$
+                           value: 'N/A'},$
                field95: { title: '-> Error',$
-                           value: tab7gifwE},$
+                           value: 'N/A'},$
                field96: { title: 'Time of Flight Range (microseconds)',$
-                           value: tab7tofCB},$
+                           value: 'N/A'},$
                field97: { title: '-> Min',$
-                           value: tab7tofCMin},$
+                           value: 'N/A'},$
                field98: { title: '-> Max',$
-                           value: tab7tofCMax},$
+                           value: 'N/A'},$
                field99: { title: 'Write all Intermediate Output',$
-                           value: tab8Waio},$
+                           value: 'N/A'},$
                field100: { title: 'Write Out Time-Independent Background',$
-                           value: tab8woctib},$
+                           value: 'N/A'},$
                fiedl101: { title: 'Write Out Pixel Wavelength Spectra',$
-                           value: tab8wopws},$
+                           value: 'N/A'},$
                field102: { title: 'Write Out Monitor Wavelength Spectrum',$
-                           value: tab8womws},$
+                           value: 'N/A'},$
                field103: { title: 'Write Out Monitor Efficiency Spectrum',$
-                           value: tab8womes},$
+                           value: 'N/A'},$
                field104: { title: 'Write Out Rebinned Monitor Spectra',$
-                           value: tab8worms},$
+                           value: 'N/A'},$
                field105: { title: 'Write Out Combined Pixel Spectrum After' + $
                            ' Monitor Normalization',$
-                           value: tab8wocpsamn},$
+                           value: 'N/A'},$
                field106: { title: '-> Min',$
-                           value: tab8waMin},$
+                           value: 'N/A'},$
                field107: { title: '-> Max',$
-                           value: tab8waMax},$
+                           value: 'N/A'},$
                field108: { title: '-> Width',$
-                           value: tab8WaBin},$
+                           value: 'N/A'},$
                field109: { title: 'Write Out Linearly Interpolated Direct' + $
                            ' Scattering Background Information Summed' + $
                            ' over all Pixels',$
-                           value: tab8wolidsb},$
+                           value: 'N/A'},$
                field110: { title: 'Write Out Pixel Wavelength Spectra ' + $
                            'after Vanadium Normalization',$
-                           value: tab8pwsavn}}
+                           value: 'N/A'}}
                
 RETURN, sStructure
 END
@@ -425,10 +379,10 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 Nbr_jobs = N_ELEMENTS(list_OF_files)
 
 ;try to get information from first .rmd file
-retrieve_information_from_rmd, Event, list_OF_files[0]
+sStructure = retrieve_information_from_rmd(list_OF_files[0])
 
 ;retrieve value of fields from REDUCE tabs
-sReduce = populateReduceStructure(Event)
+sReduce = populateReduceStructure(sStructure)
 
 ;define current date
 DateTime = GenerateIsoTimeStamp()
