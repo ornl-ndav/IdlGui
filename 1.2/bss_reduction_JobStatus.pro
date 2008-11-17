@@ -109,11 +109,17 @@ IF (OBJ_VALID(iJob)) THEN BEGIN
 ;put time stamp
     updateRefreshButtonLabel, Event ;_GUI
 
+;activate refresh button
+    activate_refresh = 1
+
 ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
 
     label = 'NO MORE JOBS TO LIST !'
     putButtonValue, Event, 'refresh_list_of_jobs_button', label
     
+;desactivate refresh button
+    activate_refresh = 0
+
     error = 0
     CATCH, error
     IF (error NE 0) THEN BEGIN
@@ -124,6 +130,20 @@ ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
     
 ENDELSE
 OBJ_DESTROY, iJob
+
+;disable or not the REFRESH button and the remove button
+activate_button, Event, 'refresh_list_of_jobs_button', activate_refresh
+activate_button, Event, 'job_status_remove_folder', activate_refresh
+
+;if no more files, cleanup table and disable output base
+IF (activate_refresh EQ 0) THEN BEGIN
+    tableValue = getTableValue(Event,'job_status_table')
+    column = (size(tableValue))(1)
+    row    = (size(tableValue))(2)
+    aTable = STRARR(column, row)
+    putTableValue, Event, 'job_status_table', aTable
+    SensitiveBase, Event, 'job_status_output_base', 0
+ENDIF
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
@@ -250,11 +270,13 @@ IF (scaling_flag EQ 'ON') THEN BEGIN
         OBJ_DESTROY, iScaling
     ENDELSE
 ENDIF
-
 IF (scaling_flag EQ 'N/A') THEN BEGIN ;popup base that ask for a scaling value
     title = 'The status of the Scaling Flag/Value is undefined !'
     iScaling = OBJ_NEW('IDLscalingGUI',Event, scaling_constant,title, cmd)
     OBJ_DESTROY, iScaling
+ENDIF
+IF (scaling_flag EQ 'OFF') THEN BEGIN 
+    stitch_files_step2, Event, cmd
 ENDIF
 
 ;turn off hourglass

@@ -32,6 +32,13 @@
 ;
 ;==============================================================================
 
+FUNCTION getTableValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;This function returns the contain of the Text Field
 FUNCTION getTextFieldValue, Event, uname
 TextFieldID = widget_info(Event.top,find_by_uname=uname)

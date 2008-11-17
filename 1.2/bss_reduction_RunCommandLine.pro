@@ -100,7 +100,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
         status_text = 'Data Reduction ... ' + PROCESSING
         putDRstatusInfo, Event, status_text
                 
-        spawn, cmd, listening, err_listening
+        SPAWN, cmd, listening, err_listening 
         IF (err_listening[0] NE '') THEN BEGIN
             
             MessageToAdd    = (*global).FAILED
@@ -164,7 +164,6 @@ IF (ok_to_CONTINUE) THEN BEGIN
         WHILE (index LT nbr_jobs) DO BEGIN
             cmd_text = '-> ' + cmd[index]
             spawn, cmd[index], listening, err_listening
-            print, cmd[index] ;remove_me
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
