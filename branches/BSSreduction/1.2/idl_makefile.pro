@@ -95,6 +95,7 @@ cd, CurrentFolder
 .run IDLrefreshRoot__define.pro
 .run IDLsendToGeek__define.pro
 .run IDLremoveFolderFromConfig__define.pro
+.run IDLxmlParser__define.pro
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro
