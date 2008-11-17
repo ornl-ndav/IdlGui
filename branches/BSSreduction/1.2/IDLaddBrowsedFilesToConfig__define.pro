@@ -112,7 +112,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;This function retrieves the values from the various Reduce Tab
-FUNCTION populateReduceStructure, sValue
+FUNCTION populateReduceStructureFromBrowse, sValue
 
 ;write value in structure
 sStructure = { field1: { title: 'Raw Sample Data File',$
@@ -382,7 +382,7 @@ Nbr_jobs = N_ELEMENTS(list_OF_files)
 sStructure = retrieve_information_from_rmd(list_OF_files[0])
 
 ;retrieve value of fields from REDUCE tabs
-sReduce = populateReduceStructure(sStructure)
+sReduce = populateReduceStructureFromBrowse(sStructure)
 
 ;define current date
 DateTime = GenerateIsoTimeStamp()
