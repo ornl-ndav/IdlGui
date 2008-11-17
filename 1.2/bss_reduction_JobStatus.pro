@@ -280,14 +280,12 @@ AppendLogBookMessage, Event, text
 cmd_text = '-> ' + cmd + ' ... ' + PROCESSING
 AppendLogBookMessage, Event, cmd_text
 
-;spawn, cmd, listening, err_listening
+spawn, cmd, listening, err_listening
 err_listening = ''
 IF (err_listening[0] NE '') THEN BEGIN
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
 ENDIF ELSE BEGIN
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-
-;    full_output_file_name = '~/BSS_638.txt' ;REMOVE_ME
 
 ;plot data
     IF (FILE_TEST(full_output_file_name)) THEN BEGIN

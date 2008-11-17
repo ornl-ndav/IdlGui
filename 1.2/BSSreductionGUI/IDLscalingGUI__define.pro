@@ -32,11 +32,30 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+FUNCTION getCWBgroupValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;This function returns the contain of the Text Field
 FUNCTION getTextFieldValue, Event, uname
 TextFieldID = widget_info(Event.top,find_by_uname=uname)
 widget_control, TextFieldID, get_value = TextFieldValue
 RETURN, TextFieldValue
+END
+
+;------------------------------------------------------------------------------
+;valid if entry is numeric
+FUNCTION isValidEntry, value
+IF (value EQ '') THEN RETURN, 0
+ON_IOERROR, invalid_entry
+test_array = FLOAT(value)
+RETURN, 1
+invalid_entry:
+RETURN,0
 END
 
 ;------------------------------------------------------------------------------
@@ -70,19 +89,45 @@ wWidget =  Event.top            ;widget id
 
 CASE Event.id OF
 
+;cw_bgroup
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'job_status_scaling_cw_bgroup'): BEGIN
+        value = getCWBgroupValue(Event, 'job_status_scaling_cw_bgroup')
+        IF (value EQ 0.0) THEN BEGIN
+            value = getTextFieldValue(Event,'job_status_scaling_value')
+            valid_entry_status = isValidEntry(value)
+        ENDIF ELSE BEGIN
+            valid_entry_status = 1
+        ENDELSE
+        activate_button, Event, 'job_status_scaling_ok_button', $
+          valid_entry_status
+    END    
+
 ;Cancel 
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                 'job_status_scaling_cancel_button'): BEGIN
         WIDGET_CONTROL, Event.top, /DESTROY
     END
 
+;value of scaling constant
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'job_status_scaling_value'): BEGIN
+        value = getTextFieldValue(Event,'job_status_scaling_value')
+        valid_entry_status = isValidEntry(value)
+        activate_button, Event, 'job_status_scaling_ok_button', $
+          valid_entry_status
+    END
+
 ;Ok
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                 'job_status_scaling_ok_button'): BEGIN
         cmd = sMainBase.CMD
-        value = getTextFieldValue(Event,'job_status_scaling_value')
-        WIDGET_CONTROL, Event.top, /DESTROY
-        cmd += ' --rescale=' + value
+        IF (getCWBgroupValue(Event, $
+                             'job_status_scaling_cw_bgroup') EQ 0) THEN BEGIN
+            value = getTextFieldValue(Event,'job_status_scaling_value')
+            WIDGET_CONTROL, Event.top, /DESTROY
+            cmd += ' --rescale=' + value
+        ENDIF
         stitch_files_step2, sMainBase.Event, cmd
     END
 
@@ -179,6 +224,7 @@ wValue = WIDGET_TEXT(wBaseRow,$
                      SCR_XSIZE = sValue.size[2],$
                      UNAME     = sValue.uname,$
                      VALUE     = sValue.value,$
+                     /ALL_EVENTS,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
@@ -204,6 +250,19 @@ wOk = WIDGET_BUTTON(wBaseRow3,$
 
 Widget_Control, /REALIZE, wBase
 XManager, 'MAIN_BASE', wBase, /NO_BLOCK, CLEANUP = 'make_scaling_cleanup'
+
+;check initial status of gui
+id_value = WIDGET_INFO(wBASE,FIND_BY_UNAME='job_status_scaling_cw_bgroup')
+WIDGET_CONTROL, id_value, get_value = group_value
+IF (group_value EQ 0.0) THEN BEGIN
+    id = WIDGET_INFO(wBASE,FIND_BY_UNAME='job_status_scaling_value')
+    WIDGET_CONTROL, id, get_value = value
+    valid_entry_status = isValidEntry(value)
+ENDIF ELSE BEGIN
+    valid_entry_status = 1
+ENDELSE
+id_button = WIDGET_INFO(wBASE,FIND_BY_UNAME='job_status_scaling_ok_button')
+WIDGET_CONTROL, id_button, SENSITIVE=valid_entry_status
 END
 
 ;------------------------------------------------------------------------------
