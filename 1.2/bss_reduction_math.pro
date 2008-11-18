@@ -40,6 +40,7 @@ fQmax = FLOAT(Qmax)
 fQbin = FLOAT(Qbin)
 ;make sure Qmin<Qmax
 IF(fQmin GE fQmax) THEN RETURN, 0
+IF(fQbin EQ 0) THEN RETURN, 0
 ;create Qaxis
 Qaxis  = [fQmin]
 fQleft  = fQmin
