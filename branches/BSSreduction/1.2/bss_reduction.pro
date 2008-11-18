@@ -132,8 +132,8 @@ global = ptr_new ({ $
                     job_status_root_id: PTR_NEW(0L),$
                     job_status_first_plot: 1,$
                     job_status_root_status: PTR_NEW(0L),$
-                    ok_bmp: 'images/ok.bmp',$
-                    failed_bmp: 'images/failed.bmp',$
+                    ok_bmp: 'BSSreduction_images/ok.bmp',$
+                    failed_bmp: 'BSSreduction_images/failed.bmp',$
                     TreeBase: 0L,$
                     TreeID: 0L,$
                     RootID: 0L,$
