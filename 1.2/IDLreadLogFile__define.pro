@@ -46,33 +46,39 @@ END
 FUNCTION IDLreadLogFile::init, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-config_file_name = (*global).config_file_name
-
-IF (FILE_TEST(config_file_name)) THEN BEGIN
-
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+ENDIF ELSE BEGIN
+    config_file_name = (*global).config_file_name
+    
+    IF (FILE_TEST(config_file_name)) THEN BEGIN
+        
 ;read file --------------------------------------------------------------------
-    file_size  = FILE_LINES(config_file_name)
-    IF (file_size LT 10) THEN RETURN, 0
-    file_array = STRARR(file_size)
-    OPENR, 1, config_file_name
-    READF, 1, file_array
-    CLOSE, 1
-
+        file_size  = FILE_LINES(config_file_name)
+        IF (file_size LT 10) THEN RETURN, 0
+        file_array = STRARR(file_size)
+        OPENR, 1, config_file_name
+        READF, 1, file_array
+        CLOSE, 1
+        
 ;determine the number of global jobs (result gives where they were ------------
 ;found!)
-    result = WHERE(file_array EQ '', nbr_input)
-    
-    start_point = WHERE(file_array EQ $
-                        '***** Start List of Output Files *****',count)
-    end_point   = WHERE(file_array EQ $
-                        '***** End List of Output Files *****')
-
+        result = WHERE(file_array EQ '', nbr_input)
+        
+        start_point = WHERE(file_array EQ $
+                            '***** Start List of Output Files *****',count)
+        end_point   = WHERE(file_array EQ $
+                            '***** End List of Output Files *****')
+        
 ;start and end points for the metadata
-    start_point_metadata = end_point
-    end_point_metadata   = result
-
+        start_point_metadata = end_point
+        end_point_metadata   = result
+        
 ;populate the structure -------------------------------------------------------
-
+        
 ; sStructure = { info, date:'', files:PTR_NEW(0L)}
 ; mStructure = REPLICATE({info}, nbr_empty_space+1)
 ;-----------------------------------------------------
@@ -80,55 +86,57 @@ IF (FILE_TEST(config_file_name)) THEN BEGIN
 ; *mStructure[0].files = ['~/results/BSS_0_Q00.txt',$
 ;                         '~/results/BSS_0_Q01.txt']
 ;-----------------------------------------------------
-    sInfo = { info, $
-              date: '', $
-              files: PTR_NEW()}
-    sLocalInfo = REPLICATE({info}, count)
-
+        sInfo = { info, $
+                  date: '', $
+                  files: PTR_NEW()}
+        sLocalInfo = REPLICATE({info}, count)
+        
 ;create big array aMetadata = STRARR(nbr of metadata, nbr folder + 1)
 ;+1: because the first column will be for the NAME of the value
-    nbr_metadata = end_point_metadata[0] - start_point_metadata[0]
-    aMetadata    = STRARR(count+1,nbr_metadata-1) ;final array of metadata
-    
-    index = 0
-    WHILE (index LT count) DO BEGIN
+        nbr_metadata = end_point_metadata[0] - start_point_metadata[0]
+        aMetadata    = STRARR(count+1,nbr_metadata-1) ;final array of metadata
+        
+        index = 0
+        WHILE (index LT count) DO BEGIN
 ;retrieve date
-        sLocalInfo[index].date = file_array[start_point[index]-1]
+            sLocalInfo[index].date = file_array[start_point[index]-1]
 ;retrieve list of output files
-        str_index = start_point[index]+1
-        end_index = end_point[index]
-        nbr_files = end_index - str_index
-        i = 0
-        list_OF_files = STRARR(nbr_files)
-        WHILE (i LT nbr_files) DO BEGIN
-            list_OF_files[i] = file_array[str_index+i]
-            i++
-        ENDWHILE
+            str_index = start_point[index]+1
+            end_index = end_point[index]
+            nbr_files = end_index - str_index
+            i = 0
+            list_OF_files = STRARR(nbr_files)
+            WHILE (i LT nbr_files) DO BEGIN
+                list_OF_files[i] = file_array[str_index+i]
+                i++
+            ENDWHILE
 ;put list of files into structure
-        sLocalInfo[index].files = PTR_NEW(list_OF_files)
-
+            sLocalInfo[index].files = PTR_NEW(list_OF_files)
+            
 ;retrieve metadata
-        j = 0
-        offset = start_point_metadata[index] + 1
-        WHILE (j LT nbr_metadata-1) DO BEGIN
-            metadata_array = STRSPLIT(file_array[j+offset],': ', $
-                                      /REGEX, $
-                                      /EXTRACT)
+            j = 0
+            offset = start_point_metadata[index] + 1
+            WHILE (j LT nbr_metadata-1) DO BEGIN
+                metadata_array = STRSPLIT(file_array[j+offset],': ', $
+                                          /REGEX, $
+                                          /EXTRACT)
 ;keep record of name of field for the first index only
-            IF (index EQ 0) THEN BEGIN
-                aMetadata[index,j] = metadata_array[0]
-            ENDIF
-            aMetadata[index+1,j] = metadata_array[1]
-            j++
+                IF (index EQ 0) THEN BEGIN
+                    aMetadata[index,j] = metadata_array[0]
+                ENDIF
+                aMetadata[index+1,j] = metadata_array[1]
+                j++
+            ENDWHILE
+            
+            index++
         ENDWHILE
         
-        index++
-    ENDWHILE
+        self.sStructure = PTR_NEW(sLocalInfo)
+        self.aMetadata  = PTR_NEW(aMetadata)
+        
+    ENDIF
 
-    self.sStructure = PTR_NEW(sLocalInfo)
-    self.aMetadata  = PTR_NEW(aMetadata)
-
-ENDIF
+ENDELSE
 
 RETURN, 1
 END
