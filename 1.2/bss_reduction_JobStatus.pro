@@ -76,6 +76,9 @@ file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
 ;keep only first part of file name (BSS_623_Q00.txt)
 split_array     = STRSPLIT(file_name,'_',COUNT=nbr)
 file_name       = STRMID(file_name,0,split_array[nbr-1])
+;add time stamp
+time_stamp = GenerateIsoTimeStamp()
+file_name += time_stamp + '_'
 ;add new extension
 file_name      += (*global).iter_dependent_back_ext
 ;file name only
@@ -88,65 +91,76 @@ PRO create_job_status, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;indicate initialization with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
-label = 'REFRESHING LIST OF JOBS ... '
-putButtonValue, Event, 'refresh_list_of_jobs_button', label
+;if there is a config file
+IF (FILE_TEST((*global).config_file_name)) THEN BEGIN 
 
-iJob = OBJ_NEW('IDLreadLogFile',Event)
-IF (OBJ_VALID(iJob)) THEN BEGIN
-    pMetadata = iJob->getStructure()
-    (*(*global).pMetadata) = pMetadata
-    pMetadataValue = iJob->getMetadata()
-    (*(*global).pMetadataValue) = pMetadataValue
-    iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
-    OBJ_DESTROY, iDesign
-    
-;select the first one by default and display value of this one in table
-    select_first_node, Event    ;Gui
-    display_contain_OF_job_status, Event, 0
-    
-;put time stamp
-    updateRefreshButtonLabel, Event ;_GUI
-
-;activate refresh button
-    activate_refresh = 1
-
-;keep record that the first node is selected
-    (*global).igs_selected_index = 0
-
-ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
-
-    label = 'NO MORE JOBS TO LIST !'
+    label = 'REFRESHING LIST OF JOBS ... '
     putButtonValue, Event, 'refresh_list_of_jobs_button', label
     
+    iJob = OBJ_NEW('IDLreadLogFile',Event)
+    IF (OBJ_VALID(iJob)) THEN BEGIN
+        pMetadata = iJob->getStructure()
+        (*(*global).pMetadata) = pMetadata
+        pMetadataValue = iJob->getMetadata()
+        (*(*global).pMetadataValue) = pMetadataValue
+        iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
+        OBJ_DESTROY, iDesign
+        
+;select the first one by default and display value of this one in table
+        select_first_node, Event ;Gui
+        display_contain_OF_job_status, Event, 0
+        
+;put time stamp
+        updateRefreshButtonLabel, Event ;_GUI
+        
+;activate refresh button
+        activate_refresh = 1
+        
+;keep record that the first node is selected
+        (*global).igs_selected_index = 0
+        
+    ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
+        
+        label = 'NO MORE JOBS TO LIST !'
+        putButtonValue, Event, 'refresh_list_of_jobs_button', label
+        
 ;desactivate refresh button
-    activate_refresh = 0
-
-    error = 0
-    CATCH, error
-    IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-    ENDIF ELSE BEGIN
-        WIDGET_CONTROL, (*global).TreeID, /DESTROY
+        activate_refresh = 0
+        
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+        ENDIF ELSE BEGIN
+            WIDGET_CONTROL, (*global).TreeID, /DESTROY
+        ENDELSE
+        
     ENDELSE
+    OBJ_DESTROY, iJob
     
-ENDELSE
-OBJ_DESTROY, iJob
+;disable or not the REFRESH button and the remove button
+    activate_button, Event, 'refresh_list_of_jobs_button', activate_refresh
+    activate_button, Event, 'job_status_remove_folder', activate_refresh
+    
+;if no more files, cleanup table and disable output base
+    IF (activate_refresh EQ 0) THEN BEGIN
+        tableValue = getTableValue(Event,'job_status_table')
+        column = (size(tableValue))(1)
+        row    = (size(tableValue))(2)
+        aTable = STRARR(column, row)
+        putTableValue, Event, 'job_status_table', aTable
+        SensitiveBase, Event, 'job_status_output_base', 0
+    ENDIF
+
+ENDIF ELSE BEGIN
 
 ;disable or not the REFRESH button and the remove button
-activate_button, Event, 'refresh_list_of_jobs_button', activate_refresh
-activate_button, Event, 'job_status_remove_folder', activate_refresh
+    activate_button, Event, 'refresh_list_of_jobs_button', 0
+    activate_button, Event, 'job_status_remove_folder', 0
 
-;if no more files, cleanup table and disable output base
-IF (activate_refresh EQ 0) THEN BEGIN
-    tableValue = getTableValue(Event,'job_status_table')
-    column = (size(tableValue))(1)
-    row    = (size(tableValue))(2)
-    aTable = STRARR(column, row)
-    putTableValue, Event, 'job_status_table', aTable
-    SensitiveBase, Event, 'job_status_output_base', 0
-ENDIF
+ENDELSE
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
