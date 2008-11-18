@@ -53,7 +53,7 @@ FullNexusFileName = dialog_pickfile(path              = DefaultPath,$
                                     default_extension ='.nxs',$
                                     /fix_filter)
 
-if (FullNexusFileName NE '') then begin
+IF (FullNexusFileName NE '') THEN BEGIN
     
     message = 'Loading NeXus file selected:'
     PutLogBookMessage, Event, message
@@ -69,10 +69,25 @@ if (FullNexusFileName NE '') then begin
         SetButton, event, 'nmn_button', 0
     ENDIF
     
-    (*global).RunNumber = ''
+;get run number from NeXus file itself
+    no_error = 0
+    catch, no_error
+    IF (no_error NE 0) THEN BEGIN
+        RunNumber = 'N/A'
+    ENDIF ELSE BEGIN
+        iNexus = OBJ_NEW('IDLgetMetadata', FullNexusFileName)
+        RunNumber = iNexus->getRunNumber()
+        OBJ_DESTROY, iNexus
+    ENDELSE
+    
+;save run number
+    (*global).RunNumber = RunNumber
     
 ;reset NeXus run number cw_field
-    putRunNumberValue, Event, ''
+    putRunNumberValue, Event, RunNumber
+
+;put name of file in reduce tab
+    putTextInTextField, Event, 'rsdf_list_of_runs_text', FullNexusFileName
     
 endif else begin
     
