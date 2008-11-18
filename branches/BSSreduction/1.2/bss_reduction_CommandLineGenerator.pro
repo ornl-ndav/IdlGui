@@ -140,9 +140,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;get Alternate Instrument Geometry
-ibs_value = getCWBgroupValue(Event, $
-                         'use_iterative_background_subtraction_cw_bgroup')
-IF (ibs_value EQ 1) THEN BEGIN ;mandatory for LDS nexus files
+ 
+IF ((*global).lds_mode EQ 1) THEN BEGIN  ;mandatory for live data streaming
     cmd += ' --inst-geom='
     AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
     (*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
@@ -163,16 +162,26 @@ ENDIF ELSE BEGIN
     AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
     IF (AIGFile NE '') THEN BEGIN
         cmd += ' --inst-geom='
-        IF (FILE_TEST(AIGFile) EQ 0) THEN AIGFile = '?'
-        IF (tab2 EQ 0 AND $
-            StatusMessage NE 0) THEN BEGIN
-            putInfoInCommandLineStatus, Event, TabName, 1
+        IF (FILE_TEST(AIGFile) EQ 0) THEN BEGIN
+            AIGFile = '?'
+            IF (tab2 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab2 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab2 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            status_text = '   -Please provide a Valid Alternate Instrument' + $
+              ' Geometry'
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab2
         ENDIF
-        status_text = '   -Please provide a Valid Alternate Instrument' + $
-          ' Geometry'
-        putInfoInCommandLineStatus, Event, status_text, 1
-        StatusMessage += 1
-        ++tab2
         cmd += AIGFIle 
     ENDIF
 ENDELSE
