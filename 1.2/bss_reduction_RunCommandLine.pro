@@ -154,8 +154,19 @@ IF (ok_to_CONTINUE) THEN BEGIN
         AppendLogBookMessage, Event, cmd_text
         index = 0
 
+;create log file
+        iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
+        ListOfStdOutFiles = iFile->getListOfStdOutFiles()
+        ListOfStdErrFiles = iFile->getListOfStdErrFiles()
+       
+        OBJ_DESTROY, iFile
+
+;force the location and name of .err and .out files
+
+
 ;add batch statement to all command lines
-        cmd = 'srun --batch -o none -p ' + srun + ' ' + cmd
+        cmd = 'srun --batch -p ' + $
+          srun + ' ' + cmd
 
         status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
         status_text += ' batch jobs ... '
@@ -163,15 +174,16 @@ IF (ok_to_CONTINUE) THEN BEGIN
 
         WHILE (index LT nbr_jobs) DO BEGIN
             cmd_text = '-> ' + cmd[index]
-            spawn, cmd[index], listening, err_listening
+ ;           spawn, cmd[index], listening, err_listening
+;            print, 'listening: ' 
+;            print, listening
+;            print, 'err_listening'
+;            print, err_listening
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
 
         putDRstatusInfo, Event, status_text + OK
-
-        iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
-        OBJ_DESTROY, iFile
 
     ENDELSE
     

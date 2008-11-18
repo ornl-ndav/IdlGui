@@ -79,9 +79,9 @@ sDEBUGGING = { tab: {main_tab: 2,$
                         input6: { uname: 'mtha_min_text',$
                                   value: '0'},$
                         input7: { uname: 'mtha_max_text',$
-                                  value: '2'},$
+                                  value: '1'},$
                         input8: { uname: 'mtha_bin_text',$
-                                  value: '.1'},$
+                                  value: '.3'},$
                         input9: { uname: 'pte_min_text',$
                                   value: '180'},$
                         input10: { uname: 'pte_max_text',$
@@ -119,6 +119,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    output_log_srun_path: '~/results/',$
                     job_status_full_output_file_name: '',$
                     MainBaseSize: INTARR(4),$
                     igs_selected_index: 0,$

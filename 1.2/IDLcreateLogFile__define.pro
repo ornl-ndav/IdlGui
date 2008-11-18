@@ -31,6 +31,29 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
+FUNCTION ReplaceExt, file_array, NEW=new
+
+sz = N_ELEMENTS(file_array)
+IF (sz GT 0) THEN BEGIN
+new_file_array = STRARR(sz)
+index = 0
+WHILE (index LT sz) DO BEGIN
+    no_error
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        new_file_array[index] = file_array[index] + '.' + new
+    ENDIF ELSE BEGIN
+        local_file_array = STRSPLIT(file_array[index],'.',/EXTRACT)
+        new_file_array[index] = local_file_array[0] + '.' + new
+        index++
+    ENDELSE
+ENDWHILE
+RETURN, new_file_array
+END
+
+;------------------------------------------------------------------------------
 ;This function retrieves the values from the various Reduce Tab
 FUNCTION populateReduceStructure, Event
 
@@ -720,6 +743,22 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
 RETURN, sStructure
 END
 
+;------------------------------------------------------------------------------
+FUNCTION IDLcreateLogFile::getListOfStdOutFiles
+file_name_array = self.file_name_array
+;remove ext and put .out
+new_file_name_array = ReplaceExt(file_name_array, NEW='out')
+RETURN, new_file_name_array
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLcreateLogFile::getListOfStdErrFiles
+file_name_array = self.file_name_array
+;remove ext and put .err
+new_file_name_array = ReplaceExt(file_name_array, NEW='err')
+RETURN, new_file_name_array
+END
+
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION IDLcreateLogFile::init, Event, cmd
@@ -740,6 +779,8 @@ WHILE (index LT nbr_jobs) DO BEGIN
    match2 = STRSPLIT(match1,'=',/EXTRACT)
    file_name_array[index++] = STRCOMPRESS(match2[1],/REMOVE_ALL)
 ENDWHILE
+
+self.file_name_array = PTR_NEW(file_name_array)
 
 ;create string array of all information from this/these job(s) ----------------
 nbr_structure_tags = N_TAGS(sReduce) 
@@ -800,6 +841,7 @@ END
 ;******  Class Define *********************************************************
 PRO IDLcreateLogFile__define
 struct = {IDLcreateLogFile,$
+          file_name_array: PTR_NEW(0L),$
           var: ''}
 END
 ;******************************************************************************
