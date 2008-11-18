@@ -266,8 +266,8 @@ output_file = getTextFieldValue(Event, $
                                 'job_status_output_file_name_text_field')
 full_output_file_name = output_path + output_file 
 
-;add time_stamp to file_name
-full_output_file_name = addTimeStamp(full_output_file_name)
+;;add time_stamp to file_name
+;full_output_file_name = addTimeStamp(full_output_file_name)
 
 (*global).job_status_full_output_file_name = full_output_file_name
 cmd += ' --output=' + full_output_file_name
