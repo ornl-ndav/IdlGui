@@ -1814,98 +1814,11 @@ ENDIF
 
 ;Momentum transfer Histogram Axis or Negative Cosine Polar Axis --------------
 
-;check status of flag: Momentum Transfer Histogram or Negative Cosine Polar
-ButtonValue = getButtonValue(Event,'mtha_button')
-IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
-    cmd += ' --mom-trans-bin='
-    missing_info_title = 'Momentum Transfer Histogram'
-ENDIF ELSE BEGIN
-    cmd += ' --ncos-polar-bins='
-    missing_info_title = 'Negative Cosine Polar'
-ENDELSE
-    
-TIBCMin = getTextFieldValue(Event,'mtha_min_text')
-(*global).Configuration.Reduce.tab7.mtha_min_text= TIBCMin
-IF (TIBCMin EQ '') THEN BEGIN
-    cmd += '?'
-    status_text = '   -Please provide a ' + missing_info_title + $
-      ' Axis Min'
-    IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-    ENDIF
-    putInfoInCommandLineStatus, Event, status_text, 1
-    StatusMessage += 1
-    ++tab7
-ENDIF ELSE BEGIN
-    cmd += strcompress(TIBCMin,/remove_all)
-ENDELSE
-
-TIBCMax = getTextFieldValue(Event,'mtha_max_text')
-(*global).Configuration.Reduce.tab7.mtha_max_text = TIBCMax
-IF (TIBCMax EQ '') THEN BEGIN
-    cmd += ',?'
-    status_text = '   -Please provide a ' + missing_info_title + $
-      ' Axis Max'
-    IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-    ENDIF
-    putInfoInCommandLineStatus, Event, status_text, 1
-    StatusMessage += 1
-    ++tab7
-ENDIF ELSE BEGIN
-    cmd += ',' + strcompress(TIBCMax,/remove_all)
-ENDELSE
-
-TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
-(*global).Configuration.Reduce.tab7.mtha_bin_text = TIBCBin
-IF (TIBCBin EQ '') THEN BEGIN
-    cmd += ',?'
-    status_text = '   -Please provide a ' + missing_info_title + $
-      ' Axis Bin'
-    IF (tab7 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, '', 1
-        putInfoInCommandLineStatus, Event, '', 1
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 0
-    ENDIF
-    IF (tab7 EQ 0 AND $
-        StatusMessage NE 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
-    ENDIF
-    putInfoInCommandLineStatus, Event, status_text, 1
-    StatusMessage += 1
-    ++tab7
-ENDIF ELSE BEGIN
-    cmd += ',' + strcompress(TIBCBin,/remove_all)
-ENDELSE
-
-job_number = 1
-
 ;check if use iterative background subtraction is active or not
 ibs_value = getCWBgroupValue(Event, $
                          'use_iterative_background_subtraction_cw_bgroup')
 
-IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
+IF (ibs_value EQ 0) THEN BEGIN ;if Iterative Background Subtraction is ON
     
     Qmin = getTextFieldValue(Event,'mtha_min_text')
     Qmax = getTextFieldValue(Event,'mtha_max_text')
@@ -1949,7 +1862,96 @@ IF (ibs_value EQ 1) THEN BEGIN ;if Iterative Background Subtraction is OFF
         cmd += ',' + Qbin
     ENDELSE
 
-ENDIF
+ENDIF ELSE BEGIN
+
+;check status of flag: Momentum Transfer Histogram or Negative Cosine Polar
+    ButtonValue = getButtonValue(Event,'mtha_button')
+    IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
+        cmd += ' --mom-trans-bin='
+        missing_info_title = 'Momentum Transfer Histogram'
+    ENDIF ELSE BEGIN
+        cmd += ' --ncos-polar-bins='
+        missing_info_title = 'Negative Cosine Polar'
+    ENDELSE
+    
+    TIBCMin = getTextFieldValue(Event,'mtha_min_text')
+    (*global).Configuration.Reduce.tab7.mtha_min_text= TIBCMin
+    IF (TIBCMin EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a ' + missing_info_title + $
+          ' Axis Min'
+        IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCMin,/remove_all)
+    ENDELSE
+    
+    TIBCMax = getTextFieldValue(Event,'mtha_max_text')
+    (*global).Configuration.Reduce.tab7.mtha_max_text = TIBCMax
+    IF (TIBCMax EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a ' + missing_info_title + $
+          ' Axis Max'
+        IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCMax,/remove_all)
+    ENDELSE
+    
+    TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
+    (*global).Configuration.Reduce.tab7.mtha_bin_text = TIBCBin
+    IF (TIBCBin EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a ' + missing_info_title + $
+          ' Axis Bin'
+        IF (tab7 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab7 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab7
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCBin,/remove_all)
+    ENDELSE
+    
+    job_number = 1
+
+ENDELSE
 
 ;get time of flight range -----------------------------------------------------
 IF (isButtonSelected(Event,'tof_cutting_button')) THEN BEGIN
