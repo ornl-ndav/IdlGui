@@ -73,7 +73,9 @@ IF (FullNexusFileName NE '') THEN BEGIN
     no_error = 0
     catch, no_error
     IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
         RunNumber = 'N/A'
+        
     ENDIF ELSE BEGIN
         iNexus = OBJ_NEW('IDLgetMetadata', FullNexusFileName)
         RunNumber = iNexus->getRunNumber()
