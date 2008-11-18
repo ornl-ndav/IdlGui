@@ -129,6 +129,7 @@ CASE Event.id OF
             cmd += ' --rescale=' + value
         ENDIF
         stitch_files_step2, sMainBase.Event, cmd
+        WIDGET_CONTROL, Event.top, /DESTROY
     END
 
     ELSE:
