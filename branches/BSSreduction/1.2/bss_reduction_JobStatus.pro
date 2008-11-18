@@ -112,6 +112,9 @@ IF (OBJ_VALID(iJob)) THEN BEGIN
 ;activate refresh button
     activate_refresh = 1
 
+;keep record that the first node is selected
+    (*global).igs_selected_index = 0
+
 ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
 
     label = 'NO MORE JOBS TO LIST !'
