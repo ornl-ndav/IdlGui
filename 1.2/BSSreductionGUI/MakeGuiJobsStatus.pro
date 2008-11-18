@@ -236,7 +236,9 @@ wOutputFile = WIDGET_TEXT(OutputBase,$
                           YOFFSET   = sOutputFile.size[1],$
                           SCR_XSIZE = sOutputFile.size[2],$
                           VALUE     = sOutputFile.value,$
-                          UNAME     = sOutputFile.uname)
+                          UNAME     = sOutputFile.uname,$
+                          /EDITABLE,$
+                          /ALIGN_LEFT)
 
 ;create/plot button
 wCreateButton = WIDGET_BUTTON(OutputBase,$
