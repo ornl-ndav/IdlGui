@@ -118,7 +118,7 @@ XYoff = [0,0] ;output path button
 sOutputPath = { size: [XYoff[0],$
                        XYoff[1],$
                        670],$
-                value: '~/result/',$
+                value: '~/results/',$
                 uname: 'job_status_output_path_button'}
                       
 XYoff = [0,30] ;output file name text field
