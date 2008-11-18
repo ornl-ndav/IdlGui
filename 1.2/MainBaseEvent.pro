@@ -1057,11 +1057,10 @@ IF ((*global).LoadingConfig EQ 0) THEN BEGIN
     BSSreduction_CommandLineGenerator, Event
 ENDIF
 
-
-
 ;loop through all the jobs to find out which one the user clicked
  job_status_uname = (*(*global).job_status_uname)
  sz = N_ELEMENTS(job_status_uname)
+ print, 'sz: ' + strcompress(sz) ;remove_me
  index = 0
  job_status_root_status = (*(*global).job_status_root_status)
  WHILE (index LT sz) DO BEGIN

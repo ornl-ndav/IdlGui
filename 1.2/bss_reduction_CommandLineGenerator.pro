@@ -140,7 +140,9 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;get Alternate Instrument Geometry
-IF ((*global).lds_mode) THEN BEGIN ;mandatory for LDS nexus files
+ibs_value = getCWBgroupValue(Event, $
+                         'use_iterative_background_subtraction_cw_bgroup')
+IF (ibs_value EQ 1) THEN BEGIN ;mandatory for LDS nexus files
     cmd += ' --inst-geom='
     AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
     (*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
