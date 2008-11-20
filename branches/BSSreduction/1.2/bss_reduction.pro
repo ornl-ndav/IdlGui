@@ -60,7 +60,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 2,$
+sDEBUGGING = { tab: {main_tab: 1,$
                      reduce_input_tab: 0},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
@@ -119,6 +119,9 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    application: APPLICATION,$
+                    version: VERSION,$
+                    ucams: ucams,$ ;ucams of user                    
                     output_log_srun_path: '~/results/',$
                     job_status_full_output_file_name: '',$
                     MainBaseSize: INTARR(4),$
@@ -230,7 +233,6 @@ global = ptr_new ({ $
                     DefaultColorExcludedPixels: 150,$
                     DefaultLoadctMainPlot: 5,$
                     BSSselectionVersion: version,$ ;version of current program
-                    ucams: ucams,$ ;ucams of user
                     previous_tab: 0,$ ;default tab is 0 (Selection big tab)
                       previous_counts_vs_tof_tab: 0,$ ;default counts
                                 ;vs tof tab is 0
