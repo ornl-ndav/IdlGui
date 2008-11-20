@@ -79,7 +79,7 @@ sMetadataBase = { size: [sTreeBase.size[0]+$
                          XYoff[0],$
                          XYoff[1],$
                          MainTabSize[2]-sTreeBase.size[2]+XYoff[0]+offset,$
-                         615],$
+                         300],$
                   uname: 'metadata_base',$
                   frame: 1}
 
@@ -101,13 +101,48 @@ sTable = { size: [XYoff[0],$
            sensitive: 1,$
            label: ['FIELD NAME','FIELD VALUE'],$
            align: TableAlign,$
-           column_width: [300,400]}
+           column_width: [450,200]}
+
+;stdout and stderr files text boxes ...........................................
+XYoff = [2,25] ;std_out
+sStdoutText = { size: [sMetadataBase.size[0]+XYoff[0],$
+                       sMetadataBase.size[1]+$
+                       sMetadataBase.size[3]+XYoff[1],$
+                       334,$
+                       290],$
+                value: '',$
+                uname: 'job_status_std_out_text',$
+                sensitive: 1}
+XYoff = [0,-15]
+sStdoutLabel = { size: [sStdoutText.size[0]+$
+                        XYoff[0],$
+                        sStdoutText.size[1]+$
+                        XYoff[1]],$
+                 value: 'Stdout: N/A',$
+                 uname: 'job_status_std_out_label'}
+
+XYoff = [5,0] ;std_err
+sStderrText = { size: [sStdoutText.size[0]+$
+                       sStdoutText.size[2]+$
+                       XYoff[0],$
+                       sStdoutText.size[1]+XYoff[1],$
+                       sStdoutText.size[2:3]],$
+                value: '',$
+                uname: 'job_status_std_err_text',$
+                sensitive: 1}
+XYoff = [0,-15]
+sStderrLabel = { size: [sStderrText.size[0]+$
+                        XYoff[0],$
+                        sStderrText.size[1]+$
+                        XYoff[1]],$
+                 value: 'Stderr: N/A',$
+                 uname: 'job_status_std_err_label'}
 
 ;Base output file name ........................................................
 XYoff = [2,10]
 sOutputBase = { size: [sMetadataBase.size[0]+XYoff[0],$
-                       sMEtadataBase.size[1]+$
-                       sMetadataBase.size[3]+XYoff[1],$
+                       sStdoutText.size[1]+$
+                       sStdoutText.size[3]+XYoff[1],$
                        sMetadataBase.size[2],$
                        75],$
                 uname: 'job_status_output_base',$
@@ -211,6 +246,39 @@ wTable = WIDGET_TABLE(MetadataBase,$
                       /ROW_MAJOR,$
                       /RESIZEABLE_COLUMNS,$
                       /ALL_EVENTS)
+
+;Stdout and stderr widget_text ................................................
+wOut = WIDGET_TEXT(Base,$ ;stdout
+                   XOFFSET   = sStdoutText.size[0],$
+                   YOFFSET   = sStdoutText.size[1],$
+                   SCR_XSIZE = sStdoutText.size[2],$
+                   SCR_YSIZE = sStdoutText.size[3],$
+                   /SCROLL,$
+                   /WRAP,$
+                   UNAME     = sStdoutText.uname,$
+                   SENSITIVE = sStdoutText.sensitive)
+
+wOutlabel = WIDGET_LABEL(Base,$
+                         XOFFSET = sStdoutLabel.size[0],$
+                         YOFFSET = sStdoutLabel.size[1],$
+                         VALUE   = sStdoutLabel.value,$
+                         UNAME   = sStdoutLabel.uname)
+
+wErr = WIDGET_TEXT(Base,$ ;stderr
+                   XOFFSET   = sStderrText.size[0],$
+                   YOFFSET   = sStderrText.size[1],$
+                   SCR_XSIZE = sStderrText.size[2],$
+                   SCR_YSIZE = sStderrText.size[3],$
+                   /SCROLL,$
+                   /WRAP,$
+                   UNAME     = sStderrText.uname,$
+                   SENSITIVE = sStderrText.sensitive)
+
+wErrlabel = WIDGET_LABEL(Base,$
+                         XOFFSET = sStderrLabel.size[0],$
+                         YOFFSET = sStderrLabel.size[1],$
+                         VALUE   = sStdErrLabel.value,$
+                         UNAME   = sStdErrLabel.uname)
 
 ;Base output file name ........................................................
 Outputbase = WIDGET_BASE(Base,$

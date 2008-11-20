@@ -117,7 +117,7 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
             file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
             file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
 ;associate a uname to each leaf
-            leaf_uname = job_status_uname[index] + '_' + file_name
+            leaf_uname = job_status_uname[index] + '|' + file_name
             IF ((index + i) EQ 0) THEN BEGIN
                 leaf_uname_array = [leaf_uname]
             ENDIF ELSE BEGIN
