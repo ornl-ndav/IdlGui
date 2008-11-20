@@ -1096,12 +1096,7 @@ index = 0
 WHILE (index LT sz) DO BEGIN
     uname = leaf_uname[index]
     IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
-        
-
-
-
-
-
+        getOutErrFile, Event, uname, index ;_job_status
         BREAK
     ENDIF
     index++

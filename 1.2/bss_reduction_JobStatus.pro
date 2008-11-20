@@ -387,16 +387,52 @@ list_OF_files = DIALOG_PICKFILE(TITLE  = title,$
                                 /MUST_EXIST,$
                                 FILTER = '*.txt',$
                                 /MULTIPLE_FILES)
-                         
 IF (list_OF_files[0] NE '') THEN BEGIN ;add these files to config file
-    
     iFile = OBJ_NEW('IDLaddBrowsedFilesToConfig', Event, list_OF_files)
     IF (OBJ_VALID(iFile)) THEN BEGIN
         create_job_status, Event
         OBJ_DESTROY, iFile
     ENDIF
-    
 ENDIF
-
 END
 
+;------------------------------------------------------------------------------
+PRO getOutErrFile, Event, uname, leaf_index
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+pMetadata        = (*(*global).pMetadata)
+job_status_uname = (*(*global).job_status_uname)
+
+;get only the first part of the uname and find the folder index
+split_array = STRSPLIT(uname,'|',/EXTRACT)
+folder_uname = STRCOMPRESS(split_array[0],/REMOVE_ALL)
+leaf_uname   = split_array[1]
+
+index = WHERE(folder_uname EQ job_status_uname, nbr)
+IF (nbr GT 0) THEN BEGIN
+;get output path
+    aMetadataValue = (*(*(*global).pMetadataValue))
+    path = aMetadataValue[index+1,7]
+;get output path
+    out_files = (*(*pMetadata)[index].out_files)
+    out_files = out_files[leaf_index]
+    out_file  = STRSPLIT(out_files,':',/EXTRACT)
+    out_file  = STRCOMPRESS(out_file[1],/REMOVE_ALL)
+    err_files = (*(*pMetadata)[index].err_files)
+    err_files = err_files[leaf_index]
+    err_file  = STRSPLIT(err_files,':',/EXTRACT)
+    err_file  = STRCOMPRESS(err_file[1],/REMOVE_ALL)
+    full_out_file = path + out_file
+    full_err_file = path + err_file
+;display file into widget_text
+
+ENDIF
+
+
+
+
+
+
+
+
+END
