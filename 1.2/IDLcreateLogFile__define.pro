@@ -781,6 +781,9 @@ WHILE (index LT nbr_jobs) DO BEGIN
    file_name_array[index++] = STRCOMPRESS(match2[1],/REMOVE_ALL)
 ENDWHILE
 
+file_name_array_out = ReplaceExt(file_name_array, NEW='out')
+
+
 self.file_name_array = PTR_NEW(file_name_array)
 
 ;create string array of all information from this/these job(s) ----------------
