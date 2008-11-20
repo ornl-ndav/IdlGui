@@ -90,7 +90,6 @@ cd, CurrentFolder
 .run IDLreadLogFile__define.pro
 .run IDLmakeTree__define.pro
 .run IDLrefreshTree__define.pro
-.run IDLrefreshRoot__define.pro
 .run IDLsendToGeek__define.pro
 .run IDLremoveFolderFromConfig__define.pro
 .run IDLxmlParser__define.pro

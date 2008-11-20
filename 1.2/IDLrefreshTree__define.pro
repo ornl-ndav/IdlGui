@@ -67,7 +67,7 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO make_leaf, Event, wRoot, file_name
+PRO make_leaf, Event, wRoot, file_name, uname
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 IF (FILE_TEST(file_name)) THEN BEGIN
     icon = (*(*global).icon_ok)
@@ -75,7 +75,8 @@ ENDIF ELSE BEGIN
     icon = (*(*global).icon_failed)
 ENDELSE
 wTree = WIDGET_TREE(wRoot,$
-                    value = file_name,$
+                    VALUE  = file_name,$
+                    UNAME  = uname,$
                     BITMAP = icon)
 END
 
@@ -89,11 +90,11 @@ WIDGET_CONTROL, (*global).TreeID, /DESTROY
 nbr_jobs = (size(*pMetadata))(1)
 IF (nbr_jobs GT 0) THEN BEGIN
     make_main_tree, Event, wTree
-    WIDGET_CONTROL, /REALIZE, Event.top
 ENDIF
 
 job_status_uname   = (*(*global).job_status_uname)
 job_status_root_id = (*(*global).job_status_root_id)
+leaf_uname_array   = (*(*global).leaf_uname_array)
 
 sz = N_ELEMENTS(job_status_uname)
 index = 0
@@ -108,7 +109,6 @@ WHILE (index LT sz) DO BEGIN
       (*pMetadata)[index].date, $
       job_status_uname[index],$
       EXPANDED_STATUS = expanded_status
-    WIDGET_CONTROL, /REALIZE, Event.top     
     
     IF (expanded_status) THEN BEGIN
         
@@ -116,8 +116,7 @@ WHILE (index LT sz) DO BEGIN
         i = 0
         WHILE (i LT nbr_files) DO BEGIN
             file_name = get_file_name((*(*pMetadata)[index].files)[i])
-            make_leaf, Event, wRoot, file_name
-            WIDGET_CONTROL, /REALIZE, Event.top
+            make_leaf, Event, wRoot, file_name, leaf_uname_array[index+i]
             i++
         ENDWHILE
     ENDIF

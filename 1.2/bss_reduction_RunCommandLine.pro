@@ -37,10 +37,10 @@ PRO BSSreduction_RunCommandLine, Event
 activate_button, event, 'submit_button', 0
 
 ;get global structure
-widget_control,Event.top,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;;indicate initialization with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
 PROCESSING = (*global).processing
 OK         = (*global).ok
@@ -156,29 +156,22 @@ IF (ok_to_CONTINUE) THEN BEGIN
 
 ;create log file
         iFile = OBJ_NEW('IDLcreateLogFile',Event, cmd)
-        ListOfStdOutFiles = iFile->getListOfStdOutFiles()
-        ListOfStdErrFiles = iFile->getListOfStdErrFiles()
-       
+        ListOfStdOutFiles = *(iFile->getListofStdOutFiles())
+        ListOfStdErrFiles = *(iFile->getListofStdErrFiles())
         OBJ_DESTROY, iFile
-
-;force the location and name of .err and .out files
-
-
+        
 ;add batch statement to all command lines
-        cmd = 'srun --batch -p ' + $
-          srun + ' ' + cmd
-
         status_text  = 'Launching ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL)
         status_text += ' batch jobs ... '
         putDRstatusInfo, Event, status_text + PROCESSING
 
         WHILE (index LT nbr_jobs) DO BEGIN
-            cmd_text = '-> ' + cmd[index]
- ;           spawn, cmd[index], listening, err_listening
-;            print, 'listening: ' 
-;            print, listening
-;            print, 'err_listening'
-;            print, err_listening
+            cmd1  = 'srun --batch -p ' + srun
+            cmd1 += ' --output=' + ListOfStdOutFiles[index]
+            cmd1 += ' --error=' + ListOfStdErrFiles[index]
+            cmd2  = cmd1 + ' ' + cmd[index]
+            cmd_text = '-> ' + cmd2
+        ;    spawn, cmd2, listening, err_listening
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE

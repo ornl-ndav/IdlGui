@@ -87,8 +87,10 @@ ENDIF ELSE BEGIN
 ;                         '~/results/BSS_0_Q01.txt']
 ;-----------------------------------------------------
         sInfo = { info, $
-                  date: '', $
-                  files: PTR_NEW()}
+                  date:      '', $
+                  files:     PTR_NEW(),$
+                  out_files: PTR_NEW(),$
+                  err_files: PTR_NEW()}
         sLocalInfo = REPLICATE({info}, count)
         
 ;create big array aMetadata = STRARR(nbr of metadata, nbr folder + 1)
@@ -105,14 +107,21 @@ ENDIF ELSE BEGIN
             end_index = end_point[index]
             nbr_files = end_index - str_index
             i = 0
-            list_OF_files = STRARR(nbr_files)
+            list_OF_files     = STRARR(nbr_files)
+            list_OF_files_err = STRARR(nbr_files)
+            list_OF_files_out = STRARR(nbr_files)
             WHILE (i LT nbr_files) DO BEGIN
-                list_OF_files[i] = file_array[str_index+i]
+                list_array = STRSPLIT(file_array[str_index+i],'|',/EXTRACT)
+                list_OF_files[i]     = list_array[0]
+                list_OF_files_err[i] = list_array[1]
+                list_OF_files_out[i] = list_array[2]
                 i++
             ENDWHILE
 ;put list of files into structure
             sLocalInfo[index].files = PTR_NEW(list_OF_files)
-            
+            sLocalInfo[index].err_files = PTR_NEW(list_OF_files_err)
+            sLocalInfo[index].out_files = PTR_NEW(list_OF_files_out)
+
 ;retrieve metadata
             j = 0
             offset = start_point_metadata[index] + 1

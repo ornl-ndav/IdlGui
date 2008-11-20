@@ -33,7 +33,6 @@
 ;==============================================================================
 PRO make_main_tree_FOR_make_tree, Event, wTree
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-;IF ((*global).TreeID NE 0) THEN BEGIN
 IF (WIDGET_INFO((*global).TreeID,/VALID_ID)) THEN BEGIN
     WIDGET_CONTROL, (*global).TreeID, /DESTROY
 ENDIF
@@ -56,7 +55,7 @@ wRoot = WIDGET_TREE(wTree,$
 END
 
 ;------------------------------------------------------------------------------
-PRO make_leaf_FOR_make_tree, Event, wRoot, file_name
+PRO make_leaf_FOR_make_tree, Event, wRoot, file_name, uname
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 IF (FILE_TEST(file_name)) THEN BEGIN
     icon = (*(*global).icon_ok)
@@ -64,7 +63,8 @@ ENDIF ELSE BEGIN
     icon = (*(*global).icon_failed)
 ENDELSE
 wTree = WIDGET_TREE(wRoot,$
-                    value = file_name,$
+                    VALUE  = file_name,$
+                    UNAME  = uname,$
                     BITMAP = icon)
 END
 
@@ -110,12 +110,20 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
 ; create a leaf for each file
         nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
         
+;keep only the name of the output file (remove the stdout and stderr files)
         i = 0
         WHILE (i LT nbr_files) DO BEGIN
             file_name_full  = (*(*pMetadata)[index].files)[i]
             file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
             file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-            make_leaf_FOR_make_tree, Event, wRoot, file_name
+;associate a uname to each leaf
+            leaf_uname = job_status_uname[index] + '_' + file_name
+            IF ((index + i) EQ 0) THEN BEGIN
+                leaf_uname_array = [leaf_uname]
+            ENDIF ELSE BEGIN
+                leaf_uname_array = [leaf_uname_array,leaf_uname]
+            ENDELSE
+            make_leaf_FOR_make_tree, Event, wRoot, file_name, leaf_uname
             i++
         ENDWHILE
     ENDIF
@@ -125,6 +133,7 @@ ENDWHILE
 
 (*(*global).job_status_uname)   = job_status_uname
 (*(*global).job_status_root_id) = job_status_root_id
+(*(*global).leaf_uname_array)   = leaf_uname_array
 
 RETURN, 1
 END

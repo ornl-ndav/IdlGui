@@ -1082,13 +1082,31 @@ ENDIF
                   OBJ_DESTROY, iRefresh
               ENDIF
           ENDIF
-
 ;put time stamp
           updateRefreshButtonLabel, Event ;_GUI
-
+          GOTO, TheEnd
       ENDIF
       index++
   ENDWHILE
   (*(*global).job_status_root_status) = job_status_root_status
+
+leaf_uname = (*(*global).leaf_uname_array)
+sz = N_ELEMENTS(leaf_uname)
+index = 0
+WHILE (index LT sz) DO BEGIN
+    uname = leaf_uname[index]
+    IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
+        
+
+
+
+
+
+        BREAK
+    ENDIF
+    index++
+ENDWHILE
+
+TheEnd:
 
 END
