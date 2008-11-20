@@ -34,12 +34,21 @@
 
 FUNCTION ReplaceExt, file_array, NEW=new
 
+;file_array = *file_array
+
 sz = N_ELEMENTS(file_array)
 IF (sz GT 0) THEN BEGIN
     new_file_array = STRARR(sz)
     index = 0
     WHILE (index LT sz) DO BEGIN
-        no_error
+;get only the short file name
+        short_fn_array = STRSPLIT(file_array[index],'/',/EXTRACT, COUNT=nbr)
+        IF (nbr GE 1) THEN BEGIN
+            file_array[index] = short_fn_array[nbr-1]
+        ENDIF ELSE BEGIN
+            file_array[index] = short_fn_array[0]
+        ENDELSE
+        no_error = 0
         CATCH, no_error
         IF (no_error NE 0) THEN BEGIN
             CATCH,/CANCEL
@@ -203,7 +212,9 @@ IF (getButtonValue(Event, $
     tab5PSmin  = getTextFieldValueForConfig(Event,'pte_min_text')
     tab5PSmax  = getTextFieldValueForConfig(Event,'pte_max_text')
     tab5PSbin  = getTextFieldValueForConfig(Event,'pte_bin_text')
-    tab5Dbt    = getTextFieldValueForConfig(Event,'detailed_balance_temperature_value')
+    tab5Dbt    = $
+      getTextFieldValueForConfig(Event, $
+                                 'detailed_balance_temperature_value')
     tab5Rt     = getTextFieldValueForConfig(Event,'ratio_tolerance_value')
     tab5Ni     = getTextFieldValueForConfig(Event,'number_of_iteration')
     tab5MinWbc = getTextFieldValueForConfig(Event,'min_wave_dependent_back')
@@ -744,20 +755,14 @@ sStructure = { field1: { title: 'Raw Sample Data File',$
 RETURN, sStructure
 END
 
-;------------------------------------------------------------------------------
+;==============================================================================
 FUNCTION IDLcreateLogFile::getListOfStdOutFiles
-file_name_array = self.file_name_array
-;remove ext and put .out
-new_file_name_array = ReplaceExt(file_name_array, NEW='out')
-RETURN, new_file_name_array
+RETURN, self.file_name_array_out
 END
 
-;------------------------------------------------------------------------------
+;==============================================================================
 FUNCTION IDLcreateLogFile::getListOfStdErrFiles
-file_name_array = self.file_name_array
-;remove ext and put .err
-new_file_name_array = ReplaceExt(file_name_array, NEW='err')
-RETURN, new_file_name_array
+RETURN, self.file_name_array_err
 END
 
 ;******************************************************************************
@@ -781,10 +786,24 @@ WHILE (index LT nbr_jobs) DO BEGIN
    file_name_array[index++] = STRCOMPRESS(match2[1],/REMOVE_ALL)
 ENDWHILE
 
+;create array of .err and .out files names
 file_name_array_out = ReplaceExt(file_name_array, NEW='out')
+file_name_array_err = ReplaceExt(file_name_array, NEW='err')
 
-
-self.file_name_array = PTR_NEW(file_name_array)
+;force the location and name of .err and .out files
+output_path = (*global).default_output_path
+CD, '~', CURRENT=current_path
+expand_path = FILE_EXPAND_PATH('~/results/')
+CD, current_path
+;;; remove ~/ from expand_path
+expand_path = remove_tilda(expand_path)
+;;; add expand_path to list of std out and err files
+ListOfStdOutFiles = expand_path + file_name_array_out 
+self.file_name_array_out = PTR_NEW(ListOfStdOutFiles)
+shortListOfStdOutFiles = getBaseFileName(ListOfStdOutFiles)
+ListOfStdErrFiles = expand_path + file_name_array_err
+self.file_name_array_err = PTR_NEW(ListOfStdErrFiles)
+shortListOfStdErrFiles = getBaseFileName(ListOfStdErrFiles)
 
 ;create string array of all information from this/these job(s) ----------------
 nbr_structure_tags = N_TAGS(sReduce) 
@@ -803,7 +822,10 @@ i = 0
 final_array[1] = '***** Start List of Output Files *****'
 offset = 2
 WHILE (i LT nbr_jobs) DO BEGIN
-   final_array[i+offset] = 'Output File: ' + file_name_array[i]
+    text  = 'Output File: ' + file_name_array[i]
+    text += ' | Stderr File: ' + shortListOfStdErrFiles[i]
+    text += ' | Stdout File: ' + shortListOfStdOutFiles[i]
+    final_array[i+offset] = text
    i++
 ENDWHILE
 i+=offset
@@ -845,7 +867,8 @@ END
 ;******  Class Define *********************************************************
 PRO IDLcreateLogFile__define
 struct = {IDLcreateLogFile,$
-          file_name_array: PTR_NEW(0L),$
+          file_name_array_out: PTR_NEW(0L),$
+          file_name_array_err: PTR_NEW(0L),$
           var: ''}
 END
 ;******************************************************************************

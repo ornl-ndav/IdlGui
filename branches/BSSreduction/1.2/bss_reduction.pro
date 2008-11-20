@@ -61,7 +61,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            3: Log Book 
 
 sDEBUGGING = { tab: {main_tab: 1,$
-                     reduce_input_tab: 0},$
+                     reduce_input_tab: 4},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
@@ -133,6 +133,7 @@ global = ptr_new ({ $
                     pMetadata: PTR_NEW(0L),$
                     pMetadataValue: PTR_NEW(0L),$
                     job_status_uname: PTR_NEW(0L),$
+                    leaf_uname_array: PTR_NEW(0L),$
                     job_status_root_id: PTR_NEW(0L),$
                     job_status_first_plot: 1,$
                     job_status_root_status: PTR_NEW(0L),$
