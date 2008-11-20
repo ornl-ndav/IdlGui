@@ -36,20 +36,21 @@ FUNCTION ReplaceExt, file_array, NEW=new
 
 sz = N_ELEMENTS(file_array)
 IF (sz GT 0) THEN BEGIN
-new_file_array = STRARR(sz)
-index = 0
-WHILE (index LT sz) DO BEGIN
-    no_error
-    CATCH, no_error
-    IF (no_error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        new_file_array[index] = file_array[index] + '.' + new
-    ENDIF ELSE BEGIN
-        local_file_array = STRSPLIT(file_array[index],'.',/EXTRACT)
-        new_file_array[index] = local_file_array[0] + '.' + new
-        index++
-    ENDELSE
-ENDWHILE
+    new_file_array = STRARR(sz)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+        no_error
+        CATCH, no_error
+        IF (no_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            new_file_array[index] = file_array[index] + '.' + new
+        ENDIF ELSE BEGIN
+            local_file_array = STRSPLIT(file_array[index],'.',/EXTRACT)
+            new_file_array[index] = local_file_array[0] + '.' + new
+            index++
+        ENDELSE
+    ENDWHILE
+ENDIF
 RETURN, new_file_array
 END
 
