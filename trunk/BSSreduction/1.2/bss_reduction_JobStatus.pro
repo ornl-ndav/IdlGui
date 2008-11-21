@@ -426,11 +426,11 @@ IF (nbr GT 0) THEN BEGIN
     full_err_file = path + err_file
 ;display file into widget_text
     display_file, Event, full_out_file, 'job_status_std_out_text'
-    label = 'StdOut: ' + full_out_file
-    PutTextInTextField, Event, 'job_status_std_out_label', label
+    label = 'Stdout: ' + full_out_file
+    putTextFieldValue, Event, 'job_status_std_out_label', label[0], 0
     display_file, Event, full_err_file, 'job_status_std_err_text'
-    label = 'StdErr: ' + full_err_file
-    PutTextInTextField, Event, 'job_status_std_err_label', label
+    label = 'Stderr: ' + full_err_file
+    putTextFieldValue, Event, 'job_status_std_err_label', label[0], 0
 ENDIF
 END
 

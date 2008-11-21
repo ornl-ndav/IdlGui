@@ -118,7 +118,7 @@ sStdoutLabel = { size: [sStdoutText.size[0]+$
                         XYoff[0],$
                         sStdoutText.size[1]+$
                         XYoff[1]],$
-                 value: 'Stdout: N/A',$
+                 value: 'Stdout: N/A                                        ',$
                  uname: 'job_status_std_out_label'}
 
 XYoff = [5,0] ;std_err
@@ -135,7 +135,7 @@ sStderrLabel = { size: [sStderrText.size[0]+$
                         XYoff[0],$
                         sStderrText.size[1]+$
                         XYoff[1]],$
-                 value: 'Stderr: N/A',$
+                 value: 'Stderr: N/A                                        ',$
                  uname: 'job_status_std_err_label'}
 
 ;Base output file name ........................................................
@@ -262,7 +262,8 @@ wOutlabel = WIDGET_LABEL(Base,$
                          XOFFSET = sStdoutLabel.size[0],$
                          YOFFSET = sStdoutLabel.size[1],$
                          VALUE   = sStdoutLabel.value,$
-                         UNAME   = sStdoutLabel.uname)
+                         UNAME   = sStdoutLabel.uname,$
+                         /ALIGN_LEFT)
 
 wErr = WIDGET_TEXT(Base,$ ;stderr
                    XOFFSET   = sStderrText.size[0],$
@@ -278,7 +279,8 @@ wErrlabel = WIDGET_LABEL(Base,$
                          XOFFSET = sStderrLabel.size[0],$
                          YOFFSET = sStderrLabel.size[1],$
                          VALUE   = sStdErrLabel.value,$
-                         UNAME   = sStdErrLabel.uname)
+                         UNAME   = sStdErrLabel.uname,$
+                         /ALIGN_LEFT)
 
 ;Base output file name ........................................................
 Outputbase = WIDGET_BASE(Base,$

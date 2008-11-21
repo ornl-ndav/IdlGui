@@ -52,15 +52,19 @@ wRoot = WIDGET_TREE(wTree,$
 END
 
 ;------------------------------------------------------------------------------
-PRO IDLrefreshRoot_make_leaf, Event, wRoot, file_name, uname
+PRO IDLrefreshRoot_make_leaf, Event, $
+                              wRoot, $
+                              file_name, $
+                              uname, $
+                              full_file_name
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
- IF (FILE_TEST(file_name)) THEN BEGIN
+ IF (FILE_TEST(full_file_name)) THEN BEGIN
      icon = (*(*global).icon_ok)
  ENDIF ELSE BEGIN
      icon = (*(*global).icon_failed)
  ENDELSE
 wTree = WIDGET_TREE(wRoot,$
-                    value  = file_name,$
+                    VALUE  = file_name,$
                     UNAME  = uname,$
                     BITMAP = icon)
 END
@@ -92,26 +96,41 @@ IDLrefreshRoot_make_root, Event, $
 job_status_root_id[index] = wRoot
 (*(*global).job_status_root_id) = job_status_root_id
 
-nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
-i = 0
-WHILE (i LT nbr_files) DO BEGIN
-    file_name = get_file_name((*(*pMetadata)[index].files)[i])
+sz = N_ELEMENTS(job_status_uname)
+index_local = 0
+WHILE (index_local LT sz) DO BEGIN
 
-    file_name_full  = (*(*pMetadata)[index].files)[i]
-    file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
-    file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
+    nbr_files = N_ELEMENTS(*(*pMetadata)[index].files)
+    i = 0
+    WHILE (i LT nbr_files) DO BEGIN
+        
+        file_name = get_file_name((*(*pMetadata)[index_local].files)[i])
+        
+        file_name_full  = (*(*pMetadata)[index_local].files)[i]
+        file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
+        file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
 ;associate a uname to each leaf
-    leaf_uname = job_status_uname[index] + '|' + file_name
-    IF ((index + i) EQ 0) THEN BEGIN
-        leaf_uname_array = [leaf_uname]
-    ENDIF ELSE BEGIN
-        leaf_uname_array = [leaf_uname_array,leaf_uname]
-    ENDELSE
-    IDLrefreshRoot_make_leaf, Event, $
-      wRoot, $
-      file_name, $
-      leaf_uname
-    i++
+        leaf_uname = job_status_uname[index_local] + '|' + file_name
+        IF ((index_local + i) EQ 0) THEN BEGIN
+            leaf_uname_array = [leaf_uname]
+        ENDIF ELSE BEGIN
+            leaf_uname_array = [leaf_uname_array,leaf_uname]
+        ENDELSE
+        IF (index EQ index_local) THEN BEGIN ;plot only for index of interest
+            aMetadataValue = (*(*(*global).pMetadataValue))
+            path = aMetadataValue[index_local+1,7]
+            full_file_name = path + file_name
+            
+            IDLrefreshRoot_make_leaf, Event, $
+              wRoot, $
+              file_name, $
+              leaf_uname, $
+              full_file_name
+        ENDIF
+        i++
+    ENDWHILE
+
+    index_local++
 ENDWHILE
 
 (*(*global).leaf_uname_array) = leaf_uname_array

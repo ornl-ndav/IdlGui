@@ -55,9 +55,9 @@ wRoot = WIDGET_TREE(wTree,$
 END
 
 ;------------------------------------------------------------------------------
-PRO make_leaf_FOR_make_tree, Event, wRoot, file_name, uname
+PRO make_leaf_FOR_make_tree, Event, wRoot, file_name, uname, full_file_name
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-IF (FILE_TEST(file_name)) THEN BEGIN
+IF (FILE_TEST(full_file_name)) THEN BEGIN
     icon = (*(*global).icon_ok)
 ENDIF ELSE BEGIN
     icon = (*(*global).icon_failed)
@@ -124,7 +124,14 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
             ENDIF ELSE BEGIN
                 leaf_uname_array = [leaf_uname_array,leaf_uname]
             ENDELSE
-            make_leaf_FOR_make_tree, Event, wRoot, file_name, leaf_uname
+            aMetadataValue = (*(*(*global).pMetadataValue))
+            path = aMetadataValue[index+1,7]
+            full_file_name = path + file_name
+            make_leaf_FOR_make_tree, Event, $
+              wRoot, $
+              file_name, $
+              leaf_uname, $
+              full_file_name
             i++
         ENDWHILE
         absolute_leaf_index[index] = i
