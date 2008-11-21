@@ -415,6 +415,7 @@ IF (nbr GT 0) THEN BEGIN
     path = aMetadataValue[index+1,7]
 ;get output path
     out_files = (*(*pMetadata)[index].out_files)
+
     out_files = out_files[leaf_index]
     out_file  = STRSPLIT(out_files,':',/EXTRACT)
     out_file  = STRCOMPRESS(out_file[1],/REMOVE_ALL)

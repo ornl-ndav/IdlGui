@@ -87,6 +87,7 @@ job_status_root_status[0]           = 1
 (*global).job_status_first_plot     = 0
 (*(*global).job_status_root_status) = job_status_root_status
 absolute_leaf_index                 = INTARR(nbr_jobs)
+absolute_leaf_index_offset          = 0
 
 index = 0
 WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
@@ -134,10 +135,10 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
               full_file_name
             i++
         ENDWHILE
-        absolute_leaf_index[index] = i
+        absolute_leaf_index[index] = i + absolute_leaf_index_offset
+        absolute_leaf_index_offset = absolute_leaf_index[index]
     ENDIF
-    
-    index++
+        index++
 ENDWHILE
 
 (*(*global).job_status_uname)    = job_status_uname

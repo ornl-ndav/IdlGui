@@ -1098,12 +1098,14 @@ index = 0
 WHILE (index LT sz) DO BEGIN
     uname = leaf_uname[index]
     IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
-
         absolute_leaf_index = (*(*global).absolute_leaf_index)
-        WhichFolderIndex = WHERE(index GE absolute_leaf_index, nbr)
-        display_contain_OF_job_status, Event, (nbr-1)
+        WhichFolderIndex = WHERE(absolute_leaf_index GT index, nbr)
+        display_contain_OF_job_status, Event, WhichFolderIndex[0]
+
+        LeafAbsoluteIndex = WHERE(index GE absolute_leaf_index, nbr)
         IF (nbr GT 0) THEN BEGIN
-            real_leaf_index = index - absolute_leaf_index[WhichFolderIndex[0]]
+            real_leaf_index = index - $
+              absolute_leaf_index[LeafAbsoluteIndex[nbr-1]]
             index = real_leaf_index
         ENDIF
         getOutErrFile, Event, uname, index ;_job_status
