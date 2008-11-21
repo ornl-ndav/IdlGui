@@ -92,10 +92,11 @@ IF (nbr_jobs GT 0) THEN BEGIN
     make_main_tree, Event, wTree
 ENDIF
 
-job_status_uname    = (*(*global).job_status_uname)
-job_status_root_id  = (*(*global).job_status_root_id)
-leaf_uname_array    = (*(*global).leaf_uname_array)
-absolute_leaf_index = INTARR(nbr_jobs)
+job_status_uname           = (*(*global).job_status_uname)
+job_status_root_id         = (*(*global).job_status_root_id)
+leaf_uname_array           = (*(*global).leaf_uname_array)
+absolute_leaf_index        = INTARR(nbr_jobs)
+absolute_leaf_index_offset = 0
 
 sz = N_ELEMENTS(job_status_uname)
 index = 0
@@ -138,7 +139,8 @@ WHILE (index LT sz) DO BEGIN
         ENDIF
         i++
     ENDWHILE
-    absolute_leaf_index[index] = i
+    absolute_leaf_index[index] = i + absolute_leaf_index_offset
+    absolute_leaf_index_offset = absolute_leaf_index[index]
 ;ENDIF
     job_status_root_id[index] = wRoot
     

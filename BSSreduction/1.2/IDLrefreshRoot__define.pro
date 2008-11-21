@@ -77,10 +77,12 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 job_status_root_id = (*(*global).job_status_root_id)
 widget_control, job_status_root_id[index], /DESTROY
 
-pMetadata        = (*(*global).pMetadata)
-job_status_uname = (*(*global).job_status_uname)
-leaf_uname_array = (*(*global).leaf_uname_array)
-
+pMetadata                  = (*(*global).pMetadata)
+job_status_uname           = (*(*global).job_status_uname)
+leaf_uname_array           = (*(*global).leaf_uname_array)
+nbr_jobs                   = (size(*pMetadata))(1)
+absolute_leaf_index        = INTARR(nbr_jobs)
+absolute_leaf_index_offset = 0
 ;recovering root id
 wRoot = job_status_root_id[index]
 wTree = (*global).TreeID
@@ -129,11 +131,13 @@ WHILE (index_local LT sz) DO BEGIN
         ENDIF
         i++
     ENDWHILE
-
+    absolute_leaf_index[index_local] = i + absolute_leaf_index_offset
+    absolute_leaf_index_offset = absolute_leaf_index[index_local]
     index_local++
 ENDWHILE
 
-(*(*global).leaf_uname_array) = leaf_uname_array
+(*(*global).absolute_leaf_index) = absolute_leaf_index
+(*(*global).leaf_uname_array)    = leaf_uname_array
 
 RETURN, 1
 END
