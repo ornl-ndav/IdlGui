@@ -1058,37 +1058,38 @@ IF ((*global).LoadingConfig EQ 0) THEN BEGIN
 ENDIF
 
 ;loop through all the jobs to find out which one the user clicked
- job_status_uname = (*(*global).job_status_uname)
- sz = N_ELEMENTS(job_status_uname)
- index = 0
- job_status_root_status = (*(*global).job_status_root_status)
- WHILE (index LT sz) DO BEGIN
-      uname = job_status_uname[index]
-      IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
+job_status_uname = (*(*global).job_status_uname)
+sz = N_ELEMENTS(job_status_uname)
+index = 0
+job_status_root_status = (*(*global).job_status_root_status)
+WHILE (index LT sz) DO BEGIN
+    uname = job_status_uname[index]
 
-          label = 'REFRESHING LIST OF JOBS ... '
-          putButtonValue, Event, 'refresh_list_of_jobs_button', label
+    IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
 
-          display_contain_OF_job_status, Event, index ;_Job_status
-          (*global).igs_selected_index = index
+        label = 'REFRESHING LIST OF JOBS ... '
+        putButtonValue, Event, 'refresh_list_of_jobs_button', label
+        
+        display_contain_OF_job_status, Event, index ;_Job_status
+        (*global).igs_selected_index = index
+        
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+        expanded_status = WIDGET_INFO(id, /TREE_EXPANDED)
 
-          id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-          expanded_status = WIDGET_INFO(id, /TREE_EXPANDED)
-          
-          IF (job_status_root_status[index] NE expanded_status) THEN BEGIN
-              job_status_root_status[index] = expanded_status
-              IF (expanded_status EQ 1L) THEN BEGIN
-                  iRefresh = OBJ_NEW('IDLrefreshRoot', Event, index)
-                  OBJ_DESTROY, iRefresh
-              ENDIF
-          ENDIF
+        IF (job_status_root_status[index] NE expanded_status) THEN BEGIN
+            job_status_root_status[index] = expanded_status
+            IF (expanded_status EQ 1L) THEN BEGIN
+                iRefresh = OBJ_NEW('IDLrefreshRoot', Event, index)
+                OBJ_DESTROY, iRefresh
+            ENDIF
+        ENDIF
 ;put time stamp
-          updateRefreshButtonLabel, Event ;_GUI
-          GOTO, TheEnd
-      ENDIF
-      index++
-  ENDWHILE
-  (*(*global).job_status_root_status) = job_status_root_status
+        updateRefreshButtonLabel, Event ;_GUI
+        GOTO, TheEnd
+    ENDIF
+    index++
+ENDWHILE
+(*(*global).job_status_root_status) = job_status_root_status
 
 leaf_uname = (*(*global).leaf_uname_array)
 sz = N_ELEMENTS(leaf_uname)
@@ -1096,6 +1097,9 @@ index = 0
 WHILE (index LT sz) DO BEGIN
     uname = leaf_uname[index]
     IF (Event.id EQ WIDGET_INFO(wWidget, FIND_BY_UNAME=uname)) THEN BEGIN
+
+        print, 'here'
+
         absolute_leaf_index = (*(*global).absolute_leaf_index)
         WhichFolderIndex = WHERE(index GE absolute_leaf_index, nbr)
         IF (nbr GT 0) THEN BEGIN
@@ -1109,5 +1113,6 @@ WHILE (index LT sz) DO BEGIN
 ENDWHILE
 
 TheEnd:
+(*(*global).job_status_root_status) = job_status_root_status
 
 END
