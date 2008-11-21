@@ -404,7 +404,7 @@ pMetadata        = (*(*global).pMetadata)
 job_status_uname = (*(*global).job_status_uname)
 
 ;get only the first part of the uname and find the folder index
-split_array = STRSPLIT(uname,'|',/EXTRACT)
+split_array  = STRSPLIT(uname,'|',/EXTRACT)
 folder_uname = STRCOMPRESS(split_array[0],/REMOVE_ALL)
 leaf_uname   = split_array[1]
 
@@ -425,14 +425,20 @@ IF (nbr GT 0) THEN BEGIN
     full_out_file = path + out_file
     full_err_file = path + err_file
 ;display file into widget_text
-
+    display_file, Event, full_out_file, 'job_status_std_out_text'
+    display_file, Event, full_err_file, 'job_status_std_err_text'
 ENDIF
+END
 
-
-
-
-
-
-
-
+;------------------------------------------------------------------------------
+PRO display_file, Event, file_name, uname
+file_size = FILE_LINES(file_name)
+IF (file_size GT 0) THEN BEGIN
+    file_array = STRARR(file_size)
+    OPENR, 1, file_name
+    READF, 1, file_array
+    CLOSE, 1
+    putTextFieldValue, Event, uname, file_array, 0
+ENDIF ELSE BEGIN ;end of empty file
+ENDELSE
 END
