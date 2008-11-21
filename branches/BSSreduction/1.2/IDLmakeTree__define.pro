@@ -86,6 +86,7 @@ job_status_root_status              = INTARR(nbr_jobs)
 job_status_root_status[0]           = 1
 (*global).job_status_first_plot     = 0
 (*(*global).job_status_root_status) = job_status_root_status
+absolute_leaf_index                 = INTARR(nbr_jobs)
 
 index = 0
 WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
@@ -126,14 +127,16 @@ WHILE (index LT nbr_jobs) DO BEGIN ;create a tree for each job
             make_leaf_FOR_make_tree, Event, wRoot, file_name, leaf_uname
             i++
         ENDWHILE
+        absolute_leaf_index[index] = i
     ENDIF
     
     index++
 ENDWHILE
 
-(*(*global).job_status_uname)   = job_status_uname
-(*(*global).job_status_root_id) = job_status_root_id
-(*(*global).leaf_uname_array)   = leaf_uname_array
+(*(*global).job_status_uname)    = job_status_uname
+(*(*global).job_status_root_id)  = job_status_root_id
+(*(*global).leaf_uname_array)    = leaf_uname_array
+(*(*global).absolute_leaf_index) = absolute_leaf_index
 
 RETURN, 1
 END
@@ -146,3 +149,10 @@ struct = {IDLmakeTree,$
 END
 ;******************************************************************************
 ;******************************************************************************
+
+
+;(*(*global).absolute_leaf_index) = absolute_leaf_index
+;if there are 4 leaves in the first folder, 3 in the next one....
+;absolute_leaf_index = [0,4]
+;leaf_index of 7 will -> 4, that means index 1
+;real_leaf_index = 7 - absolute_leaf_index[1] = 3 (real leaf index)
