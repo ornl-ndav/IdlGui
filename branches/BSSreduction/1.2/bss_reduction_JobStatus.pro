@@ -426,19 +426,30 @@ IF (nbr GT 0) THEN BEGIN
     full_err_file = path + err_file
 ;display file into widget_text
     display_file, Event, full_out_file, 'job_status_std_out_text'
+    label = 'StdOut: ' + full_out_file
+    PutTextInTextField, Event, 'job_status_std_out_label', label
     display_file, Event, full_err_file, 'job_status_std_err_text'
+    label = 'StdErr: ' + full_err_file
+    PutTextInTextField, Event, 'job_status_std_err_label', label
 ENDIF
 END
 
 ;------------------------------------------------------------------------------
 PRO display_file, Event, file_name, uname
-file_size = FILE_LINES(file_name)
-IF (file_size GT 0) THEN BEGIN
-    file_array = STRARR(file_size)
-    OPENR, 1, file_name
-    READF, 1, file_array
-    CLOSE, 1
+IF (FILE_TEST(file_name)) THEN BEGIN ;file exist
+    file_size = FILE_LINES(file_name)
+    IF (file_size GT 0) THEN BEGIN
+        file_array = STRARR(file_size)
+        OPENR, 1, file_name
+        READF, 1, file_array
+        CLOSE, 1
+        putTextFieldValue, Event, uname, file_array, 0
+    ENDIF ELSE BEGIN            ;end of empty file
+        file_array = ['<< Empty File !>>']
+        putTextFieldValue, Event, uname, file_array, 0
+    ENDELSE
+ENDIF ELSE BEGIN
+    file_array = ['File Does not Exist!']
     putTextFieldValue, Event, uname, file_array, 0
-ENDIF ELSE BEGIN ;end of empty file
 ENDELSE
 END
