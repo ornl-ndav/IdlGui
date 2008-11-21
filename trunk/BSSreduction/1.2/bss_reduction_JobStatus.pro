@@ -445,7 +445,7 @@ IF (FILE_TEST(file_name)) THEN BEGIN ;file exist
         CLOSE, 1
         putTextFieldValue, Event, uname, file_array, 0
     ENDIF ELSE BEGIN            ;end of empty file
-        file_array = ['<< Empty File !>>']
+        file_array = ['Empty File!']
         putTextFieldValue, Event, uname, file_array, 0
     ENDELSE
 ENDIF ELSE BEGIN
@@ -453,3 +453,23 @@ ENDIF ELSE BEGIN
     putTextFieldValue, Event, uname, file_array, 0
 ENDELSE
 END
+
+;------------------------------------------------------------------------------
+PRO cleanup_err_out_widget_text, Event
+;out file
+putTextFieldValue, Event, $
+  'job_status_std_out_text', $
+  'No File Selected!',$
+  0
+label = 'Stdout: N/A'
+putTextFieldValue, Event, 'job_status_std_out_label', label[0], 0
+;err file
+putTextFieldValue, Event, $
+  'job_status_std_err_text',$
+  'No File Selected!',$
+  0
+label = 'Stderr: N/A'
+putTextFieldValue, Event, 'job_status_std_err_label', label[0], 0
+END
+
+
