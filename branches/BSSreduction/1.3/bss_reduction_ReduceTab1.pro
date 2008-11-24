@@ -1,11 +1,44 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 FUNCTION BSSreduction_GetNexusFullPath, Event, RunNumber, type, isNeXusExist
 NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
 NeXusFullName = NexusFullPath[0]
 RETURN, NeXusFullName
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This function is reached when the user enters a RunNumber and hits
 ;ENTER (REDUCE tab#1)
 PRO BSSreduction_NexusFullPath, Event, type
@@ -39,12 +72,16 @@ IF (RunNumber NE '') THEN BEGIN
     message1  = getLabelValue(event, uname_label)
     message = ' -> ' + message1 + ' :'
     AppendLogBookMessage, Event, message
-    message = '    - Searching for run number : ' + RunNumber + ' ... ' + PROCESSING
+    message = '    - Searching for run number : ' + RunNumber + ' ... ' + $
+      PROCESSING
     AppendLogBookMessage, Event, message
     
 ;searching for nexus file
     isNeXusExist = 0            ;by default, nexus file does not exist
-    NeXusFullName = BSSreduction_GetNexusFullPath(Event, RunNumber, type, isNeXusExist)
+    NeXusFullName = BSSreduction_GetNexusFullPath(Event, $
+                                                  RunNumber, $
+                                                  type, $
+                                                  isNeXusExist)
     
     IF (isNeXusExist EQ 1) THEN BEGIN
         
@@ -77,8 +114,7 @@ ENDIF  ;end of if(RunNumbr NE '')
 widget_control,hourglass=0
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This function is reached when the user updates the text field (remove
 ;a nexus full path for example) of REDUCE tab#1
 PRO BSSreduction_UpdateListOfNexus, Event, type
@@ -119,8 +155,7 @@ AppendLogBookMessage, Event, message
 widget_control,hourglass=0
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This function is reached when the user enters a Nexus filename (full
 ;path) and hits ENTER
 ;the program first checks if the file exist and if it does, add it to
@@ -186,10 +221,7 @@ widget_control,hourglass=0
 
 END
 
-
-
-
-
+;------------------------------------------------------------------------------
 ;This function is reached by the browse button of the first tab
 PRO BSSreduction_ReduceBrowseNexus, Event, type
 
@@ -200,8 +232,9 @@ widget_control,/hourglass
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-uname = type + '_browse_nexus_button'
-uname1 = type + '_list_of_runs_text'
+uname    = type + '_browse_nexus_button'
+uname1   = type + '_list_of_runs_text'
+;uname_rn = type + '_run_number_cw_field'
 
 CASE (type) OF
     'rsdf' : title1 = 'Raw Sample Data'
@@ -233,6 +266,12 @@ NexusFullFileName = DIALOG_PICKFILE(PATH = NeXusPath,$
 
 IF (NexusFullFileName NE '') THEN BEGIN
 
+;display run number in cw_field
+    iNexus = OBJ_NEW('IDLgetMetadata', NexusFullFileName)
+    RunNumber = iNexus->getRunNumber()
+    OBJ_DESTROY, iNexus
+;    putTextInTextField, Event, uname_rn, RunNumber
+
     uname_label = type + '_label'
     message1  = getLabelValue(event, uname_label)
     message = ' -> ' + message1 + ' :'
@@ -263,15 +302,10 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;turn off hourglass
-widget_control,hourglass=0
-
+WIDGET_CONTROL,HOURGLASS=0
 END
 
-
-
-
-
-
+;------------------------------------------------------------------------------
 ;This function is reached by the browse button of the first tab
 PRO BSSreduction_ReduceBrowseRoi, Event
 
