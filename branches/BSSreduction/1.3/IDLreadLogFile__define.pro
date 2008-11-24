@@ -46,6 +46,8 @@ END
 FUNCTION IDLreadLogFile::init, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+AppendLogBookMessage, Event, '--> Entering IDLreadLogFile'
+
 no_error = 0
 CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
@@ -54,15 +56,27 @@ IF (no_error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     config_file_name = (*global).config_file_name
     
+    AppendLogBookMessage, Event, '--> Config file name: ' + config_file_name
+
     IF (FILE_TEST(config_file_name)) THEN BEGIN
+
+        AppendLogBookMessage, Event, '---> Checking if file exist ... YES'
         
 ;read file --------------------------------------------------------------------
+        AppendLogBookMessage, Event, '--> Checking size of file:'
+
         file_size  = FILE_LINES(config_file_name)
+        AppendLogBookMessage, Event, '---> Number of lines: ' + $
+          STRCOMPRESS(file_size,/REMOVE_ALL)
         IF (file_size LT 10) THEN RETURN, 0
+        AppendLogBookMessage, Event, '--> Create file_array ' + $
+          '(STARR(file_size)) ... (START)'
         file_array = STRARR(file_size)
         OPENR, 1, config_file_name
         READF, 1, file_array
         CLOSE, 1
+        AppendLogBookMessage, Event, '--> Create file_array ' + $
+          '(STARR(file_size)) ... (END)'
         
 ;determine the number of global jobs (result gives where they were ------------
 ;found!)
@@ -100,9 +114,16 @@ ENDIF ELSE BEGIN
         
         index = 0
         WHILE (index LT count) DO BEGIN
+                    
+            AppendLogBookMessage, Event, '--> Working with set of data #' + $
+              STRCOMPRESS(index,/REMOVE_ALL) + ':'
+
 ;retrieve date
+            AppendLogBookMessage, Event, '---> Retrieve Data'
             sLocalInfo[index].date = file_array[start_point[index]-1]
+            
 ;retrieve list of output files
+            AppendLogBookMessage, Event, '---> Retrieve List of Output Files'
             str_index = start_point[index]+1
             end_index = end_point[index]
             nbr_files = end_index - str_index
@@ -118,11 +139,13 @@ ENDIF ELSE BEGIN
                 i++
             ENDWHILE
 ;put list of files into structure
+            AppendLogBookMessage, Event, '---> Put list into structure'
             sLocalInfo[index].files = PTR_NEW(list_OF_files)
             sLocalInfo[index].err_files = PTR_NEW(list_OF_files_err)
             sLocalInfo[index].out_files = PTR_NEW(list_OF_files_out)
 
 ;retrieve metadata
+            AppendLogBookMessage, Event, '---> Retrieve Metadata'
             j = 0
             offset = start_point_metadata[index] + 1
             WHILE (j LT nbr_metadata-1) DO BEGIN
@@ -143,7 +166,11 @@ ENDIF ELSE BEGIN
         self.sStructure = PTR_NEW(sLocalInfo)
         self.aMetadata  = PTR_NEW(aMetadata)
         
-    ENDIF
+    ENDIF ELSE BEGIN
+        
+        AppendLogBookMessage, Event, '---> Checking if file exist ... NO'
+
+    ENDELSE
 
 ENDELSE
 

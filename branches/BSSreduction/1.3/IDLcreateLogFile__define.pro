@@ -826,7 +826,7 @@ WHILE (i LT nbr_jobs) DO BEGIN
     text += ' | Stderr File: ' + shortListOfStdErrFiles[i]
     text += ' | Stdout File: ' + shortListOfStdOutFiles[i]
     final_array[i+offset] = text
-   i++
+    i++
 ENDWHILE
 i+=offset
 final_array[i++] = '***** End List of Output Files *****'

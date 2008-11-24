@@ -95,21 +95,39 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;if there is a config file
 IF (FILE_TEST((*global).config_file_name)) THEN BEGIN 
 
     label = 'REFRESHING LIST OF JOBS ... '
     putButtonValue, Event, 'refresh_list_of_jobs_button', label
+
+    text = '> Reading Log File (' + (*global).config_file_name + '):'
+    AppendLogBookMessage, Event, text
     
     iJob = OBJ_NEW('IDLreadLogFile',Event)
     IF (OBJ_VALID(iJob)) THEN BEGIN
+
+;        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING ;worked
+
         pMetadata = iJob->getStructure()
         (*(*global).pMetadata) = pMetadata
         pMetadataValue = iJob->getMetadata()
         (*(*global).pMetadataValue) = pMetadataValue
+
+        text = '-> Create Tree ... ' + PROCESSING
+        AppendLogBookMessage, Event, text
         iDesign = OBJ_NEW('IDLmakeTree', Event, pMetadata)
-        OBJ_DESTROY, iDesign
-        
+        IF (OBJ_VALID(iDesign)) THEN BEGIN
+            putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING ;worked
+            OBJ_DESTROY, iDesign
+        ENDIF ELSE BEGIN
+            putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING ;worked
+        ENDELSE
+
 ;select the first one by default and display value of this one in table
         select_first_node, Event ;Gui
         display_contain_OF_job_status, Event, 0
@@ -125,6 +143,8 @@ IF (FILE_TEST((*global).config_file_name)) THEN BEGIN
         
     ENDIF ELSE BEGIN ;error refreshing the config file (clear widget_tree)
         
+;        putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING ;worked
+
         label = 'NO MORE JOBS TO LIST !'
         putButtonValue, Event, 'refresh_list_of_jobs_button', label
         
