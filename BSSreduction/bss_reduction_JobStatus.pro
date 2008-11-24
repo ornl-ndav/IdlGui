@@ -244,6 +244,8 @@ stitch_driver = (*global).stitch_driver
 ;retrieve list of files
 index = (*global).igs_selected_index
 pMetadata       = (*(*global).pMetadata)
+aMetadataValue  = (*(*(*global).pMetadataValue))
+path            = aMetadataValue[index+1,7]
 nbr_files       = N_ELEMENTS(*(*pMetadata)[index].files)
 str_OF_files    = ''
 i = 0
@@ -254,7 +256,7 @@ WHILE (i LT nbr_files) DO BEGIN
     file_name_full  = (*(*pMetadata)[index].files)[i]
     file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
     file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-    str_OF_files += file_name 
+    str_OF_files += path+file_name 
     i++
 ENDWHILE
 
@@ -321,9 +323,10 @@ cmd_text = '-> ' + cmd + ' ... ' + PROCESSING
 AppendLogBookMessage, Event, cmd_text
 
 spawn, cmd, listening, err_listening
-err_listening = ''
 IF (err_listening[0] NE '') THEN BEGIN
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+    AppendLogBookMessage, Event, listening
+    AppendLogBookMessage, Event, err_listening
 ENDIF ELSE BEGIN
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
