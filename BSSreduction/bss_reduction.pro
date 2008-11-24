@@ -37,9 +37,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'BSSreduction'
-VERSION            = '1.2.20'
+VERSION            = '1.3.0'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'yes'
+DEBUGGING_VERSION  = 'no'
 CHECKING_PACKAGES  = 'yes'
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
