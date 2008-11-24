@@ -1086,6 +1086,9 @@ WHILE (index LT sz) DO BEGIN
 ;put time stamp
         updateRefreshButtonLabel, Event ;_GUI
         cleanup_err_out_widget_text, Event ;_Job_status
+;activate new refresh entry
+        select_n_node, Event, index
+
         GOTO, TheEnd
     ENDIF
     index++

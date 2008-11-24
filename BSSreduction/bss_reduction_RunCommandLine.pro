@@ -171,7 +171,7 @@ IF (ok_to_CONTINUE) THEN BEGIN
             cmd1 += ' --error=' + ListOfStdErrFiles[index]
             cmd2  = cmd1 + ' ' + cmd[index]
             cmd_text = '-> ' + cmd2
-        ;    spawn, cmd2, listening, err_listening
+            spawn, cmd2, listening, err_listening
             AppendLogBookMessage, Event, cmd_text
             index++
         ENDWHILE
