@@ -60,7 +60,8 @@ IF (FILE_TEST(rmdFile)) THEN BEGIN
                        field17: iXML->getValue(tag= $
                                                ['config','norm_end']),$
                        field8:  iXML->getValue(tag= $
-                                               ['config','path_replacement']),$
+                                               ['config', $
+                                                'path_replacement']) + '/',$
                        field49: iXML->getValue(tag= $
                                                ['config','detbal_temp']),$
                        field50: iXML->getValue(tag= $
