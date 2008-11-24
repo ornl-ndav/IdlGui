@@ -51,13 +51,15 @@ FUNCTION AreAllFilesFound, Event, index
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 pMetadata       = (*(*global).pMetadata)
 nbr_files       = N_ELEMENTS(*(*pMetadata)[index].files)
+aMetadataValue  = (*(*(*global).pMetadataValue))
+path            = aMetadataValue[index+1,7]
 i = 0
 all_found = 1
 WHILE (i LT nbr_files) DO BEGIN
     file_name_full  = (*(*pMetadata)[index].files)[i]
     file_name_array = STRSPLIT(file_name_full,':',/EXTRACT)
     file_name       = STRCOMPRESS(file_name_array[1],/REMOVE_ALL)
-    IF (~FILE_TEST(file_name)) THEN BEGIN
+    IF (~FILE_TEST(path + file_name)) THEN BEGIN
         all_found = 0
         BREAK
     ENDIF
@@ -196,8 +198,7 @@ aTable[1,*] = aMetadataValue[index+1,*]
 
 putTableValue, Event, 'job_status_table', aTable
 FileFoundStatus = AreAllFilesFound(Event, index)
-
-updateJobStatusOutputBase, Event, FileFoundStatus
+updateJobStatusOutputBase, Event, FileFoundStatus ;Gui
 
 ;determine default output file name
 default_output_file_name = determine_default_output_file_name(Event,index)

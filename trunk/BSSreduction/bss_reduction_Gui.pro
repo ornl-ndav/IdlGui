@@ -93,6 +93,15 @@ WIDGET_CONTROL, id, SET_TREE_SELECT=1
 END
 
 ;------------------------------------------------------------------------------
+PRO select_n_node, Event, n
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+job_status_uname = (*(*global).job_status_uname)
+wRoot = job_status_uname[n]
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=wRoot)
+WIDGET_CONTROL, id, SET_TREE_SELECT=1
+END
+
+;------------------------------------------------------------------------------
 PRO updateJobStatusOutputBase, Event, status
 SensitiveBase, Event, 'job_status_output_base', status
 END
