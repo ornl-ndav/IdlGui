@@ -87,6 +87,20 @@ IF (RunNumber NE '') THEN BEGIN
         
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
         
+;keep record of run number only if it's not the first run.
+        IF (type EQ 'rsdf') THEN BEGIN ;define default output file name
+            txt = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
+            IF (txt EQ '') THEN BEGIN
+;display run number in cw_field
+                iNexus = OBJ_NEW('IDLgetMetadata', NexusFullName)
+                RunNumber = iNexus->getRunNumber()
+                OBJ_DESTROY, iNexus
+                (*global).RunNumber = RunNumber
+                define_default_output_file_name, Event, $
+                  TYPE='archive' ;_eventcb
+            ENDIF
+        ENDIF
+    
 ;get current text in text_field
         CurrentText = getTextFieldValue(Event, uname)
         IF (CurrentText EQ '') THEN BEGIN
@@ -191,6 +205,18 @@ IF (NexusLoadedName NE '') THEN BEGIN
 
     IF (isNexusExist EQ 1) THEN BEGIN ;nexus exists
 
+;keep record of run number only if it's not the first run.
+        IF (type EQ 'rsdf') THEN BEGIN ;define default output file name
+            txt = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
+            IF (txt EQ '') THEN BEGIN
+;display run number in cw_field
+            iNexus = OBJ_NEW('IDLgetMetadata', NexusLoadedName)
+            RunNumber = iNexus->getRunNumber()
+            OBJ_DESTROY, iNexus
+            (*global).RunNumber = RunNumber
+            define_default_output_file_name, Event, TYPE='archive' ;_eventcb
+        ENDIF
+
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;get current text in text_field
@@ -200,6 +226,9 @@ IF (NexusLoadedName NE '') THEN BEGIN
         ENDIF ELSE BEGIN
             AppendTextInTextField, Event, uname1, ',' + NexusLoadedName
         ENDELSE
+        
+    ENDIF
+
 
     ENDIF ELSE BEGIN ;nexus does not exist
 
@@ -266,11 +295,18 @@ NexusFullFileName = DIALOG_PICKFILE(PATH = NeXusPath,$
 
 IF (NexusFullFileName NE '') THEN BEGIN
 
+;keep record of run number only if it's not the first run.
+    IF (type EQ 'rsdf') THEN BEGIN ;define default output file name
+        txt = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
+        IF (txt EQ '') THEN BEGIN
 ;display run number in cw_field
-    iNexus = OBJ_NEW('IDLgetMetadata', NexusFullFileName)
-    RunNumber = iNexus->getRunNumber()
-    OBJ_DESTROY, iNexus
-;    putTextInTextField, Event, uname_rn, RunNumber
+            iNexus = OBJ_NEW('IDLgetMetadata', NexusFullFileName)
+            RunNumber = iNexus->getRunNumber()
+            OBJ_DESTROY, iNexus
+            (*global).RunNumber = RunNumber
+            define_default_output_file_name, Event, TYPE='archive' ;_eventcb
+        ENDIF
+    ENDIF
 
     uname_label = type + '_label'
     message1  = getLabelValue(event, uname_label)
