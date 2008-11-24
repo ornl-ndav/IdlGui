@@ -135,7 +135,7 @@ sBase2 = { size: [sBase.size[0]+XYoff[0],$
                   ReduceInputTabSettings.size[2],$
                   530],$
            frame: 0,$
-           sensitive: 1,$  ;remove 1 and put 0 back
+           sensitive: 0,$
            uname: 'iterative_background_subtraction_base'}
 ;______________________________________________________________________________
 ;Positive transverse energy integration range ---------------------------------
