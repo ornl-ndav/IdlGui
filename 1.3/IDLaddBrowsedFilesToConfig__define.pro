@@ -36,49 +36,101 @@ FUNCTION retrieve_information_from_rmd, file_name
 file    = STRSPLIT(file_name, '.', /EXTRACT)
 rmdFile = file[0] + '.rmd'
 ;retrieve various metadata from xml file
-iXML = OBJ_NEW('IDLxmlParser',rmdFile)
-IF (OBJ_VALID(iXML)) THEN BEGIN
+IF (FILE_TEST(rmdFile)) THEN BEGIN
+    iXML = OBJ_NEW('IDLxmlParser',rmdFile)
+    IF (OBJ_VALID(iXML)) THEN BEGIN
 ;create structure
-    sStructure = { field42: iXML->getValue(tag=['config','ldb_const', $
-                                                'value']),$
-                   field86: iXML->getValue(tag=['config','Q_bins','min']),$
-                   field87: iXML->getValue(tag=['config','Q_bins','max']),$
-                   field88: iXML->getValue(tag=['config','Q_bins','delta']),$
-                   field82: iXML->getValue(tag=['config','E_bins','min']),$
-                   field83: iXML->getValue(tag=['config','E_bins','max']),$
-                   field84: iXML->getValue(tag=['config','E_bins','delta']),$
-                   field16: iXML->getValue(tag=['config','norm_start']),$
-                   field17: iXML->getValue(tag=['config','norm_end']),$
-                   field8:  iXML->getValue(tag=['config','path_replacement']),$
-                   field49: iXML->getValue(tag=['config','detbal_temp']),$
-                   field50: iXML->getValue(tag=['config','tol']),$
-                   field45: iXML->getValue(tag=['config','tof_least', $
-                                                'value']),$
-                   field46: iXML->getValue(tag=['config','et_int_range', $
-                                                'min']),$
-                   field47: iXML->getValue(tag=['config','et_int_range', $
-                                                'max']),$
-                   field48: iXML->getValue(tag=['config','et_int_range', $
-                                                'delta']),$
-                   field1:  iXML->getValue(tag=['config','data']),$
-                   field6:  iXML->getValue(tag=['config','roi_file']),$
-                   field51: iXML->getValue(tag=['config','niter']),$
-                   field52: iXML->getValue(tag=['config','cwdb_min']),$
-                   field53: iXML->getValue(tag=['config','cwdb_max']),$
-                   field44: iXML->getValue(tag=['config','chopper_lambda', $
-                                                'value']),$
-                   field43: iXML->getValue(tag=['config','chopper_freq',$
-                                                'value']),$
-                   field54: iXML->getValue(tag=['config','cwdb_small']),$
-                   field9: ''}
-    
-    full_output_file_name = iXML->getValue(tag=['config','output'])
-    output_file_name = FILE_BASENAME(full_output_file_name)
-    sStructure.field9 = output_file_name
-    OBJ_DESTROY, iXML
-
+        sStructure = { field42: iXML->getValue(tag= $
+                                               ['config','ldb_const', $
+                                                    'value']),$
+                       field86: iXML->getValue(tag= $
+                                               ['config','Q_bins','min']),$
+                       field87: iXML->getValue(tag= $
+                                               ['config','Q_bins','max']),$
+                       field88: iXML->getValue(tag= $
+                                               ['config','Q_bins','delta']),$
+                       field82: iXML->getValue(tag= $
+                                               ['config','E_bins','min']),$
+                       field83: iXML->getValue(tag= $
+                                               ['config','E_bins','max']),$
+                       field84: iXML->getValue(tag= $
+                                               ['config','E_bins','delta']),$
+                       field16: iXML->getValue(tag= $
+                                               ['config','norm_start']),$
+                       field17: iXML->getValue(tag= $
+                                               ['config','norm_end']),$
+                       field8:  iXML->getValue(tag= $
+                                               ['config','path_replacement']),$
+                       field49: iXML->getValue(tag= $
+                                               ['config','detbal_temp']),$
+                       field50: iXML->getValue(tag= $
+                                               ['config','tol']),$
+                       field45: iXML->getValue(tag= $
+                                               ['config','tof_least', $
+                                                    'value']),$
+                       field46: iXML->getValue(tag= $
+                                               ['config','et_int_range', $
+                                                    'min']),$
+                       field47: iXML->getValue(tag= $
+                                               ['config','et_int_range', $
+                                                    'max']),$
+                       field48: iXML->getValue(tag= $
+                                               ['config','et_int_range', $
+                                                    'delta']),$
+                       field1:  iXML->getValue(tag= $
+                                               ['config','data']),$
+                       field6:  iXML->getValue(tag= $
+                                               ['config','roi_file']),$
+                       field51: iXML->getValue(tag= $
+                                               ['config','niter']),$
+                       field52: iXML->getValue(tag= $
+                                               ['config','cwdb_min']),$
+                       field53: iXML->getValue(tag= $
+                                               ['config','cwdb_max']),$
+                       field44: iXML->getValue(tag= $
+                                               ['config','chopper_lambda', $
+                                                    'value']),$
+                       field43: iXML->getValue(tag=['config','chopper_freq',$
+                                                    'value']),$
+                       field54: iXML->getValue(tag=['config','cwdb_small']),$
+                       field9: ''}
+        
+        full_output_file_name = iXML->getValue(tag=['config','output'])
+        output_file_name = FILE_BASENAME(full_output_file_name)
+        sStructure.field9 = output_file_name
+        OBJ_DESTROY, iXML
+        
+    ENDIF ELSE BEGIN
+        
+        sStructure = { field42: 'N/A',$
+                       field86: 'N/A',$
+                       field87: 'N/A',$
+                       field88: 'N/A',$
+                       field82: 'N/A',$
+                       field83: 'N/A',$
+                       field84: 'N/A',$
+                       field16: 'N/A',$
+                       field17: 'N/A',$
+                       field8:  'N/A',$
+                       field49: 'N/A',$
+                       field50: 'N/A',$
+                       field45: 'N/A',$
+                       field46: 'N/A',$
+                       field47: 'N/A',$
+                       field48: 'N/A',$
+                       field1:  'N/A',$
+                       field6:  'N/A',$
+                       field51: 'N/A',$
+                       field52: 'N/A',$
+                       field53: 'N/A',$
+                       field44: 'N/A',$
+                       field43: 'N/A',$
+                       field54: 'N/A',$
+                       field9:  'N/A'}
+        
+    ENDELSE
 ENDIF ELSE BEGIN
-
+    
     sStructure = { field42: 'N/A',$
                    field86: 'N/A',$
                    field87: 'N/A',$
@@ -104,7 +156,7 @@ ENDIF ELSE BEGIN
                    field43: 'N/A',$
                    field54: 'N/A',$
                    field9:  'N/A'}
-
+    
 ENDELSE
 
 RETURN, sStructure
@@ -387,8 +439,27 @@ sReduce = populateReduceStructureFromBrowse(sStructure)
 ;define current date
 DateTime = GenerateIsoTimeStamp()
 
-;retrieve name of all output files
+;;retrieve name of all output files
 file_name_array = list_OF_files
+
+;create array of .err and .out files names
+file_name_array_out = ReplaceExt(file_name_array, NEW='out')
+file_name_array_err = ReplaceExt(file_name_array, NEW='err')
+
+;force the location and name of .err and .out files
+output_path = (*global).default_output_path
+CD, '~', CURRENT=current_path
+expand_path = FILE_EXPAND_PATH('~/results/')
+CD, current_path
+;;; remove ~/ from expand_path
+expand_path = remove_tilda(expand_path)
+;;; add expand_path to list of std out and err files
+ListOfStdOutFiles = expand_path + file_name_array_out 
+self.file_name_array_out = PTR_NEW(ListOfStdOutFiles)
+shortListOfStdOutFiles = getBaseFileName(ListOfStdOutFiles)
+ListOfStdErrFiles = expand_path + file_name_array_err
+self.file_name_array_err = PTR_NEW(ListOfStdErrFiles)
+shortListOfStdErrFiles = getBaseFileName(ListOfStdErrFiles)
 
 ;create string array of all information from this/these job(s) ----------------
 nbr_structure_tags = N_TAGS(sReduce) 
@@ -407,8 +478,11 @@ i = 0
 final_array[1] = '***** Start List of Output Files *****'
 offset = 2
 WHILE (i LT nbr_jobs) DO BEGIN
-   final_array[i+offset] = 'Output File: ' + file_name_array[i]
-   i++
+    text  = 'Output File: ' + file_name_array[i]
+    text += ' | Stderr File: ' + shortListOfStdErrFiles[i]
+    text += ' | Stdout File: ' + shortListOfStdOutFiles[i]
+    final_array[i+offset] = text
+    i++
 ENDWHILE
 i+=offset
 final_array[i++] = '***** End List of Output Files *****'
@@ -449,6 +523,8 @@ END
 ;******  Class Define *********************************************************
 PRO IDLaddBrowsedFilesToConfig__define
 struct = {IDLaddBrowsedFilesToConfig,$
+          file_name_array_out: PTR_NEW(0L),$
+          file_name_array_err: PTR_NEW(0L),$
           var: ''}
 END
 ;******************************************************************************
