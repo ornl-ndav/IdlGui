@@ -102,6 +102,7 @@ IF (FILE_TEST(rmdFile)) THEN BEGIN
         
     ENDIF ELSE BEGIN
         
+        path = FILE_DIRNAME(file_name) + '/'
         sStructure = { field42: 'N/A',$
                        field86: 'N/A',$
                        field87: 'N/A',$
@@ -111,7 +112,7 @@ IF (FILE_TEST(rmdFile)) THEN BEGIN
                        field84: 'N/A',$
                        field16: 'N/A',$
                        field17: 'N/A',$
-                       field8:  'N/A',$
+                       field8:  path,$
                        field49: 'N/A',$
                        field50: 'N/A',$
                        field45: 'N/A',$
@@ -131,6 +132,7 @@ IF (FILE_TEST(rmdFile)) THEN BEGIN
     ENDELSE
 ENDIF ELSE BEGIN
     
+    path = FILE_DIRNAME(file_name) + '/'
     sStructure = { field42: 'N/A',$
                    field86: 'N/A',$
                    field87: 'N/A',$
@@ -140,7 +142,7 @@ ENDIF ELSE BEGIN
                    field84: 'N/A',$
                    field16: 'N/A',$
                    field17: 'N/A',$
-                   field8:  'N/A',$
+                   field8:  path,$
                    field49: 'N/A',$
                    field50: 'N/A',$
                    field45: 'N/A',$
