@@ -100,7 +100,7 @@ fbase = WIDGET_BASE(NeXusRoiTabBase,$
                     /BASE_ALIGN_CENTER)
 
 button = WIDGET_BUTTON(fbase,$
-                       VALUE     = '~/',$
+                       VALUE     = '~/results/',$
                        UNAME     = 'roi_path_button',$
                        SCR_XSIZE = 335,$
                        SCR_YSIZE = 30,$
