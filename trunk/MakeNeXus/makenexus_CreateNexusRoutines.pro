@@ -138,8 +138,7 @@ base_file_name = CNstruct.base_file_name
 NbrSteps       = CNstruct.NbrSteps
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 error_status = 0
 
 ;name of event file
@@ -154,28 +153,12 @@ ENDIF
 cmd = (*global).Event_to_Histo_Mapped 
 cmd += ' -a ' + stagingArea + ' ' + event_file
 
-;special case for REF_M
-TotalNbrPixel = 0
-IF (instrument EQ 'REF_M') THEN BEGIN
-
-;NbrPhase
-    NbrPolaStates = (*global).NbrPolaStates
-    IF (NbrPolaStates GT 1) THEN BEGIN
-        cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
-        
-        FOR i=0,(NbrPolaStates-1) DO BEGIN
-            cmd += ' -P ' + strcompress(TotalNbrPixel,/remove_all)
-            TotalNbrPixel += 77824
-        ENDFOR
-    ENDIF
-ENDIF
-
 ;total number of pixels
 TotalNbrPixel = getTotalNbrPixel(base_file_name)
-IF (instrument EQ 'REF_M' AND N_ELEMENTS(TRY_NBR) EQ 1) THEN BEGIN
-    TotalNbrPixel = 77824
-ENDIF
-cmd += ' -p ' + strcompress(TotalNbrPixel,/remove_all)
+cmd += ' -p ' + STRCOMPRESS(TotalNbrPixel,/REMOVE_ALL)
+
+cmd += ' --combine_states'
+cmd += ' --num_states ' + STRCOMPRESS((*global).NbrPolaStates,/REMOVE_ALL)
 
 ;BinningType
 IF (getBinType(Event) EQ 0) THEN BEGIN ;linear
@@ -186,12 +169,13 @@ ENDELSE
 cmd += getBinWidth(Event)
 
 ;Binning offset
-cmd += ' -O ' + getBinOffset(Event)
+cmd += ' --time_offset ' + getBinOffset(Event)
 
 ;max time
-cmd += ' -M ' + getBinMax(Event)
+cmd += ' --max_time_bin ' + getBinMax(Event)
 
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
+
     geometry_file             = (*global).mac.geometry_file
     CNstruct.geometry_file    = geometry_file
     translation_file          = (*global).mac.translation_file
@@ -199,7 +183,7 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     mapping_file              = (*global).mac.mapping_file
     CNstruct.mapping_file     = mapping_file
     
-    cmd += ' -m ' + mapping_file
+    cmd += ' --mapping ' + mapping_file
     cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
     AppendMyLogBook, Event, cmd_text
     cmd_text = '> Creating Histo Mapped Files: '
@@ -208,7 +192,9 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     AppendMyLogBook, Event, cmd_text
     putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     putTextAtEndOfLogBook, Event, OK, PROCESSING
+
 ENDIF ELSE BEGIN
+
     file_array                = get_up_to_date_geo_tran_map_file(instrument)
     geometry_file             = file_array[0]
     CNstruct.geometry_file    = geometry_file
@@ -217,7 +203,7 @@ ENDIF ELSE BEGIN
     mapping_file              = file_array[2]
     CNstruct.mapping_file     = mapping_file
 
-    cmd += ' -m ' + mapping_file
+    cmd += ' --mapping ' + mapping_file
     cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
     AppendMyLogBook, Event, cmd_text
     cmd_text = '> Creating Histo Mapped Files: '
@@ -397,18 +383,17 @@ CNstruct.base_nexus = CNstruct.base_name
 CNstruct.base_name += '_neutron_histo'
 CNstruct.base_ext_name = CNstruct.base_name + '.dat'
 CNstruct.base_histo_name = CNstruct.base_name + '_mapped.dat'
-CNstruct.p0_mapped_file_name = CNstruct.base_name + '_p0_mapped.dat'
-CNstruct.p0_file_name        = CNstruct.base_name + '_p0.dat'
+;CNstruct.p0_mapped_file_name = CNstruct.base_name + '_p0_mapped.dat'
+;CNstruct.p0_file_name        = CNstruct.base_name + '_p0.dat'
 AppendMyLogBook, Event, '-> base_name           : ' + CNstruct.base_name
 AppendMyLogBook, Event, '-> base_ext_name       : ' + CNstruct.base_ext_name
 AppendMyLogBook, Event, '-> base_histo_name     : ' + CNstruct.base_histo_name
-AppendMyLogBook, Event, '-> p0_file_name        : ' + CNstruct.p0_file_name
-AppendMyLogBook, Event, '-> p0_mapped_file_name : ' + $
-  CNstruct.p0_mapped_file_name
+;AppendMyLogBook, Event, '-> p0_file_name        : ' + CNstruct.p0_file_name
+;AppendMyLogBook, Event, '-> p0_mapped_file_name : ' + $
+;  CNstruct.p0_mapped_file_name
 AppendMyLogBook, Event, '-> base_nexus          : ' + CNstruct.base_nexus
 AppendMyLogBook, Event, '-> ShortNexusName      : ' + CNstruct.ShortNexusName
 AppendMyLogBook, Event, ''
-
 END
 
 ;##############################################################################
@@ -535,11 +520,8 @@ END
 PRO SinglePola_message, Event, CNstruct
 
 CNstruct.multi_pola_state = 0            ;we are working in normal mode
-putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
-AppendMyLogBook, Event, ''
-AppendMyLogBook, Event, 'Working with the normal mode ' + $
-  '(no multi-polarization states)'
-AppendMyLogBook, Event, ''
+;putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
+;AppendMyLogBook, Event, ''
 
 END
 
@@ -594,11 +576,15 @@ cmd = 'TS_merge_preNeXus.sh ' + CNstruct.translation_file + ' ' + $
   + CNstruct.stagingArea
 cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, cmd_text
+;.nxt file should be
+nxt_file_name  = CNstruct.stagingArea + '/' + CNstruct.instrument
+nxt_file_name += '_' + CNstruct.RunNumber + '.nxt'
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
 ENDIF ELSE BEGIN
     spawn, cmd, listening, merging_error
-    IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN 
+    IF (strmatch(merging_error[0],'*java.lang.Error*') OR $
+        ~FILE_TEST(nxt_file_name)) THEN BEGIN 
 ;problem during merging
         putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
         AppendMyLogBook, Event, merging_error

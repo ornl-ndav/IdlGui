@@ -96,11 +96,12 @@ runinfoFullPath            += (*global).runinfo_ext
 
 ;get the number of steps
 NbrPolaStates = getNbrPolaState(Event, runinfoFullPath)
-(*global).NbrPolaStates = NbrPolaStates
 IF (NbrPolaStates EQ 0) THEN BEGIN
-    (*global).NbrPhase = 4
+    (*global).NbrPhase      = 4
+    (*global).NbrPolaStates = 1
 ENDIF ELSE BEGIN
-    (*global).NbrPhase = NbrPolaStates * 5
+    (*global).NbrPhase      = NbrPolaStates * 5
+    (*global).NbrPolaStates = NbrPolaStates
 ENDELSE
 END
 
@@ -433,7 +434,7 @@ FOR j=0,(sz-1) DO BEGIN
         error_status = ImportXml(Event, CNstruct)
         IF (error_status) THEN GOTO, ERROR
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
-        
+
 ;STEP6_global : get the geometry file from its location
         GetGeoMapTranFile, Event, CNstruct
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
@@ -451,110 +452,112 @@ FOR j=0,(sz-1) DO BEGIN
         DefineGeneralVariablePart2, Event, CNstruct
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
-;STEP9_global ; define polarization state (single or multi)
-        text = '> Checking if p0 state file exist: ' + $
-          CNstruct.p0_mapped_file_name $
-          + ' or ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
-        AppendMyLogBook, Event, text
-        TranslationError = 0 ;by default, everything is going to run smoothly
-        IF (!VERSION.os NE 'darwin' AND $
-            (FILE_TEST(CNstruct.p0_mapped_file_name) OR $
-             FILE_TEST(CNstruct.p0_file_name))) THEN BEGIN 
-;multi_polarization state
-            
-            CNStruct.multi_pola_state = 1 
-;we are working with the multi_polarization state
+;OLD METHOD THAT PRODUCED 4 NEXUS FILES FOR REF_M RUNS ------------------------
 
-            putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-            AppendMyLogBook, Event, $
-              '=> Entering the multi-polarization state mode'
-            AppendMyLogBook, Event, ''
-            message += '(Multi-Polarization): ... ' + CNstruct.PROCESSING
-            appendLogBook, Event, message
+;; STEP9_global ; define polarization state (single or multi)
+;         text = '> Checking if p0 state file exist: ' + $
+;           CNstruct.p0_mapped_file_name $
+;           + ' or ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
+;         AppendMyLogBook, Event, text
+;         TranslationError = 0 by default, everything is going to run smoothly
+;         IF (!VERSION.os NE 'darwin' AND $
+;             (FILE_TEST(CNstruct.p0_mapped_file_name) OR $
+;              FILE_TEST(CNstruct.p0_file_name))) THEN BEGIN 
+;; multi_polarization state
             
-                                ;work on first polarization state
-            CNstruct.polaIndex    = 0
-            CNstruct.anotherState = 1
-            WHILE (CNstruct.anotherState) DO BEGIN
-                message = '-> Polarization state file #' + $
-                  strcompress(CNstruct.polaIndex,/remove_all)
-                CNstruct.CurrentPolaStateFileName = CNstruct.base_name + $
-                  '_p' + $
-                  strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
-                CNstruct.CurrentMappedPolaStateFileName = $
-                  CNstruct.base_name + '_p' + $
-                  strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
-                message += ' is: ' + CNstruct.CurrentMappedPolaStateFileName
-                message += ' or ' + CNstruct.CurrentPolaStateFileName
-                AppendMyLogBook, Event, message
-                
-;renaming file into generic histogram mapped file
-                error_status = MultiPola_renamingHistoFile(Event,CNstruct)
-                IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
-                  GOTO, ERROR1  ;phase
-                
-;merging xml files
-                error_status = MultiPola_mergingFile(Event,CNstruct)
-                IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
-                  GOTO, ERROR1  ;phase
-                
-;translating the file
-                error_status = MultiPola_translatingFile(Event,CNstruct)
-                IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
-                  GOTO, ERROR1  ;phase
-                
-;renaming nexus file
-                error_status = MultiPola_renamingFile(Event,CNstruct)
-                IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
-                  GOTO, ERROR1  ;phase
-                
-;checking if there is another pola. (check if nexus exist)
-                ++CNstruct.polaIndex
-                file_name = CNstruct.base_name + '_p' + $
-                  strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
-                file_name_mapped = CNstruct.base_name + $
-                  '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + $
-                  '_mapped.dat'
-                IF (FILE_TEST(file_name) OR $
-                    FILE_TEST(file_name_mapped)) THEN BEGIN
-                    CNstruct.anotherState = 1 ;YES, CONTINUE
-                ENDIF ELSE BEGIN
-                    CNstruct.anotherState = 0 ;NO, STOP NOW
-                ENDELSE
-                AppendMyLogBook, Event, ''
-                
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
-                  GOTO, ERROR1  ;phase
-                
-            ENDWHILE
+;             CNStruct.multi_pola_state = 1 
+;; we are working with the multi_polarization state
+
+;             putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
+;             AppendMyLogBook, Event, $
+;               '=> Entering the multi-polarization state mode'
+;             AppendMyLogBook, Event, ''
+;             message += '(Multi-Polarization): ... ' + CNstruct.PROCESSING
+;             appendLogBook, Event, message
             
-        ENDIF ELSE BEGIN
+;                                 work on first polarization state
+;             CNstruct.polaIndex    = 0
+;             CNstruct.anotherState = 1
+;             WHILE (CNstruct.anotherState) DO BEGIN
+;                 message = '-> Polarization state file #' + $
+;                   strcompress(CNstruct.polaIndex,/remove_all)
+;                 CNstruct.CurrentPolaStateFileName = CNstruct.base_name + $
+;                   '_p' + $
+;                   strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
+;                 CNstruct.CurrentMappedPolaStateFileName = $
+;                   CNstruct.base_name + '_p' + $
+;                   strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
+;                 message += ' is: ' + CNstruct.CurrentMappedPolaStateFileName
+;                 message += ' or ' + CNstruct.CurrentPolaStateFileName
+;                 AppendMyLogBook, Event, message
+                
+;; renaming file into generic histogram mapped file
+;                 error_status = MultiPola_renamingHistoFile(Event,CNstruct)
+;                 IF (error_status) THEN GOTO, ERROR
+;                 IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+;                   GOTO, ERROR1  phase
+                
+;; merging xml files
+;                 error_status = MultiPola_mergingFile(Event,CNstruct)
+;                 IF (error_status) THEN GOTO, ERROR
+;                 IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+;                   GOTO, ERROR1  phase
+                
+;; translating the file
+;                 error_status = MultiPola_translatingFile(Event,CNstruct)
+;                 IF (error_status) THEN GOTO, ERROR
+;                 IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+;                   GOTO, ERROR1  phase
+                
+;; renaming nexus file
+;                 error_status = MultiPola_renamingFile(Event,CNstruct)
+;                 IF (error_status) THEN GOTO, ERROR
+;                 IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+;                   GOTO, ERROR1  phase
+                
+;; checking if there is another pola. (check if nexus exist)
+;                 ++CNstruct.polaIndex
+;                 file_name = CNstruct.base_name + '_p' + $
+;                   strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
+;                 file_name_mapped = CNstruct.base_name + $
+;                   '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + $
+;                   '_mapped.dat'
+;                 IF (FILE_TEST(file_name) OR $
+;                     FILE_TEST(file_name_mapped)) THEN BEGIN
+;                     CNstruct.anotherState = 1 YES, CONTINUE
+;                 ENDIF ELSE BEGIN
+;                     CNstruct.anotherState = 0 NO, STOP NOW
+;                 ENDELSE
+;                 AppendMyLogBook, Event, ''
+                
+;                 IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+;                   GOTO, ERROR1  phase
+                
+;             ENDWHILE
             
-            SinglePola_message, Event, CNstruct
-            message += '(Normal): ............... ' + CNstruct.PROCESSING
-            appendLogBook, Event, message
-            IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+;         ENDIF ELSE BEGIN
             
+        SinglePola_message, Event, CNstruct
+        message += '......................... ' + CNstruct.PROCESSING
+        appendLogBook, Event, message
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+        
 ;renaming histo.dat file
-            error_status = SinglePola_renaimingHistoFile(Event,CNstruct)
-            IF (error_status) THEN GOTO, ERROR
-            IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
-            
+        error_status = SinglePola_renaimingHistoFile(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+        
 ;merging xml fIles
-            error_status = SinglePola_mergingXmlFiles(Event,CNstruct)
-            IF (error_status) THEN GOTO, ERROR
-            IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
-            
+        error_status = SinglePola_mergingXmlFiles(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+        
 ;translating the file
-            error_status = SinglePola_translatingFiles(Event,CNstruct)
-            IF (error_status) THEN GOTO, ERROR
-            IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
-            
-        ENDELSE                 ;end of normal mode (no polarization)
+        error_status = SinglePola_translatingFiles(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+        
+;        ENDELSE                 ;end of normal mode (no polarization)
         
 ;display translation status in log book (ok if we reach that point)
         putTextAtEndOfLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
@@ -611,7 +614,7 @@ RETURN, 1
 ;GOTO
 
 error: BEGIN
-;   putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
+   putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
     validateCreateNexusButton, Event, 0
     progressBar->Destroy
     Obj_Destroy, progressBar
