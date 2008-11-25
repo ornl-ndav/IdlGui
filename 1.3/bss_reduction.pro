@@ -143,7 +143,7 @@ global = ptr_new ({ $
                     TreeBase: 0L,$
                     TreeID: 0L,$
                     RootID: 0L,$
-                    config_file_name: '~/.bss_reduction.cfg',$
+                    config_file_name: '~/.bss_reduction_js.cfg',$
                     lds_mode: 0,$
                     output_plot_path: '~/results/',$ 
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
