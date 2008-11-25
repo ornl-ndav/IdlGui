@@ -1,3 +1,37 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 Resolve_Routine, 'ref_reduction_eventcb',$
   /COMPILE_FULL_FILE            ; Load event callback routines
@@ -90,6 +124,10 @@ global = PTR_NEW ({ first_event: 1,$
                     cl_output_name: '',$ 
 ;name of file that will contain a copy of the command line 
                     nexus_bank1_path: '/entry/bank1/data',$ ;nxdir path to bank1 data
+                    nexus_bank1_path_pola0: '/entry-Off_Off/bank1/data',$
+                    nexus_bank1_path_pola1: '/entry-Off_On/bank1/data',$
+                    nexus_bank1_path_pola2: '/entry-On_Off/bank1/data',$
+                    nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
                     bank1_data: ptr_new(0L),$ ;
                     bank1_norm: ptr_new(0L),$ ;
                     miniVersion: 0,$ ;1 if this is the miniVersion and 0 if it's not
@@ -451,6 +489,47 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          MBAR         = WID_BASE_0_MBAR)
 
 (*global).main_base = MAIN_BASE
+
+;polarization state base ======================================================
+pola_base = WIDGET_BASE(MAIN_BASE,$
+                        XOFFSET   = 200,$
+                        YOFFSET   = 200,$
+                        SCR_XSIZE = 200,$
+                        SCR_YSIZE = 195,$
+                        UNAME     = 'polarization_state',$
+                        FRAME     = 10,$
+                        MAP       = 0,$
+                        /COLUMN,$
+                        /BASE_ALIGN_CENTER)
+
+label = WIDGET_LABEL(pola_base,$
+                    VALUE = 'Select a Polarization State:')
+label = WIDGET_LABEL(pola_base,$
+                     VALUE = '                                             ',$
+                     UNAME = 'pola_file_name_uname')
+group = CW_BGROUP(pola_base,$
+                  [' Off - Off',$
+                   ' Off - On',$
+                   ' On - Off',$
+                   ' On - On'],$
+                  UNAME= 'polarization_state_uname_group',$
+                  SET_VALUE = 0.0,$
+                  /EXCLUSIVE)
+
+ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
+                             /ROW)
+
+cancel_button = WIDGET_BUTTON(ok_cancel_base,$
+                              VALUE = 'CANCEL',$
+                              UNAME = 'cancel_pola_state',$
+                              XSIZE = 90)
+
+OK_button = WIDGET_BUTTON(ok_cancel_base,$
+                          VALUE = 'VALIDATE',$
+                          UNAME = 'ok_pola_state',$
+                          XSIZE = 90)
+
+;==============================================================================
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global

@@ -474,7 +474,48 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
                         /SCROLL)
 
 ;attach global structure with widget ID of widget main base widget ID
-widget_control, MAIN_BASE, SET_UVALUE=global
+WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
+
+;polarization state base ======================================================
+pola_base = WIDGET_BASE(MAIN_BASE,$
+                        XOFFSET   = 70,$
+                        YOFFSET   = 150,$
+                        SCR_XSIZE = 200,$
+                        SCR_YSIZE = 190,$
+                        UNAME     = 'polarization_state',$
+                        FRAME     = 10,$
+                        MAP       = 0,$
+                        /COLUMN,$
+                        /BASE_ALIGN_CENTER)
+
+label = WIDGET_LABEL(pola_base,$
+                    VALUE = 'Select a Polarization State:')
+label = WIDGET_LABEL(pola_base,$
+                     VALUE = '                                             ',$
+                     UNAME = 'pola_file_name_uname')
+group = CW_BGROUP(pola_base,$
+                  [' Off - Off',$
+                   ' Off - On',$
+                   ' On - Off',$
+                   ' On - On'],$
+                  UNAME= 'polarization_state_uname_group',$
+                  SET_VALUE = 0.0,$
+                  /EXCLUSIVE)
+
+ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
+                             /ROW)
+
+cancel_button = WIDGET_BUTTON(ok_cancel_base,$
+                              VALUE = 'CANCEL',$
+                              UNAME = 'cancel_pola_state',$
+                              XSIZE = 90)
+
+OK_button = WIDGET_BUTTON(ok_cancel_base,$
+                          VALUE = 'VALIDATE',$
+                          UNAME = 'ok_pola_state',$
+                          XSIZE = 90)
+
+;------------------------------------------------------------------------------
 
 ;HELP MENU in Menu Bar
 HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$

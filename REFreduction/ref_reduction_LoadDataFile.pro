@@ -241,11 +241,13 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO OpenDataNeXusFile, Event, DataRunNumber, full_nexus_name
+PRO OpenDataNeXusFile, Event, $
+                       DataRunNumber, $
+                       full_nexus_name, $
+                       POLA_STATE=pola_state
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
 instrument = (*global).instrument
@@ -269,7 +271,7 @@ LogBookText = getLogBookText(Event)
 Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
 putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
-                                ;display info about nexus file selected
+;display info about nexus file selected
 LogBookText = $
   '----> Displaying information about run number using nxsummary ..... ' $
   + PROCESSING
@@ -283,7 +285,13 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     putLogBookMessage, Event, LogBookText, Append=1
 ;dump binary data into local directory of user
     working_path = (*global).working_path
-    REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
+
+    REFReduction_DumpBinaryData, $ ;_dumpbinary.pro
+      Event, $
+      full_nexus_name, $
+      working_path, $
+      POLA_STATE=pola_state
+
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFiles and and put it in its box
         REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $

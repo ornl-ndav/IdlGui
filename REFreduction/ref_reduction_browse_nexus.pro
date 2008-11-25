@@ -31,6 +31,42 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION check_number_polarization_state, Event, $
+                                          nexus_file_name, $
+                                          list_pola_state
+text = '-> Number of polarization states: '
+cmd = 'nxdir ' + nexus_file_name
+SPAWN, cmd, listening
+list_pola_state = listening ;keep record of name of pola states
+sz = N_ELEMENTS(listening)
+text += STRCOMPRESS(sz,/REMOVE_ALL)
+putLogBookMessage, Event, Text, Append=1
+RETURN, sz
+END
+
+;------------------------------------------------------------------------------
+PRO select_polarization_state, Event, file_name, list_pola_state
+;get global structure
+;WIDGET_CONTROL,Event.top,GET_UVALUE=global
+MapBase, Event, 'polarization_state', 1
+
+
+
+short_file_name = FILE_BASENAME(file_name)
+putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
+text = '> Waiting for input from users (selection of the polarization ' + $
+  'state to plot)'
+putLogBookMessage, Event, Text, Append=1
+END
+
+;------------------------------------------------------------------------------
+PRO ok_polarization_state, Event
+value_selected =  getCWBgroupValue(Event,'polarization_state_uname_group')
+load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=valu_selected
+text = '> User selected polarization state #' + $
+  STRCOMPRESS(value_selected,/REMOVE_ALL)
+MapBase, Event, 'polarization_state', 0
+END
 
 ;------------------------------------------------------------------------------
 PRO BrowseDataNexus, Event
@@ -50,24 +86,37 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
 IF (nexus_file_name NE '') THEN BEGIN
     (*global).browse_data_path = new_path
 ;indicate initialization with hourglass icon
-    widget_control,/hourglass
+    WIDGET_CONTROL,/HOURGLASS
+;check how many polarization states the file has
+    nbr_pola_state = check_number_polarization_state(Event, $
+                                                     nexus_file_name,$
+                                                     list_pola_state)
+    IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-    load_data_browse_nexus, Event, nexus_file_name
+        load_data_browse_nexus, Event, nexus_file_name
+    ENDIF ELSE BEGIN
+;ask user to select the polarization state he wants to see
+        select_polarization_state, Event, nexus_file_name, list_pola_state
+    ENDELSE
 ;turn off hourglass
-    widget_control,hourglass=0
+    WIDGET_CONTROL,HOURGLASS=0
 ENDIF
 
 END
 
 ;------------------------------------------------------------------------------
-PRO load_data_browse_nexus, Event, nexus_file_name
+PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
 
 ;get run number
-iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
+IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, POLA_STATE=pola_state)
+ENDIF ELSE BEGIN
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
+ENDELSE
 DataRunNumber = iNexus->getRunNumber()
 OBJ_DESTROY, iNexus
 (*global).DataRunNumber = strcompress(DataRunNumber,/remove_all)
@@ -87,7 +136,10 @@ putDataLogBookMessage, Event, LogBookText
 ;widget_control,/hourglass
 
 NbrNexus = 1
-OpenDataNexusFile, Event, DataRunNumber, nexus_file_name
+OpenDataNexusFile, Event, $
+  DataRunNumber, $
+  nexus_file_name, $
+  POLA_STATE=pola_state
 
 ;plot data now
 REFreduction_Plot1D2DDataFile, Event 

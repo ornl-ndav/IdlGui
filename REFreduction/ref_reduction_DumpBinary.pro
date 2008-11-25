@@ -33,10 +33,10 @@
 ;==============================================================================
 ;this function is going to retrive the data from bank1
 ;and save them in (*(*global).bank)
-PRO retrieveBanksData, Event, FullNexusName, type
+PRO retrieveBanksData, Event, FullNexusName, type, POLA_STATE=pola_state
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 not_hdf5_format = 0
 CATCH, not_hdf5_format
 IF (not_hdf5_format NE 0) THEN BEGIN
@@ -49,7 +49,17 @@ ENDIF ELSE BEGIN
     fileID  = h5f_open(FullNexusName)
     (*global).isHDF5format = 1
 ;get bank data
-    fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
+    IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+        CASE (pola_state) OF
+            0: data_path = (*global).nexus_bank1_path_pola0
+            1: data_path = (*global).nexus_bank1_path_pola1
+            2: data_path = (*global).nexus_bank1_path_pola2
+            3: data_path = (*global).nexus_bank1_path_pola3
+        ENDCASE
+    ENDIF ELSE BEGIN
+        data_path = (*global).nexus_bank1_path
+    ENDELSE 
+    fieldID = h5d_open(fileID,data_path)
     if (type EQ 'data') then begin
         data = h5d_read(fieldID)
         (*(*global).bank1_data) = data
@@ -63,15 +73,18 @@ END
 ;DATA - DATA - DATA - DATA - DATA - DATA - DATA - DATA - DATA - DATA  *
 ;**********************************************************************
 ;This function dumps the binary data of the given full nexus name
-PRO RefReduction_DumpBinaryData, Event, full_nexus_name, destination_folder
+PRO RefReduction_DumpBinaryData, Event, $
+                                 full_nexus_name, $
+                                 destination_folder, $
+                                 POLA_STATE=pola_state
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;tmp_file_name = (*global).data_tmp_dat_file
 RefReduction_DumpBinary, $
   Event, $
   full_nexus_name, $
-  'data'
+  'data', $
+  POLA_STATE=pola_state
 END
 
 ;This function dumps the binary data of the given full nexus name for
@@ -125,15 +138,18 @@ END
 ;DUMP_DATA - DUMP_DATA - DUMP_DATA - DUMP_DATA - DUMP_DATA - DUMP_DATA*
 ;**********************************************************************
 ;This function dumps the binary data of the given full nexus name
-PRO RefReduction_DumpBinary, Event, full_nexus_name, type
+PRO RefReduction_DumpBinary, Event, $
+                             full_nexus_name, $
+                             type, $
+                             POLA_STATE=pola_state
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 PROCESSING = (*global).processing_message ;processing message
 ;display in log book what is going on
 cmd_text = '----> Retrieving data ... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
-retrieveBanksData, Event, full_nexus_name, type
+retrieveBanksData, Event, full_nexus_name, type, POLA_STATE=pola_state
 ;tells user that dump is done
 LogBookText = getLogBookText(Event)
 Message = 'OK'
