@@ -507,14 +507,37 @@ label = WIDGET_LABEL(pola_base,$
 label = WIDGET_LABEL(pola_base,$
                      VALUE = '                                             ',$
                      UNAME = 'pola_file_name_uname')
-group = CW_BGROUP(pola_base,$
-                  [' Off - Off',$
-                   ' Off - On',$
-                   ' On - Off',$
-                   ' On - On'],$
-                  UNAME= 'polarization_state_uname_group',$
-                  SET_VALUE = 0.0,$
-                  /EXCLUSIVE)
+
+button_base = WIDGET_BASE(pola_base,$
+                          /COLUMN,$
+                          /EXCLUSIVE)
+
+button1 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'Off_Off',$
+                        SENSITIVE = 1)
+
+button2 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'Off_On',$
+                        SENSITIVE = 1)
+
+button3 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'On_Off',$
+                        SENSITIVE = 0)
+
+button4 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'On_On',$
+                        SENSITIVE = 0)
+
+
+
+;;group = CW_BGROUP(pola_base,$
+;                  [' Off - Off',$
+;;                   ' Off - On',$
+;                   ' On - Off',$
+;                   ' On - On'],$
+;                  UNAME= 'polarization_state_uname_group',$
+;                  SET_VALUE = 0.0,$
+;                  /EXCLUSIVE)
 
 ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
                              /ROW)
