@@ -35,7 +35,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;get the current folder
-CD, CURRENT=current_folder
+;CD, CURRENT=current_folder
 
 APPLICATION = 'MakeNeXus'
 VERSION     = '1.1.0'

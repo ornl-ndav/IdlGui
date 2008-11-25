@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,37 +30,22 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
-;;
-; \brief This function outputs the ucams of the user by
-; just parsing the home directory path
-;
-; \return ucams 
-; ucams of the active account
-function get_ucams
+;This function returns the ucams of the user
+FUNCTION get_ucams
+ucams_error = 0
+CATCH, ucams_error
+IF (ucams_error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN, 'Undefined'
+ENDIF ELSE BEGIN
+    spawn, '/usr/bin/whoami', listening
+ENDELSE
+RETURN, listening[0]
+END
 
-cd , "~/"
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-
-return, ucams
-
-end
-; \}
-;;     //end of get_ucams group
-
-
-
-
-
-;;
-; \defgroup get_file_name_only; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function parses the full path
 ; of the file and output the file name only
 ;
@@ -77,12 +62,8 @@ file_name_only = file_name[length-1]
 return, file_name_only
 
 end
-; \}
-;;     //end of file_name_only group
 
-
-
-
+;------------------------------------------------------------------------------
 ;this function will remove the last part and will
 ;give back the path
 function get_path_to_file_name, file
@@ -96,15 +77,7 @@ endfor
 return, path
 end
 
-
-
-
-;;
-; \defgroup modified_string
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function will replace in the first
 ; string defined, the string given in second argument
 ; by the string given as the third argument
@@ -117,8 +90,7 @@ end
 ;
 ; \return output_string
 ; the new output string
-function modified_string, event, input_sring, old_string, new_string
-
+FUNCTION modified_string, event, input_sring, old_string, new_string
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -129,23 +101,10 @@ string_matrix = strsplit(input_string, $
                          /regex)
 
 output_string = string_matrix[0] + new_string
+RETURN, output_file_name
+END
 
-return, output_file_name
-
-end
-; \}
-;;     //end of modified_string
-
-
-
-
-
-
-;;
-; \defgroup output_into_text_box
-; \{
-;;
-
+;------------------------------------------------------------------------------
 ;;
 ; \brief This function output into the 
 ; text box window the information given as an
@@ -175,7 +134,8 @@ if (text NE '') then begin
     endelse
 endif
 
-if ((*global).ucams EQ 'ceh' && uname_destination EQ 'log_book_text') then begin
+if ((*global).ucams EQ 'ceh' && $
+    uname_destination EQ 'log_book_text') then begin
     full_logbook_filename = "~/local/DataReduction_logbook.txt"
     openu, 6,full_logbook_filename, /append
     printf, 6, text
@@ -184,20 +144,8 @@ if ((*global).ucams EQ 'ceh' && uname_destination EQ 'log_book_text') then begin
 endif
 
 end
-; \}
-;;     //end of output_into_text_box
 
-
-
-
-
-
-;;
-; \defgroup output_error_into_text_box
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function output into the 
 ; text box window the information given as an
 ; argument
@@ -218,37 +166,10 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
     full_text = 'ERROR: ' + err_listening
     widget_control, full_view_info, set_value=full_text,/append
 
-;      if ((*global).ucams EQ 'ceh') then begin
-;          full_logbook_filename = "~/local/DataReduction_logbook.txt"
-;          openu, 3,full_logbook_filename,/append
-;          nbr_lines_array = size(err_listening)
-;          nbr_lines = nbr_lines_array[1]
-;          for i=0,(nbr_lines-1) do begin
-;              printf,3, err_listening[i]
-;          endfor
-        
-;  ;close it up...
-;          close,3
-;          free_lun,3
-;      endif
-    
-endif
+ENDIF
+END
 
-end
-; \}
-;;     //end of output_error
-
-
-
-
-
-
-;;
-; \defgroup check_access
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function check if the ucams
 ; given in the command line has access to 
 ; the instrument tool is requesting
@@ -257,7 +178,6 @@ end
 ; \param instrument (INPUT) name of the instrument
 ; \param ucams (INPUT) ucams of the user
 function check_access, Event, instrument, ucams
-
 list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 
 ;0:j35:jean$
@@ -274,7 +194,8 @@ list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 ;11:Jim green (Hassina colaborator)
 ;12:andre Parizzi
 
-list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele','ceh','ks6']
+list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t', $
+                 'ele','ceh','ks6']
 
 ;check if ucams is in the list
 ucams_index=-1
@@ -333,21 +254,9 @@ CASE instrument OF
 ucams_index = 0
 
 RETURN, ucams_index
- 
 end
-; \}
-;;     //end of check_access
 
-
-
-
-
-;;
-; \defgroup remove_star
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function remove the star
 ; from the string
 ;
@@ -361,20 +270,8 @@ new_value = strsplit(value,'\*',/extract,/regex)
 
 return, new_value
 end
-; \}
-;;     //end of remove_star_from_string
 
-
-
-
-
-
-;;
-; \defgroup produce_output_file_name
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function produces the output
 ; file name
 ;
@@ -397,22 +294,8 @@ output_file_name += "_" + run_number + extension
 
 return, output_file_name 
 end
-; \}
-;;     //end of produce_output_file_name
 
-
-
-
-
-
-
-
-
-; \defgroup output_into_log_book_file
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function output the string
 ; into a predefined file (just for debugging)
 ;
@@ -434,21 +317,8 @@ close,1
 free_lun,1
 
 end
-; \}
-;;     //end of output_into_log_book_file
 
-
-
-
-
-
-
-
-; \defgroup create_tmp_folder
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function creates the temporary
 ; folder
 ;
@@ -461,19 +331,8 @@ spawn, cmd_mkdir, listening, err_listening
 
 return, [listening, err_listening]
 end
-; \}
-;;     //end of create_tmp_folder
 
-
-
-
-
-
-; \defgroup replace_string
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function replace in the string provided
 ; the first string by the second
 ; folder
@@ -487,23 +346,14 @@ end
 ; new string
 function replace_string, full_prenexus_name, string_1, string_2
 
-full_neutron_event_file_name = strsplit(full_prenexus_name,string_1,/extract,/regex)
+full_neutron_event_file_name = strsplit(full_prenexus_name, $
+                                        string_1,/extract,/regex)
 full_neutron_event_file_name += string_2
 
 return, full_neutron_event_file_name 
 end
-; \}
-;;     //end of replace_string
 
-
-
-
-
-; \defgroup get_min_run_number
-; \{
-;;
-
-;;
+;------------------------------------------------------------------------------
 ; \brief This function output the minimum
 ; run number from the list
 ;
