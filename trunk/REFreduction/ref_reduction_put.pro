@@ -453,7 +453,7 @@ ENDIF ELSE BEGIN
     coeff = 2
 ENDELSE
 
-;get ROI Ymin, Ymax ============================================================
+;get ROI Ymin, Ymax ===========================================================
 ROISelection = (*(*global).norm_roi_selection)
 ValidateSaveButton = 0
 ;check all cases (-1,-1) (-1,value) (value,-1) and (value,value)
