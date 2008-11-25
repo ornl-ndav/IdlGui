@@ -569,9 +569,10 @@ END
 ;##############################################################################
 
 FUNCTION SinglePola_mergingXmlFiles, Event, CNstruct
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 error_status = 0
 AppendMyLogBook, Event, '-> Merging the xml files:'
-cmd = 'TS_merge_preNeXus.sh ' + CNstruct.translation_file + ' ' + $
+cmd = (*global).tsmerge_link + ' ' + CNstruct.translation_file + ' ' + $
   CNstruct.geometry_file + ' ' $
   + CNstruct.stagingArea
 cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
