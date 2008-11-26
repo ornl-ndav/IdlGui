@@ -49,7 +49,7 @@ CASE (listening[0]) OF
     END
 ENDCASE
 
-cmd += (*global).driver_name' ;name of function to call
+cmd += (*global).driver_name ;name of function to call
 
 ;*****DATA*********************************************************************
 ;get Data run numbers text field

@@ -147,6 +147,7 @@ cd, CurrentFolder
 .run IDLcreateXMLJobFile__define.pro
 .run IDLsendLogBook__define.pro
 .run checking_packages.pro
+.run checking_packages_gui.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro

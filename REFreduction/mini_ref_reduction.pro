@@ -83,6 +83,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
@@ -422,6 +423,7 @@ my_package[1].version_required = ''
 my_package[1].sub_pkg_version  = './drversion'
 my_package[2].driver           = 'nxdir'
 my_package[2].version_required = ''
+(*(*global).my_package) = my_package
 
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
@@ -691,8 +693,14 @@ ENDIF ;end of debugging_version statement
 ;==============================================================================
 ;checking packages
 IF (CHECKING_PACKAGES) THEN BEGIN
-   checking_packages_routine, MAIN_BASE, my_package, global
+   checking_packages_routine, MAIN_BASE, my_package, global 
+;checking_package.pro
+   (*(*global).my_package) = my_package
+   update_gui_according_to_package, MAIN_BASE, my_package 
+;checking_package_gui.pro
 ENDIF
+
+
 
 ;==============================================================================
 ;logger message
