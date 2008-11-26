@@ -334,10 +334,12 @@ FOR j=0,(sz-1) DO BEGIN
         (*global).RunNumber     = run_number_array[j]
         
 ;check the number of steps it will have
-        checkParameters, Event, $
-          (*global).prenexus_path, $
-          (*global).RunNumber, $
-          (*global).Instrument
+          (*global).NbrPhase      = 4
+          (*global).NbrPolaStates = 1
+;   checkParameters, Event, $
+;          (*global).prenexus_path, $
+;          (*global).RunNumber, $
+;          (*global).Instrument
         
 ;define progress bar object
         title = 'Translation: ' + strcompress(j+1,/remove_all)
