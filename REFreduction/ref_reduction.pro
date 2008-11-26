@@ -51,6 +51,12 @@ DEBUGGING_VERSION  = 'no'
 MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
+CHECKING_PACKAGES  = 'yes'
+
+PACKAGE_REQUIRED_BASE = { driver:           '',$
+                          version_required: '',$
+                          found: 0,$
+                          sub_pkg_version:   ''}
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;=======================================
 
@@ -74,6 +80,7 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
@@ -191,7 +198,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;failed message to display
                    processing_message: '(PROCESSING)',$ 
 ;processing message to display
-                   ok: 'OK',$
+                    processing: '(PROCESSING)',$
+                    ok: 'OK',$
                    data_tmp_dat_file: 'tmp_data.dat',$ 
 ;default name of tmp binary data file
                    full_data_tmp_dat_file: '',$ 
@@ -412,6 +420,17 @@ BatchTable = strarr(9,20)
 ;4 user left click and is now selecting the 2nd border
 ;5 user release click and is done with selection of 2nd border
 ;------------------------------------------------------------------------
+
+;sub_pkg_version: python program that gives pkg v. of common libraries...etc
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
+;number of packages we need to check
+my_package[0].driver           = 'findnexus'
+my_package[0].version_required = ''
+my_package[1].driver           = (*global).driver_name
+my_package[1].version_required = ''
+my_package[1].sub_pkg_version  = './drversion'
+my_package[2].driver           = 'nxdir'
+my_package[2].version_required = ''
                    
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
@@ -687,7 +706,13 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ENDIF ;end of debugging_version statement
 
+;==============================================================================
+;checking packages
+IF (CHECKING_PACKAGES) THEN BEGIN
+   checking_packages_routine, MAIN_BASE, my_package, global
+ENDIF
 
+;==============================================================================
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
@@ -697,7 +722,8 @@ IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ENDIF ELSE BEGIN
     spawn, logger_message
-ENDELSE
+ ENDELSE
+;==============================================================================
 
 END
 

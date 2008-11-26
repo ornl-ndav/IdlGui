@@ -36,8 +36,9 @@ FUNCTION check_number_polarization_state, Event, $
                                           list_pola_state
 text = '-> Number of polarization states: '
 cmd = 'nxdir ' + nexus_file_name
-SPAWN, cmd, listening
+SPAWN, cmd, listening, err_listening
 list_pola_state = listening ;keep record of name of pola states
+IF (err_listening[0] NE '') THEN RETURN, -1
 sz = N_ELEMENTS(listening)
 text += STRCOMPRESS(sz,/REMOVE_ALL)
 putLogBookMessage, Event, Text, Append=1
@@ -91,16 +92,25 @@ IF (nexus_file_name NE '') THEN BEGIN
     nbr_pola_state = check_number_polarization_state(Event, $
                                                      nexus_file_name,$
                                                      list_pola_state)
+
+    print, 'nbr of pola state: ' + strcompress(nbr_pola_state) ;REMOVE_ME
+
+    IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+;turn off hourglass
+       WIDGET_CONTROL,HOURGLASS=0
+       RETURN
+    ENDIF
+
     IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-        load_data_browse_nexus, Event, nexus_file_name
+       load_data_browse_nexus, Event, nexus_file_name
     ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
-        select_polarization_state, Event, nexus_file_name, list_pola_state
+       select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
-ENDIF
+ ENDIF
 
 END
 
