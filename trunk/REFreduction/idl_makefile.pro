@@ -139,6 +139,8 @@ cd, CurrentFolder
 .run ref_reduction_BatchRepopulateGui.pro
 .run ref_reduction_LogBookInterface.pro
 .run IDLcreateXMLJobFile__define.pro
+.run IDLsendLogBook__define.pro
+.run checking_packages.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
