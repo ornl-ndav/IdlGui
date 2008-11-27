@@ -86,6 +86,7 @@ global = PTR_NEW ({ first_event: 1,$
                     browse_data_path: '~/',$
                     main_base: 0L,$
                     mouse_debugging: MOUSE_DEBUGGING,$
+                    debugging_version: DEBUGGING_VERSION,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$

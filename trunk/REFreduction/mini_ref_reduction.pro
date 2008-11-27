@@ -45,22 +45,25 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-;=======================================
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION        = 'REFreductionLow'
-VERSION            = '1.2.0'
-DEBUGGING_VERSION  = 'yes'
-MOUSE_DEBUGGING    = 'no'
-WITH_LAUNCH_SWITCH = 'no'
-WITH_JOB_MANAGER   = 'no'
-CHECKING_PACKAGES  = 'yes'
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
+VERSION            = '1.2.0'            
+DEBUGGING_VERSION  = 'yes'             ;NO
+MOUSE_DEBUGGING    = 'no'              ;NO
+WITH_LAUNCH_SWITCH = 'no' 
+WITH_JOB_MANAGER   = 'no'  
+CHECKING_PACKAGES  = 'no'              ;YES
 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
                           found: 0,$
                           sub_pkg_version:   ''}
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-;=======================================
+
+debugging_structure = {nbr_pola_state:4}
+
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
 
 LOADCT,5
 
@@ -83,12 +86,14 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
                     mouse_debugging: MOUSE_DEBUGGING,$
+                    debugging_version: DEBUGGING_VERSION,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
                     with_job_manager:  WITH_JOB_MANAGER,$
                     application:       APPLICATION,$
@@ -400,6 +405,7 @@ global = ptr_new ({ first_event: 1,$
 ;Version of REFreduction Tool
                    })
 
+(*(*global).debugging_structure) = debugging_structure
 BatchTable = strarr(9,20)
 (*(*global).BatchTable) = BatchTable
 
@@ -614,14 +620,14 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
 ;default path of Load Batch files
-    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     
 ; default tabs shown
 ;   id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
@@ -692,15 +698,13 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
-IF (CHECKING_PACKAGES) THEN BEGIN
+IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
    checking_packages_routine, MAIN_BASE, my_package, global 
 ;checking_package.pro
    (*(*global).my_package) = my_package
    update_gui_according_to_package, MAIN_BASE, my_package 
 ;checking_package_gui.pro
 ENDIF
-
-
 
 ;==============================================================================
 ;logger message
