@@ -32,47 +32,51 @@
 ;
 ;==============================================================================
 
-PRO RefReduction_NXsummary, Event, FileName, TextFieldUname
+PRO RefReduction_NXsummary, Event, $
+                            FileName, $
+                            TextFieldUname, $
+                            POLA_STATE=pola_state
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message
+OK         = (*global).ok
+FAILED     = (*global).failed
 
-LogText = '----> Display NXsummary of default selected file:'
-putLogBookMessage,Event,LogText,Append=1
-
-IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    cmd = 'head -n 22 ' + (*global).MacNXsummary
+my_package = (*(*global).my_package)
+IF (my_package[3].found EQ 0) THEN BEGIN ;nxsummary is missing
+   LogText = '--> NXsummary can not be found, no information displayed!'
+   putLogBookMessage,Event,LogText,Append=1
+   text = 'NO INFORMATION !'
+   putTextFieldArray, Event, TextFieldUname, text, 1,0
 ENDIF ELSE BEGIN
-    cmd = 'nxsummary ' + FileName + ' --verbose '
-;    spawn, 'hostname',listening
-;    CASE (listening) OF
-;        'lrac': 
-;        'mrac': 
-;        else: BEGIN
-;            if ((*global).instrument EQ (*global).REF_L) then begin
-;                cmd = 'srun -Q -p lracq ' + cmd
-;            endif else begin
-;                cmd = 'srun -Q -p mracq ' + cmd
-;            endelse
-;        END
-;    ENDCASE
-ENDELSE
-logText = '-----> cmd : ' + cmd + ' ... ' + PROCESSING
-putLogBookMessage,Event,LogText,APPEND=1
-
+   IF ((*global).debugging_version) THEN BEGIN ;debugging version
+      LogText = '--> Debugging Mode, NXsummary is faked'
+      putLogBookMessage,Event,LogText,Append=1
+      text = 'NO REAL INFORMATION HERE!'
+      putTextFieldArray, Event, TextFieldUname, text, 1,0
+   ENDIF ELSE BEGIN
+      IF (!VERSION.os EQ 'darwin') THEN BEGIN
+         cmd = 'head -n 22 ' + (*global).MacNXsummary
+      ENDIF ELSE BEGIN
+         cmd = 'nxsummary ' + FileName + ' --verbose '
+      ENDELSE
+      logText = '--> cmd : ' + cmd + ' ... ' + PROCESSING
+      putLogBookMessage,Event,LogText,APPEND=1
+      
 ;run nxsummary command
-spawn, cmd, listening, err_listening
-IF (err_listening[0] EQ '') THEN BEGIN
-    listeningSize = (size(listening))(1)
-    if (listeningSize GE 1) then begin
-        putTextFieldArray, Event, TextFieldUname, listening, listeningSize,0
-    ENDIF
-    AppendReplaceLogBookMessage, Event, 'OK', PROCESSING
-ENDIF ELSE BEGIN
-    AppendReplaceLogBookMessage, Event, 'FAILED', PROCESSING
-ENDELSE
+      SPAWN, cmd, listening, err_listening
+      IF (err_listening[0] EQ '') THEN BEGIN
+         listeningSize = (size(listening))(1)
+         if (listeningSize GE 1) then begin
+            putTextFieldArray, Event, TextFieldUname, listening, listeningSize,0
+         ENDIF
+         AppendReplaceLogBookMessage, Event, OK, PROCESSING
+      ENDIF ELSE BEGIN
+         AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+      ENDELSE
+   ENDELSE                      ;end of nxsummary found or not
+ENDELSE                         ;end of debugging version
 END
 
 

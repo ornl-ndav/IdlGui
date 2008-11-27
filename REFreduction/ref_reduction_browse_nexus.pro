@@ -169,27 +169,36 @@ ENDIF ELSE BEGIN
 ENDELSE
 DataRunNumber = iNexus->getRunNumber()
 OBJ_DESTROY, iNexus
-(*global).DataRunNumber = strcompress(DataRunNumber,/remove_all)
-;put run number in DATA RUN NUMBER cw_field
+DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
+(*global).DataRunNumber = DataRunNumber
 
 LogBookText = '-> Openning Browsed DATA Run Number: ' + DataRunNumber
-text = getLogBookText(Event)
+IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+   LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
+ENDIF
 LogBookText += ' ... ' + PROCESSING 
-if (text[0] EQ '') then begin
-    putLogBookMessage, Event, LogBookText
-endif else begin
-    putLogBookMessage, Event, LogBookText, Append=1
-endelse
+putLogBookMessage, Event, LogBookText, Append=1
 putDataLogBookMessage, Event, LogBookText
         
 ;;indicate reading data with hourglass icon
 ;widget_control,/hourglass
 
 NbrNexus = 1
-OpenDataNexusFile, Event, $
-  DataRunNumber, $
-  nexus_file_name, $
-  POLA_STATE=pola_state
+status = OpenDataNexusFile(Event, $ ;LoadDataFile.pro
+                           DataRunNumber, $
+                           nexus_file_name, $
+                           POLA_STATE=pola_state)
+
+IF (status EQ 0) THEN BEGIN
+   (*global).DataNeXusFound = 0
+   DataLogBookText = getDataLogBookText(Event)
+   putTextAtEndOfDataLogBookLastLine,$
+      Event,$
+      DataLogBookText,$
+      (*global).failed,$
+      PROCESSING
+   RETURN
+ENDIF
 
 ;plot data now
 REFreduction_Plot1D2DDataFile, Event 
@@ -203,9 +212,8 @@ DataLogBookText = getDataLogBookText(Event)
 putTextAtEndOfDataLogBookLastLine,$
   Event,$
   DataLogBookText,$
-  'OK',$
+  (*global).ok,$
   PROCESSING
-
 
 END
 

@@ -40,8 +40,7 @@ ENDIF ELSE BEGIN
    run_number_path = '/' + pola_state_name + '/run_number/'
 ENDELSE
 error_value = 0
-;CATCH, error_value
-print, run_number_path
+CATCH, error_value
 IF (error_value NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, ''
