@@ -178,4 +178,6 @@ message = '=================================================' + $
           '========================'
 IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
 
+ (*(*global).my_package) = my_package
+
 END

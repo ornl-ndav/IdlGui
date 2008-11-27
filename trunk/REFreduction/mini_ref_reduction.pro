@@ -55,17 +55,16 @@ WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'  
 CHECKING_PACKAGES  = 'no'              ;YES
 
-PACKAGE_REQUIRED_BASE = { driver:           '',$
-                          version_required: '',$
-                          found: 0,$
-                          sub_pkg_version:   ''}
-
-debugging_structure = {nbr_pola_state:4}
+debugging_structure = {nbr_pola_state:4,$
+                       list_pola_state: ['entry-Off_Off',$
+                                         'entry-Off_On',$
+                                         'entry-On_Off',$
+                                         'entry-On_On']}
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;==============================================================================
 
-LOADCT,5
+LOADCT,5, /SILENT
 
 ;get branch number
 branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
@@ -76,7 +75,6 @@ branch      = STRJOIN(branchArray[0:1],'.')
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
-
  
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams    = 'j35'
@@ -86,6 +84,8 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    data_nexus_full_path: '',$
+                    list_pola_state: PTR_NEW(0L),$	
                     debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
@@ -417,19 +417,12 @@ BatchTable = strarr(9,20)
 ;3 user right click and is now entering the back selection of 2nd border
 ;4 user left click and is now selecting the 2nd border
 ;5 user release click and is done with selection of 2nd border
-;------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
 
 ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
-my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
-;number of packages we need to check
-my_package[0].driver           = 'findnexus'
-my_package[0].version_required = ''
-my_package[1].driver           = (*global).driver_name
-my_package[1].version_required = ''
-my_package[1].sub_pkg_version  = './drversion'
-my_package[2].driver           = 'nxdir'
-my_package[2].version_required = ''
-(*(*global).my_package) = my_package
+packages_required, global
+my_package = (*(*global).my_package)
+;------------------------------------------------------------------------------
 
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
@@ -699,11 +692,9 @@ ENDIF ;end of debugging_version statement
 ;==============================================================================
 ;checking packages
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+   packages_required, global, my_package
    checking_packages_routine, MAIN_BASE, my_package, global 
-;checking_package.pro
-   (*(*global).my_package) = my_package
    update_gui_according_to_package, MAIN_BASE, my_package 
-;checking_package_gui.pro
 ENDIF
 
 ;==============================================================================

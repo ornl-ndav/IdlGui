@@ -37,17 +37,37 @@ FUNCTION check_number_polarization_state, Event, $
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 text = '-> Number of polarization states: '
 IF ((*global).debugging_version) THEN BEGIN
-   text = '
-   putLogBookMessage, Event, Text, Append=1
    debugging_structure = (*(*global).debugging_structure)
+   sz = debugging_structure.nbr_pola_state
+   text += STRCOMPRESS(sz,/REMOVE_ALL)
+   list_pola_state = debugging_structure.list_pola_state
+   (*(*global).list_pola_state) = list_pola_state
+   i=0
+   text += ' ('
+   WHILE (i LT sz) DO BEGIN
+      text += list_pola_state[i]
+      if (i LT (sz-1)) THEN text += ', '
+      i++
+   ENDWHILE
+   text += ')'
+   putLogBookMessage, Event, Text, Append=1
    RETURN, debugging_structure.nbr_pola_state
 ENDIF ELSE BEGIN
    cmd = 'nxdir ' + nexus_file_name
    SPAWN, cmd, listening, err_listening
    list_pola_state = listening  ;keep record of name of pola states
+   (*(*global).list_pola_state) = list_pola_state
    IF (err_listening[0] NE '') THEN RETURN, -1
    sz = N_ELEMENTS(listening)
    text += STRCOMPRESS(sz,/REMOVE_ALL)
+   i=0
+   text += ' ('
+   WHILE (i LT sz) DO BEGIN
+      text += listening[i]
+      if (i LT (sz-1)) THEN text += ', '
+      i++
+   ENDWHILE
+   text += ')'
    putLogBookMessage, Event, Text, Append=1
    RETURN, sz
 ENDELSE
@@ -58,9 +78,6 @@ PRO select_polarization_state, Event, file_name, list_pola_state
 ;get global structure
 ;WIDGET_CONTROL,Event.top,GET_UVALUE=global
 MapBase, Event, 'polarization_state', 1
-
-
-
 short_file_name = FILE_BASENAME(file_name)
 putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
 text = '> Waiting for input from users (selection of the polarization ' + $
@@ -70,11 +87,16 @@ END
 
 ;------------------------------------------------------------------------------
 PRO ok_polarization_state, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 value_selected =  getCWBgroupValue(Event,'polarization_state_uname_group')
-load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=valu_selected
-text = '> User selected polarization state #' + $
-  STRCOMPRESS(value_selected,/REMOVE_ALL)
 MapBase, Event, 'polarization_state', 0
+text = '> User selected polarization state #' + $
+  STRCOMPRESS(value_selected+1,/REMOVE_ALL)
+list_pola_state = (*(*global).list_pola_state)
+text += ' (' + list_pola_state[value_selected] + ')'
+putLogBookMessage, Event, Text, Append=1
+nexus_file_name = (*global).data_nexus_full_path
+load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
 END
 
 ;------------------------------------------------------------------------------
@@ -85,6 +107,8 @@ filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
 path      = (*global).browse_data_path
+text = '> Browsing for a NeXus file:'
+putLogBookMessage, Event, Text, Append=1
 nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   FILTER            = filter,$
                                   TITLE             = title, $
@@ -93,16 +117,16 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   /FIX_FILTER,$
                                   /READ)
 IF (nexus_file_name NE '') THEN BEGIN
-    (*global).browse_data_path = new_path
+   (*global).data_nexus_full_path = nexus_file_name
+   (*global).browse_data_path = new_path
+    text = '-> Nexus file name: ' + nexus_file_name
+    putLogBookMessage, Event, Text, Append=1
 ;indicate initialization with hourglass icon
     WIDGET_CONTROL,/HOURGLASS
 ;check how many polarization states the file has
     nbr_pola_state = check_number_polarization_state(Event, $
                                                      nexus_file_name,$
                                                      list_pola_state)
-
-    print, 'nbr of pola state: ' + strcompress(nbr_pola_state) ;REMOVE_ME
-
     IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
 ;turn off hourglass
        WIDGET_CONTROL,HOURGLASS=0
@@ -118,7 +142,10 @@ IF (nexus_file_name NE '') THEN BEGIN
     ENDELSE
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
- ENDIF
+ ENDIF ELSE BEGIN
+    text = '-> Operation canceled!'
+    putLogBookMessage, Event, Text, Append=1
+ ENDELSE    
 
 END
 
@@ -128,10 +155,15 @@ PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
+FAILED     = (*global).failed
 
 ;get run number
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
-    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, POLA_STATE=pola_state)
+   list_pola_state = (*(*global).list_pola_state)
+   iNexus = OBJ_NEW('IDLgetMetadata', $
+                    nexus_file_name, $
+                    POLA_STATE_NAME=list_pola_state[pola_state])
 ENDIF ELSE BEGIN
     iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
 ENDELSE

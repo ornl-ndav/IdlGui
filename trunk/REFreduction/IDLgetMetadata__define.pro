@@ -33,16 +33,11 @@
 ;==============================================================================
 
 ;This class method returns the Run Number of the given nexus
-FUNCTION get_RunNumber, fileID, POLA_STATE=pola_state
-IF (N_ELEMENTS(POLA_STATE) EQ 0) THEN BEGIN
+FUNCTION get_RunNumber, fileID, POLA_STATE_NAME=pola_state_name
+IF (N_ELEMENTS(POLA_STATE_NAME) EQ 0) THEN BEGIN
     run_number_path = '/entry/run_number/'
 ENDIF ELSE BEGIN
-    CASE (pola_state) OF
-        0: run_number_path = '/entry-Off_Off/run_number/'
-        1: run_number_path = '/entry-Off_On/run_number/'
-        2: run_number_path = '/entry-On_Off/run_number/'
-        3: run_number_path = '/entry-On_On/run_number/'
-    ENDCASE
+   run_number_path = '/' + pola_state_name + '/run_number/'
 ENDELSE
 error_value = 0
 ;CATCH, error_value
@@ -347,7 +342,8 @@ END
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
-FUNCTION IDLgetMetadata::init, nexus_full_path, POLA_STATE=pola_state
+FUNCTION IDLgetMetadata::init, nexus_full_path, $
+                               POLA_STATE_NAME=pola_state_name
 ;open hdf5 nexus file
 error_file = 0
 ;CATCH, error_file
@@ -358,26 +354,27 @@ ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
 ENDELSE
 
-IF (N_ELEMENTS(POLA_STATE) NE 0) THEN BEGIN ;NeXus file with pola states
-    self.RunNumber = get_RunNumber(fileID, POLA_STATE=pola_state)
+IF (N_ELEMENTS(POLA_STATE_NAME) NE 0) THEN BEGIN ;NeXus file with pola states
+   self.RunNumber = get_RunNumber(fileID, POLA_STATE_NAME=pola_state_NAME)
+   RETURN, 1
 ENDIF ELSE BEGIN                ;no pola state
 ;get angle (theta)
-    self.angle     = get_theta_degree(fileID)
+   self.angle     = get_theta_degree(fileID)
 ;get s1
-    self.S1        = get_s1_mm(fileID)
+   self.S1        = get_s1_mm(fileID)
 ;get s2
-    self.S2        = get_s2_mm(fileID)
+   self.S2        = get_s2_mm(fileID)
 ;get RunNumber
-    self.RunNumber = get_RunNumber(fileID)
+   self.RunNumber = get_RunNumber(fileID)
 ;close hdf5 nexus file
-    h5f_close, fileID
-    IF (self.angle NE '' AND $
-        self.S1 NE '' AND $
-        self.S2 NE '') THEN BEGIN
-        RETURN, 1
-    ENDIF ELSE BEGIN
-        RETURN, 0
-    ENDELSE
+   h5f_close, fileID
+   IF (self.angle NE '' AND $
+       self.S1 NE '' AND $
+       self.S2 NE '') THEN BEGIN
+      RETURN, 1
+   ENDIF ELSE BEGIN
+      RETURN, 0
+   ENDELSE
 ENDELSE
 END
 

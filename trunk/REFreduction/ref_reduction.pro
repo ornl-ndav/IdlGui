@@ -43,8 +43,8 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-;=======================================
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.2.0'
 DEBUGGING_VERSION  = 'no'
@@ -53,14 +53,16 @@ WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'yes'
 
-PACKAGE_REQUIRED_BASE = { driver:           '',$
-                          version_required: '',$
-                          found: 0,$
-                          sub_pkg_version:   ''}
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-;=======================================
+debugging_structure = {nbr_pola_state:4,$
+                       list_pola_state: ['entry-Off_Off',$
+                                         'entry-Off_On',$
+                                         'entry-On_Off',$
+                                         'entry-On_On']}
 
-loadct,5
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
+
+LOADCT,5, /SILENT
 
 ;get branch number
 branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
@@ -80,6 +82,8 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    data_nexus_full_path: '',$
+                    list_pola_state: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
@@ -421,17 +425,6 @@ BatchTable = strarr(9,20)
 ;4 user left click and is now selecting the 2nd border
 ;5 user release click and is done with selection of 2nd border
 ;------------------------------------------------------------------------
-
-;sub_pkg_version: python program that gives pkg v. of common libraries...etc
-my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
-;number of packages we need to check
-my_package[0].driver           = 'findnexus'
-my_package[0].version_required = ''
-my_package[1].driver           = (*global).driver_name
-my_package[1].version_required = ''
-my_package[1].sub_pkg_version  = './drversion'
-my_package[2].driver           = 'nxdir'
-my_package[2].version_required = ''
                    
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
@@ -593,19 +586,6 @@ IF (ucams EQ 'j35') THEN BEGIN
                                    UNAME = 'my_help_button')
 ENDIF
 
-;; Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-; SWITCH (listening) OF
-;     'lrac':
-;     'mrac': REF
-;     'heater': BEGIN
-;         MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;         Break
-;     END
-;     else: BEGIN
-;         miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;     END
-; ENDSWITCH
-
 structure = {with_launch_button: WITH_LAUNCH_SWITCH}
 
 MakeGuiMainTab, MAIN_BASE, $
@@ -673,18 +653,17 @@ IF (ucams EQ 'j35') THEN BEGIN
     widget_control, id, /editable
 ENDIF
 
-
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
 ;default path of Load Batch files
-    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
@@ -710,10 +689,12 @@ ENDIF ;end of debugging_version statement
 ;==============================================================================
 ;checking packages
 IF (CHECKING_PACKAGES) THEN BEGIN
+   packages_required, global, my_package
    checking_packages_routine, MAIN_BASE, my_package, global
+   update_gui_according_to_package, MAIN_BASE, my_package 
 ENDIF
-
 ;==============================================================================
+
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
