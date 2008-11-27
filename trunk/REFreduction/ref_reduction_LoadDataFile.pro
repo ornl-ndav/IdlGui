@@ -241,10 +241,10 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO OpenDataNeXusFile, Event, $
-                       DataRunNumber, $
-                       full_nexus_name, $
-                       POLA_STATE=pola_state
+FUNCTION OpenDataNeXusFile, Event, $
+                            DataRunNumber, $
+                            full_nexus_name, $
+                            POLA_STATE=pola_state
 
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -262,7 +262,7 @@ instrument = (*global).instrument
 putTextFieldValue, $
   event, $
   'reduce_data_runs_text_field', $
-  strcompress(full_nexus_name,/remove_all), $
+  STRCOMPRESS(full_nexus_name,/REMOVE_ALL), $
   0                             ;do not append
 
 ;tells the user that the NeXus file has been found
@@ -273,51 +273,49 @@ putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
 ;display info about nexus file selected
 LogBookText = $
-  '----> Displaying information about run number using nxsummary ..... ' $
-  + PROCESSING
+  '-> Displaying information about run number using nxsummary:'
 putLogBookMessage, Event, LogBookText, Append=1
-RefReduction_NXsummary, Event, full_nexus_name, 'data_file_info_text'
+RefReduction_NXsummary, Event, $
+                        full_nexus_name, $
+                        'data_file_info_text', $
+                        POLA_STATE=pola_state
 
 ;check format of NeXus file
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
-    LogBookText = '----> Is format of NeXus hdf5 ? YES'
+    LogBookText = '-> Is format of NeXus hdf5 ? YES'
     putLogBookMessage, Event, LogBookText, Append=1
+
 ;dump binary data into local directory of user
     working_path = (*global).working_path
+    status = REFReduction_DumpBinaryData(Event,$ ;_dumpbinary.pro
+                                         full_nexus_name, $
+                                         working_path, $
+                                         POLA_STATE=pola_state)
 
-    REFReduction_DumpBinaryData, $ ;_dumpbinary.pro
-      Event, $
-      full_nexus_name, $
-      working_path, $
-      POLA_STATE=pola_state
+    print, status
+stop
+
+    IF (status EQ 0) THEN RETURN, 0
 
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFiles and and put it in its box
-        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+       REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
           instrument, $
           working_path, $
           DataRunNumber
-    ENDIF
-ENDIF ELSE BEGIN
-
+    ENDIF ELSE BEGIN
+       RETURN, 0
+    ENDELSE
+ ENDIF ELSE BEGIN
     (*global).isHDF5format = 0
-    LogBookText = '---- Is format of NeXus hdf5 ? NO'
+    LogBookText = '-> Is format of NeXus hdf5 ? NO'
     putLogBookMessage, Event, LogBookText, Append=1
     LogBookText = ' !!! REFreduction does not support this file format. '
     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
     putLogBookMessage, Event, LogBookText, Append=1
-
-    ;tells the data log book that the format is wrong
-    InitialStrarr = getDataLogBookText(Event)
-    putTextAtEndOfDataLogBookLastLine, $
-      Event, $
-      InitialStrarr, $
-      (*global).failed, $
-      PROCESSING
-
-ENDELSE
-
+    RETURN, 0
+ ENDELSE
 END
 
 ;Same as previous function but this one is reached by the batch run so

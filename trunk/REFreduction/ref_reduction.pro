@@ -688,6 +688,10 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
+IF (DEBUGGING_VERSION) THEN BEGIN
+   packages_required, global, my_package
+   (*(*global).my_package) = my_package
+ENDIF
 IF (CHECKING_PACKAGES) THEN BEGIN
    packages_required, global, my_package
    checking_packages_routine, MAIN_BASE, my_package, global

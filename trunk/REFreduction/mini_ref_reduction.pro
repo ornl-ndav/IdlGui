@@ -139,7 +139,11 @@ global = ptr_new ({ first_event: 1,$
                    cl_output_name : '',$
 ;name of the file that will contain a copy of the command line
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
-                   bank1_data : ptr_new(0L),$ ;
+                    nexus_bank1_path_pola0: '/entry-Off_Off/bank1/data',$
+                    nexus_bank1_path_pola1: '/entry-Off_On/bank1/data',$
+                    nexus_bank1_path_pola2: '/entry-On_Off/bank1/data',$
+                    nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
+                    bank1_data : ptr_new(0L),$ ;
                    bank1_norm : ptr_new(0L),$ ;
                    miniVersion : 1,$
 ;1 if this is the miniVersion and 0 if it's not
@@ -419,11 +423,6 @@ BatchTable = strarr(9,20)
 ;5 user release click and is done with selection of 2nd border
 ;-----------------------------------------------------------------------------
 
-;sub_pkg_version: python program that gives pkg v. of common libraries...etc
-packages_required, global
-my_package = (*(*global).my_package)
-;------------------------------------------------------------------------------
-
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
 full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
@@ -691,6 +690,10 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
+IF (DEBUGGING_VERSION) THEN BEGIN
+   packages_required, global, my_package
+   (*(*global).my_package) = my_package
+ENDIF
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
    packages_required, global, my_package
    checking_packages_routine, MAIN_BASE, my_package, global 
