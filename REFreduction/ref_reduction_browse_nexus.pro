@@ -34,15 +34,23 @@
 FUNCTION check_number_polarization_state, Event, $
                                           nexus_file_name, $
                                           list_pola_state
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 text = '-> Number of polarization states: '
-cmd = 'nxdir ' + nexus_file_name
-SPAWN, cmd, listening, err_listening
-list_pola_state = listening ;keep record of name of pola states
-IF (err_listening[0] NE '') THEN RETURN, -1
-sz = N_ELEMENTS(listening)
-text += STRCOMPRESS(sz,/REMOVE_ALL)
-putLogBookMessage, Event, Text, Append=1
-RETURN, sz
+IF ((*global).debugging_version) THEN BEGIN
+   text = '
+   putLogBookMessage, Event, Text, Append=1
+   debugging_structure = (*(*global).debugging_structure)
+   RETURN, debugging_structure.nbr_pola_state
+ENDIF ELSE BEGIN
+   cmd = 'nxdir ' + nexus_file_name
+   SPAWN, cmd, listening, err_listening
+   list_pola_state = listening  ;keep record of name of pola states
+   IF (err_listening[0] NE '') THEN RETURN, -1
+   sz = N_ELEMENTS(listening)
+   text += STRCOMPRESS(sz,/REMOVE_ALL)
+   putLogBookMessage, Event, Text, Append=1
+   RETURN, sz
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
