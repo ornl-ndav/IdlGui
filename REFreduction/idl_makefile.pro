@@ -142,6 +142,7 @@ cd, CurrentFolder
 .run IDLsendLogBook__define.pro
 .run checking_packages.pro
 .run checking_packages_gui.pro
+.run packages_required.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
