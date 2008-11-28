@@ -292,12 +292,9 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
                                          full_nexus_name, $
                                          working_path, $
                                          POLA_STATE=pola_state)
-
-    print, status
-stop
-
+    
     IF (status EQ 0) THEN RETURN, 0
-
+    
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFiles and and put it in its box
        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
@@ -316,6 +313,7 @@ stop
     putLogBookMessage, Event, LogBookText, Append=1
     RETURN, 0
  ENDELSE
+RETURN, 1
 END
 
 ;Same as previous function but this one is reached by the batch run so

@@ -76,7 +76,6 @@ END
 ;------------------------------------------------------------------------------
 PRO select_polarization_state, Event, file_name, list_pola_state
 ;get global structure
-;WIDGET_CONTROL,Event.top,GET_UVALUE=global
 MapBase, Event, 'polarization_state', 1
 short_file_name = FILE_BASENAME(file_name)
 putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
@@ -95,8 +94,12 @@ text = '> User selected polarization state #' + $
 list_pola_state = (*(*global).list_pola_state)
 text += ' (' + list_pola_state[value_selected] + ')'
 putLogBookMessage, Event, Text, Append=1
-nexus_file_name = (*global).data_nexus_full_path
-load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+nexus_file_name = (*global).norm_nexus_full_path
+IF ((*global).pola_type EQ 'data') THEN BEGIN
+   load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+ENDIF ELSE BEGIN
+   load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
@@ -107,7 +110,7 @@ filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
 path      = (*global).browse_data_path
-text = '> Browsing for a NeXus file:'
+text = '> Browsing for a Data NeXus file:'
 putLogBookMessage, Event, Text, Append=1
 nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   FILTER            = filter,$
@@ -138,6 +141,7 @@ IF (nexus_file_name NE '') THEN BEGIN
        load_data_browse_nexus, Event, nexus_file_name
     ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
+       (*global).pola_type = 'data'
        select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
 ;turn off hourglass
@@ -180,9 +184,6 @@ LogBookText += ' ... ' + PROCESSING
 putLogBookMessage, Event, LogBookText, Append=1
 putDataLogBookMessage, Event, LogBookText
         
-;;indicate reading data with hourglass icon
-;widget_control,/hourglass
-
 NbrNexus = 1
 status = OpenDataNexusFile(Event, $ ;LoadDataFile.pro
                            DataRunNumber, $
@@ -195,7 +196,7 @@ IF (status EQ 0) THEN BEGIN
    putTextAtEndOfDataLogBookLastLine,$
       Event,$
       DataLogBookText,$
-      (*global).failed,$
+      FAILED,$
       PROCESSING
    RETURN
 ENDIF
@@ -212,7 +213,7 @@ DataLogBookText = getDataLogBookText(Event)
 putTextAtEndOfDataLogBookLastLine,$
   Event,$
   DataLogBookText,$
-  (*global).ok,$
+  OK,$
   PROCESSING
 
 END
@@ -228,7 +229,8 @@ filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
 path      = (*global).browse_data_path
-path = '/SNS/REF_M/IPTS-758/9/3981/NeXus/' ;remove_me
+text = '> Browsing for a Normalization NeXus file:'
+putLogBookMessage, Event, Text, Append=1
 nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   FILTER            = filter,$
                                   TITLE             = title, $
@@ -237,60 +239,95 @@ nexus_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
                                   /FIX_FILTER,$
                                   /READ)
 IF (nexus_file_name NE '') THEN BEGIN
+   (*global).browse_data_path = new_path
+   (*global).norm_nexus_full_path = nexus_file_name
+   text = '-> Nexus file name: ' + nexus_file_name
+   putLogBookMessage, Event, Text, Append=1
 ;indicate initialization with hourglass icon
-    widget_control,/hourglass
-    (*global).browse_data_path = new_path
-;load browse nexus file
-    load_norm_browse_nexus, Event, nexus_file_name
+   WIDGET_CONTROL,/HOURGLASS
+;check how many polarization states the file has
+   nbr_pola_state = check_number_polarization_state(Event, $
+                                                    nexus_file_name,$
+                                                    list_pola_state)
+   IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
 ;turn off hourglass
-    widget_control,hourglass=0
-ENDIF
-
+      WIDGET_CONTROL,HOURGLASS=0
+      RETURN
+   ENDIF
+   
+   IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+;load browse nexus file
+      load_norm_browse_nexus, Event, nexus_file_name
+   ENDIF ELSE BEGIN
+      (*global).pola_type = 'norm'
+;ask user to select the polarization state he wants to see
+      select_polarization_state, Event, nexus_file_name, list_pola_state
+   ENDELSE
+;turn off hourglass
+   WIDGET_CONTROL,HOURGLASS=0
+ENDIF ELSE BEGIN
+   text = '-> Operation canceled!'
+   putLogBookMessage, Event, Text, Append=1
+ENDELSE    
 END
 
 ;------------------------------------------------------------------------------
-PRO load_norm_browse_nexus, Event, nexus_file_name
+PRO load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
+FAILED     = (*global).failed
 
 ;get run number
-iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
-RunNumber = iNexus->getRunNumber()
+IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+   list_pola_state = (*(*global).list_pola_state)
+   iNexus = OBJ_NEW('IDLgetMetadata', $
+                    nexus_file_name, $
+                    POLA_STATE_NAME=list_pola_state[pola_state])
+ENDIF ELSE BEGIN
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
+ENDELSE
+NormRunNumber = iNexus->getRunNumber()
 OBJ_DESTROY, iNexus
-(*global).NormRunNumber = strcompress(RunNumber,/remove_all)
-;put run number in DATA RUN NUMBER cw_field
+NormRunNumber = STRCOMPRESS(NormRunNumber,/REMOVE_ALL)
+(*global).NormRunNumber = NormRunNumber
 
-LogBookText = '-> Openning Browsed NORMALIZATION Run Number: ' + RunNumber
-text = getLogBookText(Event)
+LogBookText = '-> Openning Browsed NORMALIZATION Run Number: ' + NormRunNumber
+IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+   LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
+ENDIF
 LogBookText += ' ... ' + PROCESSING 
-if (text[0] EQ '') then begin
-    putLogBookMessage, Event, LogBookText
-endif else begin
-    putLogBookMessage, Event, LogBookText, Append=1
-endelse
 putNormalizationLogBookMessage, Event, LogBookText
         
-;;indicate reading data with hourglass icon
-;WIDGET_CONTROL,/HOURGLASS
-
 NbrNexus = 1
-OpenNormNexusFile, Event, RunNumber, nexus_file_name
+status = OpenNormNexusFile(Event, $
+                           NormRunNumber, $
+                           nexus_file_name, $
+                           POLA_STATE=pola_state)
+IF (status EQ 0) THEN BEGIN
+   (*global).NormNeXusFound = 0
+   NormLogBookText = getNormalizationLogBookText(Event)
+   putTextAtEndOfDataLogBookLastLine,$
+      Event,$
+      NormLogBookText,$
+      FAILED,$
+      PROCESSING
+   RETURN
+ENDIF
 
-;plot data now
+;plot normalization data now
 REFreduction_Plot1D2DNormalizationFile, Event 
-
-(*global).NormNeXusFound = 1
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_normalization_gui_if_NeXus_found, Event, 1
 
 LogBookText = getNormalizationLogBookText(Event)
 putTextAtEndOfNormalizationLogBookLastLine,$
-  Event,$
-  LogBookText,$
-  'OK',$
-  PROCESSING
+   Event,$
+   LogBookText,$
+   OK,$
+   PROCESSING
 
 END

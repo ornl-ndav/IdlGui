@@ -82,7 +82,9 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    pola_type: '',$ ;'data' or 'norm'
                     data_nexus_full_path: '',$
+                    norm_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
@@ -487,6 +489,9 @@ debugger = 1 ;the world has access to the batch tab now
 
 MainBaseTitle = 'Reflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
+   MainBaseTitle += ' (DEBUGGING VERSION)'
+ENDIF
 
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$

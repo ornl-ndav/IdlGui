@@ -84,7 +84,9 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    pola_type: '',$ ;'data' or 'norm'
                     data_nexus_full_path: '',$
+                    norm_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$	
                     debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
@@ -479,6 +481,10 @@ MainBaseSize  = [50,50,905,685]
 
 MainBaseTitle = 'miniReflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
+   MainBaseTitle += ' (DEBUGGING VERSION)'
+ENDIF
+
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
                         UNAME         = 'MAIN_BASE',$

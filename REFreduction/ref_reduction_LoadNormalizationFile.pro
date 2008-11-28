@@ -236,65 +236,78 @@ RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
 
 END
 
-
-
-PRO OpenNormNeXusFile, Event, NormRunNumber, full_nexus_name
+;------------------------------------------------------------------------------
+FUNCTION OpenNormNeXusFile, Event, $
+                            NormRunNumber, $
+                            full_nexus_name, $
+                            POLA_STATE=pola_state
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-PROCESSING = (*global).processing_message ;processing message
-instrument = (*global).instrument
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  PROCESSING = (*global).processing_message ;processing message
+  instrument = (*global).instrument
+  
 ;store run number of data file
-(*global).norm_run_number = NormRunNumber
+  (*global).norm_run_number = NormRunNumber
+  
 ;store full path to NeXus
-(*global).norm_full_nexus_name = full_nexus_name
+  (*global).norm_full_nexus_name = full_nexus_name
+  
 ;display full nexus name in REDUCE tab
-putTextFieldValue, $
-  event, $
-  'reduce_normalization_runs_text_field', $
-  strcompress(full_nexus_name,/remove_all), $
-  0                             ;do not append
+  putTextFieldValue, $
+     event, $
+     'reduce_normalization_runs_text_field', $
+     strcompress(full_nexus_name,/remove_all), $
+     0   
+                                ;do not append
 ;tells the user that the NeXus file has been found
 ;get log book full text
-LogBookText = getLogBookText(Event)
-Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+  LogBookText = getLogBookText(Event)
+  Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
+  putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+  
 ;display info about nexus file selected
-LogBookText = $
-  '----> Displaying information about run number using nxsummary ..... ' + $
-  PROCESSING
-putLogBookMessage, Event, LogBookText, Append=1
-RefReduction_NXsummary, Event, full_nexus_name, 'normalization_file_info_text'
-
-IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
-    (*global).isHDF5format = 1
-    LogBookText = '----> Is format of NeXus hdf5 ? YES'
-    putLogBookMessage, Event, LogBookText, Append=1
+  LogBookText = $
+     '----> Displaying information about run number using nxsummary:'
+  putLogBookMessage, Event, LogBookText, Append=1
+  RefReduction_NXsummary, Event, $
+                          full_nexus_name, $
+                          'normalization_file_info_text', $
+                          POLA_STATE=pola_state
+  
+;check format of NeXus file
+  IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+     (*global).isHDF5format = 1
+     LogBookText = '-> Is format of NeXus hdf5 ? YES'
+     putLogBookMessage, Event, LogBookText, Append=1
+     
 ;dump binary data into local directory of user
-    working_path = (*global).working_path
-    REFReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
-    IF ((*global).isHDF5format) THEN BEGIN
+     working_path = (*global).working_path
+     status = REFReduction_DumpBinaryNormalization(Event,$
+                                                   full_nexus_name, $
+                                                   working_path, $
+                                                   POLA_STATE=pola_state)
+     IF (status EQ 0) THEN RETURN, 0
+     
+     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
-    REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
-      instrument, $
-      working_path, $
-      NormRunNumber
-    ENDIF
-ENDIF ELSE BEGIN
-    (*global).isHDF5format = 0
-    LogBookText = '---- Is format of NeXus hdf5 ? NO'
-    putLogBookMessage, Event, LogBookText, Append=1
-    LogBookText = ' !!! REFreduction does not support this file format. '
-    LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
-    putLogBookMessage, Event, LogBookText, Append=1
-;tells the norm log book that the format is wrong
-    InitialStrarr = getNormalizationLogBookText(Event)
-    putTextAtEndOfNormalizationLogBookLastLine, $
-      Event, $
-      InitialStrarr, $
-      (*global).failed, $
-      PROCESSING
-ENDELSE
+        REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
+           instrument, $
+           working_path, $
+           NormRunNumber
+     ENDIF ELSE BEGIN
+        RETURN, 0
+     ENDELSE
+  ENDIF ELSE BEGIN
+     (*global).isHDF5format = 0
+     LogBookText = '-> Is format of NeXus hdf5 ? NO'
+     putLogBookMessage, Event, LogBookText, Append=1
+     LogBookText = ' !!! REFreduction does not support this file format. '
+     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
+     putLogBookMessage, Event, LogBookText, Append=1
+     RETURN, 0
+  ENDELSE
+  RETURN, 1
 END
 
 ;Reached by the batch mode only
