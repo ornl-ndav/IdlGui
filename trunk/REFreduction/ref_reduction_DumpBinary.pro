@@ -95,6 +95,7 @@ RefReduction_DumpBinary, $
 RETURN, dump_status
 END
 
+;------------------------------------------------------------------------------
 ;This function dumps the binary data of the given full nexus name for
 ;batch run only
 PRO RefReduction_DumpBinaryData_batch, Event, $
@@ -114,19 +115,23 @@ END
 ;NORMALIZATION - NORMALIZATION - NORMALIZATION - NORMALIZATION        *
 ;**********************************************************************
 ;This function dumps the binary data of the given full nexus name
-PRO RefReduction_DumpBinaryNormalization, Event, $
+FUNCTION RefReduction_DumpBinaryNormalization, Event, $
                                           full_nexus_name, $
-                                          destination_folder
+                                          destination_folder, $
+                                          _EXTRA=_extra
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-tmp_file_name = (*global).norm_tmp_dat_file
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;tmp_file_name = (*global).norm_tmp_dat_file
 RefReduction_DumpBinary, $
-  Event, $
-  full_nexus_name, $
-  'norm'
+   Event, $
+   full_nexus_name, $
+   'norm', $
+   dump_status, $
+   _EXTRA=_extra
+RETURN, dump_status
 END
 
+;------------------------------------------------------------------------------
 ;This function dumps the binary data of the given full nexus name
 ;Batch mode only
 PRO RefReduction_DumpBinaryNormalization_batch, Event, $
