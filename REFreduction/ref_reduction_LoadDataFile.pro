@@ -53,7 +53,7 @@ WIDGET_CONTROL,/hourglass
 IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
    (*global).DataRunNumber = DataRunNumber
 
-;check if user wants archived or all nexus runs
+;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
     IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
         LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
           DataRunNumber
@@ -167,7 +167,8 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             
         endelse                 ;end of nexus found
         
-    ENDIF ELSE BEGIN            ;we just want the archived one
+;we just want the archived one
+    ENDIF ELSE BEGIN ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
 
         LogBookText = '-> Openning Archived DATA Run Number: ' + DataRunNumber
         putLogBookMessage, Event, LogBookText, Append=1
@@ -178,15 +179,11 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
         putLogBookMessage, Event, LogBookText, Append=1  
         
 ;get path to nexus run #
-        IF (!VERSION.os EQ 'darwin') THEN BEGIN
-           full_nexus_name = (*global).MacNexusFile
-           isNexusFound = 1
-        ENDIF ELSE BEGIN
-           full_nexus_name = find_full_nexus_name(Event,$
-                                                  DataRunNumber,$
-                                                  instrument,$
-                                                  isNeXusFound)
-        ENDELSE
+        full_nexus_name = find_full_nexus_name(Event,$
+                                               DataRunNumber,$
+                                               instrument,$
+                                               isNeXusFound)
+           
         
         IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
            NbrNexus = 0
@@ -209,8 +206,11 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             
         ENDIF ELSE BEGIN        ;NeXus has been found
             
+           IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
+
            NbrNexus = 1
-           
+           (*global).data_nexus_full_path = full_nexus_name
+
 ;check how many polarization states the file has
            nbr_pola_state = $
               check_number_polarization_state(Event, $

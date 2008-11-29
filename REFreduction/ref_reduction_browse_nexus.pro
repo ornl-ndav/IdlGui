@@ -36,8 +36,8 @@ PRO select_polarization_state, Event, file_name, list_pola_state
 MapBase, Event, 'polarization_state', 1
 short_file_name = FILE_BASENAME(file_name)
 putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
-text = '> Waiting for input from users (selection of the polarization ' + $
-  'state to plot)'
+text = '<USERS!> Waiting for input from users (selection of ' + $
+       'the polarization state to plot)'
 putLogBookMessage, Event, Text, Append=1
 END
 
@@ -51,18 +51,21 @@ text = '> User selected polarization state #' + $
 list_pola_state = (*(*global).list_pola_state)
 text += ' (' + list_pola_state[value_selected] + ')'
 putLogBookMessage, Event, Text, Append=1
-nexus_file_name = (*global).norm_nexus_full_path
 CASE ((*global).pola_type) OF
    'data_browse': BEGIN
+      nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'norm_browse': BEGIN
+      nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'data_load': BEGIN
+      nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'norm_load': BEGIN
+      nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
 ENDCASE
