@@ -503,16 +503,16 @@ if (PrevTabSelect NE CurrTabSelect) then begin
 endif
 END
 
-
-
+;------------------------------------------------------------------------------
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
+REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;LoadDataFile
+END
 
-REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus 
-;first Load the data file
+pro tmp
 
 ;get global structure
-widget_control,Event.top,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 IF (isArchivedDataNexusDesired(Event)) THEN BEGIN 
 ;get full list of Nexus with this run number

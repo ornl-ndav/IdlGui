@@ -102,7 +102,7 @@ CASE Event.id OF
 ;LOAD DATA file cw_field
     widget_info(wWidget, $  
                 FIND_BY_UNAME='load_data_run_number_text_field'): begin
-        REFreductionEventcb_LoadAndPlotDataFile, Event
+        REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb
         DefineDefaultOutputName, Event
     END
     

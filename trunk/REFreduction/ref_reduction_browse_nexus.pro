@@ -31,49 +31,6 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-FUNCTION check_number_polarization_state, Event, $
-                                          nexus_file_name, $
-                                          list_pola_state
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-text = '-> Number of polarization states: '
-IF ((*global).debugging_version) THEN BEGIN
-   debugging_structure = (*(*global).debugging_structure)
-   sz = debugging_structure.nbr_pola_state
-   text += STRCOMPRESS(sz,/REMOVE_ALL)
-   list_pola_state = debugging_structure.list_pola_state
-   (*(*global).list_pola_state) = list_pola_state
-   i=0
-   text += ' ('
-   WHILE (i LT sz) DO BEGIN
-      text += list_pola_state[i]
-      if (i LT (sz-1)) THEN text += ', '
-      i++
-   ENDWHILE
-   text += ')'
-   putLogBookMessage, Event, Text, Append=1
-   RETURN, debugging_structure.nbr_pola_state
-ENDIF ELSE BEGIN
-   cmd = 'nxdir ' + nexus_file_name
-   SPAWN, cmd, listening, err_listening
-   list_pola_state = listening  ;keep record of name of pola states
-   (*(*global).list_pola_state) = list_pola_state
-   IF (err_listening[0] NE '') THEN RETURN, -1
-   sz = N_ELEMENTS(listening)
-   text += STRCOMPRESS(sz,/REMOVE_ALL)
-   i=0
-   text += ' ('
-   WHILE (i LT sz) DO BEGIN
-      text += listening[i]
-      if (i LT (sz-1)) THEN text += ', '
-      i++
-   ENDWHILE
-   text += ')'
-   putLogBookMessage, Event, Text, Append=1
-   RETURN, sz
-ENDELSE
-END
-
-;------------------------------------------------------------------------------
 PRO select_polarization_state, Event, file_name, list_pola_state
 ;get global structure
 MapBase, Event, 'polarization_state', 1
@@ -95,11 +52,20 @@ list_pola_state = (*(*global).list_pola_state)
 text += ' (' + list_pola_state[value_selected] + ')'
 putLogBookMessage, Event, Text, Append=1
 nexus_file_name = (*global).norm_nexus_full_path
-IF ((*global).pola_type EQ 'data') THEN BEGIN
-   load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-ENDIF ELSE BEGIN
-   load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
-ENDELSE
+CASE ((*global).pola_type) OF
+   'data_browse': BEGIN
+      load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+   END
+   'norm_browse': BEGIN
+      load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+   END
+   'data_load': BEGIN
+      load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+   END
+   'norm_load': BEGIN
+      load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
+   END
+ENDCASE
 END
 
 ;------------------------------------------------------------------------------
@@ -141,7 +107,7 @@ IF (nexus_file_name NE '') THEN BEGIN
        load_data_browse_nexus, Event, nexus_file_name
     ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
-       (*global).pola_type = 'data'
+       (*global).pola_type = 'data_browse'
        select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
 ;turn off hourglass
@@ -176,7 +142,7 @@ OBJ_DESTROY, iNexus
 DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
 (*global).DataRunNumber = DataRunNumber
 
-LogBookText = '-> Openning Browsed DATA Run Number: ' + DataRunNumber
+LogBookText = '-> Openning DATA Run Number: ' + DataRunNumber
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
    LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
 ENDIF
@@ -259,7 +225,7 @@ IF (nexus_file_name NE '') THEN BEGIN
 ;load browse nexus file
       load_norm_browse_nexus, Event, nexus_file_name
    ENDIF ELSE BEGIN
-      (*global).pola_type = 'norm'
+      (*global).pola_type = 'norm_browse'
 ;ask user to select the polarization state he wants to see
       select_polarization_state, Event, nexus_file_name, list_pola_state
    ENDELSE
@@ -294,7 +260,7 @@ OBJ_DESTROY, iNexus
 NormRunNumber = STRCOMPRESS(NormRunNumber,/REMOVE_ALL)
 (*global).NormRunNumber = NormRunNumber
 
-LogBookText = '-> Openning Browsed NORMALIZATION Run Number: ' + NormRunNumber
+LogBookText = '-> Openning NORMALIZATION Run Number: ' + NormRunNumber
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
    LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
 ENDIF
