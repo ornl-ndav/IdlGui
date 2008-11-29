@@ -36,23 +36,26 @@
 PRO REFreduction_LoadNormalizationfile, Event, isNexusFound, NbrNexus
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
+FAILED     = (*global).failed
+instrument = (*global).instrument ;retrieve name of instrument
 
 ;get Data Run Number from DataTextField
 NormalizationRunNumber = $
-  getTextFieldValue(Event, $
-                    'load_normalization_run_number_text_field')
-NormalizationRunNumber = strcompress(NormalizationRunNumber)
+   getTextFieldValue(Event, $
+                     'load_normalization_run_number_text_field')
+NormalizationRunNumber = STRCOMPRESS(NormalizationRunNumber, /REMOVE_ALL)
 isNeXusFound = 0                ;by default, NeXus not found
 
-if (NormalizationRunNumber NE '') then BEGIN $
+IF (NormalizationRunNumber NE '') THEN BEGIN 
+   (*global).NormRunNumber = NormalizationRunNumber
 ;normalization run number is not empty
 
-;check if user wants archive dor all nexus runs
-    if (~isArchivedNormNexusDesired(Event)) then begin ;get full list of Nexus
+;check if user wants archive dor all nexus runs +++++++++++++++++++++++++++++++
+    IF (~isArchivedNormNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
 
         LogBookText = '-> Retrieving full list of ' + $
           'NORMALIZATION Run Number: ' +$
@@ -164,72 +167,75 @@ if (NormalizationRunNumber NE '') then BEGIN $
 
         endelse                 ;end of nexus found
 
-    endif else begin            ;we just want the archived one
+;we just want the archived one
+     ENDIF ELSE BEGIN ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         LogBookText = '-> Openning Archived NORMALIZATION Run Number: ' + $
           NormalizationRunNumber
-        text = getLogBookText(Event)
-        if (text[0] EQ '') then begin
-            putLogBookMessage, Event, LogBookText
-        endif else begin
-            putLogBookMessage, Event, LogBookText, Append=1
-        endelse
-        LogBookText += '..... ' + PROCESSING 
+        putLogBookMessage, Event, LogBookText, Append=1
+        LogBookText += ' ... ' + PROCESSING 
         putNormalizationLogBookMessage, Event, LogBookText
-
-;indicate reading data with hourglass icon
-        widget_control,/hourglass
-        
         LogBookText = '----> Checking if NeXus run number exist ..... ' + $
           PROCESSING
         putLogBookMessage, Event, LogBookText, Append=1
         
-;check if nexus exist and if it does, returns the full path
-
 ;get path to nexus run #
-        instrument=(*global).instrument ;retrieve name of instrument
-        isNeXusFound = 0        ;by default, NeXus not found
+        full_nexus_name = find_full_nexus_name(Event,$
+                                               NormalizationRunNumber,$
+                                               instrument,$
+                                               isNeXusFound)
 
-        if (!VERSION.os EQ 'darwin') then begin
-           full_nexus_name = (*global).MacNexusFile
-           isNexusFound = 1
-        endif else begin
-           full_nexus_name = find_full_nexus_name(Event,$
-                                                  NormalizationRunNumber,$
-                                                  instrument,$
-                                                  isNeXusFound)
-        endelse
-
-        if (~isNeXusFound) then begin ;NeXus has not been found
-        
-            NbrNexus = 0
+        IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
+           NbrNexus = 0
 ;tells the user that the NeXus file has not been found
 ;get log book full text
-            LogBookText = getLogBookText(Event)
             Message = 'FAILED - NeXus file does not exist'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
-              PROCESSING
+            IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
 
 ;get norm log book full text
             NormalizationLogBookText = getNormalizationLogBookText(Event)
             putTextAtEndOfNormalizationLogBookLastLine,$
-              Event,$
-              NormalizationLogBookText,$
-              'NeXus does not exist!',$
-              PROCESSING
+               Event,$
+               NormalizationLogBookText,$
+               'NeXus does not exist!',$
+               PROCESSING
             
 ;no needs to do anything more
             
-        endif else begin        ;NeXus has been found
-            
+        ENDIF ELSE BEGIN        ;NeXus has been found
+           
+           IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
+
             NbrNexus = 1
-            OpenNormNexusFile, Event, NormalizationRunNumber, full_nexus_name
+            (*global).norm_nexus_full_path = full_nexus_name
+
+;check how many polarization states the file has
+            nbr_pola_state = $
+               check_number_polarization_state(Event, $
+                                               full_nexus_name,$
+                                               list_pola_state)
+            IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+               RETURN
+            ENDIF
             
-        endelse
+            IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+;load browse nexus file
+               OpenNormNexusFile, Event, $
+                                  NormalizationRunNumber, $
+                                  full_nexus_name
+            ENDIF ELSE BEGIN
+;ask user to select the polarization state he wants to see
+               (*global).pola_type = 'norm_load'
+               select_polarization_state, Event, $
+                                          full_nexus_name, $
+                                          list_pola_state
+            ENDELSE
+
+        ENDELSE
         
-    endelse
+    ENDELSE
     
-endif                            ;end of if(NormalizationRunNumber Ne '')
+ENDIF                            ;end of if(NormalizationRunNumber Ne '')
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound

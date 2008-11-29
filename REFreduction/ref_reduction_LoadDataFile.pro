@@ -47,9 +47,6 @@ DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
 DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
 isNeXusFound = 0                ;by default, NeXus not found
 
-;indicate reading data with hourglass icon
-WIDGET_CONTROL,/hourglass
-
 IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
    (*global).DataRunNumber = DataRunNumber
 
@@ -65,9 +62,6 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
         endelse
         LogBookText += ' ..... ' + PROCESSING 
         putDataLogBookMessage, Event, LogBookText
-        
-;indicate reading data with hourglass icon
-        widget_control,/hourglass
         
         LogBookText = $
           '----> Checking if at least one NeXus file can be found ' + $
@@ -189,11 +183,9 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
            NbrNexus = 0
 ;tells the user that the NeXus file has not been found
 ;get log book full text
-            LogBookText = getLogBookText(Event)
             Message = 'FAILED - NeXus file does not exist'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, $
-                                           Message, $
-                                           PROCESSING
+            IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+
 ;get data log book full text
             DataLogBookText = getDataLogBookText(Event)
             putTextAtEndOfDataLogBookLastLine,$
@@ -217,14 +209,12 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                                               full_nexus_name,$
                                               list_pola_state)
            IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
-;turn off hourglass
-              WIDGET_CONTROL,HOURGLASS=0
               RETURN
            ENDIF
            
            IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-              OpenDataNexusFile, Event, DataRunNumber, nexus_file_name
+              OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
            ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
               (*global).pola_type = 'data_load'

@@ -32,6 +32,26 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+;this function is reached by the LOAD button for the DATA file
+PRO REFreductionEventcb_LoadAndPlotDataFile, Event
+  REFreduction_LoadDataFile, Event, $ ;LoadDataFile
+                             isNeXusFound, $
+                             NbrNexus 
+END
+;------------------------------------------------------------------------------
+;this function is reached by the LOAD button for the NORMALIZATION file
+PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
+  REFreduction_LoadNormalizationFile, Event, $ ;LoadNormalizationFile
+                                      isNeXusFound, $
+                                      NbrNexus 
+END
+;------------------------------------------------------------------------------
+
+
+
+
+
 ;This function get the nexus name from the data droplist and displays
 ;the nxsummary of that nexus file
 PRO REFreductionEventcb_DisplayDataNxsummary, Event
@@ -503,11 +523,6 @@ if (PrevTabSelect NE CurrTabSelect) then begin
 endif
 END
 
-;------------------------------------------------------------------------------
-;this function is reached by the LOAD button for the DATA file
-PRO REFreductionEventcb_LoadAndPlotDataFile, Event
-REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;LoadDataFile
-END
 
 pro tmp
 
@@ -597,16 +612,10 @@ ENDELSE
 END
 
 
-;this function is reached by the LOAD button for the NORMALIZATION file
-PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
 
-;first Load the normalization file
-REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus 
 
+pro tmp_2
 ;get full list of NeXus with this run number
 if (isArchivedNormNexusDesired(Event)) then begin 
     if (isNeXusFound) then begin 
