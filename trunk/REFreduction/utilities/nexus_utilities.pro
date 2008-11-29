@@ -77,26 +77,36 @@ END
 ;------------------------------------------------------------------------------
 ;when we want only the archived one
 FUNCTION find_full_nexus_name, Event, run_number, instrument, isNexusExist
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+   my_package = (*(*global).my_package)
+   IF (my_package[0].found EQ 0) THEN BEGIN
+      debugging_structure = (*(*global).debugging_structure)
+      isNexusExist = 1
+      RETURN, debugging_structure.data_nexus_full_path
+   ENDIF
+ENDIF  
 
 cmd = "findnexus --archive -i" + instrument 
 cmd += " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name, err_listening
 ;check if nexus exists
 sz = (size(full_nexus_name))(1)
-if (sz EQ 1) then begin
-    result = strmatch(full_nexus_name,"ERROR*")
-    if (result GE 1) then begin
+IF (sz EQ 1) THEN BEGIN
+    result = STRMATCH(full_nexus_name,"ERROR*")
+    IF (result GE 1) THEN BEGIN
         isNeXusExist = 0
-    endif else begin
+    ENDIF ELSE BEGIN
         isNeXusExist = 1
-    endelse
-    return, full_nexus_name
-endif else begin
+    ENDELSE
+    RETURN, full_nexus_name
+ENDIF ELSE BEGIN
     isNeXusExist = 1
-    return, full_nexus_name[0]
-endelse
+    RETURN, full_nexus_name[0]
+ENDELSE
 
-end
+END
 
 ;-----------------------------------------------------------------------------
 FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist

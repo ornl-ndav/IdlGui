@@ -56,6 +56,8 @@ WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'no'              ;YES
 
 debugging_structure = {nbr_pola_state:4,$
+                       data_nexus_full_path: '/Users/jeanbilheux/' + $
+                       'REF_M_4585.nxs',$
                        list_pola_state: ['entry-Off_Off',$
                                          'entry-Off_On',$
                                          'entry-On_Off',$
