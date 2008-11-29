@@ -31,27 +31,30 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-;this function load the given nexus file and dump the binary file
-;in the tmp data file
+;this function load the given nexus file and get the binary data
 PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
+FAILED     = (*global).failed
+instrument = (*global).instrument ;retrieve name of instrument
 
 ;get Data Run Number from DataTextField
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
-DataRunNumber = strcompress(DataRunNumber)
+DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
 isNeXusFound = 0                ;by default, NeXus not found
 
-if (DataRunNumber NE '') then begin ;data run number is not empty
-    
-    (*global).DataRunNumber = strcompress(DataRunNumber,/remove_all)
+;indicate reading data with hourglass icon
+WIDGET_CONTROL,/hourglass
+
+IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
+   (*global).DataRunNumber = DataRunNumber
 
 ;check if user wants archived or all nexus runs
-    if (~isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus
+    IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
         LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
           DataRunNumber
         text = getLogBookText(Event)
@@ -164,81 +167,82 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
             
         endelse                 ;end of nexus found
         
-    endif else begin            ;we just want the archived one
+    ENDIF ELSE BEGIN            ;we just want the archived one
 
         LogBookText = '-> Openning Archived DATA Run Number: ' + DataRunNumber
-        text = getLogBookText(Event)
-        if (text[0] EQ '') then begin
-            putLogBookMessage, Event, LogBookText
-        endif else begin
-            putLogBookMessage, Event, LogBookText, Append=1
-        endelse
-        LogBookText += '..... ' + PROCESSING 
+        putLogBookMessage, Event, LogBookText, Append=1
+        LogBookText += ' ... ' + PROCESSING 
         putDataLogBookMessage, Event, LogBookText
-        
-;indicate reading data with hourglass icon
-        widget_control,/hourglass
-        
-        LogBookText = '----> Checking if NeXus run number exist ..... ' + $
+        LogBookText = '--> Checking if NeXus run number exists ... ' + $
           PROCESSING    
         putLogBookMessage, Event, LogBookText, Append=1  
         
-;check if nexus exist and if it does, returns the full path
-        
 ;get path to nexus run #
-        instrument=(*global).instrument ;retrieve name of instrument
-        isNeXusFound = 0        ;by default, NeXus not found
-
-        if (!VERSION.os EQ 'darwin') then begin
+        IF (!VERSION.os EQ 'darwin') THEN BEGIN
            full_nexus_name = (*global).MacNexusFile
            isNexusFound = 1
-        endif else begin
+        ENDIF ELSE BEGIN
            full_nexus_name = find_full_nexus_name(Event,$
                                                   DataRunNumber,$
                                                   instrument,$
                                                   isNeXusFound)
-        endelse
+        ENDELSE
         
-        if (~isNeXusFound) then begin ;NeXus has not been found
-        
-            NbrNexus = 0
+        IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
+           NbrNexus = 0
 ;tells the user that the NeXus file has not been found
 ;get log book full text
             LogBookText = getLogBookText(Event)
             Message = 'FAILED - NeXus file does not exist'
             putTextAtEndOfLogBookLastLine, Event, LogBookText, $
-              Message, $
-              PROCESSING
+                                           Message, $
+                                           PROCESSING
 ;get data log book full text
             DataLogBookText = getDataLogBookText(Event)
             putTextAtEndOfDataLogBookLastLine,$
-              Event,$
-              DataLogBookText,$
-              'NeXus does not exist!',$
-              PROCESSING
+               Event,$
+               DataLogBookText,$
+               'NeXus does not exist!',$
+               PROCESSING
             
 ;no needs to do anything more
             
-        endif else begin        ;NeXus has been found
+        ENDIF ELSE BEGIN        ;NeXus has been found
             
-            NbrNexus = 1
-            OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
+           NbrNexus = 1
+           
+;check how many polarization states the file has
+           nbr_pola_state = $
+              check_number_polarization_state(Event, $
+                                              full_nexus_name,$
+                                              list_pola_state)
+           IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+;turn off hourglass
+              WIDGET_CONTROL,HOURGLASS=0
+              RETURN
+           ENDIF
+           
+           IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+;load browse nexus file
+              OpenDataNexusFile, Event, DataRunNumber, nexus_file_name
+           ENDIF ELSE BEGIN
+;ask user to select the polarization state he wants to see
+              (*global).pola_type = 'data_load'
+              select_polarization_state, Event, $
+                                         full_nexus_name, $
+                                         list_pola_state
+           ENDELSE
+
+        ENDELSE
         
-        endelse
-        
-    endelse
+     ENDELSE
     
-endif                            ;end of if(DataRunNumber Ne '')
+ ENDIF                          ;end of if(DataRunNumber Ne '')
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
 
 END
-
-
-
-
-
 
 ;------------------------------------------------------------------------------
 FUNCTION OpenDataNeXusFile, Event, $
@@ -316,6 +320,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
 RETURN, 1
 END
 
+;------------------------------------------------------------------------------
 ;Same as previous function but this one is reached by the batch run so
 ;without any log book messages
 PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
