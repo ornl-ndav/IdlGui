@@ -234,7 +234,6 @@ putMessageBoxInfo, Event, MessageBox
 ;remove name of file loaded from Loaded ROI text
 putLoadedRoiFileName, Event, ''
 
-
 END
 
 ;==============================================================================

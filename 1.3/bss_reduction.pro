@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreduction'
 VERSION            = '1.3.0'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 CHECKING_PACKAGES  = 'yes'
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
@@ -488,14 +488,17 @@ default_pixel_excluded[[list1,list2,list3,list4]] = 1
                                   'exclusion_base',$
                                   'reset_button']
     
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
     MainBaseSize  = [30,25,1200,730]
-endif else begin
+ENDIF ELSE BEGIN
     MainBaseSize  = [50,200,1200,730]
-endelse
+ENDELSE
 (*global).MainBaseSize = MainBasesize
 
 MainBaseTitle = 'BSS reduction tool - ' + VERSION
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
+    MainBaseTitle += ' (DEBUGGING VERSION)'
+ENDIF
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
