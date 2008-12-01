@@ -223,6 +223,12 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                OpenNormNexusFile, Event, $
                                   NormalizationRunNumber, $
                                   full_nexus_name
+
+;update GUI according to result of NeXus found or not
+               RefReduction_update_normalization_gui_if_NeXus_found, $
+                  Event, $
+                  isNeXusFound
+
             ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
                (*global).pola_type = 'norm_load'
@@ -236,9 +242,6 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
     ENDELSE
     
 ENDIF                            ;end of if(NormalizationRunNumber Ne '')
-
-;update GUI according to result of NeXus found or not
-RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
 
 END
 

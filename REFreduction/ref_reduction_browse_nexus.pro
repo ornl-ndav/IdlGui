@@ -127,6 +127,8 @@ PRO load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+WIDGET_CONTROL,/HOURGLASS
+
 PROCESSING = (*global).processing_message ;processing message
 OK         = (*global).ok
 FAILED     = (*global).failed
@@ -185,6 +187,8 @@ putTextAtEndOfDataLogBookLastLine,$
   OK,$
   PROCESSING
 
+WIDGET_CONTROL,HOURGLASS=0
+
 END
 
 ;------------------------------------------------------------------------------
@@ -242,8 +246,11 @@ END
 
 ;------------------------------------------------------------------------------
 PRO load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=pola_state
+
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+WIDGET_CONTROL,/HOURGLASS
 
 PROCESSING = (*global).processing_message ;processing message
 OK         = (*global).ok
@@ -298,5 +305,7 @@ putTextAtEndOfNormalizationLogBookLastLine,$
    LogBookText,$
    OK,$
    PROCESSING
+
+WIDGET_CONTROL,HOURGLASS=0
 
 END
