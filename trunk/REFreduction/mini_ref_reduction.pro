@@ -53,7 +53,7 @@ DEBUGGING_VERSION  = 'yes'             ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
-CHECKING_PACKAGES  = 'no'              ;YES
+CHECKING_PACKAGES  = 'yes'             ;YES
 
 debugging_structure = {nbr_pola_state:4,$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
