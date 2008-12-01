@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreduction'
 VERSION            = '1.3.0'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'yes'
+DEBUGGING_VERSION  = 'no'
 CHECKING_PACKAGES  = 'yes'
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
@@ -433,7 +433,7 @@ my_package[3].version_required = ''
 (*global).negative_cosine_polar_array = ['-1.0','1.0','0.5']
 
 Device, /decomposed
-loadct, (*global).DefaultLoadctMainPlot
+loadct, (*global).DefaultLoadctMainPlot, /SILENT
 
 XYfactor               = {Xfactor:(*global).Xfactor, $
                           Yfactor:(*global).Yfactor}

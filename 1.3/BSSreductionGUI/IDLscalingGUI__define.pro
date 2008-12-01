@@ -125,11 +125,10 @@ CASE Event.id OF
         IF (getCWBgroupValue(Event, $
                              'job_status_scaling_cw_bgroup') EQ 0) THEN BEGIN
             value = getTextFieldValue(Event,'job_status_scaling_value')
-            WIDGET_CONTROL, Event.top, /DESTROY
             cmd += ' --rescale=' + value
         ENDIF
-        stitch_files_step2, sMainBase.Event, cmd
         WIDGET_CONTROL, Event.top, /DESTROY
+        stitch_files_step2, sMainBase.Event, cmd
     END
 
     ELSE:

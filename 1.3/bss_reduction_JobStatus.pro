@@ -309,15 +309,11 @@ IF (scaling_flag EQ 'ON') THEN BEGIN
         iScaling = OBJ_NEW('IDscalingGUI',Event, scaling_constant,title, cmd)
         OBJ_DESTROY, iScaling
     ENDELSE
-ENDIF
-IF (scaling_flag EQ 'N/A') THEN BEGIN ;popup base that ask for a scaling value
-    title = 'The status of the Scaling Flag/Value is undefined !'
+ENDIF ELSE BEGIN
+    title = 'Definned the Scaling Flag/Value:'
     iScaling = OBJ_NEW('IDLscalingGUI',Event, scaling_constant,title, cmd)
     OBJ_DESTROY, iScaling
-ENDIF
-IF (scaling_flag EQ 'OFF') THEN BEGIN 
-    stitch_files_step2, Event, cmd
-ENDIF
+ENDELSE
 
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
