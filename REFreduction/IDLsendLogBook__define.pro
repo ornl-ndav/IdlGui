@@ -63,6 +63,26 @@ RETURN, 'NA'
 END
 
 ;------------------------------------------------------------------------------
+;Procedure that will return all the global variables for this routine
+FUNCTION IDLsendLogBook_getGlobalVariable, MAIN_BASE, var
+;get global structure
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+CASE (var) OF
+    'WorkingPath'     : RETURN, (*global).default_output_path
+    'LogBookPath'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'ApplicationName' : RETURN, (*global).application
+    'LogBookUname'    : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_1'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_2'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'LogBookMessageId': RETURN, IDLsendLogBook_getLocalVariable(var)
+    'ucams'           : RETURN, (*global).ucams
+    'version'         : RETURN, (*global).version
+    ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
+;------------------------------------------------------------------------------
 FUNCTION IDLsendLogBook_getUname, Event, ALT=alt
 IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
    CASE (ALT) OF
@@ -73,6 +93,28 @@ IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
    ENDCASE
 ENDIF ELSE BEGIN
    LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+ENDELSE
+RETURN, LogBookUname
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getUname, MAIN_BASE, ALT=alt
+IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
+    CASE (ALT) OF
+        1: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_1')
+        2: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_2')
+        ELSE: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'LogBookUname')
+    ENDCASE
+ENDIF ELSE BEGIN
+    LogBookUname = $
+      IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                    'LogBookUname')
 ENDELSE
 RETURN, LogBookUname
 END
@@ -88,7 +130,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, ALT=alt, text
-LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
@@ -103,7 +145,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDLsendLogBook_getLogBookText_fromMainBase, MAIN_BASE, ALT=alt
-LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
@@ -126,7 +168,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, ALT=alt, text
-LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
 id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
@@ -179,20 +221,8 @@ PRO IDLsendLogBook_ReplaceLogBookText_fromMainBase, $
    OLD_STRING, $
    NEW_STRING
 
-LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
-IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
-   CASE (ALT) OF
-      1: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_1')
-      2: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_2')
-      ELSE: LogBookUname = IDLsendLogBook_getGlobalVariable(Event, $
-                                                            'LogBookUname')
-   ENDCASE
-ENDIF ELSE BEGIN
-   LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
-ENDELSE
-InitialStrarr = IDLsendLogBook_getLogBookText_fromMainBase(MAIN_BASE, ALT=alt)
-
-ArrSize       = (SIZE(InitialStrarr))(1)
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+ArrSize      = (SIZE(InitialStrarr))(1)
 IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN $
 ;do not remove anything from last line
     IF (ArrSize GE 2) THEN BEGIN
@@ -444,7 +474,7 @@ END
 ;******************************************************************************
 PRO IDLsendLogBook__define
 STRUCT = { IDLsendLogBook,$
-           var : ''}
+           var: ''}
 END
 ;******************************************************************************
 ;******************************************************************************

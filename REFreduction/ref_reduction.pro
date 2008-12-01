@@ -54,7 +54,8 @@ WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'yes'
 
 debugging_structure = {nbr_pola_state:4,$
-                       data_nexus_full_path: '~/REF_M_4585.nxs',$
+                       data_nexus_full_path: '/Users/jeanbilheux/' + $
+                       '/REF_M_4585.nxs',$
                        list_pola_state: ['entry-Off_Off',$
                                          'entry-Off_On',$
                                          'entry-On_Off',$
@@ -87,6 +88,8 @@ global = PTR_NEW ({ first_event: 1,$
                     data_nexus_full_path: '',$
                     norm_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$
+                    debuggion_structure: PTR_NEW(0L),$
+                    my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
