@@ -83,9 +83,7 @@ putTextField, Event, 'time_bin', BinWidth
 
 END
 
-
-
-
+;------------------------------------------------------------------------------
 PRO checkParameters, Event, prenexus_full_path, RunNumber, Instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -96,17 +94,11 @@ runinfoFullPath            += (*global).runinfo_ext
 
 ;get the number of steps
 NbrPolaStates = getNbrPolaState(Event, runinfoFullPath)
-IF (NbrPolaStates EQ 0) THEN BEGIN
-    (*global).NbrPhase      = 4
-    (*global).NbrPolaStates = 1
-ENDIF ELSE BEGIN
-    (*global).NbrPhase      = NbrPolaStates * 5
-    (*global).NbrPolaStates = NbrPolaStates
-ENDELSE
+(*global).NbrPolaStates = NbrPolaStates
+(*global).NbrPhase      = 4
 END
 
-
-
+;------------------------------------------------------------------------------
 ;this function will check if the prenexus can be found
 PRO run_number, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -334,12 +326,12 @@ FOR j=0,(sz-1) DO BEGIN
         (*global).RunNumber     = run_number_array[j]
         
 ;check the number of steps it will have
-          (*global).NbrPhase      = 4
-          (*global).NbrPolaStates = 1
-;   checkParameters, Event, $
-;          (*global).prenexus_path, $
-;          (*global).RunNumber, $
-;          (*global).Instrument
+;          (*global).NbrPhase      = 4
+;          (*global).NbrPolaStates = 1
+   checkParameters, Event, $
+          (*global).prenexus_path, $
+          (*global).RunNumber, $
+          (*global).Instrument
         
 ;define progress bar object
         title = 'Translation: ' + strcompress(j+1,/remove_all)
