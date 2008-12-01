@@ -33,7 +33,7 @@
 ;==============================================================================
 FUNCTION IDLsendLogBook_getLocalVariable, var
 CASE (var) OF
-   'LogBookUname    ': RETURN, 'log_book_text_field'
+   'LogBookUname'    : RETURN, 'log_book_text_field'
    'Alternate_1'     : RETURN, 'data_log_book_text_field'
    'Alternate_2'     : RETURN, 'normalization_log_book_text_field'
    'LogBookMessageId': RETURN, 'log_book_message'
@@ -64,7 +64,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;Procedure that will return all the global variables for this routine
-FUNCTION IDLsendLogBook_getGlobalVariable, MAIN_BASE, var
+FUNCTION IDLsendLogBook_fromMainBase_getGlobalVariable, MAIN_BASE, var
 ;get global structure
 WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
 CASE (var) OF
@@ -98,7 +98,7 @@ RETURN, LogBookUname
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDLsendLogBook_getUname, MAIN_BASE, ALT=alt
+FUNCTION IDLsendLogBook_fromMainBase_getUname, MAIN_BASE, ALT=alt
 IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
     CASE (ALT) OF
         1: LogBookUname = $
@@ -215,14 +215,14 @@ IDLsendLogBook_putLogBookText, Event, ALT=alt, FinalStrarr
 END
 
 ;==============================================================================
-PRO IDLsendLogBook_ReplaceLogBookText_fromMainBase, $
-   MAIN_BASE, $
-   ALT=alt, $
-   OLD_STRING, $
-   NEW_STRING
+PRO IDLsendLogBook_ReplaceLogBookText_fromMainBase, MAIN_BASE, $
+                                                    ALT=alt, $
+                                                    OLD_STRING, $
+                                                    NEW_STRING
 
-LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
-ArrSize      = (SIZE(InitialStrarr))(1)
+LogBookUname  = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+InitialStrarr = IDLsendLogBook_getLogBookText_fromMainBase(MAIN_BASE, ALT=alt)
+ArrSize       = (SIZE(InitialStrarr))(1)
 IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN $
 ;do not remove anything from last line
     IF (ArrSize GE 2) THEN BEGIN
