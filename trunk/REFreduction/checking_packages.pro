@@ -66,6 +66,18 @@ RETURN, DateIso
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getVersion, listening
+sz = N_ELEMENTS(listening)
+i  = 0
+WHILE (i LT sz) DO BEGIN
+    version_str = STRCOMPRESS(listening[i],/REMOVE_ALL)
+    IF (version_str NE '') THEN RETURN, listening[i]
+    i++
+ENDWHILE
+RETURN, 'N/A'
+END
+   
+;------------------------------------------------------------------------------
 PRO checking_packages_routine, MAIN_BASE, my_package, global
 
 ;==============================================================================
@@ -101,83 +113,85 @@ IF (sz GT 0) THEN BEGIN
    
    first_sub_packages_check = 1
    FOR i=0,(sz-1) DO BEGIN
-      message = '-> ' + pack_list[i]
+       message = '-> ' + pack_list[i]
 ;this part is to make sure the PROCESSING string starts at the same column
-      length = STRLEN(message)
-      str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
-      new_string = STRJOIN(str_array)
-      message += ' ' + new_string + ' ' + PROCESSING
-      
-      IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
-      
-      cmd = pack_list[i] + ' --version'
-      SPAWN, cmd, listening, err_listening
-      IF (err_listening[0] EQ '') THEN BEGIN ;found
-         IDLsendLogBook_ReplaceLogBookText_fromMainBase, MAIN_BASE, $
-            PROCESSING,$
-            OK + ' (Current Version: ' + $
-            listening[N_ELEMENTS(listening)-1] + ')'
+       length = STRLEN(message)
+       str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
+       new_string = STRJOIN(str_array)
+       message += ' ' + new_string + ' ' + PROCESSING
+       
+       IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
+       
+       cmd = pack_list[i] + ' --version'
+       SPAWN, cmd, listening, err_listening
+       IF (err_listening[0] EQ '') THEN BEGIN ;found
+           VERSION = getVersion(listening)
+           IDLsendLogBook_ReplaceLogBookText_fromMainBase, $
+             MAIN_BASE, $
+             PROCESSING,$
+             OK + ' (Current Version: ' + $
+             VERSION + ')'
 ;              ' / Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
-         my_package[i].found = 1
-         IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
-            IF (first_sub_packages_check EQ 1) THEN BEGIN
-               first_sub_packages_check = 0
-               cmd = my_package[i].sub_pkg_version
-               SPAWN, cmd, listening, err_listening
-               IF (err_listening[0] EQ '') THEN BEGIN ;worked
-                  cmd_txt = '-> ' + cmd + ' ... OK'
-                  IDLsendLogBook_addLogBookText_fromMainBase, $
-                     MAIN_BASE, cmd_text
-                  IDLsendLogBook_addLogBookText_fromMainBase, $
-                     MAIN_BASE, $
-                     '--> ' + listening
+           my_package[i].found = 1
+           IF (my_package[i].sub_pkg_version NE '') THEN BEGIN
+               IF (first_sub_packages_check EQ 1) THEN BEGIN
+                   first_sub_packages_check = 0
+                   cmd = my_package[i].sub_pkg_version
+                   SPAWN, cmd, listening, err_listening
+                   IF (err_listening[0] EQ '') THEN BEGIN ;worked
+                       cmd_txt = '-> ' + cmd + ' ... OK'
+                       IDLsendLogBook_addLogBookText_fromMainBase, $
+                         MAIN_BASE, cmd_text
+                       IDLsendLogBook_addLogBookText_fromMainBase, $
+                         MAIN_BASE, $
+                         '--> ' + listening
 ;tell the structure that the correct version has been found
-                  my_package[i].found = 1
-               ENDIF ELSE BEGIN
-                  cmd_txt = '-> ' + cmd + ' ... FAILED'
-                  IDLsendLogBook_addLogBookText_fromMainBase, $
-                     MAIN_BASE, cmd_text
+                       my_package[i].found = 1
+                   ENDIF ELSE BEGIN
+                       cmd_txt = '-> ' + cmd + ' ... FAILED'
+                       IDLsendLogBook_addLogBookText_fromMainBase, $
+                         MAIN_BASE, cmd_text
 ;tell the structure that the correct version has been found
-                  my_package[i].found = 0
-               ENDELSE
-            ENDIF
-         ENDIF
-      ENDIF ELSE BEGIN          ;missing program
-         IDLsendLogBook_ReplaceLogBookText_fromMainBase, $
-            MAIN_BASE, $
-            PROCESSING,$
-            FAILED
+                       my_package[i].found = 0
+                   ENDELSE
+               ENDIF
+           ENDIF
+       ENDIF ELSE BEGIN         ;missing program
+           IDLsendLogBook_ReplaceLogBookText_fromMainBase, $
+             MAIN_BASE, $
+             PROCESSING,$
+             FAILED
 ;              + ' (Minimum Required Version: ' + $
 ;              my_package[i].version_required + ')'
-         missing_packages[i] = my_package[i].driver
+           missing_packages[i] = my_package[i].driver
 ;tell the structure that the correct version has been found
-         my_package[i].found = 0
-         ++nbr_missing_packages
-      ENDELSE
+           my_package[i].found = 0
+           ++nbr_missing_packages
+       ENDELSE
    ENDFOR
    
    IF (nbr_missing_packages GT 0) THEN BEGIN
 ;pop up window that show that they are missing packages
-      message = ['They are ' + $
-                 STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
-                 ' missing package(s) you need to ' + $
-                 'fully used this application.']
-      message = [message,'Check Log Book For More Information !']
-      result = DIALOG_MESSAGE(message, $
-                              /INFORMATION, $
-                              DIALOG_PARENT=MAIN_BASE)
+       message = ['They are ' + $
+                  STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+                  ' missing package(s) you need to ' + $
+                  'fully used this application.']
+       message = [message,'Check Log Book For More Information !']
+       result = DIALOG_MESSAGE(message, $
+                               /INFORMATION, $
+                               DIALOG_PARENT=MAIN_BASE)
    ENDIF
    
 ENDIF ELSE BEGIN                ;end of 'if (sz GT 0)'
-   message= 'No packages required!'
-   IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
+    message= 'No packages required!'
+    IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
 ENDELSE
-       
+
 message = '=================================================' + $
-          '========================'
+  '========================'
 IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, message
 
- (*(*global).my_package) = my_package
+(*(*global).my_package) = my_package
 
 END
