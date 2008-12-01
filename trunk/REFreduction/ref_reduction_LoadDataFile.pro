@@ -48,107 +48,93 @@ DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
 isNeXusFound = 0                ;by default, NeXus not found
 
 IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
+
    (*global).DataRunNumber = DataRunNumber
 
 ;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
     IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
-        LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
-          DataRunNumber
-        text = getLogBookText(Event)
-        if (text[0] EQ '') then begin
-            putLogBookMessage, Event, LogBookText
-        endif else begin
-            putLogBookMessage, Event, LogBookText, Append=1
-        endelse
-        LogBookText += ' ..... ' + PROCESSING 
-        putDataLogBookMessage, Event, LogBookText
-        
-        LogBookText = $
-          '----> Checking if at least one NeXus file can be found ' + $
-          '..... '
-        LogBookText += PROCESSING
-        putLogBookMessage, Event, LogBookText, Append=1
-
-;check if nexus exist and if it does, returns the full path
-        
+     
+       LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
+                     DataRunNumber
+       IDLsendLogBook_putLogBookText, Event, LogBookText
+       LogBookText += ' ... ' + PROCESSING 
+       putDataLogBookMessage, Event, LogBookText
+       
+       LogBookText = $
+          '--> Checking if at least one NeXus file can be found ' + $
+          ' ... ' + PROCESSING
+       IDLsendLogBook_putLogBookText, Event, LogBookText
+       
 ;get path to nexus run #
-        instrument=(*global).instrument ;retrieve name of instrument
-        full_list_of_nexus_name = find_list_nexus_name(Event,$
-                                                       DataRunNumber,$
-                                                       instrument,$
-                                                       isNeXusFound)
+       full_list_of_nexus_name = find_list_nexus_name(Event,$
+                                                      DataRunNumber,$
+                                                      instrument,$
+                                                      isNeXusFound)
 
-        if (~isNexusFound) then begin ;no nexus found
+        IF (~isNexusFound) THEN BEGIN ;no nexus found
             
 ;tells the user that the NeXus file has not been found
 ;get log book full text
-            LogBookText = getLogBookText(Event)
-            Message = 'FAILED - No NeXus can be found'
-            putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
-              PROCESSING
+           Message = 'FAILED - No NeXus can be found'
+           IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+
 ;get data log book full text
-            DataLogBookText = getDataLogBookText(Event)
-            putTextAtEndOfDataLogBookLastLine,$
-              Event,$
-              DataLogBookText,$
-              'NeXus run number does not exist!',$
-              PROCESSING
-            
+           IDLsendLogBook_ReplaceLogBookText, $
+              Event, $
+              ALT=1, $
+              PROCESSING, $
+              'NeXus run number does not exist!'
+              
             NbrNexus = 0
 
 ;no needs to do anything more
             
-        endif else begin        ;1 or more nexus have been bound
+        ENDIF ELSE BEGIN        ;1 or more nexus have been bound
             
 ;display list of nexus found if list is GT 1 otherwise proceed as
 ;before
             sz = (size(full_list_of_nexus_name))(1)
-            NbrNexus = sz
-            if (sz GT 1) then begin
+            NrefbrNexus = sz
+            IF (sz GT 1) THEN BEGIN ;more than 1 nexus file found
 
 ;display list in droplist and map=1 base
-                putArrayInDropList, $
+               putArrayInDropList, $
                   Event, $
                   full_list_of_nexus_name, $
                   'data_list_nexus_droplist'
-                
-;map base
                 MapBase, Event, 'data_list_nexus_base', 1
 
-;display info in log book
-                LogBookText = getLogBookText(Event)        
-                Message = 'OK'
-                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
-                  PROCESSING
-                LogText = '----> Found ' + strcompress(sz,/remove_all)
+                IDLsendLogBook_ReplaceLogBookText, Event, $
+                                                   PROCESSING, $
+                                                   OK
+                LogText = '--> Found ' + STRCOMPRESS(sz,/REMOVE_ALL)
                 LogText += ' NeXus files:'
-                putLogBookMessage,Event, LogText,Append=1
-                for i=0,(sz-1) do begin
+                IDLsendLogBook_putLogBookText, Event, Logtext
+
+                FOR i=0,(sz-1) DO BEGIN
                     text = '       ' + full_list_of_nexus_name[i]
-                    putLogBookMessage, Event,text,Append=1
-                endfor
+                    IDLsendLogBook_putLogBookText, Event, text
+                ENDFOR
 
 ;display nxsummary of first file in 'data_list_nexus_base'
                 RefReduction_NXsummary, $
-                  Event, $
-                  full_list_of_nexus_name[0], $
-                  'data_list_nexus_nxsummary_text_field'
+                   Event, $
+                   full_list_of_nexus_name[0], $
+                   'data_list_nexus_nxsummary_text_field'
                 
 ;Inform user that program is waiting for his action
                 LogText = $
-                  '----> Selecting one NeXus file from the list ..... ' $
-                  + PROCESSING
-                putLogBookMessage,Event,LogText,Append=1
+                   '<USERS!> Waiting for input from users. Please select ' + $
+                   'one NeXus file from the list:'
+                IDLsendLogBook_putLogBookText, Event, LogText
 
 ;display info in data log book
-                DataLogBookText = getDataLogBookText(Event)
-                putTextAtEndOfDataLogBookLastLine,$
-                  Event,$
-                  DataLogBookText,$
-                  'OK',$
-                  PROCESSING
+                IDLsendLogBook_ReplaceLogBookText, Event, $
+                                                   ALT = 1, $
+                                                   PROCESSING, $
+                                                   OK
                 text = ' --> Please select one of the ' + $
-                  strcompress(sz,/remove_all)
+                  STRCOMPRESS(sz,/remove_all)
                 text += ' NeXus file found .....'
                 putDataLogBookMessage, Event, text, Append=1
 
@@ -215,6 +201,10 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
            IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
               OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
+
+;update GUI according to result of NeXus found or not
+              RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
+
            ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
               (*global).pola_type = 'data_load'
@@ -229,8 +219,6 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
     
  ENDIF                          ;end of if(DataRunNumber Ne '')
 
-;update GUI according to result of NeXus found or not
-RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
 
 END
 
