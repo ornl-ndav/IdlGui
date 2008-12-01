@@ -111,17 +111,18 @@ sDEBUGGING = { tab: {main_tab: 2,$
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
-endif else begin
+ENDIF ELSE BEGIN
    ucams = get_ucams()
-endelse
+ENDELSE
 
 ;define global variables
 global = ptr_new ({ $
+                    first_lds_used: 1,$
                     application: APPLICATION,$
                     version: VERSION,$
-                    ucams: ucams,$ ;ucams of user                    
+                    ucams: UCAMS,$ ;ucams of user                    
                     output_log_srun_path: '~/results/',$
                     job_status_full_output_file_name: '',$
                     MainBaseSize: INTARR(4),$

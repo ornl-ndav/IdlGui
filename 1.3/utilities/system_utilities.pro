@@ -32,6 +32,26 @@
 ;
 ;==============================================================================
 
+;This procedure log on the current use of the application
+PRO logger, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+APPLICATION = (*global).application
+application = APPLICATION + '_(LDSmode)'
+VERSION     = (*global).version
+UCAMS       = (*global).ucams
+
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
+END
+
 ;------------------------------------------------------------------------------
 ;This function returns the ucams of the user
 FUNCTION get_ucams
