@@ -725,7 +725,7 @@ END
 ; Empty stub procedure used for autoloading.
 PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;check instrument here
-SPAWN, 'HOSTNAME',LISTENING
+SPAWN, 'hostname',LISTENING
 CASE (listening) OF
     'lrac': instrument = 'REF_L'
     'mrac': instrument = 'REF_M'
