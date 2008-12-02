@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO  ActivateWidget, Event, uname, ActivateStatus
+PRO ActivateWidget, Event, uname, ActivateStatus
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, sensitive=ActivateStatus
 END
@@ -260,7 +260,6 @@ ENDELSE
 ActivateWidget, Event, 'q_manual_base', ManualBaseStatus
 END
 
-
 ;------------------------------------------------------------------------------
 ;This procedure changes the size of the top and bottom progress bar in
 ;the batch tab and reset the color of these ones.
@@ -280,5 +279,29 @@ polyfill, [0,0,x2,x2,0], $
   Color= color
 END
    
-
-
+;------------------------------------------------------------------------------
+PRO update_select_polarization_state_gui, Event, list_pola_state
+uname= ['pola_state1_uname',$
+        'pola_state2_uname',$
+        'pola_state3_uname',$
+        'pola_state4_uname']
+sz    = N_ELEMENTS(list_pola_state)
+index = 0
+first_pola = 1
+FOR index=0,3 DO BEGIN
+    IF (index GT sz) THEN BEGIN ;unselect
+        select_value = 0
+    ENDIF ELSE BEGIN
+        value  = STRSPLIT(list_pola_state[index],'/',/EXTRACT)
+        value1 = STRSPLIT(value[0],'-',/EXTRACT)
+        SetButtonValue, Event, uname[index], value1[1]
+        select_value = 1
+        IF (first_pola) THEN BEGIN
+            id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname[index])
+            WIDGET_CONTROL, id, /SET_BUTTON 
+            first_pola = 0
+        ENDIF
+    ENDELSE
+    ActivateWidget, Event, uname[index], select_value
+ENDFOR
+END
