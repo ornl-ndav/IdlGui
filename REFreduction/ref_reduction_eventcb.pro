@@ -174,18 +174,18 @@ putTextAtEndOfNormalizationLogBookLastLine,$
 END
 
 
-
 PRO REFreductionEventcb_LoadListOfDataNexus, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;indicate reading data with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
 ;get full name of index selected
 currFullDataNexusName = $
   getDropListSelectedValue(Event, 'data_list_nexus_droplist')
+full_nexus_name = currFullDataNexusName
+(*global).data_nexus_full_path = full_nexus_name
 
 ;display message in data log book
 InitialStrarr = getDataLogBookText(Event)
@@ -202,6 +202,45 @@ MapBase, Event, 'data_list_nexus_base', 0
 ;get data run number
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
     
+;check how many polarization states the file has
+nbr_pola_state = $
+  check_number_polarization_state(Event, $
+                                  full_nexus_name, $
+                                  list_pola_state)
+IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+    RETURN
+ENDIF
+
+IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+
+;load browse nexus file
+    OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
+    
+;update GUI according to result of NeXus found or not
+    RefReduction_update_data_gui_if_NeXus_found, $
+      Event, $
+      isNeXusFound
+    
+    WIDGET_CONTROL,HOURGLASS=0
+    
+ENDIF ELSE BEGIN
+    
+    WIDGET_CONTROL,HOURGLASS=0
+    
+;ask user to select the polarization state he wants to see
+    (*global).pola_type = 'data_load'
+    select_polarization_state, Event, $
+      full_nexus_name, $
+      list_pola_state
+
+ENDELSE                         ;end of "IF (nbr_pola_state EQ 1)"
+END
+
+
+
+
+PRO tmp
+
 ;Open That NeXus file
 OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
     

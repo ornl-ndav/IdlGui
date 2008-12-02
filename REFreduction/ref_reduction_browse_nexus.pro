@@ -44,7 +44,7 @@ END
 ;------------------------------------------------------------------------------
 PRO ok_polarization_state, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-value_selected =  getCWBgroupValue(Event,'polarization_state_uname_group')
+value_selected =  getPolarizationStateValueSelected(Event)
 MapBase, Event, 'polarization_state', 0
 text = '> User selected polarization state #' + $
   STRCOMPRESS(value_selected+1,/REMOVE_ALL)

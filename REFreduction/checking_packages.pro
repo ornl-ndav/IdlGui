@@ -86,7 +86,7 @@ PRO checking_packages_routine, MAIN_BASE, my_package, global
 ;Put date/time when user started application in first line of log book
 time_stamp = GenerateTimeStamp()
 message    = '>>>>>>  Application started date/time: ' + time_stamp + $
-             '  <<<<<<'
+             ' <<<<<<'
 IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
 
 ;Check that the necessary packages are present
