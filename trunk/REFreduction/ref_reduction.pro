@@ -47,7 +47,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.2.0'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 MOUSE_DEBUGGING    = 'no'
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
@@ -56,6 +56,8 @@ CHECKING_PACKAGES  = 'yes'
 debugging_structure = {nbr_pola_state:4,$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
                        '/REF_M_4585.nxs',$
+                       full_list_OF_nexus: ['/SNS/users/j35/REF_M_4117.nxs',$
+                                            '/SNS/users/j35/REF_M_4117.nxs'],$
                        list_pola_state: ['entry-Off_Off',$
                                          'entry-Off_On',$
                                          'entry-On_Off',$
@@ -88,7 +90,7 @@ global = PTR_NEW ({ first_event: 1,$
                     data_nexus_full_path: '',$
                     norm_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$
-                    debuggion_structure: PTR_NEW(0L),$
+                    debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$
@@ -418,7 +420,8 @@ global = PTR_NEW ({ first_event: 1,$
                    REFreductionVersion: ''$
 ;Version of REFreduction Tool
                    })
-                   
+
+(*(*global).debugging_structure) = debugging_structure                   
 BatchTable = strarr(9,20)
 (*(*global).BatchTable) = BatchTable
                    
@@ -494,7 +497,7 @@ debugger = 1 ;the world has access to the batch tab now
 MainBaseTitle = 'Reflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-   MainBaseTitle += ' (DEBUGGING VERSION)'
+   MainBaseTitle += ' (DEBUGGING MODE)'
 ENDIF
 
 ;Build Main Base
@@ -536,30 +539,25 @@ button_base = WIDGET_BASE(pola_base,$
 
 button1 = WIDGET_BUTTON(button_base,$
                         VALUE = 'Off_Off',$
+                        UNAME = 'pola_state1_uname',$
                         SENSITIVE = 1)
 
 button2 = WIDGET_BUTTON(button_base,$
                         VALUE = 'Off_On',$
+                        UNAME = 'pola_state2_uname',$
                         SENSITIVE = 1)
 
 button3 = WIDGET_BUTTON(button_base,$
                         VALUE = 'On_Off',$
+                        UNAME = 'pola_state3_uname',$
                         SENSITIVE = 0)
 
 button4 = WIDGET_BUTTON(button_base,$
                         VALUE = 'On_On',$
+                        UNAME = 'pola_state4_uname',$
                         SENSITIVE = 0)
 
-
-
-;;group = CW_BGROUP(pola_base,$
-;                  [' Off - Off',$
-;;                   ' Off - On',$
-;                   ' On - Off',$
-;                   ' On - On'],$
-;                  UNAME= 'polarization_state_uname_group',$
-;                  SET_VALUE = 0.0,$
-;                  /EXCLUSIVE)
+WIDGET_CONTROL, button1, /SET_BUTTON
 
 ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
                              /ROW)

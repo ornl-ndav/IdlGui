@@ -520,14 +520,32 @@ label = WIDGET_LABEL(pola_base,$
 label = WIDGET_LABEL(pola_base,$
                      VALUE = '                                             ',$
                      UNAME = 'pola_file_name_uname')
-group = CW_BGROUP(pola_base,$
-                  [' Off - Off',$
-                   ' Off - On',$
-                   ' On - Off',$
-                   ' On - On'],$
-                  UNAME= 'polarization_state_uname_group',$
-                  SET_VALUE = 0.0,$
-                  /EXCLUSIVE)
+
+button_base = WIDGET_BASE(pola_base,$
+                          /COLUMN,$
+                          /EXCLUSIVE)
+
+button1 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'Off_Off',$
+                        UNAME = 'pola_state1_uname',$
+                        SENSITIVE = 1)
+
+button2 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'Off_On',$
+                        UNAME = 'pola_state2_uname',$
+                        SENSITIVE = 1)
+
+button3 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'On_Off',$
+                        UNAME = 'pola_state3_uname',$
+                        SENSITIVE = 0)
+
+button4 = WIDGET_BUTTON(button_base,$
+                        VALUE = 'On_On',$
+                        UNAME = 'pola_state4_uname',$
+                        SENSITIVE = 0)
+
+WIDGET_CONTROL, button1, /SET_BUTTON
 
 ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
                              /ROW)
@@ -722,7 +740,7 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-; Empty stub procedure used for autoloading.
+;Empty stub procedure used for autoloading.
 PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;check instrument here
 SPAWN, 'hostname',LISTENING

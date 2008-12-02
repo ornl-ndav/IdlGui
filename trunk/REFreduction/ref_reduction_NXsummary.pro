@@ -50,32 +50,28 @@ IF (my_package[3].found EQ 0) THEN BEGIN ;nxsummary is missing
    text = 'NO INFORMATION !'
    putTextFieldArray, Event, TextFieldUname, text, 1,0
 ENDIF ELSE BEGIN
-   IF ((*global).debugging_version) THEN BEGIN ;debugging version
-      LogText = '--> Debugging Mode, NXsummary is faked'
-      putLogBookMessage,Event,LogText,Append=1
-      text = 'NO REAL INFORMATION HERE!'
-      putTextFieldArray, Event, TextFieldUname, text, 1,0
-   ENDIF ELSE BEGIN
-      IF (!VERSION.os EQ 'darwin') THEN BEGIN
-         cmd = 'head -n 22 ' + (*global).MacNXsummary
-      ENDIF ELSE BEGIN
-         cmd = 'nxsummary ' + FileName + ' --verbose '
-      ENDELSE
-      logText = '--> cmd : ' + cmd + ' ... ' + PROCESSING
-      putLogBookMessage,Event,LogText,APPEND=1
-      
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+        cmd = 'head -n 22 ' + (*global).MacNXsummary
+    ENDIF ELSE BEGIN
+        cmd = 'nxsummary ' + FileName + ' --verbose '
+    ENDELSE
+    logText = '--> cmd : ' + cmd + ' ... ' + PROCESSING
+    putLogBookMessage,Event,LogText,APPEND=1
+    
 ;run nxsummary command
-      SPAWN, cmd, listening, err_listening
-      IF (err_listening[0] EQ '') THEN BEGIN
-         listeningSize = (size(listening))(1)
-         if (listeningSize GE 1) then begin
-            putTextFieldArray, Event, TextFieldUname, listening, listeningSize,0
-         ENDIF
-         AppendReplaceLogBookMessage, Event, OK, PROCESSING
-      ENDIF ELSE BEGIN
-         AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
-      ENDELSE
-   ENDELSE                      ;end of nxsummary found or not
+    SPAWN, cmd, listening, err_listening
+    IF (err_listening[0] EQ '') THEN BEGIN
+        listeningSize = (size(listening))(1)
+        if (listeningSize GE 1) then begin
+            putTextFieldArray, Event, $
+              TextFieldUname, $
+              listening, $
+              listeningSize,0
+        ENDIF
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDIF ELSE BEGIN
+        AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+    ENDELSE
 ENDELSE                         ;end of debugging version
 END
 

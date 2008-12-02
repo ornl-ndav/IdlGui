@@ -53,13 +53,17 @@ ENDIF ELSE BEGIN
     fileID  = h5f_open(FullNexusName)
     (*global).isHDF5format = 1
 ;get bank data
-    IF (N_ELEMENTS(_EXTRA.POLA_STATE) NE 0) THEN BEGIN
-        CASE (_EXTRA.POLA_STATE) OF
-            0: data_path = (*global).nexus_bank1_path_pola0
-            1: data_path = (*global).nexus_bank1_path_pola1
-            2: data_path = (*global).nexus_bank1_path_pola2
-            3: data_path = (*global).nexus_bank1_path_pola3
-        ENDCASE
+    IF (N_ELEMENTS(_EXTRA) NE 0) THEN BEGIN
+        IF (N_ELEMENTS(_EXTRA.POLA_STATE) NE 0) THEN BEGIN
+            CASE (_EXTRA.POLA_STATE) OF
+                0: data_path = (*global).nexus_bank1_path_pola0
+                1: data_path = (*global).nexus_bank1_path_pola1
+                2: data_path = (*global).nexus_bank1_path_pola2
+                3: data_path = (*global).nexus_bank1_path_pola3
+            ENDCASE
+        ENDIF ELSE BEGIN
+            data_path = (*global).nexus_bank1_path
+        ENDELSE
     ENDIF ELSE BEGIN
         data_path = (*global).nexus_bank1_path
     ENDELSE 
