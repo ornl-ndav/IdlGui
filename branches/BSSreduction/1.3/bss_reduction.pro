@@ -46,8 +46,6 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
                           found: 0,$
                           sub_pkg_version:   ''}
 
-;empty line added
-
 ;DEBUGGING (enter the tab you want to see)
 ;(main_tab): 0: Selection
 ;            1: Reduce (reduce_input_tab)
