@@ -39,6 +39,7 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
                              isNeXusFound, $
                              NbrNexus 
 END
+
 ;------------------------------------------------------------------------------
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
@@ -46,12 +47,8 @@ PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
                                       isNeXusFound, $
                                       NbrNexus 
 END
+
 ;------------------------------------------------------------------------------
-
-
-
-
-
 ;This function get the nexus name from the data droplist and displays
 ;the nxsummary of that nexus file
 PRO REFreductionEventcb_DisplayDataNxsummary, Event

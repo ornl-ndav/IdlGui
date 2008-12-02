@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 PRO select_polarization_state, Event, file_name, list_pola_state
-;get global structure
+;update gui according to list of polarization state
+update_select_polarization_state_gui, Event, list_pola_state ;GUI
 MapBase, Event, 'polarization_state', 1
 short_file_name = FILE_BASENAME(file_name)
 putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
