@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-FUNCTION IDLgetMetadata::getData, BANK=bank
+FUNCTION IDLgetSNAPmetadata::getData, BANK=bank
 no_error = 0
 CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
@@ -50,7 +50,7 @@ END
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
-FUNCTION IDLgetMetadata::init, nexus_full_path, $
+FUNCTION IDLgetSNAPmetadata::init, nexus_full_path, $
                        POLA_STATE_NAME=pola_state_name
 ;open hdf5 nexus file
 error_file = 0
@@ -68,8 +68,8 @@ END
 
 ;******************************************************************************
 ;******  Class Define ****;****************************************************
-PRO IDLgetMetadata__define
-struct = {IDLgetMetadata,$
+PRO IDLgetSNAPmetadata__define
+struct = {IDLgetSNAPmetadata,$
           RunNumber: '',$
           fileID: 0L, $
           nexus_full_path: '',$
