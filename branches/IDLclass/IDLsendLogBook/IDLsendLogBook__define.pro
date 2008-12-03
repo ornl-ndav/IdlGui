@@ -42,6 +42,7 @@ CASE (var) OF
     'LogBookPath'     : RETURN, './'
     'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
+    'LogBookMessageId': RETURN, 'sent_to_geek_text_field'
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
     ELSE:
@@ -51,6 +52,35 @@ END
 
 ;==============================================================================
 ;==============================================================================
+
+PRO IDLsendLogBook_addLogBookText, Event, text
+LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getLogBookText, Event
+LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getMessage, Event
+MessageUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookMessageId')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=MessageUname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+PRO IDLsendLogBook_putLogBookText, Event, text
+LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text
+END
 
 ;**********************************************************************
 ;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
@@ -148,7 +178,7 @@ RETURN, DateIso
 END
 
 ;------------------------------------------------------------------------------
-PRO IDLsendLogBook_SendToGeek, Event
+PRO IDLsendLogBook_SendToGeek, Event, list_OF_files_to_tar
 
 ;create full name of log Book file
 LogBookPath   = IDLsendLogBook_getGlobalVariable(Event,'LogBookPath')
@@ -162,10 +192,10 @@ FullFileName += TimeStamp + '.log'
 CD, '~/', CURRENT=current_path
 
 ;get full text of LogBook
-LogBookText   = IDLsendToGeek_getLogBookText(Event)
+LogBookText   = IDLsendLogBook_getLogBookText(Event)
 
 ;add ucams 
-ucams         = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+ucams         = IDLsendLogBook_getGlobalVariable(Event,'ucams')
 ucamsText     = 'Ucams: ' + ucams
 LogBookText   = [ucamsText,LogBookText]
 
@@ -177,7 +207,7 @@ If (no_error NE 0) THEN BEGIN
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
       'Please email j35@ornl.gov!'
-    IDLsendToGeek_AddLogBookText, Event, LogBookText
+    IDLsendLogBook_AddLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     OPENW, 1, FullFileName
     sz = (SIZE(LogBookText))(1)
@@ -187,7 +217,10 @@ ENDIF ELSE BEGIN
     ENDFOR
     CLOSE,1
     FREE_LUN,1
-    IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
+    IDLsendLogBook_EmailLogBook, Event, $
+      FullFileName, $
+      FullTarFile, $
+      list_OF_files_to_tar
 ENDELSE
 
 ;go back to initial folder
@@ -197,18 +230,23 @@ END
 
 ;------------------------------------------------------------------------------
 ;This function send by email a copy of the logBook
-PRO IDLsendLogBook_EmailLogBook, Event, FullFileName, FullTarFile
+PRO IDLsendLogBook_EmailLogBook, Event, $
+                                 FullFileName, $
+                                 FullTarFile, $
+                                 list_OF_files_to_tar
+
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-version   = IDLsendToGeek_getGlobalVariable(Event,'version')
-ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+version     = IDLsendLogBook_getGlobalVariable(Event,'version')
+ucams       = IDLsendLogBook_getGlobalVariable(Event,'ucams')
+application = IDLsendLogBook_getGlobalVariable(Event,'ApplicationName')
 ;add ucams 
 ucamsText = 'Ucams: ' + ucams
 ;hostname
 spawn, 'hostname', hostname
 ;get message added by user
-message   = IDLsendToGeek_getMessage(Event)
+message   = IDLsendLogBook_getMessage(Event)
 ;email logBook
-text = "'Log Book of plotROI "
+text = "'Log Book of " + application
 text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += ". Message is: "
@@ -227,27 +265,35 @@ If (no_error NE 0) THEN BEGIN
 ;tell the user that the email has not been sent
     LogBookText = 'An error occured while contacting the GEEK. ' + $
       'Please email j35@ornl.gov!'
-    IDLsendToGeek_putLogBookText, Event, LogBookText
+    IDLsendLogBook_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
-    application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
-    list_OF_files = (*(*global).list_OF_files_to_send)
-    create_tar_folder, Event, FullFileName, list_OF_files, FullTarFile
-
-    subject        = application + " LogBook"
-    cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
-      FullTarFile
-    cmd += ' j35@ornl.gov'
+    application    = IDLsendLogBook_getGlobalVariable(Event,'ApplicationName')
+    list_OF_files  = list_OF_files_to_tar
+;create tar files only if list_of_files has more than 1 file
+    IF (N_ELEMENTS(list_OF_files) GT 1) THEN BEGIN
+        create_tar_folder, Event, FullFileName, list_OF_files, FullTarFile
+        subject        = application + " LogBook"
+        cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
+          FullTarFile
+        cmd += ' j35@ornl.gov'
+    ENDIF ELSE BEGIN
+        subject        = application + " LogBook"
+        cmd  =  'echo ' + text + '| mutt -s "' + subject 
+        cmd += ' j35@ornl.gov'
+    ENDELSE
     SPAWN, cmd
+
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
-    IDLsendToGeek_addLogBookText, Event, LogBookText
+    IDLsendLogBook_addLogBookText, Event, LogBookText
 ;remove tar file
-    spawn, 'rm ' + FullTarFile
+    SPAWN, 'rm ' + FullTarFile
 ENDELSE
 END
 
 ;==============================================================================
-FUNCTION IDLsendLogBook::init
+FUNCTION IDLsendLogBook::init, list_OF_files_to_tar
+IDLsendLogBook_SendToGeek, Event, list_OF_files_to_tar
 RETURN, 1
 END
 
