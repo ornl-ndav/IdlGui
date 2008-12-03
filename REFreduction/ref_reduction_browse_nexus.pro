@@ -163,30 +163,37 @@ status = OpenDataNexusFile(Event, $ ;LoadDataFile.pro
                            POLA_STATE=pola_state)
 
 IF (status EQ 0) THEN BEGIN
-   (*global).DataNeXusFound = 0
-   DataLogBookText = getDataLogBookText(Event)
-   putTextAtEndOfDataLogBookLastLine,$
-      Event,$
-      DataLogBookText,$
-      FAILED,$
-      PROCESSING
+    (*global).DataNeXusFound = 0
+   IDLsendLogBook_ReplaceLogBookText, $
+     Event, $
+     ALT=1, $
+     PROCESSING, $
+     FAILED
    RETURN
 ENDIF
 
 ;plot data now
-REFreduction_Plot1D2DDataFile, Event 
+result = REFreduction_Plot1D2DDataFile(Event)
+IF (result EQ 0) THEN BEGIN
+   (*global).DataNeXusFound = 0
+   IDLsendLogBook_ReplaceLogBookText, $
+     Event, $
+     ALT=1, $
+     PROCESSING, $
+     FAILED
+   RETURN
+ENDIF
 
 (*global).DataNeXusFound = 1
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_data_gui_if_NeXus_found, Event, 1
 
-DataLogBookText = getDataLogBookText(Event)
-putTextAtEndOfDataLogBookLastLine,$
-  Event,$
-  DataLogBookText,$
-  OK,$
-  PROCESSING
+IDLsendLogBook_ReplaceLogBookText, $
+  Event, $
+  ALT=1, $
+  PROCESSING, $
+  OK
 
 WIDGET_CONTROL,HOURGLASS=0
 
@@ -285,27 +292,34 @@ status = OpenNormNexusFile(Event, $
                            POLA_STATE=pola_state)
 IF (status EQ 0) THEN BEGIN
    (*global).NormNeXusFound = 0
-   NormLogBookText = getNormalizationLogBookText(Event)
-   putTextAtEndOfDataLogBookLastLine,$
-      Event,$
-      NormLogBookText,$
-      FAILED,$
-      PROCESSING
+   IDLsendLogBook_ReplaceLogBookText, $
+     Event, $
+     ALT=2, $
+     PROCESSING, $
+     FAILED
    RETURN
 ENDIF
 
 ;plot normalization data now
-REFreduction_Plot1D2DNormalizationFile, Event 
+status = REFreduction_Plot1D2DNormalizationFile(Event) 
+IF (status EQ 0) THEN BEGIN
+   (*global).NormNeXusFound = 0
+   IDLsendLogBook_ReplaceLogBookText, $
+     Event, $
+     ALT=2, $
+     PROCESSING, $
+     FAILED
+   RETURN
+ENDIF
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_normalization_gui_if_NeXus_found, Event, 1
 
-LogBookText = getNormalizationLogBookText(Event)
-putTextAtEndOfNormalizationLogBookLastLine,$
-   Event,$
-   LogBookText,$
-   OK,$
-   PROCESSING
+IDLsendLogBook_ReplaceLogBookText, $
+  Event, $
+  ALT=2, $
+  PROCESSING, $
+  OK
 
 WIDGET_CONTROL,HOURGLASS=0
 

@@ -39,8 +39,7 @@ Resolve_Routine, 'ref_reduction_eventcb',$
 MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;==============================================================================

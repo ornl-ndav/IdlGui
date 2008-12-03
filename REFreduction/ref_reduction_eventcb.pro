@@ -191,7 +191,7 @@ putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
 DataLogBookMessage = 'Opening selected file ..... ' + $
   (*global).processing_message
-putDataLogBookMessage, Event, DataLogBookMessage, Append=1
+IDLsendLogBook_addLogBookText, Event, DataLogBookMessage
 
 ;map=0 the base
 MapBase, Event, 'data_list_nexus_base', 0
@@ -211,13 +211,27 @@ ENDIF
 IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 
 ;load browse nexus file
-    OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
+    result = OpenDataNexusFile(Event, DataRunNumber, full_nexus_name)
+    
+;plot data now
+    result = REFreduction_Plot1D2DDataFile(Event) 
+    IF (result EQ 0) THEN BEGIN
+        (*global).DataNeXusFound = 0
+        IDLsendLogBook_ReplaceLogBookText, $
+          Event, $
+          ALT=1, $
+          PROCESSING, $
+          FAILED
+        RETURN
+    ENDIF
     
 ;update GUI according to result of NeXus found or not
     RefReduction_update_data_gui_if_NeXus_found, $
       Event, $
-      isNeXusFound
+      result
     
+    (*global).DataNeXusFound = 1
+
     WIDGET_CONTROL,HOURGLASS=0
     
 ENDIF ELSE BEGIN
@@ -277,7 +291,7 @@ ENDELSE
 showLastDataLogBookLine, Event
 END
 
-
+;------------------------------------------------------------------------------
 ;This procedure is reached by the IDLupdateGui class
 PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
 ;get global structure
@@ -302,21 +316,24 @@ putDataLogBookMessage, Event, text, Append=1
 showLastDataLogBookLine, Event
 END
 
-
-
-
+;------------------------------------------------------------------------------
 PRO REFreductionEventcb_LoadListOfNormNexus, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;indicate reading data with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
+
+PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
+FAILED     = (*global).failed
 
 ;get full name of index selected
 currFullNormNexusName = $
   getDropListSelectedValue(Event, $
                            'normalization_list_nexus_droplist')
+full_nexus_name = currFullNormNexusName
+(*global).norm_nexus_full_path = full_nexus_name
 
 ;display message in data log book
 InitialStrarr = getNormalizationLogBookText(Event)
@@ -334,48 +351,58 @@ MapBase, Event, 'norm_list_nexus_base', 0
 NormRunNumber = getTextFieldValue(Event, $
                                   'load_normalization_run_number_text_field')
 
-;Open That NeXus file
-OpenNormNexusFile, Event, NormRunNumber, currFullNormNexusName
+;check how many polarization states the file has
+nbr_pola_state = $
+  check_number_polarization_state(Event, $
+                                  full_nexus_name, $
+                                  list_pola_state)
+IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+    RETURN
+ENDIF
 
-IF ((*global).isHDF5format) THEN BEGIN
+IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 
-    REFreduction_Plot1D2DNormalizationFile, Event 
-;then plot data file (1D and 2D)
+    result = OpenNormNexusFile(Event, NormRunNumber, full_nexus_name)
+    isNexusFound = result
     
-;get global structure
-    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-    widget_control,id,get_uvalue=global
+;plot normalization data now
+    result = REFreduction_Plot1D2DNormalizationFile(Event) 
+    IF (result EQ 0) THEN BEGIN
+        IDLsendLogBook_ReplaceLogBookText, $
+          Event, $
+          ALT=2, $
+          PROCESSING, $
+          FAILED
+        RETURN
+    ENDIF
     
-;tell the user that the load and plot process is done
-    InitialStrarr = getNormalizationLogBookText(Event)
-    putTextAtEndOfNormalizationLogBookLastLine, $
-      Event, $
-      InitialStrarr, $
-      ' Done', $
-      (*global).processing_message
+;update GUI according to result of NeXus found or not
+    RefReduction_update_normalization_gui_if_NeXus_found, $
+      Event, 1
     
-;display full path to NeXus in Norm log book
-    full_nexus_name = (*global).norm_full_nexus_name
-    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-    putNormalizationLogBookMessage, Event, text, Append=1
-
-;display back and peak exclusion regions
-    REFreduction_NormBackgroundPeakSelection, Event, ''
+    LogBookText = getNormalizationLogBookText(Event)
+    putTextAtEndOfNormalizationLogBookLastLine,$
+      Event,$
+      LogBookText,$
+      OK,$
+      PROCESSING
     
-    (*global).NormNeXusFound = 1
-
+    WIDGET_CONTROL,HOURGLASS=0
+    
 ENDIF ELSE BEGIN
-
-    (*global).NormNeXusFound = 0
-
-ENDELSE
-
-;to see the last line of the norm log book
-showLastNormLogBookLine, Event
-
+    
+    WIDGET_CONTROL,HOURGLASS=0
+    
+;ask user to select the polarization state he wants to see
+    (*global).pola_type = 'norm_load'
+    select_polarization_state, Event, $
+      full_nexus_name, $
+      list_pola_state
+    
+ENDELSE                         ;end of "IF (nbr_pola_state EQ 1)"
 END
 
-
+;------------------------------------------------------------------------------
 ;This procedure is reached by the IDLupdateGui class
 PRO REFreduction_OpenPlotNormNexus, Event, $
                                     NormRunNumber, $

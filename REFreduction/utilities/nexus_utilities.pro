@@ -62,12 +62,12 @@ FUNCTION find_full_nexus_name, Event, run_number, instrument, isNexusExist
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-   my_package = (*(*global).my_package)
-   IF (my_package[0].found EQ 0) THEN BEGIN
-      debugging_structure = (*(*global).debugging_structure)
-      isNexusExist = 1
-      RETURN, debugging_structure.data_nexus_full_path
-   ENDIF
+    my_package = (*(*global).my_package)
+    IF (my_package[0].found EQ 0) THEN BEGIN
+        debugging_structure = (*(*global).debugging_structure)
+        isNexusExist = 1
+        RETURN, debugging_structure.data_nexus_full_path
+    ENDIF
 ENDIF  
 
 cmd = "findnexus --archive -i" + instrument 
@@ -87,7 +87,6 @@ ENDIF ELSE BEGIN
     isNeXusExist = 1
     RETURN, full_nexus_name[0]
 ENDELSE
-
 END
 
 ;-----------------------------------------------------------------------------
