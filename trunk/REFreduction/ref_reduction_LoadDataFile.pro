@@ -55,11 +55,11 @@ putTextFieldValue, $
   STRCOMPRESS(full_nexus_name,/REMOVE_ALL), $
   0                             ;do not append
 
-;tells the user that the NeXus file has been found
-;get log book full text
-LogBookText = getLogBookText(Event)
-Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+;;tells the user that the NeXus file has been found
+;;get log book full text
+;LogBookText = getLogBookText(Event)
+;Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
+;putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
 ;display info about nexus file selected
 LogBookText = $
@@ -75,7 +75,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
     LogBookText = '-> Is format of NeXus hdf5 ? YES'
     putLogBookMessage, Event, LogBookText, Append=1
-
+    
 ;dump binary data into local directory of user
     working_path = (*global).working_path
     status = REFReduction_DumpBinaryData(Event,$ ;_dumpbinary.pro
@@ -87,14 +87,14 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFiles and and put it in its box
-       REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
           instrument, $
           working_path, $
           DataRunNumber
     ENDIF ELSE BEGIN
-       RETURN, 0
+        RETURN, 0
     ENDELSE
- ENDIF ELSE BEGIN
+ENDIF ELSE BEGIN
     (*global).isHDF5format = 0
     LogBookText = '-> Is format of NeXus hdf5 ? NO'
     putLogBookMessage, Event, LogBookText, Append=1
@@ -102,7 +102,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
     putLogBookMessage, Event, LogBookText, Append=1
     RETURN, 0
- ENDELSE
+ENDELSE
 RETURN, 1
 END
 
@@ -134,31 +134,21 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
         
         LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
           DataRunNumber
-        IDLsendLogBook_putLogBookText, Event, LogBookText
+        IDLsendLogBook_addLogBookText, Event, LogBookText
         LogBookText += ' ... ' + PROCESSING 
         putDataLogBookMessage, Event, LogBookText
         
         LogBookText = $
           '--> Checking if at least one NeXus file can be found ' + $
           ' ... ' + PROCESSING
-        IDLsendLogBook_putLogBookText, Event, LogBookText
+        IDLsendLogBook_addLogBookText, Event, LogBookText
 
-        IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-        
-            debugging_structure = (*(*global).debugging_structure)
-            full_list_OF_nexus_name = debugging_structure.full_list_OF_nexus
-            isNeXusFound = 1
-
-        ENDIF ELSE BEGIN
-            
 ;get path to nexus run #
             full_list_of_nexus_name = find_list_nexus_name(Event,$
                                                            DataRunNumber,$
                                                            instrument,$
                                                            isNeXusFound)
 
-        ENDELSE
-        
         IF (~isNexusFound) THEN BEGIN ;no nexus found
             
 ;tells the user that the NeXus file has not been found
@@ -185,7 +175,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             IF (sz GT 1) THEN BEGIN ;more than 1 nexus file found
                 
                 WIDGET_CONTROL,HOURGLASS=0
-                
+
 ;display list in droplist and map=1 base
                 putArrayInDropList, $
                   Event, $
@@ -198,11 +188,11 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                   OK
                 LogText = '--> Found ' + STRCOMPRESS(sz,/REMOVE_ALL)
                 LogText += ' NeXus files:'
-                IDLsendLogBook_putLogBookText, Event, Logtext
+                IDLsendLogBook_addLogBookText, Event, Logtext
                 
                 FOR i=0,(sz-1) DO BEGIN
                     text = '       ' + full_list_of_nexus_name[i]
-                    IDLsendLogBook_putLogBookText, Event, text
+                    IDLsendLogBook_addLogBookText, Event, text
                 ENDFOR
                 
 ;display nxsummary of first file in 'data_list_nexus_base'
@@ -215,7 +205,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                 LogText = $
                   '<USERS!> Waiting for input from users. Please select ' + $
                   'one NeXus file from the list:'
-                IDLsendLogBook_putLogBookText, Event, LogText
+                IDLsendLogBook_addLogBookText, Event, LogText
                 
 ;display info in data log book
                 IDLsendLogBook_ReplaceLogBookText, Event, $
@@ -252,18 +242,20 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                     isNexusFound = result
                     
 ;plot data now
-                    REFreduction_Plot1D2DDataFile, Event 
+                    result = REFreduction_Plot1D2DDataFile(Event) 
+                    IF (result EQ 0) THEN BEGIN
+                        IDLsendLogBook_ReplaceLogBookText, $
+                          Event, $
+                          ALT=1, $
+                          PROCESSING, $
+                          FAILED
+                        RETURN
+                    ENDIF
                     
-                    (*global).DataNeXusFound = 1
+                    (*global).DataNeXusFound = result
                     
 ;update GUI according to result of NeXus found or not
-                    RefReduction_update_data_gui_if_NeXus_found, Event, 1
-                    
-                    IDLsendLogBook_ReplaceLogBookText, $
-                      Event, $
-                      ALT=1, $
-                      PROCESSING, $
-                      OK
+                    RefReduction_update_data_gui_if_NeXus_found, Event, result
                     
                     WIDGET_CONTROL,HOURGLASS=0
                     
@@ -294,14 +286,13 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
         putDataLogBookMessage, Event, LogBookText
         LogBookText = '--> Checking if NeXus run number exists ... ' + $
           PROCESSING    
-        putLogBookMessage, Event, LogBookText, Append=1  
+        IDLsendLogBook_addLogBookText, Event, LogBookText
         
 ;get path to nexus run #
         full_nexus_name = find_full_nexus_name(Event,$
                                                DataRunNumber,$
                                                instrument,$
                                                isNeXusFound)
-        
         
         IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
             NbrNexus = 0
@@ -322,7 +313,10 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             
         ENDIF ELSE BEGIN        ;NeXus has been found
             
-            IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
+            LogBookText = getLogBookText(Event)
+            Message = 'OK  ' + '(Full Path is: ' + $
+              strcompress(full_nexus_name) + ')'
+            IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
             
             NbrNexus = 1
             (*global).data_nexus_full_path = full_nexus_name
@@ -342,26 +336,47 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                                            DataRunNumber, $
                                            full_nexus_name)
                 
+                IF (result EQ 0) THEN BEGIN
+                    IDLsendLogBook_ReplaceLogBookText, $
+                      Event, $
+                      ALT=1, $
+                      PROCESSING, $
+                      FAILED
+                    RETURN
+                ENDIF
                 isNeXusFound = result
 
-;update GUI according to result of NeXus found or not
-                RefReduction_update_data_gui_if_NeXus_found, Event, $
-                  isNeXusFound
-                
 ;plot data now
-                REFreduction_Plot1D2DDataFile, Event 
-                
+                result = REFreduction_Plot1D2DDataFile(Event) 
+                IF (result EQ 0) THEN BEGIN
+                    (*global).DataNeXusFound = 0
+                    IDLsendLogBook_ReplaceLogBookText, $
+                      Event, $
+                      ALT=1, $
+                      PROCESSING, $
+                      FAILED
+                    RETURN
+                ENDIF
+                    
                 (*global).DataNeXusFound = 1
+                                
+                IF (result) THEN BEGIN
+                    IDLsendLogBook_ReplaceLogBookText, $
+                      Event, $
+                      ALT=1, $
+                      PROCESSING, $
+                      OK
+                ENDIF ELSE BEGIN
+                    IDLsendLogBook_ReplaceLogBookText, $
+                      Event, $
+                      ALT=1, $
+                      PROCESSING, $
+                      FAILED
+                ENDELSE                    
                 
 ;update GUI according to result of NeXus found or not
-                RefReduction_update_data_gui_if_NeXus_found, Event, 1
-                
-                IDLsendLogBook_ReplaceLogBookText, $
-                  Event, $
-                  ALT=1, $
-                  PROCESSING, $
-                  OK
-                
+                RefReduction_update_data_gui_if_NeXus_found, Event, result
+
             ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
                 (*global).pola_type = 'data_load'

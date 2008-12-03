@@ -90,15 +90,15 @@ cd, CurrentFolder
 .run tvread.pro
 
 .run ref_reduction_DumpBinary.pro
-.run ref_reduction_LoadDataFile.pro
-.run ref_reduction_NXsummary.pro
-.run ref_reduction_Plot1D2DDataFile.pro
 .run ref_reduction_Plot2DDataFile.pro
 .run ref_reduction_Plot1DDataFile.pro
-.run ref_reduction_LoadNormalizationFile.pro
-.run ref_reduction_Plot1D2DNormalizationFile.pro
+.run ref_reduction_Plot1D2DDataFile.pro
+.run ref_reduction_LoadDataFile.pro
+.run ref_reduction_NXsummary.pro
 .run ref_reduction_Plot2DNormalizationFile.pro
 .run ref_reduction_Plot1DNormalizationFile.pro
+.run ref_reduction_Plot1D2DNormalizationFile.pro
+.run ref_reduction_LoadNormalizationFile.pro
 .run ref_reduction_Zoom.pro
 .run ref_reduction_RescaleDataPlot.pro
 .run ref_reduction_RescaleData1D3DPlot.pro

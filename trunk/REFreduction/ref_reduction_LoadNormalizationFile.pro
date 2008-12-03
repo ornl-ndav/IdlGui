@@ -37,72 +37,72 @@ FUNCTION OpenNormNeXusFile, Event, $
                             full_nexus_name, $
                             POLA_STATE=pola_state
 ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  PROCESSING = (*global).processing_message ;processing message
-  instrument = (*global).instrument
-  
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+PROCESSING = (*global).processing_message ;processing message
+instrument = (*global).instrument
+
 ;store run number of data file
-  (*global).norm_run_number = NormRunNumber
-  
+(*global).norm_run_number = NormRunNumber
+
 ;store full path to NeXus
-  (*global).norm_full_nexus_name = full_nexus_name
-  
+(*global).norm_full_nexus_name = full_nexus_name
+
 ;display full nexus name in REDUCE tab
-  putTextFieldValue, $
-     event, $
-     'reduce_normalization_runs_text_field', $
-     strcompress(full_nexus_name,/remove_all), $
-     0   
+putTextFieldValue, $
+  event, $
+  'reduce_normalization_runs_text_field', $
+  strcompress(full_nexus_name,/remove_all), $
+  0   
                                 ;do not append
 ;tells the user that the NeXus file has been found
 ;get log book full text
-  LogBookText = getLogBookText(Event)
-  Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
-  putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-  
+;LogBookText = getLogBookText(Event)
+;Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
+;IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
+
 ;display info about nexus file selected
-  LogBookText = $
-     '----> Displaying information about run number using nxsummary:'
-  putLogBookMessage, Event, LogBookText, Append=1
-  RefReduction_NXsummary, Event, $
-                          full_nexus_name, $
-                          'normalization_file_info_text', $
-                          POLA_STATE=pola_state
-  
+LogBookText = $
+  '-> Displaying information about run number using nxsummary:'
+putLogBookMessage, Event, LogBookText, Append=1
+RefReduction_NXsummary, Event, $
+  full_nexus_name, $
+  'normalization_file_info_text', $
+  POLA_STATE=pola_state
+
 ;check format of NeXus file
-  IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
-     (*global).isHDF5format = 1
-     LogBookText = '-> Is format of NeXus hdf5 ? YES'
-     putLogBookMessage, Event, LogBookText, Append=1
-     
+IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    (*global).isHDF5format = 1
+    LogBookText = '--> Is format of NeXus hdf5 ? YES'
+    putLogBookMessage, Event, LogBookText, Append=1
+    
 ;dump binary data into local directory of user
-     working_path = (*global).working_path
-     status = REFReduction_DumpBinaryNormalization(Event,$
-                                                   full_nexus_name, $
-                                                   working_path, $
-                                                   POLA_STATE=pola_state)
-     IF (status EQ 0) THEN RETURN, 0
-     
-     IF ((*global).isHDF5format) THEN BEGIN
+    working_path = (*global).working_path
+    status = REFReduction_DumpBinaryNormalization(Event,$
+                                                  full_nexus_name, $
+                                                  working_path, $
+                                                  POLA_STATE=pola_state)
+    IF (status EQ 0) THEN RETURN, 0
+    
+    IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
         REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
-           instrument, $
-           working_path, $
-           NormRunNumber
-     ENDIF ELSE BEGIN
+          instrument, $
+          working_path, $
+          NormRunNumber
+    ENDIF ELSE BEGIN
         RETURN, 0
-     ENDELSE
-  ENDIF ELSE BEGIN
-     (*global).isHDF5format = 0
-     LogBookText = '-> Is format of NeXus hdf5 ? NO'
-     putLogBookMessage, Event, LogBookText, Append=1
-     LogBookText = ' !!! REFreduction does not support this file format. '
-     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
-     putLogBookMessage, Event, LogBookText, Append=1
-     RETURN, 0
-  ENDELSE
-  RETURN, 1
+    ENDELSE
+ENDIF ELSE BEGIN
+    (*global).isHDF5format = 0
+    LogBookText = '-> Is format of NeXus hdf5 ? NO'
+    putLogBookMessage, Event, LogBookText, Append=1
+    LogBookText = ' !!! REFreduction does not support this file format. '
+    LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
+    putLogBookMessage, Event, LogBookText, Append=1
+    RETURN, 0
+ENDELSE
+RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
@@ -138,14 +138,14 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
         LogBookText = '-> Retrieving full list of ' + $
           'NORMALIZATION Run Number: ' +$
           NormalizationRunNumber
-        IDLsendLogBook_putLogBookText, Event, LogBookText
+        IDLsendLogBook_addLogBookText, Event, LogBookText
         LogBookText += ' ... ' + PROCESSING 
-        IDLsendLogBook_putLogBookText, Event, ALT=2, LogBookText
+        IDLsendLogBook_addLogBookText, Event, ALT=2, LogBookText
 
         LogBookText = '--> Checking if at least one NeXus file ' + $
           'can be found ... '
         LogBookText += PROCESSING
-        IDLsendLogBook_putLogBookText, Event, LogBookText
+        IDLsendLogBook_addLogBookText, Event, LogBookText
 
 ;get path to nexus run #
         full_list_of_nexus_name = find_list_nexus_name(Event,$
@@ -171,6 +171,8 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
 
         ENDIF ELSE BEGIN ;1 or more nexus have been found
 
+            WIDGET_CONTROL,HOURGLASS=0
+
 ;display list of nexus found if list is GT 1 otherwise proceed as
 ;before
             sz = (SIZE(full_list_of_nexus_name))(1)
@@ -184,16 +186,16 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                   'normalization_list_nexus_droplist'
                MapBase, Event, 'norm_list_nexus_base', 1
 
-  IDLsendLogBook_ReplaceLogBookText, Event, $
+               IDLsendLogBook_ReplaceLogBookText, Event, $
                                                    PROCESSING, $
                                                    OK
                 LogText = '--> Found ' + STRCOMPRESS(sz,/REMOVE_ALL)
                 LogText += ' NeXus files:'
-                IDLsendLogBook_putLogBookText, Event, Logtext
+                IDLsendLogBook_addLogBookText, Event, Logtext
 
                 FOR i=0,(sz-1) DO BEGIN
                     text = '       ' + full_list_of_nexus_name[i]
-                    IDLsendLogBook_putLogBookText, Event, text
+                    IDLsendLogBook_addLogBookText, Event, text
                 ENDFOR
 
 ;display nxsummary of first file in 'data_list_nexus_base'
@@ -206,7 +208,7 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                 LogText = $
                    '<USERS!> Waiting for input from users. Please select ' + $
                    'one NeXus file from the list:'
-                IDLsendLogBook_putLogBookText, Event, LogText
+                IDLsendLogBook_addLogBookText, Event, LogText
 
 ;display info in normalization log book
                 IDLsendLogBook_ReplaceLogBookText, Event, $
@@ -243,8 +245,16 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                     isNexusFound = result
 
 ;plot normalization data now
-                    REFreduction_Plot1D2DNormalizationFile, Event 
-                    
+                    result = REFreduction_Plot1D2DNormalizationFile(Event)
+                    IF (result EQ 0) THEN BEGIN
+                        IDLsendLogBook_ReplaceLogBookText, $
+                          Event, $
+                          ALT=2, $
+                          PROCESSING, $
+                          FAILED
+                        RETURN
+                    ENDIF
+                                        
 ;update GUI according to result of NeXus found or not
                     RefReduction_update_normalization_gui_if_NeXus_found, $
                       Event, 1
@@ -276,9 +286,9 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
         putLogBookMessage, Event, LogBookText, Append=1
         LogBookText += ' ... ' + PROCESSING 
         putNormalizationLogBookMessage, Event, LogBookText
-        LogBookText = '--> Checking if NeXus run number exist ..... ' + $
+        LogBookText = '--> Checking if NeXus run number exist ... ' + $
                       PROCESSING
-        putLogBookMessage, Event, LogBookText, Append=1
+        IDLsendLogBook_addLogBookText, Event, LogBookText
         
 ;get path to nexus run #
         full_nexus_name = find_full_nexus_name(Event,$
@@ -304,8 +314,11 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
 ;no needs to do anything more
             
         ENDIF ELSE BEGIN        ;NeXus has been found
-           
-           IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
+
+            LogBookText = getLogBookText(Event)
+           Message = 'OK  ' + '(Full Path is: ' + $
+             strcompress(full_nexus_name) + ')'
+           IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
 
             NbrNexus = 1
             (*global).norm_nexus_full_path = full_nexus_name
@@ -329,8 +342,16 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                 isNexusFound = result
                 
 ;plot normalization data now
-                REFreduction_Plot1D2DNormalizationFile, Event 
-                
+                result = REFreduction_Plot1D2DNormalizationFile(Event) 
+                IF (result EQ 0) THEN BEGIN
+                    IDLsendLogBook_ReplaceLogBookText, $
+                      Event, $
+                      ALT=2, $
+                      PROCESSING, $
+                      FAILED
+                    RETURN
+                ENDIF
+                                
 ;update GUI according to result of NeXus found or not
                 RefReduction_update_normalization_gui_if_NeXus_found, $
                   Event, 1
