@@ -36,8 +36,7 @@
 PRO RefReduction_LogBookInterface, Event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
@@ -72,8 +71,7 @@ END
 PRO REFreduction_EmailLogBook, Event, FullFileName
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;add ucams 
 ucamsText = 'Ucams: ' + (*global).ucams
@@ -85,7 +83,6 @@ spawn, 'hostname', hostname
 message = getTextFieldValue(Event, 'log_book_output_text_field')
 
 ;email logBook
-
 text = "'Log Book of REFreduction "
 IF ((*global).miniVersion EQ 0) THEN BEGIN
     text += "- low resolution version - "
@@ -112,14 +109,13 @@ shared_path = '/SNS/' + (*global).instrument + '/shared/'
 ;get DATA and NORM ROI files name
 data_roi_file_name = getTextFieldValue(Event, $
                                        'reduce_data_region_of_interest_file_name')
-norm_roi_file_name = $
-  getTextFieldValue(Event, $
-                    'reduce_normalization_region_of_interest_file_name')
+IF (data_roi_file_name EQ '') THEN BEGIN
+    GOTO, skip_data
+ENDIF
+
 ;copy roi files into share folder
 chmod_cmd_data = 'chmod 755 ' + data_roi_file_name
 cp_cmd_data    = 'cp ' + data_roi_file_name + ' ' + shared_path
-chmod_cmd_norm = 'chmod 755 ' + norm_roi_file_name
-cp_cmd_norm    = 'cp ' + norm_roi_file_name + ' ' + shared_path
 
 ;change permission of file first
 roi_data_error = 0
@@ -161,6 +157,18 @@ ENDIF ELSE BEGIN
         putLogBookMessage, Event, LogBookText, Append=1
     ENDELSE
 ENDELSE
+
+skip_data:
+norm_roi_file_name = $
+  getTextFieldValue(Event, $
+                    'reduce_normalization_region_of_interest_file_name')
+
+IF (norm_roi_file_name EQ '') THEN BEGIN
+    GOTO, skip_norm
+ENDIF
+
+chmod_cmd_norm = 'chmod 755 ' + norm_roi_file_name
+cp_cmd_norm    = 'cp ' + norm_roi_file_name + ' ' + shared_path
 
 IF (norm_roi_file_name NE '') THEN BEGIN
 ;change permission of file
@@ -205,6 +213,8 @@ IF (norm_roi_file_name NE '') THEN BEGIN
         ENDELSE
     ENDELSE
 ENDIF
+
+skip_norm:
 
 ;copy Batch File Name if any
 IF ((*global).BatchFileName NE '') THEN BEGIN
