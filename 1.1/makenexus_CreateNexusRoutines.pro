@@ -65,10 +65,7 @@ stagingArea = CNstruct.stagingArea
 AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
-
 END
-
-
 
 ;##############################################################################
 FUNCTION CreateStagingArea, Event, CNstruct
@@ -120,12 +117,7 @@ ENDELSE
 RETURN, error_status
 END
 
-
-
 ;##############################################################################
-
-
-
 FUNCTION RunmpFlags, Event, CNstruct, TRY_NBR=try_nbr
 
 ;retrieving parameters
