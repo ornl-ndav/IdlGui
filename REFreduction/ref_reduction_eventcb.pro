@@ -189,8 +189,7 @@ InitialStrarr = getDataLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-DataLogBookMessage = 'Opening selected file ..... ' + $
-  (*global).processing_message
+DataLogBookMessage = 'Opening selected file:'
 IDLsendLogBook_addLogBookText, Event, DataLogBookMessage
 
 ;map=0 the base
@@ -340,8 +339,7 @@ InitialStrarr = getNormalizationLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfNormalizationLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-NormLogBookMessage = 'Opening selected file ..... ' + $
-  (*global).processing_message
+NormLogBookMessage = 'Opening selected file:'
 putNormalizationLogBookMessage, Event, NormLogBookMessage, Append=1
 
 ;map=0 the base

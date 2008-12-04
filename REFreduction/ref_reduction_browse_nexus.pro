@@ -35,7 +35,7 @@ PRO select_polarization_state, Event, file_name, list_pola_state
 ;update gui according to list of polarization state
 update_select_polarization_state_gui, Event, list_pola_state ;GUI
 MapBase, Event, 'polarization_state', 1
-short_file_name = FILE_BASENAME(file_name)
+short_file_name = FILE_BASENAME(file_name[0])
 putLabelValue, Event, 'pola_file_name_uname', '('+ short_file_name+')'
 text = '<USERS!> Waiting for input from users (selection of ' + $
        'the polarization state to plot)'
@@ -148,13 +148,12 @@ OBJ_DESTROY, iNexus
 DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
 (*global).DataRunNumber = DataRunNumber
 
-LogBookText = '-> Openning DATA Run Number: ' + DataRunNumber
+LogBookText = '> Openning DATA Run Number: ' + DataRunNumber
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
    LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
 ENDIF
-LogBookText += ' ... ' + PROCESSING 
 putLogBookMessage, Event, LogBookText, Append=1
-putDataLogBookMessage, Event, LogBookText
+putDataLogBookMessage, Event, LogBookText + ' ... ' + PROCESSING
         
 NbrNexus = 1
 status = OpenDataNexusFile(Event, $ ;LoadDataFile.pro
@@ -278,12 +277,13 @@ OBJ_DESTROY, iNexus
 NormRunNumber = STRCOMPRESS(NormRunNumber,/REMOVE_ALL)
 (*global).NormRunNumber = NormRunNumber
 
-LogBookText = '-> Openning NORMALIZATION Run Number: ' + NormRunNumber
+LogBookText = '> Openning NORMALIZATION Run Number: ' + NormRunNumber
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
    LogBookText += ' (polarization state: ' + list_pola_state[POLA_STATE] + ')'
 ENDIF
-LogBookText += ' ... ' + PROCESSING 
-putNormalizationLogBookMessage, Event, LogBookText
+IDLsendLogBook_addLogBookText, Event, LogBookText
+IDLsendLogBook_addLogBookText, Event, ALT=2,  LogBookText + ' ... ' + $
+  PROCESSING
         
 NbrNexus = 1
 status = OpenNormNexusFile(Event, $
