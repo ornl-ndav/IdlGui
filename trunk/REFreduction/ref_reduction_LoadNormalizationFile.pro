@@ -224,6 +224,7 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                 
                 IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
                 
+                full_nexus_name = full_list_OF_nexus_name[0]
                 NbrNexus = 1
                 (*global).norm_nexus_full_path = full_nexus_name
                 

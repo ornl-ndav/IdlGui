@@ -221,6 +221,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                 
                 IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, OK
                 
+                full_nexus_name = full_list_of_nexus_name[0]
                 NbrNexus = 1
                 (*global).data_nexus_full_path = full_nexus_name
                 
