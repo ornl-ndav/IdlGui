@@ -186,6 +186,9 @@ global = ptr_new ({ ucams:               ucams,$
 MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Reflectometer Off Specular Application'
 MainBaseTitle += ' - ' + VERSION
+IF (DEBUGGING EQ 'yes') THEN BEGIN
+    MainBaseTitle += ' (DEBUGGING MODE)'
+ENDIF
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
