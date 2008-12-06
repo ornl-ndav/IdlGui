@@ -3,11 +3,10 @@ FUNCTION getOutputFileName, INPUT_FILE
 ;just remove <extenstion> and put _new.<extension>
 file_parse = STRSPLIT(INPUT_FILE,'.',/EXTRACT,COUNT=nbr)
 CASE (nbr) OF 
-   0: new_file_name = input_file + '_new'
-   1: new_file_name = file_parse[0]+ '_new.' + file_parse[1]
+   0: new_file_name = input_file + '_new.txt'
+   1: new_file_name = file_parse[0]+ '_new.txt
    ELSE: new_file_name = STRJOIN(file_parse[0:nbr-2],'.') + $
-                         '_new.' + $
-                         file_parse[nbr-1]
+                         '_new.txt'
 ENDCASE
 RETURN, new_file_name
 END
