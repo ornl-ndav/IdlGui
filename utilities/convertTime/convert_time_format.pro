@@ -1,7 +1,21 @@
+FUNCTION getOutputFileName, INPUT_FILE
+
+;just remove <extenstion> and put _new.<extension>
+file_parse = STRSPLIT(INPUT_FILE,'.',/EXTRACT,COUNT=nbr)
+CASE (nbr) OF 
+   0: new_file_name = input_file + '_new'
+   1: new_file_name = file_parse[0]+ '_new.' + file_parse[1]
+   ELSE: new_file_name = STRJOIN(file_parse[0:nbr-2],'.') + $
+                         '_new.' + $
+                         file_parse[nbr-1]
+ENDCASE
+RETURN, new_file_name
+END
+
+;------------------------------------------------------------------------------
 FUNCTION convert_date, date
 
 YEAR_REFERENCE  = 2000L
-
 split = STRSPLIT(date,'/',/EXTRACT)
 
 ;year into days
@@ -102,7 +116,10 @@ END
 ;------------------------------------------------------------------------------
 PRO convert_time_format
 
-INPUT_FILE = 'day6p3.dat'
+input = COMMAND_LINE_ARGS()
+IF (N_ELEMENTS(input) EQ 0) THEN RETURN
+INPUT_FILE = input[0]
+
 file_size  = FILE_LINES(INPUT_FILE)
 IF (file_size EQ 0) THEN RETURN
 file_array = STRARR(file_size)
@@ -117,7 +134,12 @@ file_array_wo_header = remove_header(file_array)
 file_array_new_format = changeFormat(file_array_wo_header)
 
 ;output file
-openw, 1, 'day6p3_new.txt'
+IF (N_ELEMENTS(input) GT 1) THEN BEGIN
+   OUTPUT_FILE=input[1]
+ENDIF ELSE BEGIN
+   OUTPUT_FILE = getOutputFileName(INPUT_FILE)
+ENDELSE
+openw, 1, OUTPUT_FILE
 sz = N_ELEMENTS(file_array_new_format)
 index = 0
 WHILE (index LT sz) DO BEGIN
