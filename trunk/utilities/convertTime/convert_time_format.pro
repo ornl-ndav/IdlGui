@@ -102,8 +102,6 @@ END
 ;------------------------------------------------------------------------------
 PRO convert_time_format
 
-help, COMMAND_LINE_ARGS()
-
 INPUT_FILE = 'day6p3.dat'
 file_size  = FILE_LINES(INPUT_FILE)
 IF (file_size EQ 0) THEN RETURN
