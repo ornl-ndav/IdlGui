@@ -116,7 +116,16 @@ END
 PRO convert_time_format
 
 input = COMMAND_LINE_ARGS()
-IF (N_ELEMENTS(input) EQ 0) THEN RETURN
+IF (input[0] EQ '') THEN BEGIN
+   text = ['Please Provide an input file !',$
+           '',$
+           'Format:',$
+           '    convertTimeFormat <input_file_name> [<output_file_name>]']
+   result = DIALOG_MESSAGE(text,$
+                           TITLE = "ERROR!",$
+                           /ERROR)
+   EXIT
+ENDIF
 INPUT_FILE = input[0]
 
 file_size  = FILE_LINES(INPUT_FILE)
