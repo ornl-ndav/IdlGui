@@ -4,7 +4,7 @@ FUNCTION getOutputFileName, INPUT_FILE
 file_parse = STRSPLIT(INPUT_FILE,'.',/EXTRACT,COUNT=nbr)
 CASE (nbr) OF 
    0: new_file_name = input_file + '_new.txt'
-   1: new_file_name = file_parse[0]+ '_new.txt
+   1: new_file_name = file_parse[0]+ '_new.txt'
    ELSE: new_file_name = STRJOIN(file_parse[0:nbr-2],'.') + $
                          '_new.txt'
 ENDCASE
@@ -115,47 +115,103 @@ END
 ;------------------------------------------------------------------------------
 PRO convert_time_format
 
-input = COMMAND_LINE_ARGS()
-IF (input[0] EQ '') THEN BEGIN
-   text = ['Please Provide an input file !',$
-           '',$
-           'Format:',$
-           '    convertTimeFormat <input_file_name> [<output_file_name>]']
+VERSION = '1.0.0'
+
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   text = ['There is a problem with the input file or your mispelled one ' + $
+           'of the flags',$
+           'Please send your input file to j35@ornl.gov with the command ' + $
+           'line you used']
    result = DIALOG_MESSAGE(text,$
-                           TITLE = "ERROR!",$
+                           TITLE = "Conversion Failed",$
                            /ERROR)
    EXIT
-ENDIF
-INPUT_FILE = input[0]
-
-file_size  = FILE_LINES(INPUT_FILE)
-IF (file_size EQ 0) THEN RETURN
-file_array = STRARR(file_size)
-OPENR, 1, INPUT_FILE
-READF, 1, file_array
-CLOSE, 1
-
-;remove header
-file_array_wo_header = remove_header(file_array)
-
-;format the first column
-file_array_new_format = changeFormat(file_array_wo_header)
-
-;output file
-IF (N_ELEMENTS(input) GT 1) THEN BEGIN
-   OUTPUT_FILE=input[1]
 ENDIF ELSE BEGIN
-   OUTPUT_FILE = getOutputFileName(INPUT_FILE)
-ENDELSE
-openw, 1, OUTPUT_FILE
-sz = N_ELEMENTS(file_array_new_format)
-index = 0
-WHILE (index LT sz) DO BEGIN
-    PRINTF, 1, file_array_new_format[index]
-    index++
-ENDWHILE        
-CLOSE, 1
-FREE_LUN, 1
+   input = COMMAND_LINE_ARGS()
+   
+   isVersion1 = STRMATCH(input,'--version')
+   isVersion2 = STRMaTCH(input,'-v')
+   IF (TOTAL(isVersion1) + TOTAL(isVersion2) GT 0) THEN BEGIN
+      print, 'convertTimeFormat version ' + VERSION
+      EXIT	
+   ENDIF
+   
+;check if there is the --help or -h tag and if there is, display help
+;menu
+   isHelp1 = STRMATCH(input,'--help')
+   isHelp2 = STRMATCH(input,'-h')
+   IF (TOTAL(isHelp1) + TOTAL(isHelp2) GT 0) THEN BEGIN
+      print, 'convertTimeFormat Help Menu:'
+      print
+      print, 'This program takes a 3 columns ASCII file with metadata in the header'
+      print, 'and replace the time format by numbers of days since 2000.'
+      print
+      print, '   convertTimeFormat <input_file> [<output_file>] [-h] [--help]'
+      print
+      print, 'Parameters:'
+      print
+      print, '   <infput_file>(mandatory) name of file to convert'
+      print, '   <output_file>(optional)  name of output file to create. If no name'
+      print, '                            is provided, "_new.txt" will replace the'
+      print, '                            extension of the input file.'
+      print, '   -h, --help (optional)    displays this help.'
+      print, '   -v, --version (optional) to get the current version of the' + $
+             ' application'
+      print
+      print, ' To report bugs, request new feature or questions, contact j35@ornl.gov'
+      EXIT
+   ENDIF
+   
+   IF (input[0] EQ '') THEN BEGIN
+      text = ['Please Provide an input file !',$
+              '',$
+              'Format:',$
+              '    convertTimeFormat <input_file_name> [<output_file_name>]']
+      result = DIALOG_MESSAGE(text,$
+                              TITLE = "ERROR!",$
+                              /ERROR)
+      EXIT
+   ENDIF
+   INPUT_FILE = input[0]
+   
+   file_size  = FILE_LINES(INPUT_FILE)
+   IF (file_size EQ 0) THEN RETURN
+   file_array = STRARR(file_size)
+   OPENR, 1, INPUT_FILE
+   READF, 1, file_array
+   CLOSE, 1
+   
+;remove header
+   file_array_wo_header = remove_header(file_array)
+   
+;format the first column
+   file_array_new_format = changeFormat(file_array_wo_header)
+   
+;output file
+   IF (N_ELEMENTS(input) GT 1) THEN BEGIN
+      OUTPUT_FILE=input[1]
+   ENDIF ELSE BEGIN
+      OUTPUT_FILE = getOutputFileName(INPUT_FILE)
+   ENDELSE
+   openw, 1, OUTPUT_FILE
+   sz = N_ELEMENTS(file_array_new_format)
+   index = 0
+   WHILE (index LT sz) DO BEGIN
+      PRINTF, 1, file_array_new_format[index]
+      index++
+   ENDWHILE        
+   CLOSE, 1
+   FREE_LUN, 1
+   
+   text = 'Output file is: ' + OUTPUT_FILE
+   result = DIALOG_MESSAGE(text,$
+                           TITLE = "Conversion Successful!",$
+                           /INFORMATION)
 
+ENDELSE ;end of catch statement
+   
 END
 
