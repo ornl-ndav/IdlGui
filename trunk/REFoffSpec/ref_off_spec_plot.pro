@@ -117,8 +117,6 @@ END
 PRO plotAsciiData, Event, TYPE=type
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-new_way = 1 ;1 for new way, 0 for old way of adding data together
-
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 ;;clean up data
     Cleanup_data, Event
@@ -135,13 +133,9 @@ xData               = (*(*global).pData_x)
 xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
 xmax                = 0L
-IF (new_way) THEN BEGIN
-    x_axis              = LONARR(nbr_plot)
-ENDIF ELSE BEGIN
-    x_axis              = LONARR(1) ;max value of each x-axis
-ENDELSE
-y_coeff = 2
-x_coeff = 1
+x_axis              = LONARR(nbr_plot)
+y_coeff             = 2
+x_coeff             = 1
 
 ;check which array is the biggest (index)
 ;this array will be the base for the other array (xaxis will be based
@@ -150,27 +144,19 @@ max_coeff       = MAX(congrid_coeff_array)
 index_max_array = WHERE(congrid_coeff_array EQ max_coeff)
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN ;from browse button
-;    IF ((*global).first_load EQ 1) THEN BEGIN
-;populate trans_coeff_list using default value of (1,1,...)
     trans_coeff_list = FLTARR(nbr_plot) + 1.
     (*(*global).trans_coeff_list) = trans_coeff_list
-;    ENDIF ELSE BEGIN
-;        trans_coeff_list = (*(*global).trans_coeff_list)        
-;        trans_coeff_list = [trans_coeff_list,1.]
-;    ENDELSE
-;    (*(*global).trans_coeff_list) = trans_coeff_list
 ENDIF ELSE BEGIN ;when using 'replot'
     trans_coeff_list = (*(*global).trans_coeff_list)
 ENDELSE
 
-;master_min = 0
-;master_max = 0
 min_array  = FLTARR(nbr_plot) ;array of all the min values
 max_array  = FLTARR(nbr_plot) ;array of all the max values
 xmax_array = FLTARR(nbr_plot) ;x of max value per array
 ymax_array = FLTARR(nbr_plot) ;y of max value per array
 max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -185,17 +171,14 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisSelected(Event)
     IF (bLogPlot) THEN BEGIN
-        
         zero_index = WHERE(local_tfpdata EQ 0) 
         local_tfpdata[zero_index] = !VALUES.F_NAN
-
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
         max_array[index] = local_max
 ;save position of max value (used for log book only)
         idx1 = WHERE(transparency_1*local_tfpData EQ local_max)
-
         local_tfpData = ALOG10(local_tfpData)
         cleanup_array, local_tfpdata ;_plot
     ENDIF ELSE BEGIN ;linear
@@ -206,145 +189,71 @@ WHILE (index LT nbr_plot) DO BEGIN
         max_array[index] = local_max
 ;save position of max value (used for log book only)
         idx1 = WHERE(transparency_1*local_tfpData EQ local_max)
-
     ENDELSE
     
-    IF (new_way) THEN BEGIN
-
-        IF (index EQ 0) THEN BEGIN
+    IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
-            base_array = local_tfpData 
-            base_array_untouched = local_tfpdata_untouched ;for counts
-
-            size = (size(total_array,/DIMENSIONS))[0]
-            max_size = (size GT max_size) ? size : max_size
-
-;give master_min and master_max the values of local min and max 
-            master_min = local_min
-            master_max = local_max
-
-        ENDIF
-
-        ind1 = ARRAY_INDICES(local_tfpData,idx1)
-        delta_x = xaxis[1]-xaxis[0]
-        xmax_array[index] = ind1[0]*delta_x
-        ymax_array[index] = ind1[1]/2.
-        
-;store x-axis end value
-        x_axis[index] = (size(local_tfpData,/DIMENSION))[0]
-
-;determine max and min value of y (over all the data arrays)
-        master_min = (local_min LT master_min) ? local_min : master_min
-        master_max = (local_max GT master_max) ? local_max : master_max
-
-        IF (index NE 0) THEN BEGIN
-            index_no_null = WHERE(local_tfpData NE 0,nbr)
-            IF (nbr NE 0) THEN BEGIN
-                index_indices = ARRAY_INDICES(local_tfpData,index_no_null)
-                sz = (size(index_indices,/DIMENSION))[1]
-;loop through all the not null values and add them to the background
-;array if their value is greater than the background one
-                i = 0L
-                WHILE(i LT sz) DO BEGIN
-                    x = index_indices[0,i]
-                    y = index_indices[1,i]
-                    value_new = local_tfpData(x,y)
-                    value_new_untouched = local_tfpData_untouched(x,y)
-                    value_old = base_array(x,y)
-                    value_old_untouched = base_array_untouched(x,y)
-                    IF (value_new GT value_old) THEN BEGIN
-                        base_array(x,y) = value_new
-                        base_array_untouched(x,y) = value_new_untouched
-                    ENDIF
-                    ++i
-                ENDWHILE
-            ENDIF
-        ENDIF
-
-    ENDIF ELSE BEGIN
-    
-;rebin by 2 in y-axis
-        rData = REBIN(local_tfpData,(size(local_tfpData))(1)*x_coeff, $
-                      (size(local_tfpData))(2)*y_coeff,/SAMPLE)
+        base_array = local_tfpData 
+        base_array_untouched = local_tfpdata_untouched ;for counts
         
         size = (size(total_array,/DIMENSIONS))[0]
         max_size = (size GT max_size) ? size : max_size
         
-        transparency_1 = trans_coeff_list[index]
-;determine min and max value (for this array only)
-        local_min = transparency_1 * MIN(rData)
-        local_max = transparency_1 * MAX(rData)
+;give master_min and master_max the values of local min and max 
+        master_min = local_min
+        master_max = local_max
         
-;save position of max value (used for log book only)
-        idx1 = WHERE(transparency_1*rData EQ local_max)
-        ind1 = ARRAY_INDICES(rData,idx1)
-        delta_x = xaxis[1]-xaxis[0]
-        xmax_array[index] = ind1[0]*delta_x
-        ymax_array[index] = ind1[1]/2.
-        
+    ENDIF
+    
+    ind1    = ARRAY_INDICES(local_tfpData,idx1)
+    delta_x = xaxis[1]-xaxis[0]
+    xmax_array[index] = ind1[0]*delta_x
+    ymax_array[index] = ind1[1]/2.
+    
+;store x-axis end value
+    x_axis[index] = (size(local_tfpData,/DIMENSION))[0]
+    
 ;determine max and min value of y (over all the data arrays)
-        master_min = (local_min LT master_min) ? local_min : master_min
-        master_max = (local_max GT master_max) ? local_max : master_max
-        IF (index EQ 0) THEN BEGIN ;first pass
-            total_array = rData
-            x_axis[0] = (size(rData,/DIMENSION))[0]
-            min_array[0] = local_min
-            max_array[0] = local_max
-        ENDIF ELSE BEGIN        ;other pass
-            size = (size(rData,/DIMENSIONS))[0]
-            x_axis = [x_axis,size]
-            min_array[index] = local_min
-            max_array[index] = local_max
-            IF (size GT max_size) THEN BEGIN ;if new array is bigger
-                new_total_array = rData
-                old_array = total_array
-;add old array to total_array
-;#1 make old array same size as new array
-                x = (size(rData,/DIMENSIONS))[0]
-                y = (size(rData,/DIMENSIONS))[1]
-                new_array = LONARR(x,y)
-;#2 find out where there are data
-                idx = WHERE(rData NE 0)
-                new_array[idx] = old_array[idx]
-;#3 add arrays together
-                total_array = BYTSCL(new_total_array + $
-                                     transparency_1* $
-                                     new_array, $
-                                     /NAN)
-            ENDIF ELSE BEGIN    ;new array is smaller
-                x = (size(total_array,/DIMENSIONS))[0]
-                y = (size(total_array,/DIMENSIONS))[1]
-                new_array = LONARR(x,y)
-                idx = WHERE(rData NE 0)
-                ind = ARRAY_INDICES(rData,idx)
-                imax = (size(ind,/DIMENSIONS))[1]
-                FOR i=0L,imax-1 DO BEGIN
-                    new_array(ind[0,i],ind[1,i]) = rData(ind[0,i],ind[1,i])
-                ENDFOR
-                total_array = BYTSCL(total_array + $
-                                     transparency_1*new_array,/NAN)
-            ENDELSE
-        ENDELSE
-        
-        (*(*global).total_array) = total_array
-
-    ENDELSE ;end of 'if (new_way)'
-
+    master_min = (local_min LT master_min) ? local_min : master_min
+    master_max = (local_max GT master_max) ? local_max : master_max
+    
+    IF (index NE 0) THEN BEGIN
+        index_no_null = WHERE(local_tfpData NE 0,nbr)
+        IF (nbr NE 0) THEN BEGIN
+            index_indices = ARRAY_INDICES(local_tfpData,index_no_null)
+            sz = (size(index_indices,/DIMENSION))[1]
+;loop through all the not null values and add them to the background
+;array if their value is greater than the background one
+            i = 0L
+            WHILE(i LT sz) DO BEGIN
+                x = index_indices[0,i]
+                y = index_indices[1,i]
+                value_new = local_tfpData(x,y)
+                value_new_untouched = local_tfpData_untouched(x,y)
+                value_old = base_array(x,y)
+                value_old_untouched = base_array_untouched(x,y)
+                IF (value_new GT value_old) THEN BEGIN
+                    base_array(x,y) = value_new
+                    base_array_untouched(x,y) = value_new_untouched
+                ENDIF
+                ++i
+            ENDWHILE
+        ENDIF
+    ENDIF
+    
     ++index
     
 ENDWHILE
 
-IF (new_way) THEN BEGIN
 ;rebin by 2 in y-axis final array
-    rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
-                  (size(base_array))(2)*y_coeff,/SAMPLE)
-    rData_untouched = REBIN(base_array_untouched, $
-                            (size(base_array))(1)*x_coeff, $
-                            (size(base_array))(2)*y_coeff,/SAMPLE)
-    (*(*global).total_array) = rData
-    (*(*global).total_array_untouched) = rData_untouched
-    total_array = rData
-ENDIF
+rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
+              (size(base_array))(2)*y_coeff,/SAMPLE)
+rData_untouched = REBIN(base_array_untouched, $
+                        (size(base_array))(1)*x_coeff, $
+                        (size(base_array))(2)*y_coeff,/SAMPLE)
+(*(*global).total_array) = rData
+(*(*global).total_array_untouched) = rData_untouched
+total_array = rData
 
 ;put information in log book about min and max
 InformLogBook, Event, min_array, max_array, xmax_array, ymax_array ;_gui
