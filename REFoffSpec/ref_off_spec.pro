@@ -134,10 +134,10 @@ global = ptr_new ({ ucams:               ucams,$
                     sys_color_face_3d:   INTARR(3),$
                     working_pola_state:  '',$
                     list_OF_ascii_files: ptr_new(0L),$
-                    list_OF_ascii_files_p1 : ptr_new(0L),$
-                    list_OF_ascii_files_p2 : ptr_new(0L),$
-                    list_OF_ascii_files_p3 : ptr_new(0L),$
-                    time_stamp           : '',$
+                    list_OF_ascii_files_p1: ptr_new(0L),$
+                    list_OF_ascii_files_p2: ptr_new(0L),$
+                    list_OF_ascii_files_p3: ptr_new(0L),$
+                    time_stamp:             '',$
                     short_list_OF_ascii_files: ptr_new(0L),$
                     trans_coeff_list:    ptr_new(0L),$
                     pData:               ptr_new(0L),$
@@ -207,7 +207,7 @@ sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
 (*global).sys_color_face_3d = sys_color.face_3d
 
 ;attach global structure with widget ID of widget main base widget ID
-widget_control, MAIN_BASE, set_uvalue=global
+WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 
 label = Widget_label(MAIN_BASe,$
                      xoffset = 0,$
