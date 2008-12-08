@@ -106,9 +106,8 @@ colorbar, $
   POSITION     = [0.75,0.01,0.95,0.99], $
   RANGE        = range,$
   DIVISIONS    = divisions,$
-;  FORMAT       = '(I0)',$
   PERSO_FORMAT = perso_format,$
-    YLOG = 1,$
+  YLOG = 1,$
   /VERTICAL
 
 END
