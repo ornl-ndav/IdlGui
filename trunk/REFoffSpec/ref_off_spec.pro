@@ -64,7 +64,7 @@ SUPER_USERS       = ['j35']
 sDEBUGGING = { tab: {main_tab: 1,$
                      step4_tab: 0,$
                      scaling_tab: 1},$
-               ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.0/'}
+               ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/'}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}

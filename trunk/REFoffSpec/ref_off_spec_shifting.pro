@@ -218,12 +218,19 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisShiftingSelected(Event)
     IF (bLogPlot) THEN BEGIN
-        local_tfpData       = ALOG10(local_tfpData)
-        index_inf = WHERE(local_tfpData LT 0, nIndex)
-        IF (nIndex GT 0) THEN BEGIN
-            local_tfpData[index_inf]       = 0
-        ENDIF
+        zero_index = WHERE(local_tfpdata EQ 0) 
+        local_tfpdata[zero_index] = !VALUES.F_NAN
+        local_tfpData = ALOG10(local_tfpData)
+        cleanup_array, local_tfpdata ;_plot
     ENDIF
+
+;     IF (bLogPlot) THEN BEGIN
+;         local_tfpData       = ALOG10(local_tfpData)
+;         index_inf = WHERE(local_tfpData LT 0, nIndex)
+;         IF (nIndex GT 0) THEN BEGIN
+;             local_tfpData[index_inf]       = 0
+;         ENDIF
+;     ENDIF
     
     IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
