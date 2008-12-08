@@ -133,19 +133,26 @@ IF (isLogZaxisShiftingSelected(Event)) THEN BEGIN
     divisions = 10
     perso_format = '(e8.1)'
     range  = FLOAT([master_min,master_max])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      YLOG = 1,$
+      /VERTICAL
 ENDIF ELSE BEGIN
     divisions = 20
     perso_format = '(e8.1)'
     range = [master_min,master_max]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
 ENDELSE
-
-colorbar, $
-  NCOLORS      = 255, $
-  POSITION     = [0.75,0.01,0.95,0.99], $
-  RANGE        = range,$
-  DIVISIONS    = divisions,$
-  PERSO_FORMAT = perso_format,$
-  /VERTICAL
 
 END
 
@@ -211,6 +218,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (bLogPlot) THEN BEGIN
         zero_index = WHERE(local_tfpdata EQ 0) 
         local_tfpdata[zero_index] = !VALUES.F_NAN
+
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
@@ -233,14 +241,11 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;array that will serve as the background 
         base_array           = local_tfpData 
         base_array_untouched = local_tfpData_untouched ;for counts
-
         size = (size(total_array,/DIMENSIONS))[0]
         max_size = (size GT max_size) ? size : max_size
-
 ;give master_min and master_max the values of local min and max 
         master_min = local_min
         master_max = local_max
-
     ENDIF
 
     ind1    = ARRAY_INDICES(local_tfpData,idx1)

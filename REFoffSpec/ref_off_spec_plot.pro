@@ -95,20 +95,26 @@ IF (isLogZaxisSelected(Event)) THEN BEGIN
     divisions = 10
     perso_format = '(e8.1)'
     range  = FLOAT([master_min,master_max])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      YLOG = 1,$
+      /VERTICAL
 ENDIF ELSE BEGIN
     divisions = 20
     perso_format = '(e8.1)'
     range = [master_min,master_max]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
 ENDELSE
-
-colorbar, $
-  NCOLORS      = 255, $
-  POSITION     = [0.75,0.01,0.95,0.99], $
-  RANGE        = range,$
-  DIVISIONS    = divisions,$
-  PERSO_FORMAT = perso_format,$
-  YLOG = 1,$
-  /VERTICAL
 
 END
 
