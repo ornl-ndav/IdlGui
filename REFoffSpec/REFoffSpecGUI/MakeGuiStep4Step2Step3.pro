@@ -152,7 +152,7 @@ XYoff = [5,10]
 sButton3Plus = { size  : [XYoff[0],$
                           XYoff[1],$
                           55,30],$
-                 value : 'images/3increase.bmp',$
+                 value : 'REFoffSpec_images/3increase.bmp',$
                  tooltip: 'Increase Scaling Factor by 100',$
                  uname : 'step4_2_3_3increase_button'}
 
@@ -163,7 +163,7 @@ sButton2Plus = { size  : [sButton3Plus.size[0]+sButton3Plus.size[2]+XYoff[0],$
                           sButton3Plus.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
                  tooltip: 'Increase Scaling Factor by 10',$
-                 value : 'images/2increase.bmp',$
+                 value : 'REFoffSpec_images/2increase.bmp',$
                  uname : 'step4_2_3_2increase_button'}
 
 ;***** + Button ***************************************************************
@@ -171,7 +171,7 @@ XYoff = [5,20]
 sButton1Plus = { size  : [sButton2Plus.size[0]+sButton2Plus.size[2]+XYoff[0],$
                           sButton2Plus.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
-                 value : 'images/1increase.bmp',$
+                 value : 'REFoffSpec_images/1increase.bmp',$
                  tooltip: 'Increase Scaling Factor by 2',$
                  uname : 'step4_2_3_1increase_button'}
 
@@ -180,7 +180,7 @@ XYoff = [0,160]
 sButton3Less = { size  : [sButton3Plus.size[0]+XYoff[0],$
                           XYoff[1],$
                           55,30],$
-                 value : 'images/3decrease.bmp',$
+                 value : 'REFoffSpec_images/3decrease.bmp',$
                  tooltip: 'Decrease Scaling Factor by 100',$
                  uname : 'step4_2_3_3decrease_button'}
 
@@ -189,7 +189,7 @@ XYoff = [0,0]
 sButton2Less = { size  : [sButton2Plus.size[0]+XYoff[0],$
                           sButton3Less.size[1]+XYoff[1],$
                           sButton3Plus.size[2]-Xreducer,30],$
-                 value : 'images/2decrease.bmp',$
+                 value : 'REFoffSpec_images/2decrease.bmp',$
                  tooltip: 'Decrease Scaling Factor by 10',$
                  uname : 'step4_2_3_2decrease_button'}
 
@@ -198,7 +198,7 @@ XYoff = [0,0]
 sButton1Less = { size  : [sButton1Plus.size[0]+XYoff[0],$
                           sButton2Less.size[1]+XYoff[1],$
                           sButton2Plus.size[2]-Xreducer,30],$
-                 value : 'images/1decrease.bmp',$
+                 value : 'REFoffSpec_images/1decrease.bmp',$
                  tooltip: 'Decrease Scaling Factor by 2',$
                  uname : 'step4_2_3_1decrease_button'}
 

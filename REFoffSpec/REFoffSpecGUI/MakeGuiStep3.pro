@@ -88,11 +88,11 @@ sMode = { size: [sModeLabel.size[0]+$
 
 XYoff = [50,0]
 sSelectionMode = { uname: 'selection_mode',$
-                   value: 'images/selection_mode.bmp',$
+                   value: 'REFoffSpec_images/selection_mode.bmp',$
                    tooltip: 'Reference Pixel Selection Mode'}
 XYoff = [50,0]
 s2DplotMode = { uname: 'two_d_selection_plot_mode',$
-                value: 'images/twoD_selection_mode.bmp',$
+                value: 'REFoffSpec_images/twoD_selection_mode.bmp',$
                 tooltip: '2D Plot Selection Mode'}
                          
 ;More or Less axis ticks number ----------------------------------------------
@@ -227,7 +227,7 @@ sPixelDwButton = { size: [sRefPixelValue.size[0]+$
                           XYoff[1]],$
                    uname: 'pixel_down_selection_shifting',$
                    tooltip: 'To decrease reference pixel by x pixel',$
-                   value: 'images/reference_down.bmp'}
+                   value: 'REFoffSpec_images/reference_down.bmp'}
 
 XYOff = [42,0] ;Help on down and up buttons
 sPixelDwUpHelp = { size: [sPixelDwButton.size[0]+$
@@ -244,7 +244,7 @@ sPixelUpButton = { size: [sPixelDwButton.size[0]+$
                           XYoff[1]],$
                    tooltip: 'To increase reference pixel by x pixel',$
                    uname: 'pixel_up_selection_shifting',$
-                   value: 'images/reference_up.bmp'}
+                   value: 'REFoffSpec_images/reference_up.bmp'}
                          
 XYoff = [60,0]
 sMoveByLabel = { size: [sPixelUpButton.size[0]+$
@@ -307,7 +307,7 @@ XYoff = [0,10]
 sRealignButton = { size: [XYoff[0],$
                           XYoff[1]],$
                    uname: 'realign_data_button',$
-                   value: 'images/realign_data.bmp',$
+                   value: 'REFoffSpec_images/realign_data.bmp',$
                    tooltip: 'Realign all the data according to the' + $
                    ' refrence pixels defined',$
                    sensitive: 1}
@@ -319,7 +319,7 @@ sCancelRealignButton = { size: [sRealignButton.size[0]+$
                                 sRealignButton.size[1]+$
                                 XYoff[1]],$
                          uname: 'cancel_realign_data_button',$
-                         value: 'images/cancel_realign_data.bmp',$
+                         value: 'REFoffSpec_images/cancel_realign_data.bmp',$
                          tooltip: 'Cancel the realign process',$
                          sensitive: 1}
 
@@ -361,7 +361,7 @@ sManualDownButton = { size: [XYoff[0],$
                              sManualModeFileValue.size[1]+XYoff[1]],$
                       tooltip: 'To move down the active file by x pixel',$
                       uname: 'data_down_shifting',$
-                      value: 'images/selection_down.bmp'}
+                      value: 'REFoffSpec_images/selection_down.bmp'}
 
 
 XYoff = [50,0]
@@ -369,7 +369,7 @@ sManualUpButton = { size: [sManualDownButton.size[0]+XYoff[0],$
                            sManualDownButton.size[1]+XYoff[1]],$
                     tooltip: 'To move up the active file by x pixel',$
                     uname: 'data_up_shifting',$
-                    value: 'images/selection_up.bmp'}
+                    value: 'REFoffSpec_images/selection_up.bmp'}
 
 XYoff = [50,12]
 sMoveByManualLabel = { size: [sManualUpButton.size[0]+$

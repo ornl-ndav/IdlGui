@@ -191,7 +191,7 @@ sSelectionMoveTitle = { size: [sSelectionMoveBase.size[0]+XYoff[0],$
 XYoff = [10,40]
 sSelectionMoveLeft = { size: [XYoff[0],$
                               XYoff[1]],$
-                       value: 'images/move_selection_left.bmp',$
+                       value: 'REFoffSpec_images/move_selection_left.bmp',$
                        tooltip: 'Move the selection to the left',$
                        uname: 'step4_step1_move_selection_left'}
 
@@ -199,7 +199,7 @@ sSelectionMoveLeft = { size: [XYoff[0],$
 XYoff = [50,8]
 sSelectionMoveUp = { size: [XYoff[0],$
                             XYoff[1]],$
-                     value: 'images/move_selection_up.bmp',$
+                     value: 'REFoffSpec_images/move_selection_up.bmp',$
                      tooltip: 'Move up the selection',$
                      uname: 'step4_step1_move_selection_up'}
 
@@ -207,7 +207,7 @@ sSelectionMoveUp = { size: [XYoff[0],$
 XYoff = [115,0]
 sSelectionMoveRight = { size: [XYoff[0],$
                                sSelectionMoveLeft.size[1]+XYoff[1]],$
-                        value: 'images/move_selection_right.bmp',$
+                        value: 'REFoffSpec_images/move_selection_right.bmp',$
                         tooltip: 'Move the selection to the right',$
                         uname: 'step4_step1_move_selection_right'}
 
@@ -215,7 +215,7 @@ sSelectionMoveRight = { size: [XYoff[0],$
 XYoff = [0,95]
 sSelectionMoveDown = { size: [sSelectionMoveUp.size[0]+XYoff[0],$
                               XYoff[1]],$
-                       value: 'images/move_selection_down.bmp',$
+                       value: 'REFoffSpec_images/move_selection_down.bmp',$
                        tooltip: 'Move down the selection',$
                        uname: 'step4_step1_move_selection_down'}
 
