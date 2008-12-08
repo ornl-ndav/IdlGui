@@ -125,23 +125,29 @@ WSET,id_value
 ERASE
 
 IF (isLogZaxisScalingStep1Selected(Event)) THEN BEGIN
-    divisions = 4
-    perso_format = '(f6.2)'
+    divisions = 10
+    perso_format = '(e8.1)'
     range  = FLOAT([master_min,master_max])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      YLOG = 1,$
+      /VERTICAL
 ENDIF ELSE BEGIN
     divisions = 20
-    perso_format = ''
+    perso_format = '(e8.1)'
     range = [master_min,master_max]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
 ENDELSE
-
-colorbar, $
-  NCOLORS      = 255, $
-  POSITION     = [0.58,0.01,0.95,0.99], $
-  RANGE        = range,$
-  DIVISIONS    = divisions,$
-  FORMAT       = '(I0)',$
-  PERSO_FORMAT = perso_format,$
-  /VERTICAL
 
 END
 
@@ -159,8 +165,8 @@ xaxis               = (*(*global).x_axis)
 congrid_coeff_array = (*(*global).congrid_coeff_array)
 xmax                = 0L
 x_axis              = LONARR(nbr_plot)
-y_coeff = 2
-x_coeff = 1
+y_coeff             = 2
+x_coeff             = 1
 
 ;check which array is the biggest (index)
 ;this array will be the base for the other array (xaxis will be based
@@ -178,6 +184,7 @@ xmax_array = FLTARR(nbr_plot) ;x of max value per array
 ymax_array = FLTARR(nbr_plot) ;y of max value per array
 max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -190,30 +197,49 @@ WHILE (index LT nbr_plot) DO BEGIN
     transparency_1 = 1.
     local_tfpData = local_tfpData * transparency_1
     
+    local_tfpData_untouched = local_tfpData
+
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisScalingStep1Selected(Event)
     IF (bLogPlot) THEN BEGIN
+
         zero_index = WHERE(local_tfpdata EQ 0) 
         local_tfpdata[zero_index] = !VALUES.F_NAN
+
+        local_min = transparency_1 * MIN(local_tfpData,/NAN)
+        local_max = transparency_1 * MAX(local_tfpData,/NAN)
+        min_array[index] = local_min
+        max_array[index] = local_max
+;save position of max value (used for log book only)
+        idx1 = WHERE(transparency_1*local_tfpData EQ local_max)
+
         local_tfpData = ALOG10(local_tfpData)
         cleanup_array, local_tfpdata ;_plot
-    ENDIF
+
+    ENDIF ELSE BEGIN
+
+;determine min and max value (for this array only)
+        local_min = transparency_1 * MIN(local_tfpData,/NAN)
+        local_max = transparency_1 * MAX(local_tfpData,/NAN)
+        min_array[index] = local_min
+        max_array[index] = local_max
+;save position of max value (used for log book only)
+        idx1 = WHERE(transparency_1*local_tfpData EQ local_max)
+
+    ENDELSE
     
     IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
-        base_array = local_tfpData 
+        base_array           = local_tfpData 
+        base_array_untouched = local_tfpData_untouched
         size = (size(total_array,/DIMENSIONS))[0]
         max_size = (size GT max_size) ? size : max_size
+;give master_min and master_max the values of local min and max 
+        master_min = local_min
+        master_max = local_max
     ENDIF
     
-;determine min and max value (for this array only)
-    local_min = transparency_1 * MIN(local_tfpData)
-    local_max = transparency_1 * MAX(local_tfpData)
-    min_array[index] = local_min
-    max_array[index] = local_max
-    
 ;save position of max value (used for log book only)
-    idx1 = WHERE(transparency_1*local_tfpData EQ local_max)
     ind1 = ARRAY_INDICES(local_tfpData,idx1)
     delta_x = xaxis[1]-xaxis[0]
     xmax_array[index] = ind1[0]*delta_x
@@ -237,10 +263,13 @@ WHILE (index LT nbr_plot) DO BEGIN
             WHILE(i LT sz) DO BEGIN
                 x = index_indices[0,i]
                 y = index_indices[1,i]
-                value_new = local_tfpData(x,y)
-                value_old = base_array(x,y)
+                value_new           = local_tfpData(x,y)
+                value_new_untouched = local_tfpData_untouched(x,y)
+                value_old           = base_array(x,y)
+                value_old_untouched = base_array_untouched(x,y)
                 IF (value_new GT value_old) THEN BEGIN
-                    base_array(x,y) = value_new
+                    base_array(x,y)           = value_new
+                    base_array_untouched(x,y) = value_new_untouched
                 ENDIF
                 ++i
             ENDWHILE
@@ -256,6 +285,11 @@ rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
               (size(base_array))(2)*y_coeff,/SAMPLE)
 (*(*global).total_array) = rData
 total_array = rData
+
+rData_untouched = REBIN(base_array_untouched, $
+                        (size(base_array))(1)*x_coeff, $
+                        (size(base_array))(2)*y_coeff,/SAMPLE)
+(*(*global).total_array_untouched) = rData_untouched
 
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
