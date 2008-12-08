@@ -180,13 +180,14 @@ CASE Event.id OF
             Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
             putTextFieldValue, Event, 'y_value_shifting', Ytext
 
-            total_array = (*(*global).total_array)
+            total_array = (*(*global).total_array_untouched)
             size_x = (SIZE(total_array,/DIMENSION))[0]
             size_y = (SIZE(total_array,/DIMENSION))[1]
             IF (x LT size_x AND $
                 y LT size_y) THEN BEGIN
                 counts = total_array(x,y)
-                intensity = STRCOMPRESS(counts,/REMOVE_ALL)
+                sIntensity = STRING(counts,FORMAT='(e8.1)')
+                intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
             ENDIF ELSE BEGIN
                 intensity = 'N/A'
             ENDELSE
