@@ -88,19 +88,19 @@ sDraw = { size: [XYoff[0],$
                         304L*2+40],$
           uname: 'step2_draw'}
           
-XYoff = [0,-18] ;Scale of Draw ------------------------------------------------
+XYoff = [-7,-18] ;Scale of Draw ----------------------------------------------
 sScale = { size: [XYoff[0],$
                   sDraw.size[1]+XYoff[1],$
-                  tab_size[2]-80,$
+                  tab_size[2]-75,$
 ;                  sDraw.size[3]],$
                   sDraw.size[3]+57],$
            uname: 'scale_draw_step2'}
 
-XYoff = [5,0] ;Color Scale ----------------------------------------------------
+XYoff = [1,0] ;Color Scale ----------------------------------------------------
 sColorScale = { size: [sScale.size[0]+$
                        sScale.size[2]+XYoff[0],$
                        sScale.size[1]+XYoff[1],$
-                       70,$
+                       75,$
                        sScale.size[3]],$
                 uname: 'scale_color_draw'}
 
@@ -284,6 +284,14 @@ wRefreshPlot = WIDGET_BUTTON(BaseTab,$
                              UNAME     = sRefreshPlot.uname,$
                              SENSITIVE = sRefreshPlot.sensitive)
 
+;Color Scale Draw -------------------------------------------------------------
+wColorScale = WIDGET_DRAW(BaseTab,$
+                          XOFFSET   = sColorScale.size[0],$
+                          YOFFSET   = sColorScale.size[1],$
+                          SCR_XSIZE = sColorScale.size[2],$
+                          SCR_YSIZE = sColorScale.size[3],$
+                          UNAME     = sColorScale.uname)
+
 ;Draw -------------------------------------------------------------------------
 wDraw = WIDGET_DRAW(BaseTab,$
                     XOFFSET       = sDraw.size[0],$
@@ -300,14 +308,6 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
-
-;Color Scale Draw -------------------------------------------------------------
-wColorScale = WIDGET_DRAW(BaseTab,$
-                          XOFFSET   = sColorScale.size[0],$
-                          YOFFSET   = sColorScale.size[1],$
-                          SCR_XSIZE = sColorScale.size[2],$
-                          SCR_YSIZE = sColorScale.size[3],$
-                          UNAME     = sColorScale.uname)
 
 index = WHERE((*global).ucams EQ (*global).super_users)
 IF (index NE -1) THEN BEGIN ;for super users
