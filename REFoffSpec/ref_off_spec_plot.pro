@@ -32,6 +32,11 @@
 ;
 ;==============================================================================
 
+PRO  cleanup_array, local_tfpdata
+local_tfpdata = BYTSCL(local_tfpdata,/NAN)
+END
+   
+;------------------------------------------------------------------------------
 PRO plotBox, x_coeff, y_coeff, xmin, xmax, COLOR=color
 ymin = 0 * y_coeff
 ymax = 303 * y_coeff
@@ -177,13 +182,12 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisSelected(Event)
     IF (bLogPlot) THEN BEGIN
+        zero_index = WHERE(local_tfpdata EQ 0) 
+        local_tfpdata[zero_index] = !VALUES.F_NAN
         local_tfpData = ALOG10(local_tfpData)
-        index_inf = WHERE(local_tfpData LT 0, nIndex)
-        IF (nIndex GT 0) THEN BEGIN
-            local_tfpData[index_inf] = 0
-        ENDIF
+        cleanup_array, local_tfpdata ;_plot
     ENDIF
-
+    
     IF (new_way) THEN BEGIN
 
         IF (index EQ 0) THEN BEGIN
