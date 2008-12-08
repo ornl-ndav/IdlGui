@@ -237,8 +237,6 @@ WHILE (index LT nbr_plot) DO BEGIN
 ;determine max and min value of y (over all the data arrays)
         master_min = (local_min LT master_min) ? local_min : master_min
         master_max = (local_max GT master_max) ? local_max : master_max
-;        master_min = MIN(min_array)
-;        master_max = MAX(min_array)
 
         IF (index NE 0) THEN BEGIN
             index_no_null = WHERE(local_tfpData NE 0,nbr)
