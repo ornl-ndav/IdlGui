@@ -130,21 +130,20 @@ WSET,id_value
 ERASE
 
 IF (isLogZaxisShiftingSelected(Event)) THEN BEGIN
-    divisions = 4
-    perso_format = '(f6.2)'
+    divisions = 10
+    perso_format = '(e8.1)'
     range  = FLOAT([master_min,master_max])
 ENDIF ELSE BEGIN
     divisions = 20
-    perso_format = ''
+    perso_format = '(e8.1)'
     range = [master_min,master_max]
 ENDELSE
 
 colorbar, $
   NCOLORS      = 255, $
-  POSITION     = [0.58,0.01,0.95,0.99], $
+  POSITION     = [0.75,0.01,0.95,0.99], $
   RANGE        = range,$
   DIVISIONS    = divisions,$
-  FORMAT       = '(I0)',$
   PERSO_FORMAT = perso_format,$
   /VERTICAL
 
