@@ -56,11 +56,20 @@ sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
                    value: '3/ SHIFTING'}
 
 ;Use or not transparency coefficient ------------------------------------------
-sBase = { size: [sShiftingBase.size[2],$
-                 30]}
+IF ((*global).ucams EQ 'j35') THEN BEGIN
+    sens_value = 1
+    value      = 1.0
+ENDIF ELSE BEGIN
+    sens_value = 0
+    value      = 0.0
+ENDELSE
+
+sBase1 = { size: [sShiftingBase.size[2],$
+                 30],$
+          sensitive: sens_value}
 sTransparencyGroup = { list: ['NO','YES'],$
                        title: 'Use non-active file attenuator     ',$
-                       value: 1.0,$
+                       value: value,$
                        uname: 'transparency_attenuator_shifting_options'}
 
 ;Transparency coefficient -----------------------------------------------------
@@ -168,6 +177,7 @@ label = WIDGET_LABEL(wShiftingBase,$ ;just to make a vertical space
 
 sBase1 = WIDGET_BASE(wShiftingBase,$
                      FRAME = 1,$
+                     SENSITIVE = sBase1.sensitive,$
                      /ROW)
 
 wTransparencyGroup = CW_BGROUP(sBase1,$
