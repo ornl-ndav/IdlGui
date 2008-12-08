@@ -152,6 +152,7 @@ global = ptr_new ({ ucams:               ucams,$
                     pData_x:             ptr_new(0L),$
                     x_axis:              ptr_new(0L),$
                     total_array:         ptr_new(0L),$
+                    total_array_untouched: ptr_new(0L),$
                     xscale:              {xrange: FLTARR(2),$
                                           xticks: 1L,$
                                           position: INTARR(4)},$
