@@ -37,7 +37,7 @@ PRO logger, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 APPLICATION = (*global).application
-application = APPLICATION + '_(LDSmode)'
+application = APPLICATION + 'LDSmode'
 VERSION     = (*global).version
 UCAMS       = (*global).ucams
 
@@ -47,6 +47,7 @@ error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
+    RETURN
 ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
