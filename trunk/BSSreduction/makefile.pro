@@ -1,4 +1,4 @@
-@idl_makefile
+.run convert_time_format.pro
 
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
