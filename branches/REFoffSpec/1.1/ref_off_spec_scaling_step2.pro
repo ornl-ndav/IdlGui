@@ -103,6 +103,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;step1 of scaling has been done). If not, display a message asking for
 ;a selection first.
 
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
 xy_position = (*global).step4_step1_selection
 IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
