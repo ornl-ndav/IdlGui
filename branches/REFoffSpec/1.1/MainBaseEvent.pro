@@ -676,37 +676,37 @@ CASE Event.id OF
 ;Lambda min and max text fields -----------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_lambda1_text_field'): BEGIN
-        manual_lambda_input, Event ;scaling_step4_step2
+        manual_lambda_input, Event ;scaling_step2_step2
     END
 
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_lambda2_text_field'): BEGIN
-        manual_lambda_input, Event ;scaling_step4_step2
+        manual_lambda_input, Event ;scaling_step2_step2
     END
 
 ;Automatic fitting and scaling of data ----------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_auto_button'): BEGIN
         step4_2_2_automatic_fitting_scaling, Event ;scaling_step4_step2
-        check_step4_2_2_gui, Event ;scaling_step4_step2
+        check_step4_2_2_gui, Event ;scaling_step2_step2
     END
     
 ;SF text field ----------------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
-        step4_2_2_manual_scaling, Event ;scaling_step4_step2
+        step4_2_2_manual_scaling, Event ;scaling_step2_step2
     END
 
 ;Manual scaling of data -------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step2_sf_text_field'): BEGIN
-        step4_2_2_manual_scaling, Event ;scaling_step4_step2
+        step4_2_2_manual_scaling, Event ;scaling_step2_step2
     END
 
 ;Reset scaling of data --------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_reset_scaling_button'): BEGIN
-        step4_2_2_reset_scaling, Event ;scaling_step4_step2
+        step4_2_2_reset_scaling, Event ;scaling_step2_step2
     END
 
 ;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_

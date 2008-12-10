@@ -38,11 +38,17 @@ PRO fit_data, Event, flt0, flt1, flt2, a, b
 ;retrieve global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ; Compute the second degree polynomial fit to the data:
+
+print, flt0
+print, flt1
+print, flt2
+
 cooef = POLY_FIT(flt0, $
                  flt1, $
                  1, $
                  MEASURE_ERRORS = flt2, $
                  SIGMA          = sigma)         ;standard error
+
 a = cooef[0]
 b = cooef[1]
 
