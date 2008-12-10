@@ -313,16 +313,13 @@ IF (step4_2_2_lambda_array[0] NE 0 AND $
 ENDIF ELSE BEGIN
     status = 0
 ENDELSE
-activate_widget, Event, 'step4_2_2_auto_button', status
+activate_widget, Event, 'auto_mode_base', status
 END
 
 ;------------------------------------------------------------------------------
 PRO manual_lambda_input, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;reorder lambda
-reorder_step4_2_2_lambda, Event
 
 ;retrieve manual lambda min and max
 lambda_array = get_step4_step2_step2_lambda(Event)
@@ -345,9 +342,6 @@ Lambda_value_2 = (FLOAT(lambda_array[1]) - xmin) * ratio + gr_xmin
 display_step4_step2_step2_selection, Event
 ;plot lambda
 plotLambdaSelected, Event
-
-;check gui to see if the FIT button can be validated
-check_step4_step2_step2, Event 
 
 END
 
