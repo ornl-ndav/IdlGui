@@ -94,6 +94,7 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
+
     psym = getStep4Step2PSYMselected(Event)
   
     isLog = getStep4Step2PlotType(Event)
@@ -382,7 +383,7 @@ IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
 ;Fitting --------------------------------------
 IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
-;CATCH, fit_error
+CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -401,7 +402,7 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-;   CATCH, scale_error           ;remove_me comments
+   CATCH, scale_error           ;remove_me comments
    IF (scale_error NE 0) THEN BEGIN
        CATCH,/CANCEL
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -512,21 +513,19 @@ fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
 (*global).step4_2_2_fitting_parameters_backup = [a,b]
 IF ((a EQ 0 AND $
      b EQ 0) OR $
-    a EQ 'NaN' OR $
-    a EQ '-NaN' OR $
-    b EQ 'NaN' OR $
-    b EQ '-NaN') THEN BEGIN     ;a and b not found
-   a_value = 'NaN'
-   b_value = 'NaN'
-   (*global).step4_2_2_fitting_status = 0
+    ~FINITE(a) OR $
+    ~FINITE(b)) THEN BEGIN
+    a_value = 'NaN'
+    b_value = 'NaN'
+    (*global).step4_2_2_fitting_status = 0
 ENDIF ELSE BEGIN                ;found a and b
-   a_value = STRCOMPRESS(a,/REMOVE_ALL)
-   b_value = STRCOMPRESS(b,/REMOVE_ALL)
+    a_value = STRCOMPRESS(a,/REMOVE_ALL)
+    b_value = STRCOMPRESS(b,/REMOVE_ALL)
 ;   x_range_fit = x_array_to_fit
 ;;   plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
 ;Calculate the average value inside the lda range selected
-   calculate_average_fitted_y, Event, a, b, lda_min, lda_max
-   (*global).step4_2_2_fitting_status = 1
+    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
+    (*global).step4_2_2_fitting_status = 1
 ENDELSE
 putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', b_value
 putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', a_value

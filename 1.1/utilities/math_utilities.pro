@@ -53,11 +53,15 @@ IF (isWithStep4_step2_step2_error_bars(Event)) THEN BEGIN
                      flt1, $
                      1, $
                      MEASURE_ERRORS = flt2, $
+                     /DOUBLE,$
+                     STATUS         = status,$
                      SIGMA          = sigma) ;standard error
 ENDIF ELSE BEGIN
     cooef = POLY_FIT(flt0, $
                      flt1, $
                      1, $
+                     STATUS         = status,$
+                     /DOUBLE,$
                      SIGMA          = sigma) ;standard error
 ENDELSE
 

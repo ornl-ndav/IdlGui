@@ -123,7 +123,9 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
     ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
     ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
-            
+ 
+    (*global).step4_step1_ymax_value = FLOAT(ymax)
+           
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     CASE (CurrTabSelect) OF
