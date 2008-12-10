@@ -157,7 +157,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
                 END
                 1: BEGIN ;CE files
                     display_step4_step2_step2_selection, $
-                      Event     ;scaling_step2_step1
+                      Event     ;scaling_step2_step2
                     re_plot_lambda_selected, Event ;scaling_step2
                     re_plot_fitting, Event ;scaling_step2_step2
                 END
