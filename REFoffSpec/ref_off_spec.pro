@@ -87,6 +87,8 @@ ENDELSE
 global = ptr_new ({ ucams:               ucams,$
                     step2_zmax: 0d,$
                     step2_zmin: 0d,$
+                    step2_zmax_backup: 0d,$
+                    step2_zmin_backup: 0d,$
                     manual_scaling_4: FLOAT(5),$
                     manual_scaling_3: FLOAT(2),$
                     manual_scaling_2: FLOAT(1.5),$
