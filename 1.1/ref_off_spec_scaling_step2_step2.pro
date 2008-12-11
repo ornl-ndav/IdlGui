@@ -97,10 +97,8 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
-
-    psym = getStep4Step2PSYMselected(Event)
-  
-    isLog = getStep4Step2PlotType(Event)
+    psym       = getStep4Step2PSYMselected(Event)
+    isLog      = getStep4Step2PlotType(Event)
 
     IF (isLog) THEN BEGIN
         PLOT, xrange, $

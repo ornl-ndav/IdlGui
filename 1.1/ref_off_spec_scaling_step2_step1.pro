@@ -43,8 +43,6 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
-print, 'here'
-
 xy_position = (*global).step4_step1_selection
 IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
