@@ -125,6 +125,37 @@ CASE Event.id OF
         changeTransparencyFullReset, Event ;_plot
     END
 
+;zmax widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_zmax'): BEGIN
+        zmax_w   = getTextFieldValue(Event,'step2_zmax')
+        s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+        zmax_g   = (*global).step2_zmax
+        s_zmax_g = STRING(zmax_g, FORMAT='(e8.1)')
+        s_zmax_g = STRCOMPRESS(s_zmax_g,/REMOVE_ALL)
+        IF (s_zmax_g NE s_zmax_w) THEN BEGIN
+            (*global).step2_zmax = FLOAT(zmax_w)
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
+        ENDIF
+    END
+    
+;zmin widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_zmin'): BEGIN
+        zmin_w   = getTextFieldValue(Event,'step2_zmin')
+        s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+        zmin_g   = (*global).step2_zmin
+        s_zmin_g = STRING(zmin_g, FORMAT='(e8.1)')
+        s_zmin_g = STRCOMPRESS(s_zmin_g,/REMOVE_ALL)
+        IF (s_zmin_g NE s_zmin_w) THEN BEGIN
+            (*global).step2_zmin = FLOAT(zmin_w)
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
+        ENDIF
+    END
+
+;Reset zmin and zmax
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_z_reset'): BEGIN
+        plotAsciiData, Event, TYPE='replot'
+    END
+
 ;lin/log z-azis scale
     Widget_Info(wWidget, FIND_BY_UNAME='z_axis_linear_log'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)

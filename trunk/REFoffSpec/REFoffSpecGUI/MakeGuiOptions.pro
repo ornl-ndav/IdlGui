@@ -58,7 +58,7 @@ sShiftingLabel = { size: [sShiftingBase.size[0]+XYoff[0],$
 ;Use or not transparency coefficient ------------------------------------------
 IF ((*global).ucams EQ 'j35') THEN BEGIN
     sens_value = 1
-    value      = 1.0
+    value      = 0.0
 ENDIF ELSE BEGIN
     sens_value = 0
     value      = 0.0
@@ -75,7 +75,7 @@ sTransparencyGroup = { list: ['NO','YES'],$
 ;Transparency coefficient -----------------------------------------------------
 sBase2 = { size: [300,30],$
            uname: 'transparency_coeff_base',$
-           sensitive: 1}
+           sensitive: 0}
 sTransparencyCWfield = { size: [5,1],$
                          value: 10,$
                          uname: 'transparency_shifting_options',$
