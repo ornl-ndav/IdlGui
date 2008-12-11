@@ -92,7 +92,6 @@ XYoff = [-7,-18] ;Scale of Draw ----------------------------------------------
 sScale = { size: [XYoff[0],$
                   sDraw.size[1]+XYoff[1],$
                   tab_size[2]-75,$
-;                  sDraw.size[3]],$
                   sDraw.size[3]+57],$
            uname: 'scale_draw_step2'}
 
@@ -104,8 +103,32 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw'}
 
+
+XYoff = [0,-30] ;z_max value
+sZmax = { size: [sColorScale.size[0]+XYoff[0],$
+                 sColorScale.size[1]+XYoff[1],$
+                 75],$
+          uname: 'step2_zmax',$
+          value: ''}
+
+XYoff = [0,-25] ;z_reset
+sZreset = { size: [sZmax.size[0]+XYoff[0],$
+                   sZmax.size[1]+XYoff[1],$
+                   sZmax.size[2]],$
+            uname: 'step2_z_reset',$
+            value: 'R E S E T'}
+
+XYoff = [0,0]
+sZmin = { size: [sZmax.size[0]+XYoff[0],$
+                 sColorScale.size[1]+$
+                 sColorScale.size[3]+$
+                 XYoff[1],$
+                 sZmax.size[2]],$
+          uname: 'step2_zmin',$
+          value: ''}
+
 ;X and Y of mouse over plot area ----------------------------------------------
-XYoff = [-250,-30]
+XYoff = [-330,-30]
 sXYdisplay = { size: [sColorScale.size[0]+$
                       XYoff[0],$
                       sColorScale.size[1]+$
@@ -184,7 +207,7 @@ sLinLog = { size: [sTransBase.size[0]+$
             uname: 'z_axis_linear_log',$
             value: 0.0}
                    
-XYoff = [-200,10] ;+/- number of x-axis ticks ---------------------------------
+XYoff = [-290,10] ;+/- number of x-axis ticks ---------------------------------
 sXaxisTicksBase = { size: [sScale.size[0]+$
                            sScale.size[2]+$
                            XYoff[0],$
@@ -283,6 +306,30 @@ wRefreshPlot = WIDGET_BUTTON(BaseTab,$
                              VALUE     = sRefreshPlot.value,$
                              UNAME     = sRefreshPlot.uname,$
                              SENSITIVE = sRefreshPlot.sensitive)
+
+;Z range widgets --------------------------------------------------------------
+wZreset = WIDGET_BUTTON(BaseTab,$
+                        XOFFSET   = sZreset.size[0],$
+                        YOFFSET   = sZreset.size[1],$
+                        SCR_XSIZE = sZreset.size[2],$
+                        VALUE     = sZreset.value,$
+                        UNAME     = sZreset.uname)
+
+wZmax = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmax.size[0],$
+                    YOFFSET   = sZmax.size[1],$
+                    SCR_XSIZE = sZmax.size[2],$
+                    UNAME     = sZmax.uname,$
+                    VALUE     = sZmax.value)
+
+wZmin = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmin.size[0],$
+                    YOFFSET   = sZmin.size[1],$
+                    SCR_XSIZE = sZmin.size[2],$
+                    UNAME     = sZmin.uname,$
+                    VALUE     = sZmin.value)
+
+
 
 ;Color Scale Draw -------------------------------------------------------------
 wColorScale = WIDGET_DRAW(BaseTab,$
