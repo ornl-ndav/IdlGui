@@ -40,8 +40,12 @@ WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
-PRO putTextFieldValue, Event, uname, text
+PRO putTextFieldValue, Event, uname, text, FORMAT=format
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+IF (N_ELEMENTS(FORMAT) NE 0) THEN BEGIN
+    text = STRING(text,FORMAT=format)
+    text = STRCOMPRESS(text,/REMOVE_ALL)
+ENDIF
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
@@ -127,3 +131,5 @@ ReplaceTextInTextField, Event, $
   OLD_STRING, $
   NEW_STRING
 END
+
+

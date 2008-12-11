@@ -320,16 +320,18 @@ wZmax = WIDGET_TEXT(BaseTab,$
                     YOFFSET   = sZmax.size[1],$
                     SCR_XSIZE = sZmax.size[2],$
                     UNAME     = sZmax.uname,$
-                    VALUE     = sZmax.value)
+                    VALUE     = sZmax.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
 
 wZmin = WIDGET_TEXT(BaseTab,$
                     XOFFSET   = sZmin.size[0],$
                     YOFFSET   = sZmin.size[1],$
                     SCR_XSIZE = sZmin.size[2],$
                     UNAME     = sZmin.uname,$
-                    VALUE     = sZmin.value)
-
-
+                    VALUE     = sZmin.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
 
 ;Color Scale Draw -------------------------------------------------------------
 wColorScale = WIDGET_DRAW(BaseTab,$

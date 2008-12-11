@@ -120,7 +120,7 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData, Event, TYPE=type
+PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
@@ -171,14 +171,38 @@ WHILE (index LT nbr_plot) DO BEGIN
     transparency_1 = trans_coeff_list[index]
     local_tfpData = local_tfpData * transparency_1
 
+    IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
+
+        Max  = (*global).step2_zmax
+        fMax = DOUBLE(Max)
+        index_GT = WHERE(local_tfpData GT fMax, nbr)
+        IF (nbr GT 0) THEN BEGIN
+            local_tfpData[index_GT] = !VALUES.D_NAN
+        ENDIF
+
+        Min  = (*global).step2_zmin
+        fMin = DOUBLE(Min)
+        index_LT = WHERE(local_tfpData LT fMin, nbr1)
+        IF (nbr1 GT 0) THEN BEGIN
+            tmp = local_tfpData
+            tmp[index_LT] = !VALUeS.D_NAN
+            local_min = MIN(tmp,/NAN)
+            local_tfpData[index_LT] = DOUBLE(0)
+        ENDIF ELSE BEGIN
+            local_min = MIN(local_tfpData,/NAN)
+        ENDELSE
+    ENDIF
+
 ;array that will be used to display counts 
     local_tfpdata_untouched = local_tfpdata
-
+    
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisSelected(Event)
     IF (bLogPlot) THEN BEGIN
-        zero_index = WHERE(local_tfpdata EQ 0) 
-        local_tfpdata[zero_index] = !VALUES.F_NAN
+        zero_index = WHERE(local_tfpdata EQ 0., nbr)
+         IF (nbr GT 0) THEN BEGIN
+            local_tfpdata[zero_index] = !VALUES.D_NAN
+        ENDIF
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
@@ -188,8 +212,15 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = ALOG10(local_tfpData)
         cleanup_array, local_tfpdata ;_plot
     ENDIF ELSE BEGIN ;linear
+;        zero_index = WHERE(local_tfpdata EQ 0, nbr)
+;        IF (nbr GT 0) THEN BEGIN
+;            local_tfpdata[zero_index] = !VALUES.D_NAN
+;        ENDIF
 ;determine min and max value (for this array only)
-        local_min = transparency_1 * MIN(local_tfpData,/NAN)
+        IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
+            local_min = transparency_1 * MIN(local_tfpData,/NAN)
+        ENDIF
+
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
         max_array[index] = local_max
@@ -269,6 +300,12 @@ LOADCT, 5, /SILENT
 
 ;plot color scale
 plotColorScale, Event, master_min, master_max
+
+(*global).step2_zmax = master_max
+(*global).step2_zmin = master_min
+
+putTextFieldValue, Event, 'step2_zmax', master_max, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step2_zmin', master_min, FORMAT='(e8.1)'
 
 ;select plot
 ;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
