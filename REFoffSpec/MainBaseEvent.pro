@@ -676,37 +676,37 @@ CASE Event.id OF
 ;Lambda min and max text fields -----------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_lambda1_text_field'): BEGIN
-        manual_lambda_input, Event ;scaling_step4_step2
+        manual_lambda_input, Event ;scaling_step2_step2
     END
 
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_lambda2_text_field'): BEGIN
-        manual_lambda_input, Event ;scaling_step4_step2
+        manual_lambda_input, Event ;scaling_step2_step2
     END
 
 ;Automatic fitting and scaling of data ----------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_auto_button'): BEGIN
         step4_2_2_automatic_fitting_scaling, Event ;scaling_step4_step2
-        check_step4_2_2_gui, Event ;scaling_step4_step2
+        check_step4_2_2_gui, Event ;scaling_step2_step2
     END
     
 ;SF text field ----------------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
-        step4_2_2_manual_scaling, Event ;scaling_step4_step2
+        step4_2_2_manual_scaling, Event ;scaling_step2_step2
     END
 
 ;Manual scaling of data -------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step2_sf_text_field'): BEGIN
-        step4_2_2_manual_scaling, Event ;scaling_step4_step2
+        step4_2_2_manual_scaling, Event ;scaling_step2_step2
     END
 
 ;Reset scaling of data --------------------------------------------------------
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='step4_2_2_reset_scaling_button'): BEGIN
-        step4_2_2_reset_scaling, Event ;scaling_step4_step2
+        step4_2_2_reset_scaling, Event ;scaling_step2_step2
     END
 
 ;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_
@@ -785,6 +785,40 @@ CASE Event.id OF
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------
+
+;draw
+    Widget_Info(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
+        LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
+        ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+        IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
+            delta_x = (*global).delta_x
+            x = Event.x
+            x1 = FLOAT(delta_x) * FLOAT(x)
+            Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'x_value_step5', Xtext
+            
+            y = Event.y
+            y1 = y / 2
+            Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'y_value_step5', Ytext
+
+            total_array = (*(*global).total_array_untouched)
+            size_x = (SIZE(total_array,/DIMENSION))[0]
+            size_y = (SIZE(total_array,/DIMENSION))[1]
+            IF (x LT size_x AND $
+                y LT size_y AND $
+                x GE 0 AND $
+                y GE 0) THEN BEGIN
+                counts = total_array(x,y)
+                sIntensity = STRING(counts,FORMAT='(e8.1)')
+                intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
+            ENDIF ELSE BEGIN
+                intensity = 'N/A'
+            ENDELSE
+            CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
+            putTextFieldValue, Event, 'counts_value_step5', CountsText
+        ENDIF
+    END
 
 ;output file path button
     WIDGET_INFO(wWidget, $
