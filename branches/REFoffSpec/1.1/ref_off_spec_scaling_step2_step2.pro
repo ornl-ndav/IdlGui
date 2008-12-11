@@ -358,6 +358,19 @@ putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', ''
 END
 
 ;------------------------------------------------------------------------------
+PRO display_error_message, Event, STEP=step
+Message = ['Error during the ' + STEP + ' process!',$
+           '',$
+           'Try to rerun the process without taking into account error bars']
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_2_2_auto_button')
+result = DIALOG_MESSAGE(Message,$
+                        /INFORMATION, $
+                        TITLE = 'Fitting/Scaling FAILED!',$
+                        DIALOG_PARENT = id)
+
+END
+
+;------------------------------------------------------------------------------
 ;Reach by the Automatic fitting and scaling of step4/step2/step2
 PRO step4_2_2_automatic_fitting_scaling, Event
 ;get global structure
@@ -394,6 +407,7 @@ ENDIF ELSE BEGIN
     IF ((*global).step4_2_2_fitting_status EQ 0) THEN BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
        fit_scale_status = 0
+       display_error_message, Event, STEP='fitting'
     ENDIF ELSE BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
@@ -403,11 +417,12 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-   CATCH, scale_error           ;remove_me comments
+   CATCH, scale_error      
    IF (scale_error NE 0) THEN BEGIN
        CATCH,/CANCEL
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
        fit_scale_status = 0
+       display_error_message, Event, STEP='scaling'
    ENDIF ELSE BEGIN
        step4_step2_step2_scaleCE, Event ;scaling_step2_step2
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
