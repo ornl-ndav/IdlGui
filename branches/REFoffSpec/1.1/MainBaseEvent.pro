@@ -786,6 +786,40 @@ CASE Event.id OF
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------
 
+;draw
+    Widget_Info(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
+        LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
+        ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+        IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
+            delta_x = (*global).delta_x
+            x = Event.x
+            x1 = FLOAT(delta_x) * FLOAT(x)
+            Xtext = 'X: ' + STRCOMPRESS(x1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'x_value_step5', Xtext
+            
+            y = Event.y
+            y1 = y / 2
+            Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+            putTextFieldValue, Event, 'y_value_step5', Ytext
+
+            total_array = (*(*global).total_array_untouched)
+            size_x = (SIZE(total_array,/DIMENSION))[0]
+            size_y = (SIZE(total_array,/DIMENSION))[1]
+            IF (x LT size_x AND $
+                y LT size_y AND $
+                x GE 0 AND $
+                y GE 0) THEN BEGIN
+                counts = total_array(x,y)
+                sIntensity = STRING(counts,FORMAT='(e8.1)')
+                intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
+            ENDIF ELSE BEGIN
+                intensity = 'N/A'
+            ENDELSE
+            CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
+            putTextFieldValue, Event, 'counts_value_step5', CountsText
+        ENDIF
+    END
+
 ;output file path button
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='create_output_file_path_button'): BEGIN
