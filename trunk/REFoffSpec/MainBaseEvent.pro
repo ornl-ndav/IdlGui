@@ -127,28 +127,64 @@ CASE Event.id OF
 
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_zmax'): BEGIN
-        zmax_w   = getTextFieldValue(Event,'step2_zmax')
-        s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
-        zmax_g   = (*global).step2_zmax
-        s_zmax_g = STRING(zmax_g, FORMAT='(e8.1)')
-        s_zmax_g = STRCOMPRESS(s_zmax_g,/REMOVE_ALL)
-        IF (s_zmax_g NE s_zmax_w) THEN BEGIN
-            (*global).step2_zmax = FLOAT(zmax_w)
-            plotAsciiData, Event, RESCALE=1, TYPE='replot'
-        ENDIF
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).step2_zmax = (*global).step2_zmax_backup
+            (*global).step2_zmin = (*global).step2_zmin_backup
+            double_error = 0
+            CATCH, double_error
+            IF (double_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                plotAsciiData, Event, TYPE='replot'
+            ENDIF ELSE BEGIN
+                plotAsciiData, Event, RESCALE=1, TYPE='replot'
+            ENDELSE
+        ENDIF ELSE BEGIN
+            zmax_w   = getTextFieldValue(Event,'step2_zmax')
+            s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+            zmax_g   = (*global).step2_zmax
+            s_zmax_g = STRING(zmax_g, FORMAT='(e8.1)')
+            s_zmax_g = STRCOMPRESS(s_zmax_g,/REMOVE_ALL)
+            IF (s_zmax_g NE s_zmax_w) THEN BEGIN
+                (*global).step2_zmax = FLOAT(zmax_w)
+                plotAsciiData, Event, RESCALE=1, TYPE='replot'
+                (*global).step2_zmax_backup = (*global).step2_zmax
+                (*global).step2_zmin_backup = (*global).step2_zmin
+            ENDIF
+        ENDELSE
     END
     
 ;zmin widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_zmin'): BEGIN
-        zmin_w   = getTextFieldValue(Event,'step2_zmin')
-        s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
-        zmin_g   = (*global).step2_zmin
-        s_zmin_g = STRING(zmin_g, FORMAT='(e8.1)')
-        s_zmin_g = STRCOMPRESS(s_zmin_g,/REMOVE_ALL)
-        IF (s_zmin_g NE s_zmin_w) THEN BEGIN
-            (*global).step2_zmin = FLOAT(zmin_w)
-            plotAsciiData, Event, RESCALE=1, TYPE='replot'
-        ENDIF
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).step2_zmax = (*global).step2_zmax_backup
+            (*global).step2_zmin = (*global).step2_zmin_backup
+            double_error = 0
+            CATCH, double_error
+            IF (double_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                plotAsciiData, Event, TYPE='replot'
+            ENDIF ELSE BEGIN
+                plotAsciiData, Event, RESCALE=1, TYPE='replot'
+            ENDELSE
+        ENDIF ELSE BEGIN
+            zmin_w   = getTextFieldValue(Event,'step2_zmin')
+            s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+            zmin_g   = (*global).step2_zmin
+            s_zmin_g = STRING(zmin_g, FORMAT='(e8.1)')
+            s_zmin_g = STRCOMPRESS(s_zmin_g,/REMOVE_ALL)
+            IF (s_zmin_g NE s_zmin_w) THEN BEGIN
+                (*global).step2_zmin = FLOAT(zmin_w)
+                plotAsciiData, Event, RESCALE=1, TYPE='replot'
+                (*global).step2_zmax_backup = (*global).step2_zmax
+                (*global).step2_zmin_backup = (*global).step2_zmin
+            ENDIF
+        ENDELSE
     END
 
 ;Reset zmin and zmax
