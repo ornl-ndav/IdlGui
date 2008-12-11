@@ -75,6 +75,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;step1 of scaling has been done). If not, display a message asking for
 ;a selection first.
 
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
 xy_position = (*global).step4_step1_selection
 IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
@@ -94,9 +97,8 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
-    psym = getStep4Step2PSYMselected(Event)
-  
-    isLog = getStep4Step2PlotType(Event)
+    psym       = getStep4Step2PSYMselected(Event)
+    isLog      = getStep4Step2PlotType(Event)
 
     IF (isLog) THEN BEGIN
         PLOT, xrange, $
@@ -313,7 +315,7 @@ IF (step4_2_2_lambda_array[0] NE 0 AND $
 ENDIF ELSE BEGIN
     status = 0
 ENDELSE
-activate_widget, Event, 'step4_2_2_auto_button', status
+activate_widget, Event, 'auto_mode_base', status
 END
 
 ;------------------------------------------------------------------------------
@@ -356,6 +358,19 @@ putTextFieldValue, Event, 'step4_2_2_lambda2_text_field', ''
 END
 
 ;------------------------------------------------------------------------------
+PRO display_error_message, Event, STEP=step
+Message = ['Error during the ' + STEP + ' process!',$
+           '',$
+           'Try to rerun the process without taking into account error bars']
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_2_2_auto_button')
+result = DIALOG_MESSAGE(Message,$
+                        /INFORMATION, $
+                        TITLE = 'Fitting/Scaling FAILED!',$
+                        DIALOG_PARENT = id)
+
+END
+
+;------------------------------------------------------------------------------
 ;Reach by the Automatic fitting and scaling of step4/step2/step2
 PRO step4_2_2_automatic_fitting_scaling, Event
 ;get global structure
@@ -382,7 +397,7 @@ IDLsendToGeek_addLogBookText, Event, '--> Lambda max : ' + $
 ;Fitting --------------------------------------
 IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
-;CATCH, fit_error
+CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -392,6 +407,7 @@ ENDIF ELSE BEGIN
     IF ((*global).step4_2_2_fitting_status EQ 0) THEN BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
        fit_scale_status = 0
+       display_error_message, Event, STEP='fitting'
     ENDIF ELSE BEGIN
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
@@ -401,11 +417,12 @@ IF ((*global).step4_2_2_fitting_status) THEN BEGIN
 ;Scaling --------------------------------------
    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
    scale_error = 0
-;   CATCH, scale_error           ;remove_me comments
+   CATCH, scale_error      
    IF (scale_error NE 0) THEN BEGIN
        CATCH,/CANCEL
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
        fit_scale_status = 0
+       display_error_message, Event, STEP='scaling'
    ENDIF ELSE BEGIN
        step4_step2_step2_scaleCE, Event ;scaling_step2_step2
        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
@@ -512,21 +529,19 @@ fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
 (*global).step4_2_2_fitting_parameters_backup = [a,b]
 IF ((a EQ 0 AND $
      b EQ 0) OR $
-    a EQ 'NaN' OR $
-    a EQ '-NaN' OR $
-    b EQ 'NaN' OR $
-    b EQ '-NaN') THEN BEGIN     ;a and b not found
-   a_value = 'NaN'
-   b_value = 'NaN'
-   (*global).step4_2_2_fitting_status = 0
+    ~FINITE(a) OR $
+    ~FINITE(b)) THEN BEGIN
+    a_value = 'NaN'
+    b_value = 'NaN'
+    (*global).step4_2_2_fitting_status = 0
 ENDIF ELSE BEGIN                ;found a and b
-   a_value = STRCOMPRESS(a,/REMOVE_ALL)
-   b_value = STRCOMPRESS(b,/REMOVE_ALL)
+    a_value = STRCOMPRESS(a,/REMOVE_ALL)
+    b_value = STRCOMPRESS(b,/REMOVE_ALL)
 ;   x_range_fit = x_array_to_fit
 ;;   plot_ce_fit, Event, x_axis=x_range_fit, A=a, B=b ;scaling_step2_step2
 ;Calculate the average value inside the lda range selected
-   calculate_average_fitted_y, Event, a, b, lda_min, lda_max
-   (*global).step4_2_2_fitting_status = 1
+    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
+    (*global).step4_2_2_fitting_status = 1
 ENDELSE
 putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', b_value
 putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', a_value

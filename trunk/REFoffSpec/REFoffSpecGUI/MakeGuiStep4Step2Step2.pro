@@ -128,8 +128,9 @@ XYoff        = [0,Y_base_off]
 sAutoBase    = { size   : [sB1_LambdaminLambdamaxInput.size[0]+XYoff[0],$
                            sB1_LambdaminLambdamaxInput.size[1]+ $
                            sB1_LambdaminLambdamaxInput.size[3]+XYoff[1],$
-                           sB1_LambdaminLambdamaxInput.size[2],40],$
+                           sB1_LambdaminLambdamaxInput.size[2],65],$
                  uname  : 'auto_mode_base',$
+                 sensitive: 0,$
                  frame  : 5}
 
 ;***** Auto mode base title ***************************************************
@@ -137,16 +138,26 @@ sAutoBaseTitle = { size  : [sAutoBase.size[0]+15, $
                             sAutoBase.size[1]-8],$
                    value : 'Automatic Mode'} 
 
-;***** Auto Fitting and Scalling button ***************************************
+;***** Auto Fitting and Scalling button
 XYoff          = [5,5]
 sB_AutoScalFit = { size      : [XYoff[0],$
                                 XYoff[1],$
                                 495,$
                                 30],$
                    uname     : 'step4_2_2_auto_button',$
-                   sensitive : 0,$
                    value     : '>     >   >  > >> >>> AUTOMATIC ' + $
                    'FITTING and RESCALING <<< << <  <   <    <'}
+
+;***** with error bars or not
+XYoff = [0,-5]
+sError = { size: [sB_AutoScalFit.size[0]+XYoff[0],$
+                  sB_AutoScalFit.size[1]+$
+                  sB_AutoScalFit.size[3]+$
+                  XYoff[1]],$
+           list: ['YES','NO'],$
+           title: 'Calculation taking into account error bars:',$
+           value: 0.0,$
+           uname: 'step4_step2_step2_with_error_bars_cw_bgroup'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual *****************************************************************
@@ -388,6 +399,7 @@ wAutoBase = WIDGET_BASE(STEP_BASE,$
                         YOFFSET   = sAutoBase.size[1],$
                         SCR_XSIZE = sAutoBase.size[2],$
                         SCR_YSIZE = sAutoBase.size[3],$
+                        SENSITIVE = sAutoBase.sensitive,$
                         FRAME     = sAutoBase.frame)
 
 ;***** Auto Fitting and Scalling button ***************************************
@@ -397,8 +409,18 @@ wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               YOFFSET   = sB_AutoScalFit.size[1],$
                               SCR_XSIZE = sB_AutoScalFit.size[2],$
                               SCR_YSIZE = sB_AutoScalFit.size[3],$
-                              VALUE     = sB_AutoScalFit.value,$
-                              SENSITIVE = sB_AutoScalFit.sensitive)
+                              VALUE     = sB_AutoScalFit.value)
+
+wError = CW_BGROUP(wAutoBase,$
+                   sError.list,$
+                   XOFFSET    = sError.size[0],$
+                   YOFFSET    = sError.size[1],$
+                   LABEL_LEFT = sError.title,$
+                   UNAME      = sError.uname,$
+                   SET_VALUE  = sError.value,$
+                   /EXCLUSIVE,$
+                   /ROW,$
+                   /NO_RELEASE)
 
 ;------------------------------------------------------------------------------
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

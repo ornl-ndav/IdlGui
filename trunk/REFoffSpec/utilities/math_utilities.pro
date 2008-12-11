@@ -32,17 +32,39 @@
 ;
 ;==============================================================================
 
+FUNCTION isWithStep4_step2_step2_error_bars, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
+                 'step4_step2_step2_with_error_bars_cw_bgroup')
+WIDGET_CONTROL, id, GET_VALUE=index
+RETURN, 0^index
+END
+
+;------------------------------------------------------------------------------
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn_23s
 PRO fit_data, Event, flt0, flt1, flt2, a, b
 ;retrieve global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 ; Compute the second degree polynomial fit to the data:
-cooef = POLY_FIT(flt0, $
-                 flt1, $
-                 1, $
-                 MEASURE_ERRORS = flt2, $
-                 SIGMA          = sigma)         ;standard error
+;check if we want with error bars or not
+IF (isWithStep4_step2_step2_error_bars(Event)) THEN BEGIN
+    cooef = POLY_FIT(flt0, $
+                     flt1, $
+                     1, $
+                     MEASURE_ERRORS = flt2, $
+                     /DOUBLE,$
+                     STATUS         = status,$
+                     SIGMA          = sigma) ;standard error
+ENDIF ELSE BEGIN
+    cooef = POLY_FIT(flt0, $
+                     flt1, $
+                     1, $
+                     STATUS         = status,$
+                     /DOUBLE,$
+                     SIGMA          = sigma) ;standard error
+ENDELSE
+
 a = cooef[0]
 b = cooef[1]
 

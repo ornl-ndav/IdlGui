@@ -103,6 +103,9 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;step1 of scaling has been done). If not, display a message asking for
 ;a selection first.
 
+DEVICE, DECOMPOSED=0
+LOADCT, 5, /SILENT
+
 xy_position = (*global).step4_step1_selection
 IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
@@ -123,7 +126,9 @@ IF (xy_position[0]+xy_position[2] NE 0 AND $
     xmax = getTextFieldValue(Event,'step4_2_zoom_x_max')
     ymin = getTextFieldValue(Event,'step4_2_zoom_y_min')
     ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
-            
+ 
+    (*global).step4_step1_ymax_value = FLOAT(ymax)
+           
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     CASE (CurrTabSelect) OF
