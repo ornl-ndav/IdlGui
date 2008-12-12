@@ -210,15 +210,38 @@ WHILE (index LT nbr_plot) DO BEGIN
     ENDELSE
     local_tfpData = local_tfpData * transparency_1
     
+ ;    IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
+
+;         Max  = (*global).step2_zmax
+;         fMax = DOUBLE(Max)
+;         index_GT = WHERE(local_tfpData GT fMax, nbr)
+;         IF (nbr GT 0) THEN BEGIN
+;             local_tfpData[index_GT] = !VALUES.D_NAN
+;         ENDIF
+
+;         Min  = (*global).step2_zmin
+;         fMin = DOUBLE(Min)
+;         index_LT = WHERE(local_tfpData LT fMin, nbr1)
+;         IF (nbr1 GT 0) THEN BEGIN
+;             tmp = local_tfpData
+;             tmp[index_LT] = !VALUeS.D_NAN
+;             local_min = MIN(tmp,/NAN)
+;             local_tfpData[index_LT] = DOUBLE(0)
+;         ENDIF ELSE BEGIN
+;             local_min = MIN(local_tfpData,/NAN)
+;         ENDELSE
+;     ENDIF
+
 ;array that will be used to display counts 
     local_tfpdata_untouched = local_tfpdata
 
 ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisShiftingSelected(Event)
     IF (bLogPlot) THEN BEGIN
-        zero_index = WHERE(local_tfpdata EQ 0) 
-        local_tfpdata[zero_index] = !VALUES.F_NAN
-
+        zero_index = WHERE(local_tfpdata EQ 0., nbr)
+        IF (nbr GT 0) THEN BEGIN
+            local_tfpdata[zero_index] = !VALUES.F_NAN
+        ENDIF
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
@@ -229,6 +252,9 @@ WHILE (index LT nbr_plot) DO BEGIN
         cleanup_array, local_tfpdata ;_plot
     ENDIF ELSE BEGIN
 ;determine min and max value (for this array only)
+;        IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
+;            local_min = transparency_1 * MIN(local_tfpData,/NAN)
+;        ENDIF
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
         min_array[index] = local_min
@@ -305,6 +331,12 @@ LOADCT, 5, /SILENT
 
 ;plot color scale
 plotColorScale_shifting, Event, master_min, master_max ;_gui
+
+;(*global).step2_zmax = master_max
+;(*global).step2_zmin = master_min
+
+;putTextFieldValue, Event, 'step3_zmax', master_max, FORMAT='(e8.1)'
+;putTextFieldValue, Event, 'step3_zmin', master_min, FORMAT='(e8.1)'
 
 ;select plot
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')

@@ -72,8 +72,9 @@ sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
                  uname: 'counts_value_scaling_step1'}
 
 ;Lin/Log z-axis ---------------------------------------------------------------
-XYoff = [-175,0]
-sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
+XYoff = [20,0]
+sLinLog = { size: [sXYIFrame.size[0]+$
+                   sXYIFrame.size[2]+XYoff[0],$
                    XYoff[1]],$
             list: ['Linear','Log'],$
             label: 'Z-axis:',$
@@ -103,6 +104,32 @@ sColorScale = { size: [sScale.size[0]+$
                        70,$
                        sScale.size[3]],$
                 uname: 'scale_color_draw_step4_step1'}
+
+XYoff = [-5,-30] ;z_max value -------------------------------------------------
+sZmax = { size: [sColorScale.size[0]+XYoff[0],$
+                 sColorScale.size[1]+XYoff[1],$
+                 75],$
+          uname: 'step4_zmax',$
+          sensitive: 0,$
+          value: ''}
+
+XYoff = [-80,0] ;z_reset
+sZreset = { size: [sZmax.size[0]+XYoff[0],$
+                   sZmax.size[1]+XYoff[1],$
+                   sZmax.size[2]],$
+            uname: 'step4_z_reset',$
+            sensitive: 0,$
+            value: 'R E S E T'}
+
+XYoff = [0,0]
+sZmin = { size: [sZmax.size[0]+XYoff[0],$
+                 sColorScale.size[1]+$
+                 sColorScale.size[3]+$
+                 XYoff[1],$
+                 sZmax.size[2]],$
+          uname: 'step4_zmin',$
+          sensitive: 0,$
+          value: ''}
 
 ;Selection Info ---------------------------------------------------------------
 XYoff = [10,15]
@@ -292,6 +319,35 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
+
+;Z range widgets --------------------------------------------------------------
+wZreset = WIDGET_BUTTON(BaseTab,$
+                        XOFFSET   = sZreset.size[0],$
+                        YOFFSET   = sZreset.size[1],$
+                        SCR_XSIZE = sZreset.size[2],$
+                        VALUE     = sZreset.value,$
+                        SENSITIVE = sZreset.sensitive,$
+                        UNAME     = sZreset.uname)
+
+wZmax = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmax.size[0],$
+                    YOFFSET   = sZmax.size[1],$
+                    SCR_XSIZE = sZmax.size[2],$
+                    UNAME     = sZmax.uname,$
+                    SENSITIVE = sZmax.sensitive,$
+                    VALUE     = sZmax.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+
+wZmin = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmin.size[0],$
+                    YOFFSET   = sZmin.size[1],$
+                    SCR_XSIZE = sZmin.size[2],$
+                    UNAME     = sZmin.uname,$
+                    VALUE     = sZmin.value,$
+                    SENSITIVE = sZmin.sensitive,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
 
 ;Color Scale Draw -------------------------------------------------------------
 wColorScale = WIDGET_DRAW(BaseTab,$
