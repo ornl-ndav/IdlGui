@@ -109,6 +109,7 @@ sZmax = { size: [sColorScale.size[0]+XYoff[0],$
                  sColorScale.size[1]+XYoff[1],$
                  75],$
           uname: 'step2_zmax',$
+          sensitive: 0,$
           value: ''}
 
 XYoff = [0,-25] ;z_reset
@@ -116,6 +117,7 @@ sZreset = { size: [sZmax.size[0]+XYoff[0],$
                    sZmax.size[1]+XYoff[1],$
                    sZmax.size[2]],$
             uname: 'step2_z_reset',$
+            sensitive: 0,$
             value: 'R E S E T'}
 
 XYoff = [0,0]
@@ -125,6 +127,7 @@ sZmin = { size: [sZmax.size[0]+XYoff[0],$
                  XYoff[1],$
                  sZmax.size[2]],$
           uname: 'step2_zmin',$
+          sensitive: 0,$
           value: ''}
 
 ;X and Y of mouse over plot area ----------------------------------------------
@@ -313,6 +316,7 @@ wZreset = WIDGET_BUTTON(BaseTab,$
                         YOFFSET   = sZreset.size[1],$
                         SCR_XSIZE = sZreset.size[2],$
                         VALUE     = sZreset.value,$
+                        SENSITIVE = sZreset.sensitive,$
                         UNAME     = sZreset.uname)
 
 wZmax = WIDGET_TEXT(BaseTab,$
@@ -320,6 +324,7 @@ wZmax = WIDGET_TEXT(BaseTab,$
                     YOFFSET   = sZmax.size[1],$
                     SCR_XSIZE = sZmax.size[2],$
                     UNAME     = sZmax.uname,$
+                    SENSITIVE = sZmax.sensitive,$
                     VALUE     = sZmax.value,$
                     /EDITABLE,$
                     /ALIGN_LEFT)
@@ -330,6 +335,7 @@ wZmin = WIDGET_TEXT(BaseTab,$
                     SCR_XSIZE = sZmin.size[2],$
                     UNAME     = sZmin.uname,$
                     VALUE     = sZmin.value,$
+                    SENSITIVE = sZmin.sensitive,$
                     /EDITABLE,$
                     /ALIGN_LEFT)
 
