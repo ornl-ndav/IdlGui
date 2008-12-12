@@ -156,7 +156,7 @@ XYoff = [-5,-30] ;z_max value -------------------------------------------------
 sZmax = { size: [sColorScale.size[0]+XYoff[0],$
                  sColorScale.size[1]+XYoff[1],$
                  75],$
-          uname: 'step4_zmax',$
+          uname: 'step5_zmax',$
           sensitive: 0,$
           value: ''}
 
@@ -164,7 +164,7 @@ XYoff = [-80,0] ;z_reset
 sZreset = { size: [sZmax.size[0]+XYoff[0],$
                    sZmax.size[1]+XYoff[1],$
                    sZmax.size[2]],$
-            uname: 'step4_z_reset',$
+            uname: 'step5_z_reset',$
             sensitive: 0,$
             value: 'R E S E T'}
 
@@ -174,7 +174,7 @@ sZmin = { size: [sZmax.size[0]+XYoff[0],$
                  sColorScale.size[3]+$
                  XYoff[1],$
                  sZmax.size[2]],$
-          uname: 'step4_zmin',$
+          uname: 'step5_zmin',$
           sensitive: 0,$
           value: ''}
 

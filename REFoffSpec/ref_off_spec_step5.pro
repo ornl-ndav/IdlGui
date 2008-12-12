@@ -332,6 +332,11 @@ ENDIF ELSE BEGIN
     ENDIF
     MapBase, Event, 'scaling_base_step5', scale_map_status
     
+    uname_list = ['step5_zmax',$
+                  'step5_zmin',$
+                  'step5_z_reset']
+    activate_widget_list, Event, uname_list, 0^scale_map_status
+
 ENDELSE
 MapBase, Event, 'shifting_base_step5', map_status
 
