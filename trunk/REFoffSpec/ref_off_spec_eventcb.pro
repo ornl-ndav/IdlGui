@@ -71,7 +71,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         IF((*global).something_to_plot) THEN BEGIN
             xaxis = (*(*global).x_axis)
             contour_plot, Event, xaxis
-            plotAsciiData, Event, TYPE='replot' ;_plot
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
         ENDIF
     END
 

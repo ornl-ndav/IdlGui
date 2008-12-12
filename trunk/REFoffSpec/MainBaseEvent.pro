@@ -102,7 +102,8 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='refresh_step2_plot'): BEGIN
         xaxis = (*(*global).x_axis)
         contour_plot, Event, xaxis ;_plot
-        plotASCIIdata, Event, TYPE='replot' ;_plot
+        plotAsciiData, Event, RESCALE=1, TYPE='replot'
+;        plotASCIIdata, Event, TYPE='replot' ;_plot
     END
 
 ;delete ascii files
