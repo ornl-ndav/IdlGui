@@ -196,7 +196,7 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='z_axis_linear_log'): BEGIN
         current_list_OF_files = (*(*global).list_OF_ascii_files)
         IF (current_list_OF_files[0] NE '') THEN BEGIN
-            plotASCIIdata, Event, TYPE='replot' ;_plot
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
         ENDIF
     END
 
