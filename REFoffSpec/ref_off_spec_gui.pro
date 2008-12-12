@@ -74,14 +74,19 @@ END
 
 ;------------------------------------------------------------------------------
 PRO activate_browse_gui, Event, value
-activate_widget, Event, 'x_axis_ticks_base', value
-activate_widget, Event, 'ascii_preview_button', value
+uname_list = ['x_axis_ticks_base',$
+              'ascii_preview_button',$
+              'refresh_step2_plot',$
+              'step2_zmax',$
+              'step2_zmin',$
+              'step2_z_reset']
+activate_widget_list, Event, uname_list, value
+
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 index = WHERE((*global).ucams EQ (*global).super_users)
 IF (index NE -1) THEN BEGIN ;for super users
     activate_widget, Event, 'transparency_base', value
 ENDIF
-activate_widget, Event, 'refresh_step2_plot', value
 END
 
 ;------------------------------------------------------------------------------
