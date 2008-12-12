@@ -43,7 +43,7 @@ sBaseTab = { size:  tab_size,$
              title: TabTitles.step3}
 
 ;x/y and counts values --------------------------------------------------------
-XYoff = [45,5]
+XYoff = [5,5]
 sXYIFrame = { size: [XYoff[0],$
                      XYoff[1],$
                      350,$
@@ -72,7 +72,7 @@ sCountsLabel = { size: [sYlabel.size[0]+XYoff[0],$
                  uname: 'counts_value_shifting'}
 
 ;Selection or 2D plot modes ---------------------------------------------------
-XYoff = [100,5]
+XYoff = [30,5]
 sModeLabel = { size: [sXYIFrame.size[0]+$
                       sXYIFrame.size[2]+XYoff[0],$
                       XYoff[1]],$
@@ -83,7 +83,7 @@ XYoff = [70,0]
 sMode = { size: [sModeLabel.size[0]+$
                  XYoff[0],$
                  XYoff[1],$
-                 200,25],$
+                 150,25],$
           uname: 'selection_mode_base'}
 
 XYoff = [50,0]
@@ -96,7 +96,7 @@ s2DplotMode = { uname: 'two_d_selection_plot_mode',$
                 tooltip: '2D Plot Selection Mode'}
                          
 ;More or Less axis ticks number ----------------------------------------------
-XYoff = [550,5]
+XYoff = [360,5]
 sXaxisTicksLabel = { size: [sCountsLabel.size[0]+XYoff[0],$
                             XYoff[1]],$
                      uname: 'x_axis_less_more_label',$
@@ -116,7 +116,7 @@ sXaxisMoreTicks = { size: [sXaxisLessTicks.size[0]+$
                     uname: 'x_axis_more_ticks_shifting'}
 
 ;Lin/Log z-axis ---------------------------------------------------------------
-XYoff = [-175,0]
+XYoff = [-395,0]
 sLinLog = { size: [sBaseTab.size[2]+XYoff[0],$
                    XYoff[1]],$
             list: ['Linear','Log'],$
@@ -148,13 +148,39 @@ sColorScale = { size: [sScale.size[0]+$
                        sScale.size[3]],$
                 uname: 'scale_color_draw_step3'}
 
+XYoff = [-5,-30] ;z_max value -------------------------------------------------
+sZmax = { size: [sColorScale.size[0]+XYoff[0],$
+                 sColorScale.size[1]+XYoff[1],$
+                 75],$
+          uname: 'step3_zmax',$
+          sensitive: 0,$
+          value: ''}
+
+XYoff = [-80,0] ;z_reset
+sZreset = { size: [sZmax.size[0]+XYoff[0],$
+                   sZmax.size[1]+XYoff[1],$
+                   sZmax.size[2]],$
+            uname: 'step3_z_reset',$
+            sensitive: 0,$
+            value: 'R E S E T'}
+
+XYoff = [0,0]
+sZmin = { size: [sZmax.size[0]+XYoff[0],$
+                 sColorScale.size[1]+$
+                 sColorScale.size[3]+$
+                 XYoff[1],$
+                 sZmax.size[2]],$
+          uname: 'step3_zmin',$
+          sensitive: 0,$
+          value: ''}
+
 ;Reference and active File Base -----------------------------------------------
 XYoff = [5,5]
 sRefBase = { size: [XYoff[0],$
                     sScale.size[1]+$
                     sScale.size[3]+$
                     XYoff[1],$
-                    1258,$
+                    1180,$
                     42],$
              uname: 'reference_base_shifting',$
              sensitive: 0,$
@@ -198,7 +224,7 @@ sActiveDroplist = { size: [sActiveLabel.size[0]+XYoff[0],$
                     value: ['N/A                                         '],$
                     uname: 'active_file_droplist_shifting'}
 
-XYoff = [390,0]
+XYoff = [350,0]
 sRefPixelLabel = { size: [sActiveDroplist.size[0]+$
                           XYoff[0],$
                           sRefLabel.size[1]+$
@@ -220,7 +246,7 @@ sRefPixelValue = { size: [sRefPixelLabel.size[0]+$
                           40],$
                    value: '',$
                    uname: 'reference_pixel_value_shifting'}
-XYoff = [50,0]
+XYoff = [20,0]
 sPixelDwButton = { size: [sRefPixelValue.size[0]+$
                           sRefPixelValue.size[2]+$
                           XYoff[0],$
@@ -246,7 +272,7 @@ sPixelUpButton = { size: [sPixelDwButton.size[0]+$
                    uname: 'pixel_up_selection_shifting',$
                    value: 'REFoffSpec_images/reference_up.bmp'}
                          
-XYoff = [60,0]
+XYoff = [50,0]
 sMoveByLabel = { size: [sPixelUpButton.size[0]+$
                         XYoff[0],$
                         sRefPixelLabel.size[1]+$
@@ -500,6 +526,35 @@ wScale = WIDGET_DRAW(BaseTab,$
                      SCR_XSIZE     = sScale.size[2],$
                      SCR_YSIZE     = sScale.size[3],$
                      UNAME         = sScale.uname)
+
+;Z range widgets --------------------------------------------------------------
+wZreset = WIDGET_BUTTON(BaseTab,$
+                        XOFFSET   = sZreset.size[0],$
+                        YOFFSET   = sZreset.size[1],$
+                        SCR_XSIZE = sZreset.size[2],$
+                        VALUE     = sZreset.value,$
+                        SENSITIVE = sZreset.sensitive,$
+                        UNAME     = sZreset.uname)
+
+wZmax = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmax.size[0],$
+                    YOFFSET   = sZmax.size[1],$
+                    SCR_XSIZE = sZmax.size[2],$
+                    UNAME     = sZmax.uname,$
+                    SENSITIVE = sZmax.sensitive,$
+                    VALUE     = sZmax.value,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+
+wZmin = WIDGET_TEXT(BaseTab,$
+                    XOFFSET   = sZmin.size[0],$
+                    YOFFSET   = sZmin.size[1],$
+                    SCR_XSIZE = sZmin.size[2],$
+                    UNAME     = sZmin.uname,$
+                    VALUE     = sZmin.value,$
+                    SENSITIVE = sZmin.sensitive,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
 
 ;Color Scale Draw -------------------------------------------------------------
 wColorScale = WIDGET_DRAW(BaseTab,$
