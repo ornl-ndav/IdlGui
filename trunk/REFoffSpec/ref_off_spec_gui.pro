@@ -298,7 +298,10 @@ uname_list = ['reference_base_shifting',$
               'x_axis_less_more_label',$
               'x_axis_less_ticks_shifting',$
               'x_axis_more_ticks_shifting',$
-              'z_axis_linear_log_shifting']
+              'z_axis_linear_log_shifting',$
+              'step3_zmax',$
+              'step3_zmin',$
+              'step3_z_reset']
 IF (current_list_OF_files[0] NE '') THEN BEGIN
     activate_status = 1
 ENDIF ELSE BEGIN
