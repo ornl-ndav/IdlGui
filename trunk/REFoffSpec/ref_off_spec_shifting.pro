@@ -193,6 +193,15 @@ ymax_array = FLTARR(nbr_plot) ;y of max value per array
 max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
 
+bLogPlot = isLogZaxisShiftingSelected(Event)
+IF (bLogPlot) THEN BEGIN
+    zmax = (*global).log_zmax
+    zmin = (*global).log_zmin
+ENDIF ELSE BEGIN
+    zmax = (*global).lin_zmax
+    zmin = (*global).lin_zmin
+ENDELSE
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -201,7 +210,24 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (index NE 0) THEN BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
-    
+
+    fmax     = DOUBLE(max)
+    index_GT = WHERE(local_tfpData GT fmax, nbr)
+    IF (nbr GT 0) THEN BEGIN
+        local_tfpData[index_GT] = !VALUES.D_NAN
+    ENDIF
+
+    fmin     = DOUBLE(min)
+    index_LT = WHERE(local_tfpData LT fmin, nbr1)
+    IF (nbr1 GT 0) THEN BEGIN
+        tmp = local_tfpData
+        tmp[index_LT] = !VALUES.D_NAN
+        local_min = MIN(tmp,/NAN)
+        local_tfpData[index_LT] = DOUBLE(0)
+    ENDIF ELSE BEGIN
+        local_min = MIN(local_tfpData,/NAN)
+    ENDELSE
+
 ;Applied attenuator coefficient 
     IF (bTransCoeff EQ 1) THEN BEGIN ;yes
         transparency_1 = trans_coeff_list[index]
@@ -332,11 +358,16 @@ LOADCT, 5, /SILENT
 ;plot color scale
 plotColorScale_shifting, Event, master_min, master_max ;_gui
 
-;(*global).step2_zmax = master_max
-;(*global).step2_zmin = master_min
+IF (bLogPlot) THEN BEGIN
+    (*global).log_zmin = master_min
+    (*global).log_zmax = master_max
+ENDIF ELSE BEGIN
+    (*global).lin_zmin = master_min
+    (*global).lin_zmax = master_max
+ENDELSE
 
-;putTextFieldValue, Event, 'step3_zmax', master_max, FORMAT='(e8.1)'
-;putTextFieldValue, Event, 'step3_zmin', master_min, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step3_zmax', master_max, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step3_zmin', master_min, FORMAT='(e8.1)'
 
 ;select plot
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step3_draw')
@@ -942,8 +973,23 @@ ENDIF
 
 END
 
+;------------------------------------------------------------------------------
+PRO populate_step3_range_widgets, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+bLogPlot = isLogZaxisShiftingSelected(Event)
+IF (bLogPlot) THEN BEGIN
+    zmax = (*global).log_zmax
+    zmin = (*global).log_zmin
+ENDIF ELSE BEGIN
+    zmax = (*global).lin_zmax
+    zmin = (*global).lin_zmin
+ENDELSE
 
+putTextFieldValue, Event, 'step3_zmax', zmax
+putTextFieldValue, Event, 'step3_zmin', zmin
+
+END
 
 
 

@@ -143,17 +143,10 @@ CASE Event.id OF
                 plotAsciiData, Event, RESCALE=1, TYPE='replot'
             ENDELSE
         ENDIF ELSE BEGIN
-            zmax_w   = getTextFieldValue(Event,'step2_zmax')
-            s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
-            zmax_g   = (*global).step2_zmax
-            s_zmax_g = STRING(zmax_g, FORMAT='(e8.1)')
-            s_zmax_g = STRCOMPRESS(s_zmax_g,/REMOVE_ALL)
-            IF (s_zmax_g NE s_zmax_w) THEN BEGIN
-                (*global).step2_zmax = FLOAT(zmax_w)
-                plotAsciiData, Event, RESCALE=1, TYPE='replot'
-                (*global).step2_zmax_backup = (*global).step2_zmax
-                (*global).step2_zmin_backup = (*global).step2_zmin
-            ENDIF
+            populate_step2_range_widgets, Event
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
+            (*global).step2_zmax_backup = (*global).step2_zmax
+            (*global).step2_zmin_backup = (*global).step2_zmin
         ENDELSE
     END
     
@@ -174,17 +167,10 @@ CASE Event.id OF
                 plotAsciiData, Event, RESCALE=1, TYPE='replot'
             ENDELSE
         ENDIF ELSE BEGIN
-            zmin_w   = getTextFieldValue(Event,'step2_zmin')
-            s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
-            zmin_g   = (*global).step2_zmin
-            s_zmin_g = STRING(zmin_g, FORMAT='(e8.1)')
-            s_zmin_g = STRCOMPRESS(s_zmin_g,/REMOVE_ALL)
-            IF (s_zmin_g NE s_zmin_w) THEN BEGIN
-                (*global).step2_zmin = FLOAT(zmin_w)
-                plotAsciiData, Event, RESCALE=1, TYPE='replot'
-                (*global).step2_zmax_backup = (*global).step2_zmax
-                (*global).step2_zmin_backup = (*global).step2_zmin
-            ENDIF
+            populate_step2_range_widgets, Event
+            plotAsciiData, Event, RESCALE=1, TYPE='replot'
+            (*global).step2_zmax_backup = (*global).step2_zmax
+            (*global).step2_zmin_backup = (*global).step2_zmin
         ENDELSE
     END
 
@@ -214,6 +200,10 @@ CASE Event.id OF
 ;333333333333333333333333333333333333333333333333333333333333333333333333333333
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmax'): BEGIN
+        populate_step3_range_widgets, Event
+        plotAsciiData_shifting, Event
+        plotReferencedPixels, Event
+        refresh_plot_selection_OF_2d_plot_mode, Event
 ;         input_error = 0
 ;         CATCH, input_error
 ;         IF (input_error NE 0) THEN BEGIN
@@ -245,6 +235,10 @@ CASE Event.id OF
     
 ;zmin widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmin'): BEGIN
+        populate_step3_range_widgets, Event
+        plotAsciiData_shifting, Event
+        plotReferencedPixels, Event
+        refresh_plot_selection_OF_2d_plot_mode, Event
 ;         input_error = 0
 ;         CATCH, input_error
 ;         IF (input_error NE 0) THEN BEGIN

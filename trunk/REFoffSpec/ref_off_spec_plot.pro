@@ -307,6 +307,14 @@ plotColorScale, Event, master_min, master_max
 putTextFieldValue, Event, 'step2_zmax', master_max, FORMAT='(e8.1)'
 putTextFieldValue, Event, 'step2_zmin', master_min, FORMAT='(e8.1)'
 
+IF (bLogPlot) THEN BEGIN
+    (*global).log_zmin = master_min
+    (*global).log_zmax = master_max
+ENDIF ELSE BEGIN
+    (*global).lin_zmin = master_min
+    (*global).lin_zmax = master_max
+ENDELSE
+
 ;select plot
 ;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
@@ -514,6 +522,34 @@ ENDELSE
 plotASCIIdata, Event, TYPE='replot' ;_plot
 ;turn off hourglass
 WIDGET_CONTROL,HOURGLASS=0
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step2_range_widgets, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+zmin_w   = getTextFieldValue(Event,'step2_zmin')
+s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+(*global).step2_zmin = FLOAT(zmin_w)
+zmin = s_zmin_w
+
+zmax_w   = getTextFieldValue(Event,'step2_zmax')
+s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+(*global).step2_zmax = FLOAT(zmax_w)
+zmax = s_zmax_w
+
+;bLogPlot = isLogZaxisSelected(Event)
+;IF (bLogPlot) THEN BEGIN
+;    zmax = (*global).log_zmax
+;    zmin = (*global).log_zmin
+;ENDIF ELSE BEGIN
+;    zmax = (*global).lin_zmax
+;    zmin = (*global).lin_zmin
+;ENDELSE
+
+putTextFieldValue, Event, 'step2_zmax', zmax, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step2_zmin', zmin, FORMAT='(e8.1)'
+
 END
 
 
