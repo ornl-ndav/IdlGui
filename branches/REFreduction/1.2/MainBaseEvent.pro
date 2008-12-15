@@ -95,6 +95,7 @@ CASE Event.id OF
 ;Browse NeXus file
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='browse_data_nexus_button'): begin
+        (*global).data_path = ''
         BrowseDataNexus, Event
         DefineDefaultOutputName, Event
     END
@@ -102,6 +103,7 @@ CASE Event.id OF
 ;LOAD DATA file cw_field
     widget_info(wWidget, $  
                 FIND_BY_UNAME='load_data_run_number_text_field'): begin
+        (*global).data_path = ''
         REFreductionEventcb_LoadAndPlotDataFile, Event ;_eventcb
         DefineDefaultOutputName, Event
     END
@@ -113,6 +115,7 @@ CASE Event.id OF
            (*global).archived_data_flag = isArchivedDataNexusDesired(Event)
            IF (getTextFieldValue(Event,'load_data_run_number_text_field') $
                NE 0) THEN BEGIN
+               (*global).data_path = ''
                REFreductionEventcb_LoadAndPlotDataFile, Event
                DefineDefaultOutputName, Event
            ENDIF
@@ -555,6 +558,7 @@ CASE Event.id OF
 ;Browse NeXus file
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='browse_norm_nexus_button'): begin
+        (*global).norm_path = ''
         BrowseNormNexus, Event
     END
     
@@ -562,6 +566,7 @@ CASE Event.id OF
     widget_info(wWidget, $
                 FIND_BY_UNAME= $
                 'load_normalization_run_number_text_field'): begin
+        (*global).norm_path = ''
         REFreductionEventcb_LoadAndPlotNormFile, Event
     end
 
@@ -573,6 +578,7 @@ CASE Event.id OF
             IF (getTextFieldValue(Event, $
                                   'load_normalization_run_number_text_field') $
                 NE 0) THEN BEGIN
+                (*global).norm_path = ''
                 REFreductionEventcb_LoadAndPlotNormFile, Event
             ENDIF
         ENDIF
@@ -1311,6 +1317,7 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_pola_state'): 
     widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_list'): 
     widget_info(wWidget, FIND_BY_UNAME='detector_value_text_field'): 

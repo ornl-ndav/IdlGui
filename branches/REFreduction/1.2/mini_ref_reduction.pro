@@ -87,6 +87,12 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ first_event: 1,$
                     pola_type: '',$ ;'data' or 'norm'
+                    data_path_flag: '--data-paths',$
+                    data_path_flag_suffix: '/bank1,1',$
+                    data_path: '',$ ;for example  '/entry_Off-Off/'
+                    norm_path_flag: '--norm-data-paths=/entry-Off_Off/' + $
+                    'bank1,1',$
+                    norm_path: '',$ 
                     data_nexus_full_path: '',$
                     norm_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$	
@@ -638,8 +644,8 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
