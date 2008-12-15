@@ -61,6 +61,7 @@ SWITCH (ucams) OF
     'mid':
     'vl2':
     'ha9':
+    'scu':
     '1qg': ArchivedUser = 1
     ELSE:
 ENDSWITCH
@@ -112,7 +113,12 @@ global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 ['j35','pf9','2zr','mid','ha9'],$
+                    geek:                 ['j35', $
+                                           'pf9', $
+                                           '2zr', $
+                                           'mid', $
+                                           'ha9', $
+                                           'scu'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
