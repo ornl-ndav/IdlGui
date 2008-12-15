@@ -61,7 +61,7 @@ SUPER_USERS       = ['j35']
 ;          5: Create Output
 ;          6: Options,
 ;          7:Log Book 
-sDEBUGGING = { tab: {main_tab: 4,$
+sDEBUGGING = { tab: {main_tab: 1,$
                      step4_tab: 0,$
                      scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/'}
@@ -85,6 +85,10 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams:               ucams,$
+                    lin_zmax: 0d,$
+                    lin_zmin: 0d,$
+                    log_zmax: 0d,$
+                    log_zmin: 0d,$
                     step2_zmax: 0d,$
                     step2_zmin: 0d,$
                     step2_zmax_backup: 0d,$
