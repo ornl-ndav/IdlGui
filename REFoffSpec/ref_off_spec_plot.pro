@@ -123,6 +123,10 @@ END
 PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Entering plotAsciiData'
+ENDIF
+
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 ;;clean up data
     Cleanup_data, Event
@@ -169,18 +173,24 @@ WHILE (index LT nbr_plot) DO BEGIN
 
 ;Applied attenuator coefficient 
     transparency_1 = trans_coeff_list[index]
-    local_tfpData = local_tfpData * transparency_1
+    local_tfpData = DOUBLE(local_tfpData * transparency_1)
 
     IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
 
-        Max  = (*global).step2_zmax
+        Max  = (*global).zmax_g
+        IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+            print, ' max(local_tfpData): ' + STRCOMPRESS(max(local_tfpData)) 
+            print, ' Max               : ' + strcompress(Max)
+        ENDIF
+
         fMax = DOUBLE(Max)
+        
         index_GT = WHERE(local_tfpData GT fMax, nbr)
         IF (nbr GT 0) THEN BEGIN
             local_tfpData[index_GT] = !VALUES.D_NAN
         ENDIF
 
-        Min  = (*global).step2_zmin
+        Min  = (*global).zmin_g
         fMin = DOUBLE(Min)
         index_LT = WHERE(local_tfpData LT fMin, nbr1)
         IF (nbr1 GT 0) THEN BEGIN
@@ -191,7 +201,7 @@ WHILE (index LT nbr_plot) DO BEGIN
         ENDIF ELSE BEGIN
             local_min = MIN(local_tfpData,/NAN)
         ENDELSE
-    ENDIF
+    ENDIF ;enf of N_ELEMENTS(RESCALE)
 
 ;array that will be used to display counts 
     local_tfpdata_untouched = local_tfpdata
@@ -298,8 +308,18 @@ InformLogBook, Event, min_array, max_array, xmax_array, ymax_array ;_gui
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
+IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
+    (*global).zmin_g = master_min
+    (*global).zmax_g = master_max
+ENDIF
+
 ;plot color scale
 plotColorScale, Event, master_min, master_max
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, ' master_max: ' + STRCOMPRESS(master_max,/REMOVE_ALL)
+    print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
+ENDIF
 
 (*global).step2_zmax = master_max
 (*global).step2_zmin = master_min
@@ -339,6 +359,11 @@ IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
 
     contour_plot, Event, xaxis
 
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving plotAsciiData'
+    print
 ENDIF
 
 END
@@ -528,27 +553,46 @@ END
 PRO populate_step2_range_widgets, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-zmin_w   = getTextFieldValue(Event,'step2_zmin')
-s_zmin_w = STRCOMPRESS(zmin_w,/REMOVE_ALL)
-(*global).step2_zmin = FLOAT(zmin_w)
-zmin = s_zmin_w
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Entering populate_step2_range'
+ENDIF
 
-zmax_w   = getTextFieldValue(Event,'step2_zmax')
-s_zmax_w = STRCOMPRESS(zmax_w,/REMOVE_ALL)
-(*global).step2_zmax = FLOAT(zmax_w)
-zmax = s_zmax_w
+zmin_w    = getTextFieldValue(Event,'step2_zmin')
+s_zmin_w  = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+as_zmin_w = STRING(s_zmin_w, FORMAT='(e8.1)')
 
-;bLogPlot = isLogZaxisSelected(Event)
-;IF (bLogPlot) THEN BEGIN
-;    zmax = (*global).log_zmax
-;    zmin = (*global).log_zmin
-;ENDIF ELSE BEGIN
-;    zmax = (*global).lin_zmax
-;    zmin = (*global).lin_zmin
-;ENDELSE
+zmin_g    = (*global).zmin_g
+s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
+as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
 
-putTextFieldValue, Event, 'step2_zmax', zmax, FORMAT='(e8.1)'
-putTextFieldValue, Event, 'step2_zmin', zmin, FORMAT='(e8.1)'
+IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    (*global).zmin_g = DOUBLE(zmin_w)
+ENDIF
+
+;------------------------------------------------
+zmax_w    = getTextFieldValue(Event,'step2_zmax')
+s_zmax_w  = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+as_zmax_w = STRING(s_zmax_w, FORMAT='(e8.1)')
+
+zmax_g    = (*global).zmax_g
+
+s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
+as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, '  zmax_g    : ' + strcompress(zmax_g)
+    print, '  as_zmax_w : ' + as_zmax_w
+    print, '  as_zmax_g : ' + as_zmax_g
+ENDIF
+
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    (*global).zmax_g = DOUBLE(zmax_w)
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving populate_step2_range'
+    print
+ENDIF
 
 END
 

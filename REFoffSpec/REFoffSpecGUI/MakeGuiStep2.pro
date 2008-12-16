@@ -208,7 +208,7 @@ sLinLog = { size: [sTransBase.size[0]+$
             list: ['Linear','Log'],$
             label: 'Z-axis:',$
             uname: 'z_axis_linear_log',$
-            value: 0.0}
+            value: 1.0}
                    
 XYoff = [-290,10] ;+/- number of x-axis ticks ---------------------------------
 sXaxisTicksBase = { size: [sScale.size[0]+$
