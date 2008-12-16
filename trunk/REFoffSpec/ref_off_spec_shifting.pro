@@ -161,6 +161,10 @@ END
 PRO plotAsciiData_shifting, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Entering plotAsciiData_shifting'
+ENDIF
+
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
@@ -193,17 +197,22 @@ ymax_array = FLTARR(nbr_plot) ;y of max value per array
 max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
 
-bLogPlot = isLogZaxisShiftingSelected(Event)
-IF (bLogPlot) THEN BEGIN
-    zmax = (*global).log_zmax
-    zmin = (*global).log_zmin
-ENDIF ELSE BEGIN
-    zmax = (*global).lin_zmax
-    zmin = (*global).lin_zmin
-ENDELSE
+;bLogPlot = isLogZaxisShiftingSelected(Event)
+;IF (bLogPlot) THEN BEGIN
+;    zmax = (*global).log_zmax
+;    zmin = (*global).log_zmin
+;ENDIF ELSE BEGIN
+;    zmax = (*global).lin_zmax
+;    zmin = (*global).lin_zmin
+;ENDELSE
 
-print, zmax
-print, zmin
+zmax  = (*global).zmax_g
+zmin  = (*global).zmin_g
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, ' zmin: ' + STRCOMPRESS(zmin,/REMOVE_ALL)
+    print, ' zmax: ' + STRCOMPRESS(zmax,/REMOVE_ALL)
+ENDIF
 
 WHILE (index LT nbr_plot) DO BEGIN
     
@@ -390,6 +399,11 @@ WHILE (i LT nbr_plot) DO BEGIN
       COLOR=box_color[i]
     ++i
 ENDWHILE
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving plotAsciiData_shifting'
+    print
+ENDIF
 
 END
 
@@ -980,22 +994,59 @@ END
 PRO populate_step3_range_widgets, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-bLogPlot = isLogZaxisShiftingSelected(Event)
-IF (bLogPlot) THEN BEGIN
-    zmax = (*global).log_zmax
-    zmin = (*global).log_zmin
-ENDIF ELSE BEGIN
-    zmax = (*global).lin_zmax
-    zmin = (*global).lin_zmin
-ENDELSE
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, 'Entering populate_step3_range_widgets'
+ENDIF
 
-putTextFieldValue, Event, 'step3_zmax', zmax, FORMAT='(e8.1)'
-putTextFieldValue, Event, 'step3_zmin', zmin, FORMAT='(e8.1)'
+zmin_w    = getTextFieldValue(Event,'step3_zmin')
+s_zmin_w  = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+as_zmin_w = STRING(s_zmin_w, FORMAT='(e8.1)')
+
+zmin_g    = (*global).zmin_g
+s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
+as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
+
+IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    (*global).zmin_g = DOUBLE(zmin_w)
+ENDIF
+
+;------------------------------------------------
+zmax_w    = getTextFieldValue(Event,'step3_zmax')
+s_zmax_w  = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+as_zmax_w = STRING(s_zmax_w, FORMAT='(e8.1)')
+
+zmax_g    = (*global).zmax_g
+
+s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
+as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, '  zmax_g    : ' + strcompress(zmax_g)
+    print, '  as_zmax_w : ' + as_zmax_w
+    print, '  as_zmax_g : ' + as_zmax_g
+ENDIF
+
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    (*global).zmax_g = DOUBLE(zmax_w)
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving populate_step3_range_widgets'
+    print
+ENDIF
 
 END
 
+;------------------------------------------------------------------------------
+PRO populate_step3_range_init, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+print, 'here'
 
+putTextFieldValue, Event, 'step3_zmax', (*global).zmax_g, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step3_zmin', (*global).zmin_g, FORMAT='(e8.1)'
+
+END
 
 
 
