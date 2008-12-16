@@ -84,15 +84,26 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ ucams:               ucams,$
-                    lin_zmax: 0d,$
-                    lin_zmin: 0d,$
-                    log_zmax: 0d,$
-                    log_zmin: 0d,$
+global = ptr_new ({ ucams: ucams,$
+                    debugging: DEBUGGING,$
+
+                    lin_zmax: 0d,$ ;0.46009228 (real value)
+                    lin_zmin: 0d,$ ;real value
+                    log_zmax: 0d,$ ;0.46009228 (real value)
+                    log_zmin: 0d,$ ;real value
+                    a_zmax: 0d,$ ;4.6e-1 (abreviated value)
+                    a_zmin: 0d,$ ;abreviated value
+                    a_log_zmax: 0d,$ ;abreviated value
+                    a_log_zmin: 0d,$ ;abreviated value
+
                     step2_zmax: 0d,$
                     step2_zmin: 0d,$
                     step2_zmax_backup: 0d,$
                     step2_zmin_backup: 0d,$
+                      
+                    zmin_g: 0d,$
+                    zmax_g: 0d,$
+
                     manual_scaling_4: FLOAT(5),$
                     manual_scaling_3: FLOAT(2),$
                     manual_scaling_2: FLOAT(1.5),$

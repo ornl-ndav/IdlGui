@@ -202,6 +202,9 @@ ENDIF ELSE BEGIN
     zmin = (*global).lin_zmin
 ENDELSE
 
+print, zmax
+print, zmin
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -211,13 +214,13 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
 
-    fmax     = DOUBLE(max)
+    fmax     = DOUBLE(zmax)
     index_GT = WHERE(local_tfpData GT fmax, nbr)
     IF (nbr GT 0) THEN BEGIN
         local_tfpData[index_GT] = !VALUES.D_NAN
     ENDIF
 
-    fmin     = DOUBLE(min)
+    fmin     = DOUBLE(zmin)
     index_LT = WHERE(local_tfpData LT fmin, nbr1)
     IF (nbr1 GT 0) THEN BEGIN
         tmp = local_tfpData
@@ -986,8 +989,8 @@ ENDIF ELSE BEGIN
     zmin = (*global).lin_zmin
 ENDELSE
 
-putTextFieldValue, Event, 'step3_zmax', zmax
-putTextFieldValue, Event, 'step3_zmin', zmin
+putTextFieldValue, Event, 'step3_zmax', zmax, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step3_zmin', zmin, FORMAT='(e8.1)'
 
 END
 

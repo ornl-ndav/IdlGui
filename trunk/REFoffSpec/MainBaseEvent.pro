@@ -129,7 +129,7 @@ CASE Event.id OF
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_zmax'): BEGIN
         input_error = 0
-        CATCH, input_error
+       CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             (*global).step2_zmax = (*global).step2_zmax_backup
