@@ -80,7 +80,8 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         IF((*global).something_to_plot) THEN BEGIN
             ActiveFileDroplist, Event ;_shifting
             xaxis = (*(*global).x_axis)
-            populate_step3_range_widgets, Event; _shifting
+            populate_step3_range_init, Event ;_shifting
+;            populate_step3_range_widgets, Event; _shifting
             contour_plot_shifting, Event, xaxis ;_shifting
             plotAsciiData_shifting, Event
             plotReferencedPixels, Event ;_shifting
