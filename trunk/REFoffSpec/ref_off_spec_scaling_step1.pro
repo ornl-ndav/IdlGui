@@ -152,7 +152,7 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData_scaling_step1, Event
+PRO plotAsciiData_scaling_step1, Event, RESET=reset
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
@@ -326,6 +326,9 @@ rData_untouched = REBIN(base_array_untouched, $
 
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
+
+(*global).zmax_g = master_max
+(*global).zmin_g = master_min
 
 ;plot color scale
 plotColorScale_scaling_step1, Event, master_min, master_max ;_gui

@@ -244,13 +244,15 @@ CASE Event.id OF
             plotReferencedPixels, Event
             refresh_plot_selection_OF_2d_plot_mode, Event
         ENDELSE
-        (*global).step2_zmax_backup = (*global).step2_zmax
-        (*global).step2_zmin_backup = (*global).step2_zmin
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
 
 ;Reset zmin and zmax
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_z_reset'): BEGIN
         plotAsciiData_shifting, Event, RESET='yes'
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
 
 ;lin/log z-azis scale
@@ -508,23 +510,59 @@ CASE Event.id OF
 
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmax'): BEGIN
-        populate_step4_range_widgets, Event 
-        plotAsciiData_scaling_step1, Event
-;        plotReferencedPixels, Event
-;        refresh_plot_selection_OF_2d_plot_mode, Event
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g = (*global).step2_zmax_backup
+            (*global).zmin_g = (*global).step2_zmin_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step4_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g)
+            ENDIF
+            plotAsciiData_scaling_step1, Event
+        ENDIF ELSE BEGIN
+            populate_step4_range_widgets, Event 
+            plotAsciiData_scaling_step1, Event
+        ENDELSE
+        plotReferencedPixels, Event
+        refresh_plotStep4Step1Selection, Event
+        refresh_plot_selection_OF_2d_plot_mode, Event
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
     
 ;zmin widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmin'): BEGIN
-        populate_step4_range_widgets, Event
-        plotAsciiData_scaling_step1, Event
-;        plotReferencedPixels, Event
-;        refresh_plot_selection_OF_2d_plot_mode, Event
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g = (*global).step2_zmax_backup
+            (*global).zmin_g = (*global).step2_zmin_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step4_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g)
+            ENDIF
+            plotAsciiData_scaling_step1, Event
+        ENDIF ELSE BEGIN
+            populate_step4_range_widgets, Event
+            plotAsciiData_scaling_step1, Event
+        ENDELSE
+        plotReferencedPixels, Event
+        refresh_plotStep4Step1Selection, Event
+        refresh_plot_selection_OF_2d_plot_mode, Event
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
 
 ;Reset zmin and zmax
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_z_reset'): BEGIN
-;        plotAsciiData_shifting, Event, RESET='yes'
+        plotAsciiData_scaling_step1, Event, RESET='yes'
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN

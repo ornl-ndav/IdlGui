@@ -349,6 +349,9 @@ total_array = rData
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
+(*global).zmax_g = master_max
+(*global).zmin_g = master_min
+
 ;plot color scale
 plotColorScale_shifting, Event, master_min, master_max ;_gui
 
