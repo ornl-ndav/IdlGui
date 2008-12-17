@@ -110,7 +110,14 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
         ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
         IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
-            refresh_recap_plot, Event ;_step5
+            error = 0
+            CATCH, error
+            IF (error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                refresh_recap_plot, Event ;_step5
+            ENDIF ELSE BEGIN
+                refresh_recap_plot, Event, RESCALE=1;_step5
+            ENDELSE
         ENDIF
     END
 

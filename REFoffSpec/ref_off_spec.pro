@@ -101,6 +101,11 @@ global = ptr_new ({ ucams: ucams,$
                     step2_zmax_backup: 0d,$
                     step2_zmin_backup: 0d,$
                       
+                    zmax_g_recap: 0d,$
+                    zmin_g_recap: 0d,$
+                    zmax_g_recap_backup: 0d,$
+                    zmin_g_recap_backup: 0d,$
+
                     zmin_g: 0d,$
                     zmax_g: 0d,$
 
