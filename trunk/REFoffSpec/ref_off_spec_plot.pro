@@ -327,16 +327,7 @@ ENDIF
 putTextFieldValue, Event, 'step2_zmax', master_max, FORMAT='(e8.1)'
 putTextFieldValue, Event, 'step2_zmin', master_min, FORMAT='(e8.1)'
 
-;IF (bLogPlot) THEN BEGIN
-;    (*global).log_zmin = master_min
-;    (*global).log_zmax = master_max
-;ENDIF ELSE BEGIN
-;    (*global).lin_zmin = master_min
-;    (*global).lin_zmax = master_max
-;ENDELSE
-
 ;select plot
-;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
@@ -356,9 +347,7 @@ WHILE (i LT nbr_plot) DO BEGIN
 ENDWHILE
 
 IF (N_ELEMENTS(TYPE) EQ 0) THEN BEGIN
-
     contour_plot, Event, xaxis
-
 ENDIF
 
 IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN

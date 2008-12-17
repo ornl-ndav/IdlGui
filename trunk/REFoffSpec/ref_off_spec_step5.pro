@@ -32,9 +32,13 @@
 ;
 ;==============================================================================
 ;This procedure is reached each time the tab 'RECAP' is reached
-PRO refresh_recap_plot, Event
+PRO refresh_recap_plot, Event, RESCALE=rescale
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Entering refresh_recap_plot'
+ENDIF
 
 nbr_plot    = getNbrFiles(Event) ;number of files
 
@@ -75,10 +79,38 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (index NE 0) THEN BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
-    
+
 ;applied scaling factor
     local_tfpData /= scaling_factor
     
+    IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
+
+        Max  = (*global).zmax_g_recap
+        IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+            print, ' max(local_tfpData): ' + STRCOMPRESS(max(local_tfpData)) 
+            print, ' Max               : ' + strcompress(Max)
+        ENDIF
+
+        fMax = DOUBLE(Max)
+        
+        index_GT = WHERE(local_tfpData GT fMax, nbr)
+        IF (nbr GT 0) THEN BEGIN
+            local_tfpData[index_GT] = !VALUES.D_NAN
+        ENDIF
+
+        Min  = (*global).zmin_g_recap
+        fMin = DOUBLE(Min)
+        index_LT = WHERE(local_tfpData LT fMin, nbr1)
+        IF (nbr1 GT 0) THEN BEGIN
+            tmp = local_tfpData
+            tmp[index_LT] = !VALUeS.D_NAN
+            local_min = MIN(tmp,/NAN)
+            local_tfpData[index_LT] = DOUBLE(0)
+        ENDIF ELSE BEGIN
+            local_min = MIN(local_tfpData,/NAN)
+        ENDELSE
+    ENDIF ;enf of N_ELEMENTS(RESCALE)
+
 ;array that will be used to display counts 
     local_tfpdata_untouched = local_tfpdata
 
@@ -153,32 +185,24 @@ WHILE (index LT nbr_plot) DO BEGIN
     
 ENDWHILE
 
-;true_master_max = MAX(base_array,MIN=true_master_min) ;remove_me
-
 ;rebin by 2 in y-axis final array
 rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
               (size(base_array))(2)*y_coeff,/SAMPLE)
 total_array = rData
 
-;master_max = true_master_max
-;IF (bLogPlot) THEN BEGIN
-;;determine the min (other than -inf) value
-;    array_inf = WHERE(total_array EQ -!VALUES.F_INFINITY, n)
-;    IF (n GE 1) THEN BEGIN
-;        new_total_array = total_array
-;        new_total_array[array_inf] = 0
-;        user_min = MIN(new_total_array)
-;    ENDIF ELSE BEGIN
-;        user_min = true_master_min
-;    ENDELSE
-;    index_inf = where(total_array LT user_min)
-;    total_array[index_inf] = user_min
-;ENDIF ELSE BEGIN
-;    user_min = true_master_min
-;ENDELSE
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, ' master_max: ' + STRCOMPRESS(master_max,/REMOVE_ALL)
+    print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
+ENDIF
+
+(*global).zmax_g_recap = master_max
+(*global).zmin_g_recap = master_min
 
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
+
+putTextFieldValue, Event, 'step5_zmax', (*global).zmax_g_recap, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step5_zmin', (*global).zmin_g_recap, FORMAT='(e8.1)'
 
 ;plot color scale
 plotColorScale_step5, Event, master_min, master_max ;_gui
@@ -200,6 +224,11 @@ refresh_plot_scale_step5, $
   XSCALE   = xrange, $
   XTICKS   = xticks, $
   POSITION = position
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving refresh_recap_plot'
+    print
+ENDIF
 
 END
 
@@ -339,5 +368,53 @@ ENDIF ELSE BEGIN
 
 ENDELSE
 MapBase, Event, 'shifting_base_step5', map_status
+
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step5_range_widgets, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, 'Entering populate_step5_range_widgets'
+ENDIF
+
+zmin_w    = getTextFieldValue(Event,'step5_zmin')
+s_zmin_w  = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+as_zmin_w = STRING(s_zmin_w, FORMAT='(e8.1)')
+
+zmin_g    = (*global).zmin_g_recap
+s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
+as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
+
+IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    print, ' New value of zmin_g is: ' + strcompress(zmin_w)
+    (*global).zmin_g_recap = DOUBLE(zmin_w)
+ENDIF
+
+;------------------------------------------------
+zmax_w    = getTextFieldValue(Event,'step5_zmax')
+s_zmax_w  = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+as_zmax_w = STRING(s_zmax_w, FORMAT='(e8.1)')
+
+zmax_g    = (*global).zmax_g_recap
+s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
+as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, '  zmax_g    : ' + strcompress(zmax_g)
+    print, '  as_zmax_w : ' + as_zmax_w
+    print, '  as_zmax_g : ' + as_zmax_g
+ENDIF
+
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    print, ' New value of zmax_g is: ' + strcompress(zmax_w)
+    (*global).zmax_g_recap = DOUBLE(zmax_w)
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving populate_step5_range_widgets'
+    print
+ENDIF
 
 END

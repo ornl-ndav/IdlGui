@@ -134,8 +134,8 @@ CASE Event.id OF
        CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).step2_zmax = (*global).step2_zmax_backup
-            (*global).step2_zmin = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             double_error = 0
             CATCH, double_error
             IF (double_error NE 0) THEN BEGIN
@@ -147,8 +147,8 @@ CASE Event.id OF
         ENDIF ELSE BEGIN
             populate_step2_range_widgets, Event
             plotAsciiData, Event, RESCALE=1, TYPE='replot'
-            (*global).step2_zmax_backup = (*global).zmax_g
-            (*global).step2_zmin_backup = (*global).zmin_g
+            (*global).zmax_g_backup = (*global).zmax_g
+            (*global).zmin_g_backup = (*global).zmin_g
         ENDELSE
     END
     
@@ -158,8 +158,8 @@ CASE Event.id OF
         CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).step2_zmax = (*global).step2_zmax_backup
-            (*global).step2_zmin = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             double_error = 0
             CATCH, double_error
             IF (double_error NE 0) THEN BEGIN
@@ -171,8 +171,8 @@ CASE Event.id OF
         ENDIF ELSE BEGIN
             populate_step2_range_widgets, Event
             plotAsciiData, Event, RESCALE=1, TYPE='replot'
-            (*global).step2_zmax_backup = (*global).zmax_g
-            (*global).step2_zmin_backup = (*global).zmin_g
+            (*global).zmax_g_backup = (*global).zmax_g
+            (*global).zmin_g_backup = (*global).zmin_g
         ENDELSE
     END
 
@@ -206,8 +206,8 @@ CASE Event.id OF
         CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).zmax_g = (*global).step2_zmax_backup
-            (*global).zmin_g = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             IF ((*global).debugging EQ 'yes') THEN BEGIN
                 print, 'Catch statement of step3_zmax'
                 print, ' zmax_g: ' + strcompress((*global).zmax_g)
@@ -220,8 +220,8 @@ CASE Event.id OF
             plotReferencedPixels, Event
             refresh_plot_selection_OF_2d_plot_mode, Event
         ENDELSE
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
     
 ;zmin widget_text
@@ -230,8 +230,8 @@ CASE Event.id OF
         CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).zmax_g = (*global).step2_zmax_backup
-            (*global).zmin_g = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             IF ((*global).debugging EQ 'yes') THEN BEGIN
                 print, 'Catch statement of step3_zmax'
                 print, ' zmax_g: ' + strcompress((*global).zmax_g)
@@ -244,15 +244,15 @@ CASE Event.id OF
             plotReferencedPixels, Event
             refresh_plot_selection_OF_2d_plot_mode, Event
         ENDELSE
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
 
 ;Reset zmin and zmax
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_z_reset'): BEGIN
         plotAsciiData_shifting, Event, RESET='yes'
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
 
 ;lin/log z-azis scale
@@ -514,8 +514,8 @@ CASE Event.id OF
         CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).zmax_g = (*global).step2_zmax_backup
-            (*global).zmin_g = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             IF ((*global).debugging EQ 'yes') THEN BEGIN
                 print, 'Catch statement of step4_zmax'
                 print, ' zmax_g: ' + strcompress((*global).zmax_g)
@@ -529,8 +529,8 @@ CASE Event.id OF
         plotReferencedPixels, Event
         refresh_plotStep4Step1Selection, Event
         refresh_plot_selection_OF_2d_plot_mode, Event
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
     
 ;zmin widget_text
@@ -539,8 +539,8 @@ CASE Event.id OF
         CATCH, input_error
         IF (input_error NE 0) THEN BEGIN
             CATCH,/CANCEL
-            (*global).zmax_g = (*global).step2_zmax_backup
-            (*global).zmin_g = (*global).step2_zmin_backup
+            (*global).zmax_g = (*global).zmax_g_backup
+            (*global).zmin_g = (*global).zmin_g_backup
             IF ((*global).debugging EQ 'yes') THEN BEGIN
                 print, 'Catch statement of step4_zmax'
                 print, ' zmax_g: ' + strcompress((*global).zmax_g)
@@ -554,15 +554,15 @@ CASE Event.id OF
         plotReferencedPixels, Event
         refresh_plotStep4Step1Selection, Event
         refresh_plot_selection_OF_2d_plot_mode, Event
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
 
 ;Reset zmin and zmax
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_z_reset'): BEGIN
         plotAsciiData_scaling_step1, Event, RESET='yes'
-        (*global).step2_zmax_backup = (*global).zmax_g
-        (*global).step2_zmin_backup = (*global).zmin_g
+        (*global).zmax_g_backup = (*global).zmax_g
+        (*global).zmin_g_backup = (*global).zmin_g
     END
 
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
@@ -948,6 +948,75 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
         refresh_recap_plot, Event ;_step5
+    END
+
+;zmax widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_zmax'): BEGIN
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g_recap = (*global).zmax_g_recap_backup
+            (*global).zmin_g_recap = (*global).zmin_g_recap_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step5_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g)
+            ENDIF
+            double_error = 0
+            CATCH, double_error
+            IF (double_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                refresh_recap_plot, Event
+            ENDIF ELSE BEGIN
+                refresh_recap_plot, Event, RESCALE=1
+            ENDELSE
+        ENDIF ELSE BEGIN
+            populate_step5_range_widgets, Event 
+            refresh_recap_plot, Event, RESCALE=1
+        ENDELSE
+        (*global).zmax_g_recap_backup = (*global).zmax_g_recap
+        (*global).zmin_g_recap_backup = (*global).zmin_g_recap
+    END
+    
+;zmin widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_zmin'): BEGIN
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g_recap = (*global).zmax_g_recap_backup
+            (*global).zmin_g_recap = (*global).zmin_g_recap_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step4_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g_recap)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g_recap)
+            ENDIF
+            double_error = 0
+            CATCH, double_error
+            IF (double_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                refresh_recap_plot, Event
+            ENDIF  ELSE BEGIN
+                refresh_recap_plot, Event, RESCALE=1
+            ENDELSE
+        ENDIF ELSE BEGIN
+            populate_step5_range_widgets, Event 
+            refresh_recap_plot, Event, RESCALE=1
+        ENDELSE
+        (*global).zmax_g_recap_backup = (*global).zmax_g_recap
+        (*global).zmin_g_recap_backup = (*global).zmin_g_recap
+    END
+
+;Reset zmin and zmax
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_z_reset'): BEGIN
+        refresh_recap_plot, Event
+        (*global).zmax_g_recap_backup = (*global).zmax_g_recap
+        (*global).zmin_g_recap_backup = (*global).zmin_g_recap
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_main_tab'): BEGIN
+        scaling_tab_event, Event ;_eventcb
     END
 
 ;------------------------------------------------------------------------------
