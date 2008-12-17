@@ -76,7 +76,7 @@ RegionOfInterestTextFieldSize = [230,$
 XYoff = [-1,60] ;Peak Base and labels
 sPeakBase = { size:  [RunsLabelSize[0]+XYoff[0],$
                       RunsLabelSize[1]+XYoff[1],$
-                      650,30],$
+                      365,30],$
               frame: 0,$
               uname: 'norm_peak_base',$
               map:   1}
@@ -84,28 +84,47 @@ sPeakBase = { size:  [RunsLabelSize[0]+XYoff[0],$
 XYoff = [0,7] ;Main label
 sPeakMainLabel = { size:  XYoff,$
                    value: 'Peak Exclusion Region:'}
-XYoff = [250,0]
+XYoff = [150,0]
 sPeakYminLabel = { size: [sPeakMainLabel.size[0]+XYoff[0],$
                           sPeakMainLabel.size[1]+XYoff[1]],$
                    value: 'Ymin:'}
-XYoff = [50,-6]
+XYoff = [40,-6]
 sPeakYminValue = { size: [sPeakYminLabel.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '150',$
                    uname: 'norm_exclusion_low_bin_text'}
-XYoff = [100,0]
+XYoff = [50,0]
 sPeakYmaxLabel = { size: [sPeakYminValue.size[0]+XYoff[0],$
                           sPeakYminLabel.size[1]+XYoff[1]],$
                    value: 'Ymax:'}
-XYoff = [50,0]
+XYoff = [40,0]
 sPeakYmaxValue = { size: [sPeakYmaxLabel.size[0]+XYoff[0],$
                           sPeakYminValue.size[1]+XYoff[1],$
                           50,30],$
-                   value: '',$
+                   value: '111',$
                    uname: 'norm_exclusion_high_bin_text'}
 
-;Background Base, label and text_field
+;Polarization state to use ----------------------------------------------------
+XYoff = [10,2]
+sPolaStateBase = { size: [sPeakBase.size[0]+$
+                          sPeakBase.size[2]+$
+                          XYoff[0],$
+                          sPeakBase.size[1]+$
+                          XYoff[1],$
+                          220,60],$
+                   uname: 'norm_pola_base',$
+                   frame: 1}
+
+XYoff = [10,5]
+sPolaCWBgroup = { size: [XYoff[0],$
+                         XYoff[1]],$
+                  list: ['Same as Data File','Off-Off'],$
+                  title: 'Polarization state:',$
+                  uname: 'normalization_pola_state',$
+                  value: 0}
+
+;Background Base, label and text_field ----------------------------------------
 sBackBase = { size:  sPeakBase.size,$
               frame: 0,$
               uname: 'norm_background_base',$
@@ -217,6 +236,25 @@ RegionOfInterestTextField = $
                VALUE     = '',$
                /ALIGN_LEFT)
   
+;Polarization state to use ----------------------------------------------------
+pola_base = WIDGET_BASE(normalization_base,$
+                        XOFFSET   = sPolaStateBase.size[0],$
+                        YOFFSET   = sPolaStateBase.size[1],$
+                        SCR_XSIZE = sPolaStateBase.size[2],$
+                        SCR_YSIZE = sPolaStateBase.size[3],$
+                        UNAME     = sPolaStateBase.uname,$
+                        FRAME     = sPolaStateBase.frame)
+                        
+pola_group = CW_BGROUP(pola_base,$
+                       sPolaCWBgroup.list,$
+                       XOFFSET   = sPolaCWBgroup.size[0],$
+                       YOFFSET   = sPolaCWBgroup.size[1],$
+                       LABEL_TOP = sPolaCWBgroup.title,$
+                       UNAME     = sPolaCWBgroup.uname,$
+                       SET_VALUE = sPolaCWBgroup.value,$
+                       /ROW,$
+                       /EXCLUSIVE)
+
 ;Peak exlusion Base -----------------------------------------------------------
 wPeakBase = WIDGET_BASE(normalization_base,$
                         XOFFSET   = sPeakBase.size[0],$

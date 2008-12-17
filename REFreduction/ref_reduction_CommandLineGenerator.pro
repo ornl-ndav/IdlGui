@@ -64,6 +64,13 @@ endif else begin
     StatusMessage += 1
 endelse
 
+;data path
+IF ((*global).data_path NE '') THEN BEGIN
+    cmd += ' ' + (*global).data_path_flag
+    cmd += '=' + (*global).data_path
+    cmd += (*global).data_path_flag_suffix
+ENDIF
+
 ;get data ROI file
 data_roi_file = getTextFieldValue(Event, $
                                   'reduce_data_region_of_interest_file_name')
@@ -239,6 +246,18 @@ if (isReductionWithNormalization(Event)) then begin
         StatusMessage += 1
     endelse
     
+;normalization path
+    IF ((*global).norm_path NE '') THEN BEGIN
+        norm_pola_sensitive = 1
+        pola_state = getCWBgroupValue(Event, 'normalization_pola_state')
+        IF (pola_state EQ 1) THEN BEGIN
+            cmd += ' ' + (*global).norm_path_flag
+        ENDIF
+    ENDIF ELSE BEGIN
+        norm_pola_sensitive = 0
+    ENDELSE
+    ActivateWidget, Event, 'norm_pola_base', norm_pola_sensitive
+
 ;get normalization ROI file
     norm_roi_file = $
       getTextFieldValue(Event,$

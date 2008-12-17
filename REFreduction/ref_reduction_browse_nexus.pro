@@ -54,18 +54,22 @@ text += ' (' + list_pola_state[value_selected] + ')'
 putLogBookMessage, Event, Text, Append=1
 CASE ((*global).pola_type) OF
    'data_browse': BEGIN
+       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'norm_browse': BEGIN
+       (*global).norm_path = list_pola_state[value_selected]
       nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'data_load': BEGIN
+       (*global).data_path = list_pola_state[value_selected]
       nexus_file_name = (*global).data_nexus_full_path
       load_data_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
    'norm_load': BEGIN
+       (*global).norm_path = list_pola_state[value_selected]
       nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
    END
