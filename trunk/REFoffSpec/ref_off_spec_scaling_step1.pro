@@ -880,14 +880,14 @@ zmax_g    = (*global).zmax_g
 s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
 as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
 
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    (*global).zmax_g = DOUBLE(zmax_w)
+ENDIF
+
 IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
     print, '  zmax_g    : ' + strcompress(zmax_g)
     print, '  as_zmax_w : ' + as_zmax_w
     print, '  as_zmax_g : ' + as_zmax_g
-ENDIF
-
-IF (as_zmax_w NE as_zmax_g) THEN BEGIN
-    (*global).zmax_g = DOUBLE(zmax_w)
 ENDIF
 
 IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
