@@ -989,6 +989,7 @@ s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
 as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
 
 IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    print, ' New value of zmin_g is: ' + strcompress(zmin_w)
     (*global).zmin_g = DOUBLE(zmin_w)
 ENDIF
 
@@ -1009,6 +1010,7 @@ IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
 ENDIF
 
 IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    print, ' New value of zmax_g is: ' + strcompress(zmax_w)
     (*global).zmax_g = DOUBLE(zmax_w)
 ENDIF
 

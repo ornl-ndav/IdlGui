@@ -58,6 +58,8 @@ CASE Event.id OF
 ;Browse ASCII file button
     Widget_Info(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
         browse_ascii_file, Event ;_browse_ascii
+        (*global).step2_zmax_backup = (*global).step2_zmax
+        (*global).step2_zmin_backup = (*global).step2_zmin
     END
 
 ;Ascii File list
@@ -200,18 +202,50 @@ CASE Event.id OF
 ;333333333333333333333333333333333333333333333333333333333333333333333333333333
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmax'): BEGIN
-        populate_step3_range_widgets, Event
-        plotAsciiData_shifting, Event
-        plotReferencedPixels, Event
-        refresh_plot_selection_OF_2d_plot_mode, Event
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g = (*global).step2_zmax_backup
+            (*global).zmin_g = (*global).step2_zmin_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step3_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g)
+            ENDIF
+            plotAsciiData_shifting, Event
+        ENDIF ELSE BEGIN
+            populate_step3_range_widgets, Event
+            plotAsciiData_shifting, Event
+            plotReferencedPixels, Event
+            refresh_plot_selection_OF_2d_plot_mode, Event
+        ENDELSE
+        (*global).step2_zmax_backup = (*global).zmax_g
+        (*global).step2_zmin_backup = (*global).zmin_g
     END
     
 ;zmin widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmin'): BEGIN
-        populate_step3_range_widgets, Event
-        plotAsciiData_shifting, Event
-        plotReferencedPixels, Event
-        refresh_plot_selection_OF_2d_plot_mode, Event
+        input_error = 0
+        CATCH, input_error
+        IF (input_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            (*global).zmax_g = (*global).step2_zmax_backup
+            (*global).zmin_g = (*global).step2_zmin_backup
+            IF ((*global).debugging EQ 'yes') THEN BEGIN
+                print, 'Catch statement of step3_zmax'
+                print, ' zmax_g: ' + strcompress((*global).zmax_g)
+                print, ' zmin_g: ' + strcompress((*global).zmin_g)
+            ENDIF
+            plotAsciiData_shifting, Event
+        ENDIF ELSE BEGIN
+            populate_step3_range_widgets, Event
+            plotAsciiData_shifting, Event
+            plotReferencedPixels, Event
+            refresh_plot_selection_OF_2d_plot_mode, Event
+        ENDELSE
+        (*global).step2_zmax_backup = (*global).step2_zmax
+        (*global).step2_zmin_backup = (*global).step2_zmin
     END
 
 ;Reset zmin and zmax
