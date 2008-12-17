@@ -81,7 +81,6 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             ActiveFileDroplist, Event ;_shifting
             xaxis = (*(*global).x_axis)
             populate_step3_range_init, Event ;_shifting
-;            populate_step3_range_widgets, Event; _shifting
             contour_plot_shifting, Event, xaxis ;_shifting
             plotAsciiData_shifting, Event
             plotReferencedPixels, Event ;_shifting
@@ -95,7 +94,9 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
         IF((*global).something_to_plot) THEN BEGIN
             IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
+                populate_step4_range_init, Event ;_scaling
                 refresh_step4_step1_plot, Event ;_scaling
+                checkScalingGui, Event ;_gui
             ENDIF ELSE BEGIN    ;scaling_step2
                 display_step4_step2_step2_selection, $
                   Event         ;scaling_step2_step1

@@ -155,6 +155,10 @@ END
 PRO plotAsciiData_scaling_step1, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Entering plotAsciiData_scaling'
+ENDIF
+
 ;get number of files loaded
 nbr_plot = getNbrFiles(Event)
 
@@ -185,6 +189,14 @@ ymax_array = FLTARR(nbr_plot) ;y of max value per array
 max_size   = 0 ;maximum x value
 index      = 0 ;loop variable (nbr of array to add/plot
 
+zmax = (*global).zmax_g
+zmin = (*global).zmin_g
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, ' zmin: ' + STRCOMPRESS(zmin,/REMOVE_ALL)
+    print, ' zmax: ' + STRCOMPRESS(zmax,/REMOVE_ALL)
+ENDIF
+
 WHILE (index LT nbr_plot) DO BEGIN
     
     local_tfpData = *tfpData[index]
@@ -194,6 +206,27 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
     
+    IF (N_ELEMENTS(RESET) EQ 0) THEN BEGIN
+
+        fmax     = DOUBLE(zmax)
+        index_GT = WHERE(local_tfpData GT fmax, nbr)
+        IF (nbr GT 0) THEN BEGIN
+            local_tfpData[index_GT] = !VALUES.D_NAN
+        ENDIF
+        
+        fmin     = DOUBLE(zmin)
+        index_LT = WHERE(local_tfpData LT fmin, nbr1)
+        IF (nbr1 GT 0) THEN BEGIN
+            tmp = local_tfpData
+            tmp[index_LT] = !VALUES.D_NAN
+            local_min = MIN(tmp,/NAN)
+            local_tfpData[index_LT] = DOUBLE(0)
+        ENDIF ELSE BEGIN
+            local_min = MIN(local_tfpData,/NAN)
+        ENDELSE
+        
+    ENDIF
+
     transparency_1 = 1.
     local_tfpData = local_tfpData * transparency_1
     
@@ -204,7 +237,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (bLogPlot) THEN BEGIN
 
         zero_index = WHERE(local_tfpdata EQ 0) 
-        local_tfpdata[zero_index] = !VALUES.F_NAN
+        local_tfpdata[zero_index] = !VALUES.D_NAN
 
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
@@ -297,6 +330,9 @@ LOADCT, 5, /SILENT
 ;plot color scale
 plotColorScale_scaling_step1, Event, master_min, master_max ;_gui
 
+putTextFieldValue, Event, 'step4_zmax', master_max, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step4_zmin', master_min, FORMAT='(e8.1)'
+
 ;select plot
 id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step1_draw')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
@@ -315,6 +351,12 @@ WHILE (i LT nbr_plot) DO BEGIN
       COLOR=box_color[i]
     ++i
 ENDWHILE
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving plotAsciiData_scaling'
+    print
+ENDIF
+
 
 END
 
@@ -751,3 +793,115 @@ putYmaxStep4Step1Value, Event, Ymax
 
 END
 
+;------------------------------------------------------------------------------
+PRO populate_step4_range_init, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+putTextFieldValue, Event, 'step4_zmax', (*global).zmax_g, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step4_zmin', (*global).zmin_g, FORMAT='(e8.1)'
+
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step4_range_widgets, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, 'Entering populate_step4_range_widgets'
+ENDIF
+
+zmin_w    = getTextFieldValue(Event,'step4_zmin')
+s_zmin_w  = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+as_zmin_w = STRING(s_zmin_w, FORMAT='(e8.1)')
+
+zmin_g    = (*global).zmin_g
+s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
+as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
+
+IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    (*global).zmin_g = DOUBLE(zmin_w)
+ENDIF
+
+;................................................
+zmax_w    = getTextFieldValue(Event,'step4_zmax')
+s_zmax_w  = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+as_zmax_w = STRING(s_zmax_w, FORMAT='(e8.1)')
+
+zmax_g    = (*global).zmax_g
+
+s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
+as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, '  zmax_g    : ' + strcompress(zmax_g)
+    print, '  as_zmax_w : ' + as_zmax_w
+    print, '  as_zmax_g : ' + as_zmax_g
+ENDIF
+
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    (*global).zmax_g = DOUBLE(zmax_w)
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving populate_step4_range_widgets'
+    print
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step4_range_widgets, Event
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+    print, 'Entering populate_step4_range_widgets'
+ENDIF
+
+zmin_w    = getTextFieldValue(Event,'step4_zmin')
+s_zmin_w  = STRCOMPRESS(zmin_w,/REMOVE_ALL)
+as_zmin_w = STRING(s_zmin_w, FORMAT='(e8.1)')
+
+zmin_g    = (*global).zmin_g
+s_zmin_g  = STRCOMPRESS(zmin_g,/REMOVE_ALL)
+as_zmin_g = STRING(s_zmin_g, FORMAT='(e8.1)')
+
+IF (as_zmin_w NE as_zmin_g) THEN BEGIN
+    (*global).zmin_g = DOUBLE(zmin_w)
+ENDIF
+
+;------------------------------------------------
+zmax_w    = getTextFieldValue(Event,'step4_zmax')
+s_zmax_w  = STRCOMPRESS(zmax_w,/REMOVE_ALL)
+as_zmax_w = STRING(s_zmax_w, FORMAT='(e8.1)')
+
+zmax_g    = (*global).zmax_g
+
+s_zmax_g  = STRCOMPRESS(zmax_g,/REMOVE_ALL)
+as_zmax_g = STRING(s_zmax_g, FORMAT='(e8.1)')
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, '  zmax_g    : ' + strcompress(zmax_g)
+    print, '  as_zmax_w : ' + as_zmax_w
+    print, '  as_zmax_g : ' + as_zmax_g
+ENDIF
+
+IF (as_zmax_w NE as_zmax_g) THEN BEGIN
+    (*global).zmax_g = DOUBLE(zmax_w)
+ENDIF
+
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    print, 'Leaving populate_step4_range_widgets'
+    print
+ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO populate_step4_range_init, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+putTextFieldValue, Event, 'step4_zmax', (*global).zmax_g, FORMAT='(e8.1)'
+putTextFieldValue, Event, 'step4_zmin', (*global).zmin_g, FORMAT='(e8.1)'
+
+END
