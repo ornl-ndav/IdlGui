@@ -158,7 +158,7 @@ END
 
 
 ;------------------------------------------------------------------------------
-PRO plotAsciiData_shifting, Event
+PRO plotAsciiData_shifting, Event, RESET=reset
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
@@ -223,22 +223,26 @@ WHILE (index LT nbr_plot) DO BEGIN
         local_tfpData = local_tfpData[*,304L:2*304L-1]
     ENDIF
 
-    fmax     = DOUBLE(zmax)
-    index_GT = WHERE(local_tfpData GT fmax, nbr)
-    IF (nbr GT 0) THEN BEGIN
-        local_tfpData[index_GT] = !VALUES.D_NAN
-    ENDIF
+    IF (N_ELEMENTS(RESET) EQ 0) THEN BEGIN
 
-    fmin     = DOUBLE(zmin)
-    index_LT = WHERE(local_tfpData LT fmin, nbr1)
-    IF (nbr1 GT 0) THEN BEGIN
-        tmp = local_tfpData
-        tmp[index_LT] = !VALUES.D_NAN
-        local_min = MIN(tmp,/NAN)
-        local_tfpData[index_LT] = DOUBLE(0)
-    ENDIF ELSE BEGIN
-        local_min = MIN(local_tfpData,/NAN)
-    ENDELSE
+        fmax     = DOUBLE(zmax)
+        index_GT = WHERE(local_tfpData GT fmax, nbr)
+        IF (nbr GT 0) THEN BEGIN
+            local_tfpData[index_GT] = !VALUES.D_NAN
+        ENDIF
+        
+        fmin     = DOUBLE(zmin)
+        index_LT = WHERE(local_tfpData LT fmin, nbr1)
+        IF (nbr1 GT 0) THEN BEGIN
+            tmp = local_tfpData
+            tmp[index_LT] = !VALUES.D_NAN
+            local_min = MIN(tmp,/NAN)
+            local_tfpData[index_LT] = DOUBLE(0)
+        ENDIF ELSE BEGIN
+            local_min = MIN(local_tfpData,/NAN)
+        ENDELSE
+        
+    ENDIF
 
 ;Applied attenuator coefficient 
     IF (bTransCoeff EQ 1) THEN BEGIN ;yes
@@ -248,28 +252,6 @@ WHILE (index LT nbr_plot) DO BEGIN
     ENDELSE
     local_tfpData = local_tfpData * transparency_1
     
- ;    IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
-
-;         Max  = (*global).step2_zmax
-;         fMax = DOUBLE(Max)
-;         index_GT = WHERE(local_tfpData GT fMax, nbr)
-;         IF (nbr GT 0) THEN BEGIN
-;             local_tfpData[index_GT] = !VALUES.D_NAN
-;         ENDIF
-
-;         Min  = (*global).step2_zmin
-;         fMin = DOUBLE(Min)
-;         index_LT = WHERE(local_tfpData LT fMin, nbr1)
-;         IF (nbr1 GT 0) THEN BEGIN
-;             tmp = local_tfpData
-;             tmp[index_LT] = !VALUeS.D_NAN
-;             local_min = MIN(tmp,/NAN)
-;             local_tfpData[index_LT] = DOUBLE(0)
-;         ENDIF ELSE BEGIN
-;             local_min = MIN(local_tfpData,/NAN)
-;         ENDELSE
-;     ENDIF
-
 ;array that will be used to display counts 
     local_tfpdata_untouched = local_tfpdata
 
@@ -278,7 +260,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (bLogPlot) THEN BEGIN
         zero_index = WHERE(local_tfpdata EQ 0., nbr)
         IF (nbr GT 0) THEN BEGIN
-            local_tfpdata[zero_index] = !VALUES.F_NAN
+            local_tfpdata[zero_index] = !VALUES.D_NAN
         ENDIF
         local_min = transparency_1 * MIN(local_tfpData,/NAN)
         local_max = transparency_1 * MAX(local_tfpData,/NAN)
@@ -370,13 +352,13 @@ LOADCT, 5, /SILENT
 ;plot color scale
 plotColorScale_shifting, Event, master_min, master_max ;_gui
 
-IF (bLogPlot) THEN BEGIN
-    (*global).log_zmin = master_min
-    (*global).log_zmax = master_max
-ENDIF ELSE BEGIN
-    (*global).lin_zmin = master_min
-    (*global).lin_zmax = master_max
-ENDELSE
+;IF (bLogPlot) THEN BEGIN
+;    (*global).log_zmin = master_min
+;    (*global).log_zmax = master_max
+;ENDIF ELSE BEGIN
+;    (*global).lin_zmin = master_min
+;    (*global).lin_zmax = master_max
+;ENDELSE
 
 putTextFieldValue, Event, 'step3_zmax', master_max, FORMAT='(e8.1)'
 putTextFieldValue, Event, 'step3_zmin', master_min, FORMAT='(e8.1)'
@@ -1040,8 +1022,6 @@ END
 ;------------------------------------------------------------------------------
 PRO populate_step3_range_init, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-print, 'here'
 
 putTextFieldValue, Event, 'step3_zmax', (*global).zmax_g, FORMAT='(e8.1)'
 putTextFieldValue, Event, 'step3_zmin', (*global).zmin_g, FORMAT='(e8.1)'

@@ -310,3 +310,20 @@ ENDELSE
 activate_widget_list, Event, uname_list, activate_status
 END
 
+;------------------------------------------------------------------------------
+PRO checkScalingGui, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+current_list_OF_files = (*(*global).list_OF_ascii_files)
+uname_list = ['step4_zmax',$
+              'step4_zmin',$
+              'step4_z_reset']
+IF (current_list_OF_files[0] NE '') THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activate_widget_list, Event, uname_list, activate_status
+
+END
+
