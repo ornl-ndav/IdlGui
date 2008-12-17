@@ -475,7 +475,7 @@ CASE Event.id OF
 ;zmax widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmax'): BEGIN
         populate_step4_range_widgets, Event 
-;        plotAsciiData_shifting, Event
+        plotAsciiData_scaling_step1, Event
 ;        plotReferencedPixels, Event
 ;        refresh_plot_selection_OF_2d_plot_mode, Event
     END
@@ -483,7 +483,7 @@ CASE Event.id OF
 ;zmin widget_text
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmin'): BEGIN
         populate_step4_range_widgets, Event
-;        plotAsciiData_shifting, Event
+        plotAsciiData_scaling_step1, Event
 ;        plotReferencedPixels, Event
 ;        refresh_plot_selection_OF_2d_plot_mode, Event
     END
