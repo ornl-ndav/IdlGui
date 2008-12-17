@@ -308,10 +308,10 @@ InformLogBook, Event, min_array, max_array, xmax_array, ymax_array ;_gui
 DEVICE, DECOMPOSED=0
 LOADCT, 5, /SILENT
 
-IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
-    (*global).zmin_g = master_min
-    (*global).zmax_g = master_max
-ENDIF
+;IF (N_ELEMENTS(RESCALE) EQ 0) THEN BEGIN
+;    (*global).zmin_g = master_min
+;    (*global).zmax_g = master_max
+;ENDIF
 
 ;plot color scale
 plotColorScale, Event, master_min, master_max
@@ -321,19 +321,19 @@ IF ((*global).debugging EQ 'yes') THEN BEGIN
     print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
 ENDIF
 
-(*global).step2_zmax = master_max
-(*global).step2_zmin = master_min
+(*global).zmax_g = master_max
+(*global).zmin_g = master_min
 
 putTextFieldValue, Event, 'step2_zmax', master_max, FORMAT='(e8.1)'
 putTextFieldValue, Event, 'step2_zmin', master_min, FORMAT='(e8.1)'
 
-IF (bLogPlot) THEN BEGIN
-    (*global).log_zmin = master_min
-    (*global).log_zmax = master_max
-ENDIF ELSE BEGIN
-    (*global).lin_zmin = master_min
-    (*global).lin_zmax = master_max
-ENDELSE
+;IF (bLogPlot) THEN BEGIN
+;    (*global).log_zmin = master_min
+;    (*global).log_zmax = master_max
+;ENDIF ELSE BEGIN
+;    (*global).lin_zmin = master_min
+;    (*global).lin_zmax = master_max
+;ENDELSE
 
 ;select plot
 ;id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='scale_draw_step2')

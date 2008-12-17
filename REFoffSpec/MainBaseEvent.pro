@@ -147,8 +147,8 @@ CASE Event.id OF
         ENDIF ELSE BEGIN
             populate_step2_range_widgets, Event
             plotAsciiData, Event, RESCALE=1, TYPE='replot'
-            (*global).step2_zmax_backup = (*global).step2_zmax
-            (*global).step2_zmin_backup = (*global).step2_zmin
+            (*global).step2_zmax_backup = (*global).zmax_g
+            (*global).step2_zmin_backup = (*global).zmin_g
         ENDELSE
     END
     
@@ -171,8 +171,8 @@ CASE Event.id OF
         ENDIF ELSE BEGIN
             populate_step2_range_widgets, Event
             plotAsciiData, Event, RESCALE=1, TYPE='replot'
-            (*global).step2_zmax_backup = (*global).step2_zmax
-            (*global).step2_zmin_backup = (*global).step2_zmin
+            (*global).step2_zmax_backup = (*global).zmax_g
+            (*global).step2_zmin_backup = (*global).zmin_g
         ENDELSE
     END
 
