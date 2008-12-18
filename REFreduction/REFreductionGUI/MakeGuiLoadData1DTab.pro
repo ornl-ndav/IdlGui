@@ -442,7 +442,7 @@ wSaveButton = WIDGET_BUTTON(wRoiBase,$
                             VALUE     = sSaveButton.value,$
                             UNAME     = sSaveButton.uname)
 
-;TAB #1-2 Peak/Back base =======================================================
+;TAB #1-2 Peak/Back base ======================================================
 wPeakBackBase = WIDGET_BASE(wRoiTab,$
                             XOFFSET   = sPeakBackBase.size[0],$
                             YOFFSET   = sPeakBackBase.size[1],$
@@ -581,7 +581,7 @@ wSaveButton = WIDGET_BUTTON(wBackBase,$
                             VALUE     = sBackSaveButton.value,$
                             UNAME     = sBackSaveButton.uname)
 
-;TAB #1-3 Zoom base ============================================================
+;TAB #1-3 Zoom base ===========================================================
 wZoomBase = WIDGET_BASE(wRoiTab,$
                         XOFFSET   = sZoomBase.size[0],$
                         YOFFSET   = sZoomBase.size[1],$
@@ -594,7 +594,7 @@ wZoomLabel = WIDGET_LABEL(wZoomBase,$
                           YOFFSET = sZoomLabel.size[1],$
                           VALUE   = sZoomLabel.value)
 
-;Tab #2 (contrast base) --------------------------------------------------------
+;Tab #2 (contrast base) -------------------------------------------------------
 ContrastBase = widget_base(BackPeakRescaleTab,$
                           uname='data_contrast_base',$
                           xoffset=ContrastBaseSize[0],$

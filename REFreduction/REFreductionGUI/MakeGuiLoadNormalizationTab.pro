@@ -113,7 +113,7 @@ button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
                        UNAME = 'save_as_jpeg_button_normalization',$
                        XOFFSET = 550,$
                        YOFFSET = 0,$
-                       VALUE   = 'images/SaveAsJpeg.bmp',$
+                       VALUE   = 'REFreduction_images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
                        SENSITIVE = 0,$
                        /BITMAP)
@@ -124,7 +124,7 @@ button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
                        UNAME = 'advanced_plot_button_normalization',$
                        XOFFSET = 610,$
                        YOFFSET = 0,$
-                       VALUE   = 'images/advanced_plot.bmp',$
+                       VALUE   = 'REFreduction_images/advanced_plot.bmp',$
                        TOOLTIP = 'Open the Advanced Plot Tool',$
                        SENSITIVE = 0,$
                        /BITMAP)
