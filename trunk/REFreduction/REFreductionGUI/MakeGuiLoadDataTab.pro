@@ -112,7 +112,7 @@ button = WIDGET_BUTTON(LOAD_DATA_BASE,$
                        UNAME = 'save_as_jpeg_button_data',$
                        XOFFSET = 550,$
                        YOFFSET = 0,$
-                       VALUE   = 'images/SaveAsJpeg.bmp',$
+                       VALUE   = 'REFreduction_images/SaveAsJpeg.bmp',$
                        TOOLTIP = 'Create a JPEG of the plot',$
                        SENSITIVE = 0,$
                        /BITMAP)
@@ -123,7 +123,7 @@ button = WIDGET_BUTTON(LOAD_DATA_BASE,$
                        UNAME = 'advanced_plot_button_data',$
                        XOFFSET = 610,$
                        YOFFSET = 0,$
-                       VALUE   = 'images/advanced_plot.bmp',$
+                       VALUE   = 'REFreduction_images/advanced_plot.bmp',$
                        TOOLTIP = 'Open the Advanced Plot Tool',$
                        SENSITIVE = 0,$
                        /BITMAP)
@@ -148,7 +148,8 @@ DataListNexusLabel = widget_label(DataListNexusBase,$
                                   value=NexusListLabelGlobal[0],$
                                   frame=1)
 
-DropListvalue = ['                                                                        ']
+DropListvalue = ['                                        ' + $
+                 '                                ']
 DataListNexusDropList = widget_droplist(DataListNexusBase,$
                                         uname='data_list_nexus_droplist',$
                                         xoffset=NexusListSizeGlobal[8],$
@@ -163,7 +164,8 @@ DataListNexusNXsummary = widget_text(DataListNexusBase,$
                                      scr_ysize=NexusListSizeGlobal[13],$
                                      /wrap,$
                                      /scroll,$
-                                     uname='data_list_nexus_nxsummary_text_field')
+                                     uname='data_list_nexus_nxsummary_' + $
+                                     'text_field')
   
 DataListNexusLoadButton = widget_button(DataListNexusBase,$
                                         uname='data_list_nexus_load_button',$
@@ -174,7 +176,8 @@ DataListNexusLoadButton = widget_button(DataListNexusBase,$
                                         value=NexusListLabelGlobal[1])
                                         
 DataListNexusCancelButton = widget_button(DataListNexusBase,$
-                                          uname='data_list_nexus_cancel_button',$
+                                          uname='data_list_nexus_' + $
+                                          'cancel_button',$
                                           xoffset=NexusListSizeGlobal[18],$
                                           yoffset=NexusListSizeGlobal[19],$
                                           scr_xsize=NexusListSizeGlobal[20],$
@@ -240,13 +243,6 @@ counts_value = WIDGET_LABEL(info_base,$
                             VALUE     = 'N/A',$
                             UNAME     = 'data_counts_info_value',$
                             /ALIGN_LEFT)
-
-
-
-
-
-
-
 
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
@@ -314,26 +310,40 @@ data_zoom_draw = widget_draw(data_zoom_base,$
 ;Help base and text field that will show what is going on in the
 ;drawing region
 LeftInteractionHelpMessageBase = widget_base(LOAD_DATA_BASE,$
-                                             uname='left_interaction_help_message_base',$
-                                             xoffset=LeftInteractionHelpsize[0],$
-                                             yoffset=LeftInteractionHelpsize[1],$
-                                             scr_xsize=LeftInteractionHelpsize[2],$
-                                             scr_ysize=LeftInteractionHelpsize[3],$
+                                             uname='left_interaction_' + $
+                                             'help_message_base',$
+                                             xoffset= $
+                                             LeftInteractionHelpsize[0],$
+                                             yoffset= $
+                                             LeftInteractionHelpsize[1],$
+                                             scr_xsize= $
+                                             LeftInteractionHelpsize[2],$
+                                             scr_ysize= $
+                                             LeftInteractionHelpsize[3],$
                                              frame=1)
 
 LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
-                                               uname='left_data_interaction_help_message_help',$
-                                               xoffset=LeftInteractionHelpSize[4],$
-                                               yoffset=LeftInteractionHelpSize[5],$
-                                               scr_xsize=LeftInteractionHelpSize[8],$
-                                               value=LeftInteractionHelpMessageLabelTitle)
+                                               uname= $
+                                               'left_data_interaction_' + $
+                                               'help_message_help',$
+                                               xoffset= $
+                                               LeftInteractionHelpSize[4],$
+                                               yoffset= $
+                                               LeftInteractionHelpSize[5],$
+                                               scr_xsize= $
+                                               LeftInteractionHelpSize[8],$
+                                               value= $
+                                               LeftInteractionHelpMessageLabelTitle)
 
 LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
                                            xoffset=LeftInteractionHelpSize[6],$
                                            yoffset=LeftInteractionHelpSize[7],$
-                                           scr_xsize=LeftInteractionHelpSize[8],$
-                                           scr_ysize=LeftInteractionHelpSize[9],$
-                                           uname='DATA_left_interaction_help_text',$
+                                           scr_xsize= $
+                                           LeftInteractionHelpSize[8],$
+                                           scr_ysize= $
+                                           LeftInteractionHelpSize[9],$
+                                           uname= $
+                                           'DATA_left_interaction_help_text',$
                                            /wrap,$
                                            /scroll)
                                            
