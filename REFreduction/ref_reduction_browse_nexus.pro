@@ -328,3 +328,4 @@ IDLsendLogBook_ReplaceLogBookText, $
 WIDGET_CONTROL,HOURGLASS=0
 
 END
+

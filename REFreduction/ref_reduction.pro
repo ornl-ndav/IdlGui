@@ -94,6 +94,7 @@ global = PTR_NEW ({ first_event: 1,$
                     norm_path: '',$ 
                     data_nexus_full_path: '',$
                     norm_nexus_full_path: '',$
+                    empty_cell_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$
                     debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
@@ -135,6 +136,7 @@ global = PTR_NEW ({ first_event: 1,$
                     isHDF5format: 1,$
                     DataRunNumber: '',$
                     NormRunNumber: '',$
+                    EmptyCellRunNumber: '',$
                     archived_data_flag: 1,$
                     archived_norm_flag: 1,$
                     dr_output_path: '~/results',$ ;output path define in the REDUCE tab
@@ -155,6 +157,7 @@ global = PTR_NEW ({ first_event: 1,$
                     nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
                     bank1_data: ptr_new(0L),$ ;
                     bank1_norm: ptr_new(0L),$ ;
+                    bank1_empty_cell: ptr_new(0L),$ ;
                     miniVersion: 0,$ ;1 if this is the miniVersion and 0 if it's not
                     FilesToPlotList: ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
@@ -188,10 +191,14 @@ global = PTR_NEW ({ first_event: 1,$
 ;name of previous zoom/NXsummary tab selected (normalization)
                    DataNeXusFound: 0, $ 
 ;no data nexus found by default
+                   EmptyCellNeXusFound: 0, $ 
+;no empty cell nexus found by default
                    NormNeXusFound: 0, $ 
 ;no norm nexus found by default
                    data_full_nexus_name: '',$ 
 ;full path to data nexus file
+                   empty_cell_full_nexus_name: '',$ 
+;full path to empty cell nexus file
                    norm_full_nexus_name: '',$ 
 ;full path to norm nexus file
                    xsize_1d_draw: 2*304L,$ 
@@ -210,6 +217,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;Ny for REF_M instrument
                    Ntof_DATA: 0L, $ 
 ;TOF for data file
+                   Ntof_empty_cell: 0L, $ 
+;TOF for empty_cell file
                    Ntof_NORM: 0L, $ 
 ;TOF for norm file
                    failed: 'FAILED',$
@@ -236,9 +245,15 @@ global = PTR_NEW ({ first_event: 1,$
 ;run number of the norm. file loaded and plotted
                    DATA_DD_ptr: ptr_new(0L),$ 
 ;detector view of DATA (2D)
+                   empty_cell_DD_ptr: ptr_new(0L),$ 
+;detector view of empty cell (2D)
                    DATA_D_ptr: ptr_new(0L),$ 
 ;(ntot,Ny,Nx) array of DATA
+                   empty_cell_D_ptr: ptr_new(0L),$ 
+;(ntot,Ny,Nx) array of empty_cell
                    DATA_D_Total_ptr: ptr_new(0L),$
+;img=total(img,x) x=2 for REF_M and x=3 for REF_L
+                   empty_cell_D_Total_ptr: ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
                    NORM_D_Total_ptr: ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
@@ -248,6 +263,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;(Ntof,Ny,Nx) array of NORMALIZATION
                    tvimg_data_ptr: ptr_new(0L),$ 
 ;rebin data img
+                   tvimg_empty_cell_ptr: ptr_new(0L),$ 
+;rebin empty cell img
                    tvimg_norm_ptr: ptr_new(0L),$ 
 ;rebin norm img
                    roi_selection_color: 250L,$ 

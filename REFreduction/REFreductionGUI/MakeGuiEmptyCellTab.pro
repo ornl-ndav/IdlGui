@@ -127,16 +127,6 @@ sStatusLabel = { size: [sStatus.size[0]+XYoff[0],$
                         sStatus.size[1]+XYoff[1]],$
                  value: 'S t a t u s'}
 
-
-
-
-
-
-
-
-
-
-
 ;Define widgets ***************************************************************
 wBase = WIDGET_BASE(DataNormalizationTab,$
                     UNAME     = sBase.uname,$
@@ -233,7 +223,7 @@ wDraw2 = WIDGET_DRAW(wBase2,$
 ;                     Y_SCROLL_SIZE = sDraw2.scroll[1],$
                      SCR_XSIZE     = sDraw2.scroll[0],$
                      SCR_YSIZE     = sDraw2.scroll[1],$
-                     UNAME         = sDraw1.uname,$
+                     UNAME         = sDraw2.uname,$
                      RETAIN        = 2,$
 ;                     /SCROLL,$
                      /MOTION_EVENTS)

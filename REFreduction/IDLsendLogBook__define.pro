@@ -36,6 +36,7 @@ CASE (var) OF
    'LogBookUname'    : RETURN, 'log_book_text_field'
    'Alternate_1'     : RETURN, 'data_log_book_text_field'
    'Alternate_2'     : RETURN, 'normalization_log_book_text_field'
+   'Alternate_3'     : RETURN, 'empty_cell_status'
    'LogBookMessageId': RETURN, 'log_book_message'
    'LogBookPath'     : RETURN, './'
    ELSE: RETURN, ''
@@ -54,6 +55,7 @@ CASE (var) OF
     'LogBookUname'    : RETURN, IDLsendLogBook_getLocalVariable(var)
     'Alternate_1'     : RETURN, IDLsendLogBook_getLocalVariable(var)
     'Alternate_2'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_3'     : RETURN, IDLsendLogBook_getLocalVariable(var)
     'LogBookMessageId': RETURN, IDLsendLogBook_getLocalVariable(var)
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
@@ -74,6 +76,7 @@ CASE (var) OF
     'LogBookUname'    : RETURN, IDLsendLogBook_getLocalVariable(var)
     'Alternate_1'     : RETURN, IDLsendLogBook_getLocalVariable(var)
     'Alternate_2'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_3'     : RETURN, IDLsendLogBook_getLocalVariable(var)
     'LogBookMessageId': RETURN, IDLsendLogBook_getLocalVariable(var)
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
@@ -88,6 +91,7 @@ IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
    CASE (ALT) OF
       1: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_1')
       2: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_2')
+      3: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_3')
       ELSE: LogBookUname = IDLsendLogBook_getGlobalVariable(Event, $
                                                             'LogBookUname')
    ENDCASE
@@ -107,6 +111,9 @@ IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
         2: LogBookUname = $
           IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
                                                         'Alternate_2')
+        3: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_3')
         ELSE: LogBookUname = $
           IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
                                                         'LogBookUname')
