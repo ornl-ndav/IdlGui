@@ -1075,7 +1075,21 @@ CASE Event.id OF
         endif
     end
 
-;**REDUCE TAB**
+;==============================================================================
+;**LOAD TAB**DATA**------------------------------------------------------------
+;==============================================================================
+
+;Browse NeXus file
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='browse_empty_cell_nexus_button'): begin
+;        (*global).data_path = ''
+        BrowseEmptyCellNexus, Event ;_browse
+    END
+
+;==============================================================================
+;**REDUCE TAB -----------------------------------------------------------------
+;==============================================================================
+
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
         REFreduction_ReduceNormalizationUpdateGui, Event

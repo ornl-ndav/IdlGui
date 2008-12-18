@@ -107,6 +107,7 @@ cd, CurrentFolder
 .run ref_reduction_RescaleNormalization1D3DPlot.pro
 .run ref_reduction_RescaleNormalization2D3DPlot.pro
 .run ref_reduction_browse_nexus.pro
+.run ref_reduction_empty_cell.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro

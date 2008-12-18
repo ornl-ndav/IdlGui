@@ -68,12 +68,12 @@ ENDIF ELSE BEGIN
         data_path = (*global).nexus_bank1_path
     ENDELSE 
     fieldID = h5d_open(fileID,data_path)
-    if (type EQ 'data') then begin
-        data = h5d_read(fieldID)
-        (*(*global).bank1_data) = data
-    endif else begin
-        (*(*global).bank1_norm) = h5d_read(fieldID)
-     endelse
+    CASE (type) OF 
+        'data': (*(*global).bank1_data) = h5d_read(fieldID)
+        'norm': (*(*global).bank1_norm) = h5d_read(fieldID)
+        'empty_cell': (*(*global).bank1_empty_cell) = h5d_read(fieldID)
+        ELSE: RETURN, 0
+    ENDCASE
     RETURN, 1
 ENDELSE
 END
@@ -96,6 +96,25 @@ RefReduction_DumpBinary, $
   'data', $
    dump_status, $
    _EXTRA=_extra
+RETURN, dump_status
+END
+
+;------------------------------------------------------------------------------
+;This function dumps the binary data of the given full nexus name
+FUNCTION RefReduction_DumpBinaryEmptyCell, Event, $
+                                           full_nexus_name, $
+                                           destination_folder, $
+                                           _EXTRA=_extra
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;tmp_file_name = (*global).data_tmp_dat_file
+RefReduction_DumpBinary, $
+  Event, $
+  full_nexus_name, $
+  'empty_cell', $
+   dump_status, $
+  _EXTRA=_extra
 RETURN, dump_status
 END
 
