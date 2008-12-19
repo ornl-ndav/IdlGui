@@ -80,6 +80,14 @@ CASE ((*global).pola_type) OF
       nexus_file_name = (*global).norm_nexus_full_path
       load_norm_browse_nexus, Event, nexus_file_name, POLA_STATE=value_selected
   END
+  'empty_cell_load': BEGIN
+      (*global).empty_cell_path = list_pola_state[value_selected]
+      nexus_file_name = (*global).empty_cell_nexus_full_path
+      load_empty_cell_browse_nexus, $
+        Event, $
+        nexus_file_name, $
+        POLA_STATE=value_selected
+  END
 ENDCASE
 END
 

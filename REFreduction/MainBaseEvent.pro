@@ -1076,15 +1076,36 @@ CASE Event.id OF
     end
 
 ;==============================================================================
-;**LOAD TAB**DATA**------------------------------------------------------------
+;**LOAD TAB**EMPTY CELL**------------------------------------------------------
 ;==============================================================================
 
 ;Browse NeXus file
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME='browse_empty_cell_nexus_button'): begin
-;        (*global).data_path = ''
         BrowseEmptyCellNexus, Event ;_browse
     END
+
+;LOAD empty_cell file cw_field
+    WIDGET_INFO(wWidget, $  
+                FIND_BY_UNAME='empty_cell_nexus_run_number'): begin
+        REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus ;_empty_cell
+    END
+
+;##In list of nexus base##
+;droplist
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_nexus_droplist'): BEGIN
+        DisplayEmptyCellNxsummary, Event ;_empty_cell
+    END
+    
+;ok button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_list_load_button'): begin
+        LoadListOfEmptyCellNexus, Event ;_empty_cell
+    end
+
+;cancel button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_list_cancel_button'): begin
+        CancelListOfEmptyCellNexus, Event ;_empty_cell
+    end
 
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------

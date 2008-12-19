@@ -252,7 +252,18 @@ endif else begin
 endelse
 END
 
+;------------------------------------------------------------------------------
+Function isArchivedEmptyCellNexusDesired, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='empty_cell_archived_or_all_uname')
+WIDGET_CONTROL,id,GET_VALUE=status
+IF (status EQ 0) THEN BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
+END
 
+;------------------------------------------------------------------------------
 Function isArchivedNormNexusDesired, Event
 id = widget_info(Event.top, $
                  find_by_uname='normalization_archived_or_full_cwbgroup')

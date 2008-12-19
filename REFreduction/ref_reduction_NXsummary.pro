@@ -58,15 +58,30 @@ ENDIF ELSE BEGIN
     logText = '--> cmd : ' + cmd + ' ... ' + PROCESSING
     putLogBookMessage,Event,LogText,APPEND=1
     
+    spawn, 'hostname',listening
+    CASE (listening) OF
+        'lrac': 
+        'mrac': 
+        else: BEGIN
+            if ((*global).instrument EQ (*global).REF_L) then begin
+                cmd = 'srun -p lracq ' + cmd
+            endif else begin
+                cmd = 'srun -p mracq ' + cmd
+            endelse
+        END
+    ENDCASE
+    
 ;run nxsummary command
     SPAWN, cmd, listening, err_listening
+    
     IF (err_listening[0] EQ '') THEN BEGIN
         listeningSize = (size(listening))(1)
         if (listeningSize GE 1) then begin
             putTextFieldArray, Event, $
               TextFieldUname, $
               listening, $
-              listeningSize,0
+              listeningSize, $
+              0
         ENDIF
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDIF ELSE BEGIN
@@ -75,9 +90,7 @@ ENDIF ELSE BEGIN
 ENDELSE                         ;end of debugging version
 END
 
-
-
-
+;------------------------------------------------------------------------------
 PRO RefReduction_NXsummaryBatch, Event, FileName, TextFieldUname
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

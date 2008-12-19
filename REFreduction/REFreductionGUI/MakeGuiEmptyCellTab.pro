@@ -35,9 +35,13 @@
 PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
                          DataNormalizationTabSize,$
                          EmptyCellTitle,$
-                         D_DD_TabSize
+                         D_DD_TabSize,$
+                         NexusListSizeGlobal,$
+                         NexusListLabelGlobal
 
+;******************************************************************************
 ;Define structures ************************************************************
+;******************************************************************************
 
 ;main base --------------------------------------------------------------------
 sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
@@ -73,7 +77,8 @@ sEmptyCellArchivedListAll = { list: ['Archived','All NeXus'],$
 ;JPEG button
 sEmptyCellJPEGbutton = { value: 'REFreduction_images/SaveAsJpeg.bmp',$
                          uname: 'empty_cell_save_as_jpeg_button',$
-                         tooltip: 'Create a JPEG of the plot' }
+                         tooltip: 'Create a JPEG of the plot' ,$
+                         sensitive: 0}
 
 ;Y vs TOF (2d) and Y vs X (2D)
 XYoff = [40,55]
@@ -127,7 +132,59 @@ sStatusLabel = { size: [sStatus.size[0]+XYoff[0],$
                         sStatus.size[1]+XYoff[1]],$
                  value: 'S t a t u s'}
 
+;Nexus list base --------------------------------------------------------------
+;base
+sNexusListBase = { size: [NexusListSizeGlobal[0:3]],$
+                   frame: 2,$
+                   uname: 'empty_cell_list_nexus_base',$
+                   map: 0}
+;label
+XYoff = [0,0]
+sNexusListLabel = { size: [XYoff[0],$
+                           XYoff[1],$
+                           sNexusListBase.size[2]-4],$
+                    value: NexusListLabelGlobal[0],$
+                    frame: 1 }
+
+;droplist value
+XYoff = [0,25]
+sNexusDroplist = { size: [XYoff[0],$
+                          XYoff[1]],$
+                   value: ['                                        ' + $
+                           '                                 '],$
+                   uname: 'empty_cell_nexus_droplist' }
+
+;widget_text
+XYoff = [0,38]
+sNexusText = { size: [XYoff[0],$
+                      sNexusDroplist.size[1]+XYoff[1],$
+                      sNexusListBase.size[2]-2,$
+                      400],$
+               uname: 'empty_cell_list_nexus_nxsummary_text_field' }
+
+;cancel button
+XYoff = [2,5]
+sNexusCancelButton = { size: [XYoff[0],$
+                              sNexusText.size[1]+$
+                              sNexusText.size[3]+$
+                              XYoff[1],$
+                              245],$
+                       value: 'CANCEL',$
+                       uname: 'empty_cell_list_cancel_button' }
+
+;load button
+XYoff = [5,0]
+sNexusLoadButton = { size: [sNexusCancelButton.size[0]+ $
+                            sNexusCancelButton.size[2]+ $
+                            XYoff[0],$
+                            sNexusCancelButton.size[1]+XYoff[1],$
+                            sNexusCancelButton.size[2]],$
+                     value: 'LOAD SELECTED NEXUS',$
+                     uname: 'empty_cell_list_load_button' }
+
+;******************************************************************************
 ;Define widgets ***************************************************************
+;******************************************************************************
 wBase = WIDGET_BASE(DataNormalizationTab,$
                     UNAME     = sBase.uname,$
                     XOFFSET   = sBase.size[0],$
@@ -180,12 +237,69 @@ wLabel = WIDGET_LABEL(wNexusBase,$
                       VALUE = '  ')
 
 ;JPEG button                               
-wEmptyCellJPEGbutton = WIDGET_BUTTON(wNexusBase,$
-                                     UNAME   = sEmptyCellJPEGbutton.uname,$
-                                     VALUE   = sEmptyCellJPEGbutton.value,$
-                                     TOOLTIP = sEmptyCellJPEGbutton.tooltip,$
-                                     /BITMAP)
+wEmptyCellJPEGbutton = $
+  WIDGET_BUTTON(wNexusBase,$
+                UNAME     = sEmptyCellJPEGbutton.uname,$
+                VALUE     = sEmptyCellJPEGbutton.value,$
+                TOOLTIP   = sEmptyCellJPEGbutton.tooltip,$
+                SENSITIVE = sEmptyCellJPEGbutton.sensitive,$
+                /BITMAP)
 
+
+;Nexus list base and widgets --------------------------------------------------
+
+;base
+wNexusListBase = WIDGET_BASE(wBase,$
+                             UNAME     = sNexusListBase.uname,$
+                             XOFFSET   = sNexusListBase.size[0],$
+                             YOFFSET   = sNexusListBase.size[1],$
+                             SCR_XSIZE = sNexusListBase.size[2],$
+                             SCR_YSIZE = sNexusListBase.size[3],$
+                             FRAME     = sNexusListBase.frame,$
+                             MAP       = sNexusListBase.map)
+
+;label
+wNexusListLabel = WIDGET_LABEL(wNexusListBase,$
+                               XOFFSET   = sNexusListLabel.size[0],$
+                               YOFFSET   = sNexusListLabel.size[1],$
+                               SCR_XSIZE = sNexusListLabel.size[2],$
+                               VALUE     = sNexusListLabel.value,$
+                               FRAME     = sNexusListLabel.frame)
+
+;droplist value
+wNexusDroplist = WIDGET_DROPLIST(wNexusListBase,$
+                                 UNAME   = sNexusDroplist.uname,$
+                                 XOFFSET = sNexusDroplist.size[0],$
+                                 YOFFSET = sNexusDroplist.size[1],$
+                                 VALUE   = sNexusDroplist.value,$
+                                 /TRACKING_EVENTS)
+                                   
+;nxsummary text
+wNexusText = WIDGET_TEXT(wNexusListBase,$
+                         XOFFSET = sNexusText.size[0],$
+                         YOFFSET = sNexusText.size[1],$
+                         SCR_XSIZE = sNexusText.size[2],$
+                         SCR_YSIZE = sNexusText.size[3],$
+                         UNAME     = sNexusText.uname,$
+                         /WRAP,$
+                         /SCROLL)
+  
+;cancel button
+wNexusCancelButton = WIDGET_BUTTON(wNexusListBase,$
+                                 UNAME     = sNexusCancelButton.uname,$
+                                 XOFFSET   = sNexusCancelButton.size[0],$
+                                 YOFFSET   = sNexusCancelButton.size[1],$
+                                 SCR_XSIZE = sNexusCancelButton.size[2],$
+                                 VALUE     = sNexusCancelButton.value)
+
+;load button
+wNexusLoadButton = WIDGET_BUTTON(wNexusListBase,$
+                                 UNAME     = sNexusLoadButton.uname,$
+                                 XOFFSET   = sNexusLoadButton.size[0],$
+                                 YOFFSET   = sNexusLoadButton.size[1],$
+                                 SCR_XSIZE = sNexusLoadButton.size[2],$
+                                 VALUE     = sNexusLoadButton.value)
+                                        
 ;Plot Tabs ....................................................................
 wTab = WIDGET_TAB(wBase,$
                   XOFFSET   = sTab.size[0],$

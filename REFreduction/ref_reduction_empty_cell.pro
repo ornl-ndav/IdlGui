@@ -88,7 +88,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ;this function load the given nexus file and get the binary data
-PRO REFreduction_LoadDatafile2, Event, isNeXusFound, NbrNexus
+PRO REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus
 
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -99,25 +99,26 @@ FAILED     = (*global).failed
 instrument = (*global).instrument ;retrieve name of instrument
 
 ;get Data Run Number from DataTextField
-DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
-DataRunNumber = STRCOMPRESS(DataRunNumber,/REMOVE_ALL)
+RunNumber = getTextFieldValue(Event,'empty_cell_nexus_run_number')
+RunNumber = STRCOMPRESS(RunNumber,/REMOVE_ALL)
 isNeXusFound = 0                ;by default, NeXus not found
 
 WIDGET_CONTROL,/HOURGLASS
 
-IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
+IF (RunNumber NE '') THEN BEGIN ;run number is not empty
     
-    (*global).DataRunNumber = DataRunNumber
+    (*global).EmptyCellRunNumber = RunNumber
     
 ;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
-    IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
+
+;get full list of Nexus
+    IF (~isArchivedEmptyCellNexusDesired(Event)) THEN BEGIN 
         
-        LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
-          DataRunNumber
+        LogBookText = '-> Retrieving full list of Empty Cell Run Number: ' + $
+          RunNumber
         IDLsendLogBook_addLogBookText, Event, LogBookText
         LogBookText += ' ... ' + PROCESSING 
-        putDataLogBookMessage, Event, LogBookText
-        
+        IDLsendLogBook_addLogBookText, Event, LogBookText, ALT=3
         LogBookText = $
           '--> Checking if at least one NeXus file can be found ' + $
           ' ... ' + PROCESSING
@@ -125,7 +126,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
 
 ;get path to nexus run #
             full_list_of_nexus_name = find_list_nexus_name(Event,$
-                                                           DataRunNumber,$
+                                                           RunNumber,$
                                                            instrument,$
                                                            isNeXusFound)
 
@@ -137,7 +138,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             
             IDLsendLogBook_ReplaceLogBookText, $
               Event, $
-              ALT=1, $
+              ALT=3, $
               PROCESSING, $
               'NeXus run number does not exist!'
             
@@ -160,8 +161,8 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                 putArrayInDropList, $
                   Event, $
                   full_list_of_nexus_name, $
-                  'data_list_nexus_droplist'
-                MapBase, Event, 'data_list_nexus_base', 1
+                  'empty_cell_nexus_droplist'
+                MapBase, Event, 'empty_cell_list_nexus_base', 1
                 
                 IDLsendLogBook_ReplaceLogBookText, Event, $
                   PROCESSING, $
@@ -175,27 +176,28 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                     IDLsendLogBook_addLogBookText, Event, text
                 ENDFOR
                 
-;display nxsummary of first file in 'data_list_nexus_base'
+;display nxsummary of first file in 'empty_cell_list_nexus_base'
                 RefReduction_NXsummary, $
                   Event, $
                   full_list_of_nexus_name[0], $
-                  'data_list_nexus_nxsummary_text_field'
+                  'empty_cell_list_nexus_nxsummary_text_field'
                 
 ;Inform user that program is waiting for his action
                 LogText = $
                   '<USERS!> Waiting for input from users. Please select ' + $
-                  'one NeXus file from the list:'
+                  'one NeXus file from the list ... '
                 IDLsendLogBook_addLogBookText, Event, LogText
                 
-;display info in data log book
+;display info in empty cell log book
                 IDLsendLogBook_ReplaceLogBookText, Event, $
-                  ALT = 1, $
+                  ALT = 3, $
                   PROCESSING, $
                   OK
+
                 text = ' -> Please select one of the ' + $
                   STRCOMPRESS(sz,/REMOVE_ALL)
-                text += ' NeXus file found .....'
-                IDLsendLogBook_addLogBookText, Event, ALT=1, text
+                text += ' NeXus file found ... ' + PROCESSING
+                IDLsendLogBook_addLogBookText, Event, ALT=3, text
                 
             ENDIF ELSE BEGIN    ;only 1 found
                 
@@ -203,7 +205,8 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                 
                 full_nexus_name = full_list_of_nexus_name[0]
                 NbrNexus = 1
-                (*global).data_nexus_full_path = full_nexus_name
+
+                (*global).empty_cell_nexus_full_path = full_nexus_name
                 
 ;check how many polarization states the file has
                 nbr_pola_state = $
@@ -216,27 +219,28 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                 
                 IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-                    result = OpenDataNexusFile(Event, $
-                                               DataRunNumber, $
-                                               full_nexus_name)
 
+                    result = OpenEmptyCellNeXusFile(Event, $
+                                                    DataRunNumber, $
+                                                    full_nexus_name)
+                    
                     isNexusFound = result
                     
 ;plot data now
-                    result = REFreduction_Plot1D2DDataFile(Event) 
+                    result = REFreduction_PlotEmptyCellFile(Event)
                     IF (result EQ 0) THEN BEGIN
                         IDLsendLogBook_ReplaceLogBookText, $
                           Event, $
-                          ALT=1, $
+                          ALT=3, $
                           PROCESSING, $
                           FAILED
                         RETURN
                     ENDIF
                     
-                    (*global).DataNeXusFound = result
+                    (*global).EmptyCellNeXusFound = result
                     
-;update GUI according to result of NeXus found or not
-                    RefReduction_update_data_gui_if_NeXus_found, Event, result
+;;update GUI according to result of NeXus found or not
+;                    RefReduction_update_data_gui_if_NeXus_found, Event, result
                     
                     WIDGET_CONTROL,HOURGLASS=0
                     
@@ -245,13 +249,10 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
                     WIDGET_CONTROL,HOURGLASS=0
                     
 ;ask user to select the polarization state he wants to see
-                    (*global).pola_type = 'data_load'
+                    (*global).pola_type = 'empty_cell_load'
                     select_polarization_state, Event, $
                       full_nexus_name, $
                       list_pola_state
-;               OpenDataNexusFile, Event, $
-;                                  DataRunNumber, $
-;                                  full_list_of_nexus_name
                     
                 ENDELSE         ;end of "IF (nbr_pola_state EQ 1)"
                 
@@ -261,17 +262,22 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
 ;we just want the archived one
     ENDIF ELSE BEGIN ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++  
         
-        LogBookText = '-> Openning Archived DATA Run Number: ' + DataRunNumber
+        LogBookText = '-> Openning Archived Empty Cell Run Number: ' + $
+          RunNumber
         putLogBookMessage, Event, LogBookText, Append=1
         LogBookText += ' ... ' + PROCESSING 
-        putDataLogBookMessage, Event, LogBookText
+        IDLsendLogBook_ReplaceLogBookText, $
+          Event, $
+          ALT=3, $
+          PROCESSING, $
+          LogBookText
         LogBookText = '--> Checking if NeXus run number exists ... ' + $
           PROCESSING    
         IDLsendLogBook_addLogBookText, Event, LogBookText
         
 ;get path to nexus run #
         full_nexus_name = find_full_nexus_name(Event,$
-                                               DataRunNumber,$
+                                               RunNumber,$
                                                instrument,$
                                                isNeXusFound)
         
@@ -283,12 +289,11 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
             
 ;get data log book full text
-            DataLogBookText = getDataLogBookText(Event)
-            putTextAtEndOfDataLogBookLastLine,$
-              Event,$
-              DataLogBookText,$
-              'NeXus does not exist!',$
-              PROCESSING
+            IDLsendLogBook_ReplaceLogBookText, $
+              Event, $
+              ATL=3,$
+              PROCESSING,$
+              'NeXus does not exist!'
             
 ;no needs to do anything more
             
@@ -300,7 +305,7 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, Message
             
             NbrNexus = 1
-            (*global).data_nexus_full_path = full_nexus_name
+            (*global).empty_cell_nexus_full_path = full_nexus_name
             
 ;check how many polarization states the file has
             nbr_pola_state = $
@@ -310,69 +315,70 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
             IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
                 RETURN
             ENDIF
-
+            
             IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-                result = OpenDataNexusFile(Event, $
-                                           DataRunNumber, $
-                                           full_nexus_name)
+                result = OpenEmptyCellNeXusFile(Event, $
+                                                RunNumber, $
+                                                full_nexus_name)
                 
                 IF (result EQ 0) THEN BEGIN
                     IDLsendLogBook_ReplaceLogBookText, $
                       Event, $
-                      ALT=1, $
+                      ALT=3, $
                       PROCESSING, $
                       FAILED
                     RETURN
                 ENDIF
                 isNeXusFound = result
-
+                
 ;plot data now
-                result = REFreduction_Plot1D2DDataFile(Event) 
+
+                result = REFreduction_PlotEmptyCellFile(Event)
                 IF (result EQ 0) THEN BEGIN
-                    (*global).DataNeXusFound = 0
+                    (*global).EmptyCellNeXusFound = 0
                     IDLsendLogBook_ReplaceLogBookText, $
                       Event, $
-                      ALT=1, $
+                      ALT=3, $
                       PROCESSING, $
                       FAILED
                     RETURN
                 ENDIF
-                    
-                (*global).DataNeXusFound = 1
+                
+                (*global).EmptyCellNeXusFound = 1
                                 
                 IF (result) THEN BEGIN
                     IDLsendLogBook_ReplaceLogBookText, $
                       Event, $
-                      ALT=1, $
+                      ALT=3, $
                       PROCESSING, $
                       OK
                 ENDIF ELSE BEGIN
                     IDLsendLogBook_ReplaceLogBookText, $
                       Event, $
-                      ALT=1, $
+                      ALT=3, $
                       PROCESSING, $
                       FAILED
                 ENDELSE                    
                 
-;update GUI according to result of NeXus found or not
-                RefReduction_update_data_gui_if_NeXus_found, Event, result
+;;update GUI according to result of NeXus found or not
+;                RefReduction_update_data_gui_if_NeXus_found, Event, result
 
             ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
-                (*global).pola_type = 'data_load'
+                (*global).pola_type = 'empty_cell_load'
                 select_polarization_state, Event, $
                   full_nexus_name, $
                   list_pola_state
             ENDELSE
             
         ENDELSE
-
+        
         WIDGET_CONTROL,HOURGLASS=0
         
     ENDELSE
     
-ENDIF                           ;end of if(DataRunNumber Ne '')
+ENDIF                           ;end of if(EmptyCellRunNumber Ne '')
 
 END
 
@@ -475,6 +481,7 @@ IDLsendLogBook_addLogBookText, Event, LogBookText
 IDLsendLogBook_addLogBookText, Event, LogBookText + ' ... ' + PROCESSING, ALT=3
 
 NbrNexus = 1
+
 status = OpenEmptyCellNexusFile(Event, $ 
                                 EmptyCellRunNumber, $
                                 nexus_file_name, $
@@ -517,3 +524,149 @@ WIDGET_CONTROL,HOURGLASS=0
 
 END
 
+;------------------------------------------------------------------------------
+;This function get the nexus name from the data droplist and displays
+;the nxsummary of that nexus file
+PRO DisplayEmptyCellNxsummary, Event
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+prevECNexusIndex = (*global).PreviousECNexusListSelected
+currECNexusIndex = getDropListSelectedIndex(Event, $
+                                              'empty_cell_nexus_droplist')
+
+if (prevECNexusIndex NE currECNexusIndex) then begin
+
+;reset value of previous index selected
+    (*global).PreviousECNexusListSelected = currECNexusIndex
+    
+;get full name of index selected
+    currFullECNexusName = $
+      getDropListSelectedValue(Event, $
+                               'empty_cell_nexus_droplist')
+
+;display NXsummary of that file
+    RefReduction_NXsummary, $
+      Event, $
+      currFullECNexusName, $
+      'empty_cell_list_nexus_nxsummary_text_field'
+endif 
+END
+
+;------------------------------------------------------------------------------
+PRO LoadListOfEmptyCellNexus, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+PROCESSING = (*global).processing_message ;processing message
+
+;indicate reading data with hourglass icon
+WIDGET_CONTROL,/HOURGLASS
+
+;get full name of index selected
+currFullEmptyCellNexusName = $
+  getDropListSelectedValue(Event, 'empty_cell_nexus_droplist')
+full_nexus_name = currFullEmptyCellNexusName
+(*global).empty_cell_nexus_full_path = full_nexus_name
+
+;display message in data log book
+InitialStrarr = getDataLogBookText(Event)
+MessageToAdd = ' OK'
+putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
+
+IDLsendLogBook_ReplaceLogBookText, $
+  Event, $
+  ALT=3, $
+  PROCESSING, $
+  'OK'
+
+IDLsendLogBook_AddLogBookText, $
+  Event, $
+  ALT=3, $
+  'Opening selected file ... ' + PROCESSING
+
+;map=0 the base
+MapBase, Event, 'empty_cell_list_nexus_base', 0
+
+;get run number
+RunNumber = getTextFieldValue(Event,'empty_cell_nexus_run_number')
+    
+;check how many polarization states the file has
+nbr_pola_state = $
+  check_number_polarization_state(Event, $
+                                  full_nexus_name, $
+                                  list_pola_state)
+
+print, nbr_pola_state ;remove_me
+
+IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+    RETURN
+ENDIF
+
+IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+    
+;load browse nexus file
+    result = OpenEmptyCellNeXusFile(Event, $
+                                    RunNumber, $
+                                    full_nexus_name)
+    
+;plot now
+    result = REFreduction_PlotEmptyCellFile(Event)
+    IF (result EQ 0) THEN BEGIN
+        (*global).EmptyCellNeXusFound = 0
+        IDLsendLogBook_ReplaceLogBookText, $
+          Event, $
+          ALT=3, $
+          PROCESSING, $
+          FAILED
+        RETURN
+    ENDIF
+    
+;update GUI according to result of NeXus found or not
+;    RefReduction_update_data_gui_if_NeXus_found, $
+;      Event, $
+;      result
+    
+    (*global).EmptyCellNeXusFound = 1
+    
+    WIDGET_CONTROL,HOURGLASS=0
+    
+ENDIF ELSE BEGIN
+    
+    WIDGET_CONTROL,HOURGLASS=0
+    
+;ask user to select the polarization state he wants to see
+    (*global).pola_type = 'empty_cell_load'
+    select_polarization_state, Event, $
+      full_nexus_name, $
+      list_pola_state
+    
+ENDELSE                         ;end of "IF (nbr_pola_state EQ 1)"
+END
+
+;------------------------------------------------------------------------------
+PRO CancelListOfEmptyCellNexus, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+PROCESSING = (*global).processing_message
+CANCEL     = 'CANCELED'
+
+;map=0 the base
+MapBase, Event, 'empty_cell_list_nexus_base', 0
+
+;clear data run number entry
+putTextFieldValue, event, 'empty_cell_nexus_run_number', '',0
+
+;inform data log book and log book that process has been canceled
+IDLsendLogBook_ReplaceLogBookText, Event, $
+  PROCESSING, $
+  CANCELED
+               
+IDLsendLogBook_ReplaceLogBookText, Event, $
+  ALT = 3, $
+  PROCESSING, $
+  CANCEL
+  
+END
