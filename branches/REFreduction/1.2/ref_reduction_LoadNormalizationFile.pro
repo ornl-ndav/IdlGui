@@ -255,7 +255,9 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                           FAILED
                         RETURN
                     ENDIF
-                                        
+                  
+                    (*global).NormNeXusFound = 1
+                      
 ;update GUI according to result of NeXus found or not
                     RefReduction_update_normalization_gui_if_NeXus_found, $
                       Event, 1
@@ -353,6 +355,8 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
                     RETURN
                 ENDIF
                                 
+                (*global).NormNeXusFound = 1
+
 ;update GUI according to result of NeXus found or not
                 RefReduction_update_normalization_gui_if_NeXus_found, $
                   Event, 1
