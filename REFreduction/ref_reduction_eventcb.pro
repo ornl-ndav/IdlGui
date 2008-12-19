@@ -330,6 +330,8 @@ IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
         RETURN
     ENDIF
     
+    (*global).NormNeXusFound = 1
+
 ;update GUI according to result of NeXus found or not
     RefReduction_update_normalization_gui_if_NeXus_found, $
       Event, 1
