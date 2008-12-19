@@ -187,6 +187,8 @@ MakeGuiEmptyCellTab,$
   DataNormalizationTab,$
   DataNormalizationTabSize,$
   EmptyCellTitle,$
-  D_DD_TabSize
+  D_DD_TabSize,$
+  NexusListSizeGlobal,$
+  NexusListLabelGlobal
 
 END

@@ -345,6 +345,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;using NXsummary)
                    PreviousDataNexusListSelected: 0,$
 ;previous element selected in data nexus droplist
+                   PreviousECNexusListSelected: 0,$
+;previous element selected in empty cell nexus droplist
                    PreviousNormNexusListSelected: 0,$
 ;previous element selected in normalization nexus droplist
                    InitialDataContrastDropList: 5,$

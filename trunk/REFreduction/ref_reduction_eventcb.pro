@@ -35,17 +35,17 @@
 ;------------------------------------------------------------------------------
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
-  REFreduction_LoadDataFile, Event, $ ;LoadDataFile
-                             isNeXusFound, $
-                             NbrNexus 
+REFreduction_LoadDataFile, Event, $ ;LoadDataFile
+  isNeXusFound, $
+  NbrNexus 
 END
 
 ;------------------------------------------------------------------------------
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
-  REFreduction_LoadNormalizationFile, Event, $ ;LoadNormalizationFile
-                                      isNeXusFound, $
-                                      NbrNexus 
+REFreduction_LoadNormalizationFile, Event, $ ;LoadNormalizationFile
+  isNeXusFound, $
+  NbrNexus 
 END
 
 ;------------------------------------------------------------------------------
@@ -244,50 +244,6 @@ ENDIF ELSE BEGIN
       list_pola_state
 
 ENDELSE                         ;end of "IF (nbr_pola_state EQ 1)"
-END
-
-
-
-
-PRO tmp
-
-;Open That NeXus file
-OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
-    
-IF ((*global).isHDF5format) THEN BEGIN
-        
-    REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
-    
-;get global structure
-    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-    widget_control,id,get_uvalue=global
-    
-;tell the user that the load and plot process is done
-    InitialStrarr = getDataLogBookText(Event)
-    putTextAtEndOfDataLogBookLastLine, $
-      Event, $
-      InitialStrarr, $
-      ' Done', $
-      (*global).processing_message
-    
-;display full path to NeXus in data log book
-    full_nexus_name = (*global).data_full_nexus_name
-    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-    putDataLogBookMessage, Event, text, Append=1
-    
-;replot the background and peak exclusion regions
-    REFreduction_DataBackgroundPeakSelection, Event, ''
-    
-    (*global).DataNeXusFound = 1
-    
-ENDIF ELSE BEGIN
-
-    (*global).DataNeXusFound = 0
-
-ENDELSE
-
-;to see the last line of the data log book
-showLastDataLogBookLine, Event
 END
 
 ;------------------------------------------------------------------------------
