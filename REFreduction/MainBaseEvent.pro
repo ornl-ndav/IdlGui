@@ -1090,6 +1090,21 @@ CASE Event.id OF
                 FIND_BY_UNAME='empty_cell_nexus_run_number'): begin
         REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus ;_empty_cell
     END
+    
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME='empty_cell_archived_or_all_uname'): BEGIN
+        IF ((*global).archived_empty_cell_flag NE $
+            isArchivedemptyCellNexusDesired(Event)) THEN BEGIN
+            (*global).archived_empty_cell_flag = $
+              isArchivedEmptyCellNexusDesired(Event)
+            IF (getTextFieldValue(Event, $
+                                  'empty_cell_nexus_run_number') $
+                NE 0) THEN BEGIN
+                (*global).empty_cell_path = ''
+                REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus
+            ENDIF
+        ENDIF
+    END
 
 ;##In list of nexus base##
 ;droplist
