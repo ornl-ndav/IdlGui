@@ -130,6 +130,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 tvimg = REBIN(img, New_Nx, New_Ny,/SAMPLE)
+
 TVSCL, tvimg, /DEVICE
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
@@ -172,6 +173,7 @@ WIDGET_CONTROL, id_draw, DRAW_XSIZE=file_Ntof
 tvimg = REBIN(img, file_Ntof, new_N,/SAMPLE)
 (*(*global).tvimg_empty_cell_ptr) = tvimg
 TVSCL, tvimg, /DEVICE
+
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING

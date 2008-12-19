@@ -21,6 +21,7 @@ DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]-32]
 ;Tab titles
 DataTitle          = 'D A T A'
 NormalizationTitle = 'N O R M A L I Z A T I O N'
+EmptyCellTitle     = '   E M P T Y   C E L L  '
 
 ;Archived or Full NeXus list cw_bgroup
 ArchivedOrAllCWBgroupList = ['Arch.','All']
@@ -147,5 +148,14 @@ miniMakeGuiLoadNormalizationTab,$
   NexusListSizeGlobal,$
   NexusListLabelGlobal,$
   loadctList
+
+;build empty cell tab
+miniMakeGuiEmptyCellTab,$
+  DataNormalizationTab,$
+  DataNormalizationTabSize,$
+  EmptyCellTitle,$
+  D_DD_TabSize,$
+  NexusListSizeGlobal,$
+  NexusListLabelGlobal
 
 END

@@ -49,7 +49,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
 VERSION            = '1.3.0'            
-DEBUGGING_VERSION  = 'no'              ;NO
+DEBUGGING_VERSION  = 'yes'              ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
@@ -90,11 +90,13 @@ global = ptr_new ({ first_event: 1,$
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: '/bank1,1',$
                     data_path: '',$ ;for example  '/entry_Off-Off/'
+                    empty_cell_path: '',$ ;for example  '/entry_Off-Off/'
                     norm_path_flag: '--norm-data-paths=/entry-Off_Off/' + $
                     'bank1,1',$
                     norm_path: '',$ 
                     data_nexus_full_path: '',$
                     norm_nexus_full_path: '',$
+                    empty_cell_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$	
                     debugging_structure: PTR_NEW(0L),$
                     my_package: PTR_NEW(0L),$
@@ -129,14 +131,16 @@ global = ptr_new ({ first_event: 1,$
                     BatchDefaultPath: '~/results/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
                     BatchFileName : '',$
-                      DataRunNumber : '',$
-                      NormRunNumber : '',$
+                    DataRunNumber : '',$
+                    NormRunNumber : '',$
+                    EmptyCellRunNumber: '',$
                     PreviousRunReductionValidated : 0,$  
                     BatchTable : ptr_new(0L),$ ;big array of batch table
                     isHDF5format : 1,$
                     dr_output_path : '~/results/',$
                     archived_data_flag : 1,$
                     archived_norm_flag : 1,$
+                    archived_empty_cell_flag: 1,$
 ;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
@@ -155,6 +159,7 @@ global = ptr_new ({ first_event: 1,$
                     nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
                     bank1_data : ptr_new(0L),$ ;
                    bank1_norm : ptr_new(0L),$ ;
+                   bank1_empty_cell: ptr_new(0L),$
                    miniVersion : 1,$
 ;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
@@ -191,10 +196,14 @@ global = ptr_new ({ first_event: 1,$
 ;no data nexus found by default
                    NormNeXusFound : 0, $ 
 ;no norm nexus found by default
+                   EmptyCellNexusFound: 0,$
+;no empty cell nexus found by default
                    data_full_nexus_name : '',$ 
 ;full path to data nexus file
                    norm_full_nexus_name : '',$ 
 ;full path to norm nexus file
+                   empty_cell_full_nexus_name : '',$ 
+;full path to empty cell nexus file
                    xsize_1d_draw : 2*304L,$ 
 ;size of 1D draw (should be Ntof)
                    REF_L : 'REF_L',$ 
@@ -211,6 +220,8 @@ global = ptr_new ({ first_event: 1,$
 ;Ny for REF_M instrument
                    Ntof_DATA : 0L, $ 
 ;TOF for data file
+                   Ntof_empty_cell : 0L, $ 
+;TOF for empty cell file
                    Ntof_NORM : 0L, $ 
 ;TOF for norm file
                    failed : 'FAILED',$
@@ -239,9 +250,15 @@ global = ptr_new ({ first_event: 1,$
 ;detector view of DATA (2D)
                    DATA_D_ptr : ptr_new(0L),$ 
 ;(ntot,Ny,Nx) array of DATA
+                   empty_cell_DD_ptr: ptr_new(0L),$ 
+;detector view of empty cell (2D)
                    DATA_D_Total_ptr : ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
                    NORM_D_Total_ptr : ptr_new(0L),$
+;img=total(img,x) x=2 for REF_M and x=3 for REF_L
+                   empty_cell_D_ptr: ptr_new(0L),$ 
+;(ntot,Ny,Nx) array of empty_cell
+                   empty_cell_D_Total_ptr: ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
                    NORM_DD_ptr : ptr_new(0L),$ 
 ;detector view of NORMALIZATION (2D)
@@ -249,6 +266,8 @@ global = ptr_new ({ first_event: 1,$
 ;(Ntof,Ny,Nx) array of NORMALIZATION
                    tvimg_data_ptr : ptr_new(0L),$ 
 ;rebin data img
+                   tvimg_empty_cell_ptr: ptr_new(0L),$ 
+;rebin empty cell img
                    tvimg_norm_ptr : ptr_new(0L),$ 
 ;rebin norm img
                    roi_selection_color: 250L,$
@@ -328,6 +347,8 @@ global = ptr_new ({ first_event: 1,$
 ;using NXsummary)
                    PreviousDataNexusListSelected: 0,$
 ;previous element selected in data nexus droplist
+                   PreviousECNexusListSelected: 0,$
+;previous element selected in empty cell nexus droplist
                    PreviousNormNexusListSelected: 0,$
 ;previous element selected in normalization nexus droplist
                    InitialDataContrastDropList: 5,$
@@ -644,8 +665,8 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
@@ -660,8 +681,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ;   widget_control, id2, set_tab_current = 0 ;DATA
 
-; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
+ id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+ widget_control, id2, set_tab_current = 2 ;empty_cell
     
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
