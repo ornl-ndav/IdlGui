@@ -81,8 +81,8 @@ ENDIF ELSE BEGIN
     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
     IDLsendLogBook_addLogBookText, Event, LogBookText ;log_book
     RETURN, 0
-
 ENDELSE
+
 RETURN, 1
 END
 
@@ -185,7 +185,7 @@ IF (RunNumber NE '') THEN BEGIN ;run number is not empty
 ;Inform user that program is waiting for his action
                 LogText = $
                   '<USERS!> Waiting for input from users. Please select ' + $
-                  'one NeXus file from the list ... '
+                  'one NeXus file from the list ... ' + PROCESSING
                 IDLsendLogBook_addLogBookText, Event, LogText
                 
 ;display info in empty cell log book
@@ -194,7 +194,7 @@ IF (RunNumber NE '') THEN BEGIN ;run number is not empty
                   PROCESSING, $
                   OK
 
-                text = ' -> Please select one of the ' + $
+                text = '--> Please select one of the ' + $
                   STRCOMPRESS(sz,/REMOVE_ALL)
                 text += ' NeXus file found ... ' + PROCESSING
                 IDLsendLogBook_addLogBookText, Event, ALT=3, text
@@ -291,7 +291,7 @@ IF (RunNumber NE '') THEN BEGIN ;run number is not empty
 ;get data log book full text
             IDLsendLogBook_ReplaceLogBookText, $
               Event, $
-              ATL=3,$
+              ALT=3,$
               PROCESSING,$
               'NeXus does not exist!'
             
@@ -438,7 +438,7 @@ IF (nexus_file_name NE '') THEN BEGIN
 
  ENDIF ELSE BEGIN
 
-    text = '-> Operation canceled!'
+    text = '-> Operation canceled!'x
     putLogBookMessage, Event, Text, Append=1
 
  ENDELSE    
@@ -471,6 +471,8 @@ EmptyCellRunNumber = iNexus->getRunNumber()
 OBJ_DESTROY, iNexus
 EmptyCellRunNumber = STRCOMPRESS(EmptyCellRunNumber,/REMOVE_ALL)
 (*global).EmptyCellRunNumber = EmptyCellRunNumber
+
+putTextFieldvalue, Event, 'empty_cell_nexus_run_number', EmptyCellRunNumber, 0
 
 LogBookText = '> Openning Empty Cell Run Number: ' + EmptyCellRunNumber
 IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
@@ -560,6 +562,7 @@ PRO LoadListOfEmptyCellNexus, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 PROCESSING = (*global).processing_message ;processing message
+OK         = (*global).ok
 
 ;indicate reading data with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
@@ -593,12 +596,11 @@ MapBase, Event, 'empty_cell_list_nexus_base', 0
 RunNumber = getTextFieldValue(Event,'empty_cell_nexus_run_number')
     
 ;check how many polarization states the file has
+
 nbr_pola_state = $
   check_number_polarization_state(Event, $
                                   full_nexus_name, $
                                   list_pola_state)
-
-print, nbr_pola_state ;remove_me
 
 IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
     RETURN
@@ -628,6 +630,12 @@ IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;      Event, $
 ;      result
     
+        IDLsendLogBook_ReplaceLogBookText, $
+          Event, $
+          ALT=3, $
+          PROCESSING, $
+          OK
+
     (*global).EmptyCellNeXusFound = 1
     
     WIDGET_CONTROL,HOURGLASS=0
@@ -662,7 +670,7 @@ putTextFieldValue, event, 'empty_cell_nexus_run_number', '',0
 ;inform data log book and log book that process has been canceled
 IDLsendLogBook_ReplaceLogBookText, Event, $
   PROCESSING, $
-  CANCELED
+  CANCEL
                
 IDLsendLogBook_ReplaceLogBookText, Event, $
   ALT = 3, $

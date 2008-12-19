@@ -48,11 +48,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
-<<<<<<< .working
 VERSION            = '1.3.0'            
-=======
-VERSION            = '1.2.2'            
->>>>>>> .merge-right.r4199
 DEBUGGING_VERSION  = 'no'              ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 

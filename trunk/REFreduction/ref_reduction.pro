@@ -45,13 +45,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
-<<<<<<< .working
 VERSION            = '1.3.0'
 DEBUGGING_VERSION  = 'yes'          ;NO
-=======
-VERSION            = '1.2.2'
-DEBUGGING_VERSION  = 'no'          ;NO
->>>>>>> .merge-right.r4199
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
@@ -145,6 +140,7 @@ global = PTR_NEW ({ first_event: 1,$
                     EmptyCellRunNumber: '',$
                     archived_data_flag: 1,$
                     archived_norm_flag: 1,$
+                    archived_empty_cell_flag: 1,$
                     dr_output_path: '~/results',$ ;output path define in the REDUCE tab
                     cl_output_path: '~/REFreduction_CL/',$ 
 ;default path where to put the command line output file

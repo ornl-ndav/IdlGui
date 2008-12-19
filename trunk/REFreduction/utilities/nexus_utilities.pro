@@ -38,6 +38,20 @@ FUNCTION check_number_polarization_state, Event, $
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 text = '-> Number of polarization states: '
 cmd = 'nxdir ' + nexus_file_name
+
+; spawn, 'hostname',listening
+; CASE (listening) OF
+;     'lrac': 
+;     'mrac': 
+;     else: BEGIN
+;         if ((*global).instrument EQ (*global).REF_L) then begin
+;             cmd = 'srun -p lracq ' + cmd
+;         endif else begin
+;             cmd = 'srun -p mracq ' + cmd
+;         endelse
+;     END
+; ENDCASE
+
 SPAWN, cmd, listening, err_listening
 list_pola_state = listening     ;keep record of name of pola states
 (*(*global).list_pola_state) = list_pola_state
@@ -100,18 +114,18 @@ cmd = "findnexus -i" + instrument
 cmd += " " + strcompress(run_number,/remove_all)
 cmd += " --listall"
 
-spawn, 'hostname',listening
-CASE (listening) OF
-    'lrac': 
-    'mrac': 
-    else: BEGIN
-        if ((*global).instrument EQ (*global).REF_L) then begin
-            cmd = 'srun -p lracq ' + cmd
-        endif else begin
-            cmd = 'srun -p mracq ' + cmd
-        endelse
-    END
-ENDCASE
+; spawn, 'hostname',listening
+; CASE (listening) OF
+;     'lrac': 
+;     'mrac': 
+;     else: BEGIN
+;         if ((*global).instrument EQ (*global).REF_L) then begin
+;             cmd = 'srun -p lracq ' + cmd
+;         endif else begin
+;             cmd = 'srun -p mracq ' + cmd
+;         endelse
+;     END
+; ENDCASE
 
 spawn, cmd, full_nexus_name, err_listening
 

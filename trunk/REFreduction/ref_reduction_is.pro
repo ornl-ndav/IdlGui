@@ -129,7 +129,8 @@ RETURN,0
 END
 
 ;------------------------------------------------------------------------------
-;This function checks which cw_bgroup is selected for Norm. (PEAK or BACKGROUND)
+;This function checks which cw_bgroup is selected for Norm. (PEAK or
+;BACKGROUND)
 FUNCTION isNormPeakSelected, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='peak_norm_back_group')
 WIDGET_CONTROL, id, GET_VALUE=value
@@ -275,7 +276,19 @@ endif else begin
 endelse
 END
 
+;------------------------------------------------------------------------------
+FUNCTION isArchivedEmptyCellNexusDesired, Event
+id = widget_info(Event.top, $
+                 find_by_uname='empty_cell_archived_or_all_uname')
+WIDGET_CONTROL,id,GET_VALUE=status
+IF (status EQ 0) THEN BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
+END
 
+;------------------------------------------------------------------------------
 ;1D_3D booleans
 FUNCTION isDataXaxisScaleLog, Event
 id = widget_info(Event.top,find_by_uname='data1d_x_axis_scale')
