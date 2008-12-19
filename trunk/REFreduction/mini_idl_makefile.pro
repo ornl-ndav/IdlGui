@@ -63,6 +63,7 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiLoadNormalization1D_3D_Tab.pro
 .run miniMakeGuiLoadNormalization2DTab.pro
 .run miniMakeGuiLoadNormalization2D_3D_Tab.pro
+.run miniMakeGuiEmptyCellTab.pro
 
 .run miniMakeGuiReduceTab.pro
 .run miniMakeGuiReduceDataBase.pro
@@ -107,6 +108,7 @@ cd, CurrentFolder
 .run ref_reduction_RescaleNormalization1D3DPlot.pro
 .run ref_reduction_RescaleNormalization2D3DPlot.pro
 .run ref_reduction_browse_nexus.pro
+.run ref_reduction_PlotEmptyCell.pro
 .run ref_reduction_empty_cell.pro
 
 .run ref_reduction_DataMouseSelection.pro

@@ -104,7 +104,6 @@ cd, CurrentFolder
 .run ref_reduction_browse_nexus.pro
 .run ref_reduction_PlotEmptyCell.pro
 .run ref_reduction_empty_cell.pro
-;.run ref_reduction_Plot1DEmptyCellFile.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
