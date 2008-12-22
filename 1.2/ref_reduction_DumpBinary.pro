@@ -105,14 +105,30 @@ END
 PRO RefReduction_DumpBinaryData_batch, Event, $
                                        full_nexus_name, $
                                        destination_folder
+
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '--> Entering RefReduction_DumpBinaryData_batch'
+ENDIF
+
 tmp_file_name = (*global).data_tmp_dat_file
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '--> About to enter RefReduction_DumpBinary_batch'
+ENDIF
 RefReduction_DumpBinary_batch, $
   Event, $
   full_nexus_name, $
   'data'
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '--> About to leave RefReduction_DumpBinary_batch'
+ENDIF
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '--> Leaving RefReduction_DumpBinaryData_batch'
+ENDIF
+
 END
 
 ;**********************************************************************
@@ -195,7 +211,12 @@ END
 ;batch mode only
 PRO RefReduction_DumpBinary_batch, Event, full_nexus_name, type
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-retrieveBanksData, Event, full_nexus_name, type
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '---> Enter RefReduction_Dumpbinary_batch'
+ENDIF
+result = retrieveBanksData(Event, full_nexus_name, type)
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, '---> Leaving RefReduction_Dumpbinary_batch'
+ENDIF
 END

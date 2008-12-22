@@ -33,6 +33,9 @@
 ;==============================================================================
 PRO RepopulateGui, Event
 
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 ;desactivate REPOPULATE GUI button
 RepopulateButtonStatus, Event, 0
 
@@ -290,7 +293,10 @@ text = '-> Repopulating GUI ... START'
 putLogBookMessage, Event, text, APPEND=1
 
 populate_error = 0
-CATCH, populate_error
+IF ((*global).debugging_version EQ 'no') THEN BEGIN
+    CATCH, populate_error
+ENDIF
+
 IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
 ENDIF ELSE BEGIN

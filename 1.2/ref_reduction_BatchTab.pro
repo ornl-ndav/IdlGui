@@ -89,7 +89,7 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 populate_error = 0
-;CATCH, populate_error
+CATCH, populate_error
 NbrColumn = getGlobalVariable('NbrColumn')
 NbrRow    = getGlobalVariable('NbrRow')
 BatchTable = strarr(NbrColumn,NbrRow)
@@ -183,8 +183,7 @@ END
 ;and create the Batch output file
 PRO CreateBatchFile, Event, FullFileName
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;get Text To copy
 BatchTable = (*(*global).BatchTable)
 NbrRow    = (size(BatchTable))(2)
@@ -216,7 +215,6 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
     text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
-    print, BatchTable[k,i] ;remove-me
     text    = [text,'#Date : ' + BatchTable[k++,i]]
     text    = [text,'#SF : ' + BatchTable[k++,i]]
 ;add --batch flag to command line
@@ -267,8 +265,7 @@ IF (file_error EQ 0) THEN BEGIN
 ENDIF
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
 split1      = '--output='
 ArraySplit1 = STRSPLIT(new_cmd,split1,/EXTRACT,/REGEX)
@@ -283,8 +280,7 @@ ENDELSE
 
 ;create new output file name
 ;get global structure			
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 NewFileName  = path + '/'
 instrument   = (*global).instrument
 NewFileName += instrument

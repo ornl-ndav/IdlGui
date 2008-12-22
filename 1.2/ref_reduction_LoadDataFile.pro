@@ -401,20 +401,46 @@ END
 ;without any log book messages
 PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Entering OpenDataNexusFile_batch'
+ENDIF
+
 instrument = (*global).instrument
+
 ;store run number of data file
 (*global).data_run_number = DataRunNumber
+
 ;store full path to NeXus
 (*global).data_full_nexus_name = full_nexus_name
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Before NXsummaryBatch'
+ENDIF
 RefReduction_NXsummaryBatch, Event, full_nexus_name, 'data_file_info_text'
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'After NXsummaryBatch'
+ENDIF
+
 ;check format of NeXus file
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+        print, '-> file is HDF5'
+    ENDIF
+
     (*global).isHDF5format = 1
 ;dump binary data into local directory of user
     working_path = (*global).working_path
+
+    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+        print, '-> About to enter REFreduction_DumpBinaryData_batch'
+    ENDIF
     REFReduction_DumpBinaryData_batch, Event, full_nexus_name, working_path
+    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+        print, '-> About to leave REFreduction_DumpBinaryData_batch'
+    ENDIF
+
     IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
         REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
@@ -423,6 +449,10 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
           DataRunNumber
     ENDIF
 ENDIF ELSE BEGIN
+    IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+        print, '-> file is not HDF5'
+    ENDIF
+
     (*global).isHDF5format = 0
     ;tells the data log book that the format is wrong
     InitialStrarr = getDataLogBookText(Event)
@@ -432,4 +462,9 @@ ENDIF ELSE BEGIN
       (*global).failed, $
       PROCESSING
 ENDELSE
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Leaving OpenDataNexusFile_batch'
+ENDIF
+
 END
