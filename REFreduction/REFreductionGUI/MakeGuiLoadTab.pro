@@ -32,7 +32,11 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
+PRO MakeGuiLoadTab, MAIN_TAB, $
+                    MainTabSize, $
+                    LoadTabTitle, $
+                    instrument, $
+                    MAIN_BASE
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -154,6 +158,7 @@ MakeGuiLoadDataNormalizationTab,$
   NxsummaryZoomTabSize,$
   NxsummaryZoomTitle,$
   ZoomScaleBaseSize,$
-  ZoomScaleTitle
+  ZoomScaleTitle,$
+  MAIN_BASE
   
 END
