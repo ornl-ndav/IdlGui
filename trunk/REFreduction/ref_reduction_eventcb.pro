@@ -250,12 +250,28 @@ END
 ;This procedure is reached by the IDLupdateGui class
 PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 ;Open That NeXus file
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just before OpenDataNexusFile_batch'
+ENDIF
 OpenDataNexusFile_batch, Event, DataRunNumber, currFullDataNexusName
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just after OpenDataNexusFile_batch'
+ENDIF
+
 (*global).DataNexusFound  = 1
-REFreduction_Plot1D2DDataFile_batch, Event ;then plot data file (1D and 2D)
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just before REFreduction_Plot1D2DDataFile_batch'
+ENDIF
+;then plot data file (1D and 2D)
+result = REFreduction_Plot1D2DDataFile_batch(Event) 
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just after REFreduction_Plot1D2DDataFile_batch'
+ENDIF
+
 ;tell the user that the load and plot process is done
 InitialStrarr = getDataLogBookText(Event)
 putTextAtEndOfDataLogBookLastLine, $
@@ -275,6 +291,10 @@ END
 PRO REFreductionEventcb_LoadListOfNormNexus, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Entering REFreductionEventcb_LoadListOfNormNexus'
+ENDIF
 
 ;indicate reading data with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
@@ -356,6 +376,11 @@ ENDIF ELSE BEGIN
       list_pola_state
     
 ENDELSE                         ;end of "IF (nbr_pola_state EQ 1)"
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Leaving REFreductionEventcb_LoadListOfNormNexus'
+ENDIF
+
 END
 
 ;------------------------------------------------------------------------------
@@ -364,15 +389,28 @@ PRO REFreduction_OpenPlotNormNexus, Event, $
                                     NormRunNumber, $
                                     currFullNormNexusName
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Entering REFreduction_OpenPlotNormNexus'
+    print, 'Just before OpenNormNexusFile_Batch'
+ENDIF
 OpenNormNexusFile_batch, Event, NormRunNumber, currFullNormNexusName
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just after OpenNormNexusFile_Batch'
+ENDIF
+
 (*global).NormNexusFound = 1
 ;then plot data file (1D and 2D)
-REFreduction_Plot1D2DNormalizationFile_batch, Event 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just before REFreduction_Plot1D2DNormalizationFile_batch'
+ENDIF
+result = REFreduction_Plot1D2DNormalizationFile_batch(Event) 
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    print, 'Just after REFreduction_Plot1D2DNormalizationFile_batch'
+ENDIF
+
 ;tell the user that the load and plot process is done
 InitialStrarr = getNormalizationLogBookText(Event)
 putTextAtEndOfNormalizationLogBookLastLine, $
