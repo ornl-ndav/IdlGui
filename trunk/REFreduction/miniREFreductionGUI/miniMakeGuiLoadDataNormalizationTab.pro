@@ -12,7 +12,8 @@ PRO miniMakeGuiLoadDataNormalizationTab, LOAD_BASE,$
                                          NxsummaryZoomTabSize,$
                                          NxsummaryZoomTitle,$
                                          ZoomScaleBaseSize,$
-                                         ZoomScaleTitle
+                                         ZoomScaleTitle,$
+                                         MAIN_BASE
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -156,6 +157,7 @@ miniMakeGuiEmptyCellTab,$
   EmptyCellTitle,$
   D_DD_TabSize,$
   NexusListSizeGlobal,$
-  NexusListLabelGlobal
+  NexusListLabelGlobal,$
+  MAIN_BASE
 
 END

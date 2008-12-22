@@ -37,7 +37,8 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
                          EmptyCellTitle,$
                          D_DD_TabSize,$
                          NexusListSizeGlobal,$
-                         NexusListLabelGlobal
+                         NexusListLabelGlobal,$
+                         MAIN_BASE
 
 ;******************************************************************************
 ;Define structures ************************************************************
@@ -124,7 +125,7 @@ sStatus = { size: [sNXsummary.size[0]+$
                    sNXsummary.size[3]+$
                    XYoff[1],$
                    sNXsummary.size[2], $
-                   100],$
+                   80],$
                uname: 'empty_cell_status'}
 
 XYoff = [200,-20] ;label
@@ -181,6 +182,64 @@ sNexusLoadButton = { size: [sNexusCancelButton.size[0]+ $
                             sNexusCancelButton.size[2]],$
                      value: 'LOAD SELECTED NEXUS',$
                      uname: 'empty_cell_list_load_button' }
+
+;Substrate Transmission Equation ----------------------------------------------
+XYoff = [0,20]
+sSubBase = { size: [sTab.size[0]+XYoff[0],$
+                    sTab.size[1]+$
+                    sTab.size[3]+$
+                    XYoff[1],$
+                    900,135],$
+             uname: 'empty_cell_substrate_base',$
+             frame: 1}
+
+XYoff = [20,-8] ;label
+sSubLabel = { size: [sSubBase.size[0]+XYoff[0],$
+                     sSubBase.size[1]+XYoff[1]],$
+              value: 'Substrate Transmission Equation'}
+
+;equation label ...............................................................
+sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]'}
+
+;substrate type ...............................................................
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+substrate_type = (*(*global).substrate_type)
+
+sz = (SIZE(substrate_type))(1)
+type_array = STRARR(sz)
+FOR i=0,(sz-1) DO BEGIN
+    type_array[i] = substrate_type[i].type_name
+ENDFOR
+sSubList = { list: type_array,$
+             uname: 'empty_cell_substrate_list',$
+             title: 'Substrate Type:'}
+
+;a and b coefficient ..........................................................
+sAcoeff = { uname: 'empty_cell_substrate_a',$
+            title: 'A =',$
+            value: STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)}
+sAunits = { value: 'cm^-1' }
+
+sBcoeff = { uname: 'empty_cell_substrate_b',$
+            title: 'B =',$
+            value: STRCOMPRESS(substrate_type[0].b,/REMOVE_ALL)}
+sBunits = { value: 'cm^-2' }
+
+;substrate diameter ...........................................................
+sDiameterLabel = { title: 'Substrate Diameter' }
+sDiameterField = { title: '                 D =',$
+                   uname: 'empty_cell_diameter',$
+                   value: STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)}
+sDiameterUnits = { title: 'cm' }
+
+;final equation ...............................................................
+Equation  = 'T = exp[-(' + STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(substrate_type[0].b,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)
+Equation += ']'
+sFinalEquation = { uname: 'empty_cell_substrate_equation',$
+                   value: Equation,$
+                   frame: 1}
 
 ;******************************************************************************
 ;Define widgets ***************************************************************
@@ -373,9 +432,89 @@ wStatusLabel = WIDGET_LABEL(wBase,$
                                VALUE   = sStatusLabel.value)
 
 
+;Substrate Transmission Equation ----------------------------------------------
+;title
+wSubLabel = WIDGET_LABEL(wBase,$
+                         XOFFSET = sSubLabel.size[0],$
+                         YOFFSET = sSubLabel.size[1],$
+                         VALUE   = sSubLabel.value)
+
+;frame
+wSubBase = WIDGET_BASE(wBase,$
+                       XOFFSET   = sSubBase.size[0],$
+                       YOFFSET   = sSubBase.size[1],$
+                       SCR_XSIZE = sSubBase.size[2],$
+                       SCR_YSIZE = sSubBase.size[3],$
+                       UNAME     = sSubBase.uname,$
+                       FRAME     = sSubBase.frame,$
+                       /ROW)
+
+;equation .....................................................................
+wSpace = WIDGET_LABEL(wSubBase,$
+                      VALUE = '  ')
+wSubEquation = WIDGET_LABEL(wSubBase,$
+                            VALUE = sSubEquation.value)
+wSpace = WIDGET_LABEL(wSubBase,$
+                      VALUE = '  ')
+
+;Type .........................................................................
+wTypeBase = WIDGET_BASE(wSubBase,$
+                        /COLUMN)
+list = WIDGET_DROPLIST(wTypeBase,$
+                       UNAME = sSubList.uname,$
+                       VALUE = sSubList.list,$
+                       TITLE = sSubList.title)
+
+;a and b coefficient ..........................................................
+wBase1 = WIDGET_BASE(wTypeBase,$
+                     /ROW)
+wAcoeff = CW_FIELD(wBase1,$
+                   VALUE = sAcoeff.value,$
+                   UNAME = sAcoeff.uname,$
+                   TITLE = sAcoeff.title)
+wAunits = WIDGET_LABEL(wBase1,$
+                       VALUE = sAunits.value)
+
+wBase2 = WIDGET_BASE(wTypeBase,$
+                     /ROW)
+wBcoeff = CW_FIELD(wBase2,$
+                   VALUE = sBcoeff.value,$
+                   UNAME = sBcoeff.uname,$
+                   TITLE = sBcoeff.title)
+wBunits = WIDGET_LABEL(wBase2,$
+                       VALUE = sBunits.value)
 
 
+;space
+wSpace = WIDGET_LABEL(wSubBase,$
+                      VALUE = '   ')
 
+;diameter label and units .....................................................
+wBase3 = WIDGET_BASE(wSubBase,$
+                     /COLUMN)
+wDiameterLabel = WIDGET_LABEL(wBase3,$
+                              VALUE = sDiameterLabel.title)
+wBase4 = WIDGET_BASE(wBase3,$
+                     /ROW)
+wDiameterValue = CW_FIELD(wBase4,$
+                          TITLE = sDiameterField.title,$
+                          VALUE = sDiameterField.value,$
+                          UNAME = sDiameterField.uname)
+wDiameterUnits = WIDGET_LABEL(wBase4,$
+                              VALUE = sDiameterUnits.title)
+
+;space
+wSpace = WIDGET_LABEL(wBase3,$
+                      VALUE = '')
+wSpace = WIDGET_LABEL(wBase3,$
+                      VALUE = '')
+
+;final equation
+wEquation = WIDGET_LABEL(wBase3, $
+                         VALUE = sFinalEquation.value,$
+                         UNAME = sFinalEquation.uname,$
+                         XSIZE = 400,$
+                         FRAME = sFinalEquation.frame)
 
 END
 

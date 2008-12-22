@@ -86,6 +86,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ first_event: 1,$
+                    substrate_type: PTR_NEW(0L),$
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: '/bank1,1',$
@@ -439,6 +440,8 @@ global = ptr_new ({ first_event: 1,$
                    REFreductionVersion : ''$
 ;Version of REFreduction Tool
                    })
+
+(*(*global).substrate_type) = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure
 BatchTable = strarr(9,20)

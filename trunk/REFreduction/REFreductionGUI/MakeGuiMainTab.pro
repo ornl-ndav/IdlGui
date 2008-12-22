@@ -64,7 +64,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 ;widget_control, Main_Tab, set_tab_current = 0 ;LOAD
 
 ;build LOAD tab
-MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
+MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument, MAIN_BASE
 
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle

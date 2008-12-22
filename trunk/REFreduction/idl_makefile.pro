@@ -146,6 +146,7 @@ cd, CurrentFolder
 .run checking_packages.pro
 .run checking_packages_gui.pro
 .run packages_required.pro
+.run ref_reduction_configuration.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro

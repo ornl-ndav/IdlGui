@@ -54,6 +54,7 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  NexusListLabelGlobal,$
                                  loadctList
 
+
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LoadNormalizationTabSize = [0,0,$

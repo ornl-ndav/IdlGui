@@ -85,6 +85,7 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    substrate_type: PTR_NEW(0L),$
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: 'bank1,1',$
@@ -447,6 +448,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;Version of REFreduction Tool
                    })
 
+(*(*global).substrate_type) = getSubstrateType()
+
 (*(*global).debugging_structure) = debugging_structure                   
 BatchTable = strarr(9,20)
 (*(*global).BatchTable) = BatchTable
@@ -621,7 +624,8 @@ ENDIF
 
 structure = {with_launch_button: WITH_LAUNCH_SWITCH}
 
-MakeGuiMainTab, MAIN_BASE, $
+MakeGuiMainTab, $
+  MAIN_BASE, $
   MainBaseSize, $
   instrument, $
   PlotsTitle, $
