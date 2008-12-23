@@ -1125,9 +1125,14 @@ CASE Event.id OF
 ;Substrate Transmission equation ..............................................
 
 ;yes/no
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): begin
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): BEGIN
         activate_OR_NOT_substrate_base, Event ;_empty_cell
-    end
+    END
+
+;Substrate type droplist
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_list'): BEGIN
+        substrate_type_droplist_event, Event ;_empty_cell
+    END
 
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
