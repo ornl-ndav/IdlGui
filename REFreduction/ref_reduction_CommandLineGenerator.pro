@@ -418,6 +418,85 @@ endelse                         ;end of (~isWithoutNormalization)
 ;get name of instrument
 cmd += ' --inst=' + (*global).instrument
 
+;*****EMPTY CELL***************************************************************
+substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+IF (substrateValue EQ 0) THEN BEGIN
+
+    cmd += ' --subtrans-coeff='
+
+    A = getTextFieldValue(Event, 'empty_cell_substrate_a')
+    IF (A EQ '' OR A EQ 0) THEN BEGIN
+        cmd  += '?'
+        status_text = '- Please provide a valid Coefficient A to' + $
+          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += A
+    ENDELSE
+ 
+    cmd += ' '
+
+    B = getTextFieldValue(Event, 'empty_cell_substrate_b')
+    IF (B EQ '' OR B EQ 0) THEN BEGIN
+        cmd  += '?'
+        status_text = '- Please provide a valid Coefficient B to' + $
+          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += B
+    ENDELSE
+
+    cmd += ' --substrate-diam='
+    D = getTextFieldValue(Event, 'empty_cell_diameter')
+    IF (D EQ '' OR D EQ 0) THEN BEGIN
+        cmd  += '?'
+        status_text = '- Please provide a valid Substrate Diameter D to' + $
+          ' the Substrate Transmission Equation (tab -> LOAD/EMPTY_CELL)'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += D
+    ENDELSE
+    
+;NeXus file
+    cmd += ' --ecell='
+    empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
+    IF (empty_cell_nexus_file EQ '') THEN BEGIN
+        cmd  += '?'
+        status_text = '- Please provide a valid Empty Cell NeXus File'
+        status_text += ' (tab-> LOAD/EMPTY_CELL)'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += empty_cell_nexus_file
+    ENDELSE
+        
+ENDIF
+
+;*****Q VALUES*****************************************************************
+
 ;Q values ---------------------------------------------------------------------
 ;check if Mode is auto or not
 AutoModeStatus = getCWBgroupValue(Event,'q_mode_group')
