@@ -38,7 +38,7 @@ id = widget_info(Event.top,find_by_uname='plots_droplist')
 widget_control, id, set_value=ContainTextArray
 END
 
-
+;------------------------------------------------------------------------------
 ;set the value of the specified uname with text
 PRO putTextFieldValue, event, uname, text, append
 TextFieldId = widget_info(Event.top,find_by_uname=uname)
@@ -49,7 +49,7 @@ endif else begin
 endelse
 END
 
-
+;------------------------------------------------------------------------------
 ;Put the contain of the string array in the specified text field
 PRO putTextFieldArray, Event, uname, array, NbrToDisplay, iteration
 if (iteration EQ 0) then begin  ;no append
@@ -78,14 +78,14 @@ endif else begin
 endelse
 END
 
-
+;------------------------------------------------------------------------------
 ;set the value of the widget_label
 PRO putLabelValue, Event, uname, value
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value= value
 END
 
-
+;------------------------------------------------------------------------------
 ;display message in Main Log Book (default is to not append the new message)
 PRO putLogBookMessage, Event, LogBookText, Append=Append
 if (n_elements(Append) EQ 0) then begin
@@ -96,7 +96,7 @@ endelse
 putTextFieldValue, Event, 'log_book_text_field', LogBookText, append
 END
 
-
+;------------------------------------------------------------------------------
 ;display message in Data Log Book (default is to not append the new text)
 PRO putDataLogBookMessage, Event, DataLogBookText, Append=Append
 if (n_elements(append) EQ 0) then begin
@@ -110,7 +110,7 @@ putTextFieldValue, Event, $
   append
 END
 
-
+;------------------------------------------------------------------------------
 ;display message in Normalization Log Book (default is to not append
 ;the new text
 PRO putNormalizationLogBookMessage, Event, $
@@ -128,7 +128,7 @@ putTextFieldValue, $
   append
 END
 
-
+;------------------------------------------------------------------------------
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
@@ -164,8 +164,7 @@ endelse
 putLogBookMessage, Event, FinalStrarr
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO AppendReplaceLogBookMessage, Event, MessageToAdd, RemoveString
 InitialStrarr = getLogBookText(Event)
 ;get size of InitialStrarr
@@ -193,15 +192,13 @@ endelse
 putLogBookMessage, Event, FinalStrarr
 END
 
-
-
+;------------------------------------------------------------------------------
 ;Add the given message at the end of the last string array element and
 ;put it back in the DataLogBook text field given
 PRO putTextAtEndOfDataLogBookLastLine, Event, $
                                        InitialStrarr, $
                                        MessageToAdd, $
                                        RemoveString
-
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
 if (n_elements(RemoveString) EQ 0) then begin 
@@ -227,8 +224,7 @@ endelse
 putDataLogBookMessage, Event, FinalStrarr
 END
 
-
-
+;------------------------------------------------------------------------------
 ;Add the given message at the end of the last string array element and
 ;put it back in the NormalizationLogBook text field given
 PRO putTextAtEndOfNormalizationLogBookLastLine, $
@@ -236,7 +232,6 @@ PRO putTextAtEndOfNormalizationLogBookLastLine, $
                                                 InitialStrarr, $
                                                 MessageToAdd, $
                                                 RemoveString
-
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
 if (n_elements(RemoveString) EQ 0) then begin 
@@ -262,18 +257,17 @@ endelse
 putNormalizationLogBookMessage, Event, FinalStrarr
 END
 
-
+;------------------------------------------------------------------------------
 ;This function put an integer in his cw_fields
 PRO putCWFieldValue, Event, Uname, value
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=value
 END
 
-
+;------------------------------------------------------------------------------
 ;Put all the peak and background Ymin and Ymax values in their
 ;respective cw_fields for DATA
 PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
-
 ;get global structure
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL,id,GET_UVALUE=global
@@ -436,7 +430,7 @@ endcase
 
 END
 
-
+;------------------------------------------------------------------------------
 ;Put all the peak and background Ymin and Ymax values in their
 ;respective cw_fields for NORM
 PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
@@ -607,9 +601,7 @@ CASE (PeakSelection[0]) OF
 ENDCASE
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;Put the given string in the Reduction status text field
 PRO putInfoInReductionStatus, Event, string, append
 putTextFieldValue, $
@@ -619,14 +611,14 @@ putTextFieldValue, $
   append
 END
 
-
+;------------------------------------------------------------------------------
 ;Put array in droplist specified
 PRO putArrayInDropList, Event, arrayString, uname
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=arrayString
 END
 
-
+;------------------------------------------------------------------------------
 ;Put name of file in widget_text 'save_as_file_name'
 PRO putBatchFileName, Event, FileName
 putTextFieldValue, Event, 'save_as_file_name', FileName, 0

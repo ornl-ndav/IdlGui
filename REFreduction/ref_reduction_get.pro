@@ -113,8 +113,8 @@ END
 ;------------------------------------------------------------------------------
 ;this function gives the droplist index
 FUNCTION getDropListSelectedIndex, Event, uname
-id = widget_info(Event.top,find_by_uname=uname)
-return, widget_info(id, /droplist_select)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
 END
 
 ;------------------------------------------------------------------------------

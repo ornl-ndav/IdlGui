@@ -685,3 +685,18 @@ value          = getCWBgroupValue(Event,'empty_cell_substrate_group')
 ActivateStatus = 0^value
 ActivateWidget, Event, 'empty_cell_substrate_base', ActivateStatus
 END
+
+;------------------------------------------------------------------------------
+PRO substrate_type_droplist_event, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;get index selected
+index_selected = getDropListSelectedIndex(Event,'empty_cell_substrate_list')
+substrate_type = (*(*global).substrate_type)
+A  = substrate_type[index_selected].A
+sA = STRCOMPRESS(A,/REMOVE_ALL)
+B  = substrate_type[index_selected].B
+sB = STRCOMPRESS(B,/REMOVE_ALL)
+putTextFieldValue, event, 'empty_cell_substrate_a', sA, 0
+putTextFieldValue, event, 'empty_cell_substrate_b', sB, 0
+END
