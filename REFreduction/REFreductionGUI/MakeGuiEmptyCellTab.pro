@@ -201,8 +201,6 @@ sSubGroup = { size: [sSubBase.size[0]+XYoff[0],$
               uname: 'empty_cell_substrate_group',$
               value: 0.0 }
 
-
-
 ;equation label ...............................................................
 sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]         '}
 

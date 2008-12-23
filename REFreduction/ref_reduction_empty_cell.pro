@@ -703,6 +703,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO update_substrate_equation, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 errorA = 0
 errorB = 0
@@ -734,7 +736,11 @@ Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
 Equation += ']'
 
 IF (errorA + errorB + errorD GT 0) THEN BEGIN
-    Equation = ' E R R O R >>  ' + Equation + '  << E R R O R '
+    IF ((*global).miniVersion) THEN BEGIN
+        Equation = 'ERROR>> ' + Equation
+    ENDIF ELSE BEGIN
+        Equation = ' E R R O R >>  ' + Equation + '  << E R R O R '
+    ENDELSE
 ENDIF
 
 ;update equation
