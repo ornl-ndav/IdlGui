@@ -487,7 +487,8 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Normalization Combined Subtracted TOF Plot',$
               'R vs TOF Plot',$
               'R vs TOF Combined Plot',$
-              'XML output file']
+;              'XML output file',$
+              'Empty Cell R vs TOF Plot']
 (*(*global).PlotsTitle) = PlotsTitle
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
@@ -509,7 +510,8 @@ ExtOfAllPlots = ['.txt',$
                  '_norm.bkg',$
                  '_norm.sub',$
                  '.rtof',$
-                 '.crtof']
+                 '.crtof',$
+                 '.ecrtof']
 (*(*global).ExtOfAllPlots) = ExtOfAllPlots
 
 ;define Main Base variables
@@ -693,8 +695,8 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
@@ -712,8 +714,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;change default location of Batch file
 ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     
- id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
- widget_control, id2, set_tab_current = 2  ;empty cell
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 2  ;empty cell
     
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)

@@ -35,7 +35,7 @@
 PRO MakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
-GeneralInfoAndXmlBaseSize = [725,268,450,315]
+GeneralInfoAndXmlBaseSize = [725,310,450,260]
 GeneralInfoTabSize = [0,0,GeneralInfoAndXmlBaseSize[2],$
                       GeneralInfoAndXmlBaseSize[3]]
 ReduceTab1BaseSize = [0,0,GeneralInfoTabSize[2],$
@@ -46,7 +46,7 @@ ReduceTab2BaseSize = [0,0,GeneralInfoTabSize[2],$
 ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 
 ;general info label frame
-GeneralInfoTextFieldSize = [0,0,443,290] 
+GeneralInfoTextFieldSize = [0,0,443,235]
 
 DataReductionStatusFrameSize = [725,599,450,40]
 DataReductionStatusLabelSize = [740,585]
@@ -110,40 +110,33 @@ XmlTextField = widget_text(reduce_tab2_base,$
                            uname='xml_text_field')
 
 
-
-
-
-
-
-
-
-
 ;Data reduction status label
-DataReductionStatusLabel = widget_label(REDUCE_BASE,$
-                                        xoffset=DataReductionStatusLabelSize[0],$
-                                        yoffset=DataReductionStatusLabelSize[1],$
-                                        value=DataReductionStatusLabelTitle)
+DataReductionStatusLabel = $
+  WIDGET_LABEL(REDUCE_BASE,$
+               xoffset=DataReductionStatusLabelSize[0],$
+               yoffset=DataReductionStatusLabelSize[1],$
+               value=DataReductionStatusLabelTitle)
 
 ;text field
-DataReductionStatusTextField = widget_text(REDUCE_BASE,$
-                                           xoffset=DataReductionStatusTextFieldSize[0],$
-                                           yoffset=DataReductionStatusTextFieldSize[1],$
-                                           scr_xsize=DataReductionStatusTextFieldSize[2],$
-                                           scr_ysize=DataReductionStatusTextFieldSize[3],$
-                                           uname='data_reduction_status_text_field',$
-                                           /align_left)
+DataReductionStatusTextField = $
+  WIDGET_TEXT(REDUCE_BASE,$
+              xoffset=DataReductionStatusTextFieldSize[0],$
+              yoffset=DataReductionStatusTextFieldSize[1],$
+              scr_xsize=DataReductionStatusTextFieldSize[2],$
+              scr_ysize=DataReductionStatusTextFieldSize[3],$
+              uname='data_reduction_status_text_field',$
+              /align_left)
 
 
 ;Data Reduction status frame
-DataReductionStatusFrame = widget_label(REDUCE_BASE,$
-                                        frame=1,$
-                                        xoffset=DataReductionStatusFrameSize[0],$
-                                        yoffset=DataReductionStatusFrameSize[1],$
-                                        scr_xsize=DataReductionStatusFrameSize[2],$
-                                        scr_ysize=DataReductionStatusFrameSize[3],$
-                                        value='')
-
-
+DataReductionStatusFrame = $
+  WIDGET_LABEL(REDUCE_BASE,$
+               frame=1,$
+               xoffset=DataReductionStatusFrameSize[0],$
+               yoffset=DataReductionStatusFrameSize[1],$
+               scr_xsize=DataReductionStatusFrameSize[2],$
+               scr_ysize=DataReductionStatusFrameSize[3],$
+               value='')
 
 
 END
