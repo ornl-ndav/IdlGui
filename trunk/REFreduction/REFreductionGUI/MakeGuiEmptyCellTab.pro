@@ -189,7 +189,7 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
                     sTab.size[1]+$
                     sTab.size[3]+$
                     XYoff[1],$
-                    900,135],$
+                    1115,135],$
              uname: 'empty_cell_substrate_base',$
              frame: 1}
 
@@ -226,8 +226,8 @@ sBcoeff = { uname: 'empty_cell_substrate_b',$
 sBunits = { value: 'cm^-2' }
 
 ;substrate diameter ...........................................................
-sDiameterLabel = { title: 'Substrate Diameter' }
-sDiameterField = { title: '                 D =',$
+sDiameterLabel = { title: '                  Substrate Diameter' }
+sDiameterField = { title: '           D =',$
                    uname: 'empty_cell_diameter',$
                    value: STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)}
 sDiameterUnits = { title: 'cm' }
@@ -491,7 +491,8 @@ wSpace = WIDGET_LABEL(wSubBase,$
 
 ;diameter label and units .....................................................
 wBase3 = WIDGET_BASE(wSubBase,$
-                     /COLUMN)
+                     /COLUMN,$
+                    /BASE_ALIGN_LEFT)
 wDiameterLabel = WIDGET_LABEL(wBase3,$
                               VALUE = sDiameterLabel.title)
 wBase4 = WIDGET_BASE(wBase3,$
@@ -510,10 +511,14 @@ wSpace = WIDGET_LABEL(wBase3,$
                       VALUE = '')
 
 ;final equation
-wEquation = WIDGET_LABEL(wBase3, $
+wBase4 = WIDGET_BASE(wBase3,$
+                     /ROW)
+wSpace = WIDGET_LABEL(wBase4,$
+                      VALUE = '          ')
+wEquation = WIDGET_LABEL(wBase4, $
                          VALUE = sFinalEquation.value,$
                          UNAME = sFinalEquation.uname,$
-                         XSIZE = 400,$
+                         XSIZE = 530,$
                          FRAME = sFinalEquation.frame)
 
 END
