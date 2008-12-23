@@ -1122,6 +1122,13 @@ CASE Event.id OF
         CancelListOfEmptyCellNexus, Event ;_empty_cell
     end
 
+;Substrate Transmission equation ..............................................
+
+;yes/no
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): begin
+        activate_OR_NOT_substrate_base, Event ;_empty_cell
+    end
+
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================

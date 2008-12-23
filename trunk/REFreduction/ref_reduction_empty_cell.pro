@@ -678,3 +678,10 @@ IDLsendLogBook_ReplaceLogBookText, Event, $
   CANCEL
   
 END
+
+;------------------------------------------------------------------------------
+PRO activate_OR_NOT_substrate_base, Event
+value          = getCWBgroupValue(Event,'empty_cell_substrate_group')
+ActivateStatus = 0^value
+ActivateWidget, Event, 'empty_cell_substrate_base', ActivateStatus
+END
