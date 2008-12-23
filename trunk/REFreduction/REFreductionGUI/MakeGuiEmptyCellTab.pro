@@ -481,7 +481,9 @@ wBase1 = WIDGET_BASE(wTypeBase,$
 wAcoeff = CW_FIELD(wBase1,$
                    VALUE = sAcoeff.value,$
                    UNAME = sAcoeff.uname,$
-                   TITLE = sAcoeff.title)
+                   TITLE = sAcoeff.title,$
+;                   /FLOATING,$
+                   /ALL_EVENTS)
 wAunits = WIDGET_LABEL(wBase1,$
                        VALUE = sAunits.value)
 
@@ -490,7 +492,9 @@ wBase2 = WIDGET_BASE(wTypeBase,$
 wBcoeff = CW_FIELD(wBase2,$
                    VALUE = sBcoeff.value,$
                    UNAME = sBcoeff.uname,$
-                   TITLE = sBcoeff.title)
+                   TITLE = sBcoeff.title,$
+;                   /FLOATING,$
+                   /ALL_EVENTS)
 wBunits = WIDGET_LABEL(wBase2,$
                        VALUE = sBunits.value)
 
@@ -510,7 +514,9 @@ wBase4 = WIDGET_BASE(wBase3,$
 wDiameterValue = CW_FIELD(wBase4,$
                           TITLE = sDiameterField.title,$
                           VALUE = sDiameterField.value,$
-                          UNAME = sDiameterField.uname)
+                          UNAME = sDiameterField.uname,$
+;                          /FLOATING,$
+                          /ALL_EVENTS)
 wDiameterUnits = WIDGET_LABEL(wBase4,$
                               VALUE = sDiameterUnits.title)
 
