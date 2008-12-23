@@ -42,8 +42,8 @@ InterLabelSize = [IndividualBasewidth+20,10]
 
 ;intermdiate plot base
 InterBaseSize = [IndividualBaseWidth,15,$
-                 510,248]
-InterMainFramesize = [5,5,450,235]
+                 510,290]
+InterMainFramesize = [5,5,450,270]
 
 plot1BaseSize = [15,22,400,23]
 plotnYoff = 28
@@ -72,14 +72,14 @@ plot7Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[2],$
                  plot1Basesize[3]]
 plot8Basesize = [plot1BaseSize[0],$
-                 plot1BaseSize[1]+7*plotnYoff,$
+                 plot1BaseSize[1]+8*plotnYoff,$
                  plot1BaseSize[2],$
                  plot1Basesize[3]]
 
 ;remove last plot title from list
 sz = (size(PlotsTitle))(1)
 ;intermediate plots list
-InterList = PlotsTitle[0:sz-2]
+InterList = PlotsTitle
 
 InterListSize = [10,15]
 NotAvailableTitle = ' -- NOT AVAILABLE! --'
@@ -198,7 +198,21 @@ plot7Label = widget_label(plot7Base,$
                           yoffset=0,$
                           value=InterList[6] + NotAvailableTitle)
 
-;plot 8 base/label
+;;plot 8 base/label
+;plot8Base = widget_base(InterBase,$
+;                        xoffset=plot8BaseSize[0],$
+;                        yoffset=plot8Basesize[1],$
+;                        scr_xsize=plot8BaseSize[2],$
+;                        scr_ysize=plot8Basesize[3],$
+;                        uname='reduce_plot8_base',$
+;                        map=0)
+
+;plot8Label = widget_label(plot8Base,$
+;                          xoffset=0,$
+;                          yoffset=0,$
+;                          value=InterList[7] + NotAvailableTitle)
+
+;plot 9 base/label
 plot8Base = widget_base(InterBase,$
                         xoffset=plot8BaseSize[0],$
                         yoffset=plot8Basesize[1],$
@@ -210,7 +224,8 @@ plot8Base = widget_base(InterBase,$
 plot8Label = widget_label(plot8Base,$
                           xoffset=0,$
                           yoffset=0,$
-                          value=InterList[7] + NotAvailableTitle)
+                          value=InterList[8] + NotAvailableTitle)
+
 
 InterList = cw_bgroup(InterBase,$
                       InterList,$
