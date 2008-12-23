@@ -700,3 +700,43 @@ sB = STRCOMPRESS(B,/REMOVE_ALL)
 putTextFieldValue, event, 'empty_cell_substrate_a', sA, 0
 putTextFieldValue, event, 'empty_cell_substrate_b', sB, 0
 END
+
+;------------------------------------------------------------------------------
+PRO update_substrate_equation, Event
+
+errorA = 0
+errorB = 0
+errorD = 0
+
+;get A, B and D parameters
+A = getTextFieldValue(Event, 'empty_cell_substrate_a')
+B = getTextFieldValue(Event, 'empty_cell_substrate_b')
+D = getTextFieldValue(Event, 'empty_cell_diameter')
+
+;;check value of A, B and D
+IF (A EQ '' OR A EQ 0)  THEN BEGIN
+    errorA = 1
+    A = 'N/A'
+ENDIF
+IF (B EQ '' OR B EQ 0)  THEN BEGIN
+    errorB = 1
+    B = 'N/A'
+ENDIF
+IF (D EQ '' OR D EQ 0)  THEN BEGIN
+    errorD = 1
+    D = 'N/A'
+ENDIF
+
+;final equation
+Equation  = 'T = exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(B,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
+Equation += ']'
+
+IF (errorA + errorB + errorD GT 0) THEN BEGIN
+    Equation = ' E R R O R >>  ' + Equation + '  << E R R O R '
+ENDIF
+
+;update equation
+putTextFieldValue, Event, 'empty_cell_substrate_equation', Equation[0], 0
+END

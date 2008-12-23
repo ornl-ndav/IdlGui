@@ -39,6 +39,7 @@ value  = value1 / float(!PI)
 return, value
 END
 
+;------------------------------------------------------------------------------
 ;This function converts a lenght from various units to millimetre
 FUNCTION convert_to_mm, value, units
 CASE (units) OF
@@ -47,5 +48,4 @@ CASE (units) OF
 ENDCASE
 RETURN, value*coefficient
 END
-    
     

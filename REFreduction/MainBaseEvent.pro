@@ -1132,6 +1132,22 @@ CASE Event.id OF
 ;Substrate type droplist
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_list'): BEGIN
         substrate_type_droplist_event, Event ;_empty_cell
+        update_substrate_equation, Event ;_empty_cell
+    END
+
+;A Equation
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_a'): BEGIN
+        update_substrate_equation, Event ;_empty_cell
+    END
+
+;B Equation
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_b'): BEGIN
+        update_substrate_equation, Event ;_empty_cell
+    END
+
+;Diameter
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_diameter'): BEGIN
+        update_substrate_equation, Event ;_empty_cell
     END
 
 ;==============================================================================
