@@ -193,13 +193,18 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
              uname: 'empty_cell_substrate_base',$
              frame: 1}
 
-XYoff = [20,-8] ;label
-sSubLabel = { size: [sSubBase.size[0]+XYoff[0],$
+XYoff = [10,-18] ;cw_bgroup
+sSubGroup = { size: [sSubBase.size[0]+XYoff[0],$
                      sSubBase.size[1]+XYoff[1]],$
-              value: 'Substrate Transmission Equation'}
+              list: ['YES ','NO'],$
+              title: 'Use The Substrate Transmission Equation ',$
+              uname: 'empty_cell_substrate_group',$
+              value: 0.0 }
+
+
 
 ;equation label ...............................................................
-sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]'}
+sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]         '}
 
 ;substrate type ...............................................................
 WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
@@ -433,11 +438,16 @@ wStatusLabel = WIDGET_LABEL(wBase,$
 
 
 ;Substrate Transmission Equation ----------------------------------------------
-;title
-wSubLabel = WIDGET_LABEL(wBase,$
-                         XOFFSET = sSubLabel.size[0],$
-                         YOFFSET = sSubLabel.size[1],$
-                         VALUE   = sSubLabel.value)
+;cw_bgroup for using or not substrate equation
+wSubGroup = CW_BGROUP(wBase,$
+                      sSubGroup.list,$
+                      XOFFSET    = sSubGroup.size[0],$
+                      YOFFSET    = sSubGroup.size[1],$
+                      LABEL_LEFT = sSubGroup.title,$
+                      SET_VALUE  = sSubGroup.value,$
+                      UNAME      = sSubGroup.uname,$
+                      /ROW,$
+                      /EXCLUSIVE)
 
 ;frame
 wSubBase = WIDGET_BASE(wBase,$
@@ -518,7 +528,7 @@ wSpace = WIDGET_LABEL(wBase4,$
 wEquation = WIDGET_LABEL(wBase4, $
                          VALUE = sFinalEquation.value,$
                          UNAME = sFinalEquation.uname,$
-                         XSIZE = 530,$
+                         XSIZE = 500,$
                          FRAME = sFinalEquation.frame)
 
 END
