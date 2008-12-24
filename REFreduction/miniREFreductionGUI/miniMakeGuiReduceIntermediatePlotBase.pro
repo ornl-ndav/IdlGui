@@ -208,7 +208,7 @@ plot8Base = widget_base(InterBase,$
                         scr_xsize=plot8BaseSize[2],$
                         scr_ysize=plot8Basesize[3],$
                         uname='reduce_plot8_base',$
-                        map=0)
+                        map=1)
 
 plot8Label = widget_label(plot8Base,$
                           xoffset=0,$

@@ -1388,6 +1388,7 @@ ENDCASE
 ;command line generator
 SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'):
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_pola_state'): 
