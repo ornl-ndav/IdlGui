@@ -35,7 +35,7 @@
 PRO miniMakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
-GeneralInfoAndXmlBaseSize = [580,240,292,245]
+GeneralInfoAndXmlBaseSize = [580,265,315,220]
 GeneralInfoTabSize = [0, $
                       0, $
                       GeneralInfoAndXmlBaseSize[2],$
@@ -52,13 +52,13 @@ ReduceTab2BaseSize = [0, $
 ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 
 ;general info label frame
-GeneralInfoTextFieldSize = [0,0,445,218] 
+GeneralInfoTextFieldSize = [0,0,445,195] 
 
 XYoff = [0,-5]
-DataReductionStatusFrameSize = [580,500+XYoff[1],288,40]
+DataReductionStatusFrameSize = [580,500+XYoff[1],310,40]
 DataReductionStatusLabelSize = [585,493+XYoff[1]]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
-DataReductionStatusTextFieldSize = [585,509+XYoff[1],280,30]
+DataReductionStatusTextFieldSize = [585,509+XYoff[1],305,30]
 
 ;###############################################################################
 ;############################### Create GUI ####################################
