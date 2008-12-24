@@ -193,13 +193,10 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
              uname: 'empty_cell_substrate_base',$
              frame: 1}
 
-XYoff = [10,-18] ;cw_bgroup
-sSubGroup = { size: [sSubBase.size[0]+XYoff[0],$
+XYoff = [20,-8] ;title
+sSubTitle = { size: [sSubBase.size[0]+XYoff[0],$
                      sSubBase.size[1]+XYoff[1]],$
-              list: ['YES ','NO'],$
-              title: 'Use The Substrate Transmission Equation ',$
-              uname: 'empty_cell_substrate_group',$
-              value: 0.0 }
+              title: 'Substrate Transmission Equation '}
 
 ;equation label ...............................................................
 sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]         '}
@@ -436,16 +433,11 @@ wStatusLabel = WIDGET_LABEL(wBase,$
 
 
 ;Substrate Transmission Equation ----------------------------------------------
-;cw_bgroup for using or not substrate equation
-wSubGroup = CW_BGROUP(wBase,$
-                      sSubGroup.list,$
-                      XOFFSET    = sSubGroup.size[0],$
-                      YOFFSET    = sSubGroup.size[1],$
-                      LABEL_LEFT = sSubGroup.title,$
-                      SET_VALUE  = sSubGroup.value,$
-                      UNAME      = sSubGroup.uname,$
-                      /ROW,$
-                      /EXCLUSIVE)
+;title
+wSubTitle = WIDGET_LABEL(wBase,$
+                         XOFFSET = sSubTitle.size[0],$
+                         YOFFSET = sSubTitle.size[1],$
+                         VALUE   = sSubTitle.title)
 
 ;frame
 wSubBase = WIDGET_BASE(wBase,$
