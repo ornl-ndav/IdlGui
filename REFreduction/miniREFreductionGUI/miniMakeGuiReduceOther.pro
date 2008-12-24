@@ -110,7 +110,7 @@ NormIGbutton = {size : [0,5,230,25],$
 XYoff= [570,d_vertical_L_L-5]
 StartDRButtonSize = [5+XYoff[0],$
                      OIGLsize[1]+XYoff[1],$
-                     300, $
+                     320, $
                      30]
 StartDRButtonTitle = 'S T A R T    D A T A    R E D U C T I O N'
 
@@ -121,7 +121,7 @@ cmdLinePreviewLabelTitle = 'Preview of the Command Line'
 d_vertical_L_L_3 = -5
 cmdLinePreviewTextSize = [5, $
                           cmdLinePreviewLabelSize[1]+d_vertical_L_L_3,$
-                          865, $
+                          885, $
                           45]
            
 ;OUTPUT COMMAND LINE INTO A FILE
@@ -170,7 +170,7 @@ BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
 XYoff   = [22,0]
 OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
                           BDbutton.size[1],$
-                          135, $
+                          155, $
                           BDbutton.size[3]],$
              uname     : 'output_cl_button',$
              value     : 'CREATE CL FILE',$
