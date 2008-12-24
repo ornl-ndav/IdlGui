@@ -492,8 +492,16 @@ IF (substrateValue EQ 0) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += empty_cell_nexus_file
     ENDELSE
+
+;remove Empty Cell Intermediate Plots
+    MapBase, Event, 'reduce_plot8_base', 0
         
-ENDIF
+ ENDIF ELSE BEGIN
+
+;remove Empty Cell Intermediate Plots
+    MapBase, Event, 'reduce_plot8_base', 1
+
+ ENDELSE
 
 ;*****Q VALUES*****************************************************************
 

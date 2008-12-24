@@ -60,6 +60,7 @@ wEmptyCellGroup = CW_BGROUP(REDUCE_BASE,$
                             LABEL_LEFT = 'E M P T Y  C E L L:  ',$
                             SET_VALUE  = 1.0,$
                             /EXCLUSIVE,$
+                            /NO_RELEASE,$
                             /ROW)
 
 ;create normalization base
