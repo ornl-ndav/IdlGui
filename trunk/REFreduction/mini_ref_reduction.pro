@@ -173,7 +173,7 @@ global = ptr_new ({ first_event: 1,$
 ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ 
 ;title of main data reduction
-                   IntermPlots : intarr(8),$ 
+                   IntermPlots : intarr(9),$ 
 ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName:ptr_new(0L),$ 
 ;full path name of the plot currently plotted
@@ -685,8 +685,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ;   widget_control, id2, set_tab_current = 0 ;DATA
 
- id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
- widget_control, id2, set_tab_current = 2 ;empty_cell
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 2 ;empty_cell
     
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)

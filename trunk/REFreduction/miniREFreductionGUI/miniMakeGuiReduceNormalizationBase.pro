@@ -40,8 +40,8 @@ NormalizationYesNoBaseSize = [0,155,IndividualBaseWidth,30]
 ;yes or not offset
 NormalizationBGroupLabelSize = [10,5]
 NormalizationBGroupLabelTitle = 'N O R M A L I Z A T I O N:'
-NormalizationBGroupList = [' Yes    ',' No    ']
-d1=190
+NormalizationBGroupList = ['Yes  ','No  ']
+d1=170
 NormalizationBGroupSize = [NormalizationBGroupLabelSize[0]+d1,$
                            NormalizationBGroupLabelSize[1]-5]
 

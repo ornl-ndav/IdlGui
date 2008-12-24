@@ -51,6 +51,17 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
 ;create data base
 miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
+;empty cell or not
+wEmptyCellGroup = CW_BGROUP(REDUCE_BASE,$
+                            ['Yes  ','No  '],$
+                            XOFFSET    = 315,$
+                            YOFFSET    = 153,$
+                            uname      = 'empty_cell_substrate_group',$
+                            LABEL_LEFT = 'E M P T Y  C E L L:  ',$
+                            SET_VALUE  = 1.0,$
+                            /EXCLUSIVE,$
+                            /ROW)
+
 ;create normalization base
 miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 

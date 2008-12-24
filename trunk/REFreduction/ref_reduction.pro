@@ -172,7 +172,7 @@ global = PTR_NEW ({ first_event: 1,$
 ;title of all the plots (main and intermediate)
                    MainPlotTitle: '',$ 
 ;title of main data reduction
-                   IntermPlots: intarr(8),$ 
+                   IntermPlots: intarr(9),$ 
 ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName: ptr_new(0L),$ 
 ;full path name of the plot currently plotted
