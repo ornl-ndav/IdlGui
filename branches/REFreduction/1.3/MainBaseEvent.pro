@@ -1151,6 +1151,12 @@ CASE Event.id OF
 
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
+        MapBase, Event, 'background_message_uname', 0
+        substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+        IF (isDataWithBackground(Event) EQ 1 AND $
+            substrateValue EQ 0) THEN BEGIN
+            print, 'make the user select what he wants to do'
+        ENDIF
         REFreduction_CommandLineGenerator, Event
     END
 

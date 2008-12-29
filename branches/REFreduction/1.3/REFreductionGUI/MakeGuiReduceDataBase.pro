@@ -249,6 +249,7 @@ BackgroundBGroup = CW_BGROUP(data_base,$
                              SET_VALUE = 0,$
                              UNAME     = 'data_background_cw_bgroup',$
                              ROW       = 1,$
+                             /NO_RELEASE,$
                              /EXCLUSIVE)
 
 ;------------------------------------------------------------------------------
