@@ -1149,6 +1149,25 @@ CASE Event.id OF
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================
 
+    ;yes or no data background
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
+        REFreduction_CommandLineGenerator, Event
+    END
+
+    ;empty cell yes or no
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'): BEGIN
+        substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+        IF (isDataWithBackground(Event) EQ 1 AND $
+            substrateValue EQ 0) THEN BEGIN
+;display data background message            
+            MapBase, Event, 'background_message_uname', 1
+            SetCWBgroup, Event, 'data_background_cw_bgroup', 1
+        ENDIF ELSE BEGIN
+            MapBase, Event, 'background_message_uname', 0
+        ENDELSE
+        REFreduction_CommandLineGenerator, Event
+    END
+
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
         REFreduction_ReduceNormalizationUpdateGui, Event
@@ -1387,8 +1406,6 @@ ENDCASE
 ;**REDUCE TAB**
 ;command line generator
 SWITCH Event.id OF
-    widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
-    widget_info(wWidget, FIND_BY_UNAME='empty_cell_substrate_group'):
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_pola_state'): 
