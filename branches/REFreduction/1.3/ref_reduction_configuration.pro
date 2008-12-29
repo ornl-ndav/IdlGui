@@ -34,32 +34,34 @@
 
 FUNCTION getSubstrateType
 
+NbrEntries = 4
+
 SubstrateType = { type_name: '',$
                   a:         '',$
                   b:         '',$
                   d:         '5'}
 
-mySubstrateType = REPLICATE(SubstrateType, 4)
+mySubstrateType = REPLICATE(SubstrateType, NbrEntries)
 
 ;Silicon
 mySubstrateType[0].type_name = 'Si'
 mySubstrateType[0].a         = '2.00E-4'
-mySubstrateType[0].b         = '4.75E-5'
+mySubstrateType[0].b         = '4.75E5'
 
-;name#1
+;SiO2
 mySubstrateType[1].type_name = 'SiO2'
 mySubstrateType[1].a         = '1.49E-4'
-mySubstrateType[1].b         = '2.53E-5'
+mySubstrateType[1].b         = '2.53E5'
 
-;name#2
+;Al2O3
 mySubstrateType[2].type_name = 'Al2O3'
 mySubstrateType[2].a         = '4.47E-4'
-mySubstrateType[2].b         = '6.12E-5'
+mySubstrateType[2].b         = '6.12E5'
 
-;name#3
+;TiO2
 mySubstrateType[3].type_name = 'TiO2'
-mySubstrateType[3].a         = '1.14E-7'
-mySubstrateType[3].b         = '1.35E-7'
+mySubstrateType[3].a         = '1.14E-1'
+mySubstrateType[3].b         = '1.35E-1'
 
 ;name#4
 ;mySubstrateType[4].type_name = 'name#4'
