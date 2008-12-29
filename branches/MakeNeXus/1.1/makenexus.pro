@@ -83,7 +83,7 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ my_help_linux_path: '/SNS/users/',$
-                    tsmerge_link: '/SNS/users/pf9/temp/translation-service-cli-1.13-SNAPSHOT/bin/TS_merge_preNeXus.sh ',$
+                    tsmerge_link: 'TS_merge_preNeXus.sh ',$
                     my_help_mac_path:   '/Users/',$
                     EnteringProposal:       1,$
                     program_name:           'MakeNeXus',$
