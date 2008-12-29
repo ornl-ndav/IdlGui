@@ -55,7 +55,7 @@ sBackMessageBase = { size: [XYoff[0],$
                             380,$
                             43],$
                      frame: 5,$
-                     map: 1,$
+                     map: 0,$
                      uname: 'background_message_uname' }
 
 sBackMessageLabel = { label1: "<-- You can't run Empty Cell and Data" + $
