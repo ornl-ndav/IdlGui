@@ -48,6 +48,40 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           SCR_XSIZE=ReduceTabSize[2],$
                           SCR_YSIZE=ReduceTabSize[3])
 
+;background turned off message ------------------------------------------------
+XYoff = [250,130]
+sBackMessageBase = { size: [XYoff[0],$
+                            XYoff[1],$
+                            430,$
+                            43],$
+                     frame: 5,$
+                     map: 0,$
+                     uname: 'background_message_uname' }
+
+sBackMessageLabel = { label1: '<-- You can not run Empty Cell and Data' + $
+                      ' Background in the same time.',$
+                      label2: '>>> Background has been' + $
+                      ' turned off <<<'}
+
+;background turned off message
+wBackMessageBase = WIDGET_BASE(REDUCE_BASE,$
+                               XOFFSET   = sBackMessageBase.size[0],$
+                               YOFFSET   = sBackMessageBase.size[1],$
+                               SCR_XSIZE = sBackMessageBase.size[2],$
+                               SCR_YSIZE = sBackMessageBase.size[3],$
+                               UNAME     = sBackMessageBase.uname,$
+                               FRAME     = sBackMessageBase.frame,$
+                               MAP       = sBackMessageBase.map,$
+                               /COLUMN)
+
+wBackMessageLabel1 = WIDGET_LABEL(wBackMessageBase,$
+                                 VALUE = sBackMessageLabel.label1)
+
+wBackMessageLabel2 = WIDGET_LABEL(wBackMessageBase,$
+                                  VALUE = sBackMessageLabel.label2)
+
+;------------------------------------------------------------------------------
+
 ;create data base
 MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
