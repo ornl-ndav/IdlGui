@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 APPLICATION        = 'BSSreduction'
 VERSION            = '1.4.0'
 DeployedVersion    = 'yes'
-DEBUGGING_VERSION  = 'no'
+DEBUGGING_VERSION  = 'yes'
 CHECKING_PACKAGES  = 'yes'
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
@@ -60,7 +60,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 2,$
+sDEBUGGING = { tab: {main_tab: 1,$
                      reduce_input_tab: 4},$
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
@@ -119,6 +119,8 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ $
+                    firefox: '/usr/bin/firefox',$
+                    srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
                     first_lds_used: 1,$
                     application: APPLICATION,$
                     version: VERSION,$

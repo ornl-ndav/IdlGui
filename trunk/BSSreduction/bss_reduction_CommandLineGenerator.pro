@@ -2214,6 +2214,7 @@ ENDIF ELSE BEGIN
     activate = 1
 ENDELSE
 
-Activate_button, Event,'submit_button',activate
+Activate_button, Event, 'submit_button', activate
+activate_button, event, 'submit_batch_button', activate
 
 END
