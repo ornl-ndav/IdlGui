@@ -1000,10 +1000,24 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
     
+;Start Batch Data Reduction
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='submit_batch_button'): BEGIN
+        BSSreduction_RunBatchCommandLine, Event
+    END    
+
 ;Start Data Reduction
-    Widget_Info(wWidget, FIND_BY_UNAME='submit_button'): begin
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='submit_button'): BEGIN
         BSSreduction_RunCommandLine, Event
-    end    
+    END    
+
+;check status
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='check_status_of_jobs'): BEGIN
+        WIDGET_CONTROL,/HOURGLASS
+        firefox       = (*global).firefox
+        srun_web_page = (*global).srun_web_page
+        spawn, firefox + ' ' + srun_web_page
+        WIDGET_CONTROL,HOURGLASS=0
+    END    
 
 ;______________________________________________________________________________
 ; JOBS STATUS TAB

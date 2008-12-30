@@ -63,16 +63,35 @@ ReduceClgXmlTabSettings = {Size : [ReduceInputTabSettings.Size[0]+$
                            title : ['Command Line Generator Status', $
                                     'XML Reduce File']}
 
-yoff = 5
-SubmitButton = {Size : [0, $
-                        ReduceInputTabSettings.size[1]+$
-                        ReduceInputTabSettings.size[3]+yoff, $
-                        400, $
-                        45], $
-                sensitive : 0,$
-                title : 'START DATA REDUCTION', $
-                uname : 'submit_button'}
+;------------------------------------------------------------------------------
+XYoff = [0,5]
+SubmitButtonBatch = { size: [XYoff[0],$
+                             ReduceInputTabSettings.size[1]+$
+                             ReduceInputTabSettings.size[3]+XYoff[1],$
+                             200,45],$
+                      sensitive: 0,$
+                      title: 'RUN REDUCTION IN BACKGROUND',$
+                      uname: 'submit_batch_button'}
+XYoff = [5,0]
+SubmitButton = { size: [SubmitButtonBatch.size[0]+$
+                        SubmitButtonBatch.size[2]+$
+                        XYoff[0],$
+                        SubmitButtonBatch.size[1]+$
+                        XYoff[1],$
+                        SubmitButtonBatch.size[2:3]],$
+                 sensitive: 0,$
+                 title: 'RUN REDUCTION LIVE', $
+                 uname: 'submit_button'}
 
+XYoff = [0,28]
+sCheckStatus = { size: [SubmitButtonBatch.size[0]+XYoff[0],$
+                        SubmitButtonBatch.size[1]+$
+                        XYoff[1],$
+                        SubmitButtonBatch.size[2]*2+5],$
+                 title: 'Check Status of the Jobs Submitted',$
+                 uname: 'check_status_of_jobs'}
+                 
+;------------------------------------------------------------------------------
 xoff  = 5
 xoff1 = 10
 yoff  = -7
@@ -123,16 +142,36 @@ MakeGuiReduceInputTab, ReduceBase, ReduceInputTabSettings
 ;tabs of 'CLG status' and 'XML reduce file'
 MakeGuiReduceClgXmlTab, ReduceBase, ReduceClgXmlTabSettings
 
+;------------------------------------------------------------------------------
+;Submit Batch Button
+buttonBatch = WIDGET_BUTTON(ReduceBase,$
+                            XOFFSET   = SubmitButtonBatch.size[0],$
+                            YOFFSET   = SubmitButtonBatch.size[1],$
+                            SCR_XSIZE = SubmitButtonBatch.size[2],$
+;                            SCR_YSIZE = SubmitButtonBatch.size[3],$
+                            VALUE     = SubmitButtonBatch.title,$
+                            SENSITIVE = SubmitButtonBatch.sensitive,$
+                            UNAME     = SubmitButtonBatch.uname)
+
 ;Submit Button
 button = WIDGET_BUTTON(ReduceBase,$
                        XOFFSET   = SubmitButton.size[0],$
                        YOFFSET   = SubmitButton.size[1],$
                        SCR_XSIZE = SubmitButton.size[2],$
-                       SCR_YSIZE = SubmitButton.size[3],$
+;                       SCR_YSIZE = SubmitButton.size[3],$
                        VALUE     = SubmitButton.title,$
                        SENSITIVE = SubmitButton.sensitive,$
                        UNAME     = SubmitButton.uname)
 
+;Check Status button
+buttonStatus = WIDGET_BUTTON(ReduceBase,$
+                             XOFFSET   = sCheckStatus.size[0],$
+                             YOFFSET   = sCheckStatus.size[1],$
+                             SCR_XSIZE = sCheckStatus.size[2],$
+                             UNAME     = sCheckStatus.uname,$
+                             VALUE     = sCheckStatus.title)
+
+;------------------------------------------------------------------------------
 
 ;Data Reduction status
 label = WIDGET_LABEL(ReduceBase,$

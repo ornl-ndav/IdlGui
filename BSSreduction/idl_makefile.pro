@@ -77,6 +77,7 @@ cd, CurrentFolder
 .run bss_reduction_ReduceGui.pro
 .run bss_reduction_CommandLineGenerator.pro
 .run bss_reduction_RunCommandLine.pro
+.run bss_reduction_RunBatchCommandLine.pro
 .run bss_reduction_IntermediatePlots.pro
 .run bss_reduction_DisplayDRxmlConfigFile.pro
 .run bss_reduction_JobStatus.pro
