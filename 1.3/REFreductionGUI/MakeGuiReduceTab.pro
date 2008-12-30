@@ -48,29 +48,6 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           SCR_XSIZE = ReduceTabSize[2],$
                           SCR_YSIZE = ReduceTabSize[3])
 
-;background or data base ------------------------------------------------------
-XYoff = [400,150]
-sBackorEmptyCellBase = { size: [XYoff[0],$
-                                XYoff[1],$
-                                300,80],$
-                         frame: 5,$
-                         uname: 'back_or_empty_cell_base',$
-                         map: 1}
-
-wBackOrEmptyCellBase = WIDGET_BASE(REDUCE_BASE,$
-                                   XOFFSET = sBackorEmptyCellBase.size[0],$
-                                   YOFFSET = sBackorEmptyCellBase.size[1],$
-                                   SCR_XSIZE = sBackorEmptyCellBase.size[2],$
-                                   SCR_YSIZE = sBackorEmptyCellBase.size[3],$
-                                   UNAME     = sBackorEmptyCellBase.uname,$
-                                   FRAME     = sBackorEmptyCellBase.frame,$
-                                   MAP       = sBackorEmptyCellBase.map)
-
-
-
-
-
-
 ;background turned off message ------------------------------------------------
 XYoff = [250,130]
 sBackMessageBase = { size: [XYoff[0],$

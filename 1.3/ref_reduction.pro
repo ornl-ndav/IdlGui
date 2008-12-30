@@ -532,7 +532,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ENDIF
 
 ;Build Main Base
-MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
                          SCR_XSIZE    = MainBaseSize[2],$
                          SCR_YSIZE    = MainBaseSize[3],$

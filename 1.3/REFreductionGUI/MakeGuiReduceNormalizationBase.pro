@@ -154,6 +154,7 @@ BackgroundBGroupList = [' Yes    ',' No    ']
 ;Create GUI
 
 NormalizationYesNoBase = WIDGET_BASE(REDUCE_BASE,$
+                                     UNAME     = 'reduce_normalization_base',$
                                      XOFFSET   = $
                                      NormalizationYesNoBaseSize[0],$
                                      YOFFSET   = $
