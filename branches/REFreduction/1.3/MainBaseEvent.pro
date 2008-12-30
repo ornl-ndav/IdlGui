@@ -1155,7 +1155,7 @@ CASE Event.id OF
         substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
         IF (isDataWithBackground(Event) EQ 1 AND $
             substrateValue EQ 0) THEN BEGIN
-            print, 'make the user select what he wants to do'
+            show_empty_cell_OR_data_background_base, Event ;_GUI
         ENDIF
         REFreduction_CommandLineGenerator, Event
     END

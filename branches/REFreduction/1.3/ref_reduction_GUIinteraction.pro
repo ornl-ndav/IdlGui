@@ -305,3 +305,58 @@ FOR index=0,3 DO BEGIN
     ActivateWidget, Event, uname[index], select_value
 ENDFOR
 END
+
+;------------------------------------------------------------------------------
+PRO show_empty_cell_OR_data_background_base, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+base_global = { event: event,$
+                global: global}
+
+;determine position of base
+xsize = 300
+ysize = 400
+
+geometry = WIDGET_INFO((*global).main_base,/GEOMETRY)
+xoffset  = geometry.xoffset + FIX((geometry.xsize - xsize)/2)
+yoffset  = geometry.yoffset + FIX((geometry.ysize - ysize)/2)
+
+sBase = { size: [xoffset,$
+                 yoffset,$
+                 xsize,$
+                 ysize],$
+          uname: 'empty_cell_or_data_background_base',$
+          title: 'CONFLICT IN YOUR SELECTION!',$
+          map: 1 }
+
+wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$
+                    XOFFSET      = sBase.size[0],$
+                    YOFFSET      = sBase.size[1],$
+                    SCR_XSIZE    = sBase.size[2],$
+                    SCR_YSIZE    = sBase.size[3],$
+                    MAP          = sBase.map,$
+                    TITLE        = sBase.title,$
+                    UNAME        = sBase.uname,$
+                    /COLUMN,$
+                    /MODAL)
+
+WIDGET_CONTROL, wBase, SET_UVALUE = base_global
+
+label  = WIDGET_LABEL(wBase,$
+                     VALUE = '')
+label1 = WIDGET_LABEL(wBase,$
+                      VALUE = "You can't run the data reduction")
+label2 = WIDGET_LABEL(wBase,$
+                      VALUE = " using Data Background AND Empty Cell")
+
+
+
+
+
+
+
+WIDGET_CONTROL, /REALIZE, wBase
+XMANAGER, 'wBase', wBase, /NO_BLOCK
+
+
+END
