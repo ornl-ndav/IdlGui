@@ -40,7 +40,7 @@ activate_button, event, 'submit_batch_button', 0
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-;;indicate initialization with hourglass icon
+;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
 
 PROCESSING = (*global).processing
