@@ -70,3 +70,24 @@ mySubstrateType[3].b         = '1.35E-1'
 
 RETURN, mySubstrateType
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getEmptyCellImages
+
+folder = 'REFreduction_images/'
+
+sImages = { confuse_background: folder + 'confuse_background.png',$
+            data_background: folder + 'data_background.png',$
+            data_background_mouse_over: folder + $
+            'data_background_mouse_over.png',$
+            data_background_mouse_click: folder + $
+            'data_background_mouse_click.png',$
+            empty_cell: folder + $
+            'empty_cell.png',$
+            empty_cell_mouse_over: folder + $
+            'empty_cell_mouse_over.png',$
+            empty_cell_mouse_click: folder + $
+            'empty_cell_mouse_click.png'}
+
+RETURN, sImages
+END

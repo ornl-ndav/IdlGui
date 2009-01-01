@@ -50,7 +50,7 @@ DEBUGGING_VERSION  = 'yes'          ;NO
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
-CHECKING_PACKAGES  = 'yes'         ;YES
+CHECKING_PACKAGES  = 'no'         ;YES
 
 debugging_structure = {nbr_pola_state:4,$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
@@ -86,6 +86,7 @@ debugger = 1 ;the world has access to the batch tab now
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    empty_cell_images: PTR_NEW(0L),$			
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: 'bank1,1',$
@@ -448,6 +449,8 @@ global = PTR_NEW ({ first_event: 1,$
 ;Version of REFreduction Tool
                    })
 
+(*(*global).empty_cell_images) = getEmptyCellImages()
+
 (*(*global).substrate_type) = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure                   
@@ -727,11 +730,11 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
-IF (DEBUGGING_VERSION) THEN BEGIN
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
    packages_required, global, my_package
    (*(*global).my_package) = my_package
 ENDIF
-IF (CHECKING_PACKAGES) THEN BEGIN
+IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
    packages_required, global, my_package
    checking_packages_routine, MAIN_BASE, my_package, global
    update_gui_according_to_package, MAIN_BASE, my_package 
