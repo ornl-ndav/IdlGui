@@ -87,6 +87,7 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    empty_cell_images: PTR_NEW(0L),$
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: '/bank1,1',$
@@ -747,7 +748,7 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
-IF (DEBUGGING_VERSION) THEN BEGIN
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
    packages_required, global, my_package
    (*(*global).my_package) = my_package
 ENDIF
