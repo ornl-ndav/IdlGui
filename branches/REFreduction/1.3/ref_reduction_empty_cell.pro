@@ -879,7 +879,7 @@ sBase = { size: [xoffset,$
 XYoff = [20,0]
 sLabel = { size: [0+XYoff[0],$
                   257+XYoff[1]],$
-           value: 'Click the Way you want to follow!',$
+           value: 'Click the Path you Want to Follow!',$
            frame: 3}
 
 wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$
