@@ -755,6 +755,16 @@ global = local_global.global
 
 wWidget =  Event.top            ;widget id
 
+IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') THEN BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='direction_to_take_uname')
+    FOR i=0,5 DO BEGIN
+        WIDGET_CONTROL, id, SENSITIVE=0
+        WAIT,0.2
+        WIDGET_CONTROL, id, SENSITIVE=1
+        WAIT,0.2
+    ENDFOR
+ENDIF
+
 CASE Event.id OF
 
 ;Make up your mind base -------------------------------------------------------
@@ -914,10 +924,11 @@ sBase = { size: [xoffset,$
           title: 'CONFLICT IN YOUR SELECTION!',$
           map: 1 }
 
-XYoff = [20,0]
+XYoff = [10,0]
 sLabel = { size: [0+XYoff[0],$
                   257+XYoff[1]],$
            value: 'Click the Direction you Want to Take!',$
+           uname: 'direction_to_take_uname',$
            frame: 3}
 
 wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$
@@ -928,6 +939,7 @@ wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$
                     MAP          = sBase.map,$
                     TITLE        = sBase.title,$
                     UNAME        = sBase.uname,$
+                    /TLB_KILL_REQUEST_EVENTS,$
                     /MODAL)
 
 
@@ -965,6 +977,7 @@ label = WIDGET_LABEL(wBase,$
                      XOFFSET = sLabel.size[0],$
                      YOFFSET = sLabel.size[1],$
                      VALUE   = sLabel.value,$
+                     UNAME   = sLabel.uname,$
                      FRAME   = sLabel.frame)
 
 widget_control, wBase, set_uvalue=local_global
@@ -994,3 +1007,4 @@ tv, image, 0,0,/true
 XManager, 'wBase', wBase, /NO_BLOCK
 
 END
+
