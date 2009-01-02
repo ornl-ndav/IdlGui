@@ -112,15 +112,15 @@ XYoff = [0,7]
 BackgroundLabelSize = [sPeakBase.size[0]+XYoff[0],$
                        sPeakBase.size[1]+sPeakBase.size[3]+XYoff[1]]
 BackgroundLabelTitle = 'Background:'
-d_L_T_3 = 100
+d_L_T_3 = 70
 BackgroundBGroupSize = [BackgroundLabelSize[0]+d_L_T_3,$
                         BackgroundLabelSize[1]-5]
-BackgroundBGroupList = [' Yes    ',' No    ']
+BackgroundBGroupList = ['Yes','No']
 
 
-;###############################################################################
-;############################### Create GUI ####################################
-;###############################################################################
+;##############################################################################
+;############################## Create GUI ####################################
+;##############################################################################
 
 ;base
 data_base = WIDGET_BASE(REDUCE_BASE,$
@@ -249,6 +249,7 @@ BackgroundBGroup = CW_BGROUP(data_base,$
                              SET_VALUE = 0,$
                              UNAME     = 'data_background_cw_bgroup',$
                              ROW       = 1,$
+                             /NO_RELEASE,$
                              /EXCLUSIVE)
 
 ;frame

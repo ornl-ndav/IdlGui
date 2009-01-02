@@ -115,13 +115,15 @@ BackgroundLabelTitle = 'Background:'
 d_L_T_3 = 100
 BackgroundBGroupSize = [BackgroundLabelSize[0]+d_L_T_3,$
                         BackgroundLabelSize[1]-5]
-BackgroundBGroupList = [' Yes    ',' No    ']
+BackgroundBGroupList = [' Yes ',' No ']
 
-;*********************************************************
+;******************************************************************************
 ;Create GUI
+;******************************************************************************
 
 ;base
 data_base = WIDGET_BASE(REDUCE_BASE,$
+                        UNAME     = 'reduce_data_base',$
                         XOFFSET   = DataBaseSize[0],$
                         YOFFSET   = DataBaseSize[1],$
                         SCR_XSIZE = DataBaseSize[2],$
@@ -248,7 +250,10 @@ BackgroundBGroup = CW_BGROUP(data_base,$
                              SET_VALUE = 0,$
                              UNAME     = 'data_background_cw_bgroup',$
                              ROW       = 1,$
+                             /NO_RELEASE,$
                              /EXCLUSIVE)
+
+;------------------------------------------------------------------------------
 
 ;frame
 DataFrame = WIDGET_LABEL(data_base,$

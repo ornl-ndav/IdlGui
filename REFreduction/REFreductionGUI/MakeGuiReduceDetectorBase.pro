@@ -77,6 +77,7 @@ NexusDataUsedLabelTitle = 'NeXus data used'
 
 ;base
 detector_base = widget_base(REDUCE_BASE,$
+                            UNAME  = 'reduce_detector_base',$
                             xoffset=DetectorBaseSize[0],$
                             yoffset=DetectorBaseSize[1],$
                             scr_xsize=DetectorBaseSize[2],$
