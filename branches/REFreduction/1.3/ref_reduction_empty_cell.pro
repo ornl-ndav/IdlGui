@@ -751,7 +751,7 @@ END
 ;------------------------------------------------------------------------------
 PRO wBase_event, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=local_global
-global = (local_global).global
+global = local_global.global
 
 wWidget =  Event.top            ;widget id
 
@@ -795,22 +795,41 @@ CASE Event.id OF
        image = READ_PNG(sImages.empty_cell)
        tv, image, 0,0,/true
 
-       IF (Event.press EQ 1) THEN BEGIN
+       IF (Event.press EQ 1) THEN BEGIN ;left click
 ;display mouse over data background image
-       WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-       WSET, id
-       image = READ_PNG(sImages.data_background_mouse_click)
-       tv, image, 0,0,/true
+           WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.data_background_mouse_click)
+           tv, image, 0,0,/true
+           
+;desactivate empty cell and destroy base
+           WIDGET_CONTROL,/HOURGLASS
+           WAIT, 0.5
+           
+           main_event = local_global.event
+           id = WIDGET_INFO(main_event.top, $
+                            FIND_BY_UNAME='empty_cell_substrate_group')
+           WIDGET_CONTROL, id, SET_VALUE=1.0
+           
+           WIDGET_CONTROL,HOURGLASS=0
+           
+           id = WIDGET_INFO(wWidget, $
+                            FIND_BY_UNAME='empty_cell_or_data_background_base')
+           
+           REFreduction_CommandLineGenerator, main_event
+
+           WIDGET_CONTROL, id, /DESTROY
+
        ENDIF
        
-       IF (Event.type EQ 1) THEN BEGIN
+       IF (Event.type EQ 1) THEN BEGIN ;release mouse
 ;display mouse over data background image
-       WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-       WSET, id
-       image = READ_PNG(sImages.data_background_mouse_over)
-       tv, image, 0,0,/true
+           WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.data_background_mouse_over)
+           tv, image, 0,0,/true
        ENDIF
-
+       
     END
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_draw'): BEGIN
@@ -833,18 +852,37 @@ CASE Event.id OF
 
        IF (Event.press EQ 1) THEN BEGIN
 ;display mouse over empty cellimage
-       WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-       WSET, id
-       image = READ_PNG(sImages.empty_cell_mouse_click)
-       tv, image, 0,0,/true
+           WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.empty_cell_mouse_click)
+           tv, image, 0,0,/true
+           
+;desactivate empty cell and destroy base
+           WIDGET_CONTROL,/HOURGLASS
+           WAIT, 0.5
+           
+           main_event = local_global.event
+           id = WIDGET_INFO(main_event.top, $
+                            FIND_BY_UNAME='data_background_cw_bgroup')
+           WIDGET_CONTROL, id, SET_VALUE=1.0
+           
+           WIDGET_CONTROL,HOURGLASS=0
+           
+           id = WIDGET_INFO(wWidget, $
+                            FIND_BY_UNAME='empty_cell_or_data_background_base')
+
+           REFreduction_CommandLineGenerator, main_event
+
+           WIDGET_CONTROL, id, /DESTROY
+           
        ENDIF
        
        IF (Event.type EQ 1) THEN BEGIN
 ;display mouse over empty cell image
-       WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-       WSET, id
-       image = READ_PNG(sImages.empty_cell_mouse_over)
-       tv, image, 0,0,/true
+           WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.empty_cell_mouse_over)
+           tv, image, 0,0,/true
        ENDIF
 
     END
@@ -879,7 +917,7 @@ sBase = { size: [xoffset,$
 XYoff = [20,0]
 sLabel = { size: [0+XYoff[0],$
                   257+XYoff[1]],$
-           value: 'Click the Path you Want to Follow!',$
+           value: 'Click the Direction you Want to Take!',$
            frame: 3}
 
 wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$

@@ -450,8 +450,7 @@ global = PTR_NEW ({ first_event: 1,$
                    })
 
 (*(*global).empty_cell_images) = getEmptyCellImages()
-
-(*(*global).substrate_type) = getSubstrateType()
+(*(*global).substrate_type)    = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure                   
 BatchTable = strarr(9,20)

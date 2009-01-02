@@ -106,6 +106,7 @@ global = ptr_new ({ first_event: 1,$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
+                    main_base: 0L,$
                     mouse_debugging: MOUSE_DEBUGGING,$
                     debugging_version: DEBUGGING_VERSION,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
@@ -442,7 +443,8 @@ global = ptr_new ({ first_event: 1,$
 ;Version of REFreduction Tool
                    })
 
-(*(*global).substrate_type) = getSubstrateType()
+(*(*global).empty_cell_images) = getEmptyCellImages()
+(*(*global).substrate_type)    = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure
 BatchTable = strarr(9,20)
@@ -546,6 +548,8 @@ pola_base = WIDGET_BASE(MAIN_BASE,$
                         MAP       = 0,$
                         /COLUMN,$
                         /BASE_ALIGN_CENTER)
+
+(*global).main_base = MAIN_BASE
 
 label = WIDGET_LABEL(pola_base,$
                     VALUE = 'Select a Polarization State:')
