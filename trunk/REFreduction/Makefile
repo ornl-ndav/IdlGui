@@ -23,5 +23,11 @@ backup:
 	cp mini_ref_reduction.sav /SNS/software/idltools/sav_backup/
 	cp mini_ref_reduction_backup /SNS/software/idltools/
 
+test: 
+	cp ref_reduction.sav /usr/local/SNS/idltools/
+	cp mini_ref_reduction.sav /usr/local/SNS/idltools/
+	cp -rf REFreductionHELP /usr/local/SNS/idltools/
+	cp -rf REFreduction_images /usr/local/SNS/idltools/
+
 
 

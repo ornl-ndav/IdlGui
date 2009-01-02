@@ -48,8 +48,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
-VERSION            = '1.3.0'            
-DEBUGGING_VERSION  = 'no'              ;NO
+VERSION            = '1.3.1'            
+DEBUGGING_VERSION  = 'yes'              ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
@@ -87,6 +87,7 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    empty_cell_images: PTR_NEW(0L),$
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: '/bank1,1',$
@@ -105,6 +106,7 @@ global = ptr_new ({ first_event: 1,$
                     norm_loadct_contrast_changed: 0,$
                     data_loadct_contrast_changed: 0,$
                     browse_data_path: '~/',$
+                    main_base: 0L,$
                     mouse_debugging: MOUSE_DEBUGGING,$
                     debugging_version: DEBUGGING_VERSION,$
                     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$ 
@@ -441,7 +443,8 @@ global = ptr_new ({ first_event: 1,$
 ;Version of REFreduction Tool
                    })
 
-(*(*global).substrate_type) = getSubstrateType()
+(*(*global).empty_cell_images) = getEmptyCellImages()
+(*(*global).substrate_type)    = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure
 BatchTable = strarr(9,20)
@@ -545,6 +548,8 @@ pola_base = WIDGET_BASE(MAIN_BASE,$
                         MAP       = 0,$
                         /COLUMN,$
                         /BASE_ALIGN_CENTER)
+
+(*global).main_base = MAIN_BASE
 
 label = WIDGET_LABEL(pola_base,$
                     VALUE = 'Select a Polarization State:')
@@ -747,7 +752,7 @@ ENDIF ;end of debugging_version statement
 
 ;==============================================================================
 ;checking packages
-IF (DEBUGGING_VERSION) THEN BEGIN
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
    packages_required, global, my_package
    (*(*global).my_package) = my_package
 ENDIF
