@@ -46,11 +46,11 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.3.1'
-DEBUGGING_VERSION  = 'yes'          ;NO
+DEBUGGING_VERSION  = 'no'          ;NO
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
-CHECKING_PACKAGES  = 'no'         ;YES
+CHECKING_PACKAGES  = 'yes'         ;YES
 
 debugging_structure = {nbr_pola_state:4,$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
