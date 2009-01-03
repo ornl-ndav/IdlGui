@@ -224,6 +224,17 @@ Function findIt, init_str, tag
 end
 
 ;------------------------------------------------------------------------------
+FUNCTION fileType, location
+;help, self
+;tmp = self.path
+;  help, STRPOS(tmp, ".")
+
+  type = STRSPLIT(location, ".", /EXTRACT)
+  print, type[1]
+  RETURN, type[1]
+END
+
+;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
 
 
@@ -393,7 +404,7 @@ FUNCTION IDL3columnsASCIIparser::getAllTag
 END
 
 ;------------------------------------------------------------------------------
-pro IDL3columnsASCIIparser::CLEANUP
+pro IDL3columnsASCIIparser::cleanup
   ptr_free, self.all_data
 ;help, self.all_data, /heap_variables
 END
@@ -402,8 +413,11 @@ END
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
+  ;check if file exitsts
   IF (FILE_TEST(location, /READ)) THEN BEGIN
+  ;read file
   self.all_data = ptr_new(readData(self.path))
+  self.type = fileType(location)
   END
   RETURN, FILE_TEST(location, /READ)
 END
@@ -412,6 +426,7 @@ END
 PRO IDL3columnsASCIIparser__define
   struct = {IDL3columnsASCIIparser,$
     path: '', $
+    type: '', $
     all_data: ptr_new()}
 END
 
