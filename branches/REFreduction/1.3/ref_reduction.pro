@@ -50,7 +50,7 @@ DEBUGGING_VERSION  = 'no'          ;NO
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
-CHECKING_PACKAGES  = 'YES'         ;YES
+CHECKING_PACKAGES  = 'yes'         ;YES
 
 debugging_structure = {nbr_pola_state:4,$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
@@ -730,11 +730,11 @@ ENDIF ;end of debugging_version statement
 ;==============================================================================
 ;checking packages
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-   packages_required, global, my_package
+   packages_required, global, my_package ;packages_required
    (*(*global).my_package) = my_package
 ENDIF
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-   packages_required, global, my_package
+   packages_required, global, my_package ;packages_required
    checking_packages_routine, MAIN_BASE, my_package, global
    update_gui_according_to_package, MAIN_BASE, my_package 
 ENDIF
