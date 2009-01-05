@@ -44,6 +44,7 @@ OK         = (*global).ok
 FAILED     = (*global).failed
 
 my_package = (*(*global).my_package)
+
 IF (my_package[3].found EQ 0) THEN BEGIN ;nxsummary is missing
    LogText = '--> NXsummary can not be found, no information displayed!'
    putLogBookMessage,Event,LogText,Append=1
