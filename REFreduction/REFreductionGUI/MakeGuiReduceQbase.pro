@@ -107,7 +107,8 @@ Q_base = widget_base(REDUCE_BASE,$
                      xoffset=QBaseSize[0],$
                      yoffset=QBaseSize[1],$
                      scr_xsize=QBaseSize[2],$
-                     scr_ysize=QBaseSize[3])
+                     scr_ysize=QBaseSize[3],$
+                     UNAME='reduce_q_base')
 
 ;label that goes on top of frame
 QLabel = widget_label(Q_base,$

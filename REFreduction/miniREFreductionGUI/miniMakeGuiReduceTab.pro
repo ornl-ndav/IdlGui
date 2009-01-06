@@ -32,7 +32,11 @@
 ;
 ;==============================================================================
 
-PRO miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
+PRO miniMakeGuiReduceTab, MAIN_TAB, $
+                          MainTabSize, $
+                          ReduceTabTitle, $
+                          PlotsTitle, $
+                          global
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -47,6 +51,9 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           YOFFSET   = ReduceTabSize[1],$
                           SCR_XSIZE = ReduceTabSize[2],$
                           SCR_YSIZE = ReduceTabSize[3])
+
+;build empty cell base
+MakeGuiEmptyCell, REDUCE_BASE, global
 
 ;background turned off message ------------------------------------------------
 XYoff = [180,105]
@@ -107,7 +114,8 @@ miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create intermediate plot base
-miniMakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
+miniMakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, $
+  IndividualBaseWidth, PlotsTitle
 
 ;create other component of base
 miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth

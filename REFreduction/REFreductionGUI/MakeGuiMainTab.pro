@@ -41,6 +41,8 @@ PRO MakeGuiMainTab, MAIN_BASE, $
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
+WIDGET_CONTROL,MAIN_BASE,GET_UVALUE=global
+
 ;Tab titles
 LoadTabTitle     = '       LOAD       ' 
 ReduceTabTitle   = '      REDUCE      ' 
@@ -67,7 +69,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument, MAIN_BASE
 
 ;build REDUCE tab
-MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
+MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle, global
 
 ;build PLOTS tab
 MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
