@@ -2217,4 +2217,7 @@ ENDELSE
 Activate_button, Event, 'submit_button', activate
 activate_button, event, 'submit_batch_button', activate
 
+;generate new command line file name
+generate_command_line_file_name, Event
+
 END

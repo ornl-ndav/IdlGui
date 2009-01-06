@@ -59,9 +59,48 @@ ReduceClgXmlTabSettings = {Size : [ReduceInputTabSettings.Size[0]+$
                                    ReduceInputTabSettings.Size[2]+xoff, $
                                    ReduceInputTabSettings.Size[1], $
                                    440, $
-                                   ReduceInputTabSettings.size[3]+yoff],$
+                                   ReduceInputTabSettings.size[3]+yoff-70],$
                            title : ['Command Line Generator Status', $
                                     'XML Reduce File']}
+
+;Create file of Command Line --------------------------------------------------
+XYoff = [5,10]
+sCLframe = { size: [ReduceClgXmlTabSettings.size[0]+XYoff[0],$
+                    ReduceClgXmlTabSettings.size[1]+ $
+                    ReduceClgXmlTabSettings.size[3]+XYoff[1],$
+                    ReduceClgXmlTabSettings.size[2]-15,$
+                    65],$
+             frame: 1}
+
+XYoff = [20,-8]
+sCLtitle = { size: [sCLframe.size[0]+XYoff[0],$
+                    sCLframe.size[1]+XYoff[1]],$
+             value: 'Create File of Command Line'}
+
+XYoff = [5,10]
+sCLpath = { size: [sCLframe.size[0]+XYoff[0],$
+                   sCLframe.size[1]+XYoff[1],$
+                   sCLframe.size[2]-6],$
+            value: '~/results/',$
+            uname: 'command_line_path_button'}
+
+XYoff = [0,25]
+sCLfile = { size: [sCLpath.size[0]+XYoff[0],$
+                   sCLpath.size[1]+XYoff[1],$
+                   300],$
+            value: '',$
+            uname: 'command_line_file_text_field'}
+
+XYoff = [3,0]
+sCLbutton = { size: [sCLfile.size[0]+$
+                     sCLfile.size[2]+$
+                     XYoff[0],$
+                     sCLfile.size[1]+$
+                     XYoff[1],$
+                     115,$
+                     30],$
+              value: 'CREATE FILE',$
+              uname: 'command_line_file_button'}
 
 ;------------------------------------------------------------------------------
 XYoff = [0,5]
@@ -135,6 +174,46 @@ ReduceBase = WIDGET_BASE(MAIN_TAB,$
                          SCR_YSIZE = MainTabSize[3],$
                          TITLE     = ReduceBaseTitle,$
                          UNAME     = 'reduce_base')
+
+;Create file of Command Line --------------------------------------------------
+;title 
+wCLtitle = WIDGET_LABEL(ReduceBase,$
+                        XOFFSET = sCLtitle.size[0],$
+                        YOFFSET = sCLtitle.size[1],$
+                        VALUE   = sCLtitle.value)
+
+wCLpath = WIDGET_BUTTON(ReduceBase,$
+                        XOFFSET   = sCLpath.size[0],$
+                        YOFFSET   = sCLpath.size[1],$
+                        SCR_XSIZE = sCLpath.size[2],$
+                        UNAME     = sCLpath.uname,$
+                        VALUE     = sCLpath.value)
+
+wCLfile = WIDGET_TEXT(ReduceBase,$
+                      XOFFSET   = sCLfile.size[0],$
+                      YOFFSET   = sCLfile.size[1],$
+                      SCR_XSIZE = sCLfile.size[2],$
+                      UNAME     = sCLfile.uname,$
+                      VALUE     = sCLfile.value,$
+                      /EDITABLE)
+                      
+wCLbutton = WIDGET_BUTTON(ReduceBase,$
+                          XOFFSET = sCLbutton.size[0],$
+                          YOFFSET = sCLbutton.size[1],$
+                          SCR_XSIZE = sCLbutton.size[2],$
+                          SCR_YSIZE = sCLbutton.size[3],$
+                          UNAME     = sCLbutton.uname,$
+                          VALUE     = sCLbutton.value)
+
+wCLframe = WIDGET_LABEL(ReduceBase,$
+                        XOFFSET   = sCLframe.size[0],$
+                        YOFFSET   = sCLframe.size[1],$
+                        SCR_XSIZE = sCLframe.size[2],$
+                        SCR_YSIZE = sCLframe.size[3],$
+                        VALUE     = '',$
+                        FRAME     = sCLframe.frame)
+
+;------------------------------------------------------------------------------
 
 ;tabs of 'input data setup', 'process setup' ....
 MakeGuiReduceInputTab, ReduceBase, ReduceInputTabSettings

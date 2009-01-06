@@ -35,8 +35,7 @@
 PRO MAIN_BASE_event, Event
  
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 wWidget =  Event.top            ;widget id
 
@@ -1017,6 +1016,17 @@ CASE Event.id OF
         srun_web_page = (*global).srun_web_page
         spawn, firefox + ' ' + srun_web_page
         WIDGET_CONTROL,HOURGLASS=0
+    END    
+
+;Create Command Line File -----------------------------------------------------
+;path
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='command_line_path_button'): BEGIN
+        command_line_path, Event ;_CreateCommandLineFile
+    END    
+
+;create file
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='command_line_file_button'): BEGIN
+        create_cl_file, Event ;_CreateCommandLineFile
     END    
 
 ;______________________________________________________________________________
