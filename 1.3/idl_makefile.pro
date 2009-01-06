@@ -63,6 +63,7 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiInstrumentSelection.pro
 
 .run MakeGuiReduceTab.pro
+.run MakeGuiEmptyCell.pro
 .run MakeGuiReduceDataBase.pro
 .run MakeGuiReduceNormalizationBase.pro
 .run MakeGuiReduceQbase.pro

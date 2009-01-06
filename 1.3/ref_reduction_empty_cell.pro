@@ -755,15 +755,15 @@ global = local_global.global
 
 wWidget =  Event.top            ;widget id
 
-IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') THEN BEGIN
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='direction_to_take_uname')
-    FOR i=0,5 DO BEGIN
-        WIDGET_CONTROL, id, SENSITIVE=0
-        WAIT,0.2
-        WIDGET_CONTROL, id, SENSITIVE=1
-        WAIT,0.2
-    ENDFOR
-ENDIF
+; IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') THEN BEGIN
+;     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='direction_to_take_uname')
+;     FOR i=0,5 DO BEGIN
+;         WIDGET_CONTROL, id, SENSITIVE=0
+;         WAIT,0.2
+;         WIDGET_CONTROL, id, SENSITIVE=1
+;         WAIT,0.2
+;     ENDFOR
+;ENDIF
 
 CASE Event.id OF
 
@@ -899,112 +899,5 @@ CASE Event.id OF
 
     ELSE:
 ENDCASE
-END
-
-;------------------------------------------------------------------------------
-PRO show_empty_cell_OR_data_background_base, Event
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-local_global = { event: event,$
-                global: global}
-
-;determine position of base
-xsize = 250
-ysize = 275
-
-geometry = WIDGET_INFO((*global).main_base,/GEOMETRY)
-xoffset  = geometry.xoffset + FIX((geometry.xsize - xsize)/2)
-yoffset  = geometry.yoffset + FIX((geometry.ysize - ysize)/2)
-
-sBase = { size: [xoffset,$
-                 yoffset,$
-                 xsize,$
-                 ysize],$
-          uname: 'empty_cell_or_data_background_base',$
-          title: 'CONFLICT IN YOUR SELECTION!',$
-          map: 1 }
-
-XYoff = [10,0]
-sLabel = { size: [0+XYoff[0],$
-                  257+XYoff[1]],$
-           value: 'Click the Direction you Want to Take!',$
-           uname: 'direction_to_take_uname',$
-           frame: 3}
-
-wBase = WIDGET_BASE(GROUP_LEADER = (*global).main_base,$
-                    XOFFSET      = sBase.size[0],$
-                    YOFFSET      = sBase.size[1],$
-                    SCR_XSIZE    = sBase.size[2],$
-                    SCR_YSIZE    = sBase.size[3],$
-                    MAP          = sBase.map,$
-                    TITLE        = sBase.title,$
-                    UNAME        = sBase.uname,$
-                    /TLB_KILL_REQUEST_EVENTS,$
-                    /MODAL)
-
-
-draw1 = WIDGET_DRAW(wBase,$
-                   XOFFSET = 0,$
-                   YOFFSET = 0,$
-                   SCR_XSIZE = 251,$
-                   SCR_YSIZE = 257,$
-                   UNAME     = 'confuse_background',$
-                    RETAIN=2,$
-                    /BUTTON_EVENTS,$
-                    /MOTION_EVENTS)
-
-data_background_draw = WIDGET_DRAW(wBase,$
-                                   XOFFSET = 101,$
-                                   YOFFSET = 7,$
-                                   SCR_XSIZE = 118,$
-                                   SCR_YSIZE = 42,$
-                                   UNAME     = 'data_background_draw',$
-                                   RETAIN=2,$
-                                   /BUTTON_EVENTS,$
-                                   /MOTION_EVENTS)
-
-empty_cell_draw = WIDGET_DRAW(wBase,$
-                              XOFFSET = 141,$
-                              YOFFSET = 57,$
-                              SCR_XSIZE = 109,$
-                              SCR_YSIZE = 35,$
-                              UNAME     = 'empty_cell_draw',$
-                              RETAIN=2,$
-                              /BUTTON_EVENTS,$
-                              /MOTION_EVENTS)
-
-label = WIDGET_LABEL(wBase,$
-                     XOFFSET = sLabel.size[0],$
-                     YOFFSET = sLabel.size[1],$
-                     VALUE   = sLabel.value,$
-                     UNAME   = sLabel.uname,$
-                     FRAME   = sLabel.frame)
-
-widget_control, wBase, set_uvalue=local_global
-WIDGET_CONTROL, /REALIZE, wBase
-
-;get images files
-sImages = (*(*global).empty_cell_images)
-
-;background image
-WIDGET_CONTROL, draw1, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.confuse_background)
-tv, image, 0,0,/true
-
-;empty cell image
-WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.empty_cell)
-tv, image, 0,0,/true
-
-;data background image
-WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.data_background)
-tv, image, 0,0,/true
-
-XManager, 'wBase', wBase, /NO_BLOCK
-
 END
 

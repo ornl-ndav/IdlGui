@@ -1154,7 +1154,7 @@ CASE Event.id OF
         substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
         IF (isDataWithBackground(Event) EQ 1 AND $
             substrateValue EQ 0) THEN BEGIN
-            show_empty_cell_OR_data_background_base, Event ;_GUI
+            MapBase, Event, 'empty_cell_or_data_background_base', 1
         ENDIF
         REFreduction_CommandLineGenerator, Event
     END
@@ -1171,6 +1171,134 @@ CASE Event.id OF
             MapBase, Event, 'background_message_uname', 0
         ENDELSE
         REFreduction_CommandLineGenerator, Event
+    END
+
+;Make up your mind base -------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='confuse_background'): BEGIN
+;get images files
+       sImages = (*(*global).empty_cell_images)
+;display normal data background image
+       data_background_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='data_background_draw')
+       WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.data_background)
+       tv, image, 0,0,/true
+;display normal empty cell image
+       empty_cell_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='empty_cell_draw')
+       WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.empty_cell)
+       tv, image, 0,0,/true
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_draw'): BEGIN
+;get images files
+       sImages = (*(*global).empty_cell_images)
+;display mouse over data background image
+       data_background_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='data_background_draw')
+       WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.data_background_mouse_over)
+       tv, image, 0,0,/true
+;display normal empty cell image
+       empty_cell_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='empty_cell_draw')
+       WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.empty_cell)
+       tv, image, 0,0,/true
+
+       IF (Event.press EQ 1) THEN BEGIN ;left click
+;display mouse over data background image
+           WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.data_background_mouse_click)
+           tv, image, 0,0,/true
+           
+;desactivate empty cell and destroy base
+           WIDGET_CONTROL,/HOURGLASS
+           WAIT, 0.5
+           
+           id = WIDGET_INFO(event.top, $
+                            FIND_BY_UNAME='empty_cell_substrate_group')
+           WIDGET_CONTROL, id, SET_VALUE=1.0
+           
+           WIDGET_CONTROL,HOURGLASS=0
+           
+           id = WIDGET_INFO(wWidget, $
+                            FIND_BY_UNAME='empty_cell_or_data_background_base')
+           
+           REFreduction_CommandLineGenerator, event
+
+           WIDGET_CONTROL, id, MAP=0
+
+       ENDIF
+       
+       IF (Event.type EQ 1) THEN BEGIN ;release mouse
+;display mouse over data background image
+           WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.data_background_mouse_over)
+           tv, image, 0,0,/true
+       ENDIF
+       
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_draw'): BEGIN
+;get images files
+       sImages = (*(*global).empty_cell_images)
+;display normal data background image
+       data_background_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='data_background_draw')
+       WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.data_background)
+       tv, image, 0,0,/true
+;display empty cell mouse over image
+       empty_cell_draw = WIDGET_INFO(Event.top, $
+                                          FIND_BY_UNAME='empty_cell_draw')
+       WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+       WSET, id
+       image = READ_PNG(sImages.empty_cell_mouse_over)
+       tv, image, 0,0,/true
+
+       IF (Event.press EQ 1) THEN BEGIN
+;display mouse over empty cellimage
+           WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.empty_cell_mouse_click)
+           tv, image, 0,0,/true
+           
+;desactivate empty cell and destroy base
+           WIDGET_CONTROL,/HOURGLASS
+           WAIT, 0.5
+           
+           id = WIDGET_INFO(event.top, $
+                            FIND_BY_UNAME='data_background_cw_bgroup')
+           WIDGET_CONTROL, id, SET_VALUE=1.0
+           
+           WIDGET_CONTROL,HOURGLASS=0
+           
+           id = WIDGET_INFO(wWidget, $
+                            FIND_BY_UNAME='empty_cell_or_data_background_base')
+
+           REFreduction_CommandLineGenerator, event
+
+           WIDGET_CONTROL, id, MAP=0
+           
+       ENDIF
+       
+       IF (Event.type EQ 1) THEN BEGIN
+;display mouse over empty cell image
+           WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+           WSET, id
+           image = READ_PNG(sImages.empty_cell_mouse_over)
+           tv, image, 0,0,/true
+       ENDIF
+
     END
 
     ;yes or no normalization
