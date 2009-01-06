@@ -66,12 +66,12 @@
 ; ==========================================================================>>>
 
 ;------------------------------------------------------------------------------
-FUNCTION readToBlank, data
-  index_blank = WHERE(data EQ '',nbr)
-  IF (nbr GT 0) THEN BEGIN
-    RETURN, data[0:index_blank[0]-1]
-  ENDIF
-END
+;FUNCTION readToBlank, data
+;  index_blank = WHERE(data EQ '',nbr)
+;  IF (nbr GT 0) THEN BEGIN
+;    RETURN, data[0:index_blank[0]-1]
+;  ENDIF
+;END
 
 ;------------------------------------------------------------------------------
 function modtag, init_str
@@ -225,9 +225,9 @@ end
 
 ;------------------------------------------------------------------------------
 FUNCTION fileType, location
-;help, self
-;tmp = self.path
-;  help, STRPOS(tmp, ".")
+  ;help, self
+  ;tmp = self.path
+  ;  help, STRPOS(tmp, ".")
 
   type = STRSPLIT(location, ".", /EXTRACT)
   print, type[1]
@@ -247,7 +247,7 @@ pro populate_structure, all_data, MyStruct
     ;make sure the last one is for the last element of the array
     IF (blk_line_index[new_nbr-1] NE (num_elnts-1)) THEN BEGIN
       ++new_nbr
-    ENDIF 
+    ENDIF
   endif else begin
     new_nbr = 1
   endelse
@@ -317,20 +317,20 @@ pro populate_structure, all_data, MyStruct
       ;populate the rest of MyStruct structure
       if array_nbr eq 0 then begin
         IF (STRMATCH(line,'#L*')) THEN BEGIN
-            no_error = 0
-            CATCH, no_error
-            IF (no_error NE 0) THEN BEGIN
-                CATCH,/CANCEL
-                x_all = ['','']
-                y_all = ['','']
-                sigma_all = ['','']
-            ENDIF ELSE BEGIN
-                temp = strsplit(line,'#L',/extract)
-                temp1 = strsplit(temp[0],'()', /extract)
-                x_all = [temp1[0],temp1[1]]
-                y_all = [temp1[2],temp1[3]]
-                sigma_all = [temp1[4],temp1[5]]
-            ENDELSE
+          no_error = 0
+          CATCH, no_error
+          IF (no_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            x_all = ['','']
+            y_all = ['','']
+            sigma_all = ['','']
+          ENDIF ELSE BEGIN
+            temp = strsplit(line,'#L',/extract)
+            temp1 = strsplit(temp[0],'()', /extract)
+            x_all = [temp1[0],temp1[1]]
+            y_all = [temp1[2],temp1[3]]
+            sigma_all = [temp1[4],temp1[5]]
+          ENDELSE
         ENDIF
       ENDIF
       
@@ -386,21 +386,27 @@ FUNCTION IDL3columnsASCIIparser::getData
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getTag, tag
-  ;remove semicolon from tag
-  tag = modtag(tag)
-  ;read data into array
-  data = *self.all_data
-  ;find and format data
-  output = findIt(data, tag)
-  RETURN, output
-END
-
-;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getAllTag
-  ;help, self.all_data, /heap_variables
-  output = readToBlank(*self.all_data)
-  RETURN, output
+FUNCTION IDL3columnsASCIIparser::getMetadata, tag
+  CASE N_ELEMENTS(tag) OF
+    0: BEGIN
+      data = *self.all_data
+      index_blank = WHERE(data EQ '', nbr)
+      IF (nbr GT 0) THEN BEGIN
+        RETURN, data[0:index_blank[0]-1]
+      ENDIF
+      RETURN, "Error getting metadata"
+    END
+    1: BEGIN
+      ;remove semicolon from tag
+      tag = modtag(tag)
+      ;read data into array
+      data = *self.all_data
+      ;find and format data
+      output = findIt(data, tag)
+      RETURN, output
+    END
+  ENDCASE
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -415,9 +421,9 @@ FUNCTION IDL3columnsASCIIparser::init, location
   self.path = location
   ;check if file exitsts
   IF (FILE_TEST(location, /READ)) THEN BEGIN
-  ;read file
-  self.all_data = ptr_new(readData(self.path))
-  self.type = fileType(location)
+    ;read file
+    self.all_data = ptr_new(readData(self.path))
+    self.type = fileType(location)
   END
   RETURN, FILE_TEST(location, /READ)
 END
