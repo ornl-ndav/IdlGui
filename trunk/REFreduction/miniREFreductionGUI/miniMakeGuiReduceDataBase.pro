@@ -124,6 +124,7 @@ BackgroundBGroupList = ['Yes','No']
 
 ;base
 data_base = WIDGET_BASE(REDUCE_BASE,$
+                        UNAME     = 'reduce_data_base',$
                         XOFFSET   = DataBaseSize[0],$
                         YOFFSET   = DataBaseSize[1],$
                         SCR_XSIZE = DataBaseSize[2],$

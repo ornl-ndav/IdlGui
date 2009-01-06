@@ -45,7 +45,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
-VERSION            = '1.3.3'
+VERSION            = '1.3.5'
 DEBUGGING_VERSION  = 'no'          ;NO
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
@@ -682,6 +682,33 @@ time = RefReduction_GenerateIsoTimeStamp()
 file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
 id = widget_info(Main_Base, find_by_uname='cl_file_text')
 widget_control, id, set_value=file_name
+
+;display empty cell images ----------------------------------------------------
+;get images files
+sImages = (*(*global).empty_cell_images)
+
+;background image
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='confuse_background')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.confuse_background)
+tv, image, 0,0,/true
+
+;empty cell image
+empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
+WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.empty_cell)
+tv, image, 0,0,/true
+
+;data background image
+data_background_draw = WIDGET_INFO(MAIN_BASE, $
+                                  FIND_BY_UNAME='data_background_draw')
+WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.data_background)
+tv, image, 0,0,/true
+;------------------------------------------------------------------------------
 
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN

@@ -305,3 +305,58 @@ FOR index=0,3 DO BEGIN
     ActivateWidget, Event, uname[index], select_value
 ENDFOR
 END
+
+;------------------------------------------------------------------------------
+PRO focus_empty_cell_base, Event, status
+uname_list = ['load_base',$
+              'plots_base',$
+              'batch_base',$
+              'Log_book_base',$
+              'reduce_data_base',$
+              'reduce_normalization_base',$
+              'normalization_base',$
+              'reduce_detector_base',$
+              'intermediate_base',$
+              'general_info_and_xml_base',$
+              'reduce_q_base',$
+              'reduce_label1',$
+              'filtering_data_cwbgroup',$
+              'reduce_label2',$
+              'delta_t_over_t_cwbgroup',$
+              'reduce_label3',$
+              'overwrite_data_instrument_geometry_cwbgroup',$
+              'overwrite_data_instrument_geometry_base',$
+              'reduce_label4',$
+              'overwrite_norm_instrument_geometry_cwbgroup',$
+              'overwrite_norm_instrument_geometry_base',$
+              'of_button',$
+              'of_text',$
+              'reduce_label5',$
+              'reduce_label6',$
+              'GeneralInfoTab',$
+              'reduce_label7',$
+              'data_reduction_status_text_field',$
+              'reduce_cmd_line_preview',$
+              'cl_directory_button',$
+              'cl_directory_text',$
+              'cl_file_button',$
+              'cl_file_text',$
+              'output_cl_button',$
+              'reduce_label10',$
+              'reduce_label11',$
+              'reduce_label12',$
+              'empty_cell_substrate_group']
+
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+IF ((*global).miniversion EQ 0) THEN BEGIN
+    uname_list = [uname_list,$
+                  'reduce_label8',$
+                  'reduce_label9']
+ENDIF
+
+nbr = N_ELEMENTS(uname_list)
+FOR i=0,(nbr-1) DO BEGIN
+    ActivateWidget, Event, uname_list[i], status
+ENDFOR
+
+END
