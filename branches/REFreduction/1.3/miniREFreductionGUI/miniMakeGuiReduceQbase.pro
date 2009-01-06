@@ -98,16 +98,17 @@ XYOff = [5,0]
 QScaleBGroupSize = [QwidthTextFieldSize[0]+QwidthTextFieldSize[2]+XYoff[0],$
                     QminTextFieldSize[1]]
                     
-;###############################################################################
-;############################### Create GUI ####################################
-;###############################################################################
+;##############################################################################
+;############################## Create GUI ####################################
+;##############################################################################
 
 ;base
 Q_base = WIDGET_BASE(REDUCE_BASE,$
                      XOFFSET   = QBaseSize[0],$
                      YOFFSET   = QBaseSize[1],$
                      SCR_XSIZE = QBaseSize[2],$
-                     SCR_YSIZE = QBaseSize[3])
+                     SCR_YSIZE = QBaseSize[3],$
+                     UNAME     = 'reduce_q_base')
 
 ;label that goes on top of frame
 QLabel = WIDGET_LABEL(Q_base,$

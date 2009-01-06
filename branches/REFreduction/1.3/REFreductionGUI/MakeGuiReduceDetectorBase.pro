@@ -138,27 +138,6 @@ DetectorUnitsBGroup = cw_bgroup(detector_base,$
                                 uname='detector_units_b_group',$
                                 row=1)
 
-;;NeXus data used
-;NeXusDataUsedLabel = widget_label(detector_base,$
-;                                  uname='nexus_data_used_label',$
-;                                  xoffset=NexusDataUsedSize[0],$
-;                                  yoffset=NexusDataUsedSize[1],$
-;                                  scr_xsize=NexusDataUsedSize[2],$
-;                                  scr_ysize=NexusDataUsedSize[3],$
-;                                  value=NexusDataUsedLabelTitle,$
-;                                  frame=1)
-;;GUI data used
-; GuiDataUsedLabel = widget_label(detector_base,$
-;                                 uname='gui_data_used_label',$
-;                                 xoffset=GuiDataUsedSize[0],$
-;                                 yoffset=GuiDataUsedSize[1],$
-;                                 scr_xsize=GuiDataUsedSize[2],$
-;                                 scr_ysize=GuiDataUsedSize[3],$
-;                                 value=GuiDataUsedLabelTitle,$
-;                                 frame=1,$
-;                                 sensitive=0)
-
-
 ;frame
 DetectorFrame = widget_label(detector_base,$
                              xoffset=DetectorFrameSize[0],$

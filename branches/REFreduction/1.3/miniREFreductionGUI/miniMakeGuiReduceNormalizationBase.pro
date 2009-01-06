@@ -158,6 +158,7 @@ BackgroundBGroupList = [' Yes    ',' No    ']
 
 NormalizationYesNoBase = $
   WIDGET_BASE(REDUCE_BASE,$
+              UNAME     = 'reduce_normalization_base',$
               XOFFSET   = NormalizationYesNoBaseSize[0],$
               YOFFSET   = NormalizationYesNoBaseSize[1],$
               SCR_XSIZE = NormalizationYesNoBaseSize[2],$

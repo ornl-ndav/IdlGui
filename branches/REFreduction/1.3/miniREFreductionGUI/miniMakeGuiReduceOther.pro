@@ -176,15 +176,16 @@ OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
              value     : 'CREATE CL FILE',$
              sensitive : 1}
     
-;###############################################################################
-;############################### Create GUI ####################################
-;###############################################################################
+;##############################################################################
+;############################## Create GUI ####################################
+;##############################################################################
 
 ;filtering data
 FilteringDataLabel = WIDGET_LABEL(REDUCE_BASE,$
                                   XOFFSET = FDLsize[0],$
                                   YOFFSET = FDLsize[1],$
-                                  VALUE   = FDLtitle)
+                                  VALUE   = FDLtitle,$
+                                  UNAME   = 'reduce_label1')
 
 FilteringDataCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                   cwbgroup2_list,$
@@ -199,7 +200,8 @@ FilteringDataCWBgroup = CW_BGROUP(REDUCE_BASE,$
 DeltaToverTLabel = WIDGET_LABEL(REDUCE_BASE,$
                                 XOFFSET = DToTLsize[0],$
                                 YOFFSET = DToTLsize[1],$
-                                VALUE   = DToTLtitle)
+                                VALUE   = DToTLtitle,$
+                                UNAME   = 'reduce_label2')
 
 DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                 cwbgroup2_list,$
@@ -214,7 +216,8 @@ DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
 label = WIDGET_LABEL(REDUCE_BASE,$
                      XOFFSET = OPFlabel.size[0],$
                      YOFFSET = OPFlabel.size[1],$
-                     VALUE   = OPFlabel.value)
+                     VALUE   = OPFlabel.value,$
+                     UNAME   = 'reduce_label5')
 
 button = WIDGET_BUTTON(REDUCE_BASE,$
                        XOFFSET   = OPbutton.size[0],$
@@ -227,7 +230,8 @@ button = WIDGET_BUTTON(REDUCE_BASE,$
 label = WIDGET_LABEL(REDUCE_BASE,$
                      XOFFSET = OFlabel.size[0],$
                      YOFFSET = OFlabel.size[1],$
-                     VALUE   = OFlabel.value)
+                     VALUE   = OFlabel.value,$
+                     UNAME   = 'reduce_label6')
 
 text = WIDGET_TEXT(REDUCE_BASE,$
                    XOFFSET = OFtext.size[0],$
@@ -244,7 +248,8 @@ OverwriteInstrumentGeometryLabel = $
   WIDGET_LABEL(REDUCE_BASE,$
                XOFFSET = OIGLsize[0],$
                YOFFSET = OIGLsize[1],$
-               VALUE   = OIGLtitle)
+               VALUE   = OIGLtitle,$
+               UNAME   = 'reduce_label3')
 
 OverwriteInstrumentGeometryCWBgroup = $
   CW_BGROUP(REDUCE_BASE,$
@@ -278,7 +283,8 @@ OverwriteInsrumentGeometryButton = $
 label = WIDGET_LABEL(REDUCE_BASE,$
                      XOFFSET = NormIGlabel.size[0],$
                      YOFFSET = NormIGlabel.size[1],$
-                     VALUE   = NormIGlabel.title)
+                     VALUE   = NormIGlabel.title,$
+                     UNAME   = 'reduce_label4')
 
 group = CW_BGROUP(REDUCE_BASE,$
                   cwbgroup2_list,$
@@ -339,7 +345,8 @@ button1 = WIDGET_BUTTON(REDUCE_BASE,$
 label1 = WIDGET_LABEL(REDUCE_BASE,$
                       XOFFSET = BDorLabel.size[0],$
                       YOFFSET = BDorLabel.size[1],$
-                      VALUE   = BDorLabel.value)
+                      VALUE   = BDorLabel.value,$
+                      UNAME   = 'reduce_label5')
                               
 text1 = WIDGET_TEXT(REDUCE_BASE,$
                     XOFFSET   = BDtext.size[0],$
@@ -354,7 +361,8 @@ text1 = WIDGET_TEXT(REDUCE_BASE,$
 label2 = WIDGET_LABEL(REDUCE_BASE,$
                       XOFFSET = BDandLabel.size[0],$
                       YOFFSET = BDandLabel.size[1],$
-                      VALUE   = BDandLabel.value)
+                      VALUE   = BDandLabel.value,$
+                      UNAME   = 'reduce_label10')
                               
 button2 = WIDGET_BUTTON(REDUCE_BASE,$
                         UNAME     = BFbutton.uname,$
@@ -367,7 +375,8 @@ button2 = WIDGET_BUTTON(REDUCE_BASE,$
 label3 = WIDGET_LABEL(REDUCE_BASE,$
                       XOFFSET = BForLabel.size[0],$
                       YOFFSET = BForLabel.size[1],$
-                      VALUE   = BForLabel.value)
+                      VALUE   = BForLabel.value,$
+                      UNAME   = 'reduce_label11')
                               
 text2 = WIDGET_TEXT(REDUCE_BASE,$
                     XOFFSET   = BFtext.size[0],$
@@ -382,7 +391,8 @@ text2 = WIDGET_TEXT(REDUCE_BASE,$
 label4 = WIDGET_LABEL(REDUCE_BASE,$
                       XOFFSET = BDBFLabel.size[0],$
                       YOFFSET = BDBFLabel.size[1],$
-                      VALUE   = BDBFLabel.value)
+                      VALUE   = BDBFLabel.value,$
+                      UNAME   = 'reduce_label12')
                               
 button3 = WIDGET_BUTTON(REDUCE_BASE,$
                         UNAME     = OGbutton.uname,$

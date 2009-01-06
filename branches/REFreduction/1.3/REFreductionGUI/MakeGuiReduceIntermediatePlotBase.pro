@@ -90,7 +90,8 @@ NotAvailableTitle = ' -- NOT AVAILABLE! --'
 IndividualLabel = widget_label(REDUCE_BASE,$
                                xoffset=InterLabelSize[0],$
                                yoffset=InterLabelSize[1],$
-                               value=InterLabeltitle)
+                               value=InterLabeltitle,$
+                               uname='reduce_label8')
 
 ;base
 InterBase = widget_base(REDUCE_BASE,$
