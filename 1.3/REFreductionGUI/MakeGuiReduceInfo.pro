@@ -115,7 +115,8 @@ DataReductionStatusLabel = $
   WIDGET_LABEL(REDUCE_BASE,$
                xoffset=DataReductionStatusLabelSize[0],$
                yoffset=DataReductionStatusLabelSize[1],$
-               value=DataReductionStatusLabelTitle)
+               value=DataReductionStatusLabelTitle,$
+               uname='reduce_label7')
 
 ;text field
 DataReductionStatusTextField = $

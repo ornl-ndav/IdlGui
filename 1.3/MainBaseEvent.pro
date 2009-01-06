@@ -1154,9 +1154,11 @@ CASE Event.id OF
         substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
         IF (isDataWithBackground(Event) EQ 1 AND $
             substrateValue EQ 0) THEN BEGIN
+            focus_empty_cell_base, Event, 0
             MapBase, Event, 'empty_cell_or_data_background_base', 1
-        ENDIF
-        REFreduction_CommandLineGenerator, Event
+        ENDIF ELSE BEGIN
+            REFreduction_CommandLineGenerator, Event
+        ENDELSE
     END
 
     ;empty cell yes or no
@@ -1233,6 +1235,7 @@ CASE Event.id OF
            
            REFreduction_CommandLineGenerator, event
 
+           focus_empty_cell_base, Event, 1
            WIDGET_CONTROL, id, MAP=0
 
        ENDIF
@@ -1287,6 +1290,7 @@ CASE Event.id OF
 
            REFreduction_CommandLineGenerator, event
 
+           focus_empty_cell_base, Event, 1
            WIDGET_CONTROL, id, MAP=0
            
        ENDIF

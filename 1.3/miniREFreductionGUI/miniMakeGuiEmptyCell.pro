@@ -38,7 +38,7 @@ PRO MakeGuiEmptyCell, REDUCE_BASE, global
 xsize = 250
 ysize = 280
 
-xoffset  = 250
+xoffset  = 175
 yoffset  = 100
 
 sBase = { size: [xoffset,$

@@ -60,9 +60,9 @@ DataReductionStatusLabelSize = [585,493+XYoff[1]]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
 DataReductionStatusTextFieldSize = [585,509+XYoff[1],305,30]
 
-;###############################################################################
-;############################### Create GUI ####################################
-;###############################################################################
+;##############################################################################
+;############################## Create GUI ####################################
+;##############################################################################
 
 GeneralInfoAndXmlBase = WIDGET_BASE(REDUCE_BASE,$
                                     XOFFSET   = GeneralInfoAndXmlBaseSize[0],$
@@ -124,7 +124,8 @@ DataReductionStatusLabel = $
                XOFFSET = DataReductionStatusLabelSize[0],$
                YOFFSET = DataReductionStatusLabelSize[1],$
 ;               FONT    = 'lucidasans-10',$
-               VALUE   = DataReductionStatusLabelTitle)
+               VALUE   = DataReductionStatusLabelTitle,$
+                 UNAME = 'reduce_label7')
 
 ;text field
 DataReductionStatusTextField = $
