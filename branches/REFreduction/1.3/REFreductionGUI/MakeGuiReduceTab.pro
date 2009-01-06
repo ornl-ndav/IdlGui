@@ -32,7 +32,11 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
+PRO MakeGuiReduceTab, MAIN_TAB, $
+                      MainTabSize, $
+                      ReduceTabTitle, $
+                      PlotsTitle, $
+                      global
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -47,6 +51,9 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           YOFFSET   = ReduceTabSize[1],$
                           SCR_XSIZE = ReduceTabSize[2],$
                           SCR_YSIZE = ReduceTabSize[3])
+
+;build empty cell base
+MakeGuiEmptyCell, REDUCE_BASE, global
 
 ;background turned off message ------------------------------------------------
 XYoff = [250,130]

@@ -66,6 +66,7 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiEmptyCellTab.pro
 
 .run miniMakeGuiReduceTab.pro
+.run miniMakeGuiEmptyCell.pro
 .run miniMakeGuiReduceDataBase.pro
 .run miniMakeGuiReduceNormalizationBase.pro
 .run miniMakeGuiReduceQbase.pro
