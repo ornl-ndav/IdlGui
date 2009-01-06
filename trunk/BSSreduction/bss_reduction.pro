@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'BSSreduction'
 VERSION            = '1.5.0'
-DeployedVersion    = 'yes' ;yes
+DeployedVersion    = 'yes'  ;yes
 DEBUGGING_VERSION  = 'yes'  ;no
 CHECKING_PACKAGES  = 'yes' 
 PACKAGE_REQUIRED_BASE = { driver:           '',$
@@ -151,6 +151,7 @@ global = ptr_new ({ $
                     output_plot_path: '~/results/',$ 
                     findlivenexus: '/SNS/software/sbin/findlivenexus',$
                     default_output_path: '~/results/',$
+                    CL_output_path: '~/results/',$
                     negative_cosine_polar_array: STRARR(3),$
                     momentum_transfer_array:     STRARR(3),$
                     DeployedVersion: DeployedVersion,$

@@ -81,6 +81,7 @@ cd, CurrentFolder
 .run bss_reduction_IntermediatePlots.pro
 .run bss_reduction_DisplayDRxmlConfigFile.pro
 .run bss_reduction_JobStatus.pro
+.run bss_reduction_CreateCommandLineFile.pro
 
 ;classes
 .run IDLoutputFile__define.pro
