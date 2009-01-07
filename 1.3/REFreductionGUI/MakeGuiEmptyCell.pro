@@ -96,11 +96,10 @@ draw1 = WIDGET_DRAW(wBase,$
                     /BUTTON_EVENTS,$
                     /MOTION_EVENTS)
  
-
- label = WIDGET_LABEL(wBase,$
-                      XOFFSET = sLabel.size[0],$
-                      YOFFSET = sLabel.size[1],$
-                      VALUE   = sLabel.value,$
-                      UNAME   = sLabel.uname)
+label = WIDGET_LABEL(wBase,$
+                     XOFFSET = sLabel.size[0],$
+                     YOFFSET = sLabel.size[1],$
+                     VALUE   = sLabel.value,$
+                     UNAME   = sLabel.uname)
 
 END
