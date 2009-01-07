@@ -101,7 +101,6 @@ draw1 = WIDGET_DRAW(wBase,$
                       XOFFSET = sLabel.size[0],$
                       YOFFSET = sLabel.size[1],$
                       VALUE   = sLabel.value,$
-                      UNAME   = sLabel.uname,$
-                      FRAME   = sLabel.frame)
+                      UNAME   = sLabel.uname)
 
 END
