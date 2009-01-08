@@ -52,7 +52,32 @@ Base = WIDGET_BASE(REDUCE_TAB,$
                    YOFFSET   = sBase.size[1],$
                    SCR_XSIZE = sBase.size[2],$
                    SCR_YSIZE = sBase.size[3],$
-                   TITLE     = sBase.title)
+                   TITLE     = sBase.title,$
+                   /COLUMN)
+
+;Load New Entry ---------------------------------------------------------------
+Row1 = WIDGET_BASE(Base,$
+                   /ROW)
+
+lLoad = WIDGET_LABEL(Row1,$
+                     VALUE = 'Load New Entry:')
+
+bBrowse = WIDGET_BUTTON(Row1,$
+                        XSIZE = 100,$
+                        VALUE = 'BROWSE...',$
+                        UNAME = 'reduce_tab1_browse_button')
+
+lOrRun = WIDGET_LABEL(Row1,$
+                      VALUE = 'or Run #:')
+
+tRun = CW_FIELD(Row1,$
+                XSIZE = 15,$
+                UNAME = 'reduce_tab1_run_cw_field',$
+                /INTEGER)
+                
+                
+
+
 
 
 END
