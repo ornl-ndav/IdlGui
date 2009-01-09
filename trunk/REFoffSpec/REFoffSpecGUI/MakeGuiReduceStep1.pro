@@ -53,31 +53,123 @@ Base = WIDGET_BASE(REDUCE_TAB,$
                    SCR_XSIZE = sBase.size[2],$
                    SCR_YSIZE = sBase.size[3],$
                    TITLE     = sBase.title,$
+                   /BASE_ALIGN_LEFT,$
                    /COLUMN)
 
-;Load New Entry ---------------------------------------------------------------
+;Vertical space
+vSpace = Widget_label(Base,$
+                      VALUE = '',$
+                      YSIZE = 15)
+
+;Load New Entry (row #1) ------------------------------------------------------
 Row1 = WIDGET_BASE(Base,$
-                   /ROW)
+                   /ROW,$
+                   SCR_XSIZE = 680,$
+                   FRAME = 0)
 
 lLoad = WIDGET_LABEL(Row1,$
-                     VALUE = 'Load New Entry:')
+                     VALUE = '     Load New Entry into Table   ')
 
 bBrowse = WIDGET_BUTTON(Row1,$
-                        XSIZE = 100,$
-                        VALUE = 'BROWSE...',$
+                        VALUE = '  BROWSE...  ',$
                         UNAME = 'reduce_tab1_browse_button')
 
 lOrRun = WIDGET_LABEL(Row1,$
-                      VALUE = 'or Run #:')
+                      VALUE = '  or   Run #:')
 
 tRun = CW_FIELD(Row1,$
                 XSIZE = 15,$
                 UNAME = 'reduce_tab1_run_cw_field',$
+                TITLE = '',$
                 /INTEGER)
                 
-                
+base_group = WIDGET_BASE(Row1,$
+                         /ROW)
+
+list_OR_archived = CW_BGROUP(base_group,$
+                             ['Archived','Full List'],$
+                             /EXCLUSIVE,$
+                             /ROW,$
+                             SET_VALUE = 0,$
+                             uname = 'reduce_tab1_archived_cw_bgroup')
 
 
+;Table (Row #2) ---------------------------------------------------------------
+Row2 = WIDGET_BASE(Base,$
+                   /ROW)
+                   
+space = WIDGET_LABEL(Row2,$
+                     VALUE = '  ')
 
+table = WIDGET_TABLE(Row2,$
+                     COLUMN_LABELS = ['Run #',$
+                                      'Full NeXus File Name',$
+                                      'Polarization State'],$
+                     /NO_ROW_HEADERS,$
+                     /RESIZEABLE_COLUMNS,$
+                     XSIZE = 3,$
+                     YSIZE = 1,$
+                     SCR_XSIZE = 1230,$
+                     SCR_YSIZE = 400,$
+                     COLUMN_WIDTHS = [100,955,150],$
+                     /SCROLL)
+
+;Button (Row #3) --------------------------------------------------------------
+Row3 = WIDGET_BASE(Base,$
+                   /ROW)
+
+button1 = WIDGET_BUTTON(Row3,$
+                        VALUE = 'Remove Selected Run',$
+                        UNAME = 'reduce_step1_remove_run_button',$
+                        SENSITIVE = 0)
+
+button2 = WIDGET_BUTTON(Row3,$
+                        VALUE = 'Display Y vs TOF of Selected Run',$
+                        UNAME = 'reduce_step1_display_y_vs_tof_button',$
+                        SENSITIVE = 0)
+
+button3 = WIDGET_BUTTON(Row3,$
+                        VALUE = 'Display Y vs X of Selected Run',$
+                        UNAME = 'reduce_step1_display_y_vs_x_button',$
+                        SENSITIVE = 0)
+
+;Repeat work for other polarization states (Row #4) ---------------------------
+Row4 = WIDGET_BASE(Base,$
+                   UNAME = 'reduce_tab1_row4_base',$
+                   FRAME = 1,$
+                   /ROW)
+
+label = WIDGET_LABEL(Row4,$
+                     VALUE = 'Working with Polarization State:  ')
+label = WIDGET_LABEL(Row4,$
+                     VALUE = 'N/A                     ',$
+                     UNAME = 'reduce_tab1_working_polarization_state_label')
+                    
+label = WIDGET_LABEL(Row4,$
+                     VALUE = 'Repeat work with Polarization States:  ')
+
+Row4Base = WIDGET_BASE(Row4,$
+                       /ROW,$
+                       /BASE_ALIGN_TOP,$
+                       /NONEXCLUSIVE)
+
+button1 = WIDGET_BUTTON(Row4Base,$
+                        VALUE = 'Off-Off  ',$
+                        UNAME = 'reduce_tab1_pola_1',$
+                        SENSITIVE = 1)
+button2 = WIDGET_BUTTON(Row4Base,$
+                        VALUE = 'Off-On  ',$
+                        UNAME = 'reduce_tab1_pola_2',$
+                        SENSITIVE = 1)
+button3 = WIDGET_BUTTON(Row4Base,$
+                        VALUE = 'On-Off  ',$
+                        UNAME = 'reduce_tab1_pola_3',$
+                        SENSITIVE = 1)
+button4 = WIDGET_BUTTON(Row4Base,$
+                        VALUE = 'On-On  ',$
+                        UNAME = 'reduce_tab1_pola_4',$
+                        SENSITIVE = 1)
+
+    
 
 END
