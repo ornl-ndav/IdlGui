@@ -185,6 +185,7 @@ ENDWHILE
 
 x = 3
 y = N_ELEMENTS(reduce_tab1_table)/3
+
 reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
 
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
@@ -197,6 +198,7 @@ END
 
 ;------------------------------------------------------------------------------
 ;This function will disable the pola states selected in the pola base
+;and is reached by the OK button of the polarization base
 PRO update_polarization_states_widgets, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -216,6 +218,10 @@ NexusListOfPola = (*global).nexus_list_OF_pola_state
 LogText = '--> Working Polarization State Selected by User: ' + $
   NexusListOfPola[i]
 IDLsendToGeek_addLogBookText, Event, LogText
+
+putTextFieldValue, Event, $
+  'reduce_tab1_working_polarization_state_label',$
+  STRCOMPRESS(NexusListOfPola[i],/REMOVE_ALL)
 
 ;save the polarization state selected
 (*global).reduce_tab1_working_pola_state = NexusListOfPola[i]
@@ -309,6 +315,19 @@ END
 
 ;------------------------------------------------------------------------------
 PRO check_reduce_step1_gui, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+reduce_tab1_table = (*(*global).reduce_tab1_table)
+IF (reduce_tab1_table[1] EQ '') THEN BEGIN
+    sensitive_status = 0
+ENDIF ELSE BEGIN
+    sensitive_status = 1
+ENDELSE
+
+uname_list = ['reduce_step1_remove_selection_button',$
+              'reduce_step1_display_y_vs_tof_button',$
+              'reduce_step1_display_y_vs_x_button']
+activate_widget_list, Event, uname_list, sensitive_status
 
 END

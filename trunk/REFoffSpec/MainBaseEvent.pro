@@ -56,11 +56,13 @@ CASE Event.id OF
     
 ;11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111
 
+;Browse button
    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
        reduce_tab1_browse_button, Event ;_reduce_step1
-       check_reduce_step1_gui, Event ;_reduce_step1
+;       check_reduce_step1_gui, Event ;_reduce_step1
    END
 
+;OK button of the polarization state base
    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                'reduce_tab1_pola_base_valid_button'): BEGIN
        update_polarization_states_widgets, Event ;reduce_step1

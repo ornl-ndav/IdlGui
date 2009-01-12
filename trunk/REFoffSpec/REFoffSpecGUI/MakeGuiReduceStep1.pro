@@ -174,7 +174,7 @@ Row3 = WIDGET_BASE(Base,$
 
 button1 = WIDGET_BUTTON(Row3,$
                         VALUE = 'Remove Selected Run',$
-                        UNAME = 'reduce_step1_remove_run_button',$
+                        UNAME = 'reduce_step1_remove_selection_button',$
                         SENSITIVE = 0)
 
 button2 = WIDGET_BUTTON(Row3,$
@@ -194,10 +194,12 @@ Row4 = WIDGET_BASE(Base,$
                    /ROW)
 
 label = WIDGET_LABEL(Row4,$
-                     VALUE = 'Working with Polarization State:  ')
+                     VALUE = 'Working with Polarization State:')
 label = WIDGET_LABEL(Row4,$
                      VALUE = 'N/A                     ',$
-                     UNAME = 'reduce_tab1_working_polarization_state_label')
+                     /ALIGN_LEFT,$
+                     UNAME = 'reduce_tab1_working_polarization_state_label',$
+                     FRAME = 0)
                     
 label = WIDGET_LABEL(Row4,$
                      VALUE = 'Repeat work with Polarization States:  ')
