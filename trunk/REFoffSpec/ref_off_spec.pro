@@ -86,7 +86,11 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ ucams: ucams,$
                     debugging: DEBUGGING,$
-
+                    
+                    nexus_list_OF_pola_state: ['/entry-Off_Off/',$
+                                               '/entry-Off_On/',$
+                                               '/entry-On_Off/',$
+                                               '/entry-On_On/'],$
                     reduce_tab1_table_left_click: 1,$
                     browsing_path: '~/results/',$  
 
