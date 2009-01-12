@@ -146,6 +146,56 @@ RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
+PRO AddNexusToReduceTab1Table, Event
+;get global structure
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+reduce_tab1_working_pola_state = (*global).reduce_tab1_working_pola_state
+reduce_tab1_table = (*(*global).reduce_tab1_table)
+nexus_file_list = (*(*global).reduce_tab1_nexus_file_list)
+
+sz = N_ELEMENTS(nexus_file_list)
+index = 0
+WHILE (index LT sz) DO BEGIN
+
+;retrieve RunNumber of nexus file name
+    iNexus = OBJ_NEW('IDLgetMetadata', $
+                     nexus_file_list[index],$
+                     reduce_tab1_working_pola_state)
+    RunNumber = iNexus->getRunNumber()
+    OBJ_DESTROY, iNexus
+    
+;check if it's the first time we add NeXus files (file name is empty)
+    IF (reduce_tab1_table[1,0] EQ '') THEN BEGIN
+        reduce_tab1_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        reduce_tab1_table[1,0] = nexus_file_list[index]
+        reduce_tab1_table[2,0] = reduce_tab1_working_pola_state
+    ENDIF ELSE BEGIN
+        sz1 = N_ELEMENTS(reduce_tab1_table)
+        reduce_tab1_table = REFORM(reduce_tab1_table,sz1,/OVERWRITE)
+        tmp_table = STRARR(3,1)
+        tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        tmp_table[1,0] = nexus_file_list[index]
+        tmp_table[2,0] = reduce_tab1_working_pola_state
+        reduce_tab1_table = [reduce_tab1_table,tmp_table]
+    ENDELSE
+        
+    index++
+ENDWHILE
+
+x = 3
+y = N_ELEMENTS(reduce_tab1_table)/3
+reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
+
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
+WIDGET_CONTROL, id, TABLE_YSIZE = y
+WIDGET_CONTROL, id, SET_VALUE = reduce_tab1_table
+
+(*(*global).reduce_tab1_table) = reduce_tab1_table
+
+END
+
+;------------------------------------------------------------------------------
 ;This function will disable the pola states selected in the pola base
 PRO update_polarization_states_widgets, Event
 ;get global structure
@@ -166,6 +216,9 @@ NexusListOfPola = (*global).nexus_list_OF_pola_state
 LogText = '--> Working Polarization State Selected by User: ' + $
   NexusListOfPola[i]
 IDLsendToGeek_addLogBookText, Event, LogText
+
+;save the polarization state selected
+(*global).reduce_tab1_working_pola_state = NexusListOfPola[i]
 
 list_OF_main_base_uname = ['reduce_tab1_pola_1',$
                            'reduce_tab1_pola_2',$
@@ -203,6 +256,9 @@ nexus_file_list = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
                                   TITLE = title)
 
 IF (nexus_file_list[0] NE '') THEN BEGIN
+
+    (*(*global).reduce_tab1_nexus_file_list) = nexus_file_list
+
     IF (new_path NE path) THEN BEGIN
         (*global).browsing_path = new_path
         LogText = '-> New browsing_path is: ' + new_path
@@ -210,12 +266,20 @@ IF (nexus_file_list[0] NE '') THEN BEGIN
     IDLsendToGeek_addLogBookText, Event, LogText
     display_message_about_files_browsed, Event, nexus_file_list
 
+    IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
 ;get list of polarization state available and display list_of_pola base
-    nexus_file_name = nexus_file_list[0]
-    status = retrieve_list_OF_polarization_state(Event, $
-                                                 nexus_file_name, $
-                                                 list_OF_pola_state)
-    IF (status EQ 0) THEN RETURN
+        nexus_file_name = nexus_file_list[0]
+        status = retrieve_list_OF_polarization_state(Event, $
+                                                     nexus_file_name, $
+                                                     list_OF_pola_state)
+        IF (status EQ 0) THEN RETURN
+
+    ENDIF ELSE BEGIN
+
+;update the table
+        AddNexusToReduceTab1Table, Event
+
+    ENDELSE
     
 ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for NeXus file'
@@ -240,5 +304,11 @@ WHILE (index LT nbr_files) DO BEGIN
     IDLsendToGeek_addLogBookText, Event, LogText
     ++index
 ENDWHILE
+
+END
+
+;------------------------------------------------------------------------------
+PRO check_reduce_step1_gui, Event
+
 
 END

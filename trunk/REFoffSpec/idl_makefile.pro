@@ -6,7 +6,9 @@ cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run time_utilities.pro
 .run IDLsendLogBook__define.pro
+.run IDLsendToGeek__define.pro
 .run IDL3columnsASCIIparser__define.pro
+.run IDLgetMetadata__define.pro
 .run xdisplayfile.pro
 .run math_utilities.pro
 
@@ -45,7 +47,6 @@ cd, CurrentFolder
 .run IDLnexusUtilities__define.pro
 
 ;procedures
-.run IDLsendToGeek__define.pro
 .run colorbar.pro
 .run CheckPackages.pro
 
