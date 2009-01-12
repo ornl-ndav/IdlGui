@@ -93,6 +93,9 @@ global = ptr_new ({ ucams: ucams,$
                                                '/entry-On_On/'],$
                     reduce_tab1_table_left_click: 1,$
                     browsing_path: '~/results/',$  
+                    reduce_tab1_table: PTR_NEW(0L),$
+                    reduce_tab1_working_pola_state: '',$
+                    reduce_tab1_nexus_file_list: PTR_NEW(0L),$
 
                     lin_zmax: 0d,$ ;0.46009228 (real value)
                     lin_zmin: 0d,$ ;real value
@@ -215,6 +218,8 @@ global = ptr_new ({ ucams: ucams,$
 
 ;initialize variables
 (*(*global).list_OF_ascii_files) = STRARR(1)
+(*(*global).reduce_tab1_table) = STRARR(3,1)
+
 
 MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Reflectometer Off Specular Application'

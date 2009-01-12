@@ -61,7 +61,7 @@ wPolaBase = WIDGET_BASE(TopBase,$
                         SCR_XSIZE = 300,$
                         SCR_YSIZE = 180,$
                         UNAME     = 'reduce_tab1_polarization_base',$
-                        FRAME     = 5,$
+                        FRAME     = 10,$
                         MAP       = 0,$
                         /COLUMN,$
                         /BASE_ALIGN_CENTER)
@@ -157,8 +157,10 @@ table = WIDGET_TABLE(Row2,$
                      COLUMN_LABELS = ['Run #',$
                                       'Full NeXus File Name',$
                                       'Polarization State'],$
+                     UNAME = 'reduce_tab1_table_uname',$
                      /NO_ROW_HEADERS,$
                      /RESIZEABLE_COLUMNS,$
+                     ALIGNMENT = 0,$
                      XSIZE = 3,$
                      YSIZE = 1,$
                      SCR_XSIZE = 1230,$
