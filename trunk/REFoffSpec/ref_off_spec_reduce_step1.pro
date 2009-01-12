@@ -37,6 +37,10 @@ PRO reduce_tab1_browse_button, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 path  = (*global).browsing_path
 title = 'Select 1 or several NeXus file'
 default_extenstion = '.nxs'
@@ -59,6 +63,23 @@ IF (nexus_file_list[0] NE '') THEN BEGIN
     ENDIF
     IDLsendToGeek_addLogBookText, Event, LogText
     display_message_about_files_browsed, Event, nexus_file_list
+
+;get list of polarization state available
+    LogText = '-> Get list of polarization states ... ' + PROCESSING
+    IDLsendToGeek_addLogBookText, Event, LogText
+    iPola = OBJ_NEW('IDLnexusUtilities',nexus_file_list[0])
+    IF (OBJ_VALID(iPola) NE 1) THEN BEGIN ;obj not valid
+        
+
+
+
+
+
+
+    pPolaList = iPola->getPolarization()
+    PolaList = *pPolaList
+    
+
     
 ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for NeXus file'
