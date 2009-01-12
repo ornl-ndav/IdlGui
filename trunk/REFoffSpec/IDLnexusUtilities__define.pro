@@ -59,6 +59,11 @@ status = check_number_polarization_state(full_nexus_name, list_pola_state)
 IF (status EQ 0) THEN RETURN, 0
 self.list_pola_state = PTR_NEW(list_pola_state)
 
+;if value is '/entry/' that means it's the old format
+test_list_OF_pola = *self.list_pola_state
+IF (STRCOMPRESS(test_list_OF_pola[0],/REMOVE_ALL) EQ $
+    '/entry/') THEN RETURN, 0 
+
 RETURN, 1
 END
 

@@ -38,11 +38,11 @@ FUNCTION IDLsendLogBook_getGlobalVariable, Event, var
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
-    'WorkingPath'     : RETURN, (*global).default_output_path
+    'WorkingPath'     : RETURN, (*global).browsing_path
     'LogBookPath'     : RETURN, './'
     'ApplicationName' : RETURN, (*global).application
-    'LogBookUname'    : RETURN, 'log_book'
-    'LogBookMessageId': RETURN, 'log_book_message'
+    'LogBookUname'    : RETURN, 'log_book_text'
+    'LogBookMessageId': RETURN, 'sent_to_geek_text_field'
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
     ELSE:
