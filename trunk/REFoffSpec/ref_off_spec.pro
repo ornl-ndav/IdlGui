@@ -88,6 +88,7 @@ global = ptr_new ({ ucams: ucams,$
                     debugging: DEBUGGING,$
 
                     reduce_tab1_table_left_click: 1,$
+                    browsing_path: '~/results/',$  
 
                     lin_zmax: 0d,$ ;0.46009228 (real value)
                     lin_zmin: 0d,$ ;real value

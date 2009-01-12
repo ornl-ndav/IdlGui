@@ -73,7 +73,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;step1
-make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
+make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;step2
 make_gui_step2, MAIN_TAB, sMainTabSize.size, TabTitles, global
