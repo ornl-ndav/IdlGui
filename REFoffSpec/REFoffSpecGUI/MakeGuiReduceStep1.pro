@@ -46,13 +46,65 @@ sBase = { size:  stab.size,$
 ;            BUILD GUI
 ;******************************************************************************
 
-Base = WIDGET_BASE(REDUCE_TAB,$
+TopBase = WIDGET_BASE(REDUCE_TAB,$
+                      UNAME     = 'reduce_step1_top_base',$
+                      XOFFSET   = sBase.size[0],$
+                      YOFFSET   = sBase.size[1],$
+                      SCR_XSIZE = sBase.size[2],$
+                      SCR_YSIZE = sBase.size[3],$
+                      TITLE     = sBase.title)
+
+;list of polarization states --------------------------------------------------
+wPolaBase = WIDGET_BASE(TopBase,$
+                        XOFFSET   = 400,$
+                        YOFFSET   = 130,$
+                        SCR_XSIZE = 300,$
+                        SCR_YSIZE = 180,$
+                        UNAME     = 'reduce_tab1_polarization_base',$
+                        FRAME     = 5,$
+                        MAP       = 0,$
+                        /COLUMN,$
+                        /BASE_ALIGN_CENTER)
+
+wLabel = WIDGET_LABEL(wPolaBase,$
+                      VALUE = 'Select the Polarization State You Want to Use:')
+                        
+ColumnBase = WIDGET_BASE(wPolaBase,$
+                         /COLUMN,$
+                         /BASE_ALIGN_TOP,$
+                         /EXCLUSIVE,$
+                         UNAME = 'reduce_tab1_pola_base_list_of_pola_state')
+
+button1 = WIDGET_BUTTON(ColumnBase,$
+                        VALUE = 'Off-Off  ',$
+                        UNAME = 'reduce_tab1_pola_base_pola_1',$
+                        SENSITIVE = 1)
+button2 = WIDGET_BUTTON(ColumnBase,$
+                        VALUE = 'Off-On  ',$
+                        UNAME = 'reduce_tab1_pola_base_pola_2',$
+                        SENSITIVE = 1)
+button3 = WIDGET_BUTTON(ColumnBase,$
+                        VALUE = 'On-Off  ',$
+                        UNAME = 'reduce_tab1_pola_base_pola_3',$
+                        SENSITIVE = 1)
+button4 = WIDGET_BUTTON(ColumnBase,$
+                        VALUE = 'On-On  ',$
+                        UNAME = 'reduce_tab1_pola_base_pola_4',$
+                        SENSITIVE = 1)
+
+
+okButton = WIDGET_BUTTON(wPolaBase,$
+                         VALUE = 'OK',$
+                         SCR_XSIZE = 250,$
+                         UNAME = 'reduce_tab1_pola_base_valid_button')
+
+;Main base --------------------------------------------------------------------
+Base = WIDGET_BASE(TopBase,$
                    UNAME     = sBase.uname,$
-                   XOFFSET   = sBase.size[0],$
-                   YOFFSET   = sBase.size[1],$
+                   XOFFSET   = 0,$
+                   YOFFSET   = 0,$
                    SCR_XSIZE = sBase.size[2],$
                    SCR_YSIZE = sBase.size[3],$
-                   TITLE     = sBase.title,$
                    /BASE_ALIGN_LEFT,$
                    /COLUMN)
 
