@@ -32,6 +32,49 @@
 ;
 ;==============================================================================
 
+FUNCTION retrieve_list_OF_polarization_state, Event, $
+                                              nexus_file_name, $
+                                              PolaList
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+LogText = '-> Retrieve list of polarization states for first NeXus file ' + $
+  ' (' + STRCOMPRESS(nexus_file_name,/REMOVE_ALL) + ') ... ' + $
+  PROCESSING
+IDLsendToGeek_addLogBookText, Event, LogText
+iPola = OBJ_NEW('IDLnexusUtilities',nexus_file_name)
+IF (OBJ_VALID(iPola) NE 1) THEN BEGIN ;obj not valid
+    message = FAILED + '  (Format of file not supported by' + $
+      ' this application).'
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, message
+    RETURN, 0
+ENDIF
+
+;display list of polarization states found
+IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+pPolaList = iPola->getPolarization()
+PolaList = *pPolaList
+sz = N_ELEMENTS(PolaList)
+LogText = '--> Number of polarization states found: ' + $
+  STRCOMPRESS(sz,/REMOVE_ALL) + ' ('
+index = 0
+WHILE (index LT sz) DO BEGIN
+    IF (index NE 0) THEN LogText += ' , '
+    LogText += PolaList[index]
+    ++index
+ENDWHILE
+LogText += ')'
+IDLsendToGeek_addLogBookText, Event, LogText
+    
+RETURN, 1
+END
+
+;------------------------------------------------------------------------------
 PRO reduce_tab1_browse_button, Event
 
 ;get global structure
@@ -65,20 +108,14 @@ IF (nexus_file_list[0] NE '') THEN BEGIN
     display_message_about_files_browsed, Event, nexus_file_list
 
 ;get list of polarization state available
-    LogText = '-> Get list of polarization states ... ' + PROCESSING
-    IDLsendToGeek_addLogBookText, Event, LogText
-    iPola = OBJ_NEW('IDLnexusUtilities',nexus_file_list[0])
-    IF (OBJ_VALID(iPola) NE 1) THEN BEGIN ;obj not valid
-        
-
-
-
-
-
-
-    pPolaList = iPola->getPolarization()
-    PolaList = *pPolaList
+    nexus_file_name = nexus_file_list[0]
+    status = retrieve_list_OF_polarization_state(Event, $
+                                                 nexus_file_name, $
+                                                 list_OF_pola_state)
+    IF (status EQ 0) THEN RETURN
     
+;bring to life base that ask the user to select the polarization state
+
 
     
 ENDIF ELSE BEGIN
