@@ -87,13 +87,24 @@ ENDWHILE
 LogText += ')'
 IDLsendToGeek_addLogBookText, Event, LogText
 
-;display list of polarization state base
+;list of polarization states from global (reference)
 NexusListOfPola = (*global).nexus_list_OF_pola_state
 
 ;check which pola states are in the file
+LogText = '--> Checking the polarization states found in the file:'
+IDLsendToGeek_addLogBookText, Event, LogText
 pola_state_there = check_IF_pola_states_are_there(SOURCE = PolaList,$
                                                   REFERENCE = NexusListOfPola)
-
+sz = N_ELEMENTS(NexusListOfPola)
+FOR i=0,(sz-1) DO BEGIN
+    LogText= "     " + NexusListOfPola[i]
+    IF (pola_state_there[i]) THEN BEGIN
+        LogText += " -> FOUND"
+    ENDIF ELSE BEGIN
+        LogText += " -> NOT FOUND"
+    ENDELSE
+    IDLsendToGeek_addLogBookText, Event, LogText
+ENDFOR
 
 ;enables the pola states that are there
 ;from pola base
@@ -118,11 +129,18 @@ IF (nbr GT 0) THEN BEGIN
     id = WIDGET_INFO(Event.top, $
                      FIND_BY_UNAME=list_OF_uname[IndexNoneZero[0]])
     WIDGET_CONTROL, id, /SET_BUTTON
+    LogText = '--> Default Polarization State Selected: ' + $
+      NexusListOfPola[IndexNoneZero[0]]
+    IDLsendToGeek_addLogBookText, Event, LogText
 ENDIF
 
 ;bring to life base that ask the user to select the polarization state
 MapBase, Event, 'reduce_tab1_polarization_base', 1
 activate_widget, Event, 'reduce_step1_tab_base', 0
+
+LogText = '-> <USERS> Waiting for Selection of Working Polarization ' + $
+  'State from User.'
+IDLsendToGeek_addLogBookText, Event, LogText
 
 RETURN, 1
 END
@@ -130,22 +148,32 @@ END
 ;------------------------------------------------------------------------------
 ;This function will disable the pola states selected in the pola base
 PRO update_polarization_states_widgets, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 list_OF_uname = ['reduce_tab1_pola_base_pola_1',$
                  'reduce_tab1_pola_base_pola_2',$
                  'reduce_tab1_pola_base_pola_3',$
                  'reduce_tab1_pola_base_pola_4']
-
 sz = N_ELEMENTS(list_OF_uname)
 FOR i=0,(sz-1) DO BEGIN
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=list_OF_uname[i])
     IF (WIDGET_INFO(id, /BUTTON_SET) EQ 1) THEN BREAK
 ENDFOR
 
+;list of polarization states from global (reference)
+NexusListOfPola = (*global).nexus_list_OF_pola_state
+LogText = '--> Working Polarization State Selected by User: ' + $
+  NexusListOfPola[i]
+IDLsendToGeek_addLogBookText, Event, LogText
+
 list_OF_main_base_uname = ['reduce_tab1_pola_1',$
                            'reduce_tab1_pola_2',$
                            'reduce_tab1_pola_3',$
                            'reduce_tab1_pola_4']
 activate_widget, Event, list_OF_main_base_uname[i], 0
+
+IDLsendToGeek_addLogBookText, Event, ''
 
 END
 
