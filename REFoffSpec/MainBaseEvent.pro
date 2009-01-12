@@ -35,14 +35,13 @@
 PRO MAIN_BASE_event, Event
  
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 wWidget =  Event.top            ;widget id
 
 CASE Event.id OF
     
-    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
@@ -54,9 +53,32 @@ CASE Event.id OF
     END
 
 ;111111111111111111111111111111111111111111111111111111111111111111111111111111
+    
+;11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111
+
+   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
+       reduce_tab1_browse_button, Event ;_reduce_step1
+   END
+
+
+
+
    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_table'): BEGIN
    END
    
+;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
+
+
+
+;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
+
+
+
+;11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111
+
+
+
+
 ;222222222222222222222222222222222222222222222222222222222222222222222222222222
 
 ;Browse ASCII file button

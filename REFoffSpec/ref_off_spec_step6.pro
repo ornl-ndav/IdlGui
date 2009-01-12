@@ -417,14 +417,13 @@ ListOfInputFiles = Table[0,0:nbr_plot-1]
 path             = getTextFieldValue(Event,'create_output_file_path_button')
 ListOfInputFiles = path + ListOfInputFiles
 
-print, ListOfInputFiles ;remove_me
-
+;print, ListOfInputFiles ;remove_me
 
 ;check that all the file exist
 result = FIX(FILE_TEST(ListOfInputFiles,/READ))
 
-print, TOTAL(result)
-print, nbr_plot
+;print, TOTAL(result)
+;print, nbr_plot
 
 
 IF (TOTAL(result) NE nbr_plot) THEN BEGIN
