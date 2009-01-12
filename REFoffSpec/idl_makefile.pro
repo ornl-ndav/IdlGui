@@ -5,7 +5,7 @@ IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run time_utilities.pro
-;.run IDLsendToGeek__define.pro
+.run IDLsendLogBook__define.pro
 .run IDL3columnsASCIIparser__define.pro
 .run xdisplayfile.pro
 .run math_utilities.pro
@@ -42,6 +42,7 @@ cd, CurrentFolder
 .run ref_off_spec_get.pro
 .run ref_off_spec_put.pro
 .run ref_off_spec_gui.pro
+.run IDLnexusUtilities__define.pro
 
 ;procedures
 .run IDLsendToGeek__define.pro
