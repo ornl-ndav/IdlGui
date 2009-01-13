@@ -61,6 +61,15 @@ ENDELSE
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION RemoveDuplicate, BigArray
+
+SortBigArray = BigArray(SORT(BigArray))
+UniqBigArray = SortBigArray[UNIQ(SortBigArray)]
+
+RETURN, UniqBigArray
+END
+
+;------------------------------------------------------------------------------
 ;Parse the cw_field (ex: 1,2,4-6,8,9 -> 1,2,4,5,6,8,9)
 FUNCTION ParseTextField, TextField
 
@@ -81,7 +90,10 @@ ENDIF ELSE BEGIN ;no ',' found
     BigArray = ParseForDash(resultComma[i])
 ENDELSE
 
-RETURN, BigArray
+;Make sure we don't have any duplicate
+UniqBigArray = RemoveDuplicate(BigArray)
+
+RETURN, UniqBigArray
 END
 
 ;------------------------------------------------------------------------------
