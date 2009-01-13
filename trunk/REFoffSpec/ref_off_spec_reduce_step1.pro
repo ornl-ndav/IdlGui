@@ -362,3 +362,12 @@ uname_list = ['reduce_step1_remove_selection_button',$
 activate_widget_list, Event, uname_list, sensitive_status
 
 END
+
+;------------------------------------------------------------------------------
+PRO select_full_line, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
+TableSelection = WIDGET_INFO(id, /TABLE_SELECT)
+RowSelected    = TableSelection[1]
+WIDGET_CONTROL, id, SET_TABLE_SELECT = [0,RowSelected,2,RowSelected]
+
+END

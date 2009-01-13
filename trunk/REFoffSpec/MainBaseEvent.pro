@@ -59,7 +59,7 @@ CASE Event.id OF
 ;Browse button
    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
        reduce_tab1_browse_button, Event ;_reduce_step1
-;       check_reduce_step1_gui, Event ;_reduce_step1
+       select_full_line, Event ;_reduce_step1
    END
 
 ;OK button of the polarization state base
@@ -72,9 +72,11 @@ CASE Event.id OF
        AddNexusToReduceTab1Table, Event ;update the table
        check_reduce_step1_gui, Event ;_reduce_step1
     
+       select_full_line, Event  ;_reduce_step1
    END
    
-   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_table'): BEGIN
+   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_table_uname'): BEGIN
+       select_full_line, Event  ;_reduce_step1
    END
    
 ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
