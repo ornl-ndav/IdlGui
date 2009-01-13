@@ -116,7 +116,7 @@ vSpace = Widget_label(Base,$
 ;Load New Entry (row #1) ------------------------------------------------------
 Row1 = WIDGET_BASE(Base,$
                    /ROW,$
-                   SCR_XSIZE = 680,$
+                   SCR_XSIZE = 880,$
                    FRAME = 0)
 
 lLoad = WIDGET_LABEL(Row1,$
@@ -127,23 +127,26 @@ bBrowse = WIDGET_BUTTON(Row1,$
                         UNAME = 'reduce_tab1_browse_button')
 
 lOrRun = WIDGET_LABEL(Row1,$
-                      VALUE = '  or   Run #:')
+                      VALUE = '  or   Run(s) #:')
 
 tRun = CW_FIELD(Row1,$
-                XSIZE = 15,$
+                XSIZE = 40,$
                 UNAME = 'reduce_tab1_run_cw_field',$
                 TITLE = '',$
-                /INTEGER)
+                /RETURN_EVENTS)
                 
-base_group = WIDGET_BASE(Row1,$
-                         /ROW)
+label = WIDGET_LABEL(Row1,$
+                     VALUE = '(ex: 1245,1345-1347,1349)')
 
-list_OR_archived = CW_BGROUP(base_group,$
-                             ['Archived','Full List'],$
-                             /EXCLUSIVE,$
-                             /ROW,$
-                             SET_VALUE = 0,$
-                             uname = 'reduce_tab1_archived_cw_bgroup')
+; base_group = WIDGET_BASE(Row1,$
+;                          /ROW)
+
+; list_OR_archived = CW_BGROUP(base_group,$
+;                              ['Archived','Full List'],$
+;                              /EXCLUSIVE,$
+;                              /ROW,$
+;                              SET_VALUE = 0,$
+;                              uname = 'reduce_tab1_archived_cw_bgroup')
 
 
 ;Table (Row #2) ---------------------------------------------------------------
