@@ -32,6 +32,59 @@
 ;
 ;==============================================================================
 
+;this function parse for the '-' and return the sequence of numbers
+FUNCTION ParseForDash, element
+resultDash  = STRSPLIT(element,'-',/EXTRACT,COUNT=nbr_dash)
+IF (nbr_dash GT 1) THEN BEGIN    ;there is 1 '-'
+
+    LeftElement  = FIX(resultDash[0])
+    RightElement = FIX(resultDash[1])
+    
+    MinElement = MIN([LeftElement,RightElement], MAX = MaxElement)
+    
+    step     = 1
+    element  = MinElement
+    sz_array = (MaxElement - MinElement + 1) 
+    array    = STRARR(sz_array)
+
+    index = 0
+    WHILE (element LE MaxElement) DO BEGIN
+        array[index] = STRCOMPRESS(element,/REMOVE_ALL)
+        element += step
+        index ++
+    ENDWHILE
+    RETURN, array
+
+ENDIF ELSE BEGIN                ;no '-' found
+    RETURN, [element]
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+;Parse the cw_field (ex: 1,2,4-6,8,9 -> 1,2,4,5,6,8,9)
+FUNCTION ParseTextField, TextField
+
+;check if there is more than 1 run loaded
+resultComma = STRSPLIT(TextField,',',/EXTRACT,COUNT=nbr_comma)
+resultDash  = STRSPLIT(TextField,'-',/EXTRACT,COUNT=nbr_dash)
+;no ',' and no '-' found
+IF (nbr_comma + nbr_dash EQ 2) THEN RETURN, STRCOMPRESS(TextField,/REMOVE_ALL)
+
+sz_comma = N_ELEMENTS(resultComma)
+BigArray = ['']
+IF (sz_comma GT 1) THEN BEGIN ;there is at least 1 ','
+    FOR i=0,(sz_comma-1) DO BEGIN
+        DashList = ParseForDash(resultComma[i])
+        BigArray = [BigArray,DashList]
+    ENDFOR
+ENDIF ELSE BEGIN ;no ',' found
+    BigArray = ParseForDash(resultComma[i])
+ENDELSE
+
+RETURN, BigArray
+END
+
+;------------------------------------------------------------------------------
 ;This function searches for the polarization state given as input in
 ;the nexus_file_name given and return 1 if it has been found, 0 otherwise.
 FUNCTION stateFoundInThisNexus, nexus_file_name, selected_pola_state
@@ -166,6 +219,8 @@ IDLsendToGeek_addLogBookText, Event, LogText
 RETURN, 1
 END
 
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;This function populates the big table
 PRO AddNexusToReduceTab1Table, Event
@@ -369,5 +424,35 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
 TableSelection = WIDGET_INFO(id, /TABLE_SELECT)
 RowSelected    = TableSelection[1]
 WIDGET_CONTROL, id, SET_TABLE_SELECT = [0,RowSelected,2,RowSelected]
+
+END
+
+;------------------------------------------------------------------------------
+PRO reduce_tab1_run_cw_field, Event ;_reduce_step1
+
+WIDGET_CONTROL, /HOURGLASS
+
+;get text contain
+TextField = getTextFieldValue(Event,'reduce_tab1_run_cw_field')
+
+;stop now if there is nothing to do
+IF (STRCOMPRESS(TextField,/REMOVE_ALL) EQ '') THEN BEGIN
+    WIDGET_CONTROL, HOURGLASS = 0
+    RETURN
+ENDIF
+
+LogText   = '-> Run or List of Runs entered by user: ' + TextField
+IDLsendToGeek_addLogBookText, Event, LogText
+
+;retrieve list of runs
+ListOfRuns = ParseTextField(TextField)
+print, 'listOfRuns: '
+print, ListOfRuns ;remove_all
+
+
+
+
+
+WIDGET_CONTROL, HOURGLASS = 0
 
 END

@@ -61,6 +61,11 @@ CASE Event.id OF
        reduce_tab1_browse_button, Event ;_reduce_step1
    END
 
+;Run number cw_field
+   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_run_cw_field'):BEGIN
+       reduce_tab1_run_cw_field, Event ;_reduce_step1
+   END
+
 ;OK button of the polarization state base
    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                'reduce_tab1_pola_base_valid_button'): BEGIN
@@ -73,7 +78,7 @@ CASE Event.id OF
     
        select_full_line, Event  ;_reduce_step1
    END
-   
+
    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_table_uname'): BEGIN
        select_full_line, Event  ;_reduce_step1
    END
