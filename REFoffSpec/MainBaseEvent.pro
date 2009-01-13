@@ -59,7 +59,6 @@ CASE Event.id OF
 ;Browse button
    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_browse_button'): BEGIN
        reduce_tab1_browse_button, Event ;_reduce_step1
-       select_full_line, Event ;_reduce_step1
    END
 
 ;OK button of the polarization state base

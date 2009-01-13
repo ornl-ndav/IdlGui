@@ -169,6 +169,8 @@ table = WIDGET_TABLE(Row2,$
                      /SCROLL,$
                      /ALL_EVENTS)
 
+WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,2,0]
+
 ;Button (Row #3) --------------------------------------------------------------
 Row3 = WIDGET_BASE(Base,$
                    /ROW)
