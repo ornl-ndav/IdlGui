@@ -63,7 +63,7 @@ FUNCTION IDLgetMetadata::init, nexus_full_path, pola_state_path
 
 ;open hdf5 nexus file
 error_file = 0
-;CATCH, error_file
+CATCH, error_file
 IF (error_file NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN,0

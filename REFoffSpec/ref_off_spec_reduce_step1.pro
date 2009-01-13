@@ -32,6 +32,27 @@
 ;
 ;==============================================================================
 
+;This function searches for the polarization state given as input in
+;the nexus_file_name given and return 1 if it has been found, 0 otherwise.
+FUNCTION stateFoundInThisNexus, nexus_file_name, selected_pola_state
+no_error = 0
+CATCH, no_error 
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    return, 0
+ENDIF ELSE BEGIN
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name, selected_pola_state)
+    IF (OBJ_VALID(iNexus)) THEN BEGIN
+        result = 1
+        OBJ_DESTROY, iNexus
+    ENDIF ELSE BEGIN
+        result = 0
+    ENDELSE
+ENDELSE
+RETURN, result
+END
+
+;------------------------------------------------------------------------------
 FUNCTION check_IF_pola_states_are_there, SOURCE    = source,$
                                          REFERENCE = reference
 
@@ -146,6 +167,7 @@ RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
+;This function populates the big table
 PRO AddNexusToReduceTab1Table, Event
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -169,14 +191,24 @@ WHILE (index LT sz) DO BEGIN
     IF (reduce_tab1_table[1,0] EQ '') THEN BEGIN
         reduce_tab1_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
         reduce_tab1_table[1,0] = nexus_file_list[index]
-        reduce_tab1_table[2,0] = reduce_tab1_working_pola_state
+        IF (stateFoundInThisNexus(nexus_file_list[index],$
+                                  reduce_tab1_working_pola_state)) THEN BEGIN
+            reduce_tab1_table[2,0] = 'Pola. State FOUND'
+        ENDIF ELSE BEGIN
+            reduce_tab1_table[2,0] = 'Pola. State MISSING!'
+        ENDELSE
     ENDIF ELSE BEGIN
         sz1 = N_ELEMENTS(reduce_tab1_table)
         reduce_tab1_table = REFORM(reduce_tab1_table,sz1,/OVERWRITE)
         tmp_table = STRARR(3,1)
         tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
         tmp_table[1,0] = nexus_file_list[index]
-        tmp_table[2,0] = reduce_tab1_working_pola_state
+        IF (stateFoundInThisNexus(nexus_file_list[index], $
+                                  reduce_tab1_working_pola_state)) THEN BEGIN
+            tmp_table[2,0] = 'Pola. State FOUND'
+        ENDIF ELSE BEGIN
+            tmp_table[2,0] = 'Pola. State MISSING!'
+        ENDELSE
         reduce_tab1_table = [reduce_tab1_table,tmp_table]
     ENDELSE
         
@@ -197,8 +229,7 @@ WIDGET_CONTROL, id, SET_VALUE = reduce_tab1_table
 END
 
 ;------------------------------------------------------------------------------
-;This function will disable the pola states selected in the pola base
-;and is reached by the OK button of the polarization base
+;This function is reached by the OK button of the polarization base
 PRO update_polarization_states_widgets, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
