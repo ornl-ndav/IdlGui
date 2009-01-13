@@ -116,7 +116,7 @@ vSpace = Widget_label(Base,$
 ;Load New Entry (row #1) ------------------------------------------------------
 Row1 = WIDGET_BASE(Base,$
                    /ROW,$
-                   SCR_XSIZE = 880,$
+                   SCR_XSIZE = 1200,$
                    FRAME = 0)
 
 lLoad = WIDGET_LABEL(Row1,$
@@ -138,15 +138,13 @@ tRun = CW_FIELD(Row1,$
 label = WIDGET_LABEL(Row1,$
                      VALUE = '(ex: 1245,1345-1347,1349)')
 
-; base_group = WIDGET_BASE(Row1,$
-;                          /ROW)
 
-; list_OR_archived = CW_BGROUP(base_group,$
-;                              ['Archived','Full List'],$
-;                              /EXCLUSIVE,$
-;                              /ROW,$
-;                              SET_VALUE = 0,$
-;                              uname = 'reduce_tab1_archived_cw_bgroup')
+label = WIDGET_LABEL(Row1,$
+                     VALUE = '     List of Proposal:')
+ComboBox = WIDGET_COMBOBOX(Row1,$
+                           VALUE = '                         ',$
+                           UNAME = 'reduce_tab1_list_of_proposal')
+                           
 
 
 ;Table (Row #2) ---------------------------------------------------------------

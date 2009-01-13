@@ -85,6 +85,7 @@ ENDELSE
 
 ;define global variables
 global = ptr_new ({ ucams: ucams,$
+                    instrument: 'REF_M',$
                     debugging: DEBUGGING,$
                     
                     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
@@ -294,6 +295,15 @@ IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
 ENDIF
+
+;display list of proposal for this instrument ---------------------------------
+ListOfProposal = getListOfProposal((*global).instrument,$
+                                   MAIN_BASE)
+id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+print, ListOfProposal
+WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+
+
 
 ;==============================================================================
 ;==============================================================================
