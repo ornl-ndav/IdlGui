@@ -166,7 +166,8 @@ table = WIDGET_TABLE(Row2,$
                      SCR_XSIZE = 1230,$
                      SCR_YSIZE = 400,$
                      COLUMN_WIDTHS = [100,955,150],$
-                     /SCROLL)
+                     /SCROLL,$
+                     /ALL_EVENTS)
 
 ;Button (Row #3) --------------------------------------------------------------
 Row3 = WIDGET_BASE(Base,$
