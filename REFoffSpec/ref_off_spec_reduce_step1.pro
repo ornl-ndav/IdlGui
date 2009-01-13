@@ -87,13 +87,20 @@ IF (sz_comma GT 1) THEN BEGIN ;there is at least 1 ','
         BigArray = [BigArray,DashList]
     ENDFOR
 ENDIF ELSE BEGIN ;no ',' found
-    BigArray = ParseForDash(resultComma[i])
+    BigArray = [ParseForDash(resultComma[0])]
 ENDELSE
 
 ;Make sure we don't have any duplicate
 UniqBigArray = RemoveDuplicate(BigArray)
 
-RETURN, UniqBigArray
+;remove '' element (first place) if it's here
+emptyElement   = STRMATCH(UniqBigArray,'')
+ResultArray    = WHERE(emptyElement EQ 0)
+NewResultArray = UniqBigArray[ResultArray]
+;sort using numbers
+SortArray = NewResultArray[SORT(FIX(NewResultArray))]
+
+RETURN, SortArray
 END
 
 ;------------------------------------------------------------------------------
@@ -453,13 +460,16 @@ IF (STRCOMPRESS(TextField,/REMOVE_ALL) EQ '') THEN BEGIN
     RETURN
 ENDIF
 
-LogText   = '-> Run or List of Runs entered by user: ' + TextField
+;display list of runs
+LogText = '-> Run or List of Runs entered by user: ' + TextField
 IDLsendToGeek_addLogBookText, Event, LogText
 
 ;retrieve list of runs
 ListOfRuns = ParseTextField(TextField)
-print, 'listOfRuns: '
-print, ListOfRuns ;remove_all
+
+;list of runs after parsing
+LogText = '-> Run or List of Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
+IDLsendToGeek_addLogBookText, Event, LogText
 
 
 
