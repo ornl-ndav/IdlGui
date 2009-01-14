@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 .run IDLgetMetadata__define.pro
 .run xdisplayfile.pro
 .run math_utilities.pro
+.run findnexus.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

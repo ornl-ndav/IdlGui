@@ -449,6 +449,8 @@ END
 ;------------------------------------------------------------------------------
 PRO reduce_tab1_run_cw_field, Event ;_reduce_step1
 
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
 WIDGET_CONTROL, /HOURGLASS
 
 ;get text contain
@@ -461,7 +463,7 @@ IF (STRCOMPRESS(TextField,/REMOVE_ALL) EQ '') THEN BEGIN
 ENDIF
 
 ;display list of runs
-LogText = '-> Run or List of Runs entered by user: ' + TextField
+LogText = '> Run or List of Runs entered by user: ' + TextField
 IDLsendToGeek_addLogBookText, Event, LogText
 
 ;retrieve list of runs
@@ -471,9 +473,27 @@ ListOfRuns = ParseTextField(TextField)
 LogText = '-> Run or List of Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
 IDLsendToGeek_addLogBookText, Event, LogText
 
+;get proposal selected by user (from droplist)
+proposalSelected = getComboListSelectedValue(Event, $
+                                            'reduce_tab1_list_of_proposal')
+LogText = '-> Proposal Folder Selected: ' + proposalSelected
+IDLsendToGeek_addLogBookText, Event, LogText
 
-
-
+;get full nexus file name for the runs loaded
+LogText = '-> Retrieve List of Full NeXus File Names:'
+IDLsendToGeek_addLogBookText, Event, LogText
+nbr_runs = N_ELEMENTS(ListOfRuns)
+index    = 0
+WHILE (index LT nbr_runs) DO BEGIN
+    full_nexus_name = findnexus(Event,$
+                                RUN_NUMBER = ListOfRuns[index],$
+                                INSTRUMENT = (*global).instrument,$
+                                PROPOSAL   = proposalSelected)
+    LogText = '-> Run #: ' + ListOfRuns[index]
+    LogText += ' => ' + full_nexus_name
+    IDLsendToGeek_addLogBookText, Event, LogText
+    index++
+ENDWHILE
 
 WIDGET_CONTROL, HOURGLASS = 0
 

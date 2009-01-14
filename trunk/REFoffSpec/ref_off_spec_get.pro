@@ -56,7 +56,14 @@ FUNCTION getDropListSelectedValue, Event, uname
 index_selected = getDropListSelectedIndex(Event,uname)
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=list
-return, list[index_selected]
+RETURN, list[index_selected]
+END
+
+;------------------------------------------------------------------------------
+;This function gives the value of the index selected
+FUNCTION getComboListSelectedValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id, /COMBOBOX_GETTEXT)
 END
 
 ;------------------------------------------------------------------------------
