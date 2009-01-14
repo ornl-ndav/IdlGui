@@ -73,7 +73,10 @@ IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
     ProposalList = STRARR(sz+1)
     FOR i=0,(sz-1) DO BEGIN
         str_array = STRSPLIT(listening[i],prefix+'*',/EXTRACT,/REGEX)
-        ProposalList[i] = str_array[0]
+        folder_with_slash = str_array[0]
+        str_array = STRSPLIT(folder_with_slash,'/',/EXTRACT)
+        folder_without_slash = str_array[0]
+        ProposalList[i] = folder_without_slash
         IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE,$
           '   ' + str_array[0]
     ENDFOR
