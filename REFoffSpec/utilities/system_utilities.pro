@@ -70,13 +70,14 @@ IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, $
 spawn, cmd_ls, listening, err_listening
 IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
     sz = N_ELEMENTS(listening)
-    ProposalList = STRARR(sz)
+    ProposalList = STRARR(sz+1)
     FOR i=0,(sz-1) DO BEGIN
         str_array = STRSPLIT(listening[i],prefix+'*',/EXTRACT,/REGEX)
         ProposalList[i] = str_array[0]
         IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE,$
           '   ' + str_array[0]
-      ENDFOR
+    ENDFOR
+    ProposalList[i] = ['> CHECK IN ALL FOLDERS <']
 ENDIF ELSE BEGIN
     ProposalList = ['FOLDER IS EMPTY !']
 ENDELSE
