@@ -298,9 +298,9 @@ ENDIF
 
 ;display list of proposal for this instrument ---------------------------------
 ListOfProposal = getListOfProposal((*global).instrument,$
+                                   UCAMS,$
                                    MAIN_BASE)
 id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-print, ListOfProposal
 WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
 
 

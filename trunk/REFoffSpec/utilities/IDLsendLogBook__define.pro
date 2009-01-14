@@ -31,18 +31,32 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+FUNCTION IDLsendLogBook_getLocalVariable, var
+CASE (var) OF
+   'LogBookUname'    : RETURN, 'log_book_text'
+   'Alternate_1'     : RETURN, 'data_log_book_text_field'
+   'Alternate_2'     : RETURN, 'normalization_log_book_text_field'
+   'Alternate_3'     : RETURN, 'empty_cell_status'
+   'LogBookMessageId': RETURN, 'sent_to_geek_text_field'
+   'LogBookPath'     : RETURN, './'
+   ELSE: RETURN, ''
+ENDCASE
+END
 
+;------------------------------------------------------------------------------
 ;Procedure that will return all the global variables for this routine
 FUNCTION IDLsendLogBook_getGlobalVariable, Event, var
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 CASE (var) OF
-    'WorkingPath'     : RETURN, (*global).browsing_path
-    'LogBookPath'     : RETURN, './'
+    'WorkingPath'     : RETURN, (*global).default_output_path
+    'LogBookPath'     : RETURN, IDLsendLogBook_getLocalVariable(var)
     'ApplicationName' : RETURN, (*global).application
-    'LogBookUname'    : RETURN, 'log_book_text'
-    'LogBookMessageId': RETURN, 'sent_to_geek_text_field'
+    'LogBookUname'    : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_1'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_2'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_3'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'LogBookMessageId': RETURN, IDLsendLogBook_getLocalVariable(var)
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
     ELSE:
@@ -50,36 +64,192 @@ ENDCASE
 RETURN, 'NA'
 END
 
+;------------------------------------------------------------------------------
+;Procedure that will return all the global variables for this routine
+FUNCTION IDLsendLogBook_fromMainBase_getGlobalVariable, MAIN_BASE, var
+;get global structure
+WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+CASE (var) OF
+    'WorkingPath'     : RETURN, (*global).default_output_path
+    'LogBookPath'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'ApplicationName' : RETURN, (*global).application
+    'LogBookUname'    : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_1'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_2'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'Alternate_3'     : RETURN, IDLsendLogBook_getLocalVariable(var)
+    'LogBookMessageId': RETURN, IDLsendLogBook_getLocalVariable(var)
+    'ucams'           : RETURN, (*global).ucams
+    'version'         : RETURN, (*global).version
+    ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getUname, Event, ALT=alt
+IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
+   CASE (ALT) OF
+      1: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_1')
+      2: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_2')
+      3: LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'Alternate_3')
+      ELSE: LogBookUname = IDLsendLogBook_getGlobalVariable(Event, $
+                                                            'LogBookUname')
+   ENDCASE
+ENDIF ELSE BEGIN
+   LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+ENDELSE
+RETURN, LogBookUname
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_fromMainBase_getUname, MAIN_BASE, ALT=alt
+IF (N_ELEMENTS(ALT) NE 0) THEN BEGIN
+    CASE (ALT) OF
+        1: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_1')
+        2: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_2')
+        3: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'Alternate_3')
+        ELSE: LogBookUname = $
+          IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                        'LogBookUname')
+    ENDCASE
+ENDIF ELSE BEGIN
+    LogBookUname = $
+      IDLsendLogBook_fromMainBase_getGlobalVariable(MAIN_BASE, $
+                                                    'LogBookUname')
+ENDELSE
+RETURN, LogBookUname
+END
+
 ;==============================================================================
 ;==============================================================================
 
-PRO IDLsendLogBook_addLogBookText, Event, text
-LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+PRO IDLsendLogBook_addLogBookText, Event, ALT=alt, text
+LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDLsendLogBook_getLogBookText, Event
-LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+PRO IDLsendLogBook_addLogBookText_fromMainBase, MAIN_BASE, ALT=alt, text
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getLogBookText, Event, ALT=alt
+LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDLsendLogBook_getMessage, Event
-MessageUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookMessageId')
+FUNCTION IDLsendLogBook_getLogBookText_fromMainBase, MAIN_BASE, ALT=alt
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION IDLsendLogBook_getMessage, Event, ALT=alt
+LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=MessageUname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
 ;------------------------------------------------------------------------------
-PRO IDLsendLogBook_putLogBookText, Event, text
-LogBookUname = IDLsendLogBook_getGlobalVariable(Event,'LogBookUname')
+PRO IDLsendLogBook_putLogBookText, Event, ALT=alt, text
+LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text
+END
+
+;------------------------------------------------------------------------------
+PRO IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, ALT=alt, text
+LogBookUname = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;this function removes from the intial text the given TextToRemove and 
+;returns the result.
+FUNCTION removeStringFromText, initialText, TextToRemove
+;find where the 'textToRemove' starts
+step1 = strpos(initialText,TexttoRemove)
+;keep the text from the start of the line to the step1 position
+step2 = strmid(initialText,0,step1)
+RETURN, step2
+END
+
+;------------------------------------------------------------------------------
+PRO IDLsendLogBook_ReplaceLogBookText, Event, $
+                                       ALT = alt, $
+                                       OLD_STRING, $
+                                       NEW_STRING 
+InitialStrarr = IDLsendLogBook_getLogBookText(Event, ALT=alt)
+ArrSize       = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN 
+;do not remove anything from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        FinalStrarr = InitialStrarr + NEW_STRING
+    ENDELSE
+ENDIF ELSE BEGIN ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                            OLD_STRING)
+        NewLastLine += NEW_STRING
+        FinalStrarr  = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        NewInitialStrarr = removeStringFromText(InitialStrarr,OLD_STRING)
+        FinalStrarr      = NewInitialStrarr + NEW_STRING
+    ENDELSE
+ENDELSE
+IDLsendLogBook_putLogBookText, Event, ALT=alt, FinalStrarr
+END
+
+;==============================================================================
+PRO IDLsendLogBook_ReplaceLogBookText_fromMainBase, MAIN_BASE, $
+                                                    ALT=alt, $
+                                                    OLD_STRING, $
+                                                    NEW_STRING
+
+LogBookUname  = IDLsendLogBook_fromMainBase_getUname(MAIN_BASE, ALT=alt)
+InitialStrarr = IDLsendLogBook_getLogBookText_fromMainBase(MAIN_BASE, ALT=alt)
+ArrSize       = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN $
+;do not remove anything from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        FinalStrarr = InitialStrarr + NEW_STRING
+    ENDELSE
+ENDIF ELSE BEGIN ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                            OLD_STRING)
+        NewLastLine += NEW_STRING
+        FinalStrarr  = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        NewInitialStrarr = removeStringFromText(InitialStrarr,OLD_STRING)
+        FinalStrarr      = NewInitialStrarr + NEW_STRING
+    ENDELSE
+ENDELSE
+IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, ALT=alt, FinalStrarr
 END
 
 ;**********************************************************************
@@ -311,7 +481,7 @@ END
 ;******************************************************************************
 PRO IDLsendLogBook__define
 STRUCT = { IDLsendLogBook,$
-           var : ''}
+           var: ''}
 END
 ;******************************************************************************
 ;******************************************************************************
