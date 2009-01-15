@@ -258,6 +258,10 @@ WHILE (index LT sz) DO BEGIN
     iNexus = OBJ_NEW('IDLgetMetadata', $
                      nexus_file_list[index],$
                      reduce_tab1_working_pola_state)
+    IF (~OBJ_VALID(iNexus)) THEN BEGIN
+        index ++
+        CONTINUE
+    ENDIF
     RunNumber = iNexus->getRunNumber()
     OBJ_DESTROY, iNexus
     
@@ -295,13 +299,16 @@ y = N_ELEMENTS(reduce_tab1_table)/3
 reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
 
 ;check that there are no duplicates
-RemoveDuplicatedRuns, Reduce_tab1_table
+New_Reduce_tab1_table = uniq_element_table(INPUT_TABLE = reduce_tab1_table,$
+                                           COL         = 0)
+
+new_y = (SIZE(New_Reduce_tab1_table))(2)
 
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
-WIDGET_CONTROL, id, TABLE_YSIZE = y
-WIDGET_CONTROL, id, SET_VALUE = reduce_tab1_table
+WIDGET_CONTROL, id, TABLE_YSIZE = new_y
+WIDGET_CONTROL, id, SET_VALUE = New_Reduce_tab1_table
 
-(*(*global).reduce_tab1_table) = reduce_tab1_table
+(*(*global).reduce_tab1_table) = New_Reduce_tab1_table
 
 END
 
@@ -495,10 +502,12 @@ WHILE (index LT nbr_runs) DO BEGIN
                                 PROPOSAL   = proposalSelected,$
                                 isNexusExist)
     LogText = '-> Run #: ' + ListOfRuns[index]
-    LogText += ' => ' + full_nexus_name
     IF (isNexusExist) THEN BEGIN
+        LogText += ' => ' + full_nexus_name
         nexus_file_list[index] = full_nexus_name
-    ENDIF
+    ENDIF ELSE BEGIN
+        LogText += ' => NeXus file not FOUND !'
+    ENDELSE
     IDLsendToGeek_addLogBookText, Event, LogText
     index++
 ENDWHILE
@@ -532,11 +541,3 @@ WIDGET_CONTROL, HOURGLASS = 0
 
 END
 
-;------------------------------------------------------------------------------
-PRO RemoveDuplicatedRuns, Reduce_tab1_table
-
-help, reduce_tab1_table
-
-
-
-END
