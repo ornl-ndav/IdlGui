@@ -1062,6 +1062,36 @@ CASE Event.id OF
         scaling_tab_event, Event ;_eventcb
     END
 
+;type of selection (none, i vs Q, ...) ----------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_group_uname'): BEGIN
+        selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+        CASE (selection_value) OF
+            0: IvsQbaseMap = 0
+            1: IvsQbaseMap = 1
+            ELSE: IvsQbaseMap = 0
+        ENDCASE
+        MapBase, Event, 'step5_counts_vs_q_base_uname', IvsQbaseMap
+    END
+
+;name of file (text field)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_file_name_i_vs_q'): BEGIN
+        text = getTextFieldValue(Event,'step5_file_name_i_vs_q')
+        IF (text NE '') THEN BEGIN
+            go_button_sensitive = 1
+        ENDIF ELSE BEGIN
+            go_button_sensitive = 0
+        ENDELSE
+        activate_widget, Event, $
+          'step5_create_button_i_vs_q', $
+          go_button_sensitive
+    END
+
+
+
+
+
+
+
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------

@@ -204,7 +204,7 @@ sIvsQbase = { size: [sSelectionGroupBase.size[0]+XYoff[0],$
                      1250,60],$
               frame: 0,$
               uname: 'step5_counts_vs_q_base_uname',$
-              map: 1}
+              map: 0}
 
 XYoff = [10,10] ;inside frame
 sInsideFrame = { size: [XYoff[0],$
@@ -225,7 +225,7 @@ sFolderButton = { size: [XYoff[0],$
                   uname: 'step5_browse_button_i_vs_q',$
                   value: (*global).working_path }
 
-XYoff = [0,0] ;file name
+XYoff = [0,0] ;file name text field
 sFileName = { size: [sFolderButton.size[0]+$
                      sFolderButton.size[2]+$
                      XYoff[0],$
@@ -486,6 +486,7 @@ text = WIDGET_TEXT(wInsideBase,$
                    VALUE     = sFileName.value,$
                    UNAME     = sFileName.uname,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 ;create button
