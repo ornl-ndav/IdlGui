@@ -287,7 +287,10 @@ wShiftingDraw = WIDGET_DRAW(wShiftBase,$
                             YOFFSET   = sShiftingDraw.size[1],$
                             SCR_XSIZE = sShiftingDraw.size[2],$
                             SCR_YSIZE = sShiftingDraw.size[3],$
-                            UNAME     = sShiftingDraw.uname)
+                            UNAME     = sShiftingDraw.uname,$
+                            /BUTTON_EVENTS,$
+                            /MOTION_EVENTS,$
+                            /TRACKING_EVENTS)
 
 ;Shifting base ----------------------------------------------------------------
 wScalebase = WIDGET_BASE(BaseTab,$
