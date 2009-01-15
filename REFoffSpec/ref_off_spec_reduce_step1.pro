@@ -484,16 +484,46 @@ LogText = '-> Retrieve List of Full NeXus File Names:'
 IDLsendToGeek_addLogBookText, Event, LogText
 nbr_runs = N_ELEMENTS(ListOfRuns)
 index    = 0
+nexus_file_list = STRARR(nbr_runs)
 WHILE (index LT nbr_runs) DO BEGIN
     full_nexus_name = findnexus(Event,$
                                 RUN_NUMBER = ListOfRuns[index],$
                                 INSTRUMENT = (*global).instrument,$
-                                PROPOSAL   = proposalSelected)
+                                PROPOSAL   = proposalSelected,$
+                                isNexusExist)
     LogText = '-> Run #: ' + ListOfRuns[index]
     LogText += ' => ' + full_nexus_name
+    IF (isNexusExist) THEN BEGIN
+        nexus_file_list[index] = full_nexus_name
+    ENDIF
     IDLsendToGeek_addLogBookText, Event, LogText
     index++
 ENDWHILE
+
+;remove the runs not found by STRJOIN with ',' and STRPLIT with ','
+;after removing blank spaces
+
+form1 = STRJOIN(nexus_file_list,',')
+form2 = STRCOMPRESS(form1,/REMOVE_ALL)
+nexus_file_list = STRSPLIT(form2,',',/EXTRACT)
+
+(*(*global).reduce_tab1_nexus_file_list) = nexus_file_list
+
+IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
+;get list of polarization state available and display list_of_pola base
+    nexus_file_name = nexus_file_list[0]
+    status = retrieve_list_OF_polarization_state(Event, $
+                                                     nexus_file_name, $
+                                                     list_OF_pola_state)
+ENDIF ELSE BEGIN
+
+;update the table
+    AddNexusToReduceTab1Table, Event
+
+ENDELSE
+
+;clear the cw_field
+putTextFieldValue, Event, 'reduce_tab1_run_cw_field', ''
 
 WIDGET_CONTROL, HOURGLASS = 0
 

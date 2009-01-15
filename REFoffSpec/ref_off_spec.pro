@@ -64,7 +64,9 @@ SUPER_USERS       = ['j35']
 sDEBUGGING = { tab: {main_tab: 0,$ ;REDUCE tab
                      step4_tab: 0,$
                      scaling_tab: 1},$
-               ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/'}
+               ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
+               reduce_tab1_cw_field: '4753-4755',$
+               reduce_tab1_proposal_combobox: 1}
 ;PACKAGES
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: ''}
@@ -87,7 +89,8 @@ ENDELSE
 global = ptr_new ({ ucams: ucams,$
                     instrument: 'REF_M',$
                     debugging: DEBUGGING,$
-                    
+                    sDebugging: sDebugging,$
+          
                     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
                                                '/entry-Off_On/',$
                                                '/entry-On_Off/',$
@@ -265,11 +268,22 @@ WSET, id_value
 
 ;LOADCT, 0,/SILENT
 
+;display list of proposal for this instrument ---------------------------------
+ListOfProposal = getListOfProposal((*global).instrument,$
+                                   UCAMS,$
+                                   MAIN_BASE)
+id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+
 ;??????????????????????????????????????????????????????????????????????????????
 IF (DEBUGGING EQ 'yes' ) THEN BEGIN
 ;tab to show (main_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+;reduce tab1 combobox index selected
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+    set_value = sDebugging.reduce_tab1_proposal_combobox
+    WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
 ;tab to show (pixel_range_selection/scaling_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.step4_tab
@@ -295,15 +309,6 @@ IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
 IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
 ENDIF
-
-;display list of proposal for this instrument ---------------------------------
-ListOfProposal = getListOfProposal((*global).instrument,$
-                                   UCAMS,$
-                                   MAIN_BASE)
-id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
-
-
 
 ;==============================================================================
 ;==============================================================================

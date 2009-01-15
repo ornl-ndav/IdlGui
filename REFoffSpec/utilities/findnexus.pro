@@ -55,10 +55,7 @@ IF (N_ELEMENTS(PROPOSAL) AND $
 ENDIF
  
 cmd += ' ' + STRCOMPRESS(RUN_NUMBER,/REMOVE_ALL)
-
 spawn, cmd, full_nexus_name, err_listening
-
-print, cmd
 
 ;check if nexus exists
 sz = (size(full_nexus_name))(1)
