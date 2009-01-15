@@ -129,10 +129,17 @@ bBrowse = WIDGET_BUTTON(Row1,$
 lOrRun = WIDGET_LABEL(Row1,$
                       VALUE = '  or   Run(s) #:')
 
+IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+    value = (*global).sDebugging.reduce_tab1_cw_field
+ENDIF ELSE BEGIN
+    value = ''
+ENDELSE
+
 tRun = CW_FIELD(Row1,$
                 XSIZE = 40,$
                 UNAME = 'reduce_tab1_run_cw_field',$
                 TITLE = '',$
+                VALUE = value,$
                 /RETURN_EVENTS)
                 
 label = WIDGET_LABEL(Row1,$
@@ -145,8 +152,6 @@ ComboBox = WIDGET_COMBOBOX(Row1,$
                            VALUE = '                         ',$
                            UNAME = 'reduce_tab1_list_of_proposal')
                            
-
-
 ;Table (Row #2) ---------------------------------------------------------------
 Row2 = WIDGET_BASE(Base,$
                    /ROW)
