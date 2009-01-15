@@ -294,6 +294,9 @@ y = N_ELEMENTS(reduce_tab1_table)/3
 
 reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
 
+;check that there are no duplicates
+RemoveDuplicatedRuns, Reduce_tab1_table
+
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
 WIDGET_CONTROL, id, TABLE_YSIZE = y
 WIDGET_CONTROL, id, SET_VALUE = reduce_tab1_table
@@ -526,5 +529,14 @@ ENDELSE
 putTextFieldValue, Event, 'reduce_tab1_run_cw_field', ''
 
 WIDGET_CONTROL, HOURGLASS = 0
+
+END
+
+;------------------------------------------------------------------------------
+PRO RemoveDuplicatedRuns, Reduce_tab1_table
+
+help, reduce_tab1_table
+
+
 
 END
