@@ -61,7 +61,7 @@ SUPER_USERS       = ['j35']
 ;          5: Create Output
 ;          6: Options,
 ;          7:Log Book 
-sDEBUGGING = { tab: {main_tab: 0,$ ;REDUCE tab
+sDEBUGGING = { tab: {main_tab: 4,$ ;REDUCE tab
                      step4_tab: 0,$
                      scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -100,6 +100,8 @@ global = ptr_new ({ ucams: ucams,$
                     reduce_tab1_table: PTR_NEW(0L),$
                     reduce_tab1_working_pola_state: '',$
                     reduce_tab1_nexus_file_list: PTR_NEW(0L),$
+
+                    working_path: '~/results/',$
 
                     lin_zmax: 0d,$ ;0.46009228 (real value)
                     lin_zmin: 0d,$ ;real value
@@ -169,7 +171,7 @@ global = ptr_new ({ ucams: ucams,$
                     MainBaseSize:        [30,50,1276,901],$
                     ascii_extension:     'txt',$
                     ascii_filter:        '*.txt',$
-                    ascii_path:          '~/',$
+                    ascii_path:          '~/results/',$
                     sys_color_face_3d:   INTARR(3),$
                     working_pola_state:  '',$
                     list_OF_ascii_files: ptr_new(0L),$

@@ -32,6 +32,7 @@
 ;
 ;==============================================================================
 
+;RECAP base
 PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
 
 ;******************************************************************************
@@ -177,6 +178,86 @@ sZmin = { size: [sZmax.size[0]+XYoff[0],$
           uname: 'step5_zmin',$
           sensitive: 0,$
           value: ''}
+
+;cw_bgroup of selection to make (none, counts vs Q .... etc) ------------------
+XYoff = [10,10]
+sSelectionGroupBase = { size: [sScale.size[0]+XYoff[0],$
+                               sScale.size[1]+$
+                               sScale.size[3]+$
+                               XYoff[1],$
+                               800,40],$
+                        frame: 0,$
+                        sensitive: 1,$
+                        uname: 'step5_selection_group' }
+
+sSelectionGroup = { value: [' None ',' Counts vs Q '],$
+                    set_value: 0,$
+                    label: 'Selection Type:  ',$
+                    uname: 'step5_selection_group_uname' }
+
+;counts vs Q base -------------------------------------------------------------
+XYoff = [0,5]
+sIvsQbase = { size: [sSelectionGroupBase.size[0]+XYoff[0],$
+                     sSelectionGroupBase.size[1]+$
+                     sSelectionGroupBase.size[3]+$
+                     XYoff[1],$
+                     1250,60],$
+              frame: 0,$
+              uname: 'step5_counts_vs_q_base_uname',$
+              map: 1}
+
+XYoff = [10,10] ;inside frame
+sInsideFrame = { size: [XYoff[0],$
+                        XYoff[1],$
+                        sIvsQbase.size[2]-2*XYoff[0],$
+                        sIvsQbase.size[3]-2*XYoff[1]],$
+                 frame: 1}
+           
+XYoff = [15,-8] ;title
+sTitle = { size: [sInsideFrame.size[0]+XYoff[0],$
+                  sInsideFrame.size[1]+XYoff[1]],$
+           value: 'Selection: I vs Q'}
+
+XYoff = [5,8] ;folder button
+sFolderButton = { size: [XYoff[0],$
+                         XYoff[1],$
+                         550,30],$
+                  uname: 'step5_browse_button_i_vs_q',$
+                  value: (*global).working_path }
+
+XYoff = [0,0] ;file name
+sFileName = { size: [sFolderButton.size[0]+$
+                     sFolderButton.size[2]+$
+                     XYoff[0],$
+                     sFolderButton.size[1]+$
+                     XYoff[1],$
+                     400],$
+              uname: 'step5_file_name_i_vs_q',$
+              value: '' }
+
+XYoff = [0,0] ;create button
+sCreateButton = { size: [sFileName.size[0]+$
+                         sFileName.size[2]+$
+                         XYoff[0],$
+                         sFileName.size[1]+$
+                         XYoff[0],$
+                         140,$
+                         sFolderButton.size[3]],$
+                  uname: 'step5_create_button_i_vs_q',$
+                  value: 'CREATE ASCII FILE',$
+                  sensitive: 0}
+                        
+XYoff = [0,0] ;preview button
+sPreviewButton = { size: [sCreateButton.size[0]+$
+                          sCreateButton.size[2]+$
+                          XYoff[0],$
+                          sCreateButton.size[1]+$
+                          XYoff[1],$
+                          130,$
+                          sCreateButton.size[3]],$
+                   value: 'PREVIEW',$
+                   uname: 'preview_button_i_vs_q',$
+                   sensitive: 0}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -344,5 +425,87 @@ wLinLog = CW_BGROUP(BaseTab,$
                     /EXCLUSIVE,$
                     /ROW,$
                     /NO_RELEASE)
+
+;cw_bgroup of selection to make (none, counts vs Q .... etc) ------------------
+wSelectionGroupBase = WIDGET_BASE(BaseTab,$
+                                  XOFFSET   = sSelectionGroupBase.size[0],$
+                                  YOFFSET   = sSelectionGroupBase.size[1],$
+                                  SCR_XSIZE = sSelectionGroupBase.size[2],$
+                                  SCR_YSIZE = sSelectionGroupBase.size[3],$
+                                  UNAME     = sSelectionGroupBase.uname,$
+                                  FRAME     = sSelectionGroupBase.frame,$
+                                  SENSITIVE = sSelectionGroupBase.sensitive,$
+                                  /ROW)
+
+wSelectionGroup = CW_BGROUP(wSelectionGroupBase,$
+                            sSelectionGroup.value,$
+                            LABEL_LEFT = sSelectionGroup.label,$
+                            UNAME      = sSelectionGroup.uname,$
+                            /EXCLUSIVE,$
+                            SET_VALUE = 0,$
+                            /NO_RELEASE,$
+                            /ROW)
+
+;counts vs Q base -------------------------------------------------------------
+wQbase = WIDGET_BASE(BaseTab,$
+                     XOFFSET   = sIvsQbase.size[0],$
+                     YOFFSET   = sIvsQbase.size[1],$
+                     SCR_XSIZE = sIvsQbase.size[2],$
+                     SCR_YSIZE = sIvsQbase.size[3],$
+                     UNAME     = sIvsQbase.uname,$
+                     MAP       = sIvsQbase.map,$
+                     FRAME     = sIvsQbase.frame)
+                     
+;title
+wTitle = WIDGET_LABEL(wQbase,$
+                      XOFFSET = sTitle.size[0],$
+                      YOFFSET = sTitle.size[1],$
+                      VALUE   = sTitle.value)
+
+;inside frame
+wInsideBase = WIDGET_BASE(wQbase,$
+                          XOFFSET   = sInsideFrame.size[0],$
+                          YOFFSET   = sInsideFrame.size[1],$
+                          SCR_XSIZE = sInsideFrame.size[2],$
+                          SCR_YSIZE = sInsideFrame.size[3],$
+                          FRAME     = sInsideFrame.frame)                     
+;folder button
+button = WIDGET_BUTTON(wInsideBase,$
+                       VALUE     = sFolderButton.value,$
+                       XOFFSET   = sFolderButton.size[0],$
+                       YOFFSET   = sFolderButton.size[1],$
+                       SCR_XSIZE = sFolderButton.size[2],$
+                       SCR_YSIZE = sFolderButton.size[3],$
+                       UNAME     = sFolderButton.uname)
+                       
+;file name
+text = WIDGET_TEXT(wInsideBase,$
+                   XOFFSET = sFileName.size[0],$
+                   YOFFSET = sFileName.size[1],$
+                   SCR_XSIZE = sFileName.size[2],$
+                   VALUE     = sFileName.value,$
+                   UNAME     = sFileName.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
+
+;create button
+button = WIDGET_BUTTON(wInsideBase,$
+                       XOFFSET   = sCreateButton.size[0],$
+                       YOFFSET   = sCreateButton.size[1],$
+                       SCR_XSIZE = sCreateButton.size[2],$
+                       SCR_YSIZE = sCreateButton.size[3],$
+                       VALUE     = sCreateButton.value,$
+                       SENSITIVE = sCreateButton.sensitive,$
+                       UNAME     = sCreateButton.uname)
+
+;preview button
+button = WIDGET_BUTTON(wInsideBase,$
+                       XOFFSET   = sPreviewButton.size[0],$
+                       YOFFSET   = sPreviewButton.size[1],$
+                       SCR_XSIZE = sPreviewButton.size[2],$
+                       SCR_YSIZE = sPreviewButton.size[3],$
+                       VALUE     = sPreviewButton.value,$
+                       SENSITIVE = sPreviewButton.sensitive,$
+                       UNAME     = sPreviewButton.uname)
 
 END
