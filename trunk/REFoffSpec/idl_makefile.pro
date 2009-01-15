@@ -12,6 +12,7 @@ cd, IdlUtilitiesPath
 .run xdisplayfile.pro
 .run math_utilities.pro
 .run findnexus.pro
+.run uniq_element_table.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
