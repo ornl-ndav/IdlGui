@@ -1086,12 +1086,6 @@ CASE Event.id OF
           go_button_sensitive
     END
 
-
-
-
-
-
-
 ;------------------------------------------------------------------------------
 ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
 ;------------------------------------------------------------------------------
