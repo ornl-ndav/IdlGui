@@ -548,14 +548,45 @@ ENDFOR
 output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
 output_file_path = getButtonValue(Event,'step5_browse_button_i_vs_q')
 output_file = output_file_path + output_file_name
-OPENW, 1, output_file
-sz = N_ELEMENTS(FileLine)
-FOR i=0,(sz-1) DO BEGIN
-    PRINTF, 1, FileLine[i]
-ENDFOR
-CLOSE, 1
-FREE_LUN, 1
 
+no_error = 0
+CATCH,no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    update_step5_preview_button, Event, FILE=output_file
+    WIDGET_CONTROL, HOURGLASS=0
+    RETURN
+ENDIF ELSE BEGIN
+    OPENW, 1, output_file
+    sz = N_ELEMENTS(FileLine)
+    FOR i=0,(sz-1) DO BEGIN
+        PRINTF, 1, FileLine[i]
+    ENDFOR
+    CLOSE, 1
+    FREE_LUN, 1
+    
+ENDELSE
+
+update_step5_preview_button, Event, FILE=output_file
 WIDGET_CONTROL, HOURGLASS=0
+
+END
+
+;------------------------------------------------------------------------------
+PRO update_step5_preview_button, Event, FILE=file
+
+IF (N_ELEMENTS(FILE) EQ 0) THEN BEGIN
+    output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
+    output_file_path = getButtonValue(Event,'step5_browse_button_i_vs_q')
+    output_file = output_file_path + output_file_name
+ENDIF
+
+IF (FILE_TEST(output_file,/READ)) THEN BEGIN
+    activate_preview_button = 1
+ENDIF ELSE BEGIN
+    activate_preview_button = 0
+ENDELSE
+
+activate_widget, Event, 'preview_button_i_vs_q', activate_preview_button
 
 END
