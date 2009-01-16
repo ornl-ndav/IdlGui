@@ -357,7 +357,7 @@ WHILE (index LT nbr_plot) DO BEGIN
             WHILE(i LT sz) DO BEGIN
                 x = index_indices[0,i]
                 y = index_indices[1,i]
-                value_new       = local_tfpData(x,y)
+                value_new = local_tfpData(x,y)
                 value_old = base_array(x,y)
                 IF (value_new GT value_old) THEN BEGIN
                     base_array(x,y)       = value_new

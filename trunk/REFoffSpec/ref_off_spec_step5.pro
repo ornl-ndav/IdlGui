@@ -44,6 +44,7 @@ nbr_plot    = getNbrFiles(Event) ;number of files
 
 scaling_factor_array = (*(*global).scaling_factor)
 tfpData              = (*(*global).realign_pData_y)
+tfpData_error        = (*(*global).realign_pData_y_error)
 xData                = (*(*global).pData_x)
 xaxis                = (*(*global).x_axis)
 congrid_coeff_array  = (*(*global).congrid_coeff_array)
@@ -72,30 +73,29 @@ index        = 0                ;loop variable (nbr of array to add/plot
 
 WHILE (index LT nbr_plot) DO BEGIN
     
-    local_tfpData  = *tfpData[index]
-    scaling_factor = scaling_factor_array[index]
+    local_tfpData       = *tfpData[index]
+    local_tfpData_error = *tfpData_error[index]
+    scaling_factor      = scaling_factor_array[index]
     
 ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
-        local_tfpData = local_tfpData[*,304L:2*304L-1]
+        local_tfpData      = local_tfpData[*,304L:2*304L-1]
+        local_tfpData_eror = local_tfpData_error[*,304L:2*304L-1]
     ENDIF
 
 ;applied scaling factor
-    local_tfpData /= scaling_factor
+    local_tfpData       /= scaling_factor
+    local_tfpData_error /= scaling_factor
     
     IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
 
         Max  = (*global).zmax_g_recap
-;        IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
-;            print, ' max(local_tfpData): ' + STRCOMPRESS(max(local_tfpData)) 
-;            print, ' Max               : ' + strcompress(Max)
-;        ENDIF
-
         fMax = DOUBLE(Max)
         
         index_GT = WHERE(local_tfpData GT fMax, nbr)
         IF (nbr GT 0) THEN BEGIN
-            local_tfpData[index_GT] = !VALUES.D_NAN
+            local_tfpData[index_GT]       = !VALUES.D_NAN
+            local_tfpData_error[index_GT] = !VALUES.D_NAN
         ENDIF
 
         Min  = (*global).zmin_g_recap
@@ -106,6 +106,7 @@ WHILE (index LT nbr_plot) DO BEGIN
             tmp[index_LT] = !VALUeS.D_NAN
             local_min = MIN(tmp,/NAN)
             local_tfpData[index_LT] = DOUBLE(0)
+            local_tfpData_error[index_LT] = DOUBLE(0)
         ENDIF ELSE BEGIN
             local_min = MIN(local_tfpData,/NAN)
         ENDELSE
@@ -142,6 +143,7 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (index EQ 0) THEN BEGIN
 ;array that will serve as the background 
         base_array           = local_tfpData 
+        base_array_error     = local_tfpData_error
         base_array_untouched = local_tfpData_untouched
         size       = (size(total_array,/DIMENSIONS))[0]
         max_size   = (size GT max_size) ? size : max_size
@@ -174,6 +176,7 @@ WHILE (index LT nbr_plot) DO BEGIN
                 value_old_untouched = base_array_untouched(x,y)
                 IF (value_new GT value_old) THEN BEGIN
                     base_array(x,y)           = value_new
+                    base_array_error(x,y)     = local_tfpData_error(x,y)
                     base_array_untouched(x,y) = value_new_untouched
                 ENDIF
                 ++i
@@ -186,15 +189,16 @@ WHILE (index LT nbr_plot) DO BEGIN
 ENDWHILE
 
 ;rebin by 2 in y-axis final array
-rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
+rData = REBIN(base_array, $
+              (size(base_array))(1)*x_coeff, $
               (size(base_array))(2)*y_coeff,/SAMPLE)
+rData_error = REBIN(base_array_error, $
+                    (size(base_array_error))(1)*x_coeff, $
+                    (size(base_array_error))(2)*y_coeff,/SAMPLE)
+
 total_array = rData
 
-;IF ((*global).debugging EQ 'yes') THEN BEGIN
-;    print, ' master_max: ' + STRCOMPRESS(master_max,/REMOVE_ALL)
-;    print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
-;ENDIF
-
+(*(*global).total_array_error) = base_array_error
 (*(*global).total_array_untouched) = base_array_untouched
 
 (*global).zmax_g_recap = master_max
@@ -226,11 +230,6 @@ refresh_plot_scale_step5, $
   XSCALE   = xrange, $
   XTICKS   = xticks, $
   POSITION = position
-
-;IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
-;    print, 'Leaving refresh_recap_plot'
-;    print
-;ENDIF
 
 END
 
@@ -509,6 +508,11 @@ WIDGET_CONTROL, Event.top, GET_UVALUE=global
 WIDGET_CONTROL, /HOURGLASS
 
 base_array_untouched = (*(*global).total_array_untouched)
+base_array_error     = (*(*global).total_array_error)
+
+help, base_array_untouched
+help, base_array_error
+
 x0 = (*global).step5_x0 ;lambda
 y0 = (*global).step5_y0 ;pixel
 x1 = (*global).step5_x1 ;lambda
@@ -521,6 +525,10 @@ ymax = FIX(ymax/2)
 
 array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
 array_selected_total = TOTAL(array_selected,2)
+
+array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
+y = (size(array_error_selected))(2)
+array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
 
 x_axis = (*(*global).x_axis)
 x_axis_selected = x_axis[xmin:xmax]
@@ -541,6 +549,7 @@ FileLine[++index] = ''
 FOR i=0,(nbr_data-1) DO BEGIN
     Line = STRCOMPRESS(x_axis_selected[i],/REMOVE_ALL) + '  '
     Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+    Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
     FileLine[++index] = Line
 ENDFOR
 
@@ -567,7 +576,7 @@ ENDIF ELSE BEGIN
     
 ENDELSE
 
-update_step5_preview_button, Event, FILE=output_file
+update_step5_preview_button, Event, OUTPUT_FILE=output_file
 WIDGET_CONTROL, HOURGLASS=0
 
 END
