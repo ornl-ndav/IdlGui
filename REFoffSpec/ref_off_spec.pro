@@ -323,7 +323,8 @@ ENDIF
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+year = getYear()
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams + year
 error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN

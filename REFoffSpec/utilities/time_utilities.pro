@@ -34,7 +34,7 @@
 
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn_23s
-Function GenerateIsoTimeStamp
+FUNCTION GenerateIsoTimeStamp
 
 dateUnformated = SYSTIME()    
 DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
@@ -70,6 +70,12 @@ END
 
 ;------------------------------------------------------------------------------
 
-
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
 
 
