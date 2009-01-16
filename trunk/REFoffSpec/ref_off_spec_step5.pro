@@ -36,9 +36,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
 ;get global structure
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
-IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
-    print, 'Entering refresh_recap_plot'
-ENDIF
+;IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+;    print, 'Entering refresh_recap_plot'
+;ENDIF
 
 nbr_plot    = getNbrFiles(Event) ;number of files
 
@@ -86,10 +86,10 @@ WHILE (index LT nbr_plot) DO BEGIN
     IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
 
         Max  = (*global).zmax_g_recap
-        IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
-            print, ' max(local_tfpData): ' + STRCOMPRESS(max(local_tfpData)) 
-            print, ' Max               : ' + strcompress(Max)
-        ENDIF
+;        IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+;            print, ' max(local_tfpData): ' + STRCOMPRESS(max(local_tfpData)) 
+;            print, ' Max               : ' + strcompress(Max)
+;        ENDIF
 
         fMax = DOUBLE(Max)
         
@@ -190,10 +190,12 @@ rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
               (size(base_array))(2)*y_coeff,/SAMPLE)
 total_array = rData
 
-IF ((*global).debugging EQ 'yes') THEN BEGIN
-    print, ' master_max: ' + STRCOMPRESS(master_max,/REMOVE_ALL)
-    print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
-ENDIF
+;IF ((*global).debugging EQ 'yes') THEN BEGIN
+;    print, ' master_max: ' + STRCOMPRESS(master_max,/REMOVE_ALL)
+;    print, ' master_min: ' + STRCOMPRESS(master_min,/REMOVE_ALL)
+;ENDIF
+
+(*(*global).total_array_untouched) = base_array_untouched
 
 (*global).zmax_g_recap = master_max
 (*global).zmin_g_recap = master_min
@@ -225,10 +227,10 @@ refresh_plot_scale_step5, $
   XTICKS   = xticks, $
   POSITION = position
 
-IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
-    print, 'Leaving refresh_recap_plot'
-    print
-ENDIF
+;IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
+;    print, 'Leaving refresh_recap_plot'
+;    print
+;ENDIF
 
 END
 
@@ -416,5 +418,133 @@ IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
     print, 'Leaving populate_step5_range_widgets'
     print
 ENDIF
+
+END
+
+;------------------------------------------------------------------------------
+PRO plot_step5_i_vs_Q_selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+refresh_recap_plot, Event, RESCALE=1 ;_step5
+
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+x0 = (*global).step5_x0
+y0 = (*global).step5_y0
+
+x1 = Event.x
+y1 = Event.y
+
+color = (*global).step5_i_vs_q_color
+
+plots, [x0, x0, x1, x1, x0],$
+  [y0,y1, y1, y0, y0],$
+  /DEVICE,$
+  COLOR =color
+
+END
+
+;------------------------------------------------------------------------------
+PRO replot_step5_i_vs_Q_selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+x0 = (*global).step5_x0
+y0 = (*global).step5_y0
+
+x1 = (*global).step5_x1
+y1 = (*global).step5_y1
+
+color = (*global).step5_i_vs_q_color
+
+id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+plots, [x0, x0, x1, x1, x0],$
+  [y0,y1, y1, y0, y0],$
+  /DEVICE,$
+  COLOR =color
+
+END
+
+;------------------------------------------------------------------------------
+PRO inform_log_book_step5_selection, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+x0 = (*global).step5_x0 ;lambda
+y0 = (*global).step5_y0 ;lambda
+x1 = (*global).step5_x1 ;pixel
+y1 = (*global).step5_y1 ;pixel
+
+ry0 = FIX(y0/2)
+ry1 = FIX(y1/2)
+yBottom = MIN([ry0,ry1],MAX=yTop)
+
+xMin = MIN([x0,x1],MAX=xMax)
+x_axis = (*(*global).x_axis)
+Lambda_min = x_axis[xMin]
+Lambda_max = x_axis[xMax]
+
+LogText = '> User selected a I vs Q region in the Step5 (Recap) tab:'
+IDLsendToGeek_addLogBookText, Event, LogText
+LogText = '    Bottom Pixel: ' + STRCOMPRESS(yBottom,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, LogText
+LogText = '    Lambda min: ' + STRCOMPRESS(lambda_min,/REMOVE_ALL) + $
+  ' Angstroms'
+IDLsendToGeek_addLogBookText, Event, LogText
+LogText = '    Top Pixel: ' + STRCOMPRESS(yTop,/REMOVE_ALL)
+IDLsendToGeek_addLogBookText, Event, LogText
+LogText = '    Lambda max: ' + STRCOMPRESS(lambda_max,/REMOVE_ALL) + $
+  ' Angstroms'
+IDLsendToGeek_addLogBookText, Event, LogText
+
+END
+
+;------------------------------------------------------------------------------
+PRO produce_i_vs_q_output_file, Event
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+base_array_untouched = (*(*global).total_array_untouched)
+x0 = (*global).step5_x0 ;lambda
+y0 = (*global).step5_y0 ;pixel
+x1 = (*global).step5_x1 ;lambda
+y1 = (*global).step5_y1 ;pixel
+
+xmin = MIN([x0,x1],MAX=xmax)
+ymin = MIN([y0,y1],MAX=ymax)
+ymin = FIX(ymin/2)
+ymax = FIX(ymax/2)
+
+array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
+array_selected_total = TOTAL(array_selected,2)
+
+x_axis = (*(*global).x_axis)
+x_axis_selected = x_axis[xmin:xmax]
+x_axis_in_Q = convert_from_lambda_to_Q(x_axis_selected)
+nbr_data = N_ELEMENTS(x_axis_selected)
+
+;create ascii file
+nbr_comments = 4
+nbr_lines = nbr_comments + nbr_data
+FileLine = STRARR(nbr_lines)
+
+FileLine[0] = '#D ' + GenerateIsoTimeStamp()
+FileLine[1] = ''
+FileLine[2] = '#L Q(Angstroms^-1) Intensity(Counts/A) Sigma(Counts/A)'
+FileLine[3] = ''
+
+print, 'nbr_data: ' + strcompress(nbr_data)
+help, x_axis_selected
+help, array_selected_total
+
+FOR i=0,(nbr_data-1) DO BEGIN
+    Line = STRCOMPRESS(x_axis_selected[i],/REMOVE_ALL) + '  '
+    Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+    FileLine[i] = Line
+ENDFOR
+
+
 
 END

@@ -118,6 +118,22 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
             ENDIF ELSE BEGIN
                 refresh_recap_plot, Event, RESCALE=1;_step5
             ENDELSE
+
+            ;show selection if one is selected
+            selection_value = $
+              getCWBgroupValue(Event,'step5_selection_group_uname')
+            CASE (selection_value) OF
+                1: BEGIN
+                    IF ((*global).step5_x0 + $
+                        (*global).step5_x1 + $
+                        (*global).step5_y0 + $
+                        (*global).step5_y1 NE 0) THEN BEGIN
+                        replot_step5_i_vs_Q_selection, Event ;step5
+                    ENDIF
+                END
+                ELSE:
+            ENDCASE
+
         ENDIF
     END
 
