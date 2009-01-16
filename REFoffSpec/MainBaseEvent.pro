@@ -1084,6 +1084,8 @@ CASE Event.id OF
         activate_widget, Event, $
           'step5_create_button_i_vs_q', $
           go_button_sensitive
+;check if preview button can be validated or not
+        update_step5_preview_button, Event ;step5
     END
 
 ;create ascii file button
