@@ -612,3 +612,24 @@ IF (FILE_TEST(output_file)) THEN BEGIN
 ENDIF
 
 END
+
+;------------------------------------------------------------------------------
+PRO step5_browse_path_button, Event
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+path  = (*global).working_path
+title = 'Select where you want to create the ASCII file'
+
+path = DIALOG_PICKFILE(PATH = path,$
+                       TITLE = title, $
+                       /MUST_EXIST,$
+                       /DIRECTORY)
+
+IF (path NE '') THEN BEGIN
+    (*global).working_path = path
+    putButtonValue, Event, 'step5_browse_button_i_vs_q', path 
+ENDIF
+
+END
