@@ -52,7 +52,8 @@ TopBase = WIDGET_BASE(REDUCE_TAB,$
                       YOFFSET   = sBase.size[1],$
                       SCR_XSIZE = sBase.size[2],$
                       SCR_YSIZE = sBase.size[3],$
-                      TITLE     = sBase.title)
+                      TITLE     = sBase.title,$
+                      map = 0)
 
 ;list of polarization states --------------------------------------------------
 wPolaBase = WIDGET_BASE(TopBase,$
@@ -106,7 +107,8 @@ Base = WIDGET_BASE(TopBase,$
                    SCR_XSIZE = sBase.size[2],$
                    SCR_YSIZE = sBase.size[3],$
                    /BASE_ALIGN_LEFT,$
-                   /COLUMN)
+                   /COLUMN,$
+                   map =0)
 
 ;Vertical space
 vSpace = Widget_label(Base,$
