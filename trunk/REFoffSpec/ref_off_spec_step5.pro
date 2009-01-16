@@ -506,6 +506,8 @@ END
 PRO produce_i_vs_q_output_file, Event
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
+WIDGET_CONTROL, /HOURGLASS
+
 base_array_untouched = (*(*global).total_array_untouched)
 x0 = (*global).step5_x0 ;lambda
 y0 = (*global).step5_y0 ;pixel
@@ -530,21 +532,30 @@ nbr_comments = 4
 nbr_lines = nbr_comments + nbr_data
 FileLine = STRARR(nbr_lines)
 
-FileLine[0] = '#D ' + GenerateIsoTimeStamp()
-FileLine[1] = ''
-FileLine[2] = '#L Q(Angstroms^-1) Intensity(Counts/A) Sigma(Counts/A)'
-FileLine[3] = ''
-
-print, 'nbr_data: ' + strcompress(nbr_data)
-help, x_axis_selected
-help, array_selected_total
+index = 0
+FileLine[index] = '#D ' + GenerateIsoTimeStamp()
+FileLine[++index] = ''
+FileLine[++index] = '#L Q(Angstroms^-1) Intensity(Counts/A) Sigma(Counts/A)'
+FileLine[++index] = ''
 
 FOR i=0,(nbr_data-1) DO BEGIN
     Line = STRCOMPRESS(x_axis_selected[i],/REMOVE_ALL) + '  '
     Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
-    FileLine[i] = Line
+    FileLine[++index] = Line
 ENDFOR
 
+;name of file to create
+output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
+output_file_path = getButtonValue(Event,'step5_browse_button_i_vs_q')
+output_file = output_file_path + output_file_name
+OPENW, 1, output_file
+sz = N_ELEMENTS(FileLine)
+FOR i=0,(sz-1) DO BEGIN
+    PRINTF, 1, FileLine[i]
+ENDFOR
+CLOSE, 1
+FREE_LUN, 1
 
+WIDGET_CONTROL, HOURGLASS=0
 
 END
