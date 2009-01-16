@@ -573,7 +573,7 @@ WIDGET_CONTROL, HOURGLASS=0
 END
 
 ;------------------------------------------------------------------------------
-PRO update_step5_preview_button, Event, FILE=file
+PRO update_step5_preview_button, Event, OUTPUT_FILE=output_file
 
 IF (N_ELEMENTS(FILE) EQ 0) THEN BEGIN
     output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
@@ -588,5 +588,27 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 activate_widget, Event, 'preview_button_i_vs_q', activate_preview_button
+
+END
+
+;------------------------------------------------------------------------------
+PRO step5_preview_button, Event
+
+selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+CASE (selection_value) OF
+    1: BEGIN
+        output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
+        output_file_path = getButtonValue(Event,'step5_browse_button_i_vs_q')
+        output_file = output_file_path + output_file_name
+    END
+    ELSE: BEGIN
+        output_file = ''
+    END
+ENDCASE
+
+IF (FILE_TEST(output_file)) THEN BEGIN
+    XDISPLAYFILE, output_file, $
+      TITLE = 'Preview of ' + output_file
+ENDIF
 
 END
