@@ -1093,6 +1093,11 @@ CASE Event.id OF
         produce_i_vs_q_output_file, Event 
     END
 
+;preview button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_button_i_vs_q'): BEGIN
+        step5_preview_button, Event ;step5
+    END
+
 ;------------------------------------------------------------------------------
 ;draw
     Widget_Info(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
