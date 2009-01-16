@@ -510,9 +510,6 @@ WIDGET_CONTROL, /HOURGLASS
 base_array_untouched = (*(*global).total_array_untouched)
 base_array_error     = (*(*global).total_array_error)
 
-help, base_array_untouched
-help, base_array_error
-
 x0 = (*global).step5_x0 ;lambda
 y0 = (*global).step5_y0 ;pixel
 x1 = (*global).step5_x1 ;lambda

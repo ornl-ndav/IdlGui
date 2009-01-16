@@ -41,10 +41,10 @@ CD, CURRENT = current_folder
 ;******************************************************************************
 APPLICATION       = 'REFoffSpec'
 VERSION           = '1.2.0'
-DEBUGGING         = 'yes' ;yes/no
-TESTING           = 'no' 
-SCROLLING         = 'no' 
-CHECKING_PACKAGES = 'yes'
+DEBUGGING         = 'no'        ;no
+TESTING           = 'no'        ;no
+SCROLLING         = 'no'        ;no 
+CHECKING_PACKAGES = 'yes'       ;yes
 SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see)
