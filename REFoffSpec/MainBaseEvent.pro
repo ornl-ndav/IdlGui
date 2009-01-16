@@ -1086,10 +1086,12 @@ CASE Event.id OF
           go_button_sensitive
     END
 
-;------------------------------------------------------------------------------
-;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
-;------------------------------------------------------------------------------
+;create ascii file button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_create_button_i_vs_q'): BEGIN
+        produce_i_vs_q_output_file, Event 
+    END
 
+;------------------------------------------------------------------------------
 ;draw
     Widget_Info(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
@@ -1121,8 +1123,42 @@ CASE Event.id OF
             ENDELSE
             CountsText = 'Counts: ' + STRCOMPRESS(intensity,/REMOVE_ALL)
             putTextFieldValue, Event, 'counts_value_step5', CountsText
+            
+            selection_value = $
+              getCWBgroupValue(Event,'step5_selection_group_uname')
+
+            IF (selection_value NE 0) THEN BEGIN
+                
+                IF (event.press EQ 1) THEN BEGIN ;press left
+                    (*global).left_mouse_pressed = 1
+                    (*global).step5_x0 = Event.x
+                    (*global).step5_y0 = Event.y
+                ENDIF
+                
+                IF (event.type EQ 2 AND $ ;move mouse with left pressed
+                    (*global).left_mouse_pressed EQ 1) THEN BEGIN
+                    CASE (selection_value) OF
+                        1: plot_step5_i_vs_Q_selection, Event ;_step5
+                        ELSE:
+                    ENDCASE
+                ENDIF
+                
+                IF (event.type EQ 1) THEN BEGIN ;release mouse
+                    (*global).left_mouse_pressed = 0
+                    (*global).step5_x1 = Event.x
+                    (*global).step5_y1 = Event.y
+                    inform_log_book_step5_selection, Event ;_step5
+                ENDIF
+
+            ENDIF ;end of 'if (selection_value NE 0)'
+            
         ENDIF
+        
     END
+    
+;------------------------------------------------------------------------------
+;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
+;------------------------------------------------------------------------------
 
 ;output file path button
     WIDGET_INFO(wWidget, $

@@ -103,6 +103,12 @@ global = ptr_new ({ ucams: ucams,$
 
                     working_path: '~/results/',$
 
+                    step5_x0: 0,$ ;event.x initial
+                    step5_y0: 0,$ ;event.y initial
+                    step5_x1: 0,$ ;event.x final
+                    step5_y1: 0,$ ;event.y final
+                    step5_i_vs_q_color: 200,$ ;color of selection
+
                     lin_zmax: 0d,$ ;0.46009228 (real value)
                     lin_zmin: 0d,$ ;real value
                     log_zmax: 0d,$ ;0.46009228 (real value)

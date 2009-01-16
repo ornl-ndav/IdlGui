@@ -72,6 +72,9 @@ END
 
 ;------------------------------------------------------------------------------
 
-
+FUNCTION convert_from_lambda_to_Q, axis_before
+axis_after = (4. * !PI)/axis_before
+RETURN, axis_after
+END
 
 
