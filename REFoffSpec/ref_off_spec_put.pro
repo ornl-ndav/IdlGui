@@ -65,6 +65,12 @@ WIDGET_CONTROL, id, SET_VALUE=TableArray
 END
 
 ;------------------------------------------------------------------------------
+PRO putButtonValue, Event, uname, value
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
 ;------------------------------------------------------------------------------
 ;Function that updates the list of the ascii file list found in the step2

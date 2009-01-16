@@ -1073,6 +1073,11 @@ CASE Event.id OF
         MapBase, Event, 'step5_counts_vs_q_base_uname', IvsQbaseMap
     END
 
+;path button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_browse_button_i_vs_q'): BEGIN
+        step5_browse_path_button, Event ;_step5
+    END
+
 ;name of file (text field)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_file_name_i_vs_q'): BEGIN
         text = getTextFieldValue(Event,'step5_file_name_i_vs_q')
