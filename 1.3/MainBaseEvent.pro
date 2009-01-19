@@ -1143,7 +1143,13 @@ CASE Event.id OF
 ;Diameter
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_diameter'): BEGIN
         update_substrate_equation, Event ;_empty_cell
+     END
+
+;Scaling Factor 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_scaling_factor'): BEGIN
+       update_substrate_equation, Event ;_empty_cell
     END
+    
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================

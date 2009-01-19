@@ -540,7 +540,7 @@ wSFValue = CW_FIELD(wBaseColumn1_2_row1,$
                     TITLE = sScalingFactorField.title,$
                     VALUE = sScalingFactorField.value,$
                     UNAME = sScalingFactorField.uname,$
-                    /FLOATING,$
+;                    /FLOATING,$
                     /ALL_EVENTS)
 wSFbutton = WIDGET_BUTTON(wBaseColumn1_2_row1,$
                           VALUE = sScalingFactorButton.value,$

@@ -709,13 +709,15 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 errorA = 0
 errorB = 0
 errorD = 0
+errorC = 0 ;scaling factor
 
-;get A, B and D parameters
+;get A, B, D  and C parameters
 A = getTextFieldValue(Event, 'empty_cell_substrate_a')
 B = getTextFieldValue(Event, 'empty_cell_substrate_b')
 D = getTextFieldValue(Event, 'empty_cell_diameter')
+C = getTextFieldValue(Event, 'empty_cell_scaling_factor')
 
-;;check value of A, B and D
+;;check value of A, B, D and C
 IF (A EQ '' OR A EQ 0)  THEN BEGIN
     errorA = 1
     A = 'N/A'
@@ -729,14 +731,23 @@ IF (D EQ '' OR D EQ 0)  THEN BEGIN
     D = 'N/A'
 ENDIF
 
+IF (C EQ 0) THEN BEGIN
+   errorC = 1
+   C = 'N/A'
+ENDIF
+
 ;final equation
-Equation  = 'T = exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
+Equation  = 'T = ' 
+IF (STRCOMPRESS(C,/REMOVE_ALL) NE '1') THEN BEGIN
+   Equation += STRCOMPRESS(C,/REMOVE_ALL) + ' * '
+ENDIF
+Equation += 'exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
 Equation += ' + ' + STRCOMPRESS(B,/REMOVE_ALL)
 Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
 Equation += ']'
 
-IF (errorA + errorB + errorD GT 0) THEN BEGIN
-    IF ((*global).miniVersion) THEN BEGIN
+IF (errorA + errorB + errorD + errorC GT 0) THEN BEGIN
+   IF ((*global).miniVersion) THEN BEGIN
         Equation = 'ERROR>> ' + Equation
     ENDIF ELSE BEGIN
         Equation = ' E R R O R >>  ' + Equation + '  << E R R O R '
