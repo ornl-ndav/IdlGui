@@ -1150,6 +1150,12 @@ CASE Event.id OF
        update_substrate_equation, Event ;_empty_cell
     END
     
+;Scaling Factor button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_button'): BEGIN
+       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
+    END
+
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================
