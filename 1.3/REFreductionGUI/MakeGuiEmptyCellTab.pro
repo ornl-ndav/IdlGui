@@ -52,6 +52,20 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
                        map: 1}
+;data base
+XYoff = [0,0]
+sDataBase = { size: [XYoff[0],$
+                     XYoff[1],$
+                     500,320],$
+              frame: 1}
+XYoff = [0,0]
+sDataDraw = { size: [XYoff[0],$
+                     XYoff[1],$
+                     sDataBase.size[2]+50,$
+                     304],$
+              uname: 'empty_cell_scaling_factor_base_data_draw'}
+
+
 
 XYoff = [-215,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
@@ -287,6 +301,30 @@ wSFcalculationBase = WIDGET_BASE(wBase,$
                                  SCR_XSIZE = sSFcalculationBase.size[2],$
                                  SCR_YSIZE = sSFcalculationBase.size[3],$
                                  MAP       = sSFcalculationBase.map)
+
+;Data base ....................................................................
+wDataBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sDataBase.size[0],$
+                        YOFFSET   = sDataBase.size[1],$
+                        SCR_XSIZE = sDataBase.size[2],$
+                        SCR_YSIZE = sDataBase.size[3],$
+                        FRAME     = sDataBase.frame)
+
+;Draw
+wDataDraw = WIDGET_DRAW(wDatabase,$
+                        XOFFSET       = sDataDraw.size[0],$
+                        YOFFSET       = sDataDraw.size[1],$
+                        Y_SCROLL_SIZE = sDataDraw.size[3],$
+                        X_SCROLL_SIZE = sDataDraw.size[2],$
+                        XSIZE         = sDataDraw.size[2],$
+                        YSIZE         = sDataDraw.size[3],$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        UNAME         = sDataDraw.uname)
+
+
+
+
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
