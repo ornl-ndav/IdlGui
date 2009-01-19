@@ -53,6 +53,21 @@ sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
                        map: 0}
 
+XYoff = [-215,-55]
+sSFcancel = { size: [sBase.size[2]+XYoff[0],$
+                     sBase.size[3]+XYoff[1],$
+                     100],$
+              value: 'CANCEL',$
+              uname: 'empty_cell_sf_base_cancel'}
+
+XYoff = [0,0]
+sSFok = { size: [sSFcancel.size[0]+$
+                 sSFcancel.size[2]+XYoff[0],$
+                 sSFcancel.size[1]+XYoff[1],$
+                 sSFcancel.size[2]],$
+          value: 'OK',$
+          uname: 'empty_cell_sf_base_ok'}
+
 ;nexus (browse, widget_text....etc) -------------------------------------------
 XYoff = [0,0] ;base
 sNexusBase = { size: [XYoff[0],$
@@ -279,13 +294,35 @@ wBase = WIDGET_BASE(DataNormalizationTab,$
                     TITLE     = EmptyCellTitle)
 
 ;Base that will contain the Scaling Factor calculation ------------------------
-wSFcalucationBase = WIDGET_BASE(wBase,$
-                                UNAME     = sSFcalculationBase.uname,$
-                                XOFFSET   = sSFcalculationBase.size[0],$
-                                YOFFSET   = sSFcalculationBase.size[1],$
-                                SCR_XSIZE = sSFcalculationBase.size[2],$
-                                SCR_YSIZE = sSFcalculationBase.size[3],$
-                                MAP       = sSFcalculationBase.map)
+wSFcalculationBase = WIDGET_BASE(wBase,$
+                                 UNAME     = sSFcalculationBase.uname,$
+                                 XOFFSET   = sSFcalculationBase.size[0],$
+                                 YOFFSET   = sSFcalculationBase.size[1],$
+                                 SCR_XSIZE = sSFcalculationBase.size[2],$
+                                 SCR_YSIZE = sSFcalculationBase.size[3],$
+                                 MAP       = sSFcalculationBase.map)
+
+wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
+                          XOFFSET   = sSFcancel.size[0],$
+                          YOFFSET   = sSFcancel.size[1],$
+                          SCR_XSIZE = sSFcancel.size[2],$
+                          UNAME     = sSFcancel.uname,$
+                          VALUE     = sSFcancel.value)
+
+wSFok = WIDGET_BUTTON(wSFcalculationBase,$
+                      XOFFSET   = sSFok.size[0],$
+                      YOFFSET   = sSFok.size[1],$
+                      SCR_XSIZE = sSFok.size[2],$
+                      UNAME     = sSFok.uname,$
+                      VALUE     = sSFok.value)
+
+
+
+
+
+
+
+
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 wNexusBase = WIDGET_BASE(wBase,$
