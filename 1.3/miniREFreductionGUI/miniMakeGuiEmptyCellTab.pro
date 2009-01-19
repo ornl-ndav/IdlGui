@@ -203,7 +203,7 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
                     sTab.size[1]+$
                     sTab.size[3]+$
                     XYoff[1],$
-                    1115,135],$
+                    880,135],$
              uname: 'empty_cell_substrate_base',$
              frame: 1}
 
@@ -213,7 +213,7 @@ sSubTitle = { size: [sSubBase.size[0]+XYoff[0],$
               title: 'Substrate Transmission Equation '}
 
 ;equation label ...............................................................
-sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]     '}
+sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]'}
 
 ;substrate type ...............................................................
 WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
@@ -240,11 +240,19 @@ sBcoeff = { uname: 'empty_cell_substrate_b',$
 sBunits = { value: 'cm^-2' }
 
 ;substrate diameter ...........................................................
-sDiameterLabel = { title: '            Substrate Diameter' }
-sDiameterField = { title: '     D =',$
+sDiameterLabel = { title: '   Substrate Diameter' }
+sDiameterField = { title: 'D =',$
                    uname: 'empty_cell_diameter',$
                    value: STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)}
 sDiameterUnits = { title: 'cm' }
+
+;scaling factor ..-...........................................................
+sScalingFactorLabel = { title: '      Scaling Factor' }
+sScalingFactorField = { title: 'C =',$
+                        uname: 'empty_cell_scaling_factor',$
+                        value: STRCOMPRESS(1,/REMOVE_ALL)}
+sScalingFactorButton = { value: '  CALCULATE C  ',$
+                         uname: 'empty_cell_scaling_factor_button'}
 
 ;final equation ...............................................................
 Equation  = 'T = exp[-(' + STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)
@@ -506,40 +514,75 @@ wBunits = WIDGET_LABEL(wBase2,$
 wSpace = WIDGET_LABEL(wSubBase,$
                       VALUE = '   ')
 
-;diameter label and units .....................................................
-wBase3 = WIDGET_BASE(wSubBase,$
-                     /COLUMN,$
-                    /BASE_ALIGN_LEFT)
-wDiameterLabel = WIDGET_LABEL(wBase3,$
+;diameter label/units, Scaling Factor and equation .............................
+wBaseColumn = WIDGET_BASE(wSubBase,$
+                          /COLUMN,$
+                          XSIZE = 400,$
+                          /BASE_ALIGN_CENTER)
+
+;diameter and scaling factor
+wBaseRow1 = WIDGET_BASE(wBaseColumn,$
+                        /ROW)
+
+;diameter 
+wBaseColumn1_1 = WIDGET_BASE(wBaseRow1,$
+                             /COLUMN,$
+                             /BASE_ALIGN_CENTER,$
+                             xsize = 150)
+
+wDiameterLabel = WIDGET_LABEL(wBaseColumn1_1,$
                               VALUE = sDiameterLabel.title)
-wBase4 = WIDGET_BASE(wBase3,$
+wBaseColumn1_1_row1 = WIDGET_BASE(wBaseColumn1_1,$
                      /ROW)
-wDiameterValue = CW_FIELD(wBase4,$
+wDiameterValue = CW_FIELD(wBaseColumn1_1_row1,$
                           TITLE = sDiameterField.title,$
                           VALUE = sDiameterField.value,$
                           UNAME = sDiameterField.uname,$
+                          XSIZE = 10,$
 ;                          /FLOATING,$
                           /ALL_EVENTS)
-wDiameterUnits = WIDGET_LABEL(wBase4,$
+wDiameterUnits = WIDGET_LABEL(wBaseColumn1_1_row1,$
                               VALUE = sDiameterUnits.title)
 
 ;space
-wSpace = WIDGET_LABEL(wBase3,$
+space = WIDGET_LABEL(wBaseRow1,$
+                     VALUE = '')
+
+;Scaling Factor
+wBaseColumn1_2 = WIDGET_BASE(wBaseRow1,$
+                             /COLUMN,$
+                             xsize = 300,$
+                             /BASE_ALIGN_LEFT)
+wSFLabel = WIDGET_LABEL(wBaseColumn1_2,$
+                        VALUE = sScalingFactorLabel.title)
+wBaseColumn1_2_row1 = WIDGET_BASE(wBaseColumn1_2,$
+                     /ROW)
+wSFValue = CW_FIELD(wBaseColumn1_2_row1,$
+                    TITLE = sScalingFactorField.title,$
+                    VALUE = sScalingFactorField.value,$
+                    UNAME = sScalingFactorField.uname,$
+                    XSIZE = 10,$
+                    /FLOATING,$
+                    /ALL_EVENTS)
+wSFbutton = WIDGET_BUTTON(wBaseColumn1_2_row1,$
+                          VALUE = sScalingFactorButton.value,$
+                          UNAME = sScalingFactorButton.uname)
+
+;space
+wSpace = WIDGET_LABEL(wBaseColumn,$
                       VALUE = '')
-wSpace = WIDGET_LABEL(wBase3,$
+wSpace = WIDGET_LABEL(wBaseColumn,$
                       VALUE = '')
 
 ;final equation
-wBase4 = WIDGET_BASE(wBase3,$
-                     /ROW)
-;wSpace = WIDGET_LABEL(wBase4,$
-;                      VALUE = '          ')
-wEquation = WIDGET_LABEL(wBase4, $
+wBaseColumn2_1 = WIDGET_BASE(wBaseColumn,$
+                             /ROW,$
+                             /BASE_ALIGN_LEFT)
+wEquation = WIDGET_LABEL(wBaseColumn2_1, $
                          VALUE = sFinalEquation.value,$
                          UNAME = sFinalEquation.uname,$
-                         XSIZE = 370,$
+                         XSIZE = 350,$
                          FRAME = sFinalEquation.frame)
-
 
 END
 
