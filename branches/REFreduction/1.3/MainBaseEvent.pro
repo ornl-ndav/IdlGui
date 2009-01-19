@@ -1156,6 +1156,20 @@ CASE Event.id OF
        MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
     END
 
+;Calculate Scaling Factor Base ................................................
+
+;cancel button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_cancel'): BEGIN
+       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
+    END
+
+;ok button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_ok'): BEGIN
+;copy A value into empty cell main base and refresh equation
+       update_substrate_equation, Event ;_empty_cell
+       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
+    END
+
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================
