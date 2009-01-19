@@ -48,6 +48,10 @@ PRO miniMakeGuiEmptyCellTab, DataNormalizationTab,$
 sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
           uname: 'empty_cell_base'}
 
+;SF calculation base ----------------------------------------------------------
+sSFcalculationBase = { size: sBase.size,$
+                       uname: 'empty_cell_scaling_factor_calculation_base',$
+                       map: 0}
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 XYoff = [0,0] ;base
@@ -273,6 +277,15 @@ wBase = WIDGET_BASE(DataNormalizationTab,$
                     SCR_XSIZE = sBase.size[2],$
                     SCR_YSIZE = sBase.size[3],$
                     TITLE     = EmptyCellTitle)
+
+;Base that will contain the Scaling Factor calculation ------------------------
+wSFcalucationBase = WIDGET_BASE(wBase,$
+                                UNAME     = sSFcalculationBase.uname,$
+                                XOFFSET   = sSFcalculationBase.size[0],$
+                                YOFFSET   = sSFcalculationBase.size[1],$
+                                SCR_XSIZE = sSFcalculationBase.size[2],$
+                                SCR_YSIZE = sSFcalculationBase.size[3],$
+                                MAP       = sSFcalculationBase.map)
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 wNexusBase = WIDGET_BASE(wBase,$
