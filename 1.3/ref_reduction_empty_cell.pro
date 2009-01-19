@@ -717,21 +717,26 @@ B = getTextFieldValue(Event, 'empty_cell_substrate_b')
 D = getTextFieldValue(Event, 'empty_cell_diameter')
 C = getTextFieldValue(Event, 'empty_cell_scaling_factor')
 
+A = STRCOMPRESS(A,/REMOVE_ALL)
+B = STRCOMPRESS(B,/REMOVE_ALL)
+D = STRCOMPRESS(D,/REMOVE_ALL)
+C = STRCOMPRESS(C,/REMOVE_ALL)
+
 ;;check value of A, B, D and C
-IF (A EQ '' OR A EQ 0)  THEN BEGIN
+IF (A EQ '' OR A EQ '0')  THEN BEGIN
     errorA = 1
     A = 'N/A'
 ENDIF
-IF (B EQ '' OR B EQ 0)  THEN BEGIN
+IF (B EQ '' OR B EQ '0')  THEN BEGIN
     errorB = 1
     B = 'N/A'
 ENDIF
-IF (D EQ '' OR D EQ 0)  THEN BEGIN
+IF (D EQ '' OR D EQ '0')  THEN BEGIN
     errorD = 1
     D = 'N/A'
 ENDIF
 
-IF (C EQ 0) THEN BEGIN
+IF (C EQ '0') THEN BEGIN
    errorC = 1
    C = 'N/A'
 ENDIF
