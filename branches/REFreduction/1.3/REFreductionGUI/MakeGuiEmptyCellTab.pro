@@ -53,7 +53,7 @@ sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
                        map: 1}
 ;data base --------------------------------------------------------------------
-XYoff = [0,10]
+XYoff = [0,20]
 yoff = 15
 sDataBase = { size: [XYoff[0],$
                      XYoff[1],$
@@ -82,23 +82,59 @@ sDataRowBase = { size: [sDataDraw.size[0]+XYoff[0],$
                         40],$
                  frame: 0 }
 
-sLabel = { x : { value: 'X (TOF in microS):',$
-                 uname: 'empty_cell_data_draw_x_value',$
-                 xsize:  50},$
-           y : { value: 'Y (Pixel #):',$
-                 uname: 'empty_cell_data_draw_y_value',$
-                 xsize: 20},$
-           counts : { value: 'Nbr Counts:',$
-                      uname: 'empty_cell_data_draw_counts_value',$
-                      xsize: 50}}
-           
-           
+sDataLabel = { x : { value: 'X (TOF in microS):',$
+                     uname: 'empty_cell_data_draw_x_value',$
+                     xsize:  50},$
+               y : { value: 'Y (Pixel #):',$
+                     uname: 'empty_cell_data_draw_y_value',$
+                     xsize: 20},$
+               counts : { value: 'Nbr Counts:',$
+                          uname: 'empty_cell_data_draw_counts_value',$
+                          xsize: 50}}
 
 ;end of data base/draw ........................................................
 
+;Empty Cell base --------------------------------------------------------------
+XYoff = [0,40]
+sEmptyCellBase = { size: [sDataBase.size[0]+XYoff[0],$
+                          sDataBase.size[1]+$
+                          sDataBase.size[3]+XYoff[1],$
+                          sDataBase.size[2], $
+                          sDataBase.size[3]],$
+                   frame: 1}
+;EmptyCell title
+XYoff = [20,-8]
+sEmptyCellTitle = { size: [sEmptyCellBase.size[0]+XYoff[0],$
+                           sEmptyCellbase.size[1]+XYoff[1]],$
+                    value: 'Empty Cell File: I vs TOF'}
 
+XYoff = [0,yoff]
+sEmptyCellDraw = { size: [XYoff[0],$
+                          XYoff[1],$
+                          sEmptyCellBase.size[2],$
+                          306],$
+                   uname: 'empty_cell_scaling_factor_base_empty_cell_draw'}
 
+XYoff = [0,20]
+sEmptyCellRowBase = { size: [sEmptyCellDraw.size[0]+XYoff[0],$
+                             sEmptyCellDraw.size[1]+$
+                             sEmptyCellDraw.size[3]+$
+                             XYoff[1],$
+                             sEmptyCellDraw.size[2],$
+                             40],$
+                      frame: 0 }
 
+sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
+                         uname: 'empty_cell_empty_cell_draw_x_value',$
+                         xsize:  50},$
+                    y: { value: 'Y (Pixel #):',$
+                         uname: 'empty_cell_empty_cell_draw_y_value',$
+                         xsize: 20},$
+                    counts: { value: 'Nbr Counts:',$
+                              uname: $
+                              'empty_cell_empty_cell_draw_counts_value',$
+                              xsize: 50}}
+;end of empty cell base/draw ..................................................
 
 XYoff = [-215,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
@@ -131,7 +167,7 @@ sNexusBrowseButton = { size: [XYoff[0],$
                        value: 'BROWSE NeXus ...'}
 
 ;empty cell run number
-sEmptyCellLabel = { value: 'Empty Cell Run Number:'}
+sEmptyCellRunNumberLabel = { value: 'Empty Cell Run Number:'}
 
 ;Empty cell run number text field
 sEmptyCellTextfield = { value: '',$
@@ -370,33 +406,94 @@ wDataRowBase = WIDGET_BASE(wDatabase,$
                            /ROW)
                            
 xlabel = WIDGET_LABEL(wDataRowBase,$
-                      VALUE = sLabel.x.value)
+                      VALUE = sDataLabel.x.value)
 xValue = WIDGET_LABEL(wDataRowBase,$
                       VALUE = 'N/A',$
-                      XSIZE = sLabel.x.xsize,$
+                      XSIZE = sDataLabel.x.xsize,$
                       /ALIGN_LEFT,$
-                      UNAME = sLabel.x.uname)
+                      UNAME = sDataLabel.x.uname)
 label = WIDGET_LABEL(wDataRowBase,$
                      VALUE = '  ')
 ylabel = WIDGET_LABEL(wDataRowBase,$
-                      VALUE = sLabel.y.value)
+                      VALUE = sDataLabel.y.value)
 yValue = WIDGET_LABEL(wDataRowBase,$
                       VALUE = 'N/A',$
                       /ALIGN_LEFT,$
-                      XSIZE = sLabel.y.xsize,$
-                      UNAME = sLabel.y.uname)
+                      XSIZE = sDataLabel.y.xsize,$
+                      UNAME = sDataLabel.y.uname)
 label = WIDGET_LABEL(wDataRowBase,$
                      VALUE = '      ')
 Ilabel = WIDGET_LABEL(wDataRowBase,$
-                      VALUE = sLabel.counts.value)
+                      VALUE = sDataLabel.counts.value)
 IValue = WIDGET_LABEL(wDataRowBase,$
                       VALUE = 'N/A',$
                       /ALIGN_LEFT,$
-                      XSIZE = sLabel.counts.xsize,$
-                      UNAME = sLabel.counts.uname)
+                      XSIZE = sDataLabel.counts.xsize,$
+                      UNAME = sDataLabel.counts.uname)
 
 ;end of data base .............................................................
 
+;EmptyCell base ................................................................
+wEmptyCellTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sEmptyCellTitle.size[0],$
+                          YOFFSET = sEmptyCellTitle.size[1],$
+                          VALUE   = sEmptyCellTitle.value)
+
+wEmptyCellBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sEmptyCellBase.size[0],$
+                        YOFFSET   = sEmptyCellBase.size[1],$
+                        SCR_XSIZE = sEmptyCellBase.size[2],$
+                        SCR_YSIZE = sEmptyCellBase.size[3]+12,$
+                        FRAME     = sEmptyCellBase.frame)
+
+;Draw
+wEmptyCellDraw = WIDGET_DRAW(wEmptyCellbase,$
+                        XOFFSET       = sEmptyCellDraw.size[0],$
+                        YOFFSET       = sEmptyCellDraw.size[1],$
+                        Y_SCROLL_SIZE = sEmptyCellDraw.size[3],$
+                        X_SCROLL_SIZE = sEmptyCellDraw.size[2],$
+                        XSIZE         = sEmptyCellDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        UNAME         = sEmptyCellDraw.uname)
+
+;X(label/value), Y(label/value) and I(label/value)
+wEmptyCellRowBase = WIDGET_BASE(wEmptyCellbase,$
+                           XOFFSET = sEmptyCellRowBase.size[0],$
+                           YOFFSET = sEmptyCellRowBase.size[1],$
+                           SCR_XSIZE = sEmptyCellRowBase.size[2],$
+                           SCR_YSIZE = sEmptyCellRowBase.size[3],$
+                           FRAME     = sEmptyCellRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.x.value)
+xValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sEmptyCellLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sEmptyCellLabel.x.uname)
+label = WIDGET_LABEL(wEmptyCellRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.y.value)
+yValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sEmptyCellLabel.y.xsize,$
+                      UNAME = sEmptyCellLabel.y.uname)
+label = WIDGET_LABEL(wEmptyCellRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.counts.value)
+IValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sEmptyCellLabel.counts.xsize,$
+                      UNAME = sEmptyCellLabel.counts.uname)
+
+;end of data base .............................................................
 
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
@@ -444,7 +541,7 @@ wLabel = WIDGET_LABEL(wNexusBase,$
 
 ;label and text field
 wEmptyCellLabel = WIDGET_LABEL(wNexusBase,$
-                               VALUE = sEmptyCellLabel.value)
+                               VALUE = sEmptyCellRunNumberLabel.value)
 
 wEmptyCellTextField = WIDGET_TEXT(wNexusBase,$
                                   VALUE = sEmptyCellTextField.value,$
