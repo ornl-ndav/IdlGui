@@ -86,8 +86,11 @@ debugger = 1 ;the world has access to the batch tab now
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+
                     empty_cell_images: PTR_NEW(0L),$
                     sf_equation_file: 'REFreduction_images/SFequation.png',$
+                    PrevDNECtabSelect: 0,$
+
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: 'bank1,1',$

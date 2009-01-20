@@ -763,18 +763,14 @@ ENDIF
 putTextFieldValue, Event, 'empty_cell_substrate_equation', Equation[0], 0
 END
 
-;---------- NEW BASE ----------------------------------------------------------
-;------------------------------------------------------------------------------
-PRO wBase_event, Event
-WIDGET_CONTROL,Event.top,GET_UVALUE=local_global
-global = local_global.global
-
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-
-
-    ELSE:
-ENDCASE
+;______________________________________________________________________________
+;This function is reached each time the user wants to calculate the SF
+PRO RefreshEquationDraw, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_factor_equation_draw')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).sf_equation_file)
+tv, image, 0,0,/true
 END
 
