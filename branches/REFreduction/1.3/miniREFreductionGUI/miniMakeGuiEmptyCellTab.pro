@@ -58,7 +58,7 @@ XYoff = [0,10]
 yoff = 15
 sDataBase = { size: [XYoff[0],$
                      XYoff[1],$
-                     500, $
+                     450, $
                      265+yoff],$
               frame: 1}
 ;data title
@@ -83,13 +83,13 @@ sDataRowBase = { size: [sDataDraw.size[0]+XYoff[0],$
                         40],$
                  frame: 0 }
 
-sDataLabel = { x : { value: 'X (TOF in microS):',$
+sDataLabel = { x : { value: 'X(TOF,microS):',$
                      uname: 'empty_cell_data_draw_x_value',$
                      xsize:  50},$
-               y : { value: 'Y (Pixel #):',$
+               y : { value: 'Y(Pixel):',$
                      uname: 'empty_cell_data_draw_y_value',$
                      xsize: 20},$
-               counts : { value: 'Nbr Counts:',$
+               counts : { value: 'Counts:',$
                           uname: 'empty_cell_data_draw_counts_value',$
                           xsize: 50}}
 
@@ -125,13 +125,13 @@ sEmptyCellRowBase = { size: [sEmptyCellDraw.size[0]+XYoff[0],$
                              40],$
                       frame: 0 }
 
-sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
+sEmptyCellLabel = { x: { value: 'X(TOF,microS):',$
                          uname: 'empty_cell_empty_cell_draw_x_value',$
                          xsize:  50},$
-                    y: { value: 'Y (Pixel #):',$
+                    y: { value: 'Y(Pixel:',$
                          uname: 'empty_cell_empty_cell_draw_y_value',$
                          xsize: 20},$
-                    counts: { value: 'Nbr Counts:',$
+                    counts: { value: 'Counts:',$
                               uname: $
                               'empty_cell_empty_cell_draw_counts_value',$
                               xsize: 50}}
@@ -164,7 +164,52 @@ sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
 
 ;end of SF equation label and text field ......................................
 
-XYoff = [-215,-55]
+;recap base --------------------------------------------------------------------
+XYoff = [10,-70]
+yoff = 15
+sRecapBase = { size: [sDataBase.size[0]+$
+                      sDataBase.size[2]+XYoff[0],$
+                      sDataBase.size[1]+$
+                      sDataBase.size[3]+$
+                      XYoff[1],$	
+                      425, $
+                      sDataBase.size[3]],$
+               frame: 1}
+;recap title
+XYoff = [20,-8]
+sRecapTitle = { size: [sRecapBase.size[0]+XYoff[0],$
+                       sRecapbase.size[1]+XYoff[1]],$
+                value: 'Data_File - C * Empty_Cell_File: I vs TOF'}
+
+XYoff = [0,10]
+sRecapDraw = { size: [XYoff[0],$
+                      XYoff[1],$
+                      sRecapBase.size[2],$
+                      220],$
+               uname: 'empty_cell_scaling_factor_base_recap_draw'}
+
+XYoff = [0,20]
+sRecapRowBase = { size: [sRecapDraw.size[0]+XYoff[0],$
+                         sRecapDraw.size[1]+$
+                         sRecapDraw.size[3]+$
+                         XYoff[1],$
+                         sRecapDraw.size[2],$
+                         40],$
+                  frame: 0 }
+
+sRecapLabel = { x : { value: 'X(TOF,microS):',$
+                      uname: 'empty_cell_recap_draw_x_value',$
+                      xsize:  50},$
+                y : { value: 'Y(Pixel):',$
+                      uname: 'empty_cell_recap_draw_y_value',$
+                      xsize: 20},$
+                counts : { value: 'Counts:',$
+                           uname: 'empty_cell_recap_draw_counts_value',$
+                           xsize: 50}}
+
+;end of recap base/draw ........................................................
+
+XYoff = [-215,-110]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
                      sBase.size[3]+XYoff[1],$
                      100],$
@@ -568,6 +613,68 @@ wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
                                 VALUE   = sSFequationLabel2.value)
 
 ;end of SF equation label and text field ......................................
+
+;Recap base ....................................................................
+wRecapTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sRecapTitle.size[0],$
+                          YOFFSET = sRecapTitle.size[1],$
+                          VALUE   = sRecapTitle.value)
+
+wRecapBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sRecapBase.size[0],$
+                        YOFFSET   = sRecapBase.size[1],$
+                        SCR_XSIZE = sRecapBase.size[2],$
+                        SCR_YSIZE = sRecapBase.size[3]+12,$
+                        FRAME     = sRecapBase.frame)
+
+;Draw
+wRecapDraw = WIDGET_DRAW(wRecapBase,$
+                        XOFFSET       = sRecapDraw.size[0],$
+                        YOFFSET       = sRecapDraw.size[1],$
+                        Y_SCROLL_SIZE = sRecapDraw.size[3],$
+                        X_SCROLL_SIZE = sRecapDraw.size[2],$
+                        XSIZE         = sRecapDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        UNAME         = sRecapDraw.uname)
+
+;X(label/value), Y(label/value) and I(label/value)
+wRecapRowBase = WIDGET_BASE(wRecapbase,$
+                           XOFFSET = sRecapRowBase.size[0],$
+                           YOFFSET = sRecapRowBase.size[1],$
+                           SCR_XSIZE = sRecapRowBase.size[2],$
+                           SCR_YSIZE = sRecapRowBase.size[3],$
+                           FRAME     = sRecapRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.x.value)
+xValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sRecapLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sRecapLabel.x.uname)
+label = WIDGET_LABEL(wRecapRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.y.value)
+yValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sRecapLabel.y.xsize,$
+                      UNAME = sRecapLabel.y.uname)
+label = WIDGET_LABEL(wRecapRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.counts.value)
+IValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sRecapLabel.counts.xsize,$
+                      UNAME = sRecapLabel.counts.uname)
+
+;end of recap base .............................................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
