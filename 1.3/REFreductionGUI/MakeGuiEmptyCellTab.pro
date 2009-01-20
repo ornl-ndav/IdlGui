@@ -493,7 +493,7 @@ IValue = WIDGET_LABEL(wEmptyCellRowBase,$
                       XSIZE = sEmptyCellLabel.counts.xsize,$
                       UNAME = sEmptyCellLabel.counts.uname)
 
-;end of data base .............................................................
+;end of empty cell base .......................................................
 
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
