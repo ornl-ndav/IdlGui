@@ -53,6 +53,50 @@ sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
                        map: 0}
 
+;data base --------------------------------------------------------------------
+XYoff = [0,10]
+yoff = 15
+sDataBase = { size: [XYoff[0],$
+                     XYoff[1],$
+                     400, $
+                     350+yoff],$
+              frame: 1}
+;data title
+XYoff = [20,-8]
+sDataTitle = { size: [sDataBase.size[0]+XYoff[0],$
+                      sDatabase.size[1]+XYoff[1]],$
+               value: 'Data File: I vs TOF'}
+
+XYoff = [0,yoff]
+sDataDraw = { size: [XYoff[0],$
+                     XYoff[1],$
+                     sDataBase.size[2],$
+                     306],$
+              uname: 'empty_cell_scaling_factor_base_data_draw'}
+
+XYoff = [0,20]
+sDataRowBase = { size: [sDataDraw.size[0]+XYoff[0],$
+                        sDataDraw.size[1]+$
+                        sDataDraw.size[3]+$
+                        XYoff[1],$
+                        sDataDraw.size[2],$
+                        40],$
+                 frame: 0 }
+
+sLabel = { x : { value: 'X(microS):',$
+                 uname: 'empty_cell_data_draw_x_value',$
+                 xsize:  50},$
+           y : { value: 'Y(Pixel):',$
+                 uname: 'empty_cell_data_draw_y_value',$
+                 xsize: 20},$
+           counts : { value: 'I:',$
+                      uname: 'empty_cell_data_draw_counts_value',$
+                      xsize: 50}}
+
+;end of data base/draw ........................................................
+
+;end of SF calculation base ...................................................
+
 XYoff = [-215,-55]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
                      sBase.size[3]+XYoff[1],$
@@ -302,6 +346,68 @@ wSFcalculationBase = WIDGET_BASE(wBase,$
                                  SCR_YSIZE = sSFcalculationBase.size[3],$
                                  MAP       = sSFcalculationBase.map)
 
+;Data base ....................................................................
+wDataTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sDataTitle.size[0],$
+                          YOFFSET = sDataTitle.size[1],$
+                          VALUE   = sDataTitle.value)
+
+wDataBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sDataBase.size[0],$
+                        YOFFSET   = sDataBase.size[1],$
+                        SCR_XSIZE = sDataBase.size[2],$
+                        SCR_YSIZE = sDataBase.size[3]+12,$
+                        FRAME     = sDataBase.frame)
+
+;Draw
+wDataDraw = WIDGET_DRAW(wDatabase,$
+                        XOFFSET       = sDataDraw.size[0],$
+                        YOFFSET       = sDataDraw.size[1],$
+                        Y_SCROLL_SIZE = sDataDraw.size[3],$
+                        X_SCROLL_SIZE = sDataDraw.size[2],$
+                        XSIZE         = sDataDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        UNAME         = sDataDraw.uname)
+
+;X(label/value), Y(label/value) and I(label/value)
+wDataRowBase = WIDGET_BASE(wDatabase,$
+                           XOFFSET = sDataRowBase.size[0],$
+                           YOFFSET = sDataRowBase.size[1],$
+                           SCR_XSIZE = sDataRowBase.size[2],$
+                           SCR_YSIZE = sDataRowBase.size[3],$
+                           FRAME     = sDataRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sLabel.x.value)
+xValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sLabel.x.uname)
+label = WIDGET_LABEL(wDataRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sLabel.y.value)
+yValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sLabel.y.xsize,$
+                      UNAME = sLabel.y.uname)
+label = WIDGET_LABEL(wDataRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sLabel.counts.value)
+IValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sLabel.counts.xsize,$
+                      UNAME = sLabel.counts.uname)
+
+;end of data base .............................................................
+
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
                           YOFFSET   = sSFcancel.size[1],$
@@ -316,11 +422,7 @@ wSFok = WIDGET_BUTTON(wSFcalculationBase,$
                       UNAME     = sSFok.uname,$
                       VALUE     = sSFok.value)
 
-
-
-
-
-
+;end of scaling factor calculation ............................................
 
 
 
