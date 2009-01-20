@@ -156,6 +156,7 @@ cd, CurrentFolder
 .run ref_reduction_configuration.pro
 
 .run MainBaseEvent.pro
+.run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
 .run mini_ref_reduction.pro
 
