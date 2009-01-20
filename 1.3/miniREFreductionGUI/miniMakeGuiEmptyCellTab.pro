@@ -138,12 +138,29 @@ sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
 ;end of empty cell base/draw ..................................................
 
 ;SF equation label and text field .............................................
-XYoff = [550,30]
+XYoff = [550,65]
+sSFequationLabel = { size: [XYoff[0],$
+                            XYoff[1]],$
+                     value: 'C ='}
+
+XYoff = [580,30]
 sSFequationDraw = { size: [XYoff[0],$
                            XYoff[1],$
-                           333,$
-                           133],$
+                           295,$
+                           100],$
                     uname: 'scaling_factor_equation_draw' }
+
+XYoff = [0,150]
+sSFequationLabel2 = { size: [sSFequationLabel.size[0]+XYoff[0],$
+                             XYoff[1]],$
+                     value: sSFequationLabel.value}
+
+XYoff = [25,-8] ;widget_text
+sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
+                                sSFequationLabel2.size[1]+XYoff[1],$
+                                10],$
+                         value: '1',$
+                         uname: 'scaling_factor_equation_value'}
 
 ;end of SF equation label and text field ......................................
 
@@ -531,6 +548,24 @@ wSFequationDraw = WIDGET_DRAW(wSFcalculationBase,$
                               SCR_XSIZE = sSFequationDraw.size[2],$
                               SCR_YSIZE = sSFequationDraw.size[3],$
                               UNAME     = sSFequationDraw.uname)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel.size[0],$
+                                YOFFSET = sSFequationLabel.size[1],$
+                                VALUE   = sSFequationLabel.value)
+
+wSFequation = WIDGET_TEXT(wSFcalculationBase,$
+                          XOFFSET = sSFequationTextField.size[0],$
+                          YOFFSET = sSFequationTextField.size[1],$
+                          XSIZE   = sSFequationTextField.size[2],$
+                          UNAME   = sSFequationTextField.uname,$
+                          VALUE   = sSFequationTextField.value,$
+                          /EDITABLE)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel2.size[0],$
+                                YOFFSET = sSFequationLabel2.size[1],$
+                                VALUE   = sSFequationLabel2.value)
 
 ;end of SF equation label and text field ......................................
 
