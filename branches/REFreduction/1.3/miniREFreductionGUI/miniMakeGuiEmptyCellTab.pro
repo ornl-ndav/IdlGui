@@ -137,6 +137,16 @@ sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
                               xsize: 50}}
 ;end of empty cell base/draw ..................................................
 
+;SF equation label and text field .............................................
+XYoff = [550,30]
+sSFequationDraw = { size: [XYoff[0],$
+                           XYoff[1],$
+                           333,$
+                           133],$
+                    uname: 'scaling_factor_equation_draw' }
+
+;end of SF equation label and text field ......................................
+
 XYoff = [-215,-55]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
                      sBase.size[3]+XYoff[1],$
@@ -153,6 +163,7 @@ sSFok = { size: [sSFcancel.size[0]+$
           uname: 'empty_cell_sf_base_ok'}
 
 ;end of SF calculation base ...................................................
+;..............................................................................
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 XYoff = [0,0] ;base
@@ -512,6 +523,16 @@ IValue = WIDGET_LABEL(wEmptyCellRowBase,$
                       UNAME = sEmptyCellLabel.counts.uname)
 
 ;end of empty cell base .......................................................
+
+;SF equation label and text field .............................................
+wSFequationDraw = WIDGET_DRAW(wSFcalculationBase,$
+                              XOFFSET = sSFequationDraw.size[0],$
+                              YOFFSET = sSFequationDraw.size[1],$
+                              SCR_XSIZE = sSFequationDraw.size[2],$
+                              SCR_YSIZE = sSFequationDraw.size[3],$
+                              UNAME     = sSFequationDraw.uname)
+
+;end of SF equation label and text field ......................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$

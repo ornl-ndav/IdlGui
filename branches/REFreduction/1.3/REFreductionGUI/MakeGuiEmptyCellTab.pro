@@ -136,6 +136,25 @@ sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
                               xsize: 50}}
 ;end of empty cell base/draw ..................................................
 
+;SF equation label and text field .............................................
+XYoff = [630,81]
+sSFequationLabel = { size: [XYoff[0],$
+                            XYoff[1]],$
+                     value: 'Scaling Factor, C = '}
+XYoff = [750,30]
+sSFequationDraw = { size: [XYoff[0],$
+                           XYoff[1],$
+                           333,$
+                           133],$
+                    uname: 'scaling_factor_equation_draw' }
+
+XYoff = [0,190]
+sSFequationLabel2 = { size: [sSFequationLabel.size[0]+XYoff[0],$
+                             XYoff[1]],$
+                     value: sSFequationLabel.value}
+
+;end of SF equation label and text field ......................................
+
 XYoff = [-215,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
                      sBase.size[3]+XYoff[1],$
@@ -495,6 +514,24 @@ IValue = WIDGET_LABEL(wEmptyCellRowBase,$
 
 ;end of empty cell base .......................................................
 
+;SF equation label and text field .............................................
+wSFequationDraw = WIDGET_DRAW(wSFcalculationBase,$
+                              XOFFSET = sSFequationDraw.size[0],$
+                              YOFFSET = sSFequationDraw.size[1],$
+                              SCR_XSIZE = sSFequationDraw.size[2],$
+                              SCR_YSIZE = sSFequationDraw.size[3],$
+                              UNAME     = sSFequationDraw.uname)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel.size[0],$
+                                YOFFSET = sSFequationLabel.size[1],$
+                                VALUE   = sSFequationLabel.value)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel2.size[0],$
+                                YOFFSET = sSFequationLabel2.size[1],$
+                                VALUE   = sSFequationLabel2.value)
+;end of SF equation label and text field ......................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
