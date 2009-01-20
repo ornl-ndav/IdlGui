@@ -52,7 +52,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
                        map: 1}
-;data base
+;data base --------------------------------------------------------------------
 XYoff = [0,10]
 yoff = 15
 sDataBase = { size: [XYoff[0],$
@@ -395,7 +395,7 @@ IValue = WIDGET_LABEL(wDataRowBase,$
                       XSIZE = sLabel.counts.xsize,$
                       UNAME = sLabel.counts.uname)
 
-
+;end of data base .............................................................
 
 
 
