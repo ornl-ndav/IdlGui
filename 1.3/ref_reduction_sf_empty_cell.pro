@@ -67,7 +67,8 @@ widget_id = WIDGET_INFO(Event.top, $
 ;check that there are data and empty cell nexus file loaded
 data_nexus_file       = (*global).data_full_nexus_name
 empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
-IF (data_nexus_file EQ '' AND $   
+
+IF (data_nexus_file EQ '' OR $   
     empty_cell_nexus_file EQ '') THEN BEGIN
 
     text   = ['Data and/or Empty Cell NeXus file is/are missing!',$
