@@ -464,7 +464,9 @@ wDataDraw = WIDGET_DRAW(wDatabase,$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
                         /SCROLL,$
-                        UNAME         = sDataDraw.uname)
+                        UNAME         = sDataDraw.uname,$
+                        /MOTION_EVENTS,$
+                        /TRACKING_EVENTS)
 
 ;X(label/value), Y(label/value) and I(label/value)
 wDataRowBase = WIDGET_BASE(wDatabase,$
@@ -503,7 +505,7 @@ IValue = WIDGET_LABEL(wDataRowBase,$
 
 ;end of data base .............................................................
 
-;EmptyCell base ................................................................
+;EmptyCell base ...............................................................
 wEmptyCellTitle = WIDGET_LABEL(wSFcalculationBase,$
                           XOFFSET = sEmptyCellTitle.size[0],$
                           YOFFSET = sEmptyCellTitle.size[1],$
@@ -526,6 +528,7 @@ wEmptyCellDraw = WIDGET_DRAW(wEmptyCellbase,$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
                         /SCROLL,$
+                        /MOTION_EVENTS,$
                         UNAME         = sEmptyCellDraw.uname)
 
 ;X(label/value), Y(label/value) and I(label/value)
@@ -616,6 +619,7 @@ wRecapDraw = WIDGET_DRAW(wRecapbase,$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
                         /SCROLL,$
+                        /MOTION_EVENTS,$
                         UNAME         = sRecapDraw.uname)
 
 ;X(label/value), Y(label/value) and I(label/value)
@@ -653,7 +657,7 @@ IValue = WIDGET_LABEL(wRecapRowBase,$
                       XSIZE = sRecapLabel.counts.xsize,$
                       UNAME = sRecapLabel.counts.uname)
 
-;end of Recap base .............................................................
+;end of Recap base ............................................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
