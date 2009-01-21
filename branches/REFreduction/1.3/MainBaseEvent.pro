@@ -1178,6 +1178,23 @@ CASE Event.id OF
             ENDIF
         ENDIF ELSE BEGIN
             display_sf_calculation_base_data_info, Event ;_sf_empty_cell 
+
+            IF (Event.press EQ 1) THEN BEGIN ;left click
+                print, 'left click'
+                (*global).ec_left_click = 1
+            ENDIF
+
+            IF (Event.type EQ 2) THEN BEGIN ;move mouse
+                IF ((*global).ec_left_click) THEN BEGIN
+                    print, 'move mouse'
+                ENDIF
+            ENDIF
+
+            IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                (*global).ec_left_click = 0
+                print, 'release mouse'
+            ENDIF
+
         ENDELSE
     END
 

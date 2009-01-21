@@ -95,7 +95,7 @@ global = ptr_new ({ first_event: 1,$
                     nexus_tof_path: '/entry/bank1/time_of_flight/',$
                     sf_data_tof: PTR_NEW(0L),$
                     sf_empty_cell_tof: PTR_NEW(0L),$
-
+                    ec_left_click: 0,$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
