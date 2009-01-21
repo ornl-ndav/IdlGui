@@ -36,8 +36,7 @@
 ;this function is trigerred each time the user changes tab (main tabs)
 PRO tab_event, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+widget_control,Event.top,get_uvalue=global
 
 tab_id = widget_info(Event.top,find_by_uname='main_tab')
 CurrTabSelect = widget_info(tab_id,/tab_current)
@@ -218,5 +217,25 @@ IF ((*global).NormNexusFound EQ 1) THEN BEGIN
 ENDIF
 
 MapBase, Event, 'info_norm_base', info_base_status
+
+END
+
+;------------------------------------------------------------------------------
+PRO data_norma_empty_cell_tab_event, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+tab_id = widget_info(Event.top, $
+                     find_by_uname='data_normalization_tab')
+CurrDNECtabSelect = widget_info(tab_id,/tab_current)
+PrevDNECtabSelect = (*global).PrevDNECtabSelect
+IF(CurrDNECtabSelect NE PrevDNECtabSelect) THEN BEGIN
+   IF (isBaseMap(Event, $
+                 'empty_cell_scaling_' + $
+                 'factor_calculation_base')) THEN BEGIN
+                                ;refresh the equation plot
+      RefreshEquationDraw, Event ;_empty_cell
+   ENDIF
+ENDIF
 
 END
