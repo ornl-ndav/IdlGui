@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 1}
+                       map: 0}
 
 ;data base --------------------------------------------------------------------
 XYoff = [0,10]

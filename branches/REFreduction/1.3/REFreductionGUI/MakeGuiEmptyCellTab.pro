@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 1}
+                       map: 0}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -162,7 +162,7 @@ sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
 
 ;end of SF equation label and text field ......................................
 
-;recap base --------------------------------------------------------------------
+;recap base -------------------------------------------------------------------
 XYoff = [20,-90]
 yoff = 15
 sRecapBase = { size: [sDataBase.size[0]+$

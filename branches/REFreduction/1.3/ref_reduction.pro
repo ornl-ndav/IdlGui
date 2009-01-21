@@ -723,8 +723,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;change default location of Batch file
 ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
     
- id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
- widget_control, id2, set_tab_current = 2  ;empty cell
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 2  ;empty cell
     
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
