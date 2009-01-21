@@ -1156,15 +1156,10 @@ CASE Event.id OF
        update_substrate_equation, Event ;_empty_cell
     END
     
-;Scaling Factor button
+;Scaling Factor button (to launch the calculation of the SF)
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                 'empty_cell_scaling_factor_button'): BEGIN
-       SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
-       putTextFieldValue, Event, 'scaling_factor_equation_value', $
-                          STRCOMPRESS(SFvalue,/REMOVE_ALL), 0
-       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
-;refresh the equation plot
-       RefreshEquationDraw, Event ;_empty_cell
+        start_sf_scaling_factor_calculation_mode, Event ;_sf_empty_cell
     END
 
 ;Calculate Scaling Factor Base ................................................
