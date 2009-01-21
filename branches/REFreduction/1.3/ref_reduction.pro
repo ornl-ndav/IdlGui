@@ -103,6 +103,9 @@ global = PTR_NEW ({ first_event: 1,$
                     nexus_proton_charge_path: '/entry/proton_charge/',$
                     data_proton_charge: '',$
                     empty_cell_proton_charge: '',$
+                    distance_moderator_sample: $
+                      '/entry/instrument/moderator/distance/',$
+                    empty_cell_distance_moderator_sample: '',$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
