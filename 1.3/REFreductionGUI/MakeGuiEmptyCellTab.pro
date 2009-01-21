@@ -466,6 +466,7 @@ wDataDraw = WIDGET_DRAW(wDatabase,$
                         RETAIN        = 2,$
                         /SCROLL,$
                         UNAME         = sDataDraw.uname,$
+                        /BUTTON_EVENTS,$
                         /MOTION_EVENTS,$
                         /TRACKING_EVENTS)
 
