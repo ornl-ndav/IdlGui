@@ -32,12 +32,10 @@
 ;
 ;==============================================================================
 
-FUNCTION getTOFArray, Event, FILE_NAME = file_name, result
+FUNCTION getNexusInfo, file_name, PATH=path, result
 
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
 fileID = H5F_OPEN(file_name)
-path   = (*global).nexus_tof_path
+path   = PATH
 
 error_value = 0
 CATCH, error_value
@@ -54,6 +52,24 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+;..............................................................................
+FUNCTION getTOFArray, Event, FILE_NAME=file_name, result
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+path      = (*global).nexus_tof_path
+tof_array = getNexusInfo(FILE_NAME, PATH=path, result)
+RETURN, tof_array
+END
+
+;..............................................................................
+FUNCTION retrieveProtonCharge, event, FILE_NAME=file_name, result
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+path =  (*global).nexus_proton_charge_path
+proton_charge = getNexusInfo(FILE_NAME, PATH=path, result)
+RETURN, proton_charge
+END
+
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;This procedure is reached by the CALCULATE SF button of the empty cell
 PRO start_sf_scaling_factor_calculation_mode, Event 
@@ -67,89 +83,105 @@ widget_id = WIDGET_INFO(Event.top, $
 IF ((*global).debugging_version EQ 'yes') THEN BEGIN
 
     data_nexus_file       = (*global).empty_cell_full_nexus_name
-;retrieve the tof of data and empty_cell
-    sf_empty_cell_tof = getTOFArray(Event, $
-                                    FILE_NAME=data_nexus_file, $
-                                    result_data) ;_sf_empty
-    (*(*global).sf_empty_cell_tof) = sf_empty_cell_tof
-;load the data file
-    plot_data_file_in_sf_calculation_base, Event, FILE_NAME=data_nexus_file
+    empty_cell_nexus_file = data_nexus_file
+    (*global).data_full_nexus_name = data_nexus_file
+    (*(*global).DATA_D_TOTAL_ptr) = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+    
 
-ENDIF ELSE BEGIN
+ENDIF
 
 ;check that there are data and empty cell nexus file loaded
-    data_nexus_file       = (*global).data_full_nexus_name
-    empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
+data_nexus_file       = (*global).data_full_nexus_name
+empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
+
+IF (data_nexus_file EQ '' OR $   
+    empty_cell_nexus_file EQ '') THEN BEGIN
     
-    IF (data_nexus_file EQ '' OR $   
-        empty_cell_nexus_file EQ '') THEN BEGIN
-        
-        text   = ['Data and/or Empty Cell NeXus file is/are missing!',$
-                  'Please load the missing NeXus file(s)']
-        title  = 'NeXus File Missing!'
-        
-        result = DIALOG_MESSAGE(text,$
-                                /INFORMATION,$
-                                /CENTER,$
-                                TITLE = title,$
-                                DIALOG_PARENT = widget_id)
-        RETURN
-    ENDIF
+    text   = ['Data and/or Empty Cell NeXus file is/are missing!',$
+              'Please load the missing NeXus file(s)']
+    title  = 'NeXus File Missing!'
     
+    result = DIALOG_MESSAGE(text,$
+                            /INFORMATION,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+ENDIF
+
 ;retrieve the tof of data and empty_cell
-    data_tof = getTOFArray(Event, $
-                           FILE_NAME=data_nexus_file, $
-                           result_data) ;_sf_empty
-    IF (result_data NE 1) THEN BEGIN
-        text   = 'Problem Retrieving the TOF axis from ' + data_nexus_file
-        title  = 'TOF axis ERROR!'
-        result = DIALOG_MESSAGE(text,$
-                                /ERROR,$
-                                /CENTER,$
-                                TITLE = title,$
-                                DIALOG_PARENT = widget_id)
-        RETURN
-    ENDIF
-    (*(*global).sf_data_tof) = data_tof
-    
-    empty_cell_tof = getTOFArray(Event, $
-                                 FILE_NAME=empty_cell_nexus_file, $
-                                 result_empty_cell)
-    IF (result_empty_cell NE 1) THEN BEGIN
-        text   = 'Problem Retrieving the TOF axis from ' + $
-          empty_cell_nexus_file
-        title  = 'TOF axis ERROR!'
-        result = DIALOG_MESSAGE(text,$
-                                /ERROR,$
-                                /CENTER,$
-                                TITLE = title,$
-                                DIALOG_PARENT = widget_id)
-        RETURN
-    ENDIF
-    (*(*global).sf_empty_cell_tof) = empty_cell_tof
-    
+data_tof = getTOFArray(Event, $
+                       FILE_NAME=data_nexus_file, $
+                       result_data) ;_sf_empty
+IF (result_data NE 1) THEN BEGIN
+    text   = 'Problem Retrieving the TOF axis from ' + data_nexus_file
+    title  = 'TOF axis ERROR!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+ENDIF
+(*(*global).sf_data_tof) = data_tof
+
+empty_cell_tof = getTOFArray(Event, $
+                             FILE_NAME=empty_cell_nexus_file, $
+                             result_empty_cell)
+IF (result_empty_cell NE 1) THEN BEGIN
+    text   = 'Problem Retrieving the TOF axis from ' + $
+      empty_cell_nexus_file
+    title  = 'TOF axis ERROR!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+ENDIF
+(*(*global).sf_empty_cell_tof) = empty_cell_tof
+
 ;check that both tof arrays are identical
-    IF (~ARRAY_EQUAL(data_tof, empty_cell_tof)) THEN BEGIN
-        text   = ['Data and Empty Cell NeXus files do not have the same ' + $
-                  'histogramming schema (TOF axis).',$
-                  'Please use MakeNeXus to have them use the same TOF axis']
-        title  = 'TOF axis INCOMPATIBLE!'
-        result = DIALOG_MESSAGE(text,$
-                                /ERROR,$
-                                /CENTER,$
-                                TITLE = title,$
-                                DIALOG_PARENT = widget_id)
-        RETURN
-    END
-    
+IF (~ARRAY_EQUAL(data_tof, empty_cell_tof)) THEN BEGIN
+    text   = ['Data and Empty Cell NeXus files do not have the same ' + $
+              'histogramming schema (TOF axis).',$
+              'Please use MakeNeXus to have them use the same TOF axis']
+    title  = 'TOF axis INCOMPATIBLE!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+END
+
 ;load the data file
-    plot_data_file_in_sf_calculation_base, Event, FILE_NAME=data_nexus_file
-    
+plot_data_file_in_sf_calculation_base, Event, FILE_NAME=data_nexus_file
+
 ;load the empty cell file
-    plot_empty_cell_file_in_sf_calculation_base, Event, $
-      FILE_NAME=empty_cell_nexus_file
-    
-ENDELSE
+plot_empty_cell_file_in_sf_calculation_base, Event, $
+  FILE_NAME=empty_cell_nexus_file
+
+;retrive value of proton charge for data and empty cell
+data_proton_charge = retrieveProtonCharge(event, $
+                                          FILE_NAME=data_nexus_file,$
+                                          result_data_proton)
+IF (result_data_proton NE 1) THEN BEGIN
+    data_proton_charge = 0
+ENDIF
+(*global).data_proton_charge = data_proton_charge
+
+empty_cell_proton_charge = $
+  retrieveProtonCharge(event, $
+                       FILE_NAME=empty_cell_nexus_file,$
+                       result_empty_cell_proton)
+IF (result_empty_cell_proton NE 1) THEN BEGIN
+    empty_cell_proton_charge = 0
+ENDIF
+(*global).empty_cell_proton_charge = empty_cell_proton_charge
+
+
+
 
 ;copy SF value into sf_calculation base
 SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
@@ -263,13 +295,8 @@ tof_uname    = 'empty_cell_data_draw_x_value'
 counts_uname = 'empty_cell_data_draw_counts_value'
 
 
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    data     = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
-    data_tof = (*(*global).sf_empty_cell_tof)
-ENDIF ELSE BEGIN
-    data     = (*(*global).DATA_D_TOTAL_ptr)
-    data_tof = (*(*global).sf_data_tof)
-ENDELSE
+data     = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+data_tof = (*(*global).sf_empty_cell_tof)
 
 display_sf_calculation_base_info, Event,$
   X            = x,$
@@ -369,11 +396,7 @@ PRO refresh_sf_data_plot_plot, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
-ENDIF ELSE BEGIN
-    data = (*(*global).DATA_D_TOTAL_ptr)
-ENDELSE
+data = (*(*global).DATA_D_TOTAL_ptr)
 
 DEVICE, DECOMPOSED = 0
 id_draw = WIDGET_INFO(Event.top, $
