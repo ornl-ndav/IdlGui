@@ -471,6 +471,54 @@ PLOTS, [x0, x0, x1, x1, x0],$
   /DEVICE,$
   COLOR =color
 
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO calculate_sf, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+;retrieve all parameters required to calculate SF
+x0 = (*global).sf_x0
+y0 = (*global).sf_y0
+x1 = (*global).sf_x1
+y1 = (*global).sf_y1
+xmin = MIN([x0,x1],MAX=xmax)
+ymin = MIN([y0,y1],MAX=ymax)
+
+data_proton_charge          = (*global).data_proton_charge
+empty_cell_proton_charge    = (*global).empty_cell_proton_charge
+distance_sample_moderator   = (*global).empty_cell_distance_moderator_sample
+distance_sample_pixel_array = (*(*global).distance_sample_pixel_array)
+
+data_data       = (*(*global).DATA_D_TOTAL_ptr)
+empty_cell_data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+
+
+
+
+;start the calculation of SF 
+
+;#1 calculate the numerator (sigma over x and y of data)
+Num = data_data[xmin:xmax,ymin:ymax]
+Num = TOTAL(Num)
+
+
+;#2 divide by proton_charge of data and multiply by proton charge of
+;empty cell
+Pdata = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
+f_Pdata = FLOAT(Pdata)
+
+Pempty_cell = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
+f_Pempty_cel = FLOAT(Pempty_cell)
+
+fNum = FLOAT(Num)
+fNum *= f_Pempty_cell
+fNum /= f_Pdata
+
+
+;#3 calculate the denominator
 
 
 END

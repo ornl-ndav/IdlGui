@@ -1197,6 +1197,7 @@ CASE Event.id OF
                 (*global).sf_x1 = Event.x
                 (*global).sf_y1 = Event.y
                 (*global).ec_left_click = 0
+                calculate_sf, Event ;_sf_empty_cell
             ENDIF
 
         ENDELSE
