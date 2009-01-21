@@ -91,6 +91,9 @@ global = PTR_NEW ({ first_event: 1,$
                     empty_cell_images: PTR_NEW(0L),$
                     sf_equation_file: 'REFreduction_images/SFequation.png',$
                     PrevDNECtabSelect: 0,$
+                    nexus_tof_path: '/entry/bank1/time_of_flight/',$
+                    sf_data_tof: PTR_NEW(0L),$
+                    sf_empty_cell_tof: PTR_NEW(0L),$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$

@@ -1162,7 +1162,22 @@ CASE Event.id OF
         start_sf_scaling_factor_calculation_mode, Event ;_sf_empty_cell
     END
 
+
 ;Calculate Scaling Factor Base ................................................
+
+;data draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_data_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN
+                reset_sf_calculation_base_data_info, Event ;_sf_empty_cell
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_data_info, Event ;_sf_empty_cell 
+        ENDELSE
+    END
 
 ;cancel button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_cancel'): BEGIN
@@ -1178,6 +1193,9 @@ CASE Event.id OF
        update_substrate_equation, Event ;_empty_cell
        MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
     END
+
+;END of Calculate Scaling Factor Base .........................................
+
 
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------

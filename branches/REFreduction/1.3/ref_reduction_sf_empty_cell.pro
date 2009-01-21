@@ -32,9 +32,27 @@
 ;
 ;==============================================================================
 
+FUNCTION getTOFArray, Event, FILE_NAME = file_name, result
 
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+fileID = H5F_OPEN(file_name)
+path   = (*global).nexus_tof_path
 
-
+error_value = 0
+CATCH, error_value
+IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    result = 0
+    RETURN, ''
+ENDIF ELSE BEGIN
+    pathID     = H5D_OPEN(fileID, path)
+    tof_array  = H5D_READ(pathID)
+    H5D_CLOSE, pathID
+    result     = 1
+    RETURN, tof_array
+ENDELSE
+END
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;This procedure is reached by the CALCULATE SF button of the empty cell
@@ -66,7 +84,26 @@ IF (data_nexus_file EQ '') THEN BEGIN
     RETURN
 ENDIF
 
-;check that they both have the same binning
+;retrieve the tof of data and empty_cell
+data_tof = getTOFArray(Event, $
+                       FILE_NAME=data_nexus_file, $
+                       result_data) ;_sf_empty
+;empty_cell_tof = getTOFArray, Event, FILE_NAME=empty_cell_nexus_file
+IF (result_data NE 1) THEN BEGIN
+    text   = 'Problem Retrieving the TOF axis from ' + data_nexus_file
+    title  = 'TOF axis ERROR!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+ENDIF
+(*(*global).sf_data_tof) = data_tof
+
+;check that both tof arrays are identical
+
+
 
 
 ;load the data file
@@ -84,6 +121,11 @@ MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
 RefreshEquationDraw, Event
 END
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+
+
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;load the data into the widget_draw uname specified
 PRO plot_file_in_sf_calculation_base, Event,$
@@ -109,6 +151,8 @@ WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
 
 TVSCL, data, /DEVICE
 
+;retrieve and save the tof axis values
+
 END
 
 ;..............................................................................
@@ -133,4 +177,97 @@ plot_file_in_sf_calculation_base, $
   DRAW_UNAME = draw_uname
 END
 
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+
+PRO display_sf_calculation_base_info, Event, $
+                                      X = x,$
+                                      Y = y,$
+                                      PIXEL_UNAME  = pixel_uname,$
+                                      TOF_UNAME    = tof_uname,$
+                                      COUNTS_UNAME = counts_uname,$
+                                      TOF_ARRAY    = tof_array
+                                      
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+;Pixel
+putTextFieldValue, Event, PIXEL_UNAME, STRCOMPRESS(Y,/REMOVE_ALL), 0
+
+;TOF
+tof_value = TOF_ARRAY[x]
+putTextFieldValue, Event, TOF_UNAME, STRCOMPRESS(tof_value,/REMOVE_ALL), 0
+                                      
+;Counts
+data = (*(*global).DATA_D_TOTAL_ptr)
+counts_value = data[x,y]
+putTextFieldValue, Event, COUNTS_UNAME, $
+  STRCOMPRESS(counts_value,/REMOVE_ALL), 0
+
+END
+
+;..............................................................................
+PRO display_sf_calculation_base_data_info, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+x = Event.X
+y = Event.Y
+
+type = 'data'
+
+pixel_uname  = 'empty_cell_data_draw_y_value'
+tof_uname    = 'empty_cell_data_draw_x_value'
+counts_uname = 'empty_cell_data_draw_counts_value'
+
+data_tof     = (*(*global).sf_data_tof)
+
+display_sf_calculation_base_info, Event,$
+  X            = x,$
+  Y            = y,$
+  PIXEL_UNAME  = pixel_uname,$
+  TOF_UNAME    = tof_uname,$
+  COUNTS_UNAME = counts_uname,$
+  TOF_ARRAY    = data_tof
+
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+
+PRO reset_sf_calculation_base_info, Event,$
+                                    PIXEL_UNAME = pixel_uname,$
+                                    TOF_UNAME    = tof_uname,$
+                                    COUNTS_UNAME = counts_uname,$
+                                    VALUE        = value
+                                    
+;Pixel
+putTextFieldValue, Event, PIXEL_UNAME, VALUE, 0
+
+;TOF
+putTextFieldValue, Event, TOF_UNAME, VALUE, 0
+                                      
+;Counts
+putTextFieldValue, Event, COUNTS_UNAME, VALUE, 0
+
+END
+
+;..............................................................................
+PRO reset_sf_calculation_base_data_info, Event
+
+value = 'N/A'
+
+pixel_uname  = 'empty_cell_data_draw_y_value'
+tof_uname    = 'empty_cell_data_draw_x_value'
+counts_uname = 'empty_cell_data_draw_counts_value'
+
+reset_sf_calculation_base_info, Event, $
+  PIXEL_UNAME  = pixel_uname,$
+  TOF_UNAME    = tof_uname,$
+  COUNTS_UNAME = counts_uname,$
+  VALUE        = value
+
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
