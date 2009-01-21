@@ -83,6 +83,12 @@ CASE Event.id OF
         ok_polarization_state, Event
     END
 
+
+;data/normalization/empty cell tab
+    widget_info(wWidget, FIND_BY_UNAME='data_normalization_tab'): begin
+       data_norma_empty_cell_tab_event, Event ;_tab
+    end
+
 ;==============================================================================
 ;**LOAD TAB**DATA**------------------------------------------------------------
 ;==============================================================================
