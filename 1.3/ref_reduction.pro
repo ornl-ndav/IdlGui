@@ -106,6 +106,9 @@ global = PTR_NEW ({ first_event: 1,$
                     distance_moderator_sample: $
                       '/entry/instrument/moderator/distance/',$
                     empty_cell_distance_moderator_sample: '',$
+                      distance_sample_pixel_path: $
+                      '/entry/instrument/bank1/distance/',$
+                    distance_sample_pixel_array: PTR_NEW(0L),$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
