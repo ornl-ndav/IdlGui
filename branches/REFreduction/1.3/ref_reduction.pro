@@ -53,6 +53,7 @@ WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'yes'         ;YES
 
 debugging_structure = {nbr_pola_state:4,$
+                       working_path: '~/SVN/IdlGui/branches/REFreduction/1.3/',$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
                        '/REF_M_4585.nxs',$
                        full_list_OF_nexus: ['/SNS/users/j35/REF_M_4117.nxs',$
@@ -103,7 +104,9 @@ global = PTR_NEW ({ first_event: 1,$
                     norm_nexus_full_path: '',$
                     empty_cell_nexus_full_path: '',$
                     list_pola_state: PTR_NEW(0L),$
+
                     debugging_structure: PTR_NEW(0L),$
+              
                     my_package: PTR_NEW(0L),$
                     driver_name: 'reflect_reduction',$
                     norm_loadct_contrast_changed: 0,$

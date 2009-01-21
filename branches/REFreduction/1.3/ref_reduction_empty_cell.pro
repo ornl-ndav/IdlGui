@@ -390,7 +390,11 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
-path      = (*global).browse_data_path
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+   path      = (*(*global).debugging_structure).working_path
+ENDIF ELSE BEGIN
+   path      = (*global).browse_data_path
+ENDELSE
 text      = '> Browsing for an Empty Cell NeXus file:'
 putLogBookMessage, Event, Text, Append=1
 
