@@ -1159,6 +1159,9 @@ CASE Event.id OF
 ;Scaling Factor button
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                 'empty_cell_scaling_factor_button'): BEGIN
+       SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
+       putTextFieldValue, Event, 'scaling_factor_equation_value', $
+                          STRCOMPRESS(SFvalue,/REMOVE_ALL), 0
        MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
 ;refresh the equation plot
        RefreshEquationDraw, Event ;_empty_cell
@@ -1174,6 +1177,9 @@ CASE Event.id OF
 ;ok button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_ok'): BEGIN
 ;copy A value into empty cell main base and refresh equation
+       SF_value = getTextFieldValue(Event,'scaling_factor_equation_value')
+       putTextFieldValue, Event, 'empty_cell_scaling_factor', $
+                          STRCOMPRESS(SF_value,/REMOVE_ALL), 0
        update_substrate_equation, Event ;_empty_cell
        MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
     END
