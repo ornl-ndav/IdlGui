@@ -1180,19 +1180,23 @@ CASE Event.id OF
             display_sf_calculation_base_data_info, Event ;_sf_empty_cell 
 
             IF (Event.press EQ 1) THEN BEGIN ;left click
-                print, 'left click'
+                (*global).sf_x0 = Event.x
+                (*global).sf_y0 = Event.y
                 (*global).ec_left_click = 1
             ENDIF
 
             IF (Event.type EQ 2) THEN BEGIN ;move mouse
                 IF ((*global).ec_left_click) THEN BEGIN
-                    print, 'move mouse'
+                    display_sf_data_selection, Event, $ ;_sf_empty_cell
+                      X1 = Event.x,$
+                      Y1 = Event.y
                 ENDIF
             ENDIF
 
             IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                (*global).sf_x1 = Event.x
+                (*global).sf_y1 = Event.y
                 (*global).ec_left_click = 0
-                print, 'release mouse'
             ENDIF
 
         ENDELSE

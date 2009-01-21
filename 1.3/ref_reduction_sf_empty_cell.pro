@@ -197,8 +197,6 @@ WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
 
 TVSCL, data, /DEVICE
 
-;retrieve and save the tof axis values
-
 END
 
 ;..............................................................................
@@ -366,3 +364,49 @@ END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
+
+PRO refresh_sf_data_plot_plot, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+    data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+ENDIF ELSE BEGIN
+    data = (*(*global).DATA_D_TOTAL_ptr)
+ENDELSE
+
+DEVICE, DECOMPOSED = 0
+id_draw = WIDGET_INFO(Event.top, $
+                      FIND_BY_UNAME='empty_cell_scaling_factor_base_data_draw')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+
+TVSCL, data, /DEVICE
+
+END
+
+;..............................................................................
+PRO display_sf_data_selection, Event, X1 = x1, Y1 = y1
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+x0 = (*global).sf_x0
+y0 = (*global).sf_y0
+x1 = X1
+y1 = Y1
+
+xmin = MIN([x0,x1],MAX=xmax)
+ymin = MIN([y0,y1],MAX=ymax)
+
+refresh_sf_data_plot_plot, Event
+
+color = 150
+
+PLOTS, [x0, x0, x1, x1, x0],$
+  [y0,y1, y1, y0, y0],$
+  /DEVICE,$
+  COLOR =color
+
+
+
+END

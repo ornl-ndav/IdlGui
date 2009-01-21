@@ -96,6 +96,10 @@ global = ptr_new ({ first_event: 1,$
                     sf_data_tof: PTR_NEW(0L),$
                     sf_empty_cell_tof: PTR_NEW(0L),$
                     ec_left_click: 0,$
+                    sf_x0: 0,$
+                    sf_y0: 0,$
+                    sf_x1: 0,$
+                    sf_y1: 0,$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
