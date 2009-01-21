@@ -67,10 +67,8 @@ widget_id = WIDGET_INFO(Event.top, $
 ;check that there are data and empty cell nexus file loaded
 data_nexus_file       = (*global).data_full_nexus_name
 empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
-;IF (data_nexus_file EQ '' AND $                ;REMOVE_COMMENTS
-;    empty_cell_nexus_file EQ '') THEN BEGIN    ;REMOVE_COMMENTS
-
-IF (data_nexus_file EQ '') THEN BEGIN
+IF (data_nexus_file EQ '' AND $   
+    empty_cell_nexus_file EQ '') THEN BEGIN
 
     text   = ['Data and/or Empty Cell NeXus file is/are missing!',$
               'Please load the missing NeXus file(s)']
@@ -88,7 +86,6 @@ ENDIF
 data_tof = getTOFArray(Event, $
                        FILE_NAME=data_nexus_file, $
                        result_data) ;_sf_empty
-;empty_cell_tof = getTOFArray, Event, FILE_NAME=empty_cell_nexus_file
 IF (result_data NE 1) THEN BEGIN
     text   = 'Problem Retrieving the TOF axis from ' + data_nexus_file
     title  = 'TOF axis ERROR!'
@@ -101,13 +98,41 @@ IF (result_data NE 1) THEN BEGIN
 ENDIF
 (*(*global).sf_data_tof) = data_tof
 
+empty_cell_tof = getTOFArray(Event, $
+                             FILE_NAME=empty_cell_nexus_file, $
+                             result_empty_cell)
+IF (result_empty_cell NE 1) THEN BEGIN
+    text   = 'Problem Retrieving the TOF axis from ' + empty_cell_nexus_file
+    title  = 'TOF axis ERROR!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+ENDIF
+(*(*global).sf_empty_cell_tof) = empty_cell_tof
+
 ;check that both tof arrays are identical
-
-
-
+IF (~ARRAY_EQUAL(data_tof, empty_cell_tof)) THEN BEGIN
+    text   = ['Data and Empty Cell NeXus files do not have the same ' + $
+      'histogramming schema (TOF axis).',$
+              'Please use MakeNeXus to have them use the same TOF axis']
+    title  = 'TOF axis INCOMPATIBLE!'
+    result = DIALOG_MESSAGE(text,$
+                            /ERROR,$
+                            /CENTER,$
+                            TITLE = title,$
+                            DIALOG_PARENT = widget_id)
+    RETURN
+END
 
 ;load the data file
 plot_data_file_in_sf_calculation_base, Event, FILE_NAME=data_nexus_file
+
+;load the empty cell file
+plot_empty_cell_file_in_sf_calculation_base, Event, $
+  FILE_NAME=empty_cell_nexus_file
 
 ;copy SF value into sf_calculation base
 SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
@@ -214,13 +239,35 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 x = Event.X
 y = Event.Y
 
-type = 'data'
-
 pixel_uname  = 'empty_cell_data_draw_y_value'
 tof_uname    = 'empty_cell_data_draw_x_value'
 counts_uname = 'empty_cell_data_draw_counts_value'
 
 data_tof     = (*(*global).sf_data_tof)
+
+display_sf_calculation_base_info, Event,$
+  X            = x,$
+  Y            = y,$
+  PIXEL_UNAME  = pixel_uname,$
+  TOF_UNAME    = tof_uname,$
+  COUNTS_UNAME = counts_uname,$
+  TOF_ARRAY    = data_tof
+
+END
+
+;..............................................................................
+PRO display_sf_calculation_base_empty_cell_info, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+x = Event.X
+y = Event.Y
+
+pixel_uname  = 'empty_cell_empty_cell_draw_y_value'
+tof_uname    = 'empty_cell_empty_cell_draw_x_value'
+counts_uname = 'empty_cell_empty_cell_draw_counts_value'
+
+data_tof     = (*(*global).sf_empty_cell_tof)
 
 display_sf_calculation_base_info, Event,$
   X            = x,$
@@ -260,6 +307,23 @@ value = 'N/A'
 pixel_uname  = 'empty_cell_data_draw_y_value'
 tof_uname    = 'empty_cell_data_draw_x_value'
 counts_uname = 'empty_cell_data_draw_counts_value'
+
+reset_sf_calculation_base_info, Event, $
+  PIXEL_UNAME  = pixel_uname,$
+  TOF_UNAME    = tof_uname,$
+  COUNTS_UNAME = counts_uname,$
+  VALUE        = value
+
+END
+
+;..............................................................................
+PRO reset_sf_calculation_base_empty_cell_info, Event
+
+value = 'N/A'
+
+pixel_uname  = 'empty_cell_empty_cell_draw_y_value'
+tof_uname    = 'empty_cell_empty_cell_draw_x_value'
+counts_uname = 'empty_cell_empty_cell_draw_counts_value'
 
 reset_sf_calculation_base_info, Event, $
   PIXEL_UNAME  = pixel_uname,$

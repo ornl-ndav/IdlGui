@@ -1159,7 +1159,9 @@ CASE Event.id OF
 ;Scaling Factor button (to launch the calculation of the SF)
     WIDGET_INFO(wWidget, FIND_BY_UNAME= $
                 'empty_cell_scaling_factor_button'): BEGIN
+        WIDGET_CONTROL, HOURGLASS=1
         start_sf_scaling_factor_calculation_mode, Event ;_sf_empty_cell
+        WIDGET_CONTROL, HOURGLASS=0
     END
 
 
@@ -1176,6 +1178,20 @@ CASE Event.id OF
             ENDIF
         ENDIF ELSE BEGIN
             display_sf_calculation_base_data_info, Event ;_sf_empty_cell 
+        ENDELSE
+    END
+
+;empty cell draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_empty_cell_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN 
+                reset_sf_calculation_base_empty_cell_info, Event 
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_empty_cell_info, Event ;_sf_empty_cell 
         ENDELSE
     END
 

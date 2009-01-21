@@ -529,6 +529,7 @@ wEmptyCellDraw = WIDGET_DRAW(wEmptyCellbase,$
                         RETAIN        = 2,$
                         /SCROLL,$
                         /MOTION_EVENTS,$
+                        /TRACKING_EVENTS,$
                         UNAME         = sEmptyCellDraw.uname)
 
 ;X(label/value), Y(label/value) and I(label/value)
