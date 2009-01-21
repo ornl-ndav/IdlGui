@@ -81,6 +81,17 @@ distance = getNexusInfo(FILE_NAME, PATH=path, result)
 RETURN, distance
 END
 
+;..............................................................................
+FUNCTION retrieveSamplePixelArray, Event,$
+                                   FILE_NAME=file_name,$
+                                   result
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+path =  (*global).distance_sample_pixel_path
+distance = getNexusInfo(FILE_NAME, PATH=path, result)
+RETURN, distance
+END
+
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;This procedure is reached by the CALCULATE SF button of the empty cell
 PRO start_sf_scaling_factor_calculation_mode, Event 
@@ -201,10 +212,17 @@ IF (result_distance_moderator NE 1) THEN BEGIN
 ENDIF
 (*global).empty_cell_distance_moderator_sample = distance_sample_moderator
 
-
-
-
-
+;retrieve distance pixel/sample array *****************************************
+distance_sample_pixel_array = $
+  retrieveSamplePixelArray(Event,$
+                           FILE_NAME=data_nexus_file,$
+                           result_distance_pixel)
+IF (result_distance_pixel NE 1) THEN BEGIN
+    distance_sample_pixel_array = ['']
+ENDIF ELSE BEGIN ;keep only the row #127
+    distance_sample_pixel_array = distance_sample_pixel_array[*,127]
+ENDELSE
+(*(*global).distance_sample_pixel_array) = distance_sample_pixel_array
 
 ;copy SF value into sf_calculation base
 SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
