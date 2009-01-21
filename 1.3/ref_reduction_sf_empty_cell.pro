@@ -70,6 +70,17 @@ proton_charge = getNexusInfo(FILE_NAME, PATH=path, result)
 RETURN, proton_charge
 END
 
+;..............................................................................
+FUNCTION retrieveModeratorSampleDistance, Event, $
+                                          FILE_NAME=file_name,$
+                                          result
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+path =  (*global).distance_moderator_sample
+distance = getNexusInfo(FILE_NAME, PATH=path, result)
+RETURN, distance
+END
+
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;This procedure is reached by the CALCULATE SF button of the empty cell
 PRO start_sf_scaling_factor_calculation_mode, Event 
@@ -162,12 +173,12 @@ plot_data_file_in_sf_calculation_base, Event, FILE_NAME=data_nexus_file
 plot_empty_cell_file_in_sf_calculation_base, Event, $
   FILE_NAME=empty_cell_nexus_file
 
-;retrive value of proton charge for data and empty cell
+;retrive value of proton charge for data and empty cell ***********************
 data_proton_charge = retrieveProtonCharge(event, $
                                           FILE_NAME=data_nexus_file,$
                                           result_data_proton)
 IF (result_data_proton NE 1) THEN BEGIN
-    data_proton_charge = 0
+    data_proton_charge = ''
 ENDIF
 (*global).data_proton_charge = data_proton_charge
 
@@ -176,9 +187,21 @@ empty_cell_proton_charge = $
                        FILE_NAME=empty_cell_nexus_file,$
                        result_empty_cell_proton)
 IF (result_empty_cell_proton NE 1) THEN BEGIN
-    empty_cell_proton_charge = 0
+    empty_cell_proton_charge = ''
 ENDIF
 (*global).empty_cell_proton_charge = empty_cell_proton_charge
+
+;retrive Sample Moderator distance ********************************************
+distance_sample_moderator = $
+  retrieveModeratorSampleDistance(Event,$
+                                  FILE_NAME=data_nexus_file,$
+                                  result_distance_moderator)
+IF (result_distance_moderator NE 1) THEN BEGIN
+    distance_sample_moderator = ''
+ENDIF
+(*global).empty_cell_distance_moderator_sample = distance_sample_moderator
+
+
 
 
 
