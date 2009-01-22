@@ -220,19 +220,10 @@ Function findIt, init_str, tag
   ;cut out the tag
   new_str = format(new_str, tag)
   return, new_str
-  
 end
-
-;;------------------------------------------------------------------------------
-;FUNCTION fileType, type
-;  print, type
-;  RETURN, type
-;END
 
 ;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
-
-
 
   ;get how many array we have here
   blk_line_index = WHERE(all_data EQ '', new_nbr)
@@ -382,26 +373,58 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getMetadata, tag
-  CASE N_ELEMENTS(tag) OF
-    0: BEGIN
-      data = *self.all_data
-      index_blank = WHERE(data EQ '', nbr)
-      IF (nbr GT 0) THEN BEGIN
-        RETURN, data[0:index_blank[0]-1]
-      ENDIF
-      RETURN, "Error getting metadata"
+
+  CASE self.type OF
+    'F': BEGIN
+      PRINT, 'CRTOF'
+      CASE N_ELEMENTS(tag) OF
+        0: BEGIN
+          data = *self.all_data
+          index_blank = WHERE(data EQ '', nbr)
+          IF (nbr GT 0) THEN BEGIN
+            RETURN, data[0:index_blank[0]-1]
+          ENDIF
+          RETURN, "Error getting metadata"
+        END
+        1: BEGIN
+          ;remove semicolon from tag
+          tag = modtag(tag)
+          ;read data into array
+          data = *self.all_data
+          ;find and format data
+          output = findIt(data, tag)
+          RETURN, output
+        END
+      ENDCASE
     END
-    1: BEGIN
-      ;remove semicolon from tag
-      tag = modtag(tag)
-      ;read data into array
-      data = *self.all_data
-      ;find and format data
-      output = findIt(data, tag)
-      RETURN, output
+    'I': BEGIN
+      PRINT, 'NORM'
+    END
+    ' ': BEGIN
+      PRINT, 'BSS'
+      ;metadata at the end of file
+      CASE N_ELEMENTS(tag) OF
+        0: BEGIN
+          data = *self.all_data
+          index_blank = WHERE(STRMATCH(data, '#F*') EQ 1)
+          IF (index_blank NE -1) THEN BEGIN
+            RETURN, data[index_blank:N_ELEMENTS(data) - 1]
+          ENDIF
+          RETURN, "Error getting metadata"
+        END
+        1: BEGIN
+          ;remove semicolon from tag
+          tag = modtag(tag)
+          ;read data into array
+          data = *self.all_data
+          ;find and format data
+          output = findIt(data, tag)
+          RETURN, output
+        END
+      ENDCASE
+      
     END
   ENDCASE
-  
 END
 
 ;------------------------------------------------------------------------------
@@ -412,6 +435,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::init, location
+  help, self
   ;set up the path
   self.path = location
   ;check if file exitsts
