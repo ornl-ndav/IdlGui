@@ -223,16 +223,11 @@ Function findIt, init_str, tag
   
 end
 
-;------------------------------------------------------------------------------
-FUNCTION fileType, location
-  ;help, self
-  ;tmp = self.path
-  ;  help, STRPOS(tmp, ".")
-
-  type = STRSPLIT(location, ".", /EXTRACT)
-  print, type[1]
-  RETURN, type[1]
-END
+;;------------------------------------------------------------------------------
+;FUNCTION fileType, type
+;  print, type
+;  RETURN, type
+;END
 
 ;------------------------------------------------------------------------------
 pro populate_structure, all_data, MyStruct
@@ -423,7 +418,8 @@ FUNCTION IDL3columnsASCIIparser::init, location
   IF (FILE_TEST(location, /READ)) THEN BEGIN
     ;read file
     self.all_data = ptr_new(readData(self.path))
-    self.type = fileType(location)
+    self.type = STRMID((*self.all_data)[0], 1, 1)
+    print, self.type
   END
   RETURN, FILE_TEST(location, /READ)
 END
