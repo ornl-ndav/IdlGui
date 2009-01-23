@@ -494,9 +494,14 @@ distance_sample_pixel_array = (*(*global).distance_sample_pixel_array)
 
 data_data       = (*(*global).DATA_D_TOTAL_ptr)
 empty_cell_data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+data_tof_axis   = (*(*global).sf_empty_cell_tof)
 
+A = getTextFieldValue(Event, 'empty_cell_substrate_a')
+B = getTextFieldValue(Event, 'empty_cell_substrate_b')
+D = getTextFieldValue(Event, 'empty_cell_diameter')
 
-
+Mn = 1.674928E-27 ;neutron mass (kg)
+h  = 6.62606876E-34 ;Plank's constant (J.s)
 
 ;start the calculation of SF 
 
@@ -510,8 +515,8 @@ Num = TOTAL(Num)
 Pdata = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
 f_Pdata = FLOAT(Pdata)
 
-Pempty_cell = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
-f_Pempty_cel = FLOAT(Pempty_cell)
+Pempty_cell   = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
+f_Pempty_cell = FLOAT(Pempty_cell)
 
 fNum = FLOAT(Num)
 fNum *= f_Pempty_cell
@@ -519,6 +524,52 @@ fNum /= f_Pdata
 
 
 ;#3 calculate the denominator
+;calculate the constant used
 
+;A*(Substrate Diameter)
+A1 = FLOAT(A) * FLOAT(D)
+
+;B*(Substrate diameter) * h/(masse neutron)
+B1 = FLOAT(B) * FLOAT(D) * FLOAT(h) 
+B1 /= FLOAT(Mn)
+
+;Counts_empty_cell(t,p)
+Counts = empty_cell_data[xmin:xmax,ymin:ymax]
+
+;number of tof and pixel selected
+Ntof = (SIZE(Counts))(1)
+Npix = (SIZE(Counts))(2)
+
+fDenom = 0 ;initial denominator sum
+FOR t=0,(Ntof-1) DO BEGIN
+    FOR p=0,(Npix-1) DO BEGIN
+;part 1
+;Counts at this pixel and tof
+        Counts = empty_cell_data[xmin+t,ymin+p]
+
+;part 2
+;TOF value 
+        TOF    = FLOAT(data_tof_axis[xmin+t])
+;distance sample - detector
+        Lsd    = distance_sample_pixel_array[ymin+p] 
+;distance total
+        Ltotal = FLOAT(Lsd) + FLOAT(distance_sample_moderator)
+;TOF/Ltotal
+        B2     = TOF / Ltotal
+;exp[-(A1+B1*B2)]
+        exp1   = A1 + B1 * B2
+        exp    = EXP(-exp1)
+;*Counts
+        fDenom_local = exp * Counts
+
+;update total
+        fDenom += fDenom_local
+
+    ENDFOR
+ENDFOR
+
+SF = fNum / fDenom
+sSF = STRCOMPRESS(SF,/REMOVE_ALL)
+putTextFieldValue, Event, 'scaling_factor_equation_value', sSF, 0
 
 END
