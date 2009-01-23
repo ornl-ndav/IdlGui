@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 0}
+                       map: 1}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -144,7 +144,7 @@ sSFequationLabel = { size: [XYoff[0],$
 XYoff = [760,-51]
 sSFequationDraw = { size: [XYoff[0],$
                            sSFequationLabel.size[1]+XYoff[1],$
-                           345,$
+                           392,$
                            133],$
                     uname: 'scaling_factor_equation_draw' }
 
@@ -204,7 +204,7 @@ sRecapLabel = { x : { value: 'X (TOF in microS):',$
                            uname: 'empty_cell_recap_draw_counts_value',$
                            xsize: 50}}
 
-;end of recap base/draw ........................................................
+;end of recap base/draw .......................................................
 
 XYoff = [-215,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
@@ -599,7 +599,7 @@ wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
 
 ;end of SF equation label and text field ......................................
 
-;Recap base ....................................................................
+;Recap base ...................................................................
 wRecapTitle = WIDGET_LABEL(wSFcalculationBase,$
                           XOFFSET = sRecapTitle.size[0],$
                           YOFFSET = sRecapTitle.size[1],$
@@ -675,17 +675,6 @@ wSFok = WIDGET_BUTTON(wSFcalculationBase,$
                       SCR_XSIZE = sSFok.size[2],$
                       UNAME     = sSFok.uname,$
                       VALUE     = sSFok.value)
-
-
-
-
-
-
-
-
-
-
-
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 wNexusBase = WIDGET_BASE(wBase,$
@@ -929,7 +918,7 @@ wBunits = WIDGET_LABEL(wBase2,$
 wSpace = WIDGET_LABEL(wSubBase,$
                       VALUE = '   ')
 
-;diameter label/units, Scaling Factor and equation .............................
+;diameter label/units, Scaling Factor and equation ............................
 wBaseColumn = WIDGET_BASE(wSubBase,$
                           /COLUMN,$
                           /BASE_ALIGN_CENTER)
