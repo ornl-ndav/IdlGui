@@ -399,6 +399,26 @@ FUNCTION IDL3columnsASCIIparser::getMetadata, tag
     END
     'I': BEGIN
       PRINT, 'NORM'
+      ; metadata is all before the "(*" line
+      CASE N_ELEMENTS(tag) OF
+        0: BEGIN
+          data = *self.all_data
+          index_blank = WHERE(STRMATCH(data, '(*') EQ 1)
+          IF (index_blank[0] NE -1) THEN BEGIN
+            RETURN, data[0:index_blank[0]-1]
+          ENDIF
+          RETURN, "Error getting metadata"
+        END
+        1: BEGIN
+          ;remove semicolon from tag
+          tag = modtag(tag)
+          ;read data into array
+          data = *self.all_data
+          ;find and format data
+          output = findIt(data, tag)
+          RETURN, output
+        END
+      ENDCASE
     END
     ' ': BEGIN
       PRINT, 'BSS'
