@@ -422,6 +422,7 @@ IF (nexus_file_name NE '') THEN BEGIN
                                                      nexus_file_name,$
                                                      list_pola_state)
 
+
     IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
        putLogBookMessage, Event, $
                           'ERROR retrieving the number of' + $
