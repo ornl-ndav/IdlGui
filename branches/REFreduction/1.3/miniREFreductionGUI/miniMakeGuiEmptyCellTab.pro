@@ -485,7 +485,10 @@ wDataDraw = WIDGET_DRAW(wDatabase,$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
                         /SCROLL,$
-                        UNAME         = sDataDraw.uname)
+                        UNAME         = sDataDraw.uname,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS,$
+                        /TRACKING_EVENTS)
 
 ;X(label/value), Y(label/value) and I(label/value)
 wDataRowBase = WIDGET_BASE(wDatabase,$
