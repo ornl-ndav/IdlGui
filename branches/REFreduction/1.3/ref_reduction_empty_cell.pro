@@ -423,11 +423,16 @@ IF (nexus_file_name NE '') THEN BEGIN
                                                      list_pola_state)
 
     IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+       putLogBookMessage, Event, $
+                          'ERROR retrieving the number of' + $
+                          ' polarization states!', $
+                          APPEND=1
+       
 ;turn off hourglass
        WIDGET_CONTROL,HOURGLASS=0
        RETURN
     ENDIF
-
+    
     IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
        load_empty_cell_browse_nexus, Event, nexus_file_name

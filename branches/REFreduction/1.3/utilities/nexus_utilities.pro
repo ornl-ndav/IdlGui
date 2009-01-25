@@ -35,6 +35,8 @@
 FUNCTION check_number_polarization_state, Event, $
                                           nexus_file_name, $
                                           list_pola_state
+
+
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 text = '-> Number of polarization states: '
 cmd = 'nxdir ' + nexus_file_name
@@ -52,22 +54,32 @@ cmd = 'nxdir ' + nexus_file_name
 ;     END
 ; ENDCASE
 
-SPAWN, cmd, listening, err_listening
-list_pola_state = listening     ;keep record of name of pola states
-(*(*global).list_pola_state) = list_pola_state
-IF (err_listening[0] NE '') THEN RETURN, -1
-sz = N_ELEMENTS(listening)
-text += STRCOMPRESS(sz,/REMOVE_ALL)
-i=0
-text += ' ('
-WHILE (i LT sz) DO BEGIN
-    text += listening[i]
-    if (i LT (sz-1)) THEN text += ', '
-    i++
-ENDWHILE
-text += ')'
-putLogBookMessage, Event, Text, Append=1
-RETURN, sz
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+   CATCH,/CANCEL
+   putLogBookMessage, Event, $
+                      'ERROR retrieving the number of polarization states!', $
+                      APPEND=1
+   RETURN, -1
+ENDIF ELSE BEGIN
+   SPAWN, cmd, listening, err_listening
+   list_pola_state = listening  ;keep record of name of pola states
+   (*(*global).list_pola_state) = list_pola_state
+   IF (err_listening[0] NE '') THEN RETURN, -1
+   sz = N_ELEMENTS(listening)
+   text += STRCOMPRESS(sz,/REMOVE_ALL)
+   i=0
+   text += ' ('
+   WHILE (i LT sz) DO BEGIN
+      text += listening[i]
+      if (i LT (sz-1)) THEN text += ', '
+      i++
+   ENDWHILE
+   text += ')'
+   putLogBookMessage, Event, Text, Append=1
+   RETURN, sz
+ENDELSE
 END
 
 ;------------------------------------------------------------------------------
