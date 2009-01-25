@@ -56,8 +56,12 @@ WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'yes'             ;YES
 
 debugging_structure = {nbr_pola_state:4,$
+                       working_path: $
+                       '~/SVN/IdlGui/branches/REFreduction/1.3/',$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
                        'REF_M_4585.nxs',$
+                       full_list_OF_nexus: ['/SNS/users/j35/REF_M_4117.nxs',$
+                                            '/SNS/users/j35/REF_M_4117.nxs'],$
                        list_pola_state: ['entry-Off_Off',$
                                          'entry-Off_On',$
                                          'entry-On_Off',$
