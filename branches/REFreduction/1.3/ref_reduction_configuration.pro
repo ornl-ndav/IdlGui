@@ -91,3 +91,21 @@ sImages = { confuse_background: folder + 'confuse_background.png',$
 
 RETURN, sImages
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getDebuggingStructure
+
+debugging_structure = {nbr_pola_state:1,$
+                       working_path: $
+                       '~/SVN/IdlGui/branches/REFreduction/1.3/',$
+                       data_nexus_full_path: '/Users/jeanbilheux/' + $
+                       '/REF_M_4585.nxs',$
+                       full_list_OF_nexus: ['/SNS/users/j35/REF_M_4117.nxs',$
+                                            '/SNS/users/j35/REF_M_4117.nxs'],$
+                       list_pola_state: ['entry-Off_Off',$
+                                         'entry-Off_On',$
+                                         'entry-On_Off',$
+                                         'entry-On_On']}
+
+RETURN, debugging_structure
+END

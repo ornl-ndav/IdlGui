@@ -41,18 +41,10 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 text = '-> Number of polarization states: '
 cmd = 'nxdir ' + nexus_file_name
 
-; spawn, 'hostname',listening
-; CASE (listening) OF
-;     'lrac': 
-;     'mrac': 
-;     else: BEGIN
-;         if ((*global).instrument EQ (*global).REF_L) then begin
-;             cmd = 'srun -p lracq ' + cmd
-;         endif else begin
-;             cmd = 'srun -p mracq ' + cmd
-;         endelse
-;     END
-; ENDCASE
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+   debugging_structure = (*(*global).debugging_structure)
+   RETURN, debugging_structure.nbr_pola_state
+ENDIF
 
 no_error = 0
 CATCH, no_error
