@@ -246,7 +246,8 @@ END
 PRO plot_file_in_sf_calculation_base, Event,$
                                       FILE_NAME  = file_name,$
                                       TYPE       = type,$
-                                      draw_uname = draw_uname
+                                      draw_uname = draw_uname,$
+                                      DATA       = data
 
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -257,6 +258,7 @@ ENDIF ELSE BEGIN
     CASE (TYPE) OF
         'data': data = (*(*global).DATA_D_TOTAL_ptr)
         'empty_cell': data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+        'recap': data = data
     ENDCASE
 ENDELSE
 
@@ -479,6 +481,8 @@ PRO calculate_sf, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+WIDGET_CONTROL, /HOURGLASS
+
 ;local_debugger_flag
 local_debugger_flag = 0   ;0 for no, 1 for yes
 
@@ -618,7 +622,7 @@ FOR t=0,(Ntof-1) DO BEGIN
 ;part 2
 ;TOF value 
         TOF    = FLOAT(data_tof_axis[xmin+t])
-        TOF    *= 1e-6 ;in s
+        TOF    *= 1.e-6 ;in s
 
 ;distance sample - detector
         Lsd    = distance_sample_pixel_array[ymin+p] 
@@ -659,5 +663,105 @@ ENDFOR
 SF = fNum / fDenom
 sSF = STRCOMPRESS(SF,/REMOVE_ALL)
 putTextFieldValue, Event, 'scaling_factor_equation_value', sSF, 0
+
+;check that the SF found is a real number and not undefined
+
+IF (FINITE(SF)) THEN BEGIN ;launch the refresh
+
+    plot_recap_empty_cell_sf, Event,$
+      data_proton_charge       = f_Pdata,$
+      empty_cell_proton_charge = f_Pempty_cell,$
+      distance_sample_moderator = distance_sample_moderator,$
+      distance_sample_pixel_array = distance_sample_pixel_array,$
+      data_data = data_data,$
+      empty_cell_data = empty_cell_data,$
+      data_tof_axis = data_tof_axis,$
+      fAm = fAm,$
+      fBm = fBm,$
+      fDm = fDm,$
+      Mn = Mn,$
+      h = h,$
+      SF = SF
+          
+ENDIF ELSE BEGIN ;SF is NaN, stop here
+
+ENDELSE
+
+WIDGET_CONTROL, HOURGLASS=0
+
+END
+
+;------------------------------------------------------------------------------
+PRO plot_recap_empty_cell_sf, Event,$
+                              data_proton_charge = $
+                              data_proton_charge,$
+                              empty_cell_proton_charge = $
+                              empty_cell_proton_charge,$
+                              distance_sample_moderator = $
+                              distance_sample_moderator,$
+                              distance_sample_pixel_array = $
+                              distance_sample_pixel_array,$
+                              data_data = data_data,$
+                              empty_cell_data = empty_cell_data,$
+                              data_tof_axis = data_tof_axis,$
+                              fAm = fAm,$
+                              fBm = fBm,$
+                              fDm = fDm,$
+                              Mn = Mn,$
+                              h = h,$
+                              SF = SF
+
+
+;determine the size (number of TOF and of pixels)
+Ntof = (SIZE(data_data))(1)
+Npix = (SIZE(data_data))(2)
+
+;calculate the constant such as fAm * fDm and fBm * fDm
+fADm = fAm * fDm
+fBDm = fBm * fDm
+
+;initialize recap_data
+recap_data = FLTARR(Ntof,Npix)
+
+;h/Mn
+h_over_Mn = h / Mn
+A_times_diameter = fAm * fDm
+B_times_diameter = fBm * fDm
+
+FOR t=0,(Ntof-1) DO BEGIN
+
+    FOR p=0,(Npix-1) DO BEGIN
+
+;1st part (data)
+        part1 = data_data[t,p] / data_proton_charge
+
+;2nd part (empty_cell)
+        TOF = FLOAT(data_tof_axis[t]) * 1.E-6 ;to be in s
+        Lsd = FLOAT(distance_sample_pixel_array[p]) ;distance sample detector
+        Lsm = ABS(FLOAT(distance_sample_moderator)) ;distance sample moderator
+        Ldm = Lsd + Lsm
+
+        lambda = (h_over_Mn * TOF) / Ldm
+        
+        exp1 = A_times_diameter + lambda * B_times_diameter
+        exp  = EXP(-exp1)
+
+        part2  = exp / empty_cell_proton_charge
+        part2 *= empty_cell_data[t,p] 
+
+;difference
+        recap_data[t,p] = part1 - SF * part2
+
+    ENDFOR
+
+ENDFOR
+
+draw_uname = 'empty_cell_scaling_factor_base_recap_draw'
+plot_file_in_sf_calculation_base, $
+  Event, $
+  FILE_NAME  = file_name, $
+  TYPE       = 'recap',$
+  DRAW_UNAME = draw_uname,$
+  DATA       = recap_data
 
 END
