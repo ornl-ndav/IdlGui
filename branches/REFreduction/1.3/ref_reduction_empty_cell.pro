@@ -733,15 +733,15 @@ D = STRCOMPRESS(D,/REMOVE_ALL)
 C = STRCOMPRESS(C,/REMOVE_ALL)
 
 ;;check value of A, B, D and C
-IF (A EQ '' OR A EQ '0')  THEN BEGIN
+IF (A EQ '')  THEN BEGIN
     errorA = 1
     A = 'N/A'
 ENDIF
-IF (B EQ '' OR B EQ '0')  THEN BEGIN
+IF (B EQ '')  THEN BEGIN
     errorB = 1
     B = 'N/A'
 ENDIF
-IF (D EQ '' OR D EQ '0')  THEN BEGIN
+IF (D EQ '')  THEN BEGIN
     errorD = 1
     D = 'N/A'
 ENDIF
@@ -752,18 +752,26 @@ IF (C EQ '0') THEN BEGIN
 ENDIF
 
 ;change from cm -> m
-fA = FLOAT(A) * 100
-fB = FLOAT(B) * 10000
-fD = FLOAT(D) * 0.01
+IF (errorA NE 1) THEN BEGIN
+    A = FLOAT(A) * 100
+ENDIF
+
+IF (errorB NE 1) THEN BEGIN
+    B = FLOAT(B) * 10000
+ENDIF
+
+IF (errorD NE 1) THEN BEGIN
+    D = FLOAT(D) * 0.01
+ENDIF
 
 ;final equation
 Equation  = 'T = ' 
 IF (STRCOMPRESS(C,/REMOVE_ALL) NE '1') THEN BEGIN
    Equation += STRCOMPRESS(C,/REMOVE_ALL) + ' * '
 ENDIF
-Equation += 'exp[-(' + STRCOMPRESS(fA,/REMOVE_ALL)
-Equation += ' + ' + STRCOMPRESS(fB,/REMOVE_ALL)
-Equation += ' * Lambda) * ' + STRCOMPRESS(fD,/REMOVE_ALL)
+Equation += 'exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(B,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
 Equation += ']'
 
 IF (errorA + errorB + errorD + errorC GT 0) THEN BEGIN

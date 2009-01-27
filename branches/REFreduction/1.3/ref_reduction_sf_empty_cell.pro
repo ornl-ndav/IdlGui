@@ -479,6 +479,9 @@ PRO calculate_sf, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
+;local_debugger_flag
+local_debugger_flag = 0   ;0 for no, 1 for yes
+
 ;retrieve all parameters required to calculate SF
 x0 = (*global).sf_x0
 y0 = (*global).sf_y0
@@ -503,29 +506,67 @@ D = getTextFieldValue(Event, 'empty_cell_diameter')
 Mn = 1.674928E-27 ;neutron mass (kg)
 h  = 6.62606876E-34 ;Plank's constant (J.s)
 
+IF ((*global).debugging_version EQ 'yes' AND $
+    local_debugger_flag EQ 1) THEN BEGIN
+    print, '***** Recap of parameters *****'
+    print
+    print, 'data_proton_charge:          ' + strcompress(data_proton_charge)
+    print, 'empty_cell_proton_charge:    ' + $
+      strcompress(empty_cell_proton_charge)
+    print, 'distance_sample_moderator:   ' + $
+      strcompress(distance_sample_moderator)
+    help, distance_sample_pixel_array
+    print
+    help, data_data
+    help, empty_cell_data
+    help, data_tof_axis
+    print
+    print, 'A:  ' + strcompress(A)
+    print, 'B:  ' + strcompress(B)
+    print, 'D:  ' + strcompress(D)
+    print
+    print, 'Mn: ' + strcompress(Mn)
+    print, 'h:  ' + strcompress(h)
+ENDIF
+
 ;start the calculation of SF 
 
 ;#1 calculate the numerator (sigma over x and y of data)
-Num = data_data[xmin:xmax,ymin:ymax]
-Num = TOTAL(Num)
+Num1 = data_data[xmin:xmax,ymin:ymax]
+Num = TOTAL(Num1)
+
+IF ((*global).debugging_version EQ 'yes' AND $
+    local_debugger_flag EQ 1) THEN BEGIN
+    print
+    print, '-- Start calculation of SF --'
+    print
+    print, '#1'
+    help, Num1
+    print, 'Num = TOTAL(Num1) = ' + strcompress(Num)
+ENDIF
 
 ;#2 divide by proton_charge of data and multiply by proton charge of
 ;empty cell
 Pdata   = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
-print, 'Pdata: ' + Pdata
 f_Pdata = FLOAT(Pdata)
-help, f_Pdata
 
 Pempty_cell   = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
 f_Pempty_cell = FLOAT(Pempty_cell)
-print, 'Pempty_cell: ' + Pempty_cell
-help, f_Pempty_cell
 
-fNum = FLOAT(Num)
-fNum *= f_Pempty_cell
-fNum /= f_Pdata
+fNum1 = FLOAT(Num)
+fNum2 = fNum1 * f_Pempty_cell
+fNum  = fNum2 / f_Pdata
 
-help, fNum
+IF ((*global).debugging_version EQ 'yes' AND $
+    local_debugger_flag EQ 1) THEN BEGIN
+    print
+    print, '#2 '
+    print, 'Pdata:       ' + Pdata
+    print, 'Pempty_cell: ' + Pempty_cell
+    print, 'fNum1:       ' + strcompress(fNum1)
+    print, 'fNum2:       ' + strcompress(fNum2)
+    print, 'fNum:        ' + strcompress(fNum)
+ENDIF
 
 ;#3 calculate the denominator
 ;calculate the constant used
@@ -536,13 +577,10 @@ fDm = FLOAT(D) * 0.01
 
 ;A*(Substrate Diameter)
 A1 = fAm * fDm
-print, 'A1: ' + strcompress(A1)
 
 ;B*(Substrate diameter) * h/(masse neutron)
 B1 = fBm * fDm * FLOAT(h) 
-print, 'B1(1): ' + strcompress(B1)
 B1 /= FLOAT(Mn)
-print, 'B1(2): ' + strcompress(B1)
 
 ;Counts_empty_cell(t,p)
 Counts = empty_cell_data[xmin:xmax,ymin:ymax]
@@ -551,26 +589,42 @@ Counts = empty_cell_data[xmin:xmax,ymin:ymax]
 Ntof = (SIZE(Counts))(1)
 Npix = (SIZE(Counts))(2)
 
+IF ((*global).debugging_version EQ 'yes' AND $
+    local_debugger_flag EQ 1) THEN BEGIN
+    print
+    print, '#3 '
+    print, 'fAm: ' + strcompress(fAm)
+    print, 'fBm: ' + strcompress(fBm)
+    print, 'fDm: ' + strcompress(fDm)
+    print, 'A*(substrate diameter):                     ' + strcompress(A1)
+    print, 'B*(substrate diameter) * h/(masse neutron): ' + strcompress(B1)
+    help, Counts
+ENDIF
+
 fDenom = 0 ;initial denominator sum
+IF ((*global).debugging_version EQ 'yes' AND $
+       local_debugger_flag EQ 1) THEN BEGIN
+    print
+    print, 'Entering the FOR loop with'
+    print, ' t= 0 -> ' + strcompress(Ntof-1)
+    print, ' p= 0 -> ' + strcompress(Npix-1)
+ENDIF 
 FOR t=0,(Ntof-1) DO BEGIN
     FOR p=0,(Npix-1) DO BEGIN
 ;part 1
 ;Counts at this pixel and tof
         Counts = empty_cell_data[xmin+t,ymin+p]
-        print, 'Counts: ' + strcompress(Counts)
 
 ;part 2
 ;TOF value 
         TOF    = FLOAT(data_tof_axis[xmin+t])
-        print, 'TOF: ' + strcompress(TOF)
+        TOF    *= 1e-6 ;in s
 
 ;distance sample - detector
         Lsd    = distance_sample_pixel_array[ymin+p] 
-        print, 'Lsd: ' + strcompress(Lsd)
 
 ;distance total
         Ltotal = FLOAT(Lsd) + ABS(FLOAT(distance_sample_moderator))
-        print, 'Ltotal: ' + strcompress(Ltotal)
 
 ;TOF/Ltotal
         B2     = TOF / Ltotal
@@ -578,23 +632,29 @@ FOR t=0,(Ntof-1) DO BEGIN
         exp1   = A1 + B1 * B2
 
         exp    = EXP(-exp1)
-        print, 'exp1: ' + strcompress(exp1) + '  | exp: ' + strcompress(exp)
 
 ;*Counts
-        print, 'Counts: ' + strcompress(counts)
-        print
         fDenom_local = exp * Counts
 
 ;update total
         fDenom += fDenom_local
-       
-stop 
+
+        IF ((*global).debugging_version EQ 'yes' AND $
+            local_debugger_flag EQ 1) THEN BEGIN
+            print
+            print, 't=' + strcompress(t) + ' ; p=' + strcompress(p)
+            print, 'Counts: ' + strcompress(Counts)
+            print, 'TOF:    ' + strcompress(TOF)
+            print, 'Lsd:    ' + strcompress(Lsd)
+            print, 'Ltotal: ' + strcompress(Ltotal)
+            print, 'B2:     ' + strcompress(B2)
+            print, 'exp1 = A1 + B1 * B2 = ' + strcompress(exp1)
+            print, 'exp =                 ' + strcompress(exp)
+            print, 'fDenom_local = exp * Counts = ' + strcompress(fDenom_local)
+            print, 'fDenom = ' + strcompress(fDenom)
+        ENDIF
     ENDFOR
 ENDFOR
-
-print
-print, 'fNum: ' + strcompress(fNum)
-print, 'fDenom: ' + strcompress(fDenom)
 
 SF = fNum / fDenom
 sSF = STRCOMPRESS(SF,/REMOVE_ALL)
