@@ -138,15 +138,15 @@ sEmptyCellLabel = { x: { value: 'X(TOF,microS):',$
 ;end of empty cell base/draw ..................................................
 
 ;SF equation label and text field .............................................
-XYoff = [550,65]
+XYoff = [500,65]
 sSFequationLabel = { size: [XYoff[0],$
                             XYoff[1]],$
                      value: 'C ='}
 
-XYoff = [580,30]
+XYoff = [530,30]
 sSFequationDraw = { size: [XYoff[0],$
                            XYoff[1],$
-                           295,$
+                           310,$
                            100],$
                     uname: 'scaling_factor_equation_draw' }
 

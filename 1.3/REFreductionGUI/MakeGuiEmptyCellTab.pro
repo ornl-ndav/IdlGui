@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 1}
+                       map: 0}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -144,7 +144,7 @@ sSFequationLabel = { size: [XYoff[0],$
 XYoff = [760,-51]
 sSFequationDraw = { size: [XYoff[0],$
                            sSFequationLabel.size[1]+XYoff[1],$
-                           392,$
+                           415,$
                            133],$
                     uname: 'scaling_factor_equation_draw' }
 
