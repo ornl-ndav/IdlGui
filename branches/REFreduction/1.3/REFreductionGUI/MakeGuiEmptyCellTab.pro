@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 0}
+                       map: 1}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -176,7 +176,7 @@ sRecapBase = { size: [sDataBase.size[0]+$
 XYoff = [20,-8]
 sRecapTitle = { size: [sRecapBase.size[0]+XYoff[0],$
                        sRecapBase.size[1]+XYoff[1]],$
-                value: 'Data_File - C * Empty_Cell_File: I vs TOF'}
+                value: 'Recap. Plot (Data - SF * EC)'}
 
 XYoff = [0,yoff]
 sRecapDraw = { size: [XYoff[0],$

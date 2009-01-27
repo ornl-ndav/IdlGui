@@ -164,7 +164,7 @@ sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
 
 ;end of SF equation label and text field ......................................
 
-;recap base --------------------------------------------------------------------
+;recap base -------------------------------------------------------------------
 XYoff = [10,-70]
 yoff = 15
 sRecapBase = { size: [sDataBase.size[0]+$
@@ -179,7 +179,7 @@ sRecapBase = { size: [sDataBase.size[0]+$
 XYoff = [20,-8]
 sRecapTitle = { size: [sRecapBase.size[0]+XYoff[0],$
                        sRecapbase.size[1]+XYoff[1]],$
-                value: 'Data_File - C * Empty_Cell_File: I vs TOF'}
+                value: 'Recap. Plot (Data - SF * EC)'}
 
 XYoff = [0,10]
 sRecapDraw = { size: [XYoff[0],$
