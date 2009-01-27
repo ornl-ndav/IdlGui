@@ -751,14 +751,19 @@ IF (C EQ '0') THEN BEGIN
    C = 'N/A'
 ENDIF
 
+;change from cm -> m
+fA = FLOAT(A) * 100
+fB = FLOAT(B) * 10000
+fD = FLOAT(D) * 0.01
+
 ;final equation
 Equation  = 'T = ' 
 IF (STRCOMPRESS(C,/REMOVE_ALL) NE '1') THEN BEGIN
    Equation += STRCOMPRESS(C,/REMOVE_ALL) + ' * '
 ENDIF
-Equation += 'exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
-Equation += ' + ' + STRCOMPRESS(B,/REMOVE_ALL)
-Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
+Equation += 'exp[-(' + STRCOMPRESS(fA,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(fB,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(fD,/REMOVE_ALL)
 Equation += ']'
 
 IF (errorA + errorB + errorD + errorC GT 0) THEN BEGIN

@@ -207,7 +207,7 @@ sRecapLabel = { x : { value: 'X(TOF,microS):',$
                            uname: 'empty_cell_recap_draw_counts_value',$
                            xsize: 50}}
 
-;end of recap base/draw ........................................................
+;end of recap base/draw .......................................................
 
 XYoff = [-215,-110]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
@@ -432,10 +432,14 @@ sScalingFactorField = { title: 'C =',$
 sScalingFactorButton = { value: '  CALCULATE C  ',$
                          uname: 'empty_cell_scaling_factor_button'}
 
+fa = FLOAT(substrate_type[0].a) * 100
+fb = FLOAT(substrate_type[0].b) * 10000
+fd = FLOAT(substrate_type[0].d) * 0.01
+
 ;final equation ...............................................................
-Equation  = 'T = exp[-(' + STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)
-Equation += ' + ' + STRCOMPRESS(substrate_type[0].b,/REMOVE_ALL)
-Equation += ' * Lambda) * ' + STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)
+Equation  = 'T = exp[-(' + STRCOMPRESS(fa,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(fb,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(fd,/REMOVE_ALL)
 Equation += ']'
 sFinalEquation = { uname: 'empty_cell_substrate_equation',$
                    value: Equation,$

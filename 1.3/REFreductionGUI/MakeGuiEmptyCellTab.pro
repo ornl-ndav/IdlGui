@@ -387,6 +387,10 @@ sSubList = { list: type_array,$
              uname: 'empty_cell_substrate_list',$
              title: 'Substrate Type:'}
 
+fa = FLOAT(substrate_type[0].a) * 100
+fb = FLOAT(substrate_type[0].b) * 10000
+fd = FLOAT(substrate_type[0].d) * 0.01
+
 ;a and b coefficient ..........................................................
 sAcoeff = { uname: 'empty_cell_substrate_a',$
             title: 'A =',$
@@ -414,9 +418,9 @@ sScalingFactorButton = { value: 'CALCULATE SCALING FACTOR',$
                          uname: 'empty_cell_scaling_factor_button'}
 
 ;final equation ...............................................................
-Equation  = 'T = exp[-(' + STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)
-Equation += ' + ' + STRCOMPRESS(substrate_type[0].b,/REMOVE_ALL)
-Equation += ' * Lambda) * ' + STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)
+Equation  = 'T = exp[-(' + STRCOMPRESS(fa,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(fb,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(fd,/REMOVE_ALL)
 Equation += ']'
 sFinalEquation = { uname: 'empty_cell_substrate_equation',$
                    value: Equation,$

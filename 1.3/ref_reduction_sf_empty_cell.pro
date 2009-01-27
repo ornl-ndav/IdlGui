@@ -509,29 +509,40 @@ h  = 6.62606876E-34 ;Plank's constant (J.s)
 Num = data_data[xmin:xmax,ymin:ymax]
 Num = TOTAL(Num)
 
-
 ;#2 divide by proton_charge of data and multiply by proton charge of
 ;empty cell
-Pdata = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
+Pdata   = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
+print, 'Pdata: ' + Pdata
 f_Pdata = FLOAT(Pdata)
+help, f_Pdata
 
 Pempty_cell   = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
 f_Pempty_cell = FLOAT(Pempty_cell)
+print, 'Pempty_cell: ' + Pempty_cell
+help, f_Pempty_cell
 
 fNum = FLOAT(Num)
 fNum *= f_Pempty_cell
 fNum /= f_Pdata
 
+help, fNum
 
 ;#3 calculate the denominator
 ;calculate the constant used
 
+fAm = FLOAT(A) * 100
+fBm = FLOAT(B) * 10000
+fDm = FLOAT(D) * 0.01
+
 ;A*(Substrate Diameter)
-A1 = FLOAT(A) * FLOAT(D)
+A1 = fAm * fDm
+print, 'A1: ' + strcompress(A1)
 
 ;B*(Substrate diameter) * h/(masse neutron)
-B1 = FLOAT(B) * FLOAT(D) * FLOAT(h) 
+B1 = fBm * fDm * FLOAT(h) 
+print, 'B1(1): ' + strcompress(B1)
 B1 /= FLOAT(Mn)
+print, 'B1(2): ' + strcompress(B1)
 
 ;Counts_empty_cell(t,p)
 Counts = empty_cell_data[xmin:xmax,ymin:ymax]
@@ -546,27 +557,44 @@ FOR t=0,(Ntof-1) DO BEGIN
 ;part 1
 ;Counts at this pixel and tof
         Counts = empty_cell_data[xmin+t,ymin+p]
+        print, 'Counts: ' + strcompress(Counts)
 
 ;part 2
 ;TOF value 
         TOF    = FLOAT(data_tof_axis[xmin+t])
+        print, 'TOF: ' + strcompress(TOF)
+
 ;distance sample - detector
         Lsd    = distance_sample_pixel_array[ymin+p] 
+        print, 'Lsd: ' + strcompress(Lsd)
+
 ;distance total
-        Ltotal = FLOAT(Lsd) + FLOAT(distance_sample_moderator)
+        Ltotal = FLOAT(Lsd) + ABS(FLOAT(distance_sample_moderator))
+        print, 'Ltotal: ' + strcompress(Ltotal)
+
 ;TOF/Ltotal
         B2     = TOF / Ltotal
 ;exp[-(A1+B1*B2)]
         exp1   = A1 + B1 * B2
+
         exp    = EXP(-exp1)
+        print, 'exp1: ' + strcompress(exp1) + '  | exp: ' + strcompress(exp)
+
 ;*Counts
+        print, 'Counts: ' + strcompress(counts)
+        print
         fDenom_local = exp * Counts
 
 ;update total
         fDenom += fDenom_local
-
+       
+stop 
     ENDFOR
 ENDFOR
+
+print
+print, 'fNum: ' + strcompress(fNum)
+print, 'fDenom: ' + strcompress(fDenom)
 
 SF = fNum / fDenom
 sSF = STRCOMPRESS(SF,/REMOVE_ALL)
