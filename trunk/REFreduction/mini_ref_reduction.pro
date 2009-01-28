@@ -48,20 +48,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
-VERSION            = '1.3.5'            
+VERSION            = '1.3.9'            
 DEBUGGING_VERSION  = 'no'              ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
 CHECKING_PACKAGES  = 'yes'             ;YES
 
-debugging_structure = {nbr_pola_state:4,$
-                       data_nexus_full_path: '/Users/jeanbilheux/' + $
-                       'REF_M_4585.nxs',$
-                       list_pola_state: ['entry-Off_Off',$
-                                         'entry-Off_On',$
-                                         'entry-On_Off',$
-                                         'entry-On_On']}
+debugging_structure = getDebuggingStructure()
 
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 ;==============================================================================
@@ -87,7 +81,31 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    VERSION: version,$
+
                     empty_cell_images: PTR_NEW(0L),$
+                      sf_equation_file: $
+                      'REFreduction_images/miniSFequation.png',$
+                    PrevDNECtabSelect: 0,$
+                    nexus_tof_path: '/entry/bank1/time_of_flight/',$
+                    sf_data_tof: PTR_NEW(0L),$
+                    sf_empty_cell_tof: PTR_NEW(0L),$
+                    ec_left_click: 0,$
+                    sf_x0: 0,$
+                    sf_y0: 0,$
+                    sf_x1: 0,$
+                    sf_y1: 0,$
+                    nexus_proton_charge_path: '/entry/proton_charge/',$
+                    data_proton_charge: '',$
+                    empty_cell_proton_charge: '',$
+                    distance_moderator_sample: $
+                      '/entry/instrument/moderator/distance/',$
+                    empty_cell_distance_moderator_sample: '',$
+                      distance_sample_pixel_path: $
+                      '/entry/instrument/bank1/distance/',$
+                    distance_sample_pixel_array: PTR_NEW(0L),$
+                    SF_RECAP_D_TOTAL_ptr: PTR_NEW(0L),$
+
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
                     data_path_flag_suffix: '/bank1,1',$
@@ -660,39 +678,15 @@ file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
 id = widget_info(Main_Base, find_by_uname='cl_file_text')
 widget_control, id, set_value=file_name
 
-;display empty cell images ----------------------------------------------------
-;get images files
-sImages = (*(*global).empty_cell_images)
-
-;background image
-draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='confuse_background')
-WIDGET_CONTROL, draw1, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.confuse_background)
-tv, image, 0,0,/true
-
-;empty cell image
-empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
-WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.empty_cell)
-tv, image, 0,0,/true
-
-;data background image
-data_background_draw = WIDGET_INFO(MAIN_BASE, $
-                                  FIND_BY_UNAME='data_background_draw')
-WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-WSET, id
-image = READ_PNG(sImages.data_background)
-tv, image, 0,0,/true
 ;------------------------------------------------------------------------------
 
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN
     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     widget_control, id, /editable
+    WIDGET_CONTROL, /CONTEXT_EVENTS
 ENDIF
-
+   
 IF (ucams EQ 'j35') THEN BEGIN
     id = widget_info(MAIN_BASE,find_by_uname='cmd_status_preview')
     widget_control, id, /editable
@@ -701,8 +695,8 @@ ENDIF
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; Default Main Tab Shown
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
@@ -717,8 +711,8 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ;   widget_control, id2, set_tab_current = 0 ;DATA
 
-; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-; widget_control, id2, set_tab_current = 2 ;empty_cell
+ id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+ widget_control, id2, set_tab_current = 2 ;empty_cell
     
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
@@ -777,6 +771,39 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ENDIF ;end of debugging_version statement
 
+;display empty cell images ----------------------------------------------------
+;get images files
+sImages = (*(*global).empty_cell_images)
+
+;background image
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='confuse_background')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.confuse_background)
+tv, image, 0,0,/true
+
+;empty cell image
+empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
+WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.empty_cell)
+tv, image, 0,0,/true
+
+;data background image
+data_background_draw = WIDGET_INFO(MAIN_BASE, $
+                                  FIND_BY_UNAME='data_background_draw')
+WIDGET_CONTROL, data_background_draw, GET_VALUE=id
+WSET, id
+image = READ_PNG(sImages.data_background)
+tv, image, 0,0,/true
+
+;display equation of Scalling factor in Empty Cell tab
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).sf_equation_file)
+tv, image, 0,0,/true
+
 ;==============================================================================
 ;checking packages
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
@@ -793,6 +820,7 @@ ENDIF
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+logger_message += ' ' + getYear()
 error = 0
 CATCH, error
 IF (error NE 0) THEN BEGIN

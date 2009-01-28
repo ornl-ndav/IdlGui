@@ -41,6 +41,7 @@ cd, CurrentFolder + '/utilities'
 .run system_utilities.pro
 .run nexus_utilities.pro
 .run math_conversion.pro
+.run time.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
@@ -105,6 +106,7 @@ cd, CurrentFolder
 .run ref_reduction_browse_nexus.pro
 .run ref_reduction_PlotEmptyCell.pro
 .run ref_reduction_empty_cell.pro
+.run ref_reduction_sf_empty_cell.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
@@ -150,6 +152,7 @@ cd, CurrentFolder
 .run ref_reduction_configuration.pro
 
 .run MainBaseEvent.pro
+.run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
 

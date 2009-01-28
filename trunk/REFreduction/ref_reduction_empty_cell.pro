@@ -390,7 +390,11 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 filter    = '*.nxs'
 extension = 'nxs'
 title     = 'Select a NeXus file ...'
-path      = (*global).browse_data_path
+IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+   path      = (*(*global).debugging_structure).working_path
+ENDIF ELSE BEGIN
+   path      = (*global).browse_data_path
+ENDELSE
 text      = '> Browsing for an Empty Cell NeXus file:'
 putLogBookMessage, Event, Text, Append=1
 
@@ -418,12 +422,18 @@ IF (nexus_file_name NE '') THEN BEGIN
                                                      nexus_file_name,$
                                                      list_pola_state)
 
+
     IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+       putLogBookMessage, Event, $
+                          'ERROR retrieving the number of' + $
+                          ' polarization states!', $
+                          APPEND=1
+       
 ;turn off hourglass
        WIDGET_CONTROL,HOURGLASS=0
        RETURN
     ENDIF
-
+    
     IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
        load_empty_cell_browse_nexus, Event, nexus_file_name
@@ -438,7 +448,7 @@ IF (nexus_file_name NE '') THEN BEGIN
 
  ENDIF ELSE BEGIN
 
-    text = '-> Operation canceled!'x
+    text = '-> Operation canceled!'
     putLogBookMessage, Event, Text, Append=1
 
  ENDELSE    
@@ -709,34 +719,69 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 errorA = 0
 errorB = 0
 errorD = 0
+errorC = 0 ;scaling factor
 
-;get A, B and D parameters
+;get A, B, D  and C parameters
 A = getTextFieldValue(Event, 'empty_cell_substrate_a')
 B = getTextFieldValue(Event, 'empty_cell_substrate_b')
 D = getTextFieldValue(Event, 'empty_cell_diameter')
+C = getTextFieldValue(Event, 'empty_cell_scaling_factor')
 
-;;check value of A, B and D
-IF (A EQ '' OR A EQ 0)  THEN BEGIN
+A = STRCOMPRESS(A,/REMOVE_ALL)
+B = STRCOMPRESS(B,/REMOVE_ALL)
+D = STRCOMPRESS(D,/REMOVE_ALL)
+C = STRCOMPRESS(C,/REMOVE_ALL)
+
+;;check value of A, B, D and C
+IF (A EQ '')  THEN BEGIN
     errorA = 1
     A = 'N/A'
 ENDIF
-IF (B EQ '' OR B EQ 0)  THEN BEGIN
+IF (B EQ '')  THEN BEGIN
     errorB = 1
     B = 'N/A'
 ENDIF
-IF (D EQ '' OR D EQ 0)  THEN BEGIN
+IF (D EQ '')  THEN BEGIN
     errorD = 1
     D = 'N/A'
 ENDIF
 
+IF (C EQ '0') THEN BEGIN
+   errorC = 1
+   C = 'N/A'
+ENDIF
+
+;check that A, B, D and C are real numbers
+format_error_status = 1
+ON_IOERROR, format_error
+
+;change from cm -> m
+IF (errorA NE 1) THEN BEGIN
+    A = FLOAT(A) * 100
+ENDIF
+
+IF (errorB NE 1) THEN BEGIN
+    B = FLOAT(B) * 10000
+ENDIF
+
+IF (errorD NE 1) THEN BEGIN
+    D = FLOAT(D) * 0.01
+ENDIF
+
+format_error_status = 0
+
 ;final equation
-Equation  = 'T = exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
+Equation  = 'T = ' 
+IF (STRCOMPRESS(C,/REMOVE_ALL) NE '1') THEN BEGIN
+   Equation += STRCOMPRESS(C,/REMOVE_ALL) + ' * '
+ENDIF
+Equation += 'exp[-(' + STRCOMPRESS(A,/REMOVE_ALL)
 Equation += ' + ' + STRCOMPRESS(B,/REMOVE_ALL)
 Equation += ' * Lambda) * ' + STRCOMPRESS(D,/REMOVE_ALL)
 Equation += ']'
 
-IF (errorA + errorB + errorD GT 0) THEN BEGIN
-    IF ((*global).miniVersion) THEN BEGIN
+IF (errorA + errorB + errorD + errorC GT 0) THEN BEGIN
+   IF ((*global).miniVersion) THEN BEGIN
         Equation = 'ERROR>> ' + Equation
     ENDIF ELSE BEGIN
         Equation = ' E R R O R >>  ' + Equation + '  << E R R O R '
@@ -745,20 +790,28 @@ ENDIF
 
 ;update equation
 putTextFieldValue, Event, 'empty_cell_substrate_equation', Equation[0], 0
+
+format_error:
+IF (format_error_status EQ 1) THEN BEGIN
+    widget_id = WIDGET_INFO(Event.top, $
+                            FIND_BY_UNAME='empty_cell_scaling_factor_button')
+
+    result = DIALOG_MESSAGE('Format of one of the parameter is wrong!',$
+                            /ERROR,$
+                            TITLE = 'FORMAT ERROR',$
+                            DIALOG_PARENT = widget_id)
+ENDIF
+
 END
 
-;---------- NEW BASE ----------------------------------------------------------
-;------------------------------------------------------------------------------
-PRO wBase_event, Event
-WIDGET_CONTROL,Event.top,GET_UVALUE=local_global
-global = local_global.global
-
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-
-
-    ELSE:
-ENDCASE
+;______________________________________________________________________________
+;This function is reached each time the user wants to calculate the SF
+PRO RefreshEquationDraw, Event
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_factor_equation_draw')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).sf_equation_file)
+tv, image, 0,0,/true
 END
 

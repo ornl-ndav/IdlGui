@@ -161,7 +161,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION IDLsendLogBook_getMessage, Event, ALT=alt
 LogBookUname = IDLsendLogBook_getUname(Event, ALT=alt)
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=MessageUname)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
@@ -356,7 +356,7 @@ PRO IDLsendLogBook_SendToGeek, Event, $
 
 ;create full name of log Book file
 LogBookPath   = IDLsendLogBook_getGlobalVariable(Event,'LogBookPath')
-WorkingPath   = IDLsendLogBook_getGlobalVariable(Event,'WorkingPath')
+;WorkingPath   = IDLsendLogBook_getGlobalVariable(Event,'WorkingPath')
 TimeStamp     = IDLsendLogBook_GenerateIsoTimeStamp()
 application   = IDLsendLogBook_getGlobalVariable(Event,'ApplicationName')
 FullFileName  = LogBookPath + application + '_' 
@@ -425,7 +425,7 @@ text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += ". Message is: "
 
-IF (message NE '') THEN BEGIN
+IF (message[0] NE '') THEN BEGIN
     text += message
 ENDIF ELSE BEGIN
     text += "No messages added."
@@ -442,6 +442,7 @@ IF (no_error NE 0) THEN BEGIN
     IDLsendLogBook_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
     application    = IDLsendLogBook_getGlobalVariable(Event,'ApplicationName')
+
     list_OF_files  = list_OF_files_to_tar
 ;create tar files only if list_of_files has more than 1 file
     IF (N_ELEMENTS(list_OF_files_to_tar) NE 0) THEN BEGIN
@@ -453,7 +454,8 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN
         subject        = application + " LogBook"
         cmd  =  'echo ' + text + '| mutt -s "' + subject 
-        cmd += ' j35@ornl.gov'
+        cmd += ' scsupport@ornl.gov'
+;        cmd += ' j35@ornl.gov'
     ENDELSE
     SPAWN, cmd
 
