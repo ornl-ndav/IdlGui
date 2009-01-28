@@ -215,16 +215,21 @@ IF (substrateValue EQ 1) THEN BEGIN
 ENDIF ;end of if empty_cell selected
 
 ;check if user wants data background or not
-if (isDataWithBackground(Event)) then begin ;yes, with background
+IF (isDataWithBackground(Event)) THEN BEGIN ;yes, with background
 ;activate DATA Intermediate Plots
     MapBase, Event, 'reduce_plot2_base', 0
     MapBase, Event, 'reduce_plot3_base', 0
-endif else begin
+ENDIF ELSE BEGIN
     cmd += ' --no-bkg'
 ;desactivate DATA Intermediate Plots
+    substrateValue = getCWBgroupValue(Event,'empty_cell_substrate_group')
+    IF (substrateValue EQ 0) THEN BEGIN
+        MapBase, Event, 'reduce_plot3_base', 0
+    ENDIF ELSE BEGIN
+        MapBase, Event, 'reduce_plot3_base', 1
+    ENDELSE
     MapBase, Event, 'reduce_plot2_base', 1
-    MapBase, Event, 'reduce_plot3_base', 1
-end
+END
 
 ;*****NORMALIZATION************************************************************
 ;check if user wants to use normalization or not
@@ -483,6 +488,11 @@ IF (substrateValue EQ 0) THEN BEGIN
         cmd += D
     ENDELSE
     
+    SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
+    IF (SF NE '') THEN BEGIN
+        cmd += ' --scale-ecell=' + SF
+    ENDIF
+
 ;NeXus file
     cmd += ' --ecell='
     empty_cell_nexus_file = (*global).empty_cell_full_nexus_name

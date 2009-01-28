@@ -178,5 +178,8 @@ TVSCL, tvimg, /DEVICE
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
 
+;bring to life the Substrate Transmission Equation
+ActivateWidget, Event, 'empty_cell_substrate_base', 1
+
 END
 

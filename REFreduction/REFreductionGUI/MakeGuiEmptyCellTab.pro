@@ -48,6 +48,178 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
 sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
           uname: 'empty_cell_base'}
 
+;SF calculation base ----------------------------------------------------------
+sSFcalculationBase = { size: sBase.size,$
+                       uname: 'empty_cell_scaling_factor_calculation_base',$
+                       map: 0}
+;data base --------------------------------------------------------------------
+XYoff = [0,20]
+yoff = 15
+sDataBase = { size: [XYoff[0],$
+                     XYoff[1],$
+                     575, $
+                     350+yoff],$
+              frame: 1}
+;data title
+XYoff = [20,-8]
+sDataTitle = { size: [sDataBase.size[0]+XYoff[0],$
+                      sDatabase.size[1]+XYoff[1]],$
+               value: 'Data File: I vs TOF'}
+
+XYoff = [0,yoff]
+sDataDraw = { size: [XYoff[0],$
+                     XYoff[1],$
+                     sDataBase.size[2],$
+                     306],$
+              uname: 'empty_cell_scaling_factor_base_data_draw'}
+
+XYoff = [0,20]
+sDataRowBase = { size: [sDataDraw.size[0]+XYoff[0],$
+                        sDataDraw.size[1]+$
+                        sDataDraw.size[3]+$
+                        XYoff[1],$
+                        sDataDraw.size[2],$
+                        40],$
+                 frame: 0 }
+
+sDataLabel = { x : { value: 'X (TOF in microS):',$
+                     uname: 'empty_cell_data_draw_x_value',$
+                     xsize:  50},$
+               y : { value: 'Y (Pixel #):',$
+                     uname: 'empty_cell_data_draw_y_value',$
+                     xsize: 20},$
+               counts : { value: 'Nbr Counts:',$
+                          uname: 'empty_cell_data_draw_counts_value',$
+                          xsize: 50}}
+
+;end of data base/draw ........................................................
+
+;Empty Cell base --------------------------------------------------------------
+XYoff = [0,40]
+sEmptyCellBase = { size: [sDataBase.size[0]+XYoff[0],$
+                          sDataBase.size[1]+$
+                          sDataBase.size[3]+XYoff[1],$
+                          sDataBase.size[2], $
+                          sDataBase.size[3]],$
+                   frame: 1}
+;EmptyCell title
+XYoff = [20,-8]
+sEmptyCellTitle = { size: [sEmptyCellBase.size[0]+XYoff[0],$
+                           sEmptyCellbase.size[1]+XYoff[1]],$
+                    value: 'Empty Cell File: I vs TOF'}
+
+XYoff = [0,yoff]
+sEmptyCellDraw = { size: [XYoff[0],$
+                          XYoff[1],$
+                          sEmptyCellBase.size[2],$
+                          306],$
+                   uname: 'empty_cell_scaling_factor_base_empty_cell_draw'}
+
+XYoff = [0,20]
+sEmptyCellRowBase = { size: [sEmptyCellDraw.size[0]+XYoff[0],$
+                             sEmptyCellDraw.size[1]+$
+                             sEmptyCellDraw.size[3]+$
+                             XYoff[1],$
+                             sEmptyCellDraw.size[2],$
+                             40],$
+                      frame: 0 }
+
+sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
+                         uname: 'empty_cell_empty_cell_draw_x_value',$
+                         xsize:  50},$
+                    y: { value: 'Y (Pixel #):',$
+                         uname: 'empty_cell_empty_cell_draw_y_value',$
+                         xsize: 20},$
+                    counts: { value: 'Nbr Counts:',$
+                              uname: $
+                              'empty_cell_empty_cell_draw_counts_value',$
+                              xsize: 50}}
+;end of empty cell base/draw ..................................................
+
+;SF equation label and text field .............................................
+XYoff = [630,101]
+sSFequationLabel = { size: [XYoff[0],$
+                            XYoff[1]],$
+                     value: 'Scaling Factor, C = '}
+XYoff = [760,-51]
+sSFequationDraw = { size: [XYoff[0],$
+                           sSFequationLabel.size[1]+XYoff[1],$
+                           415,$
+                           133],$
+                    uname: 'scaling_factor_equation_draw' }
+
+XYoff = [0,110]
+sSFequationLabel2 = { size: [sSFequationLabel.size[0]+XYoff[0],$
+                             sSFequationLabel.size[1]+XYoff[1]],$
+                     value: sSFequationLabel.value}
+
+XYoff = [125,-8] ;widget_text
+sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
+                                sSFequationLabel2.size[1]+XYoff[1],$
+                                10],$
+                         value: '1',$
+                         uname: 'scaling_factor_equation_value'}
+
+;end of SF equation label and text field ......................................
+
+;recap base -------------------------------------------------------------------
+XYoff = [20,-90]
+yoff = 15
+sRecapBase = { size: [sDataBase.size[0]+$
+                     sDataBase.size[2]+XYoff[0],$
+                     sDataBase.size[1]+$
+                     sDatabase.size[3]+XYoff[1],$
+                     sDatabase.size[2], $
+                     sDataBase.size[3]],$
+                     frame: 1}
+;recap title
+XYoff = [20,-8]
+sRecapTitle = { size: [sRecapBase.size[0]+XYoff[0],$
+                       sRecapBase.size[1]+XYoff[1]],$
+                value: 'Recap. Plot (Data - SF * EC)'}
+
+XYoff = [0,yoff]
+sRecapDraw = { size: [XYoff[0],$
+                      XYoff[1],$
+                      sRecapBase.size[2],$
+                      306],$
+               uname: 'empty_cell_scaling_factor_base_recap_draw'}
+
+XYoff = [0,20]
+sRecapRowBase = { size: [sRecapDraw.size[0]+XYoff[0],$
+                         sRecapDraw.size[1]+$
+                         sRecapDraw.size[3]+$
+                         XYoff[1],$
+                         sRecapDraw.size[2],$
+                         40],$
+                  frame: 0 }
+
+sRecapLabel = { x : { value: 'X (TOF in microS):',$
+                      uname: 'empty_cell_recap_draw_x_value',$
+                      xsize:  50},$
+                y : { value: 'Y (Pixel #):',$
+                      uname: 'empty_cell_recap_draw_y_value',$
+                      xsize: 20},$
+                counts : { value: 'Nbr Counts:',$
+                           uname: 'empty_cell_recap_draw_counts_value',$
+                           xsize: 50}}
+
+;end of recap base/draw .......................................................
+
+XYoff = [-215,-80]
+sSFcancel = { size: [sBase.size[2]+XYoff[0],$
+                     sBase.size[3]+XYoff[1],$
+                     100],$
+              value: 'CANCEL',$
+              uname: 'empty_cell_sf_base_cancel'}
+
+XYoff = [0,0]
+sSFok = { size: [sSFcancel.size[0]+$
+                 sSFcancel.size[2]+XYoff[0],$
+                 sSFcancel.size[1]+XYoff[1],$
+                 sSFcancel.size[2]],$
+          value: 'OK',$
+          uname: 'empty_cell_sf_base_ok'}
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 XYoff = [5,10] ;base
@@ -65,7 +237,7 @@ sNexusBrowseButton = { size: [XYoff[0],$
                        value: 'BROWSE NeXus ...'}
 
 ;empty cell run number
-sEmptyCellLabel = { value: 'Empty Cell Run Number:'}
+sEmptyCellRunNumberLabel = { value: 'Empty Cell Run Number:'}
 
 ;Empty cell run number text field
 sEmptyCellTextfield = { value: '',$
@@ -189,8 +361,9 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
                     sTab.size[1]+$
                     sTab.size[3]+$
                     XYoff[1],$
-                    1115,135],$
+                    1135,135],$
              uname: 'empty_cell_substrate_base',$
+             sensitive: 0,$
              frame: 1}
 
 XYoff = [20,-8] ;title
@@ -199,7 +372,7 @@ sSubTitle = { size: [sSubBase.size[0]+XYoff[0],$
               title: 'Substrate Transmission Equation '}
 
 ;equation label ...............................................................
-sSubEquation = {value: 'T = exp[-(A + B * Lambda) * D]         '}
+sSubEquation = {value: 'T = C * exp[-(A + B * Lambda) * D]         '}
 
 ;substrate type ...............................................................
 WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
@@ -214,6 +387,10 @@ sSubList = { list: type_array,$
              uname: 'empty_cell_substrate_list',$
              title: 'Substrate Type:'}
 
+fa = FLOAT(substrate_type[0].a) * 100
+fb = FLOAT(substrate_type[0].b) * 10000
+fd = FLOAT(substrate_type[0].d) * 0.01
+
 ;a and b coefficient ..........................................................
 sAcoeff = { uname: 'empty_cell_substrate_a',$
             title: 'A =',$
@@ -226,16 +403,24 @@ sBcoeff = { uname: 'empty_cell_substrate_b',$
 sBunits = { value: 'cm^-2' }
 
 ;substrate diameter ...........................................................
-sDiameterLabel = { title: '                  Substrate Diameter' }
-sDiameterField = { title: '           D =',$
+sDiameterLabel = { title: '         Substrate Diameter' }
+sDiameterField = { title: ' D =',$
                    uname: 'empty_cell_diameter',$
                    value: STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)}
 sDiameterUnits = { title: 'cm' }
 
+;scaling factor ..-...........................................................
+sScalingFactorLabel = { title: '             Scaling Factor' }
+sScalingFactorField = { title: '   C =',$
+                        uname: 'empty_cell_scaling_factor',$
+                        value: STRCOMPRESS(1,/REMOVE_ALL)}
+sScalingFactorButton = { value: 'CALCULATE SCALING FACTOR',$
+                         uname: 'empty_cell_scaling_factor_button'}
+
 ;final equation ...............................................................
-Equation  = 'T = exp[-(' + STRCOMPRESS(substrate_type[0].a,/REMOVE_ALL)
-Equation += ' + ' + STRCOMPRESS(substrate_type[0].b,/REMOVE_ALL)
-Equation += ' * Lambda) * ' + STRCOMPRESS(substrate_type[0].d,/REMOVE_ALL)
+Equation  = 'T = exp[-(' + STRCOMPRESS(fa,/REMOVE_ALL)
+Equation += ' + ' + STRCOMPRESS(fb,/REMOVE_ALL)
+Equation += ' * Lambda) * ' + STRCOMPRESS(fd,/REMOVE_ALL)
 Equation += ']'
 sFinalEquation = { uname: 'empty_cell_substrate_equation',$
                    value: Equation,$
@@ -251,6 +436,250 @@ wBase = WIDGET_BASE(DataNormalizationTab,$
                     SCR_XSIZE = sBase.size[2],$
                     SCR_YSIZE = sBase.size[3],$
                     TITLE     = EmptyCellTitle)
+
+;Base that will contain the Scaling Factor calculation ------------------------
+wSFcalculationBase = WIDGET_BASE(wBase,$
+                                 UNAME     = sSFcalculationBase.uname,$
+                                 XOFFSET   = sSFcalculationBase.size[0],$
+                                 YOFFSET   = sSFcalculationBase.size[1],$
+                                 SCR_XSIZE = sSFcalculationBase.size[2],$
+                                 SCR_YSIZE = sSFcalculationBase.size[3],$
+                                 MAP       = sSFcalculationBase.map)
+
+;Data base ....................................................................
+wDataTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sDataTitle.size[0],$
+                          YOFFSET = sDataTitle.size[1],$
+                          VALUE   = sDataTitle.value)
+
+wDataBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sDataBase.size[0],$
+                        YOFFSET   = sDataBase.size[1],$
+                        SCR_XSIZE = sDataBase.size[2],$
+                        SCR_YSIZE = sDataBase.size[3]+12,$
+                        FRAME     = sDataBase.frame)
+
+;Draw
+wDataDraw = WIDGET_DRAW(wDatabase,$
+                        XOFFSET       = sDataDraw.size[0],$
+                        YOFFSET       = sDataDraw.size[1],$
+                        Y_SCROLL_SIZE = sDataDraw.size[3],$
+                        X_SCROLL_SIZE = sDataDraw.size[2],$
+                        XSIZE         = sDataDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        UNAME         = sDataDraw.uname,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS,$
+                        /TRACKING_EVENTS)
+
+;X(label/value), Y(label/value) and I(label/value)
+wDataRowBase = WIDGET_BASE(wDatabase,$
+                           XOFFSET = sDataRowBase.size[0],$
+                           YOFFSET = sDataRowBase.size[1],$
+                           SCR_XSIZE = sDataRowBase.size[2],$
+                           SCR_YSIZE = sDataRowBase.size[3],$
+                           FRAME     = sDataRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sDataLabel.x.value)
+xValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sDataLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sDataLabel.x.uname)
+label = WIDGET_LABEL(wDataRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sDataLabel.y.value)
+yValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sDataLabel.y.xsize,$
+                      UNAME = sDataLabel.y.uname)
+label = WIDGET_LABEL(wDataRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = sDataLabel.counts.value)
+IValue = WIDGET_LABEL(wDataRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sDataLabel.counts.xsize,$
+                      UNAME = sDataLabel.counts.uname)
+
+;end of data base .............................................................
+
+;EmptyCell base ...............................................................
+wEmptyCellTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sEmptyCellTitle.size[0],$
+                          YOFFSET = sEmptyCellTitle.size[1],$
+                          VALUE   = sEmptyCellTitle.value)
+
+wEmptyCellBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sEmptyCellBase.size[0],$
+                        YOFFSET   = sEmptyCellBase.size[1],$
+                        SCR_XSIZE = sEmptyCellBase.size[2],$
+                        SCR_YSIZE = sEmptyCellBase.size[3]+12,$
+                        FRAME     = sEmptyCellBase.frame)
+
+;Draw
+wEmptyCellDraw = WIDGET_DRAW(wEmptyCellbase,$
+                        XOFFSET       = sEmptyCellDraw.size[0],$
+                        YOFFSET       = sEmptyCellDraw.size[1],$
+                        Y_SCROLL_SIZE = sEmptyCellDraw.size[3],$
+                        X_SCROLL_SIZE = sEmptyCellDraw.size[2],$
+                        XSIZE         = sEmptyCellDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        /MOTION_EVENTS,$
+                        /TRACKING_EVENTS,$
+                        UNAME         = sEmptyCellDraw.uname)
+
+;X(label/value), Y(label/value) and I(label/value)
+wEmptyCellRowBase = WIDGET_BASE(wEmptyCellbase,$
+                           XOFFSET = sEmptyCellRowBase.size[0],$
+                           YOFFSET = sEmptyCellRowBase.size[1],$
+                           SCR_XSIZE = sEmptyCellRowBase.size[2],$
+                           SCR_YSIZE = sEmptyCellRowBase.size[3],$
+                           FRAME     = sEmptyCellRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.x.value)
+xValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sEmptyCellLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sEmptyCellLabel.x.uname)
+label = WIDGET_LABEL(wEmptyCellRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.y.value)
+yValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sEmptyCellLabel.y.xsize,$
+                      UNAME = sEmptyCellLabel.y.uname)
+label = WIDGET_LABEL(wEmptyCellRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = sEmptyCellLabel.counts.value)
+IValue = WIDGET_LABEL(wEmptyCellRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sEmptyCellLabel.counts.xsize,$
+                      UNAME = sEmptyCellLabel.counts.uname)
+
+;end of empty cell base .......................................................
+
+;SF equation label and text field .............................................
+wSFequationDraw = WIDGET_DRAW(wSFcalculationBase,$
+                              XOFFSET = sSFequationDraw.size[0],$
+                              YOFFSET = sSFequationDraw.size[1],$
+                              SCR_XSIZE = sSFequationDraw.size[2],$
+                              SCR_YSIZE = sSFequationDraw.size[3],$
+                              UNAME     = sSFequationDraw.uname)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel.size[0],$
+                                YOFFSET = sSFequationLabel.size[1],$
+                                VALUE   = sSFequationLabel.value)
+
+wSFequation = WIDGET_TEXT(wSFcalculationBase,$
+                          XOFFSET = sSFequationTextField.size[0],$
+                          YOFFSET = sSFequationTextField.size[1],$
+                          XSIZE   = sSFequationTextField.size[2],$
+                          UNAME   = sSFequationTextField.uname,$
+                          VALUE   = sSFequationTextField.value,$
+                          /EDITABLE)
+
+wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
+                                XOFFSET = sSFequationLabel2.size[0],$
+                                YOFFSET = sSFequationLabel2.size[1],$
+                                VALUE   = sSFequationLabel2.value)
+
+;end of SF equation label and text field ......................................
+
+;Recap base ...................................................................
+wRecapTitle = WIDGET_LABEL(wSFcalculationBase,$
+                          XOFFSET = sRecapTitle.size[0],$
+                          YOFFSET = sRecapTitle.size[1],$
+                          VALUE   = sRecapTitle.value)
+
+wRecapBase = WIDGET_BASE(wSFcalculationBase,$
+                        XOFFSET   = sRecapBase.size[0],$
+                        YOFFSET   = sRecapBase.size[1],$
+                        SCR_XSIZE = sRecapBase.size[2],$
+                        SCR_YSIZE = sRecapBase.size[3]+12,$
+                        FRAME     = sRecapBase.frame)
+
+;Draw
+wRecapDraw = WIDGET_DRAW(wRecapbase,$
+                        XOFFSET       = sRecapDraw.size[0],$
+                        YOFFSET       = sRecapDraw.size[1],$
+                        Y_SCROLL_SIZE = sRecapDraw.size[3],$
+                        X_SCROLL_SIZE = sRecapDraw.size[2],$
+                        XSIZE         = sRecapDraw.size[2],$
+                        YSIZE         = 304,$
+                        RETAIN        = 2,$
+                        /SCROLL,$
+                        /MOTION_EVENTS,$
+                        /TRACKING_EVENTS,$
+                        UNAME         = sRecapDraw.uname)
+
+;X(label/value), Y(label/value) and I(label/value)
+wRecapRowBase = WIDGET_BASE(wRecapbase,$
+                           XOFFSET = sRecapRowBase.size[0],$
+                           YOFFSET = sRecapRowBase.size[1],$
+                           SCR_XSIZE = sRecapRowBase.size[2],$
+                           SCR_YSIZE = sRecapRowBase.size[3],$
+                           FRAME     = sRecapRowBase.frame,$
+                           /ROW)
+                           
+xlabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.x.value)
+xValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      XSIZE = sRecapLabel.x.xsize,$
+                      /ALIGN_LEFT,$
+                      UNAME = sRecapLabel.x.uname)
+label = WIDGET_LABEL(wRecapRowBase,$
+                     VALUE = '  ')
+ylabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.y.value)
+yValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sRecapLabel.y.xsize,$
+                      UNAME = sRecapLabel.y.uname)
+label = WIDGET_LABEL(wRecapRowBase,$
+                     VALUE = '      ')
+Ilabel = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = sRecapLabel.counts.value)
+IValue = WIDGET_LABEL(wRecapRowBase,$
+                      VALUE = 'N/A',$
+                      /ALIGN_LEFT,$
+                      XSIZE = sRecapLabel.counts.xsize,$
+                      UNAME = sRecapLabel.counts.uname)
+
+;end of Recap base ............................................................
+
+wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
+                          XOFFSET   = sSFcancel.size[0],$
+                          YOFFSET   = sSFcancel.size[1],$
+                          SCR_XSIZE = sSFcancel.size[2],$
+                          UNAME     = sSFcancel.uname,$
+                          VALUE     = sSFcancel.value)
+
+wSFok = WIDGET_BUTTON(wSFcalculationBase,$
+                      XOFFSET   = sSFok.size[0],$
+                      YOFFSET   = sSFok.size[1],$
+                      SCR_XSIZE = sSFok.size[2],$
+                      UNAME     = sSFok.uname,$
+                      VALUE     = sSFok.value)
 
 ;nexus (browse, widget_text....etc) -------------------------------------------
 wNexusBase = WIDGET_BASE(wBase,$
@@ -272,7 +701,7 @@ wLabel = WIDGET_LABEL(wNexusBase,$
 
 ;label and text field
 wEmptyCellLabel = WIDGET_LABEL(wNexusBase,$
-                               VALUE = sEmptyCellLabel.value)
+                               VALUE = sEmptyCellRunNumberLabel.value)
 
 wEmptyCellTextField = WIDGET_TEXT(wNexusBase,$
                                   VALUE = sEmptyCellTextField.value,$
@@ -335,8 +764,8 @@ wNexusDroplist = WIDGET_DROPLIST(wNexusListBase,$
                                    
 ;nxsummary text
 wNexusText = WIDGET_TEXT(wNexusListBase,$
-                         XOFFSET = sNexusText.size[0],$
-                         YOFFSET = sNexusText.size[1],$
+                         XOFFSET   = sNexusText.size[0],$
+                         YOFFSET   = sNexusText.size[1],$
                          SCR_XSIZE = sNexusText.size[2],$
                          SCR_YSIZE = sNexusText.size[3],$
                          UNAME     = sNexusText.uname,$
@@ -447,6 +876,7 @@ wSubBase = WIDGET_BASE(wBase,$
                        SCR_YSIZE = sSubBase.size[3],$
                        UNAME     = sSubBase.uname,$
                        FRAME     = sSubBase.frame,$
+                       SENSITIVE = sSubBase.sensitive,$
                        /ROW)
 
 ;equation .....................................................................
@@ -493,35 +923,63 @@ wBunits = WIDGET_LABEL(wBase2,$
 wSpace = WIDGET_LABEL(wSubBase,$
                       VALUE = '   ')
 
-;diameter label and units .....................................................
-wBase3 = WIDGET_BASE(wSubBase,$
-                     /COLUMN,$
-                    /BASE_ALIGN_LEFT)
-wDiameterLabel = WIDGET_LABEL(wBase3,$
+;diameter label/units, Scaling Factor and equation ............................
+wBaseColumn = WIDGET_BASE(wSubBase,$
+                          /COLUMN,$
+                          /BASE_ALIGN_CENTER)
+
+;diameter and scaling factor
+wBaseRow1 = WIDGET_BASE(wBaseColumn,$
+                        /ROW)
+
+;diameter 
+wBaseColumn1_1 = WIDGET_BASE(wBaseRow1,$
+                             /COLUMN,$
+                             /BASE_ALIGN_LEFT)
+
+wDiameterLabel = WIDGET_LABEL(wBaseColumn1_1,$
                               VALUE = sDiameterLabel.title)
-wBase4 = WIDGET_BASE(wBase3,$
+wBaseColumn1_1_row1 = WIDGET_BASE(wBaseColumn1_1,$
                      /ROW)
-wDiameterValue = CW_FIELD(wBase4,$
+wDiameterValue = CW_FIELD(wBaseColumn1_1_row1,$
                           TITLE = sDiameterField.title,$
                           VALUE = sDiameterField.value,$
                           UNAME = sDiameterField.uname,$
 ;                          /FLOATING,$
                           /ALL_EVENTS)
-wDiameterUnits = WIDGET_LABEL(wBase4,$
+wDiameterUnits = WIDGET_LABEL(wBaseColumn1_1_row1,$
                               VALUE = sDiameterUnits.title)
 
+;Scaling Factor
+wBaseColumn1_2 = WIDGET_BASE(wBaseRow1,$
+                             /COLUMN,$
+                             /BASE_ALIGN_LEFT)
+wSFLabel = WIDGET_LABEL(wBaseColumn1_2,$
+                        VALUE = sScalingFactorLabel.title)
+wBaseColumn1_2_row1 = WIDGET_BASE(wBaseColumn1_2,$
+                     /ROW)
+wSFValue = CW_FIELD(wBaseColumn1_2_row1,$
+                    TITLE = sScalingFactorField.title,$
+                    VALUE = sScalingFactorField.value,$
+                    UNAME = sScalingFactorField.uname,$
+;                    /FLOATING,$
+                    /ALL_EVENTS)
+wSFbutton = WIDGET_BUTTON(wBaseColumn1_2_row1,$
+                          VALUE = sScalingFactorButton.value,$
+                          UNAME = sScalingFactorButton.uname)
+
 ;space
-wSpace = WIDGET_LABEL(wBase3,$
+wSpace = WIDGET_LABEL(wBaseColumn,$
                       VALUE = '')
-wSpace = WIDGET_LABEL(wBase3,$
+wSpace = WIDGET_LABEL(wBaseColumn,$
                       VALUE = '')
 
 ;final equation
-wBase4 = WIDGET_BASE(wBase3,$
+wBaseColumn2_1 = WIDGET_BASE(wBaseColumn,$
                      /ROW)
-wSpace = WIDGET_LABEL(wBase4,$
-                      VALUE = '          ')
-wEquation = WIDGET_LABEL(wBase4, $
+wSpace = WIDGET_LABEL(wBaseColumn2_1,$
+                      VALUE = '  ')
+wEquation = WIDGET_LABEL(wBaseColumn2_1, $
                          VALUE = sFinalEquation.value,$
                          UNAME = sFinalEquation.uname,$
                          XSIZE = 500,$

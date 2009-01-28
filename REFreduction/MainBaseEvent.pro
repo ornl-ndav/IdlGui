@@ -34,6 +34,8 @@
 
 PRO MAIN_BASE_event, Event
 
+COMPILE_OPT hidden
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -82,6 +84,12 @@ CASE Event.id OF
                 FIND_BY_UNAME='ok_pola_state'): BEGIN
         ok_polarization_state, Event
     END
+
+
+;data/normalization/empty cell tab
+    widget_info(wWidget, FIND_BY_UNAME='data_normalization_tab'): begin
+       data_norma_empty_cell_tab_event, Event ;_tab
+    end
 
 ;==============================================================================
 ;**LOAD TAB**DATA**------------------------------------------------------------
@@ -1143,7 +1151,111 @@ CASE Event.id OF
 ;Diameter
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_diameter'): BEGIN
         update_substrate_equation, Event ;_empty_cell
+     END
+
+;Scaling Factor 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_scaling_factor'): BEGIN
+       update_substrate_equation, Event ;_empty_cell
     END
+    
+;Scaling Factor button (to launch the calculation of the SF)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_button'): BEGIN
+        WIDGET_CONTROL, HOURGLASS=1
+        start_sf_scaling_factor_calculation_mode, Event ;_sf_empty_cell
+        WIDGET_CONTROL, HOURGLASS=0
+    END
+
+
+;Calculate Scaling Factor Base ................................................
+
+;data draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_data_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN
+                reset_sf_calculation_base_data_info, Event ;_sf_empty_cell
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_data_info, Event ;_sf_empty_cell 
+
+            IF (Event.press EQ 1) THEN BEGIN ;left click
+                (*global).sf_x0 = Event.x
+                (*global).sf_y0 = Event.y
+                (*global).ec_left_click = 1
+            ENDIF
+
+            IF (Event.type EQ 2) THEN BEGIN ;move mouse
+                IF ((*global).ec_left_click) THEN BEGIN
+                    display_sf_data_selection, Event, $ ;_sf_empty_cell
+                      X1 = Event.x,$
+                      Y1 = Event.y
+                ENDIF
+            ENDIF
+
+            IF (Event.type EQ 1) THEN BEGIN ;release mouse
+                (*global).sf_x1 = Event.x
+                (*global).sf_y1 = Event.y
+                (*global).ec_left_click = 0
+                calculate_sf, Event ;_sf_empty_cell
+            ENDIF
+
+        ENDELSE
+    END
+
+;empty cell draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_empty_cell_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN 
+                reset_sf_calculation_base_empty_cell_info, Event 
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_empty_cell_info, Event ;_sf_empty_cell 
+        ENDELSE
+    END
+
+;Scaling Factor, C= 'text field'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_factor_equation_value'): BEGIN
+        replot_recap_with_manual_sf, Event ;_sf_empty_cell
+    END
+
+;recap draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_recap_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN 
+                reset_sf_calculation_base_recap_info, Event 
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_recap_info, Event ;_sf_empty_cell 
+        ENDELSE
+    END
+
+;cancel button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_cancel'): BEGIN
+       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
+    END
+
+;ok button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_ok'): BEGIN
+;copy A value into empty cell main base and refresh equation
+       SF_value = getTextFieldValue(Event,'scaling_factor_equation_value')
+       putTextFieldValue, Event, 'empty_cell_scaling_factor', $
+                          STRCOMPRESS(SF_value,/REMOVE_ALL), 0
+       update_substrate_equation, Event ;_empty_cell
+       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
+    END
+
+;END of Calculate Scaling Factor Base .........................................
+
+
 ;==============================================================================
 ;**REDUCE TAB -----------------------------------------------------------------
 ;==============================================================================
@@ -1392,6 +1504,11 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='output_cl_button'): begin
         CL_outputButton, Event
     end
+
+;Preview of the command line text box
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
+;        print, 'here'
+;    END
 
 ;******************************************************************************
 ;**PLOTS TAB**
