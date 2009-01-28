@@ -751,6 +751,10 @@ IF (C EQ '0') THEN BEGIN
    C = 'N/A'
 ENDIF
 
+;check that A, B, D and C are real numbers
+format_error_status = 1
+ON_IOERROR, format_error
+
 ;change from cm -> m
 IF (errorA NE 1) THEN BEGIN
     A = FLOAT(A) * 100
@@ -763,6 +767,8 @@ ENDIF
 IF (errorD NE 1) THEN BEGIN
     D = FLOAT(D) * 0.01
 ENDIF
+
+format_error_status = 0
 
 ;final equation
 Equation  = 'T = ' 
@@ -784,6 +790,18 @@ ENDIF
 
 ;update equation
 putTextFieldValue, Event, 'empty_cell_substrate_equation', Equation[0], 0
+
+format_error:
+IF (format_error_status EQ 1) THEN BEGIN
+    widget_id = WIDGET_INFO(Event.top, $
+                            FIND_BY_UNAME='empty_cell_scaling_factor_button')
+
+    result = DIALOG_MESSAGE('Format of one of the parameter is wrong!',$
+                            /ERROR,$
+                            TITLE = 'FORMAT ERROR',$
+                            DIALOG_PARENT = widget_id)
+ENDIF
+
 END
 
 ;______________________________________________________________________________
