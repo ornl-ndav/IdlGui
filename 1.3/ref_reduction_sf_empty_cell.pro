@@ -102,15 +102,14 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 widget_id = WIDGET_INFO(Event.top, $
                         FIND_BY_UNAME='empty_cell_scaling_factor_button')
 
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-
-    data_nexus_file       = (*global).empty_cell_full_nexus_name
-    empty_cell_nexus_file = data_nexus_file
-    (*global).data_full_nexus_name = data_nexus_file
-    (*(*global).DATA_D_TOTAL_ptr) = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
-    
-
-ENDIF
+;IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+;
+;    data_nexus_file       = (*global).empty_cell_full_nexus_name
+;    empty_cell_nexus_file = data_nexus_file
+;    (*global).data_full_nexus_name = data_nexus_file
+;    (*(*global).DATA_D_TOTAL_ptr) = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+;    
+;ENDIF
 
 ;check that there are data and empty cell nexus file loaded
 data_nexus_file       = (*global).data_full_nexus_name
@@ -252,15 +251,15 @@ PRO plot_file_in_sf_calculation_base, Event,$
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
-ENDIF ELSE BEGIN
+;IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+;    data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+;ENDIF ELSE BEGIN
     CASE (TYPE) OF
         'data': data = (*(*global).DATA_D_TOTAL_ptr)
         'empty_cell': data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
         'recap': data = data
     ENDCASE
-ENDELSE
+;ENDELSE
 
 DEVICE, DECOMPOSED = 0
 id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME=draw_uname)
@@ -733,7 +732,7 @@ FOR t=0,(Ntof-1) DO BEGIN
     FOR p=0,(Npix-1) DO BEGIN
 
 ;1st part (data)
-        part1 = data_data[t,p] / data_proton_charge
+        part1 = data_data[t,p] 
 
 ;2nd part (empty_cell)
         TOF = FLOAT(data_tof_axis[t]) * 1.E-6 ;to be in s
@@ -747,11 +746,12 @@ FOR t=0,(Ntof-1) DO BEGIN
         exp  = EXP(-exp1)
 
         part2  = exp / empty_cell_proton_charge
+        part2 *= data_proton_charge
         part2 *= empty_cell_data[t,p] 
 
 ;difference
         recap_data[t,p] = part1 - SF * part2
-
+        
     ENDFOR
 
 ENDFOR
