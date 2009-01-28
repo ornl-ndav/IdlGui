@@ -1217,6 +1217,20 @@ CASE Event.id OF
         ENDELSE
     END
 
+;recap draw
+    WIDGET_INFO(wWidget, $
+                FIND_BY_UNAME= $
+                'empty_cell_scaling_factor_base_recap_draw'): BEGIN
+        IF (TAG_NAMES(event, /STRUCTURE_NAME) EQ 'WIDGET_TRACKING') $
+          THEN BEGIN
+            IF (event.ENTER EQ 0) THEN BEGIN 
+                reset_sf_calculation_base_recap_info, Event 
+            ENDIF
+        ENDIF ELSE BEGIN
+            display_sf_calculation_base_recap_info, Event ;_sf_empty_cell 
+        ENDELSE
+    END
+
 ;cancel button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_base_cancel'): BEGIN
        MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0

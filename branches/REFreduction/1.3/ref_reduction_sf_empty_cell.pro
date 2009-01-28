@@ -377,6 +377,38 @@ display_sf_calculation_base_info, Event,$
 
 END
 
+;..............................................................................
+PRO display_sf_calculation_base_recap_info, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+x = Event.X
+y = Event.Y
+
+pixel_uname  = 'empty_cell_recap_draw_y_value'
+tof_uname    = 'empty_cell_recap_draw_x_value'
+counts_uname = 'empty_cell_recap_draw_counts_value'
+
+data_tof     = (*(*global).sf_empty_cell_tof)
+data         = (*(*global).SF_RECAP_D_TOTAL_ptr)
+
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    reset_sf_calculation_base_recap_info, Event
+ENDIF ELSE BEGIN
+    display_sf_calculation_base_info, Event,$
+      X            = x,$
+      Y            = y,$
+      PIXEL_UNAME  = pixel_uname,$
+      TOF_UNAME    = tof_uname,$
+      COUNTS_UNAME = counts_uname,$
+      TOF_ARRAY    = data_tof,$
+      DATA         = data
+ENDELSE
+END
+
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 
@@ -422,6 +454,23 @@ value = 'N/A'
 pixel_uname  = 'empty_cell_empty_cell_draw_y_value'
 tof_uname    = 'empty_cell_empty_cell_draw_x_value'
 counts_uname = 'empty_cell_empty_cell_draw_counts_value'
+
+reset_sf_calculation_base_info, Event, $
+  PIXEL_UNAME  = pixel_uname,$
+  TOF_UNAME    = tof_uname,$
+  COUNTS_UNAME = counts_uname,$
+  VALUE        = value
+
+END
+
+;..............................................................................
+PRO reset_sf_calculation_base_recap_info, Event
+
+value = 'N/A'
+
+pixel_uname  = 'empty_cell_recap_draw_y_value'
+tof_uname    = 'empty_cell_recap_draw_x_value'
+counts_uname = 'empty_cell_recap_draw_counts_value'
 
 reset_sf_calculation_base_info, Event, $
   PIXEL_UNAME  = pixel_uname,$
@@ -710,6 +759,8 @@ PRO plot_recap_empty_cell_sf, Event,$
                               h = h,$
                               SF = SF
 
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 ;determine the size (number of TOF and of pixels)
 Ntof = (SIZE(data_data))(1)
@@ -755,6 +806,8 @@ FOR t=0,(Ntof-1) DO BEGIN
     ENDFOR
 
 ENDFOR
+
+(*(*global).SF_RECAP_D_TOTAL_ptr) = recap_data
 
 draw_uname = 'empty_cell_scaling_factor_base_recap_draw'
 plot_file_in_sf_calculation_base, $
