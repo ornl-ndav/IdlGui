@@ -453,7 +453,7 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN
         subject        = application + " LogBook"
         cmd  =  'echo ' + text + '| mutt -s "' + subject 
-        cmd += ' j35@ornl.gov'
+        cmd += ' scsupport@ornl.gov'
     ENDELSE
     SPAWN, cmd
 
