@@ -531,7 +531,7 @@ IValue = WIDGET_LABEL(wDataRowBase,$
 
 ;end of data base .............................................................
 
-;EmptyCell base ................................................................
+;EmptyCell base ...............................................................
 wEmptyCellTitle = WIDGET_LABEL(wSFcalculationBase,$
                           XOFFSET = sEmptyCellTitle.size[0],$
                           YOFFSET = sEmptyCellTitle.size[1],$
@@ -554,6 +554,8 @@ wEmptyCellDraw = WIDGET_DRAW(wEmptyCellbase,$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
                         /SCROLL,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS,$
                         UNAME         = sEmptyCellDraw.uname)
 
 ;X(label/value), Y(label/value) and I(label/value)
@@ -621,7 +623,7 @@ wSFequationLabel = WIDGET_LABEL(wSFcalculationBase,$
 
 ;end of SF equation label and text field ......................................
 
-;Recap base ....................................................................
+;Recap base ...................................................................
 wRecapTitle = WIDGET_LABEL(wSFcalculationBase,$
                           XOFFSET = sRecapTitle.size[0],$
                           YOFFSET = sRecapTitle.size[1],$
@@ -643,6 +645,8 @@ wRecapDraw = WIDGET_DRAW(wRecapBase,$
                         XSIZE         = sRecapDraw.size[2],$
                         YSIZE         = 304,$
                         RETAIN        = 2,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS,$
                         /SCROLL,$
                         UNAME         = sRecapDraw.uname)
 
@@ -681,7 +685,7 @@ IValue = WIDGET_LABEL(wRecapRowBase,$
                       XSIZE = sRecapLabel.counts.xsize,$
                       UNAME = sRecapLabel.counts.uname)
 
-;end of recap base .............................................................
+;end of recap base ............................................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
@@ -941,7 +945,7 @@ wBunits = WIDGET_LABEL(wBase2,$
 wSpace = WIDGET_LABEL(wSubBase,$
                       VALUE = '   ')
 
-;diameter label/units, Scaling Factor and equation .............................
+;diameter label/units, Scaling Factor and equation ............................
 wBaseColumn = WIDGET_BASE(wSubBase,$
                           /COLUMN,$
                           XSIZE = 400,$
