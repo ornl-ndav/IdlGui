@@ -703,6 +703,7 @@ IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN
     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     widget_control, id, /editable
+    WIDGET_CONTROL, /CONTEXT_EVENTS
 ENDIF
 
 IF (ucams EQ 'j35') THEN BEGIN

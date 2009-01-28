@@ -337,7 +337,14 @@ cmdLinePreviewText = WIDGET_TEXT(REDUCE_BASE,$
                                  SCR_YSIZE = cmdLinePreviewTextSize[3],$
                                  VALUE     = '',$
                                  /SCROLL,$
+;                                 /ALL_EVENTS,$
+;                                 /CONTEXT_EVENTS,$
                                  /WRAP)
+
+;contextBase = WIDGET_BASE(REDUCE_BASE,$
+;                          /CONTEXT_MENU)
+;button1 = WIDGET_BUTTON(contextBase, value='LOAD...')
+;button2 = WIDGET_BUTTON(contextBase, value='CANCEL')
 
 ;output command line into a file
 button1 = WIDGET_BUTTON(REDUCE_BASE,$
