@@ -448,7 +448,7 @@ IF (nexus_file_name NE '') THEN BEGIN
 
  ENDIF ELSE BEGIN
 
-    text = '-> Operation canceled!'x
+    text = '-> Operation canceled!'
     putLogBookMessage, Event, Text, Append=1
 
  ENDELSE    
