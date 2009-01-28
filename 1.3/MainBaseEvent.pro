@@ -1217,6 +1217,11 @@ CASE Event.id OF
         ENDELSE
     END
 
+;Scaling Factor, C= 'text field'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_factor_equation_value'): BEGIN
+        replot_recap_with_manual_sf, Event ;_sf_empty_cell
+    END
+
 ;recap draw
     WIDGET_INFO(wWidget, $
                 FIND_BY_UNAME= $

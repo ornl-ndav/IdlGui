@@ -818,3 +818,62 @@ plot_file_in_sf_calculation_base, $
   DATA       = recap_data
 
 END
+
+;------------------------------------------------------------------------------
+PRO replot_recap_with_manual_sf, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+WIDGET_CONTROL, /HOURGLASS
+
+;get SF value
+SF = getTextFieldValue(Event,'scaling_factor_equation_value')
+SF = FLOAT(SF)
+
+;retrieve other parameters used
+data_proton_charge = (*global).data_proton_charge
+Pdata              = STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
+f_Pdata            = FLOAT(Pdata)
+
+empty_cell_proton_charge = (*global).empty_cell_proton_charge
+Pempty_cell              = STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
+f_Pempty_cell            = FLOAT(Pempty_cell)
+
+distance_sample_moderator   = (*global).empty_cell_distance_moderator_sample
+distance_sample_pixel_array = (*(*global).distance_sample_pixel_array)
+
+data_data       = (*(*global).DATA_D_TOTAL_ptr)
+empty_cell_data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+data_tof_axis   = (*(*global).sf_empty_cell_tof)
+
+A   = getTextFieldValue(Event, 'empty_cell_substrate_a')
+B   = getTextFieldValue(Event, 'empty_cell_substrate_b')
+D   = getTextFieldValue(Event, 'empty_cell_diameter')
+fAm = FLOAT(A) * 100
+fBm = FLOAT(B) * 10000
+fDm = FLOAT(D) * 0.01
+
+Mn = 1.674928E-27 ;neutron mass (kg)
+h  = 6.62606876E-34 ;Plank's constant (J.s)
+
+plot_recap_empty_cell_sf, Event,$
+  data_proton_charge = $
+  f_Pdata,$
+  empty_cell_proton_charge = $
+  f_Pempty_cell,$
+  distance_sample_moderator = $
+  distance_sample_moderator,$
+  distance_sample_pixel_array = $
+  distance_sample_pixel_array,$
+  data_data = data_data,$
+  empty_cell_data = empty_cell_data,$
+  data_tof_axis = data_tof_axis,$
+  fAm = fAm,$
+  fBm = fBm,$
+  fDm = fDm,$
+  Mn = Mn,$
+  h = h,$
+  SF = SF
+
+WIDGET_CONTROL, HOURGLASS=0
+END
