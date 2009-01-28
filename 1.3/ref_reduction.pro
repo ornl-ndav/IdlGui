@@ -78,6 +78,7 @@ debugger = 1 ;the world has access to the batch tab now
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    VERSION: version,$
 
                     empty_cell_images: PTR_NEW(0L),$
                     sf_equation_file: 'REFreduction_images/SFequation.png',$

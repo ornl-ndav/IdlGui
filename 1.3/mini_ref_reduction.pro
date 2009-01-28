@@ -81,6 +81,7 @@ ENDELSE
 ;define global variables
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
+                    VERSION: version,$
 
                     empty_cell_images: PTR_NEW(0L),$
                       sf_equation_file: $
