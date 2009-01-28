@@ -34,6 +34,8 @@
 
 PRO MAIN_BASE_event, Event
 
+COMPILE_OPT hidden
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -1502,6 +1504,11 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='output_cl_button'): begin
         CL_outputButton, Event
     end
+
+;Preview of the command line text box
+;    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_cmd_line_preview'):BEGIN
+;        print, 'here'
+;    END
 
 ;******************************************************************************
 ;**PLOTS TAB**
