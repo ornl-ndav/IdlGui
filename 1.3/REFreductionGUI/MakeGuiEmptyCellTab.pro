@@ -627,6 +627,7 @@ wRecapDraw = WIDGET_DRAW(wRecapbase,$
                         RETAIN        = 2,$
                         /SCROLL,$
                         /MOTION_EVENTS,$
+                        /TRACKING_EVENTS,$
                         UNAME         = sRecapDraw.uname)
 
 ;X(label/value), Y(label/value) and I(label/value)

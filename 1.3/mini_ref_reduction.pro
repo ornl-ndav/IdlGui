@@ -103,6 +103,7 @@ global = ptr_new ({ first_event: 1,$
                       distance_sample_pixel_path: $
                       '/entry/instrument/bank1/distance/',$
                     distance_sample_pixel_array: PTR_NEW(0L),$
+                    SF_RECAP_D_TOTAL_ptr: PTR_NEW(0L),$
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
