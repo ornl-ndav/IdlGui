@@ -483,6 +483,11 @@ IF (substrateValue EQ 0) THEN BEGIN
         cmd += D
     ENDELSE
     
+    SF = getTextFieldValue(Event,'empty_cell_scaling_factor')
+    IF (SF NE '') THEN BEGIN
+        cmd += ' --scale-ecell=' + SF
+    ENDIF
+
 ;NeXus file
     cmd += ' --ecell='
     empty_cell_nexus_file = (*global).empty_cell_full_nexus_name
