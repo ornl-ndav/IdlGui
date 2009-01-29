@@ -53,7 +53,7 @@ TopBase = WIDGET_BASE(REDUCE_TAB,$
                       SCR_XSIZE = sBase.size[2],$
                       SCR_YSIZE = sBase.size[3],$
                       TITLE     = sBase.title,$
-                      map = 0)
+                      map = 1)
 
 ;list of polarization states --------------------------------------------------
 wPolaBase = WIDGET_BASE(TopBase,$
@@ -93,7 +93,6 @@ button4 = WIDGET_BUTTON(ColumnBase,$
                         UNAME = 'reduce_tab1_pola_base_pola_4',$
                         SENSITIVE = 1)
 
-
 okButton = WIDGET_BUTTON(wPolaBase,$
                          VALUE = 'OK',$
                          SCR_XSIZE = 250,$
@@ -108,7 +107,7 @@ Base = WIDGET_BASE(TopBase,$
                    SCR_YSIZE = sBase.size[3],$
                    /BASE_ALIGN_LEFT,$
                    /COLUMN,$
-                   map =0)
+                   map = 1)
 
 ;Vertical space
 vSpace = Widget_label(Base,$

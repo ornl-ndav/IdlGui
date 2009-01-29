@@ -64,7 +64,7 @@ TabTitles = { step1:     ' 1/ REDUCTION',$
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$
+                      LOCATION  = 0,$                      
                       XOFFSET   = sMainTabSize.size[0],$
                       YOFFSET   = sMainTabSize.size[1],$
                       SCR_XSIZE = sMainTabSize.size[2],$
