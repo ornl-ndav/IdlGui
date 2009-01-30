@@ -178,7 +178,7 @@ NbrNexus = 1
 status = OpenDataNexusFile(Event, $ ;LoadDataFile.pro
                            DataRunNumber, $
                            nexus_file_name, $
-                           POLA_STATE=pola_state)
+                           POLA_STATE = pola_state)
 
 IF (status EQ 0) THEN BEGIN
     (*global).DataNeXusFound = 0
@@ -308,7 +308,7 @@ NbrNexus = 1
 status = OpenNormNexusFile(Event, $
                            NormRunNumber, $
                            nexus_file_name, $
-                           POLA_STATE=pola_state)
+                           POLA_STATE = pola_state)
 IF (status EQ 0) THEN BEGIN
    (*global).NormNeXusFound = 0
    IDLsendLogBook_ReplaceLogBookText, $

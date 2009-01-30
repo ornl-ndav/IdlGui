@@ -262,6 +262,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;ENDELSE
 
 DEVICE, DECOMPOSED = 0
+LOADCT, 13, /SILENT
 id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME=draw_uname)
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
