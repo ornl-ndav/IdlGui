@@ -46,7 +46,7 @@ TESTING           = 'no'
 CHECKING_PACKAGES = 'yes'
 
 ;DEBUGGING
-sDEBUGGING = { tab: {main_tab: 0}} ;0:step1, 1:logBook
+sDEBUGGING = { tab: {main_tab: 1}} ;0:step1, 1:logBook
 
 ;******************************************************************************
 ;******************************************************************************
