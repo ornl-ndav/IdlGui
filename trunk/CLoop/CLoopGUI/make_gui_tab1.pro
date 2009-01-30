@@ -32,45 +32,17 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiMainBase, MAIN_BASE, global
+PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
 
-MainBaseSize = (*global).MainBaseSize
-
-;******************************************************************************
-;            DEFINE STRUCTURE
-;******************************************************************************
-
-XYoff = [0,0]
-sMainTabSize = {size : [XYoff[0], $
-                        XYoff[1],$
-                        MainBaseSize[2], $
-                        MainBaseSize[3]],$
-                uname : 'main_tab'}
-
-;Tab titles
-TabTitles = { tab1:     ' L O O P E R ',$
-              tab2:  ' L O G  B O O K '}
-
-;******************************************************************************
-;            BUILD GUI
-;******************************************************************************
-
-;build widgets
-
-MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTabSize.size[0],$
-                      YOFFSET   = sMainTabSize.size[1],$
-                      SCR_XSIZE = sMainTabSize.size[2],$
-                      SCR_YSIZE = sMainTabSize.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
-
-;step1
-make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles.tab1
-
-;Build LogBook
-make_gui_tab2, MAIN_TAB, sMainTabSize.size, TabTitles.tab2
+Base = WIDGET_BASE(MAIN_TAB,$
+                   UNAME     = 'tab1_uname',$
+                   XOFFSET   = MainTabSize[0],$
+                   YOFFSET   = MainTabSize[1],$
+                   SCR_XSIZE = MainTabSize[2],$
+                   SCR_YSIZE = MainTabSize[3],$
+                   TITLE     = title,$
+                   map = 0)
 
 END
+
+

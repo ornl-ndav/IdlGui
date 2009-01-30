@@ -66,7 +66,7 @@ global = ptr_new ({ ucams:        ucams,$
                     ok:           'OK',$
                     failed:       'FAILED',$                    
                     version:      VERSION,$
-                    MainBaseSize: [30,25,1276,901]})
+                    MainBaseSize: [30,25,800,800]})
 
 MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Command Line Looper (CLoop)'
