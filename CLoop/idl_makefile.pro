@@ -14,6 +14,8 @@ cd, IdlUtilitiesPath
 ;Build CLoop GUI
 cd, CurrentFolder + '/CLoopGUI/'
 .run MakeGuiMainBase.pro
+.run make_gui_tab1.pro
+.run make_gui_tab2.pro
 
 ;Build all procedures
 cd, CurrentFolder
