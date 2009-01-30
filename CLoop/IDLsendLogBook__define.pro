@@ -33,7 +33,7 @@
 ;==============================================================================
 FUNCTION IDLsendLogBook_getLocalVariable, var
 CASE (var) OF
-   'LogBookUname'    : RETURN, 'log_book_text_field'
+   'LogBookUname'    : RETURN, 'log_book_text'
    'Alternate_1'     : RETURN, 'data_log_book_text_field'
    'Alternate_2'     : RETURN, 'normalization_log_book_text_field'
    'Alternate_3'     : RETURN, 'empty_cell_status'
