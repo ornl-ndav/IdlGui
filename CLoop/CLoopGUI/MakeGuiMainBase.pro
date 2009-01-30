@@ -67,10 +67,10 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;step1
-make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
+;make_gui_step1, MAIN_TAB, sMainTabSize.size, TabTitles
 
 ;Build LogBook
-make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
+;make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
 
 
 

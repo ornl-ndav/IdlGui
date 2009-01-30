@@ -12,7 +12,7 @@ cd, IdlUtilitiesPath
 ;and create the VM file.
 
 ;Build CLoop GUI
-cd, CurrentFolder + '/REFoffSpecGUI/'
+cd, CurrentFolder + '/CLoopGUI/'
 .run MakeGuiMainBase.pro
 
 ;Build all procedures
