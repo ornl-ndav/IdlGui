@@ -32,27 +32,19 @@
 ;
 ;==============================================================================
 
-PRO make_gui_step1, REDUCE_TAB, tab_size, TabTitles
+;logger message
+PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
-;******************************************************************************
-;            DEFINE STRUCTURE
-;******************************************************************************
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
 
-sBaseTab = { size:  tab_size,$
-             uname: 'step1_tab_base',$
-             title: TabTitles.step1}
-
-;******************************************************************************
-;            BUILD GUI
-;******************************************************************************
-
-BaseTab = WIDGET_BASE(REDUCE_TAB,$
-                      UNAME     = sBaseTab.uname,$
-                      XOFFSET   = sBaseTab.size[0],$
-                      YOFFSET   = sBaseTab.size[1],$
-                      SCR_XSIZE = sBaseTab.size[2],$
-                      SCR_YSIZE = sBaseTab.size[3],$
-                      TITLE     = sBaseTab.title)
-
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END

@@ -6,6 +6,6 @@ WIDGET_CONTROL,/HOURGLASS
 WIDGET_CONTROL,HOURGLASS=0
 END
 
-PRO ref_off_spec_eventcb, event
+PRO cloop_eventcb, event
 END
 
