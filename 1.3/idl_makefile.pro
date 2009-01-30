@@ -31,6 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = "utilities/"
@@ -155,4 +156,3 @@ cd, CurrentFolder
 .run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
-
