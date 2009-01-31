@@ -66,7 +66,7 @@ global = ptr_new ({ ucams:        ucams,$
                     ok:           'OK',$
                     failed:       'FAILED',$                    
                     version:      VERSION,$
-                    MainBaseSize: [30,25,800,800]})
+                    MainBaseSize: [30,25,800,600]})
 
 MainBaseSize   = (*global).MainBaseSize
 MainBaseTitle  = 'Command Line Looper (CLoop)'
@@ -96,9 +96,9 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ; Date Information
 ;==============================================================================
 ;Put date/time when user started application in first line of log book
-time_stamp = GenerateIsoTimeStamp()
+time_stamp = GenerateReadableIsoTimeStamp()   
 message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-;IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
+IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
 
 ;??????????????????????????????????????????????????????????????????????????????
 IF (DEBUGGING EQ 'yes' ) THEN BEGIN
