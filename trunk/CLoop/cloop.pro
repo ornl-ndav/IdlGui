@@ -46,8 +46,9 @@ TESTING           = 'no'
 CHECKING_PACKAGES = 'yes'
 
 ;DEBUGGING
-sDEBUGGING = { tab: {main_tab: 0}} ;0:step1, 1:logBook
-
+sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
+               path: '~/SVN/IdlGui/trunk/CLoop/'} ;path to CL file
+               
 ;******************************************************************************
 ;******************************************************************************
 
@@ -60,7 +61,11 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = ptr_new ({ ucams:        ucams,$
+global = PTR_NEW ({ path: '~/',$
+
+                    debugging:    debugging,$ ;yes or no
+                    debugging_structure: sDebugging,$
+                    ucams:        ucams,$
                     application:  APPLICATION,$
                     processing:   '(PROCESSING)',$
                     ok:           'OK',$

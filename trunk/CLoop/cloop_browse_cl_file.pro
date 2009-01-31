@@ -32,29 +32,35 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
- 
+PRO browse_cl_file, Event
+
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-wWidget =  Event.top            ;widget id
+IF ((*global).debugging EQ 'yes') THEN BEGIN
+  sDebugging = (*global).debugging_structure
+  path = sDebugging.path
+ENDIF ElSE BEGIN
+  path = (*global).path
+ENDELSE  
 
-CASE Event.id OF
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-;Load Command Line File Button    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
-      browse_cl_file, Event ;_browse
-    END
-    
-;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-    END
+title = 'Select a Command Line File to Load'
+filter = '*.txt'
 
-    ELSE:
-    
-ENDCASE
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+
+file_name = DIALOG_PICKFILE(FILTER=filter,$
+                            GET_PATH=new_path,$
+                            /MUST_EXIST,$
+                            PATH=path,$
+                            TITLE=title,$
+                            /READ,$
+                            DIALOG_PARENT=id)
+                            
+IF (file_name NE '') THEN BEGIN
+  (*global).path = new_path
+  putValue, Event, 'cl_file_name_label', file_name
+ENDIF  
 
 END
+
