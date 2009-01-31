@@ -49,7 +49,8 @@ sLabel1 = { size: [sLoad.size[0]+sLoad.size[2]+XYoff[0],$
             value: 'CL File Loaded:' }
 XYoff = [100,0]
 sLabel2 = { size: [sLabel1.size[0]+XYoff[0],$
-                   sLabel1.size[1]+XYoff[1]],$
+                   sLabel1.size[1]+XYoff[1],$
+                   400],$
             value: 'N/A',$
             uname: 'cl_file_name_label'}
 
@@ -79,10 +80,12 @@ wLabel1 = WIDGET_LABEL(Base,$
                        VALUE   = sLabel1.value)
                        
 wLabel2 = WIDGET_LABEL(Base,$
-                       XOFFSET = sLabel2.size[0],$
-                       YOFFSET = sLabel2.size[1],$
-                       VALUE   = sLabel2.value,$
-                       UNAME   = sLabel2.uname)     
+                       XOFFSET   = sLabel2.size[0],$
+                       YOFFSET   = sLabel2.size[1],$
+                       SCR_XSIZE = sLabel2.size[2],$
+                       VALUE     = sLabel2.value,$
+                       UNAME     = sLabel2.uname,$
+                       /ALIGN_LEFT)     
 
 END
 

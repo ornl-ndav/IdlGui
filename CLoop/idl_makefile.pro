@@ -3,6 +3,7 @@ spawn, 'pwd', CurrentFolder
 
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
+.run put.pro
 .run system_utilities.pro
 .run time_utilities.pro
 .run time.pro
@@ -20,8 +21,11 @@ cd, CurrentFolder + '/CLoopGUI/'
 ;Build all procedures
 cd, CurrentFolder
 
-;procedures
+;classes
 .run IDLsendLogBook__define.pro
+
+;procedures
+.run cloop_browse_cl_file.pro
 
 ;main functions
 .run MainBaseEvent.pro
