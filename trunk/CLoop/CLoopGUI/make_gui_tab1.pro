@@ -67,6 +67,14 @@ XYoff = [630,-14]
 sPreviewLabel = { size: [sPreview.size[0]+XYoff[0],$
                          sPreview.size[1]+XYoff[1]],$
                   value: 'PREVIEW of File Loaded'}
+                  
+;Instruction about what to do
+XYoff = [0,0]
+sInstruction = { size: [sPreview.size[0]+XYoff[0],$
+                        sPreview.size[1]+sPreview.size[3]+XYoff[1]],$
+                 value: 'Select text you want to modify in Preview and ' + $
+                        'enter new text in this field ->'}
+                        
 ;==============================================================================
 
 Base = WIDGET_BASE(MAIN_TAB,$
@@ -114,6 +122,12 @@ wPreviewLabel = WIDGET_LABEL(Base,$
                              XOFFSET = sPreviewLabel.size[0],$
                              YOFFSET = sPreviewLabel.size[1],$
                              VALUE   = sPreviewLabel.value)
+
+;Instruction
+wInstruction = WIDGET_LABEL(Base,$
+                            XOFFSET = sInstruction.size[0],$
+                            YOFFSET = sInstruction.size[1],$
+                            VALUE   = sInstruction.value)
 
 END
 
