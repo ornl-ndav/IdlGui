@@ -1,0 +1,1 @@
+srun --batch -p bss amorphous_reduction_sqe  /SNS/BSS/IPTS-1000/1/4345/NeXus/BSS_4345.nxs --roi-file=? --verbose --energy-bins=?,?,? --mom-trans-bin=?,?,? --output=~/results/
