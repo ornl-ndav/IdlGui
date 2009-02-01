@@ -55,18 +55,18 @@ sLabel2 = { size: [sLabel1.size[0]+XYoff[0],$
             uname: 'cl_file_name_label'}
 
 ;Preview of CL file text box
-XYoff = [0,35]
+XYoff = [0,40]
 sPreview = { size: [sBrowse.size[0]+XYoff[0],$
                     sBrowse.size[1]+XYoff[1],$
                     MainTabSize[2]-15,$
-                    200],$
+                    130],$
              uname: 'preview_cl_file_text_field'}
 
 ;Preview label
-XYoff = [680,-14]
+XYoff = [630,-14]
 sPreviewLabel = { size: [sPreview.size[0]+XYoff[0],$
                          sPreview.size[1]+XYoff[1]],$
-                  value: 'P R E V I E W'}
+                  value: 'PREVIEW of File Loaded'}
 ;==============================================================================
 
 Base = WIDGET_BASE(MAIN_TAB,$
