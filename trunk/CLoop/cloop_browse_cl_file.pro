@@ -59,8 +59,23 @@ file_name = DIALOG_PICKFILE(FILTER=filter,$
                             
 IF (file_name NE '') THEN BEGIN
   (*global).path = new_path
+  ;display name of file loaded
   putValue, Event, 'cl_file_name_label', file_name
+  ;display contain of file loaded
+  displayCLfile, Event, file_name
 ENDIF  
 
+END
+;-------------------------------------------------------------------------------
+;This function read the file passed as an argument and display its contain in
+;the preview text field
+PRO displayCLfile, Event, file_name
+OPENR, 1, file_name
+nbr_lines = FILE_LINES(file_name)
+;WHILE (~EOF(1)) DO BEGIN
+file_array = STRARR(nbr_lines)
+READF,1, file_array
+CLOSE,1
+putValue, Event, 'preview_cl_file_text_field', file_array
 END
 
