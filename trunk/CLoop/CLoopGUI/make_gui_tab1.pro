@@ -69,11 +69,17 @@ sPreviewLabel = { size: [sPreview.size[0]+XYoff[0],$
                   value: 'PREVIEW of File Loaded'}
                   
 ;Instruction about what to do
-XYoff = [0,0]
+XYoff = [0,5]
 sInstruction = { size: [sPreview.size[0]+XYoff[0],$
                         sPreview.size[1]+sPreview.size[3]+XYoff[1]],$
                  value: 'Select text you want to modify in Preview and ' + $
                         'enter new text in this field ->'}
+;Input text box
+XYoff = [480,0]
+sInput = { size: [XYoff[0],$
+                  sInstruction.size[1]+XYoff[1],$
+                  310,80],$
+           uname: 'input_text_field'}
                         
 ;==============================================================================
 
@@ -128,6 +134,18 @@ wInstruction = WIDGET_LABEL(Base,$
                             XOFFSET = sInstruction.size[0],$
                             YOFFSET = sInstruction.size[1],$
                             VALUE   = sInstruction.value)
+
+;Input text field
+wInput = WIDGET_TEXT(Base,$
+                     XOFFSET   = sInput.size[0],$
+                     YOFFSET   = sInput.size[1],$
+                     SCR_XSIZE = sInput.size[2],$
+                     SCR_YSIZE = sInput.size[3],$
+                     UNAME     = sInput.uname,$
+                     /SCROLL,$
+                     /EDITABLE,$
+                     /WRAP,$
+                     /ALL_EVENTS)
 
 END
 
