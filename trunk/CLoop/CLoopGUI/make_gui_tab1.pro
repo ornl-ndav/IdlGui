@@ -74,11 +74,40 @@ sInstruction = { size: [sPreview.size[0]+XYoff[0],$
                         sPreview.size[1]+sPreview.size[3]+XYoff[1]],$
                  value: 'Select text you want to modify in Preview and ' + $
                         'enter new text in this field ->'}
+
+;info text field
+XYoff = [0,30]
+sInfoFrame = { size: [sInstruction.size[0]+XYoff[0],$
+                      sInstruction.size[1]+XYoff[1],$  
+                      465,50],$
+               frame: 1}
+
+XYoff = [200,-8] ;title of info frame
+sInfoTitle = { size: [sInfoFrame.size[0]+XYoff[0],$
+                      sInfoFrame.size[1]+XYoff[1]],$
+               value: 'I N F O',$
+               uname: 'info_title_label'}
+
+XYoff = [5,10] ;label1
+sInfo1 = { size: [sInfoFrame.size[0]+XYoff[0],$
+                  sInfoFrame.size[1]+XYoff[1],$
+                  400],$
+           value: 'Status of the line entered, this is the status of the ' + $
+           'line entered',$
+           uname: 'info_line1_label'}
+
+XYoff = [0,20] ;label2
+sInfo2 = { size: [sInfo1.size[0]+XYoff[0],$
+                  sInfo1.size[1]+XYoff[1],$
+                  sInfo1.size[2]],$
+           value: 'this is the second line of the line entered',$
+           uname: 'info_line2_label'}
+
 ;Input text box
 XYoff = [480,0]
 sInput = { size: [XYoff[0],$
                   sInstruction.size[1]+XYoff[1],$
-                  310,80],$
+                  310,85],$
            uname: 'input_text_field'}
                         
 ;==============================================================================
@@ -146,6 +175,38 @@ wInput = WIDGET_TEXT(Base,$
                      /EDITABLE,$
                      /WRAP,$
                      /ALL_EVENTS)
+
+;Info messages
+wInfo1 = WIDGET_LABEL(Base,$
+                      XOFFSET   = sInfo1.size[0],$
+                      YOFFSET   = sInfo1.size[1],$
+                      SCR_XSIZE = sInfo1.size[2],$
+                      VALUE     = sInfo1.value,$
+                      UNAME     = sInfo1.uname,$
+                      /ALIGN_LEFT)
+
+wInfo2 = WIDGET_LABEL(Base,$
+                      XOFFSET   = sInfo2.size[0],$
+                      YOFFSET   = sInfo2.size[1],$
+                      SCR_XSIZE = sInfo2.size[2],$
+                      VALUE     = sInfo2.value,$
+                      UNAME     = sInfo2.uname,$
+                      /ALIGN_LEFT)
+
+wInfoTitle = WIDGET_LABEL(Base,$
+                          XOFFSET = sInfoTitle.size[0],$
+                          YOFFSET = sInfoTitle.size[1],$
+                          VALUE   = sInfoTitle.value,$
+                          UNAME   = sInfoTitle.uname)
+
+;Info frame
+wInfo = WIDGET_LABEL(Base,$
+                    XOFFSET   = sInfoFrame.size[0],$
+                    YOFFSET   = sInfoFrame.size[1],$
+                    SCR_XSIZE = sInfoFrame.size[2],$
+                    SCR_YSIZE = sInfoFrame.size[3],$
+                    VALUE     = '',$
+                    FRAME     = sInfoFrame.frame)
 
 END
 
