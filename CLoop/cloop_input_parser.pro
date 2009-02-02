@@ -79,9 +79,16 @@ input_text = removeCR(input_text)
 ;remove ',,' if any
 input_text = replaceString(input_text,FIND=",,",REPLACE=",")
 
-;strplit ',['
-input_array = split_string(input_text, PATTERN=',\[')
-sz = (size(input_array))(1)
+print, strmid(input_text,0,1)
+
+
+
+
+
+
+
+
+
 
 
 
