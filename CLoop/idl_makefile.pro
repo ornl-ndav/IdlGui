@@ -3,6 +3,10 @@ spawn, 'pwd', CurrentFolder
 
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
+
+;functions
+.run get.pro
+;procedures
 .run put.pro
 .run system_utilities.pro
 .run time_utilities.pro
@@ -26,6 +30,7 @@ cd, CurrentFolder
 
 ;procedures
 .run cloop_browse_cl_file.pro
+.run cloop_help.pro
 
 ;main functions
 .run MainBaseEvent.pro

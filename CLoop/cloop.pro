@@ -62,6 +62,7 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({ path: '~/',$
+                    old_input_text: PTR_NEW(0L),$
 
                     debugging:    debugging,$ ;yes or no
                     debugging_structure: sDebugging,$

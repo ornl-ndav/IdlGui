@@ -32,34 +32,25 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
- 
+PRO help_button, Event
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-;Load Command Line File Button    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
-      browse_cl_file, Event ;_browse
-    END
-    
-;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
-      help_button, Event ;_help
-    END
-    
-;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-    END
-
-    ELSE:
-    
-ENDCASE
+IF (Event.select EQ 1) THEN BEGIN ;button pressed
+    old_input_text = getTextFieldValue(Event,'input_text_field')
+    (*(*global).old_input_text) = old_input_text
+    new_input_text = '[1001-1003,1010],1020,1025-1027'
+    putValue, Event, 'input_text_field', new_input_text
+    help_text1 = '[1001-1003,1010] = 1001,1002,1003 and 1010 are ' + $
+    'combined into 1 run (1 CL).'
+    putValue, Event, 'info_line1_label', help_text1
+    help_text2 = '1020,1025-1027 = 1020,1025,1026 and 1027 creates ' + $
+    '4 runs (4 CLs).'
+    putValue, Event, 'info_line2_label', help_text2
+ENDIF ELSE BEGIN ;button released
+    new_input_text = (*(*global).old_input_text)
+    putValue, Event, 'input_text_field', new_input_text
+ENDELSE
 
 END
+

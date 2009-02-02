@@ -86,30 +86,40 @@ XYoff = [200,-8] ;title of info frame
 sInfoTitle = { size: [sInfoFrame.size[0]+XYoff[0],$
                       sInfoFrame.size[1]+XYoff[1]],$
                value: 'I N F O',$
-               uname: 'info_title_label'}
+               uname: 'info_title_label',$
+               sensitive: 1}
 
-XYoff = [5,10] ;label1
+XYoff = [5,2] ;label1
 sInfo1 = { size: [sInfoFrame.size[0]+XYoff[0],$
                   sInfoFrame.size[1]+XYoff[1],$
-                  400],$
-           value: 'Status of the line entered, this is the status of the ' + $
-           'line entered',$
-           uname: 'info_line1_label'}
+                  450,30],$
+           value: '',$
+           uname: 'info_line1_label',$
+           sensitive: 1}
 
 XYoff = [0,20] ;label2
 sInfo2 = { size: [sInfo1.size[0]+XYoff[0],$
                   sInfo1.size[1]+XYoff[1],$
-                  sInfo1.size[2]],$
-           value: 'this is the second line of the line entered',$
-           uname: 'info_line2_label'}
+                  sInfo1.size[2:3]],$
+           value: '',$
+           uname: 'info_line2_label',$
+           sensitive: 1}
 
 ;Input text box
 XYoff = [480,0]
 sInput = { size: [XYoff[0],$
                   sInstruction.size[1]+XYoff[1],$
-                  310,85],$
+                  310,3],$
            uname: 'input_text_field'}
                         
+;Help button
+XYoff = [0,59]
+sHelp = { size: [sInput.size[0]+XYoff[0],$
+                 sInput.size[1]+XYoff[1],$
+                 sInput.size[2]],$
+          value: 'H E L P (example of Input)',$
+          uname: 'help_button'}
+                           
 ;==============================================================================
 
 Base = WIDGET_BASE(MAIN_TAB,$
@@ -169,19 +179,38 @@ wInput = WIDGET_TEXT(Base,$
                      XOFFSET   = sInput.size[0],$
                      YOFFSET   = sInput.size[1],$
                      SCR_XSIZE = sInput.size[2],$
-                     SCR_YSIZE = sInput.size[3],$
+                     YSIZE     = sInput.size[3],$
                      UNAME     = sInput.uname,$
                      /SCROLL,$
                      /EDITABLE,$
                      /WRAP,$
                      /ALL_EVENTS)
 
+;Help button
+wHelp = WIDGET_BUTTON(Base,$
+                      XOFFSET   = sHelp.size[0],$
+                      YOFFSET   = sHelp.size[1],$
+                      SCR_XSIZE = sHelp.size[2],$
+                      UNAME     = sHelp.uname,$
+                      VALUE     = sHelp.value,$
+                      /PUSHBUTTON_EVENTS)
+
+
+wInfoTitle = WIDGET_LABEL(Base,$
+                          XOFFSET   = sInfoTitle.size[0],$
+                          YOFFSET   = sInfoTitle.size[1],$
+                          VALUE     = sInfoTitle.value,$
+                          UNAME     = sInfoTitle.uname,$
+                          SENSITIVE = sInfoTitle.sensitive)
+
 ;Info messages
 wInfo1 = WIDGET_LABEL(Base,$
                       XOFFSET   = sInfo1.size[0],$
                       YOFFSET   = sInfo1.size[1],$
                       SCR_XSIZE = sInfo1.size[2],$
+                      SCR_YSIZE = sInfo1.size[3],$  
                       VALUE     = sInfo1.value,$
+                      SENSITIVE = sInfo1.sensitive,$
                       UNAME     = sInfo1.uname,$
                       /ALIGN_LEFT)
 
@@ -189,15 +218,11 @@ wInfo2 = WIDGET_LABEL(Base,$
                       XOFFSET   = sInfo2.size[0],$
                       YOFFSET   = sInfo2.size[1],$
                       SCR_XSIZE = sInfo2.size[2],$
+                      SCR_YSIZE = sInfo2.size[3],$                        
                       VALUE     = sInfo2.value,$
                       UNAME     = sInfo2.uname,$
+                      SENSITIVE = sInfo2.sensitive,$
                       /ALIGN_LEFT)
-
-wInfoTitle = WIDGET_LABEL(Base,$
-                          XOFFSET = sInfoTitle.size[0],$
-                          YOFFSET = sInfoTitle.size[1],$
-                          VALUE   = sInfoTitle.value,$
-                          UNAME   = sInfoTitle.uname)
 
 ;Info frame
 wInfo = WIDGET_LABEL(Base,$
