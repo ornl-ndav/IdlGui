@@ -47,8 +47,8 @@ CHECKING_PACKAGES = 'yes'
 
 ;DEBUGGINGiî
 sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-               path: '~/SVN/IdlGui/trunk/CLoop/'} ;path to CL file
-               
+               path: '~/SVN/IdlGui/trunk/CLoop/',$ ;path to CL file
+               input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
 ;******************************************************************************
 ;******************************************************************************
 
@@ -112,6 +112,8 @@ IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
 IF (DEBUGGING EQ 'yes' ) THEN BEGIN
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='input_text_field')
+    WIDGET_CONTROL, id, SET_VALUE=sDebugging.input_text
 ENDIF
 ;??????????????????????????????????????????????????????????????????????????????
 

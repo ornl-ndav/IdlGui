@@ -32,39 +32,58 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
- 
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
+FUNCTION parseText, text, pattern
+result = STRSPLIT(text, pattern, COUNT=variable,/EXTRACT)
+RETURN, result
+END
 
-wWidget =  Event.top            ;widget id
+;------------------------------------------------------------------------------
+FUNCTION removeCR, text
+IF ((size(text))(1) GT 1) THEN BEGIN
+  sz = (size(text))(1)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (index EQ 0) THEN BEGIN
+      final_text = text[index]
+    ENDIF ELSE BEGIN
+      final_text += ',' + text[index]
+    ENDELSE
+    index++
+  ENDWHILE  
+RETURN, final_text
+ENDIF ELSE BEGIN
+RETURN, text[0]
+ENDELSE
+END
 
-CASE Event.id OF
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-;Load Command Line File Button    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
-      browse_cl_file, Event ;_browse
-    END
-    
-;input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
-       parse_input_field, Event ;_input_parser
-    END
-    
-;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
-      help_button, Event ;_help
-    END
-    
-;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-    END
+;------------------------------------------------------------------------------
+FUNCTION replaceString, text, FIND=find, REPLACE=replace
+str = STRSPLIT(text, FIND, /EXTRACT, /REGEX)
+new_str = STRJOIN(str, REPLACE)
+RETURN, new_str
+END
 
-    ELSE:
-    
-ENDCASE
+;------------------------------------------------------------------------------
+PRO parse_input_field, Event
+input_text = getTextFieldValue(Event,'input_text_field')
+
+;create just one string (in case the user put some [CR])
+input_text = removeCR(input_text)
+
+;remove ',,' if any
+input_text = replaceString(input_text,FIND=",,",REPLACE=",")
+print, input_text
+
+
+
+
+;find out how many '[' we have
+;result = STRSPLIT(input_text,'[',COUNT=nbr)
+;print, nbr
+
+;Step1 : parse input text for ",["
+;result = STRPOS(input_text,'[')
+
+;print, result
 
 END
