@@ -121,14 +121,14 @@ sHelp = { size: [sInput.size[0]+XYoff[0],$
           uname: 'help_button'}
                            
 ;Widget table (list of runs created)                           
-XYoff = [0,0]
-sTable = { size: [sHelp.size[0]+XYoff[0],$
-                  sHelp.size[1]+sHelp.size[3]+XYoff[1],$
+XYoff = [0,10]
+sTable = { size: [sInfoFrame.size[0]+XYoff[0],$
+                  sInfoFrame.size[1]+sInfoFrame.size[3]+XYoff[1],$
                   sPreview.size[2],$
-                  400,2,1],$
+                  250,2,1],$
            uname: 'runs_table',$
            column_labels: ['Runs','Command Line Preview'],$
-           column_widths: [100,300]}
+           column_widths: [200,580]}
            
 ;==============================================================================
 
@@ -243,6 +243,23 @@ wInfo = WIDGET_LABEL(Base,$
                     VALUE     = '',$
                     FRAME     = sInfoFrame.frame)
 
+;Table
+wTable = WIDGET_TABLE(Base,$
+                      XOFFSET   = sTable.size[0],$
+                      YOFFSET   = sTable.size[1],$
+                      SCR_XSIZE = sTable.size[2],$
+                      SCR_YSIZE = sTable.size[3],$
+                      XSIZE     = sTable.size[4],$
+                      YSIZE     = sTable.size[5],$
+                      COLUMN_WIDTHS = sTable.column_widths,$
+                      /NO_ROW_HEADERS,$
+                      COLUMN_LABELS = sTable.column_labels,$
+                      /EDITABLE,$
+                      /RESIZEABLE_COLUMNS,$
+                      UNAME = sTable.uname)
+                      
 END
+
+
 
 
