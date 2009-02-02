@@ -64,6 +64,12 @@ RETURN, new_str
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION split_string, text, PATTERN=pattern
+result_array = STRSPLIT(text, PATTERN, /EXTRACT, /REGEX)
+RETURN, result_array
+END
+
+;------------------------------------------------------------------------------
 PRO parse_input_field, Event
 input_text = getTextFieldValue(Event,'input_text_field')
 
@@ -72,18 +78,12 @@ input_text = removeCR(input_text)
 
 ;remove ',,' if any
 input_text = replaceString(input_text,FIND=",,",REPLACE=",")
-print, input_text
+
+;strplit ',['
+input_array = split_string(input_text, PATTERN=',\[')
+sz = (size(input_array))(1)
 
 
 
-
-;find out how many '[' we have
-;result = STRSPLIT(input_text,'[',COUNT=nbr)
-;print, nbr
-
-;Step1 : parse input text for ",["
-;result = STRPOS(input_text,'[')
-
-;print, result
 
 END
