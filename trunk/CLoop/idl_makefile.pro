@@ -31,6 +31,7 @@ cd, CurrentFolder
 ;procedures
 .run cloop_browse_cl_file.pro
 .run cloop_help.pro
+.run cloop_input_parser.pro
 
 ;main functions
 .run MainBaseEvent.pro
