@@ -46,7 +46,7 @@ TESTING           = 'no'
 CHECKING_PACKAGES = 'yes'
 
 ;DEBUGGINGiî
-sDEBUGGING = { tab: {main_tab: 0i},$  ;0:step1, 1:logBook
+sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
                path: '~/SVN/IdlGui/trunk/CLoop/'} ;path to CL file
                
 ;******************************************************************************
@@ -84,7 +84,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
                          SCR_XSIZE    = MainBaseSize[2],$
                          SCR_YSIZE    = MainBaseSize[3],$
-                         XOFFSET      = MainBaseSize[0],$
+                         XOFFSET      = MainBaseSize[0],$w
                          YOFFSET      = MainBaseSize[1],$
                          TITLE        = MainBaseTitle,$
                          SPACE        = 0,$
