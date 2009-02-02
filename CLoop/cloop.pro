@@ -45,8 +45,8 @@ DEBUGGING         = 'yes' ;yes/no
 TESTING           = 'no' 
 CHECKING_PACKAGES = 'yes'
 
-;DEBUGGING
-sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
+;DEBUGGINGiî
+sDEBUGGING = { tab: {main_tab: 0i},$  ;0:step1, 1:logBook
                path: '~/SVN/IdlGui/trunk/CLoop/'} ;path to CL file
                
 ;******************************************************************************

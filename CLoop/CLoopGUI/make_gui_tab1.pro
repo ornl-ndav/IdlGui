@@ -120,6 +120,16 @@ sHelp = { size: [sInput.size[0]+XYoff[0],$
           value: 'H E L P (example of Input)',$
           uname: 'help_button'}
                            
+;Widget table (list of runs created)                           
+XYoff = [0,0]
+sTable = { size: [sHelp.size[0]+XYoff[0],$
+                  sHelp.size[1]+sHelp.size[3]+XYoff[1],$
+                  sPreview.size[2],$
+                  400,2,1],$
+           uname: 'runs_table',$
+           column_labels: ['Runs','Command Line Preview'],$
+           column_widths: [100,300]}
+           
 ;==============================================================================
 
 Base = WIDGET_BASE(MAIN_TAB,$
