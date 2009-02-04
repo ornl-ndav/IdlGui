@@ -486,6 +486,44 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
                   cmd_text
                 ;tell the structure that the correct version has been found
                 my_package[i].found = 0
+<<<<<<< .mine
+              ENDELSE
+            ENDIF
+          ENDIF
+        ENDIF ELSE BEGIN    ;missing program
+          IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
+            MAIN_BASE, $
+            'log_book_text', $
+            PROCESSING,$
+            FAILED
+          ;              + ' (Minimum Required Version: ' + $
+          ;              my_package[i].version_required + ')'
+          missing_packages[i] = my_package[i].driver
+          ;tell the structure that the correct version has been found
+          my_package[i].found = 0
+          ++nbr_missing_packages
+        ENDELSE
+      ENDFOR
+      
+      IF (nbr_missing_packages GT 0) THEN BEGIN
+        ;pop up window that show that they are missing packages
+        message = ['They are ' + $
+          STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
+          ' missing package(s) you need to ' + $
+          'fully used this application.']
+        message = [message,'Check Log Book For More Information !']
+        result = DIALOG_MESSAGE(message, $
+          /INFORMATION, $
+          DIALOG_PARENT=MAIN_BASE)
+          
+        message = '=================================================' + $
+          '========================'
+        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+          'log_book_text', message
+      ENDIF
+      
+    ENDIF                      ;end of 'if (sz GT 0)'
+=======
               ENDELSE
             ENDIF
           ENDIF
@@ -518,7 +556,25 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       ENDIF
       
     ENDIF                      ;end of 'if (sz GT 0)'
+>>>>>>> .r4457
     
+<<<<<<< .mine
+  ENDIF
+  
+  (*(*global).package_required_base) = my_package
+  
+  ;logger message
+  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+  logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+    spawn, logger_message
+  ENDELSE
+  
+=======
     message = '=================================================' + $
       '========================'
     IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
@@ -539,6 +595,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     spawn, logger_message
   ENDELSE
   
+>>>>>>> .r4457
 END
 
 ;==============================================================================
