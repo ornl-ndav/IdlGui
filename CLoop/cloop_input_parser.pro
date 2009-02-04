@@ -124,27 +124,28 @@ END
 
 ;------------------------------------------------------------------------------
 PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
-
+  print, '***** entering createCLsOfRunSequence *****'
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  print, 'in CreateCLsOfRunSequence'
+  print, '-> seq_number: '
   print, seq_number
-  help, seq_number
   column_sequence = (*(*global).column_sequence)
   column_cl       = (*(*global).column_cl)
+  print, '-> column_sequence before: '
+  print, column_sequence
+  help, column_sequence
   
   sz = N_ELEMENTS(seq_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    print, index
     nbr_row = (size(column_sequence))(1)
-        
+    
     IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
       seq_number_1 = STRCOMPRESS(seq_number[0],/REMOVE_ALL)
-      column_sequence[0] = seq_number_1
-      column_cl[0] = CL_text_array[0] + seq_number_1 + ' ' + $
-        CL_text_array[1]
+      column_sequence = [seq_number_1]
+      column_cl = [CL_text_array[0] + seq_number_1 + ' ' + $
+        CL_text_array[1]]
     ENDIF ELSE BEGIN
       seq_number_1 = STRCOMPRESS(seq_number[index],/REMOVE_ALL)
       column_sequence = [column_sequence, seq_number_1]
@@ -155,13 +156,14 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
     index++
   ENDWHILE
   
-  (*(*global).column_sequence) = column_sequence
-  (*(*global).column_cl) = column_cl
-  
-  print, 'at the enf of createCLsOfRunSequence'
+  print, '-> column_sequence after'
   print, column_sequence
   help, column_sequence
   
+  (*(*global).column_sequence) = column_sequence
+  (*(*global).column_cl) = column_cl
+  
+  print, '***** leaving createCLsOfRunSequence****'
 END
 
 ;------------------------------------------------------------------------------
@@ -183,7 +185,7 @@ PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
   print, '  seq_number: '
   print, seq_number
   IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
-    column_sequence[0] = seq_number
+    column_sequence = [seq_number]
     column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
       CL_text_array[1]
   ENDIF ELSE BEGIN
