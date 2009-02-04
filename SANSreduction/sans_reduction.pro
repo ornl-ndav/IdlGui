@@ -473,14 +473,15 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
           /INFORMATION, $
           DIALOG_PARENT=MAIN_BASE)
           
-        message = '=================================================' + $
-          '========================'
-        IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
-          'log_book_text', message
       ENDIF
       
     ENDIF                       ;end of 'if (sz GT 0)'
     
+    message = '=================================================' + $
+      '========================'
+    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
+      'log_book_text', message
+      
   ENDIF
   
   ;==============================================================================
