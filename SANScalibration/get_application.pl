@@ -26,7 +26,7 @@ foreach my $line ( @filedata ) {
   # chomp the line
   chomp ($line);
 
-  if ( $line =~ m/^APPLICATION\s+=\s\'(.*)\'/ ) {
+  if ( $line =~ m/APPLICATION\s+=\s\'(.*)\'/ ) {
     print "$1\n";
     exit 0;
   }
