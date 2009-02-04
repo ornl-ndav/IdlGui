@@ -33,9 +33,30 @@
 ;==============================================================================
 
 ;------------------------------------------------------------------------------
+;this function will return an array of two elements, at index 0
+;will be what is before the selection, and at index 1, what is after
 FUNCTION getCLtextArray, Event
-
-
+  no_selection = 0
+  CATCH, no_selection
+  IF (no_selection NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    return, ['']
+  ENDIF ElSE BEGIN
+    cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
+    text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
+    cl_array = STRARR(2)
+    
+    start  = 0
+    length = text_selected_index[0]
+    cl_array[0] = STRMID(cl_text, start, length)
+    
+    start  = text_selected_index[0] + text_selected_index[1]
+    length = STRLEN(cl_text) - start
+    cL_array[1] = STRMID(cl_text, start, length)
+    
+    return, cl_array
+  ENDELSE
 END
 
 ;------------------------------------------------------------------------------
@@ -78,6 +99,11 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getSequence, left, right
+
+  print, 'in getSequence'
+  print, 'left: ' + strcompress(left)
+  print, 'right: ' + strcompress(right)
+  
   no_error = 0
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
@@ -85,8 +111,10 @@ FUNCTION getSequence, left, right
     RETURN, ['']
   ENDIF ELSE BEGIN
     ON_IOERROR, done
-    iLeft = FIX(left)
-    iRigth = FIX(right)
+    iLeft  = FIX(left)
+    iRight = FIX(right)
+    print, iRight
+    print, iLeft
     sequence = INDGEN(iRight-iLeft+1)+iLeft
     RETURN, STRING(sequence)
     done:
@@ -95,11 +123,80 @@ FUNCTION getSequence, left, right
 END
 
 ;------------------------------------------------------------------------------
+PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  print, 'in CreateCLsOfRunSequence'
+  print, seq_number
+  
+  column_sequence = (*(*global).column_sequence)
+  column_cl       = (*(*global).column_cl)
+  
+  sz = N_ELEMENTS(seq_number)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    nbr_row = (size(column_sequence))(1)
+    
+    IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
+      column_sequence[0] = seq_number[index]
+      column_cl[0] = CL_text_array[0] + Seq_number[index] + ' ' + $
+        CL_text_array[1]
+    ENDIF ELSE BEGIN
+      column_sequence = [column_sequence,seq_number[index]]
+      new_cl = CL_text_array[0] + seq_number[index] + ' ' + CL_text_array[1]
+      column_cl = [column_cl, new_cl]
+    ENDELSE
+    
+    index++
+  ENDWHILE
+  
+  (*(*global).column_sequence) = column_sequence
+  (*(*global).column_cl) = column_cl
+  
+  print, 'at the enf of createCLsOfRunSequence'
+  print, column_sequence
+  help, column_sequence
+  
+END
+
+;------------------------------------------------------------------------------
+PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  seq_number = STRJOIN(seq_number,',')
+  
+  column_sequence = (*(*global).column_sequence)
+  column_cl       = (*(*global).column_cl)
+  
+  IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
+    column_sequence[0] = seq_number
+    column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
+      CL_text_array[1]
+  ENDIF ELSE BEGIN
+    column_sequence = [column_sequence, seq_number]
+    new_cl = CL_text_array[0] + seq_number + ' ' + CL_text_array[1]
+    column_cl = [column_cl, new_cl]
+  ENDELSE
+  
+  (*(*global).column_sequence) = column_sequence
+  (*(*global).column_cl) = column_cl
+  
+END
+
+;------------------------------------------------------------------------------
 PRO parse_input_field, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   input_text = getTextFieldValue(Event,'input_text_field')
   
   ;get CL with text selected removed
-  CL_text = getCLtextArray(Event)
+  CL_text_array = getCLtextArray(Event)
   
   ;create just one string (in case the user put some [CR])
   input_text = removeCR(input_text)
@@ -119,9 +216,12 @@ PRO parse_input_field, Event
   length   = STRLEN(input_text) ;number of characters
   
   index    = 1
+  run_array = ['']  
+  
   WHILE(index LT length) DO BEGIN
-    run_array = ['']
+  
     cursor = STRMID(input_text,index,1)
+    print, 'cursor: ' + cursor
     CASE (cursor) OF
     
       '-' : BEGIN ;............................................................
@@ -137,29 +237,46 @@ PRO parse_input_field, Event
         ENDELSE
         
         IF (same_run) THEN BEGIN
+          print, 'in same run'
+          help, run_array
           addSequencesToRunArray, run_array, seq_number
+          print, 'after same run'
+          help, run_array
         ENDIF ELSE BEGIN
-          createCLsOfRunSequence, seq_number
+          createCLsOfRunSequence, Event, seq_number, CL_text_array
         ENDELSE
         
-        left     = ''     ;reinitialize left number
+        right    = ''     ;reinitialize right number
+        left     = ''
         cur_ope  = ''     ;reinitialize operation in progress
         cur_numb = 'left' ;we will now work on the left number again
       END
       
       '[' : BEGIN ;............................................................
         left     = ''
+        right    = ''
         cur_ope  = ''
         cur_numb = 'left'
         same_run = 1b
       END
       
       ']' : BEGIN ;............................................................
+        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+          seq_number = getSequence(left, right)
+        ENDIF ELSE BEGIN
+          seq_number = left
+        ENDELSE
+        
+        createCLsOfRunSequence, Event, seq_number, CL_text_array
+    
+        right    = ''
+        left     = ''
         cur_ope  = ''
         cur_numb = 'left'
         same_run = 0b
         left     = ''
-        IF (index EQ (length-1)) THEN createCLsOfRunSequence, seq_number
+        run_array = ['']
+
       END
       
       ELSE: BEGIN ;............................................................
@@ -176,12 +293,23 @@ PRO parse_input_field, Event
             right = right + cursor
           ENDELSE
         ENDELSE
-        IF (index EQ (length-1)) THEN createCLsOfRunSequence, seq_number
+        IF (index EQ (length-1)) THEN BEGIN
+          IF (cur_ope EQ '-') THEN BEGIN
+            createCLsOfRunSequence, $
+              Event, $
+              seq_number, $
+              CL_text_array
+          ENDIF
+        ENDIF
       END
       
     ENDCASE
     index++
   ENDWHILE
+  
+  print, '---------------------------------'
+  print, 'end of parse_input_text'
+  print, (*(*global).column_sequence)
   
 END
 
@@ -191,10 +319,11 @@ PRO addSequencesToRunArray, run_array, seq_number
 
   IF (seq_number[0] NE '') THEN BEGIN
     IF (run_array[0] EQ '') THEN BEGIN
-      run_array = seq_number
+      run_array = [seq_number]
     ENDIF ELSE BEGIN
       run_array = [run_array,seq_number]
     ENDELSE
   ENDIF
-  
+  print, 'in add sequencesto runarray'
+  print, run_array
 END
