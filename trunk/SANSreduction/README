@@ -5,11 +5,12 @@ Requirements:
 	install the IDL Virtual Machine for your system
 	(http://www.ittvis.com/download/download.asp?urlProductCode=13)
 
-To install this application, just run install_SANSreduction. This program will 
+To install this application (high and low resolution), 
+just run install_SANSreduction. This program will 
 create a idl/SANSreduction/ folder in /usr/local/ and copy the necessary 
-folders and the .sav (IDL Virtual Machine executable file) in this folder. 
-In the same time, the execuable file (SANSreduction) will be created in
-/usr/local/bin/. 
+folders and the .sav (IDL Virtual Machine executable files) in this folder. 
+In the same time, the execuable files (SANSreduction and miniSANSreduction)
+ will be created in /usr/local/bin/. 
 
 > sudo ./install_SANSreduction
 
@@ -28,10 +29,14 @@ ex:
 
 To run the application, launch the executable file you defined
 > /usr/local/SANSreduction
+or
+> /usr/local/miniSANSreduction
 
 or, if /usr/local is in your path
 
 > SANSreduction
+or
+> miniSANSreduction
 
 You can get help about how to install this software doing
 > ./install_SANSreduction -h
