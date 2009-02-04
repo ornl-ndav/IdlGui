@@ -67,21 +67,21 @@ copy_files()
 # This function create the executable file
 create_exec()
 {
-    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE_MINI
+    EXECUTABLE1=$EXECUTABLE_PATH$EXECUTABLE_MINI
     echo -n "Create executable file" $EXECUTABLE_PATH "...."
     install -d $EXECUTABLE_PATH
-    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_MINI_SAV" > $EXECUTABLE
+    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_MINI_SAV" > $EXECUTABLE1
     echo " Done"
-    echo -n "Change permission of $EXECUTABLE to 755 ...."
-    chmod 755 $EXECUTABLE
+    echo -n "Change permission of $EXECUTABLE1 to 755 ...."
+    chmod 755 $EXECUTABLE1
 
     EXECUTABLE2=$EXECUTABLE_PATH$EXECUTABLE
     echo -n "Create executable file" $EXECUTABLE_PATH "...."
     install -d $EXECUTABLE_PATH
-    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE
+    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE2
     echo " Done"
-    echo -n "Change permission of $EXECUTABLE to 755 ...."
-    chmod 755 $EXECUTABLE
+    echo -n "Change permission of $EXECUTABLE2 to 755 ...."
+    chmod 755 $EXECUTABLE2
 
     echo " Done"
 }
