@@ -55,4 +55,4 @@ cd, CurrentFolder
 .run MainBaseEvent.pro
 .run sans_reduction_eventcb.pro
 .run sans_reduction_build_gui.pro
-.run sans_reduction.pro
+.run mini_sans_reduction.pro
