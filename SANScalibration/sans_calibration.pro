@@ -40,7 +40,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;************************************************************************
   ;************************************************************************
   APPLICATION       = 'SANScalibration'
-  VERSION           = '1.0.9'
+  VERSION           = '1.1.0'
   DEBUGGING         = 'no' ;yes/no
   TESTING           = 'no'
   CHECKING_PACKAGES = 'yes'
