@@ -50,9 +50,9 @@ FUNCTION getBmonPath, event, file
     CATCH,/CANCEL
     RETURN, bmon_path[1]
   ENDIF ELSE BEGIN
-     fileID = h5f_open(file)
-     pathID = h5d_open(fileID, bmon_path[0])
-     RETURN, bmon_path[0]
+    fileID = h5f_open(file)
+    pathID = h5d_open(fileID, bmon_path[0])
+    RETURN, bmon_path[0]
   ENDELSE
 END
 
