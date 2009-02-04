@@ -101,7 +101,7 @@ filter     = (*global).nexus_filter
 title      = (*global).nexus_title
 path       = (*global).nexus_path
 
-IDLsendToGeek_putLogBookText, Event, '> Browsing and Plotting a NeXus file :'
+IDLsendToGeek_addLogBookText, Event, '> Browsing and Plotting a NeXus file :'
 
 FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
                                 extension, $
@@ -180,7 +180,7 @@ proposal   = getProposalSelected(Event, proposal_index)
 RunNumber  = getRunNumber(Event)
 
 IF (RunNumber NE 0) THEN BEGIN
-    IDLsendToGeek_putLogBookText, Event, '> Looking for Run Number ' + $
+    IDLsendToGeek_addLogBookText, Event, '> Looking for Run Number ' + $
     STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
     
     isNexusExist = 0
