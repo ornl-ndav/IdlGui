@@ -130,22 +130,25 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
   
   print, 'in CreateCLsOfRunSequence'
   print, seq_number
-  
+  help, seq_number
   column_sequence = (*(*global).column_sequence)
   column_cl       = (*(*global).column_cl)
   
   sz = N_ELEMENTS(seq_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
+    print, index
     nbr_row = (size(column_sequence))(1)
-    
+        
     IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
-      column_sequence[0] = seq_number[index]
-      column_cl[0] = CL_text_array[0] + Seq_number[index] + ' ' + $
+      seq_number_1 = STRCOMPRESS(seq_number[0],/REMOVE_ALL)
+      column_sequence[0] = seq_number_1
+      column_cl[0] = CL_text_array[0] + seq_number_1 + ' ' + $
         CL_text_array[1]
     ENDIF ELSE BEGIN
-      column_sequence = [column_sequence,seq_number[index]]
-      new_cl = CL_text_array[0] + seq_number[index] + ' ' + CL_text_array[1]
+      seq_number_1 = STRCOMPRESS(seq_number[index],/REMOVE_ALL)
+      column_sequence = [column_sequence, seq_number_1]
+      new_cl = CL_text_array[0] + seq_number_1 + ' ' + CL_text_array[1]
       column_cl = [column_cl, new_cl]
     ENDELSE
     
@@ -163,15 +166,22 @@ END
 
 ;------------------------------------------------------------------------------
 PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
-
+  print, '***** entering createCLOfRunsSequence *****'
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
+  print, 'in createCLofRunsSequence'
+  help, seq_number
   seq_number = STRJOIN(seq_number,',')
+  seq_number = STRCOMPRESS(seq_number,/REMOVE_ALL)
+  print, seq_number
   
   column_sequence = (*(*global).column_sequence)
   column_cl       = (*(*global).column_cl)
   
+  print, '  columns sequence before is: '
+  print, column_sequence
+  print, '  seq_number: '
+  print, seq_number
   IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
     column_sequence[0] = seq_number
     column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
@@ -181,10 +191,14 @@ PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
     new_cl = CL_text_array[0] + seq_number + ' ' + CL_text_array[1]
     column_cl = [column_cl, new_cl]
   ENDELSE
+  print, '   column sequence after is: '
+  print, column_sequence
   
+  print, 'column_sequence is'
+  print, column_sequence
   (*(*global).column_sequence) = column_sequence
   (*(*global).column_cl) = column_cl
-  
+  print, '***** leaving createCLOfRunsSequence *****'
 END
 
 ;------------------------------------------------------------------------------
@@ -216,7 +230,7 @@ PRO parse_input_field, Event
   length   = STRLEN(input_text) ;number of characters
   
   index    = 1
-  run_array = ['']  
+  run_array = ['']
   
   WHILE(index LT length) DO BEGIN
   
@@ -230,26 +244,28 @@ PRO parse_input_field, Event
       END
       
       ',' : BEGIN ;............................................................
-        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
-          seq_number = getSequence(left, right)
-        ENDIF ELSE BEGIN
-          seq_number = left
-        ENDELSE
-        
-        IF (same_run) THEN BEGIN
-          print, 'in same run'
-          help, run_array
-          addSequencesToRunArray, run_array, seq_number
-          print, 'after same run'
-          help, run_array
-        ENDIF ELSE BEGIN
-          createCLsOfRunSequence, Event, seq_number, CL_text_array
-        ENDELSE
-        
-        right    = ''     ;reinitialize right number
-        left     = ''
-        cur_ope  = ''     ;reinitialize operation in progress
-        cur_numb = 'left' ;we will now work on the left number again
+        IF (left NE '') THEN BEGIN
+          IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+            seq_number = getSequence(left, right)
+          ENDIF ELSE BEGIN
+            seq_number = left
+          ENDELSE
+          
+          IF (same_run) THEN BEGIN
+            print, 'in same run'
+            help, run_array
+            addSequencesToRunArray, run_array, seq_number
+            print, 'after same run'
+            help, run_array
+          ENDIF ELSE BEGIN
+            createCLsOfRunSequence, Event, seq_number, CL_text_array
+          ENDELSE
+          
+          right    = ''     ;reinitialize right number
+          left     = ''
+          cur_ope  = ''     ;reinitialize operation in progress
+          cur_numb = 'left' ;we will now work on the left number again
+        ENDIF
       END
       
       '[' : BEGIN ;............................................................
@@ -267,8 +283,9 @@ PRO parse_input_field, Event
           seq_number = left
         ENDELSE
         
-        createCLsOfRunSequence, Event, seq_number, CL_text_array
-    
+        addSequencesToRunArray, run_array, seq_number
+        createCLOfRunsSequence, Event, run_array  , CL_text_array
+        
         right    = ''
         left     = ''
         cur_ope  = ''
@@ -276,7 +293,7 @@ PRO parse_input_field, Event
         same_run = 0b
         left     = ''
         run_array = ['']
-
+        
       END
       
       ELSE: BEGIN ;............................................................
