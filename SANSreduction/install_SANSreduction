@@ -6,10 +6,12 @@
 #                              [-h]
 #
 FOLDERS=("images" "SANSreductionHelp")
-FILES="sans_reduction.sav"
+FILES=("sans_reduction.sav" "mini_sans_reduction.sav")
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_reduction.sav"
+EXECUTABLE_MINI_SAV="mini_sans_reduction.sav"
 EXECUTABLE='SANSreduction'
+EXECUTABLE_MINI='miniSANSreduction'
 PACKAGE_PATH='/usr/local/'
 EXECUTABLE_PATH='/usr/local/bin/'
 
@@ -65,13 +67,22 @@ copy_files()
 # This function create the executable file
 create_exec()
 {
-    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE
+    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE_MINI
+    echo -n "Create executable file" $EXECUTABLE_PATH "...."
+    install -d $EXECUTABLE_PATH
+    echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_MINI_SAV" > $EXECUTABLE
+    echo " Done"
+    echo -n "Change permission of $EXECUTABLE to 755 ...."
+    chmod 755 $EXECUTABLE
+
+    EXECUTABLE2=$EXECUTABLE_PATH$EXECUTABLE
     echo -n "Create executable file" $EXECUTABLE_PATH "...."
     install -d $EXECUTABLE_PATH
     echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE
     echo " Done"
     echo -n "Change permission of $EXECUTABLE to 755 ...."
     chmod 755 $EXECUTABLE
+
     echo " Done"
 }
 
