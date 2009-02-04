@@ -146,8 +146,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     wave_para_help_label: wave_para_help_label,$
     wave_para_help_value: wave_para_help_value,$
     wave_dep_back_sub_path: '~/',$
-    beam_monitor_path: ['/entry/bmonitor,1',$
-    '/entry/bmonitor1,1'],$
+    beam_monitor_data_path: ['/entry/monitor/data/',$
+    '/entry/monitor1/data/'],$
+    beam_monitor_flag: ['/entry/monitor,1',$
+    '/entry/monitor1,1'],$
     ReducePara: {driver_name: $
     'sas_reduction',$
     overwrite_geo: $

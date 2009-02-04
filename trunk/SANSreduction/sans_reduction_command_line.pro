@@ -1,4 +1,4 @@
-;==============================================================================
+  ;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -43,16 +43,17 @@ END
 FUNCTION getBmonPath, event, file
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  bmon_path = (*global).beam_monitor_path
+  bmon_path = (*global).beam_monitor_data_path
+  bmon_path_value = (*global).beam_monitor_flag
   no_error = 0
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    RETURN, bmon_path[1]
+    RETURN, bmon_path_value[1]
   ENDIF ELSE BEGIN
     fileID = h5f_open(file)
     pathID = h5d_open(fileID, bmon_path[0])
-    RETURN, bmon_path[0]
+    RETURN, bmon_path_value[0]
   ENDELSE
 END
 
