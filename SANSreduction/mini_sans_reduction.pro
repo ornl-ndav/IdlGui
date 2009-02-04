@@ -33,8 +33,8 @@
 ;==============================================================================
 
 ; Empty stub procedure used for autoloading.
-PRO sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO mini_sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  BuildGui, SCROLL='yes', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 
 
