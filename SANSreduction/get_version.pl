@@ -26,7 +26,7 @@ foreach my $line ( @filedata ) {
   # chomp the line
   chomp ($line);
 
-  if ( $line =~ m/^VERSION\s+=\s\'(.*)\'/ ) {
+  if ( $line =~ m/VERSION\s+=\s\'(.*)\'/ ) {
     $version = $1;
     $version =~ s/\./_/g;
     print "$version\n";
