@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# HELP
+#> ./make_tar.sh <name of file that contain the APPLICATION and VERSION tags
+#
+
 file_name_to_search=$1
 list_of_files_folders="sans_reduction.sav mini_sans_reduction.sav README install_SANSreduction images SANSreductionHelp drversion"
 
