@@ -32,6 +32,13 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+FUNCTION getCLtextArray, Event
+
+
+END
+
+;------------------------------------------------------------------------------
 FUNCTION parseText, text, pattern
   result = STRSPLIT(text, pattern, COUNT=variable,/EXTRACT)
   RETURN, result
@@ -70,8 +77,29 @@ FUNCTION split_string, text, PATTERN=pattern
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getSequence, left, right
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['']
+  ENDIF ELSE BEGIN
+    ON_IOERROR, done
+    iLeft = FIX(left)
+    iRigth = FIX(right)
+    sequence = INDGEN(iRight-iLeft+1)+iLeft
+    RETURN, STRING(sequence)
+    done:
+    RETURN, ['']
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
 PRO parse_input_field, Event
   input_text = getTextFieldValue(Event,'input_text_field')
+  
+  ;get CL with text selected removed
+  CL_text = getCLtextArray(Event)
   
   ;create just one string (in case the user put some [CR])
   input_text = removeCR(input_text)
@@ -80,7 +108,7 @@ PRO parse_input_field, Event
   input_text = replaceString(input_text,FIND=",,",REPLACE=",")
   
   left     = STRMID(input_text, 0,1) ;retrieve 1st character from input_text
-  right    = ''   
+  right    = ''
   cur_numb = 'left' ;we are currently working on the left number of the ope.
   cur_ope  = '' ;there is no current operation in progress
   IF (left EQ '[') THEN BEGIN
@@ -95,28 +123,46 @@ PRO parse_input_field, Event
     run_array = ['']
     cursor = STRMID(input_text,index,1)
     CASE (cursor) OF
-      '-' : BEGIN
+    
+      '-' : BEGIN ;............................................................
         cur_numb = 'right' ;we are now working on the right number
         cur_ope  = '-'     ;working operation is now '-'
       END
-      ',' : BEGIN
+      
+      ',' : BEGIN ;............................................................
+        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+          seq_number = getSequence(left, right)
+        ENDIF ELSE BEGIN
+          seq_number = left
+        ENDELSE
+        
+        IF (same_run) THEN BEGIN
+          addSequencesToRunArray, run_array, seq_number
+        ENDIF ELSE BEGIN
+          createCLsOfRunSequence, seq_number
+        ENDELSE
+        
         left     = ''     ;reinitialize left number
         cur_ope  = ''     ;reinitialize operation in progress
         cur_numb = 'left' ;we will now work on the left number again
       END
-      '[' : BEGIN
+      
+      '[' : BEGIN ;............................................................
         left     = ''
         cur_ope  = ''
         cur_numb = 'left'
         same_run = 1b
       END
-      ']' : BEGIN
+      
+      ']' : BEGIN ;............................................................
         cur_ope  = ''
         cur_numb = 'left'
         same_run = 0b
         left     = ''
+        IF (index EQ (length-1)) THEN createCLsOfRunSequence, seq_number
       END
-      ELSE: BEGIN
+      
+      ELSE: BEGIN ;............................................................
         IF (cur_numb EQ 'left') THEN BEGIN
           IF (left EQ '') THEN BEGIN
             left = cursor
@@ -130,13 +176,25 @@ PRO parse_input_field, Event
             right = right + cursor
           ENDELSE
         ENDELSE
+        IF (index EQ (length-1)) THEN createCLsOfRunSequence, seq_number
       END
+      
     ENDCASE
     index++
   ENDWHILE
   
-    
+END
 
+;------------------------------------------------------------------------------
+;This procedure adds the list of runs to the array
+PRO addSequencesToRunArray, run_array, seq_number
 
-
+  IF (seq_number[0] NE '') THEN BEGIN
+    IF (run_array[0] EQ '') THEN BEGIN
+      run_array = seq_number
+    ENDIF ELSE BEGIN
+      run_array = [run_array,seq_number]
+    ENDELSE
+  ENDIF
+  
 END
