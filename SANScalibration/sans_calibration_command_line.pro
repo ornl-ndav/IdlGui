@@ -89,7 +89,7 @@ PRO CheckCommandLine, Event
     missing_arguments_text = ['- Valid Data File (LOAD FILES)']
     cmd_status = 0
     ++missing_argument_counter
-<<<<<<< .mine
+
 END
 
   ;get monitor path
@@ -104,22 +104,6 @@ END
 ;-ROI File-
 file_run = getTextFieldValue(Event,'roi_file_name_text_field')
 IF (file_run NE '' AND $
-=======
-  END
-  
-  ;get monitor path
-  cmd += ' --bmon-path='
-  IF (file_run EQ '') THEN BEGIN
-    cmd += '?'
-  ENDIF ElSE BEGIN
-    path = getBmonPath(Event, file_run)
-    cmd += path
-  ENDELSE
-  
-  ;-ROI File-
-  file_run = getTextFieldValue(Event,'roi_file_name_text_field')
-  IF (file_run NE '' AND $
->>>>>>> .r4457
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
