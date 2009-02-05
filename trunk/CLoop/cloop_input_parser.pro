@@ -352,6 +352,14 @@ PRO parse_input_field, Event
   
   displayNumberOfCLs, Event, column_sequence
   
+  ;activate or not the 'Launch Jobs in Background'
+  IF (column_sequence[0] NE '') THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, Event, 'run_jobs_button', status
+  
 END
 
 ;------------------------------------------------------------------------------
