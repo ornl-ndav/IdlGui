@@ -52,6 +52,7 @@ PRO MAIN_BASE_event, Event
     ;preview of CL
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
       displayTextRemoved, Event
+      create_cl_array, Event
     END
     
     ;input text field
