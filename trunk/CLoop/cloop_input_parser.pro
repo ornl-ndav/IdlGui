@@ -117,6 +117,16 @@ FUNCTION getSequence, left, right
 END
 
 ;------------------------------------------------------------------------------
+PRO create_cl_array, Event
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  cl_array = getCLtextArray(Event)
+  (*global).cl_array) = cl_array
+  
+END
+
+;------------------------------------------------------------------------------
 PRO displayTextRemoved, Event
 
   cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
@@ -226,7 +236,7 @@ PRO parse_input_field, Event
   input_text = getTextFieldValue(Event,'input_text_field')
   
   ;get CL with text selected removed
-  CL_text_array = getCLtextArray(Event)
+  CL_text_array = (*global).cl_array
   
   ;create just one string (in case the user put some [CR])
   input_text = removeCR(input_text)

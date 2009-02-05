@@ -73,6 +73,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$
+    cl_array: STRARR(2),$
     
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
