@@ -100,10 +100,6 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getSequence, left, right
 
-  print, 'in getSequence'
-  print, 'left: ' + strcompress(left)
-  print, 'right: ' + strcompress(right)
-  
   no_error = 0
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
@@ -113,8 +109,6 @@ FUNCTION getSequence, left, right
     ON_IOERROR, done
     iLeft  = FIX(left)
     iRight = FIX(right)
-    print, iRight
-    print, iLeft
     sequence = INDGEN(iRight-iLeft+1)+iLeft
     RETURN, STRING(sequence)
     done:
@@ -124,17 +118,12 @@ END
 
 ;------------------------------------------------------------------------------
 PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
-  print, '***** entering createCLsOfRunSequence *****'
+  ;  print, '***** entering createCLsOfRunSequence *****'
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  print, '-> seq_number: '
-  print, seq_number
   column_sequence = (*(*global).column_sequence)
   column_cl       = (*(*global).column_cl)
-  print, '-> column_sequence before: '
-  print, column_sequence
-  help, column_sequence
   
   sz = N_ELEMENTS(seq_number)
   index = 0
@@ -156,34 +145,23 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
     index++
   ENDWHILE
   
-  print, '-> column_sequence after'
-  print, column_sequence
-  help, column_sequence
-  
   (*(*global).column_sequence) = column_sequence
   (*(*global).column_cl) = column_cl
   
-  print, '***** leaving createCLsOfRunSequence****'
+;  print, '***** leaving createCLsOfRunSequence****'
 END
 
 ;------------------------------------------------------------------------------
 PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
-  print, '***** entering createCLOfRunsSequence *****'
+  ;  print, '***** entering createCLOfRunsSequence *****'
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  print, 'in createCLofRunsSequence'
-  help, seq_number
   seq_number = STRJOIN(seq_number,',')
   seq_number = STRCOMPRESS(seq_number,/REMOVE_ALL)
-  print, seq_number
   
   column_sequence = (*(*global).column_sequence)
   column_cl       = (*(*global).column_cl)
   
-  print, '  columns sequence before is: '
-  print, column_sequence
-  print, '  seq_number: '
-  print, seq_number
   IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
     column_sequence = [seq_number]
     column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
@@ -193,14 +171,10 @@ PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
     new_cl = CL_text_array[0] + seq_number + ' ' + CL_text_array[1]
     column_cl = [column_cl, new_cl]
   ENDELSE
-  print, '   column sequence after is: '
-  print, column_sequence
   
-  print, 'column_sequence is'
-  print, column_sequence
   (*(*global).column_sequence) = column_sequence
   (*(*global).column_cl) = column_cl
-  print, '***** leaving createCLOfRunsSequence *****'
+;  print, '***** leaving createCLOfRunsSequence *****'
 END
 
 ;------------------------------------------------------------------------------
@@ -209,6 +183,10 @@ PRO parse_input_field, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ;reinitialize column_sequence and column_cl
+   (*global).column_sequence = PTR_NEW(0L)
+   (*global).column_cl = PTR_NEW(0L)
+    
   input_text = getTextFieldValue(Event,'input_text_field')
   
   ;get CL with text selected removed
@@ -237,7 +215,7 @@ PRO parse_input_field, Event
   WHILE(index LT length) DO BEGIN
   
     cursor = STRMID(input_text,index,1)
-    print, 'cursor: ' + cursor
+    ;    print, 'cursor: ' + cursor
     CASE (cursor) OF
     
       '-' : BEGIN ;............................................................
@@ -254,11 +232,7 @@ PRO parse_input_field, Event
           ENDELSE
           
           IF (same_run) THEN BEGIN
-            print, 'in same run'
-            help, run_array
             addSequencesToRunArray, run_array, seq_number
-            print, 'after same run'
-            help, run_array
           ENDIF ELSE BEGIN
             createCLsOfRunSequence, Event, seq_number, CL_text_array
           ENDELSE
@@ -326,10 +300,16 @@ PRO parse_input_field, Event
     index++
   ENDWHILE
   
-  print, '---------------------------------'
-  print, 'end of parse_input_text'
-  print, (*(*global).column_sequence)
-  
+  column_sequence = (*(*global).column_sequence)
+  column_cl = (*(*global).column_cl)
+  sz = N_ELEMENTS(column_sequence)
+  Table = STRARR(2,sz)
+  Table[0,*] = column_sequence[*]
+  Table[1,*] = column_cl[*]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
+  WIDGET_CONTROL, id, TABLE_YSIZE = sz
+  putValue, Event, 'runs_table', Table
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -343,6 +323,4 @@ PRO addSequencesToRunArray, run_array, seq_number
       run_array = [run_array,seq_number]
     ENDELSE
   ENDIF
-  print, 'in add sequencesto runarray'
-  print, run_array
 END

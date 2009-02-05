@@ -59,7 +59,7 @@ XYoff = [0,40]
 sPreview = { size: [sBrowse.size[0]+XYoff[0],$
                     sBrowse.size[1]+XYoff[1],$
                     MainTabSize[2]-15,$
-                    130],$
+                    90],$
              uname: 'preview_cl_file_text_field'}
 
 ;Preview label
@@ -128,7 +128,7 @@ sTable = { size: [sInfoFrame.size[0]+XYoff[0],$
                   250,2,1],$
            uname: 'runs_table',$
            column_labels: ['Runs','Command Line Preview'],$
-           column_widths: [200,580]}
+           column_widths: [200,750]}
            
 ;==============================================================================
 
@@ -254,7 +254,6 @@ wTable = WIDGET_TABLE(Base,$
                       COLUMN_WIDTHS = sTable.column_widths,$
                       /NO_ROW_HEADERS,$
                       COLUMN_LABELS = sTable.column_labels,$
-                      /EDITABLE,$
                       /RESIZEABLE_COLUMNS,$
                       UNAME = sTable.uname)
                       
