@@ -117,6 +117,40 @@ FUNCTION getSequence, left, right
 END
 
 ;------------------------------------------------------------------------------
+PRO displayTextRemoved, Event
+
+  cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
+  text_selected_index = WIDGET_INFO(id, /TEXT_SELECT)
+  title = 'Text Removed: '
+  IF (text_selected_index[1] EQ 0) THEN BEGIN
+    value = 'N/A'
+  ENDIF ELSE BEGIN
+    start  = text_selected_index[0]
+    length = text_selected_index[1]
+    text_removed = STRMID(cl_text, start, length)
+    value = text_removed[0]
+  ENDELSE
+  value = title + value
+  putValue, Event, 'info_line1_label', value
+  
+END
+
+;------------------------------------------------------------------------------
+PRO displayNumberOfCLs, Event, array
+
+  sz = N_ELEMENTS(array)
+  title = 'Number of processes that will be launched: '
+  IF (array[0] NE '') THEN BEGIN
+    value = STRCOMPRESS(sz,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    value = 'N/A'
+  ENDELSE
+  putValue, Event, 'info_line2_label', title + value
+  
+END
+
+;------------------------------------------------------------------------------
 PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
   ;  print, '***** entering createCLsOfRunSequence *****'
   ;get global structure
@@ -230,7 +264,6 @@ PRO parse_input_field, Event
           ENDIF ELSE BEGIN
             seq_number = left
           ENDELSE
-          print, left
           IF (same_run) THEN BEGIN
             addSequencesToRunArray, run_array, seq_number
           ENDIF ELSE BEGIN
@@ -314,6 +347,8 @@ PRO parse_input_field, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
   WIDGET_CONTROL, id, TABLE_YSIZE = sz
   putValue, Event, 'runs_table', Table
+  
+  displayNumberOfCLs, Event, column_sequence
   
 END
 

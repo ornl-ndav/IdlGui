@@ -33,38 +33,44 @@
 ;==============================================================================
 
 PRO MAIN_BASE_event, Event
- 
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  wWidget =  Event.top            ;widget id
+  
+  CASE Event.id OF
+  
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
-;Load Command Line File Button    
+    ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
       browse_cl_file, Event ;_browse
     END
     
-;input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
-       parse_input_field, Event ;_input_parser
+    ;preview of CL
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
+      displayTextRemoved, Event
     END
     
-;Help button
+    ;input text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
+      parse_input_field, Event ;_input_parser
+      print, 'here'
+    END
+    
+    ;Help button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
       help_button, Event ;_help
     END
     
-;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK 
+    ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
     END
-
+    
     ELSE:
     
-ENDCASE
-
+  ENDCASE
+  
 END
