@@ -72,8 +72,8 @@ sPreviewLabel = { size: [sPreview.size[0]+XYoff[0],$
 XYoff = [0,5]
 sInstruction = { size: [sPreview.size[0]+XYoff[0],$
                         sPreview.size[1]+sPreview.size[3]+XYoff[1]],$
-                 value: 'Select text you want to modify in Preview and ' + $
-                        'enter new text in this field ->'}
+                 value: 'Select text you want to modify in Preview, ' + $
+                        'enter new text and hit ENTER ->'}
 
 ;info text field
 XYoff = [0,30]
