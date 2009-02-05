@@ -110,7 +110,8 @@ XYoff = [480,0]
 sInput = { size: [XYoff[0],$
                   sInstruction.size[1]+XYoff[1],$
                   310,3],$
-           uname: 'input_text_field'}
+           uname: 'input_text_field',$
+           sensitive: 0}
                         
 ;Help button
 XYoff = [0,59]
@@ -118,7 +119,8 @@ sHelp = { size: [sInput.size[0]+XYoff[0],$
                  sInput.size[1]+XYoff[1],$
                  sInput.size[2]],$
           value: 'H E L P (example of Input)',$
-          uname: 'help_button'}
+          uname: 'help_button',$
+          sensitive: 0}
                            
 ;Widget table (list of runs created)                           
 XYoff = [0,10]
@@ -192,6 +194,7 @@ wInput = WIDGET_TEXT(Base,$
                      SCR_XSIZE = sInput.size[2],$
                      YSIZE     = sInput.size[3],$
                      UNAME     = sInput.uname,$
+                     SENSITIVE = sInput.sensitive,$
                      /SCROLL,$
                      /EDITABLE,$
                      /WRAP,$
@@ -204,6 +207,7 @@ wHelp = WIDGET_BUTTON(Base,$
                       SCR_XSIZE = sHelp.size[2],$
                       UNAME     = sHelp.uname,$
                       VALUE     = sHelp.value,$
+                      SENSITIVE = sHelp.sensitive,$
                       /PUSHBUTTON_EVENTS)
 
 

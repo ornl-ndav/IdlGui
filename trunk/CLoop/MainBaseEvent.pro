@@ -57,7 +57,6 @@ PRO MAIN_BASE_event, Event
     ;input text field
     WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
       parse_input_field, Event ;_input_parser
-      print, 'here'
     END
     
     ;Help button
