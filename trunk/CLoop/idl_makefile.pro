@@ -14,6 +14,11 @@ cd, IdlUtilitiesPath
 .run time.pro
 .run logger.pro
 
+;classes
+cd , CurrentFolder + '/Classes/'
+.run IDLxmlParser__define.pro
+.run IDLsendLogBook__define.pro
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
@@ -25,9 +30,6 @@ cd, CurrentFolder + '/CLoopGUI/'
 
 ;Build all procedures
 cd, CurrentFolder
-
-;classes
-.run IDLsendLogBook__define.pro
 
 ;procedures
 .run cloop_browse_cl_file.pro
