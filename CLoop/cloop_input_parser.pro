@@ -125,15 +125,17 @@ PRO displayTextRemoved, Event
   title = 'Text Removed: '
   IF (text_selected_index[1] EQ 0) THEN BEGIN
     value = 'N/A'
+    status = 0
   ENDIF ELSE BEGIN
     start  = text_selected_index[0]
     length = text_selected_index[1]
     text_removed = STRMID(cl_text, start, length)
     value = text_removed[0]
+    status = 1
   ENDELSE
   value = title + value
   putValue, Event, 'info_line1_label', value
-  
+  activate_widget, Event, 'input_text_field', status
 END
 
 ;------------------------------------------------------------------------------

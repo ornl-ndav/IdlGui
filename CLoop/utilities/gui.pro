@@ -32,52 +32,7 @@
 ;
 ;==============================================================================
 
-PRO browse_cl_file, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  IF ((*global).debugging EQ 'yes') THEN BEGIN
-    sDebugging = (*global).debugging_structure
-    path = sDebugging.path
-  ENDIF ElSE BEGIN
-    path = (*global).path
-  ENDELSE
-  
-  title = 'Select a Command Line File to Load'
-  filter = '*.txt'
-  
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  
-  file_name = DIALOG_PICKFILE(FILTER=filter,$
-    GET_PATH=new_path,$
-    /MUST_EXIST,$
-    PATH=path,$
-    TITLE=title,$
-    /READ,$
-    DIALOG_PARENT=id)
-    
-  IF (file_name NE '') THEN BEGIN
-    (*global).path = new_path
-    ;display name of file loaded
-    putValue, Event, 'cl_file_name_label', file_name
-    ;display contain of file loaded
-    displayCLfile, Event, file_name
-    ;activate widgets
-    activate_widget, Event, 'help_button', 1
-  ENDIF
-  
+PRO activate_widget, Event, uname, status
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SENSITIVE=status
 END
-;-------------------------------------------------------------------------------
-;This function read the file passed as an argument and display its contain in
-;the preview text field
-PRO displayCLfile, Event, file_name
-  OPENR, 1, file_name
-  nbr_lines = FILE_LINES(file_name)
-  ;WHILE (~EOF(1)) DO BEGIN
-  file_array = STRARR(nbr_lines)
-  READF,1, file_array
-  CLOSE,1
-  putValue, Event, 'preview_cl_file_text_field', file_array
-END
-
