@@ -85,7 +85,7 @@ sInfoFrame = { size: [sInstruction.size[0]+XYoff[0],$
 XYoff = [200,-8] ;title of info frame
 sInfoTitle = { size: [sInfoFrame.size[0]+XYoff[0],$
                       sInfoFrame.size[1]+XYoff[1]],$
-               value: 'I N F O',$
+               value: 'I N F O S',$
                uname: 'info_title_label',$
                sensitive: 1}
 
@@ -93,7 +93,7 @@ XYoff = [5,2] ;label1
 sInfo1 = { size: [sInfoFrame.size[0]+XYoff[0],$
                   sInfoFrame.size[1]+XYoff[1],$
                   450,30],$
-           value: '',$
+           value: 'Text Removed: N/A',$
            uname: 'info_line1_label',$
            sensitive: 1}
 
@@ -101,7 +101,7 @@ XYoff = [0,20] ;label2
 sInfo2 = { size: [sInfo1.size[0]+XYoff[0],$
                   sInfo1.size[1]+XYoff[1],$
                   sInfo1.size[2:3]],$
-           value: '',$
+           value: 'Number of processes that will be launched: N/A',$
            uname: 'info_line2_label',$
            sensitive: 1}
 
@@ -171,6 +171,7 @@ wPreview = WIDGET_TEXT(Base,$
                        SCR_YSIZE = sPreview.size[3],$
                        UNAME     = sPreview.uname,$
                        /SCROLL,$
+                       /ALL_EVENTS,$
                        /WRAP)
 
 wPreviewLabel = WIDGET_LABEL(Base,$
