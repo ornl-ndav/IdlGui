@@ -112,7 +112,7 @@ FUNCTION getSequence, left, right
     sequence = INDGEN(iRight-iLeft+1)+iLeft
     RETURN, STRING(sequence)
     done:
-    RETURN, ['']
+    RETURN, [STRCOMPRESS(left,/REMOVE_ALL)]
   ENDELSE
 END
 
@@ -184,9 +184,9 @@ PRO parse_input_field, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;reinitialize column_sequence and column_cl
-   (*global).column_sequence = PTR_NEW(0L)
-   (*global).column_cl = PTR_NEW(0L)
-    
+  (*global).column_sequence = PTR_NEW(0L)
+  (*global).column_cl = PTR_NEW(0L)
+  
   input_text = getTextFieldValue(Event,'input_text_field')
   
   ;get CL with text selected removed
@@ -230,7 +230,7 @@ PRO parse_input_field, Event
           ENDIF ELSE BEGIN
             seq_number = left
           ENDELSE
-          
+          print, left
           IF (same_run) THEN BEGIN
             addSequencesToRunArray, run_array, seq_number
           ENDIF ELSE BEGIN
@@ -274,18 +274,23 @@ PRO parse_input_field, Event
       
       ELSE: BEGIN ;............................................................
         IF (cur_numb EQ 'left') THEN BEGIN
+        
           IF (left EQ '') THEN BEGIN
             left = cursor
           ENDIF ELSE BEGIN
             left = left + cursor
           ENDELSE
+          
         ENDIF ELSE BEGIN
+        
           IF (right EQ '') THEN BEGIN
             right = cursor
           ENDIF ELSE BEGIN
             right = right + cursor
           ENDELSE
+          
         ENDELSE
+        
         IF (index EQ (length-1)) THEN BEGIN
           IF (cur_ope EQ '-') THEN BEGIN
             createCLsOfRunSequence, $
@@ -309,7 +314,7 @@ PRO parse_input_field, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
   WIDGET_CONTROL, id, TABLE_YSIZE = sz
   putValue, Event, 'runs_table', Table
-    
+  
 END
 
 ;------------------------------------------------------------------------------
