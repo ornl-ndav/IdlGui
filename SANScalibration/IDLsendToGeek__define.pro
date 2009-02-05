@@ -319,7 +319,7 @@ spawn, 'hostname', hostname
 ;get message added by user
 message   = IDLsendToGeek_getMessage(Event)
 ;email logBook
-text = "'Log Book of plotROI "
+text = "'Log Book of SANScalibration "
 text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += ". Message is: "
