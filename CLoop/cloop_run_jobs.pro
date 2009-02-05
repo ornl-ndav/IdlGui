@@ -32,56 +32,32 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO launch_jobs, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  wWidget =  Event.top            ;widget id
+  text = '> Launching jobs:'
+  IDLsendLogBook_addLogBookText, Event, ALT=alt, text
   
-  CASE Event.id OF
+  ;get second column of table
+  column_cl = (*(*global).column_cl)
   
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
+  sz = N_ELEMENTS(column_cl)
+  
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+  
+    cmd = column_cl[index]
+    cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
+    cmd_text += ': ' + cmd
+    IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
+    ;spawn, cmd
     
-    ;Load Command Line File Button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
-      browse_cl_file, Event ;_browse
-    END
-    
-    ;preview of CL
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
-      displayTextRemoved, Event
-    END
-    
-    ;input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_text_field'): BEGIN
-      parse_input_field, Event ;_input_parser
-    END
-    
-    ;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
-      help_button, Event ;_help
-    END
-    
-    ;check status of jobs submitted button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='check_status_button'): BEGIN
-      check_status, Event ;_eventcb
-    END
-    
-    ;launch jobs in background button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_jobs_button'): BEGIN
-      launch_jobs, Event ;_run_jobs
-    END
-    
-    ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-    END
-    
-    
-    
-    ELSE:
-    
-  ENDCASE
+    index++
+  ENDWHILE
+  
+;    cmd = 'srun --batch -p ' + srun + ' ' + cmd
   
 END
+

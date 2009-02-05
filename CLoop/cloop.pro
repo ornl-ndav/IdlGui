@@ -48,8 +48,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEBUGGINGiî
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     path: '~/SVN/IdlGui/trunk/CLoop/',$ ;path to CL file
-     input_text: ''}
-   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
+    input_text: ''}
+  ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
   ;******************************************************************************
   ;******************************************************************************
     
@@ -66,6 +66,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_input_text: PTR_NEW(0L),$
     old_help_text1: '',$
     old_help_text2: '',$
+    
+    firefox: '/usr/bin/firefox',$
+    srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
+    'squeue.php?view=all',$
     
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$

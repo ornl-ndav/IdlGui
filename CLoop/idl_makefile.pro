@@ -33,6 +33,7 @@ cd, CurrentFolder
 .run cloop_browse_cl_file.pro
 .run cloop_help.pro
 .run cloop_input_parser.pro
+.run cloop_run_jobs.pro
 
 ;main functions
 .run MainBaseEvent.pro
