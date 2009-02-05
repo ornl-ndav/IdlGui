@@ -122,6 +122,26 @@ PRO create_cl_array, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   cl_array = getCLtextArray(Event)
+  
+  ;check if the srun command is found
+  srun = (*global).srun_driver
+  match_srun = '*' + srun + '*'
+  IF (STRMATCH(cl_array[0], match_srun)) THEN BEGIN ;srun is there
+  
+    ;look for --batch tag
+    match_batch = '*' + '--batch' + '*'
+    IF (~STRMATCH(cl_array[0], match_batch)) THEN BEGIN ;--batch not found
+    
+    ;add --batch command
+    
+    ENDIF
+    
+  ENDIF ELSE BEGIN ;srun was not found
+  
+  ;add srun and right queue
+  
+  ENDELSE
+  
   (*global).cl_array) = cl_array
   
 END
