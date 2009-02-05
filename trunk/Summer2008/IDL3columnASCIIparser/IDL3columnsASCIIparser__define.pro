@@ -240,7 +240,7 @@ pro populate_structure, all_data, MyStruct
   
   ;create the array of structure here
   ;first the structure that will be used for each set of data
-  general_data_structure = { single_data_structure,$
+  general_data_structure = {single_data_structure,$
     bank: '',$
     X:    '',$
     Y:    '',$
@@ -345,106 +345,103 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
-
-  ;Define the Structure
-  MyStruct = { NbrArray:          0L,$
-    xaxis:             '', $
-    xaxis_units:       '',$
-    yaxis:             '', $
-    yaxis_units:       '',$
-    sigma_yaxis:       '',$
-    sigma_yaxis_units: '',$
-    Data:              ptr_new(0L)}
+  CASE self.type OF
+    'F': BEGIN
+      ;Define the Structure
+      MyStruct = { NbrArray:          0L,$
+        xaxis:             '',$
+        xaxis_units:       '',$
+        yaxis:             '',$
+        yaxis_units:       '',$
+        sigma_yaxis:       '',$
+        sigma_yaxis_units: '',$
+        Data:              ptr_new(0L)}
+        
+        
+        
+      ;find where is the first blank line (we do not want anything from the line
+      ;below that point)
+      all_data = *self.all_data
+      blk_line_index = WHERE((all_data) EQ '', nbr)
+      ;get our new interesting array of data
+      all_data = all_data[blk_line_index[0]+1:*]
+      
+      ;Populate structure with general information (NbrArray, xaxis....etc)
+      populate_structure, all_data, MyStruct
+    END
     
+    'I': BEGIN
+      PRINT, 'NORM'
+      data = *self.all_data
+      index = WHERE(STRMATCH(data, '(*') EQ 1)
+      data = data[index[0]:N_ELEMENTS(data) - 1]
+      Mystruct  = STRARR(3, N_ELEMENTS(DATA))
+      
+      FOR i = 0, N_ELEMENTS(DATA)-1 DO BEGIN
+        FOR j = 0, 2 DO BEGIN
+          Mystruct[j,i]  = (STRSPLIT(data[i], ESCAPE=',' , /extract))[j]
+        ENDFOR
+      ENDFOR
+      
+    END
     
+    ' ': BEGIN
+      MyStruct = { xaxis:             '',$
+        yaxis:             '',$
+        data:              ptr_new(0L)}
+    END
     
-  ;find where is the first blank line (we do not want anything from the line
-  ;below that point)
-  all_data = *self.all_data
-  blk_line_index = WHERE((all_data) EQ '', nbr)
-  ;get our new interesting array of data
-  all_data = all_data[blk_line_index[0]+1:*]
-  
-  ;Populate structure with general information (NbrArray, xaxis....etc)
-  populate_structure, all_data, MyStruct
-  
+  ENDCASE
   RETURN, MyStruct
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getMetadata, tag
-
-  CASE self.type OF
-    'F': BEGIN
-      PRINT, 'CRTOF'
-      CASE N_ELEMENTS(tag) OF
-        0: BEGIN
-          data = *self.all_data
-          index_blank = WHERE(data EQ '', nbr)
-          IF (nbr GT 0) THEN BEGIN
-            RETURN, data[0:index_blank[0]-1]
-          ENDIF
-          RETURN, "Error getting metadata"
-        END
-        1: BEGIN
-          ;remove semicolon from tag
-          tag = modtag(tag)
-          ;read data into array
-          data = *self.all_data
-          ;find and format data
-          output = findIt(data, tag)
-          RETURN, output
-        END
-      ENDCASE
-    END
-    'I': BEGIN
-      PRINT, 'NORM'
-      ; metadata is all before the "(*" line
-      CASE N_ELEMENTS(tag) OF
-        0: BEGIN
-          data = *self.all_data
-          index_blank = WHERE(STRMATCH(data, '(*') EQ 1)
-          IF (index_blank[0] NE -1) THEN BEGIN
-            RETURN, data[0:index_blank[0]-1]
-          ENDIF
-          RETURN, "Error getting metadata"
-        END
-        1: BEGIN
-          ;remove semicolon from tag
-          tag = modtag(tag)
-          ;read data into array
-          data = *self.all_data
-          ;find and format data
-          output = findIt(data, tag)
-          RETURN, output
-        END
-      ENDCASE
-    END
-    ' ': BEGIN
-      PRINT, 'BSS'
-      ;metadata at the end of file
-      CASE N_ELEMENTS(tag) OF
-        0: BEGIN
-          data = *self.all_data
-          index_blank = WHERE(STRMATCH(data, '#F*') EQ 1)
-          IF (index_blank NE -1) THEN BEGIN
-            RETURN, data[index_blank:N_ELEMENTS(data) - 1]
-          ENDIF
-          RETURN, "Error getting metadata"
-        END
-        1: BEGIN
-          ;remove semicolon from tag
-          tag = modtag(tag)
-          ;read data into array
-          data = *self.all_data
-          ;find and format data
-          output = findIt(data, tag)
-          RETURN, output
-        END
-      ENDCASE
+  IF ~(N_ELEMENTS(tag)) THEN BEGIN
+  
+    CASE self.type OF
+      'F': BEGIN
+        PRINT, 'CRTOF'
+        data = *self.all_data
+        index_blank = WHERE(data EQ '', nbr)
+        IF (nbr GT 0) THEN BEGIN
+          RETURN, data[0:index_blank[0]-1]
+        ENDIF
+        RETURN, "Error getting metadata"
+      END
       
-    END
-  ENDCASE
+      'I': BEGIN
+        PRINT, 'NORM'
+        ; metadata is all before the "(*" line
+        data = *self.all_data
+        index_blank = WHERE(STRMATCH(data, '(*') EQ 1)
+        IF (index_blank[0] NE -1) THEN BEGIN
+          RETURN, data[0:index_blank[0]-1]
+        ENDIF
+        RETURN, "Error getting metadata"
+      END
+      
+      ' ': BEGIN
+        PRINT, 'BSS'
+        ;metadata at the end of file
+        data = *self.all_data
+        index_blank = WHERE(STRMATCH(data, '#F*') EQ 1)
+        IF (index_blank NE -1) THEN BEGIN
+          RETURN, data[index_blank:N_ELEMENTS(data) - 1]
+        ENDIF
+        RETURN, "Error getting metadata"
+      END
+    ENDCASE
+    
+  ENDIF ELSE BEGIN
+    ;remove semicolon from tag
+    tag = modtag(tag)
+    ;read data into array
+    data = *self.all_data
+    ;find and format data
+    output = findIt(data, tag)
+    RETURN, output
+  ENDELSE
 END
 
 ;------------------------------------------------------------------------------
