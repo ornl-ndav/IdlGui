@@ -39,7 +39,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;******************************************************************************
   ;******************************************************************************
-  APPLICATION       = 'REFoffSpec'
+  APPLICATION       = 'CLoop'
   VERSION           = '1.0.0'
   DEBUGGING         = 'yes' ;yes/no
   TESTING           = 'no'
@@ -70,6 +70,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
     'squeue.php?view=all',$
+    srun_driver: 'srun',$
+    sbatch_driver: 'sbatch',$
     
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$

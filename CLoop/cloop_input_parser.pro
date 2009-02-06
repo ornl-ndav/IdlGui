@@ -157,7 +157,7 @@ PRO create_cl_array, Event
   
   ENDELSE
   
-  (*global).cl_array) = cl_array
+  (*global).cl_array = cl_array
   
 END
 
