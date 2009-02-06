@@ -8,4 +8,5 @@ all:
 install:
 	cp cloop.sav /SNS/software/idltools/sav/
 	cp CLoop /SNS/software/idltools/
+	cp slurm.xml /SNS/software/idltools/sav/
 
