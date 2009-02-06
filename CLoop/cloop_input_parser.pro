@@ -123,6 +123,19 @@ PRO create_cl_array, Event
   
   cl_array = getCLtextArray(Event)
   
+  ;check if sbatch has been found
+  sbatch = (*global).sbatch_driver
+  match_sbatch = '*' + sbatch + '*'
+  IF (STRMATCH(cl_array[0], match_sbatch)) THEN BEGIN ;sbatch was found
+    ;check if -p flag has been found'
+    IF (STRMATCH(cl_array[0],'* -p *')) THEN BEGIN ;-p was found
+      RETURN
+    ENDIF ELSE BEGIN
+      ;retrieve srun queue to use
+      srun_queue = getSrunQueue(Event)
+    ENDELSE
+  ENDIF
+  
   ;check if the srun command is found
   srun = (*global).srun_driver
   match_srun = '*' + srun + '*'
@@ -137,6 +150,8 @@ PRO create_cl_array, Event
     ENDIF
     
   ENDIF ELSE BEGIN ;srun was not found
+  
+  
   
   ;add srun and right queue
   

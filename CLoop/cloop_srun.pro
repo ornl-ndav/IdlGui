@@ -32,27 +32,18 @@
 ;
 ;==============================================================================
 
-;This function returns the ucams of the user
-FUNCTION get_ucams
-ucams_error = 0
-CATCH, ucams_error
-IF (ucams_error NE 0) THEN BEGIN
-    CATCH, /CANCEL
-    RETURN, 'Undefined'
-ENDIF ELSE BEGIN
-    spawn, '/usr/bin/whoami', listening
-ENDELSE
-RETURN, listening[0]
+FUNCTION getSrunQueue, Event
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+;retrieve hostanme
+hostname = getHostname()
+
+;retrieve flag for this hostname
+fileID = OBJ_NEW('IDLxmlParser','srun.xml')
+queue_flag = fileID->getValue(tag=['srun',hostname])
+
+RETURN, queue_flag
 END
 
-;-----------------------------------------------------------------------------
-FUNCTION convert_rgb, rgb
-COMPILE_OPT idl2, HIDDEN
-RETURN, rgb[0] + (rgb[1] * 2L^8) + (rgb[2]*2L^16)
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getHostname
-spawn, 'hostname', listening
-RETURN, listening[0]
-END

@@ -32,6 +32,7 @@ cd, CurrentFolder + '/CLoopGUI/'
 cd, CurrentFolder
 
 ;procedures
+.run cloop_srun.pro
 .run cloop_browse_cl_file.pro
 .run cloop_help.pro
 .run cloop_input_parser.pro
