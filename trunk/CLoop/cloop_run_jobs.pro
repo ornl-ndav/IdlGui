@@ -27,7 +27,7 @@
 ;   Laboratory nor the names of its contributors may be used to endorse or
 ;   promote products derived from this software without specific prior written
 ;   permission.
-;
+; 
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
@@ -56,8 +56,6 @@ PRO launch_jobs, Event
     
     index++
   ENDWHILE
-  
-;    cmd = 'srun --batch -p ' + srun + ' ' + cmd
   
 END
 
