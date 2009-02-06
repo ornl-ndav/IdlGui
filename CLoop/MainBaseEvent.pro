@@ -77,10 +77,9 @@ PRO MAIN_BASE_event, Event
     
     ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+      send_to_geek, Event ;_eventcb 
     END
-    
-    
-    
+        
     ELSE:
     
   ENDCASE

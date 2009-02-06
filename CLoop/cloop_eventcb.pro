@@ -32,6 +32,18 @@
 ;
 ;==============================================================================
 
+PRO send_to_geek, Event
+  cmd_file = getTextFieldValue(Event,'cl_file_name_label')
+  IF (cmd_file NE 'N/A') THEN BEGIN
+    list_of_files = [cmd_file]
+    IDLsendLogBook_SendToGeek, Event, $
+      LIST_OF_FILES_TO_TAR=list_of_files
+  ENDIF ELSE BEGIN
+    IDLsendLogBook_SendToGeek, Event
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
 PRO check_status, Event ;_eventcb
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
