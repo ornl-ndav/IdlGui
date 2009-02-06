@@ -450,13 +450,13 @@ PRO IDLsendLogBook_EmailLogBook, Event, $
       subject        = application + " LogBook"
       cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
         FullTarFile
-      cmd += '" scsupport@ornl.gov'
-    ;  cmd += ' j35@ornl.gov'
+      cmd += ' scsupport@ornl.gov'
+     cmd += ' j35@ornl.gov'
     ENDIF ELSE BEGIN
       subject        = application + " LogBook"
       cmd  =  'echo ' + text + '| mutt -s "' + subject
       cmd += '" scsupport@ornl.gov'
-    ;        cmd += '" j35@ornl.gov'
+            cmd += '" j35@ornl.gov'
     ENDELSE
     SPAWN, cmd
     
