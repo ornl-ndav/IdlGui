@@ -32,18 +32,18 @@
 ;
 ;==============================================================================
 
-FUNCTION getSrunQueue, Event
-
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
+FUNCTION getSrunQueue
 
 ;retrieve hostanme
 hostname = getHostname()
 
 ;retrieve flag for this hostname
-fileID = OBJ_NEW('IDLxmlParser','srun.xml')
+fileID = OBJ_NEW('IDLxmlParser','./slurm.xml')
 queue_flag = fileID->getValue(tag=['srun',hostname])
 
 RETURN, queue_flag
 END
 
+;------------------------------------------------------------------------------
+PRO cloop_srun
+END
