@@ -150,7 +150,6 @@ PRO create_cl_array, Event
     ;      cl_array[0] = cl_first
     ;      RETURN
     ;    ENDELSE
-  
     RETURN
   ENDIF
   

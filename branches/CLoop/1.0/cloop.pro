@@ -41,7 +41,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;******************************************************************************
   APPLICATION       = 'CLoop'
   VERSION           = '1.0.0'
-  DEBUGGING         = 'no' ;yes/no
+  DEBUGGING         = 'yes' ;yes/no
   TESTING           = 'no'
   CHECKING_PACKAGES = 'yes'
   
