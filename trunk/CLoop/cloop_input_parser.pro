@@ -133,6 +133,8 @@ PRO create_cl_array, Event
     ENDIF ELSE BEGIN
       ;retrieve srun queue to use
       srun_queue = getSrunQueue(Event)
+      added_word = ' -p ' + srun_queue
+      add_srun_queue, Event, BASE_WORD=sbatch, ADDED_WORD=added_word 
     ENDELSE
   ENDIF
   

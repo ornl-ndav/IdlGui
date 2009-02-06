@@ -41,6 +41,11 @@ hostname = getHostname()
 fileID = OBJ_NEW('IDLxmlParser','./slurm.xml')
 queue_flag = fileID->getValue(tag=['srun',hostname])
 
+;in case the hostname can not be recognized
+IF (queue_flag EQ '') THEN BEGIN
+queue_flag = fileID->getValue(tag=['srun','heater'])
+ENDIF
+
 RETURN, queue_flag
 END
 
