@@ -117,6 +117,14 @@ FUNCTION getSequence, left, right
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION add_srun_queue, text, BASE_WORD=base_word, ADDED_WORD=added_word
+  result_array = STRSPLIT(text, base_word, /REGEX)
+  new_cmd = result_array[0] + ' ' + base_word + ' -p ' + added_word + ' ' + $
+    result_array[1]
+  RETURN,new_cmd
+END
+
+;------------------------------------------------------------------------------
 PRO create_cl_array, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -127,39 +135,72 @@ PRO create_cl_array, Event
   sbatch = (*global).sbatch_driver
   match_sbatch = '*' + sbatch + '*'
   IF (STRMATCH(cl_array[0], match_sbatch)) THEN BEGIN ;sbatch was found
+  
+    ;;;let's suppose for now that if there is srun, there is a p queue
     ;check if -p flag has been found'
-    IF (STRMATCH(cl_array[0],'* -p *')) THEN BEGIN ;-p was found
-      RETURN
-    ENDIF ELSE BEGIN
-      ;retrieve srun queue to use
-      srun_queue = getSrunQueue(Event)
-      added_word = ' -p ' + srun_queue
-      add_srun_queue, Event, BASE_WORD=sbatch, ADDED_WORD=added_word 
-    ENDELSE
+    ;    IF (STRMATCH(cl_array[0],'* -p *')) THEN BEGIN ;-p was found
+    ;      RETURN
+    ;    ENDIF ELSE BEGIN
+    ;      ;retrieve srun queue to use
+    ;      srun_queue = getSrunQueue(Event)
+    ;      added_word = ' -p ' + srun_queue
+    ;      cl_first_part = add_srun_queue(cl_array[0],$
+    ;        BASE_WORD=sbatch,$
+    ;        ADDED_WORD=added_word)
+    ;      cl_array[0] = cl_first
+    ;      RETURN
+    ;    ENDELSE
+  
+    RETURN
   ENDIF
   
   ;check if the srun command is found
   srun = (*global).srun_driver
-  match_srun = '*' + srun + '*'
+  match_srun = '*' + srun + ' *'
   IF (STRMATCH(cl_array[0], match_srun)) THEN BEGIN ;srun is there
   
-    ;look for --batch tag
-    match_batch = '*' + '--batch' + '*'
-    IF (~STRMATCH(cl_array[0], match_batch)) THEN BEGIN ;--batch not found
+    ;remove srun and put sbatch instead
+    cmd = split_string(cl_array[0], PATTERN=srun)
+    sz = N_ELEMENTS(cmd)
+    new_cmd = sbatch + ' ' + cmd[sz-1]
     
-    ;add --batch command
+    ;found --batch
+    match_batch = '*' + ' --batch ' + '*'
+    IF (STRMATCH(cl_array[0], match_batch)) THEN BEGIN
+      ;remove srun and --batch and put just sbatch instead
     
+      ;remove --batch
+      cmd1 = split_string(new_cmd, PATTERN='--batch')
+      cl_array[0] = cmd1[0] + ' ' + cmd1[1]
+      (*global).cl_array = cl_array
+      RETURN
     ENDIF
+    
+    ;found -b
+    match_batch = '*' + ' -b ' + '*'
+    IF (STRMATCH(cl_array[0], match_batch)) THEN BEGIN
+    
+      ;remove -b
+      cmd1 = split_string(new_cmd, PATTERN='--b')
+      cl_array[0] = cmd1[0] + ' ' + cmd1[1]
+      (*global).cl_array = cl_array 
+      RETURN
+    ENDIF
+    
+    cl_array[0] = new_cmd
+    (*global).cl_array = cl_array
+    RETURN
     
   ENDIF ELSE BEGIN ;srun was not found
   
-  
-  
-  ;add srun and right queue
-  
+    srun_queue = getSrunQueue()
+    added_word = ' -p ' + srun_queue
+    new_cmd = sbatch + added_word + ' ' + cl_array[0]
+    cl_array[0] = new_cmd
+    (*global).cl_array = cl_array
+    RETURN
+    
   ENDELSE
-  
-  (*global).cl_array = cl_array
   
 END
 
