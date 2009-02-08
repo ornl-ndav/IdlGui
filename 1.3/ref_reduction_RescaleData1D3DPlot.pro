@@ -101,9 +101,9 @@ widget_control,id,get_uvalue=global
 
 img = (*(*global).DATA_D_TOTAL_ptr)
 
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 
 ;get loadct for this plot
 LoadctIndex = getDropListSelectedIndex(Event, 'data_loadct_1d_3d_droplist')
@@ -219,9 +219,9 @@ widget_control,id,get_uvalue=global
 
 img = (*(*global).DATA_D_TOTAL_ptr)
 
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 
 ;DEVICE, DECOMPOSED = 0
 ;loadct,

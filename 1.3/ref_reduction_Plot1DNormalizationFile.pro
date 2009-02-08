@@ -175,9 +175,9 @@ id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 ;rebin data to fill up all graph
 new_Ntof  = (*global).Ntof_NORM
 file_Ntof = (size(img))(1)
@@ -222,9 +222,9 @@ id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 ;rebin data to fill up all graph
 new_Ntof  = (*global).Ntof_NORM
 file_Ntof = (size(img))(1)
@@ -256,9 +256,9 @@ id_draw = widget_info(Event.top, find_by_uname='load_normalization_d_3d_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 XYangle = (*global).PrevNorm1D3DAx
 ZZangle = (*global).PrevNorm1D3DAz
 shade_surf,img, Ax=XYangle, Az=ZZangle
@@ -281,9 +281,9 @@ id_draw = widget_info(Event.top, find_by_uname='load_normalization_d_3d_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 XYangle = (*global).PrevNorm1D3DAx
 ZZangle = (*global).PrevNorm1D3DAz
 shade_surf,img, Ax=XYangle, Az=ZZangle
