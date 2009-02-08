@@ -101,9 +101,9 @@ widget_control,id,get_uvalue=global
 
 img = (*(*global).NORM_DD_ptr)
 
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 
 ;get loadct for this plot
 LoadctIndex = getDropListSelectedIndex(Event, 'normalization_loadct_2d_3d_droplist')
@@ -219,9 +219,9 @@ widget_control,id,get_uvalue=global
 
 img = (*(*global).NORM_DD_ptr)
 
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 
 id_draw = widget_info(Event.top, find_by_uname='load_normalization_dd_3d_draw')
 widget_control, id_draw, get_value=id_value

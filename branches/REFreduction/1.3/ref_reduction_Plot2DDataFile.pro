@@ -228,9 +228,9 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 img = (*(*global).DATA_DD_ptr)
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 XYangle = (*global).PrevData2D3DAx
 ZZangle = (*global).PrevData2D3DAz
 shade_surf,img, Ax=XYangle, Az=ZZangle
@@ -254,9 +254,9 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 img = (*(*global).DATA_DD_ptr)
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
+;if (!VERSION.os EQ 'darwin') then begin
+;   img = swap_endian(img)
+;endif
 XYangle = (*global).PrevData2D3DAx
 ZZangle = (*global).PrevData2D3DAz
 shade_surf,img, Ax=XYangle, Az=ZZangle
