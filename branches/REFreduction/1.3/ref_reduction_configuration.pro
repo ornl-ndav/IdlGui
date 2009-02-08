@@ -98,6 +98,8 @@ FUNCTION getDebuggingStructure
 debugging_structure = {nbr_pola_state:1,$
                        working_path: $
                        '~/SVN/IdlGui/branches/REFreduction/1.3/',$
+                       working_path_onMac: $
+                       '~/SVN/IdlGui/branches/REFreduction/1.3/',$
                        data_nexus_full_path: '/Users/jeanbilheux/' + $
                        '/REF_M_4585.nxs',$
                        full_list_OF_nexus: ['/SNS/users/j35/REF_M_4117.nxs',$

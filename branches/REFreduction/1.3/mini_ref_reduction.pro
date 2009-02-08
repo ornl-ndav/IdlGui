@@ -54,6 +54,7 @@ MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
 CHECKING_PACKAGES  = 'yes'             ;YES
+DEBUGGING_ON_MAC   = 'yes'         ;no
 
 debugging_structure = getDebuggingStructure()
 
@@ -82,6 +83,7 @@ ENDELSE
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
                     VERSION: version,$
+                    debugging_on_mac: DEBUGGING_ON_MAC,$
 
                     empty_cell_images: PTR_NEW(0L),$
                       sf_equation_file: $

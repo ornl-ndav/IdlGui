@@ -1090,7 +1090,11 @@ PRO MAIN_BASE_event, Event
     ;Browse NeXus file
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='browse_empty_cell_nexus_button'): begin
-      BrowseEmptyCellNexus, Event ;_browse
+      IF ((*global).debugging_on_mac EQ 'no') THEN BEGIN
+        BrowseEmptyCellNexus, Event
+      ENDIF ELSE BEGIN
+        BrowseEmptyCellNexus_onMac, Event
+      ENDELSE
     END
     
     ;LOAD empty_cell file cw_field
