@@ -45,8 +45,8 @@ mySubstrateType = REPLICATE(SubstrateType, NbrEntries)
 
 ;Silicon
 mySubstrateType[0].type_name = 'Si'
-mySubstrateType[0].a         = '2.00E-4'
-mySubstrateType[0].b         = '4.75E5'
+mySubstrateType[0].a         = '2.00E-4'  ;cm^-1
+mySubstrateType[0].b         = '4.75E5'   ;cm^-2
 
 ;SiO2
 mySubstrateType[1].type_name = 'SiO2'

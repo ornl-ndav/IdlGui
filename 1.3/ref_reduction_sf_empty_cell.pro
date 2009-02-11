@@ -801,7 +801,7 @@ PRO plot_recap_empty_cell_sf, Event,$
       
       lambda = (h_over_Mn * TOF) / Ldm
       
-      exp1 = A_times_diameter + lambda * B_times_diameter
+      exp1 = A_times_diameter - lambda * B_times_diameter
       exp  = EXP(-exp1)
       
       part2  = exp / empty_cell_proton_charge
