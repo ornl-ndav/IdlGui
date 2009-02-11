@@ -51,7 +51,7 @@ MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
 WITH_JOB_MANAGER   = 'no'
 CHECKING_PACKAGES  = 'yes'         ;YES
-DEBUGGING_ON_MAC   = 'yes'         ;no
+DEBUGGING_ON_MAC   = 'no'         ;no
 
 debugging_structure = getDebuggingStructure()
 

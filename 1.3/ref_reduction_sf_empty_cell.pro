@@ -763,6 +763,8 @@ PRO plot_recap_empty_cell_sf, Event,$
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  debugging_on_mac = (*global).debugging_on_mac
+  
   ;determine the size (number of TOF and of pixels)
   Ntof = (SIZE(data_data))(1)
   Npix = (SIZE(data_data))(2)
@@ -785,18 +787,26 @@ PRO plot_recap_empty_cell_sf, Event,$
     
       ;1st part (data)
       part1 = data_data[t,p]
-      IF (t EQ 82 AND p EQ 137) THEN print, 'part1: ' + strcompress(part1)
-      
+      IF (t EQ 82 AND $
+        p EQ 137 AND $
+        debugging_on_mac EQ 'yes') THEN print, 'part1: ' + strcompress(part1)
+        
       ;2nd part (empty_cell)
       TOF = FLOAT(data_tof_axis[t]) * 1.E-6 ;to be in s
-      IF (t EQ 82 AND p EQ 137) THEN print, 'TOF: ' + strcompress(TOF)
-      
+      IF (t EQ 82 AND $
+        p EQ 137 AND $
+        debuggin_on_mac EQ 'yes') THEN print, 'TOF: ' + strcompress(TOF)
+        
       Lsd = FLOAT(distance_sample_pixel_array[p]) ;distance sample detector
-      IF (t EQ 82 AND p EQ 137) THEN print, 'Lsd: ' + strcompress(lsd)
-      
+      IF (t EQ 82 AND $
+        p EQ 137 AND $
+        debugging_on_mac EQ 'yes') THEN print, 'Lsd: ' + strcompress(lsd)
+        
       Lsm = ABS(FLOAT(distance_sample_moderator)) ;distance sample moderator
-      IF (t EQ 82 AND p EQ 137) THEN print, 'lsm: ' + strcompress(lsm)
-      
+      IF (t EQ 82 AND $
+        p EQ 137 AND $
+        debugging_on_mac EQ 'yes') THEN print, 'lsm: ' + strcompress(lsm)
+        
       Ldm = Lsd + Lsm
       
       lambda = (h_over_Mn * TOF) / Ldm
