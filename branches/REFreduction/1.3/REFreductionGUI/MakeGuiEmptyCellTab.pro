@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 0}
+                       map: 1}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -204,6 +204,56 @@ sRecapLabel = { x : { value: 'X (TOF in microS):',$
                            uname: 'empty_cell_recap_draw_counts_value',$
                            xsize: 50}}
 
+;end of recap base/draw .......................................................
+
+;output recap data in rtof file base ..........................................
+XYoff = [0,35]
+sOutputBase = { size: [sRecapBase.size[0]+XYoff[0],$
+                       sRecapBase.size[1]+$
+                       sRecapBase.size[3]+XYoff[1],$
+                       sRecapbase.size[2],$
+                       95],$
+                frame: 1,$
+                uname: 'empty_cell_output_base',$
+                sensitive:1}
+
+XYoff = [20,-8] ;title
+sOutputTitle = { size: [sOutputBase.size[0]+XYoff[0],$
+                        sOutputBase.size[1]+XYoff[1]],$
+                 value: 'Output Recap Data into ASCII file'}
+
+XYoff = [5,8]
+sOutputFolder = { size: [XYoff[0],$
+                         XYoff[1],$
+                         sOutputBase.size[2]-10],$
+                  value: '~/results/',$
+                  uname: 'empty_cell_output_folder_button'}
+
+XYoff = [0,25] ;name of file
+sOutputFile = { size: [sOutputFolder.size[0]+XYoff[0],$
+                       sOutputFolder.size[1]+XYoff[1],$
+                       315],$
+                value: '',$
+                uname: 'empty_cell_output_file_name_text_field'}
+
+XYoff = [0,0] ;button to create output file
+sOutputButton = { size: [sOutputFile.size[0]+$
+                         sOutputFile.size[2]+XYoff[0],$
+                         sOutputFile.size[1]+XYoff[1],$
+                         100,30],$
+                  value: 'CREATE FILE',$
+                  uname: 'empty_cell_create_output_file_button',$
+                  sensitive: 1}
+
+XYoff = [0,1] ;preview button
+sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
+                          sOutputButton.size[1]+$
+                          sOutputButton.size[3]+XYoff[1],$
+                          sOutputFolder.size[2]],$
+                   value: 'PREVIEW of ASCII FILE',$
+                   uname: 'empty_cell_preview_of_ascii_button',$
+                   sensitive: 1}
+                          
 ;end of recap base/draw .......................................................
 
 XYoff = [-215,-80]
@@ -666,6 +716,60 @@ IValue = WIDGET_LABEL(wRecapRowBase,$
                       UNAME = sRecapLabel.counts.uname)
 
 ;end of Recap base ............................................................
+
+;output base ..................................................................
+;title
+label = WIDGET_LABEL(wSFcalculationBase,$
+                     XOFFSET = sOutputTitle.size[0],$
+                     YOFFSET = sOutputTitle.size[1],$
+                     VALUE   = sOutputTitle.value)
+
+output_base = WIDGET_BASE(wSFcalculationBase,$
+                          XOFFSET   = sOutputBase.size[0],$
+                          YOFFSET   = sOutputBase.size[1],$
+                          SCR_XSIZE = sOutputBase.size[2],$
+                          SCR_YSIZE = sOutputBase.size[3],$
+                          FRAME     = sOutputBase.frame,$
+                          UNAME     = sOutputBase.uname,$
+                          SENSITIVE = sOutputBase.sensitive)
+
+;output folder button
+button = WIDGET_BUTTON(output_base,$
+                       XOFFSET   = sOutputFolder.size[0],$
+                       YOFFSET   = sOutputFolder.size[1],$
+                       SCR_XSIZE = sOutputFolder.size[2],$
+                       VALUE     = sOutputFolder.value,$
+                       UNAME     = sOutputFolder.uname)
+
+;name of file
+text = WIDGET_TEXT(output_base,$
+                   XOFFSET   = sOutputFile.size[0],$
+                   YOFFSET   = sOutputFile.size[1],$
+                   SCR_XSIZE = sOutputFile.size[2],$
+                   UNAME     = sOutputFile.uname,$
+                   VALUE     = sOutputFile.value,$
+                   /EDITABLE)
+
+;create output file button
+button = WIDGET_BUTTON(output_base,$
+                       XOFFSET = sOutputButton.size[0],$
+                       YOFFSET = sOutputButton.size[1],$
+                       SCR_XSIZE = sOutputButton.size[2],$
+                       SCR_YSIZE = sOutputButton.size[3],$
+                       VALUE     = sOutputButton.value,$
+                       UNAME     = sOutputButton.uname,$
+                       SENSITIVE = sOutputButton.sensitive)
+
+;preview button
+button = WIDGET_BUTTON(output_base,$
+                       XOFFSET   = sOutputPreview.size[0],$
+                       YOFFSET   = sOutputPreview.size[1],$
+                       SCR_XSIZE = sOutputPreview.size[2],$
+                       VALUE     = sOutputPreview.value,$
+                       UNAME     = sOutputPreview.uname,$
+                       SENSITIVE = sOutputPreview.sensitive)
+
+;end of output base ...........................................................
 
 wSFcancel = WIDGET_BUTTON(wSFcalculationBase,$
                           XOFFSET   = sSFcancel.size[0],$
