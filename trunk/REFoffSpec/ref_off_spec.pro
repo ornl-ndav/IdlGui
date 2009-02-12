@@ -321,19 +321,9 @@ ENDIF
 
 ;==============================================================================
 ;==============================================================================
-
-;logger message
-logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-year = getYear()
-logger_message += APPLICATION + '_' + VERSION + ' ' + ucams + year
-error = 0
-CATCH, error
-IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-ENDIF ELSE BEGIN
-    spawn, logger_message
-ENDELSE
-
+ ;send message to log current run of application
+  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
 END
 
 
