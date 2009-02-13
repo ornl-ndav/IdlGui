@@ -1124,6 +1124,30 @@ PRO MAIN_BASE_event, Event
       DisplayEmptyCellNxsummary, Event ;_empty_cell
     END
     
+    ;output folder button  ------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_output_folder_button'): begin
+      empty_cell_output_folder, Event ;_output_empty_cell
+    end
+    
+    ;output recap plot file name text field  ------------------------
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='empty_cell_output_file_name_text_field'): begin
+      check_empty_cell_recap_output_file_name, Event
+    end
+    
+    ;create empty cell output file -------------------
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='empty_cell_create_output_file_button'): begin
+      create_empty_cell_output_file, Event ;_output_empty_cell
+    end
+    
+    ;preview button of output recap file
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='empty_cell_preview_of_ascii_button'): begin
+      preview_empty_cell_output_file, Event
+    end
+      
+    ;--------------------------------------------------------------------
     ;ok button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_list_load_button'): begin
       LoadListOfEmptyCellNexus, Event ;_empty_cell
