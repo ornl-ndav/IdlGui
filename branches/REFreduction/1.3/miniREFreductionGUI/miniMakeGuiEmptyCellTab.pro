@@ -244,7 +244,7 @@ sOutputButton = { size: [sOutputFile.size[0]+$
                          100,30],$
                   value: 'CREATE FILE',$
                   uname: 'empty_cell_create_output_file_button',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 XYoff = [0,1] ;preview button
 sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
@@ -253,7 +253,7 @@ sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
                           sOutputFolder.size[2]],$
                    value: 'PREVIEW of ASCII FILE',$
                    uname: 'empty_cell_preview_of_ascii_button',$
-                   sensitive: 1}
+                   sensitive: 0}
                           
 ;end of recap base/draw .......................................................
 
@@ -766,6 +766,7 @@ text = WIDGET_TEXT(output_base,$
                    SCR_XSIZE = sOutputFile.size[2],$
                    UNAME     = sOutputFile.uname,$
                    VALUE     = sOutputFile.value,$
+                   /ALL_EVENTS,$
                    /EDITABLE)
 
 ;create output file button
