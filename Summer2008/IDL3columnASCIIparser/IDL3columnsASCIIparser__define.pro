@@ -197,6 +197,10 @@ end
 ;------------------------------------------------------------------------------
 Function findIt, init_str, tag
 
+
+  ;MERGE TO SEARCH METHOD
+
+
   ;get number of elements in array
   n = N_ELEMENTS(init_str)
   i = 0
@@ -342,6 +346,15 @@ pro populate_structure, all_data, MyStruct
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION search, string, lines
+  help, self.all_data
+  data = *self.all_data
+  index =  WHERE(STRMATCH(data, '#*') EQ 1)
+  comments = data[index]
+  tmp = index[WHERE(STRMATCH(comments, string) EQ 1)]
+  RETURN, data[tmp +1:tmp + lines]
+END
 
 ;------------------------------------------------------------------------------
 FUNCTION IDL3columnsASCIIparser::getData
@@ -382,13 +395,33 @@ FUNCTION IDL3columnsASCIIparser::getData
           Mystruct[j,i]  = (STRSPLIT(data[i], ESCAPE=',' , /extract))[j]
         ENDFOR
       ENDFOR
-      
     END
     
     ' ': BEGIN
-      MyStruct = { xaxis:             '',$
-        yaxis:             '',$
+      PRINT, 'BSS'
+      data = *self.all_data
+      index =  WHERE(STRMATCH(data, '# *') EQ 1)
+      comments = data[index]
+      print, comments
+      ;find number of energy transfer values
+      tmp = index[WHERE(STRMATCH(comments, '*Number of energy transfer*') EQ 1)]
+      nrgTRN = FIX(data[tmp + 1])
+      tmp = index[WHERE(STRMATCH(comments, '*Number of Q transfer*') EQ 1)]
+      qTRN = FIX(data[tmp + 1])
+      energytrnsfr = fltarr(nrgtrn-1)
+      qtrnsfr = fltarr(qtrn-1)
+      ;need search method??
+      tmp = index[WHERE(STRMATCH(comments, '# energy*') EQ 1)]
+      energytrnsfr = data[tmp +1:tmp +nrgtrn]
+      tmp = index[WHERE(STRMATCH(comments, '# Q transfer*') EQ 1)]
+      qtrnsfr = data[tmp +1: tmp + qtrn]
+      
+      help, energytrnsfr, qtrnsfr
+      
+      MyStruct = { xaxis:             energytrnsfr,$
+        yaxis:             qtrnsfr,$
         data:              ptr_new(0L)}
+        
     END
     
   ENDCASE
