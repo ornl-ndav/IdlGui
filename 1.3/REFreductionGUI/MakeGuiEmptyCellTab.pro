@@ -51,7 +51,7 @@ sBase = { size: [0,0,DataNormalizationTabSize[2:3]],$
 ;SF calculation base ----------------------------------------------------------
 sSFcalculationBase = { size: sBase.size,$
                        uname: 'empty_cell_scaling_factor_calculation_base',$
-                       map: 1}
+                       map: 0}
 ;data base --------------------------------------------------------------------
 XYoff = [0,20]
 yoff = 15
@@ -137,7 +137,7 @@ sEmptyCellLabel = { x: { value: 'X (TOF in microS):',$
 ;end of empty cell base/draw ..................................................
 
 ;SF equation label and text field .............................................
-XYoff = [630,101]
+XYoff = [630,80]
 sSFequationLabel = { size: [XYoff[0],$
                             XYoff[1]],$
                      value: 'Scaling Factor, C = '}
@@ -163,7 +163,7 @@ sSFequationTextField = { size: [sSFequationLabel2.size[0]+XYoff[0],$
 ;end of SF equation label and text field ......................................
 
 ;recap base -------------------------------------------------------------------
-XYoff = [20,-90]
+XYoff = [20,-130]
 yoff = 15
 sRecapBase = { size: [sDataBase.size[0]+$
                      sDataBase.size[2]+XYoff[0],$
@@ -207,7 +207,7 @@ sRecapLabel = { x : { value: 'X (TOF in microS):',$
 ;end of recap base/draw .......................................................
 
 ;output recap data in rtof file base ..........................................
-XYoff = [0,35]
+XYoff = [0,55]
 sOutputBase = { size: [sRecapBase.size[0]+XYoff[0],$
                        sRecapBase.size[1]+$
                        sRecapBase.size[3]+XYoff[1],$
@@ -256,10 +256,10 @@ sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
                           
 ;end of recap base/draw .......................................................
 
-XYoff = [-215,-80]
+XYoff = [-615,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
                      sBase.size[3]+XYoff[1],$
-                     100],$
+                     300],$
               value: 'CANCEL',$
               uname: 'empty_cell_sf_base_cancel'}
 
