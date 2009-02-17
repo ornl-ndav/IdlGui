@@ -732,7 +732,11 @@ PRO calculate_sf, Event
       h = h,$
       SF = SF
       
+      (*global).bRecapPlot =  1b ;we can create the output file
+      
   ENDIF ELSE BEGIN ;SF is NaN, stop here
+  
+      (*global).bRecapPlot =  0b ;we can not create the output file
   
   ENDELSE
   
@@ -776,20 +780,20 @@ PRO plot_recap_empty_cell_sf, Event,$
   h_over_Mn = h / Mn
   A_times_diameter = fAm * fDm
   B_times_diameter = fBm * fDm
-
+  
   print, 'data proton charge: ' + strcompress(data_proton_charge)
   print, 'empty_cell_proton_charge: ' + strcompress(empty_cell_proton_charge)
   print, 'h_over_Mn: ' + strcompress(h_over_Mn)
   print, 'A_times_diameter: ' + strcompress(A_times_diameter)
   print, 'B_times_diameter: ' + strcompress(B_times_diameter)
   print, '_____________________________________'
-
+  
   FOR t=0,(Ntof-1) DO BEGIN
   
     FOR p=0,(Npix-1) DO BEGIN
-
+    
       IF (t EQ 82 AND p EQ 137) THEN print, 't=82 and p=137'
-
+      
       ;1st part (data)
       part1 = data_data[t,p]
       IF (t EQ 82 AND $
@@ -800,7 +804,7 @@ PRO plot_recap_empty_cell_sf, Event,$
       TOF = FLOAT(data_tof_axis[t]) * 1.E-6 ;to be in s
       IF (t EQ 82 AND $
         p EQ 137 AND $
-        debuggin_on_mac EQ 'yes') THEN print, 'TOF: ' + strcompress(TOF)
+        debugging_on_mac EQ 'yes') THEN print, 'TOF: ' + strcompress(TOF)
         
       Lsd = FLOAT(distance_sample_pixel_array[p]) ;distance sample detector
       IF (t EQ 82 AND $
@@ -816,28 +820,28 @@ PRO plot_recap_empty_cell_sf, Event,$
       
       lambda = (h_over_Mn * TOF) / Ldm
       IF (t EQ 82 AND p EQ 137) THEN print, 'lambda: ' + strcompress(lambda)
-
+      
       exp1 = A_times_diameter + lambda * B_times_diameter
       IF (t EQ 82 AND p EQ 137) THEN print, 'exp1: ' + strcompress(exp1)
-
+      
       exp  = EXP(-exp1)
       IF (t EQ 82 AND p EQ 137) THEN print, 'exp: ' + strcompress(exp)
-
+      
       part2  = exp / empty_cell_proton_charge
       part2 *= data_proton_charge
       part2 *= empty_cell_data[t,p]
       IF (t EQ 82 AND p EQ 137) THEN BEGIN
-          print, 'part2: ' + strcompress(part2)      
-          print, '******'
-          print, 'SF: ' + strcompress(sf)
-          print, 'empty_cell_data[t,p]: ' + strcompress(empty_cell_data[t,p])
+        print, 'part2: ' + strcompress(part2)
+        print, '******'
+        print, 'SF: ' + strcompress(sf)
+        print, 'empty_cell_data[t,p]: ' + strcompress(empty_cell_data[t,p])
       ENDIF
-
+      
       ;difference
       recap_data[t,p] = part1 - SF * part2
       IF (t EQ 82 AND p EQ 137) THEN print, 'recap_data[t,p]=' + $
         strcompress(part1 - SF * part2)
-      
+        
     ENDFOR
     
   ENDFOR

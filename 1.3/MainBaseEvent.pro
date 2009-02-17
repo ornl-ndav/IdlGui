@@ -1191,6 +1191,7 @@ PRO MAIN_BASE_event, Event
       'empty_cell_scaling_factor_button'): BEGIN
       WIDGET_CONTROL, HOURGLASS=1
       start_sf_scaling_factor_calculation_mode, Event ;_sf_empty_cell
+      (*global).bRecapPlot =  0b
       WIDGET_CONTROL, HOURGLASS=0
     END
     

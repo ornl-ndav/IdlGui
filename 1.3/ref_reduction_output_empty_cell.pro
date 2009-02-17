@@ -56,6 +56,8 @@ PRO create_empty_cell_output_file, Event
 
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  WIDGET_CONTROL, /HOURGLASS
+  
   ;get metadata
   ;;full name of data file
   ;;full name of empty cell file
@@ -72,28 +74,29 @@ PRO create_empty_cell_output_file, Event
   distance_sample_moderator = (*global).empty_cell_distance_moderator_sample
   
   ;recap data
-  recap_data = (*(*global).SF_RECAP_D_TOTAL_ptr)
-  ntof = (size(recap_data))(2)
+  recap_data    = (*(*global).SF_RECAP_D_TOTAL_ptr)
+  ntof          = (size(recap_data))(2)
+  data_tof_axis = (*(*global).sf_empty_cell_tof)
   
   ;scaling factor
   SF = getTextFieldValue(Event,'scaling_factor_equation_value')
   
-  nbr_metadata = 10
+  nbr_metadata = 11 ;number of metadata
   metadata_array = STRARR(nbr_metadata)
-  i=0
-  metadata_array[i++] = '#F data: ' + data_file
-  metadata_array[i++] = '#F empty_cell: ' + empty_cell_file
-  metadata_array[i++] = '#D ' + GenerateReadableIsoTimeStamp()
-  metadata_array[i++] = '#C data proton charge (picoCoulomb): ' + $
+  metadata_array[0] = '#F data: ' + data_file
+  metadata_array[1] = '#F empty_cell: ' + empty_cell_file
+  metadata_array[2] = '#D ' + GenerateReadableIsoTimeStamp()
+  metadata_array[3] = '#C data proton charge (picoCoulomb): ' + $
     STRCOMPRESS(data_proton_charge,/REMOVE_ALL)
-  metadata_array[i++] = '#C empty cell proton charge (picoCoulomb): ' + $
+  metadata_array[4] = '#C empty cell proton charge (picoCoulomb): ' + $
     STRCOMPRESS(empty_cell_proton_charge,/REMOVE_ALL)
-  metadata_array[i++] = '#C A(cm^-1): ' + A
-  metadata_array[i++] = '#C B(cm^-2): ' + B
-  metadata_array[i++] = '#C D(cm): ' + D
-  metadata_array[i++] = '#C Scaling Factor: ' + SF
-  metadata_array[i++] = '#C distance sample moderator(m): ' + $
+  metadata_array[5] = '#C A(cm^-1): ' + A
+  metadata_array[6] = '#C B(cm^-2): ' + B
+  metadata_array[7] = '#C D(cm): ' + D
+  metadata_array[8] = '#C Scaling Factor: ' + SF
+  metadata_array[9] = '#C distance sample moderator(m): ' + $
     STRCOMPRESS(distance_sample_moderator,/REMOVE_ALL)
+  metadata_array[10] = ''
   
   ;retrieve output file name
   folder = getButtonValue(Event,'empty_cell_output_folder_button')
@@ -101,28 +104,43 @@ PRO create_empty_cell_output_file, Event
   output_file_name = folder + file_name
   
   global_axes_description = '#L time_of_flight(microsecond) data() sigma()'
-  single_axes_1 = "#S Spectrum ID ('bank1',('
-  single_axes_2 = ',all))
+  single_axes_0 = '#N 3'
+  single_axes_1 = "#S Spectrum ID ('bank1',("
+  single_axes_2 = ',all))'
   
   OPENW, 1, output_file_name
   
+  ;Write the metadata first
+  FOR i=0,(nbr_metadata-1) DO BEGIN
+    PRINTF, 1, metadata_array[i]
+  ENDFOR
+  
   FOR pixel=0,256 DO BEGIN
-    PRINTF, 1, ''
+    PRINTF, 1, single_axes_1 + STRCOMPRESS(pixel,/REMOVE_ALL) + single_axes_2
+    PRINTF, 1, single_axes_0
+    PRINTF, 1, global_axes_description
     FOR tof=0,ntof DO BEGIN
-      PRINTF,1,''
+      text = STRCOMPRESS(data_tof_axis[tof],/REMOVE_ALL) + '   '
+      text += STRCOMPRESS(recap_data[tof,pixel],/REMOVE_ALL) + '   0'
+      PRINTF,1, text
     ENDFOR
   ENDFOR
-    
+  
   CLOSE, 1
   FREE_LUN, 1
   
+  ;validate or not the preview button according to success of file creation
+  check_empty_cell_recap_output_file_name, Event
   
+  WIDGET_CONTROL, HOURGLASS=0
   
 END
 
 ;------------------------------------------------------------------------------
 PRO check_empty_cell_recap_output_file_name, Event
 
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   folder = getButtonValue(Event,'empty_cell_output_folder_button')
   file_name = getTextFieldValue(Event,'empty_cell_output_file_name_text_field')
   
@@ -137,6 +155,13 @@ PRO check_empty_cell_recap_output_file_name, Event
   ENDELSE
   ActivateWidget, Event, 'empty_cell_preview_of_ascii_button', activate_preview
   
+  IF (file_name NE '' AND (*global).bRecapPlot EQ 1b) THEN BEGIN
+    activate_go = 1b
+  ENDIF ELSE BEGIN
+    activate_go = 0b
+  ENDELSE
+  ActivateWidget, Event, 'empty_cell_create_output_file_button', activate_go
+  
 END
 
 ;-------------------------------------------------------------------------------
@@ -149,6 +174,7 @@ PRO preview_empty_cell_output_file, Event
   full_file_name = folder + file_name
   
   ;preview file
-  xdisplayfile, full_file_name, TITLE='Preview of ' + full_file_name
+  xdisplayfile, full_file_name, TITLE='Preview of ' + full_file_name[0]
+  
   
 END

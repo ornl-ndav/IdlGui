@@ -232,7 +232,7 @@ sOutputFolder = { size: [XYoff[0],$
 XYoff = [0,25] ;name of file
 sOutputFile = { size: [sOutputFolder.size[0]+XYoff[0],$
                        sOutputFolder.size[1]+XYoff[1],$
-                       315],$
+                       465],$
                 value: '',$
                 uname: 'empty_cell_output_file_name_text_field'}
 
@@ -243,7 +243,7 @@ sOutputButton = { size: [sOutputFile.size[0]+$
                          100,30],$
                   value: 'CREATE FILE',$
                   uname: 'empty_cell_create_output_file_button',$
-                  sensitive: 1}
+                  sensitive: 0}
 
 XYoff = [0,1] ;preview button
 sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
@@ -252,9 +252,9 @@ sOutputPreview = { size: [sOutputFile.size[0]+XYoff[0],$
                           sOutputFolder.size[2]],$
                    value: 'PREVIEW of ASCII FILE',$
                    uname: 'empty_cell_preview_of_ascii_button',$
-                   sensitive: 1}
+                   sensitive: 0}
                           
-;end of recap base/draw .......................................................
+;end of output recap base/draw ................................................
 
 XYoff = [-615,-80]
 sSFcancel = { size: [sBase.size[2]+XYoff[0],$
@@ -748,6 +748,7 @@ text = WIDGET_TEXT(output_base,$
                    SCR_XSIZE = sOutputFile.size[2],$
                    UNAME     = sOutputFile.uname,$
                    VALUE     = sOutputFile.value,$
+                   /ALL_EVENTS,$
                    /EDITABLE)
 
 ;create output file button
