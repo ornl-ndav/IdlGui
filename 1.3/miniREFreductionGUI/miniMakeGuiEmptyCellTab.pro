@@ -431,6 +431,7 @@ sSubBase = { size: [sTab.size[0]+XYoff[0],$
                     XYoff[1],$
                     880,135],$
              uname: 'empty_cell_substrate_base',$
+             sensitive: 0,$
              frame: 1}
 
 XYoff = [20,-8] ;title
@@ -1003,6 +1004,7 @@ wSubBase = WIDGET_BASE(wBase,$
                        SCR_YSIZE = sSubBase.size[3],$
                        UNAME     = sSubBase.uname,$
                        FRAME     = sSubBase.frame,$
+                       SENSITIVE = sSubBase.sensitive,$
                        /ROW)
 
 ;equation .....................................................................
