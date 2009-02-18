@@ -31,6 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = "utilities/"
@@ -105,6 +106,7 @@ cd, CurrentFolder
 .run ref_reduction_RescaleNormalization2D3DPlot.pro
 .run ref_reduction_browse_nexus.pro
 .run ref_reduction_PlotEmptyCell.pro
+.run ref_reduction_output_empty_cell.pro
 .run ref_reduction_empty_cell.pro
 .run ref_reduction_sf_empty_cell.pro
 
@@ -155,4 +157,3 @@ cd, CurrentFolder
 .run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
-
