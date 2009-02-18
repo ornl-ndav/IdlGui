@@ -40,6 +40,13 @@ RETURN, TextFieldValue
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getButtonValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
 ;This function returns the contain of the Main Log Book text field
 FUNCTION getLogBookText, Event
 return, getTextFieldValue(Event,'log_book_text_field')

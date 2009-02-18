@@ -155,9 +155,9 @@ id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='empty_cell_draw1_uname')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 ERASE
-IF (!VERSION.os EQ 'darwin') THEN BEGIN
-   img = SWAP_ENDIAN(img)
-ENDIF
+;IF (!VERSION.os EQ 'darwin') THEN BEGIN
+;   img = SWAP_ENDIAN(img)
+;ENDIF
 
 ;rebin data to fill up all graph
 display_Ntof = (*global).Ntof_empty_cell

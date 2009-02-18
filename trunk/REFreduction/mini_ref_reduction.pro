@@ -48,12 +48,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
-VERSION            = '1.3.9'            
+VERSION            = '1.3.11'            
 DEBUGGING_VERSION  = 'no'              ;NO
 MOUSE_DEBUGGING    = 'no'              ;NO
 WITH_LAUNCH_SWITCH = 'no' 
 WITH_JOB_MANAGER   = 'no'  
 CHECKING_PACKAGES  = 'yes'             ;YES
+DEBUGGING_ON_MAC   = 'no'         ;no
 
 debugging_structure = getDebuggingStructure()
 
@@ -82,6 +83,7 @@ ENDELSE
 global = ptr_new ({ first_event: 1,$
                     substrate_type: PTR_NEW(0L),$
                     VERSION: version,$
+                    debugging_on_mac: DEBUGGING_ON_MAC,$
 
                     empty_cell_images: PTR_NEW(0L),$
                       sf_equation_file: $
@@ -105,6 +107,7 @@ global = ptr_new ({ first_event: 1,$
                       '/entry/instrument/bank1/distance/',$
                     distance_sample_pixel_array: PTR_NEW(0L),$
                     SF_RECAP_D_TOTAL_ptr: PTR_NEW(0L),$
+                    bRecapPlot: 0b,$ ;1 if there is a recap plot
 
                     pola_type: '',$ ;'data' or 'norm'
                     data_path_flag: '--data-paths',$
