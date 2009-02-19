@@ -41,10 +41,10 @@ CD, CURRENT = current_folder
 ;******************************************************************************
 APPLICATION       = 'REFoffSpec'
 VERSION           = '1.3.0'
-DEBUGGING         = 'no'        ;no
+DEBUGGING         = 'yes'        ;no
 TESTING           = 'no'        ;no
 SCROLLING         = 'no'        ;no 
-CHECKING_PACKAGES = 'yes'       ;yes
+CHECKING_PACKAGES = 'no'       ;yes
 SUPER_USERS       = ['j35']
 
 ;DEBUGGING (enter the tab you want to see)
@@ -61,8 +61,8 @@ SUPER_USERS       = ['j35']
 ;          5: Create Output
 ;          6: Options,
 ;          7:Log Book 
-sDEBUGGING = { tab: {main_tab: 4,$ ;REDUCE tab
-                     step4_tab: 0,$
+sDEBUGGING = { tab: {main_tab: 3,$ 
+                     step4_tab: 1,$
                      scaling_tab: 1},$
                ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
                reduce_tab1_cw_field: '4753-4755',$

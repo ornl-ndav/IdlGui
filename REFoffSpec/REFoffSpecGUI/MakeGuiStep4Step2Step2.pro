@@ -128,7 +128,7 @@ XYoff        = [0,Y_base_off]
 sAutoBase    = { size   : [sB1_LambdaminLambdamaxInput.size[0]+XYoff[0],$
                            sB1_LambdaminLambdamaxInput.size[1]+ $
                            sB1_LambdaminLambdamaxInput.size[3]+XYoff[1],$
-                           sB1_LambdaminLambdamaxInput.size[2],65],$
+                           sB1_LambdaminLambdamaxInput.size[2],45],$
                  uname  : 'auto_mode_base',$
                  sensitive: 0,$
                  frame  : 5}
@@ -148,16 +148,16 @@ sB_AutoScalFit = { size      : [XYoff[0],$
                    value     : '>     >   >  > >> >>> AUTOMATIC ' + $
                    'FITTING and RESCALING <<< << <  <   <    <'}
 
-;***** with error bars or not
-XYoff = [0,-5]
-sError = { size: [sB_AutoScalFit.size[0]+XYoff[0],$
-                  sB_AutoScalFit.size[1]+$
-                  sB_AutoScalFit.size[3]+$
-                  XYoff[1]],$
-           list: ['YES','NO'],$
-           title: 'Calculation taking into account error bars:',$
-           value: 0.0,$
-           uname: 'step4_step2_step2_with_error_bars_cw_bgroup'}
+;;***** with error bars or not
+;XYoff = [0,-5]
+;sError = { size: [sB_AutoScalFit.size[0]+XYoff[0],$
+;                  sB_AutoScalFit.size[1]+$
+;                  sB_AutoScalFit.size[3]+$
+;                  XYoff[1]],$
+;           list: ['YES','NO'],$
+;           title: 'Calculation taking into account error bars:',$
+;           value: 0.0,$
+;           uname: 'step4_step2_step2_with_error_bars_cw_bgroup'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual *****************************************************************
@@ -411,16 +411,16 @@ wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               SCR_YSIZE = sB_AutoScalFit.size[3],$
                               VALUE     = sB_AutoScalFit.value)
 
-wError = CW_BGROUP(wAutoBase,$
-                   sError.list,$
-                   XOFFSET    = sError.size[0],$
-                   YOFFSET    = sError.size[1],$
-                   LABEL_LEFT = sError.title,$
-                   UNAME      = sError.uname,$
-                   SET_VALUE  = sError.value,$
-                   /EXCLUSIVE,$
-                   /ROW,$
-                   /NO_RELEASE)
+;wError = CW_BGROUP(wAutoBase,$
+;                   sError.list,$
+;                   XOFFSET    = sError.size[0],$
+;                   YOFFSET    = sError.size[1],$
+;                   LABEL_LEFT = sError.title,$
+;                   UNAME      = sError.uname,$
+;                   SET_VALUE  = sError.value,$
+;                   /EXCLUSIVE,$
+;                   /ROW,$
+;                   /NO_RELEASE)
 
 ;------------------------------------------------------------------------------
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
