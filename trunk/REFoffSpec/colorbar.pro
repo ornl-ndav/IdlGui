@@ -254,7 +254,7 @@ PRO COLORBAR, BOTTOM        = bottom, $
     compile_opt idl2
 
     ; Return to caller on error.
-    On_Error, 2
+    ;On_Error, 2
 
     ; Save the current plot state.
     bang_p = !P

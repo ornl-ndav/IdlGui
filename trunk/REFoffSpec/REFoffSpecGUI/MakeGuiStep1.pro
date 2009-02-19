@@ -93,6 +93,4 @@ make_gui_reduce_step3, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
 ;reduce_step4
 make_gui_reduce_step4, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
 
-
-
 END
