@@ -32,6 +32,15 @@
 ;
 ;==============================================================================
 
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
+
+;------------------------------------------------------------------------------
 ;logger message
 PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
@@ -46,5 +55,7 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
+
+print, logger_message
 
 END
