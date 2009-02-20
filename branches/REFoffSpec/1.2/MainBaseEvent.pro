@@ -1068,6 +1068,7 @@ PRO MAIN_BASE_event, Event
     CASE (selection_value) OF
       0: IvsQbaseMap = 0
       1: IvsQbaseMap = 1
+      2: IvsQbaseMap = 1
       ELSE: IvsQbaseMap = 0
     ENDCASE
     MapBase, Event, 'step5_counts_vs_q_base_uname', IvsQbaseMap

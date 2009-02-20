@@ -56,6 +56,4 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
-print, logger_message
-
 END
