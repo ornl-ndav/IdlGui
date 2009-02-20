@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-;re_plot the fittin
+;re_plot the fitting 
 PRO re_plot_fitting, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
