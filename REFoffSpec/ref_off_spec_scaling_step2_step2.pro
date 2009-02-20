@@ -547,9 +547,7 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   ;    (*global).step4_2_2_fitting_status = 1
   ;ENDELSE
   
-  putTextfieldValue, Event, 'step2_fitting_equation_a_text_field', b_value
-  putTextfieldValue, Event, 'step2_fitting_equation_b_text_field', a_value
-END
+  END
 
 ;------------------------------------------------------------------------------
 PRO calculate_average_fitted_y, Event, a, b, lda_min, lda_max
