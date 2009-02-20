@@ -610,7 +610,8 @@ PRO produce_i_vs_q_output_file, Event
   FileLine[++index] = ''
   
   FOR i=0,(nbr_data-1) DO BEGIN
-    Line = STRCOMPRESS(x_axis_selected[i],/REMOVE_ALL) + '  '
+;    Line = STRCOMPRESS(x_axis_selected[i],/REMOVE_ALL) + '  '
+    Line = STRCOMPRESS(x_axis_in_Q[i],/REMOVE_ALL) + '  '
     Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
     Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
     FileLine[++index] = Line
