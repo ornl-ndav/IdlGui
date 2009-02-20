@@ -36,21 +36,22 @@
 PRO re_plot_fitting, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  fitting_parameters = (*global).step4_2_2_fitting_parameters
-  a = fitting_parameters[0]
-  b = fitting_parameters[1]
+  SF = (*(*global).scaling_factor)
+  ;fitting_parameters = (*global).step4_2_2_fitting_parameters
+  ;a = fitting_parameters[0]
+  ;b = fitting_parameters[1]
   x_axis = (*(*global).step4_2_2_x_array_to_fit)
-  IF (a EQ 0 AND $
-    b EQ 0) THEN BEGIN ;do nothing
+  IF (SF EQ 0) THEN BEGIN ;do nothing
   ENDIF ELSE BEGIN
-    plot_fitting, Event, x_axis=x_axis, A=a, B=b
+    plot_fitting, Event, x_axis=x_axis, A=SF
   ENDELSE
 END
 
 ;------------------------------------------------------------------------------
 ;plot the fitting only
 PRO plot_fitting, Event, x_axis=x_axis, A=a, B=b
-  y_new = FLOAT(b)*x_axis + FLOAT(a)
+  ;y_new = FLOAT(b)*x_axis + FLOAT(a)
+  y_new = FLOAT(a)
   oplot, x_axis, y_new, COLOR=250, thick=1.5
 END
 
@@ -447,6 +448,7 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
     s_scale_factor = getTextFieldValue(Event,'step2_y_before_text_field')
     putTextFieldvalue, Event, 'step2_sf_text_field',s_scale_factor
   ENDELSE
+  
   f_scale_factor = FLOAT(s_scale_factor)
   nbr_files      = getNbrFiles(Event)
   scaling_factor = FLTARR(nbr_files) + 1
@@ -488,13 +490,14 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
     
   ;we also need to rescale the fitting parameters to replot the fitting line
   ;after rescalling
-  fitting_parameters = (*global).step4_2_2_fitting_parameters_backup
-  a = fitting_parameters[0]
-  b = fitting_parameters[1]
-  a_rescale = a / f_scale_factor
-  b_rescale = b / f_scale_factor
-  (*global).step4_2_2_fitting_parameters = [a_rescale,b_rescale]
+  ;fitting_parameters = (*global).step4_2_2_fitting_parameters_backup
+  ;a = fitting_parameters[0]
+  ;b = fitting_parameters[1]
+  ;a_rescale = a / f_scale_factor
+  ;b_rescale = b / f_scale_factor
+  ;(*global).step4_2_2_fitting_parameters = [a_rescale,b_rescale]
   ;we can now replot CE file and fitting line too
+  
   ;replot data
   display_step4_step2_step2_selection, Event
   ;plot Lambda on top of plot
@@ -525,8 +528,15 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   ;y_error_array_to_fit      = y_error_array[lda_index[0]:lda_index[1]]
   
   ;calculate the average value over the range selected
-  average = MEAN(y_array_to_fit)
-      
+  AverageValue = MEAN(y_array_to_fit)
+  
+  putTextFieldValue, Event, $
+    'step2_y_before_text_field',$
+    STRCOMPRESS(AverageValue,/REMOVE_ALL)
+  putTextFieldValue, Event,$
+    'step2_sf_text_field',$
+    STRCOMPRESS(AverageValue,/REMOVE_ALL) 
+     
   ;;determine the fitting parameters of this data
   ;fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
   ;(*global).step4_2_2_fitting_parameters_backup = [a,b]

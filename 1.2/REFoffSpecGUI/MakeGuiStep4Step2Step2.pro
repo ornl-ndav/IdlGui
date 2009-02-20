@@ -128,7 +128,7 @@ XYoff        = [0,Y_base_off]
 sAutoBase    = { size   : [sB1_LambdaminLambdamaxInput.size[0]+XYoff[0],$
                            sB1_LambdaminLambdamaxInput.size[1]+ $
                            sB1_LambdaminLambdamaxInput.size[3]+XYoff[1],$
-                           sB1_LambdaminLambdamaxInput.size[2],65],$
+                           sB1_LambdaminLambdamaxInput.size[2],45],$
                  uname  : 'auto_mode_base',$
                  sensitive: 0,$
                  frame  : 5}
@@ -148,16 +148,16 @@ sB_AutoScalFit = { size      : [XYoff[0],$
                    value     : '>     >   >  > >> >>> AUTOMATIC ' + $
                    'FITTING and RESCALING <<< << <  <   <    <'}
 
-;***** with error bars or not
-XYoff = [0,-5]
-sError = { size: [sB_AutoScalFit.size[0]+XYoff[0],$
-                  sB_AutoScalFit.size[1]+$
-                  sB_AutoScalFit.size[3]+$
-                  XYoff[1]],$
-           list: ['YES','NO'],$
-           title: 'Calculation taking into account error bars:',$
-           value: 0.0,$
-           uname: 'step4_step2_step2_with_error_bars_cw_bgroup'}
+;;***** with error bars or not
+;XYoff = [0,-5]
+;sError = { size: [sB_AutoScalFit.size[0]+XYoff[0],$
+;                  sB_AutoScalFit.size[1]+$
+;                  sB_AutoScalFit.size[3]+$
+;                  XYoff[1]],$
+;           list: ['YES','NO'],$
+;           title: 'Calculation taking into account error bars:',$
+;           value: 0.0,$
+;           uname: 'step4_step2_step2_with_error_bars_cw_bgroup'}
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual *****************************************************************
@@ -166,7 +166,7 @@ sManualBase =  { size   : [sAutoBase.size[0]+XYoff[0],$
                            sAutoBase.size[1]+ $
                            sAutoBase.size[3]+XYoff[1],$
                            sAutoBase.size[2],$
-                           150],$
+                           120],$
                  uname  : 'manual_mode_base',$
                  frame  : 5}
 
@@ -176,40 +176,41 @@ sManualBaseTitle = { size  : [sManualBase.size[0]+15,$
                      value : 'Manual Mode'}
 
 ;***** Manual Fitting Equation Label ******************************************
-sManualFittingLabel = { size  : [5,10],$
-                        value : 'Fitting equation:  Y='}
+;sManualFittingLabel = { size  : [5,10],$
+;;                        value : 'Fitting equation:  Y='}
+;                        value : 'Average Value of Selection is: '}
+;
+;;***** Manual Fitting a text field ********************************************
+;XYoff               = [135,-8]
+;sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
+;                                 sManualFittingLabel.size[1]+XYoff[1],$
+;                                 80,$
+;                                 25],$
+;                        value : 'a',$
+;                        frame : 1,$
+;                        uname : 'step2_fitting_equation_a_text_field'}
 
-;***** Manual Fitting a text field ********************************************
-XYoff               = [135,-8]
-sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
-                                 sManualFittingLabel.size[1]+XYoff[1],$
-                                 80,$
-                                 25],$
-                        value : 'a',$
-                        frame : 1,$
-                        uname : 'step2_fitting_equation_a_text_field'}
-
-;***** Manual Fitting Equation b label ****************************************
-XYoff              = [5,0]
-sManualFitting_b_L = { size  : [sManualFitting_a_TF.size[0]+ $
-                                sManualFitting_a_TF.size[2]+XYoff[0],$
-                                sManualFittingLabel.size[1]],$
-                       value : 'X +'}
-
-;***** Manual Fitting Equation b text field ***********************************
-XYoff               = [25,0]
-sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
-                                 sManualFitting_a_TF.size[1:3]],$
-                        value : 'b',$
-                        frame : 1,$
-                        uname : 'step2_fitting_equation_b_text_field'}
+;;***** Manual Fitting Equation b label ****************************************
+;XYoff              = [5,0]
+;sManualFitting_b_L = { size  : [sManualFitting_a_TF.size[0]+ $
+;                                sManualFitting_a_TF.size[2]+XYoff[0],$
+;                                sManualFittingLabel.size[1]],$
+;                       value : 'X +'}
+;
+;;***** Manual Fitting Equation b text field ***********************************
+;XYoff               = [25,0]
+;sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
+;                                 sManualFitting_a_TF.size[1:3]],$
+;                        value : 'b',$
+;                        frame : 1,$
+;                        uname : 'step2_fitting_equation_b_text_field'}
 
 ;***** Manual Scalling ********************************************************
 
 ;***** Average Y Before *******************************************************
-XYoff           = [0,35]
-sAverageYBefore = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
-                             sManualFittingLabel.size[1]+XYoff[1]],$
+XYoff           = [5,15]
+sAverageYBefore = { size  : [XYoff[0],$
+                             XYoff[1]],$
                     value : 'Average I[Lda_min:Lda_max] Before:'}
 
 ;***** Average Y Before value *************************************************
@@ -411,16 +412,16 @@ wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               SCR_YSIZE = sB_AutoScalFit.size[3],$
                               VALUE     = sB_AutoScalFit.value)
 
-wError = CW_BGROUP(wAutoBase,$
-                   sError.list,$
-                   XOFFSET    = sError.size[0],$
-                   YOFFSET    = sError.size[1],$
-                   LABEL_LEFT = sError.title,$
-                   UNAME      = sError.uname,$
-                   SET_VALUE  = sError.value,$
-                   /EXCLUSIVE,$
-                   /ROW,$
-                   /NO_RELEASE)
+;wError = CW_BGROUP(wAutoBase,$
+;                   sError.list,$
+;                   XOFFSET    = sError.size[0],$
+;                   YOFFSET    = sError.size[1],$
+;                   LABEL_LEFT = sError.title,$
+;                   UNAME      = sError.uname,$
+;                   SET_VALUE  = sError.value,$
+;                   /EXCLUSIVE,$
+;                   /ROW,$
+;                   /NO_RELEASE)
 
 ;------------------------------------------------------------------------------
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -440,38 +441,39 @@ wManualBase = WIDGET_BASE(STEP_BASE,$
                           FRAME     = sManualBase.frame)
 
 ;***** Manual Fitting Equation Label ******************************************
-wManualFittingLabel = WIDGET_LABEL(wManualBase,$
-                                   XOFFSET = sManualFittingLabel.size[0],$
-                                   YOFFSET = sManualFittingLabel.size[1],$
-                                   VALUE   = sManualFittingLabel.value)
-
-;***** Manual Fitting a text field ********************************************
-wManualFitting_a_TF = WIDGET_LABEL(wManualBase,$
-                                   XOFFSET   = sManualFitting_a_TF.size[0],$
-                                   YOFFSET   = sManualFitting_a_TF.size[1],$
-                                   SCR_XSIZE = sManualFitting_a_TF.size[2],$
-                                   SCR_YSIZE = sManualFitting_a_TF.size[3],$
-                                   UNAME     = sManualFitting_a_TF.uname,$
-                                   VALUE     = sManualFitting_a_TF.value,$
-                                   FRAME     = sManualFitting_a_TF.frame,$
-                                   /ALIGN_LEFT)
-
-;***** Manual Fitting Equation b label ****************************************
-wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
-                                  XOFFSET = sManualFitting_b_L.size[0],$
-                                  YOFFSET = sManualFitting_b_L.size[1],$
-                                  VALUE   = sManualFitting_b_L.value)
-
-;***** Manual Fitting Equation b text field ***********************************
-wManualFitting_b_TF = WIDGET_LABEL(wManualBase,$
-                                   XOFFSET   = sManualFitting_b_TF.size[0],$
-                                   YOFFSET   = sManualFitting_b_TF.size[1],$
-                                   SCR_XSIZE = sManualFitting_b_TF.size[2],$
-                                   SCR_YSIZE = sManualFitting_b_TF.size[3],$
-                                   UNAME     = sManualFitting_b_TF.uname,$
-                                   VALUE     = sManualFitting_b_TF.value,$
-                                   FRAME     = sManualFitting_b_TF.frame,$
-                                   /ALIGN_LEFT)
+;wManualFittingLabel = WIDGET_LABEL(wManualBase,$
+;                                   XOFFSET = sManualFittingLabel.size[0],$
+;                                   YOFFSET = sManualFittingLabel.size[1],$
+;                                   VALUE   = sManualFittingLabel.value)
+;
+;;***** Manual Fitting a text field ********************************************
+;wManualFitting_a_TF = WIDGET_LABEL(wManualBase,$
+;                                   XOFFSET   = sManualFitting_a_TF.size[0],$
+;                                   YOFFSET   = sManualFitting_a_TF.size[1],$
+;                                   SCR_XSIZE = sManualFitting_a_TF.size[2],$
+;                                   SCR_YSIZE = sManualFitting_a_TF.size[3],$
+;                                   UNAME     = sManualFitting_a_TF.uname,$
+;                                   VALUE     = sManualFitting_a_TF.value,$
+;                                   FRAME     = sManualFitting_a_TF.frame,$
+;                                   /ALIGN_LEFT)
+;
+;;***** Manual Fitting Equation b label ****************************************
+;wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
+;                                  XOFFSET = sManualFitting_b_L.size[0],$
+;                                  YOFFSET = sManualFitting_b_L.size[1],$
+;                                  VALUE   = sManualFitting_b_L.value)
+;
+;;***** Manual Fitting Equation b text field ***********************************
+;wManualFitting_b_TF = WIDGET_LABEL(wManualBase,$
+;                                   XOFFSET   = sManualFitting_b_TF.size[0],$
+;                                   YOFFSET   = sManualFitting_b_TF.size[1],$
+;                                   SCR_XSIZE = sManualFitting_b_TF.size[2],$
+;                                   SCR_YSIZE = sManualFitting_b_TF.size[3],$
+;                                   UNAME     = sManualFitting_b_TF.uname,$
+;                                   VALUE     = sManualFitting_b_TF.value,$
+;                                   FRAME     = sManualFitting_b_TF.frame,$
+;                                   /ALIGN_LEFT)
+;
 
 ;***** Manual Scalling ********************************************************
 
