@@ -49,6 +49,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
   y_coeff              = 2
   x_coeff              = 1
   
+  master_min           = !VALUES.D_NAN
+  master_max           = !VALUES.D_NAN
+  
   trans_coeff_list = (*(*global).trans_coeff_list)
   
   index = 0                ;loop variable (nbr of array to add/plot
@@ -81,7 +84,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       
       Min  = (*global).zmin_g_recap
       fMin = DOUBLE(Min)
-      index_LT = WHERE(local_tfpData LT fMin, nbr1)
+      
+      index_LT = WHERE((local_tfpData LT fMin) AND $
+            (FINITE(local_tfpDAta)), nbr1)  
       IF (nbr1 GT 0) THEN BEGIN
         tmp = local_tfpData
         tmp[index_LT] = !VALUeS.D_NAN
@@ -91,7 +96,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       ENDIF ELSE BEGIN
         local_min = MIN(local_tfpData,/NAN)
       ENDELSE
-      
+            
     ENDIF ELSE BEGIN
     
       ;determine max and min
@@ -108,13 +113,13 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     IF (bLogPlot) THEN BEGIN
     
       zero_index = WHERE(local_tfpData EQ 0)
-      local_tfpdata[zero_index] = !VALUES.F_NAN
+      local_tfpdata[zero_index] = !VALUES.D_NAN
       
       local_min = MIN(local_tfpData,/NAN)
       local_max = MAX(local_tfpData,/NAN)
-      
+
       local_tfpData = ALOG10(local_tfpData)
-      
+
     ENDIF
     
     IF (index EQ 0) THEN BEGIN
@@ -124,9 +129,6 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       IF (local_min LT master_min) THEN master_min = local_min
       IF (local_max GT master_max) THEN master_max = local_max
     ENDELSE
-    
-    (*global).zmax_g_recap = master_max
-    (*global).zmin_g_recap = master_min
     
     IF (index EQ 0) THEN BEGIN
     
@@ -176,7 +178,10 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     ++index
     
   ENDWHILE
-  
+
+   (*global).zmax_g_recap = master_max
+    (*global).zmin_g_recap = master_min
+   
   ;rebin by 2 in y-axis final array
   rData = REBIN(base_array, $
     (size(base_array))(1)*x_coeff, $
