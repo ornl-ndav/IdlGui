@@ -490,7 +490,7 @@ END
 PRO plot_step5_i_vs_Q_selection, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  refresh_recap_plot, Event, RESCALE=1 ;_step5
+  refresh_recap_plot, Event, RESCALE=1
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
