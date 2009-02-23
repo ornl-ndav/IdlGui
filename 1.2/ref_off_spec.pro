@@ -40,7 +40,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*****************************************************************************
   ;*****************************************************************************
   APPLICATION       = 'REFoffSpec'
-  VERSION           = '1.2.3'
+  VERSION           = '1.2.4'
   DEBUGGING         = 'no'        ;no
   TESTING           = 'no'        ;no
   SCROLLING         = 'no'        ;no
