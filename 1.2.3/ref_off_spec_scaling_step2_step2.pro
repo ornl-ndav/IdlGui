@@ -403,7 +403,7 @@ PRO step4_2_2_automatic_fitting_scaling, Event
   ;Fitting --------------------------------------
   IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING
   fit_error = 0
-  CATCH, fit_error
+  ;CATCH, fit_error
   IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
