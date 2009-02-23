@@ -41,9 +41,14 @@ PRO re_plot_fitting, Event
   ;a = fitting_parameters[0]
   ;b = fitting_parameters[1]
   x_axis = (*(*global).step4_2_2_x_array_to_fit)
-  IF (SF EQ 0) THEN BEGIN ;do nothing
+  
+  AverageValue = (*global).AverageValue
+  SF           = getTextFieldValue(Event,'step2_sf_text_field')
+  A = AverageValue / FLOAT(SF)
+  
+  IF (AverageValue EQ 0) THEN BEGIN ;do nothing
   ENDIF ELSE BEGIN
-    plot_fitting, Event, x_axis=x_axis, A=SF
+    plot_fitting, Event, x_axis=x_axis, A=A
   ENDELSE
 END
 
@@ -51,7 +56,7 @@ END
 ;plot the fitting only
 PRO plot_fitting, Event, x_axis=x_axis, A=a, B=b
   ;y_new = FLOAT(b)*x_axis + FLOAT(a)
-  y_new = FLOAT(a)
+  y_new = FLOAT(a) + 0*x_axis
   oplot, x_axis, y_new, COLOR=250, thick=1.5
 END
 
@@ -497,7 +502,7 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
   ;b_rescale = b / f_scale_factor
   ;(*global).step4_2_2_fitting_parameters = [a_rescale,b_rescale]
   ;we can now replot CE file and fitting line too
-  
+    
   ;replot data
   display_step4_step2_step2_selection, Event
   ;plot Lambda on top of plot
@@ -529,14 +534,15 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   
   ;calculate the average value over the range selected
   AverageValue = MEAN(y_array_to_fit)
-  
-  putTextFieldValue, Event, $
+  (*global).AverageValue = AverageValue
+    
+    putTextFieldValue, Event, $
     'step2_y_before_text_field',$
     STRCOMPRESS(AverageValue,/REMOVE_ALL)
   putTextFieldValue, Event,$
     'step2_sf_text_field',$
-    STRCOMPRESS(AverageValue,/REMOVE_ALL) 
-     
+    STRCOMPRESS(AverageValue,/REMOVE_ALL)
+    
   ;;determine the fitting parameters of this data
   ;fit_data, Event, x_array_to_fit, y_array_to_fit, y_error_array_to_fit, a, b
   ;(*global).step4_2_2_fitting_parameters_backup = [a,b]
@@ -556,8 +562,9 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   ;    calculate_average_fitted_y, Event, a, b, lda_min, lda_max
   ;    (*global).step4_2_2_fitting_status = 1
   ;ENDELSE
-  
-  END
+    
+  (*global).step4_2_2_fitting_status = 1
+END
 
 ;------------------------------------------------------------------------------
 PRO calculate_average_fitted_y, Event, a, b, lda_min, lda_max
@@ -586,13 +593,14 @@ END
 PRO check_step4_2_2_gui, Event ;scaling_step4_step2
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  ;check if a and b are not 'N/A', if yes, activate SF text_field
-  a = getTextFieldValue(Event, 'step2_fitting_equation_a_text_field')
-  b = getTextFieldValue(Event, 'step2_fitting_equation_b_text_field')
-  IF (a EQ 'NaN' OR $
-    a EQ '-NaN' OR $
-    b EQ 'NaN' OR $
-    b EQ '-NaN') THEN BEGIN
+;  ;check if a and b are not 'N/A', if yes, activate SF text_field
+;  a = getTextFieldValue(Event, 'step2_fitting_equation_a_text_field')
+;  b = getTextFieldValue(Event, 'step2_fitting_equation_b_text_field')
+;  IF (a EQ 'NaN' OR $
+;    a EQ '-NaN' OR $
+;    b EQ 'NaN' OR $
+;    b EQ '-NaN') THEN BEGIN
+  IF ((*global).AverageValue EQ 0) THEN BEGIN
     sensitive_status = 0
   ENDIF ELSE BEGIN
     sensitive_status = 1

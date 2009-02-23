@@ -41,7 +41,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*****************************************************************************
   APPLICATION       = 'REFoffSpec'
   VERSION           = '1.2.3'
-  DEBUGGING         = 'yes'        ;no
+  DEBUGGING         = 'no'        ;no
   TESTING           = 'no'        ;no
   SCROLLING         = 'no'        ;no
   CHECKING_PACKAGES = 'yes'       ;yes
@@ -151,6 +151,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step4_2_2_draw_xmax:    681L,$
     step4_2_2_draw_ymin:    40L,$
     step4_2_2_draw_ymax:    678L,$
+    AverageValue: 0.0,$
     ResizeOrMove:        'move',$
     corner_selected:     INTARR(2),$
     fix_corner:          INTARR(2),$
