@@ -1068,6 +1068,7 @@ PRO MAIN_BASE_event, Event
     CASE (selection_value) OF
       0: IvsQbaseMap = 0
       1: IvsQbaseMap = 1
+      2: IvsQbaseMap = 1
       ELSE: IvsQbaseMap = 0
     ENDCASE
     MapBase, Event, 'step5_counts_vs_q_base_uname', IvsQbaseMap
@@ -1120,7 +1121,7 @@ PRO MAIN_BASE_event, Event
       Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
       putTextFieldValue, Event, 'y_value_step5', Ytext
       
- ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y) ;remove_me
+ ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y)
             
       total_array = (*(*global).total_array_untouched)
       size_x = (SIZE(total_array,/DIMENSION))[0]
