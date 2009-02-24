@@ -820,6 +820,10 @@ IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
 ENDIF
 
 ;==============================================================================
+;populate the list of proposal droplist (data, normalization,empty_cell)
+populate_list_of_proposal, MAIN_BASE, (*global).instrument
+
+;==============================================================================
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams

@@ -80,6 +80,7 @@ NexusInterface, BASE_UNAME = LOAD_DATA_BASE,$
                 PROPOSAL_BUTTON_UNAME = 'with_data_proposal_button',$
                 PROPOSAL_FOLDER_DROPLIST_UNAME = $
                 'data_proposal_folder_droplist',$
+                PROPOSAL_BASE_UNAME = 'data_proposal_base_uname',$
                 SAVE_AS_JPEG_UNAME = 'save_as_jpeg_button_data',$
                 PLOT_BUTTON_UNAME = 'advanced_plot_button_data'
                 
