@@ -307,6 +307,13 @@ sEmptyCellJPEGbutton = { value: 'REFreduction_images/SaveAsJpeg.bmp',$
                          tooltip: 'Create a JPEG of the plot' ,$
                          sensitive: 0}
 
+;plot button
+sPlotButton = { uname: 'empty_cell_advanced_plot_button'}
+
+;with or without proposal folder in findnexus
+sEmptyCell_proposal_button = { uname : 'with_empty_cell_proposal_button'}
+sEmptyCell_proposal_folder_droplist = { uname: 'empty_cell_proposal_folder_droplist'}
+                
 ;Y vs TOF (2d) and Y vs X (2D)
 XYoff = [5,45]
 sTab = { size: [XYoff[0], $
@@ -808,61 +815,16 @@ wSFok = WIDGET_BUTTON(wSFcalculationBase,$
 
 ;end of scaling factor calculation ............................................
 
-
-
-;nexus (browse, widget_text....etc) -------------------------------------------
-wNexusBase = WIDGET_BASE(wBase,$
-                         XOFFSET   = sNexusBase.size[0],$
-                         YOFFSET   = sNexusBase.size[1],$
-                         FRAME     = sNexusBase.frame,$
-                         UNAME     = sNexusBase.uname,$
-                         /ROW)
-
-;browse button
-wNexusBrowseButton = WIDGET_BUTTON(wNexusBase,$
-                                   XSIZE = sNexusBrowseButton.size[2],$
-                                   UNAME = sNexusBrowseButton.uname,$
-                                   VALUE = sNexusBrowseButton.value)
-
-;empty space
-wLabel = WIDGET_LABEL(wNexusBase,$
-                      VALUE = '  ')
-
-;label and text field
-wEmptyCellLabel = WIDGET_LABEL(wNexusBase,$
-                               VALUE = sEmptyCellRunNumberLabel.value)
-
-wEmptyCellTextField = WIDGET_TEXT(wNexusBase,$
-                                  VALUE = sEmptyCellTextField.value,$
-                                  UNAME = sEmptyCellTextField.uname,$
-                                  /EDITABLE)
-
-;empty space
-wLabel = WIDGET_LABEL(wNexusBase,$
-                      VALUE = '  ')
-
-;Archived or List All
-wEmptyCellCWBgroup = CW_BGROUP(wNexusBase,$
-                               sEmptyCellArchivedListAll.list,$
-                               UNAME     = sEmptyCellArchivedListAll.uname,$
-                               ROW       = 1,$
-                               SET_VALUE = 0,$
-                               /EXCLUSIVE)
-
-;empty space
-wLabel = WIDGET_LABEL(wNexusBase,$
-                      VALUE = '  ')
-
-;JPEG button                               
-wEmptyCellJPEGbutton = $
-  WIDGET_BUTTON(wNexusBase,$
-                UNAME     = sEmptyCellJPEGbutton.uname,$
-                VALUE     = sEmptyCellJPEGbutton.value,$
-                TOOLTIP   = sEmptyCellJPEGbutton.tooltip,$
-                SENSITIVE = sEmptyCellJPEGbutton.sensitive,$
-                /BITMAP)
-
-;Nexus list base and widgets --------------------------------------------------
+;******************* loading nexus interface **********************************
+NexusInterface, BASE_UNAME = wBase,$
+                BROWSE_BUTTON_UNAME = sNexusBrowseButton.uname,$
+                RUN_NBR_UNAME       = sEmptyCellTextField.uname,$
+                ARCHIVED_ALL_UNAME  = sEmptyCellArchivedListAll.uname,$
+                PROPOSAL_BUTTON_UNAME = sEmptyCell_proposal_button.uname,$
+                PROPOSAL_FOLDER_DROPLIST_UNAME = $
+                sEmptyCell_proposal_folder_droplist.uname,$
+                SAVE_AS_JPEG_UNAME = sEmptyCellJPEGbutton.uname,$
+                PLOT_BUTTON_UNAME = sPlotButton.uname
 
 ;base
 wNexusListBase = WIDGET_BASE(wBase,$
