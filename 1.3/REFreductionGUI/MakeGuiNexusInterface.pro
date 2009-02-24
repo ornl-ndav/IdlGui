@@ -37,6 +37,7 @@ PRO NexusInterface, BASE_UNAME = base_uname,$
                 RUN_NBR_UNAME = run_nbr_uname,$
                 ARCHIVED_ALL_UNAME = archived_all_uname,$
                 PROPOSAL_BUTTON_UNAME = proposal_button_uname,$
+                PROPOSAL_BASE_UNAME = proposal_base_uname,$
                 PROPOSAL_FOLDER_DROPLIST_UNAME = proposal_folder_droplist_uname,$
                 SAVE_AS_JPEG_UNAME = save_as_jpeg_uname,$
                 PLOT_BUTTON_UNAME = plot_button_uname
@@ -82,6 +83,7 @@ ProButton = WIDGET_BUTTON(ProBase,$
 
 ;proposal folder base
 ProFoldBase = WIDGET_BASE(NexusBase,$
+                          UNAME = PROPOSAL_BASE_UNAME,$
                           SENSITIVE = 0)
 
 ;droplist

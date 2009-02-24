@@ -782,7 +782,6 @@ image = READ_PNG((*global).sf_equation_file)
 tv, image, 0,0,/true
 
 ;------------------------------------------------------------------------------
-
 ;populate the list of proposal droplist (data, normalization,empty_cell)
 populate_list_of_proposal, MAIN_BASE, (*global).instrument
 

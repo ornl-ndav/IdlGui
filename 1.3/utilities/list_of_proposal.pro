@@ -32,45 +32,20 @@
 ;
 ;==============================================================================
 
-
 ;------------------------------------------------------------------------------
 FUNCTION getListOfProposal, instrument, MAIN_BASE
-prefix = '/SNS/' + instrument + '/'
+prefix = '/SNSlocal/' + instrument + '/'
 cmd_ls = 'ls -dt ' + prefix + '*/'
 spawn, cmd_ls, listening, err_listening
 IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
     sz = (size(listening))(1)
-    ;AppendMyLogBook_MainBase, MAIN_BASE, $
-    ;  '-> Found ' + STRCOMPRESS(sz) + ' folders'
-    ;AppendMyLogBook_MainBase, MAIN_BASE, '-> List of folders:'
-    nbr_folder_readable = 0
-    FOR i=0,(sz-1) DO BEGIN
-       IF (FILE_TEST(listening[i],/DIRECTORY,/READ)) THEN BEGIN
-           str_array = STRSPLIT(listening[i],prefix+'*',/EXTRACT,/REGEX)
-           current_proposal = str_array[0]
-           IF (nbr_folder_readable EQ 0) THEN BEGIN
-               ProposalList = [current_proposal]
-           ENDIF ELSE BEGIN
-               ProposalList = [ProposalList,current_proposal]
-           ENDELSE
-     ;      text = '--> ' + current_proposal + ' IS READABLE BY USER ... YES'
-           nbr_folder_readable++
-       ENDIF ELSE BEGIN
-      ;     text = '--> ' + current_proposal + ' IS READABLE BY USER ... NO'
-       ENDELSE
-       ;AppendMyLogBook_MainBase, MAIN_BASE, text
-   ENDFOR
-  ; text = '-> Final list of folders the user can see is:'
-  ; AppendMyLogBook_MainBase, MAIN_BASE, text
-   proposal_array = STRJOIN(ProposalList,' ; ')
-  ; AppendMyLogBook_MainBase, MAIN_BASE, '--> ' + proposal_array
-   ProposalList = [ProposalList, 'ALL PROPOSAL FOLDERS']
-;    ProposalList = STRARR(sz+1)
-;    FOR i=0,(sz-1) DO BEGIN
-;        str_array = STRSPLIT(listening[i],prefix+'*',/EXTRACT,/REGEX)
-;        ProposalList[i]=str_array[0]
-;    ENDFOR
-;    ProposalList[sz] = 'ALL PROPOSAL FOLDERS'
+    index = 0
+    ProposalList = STRARR(sz)
+    WHILE (index LT sz) DO BEGIN
+       split = STRSPLIT(listening[index],'/',/EXTRACT)
+       ProposalList[index] = split[N_ELEMENTS(split)-1]
+       index++
+    ENDWHILE
 ENDIF ELSE BEGIN
     ProposalList = ['FOLDER IS EMPTY !']
 ENDELSE

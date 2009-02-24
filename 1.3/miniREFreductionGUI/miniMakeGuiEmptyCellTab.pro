@@ -313,6 +313,7 @@ sPlotButton = { uname: 'empty_cell_advanced_plot_button'}
 ;with or without proposal folder in findnexus
 sEmptyCell_proposal_button = { uname : 'with_empty_cell_proposal_button'}
 sEmptyCell_proposal_folder_droplist = { uname: 'empty_cell_proposal_folder_droplist'}
+sEmpty_cell_proposal_base = { uname: 'empty_cell_proposal_base_uname'}
                 
 ;Y vs TOF (2d) and Y vs X (2D)
 XYoff = [5,45]
@@ -821,6 +822,7 @@ NexusInterface, BASE_UNAME = wBase,$
                 RUN_NBR_UNAME       = sEmptyCellTextField.uname,$
                 ARCHIVED_ALL_UNAME  = sEmptyCellArchivedListAll.uname,$
                 PROPOSAL_BUTTON_UNAME = sEmptyCell_proposal_button.uname,$
+                PROPOSAL_BASE_UNAME = sEmpty_cell_proposal_base.uname,$
                 PROPOSAL_FOLDER_DROPLIST_UNAME = $
                 sEmptyCell_proposal_folder_droplist.uname,$
                 SAVE_AS_JPEG_UNAME = sEmptyCellJPEGbutton.uname,$

@@ -72,7 +72,7 @@ PRO MAIN_BASE_event, Event
       REFreductionEventcb_InstrumentSelected, Event
     end
     
-    ;polarization state base ------------------------------------------------------
+    ;polarization state base --------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='cancel_pola_state'): BEGIN
       MapBase, Event, 'polarization_state', 0
@@ -91,11 +91,11 @@ PRO MAIN_BASE_event, Event
       data_norma_empty_cell_tab_event, Event ;_tab
     end
     
-    ;==============================================================================
-    ;**LOAD TAB**DATA**------------------------------------------------------------
-    ;==============================================================================
+    ;==========================================================================
+    ;**LOAD TAB**DATA**--------------------------------------------------------
+    ;==========================================================================
     
-    ;plots Tab --------------------------------------------------------------------
+    ;plots Tab ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_data_d_dd_tab'): begin
       data_plots_tab_event, Event ;_eventcb
     END
@@ -130,7 +130,17 @@ PRO MAIN_BASE_event, Event
       ENDIF
     end
     
-    ;Save As JPEG button ----------------------------------------------------------
+    ;activate or not the proposal droplist -----------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='with_data_proposal_button'): BEGIN
+      IF (event.select) THEN BEGIN
+        activate = 1
+      ENDIF ELSE BEGIN
+        activate = 0
+      ENDELSE
+      ActivateWidget, Event, 'data_proposal_base_uname', activate
+    END
+    
+    ;Save As JPEG button ------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='save_as_jpeg_button_data'): BEGIN
       save_as_jpeg, Event     ;_jpeg
@@ -162,7 +172,7 @@ PRO MAIN_BASE_event, Event
       ENDIF ELSE BEGIN
         IF ((*global).DataNeXusFound) THEN BEGIN
         
-          ;show x/y and counts **********************************************************
+          ;show x/y and counts ************************************************
           putLabelValue, Event, $
             'data_x_info_value', $
             STRCOMPRESS(Event.x,/REMOVE_ALL)
@@ -182,7 +192,7 @@ PRO MAIN_BASE_event, Event
             Event, $
             'data_counts_info_value', $
             STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-          ;******************************************************************************
+          ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
             ;only if there is a NeXus loaded
@@ -227,7 +237,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_ZoomRescaleData, Event
     end
     
-    ;ROI Ymin and Ymax ------------------------------------------------------------
+    ;ROI Ymin and Ymax --------------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymin_cw_field'): begin
@@ -240,7 +250,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
     end
     
-    ;SAVE ROI Selection into a file -----------------------------------------------
+    ;SAVE ROI Selection into a file -------------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
       REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
@@ -250,7 +260,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_LoadDataROISelection, Event
     end
     
-    ;Peak Ymin and Ymax -----------------------------------------------------------
+    ;Peak Ymin and Ymax -------------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
@@ -261,7 +271,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
     end
     
-    ;Background Ymin and Ymax -----------------------------------------------------
+    ;Background Ymin and Ymax -------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_background_ymin_cw_field'): begin
@@ -274,7 +284,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_DataBackgroundPeakSelection, Event, 'back_ymax'
     end
     
-    ;SAVE Background Selection into a file ----------------------------------------
+    ;SAVE Background Selection into a file ------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='data_back_save_button'): begin
       REFreduction_CreateDataBackgroundROIFile, Event, 'back'
     end
@@ -341,7 +351,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_ResetFullDataPlot, Event
     end
     
-    ;############################### 1D_3D PLOT TAB ###############################
+    ;############################### 1D_3D PLOT TAB ###########################
     ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_reset_button'): begin
       REFreduction_ResetData1D3DPlotZaxis, Event
@@ -448,7 +458,7 @@ PRO MAIN_BASE_event, Event
       endif
     end
     
-    ;############################### 2D_3D PLOT TAB ###############################
+    ;############################### 2D_3D PLOT TAB ###########################
     ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='data2d_z_axis_reset_button'): begin
       REFreduction_ResetData2D3DPlotZaxis, Event
@@ -554,9 +564,9 @@ PRO MAIN_BASE_event, Event
       endif
     end
     
-    ;==============================================================================
-    ;**LOAD TAB**NORMALIZATION**---------------------------------------------------
-    ;==============================================================================
+    ;==========================================================================
+    ;**LOAD TAB**NORMALIZATION**-----------------------------------------------
+    ;==========================================================================
     
     ;plots Tab --------------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_normalization_d_dd_tab'): begin
@@ -578,6 +588,16 @@ PRO MAIN_BASE_event, Event
       REFreductionEventcb_LoadAndPlotNormFile, Event
     end
     
+    ;activate or not the proposal droplist -----------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='with_norm_proposal_button'): BEGIN
+      IF (event.select) THEN BEGIN
+        activate = 1
+      ENDIF ELSE BEGIN
+        activate = 0
+      ENDELSE
+      ActivateWidget, Event, 'normalization_proposal_base_uname', activate
+    END
+
     widget_info(wWidget, $
       FIND_BY_UNAME='normalization_archived_or_full_cwbgroup'): begin
       IF ((*global).archived_norm_flag NE $
@@ -592,7 +612,7 @@ PRO MAIN_BASE_event, Event
       ENDIF
     END
     
-    ;Save As JPEG button ----------------------------------------------------------
+    ;Save As JPEG button ------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='save_as_jpeg_button_normalization'): BEGIN
       save_as_jpeg, Event ;_jpeg
@@ -626,7 +646,7 @@ PRO MAIN_BASE_event, Event
         IF ((*global).NormNeXusFound) THEN BEGIN
           ;only if there is a NeXus loaded
         
-          ;show x/y and counts **********************************************************
+          ;show x/y and counts ************************************************
           putLabelValue, Event, $
             'norm_x_info_value', $
             STRCOMPRESS(Event.x,/REMOVE_ALL)
@@ -645,7 +665,7 @@ PRO MAIN_BASE_event, Event
             Event, $
             'norm_counts_info_value', $
             STRCOMPRESS(FIX(tvimg[Event.x,Event.y]),/REMOVE_ALL)
-          ;******************************************************************************
+          ;********************************************************************
             
           IF ((*global).first_event) THEN BEGIN
             CASE (event.ch) OF ;u and d keys
@@ -691,7 +711,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_ZoomRescaleNormalization, Event
     end
     
-    ;ROI Ymin and Ymax ------------------------------------------------------------
+    ;ROI Ymin and Ymax --------------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME= $
       'nom_d_selection_roi_ymin_cw_field'): begin
@@ -704,7 +724,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_NormBackgroundPeakSelection, Event, 'roi_ymax'
     end
     
-    ;SAVE ROI Selection into a file -----------------------------------------------
+    ;SAVE ROI Selection into a file -------------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='norm_roi_save_button'): begin
       REFreduction_CreateNormBackgroundROIFile, Event, 'roi'
     end
@@ -714,7 +734,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_LoadNormROISelection, Event
     end
     
-    ;Peak Ymin and Ymax -----------------------------------------------------------
+    ;Peak Ymin and Ymax -------------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME='norm_d_selection_peak_ymin_cw_field'): begin
       REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymin'
@@ -725,7 +745,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymax'
     end
     
-    ;Background Ymin and Ymax -----------------------------------------------------
+    ;Background Ymin and Ymax -------------------------------------------------
     widget_info(wWidget, $
       FIND_BY_UNAME= $
       'norm_d_selection_background_ymin_cw_field'): begin
@@ -738,7 +758,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_NormBackgroundPeakSelection, Event, 'back_ymax'
     end
     
-    ;SAVE Background Selection into a file ----------------------------------------
+    ;SAVE Background Selection into a file ------------------------------------
     widget_info(wWidget, FIND_BY_UNAME='norm_back_save_button'): begin
       REFreduction_CreateNormBackgroundROIFile, Event, 'back'
     end
@@ -760,7 +780,7 @@ PRO MAIN_BASE_event, Event
       ReplotNormAllSelection, Event
     END
     
-    ;******************************************************************************
+    ;**************************************************************************
     
     ;CONTRAST TAB
     ;Contrast editor of data 1D tab
@@ -816,7 +836,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_ResetFullNormPlot, Event
     end
     
-    ;############################### 1D_3D PLOT TAB ###############################
+    ;############################### 1D_3D PLOT TAB ###########################
     ;reset z-axis
     widget_info(wWidget, $
       FIND_BY_UNAME='normalization1d_z_axis_reset_button'): begin
@@ -944,7 +964,7 @@ PRO MAIN_BASE_event, Event
       endif
     end
     
-    ;############################## 2D_3D PLOT TAB ################################
+    ;############################## 2D_3D PLOT TAB ############################
     ;reset z-axis
     widget_info(wWidget, $
       FIND_BY_UNAME='normalization2d_z_axis_reset_button'): begin
@@ -1083,9 +1103,9 @@ PRO MAIN_BASE_event, Event
       endif
     end
     
-    ;==============================================================================
-    ;**LOAD TAB**EMPTY CELL**------------------------------------------------------
-    ;==============================================================================
+    ;==========================================================================
+    ;**LOAD TAB**EMPTY CELL**--------------------------------------------------
+    ;==========================================================================
     
     ;Browse NeXus file
     WIDGET_INFO(wWidget, $
@@ -1103,6 +1123,16 @@ PRO MAIN_BASE_event, Event
       REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus ;_empty_cell
     END
     
+    ;activate or not the proposal droplist -----------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='with_empty_cell_proposal_button'): BEGIN
+      IF (event.select) THEN BEGIN
+        activate = 1
+      ENDIF ELSE BEGIN
+        activate = 0
+      ENDELSE
+      ActivateWidget, Event, 'empty_cell_proposal_base_uname', activate
+    END
+
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='empty_cell_archived_or_all_uname'): BEGIN
       IF ((*global).archived_empty_cell_flag NE $
@@ -1158,7 +1188,7 @@ PRO MAIN_BASE_event, Event
       CancelListOfEmptyCellNexus, Event ;_empty_cell
     end
     
-    ;Substrate Transmission equation ..............................................
+    ;Substrate Transmission equation ..........................................
     
     ;Substrate type droplist
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_substrate_list'): BEGIN
@@ -1196,7 +1226,7 @@ PRO MAIN_BASE_event, Event
     END
     
     
-    ;Calculate Scaling Factor Base ................................................
+    ;Calculate Scaling Factor Base ............................................
     
     ;data draw
     WIDGET_INFO(wWidget, $
@@ -1282,12 +1312,12 @@ PRO MAIN_BASE_event, Event
       MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 0
     END
     
-    ;END of Calculate Scaling Factor Base .........................................
+    ;END of Calculate Scaling Factor Base .....................................
     
     
-    ;==============================================================================
-    ;**REDUCE TAB -----------------------------------------------------------------
-    ;==============================================================================
+    ;==========================================================================
+    ;**REDUCE TAB -------------------------------------------------------------
+    ;==========================================================================
     
     ;yes or no data background
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): BEGIN
@@ -1316,7 +1346,7 @@ PRO MAIN_BASE_event, Event
       REFreduction_CommandLineGenerator, Event
     END
     
-    ;Make up your mind base -------------------------------------------------------
+    ;Make up your mind base ---------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='confuse_background'): BEGIN
       ;get images files
       sImages = (*(*global).empty_cell_images)
@@ -1539,9 +1569,9 @@ PRO MAIN_BASE_event, Event
     ;        print, 'here'
     ;    END
     
-    ;******************************************************************************
-    ;**PLOTS TAB**
-    ;******************************************************************************
+    ;**************************************************************************
+    ;**PLOTS TAB*
+    ;*************************************************************************
     
     ;PREVIEW of file
     widget_info(wWidget, FIND_BY_UNAME='plot_file_name_button'): begin
@@ -1553,9 +1583,9 @@ PRO MAIN_BASE_event, Event
       RefReduction_PlotMainDataReductionFileFirstTime, Event
     end
     
-    ;******************************************************************************
+    ;**************************************************************************
     ; BATCH MODE TAB
-    ;******************************************************************************
+    ;**************************************************************************
     
     ;;Main table
     widget_info(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
