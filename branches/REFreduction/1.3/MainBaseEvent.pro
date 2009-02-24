@@ -597,7 +597,7 @@ PRO MAIN_BASE_event, Event
       ENDELSE
       ActivateWidget, Event, 'normalization_proposal_base_uname', activate
     END
-
+    
     widget_info(wWidget, $
       FIND_BY_UNAME='normalization_archived_or_full_cwbgroup'): begin
       IF ((*global).archived_norm_flag NE $
@@ -1132,7 +1132,7 @@ PRO MAIN_BASE_event, Event
       ENDELSE
       ActivateWidget, Event, 'empty_cell_proposal_base_uname', activate
     END
-
+    
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='empty_cell_archived_or_all_uname'): BEGIN
       IF ((*global).archived_empty_cell_flag NE $
@@ -1176,7 +1176,7 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='empty_cell_preview_of_ascii_button'): begin
       preview_empty_cell_output_file, Event
     end
-      
+    
     ;--------------------------------------------------------------------
     ;ok button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_list_load_button'): begin
@@ -1224,7 +1224,6 @@ PRO MAIN_BASE_event, Event
       (*global).bRecapPlot =  0b
       WIDGET_CONTROL, HOURGLASS=0
     END
-    
     
     ;Calculate Scaling Factor Base ............................................
     
@@ -1281,6 +1280,7 @@ PRO MAIN_BASE_event, Event
     ;Scaling Factor, C= 'text field'
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_factor_equation_value'): BEGIN
       replot_recap_with_manual_sf, Event ;_sf_empty_cell
+      check_empty_cell_recap_output_file_name, Event
     END
     
     ;recap draw
