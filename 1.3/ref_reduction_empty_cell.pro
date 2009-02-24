@@ -286,7 +286,8 @@ PRO REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus
       full_nexus_name = find_full_nexus_name(Event,$
         RunNumber,$
         instrument,$
-        isNeXusFound)
+        isNeXusFound,$
+        SOURCE_FILE='empty_cell')
         
       IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
         NbrNexus = 0
