@@ -293,7 +293,8 @@ IF (DataRunNumber NE '') THEN BEGIN ;data run number is not empty
         full_nexus_name = find_full_nexus_name(Event,$
                                                DataRunNumber,$
                                                instrument,$
-                                               isNeXusFound)
+                                               isNeXusFound,$
+                                               SOURCE_FILE='data')
         
         IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
             NbrNexus = 0
