@@ -43,7 +43,7 @@ load_normalization_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
                                          UNAME='load_normalization_d_dd_tab',$
                                          LOCATION=1,$
                                          xoffset=D_DD_TabSize[0],$
-                                         yoffset=D_DD_TabSize[1],$
+                                         yoffset=D_DD_TabSize[1]+5,$
                                          scr_xsize=D_DD_TabSize[2],$
                                          scr_ysize=D_DD_TabSize[3],$
                                          /tracking_events)

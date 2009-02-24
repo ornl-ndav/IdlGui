@@ -60,6 +60,10 @@ LoadDataTabSize = [0,0,$
                    DataNormalizationTabSize[2],$
                    DataNormalizationTabSize[3]]
 
+;##############################################################################
+;############################# Build widgets ##################################
+;##############################################################################
+
 ;Build widgets
 LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              UNAME     = 'load_data_base',$
@@ -69,65 +73,17 @@ LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              SCR_XSIZE = LoadDataTabSize[2],$
                              SCR_YSIZE = LoadDataTabSize[3])
 
-
-;Browse Nexus File Button
-Button = WIDGET_BUTTON(LOAD_DATA_BASE,$
-                       XOFFSET   = 25,$
-                       YOFFSET   = 5,$
-                       SCR_XSIZE = 120,$
-                       VALUE     = 'BROWSE NeXus ...',$
-                       UNAME     = 'browse_data_nexus_button')
-
-;Run Number base and inside CW_FIELD
-load_data_run_number_base = widget_base(LOAD_DATA_BASE,$
-                                        UNAME     = $
-                                        'load_data_run_number_base',$
-                                        XOFFSET   = GlobalRunNumber[0]+30,$
-                                        YOFFSET   = GlobalRunNumber[1],$
-                                        SCR_XSIZE = GlobalRunNumber[2]-50,$
-                                        SCR_YSIZE = GlobalRunNumber[3])
-
-Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
-                                           ROW           = 1,$
-                                           XSIZE         = GlobalRunNumber[4],$
-                                           YSIZE         = GlobalRunNumber[5],$
-                                           return_events = 1,$
-                                           title         = RunNumberTitles[0],$
-                                           uname         = $
-                                           'load_data_run_number_text_field',$
-                                           /long)
-                                           
-;Archived or All NeXus list
-DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
-                                      ArchivedOrAllCWBgroupList,$
-                                      uname='data_archived_or_full_cwbgroup',$
-                                      xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
-                                      yoffset=ArchivedOrAllCWBgroupSize[1],$
-                                      /exclusive,$
-                                      row=1,$
-                                      set_value=0)
-
-;Save As Jpeg Button ----------------------------------------------------------
-button = WIDGET_BUTTON(LOAD_DATA_BASE,$
-                       UNAME = 'save_as_jpeg_button_data',$
-                       XOFFSET = 550,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/SaveAsJpeg.bmp',$
-                       TOOLTIP = 'Create a JPEG of the plot',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
-
-;------------------------------------------------------------------------------
-;Advanced plot
-button = WIDGET_BUTTON(LOAD_DATA_BASE,$
-                       UNAME = 'advanced_plot_button_data',$
-                       XOFFSET = 610,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/advanced_plot.bmp',$
-                       TOOLTIP = 'Open the Advanced Plot Tool',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
-
+;******************* loading nexus interface **********************************
+NexusInterface, BASE_UNAME = LOAD_DATA_BASE,$
+                BROWSE_BUTTON_UNAME = 'browse_data_nexus_button',$
+                RUN_NBR_UNAME       = 'load_data_run_number_text_field',$
+                ARCHIVED_ALL_UNAME  = 'data_archived_or_full_cwbgroup',$
+                PROPOSAL_BUTTON_UNAME = 'with_data_proposal_button',$
+                PROPOSAL_FOLDER_DROPLIST_UNAME = $
+                'data_proposal_folder_droplist',$
+                SAVE_AS_JPEG_UNAME = 'save_as_jpeg_button_data',$
+                PLOT_BUTTON_UNAME = 'advanced_plot_button_data'
+                
 ;------------------------------------------------------------------------------
 
 ;Nexus list base/label/droplist and buttons
@@ -249,9 +205,9 @@ NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
                               uname='data_nxsummary_zoom_tab',$
                               location=0,$
                               xoffset=NxsummaryZoomTabSize[0],$
-                              yoffset=NxsummaryZoomTabSize[1],$
+                              yoffset=NxsummaryZoomTabSize[1]+25,$
                               scr_xsize=NxsummaryZoomTabSize[2],$
-                              scr_ysize=NxsummaryZoomTabSize[3],$
+                              scr_ysize=NxsummaryZoomTabSize[3]-20,$
                               /tracking_events)
 
 ;NXsummary tab #1
@@ -267,7 +223,7 @@ data_file_info_text = widget_text(data_Nxsummary_base,$
                                   xoffset=FileInfoSize[0],$
                                   yoffset=FileInfoSize[1],$
                                   scr_xsize=FileInfoSize[2],$
-                                  scr_ysize=FileInfoSize[3],$
+                                  scr_ysize=FileInfoSize[3]-20,$
                                   /wrap,$
                                   /scroll,$
                                   value='',$

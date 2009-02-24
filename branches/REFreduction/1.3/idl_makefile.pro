@@ -48,6 +48,7 @@ cd, CurrentFolder + '/utilities'
 cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
+.run MakeGuiNexusInterface.pro
 .run MakeGuiLoadDataNormalizationTab.pro
 .run MakeGuiLoadDataTab.pro
 .run MakeGuiLoadData1D2DTab.pro
