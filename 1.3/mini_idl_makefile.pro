@@ -50,6 +50,7 @@ cd, CurrentFolder + '/REFreductionGUI/'
 ;Build miniREFreduction GUI
 cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiMainTab.pro
+.run miniMakeGuiNexusInterface.pro
 .run miniMakeGuiLoadTab.pro
 .run miniMakeGuiLoadDataNormalizationTab.pro
 .run miniMakeGuiLoadDataTab.pro
