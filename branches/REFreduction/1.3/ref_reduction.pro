@@ -783,6 +783,9 @@ tv, image, 0,0,/true
 
 ;------------------------------------------------------------------------------
 
+;populate the list of proposal droplist (data, normalization,empty_cell)
+populate_list_of_proposal, MAIN_BASE, (*global).instrument
+
 ;==============================================================================
 ;checking packages
 IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN

@@ -43,6 +43,7 @@ cd, CurrentFolder + '/utilities'
 .run nexus_utilities.pro
 .run math_conversion.pro
 .run time.pro
+.run list_of_proposal.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
