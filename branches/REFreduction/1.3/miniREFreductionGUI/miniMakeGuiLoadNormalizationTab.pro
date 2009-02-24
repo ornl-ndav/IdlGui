@@ -74,9 +74,9 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
 
 ;Browse Nexus File Button
 Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       XOFFSET   = 0,$
+                       XOFFSET   = 15,$
                        YOFFSET   = 5,$
-                       SCR_XSIZE = 60,$
+                       SCR_XSIZE = 70,$
                        VALUE     = 'BROWSE...',$
                        UNAME     = 'browse_norm_nexus_button')
 
