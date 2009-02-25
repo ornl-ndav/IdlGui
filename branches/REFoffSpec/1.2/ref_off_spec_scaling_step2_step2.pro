@@ -103,9 +103,8 @@ PRO display_step4_step2_step2_selection, Event
     xtitle = 'Wavelength'
     ytitle = 'Counts'
 ;    ymax_value = (*global).step4_step1_ymax_value
-    ymax = getTextFieldValue(Event,'step4_2_zoom_y_max')
-    ymax_value = FLOAT(ymax) ;remove_me
-
+    ymax_value = getTextFieldValue(Event,'step4_2_zoom_y_max')
+    
     psym       = getStep4Step2PSYMselected(Event)
     isLog      = getStep4Step2PlotType(Event)
     
