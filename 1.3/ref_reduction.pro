@@ -45,7 +45,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
-VERSION            = '1.3.12'
+VERSION            = '1.3.13'
 DEBUGGING_VERSION  = 'no'          ;NO
 MOUSE_DEBUGGING    = 'no'          ;NO
 WITH_LAUNCH_SWITCH = 'no'
