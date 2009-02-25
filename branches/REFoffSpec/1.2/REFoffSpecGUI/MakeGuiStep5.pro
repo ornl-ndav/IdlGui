@@ -35,16 +35,46 @@
 ;RECAP base
 PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
 
-  ;******************************************************************************
+  ;*****************************************************************************
   ;            DEFINE STRUCTURE
-  ;******************************************************************************
+  ;*****************************************************************************
 
   sBaseTab = { size:  tab_size,$
     uname: 'step5_tab_base',$
     title: TabTitles.step5}
     
-  ;------------------------------------------------------------------------------
-  ;Shifting base ----------------------------------------------------------------
+  ;=============================================================================
+  ;Rescale base
+  XYoff = [0,0]
+  sRescaleBase = { size: [tab_size[0],$
+    tab_size[1],$
+    tab_size[2],$
+    730],$
+    uname: 'step5_rescale_base',$
+    map: 1}
+    
+  ;draw
+  XYoff = [0,0]
+  sRescaleDraw = { size: [XYoff[0],$
+    XYoff[1],$
+    tab_size[2],$
+    730],$
+    uname: 'step5_rescale_draw'}
+    
+  ;go back to recap plot button
+  XYoff = [1110,10]
+  sRescaleButton = { size: [XYoff[0],$
+    XYoff[1],$
+    150],$
+    uname: 'step5_rescale_go_back_button',$
+    value: 'Return to Rescale Plot'}
+    
+    
+    
+    
+    
+  ;-----------------------------------------------------------------------------
+  ;Shifting base ---------------------------------------------------------------
   XYoff = [400,250]
   sShiftBase = { size: [XYoff[0],$
     XYoff[1],$
@@ -53,7 +83,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     frame: 3,$
     map: 1}
     
-  ;shifting button --------------------------------------------------------------
+  ;shifting button -------------------------------------------------------------
   sShiftingDraw = { size: [0,0,300,50],$
     uname: 'step5_shifting_draw'}
     
@@ -70,7 +100,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
   ;scaling button --------------------------------------------------------------
   sScalingDraw = { size: [0,0,300,50],$
     uname: 'step5_scaling_draw'}
-  ;x/y and counts values --------------------------------------------------------
+  ;x/y and counts values -------------------------------------------------------
   XYoff = [45,5]
   sXYIFrame = { size: [XYoff[0],$
     XYoff[1],$
@@ -120,7 +150,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     value: ' >>> ',$
     uname: 'x_axis_more_ticks_step5'}
     
-  ;Lin/Log z-axis ---------------------------------------------------------------
+  ;Lin/Log z-axis --------------------------------------------------------------
   XYoff = [750,0]
   sLinLog = { size: [XYoff[0],$
     XYoff[1]],$
@@ -129,7 +159,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'z_axis_linear_log_step5',$
     value: 1.0}
     
-  XYOff = [43,50] ;Draw ---------------------------------------------------------
+  XYOff = [43,50] ;Draw --------------------------------------------------------
   sDraw = { size: [XYoff[0],$
     XYoff[1],$
     tab_size[2]-125,$
@@ -138,14 +168,14 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     304L*2+40],$
     uname: 'step5_draw'}
     
-  XYoff = [0,-18] ;Scale of Draw ------------------------------------------------
+  XYoff = [0,-18] ;Scale of Draw -----------------------------------------------
   sScale = { size: [XYoff[0],$
     sDraw.size[1]+XYoff[1],$
     tab_size[2]-80,$
     sDraw.size[3]+57],$
     uname: 'scale_draw_step5'}
     
-  XYoff = [5,0] ;Color Scale ----------------------------------------------------
+  XYoff = [5,0] ;Color Scale ---------------------------------------------------
   sColorScale = { size: [sScale.size[0]+$
     sScale.size[2]+XYoff[0],$
     sScale.size[1]+XYoff[1],$
@@ -153,7 +183,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     sScale.size[3]],$
     uname: 'scale_color_draw_step5'}
     
-  XYoff = [-5,-30] ;z_max value -------------------------------------------------
+  XYoff = [-5,-30] ;z_max value ------------------------------------------------
   sZmax = { size: [sColorScale.size[0]+XYoff[0],$
     sColorScale.size[1]+XYoff[1],$
     75],$
@@ -179,8 +209,9 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     sensitive: 0,$
     value: ''}
     
-  ;cw_bgroup of selection to make (none, counts vs Q .... etc) ------------------
-  XYoff = [10,10]
+  ;cw_bgroup of
+  ;selection to make (none, counts vs Q .... etc) -----------------
+  XYoff = [10,5]
   sSelectionGroupBase = { size: [sScale.size[0]+XYoff[0],$
     sScale.size[1]+$
     sScale.size[3]+$
@@ -197,7 +228,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     label: 'Selection Type:  ',$
     uname: 'step5_selection_group_uname' }
     
-  ;counts vs Q base -------------------------------------------------------------
+  ;counts vs Q base ------------------------------------------------------------
   XYoff = [0,5]
   sIvsQbase = { size: [sSelectionGroupBase.size[0]+XYoff[0],$
     sSelectionGroupBase.size[1]+$
@@ -206,7 +237,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     1250,60],$
     frame: 0,$
     uname: 'step5_counts_vs_q_base_uname',$
-    map: 0}
+    map: 0} ;remove_me remove 1 and put back 0
     
   XYoff = [10,10] ;inside frame
   sInsideFrame = { size: [XYoff[0],$
@@ -261,9 +292,9 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'preview_button_i_vs_q',$
     sensitive: 0}
     
-  ;******************************************************************************
+  ;*****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
+  ;*****************************************************************************
     
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBaseTab.uname,$
@@ -273,8 +304,37 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE = sBaseTab.size[3],$
     TITLE     = sBaseTab.title)
     
-  ;------------------------------------------------------------------------------
-  ;Scaling base -----------------------------------------------------------------
+  ;-----------------------------------------------------------------------------
+  ;Rescale base ----------------------------------------------------------------
+  RescaleBase = WIDGET_BASE(BaseTab,$
+    XOFFSET = sRescaleBase.size[0],$
+    YOFFSET = sRescaleBase.size[1],$
+    SCR_XSIZE = sRescaleBase.size[2],$
+    SCR_YSIZE = sRescaleBase.size[3],$
+    UNAME = sRescaleBase.uname,$
+    MAP = sRescaleBase.map)
+    
+  ;go back button ------------------------------------------------------------
+  wButton = WIDGET_BUTTON(RescaleBase,$
+    XOFFSET = sRescaleButton.size[0],$
+    YOFFSET = sRescaleButton.size[1],$
+    SCR_XSIZE = sRescaleButton.size[2],$
+    UNAME = sRescaleButton.uname,$
+    VALUE = sRescaleButton.value)
+    
+  ;draw ------------------------------------------------------------------------
+  wDraw = WIDGET_DRAW(RescaleBase,$
+    XOFFSET = sRescaleDraw.size[0],$
+    YOFFSET = sRescaleDraw.size[1],$
+    SCR_XSIZE = sRescaleDraw.size[2],$
+    SCR_YSIZE = sRescaleDraw.size[3],$
+    UNAME = sRescaleDraw.uname)
+    
+    
+    
+    
+  ;-----------------------------------------------------------------------------
+  ;Scaling base ----------------------------------------------------------------
   wShiftbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sShiftBase.size[0],$
     YOFFSET   = sShiftBase.size[1],$
@@ -283,7 +343,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     UNAME     = sShiftBase.uname,$
     FRAME     = sShiftBase.frame)
     
-  ;Shifting button --------------------------------------------------------------
+  ;Shifting button -------------------------------------------------------------
   wShiftingDraw = WIDGET_DRAW(wShiftBase,$
     XOFFSET   = sShiftingDraw.size[0],$
     YOFFSET   = sShiftingDraw.size[1],$
@@ -294,7 +354,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /MOTION_EVENTS,$
     /TRACKING_EVENTS)
     
-  ;Shifting base ----------------------------------------------------------------
+  ;Shifting base ---------------------------------------------------------------
   wScalebase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sScaleBase.size[0],$
     YOFFSET   = sScaleBase.size[1],$
@@ -311,7 +371,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE = sScalingDraw.size[3],$
     UNAME     = sScalingDraw.uname)
     
-  ;x/y and counts values --------------------------------------------------------
+  ;x/y and counts values -------------------------------------------------------
   wXLabel = WIDGET_LABEL(BaseTab,$
     XOFFSET   = sXlabel.size[0],$
     YOFFSET   = sXlabel.size[1],$
@@ -343,7 +403,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     FRAME     = sXYIFrame.frame,$
     VALUE     = '')
     
-  ;More or Less number of ticks on the x-axis -----------------------------------
+  ;More or Less number of ticks on the x-axis ----------------------------------
   label = WIDGET_LABEL(BaseTab,$
     XOFFSET = sXaxisTicksLabel.size[0],$
     YOFFSET = sXaxisTicksLabel.size[1],$
@@ -364,7 +424,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     VALUE     = sXaxisMoreTicks.value,$
     UNAME     = sXaxisMoreTicks.uname)
     
-  ;Draw -------------------------------------------------------------------------
+  ;Draw ------------------------------------------------------------------------
   wDraw = WIDGET_DRAW(BaseTab,$
     XOFFSET       = sDraw.size[0],$
     YOFFSET       = sDraw.size[1],$
@@ -374,7 +434,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
     
-  ;Scale Draw -------------------------------------------------------------------
+  ;Scale Draw ------------------------------------------------------------------
   wScale = WIDGET_DRAW(BaseTab,$
     XOFFSET       = sScale.size[0],$
     YOFFSET       = sScale.size[1],$
@@ -382,7 +442,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE     = sScale.size[3],$
     UNAME         = sScale.uname)
     
-  ;Z range widgets --------------------------------------------------------------
+  ;Z range widgets -------------------------------------------------------------
   wZreset = WIDGET_BUTTON(BaseTab,$
     XOFFSET   = sZreset.size[0],$
     YOFFSET   = sZreset.size[1],$
@@ -411,7 +471,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /EDITABLE,$
     /ALIGN_LEFT)
     
-  ;Color Scale Draw -------------------------------------------------------------
+  ;Color Scale Draw ------------------------------------------------------------
   wColorScale = WIDGET_DRAW(BaseTab,$
     XOFFSET   = sColorScale.size[0],$
     YOFFSET   = sColorScale.size[1],$
@@ -419,7 +479,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE = sColorScale.size[3],$
     UNAME     = sColorScale.uname)
     
-  ;Linear / Logarithmic ---------------------------------------------------------
+  ;Linear / Logarithmic --------------------------------------------------------
   wLinLog = CW_BGROUP(BaseTab,$
     sLinLog.list,$
     XOFFSET    = sLinLog.size[0],$
@@ -431,7 +491,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /ROW,$
     /NO_RELEASE)
     
-  ;cw_bgroup of selection to make (none, counts vs Q .... etc) ------------------
+  ;cw_bgroup of selection to make (none, counts vs Q .... etc) -----------------
   wSelectionGroupBase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sSelectionGroupBase.size[0],$
     YOFFSET   = sSelectionGroupBase.size[1],$
@@ -451,7 +511,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /NO_RELEASE,$
     /ROW)
     
-  ;counts vs Q base -------------------------------------------------------------
+  ;counts vs Q base ------------------------------------------------------------
   wQbase = WIDGET_BASE(BaseTab,$
     XOFFSET   = sIvsQbase.size[0],$
     YOFFSET   = sIvsQbase.size[1],$
