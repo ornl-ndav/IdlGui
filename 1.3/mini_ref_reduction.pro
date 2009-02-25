@@ -45,16 +45,17 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+file = OBJ_NEW('idlxmlparser', 'configuration.xml')
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION        = 'REFreductionLow' ; FOR DEPLOYED VERSION
-VERSION            = '1.3.13'            
-DEBUGGING_VERSION  = 'no'              ;NO
-MOUSE_DEBUGGING    = 'no'              ;NO
-WITH_LAUNCH_SWITCH = 'no' 
-WITH_JOB_MANAGER   = 'no'  
-CHECKING_PACKAGES  = 'yes'             ;YES
-DEBUGGING_ON_MAC   = 'no'         ;no
+APPLICATION = file->getValue(tag=['configuration','application'])+'_low'
+VERSION = file->getValue(tag=['configuration','version'])
+DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
+MOUSE_DEBUGGING = file->getValue(tag=['configuration','mouse_debugging'])
+WITH_LAUNCH_SWITCH = file->getValue(tag=['configuration','with_launch_switch'])
+WITH_JOB_MANAGER = file->getValue(tag=['configuration','with_job_manager'])
+CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
 
 debugging_structure = getDebuggingStructure()
 
