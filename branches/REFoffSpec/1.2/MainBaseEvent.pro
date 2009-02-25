@@ -1121,8 +1121,8 @@ PRO MAIN_BASE_event, Event
       Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
       putTextFieldValue, Event, 'y_value_step5', Ytext
       
- ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y)
-            
+      ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y)
+      
       total_array = (*(*global).total_array_untouched)
       size_x = (SIZE(total_array,/DIMENSION))[0]
       size_y = (SIZE(total_array,/DIMENSION))[1]
@@ -1171,9 +1171,20 @@ PRO MAIN_BASE_event, Event
     
   END
   
-  ;------------------------------------------------------------------------------
+  ;============================================================================
+  ;Rescale base
+  ;============================================================================
+  
+  ;Return to rescale plot button
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_go_back_button'): BEGIN
+    MapBase, Event, 'step5_rescale_base', 0
+    ;refresh plot if necessary
+  END
+  
+  ;-----------------------------------------------------------------------------
   ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
-  ;------------------------------------------------------------------------------
+  ;-----------------------------------------------------------------------------
   
   ;output file path button
   WIDGET_INFO(wWidget, $
