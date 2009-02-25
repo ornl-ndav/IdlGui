@@ -235,7 +235,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     1250,60],$
     frame: 0,$
     uname: 'step5_counts_vs_q_base_uname',$
-    map: 0} ;remove_me remove 1 and put back 0
+    map: 0}
     
   XYoff = [10,10] ;inside frame
   sInsideFrame = { size: [XYoff[0],$
