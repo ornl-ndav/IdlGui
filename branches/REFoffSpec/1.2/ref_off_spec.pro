@@ -37,16 +37,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  ;*****************************************************************************
-  ;*****************************************************************************
-  APPLICATION       = 'REFoffSpec'
-  VERSION           = '1.2.4'
-  DEBUGGING         = 'yes'        ;no
-  TESTING           = 'no'        ;no
-  SCROLLING         = 'no'        ;no
-  CHECKING_PACKAGES = 'no'       ;yes
-  SUPER_USERS       = ['j35']
-  
+  file = OBJ_NEW('idlxmlparser', 'configuration.xml')
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION = file->getValue(tag=['configuration','application'])
+VERSION = file->getValue(tag=['configuration','version'])
+DEBUGGING = file->getValue(tag=['configuration','debugging'])
+CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+TESTING = file->getValue(tag=['configuration','testing'])
+SCROLLING = file->getValue(tag=['configuration','scrolling'])
+SUPER_USERS = ['j35']
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
+
   ;DEBUGGING (enter the tab you want to see)
   ;main_tab: 0: Reduction,
   ;          1: Loading,
@@ -136,6 +139,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     manual_scaling_2: FLOAT(1.5),$
     step4_1_plot2d_delta_x: 0.0,$
     scaling_factor: ptr_new(0L),$
+    
+    step5_selection_x_array: PTR_NEW(0L),$
+    step5_selection_y_array: PTR_NEW(0L),$
+    step5_selection_y_error_array: PTR_NEW(0L),$
     
     pixel_offset_array: ptr_new(0L),$
     X_Y_min_max_backup: STRARR(4),$

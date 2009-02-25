@@ -14,6 +14,7 @@ cd, IdlUtilitiesPath
 .run findnexus.pro
 .run uniq_element_table.pro
 .run logger.pro
+.run IDLxmlParser__define.pro 
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -67,6 +68,7 @@ cd, CurrentFolder
 .run ref_off_spec_scaling_step2_step2.pro
 .run ref_off_spec_scaling_step2_step3.pro
 .run ref_off_spec_step5.pro
+.run ref_off_spec_step5_rescale.pro
 .run ref_off_spec_refresh_recap_plot.pro
 .run ref_off_spec_step6.pro
 
