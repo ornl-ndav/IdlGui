@@ -303,38 +303,14 @@ END
 PRO produce_i_vs_q_output_file, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
-  CASE (selection_value) OF
-    1: type = 'IvsQ'
-    2: type = 'IvsLambda'
-  ENDCASE
+  ;create array of data
+  create_step5_selection_data, Event
   
-  WIDGET_CONTROL, /HOURGLASS
+  x_axis = (*(*global).step5_selection_x_array)
+  array_selected_total = (*(*global).step5_selection_y_array)
+  array_error_selected_total = (*(*global).step5_selection_y_error_array) 
   
-  base_array_untouched = (*(*global).total_array_untouched)
-  base_array_error     = (*(*global).total_array_error)
-  
-  x0 = (*global).step5_x0 ;lambda
-  y0 = (*global).step5_y0 ;pixel
-  x1 = (*global).step5_x1 ;lambda
-  y1 = (*global).step5_y1 ;pixel
-  
-  xmin = MIN([x0,x1],MAX=xmax)
-  ymin = MIN([y0,y1],MAX=ymax)
-  ymin = FIX(ymin/2)
-  ymax = FIX(ymax/2)
-  
-  array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
-  array_selected_total = TOTAL(array_selected,2)
-  
-  array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
-  y = (size(array_error_selected))(2)
-  array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
-  
-  x_axis = (*(*global).x_axis)
-  x_axis_selected = x_axis[xmin:xmax]
-  x_axis_in_Q = convert_from_lambda_to_Q(x_axis_selected)
-  nbr_data = N_ELEMENTS(x_axis_selected)
+  nbr_data = N_ELEMENTS(x_axis)
   
   ;create ascii file
   nbr_comments = 4
@@ -352,13 +328,7 @@ PRO produce_i_vs_q_output_file, Event
   FileLine[++index] = '#L ' + x_axis_label + $
     ' Intensity(Counts/A) Sigma(Counts/A)'
   FileLine[++index] = ''
-  
-  IF (type EQ 'IvsQ') THEN BEGIN
-    x_axis = x_axis_in_Q
-  ENDIF ELSE BEGIN
-    x_axis = x_axis_selected
-  ENDELSE
-  
+    
   FOR i=0,(nbr_data-1) DO BEGIN
     Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
     Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
