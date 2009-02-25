@@ -103,6 +103,7 @@ PRO display_step4_step2_step2_selection, Event
     xtitle = 'Wavelength'
     ytitle = 'Counts'
     ymax_value = (*global).step4_step1_ymax_value
+    
     psym       = getStep4Step2PSYMselected(Event)
     isLog      = getStep4Step2PlotType(Event)
     

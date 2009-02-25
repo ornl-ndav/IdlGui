@@ -141,7 +141,7 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
                                                  (304L+ymin):(304L+ymax)))
     ENDELSE
     nbr_pixels = (size(data_to_plot))(2)
-    t_data_to_plot       = total(data_to_plot,2)/FLOAT(nbr_pixels)
+    t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
 
     *IvsLambda_selection[index_ymax]        = t_data_to_plot
     *IvsLambda_selection_backup[index_ymax] = t_data_to_plot
@@ -173,7 +173,8 @@ WHILE (index LT nbr_plot) DO BEGIN
     psym = getStep4Step2PSYMselected(Event)
     IF (index EQ 0) THEN BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
-        t_data_to_plot = total(data_to_plot,2)
+        nbr_pixels = (size(data_to_plot))(2)
+        t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
         sz = N_ELEMENTS(t_data_to_plot)
         xaxis = (*(*global).x_axis)
         delta_x = xaxis[1]-xaxis[0]
@@ -194,7 +195,8 @@ WHILE (index LT nbr_plot) DO BEGIN
     ENDIF ELSE BEGIN
         data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
                                              (304L+ymin):(304L+ymax)))
-        t_data_to_plot = total(data_to_plot,2)
+        nbr_pixels = (size(data_to_plot))(2)
+        t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
         oplot, xrange, t_data_to_plot, $
           COLOR  = color,$
           PSYM   = psym

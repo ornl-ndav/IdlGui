@@ -58,12 +58,8 @@ PRO create_step5_selection_data, Event
   ymax = FIX(ymax/2)
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
-  ;help, array_selected ;remove_me
   y = (size(array_selected))(2)
   array_selected_total = TOTAL(array_selected,2)/FLOAT(y)
-  ;print, TOTAL(array_selected,2) ;remove_me
-  ;help, array_selected
-  ;help, array_selected_total
   
   array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
     array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
