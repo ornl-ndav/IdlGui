@@ -1180,7 +1180,9 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_go_back_button'): BEGIN
     MapBase, Event, 'step5_rescale_base', 0
-  ;refresh plot if necessary
+    ;refresh plot if necessary
+    (*global).PrevTabSelect = 0 ;to force the refresh of the tab
+    tab_event, Event
   END
   
   ;-----------------------------------------------------------------------------
