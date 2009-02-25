@@ -115,14 +115,16 @@ PRO create_empty_cell_output_file, Event
     PRINTF, 1, metadata_array[i]
   ENDFOR
   
-  FOR pixel=0,256 DO BEGIN
+  FOR pixel=0,303 DO BEGIN
     PRINTF, 1, single_axes_1 + STRCOMPRESS(pixel,/REMOVE_ALL) + single_axes_2
     PRINTF, 1, single_axes_0
     PRINTF, 1, global_axes_description
     FOR tof=0,ntof DO BEGIN
-      text = STRCOMPRESS(data_tof_axis[tof],/REMOVE_ALL) + '   '
-      text += STRCOMPRESS(recap_data[tof,pixel],/REMOVE_ALL) + '   0'
-      PRINTF,1, text
+      IF (recap_data[tof,pixel] NE 0) THEN BEGIN
+        text = STRCOMPRESS(data_tof_axis[tof],/REMOVE_ALL) + '   '
+        text += STRCOMPRESS(recap_data[tof,pixel],/REMOVE_ALL) + '   0'
+        PRINTF,1, text
+      ENDIF
     ENDFOR
   ENDFOR
   
