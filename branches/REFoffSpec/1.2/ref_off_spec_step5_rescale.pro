@@ -98,10 +98,10 @@ PRO display_step5_rescale_plot, Event
   IF (type EQ 'IvsQ') THEN BEGIN
     x_axis_label = 'Q(Angstroms^-1)'
   ENDIF ELSE BEGIN
-    x_axis_label = 'Lambda_T(Angstroms)'
+    x_axis_label = 'Lambda_T (Angstroms)'
   ENDELSE
   
-  y_axis_label = ' Intensity(Counts/A)'
+  y_axis_label = 'Intensity'
   
   x_axis = (*(*global).step5_selection_x_array)
   array_selected_total = (*(*global).step5_selection_y_array)

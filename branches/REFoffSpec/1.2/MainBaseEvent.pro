@@ -1154,6 +1154,7 @@ PRO MAIN_BASE_event, Event
           (*global).left_mouse_pressed EQ 1) THEN BEGIN
           CASE (selection_value) OF
             1: plot_step5_i_vs_Q_selection, Event ;_step5
+            2: plot_step5_i_vs_Q_selection, Event ;_step5
             ELSE:
           ENDCASE
         ENDIF
