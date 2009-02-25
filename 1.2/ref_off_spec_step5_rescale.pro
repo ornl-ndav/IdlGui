@@ -58,11 +58,15 @@ PRO create_step5_selection_data, Event
   ymax = FIX(ymax/2)
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
-  array_selected_total = TOTAL(array_selected,2)
+  ;help, array_selected ;remove_me
+  y = (size(array_selected))(2)
+  array_selected_total = TOTAL(array_selected,2)/FLOAT(y)
+  ;print, TOTAL(array_selected,2) ;remove_me
+  ;help, array_selected
+  ;help, array_selected_total
   
   array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
-  y = (size(array_error_selected))(2)
-  array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
+    array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
   
   x_axis = (*(*global).x_axis)
   
@@ -111,6 +115,16 @@ PRO display_step5_rescale_plot, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-  plot, x_axis, array_selected_total, XTITLE=x_axis_label, YTITLE=y_axis_label
+  plot, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    PSYM=1
     
+  errplot, x_axis,$
+  array_selected_total-array_error_selected_total,$
+  array_selected_total+array_error_selected_total,$
+  color=150
+  
+  
 END

@@ -140,7 +140,8 @@ WHILE (index_ymax LT nbr_plot) DO BEGIN
         data_to_plot       = FLOAT(local_tfpData(xmin:xmax, $
                                                  (304L+ymin):(304L+ymax)))
     ENDELSE
-    t_data_to_plot       = total(data_to_plot,2)
+    nbr_pixels = (size(data_to_plot))(2)
+    t_data_to_plot       = total(data_to_plot,2)/FLOAT(nbr_pixels)
 
     *IvsLambda_selection[index_ymax]        = t_data_to_plot
     *IvsLambda_selection_backup[index_ymax] = t_data_to_plot
