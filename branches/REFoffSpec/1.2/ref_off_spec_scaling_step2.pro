@@ -56,6 +56,8 @@ ENDIF ELSE BEGIN
         
         (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
 
+        symax = 1 ;remove_me
+
         putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
         putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
         putTextFieldValue, Event, 'step4_2_zoom_y_min', symin

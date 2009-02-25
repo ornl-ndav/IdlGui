@@ -33,241 +33,242 @@
 ;==============================================================================
 
 PRO ref_off_spec_scaling_plot2d_event, Event
-COMPILE_OPT idl2, hidden
-IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') $
-  THEN BEGIN
+  COMPILE_OPT idl2, hidden
+  IF (TAG_NAMES(Event, /STRUCTURE_NAME) EQ 'WIDGET_KILL_REQUEST') $
+    THEN BEGIN
     WIDGET_CONTROL, Event.top, /DESTROY
     RETURN
-ENDIF
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
 PRO step4_step1_plot2d, Event, GROUP_LEADER=group
-WIDGET_CONTROL, Event.top,GET_UVALUE=global
-COMPILE_OPT idl2, hidden
-
-; Check if already created.  If so, return.
-IF (WIDGET_INFO((*global).w_scaling_plot2d_id, /VALID_ID) NE 0) THEN BEGIN
+  WIDGET_CONTROL, Event.top,GET_UVALUE=global
+  COMPILE_OPT idl2, hidden
+  
+  ; Check if already created.  If so, return.
+  IF (WIDGET_INFO((*global).w_scaling_plot2d_id, /VALID_ID) NE 0) THEN BEGIN
     WIDGET_CONTROL,(*global).w_scaling_plot2d_id, /SHOW
     RETURN
-ENDIF
-
-xsize = 500
-ysize = 500
-
-;Built base
-title = 'Counts vs Pixels of Selection'
-wBase = WIDGET_BASE(TITLE        = title,$
-                    XOFFSET      = 900,$
-                    YOFFSET      = 500,$
-                    GROUP_LEADER = group,$
-                    UNAME = 'plot_2d_scaling_base',$
-                    /TLB_KILL_REQUEST_EVENTS)
-
-wDraw = WIDGET_DRAW(wBase,$
-                    SCR_XSIZE = xsize,$
-                    SCR_YSIZE = ysize,$
-                    UNAME     = 'plot_2d_scaling_draw')
-
-(*global).w_scaling_plot2d_id = wBase
-uname = WIDGET_INFO(wDraw,/UNAME)
-(*global).w_scaling_plot2d_draw_uname = uname
-
-WIDGET_CONTROL, wBase, /REALIZE
-XMANAGER, "ref_off_spec_scaling_plot2d", wBase, /NO_BLOCK
+  ENDIF
+  
+  xsize = 500
+  ysize = 500
+  
+  ;Built base
+  title = 'Counts vs Pixels of Selection'
+  wBase = WIDGET_BASE(TITLE        = title,$
+    XOFFSET      = 900,$
+    YOFFSET      = 500,$
+    GROUP_LEADER = group,$
+    UNAME = 'plot_2d_scaling_base',$
+    /TLB_KILL_REQUEST_EVENTS)
+    
+  wDraw = WIDGET_DRAW(wBase,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME     = 'plot_2d_scaling_draw')
+    
+  (*global).w_scaling_plot2d_id = wBase
+  uname = WIDGET_INFO(wDraw,/UNAME)
+  (*global).w_scaling_plot2d_draw_uname = uname
+  
+  WIDGET_CONTROL, wBase, /REALIZE
+  XMANAGER, "ref_off_spec_scaling_plot2d", wBase, /NO_BLOCK
 END
 
 ;------------------------------------------------------------------------------
 ;This procedure show the plot2d (if not there already) and display
 ;counts vs tof for the given selection made
 PRO display_step4_step1_plot2d, Event
-WIDGET_CONTROL, Event.top,GET_UVALUE=global
-
-;show plot2d base
-step4_step1_plot2d, $           ;scaling_step1_plot2d
-  Event, $
-  GROUP_LEADER=Event.top
-;put value there
-xy_selection = (*global).step4_step1_selection
-
-xmin = xy_selection[0]
-ymin = xy_selection[1]
-xmax = xy_selection[2]
-ymax = xy_selection[3]
-
-xmin = MIN([xmin,xmax],MAX=xmax)
-ymin = MIN([ymin,ymax],MAX=ymax)
-
-ymin = FIX(ymin/2)
-ymax = FIX(ymax/2)
-
-IF (xmin EQ xmax) THEN xmax += 1
-IF (ymin EQ ymax) THEN ymax += 1
-
-;plot counts vs tof of region selected
-id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
-                      FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
-WIDGET_CONTROL, id_draw, GET_VALUE=id_value
-WSET,id_value
-
-tfpData  = (*(*global).realign_pData_y)
-nbr_plot = getNbrFiles(Event)
-;array that will contain the counts vs wavelenght of each data file
-IvsLambda_selection        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
-IvsLambda_selection_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
-
-;determine ymax
-index_ymax = 0
-ymax_value = 0
-WHILE (index_ymax LT nbr_plot) DO BEGIN
+  WIDGET_CONTROL, Event.top,GET_UVALUE=global
+  
+  ;show plot2d base
+  step4_step1_plot2d, $           ;scaling_step1_plot2d
+    Event, $
+    GROUP_LEADER=Event.top
+  ;put value there
+  xy_selection = (*global).step4_step1_selection
+  
+  xmin = xy_selection[0]
+  ymin = xy_selection[1]
+  xmax = xy_selection[2]
+  ymax = xy_selection[3]
+  
+  xmin = MIN([xmin,xmax],MAX=xmax)
+  ymin = MIN([ymin,ymax],MAX=ymax)
+  
+  ymin = FIX(ymin/2)
+  ymax = FIX(ymax/2)
+  
+  IF (xmin EQ xmax) THEN xmax += 1
+  IF (ymin EQ ymax) THEN ymax += 1
+  
+  ;plot counts vs tof of region selected
+  id_draw = WIDGET_INFO((*global).w_scaling_plot2d_id, $
+    FIND_BY_UNAME=(*global).w_scaling_plot2d_draw_uname)
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  tfpData  = (*(*global).realign_pData_y)
+  nbr_plot = getNbrFiles(Event)
+  ;array that will contain the counts vs wavelenght of each data file
+  IvsLambda_selection        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+  IvsLambda_selection_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+  
+  ;determine ymax
+  index_ymax = 0
+  ymax_value = 0
+  WHILE (index_ymax LT nbr_plot) DO BEGIN
     local_tfpData       = *tfpData[index_ymax]
-;    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
-;    IF (bLogPlot) THEN BEGIN
-;        local_tfpData       = ALOG10(local_tfpData)
-;        index_inf = WHERE(local_tfpData LT 0, nIndex)
-;        IF (nIndex GT 0) THEN BEGIN
-;            local_tfpData[index_inf]       = 0
-;        ENDIF
-;    ENDIF
-
+    ;    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
+    ;    IF (bLogPlot) THEN BEGIN
+    ;        local_tfpData       = ALOG10(local_tfpData)
+    ;        index_inf = WHERE(local_tfpData LT 0, nIndex)
+    ;        IF (nIndex GT 0) THEN BEGIN
+    ;            local_tfpData[index_inf]       = 0
+    ;        ENDIF
+    ;    ENDIF
+    
     sz = (size(local_tfpDAta))(1)
     xmin = (xmin GE sz) ? (sz-1) : xmin
     xmax = (xmax GE sz) ? (sz-1) : xmax
-
+    
     IF (index_ymax EQ 0) THEN BEGIN
-        data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
+      data_to_plot       = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
-        data_to_plot       = FLOAT(local_tfpData(xmin:xmax, $
-                                                 (304L+ymin):(304L+ymax)))
+      data_to_plot       = FLOAT(local_tfpData(xmin:xmax, $
+        (304L+ymin):(304L+ymax)))
     ENDELSE
     nbr_pixels = (size(data_to_plot))(2)
     t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
-
+    
     *IvsLambda_selection[index_ymax]        = t_data_to_plot
     *IvsLambda_selection_backup[index_ymax] = t_data_to_plot
     ymax_local     = MAX(t_data_to_plot)
     ymax_value     = (ymax_local GT ymax_value) ? ymax_local : ymax_value
+    (*global).step4_step1_ymax_value = ymax_value
     index_ymax++
-ENDWHILE
-
-(*global).step4_step1_ymax_value        = ymax_value
-(*(*global).IvsLambda_selection)        = IvsLambda_selection
-(*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup
-
-index = 0
-WHILE (index LT nbr_plot) DO BEGIN
-    
+  ENDWHILE
+  
+  (*global).step4_step1_ymax_value        = ymax_value
+  (*(*global).IvsLambda_selection)        = IvsLambda_selection
+  (*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup
+  
+  index = 0
+  WHILE (index LT nbr_plot) DO BEGIN
+  
     box_color     = (*global).box_color
     color         = box_color[index]
     local_tfpData = *tfpData[index]
-
-;    bLogPlot = isLogZaxisScalingStep1Selected(Event)
-;    IF (bLogPlot) THEN BEGIN
-;        local_tfpData = ALOG10(local_tfpData)
-;        index_inf = WHERE(local_tfpData LT 0, nIndex)
-;        IF (nIndex GT 0) THEN BEGIN
-;            local_tfpData[index_inf] = 0
-;        ENDIF
-;    ENDIF
-
+    
+    ;    bLogPlot = isLogZaxisScalingStep1Selected(Event)
+    ;    IF (bLogPlot) THEN BEGIN
+    ;        local_tfpData = ALOG10(local_tfpData)
+    ;        index_inf = WHERE(local_tfpData LT 0, nIndex)
+    ;        IF (nIndex GT 0) THEN BEGIN
+    ;            local_tfpData[index_inf] = 0
+    ;        ENDIF
+    ;    ENDIF
+    
     psym = getStep4Step2PSYMselected(Event)
     IF (index EQ 0) THEN BEGIN
-        data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
-        nbr_pixels = (size(data_to_plot))(2)
-        t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
-        sz = N_ELEMENTS(t_data_to_plot)
-        xaxis = (*(*global).x_axis)
-        delta_x = xaxis[1]-xaxis[0]
-        (*global).step4_1_plot2d_delta_x = delta_x
-        xrange = (FINDGEN(sz)+ xmin) * delta_x
-        (*(*global).step4_step2_step1_xrange) = xrange
-        xtitle = 'Wavelength'
-        ytitle = 'Counts'
-        plot, xrange, $
-          t_data_to_plot, $
-          XTITLE = xtitle, $
-          YTITLE = ytitle,$
-          COLOR  = color,$
-          YRANGE = [0.001,ymax_value],$
-          PSYM   = psym,$
-          /YLOG,$
-          XSTYLE = 1
+      data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
+      nbr_pixels = (size(data_to_plot))(2)
+      t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
+      sz = N_ELEMENTS(t_data_to_plot)
+      xaxis = (*(*global).x_axis)
+      delta_x = xaxis[1]-xaxis[0]
+      (*global).step4_1_plot2d_delta_x = delta_x
+      xrange = (FINDGEN(sz)+ xmin) * delta_x
+      (*(*global).step4_step2_step1_xrange) = xrange
+      xtitle = 'Wavelength'
+      ytitle = 'Counts'
+      plot, xrange, $
+        t_data_to_plot, $
+        XTITLE = xtitle, $
+        YTITLE = ytitle,$
+        COLOR  = color,$
+        YRANGE = [0.001,ymax_value],$
+        PSYM   = psym,$
+        /YLOG,$
+        XSTYLE = 1
     ENDIF ELSE BEGIN
-        data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
-                                             (304L+ymin):(304L+ymax)))
-        nbr_pixels = (size(data_to_plot))(2)
-        t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
-        oplot, xrange, t_data_to_plot, $
-          COLOR  = color,$
-          PSYM   = psym
+      data_to_plot   = FLOAT(local_tfpData(xmin:xmax, $
+        (304L+ymin):(304L+ymax)))
+      nbr_pixels = (size(data_to_plot))(2)
+      t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
+      oplot, xrange, t_data_to_plot, $
+        COLOR  = color,$
+        PSYM   = psym
     ENDELSE
     index++
-ENDWHILE
-
+  ENDWHILE
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO save_y_error_step4_step1_plot2d, Event
-WIDGET_CONTROL, Event.top,GET_UVALUE=global
-
-;put value there
-xy_selection = (*global).step4_step1_selection
-
-xmin = xy_selection[0]
-ymin = xy_selection[1]
-xmax = xy_selection[2]
-ymax = xy_selection[3]
-
-xmin = MIN([xmin,xmax],MAX=xmax)
-ymin = MIN([ymin,ymax],MAX=ymax)
-
-ymin = FIX(ymin/2)
-ymax = FIX(ymax/2)
-
-IF (xmin EQ xmax) THEN xmax += 1
-IF (ymin EQ ymax) THEN ymax += 1
-
-tfpData_error = (*(*global).realign_pData_y_error)
-nbr_plot = getNbrFiles(Event)
-;array that will contain the counts vs wavelenght of each data file
-IvsLambda_selection_error        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
-IvsLambda_selection_error_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
-
-;determine ymax
-index      = 0
-ymax_value = 0
-WHILE (index LT nbr_plot) DO BEGIN
-
+  WIDGET_CONTROL, Event.top,GET_UVALUE=global
+  
+  ;put value there
+  xy_selection = (*global).step4_step1_selection
+  
+  xmin = xy_selection[0]
+  ymin = xy_selection[1]
+  xmax = xy_selection[2]
+  ymax = xy_selection[3]
+  
+  xmin = MIN([xmin,xmax],MAX=xmax)
+  ymin = MIN([ymin,ymax],MAX=ymax)
+  
+  ymin = FIX(ymin/2)
+  ymax = FIX(ymax/2)
+  
+  IF (xmin EQ xmax) THEN xmax += 1
+  IF (ymin EQ ymax) THEN ymax += 1
+  
+  tfpData_error = (*(*global).realign_pData_y_error)
+  nbr_plot = getNbrFiles(Event)
+  ;array that will contain the counts vs wavelenght of each data file
+  IvsLambda_selection_error        = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+  IvsLambda_selection_error_backup = PTRARR(nbr_plot,/ALLOCATE_HEAP)
+  
+  ;determine ymax
+  index      = 0
+  ymax_value = 0
+  WHILE (index LT nbr_plot) DO BEGIN
+  
     local_tfpData_error = *tfpData_error[index]
     bLogPlot            = isLogZaxisScalingStep1Selected(Event)
     IF (bLogPlot) THEN BEGIN
-        local_tfpData_error = ALOG10(local_tfpData_error)
-        index_inf = WHERE(local_tfpData_error LT 0, nIndex)
-        IF (nIndex GT 0) THEN BEGIN
-            local_tfpData_error[index_inf] = 0
-        ENDIF
+      local_tfpData_error = ALOG10(local_tfpData_error)
+      index_inf = WHERE(local_tfpData_error LT 0, nIndex)
+      IF (nIndex GT 0) THEN BEGIN
+        local_tfpData_error[index_inf] = 0
+      ENDIF
     ENDIF
-
+    
     sz = (size(local_tfpDAta_error))(1)
     xmin = (xmin GE sz) ? (sz-1) : xmin
     xmax = (xmax GE sz) ? (sz-1) : xmax
-
+    
     IF (index EQ 0) THEN BEGIN
-        data_to_plot_error = FLOAT(local_tfpData_error(xmin:xmax,ymin:ymax))
+      data_to_plot_error = FLOAT(local_tfpData_error(xmin:xmax,ymin:ymax))
     ENDIF ELSE BEGIN
-        data_to_plot_error = $
-          FLOAT(local_tfpData_error(xmin:xmax, $
-                                    (304L+ymin):(304L+ymax)))
+      data_to_plot_error = $
+        FLOAT(local_tfpData_error(xmin:xmax, $
+        (304L+ymin):(304L+ymax)))
     ENDELSE
     t_data_to_plot_error = total(data_to_plot_error,2)
     *IvsLambda_selection_error[index]        = t_data_to_plot_error
     *IvsLambda_selection_error_backup[index] = t_data_to_plot_error
     index++
-ENDWHILE
-
-(*(*global).IvsLambda_selection_error)        = IvsLambda_selection_error
-(*(*global).IvsLambda_selection_error_backup) = $
-  IvsLambda_selection_error_backup
-
+  ENDWHILE
+  
+  (*(*global).IvsLambda_selection_error)        = IvsLambda_selection_error
+  (*(*global).IvsLambda_selection_error_backup) = $
+    IvsLambda_selection_error_backup
+    
 END
 
