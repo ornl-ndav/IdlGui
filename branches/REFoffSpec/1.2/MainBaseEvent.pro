@@ -1164,6 +1164,7 @@ PRO MAIN_BASE_event, Event
           (*global).step5_y1 = Event.y
           inform_log_book_step5_selection, Event ;_step5
           MapBase, Event, 'step5_rescale_base', 1
+          display_step5_rescale_plot, Event
         ENDIF
         
       ENDIF ;end of 'if (selection_value NE 0)'
