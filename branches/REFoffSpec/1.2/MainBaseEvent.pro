@@ -1163,6 +1163,7 @@ PRO MAIN_BASE_event, Event
           (*global).step5_x1 = Event.x
           (*global).step5_y1 = Event.y
           inform_log_book_step5_selection, Event ;_step5
+          MapBase, Event, 'step5_rescale_base', 1
         ENDIF
         
       ENDIF ;end of 'if (selection_value NE 0)'
@@ -1179,7 +1180,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_go_back_button'): BEGIN
     MapBase, Event, 'step5_rescale_base', 0
-    ;refresh plot if necessary
+  ;refresh plot if necessary
   END
   
   ;-----------------------------------------------------------------------------
