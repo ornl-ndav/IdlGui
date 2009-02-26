@@ -77,7 +77,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
   
   wave_para_label = 'Comma-delimited List of Increasing Coefficients'
-  wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
+  wave_para_help_label = '1 + 23*X + 6*X^2 + 7890*X^3   --->'
   wave_para_help_value = '1,23,456,7890'
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
