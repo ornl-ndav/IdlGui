@@ -37,14 +37,20 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
+  file = OBJ_NEW('IDLxmlParser','configuration.xml')
+  ;============================================================================
+  ;****************************************************************************
+  
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  SCROLLING = file->getValue(tag=['configuration','scrolling'])
+  
   ;************************************************************************
   ;************************************************************************
-  APPLICATION       = 'SANScalibration'
-  VERSION           = '1.1.0'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  CHECKING_PACKAGES = 'yes'
-  SCROLLING         = 'no'
+  
   PACKAGE_REQUIRED_BASE = { driver:           '',$
     version_required: '',$
     found: 0,$
