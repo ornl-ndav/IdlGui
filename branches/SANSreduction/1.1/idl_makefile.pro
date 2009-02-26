@@ -5,6 +5,7 @@ IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run nexus_utilities.pro
+.run IDLxmlParser__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
