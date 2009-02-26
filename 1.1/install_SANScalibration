@@ -6,7 +6,7 @@
 #                                [-h]
 #
 FOLDERS=("images")
-FILES="sans_calibration.sav"
+FILES="sans_calibration.sav SANScalibration.cfg"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_calibration.sav"
 EXECUTABLE='SANScalibration'
@@ -65,7 +65,7 @@ copy_files()
 # This function create the executable file
 create_exec()
 {
-    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE
+    EXECUTABLE=$EXECUTABLE_PATH"/"$EXECUTABLE
     echo -n "Create executable file" $EXECUTABLE_PATH "...."
     install -d $EXECUTABLE_PATH
     echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE
