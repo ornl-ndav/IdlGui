@@ -37,14 +37,17 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  ;************************************************************************
-  ;************************************************************************
-  APPLICATION       = 'SANSreduction'
-  VERSION           = '1.1.1'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  SCROLLING         = scroll
-  CHECKING_PACKAGES = 'yes'
+  file = OBJ_NEW('IDLxmlParser','configuration.xml')
+  ;============================================================================
+  ;****************************************************************************
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  SCROLLING = scroll
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  ;****************************************************************************
+  ;============================================================================
   
   PACKAGE_REQUIRED_BASE = { driver:           '',$
     version_required: '',$
