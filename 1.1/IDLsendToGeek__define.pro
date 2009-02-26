@@ -310,8 +310,10 @@ END
 ;This function send by email a copy of the logBook
 PRO IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-version   = IDLsendToGeek_getGlobalVariable(Event,'version')
-ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+version = IDLsendToGeek_getGlobalVariable(Event,'version')
+ucams = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+application = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
+
 ;add ucams 
 ucamsText = 'Ucams: ' + ucams
 ;hostname
@@ -319,7 +321,7 @@ spawn, 'hostname', hostname
 ;get message added by user
 message   = IDLsendToGeek_getMessage(Event)
 ;email logBook
-text = "'Log Book of plotROI "
+text = "'Log Book of " + application
 text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += ". Message is: "
