@@ -377,10 +377,16 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     value: '          ',$
     uname: 'counts_value'}
     
-  ;linear of log plot
+  ;linear of log plot base and cw_bgroup
   XYoff = [0,5]
-  sScaleType = { size: [XYbase.size[0]+XYoff[0],$
+  sScaleTypeBase = { size: [XYbase.size[0]+XYoff[0],$
     XYbase.size[1]+XYbase.size[3]+XYoff[1]],$
+    uname: 'z_axis_scale_base',$
+    sensitive: 0}
+    
+  XYoff=[0,0]
+  sScaleType = { size: [XYoff[0],$
+    XYoff[1]],$
     title: 'Z-axis:',$
     value: 0.0,$
     list: ['linear','log'],$
@@ -831,10 +837,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     /ALIGN_LEFT)
     
   ;linear/log scale
-  wGroup = CW_BGROUP(wTab1Base,$
+  wGroupBase = WIDGET_BASE(wTab1Base,$
+  XOFFSET = sScaleTypeBase.size[0],$
+  YOFFSET = sScaleTypeBase.size[1],$
+  UNAME = sScaleTypeBase.uname,$
+  SENSITIVE = sScaleTypeBase.sensitive,$
+  /ROW)
+  
+  wGroup = CW_BGROUP(wGroupBase,$
     sScaleType.list,$
-    XOFFSET    = sScaleType.size[0],$
-    YOFFSET    = sScaleType.size[1],$
     ROW        = 1,$
     SET_VALUE  = sScaleType.value,$
     UNAME      = sScaleType.uname,$
