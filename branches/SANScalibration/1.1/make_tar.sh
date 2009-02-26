@@ -1,10 +1,13 @@
 #!/bin/bash
 
 file_name_to_search=$1
-list_of_files_folders="sans_calibration.sav README install_SANScalibration images drversion"
+list_of_files_folders="sans_calibration.sav SANScalibration README install_SANScalibration images drversion SANScalibration.cfg"
 
 application=`./get_application.pl $file_name_to_search`
 version=`./get_version.pl $file_name_to_search`
+
+application="SANScalibration"
+version="1.1.1"
 
 tar_file_name="./"$application"_"$version".tar"
 #create tar file

@@ -7,9 +7,10 @@ all:
 	idl ./makefile.pro;
 install:
 	cp sans_calibration.sav /SNS/software/idltools/sav/
-	cp SANScalibration /SNS/software/idltools/
+#	cp SANScalibration /SNS/software/idltools/
 	cp images/*.bmp /SNS/software/idltools/sav/images/
 	cp drversion /SNS/software/idltools/
+	cp SANScalibration.cfg /SNS/software/idltools/sav/
 tar:
 	./make_tar.sh sans_calibration.pro
 
