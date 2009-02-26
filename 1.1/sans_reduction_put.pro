@@ -98,7 +98,7 @@ END
 PRO putCountsValue, Event, x, y
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 img = (*(*global).img)
-putTextFieldValue, Event, 'counts_value', STRCOMPRESS(FIX(img[x,y]), $
+putTextFieldValue, Event, 'counts_value', STRCOMPRESS(LONG(img[x,y]), $
                                                       /REMOVE_ALL)
 END
 
