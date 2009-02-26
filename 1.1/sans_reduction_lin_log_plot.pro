@@ -42,6 +42,19 @@ PRO lin_or_log_plot, Event
   ;retrieve the value to plot
   DataXY = (*(*global).rtDataXY)
   
+  IF (plot_type EQ 1) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(DataXY EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      DataXY[index] = !VALUES.D_NAN
+      DataXY = ALOG10(DataXY)
+      DataXY = BYTSCL(DataXY,/NAN)
+    ENDIF
+    
+  ENDIF
+  
   DEVICE, DECOMPOSED = 0
   LOADCT,5,/SILENT
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
