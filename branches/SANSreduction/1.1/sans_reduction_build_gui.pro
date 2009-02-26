@@ -40,7 +40,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;************************************************************************
   ;************************************************************************
   APPLICATION       = 'SANSreduction'
-  VERSION           = '1.1.0'
+  VERSION           = '1.1.1'
   DEBUGGING         = 'no' ;yes/no
   TESTING           = 'no'
   SCROLLING         = scroll
