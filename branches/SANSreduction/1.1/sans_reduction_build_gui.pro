@@ -37,7 +37,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  file = OBJ_NEW('IDLxmlParser','configuration.xml')
+  file = OBJ_NEW('IDLxmlParser','SANSreduction.cfg')
   ;============================================================================
   ;****************************************************************************
   APPLICATION = file->getValue(tag=['configuration','application'])
