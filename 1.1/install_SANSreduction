@@ -6,7 +6,7 @@
 #                              [-h]
 #
 FOLDERS=("images" "SANSreductionHelp")
-FILES=("sans_reduction.sav" "mini_sans_reduction.sav")
+FILES=("sans_reduction.sav" "mini_sans_reduction.sav SANSreduction.cfg")
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_reduction.sav"
 EXECUTABLE_MINI_SAV="mini_sans_reduction.sav"
