@@ -110,6 +110,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     Xarray_untouched: ptr_new(0L),$
     Yarray:          ptr_new(0L),$
     SigmaYarray:     ptr_new(0L),$
+    rtDataXY:        ptr_new(0L),$
     ;                   ROIcolor:        [50L,50L,0L],$
     ROIcolor:        250L,$
     DrawXcoeff:      8,$
@@ -314,7 +315,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;debugging version of program
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    nexus_path           = '~/Desktop'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
     (*global).wave_dep_back_sub_path = $
@@ -345,7 +347,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0

@@ -85,6 +85,7 @@ ENDIF ELSE BEGIN
     (*global).Xpixel = Xpixel
     (*global).DrawXcoeff = xysize
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+    (*(*global).rtDataXY) = rtDataXY ;array plotted
 ;plot data
     DEVICE, DECOMPOSED = 0
     LOADCT,5,/SILENT
