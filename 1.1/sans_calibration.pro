@@ -93,7 +93,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tof_ascii_type:  '',$
     tof_ascii_file_name: '',$
     tof_monitor_flag: '--data-paths',$
-    tof_monitor_path: '/entry/monitor1,1',$
+    tof_monitor_path: '/entry/monitor,1',$
+    tof_monitor_path1: '/entry/monitor1,1',$
     tof_roi_flag: '--roi-file',$
     package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
