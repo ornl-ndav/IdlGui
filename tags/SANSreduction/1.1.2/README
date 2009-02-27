@@ -1,0 +1,45 @@
+SANSreduction is a Graphical User Interface on top of the LENS Data Reduction 
+program.
+
+Requirements:
+	install the IDL Virtual Machine for your system
+	(http://www.ittvis.com/download/download.asp?urlProductCode=13)
+
+To install this application (high and low resolution), 
+just run install_SANSreduction. This program will 
+create a idl/SANSreduction/ folder in /usr/local/ and copy the necessary 
+folders and the .sav (IDL Virtual Machine executable files) in this folder. 
+In the same time, the execuable files (SANSreduction and miniSANSreduction)
+ will be created in /usr/local/bin/. 
+
+> sudo ./install_SANSreduction
+
+You will need administrator privileges to install the software at the default
+location (/usr/local/). You won't need those priveleges if you want to install 
+it in your home directory (ex: ~/usr/local)
+
+It is possible to overwrite the folder where to install the package and the
+location of the executable, using the -d and -n flags
+
+> ./install_SANSreduction -d <where to intall the package> 
+                          -e <where to put the executable>
+
+ex: 
+> ./install_SANSreduction -d /usr/local/bin/ -e ~/bin/
+
+To run the application, launch the executable file you defined
+> /usr/local/SANSreduction
+or
+> /usr/local/miniSANSreduction
+
+or, if /usr/local is in your path
+
+> SANSreduction
+or
+> miniSANSreduction
+
+You can get help about how to install this software doing
+> ./install_SANSreduction -h
+or send an email to 
+bilheuxjm@ornl.gov
+
