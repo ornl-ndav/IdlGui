@@ -12,5 +12,5 @@ install:
 	cp drversion /SNS/software/idltools/
 	cp SANScalibration.cfg /SNS/software/idltools/sav/
 tar:
-	./make_tar.sh sans_calibration.pro
+	./make_tar.sh SANScalibration.cfg
 
