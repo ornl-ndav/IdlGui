@@ -33,87 +33,92 @@
 ;==============================================================================
 
 FUNCTION retrieveData, Event, FullNexusName, DataArray
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-;retrieve infos
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-    
-retrieve_error = 0
-CATCH, retrieve_error
-IF (retrieve_error NE 0) THEN BEGIN
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  ;retrieve infos
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  retrieve_error = 0
+  CATCH, retrieve_error
+  IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     RETURN, 0
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-                         FullNexusName,$
-                         NbrBank = 1,$
-                         BankData = 'bank1')
+      FullNexusName,$
+      NbrBank = 1,$
+      BankData = 'bank1')
     DataArray = *(sInstance->getData())
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-ENDELSE
-RETURN,1
+  ENDELSE
+  RETURN,1
 END
 
 ;------------------------------------------------------------------------------
 ;This function takes the histogram data from the NeXus file and plot it
 FUNCTION plotData, Event, DataArray, X, Y
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-plotStatus = 1 ;by default, plot does work
-plot_error = 0
-CATCH, plot_error
-IF (plot_error NE 0) THEN BEGIN
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  plotStatus = 1 ;by default, plot does work
+  plot_error = 0
+  CATCH, plot_error
+  IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
-ENDIF ELSE BEGIN
-;Integrate over TOF
+  ENDIF ELSE BEGIN
+    ;Integrate over TOF
     dataXY   = TOTAL(DataArray,1)
     tDataXY  = TRANSPOSE(dataXY)
     (*(*global).img) = tDataXY
-;Check if rebin is necessary or not
+    ;Check if rebin is necessary or not
     IF (X EQ 80) THEN BEGIN
-        xysize = 8
-        Xpixel = 80L
+      xysize = 8
+      Xpixel = 80L
     ENDIF ELSE BEGIN
-        xysize = 2
-        Xpixel = 320L
+      xysize = 2
+      Xpixel = 320L
     ENDELSE
     (*global).Xpixel = Xpixel
     (*global).DrawXcoeff = xysize
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
     (*(*global).rtDataXY) = rtDataXY ;array plotted
-;plot data
-    DEVICE, DECOMPOSED = 0
-    LOADCT,5,/SILENT
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-    WIDGET_CONTROL, id, GET_VALUE = id_value
-    WSET, id_value
-    TVSCL, rtDataXY, /DEVICE
-    refresh_scale, Event         ;_plot
+    
+    
+    lin_or_log_plot, Event
+    
+    ;;plot data
+    ;    DEVICE, DECOMPOSED = 0
+    ;    LOADCT,5,/SILENT
+    ;    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+    ;    WIDGET_CONTROL, id, GET_VALUE = id_value
+    ;    WSET, id_value
+    ;    TVSCL, rtDataXY, /DEVICE
+    ;    refresh_scale, Event         ;_plot
+    
     RETURN, plotStatus
-ENDELSE
+  ENDELSE
 END
 
 ;------------------------------------------------------------------------------
 PRO refresh_scale, Event
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-;change color of background    
-id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-
-LOADCT,0,/SILENT
-
-IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  ;change color of background
+  id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  LOADCT,0,/SILENT
+  
+  IF ((*global).Xpixel  EQ 80L) THEN BEGIN
     xrange_max = 80
     plot, randomn(s,xrange_max), $
       XRANGE     = [0,xrange_max],$
@@ -128,7 +133,7 @@ IF ((*global).Xpixel  EQ 80L) THEN BEGIN
       YTICKS      = 8,$
       XMARGIN     = [5,5],$
       /NODATA
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     xrange_max = 320
     plot, randomn(s,xrange_max), $
       XRANGE        = [0,xrange_max],$
@@ -147,58 +152,58 @@ ENDIF ELSE BEGIN
       YTICKS        = 8,$
       XMARGIN       = [5,5],$
       /NODATA
-ENDELSE
+  ENDELSE
 END
 
 ;------------------------------------------------------------------------------
 PRO refresh_plot, Event ;_plot
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;change color of background    
-id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-
-;retrieve parameters from global pointer
-X         = (*global).X
-IF (X NE 0) THEN BEGIN
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;change color of background
+  id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  ;retrieve parameters from global pointer
+  X         = (*global).X
+  IF (X NE 0) THEN BEGIN
     DataArray = (*(*global).DataArray)
     Y         = (*global).Y
-ENDIF
-result = plotData(Event, DataArray, X, Y)
-;turn off hourglass
-widget_control,hourglass=0
-
+  ENDIF
+  result = plotData(Event, DataArray, X, Y)
+  ;turn off hourglass
+  widget_control,hourglass=0
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO refresh_main_plot, Event
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;clear previous selection
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-WIDGET_CONTROL, id, GET_VALUE = id_value
-WSET, id_value
-;retrieve parameters from global pointer
-X         = (*global).X
-IF (X NE 0) THEN BEGIN
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ;clear previous selection
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  ;retrieve parameters from global pointer
+  X         = (*global).X
+  IF (X NE 0) THEN BEGIN
     DataArray = (*(*global).DataArray)
     Y         = (*global).Y
-ENDIF
-result = plotData(Event, DataArray, X, Y)
+  ENDIF
+  result = plotData(Event, DataArray, X, Y)
 END
 
 ;------------------------------------------------------------------------------
 PRO refreshROIExclusionPlot, Event
-;indicate initialization with hourglass icon
-WIDGET_CONTROL,/HOURGLASS
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;refresh_main_plot, Event
-IF ((*global).there_is_a_selection EQ 1) THEN BEGIN
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/HOURGLASS
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ;refresh_main_plot, Event
+  IF ((*global).there_is_a_selection EQ 1) THEN BEGIN
     plotROI, Event ;_exclusion
-ENDIF
-;turn off hourglass
-WIDGET_CONTROL,HOURGLASS=0
+  ENDIF
+  ;turn off hourglass
+  WIDGET_CONTROL,HOURGLASS=0
 END

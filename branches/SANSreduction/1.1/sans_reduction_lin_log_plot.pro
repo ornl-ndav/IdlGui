@@ -32,12 +32,18 @@
 ;
 ;==============================================================================
 
+FUNCTION LinOrLog, Event
+value = getCWBgroupValue(Event,'z_axis_scale')
+RETURN, value
+END
+
 PRO lin_or_log_plot, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;linear or log
-  plot_type = Event.value ;0->linear, 1->log
+  plot_type = LinOrLog(Event)
+  ;plot_type = Event.value ;0->linear, 1->log
   
   ;retrieve the value to plot
   DataXY = (*(*global).rtDataXY)
