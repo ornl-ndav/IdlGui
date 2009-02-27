@@ -10,10 +10,6 @@ list_of_files_folders="sans_reduction.sav mini_sans_reduction.sav README install
 application=`./get_application.pl $file_name_to_search`
 version=`./get_version.pl $file_name_to_search`
 
-application="SANSreduction"
-version="1.1.1"
-
 tar_file_name="./"$application"_"$version".tar"
 #create tar file
 tar cvf $tar_file_name $list_of_files_folders
-
