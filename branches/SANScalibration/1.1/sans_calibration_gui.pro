@@ -140,6 +140,7 @@ uname_list = ['clear_selection_button',$
               'selection_tool_button',$
               'selection_browse_button',$
               'selection_file_name_text_field',$
+              'z_axis_scale_base',$
               'tof_range_base',$
               'exclusion_base']
 activate_widget_list, Event, uname_list, status

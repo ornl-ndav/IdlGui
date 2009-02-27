@@ -122,15 +122,19 @@ ENDIF ELSE BEGIN
     ENDELSE
     (*global).Xpixel = Xpixel
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
-    
-;plot data
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-    WIDGET_CONTROL, id, GET_VALUE = id_value
-    WSET, id_value
-    DEVICE, DECOMPOSED = 0
-    LOADCT,5,/SILENT
-    TVSCL, rtDataXY, /DEVICE
-    refresh_scale, Event        ;_plot
+    (*(*global).rtDataXY) = rtDataXY
+
+  lin_or_log_plot, Event
+
+;;plot data
+;    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+;    WIDGET_CONTROL, id, GET_VALUE = id_value
+;    WSET, id_value
+;    DEVICE, DECOMPOSED = 0
+;    LOADCT,5,/SILENT
+;    TVSCL, rtDataXY, /DEVICE
+;    refresh_scale, Event        ;_plot
+
     RETURN, plotStatus
 
 ENDELSE
