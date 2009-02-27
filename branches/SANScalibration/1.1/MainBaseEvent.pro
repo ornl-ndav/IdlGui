@@ -195,11 +195,13 @@ PRO MAIN_BASE_event, Event
     ;- Plot button (fast)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_fast_exclusion_region'): BEGIN
       FastExclusionRegionCircle, Event ;_exclusion
+      update_tof_counts_selection_button, Event ;_gui
     END
     
     ;- Plot button (accurate)
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_accurate_exclusion_region'): BEGIN
       AccurateExclusionRegionCircle, Event ;_exclusion
+      update_tof_counts_selection_button, Event ;_gui
     END
     
     ;- Clear Input Boxed
@@ -244,7 +246,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
       RenewOutputFileName, Event
       SaveExclusionFile, Event ;_exclusion
-      update_tof_counts_selection_button, Event ;_gui
+    ;update_tof_counts_selection_button, Event ;_gui
     END
     
     ;- SAVE AS folder button
@@ -292,6 +294,8 @@ PRO MAIN_BASE_event, Event
     ;- Counts vs TOF button of selection ------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_selection_button'): $
       BEGIN
+      RenewOutputFileName, Event
+      SaveExclusionFile, Event ;_exclusion
       launch_counts_vs_tof_selection_button, Event ;_tof
     END
     
