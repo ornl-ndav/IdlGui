@@ -130,6 +130,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tof_max:         0.0,$
     pressed_stop:    0,$
     img:             ptr_new(0L),$
+    rtDataXY:        ptr_new(0L),$
     X:               0L,$
     Y:               0L,$
     PrevTabSelect:   0,$
@@ -320,7 +321,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;debugging version of program
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANScalibration/1.0'
+    nexus_path           = '~/tmp/'
     (*global).nexus_path = nexus_path
     (*global).ascii_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
     (*global).selection_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
