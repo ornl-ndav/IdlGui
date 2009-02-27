@@ -16,4 +16,4 @@ install:
 	cp SANSreductionHelp/*.* /SNS/software/idltools/sav/SANSreductionHelp/
 	cp SANSreduction.cfg /SNS/software/idltools/sav/
 tar:
-	./make_tar.sh sans_reduction.pro
+	./make_tar.sh SANSreduction.cfg
