@@ -722,11 +722,11 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
 ;default path of Load Batch files
-;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+    (*global).BatchDefaultPath = '~/tmp/'
     
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')

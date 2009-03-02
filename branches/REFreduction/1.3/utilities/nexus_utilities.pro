@@ -35,8 +35,7 @@
 FUNCTION check_number_polarization_state, Event, $
     nexus_file_name, $
     list_pola_state
-    
-    
+      
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name
