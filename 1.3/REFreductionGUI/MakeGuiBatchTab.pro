@@ -108,7 +108,7 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
   ;////////////////////////////////////////////////////////
   ;Table Widget
   NbrRow = 20
-  RowAlign   = [1,0,0,1,1,1,0,1,0]
+  RowAlign   = [1,0,0,0,1,1,1,0,1,0]
   sz         = (size(RowAlign))(1)
   TableAlign = intarr(sz,NbrRow)
   FOR i=0,(NbrRow-1) DO BEGIN
@@ -120,14 +120,15 @@ PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
     label     : ['ACTIVE', $
     'DATA RUNS', $
     'NORM. RUNS',$
+    'E.C. RUN',$
     'ANGLE (degrees)', $
     'S1 (mm)', $
     'S2 (mm)', $
     'DATE',$
     'SF',$
-    'Command Line'],$
+    'Command Line                                        '],$
     align        : TableAlign,$
-    column_width : [60,150,150,120,80,80,160,60,425]}
+    column_width : [60,150,150,100,120,80,80,160,60,425]}
     
   ;/////////////////////////////////////////////////////////
   ;Frame that will display the content of the selected run #
