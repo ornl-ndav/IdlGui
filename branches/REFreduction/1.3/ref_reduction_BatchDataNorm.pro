@@ -471,6 +471,8 @@ PRO BatchTab_ContinueProcessing, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
+  WIDGET_CONTROL, /HOURGLASS
+  
   CurrentProcess = (*global).batch_process
   IF (CurrentProcess eq 'data') THEN BEGIN
     ;reset value of top label
@@ -519,6 +521,9 @@ PRO BatchTab_ContinueProcessing, Event
       BatchTable,$
       new_cmd
   ENDELSE
+  
+  WIDGET_CONTROL, HOURGLASS = 0
+  
 END
 
 ;******************************************************************************
