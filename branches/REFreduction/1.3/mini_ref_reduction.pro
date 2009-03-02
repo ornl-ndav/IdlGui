@@ -469,7 +469,7 @@ global = ptr_new ({ first_event: 1,$
 (*(*global).substrate_type)    = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure
-BatchTable = strarr(9,20)
+BatchTable = strarr(10,20)
 (*(*global).BatchTable) = BatchTable
 
 ;------------------------------------------------------------------------
