@@ -44,7 +44,7 @@ ENDIF ELSE BEGIN
     lDataRunNumber = LONG(DataRunNumber)
     putTextFieldValue, Event, $
       'load_data_run_number_text_field', $
-      lDataRunNumber,$
+      STRCOMPRESS(lDataRunNumber,/REMOVE_ALL),$
       0
 ENDELSE
 RETURN,1
@@ -124,7 +124,7 @@ ENDIF ELSE BEGIN
     lNormRunNumber = LONG(NormRunNumber)
     putTextFieldValue, Event, $
       'load_normalization_run_number_text_field', $
-      lNormRunNumber,$
+      STRCOMPRESS(lNormRunNumber,/REMOVE_ALL),$
       0
 ENDELSE
 RETURN,1
