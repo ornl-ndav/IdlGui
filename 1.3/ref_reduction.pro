@@ -42,7 +42,7 @@ END
 ;------------------------------------------------------------------------------
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-file = OBJ_NEW('idlxmlparser', 'configuration.xml')
+file = OBJ_NEW('idlxmlparser', 'REFreduction.cfg')
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION = file->getValue(tag=['configuration','application'])+'_high'
