@@ -83,7 +83,7 @@ FUNCTION PopulateFileArray, BatchFileName, NbrLine
   RETURN, FileArray
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION PopulateBatchTable, Event, BatchFileName
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -133,7 +133,16 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 BatchTable[2,BatchIndex] = SplitArray[1]
               ENDELSE
             END
-            '#EC_Runs'   : BatchTable[3,BatchIndex] = SplitArray[1]
+            '#EC_Runs'   : BEGIN 
+              ec_error = 0
+              CATCH, ec_error
+              IF (ec_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                BatchTable[3,BatchIndex] = ''
+                ENDIF ELSE BEGIN
+                BatchTable[3,BatchIndex] = SplitArray[1]
+                ENDELSE
+                END
             '#Angle(deg)': BatchTable[4,BatchIndex] = SplitArray[1]
             '#S1(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
             '#S2(mm)'    : BatchTable[6,BatchIndex] = SplitArray[1]
@@ -179,7 +188,7 @@ ENDELSE
 RETURN, BatchTable
 END
 
-
+;------------------------------------------------------------------------------
 ;This function takes the name of the output file to create
 ;and create the Batch output file
 PRO CreateBatchFile, Event, FullFileName
@@ -213,6 +222,7 @@ PRO CreateBatchFile, Event, FullFileName
       k=1
       text    = [text,'#Data_Runs : ' + BatchTable[k++,i]]
       text    = [text,'#Norm_Runs : ' + BatchTable[k++,i]]
+      text    = [text,'#EC_Runs : ' + BatchTable[k++,i]]
       text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
       text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
       text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
@@ -308,7 +318,7 @@ FUNCTION getCurrentRowSelected, Event
   RETURN, RowSelected
 END
 
-
+;------------------------------------------------------------------------------
 ;This function determines the current table index
 ;It's +1 each time a new data is loaded and if the previous
 ;GO REDUCTION has been validated
@@ -338,8 +348,7 @@ FUNCTION getCurrentBatchTableIndex, Event
   RETURN, CurrentBatchTableIndex
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This function returns the value of the status of the data run
 FUNCTION getDataStatus, Event
   value = getTextFieldValue(Event,'batch_data_run_field_status')
@@ -352,7 +361,7 @@ FUNCTION getNormStatus, Event
   RETURN, value
 END
 
-
+;------------------------------------------------------------------------------
 ;This function gives the index of the current running batch row
 FUNCTION getCurrentWorkingRow, Event
   ;get global structure
@@ -367,7 +376,7 @@ FUNCTION getCurrentWorkingRow, Event
   RETURN, -1
 END
 
-
+;------------------------------------------------------------------------------
 ;This function retrives the first run number of the top row input
 FUNCTION GetMajorRunNumber, Event
   ;get global structure
@@ -381,7 +390,7 @@ FUNCTION GetMajorRunNumber, Event
   RETURN, MajorRun
 END
 
-
+;------------------------------------------------------------------------------
 ;Retrieves the Batch Path
 FUNCTION getBatchPath, Event
   id = widget_info(Event.top,find_by_uname='save_as_path')
@@ -389,6 +398,7 @@ FUNCTION getBatchPath, Event
   RETURN, Path
 END
 
+;------------------------------------------------------------------------------
 ;Retrieves the Batch File
 FUNCTION getBatchFile, Event
   id = widget_info(Event.top,find_by_uname='save_as_file_name')
@@ -403,33 +413,33 @@ PRO UpdateDataField, Event, value
   putTextFieldValue, Event, 'batch_data_run_field_status', value, 0
 END
 
-
+;------------------------------------------------------------------------------
 PRO UpdateNormField, Event, value
   putTextFieldValue, Event, 'batch_norm_run_field_status', value, 0
 END
 
-
+;------------------------------------------------------------------------------
 PRO UpdateAngleField, Event, value
   IF (value EQ '') THEN value = '?'
   text = 'Angle: ' + strcompress(value,/remove_all) + ' degrees'
   putTextFieldValue, Event, 'angle_value_status', text, 0
 END
 
-
+;------------------------------------------------------------------------------
 PRO UpdateS1Field, Event, value
   IF (value EQ '') THEN value = '?'
   text = 'Slit 1: ' + strcompress(value,/remove_all) + ' mm'
   putTextFieldValue, Event, 's1_value_status', text, 0
 END
 
-
+;------------------------------------------------------------------------------
 PRO UpdateS2Field, Event, value
   IF (value EQ '') THEN value = '?'
   text = 'Slit 2: ' + strcompress(value,/remove_all) + ' mm'
   putTextFieldValue, Event, 's2_value_status', text, 0
 END
 
-
+;------------------------------------------------------------------------------
 PRO UpdateCMDField, Event, value
   putTextFieldValue, Event, 'cmd_status_preview', value, 0
 END
@@ -444,16 +454,14 @@ FUNCTION IsRowSelectedActive, RowSelected, BatchTable
   RETURN, 0
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION isItCurrentWorkingRow, RowSelected, BatchTable
   IF (BatchTable[0,RowSelected] EQ '> YES <' OR $
     BatchTable[0,RowSelected] EQ '> NO <') THEN RETURN, 1
   RETURN, 0
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION IsAnyRowSelected, Event
   id = widget_info(Event.top,find_by_uname='batch_table_widget')
   Selection = widget_info(id,/table_select)
@@ -462,8 +470,7 @@ FUNCTION IsAnyRowSelected, Event
   RETURN, 0
 END
 
-
-
+;------------------------------------------------------------------------------
 FUNCTION isThereAnyCmdDefined, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -479,7 +486,7 @@ FUNCTION isThereAnyCmdDefined, Event
   RETURN,0
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION isThereAnyDataActivate, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -493,7 +500,7 @@ FUNCTION isThereAnyDataActivate, Event
   RETURN,0
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION isThereAnyDataInBatchTable, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -504,7 +511,7 @@ FUNCTION isThereAnyDataInBatchTable, Event
   RETURN,1
 END
 
-
+;------------------------------------------------------------------------------
 FUNCTION areDataIdentical, Event, DataArray
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -592,7 +599,7 @@ FUNCTION ValueOfActive, Event
   RETURN, value
 END
 
-
+;------------------------------------------------------------------------------
 PRO DisplayBatchTable, Event, BatchTable
   ;get global structure
   widget_control,Event.top,get_uvalue=global
@@ -611,42 +618,42 @@ PRO DisplayBatchTable, Event, BatchTable
   widget_control, id, set_value=NewBatchTable
 END
 
-
+;------------------------------------------------------------------------------
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
   resetArray = strarr(9)
   BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the MOVE DOWN SELECTION button
 PRO activateDownButton, Event, status
   id = widget_info(Event.top,find_by_uname='move_down_selection_button')
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the MOVE UP SELECTION button
 PRO activateUpButton, Event, status
   id = widget_info(Event.top,find_by_uname='move_up_selection_button')
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the DELETE SELECTION button
 PRO activateDeleteSelectionButton, Event, status
   id = widget_info(Event.top,find_by_uname='delete_selection_button')
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the DELETE ACTIVE button
 PRO activateDeleteActiveButton, Event, status
   id = widget_info(Event.top,find_by_uname='delete_active_button')
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the RUN ACTIVE buttons
 PRO activateRunActiveButton, Event, status
   id = widget_info(Event.top,find_by_uname='run_active_button')
@@ -655,14 +662,14 @@ PRO activateRunActiveButton, Event, status
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function activates or not the SAVE ACTIVE button
 PRO activateSaveActiveButton, Event, status
   id = widget_info(Event.top,find_by_uname='save_as_file_button')
   widget_control, id, sensitive=status
 END
 
-
+;------------------------------------------------------------------------------
 ;This function removes the given row from the BatchTable
 PRO RemoveGivenRowInBatchTable, BatchTable, Row
   RowIndexes = getGlobalVariable('RowIndexes')
@@ -672,7 +679,7 @@ PRO RemoveGivenRowInBatchTable, BatchTable, Row
   ClearStructureFields, BatchTable, RowIndexes
 END
 
-
+;------------------------------------------------------------------------------
 ;This function insert a clear row on top of batchTable and move
 ;everything else down
 PRO AddBlankRowInBatchTable, BatchTable
@@ -684,14 +691,14 @@ PRO AddBlankRowInBatchTable, BatchTable
   ClearStructureFields, BatchTable, 0
 END
 
-
+;------------------------------------------------------------------------------
 ;This function changes the label of the Batch Folder button
 PRO putBatchFolderName, Event, new_path
   id = widget_info(Event.top,find_by_uname='save_as_path')
   widget_control, id, set_value=new_path
 END
 
-
+;------------------------------------------------------------------------------
 PRO GenerateBatchFileName, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -716,7 +723,7 @@ PRO GenerateBatchFileName, Event
   putTextFieldValue, Event, 'save_as_file_name', file_name, 0
 END
 
-
+;------------------------------------------------------------------------------
 ;check if there are any not 'N/A' command line, if yes, then activate
 ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
 PRO UpdateBatchTabGui, Event
@@ -750,9 +757,7 @@ PRO UpdateBatchTabGui, Event
   
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;This function displays all the fields of the current selected row
 ;in the INPUT base below the main batch table
 PRO DisplayInfoOfSelectedRow, Event, RowSelected
@@ -802,7 +807,7 @@ PRO DisplayInfoOfSelectedRow, Event, RowSelected
   
 END
 
-
+;------------------------------------------------------------------------------
 ;This function will use the instance of the class to populate the
 ;structure with angle, S1, S2 values
 PRO PopulateBatchTableWithClassInfo, Table, instance
@@ -812,7 +817,7 @@ PRO PopulateBatchTableWithClassInfo, Table, instance
   Table[1,0] = strcompress(instance->getRunNumber(),/REMOVE_ALL)
 END
 
-
+;------------------------------------------------------------------------------
 ;This function get the info from the GUI (data run number and time) to
 ;update the new row (index 0) of BatchTable
 PRO PopulateBatchTableWithGuiInfo, Event, BatchTable
@@ -824,7 +829,7 @@ PRO PopulateBatchTableWithGuiInfo, Event, BatchTable
   BatchTable[7,0] = strcompress(TimeBatch,/remove_all)
 END
 
-
+;------------------------------------------------------------------------------
 ;This function populates the index 0 with others infos (NORM and command line)
 PRO PopulateBatchTableWithOthersInfo, Event, BatchTable
   ;get global structure
@@ -892,7 +897,6 @@ PRO PopulateBatchTableWithCMDinfo, Event, cmd
   ENDIF
   (*(*global).BatchTable) = BatchTable
 END
-
 
 ;------------------------------------------------------------------------------
 ;This function takes a strarr and return a string list of runs comma
@@ -969,8 +973,7 @@ PRO BatchTab_WidgetTable, Event
   SaveDataNormInputValues, Event  ;_batchDataNorm
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO BatchTab_ActivateRow, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1044,7 +1047,7 @@ PRO BatchTab_MoveUpSelection, Event
   CheckRepopulateButton, Event
 END
 
-
+;------------------------------------------------------------------------------
 PRO BatchTab_MoveDownSelection, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1083,8 +1086,7 @@ PRO BatchTab_MoveDownSelection, Event
   CheckRepopulateButton, Event
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This method will remove from the main table all the info of the
 ;current selected element
 PRO BatchTab_DeleteSelection, Event
@@ -1285,7 +1287,7 @@ PRO BatchTab_RunActive, Event
   MapBase, Event, 'progress_bar_base',0 ;change to 0
 END
 
-
+;------------------------------------------------------------------------------
 ;This function is reached by the [RUN ACTIVE in BACKGROUND] button
 PRO BatchTab_RunActiveBackground, Event
   ActivateWidget, Event, 'run_active_background_button', 0
@@ -1417,7 +1419,6 @@ PRO BatchTab_RunActiveBackground, Event
   ENDIF
 END
 
-
 ;------------------------------------------------------------------------------
 PRO BatchTab_LoadBatchFile, Event
   ;get global structure
@@ -1433,14 +1434,13 @@ PRO BatchTab_LoadBatchFile, Event
     new_path
 END
 
-
+;------------------------------------------------------------------------------
 PRO BatchTab_ReloadBatchFile, Event
   BatchFileName = getTextFieldValue(Event,'loaded_batch_file_name')
   BatchTab_LoadBatchFile_step2, Event, BatchFileName, ''
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO BatchTab_LoadBatchFile_step2, Event, BatchFileName, new_path
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1495,7 +1495,6 @@ PRO BatchTab_LoadBatchFile_step2, Event, BatchFileName, new_path
 END
 
 ;------------------------------------------------------------------------------
-
 ;Define where the Batch File will be created
 PRO BatchTab_BrowsePath, Event
   ;get global structure
@@ -1514,12 +1513,10 @@ PRO BatchTab_BrowsePath, Event
   ENDIF
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO BatchTab_SaveCommands, Event
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
+  widget_control,Event.top,get_uvalue=global
   
   ;retrieve path of batch file name
   MyBatchPath = getBatchPath(Event)
@@ -1537,8 +1534,6 @@ PRO BatchTab_SaveCommands, Event
   ;Create the batch output file using the FullFileName
   CreateBatchFile, Event, FullFileName
 END
-
-
 
 ;------------------------------------------------------------------------------
 ;This function is reached each time the Batch Tab is reached by the
@@ -1565,9 +1560,7 @@ PRO UpdateBatchTable, Event
   CheckRepopulateButton, Event
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;This function is reached each time the user has loaded a new
 ;Normalization run
 PRO AddNormRunToBatchTable, Event
@@ -1585,8 +1578,7 @@ PRO AddNormRunToBatchTable, Event
   (*(*global).BatchTable) = BatchTable
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO RetrieveBatchInfoAtLoading, Event
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1631,9 +1623,7 @@ PRO RetrieveBatchInfoAtLoading, Event
   GenerateBatchFileName, Event
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;This function will retrieves the DATA run numbers and add them to the
 ;Batch File
 PRO BatchRetrieveDataRuns, Event
@@ -1670,8 +1660,7 @@ PRO BatchRetrieveDataRuns, Event
   GenerateBatchFileName, Event
 END
 
-
-
+;------------------------------------------------------------------------------
 ;This function will retrieves the NORM run numbers and add them to the
 ;Batch File
 PRO BatchRetrieveNormRuns, Event
@@ -1707,9 +1696,6 @@ PRO BatchRetrieveNormRuns, Event
   ;generate a new batch file name
   GenerateBatchFileName, Event
 END
-
-
-
 
 ;------------------------------------------------------------------------------
 PRO BatchTab_LaunchREFscale, Event ;_Batch
