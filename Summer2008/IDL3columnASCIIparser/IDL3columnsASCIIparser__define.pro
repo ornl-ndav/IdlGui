@@ -416,11 +416,16 @@ FUNCTION IDL3columnsASCIIparser::getData
       tmp = index[WHERE(STRMATCH(comments, '# Q transfer*') EQ 1)]
       qtrnsfr = data[tmp +1: tmp + qtrn]
       
-      help, energytrnsfr, qtrnsfr
+      grpData = ptrarr(qTRN, /ALLOCATE_HEAP)
+      FOR i = 0, N_ELEMENTS(grpData)-1 DO BEGIN
+        stgSearch = '# Group' + STRCOMPRESS(string(i))
+        tmp = index[WHERE(STRMATCH(comments, stgSearch) EQ 1)]
+        *grpData[i] =  data[tmp +1:tmp+1000]
+      ENDFOR
       
       MyStruct = { xaxis:             energytrnsfr,$
         yaxis:             qtrnsfr,$
-        data:              ptr_new(0L)}
+        data:              grpData}
         
     END
     
