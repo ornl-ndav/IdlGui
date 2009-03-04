@@ -524,7 +524,9 @@ IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
     putMTorNCPvalues, Event, (*global).momentum_transfer_array
     
     ;enable Scale S(Q,E)  by the solid angle distribution
+    ;show the solid angle distribution from S(Q,E) output button
     scale_sqe_group_status = 1
+    show_sqe_output_flag = 0 ;hide the hidden base
     
 ENDIF ELSE BEGIN
 ;check if the Iterative background substraction mode is on or off
@@ -558,13 +560,16 @@ ENDIF ELSE BEGIN
     ENDELSE
 
     ;enable Scale S(Q,E)  by the solid angle distribution
+    ;hide the solid angle distribution from S(Q,E) output button
     scale_sqe_group_status = 0
+    show_sqe_output_flag = 1 ;show the hidden base
 
 ENDELSE
 
 activate_button, event,$
  'scale_sqe_by_solid_angle_base_uname',$
  scale_sqe_group_status
+activate_base, event, 'na_sad', show_sqe_output_flag
 
 END
 

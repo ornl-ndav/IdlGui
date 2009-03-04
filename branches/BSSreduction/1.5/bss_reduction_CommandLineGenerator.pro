@@ -2174,6 +2174,17 @@ PRO BSSreduction_CommandLineGenerator, Event
       ENDELSE
     ENDIF
     
+    ;check if use iterative background subtraction is active or not
+        ButtonValue = getButtonValue(Event,'mtha_button')
+    
+    IF (isButtonSelected(Event,'sad') AND $
+      ButtonValue EQ 0) THEN BEGIN
+      cmd += ' --dump-pix-contrib'
+    ;        (*global).Configuration.Reduce.tab8.woctib_button = 1
+    ENDIF ELSE BEGIN
+    ;        (*global).Configuration.Reduce.tab8.woctib_button = 0
+    ENDELSE
+    
   ENDIF ;end of intermediate tab
   
   ;get Output File Name and folder

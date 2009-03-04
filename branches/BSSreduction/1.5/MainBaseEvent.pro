@@ -998,11 +998,18 @@ PRO MAIN_BASE_event, Event
       BSSreduction_CommandLineGenerator, Event
     end
     
-    ;Pixel Wavelength Spectra After Vanadium Normalization ------------------------
+    ;Pixel Wavelength Spectra After Vanadium Normalization
     Widget_Info(wWidget, FIND_BY_UNAME='pwsavn_button'): begin
       BSSreduction_Reduce_pwsavn_button, Event
       BSSreduction_CommandLineGenerator, Event
     end
+    
+    ;Solid Angle Distribution from S(Q,E) Rebinning
+    Widget_Info(wWidget, FIND_BY_UNAME='sad'): begin
+      BSSreduction_CommandLineGenerator, Event
+    end
+        
+    ;end of tab8 -------------------------------------------------------------
     
     ;Start Batch Data Reduction
     WIDGET_INFO(wWidget, FIND_BY_UNAME='submit_batch_button'): BEGIN
