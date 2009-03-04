@@ -9,10 +9,12 @@ itResolve
 ;and create the VM file.
 cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
+.run time.pro
 .run IDL3columnsASCIIparser__define.pro
 .run IDLsendLogBook__define.pro
 .run IDLxmlParser__define.pro
 .run logger.pro
+.run CheckPackages.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
