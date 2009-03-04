@@ -63,7 +63,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
     ;retrieve main table
     BatchTable = (*(*global).BatchTable)
     ;cmd string is
-    cmd = BatchTable[8,RowSelected]
+    cmd = BatchTable[9,RowSelected]
     ;get first part of cmd ex: srun -Q -p lracq reflect_reduction
     split1      = 'reflect_reduction'
     part1_array = strsplit(cmd,split1,/extract,/regex)
@@ -190,7 +190,9 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
   widget_control,id,get_uvalue=global
   
   ;Update values of S1, S2 and AngleValue
-  DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+  DataNexus = getNexusFromRunArray(Event, data_runs, $
+  (*global).instrument,$
+  SOURCE_FILE='data')
   entry = obj_new('IDLgetMetadata',DataNexus)
   AngleValue = strcompress(entry->getAngle())
   S1Value    = strcompress(entry->getS1())
@@ -200,9 +202,9 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
   UpdateS1Field, Event, S1Value
   UpdateS2Field, Event, S2Value
   
-  BatchTable[3,RowSelected] = AngleValue
-  BatchTable[4,RowSelected] = S1Value
-  BatchTable[5,RowSelected] = S2Value
+  BatchTable[4,RowSelected] = AngleValue
+  BatchTable[5,RowSelected] = S1Value
+  BatchTable[6,RowSelected] = S2Value
   
   DataRunsJoined = strjoin(data_runs,',')
   BatchTable[1,RowSelected] = DatarunsJoined
@@ -216,12 +218,12 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
   ;change the --output flag in the cmd
   new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
   ;put new_cmd back in the BatchTable
-  BatchTable[8,RowSelected] = new_cmd
+  BatchTable[9,RowSelected] = new_cmd
   ;update command line
   putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
   ;update DATE field with new date/time stamp
   NewDate = GenerateDateStamp2()
-  BatchTable[6,RowSelected] = NewDate
+  BatchTable[7,RowSelected] = NewDate
   ;Save BatchTable back to Global
   (*(*global).BatchTable) = BatchTable
   DisplayBatchTable, Event, BatchTable
@@ -263,12 +265,12 @@ PRO  Continue_ChangeDataRunNumber, Event, $
   ;change the --output flag in the cmd
   new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
   ;put new_cmd back in the BatchTable
-  BatchTable[8,RowSelected] = new_cmd
+  BatchTable[9,RowSelected] = new_cmd
   ;update command line
   putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
   ;update DATE field with new date/time stamp
   NewDate = GenerateDateStamp2()
-  BatchTable[6,RowSelected] = NewDate
+  BatchTable[7,RowSelected] = NewDate
   ;Save BatchTable back to Global
   (*(*global).BatchTable) = BatchTable
   DisplayBatchTable, Event, BatchTable
@@ -299,7 +301,7 @@ pro ChangeNormRunNumber, Event
   ;retrieve main table
   BatchTable = (*(*global).BatchTable)
   ;cmd string is
-  cmd = BatchTable[8,RowSelected]
+  cmd = BatchTable[9,RowSelected]
   
   ;start working with the NORMALIZATION runs
   ;get first part of cmd, before --norm=
@@ -442,10 +444,10 @@ PRO Continue_ChangeNormRunNumber, Event,$
   ;change the --output flag in the cmd
   ;new_cmd = UpdateOutputFlag(Event, new_cmd, NormRunsJoined[0])
   ;put new_cmd back in the BatchTable
-  BatchTable[8,RowSelected] = new_cmd
+  BatchTable[9,RowSelected] = new_cmd
   ;update DATE field with new date/time stamp
   NewDate = GenerateDateStamp2()
-  BatchTable[6,RowSelected] = NewDate
+  BatchTable[7,RowSelected] = NewDate
   ;Save BatchTable back to Global
   (*(*global).BatchTable) = BatchTable
   DisplayBatchTable, Event, BatchTable
