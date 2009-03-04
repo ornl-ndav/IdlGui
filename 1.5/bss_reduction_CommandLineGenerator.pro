@@ -2175,7 +2175,7 @@ PRO BSSreduction_CommandLineGenerator, Event
     ENDIF
     
     ;check if use iterative background subtraction is active or not
-        ButtonValue = getButtonValue(Event,'mtha_button')
+    ButtonValue = getButtonValue(Event,'mtha_button')
     
     IF (isButtonSelected(Event,'sad') AND $
       ButtonValue EQ 0) THEN BEGIN

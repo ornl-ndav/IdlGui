@@ -174,7 +174,8 @@ global = ptr_new ({ $
                                          womes_button: 0,$
                                          worms_button: 0,$
                                          wocpsamn_button: 0,$
-                                         wolidsb_button: 0},$
+                                         wolidsb_button: 0,$
+                                         sad_button: 0},$
                     NameOfOutputPlots: {woctib_button: $
                                          'Calculated Time-Independent' + $
                                          ' Background', $
@@ -196,7 +197,10 @@ global = ptr_new ({ $
                                          wolidsb_button: $
                                          'linearly Interpolated Direct' + $
                                          ' Scattering Back. Info. ' + $
-                                         'Summed over all Pixels'},$
+                                         'Summed over all Pixels',$
+                                         sad_button: $
+                                         'Solid Angle Distribution from' + $
+                                         ' S(Q,E) Rebinning'},$
                     OutputPlotsExt: {woctib: '_data.tib',$
                                      wopws: '_data.pxl',$
                                      womws: '_data.mxl',$
@@ -205,7 +209,8 @@ global = ptr_new ({ $
                                      wocpsamn: '_data.pml',$
                                      wopies: '_data.ixl',$
                                      wopets: '_data.exl',$
-                                     wolidsb: '_data.lin'},$
+                                     wolidsb: '_data.lin',$
+                                     sad: '_data.pcs'},$
                     MainDRPlotsExt: { sqe: '.txt'},$
                     FullNameOutputPlots: ptr_new(0L),$
                     WidgetsToActivate: ptr_new(0L),$
