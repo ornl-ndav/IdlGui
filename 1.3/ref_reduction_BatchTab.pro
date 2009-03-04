@@ -795,11 +795,11 @@ PRO DisplayInfoOfSelectedRow, Event, RowSelected
     WIDGET_CONTROL, id, MAP=map_status
     
     UpdateNormField,  Event, BatchTable[2,RowSelected]
-    UpdateAngleField, Event, BatchTable[3,RowSelected]
-    UpdateS1Field,    Event, BatchTable[4,RowSelected]
-    UpdateS2Field,    Event, BatchTable[5,RowSelected]
-    ;UpdateDateField,  Event, BatchTable[6,RowSelected]
-    UpdateCMDField,   Event, BatchTable[8,RowSelected]
+    UpdateAngleField, Event, BatchTable[4,RowSelected]
+    UpdateS1Field,    Event, BatchTable[5,RowSelected]
+    UpdateS2Field,    Event, BatchTable[6,RowSelected]
+    ;UpdateDateField,  Event, BatchTable[7,RowSelected]
+    UpdateCMDField,   Event, BatchTable[9,RowSelected]
     
   ENDELSE
   
@@ -937,6 +937,9 @@ END
 ;This function is reached by the all_events of the main table in the
 ;batch tab
 PRO BatchTab_WidgetTable, Event
+
+  ;print, 'Entering BatchTab_WidgetTable'
+
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -969,6 +972,9 @@ PRO BatchTab_WidgetTable, Event
   ;enable or not the REPOPULATE Button
   CheckRepopulateButton, Event
   SaveDataNormInputValues, Event  ;_batchDataNorm
+  
+  ;print, 'Leaving BatchTab_WidgetTable'
+  
 END
 
 ;------------------------------------------------------------------------------
