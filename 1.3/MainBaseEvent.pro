@@ -1603,8 +1603,10 @@ PRO MAIN_BASE_event, Event
     
     ;;Change Data Run number
     widget_info(wWidget, FIND_BY_UNAME='batch_data_run_field_status'): begin
+      widget_control, /hourglass
       BatchTab_ChangeDataNormRunNumber, Event
       SaveDataNormInputValues, Event ;_batchDataNorm
+      widget_control, hourglass=0
     end
     
     ;;Repopulate GUI
@@ -1615,18 +1617,24 @@ PRO MAIN_BASE_event, Event
     
     ;;Processing Base YES (continue)
     widget_info(wWidget, FIND_BY_UNAME='pro_yes'): begin
+      widget_control, /hourglass
       BatchTab_ContinueProcessing, Event
+      widget_control, hourglass=0
     end
     
     ;;Processing Base NO (continue)
     widget_info(wWidget, FIND_BY_UNAME='pro_no'): begin
+      widget_control, /hourglass
       BatchTab_StopProcessing, Event
+      widget_control, /hourglass
     end
     
     ;;Change Normalization Run number
     widget_info(wWidget, FIND_BY_UNAME='batch_norm_run_field_status'): begin
+      widget_control, /hourglass
       BatchTab_ChangeDataNormRunNumber, Event
       SaveDataNormInputValues, Event ;_batchDataNorm
+      widget_control, hourglass=0
     end
     
     ;;Move Up Selection
