@@ -52,8 +52,6 @@ PRO RepopulateGui, Event
   ;Create instance of the class
   ClassInstance = obj_new('IDLparseCommandLine',cmd)
   
-  help, ClassInstance
-  
   ;Add message in log book
   text = '> Repopulating GUI (via Batch Tab) with information of following ' + $
     'command line:'
