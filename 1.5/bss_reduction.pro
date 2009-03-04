@@ -34,13 +34,17 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+file = OBJ_NEW('idlxmlparser', 'BSSreduction.cfg')
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION        = 'BSSreduction'
-VERSION            = '1.5.0'
-DeployedVersion    = 'yes'  ;yes
-DEBUGGING_VERSION  = 'no'   ;no
-CHECKING_PACKAGES  = 'yes' 
+APPLICATION = file->getValue(tag=['configuration','application'])
+VERSION = file->getValue(tag=['configuration','version'])
+CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+DeployedVersion = file->getValue(tag=['configuration','DeployedVersion'])
+DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+
 PACKAGE_REQUIRED_BASE = { driver:           '',$
                           version_required: '',$
                           found: 0,$

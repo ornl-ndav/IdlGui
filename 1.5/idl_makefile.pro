@@ -11,6 +11,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
 .run IDL3columnsASCIIparser__define.pro
 .run IDLsendLogBook__define.pro
+.run IDLxmlParser__define.pro
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/BSSreductionGUI/'
