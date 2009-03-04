@@ -729,6 +729,7 @@ Pro MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
   wSQEgroup = CW_BGROUP(wSQEbase,$
     sSQEgroup.label,$
     /NONEXCLUSIVE,$
+    UNAME = sSQEgroup.uname,$
     SET_value = 0,$
     ROW = 1)
     
