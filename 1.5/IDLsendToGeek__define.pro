@@ -101,7 +101,7 @@ CASE (var) OF
     'WorkingPath'     : RETURN, '~/'
     'LogBookPath'     : RETURN, './'
     'ApplicationName' : RETURN, (*global).application
-    'LogBookUname'    : RETURN, 'log_book_text'
+    'LogBookUname'    : RETURN, 'log_book'
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
     ELSE:
