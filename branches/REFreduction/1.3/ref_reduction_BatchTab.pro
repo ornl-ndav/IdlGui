@@ -133,16 +133,16 @@ FUNCTION PopulateBatchTable, Event, BatchFileName
                 BatchTable[2,BatchIndex] = SplitArray[1]
               ENDELSE
             END
-            '#EC_Runs'   : BEGIN 
+            '#EC_Runs'   : BEGIN
               ec_error = 0
               CATCH, ec_error
               IF (ec_error NE 0) THEN BEGIN
                 CATCH,/CANCEL
                 BatchTable[3,BatchIndex] = ''
-                ENDIF ELSE BEGIN
+              ENDIF ELSE BEGIN
                 BatchTable[3,BatchIndex] = SplitArray[1]
-                ENDELSE
-                END
+              ENDELSE
+            END
             '#Angle(deg)': BatchTable[4,BatchIndex] = SplitArray[1]
             '#S1(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
             '#S2(mm)'    : BatchTable[6,BatchIndex] = SplitArray[1]
@@ -541,8 +541,6 @@ FUNCTION areDataIdentical, Event, DataArray
   RETURN, 1
 END
 
-
-
 ;**********************************************************************
 ;GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI
 ;**********************************************************************
@@ -553,7 +551,7 @@ PRO CheckRepopulateButton, Event
   widget_control,id,get_uvalue=global
   BatchTable  = (*(*global).BatchTable)
   SelectedRow = getCurrentRowSelected(Event)
-  cmd         = BatchTable[8,SelectedRow]
+  cmd         = BatchTable[9,SelectedRow]
   IF (cmd NE '') THEN BEGIN
     activateButtonStatus = 1
   ENDIF ELSE BEGIN
@@ -621,7 +619,7 @@ END
 ;------------------------------------------------------------------------------
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
-  resetArray = strarr(9)
+  resetArray = strarr(10)
   BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
