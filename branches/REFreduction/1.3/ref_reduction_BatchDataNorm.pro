@@ -35,13 +35,13 @@
 ;Start working with DATA field
 PRO BatchTab_ChangeDataNormRunNumber, Event
   ;indicate initialization with hourglass icon
-  widget_control,/hourglass
+  ;widget_control,/hourglass
   ;get global structure
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL,id,GET_UVALUE=global
   
   error = 0
-  ;CATCH, error ;remove_me
+  CATCH, error ;remove_me
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'Please check the DATA RUNS input (ex: 3004,3004,3005) '
@@ -136,6 +136,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
             'OR NOT ? '
           putLabelValue, Event, 'pro_top_label', value
         ENDIF ELSE BEGIN
+   ;       widget_control,hourglass=0
           Continue_ChangeDataRunNumber, Event, $
             RowSelected,$
             data_runs, $
@@ -146,6 +147,7 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
             new_cmd
         ENDELSE
       ENDIF ELSE BEGIN
+        widget_control,hourglass=0
         Continue_ChangeDataRunNumberForOneRun, Event, $
           RowSelected,$
           data_runs, $
@@ -165,13 +167,16 @@ PRO BatchTab_ChangeDataNormRunNumber, Event
       ;generate a new batch file name
       GenerateBatchFileName, Event
       ;turn off hourglass
-      widget_control,hourglass=0
+  ;    widget_control,hourglass=0
       value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E  ' + $
         ' W A I T ) '
       putLabelValue, Event, 'pro_top_label', value
       (*global).batch_process = 'data'
     ENDELSE
   ENDELSE ;end of CATCH statement
+  
+ ; widget_control, hourglass=0
+  
 END
 
 ;******************************************************************************
@@ -191,8 +196,8 @@ PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
   
   ;Update values of S1, S2 and AngleValue
   DataNexus = getNexusFromRunArray(Event, data_runs, $
-  (*global).instrument,$
-  SOURCE_FILE='data')
+    (*global).instrument,$
+    SOURCE_FILE='data')
   entry = obj_new('IDLgetMetadata',DataNexus)
   AngleValue = strcompress(entry->getAngle())
   S1Value    = strcompress(entry->getS1())
@@ -253,6 +258,8 @@ PRO  Continue_ChangeDataRunNumber, Event, $
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
+  ;widget_control,/hourglass
+  
   DataRunsJoined = strjoin(data_runs,',')
   BatchTable[1,RowSelected] = DatarunsJoined
   IF (DataNexus[0] NE '') THEN BEGIN
@@ -280,6 +287,7 @@ PRO  Continue_ChangeDataRunNumber, Event, $
   value += '( P L E A S E   W A I T ) '
   putLabelValue, Event, 'pro_top_label', value
   
+  ;widget_control,hourglass = 0
   ;continue with normalization
   ChangeNormRunNumber, Event
 END
@@ -288,7 +296,7 @@ END
 pro ChangeNormRunNumber, Event
 
   ;indicate initialization with hourglass icon
-  widget_control,/hourglass
+  ;widget_control,/hourglass
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
@@ -379,6 +387,7 @@ pro ChangeNormRunNumber, Event
         value += 'CONTINUE OR NOT ? '
         putLabelValue, Event, 'pro_top_label', value
       ENDIF ELSE BEGIN
+   ;     widget_control,hourglass=0
         Continue_ChangeNormRunNumber, Event, $
           RowSelected,$
           norm_runs, $
@@ -389,6 +398,7 @@ pro ChangeNormRunNumber, Event
           new_cmd
       ENDELSE
     ENDIF ELSE BEGIN
+    ;  widget_control,hourglass=0
       Continue_ChangeNormRunNumber, Event, $
         RowSelected,$
         norm_runs, $
@@ -405,12 +415,15 @@ pro ChangeNormRunNumber, Event
     ;generate a new batch file name
     GenerateBatchFileName, Event
     ;turn off hourglass
-    widget_control,hourglass=0
+  ;  widget_control,hourglass=0
     value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
     putLabelValue, Event, 'pro_top_label', value
     (*global).batch_process = 'data'
     BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
   ENDELSE
+  
+  ;widget_control,hourglass=0
+  
 END
 
 ;******************************************************************************
@@ -426,6 +439,8 @@ PRO Continue_ChangeNormRunNumber, Event,$
   ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
+  
+ ; widget_control, /hourglass
   
   NormRunsJoined = strjoin(norm_runs,',')
   BatchTable[2,RowSelected] = NormRunsJoined
@@ -459,7 +474,7 @@ PRO Continue_ChangeNormRunNumber, Event,$
   ;generate a new batch file name
   GenerateBatchFileName, Event
   ;turn off hourglass
-  widget_control,hourglass=0
+  ;widget_control,hourglass=0
   value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
   putLabelValue, Event, 'pro_top_label', value
   (*global).batch_process = 'data'
@@ -473,7 +488,7 @@ PRO BatchTab_ContinueProcessing, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
-  WIDGET_CONTROL, /HOURGLASS
+ ; WIDGET_CONTROL, /HOURGLASS
   
   CurrentProcess = (*global).batch_process
   IF (CurrentProcess eq 'data') THEN BEGIN
@@ -489,6 +504,8 @@ PRO BatchTab_ContinueProcessing, Event
     part2       = (*global).batch_part2
     BatchTable  = (*(*global).BatchTable)
     new_cmd     = (*global).batch_new_cmd
+    
+   ; widget_control,hourglass=0
     
     Continue_ChangeDataRunNumber, Event, $
       RowSelected,$
@@ -514,6 +531,8 @@ PRO BatchTab_ContinueProcessing, Event
     BatchTable  = (*(*global).BatchTable)
     new_cmd     = (*global).batch_new_cmd
     
+  ;  widget_control,hourglass=0
+    
     Continue_ChangeNormRunNumber, Event, $
       RowSelected,$
       norm_runs, $
@@ -524,7 +543,7 @@ PRO BatchTab_ContinueProcessing, Event
       new_cmd
   ENDELSE
   
-  WIDGET_CONTROL, HOURGLASS = 0
+ ; widget_control,hourglass=0
   
 END
 
