@@ -522,6 +522,10 @@ IF (ButtonValue EQ 0) THEN BEGIN ;Momentum Transfer Histogram Axis
 ;first save fields value of Negative Cosine Polar Axis
     (*global).negative_cosine_polar_array = MinMaxWidthArray
     putMTorNCPvalues, Event, (*global).momentum_transfer_array
+    
+    ;enable Scale S(Q,E)  by the solid angle distribution
+    scale_sqe_group_status = 1
+    
 ENDIF ELSE BEGIN
 ;check if the Iterative background substraction mode is on or off
     ibs_value = $
@@ -552,7 +556,16 @@ ENDIF ELSE BEGIN
         (*global).momentum_transfer_array = MinMaxWidthArray
         putMTorNCPvalues, Event, (*global).negative_cosine_polar_array
     ENDELSE
+
+    ;enable Scale S(Q,E)  by the solid angle distribution
+    scale_sqe_group_status = 0
+
 ENDELSE
+
+activate_button, event,$
+ 'scale_sqe_by_solid_angle_base_uname',$
+ scale_sqe_group_status
+
 END
 
 ;This function is reached by the mtha_min_text
