@@ -611,6 +611,7 @@ button_array = ['woctib_button',$
 ;                'wopies_button',$
 ;                'wopets_button',$
                 'wolidsb_button',$
+                'sad',$
                 'pwsavn_button']
 sz = (size(button_array))(1)
 FOR i=0,(sz-1) DO BEGIN
