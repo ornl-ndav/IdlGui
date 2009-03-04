@@ -64,8 +64,8 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 1,$
-                     reduce_input_tab: 4},$
+sDEBUGGING = { tab: {main_tab: 1,$ ;Reduce tab
+                     reduce_input_tab: 5},$ ;Scaling Cst tab
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
@@ -499,7 +499,7 @@ default_pixel_excluded[[list1,list2,list3,list4]] = 1
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     MainBaseSize  = [30,25,1200,730]
 ENDIF ELSE BEGIN
-    MainBaseSize  = [50,200,1200,730]
+    MainBaseSize  = [50,50,1200,730]
 ENDELSE
 (*global).MainBaseSize = MainBasesize
 
