@@ -13,8 +13,8 @@ cooef = POLY_FIT(X, Y, 2, MEASURE_ERRORS=measure_errors, $
    SIGMA=sigma)
 
 ; Print the coefficients:
-PRINT, 'Coefficients: ', cooef
-PRINT, 'Standard errors: ', sigma
+;PRINT, 'Coefficients: ', cooef
+;PRINT, 'Standard errors: ', sigma
 
 ;show original data
 loadct,3

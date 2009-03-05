@@ -40,8 +40,8 @@
 FUNCTION getGlobalVariable, var
 CASE (var) OF
 ;number of columns in the Table (active/data/norm/s1/s2...)
-    'ColumnIndexes'         : RETURN, 8 
-    'NbrColumn'             : RETURN, 9
+    'ColumnIndexes'         : RETURN, 9 
+    'NbrColumn'             : RETURN, 10
     'RowIndexes'            : RETURN, 19
     'NbrRow'                : RETURN, 20
     'BatchFileHeadingLines' : RETURN, 3
@@ -84,6 +84,7 @@ FOR i=0,(NbrRow-1) DO BEGIN
         k=1
         text    = [text,'#Data_Runs : '  + BatchTable[k++,i]]
         text    = [text,'#Norm_Runs : '  + BatchTable[k++,i]]
+        text    = [text,'#EC_Runs : '    + BatchTable[k++,i]]
         text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
         text    = [text,'#S1(mm) : '     + BatchTable[k++,i]]
         text    = [text,'#S2(mm) : '     + BatchTable[k++,i]]
