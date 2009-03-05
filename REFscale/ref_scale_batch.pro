@@ -44,11 +44,11 @@ angle_array      = FLTARR(1)
 FOR i=0,(NbrRowMax-1) DO BEGIN
     IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
         IF (index EQ 0) THEN BEGIN
-            SF_array[0] = BatchTable[7,i]
-            angle_array[0] = BatchTable[3,i]
+            SF_array[0] = BatchTable[8,i]
+            angle_array[0] = BatchTable[4,i]
         ENDIF ELSE BEGIN
-            SF_array = [SF_array,BatchTable[7,i]]
-            angle_array = [angle_array,BatchTable[3,i]]
+            SF_array = [SF_array,BatchTable[8,i]]
+            angle_array = [angle_array,BatchTable[4,i]]
         ENDELSE
         index++
     ENDIF
@@ -71,7 +71,7 @@ flt_index        = 0
 
 FOR i=0,(NbrRowMax-1) DO BEGIN
 
-    SF_value = BatchTable[7,i]
+    SF_value = BatchTable[8,i]
     IF (SF_value EQ '') THEN BEGIN
         CONTINUE
     ENDIF ELSE BEGIN
@@ -116,7 +116,7 @@ DRfiles = STRARR(NbrDrFiles)
 ;get for each row the path/output_file_name
 j=0
 FOR i=0,(NbrRowNotEmpty-1) DO BEGIN
-    iRow = OBJ_NEW('idl_parse_command_line',BatchTable[8,i])
+    iRow = OBJ_NEW('idl_parse_command_line',BatchTable[9,i])
     IF (BatchTable[0,i] EQ 'YES') THEN BEGIN
         outputPath     = iRow->getOutputPath()
         outputFileName = iRow->getOutputFileName()
@@ -143,11 +143,11 @@ PRO UpdateBatchTable, Event, BatchTable
 NewTable = STRARR(5,20)
 ;help, BatchTable ;remove_me
 ;print, BatchTable ;remove_me
-NewTable[0,*] = BatchTable[0,*]
-NewTable[1,*] = BatchTable[1,*]
-NewTable[2,*] = BatchTable[2,*]
-NewTable[3,*] = BatchTable[7,*]
-NewTable[4,*] = BatchTable[6,*]
+NewTable[0,*] = BatchTable[0,*] 
+NewTable[1,*] = BatchTable[1,*] 
+NewTable[2,*] = BatchTable[2,*] 
+NewTable[3,*] = BatchTable[8,*]
+NewTable[4,*] = BatchTable[7,*]
 ;repopulate Table
 DisplayBatchTable, Event, NewTable
 END
