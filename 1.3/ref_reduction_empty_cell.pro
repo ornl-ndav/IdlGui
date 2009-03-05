@@ -887,10 +887,6 @@ PRO RefreshEquationDraw, Event
   tv, image, 0,0,/true
 END
 
-
-
-
-
 ;------------------------------------------------------------------------------
 FUNCTION OpenEmptyCellNeXusFile_from_repopulate, Event, $
     EmptyCellRunNumber, $
@@ -905,20 +901,19 @@ FUNCTION OpenEmptyCellNeXusFile_from_repopulate, Event, $
   ;store full path to NeXus
   (*global).empty_cell_full_nexus_name = full_nexus_name
   
-  RefReduction_NXsummary, Event, $
+  RefReduction_NXsummaryBatch, Event, $
     full_nexus_name, $
-    'empty_cell_nx_summary',$
-    POLA_STATE=pola_state
+    'empty_cell_nx_summary'
     
   ;check format of NeXus file
   IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
     
-    ;dump binary data into local directory of user
     working_path = (*global).working_path
-    status = REFReduction_DumpBinaryEmptyCell(Event,$ ;_dumpbinary.pro
+    
+    status = RefReduction_DumpBinaryEmptyCell_batch(Event,$ ;_dumpbinary.pro
       full_nexus_name, $
-      working_path, $
+      working_path,$
       POLA_STATE=pola_state)
       
     IF ((*global).debugging_on_Mac EQ 'yes') THEN BEGIN
@@ -996,9 +991,6 @@ PRO OpenPlotEmptyCell, Event, run_number, nexus_file_name
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   (*global).empty_cell_nexus_full_path = nexus_file_name
-  
-  text = '-> Nexus file name: ' + nexus_file_name
-  putLogBookMessage, Event, Text, Append=1
   
   ;indicate initialization with hourglass icon
   ;    WIDGET_CONTROL,/HOURGLASS

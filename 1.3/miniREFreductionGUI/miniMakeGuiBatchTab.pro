@@ -144,7 +144,7 @@ dFrame = { size  : [0+XYoff[0],$
 
 ;title 
 XYoff = [300,-8]
-title = 'Selected Run Number Information Box'
+title = 'Information Box of Selected Run Number'
 dTitle = { size  : [(long(dFrame.size[2])-STRLEN(title)*5)/2L,$
                     dFrame.size[1]+XYoff[1]],$
            value : title}

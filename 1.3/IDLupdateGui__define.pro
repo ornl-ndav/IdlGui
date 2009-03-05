@@ -226,16 +226,22 @@ END
 
 ;------------------------------------------------------------------------------
 PRO UpdateEmptyCellNexusFileName, Event, full_name, run_number
-OpenPlotEmptyCell, Event, run_number, full_name
+  OpenPlotEmptyCell, Event, run_number, full_name
 END
 
+;------------------------------------------------------------------------------
+PRO UpdateEmptyCellCoefficient, Event, A, B, C, D
 
-
-
-
-
-
-
+  putTextFieldValue, Event, 'empty_cell_substrate_a', $
+    STRCOMPRESS(A,/REMOVE_ALL), 0
+  putTextFieldValue, Event, 'empty_cell_substrate_b', $
+    STRCOMPRESS(B,/REMOVE_ALL), 0
+  putTextFieldValue, Event, 'empty_cell_scaling_factor',$
+    STRCOMPRESS(C,/REMOVE_ALL), 0
+  putTextFieldValue, Event, 'empty_cell_diameter',$
+    STRCOMPRESS(D,/REMOVE_ALL), 0
+    
+END
 
 ;WORK ON AngleValue and AngleError ============================================
 PRO UpdateAngle, Event, Value, Error, units
@@ -669,7 +675,7 @@ FUNCTION IDLupdateGui::init, structure
   
     empty_cell_error = 0
     
-    text = '--> Display Empty Cell Run Number ............................. ' $
+    text = '--> Display Empty Cell Run Number ............................ ' $
       + PROCESSING
     putLogBookMessage, Event, text, APPEND=1
     IF (structure.EmptyCellRunNumber EQ '') THEN BEGIN
@@ -694,19 +700,16 @@ FUNCTION IDLupdateGui::init, structure
       structure.EmptyCellRunNumber
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    ;populate A, B, D and C factors
+    text = '--> Populate A, B, C and D ................................... ' $
+      + PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
+    UpdateEmptyCellCoefficient, Event,$
+      structure.EmptyCellA,$
+      structure.EmptyCellB,$
+      structure.EmptyCellC,$
+      structure.EmptyCellD
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
     
   ENDIF ;end of if there is an empty cell run number
   
