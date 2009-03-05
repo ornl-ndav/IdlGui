@@ -297,7 +297,8 @@ IF (NormalizationRunNumber NE '') THEN BEGIN
         full_nexus_name = find_full_nexus_name(Event,$
                                                NormalizationRunNumber,$
                                                instrument,$
-                                               isNeXusFound)
+                                               isNeXusFound,$
+                                               SOURCE_FILE='norm')
 
         IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
            NbrNexus = 0

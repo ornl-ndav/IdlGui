@@ -39,7 +39,7 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global
 ;check instrument selected
 instrument = (*global).instrument
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendLogBook_ReplaceLogBookText, $
@@ -52,6 +52,28 @@ ENDIF ELSE BEGIN
         PlotEmptyCellForRefL, Event ;REF_L
     endif else begin
         PlotEmptyCellForRefM, EVENT ;REF_M
+    ENDELSE
+ENDELSE
+RETURN, 1
+END
+
+;-----------------------------------------------------------------------
+FUNCTION REFreduction_PlotEmptyCellFile_from_repopulate, Event
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;check instrument selected
+instrument = (*global).instrument
+no_error = 0
+;CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+ENDIF ELSE BEGIN
+    if (instrument EQ (*global).REF_L) then begin
+        PlotEmptyCellForRefL_from_repopulate, Event ;REF_L
+    endif else begin
+        PlotEmptyCellForRefM_from_repopulate, EVENT ;REF_M
     ENDELSE
 ENDELSE
 RETURN, 1
@@ -72,6 +94,16 @@ PlotEmptyCell, Event, Nx, Ny
 
 END
 
+PRO PlotEmptyCellForRefL_from_repopulate, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;retrieve parameters
+Nx         = (*global).Nx_REF_L ;256
+Ny         = (*global).Ny_REF_L ;304
+
+PlotEmptyCell_from_repopulate, Event, Nx, Ny
+END
+
 ;**********************************************************************
 ;REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M*
 ;**********************************************************************
@@ -84,6 +116,17 @@ Nx         = (*global).Nx_REF_M ;304
 Ny         = (*global).Ny_REF_M ;256
 
 PlotEmptyCell, Event, Nx, Ny
+
+END
+
+PRO PlotEmptyCellForRefM_from_repopulate, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;retrieve parameters
+Nx         = (*global).Nx_REF_M ;304
+Ny         = (*global).Ny_REF_M ;256
+
+PlotEmptyCell_from_repopulate, Event, Nx, Ny
 
 END
 
@@ -177,6 +220,85 @@ TVSCL, tvimg, /DEVICE
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
+
+;bring to life the Substrate Transmission Equation
+ActivateWidget, Event, 'empty_cell_substrate_base', 1
+
+END
+
+
+PRO PlotEmptyCell_from_repopulate, Event, Nx, Ny
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+img = (*(*global).bank1_empty_cell)
+
+(*global).Ntof_empty_cell = (size(img))(1)
+
+;plot y vs x ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;store big array that will be used by 1D plot
+(*(*global).empty_cell_D_ptr) = img ;data(Ntof,Ny,Nx)
+img = total(img,1) ; data(Ntof,Nx)
+;load data up in global ptr array
+(*(*global).empty_cell_DD_ptr) = img
+
+;transpose just for display purpose
+img = TRANSPOSE(img)
+DEVICE, DECOMPOSED = 0
+id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='empty_cell_draw2_uname')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+ERASE
+
+IF ((*global).miniVersion) THEN BEGIN
+    New_Ny = Ny
+    New_Nx = Nx
+ENDIF ELSE BEGIN
+    New_Ny = 2*Ny
+    New_Nx = 2*Nx
+ENDELSE
+
+tvimg = REBIN(img, New_Nx, New_Ny,/SAMPLE)
+
+TVSCL, tvimg, /DEVICE
+
+;plot y vs tof ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+N   = (*global).Ny_REF_L ; 304
+img = (*(*global).empty_cell_D_ptr) ;data(Ntof,Ny,Nx)
+
+IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+    img = TOTAL(img,3)          ;data(Ntof,Ny)
+ENDIF ELSE BEGIN
+    img = TOTAL(img,2)          ;data(Ntof,Ny)
+ENDELSE
+(*(*global).empty_cell_D_TOTAL_ptr) = img
+
+DEVICE, DECOMPOSED = 0
+id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='empty_cell_draw1_uname')
+WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+WSET,id_value
+ERASE
+;IF (!VERSION.os EQ 'darwin') THEN BEGIN
+;   img = SWAP_ENDIAN(img)
+;ENDIF
+
+;rebin data to fill up all graph
+display_Ntof = (*global).Ntof_empty_cell
+file_Ntof    = (SIZE(img))(1)
+if ((*global).miniVersion) then begin
+    new_N = N
+endif else begin
+    new_N = 2 * N
+endelse
+;change the size of the data draw true plotting area
+WIDGET_CONTROL, id_draw, DRAW_XSIZE=file_Ntof
+
+tvimg = REBIN(img, file_Ntof, new_N,/SAMPLE)
+(*(*global).tvimg_empty_cell_ptr) = tvimg
+TVSCL, tvimg, /DEVICE
 
 ;bring to life the Substrate Transmission Equation
 ActivateWidget, Event, 'empty_cell_substrate_base', 1

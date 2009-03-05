@@ -54,12 +54,15 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  NexusListLabelGlobal,$
                                  loadctList
 
-
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LoadNormalizationTabSize = [0,0,$
                             DataNormalizationTabSize[2],$
                             DataNormalizationTabSize[3]]
+
+;##############################################################################
+;###############################Build widgets##################################
+;##############################################################################
 
 ;Build widgets
 LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
@@ -70,65 +73,17 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE=LoadNormalizationTabSize[2],$
                                       SCR_YSIZE=LoadNormalizationTabSize[3])
 
-;Browse Nexus File Button
-Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       XOFFSET   = 25,$
-                       YOFFSET   = 5,$
-                       SCR_XSIZE = 120,$
-                       VALUE     = 'BROWSE NeXus ...',$
-                       UNAME     = 'browse_norm_nexus_button')
-
-;Run Number base and inside CW_FIELD
-load_normalization_run_number_base = $
-  widget_base(LOAD_NORMALIZATION_BASE,$
-              uname='load_normalization_run_number_base',$
-              xoffset=GlobalRunNumber[0]+30,$
-              yoffset=GlobalRunNumber[1],$
-              scr_xsize=GlobalRunNumber[2]-50,$
-              scr_ysize=globalRunNumber[3])
-
-Load_data_run_number_text_field = $
-  CW_FIELD(load_normalization_run_number_base,$
-           row=1,$
-           xsize=GlobalRunNumber[4],$
-           ysize=GlobalRunNumber[5],$
-           /long,$
-           return_events=1,$
-           title='NORM. RUN NUMBER:',$
-           uname='load_normalization_run_number_text_field')
-
-
-;Archived or All NeXus list
-NormArchivedOrAllCWBgroup = $
-  cw_bgroup(LOAD_NORMALIZATION_BASE,$
-            ArchivedOrAllCWBgroupList,$
-            uname='normalization_archived_or_full_cwbgroup',$
-            xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
-            yoffset=ArchivedOrAllCWBgroupSize[1],$
-            /exclusive,$
-            row=1,$
-            set_value=0)
-
-;Save As Jpeg Button ----------------------------------------------------------
-button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       UNAME = 'save_as_jpeg_button_normalization',$
-                       XOFFSET = 550,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/SaveAsJpeg.bmp',$
-                       TOOLTIP = 'Create a JPEG of the plot',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
-
-;------------------------------------------------------------------------------
-;Advanced plot
-button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       UNAME = 'advanced_plot_button_normalization',$
-                       XOFFSET = 610,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/advanced_plot.bmp',$
-                       TOOLTIP = 'Open the Advanced Plot Tool',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
+;******************* loading nexus interface **********************************
+NexusInterface, BASE_UNAME = LOAD_NORMALIZATION_BASE,$
+                BROWSE_BUTTON_UNAME = 'browse_norm_nexus_button',$
+                RUN_NBR_UNAME       = 'load_normalization_run_number_text_field',$
+                ARCHIVED_ALL_UNAME  = 'normalization_archived_or_full_cwbgroup',$
+                PROPOSAL_BUTTON_UNAME = 'with_norm_proposal_button',$
+                PROPOSAL_FOLDER_DROPLIST_UNAME = $
+                'norm_proposal_folder_droplist',$
+                PROPOSAL_BASE_UNAME = 'normalization_proposal_base_uname',$
+                SAVE_AS_JPEG_UNAME = 'save_as_jpeg_button_normalization',$
+                PLOT_BUTTON_UNAME = 'advanced_plot_button_normalization'
 
 ;------------------------------------------------------------------------------
 
@@ -250,9 +205,9 @@ NxsummaryZoomTab = widget_tab(LOAD_NORMALIZATION_BASE,$
                               uname='normalization_nxsummary_zoom_tab',$
                               location=0,$
                               xoffset=NxsummaryZoomTabSize[0],$
-                              yoffset=NxsummaryZoomTabSize[1],$
+                              yoffset=NxsummaryZoomTabSize[1]+25,$
                               scr_xsize=NxsummaryZoomTabSize[2],$
-                              scr_ysize=NxsummaryZoomTabSize[3],$
+                              scr_ysize=NxsummaryZoomTabSize[3]-20,$
                               /tracking_events)
 
 ;NXsummary tab #1
@@ -268,7 +223,7 @@ normalization_file_info_text = widget_text(data_Nxsummary_base,$
                                   xoffset=FileInfoSize[0],$
                                   yoffset=FileInfoSize[1],$
                                   scr_xsize=FileInfoSize[2],$
-                                  scr_ysize=FileInfoSize[3],$
+                                  scr_ysize=FileInfoSize[3]-20,$
                                   /wrap,$
                                   /scroll,$
                                   value='',$

@@ -286,7 +286,8 @@ PRO REFreduction_LoadEmptyCell, Event, isNeXusFound, NbrNexus
       full_nexus_name = find_full_nexus_name(Event,$
         RunNumber,$
         instrument,$
-        isNeXusFound)
+        isNeXusFound,$
+        SOURCE_FILE='empty_cell')
         
       IF (~isNeXusFound) THEN BEGIN ;NeXus has not been found
         NbrNexus = 0
@@ -886,3 +887,146 @@ PRO RefreshEquationDraw, Event
   tv, image, 0,0,/true
 END
 
+;------------------------------------------------------------------------------
+FUNCTION OpenEmptyCellNeXusFile_from_repopulate, Event, $
+    EmptyCellRunNumber, $
+    full_nexus_name, $
+    POLA_STATE=pola_state
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  instrument = (*global).instrument
+  
+  ;store full path to NeXus
+  (*global).empty_cell_full_nexus_name = full_nexus_name
+  
+  RefReduction_NXsummaryBatch, Event, $
+    full_nexus_name, $
+    'empty_cell_nx_summary'
+    
+  ;check format of NeXus file
+  IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    (*global).isHDF5format = 1
+    
+    working_path = (*global).working_path
+    
+    status = RefReduction_DumpBinaryEmptyCell_batch(Event,$ ;_dumpbinary.pro
+      full_nexus_name, $
+      working_path,$
+      POLA_STATE=pola_state)
+      
+    IF ((*global).debugging_on_Mac EQ 'yes') THEN BEGIN
+      status = REFReduction_DumpBinaryData(Event,$
+        full_nexus_name, $
+        working_path, $
+        POLA_STATE=pola_state)
+    ENDIF
+    
+    IF (status EQ 0) THEN RETURN, 0
+    
+  ENDIF ELSE BEGIN
+  
+    (*global).isHDF5format = 0
+    RETURN, 0
+  ENDELSE
+  
+  RETURN, 1
+END
+
+;------------------------------------------------------------------------------
+PRO load_empty_cell_browse_nexus_from_repopulate, Event, $
+    nexus_file_name, $
+    POLA_STATE=pola_state
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;get run number
+  IF (N_ELEMENTS(POLA_STATE)) THEN BEGIN
+    list_pola_state = (*(*global).list_pola_state)
+    iNexus = OBJ_NEW('IDLgetMetadata', $
+      nexus_file_name, $
+      POLA_STATE_NAME=list_pola_state[pola_state])
+  ENDIF ELSE BEGIN
+    iNexus = OBJ_NEW('IDLgetMetadata', nexus_file_name)
+  ENDELSE
+  
+  EmptyCellRunNumber = iNexus->getRunNumber()
+  OBJ_DESTROY, iNexus
+  EmptyCellRunNumber = STRCOMPRESS(EmptyCellRunNumber,/REMOVE_ALL)
+  (*global).EmptyCellRunNumber = EmptyCellRunNumber
+  
+  NbrNexus = 1
+  
+  status = OpenEmptyCellNexusFile_from_repopulate(Event, $
+    EmptyCellRunNumber, $
+    nexus_file_name, $
+    POLA_STATE = pola_state)
+    
+  IF (status EQ 0) THEN BEGIN
+    (*global).EmptyCellNeXusFound = 0
+    RETURN
+  ENDIF
+  
+  ;plot now
+  result = REFreduction_PlotEmptyCellFile_from_repopulate(Event)
+  IF (result EQ 0) THEN BEGIN
+    (*global).EmptyCellNeXusFound = 0
+    RETURN
+  ENDIF
+  
+  (*global).EmptyCellNeXusFound = 1
+  
+;update GUI according to result of NeXus found or not
+;RefReduction_update_empty_cell_gui_if_NeXus_found, Event, 1
+  
+END
+
+;------------------------------------------------------------------------------
+;this is reached by the repopulating gui
+;the run number and the full file name (path) is known
+PRO OpenPlotEmptyCell, Event, run_number, nexus_file_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  (*global).empty_cell_nexus_full_path = nexus_file_name
+  
+  ;indicate initialization with hourglass icon
+  ;    WIDGET_CONTROL,/HOURGLASS
+  ;
+  ;    ;check how many polarization states the file has
+  ;    nbr_pola_state = check_number_polarization_state(Event, $
+  ;      nexus_file_name,$
+  ;      list_pola_state)
+  ;
+  ;    IF (nbr_pola_state EQ -1) THEN BEGIN ;missing function
+  ;      putLogBookMessage, Event, $
+  ;        'ERROR retrieving the number of' + $
+  ;        ' polarization states!', $
+  ;        APPEND=1
+  ;
+  ;      ;turn off hourglass
+  ; ;     WIDGET_CONTROL,HOURGLASS=0
+  ;      RETURN
+  ;    ENDIF
+  ;
+  ;    IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
+  ;      ;load browse nexus file
+  load_empty_cell_browse_nexus_from_repopulate, Event, nexus_file_name
+;    ENDIF ELSE BEGIN
+;      ;ask user to select the polarization state he wants to see
+;      (*global).pola_type = 'empty_cell_browse'
+;      select_polarization_state, Event, nexus_file_name, list_pola_state
+;    ENDELSE
+;
+;    ;turn off hourglass
+;    WIDGET_CONTROL,HOURGLASS=0
+;
+;  ENDIF ELSE BEGIN
+;
+;    text = '-> Operation canceled!'
+;    putLogBookMessage, Event, Text, Append=1
+;
+;  ENDELSE
+END

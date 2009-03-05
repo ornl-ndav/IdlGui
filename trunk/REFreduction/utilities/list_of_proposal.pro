@@ -32,49 +32,43 @@
 ;
 ;==============================================================================
 
-PRO miniMakeGuiLoadNormalization1D2DTab, LOAD_DATA_BASE,$
-                                     D_DD_TabSize,$
-                                     D_DD_BaseSize,$
-                                     D_DD_TabTitle,$
-                                     GlobalLoadGraphs,$
-                                     loadctList
+;------------------------------------------------------------------------------
+FUNCTION getListOfProposal, instrument, MAIN_BASE
+prefix = '/SNSlocal/' + instrument + '/'
+cmd_ls = 'ls -dt ' + prefix + '*/'
+spawn, cmd_ls, listening, err_listening
+IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
+    sz = (size(listening))(1)
+    index = 0
+    ProposalList = STRARR(sz)
+    WHILE (index LT sz) DO BEGIN
+       split = STRSPLIT(listening[index],'/',/EXTRACT)
+       ProposalList[index] = split[N_ELEMENTS(split)-1]
+       index++
+    ENDWHILE
+ENDIF ELSE BEGIN
+    ProposalList = ['FOLDER IS EMPTY !']
+ENDELSE
+RETURN, ProposalList
+END
 
-load_normalization_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
-                                         UNAME='load_normalization_d_dd_tab',$
-                                         LOCATION=0,$
-                                         xoffset=D_DD_TabSize[0],$
-                                         yoffset=D_DD_TabSize[1]+5,$
-                                         scr_xsize=D_DD_TabSize[2],$
-                                         scr_ysize=D_DD_TabSize[3],$
-                                         /tracking_events)
+;------------------------------------------------------------------------------
+PRO populate_list_of_proposal, MAIN_BASE, instrument
 
-;build Load_Data_1D tab
-miniMakeGuiLoadNormalization1DTab,$
-  load_normalization_D_DD_Tab,$
-  D_DD_BaseSize,$
-  D_DD_TabTitle,$
-  GlobalLoadGraphs,$
-  loadctList
+;putMyLogBook_MainBase, MAIN_BASE, '> Get list of proposals:'
+ListOfProposal = getListOfProposal(instrument, $
+                                   MAIN_BASE)
 
-miniMakeGuiLoadNormalization1D_3D_Tab,$
-   load_normalization_D_DD_Tab,$
-   D_DD_BaseSize,$
-   D_DD_TabTitle,$
-   GlobalLoadGraphs,$
-   loadctList
+uname_list = ['empty_cell_proposal_folder_droplist',$
+              'data_proposal_folder_droplist',$
+              'norm_proposal_folder_droplist']
 
-;build Load_Data_2D tab
-miniMakeGuiLoadNormalization2DTab,$
-  load_normalization_D_DD_Tab,$
-  D_DD_BaseSize,$
-  D_DD_TabTitle,$
-  GlobalLoadGraphs
-
-miniMakeGuiLoadNormalization2D_3D_Tab,$
-   load_normalization_D_DD_Tab,$
-   D_DD_BaseSize,$
-   D_DD_TabTitle,$
-   GlobalLoadGraphs,$
-   loadctlist
+sz = N_ELEMENTS(uname_list)
+FOR i=0,(sz-1) DO BEGIN
+  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname_list[i])
+  WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+ENDFOR
 
 END
+
+;------------------------------------------------------------------------------

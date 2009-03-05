@@ -39,15 +39,20 @@ IdlUtilitiesPath = "utilities/"
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 cd, CurrentFolder + '/utilities'
+.run nexus_utilities.pro
+.run get.pro
 .run system_utilities.pro
 .run nexus_utilities.pro
 .run math_conversion.pro
 .run time.pro
+.run list_of_proposal.pro
+.run IDLxmlParser__define.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
+.run MakeGuiNexusInterface.pro
 .run MakeGuiLoadDataNormalizationTab.pro
 .run MakeGuiLoadDataTab.pro
 .run MakeGuiLoadData1D2DTab.pro
@@ -82,7 +87,6 @@ cd, CurrentFolder + '/REFreductionGUI/'
 ;Build main procedures
 cd, CurrentFolder
 .run ref_reduction_string.pro
-.run ref_reduction_get.pro
 .run ref_reduction_put.pro
 .run ref_reduction_is.pro
 .run ref_reduction_time.pro
