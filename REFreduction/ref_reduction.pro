@@ -42,16 +42,17 @@ END
 ;------------------------------------------------------------------------------
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+file = OBJ_NEW('idlxmlparser', 'REFreduction.cfg')
 ;==============================================================================
 ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION        = 'REFreductionHigh'
-VERSION            = '1.3.11'
-DEBUGGING_VERSION  = 'no'          ;NO
-MOUSE_DEBUGGING    = 'no'          ;NO
-WITH_LAUNCH_SWITCH = 'no'
-WITH_JOB_MANAGER   = 'no'
-CHECKING_PACKAGES  = 'yes'         ;YES
-DEBUGGING_ON_MAC   = 'no'         ;no
+APPLICATION = file->getValue(tag=['configuration','application'])+'_high'
+VERSION = file->getValue(tag=['configuration','version'])
+DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
+MOUSE_DEBUGGING = file->getValue(tag=['configuration','mouse_debugging'])
+WITH_LAUNCH_SWITCH = file->getValue(tag=['configuration','with_launch_switch'])
+WITH_JOB_MANAGER = file->getValue(tag=['configuration','with_job_manager'])
+CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+DEBUGGING_ON_MAC = file->getValue(tag=['configuration','debugging_on_mac'])
 
 debugging_structure = getDebuggingStructure()
 
@@ -473,7 +474,7 @@ global = PTR_NEW ({ first_event: 1,$
 (*(*global).substrate_type)    = getSubstrateType()
 
 (*(*global).debugging_structure) = debugging_structure                   
-BatchTable = strarr(9,20)
+BatchTable = strarr(10,20)
 (*(*global).BatchTable) = BatchTable
                    
 ;------------------------------------------------------------------------
@@ -721,11 +722,11 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
 ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
 
 ;default path of Load Batch files
-;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+    (*global).BatchDefaultPath = '~/tmp/'
     
 ; default tabs shown
 ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
@@ -782,6 +783,8 @@ image = READ_PNG((*global).sf_equation_file)
 tv, image, 0,0,/true
 
 ;------------------------------------------------------------------------------
+;populate the list of proposal droplist (data, normalization,empty_cell)
+populate_list_of_proposal, MAIN_BASE, (*global).instrument
 
 ;==============================================================================
 ;checking packages

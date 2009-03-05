@@ -72,66 +72,17 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE = LoadNormalizationTabSize[2],$
                                       SCR_YSIZE = LoadNormalizationTabSize[3])
 
-;Browse Nexus File Button
-Button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       XOFFSET   = 0,$
-                       YOFFSET   = 5,$
-                       SCR_XSIZE = 60,$
-                       VALUE     = 'BROWSE...',$
-                       UNAME     = 'browse_norm_nexus_button')
-
-;Run Number base and inside CW_FIELD
-load_normalization_run_number_base = $
-  WIDGET_BASE(LOAD_NORMALIZATION_BASE,$
-              UNAME     = 'load_normalization_run_number_base',$
-              XOFFSET   = GlobalRunNumber[0]+40,$
-              YOFFSET   = GlobalRunNumber[1],$
-              SCR_XSIZE = GlobalRunNumber[2],$
-              SCR_YSIZE = globalRunNumber[3])
-
-Load_data_run_number_text_field = $
-  CW_FIELD(load_normalization_run_number_base,$
-           ROW           = 1,$
-           XSIZE         = GlobalRunNumber[4],$
-           YSIZE         = GlobalRunNumber[5],$
-           /LONG,$
-           RETURN_EVENTS = 1,$
-           TITLE         = 'Run#',$
-           UNAME         = 'load_normalization_run_number_text_field')
-
-
-;Archived or All NeXus list
-NormArchivedOrAllCWBgroup = $
-  CW_BGROUP(LOAD_NORMALIZATION_BASE,$
-            ['Arch.','All'],$
-            UNAME     = 'normalization_archived_or_full_cwbgroup',$
-            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
-            YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
-            /EXCLUSIVE,$
-            ROW       = 1,$
-            SET_VALUE = 0)
-
-;------------------------------------------------------------------------------
-;Save As Jpeg Button
-button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       UNAME = 'save_as_jpeg_button_normalization',$
-                       XOFFSET = 250,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/SaveAsJpeg.bmp',$
-                       TOOLTIP = 'Create a JPEG of the plot',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
-
-;------------------------------------------------------------------------------
-;Advanced plot
-button = WIDGET_BUTTON(LOAD_NORMALIZATION_BASE,$
-                       UNAME = 'advanced_plot_button_normalization',$
-                       XOFFSET = 305,$
-                       YOFFSET = 0,$
-                       VALUE   = 'REFreduction_images/advanced_plot.bmp',$
-                       TOOLTIP = 'Open the Advanced Plot Tool',$
-                       SENSITIVE = 0,$
-                       /BITMAP)
+;******************* loading nexus interface **********************************
+NexusInterface, BASE_UNAME = LOAD_NORMALIZATION_BASE,$
+                BROWSE_BUTTON_UNAME = 'browse_norm_nexus_button',$
+                RUN_NBR_UNAME       = 'load_normalization_run_number_text_field',$
+                ARCHIVED_ALL_UNAME  = 'normalization_archived_or_full_cwbgroup',$
+                PROPOSAL_BUTTON_UNAME = 'with_norm_proposal_button',$
+                PROPOSAL_FOLDER_DROPLIST_UNAME = $
+                'norm_proposal_folder_droplist',$
+                PROPOSAL_BASE_UNAME = 'normalization_proposal_base_uname',$
+                SAVE_AS_JPEG_UNAME = 'save_as_jpeg_button_normalization',$
+                PLOT_BUTTON_UNAME = 'advanced_plot_button_normalization'
 
 ;------------------------------------------------------------------------------
 

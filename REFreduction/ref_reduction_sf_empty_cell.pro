@@ -732,14 +732,16 @@ PRO calculate_sf, Event
       h = h,$
       SF = SF
       
-      (*global).bRecapPlot =  1b ;we can create the output file
-      
+    (*global).bRecapPlot =  1b ;we can create the output file
+    
   ENDIF ELSE BEGIN ;SF is NaN, stop here
   
-      (*global).bRecapPlot =  0b ;we can not create the output file
-  
+    (*global).bRecapPlot =  0b ;we can not create the output file
+    
   ENDELSE
-  
+    
+  check_empty_cell_recap_output_file_name, Event
+    
   WIDGET_CONTROL, HOURGLASS=0
   
 END
@@ -792,8 +794,8 @@ PRO plot_recap_empty_cell_sf, Event,$
   
     FOR p=0,(Npix-1) DO BEGIN
     
-;      IF (t EQ 82 AND p EQ 137) THEN print, 't=82 and p=137'
-      
+      ;      IF (t EQ 82 AND p EQ 137) THEN print, 't=82 and p=137'
+    
       ;1st part (data)
       part1 = data_data[t,p]
       IF (t EQ 82 AND $
@@ -819,34 +821,35 @@ PRO plot_recap_empty_cell_sf, Event,$
       Ldm = Lsd + Lsm
       
       lambda = (h_over_Mn * TOF) / Ldm
-;      IF (t EQ 82 AND p EQ 137) THEN print, 'lambda: ' + strcompress(lambda)
+      ;      IF (t EQ 82 AND p EQ 137) THEN print, 'lambda: ' + strcompress(lambda)
       
       exp1 = A_times_diameter + lambda * B_times_diameter
- ;     IF (t EQ 82 AND p EQ 137) THEN print, 'exp1: ' + strcompress(exp1)
+      ;     IF (t EQ 82 AND p EQ 137) THEN print, 'exp1: ' + strcompress(exp1)
       
       exp  = EXP(-exp1)
-  ;    IF (t EQ 82 AND p EQ 137) THEN print, 'exp: ' + strcompress(exp)
+      ;    IF (t EQ 82 AND p EQ 137) THEN print, 'exp: ' + strcompress(exp)
       
       part2  = exp / empty_cell_proton_charge
       part2 *= data_proton_charge
       part2 *= empty_cell_data[t,p]
-   ;   IF (t EQ 82 AND p EQ 137) THEN BEGIN
-   ;     print, 'part2: ' + strcompress(part2)
-   ;     print, '******'
-   ;     print, 'SF: ' + strcompress(sf)
-   ;     print, 'empty_cell_data[t,p]: ' + strcompress(empty_cell_data[t,p])
-   ;   ENDIF
+      ;   IF (t EQ 82 AND p EQ 137) THEN BEGIN
+      ;     print, 'part2: ' + strcompress(part2)
+      ;     print, '******'
+      ;     print, 'SF: ' + strcompress(sf)
+      ;     print, 'empty_cell_data[t,p]: ' + strcompress(empty_cell_data[t,p])
+      ;   ENDIF
       
       ;difference
       recap_data[t,p] = part1 - SF * part2
-   ;   IF (t EQ 82 AND p EQ 137) THEN print, 'recap_data[t,p]=' + $
-   ;     strcompress(part1 - SF * part2)
-        
+    ;   IF (t EQ 82 AND p EQ 137) THEN print, 'recap_data[t,p]=' + $
+    ;     strcompress(part1 - SF * part2)
+      
     ENDFOR
     
   ENDFOR
   
   (*(*global).SF_RECAP_D_TOTAL_ptr) = recap_data
+  (*global).bRecapPlot =  1b ;we can create the output file
   
   draw_uname = 'empty_cell_scaling_factor_base_recap_draw'
   plot_file_in_sf_calculation_base, $

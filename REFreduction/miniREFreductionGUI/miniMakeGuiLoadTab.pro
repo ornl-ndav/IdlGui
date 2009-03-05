@@ -42,8 +42,8 @@ PRO miniMakeGuiLoadTab, MAIN_TAB, $
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [20,0,85,35]
-RunNumberCWFieldSize = [5,0]
+RunNumberBaseSize    = [250,0,95,35]
+RunNumberCWFieldSize = [6,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
 RunNumberTitles      =  ['RUN NUMBER:',$
@@ -104,8 +104,8 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
 
 ;NXsummary and Zoom tab
 NxsummaryZoomTabSize = [D_DD_TabSize[2]+35,$
-                        5,$
-                        495,$
+                        45,$
+                        525,$
                         395]
 NxsummaryZoomTitle = ['NX summary','ZOOM']
 
@@ -116,25 +116,25 @@ ZoomScaleTitle = 'Zoom factor'
 ;top label
 FileInfoSize_1 = [0,$
                   0,$
-                  489,$
+                  520,$
                   370] ;393
 
 ;help text box to explain what is going on on the left
 LeftInteractionHelpMessageBaseSize = [NxsummaryZoomTabSize[0],$
-                                      405,$
-                                      493,$
-                                      150]
+                                      450,$
+                                      520,$
+                                      115]
 LeftInteractionHelpMessageLabelSize = [5,5]
 LeftInteractionHelpMessageLabelTitle = 'I N F O'
-LeftInteractionHelpTextSize = [5,25,485,123]
+LeftInteractionHelpTextSize = [5,25,505,85]
 LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpMessageLabelSize,$
                            LeftInteractionHelpTextsize]
                            
 ;bottom text field
 FileInfoSize_2 = [NxsummaryZoomTabSize[0]-3,$
-                  565,$
-                  498,$
+                  575,$
+                  525,$
                   50]
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
