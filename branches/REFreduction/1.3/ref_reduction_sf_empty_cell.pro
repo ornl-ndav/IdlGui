@@ -509,7 +509,7 @@ PRO display_sf_data_selection, Event, X1 = x1, Y1 = y1
   y0 = (*global).sf_y0
   x1 = X1
   y1 = Y1
-  
+
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
