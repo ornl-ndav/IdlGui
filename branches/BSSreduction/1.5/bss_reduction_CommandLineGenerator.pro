@@ -1516,13 +1516,7 @@ PRO BSSreduction_CommandLineGenerator, Event
       cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
   ENDIF
-  
-  ;Scale S(Q,E) by the solid angle distribution
-  IF (isButtonSelected(Event,'scale_sqe_by_solid_angle_group_uname') AND $
-    isButtonEnabled(Event, 'scale_sqe_by_solid_angle_base_uname')) THEN BEGIN
-    cmd += ' --scale-sqe'
-  ENDIF
-  
+   
   ;*************TAB7*****************
   TabName = 'Tab#7 - DATA CONTROL'
   tab7    = 0
@@ -1983,6 +1977,12 @@ PRO BSSreduction_CommandLineGenerator, Event
     
   ENDIF
   
+   ;Scale S(Q,E) by the solid angle distribution
+  IF (isButtonSelected(Event,'scale_sqe_by_solid_angle_group_uname') AND $
+    isButtonEnabled(Event, 'scale_sqe_by_solid_angle_base_uname')) THEN BEGIN
+    cmd += ' --scale-sqe'
+  ENDIF
+ 
   ;add a white space
   putInfoInCommandLineStatus, Event, '', 1
   

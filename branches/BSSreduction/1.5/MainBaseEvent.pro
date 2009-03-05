@@ -807,10 +807,6 @@ PRO MAIN_BASE_event, Event
       BSSreduction_CommandLineGenerator, Event
     end
     
-    widget_info(wWidget, $
-      FIND_BY_UNAME='scale_sqe_by_solid_angle_group_uname'): BEGIN
-      BSSreduction_CommandLineGenerator, Event
-    END
     ;-----------------------------------------------------------------------------
     ;tab7
     Widget_Info(wWidget, FIND_BY_UNAME='csfds_button'): begin
@@ -925,6 +921,11 @@ PRO MAIN_BASE_event, Event
       BSSreduction_Reduce_tof_cutting_max_text, Event
       BSSreduction_CommandLineGenerator, Event
     end
+
+    widget_info(wWidget, $
+      FIND_BY_UNAME='scale_sqe_by_solid_angle_group_uname'): BEGIN
+      BSSreduction_CommandLineGenerator, Event
+    END
     
     ;------------------------------------------------------------------------------
     ;tab8 (intermediate plots)
