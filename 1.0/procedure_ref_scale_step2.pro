@@ -308,7 +308,7 @@ IF (YbeforeIsNumeric EQ 1 AND $
     
 ;update the BatchTable
     BatchTable = (*(*global).BatchTable)
-    BatchTable[3,0] = STRCOMPRESS(SF,/REMOVE_ALL)
+    BatchTable[7,0] = STRCOMPRESS(SF,/REMOVE_ALL)
     (*(*global).BatchTable) = BatchTable
 
     (*global).force_activation_step2 = 0 ;no need to force activation of step2

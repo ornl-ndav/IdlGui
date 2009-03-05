@@ -94,7 +94,7 @@ FAILED     = (*global).failed
 PROCESSING = (*global).processing
 
 populate_error = 0
-;CATCH, populate_error
+CATCH, populate_error
 NbrColumn  = getGlobalVariable('NbrColumn')
 NbrRow     = getGlobalVariable('NbrRow')
 BatchTable = STRARR(NbrColumn,NbrRow)
@@ -136,17 +136,27 @@ ENDIF ELSE BEGIN
                             BatchTable[2,BatchIndex] = SplitArray[1]
                         ENDELSE
                     END
-                    '#Angle(deg)': BatchTable[3,BatchIndex] = SplitArray[1]
-                    '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
-                    '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
-                    '#Date'      : BatchTable[6,BatchIndex] = $
+                    '#EC_Runs' : BEGIN
+                        ec_error = 0
+                        CATCH,ec_error
+                        IF (ec_error NE 0) THEN BEGIN
+                            CATCH,/CANCEL
+                            BatchTable[3,BatchIndex] = ''
+                        ENDIF ELSE BEGIN
+                            BatchTable[3,BatchIndex] = SplitArray[1]
+                        ENDELSE
+                    END
+                    '#Angle(deg)': BatchTable[4,BatchIndex] = SplitArray[1]
+                    '#S1(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
+                    '#S2(mm)'    : BatchTable[6,BatchIndex] = SplitArray[1]
+                    '#Date'      : BatchTable[7,BatchIndex] = $
                       STRJOIN(SplitArray[1:length-1],':')
                     '#SF'        : BEGIN
                         sz = (size(SplitArray))(1)
                         IF (sz GT 1) THEN BEGIN
-                            BatchTable[7,BatchIndex] = SplitArray[1]
+                            BatchTable[8,BatchIndex] = SplitArray[1]
                         ENDIF ELSE BEGIN
-                            BatchTable[7,BatchIndex] = ''
+                            BatchTable[8,BatchIndex] = ''
                         ENDELSE
                     END
                     ELSE         : BEGIN
@@ -169,7 +179,7 @@ ENDIF ELSE BEGIN
                         IF (length NE 0) THEN BEGIN 
                             cmd = cmd_array[0] + ' ' + cmd_array[1]
                         ENDIF
-                        BatchTable[8,BatchIndex] = cmd
+                        BatchTable[9,BatchIndex] = cmd
                     END
                 ENDCASE
                 ++FileIndex
@@ -202,7 +212,7 @@ END
 ;******  Class Define ****;****************************************************
 PRO idl_load_batch_file__define
 struct = {idl_load_batch_file,$
-          BatchTable: STRARR(9,20),$
+          BatchTable: STRARR(10,20),$
           value:      ''}
 END
 ;******************************************************************************
