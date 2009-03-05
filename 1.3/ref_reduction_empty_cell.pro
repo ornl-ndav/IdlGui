@@ -31,6 +31,11 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
+PRO  cleanup_array, data
+  data = BYTSCL(data,/NAN)
+END
+
 ;------------------------------------------------------------------------------
 FUNCTION OpenEmptyCellNeXusFile, Event, $
     EmptyCellRunNumber, $
@@ -1030,3 +1035,72 @@ PRO OpenPlotEmptyCell, Event, run_number, nexus_file_name
 ;
 ;  ENDELSE
 END
+
+;-----------------------------------------------------------------------------
+PRO empty_cell_lin_log, Event
+  value = Event.value ;0:linear, 1:log
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  DEVICE, DECOMPOSED = 0
+  LOADCT, 13, /SILENT
+  
+  ;data
+  data = (*(*global).DATA_D_TOTAL_ptr)
+  IF (value EQ 1) THEN BEGIN ;log
+  
+    zero_index = WHERE(data EQ 0., nbr)
+    IF (nbr GT 0) THEN BEGIN
+      data[zero_index] = !VALUES.D_NAN
+    ENDIF
+    data = ALOG10(data)
+    cleanup_array, data
+    
+  ENDIF
+  
+  id_draw = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='empty_cell_scaling_factor_base_data_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  TVSCL, data, /DEVICE
+  
+  ;replot selection if there is one
+  x0 = (*global).sf_x0
+  y0 = (*global).sf_y0
+  x1 = (*global).sf_x1
+  y1 = (*global).sf_y1
+  
+  color = 150
+  
+  PLOTS, [x0, x0, x1, x1, x0],$
+    [y0,y1, y1, y0, y0],$
+    /DEVICE,$
+    COLOR =color
+    
+  ;empty cell
+  ec   = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+  IF (value EQ 1) THEN BEGIN ;log
+  
+    ;empty cell
+    zero_index = WHERE(ec EQ 0., nbr)
+    IF (nbr GT 0) THEN BEGIN
+      ec[zero_index] = !VALUES.D_NAN
+    ENDIF
+    ec = ALOG10(ec)
+    cleanup_array, ec
+    
+  ENDIF
+  
+  id_draw = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='empty_cell_scaling_factor_base_empty_cell_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  TVSCL, ec, /DEVICE
+  
+  
+END
+
+

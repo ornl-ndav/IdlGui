@@ -51,7 +51,7 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
   ;SF calculation base ----------------------------------------------------------
   sSFcalculationBase = { size: sBase.size,$
     uname: 'empty_cell_scaling_factor_calculation_base',$
-    map: 1}
+    map: 0}
   ;data base --------------------------------------------------------------------
   XYoff = [0,15]
   yoff = 15
@@ -660,6 +660,7 @@ PRO MakeGuiEmptyCellTab, DataNormalizationTab,$
     sLinLogGroup.list,$
     UNAME = sLinLogGroup.uname,$
     /EXCLUSIVE,$
+    /NO_RELEASE,$
     /ROW,$
     LABEL_LEFT = sLinLogGroup.label,$
     SET_VALUE = 0.0)

@@ -1178,6 +1178,12 @@ PRO MAIN_BASE_event, Event
     end
     
     ;--------------------------------------------------------------------
+    
+    ;lin/log cw_bgroup
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_sf_z_axis'): begin
+      empty_cell_lin_log, Event
+    END
+    
     ;ok button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_cell_list_load_button'): begin
       LoadListOfEmptyCellNexus, Event ;_empty_cell
