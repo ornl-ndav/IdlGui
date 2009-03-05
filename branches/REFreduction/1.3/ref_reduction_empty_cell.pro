@@ -1046,24 +1046,24 @@ PRO empty_cell_lin_log, Event
   DEVICE, DECOMPOSED = 0
   LOADCT, 13, /SILENT
   
+  lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
+  
   ;data
   data = (*(*global).DATA_D_TOTAL_ptr)
-  IF (value EQ 1) THEN BEGIN ;log
-  
+  IF (lin_log_value EQ 1) THEN BEGIN
     zero_index = WHERE(data EQ 0., nbr)
     IF (nbr GT 0) THEN BEGIN
       data[zero_index] = !VALUES.D_NAN
     ENDIF
     data = ALOG10(data)
     cleanup_array, data
-    
   ENDIF
+  (*(*global).in_empty_cell_data_ptr) = data
   
   id_draw = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='empty_cell_scaling_factor_base_data_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
-  
   TVSCL, data, /DEVICE
   
   ;replot selection if there is one
@@ -1080,26 +1080,23 @@ PRO empty_cell_lin_log, Event
     COLOR =color
     
   ;empty cell
-  ec   = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
-  IF (value EQ 1) THEN BEGIN ;log
-  
-    ;empty cell
-    zero_index = WHERE(ec EQ 0., nbr)
+  data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+  IF (lin_log_value EQ 1) THEN BEGIN
+    zero_index = WHERE(data EQ 0., nbr)
     IF (nbr GT 0) THEN BEGIN
-      ec[zero_index] = !VALUES.D_NAN
+      data[zero_index] = !VALUES.D_NAN
     ENDIF
-    ec = ALOG10(ec)
-    cleanup_array, ec
-    
+    data = ALOG10(data)
+    cleanup_array, data
   ENDIF
+  (*(*global).in_empty_cell_empty_cell_ptr) = data
   
   id_draw = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME='empty_cell_scaling_factor_base_empty_cell_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-  TVSCL, ec, /DEVICE
-  
+  TVSCL, data, /DEVICE
   
 END
 
