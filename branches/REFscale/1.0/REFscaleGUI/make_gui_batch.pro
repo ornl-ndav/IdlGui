@@ -98,7 +98,7 @@ sRefreshButton = { size:      [XYoff[0],$
                                dTable.size[1]+dTable.size[3]+XYoff[1],$
                                260,30],$
                    uname:     'ref_scale_refresh_batch_file',$
-                   value:     'SAVE',$
+                   value:     'SAVE BATCH FILE',$
                    sensitive: 0}
 
 ;SAVE AS bash file button
@@ -108,7 +108,7 @@ sSaveAsButton = { size:      [sRefreshButton.size[0]+sRefreshButton.size[2]+ $
                               sRefreshButton.size[1]+XYoff[1],$
                               sRefreshButton.size[2:3]],$
                   uname:     'ref_scale_save_as_batch_file',$
-                  value:     'SAVE AS ...',$
+                  value:     'SAVE BATCH FILE AS ...',$
                   sensitive: 0}
 
 

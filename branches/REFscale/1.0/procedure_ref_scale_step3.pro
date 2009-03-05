@@ -189,7 +189,7 @@ ENDIF ELSE BEGIN
         IF (isBatchFileLoaded(Event)) THEN BEGIN
 ;Update the SF value in the BatchTable
             index_array = getIndexArrayOfActiveBatchRow(Event)
-            BatchTable[7,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
+            BatchTable[8,index_array[i]] = STRCOMPRESS(SF,/REMOVE_ALL)
         ENDIF
         
 ;store the SF
