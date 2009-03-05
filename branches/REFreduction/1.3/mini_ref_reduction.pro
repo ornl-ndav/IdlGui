@@ -86,6 +86,9 @@ global = ptr_new ({ first_event: 1,$
                     VERSION: version,$
                     debugging_on_mac: DEBUGGING_ON_MAC,$
 
+                    in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
+                    in_empty_cell_data_ptr: PTR_NEW(0L),$
+
                     empty_cell_images: PTR_NEW(0L),$
                       sf_equation_file: $
                       'REFreduction_images/miniSFequation.png',$
