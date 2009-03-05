@@ -119,6 +119,20 @@ RETURN, dump_status
 END
 
 ;------------------------------------------------------------------------------
+;This function dumps the binary data of the given full nexus name
+FUNCTION RefReduction_DumpBinaryEmptyCell_batch, Event, $
+                                           full_nexus_name, $
+                                           destination_folder, $
+                                           _EXTRA=_extra
+
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global
+;tmp_file_name = (*global).data_tmp_dat_file
+RefReduction_DumpBinary_batch, Event, full_nexus_name, 'empty_cell'
+RETURN, 1
+END
+
+;------------------------------------------------------------------------------
 ;This function dumps the binary data of the given full nexus name for
 ;batch run only
 PRO RefReduction_DumpBinaryData_batch, Event, $
@@ -167,7 +181,7 @@ RefReduction_DumpBinary, $
    'norm', $
    dump_status, $
    _EXTRA=_extra
-RETURN, dump_status
+RETURN, 1
 END
 
 ;------------------------------------------------------------------------------
@@ -226,16 +240,17 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+;------------------------------------------------------------------------------
 ;This function dumps the binary data of the given full nexus name for
 ;batch mode only
 PRO RefReduction_DumpBinary_batch, Event, full_nexus_name, type
 ;get global structure
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, '---> Enter RefReduction_Dumpbinary_batch'
-ENDIF
+;IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+;    print, '---> Enter RefReduction_Dumpbinary_batch'
+;ENDIF
 result = retrieveBanksData(Event, full_nexus_name, type)
-IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    print, '---> Leaving RefReduction_Dumpbinary_batch'
-ENDIF
+;IF ((*global).debugging_version EQ 'yes') THEN BEGIN
+;    print, '---> Leaving RefReduction_Dumpbinary_batch'
+;ENDIF
 END
