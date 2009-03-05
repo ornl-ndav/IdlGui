@@ -320,26 +320,7 @@ Pro MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
     100,30],$
     uname : 'cn_error_text',$
     sensitive : CNBase.button.value}
-    
-  ;----------------------------------------------------------------------------
-  ; Scale S(Q,E) by the solid Angle Distribution
-  XYoff = [0,15]
-  sSQEbase = { size: [CNframe.size[0]+XYoff[0],$
-    CNframe.size[1]+$
-    CNframe.size[3]+XYoff[1],$
-    CNframe.size[2],$
-    40],$
-    frame: 0,$
-    uname: 'scale_sqe_by_solid_angle_base_uname' }
-    
-  ;cw_bgroup
-  XYoff = [5,0]
-  sSQEgroup = { size: [XYoff[0],$
-    XYoff[1]],$
-    label: "Scale S(Q,E) by the Solid Angle Distribution.",$
-    value: 0,$
-    uname: 'scale_sqe_by_solid_angle_group_uname'}
-    
+      
   ;**************************************************************************
   ;                                Build GUI
   ;**************************************************************************
@@ -716,21 +697,5 @@ Pro MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
     SCR_YSIZE = CNframe.size[3],$
     FRAME     = CNframe.frame,$
     VALUE     = '')
-    
-  ; Scale S(Q,E) by the solid Angle Distribution
-  wSQEbase = WIDGET_BASE(tab5_base,$
-    XOFFSET = sSQEbase.size[0],$
-    YOFFSET = sSQEbase.size[1],$
-    SCR_XSIZE = sSQEbase.size[2],$
-    SCR_YSIZE = sSQEbase.size[3],$
-    FRAME     = sSQEbase.frame,$
-    UNAME     = sSQEbase.uname)
-    
-  wSQEgroup = CW_BGROUP(wSQEbase,$
-    sSQEgroup.label,$
-    /NONEXCLUSIVE,$
-    UNAME = sSQEgroup.uname,$
-    SET_value = 0,$
-    ROW = 1)
-    
+        
 END

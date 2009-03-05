@@ -70,7 +70,7 @@ CSFDSvalueText  = { size : [CSFDSvalueLabel.size[0]+XYoff3[0],$
 ;///////////////////////////////////////////////////
 ;Time Zero Slope Parameter (Angstroms/microseconds)/
 ;///////////////////////////////////////////////////
-yoff = 75
+yoff = 70
 TZSPframe = { size : [CSFDSframe.size[0], $
                       CSFDSframe.size[1]+yoff,$
                       CSFDSframe.size[2:3]],$
@@ -268,6 +268,7 @@ MTHAbinText  = { size : [MTHAbinLabel.size[0]+XYoff5[0],$
 ;///////////////////////////////////////////////
 ;Global Instrument Final Wavelength (Angstroms)/
 ;///////////////////////////////////////////////
+yoff = 72
 GIFWframe = { size : [MTHAframe.size[0],$
                       MTHAframe.size[1]+yoff,$
                       MTHAframe.size[2:3]],$
@@ -311,7 +312,7 @@ GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
 ;/////////////////////
 ;TOF cutting ability /
 ;/////////////////////
-yoff = 80
+;yoff = 80
 TOFcuttingFrame = { size : [GIFWframe.size[0], $
                             GIFWframe.size[1]+yoff,$
                             GIFWframe.size[2:3]],$
@@ -352,7 +353,25 @@ TOFcuttingMaxValueText  = { size : [TOFcuttingMaxLabel.size[0]+XYoff5[0],$
                             uname : 'tof_cutting_max_text',$
                             sensitive : TOFcuttingbase.button.value}
 
-
+;----------------------------------------------------------------------------
+  ; Scale S(Q,E) by the solid Angle Distribution
+  XYoff = [0,15]
+  sSQEbase = { size: [TOFcuttingFrame.size[0]+XYoff[0],$
+    TOFcuttingFrame.size[1]+$
+    TOFcuttingFrame.size[3]+XYoff[1],$
+    TOFcuttingFrame.size[2],$
+    40],$
+    frame: 0,$
+    uname: 'scale_sqe_by_solid_angle_base_uname' }
+    
+  ;cw_bgroup
+  XYoff = [5,0]
+  sSQEgroup = { size: [XYoff[0],$
+    XYoff[1]],$
+    label: "Scale S(Q,E) by the Solid Angle Distribution.",$
+    value: 0,$
+    uname: 'scale_sqe_by_solid_angle_group_uname'}
+  
 ;******************************************************************************
 ;                                Build GUI
 ;******************************************************************************
@@ -805,5 +824,21 @@ frame  = WIDGET_LABEL(tab6_base,$
                       SCR_YSIZE = TOFcuttingframe.size[3],$
                       FRAME     = TOFcuttingframe.frame,$
                       VALUE     = '')
+
+  ; Scale S(Q,E) by the solid Angle Distribution
+  wSQEbase = WIDGET_BASE(tab6_base,$
+    XOFFSET = sSQEbase.size[0],$
+    YOFFSET = sSQEbase.size[1],$
+    SCR_XSIZE = sSQEbase.size[2],$
+    SCR_YSIZE = sSQEbase.size[3],$
+    FRAME     = sSQEbase.frame,$
+    UNAME     = sSQEbase.uname)
+    
+  wSQEgroup = CW_BGROUP(wSQEbase,$
+    sSQEgroup.label,$
+    /NONEXCLUSIVE,$
+    UNAME = sSQEgroup.uname,$
+    SET_value = 0,$
+    ROW = 1)
 
 END

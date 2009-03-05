@@ -65,7 +65,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            3: Log Book 
 
 sDEBUGGING = { tab: {main_tab: 1,$ ;Reduce tab
-                     reduce_input_tab: 5},$ ;Scaling Cst tab
+                     reduce_input_tab: 6},$ ;Scaling Cst tab
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
                                   '/SNS/BSS/IPTS-493/7/638/' + $
