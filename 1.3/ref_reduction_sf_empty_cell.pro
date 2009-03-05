@@ -270,6 +270,35 @@ PRO plot_file_in_sf_calculation_base, Event,$
   Ntof_size = (size(data))(1)
   WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
   
+  lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
+  case (type) OF
+    'data': BEGIN
+      data = (*(*global).DATA_D_TOTAL_ptr)
+      IF (lin_log_value EQ 1) THEN BEGIN
+        zero_index = WHERE(data EQ 0., nbr)
+        IF (nbr GT 0) THEN BEGIN
+          data[zero_index] = !VALUES.D_NAN
+        ENDIF
+        data = ALOG10(data)
+        cleanup_array, data
+      ENDIF
+      (*(*global).in_empty_cell_data_ptr) = data
+    END
+    'empty_cell': BEGIN
+      data = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
+      IF (lin_log_value EQ 1) THEN BEGIN
+        zero_index = WHERE(data EQ 0., nbr)
+        IF (nbr GT 0) THEN BEGIN
+          data[zero_index] = !VALUES.D_NAN
+        ENDIF
+        data = ALOG10(data)
+        cleanup_array, data
+      ENDIF
+      (*(*global).in_empty_cell_empty_cell_ptr) = data
+    END
+    ELSE:
+  ENDCASE
+  
   TVSCL, data, /DEVICE
   
 END
@@ -496,6 +525,16 @@ PRO refresh_sf_data_plot_plot, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
+  lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
+  IF (lin_log_value EQ 1) THEN BEGIN
+    zero_index = WHERE(data EQ 0., nbr)
+    IF (nbr GT 0) THEN BEGIN
+      data[zero_index] = !VALUES.D_NAN
+    ENDIF
+    data = ALOG10(data)
+    cleanup_array, data
+  ENDIF
+  
   TVSCL, data, /DEVICE
   
 END
@@ -509,7 +548,7 @@ PRO display_sf_data_selection, Event, X1 = x1, Y1 = y1
   y0 = (*global).sf_y0
   x1 = X1
   y1 = Y1
-
+  
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
@@ -739,9 +778,9 @@ PRO calculate_sf, Event
     (*global).bRecapPlot =  0b ;we can not create the output file
     
   ENDELSE
-    
+  
   check_empty_cell_recap_output_file_name, Event
-    
+  
   WIDGET_CONTROL, HOURGLASS=0
   
 END
