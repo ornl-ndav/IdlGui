@@ -111,7 +111,7 @@ ProNoButton = { size  : [ProYesButton.size[0]+ProYesButton.size[2]+XYoff[0],$
 ;////////////////////////////////////////////////////////
 ;Table Widget
 NbrRow = 20
-RowAlign   = [1,0,0,1,1,1,1,1,0]
+RowAlign   = [1,0,0,0,1,1,1,1,1,0]
 sz         = (size(RowAlign))(1)
 TableAlign = intarr(sz,NbrRow)
 FOR i=0,(NbrRow-1) DO BEGIN
@@ -123,14 +123,15 @@ dTable = { size      : [0,0,MainTabSize[2],320,sz,20],$
            label     : ['ACTIVE', $
                         'DATA', $
                         'NORM.',$
+                        'E.C.',$
                         'ANGLE (deg)', $
                         'S1 (mm)', $
                         'S2 (mm)', $
                         'DATE',$
                         'SF',$
-                        'Command Line                                   '],$
+                        'Command Line                                       '],$
            align        : TableAlign,$
-           column_width : [50,140,140,80,70,70,155,60,360]}
+           column_width : [50,140,140,80,80,70,70,155,60,360]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
