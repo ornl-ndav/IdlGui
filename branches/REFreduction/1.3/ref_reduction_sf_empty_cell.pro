@@ -222,11 +222,14 @@ PRO start_sf_scaling_factor_calculation_mode, Event
     distance_sample_pixel_array = distance_sample_pixel_array[*,127]
   ENDELSE
   (*(*global).distance_sample_pixel_array) = distance_sample_pixel_array
-  
+
   ;copy SF value into sf_calculation base
   SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
   putTextFieldValue, Event, 'scaling_factor_equation_value', $
     STRCOMPRESS(SFvalue,/REMOVE_ALL), 0
+
+  ;show recap plot using SF
+  replot_recap_with_manual_sf, Event
     
   ;show up calculation base
   MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
