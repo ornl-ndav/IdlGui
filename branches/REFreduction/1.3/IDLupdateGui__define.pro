@@ -241,6 +241,9 @@ PRO UpdateEmptyCellCoefficient, Event, A, B, C, D
   putTextFieldValue, Event, 'empty_cell_diameter',$
     STRCOMPRESS(D,/REMOVE_ALL), 0
     
+  ;refresh the plot
+  update_substrate_equation, Event ;_empty_cell
+         
 END
 
 ;WORK ON AngleValue and AngleError ============================================
