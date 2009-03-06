@@ -365,8 +365,7 @@ PRO display_sf_calculation_base_data_info, Event
   pixel_uname  = 'empty_cell_data_draw_y_value'
   tof_uname    = 'empty_cell_data_draw_x_value'
   counts_uname = 'empty_cell_data_draw_counts_value'
-  
-  
+    
   data     = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
   data_tof = (*(*global).sf_empty_cell_tof)
   
