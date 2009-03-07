@@ -119,9 +119,20 @@ function modtag, init_str
 end
 
 ;------------------------------------------------------------------------------
-FUNCTION READ_DATA, file, half
-  ;Open the data file.
+FUNCTION READ_DATA, file, half, Event
+  
+  text = '--> Entering READ_DATA'
+  IDLsendToGeek_addLogBookText, Event, text
+    
+  text = '---> Opening the data file ... '
+  IDLsendToGeek_addLogBookText, Event, text  
+    
+  ;Open the data file
   OPENR, 1, file
+  
+  IDLsendToGeek_ReplaceLogBookText, Event, ' ... ', ' ... OK'
+  IDLsendToGeek_addLogBookText, Event, '---> half: ' + $
+  STRCOMPRESS(half,/REMOVE_ALL)
   
   ;Set up variables
   line = STRARR(1)
@@ -203,17 +214,31 @@ Function find_it, init_str, tag
 end
 
 ;------------------------------------------------------------------------------
-pro populate_structure, all_data, MyStruct
+pro populate_structure, all_data, MyStruct, Event
+
+  text = '---> Entering populate_structure'
+  IDLsendToGeek_addLogBookText, Event, text
+
   ;find where is the first blank line (we do not want anything from the line
   ;below that point
   blk_line_index = WHERE(all_data EQ '', nbr)
+  text = '----> size of blk_line_index: ' + STRCOMPRESS(nbr,/REMOVE_ALL)
+  IDLsendToGeek_addLogBookText, Event, text
+
   ;get our new interesting array of data
+  text = '----> get our new interesting array of data'
+  IDLsendToGeek_addLogBookText, Event, text
   all_data = all_data[blk_line_index[0]+1:*]
   
-  
   ;get how many array we have here
+  text = '----> get how many array we have here'
+  IDLsendToGeek_addLogBookText, Event, text
   blk_line_index = WHERE(all_data EQ '', new_nbr)
+  IDLsendToGeek_addLogBookText, Event, '-----> new_nbr: ' + $
+  strcompress(new_nbr,/remove_all)
   num_elnts = N_ELEMENTS(all_data)
+  IDLsendToGeek_addLogBookText, Event, '-----> num_elnts: ' + $
+  strcompress(num_elnts,/remove_all)
   
   if new_nbr ne 0 then begin
     ;make sure the last one is not the last element of the array
@@ -223,6 +248,9 @@ pro populate_structure, all_data, MyStruct
   endif else begin
     new_nbr = 1
   endelse
+  
+  IDLsendToGeek_addLogBookText, Event, '-----> new_nbr is now: ' + $
+  strcompress(new_nbr,/remove_all)
   
   ;create the array of structure here
   ;first the structure that will be used for each set of data
@@ -240,6 +268,8 @@ pro populate_structure, all_data, MyStruct
   array_nbr   = 0
   i           = 0
   array_index = 0
+  
+  IDLsendToGeek_addLogBookText, Event, '----> about to enter while loop'
   
   WHILE (array_nbr NE new_nbr) DO BEGIN
     if i  ne num_elnts then begin
@@ -325,8 +355,9 @@ pro populate_structure, all_data, MyStruct
     
   ENDWHILE
   
+  IDLsendToGeek_addLogBookText, Event, '----> leaving the while loop'
   
-;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, 
+  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis, 
 ;sigma_axis_units
 ;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
   
@@ -342,8 +373,15 @@ pro populate_structure, all_data, MyStruct
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getData
-  all_data = READ_DATA(self.path, 2)
+FUNCTION IDL3columnsASCIIparser::getData, Event
+  
+  text = '-> About to read Data in IDL3columnsASCIIparser'
+  IDLsendToGeek_addLogBookText, Event, text
+   
+  all_data = READ_DATA(self.path, 2, Event)
+  
+  text = '-> Data have been read in IDL3columnsASCIIparser'
+  IDLsendToGeek_addLogBookText, Event, text
   
   ;Define the Structure
   MyStruct = { NbrArray:          0L,$
@@ -356,7 +394,10 @@ FUNCTION IDL3columnsASCIIparser::getData
                Data:              ptr_new(0L)}
   
   ;Populate structure with general information (NbrArray, xaxis....etc)
-  populate_structure, all_data, MyStruct
+  text = '-> About to Enter populate_structure'
+  IDLsendToGeek_addLogBookText, Event, text
+  
+  populate_structure, all_data, MyStruct, Event
   
   RETURN, MyStruct
 END
