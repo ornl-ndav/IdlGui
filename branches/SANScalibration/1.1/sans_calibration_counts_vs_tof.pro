@@ -20,10 +20,10 @@
  ;
  ; - Redistributions of source code must retain the above copyright notice,
  ;   this list of conditions and the following disclaimer.
- ; - Redistributions in binary form must reproduce the above copyright notice,
+  ; - Redistributions in binary form must reproduce the above copyright notice,
  ;   this list of conditions and the following disclaimer in the documentation
  ;   and/or other materials provided with the distribution.
- ; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+xs ; - Neither the name of the Spallation Neutron Source, Oak Ridge National
  ;   Laboratory nor the names of its contributors may be used to endorse or
  ;   promote products derived from this software without specific prior written
  ;   permission.
@@ -36,6 +36,9 @@
  FUNCTION DetermineTOFoutputFile, Event, TYPE=type
    ;get global structure
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   text = '-> Determine TOF output File name:'
+   IDLsendToGeek_addLogBookText, Event, text
+   
    file_name  = 'SANS_'
    ;get run number
    FullNexusName = (*global).data_nexus_file_name
@@ -51,6 +54,9 @@
    ext = ext1 + '.tof'
    output_file_name  = file_name + STRCOMPRESS(RunNumber,/REMOVE_ALL)
    output_file_name += ext
+   IDLsendToGeek_addLogBookText, Event, '--> output_file_name: ' + $
+     output_file_name
+     
    RETURN, output_file_name
  END
  
@@ -61,6 +67,9 @@
      OUTPUT_FILE_NAME = output_file_name
    ;get global structure
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   
+   IDLsendToGeek_addLogBookText, Event, '-> Entering run_driver:'
+   
    ;indicate initialization with hourglass icon
    widget_control,/hourglass
    ;retrieve infos
@@ -74,6 +83,8 @@
    ;build cmd
    cmd  = tof_slicer_cmd
    cmd += ' ' + nexus_file_name
+   IDLsendToGeek_AddLogBookText, Event, '--> Type: ' + type
+   
    CASE (TYPE) OF
    
      'monitor'  : BEGIN
@@ -197,8 +208,14 @@
    text = '-> Parsing ASCII file ... ' + PROCESSING
    IDLsendToGeek_addLogBookText, Event, text
    iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
-   sData = iASCII->getData()
+   IF (OBJ_VALID(iASCII)) THEN BEGIN
+     text = '--> iASCII is a valid IDL3columnsASCIIparser object'
+   ENDIF ELSE BEGIN
+     text = '--> iASCII is not a valid IDL3columnsASCIIparser object'
+   ENDELSE
+   sData = iASCII->getData(Event)
    ;print, (*(*sDAta.data)[0].data)[1] ;remove_me
+   
    DataArray = (*(*sData.data)[0].data)
    nbr_column = FIX((size(DataArray))(1) / 3)
    newDataArray = REFORM(DAtaArray,3,nbr_column)
@@ -219,13 +236,16 @@
  ;------------------------------------------------------------------------------
  ;------------------------------------------------------------------------------
  PRO launch_counts_vs_tof_full_detector_button, Event
+ 
+   text = '> Launch counts vs tof of full detector:'
+   IDLsendToGeek_addLogBookText, Event, text
    ;determine the default full output file name
    FullOutputFileName = DetermineTOFoutputFile(Event,TYPE='all')
-   ;Create the tof base
-   launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='all'
    
-   ;get global structure
-   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+   ;Create the tof base
+   text = '> Launch counts vs tof (map the tof base):'
+   IDLsendToGeek_addLogBookText, Event, text
+   launch_counts_vs_tof, Event, FullOutputFileName, ROIfile='', TYPE='all'
    
  END
  
