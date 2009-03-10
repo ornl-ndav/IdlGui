@@ -62,7 +62,7 @@ PRO create_step5_selection_data, Event
   array_selected_total = TOTAL(array_selected,2)/FLOAT(y)
   
   array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
-    array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
+  array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
   
   x_axis = (*(*global).x_axis)
   
@@ -82,7 +82,7 @@ PRO create_step5_selection_data, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_step5_rescale_plot, Event
+PRO display_step5_rescale_plot, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -112,18 +112,105 @@ PRO display_step5_rescale_plot, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
+  IF (N_ELEMENTS(with_range)) THEN BEGIN
+  
+    x0y0x1y1 = (*global).x0y0x1y1
+    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+    ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+    xrange = [xmin,xmax]
+    yrange = [ymin,ymax]
+    
+    print, xrange
+    print, yrange
+    print
+    
+    plot, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      YRANGE = yrange,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDIF ELSE BEGIN
+  
+    plot, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDELSE
+  
+  errplot, x_axis,$
+    array_selected_total-array_error_selected_total,$
+    array_selected_total+array_error_selected_total,$
+    color=150
+    
+  !P.FONT = 0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO redisplay_step5_rescale_plot, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: type = 'IvsQ'
+    2: type = 'IvsLambda'
+  ENDCASE
+  
+  !P.FONT = 1
+  IF (type EQ 'IvsQ') THEN BEGIN
+    x_axis_label = 'Q( Angstroms!E-1!N )'
+  ENDIF ELSE BEGIN
+    x_axis_label = 'Lambda_T (Angstroms)'
+  ENDELSE
+  
+  y_axis_label = 'Intensity'
+  
+  x_axis = (*(*global).step5_selection_x_array)
+  array_selected_total = (*(*global).step5_selection_y_array)
+  array_error_selected_total = (*(*global).step5_selection_y_error_array)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  
+  print, 'x0y0x1y1: '
+  print, x0y0x1y1 ;remove_me
+  
+  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+  xrange = [xmin,xmax]
+  yrange = [ymin,ymax]
+  
+  print, 'xrange: '
+  print, xrange
+  print, 'yrange: '
+  print, yrange
+  print
+  
   plot, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
+    XRANGE = xrange,$
+    YRANGE = yrange,$
     CHARSIZE = 2,$
     PSYM=1
     
   errplot, x_axis,$
-  array_selected_total-array_error_selected_total,$
-  array_selected_total+array_error_selected_total,$
-  color=150
-  
+    array_selected_total-array_error_selected_total,$
+    array_selected_total+array_error_selected_total,$
+    color=150
+    
   !P.FONT = 0
   
 END
@@ -132,28 +219,28 @@ END
 ;plot selection for zoom
 PRO plot_recap_rescale_selection, Event
 
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-x0 = (*global).recap_rescale_x0
-y0 = (*global).recap_rescale_y0
-x1 = (*global).recap_rescale_x1
-y1 = (*global).recap_rescale_y1
-
-;physical_x_y, Event, x, y ;this make sure that we are not outside the window
-
-;xy_position[2] = x
-;xy_position[3] = y
-
-xmin = MIN([x0,x1], MAX=xmax)
-ymin = MIN([y0,y1], MAX=ymax)
-
-;(*global).step4_step1_selection = xy_position
-color = 150
-
-plots, [xmin, xmin, xmax, xmax, xmin],$
-  [ymin,ymax, ymax, ymin, ymin],$
-  /DEVICE,$
-  COLOR =color
-
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x0 = (*global).recap_rescale_x0
+  y0 = (*global).recap_rescale_y0
+  x1 = (*global).recap_rescale_x1
+  y1 = (*global).recap_rescale_y1
+  
+  ;physical_x_y, Event, x, y ;this make sure that we are not outside the window
+  
+  ;xy_position[2] = x
+  ;xy_position[3] = y
+  
+  xmin = MIN([x0,x1], MAX=xmax)
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  ;(*global).step4_step1_selection = xy_position
+  color = 150
+  
+  plots, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin,ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    COLOR =color
+    
 END
 
