@@ -1197,6 +1197,11 @@ PRO MAIN_BASE_event, Event
   Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
   
     IF (event.press EQ 1) THEN BEGIN ;press left
+      cursor, x, y
+      print, 'x: ' + strcompress(x)
+      print, 'y: ' + strcompress(y)
+      print
+      
       (*global).recap_rescale_left_mouse = 1
     ENDIF
     
