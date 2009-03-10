@@ -95,8 +95,9 @@ PRO display_step5_rescale_plot, Event
     2: type = 'IvsLambda'
   ENDCASE
   
+  !P.FONT = 1
   IF (type EQ 'IvsQ') THEN BEGIN
-    x_axis_label = 'Q(Angstroms^-1)'
+    x_axis_label = 'Q( Angstroms!E-1!N )'
   ENDIF ELSE BEGIN
     x_axis_label = 'Lambda_T (Angstroms)'
   ENDELSE
@@ -115,6 +116,7 @@ PRO display_step5_rescale_plot, Event
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
+    CHARSIZE = 2,$
     PSYM=1
     
   errplot, x_axis,$
@@ -122,5 +124,6 @@ PRO display_step5_rescale_plot, Event
   array_selected_total+array_error_selected_total,$
   color=150
   
+  !P.FONT = 0
   
 END
