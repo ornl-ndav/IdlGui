@@ -1191,6 +1191,8 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_full_reset'): BEGIN
     display_step5_rescale_plot, Event
+    (*global).first_recap_rescale_plot = 1
+    (*global).x0y0x1y1 = [0.,0.,0.,0.]
   END
   
   ;rescale widget draw
@@ -1204,17 +1206,22 @@ PRO MAIN_BASE_event, Event
         (*global).recap_rescale_x0 = Event.x
         (*global).recap_rescale_y0 = Event.y
         Cursor, x,y,/data,/nowait
-        x0y0x1y1 = [x,y,0,0]
+          x0y0x1y1 = (*global).x0y0x1y1
+          x0y0x1y1[0] = x
+          x0y0x1y1[1] = y
         (*global).x0y0x1y1 = x0y0x1y1
         (*global).recap_rescale_left_mouse = 1
-        print, 'in event pressed'
       ENDIF
       
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         print, 'in left pressed with move mouse'
         ;replot main plot
-        display_step5_rescale_plot, Event
+        IF ((*global).first_recap_rescale_plot) THEN BEGIN
+          display_step5_rescale_plot, Event
+        ENDIF ELSE BEGIN
+          redisplay_step5_rescale_plot, Event
+        ENDELSE
         ;plot selection
         (*global).recap_rescale_x1 = Event.x
         (*global).recap_rescale_y1 = Event.y
@@ -1227,8 +1234,6 @@ PRO MAIN_BASE_event, Event
         ENDELSE
       ENDIF
       
-;      help, event,/structure
-      
       IF (event.release EQ 1) THEN BEGIN ;release mouse
         print, 'in event release' ;remove_me
         (*global).recap_rescale_left_mouse = 0
@@ -1237,13 +1242,16 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[2] = x
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
-
+        
+        print, x0y0x1y1 ;remove_me
+        
         redisplay_step5_rescale_plot, Event
-
+        (*global).first_recap_rescale_plot = 0
+        
       ENDIF
       
     ENDIF ELSE BEGIN ;selection selected
-
+    
       IF (event.press EQ 1) THEN BEGIN ;press left
         (*global).recap_rescale_x0 = Event.x
         (*global).recap_rescale_y0 = Event.y
@@ -1284,11 +1292,11 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[2] = x
         x0y0x1y1[3] = y
         x0y0x1y1 = x0y0x1y1
-
+        
         display_step5_rescale_plot, Event, with_range='yes'
-
+        
       ENDIF
-    
+      
     ENDELSE
     
   END
