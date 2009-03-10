@@ -127,9 +127,9 @@ END
 PRO validate_ascii_plot, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
 
-main_event = (*sMainBase).Event
+main_event = (sMainBase).Event
 text = '> Entering validate_ascii_plot:'
-IDLsendToGeek_addLogBookText, Event, text
+IDLsendToGeek_addLogBookText, main_event, text
 
 ;disable counts_vs_tof gui
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
@@ -144,7 +144,7 @@ output_file_name = path + name
 (*sMainBase.global).tof_ascii_file_name = output_file_name
 
 text = '-> output_file_name: ' + output_file_name
-IDLsendToGeek_addLogBookText, Event, text
+IDLsendToGeek_addLogBookText, main_event, text
 
 ;run the driver to produce the ascii file
 run_driver, $
