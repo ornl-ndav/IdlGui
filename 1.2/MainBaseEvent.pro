@@ -1187,6 +1187,12 @@ PRO MAIN_BASE_event, Event
     tab_event, Event
   END
   
+  ;Full reset button
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_full_reset'): BEGIN
+    display_step5_rescale_plot, Event
+  END
+  
   ;rescale widget draw
   Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
   
@@ -1214,7 +1220,7 @@ PRO MAIN_BASE_event, Event
     
     IF (event.type EQ 1) THEN BEGIN ;release mouse
       (*global).recap_rescale_left_mouse = 0
-      ;perform scaling of selection if left and right plotted
+    ;perform scaling of selection if left and right plotted
     ENDIF
     
   END
