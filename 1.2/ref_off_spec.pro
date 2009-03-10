@@ -143,8 +143,12 @@ SUPER_USERS = ['j35']
     step5_selection_x_array: PTR_NEW(0L),$
     step5_selection_y_array: PTR_NEW(0L),$
     step5_selection_y_error_array: PTR_NEW(0L),$
-    recap_rescale_left_mouse: 1, $
+    recap_rescale_left_mouse: 0, $
     recap_rescale_working_with: 'left',$
+    recap_rescale_x0: 0,$
+    recap_rescale_y0: 0,$
+    recap_rescale_x1: 0,$
+    recap_rescale_y1: 0,$
     
     pixel_offset_array: ptr_new(0L),$
     X_Y_min_max_backup: STRARR(4),$
