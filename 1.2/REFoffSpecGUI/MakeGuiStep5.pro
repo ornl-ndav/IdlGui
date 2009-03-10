@@ -60,6 +60,14 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     tab_size[2],$
     730],$
     uname: 'step5_rescale_draw'}
+
+  ;FUll reset of scale
+  XYoff = [500,10]
+  sFullReset = { size: [XYoff[0],$
+  XYoff[1],$
+  300],$
+  uname: 'step5_rescale_full_reset',$
+  value: 'FULL RESET of SCALING'}
     
   ;go back to recap plot button
   XYoff = [1110,10]
@@ -312,6 +320,14 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     UNAME = sRescaleBase.uname,$
     MAP = sRescaleBase.map)
     
+  ;full reset ----------------------------------------------------------------
+  wButton = WIDGET_BUTTON(RescaleBase,$
+    XOFFSET = sFullReset.size[0],$
+    YOFFSET = sFullReset.size[1],$
+    SCR_XSIZE = sFullReset.size[2],$
+    UNAME = sFullReset.uname,$
+    VALUE = sFullReset.value)
+  
   ;go back button ------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$
     XOFFSET = sRescaleButton.size[0],$
@@ -327,7 +343,8 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_XSIZE = sRescaleDraw.size[2],$
     SCR_YSIZE = sRescaleDraw.size[3],$
     UNAME = sRescaleDraw.uname,$
-    /BUTTON_EVENTS)
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS)
     
   ;-----------------------------------------------------------------------------
   ;Scaling base ----------------------------------------------------------------
