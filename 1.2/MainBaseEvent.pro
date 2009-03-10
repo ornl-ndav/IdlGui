@@ -1196,45 +1196,100 @@ PRO MAIN_BASE_event, Event
   ;rescale widget draw
   Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
   
-    IF (event.press EQ 1) THEN BEGIN ;press left
-      (*global).recap_rescale_x0 = Event.x
-      (*global).recap_rescale_y0 = Event.y
-      ;      cursor, x, y
-      ;      print, 'x: ' + strcompress(x)
-      ;      print, 'y: ' + strcompress(y)
-      ;      print
+    ;zoom or selection
+    isZoomSelected = isRecapScaleZoomSelected(Event)
+    IF (isZoomSelected) THEN BEGIN
+    
+      IF (event.press EQ 1) THEN BEGIN ;press left
+        (*global).recap_rescale_x0 = Event.x
+        (*global).recap_rescale_y0 = Event.y
+        Cursor, x,y,/data,/nowait
+        x0y0x1y1 = [x,y,0,0]
+        (*global).x0y0x1y1 = x0y0x1y1
+        (*global).recap_rescale_left_mouse = 1
+        print, 'in event pressed'
+      ENDIF
       
-      (*global).recap_rescale_left_mouse = 1
-    ENDIF
-    
-    IF (event.press EQ 4) THEN BEGIN ;press right
-      IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
-        (*global).recap_rescale_working_with = 'right'
-      ENDIF ELSE BEGIN
-        (*global).recap_rescale_working_with = 'left'
-      ENDELSE
-    ENDIF
-    
-    IF (event.type EQ 2 AND $ ;move mouse with left pressed
-      (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
-      ;replot main plot
-      display_step5_rescale_plot, Event
-      ;plot selection
-      (*global).recap_rescale_x1 = Event.x
-      (*global).recap_rescale_y1 = Event.y
-      plot_recap_rescale_selection, Event
+      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+        print, 'in left pressed with move mouse'
+        ;replot main plot
+        display_step5_rescale_plot, Event
+        ;plot selection
+        (*global).recap_rescale_x1 = Event.x
+        (*global).recap_rescale_y1 = Event.y
+        plot_recap_rescale_selection, Event
+        
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+        ;replot right line and plot left line
+        ENDIF ELSE BEGIN
+        ;replot left line and plot right line
+        ENDELSE
+      ENDIF
       
-      IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
-      ;replot right line and plot left line
-      ENDIF ELSE BEGIN
-      ;replot left line and plot right line
-      ENDELSE
-    ENDIF
+;      help, event,/structure
+      
+      IF (event.release EQ 1) THEN BEGIN ;release mouse
+        print, 'in event release' ;remove_me
+        (*global).recap_rescale_left_mouse = 0
+        x0y0x1y1 = (*global).x0y0x1y1
+        CURSOR,x,y,/data,/nowait
+        x0y0x1y1[2] = x
+        x0y0x1y1[3] = y
+        (*global).x0y0x1y1 = x0y0x1y1
+
+        redisplay_step5_rescale_plot, Event
+
+      ENDIF
+      
+    ENDIF ELSE BEGIN ;selection selected
+
+      IF (event.press EQ 1) THEN BEGIN ;press left
+        (*global).recap_rescale_x0 = Event.x
+        (*global).recap_rescale_y0 = Event.y
+        Cursor, x,y
+        x0y0x1y1 = [x,y,0,0]
+        (*global).x0y0x1y1 = x0y0x1y1
+        (*global).recap_rescale_left_mouse = 1
+      ENDIF
+      
+      IF (event.press EQ 4) THEN BEGIN ;press right
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          (*global).recap_rescale_working_with = 'right'
+        ENDIF ELSE BEGIN
+          (*global).recap_rescale_working_with = 'left'
+        ENDELSE
+      ENDIF
+      
+      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+        ;replot main plot
+        display_step5_rescale_plot, Event
+        ;plot selection
+        (*global).recap_rescale_x1 = Event.x
+        (*global).recap_rescale_y1 = Event.y
+        plot_recap_rescale_selection, Event
+        
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+        ;replot right line and plot left line
+        ENDIF ELSE BEGIN
+        ;replot left line and plot right line
+        ENDELSE
+      ENDIF
+      
+      IF (event.type EQ 1) THEN BEGIN ;release mouse
+        (*global).recap_rescale_left_mouse = 0
+        x0y0x1y1 = (*global).x0y0x1y1
+        CURSOR,x,y
+        x0y0x1y1[2] = x
+        x0y0x1y1[3] = y
+        x0y0x1y1 = x0y0x1y1
+
+        display_step5_rescale_plot, Event, with_range='yes'
+
+      ENDIF
     
-    IF (event.type EQ 1) THEN BEGIN ;release mouse
-      (*global).recap_rescale_left_mouse = 0
-    ;perform scaling of selection if left and right plotted
-    ENDIF
+    ENDELSE
     
   END
   

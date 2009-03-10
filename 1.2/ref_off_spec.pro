@@ -149,6 +149,7 @@ SUPER_USERS = ['j35']
     recap_rescale_y0: 0,$
     recap_rescale_x1: 0,$
     recap_rescale_y1: 0,$
+    x0y0x1y1: [0.,0.,0.,0.],$
     
     pixel_offset_array: ptr_new(0L),$
     X_Y_min_max_backup: STRARR(4),$
