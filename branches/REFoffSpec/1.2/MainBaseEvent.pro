@@ -1187,6 +1187,38 @@ PRO MAIN_BASE_event, Event
     tab_event, Event
   END
   
+  ;rescale widget draw
+  Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
+  
+    IF (event.press EQ 1) THEN BEGIN ;press left
+      (*global).recap_rescale_left_mouse = 1
+    ENDIF
+    
+    IF (event.press EQ 4) THEN BEGIN ;press right
+      IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+        (*global).recap_rescale_working_with = 'right'
+      ENDIF ELSE BEGIN
+        (*global).recap_rescale_working_with = 'left'
+      ENDELSE
+    ENDIF
+    
+    IF (event.type EQ 2 AND $ ;move mouse with left pressed
+      (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+      ;replot main plot
+      IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+      ;replot right line and plot left line
+      ENDIF ELSE BEGIN
+      ;replot left line and plot right line
+      ENDELSE
+    ENDIF
+    
+    IF (event.type EQ 1) THEN BEGIN ;release mouse
+      (*global).recap_rescale_left_mouse = 0
+      ;perform scaling of selection if left and right plotted
+    ENDIF
+    
+  END
+  
   ;-----------------------------------------------------------------------------
   ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
   ;-----------------------------------------------------------------------------

@@ -326,10 +326,8 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     YOFFSET = sRescaleDraw.size[1],$
     SCR_XSIZE = sRescaleDraw.size[2],$
     SCR_YSIZE = sRescaleDraw.size[3],$
-    UNAME = sRescaleDraw.uname)
-    
-    
-    
+    UNAME = sRescaleDraw.uname,$
+    /BUTTON_EVENTS)
     
   ;-----------------------------------------------------------------------------
   ;Scaling base ----------------------------------------------------------------
