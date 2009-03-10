@@ -1197,10 +1197,12 @@ PRO MAIN_BASE_event, Event
   Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
   
     IF (event.press EQ 1) THEN BEGIN ;press left
-      cursor, x, y
-      print, 'x: ' + strcompress(x)
-      print, 'y: ' + strcompress(y)
-      print
+      (*global).recap_rescale_x0 = Event.x
+      (*global).recap_rescale_y0 = Event.y
+      ;      cursor, x, y
+      ;      print, 'x: ' + strcompress(x)
+      ;      print, 'y: ' + strcompress(y)
+      ;      print
       
       (*global).recap_rescale_left_mouse = 1
     ENDIF
@@ -1216,6 +1218,12 @@ PRO MAIN_BASE_event, Event
     IF (event.type EQ 2 AND $ ;move mouse with left pressed
       (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
       ;replot main plot
+      display_step5_rescale_plot, Event
+      ;plot selection
+      (*global).recap_rescale_x1 = Event.x
+      (*global).recap_rescale_y1 = Event.y
+      plot_recap_rescale_selection, Event
+      
       IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
       ;replot right line and plot left line
       ENDIF ELSE BEGIN

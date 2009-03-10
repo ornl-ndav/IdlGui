@@ -127,3 +127,33 @@ PRO display_step5_rescale_plot, Event
   !P.FONT = 0
   
 END
+
+;------------------------------------------------------------------------------
+;plot selection for zoom
+PRO plot_recap_rescale_selection, Event
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+x0 = (*global).recap_rescale_x0
+y0 = (*global).recap_rescale_y0
+x1 = (*global).recap_rescale_x1
+y1 = (*global).recap_rescale_y1
+
+;physical_x_y, Event, x, y ;this make sure that we are not outside the window
+
+;xy_position[2] = x
+;xy_position[3] = y
+
+xmin = MIN([x0,x1], MAX=xmax)
+ymin = MIN([y0,y1], MAX=ymax)
+
+;(*global).step4_step1_selection = xy_position
+color = 150
+
+plots, [xmin, xmin, xmax, xmax, xmin],$
+  [ymin,ymax, ymax, ymin, ymin],$
+  /DEVICE,$
+  COLOR =color
+
+END
+
