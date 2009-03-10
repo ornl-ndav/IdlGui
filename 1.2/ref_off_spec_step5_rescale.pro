@@ -183,19 +183,10 @@ PRO redisplay_step5_rescale_plot, Event
   
   x0y0x1y1 = (*global).x0y0x1y1
   
-  print, 'x0y0x1y1: '
-  print, x0y0x1y1 ;remove_me
-  
   xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
   ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
-  
-  print, 'xrange: '
-  print, xrange
-  print, 'yrange: '
-  print, yrange
-  print
   
   plot, x_axis, $
     array_selected_total, $
