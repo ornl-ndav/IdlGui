@@ -120,16 +120,14 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     xrange = [xmin,xmax]
     yrange = [ymin,ymax]
     
-    print, xrange
-    print, yrange
-    print
-    
     plot, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
       XRANGE = xrange,$
+      XSTYLE = 1,$
       YRANGE = yrange,$
+      YSTYLE = 1,$
       CHARSIZE = 2,$
       PSYM=1
       
@@ -139,9 +137,15 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       array_selected_total, $
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
       CHARSIZE = 2,$
       PSYM=1
       
+    xmin = MIN(x_axis,MAX=xmax)
+    ymin = MIN(array_selected_total,MAX=ymax)
+    (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
+    
   ENDELSE
   
   errplot, x_axis,$
@@ -193,7 +197,9 @@ PRO redisplay_step5_rescale_plot, Event
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
     XRANGE = xrange,$
+    XSTYLE = 1,$
     YRANGE = yrange,$
+    YSTYLE = 1,$
     CHARSIZE = 2,$
     PSYM=1
     
@@ -217,15 +223,9 @@ PRO plot_recap_rescale_selection, Event
   x1 = (*global).recap_rescale_x1
   y1 = (*global).recap_rescale_y1
   
-  ;physical_x_y, Event, x, y ;this make sure that we are not outside the window
-  
-  ;xy_position[2] = x
-  ;xy_position[3] = y
-  
   xmin = MIN([x0,x1], MAX=xmax)
   ymin = MIN([y0,y1], MAX=ymax)
   
-  ;(*global).step4_step1_selection = xy_position
   color = 150
   
   plots, [xmin, xmin, xmax, xmax, xmin],$
@@ -233,5 +233,28 @@ PRO plot_recap_rescale_selection, Event
     /DEVICE,$
     COLOR =color
     
+END
+
+;------------------------------------------------------------------------------
+;plot selection for zoom
+PRO plot_recap_rescale_CE_selection, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  y0 = x0y0x1y1[1]
+  y1 = x0y0x1y1[3]
+  
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  color = 50
+  
+  print, 'ymin: ' + strcompress(ymin)
+  
+  cursor, x, y, /DATA, /NOWAIT
+  
+  plots, x,ymin, color=color, /DATA
+  plots, x,ymax, color=color, /CONTINUE, /DATA
+  
 END
 
