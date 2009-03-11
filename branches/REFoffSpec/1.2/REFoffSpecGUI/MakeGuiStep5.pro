@@ -370,7 +370,8 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     VALUE = sSelectionButton.value,$
     UNAME = sSelectionButton.uname)
     
-  WIDGET_CONTROL, wZoomButton, /SET_BUTTON
+  ;WIDGET_CONTROL, wZoomButton, /SET_BUTTON
+  WIDGET_CONTROL, wSelectionButton, /SET_BUTTON
   
   ;full reset ----------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$

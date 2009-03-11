@@ -219,6 +219,66 @@ PRO redisplay_step5_rescale_plot, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO redisplay_step5_rescale_plot_after_scaling, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: type = 'IvsQ'
+    2: type = 'IvsLambda'
+  ENDCASE
+  
+  !P.FONT = 1
+  IF (type EQ 'IvsQ') THEN BEGIN
+    x_axis_label = 'Q( Angstroms!E-1!N )'
+  ENDIF ELSE BEGIN
+    x_axis_label = 'Lambda_T (Angstroms)'
+  ENDELSE
+  
+  y_axis_label = 'Intensity'
+  
+  x_axis = (*(*global).step5_selection_x_array)
+  array_selected_total = (*(*global).step5_selection_y_array)
+  array_error_selected_total = (*(*global).step5_selection_y_error_array)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  
+  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+  ymin = 0
+  ymax = 1.2
+  ;ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+  xrange = [xmin,xmax]
+  yrange = [ymin,ymax]
+  
+  plot, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XRANGE = xrange,$
+    XSTYLE = 1,$
+    YRANGE = yrange,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1
+    
+  errplot, x_axis,$
+    array_selected_total-array_error_selected_total,$
+    array_selected_total+array_error_selected_total,$
+    color=150
+    
+  !P.FONT = 0
+  
+END
+
+;------------------------------------------------------------------------------
 ;plot selection for zoom
 PRO plot_recap_rescale_selection, Event
 
@@ -307,16 +367,57 @@ END
 ;------------------------------------------------------------------------------
 PRO enabled_or_not_recap_rescale_button, Event
 
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-   x1 = (*global).recap_rescale_selection_left
-   x2 = (*global).recap_rescale_selection_right
-
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x1 = (*global).recap_rescale_selection_left
+  x2 = (*global).recap_rescale_selection_right
+  
   IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
-  status = 1
+    status = 1
   ENDIF ELSE BEGIN
-  status = 0
+    status = 0
   ENDELSE
   activate_widget, Event, 'step5_rescale_scale_to_1', status
+  
+END
+
+;------------------------------------------------------------------------------
+PRO calculate_average_recap_rescale, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x1 = (*global).recap_rescale_selection_left
+  x2 = (*global).recap_rescale_selection_right
+  
+  print, 'x1: ' + strcompress(x1)
+  print, 'x2: ' + strcompress(x2)
+  print
+  
+  xmin = MIN([x1,x2],MAX=xmax)
+  
+  ;calculate average if left and right selection
+  IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
+    x_axis = (*(*global).step5_selection_x_array)
+    aIndex = getArrayRangeFromlda1lda2(x_axis, xmin, xmax)
+    Index_min = aIndex[0]
+    Index_max = aIndex[1]
+    
+    array_selected_total = (*(*global).step5_selection_y_array)
+    Average = MEAN(array_selected_total[Index_min:Index_max])
+    Scaling_factor = Average
+    
+    print, 'Average: ' + strcompress(average)
+    
+    (*(*global).array_selected_total_backup) = array_selected_total
+    array_selected_total = array_selected_total / Average
+    ;    print, array_selected_total ;remove_me
+
+    (*(*global).step5_selection_y_array) = array_selected_total
+    redisplay_step5_rescale_plot, Event
+    
+    ;    display_step5_rescale_plot, Event
+    plot_recap_rescale_other_selection, Event, type='all'
+    
+  ENDIF
   
 END

@@ -64,7 +64,7 @@ SUPER_USERS = ['j35']
   ;          5: Create Output
   ;          6: Options,
   ;          7:Log Book
-  sDEBUGGING = { tab: {main_tab: 4,$ ; -> RECAP tab
+  sDEBUGGING = { tab: {main_tab: 1,$ ; -> LOAD tab
     step4_tab: 0,$ 
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -140,6 +140,7 @@ SUPER_USERS = ['j35']
     step4_1_plot2d_delta_x: 0.0,$
     scaling_factor: ptr_new(0L),$
     
+    array_selected_total_backup: PTR_NEW(0L),$
     step5_selection_x_array: PTR_NEW(0L),$
     step5_selection_y_array: PTR_NEW(0L),$
     step5_selection_y_error_array: PTR_NEW(0L),$
