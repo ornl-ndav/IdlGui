@@ -1260,6 +1260,14 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         plot_recap_rescale_CE_selection, Event
         (*global).recap_rescale_left_mouse = 1
+        
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          ;replot right line
+          plot_recap_rescale_other_selection, Event, type='right'
+        ENDIF ELSE BEGIN
+          ;replot left line
+          plot_recap_rescale_other_selection, Event, type='left'
+        ENDELSE
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;press right
@@ -1282,14 +1290,22 @@ PRO MAIN_BASE_event, Event
         plot_recap_rescale_CE_selection, Event
         
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
-        ;replot right line and plot left line
+          ;replot right line
+          plot_recap_rescale_other_selection, Event, type='right'
         ENDIF ELSE BEGIN
-        ;replot left line and plot right line
+          ;replot left line
+          plot_recap_rescale_other_selection, Event, type='left'
         ENDELSE
       ENDIF
       
       IF (event.type EQ 1) THEN BEGIN ;release mouse
-      (*global).recap_rescale_left_mouse = 0
+        (*global).recap_rescale_left_mouse = 0
+        cursor, x, y, /DATA, /NOWAIT
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          (*global).recap_rescale_selection_left = x
+        ENDIF ELSE BEGIN
+          (*global).recap_rescale_selection_right = x
+        ENDELSE
       ENDIF
       
     ENDELSE
