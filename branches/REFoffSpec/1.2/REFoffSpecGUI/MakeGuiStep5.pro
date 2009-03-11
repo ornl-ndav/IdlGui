@@ -73,12 +73,33 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'step5_rescale_draw'}
     
   ;FUll reset of scale
-  XYoff = [500,10]
+  XYoff = [300,10]
   sFullReset = { size: [XYoff[0],$
     XYoff[1],$
-    300],$
+    200],$
     uname: 'step5_rescale_full_reset',$
     value: 'RESET ZOOM'}
+    
+  ;Scale data
+  XYoff = [5,0]
+  sScaleButton = { size: [sFullReset.size[0]+$
+    sFullReset.size[2]+XYoff[0],$
+    sFullReset.size[1]+XYoff[1],$
+    sFullReset.size[2]],$
+    uname: 'step5_rescale_scale_to_1',$
+    sensitive: 0,$
+    value: 'SCALE TO 1 SELECTION'}
+    
+  ;Reset Scale
+    XYoff = [5,0]
+    sResetScaleButton = { size: [sScaleButton.size[0]+$
+    sScaleButton.size[2]+$
+    XYoff[0],$
+    sScaleButton.size[1]+XYoff[1],$
+    sScaleButton.size[2]],$
+    uname: 'step5_rescale_scale_to_1_reset',$
+    sensitive: 0,$
+    value: 'RESET SCALE'}
     
   ;go back to recap plot button
   XYoff = [1110,10]
@@ -332,25 +353,25 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     MAP = sRescaleBase.map)
     
   ;zoom and selection base ---------------------------------------------------
-    wZoomSelectionBase = WIDGET_BASE(RescaleBase,$
+  wZoomSelectionBase = WIDGET_BASE(RescaleBase,$
     XOFFSET = sZoomSelectionBase.size[0],$
     YOFFSET = sZoomSelectionBase.size[1],$
     SCR_XSIZE = sZoomSelectionBase.size[2],$
     /EXCLUSIVE,$
     /ROW)
     
-    ;Zoom button
-    wZoomButton = WIDGET_BUTTON(wZoomSelectionBase,$
+  ;Zoom button
+  wZoomButton = WIDGET_BUTTON(wZoomSelectionBase,$
     VALUE = sZoomButton.value,$
     UNAME = sZoomButton.uname)
     
-    ;Selection button
-    wSelectionButton = WIDGET_BUTTON(wZoomSelectionBase,$
+  ;Selection button
+  wSelectionButton = WIDGET_BUTTON(wZoomSelectionBase,$
     VALUE = sSelectionButton.value,$
     UNAME = sSelectionButton.uname)
     
-    WIDGET_CONTROL, wZoomButton, /SET_BUTTON
-    
+  WIDGET_CONTROL, wZoomButton, /SET_BUTTON
+  
   ;full reset ----------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$
     XOFFSET = sFullReset.size[0],$
@@ -358,6 +379,24 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     SCR_XSIZE = sFullReset.size[2],$
     UNAME = sFullReset.uname,$
     VALUE = sFullReset.value)
+    
+  ;Scale to 1 selection
+  wScaleButton = WIDGET_BUTTON(RescaleBase,$
+    XOFFSET = sScaleButton.size[0],$
+    YOFFSET = sScaleButton.size[1],$
+    SCR_XSIZE = sScaleButton.size[2],$
+    UNAME = sScaleButton.uname,$
+    VALUE = sScaleButton.value,$
+    SENSITIVE = sScaleButton.sensitive)
+    
+    ;Reset scale to 1
+    wResetScaleButton = WIDGET_BUTTON(RescaleBase,$
+    XOFFSET = sResetScaleButton.size[0],$
+    YOFFSET = sResetScaleButton.size[1],$
+    SCR_XSIZE = sResetScaleButton.size[2],$
+    VALUE = sResetScaleButton.value,$
+    UNAME = sResetScaleButton.uname,$
+    SENSITIVE = sResetScaleButton.sensitive)
     
   ;go back button ------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$
