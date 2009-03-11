@@ -1164,6 +1164,7 @@ PRO MAIN_BASE_event, Event
           (*global).step5_x1 = Event.x
           (*global).step5_y1 = Event.y
           inform_log_book_step5_selection, Event ;_step5
+          enabled_or_not_recap_rescale_button, Event
           MapBase, Event, 'step5_rescale_base', 1
           display_step5_rescale_plot, Event
         ENDIF
@@ -1187,6 +1188,8 @@ PRO MAIN_BASE_event, Event
     tab_event, Event
     (*global).first_recap_rescale_plot = 1
     (*global).x0y0x1y1 = [0.,0.,0.,0.]
+    (*global).recap_rescale_selection_left = 0.
+    (*global).recap_rescale_selection_right = 0.
   END
   
   ;Full reset button
@@ -1301,13 +1304,17 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (event.type EQ 1) THEN BEGIN ;release mouse
-        (*global).recap_rescale_left_mouse = 0
         cursor, x, y, /DATA, /NOWAIT
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
           (*global).recap_rescale_selection_left = x
         ENDIF ELSE BEGIN
           (*global).recap_rescale_selection_right = x
         ENDELSE
+        ;check if we can enabled rescale button
+        IF ((*global).recap_rescale_left_mouse) THEN BEGIN
+          enabled_or_not_recap_rescale_button, Event
+        ENDIF
+        (*global).recap_rescale_left_mouse = 0
       ENDIF
       
     ENDELSE

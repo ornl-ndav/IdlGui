@@ -292,7 +292,6 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   ymin = MIN([y0,y1], MAX=ymax)
   
   IF (type EQ 'all') THEN BEGIN
-    print, x0y0x1y1 ;remove_me
     color = 50
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
@@ -302,5 +301,22 @@ PRO plot_recap_rescale_other_selection, Event, type=type
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO enabled_or_not_recap_rescale_button, Event
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+   x1 = (*global).recap_rescale_selection_left
+   x2 = (*global).recap_rescale_selection_right
+
+  IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
+  status = 1
+  ENDIF ELSE BEGIN
+  status = 0
+  ENDELSE
+  activate_widget, Event, 'step5_rescale_scale_to_1', status
   
 END
