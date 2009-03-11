@@ -268,3 +268,27 @@ PRO plot_recap_rescale_CE_selection, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO plot_recap_rescale_other_selection, Event, type=type
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF (type EQ 'left') THEN BEGIN
+    x = (*global).recap_rescale_selection_left
+  ENDIF ELSE BEGIN
+    x = (*global).recap_rescale_selection_right
+  ENDELSE
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  y0 = x0y0x1y1[1]
+  y1 = x0y0x1y1[3]
+  
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  plots, x,ymin, color=color, /DATA
+  plots, x,ymax, color=color, /CONTINUE, /DATA
+  
+END
