@@ -78,7 +78,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     XYoff[1],$
     300],$
     uname: 'step5_rescale_full_reset',$
-    value: 'FULL RESET of SCALING'}
+    value: 'RESET ZOOM'}
     
   ;go back to recap plot button
   XYoff = [1110,10]
