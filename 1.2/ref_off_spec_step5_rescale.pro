@@ -112,6 +112,9 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
   IF (N_ELEMENTS(with_range)) THEN BEGIN
   
     x0y0x1y1 = (*global).x0y0x1y1
@@ -185,6 +188,9 @@ PRO redisplay_step5_rescale_plot, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
   x0y0x1y1 = (*global).x0y0x1y1
   
   xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
@@ -226,6 +232,9 @@ PRO plot_recap_rescale_selection, Event
   xmin = MIN([x0,x1], MAX=xmax)
   ymin = MIN([y0,y1], MAX=ymax)
   
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
   color = 150
   
   plots, [xmin, xmin, xmax, xmax, xmin],$
@@ -249,7 +258,8 @@ PRO plot_recap_rescale_CE_selection, Event
   
   color = 50
   
-  print, 'ymin: ' + strcompress(ymin)
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
   
   cursor, x, y, /DATA, /NOWAIT
   
