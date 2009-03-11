@@ -1194,7 +1194,7 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='step5_rescale_full_reset'): BEGIN
     display_step5_rescale_plot, Event
     (*global).first_recap_rescale_plot = 1
-  ;    (*global).x0y0x1y1 = [0.,0.,0.,0.]
+    plot_recap_rescale_other_selection, Event, type='all'
   END
   
   ;rescale widget draw
@@ -1249,6 +1249,8 @@ PRO MAIN_BASE_event, Event
         (*global).first_recap_rescale_plot = 0
         
       ENDIF
+      
+      plot_recap_rescale_other_selection, Event, type='all'
       
     ENDIF ELSE BEGIN ;selection selected
     

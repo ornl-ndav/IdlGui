@@ -273,11 +273,14 @@ PRO plot_recap_rescale_other_selection, Event, type=type
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  IF (type EQ 'left') THEN BEGIN
-    x = (*global).recap_rescale_selection_left
-  ENDIF ELSE BEGIN
-    x = (*global).recap_rescale_selection_right
-  ENDELSE
+  CASE (type) OF
+    'left': x = (*global).recap_rescale_selection_left
+    'right': x = (*global).recap_rescale_selection_right
+    'all': BEGIN
+      x1 = (*global).recap_rescale_selection_left
+      x2 = (*global).recap_rescale_selection_right
+    END
+  ENDCASE
   
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
@@ -288,7 +291,16 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   
   ymin = MIN([y0,y1], MAX=ymax)
   
-  plots, x,ymin, color=color, /DATA
-  plots, x,ymax, color=color, /CONTINUE, /DATA
+  IF (type EQ 'all') THEN BEGIN
+    print, x0y0x1y1 ;remove_me
+    color = 50
+    plots, x1,ymin, color=color, /DATA
+    plots, x1,ymax, color=color, /CONTINUE, /DATA
+    plots, x2,ymin, color=color, /DATA
+    plots, x2,ymax, color=color, /CONTINUE, /DATA
+  ENDIF ELSE BEGIN
+    plots, x,ymin, color=color, /DATA
+    plots, x,ymax, color=color, /CONTINUE, /DATA
+  ENDELSE
   
 END
