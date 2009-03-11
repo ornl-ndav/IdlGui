@@ -54,7 +54,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     map: 0}
     
   ;buttons zoom or selection
-  XYoff = [50,0]
+  XYoff = [0,0]
   sZoomSelectionBase = { size: [XYoff[0],$
     XYoff[1],$
     145]}

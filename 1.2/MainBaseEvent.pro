@@ -1185,6 +1185,8 @@ PRO MAIN_BASE_event, Event
     ;refresh plot if necessary
     (*global).PrevTabSelect = 0 ;to force the refresh of the tab
     tab_event, Event
+    (*global).first_recap_rescale_plot = 1
+    (*global).x0y0x1y1 = [0.,0.,0.,0.]
   END
   
   ;Full reset button
@@ -1253,12 +1255,10 @@ PRO MAIN_BASE_event, Event
     ENDIF ELSE BEGIN ;selection selected
     
       IF (event.press EQ 1) THEN BEGIN ;press left
-        (*global).recap_rescale_x0 = Event.x
-        (*global).recap_rescale_y0 = Event.y
-        Cursor, x,y
-        x0y0x1y1 = [x,y,0,0]
-        (*global).x0y0x1y1 = x0y0x1y1
-        (*global).recap_rescale_left_mouse = 1
+        
+        x=Event.x 
+        
+        Cursor, x,y, /DATA, /NOWAIT
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;press right
@@ -1272,10 +1272,13 @@ PRO MAIN_BASE_event, Event
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         ;replot main plot
-        display_step5_rescale_plot, Event
+        ;replot main plot
+        IF ((*global).first_recap_rescale_plot) THEN BEGIN
+          display_step5_rescale_plot, Event
+        ENDIF ELSE BEGIN
+          redisplay_step5_rescale_plot, Event
+        ENDELSE
         ;plot selection
-        (*global).recap_rescale_x1 = Event.x
-        (*global).recap_rescale_y1 = Event.y
         plot_recap_rescale_selection, Event
         
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
@@ -1286,15 +1289,6 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (event.type EQ 1) THEN BEGIN ;release mouse
-        (*global).recap_rescale_left_mouse = 0
-        x0y0x1y1 = (*global).x0y0x1y1
-        CURSOR,x,y
-        x0y0x1y1[2] = x
-        x0y0x1y1[3] = y
-        x0y0x1y1 = x0y0x1y1
-        
-        display_step5_rescale_plot, Event, with_range='yes'
-        
       ENDIF
       
     ENDELSE
