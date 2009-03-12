@@ -1219,27 +1219,34 @@ PRO MAIN_BASE_event, Event
         
         (*global).x0y0x1y1 = x0y0x1y1
         (*global).recap_rescale_left_mouse = 1
+        
+        plot_recap_rescale_other_selection, Event, type='all'
+        
       ENDIF
       
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         ;replot main plot
-        IF ((*global).first_recap_rescale_plot) THEN BEGIN
-          display_step5_rescale_plot, Event
-        ENDIF ELSE BEGIN
-          redisplay_step5_rescale_plot, Event
-        ENDELSE
+        display_step5_rescale_after_rescale_during_zoom_selection, Event
+;        IF ((*global).first_recap_rescale_plot) THEN BEGIN
+;          display_step5_rescale_plot, Event
+;        ENDIF ELSE BEGIN
+;          redisplay_step5_rescale_plot, Event
+;        ENDELSE
         ;plot selection
         (*global).recap_rescale_x1 = Event.x
         (*global).recap_rescale_y1 = Event.y
         plot_recap_rescale_selection, Event
-;        replot_average_recap_rescale, Event
+        ;        replot_average_recap_rescale, Event
         
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
         ;replot right line and plot left line
         ENDIF ELSE BEGIN
         ;replot left line and plot right line
         ENDELSE
+        
+        plot_recap_rescale_other_selection, Event, type='all'
+        
       ENDIF
       
       IF (event.release EQ 1) THEN BEGIN ;release mouse
@@ -1251,17 +1258,17 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
         
-;        print, 'x0: ' + strcompress(x0y0x1y1[0])
-;        print, 'y0: ' + strcompress(x0y0x1y1[1])
-;        print, 'x1: ' + strcompress(x)
-;        print, 'y1: ' + strcompress(y)
-;        
+        ;        print, 'x0: ' + strcompress(x0y0x1y1[0])
+        ;        print, 'y0: ' + strcompress(x0y0x1y1[1])
+        ;        print, 'x1: ' + strcompress(x)
+        ;        print, 'y1: ' + strcompress(y)
+        ;
         redisplay_step5_rescale_plot, Event
         (*global).first_recap_rescale_plot = 0
         
+        plot_selection_after_zoom, Event
       ENDIF
       
-      plot_recap_rescale_other_selection, Event, type='all'
       replot_average_recap_rescale, Event
       
     ENDIF ELSE BEGIN ;selection selected
@@ -1334,13 +1341,14 @@ PRO MAIN_BASE_event, Event
   ;scale to 1 selection
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1'): BEGIN
+;        (*global).first_recap_rescale_plot = 0
     print, 'just clicked the SCALE TO 1 SELECTION'
     calculate_average_recap_rescale, Event
-    redisplay_step5_rescale_plot_after_scaling, Event 
+    redisplay_step5_rescale_plot_after_scaling, Event
     plot_recap_rescale_other_selection, Event, type='all'
-    plot_average_1_recap_rescale, Event ;plot the average horizontal value  
+    plot_average_1_recap_rescale, Event ;plot the average horizontal value
   END
-   
+  
   ;-----------------------------------------------------------------------------
   ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
   ;-----------------------------------------------------------------------------
