@@ -1207,7 +1207,7 @@ PRO MAIN_BASE_event, Event
   
     ;zoom or selection
     isZoomSelected = isRecapScaleZoomSelected(Event)
-    IF (isZoomSelected) THEN BEGIN
+    IF (isZoomSelected) THEN BEGIN ;using zoom 
     
       IF (event.press EQ 1) THEN BEGIN ;press left
         (*global).recap_rescale_x0 = Event.x
@@ -1254,6 +1254,7 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[2] = x
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
+        (*global).x0y0x1y1_graph = x0y0x1y1
         
         ;        print, 'x0: ' + strcompress(x0y0x1y1[0])
         ;        print, 'y0: ' + strcompress(x0y0x1y1[1])
