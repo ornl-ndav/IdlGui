@@ -1339,11 +1339,22 @@ PRO MAIN_BASE_event, Event
   ;scale to 1 selection
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1'): BEGIN
-    ;        (*global).first_recap_rescale_plot = 0
+    ;(*global).first_recap_rescale_plot = 0
     calculate_average_recap_rescale, Event
     redisplay_step5_rescale_plot_after_scaling, Event
     plot_recap_rescale_other_selection, Event, type='all'
     plot_average_1_recap_rescale, Event ;plot the average horizontal value
+    ;enabled the RESET SCALE button
+    activate_widget, Event, 'step5_rescale_scale_to_1_reset', 1
+  END
+  
+  ;reset scale button
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
+    display_step5_rescale_plot_first_time, Event
+    activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
+    (*global).recap_rescale_selection_left = 0
+    (*global).recap_rescale_selection_right = 0
   END
   
   ;-----------------------------------------------------------------------------
