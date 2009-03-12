@@ -78,7 +78,7 @@ PRO create_step5_selection_data, Event
   (*(*global).step5_selection_x_array) = x_axis
   (*(*global).step5_selection_y_array) = array_selected_total
   (*(*global).step5_selection_y_error_array) = array_error_selected_total
-  
+
 END
 
 ;------------------------------------------------------------------------------
@@ -292,8 +292,6 @@ END
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
 
-  print, 'in display_step5_rescale_aftre_rescale_during_zoom_selection'
-  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;create array of data
@@ -404,8 +402,6 @@ END
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot, Event
 
-  print, 'in redisplay_step5_rescale_plot'
-  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -465,8 +461,6 @@ END
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot_after_scaling, Event
 
-  print, 'in redisplay_step5_rescale_plot_after_scaling'
-  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -526,12 +520,6 @@ PRO redisplay_step5_rescale_plot_after_scaling, Event
     color=150
     
   !P.FONT = 0
-  
-;  print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1_graph[1])
-;  print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1_graph[3])
-;  print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1])
-;  print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
-;  print
   
 END
 
@@ -694,13 +682,17 @@ PRO calculate_average_recap_rescale, Event
     Index_max = aIndex[1]
     
     array_selected_total = (*(*global).step5_selection_y_array)
+    array_selected_total_error = (*(*global).step5_selection_y_error_array)
     Average = MEAN(array_selected_total[Index_min:Index_max])
     Scaling_factor = Average
     
     (*(*global).array_selected_total_backup) = array_selected_total
     array_selected_total = array_selected_total / Average
-    
     (*(*global).step5_selection_y_array) = array_selected_total
+    
+    (*(*global).array_selected_total_error_backup) = array_selected_total_error
+    array_selected_total_error = array_selected_total_error / Average
+    (*(*global).step5_selection_y_error_array) = array_selected_total_error
     
   ENDIF
   

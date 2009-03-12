@@ -141,6 +141,7 @@ SUPER_USERS = ['j35']
     scaling_factor: ptr_new(0L),$
     
     array_selected_total_backup: PTR_NEW(0L),$
+    array_selected_total_error_backup: PTR_NEW(0L),$
     step5_selection_x_array: PTR_NEW(0L),$
     step5_selection_y_array: PTR_NEW(0L),$
     step5_selection_y_error_array: PTR_NEW(0L),$
