@@ -1166,7 +1166,7 @@ PRO MAIN_BASE_event, Event
           inform_log_book_step5_selection, Event ;_step5
           enabled_or_not_recap_rescale_button, Event
           MapBase, Event, 'step5_rescale_base', 1
-          display_step5_rescale_plot, Event
+          display_step5_rescale_plot_first_time, Event
         ENDIF
         
       ENDIF ;end of 'if (selection_value NE 0)'
@@ -1228,16 +1228,11 @@ PRO MAIN_BASE_event, Event
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         ;replot main plot
         display_step5_rescale_after_rescale_during_zoom_selection, Event
-;        IF ((*global).first_recap_rescale_plot) THEN BEGIN
-;          display_step5_rescale_plot, Event
-;        ENDIF ELSE BEGIN
-;          redisplay_step5_rescale_plot, Event
-;        ENDELSE
         ;plot selection
         (*global).recap_rescale_x1 = Event.x
         (*global).recap_rescale_y1 = Event.y
         plot_recap_rescale_selection, Event
-        ;        replot_average_recap_rescale, Event
+        ;        replot_average_recap_rescale, Eventˆ
         
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
         ;replot right line and plot left line
@@ -1275,7 +1270,7 @@ PRO MAIN_BASE_event, Event
     
       IF (event.press EQ 1) THEN BEGIN ;press left
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
-          display_step5_rescale_plot, Event
+          display_step5_rescale_plot, Event, with_range=1
         ENDIF ELSE BEGIN
           redisplay_step5_rescale_plot, Event
         ENDELSE
@@ -1303,7 +1298,7 @@ PRO MAIN_BASE_event, Event
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         ;replot main plot
         IF ((*global).first_recap_rescale_plot) THEN BEGIN
-          display_step5_rescale_plot, Event
+          display_step5_rescale_plot, Event, with_range=1
         ENDIF ELSE BEGIN
           redisplay_step5_rescale_plot, Event
         ENDELSE
@@ -1341,8 +1336,7 @@ PRO MAIN_BASE_event, Event
   ;scale to 1 selection
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1'): BEGIN
-;        (*global).first_recap_rescale_plot = 0
-    print, 'just clicked the SCALE TO 1 SELECTION'
+    ;        (*global).first_recap_rescale_plot = 0
     calculate_average_recap_rescale, Event
     redisplay_step5_rescale_plot_after_scaling, Event
     plot_recap_rescale_other_selection, Event, type='all'
