@@ -1188,6 +1188,7 @@ PRO MAIN_BASE_event, Event
     tab_event, Event
     (*global).first_recap_rescale_plot = 1
     (*global).x0y0x1y1 = [0.,0.,0.,0.]
+    (*global).x0y0x1y1_graph = [0.,0.,0.,0.]
     (*global).recap_rescale_selection_left = 0.
     (*global).recap_rescale_selection_right = 0.
   END
@@ -1333,7 +1334,11 @@ PRO MAIN_BASE_event, Event
   ;scale to 1 selection
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_scale_to_1'): BEGIN
+    print, 'just clicked the SCALE TO 1 SELECTION'
     calculate_average_recap_rescale, Event
+    redisplay_step5_rescale_plot_after_scaling, Event 
+    plot_recap_rescale_other_selection, Event, type='all'
+    plot_average_1_recap_rescale, Event ;plot the average horizontal value  
   END
    
   ;-----------------------------------------------------------------------------

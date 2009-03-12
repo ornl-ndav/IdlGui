@@ -163,6 +163,8 @@ END
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot, Event
 
+  print, 'in redisplay_step5_rescale_plot'
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -192,11 +194,17 @@ PRO redisplay_step5_rescale_plot, Event
   LOADCT, 5, /SILENT
   
   x0y0x1y1 = (*global).x0y0x1y1
+  ;(*global).x0y0x1y1_graph = x0y0x1y1
+  
+  
   
   xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
   ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
+  
+  print, 'yrange:'
+  print, yrange
   
   plot, x_axis, $
     array_selected_total, $
@@ -220,6 +228,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO redisplay_step5_rescale_plot_after_scaling, Event
+
+  print, 'in redisplay_step5_rescale_plot_after_scaling'
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -257,6 +267,11 @@ PRO redisplay_step5_rescale_plot_after_scaling, Event
   ;ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
+  
+  x0y0x1y1_graph = (*global).x0y0x1y1_graph
+  x0y0x1y1_graph[1] = ymin
+  x0y0x1y1_graph[3] = ymax
+  (*global).x0y0x1y1_graph = x0y0x1y1_graph 
   
   plot, x_axis, $
     array_selected_total, $
@@ -345,19 +360,23 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-    x0y0x1y1 = (*global).x0y0x1y1_graph
-    y0 = x0y0x1y1[1]
-    y1 = x0y0x1y1[3]
-    ymin = MIN([y0,y1], MAX=ymax)
-
+  x0y0x1y1 = (*global).x0y0x1y1_graph
+  y0 = x0y0x1y1[1]
+  y1 = x0y0x1y1[3]
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  print, 'in plot_recap_rescale_other_selection'
+  print, 'y0: ' + strcompress(y0)
+  print, 'y1: ' + strcompress(y1)
+  
   IF (type EQ 'all') THEN BEGIN
-;    x0y0x1y1 = (*global).x0y0x1y1
-;    y0 = x0y0x1y1[1]
-;    y1 = x0y0x1y1[3]
-;    ymin = MIN([y0,y1], MAX=ymax)
-;    
-;    print, x0y0x1y1
-    
+    ;    x0y0x1y1 = (*global).x0y0x1y1
+    ;    y0 = x0y0x1y1[1]
+    ;    y1 = x0y0x1y1[3]
+    ;    ymin = MIN([y0,y1], MAX=ymax)
+    ;
+    ;    print, x0y0x1y1
+  
     color = 50
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
@@ -390,6 +409,8 @@ END
 ;------------------------------------------------------------------------------
 PRO calculate_average_recap_rescale, Event
 
+  print,'in calculate_average_recap_rescale'
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x1 = (*global).recap_rescale_selection_left
@@ -411,13 +432,8 @@ PRO calculate_average_recap_rescale, Event
     
     (*(*global).array_selected_total_backup) = array_selected_total
     array_selected_total = array_selected_total / Average
-    ;    print, array_selected_total ;remove_me
-    
+
     (*(*global).step5_selection_y_array) = array_selected_total
-    redisplay_step5_rescale_plot, Event
-    
-    ;    display_step5_rescale_plot, Event
-    plot_recap_rescale_other_selection, Event, type='all'
     
   ENDIF
   
@@ -477,5 +493,27 @@ PRO replot_average_recap_rescale, Event
     plots, xmax,Average, color=color, /CONTINUE, /DATA
     
   ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
+
+  print, 'in plot_average_1_recap_rescale'
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x1 = (*global).recap_rescale_selection_left
+  x2 = (*global).recap_rescale_selection_right
+  xmin = MIN([x1,x2],MAX=xmax)
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  color = 150
+  plots, xmin, 1., color=color, /DATA
+  plots, xmax, 1., color=color, /CONTINUE, /DATA
+  
+  (*global).recap_rescale_average = 1
   
 END
