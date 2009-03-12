@@ -1313,7 +1313,7 @@ PRO MAIN_BASE_event, Event
         ;check if we can enabled rescale button
         IF ((*global).recap_rescale_left_mouse) THEN BEGIN
           enabled_or_not_recap_rescale_button, Event
- ;         calculate_average_recap_rescale, Event
+          plot_average_recap_rescale, Event
         ENDIF
         (*global).recap_rescale_left_mouse = 0
       ENDIF
