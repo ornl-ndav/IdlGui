@@ -151,9 +151,11 @@ SUPER_USERS = ['j35']
     recap_rescale_x1: 0,$
     recap_rescale_y1: 0,$
     x0y0x1y1: [0.,0.,0.,0.],$
+    x0y0x1y1_graph: [0.,0.,0.,0.],$
     first_recap_rescale_plot: 1,$
     recap_rescale_selection_left: 0.0,$
     recap_rescale_selection_right: 0.0,$
+    recap_rescale_average: 0.0,$
     
     pixel_offset_array: ptr_new(0L),$
     X_Y_min_max_backup: STRARR(4),$

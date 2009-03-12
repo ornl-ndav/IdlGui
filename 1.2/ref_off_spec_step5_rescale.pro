@@ -145,9 +145,9 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       CHARSIZE = 2,$
       PSYM=1
       
-;    xmin = MIN(x_axis,MAX=xmax)
-;    ymin = MIN(array_selected_total,MAX=ymax)
-;    (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
+    xmin = MIN(x_axis,MAX=xmax)
+    ymin = MIN(array_selected_total,MAX=ymax)
+    (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
     
   ENDELSE
   
@@ -310,7 +310,7 @@ PRO plot_recap_rescale_CE_selection, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  x0y0x1y1 = (*global).x0y0x1y1
+  x0y0x1y1 = (*global).x0y0x1y1_graph
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
   
@@ -345,19 +345,24 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  x0y0x1y1 = (*global).x0y0x1y1
-  y0 = x0y0x1y1[1]
-  y1 = x0y0x1y1[3]
-  
-  ymin = MIN([y0,y1], MAX=ymax)
-  
   IF (type EQ 'all') THEN BEGIN
+    x0y0x1y1 = (*global).x0y0x1y1
+    y0 = x0y0x1y1[1]
+    y1 = x0y0x1y1[3]
+    ymin = MIN([y0,y1], MAX=ymax)
+    
+    print, x0y0x1y1
+    
     color = 50
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF ELSE BEGIN
+    x0y0x1y1 = (*global).x0y0x1y1_graph
+    y0 = x0y0x1y1[1]
+    y1 = x0y0x1y1[3]
+    ymin = MIN([y0,y1], MAX=ymax)
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
@@ -437,11 +442,36 @@ PRO plot_average_recap_rescale, Event
     
     array_selected_total = (*(*global).step5_selection_y_array)
     Average = MEAN(array_selected_total[Index_min:Index_max])
+    (*global).recap_rescale_average = average
     
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
-      color = 200
+    color = 200
+    plots, xmin,Average, color=color, /DATA
+    plots, xmax,Average, color=color, /CONTINUE, /DATA
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO replot_average_recap_rescale, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x1 = (*global).recap_rescale_selection_left
+  x2 = (*global).recap_rescale_selection_right
+  xmin = MIN([x1,x2],MAX=xmax)
+  
+  average = (*global).recap_rescale_average
+  
+  IF (average NE 0.0) THEN BEGIN
+  
+    DEVICE, DECOMPOSED=0
+    LOADCT, 5, /SILENT
+    
+    color = 200
     plots, xmin,Average, color=color, /DATA
     plots, xmax,Average, color=color, /CONTINUE, /DATA
     
