@@ -86,7 +86,7 @@ ENDIF ELSE BEGIN
     sXmax = X_Y_min_max_array[2]
     sYmax = X_Y_min_max_array[3]
     
-    symin = 0.001 ;remove_me
+    symin = 0.001
     
     putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
     putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
