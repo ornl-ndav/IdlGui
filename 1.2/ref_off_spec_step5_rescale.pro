@@ -84,6 +84,8 @@ END
 ;------------------------------------------------------------------------------
 PRO display_step5_rescale_plot, Event, with_range=with_range
 
+  print, 'in display_step5_rescale_plot'
+
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;create array of data
@@ -161,7 +163,65 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
 END
 
 ;------------------------------------------------------------------------------
-PRO display_step5_rescale_reset_zoom, Event, with_range=with_range
+PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
+
+  print, 'in display_step5_rescale_aftre_rescale_during_zoom_selection'
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;create array of data
+  ;create_step5_selection_data, Event
+  
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: type = 'IvsQ'
+    2: type = 'IvsLambda'
+  ENDCASE
+  
+  !P.FONT = 1
+  IF (type EQ 'IvsQ') THEN BEGIN
+    x_axis_label = 'Q( Angstroms!E-1!N )'
+  ENDIF ELSE BEGIN
+    x_axis_label = 'Lambda_T (Angstroms)'
+  ENDELSE
+  
+  y_axis_label = 'Intensity'
+  
+  x_axis = (*(*global).step5_selection_x_array)
+  array_selected_total = (*(*global).step5_selection_y_array)
+  array_error_selected_total = (*(*global).step5_selection_y_error_array)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+    plot, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+    xmin = MIN(x_axis,MAX=xmax)
+    ymin = MIN(array_selected_total,MAX=ymax)
+    (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
+    
+  errplot, x_axis,$
+    array_selected_total-array_error_selected_total,$
+    array_selected_total+array_error_selected_total,$
+    color=150
+    
+  !P.FONT = 0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_step5_rescale_reset_zoom, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -191,41 +251,18 @@ PRO display_step5_rescale_reset_zoom, Event, with_range=with_range
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  IF (N_ELEMENTS(with_range)) THEN BEGIN
-  
-    x0y0x1y1 = (*global).x0y0x1y1
-    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
-    ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
-    xrange = [xmin,xmax]
-    yrange = [ymin,ymax]
+  plot, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XSTYLE = 1,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1
     
-    plot, x_axis, $
-      array_selected_total, $
-      XTITLE=x_axis_label, $
-      YTITLE=y_axis_label,$
-      XRANGE = xrange,$
-      XSTYLE = 1,$
-      YRANGE = yrange,$
-      YSTYLE = 1,$
-      CHARSIZE = 2,$
-      PSYM=1
-      
-  ENDIF ELSE BEGIN
-  
-    plot, x_axis, $
-      array_selected_total, $
-      XTITLE=x_axis_label, $
-      YTITLE=y_axis_label,$
-      XSTYLE = 1,$
-      YSTYLE = 1,$
-      CHARSIZE = 2,$
-      PSYM=1
-      
-    xmin = MIN(x_axis,MAX=xmax)
-    ymin = MIN(array_selected_total,MAX=ymax)
-    (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
-    
-  ENDELSE
+  xmin = MIN(x_axis,MAX=xmax)
+  ymin = MIN(array_selected_total,MAX=ymax)
+  (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
   
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
@@ -240,7 +277,7 @@ END
 PRO redisplay_step5_rescale_plot, Event
 
   print, 'in redisplay_step5_rescale_plot'
-
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -271,8 +308,6 @@ PRO redisplay_step5_rescale_plot, Event
   
   x0y0x1y1 = (*global).x0y0x1y1
   ;(*global).x0y0x1y1_graph = x0y0x1y1
-  
-  
   
   xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
   ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
@@ -306,7 +341,7 @@ END
 PRO redisplay_step5_rescale_plot_after_scaling, Event
 
   print, 'in redisplay_step5_rescale_plot_after_scaling'
-
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
@@ -347,7 +382,7 @@ PRO redisplay_step5_rescale_plot_after_scaling, Event
   x0y0x1y1_graph = (*global).x0y0x1y1_graph
   x0y0x1y1_graph[1] = ymin
   x0y0x1y1_graph[3] = ymax
-  (*global).x0y0x1y1_graph = x0y0x1y1_graph 
+  (*global).x0y0x1y1_graph = x0y0x1y1_graph
   
   plot, x_axis, $
     array_selected_total, $
@@ -466,6 +501,37 @@ PRO plot_recap_rescale_other_selection, Event, type=type
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_selection_after_zoom, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+      x1 = (*global).recap_rescale_selection_left
+      x2 = (*global).recap_rescale_selection_right
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  y0 = x0y0x1y1[1]
+  y1 = x0y0x1y1[3]
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+    ;    x0y0x1y1 = (*global).x0y0x1y1
+    ;    y0 = x0y0x1y1[1]
+    ;    y1 = x0y0x1y1[3]
+    ;    ymin = MIN([y0,y1], MAX=ymax)
+    ;
+    ;    print, x0y0x1y1
+  
+    color = 50
+    plots, x1,ymin, color=color, /DATA
+    plots, x1,ymax, color=color, /CONTINUE, /DATA
+    plots, x2,ymin, color=color, /DATA
+    plots, x2,ymax, color=color, /CONTINUE, /DATA
+
+END
+
+;------------------------------------------------------------------------------
 PRO enabled_or_not_recap_rescale_button, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -486,7 +552,7 @@ END
 PRO calculate_average_recap_rescale, Event
 
   print,'in calculate_average_recap_rescale'
-
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x1 = (*global).recap_rescale_selection_left
@@ -508,7 +574,7 @@ PRO calculate_average_recap_rescale, Event
     
     (*(*global).array_selected_total_backup) = array_selected_total
     array_selected_total = array_selected_total / Average
-
+    
     (*(*global).step5_selection_y_array) = array_selected_total
     
   ENDIF
