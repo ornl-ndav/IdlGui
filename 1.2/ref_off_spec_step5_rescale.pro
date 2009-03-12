@@ -145,9 +145,9 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       CHARSIZE = 2,$
       PSYM=1
       
-    xmin = MIN(x_axis,MAX=xmax)
-    ymin = MIN(array_selected_total,MAX=ymax)
-    (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
+;    xmin = MIN(x_axis,MAX=xmax)
+;    ymin = MIN(array_selected_total,MAX=ymax)
+;    (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
     
   ENDELSE
   
