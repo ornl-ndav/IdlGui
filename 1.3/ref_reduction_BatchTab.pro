@@ -478,8 +478,8 @@ FUNCTION isThereAnyCmdDefined, Event
   BatchTable = (*(*global).BatchTable)
   RowIndexes = getGlobalVariable('RowIndexes')
   FOR i=0,RowIndexes DO BEGIN
-    IF (BatchTable[8,i] NE 'N/A' AND $
-      BatchTable[8,i] NE '') THEN BEGIN
+    IF (BatchTable[9,i] NE 'N/A' AND $
+      BatchTable[9,i] NE '') THEN BEGIN
       RETURN,1
     ENDIF
   ENDFOR
@@ -506,7 +506,7 @@ FUNCTION isThereAnyDataInBatchTable, Event
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   BatchTable      = (*(*global).BatchTable)
-  BatchTableReset = strarr(8,20)
+  BatchTableReset = strarr(9,20)
   IF (ARRAY_EQUAL(BatchTable,BatchTableReset)) THEN RETURN, 0
   RETURN,1
 END
@@ -1240,7 +1240,7 @@ PRO BatchTab_RunActive, Event
           strcompress(ProcessToRun,/remove_all) $
           + '/' + strcompress(NbrProcess,/remove_all)
         putLogBookMessage, Event, LogText, APPEND=1
-        LogText = '--> Command is: ' + BatchTable[8,i]
+        LogText = '--> Command is: ' + BatchTable[9,i]
         putLogBookMessage, Event, LogText, APPEND=1
         LogText = '--> Running ... ' + (*global).processing_message
         putLogBookMessage, Event, LogText, APPEND=1
@@ -1251,7 +1251,7 @@ PRO BatchTab_RunActive, Event
           AppendReplaceLogBookMessage, Event, (*global).FAILED, $
             (*global).processing_message
         ENDIF ELSE BEGIN
-          spawn, BatchTable[8,i], listening, err_listening
+          spawn, BatchTable[9,i], listening, err_listening
           IF (err_listening[0] NE '') THEN BEGIN
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
@@ -1369,7 +1369,7 @@ PRO BatchTab_RunActiveBackground, Event
               INSTRUMENT        = instrument,$
               UCAMS             = ucams,$
               XML_FILE_LOCATION = xml_file_location,$
-              COMMAND_LINE      = BatchTable[8,i])
+              COMMAND_LINE      = BatchTable[9,i])
             AppendReplaceLogBookMessage, Event, OK, PROCESSING
             xml_file_name = oXML->getFullXmlFileName()
             LogText = '-> XML file is : ' + xml_file_name
@@ -1401,7 +1401,7 @@ PRO BatchTab_RunActiveBackground, Event
             AppendReplaceLogBookMessage, Event, (*global).FAILED, $
               (*global).processing_message
           ENDIF ELSE BEGIN ;add --batch just after srun
-            cmd       = BatchTable[8,i]
+            cmd       = BatchTable[9,i]
             cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
             cmd       = 'srun --batch -o none' + cmd_array[0]
             LogText = '--> Command is: ' + cmd
