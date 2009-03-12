@@ -1198,6 +1198,7 @@ PRO MAIN_BASE_event, Event
     display_step5_rescale_plot, Event
     (*global).first_recap_rescale_plot = 1
     plot_recap_rescale_other_selection, Event, type='all'
+    replot_average_recap_rescale, Event
   END
   
   ;rescale widget draw
@@ -1249,11 +1250,11 @@ PRO MAIN_BASE_event, Event
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
         
-        print, 'x0: ' + strcompress(x0y0x1y1[0])
-        print, 'y0: ' + strcompress(x0y0x1y1[1])
-        print, 'x1: ' + strcompress(x)
-        print, 'y1: ' + strcompress(y)
-        
+;        print, 'x0: ' + strcompress(x0y0x1y1[0])
+;        print, 'y0: ' + strcompress(x0y0x1y1[1])
+;        print, 'x1: ' + strcompress(x)
+;        print, 'y1: ' + strcompress(y)
+;        
         redisplay_step5_rescale_plot, Event
         (*global).first_recap_rescale_plot = 0
         

@@ -345,13 +345,18 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  IF (type EQ 'all') THEN BEGIN
-    x0y0x1y1 = (*global).x0y0x1y1
+    x0y0x1y1 = (*global).x0y0x1y1_graph
     y0 = x0y0x1y1[1]
     y1 = x0y0x1y1[3]
     ymin = MIN([y0,y1], MAX=ymax)
-    
-    print, x0y0x1y1
+
+  IF (type EQ 'all') THEN BEGIN
+;    x0y0x1y1 = (*global).x0y0x1y1
+;    y0 = x0y0x1y1[1]
+;    y1 = x0y0x1y1[3]
+;    ymin = MIN([y0,y1], MAX=ymax)
+;    
+;    print, x0y0x1y1
     
     color = 50
     plots, x1,ymin, color=color, /DATA
@@ -359,10 +364,6 @@ PRO plot_recap_rescale_other_selection, Event, type=type
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF ELSE BEGIN
-    x0y0x1y1 = (*global).x0y0x1y1_graph
-    y0 = x0y0x1y1[1]
-    y1 = x0y0x1y1[3]
-    ymin = MIN([y0,y1], MAX=ymax)
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
