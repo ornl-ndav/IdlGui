@@ -1227,7 +1227,9 @@ PRO MAIN_BASE_event, Event
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         ;replot main plot
-        display_step5_rescale_after_rescale_during_zoom_selection, Event
+        display_step5_rescale_plot_from_zoom, Event, with_range=1
+        
+        ;display_step5_rescale_after_rescale_during_zoom_selection, Event
         ;plot selection
         (*global).recap_rescale_x1 = Event.x
         (*global).recap_rescale_y1 = Event.y
