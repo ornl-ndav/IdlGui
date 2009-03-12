@@ -389,14 +389,11 @@ PRO calculate_average_recap_rescale, Event
   x1 = (*global).recap_rescale_selection_left
   x2 = (*global).recap_rescale_selection_right
   
-  print, 'x1: ' + strcompress(x1)
-  print, 'x2: ' + strcompress(x2)
-  print
-  
   xmin = MIN([x1,x2],MAX=xmax)
   
   ;calculate average if left and right selection
   IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
+  
     x_axis = (*(*global).step5_selection_x_array)
     aIndex = getArrayRangeFromlda1lda2(x_axis, xmin, xmax)
     Index_min = aIndex[0]
@@ -406,17 +403,47 @@ PRO calculate_average_recap_rescale, Event
     Average = MEAN(array_selected_total[Index_min:Index_max])
     Scaling_factor = Average
     
-    print, 'Average: ' + strcompress(average)
-    
     (*(*global).array_selected_total_backup) = array_selected_total
     array_selected_total = array_selected_total / Average
     ;    print, array_selected_total ;remove_me
-
+    
     (*(*global).step5_selection_y_array) = array_selected_total
     redisplay_step5_rescale_plot, Event
     
     ;    display_step5_rescale_plot, Event
     plot_recap_rescale_other_selection, Event, type='all'
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_average_recap_rescale, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x1 = (*global).recap_rescale_selection_left
+  x2 = (*global).recap_rescale_selection_right
+  
+  xmin = MIN([x1,x2],MAX=xmax)
+  
+  ;calculate average if left and right selection
+  IF (x1 NE 0. AND x2 NE 0.) THEN BEGIN
+  
+    x_axis = (*(*global).step5_selection_x_array)
+    aIndex = getArrayRangeFromlda1lda2(x_axis, xmin, xmax)
+    Index_min = aIndex[0]
+    Index_max = aIndex[1]
+    
+    array_selected_total = (*(*global).step5_selection_y_array)
+    Average = MEAN(array_selected_total[Index_min:Index_max])
+    
+    DEVICE, DECOMPOSED=0
+    LOADCT, 5, /SILENT
+    
+      color = 200
+    plots, xmin,Average, color=color, /DATA
+    plots, xmax,Average, color=color, /CONTINUE, /DATA
     
   ENDIF
   
