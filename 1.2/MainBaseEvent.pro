@@ -1193,10 +1193,10 @@ PRO MAIN_BASE_event, Event
     (*global).recap_rescale_selection_right = 0.
   END
   
-  ;Full reset button
+  ;reset zoom
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step5_rescale_full_reset'): BEGIN
-    display_step5_rescale_plot, Event
+    display_step5_rescale_reset_zoom, Event
     (*global).first_recap_rescale_plot = 1
     plot_recap_rescale_other_selection, Event, type='all'
     replot_average_recap_rescale, Event
