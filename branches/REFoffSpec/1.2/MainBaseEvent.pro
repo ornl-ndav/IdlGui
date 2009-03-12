@@ -1231,6 +1231,7 @@ PRO MAIN_BASE_event, Event
         (*global).recap_rescale_x1 = Event.x
         (*global).recap_rescale_y1 = Event.y
         plot_recap_rescale_selection, Event
+;        replot_average_recap_rescale, Event
         
         IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
         ;replot right line and plot left line
@@ -1259,6 +1260,7 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       plot_recap_rescale_other_selection, Event, type='all'
+      replot_average_recap_rescale, Event
       
     ENDIF ELSE BEGIN ;selection selected
     
