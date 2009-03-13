@@ -78,7 +78,7 @@ PRO create_step5_selection_data, Event
   (*(*global).step5_selection_x_array) = x_axis
   (*(*global).step5_selection_y_array) = array_selected_total
   (*(*global).step5_selection_y_error_array) = array_error_selected_total
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -123,14 +123,14 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     xrange = [xmin,xmax]
     yrange = [ymin,ymax]
     
-;    print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1[1])
-;    print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1[3])
-;    
-;    x0y0x1y1 = (*global).x0y0x1y1
-;    print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1])
-;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
-;    print
-;    
+    ;    print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1[1])
+    ;    print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1[3])
+    ;
+    ;    x0y0x1y1 = (*global).x0y0x1y1
+    ;    print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1])
+    ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+    ;    print
+    ;
     plot, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
@@ -199,31 +199,31 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-    x0y0x1y1 = (*global).x0y0x1y1_graph
-    xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
-    ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
-    xrange = [xmin,xmax]
-    yrange = [ymin,ymax]
+  x0y0x1y1 = (*global).x0y0x1y1_graph
+  xmin = MIN ([x0y0x1y1[0],x0y0x1y1[2]],MAX=xmax)
+  ymin = MIN ([x0y0x1y1[1],x0y0x1y1[3]],MAX=ymax)
+  xrange = [xmin,xmax]
+  yrange = [ymin,ymax]
+  
+  ;    print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1[1])
+  ;    print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1[3])
+  ;
+  ;    x0y0x1y1 = (*global).x0y0x1y1
+  ;    print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1])
+  ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+  ;    print
+  ;
+  plot, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XRANGE = xrange,$
+    XSTYLE = 1,$
+    YRANGE = yrange,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1
     
-;    print, 'x0y0x1y1_graph[1]: ' + strcompress(x0y0x1y1[1])
-;    print, 'x0y0x1y1_graph[3]: ' + strcompress(x0y0x1y1[3])
-;    
-;    x0y0x1y1 = (*global).x0y0x1y1
-;    print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1])
-;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
-;    print
-;    
-    plot, x_axis, $
-      array_selected_total, $
-      XTITLE=x_axis_label, $
-      YTITLE=y_axis_label,$
-      XRANGE = xrange,$
-      XSTYLE = 1,$
-      YRANGE = yrange,$
-      YSTYLE = 1,$
-      CHARSIZE = 2,$
-      PSYM=1
-      
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
@@ -267,19 +267,19 @@ PRO display_step5_rescale_plot_first_time, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-    plot, x_axis, $
-      array_selected_total, $
-      XTITLE=x_axis_label, $
-      YTITLE=y_axis_label,$
-      XSTYLE = 1,$
-      YSTYLE = 1,$
-      CHARSIZE = 2,$
-      PSYM=1
-      
-    xmin = MIN(x_axis,MAX=xmax)
-    ymin = MIN(array_selected_total,MAX=ymax)
-    (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
+  plot, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XSTYLE = 1,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1
     
+  xmin = MIN(x_axis,MAX=xmax)
+  ymin = MIN(array_selected_total,MAX=ymax)
+  (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
+  
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
@@ -594,34 +594,38 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
   ymin = MIN([y0,y1], MAX=ymax)
-  x0 = x0y0x1y1[0]
-  x1 = x0y0x1y1[2]
-  xmin = MIN([x0,x1],MAX=xmax)
-       
+  x0_graph = x0y0x1y1[0]
+  x1_graph = x0y0x1y1[2]
+  xmin = MIN([x0_graph,x1_graph],MAX=xmax)
+  
   print, 'x0y0x1y1_graph:'
   print, 'xmin: ' + strcompress(xmin) ;remove_me
   print, 'xmax: ' + strcompress(xmax) ;remove_me
   
   x0y0x1y1 = (*global).x0y0x1y1
-  x0 = x0y0x1y1[0]
-  x1 = x0y1x1y1[2]
-  xmin = MIN([x0,x1],MAX=xmax)
+  x0_normal = x0y0x1y1[0]
+  x1_normal = x0y0x1y1[2]
+  xmin = MIN([x0_normal,x1_normal],MAX=xmax)
   print, 'x0y0x1y1:'
   print, 'xmin: ' + strcompress(xmin) ;remove_me
   print, 'xmax: ' + strcompress(xmax) ;remove_me
-
-  print, '---------------'
-  print, 'x1: ' + strcompress(x1)
-  print, 'x2: ' + strcompress(x2)
-
+  
   IF (type EQ 'all') THEN BEGIN
   
+    print, '---------------'
+    print, 'x1: ' + strcompress(x1)
+    print, 'x2: ' + strcompress(x2)
+    
     color = 50
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF ELSE BEGIN
+  
+    print, '---------------'
+    print, 'x: ' + strcompress(x)
+    
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
