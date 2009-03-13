@@ -558,18 +558,26 @@ PRO plot_recap_rescale_CE_selection, Event
   x0y0x1y1 = (*global).x0y0x1y1_graph
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
+  ymin = MIN([y0,y1],MAX=ymax)
   
-  ymin = MIN([y0,y1], MAX=ymax)
-  
-  color = 50
-  
-  DEVICE, DECOMPOSED=0
-  LOADCT, 5, /SILENT
+  x0 = x0y0x1y1[0]
+  x1 = x0y0x1y1[2]
+  xmin = MIN([x0,x1],MAX=xmax)
   
   cursor, x, y, /DATA, /NOWAIT
   
-  plots, x,ymin, color=color, /DATA
-  plots, x,ymax, color=color, /CONTINUE, /DATA
+  IF (x GE xmin AND $
+    x LE xmax) THEN BEGIN
+    
+    color = 50
+    
+    DEVICE, DECOMPOSED=0
+    LOADCT, 5, /SILENT
+    
+    plots, x,ymin, color=color, /DATA
+    plots, x,ymax, color=color, /CONTINUE, /DATA
+    
+  ENDIF
   
 END
 
@@ -594,38 +602,14 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
   ymin = MIN([y0,y1], MAX=ymax)
-  x0_graph = x0y0x1y1[0]
-  x1_graph = x0y0x1y1[2]
-  xmin = MIN([x0_graph,x1_graph],MAX=xmax)
-  
-  print, 'x0y0x1y1_graph:'
-  print, 'xmin: ' + strcompress(xmin) ;remove_me
-  print, 'xmax: ' + strcompress(xmax) ;remove_me
-  
-  x0y0x1y1 = (*global).x0y0x1y1
-  x0_normal = x0y0x1y1[0]
-  x1_normal = x0y0x1y1[2]
-  xmin = MIN([x0_normal,x1_normal],MAX=xmax)
-  print, 'x0y0x1y1:'
-  print, 'xmin: ' + strcompress(xmin) ;remove_me
-  print, 'xmax: ' + strcompress(xmax) ;remove_me
   
   IF (type EQ 'all') THEN BEGIN
-  
-    print, '---------------'
-    print, 'x1: ' + strcompress(x1)
-    print, 'x2: ' + strcompress(x2)
-    
     color = 50
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF ELSE BEGIN
-  
-    print, '---------------'
-    print, 'x: ' + strcompress(x)
-    
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
