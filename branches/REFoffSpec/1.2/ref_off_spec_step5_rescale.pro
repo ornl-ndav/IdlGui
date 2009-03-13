@@ -631,6 +631,8 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x1 GT xmax) THEN BEGIN
         x1 = xmax
       ENDIF
+    plots, x1,ymin, color=color, /DATA
+    plots, x1,ymax, color=color, /CONTINUE, /DATA
     ENDELSE
     
     IF (x2 LT xmin) THEN BEGIN
@@ -639,12 +641,10 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x2 GT xmax) THEN BEGIN
         x2 = xmax
       ENDIF
-    ENDELSE
-    
-    plots, x1,ymin, color=color, /DATA
-    plots, x1,ymax, color=color, /CONTINUE, /DATA
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
+    ENDELSE
+    
   ENDIF ELSE BEGIN
     x = (x LT xmin) ? xmin : x
     x = (x GT xmax) ? xmax : x
