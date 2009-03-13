@@ -1207,13 +1207,32 @@ PRO MAIN_BASE_event, Event
   
     ;zoom or selection
     isZoomSelected = isRecapScaleZoomSelected(Event)
-    IF (isZoomSelected) THEN BEGIN ;using zoom 
+    IF (isZoomSelected) THEN BEGIN ;using zoom
     
       IF (event.press EQ 1) THEN BEGIN ;press left
         (*global).recap_rescale_x0 = Event.x
         (*global).recap_rescale_y0 = Event.y
         Cursor, x,y,/data,/nowait
         x0y0x1y1 = (*global).x0y0x1y1
+        
+        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+        x0_graph = x0y0x1y1_graph[0]
+        y0_graph = x0y0x1y1_graph[1]
+        x1_graph = x0y0x1y1_graph[2]
+        y1_graph = x0y0x1y1_graph[3]
+        print, 'left mouse pressed: '
+        print, 'x0: ' + string(x0y0x1y1[0])
+        print, 'x1: ' + string(x0y0x1y1[2])
+        print, 'y0: ' + string(x0y0x1y1[1])
+        print, 'y1: ' + string(x0y0x1y1[3])
+        print, ' x0_graph: ' + string(x0_graph)
+        print, ' y0_graph: ' + string(y0_graph)
+        print, ' x1_graph: ' + string(x1_graph)
+        print, ' y1_graph: ' + string(y1_graph)
+        print, 'x: ' + string(x)
+        print, 'y: ' + string(y)
+        print
+                
         x0y0x1y1[0] = x
         x0y0x1y1[1] = y
         
@@ -1226,6 +1245,7 @@ PRO MAIN_BASE_event, Event
       
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+   
         ;replot main plot
         display_step5_rescale_plot_from_zoom, Event, with_range=1
         
@@ -1236,12 +1256,6 @@ PRO MAIN_BASE_event, Event
         plot_recap_rescale_selection, Event
         ;        replot_average_recap_rescale, Eventˆ
         
-        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
-        ;replot right line and plot left line
-        ENDIF ELSE BEGIN
-        ;replot left line and plot right line
-        ENDELSE
-        
         plot_recap_rescale_other_selection, Event, type='all'
         
       ENDIF
@@ -1249,18 +1263,35 @@ PRO MAIN_BASE_event, Event
       IF (event.release EQ 1) THEN BEGIN ;release mouse
         (*global).recap_rescale_left_mouse = 0
         x0y0x1y1 = (*global).x0y0x1y1
+        
+        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+        x0_graph = x0y0x1y1_graph[0]
+        y0_graph = x0y0x1y1_graph[1]
+        x1_graph = x0y0x1y1_graph[2]
+        y1_graph = x0y0x1y1_graph[3]
+        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
+        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
+        
         CURSOR,x,y,/data,/nowait
+        
+        print, 'x: ' +strcompress(x)
+        print, 'y: ' + strcompress(y)
+        
+        IF (x LT 0) THEN x = xmax
+        IF (y LT 0) THEN y = ymax
         
         x0y0x1y1[2] = x
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
+        
+        print, 'x0: ' + strcompress(x0y0x1y1[0])
+        print, 'y0: ' + strcompress(x0y0x1y1[1])
+        print, 'x1: ' + strcompress(x)
+        print, 'y1: ' + strcompress(y)
+        print
+        
         (*global).x0y0x1y1_graph = x0y0x1y1
         
-        ;        print, 'x0: ' + strcompress(x0y0x1y1[0])
-        ;        print, 'y0: ' + strcompress(x0y0x1y1[1])
-        ;        print, 'x1: ' + strcompress(x)
-        ;        print, 'y1: ' + strcompress(y)
-        ;
         redisplay_step5_rescale_plot, Event
         (*global).first_recap_rescale_plot = 0
         
@@ -1350,7 +1381,7 @@ PRO MAIN_BASE_event, Event
   
   ;reset scale button
   WIDGET_INFO(wWidget, $
-  FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
+    FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
     display_step5_rescale_plot_first_time, Event
     activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
     (*global).recap_rescale_selection_left = 0
