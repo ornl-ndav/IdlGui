@@ -303,9 +303,6 @@ END
 PRO produce_i_vs_q_output_file, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  ;create array of data
-  ;create_step5_selection_data, Event
-  
   x_axis = (*(*global).step5_selection_x_array)
   array_selected_total = (*(*global).step5_selection_y_array)
   array_error_selected_total = (*(*global).step5_selection_y_error_array)
@@ -334,13 +331,22 @@ PRO produce_i_vs_q_output_file, Event
   FileLine[++index] = '#L ' + x_axis_label + $
     ' Intensity(Counts/A) Sigma(Counts/A)'
   FileLine[++index] = ''
-  
-  FOR i=0,(nbr_data-1) DO BEGIN
-    Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
-    Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
-    Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
-    FileLine[++index] = Line
-  ENDFOR
+
+  IF (type EQ 'IvsQ') THEN BEGIN
+    FOR i=(nbr_data-1),0,-1 DO BEGIN
+      Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
+      Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+      Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
+      FileLine[++index] = Line
+      ENDFOR
+  ENDIF ELSE BEGIN
+    FOR i=0,(nbr_data-1) DO BEGIN
+      Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
+      Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+      Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
+      FileLine[++index] = Line
+    ENDFOR
+ENDELSE
   
   ;name of file to create
   output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
