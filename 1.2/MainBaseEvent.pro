@@ -1232,6 +1232,11 @@ PRO MAIN_BASE_event, Event
         print, 'Cursor     x: ' + strcompress(x) + $
         ' | y: ' + strcompress(y)
         print
+        
+        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
+        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
+        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
+        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
                 
         x0y0x1y1[0] = x
         x0y0x1y1[1] = y
