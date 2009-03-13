@@ -1251,6 +1251,19 @@ PRO MAIN_BASE_event, Event
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
    
+        ;make sure the event.x stays within 5 and 1267
+        ;make sure the event.y stays within 5 and 725
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
         ;replot main plot
         display_step5_rescale_plot_from_zoom, Event, with_range=1
         
