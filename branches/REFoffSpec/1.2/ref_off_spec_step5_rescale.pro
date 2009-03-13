@@ -84,6 +84,11 @@ PRO create_step5_selection_data, Event
   
   (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
   
+  print, 'in create_step5_selection_data --------------------------------'
+  print, '  xmin: ' + strcompress(xmin) + ' | xmax: ' + strcompress(xmax)
+  print, '  ymin: ' + strcompress(ymin) + ' | ymax: ' + strcompress(ymax)
+  print
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -614,11 +619,11 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   IF (type EQ 'all') THEN BEGIN
     color = 50
     
-    ;print, 'x1: ' + string(x1)
-    ;print, 'x2: ' + string(x2)
-    ;print, 'xmin: ' + string(xmin)
-    ;print, 'xmax: ' + string(xmax)
-    ;print
+    print, 'x1: ' + string(x1)
+    print, 'x2: ' + string(x2)
+    print, 'xmin: ' + string(xmin)
+    print, 'xmax: ' + string(xmax)
+    print
     
     IF (x1 LT xmin) THEN BEGIN
       x1 = xmin

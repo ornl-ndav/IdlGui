@@ -1220,17 +1220,17 @@ PRO MAIN_BASE_event, Event
         y0_graph = x0y0x1y1_graph[1]
         x1_graph = x0y0x1y1_graph[2]
         y1_graph = x0y0x1y1_graph[3]
-        print, 'left mouse pressed: '
-        print, 'x0: ' + string(x0y0x1y1[0])
-        print, 'x1: ' + string(x0y0x1y1[2])
-        print, 'y0: ' + string(x0y0x1y1[1])
-        print, 'y1: ' + string(x0y0x1y1[3])
-        print, ' x0_graph: ' + string(x0_graph)
-        print, ' y0_graph: ' + string(y0_graph)
-        print, ' x1_graph: ' + string(x1_graph)
-        print, ' y1_graph: ' + string(y1_graph)
-        print, 'x: ' + string(x)
-        print, 'y: ' + string(y)
+        print, 'Zoom - left mouse pressed --------------------- '
+        print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
+        ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
+        print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
+        ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+        print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
+        ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
+        print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
+        ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
+        print, 'Cursor     x: ' + strcompress(x) + $
+        ' | y: ' + strcompress(y)
         print
                 
         x0y0x1y1[0] = x
@@ -1274,22 +1274,12 @@ PRO MAIN_BASE_event, Event
         
         CURSOR,x,y,/data,/nowait
         
-        print, 'x: ' +strcompress(x)
-        print, 'y: ' + strcompress(y)
-        
         IF (x LT 0) THEN x = xmax
         IF (y LT 0) THEN y = ymax
         
         x0y0x1y1[2] = x
         x0y0x1y1[3] = y
         (*global).x0y0x1y1 = x0y0x1y1
-        
-        print, 'x0: ' + strcompress(x0y0x1y1[0])
-        print, 'y0: ' + strcompress(x0y0x1y1[1])
-        print, 'x1: ' + strcompress(x)
-        print, 'y1: ' + strcompress(y)
-        print
-        
         (*global).x0y0x1y1_graph = x0y0x1y1
         
         redisplay_step5_rescale_plot, Event
