@@ -304,11 +304,11 @@ PRO produce_i_vs_q_output_file, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;create array of data
-  create_step5_selection_data, Event
+  ;create_step5_selection_data, Event
   
   x_axis = (*(*global).step5_selection_x_array)
   array_selected_total = (*(*global).step5_selection_y_array)
-  array_error_selected_total = (*(*global).step5_selection_y_error_array) 
+  array_error_selected_total = (*(*global).step5_selection_y_error_array)
   
   nbr_data = N_ELEMENTS(x_axis)
   
@@ -316,6 +316,12 @@ PRO produce_i_vs_q_output_file, Event
   nbr_comments = 4
   nbr_lines = nbr_comments + nbr_data
   FileLine = STRARR(nbr_lines)
+  
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: type = 'IvsQ'
+    2: type = 'IvsLambda'
+  ENDCASE
   
   index = 0
   FileLine[index] = '#D ' + GenerateIsoTimeStamp()
@@ -328,7 +334,7 @@ PRO produce_i_vs_q_output_file, Event
   FileLine[++index] = '#L ' + x_axis_label + $
     ' Intensity(Counts/A) Sigma(Counts/A)'
   FileLine[++index] = ''
-    
+  
   FOR i=0,(nbr_data-1) DO BEGIN
     Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
     Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
