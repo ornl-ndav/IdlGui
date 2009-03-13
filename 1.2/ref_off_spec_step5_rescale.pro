@@ -78,6 +78,11 @@ PRO create_step5_selection_data, Event
   (*(*global).step5_selection_x_array) = x_axis
   (*(*global).step5_selection_y_array) = array_selected_total
   (*(*global).step5_selection_y_error_array) = array_error_selected_total
+
+  xmin = MIN(x_axis,MAX=xmax)
+  ymin = MIN(array_selected_total,MAX=ymax)
+  
+  (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
   
 END
 
