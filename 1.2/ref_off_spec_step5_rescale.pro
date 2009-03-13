@@ -601,15 +601,43 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   x0y0x1y1 = (*global).x0y0x1y1_graph
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
-  ymin = MIN([y0,y1], MAX=ymax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  xa = x0y0x1y1[0]
+  xb = x0y0x1y1[2]
+  xmin = MIN([xa,xb],MAX=xmax)
   
   IF (type EQ 'all') THEN BEGIN
     color = 50
+    
+    ;print, 'x1: ' + string(x1)
+    ;print, 'x2: ' + string(x2)
+    ;print, 'xmin: ' + string(xmin)
+    ;print, 'xmax: ' + string(xmax)
+    ;print
+    
+    IF (x1 LT xmin) THEN BEGIN
+      x1 = xmin
+    ENDIF ELSE BEGIN
+      IF (x1 GT xmax) THEN BEGIN
+        x1 = xmax
+      ENDIF
+    ENDELSE
+    
+    IF (x2 LT xmin) THEN BEGIN
+      x2 = xmin
+    ENDIF ELSE BEGIN
+      IF (x2 GT xmax) THEN BEGIN
+        x2 = xmax
+      ENDIF
+    ENDELSE
+    
     plots, x1,ymin, color=color, /DATA
     plots, x1,ymax, color=color, /CONTINUE, /DATA
     plots, x2,ymin, color=color, /DATA
     plots, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF ELSE BEGIN
+    x = (x LT xmin) ? xmin : x
+    x = (x GT xmax) ? xmax : x
     plots, x,ymin, color=color, /DATA
     plots, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
@@ -631,19 +659,23 @@ PRO plot_selection_after_zoom, Event
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
   ymin = MIN([y0,y1], MAX=ymax)
-  
-  ;    x0y0x1y1 = (*global).x0y0x1y1
-  ;    y0 = x0y0x1y1[1]
-  ;    y1 = x0y0x1y1[3]
-  ;    ymin = MIN([y0,y1], MAX=ymax)
-  ;
-  ;    print, x0y0x1y1
+  xa = x0y0x1y1[0]
+  xb = x0y0x1y1[2]
+  xmin = MIN([xa,xb],MAX=xmax)
   
   color = 50
-  plots, x1,ymin, color=color, /DATA
-  plots, x1,ymax, color=color, /CONTINUE, /DATA
-  plots, x2,ymin, color=color, /DATA
-  plots, x2,ymax, color=color, /CONTINUE, /DATA
+  
+  IF (x1 GT xmin AND $
+    x1 LT xmax) THEN BEGIN
+    plots, x1,ymin, color=color, /DATA
+    plots, x1,ymax, color=color, /CONTINUE, /DATA
+  ENDIF
+  
+  IF (x2 GT xmin AND $
+    x2 LT xmax) THEN BEGIN
+    plots, x2,ymin, color=color, /DATA
+    plots, x2,ymax, color=color, /CONTINUE, /DATA
+  ENDIF
   
 END
 
@@ -741,8 +773,29 @@ PRO replot_average_recap_rescale, Event
   x2 = (*global).recap_rescale_selection_right
   xmin = MIN([x1,x2],MAX=xmax)
   
-  average = (*global).recap_rescale_average
+;  x0y0x1y1 = (*global).x0y0x1y1
+;  xa = x0y0x1y1[0]
+;  xb = x0y0x1y1[2]
+;  x_range_min = MIN([xa,xb],MAX=x_range_max)
   
+  color = 50
+  average = (*global).recap_rescale_average
+
+  x0y0x1y1 = (*global).x0y0x1y1_graph
+  xa = x0y0x1y1[0]
+  xb = x0y0x1y1[2]
+  x_range_min = MIN([xa,xb],MAX=x_range_max)
+;  print, 'x_range_min: ' + string(x_range_min)
+;  print, 'x_range_max: ' + string(x_range_max)
+  
+  IF (xmin LT x_range_min) THEN BEGIN
+    xmin = x_range_min
+  ENDIF ELSE BEGIN
+    IF (xmax GT x_range_max) THEN BEGIN
+      xmax = x_range_max
+    ENDIF
+  ENDELSE
+
   IF (average NE 0.0) THEN BEGIN
   
     DEVICE, DECOMPOSED=0
