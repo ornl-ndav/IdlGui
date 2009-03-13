@@ -619,12 +619,6 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   IF (type EQ 'all') THEN BEGIN
     color = 50
     
-    print, 'x1: ' + string(x1)
-    print, 'x2: ' + string(x2)
-    print, 'xmin: ' + string(xmin)
-    print, 'xmax: ' + string(xmax)
-    print
-    
     IF (x1 LT xmin) THEN BEGIN
       x1 = xmin
     ENDIF ELSE BEGIN
