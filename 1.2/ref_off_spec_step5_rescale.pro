@@ -594,14 +594,27 @@ PRO plot_recap_rescale_other_selection, Event, type=type
   y0 = x0y0x1y1[1]
   y1 = x0y0x1y1[3]
   ymin = MIN([y0,y1], MAX=ymax)
+  x0 = x0y0x1y1[0]
+  x1 = x0y0x1y1[2]
+  xmin = MIN([x0,x1],MAX=xmax)
+       
+  print, 'x0y0x1y1_graph:'
+  print, 'xmin: ' + strcompress(xmin) ;remove_me
+  print, 'xmax: ' + strcompress(xmax) ;remove_me
   
+  x0y0x1y1 = (*global).x0y0x1y1
+  x0 = x0y0x1y1[0]
+  x1 = x0y1x1y1[2]
+  xmin = MIN([x0,x1],MAX=xmax)
+  print, 'x0y0x1y1:'
+  print, 'xmin: ' + strcompress(xmin) ;remove_me
+  print, 'xmax: ' + strcompress(xmax) ;remove_me
+
+  print, '---------------'
+  print, 'x1: ' + strcompress(x1)
+  print, 'x2: ' + strcompress(x2)
+
   IF (type EQ 'all') THEN BEGIN
-    ;    x0y0x1y1 = (*global).x0y0x1y1
-    ;    y0 = x0y0x1y1[1]
-    ;    y1 = x0y0x1y1[3]
-    ;    ymin = MIN([y0,y1], MAX=ymax)
-    ;
-    ;    print, x0y0x1y1
   
     color = 50
     plots, x1,ymin, color=color, /DATA
