@@ -1222,22 +1222,22 @@ PRO MAIN_BASE_event, Event
         y1_graph = x0y0x1y1_graph[3]
         print, 'Zoom - left mouse pressed --------------------- '
         print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
-        ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
+          ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
         print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
-        ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+          ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
         print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
-        ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
+          ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
         print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
-        ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
+          ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
         print, 'Cursor     x: ' + strcompress(x) + $
-        ' | y: ' + strcompress(y)
+          ' | y: ' + strcompress(y)
         print
         
         IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
         IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
         IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
         IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
-                
+        
         x0y0x1y1[0] = x
         x0y0x1y1[1] = y
         
@@ -1250,35 +1250,54 @@ PRO MAIN_BASE_event, Event
       
       IF (event.type EQ 2 AND $ ;move mouse with left pressed
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
-   
+        
         ;make sure the event.x stays within 5 and 1267
         ;make sure the event.y stays within 5 and 725
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        ;replot main plot
-        display_step5_rescale_plot_from_zoom, Event, with_range=1
-        
-        ;display_step5_rescale_after_rescale_during_zoom_selection, Event
-        ;plot selection
-        (*global).recap_rescale_x1 = Event.x
-        (*global).recap_rescale_y1 = Event.y
-        plot_recap_rescale_selection, Event
-        ;        replot_average_recap_rescale, Eventˆ
-        
-        plot_recap_rescale_other_selection, Event, type='all'
+        IF (Event.x GT 5 AND $
+          Event.x LT 1267 AND $
+          Event.y GT 5 AND $
+          Event.y LT 725) THEN BEGIN
+          
+          cursor, x,y, /DATA, /NOWAIT
+          (*global).last_valid_x = x
+          (*global).last_valid_y = y
+          
+          ;replot main plot
+          display_step5_rescale_plot_from_zoom, Event, with_range=1
+          
+          ;display_step5_rescale_after_rescale_during_zoom_selection, Event
+          ;plot selection
+          (*global).recap_rescale_x1 = Event.x
+          (*global).recap_rescale_y1 = Event.y
+          plot_recap_rescale_selection, Event
+          
+          plot_recap_rescale_other_selection, Event, type='all'
+          
+        ENDIF
         
       ENDIF
       
       IF (event.release EQ 1) THEN BEGIN ;release mouse
+      
+        ;make sure the event.x stays within 5 and 1267
+        ;make sure the event.y stays within 5 and 725
+        IF (Event.x GT 5 AND $
+          Event.x LT 1267 AND $
+          Event.y GT 5 AND $
+          Event.y LT 725) THEN BEGIN
+          
+          CURSOR,x,y,/data,/nowait
+          
+        ENDIF ELSE BEGIN
+        
+          x = (*global).last_valid_x
+          y = (*global).last_valid_y
+        
+        ENDELSE
+        
+        print, 'in release, x: ' + string(x) + $
+        ' y: ' + string(y) ;remove_me
+        
         (*global).recap_rescale_left_mouse = 0
         x0y0x1y1 = (*global).x0y0x1y1
         
@@ -1289,8 +1308,6 @@ PRO MAIN_BASE_event, Event
         y1_graph = x0y0x1y1_graph[3]
         xmin = MIN([x0_graph,x1_graph],MAX=xmax)
         ymin = MIN([y0_graph,y1_graph],MAX=ymax)
-        
-        CURSOR,x,y,/data,/nowait
         
         IF (x LT 0) THEN x = xmax
         IF (y LT 0) THEN y = ymax
