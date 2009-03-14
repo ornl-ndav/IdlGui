@@ -65,15 +65,15 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'step5_rescale_selection_button'}
     
   ;draw
-  XYoff = [0,0]
+  XYoff = [0,35]
   sRescaleDraw = { size: [XYoff[0],$
     XYoff[1],$
     tab_size[2],$
-    730],$
+    700],$
     uname: 'step5_rescale_draw'}
     
   ;FUll reset of scale
-  XYoff = [300,10]
+  XYoff = [300,5]
   sFullReset = { size: [XYoff[0],$
     XYoff[1],$
     200],$
@@ -102,7 +102,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     value: 'RESET SCALE'}
     
   ;go back to recap plot button
-  XYoff = [1110,10]
+  XYoff = [1110,5]
   sRescaleButton = { size: [XYoff[0],$
     XYoff[1],$
     150],$
