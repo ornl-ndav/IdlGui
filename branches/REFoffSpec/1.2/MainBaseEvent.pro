@@ -1220,18 +1220,18 @@ PRO MAIN_BASE_event, Event
         y0_graph = x0y0x1y1_graph[1]
         x1_graph = x0y0x1y1_graph[2]
         y1_graph = x0y0x1y1_graph[3]
-        print, 'Zoom - left mouse pressed --------------------- '
-        print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
-          ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
-        print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
-          ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
-        print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
-          ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
-        print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
-          ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
-        print, 'Cursor     x: ' + strcompress(x) + $
-          ' | y: ' + strcompress(y)
-        print
+        ;        print, 'Zoom - left mouse pressed --------------------- '
+        ;        print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
+        ;          ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
+        ;        print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
+        ;          ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+        ;        print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
+        ;          ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
+        ;        print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
+        ;          ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
+        ;        print, 'Cursor     x: ' + strcompress(x) + $
+        ;          ' | y: ' + strcompress(y)
+        ;        print
         
         IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
         IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
@@ -1252,11 +1252,11 @@ PRO MAIN_BASE_event, Event
         (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
         
         ;make sure the event.x stays within 5 and 1267
-        ;make sure the event.y stays within 5 and 725
+        ;make sure the event.y stays within 5 and 696
         IF (Event.x GT 5 AND $
           Event.x LT 1267 AND $
           Event.y GT 5 AND $
-          Event.y LT 725) THEN BEGIN
+          Event.y LT 696) THEN BEGIN
           
           cursor, x,y, /DATA, /NOWAIT
           (*global).last_valid_x = x
@@ -1280,11 +1280,11 @@ PRO MAIN_BASE_event, Event
       IF (event.release EQ 1) THEN BEGIN ;release mouse
       
         ;make sure the event.x stays within 5 and 1267
-        ;make sure the event.y stays within 5 and 725
+        ;make sure the event.y stays within 5 and 696
         IF (Event.x GT 5 AND $
           Event.x LT 1267 AND $
           Event.y GT 5 AND $
-          Event.y LT 725) THEN BEGIN
+          Event.y LT 696) THEN BEGIN
           
           CURSOR,x,y,/data,/nowait
           
@@ -1292,11 +1292,8 @@ PRO MAIN_BASE_event, Event
         
           x = (*global).last_valid_x
           y = (*global).last_valid_y
-        
+          
         ENDELSE
-        
-        print, 'in release, x: ' + string(x) + $
-        ' y: ' + string(y) ;remove_me
         
         (*global).recap_rescale_left_mouse = 0
         x0y0x1y1 = (*global).x0y0x1y1
