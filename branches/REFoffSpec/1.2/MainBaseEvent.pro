@@ -1408,6 +1408,7 @@ PRO MAIN_BASE_event, Event
     activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
     (*global).recap_rescale_selection_left = 0
     (*global).recap_rescale_selection_right = 0
+    (*global).recap_rescale_average = 0.0
   END
   
   ;-----------------------------------------------------------------------------
