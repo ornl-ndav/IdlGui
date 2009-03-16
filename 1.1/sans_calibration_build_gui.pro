@@ -423,6 +423,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
+    (*(*global).package_required_base) = my_package
   ENDIF
   
   ;=============================================================================
