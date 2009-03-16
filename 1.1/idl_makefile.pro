@@ -6,7 +6,7 @@ cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run nexus_utilities.pro
 .run IDLxmlParser__define.pro
-.run CheckPackages.pro
+.run checking_packages.pro
 .run logger.pro
 
 ;Makefile that automatically compile the necessary modules
@@ -37,6 +37,7 @@ cd, CurrentFolder
 .run sans_calibration_put.pro
 .run sans_calibration_get.pro
 .run IDLsendToGeek__define.pro
+.run IDLsendLogBook__define.pro
 .run IDLgetNexusData__define.pro
 .run sans_calibration_plot.pro
 .run sans_calibration_gui.pro
