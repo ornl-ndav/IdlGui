@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file_name_to_search=$1
+file_name_to_search="SANScalibration.cfg"
 list_of_files_folders="sans_calibration.sav SANScalibration README install_SANScalibration images drversion SANScalibration.cfg"
 
 application=`./get_application.pl $file_name_to_search`
