@@ -15,6 +15,7 @@ resolve_routine, "POLY_FIT", /either
 resolve_routine, "UNIQ", /either
 resolve_routine, "MEAN", /either
 resolve_routine, "MOMENT", /either
+resolve_routine, "ERRPLOT", /either
 
 save,/routines,filename = CurrentFolder + '/ref_off_spec.sav'
 exit

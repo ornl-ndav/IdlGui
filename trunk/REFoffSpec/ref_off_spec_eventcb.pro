@@ -33,226 +33,232 @@
 ;==============================================================================
 ;Preview of selected ascii file(s)
 PRO  preview_ascii_file, Event ;_eventcb
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-list_OF_files = (*(*global).list_OF_ascii_files)
-index = getAsciiSelectedIndex(Event)
-IF (index[0] NE -1) THEN BEGIN
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_OF_files = (*(*global).list_OF_ascii_files)
+  index = getAsciiSelectedIndex(Event)
+  IF (index[0] NE -1) THEN BEGIN
     sz = N_ELEMENTS(index)
     CASE (sz) OF
-        1: XDISPLAYFILE, list_OF_files[index[0]]
-        ELSE: BEGIN
-            FOR i=0,(sz-1) DO BEGIN
-                XDISPLAYFILE, list_OF_files[index[i]]
-            ENDFOR
-        END
+      1: XDISPLAYFILE, list_OF_files[index[0]]
+      ELSE: BEGIN
+        FOR i=0,(sz-1) DO BEGIN
+          XDISPLAYFILE, list_OF_files[index[i]]
+        ENDFOR
+      END
     ENDCASE
-ENDIF
+  ENDIF
 END
 
- ;-----------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
-CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-PrevTabSelect = (*global).PrevTabSelect
-
-IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevTabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-
-    0: BEGIN ;step1 (reduction)
-    END
-
-    1: BEGIN ;load
+    
+      0: BEGIN ;step1 (reduction)
+      END
+      
+      1: BEGIN ;load
         IF((*global).something_to_plot) THEN BEGIN
-            xaxis = (*(*global).x_axis)
-            contour_plot, Event, xaxis
-            plotAsciiData, Event, RESCALE=1, TYPE='replot'
+          xaxis = (*(*global).x_axis)
+          contour_plot, Event, xaxis
+          plotAsciiData, Event, RESCALE=1, TYPE='replot'
         ENDIF
-    END
-
-    2: BEGIN ;shifting
+      END
+      
+      2: BEGIN ;shifting
         display_shifting_help, Event, ''
         IF((*global).something_to_plot) THEN BEGIN
-            ActiveFileDroplist, Event ;_shifting
-            xaxis = (*(*global).x_axis)
-            populate_step3_range_init, Event ;_shifting
-            contour_plot_shifting, Event, xaxis ;_shifting
-            plotAsciiData_shifting, Event
-            plotReferencedPixels, Event ;_shifting
-            refresh_plot_selection_OF_2d_plot_mode, Event
+          ActiveFileDroplist, Event ;_shifting
+          xaxis = (*(*global).x_axis)
+          populate_step3_range_init, Event ;_shifting
+          contour_plot_shifting, Event, xaxis ;_shifting
+          plotAsciiData_shifting, Event
+          plotReferencedPixels, Event ;_shifting
+          refresh_plot_selection_OF_2d_plot_mode, Event
         ENDIF
         CheckShiftingGui, Event ;_gui
-    END
-
-    3: BEGIN ;scaling
+      END
+      
+      3: BEGIN ;scaling
         tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
         step4CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
         IF((*global).something_to_plot) THEN BEGIN
-            IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
-                populate_step4_range_init, Event ;_scaling
-                refresh_step4_step1_plot, Event ;_scaling
-                checkScalingGui, Event ;_gui
-            ENDIF ELSE BEGIN    ;scaling_step2
-                display_step4_step2_step2_selection, $
-                  Event         ;scaling_step2_step1
-                plotLambdaSelected, Event ;scaling_step2_step2
-            ENDELSE
+          IF (step4CurrTabSelect EQ 0) THEN BEGIN ;scaling_step1
+            populate_step4_range_init, Event ;_scaling
+            refresh_step4_step1_plot, Event ;_scaling
+            checkScalingGui, Event ;_gui
+          ENDIF ELSE BEGIN    ;scaling_step2
+      ;    scaling_tab_event, Event
+      
+            display_step4_step2_step2_selection, $
+              Event         ;scaling_step2_step1
+            plotLambdaSelected, Event ;scaling_step2_step2
+          ENDELSE
         ENDIF
-    END
-
-    4: BEGIN ;recap
+      END
+      
+      4: BEGIN ;recap
         check_step5_gui, Event ;_step5
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
         ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
         IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
-            error = 0
-            CATCH, error
-            IF (error NE 0) THEN BEGIN
-                CATCH,/CANCEL
-                refresh_recap_plot, Event ;_step5
-            ENDIF ELSE BEGIN
-                refresh_recap_plot, Event, RESCALE=1;_step5
-            ENDELSE
-
-            ;show selection if one is selected
-            selection_value = $
-              getCWBgroupValue(Event,'step5_selection_group_uname')
-            CASE (selection_value) OF
-                1: BEGIN
-                    IF ((*global).step5_x0 + $
-                        (*global).step5_x1 + $
-                        (*global).step5_y0 + $
-                        (*global).step5_y1 NE 0) THEN BEGIN
-                        replot_step5_i_vs_Q_selection, Event ;step5
-                    ENDIF
-                END
-                ELSE:
-            ENDCASE
-
+          id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
+          WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+          WSET,id_value
+          error = 0
+          CATCH, error
+          IF (error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            refresh_recap_plot, Event ;_step5
+          ENDIF ELSE BEGIN
+            refresh_recap_plot, Event, RESCALE=1;_step5
+          ENDELSE
+          
+          ;show selection if one is selected
+          selection_value = $
+            getCWBgroupValue(Event,'step5_selection_group_uname')
+          CASE (selection_value) OF
+            1: BEGIN
+              IF ((*global).step5_x0 + $
+                (*global).step5_x1 + $
+                (*global).step5_y0 + $
+                (*global).step5_y1 NE 0) THEN BEGIN
+                replot_step5_i_vs_Q_selection, Event ;step5
+              ENDIF
+            END
+            ELSE:
+          ENDCASE
+          
         ENDIF
-    END
-
-    5: BEGIN ;create output file
+      END
+      
+      5: BEGIN ;create output file
         UpdateStep6Gui, Event ;_step6
-    END
-
-    6: BEGIN ;options
-    END
-
-    7: BEGIN ;logbook
-    END
-
-    ELSE:
+      END
+      
+      6: BEGIN ;options
+      END
+      
+      7: BEGIN ;logbook
+      END
+      
+      ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
-ENDIF
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
 ;This function is trigerred each time the mouse move over the tab of step4
 PRO scaling_tab_event, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
-CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-PrevTabSelect = (*global).PrevScalingTabSelect
-
-IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='scaling_main_tab')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevScalingTabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
+    
+      0: BEGIN ;step1 (pixel range selection)
+        IF((*global).something_to_plot) THEN BEGIN
+          refresh_step4_step1_plot, Event ;scaling_step1
+        ENDIF
+      END
+      
+      1: BEGIN ;step2 (scaling)
+      
+        populate_zoom_widgets, Event ;scaling_step2
+        tab_step4_step2_event, Event
         
-        0: BEGIN ;step1 (pixel range selection)
-            IF((*global).something_to_plot) THEN BEGIN
-                refresh_step4_step1_plot, Event ;scaling_step1
-            ENDIF
-        END
-        
-        1: BEGIN ;step2 (scaling)
-
-            populate_zoom_widgets, Event ;scaling_step2
-
-            CASE ((*global).PrevScalingStep2TabSelect) OF
-                0: BEGIN ;all files
-                    display_step4_step2_step1_selection, $
-                      Event     ;scaling_step2_step1
-                END
-                1: BEGIN ;CE files
-                    display_step4_step2_step2_selection, $
-                      Event     ;scaling_step2_step2
-                    re_plot_lambda_selected, Event ;scaling_step2
-                    re_plot_fitting, Event ;scaling_step2_step2
-                END
-                2: BEGIN ;other files
-                    check_step4_2_3_gui, Event ;scaling_step2_step3
-                END
-                ELSE:
-            ENDCASE
-        END
-        ELSE:
+        CASE ((*global).PrevScalingStep2TabSelect) OF
+          0: BEGIN ;all files
+            display_step4_step2_step1_selection, $
+              Event     ;scaling_step2_step1
+          END
+          1: BEGIN ;CE files
+            display_step4_step2_step2_selection, $
+              Event     ;scaling_step2_step2
+            re_plot_lambda_selected, Event ;scaling_step2
+            re_plot_fitting, Event ;scaling_step2_step2
+          END
+          2: BEGIN ;other files
+            check_step4_2_3_gui, Event ;scaling_step2_step3
+          END
+          ELSE:
+        ENDCASE
+      END
+      ELSE:
     ENDCASE
     (*global).PrevScalingTabSelect = CurrTabSelect
-ENDIF
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
 PRO tab_step4_step2_event, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
-CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-PrevTabSelect = (*global).PrevScalingStep2TabSelect
-
-IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevScalingStep2TabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-        
-        0: BEGIN                ;all files
-            re_display_step4_step2_step1_selection, Event ;scaling_step2
-        END
-        1: BEGIN                ;CE files
-            re_display_step4_step2_step1_selection, Event ;scaling_step2
-            re_plot_lambda_selected, Event ;scaling_step2
-            re_plot_fitting, Event ;scaling_step2_step2
-        END
-        2: BEGIN                ;other files
-            re_display_step4_step2_step1_selection, Event ;scaling_step2
-            check_step4_2_3_gui, Event ;scaling_step2_step3
-        END
-        ELSE:
+    
+      0: BEGIN                ;all files
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+      END
+      1: BEGIN                ;CE files
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+        re_plot_lambda_selected, Event ;scaling_step2
+        re_plot_fitting, Event ;scaling_step2_step2
+      END
+      2: BEGIN                ;other files
+        re_display_step4_step2_step1_selection, Event ;scaling_step2
+        check_step4_2_3_gui, Event ;scaling_step2_step3
+      END
+      ELSE:
     ENDCASE
     (*global).PrevScalingStep2TabSelect = CurrTabSelect
-ENDIF
-
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO initialize_arrays, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-list_OF_files = (*(*global).list_OF_ascii_files)
-sz = N_ELEMENTS(list_OF_files)
-ref_pixel_list = INTARR(sz)
-ref_x_list     = INTARR(sz)
-scaling_factor = FLTARR(sz)+1
-(*(*global).ref_pixel_list)        = ref_pixel_list
-(*(*global).ref_pixel_offset_list) = ref_pixel_list
-(*(*global).ref_x_list)            = ref_x_list
-(*(*global).scaling_factor)        = scaling_factor
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  list_OF_files = (*(*global).list_OF_ascii_files)
+  sz = N_ELEMENTS(list_OF_files)
+  ref_pixel_list = INTARR(sz)
+  ref_x_list     = INTARR(sz)
+  scaling_factor = FLTARR(sz)+1
+  (*(*global).ref_pixel_list)        = ref_pixel_list
+  (*(*global).ref_pixel_offset_list) = ref_pixel_list
+  (*(*global).ref_x_list)            = ref_x_list
+  (*(*global).scaling_factor)        = scaling_factor
 END
 
 
 ;------------------------------------------------------------------------------
 PRO MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-WIDGET_CONTROL,/HOURGLASS
-;turn off hourglass
-WIDGET_CONTROL,HOURGLASS=0
+  tlb = get_tlb(wWidget)
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/HOURGLASS
+  ;turn off hourglass
+  WIDGET_CONTROL,HOURGLASS=0
 END
 
 ;------------------------------------------------------------------------------

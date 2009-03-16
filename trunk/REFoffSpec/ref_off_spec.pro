@@ -37,16 +37,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  ;*****************************************************************************
-  ;*****************************************************************************
-  APPLICATION       = 'REFoffSpec'
-  VERSION           = '1.2.3'
-  DEBUGGING         = 'no'        ;no
-  TESTING           = 'no'        ;no
-  SCROLLING         = 'no'        ;no
-  CHECKING_PACKAGES = 'yes'       ;yes
-  SUPER_USERS       = ['j35']
-  
+  file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
+;==============================================================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION = file->getValue(tag=['configuration','application'])
+VERSION = file->getValue(tag=['configuration','version'])
+DEBUGGING = file->getValue(tag=['configuration','debugging'])
+CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+TESTING = file->getValue(tag=['configuration','testing'])
+SCROLLING = file->getValue(tag=['configuration','scrolling'])
+SUPER_USERS = ['j35']
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;==============================================================================
+
   ;DEBUGGING (enter the tab you want to see)
   ;main_tab: 0: Reduction,
   ;          1: Loading,
@@ -61,8 +64,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          5: Create Output
   ;          6: Options,
   ;          7:Log Book
-  sDEBUGGING = { tab: {main_tab: 1,$ ;REDUCE tab
-    step4_tab: 0,$
+  sDEBUGGING = { tab: {main_tab: 1,$ ; -> LOAD tab
+    step4_tab: 0,$ 
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
     reduce_tab1_cw_field: '4753-4755',$
@@ -136,6 +139,26 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     manual_scaling_2: FLOAT(1.5),$
     step4_1_plot2d_delta_x: 0.0,$
     scaling_factor: ptr_new(0L),$
+    
+    array_selected_total_backup: PTR_NEW(0L),$
+    array_selected_total_error_backup: PTR_NEW(0L),$
+    step5_selection_x_array: PTR_NEW(0L),$
+    step5_selection_y_array: PTR_NEW(0L),$
+    step5_selection_y_error_array: PTR_NEW(0L),$
+    recap_rescale_left_mouse: 0, $
+    recap_rescale_working_with: 'left',$
+    recap_rescale_x0: 0,$
+    recap_rescale_y0: 0,$
+    recap_rescale_x1: 0,$
+    recap_rescale_y1: 0,$
+    x0y0x1y1: [0.,0.,0.,0.],$
+    x0y0x1y1_graph: [0.,0.,0.,0.],$
+    first_recap_rescale_plot: 1,$
+    recap_rescale_selection_left: 0.0,$
+    recap_rescale_selection_right: 0.0,$
+    recap_rescale_average: 0.0,$
+    last_valid_x: 0.0,$
+    last_valid_y: 0.0,$
     
     pixel_offset_array: ptr_new(0L),$
     X_Y_min_max_backup: STRARR(4),$

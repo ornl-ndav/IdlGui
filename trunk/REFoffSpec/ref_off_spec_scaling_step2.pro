@@ -53,7 +53,8 @@ ENDIF ELSE BEGIN
         sxmax = STRCOMPRESS(xrange[sz-1],/REMOVE_ALL)
         symin = STRCOMPRESS((*global).ymin_log_mode ,/REMOVE_ALL)
         symax = STRCOMPRESS((*global).step4_step1_ymax_value,/REMOVE_ALL)
-        
+
+        symax = 1 ;remove_me        
         (*global).X_Y_min_max_backup = [sxmin, symin, sxmax, symax]
 
         putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
@@ -84,6 +85,8 @@ ENDIF ELSE BEGIN
     sYmin = X_Y_min_max_array[1]
     sXmax = X_Y_min_max_array[2]
     sYmax = X_Y_min_max_array[3]
+    
+    symin = 0.001
     
     putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
     putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax

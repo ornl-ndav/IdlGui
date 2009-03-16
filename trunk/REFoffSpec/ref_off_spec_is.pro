@@ -101,3 +101,9 @@ FUNCTION isBaseMapped, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 RETURN, WIDGET_INFO(id,/MAP)
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isRecapScaleZoomSelected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_rescale_zoom_button')
+return, WIDGET_INFO(id,/BUTTON_SET)
+END

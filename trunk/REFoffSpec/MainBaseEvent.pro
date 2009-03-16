@@ -1121,8 +1121,8 @@ PRO MAIN_BASE_event, Event
       Ytext = 'Y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
       putTextFieldValue, Event, 'y_value_step5', Ytext
       
- ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y)
-            
+      ;     print, 'x: ' + strcompress(x) + ' | y: ' + strcompress(y)
+      
       total_array = (*(*global).total_array_untouched)
       size_x = (SIZE(total_array,/DIMENSION))[0]
       size_y = (SIZE(total_array,/DIMENSION))[1]
@@ -1154,6 +1154,7 @@ PRO MAIN_BASE_event, Event
           (*global).left_mouse_pressed EQ 1) THEN BEGIN
           CASE (selection_value) OF
             1: plot_step5_i_vs_Q_selection, Event ;_step5
+            2: plot_step5_i_vs_Q_selection, Event ;_step5
             ELSE:
           ENDCASE
         ENDIF
@@ -1163,6 +1164,9 @@ PRO MAIN_BASE_event, Event
           (*global).step5_x1 = Event.x
           (*global).step5_y1 = Event.y
           inform_log_book_step5_selection, Event ;_step5
+          enabled_or_not_recap_rescale_button, Event
+          MapBase, Event, 'step5_rescale_base', 1
+          display_step5_rescale_plot_first_time, Event
         ENDIF
         
       ENDIF ;end of 'if (selection_value NE 0)'
@@ -1171,9 +1175,245 @@ PRO MAIN_BASE_event, Event
     
   END
   
-  ;------------------------------------------------------------------------------
+  ;============================================================================
+  ;Rescale base
+  ;============================================================================
+  
+  ;Return to rescale plot button
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_go_back_button'): BEGIN
+    MapBase, Event, 'step5_rescale_base', 0
+    ;refresh plot if necessary
+    (*global).PrevTabSelect = 0 ;to force the refresh of the tab
+    tab_event, Event
+    (*global).first_recap_rescale_plot = 1
+    (*global).x0y0x1y1 = [0.,0.,0.,0.]
+    (*global).x0y0x1y1_graph = [0.,0.,0.,0.]
+    (*global).recap_rescale_selection_left = 0.
+    (*global).recap_rescale_selection_right = 0.
+  END
+  
+  ;reset zoom
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_full_reset'): BEGIN
+    display_step5_rescale_reset_zoom, Event
+    (*global).first_recap_rescale_plot = 1
+    plot_recap_rescale_other_selection, Event, type='all'
+    replot_average_recap_rescale, Event
+  END
+  
+  ;rescale widget draw
+  Widget_Info(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
+  
+    ;zoom or selection
+    isZoomSelected = isRecapScaleZoomSelected(Event)
+    IF (isZoomSelected) THEN BEGIN ;using zoom
+    
+      IF (event.press EQ 1) THEN BEGIN ;press left
+        (*global).recap_rescale_x0 = Event.x
+        (*global).recap_rescale_y0 = Event.y
+        Cursor, x,y,/data,/nowait
+        x0y0x1y1 = (*global).x0y0x1y1
+        
+        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+        x0_graph = x0y0x1y1_graph[0]
+        y0_graph = x0y0x1y1_graph[1]
+        x1_graph = x0y0x1y1_graph[2]
+        y1_graph = x0y0x1y1_graph[3]
+        ;        print, 'Zoom - left mouse pressed --------------------- '
+        ;        print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
+        ;          ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
+        ;        print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
+        ;          ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
+        ;        print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
+        ;          ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
+        ;        print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
+        ;          ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
+        ;        print, 'Cursor     x: ' + strcompress(x) + $
+        ;          ' | y: ' + strcompress(y)
+        ;        print
+        
+        IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
+        IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
+        IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
+        IF (y GT x0y0x1y1_graph[3]) THEN y=x0y0x1y1_graph[3]
+        
+        x0y0x1y1[0] = x
+        x0y0x1y1[1] = y
+        
+        (*global).x0y0x1y1 = x0y0x1y1
+        (*global).recap_rescale_left_mouse = 1
+        
+        plot_recap_rescale_other_selection, Event, type='all'
+        
+      ENDIF
+      
+      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+        
+        ;make sure the event.x stays within 5 and 1267
+        ;make sure the event.y stays within 5 and 696
+        IF (Event.x GT 5 AND $
+          Event.x LT 1267 AND $
+          Event.y GT 5 AND $
+          Event.y LT 696) THEN BEGIN
+          
+          cursor, x,y, /DATA, /NOWAIT
+          (*global).last_valid_x = x
+          (*global).last_valid_y = y
+          
+          ;replot main plot
+          display_step5_rescale_plot_from_zoom, Event, with_range=1
+          
+          ;display_step5_rescale_after_rescale_during_zoom_selection, Event
+          ;plot selection
+          (*global).recap_rescale_x1 = Event.x
+          (*global).recap_rescale_y1 = Event.y
+          plot_recap_rescale_selection, Event
+          
+          plot_recap_rescale_other_selection, Event, type='all'
+          
+        ENDIF
+        
+      ENDIF
+      
+      IF (event.release EQ 1) THEN BEGIN ;release mouse
+      
+        ;make sure the event.x stays within 5 and 1267
+        ;make sure the event.y stays within 5 and 696
+        IF (Event.x GT 5 AND $
+          Event.x LT 1267 AND $
+          Event.y GT 5 AND $
+          Event.y LT 696) THEN BEGIN
+          
+          CURSOR,x,y,/data,/nowait
+          
+        ENDIF ELSE BEGIN
+        
+          x = (*global).last_valid_x
+          y = (*global).last_valid_y
+          
+        ENDELSE
+        
+        (*global).recap_rescale_left_mouse = 0
+        x0y0x1y1 = (*global).x0y0x1y1
+        
+        x0y0x1y1_graph = (*global).x0y0x1y1_graph
+        x0_graph = x0y0x1y1_graph[0]
+        y0_graph = x0y0x1y1_graph[1]
+        x1_graph = x0y0x1y1_graph[2]
+        y1_graph = x0y0x1y1_graph[3]
+        xmin = MIN([x0_graph,x1_graph],MAX=xmax)
+        ymin = MIN([y0_graph,y1_graph],MAX=ymax)
+        
+        IF (x LT 0) THEN x = xmax
+        IF (y LT 0) THEN y = ymax
+        
+        x0y0x1y1[2] = x
+        x0y0x1y1[3] = y
+        (*global).x0y0x1y1 = x0y0x1y1
+        (*global).x0y0x1y1_graph = x0y0x1y1
+        
+        redisplay_step5_rescale_plot, Event
+        (*global).first_recap_rescale_plot = 0
+        
+        plot_selection_after_zoom, Event
+      ENDIF
+      
+      replot_average_recap_rescale, Event
+      
+    ENDIF ELSE BEGIN ;selection selected
+    
+      IF (event.press EQ 1) THEN BEGIN ;press left
+        IF ((*global).first_recap_rescale_plot) THEN BEGIN
+          display_step5_rescale_plot, Event, with_range=1
+        ENDIF ELSE BEGIN
+          redisplay_step5_rescale_plot, Event
+        ENDELSE
+        plot_recap_rescale_CE_selection, Event
+        (*global).recap_rescale_left_mouse = 1
+        
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          ;replot right line
+          plot_recap_rescale_other_selection, Event, type='right'
+        ENDIF ELSE BEGIN
+          ;replot left line
+          plot_recap_rescale_other_selection, Event, type='left'
+        ENDELSE
+      ENDIF
+      
+      IF (event.press EQ 4) THEN BEGIN ;press right
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          (*global).recap_rescale_working_with = 'right'
+        ENDIF ELSE BEGIN
+          (*global).recap_rescale_working_with = 'left'
+        ENDELSE
+      ENDIF
+      
+      IF (event.type EQ 2 AND $ ;move mouse with left pressed
+        (*global).recap_rescale_left_mouse EQ 1) THEN BEGIN
+        ;replot main plot
+        IF ((*global).first_recap_rescale_plot) THEN BEGIN
+          display_step5_rescale_plot, Event, with_range=1
+        ENDIF ELSE BEGIN
+          redisplay_step5_rescale_plot, Event
+        ENDELSE
+        ;plot selection
+        plot_recap_rescale_CE_selection, Event
+        
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          ;replot right line
+          plot_recap_rescale_other_selection, Event, type='right'
+        ENDIF ELSE BEGIN
+          ;replot left line
+          plot_recap_rescale_other_selection, Event, type='left'
+        ENDELSE
+      ENDIF
+      
+      IF (event.type EQ 1) THEN BEGIN ;release mouse
+        cursor, x, y, /DATA, /NOWAIT
+        IF ((*global).recap_rescale_working_with EQ 'left') THEN BEGIN
+          (*global).recap_rescale_selection_left = x
+        ENDIF ELSE BEGIN
+          (*global).recap_rescale_selection_right = x
+        ENDELSE
+        ;check if we can enabled rescale button
+        IF ((*global).recap_rescale_left_mouse) THEN BEGIN
+          enabled_or_not_recap_rescale_button, Event
+          plot_average_recap_rescale, Event
+        ENDIF
+        (*global).recap_rescale_left_mouse = 0
+      ENDIF
+      
+    ENDELSE
+    
+  END
+  
+  ;scale to 1 selection
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_scale_to_1'): BEGIN
+    ;(*global).first_recap_rescale_plot = 0
+    calculate_average_recap_rescale, Event
+    redisplay_step5_rescale_plot_after_scaling, Event
+    plot_recap_rescale_other_selection, Event, type='all'
+    plot_average_1_recap_rescale, Event ;plot the average horizontal value
+    ;enabled the RESET SCALE button
+    activate_widget, Event, 'step5_rescale_scale_to_1_reset', 1
+  END
+  
+  ;reset scale button
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='step5_rescale_scale_to_1_reset'): BEGIN
+    display_step5_rescale_plot_first_time, Event
+    activate_widget, Event, 'step5_rescale_scale_to_1_reset', 0
+    (*global).recap_rescale_selection_left = 0
+    (*global).recap_rescale_selection_right = 0
+    (*global).recap_rescale_average = 0.0
+  END
+  
+  ;-----------------------------------------------------------------------------
   ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
-  ;------------------------------------------------------------------------------
+  ;-----------------------------------------------------------------------------
   
   ;output file path button
   WIDGET_INFO(wWidget, $
