@@ -5,6 +5,7 @@
 
 all:
 	idl ./makefile.pro;
+	idl ./mini_makefile.pro;
 install:
 	cp sans_calibration.sav /SNS/software/idltools/sav/
 #	cp SANScalibration /SNS/software/idltools/
