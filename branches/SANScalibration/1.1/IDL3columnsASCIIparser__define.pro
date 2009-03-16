@@ -407,15 +407,15 @@ FUNCTION IDL3columnsASCIIparser::get_tag, tag
   ;remove semicolon from tag
   tag = modtag(tag)
   ;read data into array
-  data = READ_DATA(self.path, 1)
+  data = READ_DATA(self.path, 1, Event)
   ;find and format data
   output = find_it(data, tag)
   RETURN, output
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::getAllTag
-data = READ_DATA(self.path, 2)
+FUNCTION IDL3columnsASCIIparser::getAllTag, Event
+data = READ_DATA(self.path, 2, Event)
 output = get_up_to_blank_line(data)
 RETURN, output
 END

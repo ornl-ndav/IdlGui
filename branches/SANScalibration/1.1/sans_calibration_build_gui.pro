@@ -319,10 +319,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;==============================================================================
   ;debugging version of program
-;  IF (DEBUGGING EQ 'yes' AND $
-;    ucams EQ 'j35') THEN BEGIN
+  ;  IF (DEBUGGING EQ 'yes' AND $
+  ;    ucams EQ 'j35') THEN BEGIN
   IF (DEBUGGING EQ 'yes') THEN BEGIN
-
+  
     ;nexus_path           = '/LENS/SANS/1/1/104/NeXus/'
     nexus_path = '~/tmp/'
     (*global).nexus_path = nexus_path
@@ -422,8 +422,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     message
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-    CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
-    (*(*global).package_required_base) = my_package
+    checking_packages_routine, MAIN_BASE, my_package, global
   ENDIF
   
   ;=============================================================================
