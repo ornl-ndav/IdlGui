@@ -136,7 +136,7 @@
      END
      
      'selection': BEGIN
-       cmd += ' ' + (*global).tof_roi_flag
+       cmd = cmd_base + ' ' + (*global).tof_roi_flag
        ROIfile = getROIfileName(Event)
        cmd += '=' + ROIfile
        text = ' selection (' + ROIfile + ')'
@@ -167,20 +167,22 @@
      
      'all': BEGIN
        text = ' full detector'
-       cmd += ' -o ' + OUTPUT_FILE_NAME
+       cmd = cmd_base + ' -o ' + OUTPUT_FILE_NAME
        cmd_text  = '> Create ASCII file of Counts vs TOF of' + text + ':'
        IDLsendToGeek_addLogBookText, Event, cmd_text
        cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
        IDLsendToGeek_addLogBookText, Event, cmd_text1
-       no_error = 0
-       CATCH, no_error
-       IF (no_error NE 0) THEN BEGIN
+       error = 0
+       CATCH, error
+       IF (error NE 0) THEN BEGIN
          CATCH,/CANCEL
          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
          result = DIALOG_MESSAGE(cmd_text + ' FAILED',/ERROR)
        ENDIF ELSE BEGIN
          spawn, cmd, listening, error_listening
-         IF (listening[0] EQ '') THEN BEGIN ;worked
+         IF (error_listening[0] NE '') THEN BEGIN
+           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+         ENDIF ELSE BEGIN
            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
            text = '-> Output File Name: ' + OUTPUT_FILE_NAME
            IDLsendToGeek_addLogBookText, Event, text
@@ -190,8 +192,6 @@
            IDLsendToGeek_addLogBookText, Event, text
            ;plot data
            plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
-         ENDIF ELSE BEGIN
-           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
          ENDELSE
        ENDELSE
      END
