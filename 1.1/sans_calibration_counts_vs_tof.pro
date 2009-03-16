@@ -20,7 +20,7 @@
  ;
  ; - Redistributions of source code must retain the above copyright notice,
  ;   this list of conditions and the following disclaimer.
-  ; - Redistributions in binary form must reproduce the above copyright notice,
+ ; - Redistributions in binary form must reproduce the above copyright notice,
  ;   this list of conditions and the following disclaimer in the documentation
  ;   and/or other materials provided with the distribution.
  ; - Neither the name of the Spallation Neutron Source, Oak Ridge National
@@ -82,40 +82,21 @@
    
    ;build cmd
    cmd  = tof_slicer_cmd
-   cmd += ' ' + nexus_file_name
+   cmd_base = cmd + ' ' + nexus_file_name
    IDLsendToGeek_AddLogBookText, Event, '--> Type: ' + type
+   
+   working_path = (*global).tof_ascii_path
+   cd, working_path, CURRENT=current
    
    CASE (TYPE) OF
    
      'monitor'  : BEGIN
        no_error = 0
        catch, no_error
-       cmd1 = cmd + ' ' + (*global).tof_monitor_flag
+       cmd1 = cmd_base + ' ' + (*global).tof_monitor_flag
        IF (no_error NE 0) THEN BEGIN
          CATCH,/CANCEL
          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-         no_error1 = 0
-         CATCH, no_error1
-         IF (no_error1 NE 0) THEN BEGIN
-           CATCH,/CANCEL
-           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-           result = DIALOG_MESSAGE(cmd_text + ' FAILED',/ERROR)
-         ENDIF ELSE BEGIN
-           cmd = cmd1 + '=' + (*global).tof_monitor_path1
-           text = ' monitor'
-           cmd += ' -o ' + OUTPUT_FILE_NAME
-           cmd_text  = '> Create ASCII file of Counts vs TOF of' + text + ':'
-           IDLsendToGeek_addLogBookText, Event, cmd_text
-           cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
-           IDLsendToGeek_addLogBookText, Event, cmd_text1
-           no_error = 0
-           spawn, cmd, listening, error_listening
-           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-           text = '-> Output File Name: ' + OUTPUT_FILE_NAME
-           IDLsendToGeek_addLogBookText, Event, text
-           ;plot data
-           plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
-         ENDELSE
        ENDIF ELSE BEGIN
          cmd = cmd1 + '=' + (*global).tof_monitor_path
          text = ' monitor'
@@ -124,14 +105,34 @@
          IDLsendToGeek_addLogBookText, Event, cmd_text
          cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
          IDLsendToGeek_addLogBookText, Event, cmd_text1
+         
          spawn, cmd, listening, error_listening
-         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-         text = '-> Output File Name: ' + OUTPUT_FILE_NAME
-         IDLsendToGeek_addLogBookText, Event, text
-         ;plot data
-         plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
+         IF (error_listening[0] NE '') THEN BEGIN
+           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+           cmd = cmd1 + '=' + (*global).tof_monitor_path1
+           text = ' monitor'
+           cmd += ' -o ' + OUTPUT_FILE_NAME
+           cmd_text  = '> Create ASCII file of Counts vs TOF of' + text + ':'
+           IDLsendToGeek_addLogBookText, Event, cmd_text
+           cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
+           IDLsendToGeek_addLogBookText, Event, cmd_text1
+           spawn, cmd, listening, error_listening
+           IF (error_listening[0] NE '') THEN BEGIN
+             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+           ENDIF ELSE BEGIN
+             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+             text = '-> Output File Name: ' + OUTPUT_FILE_NAME
+             IDLsendToGeek_addLogBookText, Event, text
+             plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
+           ENDELSE
+         ENDIF ELSE BEGIN
+           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+           text = '-> Output File Name: ' + OUTPUT_FILE_NAME
+           IDLsendToGeek_addLogBookText, Event, text
+           ;plot data
+           plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
+         ENDELSE
        ENDELSE
-       
      END
      
      'selection': BEGIN
@@ -183,6 +184,10 @@
            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
            text = '-> Output File Name: ' + OUTPUT_FILE_NAME
            IDLsendToGeek_addLogBookText, Event, text
+           text = '-> listening: ' + listening
+           IDLsendToGeek_addLogBookText, Event, text
+           text = '-> error_listening: ' + error_listening
+           IDLsendToGeek_addLogBookText, Event, text
            ;plot data
            plot_counts_vs_tof_data, Event, OUTPUT_FILE_NAME ;_counts_vs_tof
          ENDIF ELSE BEGIN
@@ -192,6 +197,9 @@
      END
      
    ENDCASE
+   
+   cd, current
+   
    ;turn off hourglass
    widget_control,hourglass=0
  END
@@ -205,7 +213,7 @@
    OK         = (*global).ok
    FAILED     = (*global).failed
    
-   text = '-> Parsing ASCII file ... ' + PROCESSING
+   text = '-> Parsing ASCII file : '
    IDLsendToGeek_addLogBookText, Event, text
    iASCII = OBJ_NEW('IDL3columnsASCIIparser',output_file_name)
    IF (OBJ_VALID(iASCII)) THEN BEGIN
@@ -213,6 +221,7 @@
    ENDIF ELSE BEGIN
      text = '--> iASCII is not a valid IDL3columnsASCIIparser object'
    ENDELSE
+   IDLsendToGeek_addLogBookText, Event, text
    sData = iASCII->getData(Event)
    ;print, (*(*sDAta.data)[0].data)[1] ;remove_me
    

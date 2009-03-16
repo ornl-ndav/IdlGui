@@ -424,7 +424,8 @@ END
 FUNCTION IDL3columnsASCIIparser::init, location
   ;set up the path
   self.path = location
-  RETURN, FILE_TEST(location, /READ)
+  test = FILE_TEST(location,/READ)
+  RETURN, test
 END
 
 ;------------------------------------------------------------------------------
