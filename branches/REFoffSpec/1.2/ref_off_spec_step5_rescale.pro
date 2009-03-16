@@ -84,11 +84,6 @@ PRO create_step5_selection_data, Event
   
   (*global).x0y0x1y1 = [xmin,ymin,xmax,ymax]
   
-  print, 'in create_step5_selection_data --------------------------------'
-  print, '  xmin: ' + strcompress(xmin) + ' | xmax: ' + strcompress(xmax)
-  print, '  ymin: ' + strcompress(ymin) + ' | ymax: ' + strcompress(ymax)
-  print
-  
 END
 
 ;------------------------------------------------------------------------------
