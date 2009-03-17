@@ -7,6 +7,7 @@ cd, IdlUtilitiesPath
 .run nexus_utilities.pro
 .run IDLxmlParser__define.pro
 .run logger.pro
+.run checking_packages.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -38,6 +39,7 @@ cd, CurrentFolder
 .run sans_reduction_put.pro
 .run sans_reduction_get.pro
 .run IDLsendToGeek__define.pro
+.run IDLsendLogBook__define.pro
 .run IDLgetNexusData__define.pro
 .run sans_reduction_plot.pro
 .run sans_reduction_gui.pro
