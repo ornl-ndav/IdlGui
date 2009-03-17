@@ -99,14 +99,20 @@ PRO ModeGuiUpdate, Event
     acc_down_time_flag      = 0
     intermediate_files_flag = 1
     transm_back_flag        = 1
+    beam_monitor_flag       = 1
     run_button              = '> >> >>> RUN TRANSMISSION <<< << <'
+    help_label = '(Specify the time zero offset in microseconds of both ' + $
+    'the Detector and the Monitor)'
   ENDIF ELSE BEGIN ;background
     Title = MainBaseTitle + ' ( Mode: Background ) ' + ' - ' + VERSION
     monitor_efficiency_flag = 0
     acc_down_time_flag      = 1
     intermediate_files_flag = 0
     transm_back_flag        = 0
+    beam_monitor_flag            = 0
     run_button              = '> >> >>> RUN BACKGROUND <<< << <'
+    help_label = '(Specify the time zero offset in microseconds of ' + $
+    'the Detector)'
   ENDELSE
   WIDGET_CONTROL, Event.top, BASE_SET_TITLE=title
   uname_list = ['monitor_efficiency_title',$
@@ -119,7 +125,11 @@ PRO ModeGuiUpdate, Event
   activate_widget_list, Event, uname_list, intermediate_files_flag
   uname_list = ['transm_back_base_uname']
   activate_widget_list, Event, uname_list, transm_back_flag
+  uname_list = ['time_zero_offset_beam_monitor_uname',$
+    'time_zero_beam_monitor_label']
+  activate_widget_list, Event, uname_list, beam_monitor_flag
   putNewButtonValue, Event, 'go_data_reduction_button', run_button
+  putTextFieldValue, Event, 'time_zero_offset_help', help_label
 END
 
 ;------------------------------------------------------------------------------

@@ -65,18 +65,22 @@ sTZO_detector_field = {size:  [sTZO_detector_value.size[0]+XYoff[0],$
 XYoff = [120,0]
 sTZO_beam_value = {size:  [sTZO_detector_field.size[0]+XYoff[0],$
                            sTZO_detector_value.size[1]+XYoff[1]],$
-                       value: 'Beam Monitor:'}
+                       value: 'Beam Monitor:',$
+                       sensitive: 1,$
+                       uname: 'time_zero_beam_monitor_label'}
 XYoff = [90,0]
 sTZO_beam_field = {size:  [sTZO_beam_value.size[0]+XYoff[0],$
                            sTZO_detector_field.size[1]+XYoff[1],$
                            sTZO_detector_field.size[2:3]],$
                    value: '',$
+                   sensitive: 1,$
                    uname: 'time_zero_offset_beam_monitor_uname'}
 XYOff = [60,0]
 sTZOhelp = { size: [sTZO_beam_field.size[0]+sTZO_beam_field.size[2]+XYoff[0],$
                     sTZO_beam_value.size[1]+XYoff[1]],$
-             value: '(Specify the time zero offset in microseconds of the ' +$
-             'Detector and the Monitor)'}
+             uname: 'time_zero_offset_help',$
+             value: '(Specify the time zero offset in microseconds of both ' + $
+             'the Detector and the Monitor)'}
 
 ;- Monitor Efficiency ---------------------------------------------------------
 XYoff = [0,20] ;title
@@ -325,7 +329,9 @@ text = WIDGET_TEXT(Base,$
 label = WIDGET_LABEL(Base,$
                      XOFFSET = sTZO_beam_value.size[0],$
                      YOFFSET = sTZO_beam_value.size[1],$
-                     VALUE   = sTZO_beam_value.value)
+                     VALUE   = sTZO_beam_value.value,$
+                     UNAME   = sTZO_beam_value.uname,$
+                     SENSITIVE = sTZO_beam_value.sensitive)
 
 text = WIDGET_TEXT(Base,$
                    XOFFSET   = sTZO_beam_field.size[0],$
@@ -335,12 +341,14 @@ text = WIDGET_TEXT(Base,$
                    VALUE     = sTZO_beam_field.value,$
                    UNAME     = sTZO_beam_field.uname,$
                    /ALL_EVENTS,$
+                   SENSITIVE = sTZO_beam_field.sensitive,$
                    /EDITABLE)
 
 help = WIDGET_LABEL(Base,$
                     XOFFSET = sTZOhelp.size[0],$
                     YOFFSET = sTZOhelp.size[1],$
-                    VALUE   = sTZOhelp.value)
+                    VALUE   = sTZOhelp.value,$
+                    UNAME   = sTZOhelp.uname)
 
 ;- Monitor Efficiency ---------------------------------------------------------
 label = WIDGET_LABEL(Basetab,$
