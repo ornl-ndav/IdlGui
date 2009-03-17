@@ -6,10 +6,12 @@
 #                                [-h]
 #
 FOLDERS=("images")
-FILES="sans_calibration.sav"
+FILES="sans_calibration.sav SANScalibration.cfg mini_sans_calibration.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_calibration.sav"
+MINI_EXECUTABLE_SAV="mini_sans_calibration.sav"
 EXECUTABLE='SANScalibration'
+MINI_EXECUTABLE='miniSANScalibration'
 PACKAGE_PATH='/usr/local/'
 EXECUTABLE_PATH='/usr/local/bin/'
 
@@ -65,10 +67,19 @@ copy_files()
 # This function create the executable file
 create_exec()
 {
-    EXECUTABLE=$EXECUTABLE_PATH$EXECUTABLE
+    EXECUTABLE=$EXECUTABLE_PATH"/"$EXECUTABLE
     echo -n "Create executable file" $EXECUTABLE_PATH "...."
     install -d $EXECUTABLE_PATH
     echo "idl -vm=$PACKAGE_PATH/$EXECUTABLE_SAV" > $EXECUTABLE
+    echo " Done"
+    echo -n "Change permission of $EXECUTABLE to 755 ...."
+    chmod 755 $EXECUTABLE
+    echo " Done"
+
+    EXECUTABLE=$EXECUTABLE_PATH"/"$MINI_EXECUTABLE
+    echo -n "Create executable file" $EXECUTABLE_PATH "...."
+    install -d $EXECUTABLE_PATH
+    echo "idl -vm=$PACKAGE_PATH/$MINI_EXECUTABLE_SAV" > $EXECUTABLE
     echo " Done"
     echo -n "Change permission of $EXECUTABLE to 755 ...."
     chmod 755 $EXECUTABLE
@@ -85,6 +96,8 @@ then
     do
 	case $1 in
 	    -h) 
+		help_install;;
+		--help)
 		help_install;;
 	    -d) 
 		PACKAGE_PATH=$2;

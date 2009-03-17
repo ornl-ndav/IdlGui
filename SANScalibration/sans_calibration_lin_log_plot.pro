@@ -32,8 +32,41 @@
 ;
 ;==============================================================================
 
-; Empty stub procedure used for autoloading.
-PRO sans_calibration, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-end
+FUNCTION LinOrLog, Event
+value = getCWBgroupValue(Event,'z_axis_scale')
+RETURN, value
+END
 
+PRO lin_or_log_plot, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;linear or log
+  plot_type = LinOrLog(Event)
+  ;plot_type = Event.value ;0->linear, 1->log
+  
+  ;retrieve the value to plot
+  DataXY = (*(*global).rtDataXY)
+  
+  IF (plot_type EQ 1) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(DataXY EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      DataXY[index] = !VALUES.D_NAN
+      DataXY = ALOG10(DataXY)
+      DataXY = BYTSCL(DataXY,/NAN)
+    ENDIF
+    
+  ENDIF
+  
+  DEVICE, DECOMPOSED = 0
+  LOADCT,5,/SILENT
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  TVSCL, DataXY, /DEVICE
+  refresh_scale, Event         ;_plot
+  
+END

@@ -32,8 +32,28 @@
 ;
 ;==============================================================================
 
-; Empty stub procedure used for autoloading.
-PRO sans_calibration, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-end
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
 
+;------------------------------------------------------------------------------
+;logger message
+PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
+
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
+
+END
