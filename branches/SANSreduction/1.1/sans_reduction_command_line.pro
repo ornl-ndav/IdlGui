@@ -58,6 +58,7 @@ FUNCTION getBmonPath, event, file
 END
 
 ;------------------------------------------------------------------------------
+;This function builds the command line
 PRO CheckCommandLine, Event
 
   ;get global structure
@@ -368,6 +369,11 @@ PRO CheckCommandLine, Event
         '(PARAMETERS)']
     ENDELSE
   ENDIF
+  
+  
+  
+  
+  
   
   ;- INTERMEDIATE ---------------------------------------------------------------
   IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')

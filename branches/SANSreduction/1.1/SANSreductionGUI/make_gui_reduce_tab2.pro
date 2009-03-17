@@ -262,14 +262,79 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     sWaveHelpButton.size[3]],$
     value : 'BROWSE ...',$
     uname: 'wave_dependent_back_browse_button'}
+   
+    ;- Accelerator Down Time (seconds) --------------------------------------------
+  XYoff = [0,20]
+  sAcceBase = { size:  [sWavebase.size[0]+XYoff[0],$
+    sWaveBase.size[1]+$
+    sWaveBase.size[3]+XYoff[1],$
+    sWaveBase.size[2],$
+    50],$
+    frame: sWaveBase.frame,$
+    uname: 'acce_base'}
+  XYoff = [20,-8]
+  sAcceTitle = { size:  [sAcceBase.size[0]+XYoff[0],$
+    sAcceBase.size[1]+XYoff[1]],$
+    value: 'Accelerator Down Time (seconds)'}
+  
+  ;Data
+  AcceXoff = 55
+  XYoff = [80,18]
+  sAcceDataLabel = { size:  [XYoff[0],$
+    XYoff[1]],$
+    value: 'Data:'}
+  XYoff = [35,-5]
+  sDataText = {  size:  [sAcceDataLabel.size[0]+XYoff[0],$
+    sAcceDataLabel.size[1]+XYoff[1],$
+    70,30],$
+    value: '0.0',$
+    uname: 'acce_data_text_field'}
     
+  ;Solvent
+  XYoff = [AcceXoff+5,0]
+  sSolventLabel = { size:  [sDataText.size[0]+sDataText.size[2]+XYoff[0],$
+    sAcceDataLabel.size[1]+XYoff[1]],$
+    value: 'Solvent:'}
+  XYoff = [53,0]
+  sSolventText = {  size:  [sSolventLabel.size[0]+XYoff[0],$
+    sDataText.size[1]+XYoff[1],$
+    sDataText.size[2:3]],$
+    value: '0.0',$
+    uname: 'acce_solvent_text_field'}
+    
+  ;Empty Can
+  XYoff = [AcceXoff+5,0]
+  sEmptyCanLabel = { size:  [sSolventText.size[0]+$
+    sSolventText.size[2]+XYoff[0],$
+    sSolventLabel.size[1]+XYoff[1]],$
+    value: 'Empty Can:'}
+  XYoff = [65,0]
+  sEmptyCanText = {  size:  [sEmptyCanLabel.size[0]+XYoff[0],$
+    sSolventText.size[1]+XYoff[1],$
+    sSolventText.size[2:3]],$
+    value: '',$
+    uname: 'acce_empty_can_text_field'}
+    
+  ;Open Beam
+  XYoff = [AcceXoff+5,0]
+  sOpenBeamLabel = { size:  [sEmptyCanText.size[0]+$
+    sEmptyCanText.size[2]+XYoff[0],$
+    sEmptyCanLabel.size[1]+XYoff[1]],$
+    value: 'Open Beam:'}
+  XYoff = [65,0]
+  sOpenBeamText = {  size:  [sOpenBeamLabel.size[0]+XYoff[0],$
+    sEmptyCanText.size[1]+XYoff[1],$
+    sEmptyCanText.size[2:3]],$
+    value: '',$
+    uname: 'acce_open_beam_text_field'}
+ 
   ;- scaling constant -----------------------------------------------------------
   XYoff = [0,20]
-  sScaleBase = { size:  [sWavebase.size[0]+XYoff[0],$
-    sWavebase.size[1]+sWavebase.size[3]+XYoff[1],$
-    sWavebase.size[2],$
+  sScaleBase = { size:  [sAcceBase.size[0]+XYoff[0],$
+    sAcceBase.size[1]+sAcceBase.size[3]+XYoff[1],$
+    sAcceBase.size[2],$
     sQLbase.size[3]],$
-    frame: sWavebase.frame}
+    frame: sAcceBase.frame}
   XYoff = [20,-8]
   sScaleTitle = { size:  [sScaleBase.size[0]+XYoff[0],$
     sScaleBase.size[1]+XYoff[1]],$
@@ -344,70 +409,6 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     uname: 'verbose_mode_group',$
     title: '* Verbose Mode      '}
     
-  ;- Accelerator Down Time (seconds) --------------------------------------------
-  XYoff = [0,20]
-  sAcceBase = { size:  [sMEbase.size[0]+XYoff[0],$
-    sFlagsBase.size[1]+$
-    sFlagsBase.size[3]+XYoff[1],$
-    sFlagsBase.size[2:3]],$
-    frame: sFlagsBase.frame,$
-    uname: 'acce_base'}
-  XYoff = [20,-8]
-  sAcceTitle = { size:  [sAcceBase.size[0]+XYoff[0],$
-    sAcceBase.size[1]+XYoff[1]],$
-    value: 'Accelerator Down Time (seconds)'}
-  
-  ;Data
-  AcceXoff = 55
-  XYoff = [80,18]
-  sAcceDataLabel = { size:  [XYoff[0],$
-    XYoff[1]],$
-    value: 'Data:'}
-  XYoff = [35,-5]
-  sDataText = {  size:  [sAcceDataLabel.size[0]+XYoff[0],$
-    sAcceDataLabel.size[1]+XYoff[1],$
-    70,30],$
-    value: '0.0',$
-    uname: 'acce_data_text_field'}
-    
-  ;Solvent
-  XYoff = [AcceXoff+5,0]
-  sSolventLabel = { size:  [sDataText.size[0]+sDataText.size[2]+XYoff[0],$
-    sAcceDataLabel.size[1]+XYoff[1]],$
-    value: 'Solvent:'}
-  XYoff = [53,0]
-  sSolventText = {  size:  [sSolventLabel.size[0]+XYoff[0],$
-    sDataText.size[1]+XYoff[1],$
-    sDataText.size[2:3]],$
-    value: '0.0',$
-    uname: 'acce_solvent_text_field'}
-    
-  ;Empty Can
-  XYoff = [AcceXoff+5,0]
-  sEmptyCanLabel = { size:  [sSolventText.size[0]+$
-    sSolventText.size[2]+XYoff[0],$
-    sSolventLabel.size[1]+XYoff[1]],$
-    value: 'Empty Can:'}
-  XYoff = [65,0]
-  sEmptyCanText = {  size:  [sEmptyCanLabel.size[0]+XYoff[0],$
-    sSolventText.size[1]+XYoff[1],$
-    sSolventText.size[2:3]],$
-    value: '',$
-    uname: 'acce_empty_can_text_field'}
-    
-  ;Open Beam
-  XYoff = [AcceXoff+5,0]
-  sOpenBeamLabel = { size:  [sEmptyCanText.size[0]+$
-    sEmptyCanText.size[2]+XYoff[0],$
-    sEmptyCanLabel.size[1]+XYoff[1]],$
-    value: 'Open Beam:'}
-  XYoff = [65,0]
-  sOpenBeamText = {  size:  [sOpenBeamLabel.size[0]+XYoff[0],$
-    sEmptyCanText.size[1]+XYoff[1],$
-    sEmptyCanText.size[2:3]],$
-    value: '',$
-    uname: 'acce_open_beam_text_field'}
-  
   ;==============================================================================
   ;= Build Widgets ==============================================================
   Basetab = WIDGET_BASE(REDUCE_TAB,$
