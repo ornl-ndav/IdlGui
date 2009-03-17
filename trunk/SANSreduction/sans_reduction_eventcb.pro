@@ -146,6 +146,7 @@ IF (FullNexusName NE '') THEN BEGIN
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
                       'refresh_plot_button',$
+                      'z_axis_scale_base',$
                       'clear_selection_button',$
                       'selection_tool_button',$
 ;                      'color_base_uname',$
@@ -234,6 +235,7 @@ IF (RunNumber NE 0) THEN BEGIN
                       'selection_browse_button',$
                       'selection_file_name_text_field',$
                       'exclusion_base',$
+                      'z_axis_scale_base',$
 ;                      'color_base_uname',$
                       'selection_tool_button',$
                       'refresh_plot_button',$

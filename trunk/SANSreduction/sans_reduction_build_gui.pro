@@ -37,17 +37,21 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  ;************************************************************************
-  ;************************************************************************
-  APPLICATION       = 'SANSreduction'
-  VERSION           = '1.1.1'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  SCROLLING         = scroll
-  CHECKING_PACKAGES = 'yes'
+  file = OBJ_NEW('IDLxmlParser','SANSreduction.cfg')
+  ;============================================================================
+  ;****************************************************************************
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  SCROLLING = scroll
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  ;****************************************************************************
+  ;============================================================================
   
   PACKAGE_REQUIRED_BASE = { driver:           '',$
     version_required: '',$
+    found: 0,$
     sub_pkg_version:   ''}
   ;sub_pkg_version: python program that gives pkg v.
   my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
@@ -74,10 +78,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
   
   wave_para_label = 'Comma-delimited List of Increasing Coefficients'
-  wave_para_help_label = '1 + 23*X + 456*X^2 + 7890*X^3   --->'
+  wave_para_help_label = '1 + 23*X + 6*X^2 + 7890*X^3   --->'
   wave_para_help_value = '1,23,456,7890'
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
+    scaling_value: '',$
+    package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
     list_OF_files_to_send: ptr_new(0L),$
     auto_output_file_name: 1,$
@@ -107,6 +113,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     Xarray_untouched: ptr_new(0L),$
     Yarray:          ptr_new(0L),$
     SigmaYarray:     ptr_new(0L),$
+    rtDataXY:        ptr_new(0L),$
     ;                   ROIcolor:        [50L,50L,0L],$
     ROIcolor:        250L,$
     DrawXcoeff:      8,$
@@ -176,6 +183,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--bkg-coeff',$
     roi_file: $
     '--roi-file'},$
+    scaling_value_flag: '--bkg-scale',$
+    accelerator_data_flag: '--data-acc-down-time',$
+    accelerator_solvent_flag: '--solv-acc-down-time',$
+    accelerator_empty_can_flag: '--ecan-acc-down-time',$
+    accelerator_open_beam_flag: '--open-acc-down-time',$
     CorrectPara: {solv_buffer: {title: $
     'Solvant Buffer Only',$
     flag: $
@@ -311,7 +323,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;debugging version of program
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-    nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
+    nexus_path           = '~/Desktop'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
     (*global).wave_dep_back_sub_path = $
@@ -345,7 +358,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     
   ENDIF
   
@@ -369,9 +382,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XMARGIN     = [5,5],$
     /NODATA
     
-  ;==============================================================================
-  ; Date and Checking Packages routines =========================================
-  ;==============================================================================
+  ;=============================================================================
+  ; Date and Checking Packages routines ========================================
+  ;=============================================================================
   ;Put date/time when user started application in first line of log book
   time_stamp = GenerateIsoTimeStamp()
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -379,125 +392,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     message
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-    ;Check that the necessary packages are present
-    message = '> Checking For Required Software: '
-    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
-      message
-      
-    PROCESSING = (*global).processing
-    OK         = (*global).ok
-    FAILED     = (*global).failed
-    NbrSpc     = 25             ;minimum value 4
-    
-    sz = (size(my_package))(1)
-    
-    IF (sz GT 0) THEN BEGIN
-      max = 0                ;find the longer required software name
-      pack_list = STRARR(sz)  ;initialize the list of driver
-      missing_packages = STRARR(sz) ;initialize the list of missing packages
-      nbr_missing_packages = 0
-      FOR k=0,(sz-1) DO BEGIN
-        pack_list[k] = my_package[k].driver
-        length = STRLEN(pack_list[k])
-        IF (length GT max) THEN max = length
-      ENDFOR
-      
-      first_sub_packages_check = 1
-      FOR i=0,(sz-1) DO BEGIN
-        message = '-> ' + pack_list[i]
-        ;this part is to make sure the PROCESSING string starts at the same column
-        length = STRLEN(message)
-        str_array = MAKE_ARRAY(NbrSpc+max-length,/STRING,VALUE='.')
-        new_string = STRJOIN(str_array)
-        message += ' ' + new_string + ' ' + PROCESSING
-        
-        IDLsendToGeek_addLogBookText_fromMainBase, $
-          MAIN_BASE, $
-          'log_book_text', $
-          message
-        cmd = pack_list[i] + ' --version'
-        spawn, cmd, listening, err_listening
-        IF (err_listening[0] EQ '') THEN BEGIN ;found
-          IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
-            MAIN_BASE, $
-            'log_book_text', $
-            PROCESSING,$
-            OK + ' (Current Version: ' + $
-            listening[N_ELEMENTS(listening)-1] + ')'
-          ;              ' / Minimum Required Version: ' + $
-          ;              my_package[i].version_required + ')'
-          IF (my_package[i].sub_pkg_version NE '' AND $
-            first_sub_packages_check EQ 1) THEN BEGIN
-            first_sub_packages_check = 0
-            cmd = my_package[i].sub_pkg_version
-            spawn, cmd, listening, err_listening
-            IF (err_listening[0] EQ '') THEN BEGIN ;worked
-              cmd_txt = '-> ' + cmd + ' ... OK'
-              IDLsendToGeek_addLogBookText_fromMainBase, $
-                MAIN_BASE, $
-                'log_book_text', $
-                cmd_text
-              IDLsendToGeek_addLogBookText_fromMainBase, $
-                MAIN_BASE, $
-                'log_book_text', $
-                '--> ' + listening
-            ENDIF ELSE BEGIN
-              cmd_txt = '-> ' + cmd + ' ... FAILED'
-              IDLsendToGeek_addLogBookText_fromMainBase, $
-                MAIN_BASE, $
-                'log_book_text', $
-                cmd_text
-            ENDELSE
-          ENDIF
-        ENDIF ELSE BEGIN    ;missing program
-          IDLsendToGeek_ReplaceLogBookText_fromMainBase, $
-            MAIN_BASE, $
-            'log_book_text', $
-            PROCESSING,$
-            FAILED
-          ;              + ' (Minimum Required Version: ' + $
-          ;              my_package[i].version_required + ')'
-          missing_packages[i] = my_package[i].driver
-          ++nbr_missing_packages
-        ENDELSE
-      ENDFOR
-      
-      IF (nbr_missing_packages GT 0) THEN BEGIN
-        ;pop up window that show that they are missing packages
-        message = ['They are ' + $
-          STRCOMPRESS(nbr_missing_packages,/REMOVE_ALL) + $
-          ' missing package(s) you need to ' + $
-          'fully used this application.']
-        message = [message,'Check Log Book For More Information !']
-        result = DIALOG_MESSAGE(message, $
-          /INFORMATION, $
-          DIALOG_PARENT=MAIN_BASE)
-          
-      ENDIF
-      
-    ENDIF                       ;end of 'if (sz GT 0)'
-    
-    message = '=================================================' + $
-      '========================'
-    IDLsendToGeek_addLogBookText_fromMainBase, MAIN_BASE, $
-      'log_book_text', message
-      
+    checking_packages_routine, MAIN_BASE, my_package, global
   ENDIF
   
   ;==============================================================================
   ;==============================================================================
   
-  
-  ;logger message
-  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-  logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-  ENDIF ELSE BEGIN
-    spawn, logger_message
-  ENDELSE
+  ;send message to log current run of application
+  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 END
 
