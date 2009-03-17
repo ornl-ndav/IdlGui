@@ -262,44 +262,51 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     sWaveHelpButton.size[3]],$
     value : 'BROWSE ...',$
     uname: 'wave_dependent_back_browse_button'}
-   
-    ;- Accelerator Down Time (seconds) --------------------------------------------
+    
+  ;- Accelerator Down Time (seconds) --------------------------------------------
   XYoff = [0,20]
   sAcceBase = { size:  [sWavebase.size[0]+XYoff[0],$
     sWaveBase.size[1]+$
     sWaveBase.size[3]+XYoff[1],$
     sWaveBase.size[2],$
     50],$
+    sensitive: 0,$
     frame: sWaveBase.frame,$
     uname: 'acce_base'}
   XYoff = [20,-8]
   sAcceTitle = { size:  [sAcceBase.size[0]+XYoff[0],$
     sAcceBase.size[1]+XYoff[1]],$
     value: 'Accelerator Down Time (seconds)'}
-  
+    
   ;Data
   AcceXoff = 55
   XYoff = [80,18]
   sAcceDataLabel = { size:  [XYoff[0],$
     XYoff[1]],$
-    value: 'Data:'}
+    value: 'Data:',$
+    sensitive: 0,$
+    uname: 'acce_data_label'}
   XYoff = [35,-5]
   sDataText = {  size:  [sAcceDataLabel.size[0]+XYoff[0],$
     sAcceDataLabel.size[1]+XYoff[1],$
     70,30],$
     value: '0.0',$
+    sensitive: 0,$
     uname: 'acce_data_text_field'}
     
   ;Solvent
   XYoff = [AcceXoff+5,0]
   sSolventLabel = { size:  [sDataText.size[0]+sDataText.size[2]+XYoff[0],$
     sAcceDataLabel.size[1]+XYoff[1]],$
-    value: 'Solvent:'}
+    value: 'Solvent:',$
+    sensitive: 0,$
+    uname: 'acce_solvent_label'}
   XYoff = [53,0]
   sSolventText = {  size:  [sSolventLabel.size[0]+XYoff[0],$
     sDataText.size[1]+XYoff[1],$
     sDataText.size[2:3]],$
     value: '0.0',$
+    sensitive: 0,$
     uname: 'acce_solvent_text_field'}
     
   ;Empty Can
@@ -307,12 +314,15 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sEmptyCanLabel = { size:  [sSolventText.size[0]+$
     sSolventText.size[2]+XYoff[0],$
     sSolventLabel.size[1]+XYoff[1]],$
-    value: 'Empty Can:'}
+    value: 'Empty Can:',$
+    sensitive: 0,$
+    uname: 'acce_empty_can_label'}
   XYoff = [65,0]
   sEmptyCanText = {  size:  [sEmptyCanLabel.size[0]+XYoff[0],$
     sSolventText.size[1]+XYoff[1],$
     sSolventText.size[2:3]],$
     value: '0.0',$
+    sensitive: 0,$
     uname: 'acce_empty_can_text_field'}
     
   ;Open Beam
@@ -320,14 +330,17 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sOpenBeamLabel = { size:  [sEmptyCanText.size[0]+$
     sEmptyCanText.size[2]+XYoff[0],$
     sEmptyCanLabel.size[1]+XYoff[1]],$
-    value: 'Open Beam:'}
+    value: 'Open Beam:',$
+    sensitive: 0,$
+    uname: 'acce_open_beam_label'}
   XYoff = [65,0]
   sOpenBeamText = {  size:  [sOpenBeamLabel.size[0]+XYoff[0],$
     sEmptyCanText.size[1]+XYoff[1],$
     sEmptyCanText.size[2:3]],$
     value: '0.0',$
+    sensitive: 0,$
     uname: 'acce_open_beam_text_field'}
- 
+    
   ;- scaling constant -----------------------------------------------------------
   XYoff = [0,20]
   sScaleBase = { size:  [sAcceBase.size[0]+XYoff[0],$
@@ -806,17 +819,17 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     VALUE     = sOGbutton.value,$
     UNAME     = sOGbutton.uname)
     
-;- Verbose Mode ---------------------------------------------------------------
-; group = CW_BGROUP(Base,$
-;                   sVerboseGroup.list,$
-;                   XOFFSET    = sVerboseGroup.size[0],$
-;                   YOFFSET    = sVerboseGroup.size[1],$
-;                   ROW        = 1,$
-;                   SET_VALUE  = sVerboseGroup.value,$
-;                   UNAME      = sVerboseGroup.uname,$
-;                   LABEL_LEFT = sVerboseGroup.title,$
-;                   /EXCLUSIVE)
-
+  ;- Verbose Mode ---------------------------------------------------------------
+  ; group = CW_BGROUP(Base,$
+  ;                   sVerboseGroup.list,$
+  ;                   XOFFSET    = sVerboseGroup.size[0],$
+  ;                   YOFFSET    = sVerboseGroup.size[1],$
+  ;                   ROW        = 1,$
+  ;                   SET_VALUE  = sVerboseGroup.value,$
+  ;                   UNAME      = sVerboseGroup.uname,$
+  ;                   LABEL_LEFT = sVerboseGroup.title,$
+  ;                   /EXCLUSIVE)
+    
   ;- Accelerator Down Time ----------------------------------------------------
   wAcceTitle = WIDGET_LABEL(Basetab,$
     XOFFSET = sAcceTitle.size[0],$
@@ -830,13 +843,16 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_XSIZE = sAcceBase.size[2],$
     SCR_YSIZE = sAcceBase.size[3],$
     FRAME     = sAcceBase.frame,$
+    SENSITIVE = sAcceBase.sensitive,$
     UNAME     = sAcceBase.uname)
     
   ;Data
   wAcceDataLabel = WIDGET_LABEL(Base,$
     XOFFSET = sAcceDataLabel.size[0],$
     YOFFSET = sAcceDataLabel.size[1],$
-    VALUE   = sAcceDataLabel.value)
+    VALUE   = sAcceDataLabel.value,$
+    UNAME   = sAcceDataLabel.uname,$
+    SENSITIVE = sAcceDataLabel.sensitive)
     
   wDataText = WIDGET_TEXT(Base,$
     XOFFSET   = sDataText.size[0],$
@@ -845,15 +861,18 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = sDataText.size[3],$
     VALUE     = sDataText.value,$
     UNAME     = sDataText.uname,$
+    SENSITIVE = sDataText.sensitive,$
     /ALL_EVENTS,$
     /EDITABLE,$
     /ALIGN_LEFT)
-  
+    
   ;Solvent
   wSolventLabel = WIDGET_LABEL(Base,$
     XOFFSET = sSolventLabel.size[0],$
     YOFFSET = sSolventLabel.size[1],$
-    VALUE   = sSolventLabel.value)
+    VALUE   = sSolventLabel.value,$
+    SENSITIVE = sSolventLabel.sensitive,$
+    UNAME   = sSolventLabel.uname)
     
   wSolventText = WIDGET_TEXT(Base,$
     XOFFSET   = sSolventText.size[0],$
@@ -861,6 +880,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_XSIZE = sSolventText.size[2],$
     SCR_YSIZE = sSolventText.size[3],$
     VALUE     = sSolventText.value,$
+    SENSITIVE = sSolventText.sensitive,$
     UNAME     = sSolventText.uname,$
     /ALL_EVENTS,$
     /EDITABLE,$
@@ -870,7 +890,9 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   wEmptyCanLabel = WIDGET_LABEL(Base,$
     XOFFSET = sEmptyCanLabel.size[0],$
     YOFFSET = sEmptyCanLabel.size[1],$
-    VALUE   = sEmptyCanLabel.value)
+    VALUE   = sEmptyCanLabel.value,$
+    SENSITIVE = sEmptyCanLabel.sensitive,$
+    UNAME   = sEmptyCanLabel.uname)
     
   wEmptyCanText = WIDGET_TEXT(Base,$
     XOFFSET   = sEmptyCanText.size[0],$
@@ -878,16 +900,19 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_XSIZE = sEmptyCanText.size[2],$
     SCR_YSIZE = sEmptyCanText.size[3],$
     VALUE     = sEmptyCanText.value,$
+    SENSITIVE = sEmptyCanText.sensitive,$
     UNAME     = sEmptyCanText.uname,$
     /ALL_EVENTS,$
     /EDITABLE,$
     /ALIGN_LEFT)
-
+    
   ;OpenBeam
   wOpenBeamLabel = WIDGET_LABEL(Base,$
     XOFFSET = sOpenBeamLabel.size[0],$
     YOFFSET = sOpenBeamLabel.size[1],$
-    VALUE   = sOpenBeamLabel.value)
+    VALUE   = sOpenBeamLabel.value,$
+    SENSITIVE = sOpenBeamLabel.sensitive,$
+    UNAME   = sOpenBeamLabel.uname)
     
   wOpenBeamText = WIDGET_TEXT(Base,$
     XOFFSET   = sOpenBeamText.size[0],$
@@ -895,9 +920,10 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_XSIZE = sOpenBeamText.size[2],$
     SCR_YSIZE = sOpenBeamText.size[3],$
     VALUE     = sOpenBeamText.value,$
+    SENSITIVE = sOpenBeamText.sensitive,$
     UNAME     = sOpenBeamText.uname,$
     /ALL_EVENTS,$
     /EDITABLE,$
     /ALIGN_LEFT)
-
+    
 END
