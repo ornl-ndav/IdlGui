@@ -34,11 +34,22 @@
 
 PRO display_buttons, MAIN_BASE, global
 
-;display equation of Scalling factor in Empty Cell tab
-draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='play_button')
 WIDGET_CONTROL, draw1, GET_VALUE=id
 WSET, id
-image = READ_PNG((*global).sf_equation_file)
+image = READ_PNG((*global).play_button_value)
+tv, image, 0,0,/true
+
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='pause_button')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).pause_button_value)
+tv, image, 0,0,/true
+
+draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='stop_button')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).stop_button_value)
 tv, image, 0,0,/true
 
 

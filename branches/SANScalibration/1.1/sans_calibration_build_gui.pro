@@ -85,6 +85,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
+    play_button_value: 'images/play.png',$
+    pause_button_value: 'images/pause.png',$
+    stop_button_value: 'images/stop.png',$
+    
     main_base_uname: 'MAIN_BASE',$
     MainBaseSize:    INTARR(4),$
     tof_ascii_path:  '~/',$
@@ -391,6 +395,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     
   ENDIF
+  
+  ;DEVICE, CURSOR_STANDARD=
   
   ;display the png files
   display_buttons, MAIN_BASE, global
