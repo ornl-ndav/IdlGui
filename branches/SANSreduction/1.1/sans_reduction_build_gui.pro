@@ -182,6 +182,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--bkg-coeff',$
     roi_file: $
     '--roi-file'},$
+    accelerator_data_flag: '--data-acc-down-time',$
+    accelerator_solvent_flag: '--solv-acc-down-time',$
+    accelerator_empty_can_flag: '--ecan-acc-down-time',$
+    accelerator_open_beam_flag: '--open-acc-down-time',$
     CorrectPara: {solv_buffer: {title: $
     'Solvant Buffer Only',$
     flag: $

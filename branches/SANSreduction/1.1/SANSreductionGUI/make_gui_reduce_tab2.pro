@@ -312,7 +312,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sEmptyCanText = {  size:  [sEmptyCanLabel.size[0]+XYoff[0],$
     sSolventText.size[1]+XYoff[1],$
     sSolventText.size[2:3]],$
-    value: '',$
+    value: '0.0',$
     uname: 'acce_empty_can_text_field'}
     
   ;Open Beam
@@ -325,7 +325,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sOpenBeamText = {  size:  [sOpenBeamLabel.size[0]+XYoff[0],$
     sEmptyCanText.size[1]+XYoff[1],$
     sEmptyCanText.size[2:3]],$
-    value: '',$
+    value: '0.0',$
     uname: 'acce_open_beam_text_field'}
  
   ;- scaling constant -----------------------------------------------------------
