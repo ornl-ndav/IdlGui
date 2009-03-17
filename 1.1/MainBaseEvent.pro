@@ -460,6 +460,14 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='wave_dependent_back_browse_button'): BEGIN
       BrowseLoadWaveFile, Event ;_reduce_tab3
+      value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
+      IF (value EQ '') THEN BEGIN
+      status = 0
+      ENDIF ELSE BEGIN
+      status = 1
+      ENDELSE
+      activate_widget, Event, 'acce_base', status
+
     END
     
     ;--- comma-delimited list of increasing coefficients ----------------------
