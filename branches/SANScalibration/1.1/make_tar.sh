@@ -10,3 +10,4 @@ tar_file_name="./"$application"_"$version".tar"
 #create tar file
 tar cvf $tar_file_name $list_of_files_folders
 
+echo $version
