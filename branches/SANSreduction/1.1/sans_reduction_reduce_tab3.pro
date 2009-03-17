@@ -140,7 +140,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION isolate_coeff, file_coeff, scaling_value
   split_error = 0
-  ;CATCH, split_error
+  CATCH, split_error
   IF (split_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN,['']
