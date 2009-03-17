@@ -468,6 +468,11 @@
       
     ENDIF
     
+    scaling_value = (*global).scaling_value
+    IF (scaling_value NE '') THEN BEGIN
+      cmd +=  ' ' + (*global).scaling_value_flag + '=' + scaling_value
+    ENDIF
+    
     ;- INTERMEDIATE ---------------------------------------------------------------
     IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
     ;beam monitor after conversion to Wavelength
