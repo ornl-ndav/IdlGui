@@ -370,11 +370,68 @@ PRO CheckCommandLine, Event
     ENDELSE
   ENDIF
   
+  ;Accelerator Down time (seconds)
+  value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
+  IF (value NE '') THEN BEGIN ;required if none empty list of coefficients
   
+  ;data
+    cmd += ' ' + (*global).accelerator_data_flag + '='
+    value1 = getTextFieldValue(Event, 'acce_data_text_field')
+    IF (value1 NE '') THEN BEGIN
+      cmd += STRCOMPRESS(value1,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      cmd += '?'
+      cmd_status = 0
+      ++missing_argument_counter
+      missing_arguments_text = [missing_arguments_text, $
+        '- Data Accelerator Down Time ' + $
+        '(PARAMETERS)']
+    ENDELSE
   
+  ;solvent
+    cmd += ' ' + (*global).accelerator_solvent_flag + '='
+    value1 = getTextFieldValue(Event, 'acce_solvent_text_field')
+    IF (value1 NE '') THEN BEGIN
+      cmd += STRCOMPRESS(value1,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      cmd += '?'
+      cmd_status = 0
+      ++missing_argument_counter
+      missing_arguments_text = [missing_arguments_text, $
+        '- Solvent Accelerator Down Time ' + $
+        '(PARAMETERS)']
+    ENDELSE
   
+  ;empty can
+    cmd += ' ' + (*global).accelerator_empty_can_flag + '='
+    value1 = getTextFieldValue(Event, 'acce_empty_can_text_field')
+    IF (value1 NE '') THEN BEGIN
+      cmd += STRCOMPRESS(value1,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      cmd += '?'
+      cmd_status = 0
+      ++missing_argument_counter
+      missing_arguments_text = [missing_arguments_text, $
+        '- Empty Can Accelerator Down Time ' + $
+        '(PARAMETERS)']
+    ENDELSE
   
+  ;Open Beam
+    cmd += ' ' + (*global).accelerator_open_beam_flag + '='
+    value1 = getTextFieldValue(Event, 'acce_open_beam_text_field')
+    IF (value1 NE '') THEN BEGIN
+      cmd += STRCOMPRESS(value1,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      cmd += '?'
+      cmd_status = 0
+      ++missing_argument_counter
+      missing_arguments_text = [missing_arguments_text, $
+        '- Open Beam Accelerator Down Time ' + $
+        '(PARAMETERS)']
+    ENDELSE
   
+  ENDIF
+    
   ;- INTERMEDIATE ---------------------------------------------------------------
   IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
   ;beam monitor after conversion to Wavelength
