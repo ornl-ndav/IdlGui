@@ -547,7 +547,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     value: 'REFRESH PLOT',$
     uname: 'refresh_plot_button',$
     sensitive: 1}
-        
+    
   ;- X and Y position of cursor -------------------------------------------------
   XYoff = [0,30]
   XYbase = { size: [sLabelDraw.size[0]+$
@@ -611,8 +611,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     value: 'COUNTS VS TOF (monitor)',$
     uname: 'counts_vs_tof_monitor_button'}
     
+  ;play, pause, stop base -----------------------------------------------------
+  XYoff = [7,3]
+  sPlayBase = { size: [XYbase.size[0]+XYoff[0],$
+    XYbase.size[1]+XYbase.size[3]+XYoff[1],$
+    150,30],$
+    uname: 'play_base',$
+    map: 1,$
+    frame: 0}
+    
+  ;play button (draw)
+  sAdvancedPlayButton = { uname: 'play_button',$
+    size: [0,0,29,30]}
+  ;pause button (draw)
+  sAdvancedPauseButton = { uname: 'pause_button',$
+    size: [0,0,29,30]}
+  ;stop button (draw)
+  sAdvancedStopButton = { uname: 'stop_button',$
+    size: [0,0,29,30]}
+    
   ;linear of log plot base and cw_bgroup
-  XYoff = [0,0]
+  XYoff = [130,0]
   sScaleTypeBase = { size: [XYbase.size[0]+XYoff[0],$
     XYbase.size[1]+XYbase.size[3]+XYoff[1]],$
     uname: 'z_axis_scale_base',$
@@ -623,7 +642,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     XYoff[1]],$
     title: 'Z-axis:',$
     value: 0.0,$
-    list: ['linear','log'],$
+    list: ['lin','log'],$
     uname: 'z_axis_scale'}
     
   ;==============================================================================
@@ -1321,7 +1340,33 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     VALUE     = sCountsTofButton3.value,$
     SENSITIVE = sCountsTofButton3.sensitive,$
     UNAME     = sCountsTofButton3.uname)
+    
+  ;play, pause, stop base
+  wPlayBase = WIDGET_BASE(wTab1Base,$
+    XOFFSET = sPlayBase.size[0],$
+    YOFFSET = sPlayBase.size[1],$
+    FRAME = sPlayBase.frame,$
+    UNAME = sPlayBase.uname,$
+    MAP = sPlayBase.map,$
+    /ROW)
+    
+  wPlayButton = WIDGET_DRAW(wPlayBase,$
+    SCR_XSIZE = sAdvancedPlayButton.size[2],$
+    SCR_YSIZE = sAdvancedPlayButton.size[3],$
+    UNAME     = sAdvancedPlayButton.uname)
   
+  wPauseButton = WIDGET_DRAW(wPlayBase,$
+    SCR_XSIZE = sAdvancedPauseButton.size[2],$
+    SCR_YSIZE = sAdvancedPauseButton.size[3],$
+    UNAME     = sAdvancedPauseButton.uname)
+    
+  wStopButton = WIDGET_DRAW(wPlayBase,$
+    SCR_XSIZE = sAdvancedStopButton.size[2],$
+    SCR_YSIZE = sAdvancedStopButton.size[3],$
+    UNAME     = sAdvancedStopButton.uname)
+    
+    
+    
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
     XOFFSET = sScaleTypeBase.size[0],$
