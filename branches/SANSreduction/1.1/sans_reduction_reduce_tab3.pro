@@ -167,8 +167,8 @@ PRO BrowseLoadWaveFile, Event ;_reduce_tab3
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   title     = 'Please select a fitting Polynome File'
-  extension = 'bkg'
-  filter    = '*.bkg'
+  extension = 'txt'
+  filter    = '*.txt'
   path      = (*global).wave_dep_back_sub_path
   poly_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
     FILTER            = filter,$
