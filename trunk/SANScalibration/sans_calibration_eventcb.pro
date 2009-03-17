@@ -207,7 +207,7 @@ IF (RunNumber NE 0) THEN BEGIN
 ;put full path of nexus in reduce tab1
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
-          full_nexus_name
+          full_nexus_name[0]
 
         IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
 ;predefined default reduce output file name
@@ -221,7 +221,7 @@ IF (RunNumber NE 0) THEN BEGIN
               defaultReuceFileName
         ENDIF
 
-        (*global).data_nexus_file_name = full_nexus_name
+        (*global).data_nexus_file_name = full_nexus_name[0]
 ;activate selection buttons 
         update_tab1_gui, Event, STATUS=1 ;_gui
     ENDIF ELSE BEGIN            ;failed

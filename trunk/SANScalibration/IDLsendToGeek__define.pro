@@ -310,8 +310,10 @@ END
 ;This function send by email a copy of the logBook
 PRO IDLsendToGeek_EmailLogBook, Event, FullFileName, FullTarFile
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
-version   = IDLsendToGeek_getGlobalVariable(Event,'version')
-ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+version = IDLsendToGeek_getGlobalVariable(Event,'version')
+ucams = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+application = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
+
 ;add ucams 
 ucamsText = 'Ucams: ' + ucams
 ;hostname
@@ -347,7 +349,8 @@ ENDIF ELSE BEGIN
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mutt -s "' + subject + '" -a ' + $
       FullTarFile
-    cmd += ' j35@ornl.gov'
+    cmd += ' scsupport@ornl.gov'
+    ;cmd += ' j35@ornl.gov'
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'

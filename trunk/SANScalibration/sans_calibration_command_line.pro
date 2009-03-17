@@ -89,21 +89,24 @@ PRO CheckCommandLine, Event
     missing_arguments_text = ['- Valid Data File (LOAD FILES)']
     cmd_status = 0
     ++missing_argument_counter
-
-END
-
-  ;get monitor path
-  cmd += ' --bmon-path='
-  IF (file_run EQ '') THEN BEGIN
-    cmd += '?'
-  ENDIF ElSE BEGIN
-    path = getBmonPath(Event, file_run)
-    cmd += path
-  ENDELSE
+    
+  END
   
-;-ROI File-
-file_run = getTextFieldValue(Event,'roi_file_name_text_field')
-IF (file_run NE '' AND $
+  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+    ;transmission mode
+    ;get monitor path
+    cmd += ' --bmon-path='
+    IF (file_run EQ '') THEN BEGIN
+      cmd += '?'
+    ENDIF ElSE BEGIN
+      path = getBmonPath(Event, file_run)
+      cmd += path
+    ENDELSE
+  ENDIF
+  
+  ;-ROI File-
+  file_run = getTextFieldValue(Event,'roi_file_name_text_field')
+  IF (file_run NE '' AND $
     FILE_TEST(file_run,/REGULAR)) THEN BEGIN
     flag = (*global).CorrectPara.roi.flag
     cmd += ' ' + flag + '=' + file_run
@@ -182,18 +185,20 @@ IF (file_run NE '' AND $
       '(PARAMETERS)']
   ENDELSE
   
-  beamTO = getTextFieldValue(Event,'time_zero_offset_beam_monitor_uname')
-  cmd += ' ' + (*global).ReducePara.monitor_time_offset + '='
-  IF (beamTO NE '') THEN BEGIN
-    cmd += beamTO + ',0'
-  ENDIF ELSE BEGIN
-    cmd += '?'
-    cmd_status = 0
-    ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, $
-      '- Beam Monitor ' + $
-      'Offset (PARAMETERS)']
-  ENDELSE
+  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+    beamTO = getTextFieldValue(Event,'time_zero_offset_beam_monitor_uname')
+    cmd += ' ' + (*global).ReducePara.monitor_time_offset + '='
+    IF (beamTO NE '') THEN BEGIN
+      cmd += beamTO + ',0'
+    ENDIF ELSE BEGIN
+      cmd += '?'
+      cmd_status = 0
+      ++missing_argument_counter
+      missing_arguments_text = [missing_arguments_text, $
+        '- Beam Monitor ' + $
+        'Offset (PARAMETERS)']
+    ENDELSE
+  ENDIF
   
   IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
     ;transmission mode
