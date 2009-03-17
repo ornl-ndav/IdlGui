@@ -143,13 +143,13 @@ IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN ;trans. mode
 ;retrieve list of #X tags from the input ascii file
     file_name = getTextFieldValue(Event,'input_file_text_field')
     iClass = OBJ_NEW('IDL3columnsASCIIparser',file_name)
-    output_array = iClass->getAllTag()
+    output_array = iClass->getAllTag(Event)
 ;add information about polynome used
     poly_string = getPolyString(Event)
     output_array = [output_array,poly_string]
 ;add emtpy line, and scale informations
     output_array = [output_array,'']
-    outputStructure = iClass->getData()
+    outputStructure = iClass->getData(Event)
 ;#S 1 Spectrum ID ('bank1',(38,38))
     bank = (*outputStructure.data[0]).bank
     x    = (*outputStructure.data[0]).x
