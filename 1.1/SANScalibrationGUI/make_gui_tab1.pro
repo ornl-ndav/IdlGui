@@ -617,7 +617,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     XYbase.size[1]+XYbase.size[3]+XYoff[1],$
     150,30],$
     uname: 'play_base',$
-    map: 1,$
+    map: 0,$
     frame: 0}
     
   ;play button (draw)
