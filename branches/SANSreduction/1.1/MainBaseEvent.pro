@@ -445,6 +445,15 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id1, SET_VALUE = (*global).wave_para_label
         WIDGET_CONTROL, id, SET_VALUE = value
       ENDELSE
+
+      value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
+      IF (value EQ '') THEN BEGIN
+      status = 0
+      ENDIF ELSE BEGIN
+      status = 1
+      ENDELSE
+      activate_widget, Event, 'acce_base', status
+
     END
     
     ;---- Browse button of Wavelength Dependent Back. subtraction -----------------
@@ -453,6 +462,18 @@ PRO MAIN_BASE_event, Event
       BrowseLoadWaveFile, Event ;_reduce_tab3
     END
     
+    ;--- comma-delimited list of increasing coefficients ----------------------
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='wave_dependent_back_sub_text_field'): BEGIN
+      value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
+      IF (value EQ '') THEN BEGIN
+      status = 0
+      ENDIF ELSE BEGIN
+      status = 1
+      ENDELSE
+      activate_widget, Event, 'acce_base', status
+    END
+        
     ;---- Clear Wavelength coefficient text field ---------------------------------
     WIDGET_INFO(wWidget,$
       FIND_BY_UNAME= $
