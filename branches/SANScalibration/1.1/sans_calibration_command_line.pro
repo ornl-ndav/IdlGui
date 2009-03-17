@@ -92,14 +92,17 @@ PRO CheckCommandLine, Event
     
   END
   
-  ;get monitor path
-  cmd += ' --bmon-path='
-  IF (file_run EQ '') THEN BEGIN
-    cmd += '?'
-  ENDIF ElSE BEGIN
-    path = getBmonPath(Event, file_run)
-    cmd += path
-  ENDELSE
+  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+    ;transmission mode
+    ;get monitor path
+    cmd += ' --bmon-path='
+    IF (file_run EQ '') THEN BEGIN
+      cmd += '?'
+    ENDIF ElSE BEGIN
+      path = getBmonPath(Event, file_run)
+      cmd += path
+    ENDELSE
+  ENDIF
   
   ;-ROI File-
   file_run = getTextFieldValue(Event,'roi_file_name_text_field')
