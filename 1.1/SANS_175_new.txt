@@ -13,6 +13,7 @@
 #C HLR Version - 1.2dev
 #C DOM Version - 1.2dev
 #C SCL Version - 1.2dev
+#C background Scaling: 53
 
 #S 1 Spectrum ID ('bank1', (38, 38))
 #N 3

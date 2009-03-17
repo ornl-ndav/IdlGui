@@ -403,7 +403,7 @@ FUNCTION IDL3columnsASCIIparser::getData, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION IDL3columnsASCIIparser::get_tag, tag
+FUNCTION IDL3columnsASCIIparser::get_tag, tag, event
   ;remove semicolon from tag
   tag = modtag(tag)
   ;read data into array
