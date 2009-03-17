@@ -82,6 +82,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   wave_para_help_value = '1,23,456,7890'
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
+    scaling_value: '',$
     package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
     list_OF_files_to_send: ptr_new(0L),$
@@ -182,6 +183,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--bkg-coeff',$
     roi_file: $
     '--roi-file'},$
+    scaling_value_flag: '--bkg-scale',$
     accelerator_data_flag: '--data-acc-down-time',$
     accelerator_solvent_flag: '--solv-acc-down-time',$
     accelerator_empty_can_flag: '--ecan-acc-down-time',$

@@ -479,6 +479,7 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME= $
       'wave_clear_text_field'): BEGIN
       putTextFieldValue, Event, 'wave_dependent_back_sub_text_field',''
+      (*global).scaling_value = ''
     END
     
     ;= TAB3 (PLOT) ================================================================
