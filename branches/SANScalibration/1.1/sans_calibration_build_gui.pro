@@ -331,7 +331,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;populate the FITTING tab (ascii file name)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='input_file_text_field')
     WIDGET_CONTROL, id, $
-      SET_VALUE='~/SVN/IdlGui/branches/SANScalibration/1.0/SANS_175_new.txt'
+      SET_VALUE='~/SVN/IdlGui/branches/SANScalibration/1.1/SANS_175_new.txt'
       
     ;min,max and width
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='alternate_wave_min_text_field')
