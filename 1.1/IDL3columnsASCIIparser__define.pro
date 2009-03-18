@@ -326,7 +326,7 @@ pro populate_structure, all_data, MyStruct, Event
       if array_nbr eq 0 then begin
         IF (STRMATCH(line,'#L*')) THEN BEGIN
           no_error = 0
-          ;            CATCH, no_error
+          CATCH, no_error
           IF (no_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             x_all = ['','']
@@ -351,37 +351,37 @@ pro populate_structure, all_data, MyStruct, Event
                 y_all = [temp1[2],'']
                 sigma_all = [temp1[3],'']
               END
-            ELSE:  BEGIN
-              x_all = [temp1[0],'']
-              y_all = [temp1[1],'']
-              sigma_all = [temp1[2],'']
-            END
-          ENDCASE
-        ENDELSE
+              ELSE:  BEGIN
+                x_all = [temp1[0],'']
+                y_all = [temp1[1],'']
+                sigma_all = [temp1[2],'']
+              END
+            ENDCASE
+          ENDELSE
+        ENDIF
       ENDIF
-    ENDIF
+      
+    ENDELSE
     
-  ENDELSE
+    ++i
+    
+  ENDWHILE
   
-  ++i
+  IDLsendToGeek_addLogBookText, Event, '----> leaving the while loop'
   
-ENDWHILE
-
-IDLsendToGeek_addLogBookText, Event, '----> leaving the while loop'
-
-;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis,
-;sigma_axis_units
-;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
-
-MyStruct.NbrArray = new_nbr
-MyStruct.xaxis = x_all[0]
-MyStruct.xaxis_units = x_all[1]
-MyStruct.yaxis = y_all[0]
-MyStruct.yaxis_units = y_all[1]
-MyStruct.sigma_yaxis = sigma_all[0]
-MyStruct.sigma_yaxis_units = sigma_all[1]
-*MyStruct.data = data_structure
-
+  ;retrieve the Xaxis, Xaxis_units, Yaxis, Yaxis_units, sigma_axis,
+  ;sigma_axis_units
+  ;and put them in MyStruct.xaxis, Mystruct.xaxis_units ....
+  
+  MyStruct.NbrArray = new_nbr
+  MyStruct.xaxis = x_all[0]
+  MyStruct.xaxis_units = x_all[1]
+  MyStruct.yaxis = y_all[0]
+  MyStruct.yaxis_units = y_all[1]
+  MyStruct.sigma_yaxis = sigma_all[0]
+  MyStruct.sigma_yaxis_units = sigma_all[1]
+  *MyStruct.data = data_structure
+  
 END
 
 ;------------------------------------------------------------------------------
