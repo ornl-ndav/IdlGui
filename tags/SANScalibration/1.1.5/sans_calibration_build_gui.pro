@@ -399,7 +399,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEVICE, CURSOR_STANDARD=
   
   ;display the png files
-  display_buttons, MAIN_BASE, global
+;  display_buttons, MAIN_BASE, global
   
   ;change color of background
   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
