@@ -132,7 +132,7 @@ PRO MAIN_BASE_event, Event
     
     ;- Play button ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_play_button'): BEGIN
-;      activate_play_base, Event
+      activate_play_base, Event
       play_tof, Event         ;_eventcb
     END
     
