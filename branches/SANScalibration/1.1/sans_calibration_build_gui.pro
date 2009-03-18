@@ -85,9 +85,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
-    play_button_value: 'images/play.png',$
-    pause_button_value: 'images/pause.png',$
-    stop_button_value: 'images/stop.png',$
+    play_button: 'images/play.png',$
+    pause_button: 'images/pause.png',$
+    stop_button: 'images/stop.png',$
+    play_button_active: 'images/play_active.png',$
+    pause_button_active: 'images/pause_active.png',$
+    stop_button_active: 'images/stop_active.png',$
     
     main_base_uname: 'MAIN_BASE',$
     MainBaseSize:    INTARR(4),$
@@ -397,7 +400,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   
   ;display the png files
-  display_buttons, MAIN_BASE = MAIN_BASE, global
+  display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=1, global
   
   ;change color of background
   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
