@@ -396,8 +396,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ENDIF
   
-  ;DEVICE, CURSOR_STANDARD=
-  
   ;display the png files
   display_buttons, MAIN_BASE = MAIN_BASE, global
   

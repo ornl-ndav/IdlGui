@@ -617,18 +617,21 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     XYbase.size[1]+XYbase.size[3]+XYoff[1],$
     150,30],$
     uname: 'play_base',$
-    map: 0,$
+    map: 1,$
     frame: 0}
     
   ;play button (draw)
   sAdvancedPlayButton = { uname: 'play_button',$
-    size: [0,0,29,30]}
+    size: [0,0,29,30],$
+    tooltip: 'Play the movie'}
   ;pause button (draw)
   sAdvancedPauseButton = { uname: 'pause_button',$
-    size: [0,0,29,30]}
+    size: [0,0,29,30],$
+    tooltip: 'Pause the movie'}
   ;stop button (draw)
   sAdvancedStopButton = { uname: 'stop_button',$
-    size: [0,0,29,30]}
+    size: [0,0,29,30],$
+    tooltip: 'Stop the movie'}
     
   ;linear of log plot base and cw_bgroup
   XYoff = [130,0]
@@ -1353,17 +1356,23 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
   wPlayButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPlayButton.size[2],$
     SCR_YSIZE = sAdvancedPlayButton.size[3],$
-    UNAME     = sAdvancedPlayButton.uname)
+    UNAME     = sAdvancedPlayButton.uname,$
+    /TRACKING_EVENTS,$
+    TOOLTIP = sAdvancedPlayButton.tooltip)
   
   wPauseButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPauseButton.size[2],$
     SCR_YSIZE = sAdvancedPauseButton.size[3],$
-    UNAME     = sAdvancedPauseButton.uname)
+    UNAME     = sAdvancedPauseButton.uname,$
+    /TRACKING_EVENTS,$
+    TOOLTIP = sAdvancedPauseButton.tooltip)
     
   wStopButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedStopButton.size[2],$
     SCR_YSIZE = sAdvancedStopButton.size[3],$
-    UNAME     = sAdvancedStopButton.uname)
+    UNAME     = sAdvancedStopButton.uname,$
+    /TRACKING_EVENTS,$
+    TOOLTIP = sAdvancedStopButton.tooltip)
     
     
     
