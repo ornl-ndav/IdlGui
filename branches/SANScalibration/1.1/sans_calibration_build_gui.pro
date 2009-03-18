@@ -356,7 +356,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;Data File text field (Load Files)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
     WIDGET_CONTROL, id, $
-      SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
+      SET_VALUE='/LENS/SANS/EXP005/2/536/NeXus/SANS_536.nxs'
+    ;roi file
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='roi_file_name_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='/SNS/users/j35/SVN/IdlGui/branches/SANScalibration/1.1/my_roi.dat'
+    ;transmission background file
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='transm_back_file_name_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='/LENS/SANS/EXP005/2/537/NeXus/SANS_537.nxs
     ;Time Zero Offset (Parameters)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='time_zero_offset_detector_uname')
     WIDGET_CONTROL, id, $
