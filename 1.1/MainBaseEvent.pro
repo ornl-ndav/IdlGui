@@ -136,6 +136,36 @@ PRO MAIN_BASE_event, Event
       play_tof, Event         ;_eventcb
     END
     
+    ;-Advanced Button ---------------------------------------------------------
+    ;play button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='play_button'): BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+       standard = 58
+      ENDIF ELSE BEGIN
+      standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    END
+    
+    ;pause button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='pause_button'): BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+       standard = 58
+      ENDIF ELSE BEGIN
+      standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    END
+
+    ;stop button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='stop_button'): BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+       standard = 58
+      ENDIF ELSE BEGIN
+      standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    END
     ;------------------------------------------------------------------------------
     ;- TOF reset button -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_reset_range'): BEGIN
