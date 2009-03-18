@@ -55,7 +55,7 @@ cd, CurrentFolder
 .run sans_calibration_fitting.pro
 .run sans_calibration_counts_vs_tof.pro
 .run sans_calibration_lin_log_plot.pro
-.run sans_calibration_play.pro
+;.run sans_calibration_play.pro
 
 ;main functions
 .run MainBaseEvent.pro
