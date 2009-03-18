@@ -32,7 +32,11 @@
 ;
 ;==============================================================================
 
-PRO display_buttons, MAIN_BASE, global
+PRO display_buttons, MAIN_BASE=MAIN_BASE, $
+EVENT=EVENT,$
+global
+
+IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
 
 draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='play_button')
 WIDGET_CONTROL, draw1, GET_VALUE=id
@@ -52,5 +56,28 @@ WSET, id
 image = READ_PNG((*global).stop_button_value)
 tv, image, 0,0,/true
 
+ENDIF ELSE BEGIN
+
+draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='play_button')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).play_button_value)
+tv, image, 0,0,/true
+
+draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='pause_button')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).pause_button_value)
+tv, image, 0,0,/true
+
+draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='stop_button')
+WIDGET_CONTROL, draw1, GET_VALUE=id
+WSET, id
+image = READ_PNG((*global).stop_button_value)
+tv, image, 0,0,/true
+
+ENDELSE
 
 END
+
+;-----------------------------------------------------------------------------
