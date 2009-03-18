@@ -139,32 +139,41 @@ PRO MAIN_BASE_event, Event
     ;-Advanced Button ---------------------------------------------------------
     ;play button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='play_button'): BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-       standard = 58
-      ENDIF ELSE BEGIN
-      standard = 31
-      ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
+;      help, event, /structure
+;      IF (N_ELEMENTS(Event.ENTER) NE 0) THEN BEGIN
+;        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+;          standard = 58
+;        ENDIF ELSE BEGIN
+;          standard = 31
+;        ENDELSE
+;        DEVICE, CURSOR_STANDARD=standard
+;        ;display_buttons, EVENT=EVENT, ACTIVATE=1, global
+;      ENDIF ELSE BEGIN
+;        print, 'here'
+;      ENDELSE
+      
     END
     
     ;pause button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='pause_button'): BEGIN
       IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-       standard = 58
+        standard = 58
       ENDIF ELSE BEGIN
-      standard = 31
+        standard = 31
       ENDELSE
       DEVICE, CURSOR_STANDARD=standard
+    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
     END
-
+    
     ;stop button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='stop_button'): BEGIN
       IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-       standard = 58
+        standard = 58
       ENDIF ELSE BEGIN
-      standard = 31
+        standard = 31
       ENDELSE
       DEVICE, CURSOR_STANDARD=standard
+    ;display_buttons, EVENT=EVENT, ACTIVATE=3, global
     END
     ;------------------------------------------------------------------------------
     ;- TOF reset button -----------------------------------------------------------

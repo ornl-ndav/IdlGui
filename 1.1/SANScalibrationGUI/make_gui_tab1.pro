@@ -1358,6 +1358,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sAdvancedPlayButton.size[3],$
     UNAME     = sAdvancedPlayButton.uname,$
     /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedPlayButton.tooltip)
   
   wPauseButton = WIDGET_DRAW(wPlayBase,$
@@ -1365,6 +1366,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sAdvancedPauseButton.size[3],$
     UNAME     = sAdvancedPauseButton.uname,$
     /TRACKING_EVENTS,$
+        /BUTTON_EVENTS,$  
     TOOLTIP = sAdvancedPauseButton.tooltip)
     
   wStopButton = WIDGET_DRAW(wPlayBase,$
@@ -1372,6 +1374,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sAdvancedStopButton.size[3],$
     UNAME     = sAdvancedStopButton.uname,$
     /TRACKING_EVENTS,$
+        /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedStopButton.tooltip)
     
     
