@@ -46,6 +46,7 @@ cd, CurrentFolder + '/utilities'
 .run time.pro
 .run list_of_proposal.pro
 .run IDLxmlParser__define.pro
+.run xmlParser__define.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
