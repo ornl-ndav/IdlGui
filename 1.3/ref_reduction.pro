@@ -79,6 +79,10 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({ first_event: 1,$
+                    
+                    findcalib: 'findcalib',$
+                    ts_geom: 'TS_geom_calc.sh',$
+                    
                     substrate_type: PTR_NEW(0L),$
                     VERSION: version,$
                     debugging_on_mac: DEBUGGING_ON_MAC,$

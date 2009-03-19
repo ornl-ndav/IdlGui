@@ -47,6 +47,7 @@ cd, CurrentFolder + '/utilities'
 .run time.pro
 .run list_of_proposal.pro
 .run IDLxmlParser__define.pro
+.run xmlParser__define.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
@@ -96,6 +97,7 @@ cd, CurrentFolder
 .run ref_reduction_Plot1DDataFile.pro
 .run ref_reduction_Plot1D2DDataFile.pro
 .run ref_reduction_LoadDataFile.pro
+.run ref_reduction_geometry.pro
 .run ref_reduction_NXsummary.pro
 .run ref_reduction_Plot2DNormalizationFile.pro
 .run ref_reduction_Plot1DNormalizationFile.pro

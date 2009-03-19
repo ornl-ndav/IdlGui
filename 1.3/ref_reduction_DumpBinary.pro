@@ -41,7 +41,7 @@ FUNCTION retrieveBanksData, Event, $
 WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 not_hdf5_format = 0
-;CATCH, not_hdf5_format
+CATCH, not_hdf5_format
 IF (not_hdf5_format NE 0) THEN BEGIN
     CATCH,/CANCEL
     (*global).isHDF5format = 0

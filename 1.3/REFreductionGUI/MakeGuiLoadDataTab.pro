@@ -267,8 +267,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
     XOFFSET = 680,$
     YOFFSET = 425,$
+    
     SCR_XSIZE = 155,$
-    SCR_YSIZE = 115,$
+    SCR_YSIZE = 290,$
     FRAME = 1,$
     /COLUMN)
     
@@ -276,35 +277,79 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     VALUE = 'GEOMETRY INFORMATION')
     
   row1 = WIDGET_BASE(GeoBase,$
-    /row)
+    /column)
   label1 = WIDGET_LABEL(row1,$
-    value = 'DANGLE0 :')
-  label2 = WIDGET_LABEL(row1,$
-    value = 'N/A',$
-    scr_xsize = 50,$
+    value = 'DANGLE0:')
+    col1 = widget_base(row1,$
+  /column)
+  row11 = widget_base(col1,$
+  /row)
+  lab = widget_label(row11,$
+  value = 'Value:')
+  val = widget_label(row11,$
+      value = 'N/A',$
+    scr_xsize = 85,$
     /align_left,$
     uname = 'data_geometry_dangle_value')
+  row12 = widget_base(col1,$
+  /row)
+  lab = widget_label(row12,$
+  value = 'Units:')
+  val = widget_label(row12,$
+      value = 'N/A',$
+    scr_xsize = 85,$
+    /align_left,$
+    uname = 'data_geometry_dangle_units')
     
   row2 = WIDGET_BASE(GeoBase,$
-    /row)
+    /column)
   label1 = WIDGET_LABEL(row2,$
-    value = 'DIRPIX  :')
-  label2 = WIDGET_TEXT(row2,$
-    value = 'N/A',$
-    scr_xsize = 50,$
-    /EDITABLE,$
+    value = 'DIRPIX:')
+    col2 = widget_base(row2,$
+  /column)
+  row21 = widget_base(col2,$
+  /row)
+  lab = widget_label(row21,$
+  value = 'Value:')
+  val = widget_label(row21,$
+      value = 'N/A',$
+    scr_xsize = 85,$
     /align_left,$
     uname = 'data_geometry_dirpix_value')
+  row22 = widget_base(col2,$
+  /row)
+  lab = widget_label(row22,$
+  value = 'Units:')
+  val = widget_label(row22,$
+      value = 'N/A',$
+    scr_xsize = 85,$
+    /align_left,$
+    uname = 'data_geometry_dirpix_units')
     
-  row1 = WIDGET_BASE(GeoBase,$
-    /row)
-  label1 = WIDGET_LABEL(row1,$
-    value = 'REFPIX  :')
-  label2 = WIDGET_LABEL(row1,$
-    value = 'N/A',$
-    scr_xsize = 50,$
+  row3 = WIDGET_BASE(GeoBase,$
+    /column)
+  label1 = WIDGET_LABEL(row3,$
+    value = 'REFPIX:')
+    col3 = widget_base(row3,$
+  /column)
+  row31 = widget_base(col3,$
+  /row)
+  lab = widget_label(row31,$
+  value = 'Value:')
+  val = widget_label(row31,$
+      value = 'N/A',$
+    scr_xsize = 85,$
     /align_left,$
     uname = 'data_geometry_refpix_value')
+  row32 = widget_base(col3,$
+  /row)
+  lab = widget_label(row32,$
+  value = 'Units:')
+  val = widget_label(row32,$
+      value = 'N/A',$
+    scr_xsize = 85,$
+    /align_left,$
+    uname = 'data_geometry_refpix_units')
 
   ;----------------------------------------------------------------------------
     

@@ -101,6 +101,7 @@ cd, CurrentFolder
 .run ref_reduction_Plot1DDataFile.pro
 .run ref_reduction_Plot1D2DDataFile.pro
 .run ref_reduction_LoadDataFile.pro
+.run ref_reduction_geometry.pro
 .run ref_reduction_NXsummary.pro
 .run ref_reduction_Plot2DNormalizationFile.pro
 .run ref_reduction_Plot1DNormalizationFile.pro

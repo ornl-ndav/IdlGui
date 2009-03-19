@@ -35,7 +35,7 @@
 FUNCTION check_number_polarization_state, Event, $
     nexus_file_name, $
     list_pola_state
-      
+    
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name
@@ -76,9 +76,9 @@ END
 ;-----------------------------------------------------------------------------
 ;return 1 if the button is enabled (pushed)
 FUNCTION isButtonSelected, Event, Uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-value = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, VALUE
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, VALUE
 END
 
 ;------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ FUNCTION find_full_nexus_name, Event,$
   ENDIF
   
   cmd += " " + STRCOMPRESS(run_number,/remove_all)
-  spawn, cmd, full_nexus_name, err_listening
+  SPAWN, cmd, full_nexus_name, err_listening
   ;check if nexus exists
-  sz = (size(full_nexus_name))(1)
+  sz = (SIZE(full_nexus_name))(1)
   IF (sz EQ 1) THEN BEGIN
     result = STRMATCH(full_nexus_name,"ERROR*")
     IF (result GE 1) THEN BEGIN
@@ -145,11 +145,11 @@ END
 FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
 
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,get_uvalue=global
   
   cmd = "findnexus -i" + instrument
-  cmd += " " + strcompress(run_number,/remove_all)
+  cmd += " " + STRCOMPRESS(run_number,/remove_all)
   cmd += " --listall"
   
   ; spawn, 'hostname',listening
@@ -165,14 +165,14 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
   ;     END
   ; ENDCASE
   
-  spawn, cmd, full_nexus_name, err_listening
+  SPAWN, cmd, full_nexus_name, err_listening
   
   ;get size of result
-  sz = (size(full_nexus_name))(1)
+  sz = (SIZE(full_nexus_name))(1)
   
   ;check if nexus exists
   if (sz EQ 1) then begin
-    result = strmatch(full_nexus_name,"ERROR*")
+    result = STRMATCH(full_nexus_name,"ERROR*")
     
     if (result GE 1) then begin
       isNeXusExist = 0
@@ -183,6 +183,6 @@ FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
     isNeXusExist = 1
   endelse
   
-  return, full_nexus_name
+  RETURN, full_nexus_name
 end
 

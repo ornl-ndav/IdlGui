@@ -33,7 +33,7 @@
 ;==============================================================================
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  Resolve_Routine, 'ref_reduction_eventcb',$
+  RESOLVE_ROUTINE, 'ref_reduction_eventcb',$
     /COMPILE_FULL_FILE            ; Load event callback routines
     
   ;build the Instrument Selection base
@@ -85,6 +85,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     substrate_type: PTR_NEW(0L),$
     VERSION: version,$
     debugging_on_mac: DEBUGGING_ON_MAC,$
+    
+    findcalib: 'findcalib',$
+    ts_geom: 'TS_geom_calc.sh',$
     
     in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
     in_empty_cell_data_ptr: PTR_NEW(0L),$
@@ -138,17 +141,17 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     with_job_manager:  WITH_JOB_MANAGER,$
     application:       APPLICATION,$
     xml_file_location: '~/',$
-    instrument: strcompress(instrument,/remove_all),$
+    instrument: STRCOMPRESS(instrument,/remove_all),$
     ;name of the current selected REF instrument
     CurrentBatchDataInput: '',$
     CurrentBatchNormInput: '',$
     branch: branch,$
-    batch_data_runs : ptr_new(0L),$
+    batch_data_runs : PTR_NEW(0L),$
     nbrIntermediateFiles : 8,$
     batch_process : 'data',$
-    batch_norm_runs : ptr_new(0L),$
-    batch_NormNexus : ptr_new(0L),$
-    batch_DataNexus : ptr_new(0L),$
+    batch_norm_runs : PTR_NEW(0L),$
+    batch_NormNexus : PTR_NEW(0L),$
+    batch_DataNexus : PTR_NEW(0L),$
     batch_percent_error : 0.01,$ ;1% difference acceptebale between angle, s1 and s2
     batch_split2 : '',$
     batch_part2 : '',$
@@ -163,7 +166,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     NormRunNumber : '',$
     EmptyCellRunNumber: '',$
     PreviousRunReductionValidated : 0,$
-    BatchTable : ptr_new(0L),$ ;big array of batch table
+    BatchTable : PTR_NEW(0L),$ ;big array of batch table
     isHDF5format : 1,$
     dr_output_path : '~/results/',$
     archived_data_flag : 1,$
@@ -185,30 +188,30 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     nexus_bank1_path_pola1: '/entry-Off_On/bank1/data',$
     nexus_bank1_path_pola2: '/entry-On_Off/bank1/data',$
     nexus_bank1_path_pola3: '/entry-On_On/bank1/data',$
-    bank1_data : ptr_new(0L),$ ;
-    bank1_norm : ptr_new(0L),$ ;
-    bank1_empty_cell: ptr_new(0L),$
+    bank1_data : PTR_NEW(0L),$ ;
+    bank1_norm : PTR_NEW(0L),$ ;
+    bank1_empty_cell: PTR_NEW(0L),$
     miniVersion : 1,$
     ;1 if this is the miniVersion and 0 if it's not
-    FilesToPlotList : ptr_new(0L),$
+    FilesToPlotList : PTR_NEW(0L),$
     ;list of files to plot (main,rmd and intermediate files)
     PreviewFileNbrLine : 40,$
     ;nbr of line to get from intermediates files
     DataReductionStatus : 'ERROR',$
     ; status of the data reduction 'OK' or 'ERROR'
-    PlotsTitle : ptr_new(0L),$
+    PlotsTitle : PTR_NEW(0L),$
     ;title of all the plots (main and intermediate)
     MainPlotTitle : '',$
     ;title of main data reduction
-    IntermPlots : intarr(9),$
+    IntermPlots : INTARR(9),$
     ;0 for inter. plot no desired, 1 for desired
-    CurrentPlotsFullFileName:ptr_new(0L),$
+    CurrentPlotsFullFileName:PTR_NEW(0L),$
     ;full path name of the plot currently plotted
     OutputFileName : '',$
     ; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
     IsoTimeStamp : '',$
     ; ex: 2007-08-31T09:28:59-04:00
-    ExtOfAllPlots : ptr_new(0L),$
+    ExtOfAllPlots : PTR_NEW(0L),$
     ;extension of all the files created
     PrevTabSelect : 0,$
     ;name of previous main tab selected
@@ -274,29 +277,29 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;run number of the data file loaded and plotted
     norm_run_number: 0L,$
     ;run number of the norm. file loaded and plotted
-    DATA_DD_ptr : ptr_new(0L),$
+    DATA_DD_ptr : PTR_NEW(0L),$
     ;detector view of DATA (2D)
-    DATA_D_ptr : ptr_new(0L),$
+    DATA_D_ptr : PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of DATA
-    empty_cell_DD_ptr: ptr_new(0L),$
+    empty_cell_DD_ptr: PTR_NEW(0L),$
     ;detector view of empty cell (2D)
-    DATA_D_Total_ptr : ptr_new(0L),$
+    DATA_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-    NORM_D_Total_ptr : ptr_new(0L),$
+    NORM_D_Total_ptr : PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-    empty_cell_D_ptr: ptr_new(0L),$
+    empty_cell_D_ptr: PTR_NEW(0L),$
     ;(ntot,Ny,Nx) array of empty_cell
-    empty_cell_D_Total_ptr: ptr_new(0L),$
+    empty_cell_D_Total_ptr: PTR_NEW(0L),$
     ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-    NORM_DD_ptr : ptr_new(0L),$
+    NORM_DD_ptr : PTR_NEW(0L),$
     ;detector view of NORMALIZATION (2D)
-    NORM_D_ptr : ptr_new(0L),$
+    NORM_D_ptr : PTR_NEW(0L),$
     ;(Ntof,Ny,Nx) array of NORMALIZATION
-    tvimg_data_ptr : ptr_new(0L),$
+    tvimg_data_ptr : PTR_NEW(0L),$
     ;rebin data img
-    tvimg_empty_cell_ptr: ptr_new(0L),$
+    tvimg_empty_cell_ptr: PTR_NEW(0L),$
     ;rebin empty cell img
-    tvimg_norm_ptr : ptr_new(0L),$
+    tvimg_norm_ptr : PTR_NEW(0L),$
     ;rebin norm img
     roi_selection_color: 250L,$
     ;color of roi selection
@@ -304,17 +307,17 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;color of background selection
     peak_selection_color : 100L,$
     ;color of peak exclusion
-    data_roi_selection : ptr_new(0L),$
+    data_roi_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for data roi
-    norm_roi_selection : ptr_new(0L),$
+    norm_roi_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for norm roi
-    data_back_selection : ptr_new(0L),$
+    data_back_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for data background
-    norm_back_selection : ptr_new(0L),$
+    norm_back_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for norm background
-    data_peak_selection : ptr_new(0L),$
+    data_peak_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for data peak
-    norm_peak_selection : ptr_new(0L),$
+    norm_peak_selection : PTR_NEW(0L),$
     ;Ymin and Ymax for norm peak
     data_roi_ext : '_data_roi.dat',$
     ;extension file name of data roi
@@ -338,15 +341,15 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;Status of the zoom (0=no zoom; 1=zoom)
     select_norm_zoom_status: 0,$
     ;Status of the normalization zoom (0=no zoom; 1=zoom)
-    flt0_ptr : ptrarr(8,/allocate_heap),$
+    flt0_ptr : PTRARR(8,/allocate_heap),$
     ;arrays of all the x-axis
-    flt1_ptr : ptrarr(8,/allocate_heap),$
+    flt1_ptr : PTRARR(8,/allocate_heap),$
     ;arrays of all the y-axis
-    flt2_ptr : ptrarr(8,/allocate_heap),$
+    flt2_ptr : PTRARR(8,/allocate_heap),$
     ;arrays of all the y-error data
-    fltPreview_ptr: ptr_new(0L),$
+    fltPreview_ptr: PTR_NEW(0L),$
     ;metadata of main data reduction file
-    fltPreview_xml_ptr: ptr_new(0L),$
+    fltPreview_xml_ptr: PTR_NEW(0L),$
     ;metadata of xml file
     InstrumentGeometryPath : '',$
     ;default path where to get the instrument geometry to overwrite
@@ -395,10 +398,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;previous value of norm contrast bottom color slider
     PreviousNormContrastNumberSliderIndex : 255,$
     ;previous value of norm contrast number of color slider
-    DataXYZminmaxArray : ptr_new(0L),$
+    DataXYZminmaxArray : PTR_NEW(0L),$
     ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
     ;Plot1DDdataFile.pro
-    NormXYZminmaxArray : ptr_new(0L),$
+    NormXYZminmaxArray : PTR_NEW(0L),$
     ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
     ;Plot1DDNormalizationFile.pro
     PrevData1D3DAx : 30L,$
@@ -449,13 +452,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;previous value of the norm loadct 1d_3d plot
     PrevNorm2d3dContrastDropList : 5,$
     ;previous value of the norm loadct 2d_3d plot
-    Data_1d_3d_min_max : ptr_new(0L),$
+    Data_1d_3d_min_max : PTR_NEW(0L),$
     ;[min,max] values of the data img array (used to reset z in 1d_3d)
-    Data_2d_3d_min_max : ptr_new(0L),$
+    Data_2d_3d_min_max : PTR_NEW(0L),$
     ;[min,max] values of the data img array (used to reset z in 2d_3d)
-    Normalization_1d_3d_min_max : ptr_new(0L),$
+    Normalization_1d_3d_min_max : PTR_NEW(0L),$
     ;[min,max] values of the normalization img array (used to reset z in 1d_3d)
-    Normalization_2d_3d_min_max : ptr_new(0L),$
+    Normalization_2d_3d_min_max : PTR_NEW(0L),$
     ;[min,max] values of the normalization img array (used to reset z in
     ;2d_3d)
     DataXMouseSelection : 0L,$
@@ -472,7 +475,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*(*global).substrate_type)    = getSubstrateType()
   
   (*(*global).debugging_structure) = debugging_structure
-  BatchTable = strarr(10,20)
+  BatchTable = STRARR(10,20)
   (*(*global).BatchTable) = BatchTable
   
   ;------------------------------------------------------------------------
@@ -656,86 +659,86 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PlotsTitle,$
     structure
     
-  Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  WIDGET_CONTROL, /REALIZE, MAIN_BASE
+  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   ; initialize contrast droplist
-  id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
-  widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
-  id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
-  widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
-  id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-  widget_control, id, set_droplist_select= $
+  id = WIDGET_INFO(Main_base,Find_by_Uname='data_contrast_droplist')
+  WIDGET_CONTROL, id, set_droplist_select=(*global).InitialDataContrastDropList
+  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_contrast_droplist')
+  WIDGET_CONTROL, id, set_droplist_select=(*global).InitialNormContrastDropList
+  id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
+  WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData1d3DContrastDropList
-  id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-  widget_control, id, set_droplist_select= $
+  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+  WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm1d3DContrastDropList
-  id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-  widget_control, id, set_droplist_select= $
+  id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
+  WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialData2d3DContrastDropList
-  id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-  widget_control, id, set_droplist_select= $
+  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+  WIDGET_CONTROL, id, set_droplist_select= $
     (*global).InitialNorm2d3DContrastDropList
     
   ;initialize CommandLineOutput widgets (path and file name)
-  id = widget_info(Main_base, find_by_uname='cl_directory_text')
-  widget_control, id, set_value=(*global).cl_output_path
+  id = WIDGET_INFO(Main_base, find_by_uname='cl_directory_text')
+  WIDGET_CONTROL, id, set_value=(*global).cl_output_path
   time = RefReduction_GenerateIsoTimeStamp()
   file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
-  id = widget_info(Main_Base, find_by_uname='cl_file_text')
-  widget_control, id, set_value=file_name
+  id = WIDGET_INFO(Main_Base, find_by_uname='cl_file_text')
+  WIDGET_CONTROL, id, set_value=file_name
   
   ;------------------------------------------------------------------------------
   
   IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN
-    id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
-    widget_control, id, /editable
+    id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+    WIDGET_CONTROL, id, /editable
     WIDGET_CONTROL, /CONTEXT_EVENTS
   ENDIF
   
   IF (ucams EQ 'j35') THEN BEGIN
-    id = widget_info(MAIN_BASE,find_by_uname='cmd_status_preview')
-    widget_control, id, /editable
+    id = WIDGET_INFO(MAIN_BASE,find_by_uname='cmd_status_preview')
+    WIDGET_CONTROL, id, /editable
   ENDIF
   
   IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
   
-    ; Default Main Tab Shown
-    ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
+  ; Default Main Tab Shown
+  ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
+  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
+  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
+  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
   
-    ;default path of Load Batch files
-    ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+  ;default path of Load Batch files
+  ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
   
-    ; default tabs shown
-    ;   id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
-    ;   widget_control, id1, set_tab_current = 1 ;peak/background
+  ; default tabs shown
+  ;   id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
+  ;   widget_control, id1, set_tab_current = 1 ;peak/background
   
-    ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-    ;   widget_control, id2, set_tab_current = 0 ;DATA
+  ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+  ;   widget_control, id2, set_tab_current = 0 ;DATA
   
-    ;id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-    ;widget_control, id2, set_tab_current = 2 ;empty_cell
-    
+  ;id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+  ;widget_control, id2, set_tab_current = 2 ;empty_cell
+  
   ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
   ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
-    
+  
   ;  to get the manual mode
   ; id6 = widget_info(MAIN_BASE, find_by_uname=
   ; 'normalization2d_rescale_tab1_base')
   ; widget_control, id6, map=0
-    
+  
   ; id5 = widget_info(MAIN_BASE, find_by_uname=
   ; 'normalization2d_rescale_tab2_base')
   ; widget_control, id5, map=1
-    
+  
   ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
   ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
-    
+  
   ;BatchTable [*,0] = ['YES', $
   ;                    '5225,5454', $
   ;                    '3443', $
@@ -769,13 +772,13 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;                    '2008y_02m_19d_01h_15mn', $
   ;                    'reflect_reduction 5225 5454 --norm=3443']
   ; (*(*global).BatchTable) = BatchTable
-    
+  
   ; id = widget_info(Main_base,find_by_uname='batch_table_widget')
   ; widget_control, id, set_value=BatchTable
-    
+  
   ; id = widget_info(Main_base,find_by_uname='save_as_file_name')
   ; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
-    
+  
   ENDIF ;end of debugging_version statement
   
   ;display empty cell images ----------------------------------------------------
@@ -787,14 +790,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, draw1, GET_VALUE=id
   WSET, id
   image = READ_PNG(sImages.confuse_background)
-  tv, image, 0,0,/true
+  TV, image, 0,0,/true
   
   ;empty cell image
   empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
   WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
   WSET, id
   image = READ_PNG(sImages.empty_cell)
-  tv, image, 0,0,/true
+  TV, image, 0,0,/true
   
   ;data background image
   data_background_draw = WIDGET_INFO(MAIN_BASE, $
@@ -802,14 +805,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, data_background_draw, GET_VALUE=id
   WSET, id
   image = READ_PNG(sImages.data_background)
-  tv, image, 0,0,/true
+  TV, image, 0,0,/true
   
   ;display equation of Scalling factor in Empty Cell tab
   draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
   WIDGET_CONTROL, draw1, GET_VALUE=id
   WSET, id
   image = READ_PNG((*global).sf_equation_file)
-  tv, image, 0,0,/true
+  TV, image, 0,0,/true
   
   ;==============================================================================
   ;checking packages

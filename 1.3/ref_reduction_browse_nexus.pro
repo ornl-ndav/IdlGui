@@ -89,6 +89,7 @@ CASE ((*global).pola_type) OF
         POLA_STATE=value_selected
   END
 ENDCASE
+populate_data_geometry_info, Event
 END
 
 ;------------------------------------------------------------------------------
@@ -127,12 +128,15 @@ IF (nexus_file_name NE '') THEN BEGIN
 
     IF (nbr_pola_state EQ 1) THEN BEGIN ;only 1 polarization state
 ;load browse nexus file
-       load_data_browse_nexus, Event, nexus_file_name
+       load_data_browse_nexus, Event, nexus_file_name       
     ENDIF ELSE BEGIN
 ;ask user to select the polarization state he wants to see
        (*global).pola_type = 'data_browse'
        select_polarization_state, Event, nexus_file_name, list_pola_state
     ENDELSE
+    
+    populate_data_geometry_info, Event
+    
 ;turn off hourglass
     WIDGET_CONTROL,HOURGLASS=0
  ENDIF ELSE BEGIN
