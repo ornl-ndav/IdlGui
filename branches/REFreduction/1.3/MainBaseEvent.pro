@@ -184,7 +184,7 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'data_y_info_value', $
-            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_data_ptr)
           
@@ -197,16 +197,27 @@ PRO MAIN_BASE_event, Event
           IF ((*global).first_event) THEN BEGIN
             ;only if there is a NeXus loaded
             CASE (event.ch) OF ;u and d keys
-              117: REFreduction_ManuallyMoveDataBackPeakUp, Event
-              100: REFreduction_ManuallyMoveDataBackPeakDown, Event
+              117: BEGIN
+                REFreduction_ManuallyMoveDataBackPeakUp, Event
+              END
+              100: BEGIN
+                REFreduction_ManuallyMoveDataBackPeakDown, Event
+              END
               ELSE:
             ENDCASE
             CASE (event.key) OF ;Up and Down arrow keys
-              7: REFreduction_ManuallyMoveDataBackPeakUp, Event
-              8: REFreduction_ManuallyMoveDataBackPeakDown, Event
+              7: BEGIN
+                REFreduction_ManuallyMoveDataBackPeakUp, Event
+              END
+              8: BEGIN
+                REFreduction_ManuallyMoveDataBackPeakDown, Event
+              END
               ELSE:
             ENDCASE
             (*global).first_event = 0
+            calculate_data_dirpix, Event
+            plot_average_data_peak_value, Event
+            
           ENDIF ELSE BEGIN
             (*global).first_event = 1
           ENDELSE
@@ -217,13 +228,16 @@ PRO MAIN_BASE_event, Event
             IF (Event.press EQ 4) THEN $
               REFreduction_DataselectionPressRight, Event ;right button
           ENDIF
-          IF (Event.type EQ 1) THEN $ ;release
+          IF (Event.type EQ 1) THEN BEGIN ;release
             REFreduction_DataSelectionRelease, Event
-          IF (Event.type EQ 2) THEN $ ;move
+            calculate_data_dirpix, Event
+            plot_average_data_peak_value, Event
+          ENDIF
+          IF (Event.type EQ 2) THEN BEGIN ;move
             REFreduction_DataSelectionMove, Event
-            
-          calculate_data_dirpix, Event
-          
+            calculate_data_dirpix, Event
+          ;            plot_average_data_peak_value, Event
+          ENDIF
         ENDIF
         
       ENDELSE
@@ -247,14 +261,14 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymin_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymin'
-      calculate_data_dirpix, Event
+      plot_average_data_peak_value, Event
     end
     
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'data_d_selection_roi_ymax_cw_field'): begin
       REFreduction_DataBackgroundPeakSelection, Event, 'roi_ymax'
-      calculate_data_dirpix, Event
+      plot_average_data_peak_value, Event
     end
     
     ;SAVE ROI Selection into a file -------------------------------------------
@@ -666,7 +680,7 @@ PRO MAIN_BASE_event, Event
           putLabelValue, $
             Event, $
             'norm_y_info_value', $
-            STRCOMPRESS(FIX(Event.y/coeff),/REMOVE_ALL)
+            STRCOMPRESS(FIX((Event.y/coeff)+1),/REMOVE_ALL)
             
           tvimg = (*(*global).tvimg_norm_ptr)
           putLabelValue, $
@@ -1241,7 +1255,7 @@ PRO MAIN_BASE_event, Event
     
     ;Calculate Scaling Factor Base ............................................
     
-    ;data draw
+    ;empty cell draw
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'empty_cell_scaling_factor_base_data_draw'): BEGIN

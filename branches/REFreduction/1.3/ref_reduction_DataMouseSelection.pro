@@ -510,6 +510,8 @@ PRO REFreduction_DataSelectionRelease, event
   ;update Back and Peak Ymin and Ymax cw_fields
   putDataBackgroundPeakYMinMaxValueInTextFields, Event
   
+ ; plot_average_data_peak_value, Event
+  
 END
 
 
@@ -721,4 +723,33 @@ PRO ReplotAllSelection, Event
       uname  = 'data_zoom_draw'
   ENDIF
   
+  
+  (*global).dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
+  print, (*global).dirpix
+  plot_average_data_peak_value, Event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_average_data_peak_value, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
+  dirpix = (*global).dirpix
+  geo_dirpix = coefficient * dirpix
+  
+  ;where to stop the plot of the lines
+  xsize_1d_draw = (*global).Ntof_DATA-1
+  
+  id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  color = 50
+  
+  PLOTS, 0, geo_dirpix, /device, color=color
+  PLOTS, xsize_1d_draw, geo_dirpix, /device, /continue, color=color, $
+    LINESTYLE = 2
+    
 END

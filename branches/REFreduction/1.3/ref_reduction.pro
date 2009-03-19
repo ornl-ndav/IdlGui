@@ -82,6 +82,7 @@ global = PTR_NEW ({ first_event: 1,$
                     
                     findcalib: 'findcalib',$
                     ts_geom: 'TS_geom_calc.sh',$
+                    dirpix: 0.0,$
                     
                     substrate_type: PTR_NEW(0L),$
                     VERSION: version,$

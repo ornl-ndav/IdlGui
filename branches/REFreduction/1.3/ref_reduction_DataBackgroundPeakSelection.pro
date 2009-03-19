@@ -37,116 +37,118 @@
 ;the background region and peak exclusion region
 PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
 
-;get global structure
-id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL,id,GET_UVALUE=global
-
-;reset plot
-REFReduction_RescaleDataPlot, Event
-;RePlot1DDataFile, Event
-
-IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
-
+  ;get global structure
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  
+  ;reset plot
+  REFReduction_RescaleDataPlot, Event
+  ;RePlot1DDataFile, Event
+  
+  IF ((*global).DataNeXusFound) THEN BEGIN ;only if there is a NeXus loaded
+  
     IF ((*global).miniVersion) THEN BEGIN
-        coeff = 1
+      coeff = 1
     ENDIF ELSE BEGIN
-        coeff = 2
+      coeff = 2
     ENDELSE
-
-;get ROI Ymin, Ymax
-    ROIYmin = getTextFieldValue(Event, $
-                                 'data_d_selection_roi_ymin_cw_field')
-    ROIYmax = getTextFieldValue(Event, $
-                                 'data_d_selection_roi_ymax_cw_field')
     
+    ;get ROI Ymin, Ymax
+    ROIYmin = getTextFieldValue(Event, $
+      'data_d_selection_roi_ymin_cw_field')
+    ROIYmax = getTextFieldValue(Event, $
+      'data_d_selection_roi_ymax_cw_field')
+      
     IF (ROIYmin EQ '') THEN BEGIN
-        ROIYmin = -1
+      ROIYmin = -1
     ENDIF ELSE BEGIN
-        ROIYmin *= coeff
+      ROIYmin *= coeff
     ENDELSE
-
+    
     IF (ROIYmax EQ '') THEN BEGIN
-        ROIYmax = -1
+      ROIYmax = -1
     ENDIF ELSE BEGIN
-        ROIYmax *= coeff
+      ROIYmax *= coeff
     ENDELSE
-
+    
     ROISelection = [ROIYmin,ROIYmax]
     (*(*global).data_roi_selection) = ROISelection
-
-;get Peak Ymin, Ymax
+    
+    ;get Peak Ymin, Ymax
     PeakYmin = getTextFieldValue(Event,'data_d_selection_peak_ymin_cw_field')
     PeakYmax = getTextfieldValue(Event,'data_d_selection_peak_ymax_cw_field')
-
+    
     IF (PeakYmin EQ '') THEN BEGIN
-        PeakYmin = -1
+      PeakYmin = -1
     ENDIF ELSE BEGIN
-        PeakYmin *= coeff
+      PeakYmin *= coeff
     ENDELSE
-
+    
     IF (PeakYmax EQ '') THEN BEGIN
-        PeakYmax = -1
+      PeakYmax = -1
     ENDIF ELSE BEGIN
-        PeakYmax *= coeff
+      PeakYmax *= coeff
     ENDELSE
-
+    
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).data_peak_selection) = PeakSelection
-
-;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event, $
-                                 'data_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event, $
-                                 'data_d_selection_background_ymax_cw_field')
     
+    ;get Background Ymin, Ymax
+    BackYmin = getTextFieldValue(Event, $
+      'data_d_selection_background_ymin_cw_field')
+    BackYmax = getTextFieldValue(Event, $
+      'data_d_selection_background_ymax_cw_field')
+      
     IF (BackYmin EQ '') THEN BEGIN
-        BackYmin = -1
+      BackYmin = -1
     ENDIF ELSE BEGIN
-        BackYmin *= coeff
+      BackYmin *= coeff
     ENDELSE
-
+    
     IF (BackYmax EQ '') THEN BEGIN
-        BackYmax = -1
+      BackYmax = -1
     ENDIF ELSE BEGIN
-        BackYmax *= coeff
+      BackYmax *= coeff
     ENDELSE
-
+    
     BackSelection = [BackYmin,BackYmax]
     (*(*global).data_back_selection) = BackSelection
-
-;refresh value of cw_fields
+    
+    ;refresh value of cw_fields
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
-
-;Replot selection selected
+    
+    calculate_data_dirpix, Event
+    
+    ;Replot selection selected
     ReplotAllSelection, Event
-
-    IF (n_elements(TYPE) EQ 1) THEN BEGIN
-        CASE (TYPE) OF
-            'roi_ymin'  : DataYMouseSelection = ROIYmin
-            'roi_ymax'  : DataYMouseSelection = ROIYmax
-            'peak_ymin' : DataYMouseSelection = PeakYmin
-            'peak_ymax' : DataYMouseSelection = PeakYmax
-            'back_ymin' : DataYMouseSelection = BackYmin
-            'back_ymax' : DataYMouseSelection = BackYmax
-            ELSE        : DataYMouseSelection = 0
-        ENDCASE
-    ENDIF ELSE BEGIN
-        DataYMouseSelection = 0
-    ENDELSE
-        
-;display zoom if zoom tab is selected
-    if (isDataZoomTabSelected(Event)) then begin
-
-        DataXMouseSelection = (*global).DataXMouseSelection
-        RefReduction_zoom, $
-          Event, $
-          MouseX = DataXMouseSelection, $
-          MouseY = DataYMouseSelection, $
-          fact   = (*global).DataZoomFactor,$
-          uname  = 'data_zoom_draw'
-
-    endif
-
+    
+    IF (N_ELEMENTS(TYPE) EQ 1) THEN BEGIN
+      CASE (TYPE) OF
+        'roi_ymin'  : DataYMouseSelection = ROIYmin
+        'roi_ymax'  : DataYMouseSelection = ROIYmax
+        'peak_ymin' : DataYMouseSelection = PeakYmin
+        'peak_ymax' : DataYMouseSelection = PeakYmax
+        'back_ymin' : DataYMouseSelection = BackYmin
+        'back_ymax' : DataYMouseSelection = BackYmax
+      ELSE        : DataYMouseSelection = 0
+    ENDCASE
+  ENDIF ELSE BEGIN
+    DataYMouseSelection = 0
+  ENDELSE
+  
+  ;display zoom if zoom tab is selected
+  if (isDataZoomTabSelected(Event)) then begin
+  
+    DataXMouseSelection = (*global).DataXMouseSelection
+    RefReduction_zoom, $
+      Event, $
+      MouseX = DataXMouseSelection, $
+      MouseY = DataYMouseSelection, $
+      fact   = (*global).DataZoomFactor,$
+      uname  = 'data_zoom_draw'
+      
+  endif
+  
 endif
 
 END
