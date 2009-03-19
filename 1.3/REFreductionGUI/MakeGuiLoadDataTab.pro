@@ -267,14 +267,10 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
     XOFFSET = 680,$
     YOFFSET = 425,$
-    
-    SCR_XSIZE = 155,$
+    SCR_XSIZE = 160,$
     SCR_YSIZE = 290,$
     FRAME = 1,$
     /COLUMN)
-    
-  title = WIDGET_LABEL(GeoBase,$
-    VALUE = 'GEOMETRY INFORMATION')
     
   row1 = WIDGET_BASE(GeoBase,$
     /column)
@@ -297,7 +293,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   value = 'Units:')
   val = widget_label(row12,$
       value = 'N/A',$
-    scr_xsize = 85,$
+    scr_xsize = 105,$
     /align_left,$
     uname = 'data_geometry_dangle_units')
     
@@ -310,12 +306,23 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   row21 = widget_base(col2,$
   /row)
   lab = widget_label(row21,$
-  value = 'Value:')
+  value = 'Value :')
   val = widget_label(row21,$
       value = 'N/A',$
     scr_xsize = 85,$
     /align_left,$
     uname = 'data_geometry_dirpix_value')
+  row31 = widget_base(col2,$
+  /row)
+  lab = widget_label(row31,$
+  value = 'Value (user) :')
+  val = widget_TEXT(row31,$
+      value = 'N/A',$
+    scr_xsize = 55,$
+    /align_left,$
+    /EDITABLE,$
+    uname = 'data_geometry_dirpix_value_user')
+
   row22 = widget_base(col2,$
   /row)
   lab = widget_label(row22,$
@@ -338,7 +345,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   value = 'Value:')
   val = widget_label(row31,$
       value = 'N/A',$
-    scr_xsize = 85,$
+    scr_xsize = 105,$
     /align_left,$
     uname = 'data_geometry_refpix_value')
   row32 = widget_base(col3,$
