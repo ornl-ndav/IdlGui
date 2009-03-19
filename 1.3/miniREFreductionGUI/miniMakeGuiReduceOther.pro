@@ -189,7 +189,7 @@ FilteringDataLabel = WIDGET_LABEL(REDUCE_BASE,$
 
 FilteringDataCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                   cwbgroup2_list,$
-                                  XOFFSET   = FDCWBgroupSize[0],$
+                                  XOFFSET   = FDCWBgroupSize[0]-125,$
                                   YOFFSET   = FDCWBgroupSize[1],$
                                   ROW       = 1,$
                                   SET_VALUE = 0,$
@@ -205,12 +205,17 @@ DeltaToverTLabel = WIDGET_LABEL(REDUCE_BASE,$
 
 DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                 cwbgroup2_list,$
-                                XOFFSET   = DToTCWBgroupSize[0],$
+                                XOFFSET   = DToTCWBgroupSize[0]-125,$
                                 YOFFSET   = DToTCWBgroupSize[1],$
                                 ROW       = 1,$
                                 SET_VALUE = 1,$
                                 UNAME     = 'delta_t_over_t_cwbgroup',$
                                 /EXCLUSIVE)
+
+;geometry info button
+wGeoButton = WIDGET_BUTTON(
+
+
 
 ;output path and file name
 label = WIDGET_LABEL(REDUCE_BASE,$

@@ -137,7 +137,8 @@ IF (ROIFullFileName NE '') THEN BEGIN
       0                         ;do not append
 
 ;display preview message in help data box
-    Message = 'Preview of ' + ROIFullFileName
+    ;Message = 'Preview of ' + ROIFullFileName
+    Message = 'Preview of ROI file saved'
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
     
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, ROIFullFileName)
