@@ -89,7 +89,8 @@ ENDIF ELSE BEGIN ;enough Y between Ymax and Ymin to create outpur roi file
     file_name = file_name[0]
 
 ;display preview message
-    Message = 'Preview of ' + file_name
+    ;Message = 'Preview of ' + file_name
+    Message = 'Preview of ROI file saved'
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
     
 ;get instrument

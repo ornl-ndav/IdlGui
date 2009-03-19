@@ -269,12 +269,12 @@ data_zoom_draw = widget_draw(data_zoom_base,$
 LeftInteractionHelpMessageBase = widget_base(LOAD_DATA_BASE,$
                                              uname='left_interaction_' + $
                                              'help_message_base',$
-                                             xoffset= $
-                                             LeftInteractionHelpsize[0],$
+                                             xoffset= 850,$
+                                             ;LeftInteractionHelpsize[0],$
                                              yoffset= $
                                              LeftInteractionHelpsize[1],$
-                                             scr_xsize= $
-                                             LeftInteractionHelpsize[2],$
+                                             scr_xsize= 325,$
+                                             ;LeftInteractionHelpsize[2],$
                                              scr_ysize= $
                                              LeftInteractionHelpsize[3],$
                                              frame=1)
@@ -295,8 +295,8 @@ LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
 LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
                                            xoffset=LeftInteractionHelpSize[6],$
                                            yoffset=LeftInteractionHelpSize[7],$
-                                           scr_xsize= $
-                                           LeftInteractionHelpSize[8],$
+                                           scr_xsize= 315,$
+;                                           LeftInteractionHelpSize[8],$
                                            scr_ysize= $
                                            LeftInteractionHelpSize[9],$
                                            uname= $
