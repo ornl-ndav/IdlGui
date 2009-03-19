@@ -43,7 +43,7 @@ PRO populate_data_geometry_info, Event
   
   ;retrieve name of geometry file
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     geometry_file = ''
@@ -67,7 +67,7 @@ PRO populate_data_geometry_info, Event
     cmd += ' -l ' + tmp_file
     
     error = 0
-    ;CATCH, error
+    CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
       DANGLE0 = 'N/A'
@@ -136,8 +136,6 @@ PRO populate_data_geometry_info, Event
   putTextFieldValue, Event, 'data_geometry_refpix_value',$
     STRCOMPRESS(REFPIX,/REMOVE_ALL), 0
     
-  PRINT, dirpix
-  
   coefficient = getUDCoefficient(Event) ;1 for low, 2 for high
   IF (coefficient EQ 1) THEN BEGIN
     value_user = '(' + STRCOMPRESS(DIRPIX,/REMOVE_ALL) + '):'
@@ -147,6 +145,14 @@ PRO populate_data_geometry_info, Event
   putTextFieldValue, Event, 'data_geometry_dirpix_value', $
     value_user, 0
     
+  ;remove tmp file
+  CATCH, error
+  IF ( error NE 0) THEN BEGIN
+    CATCH,/cancel
+  ENDIF ELSE BEGIN
+    SPAWN, 'rm ' + tmp_file
+  ENDELSE
+
 END
 
 ;------------------------------------------------------------------------------
@@ -171,7 +177,7 @@ PRO calculate_data_dirpix, Event
       ymax = FLOAT(ymax)
       dirpix = MEAN([ymin,ymax])
       (*global).dirpix = dirpix
-
+      
     ENDIF ELSE BEGIN
     
       dirpix = 'N/A'
