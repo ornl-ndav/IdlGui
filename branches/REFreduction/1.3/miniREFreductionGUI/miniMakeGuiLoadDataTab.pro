@@ -278,6 +278,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
    value = 'Geometry Information')
     
   row1 = WIDGET_BASE(GeoBase,$
+  xpad = 0,$
     /row)
   label1 = WIDGET_LABEL(row1,$
     value = 'DANGLE0 :')
@@ -293,6 +294,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     uname = 'data_geometry_dangle_units')
     
   row2 = WIDGET_BASE(GeoBase,$
+    xpad = 0,$
     /row)
   label1 = WIDGET_LABEL(row2,$
     value = 'DIRPIX')
@@ -303,13 +305,14 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   uname = 'data_geometry_dirpix_value')
   label2 = WIDGET_TEXT(row2,$
     value = 'N/A',$
-    scr_xsize = 68,$
+    scr_xsize = 82,$
     /EDITABLE,$
     /align_left,$
     uname = 'data_geometry_dirpix_value_user')
   
   row3 = WIDGET_BASE(GeoBase,$
-    /row)
+      xpad = 0,$
+      /row)
   label1 = WIDGET_LABEL(row3,$
     value = 'REFPIX :')
   label2 = WIDGET_LABEL(row3,$
