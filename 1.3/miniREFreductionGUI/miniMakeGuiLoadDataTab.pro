@@ -269,7 +269,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   GeoBase = WIDGET_BASE(LOAD_DATA_BASE,$
     XOFFSET = 365,$
     YOFFSET = 450,$
-    SCR_XSIZE = 155,$
+    SCR_XSIZE = 205,$
     SCR_YSIZE = 115,$
     FRAME = 1,$
     /COLUMN)
@@ -283,9 +283,14 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     value = 'DANGLE0 :')
   label2 = WIDGET_LABEL(row1,$
     value = 'N/A',$
-    scr_xsize = 50,$
+    scr_xsize = 70,$
     /align_left,$
     uname = 'data_geometry_dangle_value')
+    label3 = widget_label(row1,$
+    value = ' ',$
+    scr_xsize = 50,$
+    /align_left,$
+    uname = 'data_geometry_dangle_units')
     
   row2 = WIDGET_BASE(GeoBase,$
     /row)
@@ -293,20 +298,30 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     value = 'DIRPIX  :')
   label2 = WIDGET_TEXT(row2,$
     value = 'N/A',$
-    scr_xsize = 50,$
+    scr_xsize = 70,$
     /EDITABLE,$
     /align_left,$
     uname = 'data_geometry_dirpix_value')
-    
-  row1 = WIDGET_BASE(GeoBase,$
-    /row)
-  label1 = WIDGET_LABEL(row1,$
-    value = 'REFPIX  :')
-  label2 = WIDGET_LABEL(row1,$
-    value = 'N/A',$
+    label3 = widget_label(row2,$
+    value = ' ',$
     scr_xsize = 50,$
     /align_left,$
+    uname = 'data_geometry_dirpix_units')
+    
+  row3 = WIDGET_BASE(GeoBase,$
+    /row)
+  label1 = WIDGET_LABEL(row3,$
+    value = 'REFPIX  :')
+  label2 = WIDGET_LABEL(row3,$
+    value = 'N/A',$
+    scr_xsize = 70,$
+    /align_left,$
     uname = 'data_geometry_refpix_value')
+    label3 = widget_label(row3,$
+    value = ' ',$
+    scr_xsize = 50,$
+    /align_left,$
+    uname = 'data_geometry_refpix_units')
 
   ;----------------------------------------------------------------------------
     
@@ -315,9 +330,9 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   LeftInteractionHelpMessageBase = $
     WIDGET_BASE(LOAD_DATA_BASE,$
     UNAME     = 'left_interaction_help_message_base',$
-    XOFFSET   = 530,$
+    XOFFSET   = 580,$
     YOFFSET   = LeftInteractionHelpsize[1],$
-    SCR_XSIZE = 358,$
+    SCR_XSIZE = 308,$
     SCR_YSIZE = LeftInteractionHelpsize[3],$
     FRAME     = 1)
     
@@ -333,7 +348,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     WIDGET_TEXT(LeftInteractionHelpMessageBase,$
     XOFFSET   = 2,$
     YOFFSET   = LeftInteractionHelpSize[7],$
-    SCR_XSIZE = 350,$
+    SCR_XSIZE = 300,$
     SCR_YSIZE = LeftInteractionHelpSize[9],$
     UNAME     = 'DATA_left_interaction_help_text',$
     /WRAP,$
