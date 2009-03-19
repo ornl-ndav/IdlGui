@@ -271,9 +271,9 @@ data_zoom_draw = WIDGET_DRAW(data_zoom_base,$
 LeftInteractionHelpMessageBase = $
   WIDGET_BASE(LOAD_DATA_BASE,$
               UNAME     = 'left_interaction_help_message_base',$
-              XOFFSET   = LeftInteractionHelpsize[0],$
+              XOFFSET   = 550,$
               YOFFSET   = LeftInteractionHelpsize[1],$
-              SCR_XSIZE = LeftInteractionHelpsize[2],$
+              SCR_XSIZE = 338,$
               SCR_YSIZE = LeftInteractionHelpsize[3],$
               FRAME     = 1)
 
@@ -289,7 +289,7 @@ LeftInteractionHelpTextField = $
   WIDGET_TEXT(LeftInteractionHelpMessageBase,$
               XOFFSET   = LeftInteractionHelpSize[6],$
               YOFFSET   = LeftInteractionHelpSize[7],$
-              SCR_XSIZE = LeftInteractionHelpSize[8],$
+              SCR_XSIZE = 330,$
               SCR_YSIZE = LeftInteractionHelpSize[9],$
               UNAME     = 'DATA_left_interaction_help_text',$
               /WRAP,$

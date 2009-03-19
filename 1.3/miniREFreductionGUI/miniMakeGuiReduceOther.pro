@@ -212,11 +212,6 @@ DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                 UNAME     = 'delta_t_over_t_cwbgroup',$
                                 /EXCLUSIVE)
 
-;geometry info button
-wGeoButton = WIDGET_BUTTON(
-
-
-
 ;output path and file name
 label = WIDGET_LABEL(REDUCE_BASE,$
                      XOFFSET = OPFlabel.size[0],$
