@@ -273,9 +273,9 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     SCR_YSIZE = 115,$
     FRAME = 1,$
     /COLUMN)
-    
-  title = WIDGET_LABEL(GeoBase,$
-    VALUE = 'GEOMETRY INFORMATION')
+   
+   title = widget_label(GeoBase,$
+   value = 'Geometry Information')
     
   row1 = WIDGET_BASE(GeoBase,$
     /row)
@@ -295,33 +295,28 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   row2 = WIDGET_BASE(GeoBase,$
     /row)
   label1 = WIDGET_LABEL(row2,$
-    value = 'DIRPIX  :')
+    value = 'DIRPIX')
+  label = widget_label(row2,$
+  value = '(N/A) :',$
+  scr_xsize = 75,$
+  /align_left,$
+  uname = 'data_geometry_dirpix_value')
   label2 = WIDGET_TEXT(row2,$
     value = 'N/A',$
-    scr_xsize = 70,$
+    scr_xsize = 68,$
     /EDITABLE,$
     /align_left,$
-    uname = 'data_geometry_dirpix_value')
-    label3 = widget_label(row2,$
-    value = ' ',$
-    scr_xsize = 50,$
-    /align_left,$
-    uname = 'data_geometry_dirpix_units')
-    
+    uname = 'data_geometry_dirpix_value_user')
+  
   row3 = WIDGET_BASE(GeoBase,$
     /row)
   label1 = WIDGET_LABEL(row3,$
-    value = 'REFPIX  :')
+    value = 'REFPIX :')
   label2 = WIDGET_LABEL(row3,$
     value = 'N/A',$
     scr_xsize = 70,$
     /align_left,$
     uname = 'data_geometry_refpix_value')
-    label3 = widget_label(row3,$
-    value = ' ',$
-    scr_xsize = 50,$
-    /align_left,$
-    uname = 'data_geometry_refpix_units')
 
   ;----------------------------------------------------------------------------
     
