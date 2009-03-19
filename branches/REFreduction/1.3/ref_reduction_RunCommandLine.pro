@@ -71,6 +71,15 @@ putLogBookMessage, Event, cmd_text, Append=1
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
+IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+    (*global).dirpix_geometry NE '' AND $
+    (*global).cvinfo NE '') then BEGIN ;use tmp geo
+  ts_geom = (*global).ts_geom
+  geometry = (*global).dripix_geometry
+
+ENDIF
+
+
 spawn, cmd, listening, err_listening
 
 IF (err_listening[0] NE '') THEN BEGIN

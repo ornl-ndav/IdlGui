@@ -52,11 +52,15 @@ PRO populate_data_geometry_info, Event
     geometry_file = listening[0]
   ENDELSE
   
+  (*global).dirpix_geometry = geometry_file
+  
   ;retrieve full path to cv info file
   cvinfo = get_cvinfo(Event, $
     INSTRUMENT=instrument,$
     RUN_NUMBER = run_number)
     
+  (*global).cvinfo = cvinfo
+  
   IF (geometry_file NE '' AND $
     cvinfo NE '') THEN BEGIN
     
@@ -152,7 +156,7 @@ PRO populate_data_geometry_info, Event
   ENDIF ELSE BEGIN
     SPAWN, 'rm ' + tmp_file
   ENDELSE
-
+  
 END
 
 ;------------------------------------------------------------------------------

@@ -89,6 +89,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     findcalib: 'findcalib',$
     ts_geom: 'TS_geom_calc.sh',$
     dirpix: 0.0,$
+    tmp_geometry_file: '~/.tmp_ref_reduction_geo_file.nxs',$
+    dirpix_geometry: '',$
+    cvinfo: '',$
     
     in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
     in_empty_cell_data_ptr: PTR_NEW(0L),$
