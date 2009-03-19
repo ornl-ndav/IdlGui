@@ -319,7 +319,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
   val = widget_TEXT(row31,$
       value = 'N/A',$
     scr_xsize = 55,$
-    /align_left,$
+    /align_right,$
     /EDITABLE,$
     uname = 'data_geometry_dirpix_value_user')
 

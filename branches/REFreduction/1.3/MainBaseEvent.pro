@@ -199,24 +199,34 @@ PRO MAIN_BASE_event, Event
             CASE (event.ch) OF ;u and d keys
               117: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
+                
               END
               100: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
+                
               END
               ELSE:
             ENDCASE
             CASE (event.key) OF ;Up and Down arrow keys
               7: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
+                
               END
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
+                calculate_data_dirpix, Event
+                plot_average_data_peak_value, Event
+                
               END
               ELSE:
             ENDCASE
             (*global).first_event = 0
-            calculate_data_dirpix, Event
-            plot_average_data_peak_value, Event
             
           ENDIF ELSE BEGIN
             (*global).first_event = 1
@@ -235,8 +245,7 @@ PRO MAIN_BASE_event, Event
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
             REFreduction_DataSelectionMove, Event
-            calculate_data_dirpix, Event
-          ;            plot_average_data_peak_value, Event
+          ;           calculate_data_dirpix, Event
           ENDIF
         ENDIF
         
@@ -281,6 +290,18 @@ PRO MAIN_BASE_event, Event
       REFreduction_LoadDataROISelection, Event
       calculate_data_dirpix, Event
     end
+    
+    ;dirpix widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_geometry_dirpix_value_user'): BEGIN
+      coefficient = getUDCoefficient(Event)
+      REFreduction_ManuallyMoveDataBackPeak, Event, 0
+      
+    ;REFreduction_DataSelectionMove, event
+    ;REFReduction_RescaleDataPlot, Event
+    ;dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
+    ;(*global).dirpix = FLOAT(dirpix)
+    ;plot_average_data_peak_value, Event
+    END
     
     ;Peak Ymin and Ymax -------------------------------------------------------
     WIDGET_INFO(wWidget, $
