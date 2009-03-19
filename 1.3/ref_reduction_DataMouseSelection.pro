@@ -723,10 +723,12 @@ PRO ReplotAllSelection, Event
       uname  = 'data_zoom_draw'
   ENDIF
   
-  
-  (*global).dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
-  print, (*global).dirpix
+  ON_IOERROR, input_error
+  dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
+  (*global).dirpix = FLOAT(dirpix)
   plot_average_data_peak_value, Event
+  
+  input_error: 
   
 END
 

@@ -259,9 +259,6 @@ loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
 
 tvscl, tvimg
 
-;Replot all selection if any
-;ReplotAllSelection, Event
-
 END
 
 
