@@ -46,10 +46,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = getGlobal(INSTRUMENT=instrument,MINIversion=0)
   
   LOADCT,5, /SILENT
-    
+  
   ;define initial global values - these could be input via external file
   ;or other means
-    
+  
   (*(*global).empty_cell_images) = getEmptyCellImages()
   (*(*global).substrate_type)    = getSubstrateType()
   
@@ -376,18 +376,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   ;==============================================================================
   
-  ;logger message
-  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-  logger_message += (*global).APPLICATION + '_' + (*global).VERSION + ' ' + (*global).ucams
-  logger_message += ' ' + getYear()
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-  ENDIF ELSE BEGIN
-    SPAWN, logger_message
-  ENDELSE
-;==============================================================================
+  ;send message to log current run of application
+  logger, global
   
 END
 
