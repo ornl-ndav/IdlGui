@@ -221,54 +221,23 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     WIDGET_CONTROL, id, /editable
   ENDIF
   
-  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-  
-    ; Default Main Tab Shown
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
-    ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
-    
-    ;default path of Load Batch files
-    (*global).BatchDefaultPath = '~/tmp/'
-    
-  ; default tabs shown
-  ;    id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
-  ;    widget_control, id1, set_tab_current = 1 ;peak/background
-    
-  ;    id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-  ;    widget_control, id2, set_tab_current = 1 ;NORMALIZATION
-    
-  ;change default location of Batch file
-  ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
-    
-  ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-  ; widget_control, id2, set_tab_current = 2  ;empty cell
-    
-  ; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
-  ; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
-    
-  ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
-  ;widget_control, id4, set_tab_current = 3 ;ouput ascii file
-    
-  ENDIF ;end of debugging_version statement
+  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN debugging, MAIN_BASE, global
   
   ;display empty cell images ----------------------------------------------------
   display_images, MAIN_BASE, global
- 
+  
   ;------------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
   
   ;==============================================================================
-
-;  ;checking packages
-;  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-;    packages_required, global, my_package ;packages_required
-;    (*(*global).my_package) = my_package
-;  ENDIF
-
+  
+  ;  ;checking packages
+  ;  IF ((*global).DEBUGGING_VERSION EQ 'yes') THEN BEGIN
+  ;    packages_required, global, my_package ;packages_required
+  ;    (*(*global).my_package) = my_package
+  ;  ENDIF
+  
   IF ((*global).CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     packages_required, global, my_package ;packages_required
     checking_packages_routine, MAIN_BASE, my_package, global
