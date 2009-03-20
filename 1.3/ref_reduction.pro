@@ -255,38 +255,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ;end of debugging_version statement
   
   ;display empty cell images ----------------------------------------------------
-  ;get images files
-  sImages = (*(*global).empty_cell_images)
-  
-  ;background image
-  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='confuse_background')
-  WIDGET_CONTROL, draw1, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.confuse_background)
-  TV, image, 0,0,/true
-  
-  ;empty cell image
-  empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
-  WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.empty_cell)
-  TV, image, 0,0,/true
-  
-  ;data background image
-  data_background_draw = WIDGET_INFO(MAIN_BASE, $
-    FIND_BY_UNAME='data_background_draw')
-  WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.data_background)
-  TV, image, 0,0,/true
-  
-  ;display equation of Scalling factor in Empty Cell tab
-  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
-  WIDGET_CONTROL, draw1, GET_VALUE=id
-  WSET, id
-  image = READ_PNG((*global).sf_equation_file)
-  TV, image, 0,0,/true
-  
+  display_images, MAIN_BASE, global
+ 
   ;------------------------------------------------------------------------------
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
