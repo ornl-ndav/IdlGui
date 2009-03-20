@@ -105,6 +105,7 @@
 .run ref_reduction_configuration.pro
 .run ref_reduction_display_images.pro
 
+.run ref_reduction_debugging.pro
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
