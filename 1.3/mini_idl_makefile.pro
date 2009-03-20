@@ -59,6 +59,7 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiLoadNormalization2DTab.pro
 .run miniMakeGuiLoadNormalization2D_3D_Tab.pro
 .run miniMakeGuiEmptyCellTab.pro
+.run MakeGuiInstrumentSelection.pro
 
 .run miniMakeGuiReduceTab.pro
 .run miniMakeGuiEmptyCell.pro
