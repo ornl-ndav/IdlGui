@@ -31,54 +31,15 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-;define path to dependencies and current folder
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-
-;build the utilities
-cd, CurrentFolder + '/utilities'
-@main_idl_makefile_utilities.pro
-
-;Build miniREFreduction GUI
-cd, CurrentFolder + '/miniREFreductionGUI/'
-.run miniMakeGuiMainTab.pro
-.run miniMakeGuiNexusInterface.pro
-.run miniMakeGuiLoadTab.pro
-.run miniMakeGuiLoadDataNormalizationTab.pro
-.run miniMakeGuiLoadDataTab.pro
-.run miniMakeGuiLoadData1D2DTab.pro
-.run miniMakeGuiLoadData1DTab.pro
-.run miniMakeGuiLoadData1D_3D_Tab.pro
-.run miniMakeGuiLoadData2DTab.pro
-.run miniMakeGuiLoadData2D_3D_Tab.pro
-.run miniMakeGuiLoadNormalizationTab.pro
-.run miniMakeGuiLoadNormalization1D2DTab.pro
-.run miniMakeGuiLoadNormalization1DTab.pro
-.run miniMakeGuiLoadNormalization1D_3D_Tab.pro
-.run miniMakeGuiLoadNormalization2DTab.pro
-.run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-.run miniMakeGuiEmptyCellTab.pro
-
-.run miniMakeGuiReduceTab.pro
-.run miniMakeGuiEmptyCell.pro
-.run miniMakeGuiReduceDataBase.pro
-.run miniMakeGuiReduceNormalizationBase.pro
-.run miniMakeGuiReduceQbase.pro
-.run miniMakeGuiReduceDetectorBase.pro
-.run miniMakeGuiReduceIntermediatePlotBase.pro
-.run miniMakeGuiReduceOther.pro
-.run miniMakeGuiReduceInfo.pro
-
-.run miniMakeGuiPlotsTab.pro
-.run miniMakeGuiPlotsMainIntermediatesBases.pro
-.run miniMakeGuiBatchTab.pro
-.run miniMakeGuiLogBookTab.pro
-
-;build the main procedures
-cd, CurrentFolder
-@main_idl_makefile.pro
-.run mini_ref_reduction.pro
-
-
-
+;Makefile that automatically compile the necessary modules
+;and create the VM file.
+.run nexus_utilities.pro
+.run get.pro
+.run system_utilities.pro
+.run nexus_utilities.pro
+.run math_conversion.pro
+.run time.pro
+.run list_of_proposal.pro
+.run IDLxmlParser__define.pro
+.run xmlParser__define.pro
