@@ -32,15 +32,32 @@
 ;
 ;==============================================================================
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
+
+;------------------------------------------------------------------------------
+;logger message
+PRO logger, global
+
+application = (*global).application
+version     = (*global).version
+ucams       = (*global).ucams
+
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
+
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
+
+END

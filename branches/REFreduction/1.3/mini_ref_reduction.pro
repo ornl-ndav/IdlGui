@@ -48,7 +48,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = getGlobal(INSTRUMENT=instrument,MINIversion=1)
   
   LOADCT,5, /SILENT
-    
+  
   (*(*global).empty_cell_images) = getEmptyCellImages()
   (*(*global).substrate_type)    = getSubstrateType()
   
@@ -407,20 +407,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;populate the list of proposal droplist (data, normalization,empty_cell)
   populate_list_of_proposal, MAIN_BASE, (*global).instrument
   
-  ;==============================================================================
-  ;logger message
-  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-  logger_message += (*global).APPLICATION + '_' + (*global).VERSION + ' ' + (*global).ucams
-  logger_message += ' ' + getYear()
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-  ENDIF ELSE BEGIN
-    SPAWN, logger_message
-  ENDELSE
+  ;send message to log current run of application
+  logger, global
+  
 END
-
 ;------------------------------------------------------------------------------
 ;Empty stub procedure used for autoloading.
 PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
