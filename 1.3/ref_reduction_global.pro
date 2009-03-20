@@ -31,19 +31,8 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  RESOLVE_ROUTINE, 'ref_reduction_eventcb',$
-    /COMPILE_FULL_FILE            ; Load event callback routines
-    
-  ;build the Instrument Selection base
-  MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  
-END
-
-
-
-PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
 
   file = OBJ_NEW('idlxmlparser', '.REFreduction.cfg')
   ;==============================================================================
@@ -62,32 +51,31 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;==============================================================================
   
-  LOADCT,5, /SILENT
+  ;get ucams of user if running on linux
+  ;and set ucams to 'j35' if running on darwin
+  IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    ucams = 'j35'
+  ENDIF ELSE BEGIN
+    ucams = get_ucams()
+  ENDELSE
   
   ;get branch number
   branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
   branch      = STRJOIN(branchArray[0:1],'.')
   
-  ;define initial global values - these could be input via external file or
-  ;other means
-  
-  ;get ucams of user if running on linux
-  ;and set ucams to 'j35' if running on darwin
-  
-  IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ucams    = 'j35'
-  ENDIF ELSE BEGIN
-    ucams    = get_ucams()
-  ENDELSE
-  
-  global = getGlobal()
-  
   ;define global variables
   global = ptr_new ({ first_event: 1,$
-    substrate_type: PTR_NEW(0L),$
-    VERSION: version,$
-    debugging_on_mac: DEBUGGING_ON_MAC,$
+    mouse_debugging:   MOUSE_DEBUGGING,$
+    debugging_version: DEBUGGING_VERSION,$
+    debugging_on_mac:  DEBUGGING_ON_MAC,$
+    version:           VERSION,$
+    with_job_manager:  WITH_JOB_MANAGER,$
+    checking_packages: CHECKING_PACKAGES,$
+    application:       APPLICATION,$
+    instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
+    with_launch_switch: WITH_LAUNCH_SWITCH,$
     
+    substrate_type: PTR_NEW(0L),$
     findcalib: 'findcalib',$
     ts_geom: 'TS_geom_calc.sh',$
     dirpix: 0.0,$
@@ -141,13 +129,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     data_loadct_contrast_changed: 0,$
     browse_data_path: '~/',$
     main_base: 0L,$
-    mouse_debugging: MOUSE_DEBUGGING,$
-    debugging_version: DEBUGGING_VERSION,$
     job_manager_cmd:   'java -jar /usr/local/SNS/sbin/sns-job-manager-client-tool/sns-job-manager-client-tool-core-1.3-SNAPSHOT.jar ',$
-    with_job_manager:  WITH_JOB_MANAGER,$
-    application:       APPLICATION,$
     xml_file_location: '~/',$
-    instrument: STRCOMPRESS(instrument,/remove_all),$
     ;name of the current selected REF instrument
     CurrentBatchDataInput: '',$
     CurrentBatchNormInput: '',$
@@ -197,7 +180,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     bank1_data : PTR_NEW(0L),$ ;
     bank1_norm : PTR_NEW(0L),$ ;
     bank1_empty_cell: PTR_NEW(0L),$
-    miniVersion : 1,$
+    miniVersion : miniVersion,$
     ;1 if this is the miniVersion and 0 if it's not
     FilesToPlotList : PTR_NEW(0L),$
     ;list of files to plot (main,rmd and intermediate files)
@@ -467,6 +450,14 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     Normalization_2d_3d_min_max : PTR_NEW(0L),$
     ;[min,max] values of the normalization img array (used to reset z in
     ;2d_3d)
+    DataHiddenWidgetTextId: 0L, $
+    ;ID of Data Hidden Widget Text
+    DataHiddenWidgetTextUname: '',$
+    ;uname of data hidden widget text
+    NormHiddenWidgetTextId: 0L,$
+    ;ID of Norm Hidden Widget Text
+    NormHiddenWidgetTextUname: '',$
+    ;uname of Norm hidden widget text
     DataXMouseSelection : 0L,$
     ;Previous x position of data left click
     NormXMouseSelection : 0L,$
@@ -477,399 +468,5 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;Version of REFreduction Tool
     })
     
-  (*(*global).empty_cell_images) = getEmptyCellImages()
-  (*(*global).substrate_type)    = getSubstrateType()
-  
-  (*(*global).debugging_structure) = debugging_structure
-  BatchTable = STRARR(10,20)
-  (*(*global).BatchTable) = BatchTable
-  
-  ;------------------------------------------------------------------------
-  ;explanation of the select_data_status and select_norm_status
-  ;0 nothing has been done yet
-  ;1 user left click first and is now in back selection 1st border
-  ;2 user release click and is done with back selection 1st border
-  ;3 user right click and is now entering the back selection of 2nd border
-  ;4 user left click and is now selecting the 2nd border
-  ;5 user release click and is done with selection of 2nd border
-  ;-----------------------------------------------------------------------------
-  
-  full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file
-  (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
-  full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
-  (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
-  (*(*global).data_back_selection) = [-1,-1]
-  (*(*global).data_peak_selection) = [-1,-1]
-  (*(*global).norm_back_selection) = [-1,-1]
-  (*(*global).norm_peak_selection) = [-1,-1]
-  (*(*global).data_roi_selection)  = [-1,-1]
-  (*(*global).norm_roi_selection)  = [-1,-1]
-  
-  (*global).UpDownMessage = 'Use U(up) or D(down) to move selection ' + $
-    'vertically pixel per pixel.'
-  (*global).REFreductionVersion = VERSION
-  
-  PlotsTitle = ['Data Combined Specular TOF Plot',$
-    'Data Combined Background TOF Plot',$
-    'Data Combined Subtracted TOF Plot',$
-    'Norm. Combined Specular TOF Plot',$
-    'Norm. Combined Background TOF Plot',$
-    'Norm. Combined Subtracted TOF Plot',$
-    'R vs TOF Plot',$
-    'R vs TOF Combined Plot',$
-    ;              'XML output file',$
-    'Empty Cell R vs TOF Plot']
-  (*(*global).PlotsTitle) = PlotsTitle
-  MainPlotTitle = 'Main Data Reduction Plot'
-  (*global).MainPlotTitle = MainPlotTitle
-  
-  ;instrument geometry
-  if (instrument EQ 'REF_L') then begin ;REF_L
-    InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
-  endif else begin
-    InstrumentGeometryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
-  endelse
-  (*global).InstrumentGeometryPath = InstrumentGeometryPath
-  
-  ExtOfAllPlots = ['.txt',$
-    '.rmd',$
-    '_data.sdc',$
-    '_data.bkg',$
-    '_data.sub',$
-    '_norm.sdc',$
-    '_norm.bkg',$
-    '_norm.sub',$
-    '.rtof',$
-    '.crtof']
-  (*(*global).ExtOfAllPlots) = ExtOfAllPlots
-  
-  ;define Main Base variables
-  ;[xoffset, yoffset, scr_xsize, scr_ysize]
-  
-  ;MainBaseSize  = [50,50,905,685]
-  MainBaseSize  = [50,50,905,685]
-  
-  MainBaseTitle = 'miniReflectometer Data Reduction Package - '
-  MainBaseTitle += VERSION
-  IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-    MainBaseTitle += ' (DEBUGGING VERSION)'
-  ENDIF
-  
-  ;Build Main Base
-  MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
-    UNAME         = 'MAIN_BASE',$
-    XOFFSET       = MainBaseSize[0],$
-    YOFFSET       = MainBaseSize[1],$
-    TITLE         = MainBaseTitle,$
-    SPACE         = 0,$
-    XPAD          = 0,$
-    MBAR          = WID_BASE_0_MBAR,$
-    X_SCROLL_SIZE = MainBaseSize[2],$
-    Y_SCROLL_SIZE = 600,$
-    /SCROLL)
-    
-  ;attach global structure with widget ID of widget main base widget ID
-  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-  
-  ;polarization state base ======================================================
-  pola_base = WIDGET_BASE(MAIN_BASE,$
-    XOFFSET   = 70,$
-    YOFFSET   = 150,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 190,$
-    UNAME     = 'polarization_state',$
-    FRAME     = 10,$
-    MAP       = 0,$
-    /COLUMN,$
-    /BASE_ALIGN_CENTER)
-    
-  (*global).main_base = MAIN_BASE
-  
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = 'Select a Polarization State:')
-  label = WIDGET_LABEL(pola_base,$
-    VALUE = '                                             ',$
-    UNAME = 'pola_file_name_uname')
-    
-  button_base = WIDGET_BASE(pola_base,$
-    /COLUMN,$
-    /EXCLUSIVE)
-    
-  button1 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_Off',$
-    UNAME = 'pola_state1_uname',$
-    SENSITIVE = 1)
-    
-  button2 = WIDGET_BUTTON(button_base,$
-    VALUE = 'Off_On',$
-    UNAME = 'pola_state2_uname',$
-    SENSITIVE = 1)
-    
-  button3 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_Off',$
-    UNAME = 'pola_state3_uname',$
-    SENSITIVE = 0)
-    
-  button4 = WIDGET_BUTTON(button_base,$
-    VALUE = 'On_On',$
-    UNAME = 'pola_state4_uname',$
-    SENSITIVE = 0)
-    
-  WIDGET_CONTROL, button1, /SET_BUTTON
-  
-  ok_cancel_base = WIDGET_BASE(pola_base,$ ;....................................
-    /ROW)
-    
-  cancel_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'CANCEL',$
-    UNAME = 'cancel_pola_state',$
-    XSIZE = 90)
-    
-  OK_button = WIDGET_BUTTON(ok_cancel_base,$
-    VALUE = 'VALIDATE',$
-    UNAME = 'ok_pola_state',$
-    XSIZE = 90)
-    
-  ;------------------------------------------------------------------------------
-    
-  ;HELP MENU in Menu Bar
-  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
-    UNAME = 'help_menu',$
-    VALUE = 'HELP',$
-    /MENU)
-    
-  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
-    VALUE = 'HELP',$
-    UNAME = 'help_button')
-    
-  IF (ucams EQ 'j35') THEN BEGIN
-    my_help_button = WIDGET_BUTTON(HELP_MENU,$
-      VALUE = 'MY HELP',$
-      UNAME = 'my_help_button')
-  ENDIF
-  
-  ;add version to program
-  if ((*global).miniVersion) then begin
-    xoff = 715
-  endif else begin
-    xoff = 1030
-  endelse
-  
-  structure = {with_launch_button: WITH_LAUNCH_SWITCH}
-  
-  ;Build main GUI
-  miniMakeGuiMainTab, $
-    MAIN_BASE, $
-    MainBaseSize, $
-    instrument, $
-    PlotsTitle,$
-    structure
-    
-  WIDGET_CONTROL, /REALIZE, MAIN_BASE
-  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-  
-  ; initialize contrast droplist
-  id = WIDGET_INFO(Main_base,Find_by_Uname='data_contrast_droplist')
-  WIDGET_CONTROL, id, set_droplist_select=(*global).InitialDataContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_contrast_droplist')
-  WIDGET_CONTROL, id, set_droplist_select=(*global).InitialNormContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-  WIDGET_CONTROL, id, set_droplist_select= $
-    (*global).InitialData1d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-  WIDGET_CONTROL, id, set_droplist_select= $
-    (*global).InitialNorm1d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-  WIDGET_CONTROL, id, set_droplist_select= $
-    (*global).InitialData2d3DContrastDropList
-  id = WIDGET_INFO(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-  WIDGET_CONTROL, id, set_droplist_select= $
-    (*global).InitialNorm2d3DContrastDropList
-    
-  ;initialize CommandLineOutput widgets (path and file name)
-  id = WIDGET_INFO(Main_base, find_by_uname='cl_directory_text')
-  WIDGET_CONTROL, id, set_value=(*global).cl_output_path
-  time = RefReduction_GenerateIsoTimeStamp()
-  file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
-  id = WIDGET_INFO(Main_Base, find_by_uname='cl_file_text')
-  WIDGET_CONTROL, id, set_value=file_name
-  
-  ;------------------------------------------------------------------------------
-  
-  IF (ucams EQ 'j35' OR $
-    ucams EQ '2zr') THEN BEGIN
-    id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
-    WIDGET_CONTROL, id, /editable
-    WIDGET_CONTROL, /CONTEXT_EVENTS
-  ENDIF
-  
-  IF (ucams EQ 'j35') THEN BEGIN
-    id = WIDGET_INFO(MAIN_BASE,find_by_uname='cmd_status_preview')
-    WIDGET_CONTROL, id, /editable
-  ENDIF
-  
-  IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-  
-  ; Default Main Tab Shown
-  ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 ;REDUCE
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;PLOT
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3 ;BATCH
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;LOG BOOK
-  
-  ;default path of Load Batch files
-  ;    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
-  
-  ; default tabs shown
-  ;   id1 = widget_info(MAIN_BASE, find_by_uname='roi_peak_background_tab')
-  ;   widget_control, id1, set_tab_current = 1 ;peak/background
-  
-  ;   id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-  ;   widget_control, id2, set_tab_current = 0 ;DATA
-  
-  ;id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-  ;widget_control, id2, set_tab_current = 2 ;empty_cell
-  
-  ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
-  ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
-  
-  ;  to get the manual mode
-  ; id6 = widget_info(MAIN_BASE, find_by_uname=
-  ; 'normalization2d_rescale_tab1_base')
-  ; widget_control, id6, map=0
-  
-  ; id5 = widget_info(MAIN_BASE, find_by_uname=
-  ; 'normalization2d_rescale_tab2_base')
-  ; widget_control, id5, map=1
-  
-  ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
-  ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
-  
-  ;BatchTable [*,0] = ['YES', $
-  ;                    '5225,5454', $
-  ;                    '3443', $
-  ;                    '0.345', $
-  ;                    '0.15', $
-  ;                    '0.15', $
-  ;                    '2008y_02m_19d_01h_15mn', $
-  ;                    'reflect_reduction 5225 5454 --norm=3443']
-  ; BatchTable[*,1] = ['NO', $
-  ;                    '7545,5225,5454', $
-  ;                    '3443', $
-  ;                    '0.345', $
-  ;                    '0.15', $
-  ;                    '0.15', $
-  ;                    '2008y_02m_19d_01h_15mn', $
-  ;                    'reflect_reduction 5225 5454 --norm=3443']
-  ; BatchTable[*,2] = ['NO', $
-  ;                    '6000,7000,5225,5454', $
-  ;                    '3443', $
-  ;                    '0.345', $
-  ;                    '0.15', $
-  ;                    '0.15', $
-  ;                    '2008y_02m_19d_01h_15mn', $
-  ;                    'reflect_reduction 5225 5454 --norm=3443']
-  ; BatchTable[*,3] = ['> YES <', $
-  ;                    '5225,10000,5454', $
-  ;                    '3443', $
-  ;                    '0.345', $
-  ;                    '0.15', $
-  ;                    '0.15', $
-  ;                    '2008y_02m_19d_01h_15mn', $
-  ;                    'reflect_reduction 5225 5454 --norm=3443']
-  ; (*(*global).BatchTable) = BatchTable
-  
-  ; id = widget_info(Main_base,find_by_uname='batch_table_widget')
-  ; widget_control, id, set_value=BatchTable
-  
-  ; id = widget_info(Main_base,find_by_uname='save_as_file_name')
-  ; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
-  
-  ENDIF ;end of debugging_version statement
-  
-  ;display empty cell images ----------------------------------------------------
-  ;get images files
-  sImages = (*(*global).empty_cell_images)
-  
-  ;background image
-  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='confuse_background')
-  WIDGET_CONTROL, draw1, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.confuse_background)
-  TV, image, 0,0,/true
-  
-  ;empty cell image
-  empty_cell_draw = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='empty_cell_draw')
-  WIDGET_CONTROL, empty_cell_draw, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.empty_cell)
-  TV, image, 0,0,/true
-  
-  ;data background image
-  data_background_draw = WIDGET_INFO(MAIN_BASE, $
-    FIND_BY_UNAME='data_background_draw')
-  WIDGET_CONTROL, data_background_draw, GET_VALUE=id
-  WSET, id
-  image = READ_PNG(sImages.data_background)
-  TV, image, 0,0,/true
-  
-  ;display equation of Scalling factor in Empty Cell tab
-  draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scaling_factor_equation_draw')
-  WIDGET_CONTROL, draw1, GET_VALUE=id
-  WSET, id
-  image = READ_PNG((*global).sf_equation_file)
-  TV, image, 0,0,/true
-  
-  ;==============================================================================
-  ;checking packages
-  IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
-    packages_required, global, my_package
-    (*(*global).my_package) = my_package
-  ENDIF
-  IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-    packages_required, global, my_package
-    checking_packages_routine, MAIN_BASE, my_package, global
-    update_gui_according_to_package, MAIN_BASE, my_package
-  ENDIF
-  
-  ;==============================================================================
-  ;populate the list of proposal droplist (data, normalization,empty_cell)
-  populate_list_of_proposal, MAIN_BASE, (*global).instrument
-  
-  ;==============================================================================
-  ;logger message
-  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-  logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
-  logger_message += ' ' + getYear()
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-  ENDIF ELSE BEGIN
-    SPAWN, logger_message
-  ENDELSE
+  return, global
 END
-
-;------------------------------------------------------------------------------
-;Empty stub procedure used for autoloading.
-PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ;check instrument here
-  SPAWN, 'hostname',LISTENING
-  CASE (listening) OF
-    'lrac': instrument = 'REF_L'
-    'mrac': instrument = 'REF_M'
-    'heater': instrument = 'UNDEFINED'
-    else: instrument = 'UNDEFINED'
-  ENDCASE
-  
-  IF (instrument EQ 'UNDEFINED') THEN BEGIN
-    BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  ENDIF ELSE BEGIN
-    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-  ENDELSE
-END
-
-
-
-
-
