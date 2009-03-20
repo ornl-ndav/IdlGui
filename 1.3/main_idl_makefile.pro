@@ -103,6 +103,7 @@
 .run checking_packages_gui.pro
 .run packages_required.pro
 .run ref_reduction_configuration.pro
+.run ref_reduction_display_images.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro
