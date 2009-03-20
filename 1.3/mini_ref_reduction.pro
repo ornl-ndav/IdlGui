@@ -49,75 +49,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   LOADCT,5, /SILENT
   
-  (*(*global).empty_cell_images) = getEmptyCellImages()
-  (*(*global).substrate_type)    = getSubstrateType()
-  
-  BatchTable = STRARR(10,20)
-  (*(*global).BatchTable) = BatchTable
-  
-  ;------------------------------------------------------------------------
-  ;explanation of the select_data_status and select_norm_status
-  ;0 nothing has been done yet
-  ;1 user left click first and is now in back selection 1st border
-  ;2 user release click and is done with back selection 1st border
-  ;3 user right click and is now entering the back selection of 2nd border
-  ;4 user left click and is now selecting the 2nd border
-  ;5 user release click and is done with selection of 2nd border
-  ;-----------------------------------------------------------------------------
-  
-  full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file
-  (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
-  full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
-  (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
-  (*(*global).data_back_selection) = [-1,-1]
-  (*(*global).data_peak_selection) = [-1,-1]
-  (*(*global).norm_back_selection) = [-1,-1]
-  (*(*global).norm_peak_selection) = [-1,-1]
-  (*(*global).data_roi_selection)  = [-1,-1]
-  (*(*global).norm_roi_selection)  = [-1,-1]
-  
-  (*global).UpDownMessage = 'Use U(up) or D(down) to move selection ' + $
-    'vertically pixel per pixel.'
-  (*global).REFreductionVersion = (*global).VERSION
-  
-  PlotsTitle = ['Data Combined Specular TOF Plot',$
-    'Data Combined Background TOF Plot',$
-    'Data Combined Subtracted TOF Plot',$
-    'Norm. Combined Specular TOF Plot',$
-    'Norm. Combined Background TOF Plot',$
-    'Norm. Combined Subtracted TOF Plot',$
-    'R vs TOF Plot',$
-    'R vs TOF Combined Plot',$
-    ;              'XML output file',$
-    'Empty Cell R vs TOF Plot']
-  (*(*global).PlotsTitle) = PlotsTitle
-  MainPlotTitle = 'Main Data Reduction Plot'
-  (*global).MainPlotTitle = MainPlotTitle
-  
-  ;instrument geometry
-  if (instrument EQ 'REF_L') then begin ;REF_L
-    InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
-  endif else begin
-    InstrumentGeometryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
-  endelse
-  (*global).InstrumentGeometryPath = InstrumentGeometryPath
-  
-  ExtOfAllPlots = ['.txt',$
-    '.rmd',$
-    '_data.sdc',$
-    '_data.bkg',$
-    '_data.sub',$
-    '_norm.sdc',$
-    '_norm.bkg',$
-    '_norm.sub',$
-    '.rtof',$
-    '.crtof']
-  (*(*global).ExtOfAllPlots) = ExtOfAllPlots
-  
-  ;define Main Base variables
-  ;[xoffset, yoffset, scr_xsize, scr_ysize]
-  
-  ;MainBaseSize  = [50,50,905,685]
   MainBaseSize  = [50,50,905,685]
   
   MainBaseTitle = 'miniReflectometer Data Reduction Package - '
@@ -233,7 +164,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MAIN_BASE, $
     MainBaseSize, $
     instrument, $
-    PlotsTitle,$
+    (*(*global).PlotsTitle),$
     structure
     
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
