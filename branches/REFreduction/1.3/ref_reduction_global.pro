@@ -468,5 +468,77 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;Version of REFreduction Tool
     })
     
+  ;assign values to global variables
+    
+  ;define initial global values - these could be input via external file
+  ;or other means
+    
+  (*(*global).empty_cell_images) = getEmptyCellImages()
+  (*(*global).substrate_type)    = getSubstrateType()
+  
+  (*(*global).BatchTable) = STRARR(10,20)
+  
+  ;------------------------------------------------------------------------
+  ;explanation of the select_data_status and select_norm_status
+  ;0 nothing has been done yet
+  ;1 user left click first and is now in back selection 1st border
+  ;2 user release click and is done with back selection 1st border
+  ;3 user right click and is now entering the back selection of 2nd border
+  ;4 user left click and is now selecting the 2nd border
+  ;5 user release click and is done with selection of 2nd border
+  ;------------------------------------------------------------------------
+  
+  full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file
+  (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
+  full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
+  (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
+  (*(*global).data_back_selection) = [-1,-1]
+  (*(*global).data_peak_selection) = [-1,-1]
+  (*(*global).norm_back_selection) = [-1,-1]
+  (*(*global).norm_peak_selection) = [-1,-1]
+  (*(*global).data_roi_selection)  = [-1,-1]
+  (*(*global).norm_roi_selection)  = [-1,-1]
+  
+  (*global).UpDownMessage = 'Use U(up) or D(down) to move selection' + $
+    ' vertically pixel per pixel.'
+  (*global).REFreductionVersion = (*global).VERSION
+  
+  PlotsTitle = ['Data Combined Specular TOF Plot',$
+    'Data Combined Background TOF Plot',$
+    'Data Combined Subtracted TOF Plot',$
+    'Normalization Combined Specular TOF Plot',$
+    'Normalization Combined Background TOF Plot',$
+    'Normalization Combined Subtracted TOF Plot',$
+    'R vs TOF Plot',$
+    'R vs TOF Combined Plot',$
+    ;              'XML output file',$
+    'Empty Cell R vs TOF Plot']
+  (*(*global).PlotsTitle) = PlotsTitle
+  MainPlotTitle = 'Main Data Reduction Plot'
+  (*global).MainPlotTitle = MainPlotTitle
+  
+    ;instrument geometry
+  if (instrument EQ 'REF_L') then begin ;REF_L
+    InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
+  endif else begin
+    InstrumentGeometryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
+  endelse
+  (*global).InstrumentGeometryPath = InstrumentGeometryPath
+  
+  ExtOfAllPlots = ['.txt',$
+    '.rmd',$
+    '_data.sdc',$
+    '_data.bkg',$
+    '_data.sub',$
+    '_norm.sdc',$
+    '_norm.bkg',$
+    '_norm.sub',$
+    '.rtof',$
+    '.crtof',$
+    '.ecrtof']
+  (*(*global).ExtOfAllPlots) = ExtOfAllPlots
+  
+  
+  
   return, global
 END
