@@ -107,3 +107,4 @@
 .run MainBaseEvent.pro
 .run ref_reduction_tab.pro
 .run ref_reduction_eventcb.pro
+.run ref_reduction_global.pro
