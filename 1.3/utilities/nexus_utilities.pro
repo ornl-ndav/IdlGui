@@ -40,11 +40,6 @@ FUNCTION check_number_polarization_state, Event, $
   text = '-> Number of polarization states: '
   cmd = 'nxdir ' + nexus_file_name
   
-  IF ((*global).debugging_version EQ 'yes') THEN BEGIN
-    debugging_structure = (*(*global).debugging_structure)
-    RETURN, debugging_structure.nbr_pola_state
-  ENDIF
-  
   no_error = 0
   CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
