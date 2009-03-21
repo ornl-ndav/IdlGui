@@ -34,56 +34,58 @@
 
 PRO RefReduction_RunCommandLine, Event
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-PROCESSING = (*global).processing_message ;processing message
-
-status_text = 'Data Reduction ........ ' + PROCESSING
-putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
-
-;check the run numbers and replace them by full nexus path
-;check first DATA run numbers
-ReplaceDataRunNumbersByFullPath, Event
-;check second NORM run numbers
-IF (isReductionWithNormalization(Event)) THEN BEGIN
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  PROCESSING = (*global).processing_message ;processing message
+  
+  status_text = 'Data Reduction ........ ' + PROCESSING
+  putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+  
+  ;check the run numbers and replace them by full nexus path
+  ;check first DATA run numbers
+  ReplaceDataRunNumbersByFullPath, Event
+  ;check second NORM run numbers
+  IF (isReductionWithNormalization(Event)) THEN BEGIN
     ReplaceNormRunNumbersByFullPath, Event
-ENDIF
-
-;re-run the CommandLineGenerator
-REFreduction_CommandLineGenerator, Event
-
-;disable RunCommandLine
-ActivateWidget, Event,'start_data_reduction_button', 0
-
-;get command line to generate
-cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
-
-;display command line in log-book
-cmd_text = 'Running Command Line:'
-putLogBookMessage, Event, cmd_text, Append=1
-cmd_text = ' -> ' + cmd
-putLogBookMessage, Event, cmd_text, Append=1
-cmd_text = '......... ' + PROCESSING
-putLogBookMessage, Event, cmd_text, Append=1
-
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-
-IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+  ENDIF
+  
+  ;re-run the CommandLineGenerator
+  REFreduction_CommandLineGenerator, Event
+  
+  ;disable RunCommandLine
+  ActivateWidget, Event,'start_data_reduction_button', 0
+  
+  ;get command line to generate
+  cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
+  
+  ;display command line in log-book
+  cmd_text = 'Running Command Line:'
+  putLogBookMessage, Event, cmd_text, Append=1
+  cmd_text = ' -> ' + cmd
+  putLogBookMessage, Event, cmd_text, Append=1
+  cmd_text = '......... ' + PROCESSING
+  putLogBookMessage, Event, cmd_text, Append=1
+  
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  
+  IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
     (*global).dirpix_geometry NE '' AND $
-    (*global).cvinfo NE '') then BEGIN ;use tmp geo
-  ts_geom = (*global).ts_geom
-  geometry = (*global).dripix_geometry
-
-ENDIF
-
-
-spawn, cmd, listening, err_listening
-
-IF (err_listening[0] NE '') THEN BEGIN
-    
+    (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+    geo_cmd = (*global).tmp_geometry_file
+    geo_cmd += ' ' + (*global).dirpix_geometry
+    geo_cmd += ' -m ' + (*global).cvinfo
+    geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+    geo_cmd += ' -o ' + (*global).tmp_geometry_file
+    SPAWN, geo_cmd, listening, err_listening
+  ENDIF
+  
+  spawn, cmd, listening, err_listening
+  
+  IF (err_listening[0] NE '') THEN BEGIN
+  
     (*global).DataReductionStatus = 'ERROR'
     LogBookText = getLogBookText(Event)
     Message = '* ERROR! *'
@@ -95,9 +97,9 @@ IF (err_listening[0] NE '') THEN BEGIN
     status_text = 'Data Reduction ........ ERROR! (-> Check Log Book)'
     putTextFieldValue, event, 'data_reduction_status_text_field', $
       status_text, 0
-    
-ENDIF ELSE BEGIN
-    
+      
+  ENDIF ELSE BEGIN
+  
     (*global).DataReductionStatus = 'OK'
     LogBookText = getLogBookText(Event)
     Message = 'Done'
@@ -106,19 +108,19 @@ ENDIF ELSE BEGIN
     status_text = 'Data Reduction ........ DONE'
     putTextFieldValue, event, 'data_reduction_status_text_field', $
       status_text, 0
-    
- ;   IF ((*global).debugger) THEN BEGIN
-;We can retrieve info for Batch Tab
-        RetrieveBatchInfoAtLoading, Event
- ;   ENDIF
+      
+    ;   IF ((*global).debugger) THEN BEGIN
+    ;We can retrieve info for Batch Tab
+    RetrieveBatchInfoAtLoading, Event
+    ;   ENDIF
     PopulateBatchTableWithCMDinfo, Event, cmd ;_BatchTab
     
-ENDELSE
-
-;disable RunCommandLine
-ActivateWidget, Event,'start_data_reduction_button', 1
-
-;turn off hourglass
-widget_control,hourglass=0
-
+  ENDELSE
+  
+  ;disable RunCommandLine
+  ActivateWidget, Event,'start_data_reduction_button', 1
+  
+  ;turn off hourglass
+  widget_control,hourglass=0
+  
 END
