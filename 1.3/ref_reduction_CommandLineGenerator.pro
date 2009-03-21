@@ -643,8 +643,8 @@ IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
 ENDIF
 
 ;overwrite data instrument geometry file
-cmd += ' --data-inst-geom='
 if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+  cmd += ' --data-inst-geom='
   ;with instrument geometry
   IGFile = (*global).InstrumentDataGeometryFileName
   if (IGFile NE '') then begin ;instrument geometry file is not empty
@@ -669,17 +669,6 @@ if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
   endelse
   setButtonValue, Event, 'overwrite_data_intrument_geometry_button', $
     button_value
-ENDIF
-
-IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-  (*global).dirpix_geometry NE '' AND $
-  (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-  geo_cmd = (*global).tmp_geometry_file
-  geo_cmd += ' ' + (*global).dirpix_geometry
-  geo_cmd += ' -m ' + (*global).cvinfo
-  geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
-  geo_cmd += ' -o ' + (*global).tmp_geometry_file
-  SPAWN, geo_cmd, listening, err_listening
 ENDIF
 
 ;overwrite norm instrument geometry file
