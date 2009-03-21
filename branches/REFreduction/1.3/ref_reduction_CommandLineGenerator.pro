@@ -671,6 +671,12 @@ if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
     button_value
 ENDIF
 
+IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+  IF (~isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN
+    cmd += ' --data-inst-geom=' + (*global).tmp_geometry_file
+  ENDIF
+ENDIF
+
 ;overwrite norm instrument geometry file
 if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN $
   ;with instrument geometry

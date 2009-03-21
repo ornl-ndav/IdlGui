@@ -71,15 +71,17 @@ PRO RefReduction_RunCommandLine, Event
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
   
-  IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-    (*global).dirpix_geometry NE '' AND $
-    (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-    geo_cmd = (*global).tmp_geometry_file
-    geo_cmd += ' ' + (*global).dirpix_geometry
-    geo_cmd += ' -m ' + (*global).cvinfo
-    geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
-    geo_cmd += ' -o ' + (*global).tmp_geometry_file
-    SPAWN, geo_cmd, listening, err_listening
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+      (*global).dirpix_geometry NE '' AND $
+      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+      geo_cmd = (*global).tmp_geometry_file
+      geo_cmd += ' ' + (*global).dirpix_geometry
+      geo_cmd += ' -m ' + (*global).cvinfo
+      geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+      geo_cmd += ' -o ' + (*global).tmp_geometry_file
+      SPAWN, geo_cmd, listening, err_listening
+    ENDIF
   ENDIF
   
   spawn, cmd, listening, err_listening
