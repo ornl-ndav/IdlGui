@@ -35,8 +35,8 @@
 PRO RefReduction_RunCommandLine, Event
 
   ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,get_uvalue=global
   
   PROCESSING = (*global).processing_message ;processing message
   
@@ -60,6 +60,31 @@ PRO RefReduction_RunCommandLine, Event
   ;get command line to generate
   cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
   
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/hourglass
+  
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
+      (*global).dirpix_geometry NE '' AND $
+      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
+      geo_cmd = (*global).ts_geom
+      geo_cmd += ' ' + (*global).dirpix_geometry
+      geo_cmd += ' -m ' + (*global).cvinfo
+      geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+      geo_cmd += ' -o ' + (*global).tmp_geometry_file
+      cmd_text = 'Running geometry generator:'
+      putLogBookMessage, Event, cmd_text, Append=1
+      cmd_text = '-> ' + geo_cmd
+      putLogBookMessage, Event, cmd_text, Append=1
+      SPAWN, geo_cmd, listening, err_listening
+;      print, listening
+;      print, err_listening
+;      help, listening
+;      help, err_listening
+    ENDIF
+  ENDIF
+  
+  
   ;display command line in log-book
   cmd_text = 'Running Command Line:'
   putLogBookMessage, Event, cmd_text, Append=1
@@ -68,23 +93,7 @@ PRO RefReduction_RunCommandLine, Event
   cmd_text = '......... ' + PROCESSING
   putLogBookMessage, Event, cmd_text, Append=1
   
-  ;indicate initialization with hourglass icon
-  widget_control,/hourglass
-  
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    IF (~isWithDataInstrumentGeometryOverwrite(Event) AND $
-      (*global).dirpix_geometry NE '' AND $
-      (*global).cvinfo NE '') THEN BEGIN ;use tmp geo
-      geo_cmd = (*global).tmp_geometry_file
-      geo_cmd += ' ' + (*global).dirpix_geometry
-      geo_cmd += ' -m ' + (*global).cvinfo
-      geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
-      geo_cmd += ' -o ' + (*global).tmp_geometry_file
-      SPAWN, geo_cmd, listening, err_listening
-    ENDIF
-  ENDIF
-  
-  spawn, cmd, listening, err_listening
+  SPAWN, cmd, listening, err_listening
   
   IF (err_listening[0] NE '') THEN BEGIN
   
@@ -123,6 +132,6 @@ PRO RefReduction_RunCommandLine, Event
   ActivateWidget, Event,'start_data_reduction_button', 1
   
   ;turn off hourglass
-  widget_control,hourglass=0
+  WIDGET_CONTROL,hourglass=0
   
 END
