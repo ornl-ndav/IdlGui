@@ -88,6 +88,15 @@
       ++missing_argument_counter
     END
     
+    ;-facility and instrument flags
+    cmd += ' ' + (*global).facility_flag
+    facility_list = (*global).facility_list
+    cmd += '=' + facility_list[0]
+    
+    cmd +=  ' ' + (*global).instrument_flag
+    instrument_list = (*global).instrument_list
+    cmd += '=' + instrument_list[0]  
+    
     ;get monitor path
     cmd += ' --bmon-path='
     IF (file_run EQ '') THEN BEGIN
@@ -374,8 +383,8 @@
     value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
     IF (value NE '') THEN BEGIN ;required if none empty list of coefficients
     
-    prefix_flag = ',0.0,"seconds"'  
-
+      prefix_flag = ',0.0,"seconds"'
+      
       ;data
       file_run = getTextFieldValue(Event,'data_file_name_text_field')
       IF (file_run NE '') THEN BEGIN

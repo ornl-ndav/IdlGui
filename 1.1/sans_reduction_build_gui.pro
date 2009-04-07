@@ -83,6 +83,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
     scaling_value: '',$
+    
+    facility_list: ['LENS'],$
+    facility_flag: '--facility',$
+    instrument_list: ['SANS'],$
+    instrument_flag: '--inst',$
+    
     package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
     list_OF_files_to_send: ptr_new(0L),$
