@@ -92,6 +92,15 @@ PRO CheckCommandLine, Event
     
   END
   
+  ;-facility and instrument flags
+  cmd += ' ' + (*global).facility_flag
+  facility_list = (*global).facility_list
+  cmd += '=' + facility_list[0]
+  
+  cmd +=  ' ' + (*global).instrument_flag
+  instrument_list = (*global).instrument_list
+  cmd += '=' + instrument_list[0]
+  
   IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
     ;transmission mode
     ;get monitor path

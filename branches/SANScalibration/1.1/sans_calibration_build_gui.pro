@@ -92,6 +92,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pause_button_active: 'images/pause_active.png',$
     stop_button_active: 'images/stop_active.png',$
     
+    facility_list: ['LENS'],$
+    facility_flag: '--facility',$
+    instrument_list: ['SANS'],$
+    instrument_flag: '--inst',$
+    
     main_base_uname: 'MAIN_BASE',$
     MainBaseSize:    INTARR(4),$
     tof_ascii_path:  '~/',$
