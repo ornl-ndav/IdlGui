@@ -113,12 +113,47 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     sMElabel.size[1]+XYoff[1]],$
     value: '(Specify the monitor efficiency constant in 1/Angstroms)'}
     
+  ;- Detector Efficiency ---------------------------------------------------------
+  XYoff = [0,20] ;title
+  sDEbase = { size: [sMEBase.size[0]+XYoff[0],$
+    sMEbase.size[1]+sMEbase.size[3]+XYoff[1],$
+    sMEbase.size[2:3]], $
+    frame: 1,$
+    sensitive: 1,$
+    uname: 'detector_efficiency_base'}
+  XYoff = [20,-8]
+  sDEtitle = { size: [sDEbase.size[0]+XYoff[0],$
+    sDEbase.size[1]+XYoff[1]],$
+    value: 'Detector Efficiency'}
+    
+  XYoff = [50,10]
+  sDEgroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
+    XYoff[1]],$
+    uname: 'detector_efficiency_group',$
+    list: ['YES','NO'],$
+    value: 1.0}
+  XYoff = [0,5]
+  sDElabel = { size: [sTZO_beam_value.size[0]+XYoff[0],$
+    sDEgroup.size[1]+XYoff[1]],$
+    uname: 'detector_efficiency_constant_label',$
+    value: 'Value:'}
+  XYoff = [50,-6]
+  sDEvalue = { size: [sDElabel.size[0]+XYoff[0],$
+    sDElabel.size[1]+XYoff[1],$
+    sTZO_detector_field.size[2:3]],$
+    value: '',$
+    uname: 'detector_efficiency_constant_value'}
+  XYoff = [0,0]
+  sDEhelp = { size: [sTZOhelp.size[0]+XYoff[0],$
+    sDElabel.size[1]+XYoff[1]],$
+    value: '(Specify the detector efficiency constant in 1/Angstroms)'}
+
   ;- Q --------------------------------------------------------------------------
   XYoff = [0,20]
-  sQbase = { size:  [sMEbase.size[0]+XYoff[0],$
-    sMEbase.size[1]+sMEbase.size[3]+XYoff[1],$
-    sMEbase.size[2:3]],$
-    frame: sMEbase.frame,$
+  sQbase = { size:  [sDEbase.size[0]+XYoff[0],$
+    sDEbase.size[1]+sDEbase.size[3]+XYoff[1],$
+    sDEbase.size[2:3]],$
+    frame: sDEbase.frame,$
     uname: 'q_base'}
   XYoff = [20,-8]
   sQTitle = { size:  [sQbase.size[0]+XYoff[0],$
@@ -528,6 +563,54 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     XOFFSET = sMEhelp.size[0],$
     YOFFSET = sMEhelp.size[1],$
     VALUE   = sMEhelp.value)
+    
+  ;- Detector Efficiency ---------------------------------------------------------
+  label = WIDGET_LABEL(Basetab,$
+    XOFFSET = sDEtitle.size[0],$
+    YOFFSET = sDEtitle.size[1],$
+    VALUE   = sDEtitle.value)
+    
+  base = WIDGET_BASE(BaseTab,$
+    XOFFSET   = sDEbase.size[0],$
+    YOFFSET   = sDEbase.size[1],$
+    SCR_XSIZE = sDEbase.size[2],$
+    SCR_YSIZE = sDEbase.size[3],$
+    FRAME     = sDEbase.frame,$
+    SENSITIVE = sDEbase.sensitive,$
+    UNAME     = sDEbase.uname)
+    
+  group = CW_BGROUP(Base,$
+    sDEgroup.list,$
+    XOFFSET    = sDEgroup.size[0],$
+    YOFFSET    = sDEgroup.size[1],$
+    ROW        = 1,$
+    SET_VALUE  = sDEgroup.value,$
+    UNAME      = sDEgroup.uname,$
+    /EXCLUSIVE)
+    
+  ;label and value
+  wLabel = WIDGET_LABEL(Base,$
+    XOFFSET   = sDElabel.size[0],$
+    YOFFSET   = sDElabel.size[1],$
+    VALUE     = sDElabel.value,$
+    UNAME     = sDElabel.uname)
+    
+  wValue = WIDGET_TEXT(Base,$
+    XOFFSET   = sDEvalue.size[0],$
+    YOFFSET   = sDEvalue.size[1],$
+    SCR_XSIZE = sDEvalue.size[2],$
+    SCR_YSIZE = sDEvalue.size[3],$
+    UNAME     = sDEvalue.uname,$
+    VALUE     = sDEvalue.value,$
+    /EDITABLE,$
+    /ALL_EVENTS,$
+    /ALIGN_LEFT)
+    
+  ;help
+  whelp = WIDGET_LABEL(Base,$
+    XOFFSET = sDEhelp.size[0],$
+    YOFFSET = sDEhelp.size[1],$
+    VALUE   = sDEhelp.value)
     
   ;- Q --------------------------------------------------------------------------
   wQTitle = WIDGET_LABEL(Basetab,$

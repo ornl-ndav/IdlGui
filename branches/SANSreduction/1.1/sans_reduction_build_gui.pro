@@ -177,6 +177,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     1},$ ;on/OFF
     monitor_efficiency_constant: $
     '--mon-eff-const',$
+
+    detector_efficiency: {flag: $
+    '--det-effc',$
+    default: $
+    1},$ ;on/OFF
+    detector_efficiency_constant: $
+    '--det-eff-const',$
+
     verbose: $
     '--verbose',$
     min_lambda_cut_off:$

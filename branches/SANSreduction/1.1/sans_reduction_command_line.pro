@@ -276,6 +276,27 @@
     ENDELSE
     map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
     
+    ;-detector efficiency
+    IF (getCWBgroupValue(Event, 'detector_efficiency_group') EQ 0) THEN BEGIN
+      activate_intermediate_base = 0
+      cmd += ' ' + (*global).ReducePara.detector_efficiency.flag
+      cmd += ' ' + (*global).ReducePara.detector_efficiency_constant + '='
+      value = getTextFieldValue(Event, 'detector_efficiency_constant_value')
+      IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+      ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+          '- Detector Efficiency Value ' + $
+          '(PARAMETERS)']
+      ENDELSE
+    ENDIF ELSE BEGIN
+      activate_intermediate_base = 1
+    ENDELSE
+
     ;-Q min, max, width and unit
     Qmin   = getTextFieldValue(Event,'qmin_text_field')
     Qmax   = getTextFieldValue(Event,'qmax_text_field')
