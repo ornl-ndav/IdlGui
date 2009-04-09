@@ -67,7 +67,9 @@ PRO MAIN_BASE_event, Event
     ;LIVE DATA STREAMING button
     Widget_Info(wWidget, FIND_BY_UNAME='live_data_streaming_button'): begin
       IF ((*global).first_lds_used) THEN BEGIN
-        logger, Event
+        logger, APPLICATION=(*global).application,$
+        VERSION=(*global).version,$
+        UCAMS=(*global).ucams 
         (*global).first_lds_used = 0
       ENDIF
       load_live_data_streaming, Event ;_LDS
