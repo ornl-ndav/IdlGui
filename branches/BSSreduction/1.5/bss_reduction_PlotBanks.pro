@@ -91,19 +91,14 @@ endfor
 
 END
 
-
-
-
+;------------------------------------------------------------------------------
 ;This function will plot the bank1 and bank2 grids
 PRO PlotBanksGrid, Event
 PlotBank1Grid, Event
 PlotBank2Grid, Event
 END
 
-
-
-
-
+;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank1, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -115,9 +110,9 @@ bank1_sum = (*(*global).bank1_sum)
 bank1_sum_transpose = transpose(bank1_sum)
     
 ;rebin data
-Nx = (*global).Nx
+Nx = (*global).Nx+1
 Ny = (*global).Ny
-    
+
 Xfactor = (*global).Xfactor
 Yfactor = (*global).Yfactor
     
@@ -128,11 +123,11 @@ tvimg_bank1 = rebin(bank1_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
 view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
-tvscl, tvimg_bank1
+
+tvscl, tvimg_bank1, /NAN
 END
 
-
-
+;------------------------------------------------------------------------------
 PRO bss_reduction_PlotBank2, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -144,27 +139,23 @@ bank2_sum = (*(*global).bank2_sum)
 bank2_sum_transpose = transpose(bank2_sum)
     
 ;rebin data
-Nx = (*global).Nx
+Nx = (*global).Nx+1
 Ny = (*global).Ny
 
 Xfactor = (*global).Xfactor
 Yfactor = (*global).Yfactor
 
 tvimg_bank2 = rebin(bank2_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
-    
+
 ;bottom bank = bank2
 view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
-tvscl, tvimg_bank2,/NAN
 
+tvscl, tvimg_bank2,/NAN
 END
 
-
-
-
-
-
+;-----------------------------------------------------------------------------
 PRO bss_reduction_PlotBanks, Event, success
 
 ;get global structure
@@ -189,8 +180,15 @@ bank1_sum = total(bank1,1)
 bank2_sum = total(bank2,1)
 
 ;remove useless last rack
-bank1_sum = bank1_sum(0:63,0:55)
-bank2_sum = bank2_sum(0:63,0:55)
+bank1_sum = bank1_sum(0:63,0:56) ;the last column will be to be sure we use 
+bank2_sum = bank2_sum(0:63,0:56) ;the same z-axis scale (min and max)
+
+max1 = max(bank1_sum)
+max2 = max(bank2_sum)
+max = max([max1,max2])
+
+bank1_sum[0,56] = max
+bank2_sum[0,56] = max
 
 ;store banks sum
 (*(*global).bank1_sum) = bank1_sum
