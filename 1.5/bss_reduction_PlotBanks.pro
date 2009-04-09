@@ -148,7 +148,7 @@ Yfactor = (*global).Yfactor
 tvimg_bank2 = rebin(bank2_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
 
 ;bottom bank = bank2
-view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw') 
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
