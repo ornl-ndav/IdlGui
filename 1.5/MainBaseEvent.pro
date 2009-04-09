@@ -81,7 +81,8 @@ PRO MAIN_BASE_event, Event
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='load_roi_file_text'): begin
-      LoadRoiFile, Event
+;      LoadRoiFile, Event
+      PlotIncludedPixels, Event
     end
     
     ;Determine Path for saving ROI file
