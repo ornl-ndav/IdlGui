@@ -723,7 +723,7 @@ PRO UpdateFittingGui_save, Event
         file_name
       IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
       loading_error = 0
-      ;CATCH,loading_error ;remove_me
+      CATCH,loading_error
       IF (loading_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED

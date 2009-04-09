@@ -223,16 +223,11 @@
      text = '--> iASCII is not a valid IDL3columnsASCIIparser object'
    ENDELSE
    IDLsendToGeek_addLogBookText, Event, text
-;   print, 'before getting data'
    sData = iASCII->getData(Event)
-;   print, 'after getting data'
-;   print, (*(*sDAta.data)[0].data)[1] ;remove_me   
    DataArray = (*(*sData.data)[0].data)
-;   print, '#1'
    nbr_column = FIX((size(DataArray))(1) / 3)
-;   print, '#2'
+
    newDataArray = REFORM(DAtaArray,3,nbr_column)
-;   print, '#3'
    
    title = ''
    
@@ -290,7 +285,7 @@
      ROIfile=ROIfile, $
      TYPE=type
    ;get global structure
-   activate_widget, Event, 'MAIN_BASE',0
+   ;activate_widget, Event, 'MAIN_BASE',0 ;remove_me comments
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
    iBase = OBJ_NEW('IDLmakeTOFbase', $
      EVENT  = Event,$
