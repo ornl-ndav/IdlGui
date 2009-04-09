@@ -158,3 +158,61 @@ ENDIF ELSE BEGIN                ;don't do anything
 ENDELSE
 
 END
+
+;-----------------------------------------------------------------------------
+PRO LoadRoiFile, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+RoiFullFileName = getTextFieldValue(Event,'load_roi_file_text')
+
+no_error = 0
+CATCH, no_error
+
+IF (RoiFullFileName NE '') THEN BEGIN
+    
+    IF (no_error NE 0) then begin
+        
+        CATCH, /CANCEL
+        messageBox = 'ROI File Loading -> ERROR !'
+        LogBookMessage = 'ERROR loading the ROI file ' + RoiFullFileName
+        AppendLogBookMessage, Event, LogBookMessage
+
+    ENDIF ELSE BEGIN
+        
+        LogBookText = 'Loading ROI file: ' + RoiFullFileName
+        AppendLogBookMessage, Event, LogBookText
+
+;Read ROI file
+        BSSreduction_retrievePixelExcludedArray, Event, RoiFullFileName
+       
+        IF ((*global).ROI_error_status EQ 1) THEN BEGIN
+            messageBox = 'ROI File Loading -> ERROR !'
+            LogBookMessage = 'ERROR loading the ROI file ' + RoiFullFileName
+            AppendLogBookMessage, Event, LogBookMessage
+        ENDIF ELSE BEGIN
+;plot new ROI file
+            PlotIncludedPixels, Event
+            
+            message = 'ROI File Loading -> SUCCESS !'
+            LogBookMessage = '   -> ROI File has been loaded with SUCCESS !'
+            AppendLogBookMessage, Event, LogBookMessage
+
+;add full file name in REDUCE tab
+            putReduceRoiFileName, Event, RoiFullFileName
+
+        ENDELSE
+
+    ENDELSE
+    
+    putMessageBoxInfo, Event, MessageBox
+    
+ENDIF ELSE BEGIN                ;don't do anything
+    
+ENDELSE
+
+END
+
+
