@@ -43,11 +43,14 @@ widget_control,id,get_uvalue=global
 fileID  = h5f_open(FullNexusName)
 ;get bank1 data
 fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
-(*(*global).bank1) = h5d_read(fieldID)
+bank1 = h5d_read(fieldID)
 
 ;get bank2 data
 fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
-(*(*global).bank2) = h5d_read(fieldID)
+bank2 = h5d_read(fieldID)
+
+(*(*global).bank1) = bank1
+(*(*global).bank2) = bank2
 
 END
 

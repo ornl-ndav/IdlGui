@@ -168,6 +168,7 @@ global = ptr_new ({ $
                     BSSreductionVersion: VERSION,$
                     DR_xml_config_ext: '.rmd',$
                     DR_xml_config_file: '',$
+                    
                     ListOfOutputPlots: {woctib_button: 0,$
                                          wopws_button: 0,$
                                          womws_button: 0,$
