@@ -335,8 +335,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;    ucams EQ 'j35') THEN BEGIN
   IF (DEBUGGING EQ 'yes') THEN BEGIN
   
-    nexus_path           = '/LENS/SANS/1/1/104/NeXus/'
-    ;nexus_path = '~/tmp/'
+    nexus_path = '~/tmp/'
     (*global).nexus_path = nexus_path
     (*global).ascii_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
     (*global).selection_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
