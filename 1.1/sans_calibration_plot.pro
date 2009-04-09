@@ -96,20 +96,20 @@ ENDIF ELSE BEGIN
 ;check linear or log scale type
 ;     IF (getCWBgroupValue(Event,'z_axis_scale') EQ 1) THEN BEGIN ;log
 ;         index = WHERE(tDataXY GT 0, nbr)
-;         help, index ;remove_me
+;         help, index 
 ;         sz = SIZE(tDataXY)
-;         help, sz ;remove_me
+;         help, sz 
 ;         new_tDataXY = FLTARR(sz[1],sz[2])
-;         help, new_tdataxy ;remove_me
+;         help, new_tdataxy 
 ;         IF (nbr GT 0) THEN BEGIN
 ;             new_tDataXY(index) = tDataXY(index)
-;             help, new_tdataxy ;remove_me
+;             help, new_tdataxy 
 ;         ENDIF
 ;         tDataXY = new_tDataXY
-;         help, tdataxy ;remove_me
+;         help, tdataxy 
 ;         tDataXY = ALOG10(tDataXY)
-;         help, tdataxy ;remove_me
-;         print, max(tdataxy) ;remove_me
+;         help, tdataxy 
+;         print, max(tdataxy)
 ;     ENDIF
     
 ;Check if rebin is necessary or not

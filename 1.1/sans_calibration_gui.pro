@@ -168,8 +168,8 @@ PRO update_tab1_gui, Event, STATUS=status
     tof_status = 0
   ENDELSE
   activate_widget_list, Event, uname_list, tof_status
-;tof_status = 1 ;REMOVE_ME
-;activate_widget_list, Event, uname_list, tof_status ;REMOVE_ME
+tof_status = 1
+activate_widget_list, Event, uname_list, tof_status
   
 END
 

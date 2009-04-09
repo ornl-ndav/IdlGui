@@ -71,7 +71,7 @@ function modtag, init_str
   ;remove any spaces on ends
   init_str = STRTRIM(init_str, 2)
   ;locate semicolon
-  colon_pos = strpos(init_str, ':')
+  colon_pos = STRPOS(init_str, ':')
   ;find size of the array
   arrsize = N_ELEMENTS(init_str)
   ;make sure to return something
@@ -82,15 +82,15 @@ function modtag, init_str
   
     for i = 0, arrsize - 1 do begin
     
-      colon_pos = strpos(init_str[i], ':')
-      length = strlen(init_str[i])
+      colon_pos = STRPOS(init_str[i], ':')
+      length = STRLEN(init_str[i])
       
       if colon_pos ne -1 then begin
         if colon_pos eq (length-1) then begin
-          new_str[i] = strmid(init_str[i], 0, colon_pos)
+          new_str[i] = STRMID(init_str[i], 0, colon_pos)
         endif
         if colon_pos eq 0 then begin
-          new_str[i] = strmid(init_str[i], colon_pos + 1)
+          new_str[i] = STRMID(init_str[i], colon_pos + 1)
         endif
       endif
       
@@ -99,22 +99,22 @@ function modtag, init_str
   ;if input is just a string, do the same
   endif else begin
   
-    length = strlen(init_str)
+    length = STRLEN(init_str)
     
     if colon_pos ne -1 then begin
       if colon_pos eq (length-1) then begin
-        new_str = strmid(init_str, 0, colon_pos)
+        new_str = STRMID(init_str, 0, colon_pos)
       endif
       if colon_pos eq 0 then begin
-        new_str = strmid(init_str, colon_pos + 1)
+        new_str = STRMID(init_str, colon_pos + 1)
       endif
       
     endif
   endelse
   
   ;trim any spaces on ends
-  new_str = strtrim(new_str, 2)
-  return, new_str
+  new_str = STRTRIM(new_str, 2)
+  RETURN, new_str
   
 end
 
@@ -156,7 +156,7 @@ FUNCTION READ_DATA, file, half, Event
           ENDELSE
         ENDELSE
       ENDWHILE
-      close, 1
+      CLOSE, 1
       RETURN, line
     END
     2: BEGIN                  ;second half
@@ -165,7 +165,7 @@ FUNCTION READ_DATA, file, half, Event
         my_array = STRARR(1,nbr_lines)
         READF,1, my_array
       ENDWHILE
-      close,1
+      CLOSE,1
       RETURN, my_array
     END
   ENDCASE
@@ -176,11 +176,11 @@ function format, init_str, tag
   ;find out where tag ends
   pos = STRLEN(tag)
   ;make a string with the comment
-  new_str = strmid(init_str, pos)
+  new_str = STRMID(init_str, pos)
   ;call modtag to remove semicolons
   new_str = modtag(new_str)
   
-  return, new_str
+  RETURN, new_str
   
 end
 
@@ -191,7 +191,7 @@ Function find_it, init_str, tag
   n = N_ELEMENTS(init_str)
   i = 0
   flag = 1
-  new_str = strarr(1)
+  new_str = STRARR(1)
   
   ; Go through the array and find all occurances of the tag
   while (i NE n) do begin
@@ -209,7 +209,7 @@ Function find_it, init_str, tag
   
   ;cut out the tag
   new_str = format(new_str, tag)
-  return, new_str
+  RETURN, new_str
   
 end
 
@@ -235,10 +235,10 @@ pro populate_structure, all_data, MyStruct, Event
   IDLsendToGeek_addLogBookText, Event, text
   blk_line_index = WHERE(all_data EQ '', new_nbr)
   IDLsendToGeek_addLogBookText, Event, '-----> new_nbr: ' + $
-    strcompress(new_nbr,/remove_all)
+    STRCOMPRESS(new_nbr,/remove_all)
   num_elnts = N_ELEMENTS(all_data)
   IDLsendToGeek_addLogBookText, Event, '-----> num_elnts: ' + $
-    strcompress(num_elnts,/remove_all)
+    STRCOMPRESS(num_elnts,/remove_all)
     
   if new_nbr ne 0 then begin
     ;make sure the last one is not the last element of the array
@@ -250,7 +250,7 @@ pro populate_structure, all_data, MyStruct, Event
   endelse
   
   IDLsendToGeek_addLogBookText, Event, '-----> new_nbr is now: ' + $
-    strcompress(new_nbr,/remove_all)
+    STRCOMPRESS(new_nbr,/remove_all)
     
   ;create the array of structure here
   ;first the structure that will be used for each set of data
@@ -258,21 +258,23 @@ pro populate_structure, all_data, MyStruct, Event
     bank: '',$
     X:    '',$
     Y:    '',$
-    data: ptr_new()}
+    data: PTR_NEW()}
     
   ;then create the array of structures according to the number of
   ;array (new_nbr)
   data_structure = REPLICATE(general_data_structure,new_nbr)
   
   ;and put this general array of structures inside MyStruct.data
-  array_nbr   = 0
-  i           = 0
-  array_index = 0
+  array_nbr   = 0L
+  i           = 0L
+  array_index = 0L
+  step = num_elnts / 1000
   
   IDLsendToGeek_addLogBookText, Event, '----> about to enter while loop'
   
   WHILE (array_nbr NE new_nbr) DO BEGIN
-    if i  ne num_elnts then begin
+  
+    if i LT num_elnts then begin
       line = all_data[i]
     endif else begin
       line = ''
@@ -281,7 +283,7 @@ pro populate_structure, all_data, MyStruct, Event
     IF (~STRMATCH(line,'#*')) THEN BEGIN
       IF (line EQ '') THEN BEGIN
         array_index = 0
-        data_structure[array_nbr].data = ptr_new(my_data_array)
+        data_structure[array_nbr].data = PTR_NEW(my_data_array)
         data_structure[array_nbr].bank = bank
         data_structure[array_nbr].x = x
         data_structure[array_nbr].y = y
@@ -304,6 +306,12 @@ pro populate_structure, all_data, MyStruct, Event
         ++array_index
       ENDELSE
       
+      IF (num_elnts GT 1000) THEN BEGIN
+        i =  i + FIX(step)
+      ENDIF ELSE BEGIN
+        i++
+      ENDELSE
+      
     ENDIF else begin
       ;populate data_stracture
       IF (STRMATCH(line,'#S*')) THEN BEGIN
@@ -315,10 +323,10 @@ pro populate_structure, all_data, MyStruct, Event
           x    = '?'
           y    = '?'
         ENDIF ELSE BEGIN
-          temp = strsplit(line, /PRESERVE_NULL, /extract)
-          bank = strsplit(temp[4], " '  ( ) , ", /EXTRACT)
-          x = strsplit(temp[5], " '  ( ) , ", /EXTRACT)
-          y = strsplit(temp[6], " '  ( ) , ", /EXTRACT)
+          temp = STRSPLIT(line, /PRESERVE_NULL, /extract)
+          bank = STRSPLIT(temp[4], " '  ( ) , ", /EXTRACT)
+          x = STRSPLIT(temp[5], " '  ( ) , ", /EXTRACT)
+          y = STRSPLIT(temp[6], " '  ( ) , ", /EXTRACT)
         ENDELSE
       endif
       
@@ -333,8 +341,8 @@ pro populate_structure, all_data, MyStruct, Event
             y_all = ['','']
             sigma_all = ['','']
           ENDIF ELSE BEGIN
-            temp = strsplit(line,'#L',/extract)
-            temp1 = strsplit(temp[0],'()', /extract)
+            temp = STRSPLIT(line,'#L',/extract)
+            temp1 = STRSPLIT(temp[0],'()', /extract)
             CASE (N_ELEMENTS(temp1)) OF
               6: BEGIN
                 x_all = [temp1[0],temp1[1]]
@@ -360,10 +368,10 @@ pro populate_structure, all_data, MyStruct, Event
           ENDELSE
         ENDIF
       ENDIF
-      
+  
+      i++
+
     ENDELSE
-    
-    ++i
     
   ENDWHILE
   
@@ -403,7 +411,7 @@ FUNCTION IDL3columnsASCIIparser::getData, Event
     yaxis_units:       '',$
     sigma_yaxis:       '',$
     sigma_yaxis_units: '',$
-    Data:              ptr_new(0L)}
+    Data:              PTR_NEW(0L)}
     
   ;Populate structure with general information (NbrArray, xaxis....etc)
   text = '-> About to Enter populate_structure'
@@ -443,7 +451,7 @@ END
 ;------------------------------------------------------------------------------
 PRO IDL3columnsASCIIparser__define
   struct = {IDL3columnsASCIIparser,$
-    data: ptr_new(),$
+    data: PTR_NEW(),$
     path: ''}
 END
 
