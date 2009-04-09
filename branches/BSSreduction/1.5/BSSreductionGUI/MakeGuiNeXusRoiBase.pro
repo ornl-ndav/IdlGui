@@ -102,14 +102,14 @@ fbase = WIDGET_BASE(NeXusRoiTabBase,$
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = '~/results/',$
                        UNAME     = 'roi_path_button',$
-                       SCR_XSIZE = 335,$
+                       SCR_XSIZE = 320,$
                        SCR_YSIZE = 30,$
                        SENSITIVE = 0)
 
 button = WIDGET_BUTTON(fbase,$
-                       VALUE     = 'Auto. Name',$
+                       VALUE     = 'Refresh Name',$
                        UNAME     = 'roi_file_name_generator',$
-                       SCR_XSIZE = 75,$
+                       SCR_XSIZE = 90,$
                        SCR_YSIZE = 30,$
                        SENSITIVE = 0)
 END
