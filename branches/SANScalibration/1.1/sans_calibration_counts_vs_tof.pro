@@ -206,6 +206,7 @@
  
  ;------------------------------------------------------------------------------
  PRO plot_counts_vs_tof_data, Event, output_file_name
+
    ;get global structure
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
    ;retrieve infos
@@ -222,12 +223,16 @@
      text = '--> iASCII is not a valid IDL3columnsASCIIparser object'
    ENDELSE
    IDLsendToGeek_addLogBookText, Event, text
+;   print, 'before getting data'
    sData = iASCII->getData(Event)
-   ;print, (*(*sDAta.data)[0].data)[1] ;remove_me
-   
+;   print, 'after getting data'
+;   print, (*(*sDAta.data)[0].data)[1] ;remove_me   
    DataArray = (*(*sData.data)[0].data)
+;   print, '#1'
    nbr_column = FIX((size(DataArray))(1) / 3)
+;   print, '#2'
    newDataArray = REFORM(DAtaArray,3,nbr_column)
+;   print, '#3'
    
    title = ''
    
@@ -293,4 +298,5 @@
      ROIfile = ROIfile,$
      FILE   = FullOutputFileName,$
      TYPE   = type)
+     OBJ_DESTROY, iBase
  END
