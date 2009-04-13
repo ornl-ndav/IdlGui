@@ -38,6 +38,7 @@ IdlUtilitiesPath = "utilities/"
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 cd, CurrentFolder + '/utilities'
+.run nexus_utilities.pro
 .run get.pro
 .run system_utilities.pro
 .run nexus_utilities.pro
