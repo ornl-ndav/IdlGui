@@ -38,6 +38,9 @@ FUNCTION getFullNexusName, instrument , RunNumber, isNexusExist
 cmd = "findnexus --archive -i" + instrument 
 cmd += " " + strcompress(RunNumber,/REMOVE_ALL)
 spawn, cmd, full_nexus_name, err_listening
+
+print, cmd ;remove_me
+
 ;check if nexus exists
 sz = (size(full_nexus_name))(1)
 IF (sz EQ 1) then begin
