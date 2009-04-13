@@ -72,8 +72,8 @@ CountsVsTofTabSize = [748,$
                       273,$
                       444,$
                       310]
-CountsVsTofTab1Label = 'Counts Vs Tof (Selection)'
-CountsVsTofTab2Label = 'Counts Vs Tof (Individual Pixel)'
+CountsVsTofTab1Label = 'Counts Vs TOF Bins (Selection)'
+CountsVsTofTab2Label = 'Counts Vs TOF Bins (Individual Pixel)'
 
 CountsVsTofRefreshButton = {size : [335,3,100,30],$
                             title : 'REFRESH',$
