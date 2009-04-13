@@ -58,6 +58,7 @@ IF (FullNexusFileName NE '') THEN BEGIN
     message = 'Loading NeXus file selected:'
     PutLogBookMessage, Event, message
 
+    (*global).NexusFullName = FullNexusFileName
     (*global).DefaultPath = path
 
 ;nexus has been found and can be opened
