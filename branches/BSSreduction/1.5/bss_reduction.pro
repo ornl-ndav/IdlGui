@@ -64,7 +64,7 @@ PACKAGE_REQUIRED_BASE = { driver:           '',$
 ;            2: Output
 ;            3: Log Book 
 
-sDEBUGGING = { tab: {main_tab: 1,$ ;Reduce tab
+sDEBUGGING = { tab: {main_tab: 0,$ ;Selection tab
                      reduce_input_tab: 6},$ ;Scaling Cst tab
                reduce: {input1: { uname: 'rsdf_list_of_runs_text',$
                                   value: $
@@ -307,7 +307,7 @@ global = ptr_new ({ $
                     Yfactor: 5,$ ; coefficient in Y direction for rebining img
                       LogBookPath: '/SNS/users/LogBook/',$ ;path where
                                 ;to put the log book
-                    DefaultPath: '~/local/BSS/',$ ;default path where
+                    DefaultPath: '~/',$ ;default path where
                                 ;to look for the file
                     DefaultFilter: '*.nxs',$ ;default filter for the
                                 ;nexus file
