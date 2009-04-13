@@ -34,11 +34,18 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+file = OBJ_NEW('idlxmlparser', 'plotROI.cfg')
+  ;==============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING_VERSION = file->getValue(tag=['configuration','debugging_version'])
+  
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;==============================================================================
+  
 ;get the current folder
-cd, current=current_folder
-
-APPLICATION = 'plotROI'
-VERSION     = '1.0.7'
+;cd, current=current_folder
 
 ;define initial global values - these could be input via external file or other
 ;means
