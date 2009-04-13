@@ -191,6 +191,11 @@ y_coeff          = sMainBase.ycoeff
 xsize            = sMainBase.xsize
 ysize            = sMainBase.ysize
 color            = sMainBase.gridColor
+
+device, decomposed=0
+cyan = getcolor('cyan',1)
+color=1
+
 ;plot in x-direction
 FOR i=0,(NbrPixelExcluded-1) DO BEGIN
     PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, COLOR=color
@@ -296,6 +301,7 @@ ENDIF ELSE BEGIN
     Yarray  = INTARR(1)
 ENDELSE
 ;design Main Base
+
 sMainBase = { xsize     : xsize,$
               ysize     : ysize,$
               xcoeff    : self.x,$
@@ -306,7 +312,7 @@ sMainBase = { xsize     : xsize,$
               uname     : self.uname,$
               DrawUname : self.DrawUname,$
               data      : data,$
-              gridColor : 200,$
+              gridColor : 1,$
               NbrPxExcl : NbrPixelExcluded,$
               Xarray    : Xarray,$
               Yarray    : Yarray,$

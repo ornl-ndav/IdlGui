@@ -17,6 +17,7 @@ cd, CurrentFolder + '/plotROIGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run getcolor.pro
 .run plot_roi_get.pro
 .run plot_roi_is.pro
 .run plot_roi_put.pro
