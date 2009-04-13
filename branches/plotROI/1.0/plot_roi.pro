@@ -38,7 +38,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 cd, current=current_folder
 
 APPLICATION = 'plotROI'
-VERSION     = '1.0.5'
+VERSION     = '1.0.6'
 
 ;define initial global values - these could be input via external file or other
 ;means
@@ -71,7 +71,7 @@ ListOFInstruments = ['BSS',$
                      'REF_L',$
                      'REF_M',$
                      'ARCS',$
-                     'LENS']
+                     'SANS']
 
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
@@ -163,7 +163,7 @@ ENDELSE
 
 END
 
-
+;------------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
 pro plot_roi, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
