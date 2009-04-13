@@ -259,7 +259,7 @@ CountsVsTofTab1 = WIDGET_BASE(counts_vs_tof_tab,$
                               UNAME     = 'counts_vs_tof_tab1',$
                               SENSITIVE = 0)
 
-
+;plot of counts vs TOF
 draw = WIDGET_DRAW(CountsVsTofTab1,$
                    UNAME     = 'full_counts_vs_tof_draw',$
                    XOFFSET   = FullCountsVsTofSize[0],$
@@ -267,6 +267,7 @@ draw = WIDGET_DRAW(CountsVsTofTab1,$
                    SCR_XSIZE = FullCountsVsTofSize[2],$
                    SCR_YSIZE = FullCountsVsTofSize[3],$
                    /MOTION_EVENTS,$
+                   TOOLTIP = 'Right click to create a file of this data',$
                    /BUTTON_EVENTS)
 
 bgroup = CW_BGROUP(CountsVsTofTab1,$
@@ -304,6 +305,7 @@ draw = WIDGET_DRAW(CountsVsTofTab2,$
                    SCR_XSIZE = CountsVsTofSize[2],$
                    SCR_YSIZE = CountsVsTofSize[3],$
                    /MOTION_EVENTS,$
+                   TOOLTIP = 'Left click to select pixel',$
                    /BUTTON_EVENTS)
 
 bgroup = CW_BGROUP(CountsVsTofTab2,$
