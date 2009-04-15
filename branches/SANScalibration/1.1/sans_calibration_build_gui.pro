@@ -85,12 +85,16 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
+    previous_button: 'images/previous.png',$
     play_button: 'images/play.png',$
     pause_button: 'images/pause.png',$
     stop_button: 'images/stop.png',$
+    next_button: 'images/next.png',$
     play_button_active: 'images/play_active.png',$
     pause_button_active: 'images/pause_active.png',$
     stop_button_active: 'images/stop_active.png',$
+    next_button_active: 'images/next_active.png',$
+    previous_button_active: 'images/previous_active.png',$
     
     facility_list: ['LENS'],$
     facility_flag: '--facility',$
@@ -412,7 +416,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   
   ;display the png files
-  ;display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=1, global
+  display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=1, global
   
   ;change color of background
   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
