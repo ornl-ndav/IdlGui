@@ -132,14 +132,25 @@ PRO MAIN_BASE_event, Event
     
     ;- Play button ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_play_button'): BEGIN
-;      activate_play_base, Event
+      ;      activate_play_base, Event
       play_tof, Event         ;_eventcb
     END
     
     ;-Advanced Button ---------------------------------------------------------
+    ;previous button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='previous_button'): BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
+    END
+    
     ;play button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='play_button'): BEGIN
-;      help, event, /structure
+    help, event, /structure
 ;      IF (N_ELEMENTS(Event.ENTER) NE 0) THEN BEGIN
 ;        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
 ;          standard = 58
@@ -147,11 +158,9 @@ PRO MAIN_BASE_event, Event
 ;          standard = 31
 ;        ENDELSE
 ;        DEVICE, CURSOR_STANDARD=standard
-;        ;display_buttons, EVENT=EVENT, ACTIVATE=1, global
+;      ;display_buttons, EVENT=EVENT, ACTIVATE=1, global
 ;      ENDIF ELSE BEGIN
-;        print, 'here'
 ;      ENDELSE
-      
     END
     
     ;pause button
@@ -175,8 +184,20 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ;display_buttons, EVENT=EVENT, ACTIVATE=3, global
     END
-    ;------------------------------------------------------------------------------
-    ;- TOF reset button -----------------------------------------------------------
+    
+    ;next button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='next_button'): BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
+    END
+    
+    ;--------------------------------------------------------------------------
+    ;- TOF reset button -------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_reset_range'): BEGIN
       putTextFIeldValue, Event, 'tof_range_min_cw_field',$
         STRCOMPRESS((*global).tof_min,/REMOVE_ALL)
@@ -188,7 +209,7 @@ PRO MAIN_BASE_event, Event
       putTextfieldValue, Event, 'tof_range_value', ''
     END
     
-    ;- Run Number cw_field --------------------------------------------------------
+    ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
       CheckCommandLine, Event ;_command_line

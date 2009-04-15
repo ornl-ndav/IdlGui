@@ -39,50 +39,84 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     
   case (activate) OF
     1: BEGIN ;activate play button
+      previous = READ_PNG((*global).previous_button)
       play  = READ_PNG((*global).play_button_active)
       pause = READ_PNG((*global).pause_button)
       stop  = READ_PNG((*global).stop_button)
+      next  = READ_PNG((*global).next_button)
     END
     2: BEGIN ;activate pause button
+      previous = READ_PNG((*global).previous_button)
       play  = READ_PNG((*global).play_button)
       pause = READ_PNG((*global).pause_button_active)
       stop  = READ_PNG((*global).stop_button)
+      next  = READ_PNG((*global).next_button)
     END
     3: BEGIN ;activate stop button
+      previous = READ_PNG((*global).previous_button)
       play  = READ_PNG((*global).play_button)
       pause = READ_PNG((*global).pause_button)
       stop  = READ_PNG((*global).stop_button_active)
+      next  = READ_PNG((*global).next_button)
+    END
+    4: BEGIN ;activate previous button
+      previous = READ_PNG((*global).previous_button_active)
+      play  = READ_PNG((*global).play_button)
+      pause = READ_PNG((*global).pause_button)
+      stop  = READ_PNG((*global).stop_button)
+      next  = READ_PNG((*global).next_button)
+    END
+    5: BEGIN ;activate next button
+      previous = READ_PNG((*global).previous_button)
+      play  = READ_PNG((*global).play_button)
+      pause = READ_PNG((*global).pause_button)
+      stop  = READ_PNG((*global).stop_button)
+      next  = READ_PNG((*global).next_button_active)
     END
   ENDCASE
   
   IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
   
+    draw_previous = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='previous_button')
     draw_play  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='play_button')
     draw_pause = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='pause_button')
     draw_stop  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='stop_button')
+    draw_next  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='next_button')
     
   ENDIF ELSE BEGIN
   
-    draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='play_button')
-    draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='pause_button')
-    draw1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='stop_button')
+    draw_previous = WIDGET_INFO(Event.top,FIND_BY_UNAME='previous_button')
+    draw_play = WIDGET_INFO(Event.top,FIND_BY_UNAME='play_button')
+    draw_pause = WIDGET_INFO(Event.top,FIND_BY_UNAME='pause_button')
+    draw_stop = WIDGET_INFO(Event.top,FIND_BY_UNAME='stop_button')
+    draw_next = WIDGET_INFO(Event.top,FIND_BY_UNAME='next_button')
     
   ENDELSE
+  
+  ;previous button
+  WIDGET_CONTROL, draw_previous, GET_VALUE=id_previous
+  WSET, id_previous
+  TV, previous, 0,0,/true
   
   ;play button
   WIDGET_CONTROL, draw_play, GET_VALUE=id_play
   WSET, id_play
-  tv, play, 0,0,/true
+  TV, play, 0,0,/true
   
   ;pause button
   WIDGET_CONTROL, draw_pause, GET_VALUE=id_pause
   WSET, id_pause
-  tv, pause, 0,0,/true
+  TV, pause, 0,0,/true
   
   ;stop button
   WIDGET_CONTROL, draw_stop, GET_VALUE=id_stop
   WSET, id_stop
-  tv, stop, 0,0,/true
+  TV, stop, 0,0,/true
+  
+  ;next button
+  WIDGET_CONTROL, draw_next, GET_VALUE=id_next
+  WSET, id_next
+  TV, next, 0,0,/true
   
 END
 
