@@ -38,40 +38,40 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     global
     
   case (activate) OF
-    1: BEGIN ;activate play button
-      previous = READ_PNG((*global).previous_button)
-      play  = READ_PNG((*global).play_button_active)
-      pause = READ_PNG((*global).pause_button)
-      stop  = READ_PNG((*global).stop_button)
-      next  = READ_PNG((*global).next_button)
-    END
-    2: BEGIN ;activate pause button
-      previous = READ_PNG((*global).previous_button)
-      play  = READ_PNG((*global).play_button)
-      pause = READ_PNG((*global).pause_button_active)
-      stop  = READ_PNG((*global).stop_button)
-      next  = READ_PNG((*global).next_button)
-    END
-    3: BEGIN ;activate stop button
-      previous = READ_PNG((*global).previous_button)
-      play  = READ_PNG((*global).play_button)
-      pause = READ_PNG((*global).pause_button)
-      stop  = READ_PNG((*global).stop_button_active)
-      next  = READ_PNG((*global).next_button)
-    END
-    4: BEGIN ;activate previous button
+    1: BEGIN ;activate previous button
       previous = READ_PNG((*global).previous_button_active)
-      play  = READ_PNG((*global).play_button)
-      pause = READ_PNG((*global).pause_button)
-      stop  = READ_PNG((*global).stop_button)
-      next  = READ_PNG((*global).next_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+    END
+    2: BEGIN ;activate play button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button_active)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+    END
+    3: BEGIN ;activate pause button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button_active)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+    END
+    4: BEGIN ;activate stop button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button_active)
+      next     = READ_PNG((*global).next_button)
     END
     5: BEGIN ;activate next button
       previous = READ_PNG((*global).previous_button)
-      play  = READ_PNG((*global).play_button)
-      pause = READ_PNG((*global).pause_button)
-      stop  = READ_PNG((*global).stop_button)
-      next  = READ_PNG((*global).next_button_active)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button_active)
     END
   ENDCASE
   

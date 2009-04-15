@@ -139,61 +139,92 @@ PRO MAIN_BASE_event, Event
     ;-Advanced Button ---------------------------------------------------------
     ;previous button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='previous_button'): BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_buttons, EVENT=EVENT, ACTIVATE=1, global
+        ENDIF
       ENDIF ELSE BEGIN
-        standard = 31
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
       ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
     END
     
     ;play button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='play_button'): BEGIN
-    help, event, /structure
-;      IF (N_ELEMENTS(Event.ENTER) NE 0) THEN BEGIN
-;        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-;          standard = 58
-;        ENDIF ELSE BEGIN
-;          standard = 31
-;        ENDELSE
-;        DEVICE, CURSOR_STANDARD=standard
-;      ;display_buttons, EVENT=EVENT, ACTIVATE=1, global
-;      ENDIF ELSE BEGIN
-;      ENDELSE
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_buttons, EVENT=EVENT, ACTIVATE=2, global
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
     END
     
     ;pause button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='pause_button'): BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_buttons, EVENT=EVENT, ACTIVATE=3, global
+        ENDIF
       ENDIF ELSE BEGIN
-        standard = 31
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
       ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
     END
     
     ;stop button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='stop_button'): BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ENDIF
       ENDIF ELSE BEGIN
-        standard = 31
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
       ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;display_buttons, EVENT=EVENT, ACTIVATE=3, global
     END
     
     ;next button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='next_button'): BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          display_buttons, EVENT=EVENT, ACTIVATE=5, global
+        ENDIF
       ENDIF ELSE BEGIN
-        standard = 31
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
       ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
     END
     
     ;--------------------------------------------------------------------------
