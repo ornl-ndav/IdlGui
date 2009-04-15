@@ -161,7 +161,7 @@ PRO browse_nexus, Event
     (*global).data_nexus_file_name = FullNexusName
     
     map_base, Event, 'play_base', 1
-     ;display the png files
+    ;display the png files
     display_buttons, EVENT=event, ACTIVATE=0, global
     
   ENDIF ELSE BEGIN
@@ -230,8 +230,8 @@ PRO load_run_number, Event
       ;activate selection buttons
       update_tab1_gui, Event, STATUS=1 ;_gui
       
-        ;display the png files
-        display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=0, global
+      ;display the png files
+      display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=0, global
       
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
@@ -338,6 +338,45 @@ PRO selection_tool, Event
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION checkPauseStop, Event
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;check pause status
+  id_pause = WIDGET_INFO(event.top,find_by_uname='pause_button')
+  pause_status = 0
+  IF WIDGET_INFO(id_pause,/valid_id) then begin
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      event_id = WIDGET_EVENT(id_pause,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        display_buttons, EVENT=EVENT, ACTIVATE=2, global
+        pause_status = 1
+      ENDIF
+    ENDELSE
+  ENDIF
+  
+  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
+  stop_status = 0
+  IF WIDGET_INFO(id_stop,/valid_id) then begin
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      event_id = WIDGET_EVENT(id_stop,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        display_buttons, EVENT=EVENT, ACTIVATE=3, global
+        stop_status = 1
+      ENDIF
+    ENDELSE
+  ENDIF
+  
+  RETURN, [pause_status,stop_status]
+END
+
+;------------------------------------------------------------------------------
 PRO play_tof, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -387,6 +426,22 @@ PRO play_tof, Event
     tof_max_index += bin_per_frame
     IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
       tof_max_index = stop_tof_max_index
+    ENDIF
+    
+    ;check if user click pause or stop
+    pause_stop_status = checkPauseStop(event)
+    pause_status = pause_stop_status[0]
+    stop_status  = pause_stop_status[1]
+    IF (pause_status) EQ 1 THEN BEGIN
+      ;      standard = 58
+      ;      DEVICE, CURSOR_STANDARD=standard
+      display_buttons, EVENT=event, ACTIVATE=3, global
+      break
+    ENDIF
+    
+    IF (stop_status) EQ 1 THEN BEGIN
+      display_buttons, EVENT=event, ACTIVATE=4, global
+      break
     ENDIF
     
     WAIT, time_per_frame
