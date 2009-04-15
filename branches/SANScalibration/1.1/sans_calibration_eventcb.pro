@@ -159,6 +159,11 @@ PRO browse_nexus, Event
     ;activate selection buttons
     update_tab1_gui, Event, STATUS=1 ;_gui
     (*global).data_nexus_file_name = FullNexusName
+    
+    map_base, Event, 'play_base', 1
+     ;display the png files
+    display_buttons, EVENT=event, ACTIVATE=0, global
+    
   ENDIF ELSE BEGIN
     ;display name of nexus file name
     ;    putTab1NexusFileName, Event, ''
@@ -224,6 +229,10 @@ PRO load_run_number, Event
       (*global).data_nexus_file_name = full_nexus_name[0]
       ;activate selection buttons
       update_tab1_gui, Event, STATUS=1 ;_gui
+      
+        ;display the png files
+        display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=0, global
+      
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
       IDLsendToGeek_addLogBookText, Event, message

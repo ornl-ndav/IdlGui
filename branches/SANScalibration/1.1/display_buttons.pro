@@ -39,7 +39,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     
   case (activate) OF
     0: BEGIN ;activate previous button
-      previous = READ_PNG((*global).previous_button_active)
+      previous = READ_PNG((*global).previous_button)
       play     = READ_PNG((*global).play_button)
       pause    = READ_PNG((*global).pause_button)
       stop     = READ_PNG((*global).stop_button)
