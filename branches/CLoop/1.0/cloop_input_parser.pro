@@ -40,7 +40,7 @@ FUNCTION getCLtextArray, Event
   CATCH, no_selection
   IF (no_selection NE 0) THEN BEGIN
     CATCH,/CANCEL
-    return, ['']
+    RETURN, ['']
   ENDIF ElSE BEGIN
     cl_text = getTextFieldValue(Event,'preview_cl_file_text_field')
     id = WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_cl_file_text_field')
@@ -55,7 +55,7 @@ FUNCTION getCLtextArray, Event
     length = STRLEN(cl_text) - start
     cL_array[1] = STRMID(cl_text, start, length)
     
-    return, cl_array
+    RETURN, cl_array
   ENDELSE
 END
 
@@ -67,8 +67,8 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION removeCR, text
-  IF ((size(text))(1) GT 1) THEN BEGIN
-    sz = (size(text))(1)
+  IF ((SIZE(text))(1) GT 1) THEN BEGIN
+    sz = (SIZE(text))(1)
     index = 0
     WHILE (index LT sz) DO BEGIN
       IF (index EQ 0) THEN BEGIN
@@ -182,7 +182,7 @@ PRO create_cl_array, Event
       ;remove -b
       cmd1 = split_string(new_cmd, PATTERN='--b')
       cl_array[0] = cmd1[0] + ' ' + cmd1[1]
-      (*global).cl_array = cl_array 
+      (*global).cl_array = cl_array
       RETURN
     ENDIF
     
@@ -251,7 +251,7 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
   sz = N_ELEMENTS(seq_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    nbr_row = (size(column_sequence))(1)
+    nbr_row = (SIZE(column_sequence))(1)
     
     IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
       seq_number_1 = STRCOMPRESS(seq_number[0],/REMOVE_ALL)
@@ -311,23 +311,28 @@ PRO parse_input_field, Event
   (*global).column_cl = PTR_NEW(0L)
   
   input_text = getTextFieldValue(Event,'input_text_field')
-  
+
   ;get CL with text selected removed
   CL_text_array = (*global).cl_array
-  
+    
   ;create just one string (in case the user put some [CR])
   input_text = removeCR(input_text)
   
   ;remove ',,' if any
   input_text = replaceString(input_text,FIND=",,",REPLACE=",")
+
+  ;input_text = STRCOMPRESS(input_text,/REMOVE_ALL)
   
-  left     = STRMID(input_text, 0,1) ;retrieve 1st character from input_text
+  ;left     = STRMID(input_text, 0,1) ;retrieve 1st character from input_text
+  left     = ''
   right    = ''
   cur_numb = 'left' ;we are currently working on the left number of the ope.
   cur_ope  = '' ;there is no current operation in progress
-  IF (left EQ '[') THEN BEGIN
+  ;  IF (left EQ '[') THEN BEGIN
+  IF (STRMID(input_text,0,1) EQ '[') THEN BEGIN
     same_run = 1b ;next runs are part of the same CL
   ENDIF ELSE BEGIN
+    left = STRMID(input_text,0,1)
     same_run = 0b ;next runs are not part of the same CL
   ENDELSE
   length   = STRLEN(input_text) ;number of characters
@@ -338,7 +343,7 @@ PRO parse_input_field, Event
   WHILE(index LT length) DO BEGIN
   
     cursor = STRMID(input_text,index,1)
-    ;    print, 'cursor: ' + cursor
+    
     CASE (cursor) OF
     
       '-' : BEGIN ;............................................................
@@ -377,6 +382,7 @@ PRO parse_input_field, Event
       ']' : BEGIN ;............................................................
         IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
           seq_number = getSequence(left, right)
+          PRINT, seq_number ;remove_me
         ENDIF ELSE BEGIN
           seq_number = left
         ENDELSE
@@ -395,30 +401,32 @@ PRO parse_input_field, Event
       END
       
       ELSE: BEGIN ;............................................................
-        IF (cur_numb EQ 'left') THEN BEGIN
+        IF (cursor NE '[') THEN BEGIN
         
-          IF (left EQ '') THEN BEGIN
-            left = cursor
+          IF (cur_numb EQ 'left') THEN BEGIN
+            IF (left EQ '') THEN BEGIN
+              left = cursor
+            ENDIF ELSE BEGIN
+              left = left + cursor
+            ENDELSE
+            
           ENDIF ELSE BEGIN
-            left = left + cursor
+          
+            IF (right EQ '') THEN BEGIN
+              right = cursor
+            ENDIF ELSE BEGIN
+              right = right + cursor
+            ENDELSE
+            
           ENDELSE
           
-        ENDIF ELSE BEGIN
-        
-          IF (right EQ '') THEN BEGIN
-            right = cursor
-          ENDIF ELSE BEGIN
-            right = right + cursor
-          ENDELSE
-          
-        ENDELSE
-        
-        IF (index EQ (length-1)) THEN BEGIN
-          IF (cur_ope EQ '-') THEN BEGIN
-            createCLsOfRunSequence, $
-              Event, $
-              seq_number, $
-              CL_text_array
+          IF (index EQ (length-1)) THEN BEGIN
+            IF (cur_ope EQ '-') THEN BEGIN
+              createCLsOfRunSequence, $
+                Event, $
+                seq_number, $
+                CL_text_array
+            ENDIF
           ENDIF
         ENDIF
       END
