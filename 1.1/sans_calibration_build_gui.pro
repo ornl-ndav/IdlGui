@@ -34,8 +34,6 @@
 
 PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  help, !CPU, /STRUCTURE ;remove_me
-
   ;get the current folder
   CD, CURRENT = current_folder
   
