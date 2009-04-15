@@ -34,6 +34,8 @@
 
 PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+  help, !CPU, /STRUCTURE ;remove_me
+
   ;get the current folder
   CD, CURRENT = current_folder
   
@@ -95,6 +97,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     stop_button_active: 'images/stop_active.png',$
     next_button_active: 'images/next_active.png',$
     previous_button_active: 'images/previous_active.png',$
+    
+    tof_buttons_activated: 1,$
     
     facility_list: ['LENS'],$
     facility_flag: '--facility',$

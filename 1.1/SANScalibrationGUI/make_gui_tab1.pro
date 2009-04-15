@@ -122,10 +122,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     
   ;time/frame label/value
   XYoff = [5,0]
-  sTpFlabel = { size: [sPlayButton.size[0]+$
-    sPlayButton.size[2]+$
+  sTpFlabel = { size: [sTofManualBase.size[0]+$
+    sTofManualBase.size[2]+$
     XYoff[0],$
-    sPlayButton.size[1]+$
+    sTofManualBase.size[1]+$
     XYoff[1]],$
     value: 'Time/Frame(s)'}
   XYoff = [10,10]
@@ -169,26 +169,26 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
   XYoff = [60,0]
   sBinNbr = { size: [sMaxBinLabel.size[0]+XYoff[0],$
     sMaxBinLabel.size[1]+XYoff[1]],$
-    value: 'Bins'}
-  XYoff = [30,0]
+    value: 'Bins:'}
+  XYoff = [35,0]
   sBinNbrValue = { size: [sBinNbr.size[0]+XYoff[0],$
     sBinNbr.size[1]+XYoff[1],$
-    95],$
-    value: '       ',$
-    frame: 1,$
+    145],$
+    value: 'N/A       ',$
+    frame: 0,$
     uname: 'bin_range_value'}
     
   ;tof range (label/value)
   XYoff = [0,20]
   sTOFrange = { size: [sBinNbr.size[0]+XYoff[0],$
     sBinNbr.size[1]+XYoff[1]],$
-    value: 'TOFs'}
+    value: 'TOFs:'}
   XYoff = [0,0]
   sTOFrangeValue = { size: [sBinNbrValue.size[0]+XYoff[0],$
     sTOFrange.size[1]+XYoff[1],$
     sBinNbrValue.size[2]],$
-    value: '             ',$
-    frame: 1,$
+    value: 'N/A           ',$
+    frame: 0,$
     uname: 'tof_range_value'}
     
   ;------------------------------------------------------------------------------
@@ -769,14 +769,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     UNAME     = sTofReset.uname)
     
   ;play button
-  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
-    XOFFSET   = sPlayButton.size[0],$
-    YOFFSET   = sPlayButton.size[1],$
-    SCR_XSIZE = sPlayButton.size[2],$
-    SCR_YSIZE = sPlayButton.size[3],$
-    VALUE     = sPlayButton.value,$
-    UNAME     = sPlayButton.uname,$
-    /BITMAP)
+;  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
+;    XOFFSET   = sPlayButton.size[0],$
+;    YOFFSET   = sPlayButton.size[1],$
+;    SCR_XSIZE = sPlayButton.size[2],$
+;    SCR_YSIZE = sPlayButton.size[3],$
+;    VALUE     = sPlayButton.value,$
+;    UNAME     = sPlayButton.uname,$
+;    /BITMAP)
+
   ;time/frame label and value
   wTpFlabel = WIDGET_LABEL(wTofRangeBase,$
     XOFFSET = sTpFlabel.size[0],$

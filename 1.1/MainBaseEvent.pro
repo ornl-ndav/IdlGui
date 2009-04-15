@@ -162,6 +162,7 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           display_buttons, EVENT=EVENT, ACTIVATE=2, global
+          play_tof, Event         ;_eventcb
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -242,7 +243,7 @@ PRO MAIN_BASE_event, Event
     
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
-      load_run_number, Event     ;_eventcb
+      load_run_number, Event  ;_eventcb
       CheckCommandLine, Event ;_command_line
     END
     

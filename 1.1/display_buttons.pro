@@ -38,6 +38,13 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     global
     
   case (activate) OF
+    0: BEGIN ;activate previous button
+      previous = READ_PNG((*global).previous_button_active)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+    END
     1: BEGIN ;activate previous button
       previous = READ_PNG((*global).previous_button_active)
       play     = READ_PNG((*global).play_button)
@@ -74,6 +81,8 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       next     = READ_PNG((*global).next_button_active)
     END
   ENDCASE
+  
+  (*global).tof_buttons_activated = activate
   
   IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
   
