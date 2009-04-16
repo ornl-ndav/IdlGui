@@ -141,12 +141,22 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     value: 'Check Status of Jobs Submitted',$
     uname: 'check_status_button'}
     
-  ;Launch jobs
+  ;preview/save jobs listing
   XYoff = [5,0]
-  sRunButton = { size: [sBrowseButton.size[0]+$
+  sPreviewButton = { size: [sBrowseButton.size[0]+$
     sBrowseButton.size[2]+XYoff[0],$
     sBrowseButton.size[1]+XYoff[1],$
-    580],$
+    150],$
+    value: 'PREVIEW/SAVE_AS JOBS',$
+    uname: 'preview_jobs_button',$
+    sensitive: 0}
+    
+  ;Launch jobs
+  XYoff = [5,0]
+  sRunButton = { size: [sPreviewButton.size[0]+$
+    sPreviewButton.size[2]+XYoff[0],$
+    sPreviewButton.size[1]+XYoff[1],$
+    425],$
     value: 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
     uname: 'run_jobs_button',$
     sensitive: 0}
@@ -288,6 +298,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     SCR_XSIZE = sBrowseButton.size[2],$
     VALUE     = sBrowseButton.value,$
     UNAME     = sBrowseButton.uname)
+    
+  ;preview jobs button
+  wRun = WIDGET_BUTTON(Base,$
+    XOFFSET = sPreviewButton.size[0],$
+    YOFFSET = sPreviewButton.size[1],$
+    SCR_XSIZE = sPreviewButton.size[2],$
+    VALUE = sPreviewButton.value,$
+    UNAME = sPreviewButton.uname,$
+    SENSITIVE = sPreviewButton.sensitive)
     
   ;run jobs button
   wRun = WIDGET_BUTTON(Base,$
