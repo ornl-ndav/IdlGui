@@ -35,17 +35,23 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
-  CD, CURRENT = current_folder
+  ;CD, CURRENT = current_folder
   
-  ;******************************************************************************
-  ;******************************************************************************
-  APPLICATION       = 'CLoop'
-  VERSION           = '1.0.1'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  CHECKING_PACKAGES = 'yes'
+    file = OBJ_NEW('IDLxmlParser','cloop.cfg')
+
+  ;============================================================================
+  ;****************************************************************************
   
-  ;DEBUGGINGiî
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  
+  ;============================================================================
+  ;****************************************************************************
+
+  ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     path: '~/SVN/IdlGui/trunk/CLoop/',$ ;path to CL file
     input_text: ''}
