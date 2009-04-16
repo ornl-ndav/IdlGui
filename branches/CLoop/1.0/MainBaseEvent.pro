@@ -71,6 +71,11 @@ PRO MAIN_BASE_event, Event
       check_status, Event ;_eventcb
     END
     
+    ;preview jobs button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_jobs_button'): BEGIN
+      preview_jobs, Event ;_eventcb
+    END
+    
     ;launch jobs in background button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_jobs_button'): BEGIN
       launch_jobs, Event ;_run_jobs

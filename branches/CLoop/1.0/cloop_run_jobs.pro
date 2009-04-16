@@ -60,9 +60,8 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    ; spawn, cmd
-    PRINT, 'cmd: ' + cmd
-    
+    spawn, cmd
+
     index++
   ENDWHILE
   

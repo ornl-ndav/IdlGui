@@ -65,6 +65,34 @@ PRO MAIN_REALIZE, wWidget
 END
 
 ;------------------------------------------------------------------------------
+PRO preview_jobs, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;get second column of table
+  column_cl = (*(*global).column_cl)
+  column_sequence = (*(*global).column_sequence)
+  
+  sz = N_ELEMENTS(column_cl)
+  preview_array = STRARR(sz)
+  
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT)
+    runs = STRJOIN(runs_array,'_')
+    column_cl[index]+= runs + (*global).output_prefix
+    index++
+  ENDWHILE
+
+  xdisplayfile, TEXT=column_cl, $
+  title='Preview of Job(s) to submit',$
+  /BLOCK,$
+  /EDITABLE
+  
+END
+
+;------------------------------------------------------------------------------
 PRO cloop_eventcb, event
 END
 
