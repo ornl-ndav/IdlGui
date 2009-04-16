@@ -309,9 +309,9 @@ PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
       CL_text_array[1]
       
     ;add new output file name to Command Line
-    output = add_output_file_suffix(Event)
-    column_cl = column_cl + output
-    
+    ;output = add_output_file_suffix(Event)
+    ;column_cl = column_cl + output
+      
   ENDIF ELSE BEGIN
   
     column_sequence = STRING([column_sequence, seq_number])
@@ -520,6 +520,7 @@ PRO remove_output_file_name, Event
     path += '/'
     
     CL_text_array[1] = part2_parsed[0] + ' --output=' + path
+    cl_text_array[1] += (*global).output_suffix
     (*global).cl_array = CL_text_array
     
   ENDELSE
