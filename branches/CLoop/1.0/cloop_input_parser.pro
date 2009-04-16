@@ -269,34 +269,39 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
   ENDWHILE
   
   (*(*global).column_sequence) = column_sequence
-  (*(*global).column_cl) = column_cl
+  (*(*global).column_cl) = string(column_cl)
   
 ;  print, '***** leaving createCLsOfRunSequence****'
 END
 
 ;------------------------------------------------------------------------------
 PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
-  ;  print, '***** entering createCLOfRunsSequence *****'
+;    print, '***** entering createCLOfRunsSequence *****'
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   seq_number = STRJOIN(seq_number,',')
   seq_number = STRCOMPRESS(seq_number,/REMOVE_ALL)
   
   column_sequence = (*(*global).column_sequence)
-  column_cl       = (*(*global).column_cl)
+  column_cl       = string(*(*global).column_cl)
   
   IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
-    column_sequence = [seq_number]
+    column_sequence = [STRCOMPRESS(seq_number)]
+    a = cl_text_array[0] + seq_number
+    b = a + ' '
+    c = b + cl_text_array[1]
+    column_cl[0] = c
+    
     column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
       CL_text_array[1]
   ENDIF ELSE BEGIN
-    column_sequence = [column_sequence, seq_number]
+    column_sequence = STRING([column_sequence, seq_number])
     new_cl = CL_text_array[0] + seq_number + ' ' + CL_text_array[1]
     column_cl = [column_cl, new_cl]
   ENDELSE
   
   (*(*global).column_sequence) = column_sequence
-  (*(*global).column_cl) = column_cl
+  (*(*global).column_cl) = STRING(column_cl)
 ;  print, '***** leaving createCLOfRunsSequence *****'
 END
 
@@ -382,7 +387,6 @@ PRO parse_input_field, Event
       ']' : BEGIN ;............................................................
         IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
           seq_number = getSequence(left, right)
-          PRINT, seq_number ;remove_me
         ENDIF ELSE BEGIN
           seq_number = left
         ENDELSE
