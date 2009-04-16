@@ -266,42 +266,66 @@ PRO createCLsOfRunSequence, Event, seq_number, CL_text_array
     ENDELSE
     
     index++
+    
   ENDWHILE
   
   (*(*global).column_sequence) = column_sequence
-  (*(*global).column_cl) = string(column_cl)
+  (*(*global).column_cl) = STRING(column_cl)
   
 ;  print, '***** leaving createCLsOfRunSequence****'
 END
 
 ;------------------------------------------------------------------------------
-PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
-;    print, '***** entering createCLOfRunsSequence *****'
+FUNCTION add_output_file_suffix, Event
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  output_suffix = (*global).output_suffix  
+  output = + output_suffix
+    
+  RETURN, output
+  
+END
+
+;------------------------------------------------------------------------------
+PRO createCLOfRunsSequence, Event, seq_number, CL_text_array
+  ;    print, '***** entering createCLOfRunsSequence *****'
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  seq_number_for_output = STRCOMPRESS(STRJOIN(seq_number,'_'),/REMOVE_ALL)
+  
   seq_number = STRJOIN(seq_number,',')
   seq_number = STRCOMPRESS(seq_number,/REMOVE_ALL)
   
   column_sequence = (*(*global).column_sequence)
-  column_cl       = string(*(*global).column_cl)
+  column_cl       = STRING(*(*global).column_cl)
   
   IF (column_sequence[0] EQ '') THEN BEGIN ;table empty
+  
     column_sequence = [STRCOMPRESS(seq_number)]
-    a = cl_text_array[0] + seq_number
-    b = a + ' '
-    c = b + cl_text_array[1]
-    column_cl[0] = c
-    
     column_cl[0] = CL_text_array[0] + seq_number + ' ' + $
       CL_text_array[1]
+      
+    ;add new output file name to Command Line
+    output = add_output_file_suffix(Event)
+    column_cl = column_cl + output
+    
   ENDIF ELSE BEGIN
+  
     column_sequence = STRING([column_sequence, seq_number])
     new_cl = CL_text_array[0] + seq_number + ' ' + CL_text_array[1]
-    column_cl = [column_cl, new_cl]
+    
+    ;add new output file name to Command Line
+    output = add_output_file_suffix(Event)
+    column_cl = [column_cl, new_cl + output]
+    
   ENDELSE
   
   (*(*global).column_sequence) = column_sequence
-  (*(*global).column_cl) = STRING(column_cl)
+  (*(*global).column_cl) = column_cl
+  
 ;  print, '***** leaving createCLOfRunsSequence *****'
 END
 
@@ -316,16 +340,16 @@ PRO parse_input_field, Event
   (*global).column_cl = PTR_NEW(0L)
   
   input_text = getTextFieldValue(Event,'input_text_field')
-
+  
   ;get CL with text selected removed
   CL_text_array = (*global).cl_array
-    
+  
   ;create just one string (in case the user put some [CR])
   input_text = removeCR(input_text)
   
   ;remove ',,' if any
   input_text = replaceString(input_text,FIND=",,",REPLACE=",")
-
+  
   ;input_text = STRCOMPRESS(input_text,/REMOVE_ALL)
   
   ;left     = STRMID(input_text, 0,1) ;retrieve 1st character from input_text
@@ -473,3 +497,31 @@ PRO addSequencesToRunArray, run_array, seq_number
     ENDELSE
   ENDIF
 END
+
+;------------------------------------------------------------------------------
+PRO remove_output_file_name, Event
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    ;get CL with text selected removed
+    CL_text_array = (*global).cl_array
+    
+    part2 = CL_text_array[1]
+    part2_parsed = split_string(part2, PATTERN='--output=')
+    
+    ;keep path
+    path = FILE_DIRNAME(part2_parsed[1])
+    path += '/'
+    
+    CL_text_array[1] = part2_parsed[0] + ' --output=' + path
+    (*global).cl_array = CL_text_array
+    
+  ENDELSE
+END
+

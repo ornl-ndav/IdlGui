@@ -27,7 +27,7 @@
 ;   Laboratory nor the names of its contributors may be used to endorse or
 ;   promote products derived from this software without specific prior written
 ;   permission.
-; 
+;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
@@ -42,8 +42,16 @@ PRO launch_jobs, Event
   
   ;get second column of table
   column_cl = (*(*global).column_cl)
+  column_sequence = (*(*global).column_sequence)
   
   sz = N_ELEMENTS(column_cl)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT)
+    runs = STRJOIN(runs_array,'_')
+    column_cl[index]+= runs + (*global).output_prefix
+    index++
+  ENDWHILE
   
   index = 0
   WHILE (index LT sz) DO BEGIN
@@ -52,7 +60,8 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    spawn, cmd
+    ; spawn, cmd
+    PRINT, 'cmd: ' + cmd
     
     index++
   ENDWHILE
