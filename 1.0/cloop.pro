@@ -46,7 +46,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
   TESTING = file->getValue(tag=['configuration','testing'])
-  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  ;CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   
   ;============================================================================
   ;****************************************************************************
