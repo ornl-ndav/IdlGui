@@ -53,6 +53,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
       displayTextRemoved, Event
       create_cl_array, Event
+      remove_output_file_name, Event
     END
     
     ;input text field
