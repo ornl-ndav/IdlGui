@@ -266,7 +266,9 @@ PRO tab_event, Event
         refresh_plot, Event ;_plot
         RefreshRoiExclusionPlot, Event   ;_selection
         ;display the png files
-        display_buttons, EVENT=event, ACTIVATE=2, global
+        display_buttons, EVENT=event, $
+        ACTIVATE=(*global).tof_buttons_activated, $
+        global
       END
       1: BEGIN ;reduce tab
         CheckCommandLine, Event ;_command_line
@@ -384,6 +386,7 @@ PRO play_tof, Event
   ;get time/frame
   time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
   time_per_frame = FLOAT(time_per_frame)
+  
   ;get bin/frame
   bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
   bin_per_frame  = FIX(bin_per_frame)
@@ -447,7 +450,6 @@ PRO play_tof, Event
     WAIT, time_per_frame
     
   ENDWHILE
-  
 END
 
 ;==============================================================================
