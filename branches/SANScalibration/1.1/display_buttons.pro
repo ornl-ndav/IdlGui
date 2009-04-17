@@ -37,6 +37,11 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     ACTIVATE=activate,$
     global
     
+  ;-1: disable
+  ; 0: enable
+  ; 1: enable
+  status_buttons = INTARR(5)
+  
   case (activate) OF
     0: BEGIN ;nothing is activated
       previous = READ_PNG((*global).previous_disable_button)
@@ -44,6 +49,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_disable_button)
       next     = READ_PNG((*global).next_disable_button)
+      status_buttons = [-1,0,-1,-1,-1]
     END
     1: BEGIN ;activate previous button
       previous = READ_PNG((*global).previous_button_active)
@@ -51,6 +57,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button)
+      status_buttons = [1,0,-1,0,0]
     END
     2: BEGIN ;activate play button
       previous = READ_PNG((*global).previous_button)
@@ -58,6 +65,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_button)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button)
+      status_buttons = [0,1,0,0,0]
     END
     3: BEGIN ;activate pause button
       previous = READ_PNG((*global).previous_button)
@@ -65,6 +73,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_button_active)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button)
+      status_buttons = [0,0,1,0,0]      
     END
     4: BEGIN ;activate stop button
       previous = READ_PNG((*global).previous_disable_button)
@@ -72,6 +81,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button_active)
       next     = READ_PNG((*global).next_disable_button)
+      status_buttons = [-1,0,-1,1,-1]      
     END
     5: BEGIN ;activate next button
       previous = READ_PNG((*global).previous_button)
@@ -79,9 +89,11 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button_active)
+      status_buttons = [0,0,-1,0,1]      
     END
   ENDCASE
   
+  (*global).status_buttons = status_buttons
   (*global).tof_buttons_activated = activate
   
   IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
