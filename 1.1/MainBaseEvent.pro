@@ -143,7 +143,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-          display_buttons, EVENT=EVENT, ACTIVATE=1, global
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[0] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=1, global
+          ENDIF ;end of status_buttons[0]
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -161,8 +164,11 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-          display_buttons, EVENT=EVENT, ACTIVATE=2, global
-          play_tof, Event         ;_eventcb
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[1] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=2, global
+            play_tof, Event         ;_eventcb
+          ENDIF ;end of status_buttons[1]
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -180,7 +186,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-          display_buttons, EVENT=EVENT, ACTIVATE=3, global
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[2] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=3, global
+          ENDIF ;end of status_buttons[2]
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -198,7 +207,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-          display_buttons, EVENT=EVENT, ACTIVATE=4, global
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[3] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -216,7 +228,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-          display_buttons, EVENT=EVENT, ACTIVATE=5, global
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[4] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=5, global
+          ENDIF ;end of status_buttons[4]
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter

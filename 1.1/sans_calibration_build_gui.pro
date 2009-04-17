@@ -102,6 +102,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     next_disable_button: 'images/next_disable.png',$
     
     tof_buttons_activated: 1,$
+    status_buttons: INTARR(5),$
     
     facility_list: ['LENS'],$
     facility_flag: '--facility',$
