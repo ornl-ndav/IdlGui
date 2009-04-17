@@ -402,7 +402,7 @@ PRO MAIN_BASE_event, Event
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
-      RunCommandLine, Event ;_run_commandline
+      test_RunCommandLine, Event
     END
     
     ;==== tab2 ====================================================================
