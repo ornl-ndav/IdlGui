@@ -51,7 +51,7 @@ PRO check_status, Event ;_eventcb
   firefox       = (*global).firefox
   srun_web_page = (*global).srun_web_page
   cmd = firefox + ' ' + srun_web_page + ' &'
-  spawn, cmd
+  SPAWN, cmd
   WIDGET_CONTROL, HOURGLASS=0
 END
 
@@ -79,17 +79,19 @@ PRO preview_jobs, Event
   
   index = 0
   WHILE (index LT sz) DO BEGIN
-    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT)
-    runs = STRJOIN(runs_array,'_')
+    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
+    ;    runs = STRJOIN(runs_array,'_')
+    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
+    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
     column_cl[index]+= runs + (*global).output_prefix
     index++
   ENDWHILE
-
-  xdisplayfile, TEXT=column_cl, $
-  title='Preview of Job(s) to submit',$
-  /BLOCK,$
-  /EDITABLE
   
+  xdisplayfile, TEXT=column_cl, $
+    title='Preview of Job(s) to submit',$
+    /BLOCK,$
+    /EDITABLE
+    
 END
 
 ;------------------------------------------------------------------------------

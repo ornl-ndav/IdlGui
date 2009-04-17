@@ -47,8 +47,10 @@ PRO launch_jobs, Event
   sz = N_ELEMENTS(column_cl)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT)
-    runs = STRJOIN(runs_array,'_')
+    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
+    ;    runs = STRJOIN(runs_array,'_')
+    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
+    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
     column_cl[index]+= runs + (*global).output_prefix
     index++
   ENDWHILE
@@ -60,8 +62,8 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    spawn, cmd
-
+    SPAWN, cmd
+    
     index++
   ENDWHILE
   

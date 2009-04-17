@@ -82,7 +82,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$
     cl_array: STRARR(3),$
-    output_suffix: 'DR_output_',$
+    output_suffix: 'BASIS_',$
     output_prefix: '.dat',$
     
     debugging:    debugging,$ ;yes or no
