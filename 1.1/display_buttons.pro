@@ -39,16 +39,16 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     
   case (activate) OF
     0: BEGIN ;nothing is activated
-      previous = READ_PNG((*global).previous_button)
+      previous = READ_PNG((*global).previous_disable_button)
       play     = READ_PNG((*global).play_button)
-      pause    = READ_PNG((*global).pause_button)
-      stop     = READ_PNG((*global).stop_button)
-      next     = READ_PNG((*global).next_button)
+      pause    = READ_PNG((*global).pause_disable_button)
+      stop     = READ_PNG((*global).stop_disable_button)
+      next     = READ_PNG((*global).next_disable_button)
     END
     1: BEGIN ;activate previous button
       previous = READ_PNG((*global).previous_button_active)
       play     = READ_PNG((*global).play_button)
-      pause    = READ_PNG((*global).pause_button)
+      pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button)
     END
@@ -67,16 +67,16 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
       next     = READ_PNG((*global).next_button)
     END
     4: BEGIN ;activate stop button
-      previous = READ_PNG((*global).previous_button)
+      previous = READ_PNG((*global).previous_disable_button)
       play     = READ_PNG((*global).play_button)
-      pause    = READ_PNG((*global).pause_button)
+      pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button_active)
-      next     = READ_PNG((*global).next_button)
+      next     = READ_PNG((*global).next_disable_button)
     END
     5: BEGIN ;activate next button
       previous = READ_PNG((*global).previous_button)
       play     = READ_PNG((*global).play_button)
-      pause    = READ_PNG((*global).pause_button)
+      pause    = READ_PNG((*global).pause_disable_button)
       stop     = READ_PNG((*global).stop_button)
       next     = READ_PNG((*global).next_button_active)
     END
