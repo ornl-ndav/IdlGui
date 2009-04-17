@@ -51,7 +51,7 @@ ENDELSE
 ;===========================
 APPLICATION   = 'REFscale' 
 VERSION       = '1.0.13'
-DEBUGGER      = 'yes'
+DEBUGGER      = 'no'
 ;===========================
 
 StrArray      = strsplit(VERSION,'.',/extract)
