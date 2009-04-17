@@ -103,6 +103,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     tof_buttons_activated: 1,$
     status_buttons: INTARR(5),$
+    previous_button_clicked: 4,$ ;play by default
     
     facility_list: ['LENS'],$
     facility_flag: '--facility',$

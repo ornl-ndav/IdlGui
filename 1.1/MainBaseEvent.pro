@@ -165,6 +165,7 @@ PRO MAIN_BASE_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           status_buttons = (*global).status_buttons
+          print, status_buttons ;remove_me
           IF (status_buttons[1] EQ 0) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=2, global
             play_tof, Event         ;_eventcb
@@ -189,6 +190,7 @@ PRO MAIN_BASE_event, Event
           status_buttons = (*global).status_buttons
           IF (status_buttons[2] EQ 0) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=3, global
+            (*global).previous_button_clicked = 3
           ENDIF ;end of status_buttons[2]
         ENDIF
       ENDIF ELSE BEGIN
@@ -210,6 +212,9 @@ PRO MAIN_BASE_event, Event
           status_buttons = (*global).status_buttons
           IF (status_buttons[3] EQ 0) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=4, global
+            refresh_plot, Event     ;_plot
+            RefreshRoiExclusionPlot, Event   ;_selection
+            (*global).previous_button_clicked = 4
           ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
