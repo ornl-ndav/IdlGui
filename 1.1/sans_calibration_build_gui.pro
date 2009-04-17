@@ -105,6 +105,13 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     status_buttons: INTARR(5),$
     previous_button_clicked: 4,$ ;play by default
     
+    tof_min_index: 0.0,$
+    tof_max_index: 0.0,$
+    time_per_frame: 0.0,$
+    bins_range: 0.0,$
+    tof_range: 0.0,$
+    bin_per_frame: 0.0,$
+    
     facility_list: ['LENS'],$
     facility_flag: '--facility',$
     instrument_list: ['SANS'],$
