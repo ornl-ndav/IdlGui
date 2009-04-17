@@ -95,6 +95,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     stop_button_active: 'images/stop_active.png',$
     next_button_active: 'images/next_active.png',$
     previous_button_active: 'images/previous_active.png',$
+    previous_disable_button: 'images/previous_disable.png',$
+    play_disable_button: 'images/play_disable.png',$
+    pause_disable_button: 'images/pause_disable.png',$
+    stop_disable_button: 'images/stop_disable.png',$
+    next_disable_button: 'images/next_disable.png',$
     
     tof_buttons_activated: 1,$
     
