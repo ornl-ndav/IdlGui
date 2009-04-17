@@ -127,7 +127,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     XYoff[0],$
     sTofManualBase.size[1]+$
     XYoff[1]],$
-    value: 'Time/Frame(s)'}
+    value: ' Time/Frame'}
   XYoff = [10,10]
   sTpFvalue = { size: [sTpFlabel.size[0]+XYoff[0],$
     sTpFlabel.size[1]+XYoff[1],$
