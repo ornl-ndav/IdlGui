@@ -240,7 +240,7 @@
      XTITLE = 'TOF (microSeconds)',$
      YTITLE = 'Counts'
      
-   OBJ_DESTROY, sData
+   OBJ_DESTROY, iASCII
  END
  
  ;------------------------------------------------------------------------------
