@@ -128,10 +128,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tof_monitor_path: '/entry/monitor,1',$
     tof_monitor_path1: '/entry/monitor1,1',$
     tof_roi_flag: '--roi-file',$
-    package_required_base: ptr_new(0L),$
+    package_required_base: PTR_NEW(0L),$
     advancedToolId: 0,$
     tof_slicer: 'tof_slicer',$
-    list_OF_files_to_send: ptr_new(0L),$
+    list_OF_files_to_send: PTR_NEW(0L),$
     auto_output_file_name: 1,$
     Xpixel: 80L,$     ;320 or 80
     mouse_status: 0,$ ;0:nothing, 1:has been pressed
@@ -157,13 +157,13 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     DrawXcoeff:      8,$
     DrawYcoeff:      8,$
     ucams:           ucams,$
-    DataArray:       ptr_new(0L),$
-    tof_array:       ptr_new(0L),$
+    DataArray:       PTR_NEW(0L),$
+    tof_array:       PTR_NEW(0L),$
     tof_min:         0.0,$
     tof_max:         0.0,$
     pressed_stop:    0,$
-    img:             ptr_new(0L),$
-    rtDataXY:        ptr_new(0L),$
+    img:             PTR_NEW(0L),$
+    rtDataXY:        PTR_NEW(0L),$
     X:               0L,$
     Y:               0L,$
     PrevTabSelect:   0,$
@@ -185,7 +185,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     selection_filter: '*.dat',$
     selection_title:  'Browse for a ROI file',$
     selection_path:   '~/',$
-    RoiPixelArrayExcluded: ptr_new(0L),$
+    RoiPixelArrayExcluded: PTR_NEW(0L),$
     ascii_trans_extension: '.txt',$
     ascii_back_extension: '.bkg',$
     ascii_trans_filter: '*.txt',$
@@ -196,10 +196,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     short_data_nexus_file_name: '',$
     path_data_nexus_file: '',$
     inst_geom:       '',$
-    Xarray:           ptr_new(0L),$
-    Xarray_untouched: ptr_new(0L),$
-    Yarray:           ptr_new(0L),$
-    SigmaYarray:      ptr_new(0L),$
+    Xarray:           PTR_NEW(0L),$
+    Xarray_untouched: PTR_NEW(0L),$
+    Yarray:           PTR_NEW(0L),$
+    SigmaYarray:      PTR_NEW(0L),$
     xaxis:            '',$
     xaxis_units:      '',$
     yaxis:            '',$
@@ -333,12 +333,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).sys_color_face_3d = sys_color.face_3d
   
   ;attach global structure with widget ID of widget main base widget ID
-  widget_control, MAIN_BASE, SET_UVALUE=global
+  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
   ;Build Tab1
   make_gui_main_tab, MAIN_BASE, MainBaseSize, global
   
-  Widget_Control, /REALIZE, MAIN_BASE
+  WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, $
     CLEANUP='sans_calibration_cleanup'
     
@@ -440,7 +440,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WSET, id_value
   ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
   
-  plot, randomn(s,80), $
+  PLOT, RANDOMN(s,80), $
     XRANGE     = [0,80],$
     YRANGE     = [0,80],$
     COLOR      = convert_rgb([0B,0B,255B]), $
@@ -477,8 +477,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
 ;==============================================================================
-PRO sans_calibration_cleanup, global
-;if tof_base is active, close it here
+PRO sans_calibration_cleanup, MAIN_BASE
+  ;if tof_base is active, close it here
+
+  WIDGET_CONTROL, MAIN_BASE, get_uvalue=global
+  PTR_FREE, global
+  
 END
 
 
