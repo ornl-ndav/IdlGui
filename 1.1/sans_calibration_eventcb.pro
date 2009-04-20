@@ -161,7 +161,7 @@ PRO browse_nexus, Event
     update_tab1_gui, Event, STATUS=1 ;_gui
     (*global).data_nexus_file_name = FullNexusName
     
-    map_base, Event, 'play_base', 1
+    ;map_base, Event, 'play_base', 1
     ;display the png files
     display_buttons, EVENT=event, ACTIVATE=0, global
     
@@ -232,7 +232,7 @@ PRO load_run_number, Event
       ;activate selection buttons
       update_tab1_gui, Event, STATUS=1 ;_gui
       
-      map_base, Event, 'play_base', 1
+      ;map_base, Event, 'play_base', 1
       ;display the png files
       display_buttons, EVENT=EVENT, ACTIVATE=0, global
       
