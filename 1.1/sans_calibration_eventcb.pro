@@ -232,8 +232,9 @@ PRO load_run_number, Event
       ;activate selection buttons
       update_tab1_gui, Event, STATUS=1 ;_gui
       
+      map_base, Event, 'play_base', 1
       ;display the png files
-      display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=0, global
+      display_buttons, EVENT=EVENT, ACTIVATE=0, global
       
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
