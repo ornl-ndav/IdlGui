@@ -218,8 +218,13 @@ return, 0
 END
 
 
-FUNCTION getCountsToExcludeValue, Event
+FUNCTION getCountsToExcludeValue_lowrange, Event
 value =  getTextFieldValue(Event, 'counts_exclusion')
+RETURN, value
+END
+
+FUNCTION getCountsToExcludeValue_highrange, Event
+value =  getTextFieldValue(Event, 'counts_exclusion_2')
 RETURN, value
 END
 

@@ -320,6 +320,11 @@ PRO MAIN_BASE_event, Event
       BSSreduction_ExcludedPixelCounts, Event
     end
     
+    ;Excluded pixel that have value more  or equal to X
+    Widget_Info(wWidget, FIND_BY_UNAME='counts_exclusion_2'): begin
+      BSSreduction_ExcludedPixelCounts, Event
+    end
+
     ;output couts_vs_tof
     ;cw_field message to add
     Widget_Info(wWidget, FIND_BY_UNAME= $

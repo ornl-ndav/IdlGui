@@ -172,7 +172,7 @@ ExclusionBase = WIDGET_BASE(SelectionTabBase,$
                             UNAME     = 'exclusion_base',$
                             XOFFSET   = 0,$
                             YOFFSET   = 4*yoffset,$
-                            SCR_XSIZE = 290,$
+                            SCR_XSIZE = 310,$
                             SCR_YSIZE = 45,$
                             ROW       = 1,$
                             SENSITIVE = 0)
@@ -186,18 +186,26 @@ eBase = WIDGET_BASE(ExclusionBase,$
 text = CW_FIELD(ExclusionBase,$
                 UNAME         = 'counts_exclusion',$
                 RETURN_EVENTS = 1,$
-                TITLE         = 'Exclude pixels with counts <= to',$
+                TITLE         = 'Exclude Pixel with I <= ',$
                 ROW           = 1,$
-                XSIZE         = 7,$
+                XSIZE         = 3,$
+                /LONG)
+
+text = CW_FIELD(ExclusionBase,$
+                UNAME         = 'counts_exclusion_2',$
+                RETURN_EVENTS = 1,$
+                TITLE         = 'and >= ',$
+                ROW           = f1,$
+                XSIZE         = 5,$
                 /LONG)
 
 button = WIDGET_BUTTON(SelectionTabBase,$
-                       XOFFSET   = 305,$
+                       XOFFSET   = 310,$
                        YOFFSET   = 4*yoffset+5,$
                        UNAME     = 'reset_button',$
                        VALUE     = 'FULL RESET',$
-                       SCR_XSIZE = 100,$
-                       SCR_YSIZE = 35,$
+                       SCR_XSIZE = 95,$
+                       SCR_YSIZE = 33,$
                        SENSITIVE = 0)
                
 
