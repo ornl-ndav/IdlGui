@@ -161,7 +161,7 @@ PRO browse_nexus, Event
     update_tab1_gui, Event, STATUS=1 ;_gui
     (*global).data_nexus_file_name = FullNexusName
     
-    ;map_base, Event, 'play_base', 1
+    map_base, Event, 'play_base', 1
     ;display the png files
     display_buttons, EVENT=event, ACTIVATE=0, global
     
@@ -232,7 +232,7 @@ PRO load_run_number, Event
       ;activate selection buttons
       update_tab1_gui, Event, STATUS=1 ;_gui
       
-      ;map_base, Event, 'play_base', 1
+      map_base, Event, 'play_base', 1
       ;display the png files
       display_buttons, EVENT=EVENT, ACTIVATE=0, global
       
@@ -387,15 +387,18 @@ PRO play_tof, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  PRINT, 'button clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
+  PRINT, 'in play_tof, previous_button clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
+  
+  ;get time/frame
+  time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
+  time_per_frame = FLOAT(time_per_frame)
+  (*global).time_per_frame = time_per_frame
+  
+  time_per_frame = time_per_frame / 3
   
   CASE ((*global).previous_button_clicked) OF
     4: BEGIN
     
-      ;get time/frame
-      time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
-      time_per_frame = FLOAT(time_per_frame)
-      (*global).time_per_frame = time_per_frame
       PRINT, 'in 4: time_per_frame: ' + STRCOMPRESS(time_per_frame)
       
       ;get bin/frame
@@ -432,14 +435,14 @@ PRO play_tof, Event
         
         result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
         IF (result EQ 0) THEN BEGIN
-          BREAK
+          goto, leave
         ENDIF
         
         (*global).tof_min_index = tof_min_index
         (*global).tof_max_index = tof_max_index
         
         IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
-          BREAK
+          goto, leave
         ENDIF
         tof_min_index = tof_max_index
         tof_max_index += bin_per_frame
@@ -447,23 +450,33 @@ PRO play_tof, Event
           tof_max_index = stop_tof_max_index
         ENDIF
         
-        ;check if user click pause or stop
-        pause_stop_status = checkPauseStop(event)
-        pause_status = pause_stop_status[0]
-        stop_status  = pause_stop_status[1]
-        IF (pause_status) EQ 1 THEN BEGIN
-          display_buttons, EVENT=event, ACTIVATE=3, global
-          break
-        ENDIF
+        time_index = 0
+        while (time_index LT 3) DO BEGIN
         
-        IF (stop_status) EQ 1 THEN BEGIN
-          display_buttons, EVENT=event, ACTIVATE=4, global
-          break
-        ENDIF
-        
-        WAIT, time_per_frame
+          ;check if user click pause or stop
+          pause_stop_status = checkPauseStop(event)
+          pause_status = pause_stop_status[0]
+          stop_status  = pause_stop_status[1]
+          IF (pause_status) EQ 1 THEN BEGIN
+            display_buttons, EVENT=event, ACTIVATE=3, global
+            goto, leave
+          ENDIF
+          
+          IF (stop_status) EQ 1 THEN BEGIN
+            display_buttons, EVENT=event, ACTIVATE=4, global
+            goto, leave
+          ENDIF
+          
+          WAIT, time_per_frame
+          
+          time_index++
+          
+        ENDWHILE
         
       ENDWHILE
+      
+      display_buttons, EVENT=EVENT, ACTIVATE=4, global
+      
     END
     
     ELSE: BEGIN
@@ -476,11 +489,6 @@ PRO play_tof, Event
       bin_per_frame = (*global).bin_per_frame
       tof_max_index = (*global).tof_max_index + bin_per_frame
       tof_min_index = (*global).tof_max_index
-      
-      ;get time/frame
-      time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
-      time_per_frame = FLOAT(time_per_frame)
-      (*global).time_per_frame = time_per_frame
       
       PRINT, 'time_per_frame: ' + STRCOMPRESS(time_per_frame)
       
@@ -496,14 +504,14 @@ PRO play_tof, Event
         
         result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
         IF (result EQ 0) THEN BEGIN
-          BREAK
+          goto, leave
         ENDIF
         
         (*global).tof_min_index = tof_min_index
         (*global).tof_max_index = tof_max_index
         
         IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
-          BREAK
+          goto, leave
         ENDIF
         tof_min_index = tof_max_index
         tof_max_index += bin_per_frame
@@ -511,27 +519,36 @@ PRO play_tof, Event
           tof_max_index = stop_tof_max_index
         ENDIF
         
-        ;check if user click pause or stop
-        pause_stop_status = checkPauseStop(event)
-        pause_status = pause_stop_status[0]
-        stop_status  = pause_stop_status[1]
-        IF (pause_status) EQ 1 THEN BEGIN
-          display_buttons, EVENT=event, ACTIVATE=3, global
-          break
-        ENDIF
+        time_index = 0
+        while (time_index LT 3) DO BEGIN
         
-        IF (stop_status) EQ 1 THEN BEGIN
-          display_buttons, EVENT=event, ACTIVATE=4, global
-          break
-        ENDIF
-        
-        WAIT, time_per_frame
+          ;check if user click pause or stop
+          pause_stop_status = checkPauseStop(event)
+          pause_status = pause_stop_status[0]
+          stop_status  = pause_stop_status[1]
+          IF (pause_status) EQ 1 THEN BEGIN
+            display_buttons, EVENT=event, ACTIVATE=3, global
+            goto, leave
+          ENDIF
+          
+          IF (stop_status) EQ 1 THEN BEGIN
+            display_buttons, EVENT=event, ACTIVATE=4, global
+            goto, leave
+          ENDIF
+          
+          WAIT, time_per_frame
+          
+          time_index++
+          
+        ENDWHILE
         
       ENDWHILE
       
     END
     
   ENDCASE
+  
+  leave:
   
 END
 
