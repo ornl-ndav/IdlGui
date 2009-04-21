@@ -552,6 +552,112 @@ PRO play_tof, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO play_previous_tof, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  PRINT, 'in play_next_tof, previous_button clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
+  
+  ;get time/frame
+  time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
+  time_per_frame = FLOAT(time_per_frame)
+  (*global).time_per_frame = time_per_frame
+  
+  time_per_frame = time_per_frame / 3
+  
+  ;get bin/frame
+  bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
+  bin_per_frame  = FIX(bin_per_frame)
+  (*global).bin_per_frame = bin_per_frame
+  
+;  ;Integrate over TOF or get specified range of tof
+;  value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
+;  IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
+;    ;get bin min
+;    tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
+;  ENDIF ELSE BEGIN
+;    tof_min = 0.
+;  ENDELSE
+;  
+;  ;get bin max
+;  tof_max            = FLOAT(getTextFieldValue(Event,$
+;    'tof_range_max_cw_field'))
+;  tof_array          = (*(*global).tof_array)
+;  stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
+;  tof_min_index      = getIndexOfTof(tof_array, tof_min)
+;  tof_max_index      = tof_min_index + bin_per_frame
+  
+  tof_min_index = (*global).tof_min_index
+  tof_max_index = (*global).tof_max_index
+
+  tof_max_index = tof_min_index
+  tof_min_index -= bin_per_frame 
+    
+  PRINT, 'tof_min_index: ' + STRCOMPRESS(tof_min_index)
+  PRINT, 'tof_max_index: ' + STRCOMPRESS(tof_max_index)
+  
+  result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
+  
+  (*global).tof_min_index = tof_min_index
+  (*global).tof_max_index = tof_max_index
+  
+END
+
+;------------------------------------------------------------------------------
+PRO play_next_tof, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  PRINT, 'in play_next_tof, previous_button clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
+  
+  ;get time/frame
+  time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
+  time_per_frame = FLOAT(time_per_frame)
+  (*global).time_per_frame = time_per_frame
+  
+  time_per_frame = time_per_frame / 3
+  
+  ;get bin/frame
+  bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
+  bin_per_frame  = FIX(bin_per_frame)
+  (*global).bin_per_frame = bin_per_frame
+  
+;  ;Integrate over TOF or get specified range of tof
+;  value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
+;  IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
+;    ;get bin min
+;    tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
+;  ENDIF ELSE BEGIN
+;    tof_min = 0.
+;  ENDELSE
+;  
+;  ;get bin max
+;  tof_max            = FLOAT(getTextFieldValue(Event,$
+;    'tof_range_max_cw_field'))
+;  tof_array          = (*(*global).tof_array)
+;  stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
+;  tof_min_index      = getIndexOfTof(tof_array, tof_min)
+;  tof_max_index      = tof_min_index + bin_per_frame
+  
+  tof_min_index = (*global).tof_min_index
+  tof_max_index = (*global).tof_max_index
+
+  tof_min_index = tof_max_index
+  tof_max_index += bin_per_frame 
+    
+  PRINT, 'tof_min_index: ' + STRCOMPRESS(tof_min_index)
+  PRINT, 'tof_max_index: ' + STRCOMPRESS(tof_max_index)
+  
+  result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
+  
+  (*global).tof_min_index = tof_min_index
+  (*global).tof_max_index = tof_max_index
+  
+END
+
 ;==============================================================================
 PRO MAIN_REALIZE, wWidget
   tlb = get_tlb(wWidget)
