@@ -387,8 +387,6 @@ PRO play_tof, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  PRINT, 'in play_tof, previous_button clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
-  
   ;get time/frame
   time_per_frame = getTextFieldValue(Event,'tof_time_per_frame_value')
   time_per_frame = FLOAT(time_per_frame)
@@ -399,88 +397,99 @@ PRO play_tof, Event
   CASE ((*global).previous_button_clicked) OF
     4: BEGIN
     
-      PRINT, 'in 4: time_per_frame: ' + STRCOMPRESS(time_per_frame)
-      
-      ;get bin/frame
-      bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
-      bin_per_frame  = FIX(bin_per_frame)
-      (*global).bin_per_frame = bin_per_frame
-      
-      ;Integrate over TOF or get specified range of tof
-      value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
-      IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
-        ;get bin min
-        tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
+      error=0
+      CATCH, error
+      if (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        display_buttons, EVENT=EVENT, ACTIVATE=0, global
       ENDIF ELSE BEGIN
-        tof_min = 0.
-      ENDELSE
       
-      ;get bin max
-      tof_max            = FLOAT(getTextFieldValue(Event,$
-        'tof_range_max_cw_field'))
-      tof_array          = (*(*global).tof_array)
-      stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
-      tof_min_index      = getIndexOfTof(tof_array, tof_min)
-      tof_max_index      = tof_min_index + bin_per_frame
-      
-      WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
-      
-        bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
-        bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
-        putTextFieldValue, Event, 'bin_range_value', bins_range
+        ;get bin/frame
+        bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
+        bin_per_frame  = FIX(bin_per_frame)
+        (*global).bin_per_frame = bin_per_frame
         
-        tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
-        tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL)
-        putTextFieldValue, Event, 'tof_range_value', tof_range
+        ;Integrate over TOF or get specified range of tof
+        value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
+        IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
+          ;get bin min
+          tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
+        ENDIF ELSE BEGIN
+          tof_min = 0.
+        ENDELSE
         
-        result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
-        IF (result EQ 0) THEN BEGIN
-          goto, leave
-        ENDIF
+        ;get bin max
+        tof_max            = FLOAT(getTextFieldValue(Event,$
+          'tof_range_max_cw_field'))
+        tof_array          = (*(*global).tof_array)
+        stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
+        tof_min_index      = getIndexOfTof(tof_array, tof_min)
+        tof_max_index      = tof_min_index + bin_per_frame
         
-        (*global).tof_min_index = tof_min_index
-        (*global).tof_max_index = tof_max_index
+        WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
         
-        IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
-          goto, leave
-        ENDIF
-        tof_min_index = tof_max_index
-        tof_max_index += bin_per_frame
-        IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
-          tof_max_index = stop_tof_max_index
-        ENDIF
-        
-        time_index = 0
-        while (time_index LT 3) DO BEGIN
-        
-          ;check if user click pause or stop
-          pause_stop_status = checkPauseStop(event)
-          pause_status = pause_stop_status[0]
-          stop_status  = pause_stop_status[1]
-          IF (pause_status) EQ 1 THEN BEGIN
-            display_buttons, EVENT=event, ACTIVATE=3, global
+          bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
+          bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
+          putTextFieldValue, Event, 'bin_range_value', bins_range
+          
+          tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
+          tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL)
+          putTextFieldValue, Event, 'tof_range_value', tof_range
+          
+          result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
+          IF (result EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=0, global
             goto, leave
           ENDIF
           
-          IF (stop_status) EQ 1 THEN BEGIN
-            display_buttons, EVENT=event, ACTIVATE=4, global
+          (*global).tof_min_index = tof_min_index
+          (*global).tof_max_index = tof_max_index
+          
+          IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=0, global
             goto, leave
           ENDIF
+          tof_min_index = tof_max_index
+          tof_max_index += bin_per_frame
+          IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
+            tof_max_index = stop_tof_max_index
+          ENDIF
           
-          WAIT, time_per_frame
+          time_index = 0
+          while (time_index LT 3) DO BEGIN
           
-          time_index++
+            ;check if user click pause or stop
+            pause_stop_status = checkPauseStop(event)
+            pause_status = pause_stop_status[0]
+            stop_status  = pause_stop_status[1]
+            IF (pause_status) EQ 1 THEN BEGIN
+              display_buttons, EVENT=event, ACTIVATE=3, global
+              goto, leave
+            ENDIF
+            
+            IF (stop_status) EQ 1 THEN BEGIN
+              display_buttons, EVENT=event, ACTIVATE=4, global
+              goto, leave
+            ENDIF
+            
+            WAIT, time_per_frame
+            
+            time_index++
+            
+          ENDWHILE
           
         ENDWHILE
         
-      ENDWHILE
+      ENDELSE
       
-      display_buttons, EVENT=EVENT, ACTIVATE=4, global
+      display_buttons, EVENT=EVENT, ACTIVATE=0, global
       
     END
     
     ELSE: BEGIN
     
+      PRINT, 'here'
+      
       tof_array          = (*(*global).tof_array)
       tof_max            = FLOAT(getTextFieldValue(Event,$
         'tof_range_max_cw_field'))
@@ -490,59 +499,68 @@ PRO play_tof, Event
       tof_max_index = (*global).tof_max_index + bin_per_frame
       tof_min_index = (*global).tof_max_index
       
-      PRINT, 'time_per_frame: ' + STRCOMPRESS(time_per_frame)
+      error=0
+      CATCH, error
+      if (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        display_buttons, EVENT=EVENT, ACTIVATE=0, global
+      ENDIF ELSE BEGIN
       
-      WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
-      
-        bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
-        bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
-        putTextFieldValue, Event, 'bin_range_value', bins_range
+        WHILE (tof_max_index LE stop_tof_max_index) DO BEGIN
         
-        tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
-        tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL)
-        putTextFieldValue, Event, 'tof_range_value', tof_range
-        
-        result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
-        IF (result EQ 0) THEN BEGIN
-          goto, leave
-        ENDIF
-        
-        (*global).tof_min_index = tof_min_index
-        (*global).tof_max_index = tof_max_index
-        
-        IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
-          goto, leave
-        ENDIF
-        tof_min_index = tof_max_index
-        tof_max_index += bin_per_frame
-        IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
-          tof_max_index = stop_tof_max_index
-        ENDIF
-        
-        time_index = 0
-        while (time_index LT 3) DO BEGIN
-        
-          ;check if user click pause or stop
-          pause_stop_status = checkPauseStop(event)
-          pause_status = pause_stop_status[0]
-          stop_status  = pause_stop_status[1]
-          IF (pause_status) EQ 1 THEN BEGIN
-            display_buttons, EVENT=event, ACTIVATE=3, global
+          bins_range  = STRCOMPRESS(tof_min_index,/REMOVE_ALL)
+          bins_range += '-' + STRCOMPRESS(tof_max_index,/REMOVE_ALL)
+          putTextFieldValue, Event, 'bin_range_value', bins_range
+          
+          tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
+          tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL)
+          putTextFieldValue, Event, 'tof_range_value', tof_range
+          
+          result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
+          IF (result EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=0, global
             goto, leave
           ENDIF
           
-          IF (stop_status) EQ 1 THEN BEGIN
-            display_buttons, EVENT=event, ACTIVATE=4, global
+          (*global).tof_min_index = tof_min_index
+          (*global).tof_max_index = tof_max_index
+          
+          IF (tof_max_index EQ stop_tof_max_index) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=0, global
             goto, leave
           ENDIF
+          tof_min_index = tof_max_index
+          tof_max_index += bin_per_frame
+          IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
+            tof_max_index = stop_tof_max_index
+          ENDIF
           
-          WAIT, time_per_frame
+          time_index = 0
+          while (time_index LT 3) DO BEGIN
           
-          time_index++
+            ;check if user click pause or stop
+            pause_stop_status = checkPauseStop(event)
+            pause_status = pause_stop_status[0]
+            stop_status  = pause_stop_status[1]
+            IF (pause_status) EQ 1 THEN BEGIN
+              display_buttons, EVENT=event, ACTIVATE=3, global
+              goto, leave
+            ENDIF
+            
+            IF (stop_status) EQ 1 THEN BEGIN
+              display_buttons, EVENT=event, ACTIVATE=4, global
+              goto, leave
+            ENDIF
+            
+            WAIT, time_per_frame
+            
+            time_index++
+            
+          ENDWHILE
           
         ENDWHILE
         
-      ENDWHILE
+      ENDELSE
       
     END
     
@@ -575,23 +593,6 @@ PRO play_previous_tof, Event
     bin_per_frame  = FIX(bin_per_frame)
     (*global).bin_per_frame = bin_per_frame
     
-    ;  ;Integrate over TOF or get specified range of tof
-    ;  value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
-    ;  IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
-    ;    ;get bin min
-    ;    tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
-    ;  ENDIF ELSE BEGIN
-    ;    tof_min = 0.
-    ;  ENDELSE
-    ;
-    ;  ;get bin max
-    ;  tof_max            = FLOAT(getTextFieldValue(Event,$
-    ;    'tof_range_max_cw_field'))
-    ;  tof_array          = (*(*global).tof_array)
-    ;  stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
-    ;  tof_min_index      = getIndexOfTof(tof_array, tof_min)
-    ;  tof_max_index      = tof_min_index + bin_per_frame
-    
     tof_array          = (*(*global).tof_array)
     
     tof_min_index = (*global).tof_min_index
@@ -615,6 +616,7 @@ PRO play_previous_tof, Event
     (*global).tof_max_index = tof_max_index
     
   ENDELSE
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -639,23 +641,6 @@ PRO play_next_tof, Event
     bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
     bin_per_frame  = FIX(bin_per_frame)
     (*global).bin_per_frame = bin_per_frame
-    
-    ;  ;Integrate over TOF or get specified range of tof
-    ;  value = getCWBgroupValue(Event, 'tof_range_cwbgroup')
-    ;  IF (value EQ 1) THEN BEGIN      ;user wants user_defined range of tof
-    ;    ;get bin min
-    ;    tof_min = FLOAT(getTextFieldValue(Event,'tof_range_min_cw_field'))
-    ;  ENDIF ELSE BEGIN
-    ;    tof_min = 0.
-    ;  ENDELSE
-    ;
-    ;  ;get bin max
-    ;  tof_max            = FLOAT(getTextFieldValue(Event,$
-    ;    'tof_range_max_cw_field'))
-    ;  tof_array          = (*(*global).tof_array)
-    ;  stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
-    ;  tof_min_index      = getIndexOfTof(tof_array, tof_min)
-    ;  tof_max_index      = tof_min_index + bin_per_frame
     
     tof_array          = (*(*global).tof_array)
     
