@@ -396,9 +396,9 @@ PRO play_tof, Event
   
   CASE ((*global).previous_button_clicked) OF
     4: BEGIN
-
+    
       error=0
-      ;CATCH, error
+      CATCH, error
       if (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         display_buttons, EVENT=EVENT, ACTIVATE=0, global
@@ -473,7 +473,7 @@ PRO play_tof, Event
             time_index++
             
           ENDWHILE
-
+          
         ENDWHILE
         
       ENDELSE
@@ -489,12 +489,14 @@ PRO play_tof, Event
         'tof_range_max_cw_field'))
       stop_tof_max_index = getIndexOfTof(tof_array, tof_max)
       
-      bin_per_frame = (*global).bin_per_frame
+      bin_per_frame  = getTextFieldValue(Event,'tof_bin_per_frame_value')
+      bin_per_frame  = FIX(bin_per_frame)
+      
       tof_max_index = (*global).tof_max_index + bin_per_frame
       tof_min_index = (*global).tof_max_index
       
       error=0
-      ;CATCH, error
+      CATCH, error
       if (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         display_buttons, EVENT=EVENT, ACTIVATE=0, global
@@ -587,7 +589,7 @@ PRO play_previous_tof, Event
     bin_per_frame  = FIX(bin_per_frame)
     (*global).bin_per_frame = bin_per_frame
     
-    tof_array          = (*(*global).tof_array)
+    tof_array  = (*(*global).tof_array)
     
     tof_min_index = (*global).tof_min_index
     tof_max_index = (*global).tof_max_index
