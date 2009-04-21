@@ -5,7 +5,7 @@
 #                                [-e <path to executable file>]   
 #                                [-h]
 #
-FOLDERS=("images")
+FOLDERS=("SANScalibration_images")
 FILES="sans_calibration.sav SANScalibration.cfg mini_sans_calibration.sav"
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_calibration.sav"
