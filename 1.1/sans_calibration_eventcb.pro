@@ -396,9 +396,9 @@ PRO play_tof, Event
   
   CASE ((*global).previous_button_clicked) OF
     4: BEGIN
-    
+
       error=0
-      CATCH, error
+      ;CATCH, error
       if (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         display_buttons, EVENT=EVENT, ACTIVATE=0, global
@@ -435,13 +435,11 @@ PRO play_tof, Event
           tof_range  = STRCOMPRESS(tof_array[tof_min_index],/REMOVE_ALL)
           tof_range += '-' + STRCOMPRESS(tof_array[tof_max_index],/REMOVE_ALL)
           putTextFieldValue, Event, 'tof_range_value', tof_range
-          
           result = plot_range_OF_data(Event, tof_min_index, tof_max_index)
           IF (result EQ 0) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=0, global
             goto, leave
           ENDIF
-          
           (*global).tof_min_index = tof_min_index
           (*global).tof_max_index = tof_max_index
           
@@ -454,10 +452,8 @@ PRO play_tof, Event
           IF (tof_max_index GT stop_tof_max_index) THEN BEGIN
             tof_max_index = stop_tof_max_index
           ENDIF
-          
           time_index = 0
           while (time_index LT 3) DO BEGIN
-          
             ;check if user click pause or stop
             pause_stop_status = checkPauseStop(event)
             pause_status = pause_stop_status[0]
@@ -477,7 +473,7 @@ PRO play_tof, Event
             time_index++
             
           ENDWHILE
-          
+
         ENDWHILE
         
       ENDELSE
@@ -488,8 +484,6 @@ PRO play_tof, Event
     
     ELSE: BEGIN
     
-      PRINT, 'here'
-      
       tof_array          = (*(*global).tof_array)
       tof_max            = FLOAT(getTextFieldValue(Event,$
         'tof_range_max_cw_field'))
@@ -500,7 +494,7 @@ PRO play_tof, Event
       tof_min_index = (*global).tof_max_index
       
       error=0
-      CATCH, error
+      ;CATCH, error
       if (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         display_buttons, EVENT=EVENT, ACTIVATE=0, global
