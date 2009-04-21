@@ -65,13 +65,6 @@
 ;                      Author: dfp <prakapenkadv@ornl.gov>
 ; ==========================================================================>>>
 
-;------------------------------------------------------------------------------
-;FUNCTION readToBlank, data
-;  index_blank = WHERE(data EQ '',nbr)
-;  IF (nbr GT 0) THEN BEGIN
-;    RETURN, data[0:index_blank[0]-1]
-;  ENDIF
-;END
 
 ;------------------------------------------------------------------------------
 function modtag, init_str
@@ -131,7 +124,6 @@ FUNCTION readData, file
   OPENR, 1, file
   
   
-  
   WHILE (~EOF(1)) DO BEGIN
     nbr_lines = FILE_LINES(file)
     my_array = STRARR(nbr_lines)
@@ -141,43 +133,6 @@ FUNCTION readData, file
   
   RETURN, my_array
   
-  
-  
-;  ;Set up variables
-;  line = STRARR(1)
-;  tmp = ''
-;  i = 0
-  
-;  CASE (half) OF
-;    1: BEGIN                     ;first half
-;      ;Read the comments from the file until blank line
-;      WHILE(~EOF(1)) DO BEGIN
-;        READF,1,tmp
-;        ;Check for blank line
-;        IF (tmp EQ '') THEN BEGIN
-;          BREAK
-;        ENDIF ELSE BEGIN
-;          IF (i EQ 0) THEN BEGIN
-;            line[i] = tmp
-;            i = 1
-;          ENDIF ELSE BEGIN
-;            line = [line, tmp]
-;          ENDELSE
-;        ENDELSE
-;      ENDWHILE
-;      close, 1
-;      RETURN, line
-;    END
-;    2: BEGIN                     ;second half
-;      WHILE (~EOF(1)) DO BEGIN
-;        nbr_lines = FILE_LINES(file)
-;        my_array = STRARR(1,nbr_lines)
-;        READF,1, my_array
-;      ENDWHILE
-;      close,1
-;      RETURN, my_array
-;    END
-;  ENDCASE
   
 END
 
@@ -384,7 +339,7 @@ FUNCTION IDL3columnsASCIIparser::getData
     END
     
     'I': BEGIN
-      PRINT, 'NORM'
+      ;norm file
       data = *self.all_data
       index = WHERE(STRMATCH(data, '(*') EQ 1)
       data = data[index[0]:N_ELEMENTS(data) - 1]
@@ -398,7 +353,7 @@ FUNCTION IDL3columnsASCIIparser::getData
     END
     
     ' ': BEGIN
-      PRINT, 'BSS'
+      ;BSS file
       data = *self.all_data
       index =  WHERE(STRMATCH(data, '# *') EQ 1)
       comments = data[index]
@@ -439,7 +394,7 @@ FUNCTION IDL3columnsASCIIparser::getMetadata, tag
   
     CASE self.type OF
       'F': BEGIN
-        PRINT, 'CRTOF'
+        ;crtof file 
         data = *self.all_data
         index_blank = WHERE(data EQ '', nbr)
         IF (nbr GT 0) THEN BEGIN
@@ -449,8 +404,8 @@ FUNCTION IDL3columnsASCIIparser::getMetadata, tag
       END
       
       'I': BEGIN
-        PRINT, 'NORM'
-        ; metadata is all before the "(*" line
+        ;norm file
+        ;metadata is all before the "(*" line
         data = *self.all_data
         index_blank = WHERE(STRMATCH(data, '(*') EQ 1)
         IF (index_blank[0] NE -1) THEN BEGIN
@@ -460,7 +415,7 @@ FUNCTION IDL3columnsASCIIparser::getMetadata, tag
       END
       
       ' ': BEGIN
-        PRINT, 'BSS'
+        ;bss file
         ;metadata at the end of file
         data = *self.all_data
         index_blank = WHERE(STRMATCH(data, '#F*') EQ 1)
