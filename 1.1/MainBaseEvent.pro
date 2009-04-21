@@ -139,7 +139,6 @@ PRO MAIN_BASE_event, Event
     ;-Advanced Button ---------------------------------------------------------
     ;previous button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='previous_button'): BEGIN
-      PRINT, (*global).status_buttons
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
@@ -181,7 +180,6 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
-      PRINT, 'in play button, previous_button_clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
     END
     
     ;pause button
@@ -207,7 +205,6 @@ PRO MAIN_BASE_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 3
       ENDELSE
-      PRINT, 'in pause button, previous_button_clicked: ' + STRCOMPRESS((*global).previous_button_clicked)
     END
     
     ;stop button
@@ -234,12 +231,10 @@ PRO MAIN_BASE_event, Event
         DEVICE, CURSOR_STANDARD=standard
         (*global).previous_button_clicked = 4
       ENDELSE
-      PRINT, 'in stop button, previous_button_click: ' + STRCOMPRESS((*global).previous_button_clicked)
     END
     
     ;next button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='next_button'): BEGIN
-      PRINT, (*global).status_buttons
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
