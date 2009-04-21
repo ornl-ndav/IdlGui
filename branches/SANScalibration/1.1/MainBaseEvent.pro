@@ -139,13 +139,16 @@ PRO MAIN_BASE_event, Event
     ;-Advanced Button ---------------------------------------------------------
     ;previous button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='previous_button'): BEGIN
+      print, (*global).status_buttons
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           status_buttons = (*global).status_buttons
-          IF (status_buttons[0] EQ 0) THEN BEGIN
+          IF (status_buttons[0] EQ 0 OR $
+              status_buttons[0] EQ 1) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=1, global
+            play_previous_tof, Event         ;_eventcb
           ENDIF ;end of status_buttons[0]
         ENDIF
       ENDIF ELSE BEGIN
@@ -236,13 +239,16 @@ PRO MAIN_BASE_event, Event
     
     ;next button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='next_button'): BEGIN
+      print, (*global).status_buttons
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           status_buttons = (*global).status_buttons
-          IF (status_buttons[4] EQ 0) THEN BEGIN
+          IF (status_buttons[4] EQ 0 OR $
+          status_buttons[4] EQ 1) THEN BEGIN
             display_buttons, EVENT=EVENT, ACTIVATE=5, global
+            play_next_tof, Event         ;_eventcb            
           ENDIF ;end of status_buttons[4]
         ENDIF
       ENDIF ELSE BEGIN
