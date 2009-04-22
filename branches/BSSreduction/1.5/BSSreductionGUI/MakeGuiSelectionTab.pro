@@ -63,6 +63,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
   sOutputTofButton = { size: [0,5,180],$
     uname: 'output_tof_button',$
     value: 'Create TOF ascii file',$
+    tooltip: 'Click to create ASCII file of Counts vs TOF of pixel included',$
     sensitive: 1}
     
   LinLogBgroup = { size : [190,$
@@ -280,6 +281,7 @@ PRO MakeGuiSelectionTab, MAIN_TAB, $
     SCR_XSIZE = sOutputTofButton.size[2],$
     UNAME     = sOutputTofButton.uname,$
     SENSITIVE = sOutputTofButton.sensitive,$
+    TOOLTIP   = sOutputTofButton.tooltip,$
     VALUE     = sOutputTofButton.value)
     
   bgroup = CW_BGROUP(CountsVsTofTab1,$
