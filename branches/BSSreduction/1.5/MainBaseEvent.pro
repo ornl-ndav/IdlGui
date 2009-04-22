@@ -68,8 +68,8 @@ PRO MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='live_data_streaming_button'): begin
       IF ((*global).first_lds_used) THEN BEGIN
         logger, APPLICATION=(*global).application,$
-        VERSION=(*global).version,$
-        UCAMS=(*global).ucams 
+          VERSION=(*global).version,$
+          UCAMS=(*global).ucams
         (*global).first_lds_used = 0
       ENDIF
       load_live_data_streaming, Event ;_LDS
@@ -81,7 +81,7 @@ PRO MAIN_BASE_event, Event
     end
     
     Widget_Info(wWidget, FIND_BY_UNAME='load_roi_file_text'): begin
-;      LoadRoiFile, Event
+      ;      LoadRoiFile, Event
       PlotIncludedPixels, Event
     end
     
@@ -126,6 +126,10 @@ PRO MAIN_BASE_event, Event
         endif
       endif
     end
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='output_tof_button'): BEGIN
+      BSSreduction_OuputCoutsVsTofInitialization, Event
+    END
     
     ;counts vs tof draw
     widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
@@ -324,7 +328,7 @@ PRO MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='counts_exclusion_2'): begin
       BSSreduction_ExcludedPixelCounts, Event
     end
-
+    
     ;output couts_vs_tof
     ;cw_field message to add
     Widget_Info(wWidget, FIND_BY_UNAME= $
@@ -933,7 +937,7 @@ PRO MAIN_BASE_event, Event
       BSSreduction_Reduce_tof_cutting_max_text, Event
       BSSreduction_CommandLineGenerator, Event
     end
-
+    
     widget_info(wWidget, $
       FIND_BY_UNAME='scale_sqe_by_solid_angle_group_uname'): BEGIN
       BSSreduction_CommandLineGenerator, Event
@@ -1021,7 +1025,7 @@ PRO MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='sad'): begin
       BSSreduction_CommandLineGenerator, Event
     end
-        
+    
     ;end of tab8 -------------------------------------------------------------
     
     ;Start Batch Data Reduction
