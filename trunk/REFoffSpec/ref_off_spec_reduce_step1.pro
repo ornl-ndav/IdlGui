@@ -320,7 +320,6 @@ PRO AddNexusToReduceTab1Table, Event
       COL = 0)
       
     new_table = addTableToBigTable(Event, new_reduce_tab1_table)
-    help, new_table
     
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
     WIDGET_CONTROL, id, SET_VALUE = new_table
@@ -598,6 +597,7 @@ PRO AddNexusToReduceTab1Table, Event
     (*(*global).reduce_tab1_table) = new_table
     
     ;check if delete row can be disabled
+    check_status_of_reduce_step1_buttons, Event
     
   END
   
