@@ -32,9 +32,8 @@
 ;
 ;==============================================================================
 
-;re_plot the fitting 
+;re_plot the fittin
 PRO re_plot_fitting, Event
-
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   SF = (*(*global).scaling_factor)
