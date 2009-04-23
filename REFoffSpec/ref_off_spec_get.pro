@@ -256,3 +256,12 @@ FOR i=0,3 DO BEGIN
 ENDFOR
 RETURN, 'N/A'
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getTableRowSelected, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+array_selected = WIDGET_INFO(id, /TABLE_SELECT)
+return, array_selected[1]
+END
+
+
