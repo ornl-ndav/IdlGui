@@ -169,7 +169,7 @@ table = WIDGET_TABLE(Row2,$
                      /RESIZEABLE_COLUMNS,$
                      ALIGNMENT = 0,$
                      XSIZE = 3,$
-                     YSIZE = 1,$
+                     YSIZE = 18,$
                      SCR_XSIZE = 1230,$
                      SCR_YSIZE = 400,$
                      COLUMN_WIDTHS = [100,955,150],$

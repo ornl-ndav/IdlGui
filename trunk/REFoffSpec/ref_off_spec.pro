@@ -38,18 +38,18 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   CD, CURRENT = current_folder
   
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
-;==============================================================================
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-APPLICATION = file->getValue(tag=['configuration','application'])
-VERSION = file->getValue(tag=['configuration','version'])
-DEBUGGING = file->getValue(tag=['configuration','debugging'])
-CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
-TESTING = file->getValue(tag=['configuration','testing'])
-SCROLLING = file->getValue(tag=['configuration','scrolling'])
-SUPER_USERS = ['j35']
-;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-;==============================================================================
-
+  ;==============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  SCROLLING = file->getValue(tag=['configuration','scrolling'])
+  SUPER_USERS = ['j35']
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;==============================================================================
+  
   ;DEBUGGING (enter the tab you want to see)
   ;main_tab: 0: Reduction,
   ;          1: Loading,
@@ -64,8 +64,8 @@ SUPER_USERS = ['j35']
   ;          5: Create Output
   ;          6: Options,
   ;          7:Log Book
-  sDEBUGGING = { tab: {main_tab: 1,$ ; -> LOAD tab
-    step4_tab: 0,$ 
+  sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
+    step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
     reduce_tab1_cw_field: '4753-4755',$
@@ -103,6 +103,8 @@ SUPER_USERS = ['j35']
     reduce_tab1_table: PTR_NEW(0L),$
     reduce_tab1_working_pola_state: '',$
     reduce_tab1_nexus_file_list: PTR_NEW(0L),$
+    reduce_input_table_nbr_row: 18,$
+    reduce_input_table_nbr_column: 3,$
     
     working_path: '~/results/',$
     
@@ -138,7 +140,7 @@ SUPER_USERS = ['j35']
     manual_scaling_3: FLOAT(2),$
     manual_scaling_2: FLOAT(1.5),$
     step4_1_plot2d_delta_x: 0.0,$
-    scaling_factor: ptr_new(0L),$
+    scaling_factor: PTR_NEW(0L),$
     
     array_selected_total_backup: PTR_NEW(0L),$
     array_selected_total_error_backup: PTR_NEW(0L),$
@@ -160,7 +162,7 @@ SUPER_USERS = ['j35']
     last_valid_x: 0.0,$
     last_valid_y: 0.0,$
     
-    pixel_offset_array: ptr_new(0L),$
+    pixel_offset_array: PTR_NEW(0L),$
     X_Y_min_max_backup: STRARR(4),$
     ymin_log_mode: 0.001,$
     step4_2_2_fitting_status: 0,$
@@ -183,15 +185,15 @@ SUPER_USERS = ['j35']
     left_mouse_pressed:  0,$
     step4_step1_left_mouse_pressed: 0,$
     plot_realign_data:   0,$
-    ref_pixel_list:      ptr_new(0L),$
-    ref_pixel_offset_list: ptr_new(0L),$
-    ref_pixel_list_original: ptr_new(0L),$
-    ref_x_list:          ptr_new(0L),$
+    ref_pixel_list:      PTR_NEW(0L),$
+    ref_pixel_offset_list: PTR_NEW(0L),$
+    ref_pixel_list_original: PTR_NEW(0L),$
+    ref_x_list:          PTR_NEW(0L),$
     super_users:         SUPER_USERS,$
     delta_x:             0.,$
     something_to_plot:   0,$
     first_load:          0,$
-    congrid_coeff_array: ptr_new(0L),$
+    congrid_coeff_array: PTR_NEW(0L),$
     application:         APPLICATION,$
     box_color:           [50,75,100,125,150,175,200,225,250],$
     processing:          '(PROCESSING)',$
@@ -204,26 +206,26 @@ SUPER_USERS = ['j35']
     ascii_path:          '~/results/',$
     sys_color_face_3d:   INTARR(3),$
     working_pola_state:  '',$
-    list_OF_ascii_files: ptr_new(0L),$
-    list_OF_ascii_files_p1: ptr_new(0L),$
-    list_OF_ascii_files_p2: ptr_new(0L),$
-    list_OF_ascii_files_p3: ptr_new(0L),$
+    list_OF_ascii_files: PTR_NEW(0L),$
+    list_OF_ascii_files_p1: PTR_NEW(0L),$
+    list_OF_ascii_files_p2: PTR_NEW(0L),$
+    list_OF_ascii_files_p3: PTR_NEW(0L),$
     time_stamp:             '',$
-    short_list_OF_ascii_files: ptr_new(0L),$
-    trans_coeff_list:    ptr_new(0L),$
-    pData:               ptr_new(0L),$
-    pData_y:             ptr_new(0L),$
-    pData_y_error:       ptr_new(0L),$
-    realign_pData_y:     ptr_new(0L),$
-    realign_pData_y_error: ptr_new(0L),$
-    untouched_realign_pData_y:       ptr_new(0L),$
-    untouched_realign_pData_y_error: ptr_new(0L),$
+    short_list_OF_ascii_files: PTR_NEW(0L),$
+    trans_coeff_list:    PTR_NEW(0L),$
+    pData:               PTR_NEW(0L),$
+    pData_y:             PTR_NEW(0L),$
+    pData_y_error:       PTR_NEW(0L),$
+    realign_pData_y:     PTR_NEW(0L),$
+    realign_pData_y_error: PTR_NEW(0L),$
+    untouched_realign_pData_y:       PTR_NEW(0L),$
+    untouched_realign_pData_y_error: PTR_NEW(0L),$
     first_realign:       1,$
     manual_ref_pixel:    0,$
-    pData_x:             ptr_new(0L),$
-    x_axis:              ptr_new(0L),$
-    total_array:         ptr_new(0L),$
-    total_array_untouched: ptr_new(0L),$
+    pData_x:             PTR_NEW(0L),$
+    x_axis:              PTR_NEW(0L),$
+    total_array:         PTR_NEW(0L),$
+    total_array_untouched: PTR_NEW(0L),$
     total_array_error:    PTR_NEW(0L),$
     xscale:              {xrange: FLTARR(2),$
     xticks: 1L,$
@@ -263,89 +265,89 @@ SUPER_USERS = ['j35']
   MainBaseTitle += ' - ' + VERSION
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
-ENDIF
-;Build Main Base
-MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
-                         UNAME        = 'MAIN_BASE',$
-                         SCR_XSIZE    = MainBaseSize[2],$
-                         SCR_YSIZE    = MainBaseSize[3],$
-                         XOFFSET      = MainBaseSize[0],$
-                         YOFFSET      = MainBaseSize[1],$
-                         TITLE        = MainBaseTitle,$
-                         SPACE        = 0,$
-                         XPAD         = 0,$
-                         YPAD         = 2)
-
-;get the color of the GUI to hide the widget_draw that will draw the label
-sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
-(*global).sys_color_face_3d = sys_color.face_3d
-
-;attach global structure with widget ID of widget main base widget ID
-WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-
-label = Widget_label(MAIN_BASe,$
-                     xoffset = 0,$
-                     yoffset = 0,$
-                     value = '')
-
-;confirmation base
-MakeGuiMainBase, MAIN_BASE, global
-
-Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
-;change color of background    
-id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-
-;LOADCT, 0,/SILENT
-
-;display list of proposal for this instrument ---------------------------------
-ListOfProposal = getListOfProposal((*global).instrument,$
-                                   UCAMS,$
-                                   MAIN_BASE)
-id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
-
-;??????????????????????????????????????????????????????????????????????????????
-IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-;tab to show (main_tab)
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')    
+  ENDIF
+  ;Build Main Base
+  MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
+    UNAME        = 'MAIN_BASE',$
+    SCR_XSIZE    = MainBaseSize[2],$
+    SCR_YSIZE    = MainBaseSize[3],$
+    XOFFSET      = MainBaseSize[0],$
+    YOFFSET      = MainBaseSize[1],$
+    TITLE        = MainBaseTitle,$
+    SPACE        = 0,$
+    XPAD         = 0,$
+    YPAD         = 2)
+    
+  ;get the color of the GUI to hide the widget_draw that will draw the label
+  sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
+  (*global).sys_color_face_3d = sys_color.face_3d
+  
+  ;attach global structure with widget ID of widget main base widget ID
+  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
+  
+  label = WIDGET_LABEL(MAIN_BASe,$
+    xoffset = 0,$
+    yoffset = 0,$
+    value = '')
+    
+  ;confirmation base
+  MakeGuiMainBase, MAIN_BASE, global
+  
+  WIDGET_CONTROL, /REALIZE, MAIN_BASE
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  
+  ;change color of background
+  id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='scale_draw_step2')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  ;LOADCT, 0,/SILENT
+  
+  ;display list of proposal for this instrument ---------------------------------
+  ListOfProposal = getListOfProposal((*global).instrument,$
+    UCAMS,$
+    MAIN_BASE)
+  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+  WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+  
+  ;??????????????????????????????????????????????????????????????????????????????
+  IF (DEBUGGING EQ 'yes' ) THEN BEGIN
+    ;tab to show (main_tab)
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
-;reduce tab1 combobox index selected
+    ;reduce tab1 combobox index selected
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
     set_value = sDebugging.reduce_tab1_proposal_combobox
     WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
-;tab to show (pixel_range_selection/scaling_tab)
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')    
+    ;tab to show (pixel_range_selection/scaling_tab)
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.step4_tab
-;step4/step2 tabs
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='step4_step2_tab')    
+    ;step4/step2 tabs
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='step4_step2_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.scaling_tab
-;ascii default path
+    ;ascii default path
     (*global).ascii_path = sDEBUGGING.ascii_path
-ENDIF
-;??????????????????????????????????????????????????????????????????????????????
-
-;refresh_plot_scale, MAIN_BASE=MAIN_BASE ;_plot    ;rmeove comments
-
-;==============================================================================
-; Date and Checking Packages routines =========================================
-;==============================================================================
-;Put date/time when user started application in first line of log book
-time_stamp = GenerateIsoTimeStamp()
-message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
-  message
-
-IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+  ENDIF
+  ;??????????????????????????????????????????????????????????????????????????????
+  
+  ;refresh_plot_scale, MAIN_BASE=MAIN_BASE ;_plot    ;rmeove comments
+  
+  ;==============================================================================
+  ; Date and Checking Packages routines =========================================
+  ;==============================================================================
+  ;Put date/time when user started application in first line of log book
+  time_stamp = GenerateIsoTimeStamp()
+  message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+  IDLsendToGeek_putLogBookText_fromMainBase, MAIN_BASE, 'log_book_text', $
+    message
+    
+  IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
-ENDIF
-
-;==============================================================================
-;==============================================================================
- ;send message to log current run of application
+  ENDIF
+  
+  ;==============================================================================
+  ;==============================================================================
+  ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 END
@@ -353,7 +355,7 @@ END
 
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
 

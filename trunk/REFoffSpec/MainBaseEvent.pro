@@ -79,8 +79,15 @@ PRO MAIN_BASE_event, Event
     select_full_line, Event  ;_reduce_step1
   END
   
+  ;table 
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_table_uname'): BEGIN
     select_full_line, Event  ;_reduce_step1
+  END
+  
+  ;Remove selected Run
+  WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+  'reduce_step1_remove_selection_button'): BEGIN
+  remove_selected_run, Event
   END
   
   ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111

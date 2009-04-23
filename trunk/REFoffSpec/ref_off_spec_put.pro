@@ -35,107 +35,113 @@
 ;------------------------------------------------------------------------------
 ;General routine to add a list to a widget_list
 PRO putList, Event, uname, value
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
 PRO putTextFieldValue, Event, uname, text, FORMAT=format
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-IF (N_ELEMENTS(FORMAT) NE 0) THEN BEGIN
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  IF (N_ELEMENTS(FORMAT) NE 0) THEN BEGIN
     text = STRING(text,FORMAT=format)
     text = STRCOMPRESS(text,/REMOVE_ALL)
-ENDIF
-WIDGET_CONTROL, id, SET_VALUE=text
+  ENDIF
+  WIDGET_CONTROL, id, SET_VALUE=text
 END
 
 ;------------------------------------------------------------------------------
 PRO putArrayTextFieldValue, Event, uname_array, text
-sz = N_ELEMENTS(uname_array)
-FOR i=0,(sz-1) DO BEGIN
+  sz = N_ELEMENTS(uname_array)
+  FOR i=0,(sz-1) DO BEGIN
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname_array[i])
     WIDGET_CONTROL, id, SET_VALUE=text
-ENDFOR
+  ENDFOR
 END
 
 ;------------------------------------------------------------------------------
 PRO putValueInTable, Event, uname, TableArray
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=TableArray
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=TableArray
 END
 
 ;------------------------------------------------------------------------------
 PRO putButtonValue, Event, uname, value
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
-;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
+;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC
 ;------------------------------------------------------------------------------
 ;Function that updates the list of the ascii file list found in the step2
 PRO putAsciiFileList, Event, value
-putList, Event, 'ascii_file_list', value
+  putList, Event, 'ascii_file_list', value
 END
 
 ;------------------------------------------------------------------------------
-PRO putListOfFilesTransparency, Event, list_OF_files 
-putList, Event, 'transparency_file_list', list_OF_files
+PRO putListOfFilesTransparency, Event, list_OF_files
+  putList, Event, 'transparency_file_list', list_OF_files
 END
 
 ;------------------------------------------------------------------------------
-PRO putListOfFilesShifting, Event, list_OF_files 
-putList, Event, 'active_file_droplist_shifting', list_OF_files
+PRO putListOfFilesShifting, Event, list_OF_files
+  putList, Event, 'active_file_droplist_shifting', list_OF_files
 END
 
 ;------------------------------------------------------------------------------
 PRO putXminStep4Step1Value, Event, value
-putTextFieldValue, Event, 'selection_info_xmin_value', $
-  STRCOMPRESS(value,/REMOVE_ALL)
+  putTextFieldValue, Event, 'selection_info_xmin_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 PRO putYminStep4Step1Value, Event, value
-putTextFieldValue, Event, 'selection_info_ymin_value', $
-  STRCOMPRESS(value,/REMOVE_ALL)
+  putTextFieldValue, Event, 'selection_info_ymin_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 PRO putXmaxStep4Step1Value, Event, value
-putTextFieldValue, Event, 'selection_info_xmax_value', $
-  STRCOMPRESS(value,/REMOVE_ALL)
+  putTextFieldValue, Event, 'selection_info_xmax_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 PRO putYmaxStep4Step1Value, Event, value
-putTextFieldValue, Event, 'selection_info_ymax_value', $
-  STRCOMPRESS(value,/REMOVE_ALL)
+  putTextFieldValue, Event, 'selection_info_ymax_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 PRO put_step4_step2_step2_lambda, Event, lambda_min, lambda_max
-putTextFieldValue, Event,'step4_2_2_lambda1_text_field', $
-  STRCOMPRESS(lambda_min,/REMOVE_ALL)
-putTextFieldValue, Event,'step4_2_2_lambda2_text_field', $
-  STRCOMPRESS(lambda_max,/REMOVE_ALL)
+  putTextFieldValue, Event,'step4_2_2_lambda1_text_field', $
+    STRCOMPRESS(lambda_min,/REMOVE_ALL)
+  putTextFieldValue, Event,'step4_2_2_lambda2_text_field', $
+    STRCOMPRESS(lambda_max,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 PRO putMessageInCreateStatus, Event, text
-putTextInTextField, Event, 'step6_status_text_field', text
+  putTextInTextField, Event, 'step6_status_text_field', text
 END
 
 ;------------------------------------------------------------------------------
 PRO addMessageInCreateStatus, Event, text
-addTextInTextField, Event, 'step6_status_text_field', text
+  addTextInTextField, Event, 'step6_status_text_field', text
 END
 
 ;------------------------------------------------------------------------------
 PRO ReplaceTextInCreateStatus, Event, OLD_STRING, NEW_STRING
-ReplaceTextInTextField, Event, $
-  'step6_status_text_field', $
-  OLD_STRING, $
-  NEW_STRING
+  ReplaceTextInTextField, Event, $
+    'step6_status_text_field', $
+    OLD_STRING, $
+    NEW_STRING
 END
 
-
+;------------------------------------------------------------------------------
+PRO putTableValue, Event, new_table, uname
+  new_y = (SIZE(new_table))(2)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, TABLE_YSIZE = new_y
+  WIDGET_CONTROL, id, SET_VALUE = New_table
+END
