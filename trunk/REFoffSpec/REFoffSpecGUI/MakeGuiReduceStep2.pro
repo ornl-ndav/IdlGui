@@ -34,25 +34,70 @@
 
 PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 
-;******************************************************************************
-;            DEFINE STRUCTURE
-;******************************************************************************
+  ;******************************************************************************
+  ;            DEFINE STRUCTURE
+  ;******************************************************************************
 
-sBase = { size:  stab.size,$
-          uname: 'reduce_step2_tab_base',$
-          title: TabTitles.step2}
-
-;******************************************************************************
-;            BUILD GUI
-;******************************************************************************
-
-Base = WIDGET_BASE(REDUCE_TAB,$
-                   UNAME     = sBase.uname,$
-                   XOFFSET   = sBase.size[0],$
-                   YOFFSET   = sBase.size[1],$
-                   SCR_XSIZE = sBase.size[2],$
-                   SCR_YSIZE = sBase.size[3],$
-                   TITLE     = sBase.title)
-
-
+  sBase = { size:  stab.size,$
+    uname: 'reduce_step2_tab_base',$
+    title: TabTitles.step2}
+    
+  ;******************************************************************************
+  ;            BUILD GUI
+  ;******************************************************************************
+    
+  Base = WIDGET_BASE(REDUCE_TAB,$
+    UNAME     = sBase.uname,$
+    XOFFSET   = sBase.size[0],$
+    YOFFSET   = sBase.size[1],$
+    SCR_XSIZE = sBase.size[2],$
+    SCR_YSIZE = sBase.size[3],$
+    TITLE     = sBase.title)
+    
+    ;title of normalization input frame
+    label = WIDGET_LABEL(Base,$
+    XOFFSET = 20,$
+    YOFFSET = 10,$
+    VALUE = 'Normalization File Input')
+    
+  ;Loand normalization
+  base_row1 = WIDGET_BASE(Base,$
+    /ROW,$
+    XOFFSET = 10,$
+    YOFFSET = 20,$
+    FRAME = 1)
+    
+  col1 = WIDGET_BASE(base_row1,$
+    /COLUMN)
+    
+  browse_button = WIDGET_BUTTON(col1,$
+    UNAME = 'reduce_step2_browse_button',$
+    VALUE = 'BROWSE ...')
+    
+  value = WIDGET_LABEL(col1,$
+    VALUE = 'OR')
+    
+  row2 = WIDGET_BASE(col1,$
+    /ROW)
+    
+  value = WIDGET_LABEL(row2,$
+    VALUE = 'Run(s) #:')
+    
+  text = WIDGET_TEXT(row2,$
+    VALUE = '',$
+    UNAME = 'reduce_step2_normalization_text_field',$
+    XSIZE = 20)
+    
+  value = WIDGET_LABEL(row2,$
+    VALUE = '(ex: 1245,1345-1347,1349)')
+    
+  label = WIDGET_LABEL(row2,$
+    VALUE = '     List of Proposal:')
+  ComboBox = WIDGET_COMBOBOX(Row2,$
+    VALUE = '                         ',$
+    UNAME = 'reduce_tab1_list_of_proposal')
+    
+    
+    
+    
 END
