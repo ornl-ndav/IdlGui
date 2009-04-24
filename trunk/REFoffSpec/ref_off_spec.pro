@@ -107,6 +107,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 3,$
     
+    reduce_step2_polarization_mode1_disable: 'REFoffSpec_images/polarization_mode1_disable.png',$
+    reduce_step2_polarization_mode1_enable: 'REFoffSpec_images/polarization_mode1_enable.png',$
+    reduce_step2_polarization_mode2_disable: 'REFoffSpec_images/polarization_mode2_disable.png',$
+    reduce_step2_polarization_mode2_enable: 'REFoffSpec_images/polarization_mode2_enable.png',$
+    
     working_path: '~/results/',$
     
     step5_x0: 0,$ ;event.x initial
@@ -348,6 +353,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
+  
+  display_buttons, MAIN_BASE=main_base, ACTIVATE=0, global
   
   ;==============================================================================
   ;==============================================================================
