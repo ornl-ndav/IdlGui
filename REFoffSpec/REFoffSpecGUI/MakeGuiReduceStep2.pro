@@ -138,6 +138,9 @@ FRAME = 1,$
 
 button1 = WIDGET_draw(col2,$
 uname = 'reduce_step2_polarization_mode1_draw',$
+/BUTTON_EVENTS,$
+/MOTION_EVENTS,$
+/TRACKING_EVENTS,$
 SCR_XSIZE = 200,$
 SCR_YSIZE = 145)
     
@@ -146,6 +149,9 @@ SCR_YSIZE = 145)
     
 button2 = WIDGET_draw(col2,$
 uname = 'reduce_step2_polarization_mode2_draw',$
+/BUTTON_EVENTS,$
+/MOTION_EVENTS,$
+/TRACKING_EVENTS,$
 SCR_XSIZE = 200,$
 SCR_YSIZE = 145)
     
