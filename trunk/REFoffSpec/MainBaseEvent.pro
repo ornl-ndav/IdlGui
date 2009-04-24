@@ -53,7 +53,11 @@ PRO MAIN_BASE_event, Event
     END
     
     ;111111111111111111111111111111111111111111111111111111111111111111111111111111
-    
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
+      reduce_tab_event, Event ;_eventcb
+    END
+
     ;11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111
     
     ;Browse button
@@ -101,12 +105,12 @@ PRO MAIN_BASE_event, Event
           CATCH,/CANCEL
           IF (event.press EQ 1) THEN BEGIN
             ;          status_buttons = (*global).status_buttons
-;            IF (status_buttons[2] EQ 0) THEN BEGIN
-              display_buttons, MAIN_BASE=MAIN_BASE, $
-                EVENT=EVENT,$
-                ACTIVATE=0,$
-                global
- ;           ENDIF ;end of status_buttons[2]
+            ;            IF (status_buttons[2] EQ 0) THEN BEGIN
+            display_buttons, MAIN_BASE=MAIN_BASE, $
+              EVENT=EVENT,$
+              ACTIVATE=0,$
+              global
+            (*global).reduce_step2_polarization_mode_status = 0
           ENDIF
         ENDIF ELSE BEGIN
           IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -114,7 +118,6 @@ PRO MAIN_BASE_event, Event
           ENDIF ELSE BEGIN
             standard = 31
           ENDELSE
-          print, 'here'
           DEVICE, CURSOR_STANDARD=standard
         ;        (*global).previous_button_clicked = 3
         ENDELSE
@@ -128,12 +131,12 @@ PRO MAIN_BASE_event, Event
             CATCH,/CANCEL
             IF (event.press EQ 1) THEN BEGIN
               ;          status_buttons = (*global).status_buttons
-;              IF (status_buttons[2] EQ 0) THEN BEGIN
-                display_buttons, MAIN_BASE=MAIN_BASE, $
-                  EVENT=EVENT,$
-                  ACTIVATE=1,$
-                  global
- ;             ENDIF ;end of status_buttons[2]
+              ;              IF (status_buttons[2] EQ 0) THEN BEGIN
+              display_buttons, MAIN_BASE=MAIN_BASE, $
+                EVENT=EVENT,$
+                ACTIVATE=1,$
+                global
+              (*global).reduce_step2_polarization_mode_status = 1
             ENDIF
           ENDIF ELSE BEGIN
             IF (Event.ENTER EQ 1) THEN BEGIN ;enter
