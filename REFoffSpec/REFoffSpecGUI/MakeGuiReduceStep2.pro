@@ -53,16 +53,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
-  
-    xoff = 50
     
+  xoff = 40
+  
   ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
     XOFFSET = 30+xoff,$
     YOFFSET = 5,$
     VALUE = 'Normalization File Input')
     
-      ;title of normalization input frame
+  ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
     XOFFSET = 780+xoff,$
     YOFFSET = 5,$
@@ -70,41 +70,41 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;first Row
   main_row1 = WIDGET_BASE(Base,$
-  XOFFSET = 10,$
-  YOFFSET = 20,$
-  /ROW)
-
+    XOFFSET = 10,$
+    YOFFSET = 20,$
+    /ROW)
+    
   ;space
   space = WIDGET_LABEL(main_row1,$
-  VALUE = '      ')
+    VALUE = '      ')
     
   ;Loand normalization
   base_row1 = WIDGET_BASE(main_row1,$
     /ROW,$
-;    XOFFSET = 10,$
-;    YOFFSET = 20,$
-    FRAME = 1)
+    ;    XOFFSET = 10,$
+    ;    YOFFSET = 20,$
+    FRAME = 5)
     
   col1 = WIDGET_BASE(base_row1,$
     /COLUMN)
     
   value = WIDGET_LABEL(col1,$
     VALUE = '')
-
+    
   value = WIDGET_LABEL(col1,$
     VALUE = '')
-
+    
   browse_button = WIDGET_BUTTON(col1,$
     UNAME = 'reduce_step2_browse_button',$
     VALUE = 'BROWSE ...')
     
   value = WIDGET_LABEL(col1,$
     VALUE = '')
-
+    
   value = WIDGET_LABEL(col1,$
     VALUE = 'OR')
     
-      value = WIDGET_LABEL(col1,$
+  value = WIDGET_LABEL(col1,$
     VALUE = '')
     
   row2 = WIDGET_BASE(col1,$
@@ -127,33 +127,95 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                         ',$
     UNAME = 'reduce_tab1_list_of_proposal')
     
-;space between base of first row
-    space = WIDGET_LABEL(main_row1,$
+  ;space between base of first row
+  space = WIDGET_LABEL(main_row1,$
     VALUE = '      ')
     
-;Polarization buttons/base
-col2 = WIDGET_BASE(main_row1,$
-FRAME = 1,$
-/ROW)
-
-button1 = WIDGET_draw(col2,$
-uname = 'reduce_step2_polarization_mode1_draw',$
-/BUTTON_EVENTS,$
-/MOTION_EVENTS,$
-/TRACKING_EVENTS,$
-SCR_XSIZE = 200,$
-SCR_YSIZE = 145)
+  ;Polarization buttons/base
+  col2 = WIDGET_BASE(main_row1,$
+    FRAME = 5,$
+    /ROW)
     
-    space = WIDGET_LABEL(col2,$
+  button1 = WIDGET_DRAW(col2,$
+    uname = 'reduce_step2_polarization_mode1_draw',$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 145)
+    
+  space = WIDGET_LABEL(col2,$
     VALUE = '')
     
-button2 = WIDGET_draw(col2,$
-uname = 'reduce_step2_polarization_mode2_draw',$
-/BUTTON_EVENTS,$
-/MOTION_EVENTS,$
-/TRACKING_EVENTS,$
-SCR_XSIZE = 200,$
-SCR_YSIZE = 145)
+  button2 = WIDGET_DRAW(col2,$
+    uname = 'reduce_step2_polarization_mode2_draw',$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 145)
     
+  ;Data/Normalization/Spin state -------------------------------------------
+  xyoff = [50,210]
+  sLabel = { size: [XYoff[0],$
+    XYoff[1]],$
+    value: 'Data Run #       Normalization       Spin State            ROI'}
     
+  label = WIDGET_LABEL(Base,$
+    XOFFSET = sLabel.size[0],$
+    YOFFSET = sLabel.size[1],$
+    VALUE   = sLabel.value)
+    
+  offset = 35
+  yoff = offset + sLabel.size[1]
+  for i=0,10 do begin
+    uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
+    
+    value1 = WIDGET_LABEL(Base,$
+      XOFFSET = XYoff[0],$
+      YOFFSET = yoff,$
+      value   = '1345',$
+      SCR_XSIZE = 50,$
+      uname   = uname)
+      
+    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i)
+    value2 = WIDGET_LABEL(Base,$
+      XOFFSET = XYoff[0]+115,$
+      YOFFSET = yoff,$
+      value = '1500',$
+      SCR_XSIZE = 50,$
+      uname = uname)
+      
+      uname = 'reduce_tab2_spin_value' + strcompress(i)
+      spin = WIDGET_LABEL(Base,$
+      XOFFSET = XYoff[0]+225,$
+      YOFFSET = yoff,$
+      SCR_XSIZE = 50,$
+      value = 'Off-Off',$
+      uname = uname)
+      
+      uname = 'reduce_tab2_roi_value' + strcompress(i)
+      roi = widget_label(Base,$
+      XOFFSET = XYoff[0]+330,$
+      YOFFSET = yoff,$
+      SCR_XSIZE = 300,$
+      /ALIGN_LEFT,$
+      value = '/SNS/REFfdfdfdfdfdfdfdfdfdfdfdfffdfdfdfdfdfsadfdfafdfadfadfdafdsafdasfadsfadsfasdfasf',$
+      uname = uname)
+      
+    yoff += offset
+  ENDFOR
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 END
