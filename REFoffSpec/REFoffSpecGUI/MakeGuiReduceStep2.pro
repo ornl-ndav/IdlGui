@@ -53,29 +53,59 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
+  
+    xoff = 50
     
-    ;title of normalization input frame
-    label = WIDGET_LABEL(Base,$
-    XOFFSET = 20,$
-    YOFFSET = 10,$
+  ;title of normalization input frame
+  label = WIDGET_LABEL(Base,$
+    XOFFSET = 30+xoff,$
+    YOFFSET = 5,$
     VALUE = 'Normalization File Input')
     
+      ;title of normalization input frame
+  label = WIDGET_LABEL(Base,$
+    XOFFSET = 780+xoff,$
+    YOFFSET = 5,$
+    VALUE = 'Polarization Mode')
+    
+  ;first Row
+  main_row1 = WIDGET_BASE(Base,$
+  XOFFSET = 10,$
+  YOFFSET = 20,$
+  /ROW)
+
+  ;space
+  space = WIDGET_LABEL(main_row1,$
+  VALUE = '      ')
+    
   ;Loand normalization
-  base_row1 = WIDGET_BASE(Base,$
+  base_row1 = WIDGET_BASE(main_row1,$
     /ROW,$
-    XOFFSET = 10,$
-    YOFFSET = 20,$
+;    XOFFSET = 10,$
+;    YOFFSET = 20,$
     FRAME = 1)
     
   col1 = WIDGET_BASE(base_row1,$
     /COLUMN)
     
+  value = WIDGET_LABEL(col1,$
+    VALUE = '')
+
+  value = WIDGET_LABEL(col1,$
+    VALUE = '')
+
   browse_button = WIDGET_BUTTON(col1,$
     UNAME = 'reduce_step2_browse_button',$
     VALUE = 'BROWSE ...')
     
   value = WIDGET_LABEL(col1,$
+    VALUE = '')
+
+  value = WIDGET_LABEL(col1,$
     VALUE = 'OR')
+    
+      value = WIDGET_LABEL(col1,$
+    VALUE = '')
     
   row2 = WIDGET_BASE(col1,$
     /ROW)
@@ -97,7 +127,27 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                         ',$
     UNAME = 'reduce_tab1_list_of_proposal')
     
+;space between base of first row
+    space = WIDGET_LABEL(main_row1,$
+    VALUE = '      ')
     
+;Polarization buttons/base
+col2 = WIDGET_BASE(main_row1,$
+FRAME = 1,$
+/ROW)
+
+button1 = WIDGET_draw(col2,$
+uname = 'reduce_step2_polarization_mode1_draw',$
+SCR_XSIZE = 200,$
+SCR_YSIZE = 145)
+    
+    space = WIDGET_LABEL(col2,$
+    VALUE = '')
+    
+button2 = WIDGET_draw(col2,$
+uname = 'reduce_step2_polarization_mode2_draw',$
+SCR_XSIZE = 200,$
+SCR_YSIZE = 145)
     
     
 END

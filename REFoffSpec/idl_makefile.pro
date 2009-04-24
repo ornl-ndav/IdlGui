@@ -71,6 +71,7 @@ cd, CurrentFolder
 .run ref_off_spec_step5_rescale.pro
 .run ref_off_spec_refresh_recap_plot.pro
 .run ref_off_spec_step6.pro
+.run ref_off_spec_display_buttons.pro
 
 ;main functions
 .run MainBaseEvent.pro
