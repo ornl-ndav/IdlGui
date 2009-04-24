@@ -101,14 +101,17 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     ACTIVATE=activate,$
     global
     
+    activate_1 = 0^activate
+    activate_2 = activate
+    
   display_reduce_step2_polarization_mode1, MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
-    ACTIVATE=activate,$
+    ACTIVATE=activate_1,$
     global
     
   display_reduce_step2_polarization_mode2, MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
-    ACTIVATE=activate,$
+    ACTIVATE=activate_2,$
     global
     
 END
