@@ -65,6 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          6: Options,
   ;          7:Log Book
   sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
+    reduce_tab: 1,$
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -315,6 +316,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;tab to show (main_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+    ;reduce tab
+    id_reduce = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id_reduce, SET_TAB_CURRENT=1
     ;reduce tab1 combobox index selected
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
     set_value = sDebugging.reduce_tab1_proposal_combobox
