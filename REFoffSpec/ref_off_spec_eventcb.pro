@@ -52,6 +52,30 @@ PRO  preview_ascii_file, Event ;_eventcb
 END
 
 ;-----------------------------------------------------------------------------
+PRO  reduce_tab_event, Event
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevReduceTabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (currTabSelect) OF
+      0:
+      1:BEGIN
+      status = (*global).reduce_step2_polarization_mode_status
+      display_buttons, EVENT=EVENT, ACTIVATE=status, global
+    END
+    2:
+    ELSE:
+  ENDCASE
+  (*global).PrevReduceTabSelect = CurrTabSelect
+ENDIF
+
+END
+
+;-----------------------------------------------------------------------------
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
   ;get global structure
@@ -65,6 +89,17 @@ PRO tab_event, Event
     CASE (CurrTabSelect) OF
     
       0: BEGIN ;step1 (reduction)
+        reduce_tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab')
+        CurrReduceTabSelect = WIDGET_INFO(reduce_tab_id,/TAB_CURRENT)
+        CASE (CurrReduceTabSelect) OF
+          0:
+          1: BEGIN
+            status = (*global).reduce_step2_polarization_mode_status
+            display_buttons, EVENT=EVENT, ACTIVATE=status, global
+          END
+          2:
+          ELSE:
+        ENDCASE
       END
       
       1: BEGIN ;load
@@ -98,8 +133,8 @@ PRO tab_event, Event
             refresh_step4_step1_plot, Event ;_scaling
             checkScalingGui, Event ;_gui
           ENDIF ELSE BEGIN    ;scaling_step2
-      ;    scaling_tab_event, Event
-      
+            ;    scaling_tab_event, Event
+          
             display_step4_step2_step2_selection, $
               Event         ;scaling_step2_step1
             plotLambdaSelected, Event ;scaling_step2_step2

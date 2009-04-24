@@ -107,10 +107,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 3,$
     
-    reduce_step2_polarization_mode1_disable: 'REFoffSpec_images/polarization_mode1_disable.png',$
-    reduce_step2_polarization_mode1_enable: 'REFoffSpec_images/polarization_mode1_enable.png',$
-    reduce_step2_polarization_mode2_disable: 'REFoffSpec_images/polarization_mode2_disable.png',$
-    reduce_step2_polarization_mode2_enable: 'REFoffSpec_images/polarization_mode2_enable.png',$
+    reduce_step2_polarization_mode1_disable: $
+    'REFoffSpec_images/polarization_mode1_disable.png',$
+    reduce_step2_polarization_mode1_enable: $
+    'REFoffSpec_images/polarization_mode1_enable.png',$
+    reduce_step2_polarization_mode2_disable: $
+    'REFoffSpec_images/polarization_mode2_disable.png',$
+    reduce_step2_polarization_mode2_enable: $
+    'REFoffSpec_images/polarization_mode2_enable.png',$
+    reduce_step2_polarization_mode_status: 0,$
+    PrevReduceTabSelect: 0,$
     
     working_path: '~/results/',$
     
@@ -323,7 +329,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
     ;reduce tab
     id_reduce = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id_reduce, SET_TAB_CURRENT=1
+    WIDGET_CONTROL, id_reduce, SET_TAB_CURRENT=sDebugging.tab.reduce_tab
+    (*global).PrevReduceTabSelect = sDebugging.tab.reduce_tab
     ;reduce tab1 combobox index selected
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
     set_value = sDebugging.reduce_tab1_proposal_combobox
