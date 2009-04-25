@@ -168,10 +168,10 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = 109)
     
   ;-------------------------------------------------------------------------------
-  xyoff = [50,210]
+  xyoff = [8,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
-    value: 'Data Run #     Normalization         Spin State            ROI'}
+    value: 'Data Run #     Normalization       Spin State            ROI'}
     
   label = WIDGET_LABEL(Base,$
     XOFFSET = sLabel.size[0],$
@@ -179,21 +179,33 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE   = sLabel.value)
     
   offset = 35
+  xoff = 50
   yoff = offset + sLabel.size[1]
-  for i=0,10 do begin
+  label_offset = 4
+  FOR i=0,10 DO BEGIN
+
+    uname = 'reduce_tab2_data_recap_base_#' + strcompress(i)
+    row_base = WIDGET_BASE(Base,$
+    uname = uname,$
+    xoffset = XYoff[0],$
+    yoffset = yoff,$
+    scr_ysize = 30,$
+    scr_xsize = 1250,$
+    map = 1,$
+    frame = 1)
+  
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
-    
-    value1 = WIDGET_LABEL(Base,$
-      XOFFSET = XYoff[0],$
-      YOFFSET = yoff,$
+    value1 = WIDGET_LABEL(row_Base,$
       value   = '1345',$
+      xoffset = 0,$
+      yoffset = label_offset,$
       SCR_XSIZE = 50,$
       uname   = uname)
       
     uname = 'reduce_tab2_norm_base'
-    combo_base = WIDGET_BASE(Base,$
-      XOFFSET = XYoff[0]+80,$
-      YOFFSET = yoff,$
+    combo_base = WIDGET_BASE(row_Base,$
+      XOFFSET = xyoff[0]+65,$
+      YOFFSET = 0,$
       uname = uname+ strcompress(i),$
       map = 1)
       
@@ -203,18 +215,19 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       uname = uname + strcompress(i))
 
     uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i)
-    value2 = WIDGET_LABEL(Base,$
-      XOFFSET = XYoff[0]+115,$
-      YOFFSET = yoff,$
+    value2 = WIDGET_LABEL(row_Base,$
+      XOFFSET = XYoff[0]+100,$
+      YOFFSET = label_offset,$
+      /align_left,$
       value = '1500',$
       SCR_XSIZE = 50,$
       uname = uname)
       
     ;spin state widget_base and widget_combobox
     uname = 'reduce_tab2_spin_combo_base'
-    combo_base = WIDGET_BASE(Base,$
-      XOFFSET = XYoff[0]+205,$
-      YOFFSET = yoff,$
+    combo_base = WIDGET_BASE(row_Base,$
+      XOFFSET = XYoff[0]+180,$
+      YOFFSET = 0,$
       uname = uname+ strcompress(i),$
       map = 0)
       
@@ -225,20 +238,21 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     ;spin state widget_label
     uname = 'reduce_tab2_spin_value' + strcompress(i)
-    spin = WIDGET_LABEL(Base,$
-      XOFFSET = XYoff[0]+225,$
-      YOFFSET = yoff,$
+    spin = WIDGET_LABEL(row_Base,$
+      XOFFSET = XYoff[0]+210,$
+      YOFFSET = label_offset,$
       SCR_XSIZE = 50,$
       value = 'Off-Off',$
+      /align_left,$
       uname = uname)
       
     uname = 'reduce_tab2_roi_value' + strcompress(i)
-    roi = widget_label(Base,$
-      XOFFSET = XYoff[0]+330,$
-      YOFFSET = yoff,$
-      SCR_XSIZE = 300,$
+    roi = widget_label(row_Base,$
+      XOFFSET = XYoff[0]+310,$
+      YOFFSET = label_offset,$
+      SCR_XSIZE = 500,$
       /ALIGN_LEFT,$
-      value = '/SNS/REFfdfdfdfdfdfdfdfdfdfdfdfffdfdfdfdfdfsadfdfafdfadfadfdafdsafdasfadsfadsfasdfasf',$
+      value = '/SNS/users/j35/results/REF_M_5001_roi.dat',$
       uname = uname)
       
     yoff += offset
