@@ -81,8 +81,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;Loand normalization
   base_row1 = WIDGET_BASE(main_row1,$
     /ROW,$
-    ;    XOFFSET = 10,$
-    ;    YOFFSET = 20,$
+    SCR_YSIZE = 150,$
     FRAME = 5)
     
   col1 = WIDGET_BASE(base_row1,$
@@ -136,13 +135,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     FRAME = 5,$
     /ROW)
     
-  button1 = WIDGET_DRAW(col2,$
+  col2_col1 = widget_base(col2,$
+  /column)
+    
+  button1 = WIDGET_DRAW(col2_col1,$
     uname = 'reduce_step2_polarization_mode1_draw',$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 145)
+    SCR_XSIZE = 150,$
+    SCR_YSIZE = 109)
+    
+    ;base of the spin state combobox
+    base_combo = widget_base(col2_col1,$
+    /ALIGN_CENTER,$
+    uname = 'reduce_step2_spin_state_combobox_base',$
+    /ROW)
+    
+    spinStates = WIDGET_COMBOBOX(base_combo,$
+    value = ['Off-Off','Off-On','On-Off','On-On'],$
+    uname = 'reduce_step2_spin_state_combobox')
     
   space = WIDGET_LABEL(col2,$
     VALUE = '')
@@ -152,8 +164,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
-    SCR_XSIZE = 200,$
-    SCR_YSIZE = 145)
+    SCR_XSIZE = 150,$
+    SCR_YSIZE = 109)
     
   ;Data/Normalization/Spin state -------------------------------------------
   xyoff = [50,210]

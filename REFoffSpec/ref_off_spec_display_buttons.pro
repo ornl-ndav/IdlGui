@@ -112,7 +112,7 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
   display_reduce_step2_polarization_mode2, MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
     ACTIVATE=activate_2,$
-    global
+    global  
     
 END
 
