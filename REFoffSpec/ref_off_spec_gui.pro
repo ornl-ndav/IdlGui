@@ -68,6 +68,14 @@ PRO MapBase, Event, uname, map_status
   WIDGET_CONTROL, id, MAP=map_status
 END
 
+;..............................................................................
+PRO MapList, Event, uname_list, map_status
+  sz = N_ELEMENTS(uname_list)
+  FOR i=0,(sz-1) DO BEGIN
+    MapBase, Event, uname_list[i], map_status
+  ENDFOR
+END
+
 ;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC
 ;------------------------------------------------------------------------------
