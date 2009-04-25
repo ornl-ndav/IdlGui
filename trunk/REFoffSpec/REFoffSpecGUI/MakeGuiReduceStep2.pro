@@ -204,7 +204,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     XOFFSET = XYoff[0]+205,$
     YOFFSET = yoff,$
     uname = uname+ strcompress(i),$
-    map = 1)
+    map = 0)
     
     uname = 'reduce_tab2_spin_combo'
     combo = widget_combobox(combo_base,$

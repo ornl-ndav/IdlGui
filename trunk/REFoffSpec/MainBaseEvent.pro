@@ -112,6 +112,7 @@ PRO MAIN_BASE_event, Event
               global
             (*global).reduce_step2_polarization_mode_status = 0
             activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
+            activate_norm_combobox, Event, status=0
           ENDIF
         ENDIF ELSE BEGIN
           IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -138,7 +139,8 @@ PRO MAIN_BASE_event, Event
                 ACTIVATE=1,$
                 global
               (*global).reduce_step2_polarization_mode_status = 1
-                          activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
+              activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
+              activate_norm_combobox, Event, status=1
             ENDIF
           ENDIF ELSE BEGIN
             IF (Event.ENTER EQ 1) THEN BEGIN ;enter
