@@ -154,7 +154,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   spinStates = WIDGET_COMBOBOX(base_combo,$
     value = ['Off-Off','Off-On','On-Off','On-On'],$
-    uname = 'reduce_step2_spin_state_combobox')
+    uname = 'reduce_step2_mode1_spin_state_combobox')
     
   space = WIDGET_LABEL(col2,$
     VALUE = '')
@@ -167,7 +167,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 150,$
     SCR_YSIZE = 109)
     
-  ;Data/Normalization/Spin state -------------------------------------------
+  ;-------------------------------------------------------------------------------
   xyoff = [50,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
@@ -198,20 +198,20 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       SCR_XSIZE = 50,$
       uname = uname)
       
-      ;spin state widget_base and widget_combobox
+    ;spin state widget_base and widget_combobox
     uname = 'reduce_tab2_spin_combo_base'
     combo_base = WIDGET_BASE(Base,$
-    XOFFSET = XYoff[0]+205,$
-    YOFFSET = yoff,$
-    uname = uname+ strcompress(i),$
-    map = 0)
-    
+      XOFFSET = XYoff[0]+205,$
+      YOFFSET = yoff,$
+      uname = uname+ strcompress(i),$
+      map = 0)
+      
     uname = 'reduce_tab2_spin_combo'
     combo = widget_combobox(combo_base,$
-    value = ['Off-Off','Off-On','On-Off','On-On'],$
-    uname = uname + strcompress(i))
+      value = ['Off-Off','Off-On','On-Off','On-On'],$
+      uname = uname + strcompress(i))
       
-      ;spin state widget_label
+    ;spin state widget_label
     uname = 'reduce_tab2_spin_value' + strcompress(i)
     spin = WIDGET_LABEL(Base,$
       XOFFSET = XYoff[0]+225,$

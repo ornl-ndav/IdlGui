@@ -43,3 +43,19 @@ PRO activate_norm_combobox, Event, status=status
   MapList, Event, uname_list, status
   
 END
+
+;------------------------------------------------------------------------------
+PRO mode1_spin_state_combobox_changed, Event
+
+value = getComboListSelectedValue(Event,$
+'reduce_step2_mode1_spin_state_combobox')
+
+  uname_list = STRARR(11)
+  uname_base = 'reduce_tab2_spin_value'
+  for i=0,10 do begin
+    uname_list[i] = uname_base + strcompress(i)
+  ENDFOR
+
+put_list_value, Event, uname_list, value
+
+END
