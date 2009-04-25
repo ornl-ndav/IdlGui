@@ -136,7 +136,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   col2_col1 = widget_base(col2,$
-  /column)
+    /column)
     
   button1 = WIDGET_DRAW(col2_col1,$
     uname = 'reduce_step2_polarization_mode1_draw',$
@@ -146,13 +146,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 150,$
     SCR_YSIZE = 109)
     
-    ;base of the spin state combobox
-    base_combo = widget_base(col2_col1,$
+  ;base of the spin state combobox
+  base_combo = widget_base(col2_col1,$
     /ALIGN_CENTER,$
     uname = 'reduce_step2_spin_state_combobox_base',$
     /ROW)
     
-    spinStates = WIDGET_COMBOBOX(base_combo,$
+  spinStates = WIDGET_COMBOBOX(base_combo,$
     value = ['Off-Off','Off-On','On-Off','On-On'],$
     uname = 'reduce_step2_spin_state_combobox')
     
@@ -198,16 +198,30 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       SCR_XSIZE = 50,$
       uname = uname)
       
-      uname = 'reduce_tab2_spin_value' + strcompress(i)
-      spin = WIDGET_LABEL(Base,$
+      ;spin state widget_base and widget_combobox
+    uname = 'reduce_tab2_spin_combo_base'
+    combo_base = WIDGET_BASE(Base,$
+    XOFFSET = XYoff[0]+205,$
+    YOFFSET = yoff,$
+    uname = uname+ strcompress(i),$
+    map = 1)
+    
+    uname = 'reduce_tab2_spin_combo'
+    combo = widget_combobox(combo_base,$
+    value = ['Off-Off','Off-On','On-Off','On-On'],$
+    uname = uname + strcompress(i))
+      
+      ;spin state widget_label
+    uname = 'reduce_tab2_spin_value' + strcompress(i)
+    spin = WIDGET_LABEL(Base,$
       XOFFSET = XYoff[0]+225,$
       YOFFSET = yoff,$
       SCR_XSIZE = 50,$
       value = 'Off-Off',$
       uname = uname)
       
-      uname = 'reduce_tab2_roi_value' + strcompress(i)
-      roi = widget_label(Base,$
+    uname = 'reduce_tab2_roi_value' + strcompress(i)
+    roi = widget_label(Base,$
       XOFFSET = XYoff[0]+330,$
       YOFFSET = yoff,$
       SCR_XSIZE = 300,$
