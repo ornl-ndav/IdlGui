@@ -53,11 +53,11 @@ PRO MAIN_BASE_event, Event
     END
     
     ;111111111111111111111111111111111111111111111111111111111111111111111111111111
-
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
       reduce_tab_event, Event ;_eventcb
     END
-
+    
     ;11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111 tab1 11111111
     
     ;Browse button
@@ -111,6 +111,7 @@ PRO MAIN_BASE_event, Event
               ACTIVATE=0,$
               global
             (*global).reduce_step2_polarization_mode_status = 0
+            activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
           ENDIF
         ENDIF ELSE BEGIN
           IF (Event.ENTER EQ 1) THEN BEGIN ;enter
@@ -137,6 +138,7 @@ PRO MAIN_BASE_event, Event
                 ACTIVATE=1,$
                 global
               (*global).reduce_step2_polarization_mode_status = 1
+                          activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
             ENDIF
           ENDIF ELSE BEGIN
             IF (Event.ENTER EQ 1) THEN BEGIN ;enter
