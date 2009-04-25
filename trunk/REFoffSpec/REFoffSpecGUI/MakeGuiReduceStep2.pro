@@ -62,10 +62,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 5,$
     VALUE = 'Normalization File Input')
     
+    x_norm = 720
   hidden_base = widget_base(Base,$
-    xoffset = 780+xoff-5,$
+    xoffset = x_norm+xoff,$
     yoffset = 5,$
-    map = 0,$
+    map = 1,$
+    frame = 0,$
+    xsize = 130,$
+    ysize = 15,$
+    uname = 'reduce_step2_list_of_normalization_file_hidden_base')
+    
+  ;title of list of normaliation file
+  label = WIDGET_LABEL(Base,$
+    XOFFSET = x_norm+xoff,$
+    YOFFSET = 5,$
+    VALUE = 'Normalization Files')
+
+  hidden_base = widget_base(Base,$
+    xoffset = 845+xoff,$
+    yoffset = 5,$
+    map = 1,$
     frame = 0,$
     xsize = 130,$
     ysize = 15,$
@@ -76,7 +92,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     XOFFSET = 870+xoff,$
     YOFFSET = 5,$
     VALUE = 'Polarization Mode')
-    
+
+;##############################################################################    
   ;first Row
   main_row1 = WIDGET_BASE(Base,$
     XOFFSET = 0,$
@@ -144,6 +161,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     uname = 'reduce_step2_list_of_norm_files_base',$
     ;    scr_xsize = 200,$
     /column,$
+    map=0,$
     FRAME=5)
 
   table = widget_table(list_norm_base,$
@@ -165,7 +183,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   col2 = WIDGET_BASE(main_row1,$
     FRAME = 5,$
     uname = 'reduce_step2_polarization_base',$
-    map = 1,$
+    map = 0,$
     /ROW)
     
   col2_col1 = widget_base(col2,$
