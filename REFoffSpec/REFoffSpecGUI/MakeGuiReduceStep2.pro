@@ -179,6 +179,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     yoffset = slabel.size[1],$
     scr_xsize = 600,$
     scr_ysize = 30,$
+    map = 0,$
     uname = 'reduce_step2_label_table_base')
     
   label = WIDGET_LABEL(label_base,$
@@ -199,7 +200,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     yoffset = yoff,$
     scr_ysize = 30,$
     scr_xsize = 1250,$
-    map = 1,$
+    map = 0,$
     frame = 0)
   
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
