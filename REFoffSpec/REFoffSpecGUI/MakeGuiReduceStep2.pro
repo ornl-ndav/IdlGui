@@ -171,7 +171,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   xyoff = [8,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
-    value: 'Data Run #     Normalization       Spin State            ROI'}
+    value: 'Data Run #     Normalization       Spin State            ' + $
+    '             Region Of Intereset (ROI)'}
     
   label = WIDGET_LABEL(Base,$
     XOFFSET = sLabel.size[0],$
@@ -192,7 +193,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     scr_ysize = 30,$
     scr_xsize = 1250,$
     map = 1,$
-    frame = 1)
+    frame = 0)
   
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
     value1 = WIDGET_LABEL(row_Base,$
@@ -246,16 +247,36 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       /align_left,$
       uname = uname)
       
+   ;roi widgets
+   ;Browse button
+   uname = 'reduce_tab2_roi_browse_button' + strcompress(i) 
+   browse = WIDGET_BUTTON(row_base,$
+   Xoffset = xyoff[0]+310,$
+   yoffset = 0,$
+   scr_xsize = 180,$
+   value = 'Browse for a ROI file ...',$
+   uname = uname)
+      
+   ;Create/modify ROI
+   uname = 'reduce_tab2_roi_modify_button' + strcompress(i)
+   modify = widget_button(row_base,$
+   xoffset = xyoff[0]+500,$
+   yoffset = 0,$
+   uname = uname,$
+   scr_xsize = 230,$
+   value = 'Create/Modify/Visualize ROI file')
+      
     uname = 'reduce_tab2_roi_value' + strcompress(i)
     roi = widget_label(row_Base,$
-      XOFFSET = XYoff[0]+310,$
+      XOFFSET = XYoff[0]+740,$
       YOFFSET = label_offset,$
-      SCR_XSIZE = 500,$
+      SCR_XSIZE = 490,$
       /ALIGN_LEFT,$
-      value = '/SNS/users/j35/results/REF_M_5001_roi.dat',$
+      frame=0,$
+      value = '',$
       uname = uname)
       
-    yoff += offset
+    yoff += offset  
   ENDFOR
   
   
