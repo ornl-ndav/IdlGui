@@ -171,7 +171,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   xyoff = [50,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
-    value: 'Data Run #       Normalization       Spin State            ROI'}
+    value: 'Data Run #     Normalization         Spin State            ROI'}
     
   label = WIDGET_LABEL(Base,$
     XOFFSET = sLabel.size[0],$
@@ -190,6 +190,18 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       SCR_XSIZE = 50,$
       uname   = uname)
       
+    uname = 'reduce_tab2_norm_base'
+    combo_base = WIDGET_BASE(Base,$
+      XOFFSET = XYoff[0]+80,$
+      YOFFSET = yoff,$
+      uname = uname+ strcompress(i),$
+      map = 1)
+      
+    uname = 'reduce_tab2_norm_combo'
+    combo = widget_combobox(combo_base,$
+      value = ['1500','1501','1502'],$
+      uname = uname + strcompress(i))
+
     uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i)
     value2 = WIDGET_LABEL(Base,$
       XOFFSET = XYoff[0]+115,$
