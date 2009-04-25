@@ -353,5 +353,10 @@ PRO check_status_of_reduce_step1_buttons, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO Reduce_step2_polarization_active, Event, status
+MapBase, Event, 'reduce_step2_polarization_base', status
+MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0^status
+END
 
 
