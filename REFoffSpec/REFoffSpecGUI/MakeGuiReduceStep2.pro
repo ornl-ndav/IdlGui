@@ -174,9 +174,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value: 'Data Run #     Normalization       Spin State            ' + $
     '             Region Of Intereset (ROI)'}
     
-  label = WIDGET_LABEL(Base,$
-    XOFFSET = sLabel.size[0],$
-    YOFFSET = sLabel.size[1],$
+    label_base = widget_base(Base,$
+    xoffset = sLabel.size[0],$
+    yoffset = slabel.size[1],$
+    scr_xsize = 600,$
+    scr_ysize = 30,$
+    uname = 'reduce_step2_label_table_base')
+    
+  label = WIDGET_LABEL(label_base,$
+    XOFFSET = 0,$
+    YOFFSET = 0,$
     VALUE   = sLabel.value)
     
   offset = 35
