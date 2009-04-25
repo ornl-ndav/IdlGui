@@ -54,18 +54,18 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
     
-  xoff = 40
+  xoff = 30
   
   ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
-    XOFFSET = 30+xoff,$
+    XOFFSET = xoff,$
     YOFFSET = 5,$
     VALUE = 'Normalization File Input')
     
   hidden_base = widget_base(Base,$
     xoffset = 780+xoff-5,$
     yoffset = 5,$
-    map = 1,$
+    map = 0,$
     frame = 0,$
     xsize = 130,$
     ysize = 15,$
@@ -73,19 +73,19 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
-    XOFFSET = 780+xoff,$
+    XOFFSET = 870+xoff,$
     YOFFSET = 5,$
     VALUE = 'Polarization Mode')
     
   ;first Row
   main_row1 = WIDGET_BASE(Base,$
-    XOFFSET = 10,$
+    XOFFSET = 0,$
     YOFFSET = 20,$
     /ROW)
     
   ;space
   space = WIDGET_LABEL(main_row1,$
-    VALUE = '      ')
+    VALUE = '   ')
     
   ;Loand normalization
   base_row1 = WIDGET_BASE(main_row1,$
@@ -135,15 +135,37 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                         ',$
     UNAME = 'reduce_tab1_list_of_proposal')
     
-  ;space between base of first row
-  space = WIDGET_LABEL(main_row1,$
-    VALUE = '      ')
+  ;;space between base of first row
+  ;space = WIDGET_LABEL(main_row1,$
+  ;  VALUE = '      ')
     
-  ;Polarization buttons/base
+  ;list of normalization file loaded base ------------------------------------
+  list_norm_base = WIDGET_BASE(main_row1,$
+    uname = 'reduce_step2_list_of_norm_files_base',$
+    ;    scr_xsize = 200,$
+    /column,$
+    FRAME=5)
+
+  table = widget_table(list_norm_base,$
+    scr_xsize = 65,$
+    xsize = 1,$
+    ysize = 11,$
+    scr_ysize = 120,$
+    column_widths = 110,$
+    /no_headers,$
+    /no_row_headers,$
+    ;   /scroll,$
+    uname = 'reduce_step2_list_of_norm_files_table')
+    
+  button = widget_button(list_norm_base,$
+    value = 'Remove Selected File',$
+    uname = 'reduce_step2_list_of_norm_files_remove_button')
+    
+  ;Polarization buttons/base --------------------------------------------------
   col2 = WIDGET_BASE(main_row1,$
     FRAME = 5,$
     uname = 'reduce_step2_polarization_base',$
-    map = 0,$
+    map = 1,$
     /ROW)
     
   col2_col1 = widget_base(col2,$
