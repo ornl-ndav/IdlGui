@@ -40,6 +40,13 @@ PRO putList, Event, uname, value
 END
 
 ;------------------------------------------------------------------------------
+PRO put_list_value, Event, uname_list, value
+  sz = N_ELEMENTS(uname_list)
+  FOR i=0,(sz-1) DO BEGIN
+    putlist, Event, uname_list[i], value
+  ENDFOR
+END
+;------------------------------------------------------------------------------
 PRO putTextFieldValue, Event, uname, text, FORMAT=format
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   IF (N_ELEMENTS(FORMAT) NE 0) THEN BEGIN
