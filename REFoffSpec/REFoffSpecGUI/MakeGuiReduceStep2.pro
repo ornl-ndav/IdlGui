@@ -60,7 +60,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   label = WIDGET_LABEL(Base,$
     XOFFSET = xoff,$
     YOFFSET = 5,$
-    VALUE = 'Normalization File Input')
+    VALUE = 'Normalization File(s) Input')
     
     x_norm = 720
   hidden_base = widget_base(Base,$
@@ -76,7 +76,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   label = WIDGET_LABEL(Base,$
     XOFFSET = x_norm+xoff,$
     YOFFSET = 5,$
-    VALUE = 'Normalization Files')
+    VALUE = 'Normalization File(s)')
 
   hidden_base = widget_base(Base,$
     xoffset = 845+xoff,$

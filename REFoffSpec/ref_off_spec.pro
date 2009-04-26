@@ -117,6 +117,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'REFoffSpec_images/polarization_mode2_enable.png',$
     reduce_step2_polarization_mode_status: 0,$
     PrevReduceTabSelect: 0,$
+    reduce_tab2_nexus_file_list: PTR_NEW(0L),$
+    
     
     working_path: '~/results/',$
     
@@ -278,7 +280,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
-
+  
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
