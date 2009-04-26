@@ -47,17 +47,75 @@ END
 ;------------------------------------------------------------------------------
 PRO mode1_spin_state_combobox_changed, Event
 
-value = getComboListSelectedValue(Event,$
-'reduce_step2_mode1_spin_state_combobox')
-
+  value = getComboListSelectedValue(Event,$
+    'reduce_step2_mode1_spin_state_combobox')
+    
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_value'
   for i=0,10 do begin
     uname_list[i] = uname_base + strcompress(i)
   ENDFOR
-
-put_list_value, Event, uname_list, value
-
+  
+  put_list_value, Event, uname_list, value
+  
 END
 
 ;------------------------------------------------------------------------------
+PRO reduce_step2_browse_normalization, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  path  = (*global).browsing_path
+  title = 'Select 1 or several Normalization NeXus file(s)'
+  default_extenstion = '.nxs'
+  
+  LogText = '> Browsing for 1 or more Normalization NeXus file(s)' + $
+    ' in Reduce/step2:'
+  IDLsendToGeek_addLogBookText, Event, LogText
+  
+  nexus_file_list = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
+    FILTER = ['*.nxs'],$
+    GET_PATH = new_path,$
+    /MULTIPLE_FILES,$
+    /MUST_EXIST,$
+    PATH = path,$
+    TITLE = title)
+    
+  IF (nexus_file_list[0] NE '') THEN BEGIN
+  
+    (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
+    
+    IF (new_path NE path) THEN BEGIN
+      (*global).browsing_path = new_path
+      LogText = '-> New browsing_path is: ' + new_path
+    ENDIF
+    IDLsendToGeek_addLogBookText, Event, LogText
+    display_message_about_files_browsed, Event, nexus_file_list
+    
+  ;      IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
+  ;        ;get list of polarization state available and display list_of_pola base
+  ;        nexus_file_name = nexus_file_list[0]
+  ;        status = retrieve_list_OF_polarization_state(Event, $
+  ;          nexus_file_name, $
+  ;          list_OF_pola_state)
+  ;        IF (status EQ 0) THEN RETURN
+  ;
+  ;     ENDIF ELSE BEGIN
+  ;
+  ;        ;update the table
+  ;        AddNexusToReduceTab1Table, Event
+    
+  ;      ENDELSE
+    
+  ENDIF ELSE BEGIN
+    LogText = '-> User canceled Browsing for 1 or more Normalization' + $
+    ' NeXus file(s)'
+    IDLsendToGeek_addLogBookText, Event, LogText
+  ENDELSE
+  
+END
