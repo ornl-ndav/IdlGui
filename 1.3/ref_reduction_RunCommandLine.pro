@@ -70,7 +70,7 @@ PRO RefReduction_RunCommandLine, Event
       geo_cmd = (*global).ts_geom
       geo_cmd += ' ' + (*global).dirpix_geometry
       geo_cmd += ' -m ' + (*global).cvinfo
-      geo_cmd += ' -D dirpix=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
+      geo_cmd += ' -D DIRPIX=' + STRCOMPRESS((*global).dirpix,/REMOVE_ALL)
       geo_cmd += ' -o ' + (*global).tmp_geometry_file
       cmd_text = 'Running geometry generator:'
       putLogBookMessage, Event, cmd_text, Append=1
