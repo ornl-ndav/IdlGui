@@ -256,7 +256,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
     value1 = WIDGET_LABEL(row_Base,$
-      value   = '1345',$
+      value   = ' ',$
       xoffset = 0,$
       yoffset = label_offset,$
       SCR_XSIZE = 50,$
