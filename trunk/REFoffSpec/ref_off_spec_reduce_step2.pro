@@ -97,13 +97,17 @@ PRO reduce_step2_browse_normalization, Event
     
     ;activate list_of_norm base and show norm run numbers selected
     
-   putValueInTable, Event, $
-   'reduce_step2_list_of_norm_files_table', $
-   (*global).nexus_norm_list_run_number   
-   help, (*global).nexus_norm_list_run_number
+    putValueInTable, Event, $
+      'reduce_step2_list_of_norm_files_table', $
+      (*global).nexus_norm_list_run_number
+    help, (*global).nexus_norm_list_run_number
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
     MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
-  
+    
+    ;put run number in the droplist of the big table and show the number
+    ;of lines that corresponds to the number of data files loaded
+    PopulateStep2BigTabe, Event
+    
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for 1 or more Normalization' + $
       ' NeXus file(s)'
@@ -144,9 +148,32 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
       index++
     ENDWHILE
     (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
+    
   ENDIF ELSE BEGIN ;list of nexus is not empty
   
   
   ENDELSE
+  
+END
 
+;-----------------------------------------------------------------------------
+PRO    PopulateStep2BigTabe, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+   tab1_table = (*(*global).reduce_tab1_table)
+  data_run_number = tab1_table[0,*]
+  sz = N_ELEMENTS(nexus_file_list)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
+    putTextFieldValue, Event, uname, data_run_number[index]
+    uname = 'reduce_tab2_data_recap_base_#' + strcompress(index)
+    MapBase, Event, uname, 1
+    index++
+  ENDWHILE
+  
+  MapBase, Event, 'reduce_step2_label_table_base', 1
+  
 END
