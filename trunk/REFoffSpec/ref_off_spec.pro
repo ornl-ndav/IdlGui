@@ -119,7 +119,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     
-    
     working_path: '~/results/',$
     
     step5_x0: 0,$ ;event.x initial
