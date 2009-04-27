@@ -88,34 +88,55 @@ PRO reduce_step2_browse_normalization, Event
     
   IF (nexus_file_list[0] NE '') THEN BEGIN
   
-    (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
-    
     IF (new_path NE path) THEN BEGIN
       (*global).browsing_path = new_path
       LogText = '-> New browsing_path is: ' + new_path
     ENDIF
-    IDLsendToGeek_addLogBookText, Event, LogText
-    display_message_about_files_browsed, Event, nexus_file_list
     
-  ;      IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
-  ;        ;get list of polarization state available and display list_of_pola base
-  ;        nexus_file_name = nexus_file_list[0]
-  ;        status = retrieve_list_OF_polarization_state(Event, $
-  ;          nexus_file_name, $
-  ;          list_OF_pola_state)
-  ;        IF (status EQ 0) THEN RETURN
-  ;
-  ;     ENDIF ELSE BEGIN
-  ;
-  ;        ;update the table
-  ;        AddNexusToReduceTab1Table, Event
-    
-  ;      ENDELSE
+    addNormNexusToList, Event, nexus_file_list
     
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for 1 or more Normalization' + $
-    ' NeXus file(s)'
+      ' NeXus file(s)'
     IDLsendToGeek_addLogBookText, Event, LogText
   ENDELSE
   
+END
+
+;------------------------------------------------------------------------------
+PRO addNormNexusToList, Event, nexus_file_list_browsed
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
+  reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
+  reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
+  
+  IF ((size(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
+    nexus_file_list = nexus_file_list_browsed
+    (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
+    sz = N_ELEMENTS(nexus_file_list_browsed)
+    nexus_norm_list_run_number = STRARR(sz)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      ;retrieve RunNumber of nexus file name
+    
+      iNexus = OBJ_NEW('IDLgetMetadata', $
+        nexus_file_list[index],$
+        reduce_tab1_working_pola_state)
+      IF (~OBJ_VALID(iNexus)) THEN BEGIN
+        index ++
+        CONTINUE
+      ENDIF
+      RunNumber = iNexus->getRunNumber()
+      OBJ_DESTROY, iNexus
+      nexus_norm_list_run_number[index] = RunNumber
+      index++
+    ENDWHILE
+  ENDIF ELSE BEGIN ;list of nexus is not empty
+  
+  
+  ENDELSE
+
 END
