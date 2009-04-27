@@ -100,7 +100,6 @@ PRO reduce_step2_browse_normalization, Event
     putValueInTable, Event, $
       'reduce_step2_list_of_norm_files_table', $
       (*global).nexus_norm_list_run_number
-    help, (*global).nexus_norm_list_run_number
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
     MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
     
@@ -115,6 +114,9 @@ PRO reduce_step2_browse_normalization, Event
   ENDELSE
   
 END
+
+
+
 
 ;------------------------------------------------------------------------------
 PRO addNormNexusToList, Event, nexus_file_list_browsed
@@ -162,11 +164,15 @@ PRO    PopulateStep2BigTabe, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-   tab1_table = (*(*global).reduce_tab1_table)
+  tab1_table = (*(*global).reduce_tab1_table)
   data_run_number = tab1_table[0,*]
   sz = N_ELEMENTS(nexus_file_list)
   index = 0
   WHILE (index LT sz) DO BEGIN
+    ;populate norm label or droplist
+    populate_reduce_step2_norm_droplist, Event
+    
+    ;populate data labels
     uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
     putTextFieldValue, Event, uname, data_run_number[index]
     uname = 'reduce_tab2_data_recap_base_#' + strcompress(index)
@@ -175,5 +181,29 @@ PRO    PopulateStep2BigTabe, Event
   ENDWHILE
   
   MapBase, Event, 'reduce_step2_label_table_base', 1
+  
+END
+
+;------------------------------------------------------------------------------
+PRO populate_reduce_step2_norm_droplist, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  norm_run_number = (*global).nexus_norm_list_run_number
+  sz = N_ELEMENTS(norm_run_number)
+  IF (sz GT 1) THEN BEGIN ;populate the comboboxes
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
+      SetDroplistValue, Event, uname, norm_run_number
+      index++
+    ENDWHILE
+  ENDIF ELSE BEGIN ;populates the labels and hide the comboboxes
+    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index)
+    putTextFieldValue, Event, uname, norm_run_number[0]
+    uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index)
+    MapBase, Event, uname, 0
+  ENDELSE
   
 END
