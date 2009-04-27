@@ -95,6 +95,15 @@ PRO reduce_step2_browse_normalization, Event
     
     addNormNexusToList, Event, nexus_file_list
     
+    ;activate list_of_norm base and show norm run numbers selected
+    
+   putValueInTable, Event, $
+   'reduce_step2_list_of_norm_files_table', $
+   (*global).nexus_norm_list_run_number   
+   help, (*global).nexus_norm_list_run_number
+    MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
+    MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
+  
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for 1 or more Normalization' + $
       ' NeXus file(s)'
@@ -117,7 +126,7 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
     nexus_file_list = nexus_file_list_browsed
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
     sz = N_ELEMENTS(nexus_file_list_browsed)
-    nexus_norm_list_run_number = STRARR(sz)
+    nexus_norm_list_run_number = STRARR(1,11)
     index = 0
     WHILE (index LT sz) DO BEGIN
       ;retrieve RunNumber of nexus file name
@@ -131,9 +140,10 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
       ENDIF
       RunNumber = iNexus->getRunNumber()
       OBJ_DESTROY, iNexus
-      nexus_norm_list_run_number[index] = RunNumber
+      nexus_norm_list_run_number[0,index] = RunNumber
       index++
     ENDWHILE
+    (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
   ENDIF ELSE BEGIN ;list of nexus is not empty
   
   

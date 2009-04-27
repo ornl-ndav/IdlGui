@@ -118,6 +118,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step2_polarization_mode_status: 0,$
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
+    nexus_norm_list_run_number: STRARR(1,11),$
     
     working_path: '~/results/',$
     
