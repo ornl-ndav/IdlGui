@@ -37,7 +37,6 @@
 spawn, 'pwd', CurrentFolder
 
 ;build the utilities
-cd, CurrentFolder + '/utilities'
 @main_idl_makefile_utilities.pro
 
 ;Build miniREFreduction GUI

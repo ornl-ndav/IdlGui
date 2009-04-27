@@ -32,6 +32,12 @@
 ;
 ;==============================================================================
 
+spawn, 'pwd', CurrentFolder
+
+;Makefile that automatically compile the necessary modules
+;and create the VM file.
+cd, CurrentFolder + '/utilities'
+
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 .run nexus_utilities.pro
