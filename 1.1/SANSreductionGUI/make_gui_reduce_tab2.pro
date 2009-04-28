@@ -135,18 +135,36 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   XYoff = [0,5]
   sDElabel = { size: [sTZO_beam_value.size[0]+XYoff[0],$
     sDEgroup.size[1]+XYoff[1]],$
-    uname: 'detector_efficiency_constant_label',$
-    value: 'Value:'}
-  XYoff = [50,-6]
+    uname: 'detector_efficiency_scaling_label',$
+    sensitive: 0,$
+    value: 'Scaling:'}
+  XYoff = [55,-6]
   sDEvalue = { size: [sDElabel.size[0]+XYoff[0],$
     sDElabel.size[1]+XYoff[1],$
     sTZO_detector_field.size[2:3]],$
     value: '',$
-    uname: 'detector_efficiency_constant_value'}
-  XYoff = [0,0]
-  sDEhelp = { size: [sTZOhelp.size[0]+XYoff[0],$
-    sDElabel.size[1]+XYoff[1]],$
-    value: '(Specify the detector efficiency constant in 1/Angstroms)'}
+    sensitive: 0,$
+    uname: 'detector_efficiency_scaling_value'}
+  
+  XYoff = [100,5]
+  sDEAlabel = { size: [sDEvalue.size[0]+XYoff[0],$
+    sDEgroup.size[1]+XYoff[1]],$
+    uname: 'detector_efficiency_attenuator_label',$
+    sensitive: 0,$
+    value: 'Attenuation:'}
+  XYoff = [79,-6]
+  sDEAvalue = { size: [sDEAlabel.size[0]+XYoff[0],$
+    sDEAlabel.size[1]+XYoff[1],$
+    sTZO_detector_field.size[2:3]],$
+    sensitive: 0,$
+    value: '',$
+    uname: 'detector_efficiency_attenuator_value'}
+  XYoff = [70,0]
+  sDEAunits = { size: [sDEAvalue.size[0]+XYoff[0],$
+    sDEAlabel.size[1]+XYoff[1]],$
+    value: '(1/Angstroms)',$
+    sensitive: 0,$
+    uname: 'detector_efficiency_attenuator_units'}
 
   ;- Q --------------------------------------------------------------------------
   XYoff = [0,20]
@@ -593,6 +611,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     XOFFSET   = sDElabel.size[0],$
     YOFFSET   = sDElabel.size[1],$
     VALUE     = sDElabel.value,$
+    SENSITIVE = sDElabel.sensitive,$
     UNAME     = sDElabel.uname)
     
   wValue = WIDGET_TEXT(Base,$
@@ -602,15 +621,38 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = sDEvalue.size[3],$
     UNAME     = sDEvalue.uname,$
     VALUE     = sDEvalue.value,$
+    SENSITIVE = sDEvalue.sensitive,$
     /EDITABLE,$
     /ALL_EVENTS,$
     /ALIGN_LEFT)
     
-  ;help
-  whelp = WIDGET_LABEL(Base,$
-    XOFFSET = sDEhelp.size[0],$
-    YOFFSET = sDEhelp.size[1],$
-    VALUE   = sDEhelp.value)
+  ;label and value
+  wLabel = WIDGET_LABEL(Base,$
+    XOFFSET   = sDEAlabel.size[0],$
+    YOFFSET   = sDEAlabel.size[1],$
+    VALUE     = sDEAlabel.value,$
+    SENSITIVE = sDEAlabel.sensitive,$
+    UNAME     = sDEAlabel.uname)
+    
+  wValue = WIDGET_TEXT(Base,$
+    XOFFSET   = sDEAvalue.size[0],$
+    YOFFSET   = sDEAvalue.size[1],$
+    SCR_XSIZE = sDEAvalue.size[2],$
+    SCR_YSIZE = sDEAvalue.size[3],$
+    UNAME     = sDEAvalue.uname,$
+    SENSITIVE = sDEAvalue.sensitive,$
+    VALUE     = sDEAvalue.value,$
+    /EDITABLE,$
+    /ALL_EVENTS,$
+    /ALIGN_LEFT)
+  
+  ;units
+  wunits = WIDGET_LABEL(Base,$
+    XOFFSET = sDEAunits.size[0],$
+    YOFFSET = sDEAunits.size[1],$
+    VALUE   = sDEAunits.value,$
+    SENSITIVE = sDEAunits.sensitive,$
+    UNAME   = sDEAunits.uname)
     
   ;- Q --------------------------------------------------------------------------
   wQTitle = WIDGET_LABEL(Basetab,$
