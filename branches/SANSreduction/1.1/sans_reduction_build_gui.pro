@@ -182,9 +182,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--det-effc',$
     default: $
     1},$ ;on/OFF
-    detector_efficiency_constant: $
-    '--det-eff-const',$
-
+    detector_efficiency_scale: $
+    '--det-eff-scale-const',$
+    detector_efficiency_attenuator: $
+    '--det-eff-atten-scale',$
+    
     verbose: $
     '--verbose',$
     min_lambda_cut_off:$

@@ -133,8 +133,11 @@ PRO detector_efficiency_constant_gui, Event
   ENDIF ELSE BEGIN
     sensitive_status = 0
   ENDELSE
-  activate_widget, Event, 'detector_efficiency_constant_label', sensitive_status
-  activate_widget, Event, 'detector_efficiency_constant_value', sensitive_status
+  activate_widget, Event, 'detector_efficiency_scaling_label', sensitive_status
+  activate_widget, Event, 'detector_efficiency_scaling_value', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_value', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_label', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_units', sensitive_status
 END
 
 ;------------------------------------------------------------------------------
