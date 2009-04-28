@@ -71,13 +71,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
     reduce_tab1_cw_field: '4753-4755',$
     reduce_tab1_proposal_combobox: 1}
-  ;PACKAGES
-  PACKAGE_REQUIRED_BASE = { driver:           '',$
-    version_required: ''}
-  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
-  my_package[0].driver           = 'findnexus'
-  my_package[0].version_required = '1.5'
-  my_package[1].driver           = 'nxdir'
   
   ;*****************************************************************************
   ;*****************************************************************************
@@ -95,6 +88,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     instrument: 'REF_M',$
     debugging: DEBUGGING,$
     sDebugging: sDebugging,$
+    
+    driver_name: 'refred_lp',$
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
     '/entry-Off_On/',$
@@ -362,7 +357,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     message
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-    CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
+     packages_required, global, my_package ;packages_required
+     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
   
   display_buttons, MAIN_BASE=main_base, ACTIVATE=0, global

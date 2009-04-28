@@ -173,13 +173,14 @@ FUNCTION retrieve_list_OF_polarization_state, Event, $
     PROCESSING
   IDLsendToGeek_addLogBookText, Event, LogText
   iPola = OBJ_NEW('IDLnexusUtilities',nexus_file_name)
+
   IF (OBJ_VALID(iPola) NE 1) THEN BEGIN ;obj not valid
     message = FAILED + '  (Format of file not supported by' + $
       ' this application).'
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, message
     RETURN, 0
   ENDIF
-  
+
   ;display list of polarization states found
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   pPolaList = iPola->getPolarization()
