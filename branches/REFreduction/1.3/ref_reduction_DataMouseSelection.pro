@@ -724,9 +724,12 @@ PRO ReplotAllSelection, Event
   ENDIF
   
   ON_IOERROR, input_error
+  
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
   dirpix = getTextFieldValue(Event,'data_geometry_dirpix_value_user')
   (*global).dirpix = FLOAT(dirpix)
   plot_average_data_peak_value, Event
+  ENDIF
   
   input_error: 
   

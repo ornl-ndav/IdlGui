@@ -272,6 +272,7 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
     FRAME = 1,$
     XPAD         = 0,$
     YPAD         = 0,$
+    UNAME = 'data_geoemtry_info_base',$
     /COLUMN)
     
   row1 = WIDGET_BASE(GeoBase,$

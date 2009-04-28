@@ -383,7 +383,9 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
           ;update GUI according to result of NeXus found or not
           RefReduction_update_data_gui_if_NeXus_found, Event, result
           
+          IF ((*global).instrument EQ 'REF_M') THEN BEGIN
           populate_data_geometry_info, Event
+          ENDIF
           
         ENDIF ELSE BEGIN
           ;ask user to select the polarization state he wants to see

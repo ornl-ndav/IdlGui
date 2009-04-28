@@ -199,30 +199,36 @@ PRO MAIN_BASE_event, Event
             CASE (event.ch) OF ;u and d keys
               117: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
+                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+                  calculate_data_dirpix, Event
+                  plot_average_data_peak_value, Event
+                ENDIF
                 
               END
               100: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                
+                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+                  calculate_data_dirpix, Event
+                  plot_average_data_peak_value, Event
+                ENDIF
               END
               ELSE:
             ENDCASE
             CASE (event.key) OF ;Up and Down arrow keys
               7: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakUp, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
+                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+                  calculate_data_dirpix, Event
+                  plot_average_data_peak_value, Event
+                ENDIF
                 
               END
               8: BEGIN
                 REFreduction_ManuallyMoveDataBackPeakDown, Event
-                calculate_data_dirpix, Event
-                plot_average_data_peak_value, Event
-                
+                IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+                  calculate_data_dirpix, Event
+                  plot_average_data_peak_value, Event
+                ENDIF
               END
               ELSE:
             ENDCASE
@@ -240,8 +246,10 @@ PRO MAIN_BASE_event, Event
           ENDIF
           IF (Event.type EQ 1) THEN BEGIN ;release
             REFreduction_DataSelectionRelease, Event
-            calculate_data_dirpix, Event
-            plot_average_data_peak_value, Event
+            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+              calculate_data_dirpix, Event
+              plot_average_data_peak_value, Event
+            ENDIF
           ENDIF
           IF (Event.type EQ 2) THEN BEGIN ;move
             REFreduction_DataSelectionMove, Event
@@ -288,7 +296,9 @@ PRO MAIN_BASE_event, Event
     ;LOAD ROI selection
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
       REFreduction_LoadDataROISelection, Event
-      calculate_data_dirpix, Event
+      IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+        calculate_data_dirpix, Event
+      ENDIF
     end
     
     ;dirpix widget_text
