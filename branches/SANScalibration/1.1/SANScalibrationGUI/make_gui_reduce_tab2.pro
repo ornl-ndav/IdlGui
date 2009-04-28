@@ -100,17 +100,19 @@ sMEgroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
                     XYoff[1]],$
              uname: 'monitor_efficiency_group',$
              list: ['YES','NO'],$
-             value: 0.0}
+             value: 1.0}
 XYoff = [0,5]
 sMElabel = { size: [sTZO_beam_value.size[0]+XYoff[0],$
                     sMEgroup.size[1]+XYoff[1]],$
              uname: 'monitor_efficiency_constant_label',$
-             value: 'Value:'}
+             value: 'Value:',$
+             sensitive: 0}
 XYoff = [50,-6]
 sMEvalue = { size: [sMElabel.size[0]+XYoff[0],$
                     sMElabel.size[1]+XYoff[1],$
                     sTZO_detector_field.size[2:3]],$
              value: '',$
+             sensitive: 0,$
              uname: 'monitor_efficiency_constant_value'}
 XYoff = [0,0]
 sMEhelp = { size: [sTZOhelp.size[0]+XYoff[0],$
@@ -432,6 +434,7 @@ wLabel = WIDGET_LABEL(Base,$
                       XOFFSET   = sMElabel.size[0],$
                       YOFFSET   = sMElabel.size[1],$
                       VALUE     = sMElabel.value,$
+                      SENSITIVE = sMElabel.sensitive,$
                       UNAME     = sMElabel.uname)
 
 wValue = WIDGET_TEXT(Base,$
@@ -440,6 +443,7 @@ wValue = WIDGET_TEXT(Base,$
                      SCR_XSIZE = sMEvalue.size[2],$
                      SCR_YSIZE = sMEvalue.size[3],$
                      UNAME     = sMEvalue.uname,$
+                     SENSITIVE = sMEvalue.sensitive,$
                      VALUE     = sMEvalue.value,$
                      /EDITABLE,$
                      /ALL_EVENTS,$
