@@ -543,6 +543,11 @@ PRO MAIN_BASE_event, Event
       
       ;==== tab2 (PARAMETERS) =================================================
       
+      WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_efficiency_group'): BEGIN
+        detector_efficiency_constant_gui, Event
+        CheckCommandLine, Event
+      END
+      
       ;---- YES or NO geometry cw_bgroup --------------------------------------
       WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
         GeometryGroupInteraction, Event ;_reduce_tab2
