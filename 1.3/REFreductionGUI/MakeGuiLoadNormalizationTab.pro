@@ -150,9 +150,9 @@ MakeGuiLoadNormalization1D2DTab,$
 
 ;base about X, Y and counts value --------------------------------------------
 info_base = WIDGET_BASE(LOAD_NORMALIZATION_BASE,$
-                        XOFFSET   = 910,$
+                        XOFFSET   = 920,$
                         YOFFSET   = 3,$
-                        SCR_XSIZE = 275,$
+                        SCR_XSIZE = 265,$
                         SCR_YSIZE = 25,$
                         UNAME     = 'info_norm_base',$
                         MAP       = 0,$
