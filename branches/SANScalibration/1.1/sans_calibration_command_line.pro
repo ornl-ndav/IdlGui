@@ -180,6 +180,43 @@ PRO CheckCommandLine, Event
     ENDELSE
   ENDIF
   
+    ;-detector efficiency
+    IF (getCWBgroupValue(Event, 'detector_efficiency_group') EQ 0) THEN BEGIN
+      activate_intermediate_base = 0
+      cmd += ' ' + (*global).ReducePara.detector_efficiency.flag
+      
+      cmd += ' ' + (*global).ReducePara.detector_efficiency_scale + '='
+      value = getTextFieldValue(Event, 'detector_efficiency_scaling_value')
+      IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+      ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+          '- Scaling Detector Efficiency Value ' + $
+          '(PARAMETERS)']
+      ENDELSE
+
+      cmd += ' ' + (*global).ReducePara.detector_efficiency_attenuator + '='
+      value = getTextFieldValue(Event, 'detector_efficiency_attenuator_value')
+      IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+      ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+          '- Attenuator Detector Efficiency Value ' + $
+          '(PARAMETERS)']
+      ENDELSE
+
+    ENDIF ELSE BEGIN
+      activate_intermediate_base = 1
+    ENDELSE
+
   ;-time offsets of detector and beam monitor
   detectorTO = getTextFieldValue(Event,'time_zero_offset_detector_uname')
   cmd += ' ' + (*global).ReducePara.detect_time_offset + '='
