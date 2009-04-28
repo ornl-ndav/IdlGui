@@ -107,6 +107,11 @@ PRO reduce_step2_browse_normalization, Event
     ;of lines that corresponds to the number of data files loaded
     PopulateStep2BigTabe, Event
     
+    ;show the polarization base
+    MapBase, Event, 'reduce_step2_polarization_base', 1
+    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+    display_buttons, EVENT=EVENT, ACTIVATE=0, global
+      
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for 1 or more Normalization' + $
       ' NeXus file(s)'
@@ -163,7 +168,7 @@ PRO PopulateStep2BigTabe, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-   
+  
   tab1_table = (*(*global).reduce_tab1_table)
   data_run_number = tab1_table[0,*]
   sz = N_ELEMENTS(nexus_file_list)
@@ -182,8 +187,8 @@ PRO PopulateStep2BigTabe, Event
     
     index++
   ENDWHILE
- 
-     MapBase, Event, 'reduce_step2_label_table_base', 1
+  
+  MapBase, Event, 'reduce_step2_label_table_base', 1
   
 END
 
