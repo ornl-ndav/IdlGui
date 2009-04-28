@@ -32,50 +32,26 @@
 ;
 ;==============================================================================
 
-FUNCTION check_number_polarization_state, nexus_file_name, $
-                                          list_pola_state
+PRO packages_required, global, my_package
 
-cmd = 'nxdir ' + nexus_file_name
-SPAWN, cmd, listening, err_listening
+PACKAGE_REQUIRED_BASE = { driver:           '',$
+                          version_required: '',$
+                          found: 0,$
+                          sub_pkg_version:   ''}
 
-list_pola_state = listening     ;keep record of name of pola states
-
-IF (err_listening[0] NE '') THEN RETURN, 0
-RETURN, 1
+;sub_pkg_version: python program that gives pkg v. of common libraries...etc
+my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
+;number of packages we need to check
+my_package[0].driver           = 'findnexus'
+my_package[0].version_required = ''
+my_package[1].driver           = (*global).driver_name
+my_package[1].version_required = ''
+my_package[1].sub_pkg_version  = './drversion'
+my_package[2].driver           = 'nxdir'
+my_package[2].version_required = ''
+;my_package[3].driver           = 'nxsummary'
+;my_package[3].version_required = ''
+;my_package[4].driver           = 'findcalib'
+  
 END
 
-;------------------------------------------------------------------------------
-FUNCTION IDLnexusUtilities::getPolarization
-RETURN, self.list_pola_state
-END
-
-;------------------------------------------------------------------------------
-FUNCTION IDLnexusUtilities::init, full_nexus_name
-
-;check if nexus file exist
-IF (FILE_TEST(full_nexus_name) NE 1) THEN RETURN, 0
-print, '#1'
-;get list of pola state
-status = check_number_polarization_state(full_nexus_name, list_pola_state)
-print, '#2'
-IF (status EQ 0) THEN RETURN, 0
-self.list_pola_state = PTR_NEW(list_pola_state)
-print, '#3'
-;if value is '/entry/' that means it's the old format
-test_list_OF_pola = *self.list_pola_state
-IF (STRCOMPRESS(test_list_OF_pola[0],/REMOVE_ALL) EQ $
-    '/entry/') THEN RETURN, 0 
-print, '#4'
-RETURN, 1
-END
-
-;******************************************************************************
-;******  Class Define *********************************************************
-;******************************************************************************
-PRO IDLnexusUtilities__define
-STRUCT = { IDLnexusUtilities, $
-           list_pola_state: PTR_NEW(0L),$
-           var: ''}
-END
-;******************************************************************************
-;******************************************************************************
