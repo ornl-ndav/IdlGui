@@ -74,9 +74,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;PACKAGES
   PACKAGE_REQUIRED_BASE = { driver:           '',$
     version_required: ''}
-  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,1)
+  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
   my_package[0].driver           = 'findnexus'
   my_package[0].version_required = '1.5'
+  my_package[1].driver           = 'nxdir'
   
   ;*****************************************************************************
   ;*****************************************************************************
