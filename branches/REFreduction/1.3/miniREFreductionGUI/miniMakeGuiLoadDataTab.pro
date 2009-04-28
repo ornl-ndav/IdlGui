@@ -154,7 +154,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
   ;base about X, Y and counts value --------------------------------------------
   info_base = WIDGET_BASE(LOAD_DATA_BASE,$
     XOFFSET   = 510,$
-    YOFFSET   = 0,$
+    YOFFSET   = 35,$
     SCR_XSIZE = 275,$
     SCR_YSIZE = 20,$
     UNAME     = 'info_data_base',$

@@ -78,7 +78,7 @@ ProBase = WIDGET_BASE(NexusBase,$
                       /ROW)
                       
 ProButton = WIDGET_BUTTON(ProBase,$
-                          VALUE = 'Specify Proposal Folder:',$
+                          VALUE = 'Specify Proposal:',$
                           UNAME = PROPOSAL_BUTTON_UNAME)
 
 ;proposal folder base
@@ -88,7 +88,7 @@ ProFoldBase = WIDGET_BASE(NexusBase,$
 
 ;droplist
 droplist = WIDGET_DROPLIST(ProFoldBase,$
-                           VALUE = ['   Select Me ...   '],$
+                           VALUE = ['   Select Me ...      '],$
                            SCR_YSIZE = 25,$
                            UNAME = PROPOSAL_FOLDER_DROPLIST_UNAME)
 
