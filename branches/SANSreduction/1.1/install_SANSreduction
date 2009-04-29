@@ -5,7 +5,7 @@
 #                              [-e <path to executable file>]   
 #                              [-h]
 #
-FOLDERS=("images" "SANSreductionHelp")
+FOLDERS=("SANSreduction_images" "SANSreductionHelp")
 FILES=("sans_reduction.sav" "mini_sans_reduction.sav SANSreduction.cfg")
 NBR_PARAMETERS=4   #total number of parameters necessary
 EXECUTABLE_SAV="sans_reduction.sav"
