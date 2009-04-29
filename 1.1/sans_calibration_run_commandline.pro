@@ -51,8 +51,8 @@ PRO test_RunCommandLine, Event
       /DEFAULT_NO,$
       TITLE='Output File Name is not uniq !',$
       DIALOG_PARENT=id)
-      
-      IF (result EQ 'yes') THEN BEGIN
+            
+      IF (result EQ 'Yes') THEN BEGIN
       RunCommandLine, Event
       ENDIF ELSE BEGIN
       RETURN
