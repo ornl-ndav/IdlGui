@@ -64,7 +64,7 @@ PRO MAIN_BASE_event, Event
     
     ;= TAB1 (LOAD DATA) =======================================================
     
-    ;- MODE GROUP selection ---------------------------------------------------
+    ;- MODE GROUP selection (transmission or background )----------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='mode_group_uname'): BEGIN
       RenewOutputFileName, Event
       ModeGuiUpdate, Event    ;_gui

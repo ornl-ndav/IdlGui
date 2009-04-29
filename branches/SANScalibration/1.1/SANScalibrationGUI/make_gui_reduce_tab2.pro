@@ -130,7 +130,8 @@ sMEhelp = { size: [sTZOhelp.size[0]+XYoff[0],$
   XYoff = [20,-8]
   sDEtitle = { size: [sDEbase.size[0]+XYoff[0],$
     sDEbase.size[1]+XYoff[1]],$
-    value: 'Detector Efficiency'}
+    value: 'Detector Efficiency',$
+    uname: 'detector_efficiency_title'}
     
   XYoff = [50,10]
   sDEgroup = { size: [sTZO_detector_value.size[0]+XYoff[0],$
@@ -459,6 +460,7 @@ whelp = WIDGET_LABEL(Base,$
   label = WIDGET_LABEL(Basetab,$
     XOFFSET = sDEtitle.size[0],$
     YOFFSET = sDEtitle.size[1],$
+    UNAME   = sDEtitle.uname,$
     VALUE   = sDEtitle.value)
     
   base = WIDGET_BASE(BaseTab,$

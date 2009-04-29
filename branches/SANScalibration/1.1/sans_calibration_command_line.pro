@@ -180,6 +180,7 @@ PRO CheckCommandLine, Event
     ENDELSE
   ENDIF
   
+  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
     ;-detector efficiency
     IF (getCWBgroupValue(Event, 'detector_efficiency_group') EQ 0) THEN BEGIN
       activate_intermediate_base = 0
@@ -216,6 +217,7 @@ PRO CheckCommandLine, Event
     ENDIF ELSE BEGIN
       activate_intermediate_base = 1
     ENDELSE
+ENDIF
 
   ;-time offsets of detector and beam monitor
   detectorTO = getTextFieldValue(Event,'time_zero_offset_detector_uname')
