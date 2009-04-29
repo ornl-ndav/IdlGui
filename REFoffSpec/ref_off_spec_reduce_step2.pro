@@ -119,9 +119,6 @@ PRO reduce_step2_browse_normalization, Event
   
 END
 
-
-
-
 ;------------------------------------------------------------------------------
 PRO addNormNexusToList, Event, nexus_file_list_browsed
 
@@ -133,32 +130,60 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
+
     nexus_file_list = nexus_file_list_browsed
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
-    sz = N_ELEMENTS(nexus_file_list_browsed)
-    nexus_norm_list_run_number = STRARR(1,11)
-    index = 0
-    WHILE (index LT sz) DO BEGIN
-      ;retrieve RunNumber of nexus file name
-    
-      iNexus = OBJ_NEW('IDLgetMetadata', $
-        nexus_file_list[index],$
-        reduce_tab1_working_pola_state)
-      IF (~OBJ_VALID(iNexus)) THEN BEGIN
-        index ++
-        CONTINUE
-      ENDIF
-      RunNumber = iNexus->getRunNumber()
-      OBJ_DESTROY, iNexus
-      nexus_norm_list_run_number[0,index] = RunNumber
-      index++
-    ENDWHILE
-    (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
-    
+
+;    sz = N_ELEMENTS(nexus_file_list_browsed)
+;    nexus_norm_list_run_number = STRARR(1,11)
+;
+;    index = 0
+;    WHILE (index LT sz) DO BEGIN
+;      ;retrieve RunNumber of nexus file name
+;    
+;      iNexus = OBJ_NEW('IDLgetMetadata', $
+;        nexus_file_list[index],$
+;        reduce_tab1_working_pola_state)
+;      IF (~OBJ_VALID(iNexus)) THEN BEGIN
+;        index ++
+;        CONTINUE
+;      ENDIF
+;      RunNumber = iNexus->getRunNumber()
+;      OBJ_DESTROY, iNexus
+;      nexus_norm_list_run_number[0,index] = RunNumber
+;      index++
+;    ENDWHILE
+;    (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
+                               
   ENDIF ELSE BEGIN ;list of nexus is not empty
-  
-  
+
+      nexus_file_list_browsed = getOnlyDefineRunNumber(nexus_file_list_browsed)
+      nexus_file_list = [nexus_file_list,nexus_file_list_browsed]
+      (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
+      
   ENDELSE
+  
+  sz = N_ELEMENTS(nexus_file_list)
+  nexus_norm_list_run_number = STRARR(1,11)
+  
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+                                ;retrieve RunNumber of nexus file name
+      
+      iNexus = OBJ_NEW('IDLgetMetadata', $
+                       nexus_file_list[index],$
+                       reduce_tab1_working_pola_state)
+      IF (~OBJ_VALID(iNexus)) THEN BEGIN
+          nexus_norm_list_run_number[0,index] = 'N/A'
+          index ++
+      ENDIF ELSE BEGIN
+          RunNumber = iNexus->getRunNumber()
+          OBJ_DESTROY, iNexus
+          nexus_norm_list_run_number[0,index] = RunNumber
+          index++
+      ENDELSE
+  ENDWHILE
+  (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
   
 END
 
@@ -187,8 +212,6 @@ PRO PopulateStep2BigTabe, Event
       MapBase, Event, uname, 1
       
     ENDIF
-    
-    
     
     index++
     
