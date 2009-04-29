@@ -104,6 +104,13 @@ PRO MAIN_BASE_event, Event
         reduce_step2_browse_normalization, Event
       END
       
+    ;norm cw_field 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+      'reduce_step2_normalization_text_field'): BEGIN
+        reduce_step2_run_number_normalization, Event
+      END
+
+      
       ;polarization mode 1 button
       WIDGET_INFO(wWidget, FIND_BY_UNAME=$
         'reduce_step2_polarization_mode1_draw'): BEGIN

@@ -61,6 +61,48 @@ PRO mode1_spin_state_combobox_changed, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO reduce_step2_run_number_normalization, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+
+    WIDGET_CONTROL, /HOURGLASS
+
+    TextField = getTextFieldValue(Event,'reduce_step2_normalization_text_field')
+
+    ;stop now if there is nothing to do
+    IF (STRCOMPRESS(TextField,/REMOVE_ALL) EQ '') THEN BEGIN
+      WIDGET_CONTROL, HOURGLASS = 0
+      RETURN
+    ENDIF
+
+    ;display list of runs
+    LogText = '> Run or List of Normalization Runs entered by user: ' + TextField
+    IDLsendToGeek_addLogBookText, Event, LogText
+    
+    ;retrieve list of runs
+    ListOfRuns = ParseTextField(TextField)
+    
+    ;list of runs after parsing
+    LogText = '-> Run or List of Normalization Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
+    IDLsendToGeek_addLogBookText, Event, LogText
+
+    ;get proposal selected by user (from droplist)
+    proposalSelected = getComboListSelectedValue(Event, $
+      'reduce_tab2_list_of_proposal')
+    LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
+    IDLsendToGeek_addLogBookText, Event, LogText
+
+
+
+
+END
+
+;------------------------------------------------------------------------------
 PRO reduce_step2_browse_normalization, Event
 
   ;get global structure
