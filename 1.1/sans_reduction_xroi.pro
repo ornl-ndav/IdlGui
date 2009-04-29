@@ -3389,7 +3389,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                           VALUE = '>',$
                           UNAME = 'half_in_left')
     wButton = WIDGET_BUTTON(wRowBase1,$
-                            VALUE   = 'images/selection_half_in.bmp',$
+                            VALUE   = 'SANSreduction_images/selection_half_in.bmp',$
                             UNAME   = 'selection_half_in',$
                             UVALUE  = 'selection_half_in',$
                             TOOLTIP = selection_half_in_tool_tip,$
@@ -3403,7 +3403,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                            VALUE = ' ',$
                            UNAME = 'half_out_left')
     wButton = WIDGET_BUTTON(wRowBase1,$
-                            VALUE   = 'images/selection_half_out.bmp',$
+                            VALUE   = 'SANSreduction_images/selection_half_out.bmp',$
                             UNAME   = 'selection_half_out',$
                             UVALUE  = 'selection_half_out',$
                             TOOLTIP = selection_half_out_tool_tip,$
@@ -3417,7 +3417,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                            VALUE = ' ',$
                            UNAME = 'outside_in_left')
     wButton = WIDGET_BUTTON(wRowBase1,$
-                            VALUE   = 'images/selection_outside_in.bmp',$
+                            VALUE   = 'SANSreduction_images/selection_outside_in.bmp',$
                             UNAME   = 'selection_outside_in',$
                             UVALUE  = 'selection_outside_in',$
                             TOOLTIP = selection_outside_in_tool_tip,$
@@ -3431,7 +3431,7 @@ pro xroiInfo, pParentState, GROUP_LEADER=group
                            VALUE = ' ',$
                            UNAME = 'outside_out_left')
     wButton = WIDGET_BUTTON(wRowBase1,$
-                            VALUE   = 'images/selection_outside_out.bmp',$
+                            VALUE   = 'SANSreduction_images/selection_outside_out.bmp',$
                             UNAME   = 'selection_outside_out',$
                             UVALUE  = 'selection_outside_out',$
                             TOOLTIP = selection_outside_out_tool_tip,$
@@ -4600,7 +4600,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
       WIDGET_BUTTON(wSelectionBase,$
                     UNAME = 'select_inside',$
                     UVALUE = 'select_inside',$
-                    VALUE='images/inside_circle_button.bmp',$
+                    VALUE='SANSreduction_images/inside_circle_button.bmp',$
                     /BITMAP,$
                     TOOLTIP = 'Inside of cirlce is selected')
                     
@@ -4608,7 +4608,7 @@ pro xCircleBase, pParentState, GROUP_LEADER=group
       WIDGET_BUTTON(wSelectionBase,$
                     UNAME = 'select_outside',$
                     UVALUE = 'select_outside',$
-                    VALUE='images/outside_circle_button.bmp',$
+                    VALUE='SANSreduction_images/outside_circle_button.bmp',$
                     /BITMAP,$
                     TOOLTIP = 'Outside of cirlce is selected')
                     
@@ -5450,7 +5450,7 @@ PRO sans_reduction_xroi, $
 ;SAVE ROI FILE
     void = WIDGET_BUTTON( $
                           wToolbarBase, $
-                          VALUE='images/save.bmp',$
+                          VALUE='SANSreduction_images/save.bmp',$
                           /BITMAP, $
                           TOOLTIP='Save ROI File ...', $
                           UNAME=prefix + 'save_roi_bttn', $
@@ -5460,7 +5460,7 @@ PRO sans_reduction_xroi, $
 ;ROI FILE INFO
     void = WIDGET_BUTTON( $
                           wToolbarBase, $
-                          VALUE='images/prop.bmp',$
+                          VALUE='SANSreduction_images/prop.bmp',$
                           /BITMAP, $
                           TOOLTIP='Open ROI Information window', $
                           UNAME=prefix + 'info_tool_bttn', $
@@ -5498,7 +5498,7 @@ PRO sans_reduction_xroi, $
                     wTransScale = WIDGET_BUTTON( $
                         wExcToolbarBase, $
                                                  
-                        VALUE='images/arrow.bmp',$
+                        VALUE='SANSreduction_images/arrow.bmp',$
                         /BITMAP, $
                         TOOLTIP='Translate/Scale ROIs', $
                         UNAME=prefix + 'translate-scale_mode', $
@@ -5508,7 +5508,7 @@ PRO sans_reduction_xroi, $
                 'RECTANGLE': begin
                     wRectangle = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE='images/rectangl.bmp',$
+                        VALUE='SANSreduction_images/rectangl.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Rectangle ROIs', $
                         UNAME=prefix + 'rectangle_mode', $
@@ -5519,7 +5519,7 @@ PRO sans_reduction_xroi, $
                     wRectangle = $
                       WIDGET_BUTTON( $
                                      wExcToolbarBase, $
-                                     VALUE='images/rectangle_empty.bmp',$
+                                     VALUE='SANSreduction_images/rectangle_empty.bmp',$
                                      /BITMAP, $
                                      TOOLTIP='Draw Rectangle ROIs', $
                                      UNAME=prefix + 'outside_rectangle_mode', $
@@ -5529,7 +5529,7 @@ PRO sans_reduction_xroi, $
                 'ELLIPSE': begin
                     wEllipse = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE='images/ellipse.bmp',$
+                        VALUE='SANSreduction_images/ellipse.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Ellipse ROIs', $
                         UNAME=prefix + 'ellipse_mode', $
@@ -5540,7 +5540,7 @@ PRO sans_reduction_xroi, $
                     wEllipse = $
                       WIDGET_BUTTON( $
                                      wExcToolbarBase, $
-                                     VALUE='images/ellipse_empty.bmp',$
+                                     VALUE='SANSreduction_images/ellipse_empty.bmp',$
                                      /BITMAP, $
                                      TOOLTIP='Draw Ellipse ROIs', $
                                      UNAME=prefix + 'outside_ellipse_mode', $
@@ -5550,7 +5550,7 @@ PRO sans_reduction_xroi, $
                 'FREEHAND DRAW': begin
                     wFreePoly = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE='images/freepoly.bmp',$
+                        VALUE='SANSreduction_images/freepoly.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Freehand ROIs', $
                         UNAME=prefix + 'freehand_mode', $
@@ -5560,7 +5560,7 @@ PRO sans_reduction_xroi, $
                 'FREEHAND DRAW EMPTY': begin
                     wFreePoly = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE='images/freepoly_empty.bmp',$
+                        VALUE='SANSreduction_images/freepoly_empty.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Freehand ROIs', $
                         UNAME=prefix + 'outside_freehand_mode', $
@@ -5570,7 +5570,7 @@ PRO sans_reduction_xroi, $
                 'POLYGON DRAW': begin
                     wSegPoly = WIDGET_BUTTON($
                         wExcToolbarBase, $
-                        VALUE='images/segpoly.bmp',$
+                        VALUE='SANSreduction_images/segpoly.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Polygon ROIs', $
                         UNAME=prefix + 'polygon_mode', $
@@ -5580,7 +5580,7 @@ PRO sans_reduction_xroi, $
                 'POLYGON DRAW EMPTY': begin
                     wSegPoly = WIDGET_BUTTON($
                         wExcToolbarBase, $
-                        VALUE='images/segpoly_empty.bmp',$
+                        VALUE='SANSreduction_images/segpoly_empty.bmp',$
                         /BITMAP, $
                         TOOLTIP='Draw Polygon ROIs', $
                         UNAME=prefix + 'outside_polygon_mode', $
@@ -5590,7 +5590,7 @@ PRO sans_reduction_xroi, $
                 'SELECTION': begin
                     wPick = WIDGET_BUTTON( $
                         wExcToolbarBase, $
-                        VALUE='images/select.bmp',$
+                        VALUE='SANSreduction_images/select.bmp',$
                         /BITMAP, $
                         TOOLTIP='Select ROI', $
                         UNAME=prefix + 'selection_mode', $
@@ -5606,7 +5606,7 @@ PRO sans_reduction_xroi, $
 
     void  = WIDGET_BUTTON( $
                            wToolbarBase, $
-                           VALUE='images/circle.bmp',$
+                           VALUE='SANSreduction_images/circle.bmp',$
                            /BITMAP, $
                            TOOLTIP='Select ROI', $
                            UNAME=prefix + 'circle_mode', $
