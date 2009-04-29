@@ -230,7 +230,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     detector_efficiency_scale: $
     '--det-eff-scale-const',$
     detector_efficiency_attenuator: $
-    '--det-eff-atten-scale',$
+    '--det-eff-atten-const',$
         
     monitor_efficiency_constant: $
     '--mon-eff-const',$
