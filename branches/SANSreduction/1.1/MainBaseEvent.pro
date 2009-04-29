@@ -221,12 +221,11 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_color_button'): BEGIN
     END
     
-    
     ;= TAB2 (REDUCE) ==============================================================
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
-      RunCommandLine, Event ;_run_commandline
+      test_RunCommandLine, Event ;_run_commandline
     END
     
     ;==== tab1 (LOAD FILES (1)) ===================================================
