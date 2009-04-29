@@ -532,7 +532,7 @@ PRO AddNexusToReduceTab1Table, Event
       ENDELSE
       IDLsendToGeek_addLogBookText, Event, LogText
       index++
-    ENDWHILE
+  ENDWHILE
     
     ;remove the runs not found by STRJOIN with ',' and STRPLIT with ','
     ;after removing blank spaces
