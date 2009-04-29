@@ -412,6 +412,11 @@ PRO AddNexusToReduceTab1Table, Event
           list_OF_pola_state)
         IF (status EQ 0) THEN RETURN
         
+        
+        
+        
+        
+        
       ENDIF ELSE BEGIN
       
         ;update the table
