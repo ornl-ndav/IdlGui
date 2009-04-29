@@ -148,7 +148,7 @@ PRO browse_selection_file, Event
     
     ;Load ROI button (Load, extract and plot)
     LoadPlotSelection, Event
-        
+    
     ;turn off hourglass
     WIDGET_CONTROL,hourglass=0
     
@@ -194,43 +194,50 @@ PRO LoadPlotSelection, Event
   IDLsendToGeek_addLogBookText, Event, '-> ROI Loading : ' + RoiFileName
   IDLsendToGeek_addLogBookText, Event, '-> Retrieving information from ' + $
     'ROI file ... ' + PROCESSING
-  FileStringArray = retrieveStringArray(Event, RoiFileName)
-  IF (FileStringArray EQ ['']) THEN BEGIN
+    
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
   ENDIF ELSE BEGIN
-    NbrElements = N_ELEMENTS(FileStringArray)
-    InfoText    = ' (Array Created has ' + $
-      STRCOMPRESS(NbrElements,/REMOVE_ALL) + ' elements)'
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + InfoText
-    ;parse string array
-    IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
-      PROCESSING
-    Xarray = INTARR(NbrElements)
-    Yarray = INTARR(NbrElements)
-    getXYROI, FileStringArray, NbrElements, Xarray, Yarray
-    IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
+    FileStringArray = retrieveStringArray(Event, RoiFileName)
+    IF (FileStringArray EQ ['']) THEN BEGIN
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-    ENDIF ELSE BEGIN                 ;WORKED
-      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-      ;plotting ROI
-      IDLsendToGeek_addLogBookText, Event, $
-        '-> Plotting ROI ... ' + PROCESSING
-      plot_error = 0
-      ;CATCH, plot_error
-      IF (plot_error NE 0) THEN BEGIN
-        CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      NbrElements = N_ELEMENTS(FileStringArray)
+      InfoText    = ' (Array Created has ' + $
+        STRCOMPRESS(NbrElements,/REMOVE_ALL) + ' elements)'
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + InfoText
+      ;parse string array
+      IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
+        PROCESSING
+      Xarray = INTARR(NbrElements)
+      Yarray = INTARR(NbrElements)
+      getXYROI, FileStringArray, NbrElements, Xarray, Yarray
+      IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ENDIF ELSE BEGIN
-        RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
-          Xarray, $
-          Yarray)
-        (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
-        PlotROI, Event
+      ENDIF ELSE BEGIN                 ;WORKED
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        ;plotting ROI
+        IDLsendToGeek_addLogBookText, Event, $
+          '-> Plotting ROI ... ' + PROCESSING
+        plot_error = 0
+        ;CATCH, plot_error
+        IF (plot_error NE 0) THEN BEGIN
+          CATCH,/CANCEL
+          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDIF ELSE BEGIN
+          RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
+            Xarray, $
+            Yarray)
+          (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
+          PlotROI, Event
+          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        ENDELSE
       ENDELSE
     ENDELSE
   ENDELSE
-  
 END
 
 ;- Refresh ROI Plot -----------------------------------------------------------
