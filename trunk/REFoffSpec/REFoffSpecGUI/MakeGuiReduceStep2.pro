@@ -149,7 +149,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   label = WIDGET_LABEL(row2,$
     VALUE = '     List of Proposal:')
   ComboBox = WIDGET_COMBOBOX(Row2,$
-    VALUE = '                         ',$
+                             VALUE = '                          ',$
     UNAME = 'reduce_tab2_list_of_proposal')
     
   ;;space between base of first row
