@@ -271,18 +271,19 @@ sz = N_ELEMENTS(array)
 new_array = STRARR(1)
 index = 0
 WHILE (index LT sz) DO BEGIN
-  IF (array[index] NE '') THEN BEGIN
-    if (index EQ 0) THEN BEGIN
-    new_array[0] = STRCOMPRESS(array[index],/REMOVE_ALL)
-    
-index++
+    IF (array[index] NE '') THEN BEGIN
+        run_number = STRCOMPRESS(array[index],/REMOVE_ALL)
+        IF (index EQ 0) THEN BEGIN
+            new_array[0] = run_number
+        ENDIF ELSE BEGIN
+            new_array = [new_array,run_number]
+        ENDELSE
+    ENDIF
+    index++
 ENDWHILE
-
-
-
-
-
+RETURN, new_array
 END
 
+;-----------------------------------------------------------------------------
 
 
