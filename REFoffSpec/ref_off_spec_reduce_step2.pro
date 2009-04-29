@@ -37,7 +37,7 @@ PRO activate_norm_combobox, Event, status=status
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_combo_base'
   for i=0,10 do begin
-    uname_list[i] = uname_base + strcompress(i)
+    uname_list[i] = uname_base + STRCOMPRESS(i)
   ENDFOR
   
   MapList, Event, uname_list, status
@@ -53,7 +53,7 @@ PRO mode1_spin_state_combobox_changed, Event
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_value'
   for i=0,10 do begin
-    uname_list[i] = uname_base + strcompress(i)
+    uname_list[i] = uname_base + STRCOMPRESS(i)
   ENDFOR
   
   put_list_value, Event, uname_list, value
@@ -96,14 +96,13 @@ PRO reduce_step2_browse_normalization, Event
     addNormNexusToList, Event, nexus_file_list
     
     ;activate list_of_norm base and show norm run numbers selected
-    
     putValueInTable, Event, $
       'reduce_step2_list_of_norm_files_table', $
       (*global).nexus_norm_list_run_number
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
     MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
     
-    ;put run number in the droplist of the big table and show the number
+    ;put run number in the droplists of the big table and show the number
     ;of lines that corresponds to the number of data files loaded
     PopulateStep2BigTabe, Event
     
@@ -133,7 +132,7 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
   reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
   
-  IF ((size(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
+  IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
     nexus_file_list = nexus_file_list_browsed
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
     sz = N_ELEMENTS(nexus_file_list_browsed)
@@ -171,21 +170,28 @@ PRO PopulateStep2BigTabe, Event
   
   tab1_table = (*(*global).reduce_tab1_table)
   data_run_number = tab1_table[0,*]
-  sz = N_ELEMENTS(nexus_file_list)
+  
+  sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    ;populate norm label or droplist
-    populate_reduce_step2_norm_droplist, Event
+  
+    IF (data_run_number[0,index] NE '') THEN BEGIN
     
-    ;populate data labels
-    uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
-    putTextFieldValue, Event, uname, data_run_number[index]
-    uname = 'reduce_tab2_data_recap_base_#' + strcompress(index)
-    MapBase, Event, uname, 1
+      ;populate norm label or droplist
+      populate_reduce_step2_norm_droplist, Event
+      
+      ;populate data labels
+      uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
+      putTextFieldValue, Event, uname, data_run_number[0,index]
+      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+      MapBase, Event, uname, 1
+      
+    ENDIF
     
     
     
     index++
+    
   ENDWHILE
   
   MapBase, Event, 'reduce_step2_label_table_base', 1
@@ -199,14 +205,21 @@ PRO populate_reduce_step2_norm_droplist, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   norm_run_number = (*global).nexus_norm_list_run_number
-  print, norm_run_number
-  sz = N_ELEMENTS(norm_run_number)
+
+  tab1_table = (*(*global).reduce_tab1_table)
+  data_run_number = tab1_table[0,*]
+  sz = N_ELEMENTS(data_run_number)
+  
+  norm_run_number = getOnlyDefineRunNumber(norm_run_number)
+
   print, 'size is: ' + strcompress(sz)
   IF (sz GT 1) THEN BEGIN ;populate the comboboxes
     index = 0
-    WHILE (index LT sz) DO BEGIN
-      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
-      SetDroplistValue, Event, uname, norm_run_number
+    WHILE (index LT (sz-1)) DO BEGIN
+      IF (data_run_number[0,index] NE '') THEN BEGIN
+        uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
+        SetDroplistValue, Event, uname, norm_run_number[0,*]
+      ENDIF
       index++
     ENDWHILE
   ENDIF ELSE BEGIN ;populates the labels and hide the comboboxes

@@ -264,4 +264,25 @@ array_selected = WIDGET_INFO(id, /TABLE_SELECT)
 return, array_selected[1]
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getOnlyDefineRunNumber, array
+
+sz = N_ELEMENTS(array)
+new_array = STRARR(1)
+index = 0
+WHILE (index LT sz) DO BEGIN
+  IF (array[index] NE '') THEN BEGIN
+    if (index EQ 0) THEN BEGIN
+    new_array[0] = STRCOMPRESS(array[index],/REMOVE_ALL)
+    
+index++
+ENDWHILE
+
+
+
+
+
+END
+
+
 
