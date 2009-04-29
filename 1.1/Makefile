@@ -18,7 +18,7 @@ tar:
 test:
 	cp sans_calibration.sav /usr/local/SNS/idltools/
 	cp mini_sans_calibration.sav /usr/local/SNS/idltools/
-	cp SANScalibration_images/*.bmp /usr/local/SNS/idltools/images/
-	cp SANScalibration_images/*.png /user/local/SNS/idltools/images/
+	cp SANScalibration_images/*.bmp /usr/local/SNS/idltools/SANScalibration_images
+	cp SANScalibration_images/*.png /usr/local/SNS/idltools/SANScalibration_images
 	cp drversion /usr/local/SNS/idltools/
 	cp SANScalibration.cfg /usr/local/SNS/idltools/
