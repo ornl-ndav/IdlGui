@@ -271,6 +271,7 @@ PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
     YOFFSET = 450,$
     SCR_XSIZE = 205,$
     SCR_YSIZE = 115,$
+    UNAME = 'data_geometry_info_base',$
     FRAME = 1,$
     /COLUMN)
    

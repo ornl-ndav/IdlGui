@@ -131,7 +131,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
     
     ;check if user wants archived or all nexus runs +++++++++++++++++++++++++++++++
     IF (~isArchivedDataNexusDesired(Event)) THEN BEGIN ;get full list of Nexus
-    
+
       LogBookText = '-> Retrieving full list of DATA Run Number: ' + $
         DataRunNumber
       IDLsendLogBook_addLogBookText, Event, LogBookText
@@ -258,7 +258,9 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             ;update GUI according to result of NeXus found or not
             RefReduction_update_data_gui_if_NeXus_found, Event, result
             
+            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
             populate_data_geometry_info, Event
+            ENDIF
             
             WIDGET_CONTROL,HOURGLASS=0
             
