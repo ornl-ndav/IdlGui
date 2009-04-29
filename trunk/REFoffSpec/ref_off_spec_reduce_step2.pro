@@ -208,24 +208,26 @@ PRO populate_reduce_step2_norm_droplist, Event
 
   tab1_table = (*(*global).reduce_tab1_table)
   data_run_number = tab1_table[0,*]
-  sz = N_ELEMENTS(data_run_number)
+  data_run_number = getOnlyDefineRunNumber(data_run_number)
+  sz_data = N_ELEMENTS(data_run_number)
   
   norm_run_number = getOnlyDefineRunNumber(norm_run_number)
-  
-  IF (sz GT 1) THEN BEGIN       ;populate the comboboxes
-      index = 0
-      WHILE (index LT (sz-1)) DO BEGIN
-          IF (data_run_number[0,index] NE '') THEN BEGIN
-              uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
-              SetDroplistValue, Event, uname, norm_run_number
-          ENDIF
-          index++
-      ENDWHILE
-  ENDIF ELSE BEGIN       ;populates the labels and hide the comboboxes
-      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index)
+  sz_norm = N_ELEMENTS(norm_run_number)
+
+  index_data = 0
+  WHILE (index_data LT sz_data) DO BEGIN ;loop over all data runs
+
+      IF ((sz_norm) EQ 1) THEN BEGIN 
+      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index_data)
       putTextFieldValue, Event, uname, norm_run_number[0]
-      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index)
+      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data)
       MapBase, Event, uname, 0
+  ENDIF ELSE BEGIN
+      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index_data)
+      SetDroplistValue, Event, uname, norm_run_number
   ENDELSE
   
+  index_data++
+ENDWHILE
+
 END
