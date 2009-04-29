@@ -211,22 +211,21 @@ PRO populate_reduce_step2_norm_droplist, Event
   sz = N_ELEMENTS(data_run_number)
   
   norm_run_number = getOnlyDefineRunNumber(norm_run_number)
-
-  print, 'size is: ' + strcompress(sz)
-  IF (sz GT 1) THEN BEGIN ;populate the comboboxes
-    index = 0
-    WHILE (index LT (sz-1)) DO BEGIN
-      IF (data_run_number[0,index] NE '') THEN BEGIN
-        uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
-        SetDroplistValue, Event, uname, norm_run_number[0,*]
-      ENDIF
-      index++
-    ENDWHILE
-  ENDIF ELSE BEGIN ;populates the labels and hide the comboboxes
-    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index)
-    putTextFieldValue, Event, uname, norm_run_number[0]
-    uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index)
-    MapBase, Event, uname, 0
+  
+  IF (sz GT 1) THEN BEGIN       ;populate the comboboxes
+      index = 0
+      WHILE (index LT (sz-1)) DO BEGIN
+          IF (data_run_number[0,index] NE '') THEN BEGIN
+              uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index)
+              SetDroplistValue, Event, uname, norm_run_number
+          ENDIF
+          index++
+      ENDWHILE
+  ENDIF ELSE BEGIN       ;populates the labels and hide the comboboxes
+      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index)
+      putTextFieldValue, Event, uname, norm_run_number[0]
+      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index)
+      MapBase, Event, uname, 0
   ENDELSE
   
 END
