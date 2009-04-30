@@ -147,11 +147,11 @@ label = WIDGET_LABEL(Row1,$
                      VALUE = '(ex: 1245,1345-1347,1349)')
 
 
-label = WIDGET_LABEL(Row1,$
-                     VALUE = '     List of Proposal:')
-ComboBox = WIDGET_COMBOBOX(Row1,$
-                           VALUE = '                         ',$
-                           UNAME = 'reduce_tab1_list_of_proposal')
+;label = WIDGET_LABEL(Row1,$
+;                     VALUE = '     List of Proposal:')
+;ComboBox = WIDGET_COMBOBOX(Row1,$
+;                           VALUE = '                         ',$
+;                           UNAME = 'reduce_tab1_list_of_proposal')
                            
 ;Table (Row #2) ---------------------------------------------------------------
 Row2 = WIDGET_BASE(Base,$

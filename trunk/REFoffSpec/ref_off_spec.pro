@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          6: Options,
   ;          7:Log Book
   sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
-    reduce_tab: 0,$
+    reduce_tab: 1,$
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -317,10 +317,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ListOfProposal = getListOfProposal((*global).instrument,$
     UCAMS,$
     MAIN_BASE)
-  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-  WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
-  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab2_list_of_proposal')
-  WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+  ;id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+  ;WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
+  ;id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab2_list_of_proposal')
+  ;WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
@@ -332,9 +332,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     WIDGET_CONTROL, id_reduce, SET_TAB_CURRENT=sDebugging.tab.reduce_tab
     (*global).PrevReduceTabSelect = sDebugging.tab.reduce_tab
     ;reduce tab1 combobox index selected
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-    set_value = sDebugging.reduce_tab1_proposal_combobox
-    WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
+;    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+;    set_value = sDebugging.reduce_tab1_proposal_combobox
+;    WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
     ;tab to show (pixel_range_selection/scaling_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.step4_tab

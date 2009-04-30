@@ -58,12 +58,12 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   
   ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
-    XOFFSET = xoff,$
+    XOFFSET = xoff+9,$
     YOFFSET = 5,$
     VALUE = 'Normalization File(s) Input')
     
-    x_norm = 720
-  hidden_base = widget_base(Base,$
+  x_norm = 595
+  hidden_base = WIDGET_BASE(Base,$
     xoffset = x_norm+xoff,$
     yoffset = 5,$
     map = 1,$
@@ -77,9 +77,10 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     XOFFSET = x_norm+xoff,$
     YOFFSET = 5,$
     VALUE = 'Normalization File(s)')
-
-  hidden_base = widget_base(Base,$
-    xoffset = 845+xoff,$
+    
+  x2 = 795
+  hidden_base = WIDGET_BASE(Base,$
+    xoffset = x2+xoff,$
     yoffset = 5,$
     map = 1,$
     frame = 0,$
@@ -89,11 +90,11 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;title of normalization input frame
   label = WIDGET_LABEL(Base,$
-    XOFFSET = 870+xoff,$
+    XOFFSET = 25+x2+xoff,$
     YOFFSET = 5,$
     VALUE = 'Polarization Mode')
-
-;##############################################################################    
+    
+  ;##############################################################################
   ;first Row
   main_row1 = WIDGET_BASE(Base,$
     XOFFSET = 0,$
@@ -121,7 +122,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   browse_button = WIDGET_BUTTON(col1,$
     UNAME = 'reduce_step2_browse_button',$
-    VALUE = 'BROWSE ...')
+    VALUE = '     B R O W S E  ...    ')
     
   value = WIDGET_LABEL(col1,$
     VALUE = '')
@@ -142,20 +143,21 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '',$
     UNAME = 'reduce_step2_normalization_text_field',$
     /EDITABLE,$
-    XSIZE = 20)
+    XSIZE = 40)
     
   value = WIDGET_LABEL(row2,$
     VALUE = '(ex: 1245,1345-1347,1349)')
     
-  label = WIDGET_LABEL(row2,$
-    VALUE = '     List of Proposal:')
-  ComboBox = WIDGET_COMBOBOX(Row2,$
-                             VALUE = '                          ',$
-    UNAME = 'reduce_tab2_list_of_proposal')
+  ;label = WIDGET_LABEL(row2,$
+  ;  VALUE = '     List of Proposal:')
+  ;ComboBox = WIDGET_COMBOBOX(Row2,$
+  ;                           VALUE = '                          ',$
+  ;  UNAME = 'reduce_tab2_list_of_proposal')
     
-  ;;space between base of first row
-  ;space = WIDGET_LABEL(main_row1,$
-  ;  VALUE = '      ')
+  space_value = '            '
+  ;space between base of first row
+  space = WIDGET_LABEL(main_row1,$
+    VALUE = space_value)
     
   ;list of normalization file loaded base ------------------------------------
   list_norm_base = WIDGET_BASE(main_row1,$
@@ -164,21 +166,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /column,$
     map=0,$
     FRAME=5)
-
-  table = widget_table(list_norm_base,$
-                       scr_xsize = 65,$
-                       xsize = 1,$
-                       ysize = 11,$
-                       scr_ysize = 120,$
-                       column_widths = 110,$
-                       /no_headers,$
-                       /no_row_headers,$
-                       /disjoint_selection,$
-                       uname = 'reduce_step2_list_of_norm_files_table')
-  
-  button = widget_button(list_norm_base,$
-                         value = 'Remove Selected File',$
-                         uname = 'reduce_step2_list_of_norm_files_remove_button')
+    
+  table = WIDGET_TABLE(list_norm_base,$
+    scr_xsize = 65,$
+    xsize = 1,$
+    ysize = 11,$
+    scr_ysize = 120,$
+    column_widths = 110,$
+    /no_headers,$
+    /no_row_headers,$
+    /disjoint_selection,$
+    uname = 'reduce_step2_list_of_norm_files_table')
+    
+  button = WIDGET_BUTTON(list_norm_base,$
+    value = 'Remove Selected File',$
+    uname = 'reduce_step2_list_of_norm_files_remove_button')
+    
+    
+  ;space between base of first row
+  space = WIDGET_LABEL(main_row1,$
+    VALUE = space_value)
     
   ;Polarization buttons/base --------------------------------------------------
   col2 = WIDGET_BASE(main_row1,$
@@ -187,7 +194,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     map = 0,$
     /ROW)
     
-  col2_col1 = widget_base(col2,$
+  col2_col1 = WIDGET_BASE(col2,$
     /column)
     
   button1 = WIDGET_DRAW(col2_col1,$
@@ -199,7 +206,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = 109)
     
   ;base of the spin state combobox
-  base_combo = widget_base(col2_col1,$
+  base_combo = WIDGET_BASE(col2_col1,$
     /ALIGN_CENTER,$
     uname = 'reduce_step2_spin_state_combobox_base',$
     /ROW)
@@ -226,7 +233,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value: 'Data Run #     Normalization       Spin State            ' + $
     '             Region Of Intereset (ROI)'}
     
-  label_base = widget_base(Base,$
+  label_base = WIDGET_BASE(Base,$
     xoffset = sLabel.size[0],$
     yoffset = slabel.size[1],$
     scr_xsize = 600,$
@@ -245,7 +252,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   label_offset = 4
   FOR i=0,10 DO BEGIN
   
-    uname = 'reduce_tab2_data_recap_base_#' + strcompress(i)
+    uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i)
     row_base = WIDGET_BASE(Base,$
       uname = uname,$
       xoffset = XYoff[0],$
@@ -267,13 +274,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     combo_base = WIDGET_BASE(row_Base,$
       XOFFSET = xyoff[0]+65,$
       YOFFSET = 0,$
-      uname = uname+ strcompress(i),$
+      uname = uname+ STRCOMPRESS(i),$
       map = 1)
       
     uname = 'reduce_tab2_norm_combo'
-    combo = widget_combobox(combo_base,$
+    combo = WIDGET_COMBOBOX(combo_base,$
       value = ['1500','1501','1502'],$
-      uname = uname + strcompress(i))
+      uname = uname + STRCOMPRESS(i))
       
     uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i)
     value2 = WIDGET_LABEL(row_Base,$
@@ -289,16 +296,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     combo_base = WIDGET_BASE(row_Base,$
       XOFFSET = XYoff[0]+180,$
       YOFFSET = 0,$
-      uname = uname+ strcompress(i),$
+      uname = uname+ STRCOMPRESS(i),$
       map = 0)
       
     uname = 'reduce_tab2_spin_combo'
-    combo = widget_combobox(combo_base,$
+    combo = WIDGET_COMBOBOX(combo_base,$
       value = ['Off-Off','Off-On','On-Off','On-On'],$
-      uname = uname + strcompress(i))
+      uname = uname + STRCOMPRESS(i))
       
     ;spin state widget_label
-    uname = 'reduce_tab2_spin_value' + strcompress(i)
+    uname = 'reduce_tab2_spin_value' + STRCOMPRESS(i)
     spin = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+210,$
       YOFFSET = label_offset,$
@@ -309,7 +316,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     ;roi widgets
     ;Browse button
-    uname = 'reduce_tab2_roi_browse_button' + strcompress(i)
+    uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i)
     browse = WIDGET_BUTTON(row_base,$
       Xoffset = xyoff[0]+310,$
       yoffset = 0,$
@@ -318,16 +325,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       uname = uname)
       
     ;Create/modify ROI
-    uname = 'reduce_tab2_roi_modify_button' + strcompress(i)
-    modify = widget_button(row_base,$
+    uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i)
+    modify = WIDGET_BUTTON(row_base,$
       xoffset = xyoff[0]+500,$
       yoffset = 0,$
       uname = uname,$
       scr_xsize = 230,$
       value = 'Create/Modify/Visualize ROI file')
       
-    uname = 'reduce_tab2_roi_value' + strcompress(i)
-    roi = widget_label(row_Base,$
+    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i)
+    roi = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+740,$
       YOFFSET = label_offset,$
       SCR_XSIZE = 490,$

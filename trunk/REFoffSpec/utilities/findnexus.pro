@@ -34,41 +34,42 @@
 
 ;when we want only the archived one
 FUNCTION findnexus, Event, $
-                    RUN_NUMBER = run_number, $
-                    INSTRUMENT = instrument, $
-                    PROPOSAL   = proposal, $
-                    isNexusExist
-
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-IF (N_ELEMENTS(RUN_NUMBER) EQ 0) THEN RETURN, 'ERROR'
-
-cmd = 'findnexus --archive'
+    RUN_NUMBER = run_number, $
+    INSTRUMENT = instrument, $
+    PROPOSAL   = proposal, $
+    isNexusExist
+    
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-IF (N_ELEMENTS(INSTRUMENT)) THEN BEGIN
+  IF (N_ELEMENTS(RUN_NUMBER) EQ 0) THEN RETURN, 'ERROR'
+  
+  cmd = 'findnexus --archive'
+  
+  IF (N_ELEMENTS(INSTRUMENT)) THEN BEGIN
     cmd += ' -i ' + INSTRUMENT
-ENDIF
-
-IF (N_ELEMENTS(PROPOSAL) AND $
-    PROPOSAL NE '') THEN BEGIN
-    cmd += ' -p ' + PROPOSAL
-ENDIF
- 
-cmd += ' ' + STRCOMPRESS(RUN_NUMBER,/REMOVE_ALL)
-spawn, cmd, full_nexus_name, err_listening
-
-;check if nexus exists
-sz = (size(full_nexus_name))(1)
-IF (sz EQ 1) THEN BEGIN
+  ENDIF
+  
+  IF (N_ELEMENTS(PROPOSAL) NE 0) THEN BEGIN
+    IF (PROPOSAL NE '') THEN BEGIN
+      cmd += ' -p ' + PROPOSAL
+    ENDIF
+  ENDIF
+  
+  cmd += ' ' + STRCOMPRESS(RUN_NUMBER,/REMOVE_ALL)
+  SPAWN, cmd, full_nexus_name, err_listening
+  
+  ;check if nexus exists
+  sz = (SIZE(full_nexus_name))(1)
+  IF (sz EQ 1) THEN BEGIN
     result = STRMATCH(full_nexus_name,"ERROR*")
     IF (result GE 1) THEN BEGIN
-        isNeXusExist = 0
+      isNeXusExist = 0
     ENDIF ELSE BEGIN
-        isNeXusExist = 1
+      isNeXusExist = 1
     ENDELSE
     RETURN, full_nexus_name
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     isNeXusExist = 1
     RETURN, full_nexus_name[0]
-ENDELSE
+  ENDELSE
 END
