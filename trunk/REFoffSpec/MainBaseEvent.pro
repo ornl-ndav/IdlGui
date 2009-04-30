@@ -108,6 +108,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME=$
       'reduce_step2_normalization_text_field'): BEGIN
         reduce_step2_run_number_normalization, Event
+        putTextFieldValue, Event, 'reduce_step2_normalization_text_field', ''
       END
 
                                 ;remove normalization button
