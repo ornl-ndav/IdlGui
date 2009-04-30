@@ -505,11 +505,11 @@ PRO AddNexusToReduceTab1Table, Event
     LogText = '-> Run or List of Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
     IDLsendToGeek_addLogBookText, Event, LogText
     
-    ;get proposal selected by user (from droplist)
-    proposalSelected = getComboListSelectedValue(Event, $
-      'reduce_tab1_list_of_proposal')
-    LogText = '-> Proposal Folder Selected: ' + proposalSelected
-    IDLsendToGeek_addLogBookText, Event, LogText
+;    ;get proposal selected by user (from droplist)
+;    proposalSelected = getComboListSelectedValue(Event, $
+;      'reduce_tab1_list_of_proposal')
+;    LogText = '-> Proposal Folder Selected: ' + proposalSelected
+;    IDLsendToGeek_addLogBookText, Event, LogText
     
     ;get full nexus file name for the runs loaded
     LogText = '-> Retrieve List of Full NeXus File Names:'
@@ -521,7 +521,7 @@ PRO AddNexusToReduceTab1Table, Event
       full_nexus_name = findnexus(Event,$
         RUN_NUMBER = ListOfRuns[index],$
         INSTRUMENT = (*global).instrument,$
-        PROPOSAL   = proposalSelected,$
+;        PROPOSAL   = proposalSelected,$
         isNexusExist)
       LogText = '-> Run #: ' + ListOfRuns[index]
       IF (isNexusExist) THEN BEGIN
