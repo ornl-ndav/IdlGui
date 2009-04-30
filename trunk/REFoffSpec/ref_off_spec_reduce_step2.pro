@@ -129,27 +129,7 @@ PRO reduce_step2_run_number_normalization, Event
   
   addNormNexusToList, Event, nexus_file_list
   
-      tab1_table = (*(*global).reduce_tab1_table)
-    data_run_number = tab1_table[0,*]
-    IF (data_run_number[0] NE '') THEN BEGIN
-    
-  ;activate list_of_norm base and show norm run numbers selected
-  putValueInTable, Event, $
-    'reduce_step2_list_of_norm_files_table', $
-    (*global).nexus_norm_list_run_number
-  MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
-  MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
-  
-  ;put run number in the droplists of the big table and show the number
-  ;of lines that corresponds to the number of data files loaded
-  PopulateStep2BigTabe, Event
-  
-  ;show the polarization base
-  MapBase, Event, 'reduce_step2_polarization_base', 1
-  MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-  display_buttons, EVENT=EVENT, ACTIVATE=0, global
-  
-  ENDIF
+  refresh_reduce_step2_big_table, Event
   
 END
 
@@ -188,7 +168,23 @@ PRO reduce_step2_browse_normalization, Event
     
     addNormNexusToList, Event, nexus_file_list
     
-    tab1_table = (*(*global).reduce_tab1_table)
+    refresh_reduce_step2_big_table, Event
+      
+  ENDIF ELSE BEGIN
+    LogText = '-> User canceled Browsing for 1 or more Normalization' + $
+      ' NeXus file(s)'
+    IDLsendToGeek_addLogBookText, Event, LogText
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_reduce_step2_big_table, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+     tab1_table = (*(*global).reduce_tab1_table)
     data_run_number = tab1_table[0,*]
     IF (data_run_number[0] NE '') THEN BEGIN
     
@@ -207,15 +203,9 @@ PRO reduce_step2_browse_normalization, Event
       MapBase, Event, 'reduce_step2_polarization_base', 1
       MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
       display_buttons, EVENT=EVENT, ACTIVATE=0, global
-      
-    ENDIF
     
-  ENDIF ELSE BEGIN
-    LogText = '-> User canceled Browsing for 1 or more Normalization' + $
-      ' NeXus file(s)'
-    IDLsendToGeek_addLogBookText, Event, LogText
-  ENDELSE
-  
+    ENDIF
+      
 END
 
 ;------------------------------------------------------------------------------
