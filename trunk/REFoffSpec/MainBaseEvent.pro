@@ -151,7 +151,6 @@ PRO MAIN_BASE_event, Event
             mode1_spin_state_combobox_changed, Event
           END
           
-          
           ;polarization mode 2 button
           WIDGET_INFO(wWidget, FIND_BY_UNAME=$
             'reduce_step2_polarization_mode2_draw'): BEGIN

@@ -169,7 +169,7 @@ PRO reduce_step2_browse_normalization, Event
     addNormNexusToList, Event, nexus_file_list
     
     refresh_reduce_step2_big_table, Event
-      
+    
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for 1 or more Normalization' + $
       ' NeXus file(s)'
@@ -184,28 +184,33 @@ PRO refresh_reduce_step2_big_table, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-     tab1_table = (*(*global).reduce_tab1_table)
-    data_run_number = tab1_table[0,*]
-    IF (data_run_number[0] NE '') THEN BEGIN
+  norm_run_number = (*global).nexus_norm_list_run_number
+  IF (norm_run_number[0,0] NE '') THEN BEGIN
+  
+    ;activate list_of_norm base and show norm run numbers selected
+    putValueInTable, Event, $
+      'reduce_step2_list_of_norm_files_table', $
+      (*global).nexus_norm_list_run_number
+    MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
+    MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
     
-      ;activate list_of_norm base and show norm run numbers selected
-      putValueInTable, Event, $
-        'reduce_step2_list_of_norm_files_table', $
-        (*global).nexus_norm_list_run_number
-      MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
-      MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
-      
-      ;put run number in the droplists of the big table and show the number
-      ;of lines that corresponds to the number of data files loaded
-      PopulateStep2BigTabe, Event
-      
-      ;show the polarization base
-      MapBase, Event, 'reduce_step2_polarization_base', 1
-      MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-      display_buttons, EVENT=EVENT, ACTIVATE=0, global
+    ;show the polarization base
+    MapBase, Event, 'reduce_step2_polarization_base', 1
+    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+    display_buttons, EVENT=EVENT, ACTIVATE=0, global
     
-    ENDIF
-      
+  ENDIF
+  
+  tab1_table = (*(*global).reduce_tab1_table)
+  data_run_number = tab1_table[0,*]
+  IF (data_run_number[0] NE '') THEN BEGIN
+  
+    ;put run number in the droplists of the big table and show the number
+    ;of lines that corresponds to the number of data files loaded
+    PopulateStep2BigTabe, Event
+    
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -360,7 +365,9 @@ PRO PopulateStep2BigTabe, Event
     
   ENDWHILE
   
-  MapBase, Event, 'reduce_step2_label_table_base', 1
+  IF (data_run_number[0,0] NE '') THEN BEGIN
+    MapBase, Event, 'reduce_step2_label_table_base', 1
+  ENDIF
   
 END
 
