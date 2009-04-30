@@ -227,8 +227,9 @@ PRO reduce_step2_remove_run, Event
     'reduce_step2_list_of_norm_files_table')
     
   selection = selection_array[1,*]
-  
-  IF (N_ELEMENTS(selection) EQ N_ELEMENTS(nexus_file_list)) THEN BEGIN
+
+  IF (selection[0] EQ 0 and $
+  N_ELEMENTS(nexus_file_list) EQ 1 ) THEN BEGIN
     nexus_file_list = STRARR(1)
     nexus_run_number = STRARR(1,11)
     
