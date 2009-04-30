@@ -91,11 +91,11 @@ PRO reduce_step2_run_number_normalization, Event
   LogText = '-> Run or List of Normalization Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
   IDLsendToGeek_addLogBookText, Event, LogText
   
-  ;get proposal selected by user (from droplist)
-  proposalSelected = getComboListSelectedValue(Event, $
-    'reduce_tab2_list_of_proposal')
-  LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
-  IDLsendToGeek_addLogBookText, Event, LogText
+;  ;get proposal selected by user (from droplist)
+;  proposalSelected = getComboListSelectedValue(Event, $
+;    'reduce_tab2_list_of_proposal')
+;  LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
+;  IDLsendToGeek_addLogBookText, Event, LogText
   
   ;get full nexus file name for the runs loaded
   LogText = '-> Retrieve List of Full Normalization NeXus File Names:'
@@ -107,7 +107,7 @@ PRO reduce_step2_run_number_normalization, Event
     full_nexus_name = findnexus(Event,$
       RUN_NUMBER = ListOfRuns[index],$
       INSTRUMENT = (*global).instrument,$
-      PROPOSAL   = proposalSelected,$
+ ;     PROPOSAL   = proposalSelected,$
       isNexusExist)
     LogText = '-> Run #: ' + ListOfRuns[index]
     IF (isNexusExist) THEN BEGIN
