@@ -110,6 +110,12 @@ PRO MAIN_BASE_event, Event
         reduce_step2_run_number_normalization, Event
       END
 
+                                ;remove normalization button
+      WIDGET_INFO(wWidget, FIND_BY_UNAME=$
+                  'reduce_step2_list_of_norm_files_remove_button'): BEGIN
+          reduce_step2_remove_run, Event
+      END
+
       
       ;polarization mode 1 button
       WIDGET_INFO(wWidget, FIND_BY_UNAME=$

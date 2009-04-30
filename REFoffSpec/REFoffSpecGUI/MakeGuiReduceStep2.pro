@@ -166,19 +166,19 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     FRAME=5)
 
   table = widget_table(list_norm_base,$
-    scr_xsize = 65,$
-    xsize = 1,$
-    ysize = 11,$
-    scr_ysize = 120,$
-    column_widths = 110,$
-    /no_headers,$
-    /no_row_headers,$
-    ;   /scroll,$
-    uname = 'reduce_step2_list_of_norm_files_table')
-    
+                       scr_xsize = 65,$
+                       xsize = 1,$
+                       ysize = 11,$
+                       scr_ysize = 120,$
+                       column_widths = 110,$
+                       /no_headers,$
+                       /no_row_headers,$
+                       /disjoint_selection,$
+                       uname = 'reduce_step2_list_of_norm_files_table')
+  
   button = widget_button(list_norm_base,$
-    value = 'Remove Selected File',$
-    uname = 'reduce_step2_list_of_norm_files_remove_button')
+                         value = 'Remove Selected File',$
+                         uname = 'reduce_step2_list_of_norm_files_remove_button')
     
   ;Polarization buttons/base --------------------------------------------------
   col2 = WIDGET_BASE(main_row1,$

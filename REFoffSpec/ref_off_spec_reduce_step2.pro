@@ -207,6 +207,34 @@ PRO reduce_step2_browse_normalization, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO reduce_step2_remove_run, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  nexus_file_list = (*(*global).reduce_tab2_nexus_file_list) ;size of nbr of files
+  nexus_run_number = (*global).nexus_norm_list_run_number ;STRARR(1,11)
+
+  ;get index selected or range selected
+  selection_array = getTableSelection(Event, $
+                                      'reduce_step2_list_of_norm_files_table')
+  
+  selection = selection_array[1,*]
+  
+  IF (N_ELEMENTS(selection) EQ N_ELEMENTS(nexus_file_list)) THEN BEGIN
+      nexus_file_list = STRARR(1)
+      nexus_run_number = STRARR(1,11)
+  ENDIF ELSE BEGIN
+      index_to_keep = get_opposite_selection(nexus_file_list, selection)
+      nexus_file_list = nexus_file_list[index_to_keep]
+      nexus_run_number = nexus_run_number[index_to_keep]
+ENDELSE
+
+
+
+END
+
+;------------------------------------------------------------------------------
 PRO addNormNexusToList, Event, new_nexus_file_list
 
   ;get global structure
