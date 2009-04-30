@@ -97,9 +97,54 @@ PRO reduce_step2_run_number_normalization, Event
     LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
     IDLsendToGeek_addLogBookText, Event, LogText
 
+    ;get full nexus file name for the runs loaded
+    LogText = '-> Retrieve List of Full Normalization NeXus File Names:'
+    IDLsendToGeek_addLogBookText, Event, LogText
+    nbr_runs = N_ELEMENTS(ListOfRuns)
+    index    = 0
+    nexus_file_list = STRARR(nbr_runs)
+    WHILE (index LT nbr_runs) DO BEGIN
+      full_nexus_name = findnexus(Event,$
+        RUN_NUMBER = ListOfRuns[index],$
+        INSTRUMENT = (*global).instrument,$
+        PROPOSAL   = proposalSelected,$
+        isNexusExist)
+      LogText = '-> Run #: ' + ListOfRuns[index]
+      IF (isNexusExist) THEN BEGIN
+        LogText += ' => ' + full_nexus_name
+        nexus_file_list[index] = full_nexus_name
+      ENDIF ELSE BEGIN
+        LogText += ' => NeXus file not FOUND !'
+      ENDELSE
+      IDLsendToGeek_addLogBookText, Event, LogText
+      index++
+  ENDWHILE
+    
+    ;remove the runs not found by STRJOIN with ',' and STRPLIT with ','
+    ;after removing blank spaces
+    
+    form1 = STRJOIN(nexus_file_list,',')
+    form2 = STRCOMPRESS(form1,/REMOVE_ALL)
+    nexus_file_list = STRSPLIT(form2,',',/EXTRACT)
 
+    addNormNexusToList, Event, nexus_file_list
 
-
+    ;activate list_of_norm base and show norm run numbers selected
+    putValueInTable, Event, $
+      'reduce_step2_list_of_norm_files_table', $
+      (*global).nexus_norm_list_run_number
+    MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
+    MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
+    
+    ;put run number in the droplists of the big table and show the number
+    ;of lines that corresponds to the number of data files loaded
+    PopulateStep2BigTabe, Event
+    
+    ;show the polarization base
+    MapBase, Event, 'reduce_step2_polarization_base', 1
+    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+    display_buttons, EVENT=EVENT, ACTIVATE=0, global
+        
 END
 
 ;------------------------------------------------------------------------------
@@ -162,7 +207,7 @@ PRO reduce_step2_browse_normalization, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO addNormNexusToList, Event, nexus_file_list_browsed
+PRO addNormNexusToList, Event, new_nexus_file_list
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -173,7 +218,7 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
 
-    nexus_file_list = nexus_file_list_browsed
+    nexus_file_list = new_nexus_file_list
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
 
 ;    sz = N_ELEMENTS(nexus_file_list_browsed)
@@ -199,8 +244,8 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
                                
   ENDIF ELSE BEGIN ;list of nexus is not empty
 
-      nexus_file_list_browsed = getOnlyDefineRunNumber(nexus_file_list_browsed)
-      nexus_file_list = [nexus_file_list,nexus_file_list_browsed]
+      new_nexus_file_list = getOnlyDefineRunNumber(new_nexus_file_list)
+      nexus_file_list = [nexus_file_list,new_nexus_file_list]
       (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
       
   ENDELSE
@@ -225,6 +270,7 @@ PRO addNormNexusToList, Event, nexus_file_list_browsed
           index++
       ENDELSE
   ENDWHILE
+
   (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
   
 END
