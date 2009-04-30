@@ -265,6 +265,13 @@ return, array_selected[1]
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getTableSelection, Event, uname
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+array_selected = WIDGET_INFO(id, /TABLE_SELECT)
+RETURN, array_selected
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getOnlyDefineRunNumber, array
 
 sz = N_ELEMENTS(array)
@@ -285,5 +292,19 @@ RETURN, new_array
 END
 
 ;-----------------------------------------------------------------------------
+
+FUNCTION get_opposite_selection, nexus_file_list, selection
+
+sz = N_ELEMENTS(nexus_file_list)
+index = 0
+remove_index = 0
+WHILE (index LT sz) DO BEGIN
+    IF (index EQ selection[remove_index]) THEN BEGIN
+        remove_index++
+    ENDIF ELSE BEGIN
+       selection_to_keep[
+
+index++
+ENDWHILE
 
 
