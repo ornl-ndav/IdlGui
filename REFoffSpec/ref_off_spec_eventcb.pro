@@ -65,7 +65,8 @@ PRO  reduce_tab_event, Event
       0:
       1:BEGIN
       status = (*global).reduce_step2_polarization_mode_status
-      display_buttons, EVENT=EVENT, ACTIVATE=status, global
+      ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
+      refresh_reduce_step2_big_table, Event
     END
     2:
     ELSE:
