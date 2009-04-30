@@ -39,159 +39,159 @@
 ;------------------------------------------------------------------------------
 ;this function gives the droplist index
 FUNCTION getDropListSelectedIndex, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value[0]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value[0]
 END
 
 ;------------------------------------------------------------------------------
 ;This function gives the value of the index selected
 FUNCTION getDropListSelectedValue, Event, uname
-index_selected = getDropListSelectedIndex(Event,uname)
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=list
-RETURN, list[index_selected]
+  index_selected = getDropListSelectedIndex(Event,uname)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=list
+  RETURN, list[index_selected]
 END
 
 ;------------------------------------------------------------------------------
 ;This function gives the value of the index selected
 FUNCTION getComboListSelectedValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-RETURN, WIDGET_INFO(id, /COMBOBOX_GETTEXT)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id, /COMBOBOX_GETTEXT)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getCWBgroupValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getDroplistValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=list
-RETURN, list
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=list
+  RETURN, list
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTableValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getButtonValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
-;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC 
+;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC
 ;------------------------------------------------------------------------------
 
 ;------------------------------------------------------------------------------
 ;Return the index of the ascii file selected in the first tab (step1)
 FUNCTION getAsciiSelectedIndex, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ascii_file_list')
-index = WIDGET_INFO(id,/LIST_SELECT)
-RETURN, [index]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ascii_file_list')
+  index = WIDGET_INFO(id,/LIST_SELECT)
+  RETURN, [index]
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the number of plot loaded
 FUNCTION getNbrFiles, Event
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-list_OF_files = (*(*global).list_OF_ascii_files)
-sz = N_ELEMENTS(list_OF_files)
-RETURN, sz
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  list_OF_files = (*(*global).list_OF_ascii_files)
+  sz = N_ELEMENTS(list_OF_files)
+  RETURN, sz
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTranFileSelected, Event
-index = getDropListSelectedIndex(Event,'transparency_file_list')
-RETURN, index
+  index = getDropListSelectedIndex(Event,'transparency_file_list')
+  RETURN, index
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getShortName, list_OF_files
-sz = N_ELEMENTS(list_OF_files)
-IF (sz GT 0) THEN BEGIN
+  sz = N_ELEMENTS(list_OF_files)
+  IF (sz GT 0) THEN BEGIN
     new_list_OF_files = STRARR(sz)
     index = 0
     WHILE (index LT sz) DO BEGIN
-        file_name  = list_OF_files[index]
-        short_name = FILE_BASENAME(file_name)
-        new_list_OF_files[index] = short_name
-        ++index
+      file_name  = list_OF_files[index]
+      short_name = FILE_BASENAME(file_name)
+      new_list_OF_files[index] = short_name
+      ++index
     ENDWHILE
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     new_list_OF_files = ['']
-ENDELSE
-RETURN, new_list_OF_files
+  ENDELSE
+  RETURN, new_list_OF_files
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the attenuator coefficient defined in the
 ;OPTIONS tab
 FUNCTION getShiftingAttenuatorCoeff, Event
-percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
-RETURN, percentage_value/100.
+  percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
+  RETURN, percentage_value/100.
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the attenuator coefficient in percentage
 ;OPTIONS tab
 FUNCTION getShiftingAttenuatorPercentage, Event
-percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
-RETURN, percentage_value
+  percentage_value = getTextFieldValue(Event, 'transparency_shifting_options')
+  RETURN, percentage_value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step1XminValue, Event
-RETURN, getTextFieldValue(Event, 'selection_info_xmin_value')
+  RETURN, getTextFieldValue(Event, 'selection_info_xmin_value')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step1YminValue, Event
-RETURN, getTextFieldValue(Event, 'selection_info_ymin_value')
+  RETURN, getTextFieldValue(Event, 'selection_info_ymin_value')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step1XmaxValue, Event
-RETURN, getTextFieldValue(Event, 'selection_info_xmax_value')
+  RETURN, getTextFieldValue(Event, 'selection_info_xmax_value')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step1YmaxValue, Event
-RETURN, getTextFieldValue(Event, 'selection_info_ymax_value')
+  RETURN, getTextFieldValue(Event, 'selection_info_ymax_value')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION get_step4_step2_step2_lambda, Event
-lambda_left  = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
-lambda_right = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
-RETURN,[lambda_left,lambda_right]
+  lambda_left  = getTextFieldValue(Event,'step4_2_2_lambda1_text_field')
+  lambda_right = getTextFieldValue(Event,'step4_2_2_lambda2_text_field')
+  RETURN,[lambda_left,lambda_right]
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step1SelectionPixelRange, Event
-value = getTextFieldValue(Event,'selection_coverage_step4_step1')
-RETURN, FIX(value)
+  value = getTextFieldValue(Event,'selection_coverage_step4_step1')
+  RETURN, FIX(value)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step2PSYMselected, Event
-value = getCWBgroupValue(Event,'plot_2d_symbol')
-RETURN, value+1
+  value = getCWBgroupValue(Event,'plot_2d_symbol')
+  RETURN, value+1
 END
 
 ;------------------------------------------------------------------------------
@@ -201,110 +201,119 @@ END
 ;or decreasing order) the first and last argument will be checked first
 FUNCTION getArrayRangeFromlda1lda2, data, lda1, lda2
 
-FirstValue = data[0]
-data_size  = (size(data))[1]
-LastValue  = data[data_size-1]
-
-left_index  = 0
-right_index = (data_size-1)
-
-found_left_index = 0
-IF (FirstValue LT LastValue) THEN BEGIN ;increasing order
+  FirstValue = data[0]
+  data_size  = (SIZE(data))[1]
+  LastValue  = data[data_size-1]
+  
+  left_index  = 0
+  right_index = (data_size-1)
+  
+  found_left_index = 0
+  IF (FirstValue LT LastValue) THEN BEGIN ;increasing order
     FOR i=0,(data_size-1) DO BEGIN
-        IF (found_left_index EQ 0) THEN BEGIN
-            IF (data[i] GE lda1) THEN BEGIN
-                left_index       = i
-                found_left_index = 1
-            ENDIF
-        ENDIF ELSE BEGIN
-            IF (data[i] GT lda2) THEN BEGIN
-                right_index = i-1
-                BREAK
-            ENDIF
-        ENDELSE
+      IF (found_left_index EQ 0) THEN BEGIN
+        IF (data[i] GE lda1) THEN BEGIN
+          left_index       = i
+          found_left_index = 1
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (data[i] GT lda2) THEN BEGIN
+          right_index = i-1
+          BREAK
+        ENDIF
+      ENDELSE
     ENDFOR
-ENDIF ELSE BEGIN                ;decreasing order
+  ENDIF ELSE BEGIN                ;decreasing order
     FOR i=0,(data_size-1) DO BEGIN
-        IF (found_left_index EQ 0) THEN BEGIN
-            IF (data[i] LE lda2) THEN BEGIN
-                left_index       = i
-                found_left_index = 1
-            ENDIF
-        ENDIF ELSE BEGIN
-            IF (data[i] LT lda1) THEN BEGIN
-                right_index = i-1
-                BREAK
-            ENDIF
-        ENDELSE
+      IF (found_left_index EQ 0) THEN BEGIN
+        IF (data[i] LE lda2) THEN BEGIN
+          left_index       = i
+          found_left_index = 1
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (data[i] LT lda1) THEN BEGIN
+          right_index = i-1
+          BREAK
+        ENDIF
+      ENDELSE
     ENDFOR
-ENDELSE          
-returnArray = [left_index, right_index]
-RETURN, returnArray
+  ENDELSE
+  returnArray = [left_index, right_index]
+  RETURN, returnArray
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getStep4Step2PlotType, Event
-RETURN, getCWBgroupValue(Event,'step4_step2_z_axis_linear_log')
+  RETURN, getCWBgroupValue(Event,'step4_step2_z_axis_linear_log')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getPolarizationState, file_name
-pola_states = ['p0','p1','p2','p3']
-FOR i=0,3 DO BEGIN
+  pola_states = ['p0','p1','p2','p3']
+  FOR i=0,3 DO BEGIN
     IF (STRPOS(file_name,'_' + pola_states[i]) NE -1) THEN $
       RETURN, pola_states[i]
-ENDFOR
-RETURN, 'N/A'
+  ENDFOR
+  RETURN, 'N/A'
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTableRowSelected, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-array_selected = WIDGET_INFO(id, /TABLE_SELECT)
-return, array_selected[1]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  array_selected = WIDGET_INFO(id, /TABLE_SELECT)
+  RETURN, array_selected[1]
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTableSelection, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-array_selected = WIDGET_INFO(id, /TABLE_SELECT)
-RETURN, array_selected
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  array_selected = WIDGET_INFO(id, /TABLE_SELECT)
+  RETURN, array_selected
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getOnlyDefineRunNumber, array
 
-sz = N_ELEMENTS(array)
-new_array = STRARR(1)
-index = 0
-WHILE (index LT sz) DO BEGIN
+  sz = N_ELEMENTS(array)
+  new_array = STRARR(1)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
     IF (array[index] NE '') THEN BEGIN
-        run_number = STRCOMPRESS(array[index],/REMOVE_ALL)
-        IF (index EQ 0) THEN BEGIN
-            new_array[0] = run_number
-        ENDIF ELSE BEGIN
-            new_array = [new_array,run_number]
-        ENDELSE
+      run_number = STRCOMPRESS(array[index],/REMOVE_ALL)
+      IF (index EQ 0) THEN BEGIN
+        new_array[0] = run_number
+      ENDIF ELSE BEGIN
+        new_array = [new_array,run_number]
+      ENDELSE
     ENDIF
     index++
-ENDWHILE
-RETURN, new_array
+  ENDWHILE
+  RETURN, new_array
 END
 
 ;-----------------------------------------------------------------------------
+PRO get_new_list, nexus_file_list, nexus_run_number, selection
 
-FUNCTION get_opposite_selection, nexus_file_list, selection
-
-sz = N_ELEMENTS(nexus_file_list)
-index = 0
-remove_index = 0
-WHILE (index LT sz) DO BEGIN
-    IF (index EQ selection[remove_index]) THEN BEGIN
-        remove_index++
-    ENDIF ELSE BEGIN
-       selection_to_keep[
-
-index++
-ENDWHILE
-
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+CATCH,/CANCEL
+RETURN
+ENDIF ELSE BEGIN
+  sz = N_ELEMENTS(nexus_file_list)
+  sz2 = sz - N_ELEMENTS(selection)
+  new_nexus_file_list = STRARR(sz2)
+  new_nexus_run_number = STRARR(1,11)
+  j=0
+  FOR i=0,(sz-1) DO BEGIN
+    IF (WHERE(selection EQ i) EQ -1) THEN BEGIN
+      new_nexus_file_list[j] = nexus_file_list[i]
+      new_nexus_run_number[j] = nexus_run_number[i]
+      j++
+    ENDIF
+  ENDFOR
+  nexus_run_number = new_nexus_run_number
+  nexus_file_list = new_nexus_file_list
+ENDELSE
+END
 
