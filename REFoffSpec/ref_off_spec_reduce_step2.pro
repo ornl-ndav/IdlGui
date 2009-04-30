@@ -424,6 +424,8 @@ PRO populate_reduce_step2_norm_droplist, Event
     ENDIF ELSE BEGIN
       uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index_data)
       SetDroplistValue, Event, uname, norm_run_number
+      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data)
+      MapBase, Event, uname, 1
     ENDELSE
     
     index_data++
