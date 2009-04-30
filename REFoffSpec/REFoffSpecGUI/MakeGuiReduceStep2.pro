@@ -141,6 +141,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   text = WIDGET_TEXT(row2,$
     VALUE = '',$
     UNAME = 'reduce_step2_normalization_text_field',$
+    /EDITABLE,$
     XSIZE = 20)
     
   value = WIDGET_LABEL(row2,$
