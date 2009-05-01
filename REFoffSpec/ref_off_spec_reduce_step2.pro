@@ -191,15 +191,18 @@ PRO refresh_reduce_step2_big_table, Event
     putValueInTable, Event, $
       'reduce_step2_list_of_norm_files_table', $
       (*global).nexus_norm_list_run_number
-    MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
-    MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
-    
-    ;show the polarization base
-    MapBase, Event, 'reduce_step2_polarization_base', 1
-    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-    display_buttons, EVENT=EVENT, $
-    ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
-    global
+      
+    IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+      MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
+      MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
+      
+      ;show the polarization base
+      MapBase, Event, 'reduce_step2_polarization_base', 1
+      MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+      display_buttons, EVENT=EVENT, $
+        ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
+        global
+    ENDIF
     
     tab1_table = (*(*global).reduce_tab1_table)
     data_run_number = tab1_table[0,*]
@@ -266,8 +269,8 @@ PRO reduce_step2_remove_run, Event
     MapBase, Event, 'reduce_step2_polarization_base', 1
     MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
     display_buttons, EVENT=EVENT, $
-    ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
-    
+      ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
+      
   ENDELSE
   
 END
@@ -363,8 +366,11 @@ PRO PopulateStep2BigTabe, Event
       ;populate data labels
       uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
       putTextFieldValue, Event, uname, data_run_number[0,index]
-      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
-      MapBase, Event, uname, 1
+      
+      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+        uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+        MapBase, Event, uname, 1
+      ENDIF
       
       putTextFieldValue, Event, $
         'reduce_tab2_roi_value' + STRCOMPRESS(index),$
@@ -372,23 +378,27 @@ PRO PopulateStep2BigTabe, Event
         
     ENDIF ELSE BEGIN
     
-      error = 0
-      CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH, /CANCEL
-      ENDIF ELSE BEGIN
-        uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
-        MapBase, Event, uname, 0
-      ENDELSE
-
+      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN
+          CATCH, /CANCEL
+        ENDIF ELSE BEGIN
+          uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+          MapBase, Event, uname, 0
+        ENDELSE
+      ENDIF
+      
     ENDELSE
     
     index++
     
   ENDWHILE
   
-  IF (data_run_number[0,0] NE '') THEN BEGIN
-    MapBase, Event, 'reduce_step2_label_table_base', 1
+  IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+    IF (data_run_number[0,0] NE '') THEN BEGIN
+      MapBase, Event, 'reduce_step2_label_table_base', 1
+    ENDIF
   ENDIF
   
 END
@@ -508,20 +518,26 @@ END
 ;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
 PRO reduce_step2_create_roi, Event, row=row
-
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   MapBase, Event, 'reduce_step2_create_roi_base', 1
-
-
-
-
+  (*global).reduce_step2_create_roi_base = 1
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO reduce_step2_return_to_table, Event
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   MapBase, Event, 'reduce_step2_create_roi_base', 0
+  (*global).reduce_step2_create_roi_base = 0
+  
+  ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
+  refresh_reduce_step2_big_table, Event
+  
+  
 END
 
 
