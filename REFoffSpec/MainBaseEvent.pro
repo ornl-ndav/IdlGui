@@ -173,7 +173,7 @@ PRO MAIN_BASE_event, Event
     ENDELSE
   END
   
-  ;Browse for a ROI file buttons (0-> 9)
+  ;Browse for a ROI file buttons (0->9)
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button0'): BEGIN
     reduce_step2_browse_roi, Event, row=0
   END
@@ -205,6 +205,42 @@ PRO MAIN_BASE_event, Event
     reduce_step2_browse_roi, Event, row=9
   END
   
+;Create/Modify/Visualize ROI file (0->9)
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button0'): BEGIN
+    reduce_step2_create_roi, Event, row=0
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button1'): BEGIN
+    reduce_step2_create_roi, Event, row=1
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button2'): BEGIN
+    reduce_step2_create_roi, Event, row=2
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button3'): BEGIN
+    reduce_step2_create_roi, Event, row=3
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button4'): BEGIN
+    reduce_step2_create_roi, Event, row=4
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button5'): BEGIN
+    reduce_step2_create_roi, Event, row=5
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button6'): BEGIN
+    reduce_step2_create_roi, Event, row=6
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button7'): BEGIN
+    reduce_step2_create_roi, Event, row=7
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button8'): BEGIN
+    reduce_step2_create_roi, Event, row=8
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button9'): BEGIN
+    reduce_step2_create_roi, Event, row=9
+  END
+
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
+    reduce_step2_return_to_table, Event
+  END
+
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
   
   

@@ -457,8 +457,6 @@ END
 ;------------------------------------------------------------------------------
 PRO reduce_step2_browse_roi, Event, row=row
 
-  PRINT, 'in reduce_step2_browse_roi'
-  
   iRow = row
   row = STRCOMPRESS(row)
   
@@ -506,3 +504,25 @@ PRO reduce_step2_browse_roi, Event, row=row
   ENDELSE
   
 END
+
+;------------------------------------------------------------------------------
+;Reach by any of the Create/Modify/Visualize ROI file
+PRO reduce_step2_create_roi, Event, row=row
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  MapBase, Event, 'reduce_step2_create_roi_base', 1
+
+
+
+
+END
+
+;------------------------------------------------------------------------------
+PRO reduce_step2_return_to_table, Event
+  MapBase, Event, 'reduce_step2_create_roi_base', 0
+END
+
+
+
