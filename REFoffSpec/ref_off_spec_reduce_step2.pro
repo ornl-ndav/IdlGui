@@ -91,11 +91,11 @@ PRO reduce_step2_run_number_normalization, Event
   LogText = '-> Run or List of Normalization Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
   IDLsendToGeek_addLogBookText, Event, LogText
   
-;  ;get proposal selected by user (from droplist)
-;  proposalSelected = getComboListSelectedValue(Event, $
-;    'reduce_tab2_list_of_proposal')
-;  LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
-;  IDLsendToGeek_addLogBookText, Event, LogText
+  ;  ;get proposal selected by user (from droplist)
+  ;  proposalSelected = getComboListSelectedValue(Event, $
+  ;    'reduce_tab2_list_of_proposal')
+  ;  LogText = '-> Normalization Proposal Folder Selected: ' + proposalSelected
+  ;  IDLsendToGeek_addLogBookText, Event, LogText
   
   ;get full nexus file name for the runs loaded
   LogText = '-> Retrieve List of Full Normalization NeXus File Names:'
@@ -107,7 +107,7 @@ PRO reduce_step2_run_number_normalization, Event
     full_nexus_name = findnexus(Event,$
       RUN_NUMBER = ListOfRuns[index],$
       INSTRUMENT = (*global).instrument,$
- ;     PROPOSAL   = proposalSelected,$
+      ;     PROPOSAL   = proposalSelected,$
       isNexusExist)
     LogText = '-> Run #: ' + ListOfRuns[index]
     IF (isNexusExist) THEN BEGIN
@@ -199,18 +199,19 @@ PRO refresh_reduce_step2_big_table, Event
     MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
     display_buttons, EVENT=EVENT, ACTIVATE=0, global
     
-  ENDIF
-  
-  tab1_table = (*(*global).reduce_tab1_table)
-  data_run_number = tab1_table[0,*]
-  IF (data_run_number[0] NE '') THEN BEGIN
-  
-    ;put run number in the droplists of the big table and show the number
-    ;of lines that corresponds to the number of data files loaded
-    PopulateStep2BigTabe, Event
+    tab1_table = (*(*global).reduce_tab1_table)
+    data_run_number = tab1_table[0,*]
+    IF (data_run_number[0] NE '') THEN BEGIN
+    
+      ;put run number in the droplists of the big table and show the number
+      ;of lines that corresponds to the number of data files loaded
+      PopulateStep2BigTabe, Event
+      
+    ENDIF
     
   ENDIF
-
+  
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -227,9 +228,9 @@ PRO reduce_step2_remove_run, Event
     'reduce_step2_list_of_norm_files_table')
     
   selection = selection_array[1,*]
-
+  
   IF (selection[0] EQ 0 and $
-  N_ELEMENTS(nexus_file_list) EQ 1 ) THEN BEGIN
+    N_ELEMENTS(nexus_file_list) EQ 1 ) THEN BEGIN
     nexus_file_list = STRARR(1)
     nexus_run_number = STRARR(1,11)
     
@@ -239,7 +240,7 @@ PRO reduce_step2_remove_run, Event
     MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 1
     
     hideStep2BigTable, Event
-
+    
     (*global).nexus_norm_list_run_number = nexus_run_number
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
     
@@ -351,7 +352,7 @@ PRO PopulateStep2BigTabe, Event
   sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    print, index
+    PRINT, index
     IF (data_run_number[0,index] NE '') THEN BEGIN
     
       ;populate norm label or droplist
@@ -364,9 +365,9 @@ PRO PopulateStep2BigTabe, Event
       MapBase, Event, uname, 1
       
       putTextFieldValue, Event, $
-      'reduce_tab2_roi_value' + STRCOMPRESS(index),$
-      norm_roi_list[index]
-      
+        'reduce_tab2_roi_value' + STRCOMPRESS(index),$
+        norm_roi_list[index]
+        
     ENDIF
     
     index++
@@ -445,8 +446,8 @@ PRO reduce_step2_browse_roi, Event, row=row
 
   iRow = row
   row = STRCOMPRESS(row)
-
-;get global structure
+  
+  ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   PROCESSING = (*global).processing
@@ -457,7 +458,7 @@ PRO reduce_step2_browse_roi, Event, row=row
   
   data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + row)
   title = 'Select Region Of Interest File for Data Run # ' + data_run + $
-  ': '
+    ': '
   default_extenstion = '.dat'
   
   LogText = '> Browsing for 1 ROI file for data run # ' + data_run + $
@@ -481,9 +482,9 @@ PRO reduce_step2_browse_roi, Event, row=row
       (*global).ROI_path = new_path
       LogText = '-> New ROI browsing_path is: ' + new_path
     ENDIF
-  
+    
     refresh_reduce_step2_big_table, Event
-  
+    
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for a ROI file.'
     IDLsendToGeek_addLogBookText, Event, LogText
