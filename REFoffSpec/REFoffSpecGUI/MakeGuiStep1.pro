@@ -55,8 +55,7 @@ sTab = { size: [XYoff[0],$
 ;Tab titles
 ReduceTabTitles = { step1: ' Step1:  DATA  ',$
                     step2: ' Step2:  NORMALIZATION  ',$
-                    step3: ' Step3:  PARAMETERS  ',$
-                    step4: ' Step4:  RECAPITULATION  '}
+                    step3: ' Step3:  RECAPITULATION  '}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -89,8 +88,5 @@ make_gui_reduce_step2, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
 
 ;reduce_step3
 make_gui_reduce_step3, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
-
-;reduce_step4
-make_gui_reduce_step4, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
 
 END
