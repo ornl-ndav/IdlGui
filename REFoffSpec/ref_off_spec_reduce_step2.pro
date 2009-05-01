@@ -210,10 +210,7 @@ PRO refresh_reduce_step2_big_table, Event
     PopulateStep2BigTabe, Event
     
   ENDIF
-  
-  
-  
-  
+
 END
 
 ;------------------------------------------------------------------------------
@@ -242,6 +239,9 @@ PRO reduce_step2_remove_run, Event
     MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 1
     
     hideStep2BigTable, Event
+
+    (*global).nexus_norm_list_run_number = nexus_run_number
+    (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
     
   ENDIF ELSE BEGIN
   
