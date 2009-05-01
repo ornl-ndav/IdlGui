@@ -264,7 +264,7 @@ PRO REFreduction_LoadDatafile, Event, isNeXusFound, NbrNexus
             
             WIDGET_CONTROL,HOURGLASS=0
             
-          ENDIF ELSE BEGIN
+          ENDIF ELSE BEGIN ;2 or more polarization states
           
             WIDGET_CONTROL,HOURGLASS=0
             

@@ -112,7 +112,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     pola_type: '',$ ;'data' or 'norm'
     data_path_flag: '--data-paths',$
-    data_path_flag_suffix: '/bank1,1',$
+    data_path_flag_suffix: 'bank1,1',$
     data_path: '',$ ;for example  '/entry_Off-Off/'
     empty_cell_path: '',$ ;for example  '/entry_Off-Off/'
     norm_path_flag: '--norm-data-paths=/entry-Off_Off/' + $
