@@ -115,23 +115,27 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   row3_row2_base = WIDGET_BASE(row3_base,$
     /ROW)
     
-  ymin_label = WIDGET_LABEL(row3_row2_base,$
-    VALUE = 'Ymin:')
-  ymin_value = WIDGET_TEXT(row3_row2_base,$
+  y1_label = WIDGET_LABEL(row3_row2_base,$
+    VALUE = 'Y1:')
+  y1_value = WIDGET_TEXT(row3_row2_base,$
     VALUE = ' ',$
     XSIZE = 3,$
     /EDITABLE,$
     /ALIGN_LEFT,$
-    UNAME = 'reduce_step2_create_roi_ymin_value')
+    UNAME = 'reduce_step2_create_roi_y1_value')
     
-  ymax_label = WIDGET_LABEL(row3_row2_base,$
-    VALUE = '  Ymax:')
-  ymin_value = WIDGET_TEXT(row3_row2_base,$
+  y2_label = WIDGET_LABEL(row3_row2_base,$
+    VALUE = '  Y2:')
+  y2_value = WIDGET_TEXT(row3_row2_base,$
     VALUE = ' ',$
     XSIZE = 3,$
     /EDITABLE,$
     /ALIGN_LEFT,$
-    UNAME = 'reduce_step2_create_roi_ymax_value')
+    UNAME = 'reduce_step2_create_roi_y2_value')
+    
+    info = WIDGET_LABEL(row3_row2_base,$
+    VALUE = '(Left click on the plot to select first Y, Right click to ' + $
+    'switch to next Y, or manually input Y1 and Y2)')
     
     ;third row (save button)
     save_roi = WIDGET_BUTTON(row3_base,$
