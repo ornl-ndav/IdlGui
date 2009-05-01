@@ -64,46 +64,82 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME     = 'reduce_step2_create_roi_base',$
     MAP       = 1)
     
-    big_base = WIDGET_BASE(ModifyBase,$
+  big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
     
-    ;first row
-    row1_base = WIDGET_BASE(big_base,$
+  ;first row
+  row1_base = WIDGET_BASE(big_base,$
     /ROW)
     
-    space = WIDGET_LABEL(row1_base,$
+  space = WIDGET_LABEL(row1_base,$
     VALUE = ' ')
     
-    norm_label = WIDGET_LABEL(row1_base,$
+  norm_label = WIDGET_LABEL(row1_base,$
     VAlUE = '  Normalization Run:')
     
-    norm_value = WIDGET_LABEL(row1_base,$
+  norm_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     UNAME = 'reduce_step2_create_roi_norm_value',$
     FRAME = 1,$
     SCR_XSIZE = 100)
-   
-    spin_label = WIDGET_LABEL(row1_base,$
+    
+  spin_label = WIDGET_LABEL(row1_base,$
     VALUE = '     Spin State:')
     
-    spin_value = WIDGET_LABEL(row1_base,$
+  spin_value = WIDGET_LABEL(row1_base,$
     VALUE = 'Off-Off',$
     UNAME = 'reduce_step2_create_roi_pola_value',$
     FRAME = 1,$
     SCR_XSIZE = 50)
     
-    roi_label = WIDGET_LABEL(row1_base,$
+  roi_label = WIDGET_LABEL(row1_base,$
     VALUE = '     ROI File Name:')
     
-    roi_value = WIDGET_LABEL(row1_base,$
+  roi_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 500,$
     FRAME = 1)
     
+  ;third row ---------------------------
+  row3_base = WIDGET_BASE(big_base,$
+    /COLUMN,$
+    FRAME = 1)
+    
+  ;first inside row (browse button)
+  browse_button = WIDGET_BUTTON(row3_base,$
+    VALUE = 'B R O W S E   F O R   A   R O I . . .',$
+    SCR_XSIZE = 600,$
+    UNAME = 'reduce_step2_create_roi_browse_roi_button')
+    
+  ;second inside row
+  row3_row2_base = WIDGET_BASE(row3_base,$
+    /ROW)
+    
+  ymin_label = WIDGET_LABEL(row3_row2_base,$
+    VALUE = 'Ymin:')
+  ymin_value = WIDGET_TEXT(row3_row2_base,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_roi_ymin_value')
+    
+  ymax_label = WIDGET_LABEL(row3_row2_base,$
+    VALUE = '  Ymax:')
+  ymin_value = WIDGET_TEXT(row3_row2_base,$
+    VALUE = ' ',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    /ALIGN_LEFT,$
+    UNAME = 'reduce_step2_create_roi_ymax_value')
+    
+    ;third row (save button)
+    save_roi = WIDGET_BUTTON(row3_base,$
+    VALUE = 'S A V E   R O I',$
+    UNAME = 'reduce_step2_create_roi_save_roi')
     
     
     
-      
     
     
     
@@ -113,9 +149,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
     
     
-    
-    
-    RetourButton = WIDGET_BUTTON(ModifyBase,$
+  RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
     YOFFSET = sBase.size[3] - 90,$
     SCR_XSIZE = 120,$
