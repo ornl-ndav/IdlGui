@@ -351,7 +351,7 @@ PRO PopulateStep2BigTabe, Event
   sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-
+  
     IF (data_run_number[0,index] NE '') THEN BEGIN
     
       ;populate norm label or droplist
@@ -367,7 +367,18 @@ PRO PopulateStep2BigTabe, Event
         'reduce_tab2_roi_value' + STRCOMPRESS(index),$
         norm_roi_list[index]
         
-    ENDIF
+    ENDIF ELSE BEGIN
+    
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH, /CANCEL
+      ENDIF ELSE BEGIN
+        uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+        MapBase, Event, uname, 0
+      ENDELSE
+
+    ENDELSE
     
     index++
     
@@ -443,8 +454,8 @@ END
 ;------------------------------------------------------------------------------
 PRO reduce_step2_browse_roi, Event, row=row
 
-  print, 'in reduce_step2_browse_roi'
-
+  PRINT, 'in reduce_step2_browse_roi'
+  
   iRow = row
   row = STRCOMPRESS(row)
   
