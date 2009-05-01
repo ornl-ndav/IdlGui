@@ -98,8 +98,7 @@ PRO MAIN_BASE_event, Event
   ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
   
   ;browse normalization file button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME= $
-    'reduce_step2_browse_button'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME= 'reduce_step2_browse_button'): BEGIN
     reduce_step2_browse_normalization, Event
   END
   
@@ -110,15 +109,13 @@ PRO MAIN_BASE_event, Event
   END
   
   ;remove normalization button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_step2_list_of_norm_files_remove_button'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_list_of_norm_files_remove_button'): BEGIN
     reduce_step2_remove_run, Event
   END
   
   
   ;polarization mode 1 button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_step2_polarization_mode1_draw'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
@@ -145,14 +142,12 @@ PRO MAIN_BASE_event, Event
   END
   
   ;combobox of mode1
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_step2_mode1_spin_state_combobox'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
     mode1_spin_state_combobox_changed, Event
   END
   
   ;polarization mode 2 button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_step2_polarization_mode2_draw'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
@@ -179,45 +174,34 @@ PRO MAIN_BASE_event, Event
   END
   
   ;Browse for a ROI file buttons (0-> 9)
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button0'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button0'): BEGIN
     reduce_step2_browse_roi, Event, row=0
   END
-  
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button1'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button1'): BEGIN
     reduce_step2_browse_roi, Event, row=1
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button2'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button2'): BEGIN
     reduce_step2_browse_roi, Event, row=2
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button3'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button3'): BEGIN
     reduce_step2_browse_roi, Event, row=3
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button4'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button4'): BEGIN
     reduce_step2_browse_roi, Event, row=4
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button5'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button5'): BEGIN
     reduce_step2_browse_roi, Event, row=5
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button6'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button6'): BEGIN
     reduce_step2_browse_roi, Event, row=6
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button7'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button7'): BEGIN
     reduce_step2_browse_roi, Event, row=7
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button8'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button8'): BEGIN
     reduce_step2_browse_roi, Event, row=8
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME=
-  'reduce_tab2_roi_browse_button9'): BEGIN
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button9'): BEGIN
     reduce_step2_browse_roi, Event, row=9
   END
   

@@ -211,6 +211,9 @@ PRO refresh_reduce_step2_big_table, Event
     
   ENDIF
   
+  
+  
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -263,7 +266,6 @@ PRO reduce_step2_remove_run, Event
     display_buttons, EVENT=EVENT, ACTIVATE=0, global
     
   ENDELSE
-  
   
 END
 
@@ -344,11 +346,12 @@ PRO PopulateStep2BigTabe, Event
   
   tab1_table = (*(*global).reduce_tab1_table)
   data_run_number = tab1_table[0,*]
+  norm_roi_list = (*global).reduce_step2_norm_roi
   
   sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-  
+    print, index
     IF (data_run_number[0,index] NE '') THEN BEGIN
     
       ;populate norm label or droplist
@@ -359,6 +362,10 @@ PRO PopulateStep2BigTabe, Event
       putTextFieldValue, Event, uname, data_run_number[0,index]
       uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
       MapBase, Event, uname, 1
+      
+      putTextFieldValue, Event, $
+      'reduce_tab2_roi_value' + STRCOMPRESS(index),$
+      norm_roi_list[index]
       
     ENDIF
     
@@ -430,5 +437,56 @@ PRO populate_reduce_step2_norm_droplist, Event
     
     index_data++
   ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO reduce_step2_browse_roi, Event, row=row
+
+  iRow = row
+  row = STRCOMPRESS(row)
+
+;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  path  = (*global).ROI_path
+  
+  data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + row)
+  title = 'Select Region Of Interest File for Data Run # ' + data_run + $
+  ': '
+  default_extenstion = '.dat'
+  
+  LogText = '> Browsing for 1 ROI file for data run # ' + data_run + $
+    ': '
+  IDLsendToGeek_addLogBookText, Event, LogText
+  
+  roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
+    FILTER = ['*_roi.dat'],$
+    GET_PATH = new_path,$
+    /MUST_EXIST,$
+    PATH = path,$
+    TITLE = title)
+    
+  IF (roi_list[0] NE '') THEN BEGIN
+  
+    reduce_step2_norm_roi = (*global).reduce_step2_norm_roi
+    reduce_step2_norm_roi[iRow] = roi_list[0]
+    (*global).reduce_step2_norm_roi = reduce_step2_norm_roi
+    
+    IF (new_path NE path) THEN BEGIN
+      (*global).ROI_path = new_path
+      LogText = '-> New ROI browsing_path is: ' + new_path
+    ENDIF
+  
+    refresh_reduce_step2_big_table, Event
+  
+  ENDIF ELSE BEGIN
+    LogText = '-> User canceled Browsing for a ROI file.'
+    IDLsendToGeek_addLogBookText, Event, LogText
+  ENDELSE
   
 END
