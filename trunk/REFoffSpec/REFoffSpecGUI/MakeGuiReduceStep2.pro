@@ -54,6 +54,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
     
+  ;Create/Modify/Visualize base ===============================================
+    
+  ModifyBase = WIDGET_BASE(Base,$
+    XOFFSET   = sBase.size[0],$
+    YOFFSET   = sBase.size[1],$
+    SCR_XSIZE = sBase.size[2],$
+    SCR_YSIZE = sbase.size[3],$
+    UNAME     = 'reduce_step2_create_roi_base',$
+    MAP       = 0)
+    
+    RetourButton = WIDGET_BUTTON(ModifyBase,$
+    XOFFSET = sBase.size[2] - 140,$
+    YOFFSET = sBase.size[3] - 90,$
+    SCR_XSIZE = 120,$
+    SCR_YSIZE = 30,$
+    VALUE = '  RETURN TO TABLE  ',$
+    UNAME = 'reduce_step2_return_to_table_button')
+    
+  ;end of Creae/modify/visualize base =========================================
+    
   xoff = 30
   
   ;title of normalization input frame
@@ -325,7 +345,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       uname = uname)
       
     ;Create/modify ROI
-    uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i,/REMOVE_ALL)
     modify = WIDGET_BUTTON(row_base,$
       xoffset = xyoff[0]+500,$
       yoffset = 0,$
@@ -341,7 +361,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       frame=0,$
       value = 'File:',$
       uname = uname)
-
+      
     uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i)
     roi = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+780,$
@@ -354,17 +374,5 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     yoff += offset
   ENDFOR
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
 END
