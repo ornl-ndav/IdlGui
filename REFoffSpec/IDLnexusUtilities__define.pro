@@ -49,7 +49,7 @@ FUNCTION IDLnexusUtilities::getPolarization
 RETURN, self.list_pola_state
 END
 
-;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------i
 FUNCTION IDLnexusUtilities::init, full_nexus_name
 
 ;check if nexus file exist

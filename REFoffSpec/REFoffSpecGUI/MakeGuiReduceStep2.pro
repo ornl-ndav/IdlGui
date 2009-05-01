@@ -316,7 +316,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     ;roi widgets
     ;Browse button
-    uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i,/REMOVE_ALL)
     browse = WIDGET_BUTTON(row_base,$
       Xoffset = xyoff[0]+310,$
       yoffset = 0,$
@@ -333,14 +333,23 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       scr_xsize = 230,$
       value = 'Create/Modify/Visualize ROI file')
       
-    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i)
     roi = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+740,$
+      YOFFSET = label_offset,$
+      /ALIGN_LEFT,$
+      frame=0,$
+      value = 'File:',$
+      uname = uname)
+
+    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i)
+    roi = WIDGET_LABEL(row_Base,$
+      XOFFSET = XYoff[0]+780,$
       YOFFSET = label_offset,$
       SCR_XSIZE = 490,$
       /ALIGN_LEFT,$
       frame=0,$
-      value = '',$
+      value = 'N/A',$
       uname = uname)
       
     yoff += offset
