@@ -40,9 +40,16 @@ FUNCTION  addTableToBigTable, Event, new_reduce_tab1_table
   new_table = STRARR(nbr_column,nbr_row)
   
   nbr_row_loaded = (SIZE(new_reduce_tab1_table))(2)
-  FOR i=0,nbr_row_loaded-1 DO BEGIN
-    new_table[*,i] = new_reduce_tab1_table[*,i]
-  ENDFOR
+  
+  IF ((SIZE(new_reduce_tab1_table))(0) EQ 1) THEN BEGIN
+    new_table[*,0] = new_reduce_tab1_table[*]
+  ENDIF ELSE BEGIN
+    index = 0
+    WHILE (index LT nbr_row_loaded) DO BEGIN
+      new_table[*,index] = new_reduce_tab1_table[*,index]
+      index++
+    ENDWHILE
+  ENDELSE
   RETURN, new_table
   
 END
@@ -323,7 +330,7 @@ PRO AddNexusToReduceTab1Table, Event
         uniq_element_table(INPUT_TABLE = reduce_tab1_table,$
         COL = 0)
       new_table = addTableToBigTable(Event, new_reduce_tab1_table)
-    
+      
     ENDIF ELSE BEGIN
     
       new_table = reduce_tab1_table
@@ -573,9 +580,9 @@ PRO AddNexusToReduceTab1Table, Event
     nbr_row = (*global).reduce_input_table_nbr_row
     nbr_column = (*global).reduce_input_table_nbr_column
     
-    IF (nbr_row EQ 1) THEN BEGIN
-      RETURN, STRARR(3,nbr_row)
-    ENDIF
+    ;    IF (nbr_row EQ 1) THEN BEGIN
+    ;      RETURN, STRARR(3,nbr_row)
+    ;    ENDIF
     
     new_table = STRARR(nbr_column, nbr_row)
     index = 0
