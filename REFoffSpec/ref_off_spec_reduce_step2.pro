@@ -197,7 +197,9 @@ PRO refresh_reduce_step2_big_table, Event
     ;show the polarization base
     MapBase, Event, 'reduce_step2_polarization_base', 1
     MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-    display_buttons, EVENT=EVENT, ACTIVATE=0, global
+    display_buttons, EVENT=EVENT, $
+    ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
+    global
     
     tab1_table = (*(*global).reduce_tab1_table)
     data_run_number = tab1_table[0,*]
