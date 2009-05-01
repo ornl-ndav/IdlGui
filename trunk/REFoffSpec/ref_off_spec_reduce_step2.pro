@@ -211,7 +211,6 @@ PRO refresh_reduce_step2_big_table, Event
     
   ENDIF
   
-  
 END
 
 ;------------------------------------------------------------------------------
@@ -279,6 +278,8 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
   reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
+  
+  help, nexus_file_list
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
   

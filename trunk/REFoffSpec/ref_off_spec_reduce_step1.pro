@@ -44,7 +44,7 @@ FUNCTION  addTableToBigTable, Event, new_reduce_tab1_table
     new_table[*,i] = new_reduce_tab1_table[*,i]
   ENDFOR
   RETURN, new_table
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -173,14 +173,14 @@ FUNCTION retrieve_list_OF_polarization_state, Event, $
     PROCESSING
   IDLsendToGeek_addLogBookText, Event, LogText
   iPola = OBJ_NEW('IDLnexusUtilities',nexus_file_name)
-
+  
   IF (OBJ_VALID(iPola) NE 1) THEN BEGIN ;obj not valid
     message = FAILED + '  (Format of file not supported by' + $
       ' this application).'
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, message
     RETURN, 0
   ENDIF
-
+  
   ;display list of polarization states found
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   pPolaList = iPola->getPolarization()
@@ -315,16 +315,24 @@ PRO AddNexusToReduceTab1Table, Event
     
     reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
     
-    ;check that there are no duplicates
-    New_Reduce_tab1_table = $
-      uniq_element_table(INPUT_TABLE = reduce_tab1_table,$
-      COL = 0)
+    sz = (SIZE(reduce_tab1_table))(2)
+    IF (sz GT 1) THEN BEGIN
+    
+      ;check that there are no duplicates
+      New_Reduce_tab1_table = $
+        uniq_element_table(INPUT_TABLE = reduce_tab1_table,$
+        COL = 0)
+      new_table = addTableToBigTable(Event, new_reduce_tab1_table)
+    
+    ENDIF ELSE BEGIN
+    
+      new_table = reduce_tab1_table
       
-    new_table = addTableToBigTable(Event, new_reduce_tab1_table)
+    ENDELSE
     
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
     WIDGET_CONTROL, id, SET_VALUE = new_table
-
+    
     (*(*global).reduce_tab1_table) = new_table
     
   END
@@ -411,11 +419,6 @@ PRO AddNexusToReduceTab1Table, Event
           nexus_file_name, $
           list_OF_pola_state)
         IF (status EQ 0) THEN RETURN
-        
-        
-        
-        
-        
         
       ENDIF ELSE BEGIN
       
@@ -505,11 +508,11 @@ PRO AddNexusToReduceTab1Table, Event
     LogText = '-> Run or List of Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
     IDLsendToGeek_addLogBookText, Event, LogText
     
-;    ;get proposal selected by user (from droplist)
-;    proposalSelected = getComboListSelectedValue(Event, $
-;      'reduce_tab1_list_of_proposal')
-;    LogText = '-> Proposal Folder Selected: ' + proposalSelected
-;    IDLsendToGeek_addLogBookText, Event, LogText
+    ;    ;get proposal selected by user (from droplist)
+    ;    proposalSelected = getComboListSelectedValue(Event, $
+    ;      'reduce_tab1_list_of_proposal')
+    ;    LogText = '-> Proposal Folder Selected: ' + proposalSelected
+    ;    IDLsendToGeek_addLogBookText, Event, LogText
     
     ;get full nexus file name for the runs loaded
     LogText = '-> Retrieve List of Full NeXus File Names:'
@@ -521,7 +524,7 @@ PRO AddNexusToReduceTab1Table, Event
       full_nexus_name = findnexus(Event,$
         RUN_NUMBER = ListOfRuns[index],$
         INSTRUMENT = (*global).instrument,$
-;        PROPOSAL   = proposalSelected,$
+        ;        PROPOSAL   = proposalSelected,$
         isNexusExist)
       LogText = '-> Run #: ' + ListOfRuns[index]
       IF (isNexusExist) THEN BEGIN
@@ -532,7 +535,7 @@ PRO AddNexusToReduceTab1Table, Event
       ENDELSE
       IDLsendToGeek_addLogBookText, Event, LogText
       index++
-  ENDWHILE
+    ENDWHILE
     
     ;remove the runs not found by STRJOIN with ',' and STRPLIT with ','
     ;after removing blank spaces
