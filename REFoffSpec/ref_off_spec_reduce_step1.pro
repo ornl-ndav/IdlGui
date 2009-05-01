@@ -333,7 +333,7 @@ PRO AddNexusToReduceTab1Table, Event
       
     ENDIF ELSE BEGIN
     
-      new_table = reduce_tab1_table
+      new_table = addTableToBigTable(Event, reduce_tab1_table)
       
     ENDELSE
     
@@ -580,11 +580,8 @@ PRO AddNexusToReduceTab1Table, Event
     nbr_row = (*global).reduce_input_table_nbr_row
     nbr_column = (*global).reduce_input_table_nbr_column
     
-    ;    IF (nbr_row EQ 1) THEN BEGIN
-    ;      RETURN, STRARR(3,nbr_row)
-    ;    ENDIF
-    
     new_table = STRARR(nbr_column, nbr_row)
+    
     index = 0
     for i=0,(nbr_row-1) do begin
       if (i NE (row)) THEN BEGIN
