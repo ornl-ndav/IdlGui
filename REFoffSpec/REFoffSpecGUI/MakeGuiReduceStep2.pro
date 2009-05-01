@@ -62,7 +62,58 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)
+    
+    big_base = WIDGET_BASE(ModifyBase,$
+    /COLUMN)
+    
+    ;first row
+    row1_base = WIDGET_BASE(big_base,$
+    /ROW)
+    
+    space = WIDGET_LABEL(row1_base,$
+    VALUE = ' ')
+    
+    norm_label = WIDGET_LABEL(row1_base,$
+    VAlUE = '  Normalization Run:')
+    
+    norm_value = WIDGET_LABEL(row1_base,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_step2_create_roi_norm_value',$
+    FRAME = 1,$
+    SCR_XSIZE = 100)
+   
+    spin_label = WIDGET_LABEL(row1_base,$
+    VALUE = '     Spin State:')
+    
+    spin_value = WIDGET_LABEL(row1_base,$
+    VALUE = 'Off-Off',$
+    UNAME = 'reduce_step2_create_roi_pola_value',$
+    FRAME = 1,$
+    SCR_XSIZE = 50)
+    
+    roi_label = WIDGET_LABEL(row1_base,$
+    VALUE = '     ROI File Name:')
+    
+    roi_value = WIDGET_LABEL(row1_base,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 500,$
+    FRAME = 1)
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
