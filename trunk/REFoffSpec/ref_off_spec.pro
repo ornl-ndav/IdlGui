@@ -71,10 +71,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
     reduce_tab1_cw_field: '4753-4755',$
     reduce_tab1_proposal_combobox: 1}
-  
+    
   ;*****************************************************************************
   ;*****************************************************************************
-  
+    
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -115,6 +115,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
+    ROI_path: '~/results/',$
+    reduce_step2_norm_roi: STRARR(10),$
     
     working_path: '~/results/',$
     
@@ -321,7 +323,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
   ;id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab2_list_of_proposal')
   ;WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
-  
+    
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
     ;tab to show (main_tab)
@@ -332,9 +334,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     WIDGET_CONTROL, id_reduce, SET_TAB_CURRENT=sDebugging.tab.reduce_tab
     (*global).PrevReduceTabSelect = sDebugging.tab.reduce_tab
     ;reduce tab1 combobox index selected
-;    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
-;    set_value = sDebugging.reduce_tab1_proposal_combobox
-;    WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
+    ;    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab1_list_of_proposal')
+    ;    set_value = sDebugging.reduce_tab1_proposal_combobox
+    ;    WIDGET_CONTROL, id, SET_COMBOBOX_SELECT=set_value
     ;tab to show (pixel_range_selection/scaling_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='scaling_main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.step4_tab
@@ -358,8 +360,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     message
     
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
-     packages_required, global, my_package ;packages_required
-     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
+    packages_required, global, my_package ;packages_required
+    CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
   
   display_buttons, MAIN_BASE=main_base, ACTIVATE=0, global
