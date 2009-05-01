@@ -116,7 +116,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
     ROI_path: '~/results/',$
-    reduce_step2_norm_roi: STRARR(10),$
+    reduce_step2_norm_roi: STRARR(10)+'N/A',$
     
     working_path: '~/results/',$
     

@@ -279,9 +279,6 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
   
-  help, nexus_file_list
-  help, new_nexus_file_list
-  
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
   
     nexus_file_list = new_nexus_file_list
@@ -354,7 +351,7 @@ PRO PopulateStep2BigTabe, Event
   sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
-    PRINT, index
+
     IF (data_run_number[0,index] NE '') THEN BEGIN
     
       ;populate norm label or droplist
@@ -446,6 +443,8 @@ END
 ;------------------------------------------------------------------------------
 PRO reduce_step2_browse_roi, Event, row=row
 
+  print, 'in reduce_step2_browse_roi'
+
   iRow = row
   row = STRCOMPRESS(row)
   
@@ -474,10 +473,10 @@ PRO reduce_step2_browse_roi, Event, row=row
     PATH = path,$
     TITLE = title)
     
-  IF (roi_list[0] NE '') THEN BEGIN
+  IF (roi_file[0] NE '') THEN BEGIN
   
     reduce_step2_norm_roi = (*global).reduce_step2_norm_roi
-    reduce_step2_norm_roi[iRow] = roi_list[0]
+    reduce_step2_norm_roi[iRow] = roi_file[0]
     (*global).reduce_step2_norm_roi = reduce_step2_norm_roi
     
     IF (new_path NE path) THEN BEGIN
