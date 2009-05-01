@@ -103,12 +103,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;third row ---------------------------
   row3_base = WIDGET_BASE(big_base,$
     /COLUMN,$
+    /ALIGN_CENTER,$
     FRAME = 1)
     
   ;first inside row (browse button)
   browse_button = WIDGET_BUTTON(row3_base,$
     VALUE = 'B R O W S E   F O R   A   R O I . . .',$
     SCR_XSIZE = 600,$
+    TOOLTIP = 'Click to browse for a ROI file and plot it',$
     UNAME = 'reduce_step2_create_roi_browse_roi_button')
     
   ;second inside row
@@ -140,6 +142,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     ;third row (save button)
     save_roi = WIDGET_BUTTON(row3_base,$
     VALUE = 'S A V E   R O I',$
+    TOOLTIP = 'Click to Save the ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi')
     
     
