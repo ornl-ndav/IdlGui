@@ -230,7 +230,7 @@ PRO reduce_step2_remove_run, Event
   
   IF (selection[0] EQ 0 and $
     N_ELEMENTS(nexus_file_list) EQ 1 ) THEN BEGIN
-    nexus_file_list = STRARR(1)
+    nexus_file_list = PTR_NEW(0L)
     nexus_run_number = STRARR(1,11)
     
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 0
@@ -280,6 +280,7 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
   
   help, nexus_file_list
+  help, new_nexus_file_list
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
   
