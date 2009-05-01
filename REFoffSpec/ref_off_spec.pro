@@ -38,8 +38,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   CD, CURRENT = current_folder
   
   file = OBJ_NEW('idlxmlparser', '.REFoffSpec.cfg')
-  ;==============================================================================
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
@@ -47,8 +47,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   SCROLLING = file->getValue(tag=['configuration','scrolling'])
   SUPER_USERS = ['j35']
-  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-  ;==============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;============================================================================
   
   ;DEBUGGING (enter the tab you want to see)
   ;main_tab: 0: Reduction,
@@ -315,7 +315,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;LOADCT, 0,/SILENT
   
-  ;display list of proposal for this instrument ---------------------------------
+  ;display list of proposal for this instrument --------------------------------
   ListOfProposal = getListOfProposal((*global).instrument,$
     UCAMS,$
     MAIN_BASE)
@@ -324,7 +324,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab2_list_of_proposal')
   ;WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
     
-  ;??????????????????????????????????????????????????????????????????????????????
+  ;?????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
     ;tab to show (main_tab)
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
@@ -346,13 +346,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;ascii default path
     (*global).ascii_path = sDEBUGGING.ascii_path
   ENDIF
-  ;??????????????????????????????????????????????????????????????????????????????
+  ;?????????????????????????????????????????????????????????????????????????????
   
   ;refresh_plot_scale, MAIN_BASE=MAIN_BASE ;_plot    ;rmeove comments
   
-  ;==============================================================================
-  ; Date and Checking Packages routines =========================================
-  ;==============================================================================
+  ;=============================================================================
+  ; Date and Checking Packages routines ========================================
+  ;=============================================================================
   ;Put date/time when user started application in first line of log book
   time_stamp = GenerateIsoTimeStamp()
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -366,13 +366,12 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   display_buttons, MAIN_BASE=main_base, ACTIVATE=0, global
   
-  ;==============================================================================
-  ;==============================================================================
+  ;=============================================================================
+  ;=============================================================================
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
   
 END
-
 
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
