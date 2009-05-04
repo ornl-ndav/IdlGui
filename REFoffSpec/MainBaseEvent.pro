@@ -173,6 +173,38 @@ PRO MAIN_BASE_event, Event
     ENDELSE
   END
   
+  ;Normalization combobox
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo0'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=0
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo1'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=1
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo2'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=2
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo3'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=3
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo4'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=4
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo5'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=5
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo6'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=6
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo7'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=7
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo8'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=8
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo9'): BEGIN
+    save_new_reduce_tab2_norm_combobox, Event, row=9
+  END
+  
   ;Browse for a ROI file buttons (0->9)
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button0'): BEGIN
     reduce_step2_browse_roi, Event, row=0
@@ -205,7 +237,7 @@ PRO MAIN_BASE_event, Event
     reduce_step2_browse_roi, Event, row=9
   END
   
-;Create/Modify/Visualize ROI file (0->9)
+  ;Create/Modify/Visualize ROI file (0->9)
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button0'): BEGIN
     reduce_step2_create_roi, Event, row=0
   END
@@ -236,11 +268,12 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button9'): BEGIN
     reduce_step2_create_roi, Event, row=9
   END
-
+  
+  ;return to reduce step2 table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
     reduce_step2_return_to_table, Event
   END
-
+  
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
   
   

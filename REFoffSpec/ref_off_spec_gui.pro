@@ -77,6 +77,12 @@ PRO MapList, Event, uname_list, map_status
 END
 
 ;------------------------------------------------------------------------------
+PRO SetComboboxSelect, Event, uname, index
+id = WIDGET_INFO(Event.top, find_by_uname=uname)
+widget_control, id, SET_COMBOBOX_SELECT=index
+END
+
+;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC
 ;------------------------------------------------------------------------------
 

@@ -369,7 +369,7 @@ PRO PopulateStep2BigTabe, Event
       
       IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
         uname = 'reduce_tab2_data_recap_base_#' + $
-        STRCOMPRESS(index,/REMOVE_ALL)
+          STRCOMPRESS(index,/REMOVE_ALL)
         MapBase, Event, uname, 1
       ENDIF
       
@@ -386,7 +386,7 @@ PRO PopulateStep2BigTabe, Event
           CATCH, /CANCEL
         ENDIF ELSE BEGIN
           uname = 'reduce_tab2_data_recap_base_#' + $
-          STRCOMPRESS(index,/REMOVE_ALL)
+            STRCOMPRESS(index,/REMOVE_ALL)
           MapBase, Event, uname, 0
         ENDELSE
       ENDIF
@@ -446,6 +446,8 @@ PRO populate_reduce_step2_norm_droplist, Event
   norm_run_number = getOnlyDefineRunNumber(norm_run_number)
   sz_norm = N_ELEMENTS(norm_run_number)
   
+  norm_big_table = (*global).reduce_step2_big_table_norm_index
+    
   index_data = 0
   WHILE (index_data LT sz_data) DO BEGIN ;loop over all data runs
   
@@ -459,6 +461,8 @@ PRO populate_reduce_step2_norm_droplist, Event
       SetDroplistValue, Event, uname, norm_run_number
       uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data,/REMOVE_ALL)
       MapBase, Event, uname, 1
+      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index_data,/REMOVE_ALL)
+      SetComboboxSelect, Event, uname, norm_big_table[index_data]
     ENDELSE
     
     index_data++
@@ -527,24 +531,24 @@ PRO reduce_step2_create_roi, Event, row=row
   uname = 'reduce_tab2_data_value' + STRCOMPRESS(row,/REMOVE_ALL)
   data_run_number = getTextFieldValue(Event,uname)
   putTextFieldValue, Event, 'reduce_step2_create_roi_data_value', $
-  data_run_number
-  
+    data_run_number
+    
   ;get normalization run number
-  norm_run_number = getReduceStep2NormOfRow(Event, row=row)  
+  norm_run_number = getReduceStep2NormOfRow(Event, row=row)
   putTextFieldValue, Event, 'reduce_step2_create_roi_norm_value', $
-  norm_run_number
-  
+    norm_run_number
+    
   ;get normalization spin state
   spin_state = getReduceStep2SpinStateRow(Event, Row=row)
   putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
-  spin_state
-  
+    spin_state
+    
   ;get ROI file name
   uname = 'reduce_tab2_roi_value' + STRCOMPRESS(row,/REMOVE_ALL)
   roi_file_name = getTextFieldValue(Event,uname)
   IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
   putTextFieldValue, Event, uname, roi_file_name
-
+  
   ;display normalization plot (counts vs tof) of reduce_step2 plot
   display_reduce_step2_create_roi_plot, Event, Row=row
   
@@ -555,7 +559,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO reduce_step2_return_to_table, Event
-  
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -572,9 +576,21 @@ PRO display_reduce_step2_create_roi_plot, Event, Row=row
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
-  print, 'nexus_norm_file_name: ' + nexus_norm_file_name
-
+  PRINT, 'nexus_norm_file_name: ' + nexus_norm_file_name
+  
 END
 
+;------------------------------------------------------------------------------
+PRO save_new_reduce_tab2_norm_combobox, Event, row=row
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  index = Event.index
+  table = (*global).reduce_step2_big_table_norm_index
+  table[row] = index
+  (*global).reduce_step2_big_table_norm_index = table
+  
+END
