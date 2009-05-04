@@ -122,6 +122,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     norm_data: PTR_NEW(0L),$
     norm_tData: PTR_NEW(0L),$
     norm_rtData: PTR_NEW(0L),$
+    norm_roi_y_selected: 'left',$
     
     working_path: '~/results/',$
     

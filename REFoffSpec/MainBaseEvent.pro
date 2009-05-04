@@ -269,6 +269,35 @@ PRO MAIN_BASE_event, Event
     reduce_step2_create_roi, Event, row=9
   END
   
+  ;reduce step2 roi/norm draw
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_draw_uname'): BEGIN
+    
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+    
+      IF( Event.type EQ 0 )THEN BEGIN
+        IF (Event.press EQ 1) THEN $
+          PRINT, 'left pressed'
+        IF (Event.press EQ 4) THEN $
+          inverse_y_selection, Event
+          PRINT, 'right pressed'
+      ENDIF
+      
+      IF (Event.type EQ 1) THEN BEGIN ;release
+        PRINT, 'released mouse'
+      ENDIF
+      IF (Event.type EQ 2) THEN BEGIN ;move
+        PRINT, 'move moused'
+      ENDIF
+      
+    ENDELSE
+    
+  END
+  
   ;return to reduce step2 table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
     reduce_step2_return_to_table, Event
