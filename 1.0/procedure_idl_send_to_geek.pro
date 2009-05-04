@@ -43,7 +43,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 CASE (var) OF
     'LogBookPath'     : RETURN, '/SNS/users/LogBook/'
-    'ApplicationName' : RETURN, 'plotROI'
+    'ApplicationName' : RETURN, 'REFscale'
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
     'version'         : RETURN, (*global).version
@@ -214,7 +214,7 @@ spawn, 'hostname', hostname
 ;get message added by user
 message   = idl_send_to_geek_getMessage(Event)
 ;email logBook
-text = "'Log Book of plotROI ("
+text = "'Log Book of REFscale ("
 text += Version + ") sent by " + ucams
 text += " from " + hostname + "."
 text += " Log Book is: " + FullFileName 
