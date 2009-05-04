@@ -485,7 +485,8 @@ PRO reduce_step2_browse_roi, Event, row=row
   
   path  = (*global).ROI_path
   
-  data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + row)
+  data_run = getTextFieldValue(Event,'reduce_tab2_data_value' + $
+  STRCOMPRESS(row,/REMOVE_ALL))
   title = 'Select Region Of Interest File for Data Run # ' + data_run + $
     ': '
   default_extenstion = '.dat'
