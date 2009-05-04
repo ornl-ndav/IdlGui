@@ -81,12 +81,7 @@ PRO plot_reduce_step2_roi, Event
           STRCOMPRESS(y1,/REMOVE_ALL)
       ENDIF
       
-      Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
-      IF (Y2 NE '') THEN BEGIN
-        y2 = FIX(y2)
-        IF (y2 GT 303) THEN RETURN
-        plot_reduce_step2_roi_y, Event, Y2*(y_rebin_value)
-      ENDIF
+      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
       
     END
     'right': BEGIN ;changing Y2 and replot Y1 (if any)
@@ -99,12 +94,7 @@ PRO plot_reduce_step2_roi, Event
           STRCOMPRESS(y2,/REMOVE_ALL)
       ENDIF
       
-      Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
-      IF (Y1 NE '') THEN BEGIN
-        Y1 = FIX(y1)
-        IF (y1 GT 303) THEN RETURN
-        plot_reduce_step2_roi_y, Event, Y1*(y_rebin_value)
-      ENDIF
+      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
       
     END
     ELSE:
@@ -124,5 +114,26 @@ PRO plot_reduce_step2_roi_y, Event, rY
   
   PLOTS, 0, ry, /device, color=color
   PLOTS, ((*global).reduce_step2_norm_tof-1), ry, /device, /continue, color=color
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_reduce_step2_y, event, uname=uname
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  y_rebin_value = (*global).reduce_rebin_roi_rebin_y
+  
+  ON_IOERROR, error
+  
+  Y2 = getTextFieldValue(Event,uname)
+  IF (Y2 NE '') THEN BEGIN
+    y2 = FIX(y2)
+    IF (y2 GT 303) THEN RETURN
+    plot_reduce_step2_roi_y, Event, Y2*(y_rebin_value)
+  ENDIF
+  
+  error:
   
 END
