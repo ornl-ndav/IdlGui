@@ -123,6 +123,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     norm_tData: PTR_NEW(0L),$
     norm_rtData: PTR_NEW(0L),$
     norm_roi_y_selected: 'left',$
+    mouse_left_pressed: 0,$
+    mouse_right_pressed: 0,$
+    reduce_rebin_roi_rebin_y: 2,$
+    reduce_step2_roi_color: 150,$
+    reduce_step2_norm_tof: 0,$
     
     working_path: '~/results/',$
     
