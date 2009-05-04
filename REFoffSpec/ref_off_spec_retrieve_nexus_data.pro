@@ -60,6 +60,8 @@ FUNCTION retrieve_Data, Event, $
     x = (size(tData))(1)
     y = (size(tData))(2)
     
+    (*global).reduce_step2_norm_tof = x
+    
     rtData = REBIN(tData, x, 2*y)
     (*(*global).norm_rtData) = rtData
     

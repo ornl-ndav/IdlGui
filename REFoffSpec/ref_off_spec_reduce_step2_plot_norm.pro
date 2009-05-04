@@ -39,7 +39,7 @@ PRO plot_reduce_step2_norm, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   DEVICE, DECOMPOSED=0
-  loadct,5
+  loadct,5, /SILENT
   
   rtData = (*(*global).norm_rtData)
   
@@ -51,5 +51,5 @@ PRO plot_reduce_step2_norm, Event
   ;plot main plot
   TVSCL, rtData, /DEVICE
   
-  
 END
+

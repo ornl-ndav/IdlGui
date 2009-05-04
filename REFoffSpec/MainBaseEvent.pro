@@ -280,6 +280,7 @@ PRO MAIN_BASE_event, Event
     ENDIF ELSE BEGIN
     
       IF( Event.type EQ 0 )THEN BEGIN
+            CATCH,/CANCEL
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
           (*global).mouse_left_pressed = 1
           plot_reduce_step2_norm, Event
@@ -291,6 +292,7 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF (Event.type EQ 1) THEN BEGIN ;release
+            CATCH,/CANCEL
         IF ((*global).mouse_left_pressed) THEN BEGIN ;left mouse released
           (*global).mouse_left_pressed = 0
         ENDIF ELSE BEGIN ;right mouse released
@@ -299,6 +301,7 @@ PRO MAIN_BASE_event, Event
         
       ENDIF
       IF (Event.type EQ 2) THEN BEGIN ;move with left pressed
+            CATCH,/CANCEL
         IF ((*global).mouse_left_pressed) THEN BEGIN
           plot_reduce_step2_norm, Event
           plot_reduce_step2_roi, Event

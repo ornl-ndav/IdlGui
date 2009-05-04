@@ -58,3 +58,71 @@ PRO inverse_y_selection, Event
   putTextFieldValue, event, 'reduce_step2_create_roi_y2_r_status', y2_r
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_reduce_step2_roi, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  y_rebin_value = (*global).reduce_rebin_roi_rebin_y
+  y_roi_status = (*global).norm_roi_y_selected
+  
+  case (y_roi_status) OF
+    'left': BEGIN ;changing Y1 and replot Y2 (if any)
+      Y1 = EVENT.y
+      IF (y1 GE 0 AND $
+        y1 LE 303L*y_rebin_value) THEN BEGIN
+        plot_reduce_step2_roi_y, Event, Y1
+        y1 = FIX(DOUBLE(Y1)/DOUBLE(y_rebin_value))
+        putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
+          STRCOMPRESS(y1,/REMOVE_ALL)
+      ENDIF
+      
+      Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+      IF (Y2 NE '') THEN BEGIN
+        y2 = FIX(y2)
+        IF (y2 GT 303) THEN RETURN
+        plot_reduce_step2_roi_y, Event, Y2*(y_rebin_value)
+      ENDIF
+      
+    END
+    'right': BEGIN ;changing Y2 and replot Y1 (if any)
+      Y2 = EVENT.y
+      plot_reduce_step2_roi_y, Event, Y2
+      IF (y2 GE 0 AND $
+        y2 LE 303*y_rebin_value) THEN BEGIN
+        y2 = FIX(DOUBLE(Y2)/DOUBLE(y_rebin_value))
+        putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
+          STRCOMPRESS(y2,/REMOVE_ALL)
+      ENDIF
+      
+      Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
+      IF (Y1 NE '') THEN BEGIN
+        Y1 = FIX(y1)
+        IF (y1 GT 303) THEN RETURN
+        plot_reduce_step2_roi_y, Event, Y1*(y_rebin_value)
+      ENDIF
+      
+    END
+    ELSE:
+  ENDCASE
+  
+  error:
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_reduce_step2_roi_y, Event, rY
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  color = (*global).reduce_step2_roi_color
+  
+  PLOTS, 0, ry, /device, color=color
+  PLOTS, ((*global).reduce_step2_norm_tof-1), ry, /device, /continue, color=color
+  
+END
