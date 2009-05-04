@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -80,16 +80,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   data_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     UNAME = 'reduce_step2_create_roi_data_value',$
-    FRAME = 1,$
+    FRAME = 0,$
     SCR_XSIZE = 100)
-
+    
   norm_label = WIDGET_LABEL(row1_base,$
     VAlUE = '  Normalization Run:')
     
   norm_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     UNAME = 'reduce_step2_create_roi_norm_value',$
-    FRAME = 5,$
+    FRAME = 1,$
     SCR_XSIZE = 100)
     
   spin_label = WIDGET_LABEL(row1_base,$
@@ -97,8 +97,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   spin_value = WIDGET_LABEL(row1_base,$
     VALUE = 'Off_Off',$
-    UNAME = 'reduce_step2_create_roi_pola_value',$
     FRAME = 1,$
+    UNAME = 'reduce_step2_create_roi_pola_value',$
     SCR_XSIZE = 50)
     
   roi_label = WIDGET_LABEL(row1_base,$
@@ -109,11 +109,11 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 500,$
     FRAME = 1)
     
-    ;second row --------------------------
-    row2_base = WIDGET_BASE(big_base,$
+  ;second row --------------------------
+  row2_base = WIDGET_BASE(big_base,$
     /ROW)
     
-    draw = WIDGET_DRAW(row2_base,$
+  draw = WIDGET_DRAW(row2_base,$
     SCR_XSIZE = 2*500,$
     SCR_YSIZE = 2*304,$
     UNAME = 'reduce_step2_create_roi_draw_uname',$
@@ -122,9 +122,15 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /button_events)
     
   ;third row ---------------------------
-  row3_base = WIDGET_BASE(big_base,$
+  row3_row = WIDGET_BASE(big_base,$
+  /ROW)
+
+  space = WIDGET_LABEL(row3_row,$
+  value = '   ')
+
+  row3_base = WIDGET_BASE(row3_row,$
     /COLUMN,$
-    /ALIGN_CENTER,$
+    ;    /ALIGN_CENTER,$
     FRAME = 1)
     
   ;first inside row (browse button)
@@ -138,6 +144,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   row3_row2_base = WIDGET_BASE(row3_base,$
     /ROW)
     
+  y1_working = WIDGET_LABEL(row3_row2_base,$
+    VALUE = '>>',$
+    UNAME = 'reduce_step2_create_roi_y1_l_status')
   y1_label = WIDGET_LABEL(row3_row2_base,$
     VALUE = 'Y1:')
   y1_value = WIDGET_TEXT(row3_row2_base,$
@@ -146,19 +155,31 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_y1_value')
+  y1_working = WIDGET_LABEL(row3_row2_base,$
+    VALUE = '<<',$
+    UNAME = 'reduce_step2_create_roi_y1_r_status')
     
+    space = widget_label(row3_row2_base,$
+    value = '  ')
+    
+  y2_working = WIDGET_LABEL(row3_row2_base,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_roi_y2_l_status')
   y2_label = WIDGET_LABEL(row3_row2_base,$
-    VALUE = '  Y2:')
+    VALUE = 'Y2:')
   y2_value = WIDGET_TEXT(row3_row2_base,$
     VALUE = ' ',$
     XSIZE = 3,$
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_y2_value')
+  y2_working = WIDGET_LABEL(row3_row2_base,$
+    VALUE = ' ',$
+    UNAME = 'reduce_step2_create_roi_y2_r_status')
     
   info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = '(Left click on the plot to select first Y, Right click to ' + $
-    'switch to next Y, or manually input Y1 and Y2)')
+    VALUE = '     (Left click on the plot to select first Y, Right ' + $
+    'click to switch to next Y, or manually input Y1 and Y2)')
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row3_base,$
