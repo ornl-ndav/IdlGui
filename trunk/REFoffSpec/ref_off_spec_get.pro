@@ -294,26 +294,67 @@ END
 ;-----------------------------------------------------------------------------
 PRO get_new_list, nexus_file_list, nexus_run_number, selection
 
-error = 0
-CATCH, error
-IF (error NE 0) THEN BEGIN
-CATCH,/CANCEL
-RETURN
-ENDIF ELSE BEGIN
-  sz = N_ELEMENTS(nexus_file_list)
-  sz2 = sz - N_ELEMENTS(selection)
-  new_nexus_file_list = STRARR(sz2)
-  new_nexus_run_number = STRARR(1,11)
-  j=0
-  FOR i=0,(sz-1) DO BEGIN
-    IF (WHERE(selection EQ i) EQ -1) THEN BEGIN
-      new_nexus_file_list[j] = nexus_file_list[i]
-      new_nexus_run_number[j] = nexus_run_number[i]
-      j++
-    ENDIF
-  ENDFOR
-  nexus_run_number = new_nexus_run_number
-  nexus_file_list = new_nexus_file_list
-ENDELSE
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF ELSE BEGIN
+    sz = N_ELEMENTS(nexus_file_list)
+    sz2 = sz - N_ELEMENTS(selection)
+    new_nexus_file_list = STRARR(sz2)
+    new_nexus_run_number = STRARR(1,11)
+    j=0
+    FOR i=0,(sz-1) DO BEGIN
+      IF (WHERE(selection EQ i) EQ -1) THEN BEGIN
+        new_nexus_file_list[j] = nexus_file_list[i]
+        new_nexus_run_number[j] = nexus_run_number[i]
+        j++
+      ENDIF
+    ENDFOR
+    nexus_run_number = new_nexus_run_number
+    nexus_file_list = new_nexus_file_list
+  ENDELSE
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getReduceStep2NormOfRow, Event, row=row
+
+  row = STRCOMPRESS(row,/REMOVE_ALL)
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
+  sz = (SIZE(nexus_file_list))(1)
+  IF (sz GT 1) THEN BEGIN
+    uname = 'reduce_tab2_norm_combo' + row
+    RETURN, getComboListSelectedValue(Event, uname)
+  ENDIF ELSE BEGIN
+    uname = 'reduce_tab2_norm_value' + row
+    RETURN, getTextFieldValue(Event,uname)
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getReduceStep2SpinStateRow, Event, Row=row
+
+  row = STRCOMPRESS(row,/REMOVE_ALL)
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  pola_mode = (*global).reduce_step2_polarization_mode_status
+  
+  IF (pola_mode EQ 0) THEN BEGIN
+    uname = 'reduce_step2_mode1_spin_state_combobox'
+    RETURN, getComboListSelectedValue(Event,uname)
+  ENDIF ELSE BEGIN
+    uname = 'reduce_tab2_spin_combo' + row
+    RETURN, getComboListSelectedValue(Event,uname)
+  ENDELSE
+  
+END
+
+
 
