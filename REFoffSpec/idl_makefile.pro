@@ -49,6 +49,7 @@ cd, CurrentFolder
 .run ref_off_spec_put.pro
 .run ref_off_spec_gui.pro
 .run IDLnexusUtilities__define.pro
+.run ref_off_spec_retrieve_nexus_data.pro
 
 ;procedures
 .run colorbar.pro
@@ -74,6 +75,7 @@ cd, CurrentFolder
 .run ref_off_spec_step6.pro
 .run ref_off_spec_display_buttons.pro
 .run packages_required.pro
+.run ref_off_spec_reduce_step2_plot_norm.pro
 
 ;main functions
 .run MainBaseEvent.pro
