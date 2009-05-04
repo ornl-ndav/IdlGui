@@ -363,16 +363,16 @@ FUNCTION getReduceStep2NormFullName, Event, row=row
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
   sz = (SIZE(nexus_file_list))(1)
   IF (sz GT 1) THEN BEGIN
+    big_table = (*global).reduce_step2_big_table_norm_index
+    index = big_table[row]
     uname = 'reduce_tab2_norm_combo' + row
-;    index = getDropListSelectedIndex(Event, uname)
-;    RETURN, nexus_file_list[index]
-RETURN, ''
+    RETURN, nexus_file_list[index]
   ENDIF ELSE BEGIN
     RETURN, nexus_file_list[0]
   ENDELSE
-
+  
 END

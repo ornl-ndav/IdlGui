@@ -577,8 +577,15 @@ PRO display_reduce_step2_create_roi_plot, Event, Row=row
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ;norm file name
   nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
-  PRINT, 'nexus_norm_file_name: ' + nexus_norm_file_name
+  
+  ;spin state
+  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
+  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
+    spin_state
+
+
   
 END
 
