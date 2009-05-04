@@ -119,15 +119,17 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step2_create_roi_draw_uname',$
     /tracking_events,$
     /motion_events,$
-    /button_events)
+    /button_events,$
+    RETAIN = 2,$
+    /KEYBOARD_EVENT)
     
   ;third row ---------------------------
   row3_row = WIDGET_BASE(big_base,$
-  /ROW)
-
+    /ROW)
+    
   space = WIDGET_LABEL(row3_row,$
-  value = '   ')
-
+    value = '   ')
+    
   row3_base = WIDGET_BASE(row3_row,$
     /COLUMN,$
     ;    /ALIGN_CENTER,$
@@ -159,7 +161,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '<<',$
     UNAME = 'reduce_step2_create_roi_y1_r_status')
     
-    space = widget_label(row3_row2_base,$
+  space = WIDGET_LABEL(row3_row2_base,$
     value = '  ')
     
   y2_working = WIDGET_LABEL(row3_row2_base,$
@@ -177,9 +179,13 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' ',$
     UNAME = 'reduce_step2_create_roi_y2_r_status')
     
+  space = WIDGET_LABEL(row3_row2_base,$
+    value = '    ')
+    
   info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = '     (Left click on the plot to select first Y, Right ' + $
-    'click to switch to next Y, or manually input Y1 and Y2)')
+    VALUE = '- Left click on the plot to select first Y, Right ' + $
+    'click to switch to next Y. or manually input Y1 and Y2 ' + $
+    'or Use Up or Down arrows to move selection.')
     
   ;third row (save button)
   save_roi = WIDGET_BUTTON(row3_base,$
