@@ -521,6 +521,18 @@ PRO reduce_step2_create_roi, Event, row=row
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ;get data run number
+  
+  ;get normalization run number
+  
+  
+  ;get normalization spin state
+  
+  
+  ;get ROI file name
+  
+  
+  
   MapBase, Event, 'reduce_step2_create_roi_base', 1
   (*global).reduce_step2_create_roi_base = 1
   

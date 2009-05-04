@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)
+    MAP       = 0)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -74,6 +74,15 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   space = WIDGET_LABEL(row1_base,$
     VALUE = ' ')
     
+  data_label = WIDGET_LABEL(row1_base,$
+    VAlUE = '  Data Run:')
+    
+  data_value = WIDGET_LABEL(row1_base,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_step2_create_roi_data_value',$
+    FRAME = 1,$
+    SCR_XSIZE = 100)
+
   norm_label = WIDGET_LABEL(row1_base,$
     VAlUE = '  Normalization Run:')
     
