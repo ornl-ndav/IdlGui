@@ -67,7 +67,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
     
-  ;first row
+  ;first row --------------------------------
   row1_base = WIDGET_BASE(big_base,$
     /ROW)
     
@@ -99,6 +99,18 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'N/A',$
     SCR_XSIZE = 500,$
     FRAME = 1)
+    
+    ;second row --------------------------
+    row2_base = WIDGET_BASE(big_base,$
+    /ROW)
+    
+    draw = WIDGET_DRAW(row2_base,$
+    SCR_XSIZE = 2*500,$
+    SCR_YSIZE = 2*304,$
+    UNAME = 'reduce_step2_create_roi_draw_uname',$
+    /tracking_events,$
+    /motion_events,$
+    /button_events)
     
   ;third row ---------------------------
   row3_base = WIDGET_BASE(big_base,$
@@ -135,26 +147,15 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_y2_value')
     
-    info = WIDGET_LABEL(row3_row2_base,$
+  info = WIDGET_LABEL(row3_row2_base,$
     VALUE = '(Left click on the plot to select first Y, Right click to ' + $
     'switch to next Y, or manually input Y1 and Y2)')
     
-    ;third row (save button)
-    save_roi = WIDGET_BUTTON(row3_base,$
+  ;third row (save button)
+  save_roi = WIDGET_BUTTON(row3_base,$
     VALUE = 'S A V E   R O I',$
     TOOLTIP = 'Click to Save the ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
   RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
