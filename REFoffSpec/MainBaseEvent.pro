@@ -280,18 +280,29 @@ PRO MAIN_BASE_event, Event
     ENDIF ELSE BEGIN
     
       IF( Event.type EQ 0 )THEN BEGIN
-        IF (Event.press EQ 1) THEN $
-          PRINT, 'left pressed'
-        IF (Event.press EQ 4) THEN $
+        IF (Event.press EQ 1) THEN BEGIN ;left pressed
+          (*global).mouse_left_pressed = 1
+          plot_reduce_step2_norm, Event
+          plot_reduce_step2_roi, Event
+        ENDIF ELSE BEGIN ;right pressed
           inverse_y_selection, Event
-          PRINT, 'right pressed'
+          (*global).mouse_right_pressed = 1
+        ENDELSE
       ENDIF
       
       IF (Event.type EQ 1) THEN BEGIN ;release
-        PRINT, 'released mouse'
+        IF ((*global).mouse_left_pressed) THEN BEGIN ;left mouse released
+          (*global).mouse_left_pressed = 0
+        ENDIF ELSE BEGIN ;right mouse released
+          (*global).mouse_right_pressed = 0
+        ENDELSE
+        
       ENDIF
-      IF (Event.type EQ 2) THEN BEGIN ;move
-        PRINT, 'move moused'
+      IF (Event.type EQ 2) THEN BEGIN ;move with left pressed
+        IF ((*global).mouse_left_pressed) THEN BEGIN
+          plot_reduce_step2_norm, Event
+          plot_reduce_step2_roi, Event
+        ENDIF
       ENDIF
       
     ENDELSE
