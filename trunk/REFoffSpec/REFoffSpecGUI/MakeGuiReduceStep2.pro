@@ -89,14 +89,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   norm_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     UNAME = 'reduce_step2_create_roi_norm_value',$
-    FRAME = 1,$
+    FRAME = 5,$
     SCR_XSIZE = 100)
     
   spin_label = WIDGET_LABEL(row1_base,$
     VALUE = '     Spin State:')
     
   spin_value = WIDGET_LABEL(row1_base,$
-    VALUE = 'Off-Off',$
+    VALUE = 'Off_Off',$
     UNAME = 'reduce_step2_create_roi_pola_value',$
     FRAME = 1,$
     SCR_XSIZE = 50)
@@ -334,7 +334,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   spinStates = WIDGET_COMBOBOX(base_combo,$
-    value = ['Off-Off','Off-On','On-Off','On-On'],$
+    value = ['Off_Off','Off_On','On_Off','On_On'],$
     uname = 'reduce_step2_mode1_spin_state_combobox')
     
   space = WIDGET_LABEL(col2,$
@@ -423,7 +423,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     uname = 'reduce_tab2_spin_combo'
     combo = WIDGET_COMBOBOX(combo_base,$
-      value = ['Off-Off','Off-On','On-Off','On-On'],$
+      value = ['Off_Off','Off_On','On_Off','On_On'],$
       uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
       
     ;spin state widget_label
@@ -432,7 +432,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       XOFFSET = XYoff[0]+210,$
       YOFFSET = label_offset,$
       SCR_XSIZE = 50,$
-      value = 'Off-Off',$
+      value = 'Off_Off',$
       /align_left,$
       uname = uname)
       

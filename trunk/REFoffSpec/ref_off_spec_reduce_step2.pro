@@ -447,7 +447,7 @@ PRO populate_reduce_step2_norm_droplist, Event
   sz_norm = N_ELEMENTS(norm_run_number)
   
   norm_big_table = (*global).reduce_step2_big_table_norm_index
-    
+  
   index_data = 0
   WHILE (index_data LT sz_data) DO BEGIN ;loop over all data runs
   
@@ -522,10 +522,37 @@ PRO reduce_step2_browse_roi, Event, row=row
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;norm file name
+  nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
+  
+  ;spin state
+  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
+  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
+    spin_state
+    
+  success = retrieve_Data(Event, nexus_norm_file_name, spin_state)
+  
+  IF (success) THEN BEGIN
+    plot_reduce_step2_norm, Event
+    RETURN, 1
+  ENDIF
+  
+  RETURN, 0  
+  
+END
+
+;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
 PRO reduce_step2_create_roi, Event, row=row
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  WIDGET_CONTROL, /HOURGLASS
   
   ;get data run number
   uname = 'reduce_tab2_data_value' + STRCOMPRESS(row,/REMOVE_ALL)
@@ -549,11 +576,26 @@ PRO reduce_step2_create_roi, Event, row=row
   IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
   putTextFieldValue, Event, uname, roi_file_name
   
-  ;display normalization plot (counts vs tof) of reduce_step2 plot
-  display_reduce_step2_create_roi_plot, Event, Row=row
+    MapBase, Event, 'reduce_step2_create_roi_base', 1
+    (*global).reduce_step2_create_roi_base = 1
   
-  MapBase, Event, 'reduce_step2_create_roi_base', 1
-  (*global).reduce_step2_create_roi_base = 1
+  ;display normalization plot (counts vs tof) of reduce_step2 plot
+  success = display_reduce_step2_create_roi_plot(Event, Row=row)
+  
+    WIDGET_CONTROL, HOURGLASS=0
+    
+    IF (~success) THEN BEGIN
+  
+    widget_id = WIDGET_INFO(event.top,FIND_BY_UNAME='MAIN_BASE')
+    title = 'Error occured while opening normalization ' + $
+      'run number ' + norm_run_number + '!'
+    text = 'Check Log Book to get more information and/or click SEND TO GEEK!'
+    result = DIALOG_MESSAGE(text, $
+      /ERROR,$
+      TITLE=title,$
+      DIALOG_PARENT=widget_id)
+      
+  ENDIF
   
 END
 
@@ -572,24 +614,6 @@ PRO reduce_step2_return_to_table, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_reduce_step2_create_roi_plot, Event, Row=row
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ;norm file name
-  nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
-  
-  ;spin state
-  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
-  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
-    spin_state
-
-
-  
-END
-
-;------------------------------------------------------------------------------
 PRO save_new_reduce_tab2_norm_combobox, Event, row=row
 
   ;get global structure
@@ -601,3 +625,4 @@ PRO save_new_reduce_tab2_norm_combobox, Event, row=row
   (*global).reduce_step2_big_table_norm_index = table
   
 END
+
