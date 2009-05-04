@@ -374,7 +374,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   label_offset = 4
   FOR i=0,10 DO BEGIN
   
-    uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i,/REMOVE_ALL)
     row_base = WIDGET_BASE(Base,$
       uname = uname,$
       xoffset = XYoff[0],$
@@ -384,7 +384,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       map = 0,$
       frame = 0)
       
-    uname = 'reduce_tab2_data_value' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
     value1 = WIDGET_LABEL(row_Base,$
       value   = ' ',$
       xoffset = 0,$
@@ -396,20 +396,20 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     combo_base = WIDGET_BASE(row_Base,$
       XOFFSET = xyoff[0]+65,$
       YOFFSET = 0,$
-      uname = uname+ STRCOMPRESS(i),$
+      uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
       map = 1)
       
     uname = 'reduce_tab2_norm_combo'
     combo = WIDGET_COMBOBOX(combo_base,$
-      value = ['1500','1501','1502'],$
-      uname = uname + STRCOMPRESS(i))
+      value = ['    '],$
+      uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
       
-    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i,/REMOVE_ALL)
     value2 = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+100,$
       YOFFSET = label_offset,$
       /align_left,$
-      value = '1500',$
+      value = '   ',$
       SCR_XSIZE = 50,$
       uname = uname)
       
@@ -418,16 +418,16 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     combo_base = WIDGET_BASE(row_Base,$
       XOFFSET = XYoff[0]+180,$
       YOFFSET = 0,$
-      uname = uname+ STRCOMPRESS(i),$
+      uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
       map = 0)
       
     uname = 'reduce_tab2_spin_combo'
     combo = WIDGET_COMBOBOX(combo_base,$
       value = ['Off-Off','Off-On','On-Off','On-On'],$
-      uname = uname + STRCOMPRESS(i))
+      uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
       
     ;spin state widget_label
-    uname = 'reduce_tab2_spin_value' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_spin_value' + STRCOMPRESS(i,/REMOVE_ALL)
     spin = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+210,$
       YOFFSET = label_offset,$
@@ -455,7 +455,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       scr_xsize = 230,$
       value = 'Create/Modify/Visualize ROI file')
       
-    uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i,/REMOVE_ALL)
     roi = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+740,$
       YOFFSET = label_offset,$
@@ -464,7 +464,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       value = 'File:',$
       uname = uname)
       
-    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i)
+    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i,/REMOVE_ALL)
     roi = WIDGET_LABEL(row_Base,$
       XOFFSET = XYoff[0]+780,$
       YOFFSET = label_offset,$

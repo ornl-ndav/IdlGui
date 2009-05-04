@@ -37,7 +37,7 @@ PRO activate_norm_combobox, Event, status=status
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_combo_base'
   for i=0,10 do begin
-    uname_list[i] = uname_base + STRCOMPRESS(i)
+    uname_list[i] = uname_base + STRCOMPRESS(i,/REMOVE_ALL)
   ENDFOR
   
   MapList, Event, uname_list, status
@@ -53,7 +53,7 @@ PRO mode1_spin_state_combobox_changed, Event
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_value'
   for i=0,10 do begin
-    uname_list[i] = uname_base + STRCOMPRESS(i)
+    uname_list[i] = uname_base + STRCOMPRESS(i,/REMOVE_ALL)
   ENDFOR
   
   put_list_value, Event, uname_list, value
@@ -364,16 +364,17 @@ PRO PopulateStep2BigTabe, Event
       populate_reduce_step2_norm_droplist, Event
       
       ;populate data labels
-      uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index)
+      uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index,/REMOVE_ALL)
       putTextFieldValue, Event, uname, data_run_number[0,index]
       
       IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
-        uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+        uname = 'reduce_tab2_data_recap_base_#' + $
+        STRCOMPRESS(index,/REMOVE_ALL)
         MapBase, Event, uname, 1
       ENDIF
       
       putTextFieldValue, Event, $
-        'reduce_tab2_roi_value' + STRCOMPRESS(index),$
+        'reduce_tab2_roi_value' + STRCOMPRESS(index,/REMOVE_ALL),$
         norm_roi_list[index]
         
     ENDIF ELSE BEGIN
@@ -384,7 +385,8 @@ PRO PopulateStep2BigTabe, Event
         IF (error NE 0) THEN BEGIN
           CATCH, /CANCEL
         ENDIF ELSE BEGIN
-          uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+          uname = 'reduce_tab2_data_recap_base_#' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
           MapBase, Event, uname, 0
         ENDELSE
       ENDIF
@@ -417,7 +419,7 @@ PRO hideStep2BigTable, Event
   WHILE (index LT sz) DO BEGIN
   
     IF (data_run_number[0,index] NE '') THEN BEGIN
-      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index)
+      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 0
     ENDIF
     index++
@@ -448,14 +450,14 @@ PRO populate_reduce_step2_norm_droplist, Event
   WHILE (index_data LT sz_data) DO BEGIN ;loop over all data runs
   
     IF ((sz_norm) EQ 1) THEN BEGIN
-      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index_data)
+      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(index_data,/REMOVE_ALL)
       putTextFieldValue, Event, uname, norm_run_number[0]
-      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data)
+      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data,/REMOVE_ALL)
       MapBase, Event, uname, 0
     ENDIF ELSE BEGIN
-      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index_data)
+      uname = 'reduce_tab2_norm_combo' + STRCOMPRESS(index_data,/REMOVE_ALL)
       SetDroplistValue, Event, uname, norm_run_number
-      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data)
+      uname = 'reduce_tab2_norm_base' + STRCOMPRESS(index_data,/REMOVE_ALL)
       MapBase, Event, uname, 1
     ENDELSE
     
@@ -522,16 +524,26 @@ PRO reduce_step2_create_roi, Event, row=row
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;get data run number
+  uname = 'reduce_tab2_data_value' + STRCOMPRESS(row,/REMOVE_ALL)
+  data_run_number = getTextFieldValue(Event,uname)
+  putTextFieldValue, Event, 'reduce_step2_create_roi_data_value', $
+  data_run_number
   
   ;get normalization run number
-  
+  norm_run_number = getReduceStep2NormOfRow(Event, row=row)  
+  putTextFieldValue, Event, 'reduce_step2_create_roi_norm_value', $
+  norm_run_number
   
   ;get normalization spin state
-  
+  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
+  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
+  spin_state
   
   ;get ROI file name
-  
-  
+  uname = 'reduce_tab2_roi_value' + STRCOMPRESS(row,/REMOVE_ALL)
+  roi_file_name = getTextFieldValue(Event,uname)
+  IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
+  putTextFieldValue, Event, uname, roi_file_name
   
   MapBase, Event, 'reduce_step2_create_roi_base', 1
   (*global).reduce_step2_create_roi_base = 1
