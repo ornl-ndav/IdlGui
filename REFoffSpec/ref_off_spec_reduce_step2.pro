@@ -544,6 +544,9 @@ PRO reduce_step2_create_roi, Event, row=row
   roi_file_name = getTextFieldValue(Event,uname)
   IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
   putTextFieldValue, Event, uname, roi_file_name
+
+  ;display normalization plot (counts vs tof) of reduce_step2 plot
+  display_reduce_step2_create_roi_plot, Event, Row=row
   
   MapBase, Event, 'reduce_step2_create_roi_base', 1
   (*global).reduce_step2_create_roi_base = 1
@@ -552,6 +555,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO reduce_step2_return_to_table, Event
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -561,8 +565,16 @@ PRO reduce_step2_return_to_table, Event
   ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
   refresh_reduce_step2_big_table, Event
   
-  
 END
 
+;------------------------------------------------------------------------------
+PRO display_reduce_step2_create_roi_plot, Event, Row=row
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
+  print, 'nexus_norm_file_name: ' + nexus_norm_file_name
+
+END
 
