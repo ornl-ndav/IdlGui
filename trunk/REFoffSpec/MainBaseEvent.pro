@@ -279,6 +279,18 @@ PRO MAIN_BASE_event, Event
       CATCH,/CANCEL
     ENDIF ELSE BEGIN
     
+      CASE (event.key) OF ;Up and Down arrow keys
+        7: BEGIN
+          plot_reduce_step2_norm, Event
+          reduce_step2_manual_move, Event, key='up'
+        END
+        8: BEGIN
+          plot_reduce_step2_norm, Event
+          reduce_step2_manual_move, Event, key='down'
+        END
+        ELSE:
+      ENDCASE
+      
       IF( Event.type EQ 0 )THEN BEGIN
         IF (Event.press EQ 1) THEN BEGIN ;left pressed
           (*global).mouse_left_pressed = 1
