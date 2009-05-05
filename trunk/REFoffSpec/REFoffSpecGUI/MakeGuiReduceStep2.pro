@@ -34,17 +34,17 @@
 
 PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 
-  ;******************************************************************************
+  ;****************************************************************************
   ;            DEFINE STRUCTURE
-  ;******************************************************************************
+  ;****************************************************************************
 
   sBase = { size:  stab.size,$
     uname: 'reduce_step2_tab_base',$
     title: TabTitles.step2}
     
-  ;******************************************************************************
+  ;****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
+  ;****************************************************************************
     
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)
+    MAP       = 0)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -246,7 +246,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 5,$
     VALUE = 'Polarization Mode')
     
-  ;##############################################################################
+  ;############################################################################
   ;first Row
   main_row1 = WIDGET_BASE(Base,$
     XOFFSET = 0,$
@@ -378,7 +378,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 150,$
     SCR_YSIZE = 109)
     
-  ;-------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   xyoff = [8,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$

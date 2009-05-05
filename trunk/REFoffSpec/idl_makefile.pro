@@ -79,6 +79,7 @@ cd, CurrentFolder
 .run ref_off_spec_reduce_step2_roi_selection.pro
 .run ref_off_spec_reduce_step2_save_roi.pro
 .run ref_off_spec_reduce_step2_save_roi_base.pro
+.run ref_off_spec_reduce_step2_load_roi.pro
 
 ;main functions
 .run MainBaseEvent.pro

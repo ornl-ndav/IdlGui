@@ -179,6 +179,15 @@ PRO reduce_step2_manual_move, Event, key=key
       plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
       plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
     END
+    
+    'all':BEGIN
+      Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
+      y1 = FIX(Y1)
+      Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+      y2 = FIX(Y2)
+      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
+    END
     ELSE:
   ENDCASE
   
