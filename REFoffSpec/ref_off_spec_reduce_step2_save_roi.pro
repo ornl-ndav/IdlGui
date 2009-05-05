@@ -32,31 +32,30 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
 PRO reduce_step2_save_roi, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   path    = (*global).ROI_path
-  filters = ['*.dat','*.txt']
-  title   = 'Select ROI file name'
+  title   = 'ROI file name'
   file    = getDefaultReduceStep2RoiFileName(event)
   
-  LogText = '> Save ROI (default file name: ' + file
+  LogText = '> Save ROI (default file name: ' + file + ')'
+  IDLsendToGeek_addLogBookText, Event, LogText
+  LogText = '-> Bring to life ROI file name base.'
   IDLsendToGeek_addLogBookText, Event, LogText
   
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  save_roi_base, Event, PATH=path, FILE_NAME=file
+
+END
+
+;..............................................................................
+PRO reduce_step2_save_roi_step2, Event
+
   
-  file = DIALOG_PICKFILE(FILTER = filters,$
-    DIALOG_PARENT = id,$
-;    GET_PATH = new_path,$
-    PATH = path,$
-    FILE = file,$
-    /OVERWRITE_PROMPT,$
-    TITLE = title)
-    
-    print, file
-    
+
   IF (file NE '') THEN BEGIN
 ;    IF (new_path NE path) THEN BEGIN
 ;      (*global).ROI_path = new_path
