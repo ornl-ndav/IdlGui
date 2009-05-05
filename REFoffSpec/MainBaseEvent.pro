@@ -239,33 +239,43 @@ PRO MAIN_BASE_event, Event
   ;Create/Modify/Visualize ROI file (0->9)
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button0'): BEGIN
     reduce_step2_create_roi, Event, row=0
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button1'): BEGIN
     reduce_step2_create_roi, Event, row=1
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button2'): BEGIN
     reduce_step2_create_roi, Event, row=2
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button3'): BEGIN
     reduce_step2_create_roi, Event, row=3
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button4'): BEGIN
     reduce_step2_create_roi, Event, row=4
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button5'): BEGIN
     reduce_step2_create_roi, Event, row=5
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button6'): BEGIN
     reduce_step2_create_roi, Event, row=6
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button7'): BEGIN
     reduce_step2_create_roi, Event, row=7
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button8'): BEGIN
     reduce_step2_create_roi, Event, row=8
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button9'): BEGIN
     reduce_step2_create_roi, Event, row=9
+    check_reduce_step2_save_roi_validity, Event
   END
   
   ;reduce step2 roi/norm draw
@@ -276,6 +286,7 @@ PRO MAIN_BASE_event, Event
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
+      check_reduce_step2_save_roi_validity, Event
     ENDIF ELSE BEGIN
     
       CASE (event.key) OF ;Up and Down arrow keys
@@ -327,7 +338,7 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
     ENDELSE
-    
+    check_reduce_step2_save_roi_validity, Event
   END
   
   ;y1 and y2 text field (for manual input of y1 and y2
@@ -335,11 +346,13 @@ PRO MAIN_BASE_event, Event
     plot_reduce_step2_norm, Event
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+    check_reduce_step2_save_roi_validity, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_y2_value'): BEGIN
     plot_reduce_step2_norm, Event
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+    check_reduce_step2_save_roi_validity, Event
   END
   
   ;SAVE ROI

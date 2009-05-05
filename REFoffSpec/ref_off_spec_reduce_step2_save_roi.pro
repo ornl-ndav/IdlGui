@@ -68,3 +68,22 @@ PRO reduce_step2_save_roi, Event
   ENDELSE
   
 END
+
+;------------------------------------------------------------------------------
+PRO check_reduce_step2_save_roi_validity, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
+  Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+  
+  IF (STRCOMPRESS(Y1,/REMOVE_ALL) NE '' AND $
+    STRCOMPRESS(Y2,/REMOVE_ALL) NE '') THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, Event, 'reduce_step2_create_roi_save_roi', status
+  
+END

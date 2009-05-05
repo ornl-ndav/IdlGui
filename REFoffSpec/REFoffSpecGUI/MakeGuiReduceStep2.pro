@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)
+    MAP       = 0)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -191,7 +191,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   save_roi = WIDGET_BUTTON(row3_base,$
     VALUE = 'S A V E   R O I',$
     TOOLTIP = 'Click to Save the ROI you created',$
-    UNAME = 'reduce_step2_create_roi_save_roi')
+    UNAME = 'reduce_step2_create_roi_save_roi',$
+    SENSITIVE = 0)
     
   RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
