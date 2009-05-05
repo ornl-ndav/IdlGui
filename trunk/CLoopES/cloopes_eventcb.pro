@@ -65,6 +65,6 @@ PRO MAIN_REALIZE, wWidget
 END
 
 ;------------------------------------------------------------------------------
-PRO cloop_eventcb, event
+PRO cloopes_eventcb, event
 END
 
