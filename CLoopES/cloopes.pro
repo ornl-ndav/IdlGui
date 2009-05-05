@@ -45,9 +45,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING           = 'no'
   CHECKING_PACKAGES = 'yes'
   
-  ;DEBUGGINGiî
+  ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/CLoop/',$ ;path to CL file
+    path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
     input_text: ''}
   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
   ;******************************************************************************
@@ -89,7 +89,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
    
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Command Line Looper (CLoop)'
+  MainBaseTitle  = 'Command Line Looper Elastic State (CLoopES)'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
   MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -136,7 +136,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
-PRO cloop, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO cloopes, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
