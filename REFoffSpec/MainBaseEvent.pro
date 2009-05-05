@@ -113,7 +113,6 @@ PRO MAIN_BASE_event, Event
     reduce_step2_remove_run, Event
   END
   
-  
   ;polarization mode 1 button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
     CATCH, error
@@ -341,6 +340,11 @@ PRO MAIN_BASE_event, Event
     plot_reduce_step2_norm, Event
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
     plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
+  END
+  
+  ;SAVE ROI
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
+  reduce_step2_save_roi, Event
   END
   
   ;return to reduce step2 table
