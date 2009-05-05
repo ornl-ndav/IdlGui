@@ -34,8 +34,8 @@
 
 PRO MAIN_BASE_event, Event
 
-COMPILE_OPT hidden
-
+  COMPILE_OPT hidden
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -305,9 +305,9 @@ COMPILE_OPT hidden
           IF ((*global).reduce_step2_UD_keys_pressed) THEN BEGIN
             (*global).reduce_step2_UD_keys_pressed = 0
           ENDIF ELSE BEGIN
-          plot_reduce_step2_norm, Event
-          reduce_step2_manual_move, Event, key='down'
-          (*global).reduce_step2_UD_keys_pressed = 1
+            plot_reduce_step2_norm, Event
+            reduce_step2_manual_move, Event, key='down'
+            (*global).reduce_step2_UD_keys_pressed = 1
           ENDELSE
         END
         ELSE:
@@ -357,9 +357,15 @@ COMPILE_OPT hidden
     check_reduce_step2_save_roi_validity, Event
   END
   
+  ;browse/load ROI
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_browse_roi_button'): BEGIN
+    browse_reduce_step2_roi_file, Event
+  END
+  
   ;SAVE ROI
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
-  reduce_step2_save_roi, Event
+    reduce_step2_save_roi, Event
   END
   
   ;return to reduce step2 table
