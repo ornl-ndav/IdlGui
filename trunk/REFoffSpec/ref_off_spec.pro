@@ -132,6 +132,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step2_roi_path: '',$
     reduce_step2_roi_file_name: '',$
     roi_color: 150,$
+    working_reduce_step2_row: 0,$
     
     working_path: '~/results/',$
     
