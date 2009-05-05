@@ -32,9 +32,59 @@
 ;
 ;==============================================================================
 
+PRO save_roi_base_event, event
+
+  COMPILE_OPT hidden
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_roi
+  
+  wWidget =  Event.top            ;widget id
+  
+  CASE Event.id OF
+  
+   ;path button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_roi_path_button'): BEGIN
+      PRINT, 'in reduce_step2_roi_path_button'
+    END
+    
+    ;browse for file name
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_roi_file_name_browse'): BEGIN
+      PRINT, 'in reduce_step2_roi_file_name_browse'
+    END
+
+    ;file name text field
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_roi_file_name_text'): BEGIN
+      PRINT, 'in reduce_step2_roi_file_name_text'
+    END
+    
+    ;cancel
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_roi_cancel_button'): BEGIN
+      WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
+      print, 'in cancel'
+    END
+    
+    ;save roi
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_roi_save_roi_ok_button'): BEGIN
+      PRINT, 'in reduce_step2_roi_save_roi_ok_button'
+    END
+    
+    ELSE:
+    
+  ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
 PRO save_roi_base, Event, path=path, FILE_NAME=file_name
 
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;our_group = widget_base(
   roi_base = WIDGET_BASE(GROUP_LEADER=id,$
@@ -43,59 +93,68 @@ PRO save_roi_base, Event, path=path, FILE_NAME=file_name
     SCR_XSIZE = 400,$
     frame = 5,$
     title = 'Select name of ROI file name to create')
-  
-    ;path label
-    label = WIDGET_LABEL(roi_base,$
+    
+  ;path label
+  label = WIDGET_LABEL(roi_base,$
     VALUE = 'PATH:')
     
   ;path button ................. first row ........................
-    path = WIDGET_BUTTON(roi_base,$
+  path = WIDGET_BUTTON(roi_base,$
     VALUE = path,$
     UNAME = 'reduce_step2_roi_path_button')
     
-    ;vertical space
-    space = WIDGET_LABEL(roi_base,$
+  ;vertical space
+  space = WIDGET_LABEL(roi_base,$
     VALUE = ' ')
     
-    ;path label
-    label = WIDGET_LABEL(roi_base,$
+  ;path label
+  label = WIDGET_LABEL(roi_base,$
     VALUE = 'FILE NAME:')
-
+    
   ;File name frame ............ second row .....................
   file_base = WIDGET_BASE(roi_base,$
     FRAME = 1,$
     /COLUMN)
     
-    ;browse file name button
-    browse = WIDGET_BUTTON(file_base,$
+  ;browse file name button
+  browse = WIDGET_BUTTON(file_base,$
     VALUE = 'B R O W S E  . . . ',$
     SCR_XSIZE = 390,$
     UNAME = 'reduce_step2_roi_file_name_browse')
     
-    ;file name text field
-    name = WIDGET_TEXT(file_base,$
+  ;file name text field
+  name = WIDGET_TEXT(file_base,$
     VALUE = file_name,$
     SCR_XSIZE = 390,$
     /EDITABLE,$
     /ALIGN_LEFT,$
     UNAME = 'reduce_step2_roi_file_name_text')
-
+    
   ;cancel and ok buttons .............. third row ................
-    row3 = WIDGET_BASE(roi_base,$
+  row3 = WIDGET_BASE(roi_base,$
     /ROW)
-        
-    cancel = WIDGET_BUTTON(row3,$
+    
+  cancel = WIDGET_BUTTON(row3,$
     VALUE = 'CANCEL',$
     SCR_XSIZE = 120,$
-    UNAme = 'reduce_step2_roi_cancel_button')
+    UNAME = 'reduce_step2_roi_cancel_button')
     
-    space = WIDGET_LABEL(row3,$
+  space = WIDGET_LABEL(row3,$
     VALUE = '                        ')
     
-    ok = WIDGET_BUTTON(row3,$
+  ok = WIDGET_BUTTON(row3,$
     VALUE = 'SAVE ROI',$
     SCR_XSIZE = 120,$
     UNAME = 'reduce_step2_roi_save_roi_ok_button')
     
   WIDGET_CONTROL, roi_base, /realize
+  
+  global_roi = { global: global,$
+    event: event,$
+    ourGroup: roi_base }
+    
+  WIDGET_CONTROL, roi_base, SET_UVALUE=global_roi    
+  XMANAGER, "save_roi_base", roi_base,$
+    GROUP_LEADER = id
+    
 END
