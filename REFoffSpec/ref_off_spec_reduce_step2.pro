@@ -177,7 +177,7 @@ PRO refresh_reduce_step2_big_table, Event
 
   ;PRINT
   ;PRINT, 'entering refresh_reduce_step2_big_table'
-  
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -217,7 +217,7 @@ PRO refresh_reduce_step2_big_table, Event
     
   ENDIF
   
-  ;PRINT, 'leaving refresh_reduce_step2_big_table'
+;PRINT, 'leaving refresh_reduce_step2_big_table'
   
 END
 
@@ -284,8 +284,8 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   ;PRINT, '-> entering addNormNexusToList'
   ;HELP, new_nexus_file_list
   ;PRINT, new_nexus_file_list
-  
-  
+
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -295,7 +295,7 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
   
-   ; PRINT, '   in first time adding norm file'
+    ; PRINT, '   in first time adding norm file'
     ;IF (new_nexus_file_list[0] NE '') THEN BEGIN
     nexus_file_list = new_nexus_file_list
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
@@ -325,7 +325,7 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   ENDIF ELSE BEGIN ;list of nexus is not empty
   
     ;PRINT, '   list of nexus is not empty'
-    
+  
     ;print, '---> (before getOnlyDefineRunNumber) new_nexus_file_list: '
     ;print, new_nexus_file_list
     new_nexus_file_list = getOnlyDefineRunNumber(new_nexus_file_list)
@@ -336,26 +336,26 @@ PRO addNormNexusToList, Event, new_nexus_file_list
     nexus_file_list = [nexus_file_list,new_nexus_file_list]
     ;print, '---> (nexus_file_list = [nexus_file_list,new_nexus_file_list]) = '
     ;print, nexus_file_list
-
+    
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
     
   ENDELSE
-
-;  PRINT, '     reduce_tab2_nexus_file_list: '
-;  PRINT, (*(*global).reduce_tab2_nexus_file_list)
-;  HELP, (*(*global).reduce_tab2_nexus_file_list)
-;  PRINT
+  
+  ;  PRINT, '     reduce_tab2_nexus_file_list: '
+  ;  PRINT, (*(*global).reduce_tab2_nexus_file_list)
+  ;  HELP, (*(*global).reduce_tab2_nexus_file_list)
+  ;  PRINT
   
   sz = N_ELEMENTS(nexus_file_list)
   nexus_norm_list_run_number = STRARR(1,11)
   
-;  PRINT, 'entering while loop'
+  ;  PRINT, 'entering while loop'
   index = 0
   WHILE (index LT sz) DO BEGIN
     ;retrieve RunNumber of nexus file name
-;    PRINT, ' -> index: ' + STRCOMPRESS(index)
-;    PRINT, ' -> nexus_file_list[index]: ' + nexus_file_list[index]
-    
+    ;    PRINT, ' -> index: ' + STRCOMPRESS(index)
+    ;    PRINT, ' -> nexus_file_list[index]: ' + nexus_file_list[index]
+  
     iNexus = OBJ_NEW('IDLgetMetadata', $
       nexus_file_list[index],$
       reduce_tab1_working_pola_state)
@@ -364,7 +364,7 @@ PRO addNormNexusToList, Event, new_nexus_file_list
       index ++
     ENDIF ELSE BEGIN
       RunNumber = iNexus->getRunNumber()
-;      PRINT, ' -> Run number: ' + STRCOMPRESS(RunNumber)
+      ;      PRINT, ' -> Run number: ' + STRCOMPRESS(RunNumber)
       OBJ_DESTROY, iNexus
       nexus_norm_list_run_number[0,index] = RunNumber
       index++
@@ -403,6 +403,9 @@ PRO PopulateStep2BigTabe, Event
     
       ;populate norm label or droplist
       populate_reduce_step2_norm_droplist, Event
+      
+      ;populate norm roi labels
+      populate_reduce_step2_norm_roi, Event
       
       ;populate data labels
       uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index,/REMOVE_ALL)
@@ -506,6 +509,29 @@ PRO populate_reduce_step2_norm_droplist, Event
       SetComboboxSelect, Event, uname, norm_big_table[index_data]
     ENDELSE
     
+    index_data++
+  ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO populate_reduce_step2_norm_roi, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  norm_run_number = (*global).nexus_norm_list_run_number
+  reduce_step2_norm_roi = (*global).reduce_step2_norm_roi
+  
+  tab1_table = (*(*global).reduce_tab1_table)
+  data_run_number = tab1_table[0,*]
+  data_run_number = getOnlyDefineRunNumber(data_run_number)
+  sz_data = N_ELEMENTS(data_run_number)
+  
+  index_data = 0
+  WHILE (index_data LT sz_data) DO BEGIN ;loop over all data runs
+    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(index_data,/REMOVE_ALL)
+    putTextFieldValue, Event, uname, reduce_step2_norm_roi[index_data]
     index_data++
   ENDWHILE
   
@@ -647,6 +673,15 @@ PRO reduce_step2_return_to_table, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  reduce_step2_norm_roi = (*global).reduce_step2_norm_roi
+  working_row           = (*global).working_reduce_step2_row
+  roi_file_name         = getTextFieldValue(event,$
+    'reduce_step2_create_roi_file_name_label')
+    
+  reduce_step2_norm_roi[working_row] = roi_file_name
+  
+  (*global).reduce_step2_norm_roi = reduce_step2_norm_roi
+  
   MapBase, Event, 'reduce_step2_create_roi_base', 0
   (*global).reduce_step2_create_roi_base = 0
   
@@ -671,25 +706,25 @@ END
 ;------------------------------------------------------------------------------
 PRO cleanup_reduce_step2_list, nexus_norm_list_run_number, nexus_file_list
 
-;  PRINT, '-> entering cleanup_reduce_step2_list'
-  
-;  HELP, nexus_norm_list_run_number
-;  PRINT, nexus_norm_list_run_number
-;  PRINT, '**************'
-  
-;  HELP, nexus_file_list
-;  PRINT, nexus_file_list
-;  PRINT, '***************'
-  
+  ;  PRINT, '-> entering cleanup_reduce_step2_list'
+
+  ;  HELP, nexus_norm_list_run_number
+  ;  PRINT, nexus_norm_list_run_number
+  ;  PRINT, '**************'
+
+  ;  HELP, nexus_file_list
+  ;  PRINT, nexus_file_list
+  ;  PRINT, '***************'
+
   new_nexus_norm_list_run_number = STRARR(1,11)
   
   sz = (SIZE(nexus_file_list))(1)
   index = 0
   new_index = 0
-;  print, '------while loop ----------'
+  ;  print, '------while loop ----------'
   WHILE (index LT sz) DO BEGIN
-;    print, nexus_norm_list_run_number[0,index]
-    
+    ;    print, nexus_norm_list_run_number[0,index]
+  
     IF (nexus_norm_list_run_number[0,index] NE '') THEN BEGIN
       new_nexus_norm_list_run_number[0,new_index] = $
         nexus_norm_list_run_number[0,index]
@@ -702,7 +737,7 @@ PRO cleanup_reduce_step2_list, nexus_norm_list_run_number, nexus_file_list
     ENDIF
     index++
   ENDWHILE
-;    print, '------while loop ----------'
+  ;    print, '------while loop ----------'
   
   nexus_norm_list_run_number = new_nexus_norm_list_run_number
   nexus_file_list = new_nexus_file_list
