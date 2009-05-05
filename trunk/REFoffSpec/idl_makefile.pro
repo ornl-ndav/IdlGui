@@ -77,6 +77,7 @@ cd, CurrentFolder
 .run packages_required.pro
 .run ref_off_spec_reduce_step2_plot_norm.pro
 .run ref_off_spec_reduce_step2_roi_selection.pro
+.run ref_off_spec_reduce_step2_save_roi.pro
 
 ;main functions
 .run MainBaseEvent.pro
