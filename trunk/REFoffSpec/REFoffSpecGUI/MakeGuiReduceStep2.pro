@@ -106,7 +106,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   roi_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
+    /ALIGN_LEFT,$
     SCR_XSIZE = 500,$
+    UNAME = 'reduce_step2_create_roi_file_name_label',$
     FRAME = 1)
     
   ;second row --------------------------

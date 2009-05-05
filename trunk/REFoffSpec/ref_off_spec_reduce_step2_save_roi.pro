@@ -48,26 +48,21 @@ PRO reduce_step2_save_roi, Event
   IDLsendToGeek_addLogBookText, Event, LogText
   
   save_roi_base, Event, PATH=path, FILE_NAME=file
-
+  
 END
 
 ;..............................................................................
 PRO reduce_step2_save_roi_step2, Event
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-
-  IF (file NE '') THEN BEGIN
-;    IF (new_path NE path) THEN BEGIN
-;      (*global).ROI_path = new_path
-;      LogText = '-> User changed ROI path: ' + new_path
-;      IDLsendToGeek_addLogBookText, Event, LogText
-;    ENDIF
-    LogText = '-> ROI file name: ' + file
-    create_roi_file, Event, file
-  ENDIF ELSE BEGIN
-    LogText = '-> User canceled Save ROI.'
-    IDLsendToGeek_addLogBookText, Event, LogText
-  ENDELSE
+  path = (*global).reduce_step2_roi_path
+  file = (*global).reduce_step2_roi_file_name
+  
+  file_name = path + file
+  
+  create_roi_file, Event, file_name
   
 END
 
@@ -135,6 +130,10 @@ PRO create_roi_file, Event, roi_file_name
     FREE_LUN, 1
   ENDELSE ;end of (Ynbr LE 1)
   
+  putTextFieldValue, Event, $
+    'reduce_step2_create_roi_file_name_label',$
+    roi_file_name
+    
   ERROR:
   
 END
