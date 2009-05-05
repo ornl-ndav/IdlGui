@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -79,6 +79,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   data_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_data_value',$
     FRAME = 0,$
     SCR_XSIZE = 100)
@@ -88,6 +89,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   norm_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME = 'reduce_step2_create_roi_norm_value',$
     FRAME = 1,$
     SCR_XSIZE = 100)
@@ -114,6 +116,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$
     /ROW)
+    
+   space = WIDGET_LABEL(row2_base,$
+   value = '                  ')  
     
   draw = WIDGET_DRAW(row2_base,$
     SCR_XSIZE = 2*500,$
@@ -185,7 +190,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = '    ')
     
   info = WIDGET_LABEL(row3_row2_base,$
-    VALUE = '- Left click on the plot to select first Y, Right ' + $
+    VALUE = ' HELP: Left click on the plot to select first Y, Right ' + $
     'click to switch to next Y. or manually input Y1 and Y2 ' + $
     'or Use Up or Down arrows to move selection.')
     
