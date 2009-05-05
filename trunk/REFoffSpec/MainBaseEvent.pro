@@ -34,6 +34,8 @@
 
 PRO MAIN_BASE_event, Event
 
+COMPILE_OPT hidden
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
