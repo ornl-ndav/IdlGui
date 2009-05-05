@@ -49,19 +49,22 @@ PRO reduce_step2_save_roi, Event
   
   file = DIALOG_PICKFILE(FILTER = filters,$
     DIALOG_PARENT = id,$
-    GET_PATH = new_path,$
+;    GET_PATH = new_path,$
     PATH = path,$
     FILE = file,$
     /OVERWRITE_PROMPT,$
     TITLE = title)
     
+    print, file
+    
   IF (file NE '') THEN BEGIN
-    IF (new_path NE path) THEN BEGIN
-      (*global).ROI_path = new_path
-      LogText = '-> User changed ROI path: ' + new_path
-      IDLsendToGeek_addLogBookText, Event, LogText
-    ENDIF
+;    IF (new_path NE path) THEN BEGIN
+;      (*global).ROI_path = new_path
+;      LogText = '-> User changed ROI path: ' + new_path
+;      IDLsendToGeek_addLogBookText, Event, LogText
+;    ENDIF
     LogText = '-> ROI file name: ' + file
+    create_roi_file, Event, file
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Save ROI.'
     IDLsendToGeek_addLogBookText, Event, LogText
@@ -87,3 +90,53 @@ PRO check_reduce_step2_save_roi_validity, Event
   activate_widget, Event, 'reduce_step2_create_roi_save_roi', status
   
 END
+
+;------------------------------------------------------------------------------
+PRO create_roi_file, Event, roi_file_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;ON_IOERROR, error
+  
+  ;get Y1 and Y2
+  Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
+  Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
+  
+  ;get integer values
+  Y1 = FIX(Y1)
+  Y2 = FIX(Y2)
+  
+  ;get min and max values
+  Ymin = MIN([Y1,Y2],MAX=Ymax)
+  nbr_y = (Ymax-Ymin+1)
+  ;open output file
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    message = 'ERROR: The ROI file can not be saved at this location ('
+    message += roi_file_name + ')'
+    IDLsendToGeek_addLogBookText, Event, message
+  ENDIF ELSE BEGIN
+    OPENW, 1, roi_file_name
+    i     = 0L
+    NyMax = 256L
+    OutputArray = STRARR((NyMax)*nbr_y)
+    FOR y=(Ymin),(Ymax) DO BEGIN
+      FOR x=0,(NyMax-1) DO BEGIN
+        text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
+        text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
+        PRINTF,1,text
+        OutputArray[i] = text
+        i++
+      ENDFOR
+    ENDFOR
+    CLOSE, 1
+    FREE_LUN, 1
+  ENDELSE ;end of (Ynbr LE 1)
+  
+  ERROR:
+  
+END
+
