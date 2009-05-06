@@ -622,6 +622,13 @@ PRO reduce_step2_create_roi, Event, row=row
   
   WIDGET_CONTROL, /HOURGLASS
   
+  ;clear plot
+  ;select plot
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  ERASE
+  
   ;get data run number
   uname = 'reduce_tab2_data_value' + STRCOMPRESS(row,/REMOVE_ALL)
   data_run_number = getTextFieldValue(Event,uname)
@@ -641,6 +648,8 @@ PRO reduce_step2_create_roi, Event, row=row
   ;get ROI file name
   uname = 'reduce_tab2_roi_value' + STRCOMPRESS(row,/REMOVE_ALL)
   roi_file_name = getTextFieldValue(Event,uname)
+  
+  uname = 'reduce_step2_create_roi_file_name_label'
   IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
   putTextFieldValue, Event, uname, roi_file_name
   
@@ -649,6 +658,11 @@ PRO reduce_step2_create_roi, Event, row=row
   
   ;display normalization plot (counts vs tof) of reduce_step2 plot
   success = display_reduce_step2_create_roi_plot(Event, Row=row)
+  
+  ;display ROI file name if any
+  IF (roi_file_name NE 'N/A') THEN BEGIN
+    load_and_plot_roi_file, Event, roi_file_name
+  ENDIF
   
   WIDGET_CONTROL, HOURGLASS=0
   
