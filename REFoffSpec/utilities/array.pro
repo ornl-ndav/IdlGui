@@ -32,42 +32,13 @@
 ;
 ;==============================================================================
 
-PRO refresh_reduce_step3_table, Event
+PRO addElementToArray, ARRAY=array, new_element=new_element
 
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  step3_big_table = STRARR(40,9)
-  
-  tab1_table = (*(*global).reduce_tab1_table)
-  ;retrieve list of Data Runs
-  data_run_number = tab1_table[0,*] ;array[1,18]
-  HELP, data_run_number
-  PRINT, data_run_number
-  PRINT
-  
-  ;retrieve data full file name
-  data_nexus_file_name = tab1_table[1,*] ;array[1,18]
-  HELP, data_nexus_file_name
-  PRINT, data_nexus_file_name
-  PRINT
-  
-  ;retrieve working polarization state
-  data_working_spin_state = $ ;'Off_Off'
-  getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
-  help, data_working_spin_state
-  print, data_working_spin_state
-  print
-  
-  ;retrieve list of other polarization states
-  list_of_other_pola_state = getListOfDataSpinStates(Event)
-  help, list_of_other_pola_state
-  print, list_of_other_pola_state
-  print  
-    
-     
-    
-    
-    
-    
+sz = N_ELEMENTS(array)
+IF (sz EQ 1 AND array[0] EQ '') THEN BEGIN
+array[0] = new_element
+ENDIF ELSE BEGIN
+array = [array,new_element]
+ENDELSE
+RETURN
 END
