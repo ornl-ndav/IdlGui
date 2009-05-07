@@ -43,31 +43,35 @@ PRO refresh_reduce_step3_table, Event
   ;retrieve list of Data Runs
   data_run_number = tab1_table[0,*] ;array[1,18]
   short_data_run_number = RemoveEmptyElement(data_run_number[0,*])
-  HELP, short_data_run_number
-  PRINT, short_data_run_number
-  PRINT
+  nbr_data = N_ELEMENTS(short_data_run_number)
+  
+;  HELP, short_data_run_number
+;  PRINT, short_data_run_number
+;  PRINT
+;  
+  IF (short_data_run_number[0] EQ '') THEN RETURN ;stop right away if no data
   
   ;retrieve data full file name
   data_nexus_file_name = tab1_table[1,*] ;array[1,18]
-  HELP, data_nexus_file_name
-  HELP, data_nexus_file_name[0,*]
+;  HELP, data_nexus_file_name
+;  HELP, data_nexus_file_name[0,*]
   short_data_nexus_file_name = RemoveEmptyElement(data_nexus_file_name[0,*])
-  HELP, short_data_nexus_file_name
-  PRINT, short_data_nexus_file_name
-  PRINT
-  
+;  HELP, short_data_nexus_file_name
+;  PRINT, short_data_nexus_file_name
+;  PRINT
+
   ;retrieve working polarization state
   data_working_spin_state = $ ;'Off_Off'
     getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
-  HELP, data_working_spin_state
-  PRINT, data_working_spin_state
-  PRINT
+;  HELP, data_working_spin_state
+;  PRINT, data_working_spin_state
+;  PRINT
   
   ;retrieve list of other polarization states
   list_of_other_pola_state = getListOfDataSpinStates(Event)
-  HELP, list_of_other_pola_state
-  PRINT, list_of_other_pola_state
-  PRINT
+;  HELP, list_of_other_pola_state
+;  PRINT, list_of_other_pola_state
+;  PRINT
   
   ;push working pola state into list_of_other_pola_state
   full_list_of_pola_state = push_array(ARRAY=list_of_other_pola_state,$
@@ -75,19 +79,60 @@ PRO refresh_reduce_step3_table, Event
     
   ;get full number of polarization states
   nbr_pola_state = getNbrWorkingPolaState(full_list_of_pola_state)
-  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
-  PRINT
+;  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
+;  PRINT
   
   ;loop over all the working pola state to populate big table
-  index = 0 
-  WHILE (index LT nbr_pola_state) DO BEGIN
+  pola_index = 0
   
+  short_norm_file_list = (*(*global).reduce_tab2_nexus_file_list)
+  norm_run_number = (*global).nexus_norm_list_run_number
+  short_norm_run_number = RemoveEmptyElement(norm_run_number[0,*])
   
-    index++
+  table_index = 0
+  WHILE (pola_index LT nbr_pola_state) DO BEGIN
+  
+    data_index = 0
+    WHILE (data_index LT nbr_data) DO BEGIN
+    
+      data_run     = short_data_run_number[data_index]
+      data_nexus   = short_data_nexus_file_name[data_index]
+      d_spin_state = full_list_of_pola_state[pola_index]
+
+      IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
+        norm_run     = 'N/A'
+        norm_nexus   = 'N/A'
+        n_spin_state = 'N/A'
+        roi_file     = 'N/A'
+      ENDIF ELSE BEGIN
+        norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
+        norm_nexus   = getNormNexusOfIndex(Event, $
+          data_index,$
+          short_norm_file_list)
+        n_spin_state = getReduceStep2SpinStateRow(Event, Row=data_index)
+        roi_file     = getNormRoiFileOfIndex(Event, data_index)
+      ENDELSE
+      
+      ;populate Recap. Big table
+      step3_big_table[table_index,0] = data_run
+      step3_big_table[table_index,1] = data_nexus
+      step3_big_table[table_index,2] = d_spin_state
+      step3_big_table[table_index,3] = norm_run
+      step3_big_table[table_index,4] = norm_nexus
+      step3_big_table[table_index,5] = n_spin_state
+      step3_big_table[table_index,6] = roi_file
+      
+      data_index++
+      table_index++
+      
+    ENDWHILE
+    
+    pola_index++
   ENDWHILE
   
-  
-  
-  
-  
+  ;update big table
+  putValueInTable, Event,$
+    'reduce_tab3_main_spin_state_table_uname',$
+    transpose(step3_big_table)
+        
 END
