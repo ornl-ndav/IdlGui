@@ -1,4 +1,4 @@
-;==============================================================================
+
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -320,7 +320,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getReduceStep2NormOfRow, Event, row=row
 
-  row = STRCOMPRESS(row,/REMOVE_ALL)
+  sRow = STRCOMPRESS(row,/REMOVE_ALL)
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -328,10 +328,10 @@ FUNCTION getReduceStep2NormOfRow, Event, row=row
   nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
   sz = (SIZE(nexus_file_list))(1)
   IF (sz GT 1) THEN BEGIN
-    uname = 'reduce_tab2_norm_combo' + row
+    uname = 'reduce_tab2_norm_combo' + sRow
     RETURN, getComboListSelectedValue(Event, uname)
   ENDIF ELSE BEGIN
-    uname = 'reduce_tab2_norm_value' + row
+    uname = 'reduce_tab2_norm_value' + sRow
     RETURN, getTextFieldValue(Event,uname)
   ENDELSE
 END
@@ -339,7 +339,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getReduceStep2SpinStateRow, Event, Row=row
 
-  row = STRCOMPRESS(row,/REMOVE_ALL)
+  sRow = STRCOMPRESS(row,/REMOVE_ALL)
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -350,7 +350,7 @@ FUNCTION getReduceStep2SpinStateRow, Event, Row=row
     uname = 'reduce_step2_mode1_spin_state_combobox'
     RETURN, getComboListSelectedValue(Event,uname)
   ENDIF ELSE BEGIN
-    uname = 'reduce_tab2_spin_combo' + row
+    uname = 'reduce_tab2_spin_combo' + sRow
     RETURN, getComboListSelectedValue(Event,uname)
   ENDELSE
   
@@ -359,7 +359,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getReduceStep2NormFullName, Event, row=row
 
-  row = STRCOMPRESS(row,/REMOVE_ALL)
+  sRow = STRCOMPRESS(row,/REMOVE_ALL)
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -369,7 +369,7 @@ FUNCTION getReduceStep2NormFullName, Event, row=row
   IF (sz GT 1) THEN BEGIN
     big_table = (*global).reduce_step2_big_table_norm_index
     index = big_table[row]
-    uname = 'reduce_tab2_norm_combo' + row
+    uname = 'reduce_tab2_norm_combo' + sRow
     RETURN, nexus_file_list[index]
   ENDIF ELSE BEGIN
     RETURN, nexus_file_list[0]
@@ -430,3 +430,23 @@ FUNCTION getNbrWorkingPolaState, full_pola_state
   ENDELSE
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getNormNexusOfIndex, Event, index, short_norm_file_list
+  IF ((SIZE(short_norm_file_list))(1) EQ 1) THEN BEGIN
+    RETURN, short_norm_file_list[0]
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    table = (*global).reduce_step2_big_table_norm_index
+    selected_index = table[index]
+    RETURN, short_norm_file_list[selected_index]
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getNormRoiFileOfIndex, Event, index
+  sIndex = STRCOMPRESS(index,/REMOVE_ALL)
+  uname = 'reduce_tab2_roi_value' + sIndex
+  roi_file_name = getTextFieldValue(Event,uname)
+  RETURN, roi_file_name
+END
