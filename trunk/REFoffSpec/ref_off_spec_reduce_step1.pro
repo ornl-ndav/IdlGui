@@ -606,6 +606,10 @@ PRO AddNexusToReduceTab1Table, Event
       TABLE=reduce_tab1_table, $
       ROW=row_selected)
       
+    IF (new_table[0,0] EQ '') THEN BEGIN
+    (*global).reduce_tab1_working_pola_state = ''
+    ENDIF  
+      
     putTableValue, Event, new_table, 'reduce_tab1_table_uname'
     (*(*global).reduce_tab1_table) = new_table
     
