@@ -382,13 +382,44 @@ FUNCTION getDefaultReduceStep2RoiFileName, event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   ;get norm run number
   norm_run = getTextFieldValue(Event,'reduce_step2_create_roi_norm_value')
-
+  
   file = 'REF_M_' + norm_run + '_ROI.dat'
-
-RETURN, file
+  
+  RETURN, file
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getDataWorkingSpinState, full_pola_state
+  array = STRSPLIT(full_pola_state,'/entry-',/extract,/REGEX)
+  array2 = STRSPLIT(array[0],'/',/extract,/REGEX)
+  RETURN, array2[0]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getListOfDataSpinStates, Event
+  final_spin_state_array = STRARR(1)
+  spin_states_uname = ['reduce_tab1_pola_1',$
+    'reduce_tab1_pola_2',$
+    'reduce_tab1_pola_3',$
+    'reduce_tab1_pola_4']
+  FOR i=0,3 DO BEGIN
+    ;is state enabled
+    IF (isButtonSensitive(Event,spin_states_uname[i])) THEN BEGIN
+      IF (isButtonSelected(Event,spin_states_uname[i])) THEN BEGIN
+      ;add spin state to array
+      full_spin_state = getButtonValue(Event,spin_states_uname[i])
+      spin_state = getDataWorkingSpinState(full_spin_state)
+      addElementToArray, ARRAY=final_spin_state_array, NEW=spin_state
+      ENDIF
+    ENDIF
+  ENDFOR
+RETURN, final_spin_state_array  
+END
+
+
+
 
 

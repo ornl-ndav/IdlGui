@@ -3,6 +3,7 @@ spawn, 'pwd', CurrentFolder
 
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
+.run array.pro
 .run system_utilities.pro
 .run time.pro
 .run IDLsendLogBook__define.pro
