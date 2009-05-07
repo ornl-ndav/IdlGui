@@ -34,25 +34,55 @@
 
 PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
 
-;******************************************************************************
-;            DEFINE STRUCTURE
-;******************************************************************************
+  ;******************************************************************************
+  ;            DEFINE STRUCTURE
+  ;******************************************************************************
 
-sBase = { size:  stab.size,$
-          uname: 'reduce_step3_tab_base',$
-          title: TabTitles.step3}
-
-;******************************************************************************
-;            BUILD GUI
-;******************************************************************************
-
-Base = WIDGET_BASE(REDUCE_TAB,$
-                   UNAME     = sBase.uname,$
-                   XOFFSET   = sBase.size[0],$
-                   YOFFSET   = sBase.size[1],$
-                   SCR_XSIZE = sBase.size[2],$
-                   SCR_YSIZE = sBase.size[3],$
-                   TITLE     = sBase.title)
-
+  sBase = { size:  stab.size,$
+    uname: 'reduce_step3_tab_base',$
+    title: TabTitles.step3}
+    
+  ;******************************************************************************
+  ;            BUILD GUI
+  ;******************************************************************************
+    
+  Base = WIDGET_BASE(REDUCE_TAB,$
+    UNAME     = sBase.uname,$
+    XOFFSET   = sBase.size[0],$
+    YOFFSET   = sBase.size[1],$
+    SCR_XSIZE = sBase.size[2],$
+    SCR_YSIZE = sBase.size[3],$
+    TITLE     = sBase.title)
+    
+  column_base = WIDGET_BASE(Base,$
+    /COLUMN,$
+    /BASE_ALIGN_LEFT)
+    
+  space = WIDGET_LABEL(column_base,$
+    VALUE = ' ')
+    
+  main_table = WIDGET_TABLE(column_base,$
+    COLUMN_LABELS = ['DATA Run',$
+    'DATA NeXus',$
+    'D. Spin State',$
+    'NORM. Run',$
+    'NORM. NeXus',$
+    'N. Spin State',$
+    'ROI',$
+    'Output Path',$
+    'Output File'],$
+    UNAME = 'reduce_tab2_main_spin_state_table_uname',$
+    /NO_ROW_HEADERS,$
+    /RESIZEABLE_COLUMNS,$
+    ALIGNMENT = 0,$
+    XSIZE = 9,$
+    YSIZE = 40,$
+    SCR_XSIZE = 1260,$
+    SCR_YSIZE = 750,$
+    COLUMN_WIDTHS = [55,300,90,70,300,90,300,200,240],$
+    /SCROLL,$
+    /EDITABLE,$
+    /ALL_EVENTS)
+    
 
 END

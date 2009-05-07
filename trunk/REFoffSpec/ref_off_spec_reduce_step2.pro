@@ -624,7 +624,8 @@ PRO reduce_step2_create_roi, Event, row=row
   
   ;clear plot
   ;select plot
-  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
+  id_draw = WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   ERASE
