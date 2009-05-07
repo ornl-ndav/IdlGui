@@ -34,17 +34,17 @@
 
 PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
 
-  ;******************************************************************************
+  ;****************************************************************************
   ;            DEFINE STRUCTURE
-  ;******************************************************************************
+  ;****************************************************************************
 
   sBase = { size:  stab.size,$
     uname: 'reduce_step3_tab_base',$
     title: TabTitles.step3}
     
-  ;******************************************************************************
+  ;****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
+  ;****************************************************************************
     
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
@@ -71,7 +71,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     'ROI',$
     'Output Path',$
     'Output File'],$
-    UNAME = 'reduce_tab2_main_spin_state_table_uname',$
+    UNAME = 'reduce_tab3_main_spin_state_table_uname',$
     /NO_ROW_HEADERS,$
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
@@ -82,7 +82,27 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     COLUMN_WIDTHS = [55,300,90,70,300,90,300,200,240],$
     /SCROLL,$
     /EDITABLE,$
+    SENSITIVE = 0,$
     /ALL_EVENTS)
     
-
+  space = WIDGET_LABEL(column_base,$
+    VALUE = ' ')
+    
+  row = WIDGET_BASE(column_base,$
+    /ROW,$
+    SENSITIVE = 0)
+    
+  jobs = WIDGET_BUTTON(row,$
+    VALUE = 'RUN JOBS',$
+    SCR_XSIZE = 1085,$
+    UNAME = 'reduce_tab3_run_jobs',$
+    FRAME = 5)
+    
+  status = WIDGET_BUTTON(row,$
+    VALUE = 'CHECK JOB MANAGER',$
+    SCR_XSIZE = 150,$
+    UNAME = 'reduce_tab3_check_jobs',$
+    FRAME = 5)
+    
+    
 END
