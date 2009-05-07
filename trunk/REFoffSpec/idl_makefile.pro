@@ -57,6 +57,12 @@ cd, CurrentFolder
 
 .run ref_off_spec_reduce_step1.pro
 .run ref_off_spec_reduce_step2.pro
+.run ref_off_spec_reduce_step2_plot_norm.pro
+.run ref_off_spec_reduce_step2_roi_selection.pro
+.run ref_off_spec_reduce_step2_save_roi.pro
+.run ref_off_spec_reduce_step2_save_roi_base.pro
+.run ref_off_spec_reduce_step2_load_roi.pro
+.run ref_off_spec_reduce_step3.pro
 .run ref_off_spec_browse_ascii.pro
 .run ref_off_spec_read_ascii.pro
 .run ref_off_spec_plot.pro
@@ -75,11 +81,6 @@ cd, CurrentFolder
 .run ref_off_spec_step6.pro
 .run ref_off_spec_display_buttons.pro
 .run packages_required.pro
-.run ref_off_spec_reduce_step2_plot_norm.pro
-.run ref_off_spec_reduce_step2_roi_selection.pro
-.run ref_off_spec_reduce_step2_save_roi.pro
-.run ref_off_spec_reduce_step2_save_roi_base.pro
-.run ref_off_spec_reduce_step2_load_roi.pro
 
 ;main functions
 .run MainBaseEvent.pro

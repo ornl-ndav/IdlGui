@@ -68,7 +68,9 @@ PRO  reduce_tab_event, Event
       ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
       refresh_reduce_step2_big_table, Event
     END
-    2:
+    2: BEGIN ;step3: recapitulation tab
+    refresh_reduce_step3_table, Event
+    END
     ELSE:
   ENDCASE
   (*global).PrevReduceTabSelect = CurrTabSelect

@@ -82,7 +82,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     COLUMN_WIDTHS = [55,300,90,70,300,90,300,200,240],$
     /SCROLL,$
     /EDITABLE,$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     /ALL_EVENTS)
     
   space = WIDGET_LABEL(column_base,$
