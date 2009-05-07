@@ -33,12 +33,62 @@
 ;==============================================================================
 
 PRO addElementToArray, ARRAY=array, new_element=new_element
-
-sz = N_ELEMENTS(array)
-IF (sz EQ 1 AND array[0] EQ '') THEN BEGIN
-array[0] = new_element
-ENDIF ELSE BEGIN
-array = [array,new_element]
-ENDELSE
-RETURN
+  sz = N_ELEMENTS(array)
+  IF (sz EQ 1 AND array[0] EQ '') THEN BEGIN
+    array[0] = new_element
+  ENDIF ELSE BEGIN
+    array = [array,new_element]
+  ENDELSE
+  RETURN
 END
+
+;------------------------------------------------------------------------------
+FUNCTION RemoveEmptyElement, array
+
+  type = (SIZE(array))(0)
+  IF (type EQ 1) THEN RETURN, STRARR(1)
+  
+  new_array = STRARR(1)
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN, STRARR(1)
+  ENDIF ELSE BEGIN
+    sz = (SIZE(array))(2)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      IF (array[index] NE '') THEN BEGIN
+        addElementToArray, ARRAY=new_array, new_element=array[index]
+      ENDIF
+      index++
+    ENDWHILE
+  ENDELSE
+  RETURN, new_array
+  
+END
+
+;-----------------------------------------------------------------------------
+FUNCTION push_array, ARRAY=array, NEW_ELEMENT=new_element
+  sz = (SIZE(array))(1)
+  IF (sz EQ 1 AND $
+    array[0] EQ '') THEN BEGIN
+    RETURN, [new_element]
+  ENDIF ELSE BEGIN
+    RETURN, [new_element, array]
+  ENDELSE
+END
+
+
+
+
+
+
+
+
+
+
+
+
+

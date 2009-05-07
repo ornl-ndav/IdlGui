@@ -409,17 +409,24 @@ FUNCTION getListOfDataSpinStates, Event
     ;is state enabled
     IF (isButtonSensitive(Event,spin_states_uname[i])) THEN BEGIN
       IF (isButtonSelected(Event,spin_states_uname[i])) THEN BEGIN
-      ;add spin state to array
-      full_spin_state = getButtonValue(Event,spin_states_uname[i])
-      spin_state = getDataWorkingSpinState(full_spin_state)
-      addElementToArray, ARRAY=final_spin_state_array, NEW=spin_state
+        ;add spin state to array
+        full_spin_state = getButtonValue(Event,spin_states_uname[i])
+        spin_state = getDataWorkingSpinState(full_spin_state)
+        addElementToArray, ARRAY=final_spin_state_array, NEW=spin_state
       ENDIF
     ENDIF
   ENDFOR
-RETURN, final_spin_state_array  
+  RETURN, final_spin_state_array
 END
 
-
-
-
+;------------------------------------------------------------------------------
+FUNCTION getNbrWorkingPolaState, full_pola_state
+  sz = (SIZE(full_pola_state))(1)
+  IF (sz EQ 1 AND $
+    full_pola_state[0] EQ '') THEN BEGIN
+    RETURN, 0
+  ENDIF ELSE BEGIN
+    RETURN, sz
+  ENDELSE
+END
 

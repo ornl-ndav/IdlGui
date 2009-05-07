@@ -42,32 +42,52 @@ PRO refresh_reduce_step3_table, Event
   tab1_table = (*(*global).reduce_tab1_table)
   ;retrieve list of Data Runs
   data_run_number = tab1_table[0,*] ;array[1,18]
-  HELP, data_run_number
-  PRINT, data_run_number
+  short_data_run_number = RemoveEmptyElement(data_run_number[0,*])
+  HELP, short_data_run_number
+  PRINT, short_data_run_number
   PRINT
   
   ;retrieve data full file name
   data_nexus_file_name = tab1_table[1,*] ;array[1,18]
   HELP, data_nexus_file_name
-  PRINT, data_nexus_file_name
+  HELP, data_nexus_file_name[0,*]
+  short_data_nexus_file_name = RemoveEmptyElement(data_nexus_file_name[0,*])
+  HELP, short_data_nexus_file_name
+  PRINT, short_data_nexus_file_name
   PRINT
   
   ;retrieve working polarization state
   data_working_spin_state = $ ;'Off_Off'
-  getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
-  help, data_working_spin_state
-  print, data_working_spin_state
-  print
+    getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
+  HELP, data_working_spin_state
+  PRINT, data_working_spin_state
+  PRINT
   
   ;retrieve list of other polarization states
   list_of_other_pola_state = getListOfDataSpinStates(Event)
-  help, list_of_other_pola_state
-  print, list_of_other_pola_state
-  print  
+  HELP, list_of_other_pola_state
+  PRINT, list_of_other_pola_state
+  PRINT
+  
+  ;push working pola state into list_of_other_pola_state
+  full_list_of_pola_state = push_array(ARRAY=list_of_other_pola_state,$
+    NEW_ELEMENT=data_working_spin_state)
     
-     
-    
-    
-    
-    
+  ;get full number of polarization states
+  nbr_pola_state = getNbrWorkingPolaState(full_list_of_pola_state)
+  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
+  PRINT
+  
+  ;loop over all the working pola state to populate big table
+  index = 0 
+  WHILE (index LT nbr_pola_state) DO BEGIN
+  
+  
+    index++
+  ENDWHILE
+  
+  
+  
+  
+  
 END
