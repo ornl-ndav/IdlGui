@@ -59,7 +59,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     /BASE_ALIGN_LEFT)
     
   space = WIDGET_LABEL(column_base,$
-    VALUE = ' ')
+    VALUE = 'Table will refresh itself each time this Step is reached')
     
   main_table = WIDGET_TABLE(column_base,$
     COLUMN_LABELS = ['DATA Run',$

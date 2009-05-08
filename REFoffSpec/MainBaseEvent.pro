@@ -385,20 +385,23 @@ PRO MAIN_BASE_event, Event
   
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
   
+  ;big table
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_tab3_main_spin_state_table_uname'): BEGIN
+    check_status_of_reduce_step3_run_jobs_button, Event
+  END
+  
   ;define output folder button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_output_folder_button'): BEGIN
     reduces_step3_output_folder, Event
   END
-
-;check job manager  
+  
+  ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
     reduce_step3_job_mamager, Event
   END
   
   ;11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111
-  
-  
-  
   
   ;222222222222222222222222222222222222222222222222222222222222222222222222222222
   
