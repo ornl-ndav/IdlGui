@@ -37,7 +37,7 @@ PRO refresh_reduce_step3_table, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  step3_big_table = STRARR(40,9)
+  step3_big_table = STRARR(40,8)
   
   tab1_table = (*(*global).reduce_tab1_table)
   ;retrieve list of Data Runs
