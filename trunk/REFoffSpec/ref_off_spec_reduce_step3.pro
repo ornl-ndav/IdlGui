@@ -124,6 +124,10 @@ PRO refresh_reduce_step3_table, Event
         ENDIF
       ENDELSE
       
+      IF (roi_file EQ 'N/A') THEN BEGIN
+        run_job_status = 0
+      ENDIF
+      
       ;populate Recap. Big table
       step3_big_table[table_index,0] = data_run
       step3_big_table[table_index,1] = data_nexus
@@ -195,6 +199,64 @@ END
 
 ;------------------------------------------------------------------------------
 PRO update_reduce_step3_jobs_button, Event, run_job_status
-print, run_job_status
   activate_widget, Event, 'reduce_tab3_run_jobs', run_job_status
+END
+
+;------------------------------------------------------------------------------
+PRO check_status_of_reduce_step3_run_jobs_button, Event
+
+  run_job_status = 1
+  
+  ;get big table
+  Table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
+  
+  IF (Table[0,0] NE '') THEN BEGIN
+  
+    nbr_lines = (SIZE(Table))(2)
+    index = 0
+    WHILE (index LT nbr_lines) DO BEGIN
+    
+      ;check line only if there is something to check
+      norm_run = Table[3,index]
+      IF (norm_run NE '') THEN BEGIN
+      
+        ;normalization run number
+        IF (norm_run EQ 'N/A' OR $
+          STRCOMPRESS(norm_run,/REMOVE_ALL) EQ '') THEN BEGIN
+          run_job_status = 0
+          BREAK
+        ENDIF
+        
+        ;normalization nexus file
+        IF (Table[4,index] EQ 'N/A' OR $
+          STRCOMPRESS(Table[4,index],/REMOVE_ALL) EQ '') THEN BEGIN
+          run_job_status = 0
+          BREAK
+        ENDIF
+        
+        ;normalization spin state
+        IF (Table[5,index] EQ 'N/A' OR $
+          STRCOMPRESS(Table[5,index],/REMOVE_ALL) EQ '') THEN BEGIN
+          run_job_status = 0
+          BREAK
+        ENDIF
+        
+        ;ROI
+        IF (Table[6,index] EQ 'N/A' OR $
+          STRCOMPRESS(Table[6,index],/REMOVE_ALL) EQ '') THEN BEGIN
+          run_job_status = 0
+          BREAK
+        ENDIF
+        
+      ENDIF
+      
+      index++
+    ENDWHILE
+    
+  ENDIF ELSE BEGIN
+    run_job_status = 0
+  ENDELSE
+  
+  update_reduce_step3_jobs_button, Event, run_job_status
+  
 END
