@@ -37,6 +37,8 @@ PRO refresh_reduce_step3_table, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  run_job_status = 1 ;ok to activate run jobs button by default
+  
   step3_big_table = STRARR(40,8)
   
   tab1_table = (*(*global).reduce_tab1_table)
@@ -49,7 +51,11 @@ PRO refresh_reduce_step3_table, Event
   ;  PRINT, short_data_run_number
   ;  PRINT
   ;
-  IF (short_data_run_number[0] EQ '') THEN RETURN ;stop right away if no data
+  IF (short_data_run_number[0] EQ '') THEN BEGIN
+    run_job_status = 0
+    update_reduce_step3_jobs_button, Event, run_job_status
+    RETURN ;stop right away if no data
+  ENDIF
   
   ;retrieve data full file name
   data_nexus_file_name = tab1_table[1,*] ;array[1,18]
@@ -105,6 +111,7 @@ PRO refresh_reduce_step3_table, Event
         norm_nexus   = 'N/A'
         n_spin_state = 'N/A'
         roi_file     = 'N/A'
+        run_job_status = 0
       ENDIF ELSE BEGIN
         norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
         norm_nexus   = getNormNexusOfIndex(Event, $
@@ -112,6 +119,9 @@ PRO refresh_reduce_step3_table, Event
           short_norm_file_list)
         n_spin_state = getReduceStep2SpinStateRow(Event, Row=data_index)
         roi_file     = getNormRoiFileOfIndex(Event, data_index)
+        IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+          run_job_status = 0
+        ENDIF
       ENDELSE
       
       ;populate Recap. Big table
@@ -141,6 +151,8 @@ PRO refresh_reduce_step3_table, Event
     'reduce_tab3_main_spin_state_table_uname',$
     TRANSPOSE(step3_big_table)
     
+  update_reduce_step3_jobs_button, Event, run_job_status
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -179,6 +191,10 @@ PRO reduce_step3_job_mamager, Event
   SPAWN, firefox + ' ' + srun_web_page + ' &'
   WIDGET_CONTROL,HOURGLASS=0
   
-  
-  
+END
+
+;------------------------------------------------------------------------------
+PRO update_reduce_step3_jobs_button, Event, run_job_status
+print, run_job_status
+  activate_widget, Event, 'reduce_tab3_run_jobs', run_job_status
 END
