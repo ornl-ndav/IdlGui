@@ -1043,7 +1043,7 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL,/HOURGLASS
       firefox       = (*global).firefox
       srun_web_page = (*global).srun_web_page
-      spawn, firefox + ' ' + srun_web_page
+      spawn, firefox + ' ' + srun_web_page + ' &'
       WIDGET_CONTROL,HOURGLASS=0
     END
     
