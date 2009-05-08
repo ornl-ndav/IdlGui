@@ -385,7 +385,10 @@ PRO MAIN_BASE_event, Event
   
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
   
-  
+  ;define output folder button
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_output_folder_button'): BEGIN
+    reduces_step3_output_folder, Event
+  END
   
   ;11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111
   

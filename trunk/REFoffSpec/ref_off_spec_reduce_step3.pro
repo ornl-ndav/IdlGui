@@ -45,33 +45,33 @@ PRO refresh_reduce_step3_table, Event
   short_data_run_number = RemoveEmptyElement(data_run_number[0,*])
   nbr_data = N_ELEMENTS(short_data_run_number)
   
-;  HELP, short_data_run_number
-;  PRINT, short_data_run_number
-;  PRINT
-;  
+  ;  HELP, short_data_run_number
+  ;  PRINT, short_data_run_number
+  ;  PRINT
+  ;
   IF (short_data_run_number[0] EQ '') THEN RETURN ;stop right away if no data
   
   ;retrieve data full file name
   data_nexus_file_name = tab1_table[1,*] ;array[1,18]
-;  HELP, data_nexus_file_name
-;  HELP, data_nexus_file_name[0,*]
+  ;  HELP, data_nexus_file_name
+  ;  HELP, data_nexus_file_name[0,*]
   short_data_nexus_file_name = RemoveEmptyElement(data_nexus_file_name[0,*])
-;  HELP, short_data_nexus_file_name
-;  PRINT, short_data_nexus_file_name
-;  PRINT
-
+  ;  HELP, short_data_nexus_file_name
+  ;  PRINT, short_data_nexus_file_name
+  ;  PRINT
+  
   ;retrieve working polarization state
   data_working_spin_state = $ ;'Off_Off'
     getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
-;  HELP, data_working_spin_state
-;  PRINT, data_working_spin_state
-;  PRINT
-  
+  ;  HELP, data_working_spin_state
+  ;  PRINT, data_working_spin_state
+  ;  PRINT
+    
   ;retrieve list of other polarization states
   list_of_other_pola_state = getListOfDataSpinStates(Event)
-;  HELP, list_of_other_pola_state
-;  PRINT, list_of_other_pola_state
-;  PRINT
+  ;  HELP, list_of_other_pola_state
+  ;  PRINT, list_of_other_pola_state
+  ;  PRINT
   
   ;push working pola state into list_of_other_pola_state
   full_list_of_pola_state = push_array(ARRAY=list_of_other_pola_state,$
@@ -79,8 +79,8 @@ PRO refresh_reduce_step3_table, Event
     
   ;get full number of polarization states
   nbr_pola_state = getNbrWorkingPolaState(full_list_of_pola_state)
-;  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
-;  PRINT
+  ;  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
+  ;  PRINT
   
   ;loop over all the working pola state to populate big table
   pola_index = 0
@@ -98,7 +98,7 @@ PRO refresh_reduce_step3_table, Event
       data_run     = short_data_run_number[data_index]
       data_nexus   = short_data_nexus_file_name[data_index]
       d_spin_state = full_list_of_pola_state[pola_index]
-
+      
       IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
         norm_run     = 'N/A'
         norm_nexus   = 'N/A'
@@ -133,6 +133,30 @@ PRO refresh_reduce_step3_table, Event
   ;update big table
   putValueInTable, Event,$
     'reduce_tab3_main_spin_state_table_uname',$
-    transpose(step3_big_table)
-        
+    TRANSPOSE(step3_big_table)
+    
+END
+
+;------------------------------------------------------------------------------
+PRO reduces_step3_output_folder, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  
+  path = (*global).ascii_path
+  title = 'Select the output folder'
+  
+  folder = DIALOG_PICKFILE(/DIRECTORY,$
+  DIALOG_PARENT=id,$
+  /MUST_EXIST,$
+  TITLE = title,$
+  PATH = path)
+  
+  IF (folder NE '') THEN BEGIN
+  (*global).ascii_path = folder
+  putButtonValue, Event, 'reduce_tab3_output_folder_button', folder
+  ENDIF
+  
 END
