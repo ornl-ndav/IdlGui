@@ -220,19 +220,19 @@ Row4Base = WIDGET_BASE(Row4,$
                        /NONEXCLUSIVE)
 
 button1 = WIDGET_BUTTON(Row4Base,$
-                        VALUE = 'Off-Off  ',$
+                        VALUE = 'Off_Off  ',$
                         UNAME = 'reduce_tab1_pola_1',$
                         SENSITIVE = 1)
 button2 = WIDGET_BUTTON(Row4Base,$
-                        VALUE = 'Off-On  ',$
+                        VALUE = 'Off_On  ',$
                         UNAME = 'reduce_tab1_pola_2',$
                         SENSITIVE = 1)
 button3 = WIDGET_BUTTON(Row4Base,$
-                        VALUE = 'On-Off  ',$
+                        VALUE = 'On_Off  ',$
                         UNAME = 'reduce_tab1_pola_3',$
                         SENSITIVE = 1)
 button4 = WIDGET_BUTTON(Row4Base,$
-                        VALUE = 'On-On  ',$
+                        VALUE = 'On_On  ',$
                         UNAME = 'reduce_tab1_pola_4',$
                         SENSITIVE = 1)
 

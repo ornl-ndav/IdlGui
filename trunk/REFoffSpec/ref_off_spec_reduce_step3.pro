@@ -98,6 +98,7 @@ PRO refresh_reduce_step3_table, Event
       data_run     = short_data_run_number[data_index]
       data_nexus   = short_data_nexus_file_name[data_index]
       d_spin_state = full_list_of_pola_state[pola_index]
+      d_spin_state = STRCOMPRESS(d_spin_state,/REMOVE_ALL)
       
       IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
         norm_run     = 'N/A'
@@ -121,6 +122,11 @@ PRO refresh_reduce_step3_table, Event
       step3_big_table[table_index,4] = norm_nexus
       step3_big_table[table_index,5] = n_spin_state
       step3_big_table[table_index,6] = roi_file
+      
+      ;define the output file name
+      output_file_name = 'REF_M_' + data_run
+      output_file_name += '_' + d_spin_state + '.txt'
+      step3_big_table[table_index,7] = output_file_name
       
       data_index++
       table_index++
@@ -149,14 +155,14 @@ PRO reduces_step3_output_folder, Event
   title = 'Select the output folder'
   
   folder = DIALOG_PICKFILE(/DIRECTORY,$
-  DIALOG_PARENT=id,$
-  /MUST_EXIST,$
-  TITLE = title,$
-  PATH = path)
-  
+    DIALOG_PARENT=id,$
+    /MUST_EXIST,$
+    TITLE = title,$
+    PATH = path)
+    
   IF (folder NE '') THEN BEGIN
-  (*global).ascii_path = folder
-  putButtonValue, Event, 'reduce_tab3_output_folder_button', folder
+    (*global).ascii_path = folder
+    putButtonValue, Event, 'reduce_tab3_output_folder_button', folder
   ENDIF
   
 END
