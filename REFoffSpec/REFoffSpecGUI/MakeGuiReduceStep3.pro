@@ -89,16 +89,37 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     VALUE = ' ')
     
   row = WIDGET_BASE(column_base,$
-    /ROW,$
-    SENSITIVE = 0)
+    /ROW)
     
-  jobs = WIDGET_BUTTON(row,$
+  base1 = WIDGET_BASE(row,$
+  /ROW)  
+    
+  ;output folder label
+  label = WIDGET_LABEL(base1,$
+    VALUE = 'Output Folder:')
+    
+  ;output folder button
+  output = WIDGET_BUTTON(base1,$
+    VALUE = '~/results/',$
+    SCR_XSIZE = 400,$
+    UNAME = 'reduce_tab3_output_folder_button')
+    
+  ;space
+  space = WIDGET_LABEL(row,$
+    VALUE = '                                                   ' + $
+    '           ')
+    
+   base2 = WIDGET_BASE(row,$
+   /ROW,$
+   SENSITIVE = 0)
+    
+  jobs = WIDGET_BUTTON(base2,$
     VALUE = 'RUN JOBS',$
-    SCR_XSIZE = 1085,$
+    SCR_XSIZE = 200,$
     UNAME = 'reduce_tab3_run_jobs',$
     FRAME = 5)
     
-  status = WIDGET_BUTTON(row,$
+  status = WIDGET_BUTTON(base2,$
     VALUE = 'CHECK JOB MANAGER',$
     SCR_XSIZE = 150,$
     UNAME = 'reduce_tab3_check_jobs',$
