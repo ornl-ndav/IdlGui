@@ -69,17 +69,16 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     'NORM. NeXus',$
     'N. Spin State',$
     'ROI',$
-    'Output Path',$
-    'Output File'],$
+    'Output File Name'],$
     UNAME = 'reduce_tab3_main_spin_state_table_uname',$
     /NO_ROW_HEADERS,$
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
-    XSIZE = 9,$
+    XSIZE = 8,$
     YSIZE = 40,$
     SCR_XSIZE = 1260,$
     SCR_YSIZE = 750,$
-    COLUMN_WIDTHS = [55,300,90,70,300,90,300,200,240],$
+    COLUMN_WIDTHS = [55,300,90,70,300,90,300,300],$
     /SCROLL,$
     /EDITABLE,$
     SENSITIVE = 1,$
