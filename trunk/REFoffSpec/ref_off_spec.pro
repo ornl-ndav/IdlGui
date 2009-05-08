@@ -89,6 +89,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     debugging: DEBUGGING,$
     sDebugging: sDebugging,$
     
+    firefox: '/usr/bin/firefox',$
+    srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
+    
     driver_name: 'refred_lp',$
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
