@@ -389,6 +389,11 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_output_folder_button'): BEGIN
     reduces_step3_output_folder, Event
   END
+
+;check job manager  
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
+    reduce_step3_job_mamager, Event
+  END
   
   ;11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111
   

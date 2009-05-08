@@ -166,3 +166,19 @@ PRO reduces_step3_output_folder, Event
   ENDIF
   
 END
+
+;------------------------------------------------------------------------------
+PRO reduce_step3_job_mamager, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  WIDGET_CONTROL,/HOURGLASS
+  firefox       = (*global).firefox
+  srun_web_page = (*global).srun_web_page
+  SPAWN, firefox + ' ' + srun_web_page + ' &'
+  WIDGET_CONTROL,HOURGLASS=0
+  
+  
+  
+END

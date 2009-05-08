@@ -107,18 +107,15 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
   space = WIDGET_LABEL(row,$
     VALUE = '                                                   ' + $
     '           ')
-    
-   base2 = WIDGET_BASE(row,$
-   /ROW,$
-   SENSITIVE = 0)
-    
-  jobs = WIDGET_BUTTON(base2,$
+
+  jobs = WIDGET_BUTTON(row,$
     VALUE = 'RUN JOBS',$
     SCR_XSIZE = 200,$
+    SENSITIVE = 0,$
     UNAME = 'reduce_tab3_run_jobs',$
     FRAME = 5)
     
-  status = WIDGET_BUTTON(base2,$
+  status = WIDGET_BUTTON(row,$
     VALUE = 'CHECK JOB MANAGER',$
     SCR_XSIZE = 150,$
     UNAME = 'reduce_tab3_check_jobs',$
