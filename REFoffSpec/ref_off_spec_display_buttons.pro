@@ -112,8 +112,6 @@ PRO display_reduce_step1_spin_states_match, $
     END
   ENDCASE
   
-  help, main_base
-  
   uname = 'reduce_step1_spin_match'
   IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
@@ -142,7 +140,7 @@ PRO display_reduce_step1_spin_states_do_not_match_fixed, $
       mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_disable)
     END
     1: BEGIN ;activate previous button
-      mode = READ_PNG((*global).reduce_step1_spin_match_fixed_enable)
+      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_enable)
     END
   ENDCASE
   
@@ -174,7 +172,7 @@ PRO display_reduce_step1_spin_states_do_not_match_user_defined, $
       mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_disable)
     END
     1: BEGIN ;activate previous button
-      mode = READ_PNG((*global).reduce_step1_spin_match_user_defined_enable)
+      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_enable)
     END
   ENDCASE
   
@@ -220,28 +218,43 @@ PRO display_reduce_step1_buttons, MAIN_BASE = main_base,$
     ACTIVATE=activate,$
     global
     
-    help, Main_base
-    
   ;activate = 1 means first button activated
   ;activate = 2 means second button activated....
     
-  display_reduce_step1_spin_states_match, $ 
-  MAIN_BASE=MAIN_BASE,$
+  CASE (activate) OF
+    1: BEGIN
+      activate_match = 1
+      activate_no_match_fixed = 0
+      activate_no_match_user = 0
+    END
+    2: BEGIN
+      activate_match = 0
+      activate_no_match_fixed = 1
+      activate_no_match_user = 0
+    END
+    3: BEGIN
+      activate_match = 0
+      activate_no_match_fixed = 0
+      activate_no_match_user = 1
+    END
+    ELSE:
+  ENDCASE
+  
+  display_reduce_step1_spin_states_match, $
+    MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
-    ACTIVATE=activate,$
+    ACTIVATE=activate_match,$
     global
     
-  display_reduce_step1_spin_states_do_not_match_fixed, $ 
-  MAIN_BASE=MAIN_BASE,$
+  display_reduce_step1_spin_states_do_not_match_fixed, $
+    MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
-    ;    ACTIVATE=activate,$
-    ACTIVATE = 0,$
+    ACTIVATE = activate_no_match_fixed,$
     global
     
   display_reduce_step1_spin_states_do_not_match_user_defined, $
     MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
-    ;    ACTIVATE=activate,$
-    ACTIVATE = 0,$
+    ACTIVATE = activate_no_match_user,$
     global
 END

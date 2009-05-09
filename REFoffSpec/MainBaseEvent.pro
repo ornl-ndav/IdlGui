@@ -97,6 +97,72 @@ PRO MAIN_BASE_event, Event
     remove_selected_run, Event
   END
   
+  ;spin states mode selection buttons
+  ;spin states match
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_spin_match'): BEGIN
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      IF (event.press EQ 1) THEN BEGIN
+        display_reduce_step1_buttons, EVENT=EVENT,$
+          ACTIVATE=1,$
+          global
+        (*global).reduce_step1_spin_state_mode = 1
+      ENDIF
+    ENDIF ELSE BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    ENDELSE
+  END
+
+  ;spin states do not match (fixed)
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step1_spin_do_not_match_fixed'): BEGIN
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      IF (event.press EQ 1) THEN BEGIN
+        display_reduce_step1_buttons, EVENT=EVENT,$
+          ACTIVATE=2,$
+          global
+        (*global).reduce_step1_spin_state_mode = 2
+      ENDIF
+    ENDIF ELSE BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    ENDELSE
+  END
+
+  ;spin states do not match (user defined)
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step1_spin_do_not_match_user_defined'): BEGIN
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      IF (event.press EQ 1) THEN BEGIN
+        display_reduce_step1_buttons, EVENT=EVENT,$
+          ACTIVATE=3,$
+          global
+        (*global).reduce_step1_spin_state_mode = 3
+      ENDIF
+    ENDIF ELSE BEGIN
+      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+    ENDELSE
+  END
+
   ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
   
   ;browse normalization file button
