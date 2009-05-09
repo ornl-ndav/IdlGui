@@ -105,6 +105,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_tab1_nexus_file_list: PTR_NEW(0L),$
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 3,$
+    reduce_step1_spin_state_mode: 2,$
     
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$
@@ -396,7 +397,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
   
-  display_reduce_step1_buttons, MAIN_BASE=main_base, ACTIVATE=1, global
+  display_reduce_step1_buttons, MAIN_BASE=main_base, $
+  ACTIVATE=(*global).reduce_step1_spin_state_mode, global
   
   ;=============================================================================
   ;=============================================================================

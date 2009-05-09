@@ -236,40 +236,50 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_tab1_pola_4',$
     SENSITIVE = 1)
     
-  ;space base  
+  ;space base
   space = WIDGET_BASE(Base,$
-  SCR_YSIZE = 50)
-  
+    SCR_YSIZE = 50)
+    
   ;new row
   Raw5 = WIDGET_BASE(Base,$
     /ROW,$
     /BASE_ALIGN_CENTER)
     
   big_space = WIDGET_LABEL(Raw5,$
-  VALUE = '                                               ')
-
+    VALUE = '                                               ')
+    
   ;match button
   match = WIDGET_DRAW(Raw5,$
-  SCR_XSIZE = 200,$
-  SCR_YSIZE = 109,$
-  UNAME = 'reduce_step1_spin_match')    
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 109,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    UNAME = 'reduce_step1_spin_match')
     
-  space_value = '   '  
+  space_value = '   '
   space = WIDGET_LABEL(Raw5,$
-  VALUE = space_value)  
+    VALUE = space_value)
     
   ;do not match and fixed
   not_match = WIDGET_DRAW(Raw5,$
-  SCR_XSIZE = 200,$
-  SCR_YSIZE = 109,$
-  UNAME = 'reduce_step1_spin_do_not_match_fixed')    
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 109,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    UNAME = 'reduce_step1_spin_do_not_match_fixed')
+    
   space = WIDGET_LABEL(Raw5,$
-  VALUE = space_value)  
-  
+    VALUE = space_value)
+    
   ;do not match and user defined
   match = WIDGET_DRAW(Raw5,$
-  SCR_XSIZE = 200,$
-  SCR_YSIZE = 109,$
-  UNAME = 'reduce_step1_spin_do_not_match_user_defined')    
+    SCR_XSIZE = 200,$
+    SCR_YSIZE = 109,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
+    UNAME = 'reduce_step1_spin_do_not_match_user_defined')
     
 END
