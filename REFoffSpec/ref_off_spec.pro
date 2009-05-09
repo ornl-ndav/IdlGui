@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          6: Options,
   ;          7:Log Book
   sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
-    reduce_tab: 1,$
+    reduce_tab: 0,$
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -106,6 +106,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_input_table_nbr_row: 18,$
     reduce_input_table_nbr_column: 3,$
     
+    reduce_step1_spin_match_disable: $
+    'REFoffSpec_images/spin_states_match_button_unselected.png',$
+    reduce_step1_spin_match_enable: $
+    'REFoffSpec_images/spin_states_match_button_selected.png',$
+    reduce_step1_spin_do_not_match_fixed_disable: $
+    'REFoffSpec_images/spin_states_do_not_match_fixed_unselected.png',$
+    reduce_step1_spin_do_not_match_fixed_enable: $
+    'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
+    reduce_step1_spin_do_not_match_user_defined_disable: $
+    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$    
+    reduce_step1_spin_do_not_match_user_defined_enable: $
+    'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
+        
     reduce_step2_polarization_mode1_disable: $
     'REFoffSpec_images/polarization_mode1_disable.png',$
     reduce_step2_polarization_mode1_enable: $
@@ -383,7 +396,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
   
-  display_buttons, MAIN_BASE=main_base, ACTIVATE=0, global
+  display_reduce_step1_buttons, MAIN_BASE=main_base, ACTIVATE=1, global
   
   ;=============================================================================
   ;=============================================================================

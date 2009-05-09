@@ -95,15 +95,113 @@ PRO   display_reduce_step2_polarization_mode2, $
 END
 
 ;-----------------------------------------------------------------------------
+PRO display_reduce_step1_spin_states_match, $
+    MAIN_BASE=MAIN_BASE, $
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+  ; 0: disable
+  ; 1: enable
+  case (activate) OF
+    0: BEGIN ;nothing is activated
+      mode = READ_PNG((*global).reduce_step1_spin_match_disable)
+    END
+    1: BEGIN ;activate previous button
+      mode = READ_PNG((*global).reduce_step1_spin_match_enable)
+    END
+  ENDCASE
+  
+  help, main_base
+  
+  uname = 'reduce_step1_spin_match'
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO display_reduce_step1_spin_states_do_not_match_fixed, $
+    MAIN_BASE = main_base, $
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+  ; 0: disable
+  ; 1: enable
+  case (activate) OF
+    0: BEGIN ;nothing is activated
+      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_fixed_disable)
+    END
+    1: BEGIN ;activate previous button
+      mode = READ_PNG((*global).reduce_step1_spin_match_fixed_enable)
+    END
+  ENDCASE
+  
+  uname = 'reduce_step1_spin_do_not_match_fixed'
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO display_reduce_step1_spin_states_do_not_match_user_defined, $
+    MAIN_BASE=MAIN_BASE, $
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+  ; 0: disable
+  ; 1: enable
+  case (activate) OF
+    0: BEGIN ;nothing is activated
+      mode = READ_PNG((*global).reduce_step1_spin_do_not_match_user_defined_disable)
+    END
+    1: BEGIN ;activate previous button
+      mode = READ_PNG((*global).reduce_step1_spin_match_user_defined_enable)
+    END
+  ENDCASE
+  
+  uname = 'reduce_step1_spin_do_not_match_user_defined'
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
+
+;-----------------------------------------------------------------------------
 
 PRO display_buttons, MAIN_BASE=MAIN_BASE, $
     EVENT=EVENT,$
     ACTIVATE=activate,$
     global
     
-    activate_1 = 0^activate
-    activate_2 = activate
-    
+  activate_1 = 0^activate
+  activate_2 = activate
+  
   display_reduce_step2_polarization_mode1, MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
     ACTIVATE=activate_1,$
@@ -112,7 +210,38 @@ PRO display_buttons, MAIN_BASE=MAIN_BASE, $
   display_reduce_step2_polarization_mode2, MAIN_BASE=MAIN_BASE,$
     EVENT=EVENT,$
     ACTIVATE=activate_2,$
-    global  
+    global
     
 END
 
+;------------------------------------------------------------------------------
+PRO display_reduce_step1_buttons, MAIN_BASE = main_base,$
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+    help, Main_base
+    
+  ;activate = 1 means first button activated
+  ;activate = 2 means second button activated....
+    
+  display_reduce_step1_spin_states_match, $ 
+  MAIN_BASE=MAIN_BASE,$
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+  display_reduce_step1_spin_states_do_not_match_fixed, $ 
+  MAIN_BASE=MAIN_BASE,$
+    EVENT=EVENT,$
+    ;    ACTIVATE=activate,$
+    ACTIVATE = 0,$
+    global
+    
+  display_reduce_step1_spin_states_do_not_match_user_defined, $
+    MAIN_BASE=MAIN_BASE,$
+    EVENT=EVENT,$
+    ;    ACTIVATE=activate,$
+    ACTIVATE = 0,$
+    global
+END
