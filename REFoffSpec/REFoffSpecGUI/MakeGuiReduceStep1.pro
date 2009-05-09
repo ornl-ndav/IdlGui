@@ -241,45 +241,68 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = 50)
     
   ;new row
-  Raw5 = WIDGET_BASE(Base,$
+  Row5 = WIDGET_BASE(Base,$
+    /COLUMN,$
+    /BASE_ALIGN_CENTER)
+    
+  Row5_row1 = WIDGET_BASE(Row5,$
+    /ROW)
+    
+  space = WIDGET_LABEL(Row5_row1,$
+  VALUE = '                                           ')
+    
+  label = WIDGET_LABEL(Row5_row1,$
+    FONT = "8X13",$
+    VALUE = 'Select the way you want the match the Data and Normalization' + $
+    ' Spin States')
+    
+  Row5_row2 = WIDGET_BASE(Row5,$
     /ROW,$
     /BASE_ALIGN_CENTER)
     
-  big_space = WIDGET_LABEL(Raw5,$
+  big_space = WIDGET_LABEL(Row5_row2,$
     VALUE = '                                               ')
     
   ;match button
-  match = WIDGET_DRAW(Raw5,$
+  tooltip = 'Spin States of the Data and Normalization files are identical'
+  match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
+    TOOLTIP = tooltip,$
     UNAME = 'reduce_step1_spin_match')
     
   space_value = '   '
-  space = WIDGET_LABEL(Raw5,$
+  space = WIDGET_LABEL(Row5_row2,$
     VALUE = space_value)
     
   ;do not match and fixed
-  not_match = WIDGET_DRAW(Raw5,$
+  tooltip = 'Spin State of Normalization files if fixed (Off_Off), no ' + $
+    'matter the spin state of the Data file.'
+  not_match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
+    TOOLTIP = tooltip,$
     UNAME = 'reduce_step1_spin_do_not_match_fixed')
     
-  space = WIDGET_LABEL(Raw5,$
+  space = WIDGET_LABEL(Row5_row2,$
     VALUE = space_value)
     
   ;do not match and user defined
-  match = WIDGET_DRAW(Raw5,$
+  tooltip = 'Spin States of Data and Normalization files do not match and ' + $
+    'can will be manually defined by the user'
+  match = WIDGET_DRAW(Row5_row2,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 109,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
     /TRACKING_EVENTS,$
+    TOOLTIP = tooltip,$
     UNAME = 'reduce_step1_spin_do_not_match_user_defined')
     
 END
