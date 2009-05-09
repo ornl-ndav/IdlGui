@@ -403,30 +403,30 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 0,$
     VALUE   = sLabel.value)
     
-  ;general ROI browse and file label
-  ROIbase = WIDGET_BASE(Base,$
-    XOFFSET = 600,$
-    YPAD = 0,$
-    YOFFSET = 202,$
-    SCR_XSIZE = 650,$
-    SCR_YSIZE = 30,$
-    UNAME = 'reduce_step2_general_roi_base',$
-    MAP = 0,$
-    FRAME = 0,$
-    /ROW)
-    
-  browse = WIDGET_BUTTON(ROIbase,$
-    SCR_YSIZE = 25,$
-    VALUE = '  Browse for a ROI file ...  ',$
-    UNAME = 'reduce_step2_general_roi_browse_button')
-    
-  label = WIDGET_LABEL(ROIbase,$
-    VALUE = 'File: ')
-    
-  value = WIDGET_LABEL(ROIbase,$
-    VALUE = 'N/A',$
-    UNAME = 'reduce_step2_general_roi_label',$
-    /ALIGN_LEFT)
+;  ;general ROI browse and file label
+;  ROIbase = WIDGET_BASE(Base,$
+;    XOFFSET = 600,$
+;    YPAD = 0,$
+;    YOFFSET = 202,$
+;    SCR_XSIZE = 650,$
+;    SCR_YSIZE = 30,$
+;    UNAME = 'reduce_step2_general_roi_base',$
+;    MAP = 0,$
+;    FRAME = 0,$
+;    /ROW)
+;    
+;  browse = WIDGET_BUTTON(ROIbase,$
+;    SCR_YSIZE = 25,$
+;    VALUE = '  Browse for a ROI file ...  ',$
+;    UNAME = 'reduce_step2_general_roi_browse_button')
+;    
+;  label = WIDGET_LABEL(ROIbase,$
+;    VALUE = 'File: ')
+;    
+;  value = WIDGET_LABEL(ROIbase,$
+;    VALUE = 'N/A',$
+;    UNAME = 'reduce_step2_general_roi_label',$
+;    /ALIGN_LEFT)
     
   ;-------------------------------------------------------------------------
     
