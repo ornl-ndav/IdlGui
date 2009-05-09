@@ -120,16 +120,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step1_spin_do_not_match_user_defined_enable: $
     'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
         
-    reduce_step2_polarization_mode1_disable: $
-    'REFoffSpec_images/polarization_mode1_disable.png',$
-    reduce_step2_polarization_mode1_enable: $
-    'REFoffSpec_images/polarization_mode1_enable.png',$
-    reduce_step2_polarization_mode2_disable: $
-    'REFoffSpec_images/polarization_mode2_disable.png',$
-    reduce_step2_polarization_mode2_enable: $
-    'REFoffSpec_images/polarization_mode2_enable.png',$
-    reduce_step2_polarization_mode_status: 0,$
-    PrevReduceTabSelect: 0,$
+     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
     ROI_path: '~/results/',$
