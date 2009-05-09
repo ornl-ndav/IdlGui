@@ -383,18 +383,17 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
 ;    SCR_YSIZE = 109)
 ;    
   ;----------------------------------------------------------------------------
-  xyoff = [8,210]
+  xyoff = [27,210]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
-    value: 'Data Run #     Normalization       Spin State            ' + $
-    '             Region Of Intereset (ROI)'}
+    value: 'Data Run #     Normalization'}
     
   label_base = WIDGET_BASE(Base,$
     xoffset = sLabel.size[0],$
     yoffset = slabel.size[1],$
     scr_xsize = 575,$
     scr_ysize = 30,$
-    map = 0,$
+    map = 1,$
     uname = 'reduce_step2_label_table_base')
     
   label = WIDGET_LABEL(label_base,$
@@ -442,12 +441,12 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       yoffset = yoff,$
       scr_ysize = 30,$
       scr_xsize = 1250,$
-      map = 0,$
+      map = 1,$
       frame = 0)
       
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
     value1 = WIDGET_LABEL(row_Base,$
-      value   = ' ',$
+      value   = '5001',$
       xoffset = 0,$
       yoffset = label_offset,$
       SCR_XSIZE = 50,$
@@ -458,7 +457,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       XOFFSET = xyoff[0]+65,$
       YOFFSET = 0,$
       uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
-      map = 1)
+      map = 0)
       
     uname = 'reduce_tab2_norm_combo'
     combo = WIDGET_COMBOBOX(combo_base,$
@@ -467,73 +466,73 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       
     uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i,/REMOVE_ALL)
     value2 = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+100,$
+      XOFFSET = XYoff[0]+85,$
       YOFFSET = label_offset,$
       /align_left,$
-      value = '   ',$
+      value = '6000',$
       SCR_XSIZE = 50,$
       uname = uname)
-      
-    ;spin state widget_base and widget_combobox
-    uname = 'reduce_tab2_spin_combo_base'
-    combo_base = WIDGET_BASE(row_Base,$
-      XOFFSET = XYoff[0]+180,$
-      YOFFSET = 0,$
-      uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
-      map = 0)
-      
-    uname = 'reduce_tab2_spin_combo'
-    combo = WIDGET_COMBOBOX(combo_base,$
-      value = ['Off_Off','Off_On','On_Off','On_On'],$
-      uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
-      
-    ;spin state widget_label
-    uname = 'reduce_tab2_spin_value' + STRCOMPRESS(i,/REMOVE_ALL)
-    spin = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+210,$
-      YOFFSET = label_offset,$
-      SCR_XSIZE = 50,$
-      value = 'Off_Off',$
-      /align_left,$
-      uname = uname)
-      
-    ;roi widgets
-    ;Browse button
-    uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i,/REMOVE_ALL)
-    browse = WIDGET_BUTTON(row_base,$
-      Xoffset = xyoff[0]+310,$
-      yoffset = 0,$
-      scr_xsize = 180,$
-      value = 'Browse for a ROI file ...',$
-      uname = uname)
-      
-    ;Create/modify ROI
-    uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i,/REMOVE_ALL)
-    modify = WIDGET_BUTTON(row_base,$
-      xoffset = xyoff[0]+500,$
-      yoffset = 0,$
-      uname = uname,$
-      scr_xsize = 230,$
-      value = 'Create/Modify/Visualize ROI file')
-      
-    uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i,/REMOVE_ALL)
-    roi = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+740,$
-      YOFFSET = label_offset,$
-      /ALIGN_LEFT,$
-      frame=0,$
-      value = 'File:',$
-      uname = uname)
-      
-    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i,/REMOVE_ALL)
-    roi = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+780,$
-      YOFFSET = label_offset,$
-      SCR_XSIZE = 490,$
-      /ALIGN_LEFT,$
-      frame=0,$
-      value = 'N/A',$
-      uname = uname)
+;      
+;    ;spin state widget_base and widget_combobox
+;    uname = 'reduce_tab2_spin_combo_base'
+;    combo_base = WIDGET_BASE(row_Base,$
+;      XOFFSET = XYoff[0]+180,$
+;      YOFFSET = 0,$
+;      uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
+;      map = 0)
+;      
+;    uname = 'reduce_tab2_spin_combo'
+;    combo = WIDGET_COMBOBOX(combo_base,$
+;      value = ['Off_Off','Off_On','On_Off','On_On'],$
+;      uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
+;      
+;    ;spin state widget_label
+;    uname = 'reduce_tab2_spin_value' + STRCOMPRESS(i,/REMOVE_ALL)
+;    spin = WIDGET_LABEL(row_Base,$
+;      XOFFSET = XYoff[0]+210,$
+;      YOFFSET = label_offset,$
+;      SCR_XSIZE = 50,$
+;      value = 'Off_Off',$
+;      /align_left,$
+;      uname = uname)
+;      
+;    ;roi widgets
+;    ;Browse button
+;    uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i,/REMOVE_ALL)
+;    browse = WIDGET_BUTTON(row_base,$
+;      Xoffset = xyoff[0]+310,$
+;      yoffset = 0,$
+;      scr_xsize = 180,$
+;      value = 'Browse for a ROI file ...',$
+;      uname = uname)
+;      
+;    ;Create/modify ROI
+;    uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i,/REMOVE_ALL)
+;    modify = WIDGET_BUTTON(row_base,$
+;      xoffset = xyoff[0]+500,$
+;      yoffset = 0,$
+;      uname = uname,$
+;      scr_xsize = 230,$
+;      value = 'Create/Modify/Visualize ROI file')
+;      
+;    uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i,/REMOVE_ALL)
+;    roi = WIDGET_LABEL(row_Base,$
+;      XOFFSET = XYoff[0]+740,$
+;      YOFFSET = label_offset,$
+;      /ALIGN_LEFT,$
+;      frame=0,$
+;      value = 'File:',$
+;      uname = uname)
+;      
+;    uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i,/REMOVE_ALL)
+;    roi = WIDGET_LABEL(row_Base,$
+;      XOFFSET = XYoff[0]+780,$
+;      YOFFSET = label_offset,$
+;      SCR_XSIZE = 490,$
+;      /ALIGN_LEFT,$
+;      frame=0,$
+;      value = 'N/A',$
+;      uname = uname)
       
     yoff += offset
   ENDFOR
