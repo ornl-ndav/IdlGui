@@ -68,7 +68,7 @@ PRO  reduce_tab_event, Event
         global
     END
     1:BEGIN
-    status = (*global).reduce_step2_polarization_mode_status
+    ;status = (*global).reduce_step2_polarization_mode_status
     ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
     refresh_reduce_step2_big_table, Event
   END
@@ -105,8 +105,8 @@ PRO tab_event, Event
               global
           END
           1: BEGIN
-            status = (*global).reduce_step2_polarization_mode_status
-            display_buttons, EVENT=EVENT, ACTIVATE=status, global
+;            status = (*global).reduce_step2_polarization_mode_status
+;            display_buttons, EVENT=EVENT, ACTIVATE=status, global
           END
           2:
           ELSE:
