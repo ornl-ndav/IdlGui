@@ -198,11 +198,11 @@ PRO refresh_reduce_step2_big_table, Event
       MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
       
       ;show the polarization base
-      MapBase, Event, 'reduce_step2_polarization_base', 1
-      MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-      display_buttons, EVENT=EVENT, $
-        ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
-        global
+      ;MapBase, Event, 'reduce_step2_polarization_base', 1
+      ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+      ;display_buttons, EVENT=EVENT, $
+      ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
+      ;  global
     ENDIF
     
     tab1_table = (*(*global).reduce_tab1_table)
@@ -243,8 +243,8 @@ PRO reduce_step2_remove_run, Event
     
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 0
     MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 1
-    MapBase, Event, 'reduce_step2_polarization_base', 0
-    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 1
+    ;MapBase, Event, 'reduce_step2_polarization_base', 0
+    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 1
     
     hideStep2BigTable, Event
     
@@ -269,10 +269,10 @@ PRO reduce_step2_remove_run, Event
     PopulateStep2BigTabe, Event
     
     ;show the polarization base
-    MapBase, Event, 'reduce_step2_polarization_base', 1
-    MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-    display_buttons, EVENT=EVENT, $
-      ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
+    ;MapBase, Event, 'reduce_step2_polarization_base', 1
+    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+    ;display_buttons, EVENT=EVENT, $
+    ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
       
   ENDELSE
   

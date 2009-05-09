@@ -339,50 +339,49 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = 'Remove Selected File',$
     uname = 'reduce_step2_list_of_norm_files_remove_button')
     
-    
-  ;space between base of first row
-  space = WIDGET_LABEL(main_row1,$
-    VALUE = space_value)
-    
-  ;Polarization buttons/base --------------------------------------------------
-  col2 = WIDGET_BASE(main_row1,$
-    FRAME = 5,$
-    uname = 'reduce_step2_polarization_base',$
-    map = 0,$
-    /ROW)
-    
-  col2_col1 = WIDGET_BASE(col2,$
-    /column)
-    
-  button1 = WIDGET_DRAW(col2_col1,$
-    uname = 'reduce_step2_polarization_mode1_draw',$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
-    /TRACKING_EVENTS,$
-    SCR_XSIZE = 150,$
-    SCR_YSIZE = 109)
-    
-  ;base of the spin state combobox
-  base_combo = WIDGET_BASE(col2_col1,$
-    /ALIGN_CENTER,$
-    uname = 'reduce_step2_spin_state_combobox_base',$
-    /ROW)
-    
-  spinStates = WIDGET_COMBOBOX(base_combo,$
-    value = ['Off_Off','Off_On','On_Off','On_On'],$
-    uname = 'reduce_step2_mode1_spin_state_combobox')
-    
-  space = WIDGET_LABEL(col2,$
-    VALUE = '')
-    
-  button2 = WIDGET_DRAW(col2,$
-    uname = 'reduce_step2_polarization_mode2_draw',$
-    /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
-    /TRACKING_EVENTS,$
-    SCR_XSIZE = 150,$
-    SCR_YSIZE = 109)
-    
+;  ;space between base of first row
+;  space = WIDGET_LABEL(main_row1,$
+;    VALUE = space_value)
+;    
+;  ;Polarization buttons/base --------------------------------------------------
+;  col2 = WIDGET_BASE(main_row1,$
+;    FRAME = 5,$
+;    uname = 'reduce_step2_polarization_base',$
+;    map = 0,$
+;    /ROW)
+;    
+;  col2_col1 = WIDGET_BASE(col2,$
+;    /column)
+;    
+;  button1 = WIDGET_DRAW(col2_col1,$
+;    uname = 'reduce_step2_polarization_mode1_draw',$
+;    /BUTTON_EVENTS,$
+;    /MOTION_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    SCR_XSIZE = 150,$
+;    SCR_YSIZE = 109)
+;    
+;  ;base of the spin state combobox
+;  base_combo = WIDGET_BASE(col2_col1,$
+;    /ALIGN_CENTER,$
+;    uname = 'reduce_step2_spin_state_combobox_base',$
+;    /ROW)
+;    
+;  spinStates = WIDGET_COMBOBOX(base_combo,$
+;    value = ['Off_Off','Off_On','On_Off','On_On'],$
+;    uname = 'reduce_step2_mode1_spin_state_combobox')
+;    
+;  space = WIDGET_LABEL(col2,$
+;    VALUE = '')
+;    
+;  button2 = WIDGET_DRAW(col2,$
+;    uname = 'reduce_step2_polarization_mode2_draw',$
+;    /BUTTON_EVENTS,$
+;    /MOTION_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    SCR_XSIZE = 150,$
+;    SCR_YSIZE = 109)
+;    
   ;----------------------------------------------------------------------------
   xyoff = [8,210]
   sLabel = { size: [XYoff[0],$
