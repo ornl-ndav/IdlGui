@@ -197,12 +197,12 @@ PRO refresh_reduce_step2_big_table, Event
       MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
       MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
       
-      ;show the polarization base
-      ;MapBase, Event, 'reduce_step2_polarization_base', 1
-      ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-      ;display_buttons, EVENT=EVENT, $
-      ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
-      ;  global
+    ;show the polarization base
+    ;MapBase, Event, 'reduce_step2_polarization_base', 1
+    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+    ;display_buttons, EVENT=EVENT, $
+    ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
+    ;  global
     ENDIF
     
     tab1_table = (*(*global).reduce_tab1_table)
@@ -268,12 +268,12 @@ PRO reduce_step2_remove_run, Event
     ;of lines that corresponds to the number of data files loaded
     PopulateStep2BigTabe, Event
     
-    ;show the polarization base
-    ;MapBase, Event, 'reduce_step2_polarization_base', 1
-    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-    ;display_buttons, EVENT=EVENT, $
-    ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
-      
+  ;show the polarization base
+  ;MapBase, Event, 'reduce_step2_polarization_base', 1
+  ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
+  ;display_buttons, EVENT=EVENT, $
+  ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, global
+    
   ENDELSE
   
 END
@@ -767,20 +767,41 @@ END
 ;------------------------------------------------------------------------------
 PRO Reduce_step2_widget_tab_action, Event, ACTIVATE=activate
 
-IF (activate EQ 2) THEN BEGIN
-combobox_status = 0
-ENDIF
-
-FOR i=0,10 DO BEGIN
-    iS = STRCOMPRESS(i,/REMOVE_ALL)
-    uname = 'reduce_tab2_spin_combo_off_off' + iS
-    MapBase, Event, uname, combobox_status
-    uname = 'reduce_tab2_spin_combo_on_off' + iS
-    MapBase, Event, uname, combobox_status
-    uname = 'reduce_tab2_spin_combo_off_on' + iS
-    MapBase, Event, uname, combobox_status
-    uname = 'reduce_tab2_spin_combo_on_on' + iS
-    MapBase, Event, uname, combobox_status
-ENDFOR
-
+  CASE (activate) OF
+    1: BEGIN
+    END
+    
+    2: BEGIN
+      combobox_status = 0
+      
+      FOR i=0,10 DO BEGIN
+        iS = STRCOMPRESS(i,/REMOVE_ALL)
+        
+        ;make sure all the labels are Off_Off
+        uname = 'reduce_tab2_spin_value_off_off' + iS
+        putTextFieldValue, Event, uname, 'Off_Off'
+        uname = 'reduce_tab2_spin_value_on_off' + iS
+        putTextFieldValue, Event, uname, 'Off_Off'
+        uname = 'reduce_tab2_spin_value_off_on' + iS
+        putTextFieldValue, Event, uname, 'Off_Off'
+        uname = 'reduce_tab2_spin_value_on_on' + iS
+        putTextFieldValue, Event, uname, 'Off_Off'
+        
+        ;hide the comboboxes
+        uname = 'reduce_tab2_spin_combo_off_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_off_on' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_on' + iS
+        MapBase, Event, uname, combobox_status
+      ENDFOR
+    END
+    
+    3: BEGIN
+    END
+    
+  ENDCASE
+  
 END
