@@ -61,8 +61,8 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
   space = WIDGET_LABEL(column_base,$
     VALUE = 'Table will refresh itself each time this Step is reached.' + $ 
     ' You are free to edit this table but be aware that ' + $
-    ' your changes will be lost if you move out of this tab before '  + $
-    'launching the jobs')
+    'your changes will be lost if you move out of this tab before '  + $
+    'launching the jobs.')
     
   main_table = WIDGET_TABLE(column_base,$
     COLUMN_LABELS = ['DATA Run',$
