@@ -46,6 +46,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   TESTING = file->getValue(tag=['configuration','testing'])
   SCROLLING = file->getValue(tag=['configuration','scrolling'])
+  FAKING_DATA = file->getValue(tag=['configuration','faking','data'])
   SUPER_USERS = ['j35']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -116,11 +117,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step1_spin_do_not_match_fixed_enable: $
     'REFoffSpec_images/spin_states_do_not_match_fixed_selected.png',$
     reduce_step1_spin_do_not_match_user_defined_disable: $
-    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$    
+    'REFoffSpec_images/spin_states_do_not_match_user_defined_unselected.png',$
     reduce_step1_spin_do_not_match_user_defined_enable: $
     'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
-        
-     PrevReduceTabSelect: 0,$
+    
+    PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
     ROI_path: '~/results/',$
@@ -293,7 +294,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
-  (*(*global).reduce_tab1_table) = STRARR(3,1)
+  ; (*(*global).reduce_tab1_table) = STRARR(3,1)
   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Reflectometer Off Specular Application'
@@ -370,6 +371,20 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;ascii default path
     (*global).ascii_path = sDEBUGGING.ascii_path
   ENDIF
+  
+  IF (FAKING_DATA EQ 'yes') THEN BEGIN ;no need to load the data (reduce step1)
+    nexus_file_list = ['/SNS/REF_M/2008_1_2_SCI/12/5000/NeXus/REF_M_5000.nxs',$
+      '/SNS/REF_M/2008_1_2_SCI/12/5001/NeXus/REF_M_5001.nxs',$
+      '/SNS/REF_M/2008_1_2_SCI/12/5002/NeXus/REF_M_5002.nxs',$
+      '/SNS/REF_M/2008_1_2_SCI/12/5003/NeXus/REF_M_5003.nxs',$
+      '/SNS/REF_M/2008_1_2_SCI/12/5004/NeXus/REF_M_5004.nxs',$
+      '/SNS/REF_M/2008_1_2_SCI/12/5005/NeXus/REF_M_5005.nxs']
+    (*(*global).reduce_tab1_nexus_file_list) = nexus_file_list
+    
+    ;(*(*global).reduce_tab1_table)
+    
+  ENDIF
+  
   ;?????????????????????????????????????????????????????????????????????????????
   
   ;refresh_plot_scale, MAIN_BASE=MAIN_BASE ;_plot    ;rmeove comments
@@ -389,8 +404,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   
   display_reduce_step1_buttons, MAIN_BASE=main_base, $
-  ACTIVATE=(*global).reduce_step1_spin_state_mode, global
-  
+    ACTIVATE=(*global).reduce_step1_spin_state_mode, global
+    
   ;=============================================================================
   ;=============================================================================
   ;send message to log current run of application
