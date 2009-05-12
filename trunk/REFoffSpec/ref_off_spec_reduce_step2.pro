@@ -538,7 +538,7 @@ PRO populate_reduce_step2_norm_roi, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO reduce_step2_browse_roi, Event, row=row
+PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
 
   iRow = row
   row = STRCOMPRESS(row)
