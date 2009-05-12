@@ -153,6 +153,7 @@ PRO MAIN_BASE_event, Event
         display_reduce_step1_buttons, EVENT=EVENT,$
           ACTIVATE=3,$
           global
+        Reduce_step2_widget_tab_action, Event, ACTIVATE=3
         (*global).reduce_step1_spin_state_mode = 3
       ENDIF
     ENDIF ELSE BEGIN
