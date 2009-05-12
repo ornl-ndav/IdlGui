@@ -825,6 +825,21 @@ PRO Reduce_step2_widget_tab_action, Event, ACTIVATE=activate
     END
     
     3: BEGIN
+      combobox_status = 1
+      
+      FOR i=0,10 DO BEGIN
+        iS = STRCOMPRESS(i,/REMOVE_ALL)
+        
+        ;hide the comboboxes
+        uname = 'reduce_tab2_spin_combo_off_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_off_on' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_on' + iS
+        MapBase, Event, uname, combobox_status
+      ENDFOR
     END
     
   ENDCASE
