@@ -571,7 +571,7 @@ PRO   add_widgets_reduce_step2_tab, $
       XOFFSET = 25,$
       YOFFSET = 2,$
       uname = uname,$
-      map = 1)
+      map = 0)
       
     uname = 'reduce_tab2_spin_combo_' + base_name + iS
     combo = WIDGET_COMBOBOX(combo_base,$
