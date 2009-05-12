@@ -769,6 +769,31 @@ PRO Reduce_step2_widget_tab_action, Event, ACTIVATE=activate
 
   CASE (activate) OF
     1: BEGIN
+      combobox_status = 0
+      
+      FOR i=0,10 DO BEGIN
+        iS = STRCOMPRESS(i,/REMOVE_ALL)
+        
+        ;make sure all the labels are Off_Off
+        uname = 'reduce_tab2_spin_value_off_off' + iS
+        putTextFieldValue, Event, uname, 'Off_Off'
+        uname = 'reduce_tab2_spin_value_on_off' + iS
+        putTextFieldValue, Event, uname, 'On_Off'
+        uname = 'reduce_tab2_spin_value_off_on' + iS
+        putTextFieldValue, Event, uname, 'Off_On'
+        uname = 'reduce_tab2_spin_value_on_on' + iS
+        putTextFieldValue, Event, uname, 'On_On'
+        
+        ;hide the comboboxes
+        uname = 'reduce_tab2_spin_combo_off_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_off' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_off_on' + iS
+        MapBase, Event, uname, combobox_status
+        uname = 'reduce_tab2_spin_combo_on_on' + iS
+        MapBase, Event, uname, combobox_status
+      ENDFOR
     END
     
     2: BEGIN
