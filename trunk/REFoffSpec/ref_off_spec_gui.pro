@@ -37,7 +37,7 @@
 ;------------------------------------------------------------------------------
 
 ;------------------------------------------------------------------------------
-PRO activate_widget, Event, uname, activate_status
+PRO ctivate_widget, Event, uname, activate_status
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, SENSITIVE=activate_status
 END

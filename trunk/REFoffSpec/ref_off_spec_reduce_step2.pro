@@ -763,3 +763,24 @@ PRO cleanup_reduce_step2_list, nexus_norm_list_run_number, nexus_file_list
 ;  PRINT, '-> leaving cleanup_reduce_step2_list'
   
 END
+
+;------------------------------------------------------------------------------
+PRO Reduce_step2_widget_tab_action, Event, ACTIVATE=activate
+
+IF (activate EQ 2) THEN BEGIN
+combobox_status = 0
+ENDIF
+
+FOR i=0,10 DO BEGIN
+    iS = STRCOMPRESS(i,/REMOVE_ALL)
+    uname = 'reduce_tab2_spin_combo_off_off' + iS
+    MapBase, Event, uname, combobox_status
+    uname = 'reduce_tab2_spin_combo_on_off' + iS
+    MapBase, Event, uname, combobox_status
+    uname = 'reduce_tab2_spin_combo_off_on' + iS
+    MapBase, Event, uname, combobox_status
+    uname = 'reduce_tab2_spin_combo_on_on' + iS
+    MapBase, Event, uname, combobox_status
+ENDFOR
+
+END

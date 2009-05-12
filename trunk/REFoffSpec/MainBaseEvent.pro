@@ -118,10 +118,10 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ENDELSE
   END
-
+  
   ;spin states do not match (fixed)
   WIDGET_INFO(wWidget, $
-  FIND_BY_UNAME='reduce_step1_spin_do_not_match_fixed'): BEGIN
+    FIND_BY_UNAME='reduce_step1_spin_do_not_match_fixed'): BEGIN
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
@@ -129,6 +129,7 @@ PRO MAIN_BASE_event, Event
         display_reduce_step1_buttons, EVENT=EVENT,$
           ACTIVATE=2,$
           global
+        Reduce_step2_widget_tab_action, Event, ACTIVATE=2
         (*global).reduce_step1_spin_state_mode = 2
       ENDIF
     ENDIF ELSE BEGIN
@@ -140,10 +141,10 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ENDELSE
   END
-
+  
   ;spin states do not match (user defined)
   WIDGET_INFO(wWidget, $
-  FIND_BY_UNAME='reduce_step1_spin_do_not_match_user_defined'): BEGIN
+    FIND_BY_UNAME='reduce_step1_spin_do_not_match_user_defined'): BEGIN
     CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH,/CANCEL
@@ -162,7 +163,7 @@ PRO MAIN_BASE_event, Event
       DEVICE, CURSOR_STANDARD=standard
     ENDELSE
   END
-
+  
   ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
   
   ;browse normalization file button
