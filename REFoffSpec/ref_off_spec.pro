@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          6: Options,
   ;          7:Log Book
   sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
-    reduce_tab: 0,$
+    reduce_tab: 1,$
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -142,6 +142,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step2_roi_file_name: '',$
     roi_color: 150,$
     working_reduce_step2_row: 0,$
+    reduce_step2_spin_state_not_selected: $
+    'REFoffSpec_images/spin_state_not_selected.png',$
     
     working_path: '~/results/',$
     

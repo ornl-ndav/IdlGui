@@ -110,7 +110,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     map = 1)
     
   ;Vertical space
-  vSpace = Widget_label(Base,$
+  vSpace = WIDGET_LABEL(Base,$
     VALUE = '',$
     YSIZE = 15)
     
@@ -196,9 +196,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step1_display_y_vs_x_button',$
     SENSITIVE = 0)
     
-  ;space 
+  ;space
   space = WIDGET_LABEL(Base,$
-  VALUE = ' ')  
+    VALUE = ' ')
     
   ;Repeat work for other polarization states (Row #4) ---------------------------
   Row4_row = WIDGET_BASE(Base,$
@@ -209,16 +209,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     VALUE = '                                                      ')
     
   Row4 = WIDGET_BASE(Row4_row,$
-  FRAME = 1,$
-  /ROW)
+    FRAME = 1,$
+    /ROW)
     
-;  label = WIDGET_LABEL(Row4,$
-;    VALUE = 'Working with Polarization State:')
-;  label = WIDGET_LABEL(Row4,$
-;    VALUE = 'N/A                     ',$
-;    /ALIGN_LEFT,$
-;    UNAME = 'reduce_tab1_working_polarization_state_label',$
-;    FRAME = 0)
+  ;  label = WIDGET_LABEL(Row4,$
+  ;    VALUE = 'Working with Polarization State:')
+  ;  label = WIDGET_LABEL(Row4,$
+  ;    VALUE = 'N/A                     ',$q
+  ;    /ALIGN_LEFT,$
+  ;    UNAME = 'reduce_tab1_working_polarization_state_label',$
+  ;    FRAME = 0)
     
   label = WIDGET_LABEL(Row4,$
     VALUE = 'Work with Following Polarization States:  ')
@@ -231,20 +231,26 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   button1 = WIDGET_BUTTON(Row4Base,$
     VALUE = 'Off_Off  ',$
     UNAME = 'reduce_tab1_pola_1',$
+    /NO_RELEASE,$
     SENSITIVE = 1)
   button2 = WIDGET_BUTTON(Row4Base,$
     VALUE = 'Off_On  ',$
     UNAME = 'reduce_tab1_pola_2',$
+    /NO_RELEASE,$
     SENSITIVE = 1)
   button3 = WIDGET_BUTTON(Row4Base,$
     VALUE = 'On_Off  ',$
     UNAME = 'reduce_tab1_pola_3',$
+    /NO_RELEASE,$
     SENSITIVE = 1)
   button4 = WIDGET_BUTTON(Row4Base,$
     VALUE = 'On_On  ',$
     UNAME = 'reduce_tab1_pola_4',$
+    /NO_RELEASE,$
     SENSITIVE = 1)
     
+  WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
+  
   ;space base
   space = WIDGET_BASE(Base,$
     SCR_YSIZE = 50)
@@ -258,7 +264,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   space = WIDGET_LABEL(Row5_row1,$
-  VALUE = '                                           ')
+    VALUE = '                                           ')
     
   label = WIDGET_LABEL(Row5_row1,$
     FONT = "8X13",$

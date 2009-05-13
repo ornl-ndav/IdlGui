@@ -542,6 +542,19 @@ PRO   add_widgets_reduce_step2_tab, $
     base_id = base_id,$
     base_name = base_name
     
+  uname = 'reduce_tab2_data_spin_hidden_base_' + base_name
+  hidden_base = WIDGET_BASE(base_id,$
+    UNAME = uname,$
+    SCR_XSIZE = 1000,$
+    SCR_YSIZE = 430+15,$
+    MAP = 0)
+  
+  uname = 'reduce_tab2_data_spin_hidden_draw_' + base_name  
+  draw = WIDGET_DRAW(hidden_base,$
+    UNAME = uname, $
+    SCR_XSIZE = 1000,$
+    SCR_YSIZE = 430+15)
+    
   XYoff = [30,5]
   title = 'NORM. Spin State                 R e g i o n   O f  ' + $
     ' I n t e r e s t   ( R O I ) '

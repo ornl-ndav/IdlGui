@@ -71,6 +71,7 @@ PRO  reduce_tab_event, Event
     ;status = (*global).reduce_step2_polarization_mode_status
     ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
     refresh_reduce_step2_big_table, Event
+    refresh_reduce_step2_data_spin_state_table, Event
   END
   2: BEGIN ;step3: recapitulation tab
     refresh_reduce_step3_table, Event
