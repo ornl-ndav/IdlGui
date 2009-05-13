@@ -393,7 +393,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     yoffset = slabel.size[1],$
     scr_xsize = 200,$
     scr_ysize = 30,$
-    map = 1,$
+    map = 0,$
     uname = 'reduce_step2_label_table_base')
     
   label = WIDGET_LABEL(label_base,$
@@ -441,7 +441,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
       yoffset = yoff,$
       scr_ysize = 30,$
       scr_xsize = 190,$
-      map = 1,$
+      map = 0,$
       frame = 0)
       
     uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
@@ -483,7 +483,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 1005,$
     SCR_YSIZE = 430+20,$
     UNAME = 'reduce_step2_data_spin_states_table_base',$
-    MAP = 1)
+    MAP = 0)
     
   ;title of big data spin states table
   label = WIDGET_LABEL(Table_base,$
@@ -571,13 +571,14 @@ PRO   add_widgets_reduce_step2_tab, $
   
     iS = STRCOMPRESS(i,/REMOVE_ALL)
     
+    uname = 'reduce_tab2_data_spin_row_base_' + base_name + iS
     row_base = WIDGET_BASE(base_id,$
       uname = uname,$
       xoffset = 0,$
       yoffset = XYoff[1] + yoffset,$
       scr_ysize = 30,$
       scr_xsize = 1000,$
-      map = 1,$
+      map = 0,$
       frame = 0)
       
     ;spin state widget_base and widget_combobox
