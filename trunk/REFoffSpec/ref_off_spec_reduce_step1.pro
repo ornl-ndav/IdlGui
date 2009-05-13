@@ -270,7 +270,8 @@ PRO AddNexusToReduceTab1Table, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  reduce_tab1_working_pola_state = (*global).reduce_tab1_working_pola_state
+  ;reduce_tab1_working_pola_state = (*global).reduce_tab1_working_pola_state
+  reduce_tab1_working_pola_state = '/entry-Off_Off/' 
   reduce_tab1_table = (*(*global).reduce_tab1_table)
   nexus_file_list = (*(*global).reduce_tab1_nexus_file_list)
   
@@ -293,32 +294,32 @@ PRO AddNexusToReduceTab1Table, Event
     IF (reduce_tab1_table[1,0] EQ '') THEN BEGIN
       reduce_tab1_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
       reduce_tab1_table[1,0] = nexus_file_list[index]
-      IF (stateFoundInThisNexus(nexus_file_list[index],$
-        reduce_tab1_working_pola_state)) THEN BEGIN
-          reduce_tab1_table[2,0] = 'Pola. State FOUND'
-        ENDIF ELSE BEGIN
-          reduce_tab1_table[2,0] = 'Pola. State MISSING!'
-        ENDELSE
+;      IF (stateFoundInThisNexus(nexus_file_list[index],$
+;        reduce_tab1_working_pola_state)) THEN BEGIN
+;          reduce_tab1_table[2,0] = 'Pola. State FOUND'
+;        ENDIF ELSE BEGIN
+;          reduce_tab1_table[2,0] = 'Pola. State MISSING!'
+;        ENDELSE
       ENDIF ELSE BEGIN
         sz1 = N_ELEMENTS(reduce_tab1_table)
         reduce_tab1_table = REFORM(reduce_tab1_table,sz1,/OVERWRITE)
-        tmp_table = STRARR(3,1)
+        tmp_table = STRARR(2,1)
         tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
         tmp_table[1,0] = nexus_file_list[index]
-        IF (stateFoundInThisNexus(nexus_file_list[index], $
-          reduce_tab1_working_pola_state)) THEN BEGIN
-          tmp_table[2,0] = 'Pola. State FOUND'
-        ENDIF ELSE BEGIN
-          tmp_table[2,0] = 'Pola. State MISSING!'
-        ENDELSE
+;        IF (stateFoundInThisNexus(nexus_file_list[index], $
+;          reduce_tab1_working_pola_state)) THEN BEGIN
+;          tmp_table[2,0] = 'Pola. State FOUND'
+;        ENDIF ELSE BEGIN
+;          tmp_table[2,0] = 'Pola. State MISSING!'
+;        ENDELSE
         reduce_tab1_table = [reduce_tab1_table,tmp_table]
       ENDELSE
       
       index++
     ENDWHILE
     
-    x = 3
-    y = N_ELEMENTS(reduce_tab1_table)/3
+    x = 2
+    y = N_ELEMENTS(reduce_tab1_table)/2
     
     reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
     
@@ -419,21 +420,17 @@ PRO AddNexusToReduceTab1Table, Event
       IDLsendToGeek_addLogBookText, Event, LogText
       display_message_about_files_browsed, Event, nexus_file_list
       
-      IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
-        ;get list of polarization state available and display list_of_pola base
-        nexus_file_name = nexus_file_list[0]
-        status = retrieve_list_OF_polarization_state(Event, $
-          nexus_file_name, $
-          list_OF_pola_state)
-        IF (status EQ 0) THEN RETURN
+;      IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
+;        ;get list of polarization state available and display list_of_pola base
+;        nexus_file_name = nexus_file_list[0]
+;        status = retrieve_list_OF_polarization_state(Event, $
+;          nexus_file_name, $
+;          list_OF_pola_state)
+;        IF (status EQ 0) THEN RETURN
         
-      ENDIF ELSE BEGIN
-      
         ;update the table
         AddNexusToReduceTab1Table, Event
         
-      ENDELSE
-      
     ENDIF ELSE BEGIN
       LogText = '-> User canceled Browsing for NeXus file'
       IDLsendToGeek_addLogBookText, Event, LogText
@@ -484,7 +481,7 @@ PRO AddNexusToReduceTab1Table, Event
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
     TableSelection = WIDGET_INFO(id, /TABLE_SELECT)
     RowSelected    = TableSelection[1]
-    WIDGET_CONTROL, id, SET_TABLE_SELECT = [0,RowSelected,2,RowSelected]
+    WIDGET_CONTROL, id, SET_TABLE_SELECT = [0,RowSelected,1,RowSelected]
     
   END
   
@@ -553,18 +550,18 @@ PRO AddNexusToReduceTab1Table, Event
     
     (*(*global).reduce_tab1_nexus_file_list) = nexus_file_list
     
-    IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
-      ;get list of polarization state available and display list_of_pola base
-      nexus_file_name = nexus_file_list[0]
-      status = retrieve_list_OF_polarization_state(Event, $
-        nexus_file_name, $
-        list_OF_pola_state)
-    ENDIF ELSE BEGIN
-    
+;    IF ((*global).reduce_tab1_working_pola_state EQ '') THEN BEGIN
+;      ;get list of polarization state available and display list_of_pola base
+;      nexus_file_name = nexus_file_list[0]
+;      status = retrieve_list_OF_polarization_state(Event, $
+;        nexus_file_name, $
+;        list_OF_pola_state)
+;    ENDIF ELSE BEGIN
+;    
       ;update the table
       AddNexusToReduceTab1Table, Event
-      
-    ENDELSE
+;      
+;    ENDELSE
     
     ;clear the cw_field
     putTextFieldValue, Event, 'reduce_tab1_run_cw_field', ''

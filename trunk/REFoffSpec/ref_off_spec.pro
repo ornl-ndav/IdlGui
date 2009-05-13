@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          6: Options,
   ;          7:Log Book
   sDEBUGGING = { tab: {main_tab: 0,$ ; -> LOAD tab
-    reduce_tab: 1,$
+    reduce_tab: 0,$
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
@@ -105,7 +105,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_tab1_working_pola_state: '',$
     reduce_tab1_nexus_file_list: PTR_NEW(0L),$
     reduce_input_table_nbr_row: 18,$
-    reduce_input_table_nbr_column: 3,$
+    reduce_input_table_nbr_column: 2,$
     reduce_step1_spin_state_mode: 2,$
     
     reduce_step1_spin_match_disable: $
@@ -294,7 +294,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
-  ; (*(*global).reduce_tab1_table) = STRARR(3,1)
+  (*(*global).reduce_tab1_table) = STRARR(2,1)
   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Reflectometer Off Specular Application'
