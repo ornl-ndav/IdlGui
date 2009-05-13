@@ -162,21 +162,20 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   table = WIDGET_TABLE(Row2,$
     COLUMN_LABELS = ['Run #',$
-    'Full NeXus File Name',$
-    'Polarization State'],$
+    'Full NeXus File Name'],$
     UNAME = 'reduce_tab1_table_uname',$
     /NO_ROW_HEADERS,$
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
-    XSIZE = 3,$
+    XSIZE = 2,$
     YSIZE = 18,$
     SCR_XSIZE = 1230,$
     SCR_YSIZE = 400,$
-    COLUMN_WIDTHS = [100,955,150],$
+    COLUMN_WIDTHS = [100,1110],$
     /SCROLL,$
     /ALL_EVENTS)
     
-  WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,2,0]
+  WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
   
   ;Button (Row #3) --------------------------------------------------------------
   Row3 = WIDGET_BASE(Base,$
