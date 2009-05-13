@@ -62,25 +62,25 @@ PRO  reduce_tab_event, Event
   
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (currTabSelect) OF
-      0:BEGIN
-      display_reduce_step1_buttons, EVENT=EVENT,$
-        ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-        global
-    END
-    1:BEGIN
-    ;status = (*global).reduce_step2_polarization_mode_status
-    ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
-    refresh_reduce_step2_big_table, Event
-    refresh_reduce_step2_data_spin_state_table, Event
-  END
-  2: BEGIN ;step3: recapitulation tab
-    refresh_reduce_step3_table, Event
-  END
-  ELSE:
-ENDCASE
-(*global).PrevReduceTabSelect = CurrTabSelect
-ENDIF
-
+      0: BEGIN
+        display_reduce_step1_buttons, EVENT=EVENT,$
+          ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+          global
+      END
+      1: BEGIN
+        ;status = (*global).reduce_step2_polarization_mode_status
+        ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
+        refresh_reduce_step2_big_table, Event
+        refresh_reduce_step2_data_spin_state_table, Event
+      END
+      2: BEGIN ;step3: recapitulation tab
+        refresh_reduce_step3_table, Event
+      END
+      ELSE:
+    ENDCASE
+    (*global).PrevReduceTabSelect = CurrTabSelect
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -138,8 +138,12 @@ PRO tab_event, Event
               global
           END
           1: BEGIN
-          ;            status = (*global).reduce_step2_polarization_mode_status
-          ;            display_buttons, EVENT=EVENT, ACTIVATE=status, global
+            step2_tab_id = WIDGET_INFO(Event.top,$
+              FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+            Step2CurrTabSelect = WIDGET_INFO(step2_tab_id,/TAB_CURRENT)
+            check_status_of_reduce_step2_data_spin_state_hidden_base, $
+              Event, $
+              tab=(Step2CurrTabSelect+1)
           END
           2:
           ELSE:
