@@ -196,13 +196,6 @@ PRO refresh_reduce_step2_big_table, Event
     IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
       MapBase, Event, 'reduce_step2_list_of_norm_files_base', 1
       MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 0
-      
-    ;show the polarization base
-    ;MapBase, Event, 'reduce_step2_polarization_base', 1
-    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0
-    ;display_buttons, EVENT=EVENT, $
-    ;  ACTIVATE=(*global).reduce_step2_polarization_mode_status, $
-    ;  global
     ENDIF
     
     tab1_table = (*(*global).reduce_tab1_table)
@@ -405,38 +398,59 @@ PRO PopulateStep2BigTabe, Event
       populate_reduce_step2_norm_droplist, Event
       
       ;populate norm roi labels
-      populate_reduce_step2_norm_roi, Event
+      ;      populate_reduce_step2_norm_roi, Event
       
       ;populate data labels
       uname = 'reduce_tab2_data_value'+ STRCOMPRESS(index,/REMOVE_ALL)
       putTextFieldValue, Event, uname, data_run_number[0,index]
       
-      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
-        uname = 'reduce_tab2_data_recap_base_#' + $
-          STRCOMPRESS(index,/REMOVE_ALL)
-        MapBase, Event, uname, 1
-      ENDIF
+      uname  = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index,/REMOVE_ALL)
+      MapBase, Event, uname, 1
       
-      putTextFieldValue, Event, $
-        'reduce_tab2_roi_value' + STRCOMPRESS(index,/REMOVE_ALL),$
-        norm_roi_list[index]
-        
-    ENDIF ELSE BEGIN
-    
-      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
-        error = 0
-        CATCH, error
-        IF (error NE 0) THEN BEGIN
-          CATCH, /CANCEL
-        ENDIF ELSE BEGIN
-          uname = 'reduce_tab2_data_recap_base_#' + $
-            STRCOMPRESS(index,/REMOVE_ALL)
-          MapBase, Event, uname, 0
-        ENDELSE
-      ENDIF
+      ;show big data spin state table
+      MapBase, Event, 'reduce_step2_data_spin_states_table_base', 1
       
-    ENDELSE
-    
+      ;show each row
+      uname = 'reduce_tab2_data_spin_row_base_off_off' + STRCOMPRESS(index,/REMOVE_ALL)
+      MapBase, Event, uname, 1
+      
+      uname = 'reduce_tab2_data_spin_row_base_off_on' + STRCOMPRESS(index,/REMOVE_ALL)
+      MapBase, Event, uname, 1
+      
+      uname = 'reduce_tab2_data_spin_row_base_on_off' + STRCOMPRESS(index,/REMOVE_ALL)
+      MapBase, Event, uname, 1
+      
+      uname = 'reduce_tab2_data_spin_row_base_on_on' + STRCOMPRESS(index,/REMOVE_ALL)
+      MapBase, Event, uname, 1
+      
+    ;      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+    ;      ;        uname = 'reduce_tab2_data_recap_base_#' + $
+    ;      ;          STRCOMPRESS(index,/REMOVE_ALL)
+    ;      ;        MapBase, Event, uname, 1
+    ;      ;      ENDIF
+    ;
+    ;      ;      putTextFieldValue, Event, $
+    ;      ;        'reduce_tab2_roi_value' + STRCOMPRESS(index,/REMOVE_ALL),$
+    ;      ;        norm_roi_list[index]
+    ;
+    ;      ENDIF ELSE BEGIN
+    ;
+    ;        IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
+    ;          error = 0
+    ;          CATCH, error
+    ;          IF (error NE 0) THEN BEGIN
+    ;            CATCH, /CANCEL
+    ;          ENDIF ELSE BEGIN
+    ;            uname = 'reduce_tab2_data_recap_base_#' + $
+    ;              STRCOMPRESS(index,/REMOVE_ALL)
+    ;            MapBase, Event, uname, 0
+    ;          ENDELSE
+    ;        ENDIF
+    ;
+    ;      ENDELSE
+      
+      
+    ENDIF
     index++
     
   ENDWHILE
