@@ -845,3 +845,67 @@ PRO Reduce_step2_widget_tab_action, Event, ACTIVATE=activate
   ENDCASE
   
 END
+
+;------------------------------------------------------------------------------
+PRO refresh_reduce_step2_data_spin_state_table, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;continue if there is at least one data run loaded
+  tab1_table = (*(*global).reduce_tab1_table)
+  data_run_number = tab1_table[0,0]
+  
+  IF (data_run_number NE '') THEN BEGIN ;yes
+  
+    refresh_reduce_step2_data_spin_state_hidden_base, Event
+    
+    
+    
+  ENDIF
+  
+END
+
+;.............................................................................
+PRO refresh_reduce_step2_data_spin_state_hidden_base, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;check if polarization state is selected (from reduce step1)
+  FOR i=1,4 DO BEGIN
+    uname = 'reduce_tab1_pola_' + STRCOMPRESS(i,/REMOVE_ALL)
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    set_value = WIDGET_INFO(id, /BUTTON_SET)
+    
+    base_name = ['off_off','off_on','on_off','on_on']
+    
+    IF (set_value EQ 0) THEN BEGIN ;show spin_state_not_selected
+      display_reduce_step2_hidden_base, Event, base_name=base_name[i-1]
+    ENDIF ELSE BEGIN
+      uname = 'reduce_tab2_data_spin_hidden_base_' + base_name[i-1]
+      MapBase, Event, uname, 0
+    ENDELSE
+    
+  ENDFOR
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_reduce_step2_hidden_base, Event, base_name=base_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  uname = 'reduce_tab2_data_spin_hidden_base_' + base_name
+  MapBase, Event, uname, 1
+  ;refresh plot
+  mode = READ_PNG((*global).reduce_step2_spin_state_not_selected)
+  uname = 'reduce_tab2_data_spin_hidden_draw_' + base_name
+  mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
