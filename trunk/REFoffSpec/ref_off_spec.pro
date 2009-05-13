@@ -144,6 +144,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     working_reduce_step2_row: 0,$
     reduce_step2_spin_state_not_selected: $
     'REFoffSpec_images/spin_state_not_selected.png',$
+    PrevReduceStep2TabSelect: 0,$
     
     working_path: '~/results/',$
     
