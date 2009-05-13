@@ -197,22 +197,32 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step1_display_y_vs_x_button',$
     SENSITIVE = 0)
     
+  ;space 
+  space = WIDGET_LABEL(Base,$
+  VALUE = ' ')  
+    
   ;Repeat work for other polarization states (Row #4) ---------------------------
-  Row4 = WIDGET_BASE(Base,$
+  Row4_row = WIDGET_BASE(Base,$
     UNAME = 'reduce_tab1_row4_base',$
-    FRAME = 1,$
     /ROW)
     
-  label = WIDGET_LABEL(Row4,$
-    VALUE = 'Working with Polarization State:')
-  label = WIDGET_LABEL(Row4,$
-    VALUE = 'N/A                     ',$
-    /ALIGN_LEFT,$
-    UNAME = 'reduce_tab1_working_polarization_state_label',$
-    FRAME = 0)
+  space = WIDGET_LABEL(Row4_row,$
+    VALUE = '                                                      ')
+    
+  Row4 = WIDGET_BASE(Row4_row,$
+  FRAME = 1,$
+  /ROW)
+    
+;  label = WIDGET_LABEL(Row4,$
+;    VALUE = 'Working with Polarization State:')
+;  label = WIDGET_LABEL(Row4,$
+;    VALUE = 'N/A                     ',$
+;    /ALIGN_LEFT,$
+;    UNAME = 'reduce_tab1_working_polarization_state_label',$
+;    FRAME = 0)
     
   label = WIDGET_LABEL(Row4,$
-    VALUE = 'Repeat work with Polarization States:  ')
+    VALUE = 'Work with Following Polarization States:  ')
     
   Row4Base = WIDGET_BASE(Row4,$
     /ROW,$
@@ -253,7 +263,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   label = WIDGET_LABEL(Row5_row1,$
     FONT = "8X13",$
-    VALUE = 'Select the way you want the match the Data and Normalization' + $
+    VALUE = 'Select the way you want to match the Data and Normalization' + $
     ' Spin States')
     
   Row5_row2 = WIDGET_BASE(Row5,$
