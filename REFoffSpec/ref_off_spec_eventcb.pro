@@ -83,6 +83,38 @@ ENDIF
 
 END
 
+;------------------------------------------------------------------------------
+PRO reduce_step2_data_tab, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  tab_id = WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevReduceStep2TabSelect
+  
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (currTabSelect) OF
+      0: BEGIN ;off_off
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+      END
+      1: BEGIN ;off_on
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+      END
+      2: BEGIN ;on_off
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+      END
+      3: BEGIN ;on_on
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+      END
+      ELSE:
+    ENDCASE
+    (*global).PrevReduceStep2TabSelect = CurrTabSelect
+  ENDIF
+  
+END
+
 ;-----------------------------------------------------------------------------
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
@@ -106,8 +138,8 @@ PRO tab_event, Event
               global
           END
           1: BEGIN
-;            status = (*global).reduce_step2_polarization_mode_status
-;            display_buttons, EVENT=EVENT, ACTIVATE=status, global
+          ;            status = (*global).reduce_step2_polarization_mode_status
+          ;            display_buttons, EVENT=EVENT, ACTIVATE=status, global
           END
           2:
           ELSE:

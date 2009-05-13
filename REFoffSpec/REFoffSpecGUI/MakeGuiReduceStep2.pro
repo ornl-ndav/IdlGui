@@ -498,6 +498,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   tab = WIDGET_TAB(Table_base,$
     XOFFSET = 0,$
     YOFFSET = 0,$
+    UNAME = 'reduce_step2_data_spin_state_tab_uname',$
+    /TRACKING_EVENTS,$
     SCR_XSIZE = 1000,$
     SCR_YSIZE = 430+15)
     
@@ -548,8 +550,8 @@ PRO   add_widgets_reduce_step2_tab, $
     SCR_XSIZE = 1000,$
     SCR_YSIZE = 430+15,$
     MAP = 0)
-  
-  uname = 'reduce_tab2_data_spin_hidden_draw_' + base_name  
+    
+  uname = 'reduce_tab2_data_spin_hidden_draw_' + base_name
   draw = WIDGET_DRAW(hidden_base,$
     UNAME = uname, $
     SCR_XSIZE = 1000,$

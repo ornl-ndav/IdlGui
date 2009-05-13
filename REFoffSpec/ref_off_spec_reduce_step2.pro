@@ -874,20 +874,29 @@ PRO refresh_reduce_step2_data_spin_state_hidden_base, Event
   
   ;check if polarization state is selected (from reduce step1)
   FOR i=1,4 DO BEGIN
-    uname = 'reduce_tab1_pola_' + STRCOMPRESS(i,/REMOVE_ALL)
-    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-    set_value = WIDGET_INFO(id, /BUTTON_SET)
-    
-    base_name = ['off_off','off_on','on_off','on_on']
-    
-    IF (set_value EQ 0) THEN BEGIN ;show spin_state_not_selected
-      display_reduce_step2_hidden_base, Event, base_name=base_name[i-1]
-    ENDIF ELSE BEGIN
-      uname = 'reduce_tab2_data_spin_hidden_base_' + base_name[i-1]
-      MapBase, Event, uname, 0
-    ENDELSE
-    
+    check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=i
   ENDFOR
+  
+END
+
+;------------------------------------------------------------------------------
+PRO check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=i
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  uname = 'reduce_tab1_pola_' + STRCOMPRESS(i,/REMOVE_ALL)
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  set_value = WIDGET_INFO(id, /BUTTON_SET)
+  
+  base_name = ['off_off','off_on','on_off','on_on']
+  
+  IF (set_value EQ 0) THEN BEGIN ;show spin_state_not_selected
+    display_reduce_step2_hidden_base, Event, base_name=base_name[i-1]
+  ENDIF ELSE BEGIN
+    uname = 'reduce_tab2_data_spin_hidden_base_' + base_name[i-1]
+    MapBase, Event, uname, 0
+  ENDELSE
   
 END
 

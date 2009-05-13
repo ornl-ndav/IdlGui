@@ -168,6 +168,11 @@ PRO MAIN_BASE_event, Event
   
   ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
   
+  ;data spin states tab
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname'): BEGIN
+    reduce_step2_data_tab, Event
+  END
+  
   ;browse normalization file button
   WIDGET_INFO(wWidget, FIND_BY_UNAME= 'reduce_step2_browse_button'): BEGIN
     reduce_step2_browse_normalization, Event
@@ -340,7 +345,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='Off_On'
   END
-
+  
   ;Browse for a ROI file buttons (0->9) data spin state on_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='On_Off'
@@ -372,7 +377,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='On_Off'
   END
-
+  
   ;Browse for a ROI file buttons (0->9) data spin state on_on
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='On_On'
@@ -404,7 +409,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='On_On'
   END
-
+  
   ;Create/Modify/Visualize ROI file (0->9)
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button0'): BEGIN
     reduce_step2_create_roi, Event, row=0
