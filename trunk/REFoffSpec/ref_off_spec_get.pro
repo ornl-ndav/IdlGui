@@ -337,22 +337,29 @@ FUNCTION getReduceStep2NormOfRow, Event, row=row
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getReduceStep2SpinStateRow, Event, Row=row
-
+FUNCTION getReduceStep2SpinStateRow, Event, Row=row, $
+    data_spin_state=data_spin_state
+    
   sRow = STRCOMPRESS(row,/REMOVE_ALL)
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  pola_mode = (*global).reduce_step2_polarization_mode_status
+  spin_mode = (*global).reduce_step1_spin_state_mode
   
-  IF (pola_mode EQ 0) THEN BEGIN
-    uname = 'reduce_step2_mode1_spin_state_combobox'
-    RETURN, getComboListSelectedValue(Event,uname)
-  ENDIF ELSE BEGIN
-    uname = 'reduce_tab2_spin_combo' + sRow
-    RETURN, getComboListSelectedValue(Event,uname)
-  ENDELSE
+  CASE (spin_mode) OF
+    1: BEGIN ;match data spin state
+      RETURN, data_spin_state
+    END
+    2: BEGIN ;always off_off
+      RETURN, 'Off_Off'
+    END
+    3: BEGIN ;user defined
+      base_name = STRLOWCASE(data_spin_state)
+      uname = 'reduce_tab2_spin_combo_' + base_name + sRow
+      RETURN, getComboListSelectedValue(Event,uname)
+    END
+  ENDCASE
   
 END
 
