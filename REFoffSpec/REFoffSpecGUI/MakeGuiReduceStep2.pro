@@ -199,14 +199,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'S A V E   R O I',$
     TOOLTIP = 'Click to Save the ROI you created',$
     UNAME = 'reduce_step2_create_roi_save_roi',$
-    SENSITIVE = 1)
+    SENSITIVE = 0)
     
   ;save and quit base
   save_quit_roi = WIDGET_BUTTON(row3_base,$
   VALUE = 'SAVE ROI and RETURN TO TABLE',$
   tooltip = 'Click to Save the ROI and Return to the table',$
   uname = 'reduce_step2_create_roi_save_roi_quit',$
-  SENSITIVE = 1)  
+  SENSITIVE = 0)  
     
   RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
