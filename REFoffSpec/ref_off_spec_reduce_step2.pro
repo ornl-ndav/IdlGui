@@ -665,7 +665,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   IDLsendToGeek_addLogBookText, Event, LogText
   
   roi_file = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
-    FILTER = ['*_roi.dat'],$
+    FILTER = ['*_ROI.dat'],$
     GET_PATH = new_path,$
     /MUST_EXIST,$
     PATH = path,$
