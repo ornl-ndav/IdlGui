@@ -385,7 +385,6 @@ FUNCTION getDefaultReduceStep2RoiFileName, event
   
   ;get norm run number
   norm_run = getTextFieldValue(Event,'reduce_step2_create_roi_norm_value')
-  
   file = 'REF_M_' + norm_run + '_ROI.dat'
   
   RETURN, file
