@@ -572,9 +572,6 @@ PRO populate_reduce_step2_data_spin_state, Event
   
   table = (*(*global).nexus_spin_state_roi_table)
   
-  HELP, table
-  PRINT, table
-  
   nbr_row = (SIZE(table))(2)
   index = 0
   WHILE (index LT nbr_row) DO BEGIN
