@@ -68,11 +68,12 @@ PRO  reduce_tab_event, Event
           global
       END
       1: BEGIN
-        ;status = (*global).reduce_step2_polarization_mode_status
-        ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
-        refresh_reduce_step2_big_table, Event
-        refresh_reduce_step2_data_spin_state_table, Event
-        refresh_roi_file_name, Event
+        base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
+        IF (~base_mapped) THEN BEGIN
+          refresh_reduce_step2_big_table, Event
+          refresh_reduce_step2_data_spin_state_table, Event
+          refresh_roi_file_name, Event
+        ENDIF
       END
       2: BEGIN ;step3: recapitulation tab
         refresh_reduce_step3_table, Event
