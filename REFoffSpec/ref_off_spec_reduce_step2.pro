@@ -226,8 +226,7 @@ PRO reduce_step2_remove_run, Event
   ;get index selected or range selected
   selection_array = getTableSelection(Event, $
     'reduce_step2_list_of_norm_files_table')
-    
-  selection = selection_array[1,*]
+  selection = selection_array[0]
   
   IF (selection[0] EQ 0 and $
     N_ELEMENTS(nexus_file_list) EQ 1 ) THEN BEGIN
@@ -236,13 +235,14 @@ PRO reduce_step2_remove_run, Event
     
     MapBase, Event, 'reduce_step2_list_of_norm_files_base', 0
     MapBase, Event, 'reduce_step2_list_of_normalization_file_hidden_base', 1
-    ;MapBase, Event, 'reduce_step2_polarization_base', 0
-    ;MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 1
     
     hideStep2BigTable, Event
     
     (*global).nexus_norm_list_run_number = nexus_run_number
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
+    
+    ;reset big table
+    (*(*global).nexus_spin_state_roi_table) = PTR_NEW(0L)
     
   ENDIF ELSE BEGIN
   
@@ -519,6 +519,8 @@ PRO hideStep2BigTable, Event
     
   ENDWHILE
   
+  ;show big data spin state table
+  MapBase, Event, 'reduce_step2_data_spin_states_table_base', 0
   MapBase, Event, 'reduce_step2_label_table_base', 0
   
 END
@@ -578,7 +580,6 @@ PRO populate_reduce_step2_data_spin_state, Event
   
     sIndex = STRCOMPRESS(index,/REMOVE_ALL)
     IF (table[0,index] NE '') THEN BEGIN
-    
     
       ;off_off
       base_name = 'off_off'
