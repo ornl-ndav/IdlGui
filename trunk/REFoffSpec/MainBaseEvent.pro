@@ -223,65 +223,65 @@ PRO MAIN_BASE_event, Event
     reduce_step2_remove_run, Event
   END
   
-  ;polarization mode 1 button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
-    CATCH, error
-    IF (error NE 0) THEN BEGIN
-      CATCH,/CANCEL
-      IF (event.press EQ 1) THEN BEGIN
-        ;          status_buttons = (*global).status_buttons
-        ;            IF (status_buttons[2] EQ 0) THEN BEGIN
-        display_buttons, MAIN_BASE=MAIN_BASE, $
-          EVENT=EVENT,$
-          ACTIVATE=0,$
-          global
-        (*global).reduce_step2_polarization_mode_status = 0
-        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
-        activate_norm_combobox, Event, status=0
-      ENDIF
-    ENDIF ELSE BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
-      ENDIF ELSE BEGIN
-        standard = 31
-      ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;        (*global).previous_button_clicked = 3
-    ENDELSE
-  END
-  
-  ;combobox of mode1
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
-    mode1_spin_state_combobox_changed, Event
-  END
-  
-  ;polarization mode 2 button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
-    CATCH, error
-    IF (error NE 0) THEN BEGIN
-      CATCH,/CANCEL
-      IF (event.press EQ 1) THEN BEGIN
-        ;          status_buttons = (*global).status_buttons
-        ;              IF (status_buttons[2] EQ 0) THEN BEGIN
-        display_buttons, MAIN_BASE=MAIN_BASE, $
-          EVENT=EVENT,$
-          ACTIVATE=1,$
-          global
-        (*global).reduce_step2_polarization_mode_status = 1
-        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
-        activate_norm_combobox, Event, status=1
-      ENDIF
-    ENDIF ELSE BEGIN
-      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
-      ENDIF ELSE BEGIN
-        standard = 31
-      ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-    ;        (*global).previous_button_clicked = 3
-    ENDELSE
-  END
-  
+;  ;polarization mode 1 button
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
+;    CATCH, error
+;    IF (error NE 0) THEN BEGIN
+;      CATCH,/CANCEL
+;      IF (event.press EQ 1) THEN BEGIN
+;        ;          status_buttons = (*global).status_buttons
+;        ;            IF (status_buttons[2] EQ 0) THEN BEGIN
+;        display_buttons, MAIN_BASE=MAIN_BASE, $
+;          EVENT=EVENT,$
+;          ACTIVATE=0,$
+;          global
+;        (*global).reduce_step2_polarization_mode_status = 0
+;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
+;        activate_norm_combobox, Event, status=0
+;      ENDIF
+;    ENDIF ELSE BEGIN
+;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+;        standard = 58
+;      ENDIF ELSE BEGIN
+;        standard = 31
+;      ENDELSE
+;      DEVICE, CURSOR_STANDARD=standard
+;    ;        (*global).previous_button_clicked = 3
+;    ENDELSE
+;  END
+;  
+;  ;combobox of mode1
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
+;    mode1_spin_state_combobox_changed, Event
+;  END
+;  
+;  ;polarization mode 2 button
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
+;    CATCH, error
+;    IF (error NE 0) THEN BEGIN
+;      CATCH,/CANCEL
+;      IF (event.press EQ 1) THEN BEGIN
+;        ;          status_buttons = (*global).status_buttons
+;        ;              IF (status_buttons[2] EQ 0) THEN BEGIN
+;        display_buttons, MAIN_BASE=MAIN_BASE, $
+;          EVENT=EVENT,$
+;          ACTIVATE=1,$
+;          global
+;        (*global).reduce_step2_polarization_mode_status = 1
+;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
+;        activate_norm_combobox, Event, status=1
+;      ENDIF
+;    ENDIF ELSE BEGIN
+;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+;        standard = 58
+;      ENDIF ELSE BEGIN
+;        standard = 31
+;      ENDELSE
+;      DEVICE, CURSOR_STANDARD=standard
+;    ;        (*global).previous_button_clicked = 3
+;    ENDELSE
+;  END
+;  
   ;============================================================================
   
   ;Normalization combobox 
