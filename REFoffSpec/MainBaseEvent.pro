@@ -223,68 +223,68 @@ PRO MAIN_BASE_event, Event
     reduce_step2_remove_run, Event
   END
   
-;  ;polarization mode 1 button
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
-;    CATCH, error
-;    IF (error NE 0) THEN BEGIN
-;      CATCH,/CANCEL
-;      IF (event.press EQ 1) THEN BEGIN
-;        ;          status_buttons = (*global).status_buttons
-;        ;            IF (status_buttons[2] EQ 0) THEN BEGIN
-;        display_buttons, MAIN_BASE=MAIN_BASE, $
-;          EVENT=EVENT,$
-;          ACTIVATE=0,$
-;          global
-;        (*global).reduce_step2_polarization_mode_status = 0
-;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
-;        activate_norm_combobox, Event, status=0
-;      ENDIF
-;    ENDIF ELSE BEGIN
-;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-;        standard = 58
-;      ENDIF ELSE BEGIN
-;        standard = 31
-;      ENDELSE
-;      DEVICE, CURSOR_STANDARD=standard
-;    ;        (*global).previous_button_clicked = 3
-;    ENDELSE
-;  END
-;  
-;  ;combobox of mode1
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
-;    mode1_spin_state_combobox_changed, Event
-;  END
-;  
-;  ;polarization mode 2 button
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
-;    CATCH, error
-;    IF (error NE 0) THEN BEGIN
-;      CATCH,/CANCEL
-;      IF (event.press EQ 1) THEN BEGIN
-;        ;          status_buttons = (*global).status_buttons
-;        ;              IF (status_buttons[2] EQ 0) THEN BEGIN
-;        display_buttons, MAIN_BASE=MAIN_BASE, $
-;          EVENT=EVENT,$
-;          ACTIVATE=1,$
-;          global
-;        (*global).reduce_step2_polarization_mode_status = 1
-;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
-;        activate_norm_combobox, Event, status=1
-;      ENDIF
-;    ENDIF ELSE BEGIN
-;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-;        standard = 58
-;      ENDIF ELSE BEGIN
-;        standard = 31
-;      ENDELSE
-;      DEVICE, CURSOR_STANDARD=standard
-;    ;        (*global).previous_button_clicked = 3
-;    ENDELSE
-;  END
-;  
+  ;  ;polarization mode 1 button
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
+  ;    CATCH, error
+  ;    IF (error NE 0) THEN BEGIN
+  ;      CATCH,/CANCEL
+  ;      IF (event.press EQ 1) THEN BEGIN
+  ;        ;          status_buttons = (*global).status_buttons
+  ;        ;            IF (status_buttons[2] EQ 0) THEN BEGIN
+  ;        display_buttons, MAIN_BASE=MAIN_BASE, $
+  ;          EVENT=EVENT,$
+  ;          ACTIVATE=0,$
+  ;          global
+  ;        (*global).reduce_step2_polarization_mode_status = 0
+  ;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
+  ;        activate_norm_combobox, Event, status=0
+  ;      ENDIF
+  ;    ENDIF ELSE BEGIN
+  ;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+  ;        standard = 58
+  ;      ENDIF ELSE BEGIN
+  ;        standard = 31
+  ;      ENDELSE
+  ;      DEVICE, CURSOR_STANDARD=standard
+  ;    ;        (*global).previous_button_clicked = 3
+  ;    ENDELSE
+  ;  END
+  ;
+  ;  ;combobox of mode1
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
+  ;    mode1_spin_state_combobox_changed, Event
+  ;  END
+  ;
+  ;  ;polarization mode 2 button
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
+  ;    CATCH, error
+  ;    IF (error NE 0) THEN BEGIN
+  ;      CATCH,/CANCEL
+  ;      IF (event.press EQ 1) THEN BEGIN
+  ;        ;          status_buttons = (*global).status_buttons
+  ;        ;              IF (status_buttons[2] EQ 0) THEN BEGIN
+  ;        display_buttons, MAIN_BASE=MAIN_BASE, $
+  ;          EVENT=EVENT,$
+  ;          ACTIVATE=1,$
+  ;          global
+  ;        (*global).reduce_step2_polarization_mode_status = 1
+  ;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
+  ;        activate_norm_combobox, Event, status=1
+  ;      ENDIF
+  ;    ENDIF ELSE BEGIN
+  ;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+  ;        standard = 58
+  ;      ENDIF ELSE BEGIN
+  ;        standard = 31
+  ;      ENDELSE
+  ;      DEVICE, CURSOR_STANDARD=standard
+  ;    ;        (*global).previous_button_clicked = 3
+  ;    ENDELSE
+  ;  END
+  ;
   ;============================================================================
   
-  ;Normalization combobox 
+  ;Normalization combobox
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo0'): BEGIN
     save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
@@ -339,208 +339,208 @@ PRO MAIN_BASE_event, Event
   ;============================================================================
   ;Norm spin state combobox of data spin state off_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off0'): BEGIN
-;    save_new_reduce_tab2_norm_combobox, Event, row=0
+    ;    save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off1'): BEGIN
-;    save_new_reduce_tab2_norm_combobox, Event, row=1
+    ;    save_new_reduce_tab2_norm_combobox, Event, row=1
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off2'): BEGIN
-;    save_new_reduce_tab2_norm_combobox, Event, row=2
+    ;    save_new_reduce_tab2_norm_combobox, Event, row=2
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off3'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=3
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=3
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off4'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=4
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=4
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off5'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=5
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=5
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off6'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=6
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=6
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off7'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=7
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=7
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off8'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=8
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=8
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_off9'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state off_on
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on0'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=0
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on1'): BEGIN
- ;   save_new_reduce_tab2_norm_combobox, Event, row=1
+    ;   save_new_reduce_tab2_norm_combobox, Event, row=1
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on2'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on3'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on4'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on5'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on6'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on7'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on8'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_off_on9'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state on_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off0'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=0
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off1'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=1
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=1
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off2'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off3'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off4'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off5'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off6'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off7'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off8'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_off9'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   
   ;Norm spin state combobox of data spin state on_on
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on0'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=0
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=0
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on1'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=1
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=1
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on2'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=2
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=2
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on3'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=3
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=3
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on4'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=4
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=4
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on5'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=5
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=5
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on6'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=6
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=6
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on7'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=7
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=7
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on8'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=8
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=8
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_spin_combo_on_on9'): BEGIN
-  ;  save_new_reduce_tab2_norm_combobox, Event, row=9
+    ;  save_new_reduce_tab2_norm_combobox, Event, row=9
     ;this update the name of the roi files
     refresh_roi_file_name, Event
   END
@@ -984,7 +984,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
     ;this update the name of the roi files
     reduce_step2_return_to_table, Event
-        refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   END
   
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
@@ -1000,13 +1000,18 @@ PRO MAIN_BASE_event, Event
     reduces_step3_output_folder, Event
   END
   
+  ;Runs jobs
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_run_jobs'): BEGIN
+    reduce_step3_run_jobs, Event
+  END
+  
   ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
     reduce_step3_job_mamager, Event
   END
   
-  ;11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111 tab4 11111111
-  
+  ;222222222222222222222222222222222222222222222222222222222222222222222222222222
+  ;222222222222222222222222222222222222222222222222222222222222222222222222222222
   ;222222222222222222222222222222222222222222222222222222222222222222222222222222
   
   ;Browse ASCII file button

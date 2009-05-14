@@ -93,7 +93,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
-    driver_name: 'refred_lp',$
+    reduce_structure: {driver: 'refred_lp',$
+    data_paths: '--data-path',$
+    data: '--data',$
+    norm: '--norm',$
+    norm_paths: '--norm-data-paths',$
+    norm_roi: '--norm-roi-file',$
+    output: '--output'},$
     
     nexus_list_OF_pola_state: ['/entry-Off_Off/',$
     '/entry-Off_On/',$
@@ -128,7 +134,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'Off_On',$
     'On_Off',$
     'On_On'],$
-  
+    
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
@@ -393,7 +399,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       '/SNS/REF_M/2008_1_2_SCI/12/5005/NeXus/REF_M_5005.nxs']
     (*(*global).reduce_tab1_nexus_file_list) = nexus_file_list
     
-    ;(*(*global).reduce_tab1_table)
+  ;(*(*global).reduce_tab1_table)
     
   ENDIF
   
