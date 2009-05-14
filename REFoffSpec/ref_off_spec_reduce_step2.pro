@@ -716,8 +716,9 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row
-
+FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
+    data_spin_state = data_spin_state
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -725,7 +726,8 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row
   nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
   
   ;spin state
-  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
+  spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
+    data_spin_state = data_spin_state)
   putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
     spin_state
     
@@ -792,8 +794,9 @@ PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
   (*global).reduce_step2_create_roi_base = 1
   
   ;display normalization plot (counts vs tof) of reduce_step2 plot
-  success = display_reduce_step2_create_roi_plot(Event, Row=row)
-  
+  success = display_reduce_step2_create_roi_plot(Event, Row=row, $
+    data_spin_state = data_spin_state)
+    
   ;display ROI file name if any
   IF (roi_file_name NE 'N/A') THEN BEGIN
     load_and_plot_roi_file, Event, roi_file_name
