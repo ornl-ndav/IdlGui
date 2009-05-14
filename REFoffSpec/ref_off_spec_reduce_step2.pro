@@ -388,6 +388,13 @@ PRO PopulateStep2BigTabe, Event
   data_run_number = tab1_table[0,*]
   norm_roi_list = (*global).reduce_step2_norm_roi
   
+  button_value=INTARR(4)
+  FOR i=1,4 DO BEGIN
+    uname = 'reduce_tab1_pola_' + STRCOMPRESS(i,/REMOVE_ALL)
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    button_value[i-1] = WIDGET_INFO(id, /BUTTON_SET)
+  ENDFOR
+  
   sz = N_ELEMENTS(data_run_number)
   index = 0
   WHILE (index LT sz) DO BEGIN
@@ -411,26 +418,44 @@ PRO PopulateStep2BigTabe, Event
       MapBase, Event, 'reduce_step2_data_spin_states_table_base', 1
       
       ;show each row
+      IF (button_value[0] EQ 1) THEN BEGIN
+        status = 1
+      ENDIF ELSE BEGIN
+        status = 0
+      ENDELSE
       uname = 'reduce_tab2_data_spin_row_base_off_off' + $
         STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, 1
+      MapBase, Event, uname, status
       
+      IF (button_value[1] EQ 1) THEN BEGIN
+        status = 1
+      ENDIF ELSE BEGIN
+        status = 0
+      ENDELSE
       uname = 'reduce_tab2_data_spin_row_base_off_on' + $
         STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, 1
+      MapBase, Event, uname, status
       
+      IF (button_value[2] EQ 1) THEN BEGIN
+        status = 1
+      ENDIF ELSE BEGIN
+        status = 0
+      ENDELSE
       uname = 'reduce_tab2_data_spin_row_base_on_off' + $
         STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, 1
+      MapBase, Event, uname, status
       
+      IF (button_value[3] EQ 1) THEN BEGIN
+        status = 1
+      ENDIF ELSE BEGIN
+        status = 0
+      ENDELSE
       uname = 'reduce_tab2_data_spin_row_base_on_on' + $
         STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, 1
+      MapBase, Event, uname, status
       
       ;populate data spin state widget_tab of all spin states
       populate_reduce_step2_data_spin_state, Event
-      
-      
       
       
     ;      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
@@ -556,6 +581,7 @@ PRO populate_reduce_step2_data_spin_state, Event
   
     sIndex = STRCOMPRESS(index,/REMOVE_ALL)
     IF (table[0,index] NE '') THEN BEGIN
+    
     
       ;off_off
       base_name = 'off_off'
@@ -1014,7 +1040,7 @@ PRO display_reduce_step2_hidden_base, Event, base_name=base_name
   ;mode
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
-  TV, mode, 0,0,/true
+  TV, mode, 0,20,/true
   
 END
 
