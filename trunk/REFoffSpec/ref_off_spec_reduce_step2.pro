@@ -693,7 +693,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
     
     ;get Norm file selected
     norm_table = (*global).reduce_step2_big_table_norm_index
-;    norm_run_number = (*global).nexus_norm_list_run_number
+    ;    norm_run_number = (*global).nexus_norm_list_run_number
     
     nexus_spin_state_roi_table[column,norm_table[row]] = roi_file
     (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
@@ -743,7 +743,7 @@ END
 ;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
 PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
-  
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -768,7 +768,7 @@ PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
   data_run_number = getTextFieldValue(Event,uname)
   putTextFieldValue, Event, 'reduce_step2_create_roi_data_value', $
     data_run_number
-
+    
   ;get normalization run number
   norm_run_number = getReduceStep2NormOfRow(Event, row=row)
   putTextFieldValue, Event, 'reduce_step2_create_roi_norm_value', $
@@ -776,7 +776,7 @@ PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
     
   ;get normalization spin state
   spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
-  data_spin_state=data_spin_state)
+    data_spin_state=data_spin_state)
   putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
     spin_state
     
@@ -1071,7 +1071,8 @@ PRO refresh_roi_file_name, Event
     
       ;off_off
       base_name = 'off_off'
-      column = 1
+      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+        data_spin_state=base_name)
       roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
       IF (roi_file EQ '') THEN roi_file = 'N/A'
       roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
@@ -1079,7 +1080,8 @@ PRO refresh_roi_file_name, Event
       
       ;off_on
       base_name = 'off_on'
-      column = 2
+      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+        data_spin_state=base_name)
       roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
       IF (roi_file EQ '') THEN roi_file = 'N/A'
       roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
@@ -1087,7 +1089,8 @@ PRO refresh_roi_file_name, Event
       
       ;on_off
       base_name = 'on_off'
-      column = 3
+      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+        data_spin_state=base_name)
       roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
       IF (roi_file EQ '') THEN roi_file = 'N/A'
       roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
@@ -1095,7 +1098,8 @@ PRO refresh_roi_file_name, Event
       
       ;on_on
       base_name = 'on_on'
-      column = 4
+      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+        data_spin_state=base_name)
       roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
       IF (roi_file EQ '') THEN roi_file = 'N/A'
       roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex

@@ -72,6 +72,7 @@ PRO  reduce_tab_event, Event
         ;display_buttons, EVENT=EVENT, ACTIVATE=status, global
         refresh_reduce_step2_big_table, Event
         refresh_reduce_step2_data_spin_state_table, Event
+        refresh_roi_file_name, Event
       END
       2: BEGIN ;step3: recapitulation tab
         refresh_reduce_step3_table, Event
@@ -111,6 +112,7 @@ PRO reduce_step2_data_tab, Event
       ELSE:
     ENDCASE
     (*global).PrevReduceStep2TabSelect = CurrTabSelect
+            refresh_roi_file_name, Event
   ENDIF
   
 END
