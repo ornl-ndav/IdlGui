@@ -199,6 +199,23 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_normalization_text_field'): BEGIN
     reduce_step2_run_number_normalization, Event
     putTextFieldValue, Event, 'reduce_step2_normalization_text_field', ''
+    tab_id = WIDGET_INFO(Event.top,$
+      FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+    CASE (currTabSelect) OF
+      0: BEGIN ;off_off
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+      END
+      1: BEGIN ;off_on
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+      END
+      2: BEGIN ;on_off
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+      END
+      3: BEGIN ;on_on
+        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+      END
+    ENDCASE
   END
   
   ;remove normalization button
