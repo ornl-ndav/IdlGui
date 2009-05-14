@@ -33,7 +33,7 @@
 ;==============================================================================
 
 ;------------------------------------------------------------------------------
-PRO reduce_step2_save_roi, Event
+PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -46,42 +46,42 @@ PRO reduce_step2_save_roi, Event
   IDLsendToGeek_addLogBookText, Event, LogText
   LogText = '-> Bring to life ROI file name base.'
   IDLsendToGeek_addLogBookText, Event, LogText
-
-  save_roi_base, Event, PATH=path, FILE_NAME=file
   
-   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
-   data_spin_state = (*global).tmp_reduce_step2_data_spin_state
-    
-    CASE (data_spin_state) OF
-      'off_off': BEGIN
-        column = 1
-      END
-      'off_on': BEGIN
-        column = 2
-      END
-      'on_off': BEGIN
-        column = 3
-      END
-      'on_on': BEGIN
-        column = 4
-      END
-    ENDCASE
-    
-    ;get Norm file selected
-    norm_table = (*global).reduce_step2_big_table_norm_index
-
-    row = (*global).tmp_reduce_step2_row
-    full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
+  save_roi_base, Event, PATH=path, FILE_NAME=file, quit_flag=quit_flag
+  
+  nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+  data_spin_state = (*global).tmp_reduce_step2_data_spin_state
+  
+  CASE (data_spin_state) OF
+    'off_off': BEGIN
+      column = 1
+    END
+    'off_on': BEGIN
+      column = 2
+    END
+    'on_off': BEGIN
+      column = 3
+    END
+    'on_on': BEGIN
+      column = 4
+    END
+  ENDCASE
+  
+  ;get Norm file selected
+  norm_table = (*global).reduce_step2_big_table_norm_index
+  
+  row = (*global).tmp_reduce_step2_row
+  full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
     STRCOMPRESS(file,/REMOVE_ALL)
     
-    nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
-    
-    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+  nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
+  
+  (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
   
 END
 
 ;..............................................................................
-PRO reduce_step2_save_roi_step2, Event
+PRO reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -91,7 +91,7 @@ PRO reduce_step2_save_roi_step2, Event
   
   file_name = path + file
   
-  create_roi_file, Event, file_name
+  create_roi_file, Event, file_name, quit_flag=quit_flag
   
 END
 
@@ -116,7 +116,7 @@ PRO check_reduce_step2_save_roi_validity, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO create_roi_file, Event, roi_file_name
+PRO create_roi_file, Event, roi_file_name, quit_flag=quit_flag
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -165,6 +165,11 @@ PRO create_roi_file, Event, roi_file_name
     roi_file_name
     
   ERROR:
+  
+  IF (quit_flag EQ 'on') THEN BEGIN ;close
+    refresh_roi_file_name, event
+    reduce_step2_return_to_table, event
+  ENDIF
   
 END
 
