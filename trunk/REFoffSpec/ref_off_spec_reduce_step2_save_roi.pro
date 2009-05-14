@@ -51,31 +51,16 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   
   nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
   data_spin_state = (*global).tmp_reduce_step2_data_spin_state
-  
-  CASE (data_spin_state) OF
-    'off_off': BEGIN
-      column = 1
-    END
-    'off_on': BEGIN
-      column = 2
-    END
-    'on_off': BEGIN
-      column = 3
-    END
-    'on_on': BEGIN
-      column = 4
-    END
-  ENDCASE
-  
-  ;get Norm file selected
-  norm_table = (*global).reduce_step2_big_table_norm_index
-  
   row = (*global).tmp_reduce_step2_row
+  column = getReduceStep2SpinStateColumn(Event, row=row,$
+    data_spin_state=data_spin_state)
+
+  ;get Norm file selected
+  norm_table = (*global).reduce_step2_big_table_norm_index  
   full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
     STRCOMPRESS(file,/REMOVE_ALL)
     
   nexus_spin_state_roi_table[column,norm_table[row]] = full_file_name
-  
   (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
   
 END

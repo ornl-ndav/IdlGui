@@ -983,8 +983,8 @@ PRO MAIN_BASE_event, Event
   ;return to reduce step2 table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
     ;this update the name of the roi files
-    refresh_roi_file_name, Event
     reduce_step2_return_to_table, Event
+        refresh_roi_file_name, Event
   END
   
   ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111

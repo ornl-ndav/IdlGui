@@ -103,6 +103,17 @@ PRO browse_reduce_step2_roi_file, Event
       'reduce_step2_create_roi_file_name_label',$
       file_name
       
+    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    data_spin_state = (*global).tmp_reduce_step2_data_spin_state
+    row = (*global).tmp_reduce_step2_row
+    column = getReduceStep2SpinStateColumn(Event, row=row,$
+      data_spin_state=data_spin_state)
+      
+    ;get Norm file selected
+    norm_table = (*global).reduce_step2_big_table_norm_index
+    nexus_spin_state_roi_table[column,norm_table[row]] = file_name
+    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+    
     ;turn off hourglass
     WIDGET_CONTROL,hourglass=0
     
@@ -118,21 +129,21 @@ PRO load_and_plot_roi_file, Event, file_name
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-    ;Load ROI button (Load, extract and plot)
-    load_roi_selection, Event, file_name
+  ;Load ROI button (Load, extract and plot)
+  load_roi_selection, Event, file_name
+  
+  Yarray = retrieveYminMaxFromFile(event,file_name)
+  Y1 = Yarray[0]
+  Y2 = Yarray[1]
+  putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
+    STRCOMPRESS(Y1,/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
+    STRCOMPRESS(Y2,/REMOVE_ALL)
     
-    Yarray = retrieveYminMaxFromFile(event,file_name)
-    Y1 = Yarray[0]
-    Y2 = Yarray[1]
-    putTextFieldValue, Event, 'reduce_step2_create_roi_y1_value', $
-      STRCOMPRESS(Y1,/REMOVE_ALL)
-    putTextFieldValue, Event, 'reduce_step2_create_roi_y2_value', $
-      STRCOMPRESS(Y2,/REMOVE_ALL)
-      
-    plot_reduce_step2_norm, Event ;refresh plot
-    (*global).norm_roi_y_selected = 'all'
-    reduce_step2_manual_move, Event
-    
+  plot_reduce_step2_norm, Event ;refresh plot
+  (*global).norm_roi_y_selected = 'all'
+  reduce_step2_manual_move, Event
+  
 END
 
 ;-----------------------------------------------------------------------------
