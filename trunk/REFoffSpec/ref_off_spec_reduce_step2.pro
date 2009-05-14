@@ -292,6 +292,7 @@ PRO addNormNexusToList, Event, new_nexus_file_list
     ;IF (new_nexus_file_list[0] NE '') THEN BEGIN
     nexus_file_list = new_nexus_file_list
     (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
+    
   ;ENDIF
     
   ;    sz = N_ELEMENTS(nexus_file_list_browsed)
@@ -369,10 +370,9 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   (*global).nexus_norm_list_run_number = nexus_norm_list_run_number
   (*(*global).reduce_tab2_nexus_file_list) = nexus_file_list
   
-;  help, nexus_norm_list_run_number
-;  print, nexus_norm_list_run_number
-;  help, nexus_file_list
-;  print, nexus_file_list
+  nexus_spin_state_roi_table = STRARR(5,11)
+  nexus_spin_state_roi_table[0,*] = nexus_norm_list_run_number
+  (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
   
 ;  PRINT, 'leaving addNormNexusToList'
   
@@ -411,17 +411,27 @@ PRO PopulateStep2BigTabe, Event
       MapBase, Event, 'reduce_step2_data_spin_states_table_base', 1
       
       ;show each row
-      uname = 'reduce_tab2_data_spin_row_base_off_off' + STRCOMPRESS(index,/REMOVE_ALL)
+      uname = 'reduce_tab2_data_spin_row_base_off_off' + $
+        STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 1
       
-      uname = 'reduce_tab2_data_spin_row_base_off_on' + STRCOMPRESS(index,/REMOVE_ALL)
+      uname = 'reduce_tab2_data_spin_row_base_off_on' + $
+        STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 1
       
-      uname = 'reduce_tab2_data_spin_row_base_on_off' + STRCOMPRESS(index,/REMOVE_ALL)
+      uname = 'reduce_tab2_data_spin_row_base_on_off' + $
+        STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 1
       
-      uname = 'reduce_tab2_data_spin_row_base_on_on' + STRCOMPRESS(index,/REMOVE_ALL)
+      uname = 'reduce_tab2_data_spin_row_base_on_on' + $
+        STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 1
+      
+      ;populate data spin state widget_tab of all spin states
+      populate_reduce_step2_data_spin_state, Event
+      
+      
+      
       
     ;      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
     ;      ;        uname = 'reduce_tab2_data_recap_base_#' + $
@@ -529,6 +539,60 @@ PRO populate_reduce_step2_norm_droplist, Event
 END
 
 ;------------------------------------------------------------------------------
+;This function repopulates the widget_tab of the reduce step2 tab
+PRO populate_reduce_step2_data_spin_state, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  table = (*(*global).nexus_spin_state_roi_table)
+  
+  HELP, table
+  PRINT, table
+  
+  nbr_row = (SIZE(table))(2)
+  index = 0
+  WHILE (index LT nbr_row) DO BEGIN
+  
+    sIndex = STRCOMPRESS(index,/REMOVE_ALL)
+    IF (table[0,index] NE '') THEN BEGIN
+    
+      ;off_off
+      base_name = 'off_off'
+      uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      value = table[1,index]
+      IF (value EQ '') THEN value = 'N/A'
+      putTextFieldValue, Event, uname, value
+      
+      ;off_on
+      base_name = 'off_on'
+      uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      value = table[2,index]
+      IF (value EQ '') THEN value = 'N/A'
+      putTextFieldValue, Event, uname, value
+      
+      ;on_off
+      base_name = 'on_off'
+      uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      value = table[3,index]
+      IF (value EQ '') THEN value = 'N/A'
+      putTextFieldValue, Event, uname, value
+      
+      ;on_on
+      base_name = 'on_on'
+      uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      value = table[4,index]
+      IF (value EQ '') THEN value = 'N/A'
+      putTextFieldValue, Event, uname, value
+      
+    ENDIF
+    
+    index++
+  ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
 PRO populate_reduce_step2_norm_roi, Event
 
   ;get global structure
@@ -585,10 +649,31 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
     
   IF (roi_file[0] NE '') THEN BEGIN
   
-    reduce_step2_norm_roi = (*global).reduce_step2_norm_roi
-    reduce_step2_norm_roi[iRow] = roi_file[0]
-    (*global).reduce_step2_norm_roi = reduce_step2_norm_roi
-    
+    nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+    CASE (data_spin_state) OF
+      'Off_Off': BEGIN
+        column = 1
+      END
+      'Off_On': BEGIN
+        column = 2
+      END
+      'On_Off': BEGIN
+        column = 3
+      END
+      'On_On': BEGIN
+        column = 4
+      END
+    ENDCASE
+  
+   ;get Norm file selected
+;   norm_run_number = (*global).nexus_norm_list_run_number
+     norm_table = (*global).reduce_step2_big_table_norm_index
+     norm_run_number = (*global).nexus_norm_list_run_number
+     print, 'normalization file selected: ' + STRCOMPRESS(norm_run_number[norm_table[row]])
+
+    nexus_spin_state_roi_table[column,norm_table[row]] = roi_file
+    (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
+
     IF (new_path NE path) THEN BEGIN
       (*global).ROI_path = new_path
       LogText = '-> New ROI browsing_path is: ' + new_path
