@@ -664,22 +664,24 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
         column = 4
       END
     ENDCASE
-  
-   ;get Norm file selected
-;   norm_run_number = (*global).nexus_norm_list_run_number
-     norm_table = (*global).reduce_step2_big_table_norm_index
-     norm_run_number = (*global).nexus_norm_list_run_number
-     print, 'normalization file selected: ' + STRCOMPRESS(norm_run_number[norm_table[row]])
-
+    
+    ;get Norm file selected
+    norm_table = (*global).reduce_step2_big_table_norm_index
+    norm_run_number = (*global).nexus_norm_list_run_number
+    ;    PRINT, 'normalization file selected: ' + STRCOMPRESS(norm_run_number[norm_table[row]])
+    
     nexus_spin_state_roi_table[column,norm_table[row]] = roi_file
     (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
-
+    
     IF (new_path NE path) THEN BEGIN
       (*global).ROI_path = new_path
       LogText = '-> New ROI browsing_path is: ' + new_path
     ENDIF
     
     refresh_reduce_step2_big_table, Event
+    
+    ;this update the name of the roi files
+    refresh_roi_file_name, Event
     
   ENDIF ELSE BEGIN
     LogText = '-> User canceled Browsing for a ROI file.'
@@ -959,8 +961,6 @@ PRO refresh_reduce_step2_data_spin_state_table, Event
   
     refresh_reduce_step2_data_spin_state_hidden_base, Event
     
-    
-    
   ENDIF
   
 END
@@ -1015,5 +1015,62 @@ PRO display_reduce_step2_hidden_base, Event, base_name=base_name
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, mode, 0,0,/true
+  
+END
+
+;------------------------------------------------------------------------------
+;Refresh name of all the roi files
+PRO refresh_roi_file_name, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+  norm_table = (*global).reduce_step2_big_table_norm_index
+  
+  index=0
+  WHILE (index LT 11) DO BEGIN
+  
+    sIndex = STRCOMPRESS(index,/REMOVE_ALL)
+    data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=data_base_uname)
+    IF (WIDGET_INFO(id,/MAP)) THEN BEGIN ;row is displayed
+    
+      ;off_off
+      base_name = 'off_off'
+      column = 1
+      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+      IF (roi_file EQ '') THEN roi_file = 'N/A'
+      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      putTextFieldValue, Event, roi_label_uname, roi_file
+      
+      ;off_on
+      base_name = 'off_on'
+      column = 2
+      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+      IF (roi_file EQ '') THEN roi_file = 'N/A'
+      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      putTextFieldValue, Event, roi_label_uname, roi_file
+      
+      ;on_off
+      base_name = 'on_off'
+      column = 3
+      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+      IF (roi_file EQ '') THEN roi_file = 'N/A'
+      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      putTextFieldValue, Event, roi_label_uname, roi_file
+      
+      ;on_on
+      base_name = 'on_on'
+      column = 4
+      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+      IF (roi_file EQ '') THEN roi_file = 'N/A'
+      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+      putTextFieldValue, Event, roi_label_uname, roi_file
+      
+    ENDIF
+    
+    index++
+  ENDWHILE
   
 END
