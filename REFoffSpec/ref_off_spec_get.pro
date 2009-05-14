@@ -363,6 +363,22 @@ FUNCTION getReduceStep2SpinStateRow, Event, Row=row, $
   
 END
 
+;..............................................................................
+FUNCTION getReduceStep2SpinStateColumn, Event, row=row,$
+    data_spin_state=data_spin_state
+    
+  sColumn = getReduceStep2SpinStateRow(Event, Row=row, $
+    data_spin_state=data_spin_state)
+  sColumn = STRLOWCASE(sColumn)  
+    
+  CASE (sColumn) OF
+    'off_off': RETURN, 1
+    'off_on': RETURN, 2
+    'on_off': RETURN, 3
+    'on_on': RETURN, 4
+  ENDCASE
+END
+
 ;------------------------------------------------------------------------------
 FUNCTION getReduceStep2NormFullName, Event, row=row
 

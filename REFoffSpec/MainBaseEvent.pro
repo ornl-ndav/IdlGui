@@ -759,13 +759,14 @@ PRO MAIN_BASE_event, Event
   ;SAVE ROI
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi'): BEGIN
     reduce_step2_save_roi, Event, quit_flag='off'
+    refresh_roi_file_name, Event
   END
   
   ;SAVE ROI and QUIT
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi_quit'): BEGIN
     ;this update the name of the roi files
     reduce_step2_save_roi, Event, quit_flag='on'
-    refresh_roi_file_name, Event    
+    refresh_roi_file_name, Event
   END
   
   ;return to reduce step2 table
