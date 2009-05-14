@@ -64,6 +64,7 @@ cd, CurrentFolder
 .run ref_off_spec_reduce_step2_save_roi_base.pro
 .run ref_off_spec_reduce_step2_load_roi.pro
 .run ref_off_spec_reduce_step3.pro
+.run ref_off_spec_reduce_step3_command_line.pro
 .run ref_off_spec_browse_ascii.pro
 .run ref_off_spec_read_ascii.pro
 .run ref_off_spec_plot.pro
