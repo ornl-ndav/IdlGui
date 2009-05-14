@@ -112,7 +112,7 @@ PRO reduce_step2_data_tab, Event
       ELSE:
     ENDCASE
     (*global).PrevReduceStep2TabSelect = CurrTabSelect
-            refresh_roi_file_name, Event
+    refresh_roi_file_name, Event
   ENDIF
   
 END
