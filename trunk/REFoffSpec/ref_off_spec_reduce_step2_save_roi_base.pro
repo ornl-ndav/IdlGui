@@ -75,7 +75,8 @@ PRO save_roi_base_event, event
         getTextfieldValue(Event,'reduce_step2_roi_file_name_text')
       WIDGET_CONTROL, global_roi.ourGroup,/DESTROY
       event = global_roi.event
-      reduce_step2_save_roi_step2, Event
+      quit_flag = global_roi.quit_flag
+      reduce_step2_save_roi_step2, Event, quit_flag=quit_flag
     END
     
     ELSE:
@@ -85,8 +86,10 @@ PRO save_roi_base_event, event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_roi_base, Event, path=path, FILE_NAME=file_name
-
+PRO save_roi_base, Event, path=path, $
+    FILE_NAME=file_name, $
+    quit_flag=quit_flag
+    
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -164,6 +167,7 @@ PRO save_roi_base, Event, path=path, FILE_NAME=file_name
   
   global_roi = { global: global,$
     event: event,$
+    quit_flag: quit_flag,$
     ourGroup: roi_base }
     
   WIDGET_CONTROL, roi_base, SET_UVALUE=global_roi
