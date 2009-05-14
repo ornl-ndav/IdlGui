@@ -51,6 +51,7 @@ PRO refresh_reduce_step3_table, Event
   ;  PRINT, short_data_run_number
   ;  PRINT
   ;
+  
   IF (short_data_run_number[0] EQ '') THEN BEGIN
     run_job_status = 0
     update_reduce_step3_jobs_button, Event, run_job_status
@@ -66,89 +67,79 @@ PRO refresh_reduce_step3_table, Event
   ;  PRINT, short_data_nexus_file_name
   ;  PRINT
   
-  ;retrieve working polarization state
-  data_working_spin_state = $ ;'Off_Off'
-    getDataWorkingSpinState((*global).reduce_tab1_working_pola_state)
-  ;  HELP, data_working_spin_state
-  ;  PRINT, data_working_spin_state
-  ;  PRINT
-    
-  ;retrieve list of other polarization states
-  list_of_other_pola_state = getListOfDataSpinStates(Event)
-  ;  HELP, list_of_other_pola_state
-  ;  PRINT, list_of_other_pola_state
-  ;  PRINT
-  
-  ;push working pola state into list_of_other_pola_state
-  full_list_of_pola_state = push_array(ARRAY=list_of_other_pola_state,$
-    NEW_ELEMENT=data_working_spin_state)
-    
-  ;get full number of polarization states
-  nbr_pola_state = getNbrWorkingPolaState(full_list_of_pola_state)
-  ;  PRINT, 'nbr_pola_state: ' + STRCOMPRESS(nbr_pola_state)
-  ;  PRINT
-  
-  ;loop over all the working pola state to populate big table
-  pola_index = 0
+  ;ex: [1,1,0,0] -> Off_Off and Off_On only
+  data_spin_states = getListOfDataSpinStates(Event)
+  ;list_data_spin = ['Off_Off','Off_On',...]
+  list_data_spin = (*global).list_of_data_spin
   
   short_norm_file_list = (*(*global).reduce_tab2_nexus_file_list)
   norm_run_number = (*global).nexus_norm_list_run_number
   short_norm_run_number = RemoveEmptyElement(norm_run_number[0,*])
   
   table_index = 0
-  WHILE (pola_index LT nbr_pola_state) DO BEGIN
+  ;loop over all the working pola state to populate big table
+  FOR pola_index=0,3 DO BEGIN
   
-    data_index = 0
-    WHILE (data_index LT nbr_data) DO BEGIN
+    ;we want this data spin state
+    IF (data_spin_states[pola_index] EQ 1) THEN BEGIN
     
-      data_run     = short_data_run_number[data_index]
-      data_nexus   = short_data_nexus_file_name[data_index]
-      d_spin_state = full_list_of_pola_state[pola_index]
-      d_spin_state = STRCOMPRESS(d_spin_state,/REMOVE_ALL)
+      data_index = 0
+      WHILE (data_index LT nbr_data) DO BEGIN
       
-      IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
-        norm_run     = 'N/A'
-        norm_nexus   = 'N/A'
-        n_spin_state = 'N/A'
-        roi_file     = 'N/A'
-        run_job_status = 0
-      ENDIF ELSE BEGIN
-        norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
-        norm_nexus   = getNormNexusOfIndex(Event, $
-          data_index,$
-          short_norm_file_list)
-        n_spin_state = getReduceStep2SpinStateRow(Event, Row=data_index)
-        roi_file     = getNormRoiFileOfIndex(Event, data_index)
-        IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+        data_run     = short_data_run_number[data_index]
+        data_nexus   = short_data_nexus_file_name[data_index]
+        d_spin_state = list_data_spin[pola_index]
+        
+        IF ((SIZE(short_norm_file_list))(0) EQ 0) THEN BEGIN
+          norm_run     = 'N/A'
+          norm_nexus   = 'N/A'
+          n_spin_state = 'N/A'
+          roi_file     = 'N/A'
           run_job_status = 0
-        ENDIF
-      ENDELSE
+        ENDIF ELSE BEGIN
+          norm_run     = getReduceStep2NormOfRow(Event, row=data_index)
+          norm_nexus   = getNormNexusOfIndex(Event, $
+            data_index,$
+            short_norm_file_list)
+          n_spin_state = getReduceStep2SpinStateRow(Event, $
+            Row = data_index,$
+            data_spin_state = d_spin_state)
+            
+          roi_file     = getNormRoiFileOfIndex(Event, row=data_index,$
+            base_name=d_spin_state)
+          IF (STRCOMPRESS(roi_file,/REMOVE_ALL) EQ '') THEN BEGIN
+            roi_file = 'N/A'
+            run_job_status = 0
+          ENDIF
+          
+          IF (roi_file EQ 'N/A') THEN BEGIN
+            run_job_status = 0
+          ENDIF
+          
+        ENDELSE
+        
+        ;populate Recap. Big table
+        step3_big_table[table_index,0] = data_run
+        step3_big_table[table_index,1] = data_nexus
+        step3_big_table[table_index,2] = d_spin_state
+        step3_big_table[table_index,3] = norm_run
+        step3_big_table[table_index,4] = norm_nexus
+        step3_big_table[table_index,5] = n_spin_state
+        step3_big_table[table_index,6] = roi_file
+        
+        ;define the output file name
+        output_file_name = 'REF_M_' + data_run
+        output_file_name += '_' + d_spin_state + '.txt'
+        step3_big_table[table_index,7] = output_file_name
+        
+        data_index++
+        table_index++
+        
+      ENDWHILE
       
-      IF (roi_file EQ 'N/A') THEN BEGIN
-        run_job_status = 0
-      ENDIF
-      
-      ;populate Recap. Big table
-      step3_big_table[table_index,0] = data_run
-      step3_big_table[table_index,1] = data_nexus
-      step3_big_table[table_index,2] = d_spin_state
-      step3_big_table[table_index,3] = norm_run
-      step3_big_table[table_index,4] = norm_nexus
-      step3_big_table[table_index,5] = n_spin_state
-      step3_big_table[table_index,6] = roi_file
-      
-      ;define the output file name
-      output_file_name = 'REF_M_' + data_run
-      output_file_name += '_' + d_spin_state + '.txt'
-      step3_big_table[table_index,7] = output_file_name
-      
-      data_index++
-      table_index++
-      
-    ENDWHILE
+    ENDIF
     
-    pola_index++
-  ENDWHILE
+  ENDFOR
   
   ;update big table
   putValueInTable, Event,$

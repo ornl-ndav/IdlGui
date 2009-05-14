@@ -369,8 +369,8 @@ FUNCTION getReduceStep2SpinStateColumn, Event, row=row,$
     
   sColumn = getReduceStep2SpinStateRow(Event, Row=row, $
     data_spin_state=data_spin_state)
-  sColumn = STRLOWCASE(sColumn)  
-    
+  sColumn = STRLOWCASE(sColumn)
+  
   CASE (sColumn) OF
     'off_off': RETURN, 1
     'off_on': RETURN, 2
@@ -414,31 +414,14 @@ FUNCTION getDefaultReduceStep2RoiFileName, event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDataWorkingSpinState, full_pola_state
-  array = STRSPLIT(full_pola_state,'/entry-',/extract,/REGEX)
-  array2 = STRSPLIT(array[0],'/',/extract,/REGEX)
-  RETURN, array2[0]
-END
-
-;------------------------------------------------------------------------------
 FUNCTION getListOfDataSpinStates, Event
-  final_spin_state_array = STRARR(1)
-  spin_states_uname = ['reduce_tab1_pola_1',$
-    'reduce_tab1_pola_2',$
-    'reduce_tab1_pola_3',$
-    'reduce_tab1_pola_4']
-  FOR i=0,3 DO BEGIN
-    ;is state enabled
-    IF (isButtonSensitive(Event,spin_states_uname[i])) THEN BEGIN
-      IF (isButtonSelected(Event,spin_states_uname[i])) THEN BEGIN
-        ;add spin state to array
-        full_spin_state = getButtonValue(Event,spin_states_uname[i])
-        spin_state = getDataWorkingSpinState(full_spin_state)
-        addElementToArray, ARRAY=final_spin_state_array, NEW=spin_state
-      ENDIF
-    ENDIF
+  button_value=INTARR(4)
+  FOR i=1,4 DO BEGIN
+    uname = 'reduce_tab1_pola_' + STRCOMPRESS(i,/REMOVE_ALL)
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    button_value[i-1] = WIDGET_INFO(id, /BUTTON_SET)
   ENDFOR
-  RETURN, final_spin_state_array
+  RETURN, button_value
 END
 
 ;------------------------------------------------------------------------------
@@ -466,9 +449,19 @@ FUNCTION getNormNexusOfIndex, Event, index, short_norm_file_list
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getNormRoiFileOfIndex, Event, index
-  sIndex = STRCOMPRESS(index,/REMOVE_ALL)
-  uname = 'reduce_tab2_roi_value' + sIndex
-  roi_file_name = getTextFieldValue(Event,uname)
-  RETURN, roi_file_name
+FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
+  norm_table = (*global).reduce_step2_big_table_norm_index
+  
+  sIndex = STRCOMPRESS(row_data,/REMOVE_ALL)
+  data_base_uname = 'reduce_tab2_data_recap_base_#' + sIndex
+  column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+    data_spin_state=base_name)
+  roi_file = nexus_spin_state_roi_table[column,norm_table[row_data]]
+  RETURN, roi_file
+
 END

@@ -124,6 +124,11 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tmp_reduce_step2_row: 0L,$
     tmp_reduce_step2_data_spin_state: '',$
     
+    list_of_data_spin: ['Off_Off',$
+    'Off_On',$
+    'On_Off',$
+    'On_On'],$
+  
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
