@@ -693,8 +693,7 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
     
     ;get Norm file selected
     norm_table = (*global).reduce_step2_big_table_norm_index
-    norm_run_number = (*global).nexus_norm_list_run_number
-    ;    PRINT, 'normalization file selected: ' + STRCOMPRESS(norm_run_number[norm_table[row]])
+;    norm_run_number = (*global).nexus_norm_list_run_number
     
     nexus_spin_state_roi_table[column,norm_table[row]] = roi_file
     (*(*global).nexus_spin_state_roi_table) = nexus_spin_state_roi_table
@@ -743,9 +742,16 @@ END
 
 ;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
-PRO reduce_step2_create_roi, Event, row=row
+PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  (*global).tmp_reduce_step2_row = row
+  (*global).tmp_reduce_step2_data_spin_state = data_spin_state
+  
+  sRow = STRCOMPRESS(row,/REMOVE_ALL)
+  l_data_spin_state = STRLOWCASE(data_spin_state)
   
   WIDGET_CONTROL, /HOURGLASS
   
@@ -758,23 +764,24 @@ PRO reduce_step2_create_roi, Event, row=row
   ERASE
   
   ;get data run number
-  uname = 'reduce_tab2_data_value' + STRCOMPRESS(row,/REMOVE_ALL)
+  uname = 'reduce_tab2_data_value' + sRow
   data_run_number = getTextFieldValue(Event,uname)
   putTextFieldValue, Event, 'reduce_step2_create_roi_data_value', $
     data_run_number
-    
+
   ;get normalization run number
   norm_run_number = getReduceStep2NormOfRow(Event, row=row)
   putTextFieldValue, Event, 'reduce_step2_create_roi_norm_value', $
     norm_run_number
     
   ;get normalization spin state
-  spin_state = getReduceStep2SpinStateRow(Event, Row=row)
+  spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
+  data_spin_state=data_spin_state)
   putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
     spin_state
     
   ;get ROI file name
-  uname = 'reduce_tab2_roi_value' + STRCOMPRESS(row,/REMOVE_ALL)
+  uname = 'reduce_tab2_roi_value_' + l_data_spin_state + sRow
   roi_file_name = getTextFieldValue(Event,uname)
   
   uname = 'reduce_step2_create_roi_file_name_label'

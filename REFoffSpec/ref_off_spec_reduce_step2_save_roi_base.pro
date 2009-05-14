@@ -106,7 +106,7 @@ PRO save_roi_base, Event, path=path, FILE_NAME=file_name
     VALUE = 'PATH')
     
   ;path button ................. first row ........................
-  path = WIDGET_BUTTON(roi_base,$
+  path_button = WIDGET_BUTTON(roi_base,$
     VALUE = path,$
     UNAME = 'reduce_step2_roi_path_button')
     

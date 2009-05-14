@@ -121,6 +121,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step1_spin_do_not_match_user_defined_enable: $
     'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
     
+    tmp_reduce_step2_row: 0L,$
+    tmp_reduce_step2_data_spin_state: '',$
+    
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
