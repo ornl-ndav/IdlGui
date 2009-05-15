@@ -109,6 +109,15 @@ PRO  reduce_step3_run_jobs, Event
     index++
   ENDWHILE
   
+  message = ['Your ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs have ' + $
+    'submited','','Click CHECK JOB MANAGER to check the status of your jobs!']
+  title = 'Jobs Submission Message'
+  id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  result = DIALOG_MESSAGE(message,$
+    /INFORMATION,$
+    TITLE = title,$
+    DIALOG_PARENT = id)
+    
 END
 
 ;------------------------------------------------------------------------------
