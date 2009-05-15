@@ -115,7 +115,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$
-    /ROW)
+    /ROW)q
     
   space = WIDGET_LABEL(row2_base,$
     value = '                  ')
@@ -131,10 +131,20 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /KEYBOARD_EVENT)
     
   ;lin/log cwbgroup
-  ;group = CW_BGROUP(  
+  value = ['Lin ','Log ']
+  group = CW_BGROUP(row2_base,$
+    value,$
+    COLUMN=1,$
+    SET_VALUE = 0,$
+    LABEL_TOP='Z-axis type',$
+    /NO_RELEASE,$
+    FRAME = 0,$
+    SPACE = 5,$
+    UNAME = 'reduce_step2_create_roi_lin_log',$
+    /EXCLUSIVE)
     
-  ;third row ---------------------------
-  row3_row = WIDGET_BASE(big_base,$
+    ;third row ---------------------------
+    row3_row = WIDGET_BASE(big_base,$
     /ROW)
     
   space = WIDGET_LABEL(row3_row,$
@@ -206,10 +216,10 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;save and quit base
   save_quit_roi = WIDGET_BUTTON(row3_base,$
-  VALUE = 'SAVE ROI and RETURN TO TABLE',$
-  tooltip = 'Click to Save the ROI and Return to the table',$
-  uname = 'reduce_step2_create_roi_save_roi_quit',$
-  SENSITIVE = 0)  
+    VALUE = 'SAVE ROI and RETURN TO TABLE',$
+    tooltip = 'Click to Save the ROI and Return to the table',$
+    uname = 'reduce_step2_create_roi_save_roi_quit',$
+    SENSITIVE = 0)
     
   RetourButton = WIDGET_BUTTON(ModifyBase,$
     XOFFSET = sBase.size[2] - 140,$
