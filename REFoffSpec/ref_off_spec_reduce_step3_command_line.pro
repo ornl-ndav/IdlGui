@@ -57,9 +57,13 @@ PRO  reduce_step3_run_jobs, Event
   ;get driver structure
   reduce_structure = (*global).reduce_structure
   
+  nbr_jobs = 0
   FOR row=0,(nbr_row-1) DO BEGIN
   
     IF (big_table[0,row] EQ '') THEN BREAK ;stop if there is no more data file
+    
+    ;add 1 to the list of jobs
+    nbr_jobs++
     
     ;driver
     cmd += ' ' + reduce_structure.driver
@@ -92,11 +96,27 @@ PRO  reduce_step3_run_jobs, Event
     
   ENDFOR
   
+  text: '> About to submit ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs:'
+  IDLsendLogBook_addLogBookText, Event, text
+  
   index = 0
   WHILE (cl_table[index] NE '') DO BEGIN
-    print, cl_table[index]
+    text = '-> Job # ' + STRCOMPRESS(index,/REMOVE_ALL) + ':'
+    IDLsendLogBook_addLogBookText, Event, text
+    text = '--> ' + cl_table[index]
+    IDLsendLogBook_addLogBookText, Event, text
     SPAWN, cl_table[index]
     index++
   ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+;this procdure will pop up a box that will ask for the spin state to plot
+PRO reduce_step3_plot_jobs, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   
 END
