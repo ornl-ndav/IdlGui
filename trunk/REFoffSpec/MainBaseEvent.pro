@@ -1005,6 +1005,12 @@ PRO MAIN_BASE_event, Event
     reduce_step3_run_jobs, Event
   END
   
+  ;Runs jobs and plot
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_run_jobs_and_plot'): BEGIN
+    reduce_step3_run_jobs, Event
+    reduce_step3_plot_jobs, Event
+  END
+ 
   ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
     reduce_step3_job_mamager, Event
