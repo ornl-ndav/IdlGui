@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 0)
+    MAP       = 1)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -129,6 +129,9 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     /button_events,$
     RETAIN = 2,$
     /KEYBOARD_EVENT)
+    
+  ;lin/log cwbgroup
+  ;group = CW_BGROUP(  
     
   ;third row ---------------------------
   row3_row = WIDGET_BASE(big_base,$

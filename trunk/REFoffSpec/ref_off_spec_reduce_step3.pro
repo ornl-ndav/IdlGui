@@ -191,6 +191,7 @@ END
 ;------------------------------------------------------------------------------
 PRO update_reduce_step3_jobs_button, Event, run_job_status
   activate_widget, Event, 'reduce_tab3_run_jobs', run_job_status
+  activate_widget, Event, 'reduce_tab3_run_jobs_and_plot', run_job_status
 END
 
 ;------------------------------------------------------------------------------
