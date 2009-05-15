@@ -41,12 +41,19 @@ PRO plot_reduce_step2_norm, Event
   DEVICE, DECOMPOSED=0
   loadct,5, /SILENT
   
-  rtData = (*(*global).norm_rtData)
-  
   ;select plot
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_step2_create_roi_draw_uname')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
+  
+  ;check if user wants lin or log
+  uname = 'reduce_step2_create_roi_lin_log'
+  lin_log_status = getCWBgroupValue(Event, uname) ;0:lin, 1:log
+  IF (lin_log_status EQ 0) THEN BEGIN ;linear
+    rtData = (*(*global).norm_rtData)
+  ENDIF ELSE BEGIN
+    rtData = (*(*global).norm_rtData_log)
+  ENDELSE
   
   ;plot main plot
   TVSCL, rtData, /DEVICE
