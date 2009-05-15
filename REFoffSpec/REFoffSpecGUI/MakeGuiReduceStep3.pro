@@ -53,7 +53,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
-    
+  
   column_base = WIDGET_BASE(Base,$
     /COLUMN,$
     /BASE_ALIGN_LEFT)
