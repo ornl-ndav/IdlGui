@@ -69,7 +69,7 @@ PRO  reduce_step3_run_jobs, Event
     cmd += ' ' + data
     
     ;data path
-    data_path = '/entry-' + big_table[2,row] + '/'
+    data_path = '/entry-' + big_table[2,row] + '/bank1,1'
     cmd += ' ' + reduce_structure.data_paths + '=' + data_path
     
     ;norm full nexus name
@@ -77,7 +77,7 @@ PRO  reduce_step3_run_jobs, Event
     cmd += ' ' + reduce_structure.norm + '=' + norm
     
     ;norm path
-    norm_path = '/entry-' + big_table[5,row] + '/'
+    norm_path = '/entry-' + big_table[5,row] + '/bank1,1'
     cmd += ' ' + reduce_structure.norm_paths + '=' + norm_path
     
     ;norm roi file
