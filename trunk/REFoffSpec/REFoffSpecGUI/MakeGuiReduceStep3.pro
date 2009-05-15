@@ -108,8 +108,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     
   ;space
   space = WIDGET_LABEL(row,$
-    VALUE = '                                                   ' + $
-    '           ')
+    VALUE = '                                 ')
 
   jobs = WIDGET_BUTTON(row,$
     VALUE = 'RUN JOBS',$
@@ -117,6 +116,13 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     SENSITIVE = 0,$
     UNAME = 'reduce_tab3_run_jobs',$
     FRAME = 5)
+
+  jobs_plot = WIDGET_BUTTON(row,$
+  VALUE = 'RUN JOBS and PLOT',$
+  SCR_XSIZE = 200,$
+  SENSITIVE = 0,$
+  uname = 'reduce_tab3_run_jobs_and_plot',$
+  FRAME = 5)
     
   status = WIDGET_BUTTON(row,$
     VALUE = 'CHECK JOB MANAGER',$
