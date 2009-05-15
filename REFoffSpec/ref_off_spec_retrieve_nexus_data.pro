@@ -78,9 +78,8 @@ FUNCTION retrieve_Data, Event, $
     rtData = BYTSCL(rtData,/NAN)
     (*(*global).norm_rtData_log) = rtData
     
+    RETURN, 1
   ENDELSE
-  
-  RETURN, 1
-ENDELSE
+
 END
 
