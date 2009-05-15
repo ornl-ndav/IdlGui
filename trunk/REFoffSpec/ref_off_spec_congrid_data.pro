@@ -58,6 +58,9 @@ determine_delta_x, sz, pData_x, delta_x
 ;get min delta_x and index
 min_delta_x = MIN(delta_x)
 min_index   = WHERE(delta_x EQ min_delta_x)
+
+min_index = min_index[0]
+
 ;work on all the data that have delta_x GT than the delta_x found
 index = 0
 congrid_coeff_array = FLTARR(sz)
