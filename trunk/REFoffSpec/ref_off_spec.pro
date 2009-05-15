@@ -145,6 +145,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     norm_data: PTR_NEW(0L),$
     norm_tData: PTR_NEW(0L),$
     norm_rtData: PTR_NEW(0L),$
+    norm_rtData_log: PTR_NEW(0L),$
     norm_roi_y_selected: 'left',$
     mouse_left_pressed: 0,$
     mouse_right_pressed: 0,$

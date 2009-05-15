@@ -56,7 +56,7 @@ FUNCTION retrieve_Data, Event, $
     
     tData = TOTAL(data,2)
     (*(*global).norm_tData) = tData
-
+    
     x = (size(tData))(1)
     y = (size(tData))(2)
     
@@ -65,7 +65,22 @@ FUNCTION retrieve_Data, Event, $
     rtData = REBIN(tData, x, 2*y)
     (*(*global).norm_rtData) = rtData
     
-    RETURN, 1
-  ENDELSE
+    ;save the log version of it as well
+    ;(*(*global).norm_rtData_log)
+    
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(rtData EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      rtData = !VALUES.D_NAN
+    ENDIF
+    rtData = ALOG10(rtData)
+    rtData = BYTSCL(rtData,/NAN)
+    (*(*global).norm_rtData_log) = rtData
+    
+  ENDIF
+  
+  RETURN, 1
+ENDELSE
 END
 
