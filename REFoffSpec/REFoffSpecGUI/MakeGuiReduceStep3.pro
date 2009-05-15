@@ -108,7 +108,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     
   ;space
   space = WIDGET_LABEL(row,$
-    VALUE = '                                 ')
+    VALUE = '                           ')
 
   jobs = WIDGET_BUTTON(row,$
     VALUE = 'RUN JOBS',$

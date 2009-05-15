@@ -96,7 +96,7 @@ PRO  reduce_step3_run_jobs, Event
     
   ENDFOR
   
-  text: '> About to submit ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs:'
+  text = '> About to submit ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs:'
   IDLsendLogBook_addLogBookText, Event, text
   
   index = 0
