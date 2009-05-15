@@ -1,5 +1,5 @@
 ;+
-; :Author: scu
+; :Author: scu (campbellsi@ornl.gov)
 ;-
 
 PRO ReductionCmd::Cleanup
@@ -69,8 +69,27 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
   IF N_ELEMENTS(data) NE 0 THEN self.data = data
   IF N_ELEMENTS(output) NE 0 THEN self.output = output
-  IF N_ELEMENTS(instrument) NE 0 THEN self.instrument = instrument
-  IF N_ELEMENTS(facility) NE 0 THEN self.facility = facility
+  IF N_ELEMENTS(instrument) NE 0 THEN BEGIN
+    self.instrument = STRUPCASE(instrument)
+    case (STRUPCASE(instrument)) of
+      "ARCS": begin
+        self.facility = "SNS"
+      end
+      "CNCS": begin
+        self.facility = "SNS"
+      end
+      "SEQ": begin
+        self.facility = "SNS"
+      end
+      "MARI": begin
+        self.facility = "ISIS"
+      end
+      else: begin
+      end
+    endcase
+
+  ENDIF
+  IF N_ELEMENTS(facility) NE 0 THEN self.facility = STRUPCASE(facility)
   IF N_ELEMENTS(proposal) NE 0 THEN self.proposal = proposal
   IF N_ELEMENTS(spe) NE 0 THEN self.spe = spe
   IF N_ELEMENTS(configfile) NE 0 THEN self.configfile = configfile
