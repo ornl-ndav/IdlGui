@@ -70,12 +70,13 @@ FUNCTION retrieve_Data, Event, $
     
     ;remove 0 values and replace with NAN
     ;and calculate log
-    index = WHERE(rtData EQ 0, nbr)
+    index = WHERE(tData EQ 0, nbr)
     IF (nbr GT 0) THEN BEGIN
-      rtData = !VALUES.D_NAN
+      tData = !VALUES.D_NAN
     ENDIF
-    rtData = ALOG10(rtData)
-    rtData = BYTSCL(rtData,/NAN)
+    tData = ALOG10(tData)
+    tData = BYTSCL(tData,/NAN)
+    rtData = REBIN(tData, x, 2*y)
     (*(*global).norm_rtData_log) = rtData
     
     RETURN, 1
