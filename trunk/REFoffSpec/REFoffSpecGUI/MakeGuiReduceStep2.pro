@@ -115,7 +115,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     
   ;second row --------------------------
   row2_base = WIDGET_BASE(big_base,$
-    /ROW)q
+    /ROW)
     
   space = WIDGET_LABEL(row2_base,$
     value = '                  ')
