@@ -81,7 +81,13 @@ PRO ReductionCmd::SetProperty, $
       "SEQ": begin
         self.facility = "SNS"
       end
+      "MAPS": begin
+        self.facility = "ISIS"
+      end
       "MARI": begin
+        self.facility = "ISIS"
+      end
+      "MERLIN": begin
         self.facility = "ISIS"
       end
       else: begin
