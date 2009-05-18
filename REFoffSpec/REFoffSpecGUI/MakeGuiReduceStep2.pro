@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sbase.size[3],$
     UNAME     = 'reduce_step2_create_roi_base',$
-    MAP       = 1)
+    MAP       = 0)
     
   big_base = WIDGET_BASE(ModifyBase,$
     /COLUMN)
@@ -135,7 +135,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   group = CW_BGROUP(row2_base,$
     value,$
     COLUMN=1,$
-    SET_VALUE = 0,$
+    SET_VALUE = 1,$
     LABEL_TOP='Z-axis type',$
     /NO_RELEASE,$
     FRAME = 0,$

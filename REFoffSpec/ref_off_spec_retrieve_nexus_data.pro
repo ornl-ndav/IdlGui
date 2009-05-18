@@ -40,7 +40,7 @@ FUNCTION retrieve_Data, Event, $
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   not_hdf5_format = 0
-  CATCH, not_hdf5_format
+  ;CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
     CATCH,/CANCEL
     ;display message about invalid file format
@@ -72,7 +72,7 @@ FUNCTION retrieve_Data, Event, $
     ;and calculate log
     index = WHERE(tData EQ 0, nbr)
     IF (nbr GT 0) THEN BEGIN
-      tData = !VALUES.D_NAN
+      tData[index] = !VALUES.D_NAN
     ENDIF
     tData = ALOG10(tData)
     tData = BYTSCL(tData,/NAN)

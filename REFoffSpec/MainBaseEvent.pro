@@ -961,6 +961,16 @@ PRO MAIN_BASE_event, Event
     check_reduce_step2_save_roi_validity, Event
   END
   
+  ;lin/log cw_bgroup
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_step2_create_roi_lin_log'): BEGIN
+    plot_reduce_step2_norm, Event
+    tmp = (*global).norm_roi_y_selected ;save old y_selected value
+    (*global).norm_roi_y_selected = 'all'
+    reduce_step2_manual_move, Event
+    (*global).norm_roi_y_selected = tmp ;put back old y_selected value
+  END
+  
   ;browse/load ROI
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_step2_create_roi_browse_roi_button'): BEGIN
@@ -1010,7 +1020,7 @@ PRO MAIN_BASE_event, Event
     reduce_step3_run_jobs, Event
     reduce_step3_plot_jobs, Event
   END
- 
+  
   ;check job manager
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
     reduce_step3_job_mamager, Event
