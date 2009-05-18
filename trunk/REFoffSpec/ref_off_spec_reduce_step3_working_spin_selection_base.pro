@@ -51,7 +51,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO working_spin_state, Event
-    
+
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -60,11 +60,58 @@ PRO working_spin_state, Event
   spin_base = WIDGET_BASE(GROUP_LEADER=id,$
     /MODAL,$
     /COLUMN,$
-    SCR_XSIZE = 400,$
+    /BASE_ALIGN_CENTER,$
+    SCR_XSIZE = 310,$
     frame = 5,$
-    title = 'Select Spin State you want to use to Scale/Shift data.')
+    title = 'Select Working Spin State (shift/scale)')
     
   ;*****************************************
+    
+  xsize = 300
+  ysize = 100
+  
+  ;off_off
+  off_off = WIDGET_DRAW(spin_base,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'reduce_step3_spin_state_off_off_draw')
+    
+  ;off_on
+  off_on = WIDGET_DRAW(spin_base,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'reduce_step3_spin_state_off_on_draw')
+    
+  ;on_off
+  on_off = WIDGET_DRAW(spin_base,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'reduce_step3_spin_state_on_off_draw')
+    
+  ;on_on
+  on_on = WIDGET_DRAW(spin_base,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'reduce_step3_spin_state_on_on_draw')
+    
+  ;last row
+  last_row = WIDGET_BASE(spin_base,$
+    /ROW)
+    
+  xsize_button = 150
+  
+  cancel = WIDGET_BUTTON(last_row,$
+    VALUE = ' CANCEL ',$
+    SCR_XSIZE = xsize_button,$
+    FRAME = 0,$
+    uname = 'reduce_step3_spin_state_cancel')
+    
+  ok = WIDGET_BUTTON(last_row,$
+    VALUE = ' OK ',$
+    SCR_XSIZE = xsize_button,$
+    FRAME = 0,$
+    uname = 'reduce_step3_spin_state_ok')
+    
     
   WIDGET_CONTROL, spin_base, /realize
   
@@ -74,6 +121,6 @@ PRO working_spin_state, Event
     
   WIDGET_CONTROL, spin_base, SET_UVALUE=global_spin
   XMANAGER, "spin_base", spin_base, GROUP_LEADER = id
-    
+  
 END
 
