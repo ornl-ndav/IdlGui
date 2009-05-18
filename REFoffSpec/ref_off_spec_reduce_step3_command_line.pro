@@ -44,10 +44,10 @@ PRO  reduce_step3_run_jobs, Event
   
   SPAWN, 'hostname', listening
   CASE (listening[0]) OF
-    'lrac' : cmd_srun = 'srun --batch -p lracq '
-    'mrac' : cmd_srun = 'srun --batch -p mracq '
+    'lrac' : cmd_srun = 'sbatch -p lracq '
+    'mrac' : cmd_srun = 'sbatch -p mracq '
     ELSE: BEGIN
-      cmd_srun = 'srun --batch -p heaterq '
+      cmd_srun = 'sbatch -p heaterq '
     END
   ENDCASE
   
