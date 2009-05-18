@@ -385,4 +385,3 @@ PRO working_spin_state, Event
   XMANAGER, "spin_base", spin_base, GROUP_LEADER = id
   
 END
-
