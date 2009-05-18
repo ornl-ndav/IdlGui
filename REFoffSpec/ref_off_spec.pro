@@ -135,6 +135,35 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'On_Off',$
     'On_On'],$
     
+    ;step3
+     reduce_step3_spin_off_off_unavailable: $
+    'REFoffSpec_images/off_off_disable.png',$
+    reduce_step3_spin_off_off_disable: $
+    'REFoffSpec_images/off_off_unselected.png',$
+    reduce_step3_spin_off_off_enable: $
+    'REFoffSpec_images/off_off_selected.png',$
+    
+    reduce_step3_spin_off_on_unavailable: $
+    'REFoffSpec_images/off_on_disable.png',$
+    reduce_step3_spin_off_on_disable: $
+    'REFoffSpec_images/off_on_unselected.png',$
+    reduce_step3_spin_off_on_enable: $
+    'REFoffSpec_images/off_on_selected.png',$
+
+    reduce_step3_spin_on_off_unavailable: $
+    'REFoffSpec_images/on_off_disable.png',$
+    reduce_step3_spin_on_off_disable: $
+    'REFoffSpec_images/on_off_unselected.png',$
+    reduce_step3_spin_on_off_enable: $
+    'REFoffSpec_images/on_off_selected.png',$
+
+    reduce_step3_spin_on_on_unavailable: $
+    'REFoffSpec_images/on_on_disable.png',$
+    reduce_step3_spin_on_on_disable: $
+    'REFoffSpec_images/on_on_unselected.png',$
+    reduce_step3_spin_on_on_enable: $
+    'REFoffSpec_images/on_on_selected.png',$
+    
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
