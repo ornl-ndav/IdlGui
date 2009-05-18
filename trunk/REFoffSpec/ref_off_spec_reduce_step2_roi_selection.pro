@@ -181,12 +181,23 @@ PRO reduce_step2_manual_move, Event, key=key
     END
     
     'all':BEGIN
+      
+      ON_IOERROR, y1_error
+      
       Y1 = getTextFieldValue(Event,'reduce_step2_create_roi_y1_value')
       y1 = FIX(Y1)
+      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'      
+      
+      y1_error:
+      
+      ON_IOERROR, y2_error
+      
       Y2 = getTextFieldValue(Event,'reduce_step2_create_roi_y2_value')
       y2 = FIX(Y2)
-      plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y1_value'
       plot_reduce_step2_y, event, uname='reduce_step2_create_roi_y2_value'
+      
+      y2_error:
+      
     END
     ELSE:
   ENDCASE
