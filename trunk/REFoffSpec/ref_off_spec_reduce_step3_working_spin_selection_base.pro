@@ -141,9 +141,130 @@ PRO spin_base_event, event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_roi
   
   wWidget =  Event.top            ;widget id
+  main_event = global_roi.event
   
   CASE Event.id OF
   
+  ;off_off
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_spin_state_off_off_draw'): BEGIN
+      error = 0
+      ;CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ;  status_buttons = (*global).status_buttons
+        ;  IF (status_buttons[0] EQ 0 OR $
+        ;    status_buttons[0] EQ 1) THEN BEGIN
+        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+        ;    play_previous_tof, Event         ;_eventcb
+        ;  ENDIF ;end of status_buttons[0]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          data_spin_states = getListOfDataSpinStates(main_event)
+          IF (data_spin_states[0] EQ 0) THEN BEGIN
+            standard = 39
+          ENDIF ELSE BEGIN
+            standard = 58
+          ENDELSE
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
+  ;off_on
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_spin_state_off_on_draw'): BEGIN
+      
+      help, event,/structure
+      
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ;  status_buttons = (*global).status_buttons
+        ;  IF (status_buttons[0] EQ 0 OR $
+        ;    status_buttons[0] EQ 1) THEN BEGIN
+        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+        ;    play_previous_tof, Event         ;_eventcb
+        ;  ENDIF ;end of status_buttons[0]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          data_spin_states = getListOfDataSpinStates(main_event)
+          IF (data_spin_states[1] EQ 0) THEN BEGIN
+            standard = 39
+          ENDIF ELSE BEGIN
+            standard = 58
+          ENDELSE
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+
+  ;on_off
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_spin_state_on_off_draw'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ;  status_buttons = (*global).status_buttons
+        ;  IF (status_buttons[0] EQ 0 OR $
+        ;    status_buttons[0] EQ 1) THEN BEGIN
+        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+        ;    play_previous_tof, Event         ;_eventcb
+        ;  ENDIF ;end of status_buttons[0]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          data_spin_states = getListOfDataSpinStates(main_event)
+          IF (data_spin_states[2] EQ 0) THEN BEGIN
+            standard = 39
+          ENDIF ELSE BEGIN
+            standard = 58
+          ENDELSE
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+
+  ;on_on
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_spin_state_on_on_draw'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ;  status_buttons = (*global).status_buttons
+        ;  IF (status_buttons[0] EQ 0 OR $
+        ;    status_buttons[0] EQ 1) THEN BEGIN
+        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+        ;    play_previous_tof, Event         ;_eventcb
+        ;  ENDIF ;end of status_buttons[0]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          data_spin_states = getListOfDataSpinStates(main_event)
+          IF (data_spin_states[3] EQ 0) THEN BEGIN
+            standard = 39
+          ENDIF ELSE BEGIN
+            standard = 58
+          ENDELSE
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+
     ELSE:
     
   ENDCASE
@@ -175,24 +296,32 @@ PRO working_spin_state, Event
   off_off = WIDGET_DRAW(spin_base,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
     UNAME = 'reduce_step3_spin_state_off_off_draw')
     
   ;off_on
   off_on = WIDGET_DRAW(spin_base,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
     UNAME = 'reduce_step3_spin_state_off_on_draw')
     
   ;on_off
   on_off = WIDGET_DRAW(spin_base,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
     UNAME = 'reduce_step3_spin_state_on_off_draw')
     
   ;on_on
   on_on = WIDGET_DRAW(spin_base,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
     UNAME = 'reduce_step3_spin_state_on_on_draw')
     
   ;last row
