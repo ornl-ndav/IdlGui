@@ -32,6 +32,107 @@
 ;
 ;==============================================================================
 
+PRO display_reduce_step3_spin_states_match, $
+    spin_base=spin_base,$
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    png_enable = png_enable,$
+    png_disable = png_disable,$
+    png_unavailable = png_unavailable,$
+    uname
+    
+  ; 0: disable
+  ; 1: enable
+  case (activate) OF
+    -1: BEGIN ;disable
+      mode = READ_PNG(png_unavailable)
+    END
+    0: BEGIN ;nothing is activated
+      mode = READ_PNG(png_disable)
+    END
+    1: BEGIN ;activate previous button
+      mode = READ_PNG(png_enable)
+    END
+  ENDCASE
+  
+  IF (N_ELEMENTS(spin_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(spin_base, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
+
+;..............................................................................
+PRO display_step3_spin_states_button, local_event, Event=Event,$
+    spin_base=spin_base,$
+    button_selected= button_selected,$
+    global = global
+    
+  ;-1: disable
+  ;0: unselected
+  ;1: selected
+    
+  ;ex: [1,1,0,0] -> Off_Off and Off_On only
+  data_spin_states = getListOfDataSpinStates(Event)
+  
+  status = data_spin_states - 1 ;1->0 and 0-> -1
+  
+  CASE (button_selected) OF
+    'off_off': BEGIN
+      IF (status[0] NE -1) THEN status[0] = 1
+    END
+    'off_on': BEGIN
+      IF (status[1] NE -1) THEN status[1] = 1
+    END
+    'on_off': BEGIN
+      IF (status[2] NE -1) THEN status[2] = 1
+    END
+    'on_on': BEGIN
+      IF (status[3] NE -1) THEN status[3] = 1
+    END
+    ELSE:
+  ENDCASE
+  
+  uname_list = ['reduce_step3_spin_state_off_off_draw',$
+    'reduce_step3_spin_state_off_on_draw',$
+    'reduce_step3_spin_state_on_off_draw',$
+    'reduce_step3_spin_state_on_on_draw']
+    
+  png_list = [(*global).reduce_step3_spin_off_off_disable,$
+    (*global).reduce_step3_spin_off_off_enable,$
+    (*global).reduce_step3_spin_off_off_unavailable,$
+    (*global).reduce_step3_spin_off_on_disable,$
+    (*global).reduce_step3_spin_off_on_enable,$
+    (*global).reduce_step3_spin_off_on_unavailable,$
+    (*global).reduce_step3_spin_on_off_disable,$
+    (*global).reduce_step3_spin_on_off_enable,$
+    (*global).reduce_step3_spin_on_off_unavailable,$
+    (*global).reduce_step3_spin_on_on_disable,$
+    (*global).reduce_step3_spin_on_on_enable,$
+    (*global).reduce_step3_spin_on_on_unavailable]
+    
+  FOR i=0,3 do BEGIN
+  
+    display_reduce_step3_spin_states_match, $
+      spin_base=spin_base,$
+      EVENT=EVENT,$
+      ACTIVATE=status[i],$
+      png_enable = png_list[3*i+1],$
+      png_disable = png_list[3*i],$
+      png_unavailable = png_list[3*i+2],$
+      uname_list[i]
+      
+  ENDFOR
+  
+END
+
+;==============================================================================
 PRO spin_base_event, event
 
   COMPILE_OPT hidden
@@ -118,6 +219,12 @@ PRO working_spin_state, Event
   global_spin = { global: global,$
     event: event,$
     ourGroup: spin_base }
+    
+  ;display buttons and select button 1 as default selection
+  display_step3_spin_states_button, Event=Event, $
+    spin_base=spin_base,$
+    button_selected='off_off',$
+    global = global
     
   WIDGET_CONTROL, spin_base, SET_UVALUE=global_spin
   XMANAGER, "spin_base", spin_base, GROUP_LEADER = id
