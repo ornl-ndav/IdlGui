@@ -76,7 +76,8 @@ PRO  reduce_tab_event, Event
         ENDIF
       END
       2: BEGIN ;step3: recapitulation tab
-        refresh_reduce_step3_table, Event
+        working_spin_state, Event
+        ;refresh_reduce_step3_table, Event
       END
       ELSE:
     ENDCASE

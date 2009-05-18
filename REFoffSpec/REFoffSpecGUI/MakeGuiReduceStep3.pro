@@ -59,7 +59,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     /BASE_ALIGN_LEFT)
     
   space = WIDGET_LABEL(column_base,$
-    VALUE = 'Table will refresh itself each time this Step is reached.' + $ 
+    VALUE = 'Table will refresh itself each time this Step 3 is reached.' + $ 
     ' You are free to edit this table but be aware that ' + $
     'your changes will be lost if you move out of this tab before '  + $
     'launching the jobs.')

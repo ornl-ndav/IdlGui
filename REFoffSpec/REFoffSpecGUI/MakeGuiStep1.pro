@@ -53,9 +53,9 @@ sTab = { size: [XYoff[0],$
          sensitive: 1 }
 
 ;Tab titles
-ReduceTabTitles = { step1: ' Step1:  DATA  ',$
-                    step2: ' Step2:  NORMALIZATION  ',$
-                    step3: ' Step3:  RECAPITULATION  '}
+ReduceTabTitles = { step1: ' Step 1:  DATA  ',$
+                    step2: ' Step 2:  NORMALIZATION  ',$
+                    step3: ' Step 3:  RECAPITULATION  '}
 
 ;******************************************************************************
 ;            BUILD GUI
