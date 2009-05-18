@@ -34,7 +34,8 @@
 
 PRO display_reduce_step3_spin_states_match, $
     spin_base=spin_base,$
-    EVENT=EVENT,$
+    main_event = main_event,$
+    local_event = local_event,$
     ACTIVATE=activate,$
     png_enable = png_enable,$
     png_disable = png_disable,$
@@ -58,7 +59,7 @@ PRO display_reduce_step3_spin_states_match, $
   IF (N_ELEMENTS(spin_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(spin_base, FIND_BY_UNAME=uname)
   ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    mode_id = WIDGET_INFO(local_event.top, FIND_BY_UNAME=uname)
   ENDELSE
   
   ;mode
@@ -69,7 +70,9 @@ PRO display_reduce_step3_spin_states_match, $
 END
 
 ;..............................................................................
-PRO display_step3_spin_states_button, local_event, Event=Event,$
+PRO display_step3_spin_states_button, $
+    local_event = local_event, $
+    main_event= main_event,$
     spin_base=spin_base,$
     button_selected= button_selected,$
     global = global
@@ -79,7 +82,7 @@ PRO display_step3_spin_states_button, local_event, Event=Event,$
   ;1: selected
     
   ;ex: [1,1,0,0] -> Off_Off and Off_On only
-  data_spin_states = getListOfDataSpinStates(Event)
+  data_spin_states = getListOfDataSpinStates(main_event)
   
   status = data_spin_states - 1 ;1->0 and 0-> -1
   
@@ -121,7 +124,8 @@ PRO display_step3_spin_states_button, local_event, Event=Event,$
   
     display_reduce_step3_spin_states_match, $
       spin_base=spin_base,$
-      EVENT=EVENT,$
+      main_event=main_event,$
+      local_event = local_event,$
       ACTIVATE=status[i],$
       png_enable = png_list[3*i+1],$
       png_disable = png_list[3*i],$
@@ -145,25 +149,27 @@ PRO spin_base_event, event
   
   CASE Event.id OF
   
-  ;off_off
+    ;off_off
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_spin_state_off_off_draw'): BEGIN
+      data_spin_states = getListOfDataSpinStates(main_event)
+      spin_state = data_spin_states[0]
       error = 0
-      ;CATCH, error
+      CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-        ;  status_buttons = (*global).status_buttons
-        ;  IF (status_buttons[0] EQ 0 OR $
-        ;    status_buttons[0] EQ 1) THEN BEGIN
-        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
-        ;    play_previous_tof, Event         ;_eventcb
-        ;  ENDIF ;end of status_buttons[0]
+          IF (spin_state NE 0) THEN BEGIN
+            display_step3_spin_states_button, local_event=event,$
+              main_event = global_roi.event,$
+              button_selected= 'off_off',$
+              global = global_roi.global
+          ENDIF
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
           data_spin_states = getListOfDataSpinStates(main_event)
-          IF (data_spin_states[0] EQ 0) THEN BEGIN
+          IF (spin_state EQ 0) THEN BEGIN
             standard = 39
           ENDIF ELSE BEGIN
             standard = 58
@@ -175,27 +181,25 @@ PRO spin_base_event, event
       ENDELSE
     END
     
-  ;off_on
+    ;off_on
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_spin_state_off_on_draw'): BEGIN
-      
-      help, event,/structure
-      
+      data_spin_states = getListOfDataSpinStates(main_event)
+      spin_state = data_spin_states[1]
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-        ;  status_buttons = (*global).status_buttons
-        ;  IF (status_buttons[0] EQ 0 OR $
-        ;    status_buttons[0] EQ 1) THEN BEGIN
-        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
-        ;    play_previous_tof, Event         ;_eventcb
-        ;  ENDIF ;end of status_buttons[0]
+          IF (spin_state NE 0) THEN BEGIN
+            display_step3_spin_states_button, local_event=event,$
+              main_event = global_roi.event,$
+              button_selected= 'off_on',$
+              global = global_roi.global
+          ENDIF
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          data_spin_states = getListOfDataSpinStates(main_event)
-          IF (data_spin_states[1] EQ 0) THEN BEGIN
+          IF (spin_state EQ 0) THEN BEGIN
             standard = 39
           ENDIF ELSE BEGIN
             standard = 58
@@ -206,25 +210,32 @@ PRO spin_base_event, event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
     END
-
-  ;on_off
+    
+    ;on_off
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_spin_state_on_off_draw'): BEGIN
+      data_spin_states = getListOfDataSpinStates(main_event)
+      spin_state = data_spin_states[2]
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-        ;  status_buttons = (*global).status_buttons
-        ;  IF (status_buttons[0] EQ 0 OR $
-        ;    status_buttons[0] EQ 1) THEN BEGIN
-        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
-        ;    play_previous_tof, Event         ;_eventcb
-        ;  ENDIF ;end of status_buttons[0]
+          IF (spin_state NE 0) THEN BEGIN
+            display_step3_spin_states_button, local_event=event,$
+              main_event = global_roi.event,$
+              button_selected= 'on_off',$
+              global = global_roi.global
+          ;  status_buttons = (*global).status_buttons
+          ;  IF (status_buttons[0] EQ 0 OR $
+          ;    status_buttons[0] EQ 1) THEN BEGIN
+          ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+          ;    play_previous_tof, Event         ;_eventcb
+          ;  ENDIF ;end of status_buttons[0]
+          ENDIF
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          data_spin_states = getListOfDataSpinStates(main_event)
-          IF (data_spin_states[2] EQ 0) THEN BEGIN
+          IF (spin_state EQ 0) THEN BEGIN
             standard = 39
           ENDIF ELSE BEGIN
             standard = 58
@@ -235,25 +246,32 @@ PRO spin_base_event, event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
     END
-
-  ;on_on
+    
+    ;on_on
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_spin_state_on_on_draw'): BEGIN
+      data_spin_states = getListOfDataSpinStates(main_event)
+      spin_state = data_spin_states[3]
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
-        ;  status_buttons = (*global).status_buttons
-        ;  IF (status_buttons[0] EQ 0 OR $
-        ;    status_buttons[0] EQ 1) THEN BEGIN
-        ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
-        ;    play_previous_tof, Event         ;_eventcb
-        ;  ENDIF ;end of status_buttons[0]
+          IF (spin_state NE 0) THEN BEGIN
+            display_step3_spin_states_button, local_event=event,$
+              main_event = global_roi.event,$
+              button_selected= 'on_on',$
+              global = global_roi.global
+          ;  status_buttons = (*global).status_buttons
+          ;  IF (status_buttons[0] EQ 0 OR $
+          ;    status_buttons[0] EQ 1) THEN BEGIN
+          ;    display_buttons, EVENT=EVENT, ACTIVATE=1, global
+          ;    play_previous_tof, Event         ;_eventcb
+          ;  ENDIF ;end of status_buttons[0]
+          ENDIF
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          data_spin_states = getListOfDataSpinStates(main_event)
-          IF (data_spin_states[3] EQ 0) THEN BEGIN
+          IF (spin_state EQ 0) THEN BEGIN
             standard = 39
           ENDIF ELSE BEGIN
             standard = 58
@@ -264,7 +282,7 @@ PRO spin_base_event, event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
     END
-
+    
     ELSE:
     
   ENDCASE
@@ -350,7 +368,8 @@ PRO working_spin_state, Event
     ourGroup: spin_base }
     
   ;display buttons and select button 1 as default selection
-  display_step3_spin_states_button, Event=Event, $
+  display_step3_spin_states_button, main_event=Event, $
+    local_event=local_event,$
     spin_base=spin_base,$
     button_selected='off_off',$
     global = global
