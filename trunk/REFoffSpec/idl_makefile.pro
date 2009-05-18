@@ -66,6 +66,7 @@ cd, CurrentFolder
 .run ref_off_spec_reduce_step3.pro
 .run ref_off_spec_reduce_step3_command_line.pro
 .run ref_off_spec_reduce_step3_working_spin_selection_base.pro
+.run ref_off_spec_reduce_step3_checking_working_spin_state_base.pro
 .run ref_off_spec_browse_ascii.pro
 .run ref_off_spec_read_ascii.pro
 .run ref_off_spec_plot.pro
