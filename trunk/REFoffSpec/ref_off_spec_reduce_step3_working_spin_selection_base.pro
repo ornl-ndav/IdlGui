@@ -142,10 +142,10 @@ PRO spin_base_event, event
   COMPILE_OPT hidden
   
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_roi
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_spin
   
   wWidget =  Event.top            ;widget id
-  main_event = global_roi.event
+  main_event = global_spin.event
   
   CASE Event.id OF
   
@@ -161,9 +161,9 @@ PRO spin_base_event, event
         IF (event.press EQ 1) THEN BEGIN
           IF (spin_state NE 0) THEN BEGIN
             display_step3_spin_states_button, local_event=event,$
-              main_event = global_roi.event,$
+              main_event = global_spin.event,$
               button_selected= 'off_off',$
-              global = global_roi.global
+              global = global_spin.global
           ENDIF
         ENDIF
       ENDIF ELSE BEGIN
@@ -192,9 +192,9 @@ PRO spin_base_event, event
         IF (event.press EQ 1) THEN BEGIN
           IF (spin_state NE 0) THEN BEGIN
             display_step3_spin_states_button, local_event=event,$
-              main_event = global_roi.event,$
+              main_event = global_spin.event,$
               button_selected= 'off_on',$
-              global = global_roi.global
+              global = global_spin.global
           ENDIF
         ENDIF
       ENDIF ELSE BEGIN
@@ -222,9 +222,9 @@ PRO spin_base_event, event
         IF (event.press EQ 1) THEN BEGIN
           IF (spin_state NE 0) THEN BEGIN
             display_step3_spin_states_button, local_event=event,$
-              main_event = global_roi.event,$
+              main_event = global_spin.event,$
               button_selected= 'on_off',$
-              global = global_roi.global
+              global = global_spin.global
           ;  status_buttons = (*global).status_buttons
           ;  IF (status_buttons[0] EQ 0 OR $
           ;    status_buttons[0] EQ 1) THEN BEGIN
@@ -258,9 +258,9 @@ PRO spin_base_event, event
         IF (event.press EQ 1) THEN BEGIN
           IF (spin_state NE 0) THEN BEGIN
             display_step3_spin_states_button, local_event=event,$
-              main_event = global_roi.event,$
+              main_event = global_spin.event,$
               button_selected= 'on_on',$
-              global = global_roi.global
+              global = global_spin.global
           ;  status_buttons = (*global).status_buttons
           ;  IF (status_buttons[0] EQ 0 OR $
           ;    status_buttons[0] EQ 1) THEN BEGIN
@@ -282,6 +282,13 @@ PRO spin_base_event, event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
     END
+    
+    ;CANCEL button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_step3_spin_state_cancel'): BEGIN
+      WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
+    END
+    
     
     ELSE:
     
