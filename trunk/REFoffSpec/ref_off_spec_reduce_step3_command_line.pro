@@ -44,10 +44,10 @@ PRO  reduce_step3_run_jobs, Event
   
   SPAWN, 'hostname', listening
   CASE (listening[0]) OF
-    'lrac' : cmd = 'srun --batch -p lracq '
-    'mrac' : cmd = 'srun --batch -p mracq '
+    'lrac' : cmd_srun = 'srun --batch -p lracq '
+    'mrac' : cmd_srun = 'srun --batch -p mracq '
     ELSE: BEGIN
-      cmd = 'srun --batch -p heaterq '
+      cmd_srun = 'srun --batch -p heaterq '
     END
   ENDCASE
   
@@ -60,13 +60,15 @@ PRO  reduce_step3_run_jobs, Event
   nbr_jobs = 0
   FOR row=0,(nbr_row-1) DO BEGIN
   
+    cmd = ''
+  
     IF (big_table[0,row] EQ '') THEN BREAK ;stop if there is no more data file
     
     ;add 1 to the list of jobs
     nbr_jobs++
     
     ;driver
-    cmd += ' ' + reduce_structure.driver
+    cmd = cmd_srun + reduce_structure.driver
     
     ;data full nexus name
     data = big_table[1,row]
