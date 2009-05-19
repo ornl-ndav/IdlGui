@@ -32,6 +32,24 @@
 ;
 ;==============================================================================
 
+FUNCTIOn getStep3ListOfFiles, table
+
+  list_of_files = table[0,*]
+  sz = N_ELEMENTS(list_of_files)
+  a = WHERE(list_of_files NE '', nbr)
+  final_list_of_files = STRARR(nbr)
+  
+  index = 0
+  WHILE (index LT nbr) DO BEGIN
+    file_name = list_of_files[index]
+    final_list_of_files[index] = file_name
+    index++
+  ENDWHILE
+  
+  RETURN, final_list_of_files
+END
+
+;==============================================================================
 PRO checking_spin_base_event, event
 
   COMPILE_OPT hidden
@@ -57,6 +75,19 @@ PRO checking_spin_base_event, event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_working_spin_state_refresh'): BEGIN
       refresh_checking_spin_table, Event
+    END
+    
+    ;Load Files in 2/ button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale'): BEGIN
+      table = getTableValue(Event,'reduce_step3_working_spin_state_files')
+      list_of_files = getStep3ListOfFiles(table)
+      global = global_spin.global
+      (*(*global).list_of_files_to_load_in_step2) = list_of_files
+      WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
+      id_tab = WIDGET_INFO(main_event.top, FIND_BY_UNAME='main_tab')
+      WIDGET_CONTROL, id_tab, SET_TAB_CURRENT = 1
+      load_step2_files_from_reduce_step3, main_event, list_of_files
     END
     
     ;cancel button
@@ -217,9 +248,9 @@ PRO refresh_checking_spin_table, Event
     FIND_BY_UNAME='reduce_step3_working_spin_state_files')
   WIDGET_CONTROL, id, SET_VALUE=table
   
-;validate or not go button
+  ;validate or not go button
   id = WIDGET_INFO(Event.top,$
-  FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
+    FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
   WIDGET_CONTROL, id, SENSITIVE = button_status
   
 END
