@@ -39,8 +39,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;******************************************************************************
   ;******************************************************************************
-  APPLICATION       = 'CLoop'
-  VERSION           = '1.0.0'
+  APPLICATION       = 'CLoopES'
+  VERSION           = '1.1.0'
   DEBUGGING         = 'no' ;yes/no
   TESTING           = 'no'
   CHECKING_PACKAGES = 'yes'
@@ -89,7 +89,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
    
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Command Line Looper Elastic State (CLoopES)'
+  MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
   MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
