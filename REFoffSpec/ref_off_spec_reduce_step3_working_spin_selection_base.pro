@@ -288,8 +288,7 @@ PRO spin_base_event, event
       FIND_BY_UNAME = 'reduce_step3_spin_state_cancel'): BEGIN
       WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
     END
-    
-    
+        
     ELSE:
     
   ENDCASE
