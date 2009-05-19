@@ -168,6 +168,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     job_manager_splash_draw: $
     'REFoffSpec_images/job_manager_is_coming.png',$
     list_of_files_to_load_in_step2: PTR_NEW(0L),$
+    go_shift_scale: $
+    'REFoffSpec_images/go_shift_scale.png',$
     
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$

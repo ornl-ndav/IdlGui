@@ -74,20 +74,39 @@ PRO checking_spin_base_event, event
     ;refresh table button
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_working_spin_state_refresh'): BEGIN
-      refresh_checking_spin_table, Event
+      global = global_spin.global
+      refresh_checking_spin_table, Event, global
+    END
+    
+    ;move on to next step widget_draw
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          table = getTableValue(Event,'reduce_step3_working_spin_state_files')
+          list_of_files = getStep3ListOfFiles(table)
+          global = global_spin.global
+          (*(*global).list_of_files_to_load_in_step2) = list_of_files
+          WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
+          id_tab = WIDGET_INFO(main_event.top, FIND_BY_UNAME='main_tab')
+          WIDGET_CONTROL, id_tab, SET_TAB_CURRENT = 1
+          load_step2_files_from_reduce_step3, main_event, list_of_files
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
     END
     
     ;Load Files in 2/ button
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale'): BEGIN
-      table = getTableValue(Event,'reduce_step3_working_spin_state_files')
-      list_of_files = getStep3ListOfFiles(table)
-      global = global_spin.global
-      (*(*global).list_of_files_to_load_in_step2) = list_of_files
-      WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
-      id_tab = WIDGET_INFO(main_event.top, FIND_BY_UNAME='main_tab')
-      WIDGET_CONTROL, id_tab, SET_TAB_CURRENT = 1
-      load_step2_files_from_reduce_step3, main_event, list_of_files
     END
     
     ;cancel button
@@ -137,36 +156,38 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     SCR_XSIZE = 535,$
     uname = 'reduce_tab3_check_jobs')
     
-  ;3rd row with Refresh and ok buttons
-  row3 = WIDGET_BASE(checking_spin_base,$
-    /ROW)
-    
-  refresh = WIDGET_BUTTON(row3,$
+  refresh = WIDGET_BUTTON(checking_spin_base,$
     VALUE = 'R  E  F  R  E  S  H      S  T  A  T  U  S',$
     SCR_YSIZE = 35,$
-    SCR_XSIZE = 400,$
+    SCR_XSIZE = 535,$
     uname = 'reduce_step3_working_spin_state_refresh')
     
-  ok = WIDGET_BUTTON(row3,$
-    VALUE = 'Load Files in 2/',$
-    UNAME = 'reduce_step3_working_spin_state_go_shift_scale',$
-    SCR_XSIZE = 130,$
-    SCR_YSIZE = 35,$
-    SENSITIVE = 0)
-    
-  ;space
-  space = WIDGET_LABEL(checking_spin_base,$
-    VALUE = ' ')
-    
   ;4th row (cancel button)
-  row4 = WIDGET_BASE(checking_spin_base,$,$
-    /ALIGN_LEFT,$
-    /ROW)
+  row4 = WIDGET_BASE(checking_spin_base,$
+    /ROW,$
+    frame=0)
     
   cancel = WIDGET_BUTTON(row4,$
     VALUE = 'CANCEL',$
     SCR_XSIZE = 100,$
     UNAME = 'reduce_step3_working_spin_state_cancel_button')
+    
+  ;space
+  space = WIDGET_LABEL(row4,$
+    VALUE = '  ')
+    
+  base2 = WIDGET_BASE(row4,$
+    MAP = 0,$
+    UNAME = 'reduce_step2_working_spin_state_go_shift_base')
+    
+  ;3rd row
+  ok = WIDGET_DRAW(base2,$
+    UNAME = 'reduce_step3_working_spin_state_go_shift_scale',$
+    SCR_XSIZE = 405,$
+    SCR_YSIZE = 55,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
+    SENSITIVE = 1)
     
   WIDGET_CONTROL, checking_spin_base, /realize
   
@@ -213,7 +234,7 @@ PRO populate_checking_spin_state_table, Event, table_uname, $
 END
 
 ;------------------------------------------------------------------------------
-PRO refresh_checking_spin_table, Event
+PRO refresh_checking_spin_table, Event, global
 
   COMPILE_OPT hidden
   
@@ -248,9 +269,15 @@ PRO refresh_checking_spin_table, Event
     FIND_BY_UNAME='reduce_step3_working_spin_state_files')
   WIDGET_CONTROL, id, SET_VALUE=table
   
+  ;map base first
+  MapBase, Event, 'reduce_step2_working_spin_state_go_shift_base', 1
+  
   ;validate or not go button
-  id = WIDGET_INFO(Event.top,$
+  mode_id = WIDGET_INFO(Event.top,$
     FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
-  WIDGET_CONTROL, id, SENSITIVE = button_status
+  mode = READ_PNG((*global).go_shift_scale)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
   
 END

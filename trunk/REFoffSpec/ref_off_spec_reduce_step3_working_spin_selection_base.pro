@@ -381,8 +381,7 @@ PRO working_spin_state, Event
     SCR_XSIZE = xsize_button,$
     FRAME = 0,$
     uname = 'reduce_step3_spin_state_ok')
-    
-    
+      
   WIDGET_CONTROL, spin_base, /realize
   
   global_spin = { global: global,$
