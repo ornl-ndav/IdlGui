@@ -129,5 +129,7 @@ PRO reduce_step3_plot_jobs, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ;display the base that ask for the working spin state
+  working_spin_state, Event
   
 END
