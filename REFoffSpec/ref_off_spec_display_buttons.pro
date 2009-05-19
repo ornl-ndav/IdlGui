@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO   display_reduce_step2_polarization_mode1, $
+PRO  display_reduce_step2_polarization_mode1, $
     MAIN_BASE=MAIN_BASE, $
     EVENT=EVENT,$
     ACTIVATE=activate,$
