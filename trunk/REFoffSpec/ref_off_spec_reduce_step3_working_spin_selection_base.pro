@@ -389,11 +389,22 @@ PRO working_spin_state, Event
     event: event,$
     ourGroup: spin_base }
     
+  ;find out which state to select by default
+  data_spin_states = getListOfDataSpinStates(Event)
+  spin_states = ['off_off','off_on','on_off','on_on']
+  button_selected = 'off_off'
+  FOR i=0,3 DO BEGIN
+    IF (data_spin_states[i] EQ 1) THEN BEGIN
+      button_selected = spin_states[i]
+      BREAK
+    ENDIF
+  ENDFOR
+  
   ;display buttons and select button 1 as default selection
   display_step3_spin_states_button, main_event=Event, $
     local_event=local_event,$
     spin_base=spin_base,$
-    button_selected='off_off',$
+    button_selected=button_selected,$
     global = global
     
   WIDGET_CONTROL, spin_base, SET_UVALUE=global_spin
