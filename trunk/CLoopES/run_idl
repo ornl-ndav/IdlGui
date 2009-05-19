@@ -1,3 +1,4 @@
+spawn, 'cp cloopes.cfg .cloopes.cfg'
 @idl_makefile.pro
 cloopes
 

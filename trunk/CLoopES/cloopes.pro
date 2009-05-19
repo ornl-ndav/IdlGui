@@ -37,13 +37,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
+  file = OBJ_NEW('IDLxmlParser','.cloopes.cfg')
+  
   ;******************************************************************************
   ;******************************************************************************
-  APPLICATION       = 'CLoopES'
-  VERSION           = '1.1.0'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  CHECKING_PACKAGES = 'yes'
+  
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+  CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  
+  ;******************************************************************************
+  ;******************************************************************************
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
@@ -87,12 +93,12 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     version:      VERSION,$
     MainBaseSize: [30,25,800,545]})
     
-   
+    
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
-  MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+  MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
     SCR_XSIZE    = MainBaseSize[2],$
     SCR_YSIZE    = MainBaseSize[3],$
@@ -109,7 +115,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;confirmation base
   MakeGuiMainBase, MAIN_BASE, global
   
-  Widget_Control, /REALIZE, MAIN_BASE
+  WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   ;==============================================================================
