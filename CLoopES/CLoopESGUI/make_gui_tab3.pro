@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
+PRO make_gui_tab3, MAIN_TAB, MainTabSize, title
 
 ;Log Book Text
 XYoff = [10,10]
