@@ -83,14 +83,14 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     title = 'Files of working spin state ' + working_spin_state)
     
   ;big table
-  table = WIDGET_TABLE(checking_spin_base,$
+  table_uname = WIDGET_TABLE(checking_spin_base,$
     scr_xsize = 535,$
-    xsize = 3,$
+    xsize = 2,$
     ysize = 11,$
     /resizeable_columns,$
     scr_ysize = 262,$
-    column_labels = ['Use It ?','File Name','Status'],$
-    column_widths = [50,400,80],$
+    column_labels = ['File Name','Status'],$
+    column_widths = [450,80],$
     /no_row_headers,$
     uname = 'reduce_step3_working_spin_state_files')
     
@@ -105,7 +105,7 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     /ROW)
     
   refresh = WIDGET_BUTTON(row3,$
-    VALUE = 'R  E  F  R  E  S  H      T  A  B  L  E',$
+    VALUE = 'R  E  F  R  E  S  H      S  T  A  T  U  S',$
     SCR_YSIZE = 35,$
     SCR_XSIZE = 400,$
     uname = 'reduce_step3_working_spin_state_refresh')
@@ -137,9 +137,45 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     event: event,$
     ourGroup: checking_spin_base }
     
+  ;this will populate the table
+  populate_checking_spin_state_table, Event, $
+    table_uname, $
+    working_spin_state = working_spin_state
+    
   WIDGET_CONTROL, checking_spin_base, SET_UVALUE=global_spin
   XMANAGER, "checking_spin_base", checking_spin_base, GROUP_LEADER = id
   
 END
 
 ;==============================================================================
+PRO populate_checking_spin_state_table, Event, table_uname, $
+    working_spin_state = working_spin_state
+    
+    print, 'working_spin_state: ' + working_spin_state ;remove_me
+    
+  table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
+  d_spin_state = table[2,*]
+  list_of_output_files = table[7,*]
+  
+  sz = N_ELEMENTS(d_spin_state)
+  new_table = STRARR(2,sz)
+  index = 0
+  FOR i=0,(sz-1) DO BEGIN
+    spin_state = d_spin_state[i]
+    print, spin_state ;remove_me
+    IF (spin_state NE '') THEN BEGIN
+      IF (STRLOWCASE(spin_state) EQ working_spin_state) THEN BEGIN
+      print, 'here'
+        new_table[0,index] = list_of_output_files[i]
+        new_table[1,index++] = 'NOT READY'
+      ENDIF
+    ENDIF ELSE BEGIN
+      BREAK
+    ENDELSE
+  ENDFOR
+  
+  print, new_table
+  
+  WIDGET_CONTROL, table_uname, SET_VALUE=new_table
+  
+END

@@ -398,6 +398,7 @@ PRO working_spin_state, Event
     IF (data_spin_states[i] EQ 1) THEN BEGIN
       button_selected = spin_states[i]
       button_ok_validate = 1
+      (*global).step3_working_spin = button_selected
       BREAK
     ENDIF
   ENDFOR
