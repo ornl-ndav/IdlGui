@@ -393,12 +393,16 @@ PRO working_spin_state, Event
   data_spin_states = getListOfDataSpinStates(Event)
   spin_states = ['off_off','off_on','on_off','on_on']
   button_selected = 'off_off'
+  button_ok_validate = 0
   FOR i=0,3 DO BEGIN
     IF (data_spin_states[i] EQ 1) THEN BEGIN
       button_selected = spin_states[i]
+      button_ok_validate = 1
       BREAK
     ENDIF
   ENDFOR
+  
+  WIDGET_CONTROL, ok, SENSITIVE=button_ok_validate
   
   ;display buttons and select button 1 as default selection
   display_step3_spin_states_button, main_event=Event, $
