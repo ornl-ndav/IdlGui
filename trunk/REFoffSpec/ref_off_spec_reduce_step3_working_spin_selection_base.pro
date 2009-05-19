@@ -301,6 +301,7 @@ PRO spin_base_event, event
       global = global_spin.global
       Event =  global_spin.event
       working_spin_state = (*global).step3_working_spin
+      WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
       checking_spin_state, Event, working_spin_state = working_spin_state
     END
     
