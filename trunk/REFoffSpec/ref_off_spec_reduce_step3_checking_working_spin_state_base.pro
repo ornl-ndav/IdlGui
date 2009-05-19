@@ -42,7 +42,13 @@ PRO checking_spin_base_event, event
   main_event = global_spin.event
   
   CASE Event.id OF
-      
+  
+    ;cancel button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_step3_working_spin_state_cancel_button'): BEGIN
+      WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
+    END
+    
     ELSE:
     
   ENDCASE
@@ -65,9 +71,9 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     SCR_YSIZE = 400,$
     frame = 5,$
     title = 'Files of working spin state ' + working_spin_state)
-        
+    
   ;big table
-    table = WIDGET_TABLE(checking_spin_base,$
+  table = WIDGET_TABLE(checking_spin_base,$
     scr_xsize = 535,$
     xsize = 3,$
     ysize = 11,$
@@ -77,44 +83,44 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     column_widths = [50,400,80],$
     /no_row_headers,$
     uname = 'reduce_step3_working_spin_state_files')
-          
+    
   ;2rd row with checking job manager
   check = WIDGET_BUTTON(checking_spin_base,$
-  VALUE = 'CHECK JOB MANAGER',$
-  SCR_XSIZE = 535,$
-  uname = 'reduce_tab3_check_jobs')          
-          
+    VALUE = 'CHECK JOB MANAGER',$
+    SCR_XSIZE = 535,$
+    uname = 'reduce_tab3_check_jobs')
+    
   ;3rd row with Refresh and ok buttons
   row3 = WIDGET_BASE(checking_spin_base,$
-  /ROW)
-  
+    /ROW)
+    
   refresh = WIDGET_BUTTON(row3,$
-  VALUE = 'R  E  F  R  E  S  H      T  A  B  L  E',$
-  SCR_YSIZE = 35,$
-  SCR_XSIZE = 400,$
-  uname = 'reduce_step3_working_spin_state_refresh')          
-          
+    VALUE = 'R  E  F  R  E  S  H      T  A  B  L  E',$
+    SCR_YSIZE = 35,$
+    SCR_XSIZE = 400,$
+    uname = 'reduce_step3_working_spin_state_refresh')
+    
   ok = WIDGET_BUTTON(row3,$
-  VALUE = 'Load Files in 2/',$
-  UNAME = 'reduce_step3_working_spin_state_go_shift_scale',$
-  SCR_XSIZE = 130,$
-  SCR_YSIZE = 35,$
-  SENSITIVE = 0)          
-          
+    VALUE = 'Load Files in 2/',$
+    UNAME = 'reduce_step3_working_spin_state_go_shift_scale',$
+    SCR_XSIZE = 130,$
+    SCR_YSIZE = 35,$
+    SENSITIVE = 0)
+    
   ;space
   space = WIDGET_LABEL(checking_spin_base,$
-  VALUE = ' ')          
-          
+    VALUE = ' ')
+    
   ;4th row (cancel button)
   row4 = WIDGET_BASE(checking_spin_base,$,$
-  /ALIGN_LEFT,$
-  /ROW)
-  
+    /ALIGN_LEFT,$
+    /ROW)
+    
   cancel = WIDGET_BUTTON(row4,$
-  VALUE = 'CANCEL',$
-  SCR_XSIZE = 100,$
-  UNAME = 'reduce_step3_working_spin_state_cancel_button')          
-          
+    VALUE = 'CANCEL',$
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_step3_working_spin_state_cancel_button')
+    
   WIDGET_CONTROL, checking_spin_base, /realize
   
   global_spin = { global: global,$
