@@ -31,6 +31,36 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
+FUNCTION job_manager_info_base, event
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;our_group = widget_base(
+  job_base = WIDGET_BASE(GROUP_LEADER=id,$
+    /MODAL,$
+    /COLUMN,$
+    /BASE_ALIGN_CENTER,$
+    frame = 10,$
+    title = 'LOADING JOB MANAGER PAGE ...')
+    
+    space = WIDGET_LABEL(job_base,$
+    VALUE = ' ')
+    label = WIDGET_LABEL(job_base,$
+;    FONT = '9x15bold',$
+    value = 'This message may disapear before seeing the Job Manager Page!')
+    space = WIDGET_LABEL(job_base,$
+    VALUE = ' ')
+    
+    WIDGET_CONTROL, job_base, /realize
+    WIDGET_CONTROL, job_base, /SHOW
+    RETURN, job_base
+    
+END
+
+;==============================================================================
 PRO checking_spin_base_event, event
 
   COMPILE_OPT hidden
@@ -43,6 +73,15 @@ PRO checking_spin_base_event, event
   
   CASE Event.id OF
   
+    ;check job manager
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab3_check_jobs'): BEGIN
+      reduce_step3_job_mamager, main_event
+      ;show base that inform the user that the job manager is going to show up
+      job_base = job_manager_info_base(main_event)
+      WAIT, 4
+      WIDGET_CONTROL, job_base,/DESTROY
+    END
+    
     ;cancel button
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_step3_working_spin_state_cancel_button'): BEGIN
@@ -132,3 +171,4 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
   
 END
 
+;==============================================================================
