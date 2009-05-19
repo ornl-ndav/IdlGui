@@ -164,6 +164,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step3_spin_on_on_enable: $
     'REFoffSpec_images/on_on_selected.png',$
     
+    step3_working_spin: '',$
     job_manager_splash_draw: $
     'REFoffSpec_images/job_manager_is_coming.png',$
     

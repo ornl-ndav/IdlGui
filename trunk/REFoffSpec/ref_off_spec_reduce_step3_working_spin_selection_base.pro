@@ -146,6 +146,7 @@ PRO spin_base_event, event
   
   wWidget =  Event.top            ;widget id
   main_event = global_spin.event
+  main_global = global_spin.global
   
   CASE Event.id OF
   
@@ -154,6 +155,7 @@ PRO spin_base_event, event
       FIND_BY_UNAME='reduce_step3_spin_state_off_off_draw'): BEGIN
       data_spin_states = getListOfDataSpinStates(main_event)
       spin_state = data_spin_states[0]
+      
       error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN
@@ -164,6 +166,7 @@ PRO spin_base_event, event
               main_event = global_spin.event,$
               button_selected= 'off_off',$
               global = global_spin.global
+            (*main_global).step3_working_spin = 'Off_Off'
           ENDIF
         ENDIF
       ENDIF ELSE BEGIN
@@ -195,6 +198,7 @@ PRO spin_base_event, event
               main_event = global_spin.event,$
               button_selected= 'off_on',$
               global = global_spin.global
+            (*main_global).step3_working_spin = 'Off_On'
           ENDIF
         ENDIF
       ENDIF ELSE BEGIN
@@ -225,6 +229,7 @@ PRO spin_base_event, event
               main_event = global_spin.event,$
               button_selected= 'on_off',$
               global = global_spin.global
+            (*main_global).step3_working_spin = 'On_Off'
           ;  status_buttons = (*global).status_buttons
           ;  IF (status_buttons[0] EQ 0 OR $
           ;    status_buttons[0] EQ 1) THEN BEGIN
@@ -261,6 +266,7 @@ PRO spin_base_event, event
               main_event = global_spin.event,$
               button_selected= 'on_on',$
               global = global_spin.global
+            (*main_global).step3_working_spin = 'On_On'
           ;  status_buttons = (*global).status_buttons
           ;  IF (status_buttons[0] EQ 0 OR $
           ;    status_buttons[0] EQ 1) THEN BEGIN
@@ -288,7 +294,16 @@ PRO spin_base_event, event
       FIND_BY_UNAME = 'reduce_step3_spin_state_cancel'): BEGIN
       WIDGET_CONTROL, global_spin.ourGroup,/DESTROY
     END
-        
+    
+    ;ok button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME = 'reduce_step3_spin_state_ok'): BEGIN
+      global = global_spin.global
+      Event =  global_spin.event
+      working_spin_state = (*global).step3_working_spin
+      checking_spin_state, Event, working_spin_state = working_spin_state
+    END
+    
     ELSE:
     
   ENDCASE

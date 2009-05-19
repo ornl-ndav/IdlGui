@@ -76,7 +76,8 @@ PRO  reduce_tab_event, Event
         ENDIF
       END
       2: BEGIN ;step3: recapitulation tab
-        checking_spin_state, Event, working_spin_state = 'Off_Off' ;REMOVE_ME
+            reduce_step3_plot_jobs, Event
+        ;checking_spin_state, Event, working_spin_state = 'Off_Off' ;REMOVE_ME
         ;refresh_reduce_step3_table, Event
       END
       ELSE:
