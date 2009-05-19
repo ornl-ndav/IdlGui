@@ -48,8 +48,9 @@ sMainTabSize = {size : [XYoff[0], $
                 uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { tab1:     ' L O O P E R ',$
-              tab2:  ' L O G  B O O K '}
+TabTitles = { tab1:  '   1/   L O O P E R   ',$
+              tab2:  '   2/   E L A S T I C    S C A N   ',$
+              tab3:  '   L O G  B O O K   '}
 
 ;******************************************************************************
 ;            BUILD GUI
@@ -70,7 +71,10 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 ;step1
 make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles.tab1
 
-;Build LogBook
+;Elastic Scan
 make_gui_tab2, MAIN_TAB, sMainTabSize.size, TabTitles.tab2
+
+;Build LogBook
+make_gui_tab3, MAIN_TAB, sMainTabSize.size, TabTitles.tab3
 
 END
