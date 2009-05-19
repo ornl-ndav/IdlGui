@@ -46,18 +46,32 @@ FUNCTION job_manager_info_base, event
     frame = 10,$
     title = 'LOADING JOB MANAGER PAGE ...')
     
-    space = WIDGET_LABEL(job_base,$
-    VALUE = ' ')
-    label = WIDGET_LABEL(job_base,$
-;    FONT = '9x15bold',$
-    value = 'This message may disapear before seeing the Job Manager Page!')
-    space = WIDGET_LABEL(job_base,$
-    VALUE = ' ')
+  draw = WIDGET_DRAW(job_base,$
+    SCR_XSIZE = 400,$
+    SCR_YSIZE = 200,$
+    UNAME = 'job_manager_splash_draw')
     
-    WIDGET_CONTROL, job_base, /realize
-    WIDGET_CONTROL, job_base, /SHOW
-    RETURN, job_base
+  ;    space = WIDGET_LABEL(job_base,$
+  ;    VALUE = ' ')
+  ;    label = WIDGET_LABEL(job_base,$
+  ;;    FONT = '9x15bold',$
+  ;    value = 'This message may disapear before seeing the Job Manager Page!')
+  ;    space = WIDGET_LABEL(job_base,$
+  ;    VALUE = ' ')
     
+  WIDGET_CONTROL, job_base, /realize
+  WIDGET_CONTROL, job_base, /SHOW
+  
+  splash = READ_PNG((*global).job_manager_splash_draw)
+  mode_id = WIDGET_INFO(job_base, FIND_BY_UNAME='job_manager_splash_draw')
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, splash, 0,0,/true
+  
+  RETURN, job_base
+  
 END
 
 ;==============================================================================
