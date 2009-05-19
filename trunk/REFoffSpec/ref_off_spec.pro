@@ -164,6 +164,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step3_spin_on_on_enable: $
     'REFoffSpec_images/on_on_selected.png',$
     
+    job_manager_splash_draw: $
+    'REFoffSpec_images/job_manager_is_coming.png',$
+    
     PrevReduceTabSelect: 0,$
     reduce_tab2_nexus_file_list: PTR_NEW(0L),$
     nexus_norm_list_run_number: STRARR(1,11),$
