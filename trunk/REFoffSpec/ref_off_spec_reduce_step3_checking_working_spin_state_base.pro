@@ -53,6 +53,12 @@ PRO checking_spin_base_event, event
       WIDGET_CONTROL, job_base,/DESTROY
     END
     
+    ;refresh table button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='reduce_step3_working_spin_state_refresh'): BEGIN
+      refresh_checking_spin_table, Event
+    END
+    
     ;cancel button
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME = 'reduce_step3_working_spin_state_cancel_button'): BEGIN
@@ -135,6 +141,7 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
   
   global_spin = { global: global,$
     event: event,$
+    output_path: (*global).ascii_path,$
     ourGroup: checking_spin_base }
     
   ;this will populate the table
@@ -151,8 +158,6 @@ END
 PRO populate_checking_spin_state_table, Event, table_uname, $
     working_spin_state = working_spin_state
     
-    print, 'working_spin_state: ' + working_spin_state ;remove_me
-    
   table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   d_spin_state = table[2,*]
   list_of_output_files = table[7,*]
@@ -162,10 +167,8 @@ PRO populate_checking_spin_state_table, Event, table_uname, $
   index = 0
   FOR i=0,(sz-1) DO BEGIN
     spin_state = d_spin_state[i]
-    print, spin_state ;remove_me
     IF (spin_state NE '') THEN BEGIN
       IF (STRLOWCASE(spin_state) EQ working_spin_state) THEN BEGIN
-      print, 'here'
         new_table[0,index] = list_of_output_files[i]
         new_table[1,index++] = 'NOT READY'
       ENDIF
@@ -174,8 +177,49 @@ PRO populate_checking_spin_state_table, Event, table_uname, $
     ENDELSE
   ENDFOR
   
-  print, new_table
-  
   WIDGET_CONTROL, table_uname, SET_VALUE=new_table
+  
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_checking_spin_table, Event
+
+  COMPILE_OPT hidden
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_spin
+  
+  path = global_spin.output_path
+  
+  ;get table value
+  table = getTableValue(Event,'reduce_step3_working_spin_state_files')
+  
+  list_of_files = table[0,*]
+  sz = N_ELEMENTS(list_of_files)
+  button_status = 1
+  FOR i=0,(sz-1) DO BEGIN
+    file_name = list_of_files[i]
+    IF (file_name NE '') THEN BEGIN
+      full_file_name = path + file_name
+      IF (FILE_TEST(full_file_name)) THEN BEGIN
+        table[1,i] = 'READY'
+      ENDIF ELSE BEGIN
+        table[1,i] = 'NOT READY'
+        button_status = 0
+      ENDELSE
+    ENDIF ELSE BEGIN
+      BREAK
+    ENDELSE
+  ENDFOR
+  
+  ;repopulate table
+  id = WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='reduce_step3_working_spin_state_files')
+  WIDGET_CONTROL, id, SET_VALUE=table
+  
+;validate or not go button
+  id = WIDGET_INFO(Event.top,$
+  FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
+  WIDGET_CONTROL, id, SENSITIVE = button_status
   
 END
