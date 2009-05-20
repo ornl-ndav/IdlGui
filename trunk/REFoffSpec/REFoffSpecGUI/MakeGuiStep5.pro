@@ -51,7 +51,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     tab_size[2],$
     730],$
     uname: 'step5_rescale_base',$
-    map: 0}
+    map: 1}
     
   ;buttons zoom or selection
   XYoff = [0,0]
@@ -100,6 +100,17 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'step5_rescale_scale_to_1_reset',$
     sensitive: 0,$
     value: 'RESET SCALE'}
+    
+  ;lin/log plot
+   XYoff = [45,-2]
+   sLinLog1 = { size: [sResetScaleButton.size[0]+$
+   sResetScaleButton.size[2]+$
+   XYoff[0],$
+   sResetScaleButton.size[1]+$
+   XYoff[1]],$
+   value: ['Lin','Log'],$
+   uname: 'step5_rescale_lin_log_plot',$
+   default_value: 1}
     
   ;go back to recap plot button
   XYoff = [1110,5]
@@ -398,6 +409,16 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     VALUE = sResetScaleButton.value,$
     UNAME = sResetScaleButton.uname,$
     SENSITIVE = sResetScaleButton.sensitive)
+    
+    wGroup = CW_BGROUP(RescaleBase,$
+    sLinLog1.value,$
+    XOFFSET = sLinLog1.size[0],$
+    YOFFSET = sLinLog1.size[1],$
+    /EXCLUSIVE,$
+    /NO_RELEASE,$
+    SET_VALUE = sLinLog1.default_value,$
+    /ROW,$
+    UNAME = sLinLog1.uname)
     
   ;go back button ------------------------------------------------------------
   wButton = WIDGET_BUTTON(RescaleBase,$

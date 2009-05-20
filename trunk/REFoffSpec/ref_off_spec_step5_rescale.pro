@@ -58,7 +58,7 @@ PRO create_step5_selection_data, Event
   ymax = FIX(ymax/2)
   
   array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
-  y = (size(array_selected))(2)
+  y = (SIZE(array_selected))(2)
   array_selected_total = TOTAL(array_selected,2)/FLOAT(y)
   
   array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
@@ -78,7 +78,7 @@ PRO create_step5_selection_data, Event
   (*(*global).step5_selection_x_array) = x_axis
   (*(*global).step5_selection_y_array) = array_selected_total
   (*(*global).step5_selection_y_error_array) = array_error_selected_total
-
+  
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
   
@@ -136,7 +136,7 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
     ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
     ;    print
     ;
-    plot, x_axis, $
+    PLOT, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
@@ -149,7 +149,7 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
       
   ENDIF ELSE BEGIN
   
-    plot, x_axis, $
+    PLOT, x_axis, $
       array_selected_total, $
       XTITLE=x_axis_label, $
       YTITLE=y_axis_label,$
@@ -218,7 +218,11 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
   ;    print, 'x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
   ;    print
   ;
-  plot, x_axis, $
+  
+  LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+  IF (LinLog EQ 0) THEN BEGIN ;linear
+  
+  PLOT, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
@@ -228,6 +232,22 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
     YSTYLE = 1,$
     CHARSIZE = 2,$
     PSYM=1
+    
+    ENDIF ELSE BEGIN ;log
+    
+  PLOT, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XRANGE = xrange,$
+    XSTYLE = 1,$
+    YRANGE = yrange,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1,$
+    /YLOG
+
+ENDELSE    
     
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
@@ -272,15 +292,32 @@ PRO display_step5_rescale_plot_first_time, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  plot, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1
-    
+  LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+  IF (LinLog EQ 0) THEN BEGIN ;linear
+  
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDIF ELSE BEGIN
+  
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      /YLOG,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDELSE
+  
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
   (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
@@ -328,7 +365,10 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  plot, x_axis, $
+  LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+  IF (LinLog EQ 0) THEN BEGIN ;linear
+  
+  PLOT, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
@@ -336,7 +376,21 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
     YSTYLE = 1,$
     CHARSIZE = 2,$
     PSYM=1
+
+ENDIF ELSE BEGIN
     
+  PLOT, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XSTYLE = 1,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1,$
+    /YLOG
+
+ENDELSE
+
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
   (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
@@ -381,7 +435,10 @@ PRO display_step5_rescale_reset_zoom, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   
-  plot, x_axis, $
+  LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+  IF (LinLog EQ 0) THEN BEGIN ;linear
+  
+  PLOT, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
@@ -390,6 +447,20 @@ PRO display_step5_rescale_reset_zoom, Event
     CHARSIZE = 2,$
     PSYM=1
     
+  ENDIF ELSE BEGIN
+  
+  PLOT, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XSTYLE = 1,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1,$
+    /YLOG
+  
+    ENDELSE
+  
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
   (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
@@ -443,7 +514,10 @@ PRO redisplay_step5_rescale_plot, Event
   xrange = [xmin,xmax]
   yrange = [ymin,ymax]
   
-  plot, x_axis, $
+  LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
+  IF (LinLog EQ 0) THEN BEGIN ;linear
+  
+  PLOT, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
@@ -453,6 +527,22 @@ PRO redisplay_step5_rescale_plot, Event
     YSTYLE = 1,$
     CHARSIZE = 2,$
     PSYM=1
+ 
+ ENDIF ELSE BEGIN
+ 
+  PLOT, x_axis, $
+    array_selected_total, $
+    XTITLE=x_axis_label, $
+    YTITLE=y_axis_label,$
+    XRANGE = xrange,$
+    XSTYLE = 1,$
+    YRANGE = yrange,$
+    YSTYLE = 1,$
+    CHARSIZE = 2,$
+    PSYM=1,$
+    /YLOG
+
+ ENDELSE
     
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
@@ -508,7 +598,7 @@ PRO redisplay_step5_rescale_plot_after_scaling, Event
   x0y0x1y1_graph[3] = ymax
   (*global).x0y0x1y1_graph = x0y0x1y1_graph
   
-  plot, x_axis, $
+  PLOT, x_axis, $
     array_selected_total, $
     XTITLE=x_axis_label, $
     YTITLE=y_axis_label,$
@@ -547,7 +637,7 @@ PRO plot_recap_rescale_selection, Event
   
   color = 150
   
-  plots, [xmin, xmin, xmax, xmax, xmin],$
+  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
     [ymin,ymax, ymax, ymin, ymin],$
     /DEVICE,$
     COLOR =color
@@ -569,7 +659,7 @@ PRO plot_recap_rescale_CE_selection, Event
   x1 = x0y0x1y1[2]
   xmin = MIN([x0,x1],MAX=xmax)
   
-  cursor, x, y, /DATA, /NOWAIT
+  CURSOR, x, y, /DATA, /NOWAIT
   
   IF (x GE xmin AND $
     x LE xmax) THEN BEGIN
@@ -579,8 +669,8 @@ PRO plot_recap_rescale_CE_selection, Event
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
-    plots, x,ymin, color=color, /DATA
-    plots, x,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x,ymin, color=color, /DATA
+    PLOTS, x,ymax, color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -620,8 +710,8 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x1 GT xmax) THEN BEGIN
         x1 = xmax
       ENDIF
-    plots, x1,ymin, color=color, /DATA
-    plots, x1,ymax, color=color, /CONTINUE, /DATA
+      PLOTS, x1,ymin, color=color, /DATA
+      PLOTS, x1,ymax, color=color, /CONTINUE, /DATA
     ENDELSE
     
     IF (x2 LT xmin) THEN BEGIN
@@ -630,15 +720,15 @@ PRO plot_recap_rescale_other_selection, Event, type=type
       IF (x2 GT xmax) THEN BEGIN
         x2 = xmax
       ENDIF
-    plots, x2,ymin, color=color, /DATA
-    plots, x2,ymax, color=color, /CONTINUE, /DATA
+      PLOTS, x2,ymin, color=color, /DATA
+      PLOTS, x2,ymax, color=color, /CONTINUE, /DATA
     ENDELSE
     
   ENDIF ELSE BEGIN
     x = (x LT xmin) ? xmin : x
     x = (x GT xmax) ? xmax : x
-    plots, x,ymin, color=color, /DATA
-    plots, x,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x,ymin, color=color, /DATA
+    PLOTS, x,ymax, color=color, /CONTINUE, /DATA
   ENDELSE
   
 END
@@ -666,14 +756,14 @@ PRO plot_selection_after_zoom, Event
   
   IF (x1 GT xmin AND $
     x1 LT xmax) THEN BEGIN
-    plots, x1,ymin, color=color, /DATA
-    plots, x1,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x1,ymin, color=color, /DATA
+    PLOTS, x1,ymax, color=color, /CONTINUE, /DATA
   ENDIF
   
   IF (x2 GT xmin AND $
     x2 LT xmax) THEN BEGIN
-    plots, x2,ymin, color=color, /DATA
-    plots, x2,ymax, color=color, /CONTINUE, /DATA
+    PLOTS, x2,ymin, color=color, /DATA
+    PLOTS, x2,ymax, color=color, /CONTINUE, /DATA
   ENDIF
   
 END
@@ -756,8 +846,8 @@ PRO plot_average_recap_rescale, Event
     LOADCT, 5, /SILENT
     
     color = 200
-    plots, xmin,Average, color=color, /DATA
-    plots, xmax,Average, color=color, /CONTINUE, /DATA
+    PLOTS, xmin,Average, color=color, /DATA
+    PLOTS, xmax,Average, color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -772,20 +862,20 @@ PRO replot_average_recap_rescale, Event
   x2 = (*global).recap_rescale_selection_right
   xmin = MIN([x1,x2],MAX=xmax)
   
-;  x0y0x1y1 = (*global).x0y0x1y1
-;  xa = x0y0x1y1[0]
-;  xb = x0y0x1y1[2]
-;  x_range_min = MIN([xa,xb],MAX=x_range_max)
+  ;  x0y0x1y1 = (*global).x0y0x1y1
+  ;  xa = x0y0x1y1[0]
+  ;  xb = x0y0x1y1[2]
+  ;  x_range_min = MIN([xa,xb],MAX=x_range_max)
   
   color = 50
   average = (*global).recap_rescale_average
-
+  
   x0y0x1y1 = (*global).x0y0x1y1_graph
   xa = x0y0x1y1[0]
   xb = x0y0x1y1[2]
   x_range_min = MIN([xa,xb],MAX=x_range_max)
-;  print, 'x_range_min: ' + string(x_range_min)
-;  print, 'x_range_max: ' + string(x_range_max)
+  ;  print, 'x_range_min: ' + string(x_range_min)
+  ;  print, 'x_range_max: ' + string(x_range_max)
   
   IF (xmin LT x_range_min) THEN BEGIN
     xmin = x_range_min
@@ -794,15 +884,15 @@ PRO replot_average_recap_rescale, Event
       xmax = x_range_max
     ENDIF
   ENDELSE
-
+  
   IF (average NE 0.0) THEN BEGIN
   
     DEVICE, DECOMPOSED=0
     LOADCT, 5, /SILENT
     
     color = 200
-    plots, xmin,Average, color=color, /DATA
-    plots, xmax,Average, color=color, /CONTINUE, /DATA
+    PLOTS, xmin,Average, color=color, /DATA
+    PLOTS, xmax,Average, color=color, /CONTINUE, /DATA
     
   ENDIF
   
@@ -821,8 +911,8 @@ PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
   LOADCT, 5, /SILENT
   
   color = 150
-  plots, xmin, 1., color=color, /DATA
-  plots, xmax, 1., color=color, /CONTINUE, /DATA
+  PLOTS, xmin, 1., color=color, /DATA
+  PLOTS, xmax, 1., color=color, /CONTINUE, /DATA
   
   (*global).recap_rescale_average = 1
   
