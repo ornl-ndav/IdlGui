@@ -1788,7 +1788,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
     'draw_step4_step2'): BEGIN
-            DEVICE, CURSOR_STANDARD=31
+    DEVICE, CURSOR_STANDARD=31
     xy_position = (*global).step4_step1_selection
     IF (xy_position[0]+xy_position[2] NE 0 AND $
       xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
@@ -2048,7 +2048,7 @@ PRO MAIN_BASE_event, Event
   ;------------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
-        DEVICE, CURSOR_STANDARD=31
+    DEVICE, CURSOR_STANDARD=31
     LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
     ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
     IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
@@ -2146,7 +2146,7 @@ PRO MAIN_BASE_event, Event
   
   ;rescale widget draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
-      DEVICE, CURSOR_STANDARD=31
+    DEVICE, CURSOR_STANDARD=31
     ;zoom or selection
     isZoomSelected = isRecapScaleZoomSelected(Event)
     IF (isZoomSelected) THEN BEGIN ;using zoom
@@ -2381,16 +2381,55 @@ PRO MAIN_BASE_event, Event
     preview_OF_step6_file, Event, POLA_STATE='p0' ;step6
   END
   
+  ;exclude polar #2
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='exclude_polarization_state2'): BEGIN
+    value = getButtonStatus(Event,'exclude_polarization_state2')
+    IF (value) THEN BEGIN ;exclude base
+      sensitive = 0
+    ENDIF ELSE BEGIN
+      sensitive = 1
+    ENDELSE
+    activate_widget, Event, 'polarization_state2_summary_base', sensitive
+    activate_widget, Event, 'polarization_state2_summary_base_title', sensitive
+  END
+  
   ;get preview of pola #2
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step6_preview_pola_state2'): BEGIN
     preview_OF_step6_file, Event, POLA_STATE='p1' ;step6
   END
   
+  ;exclude polar #3
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='exclude_polarization_state3'): BEGIN
+    value = getButtonStatus(Event,'exclude_polarization_state3')
+    IF (value) THEN BEGIN ;exclude base
+      sensitive = 0
+    ENDIF ELSE BEGIN
+      sensitive = 1
+    ENDELSE
+    activate_widget, Event, 'polarization_state3_summary_base', sensitive
+    activate_widget, Event, 'polarization_state3_summary_base_title', sensitive
+  END
+  
   ;get preview of pola #3
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step6_preview_pola_state3'): BEGIN
     preview_OF_step6_file, Event, POLA_STATE='p2' ;step6
+  END
+  
+  ;exclude polar #4
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='exclude_polarization_state4'): BEGIN
+    value = getButtonStatus(Event,'exclude_polarization_state4')
+    IF (value) THEN BEGIN ;exclude base
+      sensitive = 0
+    ENDIF ELSE BEGIN
+      sensitive = 1
+    ENDELSE
+    activate_widget, Event, 'polarization_state4_summary_base', sensitive
+    activate_widget, Event, 'polarization_state4_summary_base_title', sensitive
   END
   
   ;get preview of pola #4

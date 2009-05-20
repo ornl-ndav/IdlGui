@@ -300,6 +300,9 @@ PopulateWorkingFileFields, Event
 ;work on other polarization states -------
 ;determine other polarization states
 PopulateOtherPolaStates, Event
+
+;hide spin state base that have not been selected in reduce step1
+
 ;check if we can validate or not the CREATE OUTPUT FILE button
 CheckValidationOfCreateOutputButton, Event
 END
