@@ -1054,6 +1054,7 @@ PRO MAIN_BASE_event, Event
   
   ;Draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
+    DEVICE, CURSOR_STANDARD=31
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
       delta_x = (*global).delta_x
@@ -1257,6 +1258,7 @@ PRO MAIN_BASE_event, Event
   
   ;Draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_draw'): BEGIN
+    DEVICE, CURSOR_STANDARD=31
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
@@ -1559,6 +1561,7 @@ PRO MAIN_BASE_event, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step1_draw'): BEGIN
+    DEVICE, CURSOR_STANDARD=31
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
@@ -1785,6 +1788,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
     'draw_step4_step2'): BEGIN
+            DEVICE, CURSOR_STANDARD=31
     xy_position = (*global).step4_step1_selection
     IF (xy_position[0]+xy_position[2] NE 0 AND $
       xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
@@ -2044,6 +2048,7 @@ PRO MAIN_BASE_event, Event
   ;------------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
+        DEVICE, CURSOR_STANDARD=31
     LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
     ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
     IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
@@ -2141,7 +2146,7 @@ PRO MAIN_BASE_event, Event
   
   ;rescale widget draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
-  
+      DEVICE, CURSOR_STANDARD=31
     ;zoom or selection
     isZoomSelected = isRecapScaleZoomSelected(Event)
     IF (isZoomSelected) THEN BEGIN ;using zoom
