@@ -44,7 +44,7 @@ my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
 ;number of packages we need to check
 my_package[0].driver           = 'findnexus'
 my_package[0].version_required = ''
-my_package[1].driver           = (*global).driver_name
+my_package[1].driver           = (*global).reduce_structure.driver
 my_package[1].version_required = ''
 my_package[1].sub_pkg_version  = './drversion'
 my_package[2].driver           = 'nxdir'
