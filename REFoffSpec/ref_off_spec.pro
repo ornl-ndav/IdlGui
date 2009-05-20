@@ -70,7 +70,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step4_tab: 0,$
     scaling_tab: 1},$
     ascii_path: '~/SVN/IdlGui/trunk/REFoffSpec/',$
-    reduce_tab1_cw_field: '4753-4755',$
+    reduce_tab1_cw_field: '5242-5244',$
     reduce_tab1_proposal_combobox: 1}
     
   ;*****************************************************************************

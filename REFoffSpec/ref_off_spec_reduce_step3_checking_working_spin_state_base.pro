@@ -210,6 +210,10 @@ END
 PRO populate_checking_spin_state_table, Event, table_uname, $
     working_spin_state = working_spin_state
     
+  PRINT, 'entering populate_checking_spin_state_table'
+  
+  print, 'working_spin_state: ' + working_spin_state
+  
   table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   d_spin_state = table[2,*]
   list_of_output_files = table[7,*]
@@ -219,8 +223,12 @@ PRO populate_checking_spin_state_table, Event, table_uname, $
   index = 0
   FOR i=0,(sz-1) DO BEGIN
     spin_state = d_spin_state[i]
+    print, '  spin_state: ' + spin_state
     IF (spin_state NE '') THEN BEGIN
-      IF (STRLOWCASE(spin_state) EQ working_spin_state) THEN BEGIN
+      print, 'STRLOWCASE(spin_state):' + STRLOWCASE(spin_state) + '*'
+      print, 'STRLOWCASE(working_spin_state):' + STRLOWCASE(working_spin_state) + '*'
+      IF (STRLOWCASE(spin_state) EQ STRLOWCASE(working_spin_state)) THEN BEGIN
+        print, 'in STRLOWCASE' 
         new_table[0,index] = list_of_output_files[i]
         new_table[1,index++] = 'NOT READY'
       ENDIF
@@ -230,6 +238,8 @@ PRO populate_checking_spin_state_table, Event, table_uname, $
   ENDFOR
   
   WIDGET_CONTROL, table_uname, SET_VALUE=new_table
+  
+  PRINT, 'leaving populate_checking_spin_state_table'
   
 END
 
@@ -253,15 +263,19 @@ PRO refresh_checking_spin_table, Event, global
     file_name = list_of_files[i]
     IF (file_name NE '') THEN BEGIN
       full_file_name = path + file_name
+      PRINT, 'test ' + full_file_name
       IF (FILE_TEST(full_file_name)) THEN BEGIN
+        PRINT, '   yes'
         table[1,i] = 'READY'
       ENDIF ELSE BEGIN
+        PRINT, '   no'
         table[1,i] = 'NOT READY'
         button_status = 0
       ENDELSE
     ENDIF ELSE BEGIN
       BREAK
     ENDELSE
+    PRINT
   ENDFOR
   
   ;repopulate table
@@ -269,15 +283,19 @@ PRO refresh_checking_spin_table, Event, global
     FIND_BY_UNAME='reduce_step3_working_spin_state_files')
   WIDGET_CONTROL, id, SET_VALUE=table
   
-  ;map base first
-  MapBase, Event, 'reduce_step2_working_spin_state_go_shift_base', 1
+  IF (button_status) THEN BEGIN
   
-  ;validate or not go button
-  mode_id = WIDGET_INFO(Event.top,$
-    FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
-  mode = READ_PNG((*global).go_shift_scale)
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, mode, 0,0,/true
+    ;map base first
+    MapBase, Event, 'reduce_step2_working_spin_state_go_shift_base', 1
+    
+    ;validate or not go button
+    mode_id = WIDGET_INFO(Event.top,$
+      FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
+    mode = READ_PNG((*global).go_shift_scale)
+    WIDGET_CONTROL, mode_id, GET_VALUE=id
+    WSET, id
+    TV, mode, 0,0,/true
+    
+  ENDIF
   
 END
