@@ -93,6 +93,12 @@ FUNCTION getButtonValue, Event, uname
   RETURN, value
 END
 
+;-------------------------------------------------------------------------------
+FUNCTION getButtonStatus, Event, uname
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  RETURN, WIDGET_INFO(id, /BUTTON_SET)
+END
+
 ;------------------------------------------------------------------------------
 ;- SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC FUNCTIONS - SPECIFIC
 ;------------------------------------------------------------------------------
@@ -462,5 +468,5 @@ FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
     data_spin_state=base_name)
   roi_file = nexus_spin_state_roi_table[column,norm_table[row_data]]
   RETURN, roi_file
-
+  
 END
