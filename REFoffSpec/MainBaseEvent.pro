@@ -2144,6 +2144,13 @@ PRO MAIN_BASE_event, Event
     replot_average_recap_rescale, Event
   END
   
+  ;lin/log cw_bgroup
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_lin_log_plot'): BEGIN
+    redisplay_step5_rescale_plot, Event
+    plot_recap_rescale_other_selection, Event, type='all'
+    replot_average_recap_rescale, Event
+  END
+  
   ;rescale widget draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_rescale_draw'): BEGIN
     DEVICE, CURSOR_STANDARD=31
