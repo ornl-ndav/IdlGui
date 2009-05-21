@@ -40,6 +40,7 @@ cd, CurrentFolder
 .run cloopes_help.pro
 .run cloopes_input_parser.pro
 .run cloopes_run_jobs.pro
+.run cloopes_job_manager_splash_base.pro
 
 ;main functions
 .run MainBaseEvent.pro

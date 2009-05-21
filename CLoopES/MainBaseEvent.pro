@@ -68,6 +68,10 @@ PRO MAIN_BASE_event, Event
     ;check status of jobs submitted button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='check_status_button'): BEGIN
       check_status, Event ;_eventcb
+      ;show base that inform the user that the job manager is going to show up
+      job_base = job_manager_info_base(Event)
+      WAIT, 4
+      WIDGET_CONTROL, job_base,/DESTROY
     END
     
     ;launch jobs in background button
@@ -75,11 +79,21 @@ PRO MAIN_BASE_event, Event
       launch_jobs, Event ;_run_jobs
     END
     
+    ;tab22222222222222222222222222222222222222222222222222222222222222222222222
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_check_job_status_uname'): BEGIN
+      check_status, Event ;_eventcb
+      ;show base that inform the user that the job manager is going to show up
+      job_base = job_manager_info_base(Event)
+      WAIT, 4
+      WIDGET_CONTROL, job_base,/DESTROY
+    END
+    
+    ;tab33333333333333333333333333333333333333333333333333333333333333333333333
     ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
-      send_to_geek, Event ;_eventcb 
+      send_to_geek, Event ;_eventcb
     END
-        
+    
     ELSE:
     
   ENDCASE
