@@ -14,6 +14,7 @@ cd, IdlUtilitiesPath
 .run time.pro
 .run logger.pro
 .run IDLxmlParser__define.pro
+.run checking_packages.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
