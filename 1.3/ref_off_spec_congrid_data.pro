@@ -89,7 +89,7 @@ WHILE (index LT sz) DO BEGIN
     IF (current_x_max_size GT max_x_size) THEN BEGIN
         max_x_size = current_x_max_size
     ENDIF
-    IF (coeff NE 1) THEN BEGIN
+    IF (coeff NE 1) THEN BEiGIN
         congrid_x_coeff = current_x_max_size * congrid_coeff_array[index]
 ;work on y
         congrid_y_coeff = (size(*pData_y[index]))(2)
