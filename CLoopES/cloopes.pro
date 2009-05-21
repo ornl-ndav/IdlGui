@@ -64,7 +64,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*************************************************************************
   
   ;DEBUGGING
-  sDEBUGGING = { tab: {main_tab: 1},$  ;0:step1, 1:logBook
+  sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
     input_text: '4056-4126'}
   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
@@ -115,7 +115,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,800,585]})
+    MainBaseSize: [30,25,800,750]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
