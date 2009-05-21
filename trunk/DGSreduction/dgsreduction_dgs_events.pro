@@ -40,7 +40,7 @@
 ;
 ; :Author: scu
 ;-
-FUNCTION DGSreduction_dgs_DataRun, event
+PRO DGSreduction_dgs_DataRun, event
 
     ; Get the info structure and copy it here
     WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY

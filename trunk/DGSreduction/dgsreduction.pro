@@ -33,6 +33,24 @@
 
 ;---------------------------------------------------------
 
+PRO DGSreduction_Execute, event
+      ; Get the info structure and copy it here
+    WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY    
+    dgscmd = info.dgscmd
+    ; Generate the Command to run
+    command = dgscmd->generate()
+    
+    ; TODO: loop over to number of jobs required - split up the min/max banks equally
+    ; over the no. of requested jobs --data-paths=1-10 etc..
+    
+    ; TODO: For now let's just dump the commands into a file
+    spawn, "echo " + command + " >> /tmp/commands" 
+    
+    ; Put info back
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    
+END
+
 ;---------------------------------------------------------
 
 PRO DGSreduction_Quit, event
@@ -44,6 +62,7 @@ END
 PRO DGSreduction_TLB_Events, event
   thisEvent = TAG_NAMES(event, /STRUCTURE_NAME)
   
+  print, thisEvent
   
   IF thisEvent EQ 'WIDGET_BASE' THEN BEGIN
     ; Get the info structure and copy it here
@@ -78,7 +97,7 @@ PRO DGSreduction_Cleanup, tlb
   IF N_ELEMENTS(info) EQ 0 THEN RETURN
   
   ; Free up the pointers
-;  PTR_FREE, info.dgscmd
+  ;  PTR_FREE, info.dgscmd
   PTR_FREE, info.extra
 END
 
@@ -107,19 +126,23 @@ PRO DGSreduction, dgscmd, _Extra=extra
   IF N_ELEMENTS(dgscmd) EQ 0 THEN dgscmd = OBJ_NEW("ReductionCMD")
   
   ; Define the TLB.
-  tlb = WIDGET_BASE(COLUMN=1, TITLE=title)
-  
-  
-  
-  ; Define a Quit button
-  quitID = WIDGET_BUTTON(tlb, Value='Quit', EVENT_PRO='DGSreduction_Quit')
+  tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
   
   ; Tabs
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionID = WIDGET_BASE(tabID, Title='Reduction')
-  runID= WIDGET_TEXT(reductionID, /EDITABLE, EVENT_PRO='DGSreduction_dgs_DataRun')
+  reductionID = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
+  
+  t1 = widget_base(reductionID, /row)
+  label = WIDGET_LABEL(t1, value="Run Number:")
+  runID= WIDGET_TEXT(t1, /EDITABLE,xsize=30, ysize=1, EVENT_PRO='DGSreduction_dgs_DataRun')
+  
+  t2 = widget_base(reductionID, /row)
+  label = WIDGET_LABEL(t2, value="Detector Banks from ")
+  lbankID = WIDGET_TEXT(t2, /EDITABLE)
+  label = WIDGET_LABEL(t2, value=" to ")
+  ubankID = WIDGET_TEXT(t2, /EDITABLE)
   
   ; normalisation tab
   normID = WIDGET_BASE(tabID, Title='Normalisation')
@@ -128,7 +151,16 @@ PRO DGSreduction, dgscmd, _Extra=extra
   utilsID = WIDGET_BASE(tabID, Title='Utilities')
   label = WIDGET_LABEL(utilsID, VALUE="Nothing to see here!")
   
-  outputID= WIDGET_TEXT(tlb, /EDITABLE, VALUE=dgscmd->generate())
+  outputID= WIDGET_TEXT(tlb, /EDITABLE, xsize=80, ysize=10, /SCROLL, $
+    VALUE=dgscmd->generate())
+    
+  
+      
+  wMainButtons = WIDGET_BASE(tlb, /ROW)   
+  ; Define a Run button
+  executeID = WIDGET_BUTTON(wMainButtons, Value='Execute', EVENT_PRO='DGSreduction_Execute')    
+  ; Define a Quit button
+  quitID = WIDGET_BUTTON(wMainButtons, Value='Quit', EVENT_PRO='DGSreduction_Quit', /ALIGN_RIGHT)
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
@@ -137,6 +169,8 @@ PRO DGSreduction, dgscmd, _Extra=extra
     ucams:ucams, $
     title:title, $
     outputID:outputID, $
+    lbank:0, $
+    ubank:0, $
     extra:ptr_new(extra) $
     }
     
