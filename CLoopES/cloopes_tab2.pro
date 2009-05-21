@@ -32,13 +32,25 @@
 ;
 ;==============================================================================
 
-PRO putValue, Event, Uname, value
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  WIDGET_CONTROL, id, SET_VALUE=value
-END
+PRO define_output_folder_tab2, Event
 
-;------------------------------------------------------------------------------
-PRO putButtonValue, Event, uname, value
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-  WIDGET_CONTROL, id, SET_VALUE=value
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  
+  path = (*global).ascii_path
+  title = 'Select the output folder'
+  
+  folder = DIALOG_PICKFILE(/DIRECTORY,$
+    DIALOG_PARENT=id,$
+    /MUST_EXIST,$
+    TITLE = title,$
+    PATH = path)
+    
+  IF (folder NE '') THEN BEGIN
+    (*global).ascii_path = folder
+    putButtonValue, Event, 'tab2_output_folder_button_uname', folder
+  ENDIF
+
 END

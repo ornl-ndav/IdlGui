@@ -80,6 +80,13 @@ PRO MAIN_BASE_event, Event
     END
     
     ;tab22222222222222222222222222222222222222222222222222222222222222222222222
+    
+    ;output folder button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_output_folder_button_uname'): BEGIN
+      define_output_folder_tab2, Event
+    END
+    
+    ;Check Jobs Status
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_check_job_status_uname'): BEGIN
       check_status, Event ;_eventcb
       ;show base that inform the user that the job manager is going to show up
