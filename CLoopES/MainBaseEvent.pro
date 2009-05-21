@@ -53,6 +53,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cl_file_text_field'): BEGIN
       displayTextRemoved, Event
       create_cl_array, Event
+      remove_output_file_name, Event
     END
     
     ;input text field
@@ -65,11 +66,6 @@ PRO MAIN_BASE_event, Event
       help_button, Event ;_help
     END
     
-    ;get preview of cell selected
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cell_selected'): BEGIN
-      display_preview_of_cell_selected, Event
-    END
-    
     ;check status of jobs submitted button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='check_status_button'): BEGIN
       check_status, Event ;_eventcb
@@ -78,6 +74,12 @@ PRO MAIN_BASE_event, Event
       WAIT, 4
       WIDGET_CONTROL, job_base,/DESTROY
     END
+    
+    ;preview jobs button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_jobs_button'): BEGIN
+      preview_jobs, Event ;_eventcb
+    END
+    
     
     ;launch jobs in background button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_jobs_button'): BEGIN

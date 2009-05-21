@@ -447,7 +447,8 @@ PRO parse_input_field, Event
     status = 0
   ENDELSE
   activate_widget, Event, 'run_jobs_button', status
-  
+    activate_widget, Event, 'preview_jobs_button', status
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -462,3 +463,33 @@ PRO addSequencesToRunArray, run_array, seq_number
     ENDELSE
   ENDIF
 END
+
+;------------------------------------------------------------------------------
+PRO remove_output_file_name, Event
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    ;get CL with text selected removed
+    CL_text_array = (*global).cl_array
+    
+    part2 = CL_text_array[1]
+    part2_parsed = split_string(part2, PATTERN='--output=')
+    
+    ;keep path
+    path = FILE_DIRNAME(part2_parsed[1])
+    path += '/'
+    
+    CL_text_array[1] = part2_parsed[0] + ' --output=' + path
+    cl_text_array[1] += (*global).output_suffix
+    (*global).cl_array = CL_text_array
+    
+  ENDELSE
+END
+
+
