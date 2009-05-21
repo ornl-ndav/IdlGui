@@ -132,11 +132,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     column_labels: ['Runs','Command Line Preview'],$
     column_widths: [200,750]}
     
-  ;Check slurm processes
+  ;Display preview of cell selected
   XYoff = [5,5]
-  sBrowseButton = { size: [XYoff[0],$
+  sPreviewCell = { size: [XYoff[0],$
     sTable.size[1]+$
     sTable.size[3]+XYoff[1],$
+    400],$
+    value: 'Preview of Command Line for Selected row (runs)',$
+    uname: 'preview_cell_selected'}
+    
+  ;Check slurm processes
+  XYoff = [5,30]
+  sBrowseButton = { size: [XYoff[0],$
+    sPreviewCell.size[1]+XYoff[1],$
     200],$
     value: 'Check Status of Jobs Submitted',$
     uname: 'check_status_button'}
@@ -278,8 +286,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     COLUMN_WIDTHS = sTable.column_widths,$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = sTable.column_labels,$
+    /SCROLL,$
     /RESIZEABLE_COLUMNS,$
     UNAME = sTable.uname)
+    
+  ;preview button
+  wPreviewCell = WIDGET_BUTTON(Base,$
+    XOFFSET = sPreviewCell.size[0],$
+    YOFFSET = sPreviewCell.size[1],$
+    SCR_XSIZE = sPreviewCell.size[2],$
+    VALUE = sPreviewCell.value,$
+    UNAME = sPreviewCell.uname)
     
   ;firefox button
   wFirefox = WIDGET_BUTTON(Base,$
