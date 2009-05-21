@@ -32,55 +32,27 @@
 ;
 ;==============================================================================
 
-PRO launch_jobs, Event
+PRO cloopes_tab, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  text = '> Launching jobs:'
-  IDLsendLogBook_addLogBookText, Event, ALT=alt, text
+  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+  PrevTabSelect = (*global).PrevReduceTabSelect
   
-  ;get second column of table
-  column_cl = (*(*global).column_cl)
-  column_sequence = (*(*global).column_sequence)
-  
-  sz = N_ELEMENTS(column_cl)
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
-    ;    runs = STRJOIN(runs_array,'_')
-    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
-    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
-    column_cl[index]+= runs + (*global).output_prefix
-    index++
-  ENDWHILE
-  
-  ;tab2 table ['output file','status','temperature']
-  tab2_table = STRARR(3,sz)
-  
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-  
-    cmd = column_cl[index]
-    cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
-    cmd_text += ': ' + cmd
-    IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    ;SPAWN, cmd ;remove_me
-    
-    ;get output file
-    parse_array = split_string(column_cl[index], PATTERN='--output=')
-    IF (N_ELEMENTS(parse_array) NE 2) THEN BEGIN
-      output_file = 'N/A'
-    ENDIF ELSE BEGIN
-      output_file = parse_array[1]
-    ENDELSE
-    tab2_table[0,index] = output_file
-    tab2_table[1,index] = 'NOT READY'
-    
-    index++
-  ENDWHILE
-  
-  (*(*global).tab2_table) = tab2_table
+  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (currTabSelect) OF
+      0: BEGIN ;LOOPER
+      END
+      1: BEGIN ;ELASTIC SCAN
+      populate_tab2, Event
+      END
+      2: BEGIN ;LOG BOOK
+      END
+      ELSE:
+    ENDCASE
+    (*global).PrevReduceTabSelect = CurrTabSelect
+  ENDIF
   
 END
-

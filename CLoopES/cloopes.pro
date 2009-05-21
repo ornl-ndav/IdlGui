@@ -80,7 +80,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
   
   ;define global variables
-  global = PTR_NEW ({ path: '~/',$
+  global = PTR_NEW ({ $
+    PrevReduceTabSelect: 0,$
+    
+    path: '~/',$
     old_input_text: PTR_NEW(0L),$
     old_help_text1: '',$
     old_help_text2: '',$
@@ -100,6 +103,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     cl_array: STRARR(2),$
     output_suffix: 'BASIS_',$
     output_prefix: '.dat',$
+    
+    tab2_table: PTR_NEW(0L),$
     
     package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
