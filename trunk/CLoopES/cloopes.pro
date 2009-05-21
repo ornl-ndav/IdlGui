@@ -85,6 +85,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_help_text1: '',$
     old_help_text2: '',$
     
+    job_manager_splash_draw: $
+    'CLoopES_images/job_manager_is_coming.png',$ 
+    
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
     'squeue.php?view=all',$
