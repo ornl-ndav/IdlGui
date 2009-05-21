@@ -51,6 +51,18 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;******************************************************************************
   ;******************************************************************************
   
+  PACKAGE_REQUIRED_BASE = { driver:           '',$
+    version_required: '',$
+    found: 0,$
+    sub_pkg_version:   ''}
+  ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
+  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,1)
+  my_package[0].driver           = 'elastic_scan'
+  my_package[0].version_required = ''
+  
+  ;*************************************************************************
+  ;*************************************************************************
+  
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
     path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
@@ -83,6 +95,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     column_cl: PTR_NEW(0L),$
     cl_array: STRARR(2),$
     
+    package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
     ucams:        ucams,$
@@ -92,7 +105,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed:       'FAILED',$
     version:      VERSION,$
     MainBaseSize: [30,25,800,545]})
-    
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
@@ -125,6 +137,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   time_stamp = GenerateReadableIsoTimeStamp()
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
   IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
+  
+  IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
+    checking_packages_routine, MAIN_BASE, my_package, global
+  ENDIF
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
