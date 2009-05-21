@@ -65,6 +65,10 @@ PRO browse_cl_file, Event
     displayCLfile, Event, file_name
     ;activate widgets
     activate_widget, Event, 'help_button', 1
+    
+    ;reset tab2_table
+    (*(*global).tab2_table) = PTR_NEW(0L)
+    
   ENDIF
   
 END

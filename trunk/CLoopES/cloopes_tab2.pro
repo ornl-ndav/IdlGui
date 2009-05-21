@@ -52,5 +52,26 @@ PRO define_output_folder_tab2, Event
     (*global).ascii_path = folder
     putButtonValue, Event, 'tab2_output_folder_button_uname', folder
   ENDIF
+  
+END
 
+;------------------------------------------------------------------------------
+PRO populate_tab2, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    refresh_button_status = 0
+  ENDIF ELSE BEGIN
+    ;get table
+    tab2_table = (*(*global).tab2_table)
+    putValue, Event, 'tab2_table_uname', tab2_table
+    refresh_button_status = 1
+  ENDELSE
+  activate_widget, Event, 'tab2_refresh_table_uname', refresh_button_status
+  
 END

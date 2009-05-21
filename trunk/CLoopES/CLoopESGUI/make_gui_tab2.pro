@@ -90,11 +90,13 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /ROW)
     
   Table = WIDGET_TABLE(row2,$
+    UNAME = 'tab2_table_uname',$
     XSIZE = 3,$
     YSIZE = 50,$
     SCR_XSIZE = 785,$
     SCR_YSIZE = 350,$
     ;    /SCROLL,$
+    /EDITABLE,$
     COLUMN_WIDTHS = [600,80,80],$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Output File','Status','Temperature'],$
@@ -105,7 +107,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /ROW)
     
     button1 = WIDGET_BUTTON(row3,$
-    VALUE = 'REFRESH TABLE',$
+    VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
     XSIZE = 785,$
     SENSITIVE = 0)

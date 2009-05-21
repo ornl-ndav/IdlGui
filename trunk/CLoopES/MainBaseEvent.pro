@@ -44,6 +44,10 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
+      cloopes_tab, Event
+    END
+    
     ;Load Command Line File Button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_cl_file_button'): BEGIN
       browse_cl_file, Event ;_browse
@@ -79,7 +83,6 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_jobs_button'): BEGIN
       preview_jobs, Event ;_eventcb
     END
-    
     
     ;launch jobs in background button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_jobs_button'): BEGIN
