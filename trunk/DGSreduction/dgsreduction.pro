@@ -33,33 +33,6 @@
 
 ;---------------------------------------------------------
 
-;+
-; :Description:
-;    Sets the DataRun property of the command object
-;
-; :Params:
-;    event
-;
-; :Author: scu
-;-
-FUNCTION DGSreduction_dgs_DataRun, event
-
-    ; Get the info structure and copy it here
-    WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-
-    WIDGET_CONTROL, event.ID, GET_VALUE=val
-
-    dgscmd=info.dgscmd
-    dgscmd->SetProperty, DataRun=val
-    
-    ; Update the command window.
-    WIDGET_CONTROL, info.outputID, SET_VALUE=dgscmd->generate()
-
-    ; Put info back
-    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-
-END
-
 ;---------------------------------------------------------
 
 PRO DGSreduction_Quit, event
