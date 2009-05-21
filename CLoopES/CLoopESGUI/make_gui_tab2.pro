@@ -48,6 +48,63 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   ;space = WIDGET_LABEL(Base,$
   ;  VALUE = ' ')
     
+  ;manual input list of files -------------------------------------------------
+   row_aa = WIDGET_BASE(Base,$
+   /ROW)
+   
+   row_a = WIDGET_BASE(row_aa,$
+   /COLUMN,$
+   FRAME = 1)
+   
+   row_a_1 = WIDGET_BASE(row_a, $ ;------------------ row1 
+    /ROW)
+    
+    label = WIDGET_LABEL(row_a_1,$
+    VALUE = 'Input File')
+    
+    button = WIDGET_BUTTON(row_a_1,$
+    VALUE = '~/results/',$
+    UNAME = 'tab2_manual_input_folder')
+    
+    label = WIDGET_LABEL(row_a_1,$
+    VALUE = '     Base of File Name:')
+    
+    ;internal_base
+    inter_base = WIDGET_BASE(row_a_1,$
+    /ROW,$
+    FRAME = 1)
+        
+    text = WIDGET_TEXT(inter_base,$
+    VALUE = ' ',$
+    UNAME = 'tab2_manual_input_suffix_name',$
+    /EDITABLE,$
+    XSIZE = 45)
+    
+    label = WIDGET_LABEL(inter_base,$
+    VALUE = '_<User_Defined>.')
+    
+    text = WIDGET_TEXT(inter_base,$
+    VALUE = 'txt',$
+    UNAME = 'tab2_manual_input_prefix_name',$
+    /EDITABLE,$
+    XSIZE = 10)
+
+   row_a_2 = WIDGET_BASE(row_a, $ ;----------------row2
+   /ROW)
+   
+   label = WIDGET_LABEL(row_a_2,$
+   VALUE = '<User_Defined>')
+   
+   text = WIDGET_TEXT(row_a_2,$
+   VALUE = ' ',$
+   XSIZE = 110,$
+   /EDITABLE,$
+   UNAME = 'tab2_manual_input_sequence')
+    
+    space = WIDGET_LABEL(row_aa,$
+    VALUE =  '   ')
+    
+  ;-----------------------------------------------------------------------------
   ;first row (energy integration range: min and max)
   row1 = WIDGET_BASE(Base,$
     /ROW)
@@ -85,6 +142,29 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   label = WIDGET_LABEL(row1,$
     VALUE = 'ueV')
     
+    
+  space = WIDGET_LABEL(row1,$
+    value = '     ')
+    
+  ;---------------------------------------------------------------------------
+  row11 = WIDGET_BASE(row1,$
+    FRAME=1,$
+    /EXCLUSIVE,$
+    /ROW)
+    
+  b1 = WIDGET_BUTTON(row11,$
+    VALUE = 'Use LOOPER input',$
+    UNAME = 'tab2_use_looper_input',$
+    /NO_RELEASE)
+    
+  b2 = WIDGET_BUTTON(row11,$
+    VALUE = 'Use MANUAL input',$
+    UNAME = 'tab2_use_manual_input',$
+    /NO_RELEASE)
+    
+  widget_control, b1, /SET_BUTTON     
+    
+  ;----------------------------------------------------------------------------
   ;row2 (big table)
   row2 = WIDGET_BASE(Base,$
     /ROW)
@@ -94,7 +174,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 3,$
     YSIZE = 50,$
     SCR_XSIZE = 785,$
-    SCR_YSIZE = 350,$
+    SCR_YSIZE = 295,$
     ;    /SCROLL,$
     /EDITABLE,$
     COLUMN_WIDTHS = [600,80,80],$
@@ -102,71 +182,71 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     COLUMN_LABELS = ['Output File','Status','Temperature'],$
     /RESIZEABLE_COLUMNS)
     
-    ;row3
-    row3 = WIDGET_BASE(Base,$
+  ;row3
+  row3 = WIDGET_BASE(Base,$
     /ROW)
     
-    button1 = WIDGET_BUTTON(row3,$
+  button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
     XSIZE = 785,$
     SENSITIVE = 0)
-        
-    space = WIDGET_LABEL(row3,$
+    
+  space = WIDGET_LABEL(row3,$
     VALUE = '')
-        
-    ;row4 (output file)
-    row4 = WIDGET_BASE(Base,$
+    
+  ;row4 (output file)
+  row4 = WIDGET_BASE(Base,$
     FRAME = 0,$
     /ROW)
     
-    row44 = WIDGET_BASE(row4,$
+  row44 = WIDGET_BASE(row4,$
     FRAME = 1,$
     /ROW)
-
-    ;label
-    label = WIDGET_LABEL(row44,$
+    
+  ;label
+  label = WIDGET_LABEL(row44,$
     VALUE = 'Output File')
     
-    ;output folder
-    path = WIDGET_BUTTON(row44,$
+  ;output folder
+  path = WIDGET_BUTTON(row44,$
     VALUE = '~/results/',$
     SCR_XSIZE = 350,$
     UNAME = 'tab2_output_folder_button_uname',$
     SENSITIVE = 1)
     
-    ;text
-    file_name = WIDGET_TEXT(row44,$
+  ;text
+  file_name = WIDGET_TEXT(row44,$
     VALUE = '',$
     UNAME = 'tab2_output_file_name_text_field_uname',$
     SCR_XSIZE = 350,$
     /EDITABLE)
     
-    ;space
-    space = WIDGET_LABEL(row4,$
+  ;space
+  space = WIDGET_LABEL(row4,$
     VALUE = '     ')
-   
-    ;row5 .....................................................................
-    row5 = WIDGET_BASE(Base,$
+    
+  ;row5 .....................................................................
+  row5 = WIDGET_BASE(Base,$
     /ROW)
     
-    button1 = WIDGET_BUTTON(row5,$
+  button1 = WIDGET_BUTTON(row5,$
     VALUE = 'Check Jobs Status',$
     xSIZE = 200,$
     UNAME = 'tab2_check_job_status_uname',$
     SENSITIVE = 1)
     
-    space = WIDGET_LABEL(row5,$
+  space = WIDGET_LABEL(row5,$
     VALUE = '  ')
     
-    button2 = WIDGET_BUTTON(row5,$
+  button2 = WIDGET_BUTTON(row5,$
     VALUE = 'RUN JOBS',$
     XSIZE = 565,$
     UNAME = 'tab2_run_jobs_uname',$
     SENSITIVE = 0)
     
     
-   
+    
     
 END
 

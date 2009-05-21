@@ -64,7 +64,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;*************************************************************************
   
   ;DEBUGGING
-  sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
+  sDEBUGGING = { tab: {main_tab: 1},$  ;0:step1, 1:logBook
     path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
     input_text: '4056-4126'}
   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
