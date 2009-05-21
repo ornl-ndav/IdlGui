@@ -93,10 +93,9 @@ PRO ReductionCmd::SetProperty, $
       else: begin
       end
     endcase
-
   ENDIF
   IF N_ELEMENTS(facility) NE 0 THEN self.facility = STRUPCASE(facility)
-  IF N_ELEMENTS(proposal) NE 0 THEN self.proposal = proposal
+  IF N_ELEMENTS(proposal) NE 0 THEN self.proposal = STRUPCASE(proposal)
   IF N_ELEMENTS(spe) NE 0 THEN self.spe = spe
   IF N_ELEMENTS(configfile) NE 0 THEN self.configfile = configfile
   IF N_ELEMENTS(instgeometry) NE 0 THEN self.instgeometry = instgeometry
@@ -115,9 +114,9 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(ei) NE 0 THEN self.ei = Ei
   IF N_ELEMENTS(tzero) NE 0 THEN self.tzero = Tzero
   IF N_ELEMENTS(nomonitornorm) NE 0 THEN self.nomonitornorm = NoMonitorNorm
-  IF N_ELEMENTS(pcnorm) NE 0 THEN self.pcnorm = PCnorm
+  IF N_ELEMENTS(pcnorm) NE 0 THEN self.pcnorm = pcnorm
   IF N_ELEMENTS(monrange) NE 0 THEN self.monrange = MonRange
-  IF N_ELEMENTS(deteff) NE 0 THEN self.deteff = DetEff
+  IF N_ELEMENTS(deteff) NE 0 THEN self.deteff = deteff
   IF N_ELEMENTS(datatrans) NE 0 THEN self.datatrans = DataTrans
   IF N_ELEMENTS(normtrans) NE 0 THEN self.normtrans = NormTrans
   IF N_ELEMENTS(normrange) NE 0 THEN self.normrange = normrange
