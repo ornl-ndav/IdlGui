@@ -174,7 +174,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 3,$
     YSIZE = 50,$
     SCR_XSIZE = 785,$
-    SCR_YSIZE = 295,$
+    SCR_YSIZE = 445,$
     ;    /SCROLL,$
     /EDITABLE,$
     COLUMN_WIDTHS = [600,80,80],$
