@@ -46,6 +46,7 @@ RETURN, value
 END
 
 ;------------------------------------------------------------------------------
+;this function returns the first row and column of the selection
 FUNCTIOn getCellSelectedTab1, Event, uname
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
 selection = WIDGET_INFO(id, /TABLE_SELECT)

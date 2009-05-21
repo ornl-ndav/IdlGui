@@ -142,7 +142,6 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   label = WIDGET_LABEL(row1,$
     VALUE = 'ueV')
     
-    
   space = WIDGET_LABEL(row1,$
     value = '     ')
     
@@ -176,7 +175,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     SCR_XSIZE = 785,$
     SCR_YSIZE = 445,$
     ;    /SCROLL,$
-    /EDITABLE,$
+    EDITABLE = [1,0,1],$ ;output file and temperature only are editable
     COLUMN_WIDTHS = [600,80,80],$
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Output File','Status','Temperature'],$
@@ -244,9 +243,6 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 565,$
     UNAME = 'tab2_run_jobs_uname',$
     SENSITIVE = 0)
-    
-    
-    
     
 END
 

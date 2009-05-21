@@ -91,6 +91,11 @@ PRO MAIN_BASE_event, Event
     
     ;tab22222222222222222222222222222222222222222222222222222222222222222222222
     
+    ;update table
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
+    update_temperature, Event
+    END
+    
     ;output folder button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_output_folder_button_uname'): BEGIN
       define_output_folder_tab2, Event
