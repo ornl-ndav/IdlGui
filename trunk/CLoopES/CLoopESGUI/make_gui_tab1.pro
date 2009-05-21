@@ -132,33 +132,35 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     column_labels: ['Runs','Command Line Preview'],$
     column_widths: [200,750]}
     
-  ;Display preview of cell selected
+   ;Check slurm processes
   XYoff = [5,5]
-  sPreviewCell = { size: [XYoff[0],$
+  sBrowseButton = { size: [XYoff[0],$
     sTable.size[1]+$
     sTable.size[3]+XYoff[1],$
-    400],$
-    value: 'Preview of Command Line for Selected row (runs)',$
-    uname: 'preview_cell_selected'}
-    
-  ;Check slurm processes
-  XYoff = [5,30]
-  sBrowseButton = { size: [XYoff[0],$
-    sPreviewCell.size[1]+XYoff[1],$
     200],$
     value: 'Check Status of Jobs Submitted',$
     uname: 'check_status_button'}
     
-  ;Launch jobs
+  ;preview/save jobs listing
   XYoff = [5,0]
-  sRunButton = { size: [sBrowseButton.size[0]+$
+  sPreviewButton = { size: [sBrowseButton.size[0]+$
     sBrowseButton.size[2]+XYoff[0],$
     sBrowseButton.size[1]+XYoff[1],$
-    580],$
+    150],$
+    value: 'PREVIEW/SAVE_AS JOBS',$
+    uname: 'preview_jobs_button',$
+    sensitive: 0}
+    
+  ;Launch jobs
+  XYoff = [5,0]
+  sRunButton = { size: [sPreviewButton.size[0]+$
+    sPreviewButton.size[2]+XYoff[0],$
+    sPreviewButton.size[1]+XYoff[1],$
+    425],$
     value: 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
     uname: 'run_jobs_button',$
     sensitive: 0}
-    
+     
   ;==============================================================================
     
   Base = WIDGET_BASE(MAIN_TAB,$
@@ -290,14 +292,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     /RESIZEABLE_COLUMNS,$
     UNAME = sTable.uname)
     
-  ;preview button
-  wPreviewCell = WIDGET_BUTTON(Base,$
-    XOFFSET = sPreviewCell.size[0],$
-    YOFFSET = sPreviewCell.size[1],$
-    SCR_XSIZE = sPreviewCell.size[2],$
-    VALUE = sPreviewCell.value,$
-    UNAME = sPreviewCell.uname)
-    
   ;firefox button
   wFirefox = WIDGET_BUTTON(Base,$
     XOFFSET   = sBrowseButton.size[0],$
@@ -305,6 +299,16 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     SCR_XSIZE = sBrowseButton.size[2],$
     VALUE     = sBrowseButton.value,$
     UNAME     = sBrowseButton.uname)
+    
+      ;preview jobs button
+  wRun = WIDGET_BUTTON(Base,$
+    XOFFSET = sPreviewButton.size[0],$
+    YOFFSET = sPreviewButton.size[1],$
+    SCR_XSIZE = sPreviewButton.size[2],$
+    VALUE = sPreviewButton.value,$
+    UNAME = sPreviewButton.uname,$
+    SENSITIVE = sPreviewButton.sensitive)
+    
     
   ;run jobs button
   wRun = WIDGET_BUTTON(Base,$

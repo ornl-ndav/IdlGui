@@ -32,27 +32,31 @@
 ;
 ;==============================================================================
 
-PRO display_preview_of_cell_selected, Event
+PRO preview_jobs, Event
 
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ;get value of table
-  table = getTableValue(Event, 'runs_table')
+  ;get second column of table
+  column_cl = (*(*global).column_cl)
+  column_sequence = (*(*global).column_sequence)
   
-  ;get cell selected
-  cell_selected = getCellSelectedTab1(Event, 'runs_table')
+  sz = N_ELEMENTS(column_cl)
+  preview_array = STRARR(sz)
   
-  ;text selection
-  title = 'Command line preview of Runs ' + Table[0,cell_selected[1]]
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    runs_array = STRSPLIT(column_sequence[index],',',/EXTRACT,count=nbr)
+    ;    runs = STRJOIN(runs_array,'_')
+    runs = STRCOMPRESS(runs_array[0],/REMOVE_ALL)
+    runs += '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + 'runs'
+    column_cl[index]+= runs + (*global).output_prefix
+    index++
+  ENDWHILE
   
-  cl_preview = table[1,cell_selected[1]]
-  
-  IF (STRCOMPRESS(cl_preview,/REMOVE_ALL) NE '') THEN BEGIN
-  
-    XDISPLAYFILE, TEXT = cl_preview,$
-      GROUP = id, $
-      TITLE = title
-      
-  ENDIF
-  
+  xdisplayfile, TEXT=column_cl, $
+    title='Preview of Job(s) to submit',$
+    /BLOCK,$
+    /EDITABLE
+    
 END

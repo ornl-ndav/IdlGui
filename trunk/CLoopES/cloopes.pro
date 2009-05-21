@@ -98,6 +98,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$
     cl_array: STRARR(2),$
+    output_suffix: 'BASIS_',$
+    output_prefix: '.dat',$
     
     package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
@@ -119,7 +121,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     SCR_XSIZE    = MainBaseSize[2],$
     SCR_YSIZE    = MainBaseSize[3],$
     XOFFSET      = MainBaseSize[0],$
-  YOFFSET      = MainBaseSize[1],$
+    YOFFSET      = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
     SPACE        = 0,$
     XPAD         = 0,$
