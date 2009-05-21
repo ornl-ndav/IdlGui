@@ -34,16 +34,138 @@
 
 PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
 
-Base = WIDGET_BASE(MAIN_TAB,$
-                   UNAME     = 'tab2_uname',$
-                   XOFFSET   = MainTabSize[0],$
-                   YOFFSET   = MainTabSize[1],$
-                   SCR_XSIZE = MainTabSize[2],$
-                   SCR_YSIZE = MainTabSize[3],$
-                   TITLE     = title,$
-                   map = 0)
+  Base = WIDGET_BASE(MAIN_TAB,$
+    UNAME     = 'tab2_uname',$
+    XOFFSET   = MainTabSize[0],$
+    YOFFSET   = MainTabSize[1],$
+    SCR_XSIZE = MainTabSize[2],$
+    SCR_YSIZE = MainTabSize[3],$
+    TITLE     = title,$
+    /COLUMN,$
+    map = 1)
+    
+  ;space
+  ;space = WIDGET_LABEL(Base,$
+  ;  VALUE = ' ')
+    
+  ;first row (energy integration range: min and max)
+  row1 = WIDGET_BASE(Base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row1,$
+    VALUE = '   Energy Integration Range:      ')
+    
+  ;min value
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'min')
+    
+  txt = WIDGET_TEXT(row1,$
+    VALUE = '',$
+    XSIZE = 5,$
+    UNAME = 'energy_integration_range_min_value',$
+    /EDITABLE)
+    
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'ueV')
+    
+  ;space
+  space = WIDGET_LABEL(row1,$
+    VALUE = '         ')
+    
+  ;max value
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'max')
+    
+  txt = WIDGET_TEXT(row1,$
+    VALUE = '',$
+    XSIZE = 5,$
+    UNAME = 'energy_integration_range_max_value',$
+    /EDITABLE)
+    
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'ueV')
+    
+  ;row2 (big table)
+  row2 = WIDGET_BASE(Base,$
+    /ROW)
+    
+  Table = WIDGET_TABLE(row2,$
+    XSIZE = 3,$
+    YSIZE = 50,$
+    SCR_XSIZE = 785,$
+    SCR_YSIZE = 350,$
+    ;    /SCROLL,$
+    COLUMN_WIDTHS = [600,80,80],$
+    /NO_ROW_HEADERS,$
+    COLUMN_LABELS = ['Output File','Status','Temperature'],$
+    /RESIZEABLE_COLUMNS)
+    
+    ;row3
+    row3 = WIDGET_BASE(Base,$
+    /ROW)
+    
+    button1 = WIDGET_BUTTON(row3,$
+    VALUE = 'REFRESH TABLE',$
+    UNAME = 'tab2_refresh_table_uname',$
+    XSIZE = 785,$
+    SENSITIVE = 0)
+        
+    space = WIDGET_LABEL(row3,$
+    VALUE = '')
+        
+    ;row4 (output file)
+    row4 = WIDGET_BASE(Base,$
+    FRAME = 0,$
+    /ROW)
+    
+    row44 = WIDGET_BASE(row4,$
+    FRAME = 1,$
+    /ROW)
 
-
+    ;label
+    label = WIDGET_LABEL(row44,$
+    VALUE = 'Output File')
+    
+    ;output folder
+    path = WIDGET_BUTTON(row44,$
+    VALUE = '~/results/',$
+    SCR_XSIZE = 350,$
+    UNAME = 'tab2_output_folder_button_uname',$
+    SENSITIVE = 1)
+    
+    ;text
+    file_name = WIDGET_TEXT(row44,$
+    VALUE = '',$
+    UNAME = 'tab2_output_file_name_text_field_uname',$
+    SCR_XSIZE = 350,$
+    /EDITABLE)
+    
+    ;space
+    space = WIDGET_LABEL(row4,$
+    VALUE = '     ')
+   
+    ;row5 .....................................................................
+    row5 = WIDGET_BASE(Base,$
+    /ROW)
+    
+    button1 = WIDGET_BUTTON(row5,$
+    VALUE = 'Check Jobs Status',$
+    xSIZE = 200,$
+    UNAME = 'tab2_check_job_status_uname',$
+    SENSITIVE = 1)
+    
+    space = WIDGET_LABEL(row5,$
+    VALUE = '  ')
+    
+    button2 = WIDGET_BUTTON(row5,$
+    VALUE = 'RUN JOBS',$
+    XSIZE = 565,$
+    UNAME = 'tab2_run_jobs_uname',$
+    SENSITIVE = 0)
+    
+    
+   
+    
 END
 
 
