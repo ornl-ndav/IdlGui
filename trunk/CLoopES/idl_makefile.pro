@@ -41,6 +41,7 @@ cd, CurrentFolder
 .run cloopes_input_parser.pro
 .run cloopes_run_jobs.pro
 .run cloopes_job_manager_splash_base.pro
+.run cloopes_tab2.pro
 
 ;main functions
 .run MainBaseEvent.pro
