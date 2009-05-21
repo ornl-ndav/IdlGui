@@ -11,7 +11,7 @@ PRO ReductionCmd::SetProperty, $
     Version=version, $
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
-    Data=data, $                         ; Data filename(s)
+    DataRun=datarun, $                         ; Data filename(s)
     Output=output, $                     ; Output
     Instrument=instrument, $             ; Instrument Name
     Facility=facility, $                 ; Facility Name
@@ -67,7 +67,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(version) NE 0 THEN self.version = version
   IF N_ELEMENTS(verbose) NE 0 THEN self.verbose = verbose
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
-  IF N_ELEMENTS(data) NE 0 THEN self.data = data
+  IF N_ELEMENTS(datarun) NE 0 THEN self.datarun = datarun
   IF N_ELEMENTS(output) NE 0 THEN self.output = output
   IF N_ELEMENTS(instrument) NE 0 THEN BEGIN
     self.instrument = STRUPCASE(instrument)
@@ -155,7 +155,7 @@ function ReductionCmd::Generate
   ; Quiet flag
   IF (self.quiet EQ 1) THEN cmd += " -q"
   ; Data filename(s)
-  IF STRLEN(self.data) GT 1 THEN cmd += " "+ self.data
+  IF STRLEN(self.datarun) GT 1 THEN cmd += " "+ self.datarun
   ; Output
   IF STRLEN(self.output) GT 1 THEN cmd += " --output="+ self.output  
   ; Instrument Name
@@ -262,7 +262,7 @@ function ReductionCmd::Init, $
     Version=version, $
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
-    Data=data, $                         ; Data filename(s)
+    DataRun=datarun, $                   ; Data filename(s)
     Output=output, $                     ; Output
     Instrument=instrument, $             ; Instrument Name
     Facility=facility, $                 ; Facility Name
@@ -318,7 +318,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(version) EQ 0 THEN version = ""
   IF N_ELEMENTS(verbose) EQ 0 THEN verbose = 1
   IF N_ELEMENTS(quiet) EQ 0 THEN quiet = 0
-  IF N_ELEMENTS(data) EQ 0 THEN data = ""
+  IF N_ELEMENTS(datarun) EQ 0 THEN datarun = ""
   IF N_ELEMENTS(output) EQ 0 THEN output = ""
   IF N_ELEMENTS(instrument) EQ 0 THEN instrument = ""
   IF N_ELEMENTS(facility) EQ 0 THEN facility = "SNS"
@@ -365,7 +365,7 @@ function ReductionCmd::Init, $
   self.version = version
   self.verbose = verbose
   self.quiet = quiet
-  self.data = data
+  self.datarun = datarun
   self.output = output
   self.instrument = instrument
   self.facility = facility
@@ -425,7 +425,7 @@ pro ReductionCmd__Define
     version: "", $           ; Program version
     verbose: 0L, $           ; Verbose flag
     quiet: 0L, $             ; Quiet flag
-    data: "", $              ; Data filename(s)
+    datarun: "", $           ; Data filename(s)
     output: "", $            ; Output
     instrument: "", $        ; Instrument (short) name
     facility: "", $          ; Facility name
