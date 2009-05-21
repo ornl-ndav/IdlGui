@@ -127,7 +127,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
   sTable = { size: [sInfoFrame.size[0]+XYoff[0],$
     sInfoFrame.size[1]+sInfoFrame.size[3]+XYoff[1],$
     sPreview.size[2],$
-    250,2,1],$
+    290,$
+    2,$
+    1],$
     uname: 'runs_table',$
     column_labels: ['Runs','Command Line Preview'],$
     column_widths: [200,750]}
