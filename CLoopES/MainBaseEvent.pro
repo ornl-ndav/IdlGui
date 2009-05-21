@@ -65,6 +65,11 @@ PRO MAIN_BASE_event, Event
       help_button, Event ;_help
     END
     
+    ;get preview of cell selected
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_cell_selected'): BEGIN
+      display_preview_of_cell_selected, Event
+    END
+    
     ;check status of jobs submitted button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='check_status_button'): BEGIN
       check_status, Event ;_eventcb

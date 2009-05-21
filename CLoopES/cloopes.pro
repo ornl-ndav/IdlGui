@@ -86,7 +86,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_help_text2: '',$
     
     job_manager_splash_draw: $
-    'CLoopES_images/job_manager_is_coming.png',$ 
+    'CLoopES_images/job_manager_is_coming.png',$
     ascii_path: '~/results/',$
     
     firefox: '/usr/bin/firefox',$
@@ -108,7 +108,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,800,545]})
+    MainBaseSize: [30,25,800,585]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
@@ -118,7 +118,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     UNAME        = 'MAIN_BASE',$
     SCR_XSIZE    = MainBaseSize[2],$
     SCR_YSIZE    = MainBaseSize[3],$
-    XOFFSET      = MainBaseSize[0],$w
+    XOFFSET      = MainBaseSize[0],$
   YOFFSET      = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
     SPACE        = 0,$

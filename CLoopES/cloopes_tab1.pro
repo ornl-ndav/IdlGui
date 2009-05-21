@@ -32,22 +32,27 @@
 ;
 ;==============================================================================
 
-FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
-END
+PRO display_preview_of_cell_selected, Event
 
-;------------------------------------------------------------------------------
-FUNCTION getTableValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
-END
-
-;------------------------------------------------------------------------------
-FUNCTIOn getCellSelectedTab1, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-selection = WIDGET_INFO(id, /TABLE_SELECT)
-RETURN, selection[0:1]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  
+  ;get value of table
+  table = getTableValue(Event, 'runs_table')
+  
+  ;get cell selected
+  cell_selected = getCellSelectedTab1(Event, 'runs_table')
+  
+  ;text selection
+  title = 'Command line preview of Runs ' + Table[0,cell_selected[1]]
+  
+  cl_preview = table[1,cell_selected[1]]
+  
+  IF (STRCOMPRESS(cl_preview,/REMOVE_ALL) NE '') THEN BEGIN
+  
+    XDISPLAYFILE, TEXT = cl_preview,$
+      GROUP = id, $
+      TITLE = title
+      
+  ENDIF
+  
 END
