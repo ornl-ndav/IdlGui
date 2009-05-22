@@ -155,7 +155,7 @@ function ReductionCmd::Generate
   ; Quiet flag
   IF (self.quiet EQ 1) THEN cmd += " -q"
   ; Data filename(s)
-  IF STRLEN(self.datarun) GT 1 THEN cmd += " "+ self.datarun
+  IF STRLEN(self.datarun) GT 1 THEN cmd += " "+ STRING(self.datarun)
   ; Output
   IF STRLEN(self.output) GT 1 THEN cmd += " --output="+ self.output  
   ; Instrument Name
@@ -175,6 +175,9 @@ function ReductionCmd::Generate
   ; Corner Geometry
   IF STRLEN(self.cornergeometry) GT 1 THEN $
     cmd += " --corner-geom="+self.cornergeometry
+  ; DataPaths
+  IF STRLEN(self.datapaths) GT 0 THEN $
+    cmd += " --datapaths="+self.datapaths
   ; normalisation file
   IF STRLEN(self.normalisation) GT 1 THEN $
     cmd += " --norm="+self.normalisation 
