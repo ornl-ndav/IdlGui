@@ -37,11 +37,16 @@ PRO DGSreduction_Execute, event
       ; Get the info structure and copy it here
     WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY    
     dgscmd = info.dgscmd
-    ; Generate the Command to run
-    command = dgscmd->generate()
-    
+
     ; TODO: loop over to number of jobs required - split up the min/max banks equally
     ; over the no. of requested jobs --data-paths=1-10 etc..
+
+    
+
+    ;dgscmd->SetProperty, DataPaths=
+
+    ; Generate the Command to run
+    command = dgscmd->generate()
     
     ; TODO: For now let's just dump the commands into a file
     spawn, "echo " + command + " >> /tmp/commands" 
@@ -59,10 +64,72 @@ END
 
 ;---------------------------------------------------------
 
+FUNCTION Construct_DataPaths, Lower=lower, Upper=upper
+
+  IF N_ELEMENTS(lower) EQ 0 THEN lower = ""
+  IF N_ELEMENTS(upper) EQ 0 THEN upper = ""
+  
+
+  IF (lower NE "") AND (upper NE "") THEN BEGIN
+    datapaths=STRING(lower) + "-" + STRING(UPPER)
+    RETURN, datapaths
+  ENDIF
+  
+  IF (lower NE "") AND (upper EQ "") THEN BEGIN
+    RETURN, STRING(lower)
+  ENDIF
+  
+  IF (lower EQ "") AND (upper NE "") THEN BEGIN
+    RETURN, STRING(upper)
+  ENDIF
+
+  RETURN, ""
+ 
+END
+
+;---------------------------------------------------------
+
 PRO DGSreduction_TLB_Events, event
   thisEvent = TAG_NAMES(event, /STRUCTURE_NAME)
+   
+     ; Get the info structure
+  WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+   
+  ; extract the command object into a separate
+  dgscmd=info.dgscmd
+      
+  WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
+ 
+  ; Check that we actually got something back in the UVALUE
+  IF N_ELEMENTS(myUVALUE) EQ 0 THEN myUVALUE="NOTHING"
+ 
+  CASE myUVALUE OF
+    'DGS_DATARUN': BEGIN
+        WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+        dgscmd->SetProperty, DataRun=myValue
+      END
+    'DGS_DATAPATHS_LOWER': BEGIN
+        WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
+        WIDGET_CONTROL, info.ubankID, GET_VALUE=upperValue
+        datapath = Construct_DataPaths(Lower=lowerValue, Upper=upperValue)
+        dgscmd->SetProperty, DataPaths=datapath
+      END
+    'DGS_DATAPATHS_UPPER': BEGIN
+        WIDGET_CONTROL, event.ID, GET_VALUE=upperValue
+        WIDGET_CONTROL, info.lbankID, GET_VALUE=lowerValue
+        datapath = Construct_DataPaths(Lower=lowerValue, Upper=upperValue)
+        dgscmd->SetProperty, DataPaths=datapath
+      END
+    'NOTHING': BEGIN
+      END
+  ENDCASE
   
-  print, thisEvent
+  ; Update the output command window
+  WIDGET_CONTROL, info.outputID, SET_VALUE=dgscmd->generate()
+  
+  ; Put info back  
+  WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  
   
   IF thisEvent EQ 'WIDGET_BASE' THEN BEGIN
     ; Get the info structure and copy it here
@@ -132,17 +199,18 @@ PRO DGSreduction, dgscmd, _Extra=extra
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionID = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
+  reductionTLB = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
   
-  t1 = widget_base(reductionID, /row)
-  label = WIDGET_LABEL(t1, value="Run Number:")
-  runID= WIDGET_TEXT(t1, /EDITABLE,xsize=30, ysize=1, EVENT_PRO='DGSreduction_dgs_DataRun')
+  row1 = widget_base(reductionTLB, /row)
+  runID= CW_FIELD(reductionTLB, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
   
-  t2 = widget_base(reductionID, /row)
-  label = WIDGET_LABEL(t2, value="Detector Banks from ")
-  lbankID = WIDGET_TEXT(t2, /EDITABLE)
-  label = WIDGET_LABEL(t2, value=" to ")
-  ubankID = WIDGET_TEXT(t2, /EDITABLE)
+  row2 = widget_base(reductionTLB, /row)
+  lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER")
+  ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER")
+  
+  
+  
+  
   
   ; normalisation tab
   normID = WIDGET_BASE(tabID, Title='Normalisation')
@@ -169,8 +237,8 @@ PRO DGSreduction, dgscmd, _Extra=extra
     ucams:ucams, $
     title:title, $
     outputID:outputID, $
-    lbank:0, $
-    ubank:0, $
+    lbankID:lbankID, $
+    ubankID:ubankID, $
     extra:ptr_new(extra) $
     }
     
