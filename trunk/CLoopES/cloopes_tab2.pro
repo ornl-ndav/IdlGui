@@ -83,15 +83,15 @@ PRO update_temperature, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   error = 0
- ; CATCH, error ;remove_me (important if user try to edit STATUS column
+  ; CATCH, error ;remove_me (important if user try to edit STATUS column
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
   
     ;get table value
     table = getTableValue(Event,'tab2_table_uname')
-    print, size(table)
-    
+    ;    PRINT, SIZE(table)
+    nbr_row = (SIZE(table))(2)
     
     ;get row and column edited
     rc_array = getCellSelectedTab1(Event, 'tab2_table_uname')
@@ -99,18 +99,25 @@ PRO update_temperature, Event
     row = rc_array[1]
     
     ;continue work only if column 2 is selected
-    IF (columns EQ 2) THEN BEGIN
+    IF (column EQ 2) THEN BEGIN
     
-    CASE (row) OF
-    0: ;do nothing
-    1: ;do nothing
-    ELSE: BEGIN
-    
-
-
-    
-    END
-    
+      CASE (row) OF
+        0: TABLE[2,0] = STRCOMPRESS(FLOAT(table[2,0]))
+        ELSE: BEGIN
+        table[2,row] = STRCOMPRESS(FLOAT(table[2,row]))
+          IF (row LT (nbr_row - 1)) THEN BEGIN
+            increment = FLOAT(table[2,row]) - FLOAT(table[2,row-1])
+            index = (row+1)
+            WHILE (index LT nbr_row) DO BEGIN
+              table[2,index] = STRCOMPRESS(table[2,index-1] + increment)
+              index++
+            ENDWHILE
+          ENDIF
+        END
+      ENDCASE
+      
+      putValue, Event, 'tab2_table_uname', table
+      
     ENDIF
     
   ENDELSE
