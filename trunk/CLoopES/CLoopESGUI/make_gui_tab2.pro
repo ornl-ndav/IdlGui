@@ -76,7 +76,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     FRAME = 1)
     
   text = WIDGET_TEXT(inter_base,$
-    VALUE = ' ',$
+    VALUE = 'BSS',$
     UNAME = 'tab2_manual_input_suffix_name',$
     /EDITABLE,$
     XSIZE = 20)
