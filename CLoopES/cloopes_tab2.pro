@@ -243,6 +243,9 @@ PRO parse_input_field_tab2, Event
   ENDELSE
   right   = ''
   cur_ope = '' ;'-' or ''
+  tmp_seq_number = ['']   ;when working with same_run
+  column_seq_number = ['']  ;1 element per run (not same_run)
+  last_cursor_is_number = 1b
   
   length = STRLEN(input_text)
   index = 1
@@ -252,177 +255,107 @@ PRO parse_input_field_tab2, Event
     cursor = STRMID(input_text, index, 1)
     
     CASE (cursor) OF
-      '0': addNumber, left, right, cursor, cur_ope
-      '1': addNumber, left, right, cursor, cur_ope
-      '2': addNumber, left, right, cursor, cur_ope
-      '3': addNumber, left, right, cursor, cur_ope
-      '4': addNumber, left, right, cursor, cur_ope
-      '5': addNumber, left, right, cursor, cur_ope
-      '6': addNumber, left, right, cursor, cur_ope
-      '7': addNumber, left, right, cursor, cur_ope
-      '8': addNumber, left, right, cursor, cur_ope
-      '9': addNumber, left, right, cursor, cur_ope
+      '0': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '1': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '2': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '3': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '4': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '5': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '6': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '7': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '8': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
+      '9': addNumber, left, right, cursor, cur_ope, last_cursor_is_number
       '-': BEGIN
         cur_ope = '-'
+        last_cursor_is_number = 0b
       END
       ',': BEGIN
-        full_reset, left, right, cur_ope
-      END
-      '[': BEGIN
-        full_reset, left, right, cur_ope
-        same_run = 1b
-      END
-      ']': BEGIN
-        full_reset, left, right, cur_ope
-        same_run = 0b
-      END
-      ',':
-      ELSE: ;[ENTER]
-    ENDCASE
-    
-    
-    index++
-  ENDWHILE
-  
-  
-  
-  
-  
-  
-  
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-pro tmp
-
-
-  run_array = ['']
-  
-  WHILE(index LT length) DO BEGIN
-  
-    cursor = STRMID(input_text,index,1)
-    ;    print, 'cursor: ' + cursor
-    CASE (cursor) OF
-    
-      '-' : BEGIN ;............................................................
-        cur_numb = 'right' ;we are now working on the right number
-        cur_ope  = '-'     ;working operation is now '-'
-      END
-      
-      ',' : BEGIN ;............................................................
-        IF (left NE '') THEN BEGIN
-          IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
-            seq_number = getSequence(left, right)
-          ENDIF ELSE BEGIN
-            seq_number = left
-          ENDELSE
-          IF (same_run) THEN BEGIN
-            addSequencesToRunArray, run_array, seq_number
-          ENDIF ELSE BEGIN
-            createCLsOfRunsSequence_tab2, Event, seq_number, CL_text_array
-          ENDELSE
-          
-          right    = ''     ;reinitialize right number
-          left     = ''
-          cur_ope  = ''     ;reinitialize operation in progress
-          cur_numb = 'left' ;we will now work on the left number again
-        ENDIF
-      END
-      
-      '[' : BEGIN ;............................................................
-        left     = ''
-        right    = ''
-        cur_ope  = ''
-        cur_numb = 'left'
-        same_run = 1b
-      END
-      
-      ']' : BEGIN ;............................................................
         IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
           seq_number = getSequence(left, right)
         ENDIF ELSE BEGIN
           seq_number = left
         ENDELSE
-        
-        addSequencesToRunArray, run_array, seq_number
-        createCLsOfRunsSequence_tab2, Event, run_array  , CL_text_array
-        
-        right    = ''
-        left     = ''
-        cur_ope  = ''
-        cur_numb = 'left'
-        same_run = 0b
-        left     = ''
-        run_array = ['']
-        
-      END
-      
-      ELSE: BEGIN ;............................................................
-        IF (cur_numb EQ 'left') THEN BEGIN
-        
-          IF (left EQ '') THEN BEGIN
-            left = cursor
-          ENDIF ELSE BEGIN
-            left = left + cursor
-          ENDELSE
-          
+        IF (same_run) THEN BEGIN
+          add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
         ENDIF ELSE BEGIN
-        
-          IF (right EQ '') THEN BEGIN
-            right = cursor
-          ENDIF ELSE BEGIN
-            right = right + cursor
-          ENDELSE
-          
+          add_seq_number_to_global_seq_number, column_seq_number,seq_number
         ENDELSE
-        
-        PRINT, 'index: ' + STRCOMPRESS(index)
-        PRINT, 'length-1: ' + STRCOMPRESS(length-1)
-        PRINT, 'left: ' + left
-        
-        IF (index EQ (length-1)) THEN BEGIN ;end
-          IF (cur_ope EQ '-') THEN BEGIN
-            createCLsOfRunsSequence_tab2, $
-              Event, $
-              seq_number, $
-              CL_text_array
-          ENDIF ELSE BEGIN
-            createCLsOfRunsSequence_tab2, $
-              Event, $
-              [left], $
-              CL_text_array
-          ENDELSE
-        ENDIF
+        right    = ''     ;reinitialize right number
+        left     = ''
+        cur_ope  = ''     ;reinitialize operation in progress
+        cur_numb = 'left' ;we will now work on the left number again
+        full_reset, left, right, cur_ope
+        last_cursor_is_number = 0b
       END
-      
+      '[': BEGIN
+        full_reset, left, right, cur_ope
+        tmp_seq_number = ['']
+        same_run = 1b
+        last_cursor_is_number = 0b
+      END
+      ']': BEGIN
+        IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+          seq_number = getSequence(left, right)
+        ENDIF ELSE BEGIN
+          seq_number = left
+        ENDELSE
+        add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
+        add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
+        full_reset, left, right, cur_ope
+        same_run = 0b
+        last_cursor_is_number = 0b
+        tmp_seq_number = ''
+      END
+      ELSE: ;[ENTER]
     ENDCASE
+    
     index++
-    PRINT
   ENDWHILE
   
-  column_sequence = (*(*global).column_sequence)
-  column_cl = (*(*global).column_cl)
+  IF (last_cursor_is_number EQ 1b) THEN BEGIN
+    IF (cur_ope EQ '-') THEN BEGIN ;sequence of numbers
+      seq_number = getSequence(left, right)
+    ENDIF ELSE BEGIN
+      seq_number = left
+    ENDELSE
+    add_seq_number_to_global_seq_number, tmp_seq_number, seq_number
+    add_seq_number_to_global_seq_number, column_seq_number, tmp_seq_number
+  ENDIF
   
-  ;print, column_cl
-  HELP, column_sequence
-  PRINT, column_sequence
+  ;get path, prefix and suffix for output files
+  path   = getButtonValue(Event,'tab2_manual_input_folder')
+  prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
+  suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
   
+  nbr_files = N_ELEMENTS(column_seq_number)
+  table = STRARR(3,nbr_files)
+  index = 0
+  WHILE (index LT nbr_files) DO BEGIN
+    IF (column_seq_number[index] NE '') THEN BEGIN
+      ;check if there are several runs
+      seq_array = STRSPLIT(column_seq_number[index],',',/EXTRACT)
+      nbr = N_ELEMENTS(seq_array)
+      CASE (nbr) OF
+        1: add_string = column_seq_number[index] + '_1run'
+        ELSE: add_string = seq_array[0] + '_' + STRCOMPRESS(nbr,/REMOVE_ALL) + $
+          'runs'
+      ENDCASE
+      
+      ;update big table
+      table[0,index]= path + prefix + '_' + add_string + '.' + suffix
+      table[1,index] = 'NOT READY'
+
+    ENDIF
+    index++
+  ENDWHILE
+  
+  putValue, Event,'tab2_table_uname', table
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO TMP
 ;sz = N_ELEMENTS(column_sequence)
 ;Table = STRARR(3,sz)
 ;Table[0,*] = column_cl[*]
@@ -430,7 +363,7 @@ pro tmp
 ;id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_table_uname')
 ;WIDGET_CONTROL, id, TABLE_YSIZE = sz
 ;putValue, Event, 'tab2_table_uname', Table
-  
+
 ;  ;activate or not the 'Launch Jobs in Background'
 ;  IF (column_sequence[0] NE '') THEN BEGIN
 ;    status = 1
@@ -439,18 +372,18 @@ pro tmp
 ;  ENDELSE
 ;  activate_widget, Event, 'run_jobs_button', status
 ;  activate_widget, Event, 'preview_jobs_button', status
-  
 END
 
 ;------------------------------------------------------------------------------
 ;This function adds the cursor to the left number if the current operator
 ;is not '-' otherwise it's added to the right operator
-PRO addNumber, left, right, cursor, cur_ope
+PRO addNumber, left, right, cursor, cur_ope, last_cursor_is_number
   IF (cur_ope EQ '-') THEN BEGIN ;add cursor to right number
     right += cursor
   ENDIF ELSE BEGIN ;add cursor to left number
     left += cursor
   ENDELSE
+  last_cursor_is_number = 1b
 END
 
 ;------------------------------------------------------------------------------
@@ -459,4 +392,30 @@ PRO full_reset, left, right, cur_ope
   right = ''
   cur_ope = ''
 END
+
+;------------------------------------------------------------------------------
+PRO add_seq_number_to_global_seq_number, tmp_seq_number, seq_number
+  IF (tmp_seq_number[0] EQ '') THEN BEGIN
+    tmp_seq_number = STRCOMPRESS(seq_number,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    tmp_seq_number = [tmp_seq_number,STRCOMPRESS(seq_number,/REMOVE_ALL)]
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
+  sz = N_ELEMENTS(seq_number)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (tmp_seq_number NE '') THEN BEGIN
+      tmp_seq_number += ',' + STRCOMPRESS(seq_number[index],/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      tmp_seq_number = STRCOMPRESS(seq_number[index],/REMOVE_ALL)
+    ENDELSE
+    index++
+  ENDWHILE
+END
+
+
+
 
