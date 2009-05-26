@@ -96,6 +96,11 @@ PRO MAIN_BASE_event, Event
       define_input_folder_tab2, Event
     END
     
+    ;<User_defined>
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence'): BEGIN
+      parse_input_field_tab2, Event
+    END
+    
     ;help button of manual input
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence_help'): BEGIN
       help_button_tab2, Event ;_help

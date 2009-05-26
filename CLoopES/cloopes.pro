@@ -106,6 +106,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     output_prefix: '.dat',$
     
     tab2_table: PTR_NEW(0L),$
+    column_file_name_tab2: PTR_NEW(0L),$
+    column_sequence_tab2: PTR_NEW(0L),$
     
     package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no

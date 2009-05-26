@@ -33,22 +33,43 @@
 ;==============================================================================
 
 FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTableValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 ;this function returns the first row and column of the selection
-FUNCTIOn getCellSelectedTab1, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-selection = WIDGET_INFO(id, /TABLE_SELECT)
-RETURN, selection[0:1]
+FUNCTION getCellSelectedTab1, Event, uname
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  selection = WIDGET_INFO(id, /TABLE_SELECT)
+  RETURN, selection[0:1]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getButtonValue, Event, uname
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTab2_cl_array, Event
+  path = getButtonValue(Event,'tab2_manual_input_folder')
+  path = STRCOMPRESS(path,/REMOVE_ALL)
+  prefix = getTextFieldValue(Event,'tab2_manual_input_suffix_name')
+  prefix = STRCOMPRESS(prefix,/REMOVE_ALL)
+  suffix = getTextFieldValue(Event,'tab2_manual_input_prefix_name')
+  suffix = STRCOMPRESS(suffix,/REMOVE_ALL)
+  cl_text_array = STRARR(2)
+  cl_text_array[0] = path + prefix+ '_'
+  cl_text_array[1] = '.' + suffix
+  RETURN, cl_text_array
 END
