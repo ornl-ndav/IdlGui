@@ -49,60 +49,65 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   ;  VALUE = ' ')
     
   ;manual input list of files -------------------------------------------------
-   row_aa = WIDGET_BASE(Base,$
-   /ROW)
-   
-   row_a = WIDGET_BASE(row_aa,$
-   /COLUMN,$
-   FRAME = 1)
-   
-   row_a_1 = WIDGET_BASE(row_a, $ ;------------------ row1 
+  row_aa = WIDGET_BASE(Base,$
     /ROW)
     
-    label = WIDGET_LABEL(row_a_1,$
+  row_a = WIDGET_BASE(row_aa,$
+    /COLUMN,$
+    FRAME = 1)
+    
+  row_a_1 = WIDGET_BASE(row_a, $ ;------------------ row1
+    /ROW)
+    
+  label = WIDGET_LABEL(row_a_1,$
     VALUE = 'Input File')
     
-    button = WIDGET_BUTTON(row_a_1,$
+  button = WIDGET_BUTTON(row_a_1,$
     VALUE = '~/results/',$
     SCR_XSIZE = 300,$
     UNAME = 'tab2_manual_input_folder')
     
-    label = WIDGET_LABEL(row_a_1,$
+  label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
     
-    ;internal_base
-    inter_base = WIDGET_BASE(row_a_1,$
+  ;internal_base
+  inter_base = WIDGET_BASE(row_a_1,$
     /ROW,$
     FRAME = 1)
-        
-    text = WIDGET_TEXT(inter_base,$
+    
+  text = WIDGET_TEXT(inter_base,$
     VALUE = ' ',$
     UNAME = 'tab2_manual_input_suffix_name',$
     /EDITABLE,$
     XSIZE = 20)
     
-    label = WIDGET_LABEL(inter_base,$
+  label = WIDGET_LABEL(inter_base,$
     VALUE = '_<User_Defined>.')
     
-    text = WIDGET_TEXT(inter_base,$
+  text = WIDGET_TEXT(inter_base,$
     VALUE = 'txt',$
     UNAME = 'tab2_manual_input_prefix_name',$
     /EDITABLE,$
     XSIZE = 10)
-
-   row_a_2 = WIDGET_BASE(row_a, $ ;----------------row2
-   /ROW)
-   
-   label = WIDGET_LABEL(row_a_2,$
-   VALUE = '<User_Defined>')
-   
-   text = WIDGET_TEXT(row_a_2,$
-   VALUE = ' ',$
-   XSIZE = 110,$
-   /EDITABLE,$
-   UNAME = 'tab2_manual_input_sequence')
     
-    space = WIDGET_LABEL(row_aa,$
+  row_a_2 = WIDGET_BASE(row_a, $ ;----------------row2
+    /ROW)
+    
+  label = WIDGET_LABEL(row_a_2,$
+    VALUE = '<User_Defined>')
+    
+  text = WIDGET_TEXT(row_a_2,$
+    VALUE = ' ',$
+    XSIZE = 107,$
+    /EDITABLE,$
+    UNAME = 'tab2_manual_input_sequence')
+    
+  help = WIDGET_BUTTON(row_a_2,$
+    VALUE = '?',$
+    UNAME = 'tab2_manual_input_sequence_help',$
+    /PUSHBUTTON_EVENTS)
+    
+  space = WIDGET_LABEL(row_aa,$
     VALUE =  '   ')
     
   ;-----------------------------------------------------------------------------
@@ -162,8 +167,8 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     UNAME = 'tab2_use_manual_input',$
     /NO_RELEASE)
     
-  widget_control, b1, /SET_BUTTON     
-    
+  WIDGET_CONTROL, b1, /SET_BUTTON
+  
   ;----------------------------------------------------------------------------
   ;row2 (big table)
   row2 = WIDGET_BASE(Base,$
