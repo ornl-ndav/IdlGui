@@ -91,9 +91,14 @@ PRO MAIN_BASE_event, Event
     
     ;tab22222222222222222222222222222222222222222222222222222222222222222222222
     
+    ;Input File path button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_folder'): BEGIN
+      define_input_folder_tab2, Event
+    END
+    
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
-    update_temperature, Event
+      update_temperature, Event
     END
     
     ;output folder button
