@@ -64,10 +64,11 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
     button = WIDGET_BUTTON(row_a_1,$
     VALUE = '~/results/',$
+    SCR_XSIZE = 300,$
     UNAME = 'tab2_manual_input_folder')
     
     label = WIDGET_LABEL(row_a_1,$
-    VALUE = '     Base of File Name:')
+    VALUE = 'File Name:')
     
     ;internal_base
     inter_base = WIDGET_BASE(row_a_1,$
@@ -78,7 +79,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = ' ',$
     UNAME = 'tab2_manual_input_suffix_name',$
     /EDITABLE,$
-    XSIZE = 45)
+    XSIZE = 20)
     
     label = WIDGET_LABEL(inter_base,$
     VALUE = '_<User_Defined>.')
