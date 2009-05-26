@@ -63,28 +63,8 @@ PRO DGSreduction_Quit, event
 END
 
 ;---------------------------------------------------------
-
-FUNCTION Construct_DataPaths, Lower=lower, Upper=upper
-
-  IF N_ELEMENTS(lower) EQ 0 THEN lower = ""
-  IF N_ELEMENTS(upper) EQ 0 THEN upper = ""
+PRO Update_Output, wid, cmdarray
   
-
-  IF (lower NE "") AND (upper NE "") THEN BEGIN
-    datapaths=STRING(lower) + "-" + STRING(UPPER)
-    RETURN, datapaths
-  ENDIF
-  
-  IF (lower NE "") AND (upper EQ "") THEN BEGIN
-    RETURN, STRING(lower)
-  ENDIF
-  
-  IF (lower EQ "") AND (upper NE "") THEN BEGIN
-    RETURN, STRING(upper)
-  ENDIF
-
-  RETURN, ""
- 
 END
 
 ;---------------------------------------------------------
@@ -110,15 +90,15 @@ PRO DGSreduction_TLB_Events, event
       END
     'DGS_DATAPATHS_LOWER': BEGIN
         WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
-        WIDGET_CONTROL, info.ubankID, GET_VALUE=upperValue
-        datapath = Construct_DataPaths(Lower=lowerValue, Upper=upperValue)
-        dgscmd->SetProperty, DataPaths=datapath
+        dgscmd->SetProperty, LowerBank=lowerValue
       END
     'DGS_DATAPATHS_UPPER': BEGIN
         WIDGET_CONTROL, event.ID, GET_VALUE=upperValue
-        WIDGET_CONTROL, info.lbankID, GET_VALUE=lowerValue
-        datapath = Construct_DataPaths(Lower=lowerValue, Upper=upperValue)
-        dgscmd->SetProperty, DataPaths=datapath
+        dgscmd->SetProperty, UpperBank=upperValue
+      END
+    'DGS_JOBS': BEGIN
+        WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+        dgscmd->SetProperty, Jobs=myValue
       END
     'NOTHING': BEGIN
       END
@@ -202,11 +182,12 @@ PRO DGSreduction, dgscmd, _Extra=extra
   reductionTLB = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
   
   row1 = widget_base(reductionTLB, /row)
-  runID= CW_FIELD(reductionTLB, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
+  runID= CW_FIELD(row1, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
+  jobID = CW_FIELD(row1, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", /INTEGER, /ALL_EVENTS)
   
   row2 = widget_base(reductionTLB, /row)
-  lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER")
-  ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER")
+  lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
+  ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)
   
   
   
