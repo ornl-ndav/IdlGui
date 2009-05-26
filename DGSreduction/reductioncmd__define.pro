@@ -20,6 +20,8 @@ PRO ReductionCmd::SetProperty, $
     ConfigFile=configfile, $             ; Config (.rmd) filename
     InstGeometry=instgeometry, $         ; Instrument Geometry filename
     CornerGeometry=cornergeometry, $     ; Corner Geometry filename
+    LowerBank=lowerbank, $               ; Lower Detector Bank
+    UpperBank=upperbank, $               ; Upper Detector Bank
     DataPaths=datapaths, $               ; Detector Data paths
     Normalisation=normalisation, $       ; Normalisation file
     EmptyCan=emptycan, $                 ; Empty Can file
@@ -53,6 +55,7 @@ PRO ReductionCmd::SetProperty, $
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
     Timing=timing, $                     ; Timing of code
+    Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
     
   ; Error Handling
@@ -100,6 +103,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(configfile) NE 0 THEN self.configfile = configfile
   IF N_ELEMENTS(instgeometry) NE 0 THEN self.instgeometry = instgeometry
   IF N_ELEMENTS(cornergeometry) NE 0 THEN self.cornergeometry = cornergeometry
+  IF N_ELEMENTS(lowerbank) NE 0 THEN self.lowerbank = lowerbank
+  IF N_ELEMENTS(upperbank) NE 0 THEN self.upperbank = upperbank
   IF N_ELEMENTS(datapaths) NE 0 THEN self.datapaths = datapaths
   IF N_ELEMENTS(normalisation) NE 0 THEN self.normalisation = Normalisation
   IF N_ELEMENTS(emptycan) NE 0 THEN self.emptycan = EmptyCan
@@ -133,6 +138,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(fixed) NE 0 THEN self.fixed = Fixed
   IF N_ELEMENTS(split) NE 0 THEN self.split = Split
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
+  IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
   
 END
@@ -147,116 +153,127 @@ function ReductionCmd::Generate
     return, 0
   ENDIF
   
+  cmd = STRARR(self.jobs)
+  
+  for i = 0L, self.jobs-1 do begin
+    
   ; Let's first start with the program name!
-  cmd = self.program
+  cmd[i] = self.program
   
   ; Verbose flag
-  IF (self.verbose EQ 1) THEN cmd += " -v"
+  IF (self.verbose EQ 1) THEN cmd[i] += " -v"
   ; Quiet flag
-  IF (self.quiet EQ 1) THEN cmd += " -q"
+  IF (self.quiet EQ 1) THEN cmd[i] += " -q"
   ; Data filename(s)
-  IF STRLEN(self.datarun) GT 1 THEN cmd += " "+ STRING(self.datarun)
+  IF STRLEN(self.datarun) GT 1 THEN cmd[i] += " "+ STRING(self.datarun)
   ; Output
-  IF STRLEN(self.output) GT 1 THEN cmd += " --output="+ self.output  
+  IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output  
   ; Instrument Name
-  IF STRLEN(self.instrument) GT 1 THEN cmd += " --inst="+self.instrument
+  IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
   ; Facility
-  IF STRLEN(self.facility) GT 1 THEN cmd += " --facility="+self.facility
+  IF STRLEN(self.facility) GT 1 THEN cmd[i] += " --facility="+self.facility
   ; Proposal
-  IF STRLEN(self.proposal) GT 1 THEN cmd += " --proposal="+self.proposal
+  IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
   ; SPE/PHX creation
-  IF (self.spe EQ 1) THEN cmd+= " --enable-spe"
+  IF (self.spe EQ 1) THEN cmd[i]+= " --enable-spe"
   ; Config (.rmd) file
   IF STRLEN(self.configfile) GT 1 THEN $
-    cmd += " --config="+self.configfile
+    cmd[i] += " --config="+self.configfile
   ; Instrument Geometry
   IF STRLEN(self.instgeometry) GT 1 THEN $
-    cmd += " --inst-geom="+self.instgeometry
+    cmd[i] += " --inst-geom="+self.instgeometry
   ; Corner Geometry
   IF STRLEN(self.cornergeometry) GT 1 THEN $
-    cmd += " --corner-geom="+self.cornergeometry
+    cmd[i] += " --corner-geom="+self.cornergeometry
   ; DataPaths
+  ; Construct the DataPaths 
+  self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $ 
+                                       i+1, self.jobs)
   IF STRLEN(self.datapaths) GT 0 THEN $
-    cmd += " --datapaths="+self.datapaths
+    cmd[i] += " --datapaths="+self.datapaths
   ; normalisation file
   IF STRLEN(self.normalisation) GT 1 THEN $
-    cmd += " --norm="+self.normalisation 
+    cmd[i] += " --norm="+self.normalisation 
   ; Empty sample container file
   IF STRLEN(self.emptycan) GT 1 THEN $
-    cmd += " --ecan="+self.emptycan   
+    cmd[i] += " --ecan="+self.emptycan   
   ; black sample container file
   IF STRLEN(self.blackcan) GT 1 THEN $
-    cmd += " --bcan="+self.blackcan   
+    cmd[i] += " --bcan="+self.blackcan   
   ; Dark Current File
   IF STRLEN(self.dark) GT 1 THEN $
-    cmd += " --dkcur="+self.dark 
+    cmd[i] += " --dkcur="+self.dark 
   ; Upstream monitor path
   IF STRLEN(self.usmonpath) GT 1 THEN $
-    cmd += " --usmon-path="+self.usmonpath 
+    cmd[i] += " --usmon-path="+self.usmonpath 
   ; Downstream monitor path
   IF STRLEN(self.dsmonpath) GT 1 THEN $
-    cmd += " --dsmon-path="+self.dsmonpath
+    cmd[i] += " --dsmon-path="+self.dsmonpath
   ; ROI filename
   IF STRLEN(self.roifile) GT 1 THEN $
-    cmd += " --roi-file="+self.roifile
+    cmd[i] += " --roi-file="+self.roifile
   ; Tmin
   IF STRLEN(self.tmin) GT 1 THEN $
-    cmd += " --tof-cut-min="+self.tmin
+    cmd[i] += " --tof-cut-min="+self.tmin
   ; Tmax
   IF STRLEN(self.tmax) GT 1 THEN $
-    cmd += " --tof-cut-max="+self.tmax
+    cmd[i] += " --tof-cut-max="+self.tmax
   ; Time Independent Background
   IF STRLEN(self.tibconst) GT 1 THEN $
-    cmd += " --tib-const="+self.tibconst  
+    cmd[i] += " --tib-const="+self.tibconst  
   ; Ei
   IF STRLEN(self.ei) GT 1 THEN $
-    cmd += " --initial-energy="+self.ei 
+    cmd[i] += " --initial-energy="+self.ei 
   ; T0
   IF STRLEN(self.tzero) GT 1 THEN $
-    cmd += " --time-zero-offset="+self.tzero 
+    cmd[i] += " --time-zero-offset="+self.tzero 
   ; Flag for turning off monitor normalization
-  IF (self.nomonitornorm EQ 1) THEN cmd += " --no-mon-norm" 
+  IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm" 
   ; proton charge normalization
-  IF (self.pcnorm EQ 1) THEN cmd += " --pc-norm" 
+  IF (self.pcnorm EQ 1) THEN cmd[i] += " --pc-norm" 
   ; Monitor integration range
   IF STRLEN(self.monrange) GT 1 THEN $
-    cmd += " --mon-int-range="+self.monrange  
+    cmd[i] += " --mon-int-range="+self.monrange  
   ; Detector Efficiency
   IF STRLEN(self.deteff) GT 1 THEN $
-    cmd += " --det-eff="+self.deteff  
+    cmd[i] += " --det-eff="+self.deteff  
   ; transmission for sample data background
   IF STRLEN(self.datatrans) GT 1 THEN $
-    cmd += " --data-trans-coef=" + self.datatrans  
+    cmd[i] += " --data-trans-coef=" + self.datatrans  
   ; transmission for norm data background
   IF STRLEN(self.normtrans) GT 1 THEN $
-    cmd += " --norm-trans-coef=" + self.normtrans  
+    cmd[i] += " --norm-trans-coef=" + self.normtrans  
   ; Normalisation integration range
   IF STRLEN(self.normrange) GT 1 THEN $
-    cmd += " --norm-int-range="+self.normrange
+    cmd[i] += " --norm-int-range="+self.normrange
   ; Lambda Bins
   IF STRLEN(self.lambdabins) GT 1 THEN $
-    cmd += " --lambda-bins=" + self.lambdabins 
+    cmd[i] += " --lambda-bins=" + self.lambdabins 
      
-  IF (self.dumptof EQ 1) THEN cmd += " --dump-ctof-comb" 
-  IF (self.dumpwave EQ 1) THEN cmd += " --dump-wave-comb" 
-  IF (self.dumpnorm EQ 1) THEN cmd += " --dump-norm" 
-  IF (self.dumpet EQ 1) THEN cmd += " --dump-et-comb" 
+  IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb" 
+  IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb" 
+  IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm" 
+  IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb" 
   ; Mask File
   IF STRLEN(self.maskfile) GT 1 THEN $
-    cmd += " --nask-file="+self.maskfile   
+    cmd[i] += " --nask-file="+self.maskfile   
   ; Lambda Ratio
-  IF (self.lambdaratio EQ 1) THEN cmd += " --lambda-ratio" 
+  IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio" 
   ; Energy Bins
   IF STRLEN(self.energybins) GT 1 THEN $
-    cmd += " --energy-bins="+self.energybins
+    cmd[i] += " --energy-bins="+self.energybins
   ; Momentum Transfer Bins
   IF STRLEN(self.omegabins) GT 1 THEN $
-    cmd += " --mom-trans-bins="+self.omegabins  
-  IF (self.qvector EQ 1) THEN cmd += " --qmesh" 
-  IF (self.fixed EQ 1) THEN cmd += " --fixed" 
-  IF (self.split EQ 1) THEN cmd += " --split" 
-  IF (self.timing EQ 1) THEN cmd += " --timing" 
-   
+    cmd[i] += " --mom-trans-bins="+self.omegabins  
+  IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh" 
+  IF (self.fixed EQ 1) THEN cmd[i] += " --fixed" 
+  IF (self.split EQ 1) THEN cmd[i] += " --split" 
+  IF (self.timing EQ 1) THEN cmd[i] += " --timing" 
+  
+  endfor
+
+  
+  
   return, cmd
 end
 
@@ -274,6 +291,8 @@ function ReductionCmd::Init, $
     ConfigFile=configfile, $             ; Config (.rmd) filename
     InstGeometry=instgeometry, $         ; Instrument Geometry filename
     CornerGeometry=cornergeometry, $     ; Corner Geometry filename
+    LowerBank=lowerbank, $               ; Lower Detector Bank
+    UpperBank=upperbank, $               ; Upper Detector Bank
     DataPaths=datapaths, $               ; detector data paths
     Normalisation=normalisation, $       ; Normalisation file
     EmptyCan=emptycan, $                 ; Empty Can file
@@ -307,6 +326,7 @@ function ReductionCmd::Init, $
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
     Timing=timing, $                     ; Timing of code
+    Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
     
   ; Error Handling
@@ -330,6 +350,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(configfile) EQ 0 THEN configfile = ""
   IF N_ELEMENTS(instgeometry) EQ 0 THEN instgeometry = ""
   IF N_ELEMENTS(cornergeometry) EQ 0 THEN cornergeometry = ""
+  IF N_ELEMENTS(lowerbank) EQ 0 THEN lowerbank = -1
+  IF N_ELEMENTS(upperbank) EQ 0 THEN upperbank = -1
   IF N_ELEMENTS(datapaths) EQ 0 THEN datapaths = ""
   IF N_ELEMENTS(normalisation) EQ 0 THEN normalisation = ""
   IF N_ELEMENTS(emptycan) EQ 0 THEN emptycan = ""
@@ -363,6 +385,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(fixed) EQ 0 THEN fixed = 0
   IF N_ELEMENTS(split) EQ 0 THEN split = 0
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
+  IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   
   self.program = program
   self.version = version
@@ -377,6 +400,8 @@ function ReductionCmd::Init, $
   self.configfile = configfile
   self.instgeometry = instgeometry
   self.cornergeometry = cornergeometry
+  self.lowerbank = lowerbank
+  self.upperbank = upperbank
   self.datapaths = datapaths
   self.normalisation = normalisation
   self.emptycan = emptycan
@@ -410,6 +435,7 @@ function ReductionCmd::Init, $
   self.fixed = fixed
   self.split = split
   self.timing = timing
+  self.jobs = jobs
   self.extra = PTR_NEW(extra)
   
   RETURN, 1
@@ -437,6 +463,8 @@ pro ReductionCmd__Define
     configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
+    lowerbank: 0L, $         ; Lower Detector Bank
+    upperbank: 0L, $         ; Upper Detector Bank
     datapaths: "", $         ; Detector Data Paths
     normalisation: "", $     ; Normalisation file
     emptycan: "", $          ; Empty Can file
@@ -470,5 +498,6 @@ pro ReductionCmd__Define
     fixed: 0L, $             ; dump Qvector info onto a fixed mesh
     split: 0L, $             ; split (distributed mode)
     timing: 0L, $            ; Timing of code
+    jobs : 0L, $             ; Number of Jobs to Run
     extra: PTR_NEW() }       ; Extra keywords
 end
