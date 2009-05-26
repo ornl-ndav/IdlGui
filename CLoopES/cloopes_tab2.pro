@@ -32,6 +32,30 @@
 ;
 ;==============================================================================
 
+PRO define_input_folder_tab2, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
+  
+  path = (*global).ascii_input_path
+  title = 'Select the Input folder'
+  
+  folder = DIALOG_PICKFILE(/DIRECTORY,$
+    DIALOG_PARENT=id,$
+    /MUST_EXIST,$
+    TITLE = title,$
+    PATH = path)
+    
+  IF (folder NE '') THEN BEGIN
+    (*global).ascii_input_path = folder
+    putButtonValue, Event, 'tab2_manual_input_folder', folder
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
 PRO define_output_folder_tab2, Event
 
   ;get global structure
