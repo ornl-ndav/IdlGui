@@ -7,6 +7,7 @@ cd, IdlUtilitiesPath
 ;functions
 .run get.pro
 ;procedures
+.run is.pro
 .run put.pro
 .run gui.pro
 .run system_utilities.pro
