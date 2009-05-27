@@ -37,7 +37,7 @@ PRO run_job_tab2, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  cmd = 'sbatch -q bac2q
+  cmd = 'srun --batch -p bac2q'
   
   ;get driver
   driver = (*global).es_driver
@@ -70,7 +70,7 @@ PRO run_job_tab2, Event
     ENDIF
     index++
   ENDWHILE
- 
+  
   ;add Energy integration range
   inte_min = getTextFieldValue(Event,'energy_integration_range_min_value')
   inte_max = getTextFieldValue(Event,'energy_integration_range_max_value')
@@ -95,9 +95,9 @@ PRO run_job_tab2, Event
     index++
   ENDWHILE
   
-  print, cmd
-  
- 
- 
+  cmd_text = '-> Launching job: '
+  cmd_text += cmd
+  IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
+  SPAWN, cmd
   
 END
