@@ -360,15 +360,15 @@ PRO parse_input_field_tab2, Event
   ;check that Manual Input is selected
   IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
     message_text = 'Switch to MANUAL input and take into account ' + $
-    '<user_defined> runs ?'
+      '<user_defined> runs ?'
     title = 'Conflict in the Input Selection!'
     result = DIALOG_MESSAGE(message_text,$
       TITLE=title,$
       /QUESTION)
     IF (result EQ 'Yes') THEN BEGIN ;switch to manual input
-        putValue, Event,'tab2_table_uname', table
-        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_use_manual_input')
-        WIDGET_CONTROL, id, /SET_BUTTON
+      putValue, Event,'tab2_table_uname', table
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_use_manual_input')
+      WIDGET_CONTROL, id, /SET_BUTTON
     ENDIF
   ENDIF ELSE BEGIN
     putValue, Event,'tab2_table_uname', table

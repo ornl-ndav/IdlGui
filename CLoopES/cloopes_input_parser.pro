@@ -447,7 +447,7 @@ PRO parse_input_field, Event
     status = 0
   ENDELSE
   activate_widget, Event, 'run_jobs_button', status
-    activate_widget, Event, 'preview_jobs_button', status
+  activate_widget, Event, 'preview_jobs_button', status
     
 END
 

@@ -46,7 +46,11 @@ PRO cloopes_tab, Event
       0: BEGIN ;LOOPER
       END
       1: BEGIN ;ELASTIC SCAN
-      populate_tab2, Event
+        IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
+          populate_tab2, Event
+        ENDIF ELSE BEGIN
+          parse_input_field_tab2, Event
+        ENDELSE
       END
       2: BEGIN ;LOG BOOK
       END
