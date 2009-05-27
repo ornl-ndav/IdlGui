@@ -106,6 +106,16 @@ PRO MAIN_BASE_event, Event
       help_button_tab2, Event ;_help
     END
     
+    ;selection of LOOPER input
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_looper_input'): BEGIN
+      populate_tab2, Event
+    END
+    
+    ;selection of MANUAL input
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_manual_input'): BEGIN
+      parse_input_field_tab2, Event
+    END
+    
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
