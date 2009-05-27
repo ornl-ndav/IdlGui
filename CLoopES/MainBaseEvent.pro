@@ -108,12 +108,16 @@ PRO MAIN_BASE_event, Event
     
     ;selection of LOOPER input
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_looper_input'): BEGIN
-      populate_tab2, Event
+      IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
+        populate_tab2, Event
+      ENDIF
     END
     
     ;selection of MANUAL input
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_manual_input'): BEGIN
-      parse_input_field_tab2, Event
+      IF (~isLooperInputSelected(Event)) THEN BEGIN ;looper selected
+        parse_input_field_tab2, Event
+      ENDIF
     END
     
     ;update table
