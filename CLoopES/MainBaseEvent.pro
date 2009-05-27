@@ -107,6 +107,18 @@ PRO MAIN_BASE_event, Event
       help_button_tab2, Event ;_help
     END
     
+    ;min energy integration range
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='energy_integration_range_min_value'): BEGIN
+      check_tab2_run_jobs_button, Event
+    END
+    
+    ;max energy integration range
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='energy_integration_range_max_value'): BEGIN
+      check_tab2_run_jobs_button, Event
+    END
+    
     ;selection of LOOPER input
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_looper_input'): BEGIN
       IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
@@ -134,6 +146,12 @@ PRO MAIN_BASE_event, Event
     ;output folder button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_output_folder_button_uname'): BEGIN
       define_output_folder_tab2, Event
+    END
+    
+    ;output file text field
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_output_file_name_text_field_uname'): BEGIN
+      check_tab2_run_jobs_button, Event
     END
     
     ;Check Jobs Status

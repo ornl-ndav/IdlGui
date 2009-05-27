@@ -125,6 +125,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   txt = WIDGET_TEXT(row1,$
     VALUE = '',$
     XSIZE = 5,$
+    /ALL_EVENTS,$
     UNAME = 'energy_integration_range_min_value',$
     /EDITABLE)
     
@@ -143,6 +144,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = '',$
     XSIZE = 5,$
     UNAME = 'energy_integration_range_max_value',$
+    /ALL_EVENTS,$
     /EDITABLE)
     
   label = WIDGET_LABEL(row1,$
@@ -225,6 +227,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = '',$
     UNAME = 'tab2_output_file_name_text_field_uname',$
     SCR_XSIZE = 350,$
+    /ALL_EVENTS,$
     /EDITABLE)
     
   ;space
