@@ -93,11 +93,22 @@ PRO populate_tab2, Event
   ENDIF ELSE BEGIN
     ;get table
     tab2_table = (*(*global).tab2_table)
+    sz = (SIZE(tab2_table))(2)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      IF (FILE_TEST(tab2_table[0,index])) THEN BEGIN
+        message = 'READY'
+      ENDIF ELSE BEGIN
+        message = 'NOT READY'
+      ENDELSE
+      tab2_table[1,index] = message
+      index++
+    ENDWHILE
     putValue, Event, 'tab2_table_uname', tab2_table
     refresh_button_status = 1
   ENDELSE
   activate_widget, Event, 'tab2_refresh_table_uname', refresh_button_status
-  
+  check_tab2_run_jobs_button, Event
 END
 
 ;------------------------------------------------------------------------------
@@ -438,6 +449,50 @@ PRO add_seq_number_to_same_seq_number, tmp_seq_number, seq_number
   ENDWHILE
 END
 
+;------------------------------------------------------------------------------
+PRO check_tab2_run_jobs_button, Event
 
+  ;get table value
+  table = getTableValue(Event, 'tab2_table_uname')
+  sz = (SIZE(table))(2)
+  
+  ;check that all the files exist and temperature defined
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (~FILE_TEST(table[0,index])) THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    index++
+  ENDWHILE
+  
+  ;check that there is an output file name
+  output_file_name = getTextFieldValue(Event,$
+    'tab2_output_file_name_text_field_uname')
+  IF (STRCOMPRESS(output_file_name,/REMOVE_ALL) EQ '') THEN BEGIN
+    activate_widget, Event, 'tab2_run_jobs_uname', 0
+    RETURN
+  ENDIF
+  
+  ;check that there is a min and max energy Integration Range
+  energy_min = getTextFieldValue(Event,'energy_integration_range_min_value')
+  IF (STRCOMPRESS(energy_min,/REMOVE_ALL) EQ '') THEN BEGIN
+    activate_widget, Event, 'tab2_run_jobs_uname', 0
+    RETURN
+  ENDIF
+  energy_max = getTextFieldValue(Event,'energy_integration_range_max_value')
+  IF (STRCOMPRESS(energy_max,/REMOVE_ALL) EQ '') THEN BEGIN
+    activate_widget, Event, 'tab2_run_jobs_uname', 0
+    RETURN
+  ENDIF
+  
+  
+  
+  
+END
 
 
