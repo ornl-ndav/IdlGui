@@ -122,7 +122,7 @@ PRO update_temperature, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   error = 0
-  ;CATCH, error ;remove_me (important if user try to edit STATUS column
+  CATCH, error ;remove_me (important if user try to edit STATUS column
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
@@ -451,18 +451,18 @@ PRO check_tab2_run_jobs_button, Event
   
   ;check that all the files exist and temperature defined
   index = 0
-  WHILE (index LT sz AND $
-    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-    IF (~FILE_TEST(table[0,index])) THEN BEGIN
-      activate_widget, Event, 'tab2_run_jobs_uname', 0
-      RETURN
-    ENDIF
-    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-      activate_widget, Event, 'tab2_run_jobs_uname', 0
-      RETURN
-    ENDIF
-    index++
-  ENDWHILE
+;  WHILE (index LT sz AND $
+;    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
+;    IF (~FILE_TEST(table[0,index])) THEN BEGIN
+;      activate_widget, Event, 'tab2_run_jobs_uname', 0
+;      RETURN
+;    ENDIF
+;    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+;      activate_widget, Event, 'tab2_run_jobs_uname', 0
+;      RETURN
+;    ENDIF
+;    index++
+;  ENDWHILE
   
   ;check that there is an output file name
   output_file_name = getTextFieldValue(Event,$
@@ -479,7 +479,7 @@ PRO check_tab2_run_jobs_button, Event
     RETURN
   ENDIF
   energy_max = getTextFieldValue(Event,'energy_integration_range_max_value')
-  IF (STRCOMPRESS(energy_max,/REMOVE_ALL) EQ '') THEN BEGINf
+  IF (STRCOMPRESS(energy_max,/REMOVE_ALL) EQ '') THEN BEGIN
     activate_widget, Event, 'tab2_run_jobs_uname', 0
     RETURN
   ENDIF

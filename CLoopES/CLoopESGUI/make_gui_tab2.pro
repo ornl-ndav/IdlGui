@@ -179,7 +179,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   Table = WIDGET_TABLE(row2,$
     UNAME = 'tab2_table_uname',$
     XSIZE = 3,$
-    YSIZE = 50,$
+    YSIZE = 200,$
     SCR_XSIZE = 785,$
     SCR_YSIZE = 445,$
     ;    /SCROLL,$
@@ -251,7 +251,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'RUN JOBS',$
     XSIZE = 565,$
     UNAME = 'tab2_run_jobs_uname',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
 END
 

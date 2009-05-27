@@ -88,6 +88,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_help_text1: '',$
     old_help_text2: '',$
     
+    es_driver: my_package[0].driver,$
+    
     job_manager_splash_draw: $
     'CLoopES_images/job_manager_is_coming.png',$
     ascii_path: '~/results/',$
