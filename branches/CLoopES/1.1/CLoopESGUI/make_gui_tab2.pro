@@ -123,7 +123,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'min')
     
   txt = WIDGET_TEXT(row1,$
-    VALUE = '',$
+    VALUE = '-3.4',$
     XSIZE = 5,$
     /ALL_EVENTS,$
     UNAME = 'energy_integration_range_min_value',$
@@ -141,7 +141,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'max')
     
   txt = WIDGET_TEXT(row1,$
-    VALUE = '',$
+    VALUE = '3.4',$
     XSIZE = 5,$
     UNAME = 'energy_integration_range_max_value',$
     /ALL_EVENTS,$
