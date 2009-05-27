@@ -88,8 +88,6 @@ PRO populate_tab2, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tab2_table = (*(*global).tab2_table)
-  HELP, tab2_table
-  PRINT, tab2_table
   
   error = 0
   CATCH, error
@@ -102,7 +100,7 @@ PRO populate_tab2, Event
     sz = (SIZE(tab2_table))(2)
     index = 0
     WHILE (index LT sz AND $
-    STRCOMPRESS(tab2_table[0,index],/REMOVE_ALL) NE '') DO BEGIN
+      STRCOMPRESS(tab2_table[0,index],/REMOVE_ALL) NE '') DO BEGIN
       IF (FILE_TEST(tab2_table[0,index])) THEN BEGIN
         message = 'READY'
       ENDIF ELSE BEGIN
@@ -228,6 +226,8 @@ END
 ;------------------------------------------------------------------------------
 PRO parse_input_field_tab2, Event
 
+  PRINT, '-> entering parse_input_field_tab2'
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -391,6 +391,8 @@ PRO parse_input_field_tab2, Event
   ENDIF ELSE BEGIN
     putValue, Event,'tab2_table_uname', table
   ENDELSE
+  
+  PRINT, '-> leaving parse_input_field_tab2'
   
 END
 
