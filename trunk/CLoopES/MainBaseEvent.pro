@@ -163,6 +163,11 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, job_base,/DESTROY
     END
     
+    ;Run Jobs
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_run_jobs_uname'): BEGIN
+      run_job_tab2, Event
+    END
+    
     ;tab33333333333333333333333333333333333333333333333333333333333333333333333
     ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
