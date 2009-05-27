@@ -99,6 +99,7 @@ PRO MAIN_BASE_event, Event
     ;<User_defined>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence'): BEGIN
       parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;help button of manual input
@@ -123,6 +124,11 @@ PRO MAIN_BASE_event, Event
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
+    END
+    
+    ;Refresh table
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_refresh_table_uname'): BEGIN
+      refresh_tab2_table, Event
     END
     
     ;output folder button

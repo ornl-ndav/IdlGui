@@ -82,8 +82,6 @@ END
 ;------------------------------------------------------------------------------
 PRO populate_tab2, Event
 
-  PRINT, 'in populate_tab2'
-  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -94,6 +92,7 @@ PRO populate_tab2, Event
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refresh_button_status = 0
+        putValue, Event, 'tab2_table_uname', STRARR(1,3)
   ENDIF ELSE BEGIN
     ;get table
     tab2_table = (*(*global).tab2_table)
@@ -226,8 +225,6 @@ END
 ;------------------------------------------------------------------------------
 PRO parse_input_field_tab2, Event
 
-  PRINT, '-> entering parse_input_field_tab2'
-  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -375,6 +372,13 @@ PRO parse_input_field_tab2, Event
     index++
   ENDWHILE
   
+  IF (nbr_files GT 0 AND $
+    table[0,0] NE '') THEN BEGIN
+    activate_widget, Event, 'tab2_refresh_table_uname', 1
+  ENDIF ELSE BEGIN
+    activate_widget, Event, 'tab2_refresh_table_uname', 0
+  ENDELSE
+  
   ;check that Manual Input is selected
   IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
     message_text = 'Switch to MANUAL input and take into account ' + $
@@ -392,28 +396,6 @@ PRO parse_input_field_tab2, Event
     putValue, Event,'tab2_table_uname', table
   ENDELSE
   
-  PRINT, '-> leaving parse_input_field_tab2'
-  
-END
-
-;------------------------------------------------------------------------------
-PRO TMP
-;sz = N_ELEMENTS(column_sequence)
-;Table = STRARR(3,sz)
-;Table[0,*] = column_cl[*]
-;  Table[1,*] =
-;id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tab2_table_uname')
-;WIDGET_CONTROL, id, TABLE_YSIZE = sz
-;putValue, Event, 'tab2_table_uname', Table
-
-;  ;activate or not the 'Launch Jobs in Background'
-;  IF (column_sequence[0] NE '') THEN BEGIN
-;    status = 1
-;  ENDIF ELSE BEGIN
-;    status = 0
-;  ENDELSE
-;  activate_widget, Event, 'run_jobs_button', status
-;  activate_widget, Event, 'preview_jobs_button', status
 END
 
 ;------------------------------------------------------------------------------
@@ -500,9 +482,28 @@ PRO check_tab2_run_jobs_button, Event
     RETURN
   ENDIF
   
-  
-  
-  
 END
 
+;------------------------------------------------------------------------------
+PRO refresh_tab2_table, Event
+
+  ;get table value
+  table = getTableValue(Event, 'tab2_table_uname')
+  sz = (SIZE(table))(2)
+  
+  ;check that all the files exist and temperature defined
+  index = 0
+  WHILE (index LT sz AND $
+    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
+    IF (FILE_TEST(table[0,index])) THEN BEGIN
+      table[1,index] = 'READY'
+    ENDIF ELSE BEGIN
+      table[1,index] = 'NOT READY'
+    ENDELSE
+    index++
+  ENDWHILE
+  
+  putValue, Event, 'tab2_table_uname', table
+  
+END
 
