@@ -479,10 +479,12 @@ PRO check_tab2_run_jobs_button, Event
     RETURN
   ENDIF
   energy_max = getTextFieldValue(Event,'energy_integration_range_max_value')
-  IF (STRCOMPRESS(energy_max,/REMOVE_ALL) EQ '') THEN BEGIN
+  IF (STRCOMPRESS(energy_max,/REMOVE_ALL) EQ '') THEN BEGINf
     activate_widget, Event, 'tab2_run_jobs_uname', 0
     RETURN
   ENDIF
+  
+  activate_widget, Event, 'tab2_run_jobs_uname', 1
   
 END
 
