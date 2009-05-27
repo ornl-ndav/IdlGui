@@ -92,7 +92,7 @@ PRO populate_tab2, Event
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refresh_button_status = 0
-        putValue, Event, 'tab2_table_uname', STRARR(1,3)
+    putValue, Event, 'tab2_table_uname', STRARR(1,3)
   ENDIF ELSE BEGIN
     ;get table
     tab2_table = (*(*global).tab2_table)
@@ -122,7 +122,7 @@ PRO update_temperature, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   error = 0
-  ; CATCH, error ;remove_me (important if user try to edit STATUS column
+  ;CATCH, error ;remove_me (important if user try to edit STATUS column
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
@@ -148,7 +148,9 @@ PRO update_temperature, Event
             increment = FLOAT(table[2,row]) - FLOAT(table[2,row-1])
             index = (row+1)
             WHILE (index LT nbr_row) DO BEGIN
-              table[2,index] = STRCOMPRESS(table[2,index-1] + increment)
+              IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') THEN BEGIN
+                table[2,index] = STRCOMPRESS(table[2,index-1] + increment)
+              ENDIF
               index++
             ENDWHILE
           ENDIF
