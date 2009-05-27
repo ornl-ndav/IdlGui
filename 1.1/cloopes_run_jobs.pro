@@ -65,7 +65,7 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-    ;SPAWN, cmd ;remove_me
+    SPAWN, cmd
     
     ;get output file
     parse_array = split_string(column_cl[index], PATTERN='--output=')
