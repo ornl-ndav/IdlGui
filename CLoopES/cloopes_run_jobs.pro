@@ -56,7 +56,7 @@ PRO launch_jobs, Event
   ENDWHILE
   
   ;tab2 table ['output file','status','temperature']
-  tab2_table = STRARR(3,sz)
+  tab2_table = STRARR(3,sz+1)
   
   index = 0
   WHILE (index LT sz) DO BEGIN
