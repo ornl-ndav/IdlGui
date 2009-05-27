@@ -82,8 +82,14 @@ END
 ;------------------------------------------------------------------------------
 PRO populate_tab2, Event
 
+  PRINT, 'in populate_tab2'
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tab2_table = (*(*global).tab2_table)
+  HELP, tab2_table
+  PRINT, tab2_table
   
   error = 0
   CATCH, error
@@ -95,7 +101,8 @@ PRO populate_tab2, Event
     tab2_table = (*(*global).tab2_table)
     sz = (SIZE(tab2_table))(2)
     index = 0
-    WHILE (index LT sz) DO BEGIN
+    WHILE (index LT sz AND $
+    STRCOMPRESS(tab2_table[0,index],/REMOVE_ALL) NE '') DO BEGIN
       IF (FILE_TEST(tab2_table[0,index])) THEN BEGIN
         message = 'READY'
       ENDIF ELSE BEGIN
@@ -458,7 +465,8 @@ PRO check_tab2_run_jobs_button, Event
   
   ;check that all the files exist and temperature defined
   index = 0
-  WHILE (index LT sz) DO BEGIN
+  WHILE (index LT sz AND $
+    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
     IF (~FILE_TEST(table[0,index])) THEN BEGIN
       activate_widget, Event, 'tab2_run_jobs_uname', 0
       RETURN
