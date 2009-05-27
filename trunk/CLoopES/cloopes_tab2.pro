@@ -330,6 +330,7 @@ PRO parse_input_field_tab2, Event
   nbr_files = N_ELEMENTS(column_seq_number)
   table = STRARR(3,nbr_files)
   index = 0
+  table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
     IF (column_seq_number[index] NE '') THEN BEGIN
       ;check if there are several runs
@@ -342,15 +343,36 @@ PRO parse_input_field_tab2, Event
       ENDCASE
       
       ;update big table
-      table[0,index]= path + prefix + '_' + add_string + '.' + suffix
-      table[1,index] = 'NOT READY'
-
+      file_name = path + prefix + '_' + add_string + '.' + suffix
+      table[0,table_index]= file_name
+      IF (FILE_TEST(file_name)) THEN BEGIN
+        message = 'READY'
+      ENDIF ELSE BEGIN
+        message = 'NOT READY'
+      ENDELSE
+      table[1,table_index] = message
+      table_index++
+      
     ENDIF
     index++
   ENDWHILE
   
-  putValue, Event,'tab2_table_uname', table
-  
+  ;check that Manual Input is selected
+  IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
+    message_text = 'Switch to MANUAL input and take into account ' + $
+    '<user_defined> runs ?'
+    title = 'Conflict in the Input Selection!'
+    result = DIALOG_MESSAGE(message_text,$
+      TITLE=title,$
+      /QUESTION)
+    IF (result EQ 'Yes') THEN BEGIN ;switch to manual input
+        putValue, Event,'tab2_table_uname', table
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME='tab2_use_manual_input')
+        WIDGET_CONTROL, id, /SET_BUTTON
+    ENDIF
+  ENDIF ELSE BEGIN
+    putValue, Event,'tab2_table_uname', table
+  ENDELSE
   
 END
 
