@@ -11,7 +11,7 @@ cd, IdlUtilitiesPath
 ;and create the VM file.
 
 ;Build BSSreduction GUI
-cd, CurrentFolder + '/plotARCSGUI/'
+cd, CurrentFolder + '/plotCNCSGUI/'
 .run MakeGuiInputBase.pro
 .run IDLloadNexus__define.pro
 .run MakeGuiMainPlot.pro
@@ -22,38 +22,38 @@ cd, CurrentFolder + '/plotARCSGUI/'
 cd, CurrentFolder
 
 ;utils functions
-.run plot_arcs_get.pro
-.run plot_arcs_time.pro
-.run plot_arcs_put.pro
-.run plot_arcs_is.pro
+.run plot_cncs_get.pro
+.run plot_cncs_time.pro
+.run plot_cncs_put.pro
+.run plot_cncs_is.pro
 
 ;procedures
 ;first base
-.run plot_arcs_Input.pro
-.run plot_arcs_Browse.pro
-.run plot_arcs_PreviewRuninfoFile.pro
-.run plot_arcs_CollectHistoInfo.pro
-.run plot_arcs_GUIupdate.pro
-.run plot_arcs_CreateHistoMapped.pro
-.run plot_arcs_SaveAsHistoMapped.pro
-.run plot_arcs_SendToGeek.pro
+.run plot_cncs_Input.pro
+.run plot_cncs_Browse.pro
+.run plot_cncs_PreviewRuninfoFile.pro
+.run plot_cncs_CollectHistoInfo.pro
+.run plot_cncs_GUIupdate.pro
+.run plot_cncs_CreateHistoMapped.pro
+.run plot_cncs_SaveAsHistoMapped.pro
+.run plot_cncs_SendToGeek.pro
 
 ;Nexus tab
-.run plot_arcs_Nexus.pro
+.run plot_cncs_Nexus.pro
 
 ;main plot base
-.run plot_arcs_PlotMainPlot.pro
-.run plot_arcs_MainPlot.pro
+.run plot_cncs_PlotMainPlot.pro
+.run plot_cncs_MainPlot.pro
 
 ;bank plot base
-.run plot_arcs_PlotBank.pro
-.run plot_arcs_PlotBankEventcb.pro
+.run plot_cncs_PlotBank.pro
+.run plot_cncs_PlotBankEventcb.pro
 
 ;tof plot base
-.run plot_arcs_PlotTof.pro
-.run plot_arcs_PlotTofEventcb.pro
+.run plot_cncs_PlotTof.pro
+.run plot_cncs_PlotTofEventcb.pro
 
 ;main functions
 .run MainBaseEvent.pro
-.run plot_arcs_eventcb.pro
-.run plot_arcs.pro
+.run plot_cncs_eventcb.pro
+.run plot_cncs.pro

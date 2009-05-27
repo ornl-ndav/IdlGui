@@ -3,8 +3,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-APPLICATION = 'plotARCS'
-VERSION     = '1.0.6'
+APPLICATION = 'plotCNCS'
+VERSION     = '1.0.0'
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -20,7 +20,7 @@ spawn, 'hostname', hostname
 ;define global variables
 global = ptr_new ({ ucams                   : ucams,$
                     HistoNexusTabSelected   : 0,$
-                    browse_nexus_path       : '/SNS/ARCS/',$
+                    browse_nexus_path       : '/SNS/CNCS/',$
                     browse_OR_list_all_flag : 0,$
                     bin_width               : '200',$
                     runinfoFileName         : '',$
@@ -28,13 +28,13 @@ global = ptr_new ({ ucams                   : ucams,$
                     nbr_pixel               : 117760L,$
                     version                 : VERSION,$
                     LogBookPath             : '/SNS/users/LogBook/',$ 
-                    staging_folder          : '~/.plotARCS_tmp/',$
-                    mapping_list_mac        : ['./mapping/ARCS_TS_2007_10_10.dat'],$
+                    staging_folder          : '~/.plotCNCS_tmp/',$
+                    mapping_list_mac        : ['./mapping/CNCS_TS_2007_10_10.dat'],$
                     event_file_filter       : '*_neutron_event.dat',$
                     histo_map_filter        : '*_neutron_histo_mapped.dat',$
                     default_extension       : '.dat',$
                     event_filter            : '*neutron_event.dat',$
-                    mac_arcs_folder         : './MAC-DAS-FS/ARCS_1/',$
+                    mac_arcs_folder         : './MAC-DAS-FS/CNCS_1/',$
 ;for mac use only
                     processing              : '(PROCESSING)',$
                     ok                      : 'OK',$
@@ -48,7 +48,7 @@ IF (ucams EQ (*global).debugger) THEN BEGIN
 ENDIF ELSE BEGIN
     MainBaseSize  = [30,25,700,560]
 ENDELSE
-MainBaseTitle = 'Plot ARCS'
+MainBaseTitle = 'Plot CNCS'
 MainBaseTitle += ' - ' + VERSION
 
 ;Build Main Base
@@ -115,7 +115,7 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro plot_arcs, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro plot_cncs, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 
