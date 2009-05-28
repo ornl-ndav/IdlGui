@@ -64,7 +64,7 @@ global = $
   PTR_NEW({ $
             BatchExtension:         '.txt',$
             BatchTable:             ptr_new(0L),$
-            BatchDefaultPath:       '~/',$
+            BatchDefaultPath:       '~/results/',$
             BatchDefaultFileFilter: '*_Batch_Run*.txt',$
             BatchFileName:          '',$
             version:                VERSION,$
