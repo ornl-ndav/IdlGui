@@ -44,7 +44,7 @@ PRO ReductionCmd::GetProperty, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LanbdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins=lambdabins, $             ; wavelength bins
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
@@ -112,7 +112,7 @@ PRO ReductionCmd::SetProperty, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LanbdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins=lambdabins, $             ; wavelength bins
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
@@ -395,7 +395,7 @@ function ReductionCmd::Init, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LanbdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins=lambdabins, $             ; wavelength bins
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
