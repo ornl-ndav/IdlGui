@@ -44,7 +44,9 @@ PRO ReductionCmd::GetProperty, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LambdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
+    LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
+    LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
@@ -114,7 +116,9 @@ PRO ReductionCmd::SetProperty, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LambdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
+    LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
+    LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
@@ -205,7 +209,10 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(datatrans) NE 0 THEN self.datatrans = DataTrans
   IF N_ELEMENTS(normtrans) NE 0 THEN self.normtrans = NormTrans
   IF N_ELEMENTS(normrange) NE 0 THEN self.normrange = normrange
-  IF N_ELEMENTS(lambdabins) NE 0 THEN self.lambdabins = lambdabins
+  IF N_ELEMENTS(lambdabins_min) NE 0 THEN self.lambdabins_min = lambdabins_min
+  IF N_ELEMENTS(lambdabins_max) NE 0 THEN self.lambdabins_max = lambdabins_max
+  IF N_ELEMENTS(lambdabins_step) NE 0 THEN $ 
+          self.lambdabins_step = lambdabins_step
   IF N_ELEMENTS(dumptof) NE 0 THEN self.dumptof = DumpTOF
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
@@ -214,7 +221,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
   IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
   IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
-  IF N_ELEMENTS(energybins_step) NE 0 THEN self.energybins_step = EnergyBins_step
+  IF N_ELEMENTS(energybins_step) NE 0 THEN $  
+          self.energybins_step = EnergyBins_step
   IF N_ELEMENTS(qbins_min) NE 0 THEN self.qbins_min = qbins_min
   IF N_ELEMENTS(qbins_max) NE 0 THEN self.qbins_max = qbins_max
   IF N_ELEMENTS(qbins_step) NE 0 THEN self.qbins_step = qbins_step
@@ -330,9 +338,13 @@ function ReductionCmd::Generate
     ; Normalisation integration range
     IF STRLEN(self.normrange) GT 1 THEN $
       cmd[i] += " --norm-int-range="+self.normrange
+      
     ; Lambda Bins
-    IF STRLEN(self.lambdabins) GT 1 THEN $
-      cmd[i] += " --lambda-bins=" + self.lambdabins
+    IF (STRLEN(self.lambdabins_min) GE 1) $
+      AND (STRLEN(self.lambdabins_max) GE 1) $
+      AND (STRLEN(self.lambdabins_step) GE 1) THEN $
+      cmd[i] += " --lambda-bins=" + self.lambdabins_min + "," + $
+          self.lambdabins_max + "," + self.lambdabins_step
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
@@ -345,14 +357,16 @@ function ReductionCmd::Generate
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     
     ; Energy Bins
-    IF (STRLEN(self.energybins_min) GE 1) AND (STRLEN(self.energybins_max) GE 1) $
-    AND (STRLEN(self.energybins_step) GE 1) THEN $
+    IF (STRLEN(self.energybins_min) GE 1) $ 
+      AND (STRLEN(self.energybins_max) GE 1) $
+      AND (STRLEN(self.energybins_step) GE 1) THEN $
       cmd[i] += " --energy-bins=" + self.energybins_min + "," + $
           self.energybins_max + "," + self.energybins_step
           
     ; Momentum Transfer Bins
-    IF (STRLEN(self.qbins_min) GE 1) AND (STRLEN(self.qbins_max) GE 1) $
-    AND (STRLEN(self.qbins_step) GE 1) THEN $
+    IF (STRLEN(self.qbins_min) GE 1) $ 
+      AND (STRLEN(self.qbins_max) GE 1) $
+      AND (STRLEN(self.qbins_step) GE 1) THEN $
       cmd[i] += " --mon-trans-bins=" + self.qbins_min + "," + $
           self.qbins_max + "," + self.qbins_step
           
@@ -406,7 +420,9 @@ function ReductionCmd::Init, $
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
     NormRange=normrange, $               ; normalisation integration range (meV)
-    LambdaBins=lambdabins, $             ; wavelength bins
+    LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
+    LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
+    LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
@@ -471,7 +487,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(datatrans) EQ 0 THEN datatrans = ""
   IF N_ELEMENTS(normtrans) EQ 0 THEN normtrans = ""
   IF N_ELEMENTS(normrange) EQ 0 THEN normrange = ""
-  IF N_ELEMENTS(lambdabins) EQ 0 THEN lambdabins = ""
+  IF N_ELEMENTS(lambdabins_min) EQ 0 THEN lambdabins_min = ""
+  IF N_ELEMENTS(lambdabins_max) EQ 0 THEN lambdabins_max = ""
+  IF N_ELEMENTS(lambdabins_step) EQ 0 THEN lambdabins_step = ""
   IF N_ELEMENTS(dumptof) EQ 0 THEN dumptof = 0
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
@@ -527,7 +545,9 @@ function ReductionCmd::Init, $
   self.datatrans = datatrans
   self.normtrans = normtrans
   self.normrange = normrange
-  self.lambdabins = lambdabins
+  self.lambdabins_min = lambdabins_min
+  self.lambdabins_max = lambdabins_max
+  self.lambdabins_step = lambdabins_step
   self.dumptof = dumptof
   self.dumpwave = dumpwave
   self.dumpnorm = dumpnorm
@@ -569,7 +589,7 @@ pro ReductionCmd__Define
     facility: "", $          ; Facility name
     proposal: "", $          ; Proposal ID
     spe: 0L, $               : SPE file creation
-  configfile: "", $        ; Config (.rmd) filename
+    configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -596,7 +616,9 @@ pro ReductionCmd__Define
     datatrans: "", $         ; transmission for sample data background
     normtrans: "", $         ; transmission for norm data background
     normrange: "", $         ; normalisation (vanadium) integration range (meV)
-    lambdabins: "", $        ; wavelength bins
+    lambdabins_min: "", $    ; wavelength bins (min)
+    lambdabins_max: "", $    ; wavelength bins (max)
+    lambdabins_step: "", $   ; wavelength bins (step)
     dumptof: 0L, $           ; Dump combined TOF file
     dumpwave: 0L, $          ; Dump combined wavelength file
     dumpnorm: 0L, $          ; Dump combined Norm file
