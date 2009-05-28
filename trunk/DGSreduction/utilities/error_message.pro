@@ -110,7 +110,7 @@
 ; This software is OSI Certified Open Source Software.
 ; OSI Certified is a certification mark of the Open Source Initiative.
 ;
-; Copyright © 1999-2006 Fanning Software Consulting
+; Copyright ï¿½ 1999-2006 Fanning Software Consulting
 ;
 ; This software is provided "as-is", without any express or
 ; implied warranty. In no event will the authors be held liable
@@ -149,7 +149,7 @@ messageType = s[s[0]+1]
 IF messageType NE 7 THEN BEGIN
    Message, "The message parameter must be a string.", _Extra=extra
 ENDIF
-IF N_Elements(traceback) EQ 0 THEN traceback = 1
+IF N_Elements(traceback) EQ 0 THEN traceback = 0
 
    ; Get the call stack and the calling routine's name.
 
