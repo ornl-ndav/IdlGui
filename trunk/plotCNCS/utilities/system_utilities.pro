@@ -1,44 +1,39 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
 ;
-;                     SNS IDL GUI tools
-;           A part of the SNS Analysis Software Suite.
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
 ;
-;                  Spallation Neutron Source
-;          Oak Ridge National Laboratory, Oak Ridge TN.
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
 ;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
 ;
-;                             NOTICE
+; @author : j35 (bilheuxjm@ornl.gov)
 ;
-; For this software and its associated documentation, permission is granted
-; to reproduce, prepare derivative works, and distribute copies to the public
-; for any purpose and without fee.
-;
-; This material was prepared as an account of work sponsored by an agency of
-; the United States Government.  Neither the United States Government nor the
-; United States Department of Energy, nor any of their employees, makes any
-; warranty, express or implied, or assumes any legal liability or
-; responsibility for the accuracy, completeness, or usefulness of any
-; information, apparatus, product, or process disclosed, or represents that
-; its use would not infringe privately owned rights.
-;
-;
+;==============================================================================
 
-;;
-; $Id$
-;
-; \file /gui/utilities/system_utilities.pro
-
-
-;;
-; \defgroup get_ucams
-; \{
-;;
-
-;;
-; \brief This function outputs the ucams of the user by
+; This function outputs the ucams of the user by
 ; just parsing the home directory path
-;
-; \return ucams 
-; ucams of the active account
 function get_ucams
 
 cd , "~/", CURRENT=path
@@ -50,18 +45,8 @@ cd, path
 return, ucams
 
 end
-; \}
-;;     //end of get_ucams group
 
 
-
-
-
-;;
-; \defgroup get_file_name_only; \{
-;;
-
-;;
 ; \brief This function parses the full path
 ; of the file and output the file name only
 ;
@@ -78,11 +63,6 @@ file_name_only = file_name[length-1]
 return, file_name_only
 
 end
-; \}
-;;     //end of file_name_only group
-
-
-
 
 ;this function will remove the last part and will
 ;give back the path
@@ -97,15 +77,6 @@ endfor
 return, path
 end
 
-
-
-
-;;
-; \defgroup modified_string
-; \{
-;;
-
-;;
 ; \brief This function will replace in the first
 ; string defined, the string given in second argument
 ; by the string given as the third argument
@@ -134,18 +105,6 @@ output_string = string_matrix[0] + new_string
 return, output_file_name
 
 end
-; \}
-;;     //end of modified_string
-
-
-
-
-
-
-;;
-; \defgroup output_into_text_box
-; \{
-;;
 
 ;;
 ; \brief This function output into the 
@@ -185,20 +144,7 @@ if ((*global).ucams EQ 'ceh' && uname_destination EQ 'log_book_text') then begin
 endif
 
 end
-; \}
-;;     //end of output_into_text_box
 
-
-
-
-
-
-;;
-; \defgroup output_error_into_text_box
-; \{
-;;
-
-;;
 ; \brief This function output into the 
 ; text box window the information given as an
 ; argument
@@ -236,112 +182,6 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
 endif
 
 end
-; \}
-;;     //end of output_error
-
-
-
-
-
-
-;;
-; \defgroup check_access
-; \{
-;;
-
-;;
-; \brief This function check if the ucams
-; given in the command line has access to 
-; the instrument tool is requesting
-;
-; \param event (INPUT) event structure
-; \param instrument (INPUT) name of the instrument
-; \param ucams (INPUT) ucams of the user
-function check_access, Event, instrument, ucams
-
-list_of_instrument = ['REF_L', 'REF_M', 'BSS']
-
-;0:j35:jean$
-;1:pf9:pete
-;2:2zr:michael
-;3:mid:steve
-;4:1qg:rick
-;5:ha9:haile
-;6:vyi:frank
-;7:vuk:john 
-;8:x4t:xiadong
-;9:ele:eugene
-;10:ceh:candice
-;11:Jim green (Hassina colaborator)
-;12:andre Parizzi
-
-list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele','ceh','ks6']
-
-;check if ucams is in the list
-ucams_index=-1
-for i =0, 11 do begin
-   if (ucams EQ list_of_ucams[i]) then begin
-     ucams_index = i
-     break 
-   endif
-endfor
-
-;check if user is autorized for this instrument
-CASE instrument OF		
-   ;REF_L
-   0: CASE  ucams_index OF
-        -1:
-	0: 		;authorized
-	1: 		;authorized
-	2: 		;authorized
-	3: 		;authorized
-	4: ucams_index=-1	;unauthorized
-	5: ucams_index=-1	;unauthorized
-	6: ucams_index=-1	;unauthorized
-	7: 		;authorized
-	8: 		;authorized
-	9: ucams_index=-1	;unauthorized
-        10:
-        11:
-      ENDCASE
-   ;REF_M
-   1: CASE ucams_index OF
-	-1:
-	0: 
-	1: 
-	2: 
-	3: 
-	4: 
-	5: 
-        6: 
-	7: ucams_index=-1
-        8: ucams_index=-1
-        9: ucams_index=-1
-        10: ucams_index=-1
-        11:
-    ENDCASE
-    2: case ucams_index of
-        -1:
-        0:
-        1:
-        2:
-        3:
-        9:
-    endcase
-        ENDCASE	 
-
-;give access to everybody
-ucams_index = 0
-
-RETURN, ucams_index
- 
-end
-; \}
-;;     //end of check_access
-
-
-
-
 
 ;;
 ; \defgroup remove_star
@@ -362,20 +202,7 @@ new_value = strsplit(value,'\*',/extract,/regex)
 
 return, new_value
 end
-; \}
-;;     //end of remove_star_from_string
 
-
-
-
-
-
-;;
-; \defgroup produce_output_file_name
-; \{
-;;
-
-;;
 ; \brief This function produces the output
 ; file name
 ;
@@ -398,22 +225,8 @@ output_file_name += "_" + run_number + extension
 
 return, output_file_name 
 end
-; \}
-;;     //end of produce_output_file_name
 
-
-
-
-
-
-
-
-
-; \defgroup output_into_log_book_file
-; \{
-;;
-
-;;
+;
 ; \brief This function output the string
 ; into a predefined file (just for debugging)
 ;
@@ -435,21 +248,7 @@ close,1
 free_lun,1
 
 end
-; \}
-;;     //end of output_into_log_book_file
 
-
-
-
-
-
-
-
-; \defgroup create_tmp_folder
-; \{
-;;
-
-;;
 ; \brief This function creates the temporary
 ; folder
 ;
@@ -462,19 +261,7 @@ spawn, cmd_mkdir, listening, err_listening
 
 return, [listening, err_listening]
 end
-; \}
-;;     //end of create_tmp_folder
 
-
-
-
-
-
-; \defgroup replace_string
-; \{
-;;
-
-;;
 ; \brief This function replace in the string provided
 ; the first string by the second
 ; folder
@@ -493,18 +280,7 @@ full_neutron_event_file_name += string_2
 
 return, full_neutron_event_file_name 
 end
-; \}
-;;     //end of replace_string
 
-
-
-
-
-; \defgroup get_min_run_number
-; \{
-;;
-
-;;
 ; \brief This function output the minimum
 ; run number from the list
 ;
