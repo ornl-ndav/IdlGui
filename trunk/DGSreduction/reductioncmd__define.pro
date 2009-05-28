@@ -35,6 +35,8 @@ PRO ReductionCmd::GetProperty, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
+    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
+    Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange=monrange, $                 ; Monitor integration range (usec)
@@ -56,8 +58,8 @@ PRO ReductionCmd::GetProperty, $
     Split=split, $                       ; split (distributed mode)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
-    _Extra=extra  
-
+    _Extra=extra
+    
   ; Error Handling
   catch, theError
   IF theError NE 0 THEN BEGIN
@@ -67,7 +69,7 @@ PRO ReductionCmd::GetProperty, $
   ENDIF
   
   IF ARG_PRESENT(Instrument) NE 0 THEN Instrument = self.instrument
-
+  
 END
 
 PRO ReductionCmd::SetProperty, $
@@ -99,6 +101,8 @@ PRO ReductionCmd::SetProperty, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
+    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
+    Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange=monrange, $                 ; Monitor integration range (usec)
@@ -184,6 +188,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(tibconst) NE 0 THEN self.tibconst = TIBconst
   IF N_ELEMENTS(ei) NE 0 THEN self.ei = Ei
   IF N_ELEMENTS(tzero) NE 0 THEN self.tzero = Tzero
+  IF N_ELEMENTS(ei_error) NE 0 THEN self.ei_error = Ei_error
+  IF N_ELEMENTS(tzero_error) NE 0 THEN self.tzero_error = Tzero_error
   IF N_ELEMENTS(nomonitornorm) NE 0 THEN self.nomonitornorm = NoMonitorNorm
   IF N_ELEMENTS(pcnorm) NE 0 THEN self.pcnorm = pcnorm
   IF N_ELEMENTS(monrange) NE 0 THEN self.monrange = MonRange
@@ -222,122 +228,122 @@ function ReductionCmd::Generate
   cmd = STRARR(self.jobs)
   
   for i = 0L, self.jobs-1 do begin
+  
+    ; Let's first start with the program name!
+    cmd[i] = self.program
     
-  ; Let's first start with the program name!
-  cmd[i] = self.program
-  
-  ; Verbose flag
-  IF (self.verbose EQ 1) THEN cmd[i] += " -v"
-  ; Quiet flag
-  IF (self.quiet EQ 1) THEN cmd[i] += " -q"
-  ; Data filename(s)
-  IF STRLEN(self.datarun) GE 1 THEN cmd[i] += " "+ STRING(self.datarun)
-  ; Output
-  IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output  
-  ; Instrument Name
-  IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
-  ; Facility
-  IF STRLEN(self.facility) GT 1 THEN cmd[i] += " --facility="+self.facility
-  ; Proposal
-  IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
-  ; SPE/PHX creation
-  IF (self.spe EQ 1) THEN cmd[i]+= " --make-spe"
-  ; Config (.rmd) file
-  IF STRLEN(self.configfile) GT 1 THEN $
-    cmd[i] += " --config="+self.configfile
-  ; Instrument Geometry
-  IF STRLEN(self.instgeometry) GT 1 THEN $
-    cmd[i] += " --inst-geom="+self.instgeometry
-  ; Corner Geometry
-  IF STRLEN(self.cornergeometry) GT 1 THEN $
-    cmd[i] += " --corner-geom="+self.cornergeometry
-  ; DataPaths
-  ; Construct the DataPaths 
-  self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $ 
-                                       i+1, self.jobs)
-  IF STRLEN(self.datapaths) GT 0 THEN $
-    cmd[i] += " --data-paths="+self.datapaths
-  ; normalisation file
-  IF STRLEN(self.normalisation) GT 1 THEN $
-    cmd[i] += " --norm="+self.normalisation 
-  ; Empty sample container file
-  IF STRLEN(self.emptycan) GT 1 THEN $
-    cmd[i] += " --ecan="+self.emptycan   
-  ; black sample container file
-  IF STRLEN(self.blackcan) GT 1 THEN $
-    cmd[i] += " --bcan="+self.blackcan   
-  ; Dark Current File
-  IF STRLEN(self.dark) GT 1 THEN $
-    cmd[i] += " --dkcur="+self.dark 
-  ; Upstream monitor path
-  IF STRLEN(self.usmonpath) GT 1 THEN $
-    cmd[i] += " --usmon-path="+self.usmonpath 
-  ; Downstream monitor path
-  IF STRLEN(self.dsmonpath) GT 1 THEN $
-    cmd[i] += " --dsmon-path="+self.dsmonpath
-  ; ROI filename
-  IF STRLEN(self.roifile) GT 1 THEN $
-    cmd[i] += " --roi-file="+self.roifile
-  ; Tmin
-  IF STRLEN(self.tmin) GT 1 THEN $
-    cmd[i] += " --tof-cut-min="+self.tmin
-  ; Tmax
-  IF STRLEN(self.tmax) GT 1 THEN $
-    cmd[i] += " --tof-cut-max="+self.tmax
-  ; Time Independent Background
-  IF STRLEN(self.tibconst) GT 1 THEN $
-    cmd[i] += " --tib-const="+self.tibconst  
-  ; Ei
-  IF STRLEN(self.ei) GT 1 THEN $
-    cmd[i] += " --initial-energy="+self.ei 
-  ; T0
-  IF STRLEN(self.tzero) GT 1 THEN $
-    cmd[i] += " --time-zero-offset="+self.tzero 
-  ; Flag for turning off monitor normalization
-  IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm" 
-  ; proton charge normalization
-  IF (self.pcnorm EQ 1) THEN cmd[i] += " --pc-norm" 
-  ; Monitor integration range
-  IF STRLEN(self.monrange) GT 1 THEN $
-    cmd[i] += " --mon-int-range="+self.monrange  
-  ; Detector Efficiency
-  IF STRLEN(self.deteff) GT 1 THEN $
-    cmd[i] += " --det-eff="+self.deteff  
-  ; transmission for sample data background
-  IF STRLEN(self.datatrans) GT 1 THEN $
-    cmd[i] += " --data-trans-coef=" + self.datatrans  
-  ; transmission for norm data background
-  IF STRLEN(self.normtrans) GT 1 THEN $
-    cmd[i] += " --norm-trans-coef=" + self.normtrans  
-  ; Normalisation integration range
-  IF STRLEN(self.normrange) GT 1 THEN $
-    cmd[i] += " --norm-int-range="+self.normrange
-  ; Lambda Bins
-  IF STRLEN(self.lambdabins) GT 1 THEN $
-    cmd[i] += " --lambda-bins=" + self.lambdabins 
-     
-  IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb" 
-  IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb" 
-  IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm" 
-  IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb" 
-  ; Mask File
-  IF STRLEN(self.maskfile) GT 1 THEN $
-    cmd[i] += " --nask-file="+self.maskfile   
-  ; Lambda Ratio
-  IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio" 
-  ; Energy Bins
-  IF STRLEN(self.energybins) GT 1 THEN $
-    cmd[i] += " --energy-bins="+self.energybins
-  ; Momentum Transfer Bins
-  IF STRLEN(self.omegabins) GT 1 THEN $
-    cmd[i] += " --mom-trans-bins="+self.omegabins  
-  IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh" 
-  IF (self.fixed EQ 1) THEN cmd[i] += " --fixed" 
-  IF (self.split EQ 1) THEN cmd[i] += " --split" 
-  IF (self.timing EQ 1) THEN cmd[i] += " --timing" 
-  
+    ; Verbose flag
+    IF (self.verbose EQ 1) THEN cmd[i] += " -v"
+    ; Quiet flag
+    IF (self.quiet EQ 1) THEN cmd[i] += " -q"
+    ; Data filename(s)
+    IF STRLEN(self.datarun) GE 1 THEN cmd[i] += " "+ STRING(self.datarun)
+    ; Output
+    IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
+    ; Instrument Name
+    IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
+    ; Facility
+    IF STRLEN(self.facility) GT 1 THEN cmd[i] += " --facility="+self.facility
+    ; Proposal
+    IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
+    ; SPE/PHX creation
+    IF (self.spe EQ 1) THEN cmd[i]+= " --make-spe"
+    ; Config (.rmd) file
+    IF STRLEN(self.configfile) GT 1 THEN $
+      cmd[i] += " --config="+self.configfile
+    ; Instrument Geometry
+    IF STRLEN(self.instgeometry) GT 1 THEN $
+      cmd[i] += " --inst-geom="+self.instgeometry
+    ; Corner Geometry
+    IF STRLEN(self.cornergeometry) GT 1 THEN $
+      cmd[i] += " --corner-geom="+self.cornergeometry
+    ; DataPaths
+    ; Construct the DataPaths
+    self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
+      i+1, self.jobs)
+    IF STRLEN(self.datapaths) GT 0 THEN $
+      cmd[i] += " --data-paths="+self.datapaths
+    ; normalisation file
+    IF STRLEN(self.normalisation) GT 1 THEN $
+      cmd[i] += " --norm="+self.normalisation
+    ; Empty sample container file
+    IF STRLEN(self.emptycan) GT 1 THEN $
+      cmd[i] += " --ecan="+self.emptycan
+    ; black sample container file
+    IF STRLEN(self.blackcan) GT 1 THEN $
+      cmd[i] += " --bcan="+self.blackcan
+    ; Dark Current File
+    IF STRLEN(self.dark) GT 1 THEN $
+      cmd[i] += " --dkcur="+self.dark
+    ; Upstream monitor path
+    IF STRLEN(self.usmonpath) GT 1 THEN $
+      cmd[i] += " --usmon-path="+self.usmonpath
+    ; Downstream monitor path
+    IF STRLEN(self.dsmonpath) GT 1 THEN $
+      cmd[i] += " --dsmon-path="+self.dsmonpath
+    ; ROI filename
+    IF STRLEN(self.roifile) GT 1 THEN $
+      cmd[i] += " --roi-file="+self.roifile
+    ; Tmin
+    IF STRLEN(self.tmin) GT 1 THEN $
+      cmd[i] += " --tof-cut-min="+self.tmin
+    ; Tmax
+    IF STRLEN(self.tmax) GT 1 THEN $
+      cmd[i] += " --tof-cut-max="+self.tmax
+    ; Time Independent Background
+    IF STRLEN(self.tibconst) GT 1 THEN $
+      cmd[i] += " --tib-const="+self.tibconst
+    ; Ei
+    IF STRLEN(self.ei) GT 1 THEN $
+      cmd[i] += " --initial-energy="+self.ei+","+self.ei_error
+    ; T0
+    IF STRLEN(self.tzero) GT 1 THEN $
+      cmd[i] += " --time-zero-offset="+self.tzero+","+self.tzero_error
+    ; Flag for turning off monitor normalization
+    IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
+    ; proton charge normalization
+    IF (self.pcnorm EQ 1) THEN cmd[i] += " --pc-norm"
+    ; Monitor integration range
+    IF STRLEN(self.monrange) GT 1 THEN $
+      cmd[i] += " --mon-int-range="+self.monrange
+    ; Detector Efficiency
+    IF STRLEN(self.deteff) GT 1 THEN $
+      cmd[i] += " --det-eff="+self.deteff
+    ; transmission for sample data background
+    IF STRLEN(self.datatrans) GT 1 THEN $
+      cmd[i] += " --data-trans-coef=" + self.datatrans
+    ; transmission for norm data background
+    IF STRLEN(self.normtrans) GT 1 THEN $
+      cmd[i] += " --norm-trans-coef=" + self.normtrans
+    ; Normalisation integration range
+    IF STRLEN(self.normrange) GT 1 THEN $
+      cmd[i] += " --norm-int-range="+self.normrange
+    ; Lambda Bins
+    IF STRLEN(self.lambdabins) GT 1 THEN $
+      cmd[i] += " --lambda-bins=" + self.lambdabins
+      
+    IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
+    IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
+    IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
+    IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
+    ; Mask File
+    IF STRLEN(self.maskfile) GT 1 THEN $
+      cmd[i] += " --nask-file="+self.maskfile
+    ; Lambda Ratio
+    IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
+    ; Energy Bins
+    IF STRLEN(self.energybins) GT 1 THEN $
+      cmd[i] += " --energy-bins="+self.energybins
+    ; Momentum Transfer Bins
+    IF STRLEN(self.omegabins) GT 1 THEN $
+      cmd[i] += " --mom-trans-bins="+self.omegabins
+    IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
+    IF (self.fixed EQ 1) THEN cmd[i] += " --fixed"
+    IF (self.split EQ 1) THEN cmd[i] += " --split"
+    IF (self.timing EQ 1) THEN cmd[i] += " --timing"
+    
   endfor
-
+  
   
   
   return, cmd
@@ -372,6 +378,8 @@ function ReductionCmd::Init, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
+    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
+    Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange=monrange, $                 ; Monitor integration range (usec)
@@ -430,7 +438,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(tmax) EQ 0 THEN tmax = ""
   IF N_ELEMENTS(tibconst) EQ 0 THEN tibconst = ""
   IF N_ELEMENTS(ei) EQ 0 THEN ei = ""
+  IF N_ELEMENTS(ei_error) EQ 0 THEN ei_error = '0.0'
   IF N_ELEMENTS(tzero) EQ 0 THEN tzero = ""
+  IF N_ELEMENTS(tzero_error) EQ 0 THEN tzero_error = '0.0'
   IF N_ELEMENTS(nomonitornorm) EQ 0 THEN nomonitornorm = 0
   IF N_ELEMENTS(pcnorm) EQ 0 THEN pcnorm = 0
   IF N_ELEMENTS(monrange) EQ 0 THEN monrange = ""
@@ -480,7 +490,9 @@ function ReductionCmd::Init, $
   self.tmax = tmax
   self.tibconst = tibconst
   self.ei = ei
+  self.ei_error = ei_error
   self.tzero = tzero
+  self.tzero_error = tzero_error
   self.nomonitornorm = nomonitornorm
   self.pcnorm = pcnorm
   self.monrange = monrange
@@ -526,7 +538,7 @@ pro ReductionCmd__Define
     facility: "", $          ; Facility name
     proposal: "", $          ; Proposal ID
     spe: 0L, $               : SPE file creation
-    configfile: "", $        ; Config (.rmd) filename
+  configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -543,7 +555,9 @@ pro ReductionCmd__Define
     tmax: "", $              ; maximum tof
     tibconst: "", $          ; Time Independant Background constant
     ei: "", $                ; Incident Energy (meV)
+    ei_error: "", $          ; Error in Incident Energy (meV)
     tzero: "", $             ; T0
+    tzero_error: "", $       ; Error in T0
     nomonitornorm: 0L, $     ; Turn off monitor normalisation
     pcnorm: 0L, $            ; Proton Charge Normalisation
     monrange: "", $          ; Monitor integration range (usec)
