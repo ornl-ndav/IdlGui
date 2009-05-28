@@ -98,7 +98,6 @@ PRO DGSreduction_TLB_Events, event
   
   CASE myUVALUE OF
     'INSTRUMENT_SELECTED': BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, Instrument=event.STR
     END
     'DGS_DATARUN': BEGIN
@@ -137,6 +136,46 @@ PRO DGSreduction_TLB_Events, event
       ; Also make the wavelength range fields active (or inactive!)
       wavelengthRange_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_COMBINED_WAVELENGTH_RANGE')
       WIDGET_CONTROL, wavelengthRange_ID, SENSITIVE=event.SELECT
+    END
+    'DGS_ET_MIN': BEGIN
+      ; Minimum Energy Transfer
+      print, 'DGS_ET_MIN'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, EnergyBins_Min=myValue
+    END
+    'DGS_ET_MAX': BEGIN
+      ; Maximum Energy Transfer
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, EnergyBins_Max=myValue
+    END
+    'DGS_ET_STEP': BEGIN
+      ; Energy Transfer Step size
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, EnergyBins_Step=myValue
+    END
+    'DGS_LAMBDA_MIN': BEGIN
+      ; Minimum Wavelength
+      print, 'DGS_LAMBDA_MIN'
+    END
+    'DGS_LAMBDA_MAX': BEGIN
+      ; Maximum Wavelength
+      print, 'DGS_LAMBDA_MAX'
+    END
+    'DGS_LAMBDA_STEP': BEGIN
+      ; Wavelength Step size
+      print, 'DGS_LAMBDA_STEP'
+    END
+    'DGS_Q_MIN': BEGIN
+      ; Minimum Q
+      print, 'DGS_Q_MIN'
+    END
+    'DGS_Q_MAX': BEGIN
+      ; Maximum Q
+      print, 'DGS_Q_MAX'
+    END
+    'DGS_Q_STEP': BEGIN
+      ; Q Step size
+      print, 'DGS_Q_STEP'
     END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -265,13 +304,32 @@ PRO DGSreduction, dgscmd, _Extra=extra
   formatOptionsPrettyBase = Widget_Base(formatOptionsBase, COLUMN=1, Scr_XSize=400, /FRAME, $
     YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
   
+  ; Energy Transfer Range Base
+  formatOptionsPrettyBaseEnergyRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
+  minEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Energy Min:", $
+        XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)
+  maxEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Max:", $
+        XSIZE=8, UVALUE="DGS_ET_MAX", /ALL_EVENTS)
+  stepEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Step:", $
+        XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
+
+  ; Q Range Base
+  formatOptionsPrettyBaseQRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
+  minMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Q Min:", $
+        XSIZE=8, UVALUE="DGS_Q_MIN")
+  maxMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Max:", $
+        XSIZE=8, UVALUE="DGS_Q_MAX")
+  stepMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Step:", $
+        XSIZE=8, UVALUE="DGS_Q_STEP")
+
   ; Combined Wavelength Range Base
-  formatOptionsPrettyBaseRow1 = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
-  minWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Wavelength Min:", XSIZE=8)
-  maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Max:", XSIZE=8)
-  stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Step:", XSIZE=8)
-  
-  
+  formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
+  minWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Wavelength Min:", $
+        XSIZE=8, UVALUE="DGS_LAMBDA_MIN")
+  maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Max:", $
+        XSIZE=8, UVALUE="DGS_LAMBDA_MAX")
+  stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
+        XSIZE=8, UVALUE="DGS_LAMBDA_STEP")
   
   
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
@@ -281,7 +339,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   WIDGET_CONTROL, fixedButton, SENSITIVE=0
   
   ; Don't enable wavelength range until it's selected.
-  WIDGET_CONTROL, formatOptionsPrettyBaseRow1, SENSITIVE=0
+  WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
  
   ; normalisation tab
   normID = WIDGET_BASE(tabID, Title='Normalisation')
