@@ -112,7 +112,7 @@ END
 ;return the column of the bank selected
 FUNCTION getColumnMainPlot, X
 Xwidth = 32
-FOR i=0,37 DO BEGIN
+FOR i=0,50 DO BEGIN
     xoff = i*37
     xmin = 10 + xoff
     xmax = xmin + Xwidth
@@ -126,8 +126,8 @@ END
 ;L1 -> 0, L2 -> 1, M1 -> 38 ....
 FUNCTION getColumnMainPlotIndex, X
 Xwidth = 32
-FOR i=0,37 DO BEGIN
-    xoff = i*37
+FOR i=0,50 DO BEGIN
+    xoff = i*50
     xmin = 10 + xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i)
@@ -172,15 +172,9 @@ WIDGET_CONTROL,Event.top,GET_UVALUE=global1
 X = Event.X
 Y = Event.Y
 column = getColumnMainPlot(X)
-row    = getRowMainPlot(Y)
-;Special case for 32A and 32B
-IF (column EQ 32 AND row EQ 'M') THEN BEGIN
-    IF (Y LT 394) THEN column = '32B'
-    IF (Y GT 394) THEN column = '32A'
-    IF (Y EQ 394) THEN column = ''
-ENDIF
-IF (Row NE '' AND Column NE 0) THEN BEGIN ;we click inside a bank
-    RETURN, Row + strcompress(Column,/remove_all)
+;row    = getRowMainPlot(Y)
+IF (Column NE 0) THEN BEGIN ;we click inside a bank
+    RETURN, strcompress(Column,/remove_all)
 ENDIF ELSE BEGIN ;if we click outside a bank
     RETURN, ''
 ENDELSE
