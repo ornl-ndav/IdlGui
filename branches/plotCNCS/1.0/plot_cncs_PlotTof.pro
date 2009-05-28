@@ -82,7 +82,7 @@ WIDGET_CONTROL, wBase, SET_UVALUE = global3
 XMANAGER, "MakeGuiTofBase", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
 
 DEVICE, DECOMPOSED = 0
-loadct, 5
+loadct, 5, /SILENT
 
 ;select plot area
 id = widget_info(wBase,find_by_uname='tof_plot_draw')
