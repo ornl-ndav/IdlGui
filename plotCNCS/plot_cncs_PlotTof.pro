@@ -84,7 +84,11 @@ widget_control, id, base_set_title= title
 ;plot data
 tof = (size(img))(1)
 (*global3).tof = tof
-tof_array = REFORM(img,tof,117760)
+
+help, img
+help, tof
+
+tof_array = REFORM(img,tof,400L*128L)
 IvsTOF = tof_array(*,pixelID)
 sz = (size(IvsTOF))(0)
 IF (sz EQ 2) THEN BEGIN
