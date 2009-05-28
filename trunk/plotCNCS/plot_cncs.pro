@@ -1,7 +1,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;get the current folder
-cd, current=current_folder
+;cd, current=current_folder
 
 APPLICATION = 'plotCNCS'
 VERSION     = '1.0.0'

@@ -118,7 +118,7 @@ FUNCTION getIMGfromNexus, NexusFileName, progressBar, Nstep, progressBarCancel
 step       = float(0)           ;0 step so far
 bank1      = retrieveFirstBankData(NexusFileName, 1)
 Ntof       = (size(bank1))(1)
-img        = lonarr(Ntof,128,115*8)
+img        = lonarr(Ntof,128,50*8)
 IF (progressBarCancel) THEN RETURN, img
 ;progressBar->Update,(++step/Nstep)*100
 IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
@@ -127,7 +127,7 @@ IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
 ENDIF
 
 ;retrieve data from Bottom Bank
-progressBar->SetLabel, 'Retrieving Bottom Data ...'
+progressBar->SetLabel, 'Retrieving Data ...'
 BottomBank = retrieveBottomBankData(NexusFileName, $
                                     Ntof, $
                                     progressBar, $
@@ -136,36 +136,6 @@ BottomBank = retrieveBottomBankData(NexusFileName, $
                                     progressBarCancel)
 IF (progressBarCancel) THEN RETURN, img
 img[0,0,0] = BottomBank
-IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-    progressBarCancel = 1
-    RETURN, img
-ENDIF
-
-;retrieve data from Middle Bank
-progressBar->SetLabel, 'Retrieving Middle Data ...'
-MiddleBank    = retrieveMiddleBankData(NexusFileName, $
-                                       Ntof, $
-                                       ProgressBar, $
-                                       Nstep, $
-                                       step,$
-                                       progressBarCancel)
-IF (progressBarCancel) THEN RETURN, img
-img[0,0,38*8] = MiddleBank
-IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-    progressBarCancel = 1
-    RETURN, img
-ENDIF
-
-;retrieve data from Top Bank
-progressBar->SetLabel, 'Retrieve Top Data ...'
-TopBank     = retrieveTopBankData(NexusFileName, $
-                                  Ntof, $
-                                  ProgressBar, $
-                                  Nstep, $
-                                  step, $
-                                  progressBarCancel)
-IF (progressBarCancel) THEN RETURN, img
-img[0,0,77*8] = TopBank
 IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
     progressBarCancel = 1
     RETURN, img
@@ -372,9 +342,7 @@ ENDCASE
 
 END
 
-
-
-
+;==============================================================================
 PRO plotGridMainPlot, global1
 
 ;retrieve values from inside structure
@@ -390,7 +358,7 @@ xoff    = (*global1).xoff
 ;##########################################
 ;;plot grid of bottom bank
 color  = 100
-for i=0,(38-1) do begin
+for i=0,(50-1) do begin
     plots, i*(Xcoeff)+i*off+xoff    , off       , /device, color=color
     plots, i*(Xcoeff)+i*off+xoff    , Ycoeff+off, /device, color=color, /continue
     plots, (i+1)*(Xcoeff)+i*off+xoff, Ycoeff+off, /device, color=color, /continue
@@ -398,68 +366,9 @@ for i=0,(38-1) do begin
     plots, i*(Xcoeff)+i*off+xoff    , off       , /device, color=color, /continue
 endfor
 
-;;plot grid of middle bank
-;from bank 1 to 31
-color  = 150
-yoff   = Ycoeff + 2*off
-for i=0,(31-1) do begin
-    plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, $
-      /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, $
-      /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
-    plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
-endfor
-
-;bank 32A and 32B
-color  = 200
-yoff   = Ycoeff + 2*off
-Ycoeff = 128
-i=31
-plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, /continue
-plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, /continue
-plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
-plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
-
-yoff   = 3*Ycoeff + 2*off
-plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-plots, i*(Xcoeff)+i*off+xoff    , Ycoeff+yoff , /device, color=color, /continue
-plots, (i+1)*(Xcoeff)+i*off+xoff, Ycoeff+yoff , /device, color=color, /continue
-plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
-plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
-
-;from bank 33 to 38
-color  = 150
-Ycoeff = 128 * 2
-yoff   = Ycoeff + 2*off
-for i=32,(38-1) do begin
-    plots, i*(Xcoeff)+i*off+xoff    , yoff , /device, color=color
-    plots, i*(Xcoeff)+i*off+xoff    , yoff+Ycoeff , /device, color=color, $
-      /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff+Ycoeff , /device, color=color, $
-      /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff , /device, color=color, /continue
-    plots, i*(Xcoeff)+i*off+xoff    , yoff  , /device, color=color, /continue
-endfor
-
-;;plot grid of top banks
-color  = 100
-yoff   = 2*Ycoeff + 3*off
-FOR i=0,(38-1) DO BEGIN
-    plots, i*(Xcoeff)+i*off+xoff    , yoff       , /device, color=color
-    plots, i*(Xcoeff)+i*off+xoff    , Ycoeff+yoff, /device, color=color, /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, Ycoeff+yoff, /device, color=color, /continue
-    plots, (i+1)*(Xcoeff)+i*off+xoff, yoff       , /device, color=color, /continue
-    plots, i*(Xcoeff)+i*off+xoff    , yoff       , /device, color=color, /continue
-ENDFOR
-
 END
 
-
-
-
+;==============================================================================
 PRO plotDASviewFullInstrument, global1
 
 ;retrieve values from inside structure
@@ -489,44 +398,10 @@ ERASE
 ;isolate various banks of data
 bank = lonarr(8,128)
 ;plot bottom  banks
-for i=0,(38-1) do begin
+for i=0,(50-1) do begin
     bank = tvimg[i*8:(i+1)*8-1,*]
     bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
     tvscl, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
-endfor
-
-;plot middle banks
-yoff   = Ycoeff + 2*off
-for i=38,68 do begin
-    bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
-    tvscl, bank_rebin, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff
-endfor
-
-;plot 32A and 32B of middle banks
-i=70 ;32B (bottom one)
-bank       = tvimg[i*8:(i+1)*8-1,*]
-bank_rebin = rebin(bank,8*Xfactor,128L*Yfactor/2,/sample)
-tvscl, bank_rebin, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
-
-i=69 ; 32A (top one)
-bank       = tvimg[i*8:(i+1)*8-1,*]
-bank_rebin = rebin(bank,8*Xfactor,128L*Yfactor/2,/sample)
-tvscl, bank_rebin, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff+Ycoeff/2
-
-;plot 33 to 38 of middle banks
-FOR i=71,76 DO BEGIN
-    bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
-    tvscl, bank_rebin, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
-ENDFOR
-
-;plot top banks
-yoff   = 2*Ycoeff + 3*off
-for i=77,114 do begin
-    bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
-    tvscl, bank_rebin, /device, (i-77)*(Xcoeff)+(i-77)*off+xoff, yoff
 endfor
 
 ;plot grid
@@ -744,7 +619,7 @@ XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
 DEVICE, DECOMPOSED = 0
 loadct, 5
 
-Nstep  = FLOAT(120) ;number of steps
+Nstep  = FLOAT(50) ;number of steps
 progressBarCancel = 0
 progressBar = OBJ_NEW("SHOWPROGRESS", $
                       XOFFSET = 100, $
