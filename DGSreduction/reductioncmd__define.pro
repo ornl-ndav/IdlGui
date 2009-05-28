@@ -342,7 +342,8 @@ function ReductionCmd::Generate
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
       AND (STRLEN(self.lambdabins_max) GE 1) $
-      AND (STRLEN(self.lambdabins_step) GE 1) THEN $
+      AND (STRLEN(self.lambdabins_step) GE 1) $ 
+      AND (self.dumpwave EQ 1) THEN $
       cmd[i] += " --lambda-bins=" + self.lambdabins_min + "," + $
           self.lambdabins_max + "," + self.lambdabins_step
       
