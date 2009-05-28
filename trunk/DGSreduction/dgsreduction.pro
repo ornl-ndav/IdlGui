@@ -34,26 +34,29 @@
 ;---------------------------------------------------------
 
 PRO DGSreduction_Execute, event
-      ; Get the info structure and copy it here
-    WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY    
-    dgscmd = info.dgscmd
-
-    ; TODO: loop over to number of jobs required - split up the min/max banks equally
-    ; over the no. of requested jobs --data-paths=1-10 etc..
-
-    
-
-    ;dgscmd->SetProperty, DataPaths=
-
-    ; Generate the Command to run
-    command = dgscmd->generate()
-    
+  ; Get the info structure and copy it here
+  WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+  dgscmd = info.dgscmd
+  
+  ; Do some sanity checking.
+  
+  ; First lets check that an instrument has been selected!
+  dgscmd->GetProperty, Instrument=instrument
+  IF (STRLEN(instrument) LT 2) THEN ok=ERROR_MESSAGE("Please select an Instrument from the list.")
+  
+  ; Generate the array of commands to run
+  commands = dgscmd->generate()
+  
+  ; Loop over the command array
+  for index = 0L, N_ELEMENTS(commands)-1 do begin
+    cmd = commands[index]
     ; TODO: For now let's just dump the commands into a file
-    spawn, "echo " + command + " >> /tmp/commands" 
-    
-    ; Put info back
-    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-    
+    spawn, "echo " + cmd + " >> /tmp/commands"
+  endfor
+  
+  ; Put info back
+  WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+  
 END
 
 ;---------------------------------------------------------
@@ -63,51 +66,75 @@ PRO DGSreduction_Quit, event
 END
 
 ;---------------------------------------------------------
-PRO Update_Output, wid, cmdarray
-  
-END
-
-;---------------------------------------------------------
 
 PRO DGSreduction_TLB_Events, event
   thisEvent = TAG_NAMES(event, /STRUCTURE_NAME)
-   
-     ; Get the info structure
+  
+  ; Get the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
-   
+  
   ; extract the command object into a separate
   dgscmd=info.dgscmd
-      
+  
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
- 
+  
   ; Check that we actually got something back in the UVALUE
   IF N_ELEMENTS(myUVALUE) EQ 0 THEN myUVALUE="NOTHING"
- 
+  
   CASE myUVALUE OF
+    'INSTRUMENT_SELECTED': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Instrument=event.STR
+    END
     'DGS_DATARUN': BEGIN
-        WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-        dgscmd->SetProperty, DataRun=myValue
-      END
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ;print, 'DGS_DATARUN'
+      dgscmd->SetProperty, DataRun=myValue
+    END
     'DGS_DATAPATHS_LOWER': BEGIN
-        WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
-        dgscmd->SetProperty, LowerBank=lowerValue
-      END
+      WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
+      dgscmd->SetProperty, LowerBank=lowerValue
+    END
     'DGS_DATAPATHS_UPPER': BEGIN
-        WIDGET_CONTROL, event.ID, GET_VALUE=upperValue
-        dgscmd->SetProperty, UpperBank=upperValue
-      END
+      WIDGET_CONTROL, event.ID, GET_VALUE=upperValue
+      dgscmd->SetProperty, UpperBank=upperValue
+    END
+    'DGS_MAKE_SPE': BEGIN
+      dgscmd->SetProperty, SPE=event.SELECT
+    END
+    'DGS_MAKE_QVECTOR': BEGIN
+      dgscmd->SetProperty, Qvector=event.SELECT
+      fixedGrid_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_MAKE_FIXED')
+      ; Make the Fixed Grid output selection active if Qvector is selected.
+      WIDGET_CONTROL, fixedGrid_ID, SENSITIVE=event.SELECT
+    END
+    'DGS_MAKE_FIXED': BEGIN
+      dgscmd->SetProperty, Fixed=event.SELECT
+    END
+    'DGS_MAKE_COMBINED_ET': BEGIN
+      dgscmd->SetProperty, DumpEt=event.SELECT
+    END
+    'DGS_MAKE_COMBINED_TOF': BEGIN
+      dgscmd->SetProperty, DumpTOF=event.SELECT
+    END
+    'DGS_MAKE_COMBINED_WAVE': BEGIN
+      dgscmd->SetProperty, DumpWave=event.SELECT
+    ; Also make the
+    END
     'DGS_JOBS': BEGIN
-        WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      if (myValue ne "") OR (myValue ne 0) then begin
         dgscmd->SetProperty, Jobs=myValue
-      END
+      endif
+    END
     'NOTHING': BEGIN
-      END
+    END
   ENDCASE
   
   ; Update the output command window
   WIDGET_CONTROL, info.outputID, SET_VALUE=dgscmd->generate()
   
-  ; Put info back  
+  ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
   
@@ -175,24 +202,52 @@ PRO DGSreduction, dgscmd, _Extra=extra
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
   
+  toprow = WIDGET_BASE(tlb, /ROW)
+  textID = WIDGET_LABEL(toprow, VALUE='Please select an instrument --> ')
+  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", VALUE=[' ','ARCS','CNCS','SEQUOIA'], XSIZE=90)
+  
   ; Tabs
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
   reductionTLB = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
   
-  row1 = widget_base(reductionTLB, /row)
+  row1 = widget_base(reductionTLB, /ROW)
   runID= CW_FIELD(row1, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
-  jobID = CW_FIELD(row1, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", /INTEGER, /ALL_EVENTS)
+  jobID = CW_FIELD(row1, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
   
-  row2 = widget_base(reductionTLB, /row)
+  row2 = widget_base(reductionTLB, /ROW)
   lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
   ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)
   
+  row3 = widget_base(reductionTLB, /ROW)
   
   
+  formatsBase = WIDGET_BASE(reductionTLB)
+  formatsLabel = WIDGET_LABEL(formatsBase, value=' Output Formats ', XOFFSET=5)
+  formatsLabelGeometry = WIDGET_INFO(formatsLabel, /GEOMETRY)
+  formatsLabelYSize = formatsLabelGeometry.ysize
+  outputBase = Widget_Base(formatsBase, COLUMN=1, Scr_XSize=400, /FRAME, $
+    YOFFSET=formatsLabelYSize/2, YPAD=10, XPAD=10, SCR_YSIZE=500)
+  outputTLB = WIDGET_BASE(outputBase, /NONEXCLUSIVE)
+  speButton = Widget_Button(outputTLB, Value='SPE/PHX', UVALUE='DGS_MAKE_SPE')
+  qvectorButton = Widget_Button(outputTLB, Value='Qvector', UVALUE='DGS_MAKE_QVECTOR')
+  fixedButton = Widget_Button(outputTLB, Value='Fixed Grid', UVALUE='DGS_MAKE_FIXED', UNAME='DGS_MAKE_FIXED')
+  etButton = Widget_Button(outputTLB, Value='Combined Energy Transfer', UVALUE='DGS_MAKE_COMBINED_ET')
+  tofButton = Widget_Button(outputTLB, Value='Combined Time-of-Flight', UVALUE='DGS_MAKE_COMBINED_TOF')
+  waveButton = Widget_Button(outputTLB, Value='Combined Wavelength', UVALUE='DGS_MAKE_COMBINED_WAVE')
   
+  ;minWavelengthID = CW_FIELD(waveBase, TITLE="Min:", XSIZE=10)
+  ;maxWavelengthID = CW_FIELD(waveBase, TITLE="Max:", XSIZE=10)
   
+  ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
+  Widget_Control, speButton, SET_BUTTON=1
+  
+  ; Cannot have the fixed grid without the Qvector
+  WIDGET_CONTROL, fixedButton, SENSITIVE=0
+  
+  ;WIDGET_CONTROL, wavebase, SENSITIVE=0
+ 
   ; normalisation tab
   normID = WIDGET_BASE(tabID, Title='Normalisation')
   label = WIDGET_LABEL(normID, VALUE="Nothing to see here!")
@@ -200,14 +255,15 @@ PRO DGSreduction, dgscmd, _Extra=extra
   utilsID = WIDGET_BASE(tabID, Title='Utilities')
   label = WIDGET_LABEL(utilsID, VALUE="Nothing to see here!")
   
-  outputID= WIDGET_TEXT(tlb, /EDITABLE, xsize=80, ysize=10, /SCROLL, $
+  textID = WIDGET_LABEL(tlb, VALUE='Command to execute:', /ALIGN_LEFT)
+  outputID= WIDGET_TEXT(tlb, /EDITABLE, xsize=80, ysize=10, /SCROLL, /WRAP, $
     VALUE=dgscmd->generate())
     
-  
-      
-  wMainButtons = WIDGET_BASE(tlb, /ROW)   
+    
+    
+  wMainButtons = WIDGET_BASE(tlb, /ROW)
   ; Define a Run button
-  executeID = WIDGET_BUTTON(wMainButtons, Value='Execute', EVENT_PRO='DGSreduction_Execute')    
+  executeID = WIDGET_BUTTON(wMainButtons, Value='Execute', EVENT_PRO='DGSreduction_Execute')
   ; Define a Quit button
   quitID = WIDGET_BUTTON(wMainButtons, Value='Quit', EVENT_PRO='DGSreduction_Quit', /ALIGN_RIGHT)
   
@@ -220,6 +276,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
     outputID:outputID, $
     lbankID:lbankID, $
     ubankID:ubankID, $
+    fixedButton:fixedButton, $
     extra:ptr_new(extra) $
     }
     
