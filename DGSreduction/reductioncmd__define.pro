@@ -6,6 +6,70 @@ PRO ReductionCmd::Cleanup
   PTR_FREE, self.extra
 END
 
+PRO ReductionCmd::GetProperty, $
+    Program=program, $                   ; Program name
+    Version=version, $
+    Verbose=verbose, $                   ; Verbose flag
+    Quiet=quiet, $                       ; Quiet flag
+    DataRun=datarun, $                         ; Data filename(s)
+    Output=output, $                     ; Output
+    Instrument=instrument, $             ; Instrument Name
+    Facility=facility, $                 ; Facility Name
+    Proposal=proposal, $                 ; Proposal ID
+    SPE=spe, $                           ; Create SPE/PHX files
+    ConfigFile=configfile, $             ; Config (.rmd) filename
+    InstGeometry=instgeometry, $         ; Instrument Geometry filename
+    CornerGeometry=cornergeometry, $     ; Corner Geometry filename
+    LowerBank=lowerbank, $               ; Lower Detector Bank
+    UpperBank=upperbank, $               ; Upper Detector Bank
+    DataPaths=datapaths, $               ; Detector Data paths
+    Normalisation=normalisation, $       ; Normalisation file
+    EmptyCan=emptycan, $                 ; Empty Can file
+    BlackCan=blackcan, $                 ; Black Sample file
+    Dark=dark, $                         ; Dark current file
+    USmonPath=usmonpath, $               ; Upstream monitor path
+    DSmonPath=dsmonpath, $               ; Downstream monitor path
+    ROIfile=roifile, $                   ; ROI file
+    Tmin=tmin, $                         ; minimum tof
+    Tmax=tmax, $                         ; maximum tof
+    TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
+    Ei=ei, $                             ; Incident Energy (meV)
+    Tzero=tzero, $                       ; T0
+    NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
+    PCnorm=pcnorm, $                     ; Proton Charge Normalisation
+    MonRange=monrange, $                 ; Monitor integration range (usec)
+    DetEff=deteff, $                     ; Detector efficiency
+    DataTrans=datatrans, $               ; transmission for sample data bkgrd
+    NormTrans=normtrans, $               ; transmission for norm data bkgrd
+    NormRange=normrange, $               ; normalisation integration range (meV)
+    LanbdaBins=lambdabins, $             ; wavelength bins
+    DumpTOF=dumptof, $                   ; Dump combined TOF file
+    DumpWave=dumpwave, $                 ; Dump combined wavelength file
+    DumpNorm=dumpnorm, $                 ; Dump combined Norm file
+    DumpEt=dumpet, $                     ; Dump combined Et file
+    MaskFile=maskfile, $                 ; Mask File
+    LambdaRatio=lambdaratio, $           ; Lambda ratio
+    EnergyBins=energybins, $             ; Energy transfer bins
+    OmegaBins=omegabins, $               ; Momentum transfer bins
+    Qvector=qvector, $                   ; Create Qvec mesh per energy slice
+    Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
+    Split=split, $                       ; split (distributed mode)
+    Timing=timing, $                     ; Timing of code
+    Jobs=jobs, $                         ; Number of Jobs to run
+    _Extra=extra  
+
+  ; Error Handling
+  catch, theError
+  IF theError NE 0 THEN BEGIN
+    catch, /cancel
+    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
+    return
+  ENDIF
+  
+  IF ARG_PRESENT(Instrument) NE 0 THEN Instrument = self.instrument
+
+END
+
 PRO ReductionCmd::SetProperty, $
     Program=program, $                   ; Program name
     Version=version, $
@@ -94,6 +158,8 @@ PRO ReductionCmd::SetProperty, $
         self.facility = "ISIS"
       end
       else: begin
+        ; If it's an unknown instrument then we don't know the facility!
+        self.facility = ""
       end
     endcase
   ENDIF
@@ -165,7 +231,7 @@ function ReductionCmd::Generate
   ; Quiet flag
   IF (self.quiet EQ 1) THEN cmd[i] += " -q"
   ; Data filename(s)
-  IF STRLEN(self.datarun) GT 1 THEN cmd[i] += " "+ STRING(self.datarun)
+  IF STRLEN(self.datarun) GE 1 THEN cmd[i] += " "+ STRING(self.datarun)
   ; Output
   IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output  
   ; Instrument Name
@@ -175,7 +241,7 @@ function ReductionCmd::Generate
   ; Proposal
   IF STRLEN(self.proposal) GT 1 THEN cmd[i] += " --proposal="+self.proposal
   ; SPE/PHX creation
-  IF (self.spe EQ 1) THEN cmd[i]+= " --enable-spe"
+  IF (self.spe EQ 1) THEN cmd[i]+= " --make-spe"
   ; Config (.rmd) file
   IF STRLEN(self.configfile) GT 1 THEN $
     cmd[i] += " --config="+self.configfile
@@ -190,7 +256,7 @@ function ReductionCmd::Generate
   self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $ 
                                        i+1, self.jobs)
   IF STRLEN(self.datapaths) GT 0 THEN $
-    cmd[i] += " --datapaths="+self.datapaths
+    cmd[i] += " --data-paths="+self.datapaths
   ; normalisation file
   IF STRLEN(self.normalisation) GT 1 THEN $
     cmd[i] += " --norm="+self.normalisation 
@@ -344,7 +410,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(datarun) EQ 0 THEN datarun = ""
   IF N_ELEMENTS(output) EQ 0 THEN output = ""
   IF N_ELEMENTS(instrument) EQ 0 THEN instrument = ""
-  IF N_ELEMENTS(facility) EQ 0 THEN facility = "SNS"
+  IF N_ELEMENTS(facility) EQ 0 THEN facility = ""
   IF N_ELEMENTS(proposal) EQ 0 THEN proposal = ""
   IF N_ELEMENTS(spe) eq 0 THEN spe = 1
   IF N_ELEMENTS(configfile) EQ 0 THEN configfile = ""
