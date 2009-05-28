@@ -325,6 +325,45 @@ wHistoNexusTab = WIDGET_TAB(wBase,$
                             /TRACKING_EVENTS)
                        
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\ NeXus base \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wNexusBase = WIDGET_BASE(wHistoNexusTab,$
+                         XOFFSET   = NexusBase.size[0],$
+                         YOFFSET   = NexusBase.size[1],$
+                         SCR_XSIZE = NexusBase.size[2],$
+                         SCR_YSIZE = NexusBase.size[3],$
+                         TITLE     = NexusBase.title)
+
+sInput = { MainBase              : wNexusBase,$
+           ListInstr             : ['CNCS'],$
+           DefaultInstr          : 'CNCS'}
+
+instanceGui = OBJ_NEW('IDLloadNexus',sInput)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wButtonP = WIDGET_BUTTON(wBase,$
+                         XOFFSET   = iButtonP.size[0],$
+                         YOFFSET   = iButtonP.size[1],$
+                         SCR_XSIZE = iButtonP.size[2],$
+                         SCR_YSIZE = iButtonP.size[3],$
+                         UNAME     = iButtonP.uname,$
+                         VALUE     = iButtonP.value,$
+                         SENSITIVE = iButtonP.sensitive)
+
+;\\\\\\\\\\\\\\\\\\STATUS LABEL\\\\\\\\\\\\\\\\\\\\\\\\\
+wStatusLabel = WIDGET_LABEL(wBase,$
+                            XOFFSET   = iStatusLabel.size[0],$
+                            YOFFSET   = iStatusLabel.size[1],$
+                            SCR_XSIZE = iStatusLabel.size[2],$
+                            SCR_YSIZE = iStatusLabel.size[3],$
+                            VALUE     = iStatusLabel.value,$
+                            UNAME     = iStatusLabel.uname,$
+                            FRAME     = iStatusLabel.frame,$
+                            /ALIGN_LEFT)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;\\\\\\\\\\\\\\\\\\Histo Base\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wHistoBase = WIDGET_BASE(wHistoNexusTab,$
@@ -568,45 +607,6 @@ wFrameCH = WIDGET_LABEL(wHistoBase,$
                        SCR_YSIZE = iFrameCH.size[3],$
                        FRAME     = iFrameCH.frame,$
                        VALUE     = '')
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;\\\\\\\\\\\\\ NeXus base \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wNexusBase = WIDGET_BASE(wHistoNexusTab,$
-                         XOFFSET   = NexusBase.size[0],$
-                         YOFFSET   = NexusBase.size[1],$
-                         SCR_XSIZE = NexusBase.size[2],$
-                         SCR_YSIZE = NexusBase.size[3],$
-                         TITLE     = NexusBase.title)
-
-sInput = { MainBase              : wNexusBase,$
-           ListInstr             : ['CNCS'],$
-           DefaultInstr          : 'CNCS'}
-
-instanceGui = OBJ_NEW('IDLloadNexus',sInput)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wButtonP = WIDGET_BUTTON(wBase,$
-                         XOFFSET   = iButtonP.size[0],$
-                         YOFFSET   = iButtonP.size[1],$
-                         SCR_XSIZE = iButtonP.size[2],$
-                         SCR_YSIZE = iButtonP.size[3],$
-                         UNAME     = iButtonP.uname,$
-                         VALUE     = iButtonP.value,$
-                         SENSITIVE = iButtonP.sensitive)
-
-;\\\\\\\\\\\\\\\\\\STATUS LABEL\\\\\\\\\\\\\\\\\\\\\\\\\
-wStatusLabel = WIDGET_LABEL(wBase,$
-                            XOFFSET   = iStatusLabel.size[0],$
-                            YOFFSET   = iStatusLabel.size[1],$
-                            SCR_XSIZE = iStatusLabel.size[2],$
-                            SCR_YSIZE = iStatusLabel.size[3],$
-                            VALUE     = iStatusLabel.value,$
-                            UNAME     = iStatusLabel.uname,$
-                            FRAME     = iStatusLabel.frame,$
-                            /ALIGN_LEFT)
 
 ;\\\\\\\\\\\\\\\\\\SEND TO GEEK\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wLabelSTG = WIDGET_LABEL(wBase,$

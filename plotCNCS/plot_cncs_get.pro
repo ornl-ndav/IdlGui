@@ -362,8 +362,6 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get pixelID using bank name (M12), tube (X) and row (Y) position
 FUNCTION getPixelID, BankID, X, Y
-  print, 'bankid: ' + strcompress(bankID)
-  help, bankID
   pxOffset = LONG(Y) + 128*LONG(X)
   RETURN, pxOffset
 END
