@@ -63,7 +63,7 @@ IF (RunNumber NE 0) THEN BEGIN
     nexusInstance = OBJ_NEW('IDLnexusUtilities',$
                             RunNumber,$ 
                             PROPOSAL   = Proposal,$
-                            instrument = 'ARCS')
+                            instrument = 'CNCS')
     
     IF(archivedFlag) THEN BEGIN
         NexusFileName = nexusInstance->getArchivedNexusPath()

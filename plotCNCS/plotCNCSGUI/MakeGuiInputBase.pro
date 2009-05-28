@@ -546,8 +546,8 @@ wNexusBase = WIDGET_BASE(wHistoNexusTab,$
                          TITLE     = NexusBase.title)
 
 sInput = { MainBase              : wNexusBase,$
-           ListInstr             : ['ARCS'],$
-           DefaultInstr          : 'ARCS'}
+           ListInstr             : ['CNCS'],$
+           DefaultInstr          : 'CNCS'}
 
 instanceGui = OBJ_NEW('IDLloadNexus',sInput)
 

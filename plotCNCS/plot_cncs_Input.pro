@@ -23,7 +23,7 @@ IF (getRunPath(Event, RunNumber, runFullPath)) THEN BEGIN
     putTextAtEndOfStatus, Event, OK, PROCESSING
     message = ' -> full path to prenexus file is: ' + runFullPath
     appendLogBook, Event, message
-    event_file = '/ARCS_' + RunNumber + (*global).neutron_event_dat_ext
+    event_file = '/CNCS_' + RunNumber + (*global).neutron_event_dat_ext
     full_event_file = runFullPath + event_file
     message    = ' -> Looking for event_file ' + $
       full_event_file + ' ... ' + PROCESSING
@@ -35,7 +35,7 @@ IF (getRunPath(Event, RunNumber, runFullPath)) THEN BEGIN
 ;display name of event file name in event file widget_text
         putTextInTextField, Event, 'event_file', full_event_file
 ;determine full name of runinfo file name
-        runinfoFileName = runFullPath + '/ARCS_' + RunNumber + '_runinfo.xml'
+        runinfoFileName = runFullPath + '/CNCS_' + RunNumber + '_runinfo.xml'
         (*global).runinfoFileName = runinfoFileName
     ENDIF ELSE BEGIN
         putTextAtEndOfLogBook, Event, FAILED, PROCESSING
