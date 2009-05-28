@@ -338,7 +338,8 @@ function ReductionCmd::Generate
     ; Lambda Ratio
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     ; Energy Bins
-    IF STRLEN(self.energybins) GT 1 THEN $
+    IF (STRLEN(self.energybins_min) GE 1) AND (STRLEN(self.energybins_max) GE 1) $
+    AND (STRLEN(self.energybins_step) GE 1) THEN $
       cmd[i] += " --energy-bins=" + self.energybins_min + "," + $
           self.energybins_max + "," + self.energybins_step
     ; Momentum Transfer Bins
