@@ -1,5 +1,8 @@
 FUNCTION Construct_DataPaths, lower, upper, job, totaljobs
 
+  ; Sanity checking
+  
+  
   
   ; Work out what the lower/upper are for this jo
 
@@ -11,17 +14,17 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs
     this_upper = ceil(job*banks_per_job)
     IF (this_upper GT upper) THEN this_upper = upper
     IF (job EQ TotalJobs) THEN this_upper = upper
-    datapaths=STRCOMPRESS(STRING(this_lower)) + "-" $
-        + STRCOMPRESS(STRING(this_upper))
+    datapaths=STRCOMPRESS(STRING(this_lower), /REMOVE_ALL) + "-" $
+        + STRCOMPRESS(STRING(this_upper), /REMOVE_ALL)
     RETURN, datapaths
   ENDIF
   
   IF (lower NE -1) AND (upper EQ -1) THEN BEGIN
-    RETURN, STRING(lower)
+    RETURN, STRING(STRCOMPRESS(lower, /REMOVE_ALL))
   ENDIF
   
   IF (lower EQ -1) AND (upper NE -1) THEN BEGIN
-    RETURN, STRING(upper)
+    RETURN, STRING(STRCOMPRESS(upper, /REMOVE_ALL))
   ENDIF
 
   RETURN, ""
