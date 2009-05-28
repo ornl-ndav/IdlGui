@@ -1,5 +1,0 @@
-MakeNeXus (version 1.0.16)
-Oak Ridge National Laboratory (ORNL)
-Spallation Neutron Source (SNS)
-email : bilheuxjm@ornl.gov
-
