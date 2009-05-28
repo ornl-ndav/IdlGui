@@ -50,13 +50,13 @@ END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Returns the full path up to the prenexus folder
-;example: /ARCS-DAS-FS/2007_1_18_SCI/ARCS_16/
+;example: /CNCS-DAS-FS/2007_1_18_SCI/CNCS_16/
 FUNCTION getRunPath, Event, RunNumber, runFullPath
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
     ;get global structure
     id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
     WIDGET_CONTROL,id,get_uvalue=global
-    runFullPath = (*global).mac_arcs_folder
+    runFullPath = (*global).mac_CNCS_folder
     RETURN, 1
   ENDIF ELSE BEGIN
     no_error = 0
@@ -65,7 +65,7 @@ FUNCTION getRunPath, Event, RunNumber, runFullPath
       CATCH,/cancel
       RETURN, 0
     ENDIF ELSE BEGIN
-      SPAWN, 'findnexus -iARCS --prenexus ' + RunNumber, listening
+      SPAWN, 'findnexus -iCNCS --prenexus ' + RunNumber, listening
       IF (STRMATCH(listening[0],'*ERROR*')) THEN BEGIN
         RETURN, 0
       ENDIF ELSE BEGIN
@@ -79,7 +79,7 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Get the list of mapping files
 FUNCTION getMappingFileList
-  cmd = 'findcalib -m --listall -iARCS'
+  cmd = 'findcalib -m --listall -iCNCS'
   SPAWN, cmd, listening, err_listening
   IF (err_listening[0] EQ '') THEN BEGIN
     RETURN, listening

@@ -34,8 +34,7 @@
 
 PRO InputRunNumber, Event
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+widget_control,Event.top,get_uvalue=global
 
 ;clear log_book and status message
 putStatus, Event, ''

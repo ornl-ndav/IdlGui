@@ -33,122 +33,124 @@
 ;==============================================================================
 
 PRO MAIN_BASE_event, Event
- 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
 
-wWidget =  Event.top            ;widget id
-
-CASE Event.id OF
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+  ;get global structure
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,get_uvalue=global
+  
+  wWidget =  Event.top            ;widget id
+  
+  CASE Event.id OF
+  
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
-;-------------------------------------------------------------------------------
-;Tab Event (Histo - Nexus)
-    widget_info(wWidget, FIND_BY_UNAME='histo_nexus_tab'): begin
-        TabEventcb, Event ;_eventcb
-    end
-
-;-------------------------------------------------------------------------------
-;'Run #' cw_field in INPUT base
-    widget_info(wWidget, FIND_BY_UNAME='run_number'): begin
-        InputRunNumber, Event   ;in plot_arcs_Input.pro
-        ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
-        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
-        ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
-        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
+    ;-------------------------------------------------------------------------------
+    ;Tab Event (Histo - Nexus)
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='histo_nexus_tab'): begin
+      TabEventcb, Event ;_eventcb
     end
     
-;'BROWSE EVENT FILE' button in INPUT base
-    widget_info(wWidget, FIND_BY_UNAME='browse_event_file_button'): begin
-        BrowseEventRunNumber, Event ;in plot_arcs_Browse.pro
-        ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
-        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
-        ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+    ;-------------------------------------------------------------------------------
+    ;'Run #' cw_field in INPUT base
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number'): begin
+      WIDGET_CONTROL,/HOURGLASS
+      InputRunNumber, Event  
+      ActivateHistoMappingBasesStatus, Event 
+      GetHistogramInfo, Event 
+      ActivateOrNotCreateHistogramMapped, Event 
+      ActivateOrNotPlotButton, Event 
+      WIDGET_CONTROL,HOURGLASS=0
     end
-
-;preview runinfo file
-    widget_info(wWidget, FIND_BY_UNAME='preview_runinfo_file'): begin
-        PreviewRuninfoFile, Event ;in plot_arcs_PreviewRuninfoFile.pro
+    
+    ;'BROWSE EVENT FILE' button in INPUT base
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_event_file_button'): begin
+      BrowseEventRunNumber, Event ;in plot_arcs_Browse.pro
+      ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
+      GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
+      ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
-
-;'Event File' widget_text in INPUT base
-    widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
-        putTextInTextField, Event, 'histo_mapped_text_field', ''
-        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
-        ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro
-        ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
-        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
+    
+    ;preview runinfo file
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_runinfo_file'): begin
+      PreviewRuninfoFile, Event ;in plot_arcs_PreviewRuninfoFile.pro
     end
-
-;'max_time_bin' 
-    widget_info(wWidget, FIND_BY_UNAME='max_time_bin'): begin
-        ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+    
+    ;'Event File' widget_text in INPUT base
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='event_file'): begin
+      putTextInTextField, Event, 'histo_mapped_text_field', ''
+      ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
+      ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro
+      ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+      GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
     end
-
-;'bin_width' 
-    widget_info(wWidget, FIND_BY_UNAME='bin_width'): begin
-        ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+    
+    ;'max_time_bin'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='max_time_bin'): begin
+      ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
-
-;create_histo_mapped_button
-    widget_info(wWidget, FIND_BY_UNAME='create_histo_mapped_button'): begin
-        CreateHistoMapped, Event ;in plot_arcs_CreateHistoMapped.pro
+    
+    ;'bin_width'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='bin_width'): begin
+      ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
-
-;'BROWSE HISTO FILE' button
-    widget_info(wWidget, FIND_BY_UNAME='browse_histo_mapped_button'): begin
-        BrowseHistoFile, Event ;in plot_arcs_Browse.pro
-        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
+    
+    ;create_histo_mapped_button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='create_histo_mapped_button'): begin
+      CreateHistoMapped, Event ;in plot_arcs_CreateHistoMapped.pro
     end
-
-;'histo_mapped text_field'
-    widget_info(wWidget, FIND_BY_UNAME='histo_mapped_text_field'): begin
-        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
+    
+    ;'BROWSE HISTO FILE' button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_histo_mapped_button'): begin
+      BrowseHistoFile, Event ;in plot_arcs_Browse.pro
+      ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
     end
-
-;SAVE AS button
-    widget_info(wWidget, FIND_BY_UNAME='save_as_histo_mapped_button'): begin
-        SaveAsHistoMappedFile, Event ;in plot_arcs_SaveAsHistoMapped.pro
+    
+    ;'histo_mapped text_field'
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='histo_mapped_text_field'): begin
+      ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
     end
-
-;send to geek button
-    widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
-        LogBook, Event ;in plot_arcs_SendToGeek.pro
+    
+    ;SAVE AS button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_histo_mapped_button'): begin
+      SaveAsHistoMappedFile, Event ;in plot_arcs_SaveAsHistoMapped.pro
     end
-
-;-------------------------------------------------------------------------------
-;***** NeXus Tab ***************************************************************
-;-------------------------------------------------------------------------------
-;Run Number CW_FIELD
-    widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
-        RetrieveFullNexusFileName, Event ;_Nexus
-        ActivateOrNotPlotButton_from_NexusTab, Event
+    
+    ;send to geek button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
+      LogBook, Event ;in plot_arcs_SendToGeek.pro
     end
-
-;Archived or ListAll
-    widget_info(wWidget, FIND_BY_UNAME='archived_or_list_all'): begin
-        ArchivedOrListAll, Event ;_Nexus
-        ActivateOrNotPlotButton_from_NexusTab, Event
+    
+    ;-------------------------------------------------------------------------------
+    ;***** NeXus Tab ***************************************************************
+    ;-------------------------------------------------------------------------------
+    ;Run Number CW_FIELD
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
+      RetrieveFullNexusFileName, Event ;_Nexus
+      ActivateOrNotPlotButton_from_NexusTab, Event
     end
-
-;Browse Nexus
-    widget_info(wWidget, FIND_BY_UNAME='browse_nexus_button'): begin
-        BrowseNexus, Event ;_Nexus
-        ActivateOrNotPlotButton_from_NexusTab, Event
+    
+    ;Archived or ListAll
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='archived_or_list_all'): begin
+      ArchivedOrListAll, Event ;_Nexus
+      ActivateOrNotPlotButton_from_NexusTab, Event
     end
-
-;-------------------------------------------------------------------------------
-;***** PLOT BUTTON *************************************************************
-;-------------------------------------------------------------------------------
-    widget_info(wWidget, FIND_BY_UNAME='plot_button'): begin
-        LaunchPlot, Event     ;_eventcb
+    
+    ;Browse Nexus
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): begin
+      BrowseNexus, Event ;_Nexus
+      ActivateOrNotPlotButton_from_NexusTab, Event
     end
-
+    
+    ;-------------------------------------------------------------------------------
+    ;***** PLOT BUTTON *************************************************************
+    ;-------------------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_button'): begin
+      LaunchPlot, Event     ;_eventcb
+    end
+    
     ELSE:
     
-ENDCASE
-
+  ENDCASE
+  
 END
