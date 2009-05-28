@@ -506,7 +506,7 @@ PRO PlotMainPlot, histo_mapped_file
   XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   DEVICE, DECOMPOSED = 0
-  loadct, 5
+  loadct, 5, /SILENT
   
   ;open file
   OPENR,u,histo_mapped_file,/get
@@ -566,7 +566,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
   XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   DEVICE, DECOMPOSED = 0
-  loadct, 5
+  loadct, 5, /SILENT
   
   Nstep  = FLOAT(50) ;number of steps
   progressBarCancel = 0

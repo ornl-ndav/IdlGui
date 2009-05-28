@@ -165,7 +165,7 @@ WIDGET_CONTROL, wBase, SET_UVALUE = global2
 XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
 
 DEVICE, DECOMPOSED = 0
-loadct, 5
+loadct, 5, /SILENT
 
 ;select plot area
 id = widget_info(wBase,find_by_uname='bank_plot')
