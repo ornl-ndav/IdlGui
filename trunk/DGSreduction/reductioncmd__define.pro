@@ -51,7 +51,9 @@ PRO ReductionCmd::GetProperty, $
     DumpEt=dumpet, $                     ; Dump combined Et file
     MaskFile=maskfile, $                 ; Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
-    EnergyBins=energybins, $             ; Energy transfer bins
+    EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
+    EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
+    EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
     OmegaBins=omegabins, $               ; Momentum transfer bins
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
@@ -117,7 +119,9 @@ PRO ReductionCmd::SetProperty, $
     DumpEt=dumpet, $                     ; Dump combined Et file
     MaskFile=maskfile, $                 ; Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
-    EnergyBins=energybins, $             ; Energy transfer bins
+    EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
+    EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
+    EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
     OmegaBins=omegabins, $               ; Momentum transfer bins
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
@@ -204,7 +208,9 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
   IF N_ELEMENTS(maskfile) NE 0 THEN self.maskfile = MaskFile
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
-  IF N_ELEMENTS(energybins) NE 0 THEN self.energybins = EnergyBins
+  IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
+  IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
+  IF N_ELEMENTS(energybins_step) NE 0 THEN self.energybins_step = EnergyBins_step
   IF N_ELEMENTS(omegabins) NE 0 THEN self.omegabins = OmegaBins
   IF N_ELEMENTS(qvector) NE 0 THEN self.qvector = Qvector
   IF N_ELEMENTS(fixed) NE 0 THEN self.fixed = Fixed
@@ -333,7 +339,8 @@ function ReductionCmd::Generate
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     ; Energy Bins
     IF STRLEN(self.energybins) GT 1 THEN $
-      cmd[i] += " --energy-bins="+self.energybins
+      cmd[i] += " --energy-bins=" + self.energybins_min + "," + $
+          self.energybins_max + "," + self.energybins_step
     ; Momentum Transfer Bins
     IF STRLEN(self.omegabins) GT 1 THEN $
       cmd[i] += " --mom-trans-bins="+self.omegabins
@@ -394,7 +401,9 @@ function ReductionCmd::Init, $
     DumpEt=dumpet, $                     ; Dump combined Et file
     MaskFile=maskfile, $                 ; Mask File
     LambdaRatio=lambdaratio, $           ; Lambda ratio
-    EnergyBins=energybins, $             ; Energy transfer bins
+    EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
+    EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
+    EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
     OmegaBins=omegabins, $               ; Momentum transfer bins
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
@@ -455,7 +464,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(maskfile) EQ 0 THEN maskfile = ""
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
-  IF N_ELEMENTS(energybins) EQ 0 THEN energybins = ""
+  IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
+  IF N_ELEMENTS(energybins_max) EQ 0 THEN energybins_max = ""
+  IF N_ELEMENTS(energybins_step) EQ 0 THEN energybins_step = ""
   IF N_ELEMENTS(omegabins) EQ 0 THEN omegabins = ""
   IF N_ELEMENTS(qvector) EQ 0 THEN qvector = 0
   IF N_ELEMENTS(fixed) EQ 0 THEN fixed = 0
@@ -507,7 +518,9 @@ function ReductionCmd::Init, $
   self.dumpet = dumpet
   self.maskfile = maskfile
   self.lambdaratio = lambdaratio
-  self.energybins = energybins
+  self.energybins_min = energybins_min
+  self.energybins_max = energybins_max
+  self.energybins_step = energybins_step
   self.omegabins = omegabins
   self.qvector = qvector
   self.fixed = fixed
@@ -572,7 +585,9 @@ pro ReductionCmd__Define
     dumpet: 0L, $            ; Dump combined Et file
     maskfile: "", $          ; Mask File
     lambdaratio: 0L, $       ; Lambda ratio
-    energybins: "", $        ; Energy transfer bins
+    energybins_min: "", $    ; Energy transfer bins (min)
+    energybins_max: "", $    ; Energy transfer bins (max)
+    energybins_step: "", $   ; Energy transfer bins (step)
     omegabins: "", $         ; Momentum transfer bins
     qvector: 0L, $           ; Create Q vector meshes for each energy slice
     fixed: 0L, $             ; dump Qvector info onto a fixed mesh
