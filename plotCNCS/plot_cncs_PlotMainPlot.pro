@@ -16,89 +16,9 @@ FUNCTION retrieveBottomBankData, NexusFileName, $
     progressBarCancel
     
   fileID  = H5F_OPEN(NexusFileName)
-  result  = LONARR(Ntof,128,38*8)
-  FOR i=0,37 DO BEGIN
+  result  = LONARR(Ntof,128,50*8)
+  FOR i=0,49 DO BEGIN
     path          = '/entry/bank' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
-    fieldID       = H5D_OPEN(fileID, path)
-    data          = H5D_READ(fieldID)
-    result[0,0,i*8] = data
-    IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
-      progressBarCancel = 1
-      RETURN,result
-    ENDIF
-  ENDFOR
-  H5F_CLOSE, fileID
-  RETURN, result
-END
-
-;-------------------------------------------------------------------------------
-FUNCTION retrieveMiddleBankData, NexusFileName, $
-    Ntof, $
-    progressBar, $
-    Nstep, $
-    step, $
-    progressBarCancel
-    
-  fileID  = H5F_OPEN(NexusFileName)
-  result  = LONARR(Ntof,128,39*8)
-  FOR i=0,38 DO BEGIN
-    path     = '/entry/bank' + STRCOMPRESS(i+39,/REMOVE_ALL) + '/data'
-    fieldID  = H5D_OPEN(fileID, path)
-    data     = H5D_READ(fieldID)
-    result[0,0,i*8] = data
-    IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
-      progressBarCancel = 1
-      RETURN,result
-    END
-  ENDFOR
-  ;     IF (i EQ 31) THEN BEGIN
-  ;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'A/data'
-  ;         fieldID       = H5D_OPEN(fileID, path)
-  ;         data          = H5D_READ(fieldID)
-  ;         result[0,0,31*8] = data
-  ;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-  ;             progressBarCancel = 1
-  ;             RETURN,result
-  ;         END
-  ;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'B/data'
-  ;         fieldID       = H5D_OPEN(fileID, path)
-  ;         data          = H5D_READ(fieldID)
-  ;         result[0,0,32*8] = data
-  ;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-  ;             progressBarCancel = 1
-  ;             RETURN,result
-  ;         ENDIF
-  ;     ENDIF ELSE BEGIN
-  ;         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
-  ;         fieldID       = H5D_OPEN(fileID, path)
-  ;         data          = H5D_READ(fieldID)
-  ;         IF (i LT 31) THEN BEGIN
-  ;             result[0,0,i*8] = data
-  ;         ENDIF
-  ;         IF (i GT 31) THEN BEGIN
-  ;             result[0,0,(i+1)*8] = data
-  ;         ENDIF
-  ;         IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
-  ;             progressBarCancel = 1
-  ;             RETURN,result
-  ;         ENDIF
-  ;    ENDELSE
-  H5F_CLOSE, fileID
-  RETURN, result
-END
-
-;-------------------------------------------------------------------------------
-FUNCTION retrieveTopBankData, NexusFileName, $
-    Ntof, $
-    progressBar, $
-    Nstep, $
-    step, $
-    progressBarCancel
-    
-  fileID  = H5F_OPEN(NexusFileName)
-  result  = LONARR(Ntof,128,38*8)
-  FOR i=0,37 DO BEGIN
-    path          = '/entry/bank' + STRCOMPRESS(i+78,/REMOVE_ALL) + '/data'
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
     result[0,0,i*8] = data
@@ -135,7 +55,7 @@ FUNCTION getIMGfromNexus, NexusFileName, progressBar, Nstep, progressBarCancel
     step,$
     progressBarCancel)
   IF (progressBarCancel) THEN RETURN, img
-  img[0,0,0] = BottomBank
+  img = BottomBank
   IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
     progressBarCancel = 1
     RETURN, img
@@ -145,8 +65,6 @@ FUNCTION getIMGfromNexus, NexusFileName, progressBar, Nstep, progressBarCancel
 END
 
 ;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
-
 PRO MakeGuiMainPLot_Event, event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
@@ -362,6 +280,7 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
       MainPlotInteraction, Event
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
+        WIDGET_CONTROL,/HOURGLASS
         X = Event.X
         Y = Event.Y
         index = getBankIndex(Event, X, Y)
@@ -372,6 +291,7 @@ PRO MakeGuiMainPLot_Event, event
             bankName, $
             (*global1).real_or_tof
         ENDIF
+      WIDGET_CONTROL, HOURGLASS=0
       ENDIF
     END
     
@@ -557,7 +477,7 @@ PRO PlotMainPlot, histo_mapped_file
   ;open file
   OPENR,u,histo_mapped_file,/get
   fs=FSTAT(u)
-  Nx = LONG(38*8*3+8)
+  Nx = LONG(50*8)
   Ny = LONG(128)
   Nimg = LONG(Nx*Ny)
   Ntof = fs.size/(Nimg*4L)

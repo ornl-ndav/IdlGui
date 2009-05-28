@@ -14,8 +14,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
+;==============================================================================
 PRO BankPlotInteraction, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=global2
 wbase   = (*global2).wBase
@@ -32,7 +31,8 @@ putTextInTextField, Event, 'pixelid_input', PixelID
 
 ;get number of counts
 tvimg = (*(*global2).tvimg)
-putTextInTextField, Event, 'counts', tvimg[PixelID]
+real_pixelID = DOUBLE(PixelID) + (DOUBLE(BankID)-1) * 1024L
+putTextInTextField, Event, 'counts', tvimg[real_pixelID]
 END
 
 
