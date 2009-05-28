@@ -65,7 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     bin_width               : '200',$
     runinfoFileName         : '',$
     img                     : PTR_NEW(0L),$
-    nbr_pixel               : 117760L,$
+    nbr_pixel               : 51200L,$
     version                 : VERSION,$
     LogBookPath             : '/SNS/users/LogBook/',$
     staging_folder          : '~/.plotCNCS_tmp/',$
@@ -74,7 +74,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     histo_map_filter        : '*_neutron_histo_mapped.dat',$
     default_extension       : '.dat',$
     event_filter            : '*neutron_event.dat',$
-    mac_arcs_folder         : './MAC-DAS-FS/CNCS_1/',$
+    mac_CNCS_folder         : './MAC-DAS-FS/CNCS_1/',$
     ;for mac use only
     processing              : '(PROCESSING)',$
     ok                      : 'OK',$
