@@ -34,6 +34,15 @@
 ;---------------------------------------------------------
 
 PRO DGSreduction_Execute, event
+
+  ; Error Handling
+  catch, theError
+  IF theError NE 0 THEN BEGIN
+    catch, /cancel
+    ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
+    return
+  ENDIF
+
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgscmd = info.dgscmd
@@ -42,7 +51,13 @@ PRO DGSreduction_Execute, event
   
   ; First lets check that an instrument has been selected!
   dgscmd->GetProperty, Instrument=instrument
-  IF (STRLEN(instrument) LT 2) THEN ok=ERROR_MESSAGE("Please select an Instrument from the list.")
+  IF (STRLEN(instrument) LT 2) THEN BEGIN
+    ; First put back the info structure
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY 
+    ; Then show an error message!   
+    ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
+    return
+  END
   
   ; Generate the array of commands to run
   commands = dgscmd->generate()
@@ -119,12 +134,18 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_MAKE_COMBINED_WAVE': BEGIN
       dgscmd->SetProperty, DumpWave=event.SELECT
-    ; Also make the
+      ; Also make the wavelength range fields active (or inactive!)
+      wavelengthRange_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_COMBINED_WAVELENGTH_RANGE')
+      WIDGET_CONTROL, wavelengthRange_ID, SENSITIVE=event.SELECT
     END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      if (myValue ne "") OR (myValue ne 0) then begin
+      if (myValue ne "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
         dgscmd->SetProperty, Jobs=myValue
+        ; If we are doing more than 1 job, we also need to set the --split option
+        IF (myValue GT 1) THEN dgscmd->SetProperty, Split=1
+        ; But if we are only doing 1 then we don't!
+        IF (myValue EQ 1) THEN dgscmd->SetProperty, Split=0
       endif
     END
     'NOTHING': BEGIN
@@ -214,7 +235,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   row1 = widget_base(reductionTLB, /ROW)
   runID= CW_FIELD(row1, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
-  jobID = CW_FIELD(row1, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
+  jobID = CW_FIELD(row1, TITLE="        No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
   
   row2 = widget_base(reductionTLB, /ROW)
   lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
@@ -222,23 +243,36 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   row3 = widget_base(reductionTLB, /ROW)
   
+  ; Output Formats Pretty Frame
+  formatBase = WIDGET_BASE(row3)
+  formatLabel = WIDGET_LABEL(formatBase, value=' Output Formats ', XOFFSET=5)
+  formatLabelGeometry = WIDGET_INFO(formatLabel, /GEOMETRY)
+  formatLabelYSize = formatLabelGeometry.ysize
+  ; Output Formats Selection Boxes
+  outputBase = Widget_Base(formatBase, COLUMN=1, Scr_XSize=225, /FRAME, $
+    YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10, /NONEXCLUSIVE)
+  speButton = Widget_Button(outputBase, Value='SPE/PHX', UVALUE='DGS_MAKE_SPE')
+  qvectorButton = Widget_Button(outputBase, Value='Qvector', UVALUE='DGS_MAKE_QVECTOR')
+  fixedButton = Widget_Button(outputBase, Value='Fixed Grid', UVALUE='DGS_MAKE_FIXED', UNAME='DGS_MAKE_FIXED')
+  etButton = Widget_Button(outputBase, Value='Combined Energy Transfer', UVALUE='DGS_MAKE_COMBINED_ET')
+  tofButton = Widget_Button(outputBase, Value='Combined Time-of-Flight', UVALUE='DGS_MAKE_COMBINED_TOF')
+  waveButton = Widget_Button(outputBase, Value='Combined Wavelength', UVALUE='DGS_MAKE_COMBINED_WAVE')
   
-  formatsBase = WIDGET_BASE(reductionTLB)
-  formatsLabel = WIDGET_LABEL(formatsBase, value=' Output Formats ', XOFFSET=5)
-  formatsLabelGeometry = WIDGET_INFO(formatsLabel, /GEOMETRY)
-  formatsLabelYSize = formatsLabelGeometry.ysize
-  outputBase = Widget_Base(formatsBase, COLUMN=1, Scr_XSize=400, /FRAME, $
-    YOFFSET=formatsLabelYSize/2, YPAD=10, XPAD=10, SCR_YSIZE=500)
-  outputTLB = WIDGET_BASE(outputBase, /NONEXCLUSIVE)
-  speButton = Widget_Button(outputTLB, Value='SPE/PHX', UVALUE='DGS_MAKE_SPE')
-  qvectorButton = Widget_Button(outputTLB, Value='Qvector', UVALUE='DGS_MAKE_QVECTOR')
-  fixedButton = Widget_Button(outputTLB, Value='Fixed Grid', UVALUE='DGS_MAKE_FIXED', UNAME='DGS_MAKE_FIXED')
-  etButton = Widget_Button(outputTLB, Value='Combined Energy Transfer', UVALUE='DGS_MAKE_COMBINED_ET')
-  tofButton = Widget_Button(outputTLB, Value='Combined Time-of-Flight', UVALUE='DGS_MAKE_COMBINED_TOF')
-  waveButton = Widget_Button(outputTLB, Value='Combined Wavelength', UVALUE='DGS_MAKE_COMBINED_WAVE')
+  ; Output Options Pretty Frame
+  formatOptionsBase = WIDGET_BASE(row3)
+  formatOptionsLabel = WIDGET_LABEL(formatOptionsBase, value=' Output Options ', XOFFSET=5)
+  formatOptionsLabelGeometry = WIDGET_INFO(formatOptionsLabel, /GEOMETRY)
+  formatOptionsPrettyBase = Widget_Base(formatOptionsBase, COLUMN=1, Scr_XSize=400, /FRAME, $
+    YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
   
-  ;minWavelengthID = CW_FIELD(waveBase, TITLE="Min:", XSIZE=10)
-  ;maxWavelengthID = CW_FIELD(waveBase, TITLE="Max:", XSIZE=10)
+  ; Combined Wavelength Range Base
+  formatOptionsPrettyBaseRow1 = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
+  minWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Wavelength Min:", XSIZE=8)
+  maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Max:", XSIZE=8)
+  stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseRow1, TITLE="Step:", XSIZE=8)
+  
+  
+  
   
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
   Widget_Control, speButton, SET_BUTTON=1
@@ -246,7 +280,8 @@ PRO DGSreduction, dgscmd, _Extra=extra
   ; Cannot have the fixed grid without the Qvector
   WIDGET_CONTROL, fixedButton, SENSITIVE=0
   
-  ;WIDGET_CONTROL, wavebase, SENSITIVE=0
+  ; Don't enable wavelength range until it's selected.
+  WIDGET_CONTROL, formatOptionsPrettyBaseRow1, SENSITIVE=0
  
   ; normalisation tab
   normID = WIDGET_BASE(tabID, Title='Normalisation')
@@ -271,12 +306,14 @@ PRO DGSreduction, dgscmd, _Extra=extra
   WIDGET_CONTROL, tlb, /REALIZE
   
   info = { dgscmd:dgscmd, $
+    application:application, $
+    version:version, $
+    max_jobs:1000, $  ; Maximum number of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     ucams:ucams, $
     title:title, $
     outputID:outputID, $
     lbankID:lbankID, $
     ubankID:ubankID, $
-    fixedButton:fixedButton, $
     extra:ptr_new(extra) $
     }
     
