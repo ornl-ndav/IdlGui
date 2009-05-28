@@ -1,3 +1,4 @@
+spawn, 'cp plotcncs.cfg .plotcncs.cfg'
 @idl_makefile.pro
 plot_cncs
 

@@ -6,6 +6,8 @@
 all:
 	idl ./makefile.pro;
 install:
+	cp plotcncs.cfg .plotcncs.cfg
+	cp .plotcncs.cfg /SNS/software/idltools/sav/
 	cp plot_cncs.sav /SNS/software/idltools/sav/
 	cp plotCNCS /SNS/software/idltools/
 

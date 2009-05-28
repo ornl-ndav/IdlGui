@@ -34,12 +34,17 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-  ;get the current folder
-  ;cd, current=current_folder
+  file = OBJ_NEW('IDLxmlParser','.plotcncs.cfg')
+  
+  ;******************************************************************************
+  ;******************************************************************************
+  
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
 
-  APPLICATION = 'plotCNCS'
-  VERSION     = '1.0.0'
-  DEBUGGING   = 'yes'
+  ;******************************************************************************
+  ;******************************************************************************
   
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
@@ -85,6 +90,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
   MainBaseTitle = 'Plot CNCS'
   MainBaseTitle += ' - ' + VERSION
+  
+  IF (DEBUGGING EQ 'yes') THEN BEGIN
+  MainBaseTitle += ' (DEBUGGING MODE)'
+  ENDIF
   
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$

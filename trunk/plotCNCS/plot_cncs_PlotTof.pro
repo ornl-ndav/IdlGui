@@ -112,9 +112,6 @@ widget_control, id, base_set_title= title
 tof = (size(img))(1)
 (*global3).tof = tof
 
-help, img
-help, tof
-
 tof_array = REFORM(img,tof,400L*128L)
 IvsTOF = tof_array(*,pixelID)
 sz = (size(IvsTOF))(0)
