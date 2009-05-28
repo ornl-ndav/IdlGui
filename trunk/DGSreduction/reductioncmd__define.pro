@@ -54,7 +54,9 @@ PRO ReductionCmd::GetProperty, $
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
     EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
-    OmegaBins=omegabins, $               ; Momentum transfer bins
+    QBins_Min=qbins_min, $               ; Momentum transfer bins (min)
+    QBins_Max=qbins_max, $               ; Momentum transfer bins (max)
+    QBins_Step=qbins_step, $             ; Momentum transfer bins (step)
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
@@ -122,7 +124,9 @@ PRO ReductionCmd::SetProperty, $
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
     EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
-    OmegaBins=omegabins, $               ; Momentum transfer bins
+    QBins_Min=qbins_min, $               ; Momentum transfer bins (min)
+    QBins_Max=qbins_max, $               ; Momentum transfer bins (max)
+    QBins_Step=qbins_step, $             ; Momentum transfer bins (step)
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
@@ -166,7 +170,7 @@ PRO ReductionCmd::SetProperty, $
         self.facility = "ISIS"
       end
       else: begin
-        ; If it's an unknown instrument then we don't know the facility!
+        ; If it's an unknown instrument then we can't know the facility!
         self.facility = ""
       end
     endcase
@@ -211,7 +215,9 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
   IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
   IF N_ELEMENTS(energybins_step) NE 0 THEN self.energybins_step = EnergyBins_step
-  IF N_ELEMENTS(omegabins) NE 0 THEN self.omegabins = OmegaBins
+  IF N_ELEMENTS(qbins_min) NE 0 THEN self.qbins_min = qbins_min
+  IF N_ELEMENTS(qbins_max) NE 0 THEN self.qbins_max = qbins_max
+  IF N_ELEMENTS(qbins_step) NE 0 THEN self.qbins_step = qbins_step
   IF N_ELEMENTS(qvector) NE 0 THEN self.qvector = Qvector
   IF N_ELEMENTS(fixed) NE 0 THEN self.fixed = Fixed
   IF N_ELEMENTS(split) NE 0 THEN self.split = Split
@@ -337,14 +343,19 @@ function ReductionCmd::Generate
       cmd[i] += " --nask-file="+self.maskfile
     ; Lambda Ratio
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
+    
     ; Energy Bins
     IF (STRLEN(self.energybins_min) GE 1) AND (STRLEN(self.energybins_max) GE 1) $
     AND (STRLEN(self.energybins_step) GE 1) THEN $
       cmd[i] += " --energy-bins=" + self.energybins_min + "," + $
           self.energybins_max + "," + self.energybins_step
+          
     ; Momentum Transfer Bins
-    IF STRLEN(self.omegabins) GT 1 THEN $
-      cmd[i] += " --mom-trans-bins="+self.omegabins
+    IF (STRLEN(self.qbins_min) GE 1) AND (STRLEN(self.qbins_max) GE 1) $
+    AND (STRLEN(self.qbins_step) GE 1) THEN $
+      cmd[i] += " --mon-trans-bins=" + self.qbins_min + "," + $
+          self.qbins_max + "," + self.qbins_step
+          
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) THEN cmd[i] += " --fixed"
     IF (self.split EQ 1) THEN cmd[i] += " --split"
@@ -405,7 +416,9 @@ function ReductionCmd::Init, $
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
     EnergyBins_step=energybins_step, $   ; Energy transfer bins (step)
-    OmegaBins=omegabins, $               ; Momentum transfer bins
+    QBins_Min=qbins_min, $               ; Momentum transfer bins (min)
+    QBins_Max=qbins_max, $               ; Momentum transfer bins (max)
+    QBins_Step=qbins_step, $             ; Momentum transfer bins (step)
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
@@ -468,7 +481,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
   IF N_ELEMENTS(energybins_max) EQ 0 THEN energybins_max = ""
   IF N_ELEMENTS(energybins_step) EQ 0 THEN energybins_step = ""
-  IF N_ELEMENTS(omegabins) EQ 0 THEN omegabins = ""
+  IF N_ELEMENTS(qbins_min) EQ 0 THEN qbins_min = ""
+  IF N_ELEMENTS(qbins_max) EQ 0 THEN qbins_max = ""
+  IF N_ELEMENTS(qbins_step) EQ 0 THEN qbins_step = ""
   IF N_ELEMENTS(qvector) EQ 0 THEN qvector = 0
   IF N_ELEMENTS(fixed) EQ 0 THEN fixed = 0
   IF N_ELEMENTS(split) EQ 0 THEN split = 0
@@ -522,7 +537,9 @@ function ReductionCmd::Init, $
   self.energybins_min = energybins_min
   self.energybins_max = energybins_max
   self.energybins_step = energybins_step
-  self.omegabins = omegabins
+  self.qbins_min = qbins_min
+  self.qbins_max = qbins_max
+  self.qbins_step = qbins_step
   self.qvector = qvector
   self.fixed = fixed
   self.split = split
@@ -589,7 +606,9 @@ pro ReductionCmd__Define
     energybins_min: "", $    ; Energy transfer bins (min)
     energybins_max: "", $    ; Energy transfer bins (max)
     energybins_step: "", $   ; Energy transfer bins (step)
-    omegabins: "", $         ; Momentum transfer bins
+    qbins_min: "", $         ; Momentum transfer bins (min)
+    qbins_max: "", $         ; Momentum transfer bins (max)
+    qbins_step: "", $        ; Momentum transfer bins (step)
     qvector: 0L, $           ; Create Q vector meshes for each energy slice
     fixed: 0L, $             ; dump Qvector info onto a fixed mesh
     split: 0L, $             ; split (distributed mode)
