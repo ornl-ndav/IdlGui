@@ -32,63 +32,28 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
+;------------------------------------------------------------------------------
+;logger message
+PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
 
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+END
