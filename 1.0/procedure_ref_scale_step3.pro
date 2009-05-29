@@ -62,6 +62,8 @@ END
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
 
+;  PRINT, 'Step3AutomaticRescaling' ;remove_me
+  
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
@@ -78,13 +80,20 @@ PRO Step3AutomaticRescaling, Event
   idl_send_to_geek_addLogBookText, Event, '-> Number of files loaded : ' + $
     STRCOMPRESS(nbrFile,/REMOVE_ALL)
     
+;  PRINT, 'in checking flt0, flt1 and flt2 rescale ptr'
+;  for i=0,(nbrFile-1) do begin
+;    HELP, *flt0_rescale_ptr[i]
+;    HELP, *flt1_rescale_ptr[i]
+;    HELP, *flt2_rescale_ptr[i]
+;  ENDFOR  
+
   IF (isBatchFileLoaded(Event)) THEN BEGIN
     ;Get BatchTable
     BatchTable = (*(*global).BatchTable)
   ENDIF
   
   no_error = 0
-  ;CATCH, no_error
+  CATCH, no_error
   IF (no_error NE 0) THEN BEGIN
   
     CATCH,/CANCEL
@@ -98,12 +107,17 @@ PRO Step3AutomaticRescaling, Event
   
     FOR i=1,(nbrFile-1) DO BEGIN
     
+;      PRINT, 'i: ' + STRCOMPRESS(i) ;remove_me
+      
       idl_send_to_geek_addLogBookText, Event, '--> Working with File # ' + $
         STRCOMPRESS(i,/REMOVE_ALL)
         
       CurrentFileName = getFileFromIndex(Event, i)
       idl_send_to_geek_addLogBookText, Event, '---> Name of File : ' + $
         CurrentFileName
+        
+      ;        help, Qmin_array ;remove_me
+      ;        help, Qmax_array ;remove_me
         
       ;get Qmin and Qmax
       Qmin = FLOAT(Qmin_array[i])
@@ -122,6 +136,11 @@ PRO Step3AutomaticRescaling, Event
       flt0_highQ = *flt0_rescale_ptr[i]
       flt1_highQ = *flt1_rescale_ptr[i]
       flt2_highQ = *flt2_rescale_ptr[i]
+      
+;      PRINT, 'High Q file'
+;      HELP, flt0_highQ ;remove_me
+;      HELP, flt1_highQ ;remove_me
+;      HELP, flt2_highQ ;remove_me
       
       ;determine the working indexes of flt0, flt1 and flt2 for high Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
@@ -153,6 +172,11 @@ PRO Step3AutomaticRescaling, Event
       flt0_lowQ = *flt0_rescale_ptr[i-1]
       flt1_lowQ = *flt1_rescale_ptr[i-1]
       flt2_lowQ = *flt2_rescale_ptr[i-1]
+      
+;      PRINT, 'Low Q file'
+;      HELP, flt0_lowQ ;remove_me
+;      HELP, flt1_lowQ ;remove_me
+;      HELP, flt2_lowQ ;remove_me
       
       ;determine the working indexes of flt0, flt1 and flt2 for low Q file
       RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax) ;_get
