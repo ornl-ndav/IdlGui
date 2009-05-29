@@ -73,8 +73,66 @@ PRO ReductionCmd::GetProperty, $
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-  
+   
+  IF ARG_PRESENT(Program) NE 0 THEN Program = self.program
+  IF ARG_PRESENT(Version) NE 0 THEN Version = self.version
+  IF ARG_PRESENT(Verbose) NE 0 THEN self.verbose = verbose
+  IF ARG_PRESENT(Quiet) NE 0 THEN Quiet = self.quiet
+  IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun 
+  IF ARG_PRESENT(Output) NE 0 THEN Output = self.output
   IF ARG_PRESENT(Instrument) NE 0 THEN Instrument = self.instrument
+  IF ARG_PRESENT(Facility) NE 0 THEN Facility = self.facility
+  IF ARG_PRESENT(Proposal) NE 0 THEN Proposal = self.proposal
+  IF ARG_PRESENT(SPE) NE 0 THEN SPE = self.spe 
+  IF ARG_PRESENT(ConfigFile) NE 0 THEN ConfigFile = self.configfile
+  IF ARG_PRESENT(instgeometry) NE 0 THEN InstGeometry = self.instgeometry
+  IF ARG_PRESENT(CornerGeometry) NE 0 THEN CornerGeometry = self.cornergeometry 
+  IF ARG_PRESENT(LowerBank) NE 0 THEN LowerBank  = self.lowerbank 
+  IF ARG_PRESENT(UpperBank) NE 0 THEN UpperBank = self.upperbank
+  IF ARG_PRESENT(DataPaths) NE 0 THEN DataPaths = self.datapaths
+  IF ARG_PRESENT(Normalisation) NE 0 THEN Normalisation = self.normalisation 
+  IF ARG_PRESENT(EmptyCan) NE 0 THEN EmptyCan = self.emptycan
+  IF ARG_PRESENT(BlackCan) EQ 0 THEN BlackCan = self.blackcan
+  IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark 
+  IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath 
+  IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath 
+  IF ARG_PRESENT(ROIfile) NE 0 THEN ROIfile = self.roifile
+  IF ARG_PRESENT(Tmin) NE 0 THEN Tmin = self.tmin
+  IF ARG_PRESENT(Tmax) NE 0 THEN Tmax = self.tmax
+  IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst 
+  IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei 
+  IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero 
+  IF ARG_PRESENT(Ei_error) NE 0 THEN Ei_error = self.ei_error
+  IF ARG_PRESENT(Tzero_error) NE 0 THEN Tzero_error = self.tzero_error 
+  IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm 
+  IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm 
+  IF ARG_PRESENT(MonRange) NE 0 THEN MonRange = self.monrange
+  IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff 
+  IF ARG_PRESENT(DataTrans) NE 0 THEN DataTrans = self.datatrans 
+  IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans 
+  IF ARG_PRESENT(NormRange) NE 0 THEN NormRange = self.normrange 
+  IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min 
+  IF ARG_PRESENT(LambdaBins_Max) NE 0 THEN LambdaBins_Max = self.lambdabins_max
+  IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $ 
+          LambdaBins_Step = self.lambdabins_step 
+  IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof 
+  IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
+  IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm 
+  IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
+  IF ARG_PRESENT(MaskFile) NE 0 THEN MaskFile = self.maskfile 
+  IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
+  IF ARG_PRESENT(EnergyBins_Min) NE 0 THEN EnergyBins_Min = self.energybins_min 
+  IF ARG_PRESENT(EnergyBins_Max) NE 0 THEN EnergyBins_Max = self.energybins_max 
+  IF ARG_PRESENT(EnergyBins_Step) NE 0 THEN $  
+          EnergyBins_step = self.energybins_step
+  IF ARG_PRESENT(QBins_Min) NE 0 THEN QBins_Min = self.qbins_min 
+  IF ARG_PRESENT(QBins_Max) NE 0 THEN QBins_Max = self.qbins_max 
+  IF ARG_PRESENT(QBins_Step) NE 0 THEN QBins_Step = self.qbins_step 
+  IF ARG_PRESENT(Qvector) NE 0 THEN Qvector = self.qvector 
+  IF ARG_PRESENT(Fixed) NE 0 THEN Fixed = self.fixed 
+  IF ARG_PRESENT(Split) NE 0 THEN Split = self.split 
+  IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
+  IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
   
 END
 
@@ -191,7 +249,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(datapaths) NE 0 THEN self.datapaths = datapaths
   IF N_ELEMENTS(normalisation) NE 0 THEN self.normalisation = Normalisation
   IF N_ELEMENTS(emptycan) NE 0 THEN self.emptycan = EmptyCan
-  IF N_ELEMENTS(blackcan) EQ 0 THEN blackcan = BlackCan
+  IF N_ELEMENTS(blackcan) NE 0 THEN self.blackcan = BlackCan
   IF N_ELEMENTS(dark) NE 0 THEN self.dark = dark
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
