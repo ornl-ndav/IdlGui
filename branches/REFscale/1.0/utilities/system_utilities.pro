@@ -34,15 +34,16 @@
 
 ;This function returns the ucams of the user
 FUNCTION get_ucams
-ucams_error = 0
-CATCH, ucams_error
-IF (ucams_error NE 0) THEN BEGIN
-    CATCH, /CANCEL
-    RETURN, 'Undefined'
-ENDIF ELSE BEGIN
-    spawn, '/usr/bin/whoami', listening
-ENDELSE
-RETURN, listening[0]
+;ucams_error = 0
+;CATCH, ucams_error
+;IF (ucams_error NE 0) THEN BEGIN
+;    CATCH, /CANCEL
+;    RETURN, 'Undefined'
+;ENDIF ELSE BEGIN
+;    spawn, '/usr/bin/whoami', listening
+;ENDELSE
+;RETURN, listening[0]
+RETURN, GETENV('USER')
 END
 
 ;;
