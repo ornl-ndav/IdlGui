@@ -146,13 +146,52 @@ END
 ;return the column of the bank selected
 FUNCTION getColumnMainPlot, X
   Xwidth = 32
-  FOR i=0,50 DO BEGIN
+  FOR i=0,35 DO BEGIN
     xoff = i*37
     xmin = 10 + xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i+1)
   ENDFOR
+  
+  FOR i=38,51 DO BEGIN
+    xoff = i*37
+    xmin = 10 + xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN RETURN, (i-1)
+  ENDFOR
+  
   RETURN, 0
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;return the column of the bank selected
+FUNCTION getBankTubeMainPlot, X
+  Xwidth = 32
+  FOR i=0,35 DO BEGIN
+    xoff = i*37
+    xmin = 10 + xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN BEGIN
+      bank = (i+1)
+      delta_x = (X - xmin)
+      tube = FIX(delta_x / 4.)
+      RETURN, [bank,tube]
+    ENDIF
+  ENDFOR
+  
+  FOR i=38,51 DO BEGIN
+    xoff = i*37
+    xmin = 10 + xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN BEGIN
+      bank = (i-1)
+      delta_x = (X - xmin)
+      tube = FIX(delta_x / 4.)
+      RETURN, [bank,tube]
+    ENDIF
+  ENDFOR
+  
+  RETURN, [0,0]
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -201,8 +240,6 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the bank number
 FUNCTION getBank, Event
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global1
   X = Event.X
   Y = Event.Y
   column = getColumnMainPlot(X)
@@ -211,6 +248,19 @@ FUNCTION getBank, Event
     RETURN, STRCOMPRESS(Column,/remove_all)
   ENDIF ELSE BEGIN ;if we click outside a bank
     RETURN, ''
+  ENDELSE
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;return the bank number
+FUNCTION getBankTube, Event
+  X = Event.X
+  column_tube = getBankTubeMainPlot(X)
+  IF (column_tube[0] NE 0) THEN BEGIN ;we click inside a bank
+    RETURN, [STRCOMPRESS(column_tube[0],/REMOVE_ALL),$
+      STRCOMPRESS(column_tube[1],/REMOVE_ALL)]
+  ENDIF ELSE BEGIN ;if we click outside a bank
+    RETURN, ['','']
   ENDELSE
 END
 

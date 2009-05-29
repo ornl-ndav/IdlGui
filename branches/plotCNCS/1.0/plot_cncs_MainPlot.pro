@@ -33,22 +33,36 @@
 ;==============================================================================
 
 PRO MainPlotInteraction, Event
-WIDGET_CONTROL, event.top, GET_UVALUE=global1
-wbase   = (*global1).wBase
-;retrieve bank number
-bank_number = getBank(Event)
-;display bank number in title
-IF ((*global1).real_or_tof EQ 0) THEN BEGIN ;real das view
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  wbase   = (*global1).wBase
+  TubeAngle = (*global1).TubeAngle
+
+  ;retrieve bank number
+  bank_tube   = getBankTube(Event)
+  bank_number = bank_tube[0]
+  tube_number = bank_tube[1]
+  
+  ;display bank number in title
+  IF ((*global1).real_or_tof EQ 0) THEN BEGIN ;real das view
     text = (*global1).main_plot_real_title
-ENDIF ELSE BEGIN ;tof view
+  ENDIF ELSE BEGIN ;tof view
     text = (*global1).main_plot_tof_title
-ENDELSE
-IF (bank_number NE '') THEN BEGIN
+  ENDELSE
+  IF (bank_number NE '') THEN BEGIN
     text += ' - bank: ' + bank_number
-ENDIF
-;change title
-id = widget_info(wBase,find_by_uname='main_plot_base')
-widget_control, id, base_set_title= text
+  ENDIF
+  
+  ;Show tube angle
+  real_tube_number = FIX(tube_number) + (FIX(bank_number)-1) * 8L
+  IF (tube_number NE '') THEN BEGIN
+    text += ' - Scattering Angle: ' + $
+    STRCOMPRESS(TubeAngle[real_tube_number],/REMOVE_ALL) + $
+    ' degrees'
+  ENDIF
+  
+  ;change title
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot_base')
+  WIDGET_CONTROL, id, base_set_title= text
 END
 
 

@@ -82,7 +82,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     status                  : 'STATUS: ',$
     neutron_event_dat_ext   : '_neutron_event.dat',$
     debugger                : 'j35'})
-    
+        
   IF (ucams EQ (*global).debugger) THEN BEGIN
     MainBaseSize  = [30,25,700,740]
   ENDIF ELSE BEGIN

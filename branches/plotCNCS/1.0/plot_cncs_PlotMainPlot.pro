@@ -325,7 +325,7 @@ PRO MakeGuiMainPLot_Event, event
             bankName, $
             (*global1).real_or_tof
         ENDIF
-      WIDGET_CONTROL, HOURGLASS=0
+        WIDGET_CONTROL, HOURGLASS=0
       ENDIF
     END
     
@@ -350,7 +350,7 @@ PRO plotGridMainPlot, global1
   ;##########################################
   ;;plot grid of bottom bank
   color  = 100
-  for i=0,(50-1) do begin
+  for i=0,(52-1) do begin
     PLOTS, i*(Xcoeff)+i*off+xoff    , off       , /device, color=color
     PLOTS, i*(Xcoeff)+i*off+xoff    , Ycoeff+off, /device, color=color, /continue
     PLOTS, (i+1)*(Xcoeff)+i*off+xoff, Ycoeff+off, /device, color=color, /continue
@@ -389,13 +389,20 @@ PRO plotDASviewFullInstrument, global1
   
   ;isolate various banks of data
   bank = LONARR(8,128)
-  ;plot bottom  banks
-  for i=0,(50-1) do begin
+  ;plot left part
+  for i=0,(36-1) do begin
     bank = tvimg[i*8:(i+1)*8-1,*]
     bank_rebin = REBIN(bank,8*Xfactor, 128L*Yfactor,/sample)
     TVSCL, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
   endfor
   
+  ;beam_stop_offset = 16*(Xcoeff)+2*off+xoff
+  for i=38,(52-1) do begin
+    bank = tvimg[(i-2)*8:((i-2)+1)*8-1,*]
+    bank_rebin = REBIN(bank,8*Xfactor, 128L*Yfactor,/sample)
+    TVSCL, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
+  endfor
+
   ;plot grid
   plotGridMainPlot, global1
 END
@@ -496,8 +503,12 @@ PRO PlotMainPlot, histo_mapped_file
     img:                  PTR_NEW(0L),$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
+    TubeAngle:             FLTARR(400),$
     wbase:                wbase})
     
+  ;This function retrieves the value of all the tube angles
+  (*global1).TubeAngle = getTubeAngle()
+  
   file_ext = ' - File: ' + histo_mapped_file
   (*global1).main_plot_real_title += file_ext
   (*global1).main_plot_tof_title += file_ext
@@ -556,8 +567,12 @@ PRO PlotMainPlotFromNexus, NexusFileName
     img:                   PTR_NEW(0L),$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
+    TubeAngle:             FLTARR(400),$
     wbase:                 wbase})
     
+  ;This function retrieves the value of all the tube angles
+  (*global1).TubeAngle = getTubeAngle()
+  
   file_ext = ' - File: ' + NexusFileName
   (*global1).main_plot_real_title += file_ext
   (*global1).main_plot_tof_title += file_ext
