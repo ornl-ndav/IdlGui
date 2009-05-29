@@ -219,13 +219,22 @@ PRO ReductionCmd::SetProperty, $
     case (STRUPCASE(instrument)) of
       "ARCS": begin
         self.facility = "SNS"
+        self.cornergeometry = $
+          "/SNS/ARCS/2009_2_18_CAL/calibrations/ARCS_cgeom_20090128.txt"
+        self.queue = "arcs"
       end
       "CNCS": begin
         self.facility = "SNS"
+        self.cornergeometry = $
+          "/SNS/CNCS/2009_2_5_CAL/calibrations/CNCS_cgeom_20090224.txt"
+        self.queue = "cncsq"
       end
       "SEQUOIA": begin
         self.instrument = "SEQ"
         self.facility = "SNS"
+        self.cornergeometry = $
+          "/SNS/SEQ/2009_2_17_CAL/calibrations/SEQ_cgeom_20090302.txt"
+        self.queue = "sequoiaq"
       end
       "MAPS": begin
         self.facility = "ISIS"
@@ -312,11 +321,13 @@ function ReductionCmd::Generate
   
   for i = 0L, self.jobs-1 do begin
   
-    ; Let's first start with the program name!
-    cmd[i] = self.program
-    
+    cmd[i] = ""
+  
     ; Queue name
-    IF STRLEN(self.queue) GT 1 THEN cmd[i] += " -p " + self.queue
+    ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += " -p " + self.queue
+  
+    ; Let's first start with the program name!
+    cmd[i] += self.program
     
     ; Verbose flag
     IF (self.verbose EQ 1) THEN cmd[i] += " -v"
