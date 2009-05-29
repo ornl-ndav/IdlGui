@@ -50,7 +50,7 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
   ;===========================
   APPLICATION   = 'REFscale'
-  VERSION       = '1.0.14'
+  VERSION       = '1.0.15'
   DEBUGGER      = 'yes'
   ;===========================
   
