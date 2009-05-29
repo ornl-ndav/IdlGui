@@ -1,4 +1,5 @@
 ;+
+; :Copyright:
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -278,17 +279,45 @@ PRO DGSreduction, dgscmd, _Extra=extra
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionTLB = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
+  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
   
-  row1 = widget_base(reductionTLB, /ROW)
+  row1 = widget_base(reductionTabBase, /ROW)
   runID= CW_FIELD(row1, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
   jobID = CW_FIELD(row1, TITLE="        No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
   
-  row2 = widget_base(reductionTLB, /ROW)
+  row2 = widget_base(reductionTabBase, /ROW)
   lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
   ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)
   
-  row3 = widget_base(reductionTLB, /ROW)
+  rangesBase = WIDGET_BASE(reductionTabBase)
+  rangesLabel = WIDGET_LABEL(rangesBase, value=' Data Ranges ', XOFFSET=5)
+  rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
+  rangesLabelYSize = rangesLabelGeometry.ysize
+  rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /COLUMN, $
+        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
+   
+    ; Energy Transfer Range Base
+  EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
+  minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Energy Min:", $
+        XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)
+  maxEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Max:", $
+        XSIZE=8, UVALUE="DGS_ET_MAX", /ALL_EVENTS)
+  stepEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Step:", $
+        XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
+
+  ; Q Range Base
+  QRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
+  minMomentumID = CW_FIELD(QRangeRow, TITLE="Q Min:", $
+        XSIZE=8, UVALUE="DGS_Q_MIN", /ALL_EVENTS)
+  maxMomentumID = CW_FIELD(QRangeRow, TITLE="Max:", $
+        XSIZE=8, UVALUE="DGS_Q_MAX", /ALL_EVENTS)
+  stepMomentumID = CW_FIELD(QRangeRow, TITLE="Step:", $
+        XSIZE=8, UVALUE="DGS_Q_STEP", /ALL_EVENTS) 
+   
+  
+  row3 = widget_base(reductionTabBase, /ROW)
+  
+  
   
   ; Output Formats Pretty Frame
   formatBase = WIDGET_BASE(row3)
@@ -313,24 +342,6 @@ PRO DGSreduction, dgscmd, _Extra=extra
   formatOptionsLabelGeometry = WIDGET_INFO(formatOptionsLabel, /GEOMETRY)
   formatOptionsPrettyBase = Widget_Base(formatOptionsBase, COLUMN=1, Scr_XSize=400, /FRAME, $
     YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
-  
-  ; Energy Transfer Range Base
-  formatOptionsPrettyBaseEnergyRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
-  minEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Energy Min:", $
-        XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)
-  maxEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_ET_MAX", /ALL_EVENTS)
-  stepEnergyID = CW_FIELD(formatOptionsPrettyBaseEnergyRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
-
-  ; Q Range Base
-  formatOptionsPrettyBaseQRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
-  minMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Q Min:", $
-        XSIZE=8, UVALUE="DGS_Q_MIN", /ALL_EVENTS)
-  maxMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_Q_MAX", /ALL_EVENTS)
-  stepMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_Q_STEP", /ALL_EVENTS)
 
   ; Combined Wavelength Range Base
   formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
