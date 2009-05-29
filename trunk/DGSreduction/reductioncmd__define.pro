@@ -161,7 +161,8 @@ PRO ReductionCmd::SetProperty, $
       "CNCS": begin
         self.facility = "SNS"
       end
-      "SEQ": begin
+      "SEQUOIA": begin
+        self.instrument = "SEQ"
         self.facility = "SNS"
       end
       "MAPS": begin
