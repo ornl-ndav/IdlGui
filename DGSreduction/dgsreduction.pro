@@ -142,7 +142,6 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_ET_MIN': BEGIN
       ; Minimum Energy Transfer
-      print, 'DGS_ET_MIN'
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, EnergyBins_Min=myValue
     END
@@ -158,27 +157,33 @@ PRO DGSreduction_TLB_Events, event
     END
     'DGS_LAMBDA_MIN': BEGIN
       ; Minimum Wavelength
-      print, 'DGS_LAMBDA_MIN'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, LambdaBins_Min=myValue
     END
     'DGS_LAMBDA_MAX': BEGIN
       ; Maximum Wavelength
-      print, 'DGS_LAMBDA_MAX'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, LambdaBins_Max=myValue
     END
     'DGS_LAMBDA_STEP': BEGIN
       ; Wavelength Step size
-      print, 'DGS_LAMBDA_STEP'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, LambdaBins_Step=myValue
     END
     'DGS_Q_MIN': BEGIN
       ; Minimum Q
-      print, 'DGS_Q_MIN'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, QBins_Min=myValue
     END
     'DGS_Q_MAX': BEGIN
       ; Maximum Q
-      print, 'DGS_Q_MAX'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, QBins_Max=myValue
     END
     'DGS_Q_STEP': BEGIN
       ; Q Step size
-      print, 'DGS_Q_STEP'
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, QBins_Step=myValue
     END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -321,20 +326,20 @@ PRO DGSreduction, dgscmd, _Extra=extra
   ; Q Range Base
   formatOptionsPrettyBaseQRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
   minMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Q Min:", $
-        XSIZE=8, UVALUE="DGS_Q_MIN")
+        XSIZE=8, UVALUE="DGS_Q_MIN", /ALL_EVENTS)
   maxMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_Q_MAX")
+        XSIZE=8, UVALUE="DGS_Q_MAX", /ALL_EVENTS)
   stepMomentumID = CW_FIELD(formatOptionsPrettyBaseQRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_Q_STEP")
+        XSIZE=8, UVALUE="DGS_Q_STEP", /ALL_EVENTS)
 
   ; Combined Wavelength Range Base
   formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
   minWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Wavelength Min:", $
-        XSIZE=8, UVALUE="DGS_LAMBDA_MIN")
+        XSIZE=8, UVALUE="DGS_LAMBDA_MIN", /ALL_EVENTS)
   maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_LAMBDA_MAX")
+        XSIZE=8, UVALUE="DGS_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_LAMBDA_STEP")
+        XSIZE=8, UVALUE="DGS_LAMBDA_STEP", /ALL_EVENTS)
   
   
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
@@ -371,7 +376,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   info = { dgscmd:dgscmd, $
     application:application, $
     version:version, $
-    max_jobs:1000, $  ; Maximum number of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
+    max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     ucams:ucams, $
     title:title, $
     outputID:outputID, $
