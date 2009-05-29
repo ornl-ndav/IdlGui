@@ -137,6 +137,9 @@ PRO DGSreduction_TLB_Events, event
       wavelengthRange_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_COMBINED_WAVELENGTH_RANGE')
       WIDGET_CONTROL, wavelengthRange_ID, SENSITIVE=event.SELECT
     END
+    'DGS_DUMP_NORM': BEGIN
+      dgscmd->SetProperty, DumpNorm=event.SELECT
+    END
     'DGS_ET_MIN': BEGIN
       ; Minimum Energy Transfer
       print, 'DGS_ET_MIN'
@@ -296,6 +299,8 @@ PRO DGSreduction, dgscmd, _Extra=extra
   etButton = Widget_Button(outputBase, Value='Combined Energy Transfer', UVALUE='DGS_MAKE_COMBINED_ET')
   tofButton = Widget_Button(outputBase, Value='Combined Time-of-Flight', UVALUE='DGS_MAKE_COMBINED_TOF')
   waveButton = Widget_Button(outputBase, Value='Combined Wavelength', UVALUE='DGS_MAKE_COMBINED_WAVE')
+  normButton = Widget_Button(outputBase, Value='Vanadium Normalisation', UVALUE='DGS_DUMP_NORM')
+  
   
   ; Output Options Pretty Frame
   formatOptionsBase = WIDGET_BASE(row3)
