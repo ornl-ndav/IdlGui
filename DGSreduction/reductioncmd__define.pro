@@ -9,6 +9,7 @@ END
 PRO ReductionCmd::GetProperty, $
     Program=program, $                   ; Program name
     Version=version, $
+    Queue=queue, $                       ; Queue name
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
     DataRun=datarun, $                         ; Data filename(s)
@@ -76,6 +77,7 @@ PRO ReductionCmd::GetProperty, $
    
   IF ARG_PRESENT(Program) NE 0 THEN Program = self.program
   IF ARG_PRESENT(Version) NE 0 THEN Version = self.version
+  IF ARG_PRESENT(Queue) NE 0 THEN Queue = self.queue
   IF ARG_PRESENT(Verbose) NE 0 THEN self.verbose = verbose
   IF ARG_PRESENT(Quiet) NE 0 THEN Quiet = self.quiet
   IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun 
@@ -139,6 +141,7 @@ END
 PRO ReductionCmd::SetProperty, $
     Program=program, $                   ; Program name
     Version=version, $
+    Queue=queue, $                       ; Queue name
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
     DataRun=datarun, $                         ; Data filename(s)
@@ -206,6 +209,7 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(program) NE 0 THEN self.program = program
   IF N_ELEMENTS(version) NE 0 THEN self.version = version
+  IF N_ELEMENTS(queue) NE 0 THEN self.queue = queue
   IF N_ELEMENTS(verbose) NE 0 THEN self.verbose = verbose
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
   IF N_ELEMENTS(datarun) NE 0 THEN self.datarun = datarun
@@ -310,6 +314,9 @@ function ReductionCmd::Generate
   
     ; Let's first start with the program name!
     cmd[i] = self.program
+    
+    ; Queue name
+    IF STRLEN(self.queue) GT 1 THEN cmd[i] += " -p " + self.queue
     
     ; Verbose flag
     IF (self.verbose EQ 1) THEN cmd[i] += " -v"
@@ -445,6 +452,7 @@ end
 function ReductionCmd::Init, $
     Program=program, $                   ; Program name
     Version=version, $
+    Queue=queue, $                       ; Name of Queue
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
     DataRun=datarun, $                   ; Data filename(s)
@@ -512,6 +520,7 @@ function ReductionCmd::Init, $
   
   IF N_ELEMENTS(program) EQ 0 THEN program = "dgs_reduction"
   IF N_ELEMENTS(version) EQ 0 THEN version = ""
+  IF N_ELEMENTS(queue) EQ 0 THEN queue = ""
   IF N_ELEMENTS(verbose) EQ 0 THEN verbose = 1
   IF N_ELEMENTS(quiet) EQ 0 THEN quiet = 0
   IF N_ELEMENTS(datarun) EQ 0 THEN datarun = ""
@@ -570,6 +579,7 @@ function ReductionCmd::Init, $
   
   self.program = program
   self.version = version
+  self.queue = queue
   self.verbose = verbose
   self.quiet = quiet
   self.datarun = datarun
@@ -641,6 +651,7 @@ pro ReductionCmd__Define
   struct = { REDUCTIONCMD, $
     program: "", $           ; Program name
     version: "", $           ; Program version
+    queue: "", $             ; Queue to use
     verbose: 0L, $           ; Verbose flag
     quiet: 0L, $             ; Quiet flag
     datarun: "", $           ; Data filename(s)
