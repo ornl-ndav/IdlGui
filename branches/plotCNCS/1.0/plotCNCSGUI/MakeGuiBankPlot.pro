@@ -43,9 +43,11 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     GROUP_LEADER = ourGroup,$
     /BASE_ALIGN_CENTER,$
     /COLUMN)
+  
+  ;row11, tube and row ------------------------
+  row11 = WIDGET_BASE(wBase,/ROW)
     
-  ;row1, tube
-  row1 = WIDGET_BASE(wBase,/ROW)
+  row1 = WIDGET_BASE(row11,/ROW)
   x = CW_FIELD(row1,$
     XSIZE = 3,$
     UNAME = 'x_input',$
@@ -53,9 +55,12 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     /ALL_EVENTS,$
     /ROW,$
     /INTEGER)
+  
+  ;space
+  space = WIDGET_LABEL(row11,$
+  VALUE = '  ')  
     
-  ;row2, row
-  row2 = WIDGET_BASE(wBase,/ROW)
+  row2 = WIDGET_BASE(row11,/ROW)
   x = CW_FIELD(row2,$
     XSIZE = 3,$
     UNAME = 'y_input',$
@@ -64,7 +69,7 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     /ROW,$
     /INTEGER)
     
-  ;row3, pixelID
+  ;row3, pixelID --------------------------------
   row3 = WIDGET_BASE(wBase,/ROW)
   pixel =  CW_FIELD(row3,$
     XSIZE = 6,$
@@ -74,7 +79,7 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     /ROW,$
     /INTEGER)
     
-  ;row4, counts
+  ;row4, counts ----------------------------------
   row4 = WIDGET_BASE(wBase,/ROW)
   counts = WIDGET_LABEL(row4,$
     VALUE = 'Counts:')
@@ -83,7 +88,19 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     UNAME = 'counts',$
     SCR_XSIZE = 50)
     
-  wBankDraw = WIDGET_DRAW(wBase,$
+   ;row5, tube angle ------------------------------
+   row5 = WIDGET_BASE(wBase,/ROW, FRAME=1)
+   tube = WIDGET_LABEL(row5,$
+   VALUE = 'Tube Angle:')
+   value = WIDGET_LABEL(row5,$
+   VALUE = 'N/A',$
+   /ALIGN_LEFT,$
+   UNAME = 'scattering_angle',$
+   SCR_XSIZE = 80) 
+   unit = WIDGET_LABEL(row5,$
+   VALUE = 'degrees') 
+    
+  wBankDraw = WIDGET_DRAW(wBase,$ ;------------------
     SCR_XSIZE = 8L*Xfactor,$
     SCR_YSIZE = 128L*Yfactor,$
     UNAME     = 'bank_plot',$
