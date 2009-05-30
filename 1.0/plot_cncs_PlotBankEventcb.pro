@@ -67,6 +67,11 @@ putTextInTextField, Event, 'pixelid_input', PixelID
 tvimg = (*(*global2).tvimg)
 real_pixelID = DOUBLE(PixelID) + (DOUBLE(BankID)-1) * 1024L
 putTextInTextField, Event, 'counts', STRCOMPRESS(tvimg[real_pixelID],/REMOVE_ALL)
+
+;display tube angle
+TubeAngle = (*global2).TubeAngle
+GeneralTube = 
+
 END
 
 
