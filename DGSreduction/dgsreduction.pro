@@ -114,6 +114,11 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=upperValue
       dgscmd->SetProperty, UpperBank=upperValue
     END
+    'DGS_ROI_FILENAME': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ; TODO: Check filename exists before setting the property!
+      dgscmd->SetProperty, ROIfile=myValue
+    END
     'DGS_MAKE_SPE': BEGIN
       dgscmd->SetProperty, SPE=event.SELECT
     END
@@ -289,6 +294,16 @@ PRO DGSreduction, dgscmd, _Extra=extra
   lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
   ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)
   
+  RoiBase = WIDGET_BASE(reductionTabBase)
+  RoiLabel = WIDGET_LABEL(RoiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
+  RoiLabelGeometry = WIDGET_INFO(RoiLabel, /GEOMETRY)
+  RoiLabelYSize = RoiLabelGeometry.ysize
+  RoiPrettyBase = WIDGET_BASE(RoiBase, /FRAME, /COLUMN, $
+        YOFFSET=RoiLabelYSize/2, YPAD=10, XPAD=10)
+  
+  RoiRow = WIDGET_BASE(RoiPrettyBase, /ROW)
+  RoiFileID = CW_FIELD(RoiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
+  
   rangesBase = WIDGET_BASE(reductionTabBase)
   rangesLabel = WIDGET_LABEL(rangesBase, value=' Data Ranges ', XOFFSET=5)
   rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
@@ -296,7 +311,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /COLUMN, $
         YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
    
-    ; Energy Transfer Range Base
+  ; Energy Transfer Range Row
   EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
   minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Energy Min:", $
         XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)

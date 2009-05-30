@@ -379,7 +379,7 @@ function ReductionCmd::Generate
     IF STRLEN(self.dsmonpath) GT 1 THEN $
       cmd[i] += " --dsmon-path="+self.dsmonpath
     ; ROI filename
-    IF STRLEN(self.roifile) GT 1 THEN $
+    IF STRLEN(self.roifile) GE 1 THEN $
       cmd[i] += " --roi-file="+self.roifile
     ; Tmin
     IF STRLEN(self.tmin) GT 1 THEN $
