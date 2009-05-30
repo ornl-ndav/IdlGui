@@ -136,7 +136,7 @@ tvscl, bank_congrid, /device
 END
 
 ;-------------------------------------------------------------------------------
-PRO PlotBank, img, i, bankName, bDasView
+PRO PlotBank, img, i, bankName, bDasView, TubeAngle
 
 Xfactor = 10
 Yfactor = 5
@@ -159,6 +159,7 @@ global2 = ptr_new({ wbase           : wbase,$
                     tmpImg          : ptr_new(0L),$
                     bank_rebin      : ptr_new(0L),$
                     bank_congrid    : ptr_new(0L),$
+                    TubeAngle       : TubeAngle,$
                     img             : img})     
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2

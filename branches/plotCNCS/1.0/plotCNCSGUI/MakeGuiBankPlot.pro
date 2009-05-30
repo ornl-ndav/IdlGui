@@ -35,7 +35,7 @@
 PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
   ourGroup = WIDGET_BASE()
-  wBase = WIDGET_BASE(TITLE        = 'Bank View',$
+  wBase = WIDGET_BASE(TITLE = 'Bank View',$
     UNAME        = 'bank_plot_base',$
     XOFFSET      = 50,$
     YOFFSET      = 50,$

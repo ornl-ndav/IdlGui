@@ -323,7 +323,8 @@ PRO MakeGuiMainPLot_Event, event
           PlotBank, (*(*global1).img), $ ;launch the bank view
             index, $
             bankName, $
-            (*global1).real_or_tof
+            (*global1).real_or_tof,$
+            (*global1).TubeAngle
         ENDIF
         WIDGET_CONTROL, HOURGLASS=0
       ENDIF
