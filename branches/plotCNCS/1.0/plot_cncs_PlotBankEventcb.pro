@@ -66,7 +66,7 @@ putTextInTextField, Event, 'pixelid_input', PixelID
 ;get number of counts
 tvimg = (*(*global2).tvimg)
 real_pixelID = DOUBLE(PixelID) + (DOUBLE(BankID)-1) * 1024L
-putTextInTextField, Event, 'counts', tvimg[real_pixelID]
+putTextInTextField, Event, 'counts', STRCOMPRESS(tvimg[real_pixelID],/REMOVE_ALL)
 END
 
 
