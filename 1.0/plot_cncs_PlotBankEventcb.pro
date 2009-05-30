@@ -70,7 +70,10 @@ putTextInTextField, Event, 'counts', STRCOMPRESS(tvimg[real_pixelID],/REMOVE_ALL
 
 ;display tube angle
 TubeAngle = (*global2).TubeAngle
-GeneralTube = 
+GeneralTube = (FIX(BankID)-1)*8 + FIX(BankX)
+TubeAngleValue = TubeAngle[GeneralTube]
+putTextInTextField, Event, 'scattering_angle', $
+STRCOMPRESS(TubeAngleValue,/REMOVE_ALL)
 
 END
 

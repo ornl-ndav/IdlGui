@@ -96,7 +96,7 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
    VALUE = 'N/A',$
    /ALIGN_LEFT,$
    UNAME = 'scattering_angle',$
-   SCR_XSIZE = 80) 
+   SCR_XSIZE = 50) 
    unit = WIDGET_LABEL(row5,$
    VALUE = 'degrees') 
     
