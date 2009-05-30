@@ -388,23 +388,31 @@ PRO plotDASviewFullInstrument, global1
   WSET, id_value
   ERASE
   
-  ;isolate various banks of data
-  bank = LONARR(8,128)
-  ;plot left part
-  for i=0,(36-1) do begin
-    bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = REBIN(bank,8*Xfactor, 128L*Yfactor,/sample)
-    TVSCL, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
-  endfor
-  
-  ;beam_stop_offset = 16*(Xcoeff)+2*off+xoff
-  for i=38,(52-1) do begin
-    bank = tvimg[(i-2)*8:((i-2)+1)*8-1,*]
-    bank_rebin = REBIN(bank,8*Xfactor, 128L*Yfactor,/sample)
-    TVSCL, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
-  endfor
+  ;Create big array (before rebining)
+  xsize       = 8L
+  xsize_space = 1L
+  xsize_total = xsize * 52L + xsize_space * 51L
+  ysize = 128L
+  big_array = LONARR(xsize_total, ysize)
+  ;put left part in big array
+  FOR i=0L,(36L-1) DO BEGIN
+    bank = tvimg[i*8:(i+1)*8,*]
+    big_array[i*8L:(i+1L)*8L,*] = bank
+  ENDFOR
+  ;put right part in big array
+  FOR i=38L,(52L-2L) DO BEGIN
+  print, '(i-2L)*8L: ' + strcompress((i-2L)*8L)
+  print, '(i-1L)*8L: ' + strcompress((i-1L)*8L)
+  print, 'i: ' + strcompress(i)
+  print
+    bank = tvimg[(i-2L)*8L:(i-1L)*8L,*]
+    big_array[i*8L:(i+1L)*8L,*] = bank
+  ENDFOR
+  ;rebin big array
+  big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
+  TVSCL, big_array_rebin, /DEVICE, xoff, off
 
-  ;plot grid
+    ;plot grid
   plotGridMainPlot, global1
 END
 
@@ -499,7 +507,7 @@ PRO PlotMainPlot, histo_mapped_file
     Ycoeff:               128L * 2,$
     Ytof:                 128L * 2,$
     Ytof_untouched:       128L*2,$
-    off:                  5,$
+    off:                  4,$
     xoff:                 10,$
     img:                  PTR_NEW(0L),$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
