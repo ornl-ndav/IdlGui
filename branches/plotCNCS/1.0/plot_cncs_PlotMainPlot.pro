@@ -337,7 +337,7 @@ END
 
 ;==============================================================================
 PRO plotGridMainPlot, global1
-
+  
   ;retrieve values from inside structure
   Xfactor = (*global1).Xfactor
   Yfactor = (*global1).Yfactor
@@ -352,11 +352,11 @@ PRO plotGridMainPlot, global1
   ;;plot grid of bottom bank
   color  = 100
   for i=0,(52-1) do begin
-    PLOTS, i*(Xcoeff)+i*off+xoff    , off       , /device, color=color
-    PLOTS, i*(Xcoeff)+i*off+xoff    , Ycoeff+off, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff, Ycoeff+off, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff, off       , /device, color=color, /continue
-    PLOTS, i*(Xcoeff)+i*off+xoff    , off       , /device, color=color, /continue
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , off       , /device, color=color
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+off, /device, color=color, /continue
+    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+off, /device, color=color, /continue
+    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, off       , /device, color=color, /continue
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , off       , /device, color=color, /continue
   endfor
   
 END
@@ -396,18 +396,23 @@ PRO plotDASviewFullInstrument, global1
   big_array = LONARR(xsize_total, ysize)
   ;put left part in big array
   FOR i=0L,(36L-1) DO BEGIN
-    bank = tvimg[i*8:(i+1)*8,*]
-    big_array[i*8L:(i+1L)*8L,*] = bank
+    bank = tvimg[i*8:(i+1)*8L-1,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
   ENDFOR
   ;put right part in big array
   FOR i=38L,(52L-2L) DO BEGIN
-  print, '(i-2L)*8L: ' + strcompress((i-2L)*8L)
-  print, '(i-1L)*8L: ' + strcompress((i-1L)*8L)
-  print, 'i: ' + strcompress(i)
-  print
-    bank = tvimg[(i-2L)*8L:(i-1L)*8L,*]
-    big_array[i*8L:(i+1L)*8L,*] = bank
+    bank = tvimg[(i-2L)*8L:(i-1L)*8L-1,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
   ENDFOR
+  
+  ;REMOVE_ME
+  big_array[7,*] = 2550
+  big_array[9,*] = 2550
+  big_array[16,*] = 2550
+  big_array[18,*] = 2550
+  big_array[25,*] = 2550
+  big_array[27,*] = 2550
+  
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   TVSCL, big_array_rebin, /DEVICE, xoff, off
