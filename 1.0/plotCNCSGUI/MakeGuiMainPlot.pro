@@ -38,7 +38,7 @@ PRO MakeGuiMainPlot, wBase
 ;                           Define size arrays
 ;********************************************************************************
 
-MainPlotBase = { size  : [200,50,1930,268],$
+MainPlotBase = { size  : [200,50,1885,268],$
                  uname : 'main_plot_base',$
                  title : 'Real View of Instrument (Y vs X integrated over TOF)'}
 
@@ -116,31 +116,31 @@ wMainDraw = WIDGET_DRAW(wBase,$
                         /BUTTON_EVENTS,$
                         /MOTION_EVENTS)
 
-plot_selection_button = WIDGET_BUTTON(MBAR,$
-                                      UNAME = PSbutton.uname,$
-                                      VALUE = PSbutton.value,$
-                                      /MENU)
+;plot_selection_button = WIDGET_BUTTON(MBAR,$
+;                                      UNAME = PSbutton.uname,$
+;                                      VALUE = PSbutton.value,$
+;                                      /MENU)
 
-plot_das_view_button = WIDGET_BUTTON(plot_selection_button,$
-                                     UNAME = PDVbutton.uname,$
-                                     VALUE = PDVbutton.value)
+;plot_das_view_button = WIDGET_BUTTON(plot_selection_button,$
+;                                     UNAME = PDVbutton.uname,$
+;                                     VALUE = PDVbutton.value);
 
-plot_tof_view_button = WIDGET_BUTTON(plot_selection_button,$
-                                     UNAME = PtofVbutton.uname,$
-                                     VALUE = PtofVbutton.value)
+;plot_tof_view_button = WIDGET_BUTTON(plot_selection_button,$
+;                                     UNAME = PtofVbutton.uname,$
+;                                     VALUE = PtofVbutton.value)
 
-scale_button_menu = WIDGET_BUTTON(MBAR,$
-                                  UNAME     = PtofScaleButton.uname,$
-                                  VALUE     = PtofScaleButton.value,$
-                                  SENSITIVE = PtofScaleButton.sensitive,$
-                                  /MENU)
+;scale_button_menu = WIDGET_BUTTON(MBAR,$
+;                                  UNAME     = PtofScaleButton.uname,$
+;                                  VALUE     = PtofScaleButton.value,$
+;                                  SENSITIVE = PtofScaleButton.sensitive,$
+;                                  /MENU)
 
-sz = (size(PtofScale.uname))(1)
-FOR i=0,(sz-1) DO BEGIN
-    scale_button = WIDGET_BUTTON(scale_button_menu,$
-                                 UNAME = PtofScale.uname[i],$
-                                 VALUE = PtofScale.value[i])
-ENDFOR
+;sz = (size(PtofScale.uname))(1)
+;FOR i=0,(sz-1) DO BEGIN
+;    scale_button = WIDGET_BUTTON(scale_button_menu,$
+;                                 UNAME = PtofScale.uname[i],$
+;                                 VALUE = PtofScale.value[i])
+;ENDFOR
 
 WIDGET_CONTROL, wBase, /REALIZE
 
