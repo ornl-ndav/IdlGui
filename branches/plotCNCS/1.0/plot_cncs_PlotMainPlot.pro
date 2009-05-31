@@ -405,14 +405,6 @@ PRO plotDASviewFullInstrument, global1
     big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
   ENDFOR
   
-  ;REMOVE_ME
-  big_array[7,*] = 2550
-  big_array[9,*] = 2550
-  big_array[16,*] = 2550
-  big_array[18,*] = 2550
-  big_array[25,*] = 2550
-  big_array[27,*] = 2550
-  
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   TVSCL, big_array_rebin, /DEVICE, xoff, off

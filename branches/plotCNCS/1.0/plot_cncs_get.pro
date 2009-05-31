@@ -168,7 +168,7 @@ END
 FUNCTION getBankTubeMainPlot, X
   Xwidth = 32
   FOR i=0,35 DO BEGIN
-    xoff = i*37
+    xoff = i*36
     xmin = 10 + xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
@@ -180,7 +180,7 @@ FUNCTION getBankTubeMainPlot, X
   ENDFOR
   
   FOR i=38,51 DO BEGIN
-    xoff = i*37
+    xoff = i*36
     xmin = 10 + xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
