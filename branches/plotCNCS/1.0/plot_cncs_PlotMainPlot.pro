@@ -117,9 +117,9 @@ PRO MakeGuiMainPLot_Event, event
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
-    replot_main_plot, Event
+      replot_main_plot, Event
     END
-
+    
     ;selection of mbar button - DAS view
     WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
       WIDGET_CONTROL, /HOURGLASS
@@ -430,6 +430,7 @@ PRO plotDASviewFullInstrument, global1
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   (*(*global1).big_array_rebin) = big_array_rebin
+  (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
   ;plot grid
   plotGridMainPlot, global1
@@ -470,6 +471,8 @@ PRO replot_main_plot_with_scale, Event
     big_array_rebin[index_max] = 0
   ENDIF
   
+  (*(*global1).big_array_rebin_rescale) = big_array_rebin
+  
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
@@ -501,7 +504,7 @@ PRO replot_main_plot, Event
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
-
+  
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
@@ -604,6 +607,7 @@ PRO PlotMainPlot, histo_mapped_file
     off:                  5,$
     xoff:                 10,$
     big_array_rebin:      PTR_NEW(0L),$
+    big_array_rebin_rescale: PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
@@ -670,6 +674,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     xoff:                  10,$
     img:                   PTR_NEW(0L),$
     big_array_rebin:       PTR_NEW(0L),$
+    big_array_rebin_rescale: PTR_NEW(0L),$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
