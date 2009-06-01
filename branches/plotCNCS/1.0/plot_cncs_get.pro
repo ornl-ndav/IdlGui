@@ -251,16 +251,31 @@ FUNCTION getBank, Event
   ENDELSE
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getRow, Event, Y
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  Yfactor = (*global1).Yfactor
+  off     = (*global1).off
+  row = (Y- off)/2
+  IF (row LT 128 AND $
+  row GE 0) THEN RETURN, row
+  RETURN, -1
+END
+
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the bank number
 FUNCTION getBankTube, Event
   X = Event.X
+  Y = Event.Y
   column_tube = getBankTubeMainPlot(X)
-  IF (column_tube[0] NE 0) THEN BEGIN ;we click inside a bank
+  row = getRow(Event, Y)
+  IF (column_tube[0] NE 0 AND $
+  row NE -1) THEN BEGIN ;we click inside a bank
     RETURN, [STRCOMPRESS(column_tube[0],/REMOVE_ALL),$
-      STRCOMPRESS(column_tube[1],/REMOVE_ALL)]
+      STRCOMPRESS(column_tube[1],/REMOVE_ALL),$
+      STRCOMPRESS(row,/REMOVE_ALL)]
   ENDIF ELSE BEGIN ;if we click outside a bank
-    RETURN, ['','']
+    RETURN, ['','','']
   ENDELSE
 END
 
