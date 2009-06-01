@@ -40,7 +40,8 @@ PRO plot_scale, global1, min, max
   id = WIDGET_INFO(wBase,find_by_uname='main_plot_scale')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-;
+  ERASE
+
 ;  IF (isLogZaxisSelected(Event)) THEN BEGIN
 ;    divisions = 10
 ;    perso_format = '(e8.1)'
