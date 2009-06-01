@@ -41,6 +41,7 @@ PRO MainPlotInteraction, Event
   bank_tube   = getBankTube(Event)
   bank_number = bank_tube[0]
   tube_number = bank_tube[1]
+  row_number  = bank_tube[2]
   
   ;display bank number in title
   ;IF ((*global1).real_or_tof EQ 0) THEN BEGIN ;real das view
@@ -82,6 +83,14 @@ PRO MainPlotInteraction, Event
     ENDELSE
   ENDELSE
   putTextFieldValue, Event, 'angle_value', angle
+  
+  ;Show row
+  IF (row_number EQ '') THEN BEGIN
+    value = 'N/A'
+  ENDIF ELSE BEGIN
+    value = STRCOMPRESS(row_number,/REMOVE_ALL)
+  ENDELSE
+  putTextFieldValue, event, 'row_value', value
   
 END
 

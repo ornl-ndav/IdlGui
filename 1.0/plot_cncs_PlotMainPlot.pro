@@ -601,7 +601,7 @@ PRO PlotMainPlot, histo_mapped_file
     Ycoeff:               128L * 2,$
     Ytof:                 128L * 2,$
     Ytof_untouched:       128L*2,$
-    off:                  4,$
+    off:                  5,$
     xoff:                 10,$
     big_array_rebin:      PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
