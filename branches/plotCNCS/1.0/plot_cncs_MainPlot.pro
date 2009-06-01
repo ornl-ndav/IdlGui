@@ -43,16 +43,7 @@ PRO MainPlotInteraction, Event
   tube_number = bank_tube[1]
   row_number  = bank_tube[2]
   
-  ;display bank number in title
-  ;IF ((*global1).real_or_tof EQ 0) THEN BEGIN ;real das view
-  ;  text = (*global1).main_plot_real_title
-  ;ENDIF ELSE BEGIN ;tof view
-  ;  text = (*global1).main_plot_tof_title
-  ;ENDELSE
-  ;IF (bank_number NE '') THEN BEGIN
-  ;  text += ' - bank: ' + bank_number
-  ;ENDIF
-  
+  ;show bank number
   IF (bank_number EQ '') THEN BEGIN
     value = 'N/A'
   ENDIF ELSE BEGIN
@@ -60,6 +51,7 @@ PRO MainPlotInteraction, Event
   ENDELSE
   putTextFieldValue, Event, 'bank_value', value
   
+  ;show tube number
   IF (tube_number EQ '') THEN BEGIN
     VALUE = 'N/A'
   ENDIF ELSE BEGIN
@@ -91,6 +83,16 @@ PRO MainPlotInteraction, Event
     value = STRCOMPRESS(row_number,/REMOVE_ALL)
   ENDELSE
   putTextFieldValue, event, 'row_value', value
+  
+  ;show real pixelID
+  real_tube = FIX(real_tube_number)
+  IF (real_tube EQ -8L) THEN BEGIN
+    value = 'N/A'
+  ENDIF ELSE BEGIN
+    row = FIX(row_number)
+    value = STRCOMPRESS(LONG(DOUBLE(real_tube) * 128L + DOUBLE(row)),/REMOVE_ALL)
+  ENDELSE
+  putTextFieldValue, Event, 'pixelid_value', value
   
 END
 
