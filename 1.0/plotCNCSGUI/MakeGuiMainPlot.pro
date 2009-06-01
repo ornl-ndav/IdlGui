@@ -175,7 +175,7 @@ PRO MakeGuiMainPlot, wBase
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'pixelid_value',$
-    SCR_XSIZE = 50)
+    SCR_XSIZE = 60)
     
   counts = WIDGET_LABEL(row1b,$
     VALUE = 'Counts')
