@@ -32,8 +32,14 @@
 ;
 ;==============================================================================
 
-PRO plot_scale, global1 
+PRO plot_scale, global1, min, max 
 
+  wbase   = (*global1).wBase
+
+ ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
 ;
 ;  IF (isLogZaxisSelected(Event)) THEN BEGIN
 ;    divisions = 10
@@ -48,9 +54,9 @@ PRO plot_scale, global1
 ;      YLOG = 1,$
 ;      /VERTICAL
 ;  ENDIF ELSE BEGIN
-    divisions = 20
+    divisions = 10
     perso_format = '(e8.1)'
-    range = [master_min,master_max]
+    range = [min,max]
     colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.75,0.01,0.95,0.99], $

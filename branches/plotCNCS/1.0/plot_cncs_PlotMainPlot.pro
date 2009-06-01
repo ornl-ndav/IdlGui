@@ -405,12 +405,18 @@ PRO plotDASviewFullInstrument, global1
     big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
   ENDFOR
   
+  min = MIN(big_array,MAX=max)
+  
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   TVSCL, big_array_rebin, /DEVICE, xoff, off
 
     ;plot grid
   plotGridMainPlot, global1
+  
+  ;plot scale
+  plot_scale, global1, min, max
+  
 END
 
 ;==============================================================================
