@@ -111,37 +111,88 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   row1a = WIDGET_BASE(row1,$
-  /ROW,$
-  /FRAME)
-  
+    /ROW,$
+    /FRAME)
+    
   title = WIDGET_LABEL(row1a,$
-  VALUE = 'Counts:  ')  
+    VALUE = 'Counts:  ')
     
   min_value = CW_FIELD(row1a,$
- VALUE = '',$
- UNAME= 'main_base_min_value',$
- /INTEGER,$
- /RETURN_EVENTS,$
- TITLE = 'Min:',$
- XSIZE = 6,$
- /ROW)
- 
+    VALUE = '',$
+    UNAME= 'main_base_min_value',$
+    /INTEGER,$
+    /RETURN_EVENTS,$
+    TITLE = 'Min:',$
+    XSIZE = 6,$
+    /ROW)
+    
   max_value = CW_FIELD(row1a,$
- VALUE = '',$
- UNAME= 'main_base_max_value',$
- /INTEGER,$
- /RETURN_EVENTS,$
- XSIZE = 6,$
- TITLE = '   Max:',$
- /ROW)
-      
- space = WIDGET_LABEL(row1a,$
- VALUE = '  ')     
-      
- reset = WIDGET_BUTTON(row1a,$
- VALUE = 'RESET SCALE',$
- UNAME = 'reset_scale')     
-      
+    VALUE = '',$
+    UNAME= 'main_base_max_value',$
+    /INTEGER,$
+    /RETURN_EVENTS,$
+    XSIZE = 6,$
+    TITLE = '   Max:',$
+    /ROW)
+    
+  space = WIDGET_LABEL(row1a,$
+    VALUE = '  ')
+    
+  reset = WIDGET_BUTTON(row1a,$
+    VALUE = 'RESET SCALE',$
+    UNAME = 'reset_scale')
+    
+  space = WIDGET_LABEL(row1a,$
+    VALUE = '    ')
+    
+  row1b = WIDGET_BASE(row1,$ ;-----------------------------------------------
+    /ROW,$
+    FRAME=1)
+    
+  bank = WIDGET_LABEL(row1b,$
+    VALUE = 'Bank')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'bank_value',$
+    SCR_XSIZE = 50)
+
+  tube = WIDGET_LABEL(row1b,$
+    VALUE = 'Tube')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'tube_value',$
+    SCR_XSIZE = 50)
+    
+  row = WIDGET_LABEL(row1b,$
+    VALUE = 'Row')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'row_value',$
+    SCR_XSIZE = 50)
+    
+  pixelid = WIDGET_LABEL(row1b,$
+    VALUE = 'PixelID')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'pixelid_value',$
+    SCR_XSIZE = 50)
+    
+  counts = WIDGET_LABEL(row1b,$
+    VALUE = 'Counts')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'counts_value',$
+    SCR_XSIZE = 50)
+    
+  angle = WIDGET_LABEL(row1b,$
+    VALUE = 'Tube Angle')
+  value = WIDGET_TEXT(row1b,$
+    VALUE = 'N/A',$
+    UNAME = 'angle_value',$
+    SCR_XSIZE = 90)
+    degrees = WIDGET_LABEL(row1b,$
+    VALUE = 'degrees')
+    
   row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
     /ROW)
     

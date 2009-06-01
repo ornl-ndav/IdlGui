@@ -60,6 +60,11 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=text
 END
 
+;------------------------------------------------------------------------------
+PRO putTextFieldValue, Event, uname, value
+putTextInTextField, Event, uname, value
+END
+
 ;-------------------------------------------------------------------------------
 PRO putDropListValue, Event, uname, value
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
