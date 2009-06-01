@@ -98,24 +98,46 @@ PRO MakeGuiMainPlot, wBase
   ;                                Build GUI
   ;********************************************************************************
   ourGroup = WIDGET_BASE()
+  
   wBase = WIDGET_BASE(TITLE        = MainPlotBase.title,$
     UNAME        = MainPlotBase.uname,$
     XOFFSET      = MainPlotBase.size[0],$
     YOFFSET      = MainPlotBase.size[1],$
-    ;                    SCR_XSIZE    = MainPlotBase.size[2],$
-    ;                    SCR_YSIZE    = MainPlotBase.size[3],$
     MAP          = 1,$
     GROUP_LEADER = ourGroup,$
+    /COLUMN)
+    
+  row1 = WIDGET_BASE(wBase,$ ;row1 --------------------------------------
     /ROW)
     
-  scale = WIDGET_DRAW(wBase,$
+  title = WIDGET_LABEL(row1,$
+  VALUE = 'Counts:  ')  
+    
+  min_value = CW_FIELD(row1,$
+ VALUE = '',$
+ UNAME= 'main_base_min_value',$
+ /INTEGER,$
+ TITLE = 'Min:',$
+ XSIZE = 6,$
+ /ROW)
+ 
+  max_value = CW_FIELD(row1,$
+ VALUE = '',$
+ UNAME= 'main_base_max_value',$
+ /INTEGER,$
+ XSIZE = 6,$
+ TITLE = '   Max:',$
+ /ROW)
+      
+  row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
+    /ROW)
+    
+  scale = WIDGET_DRAW(row2,$
     SCR_XSIZE = 70,$
     SCR_YSIZE = MainDraw.size[3],$
     UNAME = 'main_plot_scale')
     
-  wMainDraw = WIDGET_DRAW(wBase,$
-    ;                        XOFFSET   = MainDraw.size[0],$
-    ;                        YOFFSET   = MainDraw.size[1],$
+  wMainDraw = WIDGET_DRAW(row2,$
     SCR_XSIZE = MainDraw.size[2],$
     SCR_YSIZE = MainDraw.size[3],$
     UNAME     = MainDraw.uname,$
