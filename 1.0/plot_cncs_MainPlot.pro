@@ -94,6 +94,9 @@ PRO MainPlotInteraction, Event
   ENDELSE
   putTextFieldValue, Event, 'pixelid_value', value
   
+  ;display counts
+  
+  
 END
 
 
