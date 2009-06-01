@@ -117,6 +117,7 @@ PRO MakeGuiMainPlot, wBase
  VALUE = '',$
  UNAME= 'main_base_min_value',$
  /INTEGER,$
+ /RETURN_EVENTS,$
  TITLE = 'Min:',$
  XSIZE = 6,$
  /ROW)
@@ -125,6 +126,7 @@ PRO MakeGuiMainPlot, wBase
  VALUE = '',$
  UNAME= 'main_base_max_value',$
  /INTEGER,$
+ /RETURN_EVENTS,$
  XSIZE = 6,$
  TITLE = '   Max:',$
  /ROW)
@@ -133,7 +135,7 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   scale = WIDGET_DRAW(row2,$
-    SCR_XSIZE = 70,$
+    SCR_XSIZE = 90,$
     SCR_YSIZE = MainDraw.size[3],$
     UNAME = 'main_plot_scale')
     

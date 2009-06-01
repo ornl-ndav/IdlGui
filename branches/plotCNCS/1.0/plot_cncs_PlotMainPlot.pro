@@ -105,6 +105,17 @@ PRO MakeGuiMainPLot_Event, event
   
   CASE event.id OF
   
+    ;Counts min value
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_min_value'): BEGIN
+      PRINT, 'replot_main_plot'
+      replot_main_plot, Event
+    END
+    
+    ;Counts max value
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value'): BEGIN
+      replot_main_plot, Event
+    END
+    
     ;selection of mbar button - DAS view
     WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
       WIDGET_CONTROL, /HOURGLASS
@@ -337,7 +348,7 @@ END
 
 ;==============================================================================
 PRO plotGridMainPlot, global1
-  
+
   ;retrieve values from inside structure
   Xfactor = (*global1).Xfactor
   Yfactor = (*global1).Yfactor
@@ -406,18 +417,76 @@ PRO plotDASviewFullInstrument, global1
   ENDFOR
   
   min = MIN(big_array,MAX=max)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   TVSCL, big_array_rebin, /DEVICE, xoff, off
-
-    ;plot grid
+  (*(*global1).big_array_rebin) = big_array_rebin
+  
+  ;plot grid
   plotGridMainPlot, global1
   
   ;plot scale
   plot_scale, global1, min, max
   
 END
+
+;==============================================================================
+PRO replot_main_plot, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;retrieve values from inside structure
+  off     = (*global1).off
+  xoff    = (*global1).xoff
+  wbase   = (*global1).wBase
+  big_array_rebin = (*(*global1).big_array_rebin)
+  
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  ;ERASE
+  
+  ;min value
+  min = getCWFieldValue(Event,'main_base_min_value')
+  max = getCWFieldValue(Event,'main_base_max_value')
+  
+  index_min = WHERE(big_array_rebin LT MIN, nbr)
+  IF (nbr GT 0) THEN BEGIN
+    big_array_rebin[index_min] = 0
+  ENDIF
+  
+  index_max = WHERE(big_array_rebin GT MAX, nbr)
+  IF (nbr GT 0) THEN BEGIN
+    big_array_rebin[index_max] = 0
+  ENDIF
+  
+  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  
+  ;plot grid
+  plotGridMainPlot, global1
+  
+  ;plot scale
+  plot_scale, global1, min, max
+  
+END
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;==============================================================================
 PRO plotTOFviewFullInstrument, global1
@@ -442,7 +511,7 @@ PRO plotTOFviewFullInstrument, global1
   ;change title
   id = WIDGET_INFO(wBase,find_by_uname='main_plot_base')
   WIDGET_CONTROL, id, base_set_title= (*global1).main_plot_tof_title
-  
+  i
   ;select plot area
   id = WIDGET_INFO(wBase,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -492,8 +561,6 @@ PRO plotTOFviewFullInstrument, global1
   
 END
 
-
-
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PRO PlotMainPlot, histo_mapped_file
   ;build gui
@@ -512,6 +579,7 @@ PRO PlotMainPlot, histo_mapped_file
     Ytof_untouched:       128L*2,$
     off:                  4,$
     xoff:                 10,$
+    big_array_rebin:      PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
@@ -577,6 +645,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     off:                   5,$
     xoff:                  10,$
     img:                   PTR_NEW(0L),$
+    big_array_rebin:       PTR_NEW(0L),$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
