@@ -110,10 +110,14 @@ PRO MakeGuiMainPlot, wBase
   row1 = WIDGET_BASE(wBase,$ ;row1 --------------------------------------
     /ROW)
     
-  title = WIDGET_LABEL(row1,$
+  row1a = WIDGET_BASE(row1,$
+  /ROW,$
+  /FRAME)
+  
+  title = WIDGET_LABEL(row1a,$
   VALUE = 'Counts:  ')  
     
-  min_value = CW_FIELD(row1,$
+  min_value = CW_FIELD(row1a,$
  VALUE = '',$
  UNAME= 'main_base_min_value',$
  /INTEGER,$
@@ -122,7 +126,7 @@ PRO MakeGuiMainPlot, wBase
  XSIZE = 6,$
  /ROW)
  
-  max_value = CW_FIELD(row1,$
+  max_value = CW_FIELD(row1a,$
  VALUE = '',$
  UNAME= 'main_base_max_value',$
  /INTEGER,$
@@ -130,6 +134,13 @@ PRO MakeGuiMainPlot, wBase
  XSIZE = 6,$
  TITLE = '   Max:',$
  /ROW)
+      
+ space = WIDGET_LABEL(row1a,$
+ VALUE = '  ')     
+      
+ reset = WIDGET_BUTTON(row1a,$
+ VALUE = 'RESET SCALE',$
+ UNAME = 'reset_scale')     
       
   row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
     /ROW)

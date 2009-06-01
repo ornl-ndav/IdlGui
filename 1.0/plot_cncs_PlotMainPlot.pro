@@ -107,15 +107,19 @@ PRO MakeGuiMainPLot_Event, event
   
     ;Counts min value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_min_value'): BEGIN
-      PRINT, 'replot_main_plot'
-      replot_main_plot, Event
+      replot_main_plot_with_scale, Event
     END
     
     ;Counts max value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value'): BEGIN
-      replot_main_plot, Event
+      replot_main_plot_with_scale, Event
     END
     
+    ;reset scale
+    WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
+    replot_main_plot, Event
+    END
+
     ;selection of mbar button - DAS view
     WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
       WIDGET_CONTROL, /HOURGLASS
@@ -436,7 +440,7 @@ PRO plotDASviewFullInstrument, global1
 END
 
 ;==============================================================================
-PRO replot_main_plot, Event
+PRO replot_main_plot_with_scale, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
@@ -476,17 +480,37 @@ PRO replot_main_plot, Event
   
 END
 
+;==============================================================================
+PRO replot_main_plot, Event
 
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;retrieve values from inside structure
+  off     = (*global1).off
+  xoff    = (*global1).xoff
+  wbase   = (*global1).wBase
+  big_array_rebin = (*(*global1).big_array_rebin)
+  
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  min = MIN(big_array_rebin,MAX=max)
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base_min_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base_max_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
 
-
-
-
-
-
-
-
-
-
+  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  
+  ;plot grid
+  plotGridMainPlot, global1
+  
+  ;plot scale
+  plot_scale, global1, min, max
+  
+END
 
 ;==============================================================================
 PRO plotTOFviewFullInstrument, global1
