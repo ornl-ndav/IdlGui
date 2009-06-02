@@ -69,7 +69,6 @@ CASE event.id OF
                                                   xRightCorner,$
                                                   yRightCorner)
 
-
             PlotTof, (*global2).img, $
               (*global2).bankName, $
               (*global2).xLeftCorner, $
