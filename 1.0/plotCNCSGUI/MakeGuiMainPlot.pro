@@ -39,7 +39,7 @@ PRO MakeGuiMainPlot, wBase
   ;********************************************************************************
 
   ;MainPlotBase = { size  : [200,50,1938,268],$
-  MainPlotBase = { size  : [200,50,1885,268],$
+  MainPlotBase = { size  : [200,50,1885,2*268],$
     uname : 'main_plot_base',$
     title : 'Real View of Instrument (Y vs X integrated over TOF)'}
     

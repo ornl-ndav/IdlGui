@@ -609,10 +609,10 @@ PRO PlotMainPlot, histo_mapped_file
     real_or_tof:          0,$;0:REAL das view, 1:tof view
     tof_scale_title:      'TOF scale',$
     Xfactor:              4,$
-    Yfactor:              2,$
+    Yfactor:              4,$
     Yfactor_untouched:    2,$
     Xcoeff:               8 * 4,$
-    Ycoeff:               128L * 2,$
+    Ycoeff:               128L * 4,$
     Ytof:                 128L * 2,$
     Ytof_untouched:       128L*2,$
     off:                  5,$
@@ -675,10 +675,10 @@ PRO PlotMainPlotFromNexus, NexusFileName
     real_or_tof:           0,$;0:REAL das view, 1:tof view
     tof_scale_title:       'TOF scale',$
     Xfactor:               4,$
-    Yfactor:               2,$
+    Yfactor:               4,$
     Yfactor_untouched:     2,$
     Xcoeff:                8 * 4,$
-    Ycoeff:                128L * 2,$
+    Ycoeff:                128L * 4,$
     Ytof:                  128L * 2,$
     Ytof_untouched:        128L*2,$
     off:                   5,$
