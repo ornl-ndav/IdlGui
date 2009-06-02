@@ -391,6 +391,69 @@ PRO MakeGuiMainPLot_Event, event
       ENDIF
     END
     
+    ;play/pause.... buttons
+    WIDGET_INFO(event.top, FIND_BY_UNAME='play_buttons'): BEGIN
+      x = Event.x
+      y = Event.y
+      status_over = 0
+      ;play button
+      IF (x GE 74 AND $
+        x LE 132 AND $
+        y GE 73 AND $
+        y LE 117) THEN BEGIN
+        status_over = 1
+        play_buttons_activation, event, activate_button='play'
+      ENDIF
+      
+      ;next button
+      IF (x GE 147 AND $
+        x LE 191 AND $
+        y GE 56 AND $
+        y LE 92) THEN BEGIN
+        status_over = 1
+        play_buttons_activation, event, activate_button='next'
+      ENDIF
+      
+      ;stop button
+      IF (x GE 117 AND $
+        x LE 147 AND $
+        y GE 17 AND $
+        y LE 45) THEN BEGIN
+        status_over = 1
+        play_buttons_activation, event, activate_button='stop'
+      ENDIF
+      
+      ;pause button
+      IF (x GE 55 AND $
+        x LE 84 AND $
+        y GE 18 AND $
+        y LE 44) THEN BEGIN
+        status_over = 1
+        play_buttons_activation, event, activate_button='pause'
+      ENDIF
+      
+      ;previous button
+      IF (x GE 11 AND $
+        x LE 54 AND $
+        y GE 50 AND $
+        y LE 89) THEN BEGIN
+        status_over = 1
+        play_buttons_activation, event, activate_button='previous'
+      ENDIF
+      
+      IF (status_over) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+      
+      IF (status_over EQ 0) THEN BEGIN ;raw data
+              play_buttons_activation, event, activate_button='raw'
+              ENDIF
+      
+    END
+    
     ELSE:
   ENDCASE
   
@@ -912,6 +975,17 @@ PRO PlotMainPlotFromNexus, NexusFileName
   
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
+  
+  ;display buttons (play, stop, next, previous, pause) -----------------------
+  raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, raw_buttons, -20,-5,/true
+  
+  ;---------------------------------------------------------------------------
   
   Nstep  = FLOAT(50) ;number of steps
   progressBarCancel = 0
