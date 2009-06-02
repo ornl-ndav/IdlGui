@@ -358,7 +358,9 @@ PRO MakeGuiMainPLot_Event, event
       IF (Event.type EQ 1 AND $
         (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
         (*global1).left_pressed = 0
+        WIDGET_CONTROL, /HOURGLASS
         plot_counts_vs_tof_of_selection, Event
+        WIDGET_CONTROL, HOURGLASS=0
       ENDIF
       
       IF (Event.type EQ 2 AND $
