@@ -116,14 +116,5 @@ PRO MainPlotInteraction, Event
     ENDELSE
   ENDELSE
   putTextFieldValue, Event, 'counts_value', value
- 
- 
-  
+
 END
-
-
-
-
-
-
-

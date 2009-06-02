@@ -108,237 +108,262 @@ PRO MakeGuiMainPLot_Event, event
     ;Counts min value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_min_value'): BEGIN
       replot_main_plot_with_scale, Event
+      plot_selection_box, Event
     END
     
     ;Counts max value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value'): BEGIN
       replot_main_plot_with_scale, Event
+      plot_selection_box, Event
     END
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
       replot_main_plot, Event
+      plot_selection_box, Event
     END
     
     ;linear plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
       replot_main_plot_with_scale, Event
+      plot_selection_box, Event
     END
     
     ;log plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_log_plot'): BEGIN
       replot_main_plot_with_scale, Event
+      plot_selection_box, Event
     END
     
-    ;selection of mbar button - DAS view
-    WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      activateWidget, event, 'tof_scale_button', 0
-      (*global1).real_or_tof =0
-      plotDASviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;selection of mbar button - tof view
-    WIDGET_INFO(event.top, FIND_BY_UNAME='plot_tof_view_button_mbar'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      activateWidget, event, 'tof_scale_button', 1
-      (*global1).real_or_tof = 1
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /9
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d9'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 9)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 9
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /8
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d8'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 8)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 8
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /7
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d7'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 7)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 7
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /6
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d6'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 6)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 6
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /5
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d5'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 5)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 5
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /4
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d4'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 4)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 4
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /3
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d3'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 3)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 3
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale /2
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d2'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (/ 2)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched / 2
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale reset
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_reset'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 1)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *2
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m2'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 2)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 2
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *3
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m3'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 3)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 3
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *4
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m4'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 4)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 4
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *5
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m5'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 5)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 5
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *6
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m6'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 6)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 6
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *7
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m7'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 7)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 7
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *8
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m8'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 8)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 8
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
-    
-    ;tof scale *9
-    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m9'): begin
-      WIDGET_CONTROL, /HOURGLASS
-      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
-      title = (*global1).tof_scale_title + ' (* 9)'
-      WIDGET_CONTROL, id, set_value= title
-      (*global1).Ytof = (*global1).Ytof_untouched * 9
-      plotTOFviewFullInstrument, global1
-      WIDGET_CONTROL, HOURGLASS = 0
-    end
+    ;    ;selection of mbar button - DAS view
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      activateWidget, event, 'tof_scale_button', 0
+    ;      (*global1).real_or_tof =0
+    ;      plotDASviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;selection of mbar button - tof view
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='plot_tof_view_button_mbar'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      activateWidget, event, 'tof_scale_button', 1
+    ;      (*global1).real_or_tof = 1
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /9
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d9'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 9)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 9
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /8
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d8'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 8)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 8
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /7
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d7'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 7)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 7
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /6
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d6'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 6)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 6
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /5
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d5'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 5)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 5
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /4
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d4'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 4)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 4
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /3
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d3'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 3)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 3
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale /2
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_d2'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (/ 2)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched / 2
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale reset
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_reset'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 1)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *2
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m2'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 2)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 2
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *3
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m3'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 3)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 3
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *4
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m4'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 4)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 4
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *5
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m5'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 5)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 5
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *6
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m6'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 6)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 6
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *7
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m7'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 7)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 7
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *8
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m8'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 8)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 8
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
+    ;
+    ;    ;tof scale *9
+    ;    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_scale_m9'): begin
+    ;      WIDGET_CONTROL, /HOURGLASS
+    ;      id = WIDGET_INFO(event.top,find_by_uname='tof_scale_button')
+    ;      title = (*global1).tof_scale_title + ' (* 9)'
+    ;      WIDGET_CONTROL, id, set_value= title
+    ;      (*global1).Ytof = (*global1).Ytof_untouched * 9
+    ;      plotTOFviewFullInstrument, global1
+    ;      WIDGET_CONTROL, HOURGLASS = 0
+    ;    end
     
     ;Main plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
       MainPlotInteraction, Event
-      IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
+      
+      IF (Event.press EQ 1) THEN BEGIN ;press left button
+        (*global1).left_pressed = 1
+        (*global1).X1 = Event.x
+        (*global1).Y1 = Event.y
+      ENDIF
+      
+      IF (Event.type EQ 1 AND $
+        (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
+        (*global1).left_pressed = 0
+      ENDIF
+      
+      IF (Event.type EQ 2 AND $
+        (*global1).left_pressed EQ 1) THEN BEGIN ;move
+        (*global1).X2 = Event.x
+        (*global1).Y2 = Event.y
+        replot_main_plot_with_scale, Event, without_scale=1
+        plot_selection_box, Event
+      ENDIF
+      
+      IF (Event.press EQ 4) THEN BEGIN ;right mouse pressed
         WIDGET_CONTROL,/HOURGLASS
         X = Event.X
         Y = Event.Y
@@ -448,7 +473,7 @@ PRO plotDASviewFullInstrument, global1
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   
   ;remove_me
-;  big_array_rebin[0:3,0:1] = 1500
+  ;  big_array_rebin[0:3,0:1] = 1500
   
   yoff = 0
   TVSCL, big_array_rebin, /DEVICE, xoff, yoff
@@ -464,7 +489,40 @@ PRO plotDASviewFullInstrument, global1
 END
 
 ;==============================================================================
-PRO replot_main_plot_with_scale, Event
+PRO plot_selection_box, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x1 = (*global1).X1
+  y1 = (*global1).Y1
+  x2 = (*global1).X2
+  y2 = (*global1).Y2
+  
+  IF (x1 EQ 0L AND $
+    x2 EQ 0L) THEN RETURN
+    
+  xmin = MIN([x1,x2], MAX=xmax)
+  ymin = MIN([y1,y2], MAX=ymax)
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  color = 150
+  
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin,ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR =color
+    
+END
+
+;==============================================================================
+PRO replot_main_plot_with_scale, Event, without_scale=without_scale
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
@@ -512,15 +570,19 @@ PRO replot_main_plot_with_scale, Event
     
   ENDIF
   
-;  (*(*global1).big_array_rebin_rescale) = big_array_rebin
+  ;  (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
   plotGridMainPlot, global1
   
-  ;plot scale
-  plot_scale, global1, min, max, lin_status=lin_status
+  IF (N_ELEMENTS(without_scale) EQ 0) THEN BEGIN
+  
+    ;plot scale
+    plot_scale, global1, min, max, lin_status=lin_status
+    
+  ENDIF
   
 END
 
@@ -666,6 +728,7 @@ PRO PlotMainPlot, histo_mapped_file
     big_array_rebin:      PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
+    left_pressed:         0,$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
@@ -732,6 +795,11 @@ PRO PlotMainPlotFromNexus, NexusFileName
     img:                   PTR_NEW(0L),$
     big_array_rebin:       PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
+    left_pressed:           0,$
+    X1:                    0L,$
+    Y1:                    0L,$
+    X2:                    0L,$
+    Y2:                    0L,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
