@@ -327,6 +327,7 @@ PRO MakeGuiMainPLot_Event, event
     
     ;Main plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
+      print, Event.x
       MainPlotInteraction, Event
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
         WIDGET_CONTROL,/HOURGLASS
@@ -361,17 +362,19 @@ PRO plotGridMainPlot, global1
   off     = (*global1).off
   xoff    = (*global1).xoff
   
+  yoff = 0
+  
   ;##########################################
   ;PLOT BANKS GRID ##########################
   ;##########################################
   ;;plot grid of bottom bank
   color  = 100
   for i=0,(52-1) do begin
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , off       , /device, color=color
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+off, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+off, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, off       , /device, color=color, /continue
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , off       , /device, color=color, /continue
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+yoff, /device, color=color, /continue
+    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+yoff, /device, color=color, /continue
+    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, yoff       , /device, color=color, /continue
+    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color, /continue
   endfor
   
 END
@@ -438,8 +441,8 @@ PRO plotDASviewFullInstrument, global1
     ;remove_me
   big_array_rebin[0:3,0:1] = 1500
   
-  
-  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  yoff = 0
+  TVSCL, big_array_rebin, /DEVICE, xoff, yoff
   (*(*global1).big_array_rebin) = big_array_rebin
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
@@ -615,8 +618,8 @@ PRO PlotMainPlot, histo_mapped_file
     Ycoeff:               128L * 4,$
     Ytof:                 128L * 2,$
     Ytof_untouched:       128L*2,$
-    off:                  5,$
-    xoff:                 10,$
+    off:                  5,$ ;5
+    xoff:                 0,$ ;10
     big_array_rebin:      PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
@@ -681,8 +684,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Ycoeff:                128L * 4,$
     Ytof:                  128L * 2,$
     Ytof_untouched:        128L*2,$
-    off:                   5,$
-    xoff:                  10,$
+    off:                   5,$ ;5
+    xoff:                  0,$ ;10
     img:                   PTR_NEW(0L),$
     big_array_rebin:       PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$

@@ -38,8 +38,9 @@ PRO MakeGuiMainPlot, wBase
   ;                           Define size arrays
   ;********************************************************************************
 
-  ;MainPlotBase = { size  : [200,50,1938,268],$
-  MainPlotBase = { size  : [200,50,1885,2*268],$
+  xsize = 1867L
+  ;MainPlotBase = { size  : [200,50,1938,268],$ 
+  MainPlotBase = { size  : [200,50,xsize,4*128L+1],$  ;1885
     uname : 'main_plot_base',$
     title : 'Real View of Instrument (Y vs X integrated over TOF)'}
     
