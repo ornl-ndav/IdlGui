@@ -39,7 +39,7 @@ PRO MakeGuiMainPlot, wBase
   ;****************************************************************************
 
   xsize = 1867L
-  ;MainPlotBase = { size  : [200,50,1938,268],$ 
+  ;MainPlotBase = { size  : [200,50,1938,268],$
   MainPlotBase = { size  : [200,50,xsize,4*128L+1],$  ;1885
     uname : 'main_plot_base',$
     title : 'Real View of Instrument (Y vs X integrated over TOF)'}
@@ -156,7 +156,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'N/A',$
     UNAME = 'bank_value',$
     SCR_XSIZE = 50)
-
+    
   tube = WIDGET_LABEL(row1b,$
     VALUE = 'Tube')
   value = WIDGET_TEXT(row1b,$
@@ -191,31 +191,31 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'N/A',$
     UNAME = 'angle_value',$
     SCR_XSIZE = 90)
-    degrees = WIDGET_LABEL(row1b,$
+  degrees = WIDGET_LABEL(row1b,$
     VALUE = 'degrees')
     
   ;space
   space = WIDGET_LABEL(row1,$
-  VALUE = ' ')
-  
+    VALUE = ' ')
+    
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
-  /ROW,$
-  /EXCLUSIVE,$
-  FRAME = 1)
-  
+    /ROW,$
+    /EXCLUSIVE,$
+    FRAME = 1)
+    
   lin = WIDGET_BUTTON(row1c,$
-  VALUE = 'Linear',$
-  UNAME = 'main_plot_linear_plot',$
-  /NO_RELEASE)
-  
+    VALUE = 'Linear',$
+    UNAME = 'main_plot_linear_plot',$
+    /NO_RELEASE)
+    
   log = WIDGET_BUTTON(row1c,$
-  VALUE = 'Logarithmic',$
-  UNAME = 'main_plot_log_plot',$
-  /NO_RELEASE)    
+    VALUE = 'Logarithmic',$
+    UNAME = 'main_plot_log_plot',$
+    /NO_RELEASE)
     
-  WIDGET_CONTROL, lin, /SET_BUTTON  
-    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
   row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
     /ROW)
     
@@ -230,6 +230,12 @@ PRO MakeGuiMainPlot, wBase
     UNAME     = MainDraw.uname,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
+    
+  ;---------------------------------------------------------------------------
+  message = 'LEFT click to select region of interest for Counts vs TOF plot'
+  message += ' - RIGHT click to zoom in into selected bank'
+  row3 = WIDGET_LABEL(wBase,$ ;explain how the selection works
+    VALUE = message)
     
   ;plot_selection_button = WIDGET_BUTTON(MBAR,$
   ;                                      UNAME = PSbutton.uname,$
