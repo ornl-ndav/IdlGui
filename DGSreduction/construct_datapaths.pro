@@ -1,7 +1,8 @@
 FUNCTION Construct_DataPaths, lower, upper, job, totaljobs
 
   ; Sanity checking
-  
+  IF (lower EQ "") THEN lower = -1  
+  IF (upper EQ "") THEN upper = -1
   
   
   ; Work out what the lower/upper are for this jo
