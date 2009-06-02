@@ -373,8 +373,9 @@ function ReductionCmd::Generate
     IF STRLEN(self.dark) GT 1 THEN $
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
-    IF STRLEN(self.usmonpath) GT 1 THEN $
-      cmd[i] += " --usmon-path="+self.usmonpath
+    IF (STRLEN(self.usmonpath) GE 1) AND $
+       (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
+      cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
     ; Downstream monitor path
     IF STRLEN(self.dsmonpath) GT 1 THEN $
       cmd[i] += " --dsmon-path="+self.dsmonpath
@@ -399,7 +400,7 @@ function ReductionCmd::Generate
     ; Flag for turning off monitor normalization
     IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
     ; proton charge normalization
-    IF (self.pcnorm EQ 1) THEN cmd[i] += " --pc-norm"
+    IF (self.pcnorm EQ 1) AND (self.nomonitornorm EQ 1) THEN cmd[i] += " --pc-norm"
     ; Monitor integration range
     IF STRLEN(self.monrange) GT 1 THEN $
       cmd[i] += " --mon-int-range="+self.monrange
