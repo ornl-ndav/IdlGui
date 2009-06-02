@@ -106,6 +106,12 @@ PRO DGSreduction_TLB_Events, event
       ;print, 'DGS_DATARUN'
       dgscmd->SetProperty, DataRun=myValue
     END
+    'DGS_FINDNEXUS': BEGIN
+      dgscmd->GetProperty, Instrument=instrument
+      dgscmd->GetProperty, DataRun=run_number
+      ; TODO: Sort out findnexus
+      ;nxsfile = findnexus(RUN_NUMBER=run_number, INSTRUMENT=instrument)
+    END
     'DGS_DATAPATHS_LOWER': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
       dgscmd->SetProperty, LowerBank=lowerValue
@@ -191,9 +197,23 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, QBins_Step=myValue
     END
+    'DGS_NO-MON-NORM': BEGIN
+      dgscmd->SetProperty, NoMonitorNorm=event.SELECT
+      ; Also make the Proton Charge Norm active
+      pcnorm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_PC-NORM')
+      WIDGET_CONTROL, pcnorm_ID, SENSITIVE=event.SELECT
+    END
+    'DGS_PC-NORM': BEGIN
+      dgscmd->SetProperty, PCnorm=event.SELECT
+    END
+    'DGS_USMON': BEGIN
+      ; Upstream Monitor Number (usualy 1)
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, USmonPath=STRCOMPRESS(myValue, /REMOVE_ALL)
+    END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      if (myValue ne "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
+      if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
         dgscmd->SetProperty, Jobs=myValue
         ; If we are doing more than 1 job, we also need to set the --split option
         IF (myValue GT 1) THEN dgscmd->SetProperty, Split=1
@@ -284,25 +304,73 @@ PRO DGSreduction, dgscmd, _Extra=extra
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction',/COLUMN)
+  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction', COLUMN=1)
   
-  row1 = widget_base(reductionTabBase, /ROW)
-  runID= CW_FIELD(row1, xsize=30, ysize=1, TITLE="Run Number:", UVALUE="DGS_DATARUN", /ALL_EVENTS)
-  jobID = CW_FIELD(row1, TITLE="        No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
+  reductionTabRow1 = WIDGET_BASE(reductionTabBase, /ROW)
+  reductionTabRow2 = WIDGET_BASE(reductionTabBase, /ROW)
   
-  row2 = widget_base(reductionTabBase, /ROW)
-  lbankID = CW_FIELD(row2, /ALL_EVENTS, TITLE="Detector Banks from", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
-  ubankID = CW_FIELD(row2, /ALL_EVENTS, TITLE=" to ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)
+  dataSourceBase = WIDGET_BASE(reductionTabRow1)
+  dataSourceLabel = WIDGET_LABEL(dataSourceBase, VALUE=' Run Number ', XOFFSET=5)
+  dataSourceLabelGeometry = WIDGET_INFO(dataSourceLabel, /GEOMETRY)
+  dataSourceLabelGeometryYSize = dataSourceLabelGeometry.ysize
+  dataSourcePrettyBase = WIDGET_BASE(dataSourceBase, /FRAME, /COLUMN, $
+        YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
   
-  RoiBase = WIDGET_BASE(reductionTabBase)
-  RoiLabel = WIDGET_LABEL(RoiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
-  RoiLabelGeometry = WIDGET_INFO(RoiLabel, /GEOMETRY)
-  RoiLabelYSize = RoiLabelGeometry.ysize
-  RoiPrettyBase = WIDGET_BASE(RoiBase, /FRAME, /COLUMN, $
-        YOFFSET=RoiLabelYSize/2, YPAD=10, XPAD=10)
+  dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
+  runID= CW_FIELD(dataSourceRow, xsize=30, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS)
+  findNexusButton = WIDGET_BUTTON(dataSourceRow, VALUE="Find File", UVALUE="DGS_FINDNEXUS", SENSITIVE=0)
   
-  RoiRow = WIDGET_BASE(RoiPrettyBase, /ROW)
-  RoiFileID = CW_FIELD(RoiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
+  
+  jobBase = WIDGET_BASE(reductionTabBase)
+  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
+  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
+  jobLabelGeometryYSize = jobLabelGeometry.ysize
+  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, /COLUMN, $
+        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  jobID = CW_FIELD(jobPrettyBase, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
+  
+ 
+  detectorBankBase = WIDGET_BASE(reductionTabRow1)
+  detectorBankLabel = WIDGET_LABEL(detectorBankBase, VALUE=' Detector Banks ', XOFFSET=5)
+  detectorBankLabelGeometry = WIDGET_INFO(detectorBankLabel, /GEOMETRY)
+  detectorBankLabelYSize = detectorBankLabelGeometry.ysize
+  detectorBankPrettyBase = WIDGET_BASE(detectorBankBase, /FRAME, /COLUMN, $
+        YOFFSET=detectorBankLabelYSize/2, YPAD=10, XPAD=10)
+  
+  detectorBankRow = WIDGET_BASE(detectorBankPrettyBase, /ROW)
+  lbankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE="", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
+  ubankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE=" --> ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)  
+  
+  normBase = WIDGET_BASE(reductionTabRow2)
+  normLabel = WIDGET_LABEL(normBase, VALUE=' Normalisation ', XOFFSET=5)
+  normLabelGeometry = WIDGET_INFO(normLabel, /GEOMETRY)
+  normLabelGeometryYSize = normLabelGeometry.ysize
+  normPrettyBase = WIDGET_BASE(normBase, /FRAME, COLUMN=2, $
+        YOFFSET=normLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  
+  normOptionsBase = WIDGET_BASE(normPrettyBase, /NONEXCLUSIVE)
+  noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', UVALUE='DGS_NO-MON-NORM')
+  pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', UVALUE='DGS_PC-NORM', UNAME='DGS_PC-NORM')
+  monitorNumberID = CW_FIELD(normPrettyBase, TITLE="Monitor Number:", UVALUE="DGS_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
+  ; Also set the default monitor in the ReductionCmd Class
+  dgscmd->SetProperty, USmonPath=1
+  
+  ; Normalisation Files
+  
+  
+  ; Disable Proton Charge Norm until No-Monitor Norm is selected
+  WIDGET_CONTROL, pc_button, SENSITIVE=0
+    
+  ; ROI
+  roiBase = WIDGET_BASE(reductionTabBase)
+  roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
+  roiLabelGeometry = WIDGET_INFO(roiLabel, /GEOMETRY)
+  roiLabelYSize = roiLabelGeometry.ysize
+  roiPrettyBase = WIDGET_BASE(roiBase, /FRAME, /COLUMN, $
+        YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
+  
+  roiRow = WIDGET_BASE(roiPrettyBase, /ROW)
+  roiFileID = CW_FIELD(roiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
   
   rangesBase = WIDGET_BASE(reductionTabBase)
   rangesLabel = WIDGET_LABEL(rangesBase, value=' Data Ranges ', XOFFSET=5)
@@ -330,7 +398,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
         XSIZE=8, UVALUE="DGS_Q_STEP", /ALL_EVENTS) 
    
   
-  row3 = widget_base(reductionTabBase, /ROW)
+  row3 = widget_base(reductionTabBase, COLUMN=1)
   
   
   
@@ -340,7 +408,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   formatLabelGeometry = WIDGET_INFO(formatLabel, /GEOMETRY)
   formatLabelYSize = formatLabelGeometry.ysize
   ; Output Formats Selection Boxes
-  outputBase = Widget_Base(formatBase, COLUMN=1, Scr_XSize=225, /FRAME, $
+  outputBase = Widget_Base(formatBase, COLUMN=2,  /FRAME, $
     YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10, /NONEXCLUSIVE)
   speButton = Widget_Button(outputBase, Value='SPE/PHX', UVALUE='DGS_MAKE_SPE')
   qvectorButton = Widget_Button(outputBase, Value='Qvector', UVALUE='DGS_MAKE_QVECTOR')
@@ -370,6 +438,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
   Widget_Control, speButton, SET_BUTTON=1
+
   
   ; Cannot have the fixed grid without the Qvector
   WIDGET_CONTROL, fixedButton, SENSITIVE=0
