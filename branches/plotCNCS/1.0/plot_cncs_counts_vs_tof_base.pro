@@ -32,68 +32,69 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+FUNCTION retrieve_tof_array, NexusFileName
+  path    = '/entry/bank1/time_of_flight/'
+  fileID  = H5F_OPEN(NexusFileName)
+  fieldID = H5D_OPEN(fileID, path)
+  data    = H5D_READ(fieldID)
+  RETURN, data
+END
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
+;------------------------------------------------------------------------------
+PRO MakeCountsVsTofBase, wBase
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'Counts vs TOF of Selection',$
+    MAP          = 1,$
+    GROUP_LEADER = ourGroup,$
+    /COLUMN)
+    
+  draw = WIDGET_DRAW(wBase,$
+    SCR_XSIZE = 1500,$
+    SCR_YSIZE = 600,$
+    UNAME = 'counts_vs_tof_main_base')
+    
+  WIDGET_CONTROL, wBase, /REALIZE
+  
+END
 
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
+;------------------------------------------------------------------------------
+PRO Launch_counts_vs_tof_base, counts_vs_tof_array, nexus_file_name
 
-;Build all procedures
-cd, CurrentFolder
+  HELP, counts_vs_tof_array
+  
+  ;build gui
+  wBase = ''
+  MakeCountsVsTofBase, wBase
+  
+  global1 = PTR_NEW({ $
+    NexusFileName:       nexus_file_name,$
+    counts_vs_tof_array: counts_vs_tof_array,$
+    wbase:               wbase})
+    
+  WIDGET_CONTROL, wBase, SET_UVALUE = global1
+  XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+  
+  DEVICE, DECOMPOSED = 0
+  loadct, 5, /SILENT
+  
+  ;retrieve TOF array
+  tof_array = retrieve_tof_array(nexus_file_name)
+  
+  ;integrated counts_vs_tof for all pixels
+  counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
+  HELP, counts_vs_tof_integrated_1
+  counts_vs_tof_integrated_2 = TOTAL(counts_vs_tof_integrated_1,1)
+  HELP, counts_vs_tof_integrated_2
+  
+  id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
 
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  PLOT, tof_array, $
+  counts_vs_tof_integrated_2, $
+  XTITLE = 'TOF (microS)',$
+  YTITLE = 'Counts'
+  
+END

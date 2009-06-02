@@ -390,7 +390,50 @@ END
 PRO plot_counts_vs_tof_of_selection, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  nexus_file_name = (*global1).nexus_file_name
+  
+  x1 = (*global1).X1/4
+  x2 = (*global1).X2/4
+  y1 = FIX((*global1).Y1/4)
+  y2 = FIX((*global1).Y2/4)
+  
+  xmin = MIN([x1,x2],MAX=xmax)
+  ymin = MIN([y1,y2],MAX=ymax)
+  
+  img     = (*(*global1).img)
+  Xfactor = (*global1).Xfactor
+  Yfactor = (*global1).Yfactor
+  Xcoeff  = (*global1).Xcoeff
+  Ycoeff  = (*global1).Ycoeff
+  off     = (*global1).off
+  xoff    = (*global1).xoff
 
+  t_img = TRANSPOSE(img)
+  N_tof = LONG((size(t_img))(3))
+  ysize = (size(t_img))(2)
+  
+  ;rebin big array
+  xsize       = 8L
+  xsize_space = 1L
+  xsize_total = xsize * 52L + xsize_space * 51L
+  big_array = LONARR(xsize_total, ysize, N_tof)
+
+  ;put left part in big array
+  FOR i=0L,(36L-1) DO BEGIN
+    bank = t_img[i*8:(i+1)*8L-1,*,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*,*] = bank
+  ENDFOR
+  ;put right part in big array
+  FOR i=38L,(52L-2L) DO BEGIN
+    bank = t_img[(i-2L)*8L:(i-1L)*8L-1,*,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*,*] = bank
+  ENDFOR
+  
+  counts_vs_tof = big_array[xmin:xmax,ymin:ymax,*]
+  help, counts_vs_tof
+  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name
+   
 
 END
 
@@ -412,24 +455,18 @@ PRO plotGridMainPlot, global1
   ;##########################################
   ;;plot grid of bottom bank
   color  = 100
-  for i=0,(52-1) do begin
+  FOR i=0,(52-1) DO BEGIN
     xmin = i*(Xcoeff)+i*off+xoff-i
     xmax = (i+1)*(Xcoeff)+i*off+xoff-i
     ymin = yoff
     ymax = yoff+Ycoeff
     PLOTS, [xmin, xmin, xmax, xmax, xmin],$
-    [ymin,ymax, ymax, ymin, ymin],$
-    /DEVICE,$
-    LINESTYLE = 0,$
-    COLOR =color
-    
-;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color
-;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+yoff, /device, color=color, /continue
-;    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+yoff, /device, color=color, /continue
-;    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, yoff       , /device, color=color, /continue
-;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color, /continue
-  endfor
-    
+      [ymin,ymax, ymax, ymin, ymin],$
+      /DEVICE,$
+      LINESTYLE = 0,$
+      COLOR =color
+  ENDFOR
+  
 END
 
 ;==============================================================================
@@ -819,6 +856,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y1:                    0L,$
     X2:                    0L,$
     Y2:                    0L,$
+    nexus_file_name:       NexusFileName,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
