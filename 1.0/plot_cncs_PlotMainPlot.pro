@@ -426,8 +426,19 @@ PRO plotDASviewFullInstrument, global1
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
+  ;display min and max in cw_fields
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+  WIDGET_CONTROL, id, SET_VALUE=MIN
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+  WIDGET_CONTROL, id, SET_VALUE=MAX
+  
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
+  
+    ;remove_me
+  big_array_rebin[0:3,0:1] = 1500
+  
+  
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   (*(*global1).big_array_rebin) = big_array_rebin
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
@@ -472,7 +483,7 @@ PRO replot_main_plot_with_scale, Event
   ENDIF
   
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
-  
+    
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
