@@ -93,15 +93,16 @@ WSET, id_value
 id = widget_info(wBase,find_by_uname='tof_plot_base')
 title = 'Counts vs TOF - '
 title += '(Bank:' + strcompress(bank,/remove_all)
+real_pixelID = pixelID + 1024L * (FIX(bank)-1)
 IF ((size(pixelID))(1) EQ 1) THEN BEGIN
     title += ' ,X:' + strcompress(xRight,/remove_all)
     title += ' ,Y:' + strcompress(yRight,/remove_all)
-    title += ' ,PixelID:' + strcompress(pixelID[0],/remove_all)
+    title += ' ,PixelID:' + strcompress(real_pixelID[0],/remove_all)
 ENDIF ELSE BEGIN
     nbr = (size(pixelID))(1)
-    title += ' ,Xrange:'+strcompress(xLeft,/remove_all)
+    title += ' ,Tube:'+strcompress(xLeft,/remove_all)
     title += '->'+strcompress(xRight,/remove_all)
-    title += ' ,Yrange:'+strcompress(yLeft,/remove_all)
+    title += ' ,Row:'+strcompress(yLeft,/remove_all)
     title += '->'+strcompress(yRight,/remove_all)
     title += ' , Number of Pixel selected:'+strcompress(nbr,/remove_all)
 ENDELSE
@@ -113,7 +114,7 @@ tof = (size(img))(1)
 (*global3).tof = tof
 
 tof_array = REFORM(img,tof,400L*128L)
-IvsTOF = tof_array(*,pixelID)
+IvsTOF = tof_array(*,real_pixelID)
 sz = (size(IvsTOF))(0)
 IF (sz EQ 2) THEN BEGIN
     IvsTOF = total(IvsTOF,2)
