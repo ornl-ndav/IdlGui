@@ -353,6 +353,7 @@ PRO MakeGuiMainPLot_Event, event
       IF (Event.type EQ 1 AND $
         (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
         (*global1).left_pressed = 0
+        plot_counts_vs_tof_of_selection, Event
       ENDIF
       
       IF (Event.type EQ 2 AND $
@@ -386,6 +387,14 @@ PRO MakeGuiMainPLot_Event, event
 END
 
 ;==============================================================================
+PRO plot_counts_vs_tof_of_selection, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+
+
+END
+
+;==============================================================================
 PRO plotGridMainPlot, global1
 
   ;retrieve values from inside structure
@@ -404,13 +413,23 @@ PRO plotGridMainPlot, global1
   ;;plot grid of bottom bank
   color  = 100
   for i=0,(52-1) do begin
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+yoff, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+yoff, /device, color=color, /continue
-    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, yoff       , /device, color=color, /continue
-    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color, /continue
+    xmin = i*(Xcoeff)+i*off+xoff-i
+    xmax = (i+1)*(Xcoeff)+i*off+xoff-i
+    ymin = yoff
+    ymax = yoff+Ycoeff
+    PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin,ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 0,$
+    COLOR =color
+    
+;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color
+;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , Ycoeff+yoff, /device, color=color, /continue
+;    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, Ycoeff+yoff, /device, color=color, /continue
+;    PLOTS, (i+1)*(Xcoeff)+i*off+xoff-i, yoff       , /device, color=color, /continue
+;    PLOTS, i*(Xcoeff)+i*off+xoff-i    , yoff       , /device, color=color, /continue
   endfor
-  
+    
 END
 
 ;==============================================================================
