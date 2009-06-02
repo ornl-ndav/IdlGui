@@ -143,8 +143,8 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'RESET SCALE',$
     UNAME = 'reset_scale')
     
-  space = WIDGET_LABEL(row1a,$
-    VALUE = '    ')
+  space = WIDGET_LABEL(row1,$
+    VALUE = '  ')
     
   row1b = WIDGET_BASE(row1,$ ;-----------------------------------------------
     /ROW,$
@@ -193,6 +193,28 @@ PRO MakeGuiMainPlot, wBase
     SCR_XSIZE = 90)
     degrees = WIDGET_LABEL(row1b,$
     VALUE = 'degrees')
+    
+  ;space
+  space = WIDGET_LABEL(row1,$
+  VALUE = ' ')
+  
+  ;lin/log cw_bgroup
+  row1c = WIDGET_BASE(row1,$
+  /ROW,$
+  /EXCLUSIVE,$
+  FRAME = 1)
+  
+  lin = WIDGET_BUTTON(row1c,$
+  VALUE = 'Linear',$
+  UNAME = 'main_plot_linear_plot',$
+  /NO_RELEASE)
+  
+  log = WIDGET_BUTTON(row1c,$
+  VALUE = 'Logarithmic',$
+  UNAME = 'main_plot_log_plot',$
+  /NO_RELEASE)    
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON  
     
   row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
     /ROW)

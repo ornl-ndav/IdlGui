@@ -32,7 +32,9 @@
 ;
 ;==============================================================================
 
-PRO plot_scale, global1, min, max 
+PRO plot_scale, global1, min, max, lin_status=lin_status
+
+  IF (N_ELEMENTS(lin_status) EQ 0) THEN lin_status = 1
 
   wbase   = (*global1).wBase
 
@@ -42,19 +44,22 @@ PRO plot_scale, global1, min, max
   WSET, id_value
   ERASE
 
-;  IF (isLogZaxisSelected(Event)) THEN BEGIN
-;    divisions = 10
-;    perso_format = '(e8.1)'
-;    range  = FLOAT([master_min,master_max])
-;    colorbar, $
-;      NCOLORS      = 255, $
-;      POSITION     = [0.75,0.01,0.95,0.99], $
-;      RANGE        = range,$
-;      DIVISIONS    = divisions,$
-;      PERSO_FORMAT = perso_format,$
-;      YLOG = 1,$
-;      /VERTICAL
-;  ENDIF ELSE BEGIN
+  IF (lin_status EQ 0) THEN BEGIN
+
+    divisions = 10
+    perso_format = '(e8.1)'
+    range  = FLOAT([min,max])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      YLOG = 1,$
+      /VERTICAL
+
+  ENDIF ELSE BEGIN
+
     divisions = 10
     perso_format = '(e8.1)'
     range = [min,max]
@@ -65,6 +70,7 @@ PRO plot_scale, global1, min, max
       DIVISIONS    = divisions,$
       PERSO_FORMAT = perso_format,$
       /VERTICAL
-;  ENDELSE
+
+  ENDELSE
 
 END

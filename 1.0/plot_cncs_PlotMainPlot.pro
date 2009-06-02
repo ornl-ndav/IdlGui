@@ -120,6 +120,16 @@ PRO MakeGuiMainPLot_Event, event
       replot_main_plot, Event
     END
     
+    ;linear plot
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
+      replot_main_plot_with_scale, Event
+    END
+    
+    ;log plot
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_log_plot'): BEGIN
+      replot_main_plot_with_scale, Event
+    END
+    
     ;selection of mbar button - DAS view
     WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
       WIDGET_CONTROL, /HOURGLASS
@@ -437,8 +447,8 @@ PRO plotDASviewFullInstrument, global1
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   
-    ;remove_me
-  big_array_rebin[0:3,0:1] = 1500
+  ;remove_me
+;  big_array_rebin[0:3,0:1] = 1500
   
   yoff = 0
   TVSCL, big_array_rebin, /DEVICE, xoff, yoff
@@ -464,6 +474,9 @@ PRO replot_main_plot_with_scale, Event
   wbase   = (*global1).wBase
   big_array_rebin = (*(*global1).big_array_rebin)
   
+  ;check if we want lin or log
+  lin_status = isMainPlotLin(Event)
+  
   ;select plot area
   id = WIDGET_INFO(wBase,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -485,14 +498,29 @@ PRO replot_main_plot_with_scale, Event
   ENDIF
   
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
+  
+  IF (lin_status EQ 0) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(big_array_rebin EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      big_array_rebin[index] = !VALUES.D_NAN
+      big_array_rebin = ALOG10(big_array_rebin)
+      big_array_rebin = BYTSCL(big_array_rebin,/NAN)
+    ENDIF
     
+  ENDIF
+  
+;  (*(*global1).big_array_rebin_rescale) = big_array_rebin
+  
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
   plotGridMainPlot, global1
   
   ;plot scale
-  plot_scale, global1, min, max
+  plot_scale, global1, min, max, lin_status=lin_status
   
 END
 
@@ -507,6 +535,9 @@ PRO replot_main_plot, Event
   wbase   = (*global1).wBase
   big_array_rebin = (*(*global1).big_array_rebin)
   
+  ;check if we want lin or log
+  lin_status = isMainPlotLin(Event)
+  
   ;select plot area
   id = WIDGET_INFO(wBase,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -518,13 +549,26 @@ PRO replot_main_plot, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
+  IF (lin_status EQ 0) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(big_array_rebin EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      big_array_rebin[index] = !VALUES.D_NAN
+      big_array_rebin = ALOG10(big_array_rebin)
+      big_array_rebin = BYTSCL(big_array_rebin,/NAN)
+    ENDIF
+    
+  ENDIF
+  
   TVSCL, big_array_rebin, /DEVICE, xoff, off
   
   ;plot grid
   plotGridMainPlot, global1
   
   ;plot scale
-  plot_scale, global1, min, max
+  plot_scale, global1, min, max, lin_status=lin_status
   
 END
 
