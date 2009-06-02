@@ -256,7 +256,8 @@ FUNCTION getRow, Event, Y
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   Yfactor = (*global1).Yfactor
   off     = (*global1).off
-  row = (Y- off)/2
+  off = 6
+  row = (Y- off) / 2 
   IF (row LT 128 AND $
   row GE 0) THEN RETURN, row
   RETURN, -1

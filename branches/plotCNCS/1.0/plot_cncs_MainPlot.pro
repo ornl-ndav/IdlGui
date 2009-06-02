@@ -36,6 +36,9 @@ PRO MainPlotInteraction, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   wbase   = (*global1).wBase
   TubeAngle = (*global1).TubeAngle
+  big_array_rebin = (*(*global1).big_array_rebin_rescale)
+  off   = (*global1).off
+  xoff  = (*global1).xoff
   
   ;retrieve bank number
   bank_tube   = getBankTube(Event)
@@ -95,7 +98,29 @@ PRO MainPlotInteraction, Event
   putTextFieldValue, Event, 'pixelid_value', value
   
   ;display counts
-  
+  x = Event.X
+  y = Event.Y
+  error1 = 0
+ ; CATCH, error1
+  IF (error1 NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    value = 'N/A'
+  ENDIF ELSE BEGIN
+    IF (real_tube eq -8L OR $
+      row_number EQ '') THEN BEGIN
+      value = 'N/A'
+    ENDIF ELSE BEGIN
+      x = x - xoff
+      ;y = y - off
+            y = y - 6
+      print, '(off: ' + strcompress(off) + ') x: ' + strcompress(x) + ', y: ' + strcompress(y)
+      print
+      value = STRCOMPRESS(big_array_rebin[x,y],/REMOVE_ALL)
+    ENDELSE
+  ENDELSE
+  putTextFieldValue, Event, 'counts_value', value
+ 
+ 
   
 END
 
