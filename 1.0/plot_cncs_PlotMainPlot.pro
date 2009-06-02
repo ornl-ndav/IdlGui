@@ -135,6 +135,11 @@ PRO MakeGuiMainPLot_Event, event
       plot_selection_box, Event
     END
     
+    ;counts vs tof of full detector
+    WIDGET_INFO(event.top, FIND_BY_UNAME='counts_vs_tof_full_detector'): BEGIN
+      plot_counts_vs_tof_of_full_detector, Event
+    END
+    
     ;    ;selection of mbar button - DAS view
     ;    WIDGET_INFO(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
     ;      WIDGET_CONTROL, /HOURGLASS
@@ -408,17 +413,16 @@ PRO plot_counts_vs_tof_of_selection, Event
   Ycoeff  = (*global1).Ycoeff
   off     = (*global1).off
   xoff    = (*global1).xoff
-
-  t_img = TRANSPOSE(img)
-  N_tof = LONG((size(t_img))(3))
-  ysize = (size(t_img))(2)
   
-  ;rebin big array
+  t_img = TRANSPOSE(img)
+  N_tof = LONG((SIZE(t_img))(3))
+  ysize = (SIZE(t_img))(2)
+  
   xsize       = 8L
   xsize_space = 1L
   xsize_total = xsize * 52L + xsize_space * 51L
   big_array = LONARR(xsize_total, ysize, N_tof)
-
+  
   ;put left part in big array
   FOR i=0L,(36L-1) DO BEGIN
     bank = t_img[i*8:(i+1)*8L-1,*,*]
@@ -431,10 +435,34 @@ PRO plot_counts_vs_tof_of_selection, Event
   ENDFOR
   
   counts_vs_tof = big_array[xmin:xmax,ymin:ymax,*]
-  help, counts_vs_tof
-  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name
-   
+  title = 'Counts vs TOF of selection'
+  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name, title=title
+  
+END
 
+;==============================================================================
+PRO plot_counts_vs_tof_of_full_detector, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  nexus_file_name = (*global1).nexus_file_name
+  
+  img     = (*(*global1).img)
+  Xfactor = (*global1).Xfactor
+  Yfactor = (*global1).Yfactor
+  Xcoeff  = (*global1).Xcoeff
+  Ycoeff  = (*global1).Ycoeff
+  off     = (*global1).off
+  xoff    = (*global1).xoff
+  
+  t_img = TRANSPOSE(img)
+  N_tof = LONG((SIZE(t_img))(3))
+  ysize = (SIZE(t_img))(2)
+  
+  counts_vs_tof = t_img
+  title = 'Counts vs TOF of Full Detector'
+  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name, title=title
+  
 END
 
 ;==============================================================================

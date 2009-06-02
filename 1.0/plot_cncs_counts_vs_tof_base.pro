@@ -45,25 +45,24 @@ PRO MakeCountsVsTofBase, wBase
 
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Counts vs TOF of Selection',$
-    MAP          = 1,$
+  wBase = WIDGET_BASE(MAP = 1,$
     GROUP_LEADER = ourGroup,$
+    UNAME = 'counts_vs_tof_main_base',$
     /COLUMN)
     
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
     SCR_YSIZE = 600,$
-    UNAME = 'counts_vs_tof_main_base')
+    UNAME = 'counts_vs_tof_main_base_draw')
     
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
 
 ;------------------------------------------------------------------------------
-PRO Launch_counts_vs_tof_base, counts_vs_tof_array, nexus_file_name
+PRO Launch_counts_vs_tof_base, counts_vs_tof_array, nexus_file_name, $
+title=title
 
-  HELP, counts_vs_tof_array
-  
   ;build gui
   wBase = ''
   MakeCountsVsTofBase, wBase
@@ -84,11 +83,19 @@ PRO Launch_counts_vs_tof_base, counts_vs_tof_array, nexus_file_name
   
   ;integrated counts_vs_tof for all pixels
   counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
-  HELP, counts_vs_tof_integrated_1
   counts_vs_tof_integrated_2 = TOTAL(counts_vs_tof_integrated_1,1)
-  HELP, counts_vs_tof_integrated_2
+
+  ;determine position of maximum
+  max = MAX(counts_vs_tof_integrated_2)
+  max_index = WHERE(counts_vs_tof_integrated_2 EQ max)
   
-  id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base')
+  title += ' (TOF of maximum intensity is ' + $
+  STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+  
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='counts_vs_tof_main_base')
+  WIDGET_CONTROL, id, BASE_SET_TITLE=title
+  
+  id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
 

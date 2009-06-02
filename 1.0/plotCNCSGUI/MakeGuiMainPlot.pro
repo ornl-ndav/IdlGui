@@ -100,7 +100,7 @@ PRO MakeGuiMainPlot, wBase
   ;****************************************************************************
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE        = MainPlotBase.title,$
+  wBase = WIDGET_BASE(TITLE = MainPlotBase.title,$
     UNAME        = MainPlotBase.uname,$
     XOFFSET      = MainPlotBase.size[0],$
     YOFFSET      = MainPlotBase.size[1],$
@@ -194,15 +194,22 @@ PRO MakeGuiMainPlot, wBase
   degrees = WIDGET_LABEL(row1b,$
     VALUE = 'degrees')
     
+  ;produce counts vs tof of full detector
+  button = WIDGET_BUTTON(row1,$
+  VALUE = 'Counts vs TOF of full detector',$
+  UNAME = 'counts_vs_tof_full_detector',$
+  /NO_RELEASE)
+  
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = ' ')
+    VALUE = '                                                              ' + $
+     '                      ')
     
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
     /ROW,$
     /EXCLUSIVE,$
-    FRAME = 1)
+    FRAME = 0)
     
   lin = WIDGET_BUTTON(row1c,$
     VALUE = 'Linear',$
@@ -236,7 +243,7 @@ PRO MakeGuiMainPlot, wBase
   message += ' - RIGHT click to zoom in into selected bank'
   row3 = WIDGET_LABEL(wBase,$ ;explain how the selection works
     VALUE = message)
-    
+      
   ;plot_selection_button = WIDGET_BUTTON(MBAR,$
   ;                                      UNAME = PSbutton.uname,$
   ;                                      VALUE = PSbutton.value,$
