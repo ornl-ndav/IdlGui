@@ -169,7 +169,8 @@ FUNCTION getBankTubeMainPlot, X
   Xwidth = 32
   FOR i=0,35 DO BEGIN
     xoff = i*36
-    xmin = 10 + xoff
+;    xmin = 10 + xoff
+   xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
       bank = (i+1)
@@ -181,7 +182,8 @@ FUNCTION getBankTubeMainPlot, X
   
   FOR i=38,51 DO BEGIN
     xoff = i*36
-    xmin = 10 + xoff
+;    xmin = 10 + xoff
+xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
       bank = (i-1)
@@ -255,9 +257,7 @@ END
 FUNCTION getRow, Event, Y
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   Yfactor = (*global1).Yfactor
-  off     = (*global1).off
-  off = 6
-  row = (Y- off) / 2 
+  row = Y/4 
   IF (row LT 128 AND $
   row GE 0) THEN RETURN, row
   RETURN, -1

@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO MakeGuiBankPlot_Event, event
 
 WIDGET_CONTROL, event.top, GET_UVALUE=global2
@@ -94,7 +94,7 @@ bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
 tvscl, bank_rebin, /device
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO plotTofView, img, i, Xfactor, Yfactor, bank_congrid
 ;find out the range of non-zero values using the first non-empty bank
 ;bank_index = 49
@@ -135,7 +135,7 @@ bank_congrid = congrid(bank_smooth,8*Xfactor,dim_new*128)
 tvscl, bank_congrid, /device
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO PlotBank, img, i, bankName, bDasView, TubeAngle
 
 Xfactor = 10

@@ -93,7 +93,8 @@ PRO MainPlotInteraction, Event
     value = 'N/A'
   ENDIF ELSE BEGIN
     row = FIX(row_number)
-    value = STRCOMPRESS(LONG(DOUBLE(real_tube) * 128L + DOUBLE(row)),/REMOVE_ALL)
+    value = STRCOMPRESS(LONG(DOUBLE(real_tube) * 128L + $
+    DOUBLE(row)),/REMOVE_ALL)
   ENDELSE
   putTextFieldValue, Event, 'pixelid_value', value
   
@@ -101,7 +102,7 @@ PRO MainPlotInteraction, Event
   x = Event.X
   y = Event.Y
   error1 = 0
- ; CATCH, error1
+ CATCH, error1
   IF (error1 NE 0) THEN BEGIN
     CATCH,/CANCEL
     value = 'N/A'
@@ -110,11 +111,7 @@ PRO MainPlotInteraction, Event
       row_number EQ '') THEN BEGIN
       value = 'N/A'
     ENDIF ELSE BEGIN
-      x = x - xoff
-      ;y = y - off
-            y = y - 6
-      print, '(off: ' + strcompress(off) + ') x: ' + strcompress(x) + ', y: ' + strcompress(y)
-      print
+      x = x
       value = STRCOMPRESS(big_array_rebin[x,y],/REMOVE_ALL)
     ENDELSE
   ENDELSE

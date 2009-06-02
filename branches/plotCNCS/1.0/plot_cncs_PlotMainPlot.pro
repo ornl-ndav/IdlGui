@@ -327,7 +327,6 @@ PRO MakeGuiMainPLot_Event, event
     
     ;Main plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
-      print, Event.x
       MainPlotInteraction, Event
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
         WIDGET_CONTROL,/HOURGLASS
