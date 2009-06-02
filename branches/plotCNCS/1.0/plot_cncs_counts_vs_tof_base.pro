@@ -60,9 +60,11 @@ PRO MakeCountsVsTofBase, wBase
 END
 
 ;------------------------------------------------------------------------------
-PRO Launch_counts_vs_tof_base, counts_vs_tof_array, nexus_file_name, $
-title=title
-
+PRO Launch_counts_vs_tof_base, $
+    counts_vs_tof_array, $
+    nexus_file_name, $
+    title=title
+    
   ;build gui
   wBase = ''
   MakeCountsVsTofBase, wBase
@@ -79,18 +81,25 @@ title=title
   loadct, 5, /SILENT
   
   ;retrieve TOF array
-  tof_array = retrieve_tof_array(nexus_file_name)
+  IF (nexus_file_name NE '') THEN BEGIN
+    tof_array = retrieve_tof_array(nexus_file_name)
+  ENDIF
   
   ;integrated counts_vs_tof for all pixels
   counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
   counts_vs_tof_integrated_2 = TOTAL(counts_vs_tof_integrated_1,1)
-
+  
   ;determine position of maximum
   max = MAX(counts_vs_tof_integrated_2)
-  max_index = WHERE(counts_vs_tof_integrated_2 EQ max)
+  max_index = WHERE(counts_vs_tof_integrated_2 EQ MAX)
   
-  title += ' (TOF of maximum intensity is ' + $
-  STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+  IF (nexus_file_name NE '') THEN BEGIN
+    title += ' (TOF of maximum intensity is ' + $
+      STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+  ENDIF ELSE BEGIN
+    title += ' (TOF of maximum intensity is at binning #' + $
+      STRCOMPRESS(max_index[0],/REMOVE_ALL) + ')'
+  ENDELSE
   
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='counts_vs_tof_main_base')
   WIDGET_CONTROL, id, BASE_SET_TITLE=title
@@ -98,10 +107,15 @@ title=title
   id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-
-  PLOT, tof_array, $
-  counts_vs_tof_integrated_2, $
-  XTITLE = 'TOF (microS)',$
-  YTITLE = 'Counts'
   
+  IF (nexus_file_name NE '') THEN BEGIN
+  PLOT, tof_array, $
+    counts_vs_tof_integrated_2, $
+    XTITLE = 'TOF (microS)',$
+    YTITLE = 'Counts'
+    ENDIF ELSE BEGIN
+  PLOT, counts_vs_tof_integrated_2, $
+    XTITLE = 'Bins #',$
+    YTITLE = 'Counts'
+    ENDELSE
 END
