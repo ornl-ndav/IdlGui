@@ -199,7 +199,7 @@ PRO MakeGuiMainPlot, wBase
   VALUE = 'Counts vs TOF of full detector',$
   UNAME = 'counts_vs_tof_full_detector',$
   /NO_RELEASE)
-  
+    
   ;space
   space = WIDGET_LABEL(row1,$
     VALUE = '                                                              ' + $
@@ -243,7 +243,24 @@ PRO MakeGuiMainPlot, wBase
   message += ' - RIGHT click to zoom in into selected bank'
   row3 = WIDGET_LABEL(wBase,$ ;explain how the selection works
     VALUE = message)
-      
+  
+  ;--------------------------------------------------------------------------
+    
+  row4 = WIDGET_BASE(wBase,$
+  /ROW)
+  
+  space = WIDGET_LABEL(row4,$
+  VALUE =  '   ')
+    
+    ;play/pause/next.... buttons
+  play_buttons = WIDGET_DRAW(row4,$
+  UNAME = 'play_buttons',$
+  SCR_XSIZE = 205,$
+  FRAME = 1,$
+  /BUTTON_EVENTS,$
+  /MOTION_EVENTS,$
+  SCR_YSIZE = 129)  
+  
   ;plot_selection_button = WIDGET_BUTTON(MBAR,$
   ;                                      UNAME = PSbutton.uname,$
   ;                                      VALUE = PSbutton.value,$
