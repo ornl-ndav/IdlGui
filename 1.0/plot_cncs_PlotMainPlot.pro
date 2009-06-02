@@ -812,6 +812,11 @@ PRO PlotMainPlot, histo_mapped_file
     big_array_rebin:      PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
+    nexus_file_name:      '',$
+    X1:                    0L,$
+    Y1:                    0L,$
+    X2:                    0L,$
+    Y2:                    0L,$
     left_pressed:         0,$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
