@@ -61,11 +61,15 @@ putTextInTextField, Event, 'y_input', BankY
 ;get pixelID
 BankID = (*global2).bankName
 PixelID = getPixelID(BankID, BankX, BankY)
-putTextInTextField, Event, 'pixelid_input', PixelID
+
+print, 'PixelID: ' + strcompress(PixelID) ;remove_me
 
 ;get number of counts
 tvimg = (*(*global2).tvimg)
 real_pixelID = DOUBLE(PixelID) + (DOUBLE(BankID)-1) * 1024L
+print, 'real_pixelID: ' + strcompress(real_pixelID) ;remove_me
+putTextInTextField, Event, 'pixelid_input', $
+STRCOMPRESS(real_pixelID,/REMOVE_ALL)
 putTextInTextField, Event, 'counts', STRCOMPRESS(tvimg[real_pixelID],/REMOVE_ALL)
 
 ;display tube angle

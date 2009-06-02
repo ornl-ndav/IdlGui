@@ -147,15 +147,15 @@ END
 FUNCTION getColumnMainPlot, X
   Xwidth = 32
   FOR i=0,35 DO BEGIN
-    xoff = i*37
-    xmin = 10 + xoff
+    xoff = i*36
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i+1)
   ENDFOR
   
   FOR i=38,51 DO BEGIN
-    xoff = i*37
-    xmin = 10 + xoff
+    xoff = i*36
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i-1)
   ENDFOR
@@ -202,8 +202,8 @@ END
 FUNCTION getColumnMainPlotIndex, X
   Xwidth = 32
   FOR i=0,50 DO BEGIN
-    xoff = i*37
-    xmin = 10 + xoff
+    xoff = i*36
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i)
   ENDFOR
@@ -378,14 +378,9 @@ END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBankIndex, Event, X, Y
-  ;retrieve bank number
-  bank_number = getBank(Event)
   ColumnIndex = getColumnMainPlotIndex(X)
-  ;RowIndex    = getRowMainPlotIndex(Y)
   IF (ColumnIndex EQ -1) THEN RETURN, -1
-  ;IF (RowIndex EQ -1) THEN RETURN, -1
   index = ColumnIndex
-  ;Special case for 32A and 32B
   RETURN, index
 END
 
@@ -428,7 +423,7 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get pixelID using bank name (M12), tube (X) and row (Y) position
 FUNCTION getPixelID, BankID, X, Y
-  pxOffset = LONG(Y) + 128*LONG(X)
+  pxOffset = LONG(Y) + 128L*LONG(X)
   RETURN, pxOffset
 END
 

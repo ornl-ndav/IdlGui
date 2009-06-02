@@ -77,7 +77,7 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
     TITLE = 'PixelID:',$
     /ALL_EVENTS,$
     /ROW,$
-    /INTEGER)
+    /LONG)
     
   ;row4, counts ----------------------------------
   row4 = WIDGET_BASE(wBase,/ROW)
