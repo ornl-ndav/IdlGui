@@ -55,13 +55,14 @@ CASE event.id OF
             (*global2).xLeftCorner = Event.x/(*global2).Xfactor
             (*global2).yLeftCorner = Event.y/(*global2).Yfactor
         ENDIF
-        IF (Event.release EQ 1) THEN BEGIN ;mouse pressed
-            refreshBank, Event
-            plotSelection, Event 
+        IF (Event.release EQ 1) THEN BEGIN ;mouse released
+            ;refreshBank, Event
+            ;plotSelection, Event 
             takeScreenshot, Event ;that will be dispayed on the right of the
                                 ;IvsTOF plot
             xRightCorner = Event.x/(*global2).Xfactor
             yRightCorner = Event.y/(*global2).Yfactor
+
             pixelID = getPixelIdRangeFromBankBase((*global2).bankName,$
                                                   (*global2).xLeftCorner,$
                                                   (*global2).yLeftCorner,$
@@ -179,16 +180,17 @@ tvimg = total(img,1)
 tvimg = transpose(tvimg)
 (*(*global2).tvimg_transpose) = tvimg
 
-IF (bDasView EQ 0) THEN BEGIN 
+;IF (bDasView EQ 0) THEN BEGIN 
     plotDasView, tvimg, i, Xfactor, Yfactor, bank_rebin
     (*(*global2).bank_rebin) = bank_rebin
-ENDIF ELSE BEGIN
-    plotTofView, img, i, Xfactor, Yfactor, bank_congrid
-    (*(*global2).bank_congrid) = bank_congrid
-ENDELSE
+;ENDIF ELSE BEGIN
+;    plotTofView, img, i, Xfactor, Yfactor, bank_congrid
+;    (*(*global2).bank_congrid) = bank_congrid
+;ENDELSE
 
 ;display bank number in title bar
 id = widget_info(wBase,find_by_uname='bank_plot_base')
-widget_control, id, base_set_title= strcompress(bankName)
+widget_control, id, base_set_title= 'Bank #: ' + $
+strcompress(bankName,/REMOVE_ALL)
 
 END

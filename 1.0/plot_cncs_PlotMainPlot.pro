@@ -379,6 +379,7 @@ PRO MakeGuiMainPLot_Event, event
         X = Event.X
         Y = Event.Y
         index = getBankIndex(Event, X, Y)
+        print, index
         IF (index NE -1) THEN BEGIN
           bankName = getBank(Event)
           PlotBank, (*(*global1).img), $ ;launch the bank view
