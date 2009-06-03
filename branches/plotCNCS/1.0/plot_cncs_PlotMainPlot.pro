@@ -403,70 +403,76 @@ PRO MakeGuiMainPLot_Event, event
         y LE 117) THEN BEGIN
         status_over = 1
         IF (event.press EQ 1) THEN BEGIN
-        play_buttons_activation, event, activate_button='play'
+          play_buttons_activation, event, activate_button='play'
+        ENDIF
       ENDIF
-    ENDIF
-    
-    ;next button
-    IF (x GE 147 AND $
-      x LE 191 AND $
-      y GE 56 AND $
-      y LE 92) THEN BEGIN
-      status_over = 1
-      IF (event.press EQ 1) THEN BEGIN
-        play_buttons_activation, event, activate_button='next'
+      
+      ;next button
+      IF (x GE 147 AND $
+        x LE 191 AND $
+        y GE 56 AND $
+        y LE 92) THEN BEGIN
+        status_over = 1
+        IF (event.press EQ 1) THEN BEGIN
+          play_buttons_activation, event, activate_button='next'
+        ENDIF
       ENDIF
-    ENDIF
-    
-    ;stop button
-    IF (x GE 117 AND $
-      x LE 147 AND $
-      y GE 17 AND $
-      y LE 45) THEN BEGIN
-      status_over = 1
-      IF (event.press EQ 1) THEN BEGIN
-      play_buttons_activation, event, activate_button='stop'
+      
+      ;stop button
+      IF (x GE 117 AND $
+        x LE 147 AND $
+        y GE 17 AND $
+        y LE 45) THEN BEGIN
+        status_over = 1
+        IF (event.press EQ 1) THEN BEGIN
+          play_buttons_activation, event, activate_button='stop'
+        ENDIF
       ENDIF
-    ENDIF
-    
-    ;pause button
-    IF (x GE 55 AND $
-      x LE 84 AND $
-      y GE 18 AND $
-      y LE 44) THEN BEGIN
-      status_over = 1
-      IF (event.press EQ 1) THEN BEGIN
-      play_buttons_activation, event, activate_button='pause'
+      
+      ;pause button
+      IF (x GE 55 AND $
+        x LE 84 AND $
+        y GE 18 AND $
+        y LE 44) THEN BEGIN
+        status_over = 1
+        IF (event.press EQ 1) THEN BEGIN
+          play_buttons_activation, event, activate_button='pause'
+        ENDIF
       ENDIF
-    ENDIF
-    
-    ;previous button
-    IF (x GE 11 AND $
-      x LE 54 AND $
-      y GE 50 AND $
-      y LE 89) THEN BEGIN
-      status_over = 1
-      IF (event.press EQ 1) THEN BEGIN
-      play_buttons_activation, event, activate_button='previous'
+      
+      ;previous button
+      IF (x GE 11 AND $
+        x LE 54 AND $
+        y GE 50 AND $
+        y LE 89) THEN BEGIN
+        status_over = 1
+        IF (event.press EQ 1) THEN BEGIN
+          play_buttons_activation, event, activate_button='previous'
+        ENDIF
       ENDIF
-    ENDIF
-    
-    IF (status_over) THEN BEGIN ;enter
-      standard = 58
-    ENDIF ELSE BEGIN
-      standard = 31
-    ENDELSE
-    DEVICE, CURSOR_STANDARD=standard
-    
+      
+      IF (status_over) THEN BEGIN ;enter
+        standard = 58
+      ENDIF ELSE BEGIN
+        standard = 31
+      ENDELSE
+      DEVICE, CURSOR_STANDARD=standard
+      
     ;IF (status_over EQ 0) THEN BEGIN ;raw data
     ;  play_buttons_activation, event, activate_button='raw'
     ;ENDIF
+      
+    END
     
-  END
+    ;View full TOF axis
+    WIDGET_INFO(event.top, FIND_BY_UNAME='tof_preview'): BEGIN
+      preview_of_tof, Event
+    END
+    
+    
+    ELSE:
+  ENDCASE
   
-  ELSE:
-ENDCASE
-
 END
 
 ;==============================================================================
@@ -936,6 +942,13 @@ PRO PlotMainPlot, histo_mapped_file
   
   (*(*global1).img)= img
   
+  ;disable View full TOF axis
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='tof_preview')
+  WIDGET_CONTROL, id, SENSITIVE=0
+  ;disable row that display TOF min and max in play base
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_tof_row')
+  WIDGET_CONTROL, id, SENSITIVE=0
+  
   ;plot das view of full instrument
   plotDASviewFullInstrument, global1
   
@@ -967,6 +980,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y1:                    0L,$
     X2:                    0L,$
     Y2:                    0L,$
+    tof_array:             PTR_NEW(0L),$
     nexus_file_name:       NexusFileName,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
@@ -975,6 +989,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
+  (*(*global1).tof_array) = retrieve_tof_array(NexusFileName)
   
   file_ext = ' - File: ' + NexusFileName
   (*global1).main_plot_real_title += file_ext

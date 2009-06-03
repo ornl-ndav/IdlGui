@@ -272,6 +272,7 @@ PRO MakeGuiMainPlot, wBase
   /COLUMN)  
     
   row4b1a1 = WIDGET_BASE(row4b1a,$ ;-------------------------------------------
+  UNAME = 'play_tof_row',$
   /ROW)
     
   label = WIDGET_LABEL(row4b1a1,$
