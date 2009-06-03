@@ -125,6 +125,11 @@ PRO DGSreduction_TLB_Events, event
       ; TODO: Check filename exists before setting the property!
       dgscmd->SetProperty, ROIfile=myValue
     END
+    'DGS_MASK_FILENAME': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ; TODO: Check filename exists before setting the property!
+      dgscmd->SetProperty, MaskFile=myValue
+    END
     'DGS_MAKE_SPE': BEGIN
       dgscmd->SetProperty, SPE=event.SELECT
     END
@@ -210,6 +215,31 @@ PRO DGSreduction_TLB_Events, event
       ; Upstream Monitor Number (usualy 1)
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, USmonPath=STRCOMPRESS(myValue, /REMOVE_ALL)
+    END
+    'DGS_NORM': BEGIN
+      ; Norm Filename
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Normalisation=myValue      
+    END    
+    'DGS_EMPTYCAN': BEGIN
+      ; Empty Can Filename
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, EmptyCan=myValue      
+    END    
+    'DGS_BLACKCAN': BEGIN
+      ; Black Can Filename
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, BlackCan=myValue      
+    END    
+    'DGS_DARK': BEGIN
+      ; Dark Current Filename
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Dark=myValue      
+    END
+    'DGS_TIBCONST': BEGIN
+      ; Time Independent Background Constant
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, TIBconst=myValue
     END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -304,7 +334,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   tabID = WIDGET_TAB(tlb)
   
   ; Reduction Tab
-  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction', COLUMN=1)
+  reductionTabBase = WIDGET_BASE(tabID, Title='Reduction', COLUMN=2)
   
   reductionTabRow1 = WIDGET_BASE(reductionTabBase, /ROW)
   reductionTabRow2 = WIDGET_BASE(reductionTabBase, /ROW)
@@ -348,15 +378,53 @@ PRO DGSreduction, dgscmd, _Extra=extra
   normPrettyBase = WIDGET_BASE(normBase, /FRAME, COLUMN=2, $
         YOFFSET=normLabelGeometryYSize/2, XPAD=10, YPAD=10)
   
-  normOptionsBase = WIDGET_BASE(normPrettyBase, /NONEXCLUSIVE)
+  normOptionsBaseColumn1 = WIDGET_BASE(normPrettyBase, /COLUMN)
+
+  normOptionsBaseColumn2 = WIDGET_BASE(normPrettyBase, /COLUMN)
+  
+  
+  normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
   noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', UVALUE='DGS_NO-MON-NORM')
   pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', UVALUE='DGS_PC-NORM', UNAME='DGS_PC-NORM')
-  monitorNumberID = CW_FIELD(normPrettyBase, TITLE="Monitor Number:", UVALUE="DGS_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
+  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGS_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
   dgscmd->SetProperty, USmonPath=1
   
   ; Normalisation Files
+  normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN)
+  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation:", UVALUE="DGS_NORM")
+  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can:", UVALUE="DGS_EMPTYCAN")
+  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can:", UVALUE="DGS_BLACKCAN")
+  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current:", UVALUE="DGS_DARK")
+
+  TIBconstID = CW_FIELD(normOptionsBaseColumn2, XSIZE=21, TITLE=" Time Independent Bkgrd:", UVALUE="DGS_TIBCONST", /ALL_EVENTS)
+
   
+  ; Monitor integration range
+  monitorRangeBase = WIDGET_BASE(normOptionsBaseColumn1, /ALIGN_BOTTOM)
+  monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE='Monitor Integration Range', XOFFSET=5)
+  monitorRangeBaseLabelGeometry = WIDGET_INFO(monitorRangeBaseLabel, /GEOMETRY)
+  monitorRangeBaseLabelGeometryYSize = monitorRangeBaseLabelGeometry.ysize
+  monitorRangePrettyBase = WIDGET_BASE(monitorRangeBase, /FRAME, /ROW, $
+      YOFFSET=monitorRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  
+  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGS_MON-INT-MIN")
+  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_MON-INT-MAX")
+  
+   ; Norm integration range
+  normRangeBase = WIDGET_BASE(normOptionsBaseColumn1, UNAME="DGS_NORM-INT-RANGE", /ALIGN_BOTTOM)
+  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE='Normalisation Integration Range', XOFFSET=5)
+  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
+  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
+  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
+      YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  
+  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGS_NORM-INT-MIN")
+  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_NORM-INT-MAX")
+            
+  
+  ; Disable some of the inputs until something has been defined in the DGS_NORM field.
+  WIDGET_CONTROL, normRangeBase, SENSITIVE=0
   
   ; Disable Proton Charge Norm until No-Monitor Norm is selected
   WIDGET_CONTROL, pc_button, SENSITIVE=0
@@ -372,8 +440,19 @@ PRO DGSreduction, dgscmd, _Extra=extra
   roiRow = WIDGET_BASE(roiPrettyBase, /ROW)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
   
+   ; Mask File
+  maskBase = WIDGET_BASE(reductionTabBase)
+  maskLabel = WIDGET_LABEL(maskBase, VALUE=' Mask ', XOFFSET=5)
+  maskLabelGeometry = WIDGET_INFO(maskLabel, /GEOMETRY)
+  maskLabelYSize = maskLabelGeometry.ysize
+  maskPrettyBase = WIDGET_BASE(maskBase, /FRAME, /COLUMN, $
+        YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10)
+  
+  maskRow = WIDGET_BASE(maskPrettyBase, /ROW)
+  maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGS_MASK_FILENAME', /ALL_EVENTS)
+  
   rangesBase = WIDGET_BASE(reductionTabBase)
-  rangesLabel = WIDGET_LABEL(rangesBase, value=' Data Ranges ', XOFFSET=5)
+  rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range ', XOFFSET=5)
   rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
   rangesLabelYSize = rangesLabelGeometry.ysize
   rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /COLUMN, $
@@ -381,16 +460,23 @@ PRO DGSreduction, dgscmd, _Extra=extra
    
   ; Energy Transfer Range Row
   EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
-  minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Energy Min:", $
+  minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Min:", $
         XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)
   maxEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Max:", $
         XSIZE=8, UVALUE="DGS_ET_MAX", /ALL_EVENTS)
   stepEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Step:", $
         XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
 
+  QrangesBase = WIDGET_BASE(reductionTabBase)
+  QrangesLabel = WIDGET_LABEL(QrangesBase, value=' Q-Range ', XOFFSET=5)
+  QrangesLabelGeometry = WIDGET_INFO(QrangesLabel, /GEOMETRY)
+  QrangesLabelYSize = QrangesLabelGeometry.ysize
+  QrangesPrettyBase = WIDGET_BASE(QrangesBase, /FRAME, /COLUMN, $
+        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
+        
   ; Q Range Base
-  QRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
-  minMomentumID = CW_FIELD(QRangeRow, TITLE="Q Min:", $
+  QRangeRow = WIDGET_BASE(QrangesPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
+  minMomentumID = CW_FIELD(QRangeRow, TITLE="Min:", $
         XSIZE=8, UVALUE="DGS_Q_MIN", /ALL_EVENTS)
   maxMomentumID = CW_FIELD(QRangeRow, TITLE="Max:", $
         XSIZE=8, UVALUE="DGS_Q_MAX", /ALL_EVENTS)
