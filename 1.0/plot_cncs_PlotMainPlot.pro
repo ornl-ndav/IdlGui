@@ -1049,6 +1049,12 @@ PRO PlotMainPlotFromNexus, NexusFileName
   WSET, id
   TV, play_button, 0, 0,/true
   
+  next_button = READ_PNG('plotCNCS_images/next_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='next_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, next_button, 0, 0,/true
+
   ;---------------------------------------------------------------------------
   
   Nstep  = FLOAT(50) ;number of steps

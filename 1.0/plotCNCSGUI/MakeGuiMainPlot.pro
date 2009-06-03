@@ -287,7 +287,14 @@ PRO MakeGuiMainPlot, wBase
     xoffset = 65,$
     yoffset= 7)
   
-  
+  next =  WIDGET_DRAW(row4a,$
+    uname = 'next_button',$
+    scr_xsize = 47,$
+    FRAME = 0,$
+    scr_ysize = 45,$
+    xoffset = 148,$
+    yoffset= 33)
+    
   
   
   
