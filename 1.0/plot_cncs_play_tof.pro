@@ -32,6 +32,46 @@
 ;
 ;==============================================================================
 
+FUNCTION checkPauseStop, Event
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;check pause status
+  id_pause = WIDGET_INFO(event.top,find_by_uname='play_buttons')
+  pause_status = 0
+  IF WIDGET_INFO(id_pause,/valid_id) then begin
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      event_id = WIDGET_EVENT(id_pause,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
+        pause_status = 1
+      ENDIF
+    ENDELSE
+  ENDIF
+  
+  ;  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
+  ;  stop_status = 0
+  ;  IF WIDGET_INFO(id_stop,/valid_id) then begin
+  ;    CATCH, error
+  ;    IF (error NE 0) THEN BEGIN
+  ;      CATCH,/CANCEL
+  ;    ENDIF ELSE BEGIN
+  ;      event_id = WIDGET_EVENT(id_stop,/nowait)
+  ;      IF (event_id.press EQ 1) THEN BEGIN
+  ;        display_buttons, EVENT=EVENT, ACTIVATE=3, global
+  ;        stop_status = 1
+  ;      ENDIF
+  ;    ENDELSE
+  ;  ENDIF
+  
+  stop_status = 0
+  RETURN, [pause_status,stop_status]
+END
+
+;==============================================================================
 PRO preview_of_tof, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
@@ -72,6 +112,9 @@ PRO play_tof, Event
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   time_per_frame     = getTimePerFrame(Event)
   
+  time_per_frame = FLOAT(time_per_frame) / 3.0 ;to check 3 times if pause has been hitted
+  ;during the same frame displayed
+  
   img = (*(*global1).img)
   nbr_total_bins = (SIZE(img))(1)
   
@@ -98,7 +141,28 @@ PRO play_tof, Event
       STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
       
     plot_from_play_tof, Event, img_range
-    WAIT, time_per_frame
+    
+    time_index = 0
+    while (time_index LT 3) DO BEGIN
+      ;check if user click pause or stop
+            pause_stop_status = checkPauseStop(event)
+      pause_status = (*global1).pause_status
+      PRINT, 'pause_status: ' + strcompress(pause_status)
+      ;      pause_status = pause_stop_status[0]
+      ;stop_status  = pause_stop_status[1]
+      IF (pause_status) EQ 1 THEN BEGIN
+;        goto, leave
+      ENDIF
+      
+      ;         IF (stop_status) EQ 1 THEN BEGIN
+      ;           display_buttons, EVENT=event, ACTIVATE=4, global
+      ;           goto, leave
+      ;         ENDIF
+      
+      WAIT, time_per_frame
+      time_index++
+      
+    ENDWHILE
     
     bin_min = bin_max
     bin_max = bin_min + nbr_bins_per_frame
