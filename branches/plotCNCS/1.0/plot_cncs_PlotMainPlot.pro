@@ -456,6 +456,9 @@ PRO MakeGuiMainPLot_Event, event
       ENDIF ELSE BEGIN
         standard = 31
       ENDELSE
+      id = WIDGET_INFO(event.top,find_by_uname='play_buttons')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
       DEVICE, CURSOR_STANDARD=standard
       
     ;IF (status_over EQ 0) THEN BEGIN ;raw data
