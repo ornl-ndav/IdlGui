@@ -196,14 +196,14 @@ PRO MakeGuiMainPlot, wBase
     
   ;produce counts vs tof of full detector
   button = WIDGET_BUTTON(row1,$
-  VALUE = 'Counts vs TOF of full detector',$
-  UNAME = 'counts_vs_tof_full_detector',$
-  /NO_RELEASE)
+    VALUE = 'Counts vs TOF of full detector',$
+    UNAME = 'counts_vs_tof_full_detector',$
+    /NO_RELEASE)
     
   ;space
   space = WIDGET_LABEL(row1,$
     VALUE = '                                                              ' + $
-     '                      ')
+    '                      ')
     
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
@@ -243,24 +243,124 @@ PRO MakeGuiMainPlot, wBase
   message += ' - RIGHT click to zoom in into selected bank'
   row3 = WIDGET_LABEL(wBase,$ ;explain how the selection works
     VALUE = message)
-  
+    
   ;--------------------------------------------------------------------------
     
   row4 = WIDGET_BASE(wBase,$
-  /ROW)
-  
-  space = WIDGET_LABEL(row4,$
-  VALUE =  '   ')
+    /ROW)
     
-    ;play/pause/next.... buttons
+  space = WIDGET_LABEL(row4,$
+    VALUE =  '   ')
+    
+  ;play/pause/next.... buttons
   play_buttons = WIDGET_DRAW(row4,$
-  UNAME = 'play_buttons',$
-  SCR_XSIZE = 205,$
-  FRAME = 1,$
-  /BUTTON_EVENTS,$
-  /MOTION_EVENTS,$
-  SCR_YSIZE = 129)  
-  
+    UNAME = 'play_buttons',$
+    SCR_XSIZE = 205,$
+    FRAME = 1,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
+    SCR_YSIZE = 129)
+    
+  row4b = WIDGET_BASE(row4,$ ;column b of row4 ..............................
+    /COLUMN,$
+    FRAME = 1)
+    
+  row4b1 = WIDGET_BASE(row4b,$ ;row 1 of column b of row 4 ..................
+    /ROW)
+    
+  row4b1a = WIDGET_BASE(row4b1, $ ;column 1 of row 1 of column b of row 4....
+  /COLUMN)  
+    
+  row4b1a1 = WIDGET_BASE(row4b1a,$ ;-------------------------------------------
+  /ROW)
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'TOF')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = '   Min:')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    FRAME = 1,$
+    UNAME = 'min_tof_value')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'microS     ')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'Max:')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    UNAME = 'max_tof_value')
+    
+  label = WIDGET_LABEL(row4b1a1,$
+    VALUE = 'microS')
+    
+  row4b1a2 = WIDGET_BASE(row4b1a,$ ;-------------------------------------------
+  /ROW)
+    
+  label = WIDGET_LABEL(row4b1a2,$
+    VALUE = 'Bin #')
+    
+  label = WIDGET_LABEL(row4b1a2,$
+    VALUE = ' Min:')
+    
+  label = WIDGET_LABEL(row4b1a2,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    FRAME = 1,$
+    UNAME = 'min_bin_value')
+    
+  label = WIDGET_LABEL(row4b1a2,$
+    VALUE = '            Max:')
+    
+  label = WIDGET_LABEL(row4b1a2,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT,$
+    UNAME = 'max_bin_value')
+    
+  button = WIDGET_BUTTON(row4b1,$; --------------------------------------------
+    VALUE = 'View full TOF axis',$
+    SCR_XSIZE = 150,$
+    UNAME = 'tof_preview')
+    
+  row4b2 = WIDGET_BASE(row4b,$ ;row2 of column b of row4 ....................
+    /ROW)
+    
+  value = CW_FIELD(row4b2,$
+    VALUE = '100',$
+    XSIZE = 10,$
+    TITLE = 'Nbr bins per frame:',$
+    UNAME = 'nbr_bins_per_frame_tof',$
+    /LONG,$
+    /RETURN_EVENTS)
+    
+  value = CW_FIELD(row4b2,$
+  VALUE = '2',$
+  XSIZE = 2,$
+  TITLE = '     Display time of each frame:',$
+  UNAME = 'time_per_frame_tof',$
+  /FLOATING,$
+  /RETURN_EVENTS)  
+    
+    label = WIDGET_LABEL(row4b2,$
+    VALUE = 's')
+    
+    
+    
+    
+    
+    
   ;plot_selection_button = WIDGET_BUTTON(MBAR,$
   ;                                      UNAME = PSbutton.uname,$
   ;                                      VALUE = PSbutton.value,$
