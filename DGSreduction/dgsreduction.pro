@@ -249,6 +249,14 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, NormRange_Max=myValue
     END
+    'DGS_MON-INT-MIN': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, MonRange_Min=myValue
+    END
+    'DGS_MON-INT-MAX': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, MonRange_Max=myValue
+    END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
