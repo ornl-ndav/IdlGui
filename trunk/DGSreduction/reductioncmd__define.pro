@@ -44,7 +44,8 @@ PRO ReductionCmd::GetProperty, $
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
-    NormRange=normrange, $               ; normalisation integration range (meV)
+    NormRange_Min=normrange_min, $       ; normalisation integration range (meV) (min)
+    NormRange_Max=normrange_max, $       ; normalisation integration range (meV) (max)
     LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
     LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
@@ -112,7 +113,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff 
   IF ARG_PRESENT(DataTrans) NE 0 THEN DataTrans = self.datatrans 
   IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans 
-  IF ARG_PRESENT(NormRange) NE 0 THEN NormRange = self.normrange 
+  IF ARG_PRESENT(NormRange_Min) NE 0 THEN NormRange_Min = self.normrange_min
+  IF ARG_PRESENT(NormRange_Max) NE 0 THEN NormRange_Max = self.normrange_max 
   IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min 
   IF ARG_PRESENT(LambdaBins_Max) NE 0 THEN LambdaBins_Max = self.lambdabins_max
   IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $ 
@@ -176,7 +178,8 @@ PRO ReductionCmd::SetProperty, $
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
-    NormRange=normrange, $               ; normalisation integration range (meV)
+    NormRange_Min=normrange_min, $       ; normalisation integration range (meV) (min)
+    NormRange_Max=normrange_max, $       ; normalisation integration range (meV) (max)
     LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
     LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
@@ -280,7 +283,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(deteff) NE 0 THEN self.deteff = deteff
   IF N_ELEMENTS(datatrans) NE 0 THEN self.datatrans = DataTrans
   IF N_ELEMENTS(normtrans) NE 0 THEN self.normtrans = NormTrans
-  IF N_ELEMENTS(normrange) NE 0 THEN self.normrange = normrange
+  IF N_ELEMENTS(normrange_min) NE 0 THEN self.normrange_min = normrange_min
+  IF N_ELEMENTS(normrange_max) NE 0 THEN self.normrange_max = normrange_max
   IF N_ELEMENTS(lambdabins_min) NE 0 THEN self.lambdabins_min = lambdabins_min
   IF N_ELEMENTS(lambdabins_max) NE 0 THEN self.lambdabins_max = lambdabins_max
   IF N_ELEMENTS(lambdabins_step) NE 0 THEN $ 
@@ -414,9 +418,10 @@ function ReductionCmd::Generate
     IF STRLEN(self.normtrans) GT 1 THEN $
       cmd[i] += " --norm-trans-coef=" + self.normtrans
     ; Normalisation integration range
-    IF STRLEN(self.normrange) GT 1 THEN $
-      cmd[i] += " --norm-int-range="+self.normrange
-      
+    IF (STRLEN(self.normrange_min) GE 1 ) $
+      AND (STRLEN(self.normrange_max) GE 1) THEN $
+      cmd[i] += " --norm-int-range=" + self.normrange_min + "," $ 
+                + self.normrange_max    
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
       AND (STRLEN(self.lambdabins_max) GE 1) $
@@ -497,7 +502,8 @@ function ReductionCmd::Init, $
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
-    NormRange=normrange, $               ; normalisation integration range (meV)
+    NormRange_Min=normrange_min, $       ; normalisation integration range (meV) (min)
+    NormRange_Max=normrange_max, $       ; normalisation integration range (meV) (max)
     LambdaBins_Min=lambdabins_min, $     ; wavelength bins (min)
     LambdaBins_Max=lambdabins_max, $     ; wavelength bins (max)
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
@@ -565,7 +571,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(deteff) EQ 0 THEN deteff = ""
   IF N_ELEMENTS(datatrans) EQ 0 THEN datatrans = ""
   IF N_ELEMENTS(normtrans) EQ 0 THEN normtrans = ""
-  IF N_ELEMENTS(normrange) EQ 0 THEN normrange = ""
+  IF N_ELEMENTS(normrange_min) EQ 0 THEN normrange_min = ""
+  IF N_ELEMENTS(normrange_max) EQ 0 THEN normrange_max = ""
   IF N_ELEMENTS(lambdabins_min) EQ 0 THEN lambdabins_min = ""
   IF N_ELEMENTS(lambdabins_max) EQ 0 THEN lambdabins_max = ""
   IF N_ELEMENTS(lambdabins_step) EQ 0 THEN lambdabins_step = ""
@@ -624,7 +631,8 @@ function ReductionCmd::Init, $
   self.deteff = deteff
   self.datatrans = datatrans
   self.normtrans = normtrans
-  self.normrange = normrange
+  self.normrange_min = normrange_min
+  self.normrange_max = normrange_max
   self.lambdabins_min = lambdabins_min
   self.lambdabins_max = lambdabins_max
   self.lambdabins_step = lambdabins_step
@@ -696,7 +704,8 @@ pro ReductionCmd__Define
     deteff: "", $            ; Detector efficiency
     datatrans: "", $         ; transmission for sample data background
     normtrans: "", $         ; transmission for norm data background
-    normrange: "", $         ; normalisation (vanadium) integration range (meV)
+    normrange_min: "", $     ; normalisation (vanadium) integration range (meV)
+    normrange_max: "", $     ; normalisation (vanadium) integration range (meV)
     lambdabins_min: "", $    ; wavelength bins (min)
     lambdabins_max: "", $    ; wavelength bins (max)
     lambdabins_step: "", $   ; wavelength bins (step)
