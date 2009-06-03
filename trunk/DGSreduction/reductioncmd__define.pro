@@ -40,7 +40,8 @@ PRO ReductionCmd::GetProperty, $
     Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
-    MonRange=monrange, $                 ; Monitor integration range (usec)
+    MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
+    MonRange_Max=monrange_max, $         ; Monitor integration range (usec) (max)
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
@@ -109,7 +110,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Tzero_error) NE 0 THEN Tzero_error = self.tzero_error 
   IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm 
   IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm 
-  IF ARG_PRESENT(MonRange) NE 0 THEN MonRange = self.monrange
+  IF ARG_PRESENT(MonRange_Min) NE 0 THEN MonRange_Min = self.monrange_min
+  IF ARG_PRESENT(MonRange_Max) NE 0 THEN MonRange_Max = self.monrange_max
   IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff 
   IF ARG_PRESENT(DataTrans) NE 0 THEN DataTrans = self.datatrans 
   IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans 
@@ -174,7 +176,8 @@ PRO ReductionCmd::SetProperty, $
     Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
-    MonRange=monrange, $                 ; Monitor integration range (usec)
+    MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
+    MonRange_Max=monrange_max, $         ; Monitor integration range (usec) (max)
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
@@ -279,7 +282,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(tzero_error) NE 0 THEN self.tzero_error = Tzero_error
   IF N_ELEMENTS(nomonitornorm) NE 0 THEN self.nomonitornorm = NoMonitorNorm
   IF N_ELEMENTS(pcnorm) NE 0 THEN self.pcnorm = pcnorm
-  IF N_ELEMENTS(monrange) NE 0 THEN self.monrange = MonRange
+  IF N_ELEMENTS(monrange_min) NE 0 THEN self.monrange_min = MonRange_Min
+  IF N_ELEMENTS(monrange_max) NE 0 THEN self.monrange_max = MonRange_Max
   IF N_ELEMENTS(deteff) NE 0 THEN self.deteff = deteff
   IF N_ELEMENTS(datatrans) NE 0 THEN self.datatrans = DataTrans
   IF N_ELEMENTS(normtrans) NE 0 THEN self.normtrans = NormTrans
@@ -406,8 +410,9 @@ function ReductionCmd::Generate
     ; proton charge normalization
     IF (self.pcnorm EQ 1) AND (self.nomonitornorm EQ 1) THEN cmd[i] += " --pc-norm"
     ; Monitor integration range
-    IF STRLEN(self.monrange) GT 1 THEN $
-      cmd[i] += " --mon-int-range="+self.monrange
+    IF (STRLEN(self.monrange_min) GE 1) $
+      AND (STRLEN(self.monrange_max GE 1)) THEN $
+      cmd[i] += " --mon-int-range=" + self.monrange_min + "," + self.monrange_max
     ; Detector Efficiency
     IF STRLEN(self.deteff) GT 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
@@ -498,7 +503,8 @@ function ReductionCmd::Init, $
     Tzero_error=tzero_error, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
-    MonRange=monrange, $                 ; Monitor integration range (usec)
+    MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
+    MonRange_Max=monrange_max, $         ; Monitor integration range (usec) (max)
     DetEff=deteff, $                     ; Detector efficiency
     DataTrans=datatrans, $               ; transmission for sample data bkgrd
     NormTrans=normtrans, $               ; transmission for norm data bkgrd
@@ -567,7 +573,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(tzero_error) EQ 0 THEN tzero_error = '0.0'
   IF N_ELEMENTS(nomonitornorm) EQ 0 THEN nomonitornorm = 0
   IF N_ELEMENTS(pcnorm) EQ 0 THEN pcnorm = 0
-  IF N_ELEMENTS(monrange) EQ 0 THEN monrange = ""
+  IF N_ELEMENTS(monrange_min) EQ 0 THEN monrange_min = ""
+  IF N_ELEMENTS(monrange_max) EQ 0 THEN monrange_max = ""
   IF N_ELEMENTS(deteff) EQ 0 THEN deteff = ""
   IF N_ELEMENTS(datatrans) EQ 0 THEN datatrans = ""
   IF N_ELEMENTS(normtrans) EQ 0 THEN normtrans = ""
@@ -627,7 +634,8 @@ function ReductionCmd::Init, $
   self.tzero_error = tzero_error
   self.nomonitornorm = nomonitornorm
   self.pcnorm = pcnorm
-  self.monrange = monrange
+  self.monrange_min = monrange_min
+  self.monrange_max = monrange_max
   self.deteff = deteff
   self.datatrans = datatrans
   self.normtrans = normtrans
@@ -700,7 +708,8 @@ pro ReductionCmd__Define
     tzero_error: "", $       ; Error in T0
     nomonitornorm: 0L, $     ; Turn off monitor normalisation
     pcnorm: 0L, $            ; Proton Charge Normalisation
-    monrange: "", $          ; Monitor integration range (usec)
+    monrange_min: "", $      ; Monitor integration range (usec) (min)
+    monrange_max: "", $      ; Monitor integration range (usec) (max)
     deteff: "", $            ; Detector efficiency
     datatrans: "", $         ; transmission for sample data background
     normtrans: "", $         ; transmission for norm data background
