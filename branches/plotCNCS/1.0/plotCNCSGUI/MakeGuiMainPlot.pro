@@ -284,8 +284,8 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 75,$
     FRAME = 0,$
     scr_ysize = 60,$
-    xoffset = 50,$
-    yoffset= 25)
+    xoffset = 65,$
+    yoffset= 7)
   
   
   
