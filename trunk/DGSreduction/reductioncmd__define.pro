@@ -358,19 +358,19 @@ function ReductionCmd::Generate
     ; Construct the DataPaths
     self.datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, $
       i+1, self.jobs)
-    IF STRLEN(self.datapaths) GT 0 THEN $
+    IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
     ; normalisation file
-    IF STRLEN(self.normalisation) GT 1 THEN $
+    IF STRLEN(self.normalisation) GE 1 THEN $
       cmd[i] += " --norm="+self.normalisation
     ; Empty sample container file
-    IF STRLEN(self.emptycan) GT 1 THEN $
+    IF STRLEN(self.emptycan) GE 1 THEN $
       cmd[i] += " --ecan="+self.emptycan
     ; black sample container file
-    IF STRLEN(self.blackcan) GT 1 THEN $
+    IF STRLEN(self.blackcan) GE 1 THEN $
       cmd[i] += " --bcan="+self.blackcan
     ; Dark Current File
-    IF STRLEN(self.dark) GT 1 THEN $
+    IF STRLEN(self.dark) GE 1 THEN $
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
     IF (STRLEN(self.usmonpath) GE 1) AND $
@@ -389,10 +389,10 @@ function ReductionCmd::Generate
     IF STRLEN(self.tmax) GT 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
     ; Time Independent Background
-    IF STRLEN(self.tibconst) GT 1 THEN $
+    IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst
     ; Ei
-    IF STRLEN(self.ei) GT 1 THEN $
+    IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.ei_error
     ; T0
     IF STRLEN(self.tzero) GT 1 THEN $
@@ -430,8 +430,8 @@ function ReductionCmd::Generate
     IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     ; Mask File
-    IF STRLEN(self.maskfile) GT 1 THEN $
-      cmd[i] += " --nask-file="+self.maskfile
+    IF STRLEN(self.maskfile) GE 1 THEN $
+      cmd[i] += " --mask-file="+self.maskfile
     ; Lambda Ratio
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     
@@ -455,8 +455,6 @@ function ReductionCmd::Generate
     IF (self.timing EQ 1) THEN cmd[i] += " --timing"
     
   endfor
-  
-  
   
   return, cmd
 end
@@ -544,8 +542,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(configfile) EQ 0 THEN configfile = ""
   IF N_ELEMENTS(instgeometry) EQ 0 THEN instgeometry = ""
   IF N_ELEMENTS(cornergeometry) EQ 0 THEN cornergeometry = ""
-  IF N_ELEMENTS(lowerbank) EQ 0 THEN lowerbank = -1
-  IF N_ELEMENTS(upperbank) EQ 0 THEN upperbank = -1
+  IF N_ELEMENTS(lowerbank) EQ 0 THEN lowerbank = 0
+  IF N_ELEMENTS(upperbank) EQ 0 THEN upperbank = 0
   IF N_ELEMENTS(datapaths) EQ 0 THEN datapaths = ""
   IF N_ELEMENTS(normalisation) EQ 0 THEN normalisation = ""
   IF N_ELEMENTS(emptycan) EQ 0 THEN emptycan = ""
