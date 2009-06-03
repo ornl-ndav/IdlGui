@@ -541,3 +541,15 @@ FUNCTION getNexusFileName, Event
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getNbrBinsPerFrame, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='nbr_bins_per_frame_tof')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTimePerFrame, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='time_per_frame_tof')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
