@@ -402,61 +402,71 @@ PRO MakeGuiMainPLot_Event, event
         y GE 73 AND $
         y LE 117) THEN BEGIN
         status_over = 1
+        IF (event.press EQ 1) THEN BEGIN
         play_buttons_activation, event, activate_button='play'
       ENDIF
-      
-      ;next button
-      IF (x GE 147 AND $
-        x LE 191 AND $
-        y GE 56 AND $
-        y LE 92) THEN BEGIN
-        status_over = 1
+    ENDIF
+    
+    ;next button
+    IF (x GE 147 AND $
+      x LE 191 AND $
+      y GE 56 AND $
+      y LE 92) THEN BEGIN
+      status_over = 1
+      IF (event.press EQ 1) THEN BEGIN
         play_buttons_activation, event, activate_button='next'
       ENDIF
-      
-      ;stop button
-      IF (x GE 117 AND $
-        x LE 147 AND $
-        y GE 17 AND $
-        y LE 45) THEN BEGIN
-        status_over = 1
-        play_buttons_activation, event, activate_button='stop'
-      ENDIF
-      
-      ;pause button
-      IF (x GE 55 AND $
-        x LE 84 AND $
-        y GE 18 AND $
-        y LE 44) THEN BEGIN
-        status_over = 1
-        play_buttons_activation, event, activate_button='pause'
-      ENDIF
-      
-      ;previous button
-      IF (x GE 11 AND $
-        x LE 54 AND $
-        y GE 50 AND $
-        y LE 89) THEN BEGIN
-        status_over = 1
-        play_buttons_activation, event, activate_button='previous'
-      ENDIF
-      
-      IF (status_over) THEN BEGIN ;enter
-        standard = 58
-      ENDIF ELSE BEGIN
-        standard = 31
-      ENDELSE
-      DEVICE, CURSOR_STANDARD=standard
-      
-      IF (status_over EQ 0) THEN BEGIN ;raw data
-              play_buttons_activation, event, activate_button='raw'
-              ENDIF
-      
-    END
+    ENDIF
     
-    ELSE:
-  ENDCASE
+    ;stop button
+    IF (x GE 117 AND $
+      x LE 147 AND $
+      y GE 17 AND $
+      y LE 45) THEN BEGIN
+      status_over = 1
+      IF (event.press EQ 1) THEN BEGIN
+      play_buttons_activation, event, activate_button='stop'
+      ENDIF
+    ENDIF
+    
+    ;pause button
+    IF (x GE 55 AND $
+      x LE 84 AND $
+      y GE 18 AND $
+      y LE 44) THEN BEGIN
+      status_over = 1
+      IF (event.press EQ 1) THEN BEGIN
+      play_buttons_activation, event, activate_button='pause'
+      ENDIF
+    ENDIF
+    
+    ;previous button
+    IF (x GE 11 AND $
+      x LE 54 AND $
+      y GE 50 AND $
+      y LE 89) THEN BEGIN
+      status_over = 1
+      IF (event.press EQ 1) THEN BEGIN
+      play_buttons_activation, event, activate_button='previous'
+      ENDIF
+    ENDIF
+    
+    IF (status_over) THEN BEGIN ;enter
+      standard = 58
+    ENDIF ELSE BEGIN
+      standard = 31
+    ENDELSE
+    DEVICE, CURSOR_STANDARD=standard
+    
+    ;IF (status_over EQ 0) THEN BEGIN ;raw data
+    ;  play_buttons_activation, event, activate_button='raw'
+    ;ENDIF
+    
+  END
   
+  ELSE:
+ENDCASE
+
 END
 
 ;==============================================================================
