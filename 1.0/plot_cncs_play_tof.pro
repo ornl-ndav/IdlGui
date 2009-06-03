@@ -32,71 +32,31 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+PRO preview_of_tof, Event
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  wBase = (*global1).wBase
+  
+  nexus_file_name = (*global1).nexus_file_name
+  tof_array = (*(*global1).tof_array)
+  s_tof_array = STRCOMPRESS(tof_array,/REMOVE_ALL)
+  
+  title = 'TOF axis of ' + nexus_file_name
+  done_button = 'DONE with TOF axis'
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  sz = N_ELEMENTS(tof_array)
+  new_tof_array = STRARR(1,sz+1)
+  new_tof_array[0] = 'Bin #     TOF Range (microS)'
+  index = 1
+  WHILE (index LT sz) DO BEGIN
+  new_tof_array[index] = STRCOMPRESS(index,/REMOVE_ALL) + $
+  '          ' + s_tof_array[index-1] + ' -> ' + $
+  s_tof_array[index]
+  index++
+  ENDWHILE
+  XDISPLAYFILE, GROUP=wBase, $
+    TITLE=title, $
+    TEXT=new_tof_array, $
+    DONE_BUTTON=done_button
+    
+END
