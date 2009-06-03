@@ -339,7 +339,7 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   value = CW_FIELD(row4b2,$
-    VALUE = '100',$
+    VALUE = '5',$
     XSIZE = 10,$
     TITLE = 'Nbr bins per frame:',$
     UNAME = 'nbr_bins_per_frame_tof',$
@@ -347,8 +347,8 @@ PRO MakeGuiMainPlot, wBase
     /RETURN_EVENTS)
     
   value = CW_FIELD(row4b2,$
-  VALUE = '2',$
-  XSIZE = 2,$
+  VALUE = '1',$
+  XSIZE = 4,$
   TITLE = '     Display time of each frame:',$
   UNAME = 'time_per_frame_tof',$
   /FLOATING,$

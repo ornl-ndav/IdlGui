@@ -404,6 +404,7 @@ PRO MakeGuiMainPLot_Event, event
         status_over = 1
         IF (event.press EQ 1) THEN BEGIN
           play_buttons_activation, event, activate_button='play'
+          play_tof, Event
         ENDIF
       ENDIF
       

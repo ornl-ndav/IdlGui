@@ -43,20 +43,152 @@ PRO preview_of_tof, Event
   
   title = 'TOF axis of ' + nexus_file_name
   done_button = 'DONE with TOF axis'
-
+  
   sz = N_ELEMENTS(tof_array)
   new_tof_array = STRARR(1,sz+1)
   new_tof_array[0] = 'Bin #     TOF Range (microS)'
   index = 1
   WHILE (index LT sz) DO BEGIN
-  new_tof_array[index] = STRCOMPRESS(index,/REMOVE_ALL) + $
-  '          ' + s_tof_array[index-1] + ' -> ' + $
-  s_tof_array[index]
-  index++
+    new_tof_array[index] = STRCOMPRESS(index,/REMOVE_ALL) + $
+      '          ' + s_tof_array[index-1] + ' -> ' + $
+      s_tof_array[index]
+    index++
   ENDWHILE
   XDISPLAYFILE, GROUP=wBase, $
     TITLE=title, $
     TEXT=new_tof_array, $
     DONE_BUTTON=done_button
     
+END
+
+;------------------------------------------------------------------------------
+PRO play_tof, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  tof_array = (*(*global1).tof_array)
+  
+  ;get nbr bins per frame
+  nbr_bins_per_frame = getNbrBinsPerFrame(Event)
+  time_per_frame     = getTimePerFrame(Event)
+  
+  img = (*(*global1).img)
+  nbr_total_bins = (SIZE(img))(1)
+  
+  bin_min = 0
+  bin_max = nbr_bins_per_frame
+  
+  ;select plot area
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  ERASE
+  
+  WHILE (bin_min LT nbr_total_bins) DO BEGIN
+  
+    ;extract range of data
+    img_range = img[bin_min:bin_max-1,*,*]
+    
+    ;display min and max
+    putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
+    putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
+    putTextFieldValue, Event, 'min_tof_value', $
+      STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
+    putTextFieldValue, Event, 'max_tof_value', $
+      STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
+      
+    plot_from_play_tof, Event, img_range
+    WAIT, time_per_frame
+    
+    bin_min = bin_max
+    bin_max = bin_min + nbr_bins_per_frame
+    IF (bin_max GT nbr_total_bins) THEN bin_max = nbr_total_bins
+    
+  ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_from_play_tof, Event, img
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;retrieve values from inside structure
+  Xfactor = (*global1).Xfactor
+  Yfactor = (*global1).Yfactor
+  Xcoeff  = (*global1).Xcoeff
+  Ycoeff  = (*global1).Ycoeff
+  off     = (*global1).off
+  xoff    = (*global1).xoff
+  wbase   = (*global1).wBase
+  
+  ;main data array
+  tvimg = TOTAL(img,1)
+  tvimg = TRANSPOSE(tvimg)
+  
+  ;change title
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot_base')
+  WIDGET_CONTROL, id, base_set_title= (*global1).main_plot_real_title
+  
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  ;  ERASE
+  
+  ;Create big array (before rebining)
+  xsize       = 8L
+  xsize_space = 1L
+  xsize_total = xsize * 52L + xsize_space * 51L
+  ysize = 128L
+  big_array = LONARR(xsize_total, ysize)
+  ;put left part in big array
+  FOR i=0L,(36L-1) DO BEGIN
+    bank = tvimg[i*8:(i+1)*8L-1,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
+  ENDFOR
+  ;put right part in big array
+  FOR i=38L,(52L-2L) DO BEGIN
+    bank = tvimg[(i-2L)*8L:(i-1L)*8L-1,*]
+    big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
+  ENDFOR
+  
+  min = MIN(big_array,MAX=max)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
+  
+  ;display min and max in cw_fields
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+  WIDGET_CONTROL, id, SET_VALUE=MIN
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+  WIDGET_CONTROL, id, SET_VALUE=MAX
+  
+  IF (min NE MAX) THEN BEGIN
+  
+    ;rebin big array
+    big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
+    
+    ;remove_me
+    ;  big_array_rebin[0:3,0:1] = 1500
+    
+    yoff = 0
+    TVSCL, big_array_rebin, /DEVICE, xoff, yoff
+    (*(*global1).big_array_rebin) = big_array_rebin
+    (*(*global1).big_array_rebin_rescale) = big_array_rebin
+    
+    ;plot scale
+    plot_scale, global1, min, max
+    
+  ENDIF
+  
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  ;plot grid
+  plotGridMainPlot, global1
+  
 END
