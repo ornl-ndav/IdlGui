@@ -252,15 +252,57 @@ PRO MakeGuiMainPlot, wBase
   space = WIDGET_LABEL(row4,$
     VALUE =  '   ')
     
-  ;play/pause/next.... buttons
-  play_buttons = WIDGET_DRAW(row4,$
+    row4a = WIDGET_BASE(row4,$ ;play/pause/next.... buttons ----------------
+    FRAME = 1)
+    
+    pause = WIDGET_DRAW(row4a,$
+    uname = 'pause_button',$
+    scr_xsize = 34,$
+    FRAME = 0,$
+    scr_ysize = 27,$
+    xoffset = 56,$
+    yoffset= 82)
+  
+    stop =  WIDGET_DRAW(row4a,$
+    uname = 'stop_button',$
+    scr_xsize = 32,$
+    FRAME = 0,$
+    scr_ysize = 25,$
+    xoffset = 120,$
+    yoffset= 82)
+  
+    previous =  WIDGET_DRAW(row4a,$
+    uname = 'previous_button',$
+    scr_xsize = 47,$
+    FRAME = 0,$
+    scr_ysize = 41,$
+    xoffset = 12,$
+    yoffset= 35)
+  
+    play =  WIDGET_DRAW(row4a,$
+    uname = 'play_button',$
+    scr_xsize = 75,$
+    FRAME = 0,$
+    scr_ysize = 60,$
+    xoffset = 50,$
+    yoffset= 25)
+  
+  
+  
+  
+  
+  
+  
+  
+  play_buttons = WIDGET_DRAW(row4a,$
     UNAME = 'play_buttons',$
     SCR_XSIZE = 205,$
-    FRAME = 1,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
-    SCR_YSIZE = 129)
+    SCR_YSIZE = 125)
     
+  ;---------------------------------------------------------------------------
+  
   row4b = WIDGET_BASE(row4,$ ;column b of row4 ..............................
     /COLUMN,$
     FRAME = 1)
