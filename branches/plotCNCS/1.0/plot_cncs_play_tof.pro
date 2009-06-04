@@ -180,6 +180,8 @@ PRO play_tof, Event
     
   ENDWHILE
   
+  play_buttons_activation, event, activate_button='all'
+  
 END
 
 ;------------------------------------------------------------------------------
