@@ -259,6 +259,8 @@ PRO MakeGuiMainPlot, wBase
     uname = 'pause_button',$
     scr_xsize = 34,$
     FRAME = 0,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     scr_ysize = 27,$
     xoffset = 56,$
     yoffset= 82)
@@ -267,6 +269,8 @@ PRO MakeGuiMainPlot, wBase
     uname = 'stop_button',$
     scr_xsize = 32,$
     FRAME = 0,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     scr_ysize = 25,$
     xoffset = 120,$
     yoffset= 82)
@@ -275,6 +279,8 @@ PRO MakeGuiMainPlot, wBase
     uname = 'previous_button',$
     scr_xsize = 47,$
     FRAME = 0,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     scr_ysize = 41,$
     xoffset = 12,$
     yoffset= 35)
@@ -283,6 +289,8 @@ PRO MakeGuiMainPlot, wBase
     uname = 'play_button',$
     scr_xsize = 75,$
     FRAME = 0,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     scr_ysize = 60,$
     xoffset = 65,$
     yoffset= 7)
@@ -291,6 +299,8 @@ PRO MakeGuiMainPlot, wBase
     uname = 'next_button',$
     scr_xsize = 47,$
     FRAME = 0,$
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     scr_ysize = 45,$
     xoffset = 148,$
     yoffset= 33)

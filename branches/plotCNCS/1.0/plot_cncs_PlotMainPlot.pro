@@ -199,98 +199,202 @@ PRO MakeGuiMainPLot_Event, event
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;play button
     WIDGET_INFO(event.top, FIND_BY_UNAME='play_button'): BEGIN
-
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ;        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+        ;          status_buttons = (*global).status_buttons
+        ;          IF (status_buttons[3] EQ 0) THEN BEGIN
+        ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ;            refresh_plot, Event     ;_plot
+        ;            RefreshRoiExclusionPlot, Event   ;_selection
+        ;            (*global).previous_button_clicked = 4
+        ;          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 4
+      ENDELSE
     END
     
     ;next button
     WIDGET_INFO(event.top, FIND_BY_UNAME='next_button'): BEGIN
-
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ;        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+        ;          status_buttons = (*global).status_buttons
+        ;          IF (status_buttons[3] EQ 0) THEN BEGIN
+        ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ;            refresh_plot, Event     ;_plot
+        ;            RefreshRoiExclusionPlot, Event   ;_selection
+        ;            (*global).previous_button_clicked = 4
+        ;          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 4
+      ENDELSE
     END
-
+    
     ;stop button
     WIDGET_INFO(event.top, FIND_BY_UNAME='stop_button'): BEGIN
-
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ;        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+        ;          status_buttons = (*global).status_buttons
+        ;          IF (status_buttons[3] EQ 0) THEN BEGIN
+        ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ;            refresh_plot, Event     ;_plot
+        ;            RefreshRoiExclusionPlot, Event   ;_selection
+        ;            (*global).previous_button_clicked = 4
+        ;          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 4
+      ENDELSE
     END
-
+    
     ;pause button
     WIDGET_INFO(event.top, FIND_BY_UNAME='pause_button'): BEGIN
-
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ;        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+        ;          status_buttons = (*global).status_buttons
+        ;          IF (status_buttons[3] EQ 0) THEN BEGIN
+        ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ;            refresh_plot, Event     ;_plot
+        ;            RefreshRoiExclusionPlot, Event   ;_selection
+        ;            (*global).previous_button_clicked = 4
+        ;          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 4
+      ENDELSE
     END
-
+    
     ;previous button
     WIDGET_INFO(event.top, FIND_BY_UNAME='previous_button'): BEGIN
-
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        ;        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+        ;          status_buttons = (*global).status_buttons
+        ;          IF (status_buttons[3] EQ 0) THEN BEGIN
+        ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+        ;            refresh_plot, Event     ;_plot
+        ;            RefreshRoiExclusionPlot, Event   ;_selection
+        ;            (*global).previous_button_clicked = 4
+        ;          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 4
+      ENDELSE
     END
-
-
+    
     ;play/pause.... buttons
     WIDGET_INFO(event.top, FIND_BY_UNAME='play_buttons'): BEGIN
-;      x = Event.x
-;      y = Event.y
-;      status_over = 0
-;      ;play button
-;      IF (x GE 74 AND $
-;        x LE 132 AND $
-;        y GE 73 AND $
-;        y LE 117) THEN BEGIN
-;        status_over = 1
-;        IF (event.press EQ 1) THEN BEGIN
-;          (*global1).pause_status = 0
-;          play_buttons_activation, event, activate_button='play'
-;          play_tof, Event
-;        ENDIF
-;      ENDIF
-;      
-;      ;next button
-;      IF (x GE 147 AND $
-;        x LE 191 AND $
-;        y GE 56 AND $
-;        y LE 92) THEN BEGIN
-;        status_over = 1
-;        IF (event.press EQ 1) THEN BEGIN
-;          play_buttons_activation, event, activate_button='next'
-;        ENDIF
-;      ENDIF
-;      
-;      ;stop button
-;      IF (x GE 117 AND $
-;        x LE 147 AND $
-;        y GE 17 AND $
-;        y LE 45) THEN BEGIN
-;        status_over = 1
-;        IF (event.press EQ 1) THEN BEGIN
-;          play_buttons_activation, event, activate_button='stop'
-;        ENDIF
-;      ENDIF
-;      
-;      ;pause button
-;      IF (x GE 55 AND $
-;        x LE 84 AND $
-;        y GE 18 AND $
-;        y LE 44) THEN BEGIN
-;        status_over = 1
-;        IF (event.press EQ 1) THEN BEGIN
-;          (*global1).pause_status = 1
-;          play_buttons_activation, event, activate_button='pause'
-;        ENDIF
-;      ENDIF
-;      
-;      ;previous button
-;      IF (x GE 11 AND $
-;        x LE 54 AND $
-;        y GE 50 AND $
-;        y LE 89) THEN BEGIN
-;        status_over = 1
-;        IF (event.press EQ 1) THEN BEGIN
-;          play_buttons_activation, event, activate_button='previous'
-;        ENDIF
-;      ENDIF
-      
-;      IF (status_over) THEN BEGIN ;enter
-        standard = 58
-;      ENDIF ELSE BEGIN
-;        standard = 31
-;      ENDELSE
+      ;      x = Event.x
+      ;      y = Event.y
+      ;      status_over = 0
+      ;      ;play button
+      ;      IF (x GE 74 AND $
+      ;        x LE 132 AND $
+      ;        y GE 73 AND $
+      ;        y LE 117) THEN BEGIN
+      ;        status_over = 1
+      ;        IF (event.press EQ 1) THEN BEGIN
+      ;          (*global1).pause_status = 0
+      ;          play_buttons_activation, event, activate_button='play'
+      ;          play_tof, Event
+      ;        ENDIF
+      ;      ENDIF
+      ;
+      ;      ;next button
+      ;      IF (x GE 147 AND $
+      ;        x LE 191 AND $
+      ;        y GE 56 AND $
+      ;        y LE 92) THEN BEGIN
+      ;        status_over = 1
+      ;        IF (event.press EQ 1) THEN BEGIN
+      ;          play_buttons_activation, event, activate_button='next'
+      ;        ENDIF
+      ;      ENDIF
+      ;
+      ;      ;stop button
+      ;      IF (x GE 117 AND $
+      ;        x LE 147 AND $
+      ;        y GE 17 AND $
+      ;        y LE 45) THEN BEGIN
+      ;        status_over = 1
+      ;        IF (event.press EQ 1) THEN BEGIN
+      ;          play_buttons_activation, event, activate_button='stop'
+      ;        ENDIF
+      ;      ENDIF
+      ;
+      ;      ;pause button
+      ;      IF (x GE 55 AND $
+      ;        x LE 84 AND $
+      ;        y GE 18 AND $
+      ;        y LE 44) THEN BEGIN
+      ;        status_over = 1
+      ;        IF (event.press EQ 1) THEN BEGIN
+      ;          (*global1).pause_status = 1
+      ;          play_buttons_activation, event, activate_button='pause'
+      ;        ENDIF
+      ;      ENDIF
+      ;
+      ;      ;previous button
+      ;      IF (x GE 11 AND $
+      ;        x LE 54 AND $
+      ;        y GE 50 AND $
+      ;        y LE 89) THEN BEGIN
+      ;        status_over = 1
+      ;        IF (event.press EQ 1) THEN BEGIN
+      ;          play_buttons_activation, event, activate_button='previous'
+      ;        ENDIF
+      ;      ENDIF
+    
+      ;      IF (status_over) THEN BEGIN ;enter
+      standard = 31
+      ;      ENDIF ELSE BEGIN
+      ;        standard = 31
+      ;      ENDELSE
       id = WIDGET_INFO(event.top,find_by_uname='play_buttons')
       WIDGET_CONTROL, id, GET_VALUE=id_value
       WSET, id_value
@@ -876,7 +980,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, next_button, 0, 0,/true
-
+  
   ;---------------------------------------------------------------------------
   
   Nstep  = FLOAT(50) ;number of steps
