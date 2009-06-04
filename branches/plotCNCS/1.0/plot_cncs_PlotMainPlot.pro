@@ -199,6 +199,7 @@ PRO MakeGuiMainPLot_Event, event
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;play button
     WIDGET_INFO(event.top, FIND_BY_UNAME='play_button'): BEGIN
+      error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
@@ -216,12 +217,10 @@ PRO MakeGuiMainPLot_Event, event
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          standard = 58
-        ENDIF ELSE BEGIN
-          standard = 31
-        ENDELSE
+        standard = 58
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 4
+      ENDIF
       ENDELSE
     END
     
@@ -242,11 +241,11 @@ PRO MakeGuiMainPLot_Event, event
         ;          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          standard = 58
-        ENDIF ELSE BEGIN
-          standard = 31
-        ENDELSE
+        ; IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+        ; ENDIF ELSE BEGIN
+        ;   standard = 31
+        ; ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 4
       ENDELSE
@@ -269,11 +268,11 @@ PRO MakeGuiMainPLot_Event, event
         ;          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          standard = 58
-        ENDIF ELSE BEGIN
-          standard = 31
-        ENDELSE
+        ;IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+        ;ENDIF ELSE BEGIN
+        ;  standard = 31
+        ;ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 4
       ENDELSE
@@ -296,11 +295,11 @@ PRO MakeGuiMainPLot_Event, event
         ;          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          standard = 58
-        ENDIF ELSE BEGIN
-          standard = 31
-        ENDELSE
+        ;IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+        ;ENDIF ELSE BEGIN
+        ;  standard = 31
+        ;ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 4
       ENDELSE
@@ -323,11 +322,11 @@ PRO MakeGuiMainPLot_Event, event
         ;          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          standard = 58
-        ENDIF ELSE BEGIN
-          standard = 31
-        ENDELSE
+        ;IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+        standard = 58
+        ;ENDIF ELSE BEGIN
+        ;  standard = 31
+        ;ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ;        (*global).previous_button_clicked = 4
       ENDELSE
@@ -335,81 +334,95 @@ PRO MakeGuiMainPLot_Event, event
     
     ;play/pause.... buttons
     WIDGET_INFO(event.top, FIND_BY_UNAME='play_buttons'): BEGIN
-      ;      x = Event.x
-      ;      y = Event.y
-      ;      status_over = 0
-      ;      ;play button
-      ;      IF (x GE 74 AND $
-      ;        x LE 132 AND $
-      ;        y GE 73 AND $
-      ;        y LE 117) THEN BEGIN
-      ;        status_over = 1
-      ;        IF (event.press EQ 1) THEN BEGIN
-      ;          (*global1).pause_status = 0
-      ;          play_buttons_activation, event, activate_button='play'
-      ;          play_tof, Event
-      ;        ENDIF
-      ;      ENDIF
-      ;
-      ;      ;next button
-      ;      IF (x GE 147 AND $
-      ;        x LE 191 AND $
-      ;        y GE 56 AND $
-      ;        y LE 92) THEN BEGIN
-      ;        status_over = 1
-      ;        IF (event.press EQ 1) THEN BEGIN
-      ;          play_buttons_activation, event, activate_button='next'
-      ;        ENDIF
-      ;      ENDIF
-      ;
-      ;      ;stop button
-      ;      IF (x GE 117 AND $
-      ;        x LE 147 AND $
-      ;        y GE 17 AND $
-      ;        y LE 45) THEN BEGIN
-      ;        status_over = 1
-      ;        IF (event.press EQ 1) THEN BEGIN
-      ;          play_buttons_activation, event, activate_button='stop'
-      ;        ENDIF
-      ;      ENDIF
-      ;
-      ;      ;pause button
-      ;      IF (x GE 55 AND $
-      ;        x LE 84 AND $
-      ;        y GE 18 AND $
-      ;        y LE 44) THEN BEGIN
-      ;        status_over = 1
-      ;        IF (event.press EQ 1) THEN BEGIN
-      ;          (*global1).pause_status = 1
-      ;          play_buttons_activation, event, activate_button='pause'
-      ;        ENDIF
-      ;      ENDIF
-      ;
-      ;      ;previous button
-      ;      IF (x GE 11 AND $
-      ;        x LE 54 AND $
-      ;        y GE 50 AND $
-      ;        y LE 89) THEN BEGIN
-      ;        status_over = 1
-      ;        IF (event.press EQ 1) THEN BEGIN
-      ;          play_buttons_activation, event, activate_button='previous'
-      ;        ENDIF
-      ;      ENDIF
+    ;      error = 0
+    ;      ;CATCH, error
+    ;      IF (error NE 0) THEN BEGIN
+    ;        CATCH,/CANCEL
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;        ENDIF
+    ;      ENDIF ELSE BEGIN
+    ;        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+    ;          standard = 58
+    ;        ENDIF ELSE BEGIN
+    ;          standard = 31
+    ;        ENDELSE
+    ;        DEVICE, CURSOR_STANDARD=standard
+    ;ENDELSE
+    ;      x = Event.x
+    ;      y = Event.y
+    ;      status_over = 0
+    ;      ;play button
+    ;      IF (x GE 74 AND $
+    ;        x LE 132 AND $
+    ;        y GE 73 AND $
+    ;        y LE 117) THEN BEGIN
+    ;        status_over = 1
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;          (*global1).pause_status = 0
+    ;          play_buttons_activation, event, activate_button='play'
+    ;          play_tof, Event
+    ;        ENDIF
+    ;      ENDIF
+    ;
+    ;      ;next button
+    ;      IF (x GE 147 AND $
+    ;        x LE 191 AND $
+    ;        y GE 56 AND $
+    ;        y LE 92) THEN BEGIN
+    ;        status_over = 1
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;          play_buttons_activation, event, activate_button='next'
+    ;        ENDIF
+    ;      ENDIF
+    ;
+    ;      ;stop button
+    ;      IF (x GE 117 AND $
+    ;        x LE 147 AND $
+    ;        y GE 17 AND $
+    ;        y LE 45) THEN BEGIN
+    ;        status_over = 1
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;          play_buttons_activation, event, activate_button='stop'
+    ;        ENDIF
+    ;      ENDIF
+    ;
+    ;      ;pause button
+    ;      IF (x GE 55 AND $
+    ;        x LE 84 AND $
+    ;        y GE 18 AND $
+    ;        y LE 44) THEN BEGIN
+    ;        status_over = 1
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;          (*global1).pause_status = 1
+    ;          play_buttons_activation, event, activate_button='pause'
+    ;        ENDIF
+    ;      ENDIF
+    ;
+    ;      ;previous button
+    ;      IF (x GE 11 AND $
+    ;        x LE 54 AND $
+    ;        y GE 50 AND $
+    ;        y LE 89) THEN BEGIN
+    ;        status_over = 1
+    ;        IF (event.press EQ 1) THEN BEGIN
+    ;          play_buttons_activation, event, activate_button='previous'
+    ;        ENDIF
+    ;      ENDIF
     
-      ;      IF (status_over) THEN BEGIN ;enter
-      standard = 31
-      ;      ENDIF ELSE BEGIN
-      ;        standard = 31
-      ;      ENDELSE
-      id = WIDGET_INFO(event.top,find_by_uname='play_buttons')
-      WIDGET_CONTROL, id, GET_VALUE=id_value
-      WSET, id_value
-      DEVICE, CURSOR_STANDARD=standard
-      
+    ;      IF (status_over) THEN BEGIN ;enter
+    ;standard = 31
+    ;      ENDIF ELSE BEGIN
+    ;        standard = 31
+    ;      ENDELSE
+    ;id = WIDGET_INFO(event.top,find_by_uname='play_buttons')
+    ;WIDGET_CONTROL, id, GET_VALUE=id_value
+    ;WSET, id_value
+    ;DEVICE, CURSOR_STANDARD=standard
+    
     ;IF (status_over EQ 0) THEN BEGIN ;raw data
     ;  play_buttons_activation, event, activate_button='raw'
     ;ENDIF
-      
+    
     END
     
     ;View full TOF axis
@@ -930,11 +943,11 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y2:                    0L,$
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
-  
+    
     pause_button_activated: 0b,$
     bin_min:               0.0,$
     bin_max:               0.0,$
-      
+    
     nexus_file_name:       NexusFileName,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$

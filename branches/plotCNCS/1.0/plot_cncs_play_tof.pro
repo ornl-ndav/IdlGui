@@ -47,6 +47,7 @@ FUNCTION checkPauseStop, Event
       event_id = WIDGET_EVENT(id_pause,/nowait)
       IF (event_id.press EQ 1) THEN BEGIN
         (*global).pause_button_activated = 1
+        play_buttons_activation, event, activate_button='pause'
         pause_status = 1
       ENDIF ELSE BEGIN
         (*global).pause_button_activated = 0
