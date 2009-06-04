@@ -37,7 +37,7 @@ FUNCTION checkPauseStop, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;check pause status
-  id_pause = WIDGET_INFO(event.top,find_by_uname='play_buttons')
+  id_pause = WIDGET_INFO(event.top,find_by_uname='pause_button')
   pause_status = 0
   IF WIDGET_INFO(id_pause,/valid_id) then begin
     CATCH, error
@@ -145,13 +145,12 @@ PRO play_tof, Event
     time_index = 0
     while (time_index LT 3) DO BEGIN
       ;check if user click pause or stop
-            pause_stop_status = checkPauseStop(event)
-      pause_status = (*global1).pause_status
-      PRINT, 'pause_status: ' + strcompress(pause_status)
-      ;      pause_status = pause_stop_status[0]
+      pause_stop_status = checkPauseStop(event)
+      pause_status = pause_stop_status[0]
       ;stop_status  = pause_stop_status[1]
-      IF (pause_status) EQ 1 THEN BEGIN
-;        goto, leave
+      IF (pause_status EQ 1) THEN BEGIN
+        RETURN
+        ;GOTO, leave
       ENDIF
       
       ;         IF (stop_status) EQ 1 THEN BEGIN
@@ -169,7 +168,7 @@ PRO play_tof, Event
     IF (bin_max GT nbr_total_bins) THEN bin_max = nbr_total_bins
     
   ENDWHILE
-  
+   
 END
 
 ;------------------------------------------------------------------------------
