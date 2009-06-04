@@ -55,22 +55,21 @@ FUNCTION checkPauseStop, Event
     ENDELSE
   ENDIF
   
-  ;  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
-  ;  stop_status = 0
-  ;  IF WIDGET_INFO(id_stop,/valid_id) then begin
-  ;    CATCH, error
-  ;    IF (error NE 0) THEN BEGIN
-  ;      CATCH,/CANCEL
-  ;    ENDIF ELSE BEGIN
-  ;      event_id = WIDGET_EVENT(id_stop,/nowait)
-  ;      IF (event_id.press EQ 1) THEN BEGIN
-  ;        display_buttons, EVENT=EVENT, ACTIVATE=3, global
-  ;        stop_status = 1
-  ;      ENDIF
-  ;    ENDELSE
-  ;  ENDIF
-  
+  id_stop = WIDGET_INFO(event.top,find_by_uname='stop_button')
   stop_status = 0
+  IF WIDGET_INFO(id_stop,/valid_id) then begin
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      event_id = WIDGET_EVENT(id_stop,/nowait)
+      IF (event_id.press EQ 1) THEN BEGIN
+        play_buttons_activation, event, activate_button='stop'
+        stop_status = 1
+      ENDIF
+    ENDELSE
+  ENDIF
+  
   RETURN, [pause_status,stop_status]
 END
 
@@ -158,16 +157,15 @@ PRO play_tof, Event
       ;check if user click pause or stop
       pause_stop_status = checkPauseStop(event)
       pause_status = pause_stop_status[0]
-      ;stop_status  = pause_stop_status[1]
+      stop_status  = pause_stop_status[1]
       IF (pause_status EQ 1) THEN BEGIN
         RETURN
-      ;GOTO, leave
       ENDIF
       
-      ;         IF (stop_status) EQ 1 THEN BEGIN
-      ;           display_buttons, EVENT=event, ACTIVATE=4, global
-      ;           goto, leave
-      ;         ENDIF
+      IF (stop_status) EQ 1 THEN BEGIN
+        stop_play, Event
+        RETURN
+      ENDIF
       
       WAIT, time_per_frame
       time_index++
@@ -273,4 +271,8 @@ END
 PRO stop_play, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   plotDASviewFullInstrument, global1
+  putTextFieldValue, Event, 'min_tof_value', 'N/A'
+  putTextFieldValue, Event, 'max_tof_value', 'N/A'
+  putTextFieldValue, Event, 'min_bin_value', 'N/A'
+  putTextFieldValue, Event, 'max_bin_value', 'N/A'
 END
