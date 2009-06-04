@@ -295,12 +295,6 @@ PRO MakeGuiMainPlot, wBase
     xoffset = 148,$
     yoffset= 33)
     
-  
-  
-  
-  
-  
-  
   play_buttons = WIDGET_DRAW(row4a,$
     UNAME = 'play_buttons',$
     SCR_XSIZE = 205,$
