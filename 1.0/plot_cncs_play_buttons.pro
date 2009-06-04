@@ -32,23 +32,37 @@
 ;
 ;==============================================================================
 
-PRO play_buttons_activation, event, activate_button= activate_button
+PRO display_image, Event, uname=uname, image=image
+id = WIDGET_INFO(event.top,find_by_uname=uname)
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+splash = READ_PNG(image)
+TV, splash, 0, 0, /true
+END
 
+;------------------------------------------------------------------------------
+PRO play_buttons_activation, event, activate_button=activate_button
+
+  image_play = 'plotCNCS_images/play_disable.png'
+  image_next = 'plotCNCS_images/next_disable.png'
+  image_stop = 'plotCNCS_images/stop_disable.png'
+  image_pause = 'plotCNCS_images/pause_disable.png'
+  image_previous = 'plotCNCS_images/previous_disable.png'
+  
   case (activate_button) OF
-    'play': image = 'plotCNCS_images/set_of_buttons_play.png'
-    'next': image = 'plotCNCS_images/set_of_buttons_next.png'
-    'stop': image = 'plotCNCS_images/set_of_buttons_stop.png'
-    'pause': image = 'plotCNCS_images/set_of_buttons_pause.png'
-    'previous': image = 'plotCNCS_images/set_of_buttons_previous.png'
-    'raw': image = 'plotCNCS_images/set_of_buttons_raw.png'
+    'play': image_play = 'plotCNCS_images/play_enable.png'
+    'next': image_next = 'plotCNCS_images/next_enable.png'
+    'stop': image_stop = 'plotCNCS_images/stop_enable.png'
+    'pause': image_pause = 'plotCNCS_images/pause_enable.png'
+    'previous': image_previous = 'plotCNCS_images/previous_enable.png'
+    'raw':
     ELSE:
   ENDCASE
   
-  id = WIDGET_INFO(event.top,find_by_uname='play_buttons')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  splash = READ_PNG(image)
-  TV, splash, -20,-5,/true
+  display_image, Event, uname='play_button', image=image_play
+  display_image, Event, uname='next_button', image=image_next
+  display_image, Event, uname='stop_button', image=image_stop
+  display_image, Event, uname='previous_button', image=image_previous
+  display_image, Event, uname='pause_button', image=image_pause
   
 END
