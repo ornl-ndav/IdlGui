@@ -268,3 +268,9 @@ PRO plot_from_play_tof, Event, img
   plotGridMainPlot, global1
   
 END
+
+;------------------------------------------------------------------------------
+PRO stop_play, Event
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  plotDASviewFullInstrument, global1
+END

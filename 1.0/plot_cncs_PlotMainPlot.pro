@@ -217,10 +217,10 @@ PRO MakeGuiMainPLot_Event, event
         ENDIF
       ENDIF ELSE BEGIN
         IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
-        DEVICE, CURSOR_STANDARD=standard
-      ;        (*global).previous_button_clicked = 4
-      ENDIF
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ;        (*global).previous_button_clicked = 4
+        ENDIF
       ENDELSE
     END
     
@@ -259,6 +259,7 @@ PRO MakeGuiMainPLot_Event, event
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
           play_buttons_activation, event, activate_button='stop'
+          stop_play, Event
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -268,12 +269,13 @@ PRO MakeGuiMainPLot_Event, event
         ;          ENDIF ;end of status_buttons[3]
         ENDIF
       ENDIF ELSE BEGIN
-        ;IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-        standard = 58
-        ;ENDIF ELSE BEGIN
-        ;  standard = 31
-        ;ENDELSE
-        DEVICE, CURSOR_STANDARD=standard
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+          ;ENDIF ELSE BEGIN
+          ;  standard = 31
+          ;ENDELSE
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
       ;        (*global).previous_button_clicked = 4
       ENDELSE
     END
