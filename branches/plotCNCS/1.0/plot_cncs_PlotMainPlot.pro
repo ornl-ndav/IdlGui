@@ -204,6 +204,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
+                play_buttons_activation, event, activate_button='play'        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -230,6 +231,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
+                play_buttons_activation, event, activate_button='next'        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -256,6 +258,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
+                play_buttons_activation, event, activate_button='stop'        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -282,6 +285,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
+                play_buttons_activation, event, activate_button='pause'        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -308,6 +312,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
+                play_buttons_activation, event, activate_button='previous'        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global

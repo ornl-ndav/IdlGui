@@ -260,7 +260,7 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 34,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$    
     scr_ysize = 27,$
     xoffset = 56,$
     yoffset= 82)
@@ -270,7 +270,7 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 32,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$    
     scr_ysize = 25,$
     xoffset = 120,$
     yoffset= 82)
@@ -280,7 +280,7 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 47,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
     scr_ysize = 41,$
     xoffset = 12,$
     yoffset= 35)
@@ -300,7 +300,7 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 47,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
     scr_ysize = 45,$
     xoffset = 148,$
     yoffset= 33)
@@ -309,7 +309,7 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'play_buttons',$
     SCR_XSIZE = 205,$
     /BUTTON_EVENTS,$
-    /MOTION_EVENTS,$
+    /TRACKING_EVENTS,$
     SCR_YSIZE = 125)
     
   ;---------------------------------------------------------------------------
