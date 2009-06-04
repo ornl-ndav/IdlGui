@@ -43,11 +43,14 @@ END
 ;------------------------------------------------------------------------------
 PRO play_buttons_activation, event, activate_button=activate_button
 
+  print, 'there'
+
   image_play = 'plotCNCS_images/play_disable.png'
   image_next = 'plotCNCS_images/next_disable.png'
   image_stop = 'plotCNCS_images/stop_disable.png'
   image_pause = 'plotCNCS_images/pause_disable.png'
   image_previous = 'plotCNCS_images/previous_disable.png'
+  image_raw = 'plotCNCS_images/set_of_buttons_raw.png'
   
   case (activate_button) OF
     'play': image_play = 'plotCNCS_images/play_enable.png'
@@ -55,10 +58,11 @@ PRO play_buttons_activation, event, activate_button=activate_button
     'stop': image_stop = 'plotCNCS_images/stop_enable.png'
     'pause': image_pause = 'plotCNCS_images/pause_enable.png'
     'previous': image_previous = 'plotCNCS_images/previous_enable.png'
-    'raw':
+    'raw': 
     ELSE:
   ENDCASE
   
+  display_image, Event, uname='play_buttons', image=image_raw
   display_image, Event, uname='play_button', image=image_play
   display_image, Event, uname='next_button', image=image_next
   display_image, Event, uname='stop_button', image=image_stop
