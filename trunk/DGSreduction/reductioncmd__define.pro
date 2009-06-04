@@ -36,8 +36,8 @@ PRO ReductionCmd::GetProperty, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
-    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
-    Tzero_error=tzero_error, $           ; Error in T0
+    error_ei=error_ei, $                 ; Error in Incident Energy (meV)
+    error_tzero=error_tzero, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
@@ -106,8 +106,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst 
   IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei 
   IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero 
-  IF ARG_PRESENT(Ei_error) NE 0 THEN Ei_error = self.ei_error
-  IF ARG_PRESENT(Tzero_error) NE 0 THEN Tzero_error = self.tzero_error 
+  IF ARG_PRESENT(error_ei) NE 0 THEN error_ei = self.error_ei
+  IF ARG_PRESENT(error_tzero) NE 0 THEN error_tzero = self.error_tzero 
   IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm 
   IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm 
   IF ARG_PRESENT(MonRange_Min) NE 0 THEN MonRange_Min = self.monrange_min
@@ -172,8 +172,8 @@ PRO ReductionCmd::SetProperty, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
-    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
-    Tzero_error=tzero_error, $           ; Error in T0
+    error_ei=error_ei, $                 ; Error in Incident Energy (meV)
+    error_tzero=error_tzero, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
@@ -278,8 +278,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(tibconst) NE 0 THEN self.tibconst = TIBconst
   IF N_ELEMENTS(ei) NE 0 THEN self.ei = Ei
   IF N_ELEMENTS(tzero) NE 0 THEN self.tzero = Tzero
-  IF N_ELEMENTS(ei_error) NE 0 THEN self.ei_error = Ei_error
-  IF N_ELEMENTS(tzero_error) NE 0 THEN self.tzero_error = Tzero_error
+  IF N_ELEMENTS(error_ei) NE 0 THEN self.error_ei = error_ei
+  IF N_ELEMENTS(error_tzero) NE 0 THEN self.error_tzero = error_tzero
   IF N_ELEMENTS(nomonitornorm) NE 0 THEN self.nomonitornorm = NoMonitorNorm
   IF N_ELEMENTS(pcnorm) NE 0 THEN self.pcnorm = pcnorm
   IF N_ELEMENTS(monrange_min) NE 0 THEN self.monrange_min = MonRange_Min
@@ -391,20 +391,20 @@ function ReductionCmd::Generate
     IF STRLEN(self.roifile) GE 1 THEN $
       cmd[i] += " --roi-file="+self.roifile
     ; Tmin
-    IF STRLEN(self.tmin) GT 1 THEN $
+    IF STRLEN(self.tmin) GE 1 THEN $
       cmd[i] += " --tof-cut-min="+self.tmin
     ; Tmax
-    IF STRLEN(self.tmax) GT 1 THEN $
+    IF STRLEN(self.tmax) GE 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
     ; Time Independent Background
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
-      cmd[i] += " --initial-energy="+self.ei+","+self.ei_error
+      cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
     ; T0
     IF STRLEN(self.tzero) GT 1 THEN $
-      cmd[i] += " --time-zero-offset="+self.tzero+","+self.tzero_error
+      cmd[i] += " --time-zero-offset="+self.tzero+","+self.error_tzero
     ; Flag for turning off monitor normalization
     IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
     ; proton charge normalization
@@ -499,8 +499,8 @@ function ReductionCmd::Init, $
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
-    Ei_error=ei_error, $                 ; Error in Incident Energy (meV)
-    Tzero_error=tzero_error, $           ; Error in T0
+    error_ei=error_ei, $                 ; Error in Incident Energy (meV)
+    error_tzero=error_tzero, $           ; Error in T0
     NoMonitorNorm=nomonitornorm, $       ; Turn off monitor normalisation
     PCnorm=pcnorm, $                     ; Proton Charge Normalisation
     MonRange_Min=monrange_min, $         ; Monitor integration range (usec) (min)
@@ -568,9 +568,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(tmax) EQ 0 THEN tmax = ""
   IF N_ELEMENTS(tibconst) EQ 0 THEN tibconst = ""
   IF N_ELEMENTS(ei) EQ 0 THEN ei = ""
-  IF N_ELEMENTS(ei_error) EQ 0 THEN ei_error = '0.0'
+  IF N_ELEMENTS(error_ei) EQ 0 THEN error_ei = '0.0'
   IF N_ELEMENTS(tzero) EQ 0 THEN tzero = ""
-  IF N_ELEMENTS(tzero_error) EQ 0 THEN tzero_error = '0.0'
+  IF N_ELEMENTS(error_tzero) EQ 0 THEN error_tzero = '0.0'
   IF N_ELEMENTS(nomonitornorm) EQ 0 THEN nomonitornorm = 0
   IF N_ELEMENTS(pcnorm) EQ 0 THEN pcnorm = 0
   IF N_ELEMENTS(monrange_min) EQ 0 THEN monrange_min = ""
@@ -629,9 +629,9 @@ function ReductionCmd::Init, $
   self.tmax = tmax
   self.tibconst = tibconst
   self.ei = ei
-  self.ei_error = ei_error
+  self.error_ei = error_ei
   self.tzero = tzero
-  self.tzero_error = tzero_error
+  self.error_tzero = error_tzero
   self.nomonitornorm = nomonitornorm
   self.pcnorm = pcnorm
   self.monrange_min = monrange_min
@@ -703,9 +703,9 @@ pro ReductionCmd__Define
     tmax: "", $              ; maximum tof
     tibconst: "", $          ; Time Independant Background constant
     ei: "", $                ; Incident Energy (meV)
-    ei_error: "", $          ; Error in Incident Energy (meV)
+    error_ei: "", $          ; Error in Incident Energy (meV)
     tzero: "", $             ; T0
-    tzero_error: "", $       ; Error in T0
+    error_tzero: "", $       ; Error in T0
     nomonitornorm: 0L, $     ; Turn off monitor normalisation
     pcnorm: 0L, $            ; Proton Charge Normalisation
     monrange_min: "", $      ; Monitor integration range (usec) (min)
