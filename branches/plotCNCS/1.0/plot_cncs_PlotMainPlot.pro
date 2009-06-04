@@ -204,7 +204,8 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='play'        
+                play_buttons_activation, event, activate_button='play'
+                play_tof, Event        
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
