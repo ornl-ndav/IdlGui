@@ -43,8 +43,6 @@ END
 ;------------------------------------------------------------------------------
 PRO play_buttons_activation, event, activate_button=activate_button
 
-  print, 'there'
-
   image_play = 'plotCNCS_images/play_disable.png'
   image_next = 'plotCNCS_images/next_disable.png'
   image_stop = 'plotCNCS_images/stop_disable.png'
