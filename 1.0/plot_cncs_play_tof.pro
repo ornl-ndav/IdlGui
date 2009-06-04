@@ -46,9 +46,11 @@ FUNCTION checkPauseStop, Event
     ENDIF ELSE BEGIN
       event_id = WIDGET_EVENT(id_pause,/nowait)
       IF (event_id.press EQ 1) THEN BEGIN
-        ;display_buttons, EVENT=EVENT, ACTIVATE=2, global
+        (*global).pause_button_activated = 1
         pause_status = 1
-      ENDIF
+      ENDIF ELSE BEGIN
+        (*global).pause_button_activated = 0
+      ENDELSE
     ENDELSE
   ENDIF
   
@@ -118,8 +120,13 @@ PRO play_tof, Event
   img = (*(*global1).img)
   nbr_total_bins = (SIZE(img))(1)
   
-  bin_min = 0
-  bin_max = nbr_bins_per_frame
+  IF ((*global1).pause_button_activated) THEN BEGIN
+    bin_min = (*global1).bin_min
+    bin_max = (*global1).bin_max
+  ENDIF ELSE BEGIN
+    bin_min = 0
+    bin_max = nbr_bins_per_frame
+  ENDELSE
   
   ;select plot area
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
@@ -131,6 +138,9 @@ PRO play_tof, Event
   
     ;extract range of data
     img_range = img[bin_min:bin_max-1,*,*]
+    
+    (*global1).bin_min = bin_min
+    (*global1).bin_max = bin_max
     
     ;display min and max
     putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
@@ -150,7 +160,7 @@ PRO play_tof, Event
       ;stop_status  = pause_stop_status[1]
       IF (pause_status EQ 1) THEN BEGIN
         RETURN
-        ;GOTO, leave
+      ;GOTO, leave
       ENDIF
       
       ;         IF (stop_status) EQ 1 THEN BEGIN
@@ -168,7 +178,7 @@ PRO play_tof, Event
     IF (bin_max GT nbr_total_bins) THEN bin_max = nbr_total_bins
     
   ENDWHILE
-   
+  
 END
 
 ;------------------------------------------------------------------------------

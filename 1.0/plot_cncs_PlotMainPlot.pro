@@ -204,8 +204,8 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='play'
-                play_tof, Event        
+          play_buttons_activation, event, activate_button='play'
+          play_tof, Event
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -232,7 +232,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='next'        
+          play_buttons_activation, event, activate_button='next'
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -259,7 +259,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='stop'        
+          play_buttons_activation, event, activate_button='stop'
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -286,7 +286,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='pause'        
+          play_buttons_activation, event, activate_button='pause'
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -313,7 +313,7 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         ;        (*global).previous_button_clicked = 4
         IF (event.press EQ 1) THEN BEGIN
-                play_buttons_activation, event, activate_button='previous'        
+          play_buttons_activation, event, activate_button='previous'
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
@@ -930,6 +930,11 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y2:                    0L,$
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
+  
+    pause_button_activated: 0b,$
+    bin_min:               0.0,$
+    bin_max:               0.0,$
+      
     nexus_file_name:       NexusFileName,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
