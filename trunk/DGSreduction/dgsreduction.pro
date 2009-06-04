@@ -106,6 +106,14 @@ PRO DGSreduction_TLB_Events, event
       ;print, 'DGS_DATARUN'
       dgscmd->SetProperty, DataRun=myValue
     END
+    'DGS_EI': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Ei=myValue
+    END
+    'DGS_TZERO': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Tzero=myValue      
+    END
     'DGS_FINDNEXUS': BEGIN
       dgscmd->GetProperty, Instrument=instrument
       dgscmd->GetProperty, DataRun=run_number
@@ -211,6 +219,9 @@ PRO DGSreduction_TLB_Events, event
     'DGS_PC-NORM': BEGIN
       dgscmd->SetProperty, PCnorm=event.SELECT
     END
+    'DGS_LAMBDA-RATIO': BEGIN
+      dgscmd->SetProperty, LambdaRatio=event.SELECT
+    END
     'DGS_USMON': BEGIN
       ; Upstream Monitor Number (usualy 1)
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -256,6 +267,14 @@ PRO DGSreduction_TLB_Events, event
     'DGS_MON-INT-MAX': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, MonRange_Max=myValue
+    END
+    'DGS_TOF-CUT-MIN': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Tmin=myValue
+    END
+    'DGS_TOF-CUT-MAX': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgscmd->SetProperty, Tmax=myValue
     END
     'DGS_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -365,17 +384,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
   runID= CW_FIELD(dataSourceRow, xsize=30, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS)
   findNexusButton = WIDGET_BUTTON(dataSourceRow, VALUE="Find File", UVALUE="DGS_FINDNEXUS", SENSITIVE=0)
-  
-  
-  jobBase = WIDGET_BASE(reductionTabBase)
-  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
-  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
-  jobLabelGeometryYSize = jobLabelGeometry.ysize
-  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, /COLUMN, $
-        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  jobID = CW_FIELD(jobPrettyBase, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", VALUE=1, /INTEGER, /ALL_EVENTS)
-  
- 
+
   detectorBankBase = WIDGET_BASE(reductionTabRow1)
   detectorBankLabel = WIDGET_LABEL(detectorBankBase, VALUE=' Detector Banks ', XOFFSET=5)
   detectorBankLabelGeometry = WIDGET_INFO(detectorBankLabel, /GEOMETRY)
@@ -387,6 +396,35 @@ PRO DGSreduction, dgscmd, _Extra=extra
   lbankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE="", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
   ubankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE=" --> ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)  
   
+  
+  eiBase = WIDGET_BASE(reductionTabRow1)
+  eiLabel = WIDGET_LABEL(eiBase, Value=' Ei (meV) ', XOFFSET=5)
+  eiLabelGeomtry = WIDGET_INFO(eiLabel, /GEOMETRY)
+  eiLabelGeomtryYSize = eiLabelGeomtry.ysize
+  eiPrettyBase = WIDGET_BASE(eiBase, /FRAME, /COLUMN, $
+        YOFFSET=eiLabelGeomtryYSize/2, XPAD=10, YPAD=10)
+  eiRow = WIDGET_BASE(eiPrettyBase, /ROW)
+  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGS_EI", /ALL_EVENTS)
+
+  tzeroBase = WIDGET_BASE(reductionTabBase)
+  tzeroLabel = WIDGET_LABEL(tzeroBase, Value=' T0 (usec) ', XOFFSET=5)
+  tzeroLabelGeomtry = WIDGET_INFO(tzeroLabel, /GEOMETRY)
+  tzeroLabelGeomtryYSize = tzeroLabelGeomtry.ysize
+  tzeroPrettyBase = WIDGET_BASE(tzeroBase, /FRAME, /COLUMN, $
+        YOFFSET=tzeroLabelGeomtryYSize/2, XPAD=10, YPAD=10)
+  tzeroID = CW_FIELD(tzeroPrettyBase, TITLE="", UVALUE="DGS_TZERO", /ALL_EVENTS)
+
+  tofcutBase = WIDGET_BASE(reductionTabBase)
+  tofcutLabel = WIDGET_LABEL(tofcutBase, Value=' TOF Spectrum Cutting ', XOFFSET=5)
+  tofcutLabelGeomtry = WIDGET_INFO(tofcutLabel, /GEOMETRY)
+  tofcutLabelGeomtryYSize = tofcutLabelGeomtry.ysize
+  tofcutPrettyBase = WIDGET_BASE(tofcutBase, /FRAME, /COLUMN, $
+        YOFFSET=tofcutLabelGeomtryYSize/2, XPAD=10, YPAD=10)
+  tofcutRow = WIDGET_BASE(tofcutPrettyBase, /ROW)
+  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGS_TOF-CUT-MIN", /ALL_EVENTS)
+  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGS_TOF-CUT-MAX", /ALL_EVENTS)
+  
+
   normBase = WIDGET_BASE(reductionTabRow2)
   normLabel = WIDGET_LABEL(normBase, VALUE=' Normalisation ', XOFFSET=5)
   normLabelGeometry = WIDGET_INFO(normLabel, /GEOMETRY)
@@ -400,8 +438,13 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   
   normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
-  noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', UVALUE='DGS_NO-MON-NORM')
-  pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', UVALUE='DGS_PC-NORM', UNAME='DGS_PC-NORM')
+  noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
+        UVALUE='DGS_NO-MON-NORM')
+  pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
+        UVALUE='DGS_PC-NORM', UNAME='DGS_PC-NORM')
+  lambdaratioID = WIDGET_BUTTON(normOptionsBase, VALUE='Lambda Ratio Scaling', $ 
+        UVALUE='DGS_LAMBDA-RATIO')
+  
   monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGS_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
   dgscmd->SetProperty, USmonPath=1
@@ -418,7 +461,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   ; Monitor integration range
   monitorRangeBase = WIDGET_BASE(normOptionsBaseColumn1, /ALIGN_BOTTOM)
-  monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE='Monitor Integration Range', XOFFSET=5)
+  monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE=' Monitor Integration Range (usec) ', XOFFSET=5)
   monitorRangeBaseLabelGeometry = WIDGET_INFO(monitorRangeBaseLabel, /GEOMETRY)
   monitorRangeBaseLabelGeometryYSize = monitorRangeBaseLabelGeometry.ysize
   monitorRangePrettyBase = WIDGET_BASE(monitorRangeBase, /FRAME, /ROW, $
@@ -429,7 +472,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
    ; Norm integration range
   normRangeBase = WIDGET_BASE(normOptionsBaseColumn1, UNAME="DGS_NORM-INT-RANGE", /ALIGN_BOTTOM)
-  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE='Normalisation Integration Range', XOFFSET=5)
+  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
   normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
   normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
   normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
@@ -452,9 +495,17 @@ PRO DGSreduction, dgscmd, _Extra=extra
   roiLabelYSize = roiLabelGeometry.ysize
   roiPrettyBase = WIDGET_BASE(roiBase, /FRAME, /COLUMN, $
         YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
-  
   roiRow = WIDGET_BASE(roiPrettyBase, /ROW)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
+  
+    jobBase = WIDGET_BASE(reductionTabBase)
+  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
+  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
+  jobLabelGeometryYSize = jobLabelGeometry.ysize
+  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, /COLUMN, $
+        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  jobID = CW_FIELD(jobPrettyBase, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", $
+        VALUE=1, /INTEGER, /ALL_EVENTS)
   
    ; Mask File
   maskBase = WIDGET_BASE(reductionTabBase)
@@ -468,7 +519,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGS_MASK_FILENAME', /ALL_EVENTS)
   
   rangesBase = WIDGET_BASE(reductionTabBase)
-  rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range ', XOFFSET=5)
+  rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range (meV) ', XOFFSET=5)
   rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
   rangesLabelYSize = rangesLabelGeometry.ysize
   rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /COLUMN, $
@@ -484,7 +535,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
         XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
 
   QrangesBase = WIDGET_BASE(reductionTabBase)
-  QrangesLabel = WIDGET_LABEL(QrangesBase, value=' Q-Range ', XOFFSET=5)
+  QrangesLabel = WIDGET_LABEL(QrangesBase, value=' Q-Range (1/Angstroms) ', XOFFSET=5)
   QrangesLabelGeometry = WIDGET_INFO(QrangesLabel, /GEOMETRY)
   QrangesLabelYSize = QrangesLabelGeometry.ysize
   QrangesPrettyBase = WIDGET_BASE(QrangesBase, /FRAME, /COLUMN, $
