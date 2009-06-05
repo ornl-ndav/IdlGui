@@ -907,13 +907,23 @@ PRO PlotMainPlotFromNexus, NexusFileName
   (*(*global1).img)= img
   
   ;display counts vs tof for play buttons of central row
-  t_img = total(img,3)
+  t_img = TOTAL(img,3)
   counts_vs_tof = t_img[*,64]
   id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  plot, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts'
   
+  PLOT, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts'
+  
+  ;take snapshot
+  background = TVREAD(TRUE=3)
+  DEVICE, copy=[0,0,400,400,0,0,id_value]
+  POLYFILL, [0,10,10,0,0],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+  
+  foreground = TVREAD(TRUE=3)
+  
+  alpha= 0.25 
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
   ;plot das view of full instrument
   progressBar->SetLabel, 'Generating Plot ...'

@@ -44,6 +44,7 @@ cd, IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run tube_angle.pro
 .run colorbar.pro
+.run fsc_color.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
