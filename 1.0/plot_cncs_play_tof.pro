@@ -231,17 +231,34 @@ PRO plot_from_play_tof, Event, img
     big_array[i*7L+2*i:(i+1L)*7L+2*i,*] = bank
   ENDFOR
   
-  min = MIN(big_array,MAX=max)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
-  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
-  WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
+  ;min value and max value
+  min = getCWFieldValue(Event,'main_base_min_value')
+  max = getCWFieldValue(Event,'main_base_max_value')
   
-  ;display min and max in cw_fields
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
-  WIDGET_CONTROL, id, SET_VALUE=MIN
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
-  WIDGET_CONTROL, id, SET_VALUE=MAX
+  index_min = WHERE(big_array LT MIN, nbr)
+  IF (nbr GT 0) THEN BEGIN
+    big_array[index_min] = 0
+  ENDIF
+  
+  index_max = WHERE(big_array GT MAX, nbr)
+  IF (nbr GT 0) THEN BEGIN
+    big_array[index_max] = 0
+  ENDIF
+  
+  ;check if we want lin or log
+  lin_status = isMainPlotLin(Event)
+  IF (lin_status EQ 0) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(big_array EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      big_array[index] = !VALUES.D_NAN
+      big_array = ALOG10(big_array)
+      big_array = BYTSCL(big_array,/NAN)
+    ENDIF
+    
+  ENDIF
   
   IF (min NE MAX) THEN BEGIN
   
@@ -339,10 +356,10 @@ PRO play_next, Event
     STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
   putTextFieldValue, Event, 'max_tof_value', $
     STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
-  
-  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max  
-  plot_from_play_tof, Event, img_range
     
+  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
+  plot_from_play_tof, Event, img_range
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -393,7 +410,7 @@ PRO play_previous, Event
   putTextFieldValue, Event, 'max_tof_value', $
     STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
     
-  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max  
+  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   plot_from_play_tof, Event, img_range
   
 END
