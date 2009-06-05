@@ -34,21 +34,27 @@
 
 PRO plot_scale, global1, min, max, lin_status=lin_status
 
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
   IF (N_ELEMENTS(lin_status) EQ 0) THEN lin_status = 1
-
+  
   wbase   = (*global1).wBase
-
- ;select plot area
+  
+  ;select plot area
   id = WIDGET_INFO(wBase,find_by_uname='main_plot_scale')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   ERASE
-
+  
   IF (lin_status EQ 0) THEN BEGIN
-
+  
     divisions = 10
     perso_format = '(e8.1)'
-    range  = FLOAT([min,max])
+    range  = FLOAT([MIN,MAX])
     colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.75,0.01,0.95,0.99], $
@@ -57,12 +63,12 @@ PRO plot_scale, global1, min, max, lin_status=lin_status
       PERSO_FORMAT = perso_format,$
       YLOG = 1,$
       /VERTICAL
-
+      
   ENDIF ELSE BEGIN
-
+  
     divisions = 10
     perso_format = '(e8.1)'
-    range = [min,max]
+    range = [MIN,MAX]
     colorbar, $
       NCOLORS      = 255, $
       POSITION     = [0.75,0.01,0.95,0.99], $
@@ -70,7 +76,7 @@ PRO plot_scale, global1, min, max, lin_status=lin_status
       DIVISIONS    = divisions,$
       PERSO_FORMAT = perso_format,$
       /VERTICAL
-
+      
   ENDELSE
-
+  
 END

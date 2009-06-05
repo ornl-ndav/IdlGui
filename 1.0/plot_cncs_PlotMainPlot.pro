@@ -316,6 +316,7 @@ PRO MakeGuiMainPLot_Event, event
     
     ;from_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='from_bin'): BEGIN
+      check_from_to_bin_input, Event
       change_from_and_to_bins, Event
     END
     
@@ -328,13 +329,14 @@ PRO MakeGuiMainPLot_Event, event
     
     ;to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='to_bin'): BEGIN
+      check_from_to_bin_input, Event
       change_from_and_to_bins, Event
     END
     
     ;reset to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_to_bin'): BEGIN
       IF ((*global1).nexus_file_name NE '') THEN BEGIN
-      bin_max = N_ELEMENTS((*(*global1).tof_array))
+        bin_max = N_ELEMENTS((*(*global1).tof_array))
       ENDIF ELSE BEGIN
         img = (*(*global1).img)
         bin_max = (SIZE(img))(1)
@@ -774,8 +776,11 @@ PRO PlotMainPlot, histo_mapped_file
     background:            PTR_NEW(0L),$
     
     pause_button_activated: 0b,$
-    bin_min:               0.0,$
-    bin_max:               0.0,$
+    bin_min:               0L,$
+    bin_max:               0L,$
+    bin_max_untouched:     0L,$ 
+    from_bin:              1L,$
+    to_bin:                0L,$
     xrange:                INTARR(2),$
     
     left_pressed:         0,$
@@ -860,18 +865,18 @@ PRO PlotMainPlot, histo_mapped_file
   
   ;display counts vs tof for play buttons of central row
   t_img = TOTAL(img,3)
-  HELP, img
-  HELP, t_img
-  counts_vs_tof = t_img[*,64]
+    counts_vs_tof = t_img[*,64]
   (*(*global1).counts_vs_tof_for_play) = counts_vs_tof
   id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
   bin_max = (SIZE(t_img))(1)
+  (*global1).bin_max_untouched = bin_max
   
   id = WIDGET_INFO(wBase,FIND_BY_UNAME='to_bin')
   WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
+  (*global1).to_bin = (bin_max-1)
   
   xrange = [1,bin_max-1]
   (*global1).xrange = xrange
@@ -927,8 +932,11 @@ PRO PlotMainPlotFromNexus, NexusFileName
     background:            PTR_NEW(0L),$
     
     pause_button_activated: 0b,$
-    bin_min:               0.0,$
-    bin_max:               0.0,$
+    bin_min:               0L,$
+    bin_max:               0L,$
+    bin_max_untouched:     0L,$    
+    from_bin:              1L,$
+    to_bin:                0L,$
     xrange:                INTARR(2),$
     
     nexus_file_name:       NexusFileName,$
@@ -1015,6 +1023,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
   
   id = WIDGET_INFO(wBase,FIND_BY_UNAME='to_bin')
   bin_max = N_ELEMENTS((*(*global1).tof_array))
+  (*global1).bin_max_untouched = bin_max
+  (*global1).to_bin = bin_max-1
   WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
   
   xrange = [1,bin_max-1]
