@@ -415,37 +415,14 @@ PRO MakeGuiMainPlot, wBase
     label = WIDGET_LABEL(row4b2,$
     VALUE = 's')
     
-    
-    
-    
-    
-    
-  ;plot_selection_button = WIDGET_BUTTON(MBAR,$
-  ;                                      UNAME = PSbutton.uname,$
-  ;                                      VALUE = PSbutton.value,$
-  ;                                      /MENU)
-    
-  ;plot_das_view_button = WIDGET_BUTTON(plot_selection_button,$
-  ;                                     UNAME = PDVbutton.uname,$
-  ;                                     VALUE = PDVbutton.value);
-    
-  ;plot_tof_view_button = WIDGET_BUTTON(plot_selection_button,$
-  ;                                     UNAME = PtofVbutton.uname,$
-  ;                                     VALUE = PtofVbutton.value)
-    
-  ;scale_button_menu = WIDGET_BUTTON(MBAR,$
-  ;                                  UNAME     = PtofScaleButton.uname,$
-  ;                                  VALUE     = PtofScaleButton.value,$
-  ;                                  SENSITIVE = PtofScaleButton.sensitive,$
-  ;                                  /MENU)
-    
-  ;sz = (size(PtofScale.uname))(1)
-  ;FOR i=0,(sz-1) DO BEGIN
-  ;    scale_button = WIDGET_BUTTON(scale_button_menu,$
-  ;                                 UNAME = PtofScale.uname[i],$
-  ;                                 VALUE = PtofScale.value[i])
-  ;ENDFOR
-    
+
+
+
+
+
+
+
+
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
