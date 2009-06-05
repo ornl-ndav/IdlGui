@@ -319,10 +319,14 @@ PRO MakeGuiMainPlot, wBase
     
   ;---------------------------------------------------------------------------
     
-  row4b = WIDGET_BASE(row4,$ ;column b of row4 ..............................
+  row4ba = WIDGET_BASE(row4,$
+  /ROW,$
+  FRAME = 1)
+
+  row4b = WIDGET_BASE(row4ba,$ ;column b of row4 ..............................
     /COLUMN,$
-    FRAME = 1)
-    
+    FRAME = 0)
+
   row4b1 = WIDGET_BASE(row4b,$ ;row 1 of column b of row 4 ..................
     /ROW)
     
@@ -415,16 +419,44 @@ PRO MakeGuiMainPlot, wBase
   label = WIDGET_LABEL(row4b2,$
     VALUE = 's')
     
-  ;-----------------------------------------------------------------------------
-  draw_base = WIDGET_BASE(row4)
-  
   ;plot that will display counts vs tof of central row
-  draw = WIDGET_DRAW(draw_base,$
+  draw = WIDGET_DRAW(row4ba,$
     SCR_XSIZE = 600,$
     SCR_YSIZE = 130,$
     XOFFSET = 0,$
     YOFFSET = 0,$
     UNAME = 'play_counts_vs_tof_plot')
+    
+  base_v = WIDGET_BASE(row4ba,$ ;selection of playing range (min and max)
+  /COLUMN)
+  
+  label = WIDGET_LABEL(base_v,$
+  VALUE = 'Select playing range')
+  
+  field1 = CW_FIELD(base_v,$
+    /RETURN_EVENTS,$
+    TITLE = '       From:',$
+    XSIZE = 6,$
+    UNAME = 'from_bin',$
+    /INTEGER)
+    
+    field2 = CW_FIELD(base_v,$
+    /RETURN_EVENTS,$
+    TITLE = '         To:',$
+    XSIZE = 6,$
+    UNAME = 'to_bin',$
+    /INTEGER)
+    
+    label = WIDGET_LABEL(base_v,$
+    VALUE = '(or left and right click mouse)')
+    
+    
+    
+    
+    
+    
+    
+    
     
   WIDGET_CONTROL, wBase, /REALIZE
   
