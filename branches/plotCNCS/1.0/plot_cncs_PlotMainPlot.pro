@@ -144,6 +144,9 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
       MainPlotInteraction, Event
       
+      standard = 31
+      DEVICE, CURSOR_STANDARD=standard
+      
       IF (Event.press EQ 1) THEN BEGIN ;press left button
         (*global1).left_pressed = 1
         (*global1).X1 = Event.x
