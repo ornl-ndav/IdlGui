@@ -270,15 +270,22 @@ PRO MakeGuiMainPLot_Event, event
     
     ;previous button
     WIDGET_INFO(event.top, FIND_BY_UNAME='previous_button'): BEGIN
+      PRINT, 'previous'
+      error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
+          PRINT, 'here'
           play_buttons_activation, event, activate_button='previous'
+          play_previous, Event
+          play_buttons_activation, event, activate_button='all
         ENDIF
       ENDIF ELSE BEGIN
-        standard = 58
-        DEVICE, CURSOR_STANDARD=standard
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
       ENDELSE
     END
     
