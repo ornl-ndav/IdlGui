@@ -273,13 +273,13 @@ PRO stop_play, Event
   putTextFieldValue, Event, 'max_tof_value', 'N/A'
   putTextFieldValue, Event, 'min_bin_value', 'N/A'
   putTextFieldValue, Event, 'max_bin_value', 'N/A'
-
+  
   tof_array = (*(*global1).tof_array)
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   (*global1).bin_min = 0
   (*global1).bin_max = nbr_bins_per_frame
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -306,9 +306,9 @@ PRO play_next, Event
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  ERASE
   
   IF (bin_max GE nbr_total_bins) THEN RETURN
+  ERASE
   
   bin_min = bin_max
   bin_max = bin_min + nbr_bins_per_frame
@@ -320,7 +320,57 @@ PRO play_next, Event
   (*global1).bin_min = bin_min
   (*global1).bin_max = bin_max
   
-    ;display min and max
+  ;display min and max
+  putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
+  putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
+  putTextFieldValue, Event, 'min_tof_value', $
+    STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
+  putTextFieldValue, Event, 'max_tof_value', $
+    STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
+    
+  plot_from_play_tof, Event, img_range
+  
+END
+
+;------------------------------------------------------------------------------
+PRO play_previous, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  tof_array = (*(*global1).tof_array)
+  
+  ;get nbr bins per frame
+  nbr_bins_per_frame = getNbrBinsPerFrame(Event)
+  time_per_frame     = getTimePerFrame(Event)
+  
+  time_per_frame = FLOAT(time_per_frame) / 3.0 ;to check 3 times if pause has been hitted
+  ;during the same frame displayed
+  
+  img = (*(*global1).img)
+  nbr_total_bins = (SIZE(img))(1)
+  
+  bin_min = (*global1).bin_min
+  bin_max = (*global1).bin_max
+  
+  ;select plot area
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  IF (bin_min LE 0) THEN RETURN
+  ERASE
+  
+  bin_max = bin_min
+  bin_min = bin_max - nbr_bins_per_frame
+  IF (bin_min LE 0) THEN bin_min = 0
+  
+  ;extract range of data
+  img_range = img[bin_min:bin_max-1,*,*]
+  
+  (*global1).bin_min = bin_min
+  (*global1).bin_max = bin_max
+  
+  ;display min and max
   putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
   putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
   putTextFieldValue, Event, 'min_tof_value', $
