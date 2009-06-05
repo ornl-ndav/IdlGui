@@ -485,11 +485,11 @@ PRO plotDASviewFullInstrument, global1
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
-  ;display min and max in cw_fields
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
-  WIDGET_CONTROL, id, SET_VALUE=MIN
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
-  WIDGET_CONTROL, id, SET_VALUE=MAX
+ ; ;display min and max in cw_fields
+ ; id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+ ; WIDGET_CONTROL, id, SET_VALUE=MIN
+ ; id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+ ; WIDGET_CONTROL, id, SET_VALUE=MAX
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
