@@ -553,3 +553,13 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME='time_per_frame_tof')
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getFromBin, Event
+RETURN, getCW_BgroupValue(Event, 'from_bin')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getToBin, Event
+RETURN, getCW_BgroupValue(Event, 'to_bin')
+END

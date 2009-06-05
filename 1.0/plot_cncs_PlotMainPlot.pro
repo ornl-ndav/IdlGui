@@ -314,6 +314,15 @@ PRO MakeGuiMainPLot_Event, event
       preview_of_tof, Event
     END
     
+    ;from_bin
+    WIDGET_INFO(event.top, FIND_BY_UNAME='from_bin'): BEGIN
+    change_from_and_to_bins, Event
+    END
+    
+    ;to_bin
+    WIDGET_INFO(event.top, FIND_BY_UNAME='to_bin'): BEGIN
+    change_from_and_to_bins, Event
+    END
     
     ELSE:
   ENDCASE
@@ -827,10 +836,12 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y2:                    0L,$
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
+    counts_vs_tof_for_play: PTR_NEW(0L),$
     
     pause_button_activated: 0b,$
     bin_min:               0.0,$
     bin_max:               0.0,$
+    xrange:                INTARR(2),$
     
     nexus_file_name:       NexusFileName,$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
@@ -909,21 +920,28 @@ PRO PlotMainPlotFromNexus, NexusFileName
   ;display counts vs tof for play buttons of central row
   t_img = TOTAL(img,3)
   counts_vs_tof = t_img[*,64]
+  (*(*global1).counts_vs_tof_for_play) = counts_vs_tof
   id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  PLOT, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts'
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='to_bin')
+  bin_max = N_ELEMENTS((*(*global1).tof_array))
+  WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
   
-  ;take snapshot
-  background = TVREAD(TRUE=3)
-  DEVICE, copy=[0,0,400,400,0,0,id_value]
-  POLYFILL, [0,10,10,0,0],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+  xrange = [1,bin_max-1]
+  (*global1).xrange = xrange  
+  PLOT, counts_vs_tof, XTITLE='Bins #', $
+  YTITLE='Counts', XRANGE=xrange,$
+  XSTYLE=1
   
-  foreground = TVREAD(TRUE=3)
-  
-  alpha= 0.25 
-  TV, (foreground*alpha)+(1-alpha)*background, true=3
+;  ;take snapshot
+;  background = TVREAD(TRUE=3)
+;  DEVICE, copy=[0,0,400,400,0,0,id_value]
+;  POLYFILL, [0,10,10,0,0],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+;  foreground = TVREAD(TRUE=3) 
+;  alpha= 0.25 
+;  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
   ;plot das view of full instrument
   progressBar->SetLabel, 'Generating Plot ...'
