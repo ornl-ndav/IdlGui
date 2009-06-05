@@ -540,18 +540,28 @@ PRO plot_main_plot_with_new_bin_range, Event
   id = WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
-  ;  ;display min and max in cw_fields
-  ;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
-  ;  WIDGET_CONTROL, id, SET_VALUE=MIN
-  ;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
-  ;  WIDGET_CONTROL, id, SET_VALUE=MAX
+  ;check if we want lin or log
+  lin_status = isMainPlotLin(Event)
+  
+  IF (lin_status EQ 0) THEN BEGIN ;log
+  
+    ;remove 0 values and replace with NAN
+    ;and calculate log
+    index = WHERE(big_array EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      big_array[index] = !VALUES.D_NAN
+      big_array = ALOG10(big_array)
+      big_array = BYTSCL(big_array,/NAN)
+    ENDIF
+    
+  ENDIF
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
   
   yoff = 0
   TVSCL, big_array_rebin, /DEVICE, xoff, yoff
-  (*(*global1).big_array_rebin) = big_array_rebin
+  ;(*(*global1).big_array_rebin) = big_array_rebin
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
   ;plot grid
