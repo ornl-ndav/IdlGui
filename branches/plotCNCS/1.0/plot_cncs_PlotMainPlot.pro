@@ -125,13 +125,15 @@ PRO MakeGuiMainPLot_Event, event
     
     ;linear plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
-      replot_main_plot_with_scale, Event
+      plot_main_plot_with_new_bin_range, Event
+      ;replot_main_plot_with_scale, Event
       plot_selection_box, Event
     END
     
     ;log plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_log_plot'): BEGIN
-      replot_main_plot_with_scale, Event
+      plot_main_plot_with_new_bin_range, Event
+      ;replot_main_plot_with_scale, Event
       plot_selection_box, Event
     END
     
