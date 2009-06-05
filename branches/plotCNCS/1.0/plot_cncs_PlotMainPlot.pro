@@ -319,8 +319,28 @@ PRO MakeGuiMainPLot_Event, event
       change_from_and_to_bins, Event
     END
     
+    ;reset from_bin
+    WIDGET_INFO(event.top, FIND_BY_UNAME='reset_from_bin'): BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='from_bin')
+      WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(1)
+      change_from_and_to_bins, Event
+    END
+    
     ;to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='to_bin'): BEGIN
+      change_from_and_to_bins, Event
+    END
+    
+    ;reset to_bin
+    WIDGET_INFO(event.top, FIND_BY_UNAME='reset_to_bin'): BEGIN
+      IF ((*global1).nexus_file_name NE '') THEN BEGIN
+      bin_max = N_ELEMENTS((*(*global1).tof_array))
+      ENDIF ELSE BEGIN
+        img = (*(*global1).img)
+        bin_max = (SIZE(img))(1)
+      ENDELSE
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='to_bin')
+      WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
       change_from_and_to_bins, Event
     END
     
@@ -777,7 +797,7 @@ PRO PlotMainPlot, histo_mapped_file
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
   
-    ;display buttons (play, stop, next, previous, pause) -----------------------
+  ;display buttons (play, stop, next, previous, pause) -----------------------
   raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
   mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
   WIDGET_CONTROL, mode_id, GET_VALUE=id
@@ -816,7 +836,7 @@ PRO PlotMainPlot, histo_mapped_file
   
   ;---------------------------------------------------------------------------
   
-    ;open file
+  ;open file
   OPENR,u,histo_mapped_file,/get
   fs=FSTAT(u)
   Nx = LONG(50*8)
@@ -838,17 +858,17 @@ PRO PlotMainPlot, histo_mapped_file
   
   (*(*global1).img)= img
   
-    ;display counts vs tof for play buttons of central row
+  ;display counts vs tof for play buttons of central row
   t_img = TOTAL(img,3)
-  help, img
-  help, t_img
+  HELP, img
+  HELP, t_img
   counts_vs_tof = t_img[*,64]
   (*(*global1).counts_vs_tof_for_play) = counts_vs_tof
   id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  bin_max = (size(t_img))(1)
+  bin_max = (SIZE(t_img))(1)
   
   id = WIDGET_INFO(wBase,FIND_BY_UNAME='to_bin')
   WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
@@ -862,7 +882,7 @@ PRO PlotMainPlot, histo_mapped_file
   ;take snapshot
   background = TVREAD(TRUE=3)
   (*(*global1).background) = background
- 
+  
   ;disable View full TOF axis
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='tof_preview')
   WIDGET_CONTROL, id, SENSITIVE=0
