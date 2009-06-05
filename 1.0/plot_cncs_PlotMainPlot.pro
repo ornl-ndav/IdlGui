@@ -906,6 +906,15 @@ PRO PlotMainPlotFromNexus, NexusFileName
   img = getIMGfromNexus(NexusFileName, progressBar, Nstep, progressBarCancel)
   (*(*global1).img)= img
   
+  ;display counts vs tof for play buttons of central row
+  t_img = total(img,3)
+  counts_vs_tof = t_img[*,64]
+  id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts'
+  
+  
   ;plot das view of full instrument
   progressBar->SetLabel, 'Generating Plot ...'
   plotDASviewFullInstrument, global1
