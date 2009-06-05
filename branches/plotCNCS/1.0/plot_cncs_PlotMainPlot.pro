@@ -260,6 +260,7 @@ PRO MakeGuiMainPLot_Event, event
         IF (event.press EQ 1) THEN BEGIN
           play_buttons_activation, event, activate_button='stop'
           stop_play, Event
+          play_buttons_activation, event, activate_button='raw'
         ;          status_buttons = (*global).status_buttons
         ;          IF (status_buttons[3] EQ 0) THEN BEGIN
         ;            display_buttons, EVENT=EVENT, ACTIVATE=4, global
