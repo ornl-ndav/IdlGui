@@ -563,7 +563,7 @@ PRO replot_main_plot_with_scale, Event, without_scale=without_scale
   WSET, id_value
   ;ERASE
   
-  ;min value
+  ;min value and max value
   min = getCWFieldValue(Event,'main_base_min_value')
   max = getCWFieldValue(Event,'main_base_max_value')
   
