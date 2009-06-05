@@ -664,7 +664,7 @@ PRO replot_main_plot, Event
     
   ENDIF
   
-  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  TVSCL, big_array_rebin, /DEVICE, 0, 0
   
   ;plot grid
   plotGridMainPlot, global1
