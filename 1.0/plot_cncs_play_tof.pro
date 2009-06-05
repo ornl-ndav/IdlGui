@@ -507,7 +507,7 @@ PRO plot_main_plot_with_new_bin_range, Event
   to_bin   = getToBin(Event)
   
   ;main data array
-  tvimg = img[from_bin:to_bin,*,*]
+  tvimg = img[from_bin-1:to_bin-1,*,*]
   tvimg = TOTAL(tvimg,1)
   tvimg = TRANSPOSE(tvimg)
   

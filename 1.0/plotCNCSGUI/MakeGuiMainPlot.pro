@@ -433,21 +433,35 @@ PRO MakeGuiMainPlot, wBase
   label = WIDGET_LABEL(base_v,$
   VALUE = 'Select playing range')
   
-  field1 = CW_FIELD(base_v,$
+  row_bin_a = WIDGET_BASE(base_v,$ ;from bin
+  /ROW)
+  
+  field1 = CW_FIELD(row_bin_a,$
     /RETURN_EVENTS,$
-    TITLE = '     From bin #',$
+    TITLE = 'From bin #',$
     XSIZE = 6,$
     VALUE = 1,$
     UNAME = 'from_bin',$
     /INTEGER)
+  
+  reset = WIDGET_BUTTON(row_bin_a,$
+  VALUE = 'RESET',$
+  UNAME = 'reset_from_bin')
+
+  row_bin_b = WIDGET_BASE(base_v,$ ;to bin
+  /ROW)
     
-    field2 = CW_FIELD(base_v,$
+    field2 = CW_FIELD(row_bin_b,$
     /RETURN_EVENTS,$
-    TITLE = '       To bin #',$
+    TITLE = '  To bin #',$
     XSIZE = 6,$
     VALUE = 'N/A',$
     UNAME = 'to_bin',$
     /INTEGER)
+    
+    reset = WIDGET_BUTTON(row_bin_b,$
+    VALUE = 'RESET',$
+    UNAME = 'reset_to_bin')
     
     label = WIDGET_LABEL(base_v,$
     VALUE = '(or left and right click mouse)')
