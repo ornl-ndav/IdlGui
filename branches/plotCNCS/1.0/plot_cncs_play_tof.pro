@@ -305,7 +305,14 @@ PRO stop_play, Event
   bin_max = getToBin(Event)
   (*global1).bin_max = bin_max
   
-  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
+  id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = (*(*global1).background)
+  TV, background
+  
+;display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   
 END
 
