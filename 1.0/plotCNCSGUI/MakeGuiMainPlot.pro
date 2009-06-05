@@ -260,7 +260,8 @@ PRO MakeGuiMainPlot, wBase
     scr_xsize = 34,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$    
+    /TRACKING_EVENTS,$
+    TOOLTIP = 'Pause',$    
     scr_ysize = 27,$
     xoffset = 56,$
     yoffset= 82)
@@ -272,6 +273,7 @@ PRO MakeGuiMainPlot, wBase
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$    
     scr_ysize = 25,$
+    TOOLTIP = 'Return to intilal plot with all TOF integrated',$
     xoffset = 120,$
     yoffset= 82)
   
@@ -282,6 +284,7 @@ PRO MakeGuiMainPlot, wBase
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
     scr_ysize = 41,$
+    TOOLTIP = 'Display previous frame',$
     xoffset = 12,$
     yoffset= 35)
   
@@ -292,6 +295,7 @@ PRO MakeGuiMainPlot, wBase
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
     scr_ysize = 60,$
+    TOOLTIP = 'Play',$
     xoffset = 65,$
     yoffset= 7)
   
@@ -302,6 +306,7 @@ PRO MakeGuiMainPlot, wBase
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
     scr_ysize = 45,$
+    TOOLTIP = 'Display next frame',$
     xoffset = 148,$
     yoffset= 33)
     
