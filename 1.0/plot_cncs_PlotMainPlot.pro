@@ -119,7 +119,8 @@ PRO MakeGuiMainPLot_Event, event
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
-      replot_main_plot, Event
+      plot_main_plot_with_new_bin_range, Event
+      ;replot_main_plot, Event
       plot_selection_box, Event
     END
     
@@ -511,9 +512,6 @@ PRO plotDASviewFullInstrument, global1
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
-  
-  ;remove_me
-  ;  big_array_rebin[0:3,0:1] = 1500
   
   yoff = 0
   TVSCL, big_array_rebin, /DEVICE, xoff, yoff
