@@ -416,17 +416,15 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 's')
     
   ;-----------------------------------------------------------------------------
+  draw_base = WIDGET_BASE(row4)
+  
   ;plot that will display counts vs tof of central row
-  draw = WIDGET_DRAW(row4,$
+  draw = WIDGET_DRAW(draw_base,$
     SCR_XSIZE = 600,$
     SCR_YSIZE = 130,$
+    XOFFSET = 0,$
+    YOFFSET = 0,$
     UNAME = 'play_counts_vs_tof_plot')
-    
-    
-    
-    
-    
-    
     
   WIDGET_CONTROL, wBase, /REALIZE
   
