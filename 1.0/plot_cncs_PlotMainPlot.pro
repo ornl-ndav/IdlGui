@@ -316,12 +316,12 @@ PRO MakeGuiMainPLot_Event, event
     
     ;from_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='from_bin'): BEGIN
-    change_from_and_to_bins, Event
+      change_from_and_to_bins, Event
     END
     
     ;to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='to_bin'): BEGIN
-    change_from_and_to_bins, Event
+      change_from_and_to_bins, Event
     END
     
     ELSE:
@@ -484,12 +484,6 @@ PRO plotDASviewFullInstrument, global1
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(min,/REMOVE_ALL)
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
-  
- ; ;display min and max in cw_fields
- ; id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
- ; WIDGET_CONTROL, id, SET_VALUE=MIN
- ; id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
- ; WIDGET_CONTROL, id, SET_VALUE=MAX
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
@@ -755,6 +749,15 @@ PRO PlotMainPlot, histo_mapped_file
     Y1:                    0L,$
     X2:                    0L,$
     Y2:                    0L,$
+    
+    counts_vs_tof_for_play: PTR_NEW(0L),$
+    background:            PTR_NEW(0L),$
+    
+    pause_button_activated: 0b,$
+    bin_min:               0.0,$
+    bin_max:               0.0,$
+    xrange:                INTARR(2),$
+    
     left_pressed:         0,$
     main_plot_real_title: 'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:  'TOF View (TOF vs X integrated over Y)',$
@@ -774,7 +777,46 @@ PRO PlotMainPlot, histo_mapped_file
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
   
-  ;open file
+    ;display buttons (play, stop, next, previous, pause) -----------------------
+  raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, raw_buttons, 0, 0,/true
+  
+  pause_button = READ_PNG('plotCNCS_images/pause_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='pause_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, pause_button, 0, 0,/true
+  
+  stop_button = READ_PNG('plotCNCS_images/stop_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='stop_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, stop_button, 0, 0,/true
+  
+  previous_button = READ_PNG('plotCNCS_images/previous_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='previous_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, previous_button, 0, 0,/true
+  
+  play_button = READ_PNG('plotCNCS_images/play_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, play_button, 0, 0,/true
+  
+  next_button = READ_PNG('plotCNCS_images/next_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='next_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, next_button, 0, 0,/true
+  
+  ;---------------------------------------------------------------------------
+  
+    ;open file
   OPENR,u,histo_mapped_file,/get
   fs=FSTAT(u)
   Nx = LONG(50*8)
@@ -796,6 +838,31 @@ PRO PlotMainPlot, histo_mapped_file
   
   (*(*global1).img)= img
   
+    ;display counts vs tof for play buttons of central row
+  t_img = TOTAL(img,3)
+  help, img
+  help, t_img
+  counts_vs_tof = t_img[*,64]
+  (*(*global1).counts_vs_tof_for_play) = counts_vs_tof
+  id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  bin_max = (size(t_img))(1)
+  
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='to_bin')
+  WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
+  
+  xrange = [1,bin_max-1]
+  (*global1).xrange = xrange
+  PLOT, counts_vs_tof, XTITLE='Bins #', $
+    YTITLE='Counts', XRANGE=xrange,$
+    XSTYLE=1
+    
+  ;take snapshot
+  background = TVREAD(TRUE=3)
+  (*(*global1).background) = background
+ 
   ;disable View full TOF axis
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='tof_preview')
   WIDGET_CONTROL, id, SENSITIVE=0
@@ -931,12 +998,12 @@ PRO PlotMainPlotFromNexus, NexusFileName
   WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
   
   xrange = [1,bin_max-1]
-  (*global1).xrange = xrange  
+  (*global1).xrange = xrange
   PLOT, counts_vs_tof, XTITLE='Bins #', $
-  YTITLE='Counts', XRANGE=xrange,$
-  XSTYLE=1
-  
-;take snapshot
+    YTITLE='Counts', XRANGE=xrange,$
+    XSTYLE=1
+    
+  ;take snapshot
   background = TVREAD(TRUE=3)
   (*(*global1).background) = background
   
