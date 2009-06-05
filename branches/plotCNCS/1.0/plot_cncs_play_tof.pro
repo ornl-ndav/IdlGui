@@ -108,7 +108,9 @@ PRO play_tof, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
-  tof_array = (*(*global1).tof_array)
+  IF ((*global1).nexus_file_name NE '' ) THEN BEGIN
+    tof_array = (*(*global1).tof_array)
+  ENDIF
   
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
@@ -149,11 +151,13 @@ PRO play_tof, Event
     ;display min and max
     putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
     putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
-    putTextFieldValue, Event, 'min_tof_value', $
-      STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
-    putTextFieldValue, Event, 'max_tof_value', $
-      STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
-      
+    IF ((*global1).nexus_file_name NE '' ) THEN BEGIN
+      putTextFieldValue, Event, 'min_tof_value', $
+        STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
+      putTextFieldValue, Event, 'max_tof_value', $
+        STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
+    ENDIF
+    
     plot_from_play_tof, Event, img_range
     
     time_index = 0
@@ -297,7 +301,6 @@ PRO stop_play, Event
   putTextFieldValue, Event, 'min_bin_value', 'N/A'
   putTextFieldValue, Event, 'max_bin_value', 'N/A'
   
-  tof_array = (*(*global1).tof_array)
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   bin_min = getFromBin(Event)
@@ -320,8 +323,6 @@ END
 PRO play_next, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
-  
-  tof_array = (*(*global1).tof_array)
   
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
@@ -359,11 +360,14 @@ PRO play_next, Event
   ;display min and max
   putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
   putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
-  putTextFieldValue, Event, 'min_tof_value', $
-    STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
-  putTextFieldValue, Event, 'max_tof_value', $
-    STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
-    
+  IF ((*global1).nexus_file_name NE '') THEN BEGIN
+    tof_array = (*(*global1).tof_array)
+    putTextFieldValue, Event, 'min_tof_value', $
+      STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
+    putTextFieldValue, Event, 'max_tof_value', $
+      STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
+  ENDIF
+  
   display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   plot_from_play_tof, Event, img_range
   
@@ -373,8 +377,6 @@ END
 PRO play_previous, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
-  
-  tof_array = (*(*global1).tof_array)
   
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
@@ -412,11 +414,14 @@ PRO play_previous, Event
   ;display min and max
   putTextFieldValue, Event, 'min_bin_value', STRCOMPRESS(bin_min,/REMOVE_ALL)
   putTextFieldValue, Event, 'max_bin_value', STRCOMPRESS(bin_max,/REMOVE_ALL)
-  putTextFieldValue, Event, 'min_tof_value', $
-    STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
-  putTextFieldValue, Event, 'max_tof_value', $
-    STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
-    
+  IF ((*global1).nexus_file_name NE '') THEN BEGIN
+    tof_array = (*(*global1).tof_array)
+    putTextFieldValue, Event, 'min_tof_value', $
+      STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
+    putTextFieldValue, Event, 'max_tof_value', $
+      STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
+  ENDIF
+  
   display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   plot_from_play_tof, Event, img_range
   
@@ -500,7 +505,7 @@ PRO plot_main_plot_with_new_bin_range, Event
   
   from_bin = getFromBin(Event)
   to_bin   = getToBin(Event)
-
+  
   ;main data array
   tvimg = img[from_bin:to_bin,*,*]
   tvimg = TOTAL(tvimg,1)
@@ -535,11 +540,11 @@ PRO plot_main_plot_with_new_bin_range, Event
   id = WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value')
   WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(max,/REMOVE_ALL)
   
-;  ;display min and max in cw_fields
-;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
-;  WIDGET_CONTROL, id, SET_VALUE=MIN
-;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
-;  WIDGET_CONTROL, id, SET_VALUE=MAX
+  ;  ;display min and max in cw_fields
+  ;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_min_value')
+  ;  WIDGET_CONTROL, id, SET_VALUE=MIN
+  ;  id = WIDGET_INFO(wBase, FIND_BY_UNAME='main_base_max_value')
+  ;  WIDGET_CONTROL, id, SET_VALUE=MAX
   
   ;rebin big array
   big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
@@ -554,5 +559,5 @@ PRO plot_main_plot_with_new_bin_range, Event
   
   ;plot scale
   plot_scale, global1, min, max
-
+  
 END

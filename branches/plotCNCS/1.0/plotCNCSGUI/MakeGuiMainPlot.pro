@@ -452,14 +452,6 @@ PRO MakeGuiMainPlot, wBase
     label = WIDGET_LABEL(base_v,$
     VALUE = '(or left and right click mouse)')
     
-    
-    
-    
-    
-    
-    
-    
-    
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
