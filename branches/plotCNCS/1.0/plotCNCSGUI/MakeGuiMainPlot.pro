@@ -341,7 +341,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'TOF')
     
   label = WIDGET_LABEL(row4b1a1,$
-    VALUE = '   Min:')
+    VALUE = '   Left:')
     
   label = WIDGET_LABEL(row4b1a1,$
     VALUE = 'N/A',$
@@ -354,7 +354,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'microS     ')
     
   label = WIDGET_LABEL(row4b1a1,$
-    VALUE = 'Max:')
+    VALUE = 'Right:')
     
   label = WIDGET_LABEL(row4b1a1,$
     VALUE = 'N/A',$
@@ -373,7 +373,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'Bin #')
     
   label = WIDGET_LABEL(row4b1a2,$
-    VALUE = ' Min:')
+    VALUE = ' Left:')
     
   label = WIDGET_LABEL(row4b1a2,$
     VALUE = 'N/A',$
@@ -383,7 +383,7 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'min_bin_value')
     
   label = WIDGET_LABEL(row4b1a2,$
-    VALUE = '            Max:')
+    VALUE = '            Right:')
     
   label = WIDGET_LABEL(row4b1a2,$
     VALUE = 'N/A',$
@@ -435,15 +435,17 @@ PRO MakeGuiMainPlot, wBase
   
   field1 = CW_FIELD(base_v,$
     /RETURN_EVENTS,$
-    TITLE = '       From:',$
+    TITLE = '     From bin #',$
     XSIZE = 6,$
+    VALUE = 1,$
     UNAME = 'from_bin',$
     /INTEGER)
     
     field2 = CW_FIELD(base_v,$
     /RETURN_EVENTS,$
-    TITLE = '         To:',$
+    TITLE = '       To bin #',$
     XSIZE = 6,$
+    VALUE = 'N/A',$
     UNAME = 'to_bin',$
     /INTEGER)
     

@@ -124,8 +124,8 @@ PRO play_tof, Event
     bin_min = (*global1).bin_min
     bin_max = (*global1).bin_max
   ENDIF ELSE BEGIN
-    bin_min = 0
-    bin_max = nbr_bins_per_frame
+    bin_min = getFromBin(Event)
+    bin_max = bin_min + nbr_bins_per_frame
   ENDELSE
   
   ;select plot area
@@ -134,7 +134,8 @@ PRO play_tof, Event
   WSET, id_value
   ERASE
   
-  WHILE (bin_min LT nbr_total_bins) DO BEGIN
+  to_bin = getToBin(Event)
+  WHILE (bin_min LT to_bin) DO BEGIN
   
     ;extract range of data
     img_range = img[bin_min:bin_max-1,*,*]
@@ -174,7 +175,8 @@ PRO play_tof, Event
     
     bin_min = bin_max
     bin_max = bin_min + nbr_bins_per_frame
-    IF (bin_max GT nbr_total_bins) THEN bin_max = nbr_total_bins
+    
+    IF (bin_max GT to_bin) THEN bin_max = to_bin
     
   ENDWHILE
   
@@ -208,7 +210,6 @@ PRO plot_from_play_tof, Event, img
   id = WIDGET_INFO(wBase,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  ;  ERASE
   
   ;Create big array (before rebining)
   xsize       = 8L
@@ -301,18 +302,19 @@ PRO play_next, Event
   
   bin_min = (*global1).bin_min
   bin_max = (*global1).bin_max
+  to_bin = getToBin(Event)
   
   ;select plot area
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  IF (bin_max GE nbr_total_bins) THEN RETURN
+  IF (bin_max GE to_bin) THEN RETURN
   ERASE
   
   bin_min = bin_max
   bin_max = bin_min + nbr_bins_per_frame
-  IF (bin_max GT nbr_total_bins) THEN bin_max = nbr_total_bins
+  IF (bin_max GT to_bin) THEN bin_max = to_bin
   
   ;extract range of data
   img_range = img[bin_min:bin_max-1,*,*]
@@ -351,18 +353,19 @@ PRO play_previous, Event
   
   bin_min = (*global1).bin_min
   bin_max = (*global1).bin_max
+  from_bin = getFromBin(Event)
   
   ;select plot area
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  IF (bin_min LE 0) THEN RETURN
+  IF (bin_min LE from_bin) THEN RETURN
   ERASE
   
   bin_max = bin_min
   bin_min = bin_max - nbr_bins_per_frame
-  IF (bin_min LE 0) THEN bin_min = 0
+  IF (bin_min LE from_bin) THEN bin_min = from_bin
   
   ;extract range of data
   img_range = img[bin_min:bin_max-1,*,*]
@@ -379,5 +382,39 @@ PRO play_previous, Event
     STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
     
   plot_from_play_tof, Event, img_range
+  
+END
+
+;------------------------------------------------------------------------------
+PRO change_from_and_to_bins, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;display counts vs tof for play buttons of central row
+  counts_vs_tof = (*(*global1).counts_vs_tof_for_play)
+  id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  ;get from_bin and to_bin
+  from_bin = getTextFieldValue(event,'from_bin')
+  to_bin = getTextFieldValue(event,'to_bin')
+  
+  xrange = (*global1).xrange
+  PLOT, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts', $
+    XRANGE=xrange, XSTYLE=1
+  from_bin_min = xrange[0]
+  to_bin_min = xrange[1]
+  
+  ;take snapshot
+  background = TVREAD(TRUE=3)
+  DEVICE, copy=[0,0,600,130,0,0,id_value]
+  POLYFILL, [from_bin_min,from_bin,from_bin,from_bin_min, from_bin_min],$
+    [0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+  POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+  foreground = TVREAD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
   
 END
