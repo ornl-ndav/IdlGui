@@ -271,6 +271,7 @@ PRO stop_play, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   plotDASviewFullInstrument, global1
   putTextFieldValue, Event, 'min_tof_value', 'N/A'
+  (*global1).pause_button_activated = 0
   putTextFieldValue, Event, 'max_tof_value', 'N/A'
   putTextFieldValue, Event, 'min_bin_value', 'N/A'
   putTextFieldValue, Event, 'max_bin_value', 'N/A'
