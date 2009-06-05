@@ -561,3 +561,32 @@ PRO plot_main_plot_with_new_bin_range, Event
   plot_scale, global1, min, max
   
 END
+
+;------------------------------------------------------------------------------
+PRO check_from_to_bin_input, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  from_bin = getFromBin(Event)
+  to_bin = getToBin(Event)
+  
+  min_bin = MIN([from_bin,to_bin],MAX=max_bin)
+  
+  from_bin = min_bin
+  to_bin   = max_bin
+  
+  IF (from_bin EQ to_bin) THEN BEGIN
+    from_bin = (*global1).from_bin
+    to_bin = (*global1).to_bin
+  ENDIF ELSE BEGIN
+    IF (from_bin LT 1) THEN from_bin = (*global1).from_bin
+    IF (to_bin GT (*global1).bin_max_untouched) THEN to_bin = (*global1).to_bin
+  ENDELSE
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='from_bin')
+  WIDGET_CONTROL, id, SET_VALUE=from_bin
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='to_bin')
+  WIDGET_CONTROL, id, SET_VALUE=to_bin
+  
+END
