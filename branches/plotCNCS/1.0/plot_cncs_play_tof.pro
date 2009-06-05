@@ -114,7 +114,8 @@ PRO play_tof, Event
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   time_per_frame     = getTimePerFrame(Event)
   
-  time_per_frame = FLOAT(time_per_frame) / 3.0 ;to check 3 times if pause has been hitted
+  ;to check 3 times if pause has been hitted
+  time_per_frame = FLOAT(time_per_frame) / 3.0
   ;during the same frame displayed
   
   img = (*(*global1).img)
@@ -137,6 +138,8 @@ PRO play_tof, Event
   to_bin = getToBin(Event)
   WHILE (bin_min LT to_bin) DO BEGIN
   
+    display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
+    
     ;extract range of data
     img_range = img[bin_min:bin_max-1,*,*]
     
@@ -243,8 +246,9 @@ PRO plot_from_play_tof, Event, img
   IF (min NE MAX) THEN BEGIN
   
     ;rebin big array
-    big_array_rebin = REBIN(big_array, xsize_total*Xfactor, ysize*Yfactor,/SAMPLE)
-    
+    big_array_rebin = REBIN(big_array, xsize_total*Xfactor, $
+      ysize*Yfactor,/SAMPLE)
+      
     yoff = 0
     TVSCL, big_array_rebin, /DEVICE, xoff, yoff
     (*(*global1).big_array_rebin) = big_array_rebin
@@ -279,8 +283,12 @@ PRO stop_play, Event
   tof_array = (*(*global1).tof_array)
   ;get nbr bins per frame
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
-  (*global1).bin_min = 0
-  (*global1).bin_max = nbr_bins_per_frame
+  bin_min = getFromBin(Event)
+  (*global1).bin_min = bin_min
+  bin_max = getToBin(Event)
+  (*global1).bin_max = bin_max
+  
+  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   
 END
 
@@ -295,7 +303,8 @@ PRO play_next, Event
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   time_per_frame     = getTimePerFrame(Event)
   
-  time_per_frame = FLOAT(time_per_frame) / 3.0 ;to check 3 times if pause has been hitted
+  ;to check 3 times if pause has been hitted
+  time_per_frame = FLOAT(time_per_frame) / 3.0
   ;during the same frame displayed
   
   img = (*(*global1).img)
@@ -330,9 +339,10 @@ PRO play_next, Event
     STRCOMPRESS(tof_array[bin_min],/REMOVE_ALL)
   putTextFieldValue, Event, 'max_tof_value', $
     STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
-    
-  plot_from_play_tof, Event, img_range
   
+  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max  
+  plot_from_play_tof, Event, img_range
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -346,7 +356,8 @@ PRO play_previous, Event
   nbr_bins_per_frame = getNbrBinsPerFrame(Event)
   time_per_frame     = getTimePerFrame(Event)
   
-  time_per_frame = FLOAT(time_per_frame) / 3.0 ;to check 3 times if pause has been hitted
+  ;to check 3 times if pause has been hitted
+  time_per_frame = FLOAT(time_per_frame) / 3.0
   ;during the same frame displayed
   
   img = (*(*global1).img)
@@ -382,6 +393,7 @@ PRO play_previous, Event
   putTextFieldValue, Event, 'max_tof_value', $
     STRCOMPRESS(tof_array[bin_max],/REMOVE_ALL)
     
+  display_current_bin, Event, bin_min=bin_min, bin_max=bin_max  
   plot_from_play_tof, Event, img_range
   
 END
@@ -412,10 +424,36 @@ PRO change_from_and_to_bins, Event
   DEVICE, copy=[0,0,600,130,0,0,id_value]
   POLYFILL, [from_bin_min,from_bin,from_bin,from_bin_min, from_bin_min],$
     [0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
-  POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
+  POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],[0,0,2.5e4,2.5e4,0], $
+    color=FSC_COLOR('deep pink'), /data
   foreground = TVREAD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
+  background = TVREAD(TRUE=3)
+  (*(*global1).background) = background
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;display counts vs tof for play buttons of central row
+  counts_vs_tof = (*(*global1).counts_vs_tof_for_play)
+  id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = (*(*global1).background)
+  TV, background
+  
+  POLYFILL, [bin_min, bin_max, bin_max, bin_min, bin_min],$
+    [0,0,2.5e4,2.5e4,0], color=FSC_COLOR('red'), /data
+  foreground = TVREAD(true=3)
+  alpha = 0.25
+  background = (*(*global1).background)
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
 END

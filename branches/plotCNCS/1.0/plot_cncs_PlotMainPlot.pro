@@ -837,6 +837,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
     counts_vs_tof_for_play: PTR_NEW(0L),$
+    background:            PTR_NEW(0L),$
     
     pause_button_activated: 0b,$
     bin_min:               0.0,$
@@ -935,13 +936,9 @@ PRO PlotMainPlotFromNexus, NexusFileName
   YTITLE='Counts', XRANGE=xrange,$
   XSTYLE=1
   
-;  ;take snapshot
-;  background = TVREAD(TRUE=3)
-;  DEVICE, copy=[0,0,400,400,0,0,id_value]
-;  POLYFILL, [0,10,10,0,0],[0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
-;  foreground = TVREAD(TRUE=3) 
-;  alpha= 0.25 
-;  TV, (foreground*alpha)+(1-alpha)*background, true=3
+;take snapshot
+  background = TVREAD(TRUE=3)
+  (*(*global1).background) = background
   
   ;plot das view of full instrument
   progressBar->SetLabel, 'Generating Plot ...'
