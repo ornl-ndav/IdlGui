@@ -252,32 +252,32 @@ PRO MakeGuiMainPlot, wBase
   space = WIDGET_LABEL(row4,$
     VALUE =  '   ')
     
-    row4a = WIDGET_BASE(row4,$ ;play/pause/next.... buttons ----------------
+  row4a = WIDGET_BASE(row4,$ ;play/pause/next.... buttons ----------------
     FRAME = 1)
     
-    pause = WIDGET_DRAW(row4a,$
+  pause = WIDGET_DRAW(row4a,$
     uname = 'pause_button',$
     scr_xsize = 34,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
-    TOOLTIP = 'Pause',$    
+    TOOLTIP = 'Pause',$
     scr_ysize = 27,$
     xoffset = 56,$
     yoffset= 82)
-  
-    stop =  WIDGET_DRAW(row4a,$
+    
+  stop =  WIDGET_DRAW(row4a,$
     uname = 'stop_button',$
     scr_xsize = 32,$
     FRAME = 0,$
     /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$    
+    /TRACKING_EVENTS,$
     scr_ysize = 25,$
     TOOLTIP = 'Return to intilal plot with all TOF integrated',$
     xoffset = 120,$
     yoffset= 82)
-  
-    previous =  WIDGET_DRAW(row4a,$
+    
+  previous =  WIDGET_DRAW(row4a,$
     uname = 'previous_button',$
     scr_xsize = 47,$
     FRAME = 0,$
@@ -287,8 +287,8 @@ PRO MakeGuiMainPlot, wBase
     TOOLTIP = 'Display previous frame',$
     xoffset = 12,$
     yoffset= 35)
-  
-    play =  WIDGET_DRAW(row4a,$
+    
+  play =  WIDGET_DRAW(row4a,$
     uname = 'play_button',$
     scr_xsize = 75,$
     FRAME = 0,$
@@ -298,7 +298,7 @@ PRO MakeGuiMainPlot, wBase
     TOOLTIP = 'Play',$
     xoffset = 65,$
     yoffset= 7)
-  
+    
   next =  WIDGET_DRAW(row4a,$
     uname = 'next_button',$
     scr_xsize = 47,$
@@ -318,7 +318,7 @@ PRO MakeGuiMainPlot, wBase
     SCR_YSIZE = 125)
     
   ;---------------------------------------------------------------------------
-  
+    
   row4b = WIDGET_BASE(row4,$ ;column b of row4 ..............................
     /COLUMN,$
     FRAME = 1)
@@ -327,11 +327,11 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   row4b1a = WIDGET_BASE(row4b1, $ ;column 1 of row 1 of column b of row 4....
-  /COLUMN)  
+    /COLUMN)
     
   row4b1a1 = WIDGET_BASE(row4b1a,$ ;-------------------------------------------
-  UNAME = 'play_tof_row',$
-  /ROW)
+    UNAME = 'play_tof_row',$
+    /ROW)
     
   label = WIDGET_LABEL(row4b1a1,$
     VALUE = 'TOF')
@@ -363,7 +363,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'microS')
     
   row4b1a2 = WIDGET_BASE(row4b1a,$ ;-------------------------------------------
-  /ROW)
+    /ROW)
     
   label = WIDGET_LABEL(row4b1a2,$
     VALUE = 'Bin #')
@@ -405,24 +405,29 @@ PRO MakeGuiMainPlot, wBase
     /RETURN_EVENTS)
     
   value = CW_FIELD(row4b2,$
-  VALUE = '1',$
-  XSIZE = 4,$
-  TITLE = '     Display time of each frame:',$
-  UNAME = 'time_per_frame_tof',$
-  /FLOATING,$
-  /RETURN_EVENTS)  
+    VALUE = '1',$
+    XSIZE = 4,$
+    TITLE = '     Display time of each frame:',$
+    UNAME = 'time_per_frame_tof',$
+    /FLOATING,$
+    /RETURN_EVENTS)
     
-    label = WIDGET_LABEL(row4b2,$
+  label = WIDGET_LABEL(row4b2,$
     VALUE = 's')
     
-
-
-
-
-
-
-
-
+  ;-----------------------------------------------------------------------------
+  ;plot that will display counts vs tof of central row
+  draw = WIDGET_DRAW(row4,$
+    SCR_XSIZE = 600,$
+    SCR_YSIZE = 130,$
+    UNAME = 'play_counts_vs_tof_plot')
+    
+    
+    
+    
+    
+    
+    
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
