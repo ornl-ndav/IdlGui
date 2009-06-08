@@ -136,6 +136,11 @@ PRO MAIN_BASE_event, Event
       ENDIF
     END
     
+    ;load temperature button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='load_temperature'): BEGIN
+      load_temperature, Event
+    END
+
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
