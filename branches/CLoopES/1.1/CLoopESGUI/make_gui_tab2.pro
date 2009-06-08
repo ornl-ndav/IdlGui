@@ -116,7 +116,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /ROW)
     
   label = WIDGET_LABEL(row1,$
-    VALUE = '   Energy Integration Range:      ')
+    VALUE = 'Energy Integration Range: ')
     
   ;min value
   label = WIDGET_LABEL(row1,$
@@ -134,7 +134,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '         ')
+    VALUE = ' ')
     
   ;max value
   label = WIDGET_LABEL(row1,$
@@ -151,7 +151,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'ueV')
     
   space = WIDGET_LABEL(row1,$
-    value = '     ')
+    value = ' ')
     
   ;---------------------------------------------------------------------------
   row11 = WIDGET_BASE(row1,$
@@ -170,6 +170,16 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /NO_RELEASE)
     
   WIDGET_CONTROL, b1, /SET_BUTTON
+  
+  ;Load temperature button ----------------------------------------------------
+  space = WIDGET_LABEL(row1,$
+  VALUE = '  ')
+  
+  load_T = WIDGET_BUTTON(row1,$
+  VALUE = 'Load Temperature',$
+  UNAME = 'load_temperature',$
+  TOOLTIP = 'Populate table with a Temperature file',$
+  SENSITIVE = 0)
   
   ;----------------------------------------------------------------------------
   ;row2 (big table)
@@ -196,8 +206,14 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
-    XSIZE = 785,$
+    XSIZE = 675,$
     SENSITIVE = 0)
+    
+  save_temperature = WIDGET_BUTTON(row3,$
+  VALUE = 'Save Temperature',$
+  UNAME = 'save_temperature',$
+  TOOLTIP = 'Create output file of Temperature column',$
+  SENSITIVE = 0)
     
   space = WIDGET_LABEL(row3,$
     VALUE = '')
