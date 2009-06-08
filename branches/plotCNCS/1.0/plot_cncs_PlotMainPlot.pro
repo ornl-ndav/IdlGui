@@ -119,7 +119,7 @@ PRO MakeGuiMainPLot_Event, event
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
-      plot_main_plot_with_new_bin_range, Event
+      plot_main_plot_with_new_bin_range, Event, reset_z_scale=1
       ;replot_main_plot, Event
       plot_selection_box, Event
     END
@@ -1031,7 +1031,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
   (*global1).xrange = xrange
   PLOT, counts_vs_tof, XTITLE='Bins #', $
     YTITLE='Counts', XRANGE=xrange,$
-    XSTYLE=1
+    XSTYLE=1,$
+    YSTYLE=1
     
   ;take snapshot
   background = TVREAD(TRUE=3)
