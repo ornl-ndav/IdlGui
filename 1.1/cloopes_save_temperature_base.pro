@@ -51,8 +51,8 @@ PRO save_temperature_build_gui_event, Event
     
     ;cancel button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_cancel_button'): BEGIN
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
-    WIDGET_CONTROL, id, /DESTROY
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
     END
     
     ELSE:
@@ -136,8 +136,11 @@ PRO save_temperature_path, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_temperature_build_gui, wBase, main_base_geometry, temperature_path
-
+PRO save_temperature_build_gui, wBase, $
+    main_base_geometry, $
+    temperature_path, $
+    output_file_name
+    
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
@@ -179,7 +182,7 @@ PRO save_temperature_build_gui, wBase, main_base_geometry, temperature_path
     
   ;file name
   file_name = CW_FIELD(wBase,$
-    VALUE = '',$
+    VALUE = output_file_name,$
     UNAME = 'save_temperature_file_name',$
     XSIZE = 52,$
     TITLE = 'File Name:')
@@ -197,10 +200,10 @@ PRO save_temperature_build_gui, wBase, main_base_geometry, temperature_path
     UNAME = 'save_temperature_cancel_button')
     
   space = WIDGET_LABEL(row2,$
-    VALUE = '                                             ')
+    VALUE = '                            ')
     
   ok = WIDGET_BUTTON(row2,$
-    VALUE = '  OK  ',$
+    VALUE = '  CREATE TEMPERATURE FILE  ',$
     UNAME = 'save_temperature_ok_button',$
     SENSITIVE = 0)
     
@@ -218,11 +221,21 @@ PRO save_temperature_base, main_event
   WIDGET_CONTROL,main_event.top,GET_UVALUE=global
   temperature_path = (*global).temperature_path
   
+  ;determine default output file name for file
+  table = getTableValue(main_event,'tab2_table_uname')
+  nbr_row = (SIZE(table))(2)
+  Tmin = STRING(table[2,0],format='(f10.1)')
+  Tmax = STRING(table[2,nbr_row-1],format='(f10.1)')
+  sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
+  sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
+  output_file_name = 'cloopes_temp_from_' + sTmin + '_to_ + sTmax + '.txt'
+  
   ;build gui
   wBase = ''
   save_temperature_build_gui, wBase, $
     main_base_geometry, $
-    temperature_path
+    temperature_path, $
+    output_file_name
     
   global_temperature = PTR_NEW({ wbase: wbase,$
     temperature_path: temperature_path,$
