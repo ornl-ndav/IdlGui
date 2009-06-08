@@ -56,6 +56,15 @@ PRO load_temperature_build_gui_event, Event
       check_load_temperature_ok_button, Event
     END
     
+    ;preview button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_temperature_preview_button'): BEGIN
+      path = getButtonValue(Event,'load_temperature_path_button')
+      file_name = getTextFieldValue(Event,'load_temperature_file_name')
+      s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+      full_file_name = path + s_file_name
+      XDISPLAYFILE, full_file_name[0]
+    END
+    
     ;cancel button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='load_temperature_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_temperature_base_uname')
