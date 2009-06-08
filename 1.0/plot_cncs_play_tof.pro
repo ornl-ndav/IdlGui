@@ -453,18 +453,21 @@ PRO change_from_and_to_bins, Event
   to_bin_min = xrange[1]
   
   ;take snapshot
-  background = TVREAD(TRUE=3)
+  ;background = TVREAD(TRUE=3)
+  background = TVRD(TRUE=3)
   DEVICE, copy=[0,0,600,130,0,0,id_value]
   POLYFILL, [from_bin_min,from_bin,from_bin,from_bin_min, from_bin_min],$
     [0,0,max_counts,max_counts,0], color=FSC_COLOR('deep pink'), /data
   POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],$
-  [0,0,max_counts,max_counts,0], $
+    [0,0,max_counts,max_counts,0], $
     color=FSC_COLOR('deep pink'), /data
-  foreground = TVREAD(TRUE=3)
+  ;foreground = TVREAD(TRUE=3)
+  foreground = TVRD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
-  background = TVREAD(TRUE=3)
+  ;background = TVREAD(TRUE=3)
+  background = TVRD(TRUE=3)
   (*(*global1).background) = background
   
   plot_main_plot_with_new_bin_range, Event
@@ -488,7 +491,8 @@ PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   
   POLYFILL, [bin_min, bin_max, bin_max, bin_min, bin_min],$
     [0,0,max_counts,max_counts,0], color=FSC_COLOR('red'), /data
-  foreground = TVREAD(true=3)
+  ;foreground = TVREAD(true=3)
+  foreground = TVRD(TRUE=3)
   alpha = 0.25
   background = (*(*global1).background)
   TV, (foreground*alpha)+(1-alpha)*background, true=3
