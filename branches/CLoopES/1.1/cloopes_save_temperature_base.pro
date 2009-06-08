@@ -40,8 +40,13 @@ PRO save_temperature_build_gui_event, Event
   CASE Event.id OF
   
     ;browse button
-    WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_browse_button'): BEGIN
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_browse_button'): BEGIN
       save_temperature_browse, Event
+    END
+    
+    ;path button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_path_button'): BEGIN
+      save_temperature_path, Event
     END
     
     ELSE:
@@ -95,6 +100,32 @@ PRO check_save_temperature_ok_button, Event
     status = 0
   ENDELSE
   activate_widget, Event, 'save_temperature_ok_button', status
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_temperature_path, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  
+  path = (*global_temperature).temperature_path
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_base_uname')
+  new_path = DIALOG_PICKFILE(DIALOG_PARENT=id,$
+    PATH = path, $
+    /DIRECTORY)
+    
+  IF (new_path NE '') THEN BEGIN
+  
+    main_event = (*global_temperature).main_event
+    WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+    (*global).temperature_path = new_path
+    (*global_temperature).temperature_path = new_path
+    
+    ;file dir
+    putButtonValue, Event, 'save_temperature_path_button', new_path
+    
+  ENDIF
   
 END
 
