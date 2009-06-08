@@ -506,17 +506,24 @@ PRO refresh_tab2_table, Event
   table = getTableValue(Event, 'tab2_table_uname')
   sz = (SIZE(table))(2)
   
-  ;check that all the files exist and temperature defined
-  index = 0
-  WHILE (index LT sz AND $
-    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-    IF (FILE_TEST(table[0,index])) THEN BEGIN
-      table[1,index] = 'READY'
-    ENDIF ELSE BEGIN
-      table[1,index] = 'NOT READY'
-    ENDELSE
-    index++
-  ENDWHILE
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+  
+    ;check that all the files exist and temperature defined
+    index = 0
+    WHILE (index LT sz OR $
+      STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
+      IF (FILE_TEST(table[0,index])) THEN BEGIN
+        table[1,index] = 'READY'
+      ENDIF ELSE BEGIN
+        table[1,index] = 'NOT READY'
+      ENDELSE
+      index++
+    ENDWHILE
+    
+  ENDELSE
   
   putValue, Event, 'tab2_table_uname', table
   
