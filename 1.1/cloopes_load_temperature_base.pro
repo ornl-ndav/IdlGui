@@ -32,6 +32,29 @@
 ;
 ;==============================================================================
 
+PRO load_temperature_file, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+
+  path = getButtonValue(Event,'load_temperature_path_button')
+  file_name = getTextFieldValue(Event,'load_temperature_file_name')
+  s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+  full_file_name = path + s_file_name
+  
+  file_name = full_file_name[0]
+  
+  ;create array of temperature
+  temp_array = STRARR(FILE_LINES(file_name))
+  OPENR, u, file_name, /GET_LUN
+  READF, u, temp_array
+  CLOSE, u
+  FREE_LUN, u
+
+  table = (*global_temperature).table
+  
+END
+
 ;------------------------------------------------------------------------------
 PRO load_temperature_build_gui_event, Event
 
@@ -73,6 +96,11 @@ PRO load_temperature_build_gui_event, Event
     
     ;load button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='load_temperature_ok_button'): BEGIN
+      load_temperature_file, Event
+      
+      
+      
+      
     ;      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_temperature_base_uname')
     ;      WIDGET_CONTROL, id, /DESTROY
     END
