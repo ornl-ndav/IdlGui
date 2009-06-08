@@ -205,7 +205,7 @@ PRO save_temperature_build_gui, wBase, $
   ok = WIDGET_BUTTON(row2,$
     VALUE = '  CREATE TEMPERATURE FILE  ',$
     UNAME = 'save_temperature_ok_button',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
   WIDGET_CONTROL, wBase, /REALIZE
   
@@ -228,7 +228,7 @@ PRO save_temperature_base, main_event
   Tmax = STRING(table[2,nbr_row-1],format='(f10.1)')
   sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
   sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
-  output_file_name = 'cloopes_temp_from_' + sTmin + '_to_ + sTmax + '.txt'
+  output_file_name = 'cloopes_temp_from_' + sTmin + '_to_' + sTmax + '.txt'
   
   ;build gui
   wBase = ''
