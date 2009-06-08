@@ -111,6 +111,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     column_file_name_tab2: PTR_NEW(0L),$
     column_sequence_tab2: PTR_NEW(0L),$
     
+    temperature_path: '~/results/',$
+    
     package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$

@@ -32,70 +32,137 @@
 ;
 ;==============================================================================
 
-PRO save_temperature_build_gui, wBase, main_base_geometry
+PRO save_temperature_build_gui_event, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  
+  CASE Event.id OF
+  
+    ;browse button
+    WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_browse_button'): BEGIN
+      save_temperature_browse, Event
+    END
+    
+    ELSE:
+    
+  ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_temperature_browse, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  
+  path = (*global_temperature).temperature_path
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_base_uname')
+  file = DIALOG_PICKFILE(DIALOG_PARENT=id,$
+    /WRITE,$
+    PATH = path, $
+    GET_PATH = new_path,$
+    /OVERWRITE_PROMPT)
+    
+  IF (file[0] NE '') THEN BEGIN
+  
+    IF (new_path NE path ) THEN $
+      (*global_temperature).temperature_path = new_path
+      
+    ;file dir
+    putButtonValue, Event, 'save_temperature_path_button', new_path
+    
+    ;file name
+    file_name = FILE_BASENAME(file[0])
+    putValue, Event, 'save_temperature_file_name', file_name
+    
+    ;validate_ok button
+    check_save_temperature_ok_button, Event
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO check_save_temperature_ok_button, Event
+
+  ;check that there is a file name
+  file_name = getTextFieldValue(Event,'save_temperature_file_name')
+  file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+  IF (file_name NE '') THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, Event, 'save_temperature_ok_button', status
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_temperature_build_gui, wBase, main_base_geometry, temperature_path
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
-
- ; xsize = 500
- ; ysize = 300
- xoffset = main_base_xoffset + main_base_xsize/2
- yoffset = main_base_yoffset + main_base_ysize/2
-
+  
+  ; xsize = 500
+  ; ysize = 300
+  xoffset = main_base_xoffset + main_base_xsize/2
+  yoffset = main_base_yoffset + main_base_ysize/2
+  
   ourGroup = WIDGET_BASE()
   
   wBase = WIDGET_BASE(TITLE = 'Save Temperature Column',$
     UNAME        = 'save_temperature_base_uname',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
-;    SCR_XSIZE = 300,$
-;    SCR_YSIZE = 200,$
+    ;    SCR_XSIZE = 300,$
+    ;    SCR_YSIZE = 200,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup,$
     /COLUMN)
     
-    ;browse
-    browse = WIDGET_BUTTON(wBase,$
+  ;browse
+  browse = WIDGET_BUTTON(wBase,$
     VALUE = 'Browse ...',$
     XSIZE = 400,$
     UNAME = 'save_temperature_browse_button')
     
-    ;or
-    or_label = WIDGET_LABEL(wBase,$
+  ;or
+  or_label = WIDGET_LABEL(wBase,$
     VALUE = 'OR')
     
-    ;path
-    path = WIDGET_BUTTON(wBase,$
-    VALUE = '~/results/',$
+  ;path
+  path = WIDGET_BUTTON(wBase,$
+    VALUE = temperature_path,$
     XSIZE = 400,$
     UNAME = 'save_temperature_path_button')
     
-    ;file name
-    file_name = CW_FIELD(wBase,$
+  ;file name
+  file_name = CW_FIELD(wBase,$
     VALUE = '',$
     UNAME = 'save_temperature_file_name',$
     XSIZE = 52,$
     TITLE = 'File Name:')
     
-    ;space
-    space = WIDGET_LABEL(wBase,$
+  ;space
+  space = WIDGET_LABEL(wBase,$
     VALUE = '')
     
-    ;cancel and ok buttons
-    row2 = WIDGET_BASE(wBase,$
+  ;cancel and ok buttons
+  row2 = WIDGET_BASE(wBase,$
     /ROW)
     
-    cancel = WIDGET_BUTTON(row2,$
+  cancel = WIDGET_BUTTON(row2,$
     VALUE = 'CANCEL',$
     UNAME = 'save_temperature_cancel_button')
     
-    space = WIDGET_LABEL(row2,$
+  space = WIDGET_LABEL(row2,$
     VALUE = '                                             ')
     
-    ok = WIDGET_BUTTON(row2,$
+  ok = WIDGET_BUTTON(row2,$
     VALUE = '  OK  ',$
     UNAME = 'save_temperature_ok_button',$
     SENSITIVE = 0)
@@ -109,17 +176,25 @@ PRO save_temperature_base, main_event
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
-
+  
+  ;get global structure
+  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+  temperature_path = (*global).temperature_path
+  
   ;build gui
   wBase = ''
-  save_temperature_build_gui, wBase, main_base_geometry 
-  
-  global1 = PTR_NEW({ wbase: wbase,$
-    main_event: main_event})
+  save_temperature_build_gui, wBase, $
+    main_base_geometry, $
+    temperature_path
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global1
-  XMANAGER, "save_temperature_build_gui", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
-  
+  global_temperature = PTR_NEW({ wbase: wbase,$
+    temperature_path: temperature_path,$
+    main_event:       main_event})
+    
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_temperature
+  XMANAGER, "save_temperature_build_gui", wBase, $
+    GROUP_LEADER = ourGroup, /NO_BLOCK
+    
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
   
