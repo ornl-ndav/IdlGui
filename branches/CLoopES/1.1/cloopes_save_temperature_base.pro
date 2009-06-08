@@ -49,6 +49,12 @@ PRO save_temperature_build_gui_event, Event
       save_temperature_path, Event
     END
     
+    ;cancel button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_cancel_button'): BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
+    WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ELSE:
     
   ENDCASE
