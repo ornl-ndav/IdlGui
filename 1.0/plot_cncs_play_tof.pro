@@ -434,6 +434,7 @@ PRO change_from_and_to_bins, Event
   
   ;display counts vs tof for play buttons of central row
   counts_vs_tof = (*(*global1).counts_vs_tof_for_play)
+  max_counts = MAX(counts_vs_tof)
   id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
@@ -443,8 +444,11 @@ PRO change_from_and_to_bins, Event
   to_bin = getTextFieldValue(event,'to_bin')
   
   xrange = (*global1).xrange
-  PLOT, counts_vs_tof, XTITLE='Bins #', YTITLE='Counts', $
-    XRANGE=xrange, XSTYLE=1
+  PLOT, counts_vs_tof, XTITLE='Bins #', $
+    YTITLE='Counts', $
+    XRANGE=xrange, $
+    XSTYLE=1,$
+    YSTYLE = 1
   from_bin_min = xrange[0]
   to_bin_min = xrange[1]
   
@@ -452,8 +456,9 @@ PRO change_from_and_to_bins, Event
   background = TVREAD(TRUE=3)
   DEVICE, copy=[0,0,600,130,0,0,id_value]
   POLYFILL, [from_bin_min,from_bin,from_bin,from_bin_min, from_bin_min],$
-    [0,0,2.5e4,2.5e4,0], color=FSC_COLOR('deep pink'), /data
-  POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],[0,0,2.5e4,2.5e4,0], $
+    [0,0,max_counts,max_counts,0], color=FSC_COLOR('deep pink'), /data
+  POLYFILL, [to_bin,to_bin_min,to_bin_min,to_bin,to_bin],$
+  [0,0,max_counts,max_counts,0], $
     color=FSC_COLOR('deep pink'), /data
   foreground = TVREAD(TRUE=3)
   alpha= 0.25
@@ -473,6 +478,7 @@ PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   
   ;display counts vs tof for play buttons of central row
   counts_vs_tof = (*(*global1).counts_vs_tof_for_play)
+  max_counts = MAX(counts_vs_tof)
   id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
@@ -481,7 +487,7 @@ PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   TV, background
   
   POLYFILL, [bin_min, bin_max, bin_max, bin_min, bin_min],$
-    [0,0,2.5e4,2.5e4,0], color=FSC_COLOR('red'), /data
+    [0,0,max_counts,max_counts,0], color=FSC_COLOR('red'), /data
   foreground = TVREAD(true=3)
   alpha = 0.25
   background = (*(*global1).background)
@@ -490,7 +496,7 @@ PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_main_plot_with_new_bin_range, Event
+PRO plot_main_plot_with_new_bin_range, Event, reset_z_scale=reset_z_scale
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
