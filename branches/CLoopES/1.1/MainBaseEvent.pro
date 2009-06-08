@@ -100,6 +100,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence'): BEGIN
       parse_input_field_tab2, Event
       check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
     END
     
     ;help button of manual input
@@ -123,6 +124,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_looper_input'): BEGIN
       IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         populate_tab2, Event
+        check_load_save_temperature_widgets, Event
       ENDIF
     END
     
@@ -130,12 +132,14 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_use_manual_input'): BEGIN
       IF (~isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         parse_input_field_tab2, Event
+        check_load_save_temperature_widgets, Event
       ENDIF
     END
     
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
+      check_load_save_temperature_widgets, Event
     END
     
     ;Refresh table
