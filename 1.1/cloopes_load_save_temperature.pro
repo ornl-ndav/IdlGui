@@ -32,32 +32,38 @@
 ;
 ;==============================================================================
 
-PRO cloopes_tab, Event
+PRO check_load_save_temperature_widgets, Event
 
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  catch, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    validate_load = 0
+    validate_save = 0
+  ENDIF ELSE BEGIN
   
-  tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
-  CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-  PrevTabSelect = (*global).PrevReduceTabSelect
-  
-  IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
-    CASE (currTabSelect) OF
-      0: BEGIN ;LOOPER
-      END
-      1: BEGIN ;ELASTIC SCAN
-        IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
-          populate_tab2, Event
-        ENDIF ELSE BEGIN
-          parse_input_field_tab2, Event
-        ENDELSE
-        check_load_save_temperature_widgets, Event
-      END
-      2: BEGIN ;LOG BOOK
-      END
-      ELSE:
-    ENDCASE
-    (*global).PrevReduceTabSelect = CurrTabSelect
-  ENDIF
+    ;get table value
+    table = getTableValue(Event,'tab2_table_uname')
+    nbr_row = (SIZE(table))(2)
+    
+    ;if first column is not empty, then we can validate LOAD temperature button
+    file_name = table[0,*]
+    IF (file_name[0] NE '') THEN BEGIN
+      validate_load = 1
+    ENDIF ELSE BEGIN
+      validate_load = 0
+    ENDELSE
+    
+    ;if 3rd column (temperature) is not empty, validate SAVE temperature button
+    temp = table[2,*]
+    IF (temp[0] NE '') THEN BEGIN
+      validate_save = 1
+    ENDIF ELSE BEGIN
+      validate_save = 0
+    ENDELSE
+    
+  ENDELSE
+ 
+  activate_widget, Event, 'load_temperature', validate_load
+  activate_widget, Event, 'save_temperature', validate_save
   
 END
