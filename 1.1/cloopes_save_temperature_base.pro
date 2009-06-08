@@ -85,6 +85,12 @@ PRO save_temperature_build_gui_event, Event
       save_temperature_path, Event
     END
     
+    ;file name widget_text
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_file_name'): BEGIN
+      ;validate_ok button
+      check_save_temperature_ok_button, Event
+    END
+    
     ;cancel button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
@@ -233,12 +239,19 @@ PRO save_temperature_build_gui, wBase, $
     XSIZE = 400,$
     UNAME = 'save_temperature_path_button')
     
-  ;file name
-  file_name = CW_FIELD(wBase,$
+  ;file name row
+  rowa = WIDGET_BASE(wBase,$
+    /ROW)
+    
+  label = WIDGET_LABEL(rowa,$
+    VALUE = 'File Name:')
+    
+  text = WIDGET_TEXT(rowa,$
     VALUE = output_file_name,$
     UNAME = 'save_temperature_file_name',$
-    XSIZE = 52,$
-    TITLE = 'File Name:')
+    /EDITABLE,$
+    /ALL_EVENTS,$
+    XSIZE = 52)
     
   ;space
   space = WIDGET_LABEL(wBase,$
