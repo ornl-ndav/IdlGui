@@ -147,6 +147,11 @@ PRO MAIN_BASE_event, Event
       refresh_tab2_table, Event
     END
     
+    ;save temperature button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_temperature'): BEGIN
+      save_temperature, Event
+    END
+    
     ;output folder button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_output_folder_button_uname'): BEGIN
       define_output_folder_tab2, Event

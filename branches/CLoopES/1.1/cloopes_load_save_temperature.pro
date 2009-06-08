@@ -34,7 +34,7 @@
 
 PRO check_load_save_temperature_widgets, Event
 
-  catch, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     validate_load = 0
@@ -62,8 +62,19 @@ PRO check_load_save_temperature_widgets, Event
     ENDELSE
     
   ENDELSE
- 
+  
   activate_widget, Event, 'load_temperature', validate_load
   activate_widget, Event, 'save_temperature', validate_save
   
 END
+
+;------------------------------------------------------------------------------
+PRO save_temperature, Event
+
+  ;display save temperature base
+  save_temperature_base, Event
+  
+END
+
+
+
