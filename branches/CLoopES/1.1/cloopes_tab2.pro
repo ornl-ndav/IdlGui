@@ -129,7 +129,6 @@ PRO update_temperature, Event
   
     ;get table value
     table = getTableValue(Event,'tab2_table_uname')
-    ;    PRINT, SIZE(table)
     nbr_row = (SIZE(table))(2)
     
     ;get row and column edited
@@ -141,7 +140,19 @@ PRO update_temperature, Event
     IF (column EQ 2) THEN BEGIN
     
       CASE (row) OF
-        0: TABLE[2,0] = STRCOMPRESS(FLOAT(table[2,0]))
+        0: BEGIN
+          TABLE[2,0] = STRCOMPRESS(FLOAT(table[2,0]))
+          IF (TABLE[2,1] NE '') THEN BEGIN
+            increment = FLOAT(table[2,1]) - FLOAT(table[2,0])
+            index = 1
+            WHILE (index LT nbr_row) DO BEGIN
+              IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') THEN BEGIN
+                table[2,index] = STRCOMPRESS(table[2,index-1] + increment)
+              ENDIF
+              index++
+            ENDWHILE
+          ENDIF
+        END
         ELSE: BEGIN
           table[2,row] = STRCOMPRESS(FLOAT(table[2,row]))
           IF (row LT (nbr_row - 1)) THEN BEGIN
@@ -451,18 +462,18 @@ PRO check_tab2_run_jobs_button, Event
   
   ;check that all the files exist and temperature defined
   index = 0
-;  WHILE (index LT sz AND $
-;    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-;    IF (~FILE_TEST(table[0,index])) THEN BEGIN
-;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-;      RETURN
-;    ENDIF
-;    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-;      RETURN
-;    ENDIF
-;    index++
-;  ENDWHILE
+  ;  WHILE (index LT sz AND $
+  ;    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
+  ;    IF (~FILE_TEST(table[0,index])) THEN BEGIN
+  ;      activate_widget, Event, 'tab2_run_jobs_uname', 0
+  ;      RETURN
+  ;    ENDIF
+  ;    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+  ;      activate_widget, Event, 'tab2_run_jobs_uname', 0
+  ;      RETURN
+  ;    ENDIF
+  ;    index++
+  ;  ENDWHILE
   
   ;check that there is an output file name
   output_file_name = getTextFieldValue(Event,$
