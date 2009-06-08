@@ -903,7 +903,8 @@ PRO PlotMainPlot, histo_mapped_file
     XSTYLE=1
     
   ;take snapshot
-  background = TVREAD(TRUE=3)
+;  background = TVREAD(TRUE=3)
+  background = TVRD(TRUE=3)
   (*(*global1).background) = background
   
   ;disable View full TOF axis
@@ -1053,7 +1054,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
     YSTYLE=1
     
   ;take snapshot
-  background = TVREAD(TRUE=3)
+  ;background = TVREAD(TRUE = 3)
+    background = TVRD(TRUE=3)
   (*(*global1).background) = background
   
   ;plot das view of full instrument
