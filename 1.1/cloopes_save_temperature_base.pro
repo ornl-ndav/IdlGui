@@ -32,6 +32,42 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+FUNCTION create_temperature_file, Event, output_file_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+  ENDIF
+  
+  table = (*global_temperature).table
+  
+  ;get output path
+  path = getButtonValue(Event,'save_temperature_path_button')
+  
+  ;get output file name
+  file_name = getTextFieldValue(Event,'save_temperature_file_name')
+  
+  ;output file name
+  output_file_name = path + file_name
+  
+  OPENW, 1, output_file_name
+  nbr_row = (SIZE(table))(2)
+  FOR i=0,(nbr_row - 1) DO BEGIN
+    PRINTF, 1, STRCOMPRESS(table[2,i],/REMOVE_ALL)
+  ENDFOR
+  CLOSE, 1
+  FREE_LUN, 1
+  
+  RETURN, 1
+  
+END
+
+;------------------------------------------------------------------------------
 PRO save_temperature_build_gui_event, Event
 
   ;get global structure
@@ -51,6 +87,23 @@ PRO save_temperature_build_gui_event, Event
     
     ;cancel button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ;save button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_ok_button'): BEGIN
+      output_file_name = ''
+      result = create_temperature_file(Event, output_file_name)
+      IF (result EQ 1) THEN BEGIN
+        text = 'File ' + output_file_name + ' has been created with success!'
+        tmp = DIALOG_MESSAGE(text,$
+          /INFORMATION)
+      ENDIF ELSE BEGIN
+        text = 'Creation of temperature file failed!'
+        tmp = DIALOG_MESSAGE(text,$
+          /ERROR)
+      ENDELSE
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
@@ -239,6 +292,7 @@ PRO save_temperature_base, main_event
     
   global_temperature = PTR_NEW({ wbase: wbase,$
     temperature_path: temperature_path,$
+    table: table,$
     main_event:       main_event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_temperature
