@@ -119,28 +119,38 @@ PRO MakeGuiMainPLot_Event, event
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event, reset_z_scale=1
       ;replot_main_plot, Event
       plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;linear plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
       ;replot_main_plot_with_scale, Event
       plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;log plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_log_plot'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
       ;replot_main_plot_with_scale, Event
       plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;counts vs tof of full detector
     WIDGET_INFO(event.top, FIND_BY_UNAME='counts_vs_tof_full_detector'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      job_base = counts_vs_tof_info_base(Event)
       plot_counts_vs_tof_of_full_detector, Event
+      WIDGET_CONTROL, HOURGLASS=0
+      WIDGET_CONTROL, job_base,/DESTROY
     END
     
     ;Main plot
@@ -319,25 +329,32 @@ PRO MakeGuiMainPLot_Event, event
     
     ;from_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='from_bin'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       check_from_to_bin_input, Event
       change_from_and_to_bins, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;reset from_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_from_bin'): BEGIN
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='from_bin')
+      WIDGET_CONTROL, /HOURGLASS
       WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(1)
       change_from_and_to_bins, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='to_bin'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       check_from_to_bin_input, Event
       change_from_and_to_bins, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ;reset to_bin
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_to_bin'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       IF ((*global1).nexus_file_name NE '') THEN BEGIN
         bin_max = N_ELEMENTS((*(*global1).tof_array))
       ENDIF ELSE BEGIN
@@ -347,6 +364,7 @@ PRO MakeGuiMainPLot_Event, event
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='to_bin')
       WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
       change_from_and_to_bins, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
     
     ELSE:
@@ -778,7 +796,7 @@ PRO PlotMainPlot, histo_mapped_file
     pause_button_activated: 0b,$
     bin_min:               0L,$
     bin_max:               0L,$
-    bin_max_untouched:     0L,$ 
+    bin_max_untouched:     0L,$
     from_bin:              1L,$
     to_bin:                0L,$
     xrange:                INTARR(2),$
@@ -865,7 +883,7 @@ PRO PlotMainPlot, histo_mapped_file
   
   ;display counts vs tof for play buttons of central row
   t_img = TOTAL(img,3)
-    counts_vs_tof = t_img[*,64]
+  counts_vs_tof = t_img[*,64]
   (*(*global1).counts_vs_tof_for_play) = counts_vs_tof
   id = WIDGET_INFO(wBase,find_by_uname='play_counts_vs_tof_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -934,7 +952,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     pause_button_activated: 0b,$
     bin_min:               0L,$
     bin_max:               0L,$
-    bin_max_untouched:     0L,$    
+    bin_max_untouched:     0L,$
     from_bin:              1L,$
     to_bin:                0L,$
     xrange:                INTARR(2),$
