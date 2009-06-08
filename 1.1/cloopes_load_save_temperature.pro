@@ -76,5 +76,12 @@ PRO save_temperature, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO load_temperature, Event
+
+  ;display load temperature base
+  load_temperature_base, Event
+  
+END
 
 
