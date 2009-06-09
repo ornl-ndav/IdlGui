@@ -96,6 +96,9 @@ PRO populate_tab2, Event
   ENDIF ELSE BEGIN
     ;get table
     tab2_table = (*(*global).tab2_table)
+    temperature_array = (*(*global).temperature_array)
+    sz_temp = N_ELEMENTS(temperature_array)
+    
     sz = (SIZE(tab2_table))(2)
     index = 0
     WHILE (index LT sz AND $
@@ -106,6 +109,7 @@ PRO populate_tab2, Event
         message = 'NOT READY'
       ENDELSE
       tab2_table[1,index] = message
+      IF (index LT sz_temp) THEN tab2_table[2,index] = temperature_array[index]
       index++
     ENDWHILE
     putValue, Event, 'tab2_table_uname', tab2_table
@@ -173,6 +177,9 @@ PRO update_temperature, Event
     ENDIF
     
   ENDELSE
+  
+  temp_array = table[2,*]
+  (*(*global).temperature_array) = temp_array
   
 END
 
@@ -357,6 +364,9 @@ PRO parse_input_field_tab2, Event
   
   nbr_files = N_ELEMENTS(column_seq_number)
   table = STRARR(3,nbr_files)
+  temperature_array = (*(*global).temperature_array)
+  sz_temp = N_ELEMENTS(temperature_array)
+  
   index = 0
   table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
@@ -379,6 +389,7 @@ PRO parse_input_field_tab2, Event
         message = 'NOT READY'
       ENDELSE
       table[1,table_index] = message
+      IF (index LT sz_temp) THEN table[2,table_index] = temperature_array[index]
       table_index++
       
     ENDIF
