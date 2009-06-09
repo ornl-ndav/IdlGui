@@ -51,6 +51,11 @@ PRO load_temperature_file, Event
   CLOSE, u
   FREE_LUN, u
   
+ ;get global structure
+   main_event = (*global_temperature).main_event
+  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+  (*(*global).temperature_array) = temp_array
+
   table = (*global_temperature).table
   
   CATCH, error
@@ -64,7 +69,6 @@ PRO load_temperature_file, Event
       index++
     ENDWHILE
   ENDELSE
-  main_event = (*global_temperature).main_event
   putValue, main_event, 'tab2_table_uname', table
   
 END
@@ -316,7 +320,7 @@ PRO load_temperature_base, main_event
   global_temperature = PTR_NEW({ wbase: wbase,$
     temperature_path: temperature_path,$
     table: table,$
-    main_event:       main_event})
+    main_event: main_event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_temperature
   XMANAGER, "load_temperature_build_gui", wBase, $
