@@ -312,7 +312,4 @@ PRO save_temperature_base, main_event
   XMANAGER, "save_temperature_build_gui", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  DEVICE, DECOMPOSED = 0
-  loadct, 5, /SILENT
-  
 END
