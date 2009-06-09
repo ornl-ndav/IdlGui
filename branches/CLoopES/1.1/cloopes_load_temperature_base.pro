@@ -36,7 +36,7 @@ PRO load_temperature_file, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
-
+  
   path = getButtonValue(Event,'load_temperature_path_button')
   file_name = getTextFieldValue(Event,'load_temperature_file_name')
   s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
@@ -50,8 +50,22 @@ PRO load_temperature_file, Event
   READF, u, temp_array
   CLOSE, u
   FREE_LUN, u
-
+  
   table = (*global_temperature).table
+  
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+    sz = N_ELEMENTS(temp_array)
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      table[2,index] = temp_array[index]
+      index++
+    ENDWHILE
+  ENDELSE
+  main_event = (*global_temperature).main_event
+  putValue, main_event, 'tab2_table_uname', table
   
 END
 
@@ -97,12 +111,10 @@ PRO load_temperature_build_gui_event, Event
     ;load button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='load_temperature_ok_button'): BEGIN
       load_temperature_file, Event
-      
-      
-      
-      
-    ;      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_temperature_base_uname')
-    ;      WIDGET_CONTROL, id, /DESTROY
+       main_event = (*global_temperature).main_event
+      check_load_save_temperature_widgets, main_event
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_temperature_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
     END
     
     ELSE:
@@ -149,9 +161,9 @@ PRO check_load_temperature_ok_button, Event
   ;check that there is a file name
   path = getButtonValue(Event,'load_temperature_path_button')
   file_name = getTextFieldValue(Event,'load_temperature_file_name')
-  file_name = path + STRCOMPRESS(file_name,/REMOVE_ALL)
-  IF (file_name NE '') THEN BEGIN
-    IF (FILE_TEST(file_name)) THEN BEGIN
+  full_file_name = path + STRCOMPRESS(file_name,/REMOVE_ALL)
+  IF (STRCOMPRESS(file_name,/REMOVE_ALL) NE '') THEN BEGIN
+    IF (FILE_TEST(full_file_name)) THEN BEGIN
       status = 1
     ENDIF ELSE BEGIN
       status = 0
