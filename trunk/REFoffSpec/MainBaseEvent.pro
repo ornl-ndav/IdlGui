@@ -43,6 +43,12 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+        ;Instrument Selection
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='instrument_selection_validate_button'): begin
+      REFreductionEventcb_InstrumentSelected, Event
+    end
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     

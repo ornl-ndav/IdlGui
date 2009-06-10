@@ -31,6 +31,27 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
+;This function defines the instrument if the program is started from 
+;heater
+PRO REFreductionEventcb_InstrumentSelected, Event
+
+id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
+widget_control, id, get_value=instrument_selected
+
+;descativate instrument selection base and activate main base
+ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
+widget_control, ISBaseId, map=0
+
+if (instrument_selected EQ 0) then begin
+   BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+endif else begin
+   BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+endelse
+
+END
+
+;------------------------------------------------------------------------------
 ;Preview of selected ascii file(s)
 PRO  preview_ascii_file, Event ;_eventcb
   ;get global structure

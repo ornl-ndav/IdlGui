@@ -32,7 +32,14 @@
 ;
 ;==============================================================================
 
-PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+;  RESOLVE_ROUTINE, 'ref__eventcb',$
+;    /COMPILE_FULL_FILE            ; Load event callback routines
+  ;build the Instrument Selection base
+  MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+END
+
+PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -136,7 +143,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'On_On'],$
     
     ;step3
-     reduce_step3_spin_off_off_unavailable: $
+    reduce_step3_spin_off_off_unavailable: $
     'REFoffSpec_images/off_off_disable.png',$
     reduce_step3_spin_off_off_disable: $
     'REFoffSpec_images/off_off_unselected.png',$
@@ -149,14 +156,14 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'REFoffSpec_images/off_on_unselected.png',$
     reduce_step3_spin_off_on_enable: $
     'REFoffSpec_images/off_on_selected.png',$
-
+    
     reduce_step3_spin_on_off_unavailable: $
     'REFoffSpec_images/on_off_disable.png',$
     reduce_step3_spin_on_off_disable: $
     'REFoffSpec_images/on_off_unselected.png',$
     reduce_step3_spin_on_off_enable: $
     'REFoffSpec_images/on_off_selected.png',$
-
+    
     reduce_step3_spin_on_on_unavailable: $
     'REFoffSpec_images/on_on_disable.png',$
     reduce_step3_spin_on_on_disable: $
@@ -470,7 +477,21 @@ END
 
 ; Empty stub procedure used for autoloading.
 PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+
+  ;check instrument here
+  SPAWN, 'hostname',listening
+  CASE (listening) OF
+    'lrac': instrument = 'REF_L'
+    'mrac': instrument = 'REF_M'
+    ELSE: instrument = 'UNDEFINED'
+  ENDCASE
+  
+  IF (instrument EQ 'UNDEFINED') THEN BEGIN
+    BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  ENDIF ELSE BEGIN
+    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  ENDELSE
+
 END
 
 
