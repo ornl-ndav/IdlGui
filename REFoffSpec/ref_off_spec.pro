@@ -93,7 +93,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = ptr_new ({ ucams: ucams,$
-    instrument: 'REF_M',$
+    instrument: instrument,$
     debugging: DEBUGGING,$
     sDebugging: sDebugging,$
     
