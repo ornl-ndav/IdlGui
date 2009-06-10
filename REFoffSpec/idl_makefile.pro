@@ -22,6 +22,7 @@ cd, IdlUtilitiesPath
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/REFoffSpecGUI/'
+.run MakeGuiInstrumentSelection.pro
 .run MakeGuiMainBase.pro
 .run MakeGuiStep1.pro
 .run MakeGuiReduceStep1.pro
