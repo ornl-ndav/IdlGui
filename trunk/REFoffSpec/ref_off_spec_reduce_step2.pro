@@ -283,8 +283,11 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
+  
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
   reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
   reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
+  ENDIF
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
   
