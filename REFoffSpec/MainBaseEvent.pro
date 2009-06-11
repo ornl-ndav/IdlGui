@@ -43,7 +43,7 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
-        ;Instrument Selection
+    ;Instrument Selection
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='instrument_selection_validate_button'): begin
       REFreductionEventcb_InstrumentSelected, Event
@@ -182,23 +182,25 @@ PRO MAIN_BASE_event, Event
   ;browse normalization file button
   WIDGET_INFO(wWidget, FIND_BY_UNAME= 'reduce_step2_browse_button'): BEGIN
     reduce_step2_browse_normalization, Event
-    tab_id = WIDGET_INFO(Event.top,$
-      FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
-    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-    CASE (currTabSelect) OF
-      0: BEGIN ;off_off
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
-      END
-      1: BEGIN ;off_on
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
-      END
-      2: BEGIN ;on_off
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
-      END
-      3: BEGIN ;on_on
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
-      END
-    ENDCASE
+    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+      tab_id = WIDGET_INFO(Event.top,$
+        FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+      CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+      CASE (currTabSelect) OF
+        0: BEGIN ;off_off
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+        END
+        1: BEGIN ;off_on
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+        END
+        2: BEGIN ;on_off
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+        END
+        3: BEGIN ;on_on
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+        END
+      ENDCASE
+    ENDIF
   END
   
   ;norm cw_field
@@ -552,6 +554,37 @@ PRO MAIN_BASE_event, Event
   END
   
   ;..........................................................................
+  ;Browse for a ROI file button (0->9) for REF_L instrument
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button0'): BEGIN
+    reduce_step2_browse_roi, Event, row=0
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button1'): BEGIN
+    reduce_step2_browse_roi, Event, row=1
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button2'): BEGIN
+    reduce_step2_browse_roi, Event, row=2
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button3'): BEGIN
+    reduce_step2_browse_roi, Event, row=3
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button4'): BEGIN
+    reduce_step2_browse_roi, Event, row=4
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button5'): BEGIN
+    reduce_step2_browse_roi, Event, row=5
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button6'): BEGIN
+    reduce_step2_browse_roi, Event, row=6
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button7'): BEGIN
+    reduce_step2_browse_roi, Event, row=7
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button8'): BEGIN
+    reduce_step2_browse_roi, Event, row=8
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button9'): BEGIN
+    reduce_step2_browse_roi, Event, row=9
+  END
   
   ;Browse for a ROI file buttons (0->9) data spin state off_off
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off0'): BEGIN
