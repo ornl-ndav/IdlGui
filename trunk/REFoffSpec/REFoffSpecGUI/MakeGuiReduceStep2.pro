@@ -143,8 +143,8 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step2_create_roi_lin_log',$
     /EXCLUSIVE)
     
-    ;third row ---------------------------
-    row3_row = WIDGET_BASE(big_base,$
+  ;third row ---------------------------
+  row3_row = WIDGET_BASE(big_base,$
     /ROW)
     
   space = WIDGET_LABEL(row3_row,$
@@ -359,59 +359,26 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     value = 'Remove Selected File',$
     uname = 'reduce_step2_list_of_norm_files_remove_button')
     
-  ;  ;space between base of first row
-  ;  space = WIDGET_LABEL(main_row1,$
-  ;    VALUE = space_value)
-  ;
-  ;  ;Polarization buttons/base --------------------------------------------------
-  ;  col2 = WIDGET_BASE(main_row1,$
-  ;    FRAME = 5,$
-  ;    uname = 'reduce_step2_polarization_base',$
-  ;    map = 0,$
-  ;    /ROW)
-  ;
-  ;  col2_col1 = WIDGET_BASE(col2,$
-  ;    /column)
-  ;
-  ;  button1 = WIDGET_DRAW(col2_col1,$
-  ;    uname = 'reduce_step2_polarization_mode1_draw',$
-  ;    /BUTTON_EVENTS,$
-  ;    /MOTION_EVENTS,$
-  ;    /TRACKING_EVENTS,$
-  ;    SCR_XSIZE = 150,$
-  ;    SCR_YSIZE = 109)
-  ;
-  ;  ;base of the spin state combobox
-  ;  base_combo = WIDGET_BASE(col2_col1,$
-  ;    /ALIGN_CENTER,$
-  ;    uname = 'reduce_step2_spin_state_combobox_base',$
-  ;    /ROW)
-  ;
-  ;  spinStates = WIDGET_COMBOBOX(base_combo,$
-  ;    value = ['Off_Off','Off_On','On_Off','On_On'],$
-  ;    uname = 'reduce_step2_mode1_spin_state_combobox')
-  ;
-  ;  space = WIDGET_LABEL(col2,$
-  ;    VALUE = '')
-  ;
-  ;  button2 = WIDGET_DRAW(col2,$
-  ;    uname = 'reduce_step2_polarization_mode2_draw',$
-  ;    /BUTTON_EVENTS,$
-  ;    /MOTION_EVENTS,$
-  ;    /TRACKING_EVENTS,$
-  ;    SCR_XSIZE = 150,$
-  ;    SCR_YSIZE = 109)
-  ;
-  ;----------------------------------------------------------------------------
+    
+  ;-------------- second part of tab ------------------------------------------
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    value = 'Data Run#     Normalization Run#'
+    xsize = 200
+  ENDIF ELSE BEGIN
+    value = 'Data Run#     Normalization Run#                   ' + $
+      'Region  Of  Interest  (ROI)'
+    xsize = 600
+  ENDELSE
+  
   xyoff = [27,218]
   sLabel = { size: [XYoff[0],$
     XYoff[1]],$
-    value: 'Data Run #     Normalization'}
+    value: value}
     
   label_base = WIDGET_BASE(Base,$
     xoffset = sLabel.size[0],$
     yoffset = slabel.size[1],$
-    scr_xsize = 200,$
+    scr_xsize = xsize,$
     scr_ysize = 30,$
     map = 0,$
     uname = 'reduce_step2_label_table_base')
@@ -421,142 +388,211 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 0,$
     VALUE   = sLabel.value)
     
-  ;  ;general ROI browse and file label
-  ;  ROIbase = WIDGET_BASE(Base,$
-  ;    XOFFSET = 600,$
-  ;    YPAD = 0,$
-  ;    YOFFSET = 202,$
-  ;    SCR_XSIZE = 650,$
-  ;    SCR_YSIZE = 30,$
-  ;    UNAME = 'reduce_step2_general_roi_base',$
-  ;    MAP = 0,$
-  ;    FRAME = 0,$
-  ;    /ROW)
-  ;
-  ;  browse = WIDGET_BUTTON(ROIbase,$
-  ;    SCR_YSIZE = 25,$
-  ;    VALUE = '  Browse for a ROI file ...  ',$
-  ;    UNAME = 'reduce_step2_general_roi_browse_button')
-  ;
-  ;  label = WIDGET_LABEL(ROIbase,$
-  ;    VALUE = 'File: ')
-  ;
-  ;  value = WIDGET_LABEL(ROIbase,$
-  ;    VALUE = 'N/A',$
-  ;    UNAME = 'reduce_step2_general_roi_label',$
-  ;    /ALIGN_LEFT)
-    
-  ;-------------------------------------------------------------------------
-    
-  offset = 35
-  xoff = 50
-  yoff = offset + sLabel.size[1]+5
-  label_offset = 4
-  FOR i=0,10 DO BEGIN
+  ;----------------------------------------------------------------------------
+  ;Big table
+  ;----------------------------------------------------------------------------
+  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
   
-    uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i,/REMOVE_ALL)
-    row_base = WIDGET_BASE(Base,$
-      uname = uname,$
-      xoffset = XYoff[0],$
-      yoffset = yoff,$
-      scr_ysize = 30,$
-      scr_xsize = 190,$
-      map = 0,$
-      frame = 0)
+    offset = 35
+    xoff = 50
+    yoff = offset + sLabel.size[1]+5
+    label_offset = 4
+    FOR i=0,10 DO BEGIN
+    
+      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i,/REMOVE_ALL)
+      row_base = WIDGET_BASE(Base,$
+        uname = uname,$
+        xoffset = XYoff[0],$
+        yoffset = yoff,$
+        scr_ysize = 30,$
+        scr_xsize = 1210,$
+        map = 0,$ 
+        frame = 0)
+        
+      uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
+      value1 = WIDGET_LABEL(row_Base,$
+        value   = '5001',$
+        xoffset = 0,$
+        yoffset = label_offset,$
+        SCR_XSIZE = 50,$
+        uname   = uname)
+        
+      uname = 'reduce_tab2_norm_base'
+      combo_base = WIDGET_BASE(row_Base,$
+        XOFFSET = xyoff[0]+50,$
+        YOFFSET = 0,$
+        uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
+        map = 1)
+        
+      uname = 'reduce_tab2_norm_combo'
+      combo = WIDGET_COMBOBOX(combo_base,$
+        value = ['6000','6001'],$
+        uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
+        
+      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i,/REMOVE_ALL)
+      value2 = WIDGET_LABEL(row_Base,$
+        XOFFSET = XYoff[0]+85,$
+        YOFFSET = label_offset,$
+        /align_left,$
+        value = '6000',$
+        SCR_XSIZE = 50,$
+        uname = uname)
+        
+      ;roi widgets
+      ;Browse button
+      big_off = 80 
+      uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i,/REMOVE_ALL)
+      browse = WIDGET_BUTTON(row_base,$
+        Xoffset = xyoff[0]+130 + big_off,$
+        yoffset = 2,$
+        scr_xsize = 150,$
+        value = 'Browse ROI file ...',$
+        uname = uname)
+        
+      ;Create/modify ROI
+      uname = 'reduce_tab2_roi_modify_button' + STRCOMPRESS(i,/REMOVE_ALL)
+      modify = WIDGET_BUTTON(row_base,$
+        xoffset = xyoff[0]+280 + big_off,$
+        yoffset = 2,$
+        uname = uname,$
+        scr_xsize = 230,$
+        value = 'Create/Modify/Visualize ROI file')
+        
+      uname = 'reduce_tab2_roi_label' + STRCOMPRESS(i,/REMOVE_ALL)
+      roi = WIDGET_LABEL(row_Base,$
+        XOFFSET = XYoff[0]+515 + big_off,$
+        YOFFSET = 7,$
+        /ALIGN_LEFT,$
+        frame=0,$
+        value = 'File:',$
+        uname = uname)
+        
+      uname = 'reduce_tab2_roi_value' + STRCOMPRESS(i,/REMOVE_ALL)
+      roi = WIDGET_LABEL(row_Base,$
+        XOFFSET = XYoff[0]+550 + big_off,$
+        YOFFSET = 7,$
+        SCR_XSIZE = 400,$
+        /ALIGN_LEFT,$
+        frame=0,$
+        value = 'N/A',$
+        uname = uname)
+        
+      yoff += offset
+    ENDFOR
+    
+  ENDIF ELSE BEGIN
+  
+    offset = 35
+    xoff = 50
+    yoff = offset + sLabel.size[1]+5
+    label_offset = 4
+    FOR i=0,10 DO BEGIN
+    
+      uname = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(i,/REMOVE_ALL)
+      row_base = WIDGET_BASE(Base,$
+        uname = uname,$
+        xoffset = XYoff[0],$
+        yoffset = yoff,$
+        scr_ysize = 30,$
+        scr_xsize = 190,$
+        map = 0,$
+        frame = 0)
+        
+      uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
+      value1 = WIDGET_LABEL(row_Base,$
+        value   = '5001',$
+        xoffset = 0,$
+        yoffset = label_offset,$
+        SCR_XSIZE = 50,$
+        uname   = uname)
+        
+      uname = 'reduce_tab2_norm_base'
+      combo_base = WIDGET_BASE(row_Base,$
+        XOFFSET = xyoff[0]+50,$
+        YOFFSET = 0,$
+        uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
+        map = 1)
+        
+      uname = 'reduce_tab2_norm_combo'
+      combo = WIDGET_COMBOBOX(combo_base,$
+        value = ['6000','6001'],$
+        uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
+        
+      uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i,/REMOVE_ALL)
+      value2 = WIDGET_LABEL(row_Base,$
+        XOFFSET = XYoff[0]+85,$
+        YOFFSET = label_offset,$
+        /align_left,$
+        value = '6000',$
+        SCR_XSIZE = 50,$
+        uname = uname)
+        
+      yoff += offset
+    ENDFOR
+    
+    ;table base
+    Table_base = WIDGET_BASE(Base,$
+      XOFFSET = 230,$
+      YOFFSET = 207-15,$
+      SCR_XSIZE = 1005,$
+      SCR_YSIZE = 430+20,$
+      UNAME = 'reduce_step2_data_spin_states_table_base',$
+      MAP = 0)
       
-    uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
-    value1 = WIDGET_LABEL(row_Base,$
-      value   = '5001',$
-      xoffset = 0,$
-      yoffset = label_offset,$
-      SCR_XSIZE = 50,$
-      uname   = uname)
+    ;title of big data spin states table
+    label = WIDGET_LABEL(Table_base,$
+      XOFFSET = 850-230,$
+      YOFFSET = 2,$
+      VALUE = '  -- D A T A   S p i n   S t a t e s --',$
+      FRAME = 0,$
+      FONT = '15x13',$
+      UNAME = 'reduce_step2_d-ata_spin_states_table_title')
       
-    uname = 'reduce_tab2_norm_base'
-    combo_base = WIDGET_BASE(row_Base,$
-      XOFFSET = xyoff[0]+50,$
+    ;big widget_tab
+    tab = WIDGET_TAB(Table_base,$
+      XOFFSET = 0,$
       YOFFSET = 0,$
-      uname = uname+ STRCOMPRESS(i,/REMOVE_ALL),$
-      map = 1)
+      UNAME = 'reduce_step2_data_spin_state_tab_uname',$
+      /TRACKING_EVENTS,$
+      SCR_XSIZE = 1000,$
+      SCR_YSIZE = 430+15)
       
-    uname = 'reduce_tab2_norm_combo'
-    combo = WIDGET_COMBOBOX(combo_base,$
-      value = ['6000','6001'],$
-      uname = uname + STRCOMPRESS(i,/REMOVE_ALL))
+    space = '    '
+    
+    ;data_Off_Off
+    off_off = WIDGET_BASE(tab,$
+      title = space + ' O f f _ O f f ' + space)
       
-    uname = 'reduce_tab2_norm_value' + STRCOMPRESS(i,/REMOVE_ALL)
-    value2 = WIDGET_LABEL(row_Base,$
-      XOFFSET = XYoff[0]+85,$
-      YOFFSET = label_offset,$
-      /align_left,$
-      value = '6000',$
-      SCR_XSIZE = 50,$
-      uname = uname)
+    add_widgets_reduce_step2_tab, $
+      base_id = off_off,$
+      base_name = 'off_off'
       
-    yoff += offset
-  ENDFOR
+    ;data_Off_On
+    off_on = WIDGET_BASE(tab,$
+      title = space + ' O f f _ O n ' + space)
+      
+    add_widgets_reduce_step2_tab, $
+      base_id = off_on,$
+      base_name = 'off_on'
+      
+    ;data_On_Off
+    on_off = WIDGET_BASE(tab,$
+      title = space + ' O n _ O f f ' + space)
+      
+    add_widgets_reduce_step2_tab, $
+      base_id = on_off,$
+      base_name = 'on_off'
+      
+    ;data_On_On
+    on_on = WIDGET_BASE(tab,$
+      title = space + ' O n _ O n ' + space)
+      
+    add_widgets_reduce_step2_tab, $
+      base_id = on_on,$
+      base_name = 'on_on'
+      
+  ENDELSE
   
-  ;table base
-  Table_base = WIDGET_BASE(Base,$
-    XOFFSET = 230,$
-    YOFFSET = 207-15,$
-    SCR_XSIZE = 1005,$
-    SCR_YSIZE = 430+20,$
-    UNAME = 'reduce_step2_data_spin_states_table_base',$
-    MAP = 0)
-    
-  ;title of big data spin states table
-  label = WIDGET_LABEL(Table_base,$
-    XOFFSET = 850-230,$
-    YOFFSET = 2,$
-    VALUE = '  -- D A T A   S p i n   S t a t e s --',$
-    FRAME = 0,$
-    FONT = '15x13',$
-    UNAME = 'reduce_step2_data_spin_states_table_title')
-    
-  ;big widget_tab
-  tab = WIDGET_TAB(Table_base,$
-    XOFFSET = 0,$
-    YOFFSET = 0,$
-    UNAME = 'reduce_step2_data_spin_state_tab_uname',$
-    /TRACKING_EVENTS,$
-    SCR_XSIZE = 1000,$
-    SCR_YSIZE = 430+15)
-    
-  space = '    '
-  
-  ;data_Off_Off
-  off_off = WIDGET_BASE(tab,$
-    title = space + ' O f f _ O f f ' + space)
-    
-  add_widgets_reduce_step2_tab, $
-    base_id = off_off,$
-    base_name = 'off_off'
-    
-  ;data_Off_On
-  off_on = WIDGET_BASE(tab,$
-    title = space + ' O f f _ O n ' + space)
-    
-  add_widgets_reduce_step2_tab, $
-    base_id = off_on,$
-    base_name = 'off_on'
-    
-  ;data_On_Off
-  on_off = WIDGET_BASE(tab,$
-    title = space + ' O n _ O f f ' + space)
-    
-  add_widgets_reduce_step2_tab, $
-    base_id = on_off,$
-    base_name = 'on_off'
-    
-  ;data_On_On
-  on_on = WIDGET_BASE(tab,$
-    title = space + ' O n _ O n ' + space)
-    
-  add_widgets_reduce_step2_tab, $
-    base_id = on_on,$
-    base_name = 'on_on'
-    
 END
 
 ;------------------------------------------------------------------------------

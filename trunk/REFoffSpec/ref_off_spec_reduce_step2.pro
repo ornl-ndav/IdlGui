@@ -175,16 +175,10 @@ END
 ;------------------------------------------------------------------------------
 PRO refresh_reduce_step2_big_table, Event
 
-  ;PRINT
-  ;PRINT, 'entering refresh_reduce_step2_big_table'
-
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   norm_run_number = (*global).nexus_norm_list_run_number
-  
-  ;HELP, norm_run_number
-  ;PRINT, norm_run_number
   
   IF (norm_run_number[0,0] NE '') THEN BEGIN
   
@@ -285,8 +279,8 @@ PRO addNormNexusToList, Event, new_nexus_file_list
   nexus_file_list = (*(*global).reduce_tab2_nexus_file_list)
   
   IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-  reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
-  reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
+    reduce_tab1_working_pola_state_list = (*global).nexus_list_OF_pola_state
+    reduce_tab1_working_pola_state = reduce_tab1_working_pola_state_list[0]
   ENDIF
   
   IF ((SIZE(nexus_file_list))(0) EQ 0) THEN BEGIN ;first time adding norm file
@@ -417,76 +411,51 @@ PRO PopulateStep2BigTabe, Event
       uname  = 'reduce_tab2_data_recap_base_#' + STRCOMPRESS(index,/REMOVE_ALL)
       MapBase, Event, uname, 1
       
-      ;show big data spin state table
-      MapBase, Event, 'reduce_step2_data_spin_states_table_base', 1
-      
-      ;show each row
-      IF (button_value[0] EQ 1) THEN BEGIN
-        status = 1
-      ENDIF ELSE BEGIN
-        status = 0
-      ENDELSE
-      uname = 'reduce_tab2_data_spin_row_base_off_off' + $
-        STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, status
-      
-      IF (button_value[1] EQ 1) THEN BEGIN
-        status = 1
-      ENDIF ELSE BEGIN
-        status = 0
-      ENDELSE
-      uname = 'reduce_tab2_data_spin_row_base_off_on' + $
-        STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, status
-      
-      IF (button_value[2] EQ 1) THEN BEGIN
-        status = 1
-      ENDIF ELSE BEGIN
-        status = 0
-      ENDELSE
-      uname = 'reduce_tab2_data_spin_row_base_on_off' + $
-        STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, status
-      
-      IF (button_value[3] EQ 1) THEN BEGIN
-        status = 1
-      ENDIF ELSE BEGIN
-        status = 0
-      ENDELSE
-      uname = 'reduce_tab2_data_spin_row_base_on_on' + $
-        STRCOMPRESS(index,/REMOVE_ALL)
-      MapBase, Event, uname, status
-      
-      ;populate data spin state widget_tab of all spin states
-      populate_reduce_step2_data_spin_state, Event
-      
-      
-    ;      IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
-    ;      ;        uname = 'reduce_tab2_data_recap_base_#' + $
-    ;      ;          STRCOMPRESS(index,/REMOVE_ALL)
-    ;      ;        MapBase, Event, uname, 1
-    ;      ;      ENDIF
-    ;
-    ;      ;      putTextFieldValue, Event, $
-    ;      ;        'reduce_tab2_roi_value' + STRCOMPRESS(index,/REMOVE_ALL),$
-    ;      ;        norm_roi_list[index]
-    ;
-    ;      ENDIF ELSE BEGIN
-    ;
-    ;        IF ((*global).reduce_step2_create_roi_base EQ 0) THEN BEGIN
-    ;          error = 0
-    ;          CATCH, error
-    ;          IF (error NE 0) THEN BEGIN
-    ;            CATCH, /CANCEL
-    ;          ENDIF ELSE BEGIN
-    ;            uname = 'reduce_tab2_data_recap_base_#' + $
-    ;              STRCOMPRESS(index,/REMOVE_ALL)
-    ;            MapBase, Event, uname, 0
-    ;          ENDELSE
-    ;        ENDIF
-    ;
-    ;      ENDELSE
-      
+      IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+        ;show big data spin state table
+        MapBase, Event, 'reduce_step2_data_spin_states_table_base', 1
+        
+        ;show each row
+        IF (button_value[0] EQ 1) THEN BEGIN
+          status = 1
+        ENDIF ELSE BEGIN
+          status = 0
+        ENDELSE
+        uname = 'reduce_tab2_data_spin_row_base_off_off' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
+        MapBase, Event, uname, status
+        
+        IF (button_value[1] EQ 1) THEN BEGIN
+          status = 1
+        ENDIF ELSE BEGIN
+          status = 0
+        ENDELSE
+        uname = 'reduce_tab2_data_spin_row_base_off_on' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
+        MapBase, Event, uname, status
+        
+        IF (button_value[2] EQ 1) THEN BEGIN
+          status = 1
+        ENDIF ELSE BEGIN
+          status = 0
+        ENDELSE
+        uname = 'reduce_tab2_data_spin_row_base_on_off' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
+        MapBase, Event, uname, status
+        
+        IF (button_value[3] EQ 1) THEN BEGIN
+          status = 1
+        ENDIF ELSE BEGIN
+          status = 0
+        ENDELSE
+        uname = 'reduce_tab2_data_spin_row_base_on_on' + $
+          STRCOMPRESS(index,/REMOVE_ALL)
+        MapBase, Event, uname, status
+        
+        ;populate data spin state widget_tab of all spin states
+        populate_reduce_step2_data_spin_state, Event
+        
+      ENDIF
       
     ENDIF
     index++
@@ -677,20 +646,24 @@ PRO reduce_step2_browse_roi, Event, row=row, data_spin_state=data_spin_state
   IF (roi_file[0] NE '') THEN BEGIN
   
     nexus_spin_state_roi_table = (*(*global).nexus_spin_state_roi_table)
-    CASE (data_spin_state) OF
-      'Off_Off': BEGIN
-        column = 1
-      END
-      'Off_On': BEGIN
-        column = 2
-      END
-      'On_Off': BEGIN
-        column = 3
-      END
-      'On_On': BEGIN
-        column = 4
-      END
-    ENDCASE
+    IF (N_ELEMENTS(data_spin_state) NE 0) THEN BEGIN
+      CASE (data_spin_state) OF
+        'Off_Off': BEGIN
+          column = 1
+        END
+        'Off_On': BEGIN
+          column = 2
+        END
+        'On_Off': BEGIN
+          column = 3
+        END
+        'On_On': BEGIN
+          column = 4
+        END
+      ENDCASE
+    ENDIF ELSE BEGIN
+      column = 1
+    ENDELSE
     
     ;get Norm file selected
     norm_table = (*global).reduce_step2_big_table_norm_index
@@ -1073,41 +1046,53 @@ PRO refresh_roi_file_name, Event
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=data_base_uname)
     IF (WIDGET_INFO(id,/MAP)) THEN BEGIN ;row is displayed
     
-      ;off_off
-      base_name = 'off_off'
-      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
-        data_spin_state=base_name)
-      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-      IF (roi_file EQ '') THEN roi_file = 'N/A'
-      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-      putTextFieldValue, Event, roi_label_uname, roi_file
+      IF ((*global).instrument EQ 'REF_M') THEN BEGIN
       
-      ;off_on
-      base_name = 'off_on'
-      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
-        data_spin_state=base_name)
-      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-      IF (roi_file EQ '') THEN roi_file = 'N/A'
-      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-      putTextFieldValue, Event, roi_label_uname, roi_file
+        ;off_off
+        base_name = 'off_off'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;off_on
+        base_name = 'off_on'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;on_off
+        base_name = 'on_off'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+        ;on_on
+        base_name = 'on_on'
+        column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
+          data_spin_state=base_name)
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+      ENDIF ELSE BEGIN ;REF_L
       
-      ;on_off
-      base_name = 'on_off'
-      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
-        data_spin_state=base_name)
-      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-      IF (roi_file EQ '') THEN roi_file = 'N/A'
-      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-      putTextFieldValue, Event, roi_label_uname, roi_file
-      
-      ;on_on
-      base_name = 'on_on'
-      column = getReduceStep2SpinStateColumn(Event, Row=sIndex, $
-        data_spin_state=base_name)
-      roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
-      IF (roi_file EQ '') THEN roi_file = 'N/A'
-      roi_label_uname = 'reduce_tab2_roi_value_' + base_name + sIndex
-      putTextFieldValue, Event, roi_label_uname, roi_file
+        column = 1
+        roi_file = nexus_spin_state_roi_table[column,norm_table[index]]
+        IF (roi_file EQ '') THEN roi_file = 'N/A'
+        roi_label_uname = 'reduce_tab2_roi_value' + sIndex
+        putTextFieldValue, Event, roi_label_uname, roi_file
+        
+      ENDELSE
       
     ENDIF
     

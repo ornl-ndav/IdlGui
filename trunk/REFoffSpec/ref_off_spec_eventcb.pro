@@ -32,23 +32,23 @@
 ;
 ;==============================================================================
 
-;This function defines the instrument if the program is started from 
+;This function defines the instrument if the program is started from
 ;heater
 PRO REFreductionEventcb_InstrumentSelected, Event
 
-id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
-widget_control, id, get_value=instrument_selected
-
-;descativate instrument selection base and activate main base
-ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
-widget_control, ISBaseId, map=0
-
-if (instrument_selected EQ 0) then begin
-   BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-endif else begin
-   BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-endelse
-
+  id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
+  widget_control, id, get_value=instrument_selected
+  
+  ;descativate instrument selection base and activate main base
+  ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
+  widget_control, ISBaseId, map=0
+  
+  if (instrument_selected EQ 0) then begin
+    BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  endif else begin
+    BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  endelse
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -92,14 +92,16 @@ PRO  reduce_tab_event, Event
         base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
         IF (~base_mapped) THEN BEGIN
           refresh_reduce_step2_big_table, Event
-          refresh_reduce_step2_data_spin_state_table, Event
+          IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+            refresh_reduce_step2_data_spin_state_table, Event
+          ENDIF
           refresh_roi_file_name, Event
         ENDIF
       END
       2: BEGIN ;step3: recapitulation tab
         ;checking_spin_state, Event, working_spin_state = 'Off_Off' ;REMOVE_ME
         refresh_reduce_step3_table, Event
-        ;reduce_step3_plot_jobs, Event ;REMOVE_ME
+      ;reduce_step3_plot_jobs, Event ;REMOVE_ME
       END
       ELSE:
     ENDCASE
