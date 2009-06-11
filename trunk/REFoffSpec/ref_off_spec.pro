@@ -33,8 +33,8 @@
 ;==============================================================================
 
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-;  RESOLVE_ROUTINE, 'ref__eventcb',$
-;    /COMPILE_FULL_FILE            ; Load event callback routines
+  ;  RESOLVE_ROUTINE, 'ref__eventcb',$
+  ;    /COMPILE_FULL_FILE            ; Load event callback routines
   ;build the Instrument Selection base
   MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
@@ -465,9 +465,11 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     CheckPackages, MAIN_BASE, global, my_package;_CheckPackages
   ENDIF
   
-  display_reduce_step1_buttons, MAIN_BASE=main_base, $
-    ACTIVATE=(*global).reduce_step1_spin_state_mode, global
-    
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    display_reduce_step1_buttons, MAIN_BASE=main_base, $
+      ACTIVATE=(*global).reduce_step1_spin_state_mode, global
+  ENDIF
+  
   ;=============================================================================
   ;=============================================================================
   ;send message to log current run of application
@@ -491,7 +493,7 @@ PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
     BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
-
+  
 END
 
 
