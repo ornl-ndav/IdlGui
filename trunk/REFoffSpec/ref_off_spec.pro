@@ -360,6 +360,12 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Reflectometer Off Specular Application'
+  IF (instrument EQ 'REF_L') THEN BEGIN
+    MainBaseTitle += ' for REF_L'
+  ENDIF ELSE BEGIN
+    MainBaseTitle += ' for REF_M'
+  ENDELSE
+  
   MainBaseTitle += ' - ' + VERSION
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     MainBaseTitle += ' (DEBUGGING MODE)'

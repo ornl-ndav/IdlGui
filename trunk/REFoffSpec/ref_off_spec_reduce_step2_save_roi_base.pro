@@ -54,11 +54,6 @@ PRO save_roi_base_event, event
       change_file_name, Event
     END
     
-    ;    ;file name text field
-    ;    WIDGET_INFO(wWidget, $
-    ;      FIND_BY_UNAME='reduce_step2_roi_file_name_text'): BEGIN
-    ;    END
-    
     ;cancel
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='reduce_step2_roi_cancel_button'): BEGIN

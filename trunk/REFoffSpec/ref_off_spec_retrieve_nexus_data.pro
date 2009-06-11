@@ -38,6 +38,7 @@ FUNCTION retrieve_Data, Event, $
     
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
   
   not_hdf5_format = 0
   ;CATCH, not_hdf5_format
@@ -49,12 +50,20 @@ FUNCTION retrieve_Data, Event, $
     RETURN,0
   ENDIF ELSE BEGIN
     fileID    = H5F_OPEN(FullNexusName)
-    data_path = '/entry-' + spin_state + '/bank1/data'
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      data_path = '/entry-' + spin_state + '/bank1/data'
+    ENDIF ELSE BEGIN
+      data_path = '/entry/bank1/data'
+    ENDELSE
     fieldID = H5D_OPEN(fileID,data_path)
     data = H5D_READ(fieldID)
     (*(*global).norm_data) = data
     
-    tData = TOTAL(data,2)
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      tData = TOTAL(data,2)
+    ENDIF ELSE BEGIN
+      tData = TOTAL(data,3)
+    ENDELSE
     (*(*global).norm_tData) = tData
     
     x = (size(tData))(1)
@@ -81,6 +90,6 @@ FUNCTION retrieve_Data, Event, $
     
     RETURN, 1
   ENDELSE
-
+  
 END
 
