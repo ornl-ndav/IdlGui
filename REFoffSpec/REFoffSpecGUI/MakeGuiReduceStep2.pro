@@ -94,22 +94,35 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
     FRAME = 1,$
     SCR_XSIZE = 100)
     
-  spin_label = WIDGET_LABEL(row1_base,$
-    VALUE = '     Spin State:')
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+  
+    spin_label = WIDGET_LABEL(row1_base,$
+      VALUE = '     Spin State:')
+      
+    spin_value = WIDGET_LABEL(row1_base,$
+      VALUE = 'Off_Off',$
+      FRAME = 1,$
+      UNAME = 'reduce_step2_create_roi_pola_value',$
+      SCR_XSIZE = 50)
+      
+    xsize = 500
     
-  spin_value = WIDGET_LABEL(row1_base,$
-    VALUE = 'Off_Off',$
-    FRAME = 1,$
-    UNAME = 'reduce_step2_create_roi_pola_value',$
-    SCR_XSIZE = 50)
+  ENDIF ELSE BEGIN
+  
+    space = WIDGET_LABEL(row1_base,$
+      VALUE = '      ')
+      
+    xsize = 620
     
+  ENDELSE
+  
   roi_label = WIDGET_LABEL(row1_base,$
     VALUE = '     ROI File Name:')
     
   roi_value = WIDGET_LABEL(row1_base,$
     VALUE = 'N/A',$
     /ALIGN_LEFT,$
-    SCR_XSIZE = 500,$
+    SCR_XSIZE = xsize,$
     UNAME = 'reduce_step2_create_roi_file_name_label',$
     FRAME = 1)
     
@@ -406,7 +419,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
         yoffset = yoff,$
         scr_ysize = 30,$
         scr_xsize = 1210,$
-        map = 0,$ 
+        map = 0,$
         frame = 0)
         
       uname = 'reduce_tab2_data_value' + STRCOMPRESS(i,/REMOVE_ALL)
@@ -440,7 +453,7 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
         
       ;roi widgets
       ;Browse button
-      big_off = 80 
+      big_off = 80
       uname = 'reduce_tab2_roi_browse_button' + STRCOMPRESS(i,/REMOVE_ALL)
       browse = WIDGET_BUTTON(row_base,$
         Xoffset = xyoff[0]+130 + big_off,$

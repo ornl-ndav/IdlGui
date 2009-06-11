@@ -54,9 +54,9 @@ PRO reduce_step2_save_roi, Event, quit_flag=quit_flag
   row = (*global).tmp_reduce_step2_row
   column = getReduceStep2SpinStateColumn(Event, row=row,$
     data_spin_state=data_spin_state)
-
+    
   ;get Norm file selected
-  norm_table = (*global).reduce_step2_big_table_norm_index  
+  norm_table = (*global).reduce_step2_big_table_norm_index
   full_file_name = STRCOMPRESS(path,/REMOVE_ALL) + $
     STRCOMPRESS(file,/REMOVE_ALL)
     
@@ -106,6 +106,8 @@ PRO create_roi_file, Event, roi_file_name, quit_flag=quit_flag
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  instrument = (*global).instrument
+  
   ;ON_IOERROR, error
   
   ;get Y1 and Y2
@@ -132,15 +134,32 @@ PRO create_roi_file, Event, roi_file_name, quit_flag=quit_flag
     i     = 0L
     NyMax = 256L
     OutputArray = STRARR((NyMax)*nbr_y)
-    FOR y=(Ymin),(Ymax) DO BEGIN
-      FOR x=0,(NyMax-1) DO BEGIN
-        text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
-        text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
-        PRINTF,1,text
-        OutputArray[i] = text
-        i++
+    
+    IF (instrument EQ 'REF_M') THEN BEGIN
+    
+      FOR y=(Ymin),(Ymax) DO BEGIN
+        FOR x=0,(NyMax-1) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(y,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(x,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
       ENDFOR
-    ENDFOR
+      
+    ENDIF ELSE BEGIN
+    
+      FOR x=0,(NyMax-1) DO BEGIN
+        FOR y=(Ymin),(Ymax) DO BEGIN
+          text  = 'bank1_' + STRCOMPRESS(x,/REMOVE_ALL)
+          text += '_' + STRCOMPRESS(y,/REMOVE_ALL)
+          PRINTF,1,text
+          OutputArray[i] = text
+          i++
+        ENDFOR
+      ENDFOR
+    ENDELSE
+    
     CLOSE, 1
     FREE_LUN, 1
   ENDELSE ;end of (Ynbr LE 1)

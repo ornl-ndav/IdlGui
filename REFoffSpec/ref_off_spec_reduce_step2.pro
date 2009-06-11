@@ -52,7 +52,7 @@ PRO mode1_spin_state_combobox_changed, Event
     
   uname_list = STRARR(11)
   uname_base = 'reduce_tab2_spin_value'
-  for i=0,10 do begin
+  FOR i=0,10 DO BEGIN
     uname_list[i] = uname_base + STRCOMPRESS(i,/REMOVE_ALL)
   ENDFOR
   
@@ -699,13 +699,16 @@ FUNCTION display_reduce_step2_create_roi_plot, Event, Row=row,$
   ;norm file name
   nexus_norm_file_name = getReduceStep2NormFullName(Event, row=row)
   
-  ;spin state
-  spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
-    data_spin_state = data_spin_state)
-  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
-    spin_state
-    
-  success = retrieve_Data(Event, nexus_norm_file_name, spin_state)
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    ;spin state
+    spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
+      data_spin_state = data_spin_state)
+    putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
+      spin_state
+    success = retrieve_Data(Event, nexus_norm_file_name, spin_state)
+  ENDIF ELSE BEGIN
+    success = retrieve_Data(Event, nexus_norm_file_name)
+  ENDELSE
   
   IF (success) THEN BEGIN
     plot_reduce_step2_norm, Event
@@ -718,16 +721,21 @@ END
 
 ;------------------------------------------------------------------------------
 ;Reach by any of the Create/Modify/Visualize ROI file
-PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
-
+PRO reduce_step2_create_roi, Event, $
+    row=row, $
+    data_spin_state=data_spin_state
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  instrument = (*global).instrument
   (*global).tmp_reduce_step2_row = row
-  (*global).tmp_reduce_step2_data_spin_state = data_spin_state
+  IF (N_ELEMENTS(data_spin_state) NE 0) THEN BEGIN
+    (*global).tmp_reduce_step2_data_spin_state = data_spin_state
+    l_data_spin_state = STRLOWCASE(data_spin_state)
+  ENDIF
   
   sRow = STRCOMPRESS(row,/REMOVE_ALL)
-  l_data_spin_state = STRLOWCASE(data_spin_state)
   
   WIDGET_CONTROL, /HOURGLASS
   
@@ -750,16 +758,21 @@ PRO reduce_step2_create_roi, Event, row=row, data_spin_state=data_spin_state
   putTextFieldValue, Event, 'reduce_step2_create_roi_norm_value', $
     norm_run_number
     
-  ;get normalization spin state
-  spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
-    data_spin_state=data_spin_state)
-  putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
-    spin_state
-    
-  ;get ROI file name
-  uname = 'reduce_tab2_roi_value_' + l_data_spin_state + sRow
-  roi_file_name = getTextFieldValue(Event,uname)
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    ;get normalization spin state
+    spin_state = getReduceStep2SpinStateRow(Event, Row=row, $
+      data_spin_state=data_spin_state)
+    putTextFieldValue, Event, 'reduce_step2_create_roi_pola_value', $
+      spin_state
+  ENDIF
   
+  ;get ROI file name
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    uname = 'reduce_tab2_roi_value_' + l_data_spin_state + sRow
+  ENDIF ELSE BEGIN
+    uname = 'reduce_tab2_roi_value' + sRow
+  ENDELSE
+  roi_file_name = getTextFieldValue(Event,uname)
   uname = 'reduce_step2_create_roi_file_name_label'
   IF (roi_file_name eq '') THEN roi_file_name = 'N/A'
   putTextFieldValue, Event, uname, roi_file_name

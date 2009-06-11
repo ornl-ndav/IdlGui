@@ -410,10 +410,15 @@ FUNCTION getDefaultReduceStep2RoiFileName, event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
   
   ;get norm run number
   norm_run = getTextFieldValue(Event,'reduce_step2_create_roi_norm_value')
-  file = 'REF_M_' + norm_run + '_ROI.dat'
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    file = 'REF_M_' + norm_run + '_ROI.dat'
+  ENDIF ELSE BEGIN
+    file = 'REF_L_' + norm_run + '_ROI.dat'
+  ENDELSE
   
   RETURN, file
 END
