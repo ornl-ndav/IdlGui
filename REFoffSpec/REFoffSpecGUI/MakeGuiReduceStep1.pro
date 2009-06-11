@@ -34,10 +34,12 @@
 
 PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 
+  instrument = (*global).instrument
+  
   ;******************************************************************************
   ;            DEFINE STRUCTURE
   ;******************************************************************************
-
+  
   sBase = { size:  stab.size,$
     uname: 'reduce_step1_tab_base',$
     title: TabTitles.step1}
@@ -208,8 +210,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   space = WIDGET_LABEL(Row4_row,$
     VALUE = '                                                      ')
     
+  IF (instrument EQ 'REF_L') THEN BEGIN
+    map = 0
+  ENDIF ELSE BEGIN
+    map = 1
+  ENDELSE
+  
   Row4 = WIDGET_BASE(Row4_row,$
     FRAME = 1,$
+    MAP = map,$
     /ROW)
     
   ;  label = WIDGET_LABEL(Row4,$
@@ -258,7 +267,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;new row
   Row5 = WIDGET_BASE(Base,$
     /COLUMN,$
-    /BASE_ALIGN_CENTER)
+    /BASE_ALIGN_CENTER,$
+    MAP = map)
     
   Row5_row1 = WIDGET_BASE(Row5,$
     /ROW)
