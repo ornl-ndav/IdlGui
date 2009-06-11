@@ -492,7 +492,9 @@ PRO hideStep2BigTable, Event
   ENDWHILE
   
   ;show big data spin state table
-  MapBase, Event, 'reduce_step2_data_spin_states_table_base', 0
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    MapBase, Event, 'reduce_step2_data_spin_states_table_base', 0
+  ENDIF
   MapBase, Event, 'reduce_step2_label_table_base', 0
   
 END
