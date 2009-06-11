@@ -36,11 +36,11 @@ FUNCTION ParseBackgroundFileString, Event, StringText
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   result_array = strsplit(StringText,'_',/extract)
-  ;IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-  ;    Y = result_array[2]
-  ;ENDIF ELSE BEGIN
-  Y = result_array[1]
-  ;ENDELSE
+  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+    Y = result_array[2]
+  ENDIF ELSE BEGIN
+    Y = result_array[1]
+  ENDELSE
   RETURN, Y
 END
 
@@ -52,8 +52,10 @@ FUNCTION retrieveYMinMaxFromFile, Event, FileName
   ;to get the last line of the file
   cmd = 'tail ' + FileName + ' -n 1'
   SPAWN, cmd, last_line
+  
   Ymin = ParseBackgroundFileString(Event, first_line)
   Ymax = ParseBackgroundFileString(Event, last_line)
+  
   RETURN, [Ymin,Ymax]
 END
 
@@ -84,8 +86,8 @@ PRO browse_reduce_step2_roi_file, Event
     
     (*global).roi_path = new_path
     
-    ;Load ROI button (Load, extract and plot)
-    load_roi_selection, Event, file_name
+    ;    ;Load ROI button (Load, extract and plot)
+    ;    load_roi_selection, Event, file_name
     
     Yarray = retrieveYminMaxFromFile(event,file_name)
     Y1 = Yarray[0]
@@ -129,8 +131,8 @@ PRO load_and_plot_roi_file, Event, file_name
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  ;Load ROI button (Load, extract and plot)
-  load_roi_selection, Event, file_name
+  ;  ;Load ROI button (Load, extract and plot)
+  ;  load_roi_selection, Event, file_name
   
   Yarray = retrieveYminMaxFromFile(event,file_name)
   Y1 = Yarray[0]
@@ -146,12 +148,3 @@ PRO load_and_plot_roi_file, Event, file_name
   
 END
 
-;-----------------------------------------------------------------------------
-PRO load_roi_selection, Event, file_name
-
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  
-  
-END
