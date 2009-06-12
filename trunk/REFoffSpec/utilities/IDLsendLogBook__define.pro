@@ -34,7 +34,7 @@
 FUNCTION IDLsendLogBook_getLocalVariable, var
 CASE (var) OF
    'LogBookUname'    : RETURN, 'log_book_text'
-   'Alternate_1'     : RETURN, 'data_log_book_text_field'
+   'Alternate_1'     : RETURN, 'step6_status_text_field'
    'Alternate_2'     : RETURN, 'normalization_log_book_text_field'
    'Alternate_3'     : RETURN, 'empty_cell_status'
    'LogBookMessageId': RETURN, 'sent_to_geek_text_field'
