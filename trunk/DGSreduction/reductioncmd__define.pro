@@ -221,7 +221,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(queue) NE 0 THEN self.queue = queue
   IF N_ELEMENTS(verbose) NE 0 THEN self.verbose = verbose
   IF N_ELEMENTS(quiet) NE 0 THEN self.quiet = quiet
-  IF N_ELEMENTS(datarun) NE 0 THEN self.datarun = datarun
+  IF N_ELEMENTS(datarun) NE 0 THEN self.datarun = STRCOMPRESS(STRING(datarun), /REMOVE_ALL)
   IF N_ELEMENTS(output) NE 0 THEN self.output = output
   IF N_ELEMENTS(instrument) NE 0 THEN BEGIN
     self.instrument = STRUPCASE(instrument)
@@ -332,7 +332,7 @@ function ReductionCmd::Generate
   cmd = STRARR(self.jobs)
   
   for i = 0L, self.jobs-1 do begin
-  
+   
     cmd[i] = ""
   
     ; Queue name
@@ -346,9 +346,16 @@ function ReductionCmd::Generate
     ; Quiet flag
     IF (self.quiet EQ 1) THEN cmd[i] += " -q"
     ; Data filename(s)
-    IF STRLEN(self.datarun) GE 1 THEN cmd[i] += " "+ STRING(self.datarun)
-    ; Output
-    IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
+    IF STRLEN(self.datarun) GE 1 THEN cmd[i] += " " + STRCOMPRESS(STRING(self.datarun), /REMOVE_ALL)
+    
+    ; Output (this is automatically generated for now!)
+    ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
+    
+    IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
+    cmd[i] += " --output=~/results/" + self.instrument + "/" + self.datarun + $
+      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, i+1, self.jobs, /PAD) $
+      + ".txt"
+    
     ; Instrument Name
     IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
     ; Facility
@@ -448,9 +455,13 @@ function ReductionCmd::Generate
     IF ((self.mask EQ 1) OR (self.hardmask EQ 1)) THEN BEGIN
       cmd[i] += " --mask-file="
     
-      IF (self.mask EQ 1) THEN cmd[i] += "maskfile"
+      IF (self.mask EQ 1) THEN cmd[i] += "~/results/" + self.instrument + "/"+ $
+        self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+        i+1, self.jobs, /PAD) + "_mask.dat"
       IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
-      IF (self.hardmask EQ 1) THEN cmd[i] += "hardmaskfile"
+      IF (self.hardmask EQ 1) THEN cmd[i] += "~/mask/" + self.instrument + "/" + $
+        self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+        i+1, self.jobs, /PAD) + "_mask.dat"
     
     ENDIF
     
