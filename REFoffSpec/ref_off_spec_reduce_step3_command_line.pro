@@ -154,6 +154,10 @@ PRO reduce_step3_plot_jobs, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;display the base that ask for the working spin state
-  working_spin_state, Event
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    working_spin_state, Event
+  ENDIF ELSE BEGIN
+    checking_spin_state, Event
+  ENDELSE
   
 END

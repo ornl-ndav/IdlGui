@@ -172,10 +172,11 @@ PRO MAIN_BASE_event, Event
     ENDELSE
   END
   
-  ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111
+  ;11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 11111111 tab2 111111
   
   ;data spin states tab
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname'): BEGIN
     reduce_step2_data_tab, Event
   END
   
@@ -188,23 +189,28 @@ PRO MAIN_BASE_event, Event
       CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
       CASE (currTabSelect) OF
         0: BEGIN ;off_off
-          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+          tab=1
         END
         1: BEGIN ;off_on
-          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+          tab=2
         END
         2: BEGIN ;on_off
-          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+          tab=3
         END
         3: BEGIN ;on_on
-          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, $
+          tab=4
         END
       ENDCASE
     ENDIF
   END
   
   ;norm cw_field
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_normalization_text_field'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step2_normalization_text_field'): BEGIN
     reduce_step2_run_number_normalization, Event
     putTextFieldValue, Event, 'reduce_step2_normalization_text_field', ''
     tab_id = WIDGET_INFO(Event.top,$
@@ -227,70 +233,10 @@ PRO MAIN_BASE_event, Event
   END
   
   ;remove normalization button
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_list_of_norm_files_remove_button'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step2_list_of_norm_files_remove_button'): BEGIN
     reduce_step2_remove_run, Event
   END
-  
-  ;  ;polarization mode 1 button
-  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode1_draw'): BEGIN
-  ;    CATCH, error
-  ;    IF (error NE 0) THEN BEGIN
-  ;      CATCH,/CANCEL
-  ;      IF (event.press EQ 1) THEN BEGIN
-  ;        ;          status_buttons = (*global).status_buttons
-  ;        ;            IF (status_buttons[2] EQ 0) THEN BEGIN
-  ;        display_buttons, MAIN_BASE=MAIN_BASE, $
-  ;          EVENT=EVENT,$
-  ;          ACTIVATE=0,$
-  ;          global
-  ;        (*global).reduce_step2_polarization_mode_status = 0
-  ;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 1
-  ;        activate_norm_combobox, Event, status=0
-  ;      ENDIF
-  ;    ENDIF ELSE BEGIN
-  ;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-  ;        standard = 58
-  ;      ENDIF ELSE BEGIN
-  ;        standard = 31
-  ;      ENDELSE
-  ;      DEVICE, CURSOR_STANDARD=standard
-  ;    ;        (*global).previous_button_clicked = 3
-  ;    ENDELSE
-  ;  END
-  ;
-  ;  ;combobox of mode1
-  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_mode1_spin_state_combobox'): BEGIN
-  ;    mode1_spin_state_combobox_changed, Event
-  ;  END
-  ;
-  ;  ;polarization mode 2 button
-  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_polarization_mode2_draw'): BEGIN
-  ;    CATCH, error
-  ;    IF (error NE 0) THEN BEGIN
-  ;      CATCH,/CANCEL
-  ;      IF (event.press EQ 1) THEN BEGIN
-  ;        ;          status_buttons = (*global).status_buttons
-  ;        ;              IF (status_buttons[2] EQ 0) THEN BEGIN
-  ;        display_buttons, MAIN_BASE=MAIN_BASE, $
-  ;          EVENT=EVENT,$
-  ;          ACTIVATE=1,$
-  ;          global
-  ;        (*global).reduce_step2_polarization_mode_status = 1
-  ;        activate_widget, Event, 'reduce_step2_spin_state_combobox_base', 0
-  ;        activate_norm_combobox, Event, status=1
-  ;      ENDIF
-  ;    ENDIF ELSE BEGIN
-  ;      IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-  ;        standard = 58
-  ;      ENDIF ELSE BEGIN
-  ;        standard = 31
-  ;      ENDELSE
-  ;      DEVICE, CURSOR_STANDARD=standard
-  ;    ;        (*global).previous_button_clicked = 3
-  ;    ENDELSE
-  ;  END
-  ;
-  ;============================================================================
   
   ;Normalization combobox
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_norm_combo0'): BEGIN
@@ -587,130 +533,170 @@ PRO MAIN_BASE_event, Event
   END
   
   ;Browse for a ROI file buttons (0->9) data spin state off_off
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off1'): BEGIN
     reduce_step2_browse_roi, Event, row=1, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off2'): BEGIN
     reduce_step2_browse_roi, Event, row=2, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off3'): BEGIN
     reduce_step2_browse_roi, Event, row=3, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off4'): BEGIN
     reduce_step2_browse_roi, Event, row=4, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off5'): BEGIN
     reduce_step2_browse_roi, Event, row=5, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off6'): BEGIN
     reduce_step2_browse_roi, Event, row=6, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off7'): BEGIN
     reduce_step2_browse_roi, Event, row=7, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off8'): BEGIN
     reduce_step2_browse_roi, Event, row=8, data_spin_state='Off_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_off9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='Off_Off'
   END
   
   ;Browse for a ROI file buttons (0->9) data spin state off_on
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on1'): BEGIN
     reduce_step2_browse_roi, Event, row=1, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on2'): BEGIN
     reduce_step2_browse_roi, Event, row=2, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on3'): BEGIN
     reduce_step2_browse_roi, Event, row=3, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on4'): BEGIN
     reduce_step2_browse_roi, Event, row=4, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on5'): BEGIN
     reduce_step2_browse_roi, Event, row=5, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on6'): BEGIN
     reduce_step2_browse_roi, Event, row=6, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on7'): BEGIN
     reduce_step2_browse_roi, Event, row=7, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on8'): BEGIN
     reduce_step2_browse_roi, Event, row=8, data_spin_state='Off_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_off_on9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='Off_On'
   END
   
   ;Browse for a ROI file buttons (0->9) data spin state on_off
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off1'): BEGIN
     reduce_step2_browse_roi, Event, row=1, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off2'): BEGIN
     reduce_step2_browse_roi, Event, row=2, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off3'): BEGIN
     reduce_step2_browse_roi, Event, row=3, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off4'): BEGIN
     reduce_step2_browse_roi, Event, row=4, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off5'): BEGIN
     reduce_step2_browse_roi, Event, row=5, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off6'): BEGIN
     reduce_step2_browse_roi, Event, row=6, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off7'): BEGIN
     reduce_step2_browse_roi, Event, row=7, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off8'): BEGIN
     reduce_step2_browse_roi, Event, row=8, data_spin_state='On_Off'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_off9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='On_Off'
   END
   
   ;Browse for a ROI file buttons (0->9) data spin state on_on
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on0'): BEGIN
     reduce_step2_browse_roi, Event, row=0, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on1'): BEGIN
     reduce_step2_browse_roi, Event, row=1, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on2'): BEGIN
     reduce_step2_browse_roi, Event, row=2, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on3'): BEGIN
     reduce_step2_browse_roi, Event, row=3, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on4'): BEGIN
     reduce_step2_browse_roi, Event, row=4, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on5'): BEGIN
     reduce_step2_browse_roi, Event, row=5, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on6'): BEGIN
     reduce_step2_browse_roi, Event, row=6, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on7'): BEGIN
     reduce_step2_browse_roi, Event, row=7, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on8'): BEGIN
     reduce_step2_browse_roi, Event, row=8, data_spin_state='On_On'
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_browse_button_on_on9'): BEGIN
     reduce_step2_browse_roi, Event, row=9, data_spin_state='On_On'
   END
   
@@ -769,208 +755,248 @@ PRO MAIN_BASE_event, Event
   
   ;----------------------------------------------------------------------------
   ;Create/Modify/Visualize ROI file (0->9) for off_off
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off0'): BEGIN
     reduce_step2_create_roi, Event, row=0, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 0
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off1'): BEGIN
     reduce_step2_create_roi, Event, row=1, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 1
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off2'): BEGIN
     reduce_step2_create_roi, Event, row=2, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 2
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off3'): BEGIN
     reduce_step2_create_roi, Event, row=3, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 3
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off4'): BEGIN
     reduce_step2_create_roi, Event, row=4, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 4
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off5'): BEGIN
     reduce_step2_create_roi, Event, row=5, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 5
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off6'): BEGIN
     reduce_step2_create_roi, Event, row=6, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 6
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off7'): BEGIN
     reduce_step2_create_roi, Event, row=7, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 7
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off8'): BEGIN
     reduce_step2_create_roi, Event, row=8, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 8
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_off9'): BEGIN
     reduce_step2_create_roi, Event, row=9, data_spin_state='off_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 9
   END
   
   ;Create/Modify/Visualize ROI file (0->9) for off_on
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on0'): BEGIN
     reduce_step2_create_roi, Event, row=0, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 0
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on1'): BEGIN
     reduce_step2_create_roi, Event, row=1, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 1
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on2'): BEGIN
     reduce_step2_create_roi, Event, row=2, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 2
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on3'): BEGIN
     reduce_step2_create_roi, Event, row=3, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 3
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on4'): BEGIN
     reduce_step2_create_roi, Event, row=4, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 4
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on5'): BEGIN
     reduce_step2_create_roi, Event, row=5, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 5
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on6'): BEGIN
     reduce_step2_create_roi, Event, row=6, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 6
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on7'): BEGIN
     reduce_step2_create_roi, Event, row=7, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 7
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on8'): BEGIN
     reduce_step2_create_roi, Event, row=8, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 8
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_off_on9'): BEGIN
     reduce_step2_create_roi, Event, row=9, data_spin_state='off_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 9
   END
   
   ;Create/Modify/Visualize ROI file (0->9) for on_off
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off0'): BEGIN
     reduce_step2_create_roi, Event, row=0, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 0
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off1'): BEGIN
     reduce_step2_create_roi, Event, row=1, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 1
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off2'): BEGIN
     reduce_step2_create_roi, Event, row=2, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 2
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off3'): BEGIN
     reduce_step2_create_roi, Event, row=3, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 3
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off4'): BEGIN
     reduce_step2_create_roi, Event, row=4, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 4
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off5'): BEGIN
     reduce_step2_create_roi, Event, row=5, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 5
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off6'): BEGIN
     reduce_step2_create_roi, Event, row=6, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 6
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off7'): BEGIN
     reduce_step2_create_roi, Event, row=7, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 7
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off8'): BEGIN
     reduce_step2_create_roi, Event, row=8, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 8
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_off9'): BEGIN
     reduce_step2_create_roi, Event, row=9, data_spin_state='on_off'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 9
   END
   
   ;Create/Modify/Visualize ROI file (0->9) for on_on
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on0'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on0'): BEGIN
     reduce_step2_create_roi, Event, row=0, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 0
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on1'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on1'): BEGIN
     reduce_step2_create_roi, Event, row=1, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 1
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on2'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on2'): BEGIN
     reduce_step2_create_roi, Event, row=2, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 2
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on3'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on3'): BEGIN
     reduce_step2_create_roi, Event, row=3, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 3
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on4'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on4'): BEGIN
     reduce_step2_create_roi, Event, row=4, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 4
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on5'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on5'): BEGIN
     reduce_step2_create_roi, Event, row=5, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 5
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on6'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on6'): BEGIN
     reduce_step2_create_roi, Event, row=6, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 6
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on7'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on7'): BEGIN
     reduce_step2_create_roi, Event, row=7, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 7
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on8'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on8'): BEGIN
     reduce_step2_create_roi, Event, row=8, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 8
   END
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on9'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_tab2_roi_modify_button_on_on9'): BEGIN
     reduce_step2_create_roi, Event, row=9, data_spin_state='on_on'
     check_reduce_step2_save_roi_validity, Event
     (*global).working_reduce_step2_row = 9
@@ -1076,20 +1102,22 @@ PRO MAIN_BASE_event, Event
   END
   
   ;SAVE ROI and QUIT
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_create_roi_save_roi_quit'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step2_create_roi_save_roi_quit'): BEGIN
     ;this update the name of the roi files
     reduce_step2_save_roi, Event, quit_flag='on'
     refresh_roi_file_name, Event
   END
   
   ;return to reduce step2 table
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
+  WIDGET_INFO(wWidget, $
+  FIND_BY_UNAME='reduce_step2_return_to_table_button'): BEGIN
     ;this update the name of the roi files
     reduce_step2_return_to_table, Event
     refresh_roi_file_name, Event
   END
   
-  ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111
+  ;11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 11111111 tab3 111111
   
   ;big table
   WIDGET_INFO(wWidget, $
@@ -1123,9 +1151,9 @@ PRO MAIN_BASE_event, Event
     
   END
   
-  ;222222222222222222222222222222222222222222222222222222222222222222222222222222
-  ;222222222222222222222222222222222222222222222222222222222222222222222222222222
-  ;222222222222222222222222222222222222222222222222222222222222222222222222222222
+  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
+  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
+  ;2222222222222222222222222222222222222222222222222222222222222222222222222222
   
   ;Browse ASCII file button
   WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_ascii_file_button'): BEGIN
@@ -1272,7 +1300,7 @@ PRO MAIN_BASE_event, Event
     change_xaxis_ticks, Event, type='more' ;_plot
   END
   
-  ;333333333333333333333333333333333333333333333333333333333333333333333333333333
+  ;3333333333333333333333333333333333333333333333333333333333333333333333333333
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step3_zmax'): BEGIN
     input_error = 0
@@ -1576,11 +1604,11 @@ PRO MAIN_BASE_event, Event
     manual_move_mode_shifting, Event, DIRECTION='down' ;_shifting
   END
   
-  ;------------------------------------------------------------------------------
-  ;4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ;4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-4-
+  ;----------------------------------------------------------------------------
   
-  ;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_
+  ;4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/4_1/
   
   ;zmax widget_text
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_zmax'): BEGIN
@@ -1735,7 +1763,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;Selection Info Text Fields ---------------------------------------------------
+  ;Selection Info Text Fields -------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='selection_info_xmin_value'): BEGIN
     current_list_OF_files = (*(*global).list_OF_ascii_files)
@@ -1772,7 +1800,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;Move Up, left, right and down button -----------------------------------------
+  ;Move Up, left, right and down button ---------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_step1_move_selection_left'): BEGIN
     current_list_OF_files = (*(*global).list_OF_ascii_files)
@@ -1809,7 +1837,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_
+  ;4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2/4_2
   
   ;lin/log
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
@@ -1874,7 +1902,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;Critical Edge Tab ------------------------------------------------------------
+  ;Critical Edge Tab ----------------------------------------------------------
   
   ;if mouse is over plot
   WIDGET_INFO(wWidget, $
@@ -1917,7 +1945,7 @@ PRO MAIN_BASE_event, Event
     ENDIF
   END
   
-  ;Lambda min and max text fields -----------------------------------------------
+  ;Lambda min and max text fields ---------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_2_lambda1_text_field'): BEGIN
     manual_lambda_input, Event ;scaling_step2_step2
@@ -1928,99 +1956,99 @@ PRO MAIN_BASE_event, Event
     manual_lambda_input, Event ;scaling_step2_step2
   END
   
-  ;Automatic fitting and scaling of data ----------------------------------------
+  ;Automatic fitting and scaling of data --------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_2_auto_button'): BEGIN
     step4_2_2_automatic_fitting_scaling, Event ;scaling_step4_step2
     check_step4_2_2_gui, Event ;scaling_step2_step2
   END
   
-  ;SF text field ----------------------------------------------------------------
+  ;SF text field --------------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
     step4_2_2_manual_scaling, Event ;scaling_step2_step2
   END
   
-  ;Manual scaling of data -------------------------------------------------------
+  ;Manual scaling of data -----------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step2_sf_text_field'): BEGIN
     step4_2_2_manual_scaling, Event ;scaling_step2_step2
   END
   
-  ;Reset scaling of data --------------------------------------------------------
+  ;Reset scaling of data ------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_2_reset_scaling_button'): BEGIN
     step4_2_2_reset_scaling, Event ;scaling_step2_step2
   END
   
-  ;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_
+  ;4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/4_3/
   ;Scaling of Other Files
   
-  ;Automatic Rescaling button ---------------------------------------------------
+  ;Automatic Rescaling button -------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_automatic_rescale_button'): BEGIN
     step4_2_3_auto_scaling, Event ;scaling_step2_step3
   END
   
-  ;Reset Rescaling button -------------------------------------------------------
+  ;Reset Rescaling button -----------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_reset_rescale_button'): BEGIN
     step4_2_3_reset_scaling, Event ;scaling_step2_step3
   END
   
-  ;Working file droplist --------------------------------------------------------
+  ;Working file droplist ------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_work_on_file_droplist'): BEGIN
     step4_2_3_droplist, Event ;scaling_step2_step3
   END
   
-  ;Moving up working file data by factor #4 -------------------------------------
+  ;Moving up working file data by factor #4 -----------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_3increase_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='-4' ;scaling_step2_step3
   END
   
-  ;Moving up working file data by factor #3 -------------------------------------
+  ;Moving up working file data by factor #3 -----------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_2increase_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='-3' ;scaling_step2_step3
   END
   
-  ;Moving up working file data by factor #2 -------------------------------------
+  ;Moving up working file data by factor #2 -----------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_1increase_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='-2' ;scaling_step2_step3
   END
   
-  ;Moving down working file data by factor #4 -----------------------------------
+  ;Moving down working file data by factor #4 ---------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_3decrease_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='4' ;scaling_step2_step3
   END
   
-  ;Moving down working file data by factor #3 -----------------------------------
+  ;Moving down working file data by factor #3 ---------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_2decrease_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='3' ;scaling_step2_step3
   END
   
-  ;Moving down working file data by factor #2 -----------------------------------
+  ;Moving down working file data by factor #2 ---------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_1decrease_button'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='2' ;scaling_step2_step3
   END
   
-  ;SF manual cw_field -----------------------------------------------------------
+  ;SF manual cw_field ---------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_sf_text_field'): BEGIN
     step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
   END
   
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;- RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP - RECAP -
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   
-  ;lin/log ----------------------------------------------------------------------
+  ;lin/log --------------------------------------------------------------------
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='z_axis_linear_log_step5'): BEGIN
     refresh_recap_plot, Event ;_step5
@@ -2095,7 +2123,7 @@ PRO MAIN_BASE_event, Event
     scaling_tab_event, Event ;_eventcb
   END
   
-  ;type of selection (none, i vs Q, ...) ----------------------------------------
+  ;type of selection (none, i vs Q, ...) --------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_selection_group_uname'): BEGIN
     selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
     CASE (selection_value) OF
@@ -2137,7 +2165,7 @@ PRO MAIN_BASE_event, Event
     step5_preview_button, Event ;step5
   END
   
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
     DEVICE, CURSOR_STANDARD=31
@@ -2452,9 +2480,9 @@ PRO MAIN_BASE_event, Event
     (*global).recap_rescale_average = 0.0
   END
   
-  ;-----------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;- CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE OUTPUT - CREATE....
-  ;-----------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   
   ;output file path button
   WIDGET_INFO(wWidget, $
@@ -2537,9 +2565,9 @@ PRO MAIN_BASE_event, Event
     preview_OF_step6_file, Event, POLA_STATE='p3' ;step6
   END
   
-  ;------------------------------------------------------------------------------
-  ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS --------
-  
+  ;----------------------------------------------------------------------------
+  ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS ------
+ 
   ;cw_bgroup of 'Use non active file attenuator'
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME= $
@@ -2574,7 +2602,7 @@ PRO MAIN_BASE_event, Event
   END
   
   
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;- LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK - LOG BOOK
   WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
     SendToGeek, Event ;_IDLsendToGeek
