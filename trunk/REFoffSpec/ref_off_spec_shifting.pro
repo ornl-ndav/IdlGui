@@ -665,6 +665,7 @@ END
 ;------------------------------------------------------------------------------
 ;this is reach by the automatic realign button
 PRO realign_data, Event
+
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 ;indicate initialization with hourglass icon
 WIDGET_CONTROL,/HOURGLASS
