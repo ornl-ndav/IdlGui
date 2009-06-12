@@ -36,7 +36,8 @@ PRO MainPlotInteraction, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   wbase   = (*global1).wBase
   TubeAngle = (*global1).TubeAngle
-  big_array_rebin = (*(*global1).big_array_rebin_rescale)
+  big_array_rebin = (*(*global1).big_array_rebin)
+  ;big_array_rebin = (*(*global1).big_array_rebin_rescale)
   off   = (*global1).off
   xoff  = (*global1).xoff
   
@@ -111,7 +112,6 @@ PRO MainPlotInteraction, Event
       row_number EQ '') THEN BEGIN
       value = 'N/A'
     ENDIF ELSE BEGIN
-      x = x
       value = STRCOMPRESS(big_array_rebin[x,y],/REMOVE_ALL)
     ENDELSE
   ENDELSE

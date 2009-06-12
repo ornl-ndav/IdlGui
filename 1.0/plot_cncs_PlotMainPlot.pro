@@ -572,7 +572,6 @@ PRO plot_selection_box, Event
   ENDIF ELSE BEGIN
     color = FSC_COLOR('white')
   ENDELSE
-  print, color
   
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
