@@ -499,7 +499,7 @@ PRO ref_off_spec, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
-    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+    BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDELSE
   
 END
