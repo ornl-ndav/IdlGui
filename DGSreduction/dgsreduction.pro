@@ -383,7 +383,17 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   toprow = WIDGET_BASE(tlb, /ROW)
   textID = WIDGET_LABEL(toprow, VALUE='Please select an instrument --> ')
-  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", VALUE=[' ','ARCS','CNCS','SEQUOIA'], XSIZE=90)
+  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
+    XSIZE=90, YSIZE=10)
+  
+;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
+;  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
+;  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
+;  jobLabelGeometryYSize = jobLabelGeometry.ysize
+;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
+;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", UVALUE="DGS_JOBS", $
+        VALUE=1, /INTEGER, /ALL_EVENTS)
   
   ; Tabs
   tabID = WIDGET_TAB(tlb)
@@ -402,7 +412,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
         YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
   
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  runID= CW_FIELD(dataSourceRow, xsize=30, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS)
+  runID= CW_FIELD(dataSourceRow, xsize=30, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS, /LONG)
   findNexusButton = WIDGET_BUTTON(dataSourceRow, VALUE="Find File", UVALUE="DGS_FINDNEXUS", SENSITIVE=0)
 
   detectorBankBase = WIDGET_BASE(reductionTabRow1)
@@ -428,13 +438,14 @@ PRO DGSreduction, dgscmd, _Extra=extra
   eiRow = WIDGET_BASE(eiPrettyBase, /ROW)
   eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGS_EI", /ALL_EVENTS)
 
-  tzeroBase = WIDGET_BASE(reductionTabBase)
+  tzeroBase = WIDGET_BASE(reductionTabRow1)
   tzeroLabel = WIDGET_LABEL(tzeroBase, Value=' T0 (usec) ', XOFFSET=5)
   tzeroLabelGeomtry = WIDGET_INFO(tzeroLabel, /GEOMETRY)
   tzeroLabelGeomtryYSize = tzeroLabelGeomtry.ysize
   tzeroPrettyBase = WIDGET_BASE(tzeroBase, /FRAME, /COLUMN, $
         YOFFSET=tzeroLabelGeomtryYSize/2, XPAD=10, YPAD=10)
-  tzeroID = CW_FIELD(tzeroPrettyBase, TITLE="", UVALUE="DGS_TZERO", /ALL_EVENTS)
+  tzeroRow = WIDGET_BASE(tzeroPrettyBase, /ROW)
+  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGS_TZERO", /ALL_EVENTS)
 
   tofcutBase = WIDGET_BASE(reductionTabBase)
   tofcutLabel = WIDGET_LABEL(tofcutBase, Value=' TOF Spectrum Cutting ', XOFFSET=5)
@@ -520,14 +531,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   roiRow = WIDGET_BASE(roiPrettyBase, /ROW)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS)
   
-    jobBase = WIDGET_BASE(reductionTabBase)
-  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
-  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
-  jobLabelGeometryYSize = jobLabelGeometry.ysize
-  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, /COLUMN, $
-        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  jobID = CW_FIELD(jobPrettyBase, TITLE="No. of Jobs:", UVALUE="DGS_JOBS", $
-        VALUE=1, /INTEGER, /ALL_EVENTS)
+
   
    ; Mask File
   maskBase = WIDGET_BASE(reductionTabBase)
