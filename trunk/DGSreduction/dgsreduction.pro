@@ -100,6 +100,21 @@ PRO DGSreduction_TLB_Events, event
   CASE myUVALUE OF
     'INSTRUMENT_SELECTED': BEGIN
       dgscmd->SetProperty, Instrument=event.STR
+      ; Set the default detector banks if they aren't already set
+      lowerbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_DATAPATHS_LOWER')
+      upperbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_DATAPATHS_UPPER')
+      WIDGET_CONTROL, lowerbank_ID, GET_VALUE=lowerbank
+      WIDGET_CONTROL, upperbank_ID, GET_VALUE=upperbank
+      ; Get the detector bank limits for the current beamline
+      bank = getDetectorBankRange(event.STR)
+      IF (lowerbank LE 0) THEN BEGIN 
+        WIDGET_CONTROL, lowerbank_ID, SET_VALUE=bank.lower
+        dgscmd->SetProperty, LowerBank=bank.lower
+      ENDIF
+      IF (upperbank LE 0) THEN BEGIN 
+        WIDGET_CONTROL, upperbank_ID, SET_VALUE=bank.upper
+        dgscmd->SetProperty, UpperBank=bank.upper
+      ENDIF
     END
     'DGS_DATARUN': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -133,10 +148,15 @@ PRO DGSreduction_TLB_Events, event
       ; TODO: Check filename exists before setting the property!
       dgscmd->SetProperty, ROIfile=myValue
     END
-    'DGS_MASK_FILENAME': BEGIN
-      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+    'DGS_MASK': BEGIN
+      ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       ; TODO: Check filename exists before setting the property!
-      dgscmd->SetProperty, MaskFile=myValue
+      dgscmd->SetProperty, Mask=event.SELECT
+    END
+    'DGS_HARD_MASK': BEGIN
+      ;WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ; TODO: Check filename exists before setting the property!
+      dgscmd->SetProperty, HardMask=event.SELECT
     END
     'DGS_MAKE_SPE': BEGIN
       dgscmd->SetProperty, SPE=event.SELECT
@@ -393,8 +413,10 @@ PRO DGSreduction, dgscmd, _Extra=extra
         YOFFSET=detectorBankLabelYSize/2, YPAD=10, XPAD=10)
   
   detectorBankRow = WIDGET_BASE(detectorBankPrettyBase, /ROW)
-  lbankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE="", UVALUE="DGS_DATAPATHS_LOWER" ,/INTEGER)
-  ubankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE=" --> ", UVALUE="DGS_DATAPATHS_UPPER", /INTEGER)  
+  lbankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE="", UVALUE="DGS_DATAPATHS_LOWER" , $
+    UNAME="DGS_DATAPATHS_LOWER", /INTEGER)
+  ubankID = CW_FIELD(detectorBankRow, XSIZE=15, /ALL_EVENTS, TITLE=" --> ", UVALUE="DGS_DATAPATHS_UPPER", $
+    UNAME="DGS_DATAPATHS_UPPER", /INTEGER)  
   
   
   eiBase = WIDGET_BASE(reductionTabRow1)
@@ -515,8 +537,10 @@ PRO DGSreduction, dgscmd, _Extra=extra
   maskPrettyBase = WIDGET_BASE(maskBase, /FRAME, /COLUMN, $
         YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10)
   
-  maskRow = WIDGET_BASE(maskPrettyBase, /ROW)
-  maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGS_MASK_FILENAME', /ALL_EVENTS)
+  maskRow = WIDGET_BASE(maskPrettyBase, /ROW, /NONEXCLUSIVE)
+  maskID = WIDGET_BUTTON(maskRow, VALUE='Apply Mask', UVALUE='DGS_MASK')
+  hardMaskID = WIDGET_BUTTON(maskRow, VALUE='Apply HARD Mask', UVALUE='DGS_HARD_MASK')
+  ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGS_MASK_FILENAME', /ALL_EVENTS)
   
   rangesBase = WIDGET_BASE(reductionTabBase)
   rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range (meV) ', XOFFSET=5)
