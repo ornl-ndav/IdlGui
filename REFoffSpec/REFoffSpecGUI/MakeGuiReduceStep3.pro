@@ -42,10 +42,12 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     uname: 'reduce_step3_tab_base',$
     title: TabTitles.step3}
     
+  instrument = (*global).instrument
+  
   ;****************************************************************************
   ;            BUILD GUI
   ;****************************************************************************
-    
+  
   Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
     XOFFSET   = sBase.size[0],$
@@ -53,35 +55,52 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = sBase.size[2],$
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
-  
+    
   column_base = WIDGET_BASE(Base,$
     /COLUMN,$
     /BASE_ALIGN_LEFT)
     
   space = WIDGET_LABEL(column_base,$
-    VALUE = 'Table will refresh itself each time this Step 3 is reached.' + $ 
+    VALUE = 'Table will refresh itself each time this Step 3 is reached.' + $
     ' You are free to edit this table but be aware that ' + $
     'your changes will be lost if you move out of this tab before '  + $
     'launching the jobs.')
     
-  main_table = WIDGET_TABLE(column_base,$
+  IF (instrument EQ 'REF_M') THEN BEGIN
     COLUMN_LABELS = ['DATA Run',$
-    'DATA NeXus',$
-    'D. Spin State',$
-    'NORM. Run',$
-    'NORM. NeXus',$
-    'N. Spin State',$
-    'ROI',$
-    'Output File Name'],$
+      'DATA NeXus',$
+      'D. Spin State',$
+      'NORM. Run',$
+      'NORM. NeXus',$
+      'N. Spin State',$
+      'ROI',$
+      'Output File Name']
+    xsize = 8
+    column_widths = [55,300,90,70,300,90,300,300]
+    scr_xsize = 1260
+  ENDIF ELSE BEGIN
+    COLUMN_LABELS = ['DATA Run',$
+      'DATA NeXus',$
+      'NORM. Run',$
+      'NORM. NeXus',$
+      'ROI',$
+      'Output File Name']
+    xsize = 6
+    column_widths = [55,340,70,340,360,360]
+    scr_xsize = 1260
+  ENDELSE
+  
+  main_table = WIDGET_TABLE(column_base,$
+    COLUMN_LABELS = column_labels,$
     UNAME = 'reduce_tab3_main_spin_state_table_uname',$
     /NO_ROW_HEADERS,$
     /RESIZEABLE_COLUMNS,$
     ALIGNMENT = 0,$
-    XSIZE = 8,$
+    XSIZE = xsize,$
     YSIZE = 40,$
-    SCR_XSIZE = 1260,$
+    SCR_XSIZE = scr_xsize,$
     SCR_YSIZE = 750,$
-    COLUMN_WIDTHS = [55,300,90,70,300,90,300,300],$
+    COLUMN_WIDTHS = column_widths,$
     /SCROLL,$
     /EDITABLE,$
     SENSITIVE = 1,$
@@ -94,7 +113,7 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
     
   base1 = WIDGET_BASE(row,$
-  /ROW)  
+    /ROW)
     
   ;output folder label
   label = WIDGET_LABEL(base1,$
@@ -109,20 +128,20 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
   ;space
   space = WIDGET_LABEL(row,$
     VALUE = '                           ')
-
+    
   jobs = WIDGET_BUTTON(row,$
     VALUE = 'RUN JOBS',$
     SCR_XSIZE = 200,$
     SENSITIVE = 0,$
     UNAME = 'reduce_tab3_run_jobs',$
     FRAME = 5)
-
+    
   jobs_plot = WIDGET_BUTTON(row,$
-  VALUE = 'RUN JOBS and PLOT',$
-  SCR_XSIZE = 200,$
-  SENSITIVE = 0,$
-  uname = 'reduce_tab3_run_jobs_and_plot',$
-  FRAME = 5)
+    VALUE = 'RUN JOBS and PLOT',$
+    SCR_XSIZE = 200,$
+    SENSITIVE = 0,$
+    uname = 'reduce_tab3_run_jobs_and_plot',$
+    FRAME = 5)
     
   status = WIDGET_BUTTON(row,$
     VALUE = 'CHECK JOB MANAGER',$

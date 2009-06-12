@@ -36,6 +36,7 @@ PRO  reduce_step3_run_jobs, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
   
   ;get big table of step3
   big_table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
@@ -61,7 +62,7 @@ PRO  reduce_step3_run_jobs, Event
   FOR row=0,(nbr_row-1) DO BEGIN
   
     cmd = ''
-  
+    
     IF (big_table[0,row] EQ '') THEN BREAK ;stop if there is no more data file
     
     ;add 1 to the list of jobs
@@ -75,23 +76,46 @@ PRO  reduce_step3_run_jobs, Event
     cmd += ' ' + data
     
     ;data path
-    data_path = '/entry-' + big_table[2,row] + '/bank1,1'
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      data_path = '/entry-' + big_table[2,row] + '/bank1,1'
+    ENDIF ELSE BEGIN
+      data_path = '/entry/'
+    ENDELSE
     cmd += ' ' + reduce_structure.data_paths + '=' + data_path
     
     ;norm full nexus name
-    norm = big_table[4,row]
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      col_index = 4
+    ENDIF ELSE BEGIN
+      col_index = 3
+    ENDELSE
+    norm = big_table[col_index,row]
     cmd += ' ' + reduce_structure.norm + '=' + norm
     
     ;norm path
-    norm_path = '/entry-' + big_table[5,row] + '/bank1,1'
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      norm_path = '/entry-' + big_table[5,row] + '/bank1,1'
+    ENDIF ELSE BEGIN
+      norm_path = '/entry/
+    ENDELSE
     cmd += ' ' + reduce_structure.norm_paths + '=' + norm_path
     
     ;norm roi file
-    norm_roi = big_table[6,row]
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      col_index = 6
+    ENDIF ELSE BEGIN
+      col_index = 4
+    ENDELSE
+    norm_roi = big_table[col_index,row]
     cmd += ' ' + reduce_structure.norm_roi + '=' + norm_roi
     
     ;output_path
-    output_file_name = output_path + big_table[7,row]
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      col_index = 7
+    ENDIF ELSE BEGIN
+      col_index = 5
+    ENDELSE
+    output_file_name = output_path + big_table[col_index,row]
     cmd += ' ' + reduce_structure.output + '=' + output_file_name
     
     cl_table[row] = cmd
