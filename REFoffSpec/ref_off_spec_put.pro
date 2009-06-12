@@ -129,18 +129,18 @@ END
 
 ;------------------------------------------------------------------------------
 PRO putMessageInCreateStatus, Event, text
-  putTextInTextField, Event, 'step6_status_text_field', text
+  putTextFieldValue, Event, 'step6_status_text_field', text
 END
 
 ;------------------------------------------------------------------------------
 PRO addMessageInCreateStatus, Event, text
-  addTextInTextField, Event, 'step6_status_text_field', text
+  putTextFieldValue, Event, 'step6_status_text_field', text
 END
 
 ;------------------------------------------------------------------------------
 PRO ReplaceTextInCreateStatus, Event, OLD_STRING, NEW_STRING
-  ReplaceTextInTextField, Event, $
-    'step6_status_text_field', $
+  IDLsendLogBook_ReplaceLogBookText, Event, $
+    ALT = 1,$
     OLD_STRING, $
     NEW_STRING
 END

@@ -524,6 +524,7 @@ PRO step6_create_output_file_other_pola, Event, $
   PROCESSING = (*global).processing
   OK         = (*global).ok
   FAILED     = (*global).failed
+  instrument = (*global).instrument
   
   LogMessage = '    Create output file ...................... ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
@@ -553,9 +554,14 @@ PRO step6_create_output_file_other_pola, Event, $
       
     FOR i=0,(nbr_y-1) DO BEGIN
       output_strarray[index++] = ''
-      output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
-        STRCOMPRESS(i,/REMOVE_ALL) + $
-        ", 127))"
+      IF (instrument EQ 'REF_M') THEN BEGIN
+        output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (" + $
+          STRCOMPRESS(i,/REMOVE_ALL) + $
+          ", 127))"
+      ENDIF ELSE BEGIN
+        output_strarray[index++] = "#S 1 Spectrum ID ('bank1', (127, " + $
+          STRCOMPRESS(i,/REMOVE_ALL) + "))"
+      ENDELSE
       output_strarray[index++] = '#N 3'
       output_strarray[index++] = "#L lambda_T(Angstroms)  " + $
         "Intensity(Counts/A)  Sigma(Counts/A)"
@@ -876,6 +882,7 @@ END
 PRO create_output_array, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  instrument = (*global).instrument
   
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -884,13 +891,19 @@ PRO create_output_array, Event
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
   
-  pola_state = getTextFieldValue(Event,'summary_working_polar_value')
-  LogMessage = '> Working on Initial Polarization State (' + $
-    STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
-  putMessageInCreateStatus, Event, LogMessage
-  
-  LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
-  addMessageInCreateStatus, Event, LogMessage
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    pola_state = getTextFieldValue(Event,'summary_working_polar_value')
+    LogMessage = '> Working on Initial Polarization State (' + $
+      STRCOMPRESS(pola_state,/REMOVE_ALL) + ')'
+    putMessageInCreateStatus, Event, LogMessage
+    LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
+    addMessageInCreateStatus, Event, LogMessage
+  ENDIF ELSE BEGIN
+    LogMessage = '> Working on creating output files:'
+    putMessageInCreateStatus, Event, LogMessage
+    LogMessage = '    Create output data (shifting/scaling) ... ' + PROCESSING
+    addMessageInCreateStatus, Event, LogMessage
+  ENDELSE
   
   activate_status_pola1 = 0
   activate_status_pola2 = 0
@@ -960,47 +973,51 @@ PRO create_output_array, Event
       activate_status_pola1 = 1
       ReplaceTextInCreateStatus, Event, PROCESSING, OK
       
-      value = getButtonStatus(Event,'exclude_polarization_state2')
-      IF (value EQ 0) THEN BEGIN ;we want this pola state
-        ;loop over the three other polarization states
-        ;pola#2
-        sStructure = { summary_table_uname: $
-          'polarization_state2_summary_table',$
-          pola_state_uname: $
-          'summary_polar2_value',$
-          activate_status_pola: 0,$
-          output_file_uname:$
-          'pola2_output_file_name_value'}
-        run_full_process_with_other_pola, Event, sStructure
-        activate_status_pola2 = sStructure.activate_status_pola
-      ENDIF
+      IF (instrument EQ 'REF_M') THEN BEGIN
       
-      ;pola#3
-      value = getButtonStatus(Event,'exclude_polarization_state3')
-      IF (value EQ 0) THEN BEGIN ;we want this pola state
-        sStructure = { summary_table_uname: $
-          'polarization_state3_summary_table',$
-          pola_state_uname: $
-          'summary_polar3_value',$
-          activate_status_pola: 0,$
-          output_file_uname:$
-          'pola3_output_file_name_value'}
-        run_full_process_with_other_pola, Event, sStructure
-        activate_status_pola3 = sStructure.activate_status_pola
-      ENDIF
-      
-      ;pola#4
-      value = getButtonStatus(Event,'exclude_polarization_state4')
-      IF (value EQ 0) THEN BEGIN ;we want this pola state
-        sStructure = { summary_table_uname: $
-          'polarization_state4_summary_table',$
-          pola_state_uname: $
-          'summary_polar4_value',$
-          activate_status_pola: 0,$
-          output_file_uname:$
-          'pola4_output_file_name_value'}
-        run_full_process_with_other_pola, Event, sStructure
-        activate_status_pola4 = sStructure.activate_status_pola
+        value = getButtonStatus(Event,'exclude_polarization_state2')
+        IF (value EQ 0) THEN BEGIN ;we want this pola state
+          ;loop over the three other polarization states
+          ;pola#2
+          sStructure = { summary_table_uname: $
+            'polarization_state2_summary_table',$
+            pola_state_uname: $
+            'summary_polar2_value',$
+            activate_status_pola: 0,$
+            output_file_uname:$
+            'pola2_output_file_name_value'}
+          run_full_process_with_other_pola, Event, sStructure
+          activate_status_pola2 = sStructure.activate_status_pola
+        ENDIF
+        
+        ;pola#3
+        value = getButtonStatus(Event,'exclude_polarization_state3')
+        IF (value EQ 0) THEN BEGIN ;we want this pola state
+          sStructure = { summary_table_uname: $
+            'polarization_state3_summary_table',$
+            pola_state_uname: $
+            'summary_polar3_value',$
+            activate_status_pola: 0,$
+            output_file_uname:$
+            'pola3_output_file_name_value'}
+          run_full_process_with_other_pola, Event, sStructure
+          activate_status_pola3 = sStructure.activate_status_pola
+        ENDIF
+        
+        ;pola#4
+        value = getButtonStatus(Event,'exclude_polarization_state4')
+        IF (value EQ 0) THEN BEGIN ;we want this pola state
+          sStructure = { summary_table_uname: $
+            'polarization_state4_summary_table',$
+            pola_state_uname: $
+            'summary_polar4_value',$
+            activate_status_pola: 0,$
+            output_file_uname:$
+            'pola4_output_file_name_value'}
+          run_full_process_with_other_pola, Event, sStructure
+          activate_status_pola4 = sStructure.activate_status_pola
+        ENDIF
+        
       ENDIF
       
     ENDELSE
@@ -1009,9 +1026,11 @@ PRO create_output_array, Event
   
   ;activate preview widgets
   activate_widget, Event, 'step6_preview_pola_state1', activate_status_pola1
-  activate_widget, Event, 'step6_preview_pola_state2', activate_status_pola2
-  activate_widget, Event, 'step6_preview_pola_state3', activate_status_pola3
-  activate_widget, Event, 'step6_preview_pola_state4', activate_status_pola4
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    activate_widget, Event, 'step6_preview_pola_state2', activate_status_pola2
+    activate_widget, Event, 'step6_preview_pola_state3', activate_status_pola3
+    activate_widget, Event, 'step6_preview_pola_state4', activate_status_pola4
+  ENDIF
   
   LogMessage = ''
   addMessageInCreateStatus, Event, LogMessage
