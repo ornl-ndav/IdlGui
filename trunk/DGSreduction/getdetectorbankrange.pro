@@ -18,15 +18,15 @@ FUNCTION getDetectorBankRange, instrument
   case (STRUPCASE(instrument)) of
       "ARCS": begin
         lower = 1
-        upper = 114
+        upper = 115
       end
       "CNCS": begin
         lower = 1
-        upper = 40
+        upper = 50
       end
       "SEQUOIA": begin
-        lower = 1
-        upper = 10
+        lower = 38
+        upper = 150
       end
       "MAPS": begin
         lower = 0
