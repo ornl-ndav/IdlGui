@@ -32,72 +32,51 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+PRO plot_scale, global1, min, max, lin_status=lin_status
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
-.run fsc_color.pro
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
+  IF (N_ELEMENTS(lin_status) EQ 0) THEN lin_status = 1
+  
+  wbase   = (*global1).wBase
+  
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname='main_plot_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  ERASE
+  
+  IF (lin_status EQ 0) THEN BEGIN
+  
+    divisions = 10
+    perso_format = '(e8.1)'
+    range  = FLOAT([MIN,MAX])
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      YLOG = 1,$
+      /VERTICAL
+      
+  ENDIF ELSE BEGIN
+  
+    divisions = 10
+    perso_format = '(e8.1)'
+    range = [MIN,MAX]
+    colorbar, $
+      NCOLORS      = 255, $
+      POSITION     = [0.75,0.01,0.95,0.99], $
+      RANGE        = range,$
+      DIVISIONS    = divisions,$
+      PERSO_FORMAT = perso_format,$
+      /VERTICAL
+      
+  ENDELSE
+  
+END

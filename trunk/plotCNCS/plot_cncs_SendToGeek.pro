@@ -41,7 +41,7 @@ widget_control,id,get_uvalue=global
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
 TimeStamp   = GenerateIsoTimeStamp()
-application  = 'plotARCS'
+application  = 'plotCNCS'
 FullFileName = LogBookPath + application + '_' 
 FullFileName += TimeStamp + '.log'
 
@@ -91,7 +91,7 @@ spawn, 'hostname', hostname
 message = getStatusTextFieldValue(Event)
 
 ;email logBook
-text = "'Log Book of plotARCS "
+text = "'Log Book of plotCNCS "
 text += (*global).Version + " sent by " + (*global).ucams
 text += " from " + hostname + "."
 text += " Log Book is: " + FullFileName 
@@ -112,7 +112,7 @@ If (no_error NE 0) THEN BEGIN
     LogBookText = 'An error occured while contacting the GEEK. Please email j35@ornl.gov!'
     putStatus, Event, LogBookText
 ENDIF ELSE BEGIN
-    cmd =  'echo ' + text + '| mail -s "plotARCS LogBook" j35@ornl.gov'
+    cmd =  'echo ' + text + '| mail -s "plotCNCS LogBook" j35@ornl.gov'
     spawn, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'

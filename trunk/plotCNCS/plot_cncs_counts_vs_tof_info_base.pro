@@ -32,72 +32,36 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+FUNCTION counts_vs_tof_info_base, event
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
-.run fsc_color.pro
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;our_group = widget_base(
+  job_base = WIDGET_BASE(GROUP_LEADER=id,$
+    /MODAL,$
+    /COLUMN,$
+    /BASE_ALIGN_CENTER,$
+    frame = 10,$
+    title = 'PLOTTING COUNTS vs TOF ...')
+    
+  draw = WIDGET_DRAW(job_base,$
+    SCR_XSIZE = 500,$
+    SCR_YSIZE = 500,$
+    UNAME = 'counts_vs_tof_splash_draw')
+    
+  WIDGET_CONTROL, job_base, /realize
+  WIDGET_CONTROL, job_base, /SHOW
+  
+  splash = READ_PNG('plotCNCS_images/counts_vs_tof_on_its_way.png')
+  mode_id = WIDGET_INFO(job_base, FIND_BY_UNAME='counts_vs_tof_splash_draw')
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, splash, 0,0,/true
+  
+  RETURN, job_base
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  END

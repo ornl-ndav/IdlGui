@@ -32,72 +32,24 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+FUNCTION getTubeAngle
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
-.run fsc_color.pro
-
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  TubeAngle = DBLARR(400)
+  
+  TubeAngle_0 = 132.606
+  Delta_angle = -0.44875
+  
+  ;for the left banks
+  FOR i = 0., 287. DO BEGIN
+    value = TubeAngle_0 + DOUBLE(i) * Delta_angle
+    TubeAngle[i] = value
+  ENDFOR
+  
+  ;for the right banks
+  TubeAngle_1 = 125.426
+  FOR i = 288.,399. DO BEGIN
+  TubeAngle[i] = TubeAngle_1 + DOUBLE(i) * Delta_angle
+  ENDFOR
+  
+  RETURN, TubeAngle
+END

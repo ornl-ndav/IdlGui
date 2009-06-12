@@ -41,3 +41,10 @@ END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+FUNCTION isMainPlotLin, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_linear_plot')
+status = WIDGET_INFO(id, /BUTTON_SET)
+RETURN, status
+END
+
+
