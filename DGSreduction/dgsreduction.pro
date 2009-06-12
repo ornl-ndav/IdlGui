@@ -661,11 +661,27 @@ PRO DGSreduction, dgscmd, _Extra=extra
     VALUE=dgscmd->generate())
     
     
-  wMainButtons = WIDGET_BASE(tlb, /ROW)
-  ; Define a Run button
-  executeID = WIDGET_BUTTON(wMainButtons, Value='Execute', EVENT_PRO='DGSreduction_Execute')
+  ;wMainButtons = WIDGET_BASE(tlb, /ROW)
+  mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=2)
+  mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns)
+  mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns)  
+  mainButtonsCol1Row1 = WIDGET_BASE(mainButtonsCol1, /ROW, /ALIGN_LEFT)
+  mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW, /ALIGN_RIGHT, XOFFSET=750)
+  
   ; Define a Quit button
-  quitID = WIDGET_BUTTON(wMainButtons, Value='Quit', EVENT_PRO='DGSreduction_Quit', /ALIGN_RIGHT)
+  quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
+  
+  ; Define an export to script button
+  exportScriptID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Export to Script', $
+    EVENT_PRO='DGSreduction_ExportScript')
+  
+  ; Define a save button
+  saveID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Save Parameters', $
+    EVENT_PRO='DGSreduction_SaveParameters')
+  
+  ; Define a Run button
+  executeID = WIDGET_BUTTON(mainButtonsCol2Row1, Value=' EXECUTE >>> ', $
+    EVENT_PRO='DGSreduction_Execute')
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
