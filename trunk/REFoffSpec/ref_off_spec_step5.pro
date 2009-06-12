@@ -39,6 +39,9 @@ PRO plotColorScale_step5, Event, master_min, master_max
   WSET,id_value
   ERASE
   
+  print, 'master_min: ' + strcompress(master_min) ;remove_me
+  print, 'master_max: ' + strcompress(master_max) ;remove_me
+  
   IF (isLogZaxisStep5Selected(Event)) THEN BEGIN
     divisions = 10
     perso_format = '(e8.1)'

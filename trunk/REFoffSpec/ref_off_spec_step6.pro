@@ -291,6 +291,9 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO UpdateStep6Gui, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
   ;refresh the name of the default output file name
   RefreshOutputFileName, Event
   ;refresh the list of files loaded and parameters determined
@@ -299,7 +302,9 @@ PRO UpdateStep6Gui, Event
   PopulateWorkingFileFields, Event
   ;work on other polarization states -------
   ;determine other polarization states
-  PopulateOtherPolaStates, Event
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    PopulateOtherPolaStates, Event
+  ENDIF
   
   ;hide spin state base that have not been selected in reduce step1
   

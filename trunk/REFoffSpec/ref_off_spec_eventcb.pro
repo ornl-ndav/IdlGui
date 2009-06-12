@@ -227,7 +227,7 @@ PRO tab_event, Event
           WIDGET_CONTROL, id_draw, GET_VALUE=id_value
           WSET,id_value
           error = 0
-          CATCH, error
+         ; CATCH, error
           IF (error NE 0) THEN BEGIN
             CATCH,/CANCEL
             refresh_recap_plot, Event ;_step5
