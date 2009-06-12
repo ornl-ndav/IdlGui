@@ -1,4 +1,20 @@
-FUNCTION Construct_DataPaths, lower, upper, job, totaljobs
+;+
+; :Description:
+;    Returns the string representation of the datapaths.
+;    e.g. "1-23" or "001-023"
+;
+; :Params:
+;    lower
+;    upper
+;    job
+;    totaljobs
+;
+; :Keywords:
+;    PAD - pads with 0's to return a 3-character string
+;
+; :Author: scu
+;-
+FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
 
   ; Sanity checking
   IF N_ELEMENTS(lower) EQ 0 THEN lower = 0
@@ -17,23 +33,38 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs
     ENDIF ELSE BEGIN
       banks_per_job = ceil(float((upper - lower + 1)) / TotalJobs)
       ;print, (upper - lower + 1)
-      print, banks_per_job, TotalJobs
+      ;print, banks_per_job, TotalJobs
       this_lower = ceil((job-1)*banks_per_job)+1
       this_upper = ceil(job*banks_per_job)
       IF (this_upper GT upper) THEN this_upper = upper
       IF (job EQ TotalJobs) THEN this_upper = upper
     ENDELSE
+    
+    IF KEYWORD_SET(PAD) THEN BEGIN
+      this_lower = formatBankNumber(this_lower)
+      this_upper = formatBankNumber(this_upper)
+      
+    ENDIF
+  
     datapaths=STRCOMPRESS(STRING(this_lower), /REMOVE_ALL) + "-" $
         + STRCOMPRESS(STRING(this_upper), /REMOVE_ALL)
     RETURN, datapaths
   ENDIF
   
   IF (lower NE 0) AND (upper EQ 0) THEN BEGIN
-    RETURN, STRING(STRCOMPRESS(lower, /REMOVE_ALL))
+    IF KEYWORD_SET(PAD) THEN BEGIN
+      RETURN, formatBankNumber(lower)
+    ENDIF ELSE BEGIN
+      RETURN, STRING(STRCOMPRESS(lower, /REMOVE_ALL))
+    ENDELSE
   ENDIF
   
   IF (lower EQ 0) AND (upper NE 0) THEN BEGIN
-    RETURN, STRING(STRCOMPRESS(upper, /REMOVE_ALL))
+      IF KEYWORD_SET(PAD) THEN BEGIN
+      RETURN, formatBankNumber(lower)
+    ENDIF ELSE BEGIN
+      RETURN, STRING(STRCOMPRESS(upper, /REMOVE_ALL))
+    ENDELSE
   ENDIF
 
   RETURN, ""
