@@ -132,10 +132,10 @@ PRO play_tof, Event
   ENDELSE
   
   ;select plot area
-  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  ERASE
+  ;id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  ;WIDGET_CONTROL, id, GET_VALUE=id_value
+  ;WSET, id_value
+  ;ERASE
   
   to_bin = getToBin(Event)
   WHILE (bin_min LT to_bin) DO BEGIN
@@ -491,10 +491,11 @@ PRO display_current_bin, Event, bin_min=bin_min, bin_max=bin_max
   
   POLYFILL, [bin_min, bin_max, bin_max, bin_min, bin_min],$
     [0,0,max_counts,max_counts,0], color=FSC_COLOR('red'), /data
-  ;foreground = TVREAD(true=3)
+  WSET, id_value
   foreground = TVRD(TRUE=3)
   alpha = 0.25
   background = (*(*global1).background)
+  WSET, id_value
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
 END
