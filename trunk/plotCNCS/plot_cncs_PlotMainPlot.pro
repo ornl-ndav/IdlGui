@@ -570,7 +570,8 @@ PRO plot_selection_box, Event
   IF (lin_status EQ 1) THEN BEGIN
     color = 150
   ENDIF ELSE BEGIN
-    color = FSC_COLOR('white')
+    ;color = FSC_COLOR('white')
+    color = 255*3
   ENDELSE
   
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
@@ -582,7 +583,7 @@ PRO plot_selection_box, Event
     /DEVICE,$
     LINESTYLE = 3,$
     COLOR =color
-    
+
 END
 
 ;==============================================================================
