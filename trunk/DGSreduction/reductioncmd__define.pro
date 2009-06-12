@@ -54,7 +54,8 @@ PRO ReductionCmd::GetProperty, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
-    MaskFile=maskfile, $                 ; Mask File
+    Mask=mask, $                         ; Apply Mask 
+    HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -125,7 +126,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
   IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm 
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
-  IF ARG_PRESENT(MaskFile) NE 0 THEN MaskFile = self.maskfile 
+  IF ARG_PRESENT(Mask) NE 0 THEN Mask = self.mask
+  IF ARG_PRESENT(HardMask) NE 0 THEN HardMask = self.hardmask
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
   IF ARG_PRESENT(EnergyBins_Min) NE 0 THEN EnergyBins_Min = self.energybins_min 
   IF ARG_PRESENT(EnergyBins_Max) NE 0 THEN EnergyBins_Max = self.energybins_max 
@@ -190,7 +192,8 @@ PRO ReductionCmd::SetProperty, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
-    MaskFile=maskfile, $                 ; Mask File
+    Mask=mask, $                         ; Apply Mask 
+    HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -297,7 +300,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
-  IF N_ELEMENTS(maskfile) NE 0 THEN self.maskfile = MaskFile
+  IF N_ELEMENTS(mask) NE 0 THEN self.mask = Mask
+  IF N_ELEMENTS(hardmask) NE 0 THEN self.hardmask = HardMask
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
   IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
   IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
@@ -439,9 +443,18 @@ function ReductionCmd::Generate
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
     IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
-    ; Mask File
-    IF STRLEN(self.maskfile) GE 1 THEN $
-      cmd[i] += " --mask-file="+self.maskfile
+    
+    ; Mask File(s)
+    IF ((self.mask EQ 1) OR (self.hardmask EQ 1)) THEN BEGIN
+      cmd[i] += " --mask-file="
+    
+      IF (self.mask EQ 1) THEN cmd[i] += "maskfile"
+      IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
+      IF (self.hardmask EQ 1) THEN cmd[i] += "hardmaskfile"
+    
+    ENDIF
+    
+    
     ; Lambda Ratio
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     
@@ -517,7 +530,8 @@ function ReductionCmd::Init, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
-    MaskFile=maskfile, $                 ; Mask File
+    Mask=mask, $                         ; Apply Mask 
+    HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -587,7 +601,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
-  IF N_ELEMENTS(maskfile) EQ 0 THEN maskfile = ""
+  IF N_ELEMENTS(mask) EQ 0 THEN mask = 0
+  IF N_ELEMENTS(hardmask) EQ 0 THEN hardmask = 0
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
   IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
   IF N_ELEMENTS(energybins_max) EQ 0 THEN energybins_max = ""
@@ -648,7 +663,8 @@ function ReductionCmd::Init, $
   self.dumpwave = dumpwave
   self.dumpnorm = dumpnorm
   self.dumpet = dumpet
-  self.maskfile = maskfile
+  self.mask = mask
+  self.hardmask = hardmask
   self.lambdaratio = lambdaratio
   self.energybins_min = energybins_min
   self.energybins_max = energybins_max
@@ -722,7 +738,8 @@ pro ReductionCmd__Define
     dumpwave: 0L, $          ; Dump combined wavelength file
     dumpnorm: 0L, $          ; Dump combined Norm file
     dumpet: 0L, $            ; Dump combined Et file
-    maskfile: "", $          ; Mask File
+    mask: 0L, $              ; Apply Mask File
+    hardmask: 0L, $          ; Apply Hard Mask File
     lambdaratio: 0L, $       ; Lambda ratio
     energybins_min: "", $    ; Energy transfer bins (min)
     energybins_max: "", $    ; Energy transfer bins (max)
