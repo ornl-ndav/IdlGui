@@ -636,7 +636,8 @@ PRO replot_main_plot_with_scale, Event, without_scale=without_scale
   
   ;  (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
-  TVSCL, big_array_rebin, /DEVICE, xoff, off
+;  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  TVSCL, big_array_rebin, /DEVICE, 0, 0
   
   ;plot grid
   plotGridMainPlot, global1
