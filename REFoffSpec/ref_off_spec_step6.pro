@@ -64,12 +64,10 @@ END
 PRO populate_array, TableArray, List, COLUMN=column
   sz = N_ELEMENTS(list)
   index = 0
-  IF (STRCOMPRESS(List[index],/REMOVE_ALL) NE '0') THEN BEGIN
-    WHILE (index LT sz) DO BEGIN
-      TableArray[COLUMN,index] = STRCOMPRESS(List[index],/REMOVE_ALL)
-      ++index
-    ENDWHILE
-  ENDIF
+  WHILE (index LT sz) DO BEGIN
+    TableArray[COLUMN,index] = STRCOMPRESS(List[index],/REMOVE_ALL)
+    ++index
+  ENDWHILE
 END
 
 ;------------------------------------------------------------------------------

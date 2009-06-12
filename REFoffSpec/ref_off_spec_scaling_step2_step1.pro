@@ -47,8 +47,6 @@ xy_position = (*global).step4_step1_selection
 IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
 
-print, 'here'
-
     id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_step4_step2')
     WIDGET_CONTROL, id_draw, GET_VALUE=id_value
     WSET,id_value
