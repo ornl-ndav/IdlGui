@@ -416,7 +416,7 @@ function ReductionCmd::Generate
     ; Monitor integration range
     IF (STRLEN(self.monrange_min) GE 1) $
       AND (STRLEN(self.monrange_max GE 1)) THEN $
-      cmd[i] += " --mon-int-range=" + self.monrange_min + "," + self.monrange_max
+      cmd[i] += " --mon-int-range " + self.monrange_min + " " + self.monrange_max
     ; Detector Efficiency
     IF STRLEN(self.deteff) GT 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
