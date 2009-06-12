@@ -38,6 +38,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
   NbrRows    = 6
   NbrColumns = 3
   
+  instrument = (*global).instrument
+  
   ;******************************************************************************
   ;            DEFINE STRUCTURE
   ;******************************************************************************
@@ -625,6 +627,36 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     SENSITIVE = sPreviewPolar1Button.sensitive,$
     VALUE     = sPreviewPolar1Button.value)
     
+  ;------------------------------------------------------------------------------
+    
+  ;Create output file button
+  wCreateButton = WIDGET_BUTTON(BaseTab,$
+    XOFFSET   = sCreateOutput.size[0],$
+    YOFFSET   = sCreateOutput.size[1],$
+    SCR_XSIZE = sCreateOutput.size[2],$
+    UNAME     = sCreateOutput.uname,$
+    SENSITIVE = sCreateOutput.sensitive,$
+    VALUE     = sCreateOutput.value)
+    
+  ;------------------------------------------------------------------------------
+  ;Status of process (label and text_field)
+  wStatusLabel = WIDGET_LABEL(BaseTab,$
+    XOFFSET = sStatusLabel.size[0],$
+    YOFFSET = sStatusLabel.size[1],$
+    VALUE   = sStatusLabel.value)
+    
+  wStatusTextField = WIDGET_TEXT(BaseTab,$
+    XOFFSET = sStatusText.size[0],$
+    YOFFSET = sStatusText.size[1],$
+    SCR_XSIZE = sStatusText.size[2],$
+    SCR_YSIZE = sStatusText.size[3],$
+    VALUE     = sStatusText.value,$
+    UNAME     = sStatusText.uname,$
+    /SCROLL,$
+    /WRAP)
+    
+  IF (instrument EQ 'REF_L') THEN RETURN
+  
   ;Recap of Second Polarization state -------------------------------------------
   ;Summary of Shifting/Scaling parameters used base -----------------------------
   wPolar2SummaryTitle = WIDGET_LABEL(BaseTab,$
@@ -903,38 +935,5 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME     = sPreviewPolar4Button.uname,$
     SENSITIVE = sPreviewPolar4Button.sensitive,$
     VALUE     = sPreviewPolar4Button.value)
-    
-  ;------------------------------------------------------------------------------
-    
-  ;Create output file button
-  wCreateButton = WIDGET_BUTTON(BaseTab,$
-    XOFFSET   = sCreateOutput.size[0],$
-    YOFFSET   = sCreateOutput.size[1],$
-    SCR_XSIZE = sCreateOutput.size[2],$
-    UNAME     = sCreateOutput.uname,$
-    SENSITIVE = sCreateOutput.sensitive,$
-    VALUE     = sCreateOutput.value)
-    
-  ;------------------------------------------------------------------------------
-  ;Status of process (label and text_field)
-  wStatusLabel = WIDGET_LABEL(BaseTab,$
-    XOFFSET = sStatusLabel.size[0],$
-    YOFFSET = sStatusLabel.size[1],$
-    VALUE   = sStatusLabel.value)
-    
-  wStatusTextField = WIDGET_TEXT(BaseTab,$
-    XOFFSET = sStatusText.size[0],$
-    YOFFSET = sStatusText.size[1],$
-    SCR_XSIZE = sStatusText.size[2],$
-    SCR_YSIZE = sStatusText.size[3],$
-    VALUE     = sStatusText.value,$
-    UNAME     = sStatusText.uname,$
-    /SCROLL,$
-    /WRAP)
-    
-    
-    
-    
-    
     
 END
