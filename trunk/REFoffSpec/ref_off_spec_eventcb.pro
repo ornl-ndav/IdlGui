@@ -227,12 +227,17 @@ PRO tab_event, Event
           WIDGET_CONTROL, id_draw, GET_VALUE=id_value
           WSET,id_value
           error = 0
-         ; CATCH, error
+          ; CATCH, error
           IF (error NE 0) THEN BEGIN
             CATCH,/CANCEL
             refresh_recap_plot, Event ;_step5
           ENDIF ELSE BEGIN
-            refresh_recap_plot, Event, RESCALE=1;_step5
+            IF ((*global).zmax_g_recap EQ 0d AND $
+              (*global).zmin_g_recap EQ 0d) THEN BEGIN
+              refresh_recap_plot, Event
+            ENDIF ELSE BEGIN
+              refresh_recap_plot, Event, RESCALE=1;_step5
+            ENDELSE
           ENDELSE
           
           ;show selection if one is selected

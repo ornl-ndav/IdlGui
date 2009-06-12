@@ -74,6 +74,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     IF (N_ELEMENTS(RESCALE) NE 0) THEN BEGIN
     
       Max  = (*global).zmax_g_recap
+      ;        Max  = (*global).zmax_g
       fMax = DOUBLE(Max)
       
       index_GT = WHERE(local_tfpData GT fMax, nbr)
@@ -83,10 +84,11 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       ENDIF
       
       Min  = (*global).zmin_g_recap
+      ;      Min  = (*global).zmin_g
       fMin = DOUBLE(Min)
       
       index_LT = WHERE((local_tfpData LT fMin) AND $
-            (FINITE(local_tfpDAta)), nbr1)  
+        (FINITE(local_tfpDAta)), nbr1)
       IF (nbr1 GT 0) THEN BEGIN
         tmp = local_tfpData
         tmp[index_LT] = !VALUeS.D_NAN
@@ -96,7 +98,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       ENDIF ELSE BEGIN
         local_min = MIN(local_tfpData,/NAN)
       ENDELSE
-            
+      
     ENDIF ELSE BEGIN
     
       ;determine max and min
@@ -117,9 +119,9 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       
       local_min = MIN(local_tfpData,/NAN)
       local_max = MAX(local_tfpData,/NAN)
-
+      
       local_tfpData = ALOG10(local_tfpData)
-
+      
     ENDIF
     
     IF (index EQ 0) THEN BEGIN
@@ -178,10 +180,12 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     ++index
     
   ENDWHILE
-
-   (*global).zmax_g_recap = master_max
-    (*global).zmin_g_recap = master_min
-   
+  
+  (*global).zmax_g_recap = master_max
+  (*global).zmin_g_recap = master_min
+  ;  (*global).zmax_g = master_max
+  ;  (*global).zmin_g = master_min
+  
   ;rebin by 2 in y-axis final array
   rData = REBIN(base_array, $
     (size(base_array))(1)*x_coeff, $
@@ -213,11 +217,11 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
   
   ;plot main plot
   TVSCL, total_array, /DEVICE
- 
+  
   xrange   = (*global).xscale.xrange
   xticks   = (*global).xscale.xticks
   position = (*global).xscale.position
- 
+  
   refresh_plot_scale_step5, $
     EVENT    = Event, $
     XSCALE   = xrange, $

@@ -51,7 +51,7 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     tab_size[2],$
     730],$
     uname: 'step5_rescale_base',$
-    map: 1}
+    map: 0}
     
   ;buttons zoom or selection
   XYoff = [0,0]

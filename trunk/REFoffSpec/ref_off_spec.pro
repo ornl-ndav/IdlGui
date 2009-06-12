@@ -231,6 +231,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     zmin_g_recap: 0d,$
     zmax_g_recap_backup: 0d,$
     zmin_g_recap_backup: 0d,$
+    zmax_g_backup: 0d,$
+    zmin_g_backup: 0d,$
     
     zmin_g: 0d,$
     zmax_g: 0d,$
