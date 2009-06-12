@@ -513,13 +513,14 @@ PRO DGSreduction, dgscmd, _Extra=extra
   dgscmd->SetProperty, USmonPath=1
   
   ; Normalisation Files
-  normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN)
-  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation:", UVALUE="DGS_NORM")
-  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can:", UVALUE="DGS_EMPTYCAN")
-  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can:", UVALUE="DGS_BLACKCAN")
-  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current:", UVALUE="DGS_DARK")
+  normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
+  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGS_NORM")
+  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGS_EMPTYCAN")
+  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGS_BLACKCAN")
+  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGS_DARK")
 
-  TIBconstID = CW_FIELD(normOptionsBaseColumn2, XSIZE=21, TITLE=" Time Independent Bkgrd:", UVALUE="DGS_TIBCONST", /ALL_EVENTS)
+  TIBrow = WIDGET_BASE(normOptionsBaseColumn2, /ROW)
+  TIBconstID = CW_FIELD(TIBrow, XSIZE=22, TITLE="Time Independent Bkgrd: ", UVALUE="DGS_TIBCONST", /ALL_EVENTS)
 
   
   ; Monitor integration range
