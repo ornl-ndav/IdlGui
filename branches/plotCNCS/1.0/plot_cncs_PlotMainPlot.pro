@@ -224,6 +224,8 @@ PRO MakeGuiMainPLot_Event, event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN
           play_buttons_activation, event, activate_button='play'
+          check_from_to_bin_input, Event
+          change_from_and_to_bins, Event
           play_tof, Event
         ENDIF
       ENDIF ELSE BEGIN
@@ -903,7 +905,7 @@ PRO PlotMainPlot, histo_mapped_file
     XSTYLE=1
     
   ;take snapshot
-;  background = TVREAD(TRUE=3)
+  ;  background = TVREAD(TRUE=3)
   background = TVRD(TRUE=3)
   (*(*global1).background) = background
   
@@ -1055,7 +1057,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     
   ;take snapshot
   ;background = TVREAD(TRUE = 3)
-    background = TVRD(TRUE=3)
+  background = TVRD(TRUE=3)
   (*(*global1).background) = background
   
   ;plot das view of full instrument
