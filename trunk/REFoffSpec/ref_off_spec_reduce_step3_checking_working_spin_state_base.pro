@@ -127,7 +127,13 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAIN_BASE')
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
   
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    title = 'Files of working spin state ' + working_spin_state
+  ENDIF ELSE BEGIN
+    title = 'Files to plot'
+  ENDELSE
   ;our_group = widget_base(
   checking_spin_base = WIDGET_BASE(GROUP_LEADER=id,$
     /MODAL,$
@@ -136,7 +142,7 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     SCR_XSIZE = 540,$
     SCR_YSIZE = 400,$
     frame = 5,$
-    title = 'Files of working spin state ' + working_spin_state)
+    title = title)
     
   ;big table
   table_uname = WIDGET_TABLE(checking_spin_base,$
@@ -207,27 +213,51 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
 END
 
 ;==============================================================================
-PRO populate_checking_spin_state_table, Event, table_uname, $
+PRO populate_checking_spin_state_table, Event, $
+    table_uname, $
     working_spin_state = working_spin_state
     
-  table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
-  d_spin_state = table[2,*]
-  list_of_output_files = table[7,*]
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  instrument = (*global).instrument
   
-  sz = N_ELEMENTS(d_spin_state)
-  new_table = STRARR(2,sz)
-  index = 0
-  FOR i=0,(sz-1) DO BEGIN
-    spin_state = d_spin_state[i]
-    IF (spin_state NE '') THEN BEGIN
-      IF (STRLOWCASE(spin_state) EQ STRLOWCASE(working_spin_state)) THEN BEGIN
+  table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    d_spin_state = table[2,*]
+    list_of_output_files = table[7,*]
+  ENDIF ELSE BEGIN
+    list_of_output_files = table[5,*]
+  ENDELSE
+  
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    sz = N_ELEMENTS(d_spin_state)
+    new_table = STRARR(2,sz)
+    index = 0
+    FOR i=0,(sz-1) DO BEGIN
+      spin_state = d_spin_state[i]
+      IF (spin_state NE '') THEN BEGIN
+        IF (STRLOWCASE(spin_state) EQ STRLOWCASE(working_spin_state)) THEN BEGIN
+          new_table[0,index] = list_of_output_files[i]
+          new_table[1,index++] = 'NOT READY'
+        ENDIF
+      ENDIF ELSE BEGIN
+        BREAK
+      ENDELSE
+    ENDFOR
+  ENDIF ELSE BEGIN
+  
+    sz = N_ELEMENTS(list_of_output_files)
+    new_table = STRARR(2,sz)
+    index = 0
+    FOR i=0,(sz-1) DO BEGIN
+      IF (table[0,index] NE '') THEN BEGIN
         new_table[0,index] = list_of_output_files[i]
         new_table[1,index++] = 'NOT READY'
-      ENDIF
-    ENDIF ELSE BEGIN
-      BREAK
-    ENDELSE
-  ENDFOR
+      ENDIF ELSE BEGIN
+        break
+      ENDELSE
+    ENDFOR
+    
+  ENDELSE
   
   WIDGET_CONTROL, table_uname, SET_VALUE=new_table
   
@@ -253,6 +283,7 @@ PRO refresh_checking_spin_table, Event, global
     file_name = list_of_files[i]
     IF (file_name NE '') THEN BEGIN
       full_file_name = path + file_name
+      print, full_file_name
       IF (FILE_TEST(full_file_name)) THEN BEGIN
         table[1,i] = 'READY'
       ENDIF ELSE BEGIN
