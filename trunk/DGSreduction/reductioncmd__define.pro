@@ -336,7 +336,7 @@ function ReductionCmd::Generate
     cmd[i] = ""
   
     ; Queue name
-    ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += " -p " + self.queue
+    IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
   
     ; Let's first start with the program name!
     cmd[i] += self.program
