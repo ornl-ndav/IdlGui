@@ -146,13 +146,54 @@ END
 ;return the column of the bank selected
 FUNCTION getColumnMainPlot, X
   Xwidth = 32
-  FOR i=0,50 DO BEGIN
-    xoff = i*37
-    xmin = 10 + xoff
+  FOR i=0,35 DO BEGIN
+    xoff = i*36
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i+1)
   ENDFOR
+  
+  FOR i=38,51 DO BEGIN
+    xoff = i*36
+    xmin = xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN RETURN, (i-1)
+  ENDFOR
+  
   RETURN, 0
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;return the column of the bank selected
+FUNCTION getBankTubeMainPlot, X
+  Xwidth = 32
+  FOR i=0,35 DO BEGIN
+    xoff = i*36
+;    xmin = 10 + xoff
+   xmin = xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN BEGIN
+      bank = (i+1)
+      delta_x = (X - xmin)
+      tube = FIX(delta_x / 4.)
+      RETURN, [bank,tube]
+    ENDIF
+  ENDFOR
+  
+  FOR i=38,51 DO BEGIN
+    xoff = i*36
+;    xmin = 10 + xoff
+xmin = xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN BEGIN
+      bank = (i-1)
+      delta_x = (X - xmin)
+      tube = FIX(delta_x / 4.)
+      RETURN, [bank,tube]
+    ENDIF
+  ENDFOR
+  
+  RETURN, [0,0]
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -161,8 +202,8 @@ END
 FUNCTION getColumnMainPlotIndex, X
   Xwidth = 32
   FOR i=0,50 DO BEGIN
-    xoff = i*37
-    xmin = 10 + xoff
+    xoff = i*36
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i)
   ENDFOR
@@ -201,8 +242,6 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the bank number
 FUNCTION getBank, Event
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global1
   X = Event.X
   Y = Event.Y
   column = getColumnMainPlot(X)
@@ -211,6 +250,33 @@ FUNCTION getBank, Event
     RETURN, STRCOMPRESS(Column,/remove_all)
   ENDIF ELSE BEGIN ;if we click outside a bank
     RETURN, ''
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getRow, Event, Y
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  Yfactor = (*global1).Yfactor
+  row = Y/4 
+  IF (row LT 128 AND $
+  row GE 0) THEN RETURN, row
+  RETURN, -1
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;return the bank number
+FUNCTION getBankTube, Event
+  X = Event.X
+  Y = Event.Y
+  column_tube = getBankTubeMainPlot(X)
+  row = getRow(Event, Y)
+  IF (column_tube[0] NE 0 AND $
+  row NE -1) THEN BEGIN ;we click inside a bank
+    RETURN, [STRCOMPRESS(column_tube[0],/REMOVE_ALL),$
+      STRCOMPRESS(column_tube[1],/REMOVE_ALL),$
+      STRCOMPRESS(row,/REMOVE_ALL)]
+  ENDIF ELSE BEGIN ;if we click outside a bank
+    RETURN, ['','','']
   ENDELSE
 END
 
@@ -312,14 +378,9 @@ END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBankIndex, Event, X, Y
-  ;retrieve bank number
-  bank_number = getBank(Event)
   ColumnIndex = getColumnMainPlotIndex(X)
-  ;RowIndex    = getRowMainPlotIndex(Y)
   IF (ColumnIndex EQ -1) THEN RETURN, -1
-  ;IF (RowIndex EQ -1) THEN RETURN, -1
   index = ColumnIndex
-  ;Special case for 32A and 32B
   RETURN, index
 END
 
@@ -362,7 +423,7 @@ END
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get pixelID using bank name (M12), tube (X) and row (Y) position
 FUNCTION getPixelID, BankID, X, Y
-  pxOffset = LONG(Y) + 128*LONG(X)
+  pxOffset = LONG(Y) + 128L*LONG(X)
   RETURN, pxOffset
 END
 
@@ -480,3 +541,25 @@ FUNCTION getNexusFileName, Event
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getNbrBinsPerFrame, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='nbr_bins_per_frame_tof')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTimePerFrame, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='time_per_frame_tof')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getFromBin, Event
+RETURN, getCW_BgroupValue(Event, 'from_bin')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getToBin, Event
+RETURN, getCW_BgroupValue(Event, 'to_bin')
+END

@@ -32,72 +32,39 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+PRO display_image, Event, uname=uname, image=image
+id = WIDGET_INFO(event.top,find_by_uname=uname)
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+splash = READ_PNG(image)
+TV, splash, 0, 0, /true
+END
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
-.run fsc_color.pro
+;------------------------------------------------------------------------------
+PRO play_buttons_activation, event, activate_button=activate_button
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+  image_play = 'plotCNCS_images/play_disable.png'
+  image_next = 'plotCNCS_images/next_disable.png'
+  image_stop = 'plotCNCS_images/stop_disable.png'
+  image_pause = 'plotCNCS_images/pause_disable.png'
+  image_previous = 'plotCNCS_images/previous_disable.png'
+  image_raw = 'plotCNCS_images/set_of_buttons_raw.png'
+  
+  case (activate_button) OF
+    'play': image_play = 'plotCNCS_images/play_enable.png'
+    'next': image_next = 'plotCNCS_images/next_enable.png'
+    'stop': image_stop = 'plotCNCS_images/stop_enable.png'
+    'pause': image_pause = 'plotCNCS_images/pause_enable.png'
+    'previous': image_previous = 'plotCNCS_images/previous_enable.png'
+    'raw': 
+    ELSE:
+  ENDCASE
+  
+  display_image, Event, uname='play_buttons', image=image_raw
+  display_image, Event, uname='play_button', image=image_play
+  display_image, Event, uname='next_button', image=image_next
+  display_image, Event, uname='stop_button', image=image_stop
+  display_image, Event, uname='previous_button', image=image_previous
+  display_image, Event, uname='pause_button', image=image_pause
+  
+END

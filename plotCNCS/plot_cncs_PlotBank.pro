@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO MakeGuiBankPlot_Event, event
 
 WIDGET_CONTROL, event.top, GET_UVALUE=global2
@@ -55,19 +55,19 @@ CASE event.id OF
             (*global2).xLeftCorner = Event.x/(*global2).Xfactor
             (*global2).yLeftCorner = Event.y/(*global2).Yfactor
         ENDIF
-        IF (Event.release EQ 1) THEN BEGIN ;mouse pressed
-            refreshBank, Event
-            plotSelection, Event 
+        IF (Event.release EQ 1) THEN BEGIN ;mouse released
+            ;refreshBank, Event
+            ;plotSelection, Event 
             takeScreenshot, Event ;that will be dispayed on the right of the
                                 ;IvsTOF plot
             xRightCorner = Event.x/(*global2).Xfactor
             yRightCorner = Event.y/(*global2).Yfactor
+
             pixelID = getPixelIdRangeFromBankBase((*global2).bankName,$
                                                   (*global2).xLeftCorner,$
                                                   (*global2).yLeftCorner,$
                                                   xRightCorner,$
                                                   yRightCorner)
-
 
             PlotTof, (*global2).img, $
               (*global2).bankName, $
@@ -94,7 +94,7 @@ bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
 tvscl, bank_rebin, /device
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO plotTofView, img, i, Xfactor, Yfactor, bank_congrid
 ;find out the range of non-zero values using the first non-empty bank
 ;bank_index = 49
@@ -135,8 +135,8 @@ bank_congrid = congrid(bank_smooth,8*Xfactor,dim_new*128)
 tvscl, bank_congrid, /device
 END
 
-;-------------------------------------------------------------------------------
-PRO PlotBank, img, i, bankName, bDasView
+;------------------------------------------------------------------------------
+PRO PlotBank, img, i, bankName, bDasView, TubeAngle
 
 Xfactor = 10
 Yfactor = 5
@@ -159,13 +159,14 @@ global2 = ptr_new({ wbase           : wbase,$
                     tmpImg          : ptr_new(0L),$
                     bank_rebin      : ptr_new(0L),$
                     bank_congrid    : ptr_new(0L),$
+                    TubeAngle       : TubeAngle,$
                     img             : img})     
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2
 XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
 
 DEVICE, DECOMPOSED = 0
-loadct, 5
+loadct, 5, /SILENT
 
 ;select plot area
 id = widget_info(wBase,find_by_uname='bank_plot')
@@ -178,16 +179,17 @@ tvimg = total(img,1)
 tvimg = transpose(tvimg)
 (*(*global2).tvimg_transpose) = tvimg
 
-IF (bDasView EQ 0) THEN BEGIN 
+;IF (bDasView EQ 0) THEN BEGIN 
     plotDasView, tvimg, i, Xfactor, Yfactor, bank_rebin
     (*(*global2).bank_rebin) = bank_rebin
-ENDIF ELSE BEGIN
-    plotTofView, img, i, Xfactor, Yfactor, bank_congrid
-    (*(*global2).bank_congrid) = bank_congrid
-ENDELSE
+;ENDIF ELSE BEGIN
+;    plotTofView, img, i, Xfactor, Yfactor, bank_congrid
+;    (*(*global2).bank_congrid) = bank_congrid
+;ENDELSE
 
 ;display bank number in title bar
 id = widget_info(wBase,find_by_uname='bank_plot_base')
-widget_control, id, base_set_title= strcompress(bankName)
+widget_control, id, base_set_title= 'Bank #: ' + $
+strcompress(bankName,/REMOVE_ALL)
 
 END
