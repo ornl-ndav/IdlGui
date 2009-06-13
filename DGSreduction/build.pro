@@ -49,8 +49,12 @@ PREF_SET, 'IDL_PATH', newPath, /COMMIT
 .compile construct_datapaths
 .compile getdetectorbankrange
 
+.compile monitorjob_events
+.compile monitorjob
+
 .compile dgsreduction
 .compile reductioncmd__define
+
 
 resolve_all
 
