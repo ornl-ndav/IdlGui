@@ -73,6 +73,9 @@ PRO DGSreduction_Execute, event
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
+  ; Start the sub window widget
+  MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  
 END
 
 ;---------------------------------------------------------
@@ -702,7 +705,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
   WIDGET_CONTROL, tlb, SET_UVALUE=info, /NO_COPY, /KBRD_FOCUS_EVENTS
   
   ; Setup the event loop and register the application with the window manager.
-  XMANAGER, 'dgsredction', tlb, EVENT_HANDLER='DGSreduction_TLB_Events', $
+  XMANAGER, 'dgsreduction', tlb, EVENT_HANDLER='DGSreduction_TLB_Events', $
     /NO_BLOCK, CLEANUP='DGSreduction_Cleanup', GROUP_LEADER=group_leader
     
   ;send message to log current run of application
