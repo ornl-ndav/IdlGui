@@ -304,7 +304,8 @@ PRO UpdateStep6Gui, Event
     PopulateOtherPolaStates, Event
   ENDIF
   
-  ;hide spin state base that have not been selected in reduce step1
+  ;check I vs Q files widgets
+  CheckIvsQfilesWidgets, Event
   
   ;check if we can validate or not the CREATE OUTPUT FILE button
   CheckValidationOfCreateOutputButton, Event
@@ -1037,5 +1038,46 @@ PRO create_output_array, Event
   
   ;turn off hourglass
   WIDGET_CONTROL,HOURGLASS=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO CheckIvsQfilesWidgets, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  instrument = (*global).instrument
+  
+  ;working pola state
+  file_name = getTextFieldValue(Event,'i_vs_q_output_file_working_spin_state')
+  IF (file_name NE '' AND $
+    FILE_TEST(file_name)) THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, Event, $
+    'i_vs_q_output_file_working_spin_state_preview',$
+    status
+    
+  IF (instrument EQ 'REF_M') THEN BEGIN
+  
+    uname = 'i_vs_q_output_file_spin_state'
+    
+    FOR i=2,4 DO BEGIN
+    
+      iS = STRCOMPRESS(i,/REMOVE_ALL)
+      file_name = getTextFieldValue(Event,uname + iS)
+      IF (file_name NE '' AND $
+        FILE_TEST(file_name)) THEN BEGIN
+        status = 1
+      ENDIF ELSE BEGIN
+        status = 0
+      ENDELSE
+      activate_widget, event, uname + iS + '_preview', status
+      
+    ENDFOR
+    
+  ENDIF
   
 END
