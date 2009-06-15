@@ -254,7 +254,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getPolarizationState, file_name
-  pola_states = ['p0','p1','p2','p3']
+  pola_states = ['Off_Off','Off_On','On_Off','On_On']
   FOR i=0,3 DO BEGIN
     IF (STRPOS(file_name,'_' + pola_states[i]) NE -1) THEN $
       RETURN, pola_states[i]

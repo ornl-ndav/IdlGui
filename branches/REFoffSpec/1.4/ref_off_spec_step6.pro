@@ -35,10 +35,10 @@ FUNCTION determine_other_pola_states, Event
   working_pola_state = getTextFieldValue(Event,'summary_working_polar_value')
   working_pola_state = STRCOMPRESS(working_pola_state,/REMOVE_ALL)
   CASE (working_pola_state) OF
-    'p0': RETURN, ['p1','p2','p3']
-    'p1': RETURN, ['p0','p2','p3']
-    'p2': RETURN, ['p0','p1','p3']
-    'p3': RETURN, ['p0','p1','p2']
+    'Off_Off': RETURN, ['Off_On','On_Off','On_On']
+    'Off_On': RETURN, ['Off_Off','On_Off','On_On']
+    'On_Off': RETURN, ['Off_Off','Off_On','On_On']
+    'On_On': RETURN, ['Off_Off','Off_On','On_Off']
     ELSE: RETURN, ['','','']
   ENDCASE
 END
