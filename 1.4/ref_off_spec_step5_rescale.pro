@@ -222,33 +222,33 @@ PRO display_step5_rescale_plot_from_zoom, Event, with_range=with_range
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XRANGE = xrange,$
-    XSTYLE = 1,$
-    YRANGE = yrange,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1
-    
-    ENDIF ELSE BEGIN ;log
-    
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XRANGE = xrange,$
-    XSTYLE = 1,$
-    YRANGE = yrange,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1,$
-    /YLOG
-
-ENDELSE    
-    
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      XSTYLE = 1,$
+      YRANGE = yrange,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDIF ELSE BEGIN ;log
+  
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      XSTYLE = 1,$
+      YRANGE = yrange,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1,$
+      /YLOG
+      
+  ENDELSE
+  
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
@@ -368,29 +368,29 @@ PRO display_step5_rescale_after_rescale_during_zoom_selection, Event
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1
-
-ENDIF ELSE BEGIN
-    
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1,$
-    /YLOG
-
-ENDELSE
-
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDIF ELSE BEGIN
+  
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1,$
+      /YLOG
+      
+  ENDELSE
+  
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
   (*global).x0y0x1y1_graph = [xmin,ymin,xmax,ymax]
@@ -438,28 +438,28 @@ PRO display_step5_rescale_reset_zoom, Event
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1
-    
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
   ENDIF ELSE BEGIN
   
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XSTYLE = 1,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1,$
-    /YLOG
-  
-    ENDELSE
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XSTYLE = 1,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1,$
+      /YLOG
+      
+  ENDELSE
   
   xmin = MIN(x_axis,MAX=xmax)
   ymin = MIN(array_selected_total,MAX=ymax)
@@ -517,33 +517,33 @@ PRO redisplay_step5_rescale_plot, Event
   LinLog = getCWBgroupValue(Event, 'step5_rescale_lin_log_plot')
   IF (LinLog EQ 0) THEN BEGIN ;linear
   
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XRANGE = xrange,$
-    XSTYLE = 1,$
-    YRANGE = yrange,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1
- 
- ENDIF ELSE BEGIN
- 
-  PLOT, x_axis, $
-    array_selected_total, $
-    XTITLE=x_axis_label, $
-    YTITLE=y_axis_label,$
-    XRANGE = xrange,$
-    XSTYLE = 1,$
-    YRANGE = yrange,$
-    YSTYLE = 1,$
-    CHARSIZE = 2,$
-    PSYM=1,$
-    /YLOG
-
- ENDELSE
-    
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      XSTYLE = 1,$
+      YRANGE = yrange,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1
+      
+  ENDIF ELSE BEGIN
+  
+    PLOT, x_axis, $
+      array_selected_total, $
+      XTITLE=x_axis_label, $
+      YTITLE=y_axis_label,$
+      XRANGE = xrange,$
+      XSTYLE = 1,$
+      YRANGE = yrange,$
+      YSTYLE = 1,$
+      CHARSIZE = 2,$
+      PSYM=1,$
+      /YLOG
+      
+  ENDELSE
+  
   errplot, x_axis,$
     array_selected_total-array_error_selected_total,$
     array_selected_total+array_error_selected_total,$
@@ -915,5 +915,46 @@ PRO plot_average_1_recap_rescale, Event ;plot the average horizontal value
   PLOTS, xmax, 1., color=color, /CONTINUE, /DATA
   
   (*global).recap_rescale_average = 1
+  
+END
+
+;------------------------------------------------------------------------------
+PRO define_default_recap_output_file, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  list_of_ascii_files = (*(*global).list_of_ascii_files)
+  
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: BEGIN ;IvsQ
+      ext = 'IvsQ.txt'
+    END
+    2: BEGIN ;IvsLambda
+      ext = 'IvsLambda.txt'
+    END
+  ENDCASE
+  
+  ;get list of run numbers
+  ;run_numbers = getRunNumbersFromAscii(*(*global).list_of_ascii_files)
+  ;run_ext = STRJOIN(run_numbers,'_')
+  
+  ;get nbr of data files
+  sz = N_ELEMENTS(list_of_ascii_files)
+  
+  ;get first part of name
+  ;path = FILE_DIRNAME(list_of_ascii_files[0])
+  short_file_name = FILE_BASENAME(list_of_ascii_files[0],'.txt')
+  
+  ;create default output file name
+  output_file = short_file_name
+  output_file += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files'
+  output_file += '_' + ext
+  
+  putTextFieldValue, Event, 'step5_file_name_i_vs_q', output_file
+  
+  activate_widget, Event, 'step5_create_button_i_vs_q', 1
+  ;check if preview button can be validated or not
+  update_step5_preview_button, Event ;step5
   
 END

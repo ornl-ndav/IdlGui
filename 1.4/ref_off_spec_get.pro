@@ -475,3 +475,19 @@ FUNCTION getNormRoiFileOfIndex, Event, row_data=row_data, base_name=base_name
   RETURN, roi_file
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getRunNumbersFromAscii, list_of_ascii_files
+
+  sz = N_ELEMENTS(list_of_ascii_files)
+  list_of_runs = STRARR(sz)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    ascii_object = OBJ_NEW('IDL3columnsASCIIparser', $
+    list_of_ascii_files[index])
+    run_number = ascii_object->get_tag('#C data Run Number:')
+    list_of_runs[index] = run_number
+    index++
+  ENDWHILE
+  RETURN, list_of_runs
+END

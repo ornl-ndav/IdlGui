@@ -2229,6 +2229,7 @@ PRO MAIN_BASE_event, Event
           enabled_or_not_recap_rescale_button, Event
           MapBase, Event, 'step5_rescale_base', 1
           display_step5_rescale_plot_first_time, Event
+          define_default_recap_output_file, Event
         ENDIF
         
       ENDIF ;end of 'if (selection_value NE 0)'
@@ -2289,19 +2290,7 @@ PRO MAIN_BASE_event, Event
         y0_graph = x0y0x1y1_graph[1]
         x1_graph = x0y0x1y1_graph[2]
         y1_graph = x0y0x1y1_graph[3]
-        ;        print, 'Zoom - left mouse pressed --------------------- '
-        ;        print, 'x0y0x1y1[0]: ' + strcompress(x0y0x1y1[0]) + $
-        ;          ' | x0y0x1y1[2]: ' + strcompress(x0y0x1y1[2])
-        ;        print, 'x0y0x1y1[1]: ' + strcompress(x0y0x1y1[1]) + $
-        ;          ' | x0y0x1y1[3]: ' + strcompress(x0y0x1y1[3])
-        ;        print, ' x0y0x1y1_graph[0]: ' + strcompress(x0_graph) + $
-        ;          ' | x0y0x1y1[2]: ' + strcompress(x1_graph)
-        ;        print, ' x0y0x1y1[1]: ' + strcompress(y0_graph) + $
-        ;          ' |  x0y0x1y1[3]: ' + strcompress(y1_graph)
-        ;        print, 'Cursor     x: ' + strcompress(x) + $
-        ;          ' | y: ' + strcompress(y)
-        ;        print
-        
+
         IF (x LT x0y0x1y1_graph[0]) THEN x=x0y0x1y1_graph[0]
         IF (x GT x0y0x1y1_graph[2]) THEN x=x0y0x1y1_graph[2]
         IF (y LT x0y0x1y1_graph[1]) THEN y=x0y0x1y1_graph[1]
