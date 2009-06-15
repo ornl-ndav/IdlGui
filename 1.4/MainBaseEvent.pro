@@ -2557,6 +2557,46 @@ PRO MAIN_BASE_event, Event
     preview_OF_step6_file, Event, POLA_STATE='p3' ;step6
   END
   
+  ;List of I vs Q or TOF files ------------------------------------------------
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_working_spin_state'): BEGIN
+    uname = 'i_vs_q_output_file_working_spin_state'
+    check_preview_button_of_i_vs_q_tab6, Event, uname
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state2'): BEGIN
+    uname = 'i_vs_q_output_file_spin_state2'
+    check_preview_button_of_i_vs_q_tab6, Event, uname
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state3'): BEGIN
+    uname = 'i_vs_q_output_file_spin_state3'
+    check_preview_button_of_i_vs_q_tab6, Event, uname
+  END
+  
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state4'): BEGIN
+    uname = 'i_vs_q_output_file_spin_state4'
+    check_preview_button_of_i_vs_q_tab6, Event, uname
+  END
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   ;----------------------------------------------------------------------------
   ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS ------
   
