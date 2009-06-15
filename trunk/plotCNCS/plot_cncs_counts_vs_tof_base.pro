@@ -50,6 +50,25 @@ PRO MakeCountsVsTofBase, wBase
     UNAME = 'counts_vs_tof_main_base',$
     /COLUMN)
     
+    ;lin/log cw_bgroup
+  row1c = WIDGET_BASE(row1,$
+    /ROW,$
+    /EXCLUSIVE,$
+    FRAME = 0)
+    
+  lin = WIDGET_BUTTON(row1c,$
+    VALUE = 'Linear',$
+    UNAME = 'main_plot_linear_plot',$
+    /NO_RELEASE)
+    
+  log = WIDGET_BUTTON(row1c,$
+    VALUE = 'Logarithmic',$
+    UNAME = 'main_plot_log_plot',$
+    /NO_RELEASE)
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+
+ ;--------------------------------------------------    
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
     SCR_YSIZE = 600,$
