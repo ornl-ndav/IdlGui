@@ -588,6 +588,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     ALIGNMENT     = sSummaryTable.align,$
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
+    /EDITABLE,$
     /RESIZEABLE_COLUMNS)
     
   ;label of polarization state used ---------------------------------------------
@@ -811,6 +812,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     ALIGNMENT     = sPolar2SummaryTable.align,$
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
+    /EDITABLE,$
     /RESIZEABLE_COLUMNS)
     
   ;label of polarization state used ---------------------------------------------
@@ -903,6 +905,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     COLUMN_WIDTHS = sPolar3SummaryTable.width,$
     ALIGNMENT     = sPolar3SummaryTable.align,$
     /NO_ROW_HEADERS,$
+    /EDITABLE,$
     /ROW_MAJOR,$
     /RESIZEABLE_COLUMNS)
     
@@ -997,6 +1000,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     ALIGNMENT     = sPolar4SummaryTable.align,$
     /NO_ROW_HEADERS,$
     /ROW_MAJOR,$
+    /EDITABLE,$    
     /RESIZEABLE_COLUMNS)
     
   ;label of polarization state used ---------------------------------------------
