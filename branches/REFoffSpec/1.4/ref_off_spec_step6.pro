@@ -273,6 +273,12 @@ PRO PopulateOtherPolaStates, Event
   CreateDefaultOutputFileNameForOtherStates, Event, $
     short_list_OF_ascii_files_p3[0],$
     'pola4_output_file_name_value'
+
+  ;determine name of I vs Q TOF files if there is one already in place for
+  ;working spin state
+  uname = 'i_vs_q_output_file_working_spin_state_preview'
+
+
 END
 
 ;------------------------------------------------------------------------------
