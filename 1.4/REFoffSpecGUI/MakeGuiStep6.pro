@@ -692,14 +692,12 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /ROW)
     
   title = WIDGET_LABEL(row1,$
-    VALUE = 'Working State:')
+    VALUE = 'Working State: ')
     
-  value = WIDGET_TEXT(row1,$
-    VALUE = '',$
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
     UNAME = 'i_vs_q_output_file_working_spin_state',$
-    XSIZE = 73,$
-    /EDITABLE,$
-    /ALL_EVENTS,$
+    SCR_XSIZE = 450,$
     /ALIGN_LEFT)
     
   button = WIDGET_BUTTON(row1,$

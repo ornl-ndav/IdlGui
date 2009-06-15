@@ -91,6 +91,12 @@ PRO display_step5_rescale_plot, Event, with_range=with_range
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
+  
   ;create array of data
   ;create_step5_selection_data, Event
   
@@ -262,6 +268,12 @@ END
 PRO display_step5_rescale_plot_first_time, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF
   
   ;create array of data
   create_step5_selection_data, Event
