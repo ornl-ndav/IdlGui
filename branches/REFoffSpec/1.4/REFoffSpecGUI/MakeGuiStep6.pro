@@ -478,8 +478,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     frame: 1}
     
   ;title
-  XYoff = [-5]
-  XYoff = [sOutputFileTitle.size[0]+XYoff[0],-8]
+  XYoff = [-5,-10]
+  XYoff = [sOutputFileTitle.size[0]+XYoff[0],XYoff[1]]
   sIvsQtitle = { size: [sIvsQbase.size[0]+XYoff[0],$
     sIvsQbase.size[1]+XYoff[1]],$
     value: 'List of I vs Q or TOF files'}
@@ -698,6 +698,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME = 'i_vs_q_output_file_working_spin_state',$
     XSIZE = 73,$
     /EDITABLE,$
+    /ALL_EVENTS,$
     /ALIGN_LEFT)
     
   button = WIDGET_BUTTON(row1,$
@@ -708,60 +709,63 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     uname = 'i_vs_q_output_file_spin_state2_base',$
     /ROW)
     
-  IF (instrument EQ 'REF_M') THEN BEGIN  
-    
-  title = WIDGET_LABEL(row2,$
-    VALUE = 'State #2     :')
-    
-  value = WIDGET_TEXT(row2,$
-    VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state2',$
-    XSIZE = 73,$
-    /EDITABLE,$
-    /ALIGN_LEFT)
-    
-  button = WIDGET_BUTTON(row2,$
-    VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state2_preview')
-    
-  row3 = WIDGET_BASE(base,$
-    uname = 'i_vs_q_output_file_spin_state3_base',$
-    /ROW)
-    
-  title = WIDGET_LABEL(row3,$
-    VALUE = 'State #3     :')
-    
-  value = WIDGET_TEXT(row3,$
-    VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state3',$
-    XSIZE = 73,$
-    /EDITABLE,$
-    /ALIGN_LEFT)
-    
-  button = WIDGET_BUTTON(row3,$
-    VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state3_preview')
-    
-  row4 = WIDGET_BASE(base,$
-    uname = 'i_vs_q_output_file_spin_state4_base',$
-    /ROW)
-    
-  title = WIDGET_LABEL(row4,$
-    VALUE = 'State #4     :')
-    
-  value = WIDGET_TEXT(row4,$
-    VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state4',$
-    XSIZE = 73,$
-    /EDITABLE,$
-    /ALIGN_LEFT)
-    
-  button = WIDGET_BUTTON(row4,$
-    VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state4_preview')
-    
-    ENDIF
-    
+  IF (instrument EQ 'REF_M') THEN BEGIN
+  
+    title = WIDGET_LABEL(row2,$
+      VALUE = 'State #2     :')
+      
+    value = WIDGET_TEXT(row2,$
+      VALUE = '',$
+      UNAME = 'i_vs_q_output_file_spin_state2',$
+      XSIZE = 73,$
+      /EDITABLE,$
+      /ALL_EVENTS,$
+      /ALIGN_LEFT)
+      
+    button = WIDGET_BUTTON(row2,$
+      VALUE = 'PREVIEW',$
+      UNAME = 'i_vs_q_output_file_spin_state2_preview')
+      
+    row3 = WIDGET_BASE(base,$
+      uname = 'i_vs_q_output_file_spin_state3_base',$
+      /ROW)
+      
+    title = WIDGET_LABEL(row3,$
+      VALUE = 'State #3     :')
+      
+    value = WIDGET_TEXT(row3,$
+      VALUE = '',$
+      UNAME = 'i_vs_q_output_file_spin_state3',$
+      XSIZE = 73,$
+      /EDITABLE,$
+      /ALL_EVENTS,$
+      /ALIGN_LEFT)
+      
+    button = WIDGET_BUTTON(row3,$
+      VALUE = 'PREVIEW',$
+      UNAME = 'i_vs_q_output_file_spin_state3_preview')
+      
+    row4 = WIDGET_BASE(base,$
+      uname = 'i_vs_q_output_file_spin_state4_base',$
+      /ROW)
+      
+    title = WIDGET_LABEL(row4,$
+      VALUE = 'State #4     :')
+      
+    value = WIDGET_TEXT(row4,$
+      VALUE = '',$
+      UNAME = 'i_vs_q_output_file_spin_state4',$
+      XSIZE = 73,$
+      /EDITABLE,$
+      /ALL_EVENTS,$
+      /ALIGN_LEFT)
+      
+    button = WIDGET_BUTTON(row4,$
+      VALUE = 'PREVIEW',$
+      UNAME = 'i_vs_q_output_file_spin_state4_preview')
+      
+  ENDIF
+  
   IF (instrument EQ 'REF_L') THEN RETURN
   
   ;Recap of Second Polarization state -------------------------------------------

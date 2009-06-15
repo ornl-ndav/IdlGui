@@ -1067,17 +1067,32 @@ PRO CheckIvsQfilesWidgets, Event
     FOR i=2,4 DO BEGIN
     
       iS = STRCOMPRESS(i,/REMOVE_ALL)
-      file_name = getTextFieldValue(Event,uname + iS)
-      IF (file_name NE '' AND $
-        FILE_TEST(file_name)) THEN BEGIN
-        status = 1
-      ENDIF ELSE BEGIN
-        status = 0
-      ENDELSE
-      activate_widget, event, uname + iS + '_preview', status
+      text_uname = uname + iS
+      check_preview_button_of_i_vs_q_tab6, Event, text_uname
       
     ENDFOR
     
   ENDIF
   
 END
+
+;------------------------------------------------------------------------------
+PRO check_preview_button_of_i_vs_q_tab6, Event, uname
+
+  text_uname = uname
+  preview_uname = uname + '_preview'
+  
+  file_name = getTextFieldValue(Event,text_uname)
+  IF (file_name NE '' AND $
+    FILE_TEST(file_name)) THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, event, preview_uname, status
+
+END
+
+
+
+
