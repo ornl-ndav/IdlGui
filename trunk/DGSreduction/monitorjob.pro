@@ -1,9 +1,11 @@
 PRO MonitorJob, Group_Leader=group_leader, $
   Title=title, $
-  JobName=jobname 
+  JobName=jobname, $
+  RunNumber=runnumber
   
   IF N_ELEMENTS(Title) EQ 0 THEN title = "Monitor Job"
   IF N_ELEMENTS(JobName) EQ 0 THEN JobName = ""
+  IF N_ELEMENTS(RunNumber) EQ 0 THEN RunNumber = 0
 
 
   ; Define the TLB.
