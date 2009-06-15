@@ -273,12 +273,55 @@ PRO PopulateOtherPolaStates, Event
   CreateDefaultOutputFileNameForOtherStates, Event, $
     short_list_OF_ascii_files_p3[0],$
     'pola4_output_file_name_value'
-
+    
   ;determine name of I vs Q TOF files if there is one already in place for
   ;working spin state
-  uname = 'i_vs_q_output_file_working_spin_state_preview'
-
-
+  uname = 'i_vs_q_output_file_working_spin_state'
+  file_name = getTextFieldValue(Event,uname)
+  output_file_path = getButtonValue(Event,'step5_browse_button_i_vs_q')
+  IF (file_name NE '' AND $
+    FILE_TEST(file_name)) THEN BEGIN
+    
+    ext = (*global).i_vs_q_ext
+    
+    ;working with p2 ***********************************
+    list_of_ascii_files = short_list_of_ascii_files_p1
+    sz = N_ELEMENTS(list_of_ascii_files)
+    ;get first part of name
+    short_file_name = FILE_BASENAME(list_of_ascii_files[0],'.txt')
+    ;create default output file name
+    output_file = short_file_name
+    output_file += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files'
+    output_file += '_' + ext
+    output_file = output_file_path + output_file
+    putTextFieldValue, Event, 'i_vs_q_output_file_spin_state2', output_file
+    
+    ;working with p3 ***********************************
+    list_of_ascii_files = short_list_of_ascii_files_p2
+    sz = N_ELEMENTS(list_of_ascii_files)
+    ;get first part of name
+    short_file_name = FILE_BASENAME(list_of_ascii_files[0],'.txt')
+    ;create default output file name
+    output_file = short_file_name
+    output_file += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files'
+    output_file += '_' + ext
+    output_file = output_file_path + output_file
+    putTextFieldValue, Event, 'i_vs_q_output_file_spin_state3', output_file
+    
+    ;working with p4 ***********************************
+    list_of_ascii_files = short_list_of_ascii_files_p3
+    sz = N_ELEMENTS(list_of_ascii_files)
+    ;get first part of name
+    short_file_name = FILE_BASENAME(list_of_ascii_files[0],'.txt')
+    ;create default output file name
+    output_file = short_file_name
+    output_file += '_' + STRCOMPRESS(sz,/REMOVE_ALL) + 'Files'
+    output_file += '_' + ext
+    output_file = output_file_path + output_file
+    putTextFieldValue, Event, 'i_vs_q_output_file_spin_state4', output_file
+    
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------

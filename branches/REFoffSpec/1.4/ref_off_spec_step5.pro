@@ -331,14 +331,14 @@ PRO produce_i_vs_q_output_file, Event
   FileLine[++index] = '#L ' + x_axis_label + $
     ' Intensity(Counts/A) Sigma(Counts/A)'
   FileLine[++index] = ''
-
+  
   IF (type EQ 'IvsQ') THEN BEGIN
     FOR i=(nbr_data-1),0,-1 DO BEGIN
       Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
       Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
       Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
       FileLine[++index] = Line
-      ENDFOR
+    ENDFOR
   ENDIF ELSE BEGIN
     FOR i=0,(nbr_data-1) DO BEGIN
       Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
@@ -346,7 +346,7 @@ PRO produce_i_vs_q_output_file, Event
       Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
       FileLine[++index] = Line
     ENDFOR
-ENDELSE
+  ENDELSE
   
   ;name of file to create
   output_file_name = getTextFieldValue(Event,'step5_file_name_i_vs_q')
@@ -372,8 +372,18 @@ ENDELSE
   ENDELSE
   
   putTextFieldValue, Event, $
-  'i_vs_q_output_file_working_spin_state', $
-  output_file
+    'i_vs_q_output_file_working_spin_state', $
+    output_file
+    
+  selection_value = getCWBgroupValue(Event,'step5_selection_group_uname')
+  CASE (selection_value) OF
+    1: BEGIN ;IvsQ
+      (*global).i_vs_q_ext = 'IvsQ.txt'
+    END
+    2: BEGIN ;IvsLambda
+      (*global).i_vs_q_ext = 'IvsLambda.txt'
+    END
+  ENDCASE
   
   update_step5_preview_button, Event, OUTPUT_FILE=output_file
   WIDGET_CONTROL, HOURGLASS=0

@@ -243,6 +243,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     step4_1_plot2d_delta_x: 0.0,$
     scaling_factor: PTR_NEW(0L),$
     
+    i_vs_q_ext: '',$
+    
     array_selected_total_backup: PTR_NEW(0L),$
     array_selected_total_error_backup: PTR_NEW(0L),$
     step5_selection_x_array: PTR_NEW(0L),$
