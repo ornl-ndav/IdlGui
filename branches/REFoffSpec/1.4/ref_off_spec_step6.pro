@@ -1090,9 +1090,14 @@ PRO check_preview_button_of_i_vs_q_tab6, Event, uname
     status = 0
   ENDELSE
   activate_widget, event, preview_uname, status
-
+  
 END
 
+;------------------------------------------------------------------------------
+PRO preview_file, Event, text_uname = text_uname
 
-
+  file_name = getTextFieldValue(Event, text_uname)
+  XDISPLAYFILE, file_name
+  
+END
 

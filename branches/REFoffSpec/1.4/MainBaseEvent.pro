@@ -2564,10 +2564,22 @@ PRO MAIN_BASE_event, Event
     check_preview_button_of_i_vs_q_tab6, Event, uname
   END
   
+  ;preview button of working spin state
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_working_spin_state_preview'): BEGIN
+    preview_file, Event, text_uname = 'i_vs_q_output_file_working_spin_state'
+  END
+  
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME = 'i_vs_q_output_file_spin_state2'): BEGIN
     uname = 'i_vs_q_output_file_spin_state2'
     check_preview_button_of_i_vs_q_tab6, Event, uname
+  END
+  
+  ;preview button of spin state 2
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state2_preview'): BEGIN
+    preview_file, Event, text_uname = 'i_vs_q_output_file_spin_state2'
   END
   
   WIDGET_INFO(wWidget, $
@@ -2576,26 +2588,23 @@ PRO MAIN_BASE_event, Event
     check_preview_button_of_i_vs_q_tab6, Event, uname
   END
   
+  ;preview button of spin state 3
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state3_preview'): BEGIN
+    preview_file, Event, text_uname = 'i_vs_q_output_file_spin_state3'
+  END
+  
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME = 'i_vs_q_output_file_spin_state4'): BEGIN
     uname = 'i_vs_q_output_file_spin_state4'
     check_preview_button_of_i_vs_q_tab6, Event, uname
   END
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  ;preview button of spin state 4
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME = 'i_vs_q_output_file_spin_state4_preview'): BEGIN
+    preview_file, Event, text_uname = 'i_vs_q_output_file_spin_state4'
+  END
   
   ;----------------------------------------------------------------------------
   ;- OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS - OPTIONS ------
