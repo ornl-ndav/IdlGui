@@ -114,8 +114,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     NbrColumns,$
     NbrRows],$
     uname: 'output_file_summary_table',$
-    sensitive: 1,$
-    label: ['Name of files used',$
+    sensitive: 1,$sSummaryBase
+  label: ['Name of files used',$
     'Shifting (# pixels)',$
     'Scaling Factor'],$
     align: TableAlign,$
@@ -394,7 +394,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     align: TableAlign,$
     width: sSummaryTable.width}
     
-  ;recap of polarization state used --------------------------------------------
+  ;recap of polarization state used ------------------------------------------
   XYoff = [0,5]
   sPolar4SummaryPola = { size: [sPolar4SummaryTable.size[0]+XYoff[0],$
     sPolar4SummaryTable.size[1]+$
@@ -408,7 +408,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     value: 'N/A',$
     uname: 'summary_polar4_value'}
     
-  ;repopulate gui button --------------------------------------------------------
+  ;repopulate gui button ------------------------------------------------------
   XYoff = [180,-4]
   sPolar4Button = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
     sPolar4SummaryPola.size[1]+XYoff[1],$
@@ -417,7 +417,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     uname: 'summary_polar4_repopulate_button',$
     sensitive: 0}
     
-  ;label of output file name (short file name) ----------------------------------
+  ;label of output file name (short file name) --------------------------------
   XYoff = [0,25]
   sPola4OutputFileLabel = { size: [sPolar4SummaryPola.size[0]+XYoff[0],$
     sPolar4SummaryPola.size[1]+XYoff[1]],$
@@ -431,7 +431,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     value: 'N/A',$
     uname: 'pola4_output_file_name_value'}
     
-  ;Get preview of output file ---------------------------------------------------
+  ;Get preview of output file -------------------------------------------------
   XYoff = [0,-2]
   sPreviewPolar4Button = { size: [sPola4OutputFileValue.size[0]+$
     sPola4OutputFileValue.size[2]+$
@@ -443,8 +443,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     sensitive: 0,$
     uname: 'step6_preview_pola_state4'}
     
-  ;------------------------------------------------------------------------------
-  ;Create output file button ----------------------------------------------------
+  ;----------------------------------------------------------------------------
+  ;Create output file button --------------------------------------------------
   XYoff = [0,10]
   sCreateOutput = { size: [sSummaryBase.size[0]+XYoff[0],$
     sSummaryBase.size[1]+$
@@ -454,7 +454,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     sensitive: 0,$
     uname: 'create_output_file_create_button'}
     
-  ;------------------------------------------------------------------------------
+  ;----------------------------------------------------------------------------
   ;Status of process (label and text_field)
   XYoff = [5,30]
   sStatusLabel = { size: [sCreateOutput.size[0]+XYoff[0],$
@@ -464,13 +464,30 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
   sStatusText = { size: [sCreateOutput.size[0]+XYoff[0],$
     sStatusLabel.size[1]+XYoff[1],$
     sCreateOutput.size[2],$
-    410],$
+    230],$
     value: '',$
     uname: 'step6_status_text_field'}
     
-  ;******************************************************************************
+  ;list of I vs Q (or TOF) files ----------------------------------------------
+  ;base
+  XYoff = [0,12]
+  sIvsQbase = { size: [sSummaryBase.size[0]+XYoff[0],$
+    sStatusText.size[1]+sStatusText.size[3]+XYoff[1],$
+    sSummaryBase.size[2],$
+    162],$
+    frame: 1}
+    
+  ;title
+  XYoff = [-5]
+  XYoff = [sOutputFileTitle.size[0]+XYoff[0],-8]
+  sIvsQtitle = { size: [sIvsQbase.size[0]+XYoff[0],$
+    sIvsQbase.size[1]+XYoff[1]],$
+    value: 'List of I vs Q or TOF files'}
+    
+    
+  ;****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
+  ;****************************************************************************
     
   BaseTab = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBaseTab.uname,$
@@ -480,7 +497,7 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE = sBaseTab.size[3],$
     TITLE     = sBaseTab.title)
     
-  ;Output file name frame -------------------------------------------------------
+  ;Output file name frame -----------------------------------------------------
   ;title
   wOutputFileTitle = WIDGET_LABEL(BaseTab,$
     XOFFSET = sOutputfileTitle.size[0],$
@@ -654,6 +671,106 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     UNAME     = sStatusText.uname,$
     /SCROLL,$
     /WRAP)
+    
+  ;List of I vs Q (or TOF ) files .............................................
+  title = WIDGET_LABEL(BaseTab,$
+    XOFFSET = sIvsQtitle.size[0],$
+    YOFFSET = sIvsQtitle.size[1],$
+    VALUE   = sIvsQtitle.value)
+    
+  base = WIDGET_BASE(BaseTab,$
+    XOFFSET = sIvsQbase.size[0],$
+    YOFFSET = sIvsQbase.size[1],$
+    SCR_XSIZE = sIvsQbase.size[2],$
+    SCR_YSIZE = sIvsQbase.size[3],$
+    FRAME = sIvsQbase.frame,$
+    /COLUMN)
+    
+   row1 = WIDGET_BASE(base,$
+   /ROW)
+   
+   title = WIDGET_LABEL(row1,$
+   VALUE = 'Working State:')
+   
+   value = WIDGET_TEXT(row1,$
+   VALUE = '',$
+   UNAME = 'i_vs_q_output_file_working_spin_state',$
+   XSIZE = 73,$
+   /EDITABLE,$
+   /ALIGN_LEFT)
+   
+   button = WIDGET_BUTTON(row1,$
+   VALUE = 'PREVIEW',$
+   UNAME = 'i_vs_q_output_file_working_spin_state_preview')
+
+   row2 = WIDGET_BASE(base,$
+   /ROW)
+   
+   title = WIDGET_LABEL(row2,$
+   VALUE = 'State #2     :')
+   
+   value = WIDGET_TEXT(row2,$
+   VALUE = '',$
+   UNAME = 'i_vs_q_output_file_spin_state1',$
+   XSIZE = 73,$
+   /EDITABLE,$
+   /ALIGN_LEFT)
+   
+   button = WIDGET_BUTTON(row2,$
+   VALUE = 'PREVIEW',$
+   UNAME = 'i_vs_q_output_file_spin_state1_preview')
+   
+   row3 = WIDGET_BASE(base,$
+   /ROW)
+   
+   title = WIDGET_LABEL(row3,$
+   VALUE = 'State #3     :')
+   
+   value = WIDGET_TEXT(row3,$
+   VALUE = '',$
+   UNAME = 'i_vs_q_output_file_spin_state1',$
+   XSIZE = 73,$
+   /EDITABLE,$
+   /ALIGN_LEFT)
+   
+   button = WIDGET_BUTTON(row3,$
+   VALUE = 'PREVIEW',$
+   UNAME = 'i_vs_q_output_file_spin_state1_preview')
+   
+   row4 = WIDGET_BASE(base,$
+   /ROW)
+   
+   title = WIDGET_LABEL(row4,$
+   VALUE = 'State #4     :')
+   
+   value = WIDGET_TEXT(row4,$
+   VALUE = '',$
+   UNAME = 'i_vs_q_output_file_spin_state1',$
+   XSIZE = 73,$
+   /EDITABLE,$
+   /ALIGN_LEFT)
+   
+   button = WIDGET_BUTTON(row4,$
+   VALUE = 'PREVIEW',$
+   UNAME = 'i_vs_q_output_file_spin_state1_preview')
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
   IF (instrument EQ 'REF_L') THEN RETURN
   
