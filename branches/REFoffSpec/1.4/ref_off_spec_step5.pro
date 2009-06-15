@@ -371,6 +371,10 @@ ENDELSE
     
   ENDELSE
   
+  putTextFieldValue, Event, $
+  'i_vs_q_output_file_working_spin_state', $
+  output_file
+  
   update_step5_preview_button, Event, OUTPUT_FILE=output_file
   WIDGET_CONTROL, HOURGLASS=0
   
