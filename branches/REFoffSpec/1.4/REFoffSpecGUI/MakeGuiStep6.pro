@@ -708,19 +708,21 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     uname = 'i_vs_q_output_file_spin_state2_base',$
     /ROW)
     
+  IF (instrument EQ 'REF_M') THEN BEGIN  
+    
   title = WIDGET_LABEL(row2,$
     VALUE = 'State #2     :')
     
   value = WIDGET_TEXT(row2,$
     VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state1',$
+    UNAME = 'i_vs_q_output_file_spin_state2',$
     XSIZE = 73,$
     /EDITABLE,$
     /ALIGN_LEFT)
     
   button = WIDGET_BUTTON(row2,$
     VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state1_preview')
+    UNAME = 'i_vs_q_output_file_spin_state2_preview')
     
   row3 = WIDGET_BASE(base,$
     uname = 'i_vs_q_output_file_spin_state3_base',$
@@ -731,14 +733,14 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     
   value = WIDGET_TEXT(row3,$
     VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state1',$
+    UNAME = 'i_vs_q_output_file_spin_state3',$
     XSIZE = 73,$
     /EDITABLE,$
     /ALIGN_LEFT)
     
   button = WIDGET_BUTTON(row3,$
     VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state1_preview')
+    UNAME = 'i_vs_q_output_file_spin_state3_preview')
     
   row4 = WIDGET_BASE(base,$
     uname = 'i_vs_q_output_file_spin_state4_base',$
@@ -749,32 +751,16 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     
   value = WIDGET_TEXT(row4,$
     VALUE = '',$
-    UNAME = 'i_vs_q_output_file_spin_state1',$
+    UNAME = 'i_vs_q_output_file_spin_state4',$
     XSIZE = 73,$
     /EDITABLE,$
     /ALIGN_LEFT)
     
   button = WIDGET_BUTTON(row4,$
     VALUE = 'PREVIEW',$
-    UNAME = 'i_vs_q_output_file_spin_state1_preview')
+    UNAME = 'i_vs_q_output_file_spin_state4_preview')
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    ENDIF
     
   IF (instrument EQ 'REF_L') THEN RETURN
   
