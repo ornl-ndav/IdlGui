@@ -63,6 +63,9 @@ PRO DGSreduction_Execute, event
   ; Generate the array of commands to run
   commands = dgscmd->generate()
   
+  ; Array for job numbers
+  jobIDs = STRARR(N_ELEMENTS(commands))
+  
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
     cmd = commands[index]
