@@ -134,7 +134,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO addMessageInCreateStatus, Event, text
-  putTextFieldValue, Event, 'step6_status_text_field', text
+  IDLsendLogBook_addLogBookText, Event, ALT=1, text
 END
 
 ;------------------------------------------------------------------------------
