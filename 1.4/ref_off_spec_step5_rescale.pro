@@ -936,7 +936,7 @@ PRO define_default_recap_output_file, Event
   ENDCASE
   
   ;get list of run numbers
-  ;run_numbers = getRunNumbersFromAscii(*(*global).list_of_ascii_files)
+  ;run_numbers = getRunNumbersFromAscii(*(*global).list_of_ascii_files)i
   ;run_ext = STRJOIN(run_numbers,'_')
   
   ;get nbr of data files
