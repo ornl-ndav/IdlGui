@@ -482,6 +482,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       ACTIVATE=(*global).reduce_step1_spin_state_mode, global
   ENDIF
   
+  
+  
+  
   ;=============================================================================
   ;=============================================================================
   ;send message to log current run of application

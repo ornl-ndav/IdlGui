@@ -57,6 +57,7 @@ cd, CurrentFolder
 .run colorbar.pro
 .run CheckPackages.pro
 
+.run ref_off_spec_full_reset.pro
 .run ref_off_spec_job_manager_info_base.pro
 .run ref_off_spec_reduce_step1.pro
 .run ref_off_spec_reduce_step2.pro

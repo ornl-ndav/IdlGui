@@ -673,11 +673,11 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     /SCROLL,$
     /WRAP)
     
-  ;List of I vs Q (or TOF ) files .............................................
   title = WIDGET_LABEL(BaseTab,$
     XOFFSET = sIvsQtitle.size[0],$
     YOFFSET = sIvsQtitle.size[1],$
-    VALUE   = sIvsQtitle.value)
+    VALUE   = sIvsQtitle.value,$
+    UNAME = 'i_vs_q_output_base_title')
     
   base = WIDGET_BASE(BaseTab,$
     XOFFSET = sIvsQbase.size[0],$
@@ -685,6 +685,8 @@ PRO make_gui_step6, REDUCE_TAB, tab_size, TabTitles, global
     SCR_XSIZE = sIvsQbase.size[2],$
     SCR_YSIZE = sIvsQbase.size[3],$
     FRAME = sIvsQbase.frame,$
+    UNAME  = 'i_vs_q_output_base',$
+    MAP = 1,$
     /COLUMN)
     
   row1 = WIDGET_BASE(base,$

@@ -78,8 +78,8 @@ END
 
 ;------------------------------------------------------------------------------
 PRO SetComboboxSelect, Event, uname, index
-id = WIDGET_INFO(Event.top, find_by_uname=uname)
-widget_control, id, SET_COMBOBOX_SELECT=index
+  id = WIDGET_INFO(Event.top, find_by_uname=uname)
+  widget_control, id, SET_COMBOBOX_SELECT=index
 END
 
 ;------------------------------------------------------------------------------
@@ -242,6 +242,7 @@ PRO delete_ascii_file_from_list, Event
     new_list_OF_ascii_files = list_OF_files(index)
   ENDIF ELSE BEGIN
     new_list_OF_ascii_files = STRARR(1)
+    full_reset_of_application, Event
   ENDELSE
   (*(*global).list_OF_ascii_files) = new_list_OF_ascii_files
   ;repopulate list
@@ -361,8 +362,15 @@ END
 
 ;------------------------------------------------------------------------------
 PRO Reduce_step2_polarization_active, Event, status
-MapBase, Event, 'reduce_step2_polarization_base', status
-MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0^status
+  MapBase, Event, 'reduce_step2_polarization_base', status
+  MapBase, Event, 'reduce_step2_polarization_mode_hidden_base', 0^status
 END
 
-
+;------------------------------------------------------------------------------
+PRO create_output_i_vs_q_gui, Event, status
+  title_status = 0^FIX(status)
+  putTextFieldValue, Event, 'i_vs_q_output_base_title', $
+  'List of I vs Q or TOF files'
+  MapBase, Event, 'i_vs_q_output_base', status
+  ;MapBase, Event, 'i_vs_q_output_hidden_title_base', title_status
+END

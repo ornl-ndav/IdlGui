@@ -387,6 +387,7 @@ PRO produce_i_vs_q_output_file, Event
   ENDCASE
   
   update_step5_preview_button, Event, OUTPUT_FILE=output_file
+
   WIDGET_CONTROL, HOURGLASS=0
   
 END
