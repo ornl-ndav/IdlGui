@@ -38,7 +38,9 @@ CD,CURRENT=thisDirectory
 
 ; Add all subdirectories onto the path
 newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
-PREF_SET, 'IDL_PATH', newPath, /COMMIT
+;PREF_SET, 'IDL_PATH', newPath, /COMMIT
+
+!PATH = newPath
 
 ; Now we can just compile!
 
