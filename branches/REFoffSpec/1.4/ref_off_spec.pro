@@ -72,7 +72,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;          5: Create Output
   ;          6: Options,
   ;          7:Log Book
-  sDEBUGGING = { tab: {main_tab: 5,$
+  sDEBUGGING = { tab: {main_tab: 1,$
     reduce_tab: 0,$
     step4_tab: 0,$
     scaling_tab: 1},$
