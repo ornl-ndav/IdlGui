@@ -549,10 +549,45 @@ PRO run_full_process_with_other_pola, Event, sStructure
       realign_tfpData_error, $
       final_array, $
       final_error_array
-      
     ReplaceTextInCreateStatus, Event, PROCESSING, OK
   ENDELSE
   CATCH,/CANCEL
+  
+  help, realig_tfpData
+  help, realign_tfpDAta_error
+  help, final_array
+  help, final_error_array
+  
+  LogMessage = '    Specular Peak Output File ............... ' + PROCESSING
+  addMessageInCreateStatus, Event, LogMessage
+  working_state_i_vs_q_file = getTextFieldValue(Event,$
+    'i_vs_q_output_file_working_spin_state')
+  print, '#2'
+  IF (working_state_i_vs_q_file NE 'N/A' OR $
+    working_state_i_vs_q_file NE '') THEN BEGIN
+    error5a = 0
+    ; CATCH, error5a
+    IF (error5a NE 0) THEN BEGIN
+      CATCH, /CANCEL
+      print, '#1'
+      ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
+      RETURN
+    ENDIF ELSE BEGIN
+      print, '#3'
+      output_file_name = getTextFieldValue(Event, sStructure.i_vs_q_uname)
+      IF (output_file_name NE '') THEN BEGIN
+        print, '#4'
+        step6_create_i_vs_q_output_file, Event, $
+          final_array, $
+          final_error_array, $
+          output_file_name
+      ENDIF
+    ENDELSE
+    ReplaceTextInCreateStatus, Event, PROCESSING, OK
+  ENDIF ELSE BEGIN
+    ReplaceTextInCreateStatus, Event, PROCESSING, 'N/A'
+  ENDELSE
+  ;CATCH,/CANCEL
   
   ;create output file
   step6_create_output_file_other_pola, Event, $
@@ -864,8 +899,12 @@ PRO step6_congrid_data, Event, pData_y, pData_y_error
 END
 
 ;------------------------------------------------------------------------------
-PRO  step6_scale_data, Event, tfpData, tfpData_error, $
-    final_array, final_error_array
+PRO  step6_scale_data, Event, $
+    tfpData, $
+    tfpData_error, $
+    final_array, $
+    final_error_array
+    
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -959,7 +998,7 @@ PRO create_output_array, Event
   activate_status_pola4 = 0
   
   error = 0
-  CATCH, error
+  ; CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
@@ -1033,7 +1072,9 @@ PRO create_output_array, Event
             'summary_polar2_value',$
             activate_status_pola: 0,$
             output_file_uname:$
-            'pola2_output_file_name_value'}
+            'pola2_output_file_name_value',$
+            i_vs_q_uname: $
+            'i_vs_q_output_file_spin_state2'}
           run_full_process_with_other_pola, Event, sStructure
           activate_status_pola2 = sStructure.activate_status_pola
         ENDIF
@@ -1047,7 +1088,10 @@ PRO create_output_array, Event
             'summary_polar3_value',$
             activate_status_pola: 0,$
             output_file_uname:$
-            'pola3_output_file_name_value'}
+            'pola3_output_file_name_value',$
+            i_vs_q_uname: $
+            'i_vs_q_output_file_spin_state3'}
+            
           run_full_process_with_other_pola, Event, sStructure
           activate_status_pola3 = sStructure.activate_status_pola
         ENDIF
@@ -1061,7 +1105,10 @@ PRO create_output_array, Event
             'summary_polar4_value',$
             activate_status_pola: 0,$
             output_file_uname:$
-            'pola4_output_file_name_value'}
+            'pola4_output_file_name_value',$
+            i_vs_q_uname: $
+            'i_vs_q_output_file_spin_state4'}
+            
           run_full_process_with_other_pola, Event, sStructure
           activate_status_pola4 = sStructure.activate_status_pola
         ENDIF
@@ -1149,4 +1196,130 @@ PRO preview_file, Event, text_uname = text_uname
   XDISPLAYFILE, file_name
   
 END
+
+;------------------------------------------------------------------------------
+PRO step6_create_i_vs_q_output_file, Event, $
+    final_array, $
+    final_error_array, $
+    output_file_name
+    
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  scaling_factor = (*global).step5_scaling_factor
+  
+  create_step6_selection_data, Event, $
+    final_array, $
+    final_error_array, $
+    (*global).selection_type
+    
+  final_array /= scaling_factor
+  final_error_array /= scaling_factor
+  
+  produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
+    output_file_name, (*global).selection_type
+  
+END
+
+;..............................................................................
+PRO produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
+    output_file_name, selection_type
+    
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+  x_axis = (*(*global).step5_selection_x_array)
+  array_selected_total = final_array
+  array_error_selected_total = final_error_array
+  
+  nbr_data = N_ELEMENTS(x_axis)
+  help, x_axis
+  help, array_selected_total
+  help, array_error_selected_total
+  
+  ;create ascii file
+  nbr_comments = 4
+  nbr_lines = nbr_comments + nbr_data
+  FileLine = STRARR(nbr_lines)
+  type = selection_type
+  
+  index = 0
+  FileLine[index] = '#D ' + GenerateIsoTimeStamp()
+  FileLine[++index] = ''
+  IF (type EQ 'IvsQ') THEN BEGIN
+    x_axis_label = 'Q(Angstroms^-1)'
+  ENDIF ELSE BEGIN
+    x_axis_label = 'Lambda_T(Angstroms)'
+  ENDELSE
+  FileLine[++index] = '#L ' + x_axis_label + $
+    ' Intensity(Counts/A) Sigma(Counts/A)'
+  FileLine[++index] = ''
+  
+  IF (type EQ 'IvsQ') THEN BEGIN
+    FOR i=(nbr_data-1),0,-1 DO BEGIN
+      Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
+      Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+      Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
+      FileLine[++index] = Line
+    ENDFOR
+  ENDIF ELSE BEGIN
+    FOR i=0,(nbr_data-1) DO BEGIN
+      Line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + '  '
+      Line += STRCOMPRESS(array_selected_total[i],/REMOVE_ALL)
+      Line += '  ' + STRCOMPRESS(array_error_selected_total[i],/REMOVE_ALL)
+      FileLine[++index] = Line
+    ENDFOR
+  ENDELSE
+  
+  ;name of file to create
+  output_file = output_file_name
+  print, output_file
+  no_error = 0
+  CATCH,no_error
+  IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN
+  ENDIF ELSE BEGIN
+    OPENW, 1, output_file
+    sz = N_ELEMENTS(FileLine)
+    FOR i=0,(sz-1) DO BEGIN
+    print, i
+      PRINTF, 1, FileLine[i]
+    ENDFOR
+    CLOSE, 1
+    FREE_LUN, 1
+  ENDELSE
+  
+END
+
+;..............................................................................
+PRO create_step6_selection_data, Event, final_array, $
+    final_error_array, $
+    selection_type
+    
+   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    
+  x0 = (*global).step5_x0 ;lambda
+  y0 = (*global).step5_y0 ;pixel
+  x1 = (*global).step5_x1 ;lambda
+  y1 = (*global).step5_y1 ;pixel
+  
+  xmin = MIN([x0,x1],MAX=xmax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  ymin = FIX(ymin/2)
+  ymax = FIX(ymax/2)
+  
+  base_array_untouched = final_array
+  base_array_error     = final_error_array
+  
+  array_selected = base_array_untouched[xmin:xmax,ymin:ymax]
+  
+  y = (SIZE(array_selected))(2)
+  final_array = TOTAL(array_selected,2)/FLOAT(y)
+  
+  array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
+  final_error_array = TOTAL(array_error_selected,2)/FLOAT(y)
+  
+END
+
+
 

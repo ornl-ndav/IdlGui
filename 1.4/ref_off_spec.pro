@@ -245,6 +245,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     scaling_factor: PTR_NEW(0L),$
     
     i_vs_q_ext: '',$
+    selection_type: '',$
     
     array_selected_total_backup: PTR_NEW(0L),$
     array_selected_total_error_backup: PTR_NEW(0L),$
