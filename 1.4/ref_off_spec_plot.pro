@@ -123,12 +123,13 @@ END
 PRO plotAsciiData, Event, TYPE=type, RESCALE=rescale
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  ;  error = 0
-  ;  CATCH, error
-  ;  IF (error NE 0) THEN BEGIN
-  ;    CATCH,/CANCEL
-  ;    IDLsendLogBook_addLogBookText, Event, 'ERROR LOADING FILES!'
-  ;  ENDIF ELSE BEGIN
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+      IDLsendLogBook_addLogBookText, Event, 'ERROR LOADING FILES!'
+      RETURN
+    ENDIF
   
   IF ((*global).DEBUGGING EQ 'yes') THEN BEGIN
     PRINT, 'Entering plotAsciiData'
@@ -368,6 +369,7 @@ END
 
 ;------------------------------------------------------------------------------
 PRO contour_plot, Event, xaxis
+  
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;plot xaxis

@@ -88,7 +88,8 @@ PRO reduce_step2_run_number_normalization, Event
   ListOfRuns = ParseTextField(TextField)
   
   ;list of runs after parsing
-  LogText = '-> Run or List of Normalization Runs after Parsing: ' + STRJOIN(ListOfRuns,',')
+  LogText = '-> Run or List of Normalization Runs after Parsing: ' + $
+  STRJOIN(ListOfRuns,',')
   IDLsendToGeek_addLogBookText, Event, LogText
   
   ;get full nexus file name for the runs loaded

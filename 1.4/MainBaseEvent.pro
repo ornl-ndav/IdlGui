@@ -1174,6 +1174,10 @@ PRO MAIN_BASE_event, Event
   
   ;Draw
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    ENDIF ELSE BEGIN
     DEVICE, CURSOR_STANDARD=31
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
@@ -1199,6 +1203,7 @@ PRO MAIN_BASE_event, Event
       text += '  |  counts: ' + intensity
       putTextFieldValue, Event, 'xy_display_step2', text
     ENDIF
+    ENDELSE
   END
   
   ;RefreshPlot
