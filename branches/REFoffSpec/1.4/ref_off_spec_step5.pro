@@ -319,6 +319,7 @@ PRO produce_i_vs_q_output_file, Event
     1: type = 'IvsQ'
     2: type = 'IvsLambda'
   ENDCASE
+  (*global).selection_type = type
   
   index = 0
   FileLine[index] = '#D ' + GenerateIsoTimeStamp()

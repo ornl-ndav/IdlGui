@@ -67,9 +67,9 @@ PRO create_step5_selection_data, Event
   x_axis = (*(*global).x_axis)
   
   x_axis_selected = x_axis[xmin:xmax]
-  x_axis_in_Q = convert_from_lambda_to_Q(x_axis_selected)
   
   IF (type EQ 'IvsQ') THEN BEGIN
+    x_axis_in_Q = convert_from_lambda_to_Q(x_axis_selected)
     x_axis = x_axis_in_Q
   ENDIF ELSE BEGIN
     x_axis = x_axis_selected
@@ -819,6 +819,8 @@ PRO calculate_average_recap_rescale, Event
     array_selected_total_error = (*(*global).step5_selection_y_error_array)
     Average = MEAN(array_selected_total[Index_min:Index_max])
     Scaling_factor = Average
+    
+    (*global).step5_scaling_factor = scaling_factor
     
     (*(*global).array_selected_total_backup) = array_selected_total
     array_selected_total = array_selected_total / Average

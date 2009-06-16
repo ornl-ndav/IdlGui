@@ -206,6 +206,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     nexus_spin_state_roi_table: PTR_NEW(0L),$
     
     working_path: '~/results/',$
+    step5_scaling_factor: 0.0D, $
     
     step5_x0: 0,$ ;event.x initial
     step5_y0: 0,$ ;event.y initial
