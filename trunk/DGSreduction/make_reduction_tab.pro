@@ -29,7 +29,7 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
         YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
   
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  runID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS, /LONG)
+  datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS)
   checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGS_FINDNEXUS", SENSITIVE=0)
 
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
@@ -283,7 +283,7 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
    
   ; Disable some of the inputs until something has been defined in the DGS_NORM field.
-  WIDGET_CONTROL, normRangeBase, SENSITIVE=0
+  ;WIDGET_CONTROL, normRangeBase, SENSITIVE=0
   
   ; Disable Proton Charge Norm until No-Monitor Norm is selected
   WIDGET_CONTROL, pc_button, SENSITIVE=0
