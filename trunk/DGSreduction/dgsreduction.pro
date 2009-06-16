@@ -97,6 +97,7 @@ PRO DGSreduction_TLB_Events, event
   
   ; extract the command object into a separate
   dgscmd=info.dgscmd
+  dgsncmd = info.dgsncmd
   
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
@@ -302,7 +303,7 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgscmd->SetProperty, Tmax=myValue
     END
-    'DGS_JOBS': BEGIN
+    'DGSREDUCTION_JOBS': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
         dgscmd->SetProperty, Jobs=myValue
@@ -314,10 +315,17 @@ PRO DGSreduction_TLB_Events, event
     END
     'NOTHING': BEGIN
     END
-  ENDCASE
+  ENDCASE 
   
+  ; Find the output window (DGS)
+  dgs_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_CMD')
   ; Update the output command window
-  WIDGET_CONTROL, info.outputID, SET_VALUE=dgscmd->generate()
+  WIDGET_CONTROL, dgs_cmd_outputID, SET_VALUE=dgscmd->generate()
+  
+  ; Find the output window (DGSN)
+  dgsn_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_CMD')
+  ; Update the output command window
+  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsncmd->generate()
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
@@ -362,7 +370,9 @@ END
 
 ;---------------------------------------------------------
 
-PRO DGSreduction, dgscmd, _Extra=extra
+PRO DGSreduction, DGScmd=dgscmd, $
+      DGSNcmd=dgsncmd, $
+      _Extra=extra
 
   ; Program Details
   APPLICATION       = 'DGSreduction'
@@ -383,13 +393,15 @@ PRO DGSreduction, dgscmd, _Extra=extra
   title = APPLICATION + ' (' + VERSION + ') as ' + ucams
   
   IF N_ELEMENTS(dgscmd) EQ 0 THEN dgscmd = OBJ_NEW("ReductionCMD")
+  IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("DGSN_ReductionCMD")
   
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
   
   toprow = WIDGET_BASE(tlb, /ROW)
   textID = WIDGET_LABEL(toprow, VALUE='Please select an instrument --> ')
-  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
+  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", $
+    VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
     XSIZE=90, YSIZE=10)
   
 ;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
@@ -398,7 +410,8 @@ PRO DGSreduction, dgscmd, _Extra=extra
 ;  jobLabelGeometryYSize = jobLabelGeometry.ysize
 ;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
 ;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", UVALUE="DGS_JOBS", $
+  jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", $
+        UVALUE="DGSREDUCTION_JOBS", $
         VALUE=1, /INTEGER, /ALL_EVENTS)
   
   ; Tabs
@@ -406,265 +419,20 @@ PRO DGSreduction, dgscmd, _Extra=extra
   
   ; Reduction Tab
   reductionTabBase = WIDGET_BASE(tabID, Title='Reduction', /COLUMN)
+  make_Reduction_Tab, reductionTabBase, dgscmd
   
-  reductionTabBaseColumns = WIDGET_BASE(reductionTabBase, COLUMN=2)
-  reductionTabCol1 = WIDGET_BASE(reductionTabBaseColumns, /COLUMN)
-  reductionTabCol2 = WIDGET_BASE(reductionTabBaseColumns, /COLUMN)
-  
-  reductionTabCol1Row1 = WIDGET_BASE(reductionTabCol1, /ROW)
-  reductionTabCol1Row2 = WIDGET_BASE(reductionTabCol1, /ROW)
-  
-  reductionTabCol2Row1 = WIDGET_BASE(reductionTabCol2, /ROW)
-  
-  dataSourceBase = WIDGET_BASE(reductionTabCol1Row1)
-  dataSourceLabel = WIDGET_LABEL(dataSourceBase, VALUE=' Run Number ', XOFFSET=5)
-  dataSourceLabelGeometry = WIDGET_INFO(dataSourceLabel, /GEOMETRY)
-  dataSourceLabelGeometryYSize = dataSourceLabelGeometry.ysize
-  dataSourcePrettyBase = WIDGET_BASE(dataSourceBase, /FRAME, /COLUMN, $
-        YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
-  
-  dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  runID= CW_FIELD(dataSourceRow, xsize=30, ysize=1, TITLE="", UVALUE="DGS_DATARUN", /ALL_EVENTS, /LONG)
-  findNexusButton = WIDGET_BUTTON(dataSourceRow, VALUE="Find File", UVALUE="DGS_FINDNEXUS", SENSITIVE=0)
-
-  detectorBankBase = WIDGET_BASE(reductionTabCol1Row1)
-  detectorBankLabel = WIDGET_LABEL(detectorBankBase, VALUE=' Detector Banks ', XOFFSET=5)
-  detectorBankLabelGeometry = WIDGET_INFO(detectorBankLabel, /GEOMETRY)
-  detectorBankLabelYSize = detectorBankLabelGeometry.ysize
-  detectorBankPrettyBase = WIDGET_BASE(detectorBankBase, /FRAME, /COLUMN, $
-        YOFFSET=detectorBankLabelYSize/2, YPAD=10, XPAD=10)
-  
-  detectorBankRow = WIDGET_BASE(detectorBankPrettyBase, /ROW)
-  lbankID = CW_FIELD(detectorBankRow, XSIZE=10, /ALL_EVENTS, TITLE="", UVALUE="DGS_DATAPATHS_LOWER" , $
-    UNAME="DGS_DATAPATHS_LOWER", /INTEGER)
-  ubankID = CW_FIELD(detectorBankRow, XSIZE=10, /ALL_EVENTS, TITLE=" --> ", UVALUE="DGS_DATAPATHS_UPPER", $
-    UNAME="DGS_DATAPATHS_UPPER", /INTEGER)  
-  
-  
-  eiBase = WIDGET_BASE(reductionTabCol1Row1)
-  eiLabel = WIDGET_LABEL(eiBase, Value=' Ei (meV) ', XOFFSET=5)
-  eiLabelGeomtry = WIDGET_INFO(eiLabel, /GEOMETRY)
-  eiLabelGeomtryYSize = eiLabelGeomtry.ysize
-  eiPrettyBase = WIDGET_BASE(eiBase, /FRAME, /COLUMN, $
-        YOFFSET=eiLabelGeomtryYSize/2, XPAD=10, YPAD=10)
-  eiRow = WIDGET_BASE(eiPrettyBase, /ROW)
-  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGS_EI", /ALL_EVENTS, XSIZE=10)
-
-  tzeroBase = WIDGET_BASE(reductionTabCol1Row1)
-  tzeroLabel = WIDGET_LABEL(tzeroBase, Value=' T0 (usec) ', XOFFSET=5)
-  tzeroLabelGeomtry = WIDGET_INFO(tzeroLabel, /GEOMETRY)
-  tzeroLabelGeomtryYSize = tzeroLabelGeomtry.ysize
-  tzeroPrettyBase = WIDGET_BASE(tzeroBase, /FRAME, /COLUMN, $
-        YOFFSET=tzeroLabelGeomtryYSize/2, XPAD=10, YPAD=10)
-  tzeroRow = WIDGET_BASE(tzeroPrettyBase, /ROW)
-  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGS_TZERO", /ALL_EVENTS, XSIZE=10)
-
-
-  
-  rangesBase = WIDGET_BASE(reductionTabCol2)
-  rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range (meV) ', XOFFSET=5)
-  rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
-  rangesLabelYSize = rangesLabelGeometry.ysize
-  rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /ROW, $
-        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
-  
-  ; Energy Transfer Range Row
-  EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGS_ET_RANGE")
-  minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGS_ET_MIN", /ALL_EVENTS)
-  maxEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_ET_MAX", /ALL_EVENTS)
-  stepEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_ET_STEP", /ALL_EVENTS)
-
-  QrangesBase = WIDGET_BASE(reductionTabCol2)
-  QrangesLabel = WIDGET_LABEL(QrangesBase, value=' Q-Range (1/Angstroms) ', XOFFSET=5)
-  QrangesLabelGeometry = WIDGET_INFO(QrangesLabel, /GEOMETRY)
-  QrangesLabelYSize = QrangesLabelGeometry.ysize
-  QrangesPrettyBase = WIDGET_BASE(QrangesBase, /FRAME, /COLUMN, $
-        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
-        
-  ; Q Range Base
-  QRangeRow = WIDGET_BASE(QrangesPrettyBase, /ROW, UNAME="DGS_Q_RANGE")
-  minMomentumID = CW_FIELD(QRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGS_Q_MIN", /ALL_EVENTS)
-  maxMomentumID = CW_FIELD(QRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGS_Q_MAX", /ALL_EVENTS)
-  stepMomentumID = CW_FIELD(QRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGS_Q_STEP", /ALL_EVENTS) 
-  
-
-  normBase = WIDGET_BASE(reductionTabCol1Row2)
-  normLabel = WIDGET_LABEL(normBase, VALUE=' Normalisation ', XOFFSET=5)
-  normLabelGeometry = WIDGET_INFO(normLabel, /GEOMETRY)
-  normLabelGeometryYSize = normLabelGeometry.ysize
-  normPrettyBase = WIDGET_BASE(normBase, /FRAME, /COLUMN, $
-        YOFFSET=normLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  
-  normOptionsBaseColumns = WIDGET_BASE(normPrettyBase, COLUMN=2)
-  normOptionsBaseColumn1 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
-  normOptionsBaseColumn2 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
-  normOptionsBaseRow = WIDGET_BASE(normPrettyBase, /ROW)
-  
-  normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
-  noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
-        UVALUE='DGS_NO-MON-NORM')
-  pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
-        UVALUE='DGS_PC-NORM', UNAME='DGS_PC-NORM')
-  lambdaratioID = WIDGET_BUTTON(normOptionsBase, VALUE='Lambda Ratio Scaling', $ 
-        UVALUE='DGS_LAMBDA-RATIO')
-  
-  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGS_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
-  ; Also set the default monitor in the ReductionCmd Class
-  dgscmd->SetProperty, USmonPath=1
-  
-  ; Normalisation Files
-  normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
-  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGS_NORM")
-  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGS_EMPTYCAN")
-  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGS_BLACKCAN")
-  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGS_DARK")
-
-  TIBrow = WIDGET_BASE(normOptionsBaseColumn2, /ROW)
-  TIBconstID = CW_FIELD(TIBrow, XSIZE=22, TITLE="Time Independent Bkgrd: ", UVALUE="DGS_TIBCONST", /ALL_EVENTS)
-
-  
-  ; Monitor integration range
-  monitorRangeBase = WIDGET_BASE(normOptionsBaseRow, /ALIGN_BOTTOM)
-  monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE=' Monitor Integration Range (usec) ', XOFFSET=5)
-  monitorRangeBaseLabelGeometry = WIDGET_INFO(monitorRangeBaseLabel, /GEOMETRY)
-  monitorRangeBaseLabelGeometryYSize = monitorRangeBaseLabelGeometry.ysize
-  monitorRangePrettyBase = WIDGET_BASE(monitorRangeBase, /FRAME, /ROW, $
-      YOFFSET=monitorRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  
-  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGS_MON-INT-MIN", XSIZE=10)
-  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_MON-INT-MAX", XSIZE=10)
-  
-   ; Norm integration range
-  normRangeBase = WIDGET_BASE(normOptionsBaseRow, UNAME="DGS_NORM-INT-RANGE", /ALIGN_BOTTOM)
-  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
-  normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
-  normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
-  normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
-      YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  
-  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGS_NORM-INT-MIN", XSIZE=10)
-  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_NORM-INT-MAX", XSIZE=10)
-            
-  
-  ; Disable some of the inputs until something has been defined in the DGS_NORM field.
-  WIDGET_CONTROL, normRangeBase, SENSITIVE=0
-  
-  ; Disable Proton Charge Norm until No-Monitor Norm is selected
-  WIDGET_CONTROL, pc_button, SENSITIVE=0
-    
-
-  
-
-  
-   ; Mask File
-  maskBase = WIDGET_BASE(reductionTabCol1Row2)
-  maskLabel = WIDGET_LABEL(maskBase, VALUE=' Data Selection ', XOFFSET=5)
-  maskLabelGeometry = WIDGET_INFO(maskLabel, /GEOMETRY)
-  maskLabelYSize = maskLabelGeometry.ysize
-  maskPrettyBase = WIDGET_BASE(maskBase, /FRAME, /COLUMN, $
-        YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10)
-  
-  maskRow = WIDGET_BASE(maskPrettyBase, /COLUMN, /NONEXCLUSIVE)
-  maskID = WIDGET_BUTTON(maskRow, VALUE='Apply Mask', UVALUE='DGS_MASK')
-  hardMaskID = WIDGET_BUTTON(maskRow, VALUE='Apply HARD Mask', UVALUE='DGS_HARD_MASK')
-  ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGS_MASK_FILENAME', /ALL_EVENTS)
- 
-   ; ROI
-  roiBase = WIDGET_BASE(maskPrettyBase)
-  roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
-  roiLabelGeometry = WIDGET_INFO(roiLabel, /GEOMETRY)
-  roiLabelYSize = roiLabelGeometry.ysize
-  roiPrettyBase = WIDGET_BASE(roiBase, /FRAME, /COLUMN, $
-        YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
-  roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
-  roiFileID = CW_FIELD(roiRow, TITLE='Filename:', UVALUE='DGS_ROI_FILENAME', /ALL_EVENTS, XSIZE=15)
-  
-
-  tofcutBase = WIDGET_BASE(reductionTabCol2)
-  tofcutLabel = WIDGET_LABEL(tofcutBase, Value=' TOF Spectrum Cutting ', XOFFSET=5)
-  tofcutLabelGeomtry = WIDGET_INFO(tofcutLabel, /GEOMETRY)
-  tofcutLabelGeomtryYSize = tofcutLabelGeomtry.ysize
-  tofcutPrettyBase = WIDGET_BASE(tofcutBase, /FRAME, /COLUMN, $
-        YOFFSET=tofcutLabelGeomtryYSize/2, XPAD=10, YPAD=10)
-  tofcutRow = WIDGET_BASE(tofcutPrettyBase, /ROW)
-  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGS_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
-  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGS_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
-  
-
-   
-  
-  row3 = widget_base(reductionTabBase, COLUMN=1)
-  
-  
-  
-  ; Output Formats Pretty Frame
-  formatBase = WIDGET_BASE(reductionTabCol2)
-  formatLabel = WIDGET_LABEL(formatBase, value=' Output Formats ', XOFFSET=5)
-  formatLabelGeometry = WIDGET_INFO(formatLabel, /GEOMETRY)
-  formatLabelYSize = formatLabelGeometry.ysize
-  
-  ; Output Formats Selection Boxes
-  outputBase = Widget_Base(formatBase, /COLUMN,  /FRAME, $
-    YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)  
-  outputBaseColumns = WIDGET_BASE(outputBase, COLUMN=2)
-  outputBaseCol1 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)
-  outputBaseCol2 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)  
-  outputBaseRow = WIDGET_BASE(outputBase, /ROW)
-  
-  ; Column #1
-  speButton = Widget_Button(outputBaseCol1, Value='SPE/PHX', UVALUE='DGS_MAKE_SPE')
-  qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGS_MAKE_QVECTOR')
-  fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGS_MAKE_FIXED', UNAME='DGS_MAKE_FIXED')
-  ; Column #2
-  etButton = Widget_Button(outputBaseCol2, Value='Combined Energy Transfer', UVALUE='DGS_MAKE_COMBINED_ET')
-  tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGS_MAKE_COMBINED_TOF')
-  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGS_DUMP_NORM')
-  waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGS_MAKE_COMBINED_WAVE')
-
-  
-  ; Output Options Pretty Frame
-  formatOptionsBase = WIDGET_BASE(outputBaseRow)
-  formatOptionsLabel = WIDGET_LABEL(formatOptionsBase, value=' Combined Wavelength Range ', XOFFSET=5)
-  formatOptionsLabelGeometry = WIDGET_INFO(formatOptionsLabel, /GEOMETRY)
-  formatOptionsPrettyBase = Widget_Base(formatOptionsBase, COLUMN=1, Scr_XSize=320, /FRAME, $
-    YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
-
-  ; Combined Wavelength Range Base
-  formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, UNAME="DGS_COMBINED_WAVELENGTH_RANGE")
-  minWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Min:", $
-        XSIZE=7, UVALUE="DGS_LAMBDA_MIN", /ALL_EVENTS)
-  maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Max:", $
-        XSIZE=7, UVALUE="DGS_LAMBDA_MAX", /ALL_EVENTS)
-  stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
-        XSIZE=7, UVALUE="DGS_LAMBDA_STEP", /ALL_EVENTS)
-  
-  
-  ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
-  Widget_Control, speButton, SET_BUTTON=1
-
-  
-  ; Cannot have the fixed grid without the Qvector
-  WIDGET_CONTROL, fixedButton, SENSITIVE=0
-  
-  ; Don't enable wavelength range until it's selected.
-  WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
- 
   ; normalisation tab
-  normID = WIDGET_BASE(tabID, Title='Normalisation')
-  label = WIDGET_LABEL(normID, VALUE="Nothing to see here!")
+  vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
+  make_VanMask_Tab, vanmaskTabBase, dgscmd
   
-  utilsID = WIDGET_BASE(tabID, Title='Utilities')
-  label = WIDGET_LABEL(utilsID, VALUE="Nothing to see here!")
   
-  textID = WIDGET_LABEL(tlb, VALUE='Command to execute:', /ALIGN_LEFT)
-  outputID= WIDGET_TEXT(tlb, /EDITABLE, xsize=80, ysize=10, /SCROLL, /WRAP, $
-    VALUE=dgscmd->generate())
+  
+  
+  
+  logTab = WIDGET_BASE(tabID, Title='Log')
+  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
+  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
+    UNAME='DGSREDUCTION_LOGBOOK')
     
     
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
@@ -698,9 +466,6 @@ PRO DGSreduction, dgscmd, _Extra=extra
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     ucams:ucams, $
     title:title, $
-    outputID:outputID, $
-    lbankID:lbankID, $
-    ubankID:ubankID, $
     extra:ptr_new(extra) $
     }
     
@@ -713,4 +478,7 @@ PRO DGSreduction, dgscmd, _Extra=extra
     
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+  ; Print a lovely welcome!
+  ;write2log, 'Welcome to DGSreduction..."
 END
