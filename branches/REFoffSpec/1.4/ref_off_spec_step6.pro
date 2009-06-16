@@ -553,30 +553,21 @@ PRO run_full_process_with_other_pola, Event, sStructure
   ENDELSE
   CATCH,/CANCEL
   
-  help, realig_tfpData
-  help, realign_tfpDAta_error
-  help, final_array
-  help, final_error_array
-  
   LogMessage = '    Specular Peak Output File ............... ' + PROCESSING
   addMessageInCreateStatus, Event, LogMessage
   working_state_i_vs_q_file = getTextFieldValue(Event,$
     'i_vs_q_output_file_working_spin_state')
-  print, '#2'
   IF (working_state_i_vs_q_file NE 'N/A' OR $
     working_state_i_vs_q_file NE '') THEN BEGIN
     error5a = 0
-    ; CATCH, error5a
+    CATCH, error5a
     IF (error5a NE 0) THEN BEGIN
       CATCH, /CANCEL
-      print, '#1'
       ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
       RETURN
     ENDIF ELSE BEGIN
-      print, '#3'
       output_file_name = getTextFieldValue(Event, sStructure.i_vs_q_uname)
       IF (output_file_name NE '') THEN BEGIN
-        print, '#4'
         step6_create_i_vs_q_output_file, Event, $
           final_array, $
           final_error_array, $
@@ -587,7 +578,7 @@ PRO run_full_process_with_other_pola, Event, sStructure
   ENDIF ELSE BEGIN
     ReplaceTextInCreateStatus, Event, PROCESSING, 'N/A'
   ENDELSE
-  ;CATCH,/CANCEL
+  CATCH,/CANCEL
   
   ;create output file
   step6_create_output_file_other_pola, Event, $
@@ -998,7 +989,7 @@ PRO create_output_array, Event
   activate_status_pola4 = 0
   
   error = 0
-  ; CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     ReplaceTextInCreateStatus, Event, PROCESSING, FAILED
@@ -1208,17 +1199,21 @@ PRO step6_create_i_vs_q_output_file, Event, $
   
   scaling_factor = (*global).step5_scaling_factor
   
+  local_final_array = final_array
+  local_final_error_array = final_error_array
+  
   create_step6_selection_data, Event, $
-    final_array, $
-    final_error_array, $
+    local_final_array, $
+    local_final_error_array, $
     (*global).selection_type
     
-  final_array /= scaling_factor
-  final_error_array /= scaling_factor
+  local_final_array /= scaling_factor
+  local_final_error_array /= scaling_factor
   
-  produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
+  produce_step6_i_vs_q_output_file, Event, local_final_array, $
+    local_final_error_array,$
     output_file_name, (*global).selection_type
-  
+    
 END
 
 ;..............................................................................
@@ -1226,15 +1221,12 @@ PRO produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
     output_file_name, selection_type
     
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
+  
   x_axis = (*(*global).step5_selection_x_array)
   array_selected_total = final_array
   array_error_selected_total = final_error_array
   
   nbr_data = N_ELEMENTS(x_axis)
-  help, x_axis
-  help, array_selected_total
-  help, array_error_selected_total
   
   ;create ascii file
   nbr_comments = 4
@@ -1272,7 +1264,6 @@ PRO produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
   
   ;name of file to create
   output_file = output_file_name
-  print, output_file
   no_error = 0
   CATCH,no_error
   IF (no_error NE 0) THEN BEGIN
@@ -1282,7 +1273,6 @@ PRO produce_step6_i_vs_q_output_file, Event, final_array, final_error_array,$
     OPENW, 1, output_file
     sz = N_ELEMENTS(FileLine)
     FOR i=0,(sz-1) DO BEGIN
-    print, i
       PRINTF, 1, FileLine[i]
     ENDFOR
     CLOSE, 1
@@ -1296,8 +1286,8 @@ PRO create_step6_selection_data, Event, final_array, $
     final_error_array, $
     selection_type
     
-   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-    
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
   x0 = (*global).step5_x0 ;lambda
   y0 = (*global).step5_y0 ;pixel
   x1 = (*global).step5_x1 ;lambda
