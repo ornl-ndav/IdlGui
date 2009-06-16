@@ -319,6 +319,37 @@ PRO ReductionCmd::SetProperty, $
   
 END
 
+;+
+; :Description:
+;    Returns the first run number from the datarun property.
+;    This is used for naming files/directories/jobs when more than 
+;    one file is specified.
+;    
+;    e.g. datarun="1234-1250" would return "1234"
+;         datarun="1234,1235" would return "1234"
+;         datarun="1250,1243-1249" would return "1250"
+;
+; :Author: scu (campbellsi@ornl.gov)
+;-
+FUNCTION ReductionCmd::GetRunNumber
+
+  largeNumber = 9999999
+
+  ; The runs should be delimited by either a - or ,
+  
+  ; Lets find see if there are any commas
+  commaPosition = STRPOS(self.datarun, ',')
+  IF commaPosition EQ -1 THEN commaPosition = largeNumber
+  
+  hyphenPosition = STRPOS(self.datarun, '-')
+  IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
+  
+  firstDelimiter = MIN([commaPosition, hyphenPosition])
+  
+  RETURN, STRMID(self.datarun, 0, firstDelimiter)
+
+END
+
 function ReductionCmd::Generate
 
   ; Error Handling
@@ -336,7 +367,7 @@ function ReductionCmd::Generate
     cmd[i] = ""
   
     ; Queue name
-    IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
+    ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
   
     ; Let's first start with the program name!
     cmd[i] += self.program
@@ -352,9 +383,9 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-    cmd[i] += " --output=~/results/" + self.instrument + "/" + self.datarun + $
-      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, i+1, self.jobs, /PAD) $
-      + ".txt"
+    cmd[i] += " --output=~/results/" + self.instrument + "/" + self->GetRunNumber() + $
+      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+      i+1, self.jobs, /PAD) + ".txt"
     
     ; Instrument Name
     IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
@@ -423,7 +454,7 @@ function ReductionCmd::Generate
     ; Monitor integration range
     IF (STRLEN(self.monrange_min) GE 1) $
       AND (STRLEN(self.monrange_max GE 1)) THEN $
-      cmd[i] += " --mon-int-range " + self.monrange_min + " " + self.monrange_max
+      cmd[i] += " --mon-int-range=" + self.monrange_min + " " + self.monrange_max
     ; Detector Efficiency
     IF STRLEN(self.deteff) GT 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
