@@ -63,21 +63,47 @@ PRO DGSreduction_Execute, event
   ; Generate the array of commands to run
   commands = dgscmd->generate()
   
+  ; Get the queue name
+  dgscmd->GetProperty, Queue=queue
+  ; Get the instrument name
+  dgscmd->GetProperty, Instrument=instrument
+  ; Get the detector bank limits
+  dgscmd->GetProperty, LowerBank=lowerbank
+  dgscmd->GetProperty, UpperBank=upperbank
+  ; Get the Run Number (the first integer in the datarun)
+  runnumber = dgscmd->GetRunNumber()
+  ; Number of Jobs
+  dgscmd->GetProperty, Jobs=jobs
+  
+  jobcmd = "sbatch -p " + queue + " " 
+  
   ; Array for job numbers
   jobIDs = STRARR(N_ELEMENTS(commands))
   
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
-    cmd = commands[index]
+  
+    jobname = instrument + "_" + runnumber + "_bank" + $
+      Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
+  
+    cmd = jobcmd + "--job-name=" + jobname + " " + commands[index]
     ; TODO: For now let's just dump the commands into a file
-    spawn, "echo " + cmd + " >> /tmp/commands"
+    
+    if (index EQ 1) then begin
+      spawn, "echo " + cmd + " > /tmp/commands"
+    endif else begin
+      spawn, "echo " + cmd + " >> /tmp/commands"
+    endelse
+
+    ;spawn, cmd
+
   endfor
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
   ; Start the sub window widget
-  MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
   
 END
 
@@ -393,7 +419,7 @@ PRO DGSreduction, DGScmd=dgscmd, $
   title = APPLICATION + ' (' + VERSION + ') as ' + ucams
   
   IF N_ELEMENTS(dgscmd) EQ 0 THEN dgscmd = OBJ_NEW("ReductionCMD")
-  IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("DGSN_ReductionCMD")
+  IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("ReductionCMD")
   
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
@@ -436,31 +462,40 @@ PRO DGSreduction, DGScmd=dgscmd, $
     
     
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
-  mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=2)
-  mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns)
-  mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns)  
+  mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
+  mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
+  mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns, /ROW)  
+  mainButtonsCol3 = WIDGET_BASE(mainButtonsColumns, /ROW)  
   mainButtonsCol1Row1 = WIDGET_BASE(mainButtonsCol1, /ROW, /ALIGN_LEFT)
-  mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW, /ALIGN_RIGHT, XOFFSET=750)
+  mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW)
+  mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT, XOFFSET=750)
   
   ; Define a Quit button
   quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
   
   ; Define an export to script button
-  exportScriptID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Export to Script', $
-    EVENT_PRO='DGSreduction_ExportScript')
+  ;exportScriptID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Export to Script', $
+  ;  EVENT_PRO='DGSreduction_ExportScript')
   
   ; Define a save button
-  saveID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Save Parameters', $
-    EVENT_PRO='DGSreduction_SaveParameters')
+  ;saveID = WIDGET_BUTTON(mainButtonsCol3, VALUE='Save Parameters', $
+  ;  EVENT_PRO='DGSreduction_SaveParameters')
+  
+  launchJobMonitorButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Launch SLURM Monitor', $
+    EVENT_PRO='DGSreduction_LaunchJobMonitor')
+  
+  GatherButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
+    EVENT_PRO='DGSreduction_LaunchCollector')
   
   ; Define a Run button
-  executeID = WIDGET_BUTTON(mainButtonsCol2Row1, Value=' EXECUTE >>> ', $
+  executeID = WIDGET_BUTTON(mainButtonsCol3Row1, Value=' EXECUTE >>> ', $
     EVENT_PRO='DGSreduction_Execute')
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
   
   info = { dgscmd:dgscmd, $
+    dgsncmd:dgsncmd, $
     application:application, $
     version:version, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
