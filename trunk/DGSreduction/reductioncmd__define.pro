@@ -12,7 +12,7 @@ PRO ReductionCmd::GetProperty, $
     Queue=queue, $                       ; Queue name
     Verbose=verbose, $                   ; Verbose flag
     Quiet=quiet, $                       ; Quiet flag
-    DataRun=datarun, $                         ; Data filename(s)
+    DataRun=datarun, $                   ; Data
     Output=output, $                     ; Output
     Instrument=instrument, $             ; Instrument Name
     Facility=facility, $                 ; Facility Name
@@ -586,7 +586,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(emptycan) EQ 0 THEN emptycan = ""
   IF N_ELEMENTS(blackcan) EQ 0 THEN blackcan = ""
   IF N_ELEMENTS(dark) EQ 0 THEN dark = ""
-  IF N_ELEMENTS(usmonpath) EQ 0 THEN usmonpath = ""
+  IF N_ELEMENTS(usmonpath) EQ 0 THEN usmonpath = ''
   IF N_ELEMENTS(dsmonpath) EQ 0 THEN dsmonpath = ""
   IF N_ELEMENTS(roifile) EQ 0 THEN roifile = ""
   IF N_ELEMENTS(tmin) EQ 0 THEN tmin = ""
