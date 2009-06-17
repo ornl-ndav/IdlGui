@@ -376,7 +376,7 @@ PRO DGSreduction_TLB_Events, event
   ; Find the output window (DGSN)
   dgsn_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_CMD')
   ; Update the output command window
-  ;WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsncmd->generate()
+  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsncmd->generate()
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
@@ -491,8 +491,8 @@ PRO DGSreduction, DGScmd=dgscmd, $
   
   ; normalisation tab
   vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
-  label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
-  ;make_VanMask_Tab, vanmaskTabBase, dgscmd
+  ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
+  make_VanMask_Tab, vanmaskTabBase, dgsncmd
   
   logTab = WIDGET_BASE(tabID, Title='Log')
   label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
@@ -531,6 +531,8 @@ PRO DGSreduction, DGScmd=dgscmd, $
   ; Define a Run button
   executeID = WIDGET_BUTTON(mainButtonsCol3Row1, Value=' EXECUTE >>> ', $
     EVENT_PRO='DGSreduction_Execute', UNAME='DGS_EXECUTE_BUTTON')
+  
+  
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
