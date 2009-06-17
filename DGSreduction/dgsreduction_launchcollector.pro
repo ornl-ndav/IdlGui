@@ -64,7 +64,7 @@ PRO DGSreduction_LaunchCollector, event
     dgscmd->GetProperty, EnergyBins_max=emax
     dgscmd->GetProperty, EnergyBins_step=estep
     npoints = FLOOR((FLOAT(emax) - FLOAT(emin)) / FLOAT(estep))
-    help, /str, npoints
+    ;help, /str, npoints
     
     for index = 0L, npoints-1 do begin
       qvec_cmd = "sbatch -q " + queue + " --error=none --output=none " + $
