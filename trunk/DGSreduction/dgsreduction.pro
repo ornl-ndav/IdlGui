@@ -77,17 +77,32 @@ PRO DGSreduction_Execute, event
   
   jobcmd = "sbatch -p " + queue + " " 
   
+  ; Log Directory
+  cd, CURRENT=thisDir
+  logDir = '/SNS/users/' + info.username + '/results/logs/' + instrument + '-' + runnumber
+  ; Make the directory
+  spawn, 'mkdir -p ' + logDir
+
   ; Array for job numbers
   jobIDs = STRARR(N_ELEMENTS(commands))
-  
+
+  ; Make sure that the output directory exists
+  outputDir = '~/results/' + instrument + '/' + runnumber
+  spawn, 'mkdir -p ' + outputDir
+ 
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
     jobname = instrument + "_" + runnumber + "_bank" + $
       Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
+    
+    logfile = logDir + '/' + instrument + '_bank' + $
+      Construct_DataPaths(lowerbank, upperbank, index+1, jobs) + $
+      '.log'
   
-    cmd = jobcmd + "--job-name=" + jobname + " " + commands[index]
-    ; TODO: For now let's just dump the commands into a file
+    cmd = jobcmd + " --output=" + logfile + $
+        " --job-name=" + jobname + $
+ 	" " + commands[index]
     
     if (index EQ 0) then begin
       spawn, "echo " + cmd + " > /tmp/commands"
@@ -95,7 +110,8 @@ PRO DGSreduction_Execute, event
       spawn, "echo " + cmd + " >> /tmp/commands"
     endelse
 
-    ;spawn, cmd
+    ; Actually Launch the jobs
+    spawn, cmd
 
   endfor
   
@@ -360,7 +376,7 @@ PRO DGSreduction_TLB_Events, event
   ; Find the output window (DGSN)
   dgsn_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_CMD')
   ; Update the output command window
-  WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsncmd->generate()
+  ;WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsncmd->generate()
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
@@ -422,10 +438,10 @@ PRO DGSreduction, DGScmd=dgscmd, $
   endif
   
   ; Get the UCAMS
-  ucams = GETENV('USER')
+  username = GETENV('USER')
   
   ; Set the application title
-  title = APPLICATION + ' (' + VERSION + ') as ' + ucams
+  title = APPLICATION + ' (' + VERSION + ') as ' + username
   
   IF N_ELEMENTS(dgscmd) EQ 0 THEN dgscmd = OBJ_NEW("ReductionCMD")
   IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("ReductionCMD")
@@ -433,11 +449,13 @@ PRO DGSreduction, DGScmd=dgscmd, $
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
   
-  toprow = WIDGET_BASE(tlb, /ROW)
-  textID = WIDGET_LABEL(toprow, VALUE='Please select an instrument --> ')
-  instrumentID = WIDGET_COMBOBOX(toprow, UVALUE="INSTRUMENT_SELECTED", $
+  toprow = WIDGET_BASE(tlb, COLUMN=4)
+  
+  instrumentSelectRow = WIDGET_BASE(toprow, /ROW)
+  textID = WIDGET_LABEL(instrumentSelectRow, VALUE='Please select an instrument --> ')
+  instrumentID = WIDGET_COMBOBOX(instrumentSelectRow, UVALUE="INSTRUMENT_SELECTED", $
     VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
-    XSIZE=90, YSIZE=10)
+    XSIZE=90, YSIZE=30)
   
 ;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
 ;  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
@@ -448,7 +466,22 @@ PRO DGSreduction, DGScmd=dgscmd, $
   jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", $
         UVALUE="DGSREDUCTION_JOBS", $
         VALUE=1, /INTEGER, /ALL_EVENTS)
-  
+ 
+  paddingText = "                       "
+  paddingLabel = WIDGET_LABEL(toprow, VALUE=paddingText)
+
+  WFONT = '-*-HELVETICA-BOLD-R-NORMAL-*-12-*-*-*-*-*-*-*'
+
+  warningBase = WIDGET_BASE(toprow, /COLUMN)
+
+  warningText1 = "DANGER: This is a very early development version."
+  warningText2 = "It WILL crash - there is no sanity checking at the moment."
+  warningText3 = "Otherwise, enjoy! and please be kind :-)"
+
+  warningLabel1 = WIDGET_LABEL(warningBase, VALUE=warningText1, font=wfont)
+  warningLabel2 = WIDGET_LABEL(warningBase, VALUE=warningText2)
+  warningLabel3 = WIDGET_LABEL(warningBase, VALUE=warningText3)
+ 
   ; Tabs
   tabID = WIDGET_TAB(tlb)
   
@@ -458,11 +491,8 @@ PRO DGSreduction, DGScmd=dgscmd, $
   
   ; normalisation tab
   vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
-  make_VanMask_Tab, vanmaskTabBase, dgscmd
-  
-  
-  
-  
+  label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
+  ;make_VanMask_Tab, vanmaskTabBase, dgscmd
   
   logTab = WIDGET_BASE(tabID, Title='Log')
   label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
@@ -510,7 +540,7 @@ PRO DGSreduction, DGScmd=dgscmd, $
     application:application, $
     version:version, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
-    ucams:ucams, $
+    username:username, $
     title:title, $
     extra:ptr_new(extra) $
     }
@@ -523,7 +553,7 @@ PRO DGSreduction, DGScmd=dgscmd, $
     /NO_BLOCK, CLEANUP='DGSreduction_Cleanup', GROUP_LEADER=group_leader
     
   ;send message to log current run of application
-  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  logger, APPLICATION=application, VERSION=version, UCAMS=username
   
   ; Print a lovely welcome!
   ;write2log, 'Welcome to DGSreduction..."
