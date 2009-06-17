@@ -105,9 +105,9 @@ PRO DGSreduction_Execute, event
  	" " + commands[index]
     
     if (index EQ 0) then begin
-      spawn, "echo " + cmd + " > /tmp/commands"
+      spawn, "echo " + cmd + " > /tmp/"+ info.username +"_commands"
     endif else begin
-      spawn, "echo " + cmd + " >> /tmp/commands"
+      spawn, "echo " + cmd + " >> /tmp/"+info.username +"_commands"
     endelse
 
     ; Actually Launch the jobs
