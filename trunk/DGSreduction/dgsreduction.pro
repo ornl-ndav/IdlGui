@@ -444,7 +444,7 @@ PRO DGSreduction, DGScmd=dgscmd, $
   title = APPLICATION + ' (' + VERSION + ') as ' + username
   
   IF N_ELEMENTS(dgscmd) EQ 0 THEN dgscmd = OBJ_NEW("ReductionCMD")
-  IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("ReductionCMD")
+  IF N_ELEMENTS(dgsncmd) EQ 0 THEN dgsncmd = OBJ_NEW("NormCMD")
   
   ; Define the TLB.
   tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)

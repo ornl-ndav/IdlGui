@@ -57,7 +57,7 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   RunDetectorRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
   
   dataSourceBase = WIDGET_BASE(RunDetectorRow)
-  dataSourceLabel = WIDGET_LABEL(dataSourceBase, VALUE=' Run Number ', XOFFSET=5)
+  dataSourceLabel = WIDGET_LABEL(dataSourceBase, VALUE=' Vanadium Run Number ', XOFFSET=5)
   dataSourceLabelGeometry = WIDGET_INFO(dataSourceLabel, /GEOMETRY)
   dataSourceLabelGeometryYSize = dataSourceLabelGeometry.ysize
   dataSourcePrettyBase = WIDGET_BASE(dataSourceBase, /FRAME, /COLUMN, $
@@ -112,47 +112,6 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSN_TZERO", /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
 
-
-
-
-; == ENERGY TRANSFER RANGE ==
-  
-  energyRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
-  
-  rangesBase = WIDGET_BASE(energyRow)
-  rangesLabel = WIDGET_LABEL(rangesBase, value=' Energy Transfer Range (meV) ', XOFFSET=5)
-  rangesLabelGeometry = WIDGET_INFO(rangesLabel, /GEOMETRY)
-  rangesLabelYSize = rangesLabelGeometry.ysize
-  rangesPrettyBase = WIDGET_BASE(rangesBase, /FRAME, /ROW, $
-        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
-  
-  ; Energy Transfer Range Row
-  EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGSN_ET_RANGE")
-  minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGSN_ET_MIN", /ALL_EVENTS)
-  maxEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGSN_ET_MAX", /ALL_EVENTS)
-  stepEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGSN_ET_STEP", /ALL_EVENTS)
-
-; == MOMENTUM (Q) TRANSFER RANGE ==
-  QRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
-
-  QrangesBase = WIDGET_BASE(QRow)
-  QrangesLabel = WIDGET_LABEL(QrangesBase, value=' Q-Range (1/Angstroms) ', XOFFSET=5)
-  QrangesLabelGeometry = WIDGET_INFO(QrangesLabel, /GEOMETRY)
-  QrangesLabelYSize = QrangesLabelGeometry.ysize
-  QrangesPrettyBase = WIDGET_BASE(QrangesBase, /FRAME, /COLUMN, $
-        YOFFSET=rangesLabelYSize/2, YPAD=10, XPAD=10)
-        
-  ; Q Range Base
-  QRangeRow = WIDGET_BASE(QrangesPrettyBase, /ROW, UNAME="DGSN_Q_RANGE")
-  minMomentumID = CW_FIELD(QRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGSN_Q_MIN", /ALL_EVENTS)
-  maxMomentumID = CW_FIELD(QRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGSN_Q_MAX", /ALL_EVENTS)
-  stepMomentumID = CW_FIELD(QRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGSN_Q_STEP", /ALL_EVENTS) 
   
 ; == TOF CUTTING ==
   tofRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
@@ -184,32 +143,64 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   normOptionsBaseColumns = WIDGET_BASE(normPrettyBase, COLUMN=2)
   normOptionsBaseColumn1 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
   normOptionsBaseColumn2 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
-  normOptionsBaseRow = WIDGET_BASE(normPrettyBase, /ROW)
+  normOptionsBaseRow1 = WIDGET_BASE(normPrettyBase, /ROW)
+  normOptionsBaseRow2 = WIDGET_BASE(normPrettyBase, /ROW)
   
   normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
   noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
         UVALUE='DGSN_NO-MON-NORM')
   pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
         UVALUE='DGSN_PC-NORM', UNAME='DGSN_PC-NORM')
-  lambdaratioID = WIDGET_BUTTON(normOptionsBase, VALUE='Lambda Ratio Scaling', $ 
-        UVALUE='DGSN_LAMBDA-RATIO')
+
   
   ; We also set the default value to be 1, which is the same as in reductioncmd::init
   monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSN_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
 
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
-  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSN_NORM")
+  ;normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSN_NORM")
   emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSN_EMPTYCAN")
   blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSN_BLACKCAN")
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSN_DARK")
 
-  TIBrow = WIDGET_BASE(normOptionsBaseColumn2, /ROW)
-  TIBconstID = CW_FIELD(TIBrow, XSIZE=22, TITLE="Time Independent Bkgrd: ", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
+; == TIB ==
 
+  ;TIBrow = WIDGET_BASE(normOptionsBaseRow2, /ROW)
+  
+  TIBbase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
+  TIBlabel = WIDGET_LABEL(TIBbase, VALUE=' Time Independent Bkgrd ', XOFFSET=5)
+  TIBlabelGeometry = WIDGET_INFO(TIBlabel, /GEOMETRY)
+  TIBlabelGeometryYSize = TIBlabelGeometry.ysize
+  TIBPrettyBase = WIDGET_BASE(TIBbase, /FRAME, /ROW, $
+    YOFFSET=TIBlabelGeometryYSize/2, XPAD=10, YPAD=10)
+  
+  ; TIB Constant
+  TIBConstantBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBConstantBaseLabel = WIDGET_LABEL(TIBConstantBase, VALUE=' Constant ', XOFFSET=5)
+  TIBConstantBaseLabelGeometry = WIDGET_INFO(TIBConstantBaseLabel, /GEOMETRY)
+  TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
+  TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
+      YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=15, TITLE="", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
+  
+  label1 = WIDGET_LABEL(TIBPrettyBase, VALUE=' OR ')
+  
+  ; TIB range
+  TIBRangeBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBRangeBaseLabel = WIDGET_LABEL(TIBRangeBase, VALUE=' Range ', XOFFSET=5)
+  TIBRangeBaseLabelGeometry = WIDGET_INFO(TIBRangeBaseLabel, /GEOMETRY)
+  TIBRangeBaseLabelGeometryYSize = TIBRangeBaseLabelGeometry.ysize
+  TIBRangePrettyBase = WIDGET_BASE(TIBRangeBase, /FRAME, /ROW, $
+      YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, $
+      SCR_XSIZE=318)
+  
+  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", XSIZE=15)
+  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", XSIZE=15)
+  
+  
   
   ; Monitor integration range
-  monitorRangeBase = WIDGET_BASE(normOptionsBaseRow, /ALIGN_BOTTOM)
+  monitorRangeBase = WIDGET_BASE(normOptionsBaseRow1, /ALIGN_BOTTOM)
   monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE=' Monitor Integration Range (usec) ', XOFFSET=5)
   monitorRangeBaseLabelGeometry = WIDGET_INFO(monitorRangeBaseLabel, /GEOMETRY)
   monitorRangeBaseLabelGeometryYSize = monitorRangeBaseLabelGeometry.ysize
@@ -220,7 +211,7 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_MON-INT-MAX", XSIZE=10)
   
    ; Norm integration range
-  normRangeBase = WIDGET_BASE(normOptionsBaseRow, UNAME="DGSN_NORM-INT-RANGE", /ALIGN_BOTTOM)
+  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSN_NORM-INT-RANGE", /ALIGN_BOTTOM)
   normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
   normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
   normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
@@ -231,26 +222,10 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_NORM-INT-MAX", XSIZE=10)
             
 
-; == ROI and MASKS ==
-    
-   ; Mask File
-  maskRow = WIDGET_BASE(reductionTabCol2Row1Col1, /ROW)
-   
-  maskBase = WIDGET_BASE(maskRow)
-  maskLabel = WIDGET_LABEL(maskBase, VALUE=' Data Selection ', XOFFSET=5)
-  maskLabelGeometry = WIDGET_INFO(maskLabel, /GEOMETRY)
-  maskLabelYSize = maskLabelGeometry.ysize
-  maskPrettyBase = WIDGET_BASE(maskBase, /FRAME, /COLUMN, $
-        YOFFSET=maskLabelYSize/2, YPAD=10, XPAD=10, $
-        SCR_YSIZE=145)
+; == ROI ==
   
-  maskRow = WIDGET_BASE(maskPrettyBase, /ROW, /NONEXCLUSIVE)
-  maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSN_MASK')
-  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' HARD Mask', UVALUE='DGSN_HARD_MASK')
-  ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSN_MASK_FILENAME', /ALL_EVENTS)
- 
    ; ROI
-  roiBase = WIDGET_BASE(maskPrettyBase)
+  roiBase = WIDGET_BASE(reductionTabCol2Row1Col1)
   roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
   roiLabelGeometry = WIDGET_INFO(roiLabel, /GEOMETRY)
   roiLabelYSize = roiLabelGeometry.ysize
@@ -259,7 +234,6 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGSN_ROI_FILENAME', $
     /ALL_EVENTS, XSIZE=20)
-  
   
 
     ; Output Formats Pretty Frame
@@ -279,14 +253,15 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   outputBaseRow = WIDGET_BASE(outputBase, /ROW)
   
   ; Column #1
-  speButton = Widget_Button(outputBaseCol1, Value='SPE/PHX', UVALUE='DGSN_MAKE_SPE')
-  qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSN_MAKE_QVECTOR')
-  fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGSN_MAKE_FIXED', UNAME='DGSN_MAKE_FIXED')
+  ;speButton = Widget_Button(outputBaseCol1, Value='SPE/PHX', UVALUE='DGSN_MAKE_SPE')
+  ;qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSN_MAKE_QVECTOR')
+  ;fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGSN_MAKE_FIXED', UNAME='DGSN_MAKE_FIXED')
   ; Column #2
   etButton = Widget_Button(outputBaseCol2, Value='Combined Energy Transfer', UVALUE='DGSN_MAKE_COMBINED_ET')
   tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF')
   normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSN_DUMP_NORM')
   waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE')
+  tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB')
   ; Column #3
   ; Output Options Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
@@ -307,17 +282,11 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   
 ; == DEFAULTS ==
   
-  ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
-  Widget_Control, speButton, SET_BUTTON=1
-
-  ; Cannot have the fixed grid without the Qvector
-  WIDGET_CONTROL, fixedButton, SENSITIVE=0
-  
   ; Don't enable wavelength range until it's selected.
   WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
    
   ; Disable some of the inputs until something has been defined in the DGSN_NORM field.
-  WIDGET_CONTROL, normRangeBase, SENSITIVE=0
+  ;WIDGET_CONTROL, normRangeBase, SENSITIVE=0
   
   ; Disable Proton Charge Norm until No-Monitor Norm is selected
   WIDGET_CONTROL, pc_button, SENSITIVE=0

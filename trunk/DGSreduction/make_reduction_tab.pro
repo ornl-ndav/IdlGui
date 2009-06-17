@@ -149,7 +149,8 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   normOptionsBaseColumns = WIDGET_BASE(normPrettyBase, COLUMN=2)
   normOptionsBaseColumn1 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
   normOptionsBaseColumn2 = WIDGET_BASE(normOptionsBaseColumns, /COLUMN)
-  normOptionsBaseRow = WIDGET_BASE(normPrettyBase, /ROW)
+  normOptionsBaseRow1 = WIDGET_BASE(normPrettyBase, /ROW)  
+  normOptionsBaseRow2 = WIDGET_BASE(normPrettyBase, /ROW)
   
   normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
   noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
@@ -170,12 +171,20 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGS_BLACKCAN")
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGS_DARK")
 
-  TIBrow = WIDGET_BASE(normOptionsBaseColumn2, /ROW)
-  TIBconstID = CW_FIELD(TIBrow, XSIZE=22, TITLE="Time Independent Bkgrd: ", UVALUE="DGS_TIBCONST", /ALL_EVENTS)
+    ; == Transmission Corrections == 
+  transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
+  transBaseLabel = WIDGET_LABEL(transBase, VALUE=' Transmission Corrections ', XOFFSET=5)
+  transBaseLabelGeometry = WIDGET_INFO(transBaseLabel, /GEOMETRY)
+  transBaseLabelGeometryYSize = transBaseLabelGeometry.ysize
+  transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
+    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
 
-  
+  dataTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Data Coeff:", UVALUE="DGS_DATA-TRANS", XSIZE=10)
+  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGS_NORM-TRANS", XSIZE=10)
+  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGS_DET-EFF", XSIZE=10)
+
   ; Monitor integration range
-  monitorRangeBase = WIDGET_BASE(normOptionsBaseRow, /ALIGN_BOTTOM)
+  monitorRangeBase = WIDGET_BASE(normOptionsBaseRow1, /ALIGN_BOTTOM)
   monitorRangeBaseLabel = WIDGET_LABEL(monitorRangeBase, VALUE=' Monitor Integration Range (usec) ', XOFFSET=5)
   monitorRangeBaseLabelGeometry = WIDGET_INFO(monitorRangeBaseLabel, /GEOMETRY)
   monitorRangeBaseLabelGeometryYSize = monitorRangeBaseLabelGeometry.ysize
@@ -186,7 +195,7 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_MON-INT-MAX", XSIZE=10)
   
    ; Norm integration range
-  normRangeBase = WIDGET_BASE(normOptionsBaseRow, UNAME="DGS_NORM-INT-RANGE", /ALIGN_BOTTOM)
+  normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGS_NORM-INT-RANGE", /ALIGN_BOTTOM)
   normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
   normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
   normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
@@ -196,6 +205,8 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGS_NORM-INT-MIN", XSIZE=10)
   normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGS_NORM-INT-MAX", XSIZE=10)
             
+
+  
 
 ; == ROI and MASKS ==
     
@@ -226,7 +237,39 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGS_ROI_FILENAME', $
     /ALL_EVENTS, XSIZE=20)
   
+ ; == TIB ==
+  TIBrow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
+
+  TIBbase = WIDGET_BASE(TIBrow)
+  TIBlabel = WIDGET_LABEL(TIBbase, VALUE=' Time Independent Bkgrd ', XOFFSET=5)
+  TIBlabelGeometry = WIDGET_INFO(TIBlabel, /GEOMETRY)
+  TIBlabelGeometryYSize = TIBlabelGeometry.ysize
+  TIBPrettyBase = WIDGET_BASE(TIBbase, /FRAME, /ROW, $
+    YOFFSET=TIBlabelGeometryYSize/2, XPAD=10, YPAD=10)
   
+  ; TIB Constant
+  TIBConstantBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBConstantBaseLabel = WIDGET_LABEL(TIBConstantBase, VALUE=' Constant ', XOFFSET=5)
+  TIBConstantBaseLabelGeometry = WIDGET_INFO(TIBConstantBaseLabel, /GEOMETRY)
+  TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
+  TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
+      YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=20, TITLE="", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
+  
+  label1 = WIDGET_LABEL(TIBPrettyBase, VALUE='  OR  ')
+  
+  ; TIB range
+  TIBRangeBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBRangeBaseLabel = WIDGET_LABEL(TIBRangeBase, VALUE=' Range ', XOFFSET=5)
+  TIBRangeBaseLabelGeometry = WIDGET_INFO(TIBRangeBaseLabel, /GEOMETRY)
+  TIBRangeBaseLabelGeometryYSize = TIBRangeBaseLabelGeometry.ysize
+  TIBRangePrettyBase = WIDGET_BASE(TIBRangeBase, /FRAME, /ROW, $
+      YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  
+  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", XSIZE=18)
+  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", XSIZE=18)
+
+   
 
     ; Output Formats Pretty Frame
   outputRow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
@@ -270,7 +313,8 @@ PRO make_Reduction_Tab, baseWidget, dgscmd
         XSIZE=7, UVALUE="DGS_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
         XSIZE=7, UVALUE="DGS_LAMBDA_STEP", /ALL_EVENTS)
-  
+ 
+
 ; == DEFAULTS ==
   
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
