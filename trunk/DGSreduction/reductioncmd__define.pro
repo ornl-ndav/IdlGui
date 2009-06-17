@@ -511,7 +511,7 @@ function ReductionCmd::Generate
     IF (STRLEN(self.qbins_min) GE 1) $ 
       AND (STRLEN(self.qbins_max) GE 1) $
       AND (STRLEN(self.qbins_step) GE 1) THEN $
-      cmd[i] += " --mon-trans-bins=" + self.qbins_min + "," + $
+      cmd[i] += " --mom-trans-bins=" + self.qbins_min + "," + $
           self.qbins_max + "," + self.qbins_step
           
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
