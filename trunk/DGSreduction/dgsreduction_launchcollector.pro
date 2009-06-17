@@ -29,16 +29,26 @@ PRO DGSreduction_LaunchCollector, event
   
   ;Construct the jobname
   jobname = instrument + "_" + runnumber + "_Collector"
-  
+ 
+  ; log Directory
+  logDir = '/SNS/users/' + info.username + '/results/logs/' + $
+	 instrument + '-' + runnumber
+  ;Make sure the that logfile directory exists.
+  spawn, 'mkdir -p ' + logDir
+ 
   ; Output Directory
-  outdir = "~/results/" + instrument + "/" + runnumber
+  outDir = "~/results/" + instrument + "/" + runnumber
+  ; Make sure that the output directory exists
+  spawn, 'mkdir -p ' + outDir
   
+
   ; launch agg_files
   agg_cmd = "sbatch -p " + queue + $
+    " --output=" + logDir + "/" + instrument + "_" + runnumber + "_collector.log" + $
     " --job-name=" + instrument + "_" + runnumber + "_collector " + $
     "agg_files " + instrument + " " + runnumber + " " + outdir
   
-  ;spawn, agg_cmd
+  spawn, agg_cmd
   spawn, "echo " + agg_cmd + " > /tmp/agg_commands"
   
   
@@ -47,10 +57,11 @@ PRO DGSreduction_LaunchCollector, event
   IF (SPE EQ 1) THEN BEGIN
     ; Add up the SPE files.
     spe_cmd = "sbatch -p " + queue + $
+      " --output=" + logDir + "/" + instrument + "_" + runnumber + "_SPEcollector.log" + $
       " --job-name=" + instrument + "_" + runnumber + "_SPE_collector " + $
       "add_spefiles.py " + instrument + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
-    ;spawn, spe_cmd
+    spawn, spe_cmd
     spawn, "echo " + spe_cmd + " > /tmp/spe_commands"
   ENDIF
   
@@ -79,7 +90,10 @@ PRO DGSreduction_LaunchCollector, event
     endif else begin
       spawn, "echo " + qvec_cmd + " >> /tmp/qvector_commands"
     endelse
-        
+    
+    ; Launch the jobs
+    spawn, qvec_cmd
+    
     endfor
 
     
