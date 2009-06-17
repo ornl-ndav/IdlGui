@@ -89,7 +89,7 @@ PRO DGSreduction_Execute, event
     cmd = jobcmd + "--job-name=" + jobname + " " + commands[index]
     ; TODO: For now let's just dump the commands into a file
     
-    if (index EQ 1) then begin
+    if (index EQ 0) then begin
       spawn, "echo " + cmd + " > /tmp/commands"
     endif else begin
       spawn, "echo " + cmd + " >> /tmp/commands"
