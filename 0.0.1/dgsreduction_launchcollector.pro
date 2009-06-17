@@ -86,9 +86,9 @@ PRO DGSreduction_LaunchCollector, event
         
             
     if (index EQ 0) then begin
-      spawn, "echo " + qvec_cmd + " > /tmp/qvector_commands"
+      spawn, "echo " + qvec_cmd + " > /tmp/" + info.username + "_qvector_commands"
     endif else begin
-      spawn, "echo " + qvec_cmd + " >> /tmp/qvector_commands"
+      spawn, "echo " + qvec_cmd + " >> /tmp/" + info.username + "_qvector_commands"
     endelse
     
     ; Launch the jobs
