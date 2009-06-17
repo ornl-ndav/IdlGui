@@ -50,7 +50,7 @@ PRO DGSreduction_LaunchCollector, event
       " --job-name=" + instrument + "_" + runnumber + "_SPE_collector " + $
       "add_spefiles.py " + instrument + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
-    spawn, spe_cmd
+    ;spawn, spe_cmd
     spawn, "echo " + spe_cmd + " > /tmp/spe_commands"
   ENDIF
   
@@ -58,7 +58,31 @@ PRO DGSreduction_LaunchCollector, event
   ; Is Qvector produced ?
   dgscmd->GetProperty, Qvector=qvector
   IF (qvector EQ 1) THEN BEGIN
+  
     ; Add up the meshes
+    dgscmd->GetProperty, EnergyBins_min=emin
+    dgscmd->GetProperty, EnergyBins_max=emax
+    dgscmd->GetProperty, EnergyBins_step=estep
+    npoints = FLOOR((FLOAT(emax) - FLOAT(emin)) / FLOAT(estep))
+    help, /str, npoints
+    
+    for index = 0L, npoints-1 do begin
+      qvec_cmd = "sbatch -q " + queue + " --error=none --output=none " + $
+        " --job-name=" + instrument + "_" + runnumber + "_vtk" + $
+        STRCOMPRESS(STRING(index+1), /REMOVE_ALL) + $
+        " make_vtk " + instrument + " " + runnumber + " " + STRING(index+1) + " " + $
+        outdir + "/" + runnumber + "-mesh"
+        
+            
+    if (index EQ 0) then begin
+      spawn, "echo " + qvec_cmd + " > /tmp/qvector_commands"
+    endif else begin
+      spawn, "echo " + qvec_cmd + " >> /tmp/qvector_commands"
+    endelse
+        
+    endfor
+
+    
   ENDIF
   
   
