@@ -338,6 +338,15 @@ PRO DGSreduction_TLB_Events, event
         ; But if we are only doing 1 then we don't!
         IF (myValue EQ 1) THEN dgscmd->SetProperty, Split=0
       endif
+      
+      ; Disable the "Launch Collector" button if there is only one job
+      dgs_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGS_LAUNCH_COLLECTOR_BUTTON')
+      
+      IF (myValue EQ 1) THEN BEGIN
+        WIDGET_CONTROL, dgs_collector_button, SENSITIVE=0
+      ENDIF ELSE BEGIN
+         WIDGET_CONTROL, dgs_collector_button, SENSITIVE=1
+      ENDELSE
     END
     'NOTHING': BEGIN
     END
@@ -482,14 +491,16 @@ PRO DGSreduction, DGScmd=dgscmd, $
   ;  EVENT_PRO='DGSreduction_SaveParameters')
   
   launchJobMonitorButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Launch SLURM Monitor', $
-    EVENT_PRO='DGSreduction_LaunchJobMonitor')
+    EVENT_PRO='DGSreduction_LaunchJobMonitor', UNAME='DGS_LAUNCH_JOBMONITOR_BUTTON')
   
   GatherButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
-    EVENT_PRO='DGSreduction_LaunchCollector')
+    EVENT_PRO='DGSreduction_LaunchCollector', UNAME='DGS_LAUNCH_COLLECTOR_BUTTON')
+  ; As by default we have 1 job - we should disable the collector button
+  WIDGET_CONTROL, GatherButton, SENSITIVE=0 
   
   ; Define a Run button
   executeID = WIDGET_BUTTON(mainButtonsCol3Row1, Value=' EXECUTE >>> ', $
-    EVENT_PRO='DGSreduction_Execute')
+    EVENT_PRO='DGSreduction_Execute', UNAME='DGS_EXECUTE_BUTTON')
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
