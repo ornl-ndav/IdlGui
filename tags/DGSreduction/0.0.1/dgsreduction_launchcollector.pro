@@ -49,7 +49,7 @@ PRO DGSreduction_LaunchCollector, event
     "agg_files " + instrument + " " + runnumber + " " + outdir
   
   spawn, agg_cmd
-  spawn, "echo " + agg_cmd + " > /tmp/agg_commands"
+  spawn, "echo " + agg_cmd + " > /tmp/" + info.username + "_agg_commands"
   
   
   ; Have we created SPE files ?
@@ -62,7 +62,7 @@ PRO DGSreduction_LaunchCollector, event
       "add_spefiles.py " + instrument + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
     spawn, spe_cmd
-    spawn, "echo " + spe_cmd + " > /tmp/spe_commands"
+    spawn, "echo " + spe_cmd + " > /tmp/" + info.username + "_spe_commands"
   ENDIF
   
   
