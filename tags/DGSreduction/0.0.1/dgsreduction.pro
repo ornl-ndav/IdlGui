@@ -94,10 +94,10 @@ PRO DGSreduction_Execute, event
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
     jobname = instrument + "_" + runnumber + "_bank" + $
-      Construct_DataPaths(lowerbank, upperbank, index+1, jobs)
+      Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
     
     logfile = logDir + '/' + instrument + '_bank' + $
-      Construct_DataPaths(lowerbank, upperbank, index+1, jobs) + $
+      Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
       '.log'
   
     cmd = jobcmd + " --output=" + logfile + $
