@@ -32,6 +32,74 @@
 ;
 ;==============================================================================
 
+PRO launch_couts_vs_tof_base_Event, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  CASE event.id OF
+  
+    ;linear plot
+    WIDGET_INFO(event.top, $
+      FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
+      replot_counts_vs_tof_full_detector, event, lin_log_type='linear'
+    END
+    
+    ;log plot
+    WIDGET_INFO(event.top, $
+      FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
+      replot_counts_vs_tof_full_detector, event, lin_log_type='log'
+    END
+    
+    ELSE:
+  ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  xtitle = (*global1).xtitle
+  ytitle = (*global1).ytitle
+  plot_type = (*global1).plot_type
+  counts_vs_tof_integrated = $
+    (*(*global1).counts_vs_tof_array_integrated)
+    
+  id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  IF (plot_type EQ 'tof') THEN BEGIN
+    tof_array = (*(*global1).tof_array)
+    IF (lin_log_type EQ 'log') THEN BEGIN
+      PLOT, tof_array, $
+        counts_vs_tof_integrated, $
+        XTITLE = xtitle,$
+        YTITLE = ytitle,$
+        /YLOG
+    ENDIF ELSE BEGIN
+      PLOT, tof_array, $
+        counts_vs_tof_integrated, $
+        XTITLE = xtitle,$
+        YTITLE = ytitle
+    ENDELSE
+  ENDIF ELSE BEGIN
+    IF (lin_log_type EQ 'log') THEN BEGIN
+      PLOT, counts_vs_tof_integrated, $
+        XTITLE = xtitle,$
+        YTITLE = ytitle,$
+        /YLOG
+    ENDIF ELSE BEGIN
+      PLOT, counts_vs_tof_integrated, $
+        XTITLE = xtitle,$
+        YTITLE = ytitle
+    ENDELSE
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
 FUNCTION retrieve_tof_array, NexusFileName
   path    = '/entry/bank1/time_of_flight/'
   fileID  = H5F_OPEN(NexusFileName)
@@ -50,25 +118,25 @@ PRO MakeCountsVsTofBase, wBase
     UNAME = 'counts_vs_tof_main_base',$
     /COLUMN)
     
-    ;lin/log cw_bgroup
-  row1c = WIDGET_BASE(row1,$
+  ;lin/log cw_bgroup
+  row1c = WIDGET_BASE(wBase,$
     /ROW,$
     /EXCLUSIVE,$
     FRAME = 0)
     
   lin = WIDGET_BUTTON(row1c,$
     VALUE = 'Linear',$
-    UNAME = 'main_plot_linear_plot',$
+    UNAME = 'full_detector_count_vs_tof_linear_plot',$
     /NO_RELEASE)
     
   log = WIDGET_BUTTON(row1c,$
     VALUE = 'Logarithmic',$
-    UNAME = 'main_plot_log_plot',$
+    UNAME = 'full_detector_count_vs_tof_log_plot',$
     /NO_RELEASE)
     
   WIDGET_CONTROL, lin, /SET_BUTTON
-
- ;--------------------------------------------------    
+  
+  ;--------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
     SCR_YSIZE = 600,$
@@ -91,10 +159,15 @@ PRO Launch_counts_vs_tof_base, $
   global1 = PTR_NEW({ $
     NexusFileName:       nexus_file_name,$
     counts_vs_tof_array: counts_vs_tof_array,$
+    counts_vs_tof_array_integrated: PTR_NEW(0L),$
+    xtitle: '',$
+    ytitle: '',$
+    plot_type: '',$
+    tof_array: PTR_NEW(0L),$
     wbase:               wbase})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global1
-  XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+  XMANAGER, "launch_couts_vs_tof_base", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
   
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
@@ -102,11 +175,14 @@ PRO Launch_counts_vs_tof_base, $
   ;retrieve TOF array
   IF (nexus_file_name NE '') THEN BEGIN
     tof_array = retrieve_tof_array(nexus_file_name)
+    (*(*global1).tof_array) = tof_array
   ENDIF
   
   ;integrated counts_vs_tof for all pixels
   counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
   counts_vs_tof_integrated_2 = TOTAL(counts_vs_tof_integrated_1,1)
+  
+  (*(*global1).counts_vs_tof_array_integrated) = counts_vs_tof_integrated_2
   
   ;determine position of maximum
   max = MAX(counts_vs_tof_integrated_2)
@@ -128,13 +204,28 @@ PRO Launch_counts_vs_tof_base, $
   WSET, id_value
   
   IF (nexus_file_name NE '') THEN BEGIN
-  PLOT, tof_array, $
-    counts_vs_tof_integrated_2, $
-    XTITLE = 'TOF (microS)',$
-    YTITLE = 'Counts'
-    ENDIF ELSE BEGIN
-  PLOT, counts_vs_tof_integrated_2, $
-    XTITLE = 'Bins #',$
-    YTITLE = 'Counts'
-    ENDELSE
+    xtitle = 'TOF (microS)'
+    ytitle = 'Counts'
+    plot_type = 'tof'
+  ENDIF ELSE BEGIN
+    xtitle = 'Bins #'
+    ytitle = 'Counts'
+    plot_type = 'bin'
+  ENDELSE
+  
+  (*global1).xtitle = xtitle
+  (*global1).ytitle = ytitle
+  (*global1).plot_type = plot_type
+  
+  IF (nexus_file_name NE '') THEN BEGIN
+    PLOT, tof_array, $
+      counts_vs_tof_integrated_2, $
+      XTITLE = xtitle,$
+      YTITLE = ytitle
+  ENDIF ELSE BEGIN
+    PLOT, counts_vs_tof_integrated_2, $
+      XTITLE = xtitle,$
+      YTITLE = ytitle
+  ENDELSE
+  
 END
