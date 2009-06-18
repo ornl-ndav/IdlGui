@@ -50,13 +50,13 @@ PRO launch_couts_vs_tof_base_Event, Event
     ;linear plot
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
-      replot_counts_vs_tof_full_detector, event, lin_log_type='linear'
+      display_selection, Event
     END
     
     ;log plot
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
-      replot_counts_vs_tof_full_detector, event, lin_log_type='log'
+      display_selection, Event
     END
     
     ;draw plot
@@ -87,31 +87,31 @@ PRO launch_couts_vs_tof_base_Event, Event
           ENDELSE
           (*global1).x0y0x1y1_data = x0y0x1y1_data
           (*global1).x0y0x1y1_device = x0y0x1y1_device
-          display_selection, Event, x0y0x1y1_device
+          display_selection, Event
         ENDIF
       ENDIF
-     
-     IF (event.type EQ 2 AND $
-     (*global1).left_click) THEN BEGIN
-          CURSOR, x_data, y_data, /DATA
-          CURSOR, x_device, y_device, /DEVICE
-          x0y0x1y1_data = (*global1).x0y0x1y1_data
-          x0y0x1y1_device = (*global1).x0y0x1y1_device
-          IF ((*global1).left_clicked) THEN BEGIN
-            x0y0x1y1_data[0] = x_data
-            x0y0x1y1_data[1] = y_data
-            x0y0x1y1_device[0] = x_device
-            x0y0x1y1_device[1] = y_device
-          ENDIF ELSE BEGIN
-            x0y0x1y1_data[2] = x_data
-            x0y0x1y1_data[3] = y_data
-            x0y0x1y1_device[2] = x_device
-            x0y0x1y1_device[3] = y_device
-          ENDELSE
-          (*global1).x0y0x1y1_data = x0y0x1y1_data
-          (*global1).x0y0x1y1_device = x0y0x1y1_device
-          display_selection, Event, x0y0x1y1_device
-     ENDIF
+      
+      IF (event.type EQ 2 AND $
+        (*global1).left_click) THEN BEGIN
+        CURSOR, x_data, y_data, /DATA
+        CURSOR, x_device, y_device, /DEVICE
+        x0y0x1y1_data = (*global1).x0y0x1y1_data
+        x0y0x1y1_device = (*global1).x0y0x1y1_device
+        IF ((*global1).left_clicked) THEN BEGIN
+          x0y0x1y1_data[0] = x_data
+          x0y0x1y1_data[1] = y_data
+          x0y0x1y1_device[0] = x_device
+          x0y0x1y1_device[1] = y_device
+        ENDIF ELSE BEGIN
+          x0y0x1y1_data[2] = x_data
+          x0y0x1y1_data[3] = y_data
+          x0y0x1y1_device[2] = x_device
+          x0y0x1y1_device[3] = y_device
+        ENDELSE
+        (*global1).x0y0x1y1_data = x0y0x1y1_data
+        (*global1).x0y0x1y1_device = x0y0x1y1_device
+        display_selection, Event
+      ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click
         switch_left_right_click, Event
@@ -125,9 +125,11 @@ PRO launch_couts_vs_tof_base_Event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_selection, Event, x0y0x1y1_device
+PRO display_selection, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x0y0x1y1_device = (*global1).x0y0x1y1_device
   
   id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -157,11 +159,6 @@ PRO display_selection, Event, x0y0x1y1_device
   IF (xmin LT x0y0x1y1_device_limit[0]) THEN xmin = -1L
   IF (ymax GT x0y0x1y1_device_limit[3]) THEN ymax = -1L
   IF (ymin LT x0y0x1y1_device_limit[1]) THEN ymin = -1L
-  
-  print, x0y0x1y1_device_limit ;remove_me
-  print, 'xmin: ' + string(xmin)
-  print, 'xmax: ' + string(xmax)
-  print
   
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1_data = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
@@ -322,7 +319,7 @@ PRO MakeCountsVsTofBase, wBase
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_average_value')
     
-    info = WIDGET_LABEL(row1,$
+  info = WIDGET_LABEL(row1,$
     VALUE = '  (Left click to select min/max value and right click ' + $
     'to switch to other value)')
     
