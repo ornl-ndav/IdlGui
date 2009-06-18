@@ -32,6 +32,15 @@
 ;
 ;==============================================================================
 
+FUNCTION isLinSelected, Event
+
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
 PRO launch_couts_vs_tof_base_Event, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
@@ -50,8 +59,108 @@ PRO launch_couts_vs_tof_base_Event, Event
       replot_counts_vs_tof_full_detector, event, lin_log_type='log'
     END
     
+    ;draw plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
+      
+      IF (event.press NE 4) THEN BEGIN
+      IF (event.type EQ 0) THEN BEGIN ;left click
+        CURSOR, x_data, y_data, /DATA
+        CURSOR, x_device, y_device, /DEVICE
+        x0y0x1y1_data = (*global1).x0y0x1y1_data
+        x0y0x1y1_device = (*global1).x0y0x1y1_device
+        IF ((*global1).left_clicked) THEN BEGIN
+          x0y0x1y1_data[0] = x_data
+          x0y0x1y1_data[1] = y_data
+          x0y0x1y1_device[0] = x_device
+          x0y0x1y1_device[1] = y_device
+        ENDIF ELSE BEGIN
+          x0y0x1y1_data[2] = x_data
+          x0y0x1y1_data[3] = y_data
+          x0y0x1y1_device[2] = x_device
+          x0y0x1y1_device[3] = y_device
+        ENDELSE
+        (*global1).x0y0x1y1_data = x0y0x1y1_data
+        (*global1).x0y0x1y1_device = x0y0x1y1_device
+        display_selection, Event, x0y0x1y1_device
+      ENDIF
+      ENDIF
+      
+      IF (event.press EQ 4) THEN BEGIN ;right click
+        switch_left_right_click, Event
+      ENDIF
+      
+    END
+    
     ELSE:
   ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_selection, Event, x0y0x1y1_device
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  ;replot background
+  lin_type = isLinSelected(Event)
+  IF (lin_type) THEN BEGIN
+    lin_log_type = 'linear'
+  ENDIF ELSE BEGIN
+    lin_log_type = 'log'
+  ENDELSE
+  replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
+  
+  ;plot selection
+  x0y0x1y1_device = (*global1).x0y0x1y1_device
+  x0x1 = [x0y0x1y1_device[0],x0y0x1y1_device[2]]
+  y0y1 = [x0y0x1y1_device[1],x0y0x1y1_device[3]]
+  
+  xmin = MIN(x0x1,MAX=xmax)
+  ymin = MIN(y0y1,MAX=ymax)
+  
+  ;make sure x and y are inside the space allowed
+  x0y0x1y1_device_limit = (*global1).x0y0x1y1_device_limit
+  IF (xmax LT x0y0x1y1_device_limit[0]) THEN xmax = -1L
+  IF (xmin GT x0y0x1y1_device_limit[2]) THEN xmin = -1L
+  IF (ymax LT x0y0x1y1_device_limit[1]) THEN ymax = -1L
+  IF (ymin GT x0y0x1y1_device_limit[3]) THEN ymin = -1L
+  
+  ymin_plot = x0y0x1y1_device_limit[1]
+  ymax_plot = x0y0x1y1_device_limit[3]
+
+  print, xmin
+  print, xmax
+  print
+  
+  IF (xmin NE -1L) THEN BEGIN
+    PLOTS, xmin, ymin_plot,/DEVICE
+    PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DEVICE
+  ENDIF
+  
+  IF (xmax NE -1L) THEN BEGIN
+    PLOTS, xmax, ymin_plot,/DEVICE
+    PLOTS, xmax, ymax_plot,/CONTINUE, COLOR=100,/DEVICE
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO switch_left_right_click, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  left_clicked = (*global1).left_clicked
+  IF (left_clicked EQ 1b) THEN BEGIN
+    left_clicked = 0b
+  ENDIF ELSE BEGIN
+    left_clicked = 1b
+  ENDELSE
+  (*global1).left_clicked = left_clicked
   
 END
 
@@ -118,8 +227,12 @@ PRO MakeCountsVsTofBase, wBase
     UNAME = 'counts_vs_tof_main_base',$
     /COLUMN)
     
+  ;ROW 1 --------------------------------------------------
+  row1 = WIDGET_BASE(wBase,$
+    /ROW)
+    
   ;lin/log cw_bgroup
-  row1c = WIDGET_BASE(wBase,$
+  row1c = WIDGET_BASE(row1,$
     /ROW,$
     /EXCLUSIVE,$
     FRAME = 0)
@@ -136,10 +249,42 @@ PRO MakeCountsVsTofBase, wBase
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
-  ;--------------------------------------------------
+  space = WIDGET_LABEL(row1,$
+    VALUE = '          ')
+    
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'Left Bin:')
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    UNAME = 'full_detector_counts_vs_tof_left_bin')
+    
+  value = WIDGET_LABEL(row1,$
+    VALUE = '    Right Bin:')
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    UNAME = 'full_detector_counts_vs_tof_right_bin')
+    
+  value = WIDGET_LABEL(row1,$
+    VALUE = '     Average counts of selection:')
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    FRAME = 1,$
+    /ALIGN_LEFT,$
+    UNAME = 'full_detector_counts_vs_tof_average_value')
+    
+  ;ROW 2 --------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
     SCR_YSIZE = 600,$
+    /MOTION_EVENTS,$
+    /BUTTON_EVENTS,$
     UNAME = 'counts_vs_tof_main_base_draw')
     
   WIDGET_CONTROL, wBase, /REALIZE
@@ -157,13 +302,17 @@ PRO Launch_counts_vs_tof_base, $
   MakeCountsVsTofBase, wBase
   
   global1 = PTR_NEW({ $
-    NexusFileName:       nexus_file_name,$
+    NexusFileName: nexus_file_name,$
     counts_vs_tof_array: counts_vs_tof_array,$
     counts_vs_tof_array_integrated: PTR_NEW(0L),$
     xtitle: '',$
     ytitle: '',$
     plot_type: '',$
     tof_array: PTR_NEW(0L),$
+    left_clicked: 1b,$
+    x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
+    x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
+    x0y0x1y1_device_limit: [60L,40L,1481L,580L],$
     wbase:               wbase})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global1
