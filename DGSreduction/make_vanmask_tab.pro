@@ -163,41 +163,16 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSN_BLACKCAN")
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSN_DARK")
 
-; == TIB ==
+    ; == Transmission Corrections == 
+  transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
+  transBaseLabel = WIDGET_LABEL(transBase, VALUE=' Transmission Corrections ', XOFFSET=5)
+  transBaseLabelGeometry = WIDGET_INFO(transBaseLabel, /GEOMETRY)
+  transBaseLabelGeometryYSize = transBaseLabelGeometry.ysize
+  transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
+    YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
 
-  ;TIBrow = WIDGET_BASE(normOptionsBaseRow2, /ROW)
-  
-  TIBbase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
-  TIBlabel = WIDGET_LABEL(TIBbase, VALUE=' Time Independent Bkgrd ', XOFFSET=5)
-  TIBlabelGeometry = WIDGET_INFO(TIBlabel, /GEOMETRY)
-  TIBlabelGeometryYSize = TIBlabelGeometry.ysize
-  TIBPrettyBase = WIDGET_BASE(TIBbase, /FRAME, /ROW, $
-    YOFFSET=TIBlabelGeometryYSize/2, XPAD=10, YPAD=10)
-  
-  ; TIB Constant
-  TIBConstantBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
-  TIBConstantBaseLabel = WIDGET_LABEL(TIBConstantBase, VALUE=' Constant ', XOFFSET=5)
-  TIBConstantBaseLabelGeometry = WIDGET_INFO(TIBConstantBaseLabel, /GEOMETRY)
-  TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
-  TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
-      YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=15, TITLE="", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
-  
-  label1 = WIDGET_LABEL(TIBPrettyBase, VALUE=' OR ')
-  
-  ; TIB range
-  TIBRangeBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
-  TIBRangeBaseLabel = WIDGET_LABEL(TIBRangeBase, VALUE=' Range ', XOFFSET=5)
-  TIBRangeBaseLabelGeometry = WIDGET_INFO(TIBRangeBaseLabel, /GEOMETRY)
-  TIBRangeBaseLabelGeometryYSize = TIBRangeBaseLabelGeometry.ysize
-  TIBRangePrettyBase = WIDGET_BASE(TIBRangeBase, /FRAME, /ROW, $
-      YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, $
-      SCR_XSIZE=318)
-  
-  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", XSIZE=15)
-  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", XSIZE=15)
-  
-  
+  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSN_NORM-TRANS", XSIZE=22)
+  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSN_DET-EFF", XSIZE=22)
   
   ; Monitor integration range
   monitorRangeBase = WIDGET_BASE(normOptionsBaseRow1, /ALIGN_BOTTOM)
@@ -233,7 +208,43 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
         YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
   roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGSN_ROI_FILENAME', $
-    /ALL_EVENTS, XSIZE=20)
+    /ALL_EVENTS, XSIZE=25)
+  
+
+; == TIB ==
+
+  TIBrow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
+
+  TIBbase = WIDGET_BASE(TIBrow)
+  TIBlabel = WIDGET_LABEL(TIBbase, VALUE=' Time Independent Bkgrd ', XOFFSET=5)
+  TIBlabelGeometry = WIDGET_INFO(TIBlabel, /GEOMETRY)
+  TIBlabelGeometryYSize = TIBlabelGeometry.ysize
+  TIBPrettyBase = WIDGET_BASE(TIBbase, /FRAME, /ROW, $
+    YOFFSET=TIBlabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=535)
+  
+  ; TIB Constant
+  TIBConstantBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBConstantBaseLabel = WIDGET_LABEL(TIBConstantBase, VALUE=' Constant ', XOFFSET=5)
+  TIBConstantBaseLabelGeometry = WIDGET_INFO(TIBConstantBaseLabel, /GEOMETRY)
+  TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
+  TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
+      YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
+  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=15, TITLE="", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
+  
+  label1 = WIDGET_LABEL(TIBPrettyBase, VALUE=' OR ')
+  
+  ; TIB range
+  TIBRangeBase = WIDGET_BASE(TIBPrettyBase, /ALIGN_BOTTOM)
+  TIBRangeBaseLabel = WIDGET_LABEL(TIBRangeBase, VALUE=' Range ', XOFFSET=5)
+  TIBRangeBaseLabelGeometry = WIDGET_INFO(TIBRangeBaseLabel, /GEOMETRY)
+  TIBRangeBaseLabelGeometryYSize = TIBRangeBaseLabelGeometry.ysize
+  TIBRangePrettyBase = WIDGET_BASE(TIBRangeBase, /FRAME, /ROW, $
+      YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, $
+      SCR_XSIZE=318)
+  
+  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", XSIZE=15)
+  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", XSIZE=15)
+  
   
 
     ; Output Formats Pretty Frame
@@ -257,7 +268,6 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   ;qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSN_MAKE_QVECTOR')
   ;fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGSN_MAKE_FIXED', UNAME='DGSN_MAKE_FIXED')
   ; Column #2
-  etButton = Widget_Button(outputBaseCol2, Value='Combined Energy Transfer', UVALUE='DGSN_MAKE_COMBINED_ET')
   tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF')
   normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSN_DUMP_NORM')
   waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE')
@@ -294,6 +304,17 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
 
   textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
   outputID= WIDGET_TEXT(baseWidget, /EDITABLE, xsize=80, ysize=6, /SCROLL, /WRAP, $
-    VALUE=dgsncmd->generate(), UNAME='DGSN_CMD')
+    VALUE=dgsncmd->generate(), UNAME='DGSN_CMD_TEXT')
+
+  ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
+  
+  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
+    EVENT_PRO='DGSnorm_LaunchCollector', UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+  ; As by default we have 1 job - we should disable the collector button
+  WIDGET_CONTROL, GatherButton, SENSITIVE=0 
+  
+  ; Define a Run button
+  executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $
+    EVENT_PRO='DGSnorm_Execute', UNAME='DGSN_EXECUTE_BUTTON')
 
 END
