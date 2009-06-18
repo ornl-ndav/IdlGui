@@ -148,23 +148,23 @@ PRO calculate_average_value, Event
     ENDIF ELSE BEGIN
       index_min = 0
     ENDELSE
-
+    
     index_max_array = WHERE(tof_array GT xmax_data,nbr_max)
     IF (nbr_max NE 0) THEN BEGIN
       index_max = index_max_array[0]-1
     ENDIF ELSE BEGIN
       index_max = N_ELEMENTS(tof_array)-1
     ENDELSE
-        
+    
     ;make sure index_min and index_max are in the range authorized
     IF (index_max GE N_ELEMENTS(counts_vs_tof_integrated)) THEN BEGIN
-    index_max = N_ELEMENTS(counts_vs_tof_integrated)-1
-    ENDIF    
-        
+      index_max = N_ELEMENTS(counts_vs_tof_integrated)-1
+    ENDIF
+    
     IF (index_min GE N_ELEMENTS(counts_vs_tof_integrated)) THEN BEGIN
-    index_min = N_ELEMENTS(counts_vs_tof_integrated)-1
-    ENDIF    
-
+      index_min = N_ELEMENTS(counts_vs_tof_integrated)-1
+    ENDIF
+    
     diff = index_min - index_max
     IF (diff GT 0) THEN average = 'N/A'
     IF (diff EQ 0) THEN BEGIN
@@ -175,17 +175,22 @@ PRO calculate_average_value, Event
       average = TOTAL(total_counts) / N_ELEMENTS(total_counts)
     ENDIF
     
-    putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
-      STRCOMPRESS(average,/REMOVE_ALL)
-      
   ENDIF ELSE BEGIN ;#bin mode
   
+    xmin_data += 1
+    diff = xmin_data - xmax_data
+    IF (diff GT 0) THEN average = 'N/A'
+    IF (diff EQ 0) THEN average = counts_vs_tof_integrated[xmin_data]
+    IF (diff LT 0) THEN BEGIN
+      total_counts = counts_vs_tof_integrated[xmin_data:xmax_data]
+      average = TOTAL(total_counts)/N_ELEMENTS(total_counts)
+    ENDIF
+    
   ENDELSE
   
-  print
-  print
-  
-  
+  putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
+    STRCOMPRESS(average,/REMOVE_ALL)
+    
 END
 
 ;------------------------------------------------------------------------------
