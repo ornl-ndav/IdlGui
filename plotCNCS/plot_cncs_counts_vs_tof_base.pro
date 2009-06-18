@@ -63,8 +63,15 @@ PRO launch_couts_vs_tof_base_Event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
       
+      help, event,/structure
+      
+      IF (event.release EQ 1) THEN BEGIN ;release left click
+        (*global1).left_click = 0b
+      ENDIF
+      
       IF (event.press NE 4) THEN BEGIN
         IF (event.type EQ 0) THEN BEGIN ;left click
+          (*global1).left_click = 1b
           CURSOR, x_data, y_data, /DATA
           CURSOR, x_device, y_device, /DEVICE
           x0y0x1y1_data = (*global1).x0y0x1y1_data
@@ -85,6 +92,28 @@ PRO launch_couts_vs_tof_base_Event, Event
           display_selection, Event, x0y0x1y1_device
         ENDIF
       ENDIF
+     
+     IF (event.type EQ 2 AND $
+     (*global1).left_click) THEN BEGIN
+          CURSOR, x_data, y_data, /DATA
+          CURSOR, x_device, y_device, /DEVICE
+          x0y0x1y1_data = (*global1).x0y0x1y1_data
+          x0y0x1y1_device = (*global1).x0y0x1y1_device
+          IF ((*global1).left_clicked) THEN BEGIN
+            x0y0x1y1_data[0] = x_data
+            x0y0x1y1_data[1] = y_data
+            x0y0x1y1_device[0] = x_device
+            x0y0x1y1_device[1] = y_device
+          ENDIF ELSE BEGIN
+            x0y0x1y1_data[2] = x_data
+            x0y0x1y1_data[3] = y_data
+            x0y0x1y1_device[2] = x_device
+            x0y0x1y1_device[3] = y_device
+          ENDELSE
+          (*global1).x0y0x1y1_data = x0y0x1y1_data
+          (*global1).x0y0x1y1_device = x0y0x1y1_device
+          display_selection, Event, x0y0x1y1_device
+     ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click
         switch_left_right_click, Event
@@ -133,20 +162,20 @@ PRO display_selection, Event, x0y0x1y1_device
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1_data = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
   xmin_data = MIN(x0x1_data,MAX=xmax_data)
-
+  
   ymin_plot = x0y0x1y1_device_limit[1]
   ymax_plot = x0y0x1y1_device_limit[3]
   IF (xmin NE -1L) THEN BEGIN
     PLOTS, xmin, ymin_plot,/DEVICE
     PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DEVICE
     putTextFieldValue, Event,'full_detector_counts_vs_tof_left_bin', $
-    STRCOMPRESS(xmin_data,/REMOVE_ALL)
+      STRCOMPRESS(xmin_data,/REMOVE_ALL)
   ENDIF
   IF (xmax NE -1L) THEN BEGIN
     PLOTS, xmax, ymin_plot,/DEVICE
     PLOTS, xmax, ymax_plot,/CONTINUE, COLOR=100,/DEVICE
     putTextFieldValue, Event,'full_detector_counts_vs_tof_right_bin', $
-    STRCOMPRESS(xmax_data,/REMOVE_ALL)
+      STRCOMPRESS(xmax_data,/REMOVE_ALL)
   ENDIF
   
 END
@@ -323,6 +352,7 @@ PRO Launch_counts_vs_tof_base, $
     x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device_limit: [60L,40L,1481L,580L],$
+    left_click: 0b,$
     wbase:               wbase})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global1
@@ -375,10 +405,10 @@ PRO Launch_counts_vs_tof_base, $
   ENDELSE
   
   id = WIDGET_INFO(wBase,$
-  FIND_BY_UNAME='full_detector_counts_vs_tof_right_bin_unit')
+    FIND_BY_UNAME='full_detector_counts_vs_tof_right_bin_unit')
   WIDGET_CONTROL, id, SET_VALUE = units_label
   id = WIDGET_INFO(wBase,$
-  FIND_BY_UNAME='full_detector_counts_vs_tof_left_bin_unit')
+    FIND_BY_UNAME='full_detector_counts_vs_tof_left_bin_unit')
   WIDGET_CONTROL, id, SET_VALUE = units_label
   
   (*global1).xtitle = xtitle
