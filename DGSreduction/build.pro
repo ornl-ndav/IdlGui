@@ -54,6 +54,10 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile monitorjob_events
 .compile monitorjob
 
+.compile dgsnorm_launchcollector
+.compile dgsnorm_events
+.compile dgsreduction_events
+.compile dgsreduction_tlb_events
 .compile dgsreduction_launchcollector
 .compile dgsreduction_launchjobmonitor
 .compile dgsreduction_saveparameters
@@ -62,6 +66,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile make_vanmask_tab
 .compile dgsreduction
 .compile reductioncmd__define
+.compile normcmd__define
 
 resolve_all
 
