@@ -89,9 +89,10 @@ PRO launch_couts_vs_tof_base_Event, Event
           (*global1).x0y0x1y1_device = x0y0x1y1_device
           display_selection, Event
         ENDIF
+        calculate_average_value, Event
       ENDIF
       
-      IF (event.type EQ 2 AND $
+      IF (event.type EQ 2 AND $ ;moving the mouse with left click
         (*global1).left_click) THEN BEGIN
         CURSOR, x_data, y_data, /DATA
         CURSOR, x_device, y_device, /DEVICE
@@ -111,6 +112,7 @@ PRO launch_couts_vs_tof_base_Event, Event
         (*global1).x0y0x1y1_data = x0y0x1y1_data
         (*global1).x0y0x1y1_device = x0y0x1y1_device
         display_selection, Event
+        calculate_average_value, Event
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click
@@ -125,11 +127,71 @@ PRO launch_couts_vs_tof_base_Event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_selection, Event
+PRO calculate_average_value, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
-  x0y0x1y1_device = (*global1).x0y0x1y1_device
+  counts_vs_tof_integrated= (*(*global1).counts_vs_tof_array_integrated)
+  x0y0x1y1_data = (*global1).x0y0x1y1_data
+  x0x1_data = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
+  xmin_data = MIN(x0x1_data,MAX=xmax_data)
+  
+  IF (xmin_data EQ -1L) THEN RETURN
+  IF (xmax_data EQ -1L) THEN RETURN
+  
+  plot_type = (*global1).plot_type
+  IF (plot_type EQ 'tof') THEN BEGIN ;tof mode
+    tof_array = (*(*global1).tof_array)
+    index_min_array = WHERE(tof_array LT xmin_data,nbr_min)
+    IF (nbr_min NE 0) THEN BEGIN
+      index_min = index_min_array[nbr_min-1] + 1
+    ENDIF ELSE BEGIN
+      index_min = 0
+    ENDELSE
+
+    index_max_array = WHERE(tof_array GT xmax_data,nbr_max)
+    IF (nbr_max NE 0) THEN BEGIN
+      index_max = index_max_array[0]-1
+    ENDIF ELSE BEGIN
+      index_max = N_ELEMENTS(tof_array)-1
+    ENDELSE
+        
+    ;make sure index_min and index_max are in the range authorized
+    IF (index_max GE N_ELEMENTS(counts_vs_tof_integrated)) THEN BEGIN
+    index_max = N_ELEMENTS(counts_vs_tof_integrated)-1
+    ENDIF    
+        
+    IF (index_min GE N_ELEMENTS(counts_vs_tof_integrated)) THEN BEGIN
+    index_min = N_ELEMENTS(counts_vs_tof_integrated)-1
+    ENDIF    
+
+    diff = index_min - index_max
+    IF (diff GT 0) THEN average = 'N/A'
+    IF (diff EQ 0) THEN BEGIN
+      average = counts_vs_tof_integrated[index_min]
+    ENDIF
+    IF (diff LT 0) THEN BEGIN
+      total_counts = counts_vs_tof_integrated[index_min:index_max]
+      average = TOTAL(total_counts) / N_ELEMENTS(total_counts)
+    ENDIF
+    
+    putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
+      STRCOMPRESS(average,/REMOVE_ALL)
+      
+  ENDIF ELSE BEGIN ;#bin mode
+  
+  ENDELSE
+  
+  print
+  print
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_selection, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
   id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
