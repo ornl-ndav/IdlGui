@@ -34,6 +34,8 @@ PRO ReductionCmd::GetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -54,6 +56,7 @@ PRO ReductionCmd::GetProperty, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
+    DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask 
     HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
@@ -105,6 +108,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Tmin) NE 0 THEN Tmin = self.tmin
   IF ARG_PRESENT(Tmax) NE 0 THEN Tmax = self.tmax
   IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst 
+  IF ARG_PRESENT(TIBrange_Min) NE 0 THEN TIBrange_Min = self.tibrange_min
+  IF ARG_PRESENT(TIBrange_Max) NE 0 THEN TIBrange_Max = self.tibrange_max
   IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei 
   IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero 
   IF ARG_PRESENT(error_ei) NE 0 THEN error_ei = self.error_ei
@@ -126,6 +131,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
   IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm 
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
+  IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib 
   IF ARG_PRESENT(Mask) NE 0 THEN Mask = self.mask
   IF ARG_PRESENT(HardMask) NE 0 THEN HardMask = self.hardmask
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
@@ -172,6 +178,8 @@ PRO ReductionCmd::SetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -192,6 +200,7 @@ PRO ReductionCmd::SetProperty, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
+    DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask 
     HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
@@ -269,16 +278,28 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(lowerbank) NE 0 THEN self.lowerbank = lowerbank
   IF N_ELEMENTS(upperbank) NE 0 THEN self.upperbank = upperbank
   IF N_ELEMENTS(datapaths) NE 0 THEN self.datapaths = datapaths
-  IF N_ELEMENTS(normalisation) NE 0 THEN self.normalisation = Normalisation
-  IF N_ELEMENTS(emptycan) NE 0 THEN self.emptycan = EmptyCan
-  IF N_ELEMENTS(blackcan) NE 0 THEN self.blackcan = BlackCan
-  IF N_ELEMENTS(dark) NE 0 THEN self.dark = dark
+  
+  IF N_ELEMENTS(normalisation) NE 0 THEN BEGIN
+    ; If -ve then ignore
+    IF Normalisation LE 0.0 THEN Normalisation = ""
+    self.normalisation = STRCOMPRESS(STRING(Normalisation), /REMOVE_ALL)
+  ENDIF
+  
+  IF N_ELEMENTS(emptycan) NE 0 THEN $
+    self.emptycan = STRCOMPRESS(STRING(EmptyCan), /REMOVE_ALL)
+  IF N_ELEMENTS(blackcan) NE 0 THEN $
+    self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
+  IF N_ELEMENTS(dark) NE 0 THEN $
+    self.dark = STRCOMPRESS(STRING(dark), /REMOVE_ALL)
+    
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
   IF N_ELEMENTS(roifile) NE 0 THEN self.roifile = ROIfile
   IF N_ELEMENTS(tmin) NE 0 THEN self.tmin = Tmin
   IF N_ELEMENTS(tmax) NE 0 THEN self.tmax = Tmax
   IF N_ELEMENTS(tibconst) NE 0 THEN self.tibconst = TIBconst
+  IF N_ELEMENTS(TIBrange_Min) NE 0 THEN self.tibrange_min = TIBrange_Min
+  IF N_ELEMENTS(TIBrange_Max) NE 0 THEN self.tibrange_max = TIBrange_Max
   IF N_ELEMENTS(ei) NE 0 THEN self.ei = Ei
   IF N_ELEMENTS(tzero) NE 0 THEN self.tzero = Tzero
   IF N_ELEMENTS(error_ei) NE 0 THEN self.error_ei = error_ei
@@ -300,6 +321,7 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
+  IF N_ELEMENTS(dumptib) NE 0 THEN self.dumptib = DumpTIB
   IF N_ELEMENTS(mask) NE 0 THEN self.mask = Mask
   IF N_ELEMENTS(hardmask) NE 0 THEN self.hardmask = HardMask
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
@@ -438,9 +460,16 @@ function ReductionCmd::Generate
     ; Tmax
     IF STRLEN(self.tmax) GE 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
-    ; Time Independent Background
+    
+    ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst
+    
+    ;  TIB constant determination range
+    IF (STRLEN(self.tibrange_min) GE 1) $
+      AND (STRLEN(self.tibrange_max GE 1)) THEN $
+      cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
+    
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
@@ -482,15 +511,28 @@ function ReductionCmd::Generate
     IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
+    IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
+    
     ; Mask File(s)
-    IF ((self.mask EQ 1) OR (self.hardmask EQ 1)) THEN BEGIN
+    IF (((self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) AND (STRLEN(self.instrument) GT 1)) $
+        OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
       cmd[i] += " --mask-file="
     
-      IF (self.mask EQ 1) THEN cmd[i] += "~/results/" + self.instrument + "/"+ $
-        self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-        i+1, self.jobs, /PAD) + "_mask.dat"
-      IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
-      IF (self.hardmask EQ 1) THEN cmd[i] += "~/mask/" + self.instrument + "/" + $
+      IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
+        AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+          cmd[i] += "~/results/" + self.instrument + "/"+ $
+          self.normalisation + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + "_mask.dat"
+      
+          ; Put a ',' in if the hardmask is defined as well.
+          IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
+      
+      ENDIF
+      
+      
+      IF (self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1) THEN $
+        cmd[i] += "~/mask/" + self.instrument + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + "_mask.dat"
     
@@ -552,6 +594,8 @@ function ReductionCmd::Init, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -572,6 +616,7 @@ function ReductionCmd::Init, $
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
+    DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Mask=mask, $                         ; Apply Mask 
     HardMask=hardmask, $                 ; Apply Hard Mask 
     LambdaRatio=lambdaratio, $           ; Lambda ratio
@@ -623,6 +668,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(tmin) EQ 0 THEN tmin = ""
   IF N_ELEMENTS(tmax) EQ 0 THEN tmax = ""
   IF N_ELEMENTS(tibconst) EQ 0 THEN tibconst = ""
+  IF N_ELEMENTS(tibrange_min) EQ 0 THEN tibrange_min = ""
+  IF N_ELEMENTS(tibrange_max) EQ 0 THEN tibrange_max = ""
   IF N_ELEMENTS(ei) EQ 0 THEN ei = ""
   IF N_ELEMENTS(error_ei) EQ 0 THEN error_ei = '0.0'
   IF N_ELEMENTS(tzero) EQ 0 THEN tzero = ""
@@ -643,6 +690,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
+  IF N_ELEMENTS(DumpTIB) EQ 0 THEN dumptib = 0
   IF N_ELEMENTS(mask) EQ 0 THEN mask = 0
   IF N_ELEMENTS(hardmask) EQ 0 THEN hardmask = 0
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
@@ -685,6 +733,8 @@ function ReductionCmd::Init, $
   self.tmin = tmin
   self.tmax = tmax
   self.tibconst = tibconst
+  self.tibrange_min = tibrange_min
+  self.tibrange_max = tibrange_max
   self.ei = ei
   self.error_ei = error_ei
   self.tzero = tzero
@@ -705,6 +755,7 @@ function ReductionCmd::Init, $
   self.dumpwave = dumpwave
   self.dumpnorm = dumpnorm
   self.dumpet = dumpet
+  self.dumptib = dumptib
   self.mask = mask
   self.hardmask = hardmask
   self.lambdaratio = lambdaratio
@@ -760,6 +811,8 @@ pro ReductionCmd__Define
     tmin: "", $              ; minimum tof
     tmax: "", $              ; maximum tof
     tibconst: "", $          ; Time Independant Background constant
+    tibrange_min: "", $      ; Range for calculating TIB constant 
+    tibrange_max: "", $      ; Range for calculating TIB constant 
     ei: "", $                ; Incident Energy (meV)
     error_ei: "", $          ; Error in Incident Energy (meV)
     tzero: "", $             ; T0
@@ -780,6 +833,7 @@ pro ReductionCmd__Define
     dumpwave: 0L, $          ; Dump combined wavelength file
     dumpnorm: 0L, $          ; Dump combined Norm file
     dumpet: 0L, $            ; Dump combined Et file
+    dumptib: 0L, $           ; Dump the TIB constant for all pixels
     mask: 0L, $              ; Apply Mask File
     hardmask: 0L, $          ; Apply Hard Mask File
     lambdaratio: 0L, $       ; Lambda ratio
