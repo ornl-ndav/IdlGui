@@ -63,8 +63,6 @@ PRO launch_couts_vs_tof_base_Event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
       
-      help, event,/structure
-      
       IF (event.release EQ 1) THEN BEGIN ;release left click
         (*global1).left_click = 0b
       ENDIF
@@ -154,10 +152,16 @@ PRO display_selection, Event, x0y0x1y1_device
   
   ;make sure x and y are inside the space allowed
   x0y0x1y1_device_limit = (*global1).x0y0x1y1_device_limit
+  IF (xmax GT x0y0x1y1_device_limit[2]) THEN xmax = -1L
   IF (xmax LT x0y0x1y1_device_limit[0]) THEN xmax = -1L
-  IF (xmin GT x0y0x1y1_device_limit[2]) THEN xmin = -1L
-  IF (ymax LT x0y0x1y1_device_limit[1]) THEN ymax = -1L
-  IF (ymin GT x0y0x1y1_device_limit[3]) THEN ymin = -1L
+  IF (xmin LT x0y0x1y1_device_limit[0]) THEN xmin = -1L
+  IF (ymax GT x0y0x1y1_device_limit[3]) THEN ymax = -1L
+  IF (ymin LT x0y0x1y1_device_limit[1]) THEN ymin = -1L
+  
+  print, x0y0x1y1_device_limit ;remove_me
+  print, 'xmin: ' + string(xmin)
+  print, 'xmax: ' + string(xmax)
+  print
   
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1_data = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
@@ -281,7 +285,7 @@ PRO MakeCountsVsTofBase, wBase
   WIDGET_CONTROL, lin, /SET_BUTTON
   
   space = WIDGET_LABEL(row1,$
-    VALUE = '               Selection')
+    VALUE = '        Selection')
     
   value = WIDGET_LABEL(row1,$
     VALUE = '   Min:')
@@ -317,6 +321,10 @@ PRO MakeCountsVsTofBase, wBase
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_average_value')
+    
+    info = WIDGET_LABEL(row1,$
+    VALUE = '  (Left click to select min/max value and right click ' + $
+    'to switch to other value)')
     
   ;ROW 2 --------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
