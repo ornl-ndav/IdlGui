@@ -4,6 +4,7 @@
 # Copy the VM programs in their final location
 
 all:
+	cp plotcncs.cfg .plotcncs.cfg
 	idl ./makefile.pro;
 install:
 	cp plotcncs.cfg .plotcncs.cfg
