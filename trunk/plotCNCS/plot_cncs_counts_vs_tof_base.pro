@@ -127,6 +127,25 @@ PRO launch_couts_vs_tof_base_Event, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO  plot_average, Event, average
+
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x0y0x1y1_data = (*global1).x0y0x1y1_data
+  x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
+  xmin = MIN(x0x1,MAX=xmax)
+  
+  print, 'xmin: ' + string(xmin)
+  print, 'xmax: ' + string(xmax)
+  print, 'average: ' + string(average)
+  
+  PLOTS, xmin, average,/DATA
+  PLOTS, xmax, average,/CONTINUE, COLOR=200,/DATA
+  
+END
+
+;------------------------------------------------------------------------------
 PRO calculate_average_value, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
@@ -169,10 +188,12 @@ PRO calculate_average_value, Event
     IF (diff GT 0) THEN average = 'N/A'
     IF (diff EQ 0) THEN BEGIN
       average = counts_vs_tof_integrated[index_min]
+      plot_average, Event, average
     ENDIF
     IF (diff LT 0) THEN BEGIN
       total_counts = counts_vs_tof_integrated[index_min:index_max]
       average = TOTAL(total_counts) / N_ELEMENTS(total_counts)
+      plot_average, Event, average
     ENDIF
     
   ENDIF ELSE BEGIN ;#bin mode
@@ -180,10 +201,14 @@ PRO calculate_average_value, Event
     xmin_data += 1
     diff = xmin_data - xmax_data
     IF (diff GT 0) THEN average = 'N/A'
-    IF (diff EQ 0) THEN average = counts_vs_tof_integrated[xmin_data]
+    IF (diff EQ 0) THEN BEGIN
+      average = counts_vs_tof_integrated[xmin_data]
+      plot_average, Event, average
+    ENDIF
     IF (diff LT 0) THEN BEGIN
       total_counts = counts_vs_tof_integrated[xmin_data:xmax_data]
       average = TOTAL(total_counts)/N_ELEMENTS(total_counts)
+      plot_average, Event, average
     ENDIF
     
   ENDELSE
