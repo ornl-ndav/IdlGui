@@ -41,6 +41,7 @@ IdlUtilitiesPath = "/utilities"
 cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
 .run logger.pro
+.run IDLxmlParser__define.pro
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
