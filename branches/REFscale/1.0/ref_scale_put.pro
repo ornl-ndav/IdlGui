@@ -98,26 +98,31 @@ END
 ;in their respectives boxes
 PRO putXYMinMax, Event, XYMinMax
 
-Xmin = Number_Formatter(FLOAT(XYMinMax[0]))
-Xmax = Number_Formatter(FLOAT(XYMinMax[1]))
-Ymin = Number_Formatter(FLOAT(XYMinMax[2]))
-Ymax = Number_Formatter(FLOAT(XYMinMax[3]))
+;Xmin = Number_Formatter(FLOAT(XYMinMax[0]))
+;Xmax = Number_Formatter(FLOAT(XYMinMax[1]))
+;Ymin = Number_Formatter(FLOAT(XYMinMax[2]))
+;Ymax = Number_Formatter(FLOAT(XYMinMax[3]))
+
+Xmin = STRING(FLOAT(XYMinMax[0]))
+Xmax = STRING(FLOAT(XYMinMax[1]))
+Ymin = STRING(FLOAT(XYMinMax[2]))
+Ymax = STRING(FLOAT(XYMinMax[3]))
 
 ;min-xaxis
 XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
-widget_control, XminId, set_value=strcompress(Xmin)
+widget_control, XminId, set_value=strcompress(Xmin,/REMOVE_ALL)
 
 ;max-xaxis
 XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
-widget_control, XmaxId, set_value=strcompress(Xmax)
+widget_control, XmaxId, set_value=strcompress(Xmax,/REMOVE_ALL)
 
 ;min-yaxis
 YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
-widget_control, YminId, set_value=strcompress(Ymin)
+widget_control, YminId, set_value=strcompress(Ymin,/REMOVE_ALL)
 
 ;max-yaxis
 YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
-widget_control, YmaxId, set_value=strcompress(Ymax)
+widget_control, YmaxId, set_value=strcompress(Ymax,/REMOVE_ALL)
 
 END
 

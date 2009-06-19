@@ -90,8 +90,6 @@ PRO PlotLoadedFiles, Event
   
     FOR i=0,(size-1) DO BEGIN
     
-      print, 'errorBarStatus: ' + string(errorBarStatus)
-      
       color_array = (*(*global).color_array)
       colorIndex  = color_array[i]
       IF (ErrorBarStatus EQ 0) THEN BEGIN ;with error bars
@@ -195,21 +193,21 @@ PRO PlotLoadedFiles, Event
         
       ENDELSE
       
-    ;        XYMinMax = retrieveXYMinMax(Event) ;_get
-    ;        xmin = FLOAT(XYMinMax[0])
-    ;        xmax = FLOAT(XYMinMax[1])
-    ;        ymin = FLOAT(XYMinMax[2])
-    ;        ymax = FLOAT(XYMinMax[3])
+      ;        XYMinMax = retrieveXYMinMax(Event) ;_get
+      ;        xmin = FLOAT(XYMinMax[0])
+      ;        xmax = FLOAT(XYMinMax[1])
+      ;        ymin = FLOAT(XYMinMax[2])
+      ;        ymax = FLOAT(XYMinMax[3])
+      
+      ;determine Qmin and Qmax
+      
+      QminQmax = getQminQmaxValue(flt0, flt1) ;_get
+      Qmin = QminQmax[0]
+      Qmax = QminQmax[1]
+      Qmin_array[i] = Qmin
+      Qmax_array[i] = Qmax
       
     ENDFOR
-    
-    ;determine Qmin and Qmax
-    
-    QminQmax = getQminQmaxValue(flt0, flt1) ;_get
-    Qmin = QminQmax[0]
-    Qmax = QminQmax[1]
-    Qmin_array[i] = Qmin
-    Qmax_array[i] = Qmax
     
   ENDELSE
   
