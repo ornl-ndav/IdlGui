@@ -79,9 +79,11 @@ PRO MAIN_BASE_ref_scale_event, Event
                 1 : Step2ReleaseClick, $
                   Event, $
                   XMinMax ;button released
-                2 : Step2MoveClick, $
+                2 : BEGIN
+                Step2MoveClick, $
                   Event, $
                   XMinMax ;mouse is moving
+                  END
                 ELSE:
               ENDCASE
             ENDIF

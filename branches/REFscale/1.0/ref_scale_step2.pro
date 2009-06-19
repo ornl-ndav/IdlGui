@@ -500,6 +500,7 @@ replot_main_plot, Event         ;_Plot
 IF ((*global).left_mouse_pressed) THEN BEGIN
     CASE ((*global).Q_selection) OF
         1: BEGIN
+        print, 'in #1'
             (*global).replot_me = 1
             IF ((*global).Q2 NE 0) THEN BEGIN
                 plotQs, Event, Event.x, (*global).Q2x ;_Plot
@@ -514,6 +515,7 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
           STRCOMPRESS((*global).Q1,/REMOVE_ALL)
         END
         2: BEGIN
+                print, 'in #2'
             (*global).replot_me = 1
             IF ((*global).Q1 NE 0) THEN BEGIN
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
@@ -531,15 +533,19 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
     ENDCASE
 ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
     IF ((*global).replotQnew) THEN BEGIN
+            print, 'in #3'
         saveQxFromQ, Event, Q_NUMBER = 1 ;_Step2
     ENDIF
     IF ((*global).Q1 NE 0) THEN BEGIN
+            print, 'in #4'
         plotQ, Event, (*global).Q1x
     ENDIF
     IF ((*global).replotQnew) THEN BEGIN
+            print, 'in #5'
         saveQxFromQ, Event, Q_NUMBER = 2 ;_Step2
     ENDIF
     IF ((*global).Q2 NE 0) THEN BEGIN
+    print, 'in #6'
         plotQ, Event, (*global).Q2x
     ENDIF
     (*global).replotQnew = 0
@@ -568,6 +574,10 @@ IF (x GE draw_xmin AND $
         (*global).Q2x = x 
     ENDELSE
 ENDIF
+
+print, 'in saveQ: ' 
+print, '  (*global).Q1x: ' + string(x)
+
 END
 
 ;##############################################################################
