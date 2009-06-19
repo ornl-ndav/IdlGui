@@ -51,12 +51,16 @@ PRO launch_couts_vs_tof_base_Event, Event
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
       display_selection, Event
+      average = (*global1).average
+      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
     END
     
     ;log plot
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
       display_selection, Event
+      average = (*global1).average
+      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
     END
     
     ;draw plot
@@ -129,16 +133,11 @@ END
 ;------------------------------------------------------------------------------
 PRO  plot_average, Event, average
 
-
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
   xmin = MIN(x0x1,MAX=xmax)
-  
-  print, 'xmin: ' + string(xmin)
-  print, 'xmax: ' + string(xmax)
-  print, 'average: ' + string(average)
   
   PLOTS, xmin, average,/DATA
   PLOTS, xmax, average,/CONTINUE, COLOR=200,/DATA
@@ -212,6 +211,8 @@ PRO calculate_average_value, Event
     ENDIF
     
   ENDELSE
+
+  (*global1).average = STRING(average)
   
   putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
     STRCOMPRESS(average,/REMOVE_ALL)
@@ -443,6 +444,7 @@ PRO Launch_counts_vs_tof_base, $
     counts_vs_tof_array_integrated: PTR_NEW(0L),$
     xtitle: '',$
     ytitle: '',$
+    average: '',$
     plot_type: '',$
     tof_array: PTR_NEW(0L),$
     left_clicked: 1b,$
