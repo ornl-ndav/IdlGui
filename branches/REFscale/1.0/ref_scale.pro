@@ -48,11 +48,14 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ucams = get_ucams()
   ENDELSE
     
-  ;===========================
-  APPLICATION   = 'REFscale'
-  VERSION       = '1.0.15'
-  DEBUGGER      = 'yes'
-  ;===========================
+file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
+  ;============================================================================
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION  = file->getValue(tag=['configuration','version'])
+  DEBUGGer = file->getValue(tag=['configuration','debugging'])
+  ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+  ;============================================================================
   
   StrArray      = strsplit(VERSION,'.',/extract)
   VerArray      = StrArray[0]

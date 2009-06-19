@@ -2,6 +2,7 @@
 # Compile the necessary modules
 # Create the VM program 
 all:
+	cp REFscale.cfg .REFscale.cfg
 	idl ./makefile.pro
 
 install: 
