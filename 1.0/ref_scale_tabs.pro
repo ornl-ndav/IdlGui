@@ -39,6 +39,9 @@
 ;                               - by the refresh plot button
 
 PRO steps_tab, Event, isRefresh
+
+print, 'entering steps_tab'
+
 ;Retrieve Global variable
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
@@ -51,12 +54,15 @@ CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
 list_of_files       = (*(*global).list_of_files)
 list_of_files_size  = (size(list_of_files))(1)
 
+print, '#a'
+
 IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
    
 ;do something only if it's a new tab or refresh button has been clicked
    IF ((PrevTabSelect NE CurrTabSelect) OR (isRefresh EQ 1)) THEN BEGIN
 
       (*global).PrevTabSelect = CurrTabSelect
+      print, 'currTabSelect: ' + string(CurrTabSelect)
 
       CASE (CurrTabSelect) OF
 
@@ -70,12 +76,16 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
         END
 
          1: BEGIN               ;if second tab plot only CE plot
+          print, 'in #1 of steps_tab'
             plot_loaded_file, Event, 'CE' ;_Plot
 ;recalculate Qs
             saveQxFromQ, Event, Q_NUMBER=1
             saveQxFromQ, Event, Q_NUMBER=2
 ;plot the Qmin and Qmax if any have been selected
             plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
+           
+           print, 'Q1x: ' + string((*global).Q1x)
+            
         END
 
          2: BEGIN ;if third tab plot only the file selected
@@ -139,4 +149,7 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
       ENDCASE
    ENDIF
 ENDIF
+
+print, 'leaving steps_tab'
+
 END
