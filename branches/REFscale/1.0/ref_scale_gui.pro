@@ -849,7 +849,3 @@ ENDIF ELSE BEGIN
 ENDELSE
 ActivateFullPreviewButton, Event, Validate
 END
-
-;******************************************************************************
-PRO procedure_ref_scale_gui
-END

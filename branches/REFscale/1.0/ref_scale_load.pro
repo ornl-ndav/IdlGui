@@ -255,17 +255,3 @@ id = widget_info(event.top, find_by_uname='dMD_angle_base')
 widget_control, id, map=0
 END
 
-;******************************************************************************
-
-PRO procedure_ref_scale_load
-END
-
-
-
-
-
-
-
-
-
-

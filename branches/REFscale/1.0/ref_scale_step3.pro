@@ -571,8 +571,3 @@ PRO Step3_display_SF_values, Event,index
   ENDELSE
   GuisetValue, Event, 'Step3SFTextField', SF ;_Gui
 END
-
-;##############################################################################
-;******************************************************************************
-PRO procedure_ref_scale_step3
-END
