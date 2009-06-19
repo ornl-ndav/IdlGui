@@ -32,60 +32,28 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "/utilities"
+;to retrieve the year
+FUNCTION getYear
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+YEAR           = STRCOMPRESS(DateArray[4])
+RETURN, YEAR
+END
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + IdlUtilitiesPath
-.run system_utilities.pro
-.run logger.pro
+;------------------------------------------------------------------------------
+;logger message
+PRO logger, APPLICATION=application, VERSION=version, UCAMS=ucams
 
-;Build REFscale GUI
-cd, CurrentFolder + '/REFscaleGUI/'
-.run make_gui_step1.pro
-.run make_gui_step2.pro
-.run make_gui_step3.pro
-.run make_gui_output_file.pro
-.run make_gui_batch.pro
-.run make_gui_main_base_components.pro
-.run make_gui_log_book.pro
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + UCAMS
+logger_message += ' ' + getYear()
 
-;Build main procedures
-cd, CurrentFolder
-.run ref_scale_get.pro
-.run array_delete.pro
-.run ref_scale_arrays.pro
-.run number_formatter.pro
-.run get_numeric.pro
-.run ref_scale_put.pro
-.run ref_scale_is.pro
-.run idl_send_to_geek.pro
-.run idl_get_metadata__define.pro
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
-.run ref_scale_utility.pro
-.run ref_scale_gui.pro
-.run ref_scale_fit.pro
-.run ref_scale_step3.pro
-.run ref_scale_math.pro
-.run ref_scale_file_utility.pro
-.run ref_scale_tof_to_q.pro
-
-.run ref_scale_openfile.pro
-.run ref_scale_plot.pro
-.run ref_scale_load.pro
-.run ref_scale_step2.pro
-.run ref_scale_produce_output.pro
-.run ref_scale_tabs.pro
-
-;Batch
-.run idl_load_batch_file__define.pro
-.run idl_create_batch_file__define.pro
-.run ref_scale_batch.pro
-.run idl_parse_command_line__define.pro
-
-.run main_base_event.pro
-.run ref_scale_eventcb.pro
-.run ref_scale.pro
-
+END
