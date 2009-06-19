@@ -45,10 +45,12 @@ PRO PlotLoadedFiles, Event
   XYMinMax = retrieveXYMinMax(Event)
   xmin = XYMinMax[0]
   xmax = XYMinMax[1]
-  IF  (XYMinMax[0] EQ '' AND $
-    XYMinMax[1] EQ '' AND $
-    XYMinMax[2] EQ '' AND $
-    XYMinMax[3] EQ '') THEN BEGIN
+  ymin = XYMinMax[2]
+  ymax = XYMinMax[3]
+  IF  (xmin EQ '' AND $
+    xmax EQ '' AND $
+    ymin EQ '' AND $
+    ymax EQ '') THEN BEGIN
     FirstTimePlotting = 1
   ENDIF ELSE BEGIN
     FirstTimePlotting = 0
@@ -88,15 +90,17 @@ PRO PlotLoadedFiles, Event
   
     FOR i=0,(size-1) DO BEGIN
     
-      IF (ErrorBarStatus EQ 0) THEN BEGIN
+      print, 'errorBarStatus: ' + string(errorBarStatus)
+      
+      color_array = (*(*global).color_array)
+      colorIndex  = color_array[i]
+      IF (ErrorBarStatus EQ 0) THEN BEGIN ;with error bars
         IF (i EQ 0) THEN BEGIN
           MainPlotColor = 100
         ENDIF ELSE BEGIN
           MainPlotColor = 255
         ENDELSE
       ENDIF ELSE BEGIN
-        color_array = (*(*global).color_array)
-        colorIndex  = color_array[i]
         MainPlotColor = colorIndex
       ENDELSE
       
@@ -125,6 +129,7 @@ PRO PlotLoadedFiles, Event
                 flt0, $
                 flt1, $
                 xrange = [xmin,xmax],$
+                yrange = [ymin,ymax],$
                 color=MainPlotColor
             ENDELSE
           END
@@ -166,6 +171,7 @@ PRO PlotLoadedFiles, Event
               flt0, $
               flt1, $
               xrange = [xmin,xmax],$
+              yrange = [ymin,ymax],$
               /NOERASE,$
               color=MainPlotColor
           END
@@ -175,6 +181,7 @@ PRO PlotLoadedFiles, Event
               flt1, $
               /ylog, $
               xrange = [xmin,xmax],$
+              yrange = [ymin,ymax],$
               color=MainPlotColor
           END
         ENDCASE
