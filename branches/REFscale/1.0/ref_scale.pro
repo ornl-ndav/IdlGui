@@ -295,17 +295,10 @@ pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
   ;------------------------------------------------------------------------------
   
-  ;logger message
-  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
-  logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-  ENDIF ELSE BEGIN
-    SPAWN, logger_message
-  ENDELSE
-  
+    ;=============================================================================
+  ;send message to log current run of application
+  logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+    
 END
 
 ;
