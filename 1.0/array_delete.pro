@@ -101,7 +101,3 @@ function ArrayDelete, init, $
 
   return, out
 end
-
-;-------------------------------------------------------------------------------
-PRO procedure_array_delete
-END

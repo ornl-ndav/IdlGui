@@ -140,7 +140,3 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
    ENDIF
 ENDIF
 END
-
-;******************************************************************************
-PRO procedure_ref_scale_tabs
-END

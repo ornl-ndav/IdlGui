@@ -271,8 +271,3 @@ FUNCTION number_formatter, number, DECIMALS=decimals
    IF N_Elements(retValue) EQ 1 THEN RETURN, retValue[0] ELSE RETURN, retValue
 
 END 
-
-;-------------------------------------------------------------------------------
-
-PRO procedure_number_formatter
-END

@@ -54,29 +54,29 @@ cd, CurrentFolder + '/REFscaleGUI/'
 ;Build main procedures
 cd, CurrentFolder
 .run ref_scale_get.pro
-.run procedure_array_delete.pro
-.run procedure_ref_scale_arrays.pro
-.run procedure_number_formatter.pro
-.run procedure_get_numeric.pro
+.run array_delete.pro
+.run ref_scale_arrays.pro
+.run number_formatter.pro
+.run get_numeric.pro
 .run ref_scale_put.pro
 .run ref_scale_is.pro
-.run procedure_idl_send_to_geek.pro
+.run idl_send_to_geek.pro
 .run idl_get_metadata__define.pro
 
 .run ref_scale_utility.pro
-.run procedure_ref_scale_gui.pro
+.run ref_scale_gui.pro
 .run ref_scale_fit.pro
-.run procedure_ref_scale_step3.pro
+.run ref_scale_step3.pro
 .run ref_scale_math.pro
 .run ref_scale_file_utility.pro
-.run procedure_ref_scale_tof_to_q.pro
+.run ref_scale_tof_to_q.pro
 
-.run procedure_ref_scale_openfile.pro
-.run procedure_ref_scale_plot.pro
-.run procedure_ref_scale_load.pro
-.run procedure_ref_scale_step2.pro
+.run ref_scale_openfile.pro
+.run ref_scale_plot.pro
+.run ref_scale_load.pro
+.run ref_scale_step2.pro
 .run ref_scale_produce_output.pro
-.run procedure_ref_scale_tabs.pro
+.run ref_scale_tabs.pro
 
 ;Batch
 .run idl_load_batch_file__define.pro
@@ -84,7 +84,7 @@ cd, CurrentFolder
 .run ref_scale_batch.pro
 .run idl_parse_command_line__define.pro
 
-.run procedure_main_base_event.pro
+.run main_base_event.pro
 .run ref_scale_eventcb.pro
 .run ref_scale.pro
 
