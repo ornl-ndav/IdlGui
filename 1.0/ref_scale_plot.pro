@@ -42,21 +42,21 @@ PRO plot_loaded_file, Event, index
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
-;  PRINT, 'in plot_loaded_file'
-;  
-;  ;retrieve flt0, flt1 and flt2
-;  flt0_ptr = (*global).flt0_rescale_ptr
-;  flt1_ptr = (*global).flt1_rescale_ptr
-;  flt2_ptr = (*global).flt2_rescale_ptr
-;  
-;  nbrFile = (*global).NbrFilesLoaded
-;  PRINT, 'in #0'
-;  for i=0L,(nbrFile-1) do begin
-;    HELP, *flt0_ptr[i]
-;    HELP, *flt1_ptr[i]
-;    HELP, *flt2_ptr[i]
-;    PRINT, '**************************'
-;  ENDFOR
+  ;  PRINT, 'in plot_loaded_file'
+  ;
+  ;  ;retrieve flt0, flt1 and flt2
+  ;  flt0_ptr = (*global).flt0_rescale_ptr
+  ;  flt1_ptr = (*global).flt1_rescale_ptr
+  ;  flt2_ptr = (*global).flt2_rescale_ptr
+  ;
+  ;  nbrFile = (*global).NbrFilesLoaded
+  ;  PRINT, 'in #0'
+  ;  for i=0L,(nbrFile-1) do begin
+  ;    HELP, *flt0_ptr[i]
+  ;    HELP, *flt1_ptr[i]
+  ;    HELP, *flt2_ptr[i]
+  ;    PRINT, '**************************'
+  ;  ENDFOR
   
   ;0 means that the fitting plot won't be seen
   ;1 means that the fitting plot will be seen
@@ -113,20 +113,20 @@ PRO plot_loaded_file, Event, index
     ClearPlot = 1
   ENDELSE
   
-;  ;retrieve flt0, flt1 and flt2
-;  flt0_ptr = (*global).flt0_rescale_ptr
-;  flt1_ptr = (*global).flt1_rescale_ptr
-;  flt2_ptr = (*global).flt2_rescale_ptr
-;  
-;  nbrFile = (*global).NbrFilesLoaded
-;  PRINT, 'in #1'
-;  for i=0,(nbrFile-1) do begin
-;    HELP, *flt0_ptr[i]
-;    HELP, *flt1_ptr[i]
-;    HELP, *flt2_ptr[i]
-;    PRINT, '**************************'
-;  ENDFOR
-    
+  ;  ;retrieve flt0, flt1 and flt2
+  ;  flt0_ptr = (*global).flt0_rescale_ptr
+  ;  flt1_ptr = (*global).flt1_rescale_ptr
+  ;  flt2_ptr = (*global).flt2_rescale_ptr
+  ;
+  ;  nbrFile = (*global).NbrFilesLoaded
+  ;  PRINT, 'in #1'
+  ;  for i=0,(nbrFile-1) do begin
+  ;    HELP, *flt0_ptr[i]
+  ;    HELP, *flt1_ptr[i]
+  ;    HELP, *flt2_ptr[i]
+  ;    PRINT, '**************************'
+  ;  ENDFOR
+  
   DEVICE, DECOMPOSED = 0
   loadct,5,/SILENT
   
@@ -144,14 +144,14 @@ PRO plot_loaded_file, Event, index
     flt1_ptr = (*global).flt1_rescale_ptr
     flt2_ptr = (*global).flt2_rescale_ptr
     
-;    nbrFile = (*global).NbrFilesLoaded
-;    PRINT, 'in #2'
-;    for i=0,(nbrFile-1) do begin
-;      HELP, *flt0_ptr[i]
-;      HELP, *flt1_ptr[i]
-;      HELP, *flt2_ptr[i]
-;      PRINT, '**************************'
-;    ENDFOR
+    ;    nbrFile = (*global).NbrFilesLoaded
+    ;    PRINT, 'in #2'
+    ;    for i=0,(nbrFile-1) do begin
+    ;      HELP, *flt0_ptr[i]
+    ;      HELP, *flt1_ptr[i]
+    ;      HELP, *flt2_ptr[i]
+    ;      PRINT, '**************************'
+    ;    ENDFOR
     
     index_size = (SIZE(index_to_plot))(1)
     FOR i=0,(index_size-1) DO BEGIN
@@ -165,11 +165,11 @@ PRO plot_loaded_file, Event, index
       
       ;retrieve particular flt0, flt1 and flt2
       flt0 = *flt0_ptr[index_to_plot[i]]
-;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
+      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
       flt1 = *flt1_ptr[index_to_plot[i]]
-;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
+      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
       flt2 = *flt2_ptr[index_to_plot[i]]
-;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
+      ;      PRINT, 'index_to_plot[i]: ' + STRCOMPRESS(index_to_plot[i])
       
       color_array = (*(*global).color_array)
       colorIndex = color_array[index_to_plot[i]]
@@ -327,347 +327,6 @@ ENDFOR
 ENDELSE
 
 ;PRINT, 'leaving plot_loaded_file'
-;PRINT
-
-END
-
-;##############################################################################
-;******************************************************************************
-
-;This function plot all the files loaded
-;This function is only reached by the LOAD button
-PRO PlotLoadedFiles, Event
-
-  ;retrieve global structure
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,get_uvalue=global
-
-;  PRINT
-;  PRINT, 'Entering PlotLoadedFiles'
-  
-;  flt0_ptr = (*global).flt0_rescale_ptr
-;  flt1_ptr = (*global).flt1_rescale_ptr
-;  flt2_ptr = (*global).flt2_rescale_ptr
-;  
-;  nbrFile = (*global).NbrFilesLoaded
-;  PRINT, 'in #a'
-;  for i=0L,(nbrFile-1) do begin
-;    HELP, *flt0_ptr[i]
-;    HELP, *flt1_ptr[i]
-;    HELP, *flt2_ptr[i]
-;    PRINT, '**************************'
-;  ENDFOR
-    
-  ListLongFileName = (*(*global).ListOfLongFileName)
-  
-  ;1 if first load, 0 otherwise
-  XYMinMax = retrieveXYMinMax(Event) ;_get
-  IF  (XYMinMax[0] NE '' AND $
-    XYMinMax[1] NE '' AND $
-    XYMinMax[2] NE '' AND $
-    XYMinMax[3] NE '') THEN BEGIN
-    FirstTimePlotting = 1
-  ENDIF ELSE BEGIN
-    FirstTimePlotting = 1
-  ENDELSE
-  
-  Qmin_array = (*(*global).Qmin_array)
-  Qmax_array = (*(*global).Qmax_array)
-  
-  size = getSizeOfArray(ListLongFileName) ;_get
-  
-  draw_id = WIDGET_INFO(Event.top, find_by_uname='plot_window')
-  WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
-  WSET,view_plot_id
-  
-  IsXlin = getScale(Event,'X') ;_get
-  IsYlin = getScale(Event,'Y') ;_get
-  
-  ;check if plot will be with error bars or not
-  ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group') ;_get
-  
-  IF (size EQ 1 AND $
-    ListLongFileName[0] EQ '') THEN BEGIN
-    
-    ;no more files loaded so erase plot
-    ERASE
-    
-  ENDIF ELSE BEGIN
-  
-    ;color index of main plot
-  
-    FirstPass = 1
-    
-    ;    flt0_ptr = (*global).flt0_ptr
-    ;    flt1_ptr = (*global).flt1_ptr
-    ;    flt2_ptr = (*global).flt2_ptr
-    
-    flt0_ptr = (*global).flt0_rescale_ptr
-    flt1_ptr = (*global).flt1_rescale_ptr
-    flt2_ptr = (*global).flt2_rescale_ptr
-    
-    for i=0,(size-1) do begin
-    
-      color_array = (*(*global).color_array)
-      colorIndex  = color_array[i]
-      
-      IF (ErrorBarStatus EQ 0) THEN BEGIN
-        IF (i EQ 0) THEN BEGIN
-          MainPlotColor = 100
-        ENDIF ELSE BEGIN
-          MainPlotColor = 255
-        ENDELSE
-      ENDIF ELSE BEGIN
-        MainPlotColor = colorIndex
-      ENDELSE
-      
-      error_plot_status = 0
-      CATCH, error_plot_status
-      
-      IF (error_plot_status NE 0) THEN BEGIN
-      
-        CATCH,/CANCEL
-        text = 'ERROR plotting data'
-        displayErrorMessage, Event, text ;_Gui
-        
-      ENDIF ELSE BEGIN
-      
-        flt0 = *flt0_ptr[i]
-        flt1 = *flt1_ptr[i]
-        flt2 = *flt2_ptr[i]
-        
-;        HELP, flt0
-;        HELP, flt1
-;        HELP, flt2
-;        PRINT, '=============================='
-        
-        DEVICE, DECOMPOSED = 0
-        loadct,5,/SILENT
-        
-        IF (FirstPass EQ 1) THEN BEGIN
-          flt1_first = flt1
-          
-          IF (FirstTimePlotting EQ 1) THEN BEGIN
-            CASE (IsXlin) OF
-              0:BEGIN
-              CASE (IsYlin) OF
-                0: BEGIN
-                  PLOT, $
-                    flt0, $
-                    flt1, $
-                    color=MainPlotColor
-                END
-                1: BEGIN
-                  PLOT, $
-                    flt0, $
-                    flt1, $
-                    /ylog, $
-                    color=MainPlotColor
-                END
-              ENDCASE
-            END
-            1: BEGIN
-              CASE (IsYlin) OF
-                0: BEGIN
-                  PLOT,flt0,flt1,/xlog,color=MainPlotColor
-                END
-                1: BEGIN
-                  PLOT, $
-                    flt0, $
-                    flt1, $
-                    /xlog, $
-                    /ylog, $
-                    color=MainPlotColor
-                END
-              ENDCASE
-            END
-          ENDCASE
-          IF (ErrorBarStatus EQ 0) THEN BEGIN
-            errplot, $
-              flt0, $
-              flt1-flt2, $
-              flt1+flt2, $
-              color=colorIndex
-          ENDIF
-          
-          ;populate min/max x/y axis
-          min_xaxis = MIN(flt0,max=max_xaxis,/nan)
-          min_yaxis = MIN(flt1,max=max_yaxis,/nan)
-          ;keep in global value of x and y min and max
-          (*(*global).XYMinMax) = [min_xaxis,max_xaxis,$
-            min_yaxis,max_yaxis]
-            
-          ;reduce the number of digit displayed
-          min_xaxis_display = NUMBER_FORMATTER(min_xaxis)
-          max_xaxis_display = NUMBER_FORMATTER(max_xaxis)
-          min_yaxis_display = NUMBER_FORMATTER(min_yaxis)
-          max_yaxis_display = NUMBER_FORMATTER(max_yaxis)
-          
-          PopulateXYScaleAxis, Event, $ ;_put
-            min_xaxis_display, $
-            max_xaxis_display, $
-            min_yaxis_display, $
-            max_yaxis_display
-            
-          CreateDefaultXYMinMax,Event,$ ;_gui
-            min_xaxis,$
-            max_xaxis,$
-            min_yaxis,$
-            max_yaxis
-            
-        ENDIF ELSE BEGIN
-        
-          XYMinMax = retrieveXYMinMax(Event) ;_get
-          xmin = FLOAT(XYMinMax[0])
-          xmax = FLOAT(XYMinMax[1])
-          ymin = FLOAT(XYMinMax[2])
-          ymax = FLOAT(XYMinMax[3])
-          
-          CASE (IsXlin) OF
-            0:BEGIN
-            CASE (IsYlin) OF
-              0: BEGIN
-                PLOT, $
-                  flt0, $
-                  flt1, $
-                  xrange=[xmin,xmax], $
-                  yrange=[ymin,ymax],$
-                  color=MainPlotColor
-              END
-              1: BEGIN
-                PLOT, $
-                  flt0, $
-                  flt1, $
-                  /ylog, $
-                  xrange=[xmin,xmax], $
-                  yrange=[ymin,ymax],$
-                  color=MainPlotColor
-              END
-            ENDCASE
-          END
-          1: BEGIN
-            CASE (IsYlin) OF
-              0: BEGIN
-                PLOT, $
-                  flt0, $
-                  flt1, $
-                  /xlog, $
-                  xrange=[xmin,xmax], $
-                  yrange=[ymin,ymax],$
-                  color=MainPlotColor
-              END
-              1: BEGIN
-                PLOT, $
-                  flt0, $
-                  flt1, $
-                  /xlog, $
-                  /ylog, $
-                  xrange=[xmin,xmax], $
-                  yrange=[ymin,ymax],$
-                  color=MainPlotColor
-              END
-            ENDCASE
-          END
-        ENDCASE
-        
-        IF (ErrorBarStatus EQ 0) THEN BEGIN
-          errplot, flt0, $
-            flt1-flt2, $
-            flt1+flt2, $
-            color=colorIndex
-        ENDIF
-        
-      ENDELSE
-      
-      FirstPass = 0
-      
-    ENDIF ELSE BEGIN
-    
-      XYMinMax = retrieveXYMinMax(Event) ;_get
-      xmin = FLOAT(XYMinMax[0])
-      xmax = FLOAT(XYMinMax[1])
-      ymin = FLOAT(XYMinMax[2])
-      ymax = FLOAT(XYMinMax[3])
-      
-      CASE (IsXlin) OF
-        0:BEGIN
-        CASE (IsYlin) OF
-          0: BEGIN
-            PLOT, $
-              flt0, $
-              flt1, $
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              color=MainPlotColor,$
-              /noerase
-          END
-          1: BEGIN
-            PLOT, $
-              flt0, $
-              flt1, $
-              /ylog, $
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              color=MainPlotColor,$
-              /noerase
-          END
-        ENDCASE
-      END
-      1: BEGIN
-        CASE (IsYlin) OF
-          0: BEGIN
-            PLOT, $
-              flt0, $
-              flt1, $
-              /xlog, $
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              color=MainPlotColor,$
-              /noerase
-          END
-          1: BEGIN
-            PLOT, $
-              flt0, $
-              flt1, $
-              /xlog, $
-              /ylog, $
-              xrange=[xmin,xmax], $
-              yrange=[ymin,ymax], $
-              color=MainPlotColor,$
-              /noerase
-          END
-        ENDCASE
-      END
-    ENDCASE
-    
-    IF (ErrorBarStatus EQ 0) THEN BEGIN
-      errplot, flt0, $
-        flt1-flt2, $
-        flt1+flt2, $
-        color=colorIndex
-    ENDIF
-    
-  ENDELSE
-  
-ENDELSE
-
-;determine Qmin and Qmax
-
-QminQmax = getQminQmaxValue(flt0, flt1) ;_get
-Qmin = QminQmax[0]
-Qmax = QminQmax[1]
-Qmin_array[i] = Qmin
-Qmax_array[i] = Qmax
-
-ENDFOR
-
-ENDELSE
-
-;store back the array of all the Qmin of the functions loaded
-(*(*global).Qmin_array) = Qmin_array
-(*(*global).Qmax_array) = Qmax_array
-
-;PRINT, 'Leaving PlotLoadedFiles'
 ;PRINT
 
 END

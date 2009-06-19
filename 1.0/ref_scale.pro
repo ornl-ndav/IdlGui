@@ -288,12 +288,12 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   IF (DEBUGGER EQ 'yes') THEN BEGIN
     ;default tab
     id1 = WIDGET_INFO(MAIN_BASE_ref_scale, FIND_BY_UNAME='steps_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 4 ;batch
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;batch
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2 ;step3
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
     ;change default path of batch file
-    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
-    (*global).input_path       = '/SNS/REF_L/shared/'
+    (*global).BatchDefaultPath = '~/results/'
+    (*global).input_path       = '~/results/'
   ENDIF
   ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
   ;------------------------------------------------------------------------------

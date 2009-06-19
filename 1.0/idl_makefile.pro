@@ -74,7 +74,9 @@ cd, CurrentFolder
 .run ref_scale_tof_to_q.pro
 
 .run ref_scale_openfile.pro
+.run ref_scale_plot_subroutines.pro
 .run ref_scale_plot.pro
+.run ref_scale_plot_loaded_files.pro
 .run ref_scale_load.pro
 .run ref_scale_step2.pro
 .run ref_scale_produce_output.pro
