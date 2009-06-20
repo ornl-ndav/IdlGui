@@ -576,7 +576,7 @@ PRO plot_main_plot_with_new_bin_range, Event, reset_z_scale=reset_z_scale
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
   ;plot grid
-  plotGridMainPlot, global1
+  plotGridMainPlot, global1, event=event
   
   ;plot scale
   plot_scale, global1, min, max
