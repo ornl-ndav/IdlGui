@@ -47,4 +47,11 @@ status = WIDGET_INFO(id, /BUTTON_SET)
 RETURN, status
 END
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+FUNCTION isWithGrid, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_with_grid_plot')
+status = WIDGET_INFO(id, /BUTTON_SET)
+RETURN, status
+END
 

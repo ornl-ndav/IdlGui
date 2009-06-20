@@ -202,9 +202,36 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                                                              ' + $
-    '                      ')
+    VALUE = '                                                   ')
     
+  label_base = WIDGET_BASE(row1)
+      
+  ;display banks grid or not
+  label = WIDGET_LABEL(label_base,$
+  YOFFSET = 5,$
+  VALUE = 'Display banks contours')
+  
+  row1d = WIDGET_BASE(row1,$
+  /ROW,$
+  /EXCLUSIVE,$
+  FRAME = 0)
+    
+  yes = WIDGET_BUTTON(row1d,$
+    VALUE = 'Yes',$
+    UNAME = 'main_plot_with_grid_plot',$
+    /NO_RELEASE)
+    
+  no = WIDGET_BUTTON(row1d,$
+    VALUE = 'No',$
+    UNAME = 'main_plot_without_grid_plot',$
+    /NO_RELEASE)
+    
+  WIDGET_CONTROL, yes, /SET_BUTTON
+    
+  ;space
+  space = WIDGET_LABEL(row1,$
+    VALUE = '                         ')
+
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
     /ROW,$

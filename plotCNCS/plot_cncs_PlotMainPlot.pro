@@ -126,6 +126,22 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
+    ;with or without grid
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_with_grid_plot'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      plot_main_plot_with_new_bin_range, Event
+      plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+    
+    ;with or without grid
+    WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_without_grid_plot'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      plot_main_plot_with_new_bin_range, Event
+      plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+
     ;linear plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
@@ -449,34 +465,48 @@ PRO plot_counts_vs_tof_of_full_detector, Event
 END
 
 ;==============================================================================
-PRO plotGridMainPlot, global1
+PRO plotGridMainPlot, global1, Event=event
 
-  ;retrieve values from inside structure
-  Xfactor = (*global1).Xfactor
-  Yfactor = (*global1).Yfactor
-  Xcoeff  = (*global1).Xcoeff
-  Ycoeff  = (*global1).Ycoeff
-  off     = (*global1).off
-  xoff    = (*global1).xoff
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    IF (isWithGrid(event)) THEN BEGIN
+      with_grid = 1
+    ENDIF ELSE BEGIN
+      with_grid = 0
+    ENDELSE
+  ENDIF ElSE BEGIN
+    with_grid = 1
+  ENDELSE
   
-  yoff = 0
+  IF (with_grid) THEN BEGIN
   
-  ;##########################################
-  ;PLOT BANKS GRID ##########################
-  ;##########################################
-  ;;plot grid of bottom bank
-  color  = 100
-  FOR i=0,(52-1) DO BEGIN
-    xmin = i*(Xcoeff)+i*off+xoff-i
-    xmax = (i+1)*(Xcoeff)+i*off+xoff-i
-    ymin = yoff
-    ymax = yoff+Ycoeff
-    PLOTS, [xmin, xmin, xmax, xmax, xmin],$
-      [ymin,ymax, ymax, ymin, ymin],$
-      /DEVICE,$
-      LINESTYLE = 0,$
-      COLOR =color
-  ENDFOR
+    ;retrieve values from inside structure
+    Xfactor = (*global1).Xfactor
+    Yfactor = (*global1).Yfactor
+    Xcoeff  = (*global1).Xcoeff
+    Ycoeff  = (*global1).Ycoeff
+    off     = (*global1).off
+    xoff    = (*global1).xoff
+    
+    yoff = 0
+    
+    ;##########################################
+    ;PLOT BANKS GRID ##########################
+    ;##########################################
+    ;;plot grid of bottom bank
+    color  = 100
+    FOR i=0,(52-1) DO BEGIN
+      xmin = i*(Xcoeff)+i*off+xoff-i
+      xmax = (i+1)*(Xcoeff)+i*off+xoff-i
+      ymin = yoff
+      ymax = yoff+Ycoeff
+      PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+        [ymin,ymax, ymax, ymin, ymin],$
+        /DEVICE,$
+        LINESTYLE = 0,$
+        COLOR =color
+    ENDFOR
+    
+  ENDIF
   
 END
 
@@ -583,7 +613,7 @@ PRO plot_selection_box, Event
     /DEVICE,$
     LINESTYLE = 3,$
     COLOR =color
-
+    
 END
 
 ;==============================================================================
@@ -637,11 +667,11 @@ PRO replot_main_plot_with_scale, Event, without_scale=without_scale
   
   ;  (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
-;  TVSCL, big_array_rebin, /DEVICE, xoff, off
+  ;  TVSCL, big_array_rebin, /DEVICE, xoff, off
   TVSCL, big_array_rebin, /DEVICE, 0, 0
   
   ;plot grid
-  plotGridMainPlot, global1
+  plotGridMainPlot, global1, Event=event
   
   IF (N_ELEMENTS(without_scale) EQ 0) THEN BEGIN
   
