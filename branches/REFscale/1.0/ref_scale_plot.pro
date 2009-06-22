@@ -202,6 +202,7 @@ PRO plot_loaded_file, Event, index
                 flt0, $
                 flt1, $
                 xrange=[xmin,xmax], $
+                XSTYLE = 1,$
                 yrange=[ymin,ymax], $
                 color=MainPlotColor
             END
@@ -211,6 +212,7 @@ PRO plot_loaded_file, Event, index
                 flt0, $
                 flt1, $
                 /ylog, $
+                XSTYLE = 1,$
                 xrange=[xmin,xmax], $
                 yrange=[ymin,ymax], $
                 color=MainPlotColor
@@ -228,6 +230,7 @@ PRO plot_loaded_file, Event, index
                 flt0, $
                 flt1, $
                 /xlog, $
+                XSTYLE = 1,$
                 xrange=[xmin,xmax], $
                 yrange=[ymin,ymax], $
                 color=MainPlotColor
@@ -239,6 +242,7 @@ PRO plot_loaded_file, Event, index
                 flt1, $
                 /xlog, $
                 /ylog, $
+                XSTYLE = 1,$
                 xrange=[xmin,xmax], $
                 yrange=[ymin,ymax], $
                 color=MainPlotColor
@@ -269,6 +273,7 @@ PRO plot_loaded_file, Event, index
             PLOT, $
               flt0, $
               flt1, $
+              XSTYLE = 1,$
               xrange=[xmin,xmax], $
               yrange=[ymin,ymax], $
               color=MainPlotColor, $
@@ -280,6 +285,7 @@ PRO plot_loaded_file, Event, index
               flt0, $
               flt1, $
               /ylog, $
+              XSTYLE = 1,$
               xrange=[xmin,xmax], $
               yrange=[ymin,ymax], $
               /noerase, $
@@ -296,6 +302,7 @@ PRO plot_loaded_file, Event, index
               flt0, $
               flt1, $
               /xlog, $
+              XSTYLE = 1,$
               xrange=[xmin,xmax], $
               yrange=[ymin,ymax], $
               /noerase, $
@@ -306,6 +313,7 @@ PRO plot_loaded_file, Event, index
               flt0, $
               flt1, $
               /xlog, $
+              XSTYLE = 1,$
               /ylog, $
               xrange=[xmin,xmax], $
               yrange=[ymin,ymax], $

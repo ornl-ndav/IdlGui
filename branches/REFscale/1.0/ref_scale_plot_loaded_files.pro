@@ -111,41 +111,49 @@ PRO PlotLoadedFiles, Event
       
       IF (FirstTimePlotting EQ 1) THEN BEGIN ;no axis defined yet
       
+        populate_min_max_axis, Event, $
+          flt0, $
+          flt1
+          
         draw_id = WIDGET_INFO(Event.top, find_by_uname='plot_window')
         WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
         WSET,view_plot_id
         
         CASE (IsYlin) OF
           0: BEGIN
-            IF (firstTimePlotting) THEN BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
-                color=MainPlotColor
-            ENDIF ELSE BEGIN
+;            IF (firstTimePlotting) THEN BEGIN
+;              PLOT, $
+;                flt0, $
+;                flt1, $
+;                XSTYLE = 1,$
+;                color=MainPlotColor
+;            ENDIF ELSE BEGIN
               PLOT, $
                 flt0, $
                 flt1, $
                 xrange = [xmin,xmax],$
                 yrange = [ymin,ymax],$
+                XSTYLE = 1,$
+                ;                YSTYLE = 1,$
                 color=MainPlotColor
-            ENDELSE
+;            ENDELSE
           END
           1: BEGIN
-            IF (firstTimePlotting) THEN BEGIN
+ ;           IF (firstTimePlotting) THEN BEGIN
+ ;             PLOT, $
+ ;               flt0, $
+ ;               flt1, $
+ ;               /ylog, $
+ ;               color=MainPlotColor
+ ;           ENDIF ELSE BEGIN
               PLOT, $
                 flt0, $
                 flt1, $
-                /ylog, $
-                color=MainPlotColor
-            ENDIF ELSE BEGIN
-              PLOT, $
-                flt0, $
-                flt1, $
+                XSTYLE = 1,$
                 xrange = [xmin,xmax],$
                 /ylog, $
                 color=MainPlotColor
-            ENDELSE
+  ;          ENDELSE
           END
         ENDCASE
         
@@ -157,10 +165,6 @@ PRO PlotLoadedFiles, Event
             color=colorIndex
         ENDIF
         
-        populate_min_max_axis, Event, $
-          flt0, $
-          flt1
-          
       ENDIF ELSE BEGIN ;axis defined by first file loaded
       
         CASE (IsYlin) OF
@@ -168,8 +172,10 @@ PRO PlotLoadedFiles, Event
             PLOT, $
               flt0, $
               flt1, $
+              XSTYLE = 1,$
               xrange = [xmin,xmax],$
               yrange = [ymin,ymax],$
+              XSTYLE = 1,$
               /NOERASE,$
               color=MainPlotColor
           END
@@ -178,8 +184,10 @@ PRO PlotLoadedFiles, Event
               flt0, $
               flt1, $
               /ylog, $
+              XSTYLE = 1,$
               xrange = [xmin,xmax],$
               yrange = [ymin,ymax],$
+              XSTYLE = 1,$
               color=MainPlotColor
           END
         ENDCASE
