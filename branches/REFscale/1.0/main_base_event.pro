@@ -66,6 +66,9 @@ PRO MAIN_BASE_ref_scale_event, Event
             IF (getTabSelected(Event) EQ 1 AND $
               getNbrOfFiles(Event) GE 1) THEN BEGIN
               XMinMax = getDrawXMin(Event)
+              print, '---------------'
+              print, XMinMax
+              print, '---------------'
               CASE (Event.type) OF
                 0 : BEGIN
                   CASE (Event.press) OF ;left or right click
@@ -80,10 +83,10 @@ PRO MAIN_BASE_ref_scale_event, Event
                   Event, $
                   XMinMax ;button released
                 2 : BEGIN
-                Step2MoveClick, $
-                  Event, $
-                  XMinMax ;mouse is moving
-                  END
+                  Step2MoveClick, $
+                    Event, $
+                    XMinMax ;mouse is moving
+                END
                 ELSE:
               ENDCASE
             ENDIF
