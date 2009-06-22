@@ -336,8 +336,6 @@ END
 
 PRO replot_main_plot, Event
 
-  print, 'entering replot_main_plot'
-
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
   
@@ -345,8 +343,6 @@ PRO replot_main_plot, Event
     steps_tab, Event, 1 ;_Tab
     (*global).replot_me = 0
   ENDIF
-  
-  print, 'leaving replot_main_plot'
   
 end
 

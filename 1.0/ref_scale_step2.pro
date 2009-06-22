@@ -494,20 +494,21 @@ END
 ;******************************************************************************
 ;This is reach when the user moves the mouse on the plot of step2
 PRO Step2MoveClick, Event, XMinMax
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-widget_control,id,get_uvalue=global
+print, 'entering step2MoveClick'
+widget_control,Event.top,get_uvalue=global
 replot_main_plot, Event         ;_Plot
 IF ((*global).left_mouse_pressed) THEN BEGIN
+    print, '(*global).Q_selection: ' + string((*global).Q_selection)
     CASE ((*global).Q_selection) OF
         1: BEGIN
-        print, 'in #1'
+        print, 'in (*global).Q_selection = 1 of step2MoveClick'
             (*global).replot_me = 1
             IF ((*global).Q2 NE 0) THEN BEGIN
                 plotQs, Event, Event.x, (*global).Q2x ;_Plot
-;                print, 'Move Q1 plot and replot Q2'
+                print, '-> Move Q1 plot and replot Q2'
             ENDIF ELSE BEGIN
                 plotQ, Event, Event.x ;_Plot
-;                print, 'Move Q1 plot'
+                print, '-> Move Q1 plot'
             ENDELSE
         saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
         putValueInTextField, Event, $
@@ -515,14 +516,14 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
           STRCOMPRESS((*global).Q1,/REMOVE_ALL)
         END
         2: BEGIN
-                print, 'in #2'
+                print, 'in (*global).Q_selection = 2 of step2MoveClick'
             (*global).replot_me = 1
             IF ((*global).Q1 NE 0) THEN BEGIN
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
-;                print, 'Move Q2 plot and replot Q1'
+                print, '-> Move Q2 plot and replot Q1'
             ENDIF ELSE BEGIN
                 plotQ, Event, Event.x ;_Plot
-;                print, 'Move Q2 plot'
+                print, '-> Move Q2 plot'
             ENDELSE
         saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
         putValueInTextField, Event, $
@@ -533,19 +534,19 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
     ENDCASE
 ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
     IF ((*global).replotQnew) THEN BEGIN
-            print, 'in #3'
+            print, 'in (*global).replotQnew = 1'
         saveQxFromQ, Event, Q_NUMBER = 1 ;_Step2
     ENDIF
     IF ((*global).Q1 NE 0) THEN BEGIN
-            print, 'in #4'
+            print, 'in (*global).Q1 = 1'
         plotQ, Event, (*global).Q1x
     ENDIF
     IF ((*global).replotQnew) THEN BEGIN
-            print, 'in #5'
+            print, 'in (*global).replotQnew = 1'
         saveQxFromQ, Event, Q_NUMBER = 2 ;_Step2
     ENDIF
     IF ((*global).Q2 NE 0) THEN BEGIN
-    print, 'in #6'
+    print, 'in (*global).Q2 = 1'
         plotQ, Event, (*global).Q2x
     ENDIF
     (*global).replotQnew = 0
@@ -588,6 +589,12 @@ PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
+print, 'entering SaveQxFromQ'
+
+cursor, x, y, /data
+print, 'x is ' + string(x)
+print, '++++++++++++++'
+
 ;Qx and Q
 IF (Q_NUMBER EQ 1) THEN BEGIN
     Q  = (*global).Q1
@@ -595,10 +602,15 @@ ENDIF ELSE BEGIN
     Q  = (*global).Q2
 ENDELSE
 
+print, 'Q: ' + strcompress(Q)
+
 ;Xmin and Xmax
 XMinMax   = getDrawXMin(Event)
 draw_Qmin = XMinMax[0]
 draw_Qmax = XMinMax[1]
+
+print, 'XminMax:'
+print, XminMax
 
 ;X position of left and right margins
 draw_xmin = (*global).draw_xmin
@@ -617,6 +629,11 @@ IF (Q_NUMBER EQ 1) THEN BEGIN
 ENDIF ELSE BEGIN
     (*global).Q2x = newX
 ENDELSE
+
+print, '(*global).Q1x: ' + string(newX)
+
+print, 'leaving SaveQxFromQ'
+
 END
 
 ;##############################################################################
