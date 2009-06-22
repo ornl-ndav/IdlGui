@@ -397,11 +397,12 @@ XYMinMax  = FLOAT(getXYMinMax(Event))
 xMinAsked = XYMinMax[0]
 xMaxAsked = XYMinMax[1]
 ;calculate real xmin and real xmax
-x1    = xMinAsked / delta_x_draw
-x_min = FLOOR(x1) * delta_x_draw
-x2    = xMaxAsked / delta_x_draw
-x_max = FLOOR(x2) * delta_x_draw
-RETURN, [x_min,x_max]
+;x1    = xMinAsked / delta_x_draw
+;x_min = FLOOR(x1) * delta_x_draw
+;x2    = xMaxAsked / delta_x_draw
+;x_max = FLOOR(x2) * delta_x_draw
+;RETURN, [x_min,x_max]
+RETURN, [xMinAsked, xMaxAsked]
 END
 
 ;##############################################################################
@@ -473,7 +474,3 @@ outputFileName = getTextFieldValue(Event,'output_file_name_label_dynmaic')
 RETURN, outputFileName
 END
 
-;##############################################################################
-;******************************************************************************
-PRO ref_scale_get
-END

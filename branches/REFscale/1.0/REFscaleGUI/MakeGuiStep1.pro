@@ -434,9 +434,3 @@ CancelLoadButton = WIDGET_BUTTON(dMDAngleBase,$
 
 RETURN, Step1Size
 END
-
-
-
-;*******************************************************************************
-PRO MakeGuiStep1
-END

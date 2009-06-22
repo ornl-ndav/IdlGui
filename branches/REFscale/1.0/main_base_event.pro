@@ -56,6 +56,7 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Main Plot Drawing Window
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
+      print, '(*global).Q_selection: ' + string((*global).Q_selection)
       IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
         steps_tab_id  = WIDGET_INFO(Event.top, find_by_uname='steps_tab')
         ;current tab selected
@@ -66,26 +67,33 @@ PRO MAIN_BASE_ref_scale_event, Event
             IF (getTabSelected(Event) EQ 1 AND $
               getNbrOfFiles(Event) GE 1) THEN BEGIN
               XMinMax = getDrawXMin(Event)
-              print, '---------------'
-              print, XMinMax
-              print, '---------------'
               CASE (Event.type) OF
                 0 : BEGIN
                   CASE (Event.press) OF ;left or right click
-                    1 : Step2LeftClick, $
+                    1 : BEGIN
+                    print, 'left click'
+                    Step2LeftClick, $
                       Event, $
                       XMinMax ;left click
-                    4 : Step2RightClick, Event ;right click
+                      END
+                    4 : BEGIN
+                    print, 'right click'
+ ;                   Step2RightClick, Event ;right click
+                    END
                     ELSE:
                   ENDCASE
                 END
-                1 : Step2ReleaseClick, $
-                  Event, $
-                  XMinMax ;button released
+                1 : BEGIN
+                print, '--> release click'
+                ;Step2ReleaseClick, $
+                ;  Event, $
+                ;  XMinMax ;button released
+                  END
                 2 : BEGIN
-                  Step2MoveClick, $
-                    Event, $
-                    XMinMax ;mouse is moving
+                print, '-> move click'
+                  ;Step2MoveClick, $
+                  ;  Event, $
+                  ;  XMinMax ;mouse is moving
                 END
                 ELSE:
               ENDCASE
