@@ -49,6 +49,36 @@ PRO MAIN_BASE_ref_scale_event, Event
     ;***** GENERAL FUNCTION *******************************************************
     ;------------------------------------------------------------------------------
     
+    ;Event triggered by 'X-axis  min:' widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMinTextField'): BEGIN
+      (*global).replot_me = 1
+      replot_main_plot, Event ;_Plot
+    END
+    
+    ;Event triggered by 'X-axis  max:' widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMaxTextField'): BEGIN
+      (*global).replot_me = 1
+      replot_main_plot, Event ;_Plot
+    END
+    
+    ;Event triggered by 'Y-axis  min:' widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisMinTextField'): BEGIN
+      (*global).replot_me = 1
+      replot_main_plot, Event ;_Plot
+    END
+    
+    ;Event triggered by 'Y-axis  max:' widget_text
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisMaxTextField'): BEGIN
+      (*global).replot_me = 1
+      replot_main_plot, Event ;_Plot
+    END
+    
+    ;Event of lin or log switch of Y axis
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisLinLog'): BEGIN
+      (*global).replot_me = 1
+      replot_main_plot, Event ;_Plot
+    END
+    
     ;Event of the main widget_tab
     WIDGET_INFO(wWidget, FIND_BY_UNAME='steps_tab'): BEGIN
       steps_tab, Event, 0  ;_Tabs
@@ -70,27 +100,26 @@ PRO MAIN_BASE_ref_scale_event, Event
                 0 : BEGIN
                   CASE (Event.press) OF ;left or right click
                     1 : BEGIN ;left click
-                    print, 'left click'
-                    Step2LeftClick, $
-                      Event, $
-                      XMinMax ;left click
-                      END
+                      ;print, 'left click'
+                      Step2LeftClick, $
+                        Event, $
+                        XMinMax ;left click
+                    END
                     4 : BEGIN ;right click
-                    print, 'right click'
-                    Step2RightClick, Event ;right click
+                      ;print, 'right click'
+                      Step2RightClick, Event ;right click
                     END
                     ELSE:
                   ENDCASE
                 END
                 1 : BEGIN ;release click
-                print, 'entering release click'
-                Step2ReleaseClick, $
-                  Event, $
-                  XMinMax ;button released
-                                  print, 'exit release click'
-                  END
+                  ;print, 'entering release click'
+                  Step2ReleaseClick, $
+                    Event, $
+                    XMinMax ;button released
+                END
                 2 : BEGIN ;move click
-                print, '-> move click'
+                  ;print, '-> move click'
                   Step2MoveClick, $
                     Event, $
                     XMinMax ;mouse is moving
@@ -296,25 +325,6 @@ PRO MAIN_BASE_ref_scale_event, Event
   
   ELSE:
 ENDCASE
-
-;Event triggered by 'X-axis  min:' widget_text
-SWITCH (Event.id) OF
-  ;Event triggered by 'X-axis  min:' widget_text
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMinTextField'):
-  ;Event triggered by 'X-axis  max:' widget_text
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisMaxTextField'):
-  ;Event of lin or log switch of X axis
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='XaxisLinLog'):
-  ;Event triggered by 'Y-axis  min:' widget_text
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisMinTextField'):
-  ;Event triggered by 'Y-axis  max:' widget_text
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisMaxTextField'):
-  ;Event of lin or log switch of Y axis
-  WIDGET_INFO(wWidget, FIND_BY_UNAME='YaxisLinLog'): BEGIN
-    rescale_data_changed, Event ;_eventcb
-  END
-  ELSE:
-ENDSWITCH
 
 END
 

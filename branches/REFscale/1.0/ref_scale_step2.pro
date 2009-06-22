@@ -500,9 +500,7 @@ PRO Step2MoveClick, Event, XMinMax
   IF ((*global).left_mouse_pressed) THEN BEGIN
     CASE ((*global).Q_selection) OF
       1: BEGIN
-        print, '#a'
         CURSOR, x, y, /DATA
-        print, '#b'
         saveQ, Event, Q_NUMBER = 1, x ;_Step2
         (*global).replot_me = 1
         plot_loaded_file, Event, 'CE' ;_Plot
@@ -518,9 +516,7 @@ PRO Step2MoveClick, Event, XMinMax
           STRCOMPRESS((*global).Q1,/REMOVE_ALL)
       END
       2: BEGIN
-      print, '#c'
         CURSOR, x, y, /data
-        print, '#d'
         saveQ, Event, Q_NUMBER = 2, x ;_Step2
         (*global).replot_me = 1
         plot_loaded_file, Event, 'CE' ;_Plot
