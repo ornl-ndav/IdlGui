@@ -56,7 +56,6 @@ PRO MAIN_BASE_ref_scale_event, Event
     
     ;Main Plot Drawing Window
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
-      print, '(*global).Q_selection: ' + string((*global).Q_selection)
       IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
         steps_tab_id  = WIDGET_INFO(Event.top, find_by_uname='steps_tab')
         ;current tab selected
@@ -70,30 +69,31 @@ PRO MAIN_BASE_ref_scale_event, Event
               CASE (Event.type) OF
                 0 : BEGIN
                   CASE (Event.press) OF ;left or right click
-                    1 : BEGIN
+                    1 : BEGIN ;left click
                     print, 'left click'
                     Step2LeftClick, $
                       Event, $
                       XMinMax ;left click
                       END
-                    4 : BEGIN
+                    4 : BEGIN ;right click
                     print, 'right click'
- ;                   Step2RightClick, Event ;right click
+                    Step2RightClick, Event ;right click
                     END
                     ELSE:
                   ENDCASE
                 END
-                1 : BEGIN
-                print, '--> release click'
-                ;Step2ReleaseClick, $
-                ;  Event, $
-                ;  XMinMax ;button released
+                1 : BEGIN ;release click
+                print, 'entering release click'
+                Step2ReleaseClick, $
+                  Event, $
+                  XMinMax ;button released
+                                  print, 'exit release click'
                   END
-                2 : BEGIN
+                2 : BEGIN ;move click
                 print, '-> move click'
-                  ;Step2MoveClick, $
-                  ;  Event, $
-                  ;  XMinMax ;mouse is moving
+                  Step2MoveClick, $
+                    Event, $
+                    XMinMax ;mouse is moving
                 END
                 ELSE:
               ENDCASE
