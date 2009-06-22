@@ -82,7 +82,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     draw_ymin:              40L,$
     draw_ymax:              570L,$
     qminmax_label:          'Enter or Select Qmin and Qmax',$
-    Q_selection:            0,$ ;1 or 2
+    Q_selection:            1,$ ;1 or 2
     left_mouse_pressed:     0,$
     Q1:                     0.,$ ;Qmin or Qmax
     Q2:                     0.,$ ;Qmin or Qmax

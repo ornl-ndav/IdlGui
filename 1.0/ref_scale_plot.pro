@@ -477,24 +477,24 @@ END
 ;##############################################################################
 ;******************************************************************************
 ;Plot Qmin and Qmax
-PRO PlotQs, Event, X1, X2
-  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
-  WIDGET_CONTROL,id,get_uvalue=global
-  ymin = (*global).draw_ymin
-  ymax = (*global).draw_ymax
-  xmin = (*global).draw_xmin
-  xmax = (*global).draw_xmax
-  IF (X1 GT xmin AND $
-    X1 LT xmax) THEN BEGIN
+PRO PlotQs, Event, Q1, Q2
+  WIDGET_CONTROL,event.top,get_uvalue=global
+  XMinMax = getXYMinMax(Event)
+  xmin = DOUBLE(XMinMax[0])
+  xmax = DOUBLE(XMinMax[1])
+  ymin = DOUBLE(XMinMax[2])
+  ymax = DOUBLE(XMinMax[3])
+  IF (Q1 GT xmin AND $
+    Q1 LT xmax) THEN BEGIN
     ;plot Q1
-    PLOTS, X1, ymin, /device, color=200
-    PLOTS, X1, ymax, /device, /continue, color=200
+    PLOTS, Q1, ymin, /data, color=200
+    PLOTS, Q1, ymax, /data, /continue, color=200
   ENDIF
-  IF (X2 GT xmin AND $
-    X2 LT xmax) THEN BEGIN
+  IF (Q2 GT xmin AND $
+    Q2 LT xmax) THEN BEGIN
     ;plot Q2
-    PLOTS, X2, ymin, /device, color=200
-    PLOTS, X2, ymax, /device, /continue, color=200
+    PLOTS, Q2, ymin, /data, color=200
+    PLOTS, Q2, ymax, /data, /continue, color=200
   ENDIF
 END
 
@@ -504,15 +504,24 @@ END
 PRO PlotQ, Event, X1
   id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   WIDGET_CONTROL,id,get_uvalue=global
-  ymin = (*global).draw_ymin
-  ymax = (*global).draw_ymax
-  xmin = (*global).draw_xmin
-  xmax = (*global).draw_xmax
+  XMinMax = getXYMinMax(Event)
+  xmin = DOUBLE(XMinMax[0])
+  xmax = DOUBLE(XMinMax[1])
+  ymin = DOUBLE(XMinMax[2])
+  ymax = DOUBLE(XMinMax[3])
+  
+  ;  ymin = (*global).draw_ymin
+  ;  ymax = (*global).draw_ymax
+  ;  xmin = (*global).draw_xmin
+  ;  xmax = (*global).draw_xmax
+  
   IF (X1 GE xmin AND $
     X1 LE xmax) THEN BEGIN
     ;plot Q
-    PLOTS, X1, ymin, /device, color=200
-    PLOTS, X1, ymax, /device, /continue, color=200
+    ;PLOTS, X1, ymin, /device, color=200
+    ;PLOTS, X1, ymax, /device, /continue, color=200
+    PLOTS, X1, ymin, /data, color=200
+    PLOTS, X1, ymax, /data, /continue, color=200
   ENDIF
 END
 
