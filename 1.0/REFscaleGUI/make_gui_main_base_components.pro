@@ -240,8 +240,7 @@ XaxisMinTextField = WIDGET_TEXT(RescaleBase,$
                                 SCR_YSIZE = XaxisMinTextFieldSize[3],$
                                 VALUE     = '',$
                                 /EDITABLE,$ 
-                                /ALIGN_LEFT,$ 
-                                /ALL_EVENTS)
+                                /ALIGN_LEFT)
             
 XaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
                              XOFFSET   = XaxisMaxLabelSize[0],$
@@ -258,8 +257,7 @@ XaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
                                 SCR_YSIZE = XaxisMaxTextFieldSize[3],$
                                 VALUE     = '',$
                                 /EDITABLE,$ 
-                                /ALIGN_LEFT,$ 
-                                /ALL_EVENTS)    
+                                /ALIGN_LEFT) 
 
 ResetButton = WIDGET_BUTTON(RescaleBase,$
                             XOFFSET   = ResetButtonSize[0],$
@@ -292,8 +290,7 @@ YaxisMinTextField = WIDGET_TEXT(RescaleBase,$
                                 SCR_YSIZE = YaxisMinTextFieldSize[3],$
                                 VALUE     = '',$
                                 /EDITABLE,$ 
-                                /ALIGN_LEFT,$ 
-                                /ALL_EVENTS)
+                                /ALIGN_LEFT)
             
 YaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
                              XOFFSET   = YaxisMaxLabelSize[0],$
@@ -310,8 +307,7 @@ YaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
                                 SCR_YSIZE = YaxisMaxTextFieldSize[3],$
                                 VALUE     = '',$
                                 /EDITABLE,$ 
-                                /ALIGN_LEFT,$ 
-                                /ALL_EVENTS)                     
+                                /ALIGN_LEFT)
 
 YaxisLinLog = CW_BGROUP(RescaleBase,$ 
                         axis_lin_log,$

@@ -248,7 +248,6 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
   MakeGuiOutputFile, STEPS_TAB,$
     Step1Size
     
-    
   MakeGuiLoadBatch, STEPS_TAB,$
     StepsTabSize
     

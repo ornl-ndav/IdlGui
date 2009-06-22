@@ -172,7 +172,6 @@ PRO PlotLoadedFiles, Event
             PLOT, $
               flt0, $
               flt1, $
-              XSTYLE = 1,$
               xrange = [xmin,xmax],$
               yrange = [ymin,ymax],$
               XSTYLE = 1,$
@@ -184,7 +183,6 @@ PRO PlotLoadedFiles, Event
               flt0, $
               flt1, $
               /ylog, $
-              XSTYLE = 1,$
               xrange = [xmin,xmax],$
               yrange = [ymin,ymax],$
               XSTYLE = 1,$
