@@ -49,7 +49,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     sLabelDraw.size[1]+sLabelDraw.size[3]+XYOff[1]]}
     
   ;- draw -----------------------------------------------------------------------
-  XYoff = [30,20]
+  XYoff = [30,10]
   sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
     uname : 'draw_uname'}
     
@@ -701,7 +701,30 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       SCR_XSIZE = sLabelDraw.size[2],$
       SCR_YSIZE = sLabelDraw.size[3])
       
-  ENDIF
+  ENDIF ELSE BEGIN
+  
+    bsBase = WIDGET_BASE(wTab1Base,$
+      XOFFSET = sDraw.size[0],$
+      YOFFSET = sDraw.size[1]+sDraw.size[3]+5,$
+      /EXCLUSIVE, $
+      /ROW,$
+      FRAME = 1)
+      
+    front_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Front Bank   ',$
+      UNAME = 'show_front_bank_button')
+      
+    back_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Back Bank   ',$
+      UNAME = 'show_back_bank_button')
+      
+    both_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Front and Back Banks',$
+      UNAME = 'show_both_banks_button')
+      
+    WIDGET_CONTROL, both_bank, /SET_BUTTON
+    
+  ENDELSE
   
   ;range of tof plotted ---------------------------------------------------------
   wTofRangeLabel = WIDGET_LABEL(wTab1Base,$
