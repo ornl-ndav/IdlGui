@@ -387,6 +387,10 @@ PRO create_final_array, Event, final_array, final_error_array
     local_tfpData_error = *tfpData_error[index]
     scaling_factor      = scaling_factor_array[index]
     
+    print, 'for main data: scaling_factor'
+    print, scaling_factor
+    print
+    
     ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
       local_tfpData      = local_tfpData[*,304L:2*304L-1]
@@ -901,6 +905,9 @@ PRO  step6_scale_data, Event, $
   
   nbr_plot             = getNbrFiles(Event) ;number of files
   scaling_factor_array = (*(*global).scaling_factor)
+  print, 'scaling_factor_array:'
+  print, scaling_factor_array
+  print
   
   index      = 0                ;loop variable (nbr of array to add/plot
   WHILE (index LT nbr_plot) DO BEGIN
