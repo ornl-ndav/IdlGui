@@ -34,8 +34,20 @@
 
 ; Empty stub procedure used for autoloading.
 PRO mini_sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, SCROLL='yes', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-end
+  
+  ;check facility here
+  SPAWN, 'hostname',listening
+  CASE (listening) OF
+    'eqsans': facility = 'SNS'
+    else: facility = 'UNDEFINED'
+  ENDCASE
+  
+  IF (facility EQ 'UNDEFINED') THEN BEGIN
+    BuildFacilityGui, SCROLL='yes', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  ENDIF ELSE BEGIN
+    BuildGui, SCROLL='yes', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
+  ENDELSE
+END
 
 
 

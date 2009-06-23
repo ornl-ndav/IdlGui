@@ -32,7 +32,13 @@
 ;
 ;==============================================================================
 
-PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildFacilityGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
+  ;build the facility Selection base
+  MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
+END
+
+;------------------------------------------------------------------------------
+PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -83,7 +89,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
     scaling_value: '',$
+    build_command_line: 1,$
     
+    facility: facility, $
     facility_list: ['LENS'],$
     facility_flag: '--facility',$
     instrument_list: ['SANS'],$
@@ -275,6 +283,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     })
     
   MainBaseTitle  = 'SANS Data Reduction GUI'
+  MainBaseTitle += ' for ' + facility
   MainBaseSize   = [30,25,695+320,530+320]
   MainBaseTitle += ' - ' + VERSION
   
@@ -371,10 +380,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
     
   ENDIF
   

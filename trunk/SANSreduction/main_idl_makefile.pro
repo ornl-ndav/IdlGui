@@ -58,6 +58,7 @@ cd, CurrentFolder
 
 ;main functions
 .run MainBaseEvent.pro
+.run sans_reduction_make_facility_selection.pro
 .run sans_reduction_eventcb.pro
 .run sans_reduction_build_gui.pro
 
