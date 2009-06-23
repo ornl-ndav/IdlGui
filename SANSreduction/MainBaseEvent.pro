@@ -60,8 +60,7 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='facility_selection_validate_button'): begin
       facility_selected, Event, (*global).scroll
     end
-  
-  
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
