@@ -67,6 +67,7 @@ PRO lin_or_log_plot, Event
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
   TVSCL, DataXY, /DEVICE
-  refresh_scale, Event         ;_plot
+  
+  ;refresh_scale, Event         ;_plot
   
 END

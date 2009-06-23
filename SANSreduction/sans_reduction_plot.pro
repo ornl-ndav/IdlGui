@@ -87,7 +87,6 @@ FUNCTION plotData, Event, DataArray, X, Y
     rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
     (*(*global).rtDataXY) = rtDataXY ;array plotted
     
-    
     lin_or_log_plot, Event
     
     ;;plot data
@@ -105,11 +104,16 @@ END
 
 ;------------------------------------------------------------------------------
 PRO refresh_scale, Event
+
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
   ;get global structure
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL, id, GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  facility = (*global).facility
+  
+  print, facility
+  
+  IF (facility EQ 'SNS') THEN RETURN
   
   ;change color of background
   id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
@@ -117,6 +121,8 @@ PRO refresh_scale, Event
   WSET, id_value
   
   LOADCT,0,/SILENT
+ 
+ print, 'here'
   
   IF ((*global).Xpixel  EQ 80L) THEN BEGIN
     xrange_max = 80
@@ -162,10 +168,14 @@ PRO refresh_plot, Event ;_plot
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  ;change color of background
-  id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
+;  IF ((*global).facility EQ 'LENS') THEN BEGIN
+;  
+;    ;change color of background
+;    id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+;    WIDGET_CONTROL, id, GET_VALUE=id_value
+;    WSET, id_value
+;    
+;  ENDIF
   
   ;retrieve parameters from global pointer
   X         = (*global).X

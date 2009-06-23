@@ -34,7 +34,8 @@
 
 PRO BuildFacilityGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
   ;build the facility Selection base
-  MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
+  MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, $
+  SCROLL=scroll
 END
 
 ;------------------------------------------------------------------------------
@@ -185,7 +186,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     1},$ ;on/OFF
     monitor_efficiency_constant: $
     '--mon-eff-const',$
-
+    
     detector_efficiency: {flag: $
     '--det-effc',$
     default: $
@@ -289,8 +290,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   
   (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
   
-  ;==============================================================================
-  ;Build Main Base ==============================================================
+  ;============================================================================
+  ;Build Main Base ============================================================
   IF (SCROLLING EQ 'yes') THEN BEGIN
     MAIN_BASE = WIDGET_BASE( GROUP_LEADER  = wGroup,$
       UNAME         = 'MAIN_BASE',$
@@ -337,14 +338,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   widget_control, MAIN_BASE, SET_UVALUE=global
   
   ;Build Tab1
-  make_gui_main_tab, MAIN_BASE, MainBaseSize
+  make_gui_main_tab, MAIN_BASE, MainBaseSize, global
   
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
   
   
-  ;==============================================================================
+  ;============================================================================
   ;debugging version of program
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
@@ -387,29 +388,33 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
   ENDIF
   
-  ;change color of background
-  id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
+  IF (facility EQ 'LENS') THEN BEGIN
   
-  plot, randomn(s,80), $
-    XRANGE     = [0,80],$
-    YRANGE     = [0,80],$
-    COLOR      = convert_rgb([0B,0B,255B]), $
-    BACKGROUND = convert_rgb(sys_color.face_3d),$
-    THICK      = 1, $
-    TICKLEN    = -0.015, $
-    XTICKLAYOUT = 0,$
-    YTICKLAYOUT = 0,$
-    XTICKS      = 8,$
-    YTICKS      = 8,$
-    XMARGIN     = [5,5],$
-    /NODATA
+    ;change color of background
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
     
-  ;=============================================================================
-  ; Date and Checking Packages routines ========================================
-  ;=============================================================================
+    plot, randomn(s,80), $
+      XRANGE     = [0,80],$
+      YRANGE     = [0,80],$
+      COLOR      = convert_rgb([0B,0B,255B]), $
+      BACKGROUND = convert_rgb(sys_color.face_3d),$
+      THICK      = 1, $
+      TICKLEN    = -0.015, $
+      XTICKLAYOUT = 0,$
+      YTICKLAYOUT = 0,$
+      XTICKS      = 8,$
+      YTICKS      = 8,$
+      XMARGIN     = [5,5],$
+      /NODATA
+ 
+  ENDIF
+  
+  ;============================================================================
+  ; Date and Checking Packages routines =======================================
+  ;============================================================================
   ;Put date/time when user started application in first line of log book
   time_stamp = GenerateIsoTimeStamp()
   message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
@@ -420,8 +425,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     checking_packages_routine, MAIN_BASE, my_package, global
   ENDIF
   
-  ;==============================================================================
-  ;==============================================================================
+  ;============================================================================
+  ;============================================================================
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams

@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 
-PRO MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
+PRO MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, $
+SCROLL=scroll
 
   facilitySelectionBaseSize = [400,300,240,140]
   facilitySelectioncwbgroupSize = [10,5]

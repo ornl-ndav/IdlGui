@@ -73,9 +73,9 @@ PRO MAIN_BASE_event, Event
       start_help, Event ;_eventcb
     END
     
-    ;= TAB1 (LOAD DATA) ===========================================================
+    ;= TAB1 (LOAD DATA) =======================================================
     
-    ;- Main Plot ------------------------------------------------------------------
+    ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         getXYposition, Event ;_get
@@ -107,42 +107,42 @@ PRO MAIN_BASE_event, Event
       lin_or_log_plot, Event
     END
     
-    ;- Run Number cw_field --------------------------------------------------------
+    ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
     END
     
-    ;- Browse Button --------------------------------------------------------------
+    ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
     END
     
-    ;- Selection Button -----------------------------------------------------------
+    ;- Selection Button -------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_tool_button'): BEGIN
       selection_tool, Event ;_eventcb
     END
     
-    ;- Browse Selection File ------------------------------------------------------
+    ;- Browse Selection File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
       browse_selection_file, Event ;_selection
     END
     
-    ;- Preview Selection File -----------------------------------------------------
+    ;- Preview Selection File -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_preview_button'): BEGIN
       preview_selection_file, Event ;_selection
     END
     
-    ;- Selection File Name Text Field ---------------------------------------------
+    ;- Selection File Name Text Field -----------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_file_name_text_field'): BEGIN
       selection_text_field, Event ;_selection
     END
     
-    ;- Selection Load Button ------------------------------------------------------
+    ;- Selection Load Button --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
       LoadPlotSelection, Event ;_selection
     END
     
-    ;-Exclusion Region Selection Tool ---------------------------------------------
+    ;-Exclusion Region Selection Tool -----------------------------------------
     ;- Preview button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_exclusion_region'): BEGIN
       PreviewExclusionRegionCircle, Event ;_exclusion
@@ -206,38 +206,38 @@ PRO MAIN_BASE_event, Event
       PreviewRoiExclusionFile, Event ;_exclusion
     END
     
-    ;-END of Exclusion Region Selection Tool --------------------------------------
+    ;-END of Exclusion Region Selection Tool ----------------------------------
     
-    ;- Clear Selection Button -----------------------------------------------------
+    ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       clear_selection_tool, Event ;_selection
     END
     
-    ;- Refresh Plot ---------------------------------------------------------------
+    ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
       refresh_plot, Event ;_plot
       RefreshRoiExclusionPlot, Event   ;_plot
     END
     
-    ;- Selection Color Button -----------------------------------------------------
+    ;- Selection Color Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_color_button'): BEGIN
       change_color_OF_selection, Event ;_selection
     END
     
-    ;- Plot Color Button ----------------------------------------------------------
+    ;- Plot Color Button ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_color_button'): BEGIN
     END
     
-    ;= TAB2 (REDUCE) ==============================================================
+    ;= TAB2 (REDUCE) ==========================================================
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
       test_RunCommandLine, Event ;_run_commandline
     END
     
-    ;==== tab1 (LOAD FILES (1)) ===================================================
+    ;==== tab1 (LOAD FILES (1)) ===============================================
     
-    ;----Data File ----------------------------------------------------------------
+    ;----Data File ------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'data_run_number_cw_field', $
@@ -250,14 +250,14 @@ PRO MAIN_BASE_event, Event
         'data_file_name_text_field'
     END
     
-    ;----ROI FIle -----------------------------------------------------------------
+    ;----ROI FIle -------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='roi_browse_button'): BEGIN
       BrowseNexus, Event, $
         'roi_browse_button',$
         'roi_file_name_text_field'
     END
     
-    ;----Solvant Buffer Only File -------------------------------------------------
+    ;----Solvant Buffer Only File ---------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'solvant_run_number_cw_field',$
@@ -270,7 +270,7 @@ PRO MAIN_BASE_event, Event
         'solvant_file_name_text_field'
     END
     
-    ;----Empty Can  ---------------------------------------------------------------
+    ;----Empty Can  -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'empty_run_number_cw_field',$
@@ -283,7 +283,7 @@ PRO MAIN_BASE_event, Event
         'empty_file_name_text_field'
     END
     
-    ;----Open Beam  ---------------------------------------------------------------
+    ;----Open Beam  -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='open_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'open_run_number_cw_field',$
@@ -296,7 +296,7 @@ PRO MAIN_BASE_event, Event
         'open_file_name_text_field'
     END
     
-    ;----Dark Current  ------------------------------------------------------------
+    ;----Dark Current  --------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'dark_run_number_cw_field',$
@@ -309,7 +309,7 @@ PRO MAIN_BASE_event, Event
         'dark_file_name_text_field'
     END
     
-    ;----Sample Data File ---------------------------------------------------------
+    ;----Sample Data File -----------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'sample_data_transmission_run_number_cw_field'): BEGIN
@@ -326,7 +326,7 @@ PRO MAIN_BASE_event, Event
         'sample_data_transmission_file_name_text_field'
     END
     
-    ;----Empty Can Transmission ---------------------------------------------------
+    ;----Empty Can Transmission -----------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'empty_can_transmission_run_number_cw_field'): BEGIN
@@ -349,7 +349,7 @@ PRO MAIN_BASE_event, Event
       BrowseOutputFolder, Event ;_reduce_tab2
     END
     
-    ;--- Solvent Transmission ---------------------------------------------------
+    ;--- Solvent Transmission -------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME= $
       'solvent_transmission_run_number_cw_field'): BEGIN
@@ -372,14 +372,14 @@ PRO MAIN_BASE_event, Event
       BrowseOutputFolder, Event ;_reduce_tab2
     END
     
-    ;Clear File Name text field button --------------------------------------------
+    ;Clear File Name text field button ----------------------------------------
     WIDGET_INFO(wWidget,$
       FIND_BY_UNAME= $
       'clear_output_file_name_button'): BEGIN
       clearOutputFileName, Event ;_reduce_tab2
     END
     
-    ;Reset File Name --------------------------------------------------------------
+    ;Reset File Name ----------------------------------------------------------
     WIDGET_INFO(wWidget,$
       FIND_BY_UNAME= $
       'reset_output_file_name_button'): BEGIN
@@ -402,44 +402,44 @@ PRO MAIN_BASE_event, Event
         auto_output_file_name
     END
     
-    ;==== tab2 (PARAMETERS) =======================================================
+    ;==== tab2 (PARAMETERS) ===================================================
     
-    ;---- YES or NO geometry cw_bgroup --------------------------------------------
+    ;---- YES or NO geometry cw_bgroup ----------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
       GeometryGroupInteraction, Event ;_reduce_tab3
     END
     
-    ;---- Browse button of the overwrite geometry button --------------------------
+    ;---- Browse button of the overwrite geometry button ----------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
       BrowseGeometry, Event ;_reduce_tab3
     END
     
-    ;---- Monitor Efficiency ------------------------------------------------------
+    ;---- Monitor Efficiency --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='monitor_efficiency_group'): BEGIN
       monitor_efficiency_constant_gui, Event ;_reduce_tab3
     END
     
-    ;---- Detector Efficiency ------------------------------------------------------
+    ;---- Detector Efficiency -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_efficiency_group'): BEGIN
       detector_efficiency_constant_gui, Event ;_reduce_tab3
     END
 
-    ;---- Min Lambda Cut off ------------------------------------------------------
+    ;---- Min Lambda Cut off --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
       min_lambda_cut_off_gui, Event ;_reduce_tab3
     END
     
-    ;---- Max Lambda Cut off ------------------------------------------------------
+    ;---- Max Lambda Cut off --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_group'): BEGIN
       max_lambda_cut_off_gui, Event ;_reduce_tab3
     END
     
-    ;---- Scaling Constant --------------------------------------------------------
+    ;---- Scaling Constant ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='scaling_constant_group'): BEGIN
       scaling_constant_gui, Event ;_reduce_tab3
     END
     
-    ;---- Wavelength dependent background subtraction -----------------------------
+    ;---- Wavelength dependent background subtraction -------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_help_button'): BEGIN
       id = WIDGET_INFO(wWidget, $
         FIND_BY_UNAME='wave_dependent_back_sub_text_field')
@@ -467,7 +467,7 @@ PRO MAIN_BASE_event, Event
 
     END
     
-    ;---- Browse button of Wavelength Dependent Back. subtraction -----------------
+    ;---- Browse button of Wavelength Dependent Back. subtraction -------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='wave_dependent_back_browse_button'): BEGIN
       BrowseLoadWaveFile, Event ;_reduce_tab3
@@ -493,7 +493,7 @@ PRO MAIN_BASE_event, Event
       activate_widget, Event, 'acce_base', status
     END
         
-    ;---- Clear Wavelength coefficient text field ---------------------------------
+    ;---- Clear Wavelength coefficient text field -----------------------------
     WIDGET_INFO(wWidget,$
       FIND_BY_UNAME= $
       'wave_clear_text_field'): BEGIN
@@ -501,40 +501,40 @@ PRO MAIN_BASE_event, Event
       (*global).scaling_value = ''
     END
     
-    ;= TAB3 (PLOT) ================================================================
+    ;= TAB3 (PLOT) ============================================================
     
-    ;---- Refresh plot ------------------------------------------------------------
+    ;---- Refresh plot --------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_refresh_plot_ascii_button'): BEGIN
       rePlotAsciiData, Event ;_tab_plot
     END
     
-    ;---- Browse ASCII file -------------------------------------------------------
+    ;---- Browse ASCII file ---------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_browse_button'): BEGIN
       BrowseInputAsciiFile, Event ;_tab_plot
     END
     
-    ;---- Input text field --------------------------------------------------------
+    ;---- Input text field ----------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_text_field'): BEGIN
       check_IF_file_exist, Event ;_tab_plot
     END
     
-    ;---- Load File Button --------------------------------------------------------
+    ;---- Load File Button ----------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_load_button'): BEGIN
       LoadAsciiFile, Event ;_tab_plot
     END
     
-    ;---- Preview button ----------------------------------------------------------
+    ;---- Preview button ------------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_preview_button'): BEGIN
       preview_ascii_file, event ;_tab_plot
     END
     
     
-    ;= TAB4 (LOG BOOK) ============================================================
+    ;= TAB4 (LOG BOOK) ========================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
       SendToGeek, Event       ;_IDLsendToGeek
     END

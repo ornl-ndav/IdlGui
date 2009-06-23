@@ -294,6 +294,7 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     0: BEGIN ;first tab
         refresh_plot, Event     ;_plot
         RefreshRoiExclusionPlot, Event   ;_selection
+        refresh_scale, Event
     END
     1: BEGIN                    ;reduce tab
         
