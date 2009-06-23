@@ -283,7 +283,6 @@ PRO refresh_checking_spin_table, Event, global
     file_name = list_of_files[i]
     IF (file_name NE '') THEN BEGIN
       full_file_name = path + file_name
-      print, full_file_name
       IF (FILE_TEST(full_file_name)) THEN BEGIN
         table[1,i] = 'READY'
       ENDIF ELSE BEGIN
