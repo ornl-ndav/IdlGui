@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
+PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
 
   ;- base -----------------------------------------------------------------------
   sTab1Base = { size  : MainTabSize,$
@@ -448,14 +448,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
     
-  ;- Label draw -----------------------------------------------------------------
-  wLabelDraw = WIDGET_DRAW(wTab1Base,$
-    UNAME     = sLabelDraw.uname,$
-    XOFFSET   = sLabelDraw.size[0],$
-    YOFFSET   = sLabelDraw.size[1],$
-    SCR_XSIZE = sLabelDraw.size[2],$
-    SCR_YSIZE = sLabelDraw.size[3])
-    
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
+    ;- Label draw -----------------------------------------------------------------
+    wLabelDraw = WIDGET_DRAW(wTab1Base,$
+      UNAME     = sLabelDraw.uname,$
+      XOFFSET   = sLabelDraw.size[0],$
+      YOFFSET   = sLabelDraw.size[1],$
+      SCR_XSIZE = sLabelDraw.size[2],$
+      SCR_YSIZE = sLabelDraw.size[3])
+      
+  ENDIF
+  
   ;- Selection tool -------------------------------------------------------------
   wSelection = WIDGET_BUTTON(wTab1Base,$
     XOFFSET   = sSelection.size[0],$
@@ -838,12 +842,12 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
-  XOFFSET = sScaleTypeBase.size[0],$
-  YOFFSET = sScaleTypeBase.size[1],$
-  UNAME = sScaleTypeBase.uname,$
-  SENSITIVE = sScaleTypeBase.sensitive,$
-  /ROW)
-  
+    XOFFSET = sScaleTypeBase.size[0],$
+    YOFFSET = sScaleTypeBase.size[1],$
+    UNAME = sScaleTypeBase.uname,$
+    SENSITIVE = sScaleTypeBase.sensitive,$
+    /ROW)
+    
   wGroup = CW_BGROUP(wGroupBase,$
     sScaleType.list,$
     ROW        = 1,$
