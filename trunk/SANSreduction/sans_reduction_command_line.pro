@@ -88,6 +88,15 @@
       ++missing_argument_counter
     END
     
+    ;-facility and instrument flags
+    cmd += ' ' + (*global).facility_flag
+    facility_list = (*global).facility_list
+    cmd += '=' + facility_list[0]
+    
+    cmd +=  ' ' + (*global).instrument_flag
+    instrument_list = (*global).instrument_list
+    cmd += '=' + instrument_list[0]  
+    
     ;get monitor path
     cmd += ' --bmon-path='
     IF (file_run EQ '') THEN BEGIN
@@ -267,6 +276,43 @@
     ENDELSE
     map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
     
+    ;-detector efficiency
+    IF (getCWBgroupValue(Event, 'detector_efficiency_group') EQ 0) THEN BEGIN
+      activate_intermediate_base = 0
+      cmd += ' ' + (*global).ReducePara.detector_efficiency.flag
+      
+      cmd += ' ' + (*global).ReducePara.detector_efficiency_scale + '='
+      value = getTextFieldValue(Event, 'detector_efficiency_scaling_value')
+      IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+      ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+          '- Scaling Detector Efficiency Value ' + $
+          '(PARAMETERS)']
+      ENDELSE
+
+      cmd += ' ' + (*global).ReducePara.detector_efficiency_attenuator + '='
+      value = getTextFieldValue(Event, 'detector_efficiency_attenuator_value')
+      IF (value NE '') THEN BEGIN
+        cmd += STRCOMPRESS(value,/REMOVE_ALL)
+        cmd += ',0.0'
+      ENDIF ELSE BEGIN
+        cmd += '?,0.0'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+          '- Attenuator Detector Efficiency Value ' + $
+          '(PARAMETERS)']
+      ENDELSE
+
+    ENDIF ELSE BEGIN
+      activate_intermediate_base = 1
+    ENDELSE
+
     ;-Q min, max, width and unit
     Qmin   = getTextFieldValue(Event,'qmin_text_field')
     Qmax   = getTextFieldValue(Event,'qmax_text_field')
@@ -374,8 +420,8 @@
     value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
     IF (value NE '') THEN BEGIN ;required if none empty list of coefficients
     
-    prefix_flag = ',0.0,"seconds"'  
-
+      prefix_flag = ',0.0,"seconds"'
+      
       ;data
       file_run = getTextFieldValue(Event,'data_file_name_text_field')
       IF (file_run NE '') THEN BEGIN

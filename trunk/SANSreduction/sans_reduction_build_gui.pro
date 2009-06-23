@@ -83,6 +83,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
     scaling_value: '',$
+    
+    facility_list: ['LENS'],$
+    facility_flag: '--facility',$
+    instrument_list: ['SANS'],$
+    instrument_flag: '--inst',$
+    
     package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
     list_OF_files_to_send: ptr_new(0L),$
@@ -171,6 +177,16 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     1},$ ;on/OFF
     monitor_efficiency_constant: $
     '--mon-eff-const',$
+
+    detector_efficiency: {flag: $
+    '--det-effc',$
+    default: $
+    1},$ ;on/OFF
+    detector_efficiency_scale: $
+    '--det-eff-scale-const',$
+    detector_efficiency_attenuator: $
+    '--det-eff-atten-const',$
+    
     verbose: $
     '--verbose',$
     min_lambda_cut_off:$

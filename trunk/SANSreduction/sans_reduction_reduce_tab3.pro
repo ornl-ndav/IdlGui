@@ -124,6 +124,23 @@ PRO monitor_efficiency_constant_gui, Event
 END
 
 ;------------------------------------------------------------------------------
+;This procedure is reached each time the user changes the ON/OFF
+;switch of the detector efficiency
+PRO detector_efficiency_constant_gui, Event
+  value_OF_group = getCWBgroupValue(Event,'detector_efficiency_group')
+  IF (value_OF_group EQ 0) THEN BEGIN
+    sensitive_status = 1
+  ENDIF ELSE BEGIN
+    sensitive_status = 0
+  ENDELSE
+  activate_widget, Event, 'detector_efficiency_scaling_label', sensitive_status
+  activate_widget, Event, 'detector_efficiency_scaling_value', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_value', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_label', sensitive_status
+  activate_widget, Event, 'detector_efficiency_attenuator_units', sensitive_status
+END
+
+;------------------------------------------------------------------------------
 ;This procedure is reached each time the user changes the YES/NO
 ;switch of the scaling constant
 PRO scaling_constant_gui, Event

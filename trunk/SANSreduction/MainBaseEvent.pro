@@ -221,12 +221,11 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_color_button'): BEGIN
     END
     
-    
     ;= TAB2 (REDUCE) ==============================================================
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
-      RunCommandLine, Event ;_run_commandline
+      test_RunCommandLine, Event ;_run_commandline
     END
     
     ;==== tab1 (LOAD FILES (1)) ===================================================
@@ -413,6 +412,11 @@ PRO MAIN_BASE_event, Event
       monitor_efficiency_constant_gui, Event ;_reduce_tab3
     END
     
+    ;---- Detector Efficiency ------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_efficiency_group'): BEGIN
+      detector_efficiency_constant_gui, Event ;_reduce_tab3
+    END
+
     ;---- Min Lambda Cut off ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
       min_lambda_cut_off_gui, Event ;_reduce_tab3
