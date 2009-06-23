@@ -203,7 +203,11 @@ PRO MakeGuiMainPLot_Event, event
           plot_counts_vs_tof_of_selection, Event
           WIDGET_CONTROL, HOURGLASS=0
           WIDGET_CONTROL, job_base,/DESTROY
-        ENDIF
+        ENDIF ELSE BEGIN ;remove selection
+          (*global1).X1 = 0L
+          (*global1).X2 = 0L
+        replot_main_plot_with_scale, Event, without_scale=1
+        ENDELSE
       ENDIF
       
       IF (Event.type EQ 2 AND $
