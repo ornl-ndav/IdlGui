@@ -133,14 +133,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
   sPlotExclusion = { size: [sPreviewExclusion.size[0]+$
     sPreviewExclusion.size[2]+XYoff[0],$
     sPreviewExclusion.size[1]+XYoff[1]],$
-    value: 'images/fast_selection.bmp',$
+    value: 'SANSreduction_images/fast_selection.bmp',$
     tooltip: 'Fast Selection/Plot',$
     uname: 'plot_fast_exclusion_region'}
     
   XYoff = [67,0]                  ;PLOT button (Accurate)
   sPlotAccurateExclusion = { size: [sPlotExclusion.size[0]+XYoff[0],$
     sPlotExclusion.size[1]+XYoff[1]],$
-    value: 'images/accurate_selection.bmp',$
+    value: 'SANSreduction_images/accurate_selection.bmp',$
     tooltip: 'Accurate Selection/Plot',$
     uname: 'plot_accurate_exclusion_region'}
     
@@ -263,19 +263,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     
   sButton1 = { uname:   'exclusion_half_in',$
     tooltip: tooltip_array[2],$
-    value:   'images/selection_half_in.bmp'}
+    value:   'SANSreduction_images/selection_half_in.bmp'}
     
   sButton2 = { uname:   'exclusion_half_out',$
     tooltip: tooltip_array[3],$
-    value:   'images/selection_half_out.bmp'}
+    value:   'SANSreduction_images/selection_half_out.bmp'}
     
   sButton3 = { uname:   'exclusion_outside_in',$
     tooltip: tooltip_array[0],$
-    value:   'images/selection_outside_in.bmp'}
+    value:   'SANSreduction_images/selection_outside_in.bmp'}
     
   sButton4 = { uname:   'exclusion_outside_out',$
     tooltip: tooltip_array[1],$
-    value:   'images/selection_outside_out.bmp'}
+    value:   'SANSreduction_images/selection_outside_out.bmp'}
     
   ;SAVE AS
   XYoff = [0,40]
