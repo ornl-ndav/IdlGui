@@ -62,15 +62,15 @@ PRO MAIN_BASE_event, Event
       tab_event, Event ;_eventcb
     END
     
-    ;= TAB1 (LOAD DATA) ===========================================================
+    ;= TAB1 (LOAD DATA) =======================================================
     
-    ;- MODE GROUP selection -------------------------------------------------------
+    ;- MODE GROUP selection (transmission or background )----------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='mode_group_uname'): BEGIN
       RenewOutputFileName, Event
       ModeGuiUpdate, Event    ;_gui
     END
     
-    ;- Main Plot ------------------------------------------------------------------
+    ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         getXYposition, Event ;_get
@@ -110,8 +110,8 @@ PRO MAIN_BASE_event, Event
       lin_or_log_plot, Event
     END
     
-    ;------------------------------------------------------------------------------
-    ;- Range of TOF displayed -----------------------------------------------------
+    ;--------------------------------------------------------------------------
+    ;- Range of TOF displayed -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_range_cwbgroup'): BEGIN
       value = getCWBgroupValue(Event,'tof_range_cwbgroup')
       activate_widget, Event, 'tof_manual_base', value
@@ -130,13 +130,134 @@ PRO MAIN_BASE_event, Event
       RefreshRoiExclusionPlot, Event   ;_selection
     END
     
-    ;- Play button ----------------------------------------------------------------
+    ;- Play button ------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_play_button'): BEGIN
+      ;      activate_play_base, Event
       play_tof, Event         ;_eventcb
     END
     
-    ;------------------------------------------------------------------------------
-    ;- TOF reset button -----------------------------------------------------------
+    ;-Advanced Button ---------------------------------------------------------
+    ;previous button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='previous_button'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[0] EQ 0 OR $
+            status_buttons[0] EQ 1) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=1, global
+            play_previous_tof, Event         ;_eventcb
+          ENDIF ;end of status_buttons[0]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
+    ;play button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='play_button'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[1] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=2, global
+            play_tof, Event         ;_eventcb
+          ENDIF ;end of status_buttons[1]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
+    ;pause button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='pause_button'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        (*global).previous_button_clicked = 3
+        IF (event.press EQ 1) THEN BEGIN
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[2] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=3, global
+            (*global).previous_button_clicked = 3
+            
+          ENDIF ;end of status_buttons[2]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ;        (*global).previous_button_clicked = 3
+      ENDELSE
+    END
+    
+    ;stop button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='stop_button'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        (*global).previous_button_clicked = 4
+        IF (event.press EQ 1) THEN BEGIN
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[3] EQ 0) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=4, global
+            refresh_plot, Event     ;_plot
+            RefreshRoiExclusionPlot, Event   ;_selection
+            (*global).previous_button_clicked = 4
+          ENDIF ;end of status_buttons[3]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+        (*global).previous_button_clicked = 4
+      ENDELSE
+    END
+    
+    ;next button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='next_button'): BEGIN
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+          status_buttons = (*global).status_buttons
+          IF (status_buttons[4] EQ 0 OR $
+            status_buttons[4] EQ 1) THEN BEGIN
+            display_buttons, EVENT=EVENT, ACTIVATE=5, global
+            play_next_tof, Event         ;_eventcb
+          ENDIF ;end of status_buttons[4]
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE
+    END
+    
+    ;--------------------------------------------------------------------------
+    ;- TOF reset button -------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tof_reset_range'): BEGIN
       putTextFIeldValue, Event, 'tof_range_min_cw_field',$
         STRCOMPRESS((*global).tof_min,/REMOVE_ALL)
@@ -148,45 +269,45 @@ PRO MAIN_BASE_event, Event
       putTextfieldValue, Event, 'tof_range_value', ''
     END
     
-    ;- Run Number cw_field --------------------------------------------------------
+    ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
-      load_run_number, Event     ;_eventcb
+      load_run_number, Event  ;_eventcb
       CheckCommandLine, Event ;_command_line
     END
     
-    ;- Browse Button --------------------------------------------------------------
+    ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
       CheckCommandLine, Event ;_command_line
     END
     
-    ;- Selection Button -----------------------------------------------------------
+    ;- Selection Button -------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_tool_button'): BEGIN
       selection_tool, Event ;_eventcb
     END
     
-    ;- Browse Selection File ------------------------------------------------------
+    ;- Browse Selection File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
       browse_selection_file, Event ;_selection
       update_tof_counts_selection_button, Event ;_gui
     END
     
-    ;- Preview Selection File -----------------------------------------------------
+    ;- Preview Selection File -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_preview_button'): BEGIN
       preview_selection_file, Event ;_selection
     END
     
-    ;- Selection File Name Text Field ---------------------------------------------
+    ;- Selection File Name Text Field -----------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_file_name_text_field'): BEGIN
       selection_text_field, Event ;_selection
     END
     
-    ;- Selection Load Button ------------------------------------------------------
+    ;- Selection Load Button --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
       LoadPlotSelection, Event ;_selection
     END
     
-    ;-Exclusion Region Selection Tool ---------------------------------------------
+    ;-Exclusion Region Selection Tool -----------------------------------------
     ;- Preview button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='preview_exclusion_region'): BEGIN
       PreviewExclusionRegionCircle, Event ;_exclusion
@@ -209,7 +330,7 @@ PRO MAIN_BASE_event, Event
       ClearInputBoxes, Event ;_exclusion
     END
     
-    ;- Rectangle or Circle selection ----------------------------------------------
+    ;- Rectangle or Circle selection ------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='circle_in_out_button'): BEGIN
       EnableCircleBase, Event ;_exclusion
     END
@@ -264,15 +385,15 @@ PRO MAIN_BASE_event, Event
       PreviewRoiExclusionFile, Event ;_exclusion
     END
     
-    ;-END of Exclusion Region Selection Tool --------------------------------------
+    ;-END of Exclusion Region Selection Tool ----------------------------------
     
-    ;- Clear Selection Button -----------------------------------------------------
+    ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       clear_selection_tool, Event ;_selection
       CheckCommandLine, Event ;_command_line
     END
     
-    ;- Refresh Plot ---------------------------------------------------------------
+    ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
       refresh_plot, Event     ;_plot
       RefreshRoiExclusionPlot, Event   ;_selection
@@ -284,14 +405,14 @@ PRO MAIN_BASE_event, Event
       RefreshRoiExclusionPlot, Event   ;_selection
     END
     
-    ;------------------------------------------------------------------------------
-    ;- Counts vs TOF button of full detector --------------------------------------
+    ;--------------------------------------------------------------------------
+    ;- Counts vs TOF button of full detector ----------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_full_detector_button'): $
       BEGIN
       launch_counts_vs_tof_full_detector_button, Event ;_tof
     END
     
-    ;- Counts vs TOF button of selection ------------------------------------------
+    ;- Counts vs TOF button of selection --------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_selection_button'): $
       BEGIN
       RenewOutputFileName, Event
@@ -299,22 +420,22 @@ PRO MAIN_BASE_event, Event
       launch_counts_vs_tof_selection_button, Event ;_tof
     END
     
-    ;- Counts vs TOF button of monitor --------------------------------------------
+    ;- Counts vs TOF button of monitor ----------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='counts_vs_tof_monitor_button'): $
       BEGIN
       launch_counts_vs_tof_monitor_button, Event ;_tof
     END
     
-    ;= TAB2 (REDUCE) ==============================================================
+    ;= TAB2 (REDUCE) ==========================================================
     
     ;---- GO DATA REDUCTION button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
-      RunCommandLine, Event ;_run_commandline
+      test_RunCommandLine, Event
     END
     
-    ;==== tab2 ====================================================================
+    ;==== tab2 ================================================================
     
-    ;----Data File ----------------------------------------------------------------
+    ;----Data File ------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
         'data_run_number_cw_field', $
@@ -336,7 +457,7 @@ PRO MAIN_BASE_event, Event
       CheckCommandLine, Event ;_command_line
     END
     
-    ;----ROI FIle -----------------------------------------------------------------
+    ;----ROI FIle -------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='roi_browse_button'): BEGIN
       BrowseNexus, Event, $
         'roi_browse_button',$
@@ -350,7 +471,7 @@ PRO MAIN_BASE_event, Event
       CheckCommandLine, Event  ;_command_line
     END
     
-    ;----Transmission Background --------------------------------------------------
+    ;----Transmission Background ----------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='transm_back_run_number_cw_field'): BEGIN
       LoadNeXus, Event, $
@@ -374,7 +495,7 @@ PRO MAIN_BASE_event, Event
         CheckCommandLine, Event ;_command_line
       END
       
-      ;----Output folder ------------------------------------------------------------
+      ;----Output folder ------------------------------------------------------
       WIDGET_INFO(wWidget,$
         FIND_BY_UNAME= $
         'output_folder'): BEGIN
@@ -383,7 +504,7 @@ PRO MAIN_BASE_event, Event
         CheckCommandLine, Event ;_command_line
       END
       
-      ;Clear File Name text field button --------------------------------------------
+      ;Clear File Name text field button --------------------------------------
       WIDGET_INFO(wWidget, FIND_BY_UNAME='output_file_name'): BEGIN
         RenewOutputFileName, Event
         CheckCommandLine, Event ;_command_line
@@ -396,7 +517,7 @@ PRO MAIN_BASE_event, Event
         CheckCommandLine, Event  ;_command_line
       END
       
-      ;Reset File Name --------------------------------------------------------------
+      ;Reset File Name --------------------------------------------------------
       WIDGET_INFO(wWidget,$
         FIND_BY_UNAME= $
         'reset_output_file_name_button'): BEGIN
@@ -420,23 +541,28 @@ PRO MAIN_BASE_event, Event
           auto_output_file_name
       END
       
-      ;==== tab2 (PARAMETERS) =======================================================
+      ;==== tab2 (PARAMETERS) =================================================
       
-      ;---- YES or NO geometry cw_bgroup --------------------------------------------
+      WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_efficiency_group'): BEGIN
+        detector_efficiency_constant_gui, Event
+        CheckCommandLine, Event
+      END
+      
+      ;---- YES or NO geometry cw_bgroup --------------------------------------
       WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
         GeometryGroupInteraction, Event ;_reduce_tab2
         RenewOutputFileName, Event ;_gui
         CheckCommandLine, Event         ;_command_line
       END
       
-      ;---- Browse button of the overwrite geometry button --------------------------
+      ;---- Browse button of the overwrite geometry button --------------------
       WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
         BrowseGeometry, Event ;_reduce_tab2
         RenewOutputFileName, Event ;_gui
         CheckCommandLine, Event ;_command_line
       END
       
-      ;---- Time Zero Offset --------------------------------------------------------
+      ;---- Time Zero Offset --------------------------------------------------
       WIDGET_INFO(wWidget, FIND_BY_UNAME='time_zero_offset_detector_uname'): $
         BEGIN
         RenewOutputFileName, Event ;_gui
@@ -449,7 +575,7 @@ PRO MAIN_BASE_event, Event
           CheckCommandLine, Event ;_command_line
         END
         
-        ;---- Monitor Efficiency ------------------------------------------------------
+        ;---- Monitor Efficiency ----------------------------------------------
         WIDGET_INFO(wWidget, FIND_BY_UNAME='monitor_efficiency_group'): BEGIN
           monitor_efficiency_constant_gui, Event  ;_reduce_tab2
           RenewOutputFileName, Event ;_gui
@@ -462,7 +588,7 @@ PRO MAIN_BASE_event, Event
             CheckCommandLine, Event ;_command_line
           END
           
-          ;---- Wavelength Range --------------------------------------------------------
+          ;---- Wavelength Range ----------------------------------------------
           WIDGET_INFO(wWidget, FIND_BY_UNAME='wave_min_text_field'): BEGIN
             RenewOutputFileName, Event ;_gui
             CheckCommandLine, Event ;_command_line
@@ -483,20 +609,20 @@ PRO MAIN_BASE_event, Event
             CheckCommandLine, Event ;_command_line
           END
           
-          ;---- ADT ---------------------------------------------------------------------
+          ;---- ADT -----------------------------------------------------------
           WIDGET_INFO(wWidget, FIND_BY_UNAME= $
             'accelerator_down_time_text_field'): BEGIN
             RenewOutputFileName, Event ;_gui
             CheckCommandLine, Event ;_command_line
           END
           
-          ;---- Verbose Mode ------------------------------------------------------------
+          ;---- Verbose Mode --------------------------------------------------
           WIDGET_INFO(wWidget, FIND_BY_UNAME='verbose_mode_group'): BEGIN
             RenewOutputFileName, Event ;_gui
             CheckCommandLine, Event ;_command_line
           END
           
-          ;---- min Lambda Cut off ------------------------------------------------------
+          ;---- min Lambda Cut off --------------------------------------------
           WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
             min_lambda_cut_off_gui, Event ;_reduce_tab2
             RenewOutputFileName, Event ;_gui
@@ -508,7 +634,7 @@ PRO MAIN_BASE_event, Event
             CheckCommandLine, Event ;_command_line
           END
           
-          ;---- max Lambda Cut off ------------------------------------------------------
+          ;---- max Lambda Cut off --------------------------------------------
           WIDGET_INFO(wWidget, FIND_BY_UNAME='maximum_lambda_cut_off_group'): BEGIN
             max_lambda_cut_off_gui, Event ;_reduce_tab2
             RenewOutputFileName, Event ;_gui
@@ -520,130 +646,130 @@ PRO MAIN_BASE_event, Event
             CheckCommandLine, Event ;_command_line
           END
           
-          ;==== tab2 (INTERMEDIATE FILE) ================================================
+          ;==== tab2 (INTERMEDIATE FILE) ======================================
           WIDGET_INFO(wWidget, FIND_BY_UNAME='intermediate_group_uname'): BEGIN
             RenewOutputFileName, Event ;_gui
             CheckCommandLine, Event ;_command_line
           END
           
-          ;= TAB3 (FITTING) =============================================================
+          ;= TAB3 (FITTING) ===================================================
           
-          ;----- Refresh Plot -----------------------------------------------------------
+          ;----- Refresh Plot -------------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='refresh_fitting_button'): BEGIN
             ManualFitting, Event     ;_fitting
           END
           
-          ;---- Browse Input Ascii file button ------------------------------------------
+          ;---- Browse Input Ascii file button --------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='input_file_browse_button'): BEGIN
             BrowseInputAsciiFile, Event ;_fitting
             UpdateFittingGui_preview, Event ;_fittign
           END
           
-          ;---- Input Ascii text field --------------------------------------------------
+          ;---- Input Ascii text field ----------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='input_file_text_field'): BEGIN
             AsciiInputTextField, Event ;_fitting
             UpdateFittingGui_preview, Event ;_fitting
           END
           
-          ;---- Input Ascii text field --------------------------------------------------
+          ;---- Input Ascii text field ----------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='input_file_load_button'): BEGIN
             LoadAsciiFile, Event ;_fitting
             UpdateFittingGui_preview, Event ;_fitting
           END
           
-          ;---- Previw Ascii text file --------------------------------------------------
+          ;---- Previw Ascii text file ----------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='input_file_preview_button'): BEGIN
             PreviewAsciiFile, Event ;_fitting
           END
           
-          ;---- degree of the fitting group ---------------------------------------------
+          ;---- degree of the fitting group -----------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='fitting_polynomial_degree_cw_group'): BEGIN
             ChangeDegreeOfPolynome, Event ;_fitting
             redefinedOutputFileNameOnly, Event ;_fitting
           END
           
-          ;---- Launch the Automatic Fitting --------------------------------------------
+          ;---- Launch the Automatic Fitting ----------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='auto_fitting_button'): BEGIN
             AutoFit, Event ;_fitting
             UpdateFittingGui_save, Event ;_fitting
           END
           
-          ;---- Show settings base ------------------------------------------------------
+          ;---- Show settings base --------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='settings_button'): BEGIN
             map_base, Event, 'settings_base', 1
           END
           
-          ;---- Show error bars group ---------------------------------------------------
+          ;---- Show error bars group -----------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='plot_error_bars_group'): BEGIN
             ManualFitting, Event     ;replot ascii and fitting
           END
           
-          ;---- Hide/close settings base ------------------------------------------------
+          ;---- Hide/close settings base --------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='close_fitting_settings_button'): BEGIN
             map_base, Event, 'settings_base', 0
           END
           
-          ;---- Launch the Manual Fitting --------------------------------------------
+          ;---- Launch the Manual Fitting -------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='manual_fitting_button'): BEGIN
             ManualFitting, Event ;_fitting
             UpdateFittingGui_save, Event ;_fitting
           END
           
-          ;---- Alternate Wavelength Axis -----------------------------------------------
+          ;---- Alternate Wavelength Axis -------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='alternate_wavelength_axis_cw_group'): BEGIN
             ChangeAlternateAxisOption, Event ;_fitting
             UpdateFittingGui_save, Event
           END
           
-          ;---- Wave min ----------------------------------------------------------------
+          ;---- Wave min ------------------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='alternate_wave_min_text_field'): BEGIN
             UpdateFittingGui_save, Event
           END
           
-          ;---- Wave max ----------------------------------------------------------------
+          ;---- Wave max ------------------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='alternate_wave_max_text_field'): BEGIN
             UpdateFittingGui_save, Event
           END
           
-          ;---- Wave width --------------------------------------------------------------
+          ;---- Wave width ----------------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='alternate_wave_width_text_field'): BEGIN
             UpdateFittingGui_save, Event
           END
           
-          ;---- Wave Axis Preview -------------------------------------------------------
+          ;---- Wave Axis Preview ---------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='wavelength_axis_preview_button'): BEGIN
             WaveUserDefinedAxisPreview, Event
           END
           
-          ;---- CREATE FILE BUTTON ------------------------------------------------------
+          ;---- CREATE FILE BUTTON --------------------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='output_file_save_button'): BEGIN
             OutputFileSave, Event ;_fitting
           END
           
-          ;---- PREVIEW/EDIT/CREATE FILE BUTTON -----------------------------------------
+          ;---- PREVIEW/EDIT/CREATE FILE BUTTON -------------------------------
           WIDGET_INFO(wWidget, $
             FIND_BY_UNAME='output_file_edit_save_button'): BEGIN
             OutputFileEditSave, Event ;_fitting
           END
           
-          ;= TAB4 (LOG BOOK) ============================================================
+          ;= TAB4 (LOG BOOK) ==================================================
           WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
             SendToGeek, Event       ;_IDLsendToGeek
           END

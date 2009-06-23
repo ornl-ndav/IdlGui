@@ -14,6 +14,7 @@ cd, IdlUtilitiesPath
 
 ;Build BSScalibration GUI
 cd, CurrentFolder + '/SANScalibrationGUI/'
+.run make_gui_log_book.pro
 .run IDLloadNexus__define.pro
 .run make_gui_main_tab.pro
 .run make_gui_tab1.pro
@@ -24,7 +25,6 @@ cd, CurrentFolder + '/SANScalibrationGUI/'
 .run make_gui_reduce_tab1.pro
 .run make_gui_reduce_tab2.pro
 .run make_gui_reduce_tab3.pro
-.run make_gui_log_book.pro
 .run IDLmakeTOFbase__define.pro
 
 ;Build all procedures
@@ -35,10 +35,11 @@ cd, CurrentFolder
 .run IDLgetMetadata__define.pro
 .run IDL3columnsASCIIparser__define.pro
 .run sans_calibration_put.pro
-.run sans_calibration_get.pro
 .run IDLsendToGeek__define.pro
 .run IDLsendLogBook__define.pro
 .run IDLgetNexusData__define.pro
+.run sans_calibration_get.pro
+.run sans_calibration_lin_log_plot.pro
 .run sans_calibration_plot.pro
 .run sans_calibration_gui.pro
 
@@ -54,7 +55,7 @@ cd, CurrentFolder
 .run sans_calibration_exclusion.pro
 .run sans_calibration_fitting.pro
 .run sans_calibration_counts_vs_tof.pro
-.run sans_calibration_lin_log_plot.pro
+.run sans_calibration_play.pro
 
 ;main functions
 .run MainBaseEvent.pro

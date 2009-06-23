@@ -32,62 +32,96 @@
 ;
 ;==============================================================================
 
-PRO RunCommandLine, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;retrieve infos
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-
-status_text = 'Data Reduction ... ' + PROCESSING
-putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-
-;get command line to generate
-cmd = getTextFieldValue(Event,'command_line_preview')
-
-;display command line in log-book
-cmd_text = '> Command Line:'
-IDLsendToGeek_addLogBookText, Event, cmd_text
-cmd_text = '-> ' + cmd
-IDLsendToGeek_addLogBookText, Event, cmd_text
-cmd_text = '-> Running Command Line ... ' + PROCESSING
-IDLsendToGeek_addLogBookText, Event, cmd_text
-
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;running command
-
-IF ((*global).TESTING EQ 'yes') THEN BEGIN
-    cmd = '~/bin/runenv ' + cmd
-ENDIF
-spawn, cmd, listening, err_listening 
-IF (err_listening[0] NE '') THEN BEGIN
-;in log book
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
-    logbook_text = 'Information from Verbose Mode:'
-    IDLsendToGeek_addLogBookText, Event, logbook_text
-    IDLsendToGeek_addLogBookText, Event, listening
-    IDLsendToGeek_addLogBookText, Event, err_listening
-;in status dr frame
-    status_text = 'Data Reduction ... FAILED (check log book)!'
-    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-ENDIF ELSE BEGIN
-;in log book
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-;in status dr frame
-    status_text = 'Data Reduction ... DONE WITH SUCCESS!'
-    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
-    logbook_text = 'Information from Verbose Mode:'
-    IDLsendToGeek_addLogBookText, Event, logbook_text
-    IDLsendToGeek_addLogBookText, Event, listening
-;make sure the output file exist and put its full name in the fitting
-;tab
-    short_output_file_name = (*global).short_data_nexus_file_name
-    IF (short_output_file_name NE '') THEN BEGIN
-        full_output_file_name = (*global).current_output_file_name
+PRO test_RunCommandLine, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
+  ;check first if the output file already exists and if it does, ask the user
+  ;if he wants to continue the process.
+  
+  output_path = getButtonValue(Event,'output_folder')
+  output_file = getTextfieldValue(Event, 'output_file_name')
+  output_file_name = output_path + output_file
+  
+  IF (FILE_TEST(output_file_name)) THEN BEGIN ;yes
+    result = DIALOG_MESSAGE(['Output File Name exists already !',$
+      '','Do You want to replace it ?'],$
+      /QUESTION,$
+      /DEFAULT_NO,$
+      TITLE='Output File Name is not uniq !',$
+      DIALOG_PARENT=id)
+            
+      IF (result EQ 'Yes') THEN BEGIN
+      RunCommandLine, Event
+      ENDIF ELSE BEGIN
+      RETURN
+      ENDELSE
+      
     ENDIF ELSE BEGIN
+      RunCommandLine, Event
+    ENDELSE
+    
+  END
+  
+  ;-----------------------------------------------------------------
+  PRO RunCommandLine, Event
+    ;get global structure
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+    
+    ;retrieve infos
+    PROCESSING = (*global).processing
+    OK         = (*global).ok
+    FAILED     = (*global).failed
+    
+    status_text = 'Data Reduction ... ' + PROCESSING
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+    
+    ;get command line to generate
+    cmd = getTextFieldValue(Event,'command_line_preview')
+    
+    ;display command line in log-book
+    cmd_text = '> Command Line:'
+    IDLsendToGeek_addLogBookText, Event, cmd_text
+    cmd_text = '-> ' + cmd
+    IDLsendToGeek_addLogBookText, Event, cmd_text
+    cmd_text = '-> Running Command Line ... ' + PROCESSING
+    IDLsendToGeek_addLogBookText, Event, cmd_text
+    
+    ;indicate initialization with hourglass icon
+    widget_control,/hourglass
+    ;running command
+    
+    IF ((*global).TESTING EQ 'yes') THEN BEGIN
+      cmd = '~/bin/runenv ' + cmd
+    ENDIF
+    spawn, cmd, listening, err_listening
+    IF (err_listening[0] NE '') THEN BEGIN
+      ;in log book
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+      logbook_text = 'Information from Verbose Mode:'
+      IDLsendToGeek_addLogBookText, Event, logbook_text
+      IDLsendToGeek_addLogBookText, Event, listening
+      IDLsendToGeek_addLogBookText, Event, err_listening
+      ;in status dr frame
+      status_text = 'Data Reduction ... FAILED (check log book)!'
+      putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+    ENDIF ELSE BEGIN
+      ;in log book
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+      ;in status dr frame
+      status_text = 'Data Reduction ... DONE WITH SUCCESS!'
+      putTextFieldValue, Event, 'data_reduction_status_frame', status_text
+      logbook_text = 'Information from Verbose Mode:'
+      IDLsendToGeek_addLogBookText, Event, logbook_text
+      IDLsendToGeek_addLogBookText, Event, listening
+      ;make sure the output file exist and put its full name in the fitting
+      ;tab
+      short_output_file_name = (*global).short_data_nexus_file_name
+      IF (short_output_file_name NE '') THEN BEGIN
+        full_output_file_name = (*global).current_output_file_name
+      ENDIF ELSE BEGIN
         DataFiles = getTextFieldValue(Event,'data_file_name_text_field')
         DataFilesArray = STRSPLIT(DataFiles,' ',/EXTRACT)
         DataFile1 = DataFilesArray[0]
@@ -96,27 +130,27 @@ ENDIF ELSE BEGIN
         full_output_file_name = (*global).path_data_nexus_file
         full_output_file_name += 'SANS_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
         full_output_file_name += '.txt'
-    ENDELSE
-    IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
+      ENDELSE
+      IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
         putTextFieldValue, Event, $
           'input_file_text_field', $
           full_output_file_name
-;load ascii file and plot it
-        LoadAsciiFile, Event        
-;move to fitting tab
+        ;load ascii file and plot it
+        LoadAsciiFile, Event
+        ;move to fitting tab
         id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
         WIDGET_CONTROL, id, SET_TAB_CURRENT=2
-;update fitting tab gui
-        AsciiInputTextField, Event 
-    ENDIF ELSE BEGIN
+        ;update fitting tab gui
+        AsciiInputTextField, Event
+      ENDIF ELSE BEGIN
         message = ['OUTPUT FILE NAME DOES NOT EXIST !',$
-                   'FILE NAME : ' + full_output_file_name]
+          'FILE NAME : ' + full_output_file_name]
         status = DIALOG_MESSAGE(message, $
-                                /ERROR,$
-                                DIALOG_PARENT = id)
+          /ERROR,$
+          DIALOG_PARENT = id)
+      ENDELSE
     ENDELSE
-ENDELSE
-;turn off hourglass
-widget_control,hourglass=0
-END
-
+    ;turn off hourglass
+    widget_control,hourglass=0
+  END
+  

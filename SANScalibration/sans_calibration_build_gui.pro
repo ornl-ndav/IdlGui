@@ -85,9 +85,37 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
-    play_button_value: 'images/play.png',$
-    pause_button_value: 'images/pause.png',$
-    stop_button_value: 'images/stop.png',$
+    previous_button: 'SANScalibration_images/previous.png',$
+    play_button: 'SANScalibration_images/play.png',$
+    pause_button: 'SANScalibration_images/pause.png',$
+    stop_button: 'SANScalibration_images/stop.png',$
+    next_button: 'SANScalibration_images/next.png',$
+    play_button_active: 'SANScalibration_images/play_active.png',$
+    pause_button_active: 'SANScalibration_images/pause_active.png',$
+    stop_button_active: 'SANScalibration_images/stop_active.png',$
+    next_button_active: 'SANScalibration_images/next_active.png',$
+    previous_button_active: 'SANScalibration_images/previous_active.png',$
+    previous_disable_button: 'SANScalibration_images/previous_disable.png',$
+    play_disable_button: 'SANScalibration_images/play_disable.png',$
+    pause_disable_button: 'SANScalibration_images/pause_disable.png',$
+    stop_disable_button: 'SANScalibration_images/stop_disable.png',$
+    next_disable_button: 'SANScalibration_images/next_disable.png',$
+    
+    tof_buttons_activated: 1,$
+    status_buttons: INTARR(5),$
+    previous_button_clicked: 4,$ ;play by default
+    
+    tof_min_index: 0.0,$
+    tof_max_index: 0.0,$
+    time_per_frame: 0.0,$
+    bins_range: 0.0,$
+    tof_range: 0.0,$
+    bin_per_frame: 0.0,$
+    
+    facility_list: ['LENS'],$
+    facility_flag: '--facility',$
+    instrument_list: ['SANS'],$
+    instrument_flag: '--inst',$
     
     main_base_uname: 'MAIN_BASE',$
     MainBaseSize:    INTARR(4),$
@@ -100,10 +128,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tof_monitor_path: '/entry/monitor,1',$
     tof_monitor_path1: '/entry/monitor1,1',$
     tof_roi_flag: '--roi-file',$
-    package_required_base: ptr_new(0L),$
+    package_required_base: PTR_NEW(0L),$
     advancedToolId: 0,$
     tof_slicer: 'tof_slicer',$
-    list_OF_files_to_send: ptr_new(0L),$
+    list_OF_files_to_send: PTR_NEW(0L),$
     auto_output_file_name: 1,$
     Xpixel: 80L,$     ;320 or 80
     mouse_status: 0,$ ;0:nothing, 1:has been pressed
@@ -129,13 +157,13 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     DrawXcoeff:      8,$
     DrawYcoeff:      8,$
     ucams:           ucams,$
-    DataArray:       ptr_new(0L),$
-    tof_array:       ptr_new(0L),$
+    DataArray:       PTR_NEW(0L),$
+    tof_array:       PTR_NEW(0L),$
     tof_min:         0.0,$
     tof_max:         0.0,$
     pressed_stop:    0,$
-    img:             ptr_new(0L),$
-    rtDataXY:        ptr_new(0L),$
+    img:             PTR_NEW(0L),$
+    rtDataXY:        PTR_NEW(0L),$
     X:               0L,$
     Y:               0L,$
     PrevTabSelect:   0,$
@@ -157,7 +185,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     selection_filter: '*.dat',$
     selection_title:  'Browse for a ROI file',$
     selection_path:   '~/',$
-    RoiPixelArrayExcluded: ptr_new(0L),$
+    RoiPixelArrayExcluded: PTR_NEW(0L),$
     ascii_trans_extension: '.txt',$
     ascii_back_extension: '.bkg',$
     ascii_trans_filter: '*.txt',$
@@ -168,10 +196,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     short_data_nexus_file_name: '',$
     path_data_nexus_file: '',$
     inst_geom:       '',$
-    Xarray:           ptr_new(0L),$
-    Xarray_untouched: ptr_new(0L),$
-    Yarray:           ptr_new(0L),$
-    SigmaYarray:      ptr_new(0L),$
+    Xarray:           PTR_NEW(0L),$
+    Xarray_untouched: PTR_NEW(0L),$
+    Yarray:           PTR_NEW(0L),$
+    SigmaYarray:      PTR_NEW(0L),$
     xaxis:            '',$
     xaxis_units:      '',$
     yaxis:            '',$
@@ -194,6 +222,16 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--mon-effc',$
     default: $
     1},$ ;on/OFF
+    
+    detector_efficiency: {flag: $
+    '--det-effc',$
+    default: $
+    1},$ ;on/OFF
+    detector_efficiency_scale: $
+    '--det-eff-scale-const',$
+    detector_efficiency_attenuator: $
+    '--det-eff-atten-const',$
+        
     monitor_efficiency_constant: $
     '--mon-eff-const',$
     verbose: $
@@ -305,12 +343,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   (*global).sys_color_face_3d = sys_color.face_3d
   
   ;attach global structure with widget ID of widget main base widget ID
-  widget_control, MAIN_BASE, SET_UVALUE=global
+  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
   ;Build Tab1
   make_gui_main_tab, MAIN_BASE, MainBaseSize, global
   
-  Widget_Control, /REALIZE, MAIN_BASE
+  WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, $
     CLEANUP='sans_calibration_cleanup'
     
@@ -327,8 +365,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;    ucams EQ 'j35') THEN BEGIN
   IF (DEBUGGING EQ 'yes') THEN BEGIN
   
-    nexus_path           = '/LENS/SANS/1/1/104/NeXus/'
-    ;nexus_path = '~/tmp/'
+    nexus_path = '~/tmp/'
     (*global).nexus_path = nexus_path
     (*global).ascii_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
     (*global).selection_path = '~/SVN/IdlGui/branches/SANScalibration/1.0/'
@@ -353,7 +390,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;Data File text field (Load Files)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='data_file_name_text_field')
     WIDGET_CONTROL, id, $
-      SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
+      SET_VALUE='/LENS/SANS/EXP005/2/536/NeXus/SANS_536.nxs'
+    ;roi file
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='roi_file_name_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='/SNS/users/j35/SVN/IdlGui/branches/SANScalibration/1.1/my_roi.dat'
+    ;transmission background file
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='transm_back_file_name_text_field')
+    WIDGET_CONTROL, id, $
+      SET_VALUE='/LENS/SANS/EXP005/2/537/NeXus/SANS_537.nxs
     ;Time Zero Offset (Parameters)
     id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='time_zero_offset_detector_uname')
     WIDGET_CONTROL, id, $
@@ -389,17 +434,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       
     ;show main tab # ?
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
-  ;show tab inside REDUCE
-  ;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-  ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    ;show tab inside REDUCE
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
     
   ENDIF
   
-  ;DEVICE, CURSOR_STANDARD=
-  
   ;display the png files
-  display_buttons, MAIN_BASE, global
+  ;display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=2, global
   
   ;change color of background
   id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
@@ -407,7 +450,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WSET, id_value
   ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
   
-  plot, randomn(s,80), $
+  PLOT, RANDOMN(s,80), $
     XRANGE     = [0,80],$
     YRANGE     = [0,80],$
     COLOR      = convert_rgb([0B,0B,255B]), $
@@ -444,8 +487,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
 ;==============================================================================
-PRO sans_calibration_cleanup, global
-;if tof_base is active, close it here
+PRO sans_calibration_cleanup, MAIN_BASE
+  ;if tof_base is active, close it here
+
+  WIDGET_CONTROL, MAIN_BASE, get_uvalue=global
+  PTR_FREE, global
+  
 END
 
 

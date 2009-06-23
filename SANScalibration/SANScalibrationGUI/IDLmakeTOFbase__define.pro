@@ -135,6 +135,10 @@ IDLsendToGeek_addLogBookText, main_event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tof_main_base')
 WIDGET_CONTROL, id, SENSITIVE=0
 
+;;show log book page
+;    id1 = WIDGET_INFO(main_event.top, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 3
+
 (*sMainBase.global).tof_ascii_path_backup = $
   (*sMainBase.global).tof_ascii_path
 
