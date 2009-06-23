@@ -286,7 +286,7 @@ PRO plot_from_play_tof, Event, img
   WSET, id_value
   
   ;plot grid
-  plotGridMainPlot, global1
+  plotGridMainPlot, global1, Event=event
   
 END
 
@@ -294,7 +294,7 @@ END
 PRO stop_play, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
-  plotDASviewFullInstrument, global1
+  plotDASviewFullInstrument, Event, global1
   putTextFieldValue, Event, 'min_tof_value', 'N/A'
   (*global1).pause_button_activated = 0
   putTextFieldValue, Event, 'max_tof_value', 'N/A'

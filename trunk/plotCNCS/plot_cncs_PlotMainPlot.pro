@@ -511,7 +511,7 @@ PRO plotGridMainPlot, global1, Event=event
 END
 
 ;==============================================================================
-PRO plotDASviewFullInstrument, global1
+PRO plotDASviewFullInstrument, Event, global1
 
   ;retrieve values from inside structure
   img     = (*(*global1).img)
@@ -569,7 +569,7 @@ PRO plotDASviewFullInstrument, global1
   (*(*global1).big_array_rebin_rescale) = big_array_rebin
   
   ;plot grid
-  plotGridMainPlot, global1
+  plotGridMainPlot, global1, Event=event
   
   ;plot scale
   plot_scale, global1, min, max
@@ -1100,7 +1100,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
   
   ;plot das view of full instrument
   progressBar->SetLabel, 'Generating Plot ...'
-  plotDASviewFullInstrument, global1
+  plotDASviewFullInstrument, Event, global1
   
   progressBar->Destroy
   OBJ_DESTROY, progressBar

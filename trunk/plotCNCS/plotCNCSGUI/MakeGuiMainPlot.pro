@@ -202,7 +202,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                                                   ')
+    VALUE = '                        ')
     
   label_base = WIDGET_BASE(row1)
       
