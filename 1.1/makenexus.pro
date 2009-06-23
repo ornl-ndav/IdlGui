@@ -79,6 +79,7 @@ CASE (hostname) OF
     'cncs'        : instrumentIndex = 5
     'snap'        : instrumentIndex = 6
     'powgen'      : instrumentIndex = 7
+    'eqsans'      : instrumentIndex = 8
     else          : instrumentIndex = 0
 ENDCASE 
 
@@ -145,7 +146,8 @@ InstrumentList = ['Instrument ?',$
                   'ARCS',$
                   'CNCS',$
                   'SNAP',$
-                  'POWGEN']
+                  'POWGEN',$
+                  'EQSANS']
 
 instrumentShortList = ['',$
                        'BSS',$
@@ -154,7 +156,8 @@ instrumentShortList = ['',$
                        'ARCS',$
                        'CNCS',$
                        'SNAP',$
-                       'PG3']
+                       'PG3',$
+                       'EQSANS']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
