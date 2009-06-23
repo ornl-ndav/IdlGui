@@ -458,7 +458,30 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       SCR_XSIZE = sLabelDraw.size[2],$
       SCR_YSIZE = sLabelDraw.size[3])
       
-  ENDIF
+  ENDIF ELSE BEGIN
+  
+    bsBase = WIDGET_BASE(wTab1Base,$
+      XOFFSET = sDraw.size[0],$
+      YOFFSET = sDraw.size[1]+sDraw.size[3]+5,$
+      /EXCLUSIVE, $
+      /ROW,$
+      FRAME = 1)
+      
+    front_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Front Bank   ',$
+      UNAME = 'show_front_bank_button')
+      
+    back_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Back Bank   ',$
+      UNAME = 'show_back_bank_button')
+      
+    both_bank = WIDGET_BUTTON(bsBase,$
+      VALUE = 'Show Front and Back Banks',$
+      UNAME = 'show_both_banks_button')
+      
+    WIDGET_CONTROL, both_bank, /SET_BUTTON
+    
+  ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
   wSelection = WIDGET_BUTTON(wTab1Base,$

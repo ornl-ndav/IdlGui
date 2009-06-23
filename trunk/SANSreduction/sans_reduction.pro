@@ -47,5 +47,6 @@ PRO sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF ELSE BEGIN
     BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   ENDELSE
+
 END
 
