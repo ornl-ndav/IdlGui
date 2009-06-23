@@ -579,7 +579,7 @@ PRO plot_main_plot_with_new_bin_range, Event, reset_z_scale=reset_z_scale
   plotGridMainPlot, global1, event=event
   
   ;plot scale
-  plot_scale, global1, min, max
+  plot_scale, global1, min, max, lin_status=lin_status
   
 END
 
