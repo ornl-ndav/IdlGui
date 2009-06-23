@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
+PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
 
   ;- base -----------------------------------------------------------------------
   sTab1Base = { size  : MainTabSize,$
@@ -611,7 +611,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     value: 'COUNTS VS TOF (monitor)',$
     uname: 'counts_vs_tof_monitor_button'}
     
-  ;============================================================================  
+  ;============================================================================
   ;play, pause, stop base -----------------------------------------------------
   XYoff = [0,3]
   sPlayBase = { size: [XYbase.size[0]+XYoff[0],$
@@ -620,11 +620,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     uname: 'play_base',$
     map: 0,$
     frame: 0}
-
+    
   ;previous green (draw)
   sAdvancedPreviousButton = { uname: 'previous_button',$
-  size: [0,0,30,30],$
-  tooltip: 'Move to previous frame'}
+    size: [0,0,30,30],$
+    tooltip: 'Move to previous frame'}
   ;play button (draw)
   sAdvancedPlayButton = { uname: 'play_button',$
     size: [0,0,29,30],$
@@ -639,10 +639,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     tooltip: 'Stop the movie'}
   ;next green (draw)
   sAdvancedNextButton = { uname: 'next_button',$
-  size: [0,0,30,30],$
-  tooltip: 'Move to next frame'}
+    size: [0,0,30,30],$
+    tooltip: 'Move to next frame'}
     
-  ;============================================================================  
+  ;============================================================================
     
   ;linear of log plot base and cw_bgroup
   XYoff = [158,0]
@@ -691,14 +691,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     /BUTTON_EVENTS,$
     /MOTION_EVENTS)
     
-  ;- Label draw -----------------------------------------------------------------
-  wLabelDraw = WIDGET_DRAW(wTab1Base,$
-    UNAME     = sLabelDraw.uname,$
-    XOFFSET   = sLabelDraw.size[0],$
-    YOFFSET   = sLabelDraw.size[1],$
-    SCR_XSIZE = sLabelDraw.size[2],$
-    SCR_YSIZE = sLabelDraw.size[3])
-    
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
+    ;- Label draw -----------------------------------------------------------------
+    wLabelDraw = WIDGET_DRAW(wTab1Base,$
+      UNAME     = sLabelDraw.uname,$
+      XOFFSET   = sLabelDraw.size[0],$
+      YOFFSET   = sLabelDraw.size[1],$
+      SCR_XSIZE = sLabelDraw.size[2],$
+      SCR_YSIZE = sLabelDraw.size[3])
+      
+  ENDIF
+  
   ;range of tof plotted ---------------------------------------------------------
   wTofRangeLabel = WIDGET_LABEL(wTab1Base,$
     XOFFSET = sTofRangeLabel.size[0],$
@@ -769,15 +773,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     UNAME     = sTofReset.uname)
     
   ;play button
-;  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
-;    XOFFSET   = sPlayButton.size[0],$
-;    YOFFSET   = sPlayButton.size[1],$
-;    SCR_XSIZE = sPlayButton.size[2],$
-;    SCR_YSIZE = sPlayButton.size[3],$
-;    VALUE     = sPlayButton.value,$
-;    UNAME     = sPlayButton.uname,$
-;    /BITMAP)
-
+  ;  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
+  ;    XOFFSET   = sPlayButton.size[0],$
+  ;    YOFFSET   = sPlayButton.size[1],$
+  ;    SCR_XSIZE = sPlayButton.size[2],$
+  ;    SCR_YSIZE = sPlayButton.size[3],$
+  ;    VALUE     = sPlayButton.value,$
+  ;    UNAME     = sPlayButton.uname,$
+  ;    /BITMAP)
+    
   ;time/frame label and value
   wTpFlabel = WIDGET_LABEL(wTofRangeBase,$
     XOFFSET = sTpFlabel.size[0],$
@@ -1372,7 +1376,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     /TRACKING_EVENTS,$
     /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedPreviousButton.tooltip)
-
+    
   wPlayButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPlayButton.size[2],$
     SCR_YSIZE = sAdvancedPlayButton.size[3],$
@@ -1380,13 +1384,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     /TRACKING_EVENTS,$
     /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedPlayButton.tooltip)
-  
+    
   wPauseButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPauseButton.size[2],$
     SCR_YSIZE = sAdvancedPauseButton.size[3],$
     UNAME     = sAdvancedPauseButton.uname,$
     /TRACKING_EVENTS,$
-        /BUTTON_EVENTS,$  
+    /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedPauseButton.tooltip)
     
   wStopButton = WIDGET_DRAW(wPlayBase,$
@@ -1394,7 +1398,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sAdvancedStopButton.size[3],$
     UNAME     = sAdvancedStopButton.uname,$
     /TRACKING_EVENTS,$
-        /BUTTON_EVENTS,$
+    /BUTTON_EVENTS,$
     TOOLTIP = sAdvancedStopButton.tooltip)
     
   wNextButton = WIDGET_DRAW(wPlayBase,$
@@ -1403,7 +1407,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     UNAME     = sAdvancedNextButton.uname,$
     /TRACKING_EVENTS,$
     /BUTTON_EVENTS,$
-    TOOLTIP = sAdvancedNextButton.tooltip)    
+    TOOLTIP = sAdvancedNextButton.tooltip)
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$

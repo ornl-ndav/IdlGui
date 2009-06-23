@@ -209,8 +209,9 @@ PRO refresh_scale, Event
   ;indicate initialization with hourglass icon
   ;widget_control,/hourglass
   ;get global structure
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL, id, GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  IF ((*global).facility EQ 'SNS') THEN RETURN
   
   ;change color of background
   id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
@@ -261,9 +262,10 @@ PRO refresh_plot, Event ;_plot
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/hourglass
   ;get global structure
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL, id, GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+
   ;change color of background
   id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -284,6 +286,8 @@ PRO refresh_plot, Event ;_plot
     YTICKS      = 8,$
     XMARGIN     = [5,5],$
     /NODATA
+    
+    ENDIF
     
   ;retrieve parameters from global pointer
   X         = (*global).X

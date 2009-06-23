@@ -32,40 +32,60 @@
 ;
 ;==============================================================================
 
-FUNCTION LinOrLog, Event
-value = getCWBgroupValue(Event,'z_axis_scale')
-RETURN, value
-END
+PRO MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, $
+SCROLL=scroll
 
-PRO lin_or_log_plot, Event
-
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  facilitySelectionBaseSize = [400,300,240,140]
+  facilitySelectioncwbgroupSize = [10,5]
+  facilitySelectioncwbgroupTitle = '       SELECT  YOUR  FACILITY'
+  facilityList = [' SNS (EQ-SANS)',$
+    ' LENS (SANS)']
+  facilitySelectionGoButtonSize = [10,100,220,30]
+  facilitySelectionGoButtontitle = 'VALIDATE FACILITY'
   
-  ;linear or log
-  plot_type = LinOrLog(Event)
-  ;plot_type = Event.value ;0->linear, 1->log
-  
-  ;retrieve the value to plot
-  DataXY = (*(*global).rtDataXY)
-  
-  IF (plot_type EQ 1) THEN BEGIN ;log
-  
-    ;remove 0 values and replace with NAN
-    ;and calculate log
-    index = WHERE(DataXY EQ 0, nbr)
-    IF (nbr GT 0) THEN BEGIN
-      DataXY[index] = !VALUES.D_NAN
-      DataXY = ALOG10(DataXY)
-      DataXY = BYTSCL(DataXY,/NAN)
-    ENDIF
+  ;Build GUI
+  MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
+    xoffset=facilitySelectionBaseSize[0],$
+    yoffset=facilitySelectionBaseSize[1],$
+    scr_xsize=facilitySelectionBaseSize[2],$
+    scr_ysize=facilitySelectionBaseSize[3],$
+    Title = 'Facility Selection',$
+    SPACE=0,$
+    XPAD=0,$
+    YPAD=0,$
+    uname='MAIN_BASE',$
+    frame=2)
     
-  ENDIF
+  global = ptr_new({data_nexus_file_name: '',$
+  scroll: scroll,$
+  build_command_line: 0})
   
-  DEVICE, DECOMPOSED = 0
-  LOADCT,5,/SILENT
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE = id_value
-  WSET, id_value
-  TVSCL, DataXY, /DEVICE
+  ;attach global structure with widget ID of widget main base widget ID
+  widget_control, MAIN_BASE, set_uvalue=global
+  
+  facilityCWBgroup = cw_bgroup(MAIN_BASE,$
+    facilityList,$
+    /exclusive,$
+    xoffset=facilitySelectioncwbgroupSize[0],$
+    yoffset=facilitySelectioncwbgroupSize[1],$
+    set_value=0,$
+    uname='facility_selection_cw_bgroup',$
+    column=1,$
+    label_top=facilitySelectioncwbgroupTitle)
+    
+  facilitySelectionGoButton = $
+    widget_button(MAIN_BASE,$
+    xoffset=facilitySelectionGoButtonSize[0],$
+    yoffset=facilitySelectionGoButtonSize[1],$
+    scr_xsize=facilitySelectionGoButtonSize[2],$
+    scr_ysize=facilitySelectionGoButtonSize[3],$
+    value=facilitySelectionGoButtonTitle,$
+    uname='facility_selection_validate_button')
+    
+  ;attach global structure with widget ID of widget main base widget ID
+  widget_control, MAIN_BASE, SET_UVALUE=global
+  
+  Widget_Control, /REALIZE, MAIN_BASE
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
 END

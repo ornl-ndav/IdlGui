@@ -31,6 +31,26 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+
+;This function defines the instrument if the program is started from 
+;heater
+PRO facility_selected, Event, scroll
+
+id = widget_info(Event.top,find_by_uname='facility_selection_cw_bgroup')
+widget_control, id, get_value=facility_selected
+
+;descativate facility selection base and activate main base
+ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
+widget_control, ISBaseId, map=0
+
+if (facility_selected EQ 0) then begin
+   BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'SNS'
+endif else begin
+   BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'LENS'
+endelse
+
+END
+
 ;------------------------------------------------------------------------------
 PRO retrieveNexus, Event, FullNexusName
 
@@ -266,6 +286,7 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN ;first tab
+          refresh_scale, Event         ;_plot
         refresh_plot, Event ;_plot
         RefreshRoiExclusionPlot, Event   ;_selection
         ;display the png files

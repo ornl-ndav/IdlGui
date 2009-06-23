@@ -58,6 +58,12 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+          ;facility Selection
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='facility_selection_validate_button'): begin
+      facility_selected, Event, (*global).scroll
+    end
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
       tab_event, Event ;_eventcb
     END

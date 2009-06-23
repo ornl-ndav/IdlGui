@@ -57,7 +57,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;Build Load Data Tab
-make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles
+make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles, global
 
 ;Build REDUCE tab
 make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles, global

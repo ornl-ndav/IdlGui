@@ -32,7 +32,13 @@
 ;
 ;==============================================================================
 
-PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildFacilityGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
+  ;build the facility Selection base
+  MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, $
+    SCROLL=scroll
+END
+
+PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
 
   ;get the current folder
   CD, CURRENT = current_folder
@@ -85,6 +91,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({version:         VERSION,$
+    facility: facility,$
+    
     previous_button: 'SANScalibration_images/previous.png',$
     play_button: 'SANScalibration_images/play.png',$
     pause_button: 'SANScalibration_images/pause.png',$
@@ -231,7 +239,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     '--det-eff-scale-const',$
     detector_efficiency_attenuator: $
     '--det-eff-atten-const',$
-        
+    
     monitor_efficiency_constant: $
     '--mon-eff-const',$
     verbose: $
@@ -444,26 +452,30 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;display the png files
   ;display_buttons, MAIN_BASE = MAIN_BASE, ACTIVATE=2, global
   
-  ;change color of background
-  id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
+  IF (facility EQ 'LENS') THEN BEGIN
   
-  PLOT, RANDOMN(s,80), $
-    XRANGE     = [0,80],$
-    YRANGE     = [0,80],$
-    COLOR      = convert_rgb([0B,0B,255B]), $
-    BACKGROUND = convert_rgb(sys_color.face_3d),$
-    THICK      = 1, $
-    TICKLEN    = -0.015, $
-    XTICKLAYOUT = 0,$
-    YTICKLAYOUT = 0,$
-    XTICKS      = 8,$
-    YTICKS      = 8,$
-    XMARGIN     = [5,5],$
-    /NODATA
+    ;change color of background
+    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='label_draw_uname')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
     
+    PLOT, RANDOMN(s,80), $
+      XRANGE     = [0,80],$
+      YRANGE     = [0,80],$
+      COLOR      = convert_rgb([0B,0B,255B]), $
+      BACKGROUND = convert_rgb(sys_color.face_3d),$
+      THICK      = 1, $
+      TICKLEN    = -0.015, $
+      XTICKLAYOUT = 0,$
+      YTICKLAYOUT = 0,$
+      XTICKS      = 8,$
+      YTICKS      = 8,$
+      XMARGIN     = [5,5],$
+      /NODATA
+      
+  ENDIF
+  
   ;=============================================================================
   ; Date and Checking Packages routines ========================================
   ;=============================================================================
