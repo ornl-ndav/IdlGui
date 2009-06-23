@@ -34,6 +34,19 @@
 
 ; Empty stub procedure used for autoloading.
 PRO sans_calibration, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-end
+  
+    ;check facility here
+  SPAWN, 'hostname',listening
+  CASE (listening) OF
+    'eqsans': facility = 'SNS'
+    ELSE: facility = 'UNDEFINED'
+  ENDCASE
+  
+  IF (facility EQ 'UNDEFINED') THEN BEGIN
+    BuildFacilityGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+  ENDIF ELSE BEGIN
+    BuildGui, SCROLL='no', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
+  ENDELSE
+  
+END
 

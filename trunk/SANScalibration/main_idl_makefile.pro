@@ -59,6 +59,7 @@ cd, CurrentFolder
 
 ;main functions
 .run MainBaseEvent.pro
+.run sans_calibration_make_facility_selection.pro
 .run sans_calibration_eventcb.pro
 .run sans_calibration_build_gui.pro
 
