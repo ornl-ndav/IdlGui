@@ -55,6 +55,13 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
+      ;facility Selection
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='facility_selection_validate_button'): begin
+      facility_selected, Event, (*global).scroll
+    end
+  
+  
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
@@ -536,6 +543,8 @@ PRO MAIN_BASE_event, Event
     
   ENDCASE
   
+  IF ((*global).build_command_line) THEN BEGIN
   CheckCommandLine, Event         ;_command_line
+  ENDIF
   
 END
