@@ -32,25 +32,113 @@
 ;
 ;==============================================================================
 
-PRO display_buttons, MAIN_BASE, global
-
-draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='play_button')
-WIDGET_CONTROL, draw1, GET_VALUE=id
-WSET, id
-image = READ_PNG((*global).play_button_value)
-tv, image, 0,0,/true
-
-draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='pause_button')
-WIDGET_CONTROL, draw1, GET_VALUE=id
-WSET, id
-image = READ_PNG((*global).pause_button_value)
-tv, image, 0,0,/true
-
-draw1 = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='stop_button')
-WIDGET_CONTROL, draw1, GET_VALUE=id
-WSET, id
-image = READ_PNG((*global).stop_button_value)
-tv, image, 0,0,/true
-
-
+PRO display_buttons, MAIN_BASE=MAIN_BASE, $
+    EVENT=EVENT,$
+    ACTIVATE=activate,$
+    global
+    
+  ;-1: disable
+  ; 0: enable
+  ; 1: enable
+  status_buttons = INTARR(5)
+  
+  case (activate) OF
+    0: BEGIN ;nothing is activated
+      previous = READ_PNG((*global).previous_disable_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_disable_button)
+      stop     = READ_PNG((*global).stop_disable_button)
+      next     = READ_PNG((*global).next_disable_button)
+      status_buttons = [-1,0,-1,-1,-1]
+    END
+    1: BEGIN ;activate previous button
+      previous = READ_PNG((*global).previous_button_active)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_disable_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+      status_buttons = [1,0,-1,0,0]
+    END
+    2: BEGIN ;activate play button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button_active)
+      pause    = READ_PNG((*global).pause_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+      status_buttons = [0,1,0,0,0]
+    END
+    3: BEGIN ;activate pause button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_button_active)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button)
+      status_buttons = [0,0,1,0,0]      
+    END
+    4: BEGIN ;activate stop button
+      previous = READ_PNG((*global).previous_disable_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_disable_button)
+      stop     = READ_PNG((*global).stop_button_active)
+      next     = READ_PNG((*global).next_disable_button)
+      status_buttons = [-1,0,-1,1,-1]      
+    END
+    5: BEGIN ;activate next button
+      previous = READ_PNG((*global).previous_button)
+      play     = READ_PNG((*global).play_button)
+      pause    = READ_PNG((*global).pause_disable_button)
+      stop     = READ_PNG((*global).stop_button)
+      next     = READ_PNG((*global).next_button_active)
+      status_buttons = [0,0,-1,0,1]      
+    END
+  ENDCASE
+  
+  (*global).status_buttons = status_buttons
+  (*global).tof_buttons_activated = activate
+  
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+  
+    draw_previous = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='previous_button')
+    draw_play  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='play_button')
+    draw_pause = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='pause_button')
+    draw_stop  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='stop_button')
+    draw_next  = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='next_button')
+    
+  ENDIF ELSE BEGIN
+  
+    draw_previous = WIDGET_INFO(Event.top,FIND_BY_UNAME='previous_button')
+    draw_play = WIDGET_INFO(Event.top,FIND_BY_UNAME='play_button')
+    draw_pause = WIDGET_INFO(Event.top,FIND_BY_UNAME='pause_button')
+    draw_stop = WIDGET_INFO(Event.top,FIND_BY_UNAME='stop_button')
+    draw_next = WIDGET_INFO(Event.top,FIND_BY_UNAME='next_button')
+    
+  ENDELSE
+  
+  ;previous button
+  WIDGET_CONTROL, draw_previous, GET_VALUE=id_previous
+  WSET, id_previous
+  TV, previous, 0,0,/true
+  
+  ;play button
+  WIDGET_CONTROL, draw_play, GET_VALUE=id_play
+  WSET, id_play
+  TV, play, 0,0,/true
+  
+  ;pause button
+  WIDGET_CONTROL, draw_pause, GET_VALUE=id_pause
+  WSET, id_pause
+  TV, pause, 0,0,/true
+  
+  ;stop button
+  WIDGET_CONTROL, draw_stop, GET_VALUE=id_stop
+  WSET, id_stop
+  TV, stop, 0,0,/true
+  
+  ;next button
+  WIDGET_CONTROL, draw_next, GET_VALUE=id_next
+  WSET, id_next
+  TV, next, 0,0,/true
+  
 END
+
+;-----------------------------------------------------------------------------

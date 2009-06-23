@@ -71,7 +71,7 @@
    IDLsendToGeek_addLogBookText, Event, '-> Entering run_driver:'
    
    ;indicate initialization with hourglass icon
-   widget_control,/hourglass
+   WIDGET_CONTROL,/hourglass
    ;retrieve infos
    PROCESSING = (*global).processing
    OK         = (*global).ok
@@ -86,13 +86,13 @@
    IDLsendToGeek_AddLogBookText, Event, '--> Type: ' + type
    
    working_path = (*global).tof_ascii_path
-   cd, working_path, CURRENT=current
+   CD, working_path, CURRENT=current
    
    CASE (TYPE) OF
    
      'monitor'  : BEGIN
        no_error = 0
-       catch, no_error
+       CATCH, no_error
        cmd1 = cmd_base + ' ' + (*global).tof_monitor_flag
        IF (no_error NE 0) THEN BEGIN
          CATCH,/CANCEL
@@ -106,7 +106,7 @@
          cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
          IDLsendToGeek_addLogBookText, Event, cmd_text1
          
-         spawn, cmd, listening, error_listening
+         SPAWN, cmd, listening, error_listening
          IF (error_listening[0] NE '') THEN BEGIN
            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
            cmd = cmd1 + '=' + (*global).tof_monitor_path1
@@ -116,7 +116,7 @@
            IDLsendToGeek_addLogBookText, Event, cmd_text
            cmd_text1 = '-> cmd: ' + cmd + ' ... ' + PROCESSING
            IDLsendToGeek_addLogBookText, Event, cmd_text1
-           spawn, cmd, listening, error_listening
+           SPAWN, cmd, listening, error_listening
            IF (error_listening[0] NE '') THEN BEGIN
              IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
            ENDIF ELSE BEGIN
@@ -152,7 +152,7 @@
          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
          result = DIALOG_MESSAGE(cmd_text + ' FAILED',/ERROR)
        ENDIF ELSE BEGIN
-         spawn, cmd, listening, error_listening
+         SPAWN, cmd, listening, error_listening
          IF (listening[0] EQ '') THEN BEGIN ;worked
            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
            text = '-> Output File Name: ' + OUTPUT_FILE_NAME
@@ -179,7 +179,7 @@
          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
          result = DIALOG_MESSAGE(cmd_text + ' FAILED',/ERROR)
        ENDIF ELSE BEGIN
-         spawn, cmd, listening, error_listening
+         SPAWN, cmd, listening, error_listening
          IF (error_listening[0] NE '') THEN BEGIN
            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
          ENDIF ELSE BEGIN
@@ -198,14 +198,15 @@
      
    ENDCASE
    
-   cd, current
+   CD, current
    
    ;turn off hourglass
-   widget_control,hourglass=0
+   WIDGET_CONTROL,hourglass=0
  END
  
  ;------------------------------------------------------------------------------
  PRO plot_counts_vs_tof_data, Event, output_file_name
+ 
    ;get global structure
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
    ;retrieve infos
@@ -223,10 +224,9 @@
    ENDELSE
    IDLsendToGeek_addLogBookText, Event, text
    sData = iASCII->getData(Event)
-   ;print, (*(*sDAta.data)[0].data)[1] ;remove_me
-   
    DataArray = (*(*sData.data)[0].data)
-   nbr_column = FIX((size(DataArray))(1) / 3)
+   nbr_column = FIX((SIZE(DataArray))(1) / 3)
+   
    newDataArray = REFORM(DAtaArray,3,nbr_column)
    
    title = ''
@@ -240,6 +240,7 @@
      XTITLE = 'TOF (microSeconds)',$
      YTITLE = 'Counts'
      
+   OBJ_DESTROY, iASCII
  END
  
  ;------------------------------------------------------------------------------
@@ -285,7 +286,7 @@
      ROIfile=ROIfile, $
      TYPE=type
    ;get global structure
-   activate_widget, Event, 'MAIN_BASE',0
+   ;activate_widget, Event, 'MAIN_BASE',0 ;remove_me comments
    WIDGET_CONTROL, Event.top, GET_UVALUE=global
    iBase = OBJ_NEW('IDLmakeTOFbase', $
      EVENT  = Event,$
@@ -293,4 +294,5 @@
      ROIfile = ROIfile,$
      FILE   = FullOutputFileName,$
      TYPE   = type)
+   OBJ_DESTROY, iBase
  END

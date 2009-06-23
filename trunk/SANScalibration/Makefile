@@ -9,7 +9,8 @@ all:
 install:
 	cp sans_calibration.sav /SNS/software/idltools/sav/
 #	cp SANScalibration /SNS/software/idltools/
-	cp images/*.bmp /SNS/software/idltools/sav/images/
+	cp SANScalibration_images/*.bmp /SNS/software/idltools/sav/SANScalibration_images/
+	cp SANScalibration_images/*.png /SNS/software/idltools/sav/SANScalibration_images/
 	cp drversion /SNS/software/idltools/
 	cp SANScalibration.cfg /SNS/software/idltools/sav/
 tar:
@@ -17,6 +18,7 @@ tar:
 test:
 	cp sans_calibration.sav /usr/local/SNS/idltools/
 	cp mini_sans_calibration.sav /usr/local/SNS/idltools/
-	cp images/*.bmp /usr/local/SNS/idltools/images/
+	cp SANScalibration_images/*.bmp /usr/local/SNS/idltools/SANScalibration_images
+	cp SANScalibration_images/*.png /usr/local/SNS/idltools/SANScalibration_images
 	cp drversion /usr/local/SNS/idltools/
 	cp SANScalibration.cfg /usr/local/SNS/idltools/

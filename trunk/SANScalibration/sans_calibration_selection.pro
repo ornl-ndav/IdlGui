@@ -32,229 +32,236 @@
 ;
 ;==============================================================================
 FUNCTION getListOfPixelExcluded, Event, Xarray, Yarray
-Xsize = 80L
-Ysize = 80L
-RoiPixelArrayExcluded = INTARR(Xsize,Ysize)+1
-nbrElements           = N_ELEMENTS(Xarray)
-FOR i=0,(nbrElements-1) DO BEGIN
+  Xsize = 80L
+  Ysize = 80L
+  RoiPixelArrayExcluded = INTARR(Xsize,Ysize)+1
+  nbrElements           = N_ELEMENTS(Xarray)
+  FOR i=0,(nbrElements-1) DO BEGIN
     RoiPixelArrayExcluded[Xarray[i]+ 80*Yarray[i]]=0
-ENDFOR
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-(*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
-RETURN, RoiPixelArrayExcluded
+  ENDFOR
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
+  RETURN, RoiPixelArrayExcluded
 END
 
 ;------------------------------------------------------------------------------
 PRO PlotROI, Event, RoiPixelArrayExcluded
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-WIDGET_CONTROL, id, GET_VALUE = id_value
-WSET, id_value
-
-ROIcolor = (*global).ROIcolor
-x_coeff  = (*global).DrawXcoeff
-y_coeff  = (*global).DrawYcoeff
-
-NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
-
-FOR i=0,(NbrElements-1) DO BEGIN
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  ROIcolor = (*global).ROIcolor
+  x_coeff  = (*global).DrawXcoeff
+  y_coeff  = (*global).DrawYcoeff
+  
+  NbrElements = N_ELEMENTS(RoiPixelArrayExcluded)
+  
+  FOR i=0,(NbrElements-1) DO BEGIN
     IF (RoiPixelArrayExcluded[i] EQ 0) THEN BEGIN
-        X = FIX(i/80)
-        Y = i MOD 80
-        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
-        PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
-        PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
-          /CONTINUE, COLOR=color
-        PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
-        PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
-          COLOR=color
+      X = FIX(i/80)
+      Y = i MOD 80
+      PLOTS, x * x_coeff, y * y_coeff, /DEVICE, COLOR=color
+      PLOTS, x * x_coeff, (y+1) * y_coeff, /DEVICE, /CONTINUE, $
+        COLOR=color
+      PLOTS, (x+1) * x_coeff, (y+1) * y_coeff, /DEVICE, $
+        /CONTINUE, COLOR=color
+      PLOTS, (x+1) * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+        COLOR=color
+      PLOTS, x * x_coeff, y * y_coeff, /DEVICE, /CONTINUE, $
+        COLOR=color
     ENDIF
-ENDFOR    
+  ENDFOR
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the X and Y array of the ROI file
 PRO getXYROI, StringArray, NbrRow, Xarray, Yarray
-FOR i=0,(NbrRow-1) DO BEGIN
+  FOR i=0,(NbrRow-1) DO BEGIN
     RoiStringArray = STRSPLIT(StringArray[i],'_',/EXTRACT)
     ON_IOERROR, L1
-    Xarray[i] = Fix(RoiStringArray[1])
-    Yarray[i] = Fix(RoiStringArray[2])
-ENDFOR
-L1: ;exit now
+    Xarray[i] = FIX(RoiStringArray[1])
+    Yarray[i] = FIX(RoiStringArray[2])
+  ENDFOR
+  L1: ;exit now
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION retrieveStringArray, Event, FileName
-no_error = 0
-CATCH, no_error
-IF (no_error NE 0) THEN BEGIN
+  no_error = 0
+  CATCH, no_error
+  IF (no_error NE 0) THEN BEGIN
     CATCH, /CANCEL
     RETURN, ['']
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     OPENR, unit, FileName, /GET_LUN
     NbrLine   = FILE_LINES(FileName)
     FileArray = STRARR(NbrLine)
     READF, unit, FileArray
     FREE_LUN, unit
     RETURN, FileArray
-ENDELSE
+  ENDELSE
 END
 
 ;- Browse Selection File ------------------------------------------------------
 PRO browse_selection_file, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-;retrieve infos
-extension  = (*global).selection_extension
-filter     = (*global).selection_filter
-title      = (*global).selection_title
-path       = (*global).selection_path
-
-IDLsendToGeek_addLogBookText, Event, '> Browsing a ROI file:'
-
-RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
-                              FILTER            = filter,$
-                              GET_PATH          = new_path,$
-                              PATH              = path,$
-                              TITLE             = title,$
-                              /READ,$
-                              /MUST_EXIST)
-
-IF (RoiFileName NE '') THEN BEGIN
-
-;indicate initialization with hourglass icon
-    widget_control,/hourglass
-
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  ;retrieve infos
+  extension  = (*global).selection_extension
+  filter     = (*global).selection_filter
+  title      = (*global).selection_title
+  path       = (*global).selection_path
+  
+  IDLsendToGeek_addLogBookText, Event, '> Browsing a ROI file:'
+  
+  RoiFileName = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+    FILTER            = filter,$
+    GET_PATH          = new_path,$
+    PATH              = path,$
+    TITLE             = title,$
+    /READ,$
+    /MUST_EXIST)
+    
+  IF (RoiFileName NE '') THEN BEGIN
+  
+    ;indicate initialization with hourglass icon
+    WIDGET_CONTROL,/hourglass
+    
     IDLsendToGeek_addLogBookText, Event, '-> File Browsed: ' + RoiFileName
     (*global).selection_path = new_path
     putTextFieldValue, Event, 'selection_file_name_text_field', RoiFileName
     putTextFieldValue, Event, 'roi_file_name_text_field', RoiFileName
-;activate preview and load/plot buttons
+    ;activate preview and load/plot buttons
     uname_list = ['selection_load_button',$
-                  'selection_preview_button']
+      'selection_preview_button']
     activate_widget_list, Event, uname_list, 1
-;refresh main plot
+    ;refresh main plot
     refresh_main_plot, Event
-
-;Load ROI button (Load, extract and plot)
+    
+    ;Load ROI button (Load, extract and plot)
     LoadPlotSelection, Event
-
-;turn off hourglass
-    widget_control,hourglass=0
-
-ENDIF ELSE BEGIN
+    
+    ;turn off hourglass
+    WIDGET_CONTROL,hourglass=0
+    
+  ENDIF ELSE BEGIN
     IDLsendToGeek_addLogBookText, Event, '-> Operation CANCELED'
-ENDELSE
-
+  ENDELSE
+  
 END
 
 ;- Preview Selection File -----------------------------------------------------
 PRO preview_selection_file, Event
-roi_file_name = getTextFieldValue(Event,'selection_file_name_text_field')
-title = roi_file_name
-XDISPLAYFILE, roi_file_name, TITLE=title
+  roi_file_name = getTextFieldValue(Event,'selection_file_name_text_field')
+  title = roi_file_name
+  XDISPLAYFILE, roi_file_name, TITLE=title
 END
 
 ;- Selection File Name Text Field ---------------------------------------------
 PRO selection_text_field, Event
-roi_file_name = getTextFieldValue(Event,'selection_file_name_text_field')
-IF (FILE_TEST(roi_file_name)) THEN BEGIN
+  roi_file_name = getTextFieldValue(Event,'selection_file_name_text_field')
+  IF (FILE_TEST(roi_file_name)) THEN BEGIN
     status = 1
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     status = 0
-ENDELSE
-uname_list = ['selection_load_button',$
-              'selection_preview_button']
-activate_widget_list, Event, uname_list, status
+  ENDELSE
+  uname_list = ['selection_load_button',$
+    'selection_preview_button']
+  activate_widget_list, Event, uname_list, status
 END
 
 ;- Selection Load Button ------------------------------------------------------
 PRO LoadPlotSelection, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-;retrieve infos
-PROCESSING = (*global).processing
-OK         = (*global).ok
-FAILED     = (*global).failed
-
-IDLsendToGeek_addLogBookText, Event, '> Loading and Plotting ROI file:'
-RoiFileName = getTextFieldValue(Event,'selection_file_name_text_field')
-IDLsendToGeek_addLogBookText, Event, '-> ROI Loading : ' + RoiFileName
-IDLsendToGeek_addLogBookText, Event, '-> Retrieving information from ' + $
-  'ROI file ... ' + PROCESSING
-FileStringArray = retrieveStringArray(Event, RoiFileName)
-IF (FileStringArray EQ ['']) THEN BEGIN
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  ;retrieve infos
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  IDLsendToGeek_addLogBookText, Event, '> Loading and Plotting ROI file:'
+  RoiFileName = getTextFieldValue(Event,'selection_file_name_text_field')
+  IDLsendToGeek_addLogBookText, Event, '-> ROI Loading : ' + RoiFileName
+  IDLsendToGeek_addLogBookText, Event, '-> Retrieving information from ' + $
+    'ROI file ... ' + PROCESSING
+    
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-ENDIF ELSE BEGIN
-    NbrElements = N_ELEMENTS(FileStringArray)
-    InfoText    = ' (Array Created has ' + $
-      STRCOMPRESS(NbrElements,/REMOVE_ALL) + ' elements)'
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + InfoText
-;parse string array
-    IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
-      PROCESSING
-    Xarray = INTARR(NbrElements)
-    Yarray = INTARR(NbrElements)
-    getXYROI, FileStringArray, NbrElements, Xarray, Yarray
-    IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
+  ENDIF ELSE BEGIN
+    FileStringArray = retrieveStringArray(Event, RoiFileName)
+    IF (FileStringArray EQ ['']) THEN BEGIN
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+      NbrElements = N_ELEMENTS(FileStringArray)
+      InfoText    = ' (Array Created has ' + $
+        STRCOMPRESS(NbrElements,/REMOVE_ALL) + ' elements)'
+      IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + InfoText
+      ;parse string array
+      IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
+        PROCESSING
+      Xarray = INTARR(NbrElements)
+      Yarray = INTARR(NbrElements)
+      getXYROI, FileStringArray, NbrElements, Xarray, Yarray
+      IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-    ENDIF ELSE BEGIN                 ;WORKED
+      ENDIF ELSE BEGIN                 ;WORKED
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-;plotting ROI
+        ;plotting ROI
         IDLsendToGeek_addLogBookText, Event, $
           '-> Plotting ROI ... ' + PROCESSING
         plot_error = 0
         ;CATCH, plot_error
         IF (plot_error NE 0) THEN BEGIN
-            CATCH,/CANCEL
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+          CATCH,/CANCEL
+          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
         ENDIF ELSE BEGIN
-            RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
-                                                           Xarray, $
-                                                           Yarray)
-            (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded 
-            PlotROI, Event
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+          RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
+            Xarray, $
+            Yarray)
+          (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
+          PlotROI, Event
+          IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         ENDELSE
+      ENDELSE
     ENDELSE
-ENDELSE
-
+  ENDELSE
 END
 
 ;- Refresh ROI Plot -----------------------------------------------------------
 PRO RefreshRoiPlot, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-RoiFileName = getTextFieldValue(Event,'selection_file_name_text_field')
-IF (FILE_TEST(RoiFileName,/READ)) THEN BEGIN
+  ;get global structure
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL, id, GET_UVALUE=global
+  RoiFileName = getTextFieldValue(Event,'selection_file_name_text_field')
+  IF (FILE_TEST(RoiFileName,/READ)) THEN BEGIN
     RoiPixelArrayExcluded = (*(*global).RoiPixelArrayExcluded)
     PlotROI, Event, RoiPixelArrayExcluded
-ENDIF
+  ENDIF
 END
 
 ;- Clear Selection Button -----------------------------------------------------
 PRO clear_selection_tool, Event
-;get global structure
-id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL,id,GET_UVALUE=global
-DataArray = (*(*global).DataArray)
-X         = (*global).X
-Y         = (*global).Y
-plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
-(*global).there_is_a_selection = 0
-putTextFieldValue, Event, 'roi_file_name_text_field', ''
-(*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
+  ;get global structure
+  id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  WIDGET_CONTROL,id,GET_UVALUE=global
+  DataArray = (*(*global).DataArray)
+  X         = (*global).X
+  Y         = (*global).Y
+  plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
+  (*global).there_is_a_selection = 0
+  putTextFieldValue, Event, 'roi_file_name_text_field', ''
+  (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
 END

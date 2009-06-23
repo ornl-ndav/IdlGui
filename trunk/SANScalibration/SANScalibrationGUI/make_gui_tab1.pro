@@ -117,17 +117,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     XYoff[0],$
     XYoff[1],$
     40,40],$
-    value: 'images/play_button.bmp',$
+    value: 'SANScalibration_images/play_button.bmp',$
     uname: 'tof_play_button'}
     
   ;time/frame label/value
   XYoff = [5,0]
-  sTpFlabel = { size: [sPlayButton.size[0]+$
-    sPlayButton.size[2]+$
+  sTpFlabel = { size: [sTofManualBase.size[0]+$
+    sTofManualBase.size[2]+$
     XYoff[0],$
-    sPlayButton.size[1]+$
+    sTofManualBase.size[1]+$
     XYoff[1]],$
-    value: 'Time/Frame(s)'}
+    value: ' Time/Frame'}
   XYoff = [10,10]
   sTpFvalue = { size: [sTpFlabel.size[0]+XYoff[0],$
     sTpFlabel.size[1]+XYoff[1],$
@@ -169,26 +169,26 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
   XYoff = [60,0]
   sBinNbr = { size: [sMaxBinLabel.size[0]+XYoff[0],$
     sMaxBinLabel.size[1]+XYoff[1]],$
-    value: 'Bins'}
-  XYoff = [30,0]
+    value: 'Bins:'}
+  XYoff = [35,0]
   sBinNbrValue = { size: [sBinNbr.size[0]+XYoff[0],$
     sBinNbr.size[1]+XYoff[1],$
-    95],$
-    value: '       ',$
-    frame: 1,$
+    145],$
+    value: 'N/A       ',$
+    frame: 0,$
     uname: 'bin_range_value'}
     
   ;tof range (label/value)
   XYoff = [0,20]
   sTOFrange = { size: [sBinNbr.size[0]+XYoff[0],$
     sBinNbr.size[1]+XYoff[1]],$
-    value: 'TOFs'}
+    value: 'TOFs:'}
   XYoff = [0,0]
   sTOFrangeValue = { size: [sBinNbrValue.size[0]+XYoff[0],$
     sTOFrange.size[1]+XYoff[1],$
     sBinNbrValue.size[2]],$
-    value: '             ',$
-    frame: 1,$
+    value: 'N/A           ',$
+    frame: 0,$
     uname: 'tof_range_value'}
     
   ;------------------------------------------------------------------------------
@@ -286,14 +286,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
   sPlotExclusion = { size: [sPreviewExclusion.size[0]+$
     sPreviewExclusion.size[2]+XYoff[0],$
     sPreviewExclusion.size[1]+XYoff[1]],$
-    value: 'images/fast_selection.bmp',$
+    value: 'SANScalibration_images/fast_selection.bmp',$
     tooltip: 'Fast Selection/Plot',$
     uname: 'plot_fast_exclusion_region'}
     
   XYoff = [67,0]                  ;PLOT button (Accurate)
   sPlotAccurateExclusion = { size: [sPlotExclusion.size[0]+XYoff[0],$
     sPlotExclusion.size[1]+XYoff[1]],$
-    value: 'images/accurate_selection.bmp',$
+    value: 'SANScalibration_images/accurate_selection.bmp',$
     tooltip: 'Accurate Selection/Plot',$
     uname: 'plot_accurate_exclusion_region'}
     
@@ -427,11 +427,11 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     sRadiiR2Value.size[1]+XYoff[1],$
     77,35],$
     frame: 1}
-  sCircleButton = { value: 'images/circle_in_out.bmp',$
+  sCircleButton = { value: 'SANScalibration_images/circle_in_out.bmp',$
     uname: 'circle_in_out_button',$
     tooltip: 'Circle Selection Tool'}
     
-  sRectButton = { value: 'images/rectangle_in_out.bmp',$
+  sRectButton = { value: 'SANScalibration_images/rectangle_in_out.bmp',$
     uname: 'rectangle_in_out_button',$
     tooltip: 'Rectangle Selection Tool'}
     
@@ -470,19 +470,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     
   sButton1 = { uname:   'exclusion_half_in',$
     tooltip: tooltip_array[2],$
-    value:   'images/selection_half_in.bmp'}
+    value:   'SANScalibration_images/selection_half_in.bmp'}
     
   sButton2 = { uname:   'exclusion_half_out',$
     tooltip: tooltip_array[3],$
-    value:   'images/selection_half_out.bmp'}
+    value:   'SANScalibration_images/selection_half_out.bmp'}
     
   sButton3 = { uname:   'exclusion_outside_in',$
     tooltip: tooltip_array[0],$
-    value:   'images/selection_outside_in.bmp'}
+    value:   'SANScalibration_images/selection_outside_in.bmp'}
     
   sButton4 = { uname:   'exclusion_outside_out',$
     tooltip: tooltip_array[1],$
-    value:   'images/selection_outside_out.bmp'}
+    value:   'SANScalibration_images/selection_outside_out.bmp'}
     
   ;SAVE AS
   XYoff = [0,40]
@@ -611,27 +611,41 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     value: 'COUNTS VS TOF (monitor)',$
     uname: 'counts_vs_tof_monitor_button'}
     
+  ;============================================================================  
   ;play, pause, stop base -----------------------------------------------------
-  XYoff = [7,3]
+  XYoff = [0,3]
   sPlayBase = { size: [XYbase.size[0]+XYoff[0],$
     XYbase.size[1]+XYbase.size[3]+XYoff[1],$
-    150,30],$
+    140,30],$
     uname: 'play_base',$
     map: 0,$
     frame: 0}
-    
+
+  ;previous green (draw)
+  sAdvancedPreviousButton = { uname: 'previous_button',$
+  size: [0,0,30,30],$
+  tooltip: 'Move to previous frame'}
   ;play button (draw)
   sAdvancedPlayButton = { uname: 'play_button',$
-    size: [0,0,29,30]}
-  ;pause button (draw)
+    size: [0,0,29,30],$
+    tooltip: 'Play the movie'}
+  ;pause button (draw)q
   sAdvancedPauseButton = { uname: 'pause_button',$
-    size: [0,0,29,30]}
+    size: [0,0,29,30],$
+    tooltip: 'Pause the movie'}
   ;stop button (draw)
   sAdvancedStopButton = { uname: 'stop_button',$
-    size: [0,0,29,30]}
+    size: [0,0,29,30],$
+    tooltip: 'Stop the movie'}
+  ;next green (draw)
+  sAdvancedNextButton = { uname: 'next_button',$
+  size: [0,0,30,30],$
+  tooltip: 'Move to next frame'}
+    
+  ;============================================================================  
     
   ;linear of log plot base and cw_bgroup
-  XYoff = [130,0]
+  XYoff = [158,0]
   sScaleTypeBase = { size: [XYbase.size[0]+XYoff[0],$
     XYbase.size[1]+XYbase.size[3]+XYoff[1]],$
     uname: 'z_axis_scale_base',$
@@ -755,14 +769,15 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     UNAME     = sTofReset.uname)
     
   ;play button
-  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
-    XOFFSET   = sPlayButton.size[0],$
-    YOFFSET   = sPlayButton.size[1],$
-    SCR_XSIZE = sPlayButton.size[2],$
-    SCR_YSIZE = sPlayButton.size[3],$
-    VALUE     = sPlayButton.value,$
-    UNAME     = sPlayButton.uname,$
-    /BITMAP)
+;  wPlayButton = WIDGET_BUTTON(wTofRangeBase,$
+;    XOFFSET   = sPlayButton.size[0],$
+;    YOFFSET   = sPlayButton.size[1],$
+;    SCR_XSIZE = sPlayButton.size[2],$
+;    SCR_YSIZE = sPlayButton.size[3],$
+;    VALUE     = sPlayButton.value,$
+;    UNAME     = sPlayButton.uname,$
+;    /BITMAP)
+
   ;time/frame label and value
   wTpFlabel = WIDGET_LABEL(wTofRangeBase,$
     XOFFSET = sTpFlabel.size[0],$
@@ -1350,22 +1365,45 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
     MAP = sPlayBase.map,$
     /ROW)
     
+  wPreviousButton = WIDGET_DRAW(wPlayBase,$
+    SCR_XSIZE = sAdvancedPreviousButton.size[2],$
+    SCR_YSIZE = sAdvancedPreviousButton.size[3],$
+    UNAME     = sAdvancedPreviousButton.uname,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
+    TOOLTIP = sAdvancedPreviousButton.tooltip)
+
   wPlayButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPlayButton.size[2],$
     SCR_YSIZE = sAdvancedPlayButton.size[3],$
-    UNAME     = sAdvancedPlayButton.uname)
+    UNAME     = sAdvancedPlayButton.uname,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
+    TOOLTIP = sAdvancedPlayButton.tooltip)
   
   wPauseButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedPauseButton.size[2],$
     SCR_YSIZE = sAdvancedPauseButton.size[3],$
-    UNAME     = sAdvancedPauseButton.uname)
+    UNAME     = sAdvancedPauseButton.uname,$
+    /TRACKING_EVENTS,$
+        /BUTTON_EVENTS,$  
+    TOOLTIP = sAdvancedPauseButton.tooltip)
     
   wStopButton = WIDGET_DRAW(wPlayBase,$
     SCR_XSIZE = sAdvancedStopButton.size[2],$
     SCR_YSIZE = sAdvancedStopButton.size[3],$
-    UNAME     = sAdvancedStopButton.uname)
+    UNAME     = sAdvancedStopButton.uname,$
+    /TRACKING_EVENTS,$
+        /BUTTON_EVENTS,$
+    TOOLTIP = sAdvancedStopButton.tooltip)
     
-    
+  wNextButton = WIDGET_DRAW(wPlayBase,$
+    SCR_XSIZE = sAdvancedNextButton.size[2],$
+    SCR_YSIZE = sAdvancedNextButton.size[3],$
+    UNAME     = sAdvancedNextButton.uname,$
+    /TRACKING_EVENTS,$
+    /BUTTON_EVENTS,$
+    TOOLTIP = sAdvancedNextButton.tooltip)    
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$

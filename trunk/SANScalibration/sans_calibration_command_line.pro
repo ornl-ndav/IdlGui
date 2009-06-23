@@ -51,8 +51,8 @@ FUNCTION getBmonPath, event, file
     CATCH,/CANCEL
     RETURN, bmon_path_value[1]
   ENDIF ELSE BEGIN
-    fileID = h5f_open(file)
-    pathID = h5d_open(fileID, bmon_path[0])
+    fileID = H5F_OPEN(file)
+    pathID = H5D_OPEN(fileID, bmon_path[0])
     RETURN, bmon_path_value[0]
   ENDELSE
 END
@@ -91,6 +91,15 @@ PRO CheckCommandLine, Event
     ++missing_argument_counter
     
   END
+  
+  ;-facility and instrument flags
+  cmd += ' ' + (*global).facility_flag
+  facility_list = (*global).facility_list
+  cmd += '=' + facility_list[0]
+  
+  cmd +=  ' ' + (*global).instrument_flag
+  instrument_list = (*global).instrument_list
+  cmd += '=' + instrument_list[0]
   
   IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
     ;transmission mode
@@ -171,6 +180,90 @@ PRO CheckCommandLine, Event
     ENDELSE
   ENDIF
   
+  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
+  
+    ;-check if Transmission Background is there or not
+    file_run = getTextFieldValue(Event,'transm_back_file_name_text_field')
+    IF (file_run EQ '') THEN BEGIN
+    
+      uname_list = ['monitor_efficiency_title',$
+        'monitor_efficiency_base',$
+        'detector_efficiency_base',$
+        'detector_efficiency_title']
+      activate_widget_list, Event, uname_list, 1
+      
+      ;-detector efficiency
+      IF (getCWBgroupValue(Event, 'detector_efficiency_group') EQ 0) THEN BEGIN
+      
+        activate_intermediate_base = 0
+        cmd += ' ' + (*global).ReducePara.detector_efficiency.flag
+        
+        cmd += ' ' + (*global).ReducePara.detector_efficiency_scale + '='
+        value = getTextFieldValue(Event, 'detector_efficiency_scaling_value')
+        IF (value NE '') THEN BEGIN
+          cmd += STRCOMPRESS(value,/REMOVE_ALL)
+          cmd += ',0.0'
+        ENDIF ELSE BEGIN
+          cmd += '?,0.0'
+          cmd_status = 0
+          ++missing_argument_counter
+          missing_arguments_text = [missing_arguments_text, $
+            '- Scaling Detector Efficiency Value ' + $
+            '(PARAMETERS)']
+        ENDELSE
+        
+        cmd += ' ' + (*global).ReducePara.detector_efficiency_attenuator + '='
+        value = getTextFieldValue(Event, 'detector_efficiency_attenuator_value')
+        IF (value NE '') THEN BEGIN
+          cmd += STRCOMPRESS(value,/REMOVE_ALL)
+          cmd += ',0.0'
+        ENDIF ELSE BEGIN
+          cmd += '?,0.0'
+          cmd_status = 0
+          ++missing_argument_counter
+          missing_arguments_text = [missing_arguments_text, $
+            '- Attenuator Detector Efficiency Value ' + $
+            '(PARAMETERS)']
+        ENDELSE
+        
+        ;-monitor efficiency
+        IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
+          activate_intermediate_base = 0
+          cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
+          cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
+          value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
+          IF (value NE '') THEN BEGIN
+            cmd += STRCOMPRESS(value,/REMOVE_ALL)
+            cmd += ',0.0'
+          ENDIF ELSE BEGIN
+            cmd += '?,0.0'
+            cmd_status = 0
+            ++missing_argument_counter
+            missing_arguments_text = [missing_arguments_text, $
+              '- Monitor Efficiency Value ' + $
+              '(PARAMETERS)']
+          ENDELSE
+        ENDIF ELSE BEGIN
+          activate_intermediate_base = 1
+        ENDELSE
+        map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
+        
+      ENDIF ELSE BEGIN
+        activate_intermediate_base = 1
+      ENDELSE
+      
+    ENDIF ELSE BEGIN ;file_run NE ''
+    
+      uname_list = ['monitor_efficiency_title',$
+        'monitor_efficiency_base',$
+        'detector_efficiency_base',$
+        'detector_efficiency_title']
+      activate_widget_list, Event, uname_list, 0
+      
+    ENDELSE
+    
+  ENDIF
+  
   ;-time offsets of detector and beam monitor
   detectorTO = getTextFieldValue(Event,'time_zero_offset_detector_uname')
   cmd += ' ' + (*global).ReducePara.detect_time_offset + '='
@@ -199,33 +292,6 @@ PRO CheckCommandLine, Event
         'Offset (PARAMETERS)']
     ENDELSE
   ENDIF
-  
-  IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
-    ;transmission mode
-  
-    ;-monitor efficiency
-    IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
-      activate_intermediate_base = 0
-      cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
-      cmd += ' ' + (*global).ReducePara.monitor_efficiency_constant + '='
-      value = getTextFieldValue(Event, 'monitor_efficiency_constant_value')
-      IF (value NE '') THEN BEGIN
-        cmd += STRCOMPRESS(value,/REMOVE_ALL)
-        cmd += ',0.0'
-      ENDIF ELSE BEGIN
-        cmd += '?,0.0'
-        cmd_status = 0
-        ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, $
-          '- Monitor Efficiency Value ' + $
-          '(PARAMETERS)']
-      ENDELSE
-    ENDIF ELSE BEGIN
-      activate_intermediate_base = 1
-    ENDELSE
-    map_base, Event, 'beam_monitor_hidding_base', activate_intermediate_base
-  ENDIF
-  
   
   ;-Wavelength min, max, width and unit
   Valuemin   = getTextFieldValue(Event,'wave_min_text_field')

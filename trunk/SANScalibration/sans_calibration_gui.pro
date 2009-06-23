@@ -116,7 +116,9 @@ PRO ModeGuiUpdate, Event
   ENDELSE
   WIDGET_CONTROL, Event.top, BASE_SET_TITLE=title
   uname_list = ['monitor_efficiency_title',$
-    'monitor_efficiency_base']
+    'monitor_efficiency_base',$
+    'detector_efficiency_base',$
+    'detector_efficiency_title']
   activate_widget_list, Event, uname_list, monitor_efficiency_flag
   uname_list = ['accelerator_down_time_title',$
     'accelerator_down_time_base']
@@ -168,8 +170,8 @@ PRO update_tab1_gui, Event, STATUS=status
     tof_status = 0
   ENDELSE
   activate_widget_list, Event, uname_list, tof_status
-;tof_status = 1 ;REMOVE_ME
-;activate_widget_list, Event, uname_list, tof_status ;REMOVE_ME
+tof_status = 1
+activate_widget_list, Event, uname_list, tof_status
   
 END
 

@@ -723,7 +723,7 @@ PRO UpdateFittingGui_save, Event
         file_name
       IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
       loading_error = 0
-      ;CATCH,loading_error
+      CATCH,loading_error
       IF (loading_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -733,7 +733,7 @@ PRO UpdateFittingGui_save, Event
         iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
         IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
           no_error = 0
-          ;CATCH,no_error
+          ;CATCH,no_error ;remove_me
           IF (no_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
