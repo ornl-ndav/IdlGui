@@ -677,8 +677,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   sNexus = {MainBase:    wTab1Base,$
     xoffset:     sNexus.size[0],$
     yoffset:     sNexus.size[1],$
-    instrument:  'SANS',$
-    facility:    'LENS'}
+    instrument:  (*global).instrument,$
+    facility:    (*global).facility}
   nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
   
   ;- draw ---------------------------------------------------------------------

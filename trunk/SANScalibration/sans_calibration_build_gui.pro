@@ -83,12 +83,13 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (facility EQ 'LENS') THEN BEGIN
     geo_path = '/LENS/'
     nexus_path = '/LENS/'
+    instrument = 'EQSANS'
   ENDIF ELSE BEGIN
     geo_path = '/SNS/'
     nexus_path = '/SNS/'
+    instrument = 'SANS'
   ENDELSE
-  
-  
+    
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
     ucams = 'j35'
   ENDIF ELSE BEGIN
@@ -130,6 +131,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     facility_flag: '--facility',$
     instrument_list: ['SANS'],$
     instrument_flag: '--inst',$
+    instrument: instrument, $
     
     main_base_uname: 'MAIN_BASE',$
     MainBaseSize:    INTARR(4),$
