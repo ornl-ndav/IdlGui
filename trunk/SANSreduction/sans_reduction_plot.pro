@@ -148,9 +148,8 @@ PRO refresh_scale, Event
   
   LOADCT,0,/SILENT
   
-  print, 'here'
-  
   IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+    
     xrange_max = 80
     plot, randomn(s,xrange_max), $
       XRANGE     = [0,xrange_max],$
@@ -165,7 +164,9 @@ PRO refresh_scale, Event
       YTICKS      = 8,$
       XMARGIN     = [5,5],$
       /NODATA
+      
   ENDIF ELSE BEGIN
+    
     xrange_max = 320
     plot, randomn(s,xrange_max), $
       XRANGE        = [0,xrange_max],$
@@ -184,6 +185,7 @@ PRO refresh_scale, Event
       YTICKS        = 8,$
       XMARGIN       = [5,5],$
       /NODATA
+  
   ENDELSE
 END
 
