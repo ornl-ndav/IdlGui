@@ -64,7 +64,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     ;get only the central part of the data (when it's not the first one)
     IF (index NE 0) THEN BEGIN
       local_tfpData      = FLOAT(local_tfpData[*,304L:2*304L-1])
-      local_tfpData_eror = FLOAT(local_tfpData_error[*,304L:2*304L-1])
+      local_tfpData_error = FLOAT(local_tfpData_error[*,304L:2*304L-1])
     ENDIF
     
     ;applied scaling factor
@@ -80,7 +80,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       index_GT = WHERE(local_tfpData GT fMax, nbr)
       IF (nbr GT 0) THEN BEGIN
         local_tfpData[index_GT]       = !VALUES.D_NAN
-        local_tfpData_error[index_GT] = !VALUES.D_NAN
+;        local_tfpData_error[index_GT] = !VALUES.D_NAN
       ENDIF
       
       Min  = (*global).zmin_g_recap
@@ -94,7 +94,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
         tmp[index_LT] = !VALUeS.D_NAN
         local_min = MIN(tmp,/NAN)
         local_tfpData[index_LT] = DOUBLE(0)
-        local_tfpData_error[index_LT] = DOUBLE(0)
+ ;       local_tfpData_error[index_LT] = DOUBLE(0)
       ENDIF ELSE BEGIN
         local_min = MIN(local_tfpData,/NAN)
       ENDELSE
@@ -109,6 +109,7 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     
     ;array that will be used to display counts
     local_tfpdata_untouched = local_tfpdata
+    local_tfpdata_error_untouched = local_tfpdata_error
     
     ;check if user wants linear or logarithmic plot
     bLogPlot = isLogZaxisStep5Selected(Event)
@@ -131,44 +132,78 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
       IF (local_min LT master_min) THEN master_min = local_min
       IF (local_max GT master_max) THEN master_max = local_max
     ENDELSE
-    
+
     IF (index EQ 0) THEN BEGIN
     
       ;array that will serve as the background
       base_array           = local_tfpData
       base_array_error     = local_tfpData_error
       base_array_untouched = local_tfpData_untouched
-      
+      base_array_error_untouched = local_tfpDAta_error_untouched
+
     ENDIF ELSE BEGIN
       index_no_null = WHERE((local_tfpData NE 0) AND $
         (FINITE(local_tfpDAta)), nbr)
       IF (nbr NE 0) THEN BEGIN
+        
+        ;we will work only where the data are defined and not 0
         dims = SIZE(local_tfpdata,/DIMENSIONS)
         x_size = (size(local_tfpdata))(1)
         y_size = (size(local_tfpdata))(2)
         array_dimension = [x_size, y_size]
         index_indices = ARRAY_INDICES(dims,index_no_null,/DIMENSIONS)
         sz = (size(index_indices,/DIMENSION))[1]
+
         i=0
         WHILE (i LT sz-1) DO BEGIN
+        
           value_new = local_tfpdata[index_indices[0,i],index_indices[1,i]]
           value_old = base_array[index_indices[0,i],index_indices[1,i]]
           value_new_untouched = local_tfpdata_untouched[index_indices[0,i],$
             index_indices[1,i]]
+            
+          value_error_new = local_tfpdata_error[index_indices[0,i],index_indices[1,i]]
+          value_error_old = base_array_error[index_indices[0,i],index_indices[1,i]]
+          value_error_new_untouched = local_tfpdata_error_untouched[index_indices[0,i],$
+            index_indices[1,i]]
+            
+            
+            
           IF (value_old EQ 0) THEN BEGIN
+          
             base_array[index_indices[0,i],index_indices[1,i]] = value_new
             base_array_untouched[index_indices[0,i],index_indices[1,i]] = $
               value_new_untouched
+              
+            base_array_error[index_indices[0,i],index_indices[1,i]] = $
+              value_error_new
+            base_array_error_untouched[index_indices[0,i],index_indices[1,i]] = $
+              value_error_new_untouched
+              
           ENDIF ELSE BEGIN
             IF (~FINITE(value_old)) THEN BEGIN
+
               base_array[index_indices[0,i],index_indices[1,i]] = value_new
               base_array_untouched[index_indices[0,i],index_indices[1,i]] = $
                 value_new_untouched
+
+              base_array_error[index_indices[0,i],index_indices[1,i]] = $
+              value_error_new
+              base_array_error_untouched[index_indices[0,i],index_indices[1,i]] = $
+                value_error_new_untouched
+
             ENDIF ELSE BEGIN
               IF (value_new GT value_old) THEN BEGIN
+
                 base_array[index_indices[0,i],index_indices[1,i]] = value_new
                 base_array_untouched[index_indices[0,i],index_indices[1,i]] = $
                   value_new_untouched
+
+                base_array_error[index_indices[0,i],index_indices[1,i]] = $
+                value_error_new
+                base_array_error_untouched[index_indices[0,i],index_indices[1,i]] = $
+                  value_error_new_untouched
+
               ENDIF
             ENDELSE
           ENDELSE
@@ -191,14 +226,14 @@ PRO refresh_recap_plot, Event, RESCALE=rescale
     (size(base_array))(1)*x_coeff, $
     (size(base_array))(2)*y_coeff,/SAMPLE)
     
-  rData_error = REBIN(base_array_error, $
-    (size(base_array_error))(1)*x_coeff, $
-    (size(base_array_error))(2)*y_coeff,/SAMPLE)
+;  rData_error = REBIN(base_array_error, $
+;    (size(base_array_error))(1)*x_coeff, $
+;    (size(base_array_error))(2)*y_coeff,/SAMPLE)
     
   cleanup_array, rData
   total_array = rData
   
-  (*(*global).total_array_error) = base_array_error
+  (*(*global).total_array_error_untouched) = base_array_error_untouched
   (*(*global).total_array_untouched) = base_array_untouched
   
   DEVICE, DECOMPOSED=0

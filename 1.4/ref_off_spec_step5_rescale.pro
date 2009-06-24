@@ -45,7 +45,7 @@ PRO create_step5_selection_data, Event
   WIDGET_CONTROL, /HOURGLASS
   
   base_array_untouched = (*(*global).total_array_untouched)
-  base_array_error     = (*(*global).total_array_error)
+  base_array_error     = (*(*global).total_array_error_untouched)
   
   x0 = (*global).step5_x0 ;lambda
   y0 = (*global).step5_y0 ;pixel
@@ -63,7 +63,7 @@ PRO create_step5_selection_data, Event
   
   array_error_selected = base_array_error[xmin:xmax,ymin:ymax]
   array_error_selected_total = TOTAL(array_error_selected,2)/FLOAT(y)
-  
+
   x_axis = (*(*global).x_axis)
   
   x_axis_selected = x_axis[xmin:xmax]
