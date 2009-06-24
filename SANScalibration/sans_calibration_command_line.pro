@@ -94,12 +94,12 @@ PRO CheckCommandLine, Event
   
   ;-facility and instrument flags
   cmd += ' ' + (*global).facility_flag
-  facility_list = (*global).facility_list
-  cmd += '=' + facility_list[0]
+  facility = (*global).facility
+  cmd += '=' + facility
   
   cmd +=  ' ' + (*global).instrument_flag
-  instrument_list = (*global).instrument_list
-  cmd += '=' + instrument_list[0]
+  instrument = (*global).instrument
+  cmd += '=' + instrument
   
   IF (getCWBgroupValue(Event,'mode_group_uname') EQ 0) THEN BEGIN
     ;transmission mode
