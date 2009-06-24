@@ -34,8 +34,7 @@
 
 FUNCTION retrieveData, Event, FullNexusName, DataArray
   ;get global structure
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  WIDGET_CONTROL, id, GET_UVALUE=global
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;retrieve infos
   PROCESSING = (*global).processing
@@ -49,11 +48,38 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     RETURN, 0
   ENDIF ELSE BEGIN
-    sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-      FullNexusName,$
-      NbrBank = 1,$
-      BankData = 'bank1')
-    DataArray = *(sInstance->getData())
+  
+    IF ((*global).facility EQ 'LENS') THEN BEGIN
+    
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank1')
+      DataArray = *(sInstance->getData())
+      OBJ_DESTROY, sInstance
+      
+    ENDIF ELSE BEGIN
+    
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank1')
+      DataArray1 = *(sInstance->getData())
+      (*(*global).bank1) = DataArray1
+      OBJ_DESTROY, sInstance
+      
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank2')
+      DataArray2 = *(sInstance->getData())
+      OBJ_DESTROY, sInstance
+      (*(*global).bank2) = DataArray2
+      
+      DataArray = DataArray1 + DataArray2
+      
+    ENDELSE
+    
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   ENDELSE
   RETURN,1
@@ -121,8 +147,8 @@ PRO refresh_scale, Event
   WSET, id_value
   
   LOADCT,0,/SILENT
- 
- print, 'here'
+  
+  print, 'here'
   
   IF ((*global).Xpixel  EQ 80L) THEN BEGIN
     xrange_max = 80
@@ -168,14 +194,14 @@ PRO refresh_plot, Event ;_plot
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-;  IF ((*global).facility EQ 'LENS') THEN BEGIN
-;  
-;    ;change color of background
-;    id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
-;    WIDGET_CONTROL, id, GET_VALUE=id_value
-;    WSET, id_value
-;    
-;  ENDIF
+  ;  IF ((*global).facility EQ 'LENS') THEN BEGIN
+  ;
+  ;    ;change color of background
+  ;    id = WIDGET_INFO(EVENT.TOP,FIND_BY_UNAME='label_draw_uname')
+  ;    WIDGET_CONTROL, id, GET_VALUE=id_value
+  ;    WSET, id_value
+  ;
+  ;  ENDIF
   
   ;retrieve parameters from global pointer
   X         = (*global).X
