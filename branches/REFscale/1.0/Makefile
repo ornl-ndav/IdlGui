@@ -6,6 +6,7 @@ all:
 	idl ./makefile.pro
 
 install: 
+	cp .REFscale.cfg /SNS/software/idltools/sav/
 	cp ref_scale.sav /SNS/software/idltools/sav/
 	cp REFscale /SNS/software/idltools/
 
