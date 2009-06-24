@@ -49,17 +49,50 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     RETURN, 0
   ENDIF ELSE BEGIN
-    sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-      FullNexusName,$
-      NbrBank = 1,$
-      BankData = 'bank1')
-    DataArray = *(sInstance->getData())
-    TofArray  = *(sInstance->getTof())
+
+    IF ((*global).facility EQ 'LENS') THEN BEGIN
+    
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank1')
+      DataArray = *(sInstance->getData())
+          TofArray  = *(sInstance->getTof())
+      OBJ_DESTROY, sInstance
     sz = N_ELEMENTS(TofArray)
     putTextFieldValue, Event, 'tof_max_value', $
       STRCOMPRESS(sz-2,/REMOVE_ALL)
     TofArray  = TofArray[0:sz-2]
     (*(*global).tof_array) = TofArray
+      
+    ENDIF ELSE BEGIN
+    
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank1')
+      DataArray1 = *(sInstance->getData())
+          TofArray  = *(sInstance->getTof())
+      (*(*global).bank1) = DataArray1
+      OBJ_DESTROY, sInstance
+    sz = N_ELEMENTS(TofArray)
+    putTextFieldValue, Event, 'tof_max_value', $
+      STRCOMPRESS(sz-2,/REMOVE_ALL)
+    TofArray  = TofArray[0:sz-2]
+    (*(*global).tof_array) = TofArray
+      
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank2')
+      DataArray2 = *(sInstance->getData())
+      OBJ_DESTROY, sInstance
+      (*(*global).bank2) = DataArray2
+      
+      DataArray = DataArray1 + DataArray2
+      
+    ENDELSE
+
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   ENDELSE
   RETURN,1
