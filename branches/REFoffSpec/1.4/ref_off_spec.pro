@@ -76,7 +76,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_tab: 0,$
     step4_tab: 0,$
     scaling_tab: 1},$
-    ascii_path: '~/SVN/IdlGui/branches/REFoffSpec/1.4/',$
+    ascii_path: '~/results/',$
     reduce_tab1_cw_field: '5242-5244',$
     reduce_tab1_proposal_combobox: 1}
     
@@ -332,6 +332,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     total_array:         PTR_NEW(0L),$
     total_array_untouched: PTR_NEW(0L),$
     total_array_error:    PTR_NEW(0L),$
+    total_array_error_untouched:    PTR_NEW(0L),$
     xscale:              {xrange: FLTARR(2),$
     xticks: 1L,$
     position: INTARR(4)},$

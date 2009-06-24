@@ -747,7 +747,6 @@ IF (nbr GT 1) THEN BEGIN
         big_array_error[*,304L:2*304L-1] = local_data_error
         *realign_tfpData_error[index] = big_array_error
 
-
 ;change reference pixel from old to neatew position
         ref_pixel_list[index] = ref_pixel_list[0]
         ++index
