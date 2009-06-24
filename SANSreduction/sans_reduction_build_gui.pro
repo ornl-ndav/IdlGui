@@ -35,7 +35,7 @@
 PRO BuildFacilityGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
   ;build the facility Selection base
   MakeGuiFacilitySelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, $
-  SCROLL=scroll
+    SCROLL=scroll
 END
 
 ;------------------------------------------------------------------------------
@@ -77,6 +77,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
+  
+  IF (facility EQ 'LENS') THEN BEGIN
+    geo_path = '/LENS/'
+    nexus_path = '/LENS/'
+  ENDIF ELSE BEGIN
+    geo_path = '/SNS/'
+    nexus_path = '/SNS/'
+  ENDELSE
   
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
     ucams = 'j35'
@@ -149,11 +157,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     roi_path:        '~/',$
     geo_extension:   'nxs',$
     geo_filter:      '*.nxs',$
-    geo_path:        '/LENS/',$
+    geo_path:        geo_path,$
     nexus_extension: 'nxs',$
     nexus_filter:    '*.nxs',$
     nexus_title:     'Browse for a Data NeXus File',$
-    nexus_path:      '/LENS/',$
+    nexus_path:       nexus_path,$
     selection_extension: 'dat',$
     selection_filter: '*.dat',$
     selection_title:  'Browse for a ROI file',$
@@ -409,7 +417,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
       YTICKS      = 8,$
       XMARGIN     = [5,5],$
       /NODATA
- 
+      
   ENDIF
   
   ;============================================================================
