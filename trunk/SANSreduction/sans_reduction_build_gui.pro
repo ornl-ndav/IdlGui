@@ -81,9 +81,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (facility EQ 'LENS') THEN BEGIN
     geo_path = '/LENS/'
     nexus_path = '/LENS/'
+    instrument = 'EQSANS'
   ENDIF ELSE BEGIN
     geo_path = '/SNS/'
     nexus_path = '/SNS/'
+    instrument = 'SANS'
   ENDELSE
   
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -105,6 +107,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     facility_flag: '--facility',$
     instrument_list: ['SANS'],$
     instrument_flag: '--inst',$
+    instrument: instrument,$
     
     bank1: PTR_NEW(0L),$
     bank2: PTR_NEW(0L),$
@@ -343,7 +346,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   ;get the color of the GUI to hide the widget_draw that will label the draw
   sys_color = WIDGET_INFO(MAIN_BASE,/SYSTEM_COLORS)
   (*global).sys_color_face_3d = sys_color.face_3d
-  
   
   ;attach global structure with widget ID of widget main base widget ID
   widget_control, MAIN_BASE, SET_UVALUE=global
