@@ -169,6 +169,15 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, job_base,/DESTROY
     END
     
+    ;counts vs tof of selection
+    WIDGET_INFO(event.top, FIND_BY_UNAME='counts_vs_tof_selection'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      job_base = counts_vs_tof_info_base(Event)
+;      plot_counts_vs_tof_of_full_detector, Event
+      WIDGET_CONTROL, HOURGLASS=0
+      WIDGET_CONTROL, job_base,/DESTROY
+    END
+
     ;Main plot
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot'): begin
       MainPlotInteraction, Event
@@ -188,26 +197,27 @@ PRO MakeGuiMainPLot_Event, event
       IF (Event.type EQ 1 AND $
         (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
         (*global1).left_pressed = 0
-        message_text = ['Are you sure you want to plot Counts vs TOF of ' + $
-          'selection?','','This may take a while!']
-        title = 'Plot Counts vs TOF ?'
-        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
-        result = DIALOG_MESSAGE(message_text,$
-          /QUESTION,$
-          /CENTER,$
-          DIALOG_PARENT=id,$
-          TITLE=title)
-        IF (result EQ 'Yes') THEN BEGIN
-          WIDGET_CONTROL, /HOURGLASS
-          job_base = counts_vs_tof_info_base(Event)
-          plot_counts_vs_tof_of_selection, Event
-          WIDGET_CONTROL, HOURGLASS=0
-          WIDGET_CONTROL, job_base,/DESTROY
-        ENDIF ELSE BEGIN ;remove selection
-          (*global1).X1 = 0L
-          (*global1).X2 = 0L
-        replot_main_plot_with_scale, Event, without_scale=1
-        ENDELSE
+          
+;        message_text = ['Are you sure you want to plot Counts vs TOF of ' + $
+;          'selection?','','This may take a while!']
+;        title = 'Plot Counts vs TOF ?'
+;        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
+;        result = DIALOG_MESSAGE(message_text,$
+;          /QUESTION,$
+;          /CENTER,$
+;          DIALOG_PARENT=id,$
+;          TITLE=title)
+;        IF (result EQ 'Yes') THEN BEGIN
+;          WIDGET_CONTROL, /HOURGLASS
+;          job_base = counts_vs_tof_info_base(Event)
+;          plot_counts_vs_tof_of_selection, Event
+;          WIDGET_CONTROL, HOURGLASS=0
+;          WIDGET_CONTROL, job_base,/DESTROY
+;        ENDIF ELSE BEGIN ;remove selection
+;          (*global1).X1 = 0L
+;          (*global1).X2 = 0L
+;        replot_main_plot_with_scale, Event, without_scale=1
+;        ENDELSE
       ENDIF
       
       IF (Event.type EQ 2 AND $

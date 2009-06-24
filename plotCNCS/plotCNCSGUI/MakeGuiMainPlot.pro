@@ -200,9 +200,16 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'counts_vs_tof_full_detector',$
     /NO_RELEASE)
     
+  ;produce counts vs tof of selection
+  button = WIDGET_BUTTON(row1,$
+    VALUE = 'Counts vs TOF of selection',$
+    UNAME = 'counts_vs_tof_selection',$
+    /NO_RELEASE,$
+    SENSITIVE = 0)
+    
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                        ')
+    VALUE = '       ')
     
   label_base = WIDGET_BASE(row1)
       
@@ -230,7 +237,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                         ')
+    VALUE = '                  ')
 
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
@@ -244,7 +251,7 @@ PRO MakeGuiMainPlot, wBase
     /NO_RELEASE)
     
   log = WIDGET_BUTTON(row1c,$
-    VALUE = 'Logarithmic',$
+    VALUE = 'Log',$
     UNAME = 'main_plot_log_plot',$
     /NO_RELEASE)
     
