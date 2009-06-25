@@ -79,10 +79,10 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'BSS',$
     UNAME = 'tab2_manual_input_suffix_name',$
     /EDITABLE,$
-    XSIZE = 20)
+    XSIZE = 14)
     
   label = WIDGET_LABEL(inter_base,$
-    VALUE = '_<User_Defined>.')
+    VALUE = '_<User_Defined>run[s].')
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'txt',$
@@ -206,12 +206,19 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
-    XSIZE = 675,$
+    XSIZE = 380,$
     SENSITIVE = 0)
+    
+  button2 = WIDGET_BUTTON(row3,$
+  VALUE = 'SAVE COMMNAND LINE',$
+  UNAME = 'tab2_save_command_line',$
+  XSIZE = 200, $
+  SENSITIVE = 0)  
     
   save_temperature = WIDGET_BUTTON(row3,$
   VALUE = 'Save Temperature',$
   UNAME = 'save_temperature',$
+  XSIZE = 200,$
   TOOLTIP = 'Create output file of Temperature column',$
   SENSITIVE = 0)
     
@@ -267,7 +274,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = 'RUN JOBS',$
     XSIZE = 565,$
     UNAME = 'tab2_run_jobs_uname',$
-    SENSITIVE = 1)
+    SENSITIVE = 0)
     
 END
 
