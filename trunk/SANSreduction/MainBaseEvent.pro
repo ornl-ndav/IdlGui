@@ -55,7 +55,7 @@ PRO MAIN_BASE_event, Event
   
   CASE Event.id OF
   
-      ;facility Selection
+    ;facility Selection
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='facility_selection_validate_button'): begin
       facility_selected, Event, (*global).scroll
@@ -85,12 +85,17 @@ PRO MAIN_BASE_event, Event
         ENDELSE
       ENDIF
       IF (Event.press EQ 1) THEN BEGIN
-        IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-          X = Event.x/8.
-          Y = Event.y/8.
-        ENDIF ELSE BEGIN
-          X = Event.x/2.
-          Y = Event.y/2.
+        IF ((*global).facility EQ 'LENS') THEN BEGIN
+          IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+            X = Event.x/8.
+            Y = Event.y/8.
+          ENDIF ELSE BEGIN
+            X = Event.x/2.
+            Y = Event.y/2.
+          ENDELSE
+        ENDIF ELSE BEGIN ;'SNS'
+          X = Event.x / (*global).congrid_x_coeff
+          Y = Event.y / (*global).congrid_y_coeff
         ENDELSE
         putTextFieldValue, Event, $
           'x_center_value', $
@@ -422,7 +427,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='detector_efficiency_group'): BEGIN
       detector_efficiency_constant_gui, Event ;_reduce_tab3
     END
-
+    
     ;---- Min Lambda Cut off --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='minimum_lambda_cut_off_group'): BEGIN
       min_lambda_cut_off_gui, Event ;_reduce_tab3
@@ -455,15 +460,15 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id1, SET_VALUE = (*global).wave_para_label
         WIDGET_CONTROL, id, SET_VALUE = value
       ENDELSE
-
+      
       value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
       IF (value EQ '') THEN BEGIN
-      status = 0
+        status = 0
       ENDIF ELSE BEGIN
-      status = 1
+        status = 1
       ENDELSE
       activate_widget, Event, 'acce_base', status
-
+      
     END
     
     ;---- Browse button of Wavelength Dependent Back. subtraction -------------
@@ -472,12 +477,12 @@ PRO MAIN_BASE_event, Event
       BrowseLoadWaveFile, Event ;_reduce_tab3
       value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
       IF (value EQ '') THEN BEGIN
-      status = 0
+        status = 0
       ENDIF ELSE BEGIN
-      status = 1
+        status = 1
       ENDELSE
       activate_widget, Event, 'acce_base', status
-
+      
     END
     
     ;--- comma-delimited list of increasing coefficients ----------------------
@@ -485,13 +490,13 @@ PRO MAIN_BASE_event, Event
       FIND_BY_UNAME='wave_dependent_back_sub_text_field'): BEGIN
       value = getTextFieldValue(Event,'wave_dependent_back_sub_text_field')
       IF (value EQ '') THEN BEGIN
-      status = 0
+        status = 0
       ENDIF ELSE BEGIN
-      status = 1
+        status = 1
       ENDELSE
       activate_widget, Event, 'acce_base', status
     END
-        
+    
     ;---- Clear Wavelength coefficient text field -----------------------------
     WIDGET_INFO(wWidget,$
       FIND_BY_UNAME= $
@@ -543,7 +548,7 @@ PRO MAIN_BASE_event, Event
   ENDCASE
   
   IF ((*global).build_command_line) THEN BEGIN
-  CheckCommandLine, Event         ;_command_line
+    CheckCommandLine, Event         ;_command_line
   ENDIF
   
 END

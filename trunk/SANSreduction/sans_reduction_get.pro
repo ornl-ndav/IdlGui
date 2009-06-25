@@ -33,104 +33,108 @@
 ;==============================================================================
 
 FUNCTION getTextFieldValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value[0]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value[0]
 END
 
 ;------------------------------------------------------------------------------
 ;This function retrieves the run number of the First tab
 FUNCTION getRunNumber, Event
-RETURN, getTextFieldValue(Event,'run_number_cw_field')
+  RETURN, getTextFieldValue(Event,'run_number_cw_field')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getProposalIndex, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
-index = WIDGET_INFO(id, /droplist_select)
-RETURN, index
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+  index = WIDGET_INFO(id, /droplist_select)
+  RETURN, index
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getProposalSelected, Event, index
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
-index = WIDGET_INFO(id, /droplist_select)
-WIDGET_CONTROL, id, GET_VALUE=list
-RETURN, list[index]
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+  index = WIDGET_INFO(id, /droplist_select)
+  WIDGET_CONTROL, id, GET_VALUE=list
+  RETURN, list[index]
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getButtonValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 PRO getXYposition, Event
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-x = Event.x
-y = Event.y
-IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-    Xcoeff = 8
-ENDIF ELSE BEGIN
-    Xcoeff = 2
-ENDELSE
-ScreenX = x / Xcoeff
-ScreenY = y / Xcoeff
-putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
-putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  x = Event.x
+  y = Event.y
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+    IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+      Xcoeff = 8
+    ENDIF ELSE BEGIN
+      Xcoeff = 2
+    ENDELSE
+    ScreenX = x / Xcoeff
+    ScreenY = y / Xcoeff
+  ENDIF ELSE BEGIN
+    ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff)
+    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff)
+  ENDELSE
+  putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
+  putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
-IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+  IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
     iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
     IF (OBJ_VALID(iObject)) THEN BEGIN
-        RunNumber = iObject->getRunNumber()
+      RunNumber = iObject->getRunNumber()
     ENDIF ELSE BEGIN
-        RunNumber = ''
+      RunNumber = ''
     ENDELSE
-ENDIF
-default_name = 'SANS' 
-IF (RunNumber NE '') THEN BEGIN
+  ENDIF
+  default_name = 'SANS'
+  IF (RunNumber NE '') THEN BEGIN
     default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-ENDIF
-DateIso = GenerateIsoTimeStamp()
-default_name += '_' + DateIso
-default_name += '.txt'
-RETURN, default_name
+  ENDIF
+  DateIso = GenerateIsoTimeStamp()
+  default_name += '_' + DateIso
+  default_name += '.txt'
+  RETURN, default_name
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getDefaultROIFileName, Event, FullFileName, RunNumber = RunNumber
-IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+  IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
     iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
     IF (OBJ_VALID(iObject)) THEN BEGIN
-        RunNumber = iObject->getRunNumber()
+      RunNumber = iObject->getRunNumber()
     ENDIF ELSE BEGIN
-        RunNumber = ''
+      RunNumber = ''
     ENDELSE
-ENDIF
-default_name = 'SANS' 
-IF (RunNumber NE '') THEN BEGIN
+  ENDIF
+  default_name = 'SANS'
+  IF (RunNumber NE '') THEN BEGIN
     default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
-ENDIF
-DateIso = GenerateIsoTimeStamp()
-default_name += '_' + DateIso
-default_name += '_ROI.dat'
-
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-roi_path = (*global).selection_path
-default_name = roi_path + default_name
-
-RETURN, default_name
+  ENDIF
+  DateIso = GenerateIsoTimeStamp()
+  default_name += '_' + DateIso
+  default_name += '_ROI.dat'
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  roi_path = (*global).selection_path
+  default_name = roi_path + default_name
+  
+  RETURN, default_name
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getRoiFileName, Event
-FileName = getTextFieldValue(Event,'roi_file_name_text_field')
-RETURN, FileName
+  FileName = getTextFieldValue(Event,'roi_file_name_text_field')
+  RETURN, FileName
 END

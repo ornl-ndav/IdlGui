@@ -355,7 +355,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   XYoff = [15,0] ;x value
   xValue = { size: [xLabel.size[0]+XYoff[0],$
     xLabel.size[1]+XYoff[1]],$
-    value: '   ',$
+    value: '           ',$
     uname: 'x_value'}
   XYoff = [0,20] ;y label
   yLabel = { size: [xLabel.size[0]+XYoff[0],$
@@ -364,7 +364,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   XYoff = [0,0] ;y value
   yValue = { size: [xValue.size[0]+XYoff[0],$
     ylabel.size[1]+XYoff[1]],$
-    value: '   ',$
+    value: '            ',$
     uname: 'y_value'}
     
   XYoff = [0,20]

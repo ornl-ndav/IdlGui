@@ -56,25 +56,31 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
         NbrBank = 1,$
         BankData = 'bank1')
       DataArray = *(sInstance->getData())
+      
       OBJ_DESTROY, sInstance
       
     ENDIF ELSE BEGIN
     
-      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-        FullNexusName,$
-        NbrBank = 1,$
-        BankData = 'bank1')
-      DataArray1 = *(sInstance->getData())
+      DataArray1 = LINDGEN(10,192,256)
+      DataArray2 = LINDGEN(10,192,256)+300
       (*(*global).bank1) = DataArray1
-      OBJ_DESTROY, sInstance
-      
-      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-        FullNexusName,$
-        NbrBank = 1,$
-        BankData = 'bank2')
-      DataArray2 = *(sInstance->getData())
-      OBJ_DESTROY, sInstance
       (*(*global).bank2) = DataArray2
+      
+      ;      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+      ;        FullNexusName,$
+      ;        NbrBank = 1,$
+      ;        BankData = 'bank1')
+      ;      DataArray1 = *(sInstance->getData())
+      ;      (*(*global).bank1) = DataArray1
+      ;      OBJ_DESTROY, sInstance
+      ;
+      ;      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+      ;        FullNexusName,$
+      ;        NbrBank = 1,$
+      ;        BankData = 'bank2')
+      ;      DataArray2 = *(sInstance->getData())
+      ;      OBJ_DESTROY, sInstance
+      ;      (*(*global).bank2) = DataArray2
       
       DataArray = DataArray1 + DataArray2
       
@@ -101,18 +107,36 @@ FUNCTION plotData, Event, DataArray, X, Y
     tDataXY  = TRANSPOSE(dataXY)
     (*(*global).img) = tDataXY
     ;Check if rebin is necessary or not
-    IF (X EQ 80) THEN BEGIN
-      xysize = 8
-      Xpixel = 80L
-    ENDIF ELSE BEGIN
-      xysize = 2
-      Xpixel = 320L
-    ENDELSE
-    (*global).Xpixel = Xpixel
-    (*global).DrawXcoeff = xysize
-    rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
-    (*(*global).rtDataXY) = rtDataXY ;array plotted
+    IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
+      
+      IF (X EQ 80) THEN BEGIN
+        xysize = 8
+        Xpixel = 80L
+      ENDIF ELSE BEGIN
+        xysize = 2
+        Xpixel = 320L
+      ENDELSE
+      (*global).Xpixel = Xpixel
+      (*global).DrawXcoeff = xysize
+      rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+      
+    ENDIF ELSE BEGIN ;SNS
     
+      help, tDataXY
+      x = (size(tDataXY))(1)
+      y = (size(tDataXY))(2)
+      
+      draw_x = (*global).draw_x
+      draw_y = (*global).draw_y
+            
+      rtDataXY = CONGRID(tDataXY, draw_x, draw_y)
+      
+      (*global).congrid_x_coeff = FLOAT(draw_x) / FLOAT(x)
+      (*global).congrid_y_coeff = FLOAT(draw_y) / FLOAT(y)
+      
+    ENDELSE
+    
+    (*(*global).rtDataXY) = rtDataXY ;array plotted
     lin_or_log_plot, Event
     
     ;;plot data
@@ -149,7 +173,7 @@ PRO refresh_scale, Event
   LOADCT,0,/SILENT
   
   IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-    
+  
     xrange_max = 80
     plot, randomn(s,xrange_max), $
       XRANGE     = [0,xrange_max],$
@@ -166,7 +190,7 @@ PRO refresh_scale, Event
       /NODATA
       
   ENDIF ELSE BEGIN
-    
+  
     xrange_max = 320
     plot, randomn(s,xrange_max), $
       XRANGE        = [0,xrange_max],$
@@ -185,7 +209,7 @@ PRO refresh_scale, Event
       YTICKS        = 8,$
       XMARGIN       = [5,5],$
       /NODATA
-  
+      
   ENDELSE
 END
 

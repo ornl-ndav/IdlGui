@@ -102,6 +102,9 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     scaling_value: '',$
     build_command_line: 1,$
     
+    draw_x: 640L,$
+    draw_y: 640L,$
+    
     facility: facility, $
     facility_list: ['LENS'],$
     facility_flag: '--facility',$
@@ -111,6 +114,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     bank1: PTR_NEW(0L),$
     bank2: PTR_NEW(0L),$
+    congrid_x_coeff: 1.,$
+    congrid_y_coeff: 1.,$
     
     package_required_base: ptr_new(0L),$
     advancedToolId: 0,$
@@ -363,7 +368,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
-    nexus_path           = '~/Desktop'
+    nexus_path           = '~/402/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
     (*global).wave_dep_back_sub_path = $
