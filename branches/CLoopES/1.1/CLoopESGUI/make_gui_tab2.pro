@@ -172,11 +172,11 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   WIDGET_CONTROL, b1, /SET_BUTTON
   
   ;Load temperature button ----------------------------------------------------
-  space = WIDGET_LABEL(row1,$
-  VALUE = '  ')
+;  space = WIDGET_LABEL(row1,$
+;  VALUE = '')
   
   load_T = WIDGET_BUTTON(row1,$
-  VALUE = 'Load Temperature',$
+  VALUE = ' Load Temperature ...',$
   UNAME = 'load_temperature',$
   TOOLTIP = 'Populate table with a Temperature file',$
   SENSITIVE = 0)
@@ -216,7 +216,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   SENSITIVE = 0)  
     
   save_temperature = WIDGET_BUTTON(row3,$
-  VALUE = 'Save Temperature',$
+  VALUE = 'Save Temperature ...',$
   UNAME = 'save_temperature',$
   XSIZE = 200,$
   TOOLTIP = 'Create output file of Temperature column',$
@@ -262,7 +262,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     /ROW)
     
   button1 = WIDGET_BUTTON(row5,$
-    VALUE = 'Check Jobs Status',$
+    VALUE = 'Check Jobs Status ...',$
     xSIZE = 200,$
     UNAME = 'tab2_check_job_status_uname',$
     SENSITIVE = 1)

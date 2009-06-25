@@ -139,8 +139,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
   sBrowseButton = { size: [XYoff[0],$
     sTable.size[1]+$
     sTable.size[3]+XYoff[1],$
-    200],$
-    value: 'Check Status of Jobs Submitted',$
+    250],$
+    value: 'Check Status of Jobs Submitted ...',$
     uname: 'check_status_button'}
     
   ;preview/save jobs listing
@@ -148,8 +148,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
   sPreviewButton = { size: [sBrowseButton.size[0]+$
     sBrowseButton.size[2]+XYoff[0],$
     sBrowseButton.size[1]+XYoff[1],$
-    150],$
-    value: 'PREVIEW/SAVE_AS JOBS',$
+    200],$
+    value: 'Preview/Save_as jobs ...',$
     uname: 'preview_jobs_button',$
     sensitive: 0}
     
@@ -158,7 +158,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
   sRunButton = { size: [sPreviewButton.size[0]+$
     sPreviewButton.size[2]+XYoff[0],$
     sPreviewButton.size[1]+XYoff[1],$
-    425],$
+    325],$
     value: 'L A U N C H    J O B S    I N    B A C K G R O U N D',$
     uname: 'run_jobs_button',$
     sensitive: 0}
