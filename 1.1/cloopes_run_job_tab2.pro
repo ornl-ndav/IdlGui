@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-PRO run_job_tab2, Event
+FUNCTION create_cmd, Event
 
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -94,6 +94,15 @@ PRO run_job_tab2, Event
     ENDIF
     index++
   ENDWHILE
+  
+  RETURN, cmd
+  
+END
+
+;------------------------------------------------------------------------------
+PRO run_job_tab2, Event
+
+  cmd = create_cmd(Event)
   
   cmd_text = '-> Launching job: '
   cmd_text += cmd

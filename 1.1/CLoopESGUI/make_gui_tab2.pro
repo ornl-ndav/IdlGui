@@ -210,7 +210,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     SENSITIVE = 0)
     
   button2 = WIDGET_BUTTON(row3,$
-  VALUE = 'SAVE COMMNAND LINE',$
+  VALUE = 'SAVE COMMNAND LINE ...',$
   UNAME = 'tab2_save_command_line',$
   XSIZE = 200, $
   SENSITIVE = 0)  
