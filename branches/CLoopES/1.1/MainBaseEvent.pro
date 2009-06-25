@@ -140,7 +140,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_temperature'): BEGIN
       load_temperature, Event
     END
-
+    
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
@@ -150,6 +150,12 @@ PRO MAIN_BASE_event, Event
     ;Refresh table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_refresh_table_uname'): BEGIN
       refresh_tab2_table, Event
+    END
+    
+    ;save command line
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_save_command_line'): BEGIN
+      cmd = create_cmd(Event)
+      save_command_line, Event, cmd=cmd
     END
     
     ;save temperature button
