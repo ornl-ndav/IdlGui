@@ -53,11 +53,10 @@ END
 ;------------------------------------------------------------------------------
 PRO retrieveNexus, Event, FullNexusName
 ;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
+WIDGET_CONTROL, Event.top, GET_UVALUE=global
 
 ;indicate initialization with hourglass icon
-widget_control,/hourglass
+WIDGET_CONTROL,/HOURGLASS
 
 ;retrieve infos
 PROCESSING = (*global).processing
