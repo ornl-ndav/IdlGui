@@ -212,16 +212,16 @@ PRO MakeGuiMainPlot, wBase
     VALUE = '       ')
     
   label_base = WIDGET_BASE(row1)
-      
+  
   ;display banks grid or not
   label = WIDGET_LABEL(label_base,$
-  YOFFSET = 5,$
-  VALUE = 'Display banks contours')
-  
+    YOFFSET = 5,$
+    VALUE = 'Display banks contours')
+    
   row1d = WIDGET_BASE(row1,$
-  /ROW,$
-  /EXCLUSIVE,$
-  FRAME = 0)
+    /ROW,$
+    /EXCLUSIVE,$
+    FRAME = 0)
     
   yes = WIDGET_BUTTON(row1d,$
     VALUE = 'Yes',$
@@ -234,11 +234,11 @@ PRO MakeGuiMainPlot, wBase
     /NO_RELEASE)
     
   WIDGET_CONTROL, yes, /SET_BUTTON
-    
+  
   ;space
   space = WIDGET_LABEL(row1,$
     VALUE = '                  ')
-
+    
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(row1,$
     /ROW,$
@@ -282,9 +282,6 @@ PRO MakeGuiMainPlot, wBase
     
   row4 = WIDGET_BASE(wBase,$
     /ROW)
-    
-  space = WIDGET_LABEL(row4,$
-    VALUE =  '   ')
     
   row4a = WIDGET_BASE(row4,$ ;play/pause/next.... buttons ----------------
     FRAME = 1)
@@ -354,13 +351,13 @@ PRO MakeGuiMainPlot, wBase
   ;---------------------------------------------------------------------------
     
   row4ba = WIDGET_BASE(row4,$
-  /ROW,$
-  FRAME = 1)
-
+    /ROW,$
+    FRAME = 1)
+    
   row4b = WIDGET_BASE(row4ba,$ ;column b of row4 ..............................
     /COLUMN,$
     FRAME = 0)
-
+    
   row4b1 = WIDGET_BASE(row4b,$ ;row 1 of column b of row 4 ..................
     /ROW)
     
@@ -462,14 +459,14 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'play_counts_vs_tof_plot')
     
   base_v = WIDGET_BASE(row4ba,$ ;selection of playing range (min and max)
-  /COLUMN)
-  
+    /COLUMN)
+    
   label = WIDGET_LABEL(base_v,$
-  VALUE = 'Select playing range')
-  
+    VALUE = 'Select playing range')
+    
   row_bin_a = WIDGET_BASE(base_v,$ ;from bin
-  /ROW)
-  
+    /ROW)
+    
   field1 = CW_FIELD(row_bin_a,$
     /RETURN_EVENTS,$
     TITLE = 'From bin #',$
@@ -477,15 +474,15 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 1,$
     UNAME = 'from_bin',$
     /INTEGER)
-  
-  reset = WIDGET_BUTTON(row_bin_a,$
-  VALUE = 'RESET',$
-  UNAME = 'reset_from_bin')
-
-  row_bin_b = WIDGET_BASE(base_v,$ ;to bin
-  /ROW)
     
-    field2 = CW_FIELD(row_bin_b,$
+  reset = WIDGET_BUTTON(row_bin_a,$
+    VALUE = 'RESET',$
+    UNAME = 'reset_from_bin')
+    
+  row_bin_b = WIDGET_BASE(base_v,$ ;to bin
+    /ROW)
+    
+  field2 = CW_FIELD(row_bin_b,$
     /RETURN_EVENTS,$
     TITLE = '  To bin #',$
     XSIZE = 6,$
@@ -493,12 +490,85 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'to_bin',$
     /INTEGER)
     
-    reset = WIDGET_BUTTON(row_bin_b,$
+  reset = WIDGET_BUTTON(row_bin_b,$
     VALUE = 'RESET',$
     UNAME = 'reset_to_bin')
     
-    label = WIDGET_LABEL(base_v,$
+  label = WIDGET_LABEL(base_v,$
     VALUE = '(or left and right click mouse)')
+    
+  ;selection base -------------------------------------------------------------
+    
+  sel_base = WIDGET_BASE(row4,$
+    FRAME = 1,$
+    /ROW)
+    
+  sel_col1 = WIDGET_BASE(sel_base,$ ;..........................................
+    /COLUMN)
+    
+  button = WIDGET_BUTTON(sel_col1,$
+    VALUE = 'RESET SELECTION',$
+    UNAME = 'reset_selection_button',$
+    SENSITIVE = 1,$
+    SCR_XSIZE = 200)
+    
+  sel_col1_row2 = WIDGET_BASE(sel_col1,$
+    /ROW)
+    
+  load = WIDGET_BUTTON(sel_col1_row2,$
+    VALUE = ' LOAD ROI ',$
+    SCR_XSIZE = 90,$
+    UNAME = 'load_roi_button')
+    
+  save = WIDGET_BUTTON(sel_col1_row2,$
+    VALUE = ' SAVE ROI ',$
+    SCR_XSIZE = 90,$
+    UNAME = 'save_roi_button')
+    
+  sel_col1_row3_col1 = WIDGET_BASE(sel_col1,$
+  FRAME = 1,$
+  /COLUMN)
+  
+  sel_col1_row3_col1_row1 = WIDGET_BASE(sel_col1_row3_col1,$
+  /ROW)
+  
+  fld1 = CW_FIELD(sel_col1_row3_col1_row1,$
+  VALUE = '',$
+  UNAME = 'selection_pixelid',$
+  /LONG,$
+  TITLE = 'PixelID')
+  
+  fld2 = CW_FIELD(sel_col1_row3_col1_row1,$
+  VALUE = '',$
+  UNAME = 'selection_bank',$
+  /INTEGER,$
+  TITLE = 'Bank')
+    
+  sel_col1_row3_col1_row2 = WIDGET_BASE(sel_col1_row3_col1,$
+  /ROW)
+  
+  fld1 = CW_FIELD(sel_col1_row3_col1_row2,$
+  VALUE = '',$
+  UNAME = 'selection_tube',$
+  /LONG,$
+  TITLE = 'Tube')
+  
+  fld2 = CW_FIELD(sel_col1_row3_col1_row2,$
+  VALUE = '',$
+  UNAME = 'selection_row',$
+  /INTEGER,$
+  TITLE = 'Row')
+    
+  sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................
+    /COLUMN)
+    
+    
+    
+    
+    
+    
+    
+    
     
   WIDGET_CONTROL, wBase, /REALIZE
   
