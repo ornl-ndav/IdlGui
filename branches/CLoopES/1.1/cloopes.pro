@@ -83,7 +83,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = PTR_NEW ({ $
     PrevReduceTabSelect: 0,$
     
-    path: '~/',$
+    path: '~/results/',$
     old_input_text: PTR_NEW(0L),$
     old_help_text1: '',$
     old_help_text2: '',$

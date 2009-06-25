@@ -206,14 +206,14 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
     UNAME = 'tab2_refresh_table_uname',$
-    XSIZE = 380,$
+    XSIZE = 330,$
     SENSITIVE = 0)
     
   button2 = WIDGET_BUTTON(row3,$
-  VALUE = 'SAVE COMMNAND LINE ...',$
+  VALUE = 'PREVIEW / SAVE COMMNAND LINE ...',$
   UNAME = 'tab2_save_command_line',$
-  XSIZE = 200, $
-  SENSITIVE = 0)  
+  XSIZE = 250, $
+  SENSITIVE = 1) ;remove_me and put back 0  
     
   save_temperature = WIDGET_BUTTON(row3,$
   VALUE = 'Save Temperature ...',$

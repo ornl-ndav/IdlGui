@@ -32,12 +32,119 @@
 ;
 ;==============================================================================
 
-PRO save_command_line, Event, CMD=cmd
+PRO save_command_line_event, Event
+  print, 'in save_command_line_event"
+END
 
-;display base that ask user to define the 
+;------------------------------------------------------------------------------
+PRO save_command_line_build_gui, wBase, $
+    main_base_geometry, $
+    output_path = output_path
+    
+  main_base_xoffset = main_base_geometry.xoffset
+  main_base_yoffset = main_base_geometry.yoffset
+  main_base_xsize = main_base_geometry.xsize
+  main_base_ysize = main_base_geometry.ysize
+  
+  ; xsize = 500
+  ; ysize = 300
+  xoffset = main_base_xoffset + main_base_xsize/2
+  yoffset = main_base_yoffset + main_base_ysize/2
+  
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'Save Command Line ...',$
+    UNAME        = 'save_command_line_base_uname',$
+    XOFFSET      = xoffset,$
+    YOFFSET      = yoffset,$
+    MAP          = 1,$
+    /BASE_ALIGN_CENTER,$
+    GROUP_LEADER = ourGroup,$
+    /COLUMN)
+    
+  ;browse
+  browse = WIDGET_BUTTON(wBase,$
+    VALUE = 'Browse ...',$
+    XSIZE = 400,$
+    UNAME = 'save_command_line_browse_button')
+    
+  ;or
+  or_label = WIDGET_LABEL(wBase,$
+    VALUE = 'OR')
+    
+  ;path
+  path = WIDGET_BUTTON(wBase,$
+    VALUE = output_path,$
+    XSIZE = 400,$
+    UNAME = 'save_command_line_path_button')
+    
+  ;file name row
+  rowa = WIDGET_BASE(wBase,$
+    /ROW)
+    
+  label = WIDGET_LABEL(rowa,$
+    VALUE = 'File Name:')
+    
+  text = WIDGET_TEXT(rowa,$
+    VALUE = output_file_name,$
+    UNAME = 'save_command_line_file_name',$
+    /EDITABLE,$
+    /ALL_EVENTS,$
+    XSIZE = 52)
+    
+  ;space
+  space = WIDGET_LABEL(wBase,$
+    VALUE = '')
+    
+  ;cancel and ok buttons
+  row2 = WIDGET_BASE(wBase,$
+    /ROW)
+    
+  cancel = WIDGET_BUTTON(row2,$
+    VALUE = 'CANCEL',$
+    UNAME = 'save_command_line_cancel_button')
+    
+  space = WIDGET_LABEL(row2,$
+    VALUE = '      ')
+    
+  preview = WIDGET_BUTTON(row2,$
+    VALUE = '   PREVIEW   ',$
+    UNAME = 'save_command_line_preview_button',$
+    SENSITIVE = 0)
+    
+  space = WIDGET_LABEL(row2,$
+    VALUE = '      ')
+    
+  ok = WIDGET_BUTTON(row2,$
+    VALUE = '  CREATE TEMPERATURE FILE  ',$
+    UNAME = 'save_temperature_ok_button',$
+    SENSITIVE = 1)
+    
+  WIDGET_CONTROL, wBase, /REALIZE
+  
+END
 
+;------------------------------------------------------------------------------
+PRO save_command_line, main_event, CMD=cmd
 
-
-
-
+  id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  
+  ;get global structure
+  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+  
+  ;build gui
+  wBase = ''
+  save_command_line_build_gui, wBase, $
+    main_base_geometry, $
+    output_path=(*global).path
+    
+  global_cl = PTR_NEW({ wbase: wbase,$
+    cmd: cmd,$
+    main_event: main_event})
+    
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_cl
+  XMANAGER, "save_command_line", wBase, $
+    GROUP_LEADER = ourGroup, /NO_BLOCK
+    
 END
