@@ -473,18 +473,17 @@ PRO check_tab2_run_jobs_button, Event
   
   ;check that all the files exist and temperature defined
   index = 0
-  ;  WHILE (index LT sz AND $
-  ;    STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-  ;    IF (~FILE_TEST(table[0,index])) THEN BEGIN
-  ;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-  ;      RETURN
-  ;    ENDIF
-  ;    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-  ;      activate_widget, Event, 'tab2_run_jobs_uname', 0
-  ;      RETURN
-  ;    ENDIF
-  ;    index++
-  ;  ENDWHILE
+  WHILE (index LT sz) DO BEGIN
+    IF (~FILE_TEST(table[0,index])) THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    index++
+  ENDWHILE
   
   ;check that there is an output file name
   output_file_name = getTextFieldValue(Event,$
@@ -507,6 +506,7 @@ PRO check_tab2_run_jobs_button, Event
   ENDIF
   
   activate_widget, Event, 'tab2_run_jobs_uname', 1
+  activate_widget, Event, 'tab2_save_command_line', 1
   
 END
 
