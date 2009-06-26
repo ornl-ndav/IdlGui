@@ -32,6 +32,34 @@
 ;
 ;==============================================================================
 
+;------------------------------------------------------------------------------
+FUNCTION save_command_line_save_button, Event
+
+  file_name = getTextFieldValue(event,'save_command_line_file_name')
+  path = getButtonValue(Event, 'save_command_line_path_button')
+  output_file_name = path + file_name
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_cl
+  
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+  ENDIF ELSE BEGIN
+  
+    cmd = (*global_cl).cmd
+    OPENW, 1, output_file_name
+    PRINTF, 1, cmd
+    CLOSE, 1
+    FREE_LUN, 1
+    RETURN, 1
+    
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
 PRO save_command_line_event, Event
 
   ;get global structure
@@ -64,6 +92,32 @@ PRO save_command_line_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='save_command_line_preview_button'): BEGIN
       save_command_line_preview_button, Event
+    END
+    
+    ;save command
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='save_command_line_ok_button'): BEGIN
+      result = save_command_line_save_button(Event)
+      file_name = getTextFieldValue(event,'save_command_line_file_name')
+      path = getButtonValue(Event, 'save_command_line_path_button')
+      full_file_name = path + file_name
+      message_text = STRARR(2)
+      IF (result EQ 1) THEN BEGIN
+        message_text[0] = 'Copy of Command Line as been created with success'
+        message_text[1] = 'in ' + full_file_name
+        answer = DIALOG_MESSAGE(message_text,$
+          /INFORMATION, $
+          TITLE='Command Line File Status')
+        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_command_line_base_uname')
+        WIDGET_CONTROL, id, /DESTROY
+      ENDIF ELSE BEGIN
+        message_text[0] = 'Copy of Command Line in ' + full_file_name
+        message_text[1] = 'FAILED !'
+        answer = DIALOG_MESSAGE(message_text,$
+          /ERROR, $
+          TITLE='Command Line File Status')
+      ENDELSE
+      
     END
     
     ELSE:
@@ -121,8 +175,11 @@ PRO save_command_line_preview_button, Event
   XDISPLAYFILE, full_file_name, $
     TEXT=cmd, $
     /EDITABLE, $
-    DONE_BUTTON= 'Done with ' + file_name
+    DONE_BUTTON= 'Done with ' + file_name[0]
     
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_command_line_base_uname')
+  WIDGET_CONTROL, id, /DESTROY
+  
 END
 
 ;------------------------------------------------------------------------------
