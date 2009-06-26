@@ -76,34 +76,34 @@ PRO MAIN_BASE_event, Event
     
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
-      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-        getXYposition, Event ;_get
-        IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-          putCountsValue, Event, Event.x/8., Event.y/8. ;_put
-        ENDIF ELSE BEGIN
-          putCountsValue, Event, Event.x/2., Event.y/2. ;_put
-        ENDELSE
-      ENDIF
-      IF (Event.press EQ 1) THEN BEGIN
-        IF ((*global).facility EQ 'LENS') THEN BEGIN
-          IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-            X = Event.x/8.
-            Y = Event.y/8.
-          ENDIF ELSE BEGIN
-            X = Event.x/2.
-            Y = Event.y/2.
-          ENDELSE
-        ENDIF ELSE BEGIN ;'SNS'
-          X = Event.x / (*global).congrid_x_coeff
-          Y = Event.y / (*global).congrid_y_coeff
-        ENDELSE
-        putTextFieldValue, Event, $
-          'x_center_value', $
-          STRCOMPRESS(X)
-        putTextFieldValue, Event, $
-          'y_center_value', $
-          STRCOMPRESS(Y)
-      ENDIF
+;      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+;        getXYposition, Event ;_get
+;        IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+;          putCountsValue, Event, Event.x/8., Event.y/8. ;_put
+;        ENDIF ELSE BEGIN
+;          putCountsValue, Event, Event.x/2., Event.y/2. ;_put
+;        ENDELSE
+;      ENDIF
+;      IF (Event.press EQ 1) THEN BEGIN
+;        IF ((*global).facility EQ 'LENS') THEN BEGIN
+;          IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+;            X = Event.x/8.
+;            Y = Event.y/8.
+;          ENDIF ELSE BEGIN
+;            X = Event.x/2.
+;            Y = Event.y/2.
+;          ENDELSE
+;        ENDIF ELSE BEGIN ;'SNS'
+;          X = Event.x / (*global).congrid_x_coeff
+;          Y = Event.y / (*global).congrid_y_coeff
+;        ENDELSE
+;        putTextFieldValue, Event, $
+;          'x_center_value', $
+;          STRCOMPRESS(X)
+;        putTextFieldValue, Event, $
+;          'y_center_value', $
+;          STRCOMPRESS(Y)
+;      ENDIF
     END
     
     ;-Linear of Logarithmic scale
