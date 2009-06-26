@@ -154,8 +154,7 @@ PRO MAIN_BASE_event, Event
     
     ;save command line
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_save_command_line'): BEGIN
-      ;cmd = create_cmd(Event)
-      cmd = ''
+      cmd = create_cmd(Event)
       save_command_line, Event, cmd=cmd
     END
     

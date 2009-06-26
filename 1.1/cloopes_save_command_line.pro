@@ -54,6 +54,11 @@ PRO save_command_line_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
+    ;preview button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='save_command_line_preview_button'): BEGIN
+      save_command_line_preview_button, Event
+    END
     
     ELSE:
     
@@ -80,7 +85,7 @@ PRO save_command_line_browse, Event
   IF (file[0] NE '') THEN BEGIN
   
     IF (new_path NE path ) THEN global.path = new_path
-      
+    
     ;file dir
     putButtonValue, Event, 'save_command_line_path_button', new_path
     
@@ -92,6 +97,26 @@ PRO save_command_line_browse, Event
     check_command_line_ok_button, Event
     
   ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_command_line_preview_button, Event
+
+  file_name = getTextFieldValue(event,'save_command_line_file_name')
+  path = getButtonValue(Event, 'save_command_line_path_button')
+  full_file_name = path + file_name
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_cl
+  
+ cmd = (*global_cl).cmd 
+  help, cmd
+  print, cmd
+  
+  
+  XDISPLAYFILE, full_file_name, TEXT=cmd, /EDITABLE
+  
   
 END
 
@@ -109,9 +134,9 @@ PRO check_command_line_ok_button, Event
   path = getButtonValue(Event, 'save_command_line_path_button')
   full_file_name = path + file_name
   IF (FILE_TEST(full_file_name)) THEN BEGIN
-  status = 1
+    status = 1
   ENDIF ELSE BEGIN
-  status = 0
+    status = 0
   ENDELSE
   activate_widget, Event, 'save_command_line_preview_button', status
   
@@ -182,22 +207,22 @@ PRO save_command_line_build_gui, wBase, $
     /ROW)
     
   cancel = WIDGET_BUTTON(row2,$
-    VALUE = 'CANCEL',$
+    VALUE = '  CANCEL  ',$
     UNAME = 'save_command_line_cancel_button')
     
   space = WIDGET_LABEL(row2,$
-    VALUE = '      ')
+    VALUE = '     ')
     
   preview = WIDGET_BUTTON(row2,$
-    VALUE = '   PREVIEW   ',$
+    VALUE = '    EDIT/SAVE   ',$
     UNAME = 'save_command_line_preview_button',$
     SENSITIVE = 0)
     
   space = WIDGET_LABEL(row2,$
-    VALUE = '      ')
+    VALUE = '    ')
     
   ok = WIDGET_BUTTON(row2,$
-    VALUE = '  CREATE TEMPERATURE FILE  ',$
+    VALUE = '   SAVE   ',$
     UNAME = 'save_command_line_ok_button',$
     SENSITIVE = 0)
     
