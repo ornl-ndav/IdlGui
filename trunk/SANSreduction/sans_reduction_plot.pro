@@ -42,7 +42,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
   FAILED     = (*global).failed
   
   retrieve_error = 0
-  CATCH, retrieve_error
+  ;CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -61,19 +61,86 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
       
     ENDIF ELSE BEGIN
     
-      DataArray1 = LINDGEN(10,192,256)
-      DataArray2 = LINDGEN(10,192,256)+300
-      (*(*global).bank1) = DataArray1
-      (*(*global).bank2) = DataArray2
-      
-      ;      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-      ;        FullNexusName,$
-      ;        NbrBank = 1,$
-      ;        BankData = 'bank1')
-      ;      DataArray1 = *(sInstance->getData())
+      ;      DataArray1 = LINDGEN(10,192,256)
+      ;      DataArray2 = LINDGEN(10,192,256)+300
       ;      (*(*global).bank1) = DataArray1
-      ;      OBJ_DESTROY, sInstance
-      ;
+      ;      (*(*global).bank2) = DataArray2
+    
+      ;get first front rack
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank1')
+      DataArray1 = *(sInstance->getData())
+      OBJ_DESTROY, sInstance
+      
+      ;get size of array
+      sz = size(DataArray1)
+      nbr_tof   = sz[1]
+      nbr_pixel = sz[2]
+      nbr_tube  = 96
+      
+      front_bank = LONARR(nbr_tof, nbr_pixel, nbr_tube)
+      back_bank  = LONARR(nbr_tof, nbr_pixel, nbr_tube)
+      front_and_back_bank = LONARR(nbr_tof, nbr_pixel, 2*nbr_tube)
+      
+      front_bank[*,*,0:3] = DataArray1
+      front_and_back_bank[*,*,0:3] = DataArray1
+      
+      ;get first rack
+      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+        FullNexusName,$
+        NbrBank = 1,$
+        BankData = 'bank2')
+      DataArray = *(sInstance->getData())
+      OBJ_DESTROY, sInstance
+      
+      back_bank[*,*,0:3] = DataArray
+      front_and_back_bank[*,*,4:7] = DataArray
+      
+      rack_index = 3
+      tube_index = 1
+      full_tube_index = 2
+      WHILE(rack_index LT 48) DO BEGIN
+      
+        bank_name = 'bank' + strcompress(rack_index,/REMOVE_ALL)
+        sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+          FullNexusName,$
+          NbrBank = 1,$
+          BankData = bank_name)
+        DataArray = *(sInstance->getData())
+        OBJ_DESTROY, sInstance
+        
+        start_index = tube_index * 4
+        end_index   = tube_index * 4 + 3
+        front_bank[*,*,start_index:end_index] = DataArray
+        full_start_index = full_tube_index * 4
+        full_end_index = full_tube_index * 4 + 3
+        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
+        rack_index++
+        full_tube_index++
+        
+        bank_name = 'bank' + strcompress(rack_index,/REMOVE_ALL)
+        sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+          FullNexusName,$
+          NbrBank = 1,$
+          BankData = bank_name)
+        DataArray = *(sInstance->getData())
+        OBJ_DESTROY, sInstance
+        
+        start_index = tube_index * 4
+        end_index   = tube_index * 4 + 3
+        back_bank[*,*,start_index:end_index] = DataArray
+        full_start_index = full_tube_index * 4
+        full_end_index = full_tube_index * 4 + 3
+        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
+        full_tube_index++
+        rack_index++
+        
+        tube_index++
+        
+      ENDWHILE
+      
       ;      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
       ;        FullNexusName,$
       ;        NbrBank = 1,$
@@ -81,8 +148,11 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
       ;      DataArray2 = *(sInstance->getData())
       ;      OBJ_DESTROY, sInstance
       ;      (*(*global).bank2) = DataArray2
-      
-      DataArray = DataArray1 + DataArray2
+      ;
+      ;      help, DataArray2
+      ;
+      ;DataArray = DataArray1 + DataArray2
+      DataArray = front_and_back_bank
       
     ENDELSE
     
@@ -108,7 +178,7 @@ FUNCTION plotData, Event, DataArray, X, Y
     (*(*global).img) = tDataXY
     ;Check if rebin is necessary or not
     IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
-      
+    
       IF (X EQ 80) THEN BEGIN
         xysize = 8
         Xpixel = 80L
@@ -128,7 +198,7 @@ FUNCTION plotData, Event, DataArray, X, Y
       
       draw_x = (*global).draw_x
       draw_y = (*global).draw_y
-            
+      
       rtDataXY = CONGRID(tDataXY, draw_x, draw_y)
       
       (*global).congrid_x_coeff = FLOAT(draw_x) / FLOAT(x)
