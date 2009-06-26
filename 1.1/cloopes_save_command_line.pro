@@ -33,7 +33,26 @@
 ;==============================================================================
 
 PRO save_command_line_event, Event
-  print, 'in save_command_line_event"
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  wWidget =  Event.top            ;widget id
+  
+  CASE Event.id OF
+  
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='save_command_line_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_command_line_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    
+    ELSE:
+    
+  ENDCASE
+  
+  
 END
 
 ;------------------------------------------------------------------------------
