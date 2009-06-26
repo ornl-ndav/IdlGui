@@ -47,6 +47,12 @@ PRO save_command_line_event, Event
       save_command_line_browse, Event
     END
     
+    ;widget_text
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='save_command_line_file_name'): BEGIN
+      check_command_line_ok_button, Event
+    END
+    
     ;cancel button
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='save_command_line_cancel_button'): BEGIN
@@ -106,18 +112,17 @@ PRO save_command_line_preview_button, Event
   file_name = getTextFieldValue(event,'save_command_line_file_name')
   path = getButtonValue(Event, 'save_command_line_path_button')
   full_file_name = path + file_name
-
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_cl
   
- cmd = (*global_cl).cmd 
-  help, cmd
-  print, cmd
+  cmd = (*global_cl).cmd
   
-  
-  XDISPLAYFILE, full_file_name, TEXT=cmd, /EDITABLE
-  
-  
+  XDISPLAYFILE, full_file_name, $
+    TEXT=cmd, $
+    /EDITABLE, $
+    DONE_BUTTON= 'Done with ' + file_name
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -130,14 +135,6 @@ PRO check_command_line_ok_button, Event
     status = 0
   ENDELSE
   activate_widget, Event, 'save_command_line_ok_button', status
-  
-  path = getButtonValue(Event, 'save_command_line_path_button')
-  full_file_name = path + file_name
-  IF (FILE_TEST(full_file_name)) THEN BEGIN
-    status = 1
-  ENDIF ELSE BEGIN
-    status = 0
-  ENDELSE
   activate_widget, Event, 'save_command_line_preview_button', status
   
 END
