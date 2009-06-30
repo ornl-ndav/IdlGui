@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-FUNCTION retrieveData, Event, FullNexusName, DataArray
+FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -61,11 +61,6 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
       
     ENDIF ELSE BEGIN
     
-      ;      DataArray1 = LINDGEN(10,192,256)
-      ;      DataArray2 = LINDGEN(10,192,256)+300
-      ;      (*(*global).bank1) = DataArray1
-      ;      (*(*global).bank2) = DataArray2
-    
       ;get first front rack
       sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
         FullNexusName,$
@@ -80,30 +75,30 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
       nbr_pixel = sz[2]
       nbr_tube  = 96
       
-      front_bank = LONARR(nbr_tof, nbr_pixel, nbr_tube)
-      back_bank  = LONARR(nbr_tof, nbr_pixel, nbr_tube)
-      front_and_back_bank = LONARR(nbr_tof, nbr_pixel, 2*nbr_tube)
+      front_bank = DBLARR(nbr_tof, nbr_pixel, nbr_tube)
+      back_bank  = DBLARR(nbr_tof, nbr_pixel, nbr_tube)
+      front_and_back_bank = DBLARR(nbr_tof, nbr_pixel, 2*nbr_tube)
       
       front_bank[*,*,0:3] = DataArray1
-      front_and_back_bank[*,*,0:3] = DataArray1
       
-      ;get first rack
+      ;get first back rack
       sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
         FullNexusName,$
         NbrBank = 1,$
-        BankData = 'bank2')
+        BankData = 'bank24')
       DataArray = *(sInstance->getData())
       OBJ_DESTROY, sInstance
       
       back_bank[*,*,0:3] = DataArray
-      front_and_back_bank[*,*,4:7] = DataArray
       
-      rack_index = 3
+      rack_index_front = 2
+      rack_back_offset = 23
       tube_index = 1
-      full_tube_index = 2
-      WHILE(rack_index LT 48) DO BEGIN
+      WHILE(rack_index_front LT 24) DO BEGIN
       
-        bank_name = 'bank' + strcompress(rack_index,/REMOVE_ALL)
+        print, 'rack_index_front'
+      
+        bank_name = 'bank' + strcompress(rack_index_front,/REMOVE_ALL)
         sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
           FullNexusName,$
           NbrBank = 1,$
@@ -114,13 +109,13 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
         start_index = tube_index * 4
         end_index   = tube_index * 4 + 3
         front_bank[*,*,start_index:end_index] = DataArray
-        full_start_index = full_tube_index * 4
-        full_end_index = full_tube_index * 4 + 3
-        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
-        rack_index++
-        full_tube_index++
+        ;        full_start_index = full_tube_index * 4
+        ;        full_end_index = full_tube_index * 4 + 3
+        ;        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
+        ;       full_tube_index++
         
-        bank_name = 'bank' + strcompress(rack_index,/REMOVE_ALL)
+        bank_name = 'bank' + strcompress(rack_index_front+$
+          rack_back_offset,/REMOVE_ALL)
         sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
           FullNexusName,$
           NbrBank = 1,$
@@ -128,35 +123,34 @@ FUNCTION retrieveData, Event, FullNexusName, DataArray
         DataArray = *(sInstance->getData())
         OBJ_DESTROY, sInstance
         
-        start_index = tube_index * 4
-        end_index   = tube_index * 4 + 3
         back_bank[*,*,start_index:end_index] = DataArray
-        full_start_index = full_tube_index * 4
-        full_end_index = full_tube_index * 4 + 3
-        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
-        full_tube_index++
-        rack_index++
+        ;        full_start_index = full_tube_index * 4
+        ;        full_end_index = full_tube_index * 4 + 3
+        ;        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
+        ;        full_tube_index++
         
+        rack_index_front++
         tube_index++
-        
+
       ENDWHILE
       
-      ;      sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
-      ;        FullNexusName,$
-      ;        NbrBank = 1,$
-      ;        BankData = 'bank2')
-      ;      DataArray2 = *(sInstance->getData())
-      ;      OBJ_DESTROY, sInstance
-      ;      (*(*global).bank2) = DataArray2
-      ;
-      ;      help, DataArray2
-      ;
-      ;DataArray = DataArray1 + DataArray2
-      DataArray = front_and_back_bank
+      ;create big array (front and back)
+      index = 0L
+      index_front = 0
+      while (index LT 2L*4L*24L) DO BEGIN
+        front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+        index ++
+        front_and_back_bank[*,*,index] = back_bank[*,*,index_front]
+        index ++
+        index_front++
+      ENDWHILE
+      
+    DataArrayResult = front_and_back_bank
       
     ENDELSE
     
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    
   ENDELSE
   RETURN,1
 END
