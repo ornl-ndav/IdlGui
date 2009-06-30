@@ -8,6 +8,7 @@ cd, IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run logger.pro
 .run checking_packages.pro
+.run showprogress__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

@@ -61,6 +61,29 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       
     ENDIF ELSE BEGIN
     
+      Nstep  = FLOAT(48) ;number of steps
+      step   = 0
+      progressBarCancel = 0
+      progressBar = OBJ_NEW("SHOWPROGRESS", $
+        XOFFSET = 100, $
+        YOFFSET = 50, $
+        XSIZE   = 200,$
+        TITLE   = 'Loading Data',$
+        /CANCELBUTTON)
+      progressBar->SetColor, 250
+      title = 'Retrieving Data ... '
+      progressBar->SetLabel, title + '(bank 1/48)'
+      progressBar->Start
+      
+      ;progressBarcancel = progressBar->CheckCancel()
+      ;IF (progressBarCancel) THEN RETURN, 0
+      IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
+        progressBarCancel = 1
+        progressBar->Destroy
+        OBJ_DESTROY, progressBar
+        RETURN, 0
+      ENDIF
+      
       ;get first front rack
       sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
         FullNexusName,$
@@ -81,24 +104,48 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       
       front_bank[*,*,0:3] = DataArray1
       
+      ;progressBarcancel = progressBar->CheckCancel()
+      ;IF (progressBarCancel) THEN RETURN, 0
+      IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
+        progressBarCancel = 1
+        progressBar->Destroy
+        OBJ_DESTROY, progressBar
+        RETURN, 0
+      ENDIF ELSE BEGIN
+        progressBar->SetLabel, title + '(bank 2/48)'
+      ENDELSE
+      
       ;get first back rack
       sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
         FullNexusName,$
         NbrBank = 1,$
-        BankData = 'bank24')
+        BankData = 'bank25')
       DataArray = *(sInstance->getData())
       OBJ_DESTROY, sInstance
       
       back_bank[*,*,0:3] = DataArray
       
       rack_index_front = 2
-      rack_back_offset = 23
+      rack_back_offset = 24
       tube_index = 1
-      WHILE(rack_index_front LT 24) DO BEGIN
+      WHILE(rack_index_front LT 25) DO BEGIN
       
-        print, 'rack_index_front'
+        ;work with front banks
       
         bank_name = 'bank' + strcompress(rack_index_front,/REMOVE_ALL)
+        ;progressBarcancel = progressBar->CheckCancel()
+        ;IF (progressBarCancel) THEN RETURN, 0
+        IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
+          progressBarCancel = 1
+          progressBar->Destroy
+          OBJ_DESTROY, progressBar
+          RETURN, 0
+        ENDIF ELSE BEGIN
+          bank_title = '(bank ' + strcompress(2*rack_index_front-1,/REMOVE_ALL) + $
+            '/48)'
+          progressBar->SetLabel, title + bank_title
+        ENDELSE
+        
         sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
           FullNexusName,$
           NbrBank = 1,$
@@ -109,13 +156,24 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         start_index = tube_index * 4
         end_index   = tube_index * 4 + 3
         front_bank[*,*,start_index:end_index] = DataArray
-        ;        full_start_index = full_tube_index * 4
-        ;        full_end_index = full_tube_index * 4 + 3
-        ;        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
-        ;       full_tube_index++
+        
+        ;work with back banks
         
         bank_name = 'bank' + strcompress(rack_index_front+$
           rack_back_offset,/REMOVE_ALL)
+        ;progressBarcancel = progressBar->CheckCancel()
+        ;IF (progressBarCancel) THEN RETURN, 0
+        IF (UpdateProgressBar(progressBar,(FLOAT(++step)/Nstep)*100)) THEN BEGIN
+          progressBarCancel = 1
+          progressBar->Destroy
+          OBJ_DESTROY, progressBar
+          RETURN, 0
+        ENDIF ELSE BEGIN
+          bank_title = '(bank ' + strcompress(2*rack_index_front,/REMOVE_ALL) + $
+            '/48)'
+          progressBar->SetLabel, title + bank_title
+        ENDELSE
+        
         sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
           FullNexusName,$
           NbrBank = 1,$
@@ -124,15 +182,15 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         OBJ_DESTROY, sInstance
         
         back_bank[*,*,start_index:end_index] = DataArray
-        ;        full_start_index = full_tube_index * 4
-        ;        full_end_index = full_tube_index * 4 + 3
-        ;        front_and_back_bank[*,*,full_start_index:full_end_index] = DataArray
-        ;        full_tube_index++
         
         rack_index_front++
         tube_index++
-
+        
+        print
+        
       ENDWHILE
+      
+      progressBar->SetLabel, 'Plotting data ...'
       
       ;create big array (front and back)
       index = 0L
@@ -145,7 +203,11 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         index_front++
       ENDWHILE
       
-    DataArrayResult = front_and_back_bank
+      DataArrayResult = front_and_back_bank
+      ;      DataArrayResult = back_bank
+      
+      progressBar->Destroy
+      OBJ_DESTROY, progressBar
       
     ENDELSE
     
