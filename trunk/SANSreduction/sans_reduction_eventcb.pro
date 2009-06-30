@@ -75,11 +75,35 @@ PRO retrieveNexus, Event, FullNexusName
     (*global).data_nexus_file_name = ''
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
   ENDIF ELSE BEGIN
+    (*global).data_nexus_file_name = FullNexusName
     sz_array = size(DataArray)
     Ntof     = (sz_array)(1)
     Y        = (sz_array)(2)
     X        = (sz_array)(3)
-    (*(*global).DataArray) = DataArray
+    
+    IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
+    
+      (*(*global).DataArray) = DataArray
+    
+    ENDIF ELSE BEGIN ;SNS
+      
+      CASE (is_front_back_or_both_plot(Event)) OF
+        'front': BEGIN
+          (*(*global).DataArray) = (*(*global).front_bank)
+          DataArray = (*(*global).front_bank)
+        END
+        'back' : BEGIN
+          (*(*global).DataArray) = (*(*global).back_bank)
+          DataArray = (*(*global).back_bank)
+        END
+        'both': BEGIN
+          (*(*global).DataArray) = (*(*global).both_banks)
+          DataArray = (*(*global).both_banks)
+        END
+      ENDCASE
+      
+    ENDELSE
+    
     (*global).X = X
     (*global).Y = Y
     IDLsendToGeek_addLogBookText, Event, '--> X    : ' + $

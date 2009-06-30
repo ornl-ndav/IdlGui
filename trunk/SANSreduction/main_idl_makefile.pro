@@ -9,6 +9,7 @@ cd, IdlUtilitiesPath
 .run logger.pro
 .run checking_packages.pro
 .run showprogress__define.pro
+.run is.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

@@ -186,8 +186,6 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         rack_index_front++
         tube_index++
         
-        print
-        
       ENDWHILE
       
       progressBar->SetLabel, 'Plotting data ...'
@@ -203,8 +201,11 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         index_front++
       ENDWHILE
       
+      (*(*global).back_bank) = back_bank
+      (*(*global).front_bank) = front_bank
+      (*(*global).both_banks) = front_and_back_bank
+      
       DataArrayResult = front_and_back_bank
-      ;      DataArrayResult = back_bank
       
       progressBar->Destroy
       OBJ_DESTROY, progressBar
@@ -248,7 +249,6 @@ FUNCTION plotData, Event, DataArray, X, Y
       
     ENDIF ELSE BEGIN ;SNS
     
-      help, tDataXY
       x = (size(tDataXY))(1)
       y = (size(tDataXY))(2)
       
@@ -356,12 +356,21 @@ PRO refresh_plot, Event ;_plot
   ;  ENDIF
   
   ;retrieve parameters from global pointer
-  X         = (*global).X
-  IF (X NE 0) THEN BEGIN
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+    X         = (*global).X
+    IF (X NE 0) THEN BEGIN
+      DataArray = (*(*global).DataArray)
+      Y         = (*global).Y
+    ENDIF
+    result = plotData(Event, DataArray, X, Y)
+    
+  ENDIF ELSE BEGIN ;SNS
+  
     DataArray = (*(*global).DataArray)
-    Y         = (*global).Y
-  ENDIF
-  result = plotData(Event, DataArray, X, Y)
+    result = plotData(Event, DataArray, 1, 1)
+    
+  ENDELSE
+  
   ;turn off hourglass
   widget_control,hourglass=0
   

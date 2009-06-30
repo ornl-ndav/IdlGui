@@ -112,8 +112,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     instrument_flag: '--inst',$
     instrument: instrument,$
     
-    bank1: PTR_NEW(0L),$
-    bank2: PTR_NEW(0L),$
+    back_bank: PTR_NEW(0L),$
+    front_bank: PTR_NEW(0L),$
+    both_banks: PTR_NEW(0L),$
+
     congrid_x_coeff: 1.,$
     congrid_y_coeff: 1.,$
     
