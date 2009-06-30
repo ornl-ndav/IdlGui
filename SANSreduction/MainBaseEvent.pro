@@ -85,6 +85,11 @@ PRO MAIN_BASE_event, Event
             putCountsValue, Event, Event.x/2., Event.y/2. ;_put
           ENDELSE
         ENDIF ELSE BEGIN
+          CATCH, error
+          IF (error NE 0) THEN BEGIN
+          CATCH,/CANCEL
+          RETURN
+          ENDIF
           putCountsValue, Event, $
             Event.x/(*global).congrid_x_coeff,$
             Event.y/(*global).congrid_y_coeff

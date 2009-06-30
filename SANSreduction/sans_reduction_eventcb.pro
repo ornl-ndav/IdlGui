@@ -72,6 +72,7 @@ PRO retrieveNexus, Event, FullNexusName
   ;retrieving data from NeXus file
   retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
   IF (retrieveStatus EQ 0) THEN BEGIN
+    (*global).data_nexus_file_name = ''
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
   ENDIF ELSE BEGIN
     sz_array = size(DataArray)
@@ -172,8 +173,14 @@ PRO browse_nexus, Event
       uname_list = [uname_list,$
         'selection_tool_button']
     ENDIF
-    activate_widget_list, Event, uname_list, 1
-    (*global).data_nexus_file_name = FullNexusName
+    
+    IF ((*global).data_nexus_file_name EQ '') THEN BEGIN
+      status = 0
+    ENDIF ELSE BEGIN
+      status = 1
+      (*global).data_nexus_file_name = FullNexusName
+    ENDELSE
+    activate_widget_list, Event, uname_list, status
   ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
@@ -263,7 +270,15 @@ PRO load_run_number, Event
         uname_list = [uname_list,$
           'selection_tool_button']
       ENDIF
-      activate_widget_list, Event, uname_list, 1
+      
+      IF ((*global).data_nexus_file_name EQ '') THEN BEGIN
+        status = 0
+      ENDIF ELSE BEGIN
+        status = 1
+        (*global).data_nexus_file_name = FullNexusName
+      ENDELSE
+      activate_widget_list, Event, uname_list, status
+      
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
       IDLsendToGeek_addLogBookText, Event, message
