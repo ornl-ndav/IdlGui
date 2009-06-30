@@ -44,7 +44,7 @@ WHILE (no_more_banks NE 1) DO BEGIN
         CATCH,/CANCEL
         RETURN, (bank_nbr-1)
     ENDIF ELSE BEGIN
-        pathID     = h5d_open(fileID, banks_path)
+        pathID = h5d_open(fileID, banks_path)
         h5d_close, pathID
         ++bank_nbr
     ENDELSE
@@ -86,18 +86,18 @@ ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
 ENDELSE
 
-IF (n_elements(Instrument) NE 0) THEN BEGIN
-    IF (Instrument EQ 'ARCS') THEN BEGIN
-        self.bank_number = 115
-    ENDIF ELSE BEGIN
-        self.bank_number = getNumberOfBanks(fileID)
-    ENDELSE
-ENDIF ELSE BEGIN
-    IF (n_elements(NbrBank) NE 0) THEN BEGIN
-;get NumberOfBanks
-        self.bank_number = getNumberOfBanks(fileID)
-    ENDIF
-ENDELSE
+;IF (n_elements(Instrument) NE 0) THEN BEGIN
+;    IF (Instrument EQ 'ARCS') THEN BEGIN
+;        self.bank_number = 115
+;    ENDIF ELSE BEGIN
+;        self.bank_number = getNumberOfBanks(fileID)
+;    ENDELSE
+;ENDIF ELSE BEGIN
+;    IF (n_elements(NbrBank) NE 0) THEN BEGIN
+;;get NumberOfBanks
+;        self.bank_number = getNumberOfBanks(fileID)
+;    ENDIF
+;ENDELSE
 
 IF (n_elements(BankData) NE 0) THEN BEGIN
 ;get Bank data
