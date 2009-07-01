@@ -120,7 +120,7 @@ IF (sz EQ 2) THEN BEGIN
     IvsTOF = total(IvsTOF,2)
 ENDIF
 (*(*global3).IvsTOF) = IvsTOF
-plot, IvsTOF
+plot, IvsTOF, FONT='8x13'
 
 id = widget_info(wBase,find_by_uname='preview_draw')
 WIDGET_CONTROL, id, GET_VALUE=id_value
