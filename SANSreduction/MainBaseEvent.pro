@@ -120,6 +120,7 @@ PRO MAIN_BASE_event, Event
     ;-Linear of Logarithmic scale
     WIDGET_INFO(wWidget, FIND_BY_UNAME='z_axis_scale'): BEGIN
       lin_or_log_plot, Event
+      RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Run Number cw_field ----------------------------------------------------
