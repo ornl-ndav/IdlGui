@@ -211,7 +211,7 @@ PRO calculate_average_value, Event
     ENDIF
     
   ENDELSE
-
+  
   (*global1).average = STRING(average)
   
   putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
@@ -311,23 +311,27 @@ PRO replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
         counts_vs_tof_integrated, $
         XTITLE = xtitle,$
         YTITLE = ytitle,$
+        FONT='8x13',$
         /YLOG
     ENDIF ELSE BEGIN
       PLOT, tof_array, $
         counts_vs_tof_integrated, $
         XTITLE = xtitle,$
-        YTITLE = ytitle
+        YTITLE = ytitle,$
+        FONT='8x13'
     ENDELSE
   ENDIF ELSE BEGIN
     IF (lin_log_type EQ 'log') THEN BEGIN
       PLOT, counts_vs_tof_integrated, $
         XTITLE = xtitle,$
         YTITLE = ytitle,$
+        FONT='8x13',$
         /YLOG
     ENDIF ELSE BEGIN
       PLOT, counts_vs_tof_integrated, $
         XTITLE = xtitle,$
-        YTITLE = ytitle
+        YTITLE = ytitle,$
+        FONT='8x13'
     ENDELSE
   ENDELSE
   
@@ -518,11 +522,13 @@ PRO Launch_counts_vs_tof_base, $
     PLOT, tof_array, $
       counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
-      YTITLE = ytitle
+      YTITLE = ytitle,$
+      FONT='8x13'
   ENDIF ELSE BEGIN
     PLOT, counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
-      YTITLE = ytitle
+      YTITLE = ytitle,$
+      FONT='8x13'
   ENDELSE
   
 END
