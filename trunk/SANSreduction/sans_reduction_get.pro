@@ -81,8 +81,8 @@ PRO getXYposition, Event
     ScreenX = x / Xcoeff
     ScreenY = y / Xcoeff
   ENDIF ELSE BEGIN
-    ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff)
-    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff)
+    ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff) + 1
+    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff) + 1
   ENDELSE
   putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
