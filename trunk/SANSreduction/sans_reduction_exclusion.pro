@@ -423,7 +423,11 @@ PRO plotROI, Event, $
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
   
-  IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).DrawXcoeff)
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+    IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).DrawXcoeff)
+  ENDIF ELSE BEGIN
+    IF (N_ELEMENTS(COEFF) EQ 0) THEN  coeff = FLOAT((*global).congrid_x_coeff)
+  ENDELSE
   IF (N_ELEMENTS(DisplayR1) EQ 0) THEN DisplayR1 = (*global).DisplayR1
   IF (N_ELEMENTS(DisplayR2) EQ 0) THEN DisplayR2 = (*global).DisplayR2
   
@@ -468,7 +472,6 @@ PRO plotROI, Event, $
     FOR i=0,(x-1) DO BEGIN
       FOR j=0,(y-1) DO BEGIN
         IF (PixelSelectedArray[i,j] EQ 1) THEN BEGIN
-          print, 'inside'
           plots, i*x_coeff, j*x_coeff, $
             /DEVICE, $
             COLOR=color
