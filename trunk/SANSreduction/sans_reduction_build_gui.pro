@@ -102,8 +102,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     scaling_value: '',$
     build_command_line: 1,$
     
-    draw_x: 640L,$
-    draw_y: 640L,$
+    draw_x: 3*192L,$
+    draw_y: 3*256L,$
     
     facility: facility, $
     facility_list: ['LENS'],$
@@ -115,7 +115,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     back_bank: PTR_NEW(0L),$
     front_bank: PTR_NEW(0L),$
     both_banks: PTR_NEW(0L),$
-
+    
     congrid_x_coeff: 1.,$
     congrid_y_coeff: 1.,$
     
@@ -306,7 +306,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
   MainBaseTitle  = 'SANS Data Reduction GUI'
   MainBaseTitle += ' for ' + facility
-  MainBaseSize   = [30,25,695+320,530+320]
+  IF (facility EQ 'LENS') THEN BEGIN
+    MainBaseSize   = [30,25,695+320,530+320]
+  ENDIF ELSE BEGIN
+    MainBaseSize   = [30,25,695+320,530+390]
+  ENDELSE
   MainBaseTitle += ' - ' + VERSION
   
   (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)

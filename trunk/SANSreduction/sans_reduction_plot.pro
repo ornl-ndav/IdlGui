@@ -42,7 +42,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   FAILED     = (*global).failed
   
   retrieve_error = 0
-  ;CATCH, retrieve_error
+  CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -56,6 +56,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         NbrBank = 1,$
         BankData = 'bank1')
       DataArray = *(sInstance->getData())
+      DataArrayResult = DataArray
       
       OBJ_DESTROY, sInstance
       
@@ -257,8 +258,12 @@ FUNCTION plotData, Event, DataArray, X, Y
       
       rtDataXY = CONGRID(tDataXY, draw_x, draw_y)
       
-      (*global).congrid_x_coeff = FLOAT(draw_x) / FLOAT(x)
-      (*global).congrid_y_coeff = FLOAT(draw_y) / FLOAT(y)
+      congrid_x_coeff = FLOAT(draw_x) / FLOAT(x)
+      congrid_y_coeff = FLOAT(draw_y) / FLOAT(y)
+      congrid_coeff = MIN([congrid_x_coeff,congrid_y_coeff])
+      
+      (*global).congrid_x_coeff = congrid_coeff
+      (*global).congrid_y_coeff = congrid_coeff
       
     ENDELSE
     
