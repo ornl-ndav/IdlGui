@@ -183,7 +183,7 @@ PRO create_cl_array, Event
       ;remove -b
       cmd1 = split_string(new_cmd, PATTERN='--b')
       cl_array[0] = cmd1[0] + ' ' + cmd1[1]
-      (*global).cl_array = cl_array 
+      (*global).cl_array = cl_array
       RETURN
     ENDIF
     
@@ -448,7 +448,7 @@ PRO parse_input_field, Event
   ENDELSE
   activate_widget, Event, 'run_jobs_button', status
   activate_widget, Event, 'preview_jobs_button', status
-    
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -468,7 +468,7 @@ END
 PRO remove_output_file_name, Event
 
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
   ENDIF ELSE BEGIN
@@ -482,12 +482,27 @@ PRO remove_output_file_name, Event
     part2_parsed = split_string(part2, PATTERN='--output=')
     
     ;keep path
-    path = FILE_DIRNAME(part2_parsed[1])
-    path += '/'
+    IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
-    CL_text_array[1] = part2_parsed[0] + ' --output=' + path
-    cl_text_array[1] += (*global).output_suffix
-    (*global).cl_array = CL_text_array
+      path = FILE_DIRNAME(part2_parsed[1])
+      path += '/'
+      
+      part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
+      sz = N_ELEMENTS(part2_2_parsed)
+      IF (sz GT 1) THEN BEGIN
+        new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
+        CL_text_array[1] = part2_parsed[0] + ' ' + new_part
+      ENDIF
+
+      cl_text_array[1] += ' --output=' + path + (*global).output_suffix
+      (*global).cl_array = CL_text_array
+      
+    ENDIF ELSE BEGIN
+    
+      (*global).cl_array = cl_text_array + ' --output=~/results/' +  $
+      (*global).output_suffix
+        
+    ENDELSE
     
   ENDELSE
 END
