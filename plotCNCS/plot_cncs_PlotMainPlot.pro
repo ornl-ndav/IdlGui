@@ -245,6 +245,14 @@ PRO MakeGuiMainPLot_Event, event
       ENDIF
     END
     
+    ;Refresh button -----------------------------------------------------------
+    WIDGET_INFO(event.top, FIND_BY_UNAME='refresh_plot'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      replot_main_plot_with_scale, Event
+      plot_selection_box, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
+    
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;play button
     WIDGET_INFO(event.top, FIND_BY_UNAME='play_button'): BEGIN
