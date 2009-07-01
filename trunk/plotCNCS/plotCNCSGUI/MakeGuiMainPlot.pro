@@ -572,14 +572,6 @@ PRO MakeGuiMainPlot, wBase
   sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................
     /COLUMN)
     
-    
-    
-    
-    
-    
-    
-    
-    
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
