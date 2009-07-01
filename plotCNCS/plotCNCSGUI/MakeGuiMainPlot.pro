@@ -273,9 +273,19 @@ PRO MakeGuiMainPlot, wBase
     /MOTION_EVENTS)
     
   ;---------------------------------------------------------------------------
+  refresh_base = WIDGET_BASE(wBase,$
+  /ROW)
+  
+  refresh = WIDGET_BUTTON(refresh_base,$
+  VALUE = 'R E F R E S H   P L O T',$
+  UNAME = 'refresh_plot')
+  
+  space = WIDGET_LABEL(refresh_base,$
+  VALUE = '                          ')
+  
   message = 'LEFT click to select region of interest for Counts vs TOF plot'
   message += ' - RIGHT click to zoom in into selected bank'
-  row3 = WIDGET_LABEL(wBase,$ ;explain how the selection works
+  row3 = WIDGET_LABEL(refresh_base,$ ;explain how the selection works
     VALUE = message)
     
   ;--------------------------------------------------------------------------
