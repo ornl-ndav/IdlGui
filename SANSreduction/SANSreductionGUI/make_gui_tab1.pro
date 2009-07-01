@@ -43,15 +43,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   sLabelDraw = { size: [0,0,700,700],$
     uname: 'label_draw_uname'}
     
-  ;- nexus input ----------------------------------------------------------------
-  XYoff = [0,15]
-  sNexus = { size : [10,$
-    sLabelDraw.size[1]+sLabelDraw.size[3]+XYOff[1]]}
-    
   ;- draw -----------------------------------------------------------------------
-  XYoff = [30,20]
-  sDraw = { size  : [XYoff[0],XYoff[1],640,640],$
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+    XYoff = [30,20]
+    xsize = 640L
+    ysize = 640L
+  ENDIF ELSE BEGIN
+    XYoff = [0,0]
+    xsize = 192L*3
+    ysize = 256L*3
+  ENDELSE
+  sDraw = { size  : [XYoff[0], XYoff[1], xsize, ysize],$
     uname : 'draw_uname'}
+    
+  ;- nexus input ----------------------------------------------------------------
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+    XYoff = [0,15]
+  ENDIF ELSE BEGIN
+    XYoff = [0,35]
+  ENDELSE
+  sNexus = { size : [10,$
+    sDraw.size[1]+sDraw.size[3]+XYOff[1]]}
     
   ;- selection ------------------------------------------------------------------
   XYoff = [0,15]
@@ -379,7 +391,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   XYoff = [0,20]
   countsLabel = { size: [xLabel.size[0]+XYoff[0],$
     yValue.size[1]+XYoff[1]],$
-    value: 'Counts:'}
+    value: 'Counts :'}
   XYoff = [50,0]
   countsValue = { size: [countsLabel.size[0]+XYoff[0],$
     countsLabel.size[1]+XYoff[1]],$
@@ -470,22 +482,22 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDIF ELSE BEGIN
   
     bsBase = WIDGET_BASE(wTab1Base,$
-      XOFFSET = sDraw.size[0],$
-      YOFFSET = sDraw.size[1]+sDraw.size[3]+5,$
+      XOFFSET = sDraw.size[0]+sDraw.size[2]+10,$
+      YOFFSET = sDraw.size[1]+40,$
       /EXCLUSIVE, $
-      /ROW,$
+      /COLUMN,$
       FRAME = 1)
       
     front_bank = WIDGET_BUTTON(bsBase,$
-      VALUE = 'Show Front Bank   ',$
+      VALUE = 'FRONT PANEL',$
       UNAME = 'show_front_bank_button')
       
     back_bank = WIDGET_BUTTON(bsBase,$
-      VALUE = 'Show Back Bank   ',$
+      VALUE = 'BACK PANEL',$
       UNAME = 'show_back_bank_button')
       
     both_bank = WIDGET_BUTTON(bsBase,$
-      VALUE = 'Show Front and Back Banks',$
+      VALUE = 'BOTH PANELS',$
       UNAME = 'show_both_banks_button')
       
     WIDGET_CONTROL, both_bank, /SET_BUTTON

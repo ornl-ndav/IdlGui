@@ -76,6 +76,7 @@ PRO retrieveNexus, Event, FullNexusName
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
   ENDIF ELSE BEGIN
     (*global).data_nexus_file_name = FullNexusName
+    help, sz_array
     sz_array = size(DataArray)
     Ntof     = (sz_array)(1)
     Y        = (sz_array)(2)
@@ -299,7 +300,7 @@ PRO load_run_number, Event
         status = 0
       ENDIF ELSE BEGIN
         status = 1
-        (*global).data_nexus_file_name = FullNexusName
+        (*global).data_nexus_file_name = Full_nexus_name
       ENDELSE
       activate_widget_list, Event, uname_list, status
       
