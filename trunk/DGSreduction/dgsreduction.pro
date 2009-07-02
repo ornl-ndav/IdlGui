@@ -268,7 +268,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   instrumentSelectRow = WIDGET_BASE(toprow, /ROW)
   textID = WIDGET_LABEL(instrumentSelectRow, VALUE='Please select an instrument --> ')
   instrumentID = WIDGET_COMBOBOX(instrumentSelectRow, UVALUE="INSTRUMENT_SELECTED", $
-    VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
+    UNAME='INSTRUMENT_SELECTED', VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
     XSIZE=90, YSIZE=30)
   
 ;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
@@ -278,7 +278,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
 ;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
 ;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
   jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", $
-        UVALUE="DGS_REDUCTION_JOBS", $
+        UVALUE="DGS_REDUCTION_JOBS", UNAME='DGS_REDUCTION_JOBS', $
         VALUE=1, /INTEGER, /ALL_EVENTS)
  
   paddingText = "                       "
@@ -337,7 +337,11 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   launchJobMonitorButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Launch SLURM Monitor', $
     EVENT_PRO='DGSreduction_LaunchJobMonitor', UNAME='DGS_LAUNCH_JOBMONITOR_BUTTON')
 
+  saveParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='SAVE ALL Parameters', $
+    UNAME='DGS_SAVEPARAMETERS', EVENT_PRO='save_parameters')
   
+  loadParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='LOAD ALL Parameters', $
+    UNAME='DGS_LOADPARAMETERS', EVENT_PRO='load_parameters')
   
   
   ; Realise the widget hierarchy
