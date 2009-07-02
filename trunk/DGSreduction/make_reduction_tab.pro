@@ -29,7 +29,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
         YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
   
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", /ALL_EVENTS)
+  datarunID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSR_DATARUN", UNAME='DGSR_DATARUN', /ALL_EVENTS)
   checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSR_FINDNEXUS", SENSITIVE=0)
 
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
@@ -64,7 +64,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   eiPrettyBase = WIDGET_BASE(eiBase, /FRAME, /COLUMN, $
         YOFFSET=eiLabelGeomtryYSize/2, XPAD=10, YPAD=10)
   eiRow = WIDGET_BASE(eiPrettyBase, /ROW)
-  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGSR_EI", /ALL_EVENTS, $
+  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGSR_EI", UNAME='DGSR_EI', /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
 
   tzeroBase = WIDGET_BASE(EiTzeroBase)
@@ -74,7 +74,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   tzeroPrettyBase = WIDGET_BASE(tzeroBase, /FRAME, /COLUMN, $
         YOFFSET=tzeroLabelGeomtryYSize/2, XPAD=10, YPAD=10)
   tzeroRow = WIDGET_BASE(tzeroPrettyBase, /ROW)
-  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSR_TZERO", /ALL_EVENTS, $
+  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSR_TZERO", UNAME='DGSR_TZERO', /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
 
 
@@ -94,11 +94,11 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Energy Transfer Range Row
   EnergyRangeRow = WIDGET_BASE(rangesPrettyBase, /ROW, UNAME="DGSR_ET_RANGE")
   minEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGSR_ET_MIN", /ALL_EVENTS)
+        XSIZE=8, UVALUE="DGSR_ET_MIN", UNAME="DGSR_ET_MIN", /ALL_EVENTS)
   maxEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGSR_ET_MAX", /ALL_EVENTS)
+        XSIZE=8, UVALUE="DGSR_ET_MAX", UNAME="DGSR_ET_MAX", /ALL_EVENTS)
   stepEnergyID = CW_FIELD(EnergyRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGSR_ET_STEP", /ALL_EVENTS)
+        XSIZE=8, UVALUE="DGSR_ET_STEP", UNAME="DGSR_ET_STEP", /ALL_EVENTS)
 
 ; == MOMENTUM (Q) TRANSFER RANGE ==
   QRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
@@ -113,11 +113,11 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Q Range Base
   QRangeRow = WIDGET_BASE(QrangesPrettyBase, /ROW, UNAME="DGSR_Q_RANGE")
   minMomentumID = CW_FIELD(QRangeRow, TITLE="Min:", $
-        XSIZE=8, UVALUE="DGSR_Q_MIN", /ALL_EVENTS)
+        XSIZE=8, UVALUE="DGSR_Q_MIN", UNAME="DGSR_Q_MIN", /ALL_EVENTS)
   maxMomentumID = CW_FIELD(QRangeRow, TITLE="Max:", $
-        XSIZE=8, UVALUE="DGSR_Q_MAX", /ALL_EVENTS)
+        XSIZE=8, UVALUE="DGSR_Q_MAX", UNAME="DGSR_Q_MAX", /ALL_EVENTS)
   stepMomentumID = CW_FIELD(QRangeRow, TITLE="Step:", $
-        XSIZE=8, UVALUE="DGSR_Q_STEP", /ALL_EVENTS) 
+        XSIZE=8, UVALUE="DGSR_Q_STEP", UNAME="DGSR_Q_STEP", /ALL_EVENTS) 
   
 ; == TOF CUTTING ==
   tofRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
@@ -130,8 +130,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
         YOFFSET=tofcutLabelGeomtryYSize/2, XPAD=10, YPAD=10)
 
   tofcutRow = WIDGET_BASE(tofcutPrettyBase, /ROW)
-  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGSR_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
-  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSR_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
+  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGSR_TOF-CUT-MIN", UNAME="DGSR_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
+  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSR_TOF-CUT-MAX", UNAME="DGSR_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
 
 
   ; == NORMALISATION OPTIONS ==
@@ -154,22 +154,27 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   
   normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
   noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
-        UVALUE='DGSR_NO-MON-NORM')
+        UVALUE='DGSR_NO-MON-NORM', UNAME='DGSR_NO-MON-NORM')
   pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
         UVALUE='DGSR_PC-NORM', UNAME='DGSR_PC-NORM')
   lambdaratioID = WIDGET_BUTTON(normOptionsBase, VALUE='Lambda Ratio Scaling', $ 
-        UVALUE='DGSR_LAMBDA-RATIO')
+        UVALUE='DGSR_LAMBDA-RATIO', UNAME='DGSR_LAMBDA-RATIO')
   
-  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSR_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
+  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSR_USMON", $
+    UNAME="DGSR_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
   dgsr_cmd->SetProperty, USmonPath=1
   
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
-  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSR_NORMRUN", /LONG)
-  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", /LONG)
-  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", /LONG)
-  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSR_DARK", /LONG)
+  normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSR_NORMRUN", $
+    UNAME="DGSR_NORMRUN", /LONG)
+  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", $
+    UNAME="DGSR_EMPTYCAN", /LONG)
+  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", $
+    UNAME="DGSR_BLACKCAN", /LONG)
+  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSR_DARK", $
+    UNAME="DGSR_DARK", /LONG)
 
     ; == Transmission Corrections == 
   transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
@@ -179,9 +184,12 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
     YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
 
-  dataTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Data Coeff:", UVALUE="DGSR_DATA-TRANS", XSIZE=10)
-  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", XSIZE=10)
-  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSR_DET-EFF", XSIZE=10)
+  dataTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Data Coeff:", UVALUE="DGSR_DATA-TRANS", $
+    UNAME="DGSR_DATA-TRANS", XSIZE=10)
+  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSR_NORM-TRANS", $
+    UNAME="DGSR_NORM-TRANS", XSIZE=10)
+  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSR_DET-EFF", $
+    UNAME="DGSR_DET-EFF", XSIZE=10)
 
   ; Monitor integration range
   monitorRangeBase = WIDGET_BASE(normOptionsBaseRow1, /ALIGN_BOTTOM)
@@ -191,8 +199,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   monitorRangePrettyBase = WIDGET_BASE(monitorRangeBase, /FRAME, /ROW, $
       YOFFSET=monitorRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
   
-  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_MON-INT-MIN", XSIZE=10)
-  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_MON-INT-MAX", XSIZE=10)
+  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_MON-INT-MIN", $
+    UNAME="DGSR_MON-INT-MIN", XSIZE=10)
+  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_MON-INT-MAX", $
+    UNAME="DGSR_MON-INT-MAX", XSIZE=10)
   
    ; Norm integration range
   normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSR_NORM-INT-RANGE", /ALIGN_BOTTOM)
@@ -202,8 +212,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
       YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
   
-  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", XSIZE=10)
-  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", XSIZE=10)
+  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_NORM-INT-MIN", $
+    UNAME="DGSR_NORM-INT-MIN", XSIZE=10)
+  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
+    UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
             
 
   
@@ -222,8 +234,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
         SCR_YSIZE=145)
   
   maskRow = WIDGET_BASE(maskPrettyBase, /ROW, /NONEXCLUSIVE)
-  maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK')
-  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' HARD Mask', UVALUE='DGSR_HARD_MASK')
+  maskID = WIDGET_BUTTON(maskRow, VALUE='Vanadium Mask', UVALUE='DGSR_MASK', UNAME='DGSR_MASK')
+  hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' HARD Mask', UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
   ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSR_MASK_FILENAME', /ALL_EVENTS)
  
    ; ROI
@@ -235,7 +247,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
         YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
   roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGSR_ROI_FILENAME', $
-    /ALL_EVENTS, XSIZE=20)
+    UNAME='DGSR_ROI_FILENAME', /ALL_EVENTS, XSIZE=20)
   
  ; == TIB ==
   TIBrow = WIDGET_BASE(reductionTabCol2Row2Col1, /ROW)
@@ -254,7 +266,8 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
   TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
       YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=20, TITLE="", UVALUE="DGSR_TIBCONST", /ALL_EVENTS)
+  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=20, TITLE="", UVALUE="DGSR_TIBCONST", $
+    UNAME="DGSR_TIBCONST", /ALL_EVENTS)
   
   label1 = WIDGET_LABEL(TIBPrettyBase, VALUE='  OR  ')
   
@@ -266,8 +279,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   TIBRangePrettyBase = WIDGET_BASE(TIBRangeBase, /FRAME, /ROW, $
       YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=393)
   
-  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_TIB-MIN", XSIZE=20)
-  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE=" Max:", UVALUE="DGSR_TIB-MAX", XSIZE=20)
+  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSR_TIB-MIN", $
+    UNAME="DGSR_TIB-MIN", XSIZE=20)
+  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE=" Max:", UVALUE="DGSR_TIB-MAX", $
+    UNAME="DGSR_TIB-MAX", XSIZE=20)
    
 
     ; Output Formats Pretty Frame
@@ -287,15 +302,19 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   outputBaseRow = WIDGET_BASE(outputBase, /ROW)
   
   ; Column #1
-  speButton = Widget_Button(outputBaseCol1, Value='SPE/PHX', UVALUE='DGSR_MAKE_SPE')
-  qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSR_MAKE_QVECTOR')
+  speButton = Widget_Button(outputBaseCol1, Value='SPE/PHX', UVALUE='DGSR_MAKE_SPE', UNAME='DGSR_MAKE_SPE')
+  qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSR_MAKE_QVECTOR', UNAME='DGSR_MAKE_QVECTOR')
   fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGSR_MAKE_FIXED', UNAME='DGSR_MAKE_FIXED')
-  tibButton = WIDGET_BUTTON(outputBaseCol1, VALUE='TIB const', UVALUE='DGSR_DUMP_TIB')
+  tibButton = WIDGET_BUTTON(outputBaseCol1, VALUE='TIB const', UVALUE='DGSR_DUMP_TIB', UNAME='DGSR_DUMP_TIB')
   ; Column #2
-  etButton = Widget_Button(outputBaseCol2, Value='Combined Energy Transfer', UVALUE='DGSR_MAKE_COMBINED_ET')
-  tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSR_MAKE_COMBINED_TOF')
-  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSR_DUMP_NORM')
-  waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSR_MAKE_COMBINED_WAVE')
+  etButton = Widget_Button(outputBaseCol2, Value='Combined Energy Transfer', UVALUE='DGSR_MAKE_COMBINED_ET', $
+    UNAME='DGSR_MAKE_COMBINED_ET')
+  tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSR_MAKE_COMBINED_TOF', $
+    UNAME='DGSR_MAKE_COMBINED_TOF')
+  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSR_DUMP_NORM', $
+    UNAME='DGSR_DUMP_NORM')
+  waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSR_MAKE_COMBINED_WAVE', $
+    UNAME='DGSR_MAKE_COMBINED_WAVE')
   ; Column #3
   ; Output Options Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
@@ -308,11 +327,11 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, $
     UNAME="DGSR_COMBINED_WAVELENGTH_RANGE")
   minWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Min:", $
-        XSIZE=7, UVALUE="DGSR_LAMBDA_MIN", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSR_LAMBDA_MIN", UNAME="DGSR_LAMBDA_MIN", /ALL_EVENTS)
   maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Max:", $
-        XSIZE=7, UVALUE="DGSR_LAMBDA_MAX", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSR_LAMBDA_MAX", UNAME="DGSR_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
-        XSIZE=7, UVALUE="DGSR_LAMBDA_STEP", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSR_LAMBDA_STEP", UNAME="DGSR_LAMBDA_STEP", /ALL_EVENTS)
  
 
 ; == DEFAULTS ==
