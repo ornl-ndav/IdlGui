@@ -1,9 +1,8 @@
-pro save_parameters, event
+pro save_parameters, event, Filename=filename
 
-      ; TODO: Get filename from dialog.
-      filename='~/dgsreduction_parameters.sav'
-
-  ;IF N_ELEMENTS(filename) EQ 0 THEN filename = '~/.sns/dgsreduction/dgs.par'
+  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
+    filename = DIALOG_PICKFILE(Filter='*.sav')
+  ENDIF
  
    ; Get the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY

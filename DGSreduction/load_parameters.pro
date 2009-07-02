@@ -1,9 +1,8 @@
-pro load_parameters, event
-  print, '==load=='
-  help, /str, event
+pro load_parameters, event, Filename=filename
 
-       ; TODO: Get filename from dialog.
-      filename='~/dgsreduction_parameters.sav' 
+  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
+    filename = DIALOG_PICKFILE(Filter='*.sav')
+  ENDIF
 
   print, 'Loading ALL parameters from ' + filename
 
