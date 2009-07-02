@@ -80,10 +80,16 @@ PRO DGSreduction_TLB_Events, event
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       if (myValue NE "") AND (myValue GT 0) AND (myValue LT info.max_jobs) then begin
         dgsr_cmd->SetProperty, Jobs=myValue
+        dgsn_cmd->SetProperty, Jobs=myValue
         ; If we are doing more than 1 job, we also need to set the --split option
         IF (myValue GT 1) THEN dgsr_cmd->SetProperty, Split=1
+        ; Do the same for the dgs_norm command 
+        IF (myValue GT 1) THEN dgsn_cmd->SetProperty, Split=1
+        
         ; But if we are only doing 1 then we don't!
         IF (myValue EQ 1) THEN dgsr_cmd->SetProperty, Split=0
+        ; Do the same for the dgs_norm command 
+        IF (myValue EQ 1) THEN dgsn_cmd->SetProperty, Split=0
       endif
       
       ; Disable the "Launch Collector" button if there is only one job
