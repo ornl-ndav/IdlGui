@@ -14,7 +14,9 @@ pro load_parameters, event
   
   RESTORE, FILENAME=filename
   
-  info.dgsr_cmd = dgsn_cmd
+  help,/str,dgsr_cmd
+  
+  info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
   
   ; Find the output window (DGS)
