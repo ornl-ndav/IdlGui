@@ -1,7 +1,7 @@
 pro save_parameters, event, Filename=filename
 
   IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
-    filename = DIALOG_PICKFILE(Filter='*.sav')
+    filename = DIALOG_PICKFILE(Filter='*.par')
   ENDIF
  
    ; Get the info structure
