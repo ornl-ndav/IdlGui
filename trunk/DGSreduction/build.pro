@@ -54,6 +54,12 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile monitorjob_events
 .compile monitorjob
 
+.compile load_parameters
+.compile save_parameters
+.compile dgsreduction_updategui
+.compile dgsr_updategui
+.compile dgsn_updategui
+
 .compile dgsnorm_launchcollector
 .compile dgsnorm_events
 .compile dgsreduction_events
