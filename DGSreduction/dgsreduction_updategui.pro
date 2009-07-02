@@ -1,7 +1,7 @@
 PRO DGSreduction_UpdateGUI, event
 
-  print, '==UpdateGUI=='
-  help,/str,event
+  ;print, '==UpdateGUI=='
+  ;help,/str,event
 
   ; Get the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
