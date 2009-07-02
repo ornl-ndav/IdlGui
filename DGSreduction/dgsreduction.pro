@@ -326,6 +326,10 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Define a Quit button
   quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
   
+  ;TODO: Save Defaults
+;  saveDefaultsButton = WIDGET_BUTTON(mainButtonsCol1Row1, VALUE='Save Current Values as Default', $
+;    UNAME='DGS_SAVE_DEFAULTS', EVENT_PRO='DGSreduction_save_defaults')
+  
   ; Define an export to script button
   ;exportScriptID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Export to Script', $
   ;  EVENT_PRO='DGSreduction_ExportScript')
@@ -336,13 +340,15 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   
   launchJobMonitorButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Launch SLURM Monitor', $
     EVENT_PRO='DGSreduction_LaunchJobMonitor', UNAME='DGS_LAUNCH_JOBMONITOR_BUTTON')
-
+    
   saveParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='SAVE ALL Parameters', $
     UNAME='DGS_SAVEPARAMETERS', EVENT_PRO='save_parameters')
   
   loadParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='LOAD ALL Parameters', $
     UNAME='DGS_LOADPARAMETERS', EVENT_PRO='load_parameters')
   
+  ;TODO: Load in the default Value
+
   
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
