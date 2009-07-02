@@ -14,8 +14,6 @@ pro load_parameters, event
   
   RESTORE, FILENAME=filename
   
-  help,/str,dgsr_cmd
-  
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
   
