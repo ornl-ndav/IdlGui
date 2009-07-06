@@ -433,16 +433,16 @@ function ReductionCmd::Generate
     IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
     ; normalisation file
-    IF STRLEN(self.normalisation) GE 1 THEN $
+    IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) THEN $
       cmd[i] += " --norm="+self.normalisation
     ; Empty sample container file
-    IF STRLEN(self.emptycan) GE 1 THEN $
+    IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
     ; black sample container file
-    IF STRLEN(self.blackcan) GE 1 THEN $
+    IF (STRLEN(self.blackcan) GE 1) AND (self.blackcan NE 0) THEN $
       cmd[i] += " --bcan="+self.blackcan
     ; Dark Current File
-    IF STRLEN(self.dark) GE 1 THEN $
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN $
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
     IF (STRLEN(self.usmonpath) GE 1) AND $
