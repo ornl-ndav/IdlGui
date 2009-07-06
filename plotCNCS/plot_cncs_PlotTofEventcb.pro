@@ -58,7 +58,7 @@ ENDELSE
 (*global3).true_x_min = left_click
 END
 
-
+;------------------------------------------------------------------------------
 PRO ReleaseMouseInTof, Event
 ;get global structure
 WIDGET_CONTROL, event.top, GET_UVALUE=global3
