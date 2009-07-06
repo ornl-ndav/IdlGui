@@ -74,22 +74,30 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Normalisation Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORMRUN')
   dgsr_cmd->GetProperty, Normalisation=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Don't Load the default value
+  IF (myValue NE 0) THEN $
+    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Empty Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN')
   dgsr_cmd->GetProperty, EmptyCan=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Don't Load the default value
+  IF (myValue NE 0) THEN $
+    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Black Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_BLACKCAN')
   dgsr_cmd->GetProperty, BlackCan=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Don't Load the default value
+  IF (myValue NE 0) THEN $
+    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Dark Current
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DARK')
   dgsr_cmd->GetProperty, Dark=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Don't Load the default value
+  IF (myValue NE 0) THEN $
+    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   
   ; Monitor Integration Range (min)

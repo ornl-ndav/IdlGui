@@ -90,6 +90,11 @@ PRO DGSreduction_Execute, event
   outputDir = '~/results/' + instrument + '/' + runnumber
   spawn, 'mkdir -p ' + outputDir
  
+ 
+  ; Check for existance of SPE file and ask if the user wants to override it.
+  ; (only check if we are asking to produce an SPE file)
+  ;if (
+ 
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
@@ -202,9 +207,9 @@ PRO DGSnorm_Execute, event
   " " + commands[index]
     
     if (index EQ 0) then begin
-      spawn, "echo " + cmd + " > /tmp/" + info.username + "_commands"
+      spawn, "echo " + cmd + " > /tmp/" + info.username + "_norm_commands"
     endif else begin
-      spawn, "echo " + cmd + " >> /tmp/" + info.username + "_commands"
+      spawn, "echo " + cmd + " >> /tmp/" + info.username + "_norm_commands"
     endelse
 
     ; Actually Launch the jobs
@@ -345,7 +350,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     UNAME='DGS_SAVEPARAMETERS', EVENT_PRO='save_parameters')
   
   loadParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='LOAD ALL Parameters', $
-    UNAME='DGS_LOADPARAMETERS', EVENT_PRO='load_parameters')
+    UNAME='DGS_LOADPARAMETERS', EVENT_PRO='DGSreduction_LoadParameters')
   
   ;TODO: Load in the default Value
 
