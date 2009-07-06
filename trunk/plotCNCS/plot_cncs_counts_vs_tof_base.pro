@@ -320,6 +320,8 @@ PRO replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
         YTITLE = ytitle,$
         FONT='8x13'
     ENDELSE
+    Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
+      XTITLE='Bins #'
   ENDIF ELSE BEGIN
     IF (lin_log_type EQ 'log') THEN BEGIN
       PLOT, counts_vs_tof_integrated, $
@@ -354,7 +356,18 @@ PRO MakeCountsVsTofBase, wBase
   wBase = WIDGET_BASE(MAP = 1,$
     GROUP_LEADER = ourGroup,$
     UNAME = 'counts_vs_tof_main_base',$
+    ;    MBAR  = WID_BASE_0_MBAR)
     /COLUMN)
+    
+  ;    ;HELP MENU in Menu Bar -------------------------------------------------
+  ;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+  ;    UNAME = 'help_menu',$
+  ;    VALUE = 'HELP',$
+  ;    /MENU)
+  ;
+  ;  HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+  ;    VALUE = 'HELP',$
+  ;    UNAME = 'help_button')
     
   ;ROW 1 --------------------------------------------------
   row1 = WIDGET_BASE(wBase,$
@@ -454,7 +467,7 @@ PRO Launch_counts_vs_tof_base, $
     left_clicked: 1b,$
     x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
-    x0y0x1y1_device_limit: [60L,40L,1481L,580L],$
+    x0y0x1y1_device_limit: [60L,30L,1481L,569L],$
     left_click: 0b,$
     wbase:               wbase})
     
@@ -507,6 +520,8 @@ PRO Launch_counts_vs_tof_base, $
     units_label = 'bins#'
   ENDELSE
   
+  !Y.MARGIN = [3,3]
+  
   id = WIDGET_INFO(wBase,$
     FIND_BY_UNAME='full_detector_counts_vs_tof_right_bin_unit')
   WIDGET_CONTROL, id, SET_VALUE = units_label
@@ -524,6 +539,8 @@ PRO Launch_counts_vs_tof_base, $
       XTITLE = xtitle,$
       YTITLE = ytitle,$
       FONT='8x13'
+    Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated_2)],$
+      XTITLE='Bins #'
   ENDIF ELSE BEGIN
     PLOT, counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
