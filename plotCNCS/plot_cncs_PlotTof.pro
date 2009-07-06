@@ -40,31 +40,60 @@ PRO MakeGuiTofBase_Event, event
     widget_info(event.top, FIND_BY_UNAME='tof_plot_draw'): begin
     
       IF (Event.press EQ 1) THEN BEGIN ;left mouse pressed
-        (*global3).left_mouse_pressed = 1
-        PressMouseInTOF, Event
-        CURSOR, X, Y, /data, /nowait
-        (*global3).x0_data = X
-        (*global3).y0_data = Y
-        (*global3).x0_device = Event.x
-        (*global3).y0_device = Event.y
+      
+        IF (event.x LT 60 OR $
+          event.x GT 632 OR $
+          event.y LT 40 OR $
+          event.y GT 510) THEN BEGIN
+          (*global3).x0_data = 0.
+          (*global3).y0_data = 0.
+          (*global3).x1_data = 0.
+          (*global3).y1_data = 0.
+          (*global3).x0_data_backup = (*global3).x0_data
+          (*global3).y0_data_backup = (*global3).y0_data
+          (*global3).x1_data_backup = (*global3).x1_data
+          (*global3).y1_data_backup = (*global3).y1_data
+          
+          ReleaseMouseInTof, Event
+          
+        ENDIF ELSE BEGIN
+        
+          (*global3).left_mouse_pressed = 1
+          CURSOR, X, Y, /data, /nowait
+          (*global3).x0_data = X
+          (*global3).y0_data = Y
+          (*global3).x0_device = Event.x
+          (*global3).y0_device = Event.y
+          
+        ENDELSE
+        
       ENDIF
       
       IF (Event.type EQ 2) THEN BEGIN ;moving mouse with left button clicked
         IF ((*global3).left_mouse_pressed) THEN BEGIN
           (*global3).x1_device = Event.x
           (*global3).y1_device = Event.y
-          RefreshPlotInTof, Event
+          MovingMouseInTof, Event
           plotSelection_inTofPlot, Event
         ENDIF
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;left mouse released
-        CURSOR, X, Y, /data, /nowait
-        (*global3).x1_data = X
-        (*global3).y1_data = Y
-        ReleaseMouseInTof, Event
-        (*global3).left_mouse_pressed = 0
+        IF ((*global3).left_mouse_pressed) THEN BEGIN
+          CURSOR, X, Y, /data, /nowait
+          (*global3).x1_data = X
+          (*global3).y1_data = Y
+          ReleaseMouseInTof, Event
+          (*global3).left_mouse_pressed = 0
+          
+          (*global3).x0_data_backup = (*global3).x0_data
+          (*global3).y0_data_backup = (*global3).y0_data
+          (*global3).x1_data_backup = (*global3).x1_data
+          (*global3).y1_data_backup = (*global3).y1_data
+          
+        ENDIF
       ENDIF
+      
     END
     
     widget_info(event.top, FIND_BY_UNAME='linear_scale'): begin
@@ -134,6 +163,10 @@ PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID, tmpImg
     y0_data: 0.,$
     x1_data: 0.,$
     y1_data: 0.,$
+    x0_data_backup: 0.,$
+    y0_data_backup: 0.,$
+    x1_data_backup: 0.,$
+    y1_data_backup: 0.,$
     x0_device: 0.,$
     y0_device: 0.,$
     x1_device: 0.,$
@@ -186,7 +219,7 @@ PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID, tmpImg
   plot, IvsTOF, FONT='8x13', $
     XTITLE = 'Bins #', $
     YTITLE = 'Counts'
-        
+    
   id = widget_info(wBase,find_by_uname='preview_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
