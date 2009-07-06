@@ -183,8 +183,10 @@ PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID, tmpImg
     IvsTOF = total(IvsTOF,2)
   ENDIF
   (*(*global3).IvsTOF) = IvsTOF
-  plot, IvsTOF, FONT='8x13'
-  
+  plot, IvsTOF, FONT='8x13', $
+    XTITLE = 'Bins #', $
+    YTITLE = 'Counts'
+        
   id = widget_info(wBase,find_by_uname='preview_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
