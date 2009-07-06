@@ -59,10 +59,10 @@ PRO MakeGuiTofBase_Event, event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;left mouse released
-        ;ReleaseMouseInTof, Event
         CURSOR, X, Y, /data, /nowait
         (*global3).x1_data = X
         (*global3).y1_data = Y
+        ReleaseMouseInTof, Event
         (*global3).left_mouse_pressed = 0
       ENDIF
     END
@@ -70,13 +70,13 @@ PRO MakeGuiTofBase_Event, event
     widget_info(event.top, FIND_BY_UNAME='linear_scale'): begin
       id = widget_info(Event.top,find_by_uname='plot_scale_type')
       widget_control, id, set_value='Linear Y-axis      '
-      RefreshPlotInTof, Event
+      ReleaseMouseInTof, Event
     END
     
     widget_info(event.top, FIND_BY_UNAME='log_scale'): begin
       id = widget_info(Event.top,find_by_uname='plot_scale_type')
       widget_control, id, set_value='Logarithmic Y-axis'
-      RefreshPlotInTof, Event
+      ReleaseMouseInTof, Event
     END
     
     ELSE:
