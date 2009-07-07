@@ -82,13 +82,43 @@ PRO launch_couts_vs_tof_base_Event, Event
       IF (isButtonSelected(Event, $
         'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
         
-        IF (event.release EQ 1) THEN BEGIN ;release left click
-          (*global1).left_click = 0b
-        ENDIF
+        ;if we are inside
+        IF (isInsideDrawingRegion(Event, Event.x, Event.y)) THEN BEGIN
         
-        IF (event.press NE 4) THEN BEGIN
-          IF (event.type EQ 0) THEN BEGIN ;left click
-            (*global1).left_click = 1b
+          IF (event.release EQ 1) THEN BEGIN ;release left click
+            (*global1).left_click = 0b
+          ENDIF
+          
+          IF (event.press NE 4) THEN BEGIN
+            IF (event.type EQ 0) THEN BEGIN ;left click
+              (*global1).left_click = 1b
+              CURSOR, x_data, y_data, /DATA
+              x_device = Event.x
+              y_device = Event.y
+              x0y0x1y1_data = (*global1).x0y0x1y1_data
+              x0y0x1y1_device = (*global1).x0y0x1y1_device
+              IF ((*global1).left_clicked) THEN BEGIN
+                x0y0x1y1_data[0] = x_data
+                x0y0x1y1_data[1] = y_data
+                x0y0x1y1_device[0] = x_device
+                x0y0x1y1_device[1] = y_device
+              ENDIF ELSE BEGIN
+                x0y0x1y1_data[2] = x_data
+                x0y0x1y1_data[3] = y_data
+                x0y0x1y1_device[2] = x_device
+                x0y0x1y1_device[3] = y_device
+              ENDELSE
+              (*global1).x0y0x1y1_data = x0y0x1y1_data
+              (*global1).x0y0x1y1_device = x0y0x1y1_device
+              ;replot the background counts vs tof file
+              replot_counts_vs_tof_full_detector, Event
+              display_selection, Event
+            ENDIF
+            calculate_average_value, Event
+          ENDIF
+          
+          IF (event.type EQ 2 AND $ ;moving the mouse with left click
+            (*global1).left_click) THEN BEGIN
             CURSOR, x_data, y_data, /DATA
             x_device = Event.x
             y_device = Event.y
@@ -110,39 +140,14 @@ PRO launch_couts_vs_tof_base_Event, Event
             ;replot the background counts vs tof file
             replot_counts_vs_tof_full_detector, Event
             display_selection, Event
+            calculate_average_value, Event
           ENDIF
-          calculate_average_value, Event
-        ENDIF
-        
-        IF (event.type EQ 2 AND $ ;moving the mouse with left click
-          (*global1).left_click) THEN BEGIN
-          CURSOR, x_data, y_data, /DATA
-          x_device = Event.x
-          y_device = Event.y
-          x0y0x1y1_data = (*global1).x0y0x1y1_data
-          x0y0x1y1_device = (*global1).x0y0x1y1_device
-          IF ((*global1).left_clicked) THEN BEGIN
-            x0y0x1y1_data[0] = x_data
-            x0y0x1y1_data[1] = y_data
-            x0y0x1y1_device[0] = x_device
-            x0y0x1y1_device[1] = y_device
-          ENDIF ELSE BEGIN
-            x0y0x1y1_data[2] = x_data
-            x0y0x1y1_data[3] = y_data
-            x0y0x1y1_device[2] = x_device
-            x0y0x1y1_device[3] = y_device
-          ENDELSE
-          (*global1).x0y0x1y1_data = x0y0x1y1_data
-          (*global1).x0y0x1y1_device = x0y0x1y1_device
-          ;replot the background counts vs tof file
-          replot_counts_vs_tof_full_detector, Event
-          display_selection, Event
-          calculate_average_value, Event
-        ENDIF
-        
-        IF (event.press EQ 4) THEN BEGIN ;right click
-          switch_left_right_click, Event
-        ENDIF
+          
+          IF (event.press EQ 4) THEN BEGIN ;right click
+            switch_left_right_click, Event
+          ENDIF
+          
+        ENDIF ;end of 'if we are inside drawing region'
         
       ENDIF ELSE BEGIN ; Zoom button selected =======================
       
@@ -158,7 +163,10 @@ PRO launch_couts_vs_tof_base_Event, Event
             (*global1).y0_data_backup = (*global1).y0_data
             (*global1).x1_data_backup = (*global1).x1_data
             (*global1).y1_data_backup = (*global1).y1_data
-            
+            (*global1).display_xmin = (*global1).display_xmin_backup
+            (*global1).display_ymin = (*global1).display_ymin_backup
+            (*global1).display_xmax = (*global1).display_xmax_backup
+            (*global1).display_ymax = (*global1).display_ymax_backup
             replot_counts_vs_tof_full_detector, event
             display_selection, Event ;that produces average line
             replot_average, Event
@@ -197,6 +205,7 @@ PRO launch_couts_vs_tof_base_Event, Event
             CURSOR, X, Y, /data, /nowait
             (*global1).x1_data = X
             (*global1).y1_data = Y
+            redefine_xy_display_limit, Event
             replot_counts_vs_tof_full_detector, Event
             display_selection, Event
             replot_average, Event
@@ -233,6 +242,26 @@ PRO launch_couts_vs_tof_base_Event, Event
     
     ELSE:
   ENDCASE
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO redefine_xy_display_limit, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x0 = (*global1).x0_data
+  x1 = (*global1).x1_data
+  y0 = (*global1).y0_data
+  y1 = (*global1).y1_data
+  
+  xmin = MIN([x0,x1], MAX=xmax)
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  (*global1).display_xmin = xmin
+  (*global1).display_xmax = xmax
+  (*global1).display_ymin = ymin
+  (*global1).display_ymax = ymax
   
 END
 
@@ -276,6 +305,9 @@ PRO  plot_average, Event, average
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
   xmin = MIN(x0x1,MAX=xmax)
+  
+  IF (average LT (*global1).display_ymin) THEN RETURN
+  IF (average GT (*global1).display_ymax) THEN RETURN
   
   PLOTS, xmin, average,/DATA
   PLOTS, xmax, average,/CONTINUE, COLOR=200,/DATA
@@ -413,8 +445,8 @@ PRO display_selection, Event
   IF (ymax_device GT (*global1).device_ymax) THEN ymax = -1L
   IF (ymin_device LT (*global1).device_ymin) THEN ymin = -1L
   
-  ymin_plot = (*global1).device_ymin
-  ymax_plot = (*global1).device_ymax
+  ymin_plot = (*global1).display_ymin
+  ymax_plot = (*global1).display_ymax
   IF (xmin NE -1L) THEN BEGIN
     PLOTS, xmin, ymin_plot,/DATA
     PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DATA
@@ -498,14 +530,18 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
         PLOT, tof_array, $
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13',$
           /YLOG
       ENDIF ELSE BEGIN
         PLOT, tof_array, $
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13'
       ENDELSE
       Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
@@ -514,13 +550,17 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
       IF (lin_log_type EQ 'log') THEN BEGIN
         PLOT, counts_vs_tof_integrated, $
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTILE = 1,$
           FONT='8x13',$
           /YLOG
       ENDIF ELSE BEGIN
         PLOT, counts_vs_tof_integrated, $
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYEL = 1,$
           FONT='8x13'
       ENDELSE
     ENDELSE
@@ -535,7 +575,9 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           YRANGE = [ymin,ymax],$
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13',$
           /YLOG
       ENDIF ELSE BEGIN
@@ -544,7 +586,9 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13'
       ENDELSE
       Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
@@ -555,7 +599,9 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13',$
           /YLOG
       ENDIF ELSE BEGIN
@@ -563,17 +609,14 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
+          XSTYLE = 1,$
           YTITLE = ytitle,$
+          YSTYLE = 1,$
           FONT='8x13'
       ENDELSE
     ENDELSE
     
-    
-    
-    
   ENDELSE
-  
-  
   
 END
 
@@ -806,6 +849,16 @@ PRO Launch_counts_vs_tof_base, $
     device_ymin: 31,$
     device_ymax: 570, $
     
+    display_xmin: 0.,$
+    display_xmax: 0.,$
+    display_ymin: 0.,$
+    display_ymax: 0.,$
+    
+    display_xmin_backup: 0.,$
+    display_xmax_backup: 0.,$
+    display_ymin_backup: 0.,$
+    display_ymax_backup: 0.,$
+    
     left_clicked: 1b,$
     x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
@@ -874,19 +927,35 @@ PRO Launch_counts_vs_tof_base, $
   (*global1).ytitle = ytitle
   (*global1).plot_type = plot_type
   
+  ymin = MIN(counts_vs_tof_integrated_2,MAX=ymax)
+  (*global1).display_ymin = ymin
+  (*global1).display_ymax = ymax
   IF (nexus_file_name NE '') THEN BEGIN
+    (*global1).display_xmin = tof_array[0]
+    (*global1).display_xmax = tof_array[N_ELEMENTS(tof_array)-1]
     PLOT, tof_array, $
       counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
+      XSTYLE = 1,$
       YTITLE = ytitle,$
+      YSTYLE = 1,$
       FONT='8x13'
     Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated_2)],$
       XTITLE='Bins #'
   ENDIF ELSE BEGIN
+    (*global1).display_xmin = 0
+    (*global1).display_xmax = N_ELEMENTS(tof_array)
     PLOT, counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
+      XSTYLE = 1,$
       YTITLE = ytitle,$
+      YSTYLE = 1,$
       FONT='8x13'
   ENDELSE
+  
+  (*global1).display_xmin_backup = (*global1).display_xmin
+  (*global1).display_ymin_backup = (*global1).display_ymin
+  (*global1).display_xmax_backup = (*global1).display_xmax
+  (*global1).display_ymax_backup = (*global1).display_ymax
   
 END
