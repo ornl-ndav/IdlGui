@@ -552,7 +552,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XTITLE = xtitle,$
           XSTYLE = 1,$
           YTITLE = ytitle,$
-          YSTILE = 1,$
+          YSTYLE = 1,$
           FONT='8x13',$
           /YLOG
       ENDIF ELSE BEGIN
@@ -560,7 +560,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XTITLE = xtitle,$
           XSTYLE = 1,$
           YTITLE = ytitle,$
-          YSTYEL = 1,$
+          YSTYLE = 1,$
           FONT='8x13'
       ENDELSE
     ENDELSE

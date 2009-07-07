@@ -42,7 +42,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
-
+  
   ;******************************************************************************
   ;******************************************************************************
   
@@ -82,7 +82,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     status                  : 'STATUS: ',$
     neutron_event_dat_ext   : '_neutron_event.dat',$
     debugger                : 'j35'})
-        
+    
   IF (ucams EQ (*global).debugger) THEN BEGIN
     MainBaseSize  = [30,25,700,740]
   ENDIF ELSE BEGIN
@@ -92,7 +92,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MainBaseTitle += ' - ' + VERSION
   
   IF (DEBUGGING EQ 'yes') THEN BEGIN
-  MainBaseTitle += ' (DEBUGGING MODE)'
+    MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
   
   ;Build Main Base
@@ -133,7 +133,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, id, set_value=MapArray
   
   IF (DEBUGGING EQ 'yes') THEN BEGIN
-    (*global).browse_nexus_path = '~/402/NeXus/'
+    ;(*global).browse_nexus_path = '~/402/NeXus/'
+    (*global).browse_nexus_path = '~/402/'
   ENDIF
   
   ;send message to log current run of application

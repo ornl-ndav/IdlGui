@@ -84,6 +84,8 @@ default_extension = (*global).default_extension
 filter            = (*global).histo_map_filter
 title             = 'Select an Histogram Mapped File ... '
 
+path = (*global).browse_nexus_path
+
 histo_full_file_name = BrowseRunNumber(Event, $
                                        default_extension, $
                                        filter, $
