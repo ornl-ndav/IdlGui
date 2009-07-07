@@ -40,6 +40,19 @@ FUNCTION isLinSelected, Event
   RETURN, value
 END
 
+;----------------------------------------------------------------------------
+FUNCTION isInsideDrawingRegion, Event, x, y
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  IF (x LT (*global1).device_xmin OR $
+    x GT (*global1).device_xmax OR $
+    y LT (*global1).device_ymin OR $
+    y GT (*global1).device_ymax) THEN RETURN, 0
+    
+  RETURN, 1
+END
+
 ;------------------------------------------------------------------------------
 PRO launch_couts_vs_tof_base_Event, Event
 
@@ -129,23 +142,66 @@ PRO launch_couts_vs_tof_base_Event, Event
         
       ENDIF ELSE BEGIN ; Zoom button selected =======================
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+        IF (Event.press EQ 1) THEN BEGIN ;left mouse pressed
+        
+          ;if we are outside, reset
+          IF (~isInsideDrawingRegion(Event, Event.x, Event.y)) THEN BEGIN
+            (*global1).x0_data = 0.
+            (*global1).y0_data = 0.
+            (*global1).x1_data = 0.
+            (*global1).y1_data = 0.
+            (*global1).x0_data_backup = (*global1).x0_data
+            (*global1).y0_data_backup = (*global1).y0_data
+            (*global1).x1_data_backup = (*global1).x1_data
+            (*global1).y1_data_backup = (*global1).y1_data
+            
+            replot_counts_vs_tof_full_detector, event
+            
+          ENDIF ELSE BEGIN
+          
+            (*global1).left_mouse_pressed = 1
+            CURSOR, X, Y, /data, /nowait
+            (*global1).x0_data = X
+            (*global1).y0_data = Y
+            (*global1).x0_device = Event.x
+            (*global1).y0_device = Event.y
+            
+          ENDELSE
+          
+        ENDIF
+        
+        IF (Event.type EQ 2) THEN BEGIN ;moving mouse with left button clicked
+          IF ((*global1).left_mouse_pressed) THEN BEGIN
+            (*global1).x1_device = Event.x
+            (*global1).y1_device = Event.y
+            ;refresh plot only if we still are inside the plotting area
+            IF (isInsideDrawingRegion(Event, Event.x, Event.y)) THEN BEGIN
+              ;MovingMouseInTof, Event
+              ;replot the background counts vs tof file
+              replot_counts_vs_tof_full_detector, Event, MOVING='yes'
+              plotSelection_inCountsVsTofPlot, Event
+            ENDIF
+          ENDIF
+        ENDIF
+        
+        IF (Event.release EQ 1) THEN BEGIN ;left mouse released
+          IF ((*global1).left_mouse_pressed) THEN BEGIN
+            CURSOR, X, Y, /data, /nowait
+            (*global1).x1_data = X
+            (*global1).y1_data = Y
+            replot_counts_vs_tof_full_detector, Event
+            (*global1).left_mouse_pressed = 0
+            (*global1).x0_data_backup = (*global1).x0_data
+            (*global1).y0_data_backup = (*global1).y0_data
+            (*global1).x1_data_backup = (*global1).x1_data
+            (*global1).y1_data_backup = (*global1).y1_data
+            
+          ENDIF
+        ENDIF
+        
+        
+        
+        
       ENDELSE
       
     END
@@ -169,6 +225,38 @@ PRO launch_couts_vs_tof_base_Event, Event
     ELSE:
   ENDCASE
   
+END
+
+;-----------------------------------------------------------------------------
+PRO plotSelection_inCountsVsTofPlot, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x0 = (*global1).x0_device
+  x1 = (*global1).x1_device
+  y0 = (*global1).y0_device
+  y1 = (*global1).y1_device
+  
+  IF (x0 EQ 0. AND x1 EQ 0.) THEN RETURN
+  
+  xmin = MIN([x0,x1], MAX=xmax)
+  ymin = MIN([y0,y1], MAX=ymax)
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  color = 150
+  
+  id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin,ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 3,$
+    COLOR =color
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -281,14 +369,8 @@ PRO display_selection, Event
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  ;replot background
-  lin_type = isLinSelected(Event)
-  IF (lin_type) THEN BEGIN
-    lin_log_type = 'linear'
-  ENDIF ELSE BEGIN
-    lin_log_type = 'log'
-  ENDELSE
-  replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
+  ;replot the background counts vs tof file
+  replot_counts_vs_tof_full_detector, Event
   
   ;plot selection
   x0y0x1y1_device = (*global1).x0y0x1y1_device
@@ -343,9 +425,17 @@ PRO switch_left_right_click, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
+PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  ;replot background
+  lin_type = isLinSelected(Event)
+  IF (lin_type) THEN BEGIN
+    lin_log_type = 'linear'
+  ENDIF ELSE BEGIN
+    lin_log_type = 'log'
+  ENDELSE
   
   xtitle = (*global1).xtitle
   ytitle = (*global1).ytitle
@@ -357,38 +447,106 @@ PRO replot_counts_vs_tof_full_detector, event, lin_log_type=lin_log_type
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  IF (plot_type EQ 'tof') THEN BEGIN
-    tof_array = (*(*global1).tof_array)
-    IF (lin_log_type EQ 'log') THEN BEGIN
-      PLOT, tof_array, $
-        counts_vs_tof_integrated, $
-        XTITLE = xtitle,$
-        YTITLE = ytitle,$
-        FONT='8x13',$
-        /YLOG
-    ENDIF ELSE BEGIN
-      PLOT, tof_array, $
-        counts_vs_tof_integrated, $
-        XTITLE = xtitle,$
-        YTITLE = ytitle,$
-        FONT='8x13'
-    ENDELSE
-    Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
-      XTITLE='Bins #'
+  IF (N_ELEMENTS(moving) EQ 0) THEN BEGIN
+    x0 = (*global1).x0_data
+    y0 = (*global1).y0_data
+    x1 = (*global1).x1_data
+    y1 = (*global1).y1_data
   ENDIF ELSE BEGIN
-    IF (lin_log_type EQ 'log') THEN BEGIN
-      PLOT, counts_vs_tof_integrated, $
-        XTITLE = xtitle,$
-        YTITLE = ytitle,$
-        FONT='8x13',$
-        /YLOG
-    ENDIF ELSE BEGIN
-      PLOT, counts_vs_tof_integrated, $
-        XTITLE = xtitle,$
-        YTITLE = ytitle,$
-        FONT='8x13'
-    ENDELSE
+    x0 = (*global1).x0_data_backup
+    y0 = (*global1).y0_data_backup
+    x1 = (*global1).x1_data_backup
+    y1 = (*global1).y1_data_backup
   ENDELSE
+  
+  xmin = MIN([x0,x1],MAX=xmax)
+  ymin = MIN([y0,y1],MAX=ymax)
+  
+  IF (xmax EQ 0. OR $
+    xmin EQ 0.) THEN BEGIN ;reset plot
+    
+    IF (plot_type EQ 'tof') THEN BEGIN
+      tof_array = (*(*global1).tof_array)
+      IF (lin_log_type EQ 'log') THEN BEGIN
+        PLOT, tof_array, $
+          counts_vs_tof_integrated, $
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13',$
+          /YLOG
+      ENDIF ELSE BEGIN
+        PLOT, tof_array, $
+          counts_vs_tof_integrated, $
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13'
+      ENDELSE
+      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
+        XTITLE='Bins #'
+    ENDIF ELSE BEGIN
+      IF (lin_log_type EQ 'log') THEN BEGIN
+        PLOT, counts_vs_tof_integrated, $
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13',$
+          /YLOG
+      ENDIF ELSE BEGIN
+        PLOT, counts_vs_tof_integrated, $
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13'
+      ENDELSE
+    ENDELSE
+    
+  ENDIF ELSE BEGIN ;zoom plot using range specified
+  
+    IF (plot_type EQ 'tof') THEN BEGIN
+      tof_array = (*(*global1).tof_array)
+      IF (lin_log_type EQ 'log') THEN BEGIN
+        PLOT, tof_array, $
+          XRANGE = [xmin,xmax],$
+          YRANGE = [ymin,ymax],$
+          counts_vs_tof_integrated, $
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13',$
+          /YLOG
+      ENDIF ELSE BEGIN
+        PLOT, tof_array, $
+          counts_vs_tof_integrated, $
+          XRANGE = [xmin,xmax],$
+          YRANGE = [ymin,ymax],$
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13'
+      ENDELSE
+      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
+        XTITLE='Bins #'
+    ENDIF ELSE BEGIN
+      IF (lin_log_type EQ 'log') THEN BEGIN
+        PLOT, counts_vs_tof_integrated, $
+          XRANGE = [xmin,xmax],$
+          YRANGE = [ymin,ymax],$
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13',$
+          /YLOG
+      ENDIF ELSE BEGIN
+        PLOT, counts_vs_tof_integrated, $
+          XRANGE = [xmin,xmax],$
+          YRANGE = [ymin,ymax],$
+          XTITLE = xtitle,$
+          YTITLE = ytitle,$
+          FONT='8x13'
+      ENDELSE
+    ENDELSE
+    
+    
+    
+    
+  ENDELSE
+  
+  
   
 END
 
@@ -409,11 +567,11 @@ PRO MakeCountsVsTofBase, wBaseBackground
   wBaseBackground = WIDGET_BASE(MAP = 1,$
     UNAME = 'counts_vs_tof_main_base',$
     GROUP_LEADER = ourGroup)
-    ;    MBAR  = WID_BASE_0_MBAR)
+  ;    MBAR  = WID_BASE_0_MBAR)
     
   wBase= WIDGET_BASE(wBaseBackground,$
-  /COLUMN)
-
+    /COLUMN)
+    
   ;    ;HELP MENU in Menu Bar -------------------------------------------------
   ;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
   ;    UNAME = 'help_menu',$
@@ -452,10 +610,10 @@ PRO MakeCountsVsTofBase, wBaseBackground
     UNAME = 'selection_base')
     
   space = WIDGET_LABEL(selection_base,$
-    VALUE = '     Selection ->')
+    VALUE = '  Selection ->')
     
   value = WIDGET_LABEL(selection_base,$
-    VALUE = '   Min:')
+    VALUE = ' Min:')
   value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 50,$
@@ -468,7 +626,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     UNAME = 'full_detector_counts_vs_tof_left_bin_unit')
     
   value = WIDGET_LABEL(selection_base,$
-    VALUE = '    Max:')
+    VALUE = '  Max:')
   value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 50,$
@@ -481,10 +639,10 @@ PRO MakeCountsVsTofBase, wBaseBackground
     UNAME = 'full_detector_counts_vs_tof_right_bin_unit')
     
   value = WIDGET_LABEL(selection_base,$
-    VALUE = '    Average (counts/bins) of selection:')
+    VALUE = '   Average (counts/bins) of selection:')
   value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 60,$
+    SCR_XSIZE = 70,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_average_value')
@@ -516,7 +674,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'N/A',$
     XSIZE = xsize,$
     UNAME = 'xmin')
-    unit = WIDGET_LABEL(zoom_base,$
+  unit = WIDGET_LABEL(zoom_base,$
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
@@ -526,7 +684,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'N/A',$
     XSIZE = xsize,$
     UNAME = 'xmax')
-    unit = WIDGET_LABEL(zoom_base,$
+  unit = WIDGET_LABEL(zoom_base,$
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
@@ -536,7 +694,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'N/A',$
     XSIZE = xsize,$
     UNAME = 'ymin')
-    unit = WIDGET_LABEL(zoom_base,$
+  unit = WIDGET_LABEL(zoom_base,$
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
@@ -546,7 +704,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'N/A',$
     XSIZE = xsize,$
     UNAME = 'ymax')
-    unit = WIDGET_LABEL(zoom_base,$
+  unit = WIDGET_LABEL(zoom_base,$
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
@@ -602,6 +760,25 @@ PRO Launch_counts_vs_tof_base, $
     average: '',$
     plot_type: '',$
     tof_array: PTR_NEW(0L),$
+    x0_data: 0.,$
+    y0_data: 0.,$
+    x1_data: 0.,$
+    y1_data: 0.,$
+    x0_device: 0.,$
+    y0_device: 0.,$
+    x1_device: 0.,$
+    y1_device: 0.,$
+    x0_data_backup: 0.,$
+    y0_data_backup: 0.,$
+    x1_data_backup: 0.,$
+    y1_data_backup: 0.,$
+    left_mouse_pressed: 0,$
+    
+    device_xmin: 60,$
+    device_xmax: 1481L, $
+    device_ymin: 31,$
+    device_ymax: 570, $
+    
     left_clicked: 1b,$
     x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
