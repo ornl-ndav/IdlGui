@@ -778,6 +778,8 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
+    help = WIDGET_LABEL(zoom_base,$
+    VALUE = '    (Click outside the plotting frame to reset the zoom.)')
     
   ;ROW 2 --------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
