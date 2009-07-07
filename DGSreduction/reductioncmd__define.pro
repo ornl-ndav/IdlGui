@@ -463,7 +463,7 @@ function ReductionCmd::Generate
     
     ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
-      cmd[i] += " --tib-const="+self.tibconst
+      cmd[i] += " --tib-const="+self.tibconst+',0'
     
     ;  TIB constant determination range
     IF (STRLEN(self.tibrange_min) GE 1) $
