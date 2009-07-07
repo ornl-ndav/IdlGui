@@ -338,6 +338,9 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
+
+	;print, '--SetProperty--'
+	;print, self.TIBrange_Min, self.TIBrange_Max
   
 END
 
@@ -464,12 +467,20 @@ function ReductionCmd::Generate
     ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst+',0'
-    
+   
+	;print, '--Generate--'
+	;print, self.tibrange_min,' ', self.tibrange_max
+	;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
+;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
+ 
     ;  TIB constant determination range
-    IF (STRLEN(self.tibrange_min) GE 1) $
-      AND (STRLEN(self.tibrange_max GE 1)) THEN $
+    IF (STRLEN(STRING(self.tibrange_min)) GE 1) $
+      AND (STRLEN(STRING(self.tibrange_max)) GE 1) THEN BEGIN
       cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
-    
+      ;print, 'got here'
+;	print, cmd[i]
+	ENDIF
+
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
@@ -482,7 +493,7 @@ function ReductionCmd::Generate
     IF (self.pcnorm EQ 1) AND (self.nomonitornorm EQ 1) THEN cmd[i] += " --pc-norm"
     ; Monitor integration range
     IF (STRLEN(self.monrange_min) GE 1) $
-      AND (STRLEN(self.monrange_max GE 1)) THEN $
+      AND (STRLEN(self.monrange_max) GE 1) THEN $
       cmd[i] += " --mon-int-range=" + self.monrange_min + " " + self.monrange_max
     ; Detector Efficiency
     IF STRLEN(self.deteff) GT 1 THEN $
