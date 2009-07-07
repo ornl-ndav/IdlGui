@@ -75,7 +75,8 @@ PRO launch_couts_vs_tof_base_Event, Event
         IF (event.type EQ 0) THEN BEGIN ;left click
           (*global1).left_click = 1b
           CURSOR, x_data, y_data, /DATA
-          CURSOR, x_device, y_device, /DEVICE
+          x_device = Event.x
+          y_device = Event.y
           x0y0x1y1_data = (*global1).x0y0x1y1_data
           x0y0x1y1_device = (*global1).x0y0x1y1_device
           IF ((*global1).left_clicked) THEN BEGIN
@@ -99,7 +100,8 @@ PRO launch_couts_vs_tof_base_Event, Event
       IF (event.type EQ 2 AND $ ;moving the mouse with left click
         (*global1).left_click) THEN BEGIN
         CURSOR, x_data, y_data, /DATA
-        CURSOR, x_device, y_device, /DEVICE
+        x_device = Event.x
+        y_device = Event.y
         x0y0x1y1_data = (*global1).x0y0x1y1_data
         x0y0x1y1_device = (*global1).x0y0x1y1_device
         IF ((*global1).left_clicked) THEN BEGIN
@@ -184,14 +186,19 @@ PRO calculate_average_value, Event
     ENDIF
     
     diff = index_min - index_max
-    IF (diff GT 0) THEN average = 'N/A'
+    IF (diff GT 0) THEN BEGIN
+      average = 'N/A'
+      total_value = 'N/A'
+    ENDIF
     IF (diff EQ 0) THEN BEGIN
       average = counts_vs_tof_integrated[index_min]
+      total_value = counts_vs_tof_integrated[index_min]
       plot_average, Event, average
     ENDIF
     IF (diff LT 0) THEN BEGIN
       total_counts = counts_vs_tof_integrated[index_min:index_max]
       average = TOTAL(total_counts) / N_ELEMENTS(total_counts)
+      total_value = TOTAL(total_counts)
       plot_average, Event, average
     ENDIF
     
@@ -199,14 +206,19 @@ PRO calculate_average_value, Event
   
     xmin_data += 1
     diff = xmin_data - xmax_data
-    IF (diff GT 0) THEN average = 'N/A'
+    IF (diff GT 0) THEN BEGIN
+      average = 'N/A'
+      total_value = 'N/A'
+    ENDIF
     IF (diff EQ 0) THEN BEGIN
       average = counts_vs_tof_integrated[xmin_data]
+      total_value = counts_vs_tof_integrated[xmin_data]
       plot_average, Event, average
     ENDIF
     IF (diff LT 0) THEN BEGIN
       total_counts = counts_vs_tof_integrated[xmin_data:xmax_data]
       average = TOTAL(total_counts)/N_ELEMENTS(total_counts)
+      total_value = TOTAL(total_counts)
       plot_average, Event, average
     ENDIF
     
@@ -216,6 +228,8 @@ PRO calculate_average_value, Event
   
   putTextFieldValue, Event, 'full_detector_counts_vs_tof_average_value',$
     STRCOMPRESS(average,/REMOVE_ALL)
+  putTextFieldValue, Event, 'full_detector_counts_vs_tof_total_value',$
+    STRCOMPRESS(total_value,/REMOVE_ALL) + ')'
     
 END
 
@@ -385,20 +399,20 @@ PRO MakeCountsVsTofBase, wBase
     /NO_RELEASE)
     
   log = WIDGET_BUTTON(row1c,$
-    VALUE = 'Logarithmic',$
+    VALUE = 'Log.',$
     UNAME = 'full_detector_count_vs_tof_log_plot',$
     /NO_RELEASE)
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
   space = WIDGET_LABEL(row1,$
-    VALUE = '        Selection')
+    VALUE = '     Selection ->')
     
   value = WIDGET_LABEL(row1,$
     VALUE = '   Min:')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 50,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_left_bin')
@@ -411,7 +425,7 @@ PRO MakeCountsVsTofBase, wBase
     VALUE = '    Max:')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 50,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_right_bin')
@@ -421,16 +435,24 @@ PRO MakeCountsVsTofBase, wBase
     UNAME = 'full_detector_counts_vs_tof_right_bin_unit')
     
   value = WIDGET_LABEL(row1,$
-    VALUE = '     Average counts of selection:')
+    VALUE = '    Average (counts/bins) of selection:')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 60,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_average_value')
     
+  total = WIDGET_LABEL(row1,$
+    value = '(Total:')
+  total = WIDGET_LABEL(row1,$
+    value = 'N/A)',$
+    uname = 'full_detector_counts_vs_tof_total_value',$
+    /ALIGN_LEFT,$
+    SCR_XSIZE = 80)
+    
   info = WIDGET_LABEL(row1,$
-    VALUE = '  (Left click to select min/max value and right click ' + $
+    VALUE = '      (Left click to select min/max value and right click ' + $
     'to switch to other value)')
     
   ;ROW 2 --------------------------------------------------
