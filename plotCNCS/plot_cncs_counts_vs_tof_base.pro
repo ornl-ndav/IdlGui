@@ -67,15 +67,40 @@ PRO launch_couts_vs_tof_base_Event, Event
       
       ;if in selection mode only ===================
       IF (isButtonSelected(Event, $
-      'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
-      
-      IF (event.release EQ 1) THEN BEGIN ;release left click
-        (*global1).left_click = 0b
-      ENDIF
-      
-      IF (event.press NE 4) THEN BEGIN
-        IF (event.type EQ 0) THEN BEGIN ;left click
-          (*global1).left_click = 1b
+        'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
+        
+        IF (event.release EQ 1) THEN BEGIN ;release left click
+          (*global1).left_click = 0b
+        ENDIF
+        
+        IF (event.press NE 4) THEN BEGIN
+          IF (event.type EQ 0) THEN BEGIN ;left click
+            (*global1).left_click = 1b
+            CURSOR, x_data, y_data, /DATA
+            x_device = Event.x
+            y_device = Event.y
+            x0y0x1y1_data = (*global1).x0y0x1y1_data
+            x0y0x1y1_device = (*global1).x0y0x1y1_device
+            IF ((*global1).left_clicked) THEN BEGIN
+              x0y0x1y1_data[0] = x_data
+              x0y0x1y1_data[1] = y_data
+              x0y0x1y1_device[0] = x_device
+              x0y0x1y1_device[1] = y_device
+            ENDIF ELSE BEGIN
+              x0y0x1y1_data[2] = x_data
+              x0y0x1y1_data[3] = y_data
+              x0y0x1y1_device[2] = x_device
+              x0y0x1y1_device[3] = y_device
+            ENDELSE
+            (*global1).x0y0x1y1_data = x0y0x1y1_data
+            (*global1).x0y0x1y1_device = x0y0x1y1_device
+            display_selection, Event
+          ENDIF
+          calculate_average_value, Event
+        ENDIF
+        
+        IF (event.type EQ 2 AND $ ;moving the mouse with left click
+          (*global1).left_click) THEN BEGIN
           CURSOR, x_data, y_data, /DATA
           x_device = Event.x
           y_device = Event.y
@@ -95,42 +120,34 @@ PRO launch_couts_vs_tof_base_Event, Event
           (*global1).x0y0x1y1_data = x0y0x1y1_data
           (*global1).x0y0x1y1_device = x0y0x1y1_device
           display_selection, Event
+          calculate_average_value, Event
         ENDIF
-        calculate_average_value, Event
-      ENDIF
-      
-      IF (event.type EQ 2 AND $ ;moving the mouse with left click
-        (*global1).left_click) THEN BEGIN
-        CURSOR, x_data, y_data, /DATA
-        x_device = Event.x
-        y_device = Event.y
-        x0y0x1y1_data = (*global1).x0y0x1y1_data
-        x0y0x1y1_device = (*global1).x0y0x1y1_device
-        IF ((*global1).left_clicked) THEN BEGIN
-          x0y0x1y1_data[0] = x_data
-          x0y0x1y1_data[1] = y_data
-          x0y0x1y1_device[0] = x_device
-          x0y0x1y1_device[1] = y_device
-        ENDIF ELSE BEGIN
-          x0y0x1y1_data[2] = x_data
-          x0y0x1y1_data[3] = y_data
-          x0y0x1y1_device[2] = x_device
-          x0y0x1y1_device[3] = y_device
-        ENDELSE
-        (*global1).x0y0x1y1_data = x0y0x1y1_data
-        (*global1).x0y0x1y1_device = x0y0x1y1_device
-        display_selection, Event
-        calculate_average_value, Event
-      ENDIF
-      
-      IF (event.press EQ 4) THEN BEGIN ;right click
-        switch_left_right_click, Event
-      ENDIF
-      
+        
+        IF (event.press EQ 4) THEN BEGIN ;right click
+          switch_left_right_click, Event
+        ENDIF
+        
       ENDIF ELSE BEGIN ; Zoom button selected =======================
       
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       ENDELSE
-
+      
     END
     
     ;linear plot
@@ -385,16 +402,18 @@ FUNCTION retrieve_tof_array, NexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO MakeCountsVsTofBase, wBase
+PRO MakeCountsVsTofBase, wBaseBackground
 
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(MAP = 1,$
-    GROUP_LEADER = ourGroup,$
+  wBaseBackground = WIDGET_BASE(MAP = 1,$
     UNAME = 'counts_vs_tof_main_base',$
+    GROUP_LEADER = ourGroup)
     ;    MBAR  = WID_BASE_0_MBAR)
-    /COLUMN)
     
+  wBase= WIDGET_BASE(wBaseBackground,$
+  /COLUMN)
+
   ;    ;HELP MENU in Menu Bar -------------------------------------------------
   ;  HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
   ;    UNAME = 'help_menu',$
@@ -482,16 +501,56 @@ PRO MakeCountsVsTofBase, wBase
     VALUE = '   (Left click to select min/max value and right click ' + $
     'to switch to other value)')
     
-  zoom_base = WIDGET_BASE(row1,$ ;ZOOM BASE ************************
+  zoom_base = WIDGET_BASE(wBaseBackground,$ ;ZOOM BASE ************************
+    XOFFSET = 185,$
+    YOFFSET = 8,$
     /ROW,$
     UNAME = 'zoom_base',$
     MAP = 0)
-
-
-
-
-
-
+    
+  xsize = 15
+  
+  xmin = WIDGET_LABEL(zoom_base,$
+    VALUE = 'Xmin:')
+  xmin = WIDGET_TEXT(zoom_base,$
+    VALUE = 'N/A',$
+    XSIZE = xsize,$
+    UNAME = 'xmin')
+    unit = WIDGET_LABEL(zoom_base,$
+    VALUE = 'microS',$
+    UNAME = 'xaxis_units')
+    
+  xmax = WIDGET_LABEL(zoom_base,$
+    VALUE = '     Xmax:')
+  xmax = WIDGET_TEXT(zoom_base,$
+    VALUE = 'N/A',$
+    XSIZE = xsize,$
+    UNAME = 'xmax')
+    unit = WIDGET_LABEL(zoom_base,$
+    VALUE = 'microS',$
+    UNAME = 'xaxis_units')
+    
+  ymin = WIDGET_LABEL(zoom_base,$
+    VALUE = '      Ymin:')
+  ymin = WIDGET_TEXT(zoom_base,$
+    VALUE = 'N/A',$
+    XSIZE = xsize,$
+    UNAME = 'ymin')
+    unit = WIDGET_LABEL(zoom_base,$
+    VALUE = 'microS',$
+    UNAME = 'xaxis_units')
+    
+  ymax = WIDGET_LABEL(zoom_base,$
+    VALUE = '     Ymax:')
+  ymax = WIDGET_TEXT(zoom_base,$
+    VALUE = 'N/A',$
+    XSIZE = xsize,$
+    UNAME = 'ymax')
+    unit = WIDGET_LABEL(zoom_base,$
+    VALUE = 'microS',$
+    UNAME = 'xaxis_units')
+    
+    
   ;ROW 2 --------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
