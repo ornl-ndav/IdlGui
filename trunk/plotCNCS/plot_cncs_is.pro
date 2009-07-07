@@ -34,24 +34,30 @@
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION isArchived, Event
-value = getCW_BgroupValue(Event,'archived_or_list_all')
-IF (value EQ 0) THEN RETURN, 1
-RETURN,0
+  value = getCW_BgroupValue(Event,'archived_or_list_all')
+  IF (value EQ 0) THEN RETURN, 1
+  RETURN,0
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 FUNCTION isMainPlotLin, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_linear_plot')
-status = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, status
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_linear_plot')
+  status = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, status
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 FUNCTION isWithGrid, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_with_grid_plot')
-status = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, status
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_with_grid_plot')
+  status = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, status
 END
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION isButtonSelected, Event, uname
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  status = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, status
+END

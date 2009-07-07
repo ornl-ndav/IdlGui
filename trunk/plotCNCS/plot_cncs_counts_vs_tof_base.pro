@@ -47,25 +47,27 @@ PRO launch_couts_vs_tof_base_Event, Event
   
   CASE event.id OF
   
-    ;linear plot
-    WIDGET_INFO(event.top, $
-      FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
-      display_selection, Event
-      average = (*global1).average
-      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
+    ;selection tool selected
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'full_detector_counts_vs_tof_selection_tool'): BEGIN
+      MapBase, Event, 'selection_base', 1
+      MapBase, Event, 'zoom_base', 0
     END
     
-    ;log plot
-    WIDGET_INFO(event.top, $
-      FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
-      display_selection, Event
-      average = (*global1).average
-      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
+    ;zoom tool selected
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'full_detector_counts_vs_tof_zoom_tool'): BEGIN
+      MapBase, Event, 'selection_base', 0
+      MapBase, Event, 'zoom_base', 1
     END
     
     ;draw plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
+      
+      ;if in selection mode only ===================
+      IF (isButtonSelected(Event, $
+      'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
       
       IF (event.release EQ 1) THEN BEGIN ;release left click
         (*global1).left_click = 0b
@@ -125,6 +127,26 @@ PRO launch_couts_vs_tof_base_Event, Event
         switch_left_right_click, Event
       ENDIF
       
+      ENDIF ELSE BEGIN ; Zoom button selected =======================
+      
+      ENDELSE
+
+    END
+    
+    ;linear plot
+    WIDGET_INFO(event.top, $
+      FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
+      display_selection, Event
+      average = (*global1).average
+      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
+    END
+    
+    ;log plot
+    WIDGET_INFO(event.top, $
+      FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
+      display_selection, Event
+      average = (*global1).average
+      IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
     END
     
     ELSE:
@@ -385,76 +407,91 @@ PRO MakeCountsVsTofBase, wBase
     
   ;ROW 1 --------------------------------------------------
   row1 = WIDGET_BASE(wBase,$
+    /BASE_ALIGN_CENTER,$
     /ROW)
     
-  ;lin/log cw_bgroup
+  ;Selection or zoom cw_bgroup
   row1c = WIDGET_BASE(row1,$
     /ROW,$
     /EXCLUSIVE,$
-    FRAME = 0)
+    FRAME = 5)
     
-  lin = WIDGET_BUTTON(row1c,$
-    VALUE = 'Linear',$
-    UNAME = 'full_detector_count_vs_tof_linear_plot',$
+  selection = WIDGET_BUTTON(row1c,$
+    VALUE = 'Selection',$
+    UNAME = 'full_detector_counts_vs_tof_selection_tool',$
     /NO_RELEASE)
     
-  log = WIDGET_BUTTON(row1c,$
-    VALUE = 'Log.',$
-    UNAME = 'full_detector_count_vs_tof_log_plot',$
+  zoom = WIDGET_BUTTON(row1c,$
+    VALUE = 'Zoom',$
+    UNAME = 'full_detector_counts_vs_tof_zoom_tool',$
     /NO_RELEASE)
     
-  WIDGET_CONTROL, lin, /SET_BUTTON
+  WIDGET_CONTROL, selection, /SET_BUTTON
   
-  space = WIDGET_LABEL(row1,$
+  selection_base = WIDGET_BASE(row1,$ ;SELECTION BASE ************************
+    /ROW,$
+    UNAME = 'selection_base')
+    
+  space = WIDGET_LABEL(selection_base,$
     VALUE = '     Selection ->')
     
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = '   Min:')
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 50,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_left_bin')
-  type = WIDGET_LABEL(row1,$
+  type = WIDGET_LABEL(selection_base,$
     VALUE = 'microS',$
     SCR_XSIZE = 40,$
     UNAME = 'full_detector_counts_vs_tof_left_bin_unit')
     
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = '    Max:')
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 50,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_right_bin')
-  type = WIDGET_LABEL(row1,$
+  type = WIDGET_LABEL(selection_base,$
     VALUE = 'microS',$
     SCR_XSIZE = 40,$
     UNAME = 'full_detector_counts_vs_tof_right_bin_unit')
     
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = '    Average (counts/bins) of selection:')
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(selection_base,$
     VALUE = 'N/A',$
     SCR_XSIZE = 60,$
     FRAME = 1,$
     /ALIGN_LEFT,$
     UNAME = 'full_detector_counts_vs_tof_average_value')
     
-  total = WIDGET_LABEL(row1,$
+  total = WIDGET_LABEL(selection_base,$
     value = '(Total:')
-  total = WIDGET_LABEL(row1,$
+  total = WIDGET_LABEL(selection_base,$
     value = 'N/A)',$
     uname = 'full_detector_counts_vs_tof_total_value',$
     /ALIGN_LEFT,$
     SCR_XSIZE = 80)
     
-  info = WIDGET_LABEL(row1,$
-    VALUE = '      (Left click to select min/max value and right click ' + $
+  info = WIDGET_LABEL(selection_base,$
+    VALUE = '   (Left click to select min/max value and right click ' + $
     'to switch to other value)')
     
+  zoom_base = WIDGET_BASE(row1,$ ;ZOOM BASE ************************
+    /ROW,$
+    UNAME = 'zoom_base',$
+    MAP = 0)
+
+
+
+
+
+
   ;ROW 2 --------------------------------------------------
   draw = WIDGET_DRAW(wBase,$
     SCR_XSIZE = 1500,$
@@ -463,6 +500,26 @@ PRO MakeCountsVsTofBase, wBase
     /BUTTON_EVENTS,$
     UNAME = 'counts_vs_tof_main_base_draw')
     
+  ;ROW 3 --------------------------------------------------
+    
+  ;lin/log cw_bgroup
+  row3 = WIDGET_BASE(wBase,$
+    /ROW,$
+    /EXCLUSIVE,$
+    FRAME = 0)
+    
+  lin = WIDGET_BUTTON(row3,$
+    VALUE = 'Linear',$
+    UNAME = 'full_detector_count_vs_tof_linear_plot',$
+    /NO_RELEASE)
+    
+  log = WIDGET_BUTTON(row3,$
+    VALUE = 'Log.',$
+    UNAME = 'full_detector_count_vs_tof_log_plot',$
+    /NO_RELEASE)
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
 END
