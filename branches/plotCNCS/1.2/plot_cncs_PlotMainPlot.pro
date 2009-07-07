@@ -977,7 +977,7 @@ PRO PlotMainPlot, histo_mapped_file
   WIDGET_CONTROL, id, SENSITIVE=0
   
   ;plot das view of full instrument
-  plotDASviewFullInstrument, global1
+  plotDASviewFullInstrument, Event, global1
   
 END
 
