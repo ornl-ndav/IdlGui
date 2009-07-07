@@ -378,7 +378,7 @@ function NormCmd::Generate
       cmd[i] += " --tof-cut-max="+self.tmax
     ; Time Independent Background
     IF STRLEN(self.tibconst) GE 1 THEN $
-      cmd[i] += " --tib-const="+self.tibconst
+      cmd[i] += " --tib-const="+self.tibconst+',0'
     ;  TIB constant determination range
     IF (STRLEN(self.tibrange_min) GE 1) $
       AND (STRLEN(self.tibrange_max GE 1)) THEN $
