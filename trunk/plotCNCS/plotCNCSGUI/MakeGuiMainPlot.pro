@@ -509,68 +509,69 @@ PRO MakeGuiMainPlot, wBase
     
   ;selection base -------------------------------------------------------------
     
-  sel_base = WIDGET_BASE(row4,$
-    FRAME = 1,$
-    /ROW)
-    
-  sel_col1 = WIDGET_BASE(sel_base,$ ;..........................................
-    /COLUMN)
-    
-  button = WIDGET_BUTTON(sel_col1,$
-    VALUE = 'RESET SELECTION',$
-    UNAME = 'reset_selection_button',$
-    SENSITIVE = 1,$
-    SCR_XSIZE = 200)
-    
-  sel_col1_row2 = WIDGET_BASE(sel_col1,$
-    /ROW)
-    
-  load = WIDGET_BUTTON(sel_col1_row2,$
-    VALUE = ' LOAD ROI ',$
-    SCR_XSIZE = 90,$
-    UNAME = 'load_roi_button')
-    
-  save = WIDGET_BUTTON(sel_col1_row2,$
-    VALUE = ' SAVE ROI ',$
-    SCR_XSIZE = 90,$
-    UNAME = 'save_roi_button')
-    
-  sel_col1_row3_col1 = WIDGET_BASE(sel_col1,$
-  FRAME = 1,$
-  /COLUMN)
-  
-  sel_col1_row3_col1_row1 = WIDGET_BASE(sel_col1_row3_col1,$
-  /ROW)
-  
-  fld1 = CW_FIELD(sel_col1_row3_col1_row1,$
-  VALUE = '',$
-  UNAME = 'selection_pixelid',$
-  /LONG,$
-  TITLE = 'PixelID')
-  
-  fld2 = CW_FIELD(sel_col1_row3_col1_row1,$
-  VALUE = '',$
-  UNAME = 'selection_bank',$
-  /INTEGER,$
-  TITLE = 'Bank')
-    
-  sel_col1_row3_col1_row2 = WIDGET_BASE(sel_col1_row3_col1,$
-  /ROW)
-  
-  fld1 = CW_FIELD(sel_col1_row3_col1_row2,$
-  VALUE = '',$
-  UNAME = 'selection_tube',$
-  /LONG,$
-  TITLE = 'Tube')
-  
-  fld2 = CW_FIELD(sel_col1_row3_col1_row2,$
-  VALUE = '',$
-  UNAME = 'selection_row',$
-  /INTEGER,$
-  TITLE = 'Row')
-    
-  sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................
-    /COLUMN)
+;  sel_base = WIDGET_BASE(row4,$
+;    FRAME = 1,$
+;    MAP = 1,$
+;    /ROW)
+;    
+;  sel_col1 = WIDGET_BASE(sel_base,$ ;..........................................
+;    /COLUMN)
+;    
+;  button = WIDGET_BUTTON(sel_col1,$
+;    VALUE = 'RESET SELECTION',$
+;    UNAME = 'reset_selection_button',$
+;    SENSITIVE = 1,$
+;    SCR_XSIZE = 200)
+;    
+;  sel_col1_row2 = WIDGET_BASE(sel_col1,$
+;    /ROW)
+;    
+;  load = WIDGET_BUTTON(sel_col1_row2,$
+;    VALUE = ' LOAD ROI ',$
+;    SCR_XSIZE = 90,$
+;    UNAME = 'load_roi_button')
+;    
+;  save = WIDGET_BUTTON(sel_col1_row2,$
+;    VALUE = ' SAVE ROI ',$
+;    SCR_XSIZE = 90,$
+;    UNAME = 'save_roi_button')
+;    
+;  sel_col1_row3_col1 = WIDGET_BASE(sel_col1,$
+;  FRAME = 1,$
+;  /COLUMN)
+;  
+;  sel_col1_row3_col1_row1 = WIDGET_BASE(sel_col1_row3_col1,$
+;  /ROW)
+;  
+;  fld1 = CW_FIELD(sel_col1_row3_col1_row1,$
+;  VALUE = '',$
+;  UNAME = 'selection_pixelid',$
+;  /LONG,$
+;  TITLE = 'PixelID')
+;  
+;  fld2 = CW_FIELD(sel_col1_row3_col1_row1,$
+;  VALUE = '',$
+;  UNAME = 'selection_bank',$
+;  /INTEGER,$
+;  TITLE = 'Bank')
+;    
+;  sel_col1_row3_col1_row2 = WIDGET_BASE(sel_col1_row3_col1,$
+;  /ROW)
+;  
+;  fld1 = CW_FIELD(sel_col1_row3_col1_row2,$
+;  VALUE = '',$
+;  UNAME = 'selection_tube',$
+;  /LONG,$
+;  TITLE = 'Tube')
+;  
+;  fld2 = CW_FIELD(sel_col1_row3_col1_row2,$
+;  VALUE = '',$
+;  UNAME = 'selection_row',$
+;  /INTEGER,$
+;  TITLE = 'Row')
+;    
+;  sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................
+;    /COLUMN)
     
   WIDGET_CONTROL, wBase, /REALIZE
   
