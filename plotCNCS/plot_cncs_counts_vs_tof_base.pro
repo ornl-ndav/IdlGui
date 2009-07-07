@@ -107,6 +107,8 @@ PRO launch_couts_vs_tof_base_Event, Event
             ENDELSE
             (*global1).x0y0x1y1_data = x0y0x1y1_data
             (*global1).x0y0x1y1_device = x0y0x1y1_device
+            ;replot the background counts vs tof file
+            replot_counts_vs_tof_full_detector, Event
             display_selection, Event
           ENDIF
           calculate_average_value, Event
@@ -132,6 +134,8 @@ PRO launch_couts_vs_tof_base_Event, Event
           ENDELSE
           (*global1).x0y0x1y1_data = x0y0x1y1_data
           (*global1).x0y0x1y1_device = x0y0x1y1_device
+          ;replot the background counts vs tof file
+          replot_counts_vs_tof_full_detector, Event
           display_selection, Event
           calculate_average_value, Event
         ENDIF
@@ -156,6 +160,8 @@ PRO launch_couts_vs_tof_base_Event, Event
             (*global1).y1_data_backup = (*global1).y1_data
             
             replot_counts_vs_tof_full_detector, event
+            display_selection, Event ;that produces average line
+            replot_average, Event
             
           ENDIF ELSE BEGIN
           
@@ -180,6 +186,8 @@ PRO launch_couts_vs_tof_base_Event, Event
               ;replot the background counts vs tof file
               replot_counts_vs_tof_full_detector, Event, MOVING='yes'
               plotSelection_inCountsVsTofPlot, Event
+              display_selection, Event ;that produces average line
+              replot_average, Event
             ENDIF
           ENDIF
         ENDIF
@@ -190,6 +198,8 @@ PRO launch_couts_vs_tof_base_Event, Event
             (*global1).x1_data = X
             (*global1).y1_data = Y
             replot_counts_vs_tof_full_detector, Event
+            display_selection, Event
+            replot_average, Event
             (*global1).left_mouse_pressed = 0
             (*global1).x0_data_backup = (*global1).x0_data
             (*global1).y0_data_backup = (*global1).y0_data
@@ -199,9 +209,6 @@ PRO launch_couts_vs_tof_base_Event, Event
           ENDIF
         ENDIF
         
-        
-        
-        
       ENDELSE
       
     END
@@ -209,6 +216,7 @@ PRO launch_couts_vs_tof_base_Event, Event
     ;linear plot
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot'): BEGIN
+      replot_counts_vs_tof_full_detector, event, MOVING=moving
       display_selection, Event
       average = (*global1).average
       IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
@@ -217,6 +225,7 @@ PRO launch_couts_vs_tof_base_Event, Event
     ;log plot
     WIDGET_INFO(event.top, $
       FIND_BY_UNAME='full_detector_count_vs_tof_log_plot'): BEGIN
+      replot_counts_vs_tof_full_detector, event, MOVING=moving
       display_selection, Event
       average = (*global1).average
       IF (average NE 'N/A') THEN plot_average, Event, DOUBLE(average)
@@ -263,6 +272,21 @@ END
 PRO  plot_average, Event, average
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x0y0x1y1_data = (*global1).x0y0x1y1_data
+  x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
+  xmin = MIN(x0x1,MAX=xmax)
+  
+  PLOTS, xmin, average,/DATA
+  PLOTS, xmax, average,/CONTINUE, COLOR=200,/DATA
+  
+END
+
+;------------------------------------------------------------------------------
+PRO  replot_average, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  average = (*global1).average
   
   x0y0x1y1_data = (*global1).x0y0x1y1_data
   x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
@@ -369,42 +393,45 @@ PRO display_selection, Event
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  ;replot the background counts vs tof file
-  replot_counts_vs_tof_full_detector, Event
-  
   ;plot selection
   x0y0x1y1_device = (*global1).x0y0x1y1_device
   x0x1 = [x0y0x1y1_device[0],x0y0x1y1_device[2]]
   y0y1 = [x0y0x1y1_device[1],x0y0x1y1_device[3]]
+  xmin_device = MIN(x0x1,MAX=xmax_device)
+  ymin_device = MIN(y0y1,MAX=ymax_device)
   
+  x0y0x1y1_data = (*global1).x0y0x1y1_data
+  x0x1 = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
+  y0y1 = [x0y0x1y1_data[1],x0y0x1y1_data[3]]
   xmin = MIN(x0x1,MAX=xmax)
   ymin = MIN(y0y1,MAX=ymax)
   
   ;make sure x and y are inside the space allowed
-  x0y0x1y1_device_limit = (*global1).x0y0x1y1_device_limit
-  IF (xmax GT x0y0x1y1_device_limit[2]) THEN xmax = -1L
-  IF (xmax LT x0y0x1y1_device_limit[0]) THEN xmax = -1L
-  IF (xmin LT x0y0x1y1_device_limit[0]) THEN xmin = -1L
-  IF (ymax GT x0y0x1y1_device_limit[3]) THEN ymax = -1L
-  IF (ymin LT x0y0x1y1_device_limit[1]) THEN ymin = -1L
+  IF (xmax_device GT (*global1).device_xmax) THEN xmax = -1L
+  IF (xmax_device LT (*global1).device_xmin) THEN xmax = -1L
+  IF (xmin_device LT (*global1).device_xmin) THEN xmin = -1L
+  IF (ymax_device GT (*global1).device_ymax) THEN ymax = -1L
+  IF (ymin_device LT (*global1).device_ymin) THEN ymin = -1L
   
-  x0y0x1y1_data = (*global1).x0y0x1y1_data
-  x0x1_data = [x0y0x1y1_data[0],x0y0x1y1_data[2]]
-  xmin_data = MIN(x0x1_data,MAX=xmax_data)
-  
-  ymin_plot = x0y0x1y1_device_limit[1]
-  ymax_plot = x0y0x1y1_device_limit[3]
+  ymin_plot = (*global1).device_ymin
+  ymax_plot = (*global1).device_ymax
   IF (xmin NE -1L) THEN BEGIN
-    PLOTS, xmin, ymin_plot,/DEVICE
-    PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DEVICE
-    putTextFieldValue, Event,'full_detector_counts_vs_tof_left_bin', $
-      STRCOMPRESS(xmin_data,/REMOVE_ALL)
+    PLOTS, xmin, ymin_plot,/DATA
+    PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DATA
+    IF (isButtonSelected(Event, $
+      'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
+      putTextFieldValue, Event,'full_detector_counts_vs_tof_left_bin', $
+        STRCOMPRESS(xmin,/REMOVE_ALL)
+    ENDIF
   ENDIF
   IF (xmax NE -1L) THEN BEGIN
-    PLOTS, xmax, ymin_plot,/DEVICE
-    PLOTS, xmax, ymax_plot,/CONTINUE, COLOR=100,/DEVICE
-    putTextFieldValue, Event,'full_detector_counts_vs_tof_right_bin', $
-      STRCOMPRESS(xmax_data,/REMOVE_ALL)
+    PLOTS, xmax, ymin_plot,/DATA
+    PLOTS, xmax, ymax_plot,/CONTINUE, COLOR=100,/DATA
+    IF (isButtonSelected(Event, $
+      'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
+      putTextFieldValue, Event,'full_detector_counts_vs_tof_right_bin', $
+        STRCOMPRESS(xmax,/REMOVE_ALL)
+    ENDIF
   ENDIF
   
 END
@@ -782,7 +809,6 @@ PRO Launch_counts_vs_tof_base, $
     left_clicked: 1b,$
     x0y0x1y1_data: [-1L,-1L,-1L,-1L],$
     x0y0x1y1_device: [-1L,-1L,-1L,-1L],$
-    x0y0x1y1_device_limit: [60L,30L,1481L,569L],$
     left_click: 0b,$
     wbase:               wbase})
     
