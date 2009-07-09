@@ -38,6 +38,7 @@ FUNCTION isLinSelected, Event
     FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot')
   value = WIDGET_INFO(id, /BUTTON_SET)
   RETURN, value
+  
 END
 
 ;----------------------------------------------------------------------------
@@ -778,7 +779,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     VALUE = 'microS',$
     UNAME = 'xaxis_units')
     
-    help = WIDGET_LABEL(zoom_base,$
+  help = WIDGET_LABEL(zoom_base,$
     VALUE = '    (Click outside the plotting frame to reset the zoom.)')
     
   ;ROW 2 --------------------------------------------------
@@ -817,7 +818,9 @@ END
 PRO Launch_counts_vs_tof_base, $
     counts_vs_tof_array, $
     nexus_file_name, $
-    title=title
+    timemap_file, $
+    title = title, $
+    global = global
     
   ;build gui
   wBase = ''
@@ -874,10 +877,18 @@ PRO Launch_counts_vs_tof_base, $
   loadct, 5, /SILENT
   
   ;retrieve TOF array
-  IF (nexus_file_name NE '') THEN BEGIN
-    tof_array = retrieve_tof_array(nexus_file_name)
-    (*(*global1).tof_array) = tof_array
-  ENDIF
+  mode = (*global).mode
+  CASE (mode) OF
+    'nexus': BEGIN
+      tof_array = retrieve_tof_array(nexus_file_name)
+      (*(*global1).tof_array) = tof_array
+    END
+    'histo_with_tof': BEGIN
+      tof_array = (*(*global).tof_array)
+      (*(*global1).tof_array) = tof_array
+    END
+  ELSE:
+  ENDCASE
   
   ;integrated counts_vs_tof for all pixels
   counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
@@ -889,13 +900,32 @@ PRO Launch_counts_vs_tof_base, $
   max = MAX(counts_vs_tof_integrated_2)
   max_index = WHERE(counts_vs_tof_integrated_2 EQ MAX)
   
-  IF (nexus_file_name NE '') THEN BEGIN
-    title += ' (TOF of maximum intensity is ' + $
-      STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
-  ENDIF ELSE BEGIN
-    title += ' (TOF of maximum intensity is at binning #' + $
-      STRCOMPRESS(max_index[0],/REMOVE_ALL) + ')'
-  ENDELSE
+  CASE (mode) OF
+    'nexus': BEGIN
+      title += ' (TOF of maximum intensity is ' + $
+        STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+      xtitle = 'TOF (microS)'
+      ytitle = 'Counts'
+      plot_type = 'tof'
+      units_label = 'microS'
+    END
+    'histo_with_tof' : BEGIN
+      title += ' (TOF of maximum intensity is ' + $
+        STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+      xtitle = 'TOF (microS)'
+      ytitle = 'Counts'
+      plot_type = 'tof'
+      units_label = 'microS'
+    END
+    ELSE: BEGIN
+      title += ' (TOF of maximum intensity is at binning #' + $
+        STRCOMPRESS(max_index[0],/REMOVE_ALL) + ')'
+      xtitle = 'Bins #'
+      ytitle = 'Counts'
+      plot_type = 'bin'
+      units_label = 'bins#'
+    END
+  ENDCASE
   
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='counts_vs_tof_main_base')
   WIDGET_CONTROL, id, BASE_SET_TITLE=title
@@ -903,18 +933,6 @@ PRO Launch_counts_vs_tof_base, $
   id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  
-  IF (nexus_file_name NE '') THEN BEGIN
-    xtitle = 'TOF (microS)'
-    ytitle = 'Counts'
-    plot_type = 'tof'
-    units_label = 'microS'
-  ENDIF ELSE BEGIN
-    xtitle = 'Bins #'
-    ytitle = 'Counts'
-    plot_type = 'bin'
-    units_label = 'bins#'
-  ENDELSE
   
   !Y.MARGIN = [3,3]
   
@@ -932,13 +950,14 @@ PRO Launch_counts_vs_tof_base, $
   ymin = MIN(counts_vs_tof_integrated_2,MAX=ymax)
   (*global1).display_ymin = ymin
   (*global1).display_ymax = ymax
-  IF (nexus_file_name NE '') THEN BEGIN
+  IF (mode EQ 'nexus' OR $
+    mode EQ 'histo_with_tof') THEN BEGIN
     (*global1).display_xmin = tof_array[0]
     (*global1).display_xmax = tof_array[N_ELEMENTS(tof_array)-1]
     PLOT, tof_array, $
       counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
-      XSTYLE = 1,$
+      XSTYLE = 1+8,$
       YTITLE = ytitle,$
       YSTYLE = 1,$
       FONT='8x13'
