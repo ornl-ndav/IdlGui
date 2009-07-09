@@ -504,8 +504,8 @@ PRO MakeGuiMainPlot, wBase
     VALUE = 'RESET',$
     UNAME = 'reset_to_bin')
     
-  label = WIDGET_LABEL(base_v,$
-    VALUE = '(or left and right click mouse)')
+  ;label = WIDGET_LABEL(base_v,$
+  ;  VALUE = '(or left and right click mouse)')
     
   ;selection base -------------------------------------------------------------
     
