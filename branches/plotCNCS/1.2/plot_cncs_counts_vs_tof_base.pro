@@ -154,6 +154,12 @@ PRO launch_couts_vs_tof_base_Event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
       
+      id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 31
+      DEVICE, CURSOR_STANDARD=standard
+      
       ;if in selection mode only ===================
       IF (isButtonSelected(Event, $
         'full_detector_counts_vs_tof_selection_tool')) THEN BEGIN
@@ -282,34 +288,60 @@ PRO launch_couts_vs_tof_base_Event, Event
             CURSOR, X, Y, /data, /nowait
             (*global1).x1_data = X
             (*global1).y1_data = Y
-            redefine_xy_display_limit, Event
-            replot_counts_vs_tof_full_detector, Event
-            display_selection, Event
-            replot_average, Event
+            
             (*global1).left_mouse_pressed = 0
-            (*global1).x0_data_backup = (*global1).x0_data
-            (*global1).y0_data_backup = (*global1).y0_data
-            (*global1).x1_data_backup = (*global1).x1_data
-            (*global1).y1_data_backup = (*global1).y1_data
             
-            x0 = (*global1).x0_data
-            y0 = (*global1).y0_data
-            x1 = (*global1).x1_data
-            y1 = (*global1).y1_data
-            xmin = MIN([x0,x1],MAX=xmax)
-            ymin = MIN([y0,y1],MAX=ymax)
-            
-            IF (xmin NE xmax AND $
-              ymin NE ymax) THEN BEGIN
+            IF (((*global1).x1_data EQ (*global1).x0_data) AND $
+              ((*global1).y1_data EQ (*global1).y0_data)) THEN BEGIN
               
-              putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
-              putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
-              putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
-              putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+              (*global1).x0_data = 0.
+              (*global1).y0_data = 0.
+              (*global1).x1_data = 0.
+              (*global1).y1_data = 0.
+              (*global1).x0_data_backup = (*global1).x0_data
+              (*global1).y0_data_backup = (*global1).y0_data
+              (*global1).x1_data_backup = (*global1).x1_data
+              (*global1).y1_data_backup = (*global1).y1_data
+              (*global1).display_xmin = (*global1).display_xmin_backup
+              (*global1).display_ymin = (*global1).display_ymin_backup
+              (*global1).display_xmax = (*global1).display_xmax_backup
+              (*global1).display_ymax = (*global1).display_ymax_backup
+              replot_counts_vs_tof_full_detector, event
+              display_selection, Event ;that produces average line
+              replot_average, Event
+              display_xy_min_max, Event
               
             ENDIF ELSE BEGIN
             
-              display_xy_min_max, Event
+              redefine_xy_display_limit, Event
+              replot_counts_vs_tof_full_detector, Event
+              display_selection, Event
+              replot_average, Event
+              (*global1).x0_data_backup = (*global1).x0_data
+              (*global1).y0_data_backup = (*global1).y0_data
+              (*global1).x1_data_backup = (*global1).x1_data
+              (*global1).y1_data_backup = (*global1).y1_data
+              
+              x0 = (*global1).x0_data
+              y0 = (*global1).y0_data
+              x1 = (*global1).x1_data
+              y1 = (*global1).y1_data
+              xmin = MIN([x0,x1],MAX=xmax)
+              ymin = MIN([y0,y1],MAX=ymax)
+              
+              IF (xmin NE xmax AND $
+                ymin NE ymax) THEN BEGIN
+                
+                putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
+                putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
+                putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
+                putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+                
+              ENDIF ELSE BEGIN
+              
+                display_xy_min_max, Event
+                
+              ENDELSE
               
             ENDELSE
             
@@ -360,9 +392,6 @@ PRO redefine_xy_display_limit, Event
   (*global1).display_xmax = xmax
   (*global1).display_ymin = ymin
   (*global1).display_ymax = ymax
-  
-  print, 'in redefine_xy_display_limit'
-  help, xmin
   
 END
 
@@ -546,8 +575,18 @@ PRO display_selection, Event
   IF (ymax_device GT (*global1).device_ymax) THEN ymax = -1L
   IF (ymin_device LT (*global1).device_ymin) THEN ymin = -1L
   
-  ymin_plot = (*global1).display_ymin
+  lin_type = isLinSelected(Event)
+  IF (lin_type) THEN BEGIN
+    ymin_plot = (*global1).display_ymin
+  ENDIF ELSE BEGIN
+    IF ((*global1).display_ymin EQ 0.) THEN BEGIN
+      ymin_plot = 1.5e-6
+    ENDIF ELSE BEGIN
+      ymin_plot = (*global1).display_ymin
+    ENDELSE
+  ENDELSE
   ymax_plot = (*global1).display_ymax
+  
   IF (xmin NE -1L) THEN BEGIN
     PLOTS, xmin, ymin_plot,/DATA
     PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DATA
@@ -622,53 +661,51 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
-  print, 'xmin: ' + string(xmin)
-  
-  IF (xmax EQ 0. OR $
-    xmin EQ 0.) THEN BEGIN ;reset plot
-    
-    IF (plot_type EQ 'tof') THEN BEGIN
-      tof_array = (*(*global1).tof_array)
-      IF (lin_log_type EQ 'log') THEN BEGIN
-        PLOT, tof_array, $
-          counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1+8,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13',$
-          /YLOG
-      ENDIF ELSE BEGIN
-        PLOT, tof_array, $
-          counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1+8,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13'
-      ENDELSE
-      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
-        XTITLE='Bins #'
-    ENDIF ELSE BEGIN
-      IF (lin_log_type EQ 'log') THEN BEGIN
-        PLOT, counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1+8,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13',$
-          /YLOG
-      ENDIF ELSE BEGIN
-        PLOT, counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1+8,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13'
-      ENDELSE
-    ENDELSE
-    
-  ENDIF ELSE BEGIN ;zoom plot using range specified
+;  IF (xmax EQ 0. OR $
+;    xmin EQ 0.) THEN BEGIN ;reset plot
+;    
+;    IF (plot_type EQ 'tof') THEN BEGIN
+;      tof_array = (*(*global1).tof_array)
+;      IF (lin_log_type EQ 'log') THEN BEGIN
+;        PLOT, tof_array, $
+;          counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13',$
+;          /YLOG
+;      ENDIF ELSE BEGIN
+;        PLOT, tof_array, $
+;          counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13'
+;      ENDELSE
+;      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
+;        XTITLE='Bins #'
+;    ENDIF ELSE BEGIN
+;      IF (lin_log_type EQ 'log') THEN BEGIN
+;        PLOT, counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13',$
+;          /YLOG
+;      ENDIF ELSE BEGIN
+;        PLOT, counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13'
+;      ENDELSE
+;    ENDELSE
+;    
+;  ENDIF ELSE BEGIN ;zoom plot using range specified
   
     IF (plot_type EQ 'tof') THEN BEGIN
       tof_array = (*(*global1).tof_array)
@@ -719,7 +756,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
       ENDELSE
     ENDELSE
     
-  ENDELSE
+;  ENDELSE
   
 END
 
