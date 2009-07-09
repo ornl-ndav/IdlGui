@@ -14,8 +14,14 @@ PRO DGSreduction_UpdateGUI, widgetBase
   ; Instrument
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='INSTRUMENT_SELECTED')
   dgsr_cmd->GetProperty, Instrument=myValue
-  IF STRLEN(myValue) GT 1 THEN $
-    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
+  ; Hack for SEQ
+  IF (myValue EQ 'SEQ') THEN myValue = 'SEQUOIA'
+  
+  IF STRLEN(myValue) GT 1 THEN BEGIN
+    WIDGET_CONTROL, widget_ID, GET_VALUE=instruments
+    WIDGET_CONTROL, widget_ID, SET_COMBOBOX_SELECT=(WHERE(instruments EQ myValue))
+  ENDIF
 
   ; Number of Jobs
   widget_ID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGS_REDUCTION_JOBS')
@@ -32,6 +38,13 @@ PRO DGSreduction_UpdateGUI, widgetBase
   
   ; Update the Norm Mask Tab
   DGSN_UpdateGUI, widgetBase, dgsn_cmd
+
+  
+  status = dgsr_cmd->Check()
+  
+  ; Find the Status message window
+  dgsr_infoID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGSR_INFO_TEXT')
+  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=status.message
 
   ; Put info back
   WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
