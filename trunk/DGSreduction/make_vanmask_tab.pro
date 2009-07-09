@@ -33,7 +33,7 @@
 ;-
 ;---------------------------------------------------------
 
-PRO make_VanMask_Tab, baseWidget, dgsncmd
+PRO make_VanMask_Tab, baseWidget, dgsn_cmd
 
   reductionTabBaseColumns = WIDGET_BASE(baseWidget, COLUMN=2)
   reductionTabCol1 = WIDGET_BASE(reductionTabBaseColumns, /COLUMN)
@@ -339,7 +339,7 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   CommandTab = WIDGET_BASE(reductionMessageTabsID, Title='Command to execute', /COLUMN)
   ;textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
   outputID= WIDGET_TEXT(CommandTab, xsize=MessageBoxSize, ysize=6, /SCROLL, /WRAP, $
-    VALUE=dgsr_cmd->generate(), UNAME='DGSN_CMD_TEXT')
+    VALUE=dgsn_cmd->generate(), UNAME='DGSN_CMD_TEXT')
   
 
   ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
