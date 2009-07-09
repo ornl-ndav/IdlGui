@@ -496,18 +496,18 @@ function ReductionCmd::Generate
       AND (STRLEN(self.monrange_max) GE 1) THEN $
       cmd[i] += " --mon-int-range=" + self.monrange_min + " " + self.monrange_max
     ; Detector Efficiency
-    IF STRLEN(self.deteff) GT 1 THEN $
+    IF STRLEN(self.deteff) GE 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
     ; transmission for sample data background
-    IF STRLEN(self.datatrans) GT 1 THEN $
-      cmd[i] += " --data-trans-coef=" + self.datatrans
+    IF STRLEN(self.datatrans) GE 1 THEN $
+      cmd[i] += " --data-trans-coeff=" + self.datatrans + ",0.0"
     ; transmission for norm data background
-    IF STRLEN(self.normtrans) GT 1 THEN $
-      cmd[i] += " --norm-trans-coef=" + self.normtrans
+    IF STRLEN(self.normtrans) GE 1 THEN $
+      cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
     IF (STRLEN(self.normrange_min) GE 1 ) $
       AND (STRLEN(self.normrange_max) GE 1) THEN $
-      cmd[i] += " --norm-int-range=" + self.normrange_min + "," $ 
+      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
                 + self.normrange_max    
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
