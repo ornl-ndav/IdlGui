@@ -59,7 +59,7 @@ PRO DGSreduction_LaunchCollector, event
     spe_cmd = "sbatch -p " + queue + $
       " --output=" + logDir + "/" + instrument + "_" + runnumber + "_SPE_collector.log" + $
       " --job-name=" + instrument + "_" + runnumber + "_SPE_collector " + $
-      "add_spefiles.py " + instrument + " -d " + outdir + $
+      "add_spefiles.py --force " + instrument + " -d " + outdir + $
       " -o " + outdir + "/" + instrument + "_" + runnumber + ".spe"
     spawn, spe_cmd
     spawn, "echo " + spe_cmd + " > /tmp/" + info.username + "_spe_commands"
