@@ -128,6 +128,24 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSN_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
 
 
+  ; == Thresholds ==
+  thresholdRow = WIDGET_BASE(reductionTabCol2Row1Col2, /ROW) ; Just for formatting
+    
+  thresholdBase = WIDGET_BASE(thresholdRow)
+  thresholdLabel = WIDGET_LABEL(thresholdBase, Value=' Cut off Threshold ', XOFFSET=5)
+  thresholdLabelGeomtry = WIDGET_INFO(thresholdLabel, /GEOMETRY)
+  thresholdLabelGeomtryYSize = thresholdLabelGeomtry.ysize
+  thresholdPrettyBase = WIDGET_BASE(thresholdBase, /FRAME, /COLUMN, $
+        YOFFSET=tofcutLabelGeomtryYSize/2, XPAD=10, YPAD=10)
+
+  thresholdValuesRow = WIDGET_BASE(thresholdPrettyBase, /ROW)
+  tofcutminID = CW_FIELD(thresholdValuesRow, TITLE="Low:", UVALUE="DGSN_LO_THRESHOLD", $
+    UNAME="DGSN_LO_THRESHOLD", /ALL_EVENTS, XSIZE=17)
+  tofcutmaxID = CW_FIELD(thresholdValuesRow, TITLE="High:", UVALUE="DGSN_HI_THRESHOLD", $
+    UNAME="DGSN_HI_THRESHOLD", /ALL_EVENTS, XSIZE=18)  
+  
+  
+
   ; == NORMALISATION OPTIONS ==
  
   normRow = WIDGET_BASE(reductionTabCol1Row1Col1, /ROW)
@@ -148,7 +166,7 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   
   normOptionsBase = WIDGET_BASE(normOptionsBaseColumn1, /NONEXCLUSIVE)
   noMon_Button = WIDGET_BUTTON(normOptionsBase, VALUE='No Monitor Normalisation', $
-        UVALUE='DGSN_NO-MON-NORM')
+        UVALUE='DGSN_NO-MON-NORM', UNAME='DGSN_NO-MON-NORM')
   pc_button = WIDGET_BUTTON(normOptionsBase, VALUE='Proton Charge Normalisation', $
         UVALUE='DGSN_PC-NORM', UNAME='DGSN_PC-NORM')
 
@@ -284,11 +302,11 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, $
     UNAME="DGSN_COMBINED_WAVELENGTH_RANGE")
   minWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Min:", $
-        XSIZE=7, UVALUE="DGSN_LAMBDA_MIN", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSN_LAMBDA_MIN", UNAME="DGSN_LAMBDA_MIN", /ALL_EVENTS)
   maxWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Max:", $
-        XSIZE=7, UVALUE="DGSN_LAMBDA_MAX", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSN_LAMBDA_MAX", UNAME="DGSN_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
-        XSIZE=7, UVALUE="DGSN_LAMBDA_STEP", /ALL_EVENTS)
+        XSIZE=7, UVALUE="DGSN_LAMBDA_STEP", UNAME="DGSN_LAMBDA_STEP", /ALL_EVENTS)
   
 ; == DEFAULTS ==
   
@@ -302,9 +320,27 @@ PRO make_VanMask_Tab, baseWidget, dgsncmd
   WIDGET_CONTROL, pc_button, SENSITIVE=0
 
 
-  textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
-  outputID= WIDGET_TEXT(baseWidget, /EDITABLE, xsize=80, ysize=6, /SCROLL, /WRAP, $
-    VALUE=dgsncmd->generate(), UNAME='DGSN_CMD_TEXT')
+; Lets create a set of tabs
+  
+   ; === Message Tabs ===
+  reductionMessageTabsID = WIDGET_TAB(baseWidget)
+  
+  ; Check the DGSR command
+  status=dgsn_cmd->Check()
+  
+  MessageBoxSize = 200
+  
+  ; Info Messages Tab
+  InfoTab = WIDGET_BASE(reductionMessageTabsID, TITLE='Messages')
+  infoMessagesID = WIDGET_TEXT(InfoTab, XSIZE=MessageBoxSize, YSIZE=6, /SCROLL, /WRAP, $
+    VALUE=status.message, UNAME='DGSN_INFO_TEXT') 
+  
+  ; Reduction Tab
+  CommandTab = WIDGET_BASE(reductionMessageTabsID, Title='Command to execute', /COLUMN)
+  ;textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
+  outputID= WIDGET_TEXT(CommandTab, xsize=MessageBoxSize, ysize=6, /SCROLL, /WRAP, $
+    VALUE=dgsr_cmd->generate(), UNAME='DGSN_CMD_TEXT')
+  
 
   ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
   
