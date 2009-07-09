@@ -142,6 +142,14 @@ PRO dgsnorm_events, event, dgsn_cmd
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsn_cmd->SetProperty, DetEff=myValue
     END
+    'DGSN_LO_THRESHOLD':BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsn_cmd->SetProperty, Lo_Threshold=myValue
+    END
+    'DGSN_HI_THRESHOLD':BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsn_cmd->SetProperty, Hi_Threshold=myValue
+    END
     'NOTHING': BEGIN
     END
     ELSE: begin
