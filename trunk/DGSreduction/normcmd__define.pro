@@ -359,6 +359,102 @@ FUNCTION NormCmd::GetRunNumber
 
 END
 
+;+
+; :Description:
+;    Procedure to check that all essential parameters have 
+;    been defined.  Also, that we haven't specified any 
+;    conflicting options.
+;    
+;    It is intended for producing a string array for display 
+;    in the bottom of the GUI and a status flag to enable/disable 
+;    the execute button.
+;
+;
+; :Author: scu
+;-
+function NormCmd::Check
+
+; Let's start out with everything well in the world!
+  ok = 1
+  datapaths_bad = 0
+  msg = ['Everything looks good.']
+  
+  
+  IF (STRLEN(self.instrument) LT 2) THEN BEGIN
+    ok = 0
+    msg = [msg,['There is no Instrument selected.']]
+  ENDIF
+
+  IF (STRLEN(self.datarun) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,["There doesn't seem to be a RUN NUMBER defined."]]
+  ENDIF
+
+  ; Just construct the DataPaths for the first job.
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, 1, self.jobs)
+  IF (STRLEN(datapaths) LT 1) THEN BEGIN
+    datapaths_bad = 1
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Also check for the last job (but only if the first job check above was ok)
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, self.jobs, self.jobs)
+  IF (STRLEN(datapaths) LT 1) AND (datapaths_bad NE 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Incident Energy 
+  IF (STRLEN(self.ei) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define the Incident Energy (Ei).']]
+  ENDIF
+  
+  ; T0
+  IF (STRLEN(self.tzero) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define a value for T0.']]
+  ENDIF
+
+  ; Now let's do some more complicated dependencies
+  
+  ; If Empty Can OR Black Can then we must specify Data Coeff
+  IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+    IF (STRLEN(self.datatrans) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You need to specify and value for 'Data Coeff' " + $
+        "if you have specified either an Empty Can or a Black Can."]]
+    ENDIF
+  ENDIF
+
+  ; You cannot have a Dark current and any TIB
+  IF (STRLEN(self.tibconst) GE 1) OR (STRLEN(self.tibrange_min) GE 1) $
+    OR (STRLEN(self.tibrange_min) GE 1) THEN BEGIN
+      IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
+        ok = 0
+        msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
+          "Time-Independent-Background."]]
+      ENDIF
+  ENDIF
+
+  ; Cannot have both a TIB constant and a TIB range
+  IF (STRLEN(self.tibconst) GE 1) AND ((STRLEN(self.tibrange_min) GE 1) OR (STRLEN(self.tibrange_max) GE 1)) THEN BEGIN
+    ok = 0
+    msg = [msg,['ERROR: You cannot specify a TIB constant and a TIB range.']]
+  ENDIF
+  
+
+  ; Remove the first blank String
+  IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
+
+  data = { ok : ok, $
+           message : msg}
+
+  return, data
+end
+
+
 
 function NormCmd::Generate
 
