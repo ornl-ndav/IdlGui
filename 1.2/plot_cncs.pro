@@ -69,6 +69,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     version                 : VERSION,$
     LogBookPath             : '/SNS/users/LogBook/',$
     staging_folder          : '~/.plotCNCS_tmp/',$
+    debugging_folder        : '~/CNCS/',$
     mapping_list_mac        : ['./mapping/CNCS_TS_2007_10_10.dat'],$
     event_file_filter       : '*_neutron_event.dat',$
     histo_map_filter        : '*_neutron_histo_mapped.dat',$
@@ -81,6 +82,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed                  : 'FAILED',$
     status                  : 'STATUS: ',$
     neutron_event_dat_ext   : '_neutron_event.dat',$
+    debugging:                debugging,$
     debugger                : 'j35'})
     
   IF (ucams EQ (*global).debugger) THEN BEGIN
