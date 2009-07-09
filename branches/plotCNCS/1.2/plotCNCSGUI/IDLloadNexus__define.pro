@@ -142,7 +142,6 @@ PRO MakeNexusInputGui, sInput
     /LONG,$
     /RETURN_EVENTS)
     
-    
   ;Archived or List All ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   wArchivedListAll = WIDGET_BASE(MainBase,$
     XOFFSET   = sArchivedListAll.base_size[0],$

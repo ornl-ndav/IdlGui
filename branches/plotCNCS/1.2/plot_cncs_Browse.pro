@@ -58,7 +58,9 @@ PRO BrowseEventRunNumber, Event
   
   IF ((*global).debugging EQ 'yes') THEN BEGIN
     path = (*global).debugging_folder
-  ENDIF
+  ENDIF ELSE BEGIN
+    path = (*global).event_path
+  ENDELSE
   
   event_full_file_name = BrowseRunNumber(Event, $
     default_extension, $

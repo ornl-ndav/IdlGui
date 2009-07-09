@@ -61,6 +61,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = ptr_new ({ ucams                   : ucams,$
     HistoNexusTabSelected   : 0,$
     browse_nexus_path       : '/SNS/CNCS/',$
+    event_path              : '/SNS/CNCS/',$
     browse_OR_list_all_flag : 0,$
     bin_width               : '200',$
     runinfoFileName         : '',$
