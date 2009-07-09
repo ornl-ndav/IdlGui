@@ -339,8 +339,12 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Set the default(s) as on - to match the defaults in the ReductionCMD class.
   Widget_Control, speButton, SET_BUTTON=1
 
-  ; Cannot have the fixed grid without the Qvector
-    WIDGET_CONTROL, fixedButton, SENSITIVE=0
+  ; Cannot have the fixed grid without the Qvector 
+  ; Get the state of the qvectorbutton first
+
+  qvector_status = WIDGET_INFO(qvectorButton, /BUTTON_SET)  
+  ; Now set the sensitivity of the fixed Grid button
+  WIDGET_CONTROL, fixedButton, SENSITIVE=qvector_status
   
   ; Don't enable wavelength range until it's selected.
   WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
@@ -351,9 +355,29 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Disable Proton Charge Norm until No-Monitor Norm is selected
   WIDGET_CONTROL, pc_button, SENSITIVE=0
 
-  textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
-  outputID= WIDGET_TEXT(baseWidget, /EDITABLE, xsize=80, ysize=6, /SCROLL, /WRAP, $
+  ; Lets create a set of tabs
+  
+   ; === Message Tabs ===
+  reductionMessageTabsID = WIDGET_TAB(baseWidget)
+  
+  ; Check the DGSR command
+  status=dgsr_cmd->Check()
+  
+  MessageBoxSize = 200
+  
+  ; Info Messages Tab
+  InfoTab = WIDGET_BASE(reductionMessageTabsID, TITLE='Messages')
+  infoMessagesID = WIDGET_TEXT(InfoTab, XSIZE=MessageBoxSize, YSIZE=6, /SCROLL, /WRAP, $
+    VALUE=status.message, UNAME='DGSR_INFO_TEXT') 
+  
+  ; Reduction Tab
+  CommandTab = WIDGET_BASE(reductionMessageTabsID, Title='Command to execute', /COLUMN)
+  ;textID = WIDGET_LABEL(baseWidget, VALUE='Command to execute:', /ALIGN_LEFT)
+  outputID= WIDGET_TEXT(CommandTab, xsize=MessageBoxSize, ysize=6, /SCROLL, /WRAP, $
     VALUE=dgsr_cmd->generate(), UNAME='DGSR_CMD_TEXT')
+  
+  ; === BUTTONS ===
+  
   
   ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
   
@@ -365,5 +389,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Define a Run button
   executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $
     EVENT_PRO='DGSreduction_Execute', UNAME='DGSR_EXECUTE_BUTTON')
+      
+  WIDGET_CONTROL, executeID, SENSITIVE=status.ok
 
 END
