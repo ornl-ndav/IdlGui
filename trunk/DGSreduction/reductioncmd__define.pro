@@ -287,10 +287,18 @@ PRO ReductionCmd::SetProperty, $
   
   IF N_ELEMENTS(emptycan) NE 0 THEN $
     self.emptycan = STRCOMPRESS(STRING(EmptyCan), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.emptycan EQ '0') THEN self.emptycan = ""
+    
   IF N_ELEMENTS(blackcan) NE 0 THEN $
     self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.blackcan EQ '0') THEN self.blackcan = ""
+    
   IF N_ELEMENTS(dark) NE 0 THEN $
     self.dark = STRCOMPRESS(STRING(dark), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.dark EQ '0') THEN self.dark = ""
     
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
@@ -375,6 +383,129 @@ FUNCTION ReductionCmd::GetRunNumber
 
 END
 
+;+
+; :Description:
+;    Procedure to check that all essential parameters have 
+;    been defined.  Also, that we haven't specified any 
+;    conflicting options.
+;    
+;    It is intended for producing a string array for display 
+;    in the bottom of the GUI and a status flag to enable/disable 
+;    the execute button.
+;
+;
+; :Author: scu
+;-
+function ReductionCmd::Check
+
+; Let's start out with everything well in the world!
+  ok = 1
+  datapaths_bad = 0
+  msg = ['Everything looks good.']
+  
+  
+  IF (STRLEN(self.instrument) LT 2) THEN BEGIN
+    ok = 0
+    msg = [msg,['There is no Instrument selected.']]
+  ENDIF
+
+  IF (STRLEN(self.datarun) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,["There doesn't seem to be a RUN NUMBER defined."]]
+  ENDIF
+
+  ; Just construct the DataPaths for the first job.
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, 1, self.jobs)
+  IF (STRLEN(datapaths) LT 1) THEN BEGIN
+    datapaths_bad = 1
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Also check for the last job (but only if the first job check above was ok)
+  datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, self.jobs, self.jobs)
+  IF (STRLEN(datapaths) LT 1) AND (datapaths_bad NE 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['The Detector Banks are not specified correctly.']]
+  END
+  
+  ; Energy Transfer
+  IF (STRLEN(self.ei) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define the Incident Energy (Ei).']]
+  ENDIF
+  
+  ; T0
+  IF (STRLEN(self.tzero) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,['You need to define a value for T0.']]
+  ENDIF
+  
+  ; Energy Bins
+  IF (STRLEN(self.energybins_min) LT 1) $ 
+    OR (STRLEN(self.energybins_max) LT 1) $
+    OR (STRLEN(self.energybins_step) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,["The Energy Transfer Range isn't defined correctly."]]
+  ENDIF
+
+  ; Q Bins
+  IF (STRLEN(self.qbins_min) LT 1) $ 
+    OR (STRLEN(self.qbins_max) LT 1) $
+    OR (STRLEN(self.qbins_step) LT 1) THEN BEGIN
+    ok = 0
+    msg = [msg,["The Q-Range isn't defined correctly."]]
+  ENDIF
+
+  ; Now let's do some more complicated dependencies
+  
+  ; If Empty Can OR Black Can then we must specify Data Coeff
+  IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+    IF (STRLEN(self.datatrans) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You need to specify and value for 'Data Coeff' " + $
+        "if you have specified either an Empty Can or a Black Can."]]
+    ENDIF
+  ENDIF
+
+  ; You cannot have a Dark current and any TIB
+  IF (STRLEN(self.tibconst) GE 1) OR (STRLEN(self.tibrange_min) GE 1) $
+    OR (STRLEN(self.tibrange_min) GE 1) THEN BEGIN
+      IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
+        ok = 0
+        msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
+          "Time-Independent-Background."]]
+      ENDIF
+  ENDIF
+
+  ; Cannot have both a TIB constant and a TIB range
+  IF (STRLEN(self.tibconst) GE 1) AND ((STRLEN(self.tibrange_min) GE 1) OR (STRLEN(self.tibrange_max) GE 1)) THEN BEGIN
+    ok = 0
+    msg = [msg,['ERROR: You cannot specify a TIB constant and a TIB range.']]
+  ENDIF
+  
+  
+  ; If Normalisation defined and empty or black then need to define norm-coeff
+  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+    IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+      IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
+        ok = 0
+        msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
+          "if you have specified a Normalisation Run and either an Empty Can or a Black Can."]]
+      ENDIF
+    ENDIF
+  ENDIF
+
+  ; Remove the first blank String
+  IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
+
+  data = { ok : ok, $
+           message : msg}
+
+  return, data
+end
+
+
 function ReductionCmd::Generate
 
   ; Error Handling
@@ -452,7 +583,7 @@ function ReductionCmd::Generate
        (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
       cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
     ; Downstream monitor path
-    IF STRLEN(self.dsmonpath) GT 1 THEN $
+    IF STRLEN(self.dsmonpath) GE 1 THEN $
       cmd[i] += " --dsmon-path="+self.dsmonpath
     ; ROI filename
     IF STRLEN(self.roifile) GE 1 THEN $
@@ -485,7 +616,7 @@ function ReductionCmd::Generate
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
     ; T0
-    IF STRLEN(self.tzero) GT 1 THEN $
+    IF STRLEN(self.tzero) GE 1 THEN $
       cmd[i] += " --time-zero-offset="+self.tzero+","+self.error_tzero
     ; Flag for turning off monitor normalization
     IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
@@ -568,7 +699,7 @@ function ReductionCmd::Generate
           self.qbins_max + "," + self.qbins_step
           
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
-    IF (self.fixed EQ 1) THEN cmd[i] += " --fixed"
+    IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
     IF (self.split EQ 1) THEN cmd[i] += " --split"
     IF (self.timing EQ 1) THEN cmd[i] += " --timing"
     
