@@ -53,6 +53,8 @@ PRO NormCmd::GetProperty, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
@@ -113,11 +115,72 @@ PRO NormCmd::GetProperty, $
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
+  IF ARG_PRESENT(Lo_Threshold) NE 0 THEN Lo_Threshold = self.lo_threshold
+  IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
   
 END
 
+;+
+; :Description:
+;    Sets command line properties
+;
+; :Keywords:
+;    Program
+;    Version
+;    Queue
+;    Verbose
+;    Quiet
+;    DataRun
+;    Output
+;    Instrument
+;    Facility
+;    Proposal
+;    ConfigFile
+;    InstGeometry
+;    LowerBank
+;    UpperBank
+;    DataPaths
+;    EmptyCan
+;    BlackCan
+;    Dark
+;    USmonPath
+;    DSmonPath
+;    ROIfile
+;    Tmin
+;    Tmax
+;    TIBconst
+;    TIBrange_Min
+;    TIBrange_Max
+;    Ei
+;    Tzero
+;    error_ei
+;    error_tzero
+;    NoMonitorNorm
+;    PCnorm
+;    MonRange_Min
+;    MonRange_Max
+;    DetEff
+;    NormTrans
+;    NormRange_Min
+;    NormRange_Max
+;    LambdaBins_Min
+;    LambdaBins_Max
+;    LambdaBins_Step
+;    DumpTOF
+;    DumpWave
+;    DumpNorm
+;    DumpEt
+;    DumpTIB
+;    Lo_Threshold
+;    Hi_Threshold
+;    Timing
+;    Jobs
+;    _Extra
+;
+; :Author: scu
+;-
 PRO NormCmd::SetProperty, $
     Program=program, $                   ; Program name
     Version=version, $
@@ -165,6 +228,8 @@ PRO NormCmd::SetProperty, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
@@ -255,6 +320,8 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
   IF N_ELEMENTS(dumptib) NE 0 THEN self.dumptib = DumpTIB
+  IF N_ELEMENTS(lo_threshold) NE 0 THEN self.lo_threshold = Lo_Threshold
+  IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
@@ -291,6 +358,7 @@ FUNCTION NormCmd::GetRunNumber
   RETURN, STRMID(self.datarun, 0, firstDelimiter)
 
 END
+
 
 function NormCmd::Generate
 
@@ -485,6 +553,8 @@ function NormCmd::Init, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
