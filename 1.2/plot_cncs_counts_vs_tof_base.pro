@@ -55,6 +55,23 @@ FUNCTION isInsideDrawingRegion, Event, x, y
 END
 
 ;------------------------------------------------------------------------------
+PRO display_xy_min_max, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  xmin = (*global1).display_xmin_backup
+  ymin = (*global1).display_ymin_backup
+  xmax = (*global1).display_xmax_backup
+  ymax = (*global1).display_ymax_backup
+  
+  putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
+  putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
+  putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
+  putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+  
+END
+
+;------------------------------------------------------------------------------
 PRO launch_couts_vs_tof_base_Event, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
@@ -73,6 +90,7 @@ PRO launch_couts_vs_tof_base_Event, Event
       FIND_BY_UNAME = 'full_detector_counts_vs_tof_zoom_tool'): BEGIN
       MapBase, Event, 'selection_base', 0
       MapBase, Event, 'zoom_base', 1
+      display_xy_min_max, Event
     END
     
     ;draw plot
@@ -171,6 +189,7 @@ PRO launch_couts_vs_tof_base_Event, Event
             replot_counts_vs_tof_full_detector, event
             display_selection, Event ;that produces average line
             replot_average, Event
+            display_xy_min_max, Event
             
           ENDIF ELSE BEGIN
           
@@ -215,6 +234,27 @@ PRO launch_couts_vs_tof_base_Event, Event
             (*global1).y0_data_backup = (*global1).y0_data
             (*global1).x1_data_backup = (*global1).x1_data
             (*global1).y1_data_backup = (*global1).y1_data
+            
+            x0 = (*global1).x0_data
+            y0 = (*global1).y0_data
+            x1 = (*global1).x1_data
+            y1 = (*global1).y1_data
+            xmin = MIN([x0,x1],MAX=xmax)
+            ymin = MIN([y0,y1],MAX=ymax)
+            
+            IF (xmin NE xmax AND $
+              ymin NE ymax) THEN BEGIN
+              
+              putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
+              putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
+              putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
+              putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+              
+            ENDIF ELSE BEGIN
+            
+              display_xy_min_max, Event
+              
+            ENDELSE
             
           ENDIF
         ENDIF
@@ -531,7 +571,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
         PLOT, tof_array, $
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -540,7 +580,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
         PLOT, tof_array, $
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
@@ -551,7 +591,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
       IF (lin_log_type EQ 'log') THEN BEGIN
         PLOT, counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -559,7 +599,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
       ENDIF ELSE BEGIN
         PLOT, counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
@@ -576,7 +616,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           YRANGE = [ymin,ymax],$
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -587,7 +627,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
@@ -600,7 +640,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -610,7 +650,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
@@ -618,6 +658,8 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
     ENDELSE
     
   ENDELSE
+  
+  print, ymin
   
 END
 
@@ -631,7 +673,7 @@ FUNCTION retrieve_tof_array, NexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO MakeCountsVsTofBase, wBaseBackground
+PRO MakeCountsVsTofBase, wBaseBackground, mode
 
   ourGroup = WIDGET_BASE()
   
@@ -739,6 +781,13 @@ PRO MakeCountsVsTofBase, wBaseBackground
     
   xsize = 15
   
+  IF (mode EQ 'nexus' OR $
+    mode EQ 'histo_with_tof') THEN BEGIN
+    units_value = 'microS'
+  ENDIF ELSE BEGIN
+    units_value = 'Bin(s)'
+  ENDELSE
+  
   xmin = WIDGET_LABEL(zoom_base,$
     VALUE = 'Xmin:')
   xmin = WIDGET_TEXT(zoom_base,$
@@ -746,7 +795,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     XSIZE = xsize,$
     UNAME = 'xmin')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   xmax = WIDGET_LABEL(zoom_base,$
@@ -756,7 +805,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     XSIZE = xsize,$
     UNAME = 'xmax')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   ymin = WIDGET_LABEL(zoom_base,$
@@ -766,7 +815,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     XSIZE = xsize,$
     UNAME = 'ymin')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   ymax = WIDGET_LABEL(zoom_base,$
@@ -776,7 +825,7 @@ PRO MakeCountsVsTofBase, wBaseBackground
     XSIZE = xsize,$
     UNAME = 'ymax')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   help = WIDGET_LABEL(zoom_base,$
@@ -824,7 +873,8 @@ PRO Launch_counts_vs_tof_base, $
     
   ;build gui
   wBase = ''
-  MakeCountsVsTofBase, wBase
+  mode = (*global).mode
+  MakeCountsVsTofBase, wBase, mode
   
   global1 = PTR_NEW({ $
     NexusFileName: nexus_file_name,$
@@ -887,7 +937,7 @@ PRO Launch_counts_vs_tof_base, $
       tof_array = (*(*global).tof_array)
       (*(*global1).tof_array) = tof_array
     END
-  ELSE:
+    ELSE:
   ENDCASE
   
   ;integrated counts_vs_tof for all pixels

@@ -135,8 +135,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   WIDGET_CONTROL, id, set_value=MapArray
   
   IF (DEBUGGING EQ 'yes') THEN BEGIN
-    ;(*global).browse_nexus_path = '~/402/NeXus/'
-    (*global).browse_nexus_path = '~/402/'
+    (*global).browse_nexus_path = '~/402/NeXus/'
+    ;(*global).browse_nexus_path = '~/402/'
   ENDIF
   
   ;send message to log current run of application
