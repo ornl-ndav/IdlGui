@@ -55,11 +55,16 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NO-MON-NORM')
   dgsr_cmd->GetProperty, NoMonitorNorm=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ; Store the state of this button
+  NoMonitorNorm_State = myValue
     
   ; Proton Charge Normalisation
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_PC-NORM')
   dgsr_cmd->GetProperty, PCnorm=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue  
+  ; Set the sensitivity of this button based on the value
+  ; of the No-Monitor Normalisation button
+  WIDGET_CONTROL, widget_ID, SENSITIVE=NoMonitorNorm_State
 
   ; Lambda Scaling
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA-RATIO')
@@ -180,11 +185,15 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_QVECTOR')
   dgsr_cmd->GetProperty, Qvector=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ; Store the state of this button
+  QvectorState = myValue
   
   ; Fixed Grid
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_FIXED')
   dgsr_cmd->GetProperty, Fixed=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ; Set the sensitvity based on the value of the Qvector button
+  WIDGET_CONTROL, widget_ID, SENSITIVE=QvectorState
     
   ; TIB const output
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_TIB')
@@ -210,20 +219,31 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_COMBINED_WAVE')
   dgsr_cmd->GetProperty, DumpWave=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ; Save the button state
+  DumpWavelengthState = myValue
+  
+  wavelengthRange_ID = WIDGET_INFO(tlb,FIND_BY_UNAME='DGSR_COMBINED_WAVELENGTH_RANGE')
+  WIDGET_CONTROL, wavelengthRange_ID, SENSITIVE=DumpWavelengthState
   
   ; Combined Wavelength Range (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_MIN')
   dgsr_cmd->GetProperty, LambdaBins_Min=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Enable if DumpWavelength button is pressed
+  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
   
   ; Combined Wavelength Range (max)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_MAX')
   dgsr_cmd->GetProperty, LambdaBins_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Enable if DumpWavelength button is pressed
+  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
   
   ; Combined Wavelength Range (step)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_STEP')
   dgsr_cmd->GetProperty, LambdaBins_Step=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  ; Enable if DumpWavelength button is pressed
+  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
 
 END
