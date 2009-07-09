@@ -259,6 +259,9 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ; Get the UCAMS
   username = GETENV('USER')
   
+  ; Are we going to print lots of messages
+  debug = 0
+  
   ; Set the application title
   title = APPLICATION + ' (' + VERSION + ') as ' + username
   
@@ -312,11 +315,12 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
   ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
   make_VanMask_Tab, vanmaskTabBase, dgsn_cmd
-  
-  logTab = WIDGET_BASE(tabID, Title='Log')
-  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
-  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
-    UNAME='DGS_REDUCTION_LOGBOOK')
+ 
+; Remove the LOG Tab (for the moment) as we are not using it!  
+;  logTab = WIDGET_BASE(tabID, Title='Log')
+;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
+;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
+;    UNAME='DGS_REDUCTION_LOGBOOK')
     
     
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
@@ -362,6 +366,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     dgsn_cmd:dgsn_cmd, $
     application:application, $
     version:version, $
+    debug:debug, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     username:username, $
     title:title, $
