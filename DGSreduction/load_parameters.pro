@@ -13,11 +13,12 @@ pro load_parameters, widgetBase, Filename=filename
   
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
+ 
   
   ; Find the output window (DGS)
-  dgs_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
+  dgsr_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
   ; Update the output command window
-  WIDGET_CONTROL, dgs_cmd_outputID, SET_VALUE=dgsr_cmd->generate()
+  WIDGET_CONTROL, dgsr_cmd_outputID, SET_VALUE=dgsr_cmd->generate()
   
   ; Find the output window (DGSN)
   dgsn_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_CMD_TEXT')
