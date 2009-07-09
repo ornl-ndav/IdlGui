@@ -110,6 +110,21 @@ PRO DGSreduction_TLB_Events, event
 
   ENDCASE 
   
+  ; Do a sanity check
+  status = dgsr_cmd->check()
+  
+  ; Disable the "Launch Collector" button if we are not ok to run!
+  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+  WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=status.ok
+  
+  ; Find the Messages Window (DGSR)
+  dgsr_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_INFO_TEXT')
+  WIDGET_CONTROL, dgsr_info_outputID, SET_VALUE=status.message
+  
+  ; Also Enable/Disable the DGSR Execute button
+  dgsr_executeID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_EXECUTE_BUTTON')
+  WIDGET_CONTROL, dgsr_executeID, SENSITIVE=status.ok
+  
   ; Find the output window (DGS)
   dgs_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_CMD_TEXT')
   ; Update the output command window
