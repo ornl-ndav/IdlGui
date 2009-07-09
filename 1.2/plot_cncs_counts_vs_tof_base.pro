@@ -50,8 +50,41 @@ FUNCTION isInsideDrawingRegion, Event, x, y
     x GT (*global1).device_xmax OR $
     y LT (*global1).device_ymin OR $
     y GT (*global1).device_ymax) THEN RETURN, 0
-    
   RETURN, 1
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO replot_after_manual_zoom, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  sxmin = getTextFieldValue(Event,'xmin')
+  xmin = DOUBLE(sxmin)
+  (*global1).x0_data = xmin
+  
+  sxmax = getTextFieldValue(Event,'xmax')
+  xmax = DOUBLE(sxmax)
+  (*global1).x1_data = xmax
+  
+  symin = getTextFieldValue(Event,'ymin')
+  ymin = DOUBLE(symin)
+  (*global1).y0_data = ymin
+  
+  symax = getTextFieldValue(Event,'ymax')
+  ymax = DOUBLE(symax)
+  (*global1).y1_data = ymax
+  
+  (*global1).x0_data_backup = (*global1).x0_data
+  (*global1).y0_data_backup = (*global1).y0_data
+  (*global1).x1_data_backup = (*global1).x1_data
+  (*global1).y1_data_backup = (*global1).y1_data
+  
+  redefine_xy_display_limit, Event
+  replot_counts_vs_tof_full_detector, Event
+  display_selection, Event
+  replot_average, Event
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -91,6 +124,30 @@ PRO launch_couts_vs_tof_base_Event, Event
       MapBase, Event, 'selection_base', 0
       MapBase, Event, 'zoom_base', 1
       display_xy_min_max, Event
+    END
+    
+    ;xmin in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'xmin'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;xmax in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'xmax'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;ymin in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'ymin'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;ymax in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'ymax'): BEGIN
+      replot_after_manual_zoom, Event
     END
     
     ;draw plot
@@ -303,6 +360,9 @@ PRO redefine_xy_display_limit, Event
   (*global1).display_xmax = xmax
   (*global1).display_ymin = ymin
   (*global1).display_ymax = ymax
+  
+  print, 'in redefine_xy_display_limit'
+  help, xmin
   
 END
 
@@ -562,6 +622,8 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
+  print, 'xmin: ' + string(xmin)
+  
   IF (xmax EQ 0. OR $
     xmin EQ 0.) THEN BEGIN ;reset plot
     
@@ -658,8 +720,6 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
     ENDELSE
     
   ENDELSE
-  
-  print, ymin
   
 END
 
@@ -793,6 +853,7 @@ PRO MakeCountsVsTofBase, wBaseBackground, mode
   xmin = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'xmin')
   unit = WIDGET_LABEL(zoom_base,$
     VALUE = units_value,$
@@ -803,6 +864,7 @@ PRO MakeCountsVsTofBase, wBaseBackground, mode
   xmax = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'xmax')
   unit = WIDGET_LABEL(zoom_base,$
     VALUE = units_value,$
@@ -813,6 +875,7 @@ PRO MakeCountsVsTofBase, wBaseBackground, mode
   ymin = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'ymin')
   unit = WIDGET_LABEL(zoom_base,$
     VALUE = units_value,$
@@ -823,6 +886,7 @@ PRO MakeCountsVsTofBase, wBaseBackground, mode
   ymax = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'ymax')
   unit = WIDGET_LABEL(zoom_base,$
     VALUE = units_value,$
