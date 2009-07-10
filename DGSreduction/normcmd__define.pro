@@ -487,6 +487,13 @@ function NormCmd::Check
     msg = [msg,['ERROR: You cannot specify a TIB constant and a TIB range.']]
   ENDIF
   
+  ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
+  IF (self.nomonitornorm EQ 0) THEN BEGIN
+    IF (STRLEN(self.monrange_min) LT 1) OR (STRLEN(self.monrange_max) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,['If you are normalising to the monitor, you need to specify a monitor integration range.']]
+    ENDIF
+  ENDIF
 
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
