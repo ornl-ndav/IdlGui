@@ -86,6 +86,7 @@ cd, CurrentFolder
 .run plot_cncs_PlotMainPlot.pro
 .run plot_cncs_MainPlot.pro
 .run plot_cncs_display_buttons_main_plot.pro
+.run plot_cncs_update_selection_mode.pro
 .run plot_cncs_plot_scale.pro
 .run plot_cncs_play_tof.pro
 .run plot_cncs_play_buttons.pro

@@ -107,40 +107,26 @@ PRO MakeGuiMainPLot_Event, event
   
     ;selection mode button
     WIDGET_INFO(event.top, FIND_BY_UNAME='selection_mode_button'): BEGIN
-      error = 0
-      CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        IF (event.press EQ 1) THEN BEGIN
-        ENDIF
-      ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          id = WIDGET_INFO(Event.top,find_by_uname='selection_mode_button')
-          WIDGET_CONTROL, id, GET_VALUE=id_value
-          WSET, id_value
-          standard = 58
-          DEVICE, CURSOR_STANDARD=standard
-        ENDIF
-      ENDELSE
+      id = WIDGET_INFO(Event.top,find_by_uname='selection_mode_button')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 58
+      DEVICE, CURSOR_STANDARD=standard
+      IF (event.press EQ 1) THEN BEGIN
+        update_selection_masking_mode, Event, mode='selection'
+      ENDIF
     END
     
     ;Masking mode button
     WIDGET_INFO(event.top, FIND_BY_UNAME='masking_mode_button'): BEGIN
-      error = 0
-      CATCH, error
-      IF (error NE 0) THEN BEGIN
-        CATCH,/CANCEL
-        IF (event.press EQ 1) THEN BEGIN
-        ENDIF
-      ENDIF ELSE BEGIN
-        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
-          id = WIDGET_INFO(Event.top,find_by_uname='masking_mode_button')
-          WIDGET_CONTROL, id, GET_VALUE=id_value
-          WSET, id_value
-          standard = 58
-          DEVICE, CURSOR_STANDARD=standard
-        ENDIF
-      ENDELSE
+      id = WIDGET_INFO(Event.top,find_by_uname='masking_mode_button')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 58
+      DEVICE, CURSOR_STANDARD=standard
+      IF (event.press EQ 1) THEN BEGIN
+        update_selection_masking_mode, Event, mode='masking'
+      ENDIF
     END
     
     ;Counts min value
@@ -913,6 +899,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     Y2:                   0L,$
     
     mode:                 '',$
+    selection_mode:       'selection',$
     
     counts_vs_tof_for_play: PTR_NEW(0L),$
     background:            PTR_NEW(0L),$
@@ -1061,6 +1048,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     background:            PTR_NEW(0L),$
     
     mode:                 'nexus',$
+    selection_mode:       'selection',$ ;selection or masking
     
     pause_button_activated: 0b,$
     bin_min:               0L,$
