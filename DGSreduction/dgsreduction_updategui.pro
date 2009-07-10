@@ -31,6 +31,8 @@ PRO DGSreduction_UpdateGUI, widgetBase
   IF (myValue GT 1) THEN BEGIN
     dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
     WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
+    dgsn_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+    WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=1
   ENDIF
  
   ; === Update the Reduction Tab ===
@@ -40,11 +42,14 @@ PRO DGSreduction_UpdateGUI, widgetBase
   DGSN_UpdateGUI, widgetBase, dgsn_cmd
 
   
-  status = dgsr_cmd->Check()
+  dgsr_status = dgsr_cmd->Check()
+  dgsn_status = dgsn_cmd->Check()
   
   ; Find the Status message window
   dgsr_infoID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGSR_INFO_TEXT')
-  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=status.message
+  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=dgsr_status.message  ; Find the Status message window
+  dgsn_infoID = WIDGET_INFO(widgetBase, FIND_BY_UNAME='DGSN_INFO_TEXT')
+  WIDGET_CONTROL, dgsr_infoID, SET_VALUE=dgsn_status.message
 
   ; Put info back
   WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
