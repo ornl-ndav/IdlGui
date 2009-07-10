@@ -105,7 +105,7 @@ PRO MakeGuiMainPLot_Event, event
   
   CASE event.id OF
   
-  ;selection mode button
+    ;selection mode button
     WIDGET_INFO(event.top, FIND_BY_UNAME='selection_mode_button'): BEGIN
       error = 0
       CATCH, error
@@ -403,6 +403,15 @@ PRO MakeGuiMainPLot_Event, event
     ;View full TOF axis
     WIDGET_INFO(event.top, FIND_BY_UNAME='tof_preview'): BEGIN
       preview_of_tof, Event
+    END
+    
+    ;counts vs tof preview
+    WIDGET_INFO(event.top,FIND_BY_UNAME='play_counts_vs_tof_plot'): BEGIN
+      id = WIDGET_INFO(Event.top,find_by_uname='play_counts_vs_tof_plot')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 31
+      DEVICE, CURSOR_STANDARD=standard
     END
     
     ;from_bin

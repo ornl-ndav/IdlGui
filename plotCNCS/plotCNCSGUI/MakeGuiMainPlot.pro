@@ -528,6 +528,8 @@ PRO MakeGuiMainPlot, wBase
     SCR_XSIZE = 600,$
     SCR_YSIZE = 130,$
     XOFFSET = 0,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     YOFFSET = 0,$
     UNAME = 'play_counts_vs_tof_plot')
     
