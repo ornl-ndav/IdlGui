@@ -110,17 +110,21 @@ PRO MakeGuiMainPlot, wBase
   ;Masking Selection title
   maks_label = WIDGET_LABEL(wBase,$
     VALUE = 'Masking Selection Tool',$
+    UNAME = 'masking_selection_tool',$
     XOFFSET = 1585,$
-    YOFFSET = 608,$
+    YOFFSET = 628,$
+    SENSITIVE = 0,$
     FRAME = 0)
     
   message = 'Selection input example: 1345-1350,1360,1370-1375'
   label = WIDGET_LABEL(wBase,$
-  VALUE = message,$
-  XOFFSET = 1620,$
-  YOFFSET = 750,$
-  FRAME = 1)
-  
+    VALUE = message,$
+    UNAME = 'selection_input_example',$
+    XOFFSET = 1620,$
+    YOFFSET = 770,$
+    SENSITIVE = 0,$
+    FRAME = 1)
+    
   ;wBase = WIDGET_BASE(TITLE = MainPlotBase.title,$
   ;  UNAME        = MainPlotBase.uname,$
   ;  XOFFSET      = MainPlotBase.size[0],$
@@ -128,7 +132,7 @@ PRO MakeGuiMainPlot, wBase
   ;  MAP          = 1,$
   ;  GROUP_LEADER = ourGroup,$
   ; /COLUMN)
-  
+    
   wBase1 = WIDGET_BASE(wBase,$
     /COLUMN)
     
@@ -175,48 +179,52 @@ PRO MakeGuiMainPlot, wBase
     FRAME=1)
     
   bank = WIDGET_LABEL(row1b,$
-    VALUE = 'Bank')
+    VALUE = '  Bank')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'bank_value',$
     SCR_XSIZE = 50)
     
   tube = WIDGET_LABEL(row1b,$
-    VALUE = 'Tube')
+    VALUE = '   Tube')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'tube_value',$
     SCR_XSIZE = 50)
     
   row = WIDGET_LABEL(row1b,$
-    VALUE = 'Row')
+    VALUE = '   Row')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'row_value',$
     SCR_XSIZE = 50)
     
   pixelid = WIDGET_LABEL(row1b,$
-    VALUE = 'PixelID')
+    VALUE = '   PixelID')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'pixelid_value',$
     SCR_XSIZE = 60)
     
   counts = WIDGET_LABEL(row1b,$
-    VALUE = 'Counts')
+    VALUE = '   Counts')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'counts_value',$
     SCR_XSIZE = 50)
     
   angle = WIDGET_LABEL(row1b,$
-    VALUE = 'Tube Angle')
+    VALUE = '   Tube Angle')
   value = WIDGET_TEXT(row1b,$
     VALUE = 'N/A',$
     UNAME = 'angle_value',$
     SCR_XSIZE = 90)
   degrees = WIDGET_LABEL(row1b,$
-    VALUE = 'degrees')
+    VALUE = 'degrees  ')
+    
+  ;space
+  space = WIDGET_LABEL(row1,$
+    VALUE = '      ')
     
   ;produce counts vs tof of full detector
   button = WIDGET_BUTTON(row1,$
@@ -233,54 +241,21 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '       ')
+    VALUE = '                            ')
+    
+  ;Selection mode button
+  button = WIDGET_DRAW(row1,$
+    UNAME = 'selection_mode_button',$
+    SCR_XSIZE = 128,$
+    SCR_YSIZE = 35,$
+    FRAME = 5)
     
   label_base = WIDGET_BASE(row1)
-  
-  ;display banks grid or not
-  label = WIDGET_LABEL(label_base,$
-    YOFFSET = 5,$
-    VALUE = 'Display banks contours')
-    
-  row1d = WIDGET_BASE(row1,$
-    /ROW,$
-    /EXCLUSIVE,$
-    FRAME = 0)
-    
-  yes = WIDGET_BUTTON(row1d,$
-    VALUE = 'Yes',$
-    UNAME = 'main_plot_with_grid_plot',$
-    /NO_RELEASE)
-    
-  no = WIDGET_BUTTON(row1d,$
-    VALUE = 'No',$
-    UNAME = 'main_plot_without_grid_plot',$
-    /NO_RELEASE)
-    
-  WIDGET_CONTROL, yes, /SET_BUTTON
   
   ;space
   space = WIDGET_LABEL(row1,$
     VALUE = '                  ')
     
-  ;lin/log cw_bgroup
-  row1c = WIDGET_BASE(row1,$
-    /ROW,$
-    /EXCLUSIVE,$
-    FRAME = 0)
-    
-  lin = WIDGET_BUTTON(row1c,$
-    VALUE = 'Linear',$
-    UNAME = 'main_plot_linear_plot',$
-    /NO_RELEASE)
-    
-  log = WIDGET_BUTTON(row1c,$
-    VALUE = 'Log',$
-    UNAME = 'main_plot_log_plot',$
-    /NO_RELEASE)
-    
-  WIDGET_CONTROL, lin, /SET_BUTTON
-  
   row2 = WIDGET_BASE(wBase1,$ ;row2 ----------------------------------------
     /ROW)
     
@@ -302,17 +277,73 @@ PRO MakeGuiMainPlot, wBase
     
   refresh = WIDGET_BUTTON(refresh_base,$
     VALUE = 'R E F R E S H   P L O T',$
-    UNAME = 'refresh_plot')
+    UNAME = 'refresh_plot',$
+    SCR_YSIZE = 35)
     
+  ;lin/log cw_bgroup
+  row1c = WIDGET_BASE(refresh_base,$
+    /ROW,$
+    /EXCLUSIVE,$
+    SCR_YSIZE = 35,$
+    /BASE_ALIGN_CENTER,$
+    FRAME = 1)
+    
+  lin = WIDGET_BUTTON(row1c,$
+    VALUE = 'Linear',$
+    UNAME = 'main_plot_linear_plot',$
+    /NO_RELEASE)
+    
+  log = WIDGET_BUTTON(row1c,$
+    VALUE = 'Log',$
+    UNAME = 'main_plot_log_plot',$
+    /NO_RELEASE)
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
+  ;display banks grid or not
+  label = WIDGET_LABEL(refresh_base,$
+    YOFFSET = 5,$
+    VALUE = 'Display banks contours')
+    
+  row1d = WIDGET_BASE(refresh_base,$
+    /ROW,$
+    /EXCLUSIVE,$
+    /ALIGN_CENTER,$
+    FRAME = 0)
+    
+  yes = WIDGET_BUTTON(row1d,$
+    VALUE = 'Yes',$
+    UNAME = 'main_plot_with_grid_plot',$
+    /NO_RELEASE)
+    
+  no = WIDGET_BUTTON(row1d,$
+    VALUE = 'No',$
+    UNAME = 'main_plot_without_grid_plot',$
+    /NO_RELEASE)
+    
+  WIDGET_CONTROL, yes, /SET_BUTTON
+  
   space = WIDGET_LABEL(refresh_base,$
-    VALUE = '                                                            ')
+    VALUE = '    ')
+  space = WIDGET_LABEL(refresh_base,$
+    VALUE = '                            ')
     
-  message = '                                      '
+  message = '                                   '
   message += 'LEFT click to select region of interest for Counts vs TOF plot'
   message += ' - RIGHT click to zoom in into selected bank'
   
   row3 = WIDGET_LABEL(refresh_base,$ ;explain how the selection works
     VALUE = message)
+    
+  space = WIDGET_LABEL(refresh_base,$
+    VALUE = '                                 ')
+    
+  ;masking mode button
+  button = WIDGET_DRAW(refresh_base,$
+    UNAME = 'masking_mode_button',$
+    SCR_XSIZE = 128,$
+    SCR_YSIZE = 35,$
+    FRAME = 5)
     
   ;--------------------------------------------------------------------------
     
@@ -537,6 +568,7 @@ PRO MakeGuiMainPlot, wBase
     
   sel_base = WIDGET_BASE(row4,$
     FRAME = 1,$
+    SENSITIVE = 0,$
     MAP = 1,$
     /ROW)
     

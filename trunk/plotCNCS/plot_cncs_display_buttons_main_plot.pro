@@ -32,73 +32,54 @@
 ;
 ;==============================================================================
 
-;define path to dependencies and current folder
-spawn, 'pwd', CurrentFolder
+PRO display_buttons_main_plot, wBase
 
-IdlUtilitiesPath = CurrentFolder + '/utilities'
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-.run IDLnexusUtilities__define.pro
-.run logger.pro
-.run showprogress__define.pro
-.run IDLxmlParser__define.pro
-.run tube_angle.pro
-.run colorbar.pro
-.run fsc_color.pro
+  raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, raw_buttons, 0, 0,/true
+  
+  pause_button = READ_PNG('plotCNCS_images/pause_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='pause_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, pause_button, 0, 0,/true
+  
+  stop_button = READ_PNG('plotCNCS_images/stop_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='stop_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, stop_button, 0, 0,/true
+  
+  previous_button = READ_PNG('plotCNCS_images/previous_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='previous_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, previous_button, 0, 0,/true
+  
+  play_button = READ_PNG('plotCNCS_images/play_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, play_button, 0, 0,/true
+  
+  next_button = READ_PNG('plotCNCS_images/next_disable.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='next_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, next_button, 0, 0,/true
+  
+  selection_button = READ_PNG('plotCNCS_images/selection_mode_on.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='selection_mode_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, selection_button, 0, 0,/true
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
+  mask_button = READ_PNG('plotCNCS_images/masking_mode_off.png')
+  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='masking_mode_button')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mask_button, 0, 0,/true
 
-;Build BSSreduction GUI
-cd, CurrentFolder + '/plotCNCSGUI/'
-.run MakeGuiInputBase.pro
-.run IDLloadNexus__define.pro
-.run MakeGuiMainPlot.pro
-.run MakeGuiBankPlot.pro
-.run MakeGuiTofBase.pro
-
-;Build all procedures
-cd, CurrentFolder
-
-;utils functions
-.run plot_cncs_get.pro
-.run plot_cncs_time.pro
-.run plot_cncs_put.pro
-.run plot_cncs_is.pro
-
-;procedures
-;first base
-.run plot_cncs_Input.pro
-.run plot_cncs_Browse.pro
-.run plot_cncs_PreviewRuninfoFile.pro
-.run plot_cncs_CollectHistoInfo.pro
-.run plot_cncs_GUIupdate.pro
-.run plot_cncs_CreateHistoMapped.pro
-.run plot_cncs_SaveAsHistoMapped.pro
-.run plot_cncs_SendToGeek.pro
-.run plot_cncs_counts_vs_tof_base.pro
-
-;Nexus tab
-.run plot_cncs_Nexus.pro
-
-;main plot base
-.run plot_cncs_counts_vs_tof_info_base.pro
-.run plot_cncs_PlotMainPlot.pro
-.run plot_cncs_MainPlot.pro
-.run plot_cncs_display_buttons_main_plot.pro
-.run plot_cncs_plot_scale.pro
-.run plot_cncs_play_tof.pro
-.run plot_cncs_play_buttons.pro
-
-;bank plot base
-.run plot_cncs_PlotBank.pro
-.run plot_cncs_PlotBankEventcb.pro
-
-;tof plot base
-.run plot_cncs_PlotTof.pro
-.run plot_cncs_PlotTofEventcb.pro
-
-;main functions
-.run MainBaseEvent.pro
-.run plot_cncs_eventcb.pro
-.run plot_cncs.pro
+END

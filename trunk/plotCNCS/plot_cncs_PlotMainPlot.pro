@@ -897,44 +897,8 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
   
-  ;display buttons (play, stop, next, previous, pause) -----------------------
-  raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, raw_buttons, 0, 0,/true
-  
-  pause_button = READ_PNG('plotCNCS_images/pause_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='pause_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, pause_button, 0, 0,/true
-  
-  stop_button = READ_PNG('plotCNCS_images/stop_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='stop_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, stop_button, 0, 0,/true
-  
-  previous_button = READ_PNG('plotCNCS_images/previous_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='previous_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, previous_button, 0, 0,/true
-  
-  play_button = READ_PNG('plotCNCS_images/play_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, play_button, 0, 0,/true
-  
-  next_button = READ_PNG('plotCNCS_images/next_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='next_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, next_button, 0, 0,/true
-  
-  ;---------------------------------------------------------------------------
+  ;display buttons (play, stop, next, previous, pause, selection modes...)
+  display_buttons_main_plot, wBase
   
   ;open histo_mapped file
   OPENR,u,histo_mapped_file,/get
@@ -1080,45 +1044,9 @@ PRO PlotMainPlotFromNexus, NexusFileName
   DEVICE, DECOMPOSED = 0
   loadct, 5, /SILENT
   
-  ;display buttons (play, stop, next, previous, pause) -----------------------
-  raw_buttons = READ_PNG('plotCNCS_images/set_of_buttons_raw.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_buttons')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, raw_buttons, 0, 0,/true
-  
-  pause_button = READ_PNG('plotCNCS_images/pause_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='pause_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, pause_button, 0, 0,/true
-  
-  stop_button = READ_PNG('plotCNCS_images/stop_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='stop_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, stop_button, 0, 0,/true
-  
-  previous_button = READ_PNG('plotCNCS_images/previous_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='previous_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, previous_button, 0, 0,/true
-  
-  play_button = READ_PNG('plotCNCS_images/play_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='play_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, play_button, 0, 0,/true
-  
-  next_button = READ_PNG('plotCNCS_images/next_disable.png')
-  mode_id = WIDGET_INFO(wBase, FIND_BY_UNAME='next_button')
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, next_button, 0, 0,/true
-  
-  ;---------------------------------------------------------------------------
-  
+  ;display buttons (play, stop, next, previous, pause, selection modes...)
+  display_buttons_main_plot, wBase
+
   Nstep  = FLOAT(50) ;number of steps
   progressBarCancel = 0
   progressBar = OBJ_NEW("SHOWPROGRESS", $
@@ -1168,3 +1096,4 @@ PRO PlotMainPlotFromNexus, NexusFileName
   OBJ_DESTROY, progressBar
   
 END
+
