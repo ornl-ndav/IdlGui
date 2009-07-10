@@ -105,6 +105,44 @@ PRO MakeGuiMainPLot_Event, event
   
   CASE event.id OF
   
+  ;selection mode button
+    WIDGET_INFO(event.top, FIND_BY_UNAME='selection_mode_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          id = WIDGET_INFO(Event.top,find_by_uname='selection_mode_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE
+    END
+    
+    ;Masking mode button
+    WIDGET_INFO(event.top, FIND_BY_UNAME='masking_mode_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN
+        ENDIF
+      ENDIF ELSE BEGIN
+        IF (Event.ENTER EQ 1) THEN BEGIN ;enter
+          id = WIDGET_INFO(Event.top,find_by_uname='masking_mode_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE
+    END
+    
     ;Counts min value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_min_value'): BEGIN
       replot_main_plot_with_scale, Event
@@ -1046,7 +1084,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
   
   ;display buttons (play, stop, next, previous, pause, selection modes...)
   display_buttons_main_plot, wBase
-
+  
   Nstep  = FLOAT(50) ;number of steps
   progressBarCancel = 0
   progressBar = OBJ_NEW("SHOWPROGRESS", $
