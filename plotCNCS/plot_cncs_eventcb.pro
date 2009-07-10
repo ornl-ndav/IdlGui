@@ -32,42 +32,58 @@
 ;
 ;==============================================================================
 
+FUNCTION getTimeMapFile, Event, histo_mapped_file
+  file_array = STRSPLIT(histo_mapped_file,'_histo_mapped',$
+  /EXTRACT,$
+  /REGEX,$
+  COUNT=nbr)
+  IF (nbr GT 1) THEN BEGIN
+    timemap_file = file_array[0] + '_timemap.dat'
+    RETURN, timemap_file
+  ENDIF ELSE BEGIN
+    RETURN, ''
+  ENDELSE
+END
+
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PRO LaunchPlot, Event
-tabSelected = getTabSelected(Event)
-IF (tabSelected EQ 1) THEN BEGIN ;histogram input
-;get name of histo_mapped_file
+  tabSelected = getTabSelected(Event)
+  IF (tabSelected EQ 1) THEN BEGIN ;histogram input
+    ;get name of histo_mapped_file
     histo_mapped_file = getTextFieldValue(Event, 'histo_mapped_text_field')
-    PlotMainPlot, histo_mapped_file ;in plot_arcs_PlotMainPlot
-ENDIF ELSE begin
+    ;retrieve time map
+    timemap_file = getTimeMapFile(Event, histo_mapped_file)
+    IF (~FILE_TEST(timemap_file)) THEN timemap_file = ''
+    PlotMainPlot, histo_mapped_file, timemap_file ;in plot_arcs_PlotMainPlot
+  ENDIF ELSE begin
     NexusFileName = getNexusFileName(Event)
     PlotMainPlotFromNexus, NexusFileName
-ENDELSE
+  ENDELSE
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PRO TabEventcb, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-tabSelected     = getTabSelected(Event)
-prevTabSelected = (*global).HistoNexusTabSelected
-IF (tabSelected NE prevTabSelected) THEN BEGIN
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  tabSelected     = getTabSelected(Event)
+  prevTabSelected = (*global).HistoNexusTabSelected
+  IF (tabSelected NE prevTabSelected) THEN BEGIN
     (*global).HistoNexusTabSelected = tabSelected
     IF (tabSelected EQ 1) THEN BEGIN ;histogram input
-        ActivateOrNotPlotButton, Event    
+      ActivateOrNotPlotButton, Event
     ENDIF ELSE begin
-        ActivateOrNotPlotButton_from_NexusTab, Event
+      ActivateOrNotPlotButton_from_NexusTab, Event
     ENDELSE
-ENDIF
+  ENDIF
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 PRO MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;turn off hourglass
-widget_control,hourglass=0
+  tlb = get_tlb(wWidget)
+  ;indicate initialization with hourglass icon
+  widget_control,/hourglass
+  ;turn off hourglass
+  widget_control,hourglass=0
 END
 
 

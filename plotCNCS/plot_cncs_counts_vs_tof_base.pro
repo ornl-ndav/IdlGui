@@ -38,6 +38,7 @@ FUNCTION isLinSelected, Event
     FIND_BY_UNAME='full_detector_count_vs_tof_linear_plot')
   value = WIDGET_INFO(id, /BUTTON_SET)
   RETURN, value
+  
 END
 
 ;----------------------------------------------------------------------------
@@ -49,8 +50,58 @@ FUNCTION isInsideDrawingRegion, Event, x, y
     x GT (*global1).device_xmax OR $
     y LT (*global1).device_ymin OR $
     y GT (*global1).device_ymax) THEN RETURN, 0
-    
   RETURN, 1
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO replot_after_manual_zoom, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  sxmin = getTextFieldValue(Event,'xmin')
+  xmin = DOUBLE(sxmin)
+  (*global1).x0_data = xmin
+  
+  sxmax = getTextFieldValue(Event,'xmax')
+  xmax = DOUBLE(sxmax)
+  (*global1).x1_data = xmax
+  
+  symin = getTextFieldValue(Event,'ymin')
+  ymin = DOUBLE(symin)
+  (*global1).y0_data = ymin
+  
+  symax = getTextFieldValue(Event,'ymax')
+  ymax = DOUBLE(symax)
+  (*global1).y1_data = ymax
+  
+  (*global1).x0_data_backup = (*global1).x0_data
+  (*global1).y0_data_backup = (*global1).y0_data
+  (*global1).x1_data_backup = (*global1).x1_data
+  (*global1).y1_data_backup = (*global1).y1_data
+  
+  redefine_xy_display_limit, Event
+  replot_counts_vs_tof_full_detector, Event
+  display_selection, Event
+  replot_average, Event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_xy_min_max, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  xmin = (*global1).display_xmin_backup
+  ymin = (*global1).display_ymin_backup
+  xmax = (*global1).display_xmax_backup
+  ymax = (*global1).display_ymax_backup
+  
+  putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
+  putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
+  putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
+  putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -72,11 +123,42 @@ PRO launch_couts_vs_tof_base_Event, Event
       FIND_BY_UNAME = 'full_detector_counts_vs_tof_zoom_tool'): BEGIN
       MapBase, Event, 'selection_base', 0
       MapBase, Event, 'zoom_base', 1
+      display_xy_min_max, Event
+    END
+    
+    ;xmin in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'xmin'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;xmax in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'xmax'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;ymin in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'ymin'): BEGIN
+      replot_after_manual_zoom, Event
+    END
+    
+    ;ymax in zoom base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'ymax'): BEGIN
+      replot_after_manual_zoom, Event
     END
     
     ;draw plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='counts_vs_tof_main_base_draw'): BEGIN
+      
+      id = WIDGET_INFO(Event.top,find_by_uname='counts_vs_tof_main_base_draw')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 31
+      DEVICE, CURSOR_STANDARD=standard
       
       ;if in selection mode only ===================
       IF (isButtonSelected(Event, $
@@ -170,6 +252,7 @@ PRO launch_couts_vs_tof_base_Event, Event
             replot_counts_vs_tof_full_detector, event
             display_selection, Event ;that produces average line
             replot_average, Event
+            display_xy_min_max, Event
             
           ENDIF ELSE BEGIN
           
@@ -205,15 +288,62 @@ PRO launch_couts_vs_tof_base_Event, Event
             CURSOR, X, Y, /data, /nowait
             (*global1).x1_data = X
             (*global1).y1_data = Y
-            redefine_xy_display_limit, Event
-            replot_counts_vs_tof_full_detector, Event
-            display_selection, Event
-            replot_average, Event
+            
             (*global1).left_mouse_pressed = 0
-            (*global1).x0_data_backup = (*global1).x0_data
-            (*global1).y0_data_backup = (*global1).y0_data
-            (*global1).x1_data_backup = (*global1).x1_data
-            (*global1).y1_data_backup = (*global1).y1_data
+            
+            IF (((*global1).x1_data EQ (*global1).x0_data) AND $
+              ((*global1).y1_data EQ (*global1).y0_data)) THEN BEGIN
+              
+              (*global1).x0_data = 0.
+              (*global1).y0_data = 0.
+              (*global1).x1_data = 0.
+              (*global1).y1_data = 0.
+              (*global1).x0_data_backup = (*global1).x0_data
+              (*global1).y0_data_backup = (*global1).y0_data
+              (*global1).x1_data_backup = (*global1).x1_data
+              (*global1).y1_data_backup = (*global1).y1_data
+              (*global1).display_xmin = (*global1).display_xmin_backup
+              (*global1).display_ymin = (*global1).display_ymin_backup
+              (*global1).display_xmax = (*global1).display_xmax_backup
+              (*global1).display_ymax = (*global1).display_ymax_backup
+              replot_counts_vs_tof_full_detector, event
+              display_selection, Event ;that produces average line
+              replot_average, Event
+              display_xy_min_max, Event
+              
+            ENDIF ELSE BEGIN
+            
+              redefine_xy_display_limit, Event
+              replot_counts_vs_tof_full_detector, Event
+              display_selection, Event
+              replot_average, Event
+              (*global1).x0_data_backup = (*global1).x0_data
+              (*global1).y0_data_backup = (*global1).y0_data
+              (*global1).x1_data_backup = (*global1).x1_data
+              (*global1).y1_data_backup = (*global1).y1_data
+              
+              x0 = (*global1).x0_data
+              y0 = (*global1).y0_data
+              x1 = (*global1).x1_data
+              y1 = (*global1).y1_data
+              xmin = MIN([x0,x1],MAX=xmax)
+              ymin = MIN([y0,y1],MAX=ymax)
+              
+              IF (xmin NE xmax AND $
+                ymin NE ymax) THEN BEGIN
+                
+                putTextFieldValue, Event, 'xmin', STRCOMPRESS(xmin,/REMOVE_ALL)
+                putTextFieldValue, Event, 'ymin', STRCOMPRESS(ymin,/REMOVE_ALL)
+                putTextFieldValue, Event, 'xmax', STRCOMPRESS(xmax,/REMOVE_ALL)
+                putTextFieldValue, Event, 'ymax', STRCOMPRESS(ymax,/REMOVE_ALL)
+                
+              ENDIF ELSE BEGIN
+              
+                display_xy_min_max, Event
+                
+              ENDELSE
+              
+            ENDELSE
             
           ENDIF
         ENDIF
@@ -445,8 +575,18 @@ PRO display_selection, Event
   IF (ymax_device GT (*global1).device_ymax) THEN ymax = -1L
   IF (ymin_device LT (*global1).device_ymin) THEN ymin = -1L
   
-  ymin_plot = (*global1).display_ymin
+  lin_type = isLinSelected(Event)
+  IF (lin_type) THEN BEGIN
+    ymin_plot = (*global1).display_ymin
+  ENDIF ELSE BEGIN
+    IF ((*global1).display_ymin EQ 0.) THEN BEGIN
+      ymin_plot = 1.5e-6
+    ENDIF ELSE BEGIN
+      ymin_plot = (*global1).display_ymin
+    ENDELSE
+  ENDELSE
   ymax_plot = (*global1).display_ymax
+  
   IF (xmin NE -1L) THEN BEGIN
     PLOTS, xmin, ymin_plot,/DATA
     PLOTS, xmin, ymax_plot,/CONTINUE, COLOR=50,/DATA
@@ -521,51 +661,51 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
   xmin = MIN([x0,x1],MAX=xmax)
   ymin = MIN([y0,y1],MAX=ymax)
   
-  IF (xmax EQ 0. OR $
-    xmin EQ 0.) THEN BEGIN ;reset plot
-    
-    IF (plot_type EQ 'tof') THEN BEGIN
-      tof_array = (*(*global1).tof_array)
-      IF (lin_log_type EQ 'log') THEN BEGIN
-        PLOT, tof_array, $
-          counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13',$
-          /YLOG
-      ENDIF ELSE BEGIN
-        PLOT, tof_array, $
-          counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1,$
-          YTITLE = ytitle,$
-          YSTYLE = 1,$
-          FONT='8x13'
-      ENDELSE
-      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
-        XTITLE='Bins #'
-    ENDIF ELSE BEGIN
-      IF (lin_log_type EQ 'log') THEN BEGIN
-        PLOT, counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1,$
-          YTITLE = ytitle,$
-          YSTILE = 1,$
-          FONT='8x13',$
-          /YLOG
-      ENDIF ELSE BEGIN
-        PLOT, counts_vs_tof_integrated, $
-          XTITLE = xtitle,$
-          XSTYLE = 1,$
-          YTITLE = ytitle,$
-          YSTYEL = 1,$
-          FONT='8x13'
-      ENDELSE
-    ENDELSE
-    
-  ENDIF ELSE BEGIN ;zoom plot using range specified
+;  IF (xmax EQ 0. OR $
+;    xmin EQ 0.) THEN BEGIN ;reset plot
+;    
+;    IF (plot_type EQ 'tof') THEN BEGIN
+;      tof_array = (*(*global1).tof_array)
+;      IF (lin_log_type EQ 'log') THEN BEGIN
+;        PLOT, tof_array, $
+;          counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13',$
+;          /YLOG
+;      ENDIF ELSE BEGIN
+;        PLOT, tof_array, $
+;          counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13'
+;      ENDELSE
+;      Axis, XAxis=1, XRANGE=[0,N_ELEMENTS(counts_vs_tof_integrated)],$
+;        XTITLE='Bins #'
+;    ENDIF ELSE BEGIN
+;      IF (lin_log_type EQ 'log') THEN BEGIN
+;        PLOT, counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13',$
+;          /YLOG
+;      ENDIF ELSE BEGIN
+;        PLOT, counts_vs_tof_integrated, $
+;          XTITLE = xtitle,$
+;          XSTYLE = 1+8,$
+;          YTITLE = ytitle,$
+;          YSTYLE = 1,$
+;          FONT='8x13'
+;      ENDELSE
+;    ENDELSE
+;    
+;  ENDIF ELSE BEGIN ;zoom plot using range specified
   
     IF (plot_type EQ 'tof') THEN BEGIN
       tof_array = (*(*global1).tof_array)
@@ -575,7 +715,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           YRANGE = [ymin,ymax],$
           counts_vs_tof_integrated, $
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -586,7 +726,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
@@ -599,7 +739,7 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13',$
@@ -609,14 +749,14 @@ PRO replot_counts_vs_tof_full_detector, event, MOVING=moving
           XRANGE = [xmin,xmax],$
           YRANGE = [ymin,ymax],$
           XTITLE = xtitle,$
-          XSTYLE = 1,$
+          XSTYLE = 1+8,$
           YTITLE = ytitle,$
           YSTYLE = 1,$
           FONT='8x13'
       ENDELSE
     ENDELSE
     
-  ENDELSE
+;  ENDELSE
   
 END
 
@@ -630,7 +770,7 @@ FUNCTION retrieve_tof_array, NexusFileName
 END
 
 ;------------------------------------------------------------------------------
-PRO MakeCountsVsTofBase, wBaseBackground
+PRO MakeCountsVsTofBase, wBaseBackground, mode
 
   ourGroup = WIDGET_BASE()
   
@@ -738,14 +878,22 @@ PRO MakeCountsVsTofBase, wBaseBackground
     
   xsize = 15
   
+  IF (mode EQ 'nexus' OR $
+    mode EQ 'histo_with_tof') THEN BEGIN
+    units_value = 'microS'
+  ENDIF ELSE BEGIN
+    units_value = 'Bin(s)'
+  ENDELSE
+  
   xmin = WIDGET_LABEL(zoom_base,$
     VALUE = 'Xmin:')
   xmin = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'xmin')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   xmax = WIDGET_LABEL(zoom_base,$
@@ -753,9 +901,10 @@ PRO MakeCountsVsTofBase, wBaseBackground
   xmax = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'xmax')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   ymin = WIDGET_LABEL(zoom_base,$
@@ -763,9 +912,10 @@ PRO MakeCountsVsTofBase, wBaseBackground
   ymin = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'ymin')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
   ymax = WIDGET_LABEL(zoom_base,$
@@ -773,12 +923,13 @@ PRO MakeCountsVsTofBase, wBaseBackground
   ymax = WIDGET_TEXT(zoom_base,$
     VALUE = 'N/A',$
     XSIZE = xsize,$
+    /EDITABLE,$
     UNAME = 'ymax')
   unit = WIDGET_LABEL(zoom_base,$
-    VALUE = 'microS',$
+    VALUE = units_value,$
     UNAME = 'xaxis_units')
     
-    help = WIDGET_LABEL(zoom_base,$
+  help = WIDGET_LABEL(zoom_base,$
     VALUE = '    (Click outside the plotting frame to reset the zoom.)')
     
   ;ROW 2 --------------------------------------------------
@@ -817,11 +968,14 @@ END
 PRO Launch_counts_vs_tof_base, $
     counts_vs_tof_array, $
     nexus_file_name, $
-    title=title
+    timemap_file, $
+    title = title, $
+    global = global
     
   ;build gui
   wBase = ''
-  MakeCountsVsTofBase, wBase
+  mode = (*global).mode
+  MakeCountsVsTofBase, wBase, mode
   
   global1 = PTR_NEW({ $
     NexusFileName: nexus_file_name,$
@@ -874,10 +1028,18 @@ PRO Launch_counts_vs_tof_base, $
   loadct, 5, /SILENT
   
   ;retrieve TOF array
-  IF (nexus_file_name NE '') THEN BEGIN
-    tof_array = retrieve_tof_array(nexus_file_name)
-    (*(*global1).tof_array) = tof_array
-  ENDIF
+  mode = (*global).mode
+  CASE (mode) OF
+    'nexus': BEGIN
+      tof_array = retrieve_tof_array(nexus_file_name)
+      (*(*global1).tof_array) = tof_array
+    END
+    'histo_with_tof': BEGIN
+      tof_array = (*(*global).tof_array)
+      (*(*global1).tof_array) = tof_array
+    END
+    ELSE:
+  ENDCASE
   
   ;integrated counts_vs_tof for all pixels
   counts_vs_tof_integrated_1 = TOTAL(counts_vs_tof_array,1)
@@ -889,13 +1051,32 @@ PRO Launch_counts_vs_tof_base, $
   max = MAX(counts_vs_tof_integrated_2)
   max_index = WHERE(counts_vs_tof_integrated_2 EQ MAX)
   
-  IF (nexus_file_name NE '') THEN BEGIN
-    title += ' (TOF of maximum intensity is ' + $
-      STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
-  ENDIF ELSE BEGIN
-    title += ' (TOF of maximum intensity is at binning #' + $
-      STRCOMPRESS(max_index[0],/REMOVE_ALL) + ')'
-  ENDELSE
+  CASE (mode) OF
+    'nexus': BEGIN
+      title += ' (TOF of maximum intensity is ' + $
+        STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+      xtitle = 'TOF (microS)'
+      ytitle = 'Counts'
+      plot_type = 'tof'
+      units_label = 'microS'
+    END
+    'histo_with_tof' : BEGIN
+      title += ' (TOF of maximum intensity is ' + $
+        STRCOMPRESS(tof_array[max_index[0]],/REMOVE_ALL) + ' microS)'
+      xtitle = 'TOF (microS)'
+      ytitle = 'Counts'
+      plot_type = 'tof'
+      units_label = 'microS'
+    END
+    ELSE: BEGIN
+      title += ' (TOF of maximum intensity is at binning #' + $
+        STRCOMPRESS(max_index[0],/REMOVE_ALL) + ')'
+      xtitle = 'Bins #'
+      ytitle = 'Counts'
+      plot_type = 'bin'
+      units_label = 'bins#'
+    END
+  ENDCASE
   
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='counts_vs_tof_main_base')
   WIDGET_CONTROL, id, BASE_SET_TITLE=title
@@ -903,18 +1084,6 @@ PRO Launch_counts_vs_tof_base, $
   id = WIDGET_INFO(wBase,find_by_uname='counts_vs_tof_main_base_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  
-  IF (nexus_file_name NE '') THEN BEGIN
-    xtitle = 'TOF (microS)'
-    ytitle = 'Counts'
-    plot_type = 'tof'
-    units_label = 'microS'
-  ENDIF ELSE BEGIN
-    xtitle = 'Bins #'
-    ytitle = 'Counts'
-    plot_type = 'bin'
-    units_label = 'bins#'
-  ENDELSE
   
   !Y.MARGIN = [3,3]
   
@@ -932,13 +1101,14 @@ PRO Launch_counts_vs_tof_base, $
   ymin = MIN(counts_vs_tof_integrated_2,MAX=ymax)
   (*global1).display_ymin = ymin
   (*global1).display_ymax = ymax
-  IF (nexus_file_name NE '') THEN BEGIN
+  IF (mode EQ 'nexus' OR $
+    mode EQ 'histo_with_tof') THEN BEGIN
     (*global1).display_xmin = tof_array[0]
     (*global1).display_xmax = tof_array[N_ELEMENTS(tof_array)-1]
     PLOT, tof_array, $
       counts_vs_tof_integrated_2, $
       XTITLE = xtitle,$
-      XSTYLE = 1,$
+      XSTYLE = 1+8,$
       YTITLE = ytitle,$
       YSTYLE = 1,$
       FONT='8x13'

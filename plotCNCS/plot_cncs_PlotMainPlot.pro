@@ -418,6 +418,7 @@ PRO plot_counts_vs_tof_of_selection, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
   nexus_file_name = (*global1).nexus_file_name
+  timemap_file = (*global1).timemap_file
   
   x1 = (*global1).X1/4
   x2 = (*global1).X2/4
@@ -457,8 +458,12 @@ PRO plot_counts_vs_tof_of_selection, Event
   
   counts_vs_tof = big_array[xmin:xmax,ymin:ymax,*]
   title = 'Counts vs TOF of selection'
-  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name, title=title
-  
+  Launch_counts_vs_tof_base, counts_vs_tof, $
+    nexus_file_name, $
+    timemap_file, $
+    title=title, $
+    global = global1
+    
 END
 
 ;==============================================================================
@@ -467,6 +472,7 @@ PRO plot_counts_vs_tof_of_full_detector, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   
   nexus_file_name = (*global1).nexus_file_name
+  timemap_file = (*global1).timemap_file
   
   img     = (*(*global1).img)
   Xfactor = (*global1).Xfactor
@@ -482,8 +488,12 @@ PRO plot_counts_vs_tof_of_full_detector, Event
   
   counts_vs_tof = t_img
   title = 'Counts vs TOF of Full Detector'
-  Launch_counts_vs_tof_base, counts_vs_tof, nexus_file_name, title=title
-  
+  Launch_counts_vs_tof_base, counts_vs_tof, $
+    nexus_file_name, $
+    timemap_file, $
+    title=title, $
+    global = global1
+    
 END
 
 ;==============================================================================
@@ -826,7 +836,7 @@ PRO plotTOFviewFullInstrument, global1
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-PRO PlotMainPlot, histo_mapped_file
+PRO PlotMainPlot, histo_mapped_file, timemap_file
   ;build gui
   wBase = ''
   MakeGuiMainPlot, wBase
@@ -846,11 +856,16 @@ PRO PlotMainPlot, histo_mapped_file
     big_array_rebin:      PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
     img:                  PTR_NEW(0L),$
+    tof_array:            PTR_NEW(0L),$
+    timemap_data:         PTR_NEW(0L),$
     nexus_file_name:      '',$
-    X1:                    0L,$
-    Y1:                    0L,$
-    X2:                    0L,$
-    Y2:                    0L,$
+    timemap_file:         histo_mapped_file, $
+    X1:                   0L,$
+    Y1:                   0L,$
+    X2:                   0L,$
+    Y2:                   0L,$
+    
+    mode:                 '',$
     
     counts_vs_tof_for_play: PTR_NEW(0L),$
     background:            PTR_NEW(0L),$
@@ -921,7 +936,7 @@ PRO PlotMainPlot, histo_mapped_file
   
   ;---------------------------------------------------------------------------
   
-  ;open file
+  ;open histo_mapped file
   OPENR,u,histo_mapped_file,/get
   fs=FSTAT(u)
   Nx = LONG(50*8)
@@ -942,6 +957,28 @@ PRO PlotMainPlot, histo_mapped_file
   ENDIF
   
   (*(*global1).img)= img
+  
+  ;open timemap file (if any)
+  IF (timemap_file NE '') THEN BEGIN
+  
+    OPENR,u,timemap_file,/GET
+    fs=FSTAT(u)
+    Ntof = fs.size/(4L)
+    
+    ;read data
+    data = FLTARR(Ntof)
+    READU,u,data
+    CLOSE, u
+    FREE_LUN,u
+    
+    (*global1).mode = 'histo_with_tof'
+    (*(*global1).tof_array)= data
+    
+  ENDIF ELSE BEGIN
+  
+    (*global1).mode = 'histo'
+    
+  ENDELSE
   
   ;display counts vs tof for play buttons of central row
   t_img = TOTAL(img,3)
@@ -977,7 +1014,7 @@ PRO PlotMainPlot, histo_mapped_file
   WIDGET_CONTROL, id, SENSITIVE=0
   
   ;plot das view of full instrument
-  plotDASviewFullInstrument, global1
+  plotDASviewFullInstrument, Event, global1
   
 END
 
@@ -1012,6 +1049,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
     counts_vs_tof_for_play: PTR_NEW(0L),$
     background:            PTR_NEW(0L),$
     
+    mode:                 'nexus',$
+    
     pause_button_activated: 0b,$
     bin_min:               0L,$
     bin_max:               0L,$
@@ -1021,6 +1060,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     xrange:                INTARR(2),$
     
     nexus_file_name:       NexusFileName,$
+    timemap_file:          '',$
     main_plot_real_title:  'Real View of Instrument (Y vs X integrated over TOF)',$
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
