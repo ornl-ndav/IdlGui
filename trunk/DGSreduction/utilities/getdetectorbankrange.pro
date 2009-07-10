@@ -22,7 +22,7 @@ FUNCTION getDetectorBankRange, instrument
       end
       "CNCS": begin
         lower = 1
-        upper = 50
+        upper = 48
       end
       "SEQUOIA": begin
         lower = 38
