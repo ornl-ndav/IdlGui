@@ -90,7 +90,7 @@ PRO getXYposition, Event
     coeff = 0.5
     IF (value EQ 1) THEN coeff = 1
     ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff * coeff) + 1
-    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff * coeff) + 1
+    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff) + 1
   ENDELSE
   putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)

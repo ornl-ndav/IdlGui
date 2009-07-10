@@ -97,7 +97,7 @@ PRO MAIN_BASE_event, Event
           IF (value EQ 1) THEN coeff = 1
           putCountsValue, Event, $
             Event.x/(coeff * (*global).congrid_x_coeff),$
-            Event.y/(coeff * (*global).congrid_y_coeff)
+            Event.y/(*global).congrid_y_coeff
         ENDELSE
       ENDIF
       IF (Event.press EQ 1) THEN BEGIN
@@ -113,10 +113,10 @@ PRO MAIN_BASE_event, Event
           ;check if both panels are plotted
           id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
           value = WIDGET_INFO(id, /BUTTON_SET)
-          coeff = 0.5
+          coeff = 2
           IF (value EQ 1) THEN coeff = 1
           X = Event.x / (coeff * (*global).congrid_x_coeff)
-          Y = Event.y / (coeff * (*global).congrid_y_coeff)
+          Y = Event.y / (*global).congrid_y_coeff
         ENDELSE
         putTextFieldValue, Event, $
           'x_center_value', $
