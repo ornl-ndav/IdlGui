@@ -42,7 +42,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION = file->getValue(tag=['configuration','application'])
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
-
+  
   ;******************************************************************************
   ;******************************************************************************
   
@@ -61,6 +61,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   global = ptr_new ({ ucams                   : ucams,$
     HistoNexusTabSelected   : 0,$
     browse_nexus_path       : '/SNS/CNCS/',$
+    event_path              : '/SNS/CNCS/',$
     browse_OR_list_all_flag : 0,$
     bin_width               : '200',$
     runinfoFileName         : '',$
@@ -69,6 +70,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     version                 : VERSION,$
     LogBookPath             : '/SNS/users/LogBook/',$
     staging_folder          : '~/.plotCNCS_tmp/',$
+    debugging_folder        : '~/CNCS/',$
     mapping_list_mac        : ['./mapping/CNCS_TS_2007_10_10.dat'],$
     event_file_filter       : '*_neutron_event.dat',$
     histo_map_filter        : '*_neutron_histo_mapped.dat',$
@@ -81,8 +83,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     failed                  : 'FAILED',$
     status                  : 'STATUS: ',$
     neutron_event_dat_ext   : '_neutron_event.dat',$
+    debugging:                debugging,$
     debugger                : 'j35'})
-        
+    
   IF (ucams EQ (*global).debugger) THEN BEGIN
     MainBaseSize  = [30,25,700,740]
   ENDIF ELSE BEGIN
@@ -92,7 +95,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MainBaseTitle += ' - ' + VERSION
   
   IF (DEBUGGING EQ 'yes') THEN BEGIN
-  MainBaseTitle += ' (DEBUGGING MODE)'
+    MainBaseTitle += ' (DEBUGGING MODE)'
   ENDIF
   
   ;Build Main Base
@@ -134,6 +137,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   IF (DEBUGGING EQ 'yes') THEN BEGIN
     (*global).browse_nexus_path = '~/402/NeXus/'
+    ;(*global).browse_nexus_path = '~/402/'
   ENDIF
   
   ;send message to log current run of application
