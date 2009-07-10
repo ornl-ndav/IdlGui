@@ -79,30 +79,26 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Normalisation Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORMRUN')
   dgsr_cmd->GetProperty, Normalisation=myValue
-  ; Don't Load the default value
-  IF (myValue NE 0) THEN $
-    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+;  IF (LONG(myValue) LE 0) THEN WIDGET_CONTROL, widget_ID, SET_VALUE=NULL
   
   ; Empty Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN')
   dgsr_cmd->GetProperty, EmptyCan=myValue
   ; Don't Load the default value
-  IF (myValue NE 0) THEN $
-    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Black Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_BLACKCAN')
   dgsr_cmd->GetProperty, BlackCan=myValue
   ; Don't Load the default value
-  IF (myValue NE 0) THEN $
-    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Dark Current
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DARK')
   dgsr_cmd->GetProperty, Dark=myValue
   ; Don't Load the default value
-  IF (myValue NE 0) THEN $
-    WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   
   ; Monitor Integration Range (min)
@@ -222,6 +218,7 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Save the button state
   DumpWavelengthState = myValue
   
+  ; Enable if DumpWavelength button is pressed
   wavelengthRange_ID = WIDGET_INFO(tlb,FIND_BY_UNAME='DGSR_COMBINED_WAVELENGTH_RANGE')
   WIDGET_CONTROL, wavelengthRange_ID, SENSITIVE=DumpWavelengthState
   
@@ -229,21 +226,16 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_MIN')
   dgsr_cmd->GetProperty, LambdaBins_Min=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-  ; Enable if DumpWavelength button is pressed
-  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
   
   ; Combined Wavelength Range (max)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_MAX')
   dgsr_cmd->GetProperty, LambdaBins_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-  ; Enable if DumpWavelength button is pressed
-  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
   
   ; Combined Wavelength Range (step)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_STEP')
   dgsr_cmd->GetProperty, LambdaBins_Step=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-  ; Enable if DumpWavelength button is pressed
-  ;WIDGET_CONTROL, widget_ID, SENSITIVE=DumpWavelengthState
+
 
 END
