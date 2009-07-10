@@ -67,40 +67,41 @@ PRO DGSreduction_TLB_Events, event
   
   CASE myUVALUE OF
     'INSTRUMENT_SELECTED': BEGIN
+    
       dgsr_cmd->SetProperty, Instrument=event.STR
-      ; Set the default detector banks if they aren't already set
+      ; Set the default detector banks
       lowerbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_LOWER')
       upperbank_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DATAPATHS_UPPER')
       WIDGET_CONTROL, lowerbank_ID, GET_VALUE=lowerbank
       WIDGET_CONTROL, upperbank_ID, GET_VALUE=upperbank
       ; Get the detector bank limits for the current beamline
       bank = getDetectorBankRange(event.STR)
-      IF (lowerbank LE 0) THEN BEGIN 
+      ;IF (lowerbank LE 0) THEN BEGIN 
         WIDGET_CONTROL, lowerbank_ID, SET_VALUE=bank.lower
         dgsr_cmd->SetProperty, LowerBank=bank.lower
-      ENDIF
-      IF (upperbank LE 0) THEN BEGIN 
+      ;ENDIF
+      ;IF (upperbank LE 0) THEN BEGIN 
         WIDGET_CONTROL, upperbank_ID, SET_VALUE=bank.upper
         dgsr_cmd->SetProperty, UpperBank=bank.upper
-      ENDIF
+      ;ENDIF
       
       ; Now do same for 'Vanadium Mask' Tab
       dgsn_cmd->SetProperty, Instrument=event.STR
-      ; Set the default detector banks if they aren't already set
+      ; Set the default detector banks 
       lowerbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_LOWER')
       upperbank_norm_ID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_DATAPATHS_UPPER')
       WIDGET_CONTROL, lowerbank_norm_ID, GET_VALUE=lowerbank
       WIDGET_CONTROL, upperbank_norm_ID, GET_VALUE=upperbank
       ; Get the detector bank limits for the current beamline
       bank = getDetectorBankRange(event.STR)
-      IF (lowerbank LE 0) THEN BEGIN 
+      ;IF (lowerbank LE 0) THEN BEGIN 
         WIDGET_CONTROL, lowerbank_norm_ID, SET_VALUE=bank.lower
         dgsn_cmd->SetProperty, LowerBank=bank.lower
-      ENDIF
-      IF (upperbank LE 0) THEN BEGIN 
+      ;ENDIF
+      ;IF (upperbank LE 0) THEN BEGIN 
         WIDGET_CONTROL, upperbank_norm_ID, SET_VALUE=bank.upper
         dgsn_cmd->SetProperty, UpperBank=bank.upper
-      ENDIF
+      ;ENDIF
     END
 
     
