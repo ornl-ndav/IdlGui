@@ -400,7 +400,7 @@ function NormCmd::Check
 
   IF (STRLEN(self.datarun) LT 1) THEN BEGIN
     ok = 0
-    msg = [msg,["There doesn't seem to be a RUN NUMBER defined."]]
+    msg = [msg,["There doesn't seem to be a Vanadium RUN NUMBER defined."]]
   ENDIF
 
   ; Just construct the DataPaths for the first job.
@@ -434,9 +434,9 @@ function NormCmd::Check
   
   ; If Empty Can OR Black Can then we must specify Data Coeff
   IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
-    IF (STRLEN(self.datatrans) LT 1) THEN BEGIN
+    IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
       ok = 0
-      msg = [msg,["ERROR: You need to specify and value for 'Data Coeff' " + $
+      msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
         "if you have specified either an Empty Can or a Black Can."]]
     ENDIF
   ENDIF
