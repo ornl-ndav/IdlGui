@@ -105,10 +105,34 @@ PRO MakeGuiMainPlot, wBase
     XOFFSET      = MainPlotBase.size[0],$
     YOFFSET      = MainPlotBase.size[1],$
     MAP          = 1,$
-    GROUP_LEADER = ourGroup,$
+    GROUP_LEADER = ourGroup)
+    
+  ;Masking Selection title
+  maks_label = WIDGET_LABEL(wBase,$
+    VALUE = 'Masking Selection Tool',$
+    XOFFSET = 1585,$
+    YOFFSET = 608,$
+    FRAME = 0)
+    
+  message = 'Selection input example: 1345-1350,1360,1370-1375'
+  label = WIDGET_LABEL(wBase,$
+  VALUE = message,$
+  XOFFSET = 1620,$
+  YOFFSET = 750,$
+  FRAME = 1)
+  
+  ;wBase = WIDGET_BASE(TITLE = MainPlotBase.title,$
+  ;  UNAME        = MainPlotBase.uname,$
+  ;  XOFFSET      = MainPlotBase.size[0],$
+  ;  YOFFSET      = MainPlotBase.size[1],$
+  ;  MAP          = 1,$
+  ;  GROUP_LEADER = ourGroup,$
+  ; /COLUMN)
+  
+  wBase1 = WIDGET_BASE(wBase,$
     /COLUMN)
     
-  row1 = WIDGET_BASE(wBase,$ ;row1 --------------------------------------
+  row1 = WIDGET_BASE(wBase1,$ ;row1 --------------------------------------
     /ROW)
     
   row1a = WIDGET_BASE(row1,$
@@ -257,7 +281,7 @@ PRO MakeGuiMainPlot, wBase
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
-  row2 = WIDGET_BASE(wBase,$ ;row2 ----------------------------------------
+  row2 = WIDGET_BASE(wBase1,$ ;row2 ----------------------------------------
     /ROW)
     
   scale = WIDGET_DRAW(row2,$
@@ -273,28 +297,26 @@ PRO MakeGuiMainPlot, wBase
     /MOTION_EVENTS)
     
   ;---------------------------------------------------------------------------
-  refresh_base = WIDGET_BASE(wBase,$
-  /ROW)
-  
+  refresh_base = WIDGET_BASE(wBase1,$
+    /ROW)
+    
   refresh = WIDGET_BUTTON(refresh_base,$
-  VALUE = 'R E F R E S H   P L O T',$
-  UNAME = 'refresh_plot')
-  
+    VALUE = 'R E F R E S H   P L O T',$
+    UNAME = 'refresh_plot')
+    
   space = WIDGET_LABEL(refresh_base,$
-  VALUE = '                          ')
-  
-  message = 'LEFT click to select region of interest for Counts vs TOF plot'
+    VALUE = '                                                            ')
+    
+  message = '                                      '
+  message += 'LEFT click to select region of interest for Counts vs TOF plot'
   message += ' - RIGHT click to zoom in into selected bank'
-  message += '                                                             '
-  message += '                                                '
-  message += 'Selection input example: 1345-1350,1360,1370-1375'
   
   row3 = WIDGET_LABEL(refresh_base,$ ;explain how the selection works
     VALUE = message)
     
   ;--------------------------------------------------------------------------
     
-  row4 = WIDGET_BASE(wBase,$
+  row4 = WIDGET_BASE(wBase1,$
     /ROW)
     
   row4a = WIDGET_BASE(row4,$ ;play/pause/next.... buttons ----------------
@@ -522,64 +544,64 @@ PRO MakeGuiMainPlot, wBase
     /COLUMN)
     
   row1 = WIDGET_BASE(sel_col1,$
-  /ROW)  
+    /ROW)
     
   button = WIDGET_BUTTON(row1,$
     VALUE = ' RESET SELECTION ',$
     UNAME = 'reset_selection_button',$
     SENSITIVE = 1)
     
-    space = WIDGET_LABEL(row1,$
+  space = WIDGET_LABEL(row1,$
     VALUE = ' ')
     
-    xsize = 115
+  xsize = 115
   load = WIDGET_BUTTON(row1,$
     VALUE = '  LOAD ROI  ',$
-;    SCR_XSIZE = xsize,$
+    ;    SCR_XSIZE = xsize,$
     UNAME = 'load_roi_button')
     
   save = WIDGET_BUTTON(row1,$
     VALUE = '  SAVE ROI  ',$
-;    SCR_XSIZE = xsize,$
+    ;    SCR_XSIZE = xsize,$
     UNAME = 'save_roi_button')
- 
+    
   edit_preview = WIDGET_BUTTON(row1,$
-  VALUE = '  EDIT ROI  ',$
-  UNAME = 'edit_roi_button')
+    VALUE = '  EDIT ROI  ',$
+    UNAME = 'edit_roi_button')
     
   sel_col1_row3_col1 = WIDGET_BASE(sel_col1,$
-  FRAME = 1,$
-  /COLUMN)
-  
+    FRAME = 1,$
+    /COLUMN)
+    
   sel_col1_row3_col1_row1 = WIDGET_BASE(sel_col1_row3_col1,$
-  /ROW)
-  
+    /ROW)
+    
   fld1 = CW_FIELD(sel_col1_row3_col1_row1,$
-  VALUE = '',$
-  UNAME = 'selection_pixelid',$
-  /LONG,$
-  TITLE = 'PixelID')
-  
+    VALUE = '',$
+    UNAME = 'selection_pixelid',$
+    /LONG,$
+    TITLE = 'PixelID')
+    
   fld2 = CW_FIELD(sel_col1_row3_col1_row1,$
-  VALUE = '',$
-  UNAME = 'selection_bank',$
-  /INTEGER,$
-  TITLE = 'Bank')
+    VALUE = '',$
+    UNAME = 'selection_bank',$
+    /INTEGER,$
+    TITLE = 'Bank')
     
   sel_col1_row3_col1_row2 = WIDGET_BASE(sel_col1_row3_col1,$
-  /ROW)
-  
+    /ROW)
+    
   fld1 = CW_FIELD(sel_col1_row3_col1_row2,$
-  VALUE = '',$
-  UNAME = 'selection_tube',$
-  /LONG,$
-  TITLE = '   Tube')
-  
+    VALUE = '',$
+    UNAME = 'selection_tube',$
+    /LONG,$
+    TITLE = '   Tube')
+    
   fld2 = CW_FIELD(sel_col1_row3_col1_row2,$
-  VALUE = '',$
-  UNAME = 'selection_row',$
-  /INTEGER,$
-  TITLE = ' Row')
+    VALUE = '',$
+    UNAME = 'selection_row',$
+    /INTEGER,$
+    TITLE = ' Row')
     
   sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................
     /COLUMN)
