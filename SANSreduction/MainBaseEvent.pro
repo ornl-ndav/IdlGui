@@ -248,21 +248,21 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_front_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).front_bank)
       refresh_plot, Event ;_plot
-      RefreshRoiExclusionPlot, Event   ;_plot
+      ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
-    ;- Show front panels ------------------------------------------------------
+    ;- Show back panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_back_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).back_bank)
       refresh_plot, Event ;_plot
-      RefreshRoiExclusionPlot, Event   ;_plot
+      ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Show front and back panels ---------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_both_banks_button'): BEGIN
       (*(*global).DataArray) = (*(*global).both_banks)
       refresh_plot, Event ;_plot
-      RefreshRoiExclusionPlot, Event   ;_plot
+      ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;= TAB2 (REDUCE) ==========================================================
