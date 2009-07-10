@@ -93,6 +93,8 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       DataArray1 = *(sInstance->getData())
       OBJ_DESTROY, sInstance
       
+      myArray = DataArray1
+      
       ;get size of array
       sz = size(DataArray1)
       nbr_tof   = sz[1]
