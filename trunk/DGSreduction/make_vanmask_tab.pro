@@ -64,7 +64,8 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
         YOFFSET=dataSourceLabelGeometryYSize/2, YPAD=10, XPAD=10)
   
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
-  runID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSN_DATARUN", /ALL_EVENTS, /LONG)
+  runID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSN_DATARUN", $
+    UNAME="DGSN_DATARUN", /ALL_EVENTS, /LONG)
   checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSN_FINDNEXUS", SENSITIVE=0)
 
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
@@ -99,7 +100,7 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   eiPrettyBase = WIDGET_BASE(eiBase, /FRAME, /COLUMN, $
         YOFFSET=eiLabelGeomtryYSize/2, XPAD=10, YPAD=10)
   eiRow = WIDGET_BASE(eiPrettyBase, /ROW)
-  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGSN_EI", /ALL_EVENTS, $
+  eiID = CW_FIELD(eiRow, TITLE="", UVALUE="DGSN_EI", UNAME="DGSN_EI", /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
 
   tzeroBase = WIDGET_BASE(EiTzeroBase)
@@ -109,7 +110,7 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   tzeroPrettyBase = WIDGET_BASE(tzeroBase, /FRAME, /COLUMN, $
         YOFFSET=tzeroLabelGeomtryYSize/2, XPAD=10, YPAD=10)
   tzeroRow = WIDGET_BASE(tzeroPrettyBase, /ROW)
-  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSN_TZERO", /ALL_EVENTS, $
+  tzeroID = CW_FIELD(tzeroRow, TITLE="", UVALUE="DGSN_TZERO", UNAME="DGSN_TZERO", /ALL_EVENTS, $
     XSIZE=EiTzero_TextBoxSize)
 
   
@@ -124,8 +125,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
         YOFFSET=tofcutLabelGeomtryYSize/2, XPAD=10, YPAD=10)
 
   tofcutRow = WIDGET_BASE(tofcutPrettyBase, /ROW)
-  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGSN_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
-  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSN_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
+  tofcutminID = CW_FIELD(tofcutRow, TITLE="Min:", UVALUE="DGSN_TOF-CUT-MIN", $
+    UNAME="DGSN_TOF-CUT-MIN", /ALL_EVENTS, XSIZE=17)
+  tofcutmaxID = CW_FIELD(tofcutRow, TITLE="Max:", UVALUE="DGSN_TOF-CUT-MAX", $
+    UNAME="DGSN_TOF-CUT-MAX", /ALL_EVENTS, XSIZE=18)  
 
 
   ; == Thresholds ==
@@ -172,14 +175,18 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
 
   
   ; We also set the default value to be 1, which is the same as in reductioncmd::init
-  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSN_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
+  monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSN_USMON", $
+    UNAME="DGSN_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
 
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
   ;normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSN_NORM")
-  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSN_EMPTYCAN")
-  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSN_BLACKCAN")
-  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSN_DARK")
+  emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", $
+    UVALUE="DGSN_EMPTYCAN", UNAME="DGSN_EMPTYCAN")
+  blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", $
+    UVALUE="DGSN_BLACKCAN", UNAME="DGSN_BLACKCAN")
+  darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", $
+    UVALUE="DGSN_DARK", UNAME="DGSN_DARK")
 
     ; == Transmission Corrections == 
   transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
@@ -189,8 +196,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   transPrettyBase = WIDGET_BASE(transBase, /FRAME, /ROW, $
     YOFFSET=transBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, SCR_XSIZE=513)
 
-  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSN_NORM-TRANS", XSIZE=22)
-  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSN_DET-EFF", XSIZE=22)
+  normTransID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Norm Coeff:", UVALUE="DGSN_NORM-TRANS", $
+    UNAME="DGSN_NORM-TRANS", XSIZE=22)
+  detEffID = CW_FIELD(transPrettyBase, /ALL_EVENTS, TITLE="Detector Eff:", UVALUE="DGSN_DET-EFF", $
+    UNAME="DGSN_DET-EFF", XSIZE=22)
   
   ; Monitor integration range
   monitorRangeBase = WIDGET_BASE(normOptionsBaseRow1, /ALIGN_BOTTOM)
@@ -200,8 +209,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   monitorRangePrettyBase = WIDGET_BASE(monitorRangeBase, /FRAME, /ROW, $
       YOFFSET=monitorRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
   
-  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_MON-INT-MIN", XSIZE=10)
-  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_MON-INT-MAX", XSIZE=10)
+  monMinID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_MON-INT-MIN", $
+    UNAME="DGSN_MON-INT-MIN", XSIZE=10)
+  monMaxID = CW_FIELD(monitorRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_MON-INT-MAX", $
+    UNAME="DGSN_MON-INT-MAX", XSIZE=10)
   
    ; Norm integration range
   normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSN_NORM-INT-RANGE", /ALIGN_BOTTOM)
@@ -211,8 +222,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
       YOFFSET=normRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
   
-  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_NORM-INT-MIN", XSIZE=10)
-  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_NORM-INT-MAX", XSIZE=10)
+  normMinID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_NORM-INT-MIN", $
+    UNAME="DGSN_NORM-INT-MIN", XSIZE=10)
+  normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_NORM-INT-MAX", $
+    UNAME="DGSN_NORM-INT-MAX", XSIZE=10)
             
 
 ; == ROI ==
@@ -226,7 +239,7 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
         YOFFSET=roiLabelYSize/2, YPAD=10, XPAD=10)
   roiRow = WIDGET_BASE(roiPrettyBase, ROW=1)
   roiFileID = CW_FIELD(roiRow, TITLE='Filename: ', UVALUE='DGSN_ROI_FILENAME', $
-    /ALL_EVENTS, XSIZE=25)
+    UNAME='DGSN_ROI_FILENAME', /ALL_EVENTS, XSIZE=25)
   
 
 ; == TIB ==
@@ -247,7 +260,8 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   TIBConstantBaseLabelGeometryYSize = TIBConstantBaseLabelGeometry.ysize
   TIBConstantPrettyBase = WIDGET_BASE(TIBConstantBase, /FRAME, /ROW, $
       YOFFSET=TIBConstantBaseLabelGeometryYSize/2, XPAD=10, YPAD=10)
-  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=15, TITLE="", UVALUE="DGSN_TIBCONST", /ALL_EVENTS)
+  TIBconstID = CW_FIELD(TIBConstantPrettyBase, XSIZE=15, TITLE="", UVALUE="DGSN_TIBCONST", $
+    UNAME="DGSN_TIBCONST", /ALL_EVENTS)
   
   label1 = WIDGET_LABEL(TIBPrettyBase, VALUE=' OR ')
   
@@ -260,8 +274,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
       YOFFSET=TIBRangeBaseLabelGeometryYSize/2, XPAD=10, YPAD=10, $
       SCR_XSIZE=318)
   
-  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", XSIZE=15)
-  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", XSIZE=15)
+  TIBMinID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Min:", UVALUE="DGSN_TIB-MIN", $
+    UNAME="DGSN_TIB-MIN", XSIZE=15)
+  TIBMaxID = CW_FIELD(TIBRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSN_TIB-MAX", $
+    UNAME="DGSN_TIB-MAX", XSIZE=15)
   
   
 
@@ -286,10 +302,15 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   ;qvectorButton = Widget_Button(outputBaseCol1, Value='Qvector', UVALUE='DGSN_MAKE_QVECTOR')
   ;fixedButton = Widget_Button(outputBaseCol1, Value='Fixed Grid', UVALUE='DGSN_MAKE_FIXED', UNAME='DGSN_MAKE_FIXED')
   ; Column #2
-  tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF')
-  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSN_DUMP_NORM')
-  waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE')
-  tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB')
+  tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF', $
+    UNAME='DGSN_MAKE_COMBINED_TOF')
+  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSN_DUMP_NORM', $
+    UNAME='DGSN_DUMP_NORM')
+  waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE', $
+    UNAME='DGSN_MAKE_COMBINED_WAVE')
+  tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB', $
+    UNAME='DGSN_DUMP_TIB')
+    
   ; Column #3
   ; Output Options Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
