@@ -248,6 +248,9 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'selection_mode_button',$
     SCR_XSIZE = 128,$
     SCR_YSIZE = 35,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
+    TOOLTIP = 'Selection Mode is activated !',$
     FRAME = 5)
     
   label_base = WIDGET_BASE(row1)
@@ -343,6 +346,9 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'masking_mode_button',$
     SCR_XSIZE = 128,$
     SCR_YSIZE = 35,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
+    TOOLTIP = 'Click to activate the Masking Mode',$
     FRAME = 5)
     
   ;--------------------------------------------------------------------------
