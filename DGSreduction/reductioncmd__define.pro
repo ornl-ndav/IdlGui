@@ -429,7 +429,7 @@ function ReductionCmd::Check
     msg = [msg,['The Detector Banks are not specified correctly.']]
   END
   
-  ; Energy Transfer
+  ; Incident Energy 
   IF (STRLEN(self.ei) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,['You need to define the Incident Energy (Ei).']]
