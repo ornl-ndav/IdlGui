@@ -249,7 +249,7 @@ PRO MakeGuiMainPlot, wBase
     SCR_XSIZE = 128,$
     SCR_YSIZE = 35,$
     /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
+    /MOTION_EVENTS,$
     TOOLTIP = 'Selection Mode is activated !',$
     FRAME = 5)
     
@@ -347,7 +347,7 @@ PRO MakeGuiMainPlot, wBase
     SCR_XSIZE = 128,$
     SCR_YSIZE = 35,$
     /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
+    /MOTION_EVENTS,$
     TOOLTIP = 'Click to activate the Masking Mode',$
     FRAME = 5)
     
@@ -576,6 +576,7 @@ PRO MakeGuiMainPlot, wBase
     
   sel_base = WIDGET_BASE(row4,$
     FRAME = 1,$
+    UNAME = 'masking_base',$
     SENSITIVE = 0,$
     MAP = 1,$
     /ROW)
