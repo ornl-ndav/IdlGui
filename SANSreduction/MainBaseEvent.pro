@@ -90,9 +90,14 @@ PRO MAIN_BASE_event, Event
             CATCH,/CANCEL
             RETURN
           ENDIF
+          ;check if both panels are plotted
+          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+          value = WIDGET_INFO(id, /BUTTON_SET)
+          coeff = 2
+          IF (value EQ 1) THEN coeff = 1
           putCountsValue, Event, $
-            Event.x/(*global).congrid_x_coeff,$
-            Event.y/(*global).congrid_y_coeff
+            Event.x/(coeff * (*global).congrid_x_coeff),$
+            Event.y/(coeff * (*global).congrid_y_coeff)
         ENDELSE
       ENDIF
       IF (Event.press EQ 1) THEN BEGIN
@@ -105,8 +110,13 @@ PRO MAIN_BASE_event, Event
             Y = Event.y/2.
           ENDELSE
         ENDIF ELSE BEGIN ;'SNS'
-          X = Event.x / (*global).congrid_x_coeff
-          Y = Event.y / (*global).congrid_y_coeff
+          ;check if both panels are plotted
+          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+          value = WIDGET_INFO(id, /BUTTON_SET)
+          coeff = 0.5
+          IF (value EQ 1) THEN coeff = 1
+          X = Event.x / (coeff * (*global).congrid_x_coeff)
+          Y = Event.y / (coeff * (*global).congrid_y_coeff)
         ENDELSE
         putTextFieldValue, Event, $
           'x_center_value', $
@@ -248,21 +258,21 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_front_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).front_bank)
       refresh_plot, Event ;_plot
-      ;RefreshRoiExclusionPlot, Event   ;_plot
+    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Show back panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_back_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).back_bank)
       refresh_plot, Event ;_plot
-      ;RefreshRoiExclusionPlot, Event   ;_plot
+    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Show front and back panels ---------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_both_banks_button'): BEGIN
       (*(*global).DataArray) = (*(*global).both_banks)
       refresh_plot, Event ;_plot
-      ;RefreshRoiExclusionPlot, Event   ;_plot
+    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;= TAB2 (REDUCE) ==========================================================
