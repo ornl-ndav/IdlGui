@@ -534,6 +534,14 @@ function ReductionCmd::Check
     ENDIF
   ENDIF
 
+  ; If we say we want to apply a vanadium mask, then we need to specify a normalisation run.
+  IF (self.mask EQ 1) THEN BEGIN
+    IF (STRLEN(self.normalisation) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,['If you want to apply a Vanadium Mask, please supply a Run Number for the Normalisation field.']]
+    ENDIF
+  ENDIF
+
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
 
