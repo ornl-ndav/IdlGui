@@ -65,8 +65,8 @@ PRO DGSreduction_LaunchCollector, event
   jobname = instrument + "_" + runnumber + "_collector"
  
   ; log Directory
-  logDir = '/SNS/users/' + info.username + '/results/logs/' + $
-	 instrument + '-' + runnumber
+  logDir = '/SNS/users/' + info.username + '/results/' + $
+   instrument + '/' + runnumber + '/logs'
   ;Make sure the that logfile directory exists.
   spawn, 'mkdir -p ' + logDir
  
