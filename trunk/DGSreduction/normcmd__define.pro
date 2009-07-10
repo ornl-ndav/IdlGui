@@ -288,17 +288,30 @@ PRO NormCmd::SetProperty, $
   IF N_ELEMENTS(lowerbank) NE 0 THEN self.lowerbank = lowerbank
   IF N_ELEMENTS(upperbank) NE 0 THEN self.upperbank = upperbank
   IF N_ELEMENTS(datapaths) NE 0 THEN self.datapaths = datapaths
-  IF N_ELEMENTS(emptycan) NE 0 THEN self.emptycan = EmptyCan
-  IF N_ELEMENTS(blackcan) NE 0 THEN self.blackcan = BlackCan
-  IF N_ELEMENTS(dark) NE 0 THEN self.dark = dark
+   
+  IF N_ELEMENTS(emptycan) NE 0 THEN $
+    self.emptycan = STRCOMPRESS(STRING(EmptyCan), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.emptycan EQ '0') THEN self.emptycan = ""
+    
+  IF N_ELEMENTS(blackcan) NE 0 THEN $
+    self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.blackcan EQ '0') THEN self.blackcan = ""
+    
+  IF N_ELEMENTS(dark) NE 0 THEN $
+    self.dark = STRCOMPRESS(STRING(dark), /REMOVE_ALL)
+  ; Don't let it be set to 0
+  IF (self.dark EQ '0') THEN self.dark = ""
+    
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
   IF N_ELEMENTS(roifile) NE 0 THEN self.roifile = ROIfile
   IF N_ELEMENTS(tmin) NE 0 THEN self.tmin = Tmin
   IF N_ELEMENTS(tmax) NE 0 THEN self.tmax = Tmax
   IF N_ELEMENTS(tibconst) NE 0 THEN self.tibconst = TIBconst
-  IF N_ELEMENTS(tibrange_min) NE 0 THEN self.tibrange_min = tibrange_min
-  IF N_ELEMENTS(tibrange_max) NE 0 THEN self.tibrange_max = tibrange_max
+  IF N_ELEMENTS(TIBrange_Min) NE 0 THEN self.tibrange_min = TIBrange_Min
+  IF N_ELEMENTS(TIBrange_Max) NE 0 THEN self.tibrange_max = TIBrange_Max
   IF N_ELEMENTS(ei) NE 0 THEN self.ei = Ei
   IF N_ELEMENTS(tzero) NE 0 THEN self.tzero = Tzero
   IF N_ELEMENTS(error_ei) NE 0 THEN self.error_ei = error_ei
@@ -516,20 +529,20 @@ function NormCmd::Generate
       cmd[i] += " --data-paths="+self.datapaths
 
     ; Empty sample container file
-    IF STRLEN(self.emptycan) GE 1 THEN $
+    IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
     ; black sample container file
-    IF STRLEN(self.blackcan) GE 1 THEN $
+    IF (STRLEN(self.blackcan) GE 1) AND (self.blackcan NE 0) THEN $
       cmd[i] += " --bcan="+self.blackcan
     ; Dark Current File
-    IF STRLEN(self.dark) GE 1 THEN $
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN $
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
     IF (STRLEN(self.usmonpath) GE 1) AND $
        (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
       cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
     ; Downstream monitor path
-    IF STRLEN(self.dsmonpath) GT 1 THEN $
+    IF STRLEN(self.dsmonpath) GE 1 THEN $
       cmd[i] += " --dsmon-path="+self.dsmonpath
     ; ROI filename
     IF STRLEN(self.roifile) GE 1 THEN $
@@ -540,18 +553,29 @@ function NormCmd::Generate
     ; Tmax
     IF STRLEN(self.tmax) GE 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
-    ; Time Independent Background
+    
+    ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst+',0'
+   
+	;print, '--Generate--'
+	;print, self.tibrange_min,' ', self.tibrange_max
+	;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
+;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
+ 
     ;  TIB constant determination range
-    IF (STRLEN(self.tibrange_min) GE 1) $
-      AND (STRLEN(self.tibrange_max GE 1)) THEN $
+    IF (STRLEN(STRING(self.tibrange_min)) GE 1) $
+      AND (STRLEN(STRING(self.tibrange_max)) GE 1) THEN BEGIN
       cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
+      ;print, 'got here'
+;	print, cmd[i]
+	ENDIF
+
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
     ; T0
-    IF STRLEN(self.tzero) GT 1 THEN $
+    IF STRLEN(self.tzero) GE 1 THEN $
       cmd[i] += " --time-zero-offset="+self.tzero+","+self.error_tzero
     ; Flag for turning off monitor normalization
     IF (self.nomonitornorm EQ 1) THEN cmd[i] += " --no-mon-norm"
@@ -559,20 +583,20 @@ function NormCmd::Generate
     IF (self.pcnorm EQ 1) AND (self.nomonitornorm EQ 1) THEN cmd[i] += " --pc-norm"
     ; Monitor integration range
     IF (STRLEN(self.monrange_min) GE 1) $
-      AND (STRLEN(self.monrange_max GE 1)) THEN $
+      AND (STRLEN(self.monrange_max) GE 1) THEN $
       cmd[i] += " --mon-int-range=" + self.monrange_min + " " + self.monrange_max
     ; Detector Efficiency
-    IF STRLEN(self.deteff) GT 1 THEN $
+    IF STRLEN(self.deteff) GE 1 THEN $
       cmd[i] += " --det-eff="+self.deteff
 
 
     ; transmission for norm data background
-    IF STRLEN(self.normtrans) GT 1 THEN $
-      cmd[i] += " --norm-trans-coef=" + self.normtrans
+    IF STRLEN(self.normtrans) GE 1 THEN $
+      cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
     IF (STRLEN(self.normrange_min) GE 1 ) $
       AND (STRLEN(self.normrange_max) GE 1) THEN $
-      cmd[i] += " --norm-int-range=" + self.normrange_min + "," $ 
+      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
                 + self.normrange_max    
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
