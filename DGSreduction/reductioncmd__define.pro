@@ -541,6 +541,14 @@ function ReductionCmd::Check
       msg = [msg,['If you want to apply a Vanadium Mask, please supply a Run Number for the Normalisation field.']]
     ENDIF
   ENDIF
+  
+  ; And the other way round, if you specify a norm run then you need to turn the mask on!
+  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+    IF (self.mask NE 1) THEN BEGIN
+      ok = 0
+      msg = [msg,['If you specify a Normalisation Run then you need to turn on the Vanadium Mask.']]
+    ENDIF
+  ENDIF
 
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
