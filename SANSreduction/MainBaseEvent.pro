@@ -110,6 +110,8 @@ PRO MAIN_BASE_event, Event
             Y = Event.y/2.
           ENDELSE
         ENDIF ELSE BEGIN ;'SNS'
+          (*global).left_button_clicked = 1
+          
           ;check if both panels are plotted
           id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
           value = WIDGET_INFO(id, /BUTTON_SET)
@@ -127,14 +129,34 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
-      ;display width and height
+        ;display width and height
       
-      
-      
-      
-      
+        IF (event.release EQ 1) THEN BEGIN ;left button release
+          (*global).left_button_clicked = 0
+        ENDIF
+        
+        IF (event.type EQ 0 AND $ ;moving mouse with left button clicked
+          (*global).left_button_clicked EQ 1) THEN BEGIN
+          x0 = getTextFieldValue(Event,'corner_pixel_xo')
+          y0 = getTextFieldValue(Event,'corner_pixel_yo')
+          ;check if both panels are plotted
+          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+          value = WIDGET_INFO(id, /BUTTON_SET)
+          coeff = 2
+          IF (value EQ 1) THEN coeff = 1
+          x1 = Event.x / (coeff * (*global).congrid_x_coeff)
+          y1 = Event.y / (*global).congrid_y_coeff
+          
+          width = x0 - x1
+          height = x1 - y1
+          
+          putTextFieldValue, Event, 'corner_pixel_width', width
+          putTextFieldValue, Event, 'corner_pixel_height', height
+          
+        ENDIF
+        
       ENDIF
-
+      
     END
     
     ;-Linear of Logarithmic scale
