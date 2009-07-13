@@ -102,9 +102,6 @@ PRO update_selection_masking_mode, Event, mode=mode
   WSET, id
   TV, masking_button, 0, 0,/true
   
-  
-  
-  
   (*global).selection_mode = mode
   
 END

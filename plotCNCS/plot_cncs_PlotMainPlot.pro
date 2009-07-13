@@ -212,61 +212,68 @@ PRO MakeGuiMainPLot_Event, event
       standard = 31
       DEVICE, CURSOR_STANDARD=standard
       
-      IF (Event.press EQ 1) THEN BEGIN ;press left button
-        (*global1).left_pressed = 1
-        (*global1).X1 = Event.x
-        (*global1).Y1 = Event.y
-      ENDIF
+      IF (isSelectionModeSelected(Event)) THEN BEGIN ;selection mode -------
       
-      IF (Event.type EQ 1 AND $
-        (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
-        (*global1).left_pressed = 0
-        activateWidget, Event, 'counts_vs_tof_selection', 1
-      ;        message_text = ['Are you sure you want to plot Counts vs TOF of ' + $
-      ;          'selection?','','This may take a while!']
-      ;        title = 'Plot Counts vs TOF ?'
-      ;        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
-      ;        result = DIALOG_MESSAGE(message_text,$
-      ;          /QUESTION,$
-      ;          /CENTER,$
-      ;          DIALOG_PARENT=id,$
-      ;          TITLE=title)
-      ;        IF (result EQ 'Yes') THEN BEGIN
-      ;          WIDGET_CONTROL, /HOURGLASS
-      ;          job_base = counts_vs_tof_info_base(Event)
-      ;          plot_counts_vs_tof_of_selection, Event
-      ;          WIDGET_CONTROL, HOURGLASS=0
-      ;          WIDGET_CONTROL, job_base,/DESTROY
-      ;        ENDIF ELSE BEGIN ;remove selection
-      ;          (*global1).X1 = 0L
-      ;          (*global1).X2 = 0L
-      ;        replot_main_plot_with_scale, Event, without_scale=1
-      ;        ENDELSE
-      ENDIF
-      
-      IF (Event.type EQ 2 AND $
-        (*global1).left_pressed EQ 1) THEN BEGIN ;move
-        (*global1).X2 = Event.x
-        (*global1).Y2 = Event.y
-        replot_main_plot_with_scale, Event, without_scale=1
-        plot_selection_box, Event
-      ENDIF
-      
-      IF (Event.press EQ 4) THEN BEGIN ;right mouse pressed
-        WIDGET_CONTROL,/HOURGLASS
-        X = Event.X
-        Y = Event.Y
-        index = getBankIndex(Event, X, Y)
-        IF (index NE -1) THEN BEGIN
-          bankName = getBank(Event)
-          PlotBank, (*(*global1).img), $ ;launch the bank view
-            index, $
-            bankName, $
-            (*global1).real_or_tof,$
-            (*global1).TubeAngle
+        IF (Event.press EQ 1) THEN BEGIN ;press left button
+          (*global1).left_pressed = 1
+          (*global1).X1 = Event.x
+          (*global1).Y1 = Event.y
         ENDIF
-        WIDGET_CONTROL, HOURGLASS=0
-      ENDIF
+        
+        IF (Event.type EQ 1 AND $
+          (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
+          (*global1).left_pressed = 0
+          activateWidget, Event, 'counts_vs_tof_selection', 1
+        ;        message_text = ['Are you sure you want to plot Counts vs TOF of ' + $
+        ;          'selection?','','This may take a while!']
+        ;        title = 'Plot Counts vs TOF ?'
+        ;        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
+        ;        result = DIALOG_MESSAGE(message_text,$
+        ;          /QUESTION,$
+        ;          /CENTER,$
+        ;          DIALOG_PARENT=id,$
+        ;          TITLE=title)
+        ;        IF (result EQ 'Yes') THEN BEGIN
+        ;          WIDGET_CONTROL, /HOURGLASS
+        ;          job_base = counts_vs_tof_info_base(Event)
+        ;          plot_counts_vs_tof_of_selection, Event
+        ;          WIDGET_CONTROL, HOURGLASS=0
+        ;          WIDGET_CONTROL, job_base,/DESTROY
+        ;        ENDIF ELSE BEGIN ;remove selection
+        ;          (*global1).X1 = 0L
+        ;          (*global1).X2 = 0L
+        ;        replot_main_plot_with_scale, Event, without_scale=1
+        ;        ENDELSE
+        ENDIF
+        
+        IF (Event.type EQ 2 AND $
+          (*global1).left_pressed EQ 1) THEN BEGIN ;move
+          (*global1).X2 = Event.x
+          (*global1).Y2 = Event.y
+          replot_main_plot_with_scale, Event, without_scale=1
+          plot_selection_box, Event
+        ENDIF
+        
+        IF (Event.press EQ 4) THEN BEGIN ;right mouse pressed
+          WIDGET_CONTROL,/HOURGLASS
+          X = Event.X
+          Y = Event.Y
+          index = getBankIndex(Event, X, Y)
+          IF (index NE -1) THEN BEGIN
+            bankName = getBank(Event)
+            PlotBank, (*(*global1).img), $ ;launch the bank view
+              index, $
+              bankName, $
+              (*global1).real_or_tof,$
+              (*global1).TubeAngle
+          ENDIF
+          WIDGET_CONTROL, HOURGLASS=0
+        ENDIF
+        
+      ENDIF ELSE BEGIN ;masking mode selected --------------------
+      
+      ENDELSE
+      
     END
     
     ;Refresh button -----------------------------------------------------------
