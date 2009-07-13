@@ -98,10 +98,6 @@ END
 PRO putCountsValue, Event, x, y
 WIDGET_CONTROL, Event.top, GET_UVALUE=global
 img = (*(*global).img)
-print, x
-print, y
-help, img
-
 putTextFieldValue, Event, 'counts_value', STRCOMPRESS(LONG(img[x,y]), $
                                                       /REMOVE_ALL)
 END
