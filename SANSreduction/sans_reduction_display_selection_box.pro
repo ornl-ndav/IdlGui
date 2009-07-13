@@ -38,7 +38,9 @@ PRO display_selection, Event, x1=x1, y1=y1
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  xmin = MIN([(*global).x0_device,x1],MAX=xmax)
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+    xmin = MIN([(*global).x0_device,x1],MAX=xmax)
   ymin = MIN([(*global).y0_device,y1],MAX=ymax)
   
   PLOTS, [xmin, xmin, xmax, xmax, xmin],$
@@ -46,5 +48,8 @@ PRO display_selection, Event, x1=x1, y1=y1
     /DEVICE,$
     LINESTYLE = 3,$
     COLOR = 200
+    
+    print, 'xmin: ' + string(xmin) + '; xmax: ' + string(xmax) + $
+    '; ymin: ' + string(ymin) + '; ymax: ' + string(ymax)
     
 END
