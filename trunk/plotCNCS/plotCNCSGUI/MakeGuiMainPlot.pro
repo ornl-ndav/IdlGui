@@ -250,7 +250,7 @@ PRO MakeGuiMainPlot, wBase
     SCR_YSIZE = 35,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
-    TOOLTIP = 'Selection Mode is activated !',$
+    TOOLTIP = 'Selection mode is activated !',$
     FRAME = 5)
     
   label_base = WIDGET_BASE(row1)
@@ -348,7 +348,7 @@ PRO MakeGuiMainPlot, wBase
     SCR_YSIZE = 35,$
     /BUTTON_EVENTS,$
     /MOTION_EVENTS,$
-    TOOLTIP = 'Click to activate the Masking Mode',$
+    TOOLTIP = 'Click to activate the masking mode',$
     FRAME = 5)
     
   ;--------------------------------------------------------------------------
