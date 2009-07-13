@@ -331,7 +331,7 @@ PRO MakeGuiMainPlot, wBase
   space = WIDGET_LABEL(refresh_base,$
     VALUE = '                            ')
     
-  message = '                                   '
+  message = '      '
   message += 'LEFT click to select region of interest for Counts vs TOF plot'
   message += ' - RIGHT click to zoom in into selected bank'
   
@@ -339,7 +339,7 @@ PRO MakeGuiMainPlot, wBase
     VALUE = message)
     
   space = WIDGET_LABEL(refresh_base,$
-    VALUE = '                                 ')
+    VALUE = '                                                              ')
     
   ;masking mode button
   button = WIDGET_DRAW(refresh_base,$
@@ -620,13 +620,13 @@ PRO MakeGuiMainPlot, wBase
   fld1 = CW_FIELD(sel_col1_row3_col1_row1,$
     VALUE = '',$
     UNAME = 'selection_pixelid',$
-    /LONG,$
+    /RETURN_EVENTS,$
     TITLE = 'PixelID')
     
   fld2 = CW_FIELD(sel_col1_row3_col1_row1,$
     VALUE = '',$
     UNAME = 'selection_bank',$
-    /INTEGER,$
+    /RETURN_EVENTS,$
     TITLE = 'Bank')
     
   sel_col1_row3_col1_row2 = WIDGET_BASE(sel_col1_row3_col1,$
@@ -635,13 +635,13 @@ PRO MakeGuiMainPlot, wBase
   fld1 = CW_FIELD(sel_col1_row3_col1_row2,$
     VALUE = '',$
     UNAME = 'selection_tube',$
-    /LONG,$
+    /RETURN_EVENTS,$
     TITLE = '   Tube')
     
   fld2 = CW_FIELD(sel_col1_row3_col1_row2,$
     VALUE = '',$
     UNAME = 'selection_row',$
-    /INTEGER,$
+    /RETURN_EVENTS,$
     TITLE = ' Row')
     
   sel_col2 = WIDGET_BASE(sel_base,$ ;..........................................

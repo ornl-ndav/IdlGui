@@ -169,8 +169,8 @@ FUNCTION getBankTubeMainPlot, X
   Xwidth = 32
   FOR i=0,35 DO BEGIN
     xoff = i*36
-;    xmin = 10 + xoff
-   xmin = xoff
+    ;    xmin = 10 + xoff
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
       bank = (i+1)
@@ -182,8 +182,8 @@ FUNCTION getBankTubeMainPlot, X
   
   FOR i=38,51 DO BEGIN
     xoff = i*36
-;    xmin = 10 + xoff
-xmin = xoff
+    ;    xmin = 10 + xoff
+    xmin = xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN BEGIN
       bank = (i-1)
@@ -257,9 +257,9 @@ END
 FUNCTION getRow, Event, Y
   WIDGET_CONTROL, event.top, GET_UVALUE=global1
   Yfactor = (*global1).Yfactor
-  row = Y/4 
+  row = Y/4
   IF (row LT 128 AND $
-  row GE 0) THEN RETURN, row
+    row GE 0) THEN RETURN, row
   RETURN, -1
 END
 
@@ -271,7 +271,7 @@ FUNCTION getBankTube, Event
   column_tube = getBankTubeMainPlot(X)
   row = getRow(Event, Y)
   IF (column_tube[0] NE 0 AND $
-  row NE -1) THEN BEGIN ;we click inside a bank
+    row NE -1) THEN BEGIN ;we click inside a bank
     RETURN, [STRCOMPRESS(column_tube[0],/REMOVE_ALL),$
       STRCOMPRESS(column_tube[1],/REMOVE_ALL),$
       STRCOMPRESS(row,/REMOVE_ALL)]
@@ -542,24 +542,68 @@ END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getNbrBinsPerFrame, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='nbr_bins_per_frame_tof')
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='nbr_bins_per_frame_tof')
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTimePerFrame, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='time_per_frame_tof')
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='time_per_frame_tof')
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getFromBin, Event
-RETURN, getCW_BgroupValue(Event, 'from_bin')
+  RETURN, getCW_BgroupValue(Event, 'from_bin')
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getToBin, Event
-RETURN, getCW_BgroupValue(Event, 'to_bin')
+  RETURN, getCW_BgroupValue(Event, 'to_bin')
+END
+
+;------------------------------------------------------------------------------
+PRO add_element_to_array, array, element
+
+  IF (N_ELEMENTS(array) EQ 0) THEN BEGIN
+  array = [element]
+  RETURN
+  ENDIF
+  
+  IF (array[0] NE '') THEN BEGIN
+    array = [array, element]
+  ENDIF ELSE BEGIN
+    array[0] = element
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTIOn getArray, text_field
+
+  s_text_field = STRCOMPRESS(text_field,/REMOVE_ALL)
+  IF (s_text_field EQ '') THEN RETURN, ['']
+  
+  split_comma = STRSPLIT(s_text_field,',',/EXTRACT,/REGEX, COUNT=nbr_1)
+  
+  index = 0
+  WHILE (index LT nbr_1) DO BEGIN
+  
+    split_dash = STRSPLIT(split_comma[index],'-',/EXTRACT,/REGEX, COUNT=nbr_2)
+    IF (nbr_2 EQ 1) THEN BEGIN ;no dash found in this number
+      add_element_to_array, big_array, split_dash[0]
+    ENDIF ELSE BEGIN ;found 1 dash
+      from = FIX(split_dash[0])
+      to   = FIX(split_dash[1])
+      FOR i=from,to DO BEGIN
+      add_element_to_array, big_array, i
+      ENDFOR
+    ENDELSE
+    
+    index++
+  ENDWHILE
+  
+  RETURN, big_array[SORT(big_array)]
 END
