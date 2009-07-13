@@ -605,5 +605,5 @@ FUNCTIOn getArray, text_field
     index++
   ENDWHILE
   
-  RETURN, big_array[SORT(big_array)]
+  RETURN, FIX(big_array[SORT(big_array)])
 END

@@ -32,13 +32,44 @@
 ;
 ;==============================================================================
 
+;This function returns the list of pixels included in the list of banks
+FUNCTION getPixelList_from_bankArray, bank_array
+
+pixels_first_bank = LINDGEN(1024L)
+
+sz = N_ELEMENTS(bank_array)
+index = 0
+WHILE (index LT sz) DO BEGIN
+  
+    bank = bank_array[index]
+    IF (N_ELEMENTS(final_list) EQ 0) THEN BEGIN
+    final_list = pixels_first_bank + 1024L * bank
+    ENDIF ELSE BEGIN
+    final_list = [final_list, pixels_first_bank + 1024L * bank]
+  ENDELSE
+  
+index++
+ENDWHILE
+
+RETURN, final_list
+
+END
+
+;------------------------------------------------------------------------------
 PRO refresh_masking_region, Event
 
-;retrieve list of pixel to exclude from Bank cw_field
-bank_field = getTextFieldValue(Event,'selection_bank')
-
-bank_array = getArray(bank_field)
-help, bank_array
-print, bank_array
-
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  
+  ;retrieve list of pixel to exclude from Bank cw_field
+  bank_field = getTextFieldValue(Event,'selection_bank')
+  bank_array = getArray(bank_field)
+  pixel_index = getPixelList_from_bankArray(bank_array)
+  excluded_pixel_array[pixel_index] = 1
+  
+  
+  
+  
+  
 END

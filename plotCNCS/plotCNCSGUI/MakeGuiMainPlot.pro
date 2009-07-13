@@ -232,6 +232,10 @@ PRO MakeGuiMainPlot, wBase
     UNAME = 'counts_vs_tof_full_detector',$
     /NO_RELEASE)
     
+  ;space
+  space = WIDGET_LABEL(row1,$
+    VALUE = '                           ')
+
   ;produce counts vs tof of selection
   button = WIDGET_BUTTON(row1,$
     VALUE = 'Counts vs TOF of selection',$
@@ -241,7 +245,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                            ')
+    VALUE = '')
     
   ;Selection mode button
   button = WIDGET_DRAW(row1,$
