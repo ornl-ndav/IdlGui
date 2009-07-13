@@ -114,6 +114,8 @@ PRO MakeGuiMainPLot_Event, event
       DEVICE, CURSOR_STANDARD=standard
       IF (event.press EQ 1) THEN BEGIN
         update_selection_masking_mode, Event, mode='selection'
+        replot_main_plot_with_scale, Event, without_scale=1
+        plot_selection_box, Event
       ENDIF
     END
     
@@ -126,6 +128,7 @@ PRO MakeGuiMainPLot_Event, event
       DEVICE, CURSOR_STANDARD=standard
       IF (event.press EQ 1) THEN BEGIN
         update_selection_masking_mode, Event, mode='masking'
+        replot_main_plot_with_scale, Event, without_scale=1
       ENDIF
     END
     
