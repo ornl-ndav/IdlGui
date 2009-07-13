@@ -32,7 +32,7 @@
 ;
 ;==============================================================================
 
-FUNCTION convert_data_into_device, Event, data_value, congrid_coeff
+FUNCTION convert_xdata_into_device, Event, data_value
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -40,7 +40,18 @@ FUNCTION convert_data_into_device, Event, data_value, congrid_coeff
   value = WIDGET_INFO(id, /BUTTON_SET)
   coeff = 2
   IF (value EQ 1) THEN coeff = 1
-  device_value = data_value * coeff * congrid_coeff
+  device_value = data_value * coeff * (*global).congrid_x_coeff
+
+RETURN, device_value
+
+END
+
+;------------------------------------------------------------------------------
+FUNCTION convert_ydata_into_device, Event, data_value
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  device_value = data_value * (*global).congrid_y_coeff
 
 RETURN, device_value
 
