@@ -32,27 +32,62 @@
 ;
 ;==============================================================================
 
+FUNCTION getXYfromPixelID, pixelID
+  y = pixelID MOD 128
+  x = pixelID / 128
+  RETURN, [x,y]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getx0y0x1y1, Event, xy
+
+  xmin = xy[0]
+  ymin = xy[1]
+  
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  Xfactor = (*global).Xfactor
+  Yfactor = (*global).Yfactor
+  
+  Xcoeff  = (*global).Xcoeff
+  off     = (*global).off
+  xoff    = (*global).xoff
+  
+  ;get ymin and ymax
+  ymin = ymin * Yfactor
+  ymax = (ymin+1) + Yfactor
+  
+  ;get xmin and xmax
+  bank_nbr = xmin / 8
+  xmin     = bank_nbr * off + bank_nbr * Xfactor * xmin  ;WRONG
+  xmax     = xmin + Xfactor
+  
+  RETURN, [xmin, ymin, xmax, ymax]
+  
+END
+
+;------------------------------------------------------------------------------
 ;This function returns the list of pixels included in the list of banks
 FUNCTION getPixelList_from_bankArray, bank_array
 
-pixels_first_bank = LINDGEN(1024L)
-
-sz = N_ELEMENTS(bank_array)
-index = 0
-WHILE (index LT sz) DO BEGIN
+  pixels_first_bank = LINDGEN(1024L)
+  
+  sz = N_ELEMENTS(bank_array)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
   
     bank = bank_array[index]
     IF (N_ELEMENTS(final_list) EQ 0) THEN BEGIN
-    final_list = pixels_first_bank + 1024L * bank
+      final_list = pixels_first_bank + 1024L * bank
     ENDIF ELSE BEGIN
-    final_list = [final_list, pixels_first_bank + 1024L * bank]
-  ENDELSE
+      final_list = [final_list, pixels_first_bank + 1024L * bank]
+    ENDELSE
+    
+    index++
+  ENDWHILE
   
-index++
-ENDWHILE
-
-RETURN, final_list
-
+  RETURN, final_list
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -68,8 +103,47 @@ PRO refresh_masking_region, Event
   pixel_index = getPixelList_from_bankArray(bank_array)
   excluded_pixel_array[pixel_index] = 1
   
-  
-  
-  
+  display_excluded_pixels, Event, excluded_pixel_array
   
 END
+
+;------------------------------------------------------------------------------
+PRO display_excluded_pixels, Event, excluded_pixel_array
+
+  excluded_pixels_index = WHERE(excluded_pixel_array EQ 1, sz)
+;  excluded_pixels = excluded_pixel_array[excluded_pixels_index]
+  
+  ;select plot area
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+;  sz = N_ELEMENTS(excluded_pixels)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+  
+    xy = getXYfromPixelID(excluded_pixels_index[index])
+    x0y0x1y1 = getx0y0x1y1(Event, xy)
+    
+    xmin = x0y0x1y1[0]
+    ymin = x0y0x1y1[1]
+    xmax = x0y0x1y1[2]
+    ymax = x0y0x1y1[3]
+    
+    PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+      [ymin,ymax, ymax, ymin, ymin],$
+      /DEVICE,$
+      LINESTYLE = 0,$
+      COLOR =250
+      
+        index++
+  ENDWHILE
+  
+END
+
+
+
+
+
+
+
