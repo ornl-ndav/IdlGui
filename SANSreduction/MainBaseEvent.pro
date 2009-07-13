@@ -159,7 +159,7 @@ PRO MAIN_BASE_event, Event
       
         IF (event.release EQ 1) THEN BEGIN ;left button release
           (*global).left_button_clicked = 0
-          display_exclusion_region, Event
+          display_excluded_pixels, Event
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
@@ -176,6 +176,12 @@ PRO MAIN_BASE_event, Event
 
           width = x1_data - x0_data
           height = y1_data - y0_data
+
+          x1_device = convert_xdata_into_device(Event, x1_data)
+          y1_device = convert_ydata_into_device(Event, y1_data)
+          
+          (*global).x1_device = x1_device
+          (*global).y1_device = y1_device
           
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height

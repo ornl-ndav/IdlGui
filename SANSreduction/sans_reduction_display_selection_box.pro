@@ -79,14 +79,35 @@ PRO display_selection_manually, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_exclusion_region, Event
+PRO display_excluded_pixels, Event
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-
-
-
-
+  
+  x0_device = (*global).x0_device
+  x1_device = (*global).x1_device
+  y0_device = (*global).y0_device
+  y1_device = (*global).y1_device
+  
+  x_device_min = MIN([x0_device,x1_device],MAX=x_device_max)
+  y_device_min = MIN([y0_device,y1_device],MAX=y_device_max)
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  coeff = 2
+  IF (value EQ 1) THEN coeff = 1
+  x_step = coeff * (*global).congrid_x_coeff
+  y_step = (*global).congrid_y_coeff
+  
+  FOR x=x_device_min, x_device_max, x_step DO BEGIN
+    FOR y=y_device_min, y_device_max, y_step DO BEGIN
+      PLOTS, [x, x, x+x_step, x+x_step, x],$
+        [y,y+y_step, y+y_step, y, y],$
+        /DEVICE,$
+        LINESTYLE = 5,$
+        COLOR = 100
+    ENDFOR
+  ENDFOR
+  
 END
 
 
