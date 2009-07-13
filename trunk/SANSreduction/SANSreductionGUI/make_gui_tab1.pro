@@ -791,7 +791,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   
   value = CW_FIELD(base,$
   VALUE = '0',$
-  TITLE = '  Tube # 1st corner    : ',$
+  TITLE = '  Tube # of 1st corner    : ',$
   XSIZE = 4,$
   UNAME = 'corner_pixel_xo',$
   /INTEGER)
@@ -799,21 +799,21 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   value = CW_FIELD(base,$
   VALUE = '0',$
   XSIZE = 4,$
-  TITLE = '  Pixel # 1st corner   : ',$
+  TITLE = '  Pixel # of 1st corner   : ',$
   UNAME = 'corner_pixel_yo',$
   /INTEGER)
   
   value = CW_FIELD(base,$
   VALUE = '0',$
   XSIZE = 4,$
-  TITLE = '  Width (# of tubes)   : ',$
+  TITLE = '  Width (# of tubes)      : ',$
   UNAME = 'corner_pixel_width',$
   /INTEGER)
   
   value = CW_FIELD(base,$
   VALUE = '0',$
   XSIZE = 4,$
-  TITLE = '  Height (# of pixels) : ',$
+  TITLE = '  Height (# of pixels)    : ',$
   UNAME = 'corner_pixel_height',$
   /INTEGER)
       

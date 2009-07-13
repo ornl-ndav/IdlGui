@@ -104,6 +104,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     draw_x: 3*192L,$
     draw_y: 3*256L,$
+    left_button_clicked: 0,$
     
     facility: facility, $
     facility_list: ['LENS'],$
