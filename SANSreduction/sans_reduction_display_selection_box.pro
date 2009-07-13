@@ -78,7 +78,16 @@ PRO display_selection_manually, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO display_exclusion_region, Event
 
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+
+
+
+
+END
 
 
 
