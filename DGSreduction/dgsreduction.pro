@@ -249,7 +249,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
 
   ; Program Details
   APPLICATION       = 'DGSreduction'
-  VERSION           = '0.9.0'
+  VERSION           = '1.0.0'
   
   Catch, errorStatus
   
@@ -336,6 +336,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   warningText2 = "It WILL crash - there is no sanity checking at the moment."
   warningText3 = "Otherwise, enjoy! and please be kind :-)"
 
+  ; Hide the warning for a release version!
   ;warningLabel1 = WIDGET_LABEL(warningBase, VALUE=warningText1, font=wfont)
   ;warningLabel2 = WIDGET_LABEL(warningBase, VALUE=warningText2)
   ;warningLabel3 = WIDGET_LABEL(warningBase, VALUE=warningText3)
