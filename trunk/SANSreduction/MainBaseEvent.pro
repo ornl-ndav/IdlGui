@@ -119,6 +119,10 @@ PRO MAIN_BASE_event, Event
           IF (value EQ 1) THEN coeff = 1
           X = Event.x / (coeff * (*global).congrid_x_coeff)
           Y = Event.y / (*global).congrid_y_coeff
+          
+          (*global).x0_device = Event.x
+          (*global).y0_device = Event.y
+          
         ENDELSE
         putTextFieldValue, Event, $
           'corner_pixel_xo', $
@@ -152,6 +156,8 @@ PRO MAIN_BASE_event, Event
           
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height
+          
+          display_selection, Event, x1=Event.x, y1=Event.y
           
         ENDIF
         
