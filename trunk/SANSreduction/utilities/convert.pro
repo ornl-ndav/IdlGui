@@ -32,58 +32,16 @@
 ;
 ;==============================================================================
 
-PRO display_selection, Event, x1=x1, y1=y1
-
-  id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  xmin = MIN([(*global).x0_device,x1],MAX=xmax)
-  ymin = MIN([(*global).y0_device,y1],MAX=ymax)
-  
-  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
-    [ymin,ymax, ymax, ymin, ymin],$
-    /DEVICE,$
-    LINESTYLE = 3,$
-    COLOR = 200
-    
-END
-
-;------------------------------------------------------------------------------
-PRO display_selection_manually, Event
+FUNCTION convert_data_into_device, Event, data_value, congrid_coeff
 
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  ;get manual x0, y0, width and height
-  x0_data = getTextFieldValue(Event,'corner_pixel_x0')
-  y0_data = getTextFieldValue(Event,'corner_pixel_y0')
-  width_data = getTextFieldValue(Event,'corner_pixel_width')
-  height_data = getTextFieldValue(Event,'corner_pixel_height')
-  
-  x1_data = x0_data + width_data
-  y1_data = y0_data + height_data
-  
-  x0_device = convert_data_into_device(Event,x0_data, (*global).congrid_x_coeff)
-  y0_device = convert_data_into_device(Event,y0_data, (*global).congrid_y_coeff)
-  x1_device = convert_data_into_device(Event,x1_data, (*global).congrid_x_coeff)
-  y1_device = convert_data_into_device(Event,y1_data, (*global).congrid_y_coeff)
-  
-  (*global).x0_device = x0_device
-  (*global).y0_device = y0_device
-  
-  lin_or_log_plot, Event ;refresh of main plot
-  display_selection, Event, x1=x1_device, y1=y1_device
-  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  coeff = 2
+  IF (value EQ 1) THEN coeff = 1
+  device_value = data_value * coeff * congrid_coeff
+
+RETURN, device_value
+
 END
-
-
-
-
-
-
-
-
-
-

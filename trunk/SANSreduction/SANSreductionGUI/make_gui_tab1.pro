@@ -770,55 +770,59 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     WIDGET_CONTROL,  WIDGET_INFO(wSelectionTypeBase, /CHILD), /SET_BUTTON
     
     ;frame
-  wFrame = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET   = sFrame.size[0],$
-    YOFFSET   = sFrame.size[1],$
-    SCR_XSIZE = sFrame.size[2],$
-    SCR_YSIZE = sFrame.size[3],$
-    VALUE     = sFrame.value,$
-    FRAME     = sFrame.frame)
-  
+    wFrame = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET   = sFrame.size[0],$
+      YOFFSET   = sFrame.size[1],$
+      SCR_XSIZE = sFrame.size[2],$
+      SCR_YSIZE = sFrame.size[3],$
+      VALUE     = sFrame.value,$
+      FRAME     = sFrame.frame)
+      
   ENDIF ELSE BEGIN
   
-  base = WIDGET_BASE(wExclusionBase,$
-  /COLUMN)
-    
-  space = WIDGET_LABEL(base,$
-  VALUE = '')  
-    
-  label = WIDGET_LABEL(base,$
-  VALUE = '         Rectangle Selection Definition')
-  
-  value = CW_FIELD(base,$
-  VALUE = '0',$
-  TITLE = '  Tube # of 1st corner    : ',$
-  XSIZE = 4,$
-  UNAME = 'corner_pixel_xo',$
-  /INTEGER)
-  
-  value = CW_FIELD(base,$
-  VALUE = '0',$
-  XSIZE = 4,$
-  TITLE = '  Pixel # of 1st corner   : ',$
-  UNAME = 'corner_pixel_yo',$
-  /INTEGER)
-  
-  value = CW_FIELD(base,$
-  VALUE = '0',$
-  XSIZE = 4,$
-  TITLE = '  Width (# of tubes)      : ',$
-  UNAME = 'corner_pixel_width',$
-  /INTEGER)
-  
-  value = CW_FIELD(base,$
-  VALUE = '0',$
-  XSIZE = 4,$
-  TITLE = '  Height (# of pixels)    : ',$
-  UNAME = 'corner_pixel_height',$
-  /INTEGER)
+    base = WIDGET_BASE(wExclusionBase,$
+      /COLUMN)
       
- ENDELSE
+    space = WIDGET_LABEL(base,$
+      VALUE = '')
       
+    label = WIDGET_LABEL(base,$
+      VALUE = '         Rectangle Selection Definition')
+      
+    value = CW_FIELD(base,$
+      VALUE = '0',$
+      TITLE = '  Tube # of 1st corner    : ',$
+      XSIZE = 4,$
+      /RETURN_EVENTS,$
+      UNAME = 'corner_pixel_x0',$
+      /INTEGER)
+      
+    value = CW_FIELD(base,$
+      VALUE = '0',$
+      XSIZE = 4,$
+      /RETURN_EVENTS,$
+      TITLE = '  Pixel # of 1st corner   : ',$
+      UNAME = 'corner_pixel_y0',$
+      /INTEGER)
+      
+    value = CW_FIELD(base,$
+      VALUE = '0',$
+      XSIZE = 4,$
+      /RETURN_EVENTS,$
+      TITLE = '  Width (# of tubes)      : ',$
+      UNAME = 'corner_pixel_width',$
+      /INTEGER)
+      
+    value = CW_FIELD(base,$
+      VALUE = '0',$
+      XSIZE = 4,$
+      /RETURN_EVENTS,$
+      TITLE = '  Height (# of pixels)    : ',$
+      UNAME = 'corner_pixel_height',$
+      /INTEGER)
+      
+  ENDELSE
+  
   ;SAVE AS
   wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
     XOFFSET   = sSaveAsSelection.size[0],$
