@@ -367,8 +367,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
-  
-  
   ;============================================================================
   ;debugging version of program
   IF (DEBUGGING EQ 'yes' AND $
@@ -389,20 +387,22 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     WIDGET_CONTROL, id, $
       SET_VALUE='/LENS/SANS/2008_01_COM/1/45/NeXus/SANS_45.nxs'
       
-    ;exclusion tool
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='37.25'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='y_center_value')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='41.625'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r1_radii')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='5'
-    id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r2_radii')
-    WIDGET_CONTROL, id, $
-      SET_VALUE='0'
-      
+    IF (facility EQ 'LENS') THEN BEGIN
+      ;exclusion tool
+      id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='x_center_value')
+      WIDGET_CONTROL, id, $
+        SET_VALUE='37.25'
+      id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='y_center_value')
+      WIDGET_CONTROL, id, $
+        SET_VALUE='41.625'
+      id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r1_radii')
+      WIDGET_CONTROL, id, $
+        SET_VALUE='5'
+      id = WIDGET_INFO(MAIN_BASE,FIND_BY_UNAME='r2_radii')
+      WIDGET_CONTROL, id, $
+        SET_VALUE='0'
+    ENDIF
+    
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0

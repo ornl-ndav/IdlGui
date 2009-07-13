@@ -585,189 +585,191 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SENSITIVE = sExclusionBase.sensitive,$
     UNAME     = sExclusionBase.uname)
     
-  ;PREVIEW Exclusion Button
-  wPreviewExclusion = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sPreviewExclusion.size[0],$
-    YOFFSET   = sPreviewExclusion.size[1],$
-    SCR_XSIZE = sPreviewExclusion.size[2],$
-    VALUE     = sPreviewExclusion.value,$
-    UNAME     = sPreviewExclusion.uname,$
-    SENSITIVE = sPreviewExclusion.sensitive)
-  ;PLOT Fast Exclusion Button
-  wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sPlotExclusion.size[0],$
-    YOFFSET   = sPlotExclusion.size[1],$
-    VALUE     = sPlotExclusion.value,$
-    UNAME     = sPlotExclusion.uname,$
-    TOOLTIP   = sPlotExclusion.tooltip,$
-    /BITMAP,$
-    /NO_RELEASE)
-  ;PLOT Accurate Exclusion Button
-  wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sPlotAccurateExclusion.size[0],$
-    YOFFSET   = sPlotAccurateExclusion.size[1],$
-    VALUE     = sPlotAccurateExclusion.value,$
-    UNAME     = sPlotAccurateExclusion.uname,$
-    TOOLTIP   = sPlotAccurateExclusion.tooltip,$
-    /BITMAP,$
-    /NO_RELEASE)
-    
-  ;CLEAR Exclusion Button
-  wClearExclusion = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sClearExclusion.size[0],$
-    YOFFSET   = sClearExclusion.size[1],$
-    SCR_XSIZE = sClearExclusion.size[2],$
-    VALUE     = sClearExclusion.value,$
-    UNAME     = sClearExclusion.uname)
-    
-  ;Center (Pixels) label
-  wCenterPixelTitle = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sCenterPixelTitle.size[0],$
-    YOFFSET = sCenterPixelTitle.size[1],$
-    VALUE   = sCenterPixelTitle.value)
-    
-  ;X label/value
-  wCenterValue = WIDGET_TEXT(wExclusionBase,$
-    XOFFSET   = sCenterXValue.size[0],$
-    YOFFSET   = sCenterXValue.size[1],$
-    SCR_XSIZE = sCenterXValue.size[2],$
-    VALUE     = sCenterXValue.value,$
-    UNAME     = sCenterXValue.uname,$
-    /ALIGN_LEFT,$
-    /EDITABLE)
-  wCenterXLabel = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sCenterXLabel.size[0],$
-    YOFFSET = sCenterXLabel.size[1],$
-    VALUE   = sCenterXLabel.value)
-    
-  ;Y label/value
-  wCenterValue = WIDGET_TEXT(wExclusionBase,$
-    XOFFSET   = sCenterYValue.size[0],$
-    YOFFSET   = sCenterYValue.size[1],$
-    SCR_XSIZE = sCenterYValue.size[2],$
-    VALUE     = sCenterYValue.value,$
-    UNAME     = sCenterYValue.uname,$
-    /ALIGN_LEFT,$
-    /EDITABLE)
-  wCenterYLabel = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sCenterYLabel.size[0],$
-    YOFFSET = sCenterYLabel.size[1],$
-    VALUE   = sCenterYLabel.value)
-    
-  ;Radii (Pixels) label
-  wRadiiLabel = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sRadiiLabel.size[0],$
-    YOFFSET = sRadiiLabel.size[1],$
-    VALUE   = sRadiiLabel.value)
-    
-  ;R1 label/value
-  wRadiiR1Value = WIDGET_TEXT(wExclusionBase,$
-    XOFFSET   = sRadiiR1Value.size[0],$
-    YOFFSET   = sRadiiR1Value.size[1],$
-    SCR_XSIZE = sRadiiR1Value.size[2],$
-    VALUE     = sRadiiR1Value.value,$
-    UNAME     = sRadiiR1Value.uname,$
-    /ALIGN_LEFT,$
-    /EDITABLE)
-  wRadiiR1Label = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sRadiiR1Label.size[0],$
-    YOFFSET = sRadiiR1Label.size[1],$
-    VALUE   = sRadiiR1Label.value)
-    
-  ;R1 IN/OUT base/group
-  wRadiiR1Base = WIDGET_BASE(wExclusionBase,$
-    XOFFSET   = sRadiiR1Base.size[0],$
-    YOFFSET   = sRadiiR1Base.size[1],$
-    SCR_XSIZE = sRadiiR1Base.size[2],$
-    SCR_YSIZE = sRadiiR1Base.size[3],$
-    FRAME     = sRadiiR1Base.frame)
-  wRadiiR1Group = CW_BGROUP(wRadiiR1Base,$
-    sRadiiR1group.list,$
-    XOFFSET   = sRadiiR1group.size[0],$
-    YOFFSET   = sRadiiR1group.size[1],$
-    ROW       = 1,$
-    SET_VALUE = sRadiiR1group.value,$
-    UNAME     = sRadiiR1group.uname,$
-    /NO_RELEASE,$
-    /EXCLUSIVE)
-    
-  ;R2 label/value
-  wRadiiR2Value = WIDGET_TEXT(wExclusionBase,$
-    XOFFSET   = sRadiiR2Value.size[0],$
-    YOFFSET   = sRadiiR2Value.size[1],$
-    SCR_XSIZE = sRadiiR2Value.size[2],$
-    VALUE     = sRadiiR2Value.value,$
-    UNAME     = sRadiiR2Value.uname,$
-    /ALIGN_LEFT,$
-    /EDITABLE)
-  wRadiiR2Label = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sRadiiR2Label.size[0],$
-    YOFFSET = sRadiiR2Label.size[1],$
-    VALUE   = sRadiiR2Label.value)
-    
-  ;R2 IN/OUT base/group
-  wRadiiR2Base = WIDGET_BASE(wExclusionBase,$
-    XOFFSET   = sRadiiR2Base.size[0],$
-    YOFFSET   = sRadiiR2Base.size[1],$
-    SCR_XSIZE = sRadiiR2Base.size[2],$
-    SCR_YSIZE = sRadiiR2Base.size[3],$
-    FRAME     = sRadiiR2Base.frame)
-  wRadiiR2Group = CW_BGROUP(wRadiiR2Base,$
-    sRadiiR2group.list,$
-    XOFFSET   = sRadiiR2group.size[0],$
-    YOFFSET   = sRadiiR2group.size[1],$
-    ROW       = 1,$
-    SET_VALUE = sRadiiR2group.value,$
-    UNAME     = sRadiiR2group.uname,$
-    /NO_RELEASE,$
-    /EXCLUSIVE)
-    
-  ;Type of selection base and buttons -------------------------------------------
-  wSelectionTypeBase = WIDGET_BASE(wExclusionBase,$
-    SPACE     = 20,$
-    UNAME     = sExclusionTypeBase.uname,$
-    XOFFSET   = sExclusionTypeBase.size[0],$
-    YOFFSET   = sExclusionTypeBase.size[1],$
-    SCR_XSIZE = sExclusionTypeBase.size[2],$
-    FRAME     = sExclusionTypeBase.frame,$
-    /EXCLUSIVE,$
-    /TOOLBAR,$
-    /ROW)
-    
-  ;label
-  wTypeLabel = WIDGET_LABEL(wExclusionBase,$
-    XOFFSET = sTypeLabel.size[0],$
-    YOFFSET = sTypeLabel.size[1],$
-    VALUE   = sTypeLabel.value)
-    
-  wButton1 = WIDGET_BUTTON(wSelectionTypeBase,$
-    VALUE   = sButton1.value,$
-    TOOLTIP = sButton1.tooltip,$
-    UNAME   = sButton1.uname,$
-    /BITMAP,$
-    /NO_RELEASE)
-  wButton2 = WIDGET_BUTTON(wSelectionTypeBase,$
-    VALUE   = sButton2.value,$
-    TOOLTIP = sButton2.tooltip,$
-    UNAME   = sButton2.uname,$
-    /BITMAP,$
-    /NO_RELEASE)
-  wButton3 = WIDGET_BUTTON(wSelectionTypeBase,$
-    VALUE   = sButton3.value,$
-    TOOLTIP = sButton3.tooltip,$
-    UNAME   = sButton3.uname,$
-    /BITMAP,$
-    /NO_RELEASE)
-  wButton4 = WIDGET_BUTTON(wSelectionTypeBase,$
-    VALUE   = sButton4.value,$
-    TOOLTIP = sButton4.tooltip,$
-    UNAME   = sButton4.uname,$
-    /BITMAP,$
-    /NO_RELEASE)
-    
-  WIDGET_CONTROL,  WIDGET_INFO(wSelectionTypeBase, /CHILD), /SET_BUTTON
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
   
-  ;frame
+    ;PREVIEW Exclusion Button
+    wPreviewExclusion = WIDGET_BUTTON(wExclusionBase,$
+      XOFFSET   = sPreviewExclusion.size[0],$
+      YOFFSET   = sPreviewExclusion.size[1],$
+      SCR_XSIZE = sPreviewExclusion.size[2],$
+      VALUE     = sPreviewExclusion.value,$
+      UNAME     = sPreviewExclusion.uname,$
+      SENSITIVE = sPreviewExclusion.sensitive)
+    ;PLOT Fast Exclusion Button
+    wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
+      XOFFSET   = sPlotExclusion.size[0],$
+      YOFFSET   = sPlotExclusion.size[1],$
+      VALUE     = sPlotExclusion.value,$
+      UNAME     = sPlotExclusion.uname,$
+      TOOLTIP   = sPlotExclusion.tooltip,$
+      /BITMAP,$
+      /NO_RELEASE)
+    ;PLOT Accurate Exclusion Button
+    wPlotExclusion = WIDGET_BUTTON(wExclusionBase,$
+      XOFFSET   = sPlotAccurateExclusion.size[0],$
+      YOFFSET   = sPlotAccurateExclusion.size[1],$
+      VALUE     = sPlotAccurateExclusion.value,$
+      UNAME     = sPlotAccurateExclusion.uname,$
+      TOOLTIP   = sPlotAccurateExclusion.tooltip,$
+      /BITMAP,$
+      /NO_RELEASE)
+      
+    ;CLEAR Exclusion Button
+    wClearExclusion = WIDGET_BUTTON(wExclusionBase,$
+      XOFFSET   = sClearExclusion.size[0],$
+      YOFFSET   = sClearExclusion.size[1],$
+      SCR_XSIZE = sClearExclusion.size[2],$
+      VALUE     = sClearExclusion.value,$
+      UNAME     = sClearExclusion.uname)
+      
+    ;Center (Pixels) label
+    wCenterPixelTitle = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sCenterPixelTitle.size[0],$
+      YOFFSET = sCenterPixelTitle.size[1],$
+      VALUE   = sCenterPixelTitle.value)
+      
+    ;X label/value
+    wCenterValue = WIDGET_TEXT(wExclusionBase,$
+      XOFFSET   = sCenterXValue.size[0],$
+      YOFFSET   = sCenterXValue.size[1],$
+      SCR_XSIZE = sCenterXValue.size[2],$
+      VALUE     = sCenterXValue.value,$
+      UNAME     = sCenterXValue.uname,$
+      /ALIGN_LEFT,$
+      /EDITABLE)
+    wCenterXLabel = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sCenterXLabel.size[0],$
+      YOFFSET = sCenterXLabel.size[1],$
+      VALUE   = sCenterXLabel.value)
+      
+    ;Y label/value
+    wCenterValue = WIDGET_TEXT(wExclusionBase,$
+      XOFFSET   = sCenterYValue.size[0],$
+      YOFFSET   = sCenterYValue.size[1],$
+      SCR_XSIZE = sCenterYValue.size[2],$
+      VALUE     = sCenterYValue.value,$
+      UNAME     = sCenterYValue.uname,$
+      /ALIGN_LEFT,$
+      /EDITABLE)
+    wCenterYLabel = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sCenterYLabel.size[0],$
+      YOFFSET = sCenterYLabel.size[1],$
+      VALUE   = sCenterYLabel.value)
+      
+    ;Radii (Pixels) label
+    wRadiiLabel = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sRadiiLabel.size[0],$
+      YOFFSET = sRadiiLabel.size[1],$
+      VALUE   = sRadiiLabel.value)
+      
+    ;R1 label/value
+    wRadiiR1Value = WIDGET_TEXT(wExclusionBase,$
+      XOFFSET   = sRadiiR1Value.size[0],$
+      YOFFSET   = sRadiiR1Value.size[1],$
+      SCR_XSIZE = sRadiiR1Value.size[2],$
+      VALUE     = sRadiiR1Value.value,$
+      UNAME     = sRadiiR1Value.uname,$
+      /ALIGN_LEFT,$
+      /EDITABLE)
+    wRadiiR1Label = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sRadiiR1Label.size[0],$
+      YOFFSET = sRadiiR1Label.size[1],$
+      VALUE   = sRadiiR1Label.value)
+      
+    ;R1 IN/OUT base/group
+    wRadiiR1Base = WIDGET_BASE(wExclusionBase,$
+      XOFFSET   = sRadiiR1Base.size[0],$
+      YOFFSET   = sRadiiR1Base.size[1],$
+      SCR_XSIZE = sRadiiR1Base.size[2],$
+      SCR_YSIZE = sRadiiR1Base.size[3],$
+      FRAME     = sRadiiR1Base.frame)
+    wRadiiR1Group = CW_BGROUP(wRadiiR1Base,$
+      sRadiiR1group.list,$
+      XOFFSET   = sRadiiR1group.size[0],$
+      YOFFSET   = sRadiiR1group.size[1],$
+      ROW       = 1,$
+      SET_VALUE = sRadiiR1group.value,$
+      UNAME     = sRadiiR1group.uname,$
+      /NO_RELEASE,$
+      /EXCLUSIVE)
+      
+    ;R2 label/value
+    wRadiiR2Value = WIDGET_TEXT(wExclusionBase,$
+      XOFFSET   = sRadiiR2Value.size[0],$
+      YOFFSET   = sRadiiR2Value.size[1],$
+      SCR_XSIZE = sRadiiR2Value.size[2],$
+      VALUE     = sRadiiR2Value.value,$
+      UNAME     = sRadiiR2Value.uname,$
+      /ALIGN_LEFT,$
+      /EDITABLE)
+    wRadiiR2Label = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sRadiiR2Label.size[0],$
+      YOFFSET = sRadiiR2Label.size[1],$
+      VALUE   = sRadiiR2Label.value)
+      
+    ;R2 IN/OUT base/group
+    wRadiiR2Base = WIDGET_BASE(wExclusionBase,$
+      XOFFSET   = sRadiiR2Base.size[0],$
+      YOFFSET   = sRadiiR2Base.size[1],$
+      SCR_XSIZE = sRadiiR2Base.size[2],$
+      SCR_YSIZE = sRadiiR2Base.size[3],$
+      FRAME     = sRadiiR2Base.frame)
+    wRadiiR2Group = CW_BGROUP(wRadiiR2Base,$
+      sRadiiR2group.list,$
+      XOFFSET   = sRadiiR2group.size[0],$
+      YOFFSET   = sRadiiR2group.size[1],$
+      ROW       = 1,$
+      SET_VALUE = sRadiiR2group.value,$
+      UNAME     = sRadiiR2group.uname,$
+      /NO_RELEASE,$
+      /EXCLUSIVE)
+      
+    ;Type of selection base and buttons -------------------------------------------
+    wSelectionTypeBase = WIDGET_BASE(wExclusionBase,$
+      SPACE     = 20,$
+      UNAME     = sExclusionTypeBase.uname,$
+      XOFFSET   = sExclusionTypeBase.size[0],$
+      YOFFSET   = sExclusionTypeBase.size[1],$
+      SCR_XSIZE = sExclusionTypeBase.size[2],$
+      FRAME     = sExclusionTypeBase.frame,$
+      /EXCLUSIVE,$
+      /TOOLBAR,$
+      /ROW)
+      
+    ;label
+    wTypeLabel = WIDGET_LABEL(wExclusionBase,$
+      XOFFSET = sTypeLabel.size[0],$
+      YOFFSET = sTypeLabel.size[1],$
+      VALUE   = sTypeLabel.value)
+      
+    wButton1 = WIDGET_BUTTON(wSelectionTypeBase,$
+      VALUE   = sButton1.value,$
+      TOOLTIP = sButton1.tooltip,$
+      UNAME   = sButton1.uname,$
+      /BITMAP,$
+      /NO_RELEASE)
+    wButton2 = WIDGET_BUTTON(wSelectionTypeBase,$
+      VALUE   = sButton2.value,$
+      TOOLTIP = sButton2.tooltip,$
+      UNAME   = sButton2.uname,$
+      /BITMAP,$
+      /NO_RELEASE)
+    wButton3 = WIDGET_BUTTON(wSelectionTypeBase,$
+      VALUE   = sButton3.value,$
+      TOOLTIP = sButton3.tooltip,$
+      UNAME   = sButton3.uname,$
+      /BITMAP,$
+      /NO_RELEASE)
+    wButton4 = WIDGET_BUTTON(wSelectionTypeBase,$
+      VALUE   = sButton4.value,$
+      TOOLTIP = sButton4.tooltip,$
+      UNAME   = sButton4.uname,$
+      /BITMAP,$
+      /NO_RELEASE)
+      
+    WIDGET_CONTROL,  WIDGET_INFO(wSelectionTypeBase, /CHILD), /SET_BUTTON
+    
+    ;frame
   wFrame = WIDGET_LABEL(wExclusionBase,$
     XOFFSET   = sFrame.size[0],$
     YOFFSET   = sFrame.size[1],$
@@ -775,7 +777,48 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SCR_YSIZE = sFrame.size[3],$
     VALUE     = sFrame.value,$
     FRAME     = sFrame.frame)
+  
+  ENDIF ELSE BEGIN
+  
+  base = WIDGET_BASE(wExclusionBase,$
+  /COLUMN)
     
+  space = WIDGET_LABEL(base,$
+  VALUE = '')  
+    
+  label = WIDGET_LABEL(base,$
+  VALUE = '         Rectangle Selection Definition')
+  
+  value = CW_FIELD(base,$
+  VALUE = '0',$
+  TITLE = '  Tube # 1st corner    : ',$
+  XSIZE = 4,$
+  UNAME = 'corner_pixel_xo',$
+  /INTEGER)
+  
+  value = CW_FIELD(base,$
+  VALUE = '0',$
+  XSIZE = 4,$
+  TITLE = '  Pixel # 1st corner   : ',$
+  UNAME = 'corner_pixel_yo',$
+  /INTEGER)
+  
+  value = CW_FIELD(base,$
+  VALUE = '0',$
+  XSIZE = 4,$
+  TITLE = '  Width (# of tubes)   : ',$
+  UNAME = 'corner_pixel_width',$
+  /INTEGER)
+  
+  value = CW_FIELD(base,$
+  VALUE = '0',$
+  XSIZE = 4,$
+  TITLE = '  Height (# of pixels) : ',$
+  UNAME = 'corner_pixel_height',$
+  /INTEGER)
+      
+ ENDELSE
+      
   ;SAVE AS
   wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
     XOFFSET   = sSaveAsSelection.size[0],$
