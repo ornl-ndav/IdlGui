@@ -954,6 +954,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     
   ;list of pixel excluded
   excluded_pixel_array = INTARR(128L * 400L)
+  (*(*global1).excluded_pixel_array) = excluded_pixel_array
 
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
@@ -1105,6 +1106,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
 
   ;list of pixel excluded
   excluded_pixel_array = INTARR(128L * 400L)
+  (*(*global1).excluded_pixel_array) = excluded_pixel_array
     
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
