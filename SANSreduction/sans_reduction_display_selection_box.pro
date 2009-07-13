@@ -65,10 +65,10 @@ PRO display_selection_manually, Event
   x1_data = x0_data + width_data
   y1_data = y0_data + height_data
   
-  x0_device = convert_data_into_device(Event,x0_data, (*global).congrid_x_coeff)
-  y0_device = convert_data_into_device(Event,y0_data, (*global).congrid_y_coeff)
-  x1_device = convert_data_into_device(Event,x1_data, (*global).congrid_x_coeff)
-  y1_device = convert_data_into_device(Event,y1_data, (*global).congrid_y_coeff)
+  x0_device = convert_xdata_into_device(Event,x0_data)
+  y0_device = convert_ydata_into_device(Event,y0_data)
+  x1_device = convert_xdata_into_device(Event,x1_data)
+  y1_device = convert_ydata_into_device(Event,y1_data)
   
   (*global).x0_device = x0_device
   (*global).y0_device = y0_device
