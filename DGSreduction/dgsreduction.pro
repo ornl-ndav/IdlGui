@@ -272,7 +272,40 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   IF N_ELEMENTS(dgsn_cmd) EQ 0 THEN dgsn_cmd = OBJ_NEW("NormCMD")
   
   ; Define the TLB.
-  tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME)
+  tlb = WIDGET_BASE(COLUMN=1, TITLE=title, /FRAME, MBAR=menubarID)
+  
+  ; Define the menus
+  
+  ; File Menu
+  fileMenuID = WIDGET_BUTTON(menubarID, VALUE='File')
+  loadMenuID = WIDGET_BUTTON(fileMenuID, VALUE='Load...', EVENT_PRO='DGSreduction_LoadParameters')
+  saveMenuID = WIDGET_BUTTON(fileMenuID, VALUE='Save...', EVENT_PRO='save_parameters')
+  quitMenuID = WIDGET_BUTTON(fileMenuID, VALUE='Quit', EVENT_PRO='DGSreduction_Quit', /SEPARATOR)
+  
+  ; Actions Menu
+  actionMenuID = WIDGET_BUTTON(menubarID, VALUE='Actions')
+  executeReductionMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Execute Reduction', $
+    EVENT_PRO='DGSreduction_Execute')
+  gatherReductionMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Gather Reduction', $
+    EVENT_PRO='DGSreduction_LaunchCollector')
+  
+  executeNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Execute Vanadium Mask Generation', $
+    EVENT_PRO='DGSnorm_Execute', /SEPARATOR)
+  gatherNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Gather Vanadium Mask Generation', $
+    EVENT_PRO='DGSnorm_LaunchCollector', /SEPARATOR)
+  
+  
+  ; Monitoring Menu
+  monitoringMenuID = WIDGET_BUTTON(menubarID, VALUE='Monitoring')
+  launchJobMonitorMenuID = WIDGET_BUTTON(monitoringMenuID, VALUE='Launch SLURM Monitor', $
+    EVENT_PRO='DGSreduction_LaunchJobMonitor')
+  
+  
+  
+  ; Help Menu
+  helpMenuID = WIDGET_BUTTON(menubarID, VALUE='Help')
+  helpfileMenuID = WIDGET_BUTTON(helpMenuID, VALUE='Sorry no help available at the moment')
+    
   
   toprow = WIDGET_BASE(tlb, COLUMN=4)
   
