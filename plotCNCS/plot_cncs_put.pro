@@ -152,3 +152,7 @@ putTextInTextField, Event, 'nxsummary_text_field', text
 END
 
 ;-------------------------------------------------------------------------------
+PRO setTooltip, Event, uname, text
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, TOOLTIP=text
+END

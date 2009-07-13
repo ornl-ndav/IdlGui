@@ -36,14 +36,14 @@ FUNCTION canWeValidateCountsVsTofButton, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global
   
- x1 = (*global).X1
- x2 = (*global).X2
- y1 = (*global).Y1
- y2 = (*global).Y2
-
- IF (x1 + x2 + y1 + y2 NE 0) THEN RETURN, 1
- RETURN, 0
-
+  x1 = (*global).X1
+  x2 = (*global).X2
+  y1 = (*global).Y1
+  y2 = (*global).Y2
+  
+  IF (x1 + x2 + y1 + y2 NE 0) THEN RETURN, 1
+  RETURN, 0
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -69,12 +69,16 @@ PRO update_selection_masking_mode, Event, mode=mode
       ENDELSE
       masking_status = 0
       selection_png = 'plotCNCS_images/selection_mode_on.png'
+      selection_tooltip = 'Selection mode is activated !'
+      masking_tooltip = 'Click to activate the masking mode'
       masking_png = 'plotCNCS_images/masking_mode_off.png'
     END
     'masking': BEGIN
       selection_status = 0
       masking_status = 1
       selection_png = 'plotCNCS_images/selection_mode_off.png'
+      selection_tooltip = 'Click to activate the selection mode'
+      masking_tooltip = 'Masking mode is activated !'
       masking_png = 'plotCNCS_images/masking_mode_on.png'
     END
     ELSE:
@@ -82,13 +86,16 @@ PRO update_selection_masking_mode, Event, mode=mode
   
   activateWidgets, Event, selection_unames, selection_status
   activateWidgets, Event, masking_unames, masking_status
-
+  
+  setTooltip, Event, 'selection_mode_button', selection_tooltip
+  setTooltip, Event, 'masking_mode_button', masking_tooltip
+  
   selection_button = READ_PNG(selection_png)
   mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_mode_button')
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, selection_button, 0, 0,/true
-
+  
   masking_button = READ_PNG(masking_png)
   mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='masking_mode_button')
   WIDGET_CONTROL, mode_id, GET_VALUE=id
