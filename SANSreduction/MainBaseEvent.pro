@@ -137,10 +137,7 @@ PRO MAIN_BASE_event, Event
       
         IF (event.release EQ 1) THEN BEGIN ;left button release
           (*global).left_button_clicked = 0
-        ENDIF
-        
-        IF (event.type EQ 0 AND $ ;moving mouse with left button clicked
-          (*global).left_button_clicked EQ 1) THEN BEGIN
+
           x0 = getTextFieldValue(Event,'corner_pixel_xo')
           y0 = getTextFieldValue(Event,'corner_pixel_yo')
           ;check if both panels are plotted
@@ -157,6 +154,31 @@ PRO MAIN_BASE_event, Event
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height
           
+          lin_or_log_plot, Event ;refresh of main plot
+          display_selection, Event, x1=Event.x, y1=Event.y
+
+        ENDIF
+        
+        IF (event.type EQ 0 AND $ ;moving mouse with left button clicked
+          (*global).left_button_clicked EQ 1) THEN BEGIN
+          
+          x0 = getTextFieldValue(Event,'corner_pixel_xo')
+          y0 = getTextFieldValue(Event,'corner_pixel_yo')
+          ;check if both panels are plotted
+          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+          value = WIDGET_INFO(id, /BUTTON_SET)
+          coeff = 2
+          IF (value EQ 1) THEN coeff = 1
+          x1 = Event.x / (coeff * (*global).congrid_x_coeff)
+          y1 = Event.y / (*global).congrid_y_coeff
+          
+          width = x0 - x1
+          height = x1 - y1
+          
+          putTextFieldValue, Event, 'corner_pixel_width', width
+          putTextFieldValue, Event, 'corner_pixel_height', height
+          
+          lin_or_log_plot, Event ;refresh of main plot
           display_selection, Event, x1=Event.x, y1=Event.y
           
         ENDIF
