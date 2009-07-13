@@ -119,12 +119,22 @@ PRO MAIN_BASE_event, Event
           Y = Event.y / (*global).congrid_y_coeff
         ENDELSE
         putTextFieldValue, Event, $
-          'x_center_value', $
+          'corner_pixel_xo', $
           STRCOMPRESS(X)
         putTextFieldValue, Event, $
-          'y_center_value', $
+          'corner_pixel_yo', $
           STRCOMPRESS(Y)
       ENDIF
+      
+      IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
+      ;display width and height
+      
+      
+      
+      
+      
+      ENDIF
+
     END
     
     ;-Linear of Logarithmic scale
