@@ -129,18 +129,21 @@ PRO MAIN_BASE_event, Event
             Y = Event.y/2.
           ENDELSE
         ENDIF ELSE BEGIN ;'SNS'
+        
           (*global).left_button_clicked = 1
+          x0_device = Event.x
+          y0_device = Event.y
           
-          ;check if both panels are plotted
-          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
-          value = WIDGET_INFO(id, /BUTTON_SET)
-          coeff = 2
-          IF (value EQ 1) THEN coeff = 1
-          X = Event.x / (coeff * (*global).congrid_x_coeff)
-          Y = Event.y / (*global).congrid_y_coeff
+          x0_data = convert_xdevice_into_data(Event, x0_device)
+          y0_data = convert_ydevice_into_data(Event, y0_device)
+          X = x0_data
+          Y = y0_data
           
-          (*global).x0_device = Event.x
-          (*global).y0_device = Event.y
+          x0_device = convert_xdata_into_device(Event, x0_data)
+          y0_device = convert_ydata_into_device(Event, y0_data)
+          
+          (*global).x0_device = x0_device
+          (*global).y0_device = y0_device
           
         ENDELSE
         putTextFieldValue, Event, $
@@ -156,29 +159,29 @@ PRO MAIN_BASE_event, Event
       
         IF (event.release EQ 1) THEN BEGIN ;left button release
           (*global).left_button_clicked = 0
+          display_exclusion_region, Event
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
           (*global).left_button_clicked EQ 1) THEN BEGIN
           
-          x0 = getTextFieldValue(Event,'corner_pixel_x0')
-          y0 = getTextFieldValue(Event,'corner_pixel_y0')
-          ;check if both panels are plotted
-          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
-          value = WIDGET_INFO(id, /BUTTON_SET)
-          coeff = 2
-          IF (value EQ 1) THEN coeff = 1
-          x1 = Event.x / (coeff * (*global).congrid_x_coeff)
-          y1 = Event.y / (*global).congrid_y_coeff
+          x0_data = getTextFieldValue(Event,'corner_pixel_x0')
+          y0_data = getTextFieldValue(Event,'corner_pixel_y0')
+
+          x1_device = Event.x
+          y1_device = Event.y
           
-          width = x1 - x0
-          height = y1 - y0
+          x1_data = convert_xdevice_into_data(Event, x1_device)
+          y1_data = convert_ydevice_into_data(Event, y1_device)
+
+          width = x1_data - x0_data
+          height = y1_data - y0_data
           
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height
-          
+
           lin_or_log_plot, Event ;refresh of main plot
-          display_selection, Event, x1=Event.x, y1=Event.y
+          display_selection_manually, Event
           
         ENDIF
         

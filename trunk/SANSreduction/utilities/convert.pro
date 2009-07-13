@@ -33,26 +33,36 @@
 ;==============================================================================
 
 FUNCTION convert_xdata_into_device, Event, data_value
-
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
   value = WIDGET_INFO(id, /BUTTON_SET)
   coeff = 2
   IF (value EQ 1) THEN coeff = 1
   device_value = data_value * coeff * (*global).congrid_x_coeff
-
-RETURN, device_value
-
+  RETURN, device_value
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION convert_ydata_into_device, Event, data_value
-
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
   device_value = data_value * (*global).congrid_y_coeff
+  RETURN, device_value
+END
 
-RETURN, device_value
+;------------------------------------------------------------------------------
+FUNCTION convert_xdevice_into_data, Event, device_value
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  coeff = 2
+  IF (value EQ 1) THEN coeff = 1
+  data_value = device_value / (coeff * (*global).congrid_x_coeff)
+  RETURN, data_value
+END
 
+;------------------------------------------------------------------------------
+FUNCTION convert_ydevice_into_data, Event, device_value
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  data_value = device_value / (*global).congrid_y_coeff
+  RETURN, data_value
 END
