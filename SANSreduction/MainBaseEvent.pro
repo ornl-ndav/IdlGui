@@ -76,6 +76,11 @@ PRO MAIN_BASE_event, Event
     
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
+      id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
+      WIDGET_CONTROL, id, GET_VALUE=id_value
+      WSET, id_value
+      standard = 31
+      DEVICE, CURSOR_STANDARD=standard
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         getXYposition, Event ;_get
         IF ((*global).facility EQ 'LENS') THEN BEGIN
