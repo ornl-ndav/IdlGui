@@ -923,6 +923,8 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     img:                  PTR_NEW(0L),$
     tof_array:            PTR_NEW(0L),$
     timemap_data:         PTR_NEW(0L),$
+    excluded_pixel_array:  PTR_NEW(0L),$
+
     nexus_file_name:      '',$
     timemap_file:         histo_mapped_file, $
     X1:                   0L,$
@@ -950,6 +952,9 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     TubeAngle:             FLTARR(400),$
     wbase:                wbase})
     
+  ;list of pixel excluded
+  excluded_pixel_array = INTARR(128L * 400L)
+
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
   
@@ -1078,6 +1083,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     tof_array:             PTR_NEW(0L),$
     counts_vs_tof_for_play: PTR_NEW(0L),$
     background:            PTR_NEW(0L),$
+    excluded_pixel_array:  PTR_NEW(0L),$
     
     mode:                 'nexus',$
     selection_mode:       'selection',$ ;selection or masking
@@ -1096,6 +1102,9 @@ PRO PlotMainPlotFromNexus, NexusFileName
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
     wbase:                 wbase})
+
+  ;list of pixel excluded
+  excluded_pixel_array = INTARR(128L * 400L)
     
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
