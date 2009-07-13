@@ -61,3 +61,14 @@ FUNCTION isButtonSelected, Event, uname
   status = WIDGET_INFO(id, /BUTTON_SET)
   RETURN, status
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isSelectionModeSelected, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+
+  mode = (*global).selection_mode
+  IF (mode EQ 'selection') THEN RETURN, 1
+  RETURN, 0
+
+END
