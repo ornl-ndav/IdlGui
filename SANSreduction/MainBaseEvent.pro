@@ -74,6 +74,20 @@ PRO MAIN_BASE_event, Event
     
     ;= TAB1 (LOAD DATA) =======================================================
     
+    ;manual input of x0, y0, width and Height
+    WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_x0'): BEGIN
+      display_selection_manually, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_y0'): BEGIN
+      display_selection_manually, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_width'): BEGIN
+      display_selection_manually, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_height'): BEGIN
+      display_selection_manually, Event
+    END
+    
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
@@ -130,10 +144,10 @@ PRO MAIN_BASE_event, Event
           
         ENDELSE
         putTextFieldValue, Event, $
-          'corner_pixel_xo', $
+          'corner_pixel_x0', $
           STRCOMPRESS(X)
         putTextFieldValue, Event, $
-          'corner_pixel_yo', $
+          'corner_pixel_y0', $
           STRCOMPRESS(Y)
       ENDIF
       
@@ -147,8 +161,8 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
           (*global).left_button_clicked EQ 1) THEN BEGIN
           
-          x0 = getTextFieldValue(Event,'corner_pixel_xo')
-          y0 = getTextFieldValue(Event,'corner_pixel_yo')
+          x0 = getTextFieldValue(Event,'corner_pixel_x0')
+          y0 = getTextFieldValue(Event,'corner_pixel_y0')
           ;check if both panels are plotted
           id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
           value = WIDGET_INFO(id, /BUTTON_SET)
