@@ -450,6 +450,28 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
+    ;Masking widgets ==========================================================
+    
+    ;Bank cw_field
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_bank'): BEGIN
+    refresh_masking_region, Event
+    END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ELSE:
   ENDCASE
   
