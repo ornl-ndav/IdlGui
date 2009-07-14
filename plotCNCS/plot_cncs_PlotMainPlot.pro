@@ -231,26 +231,6 @@ PRO MakeGuiMainPLot_Event, event
           (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
           (*global1).left_pressed = 0
           activateWidget, Event, 'counts_vs_tof_selection', 1
-        ;        message_text = ['Are you sure you want to plot Counts vs TOF of ' + $
-        ;          'selection?','','This may take a while!']
-        ;        title = 'Plot Counts vs TOF ?'
-        ;        id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_plot_base')
-        ;        result = DIALOG_MESSAGE(message_text,$
-        ;          /QUESTION,$
-        ;          /CENTER,$
-        ;          DIALOG_PARENT=id,$
-        ;          TITLE=title)
-        ;        IF (result EQ 'Yes') THEN BEGIN
-        ;          WIDGET_CONTROL, /HOURGLASS
-        ;          job_base = counts_vs_tof_info_base(Event)
-        ;          plot_counts_vs_tof_of_selection, Event
-        ;          WIDGET_CONTROL, HOURGLASS=0
-        ;          WIDGET_CONTROL, job_base,/DESTROY
-        ;        ENDIF ELSE BEGIN ;remove selection
-        ;          (*global1).X1 = 0L
-        ;          (*global1).X2 = 0L
-        ;        replot_main_plot_with_scale, Event, without_scale=1
-        ;        ENDELSE
         ENDIF
         
         IF (Event.type EQ 2 AND $
@@ -296,6 +276,10 @@ PRO MakeGuiMainPLot_Event, event
         IF (Event.type EQ 1 AND $
           (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
           (*global1).left_pressed = 0
+          WIDGET_CONTROL, /HOURGLASS
+          create_masking_region_from_manual_selection, Event
+          refresh_masking_region, Event
+          WIDGET_CONTROL, HOURGLASS=0
         ENDIF
         
       ENDELSE
@@ -481,6 +465,8 @@ PRO MakeGuiMainPLot_Event, event
       (*(*global1).excluded_pixel_array) = excluded_pixel_array
       replot_main_plot_with_scale, Event, without_scale=1
       display_excluded_pixels, Event, excluded_pixel_array
+      ;save background in case manual selection is next
+      saving_masking_background, Event
     END
     
     ;pixelID cw_field
