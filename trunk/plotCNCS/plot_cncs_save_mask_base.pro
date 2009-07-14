@@ -32,33 +32,55 @@
 ;
 ;==============================================================================
 
+FUNCTION getBankTubeRow_from_pixelid, pixelid
+
+  tube_row = getXYfromPixelID(pixelid)
+  global_tube = tube_row[0]
+  tube = global_tube MOD 8L
+  row = tube_row[1]
+  bank = pixelid / 1024L
+  return, [bank, tube, row]
+END
+
 ;------------------------------------------------------------------------------
-FUNCTION create_temperature_file, Event, output_file_name
+FUNCTION create_mask_file, Event, output_file_name
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
-  CATCH, error
+  global = (*global_mask).global
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  
+  ;CATCH, error
+  error = 0
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
   ENDIF
   
-  table = (*global_temperature).table
-  
   ;get output path
-  path = getButtonValue(Event,'save_temperature_path_button')
+  path = getButtonValue(Event,'save_mask_path_button')
   
   ;get output file name
-  file_name = getTextFieldValue(Event,'save_temperature_file_name')
+  file_name = getTextFieldValue(Event,'save_mask_file_name')
   
   ;output file name
   output_file_name = path + file_name
   
+  list_of_pixels = WHERE(excluded_pixel_array EQ 1)
+  nbr_pixels = N_ELEMENTS(list_of_pixels)
+  
   OPENW, 1, output_file_name
-  nbr_row = (SIZE(table))(2)
-  FOR i=0,(nbr_row - 1) DO BEGIN
-    PRINTF, 1, STRCOMPRESS(table[2,i],/REMOVE_ALL)
+  FOR i=0,(nbr_pixels-1) DO BEGIN
+    pixelid = list_of_pixels[i]
+    bank_tube_row = getBankTubeRow_from_pixelid(pixelid)
+    bank = bank_tube_row[0] + 1
+    tube = bank_tube_row[1]
+    row  = bank_tube_row[2]
+    value = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
+    PRINTF,1, value
   ENDFOR
   CLOSE, 1
   FREE_LUN, 1
@@ -99,19 +121,19 @@ PRO save_mask_build_gui_event, Event
     END
     
     ;save button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_ok_button'): BEGIN
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_ok_button'): BEGIN
       output_file_name = ''
-      result = create_temperature_file(Event, output_file_name)
+      result = create_mask_file(Event, output_file_name)
       IF (result EQ 1) THEN BEGIN
         text = 'File ' + output_file_name + ' has been created with success!'
         tmp = DIALOG_MESSAGE(text,$
           /INFORMATION)
       ENDIF ELSE BEGIN
-        text = 'Creation of temperature file failed!'
+        text = 'Creation of masking file failed!'
         tmp = DIALOG_MESSAGE(text,$
           /ERROR)
       ENDELSE
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
     
@@ -140,7 +162,7 @@ PRO save_mask_browse_button, Event
   IF (file[0] NE '') THEN BEGIN
   
     IF (new_path NE path ) THEN (*global).file_path = new_path
-      
+    
     ;file dir
     putButtonValue, Event, 'save_mask_path_button', new_path
     
