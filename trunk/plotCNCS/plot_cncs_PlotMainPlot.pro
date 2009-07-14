@@ -131,6 +131,8 @@ PRO MakeGuiMainPLot_Event, event
         replot_main_plot_with_scale, Event, without_scale=1
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
+        ;save background in case manual selection is next
+        saving_masking_background, Event
       ENDIF
     END
     
@@ -277,6 +279,25 @@ PRO MakeGuiMainPLot_Event, event
         
       ENDIF ELSE BEGIN ;masking mode selected --------------------
       
+        IF (Event.press EQ 1) THEN BEGIN ;press left button
+          (*global1).left_pressed = 1
+          (*global1).X1_masking = Event.x
+          (*global1).Y1_masking = Event.y
+        ENDIF
+        
+        IF (Event.type EQ 2 AND $
+          (*global1).left_pressed EQ 1) THEN BEGIN ;move with left pressed
+          (*global1).X2_masking = Event.x
+          (*global1).Y2_masking = Event.y
+          TV, (*(*global1).background_for_masking), true=3
+          plot_masking_box, Event
+        ENDIF
+        
+        IF (Event.type EQ 1 AND $
+          (*global1).left_pressed EQ 1) THEN BEGIN ;release of left button only
+          (*global1).left_pressed = 0
+        ENDIF
+        
       ENDELSE
       
     END
@@ -461,7 +482,7 @@ PRO MakeGuiMainPLot_Event, event
       replot_main_plot_with_scale, Event, without_scale=1
       display_excluded_pixels, Event, excluded_pixel_array
     END
-
+    
     ;pixelID cw_field
     WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_pixelid'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
@@ -950,6 +971,12 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     X2:                   0L,$
     Y2:                   0L,$
     
+    X1_masking:            0L,$
+    Y1_masking:            0L,$
+    X2_masking:            0L,$
+    Y2_masking:            0L,$
+    background_for_masking: PTR_NEW(0L),$
+    
     mode:                 '',$
     selection_mode:       'selection',$
     
@@ -1093,11 +1120,19 @@ PRO PlotMainPlotFromNexus, NexusFileName
     img:                   PTR_NEW(0L),$
     big_array_rebin:       PTR_NEW(0L),$
     big_array_rebin_rescale: PTR_NEW(0L),$
+    
     left_pressed:           0,$
     X1:                    0L,$
     Y1:                    0L,$
     X2:                    0L,$
     Y2:                    0L,$
+    
+    X1_masking:            0L,$
+    Y1_masking:            0L,$
+    X2_masking:            0L,$
+    Y2_masking:            0L,$
+    background_for_masking: PTR_NEW(0L),$
+    
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
     counts_vs_tof_for_play: PTR_NEW(0L),$

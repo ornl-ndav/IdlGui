@@ -139,7 +139,7 @@ FUNCTION getPixelList_from_rowArray, row_array
   ENDWHILE
   
   RETURN, final_list
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -172,6 +172,62 @@ PRO display_excluded_pixels, Event, excluded_pixel_array
       
     index++
   ENDWHILE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_masking_box, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global1
+  
+  x1 = (*global1).X1_masking
+  y1 = (*global1).Y1_masking
+  x2 = (*global1).X2_masking
+  y2 = (*global1).Y2_masking
+  
+  IF (x1 EQ 0L AND $
+    x2 EQ 0L) THEN RETURN
+    
+  xmin = MIN([x1,x2], MAX=xmax)
+  ymin = MIN([y1,y2], MAX=ymax)
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  ;check if we want lin or log
+  lin_status = isMainPlotLin(Event)
+  IF (lin_status EQ 1) THEN BEGIN
+    color = 150
+  ENDIF ELSE BEGIN
+    ;color = FSC_COLOR('white')
+    color = 255*3
+  ENDELSE
+  
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+    [ymin,ymax, ymax, ymin, ymin],$
+    /DEVICE,$
+    LINESTYLE = 5,$
+    COLOR =color
+    
+END
+
+;------------------------------------------------------------------------------
+PRO saving_masking_background, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  ;select plot area
+  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[0,0,1867L,4*128L+1,0,0,id_value]
+  (*(*global).background_for_masking) = background
   
 END
 
@@ -227,6 +283,9 @@ PRO refresh_masking_region, Event
   
   (*(*global).excluded_pixel_array) = excluded_pixel_array
   display_excluded_pixels, Event, excluded_pixel_array
+  
+  ;save background in case manual selection is next
+  saving_masking_background, Event
   
 END
 
