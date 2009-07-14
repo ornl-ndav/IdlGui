@@ -235,7 +235,7 @@ PRO MakeGuiMainPlot, wBase
   ;space
   space = WIDGET_LABEL(row1,$
     VALUE = '                           ')
-
+    
   ;produce counts vs tof of selection
   button = WIDGET_BUTTON(row1,$
     VALUE = 'Counts vs TOF of selection',$
@@ -605,14 +605,14 @@ PRO MakeGuiMainPlot, wBase
     ;    SCR_XSIZE = xsize,$
     UNAME = 'load_roi_button')
     
+  edit_preview = WIDGET_BUTTON(row1,$
+    VALUE = '  EDIT ROI  ',$
+    UNAME = 'edit_roi_button')
+    
   save = WIDGET_BUTTON(row1,$
     VALUE = '  SAVE ROI  ',$
     ;    SCR_XSIZE = xsize,$
     UNAME = 'save_roi_button')
-    
-  edit_preview = WIDGET_BUTTON(row1,$
-    VALUE = '  EDIT ROI  ',$
-    UNAME = 'edit_roi_button')
     
   sel_col1_row3_col1 = WIDGET_BASE(sel_col1,$
     FRAME = 1,$
