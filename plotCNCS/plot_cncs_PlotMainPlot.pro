@@ -461,6 +461,13 @@ PRO MakeGuiMainPLot_Event, event
       replot_main_plot_with_scale, Event, without_scale=1
       display_excluded_pixels, Event, excluded_pixel_array
     END
+
+    ;pixelID cw_field
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_pixelid'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      refresh_masking_region, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
     
     ;Bank cw_field
     WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_bank'): BEGIN
