@@ -129,6 +129,8 @@ PRO MakeGuiMainPLot_Event, event
       IF (event.press EQ 1) THEN BEGIN
         update_selection_masking_mode, Event, mode='masking'
         replot_main_plot_with_scale, Event, without_scale=1
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
       ENDIF
     END
     
