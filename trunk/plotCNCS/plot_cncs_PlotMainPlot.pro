@@ -452,26 +452,36 @@ PRO MakeGuiMainPLot_Event, event
     
     ;Masking widgets ==========================================================
     
+    ;Reset Selection button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='reset_selection_button'): BEGIN
+      excluded_pixel_array = INTARR(128L * 400L)
+      (*(*global1).excluded_pixel_array) = excluded_pixel_array
+      replot_main_plot_with_scale, Event, without_scale=1
+      display_excluded_pixels, Event, excluded_pixel_array
+    END
+    
     ;Bank cw_field
     WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_bank'): BEGIN
-    refresh_masking_region, Event
+      WIDGET_CONTROL, /HOURGLASS
+      refresh_masking_region, Event
+      WIDGET_CONTROL, HOURGLASS=0
     END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ELSE:
   ENDCASE
   
@@ -924,7 +934,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     tof_array:            PTR_NEW(0L),$
     timemap_data:         PTR_NEW(0L),$
     excluded_pixel_array:  PTR_NEW(0L),$
-
+    
     nexus_file_name:      '',$
     timemap_file:         histo_mapped_file, $
     X1:                   0L,$
@@ -955,7 +965,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
   ;list of pixel excluded
   excluded_pixel_array = INTARR(128L * 400L)
   (*(*global1).excluded_pixel_array) = excluded_pixel_array
-
+  
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
   
@@ -1103,11 +1113,11 @@ PRO PlotMainPlotFromNexus, NexusFileName
     main_plot_tof_title:   'TOF View (TOF vs X integrated over Y)',$
     TubeAngle:             FLTARR(400),$
     wbase:                 wbase})
-
+    
   ;list of pixel excluded
   excluded_pixel_array = INTARR(128L * 400L)
   (*(*global1).excluded_pixel_array) = excluded_pixel_array
-    
+  
   ;This function retrieves the value of all the tube angles
   (*global1).TubeAngle = getTubeAngle()
   (*(*global1).tof_array) = retrieve_tof_array(NexusFileName)
