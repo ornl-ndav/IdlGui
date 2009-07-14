@@ -92,6 +92,9 @@ cd, CurrentFolder
 .run plot_cncs_play_buttons.pro
 .run plot_cncs_masking_region.pro
 
+;save mask base
+.run plot_cncs_save_mask_base.pro
+
 ;bank plot base
 .run plot_cncs_PlotBank.pro
 .run plot_cncs_PlotBankEventcb.pro
