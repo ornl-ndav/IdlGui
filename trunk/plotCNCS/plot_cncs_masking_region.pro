@@ -51,7 +51,6 @@ FUNCTION getx0y0x1y1, Event, xy
   
   Xcoeff  = (*global).Xcoeff
   off     = (*global).off
-  xoff    = (*global).xoff
   
   ;get ymin and ymax
   ymin = ymin * Yfactor
@@ -59,8 +58,14 @@ FUNCTION getx0y0x1y1, Event, xy
   
   ;get xmin and xmax
   bank_nbr = xmin / 8
-  xmin     = bank_nbr * off + bank_nbr * Xfactor * xmin  ;WRONG
-  xmax     = xmin + Xfactor
+  print, bank_nbr
+  ;if bank >=37, then make two more shifts to the right
+  IF (bank_nbr GE 36) THEN BEGIN ;because banks have been shifted to the left
+    bank_nbr += 2
+    xmin += 16
+  ENDIF
+  xmin = ( bank_nbr + xmin ) * xfactor
+  xmax = xmin + Xfactor
   
   RETURN, [xmin, ymin, xmax, ymax]
   
@@ -91,34 +96,16 @@ FUNCTION getPixelList_from_bankArray, bank_array
 END
 
 ;------------------------------------------------------------------------------
-PRO refresh_masking_region, Event
-
-  WIDGET_CONTROL, event.top, GET_UVALUE=global
-  
-  excluded_pixel_array = (*(*global).excluded_pixel_array)
-  
-  ;retrieve list of pixel to exclude from Bank cw_field
-  bank_field = getTextFieldValue(Event,'selection_bank')
-  bank_array = getArray(bank_field)
-  pixel_index = getPixelList_from_bankArray(bank_array)
-  excluded_pixel_array[pixel_index] = 1
-  
-  display_excluded_pixels, Event, excluded_pixel_array
-  
-END
-
-;------------------------------------------------------------------------------
 PRO display_excluded_pixels, Event, excluded_pixel_array
 
   excluded_pixels_index = WHERE(excluded_pixel_array EQ 1, sz)
-;  excluded_pixels = excluded_pixel_array[excluded_pixels_index]
+  ;  excluded_pixels = excluded_pixel_array[excluded_pixels_index]
   
   ;select plot area
   id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-;  sz = N_ELEMENTS(excluded_pixels)
   index = 0
   WHILE (index LT sz) DO BEGIN
   
@@ -136,8 +123,28 @@ PRO display_excluded_pixels, Event, excluded_pixel_array
       LINESTYLE = 0,$
       COLOR =250
       
-        index++
+    index++
   ENDWHILE
+  
+END
+
+;==============================================================================
+;------------------------------------------------------------------------------
+PRO refresh_masking_region, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  
+  ;retrieve list of pixel to exclude from Bank cw_field
+  bank_field = getTextFieldValue(Event,'selection_bank')
+  bank_array = getArray(bank_field)
+  ;shift bank array number to the left as bank 1 -> 0 for processing purpose only
+  bank_array =  bank_array - 1
+  pixel_index = getPixelList_from_bankArray(bank_array)
+  excluded_pixel_array[pixel_index] = 1
+  
+  display_excluded_pixels, Event, excluded_pixel_array
   
 END
 
