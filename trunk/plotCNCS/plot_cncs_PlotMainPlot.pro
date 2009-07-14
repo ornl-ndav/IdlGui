@@ -483,18 +483,12 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    ;row cw_field
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_row'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      refresh_masking_region, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
     
     ELSE:
   ENDCASE

@@ -119,6 +119,30 @@ FUNCTION getPixelList_from_tubeArray, tube_array
 END
 
 ;------------------------------------------------------------------------------
+;This function returns the list of pixels included in the list of rows
+FUNCTION getPixelList_from_rowArray, row_array
+
+  pixels_first_row = LINDGEN(50L * 8L) * 128L
+  
+  sz = N_ELEMENTS(row_array)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+  
+    row = row_array[index]
+    IF (N_ELEMENTS(final_list) EQ 0) THEN BEGIN
+      final_list = pixels_first_row + row
+    ENDIF ELSE BEGIN
+      final_list = [final_list, pixels_first_row + row]
+    ENDELSE
+    
+    index++
+  ENDWHILE
+  
+  RETURN, final_list
+
+END
+
+;------------------------------------------------------------------------------
 PRO display_excluded_pixels, Event, excluded_pixel_array
 
   excluded_pixels_index = WHERE(excluded_pixel_array EQ 1, sz)
@@ -189,6 +213,16 @@ PRO refresh_masking_region, Event
     excluded_pixel_array[pixel_index] = 1
     ;remove contains of cw_field bank
     putTextFieldValue, Event, 'selection_tube', ''
+  ENDIF
+  
+  ;retrieve list of pixel to exclude from row cw_field
+  row_field = getTextFieldValue(Event,'selection_row')
+  IF (STRCOMPRESS(row_field,/REMOVE_ALL) NE '') THEN BEGIN
+    row_array = getArray(row_field)
+    pixel_index = getPixelList_from_rowArray(row_array)
+    excluded_pixel_array[pixel_index] = 1
+    ;remove contains of cw_field bank
+    putTextFieldValue, Event, 'selection_row', ''
   ENDIF
   
   (*(*global).excluded_pixel_array) = excluded_pixel_array
