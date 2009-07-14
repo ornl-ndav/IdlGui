@@ -43,47 +43,36 @@ FUNCTION getBankTubeRow_from_pixelid, pixelid
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION load_mask_file, Event, output_file_name
+FUNCTION load_mask_file, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
+  ;get input path
+  path = getButtonValue(Event,'load_mask_path_button')
+  
+  ;get input file name
+  file_name = getTextFieldValue(Event,'load_mask_file_name')
+  
+  ;input file name
+  input_file_name = path + file_name
+  
   global = (*global_mask).global
-  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  excluded_pixel_array = INTARR(128L * 400L)
   
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
   ENDIF
   
-  ;get output path
-  path = getButtonValue(Event,'save_mask_path_button')
-  
-  ;get output file name
-  file_name = getTextFieldValue(Event,'save_mask_file_name')
-  
-  ;output file name
-  output_file_name = path + file_name
-  
-  list_of_pixels = WHERE(excluded_pixel_array EQ 1)
-  nbr_pixels = N_ELEMENTS(list_of_pixels)
-  
-  OPENW, 1, output_file_name
-  FOR i=0,(nbr_pixels-1) DO BEGIN
-    pixelid = list_of_pixels[i]
-    bank_tube_row = getBankTubeRow_from_pixelid(pixelid)
-    bank = bank_tube_row[0] + 1
-    tube = bank_tube_row[1]
-    row  = bank_tube_row[2]
-    value = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-    value += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
-    value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
-    PRINTF,1, value
-  ENDFOR
-  CLOSE, 1
-  FREE_LUN, 1
+
+
+
+
+
+
   
   RETURN, 1
   
@@ -96,16 +85,16 @@ FUNCTION preview_load_mask_file, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
   error = 0
-  ;  CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
   ENDIF
   
-  ;get output path
+  ;get input path
   path = getButtonValue(Event,'load_mask_path_button')
   
-  ;get output file name
+  ;get input file name
   file_name = getTextFieldValue(Event,'load_mask_file_name')
   
   ;input file name
@@ -157,8 +146,7 @@ PRO load_mask_build_gui_event, Event
     
     ;load button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_ok_button'): BEGIN
-      output_file_name = ''
-      result = create_mask_file(Event, output_file_name)
+      result = load_mask_file(Event)
       IF (result EQ 1) THEN BEGIN
         text = 'File ' + output_file_name + ' has been loaded with success!'
         tmp = DIALOG_MESSAGE(text,$
