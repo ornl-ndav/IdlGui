@@ -43,7 +43,7 @@ FUNCTION getBankTubeRow_from_pixelid, pixelid
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION create_mask_file, Event, output_file_name
+FUNCTION load_mask_file, Event, output_file_name
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
@@ -90,13 +90,10 @@ FUNCTION create_mask_file, Event, output_file_name
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION preview_mask_file, Event
+FUNCTION preview_load_mask_file, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
-  
-  global = (*global_mask).global
-  excluded_pixel_array = (*(*global).excluded_pixel_array)
   
   error = 0
   ;  CATCH, error
@@ -106,43 +103,25 @@ FUNCTION preview_mask_file, Event
   ENDIF
   
   ;get output path
-  path = getButtonValue(Event,'save_mask_path_button')
+  path = getButtonValue(Event,'load_mask_path_button')
   
   ;get output file name
-  file_name = getTextFieldValue(Event,'save_mask_file_name')
-  IF (STRCOMPRESS(file_name,/REMOVE_ALL) EQ '') THEN BEGIN
-    file_name = '<UNDEFINED>'
-  ENDIF
+  file_name = getTextFieldValue(Event,'load_mask_file_name')
   
-  ;output file name
-  output_file_name = path + file_name
+  ;input file name
+  input_file_name = path + file_name
   
-  list_of_pixels = WHERE(excluded_pixel_array EQ 1)
-  nbr_pixels = N_ELEMENTS(list_of_pixels)
-  preview_array = STRARR(nbr_pixels)
-  FOR i=0,(nbr_pixels-1) DO BEGIN
-    pixelid = list_of_pixels[i]
-    bank_tube_row = getBankTubeRow_from_pixelid(pixelid)
-    bank = bank_tube_row[0] + 1
-    tube = bank_tube_row[1]
-    row  = bank_tube_row[2]
-    value = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-    value += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
-    value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
-    preview_array[i] = value
-  ENDFOR
-  
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
-  XDISPLAYFILE, TEXT = preview_array, $
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_base_uname')
+  XDISPLAYFILE, input_file_name, $
     GROUP=id, $
-    TITLE = 'Preview of ' + output_file_name[0]
+    TITLE = 'Preview of ' + input_file_name[0]
     
   RETURN, 1
 END
 
 ;==============================================================================
 ;------------------------------------------------------------------------------
-PRO save_mask_build_gui_event, Event
+PRO load_mask_build_gui_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
@@ -150,46 +129,46 @@ PRO save_mask_build_gui_event, Event
   CASE Event.id OF
   
     ;browse button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_browse_button'): BEGIN
-      save_mask_browse_button, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_browse_button'): BEGIN
+      load_mask_browse_button, Event
     END
     
     ;path button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_path_button'): BEGIN
-      save_mask_path, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_path_button'): BEGIN
+      load_mask_path, Event
     END
     
     ;file name widget_text
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_file_name'): BEGIN
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_file_name'): BEGIN
       ;validate_ok button
-      check_save_mask_ok_button, Event
+      check_load_mask_ok_button, Event
     END
     
     ;cancel button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_cancel_button'): BEGIN
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_mask_base_uname')
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
     
     ;preview button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_save_mask_button'): BEGIN
-      result = preview_mask_file(Event)
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_load_mask_button'): BEGIN
+      result = preview_load_mask_file(Event)
     END
     
-    ;save button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_ok_button'): BEGIN
+    ;load button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_ok_button'): BEGIN
       output_file_name = ''
       result = create_mask_file(Event, output_file_name)
       IF (result EQ 1) THEN BEGIN
-        text = 'File ' + output_file_name + ' has been created with success!'
+        text = 'File ' + output_file_name + ' has been loaded with success!'
         tmp = DIALOG_MESSAGE(text,$
           /INFORMATION)
       ENDIF ELSE BEGIN
-        text = 'Creation of masking file failed!'
+        text = 'Loading of masking file failed!'
         tmp = DIALOG_MESSAGE(text,$
           /ERROR)
       ENDELSE
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_mask_base_uname')
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
     
@@ -200,7 +179,7 @@ PRO save_mask_build_gui_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_mask_browse_button, Event
+PRO load_mask_browse_button, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
@@ -208,9 +187,9 @@ PRO save_mask_browse_button, Event
   global = (*global_mask).global
   path = (*global).file_path
   
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_base_uname')
   file = DIALOG_PICKFILE(DIALOG_PARENT=id,$
-    /WRITE,$
+    /READ,$
     PATH = path, $
     GET_PATH = new_path,$
     /OVERWRITE_PROMPT)
@@ -220,36 +199,37 @@ PRO save_mask_browse_button, Event
     IF (new_path NE path ) THEN (*global).file_path = new_path
     
     ;file dir
-    putButtonValue, Event, 'save_mask_path_button', new_path
+    putButtonValue, Event, 'load_mask_path_button', new_path
     
     ;file name
     file_name = FILE_BASENAME(file[0])
-    putTextFieldValue, Event, 'save_mask_file_name', file_name
+    putTextFieldValue, Event, 'load_mask_file_name', file_name
     
     ;validate_ok button
-    check_save_mask_ok_button, Event
+    check_load_mask_ok_button, Event
     
   ENDIF
   
 END
 
 ;------------------------------------------------------------------------------
-PRO check_save_mask_ok_button, Event
+PRO check_load_mask_ok_button, Event
 
   ;check that there is a file name
-  file_name = getTextFieldValue(Event,'save_mask_file_name')
+  file_name = getTextFieldValue(Event,'load_mask_file_name')
   file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
   IF (file_name NE '') THEN BEGIN
     status = 1
   ENDIF ELSE BEGIN
     status = 0
   ENDELSE
-  activateWidget, Event, 'save_mask_ok_button', status
+  activateWidget, Event, 'load_mask_ok_button', status
+  activateWidget, Event, 'preview_load_mask_button', status
   
 END
 
 ;------------------------------------------------------------------------------
-PRO save_mask_path, Event
+PRO load_mask_path, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
@@ -257,7 +237,7 @@ PRO save_mask_path, Event
   global = (*global_mask).global
   path = (*global).file_path
   
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_base_uname')
   new_path = DIALOG_PICKFILE(DIALOG_PARENT=id,$
     PATH = path, $
     /DIRECTORY)
@@ -267,27 +247,27 @@ PRO save_mask_path, Event
     (*global).file_path = new_path
     
     ;file dir
-    putButtonValue, Event, 'save_mask_path_button', new_path
+    putButtonValue, Event, 'load_mask_path_button', new_path
     
   ENDIF
   
 END
 
 ;------------------------------------------------------------------------------
-PRO save_mask_build_gui, wBase, main_base_geometry, path
+PRO load_mask_build_gui, wBase, main_base_geometry, path
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xoffset = main_base_xoffset + main_base_xsize/2 + 400
+  xoffset = main_base_xoffset + main_base_xsize/2 + 350
   yoffset = main_base_yoffset + main_base_ysize/2 + 100
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Save Mask',$
-    UNAME        = 'save_mask_base_uname',$
+  wBase = WIDGET_BASE(TITLE = 'Load Mask',$
+    UNAME        = 'load_mask_base_uname',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
@@ -299,7 +279,7 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
   browse = WIDGET_BUTTON(wBase,$
     VALUE = 'BROWSE ...',$
     XSIZE = 400,$
-    UNAME = 'save_mask_browse_button')
+    UNAME = 'load_mask_browse_button')
     
   ;or
   or_label = WIDGET_LABEL(wBase,$
@@ -309,7 +289,7 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
   path = WIDGET_BUTTON(wBase,$
     VALUE = path,$
     XSIZE = 400,$
-    UNAME = 'save_mask_path_button')
+    UNAME = 'load_mask_path_button')
     
   ;file name row
   rowa = WIDGET_BASE(wBase,$
@@ -320,7 +300,7 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
     
   text = WIDGET_TEXT(rowa,$
     VALUE = output_file_name,$
-    UNAME = 'save_mask_file_name',$
+    UNAME = 'load_mask_file_name',$
     /EDITABLE,$
     /ALL_EVENTS,$
     XSIZE = 52)
@@ -335,19 +315,19 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
     
   cancel = WIDGET_BUTTON(row2,$
     VALUE = ' CANCEL ',$
-    UNAME = 'save_mask_cancel_button')
+    UNAME = 'load_mask_cancel_button')
     
   space = WIDGET_LABEL(row2,$
     VALUE = '             ')
     
   preview = WIDGET_BUTTON(row2,$
     VALUE = ' PREVIEW ...  ',$
-    UNAME = 'preview_save_mask_button',$
-    SENSITIVE = 1)
+    UNAME = 'preview_load_mask_button',$
+    SENSITIVE = 0)
     
   ok = WIDGET_BUTTON(row2,$
-    VALUE = '  CREATE MASKING FILE  ',$
-    UNAME = 'save_mask_ok_button',$
+    VALUE = '  LOAD MASKING FILE  ',$
+    UNAME = 'load_mask_ok_button',$
     SENSITIVE = 0)
     
   WIDGET_CONTROL, wBase, /REALIZE
@@ -355,7 +335,7 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
 END
 
 ;------------------------------------------------------------------------------
-PRO save_mask_base, main_event
+PRO load_mask_base, main_event
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='main_plot_base')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
@@ -367,18 +347,16 @@ PRO save_mask_base, main_event
   
   ;build gui
   wBase = ''
-  save_mask_build_gui, wBase, $
+  load_mask_build_gui, wBase, $
     main_base_geometry, $
     mask_path
-  ;    temperature_path, $
-  ;    output_file_name
     
   global_mask = PTR_NEW({ wbase: wbase,$
     global: global,$
     main_event: main_event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
-  XMANAGER, "save_mask_build_gui", wBase, $
+  XMANAGER, "load_mask_build_gui", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
 END

@@ -597,20 +597,20 @@ PRO MakeGuiMainPlot, wBase
     SENSITIVE = 1)
     
   space = WIDGET_LABEL(row1,$
-    VALUE = ' ')
+    VALUE = '        ')
     
   xsize = 115
   load = WIDGET_BUTTON(row1,$
-    VALUE = '  LOAD MASK  ',$
+    VALUE = '  LOAD ... ',$
     ;    SCR_XSIZE = xsize,$
     UNAME = 'load_roi_button')
     
   edit_preview = WIDGET_BUTTON(row1,$
-    VALUE = '  EDIT MASK  ',$
+    VALUE = '  EDIT ... ',$
     UNAME = 'edit_roi_button')
     
   save = WIDGET_BUTTON(row1,$
-    VALUE = '  SAVE MASK  ',$
+    VALUE = '  SAVE ...  ',$
     ;    SCR_XSIZE = xsize,$
     UNAME = 'save_roi_button')
     
