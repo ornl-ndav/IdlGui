@@ -469,6 +469,11 @@ PRO MakeGuiMainPLot_Event, event
       saving_masking_background, Event
     END
     
+    ;save mask button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_roi_button'): BEGIN
+      save_mask_base, Event
+    END
+    
     ;pixelID cw_field
     WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_pixelid'): BEGIN
       WIDGET_CONTROL, /HOURGLASS

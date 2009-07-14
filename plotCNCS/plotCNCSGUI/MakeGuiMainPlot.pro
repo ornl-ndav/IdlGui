@@ -592,7 +592,7 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   button = WIDGET_BUTTON(row1,$
-    VALUE = ' RESET SELECTION ',$
+    VALUE = ' RESET MASK ',$
     UNAME = 'reset_selection_button',$
     SENSITIVE = 1)
     
@@ -601,16 +601,16 @@ PRO MakeGuiMainPlot, wBase
     
   xsize = 115
   load = WIDGET_BUTTON(row1,$
-    VALUE = '  LOAD ROI  ',$
+    VALUE = '  LOAD MASK  ',$
     ;    SCR_XSIZE = xsize,$
     UNAME = 'load_roi_button')
     
   edit_preview = WIDGET_BUTTON(row1,$
-    VALUE = '  EDIT ROI  ',$
+    VALUE = '  EDIT MASK  ',$
     UNAME = 'edit_roi_button')
     
   save = WIDGET_BUTTON(row1,$
-    VALUE = '  SAVE ROI  ',$
+    VALUE = '  SAVE MASK  ',$
     ;    SCR_XSIZE = xsize,$
     UNAME = 'save_roi_button')
     
