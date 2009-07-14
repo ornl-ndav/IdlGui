@@ -51,8 +51,8 @@ FUNCTION create_mask_file, Event, output_file_name
   global = (*global_mask).global
   excluded_pixel_array = (*(*global).excluded_pixel_array)
   
-  ;CATCH, error
   error = 0
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
@@ -89,6 +89,57 @@ FUNCTION create_mask_file, Event, output_file_name
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION preview_mask_file, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
+  
+  global = (*global_mask).global
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  
+  error = 0
+  ;  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+  ENDIF
+  
+  ;get output path
+  path = getButtonValue(Event,'save_mask_path_button')
+  
+  ;get output file name
+  file_name = getTextFieldValue(Event,'save_mask_file_name')
+  IF (STRCOMPRESS(file_name,/REMOVE_ALL) EQ '') THEN BEGIN
+    file_name = '<UNDEFINED>'
+  ENDIF
+  
+  ;output file name
+  output_file_name = path + file_name
+  
+  list_of_pixels = WHERE(excluded_pixel_array EQ 1)
+  nbr_pixels = N_ELEMENTS(list_of_pixels)
+  preview_array = STRARR(nbr_pixels)
+  FOR i=0,(nbr_pixels-1) DO BEGIN
+    pixelid = list_of_pixels[i]
+    bank_tube_row = getBankTubeRow_from_pixelid(pixelid)
+    bank = bank_tube_row[0] + 1
+    tube = bank_tube_row[1]
+    row  = bank_tube_row[2]
+    value = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
+    preview_array[i] = value
+  ENDFOR
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
+  XDISPLAYFILE, TEXT = preview_array, $
+    GROUP=id, $
+    TITLE = 'Preview of ' + output_file_name[0]
+    
+  RETURN, 1
+END
+
 ;==============================================================================
 ;------------------------------------------------------------------------------
 PRO save_mask_build_gui_event, Event
@@ -118,6 +169,11 @@ PRO save_mask_build_gui_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ;preview button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='preview_mask_button'): BEGIN
+      result = preview_mask_file(Event)
     END
     
     ;save button
@@ -268,34 +324,6 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
     /EDITABLE,$
     /ALL_EVENTS,$
     XSIZE = 52)
-    
-  ;  ;recap base .....................................
-  ;  recap_base = WIDGET_BASE(wBase,$
-  ;    /COLUMN,$
-  ;    FRAME = 1)
-  ;
-  ;  recap1 = WIDGET_BASE(recap_base,$
-  ;    /ROW,$
-  ;    /ALIGN_LEFT)
-  ;
-  ;  label = WIDGET_LABEL(recap1,$
-  ;    VALUE = '     Path: ')
-  ;  value = WIDGET_LABEL(recap1,$
-  ;    VALUE = 'N/A',$
-  ;    /ALIGN_LEFT,$
-  ;    XSIZE = 300,$
-  ;    UNAME = 'recap_path_mask_file')
-  ;
-  ;  recap2 = WIDGET_BASE(recap_base,$
-  ;    /ROW)
-  ;
-  ;  label = WIDGET_LABEL(recap2,$
-  ;    VALUE = 'File Name: ')
-  ;  value = WIDGET_LABEL(recap2,$
-  ;    VALUE = 'N/A',$
-  ;    /ALIGN_LEFT,$
-  ;    XSIZE = 300,$
-  ;    UNAME = 'recap_file_name_mask_file')
     
   ;space
   space = WIDGET_LABEL(wBase,$
