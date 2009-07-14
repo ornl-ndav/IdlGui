@@ -85,6 +85,7 @@ cd, CurrentFolder
 .run plot_cncs_counts_vs_tof_info_base.pro
 .run plot_cncs_PlotMainPlot.pro
 .run plot_cncs_MainPlot.pro
+.run MakeGuiMainPlot_event.pro
 .run plot_cncs_display_buttons_main_plot.pro
 .run plot_cncs_update_selection_mode.pro
 .run plot_cncs_plot_scale.pro
@@ -92,8 +93,9 @@ cd, CurrentFolder
 .run plot_cncs_play_buttons.pro
 .run plot_cncs_masking_region.pro
 
-;save mask base
+;mask base
 .run plot_cncs_save_mask_base.pro
+.run plot_cncs_load_mask_base.pro
 
 ;bank plot base
 .run plot_cncs_PlotBank.pro
