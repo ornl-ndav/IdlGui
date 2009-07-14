@@ -87,9 +87,9 @@ PRO save_mask_build_gui_event, Event
     END
     
     ;file name widget_text
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_file_name'): BEGIN
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_file_name'): BEGIN
       ;validate_ok button
-      check_save_temperature_ok_button, Event
+      check_save_mask_ok_button, Event
     END
     
     ;cancel button
