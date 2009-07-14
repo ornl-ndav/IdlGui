@@ -264,7 +264,7 @@ FUNCTION getRow, Event, Y
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-;return the bank number
+;return the bank number, tube and row number
 FUNCTION getBankTube, Event
   X = Event.X
   Y = Event.Y
@@ -427,6 +427,13 @@ FUNCTION getPixelID, BankID, X, Y
   RETURN, pxOffset
 END
 
+;------------------------------------------------------------------------------
+;get pixelID using global tube (X) and row (Y) position
+FUNCTION getPixelID_from_row_and_tube, tube, row
+  pixelID = LONG(tube) * 128L + LONG(row)
+  RETURN, pixelID
+END
+
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get range of pixel selected
 FUNCTION getPixelIdRangeFromBankBase, BankID, xleft, yleft, xright, yright
@@ -568,8 +575,8 @@ END
 PRO add_element_to_array, array, element
 
   IF (N_ELEMENTS(array) EQ 0) THEN BEGIN
-  array = [element]
-  RETURN
+    array = [element]
+    RETURN
   ENDIF
   
   IF (array[0] NE '') THEN BEGIN
@@ -598,7 +605,7 @@ FUNCTIOn getArray, text_field
       from = FIX(split_dash[0])
       to   = FIX(split_dash[1])
       FOR i=from,to DO BEGIN
-      add_element_to_array, big_array, i
+        add_element_to_array, big_array, i
       ENDFOR
     ENDELSE
     

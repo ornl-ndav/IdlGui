@@ -143,6 +143,125 @@ FUNCTION getPixelList_from_rowArray, row_array
 END
 
 ;------------------------------------------------------------------------------
+;return the bank number, tube and row number
+FUNCTION get_bank_tube_row, Event, X, Y
+  column_tube = getBankTubeMainPlot(X)
+  row = getRow(Event, Y)
+  IF (column_tube[0] NE 0 AND $
+    row NE -1) THEN BEGIN ;we click inside a bank
+    RETURN, [STRCOMPRESS(column_tube[0],/REMOVE_ALL),$
+      STRCOMPRESS(column_tube[1],/REMOVE_ALL),$
+      STRCOMPRESS(row,/REMOVE_ALL)]
+  ENDIF ELSE BEGIN ;if we click outside a bank
+    RETURN, ['','','']
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getPixelIdList,Event, xmin=xmin, xmax = xmax, $
+    ymin = ymin, ymax = ymax
+    
+  nbr_x = xmax - xmin + 1
+  nbr_y = ymax - ymin + 1
+  
+  pixelid_list = LONARR(nbr_x * nbr_y)
+  index = 0
+  FOR x=xmin,xmax DO BEGIN
+    FOR y=ymin,ymax DO BEGIN
+      pixelid = getPixelID_from_row_and_tube(x,y)
+      pixelid_list[index] = pixelid
+      index++
+    ENDFOR
+  ENDFOR
+  
+RETURN, pixelid_list  
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getPixelList_from_masking_selection, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  
+  X1 = (*global).X1_masking
+  Y1 = (*global).Y1_masking
+  X2 = (*global).X2_masking
+  Y2 = (*global).Y2_masking
+  
+  ;  Xmin = MIN([X1,X2],MAX=Xmax)
+  ;  Ymin = MIN([Y1,Y2],MAX=Ymax)
+  
+  bank_tube_row_1 = get_bank_tube_row(Event, X1, Y1)
+  bank_tube_row_2 = get_bank_tube_row(Event, X2, Y2)
+  
+  bank_1       = LONG(bank_tube_row_1[0])
+  local_tube_1 = (bank_tube_row_1[1]) ;local because goes from 0->7
+  row_1        = LONG(bank_tube_row_1[2])
+  
+  bank_2       = LONG(bank_tube_row_2[0])
+  local_tube_2 = (bank_tube_row_2[1])
+  row_2        = LONG(bank_tube_row_2[2])
+  
+  IF (X1 LT X2) THEN BEGIN
+  
+    local_tube_min = local_tube_1
+    local_tube_max = local_tube_2
+    bank_min       = bank_1
+    bank_max       = bank_2
+    
+    ;make sure selection is from inside a bank to inside a bank
+    IF (local_tube_min EQ '') THEN BEGIN
+      local_tube_min = 0
+      X1 += (*global).Xfactor
+      bank_tube_row_1 = get_bank_tube_row(Event, X1, Y1)
+      bank_min = bank_tube_row_1[0]
+    ENDIF
+    
+    IF (local_tube_max EQ '') THEN BEGIN
+      local_tube_max = 7
+      X2 -= (*global).Xfactor
+      bank_tube_row_2 = get_bank_tube_row(Event, X2, Y2)
+      bank_max = bank_tube_row_2[0]
+    ENDIF
+    
+  ENDIF ELSE BEGIN
+  
+    local_tube_min = local_tube_2
+    local_tube_max = local_tube_1
+    bank_min       = bank_2
+    bank_max       = bank_1
+    
+    ;make sure selection is from inside a bank to inside a bank
+    IF (local_tube_min EQ '') THEN BEGIN
+      local_tube_min = 0
+      X2 += (*global).Xfactor
+      bank_tube_row_2 = get_bank_tube_row(Event, X2, Y2)
+      bank_min = bank_tube_row_2[0]
+    ENDIF
+    
+    IF (local_tube_max EQ '') THEN BEGIN
+      local_tube_max = 7
+      X1 -= (*global).Xfactor
+      bank_tube_row_1 = get_bank_tube_row(Event, X1, Y1)
+      bank_max = bank_tube_row_1[0]
+    ENDIF
+    
+  ENDELSE
+  
+  tube_min = FIX(local_tube_min) + (FIX(bank_min)-1) * 8L
+  tube_max = FIX(local_tube_max) + (FIX(bank_max)-1) * 8L
+  row_min = MIN([row_1,row_2],MAX=row_max)
+  
+  pixelid_list = getPixelIdList(Event, xmin=tube_min, $
+    xmax = tube_max, $
+    ymin = row_min, $
+    ymax = row_max)
+    
+  RETURN, pixelid_list
+  
+END
+
+;------------------------------------------------------------------------------
 PRO display_excluded_pixels, Event, excluded_pixel_array
 
   excluded_pixels_index = WHERE(excluded_pixel_array EQ 1, sz)
@@ -228,6 +347,29 @@ PRO saving_masking_background, Event
   background = TVRD(TRUE=3)
   DEVICE, copy=[0,0,1867L,4*128L+1,0,0,id_value]
   (*(*global).background_for_masking) = background
+  
+END
+
+;------------------------------------------------------------------------------
+PRO create_masking_region_from_manual_selection, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  X1 = (*global).X1_masking
+  Y1 = (*global).Y1_masking
+  X2 = (*global).X2_masking
+  Y2 = (*global).Y2_masking
+  
+  IF (X1 EQ X2 AND Y1 EQ Y2) THEN RETURN
+  
+  pixel_index = getPixelList_from_masking_selection(Event)
+  excluded_pixel_array[pixel_index] = 1
+  
+  (*(*global).excluded_pixel_array) = excluded_pixel_array
+  display_excluded_pixels, Event, excluded_pixel_array
+  
+  ;save background in case manual selection is next
+  saving_masking_background, Event
   
 END
 
