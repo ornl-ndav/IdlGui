@@ -588,7 +588,7 @@ PRO add_element_to_array, array, element
 END
 
 ;------------------------------------------------------------------------------
-FUNCTIOn getArray, text_field
+FUNCTION getArray, text_field
 
   s_text_field = STRCOMPRESS(text_field,/REMOVE_ALL)
   IF (s_text_field EQ '') THEN RETURN, ['']
@@ -613,4 +613,11 @@ FUNCTIOn getArray, text_field
   ENDWHILE
   
   RETURN, FIX(big_array[SORT(big_array)])
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getButtonValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
 END
