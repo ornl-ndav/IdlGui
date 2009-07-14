@@ -476,7 +476,12 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
-    
+    ;tube cw_field
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='selection_tube'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
+      refresh_masking_region, Event
+      WIDGET_CONTROL, HOURGLASS=0
+    END
     
     
     
