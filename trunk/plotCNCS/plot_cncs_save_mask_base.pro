@@ -93,8 +93,8 @@ PRO save_mask_build_gui_event, Event
     END
     
     ;cancel button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_cancel_button'): BEGIN
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_temperature_base_uname')
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='save_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
     
@@ -298,7 +298,7 @@ PRO save_mask_build_gui, wBase, main_base_geometry, path
   ok = WIDGET_BUTTON(row2,$
     VALUE = '  CREATE MASKING FILE  ',$
     UNAME = 'save_mask_ok_button',$
-    SENSITIVE = 1)
+    SENSITIVE = 0)
     
   WIDGET_CONTROL, wBase, /REALIZE
   
