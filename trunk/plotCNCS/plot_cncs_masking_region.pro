@@ -54,7 +54,7 @@ FUNCTION getx0y0x1y1, Event, xy
   
   ;get ymin and ymax
   ymin = ymin * Yfactor
-  ymax = (ymin+1) + Yfactor
+  ymax = ymin + Yfactor
   
   ;get xmin and xmax
   bank_nbr = xmin / 8
@@ -135,14 +135,27 @@ PRO refresh_masking_region, Event
   
   excluded_pixel_array = (*(*global).excluded_pixel_array)
   
+  ;retrieve list of pixel to exclude from pixelid cw_field
+  pixelid_field = getTextFieldValue(Event,'selection_pixelid')
+  IF (STRCOMPRESS(pixelid_field,/REMOVE_ALL) NE '') THEN BEGIN
+    pixelid_array = getArray(pixelid_field)
+    excluded_pixel_array[pixelid_array] = 1
+    ;remove contains of cw_field pixelid
+    putTextFieldValue, Event, 'selection_pixelid', ''
+  ENDIF
+  
   ;retrieve list of pixel to exclude from Bank cw_field
   bank_field = getTextFieldValue(Event,'selection_bank')
-  bank_array = getArray(bank_field)
-  ;shift bank array number to the left as bank 1 -> 0 for processing purpose only
-  bank_array =  bank_array - 1
-  pixel_index = getPixelList_from_bankArray(bank_array)
-  excluded_pixel_array[pixel_index] = 1
-  putTextFieldValue, Event, 'selection_bank', '' ;remove contain of cw_field bank
+  IF (STRCOMPRESS(bank_field,/REMOVE_ALL) NE '') THEN BEGIN
+    bank_array = getArray(bank_field)
+    ;shift bank array number to the left as bank
+    ;1 -> 0 for processing purpose only
+    bank_array =  bank_array - 1
+    pixel_index = getPixelList_from_bankArray(bank_array)
+    excluded_pixel_array[pixel_index] = 1
+    ;remove contains of cw_field bank
+    putTextFieldValue, Event, 'selection_bank', ''
+  ENDIF
   
   (*(*global).excluded_pixel_array) = excluded_pixel_array
   display_excluded_pixels, Event, excluded_pixel_array
