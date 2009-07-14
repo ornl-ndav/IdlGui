@@ -82,8 +82,8 @@ PRO save_mask_build_gui_event, Event
     END
     
     ;path button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_path_button'): BEGIN
-      save_temperature_path, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_path_button'): BEGIN
+      save_mask_path, Event
     END
     
     ;file name widget_text
@@ -171,26 +171,25 @@ PRO check_save_mask_ok_button, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_temperature_path, Event
+PRO save_mask_path, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
-  path = (*global_temperature).temperature_path
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_base_uname')
+  global = (*global_mask).global
+  path = (*global).file_path
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
   new_path = DIALOG_PICKFILE(DIALOG_PARENT=id,$
     PATH = path, $
     /DIRECTORY)
     
   IF (new_path NE '') THEN BEGIN
   
-    main_event = (*global_temperature).main_event
-    WIDGET_CONTROL,main_event.top,GET_UVALUE=global
-    (*global).temperature_path = new_path
-    (*global_temperature).temperature_path = new_path
+    (*global).file_path = new_path
     
     ;file dir
-    putButtonValue, Event, 'save_temperature_path_button', new_path
+    putButtonValue, Event, 'save_mask_path_button', new_path
     
   ENDIF
   
