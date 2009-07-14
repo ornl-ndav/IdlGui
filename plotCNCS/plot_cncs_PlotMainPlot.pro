@@ -974,6 +974,8 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     counts_vs_tof_for_play: PTR_NEW(0L),$
     background:            PTR_NEW(0L),$
     
+    file_path:            '~/results/',$
+    
     pause_button_activated: 0b,$
     bin_min:               0L,$
     bin_max:               0L,$
@@ -1132,6 +1134,8 @@ PRO PlotMainPlotFromNexus, NexusFileName
     
     mode:                 'nexus',$
     selection_mode:       'selection',$ ;selection or masking
+    
+    file_path:            '~/results/',$
     
     pause_button_activated: 0b,$
     bin_min:               0L,$
