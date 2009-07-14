@@ -72,13 +72,13 @@ END
 PRO save_mask_build_gui_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
   CASE Event.id OF
   
     ;browse button
-    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_browse_button'): BEGIN
-      save_temperature_browse, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_browse_button'): BEGIN
+      save_mask_browse_button, Event
     END
     
     ;path button
@@ -122,13 +122,15 @@ PRO save_mask_build_gui_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_temperature_browse, Event
+PRO save_mask_browse_button, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_temperature
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
   
-  path = (*global_temperature).temperature_path
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_temperature_base_uname')
+  global = (*global_mask).global
+  path = (*global).file_path
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='save_mask_base_uname')
   file = DIALOG_PICKFILE(DIALOG_PARENT=id,$
     /WRITE,$
     PATH = path, $
@@ -137,35 +139,34 @@ PRO save_temperature_browse, Event
     
   IF (file[0] NE '') THEN BEGIN
   
-    IF (new_path NE path ) THEN $
-      (*global_temperature).temperature_path = new_path
+    IF (new_path NE path ) THEN (*global).file_path = new_path
       
     ;file dir
-    putButtonValue, Event, 'save_temperature_path_button', new_path
+    putButtonValue, Event, 'save_mask_path_button', new_path
     
     ;file name
     file_name = FILE_BASENAME(file[0])
-    putValue, Event, 'save_temperature_file_name', file_name
+    putTextFieldValue, Event, 'save_mask_file_name', file_name
     
     ;validate_ok button
-    check_save_temperature_ok_button, Event
+    check_save_mask_ok_button, Event
     
   ENDIF
   
 END
 
 ;------------------------------------------------------------------------------
-PRO check_save_temperature_ok_button, Event
+PRO check_save_mask_ok_button, Event
 
   ;check that there is a file name
-  file_name = getTextFieldValue(Event,'save_temperature_file_name')
+  file_name = getTextFieldValue(Event,'save_mask_file_name')
   file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
   IF (file_name NE '') THEN BEGIN
     status = 1
   ENDIF ELSE BEGIN
     status = 0
   ENDELSE
-  activate_widget, Event, 'save_temperature_ok_button', status
+  activateWidget, Event, 'save_mask_ok_button', status
   
 END
 
@@ -196,9 +197,8 @@ PRO save_temperature_path, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO save_mask_build_gui, wBase, $
-    main_base_geometry
-    
+PRO save_mask_build_gui, wBase, main_base_geometry, path
+
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
@@ -230,7 +230,7 @@ PRO save_mask_build_gui, wBase, $
     
   ;path
   path = WIDGET_BUTTON(wBase,$
-    VALUE = temperature_path,$
+    VALUE = path,$
     XSIZE = 400,$
     UNAME = 'save_mask_path_button')
     
@@ -248,33 +248,33 @@ PRO save_mask_build_gui, wBase, $
     /ALL_EVENTS,$
     XSIZE = 52)
     
-  ;recap base .....................................
-  recap_base = WIDGET_BASE(wBase,$
-    /COLUMN,$
-    FRAME = 1)
-    
-  recap1 = WIDGET_BASE(recap_base,$
-    /ROW,$
-    /ALIGN_LEFT)
-    
-  label = WIDGET_LABEL(recap1,$
-    VALUE = '     Path: ')
-  value = WIDGET_LABEL(recap1,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT,$
-    XSIZE = 300,$
-    UNAME = 'recap_path_mask_file')
-    
-  recap2 = WIDGET_BASE(recap_base,$
-    /ROW)
-    
-  label = WIDGET_LABEL(recap2,$
-    VALUE = 'File Name: ')
-  value = WIDGET_LABEL(recap2,$
-    VALUE = 'N/A',$
-    /ALIGN_LEFT,$
-    XSIZE = 300,$
-    UNAME = 'recap_file_name_mask_file')
+  ;  ;recap base .....................................
+  ;  recap_base = WIDGET_BASE(wBase,$
+  ;    /COLUMN,$
+  ;    FRAME = 1)
+  ;
+  ;  recap1 = WIDGET_BASE(recap_base,$
+  ;    /ROW,$
+  ;    /ALIGN_LEFT)
+  ;
+  ;  label = WIDGET_LABEL(recap1,$
+  ;    VALUE = '     Path: ')
+  ;  value = WIDGET_LABEL(recap1,$
+  ;    VALUE = 'N/A',$
+  ;    /ALIGN_LEFT,$
+  ;    XSIZE = 300,$
+  ;    UNAME = 'recap_path_mask_file')
+  ;
+  ;  recap2 = WIDGET_BASE(recap_base,$
+  ;    /ROW)
+  ;
+  ;  label = WIDGET_LABEL(recap2,$
+  ;    VALUE = 'File Name: ')
+  ;  value = WIDGET_LABEL(recap2,$
+  ;    VALUE = 'N/A',$
+  ;    /ALIGN_LEFT,$
+  ;    XSIZE = 300,$
+  ;    UNAME = 'recap_file_name_mask_file')
     
   ;space
   space = WIDGET_LABEL(wBase,$
@@ -314,28 +314,21 @@ PRO save_mask_base, main_event
   ;get global structure
   WIDGET_CONTROL,main_event.top,GET_UVALUE=global
   
-  ;  temperature_path = (*global).temperature_path
-  
-  ;determine default output file name for file
-  ;  table = getTableValue(main_event,'tab2_table_uname')
-  ;  nbr_row = (SIZE(table))(2)
-  ;  Tmin = STRING(table[2,0],format='(f10.1)')
-  ;  Tmax = STRING(table[2,nbr_row-1],format='(f10.1)')
-  ;  sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
-  ;  sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
-  ;  output_file_name = 'cloopes_temp_from_' + sTmin + '_to_' + sTmax + '.txt'
+  mask_path = (*global).file_path
   
   ;build gui
   wBase = ''
   save_mask_build_gui, wBase, $
-    main_base_geometry
+    main_base_geometry, $
+    mask_path
   ;    temperature_path, $
   ;    output_file_name
     
   global_mask = PTR_NEW({ wbase: wbase,$
-    main_event:       main_event})
+    global: global,$
+    main_event: main_event})
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_temperature
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
   XMANAGER, "save_mask_build_gui", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
