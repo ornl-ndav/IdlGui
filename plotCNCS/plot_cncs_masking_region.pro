@@ -58,7 +58,6 @@ FUNCTION getx0y0x1y1, Event, xy
   
   ;get xmin and xmax
   bank_nbr = xmin / 8
-  print, bank_nbr
   ;if bank >=37, then make two more shifts to the right
   IF (bank_nbr GE 36) THEN BEGIN ;because banks have been shifted to the left
     bank_nbr += 2
@@ -143,7 +142,9 @@ PRO refresh_masking_region, Event
   bank_array =  bank_array - 1
   pixel_index = getPixelList_from_bankArray(bank_array)
   excluded_pixel_array[pixel_index] = 1
+  putTextFieldValue, Event, 'selection_bank', '' ;remove contain of cw_field bank
   
+  (*(*global).excluded_pixel_array) = excluded_pixel_array
   display_excluded_pixels, Event, excluded_pixel_array
   
 END
