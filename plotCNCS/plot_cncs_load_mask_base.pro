@@ -289,10 +289,13 @@ END
 ;------------------------------------------------------------------------------
 PRO check_load_mask_ok_button, Event
 
+  ;get input path
+  path = getButtonValue(Event,'load_mask_path_button')
+
   ;check that there is a file name
   file_name = getTextFieldValue(Event,'load_mask_file_name')
   file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
-  IF (file_name NE '') THEN BEGIN
+  IF (FILE_TEST(path+file_name)) THEN BEGIN
     status = 1
   ENDIF ELSE BEGIN
     status = 0
