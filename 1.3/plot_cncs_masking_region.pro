@@ -335,7 +335,7 @@ PRO plot_masking_box, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO saving_masking_background, Event
+PRO saving_background, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global
   
@@ -346,7 +346,7 @@ PRO saving_masking_background, Event
   
   background = TVRD(TRUE=3)
   DEVICE, copy=[0,0,1867L,4*128L+1,0,0,id_value]
-  (*(*global).background_for_masking) = background
+  (*(*global).background_main_plot) = background
   
 END
 
@@ -369,7 +369,7 @@ PRO create_masking_region_from_manual_selection, Event
   display_excluded_pixels, Event, excluded_pixel_array
   
   ;save background in case manual selection is next
-  saving_masking_background, Event
+  saving_background, Event
   
 END
 
@@ -427,7 +427,7 @@ PRO refresh_masking_region, Event
   display_excluded_pixels, Event, excluded_pixel_array
   
   ;save background in case manual selection is next
-  saving_masking_background, Event
+  saving_background, Event
   
 END
 
