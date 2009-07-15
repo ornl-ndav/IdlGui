@@ -99,7 +99,7 @@ FUNCTION preview_mask_file, Event
   excluded_pixel_array = (*(*global).excluded_pixel_array)
   
   error = 0
-  ;  CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0

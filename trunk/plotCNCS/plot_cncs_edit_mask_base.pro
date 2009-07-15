@@ -32,6 +32,28 @@
 ;
 ;==============================================================================
 
+FUNCTION get_bank_tube_row_format, excluded_pixel_array
+
+  list_of_pixels = WHERE(excluded_pixel_array EQ 1, nbr)
+  IF (nbr EQ 0) THEN RETURN, ['']
+  nbr_pixels = N_ELEMENTS(list_of_pixels)
+  preview_array = STRARR(nbr_pixels)
+  FOR i=0,(nbr_pixels-1) DO BEGIN
+    pixelid = list_of_pixels[i]
+    bank_tube_row = getBankTubeRow_from_pixelid(pixelid)
+    bank = bank_tube_row[0] + 1
+    tube = bank_tube_row[1]
+    row  = bank_tube_row[2]
+    value = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
+    value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
+    preview_array[i] = value
+  ENDFOR
+
+RETURN, preview_array
+END
+
+;------------------------------------------------------------------------------
 PRO edit_mask_build_gui_event, Event
 
   ;get global structure
@@ -44,7 +66,7 @@ PRO edit_mask_build_gui_event, Event
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='edit_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END
-
+    
     ELSE:
     
   ENDCASE
@@ -52,7 +74,7 @@ PRO edit_mask_build_gui_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO edit_mask_build_gui, wBase, main_base_geometry
+PRO edit_mask_build_gui, wBase, main_base_geometry, preview_pixel_array
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -73,7 +95,7 @@ PRO edit_mask_build_gui, wBase, main_base_geometry
     GROUP_LEADER = ourGroup,$
     /COLUMN)
     
-    label = WIDGET_LABEL(wBase,$
+  label = WIDGET_LABEL(wBase,$
     VALUE = 'Format:  bank_tube_row')
     
   text = WIDGET_TEXT(wBase,$
@@ -81,6 +103,7 @@ PRO edit_mask_build_gui, wBase, main_base_geometry
     YSIZE = 50,$
     /EDITABLE,$
     /SCROLL,$
+    VALUE = STRCOMPRESS(preview_pixel_array,/REMOVE_ALL),$
     UNAME = 'edit_mask_text_field')
     
   row2 = WIDGET_BASE(wBase,$
@@ -114,14 +137,16 @@ PRO edit_mask_base, main_event
   ;get global structure
   WIDGET_CONTROL,main_event.top,GET_UVALUE=global
   
-  mask_path = (*global).file_path
+  excluded_pixel_array = (*(*global).excluded_pixel_array)
+  preview_pixel_array = get_bank_tube_row_format(excluded_pixel_array)
   
   ;build gui
   wBase = ''
   edit_mask_build_gui, wBase, $
-    main_base_geometry
+    main_base_geometry, $
+    preview_pixel_array
     
-    global_mask = PTR_NEW({ wbase: wbase,$
+  global_mask = PTR_NEW({ wbase: wbase,$
     global: global,$
     main_event: main_event})
     
