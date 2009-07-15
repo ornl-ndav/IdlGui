@@ -69,7 +69,6 @@ FUNCTION get_strarr_from_file, input_file_name
     RETURN, ['']
   ENDIF
   
-  help, input_file_name
   OPENR, unit, input_file_name, /GET_LUN
   NbrLine   = FILE_LINES(input_file_name)
   FileArray = STRARR(NbrLine)

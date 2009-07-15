@@ -70,9 +70,9 @@ PRO apply_new_pixelid, Event
     message_text = 'Masking file format is wrong !'
     title = 'ERROR!'
     result = DIALOG_MESSAGE(message_text,$
-    /ERROR,$
-    DIALOG_PARENT=id,$
-    TITLE = title)
+      /ERROR,$
+      DIALOG_PARENT=id,$
+      TITLE = title)
     RETURN
   ENDIF
   
@@ -83,6 +83,13 @@ PRO apply_new_pixelid, Event
   (*(*global).excluded_pixel_array) = excluded_pixel_array
   replot_main_plot_with_scale, main_event, without_scale=1
   refresh_masking_region, main_event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_new_pixelid, Event
+
+  apply_new_pixelid, Event
   
 END
 
@@ -103,6 +110,13 @@ PRO edit_mask_build_gui_event, Event
     ;apply changed
     WIDGET_INFO(Event.top, FIND_BY_UNAME='edit_mask_apply_button'): BEGIN
       apply_new_pixelid, Event
+    END
+    
+    ;save changed and quit
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='edit_mask_save_button'): BEGIN
+      save_new_pixelid, Event
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='edit_mask_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
     END
     
     ELSE:
@@ -167,7 +181,7 @@ PRO edit_mask_build_gui, wBase, main_base_geometry, preview_pixel_array
     
   ok = WIDGET_BUTTON(row2,$
     VALUE = 'SAVE CHANGES and QUIT',$
-    UNAME = 'edit_mask_ok_button')
+    UNAME = 'edit_mask_save_button')
     
   WIDGET_CONTROL, wBase, /REALIZE
   
