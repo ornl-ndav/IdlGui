@@ -32,21 +32,25 @@
 ;
 ;==============================================================================
 
-; This function outputs the ucams of the user by
-; just parsing the home directory path
-function get_ucams
+;This function returns the ucams of the user
+FUNCTION get_ucams
+;ucams_error = 0
+;CATCH, ucams_error
+;IF (ucams_error NE 0) THEN BEGIN
+;    CATCH, /CANCEL
+;    RETURN, 'Undefined'
+;ENDIF ELSE BEGIN
+;    spawn, '/usr/bin/whoami', listening
+;ENDELSE
+;RETURN, listening[0]
+RETURN, GETENV('USER')
+END
 
-cd , "~/", CURRENT=path
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-cd, path
-return, ucams
+;;
+; \defgroup get_file_name_only; \{
+;;
 
-end
-
-
+;;
 ; \brief This function parses the full path
 ; of the file and output the file name only
 ;
@@ -63,6 +67,11 @@ file_name_only = file_name[length-1]
 return, file_name_only
 
 end
+; \}
+;;     //end of file_name_only group
+
+
+
 
 ;this function will remove the last part and will
 ;give back the path
@@ -77,6 +86,15 @@ endfor
 return, path
 end
 
+
+
+
+;;
+; \defgroup modified_string
+; \{
+;;
+
+;;
 ; \brief This function will replace in the first
 ; string defined, the string given in second argument
 ; by the string given as the third argument
@@ -105,6 +123,18 @@ output_string = string_matrix[0] + new_string
 return, output_file_name
 
 end
+; \}
+;;     //end of modified_string
+
+
+
+
+
+
+;;
+; \defgroup output_into_text_box
+; \{
+;;
 
 ;;
 ; \brief This function output into the 
@@ -144,7 +174,20 @@ if ((*global).ucams EQ 'ceh' && uname_destination EQ 'log_book_text') then begin
 endif
 
 end
+; \}
+;;     //end of output_into_text_box
 
+
+
+
+
+
+;;
+; \defgroup output_error_into_text_box
+; \{
+;;
+
+;;
 ; \brief This function output into the 
 ; text box window the information given as an
 ; argument
@@ -182,6 +225,112 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
 endif
 
 end
+; \}
+;;     //end of output_error
+
+
+
+
+
+
+;;
+; \defgroup check_access
+; \{
+;;
+
+;;
+; \brief This function check if the ucams
+; given in the command line has access to 
+; the instrument tool is requesting
+;
+; \param event (INPUT) event structure
+; \param instrument (INPUT) name of the instrument
+; \param ucams (INPUT) ucams of the user
+function check_access, Event, instrument, ucams
+
+list_of_instrument = ['REF_L', 'REF_M', 'BSS']
+
+;0:j35:jean$
+;1:pf9:pete
+;2:2zr:michael
+;3:mid:steve
+;4:1qg:rick
+;5:ha9:haile
+;6:vyi:frank
+;7:vuk:john 
+;8:x4t:xiadong
+;9:ele:eugene
+;10:ceh:candice
+;11:Jim green (Hassina colaborator)
+;12:andre Parizzi
+
+list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele','ceh','ks6']
+
+;check if ucams is in the list
+ucams_index=-1
+for i =0, 11 do begin
+   if (ucams EQ list_of_ucams[i]) then begin
+     ucams_index = i
+     break 
+   endif
+endfor
+
+;check if user is autorized for this instrument
+CASE instrument OF		
+   ;REF_L
+   0: CASE  ucams_index OF
+        -1:
+	0: 		;authorized
+	1: 		;authorized
+	2: 		;authorized
+	3: 		;authorized
+	4: ucams_index=-1	;unauthorized
+	5: ucams_index=-1	;unauthorized
+	6: ucams_index=-1	;unauthorized
+	7: 		;authorized
+	8: 		;authorized
+	9: ucams_index=-1	;unauthorized
+        10:
+        11:
+      ENDCASE
+   ;REF_M
+   1: CASE ucams_index OF
+	-1:
+	0: 
+	1: 
+	2: 
+	3: 
+	4: 
+	5: 
+        6: 
+	7: ucams_index=-1
+        8: ucams_index=-1
+        9: ucams_index=-1
+        10: ucams_index=-1
+        11:
+    ENDCASE
+    2: case ucams_index of
+        -1:
+        0:
+        1:
+        2:
+        3:
+        9:
+    endcase
+        ENDCASE	 
+
+;give access to everybody
+ucams_index = 0
+
+RETURN, ucams_index
+ 
+end
+; \}
+;;     //end of check_access
+
+
+
+
 
 ;;
 ; \defgroup remove_star
@@ -202,7 +351,20 @@ new_value = strsplit(value,'\*',/extract,/regex)
 
 return, new_value
 end
+; \}
+;;     //end of remove_star_from_string
 
+
+
+
+
+
+;;
+; \defgroup produce_output_file_name
+; \{
+;;
+
+;;
 ; \brief This function produces the output
 ; file name
 ;
@@ -225,8 +387,22 @@ output_file_name += "_" + run_number + extension
 
 return, output_file_name 
 end
+; \}
+;;     //end of produce_output_file_name
 
-;
+
+
+
+
+
+
+
+
+; \defgroup output_into_log_book_file
+; \{
+;;
+
+;;
 ; \brief This function output the string
 ; into a predefined file (just for debugging)
 ;
@@ -248,7 +424,21 @@ close,1
 free_lun,1
 
 end
+; \}
+;;     //end of output_into_log_book_file
 
+
+
+
+
+
+
+
+; \defgroup create_tmp_folder
+; \{
+;;
+
+;;
 ; \brief This function creates the temporary
 ; folder
 ;
@@ -261,7 +451,19 @@ spawn, cmd_mkdir, listening, err_listening
 
 return, [listening, err_listening]
 end
+; \}
+;;     //end of create_tmp_folder
 
+
+
+
+
+
+; \defgroup replace_string
+; \{
+;;
+
+;;
 ; \brief This function replace in the string provided
 ; the first string by the second
 ; folder
@@ -280,7 +482,18 @@ full_neutron_event_file_name += string_2
 
 return, full_neutron_event_file_name 
 end
+; \}
+;;     //end of replace_string
 
+
+
+
+
+; \defgroup get_min_run_number
+; \{
+;;
+
+;;
 ; \brief This function output the minimum
 ; run number from the list
 ;
@@ -294,3 +507,8 @@ run_number_min = MIN(runs_and_full_path[*,0])
 
 return, strcompress(run_number_min,/remove_all)
 end
+
+
+;-------------------------------------------------------------------------------
+PRO system_utilities
+END
