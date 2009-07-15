@@ -49,8 +49,41 @@ FUNCTION get_bank_tube_row_format, excluded_pixel_array
     value += '_' + STRCOMPRESS(row,/REMOVE_ALL)
     preview_array[i] = value
   ENDFOR
+  
+  RETURN, preview_array
+END
 
-RETURN, preview_array
+;------------------------------------------------------------------------------
+PRO apply_new_pixelid, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
+  
+  global = (*global_mask).global
+  main_event = (*global_mask).main_event
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='edit_mask_base_uname')
+  
+  pixelid_list = getTextFieldValue(Event,'edit_mask_text_field')
+  bank_tube_row_array = get_bank_tube_row_array(pixelid_list)
+  IF (bank_tube_row_array[0,0] EQ '') THEN BEGIN
+    message_text = 'Masking file format is wrong !'
+    title = 'ERROR!'
+    result = DIALOG_MESSAGE(message_text,$
+    /ERROR,$
+    DIALOG_PARENT=id,$
+    TITLE = title)
+    RETURN
+  ENDIF
+  
+  pixelid_list = get_list_of_pixeldID(bank_tube_row_array)
+  excluded_pixel_array = INTARR(128L * 400L)
+  excluded_pixel_array[pixelid_list] = 1
+  
+  (*(*global).excluded_pixel_array) = excluded_pixel_array
+  replot_main_plot_with_scale, main_event, without_scale=1
+  refresh_masking_region, main_event
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -65,6 +98,11 @@ PRO edit_mask_build_gui_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='edit_mask_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='edit_mask_base_uname')
       WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ;apply changed
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='edit_mask_apply_button'): BEGIN
+      apply_new_pixelid, Event
     END
     
     ELSE:
@@ -96,7 +134,14 @@ PRO edit_mask_build_gui, wBase, main_base_geometry, preview_pixel_array
     /COLUMN)
     
   label = WIDGET_LABEL(wBase,$
-    VALUE = 'Format:  bank_tube_row')
+    VALUE = 'Input example:  bankB_T_R',$
+    FRAME = 1)
+  label = WIDGET_LABEL(wBase,$
+    VALUE = 'with:  B bank number (1-50)')
+  label = WIDGET_LABEL(wBase, $
+    VALUE = '       T tube number (0-7)')
+  label = WIDGET_LABEL(wBase, $
+    VALUE = '       R Row number (0-127)')
     
   text = WIDGET_TEXT(wBase,$
     XSIZE = 35,$
@@ -110,18 +155,18 @@ PRO edit_mask_build_gui, wBase, main_base_geometry, preview_pixel_array
     /ROW)
     
   cancel = WIDGET_BUTTON(row2,$
-    VALUE = ' CANCEL ',$
+    VALUE = 'CANCEL',$
     UNAME = 'edit_mask_cancel_button')
     
   space = WIDGET_LABEL(row2,$
-    VALUE = '      ')
+    VALUE = '  ')
     
   apply = WIDGET_BUTTON(row2,$
-    VALUE = ' APPLY CHANGES ',$
+    VALUE = 'APPLY CHANGES',$
     UNAME = 'edit_mask_apply_button')
     
   ok = WIDGET_BUTTON(row2,$
-    VALUE = '  OK  ',$
+    VALUE = 'SAVE CHANGES and QUIT',$
     UNAME = 'edit_mask_ok_button')
     
   WIDGET_CONTROL, wBase, /REALIZE
