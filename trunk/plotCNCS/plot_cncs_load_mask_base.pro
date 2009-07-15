@@ -147,6 +147,7 @@ FUNCTION load_mask_file, Event
   excluded_pixel_array[pixelid_list] = 1
   (*(*global).excluded_pixel_array) = excluded_pixel_array
   
+          replot_main_plot_with_scale, main_event, without_scale=1
   refresh_masking_region, main_event
   
   RETURN, 1
