@@ -681,6 +681,9 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
   ;plot das view of full instrument
   plotDASviewFullInstrument, Event, global1
   
+  local_event=0
+  saving_background, local_event, MAIN_BASE=wBase, GLOBAL=global1
+  
 END
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -811,6 +814,9 @@ PRO PlotMainPlotFromNexus, NexusFileName
   
   progressBar->Destroy
   OBJ_DESTROY, progressBar
+  
+  local_event=0
+  saving_background, local_event, MAIN_BASE=wBase, GLOBAL=global1
   
 END
 

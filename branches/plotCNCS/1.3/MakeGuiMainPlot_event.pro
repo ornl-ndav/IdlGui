@@ -210,7 +210,7 @@ PRO MakeGuiMainPLot_Event, event
           (*global1).left_pressed EQ 1) THEN BEGIN ;move
           (*global1).X2 = Event.x
           (*global1).Y2 = Event.y
-          replot_main_plot_with_scale, Event, without_scale=1
+          TV, (*(*global1).background_main_plot), true=3
           plot_selection_box, Event
         ENDIF
         

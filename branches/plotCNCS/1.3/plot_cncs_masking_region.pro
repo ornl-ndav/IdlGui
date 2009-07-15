@@ -174,7 +174,7 @@ FUNCTION getPixelIdList,Event, xmin=xmin, xmax = xmax, $
     ENDFOR
   ENDFOR
   
-RETURN, pixelid_list  
+  RETURN, pixelid_list
   
 END
 
@@ -335,12 +335,16 @@ PRO plot_masking_box, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO saving_background, Event
+PRO saving_background, Event, MAIN_BASE=main_base, GLOBAL=global
 
-  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_plot')
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global
+    ;select plot area
+    id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
+  ENDELSE
   
-  ;select plot area
-  id = WIDGET_INFO(Event.top,find_by_uname='main_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
