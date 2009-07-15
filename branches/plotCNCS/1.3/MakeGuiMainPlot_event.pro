@@ -49,6 +49,7 @@ PRO MakeGuiMainPLot_Event, event
         update_selection_masking_mode, Event, mode='selection'
         replot_main_plot_with_scale, Event, without_scale=1
         plot_selection_box, Event
+        saving_background, Event
       ENDIF
     END
     
@@ -65,7 +66,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
         ;save background in case manual selection is next
-        saving_masking_background, Event
+        saving_background, Event
       ENDIF
     END
     
@@ -78,6 +79,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
     END
     
     ;Counts max value
@@ -89,6 +91,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
     END
     
     ;reset scale
@@ -101,6 +104,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -114,6 +118,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -127,6 +132,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -140,6 +146,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -153,6 +160,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -234,7 +242,7 @@ PRO MakeGuiMainPLot_Event, event
           (*global1).left_pressed EQ 1) THEN BEGIN ;move with left pressed
           (*global1).X2_masking = Event.x
           (*global1).Y2_masking = Event.y
-          TV, (*(*global1).background_for_masking), true=3
+          TV, (*(*global1).background_main_plot), true=3
           plot_masking_box, Event
         ENDIF
         
@@ -261,6 +269,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -398,7 +407,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
-      
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -414,7 +423,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
-      
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -429,7 +438,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
-      
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -451,7 +460,7 @@ PRO MakeGuiMainPLot_Event, event
         excluded_pixel_array = (*(*global1).excluded_pixel_array)
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
-      
+      saving_background, Event
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -464,7 +473,7 @@ PRO MakeGuiMainPLot_Event, event
       replot_main_plot_with_scale, Event, without_scale=1
       display_excluded_pixels, Event, excluded_pixel_array
       ;save background in case manual selection is next
-      saving_masking_background, Event
+      saving_background, Event
     END
     
     ;load mask_button

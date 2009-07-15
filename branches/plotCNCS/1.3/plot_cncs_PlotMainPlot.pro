@@ -557,7 +557,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
     Y1_masking:            0L,$
     X2_masking:            0L,$
     Y2_masking:            0L,$
-    background_for_masking: PTR_NEW(0L),$
+    background_main_plot:  PTR_NEW(0L),$
     
     mode:                 '',$
     selection_mode:       'selection',$
@@ -715,7 +715,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
     Y1_masking:            0L,$
     X2_masking:            0L,$
     Y2_masking:            0L,$
-    background_for_masking: PTR_NEW(0L),$
+    background_main_plot:  PTR_NEW(0L),$
     
     pause_status:          0,$
     tof_array:             PTR_NEW(0L),$
