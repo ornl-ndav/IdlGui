@@ -32,15 +32,84 @@
 ;
 ;==============================================================================
 
-FUNCTION getBankTubeRow_from_pixelid, pixelid
+FUNCTION get_pixelid_from_BankTubeRow, bank=bank, tube=tube, row=row
 
-  tube_row = getXYfromPixelID(pixelid)
-  global_tube = tube_row[0]
-  tube = global_tube MOD 8L
-  row = tube_row[1]
-  bank = pixelid / 1024L
-  return, [bank, tube, row]
+  pixelid = (LONG(bank)-1) * 1024L
+  pixelid += LONG(tube) * 128L
+  pixelid += LONG(row)
+  RETURN, pixelID
+  
 END
+
+;------------------------------------------------------------------------------
+FUNCTION get_list_of_pixeldID, bank_tube_row_array
+
+  sz = N_ELEMENTS(bank_tube_row_array[0,*])
+  pixelid_list = LONARR(sz)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    bank = bank_tube_row_array[0,index]
+    tube = bank_tube_row_array[1,index]
+    row  = bank_tube_row_array[2,index]
+    pixelid = get_pixelid_from_BankTubeRow(bank=bank, tube=tube, row=row)
+    pixelid_list[index] = pixelid
+    index++
+  ENDWHILE
+  RETURN, pixelid_list
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_strarr_from_file, input_file_name
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['']
+  ENDIF
+  
+  help, input_file_name
+  OPENR, unit, input_file_name, /GET_LUN
+  NbrLine   = FILE_LINES(input_file_name)
+  FileArray = STRARR(NbrLine)
+  READF, unit, FileArray
+  FREE_LUN, unit
+  RETURN, FileArray
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_bank_tube_row_array, file_array
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['','','']
+  ENDIF
+  
+  sz = N_ELEMENTS(file_array)
+  bank_tube_row_array = STRARR(3,sz)
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+  
+    line_parsed = STRSPLIT(file_array[index],'_',/REGEX,/EXTRACT)
+    ;get tube
+    bank_tube_row_array[1,index] = line_parsed[1]
+    ;get row
+    bank_tube_row_array[2,index] = line_parsed[2]
+    ;get bank
+    bank_parsed = STRSPLIT(line_parsed[0],'bank',/REGEX,/EXTRACT)
+    bank_tube_row_array[0,index] = bank_parsed[0]
+    
+    index++
+  ENDWHILE
+  
+  RETURN, bank_tube_row_array
+  
+END
+
 
 ;------------------------------------------------------------------------------
 FUNCTION load_mask_file, Event
@@ -58,21 +127,27 @@ FUNCTION load_mask_file, Event
   input_file_name = path + file_name
   
   global = (*global_mask).global
+  main_event = (*global_mask).main_event
   excluded_pixel_array = INTARR(128L * 400L)
   
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
   ENDIF
   
-
-
-
-
-
-
+  file_array = get_strarr_from_file(input_file_name)
+  IF (file_array[0] EQ '') THEN RETURN, 0
+  
+  bank_tube_row_array = get_bank_tube_row_array(file_array)
+  IF (bank_tube_row_array[0,0] EQ '') THEN RETURN, 0
+  
+  pixelid_list = get_list_of_pixeldID(bank_tube_row_array)
+  excluded_pixel_array[pixelid_list] = 1
+  (*(*global).excluded_pixel_array) = excluded_pixel_array
+  
+  refresh_masking_region, main_event
   
   RETURN, 1
   
@@ -146,14 +221,25 @@ PRO load_mask_build_gui_event, Event
     
     ;load button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_ok_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       result = load_mask_file(Event)
+      WIDGET_CONTROL, HOURGLASS=0
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_mask_base_uname')
       IF (result EQ 1) THEN BEGIN
-        text = 'File ' + output_file_name + ' has been loaded with success!'
+        ;get input path
+        path = getButtonValue(Event,'load_mask_path_button')
+        ;get input file name
+        file_name = getTextFieldValue(Event,'load_mask_file_name')
+        ;input file name
+        input_file_name = path + file_name
+        text = 'File ' + input_file_name + ' has been loaded with success!'
         tmp = DIALOG_MESSAGE(text,$
+          DIALOG_PARENT=id,$
           /INFORMATION)
       ENDIF ELSE BEGIN
         text = 'Loading of masking file failed!'
         tmp = DIALOG_MESSAGE(text,$
+          DIALOG_PARENT=id,$
           /ERROR)
       ENDELSE
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='load_mask_base_uname')
