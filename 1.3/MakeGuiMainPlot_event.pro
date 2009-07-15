@@ -72,21 +72,35 @@ PRO MakeGuiMainPLot_Event, event
     ;Counts min value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_min_value'): BEGIN
       replot_main_plot_with_scale, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
     END
     
     ;Counts max value
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_base_max_value'): BEGIN
       replot_main_plot_with_scale, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
     END
     
     ;reset scale
     WIDGET_INFO(event.top, FIND_BY_UNAME='reset_scale'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event, reset_z_scale=1
-      ;replot_main_plot, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -94,7 +108,12 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_with_grid_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -102,7 +121,12 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_without_grid_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -110,8 +134,12 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_linear_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
-      ;replot_main_plot_with_scale, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -119,8 +147,12 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='main_plot_log_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       plot_main_plot_with_new_bin_range, Event
-      ;replot_main_plot_with_scale, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -223,7 +255,12 @@ PRO MakeGuiMainPLot_Event, event
     WIDGET_INFO(event.top, FIND_BY_UNAME='refresh_plot'): BEGIN
       WIDGET_CONTROL, /HOURGLASS
       replot_main_plot_with_scale, Event
-      plot_selection_box, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -355,6 +392,13 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, /HOURGLASS
       check_from_to_bin_input, Event
       change_from_and_to_bins, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
+      
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -364,6 +408,13 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, /HOURGLASS
       WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(1)
       change_from_and_to_bins, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
+      
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -372,6 +423,13 @@ PRO MakeGuiMainPLot_Event, event
       WIDGET_CONTROL, /HOURGLASS
       check_from_to_bin_input, Event
       change_from_and_to_bins, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
+      
       WIDGET_CONTROL, HOURGLASS=0
     END
     
@@ -387,6 +445,13 @@ PRO MakeGuiMainPLot_Event, event
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='to_bin')
       WIDGET_CONTROL, id, SET_VALUE = STRCOMPRESS(bin_max-1,/REMOVE_ALL)
       change_from_and_to_bins, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
+      
       WIDGET_CONTROL, HOURGLASS=0
     END
     
