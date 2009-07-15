@@ -407,6 +407,11 @@ PRO MakeGuiMainPLot_Event, event
       load_mask_base, Event
     END
     
+    ;edit mask button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='edit_roi_button'): BEGIN
+      edit_mask_base, Event
+    END
+    
     ;save mask button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='save_roi_button'): BEGIN
       save_mask_base, Event

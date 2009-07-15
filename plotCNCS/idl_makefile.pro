@@ -96,6 +96,7 @@ cd, CurrentFolder
 ;mask base
 .run plot_cncs_save_mask_base.pro
 .run plot_cncs_load_mask_base.pro
+.run plot_cncs_edit_mask_base.pro
 
 ;bank plot base
 .run plot_cncs_PlotBank.pro
