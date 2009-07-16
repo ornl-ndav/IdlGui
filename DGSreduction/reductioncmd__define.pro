@@ -99,6 +99,8 @@ PRO ReductionCmd::GetProperty, $
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -175,6 +177,8 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Qvector) NE 0 THEN Qvector = self.qvector 
   IF ARG_PRESENT(Fixed) NE 0 THEN Fixed = self.fixed 
   IF ARG_PRESENT(Split) NE 0 THEN Split = self.split 
+  IF ARG_PRESENT(Lo_Threshold) NE 0 THEN Lo_Threshold = self.lo_threshold
+  IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
   
@@ -243,6 +247,8 @@ PRO ReductionCmd::SetProperty, $
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -373,6 +379,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(qvector) NE 0 THEN self.qvector = Qvector
   IF N_ELEMENTS(fixed) NE 0 THEN self.fixed = Fixed
   IF N_ELEMENTS(split) NE 0 THEN self.split = Split
+  IF N_ELEMENTS(lo_threshold) NE 0 THEN self.lo_threshold = Lo_Threshold
+  IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
@@ -825,6 +833,8 @@ function ReductionCmd::Init, $
     Qvector=qvector, $                   ; Create Qvec mesh per energy slice
     Fixed=fixed, $                       ; dump Qvec info onto a fixed mesh
     Split=split, $                       ; split (distributed mode)
+    Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
+    Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
@@ -899,6 +909,8 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(qvector) EQ 0 THEN qvector = 0
   IF N_ELEMENTS(fixed) EQ 0 THEN fixed = 0
   IF N_ELEMENTS(split) EQ 0 THEN split = 0
+  IF N_ELEMENTS(lo_threshold) EQ 0 THEN lo_threshold = ""
+  IF N_ELEMENTS(hi_threshold) EQ 0 THEN hi_threshold = ""
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   
@@ -964,6 +976,8 @@ function ReductionCmd::Init, $
   self.qvector = qvector
   self.fixed = fixed
   self.split = split
+  self.lo_threshold = Lo_Threshold
+  self.hi_threshold = Hi_Threshold
   self.timing = timing
   self.jobs = jobs
   self.extra = PTR_NEW(extra)
@@ -1042,6 +1056,8 @@ pro ReductionCmd__Define
     qvector: 0L, $           ; Create Q vector meshes for each energy slice
     fixed: 0L, $             ; dump Qvector info onto a fixed mesh
     split: 0L, $             ; split (distributed mode)
+    hi_threshold: "", $      ; Threshold for pixel to be masked (default: infinity)
+    lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     extra: PTR_NEW() }       ; Extra keywords
