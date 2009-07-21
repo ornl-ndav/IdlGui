@@ -1,4 +1,5 @@
-;==============================================================================
+;+
+; :Copyright:
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,55 +29,44 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; :Author: scu (campbellsi@ornl.gov)
-; 
+; :Description:
+;    Returns the default SLURM queue name for a given instrument.
 ;
-;==============================================================================
+; :Params:
+;    instrument
+;
+; :Author: scu
+;-
+FUNCTION GetDefaultSlurmQueue, instrument
 
-;define path to dependencies and current folder
-CD,CURRENT=thisDirectory
+  IF N_ELEMENTS(instrument) EQ 0 THEN INSTRUMENT = ""
+  
+  defaultQueue = 'heaterq'
+  
+    case (STRUPCASE(instrument)) of
+      "ARCS": begin
+        queue = 'arcs'
+      end
+      "CNCS": begin
+        queue = 'cncsq'
+      end
+      "SEQUOIA": begin
+        queue = 'sequoiaq'
+      end
+      "MAPS": begin
+        queue = defaultQueue
+      end
+      "MARI": begin
+        queue = defaultQueue
+      end
+      "MERLIN": begin
+        queue = defaultQueue
+      end
+      else: begin
+        queue = defaultQueue
+      end
+    endcase  
 
-; Add all subdirectories onto the path
-newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
-;PREF_SET, 'IDL_PATH', newPath, /COMMIT
+  return, queue
 
-!PATH = newPath
-
-; Now we can just compile!
-
-.compile logger
-.compile error_message
-.compile get_ucams
-.compile formatbanknumber
-.compile construct_datapaths
-.compile getdetectorbankrange
-.compile GetDefaultSlurmQueue
-
-.compile monitorjob_events
-.compile monitorjob
-
-.compile load_parameters
-.compile save_parameters
-.compile dgsreduction_updategui
-.compile dgsr_updategui
-.compile dgsn_updategui
-.compile dgsreduction_save_defaults
-
-.compile dgsnorm_launchcollector
-.compile dgsnorm_events
-.compile dgsreduction_events
-.compile dgsreduction_tlb_events
-.compile dgsreduction_launchcollector
-.compile dgsreduction_launchjobmonitor
-.compile dgsreduction_saveparameters
-.compile dgsreduction_loadparameters
-.compile dgsreduction_exportscript
-.compile make_reduction_tab
-.compile make_vanmask_tab
-.compile dgsreduction
-.compile reductioncmd__define
-.compile normcmd__define
-
-resolve_all
-
-
+END
