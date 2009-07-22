@@ -93,8 +93,6 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       DataArray1 = *(sInstance->getData())
       OBJ_DESTROY, sInstance
       
-      myArray = DataArray1
-      
       ;get size of array
       sz = size(DataArray1)
       nbr_tof   = sz[1]
@@ -184,6 +182,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         DataArray = *(sInstance->getData())
         OBJ_DESTROY, sInstance
         
+        print, 'start_index: ' + string(start_index) + '; end_index: ' + string(end_index)
         back_bank[*,*,start_index:end_index] = DataArray
         
         rack_index_front++
@@ -193,16 +192,60 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       
       progressBar->SetLabel, 'Plotting data ...'
       
-      ;create big array (front and back)
-      index = 0L
-      index_front = 0
-      while (index LT 2L*4L*24L) DO BEGIN
-        front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
-        index ++
-        front_and_back_bank[*,*,index] = back_bank[*,*,index_front]
-        index ++
-        index_front++
-      ENDWHILE
+      method = '' ;'debug' for debugging mode
+      
+      IF (method EQ 'debug') THEN BEGIN
+        ;Create big array (new way to try to fix problem with mapping)
+        ;tube 0,1,4,5 -> bank1....
+        ;tube 2,3,6,7 -> bank25 ....
+        index = 0L
+        index_front = 0
+        index_back = 0
+        while (index LT 2L*4L*24L) DO BEGIN
+          front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+          index++
+          index_front++
+          index_front++
+          front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+          index++
+          front_and_back_bank[*,*,index] = back_bank[*,*,index_back]
+          index_back++
+          index_back++
+          index++
+          front_and_back_bank[*,*,index] = back_bank[*,*,index_back]
+          index++
+          index_front--
+          front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+          index_front++
+          index_front++
+          index++
+          front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+          index++
+          index_back--
+          front_and_back_bank[*,*,index] = back_bank[*,*,index_back]
+          index_back++
+          index_back++
+          index++
+          front_and_back_bank[*,*,index] = back_bank[*,*,index_back]
+          index_front++
+          index_back++
+          index++
+        ENDWHILE
+        
+      ENDIF ELSE BEGIN
+      
+        ;create big array (front and back)
+        index = 0L
+        index_front = 0
+        while (index LT 2L*4L*24L) DO BEGIN
+          front_and_back_bank[*,*,index] = front_bank[*,*,index_front]
+          index ++
+          front_and_back_bank[*,*,index] = back_bank[*,*,index_front]
+          index ++
+          index_front++
+        ENDWHILE
+        
+      ENDELSE
       
       (*(*global).back_bank) = back_bank
       (*(*global).front_bank) = front_bank
