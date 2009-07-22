@@ -353,6 +353,11 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
   make_VanMask_Tab, vanmaskTabBase, dgsn_cmd
  
+ 
+  ; Administrator Tab
+  adminTabBase = WIDGET_BASE(tabID, TITLE='Administrator', /COLUMN)
+  make_administrator_tab, adminTabBase, DGSR_cmd
+ 
 ; Remove the LOG Tab (for the moment) as we are not using it!  
 ;  logTab = WIDGET_BASE(tabID, Title='Log')
 ;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
@@ -407,6 +412,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     username:username, $
     title:title, $
+    adminMode:0L, $ ; Flag to toggle Superuser mode.
+    queue:"", $ ; Place holder for a custom queue name
     extra:ptr_new(extra) $
     }
     

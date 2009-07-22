@@ -136,6 +136,31 @@ PRO DGSreduction_TLB_Events, event
          WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
       ENDELSE
     END
+    'DGS_SLURM_QUEUE': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ;TODO: Check to see if the QUEUE name is valid.
+      print, "Setting SLURM queue to be ", myValue
+      dgsr_cmd->SetProperty, Queue=myValue
+    END
+    'DGS_AUTO_SLURM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        ; If we are using the auto queue, get the default queue...
+        dgsr_cmd->GetProperty, Instrument=instrument
+        default_queue = GetDefaultSlurmQueue(instrument)
+        dgsr_cmd->SetProperty, Queue=default_queue
+        ; then set the SLURM queue text field
+        ;print, 'AUTO'
+        slurm_queue_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_SLURM_QUEUE')
+        dgsr_cmd->GetProperty, Queue=currentSQ 
+        WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ 
+      ENDIF
+    END
+    'DGS_CUSTOM_SLURM': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        ;print, 'CUSTOM'
+        ; Do nothing!
+      ENDIF
+    END
     'NOTHING': BEGIN
     END
     ELSE: BEGIN
@@ -178,6 +203,19 @@ PRO DGSreduction_TLB_Events, event
   dgsn_cmd_outputID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_CMD_TEXT')
   ; Update the output command window
   WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
+  
+  
+  ; Update the name of the SLURM queue (on the Admin Tab)
+  slurm_queue_ID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_SLURM_QUEUE')
+  customSlurmQueueID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CUSTOM_SLURM')
+  pressed = WIDGET_INFO(customSlurmQueueID, /BUTTON_SET)
+  WIDGET_CONTROL, slurm_queue_ID, SENSITIVE=pressed
+  ; Only bother updating the SLURM queue field if we are on automatic
+  IF (pressed NE 1) THEN BEGIN
+    dgsr_cmd->GetProperty, Queue=currentSQ 
+    WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ 
+  ENDIF
+  
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
