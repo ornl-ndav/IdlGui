@@ -76,7 +76,6 @@ PRO retrieveNexus, Event, FullNexusName
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
   ENDIF ELSE BEGIN
     (*global).data_nexus_file_name = FullNexusName
-    help, sz_array
     sz_array = size(DataArray)
     Ntof     = (sz_array)(1)
     Y        = (sz_array)(2)
@@ -240,10 +239,10 @@ PRO load_run_number, Event
     isNexusExist = 0
     full_nexus_name = find_full_nexus_name(Event,$
       RunNumber,$
-      'SANS',$
       isNexusExist,$
       proposal_index,$
-      proposal)
+      proposal,$
+      FACILITY = (*global).facility)
     IF (isNexusExist EQ 1 AND $
       full_nexus_name[0] NE '') THEN BEGIN ;success
       message = '-> NeXus File Name : ' + full_nexus_name[0]

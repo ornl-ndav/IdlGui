@@ -373,7 +373,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   xLabel = { size: [XYoff[0],$
     XYoff[1]],$
     value: x_value}
-  XYoff = [25,0] ;x value
+  XYoff = [27,0] ;x value
   xValue = { size: [xLabel.size[0]+XYoff[0],$
     xLabel.size[1]+XYoff[1]],$
     value: '           ',$
