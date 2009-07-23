@@ -50,6 +50,8 @@ PRO plot_scale, global1, min, max, lin_status=lin_status
   WSET, id_value
   ERASE
   
+  position = [0.30,0.03,0.95,0.97]
+  
   IF (lin_status EQ 0) THEN BEGIN
   
     divisions = 10
@@ -57,12 +59,12 @@ PRO plot_scale, global1, min, max, lin_status=lin_status
     range  = FLOAT([MIN,MAX])
     colorbar, $
       NCOLORS      = 255, $
-      POSITION     = [0.75,0.01,0.95,0.99], $
+      POSITION     = position, $
       RANGE        = range,$
       DIVISIONS    = divisions,$
       PERSO_FORMAT = perso_format,$
-      YLOG = 1,$
-      /VERTICAL
+      YLOG = 1
+;      /VERTICAL
       
   ENDIF ELSE BEGIN
   
@@ -71,11 +73,11 @@ PRO plot_scale, global1, min, max, lin_status=lin_status
     range = [MIN,MAX]
     colorbar, $
       NCOLORS      = 255, $
-      POSITION     = [0.75,0.01,0.95,0.99], $
+      POSITION     = position, $
       RANGE        = range,$
       DIVISIONS    = divisions,$
-      PERSO_FORMAT = perso_format,$
-      /VERTICAL
+      PERSO_FORMAT = perso_format
+;      /VERTICAL
       
   ENDELSE
   
