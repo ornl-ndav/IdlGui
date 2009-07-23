@@ -269,7 +269,7 @@ FUNCTION plotData, Event, DataArray, X, Y
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   plotStatus = 1 ;by default, plot does work
   plot_error = 0
-  ;CATCH, plot_error
+  CATCH, plot_error
   IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
