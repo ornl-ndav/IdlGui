@@ -102,6 +102,7 @@ PRO MakeGuiMainPlot, wBase
   
   wBase = WIDGET_BASE(TITLE = MainPlotBase.title,$
     UNAME        = MainPlotBase.uname,$
+    XSIZE        = 1880,$
     XOFFSET      = MainPlotBase.size[0],$
     YOFFSET      = MainPlotBase.size[1],$
     MAP          = 1,$
@@ -111,8 +112,8 @@ PRO MakeGuiMainPlot, wBase
   maks_label = WIDGET_LABEL(wBase,$
     VALUE = 'Masking Selection Tool',$
     UNAME = 'masking_selection_tool',$
-    XOFFSET = 1585,$
-    YOFFSET = 628,$
+    XOFFSET = 1485,$
+    YOFFSET = 697,$
     SENSITIVE = 0,$
     FRAME = 0)
     
@@ -120,8 +121,8 @@ PRO MakeGuiMainPlot, wBase
   label = WIDGET_LABEL(wBase,$
     VALUE = message,$
     UNAME = 'selection_input_example',$
-    XOFFSET = 1620,$
-    YOFFSET = 770,$
+    XOFFSET = 1530,$
+    YOFFSET = 838,$
     SENSITIVE = 0,$
     FRAME = 1)
     
@@ -224,7 +225,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '      ')
+    VALUE = '             ')
     
   ;produce counts vs tof of full detector
   button = WIDGET_BUTTON(row1,$
@@ -234,7 +235,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;space
   space = WIDGET_LABEL(row1,$
-    VALUE = '                           ')
+    VALUE = '            ')
     
   ;produce counts vs tof of selection
   button = WIDGET_BUTTON(row1,$
@@ -266,11 +267,6 @@ PRO MakeGuiMainPlot, wBase
   row2 = WIDGET_BASE(wBase1,$ ;row2 ----------------------------------------
     /ROW)
     
-  scale = WIDGET_DRAW(row2,$
-    SCR_XSIZE = 90,$
-    SCR_YSIZE = MainDraw.size[3],$
-    UNAME = 'main_plot_scale')
-    
   wMainDraw = WIDGET_DRAW(row2,$
     SCR_XSIZE = MainDraw.size[2],$
     SCR_YSIZE = MainDraw.size[3],$
@@ -279,13 +275,34 @@ PRO MakeGuiMainPlot, wBase
     /MOTION_EVENTS)
     
   ;---------------------------------------------------------------------------
+  scale_base = WIDGET_BASE(wBase1,$
+    /ROW)
+    
+  scale = WIDGET_DRAW(scale_base,$
+    SCR_XSIZE = 600,$
+    SCR_YSIZE = 60,$
+    UNAME = 'main_plot_scale')
+    
+  space = WIDGET_LABEL(scale_base,$
+    VALUE = '                       ')
+    
+  message = 'LEFT click to select region of interest for Counts vs TOF plot'
+  message += ' - RIGHT click to zoom in into selected bank'
+  
+  row3 = WIDGET_LABEL(scale_base,$ ;explain how the selection works
+    VALUE = message)
+    
+  ;----------------------------------------------------------------------------
   refresh_base = WIDGET_BASE(wBase1,$
     /ROW)
     
   refresh = WIDGET_BUTTON(refresh_base,$
     VALUE = 'R E F R E S H   P L O T',$
-    UNAME = 'refresh_plot',$
-    SCR_YSIZE = 35)
+    UNAME = 'refresh_plot')
+    
+  space_value = '     '
+  space = WIDGET_LABEL(refresh_base,$
+    VALUE = space_value)
     
   ;lin/log cw_bgroup
   row1c = WIDGET_BASE(refresh_base,$
@@ -307,6 +324,9 @@ PRO MakeGuiMainPlot, wBase
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
+  space = WIDGET_LABEL(refresh_base,$
+    VALUE = space_value)
+
   ;display banks grid or not
   label = WIDGET_LABEL(refresh_base,$
     YOFFSET = 5,$
@@ -331,19 +351,9 @@ PRO MakeGuiMainPlot, wBase
   WIDGET_CONTROL, yes, /SET_BUTTON
   
   space = WIDGET_LABEL(refresh_base,$
-    VALUE = '    ')
-  space = WIDGET_LABEL(refresh_base,$
-    VALUE = '                            ')
-    
-  message = '      '
-  message += 'LEFT click to select region of interest for Counts vs TOF plot'
-  message += ' - RIGHT click to zoom in into selected bank'
-  
-  row3 = WIDGET_LABEL(refresh_base,$ ;explain how the selection works
-    VALUE = message)
-    
-  space = WIDGET_LABEL(refresh_base,$
-    VALUE = '                                                              ')
+    VALUE = '                                                             ' + $
+    '                                                                     ' + $
+    '                                                             ')
     
   ;masking mode button
   button = WIDGET_DRAW(refresh_base,$
@@ -529,7 +539,7 @@ PRO MakeGuiMainPlot, wBase
     
   ;plot that will display counts vs tof of central row
   draw = WIDGET_DRAW(row4ba,$
-    SCR_XSIZE = 600,$
+    SCR_XSIZE = 500,$
     SCR_YSIZE = 130,$
     XOFFSET = 0,$
     /BUTTON_EVENTS,$
