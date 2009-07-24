@@ -105,6 +105,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     draw_x: 3*192L,$
     draw_y: 3*256L,$
     left_button_clicked: 0,$
+    mouse_moved: 0,$
     
     x0_device: 0L,$
     y0_device: 0L,$

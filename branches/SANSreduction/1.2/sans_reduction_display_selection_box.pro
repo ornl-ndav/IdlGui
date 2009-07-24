@@ -62,23 +62,6 @@ PRO display_selection_manually, Event
   width_data = getTextFieldValue(Event,'corner_pixel_width')
   height_data = getTextFieldValue(Event,'corner_pixel_height')
   
-  x0_data = getRealDataX(Event,x0_data)
-  
-  ;go 2 by 2 for front and back panels only
-  ;start at 1 if back panel
-  panel_selected = getPanelSelected(Event)
-  CASE (panel_selected) OF
-    'front': BEGIN
-      x0_data /= 2
-      width_data /= 2
-    END
-    'back': BEGIN
-      x0_data = (x0_data  - 1 ) / 2
-      width_data /= 2
-    END
-    ELSE:
-  ENDCASE
-  
   x1_data = x0_data + width_data
   y1_data = y0_data + height_data
   
@@ -96,8 +79,10 @@ PRO display_selection_manually, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_excluded_pixels, Event
-
+PRO display_excluded_pixels, Event, $
+    temp_x_device=temp_x_device, $
+    temp_y_device=temp_y_device
+    
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   x0_device = (*global).x0_device
@@ -105,9 +90,15 @@ PRO display_excluded_pixels, Event
   y0_device = (*global).y0_device
   y1_device = (*global).y1_device
   
+  IF (x0_device EQ temp_x_device AND $
+    y0_device EQ temp_y_device) THEN RETURN
+    
   x_device_min = MIN([x0_device,x1_device],MAX=x_device_max)
   y_device_min = MIN([y0_device,y1_device],MAX=y_device_max)
   
+  IF (x0_device EQ x1_device AND $
+    y0_device EQ y1_device) THEN RETURN
+    
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
   value = WIDGET_INFO(id, /BUTTON_SET)
   coeff = 2
@@ -115,13 +106,16 @@ PRO display_excluded_pixels, Event
   x_step = coeff * (*global).congrid_x_coeff
   y_step = (*global).congrid_y_coeff
   
-  FOR x=x_device_min, x_device_max, x_step DO BEGIN
-    FOR y=y_device_min, y_device_max, y_step DO BEGIN
-      PLOTS, [x, x, x+x_step, x+x_step, x],$
-        [y,y+y_step, y+y_step, y, y],$
-        /DEVICE,$
-        LINESTYLE = 5,$
-        COLOR = 100
+  print, x_step
+  print, y_step
+  
+  FOR x=x_device_max, x_device_min, -x_step DO BEGIN
+    FOR y=y_device_max, y_device_min, -y_step DO BEGIN
+      PLOTS, x, y, COLOR=100, /DEVICE
+      PLOTS, x-x_step, y, COLOR=100, /DEVICE, /CONTINUE
+      PLOTS, x-x_step, y-y_step, COLOR=100, /DEVICE, /CONTINUE
+      PLOTS, x, y-y_step, COLOR=100, /DEVICE, /CONTINUE
+      PLOTS, x, y, COLOR=100, /DEVICE, /CONTINUE
     ENDFOR
   ENDFOR
   

@@ -183,11 +183,9 @@ FUNCTION  getRealDataX, Event, x0_data
   CASE (panel_selected) OF
     'front': BEGIN
       x0_data /= 2
-      width_data /= 2
     END
     'back': BEGIN
       x0_data = (x0_data - 1 ) / 2
-      width_data /= 2
     END
     ELSE:
   ENDCASE
