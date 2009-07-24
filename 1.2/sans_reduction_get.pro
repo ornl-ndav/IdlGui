@@ -67,6 +67,21 @@ FUNCTION getButtonValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getPanelSelected, Event
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'both'
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_front_bank_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'front'
+  
+  RETURN, 'back'
+  
+END
+
+;------------------------------------------------------------------------------
 PRO getXYposition, Event
 
   ;get global structure
@@ -91,6 +106,18 @@ PRO getXYposition, Event
     IF (value EQ 1) THEN coeff = 1
     ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff * coeff)
     ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff)
+    
+    panel_selected = getPanelSelected(Event)
+    CASE (panel_selected) OF
+      'front': BEGIN
+      ScreenX *= 2
+      END
+      'back': BEGIN
+      ScreenX = ScreenX * 2 + 1
+      END
+      ELSE:
+    ENDCASE
+    
   ENDELSE
   putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
