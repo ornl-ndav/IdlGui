@@ -354,8 +354,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
   formatOptionsLabel = WIDGET_LABEL(formatOptionsBase, value=' Combined Wavelength Range ', XOFFSET=5)
   formatOptionsLabelGeometry = WIDGET_INFO(formatOptionsLabel, /GEOMETRY)
+  formatOptionsLabelYSize = formatOptionsLabelGeometry.ysize
   formatOptionsPrettyBase = Widget_Base(formatOptionsBase, COLUMN=1, Scr_XSize=330, /FRAME, $
-    YOFFSET=formatLabelYSize/2, YPAD=10, XPAD=10)
+    YOFFSET=formatOptionsLabelYSize/2, YPAD=10, XPAD=10)
 
   ; Combined Wavelength Range Base
   formatOptionsPrettyBaseWavelengthRow = WIDGET_BASE(formatOptionsPrettyBase, /ROW, $
