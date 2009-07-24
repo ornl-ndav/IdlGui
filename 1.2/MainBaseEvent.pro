@@ -94,6 +94,9 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, id, GET_VALUE=id_value
       WSET, id_value
       standard = 31
+      print, event.x
+      print, event.y
+      print
       DEVICE, CURSOR_STANDARD=standard
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         getXYposition, Event ;_get
@@ -132,6 +135,7 @@ PRO MAIN_BASE_event, Event
         ENDIF ELSE BEGIN ;'SNS'
         
           (*global).left_button_clicked = 1
+          (*global).mouse_moved = 0
           x0_device = Event.x
           y0_device = Event.y
           
@@ -157,15 +161,23 @@ PRO MAIN_BASE_event, Event
       ENDIF
       
       IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
-        ;display width and height
       
+        ;display width and height
         IF (event.release EQ 1) THEN BEGIN ;left button release
           (*global).left_button_clicked = 0
-          display_excluded_pixels, Event
+          IF ((*global).mouse_moved EQ 0) THEN RETURN
+          temp_x_device = Event.x
+          temp_y_device = Event.y
+          lin_or_log_plot, Event ;refresh of main plot
+          display_excluded_pixels, Event, $
+            temp_x_device=temp_x_device, $
+            temp_y_device=temp_y_device
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
           (*global).left_button_clicked EQ 1) THEN BEGIN
+          
+          (*global).mouse_moved = 1
           
           x0_data = getTextFieldValue(Event,'corner_pixel_x0')
           y0_data = getTextFieldValue(Event,'corner_pixel_y0')
@@ -175,6 +187,8 @@ PRO MAIN_BASE_event, Event
           
           x1_data = convert_xdevice_into_data(Event, x1_device)
           y1_data = convert_ydevice_into_data(Event, y1_device)
+          
+          x1_data++
           
           width  = x1_data - x0_data
           height = y1_data - y0_data
