@@ -31,7 +31,7 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-
+;------------------------------------------------------------------------------
 FUNCTION getTextFieldValue, Event, uname
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, GET_VALUE=value
@@ -119,7 +119,7 @@ PRO getXYposition, Event
     ENDCASE
     
   ENDELSE
-  putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
+  putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX+1,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
 END
 
@@ -173,3 +173,24 @@ FUNCTION getRoiFileName, Event
   FileName = getTextFieldValue(Event,'roi_file_name_text_field')
   RETURN, FileName
 END
+
+;------------------------------------------------------------------------------
+FUNCTION  getRealDataX, Event, x0_data
+  
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      x0_data /= 2
+      width_data /= 2
+    END
+    'back': BEGIN
+      x0_data = (x0_data - 1 ) / 2
+      width_data /= 2
+    END
+    ELSE:
+  ENDCASE
+
+END
+

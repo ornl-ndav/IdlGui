@@ -104,7 +104,8 @@ PRO MAIN_BASE_event, Event
             putCountsValue, Event, Event.x/2., Event.y/2. ;_put
           ENDELSE
         ENDIF ELSE BEGIN
-          CATCH, error
+          ;CATCH, error
+          error = 0 ;remove_me
           IF (error NE 0) THEN BEGIN
             CATCH,/CANCEL
             RETURN
@@ -136,6 +137,7 @@ PRO MAIN_BASE_event, Event
           
           x0_data = convert_xdevice_into_data(Event, x0_device)
           y0_data = convert_ydevice_into_data(Event, y0_device)
+          
           X = x0_data
           Y = y0_data
           
@@ -148,7 +150,7 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         putTextFieldValue, Event, $
           'corner_pixel_x0', $
-          STRCOMPRESS(X)
+          STRCOMPRESS(X+1)
         putTextFieldValue, Event, $
           'corner_pixel_y0', $
           STRCOMPRESS(Y)
@@ -167,16 +169,16 @@ PRO MAIN_BASE_event, Event
           
           x0_data = getTextFieldValue(Event,'corner_pixel_x0')
           y0_data = getTextFieldValue(Event,'corner_pixel_y0')
-
+          
           x1_device = Event.x
           y1_device = Event.y
           
           x1_data = convert_xdevice_into_data(Event, x1_device)
           y1_data = convert_ydevice_into_data(Event, y1_device)
-
-          width = x1_data - x0_data
+          
+          width  = x1_data - x0_data
           height = y1_data - y0_data
-
+          
           x1_device = convert_xdata_into_device(Event, x1_data)
           y1_device = convert_ydata_into_device(Event, y1_data)
           
@@ -185,7 +187,7 @@ PRO MAIN_BASE_event, Event
           
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height
-
+          
           lin_or_log_plot, Event ;refresh of main plot
           display_selection_manually, Event
           
