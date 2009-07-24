@@ -62,6 +62,23 @@ PRO display_selection_manually, Event
   width_data = getTextFieldValue(Event,'corner_pixel_width')
   height_data = getTextFieldValue(Event,'corner_pixel_height')
   
+  x0_data = getRealDataX(Event,x0_data)
+  
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      x0_data /= 2
+      width_data /= 2
+    END
+    'back': BEGIN
+      x0_data = (x0_data  - 1 ) / 2
+      width_data /= 2
+    END
+    ELSE:
+  ENDCASE
+  
   x1_data = x0_data + width_data
   y1_data = y0_data + height_data
   

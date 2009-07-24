@@ -39,6 +39,20 @@ FUNCTION convert_xdata_into_device, Event, data_value
   coeff = 2
   IF (value EQ 1) THEN coeff = 1
   device_value = data_value * coeff * (*global).congrid_x_coeff
+  
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      device_value *= 2
+    END
+    'back': BEGIN
+      device_value = device_value * 2 + 1
+    END
+    ELSE:
+  ENDCASE
+  
   RETURN, device_value
 END
 
@@ -52,12 +66,37 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION convert_xdevice_into_data, Event, device_value
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
-  value = WIDGET_INFO(id, /BUTTON_SET)
-  coeff = 2
-  IF (value EQ 1) THEN coeff = 1
-  data_value = device_value / (coeff * (*global).congrid_x_coeff)
-  RETURN, data_value
+
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+    IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+      Xcoeff = 8
+    ENDIF ELSE BEGIN
+      Xcoeff = 2
+    ENDELSE
+    ScreenX = device_value / Xcoeff
+  ENDIF ELSE BEGIN
+  
+    ;check if both panels are plotted
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+    value = WIDGET_INFO(id, /BUTTON_SET)
+    coeff = 0.5
+    IF (value EQ 1) THEN coeff = 1
+    ScreenX = FIX(FLOAT(device_value) / (*global).congrid_x_coeff * coeff)
+    
+    panel_selected = getPanelSelected(Event)
+    CASE (panel_selected) OF
+      'front': BEGIN
+      ScreenX *= 2
+      END
+      'back': BEGIN
+      ScreenX = ScreenX * 2 + 1
+      END
+      ELSE:
+    ENDCASE
+    
+  ENDELSE
+
+  RETURN, screenX
 END
 
 ;------------------------------------------------------------------------------
