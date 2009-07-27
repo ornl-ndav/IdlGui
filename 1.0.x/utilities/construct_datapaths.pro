@@ -34,8 +34,8 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
       banks_per_job = ceil(float((upper - lower + 1)) / TotalJobs)
       ;print, (upper - lower + 1)
       ;print, banks_per_job, TotalJobs
-      this_lower = ceil((job-1)*banks_per_job)+1
-      this_upper = ceil(job*banks_per_job)
+      this_lower = ceil((job-1)*banks_per_job)+lower
+      this_upper = ceil(job*banks_per_job)+(lower-1)
       IF (this_upper GT upper) THEN this_upper = upper
       IF (job EQ TotalJobs) THEN this_upper = upper
     ENDELSE
