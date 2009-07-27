@@ -94,9 +94,6 @@ PRO MAIN_BASE_event, Event
       WIDGET_CONTROL, id, GET_VALUE=id_value
       WSET, id_value
       standard = 31
-      print, event.x
-      print, event.y
-      print
       DEVICE, CURSOR_STANDARD=standard
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         getXYposition, Event ;_get
@@ -191,7 +188,39 @@ PRO MAIN_BASE_event, Event
           x1_data++
           
           width  = x1_data - x0_data
+          ;go 2 by 2 for front and back panels only
+          ;start at 1 if back panel
+          panel_selected = getPanelSelected(Event)
+          CASE (panel_selected) OF
+            'front': BEGIN ;front
+              width /= 2
+            END
+            'back': BEGIN ;back
+              width /= 2
+            END
+            ELSE:
+          ENDCASE
+          
+          IF (width EQ 0) THEN BEGIN
+            width = 1
+          ENDIF ELSE BEGIN
+            IF (width LE 0) THEN BEGIN
+              width -= 1
+            ENDIF ELSE BEGIN
+              width += 1
+            ENDELSE
+          ENDELSE
+          
           height = y1_data - y0_data
+          IF (height EQ 0) THEN BEGIN
+            height = 1
+          ENDIF ELSE BEGIN
+            IF (height LT 0) THEN BEGIN
+              height -= 1
+            ENDIF ELSE BEGIN
+              height += 1
+            ENDELSE
+          ENDELSE
           
           x1_device = convert_xdata_into_device(Event, x1_data)
           y1_device = convert_ydata_into_device(Event, y1_data)
@@ -298,7 +327,11 @@ PRO MAIN_BASE_event, Event
     
     ;- SAVE
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
-      SaveExclusionFile, Event ;_exclusion
+      IF ((*global).facility EQ 'LENS') THEN BEGIN
+        SaveExclusionFile, Event ;_exclusion
+      ENDIF ELSE BEGIN
+        SaveExclusionFile_SNS, Event
+      ENDELSE
     END
     
     ;- SAVE AS folder button
