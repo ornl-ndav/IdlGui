@@ -81,29 +81,37 @@ PRO SaveExclusionFile_SNS, Event
   ENDCASE
   pixel_increment = pixel_sign
   
-  nbr_pixels_total = (ABS(nbr_tubes)+1) * (ABS(pixel_height_data)+1)
-  print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
-  print, 'nbr_tubes: ' + string(nbr_tubes)
-  print, 'pixel_height_data: ' + string(pixel_height_data)
+  nbr_pixels_total = (ABS(nbr_tubes)) * (ABS(pixel_height_data))
+  ;print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
+  ;print, 'nbr_tubes: ' + string(nbr_tubes)
+  ;print, 'pixel_height_data: ' + string(pixel_height_data)
   pixel_array = STRARR(nbr_pixels_total)
   
-  help, pixel_array
-  
-  pixel1_data = pixel0_data + (pixel_height_data-1) * pixel_increment
+  IF (pixel_height_data GT 0) THEN BEGIN
+  pixel_coeff = -1
+  ENDIF ELSE BEGIN
+  pixel_coeff = +1
+  ENDELSE
+  pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * pixel_increment
   from_pixel = MIN([pixel1_data,pixel0_data],MAX=to_pixel)
   
-  tube1_data  = tube0_data + (tube_width_data-1) * tube_increment
+  IF (tube_width_data GT 0) THEN BEGIN
+  tube_coeff = -1
+  ENDIF ELSE BEGIN
+  tube_coeff = +1
+  ENDELSE
+  tube1_data  = tube0_data + (tube_width_data + tube_coeff) * tube_increment
   from_tube = MIN([tube1_data, tube0_data],MAX=to_tube)
   
-  print, 'from tube: ' + string(tube0_data) + ' to tube: ' + string(tube1_data) + ' with increment: ' + string(tube_increment)
-  print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + string(pixel1_data) + ' with increment: ' + string(pixel_increment)
+  ;print, 'from tube: ' + string(tube0_data) + ' to tube: ' + string(tube1_data) + ' with increment: ' + string(tube_increment)
+  ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + string(pixel1_data) + ' with increment: ' + string(pixel_increment)
   index = 0
   tube = from_tube
   WHILE (tube LE to_tube) DO BEGIN
     pixel = from_pixel
     WHILE (pixel LE to_pixel) DO BEGIN
       bank = getBankNumber(tube)
-      print, 'tube: ' + string(tube) + ', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+   ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + ', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
       line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
       line += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
       line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
