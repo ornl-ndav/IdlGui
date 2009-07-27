@@ -49,6 +49,7 @@ cd, CurrentFolder
 .run sans_reduction_xroi.pro
 .run sans_reduction_selection.pro
 .run sans_reduction_exclusion.pro
+.run sans_reduction_exclusion_sns.pro
 .run sans_reduction_tab_plot.pro
 
 ;procedures

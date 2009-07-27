@@ -62,8 +62,8 @@ PRO display_selection_manually, Event
   width_data = getTextFieldValue(Event,'corner_pixel_width')
   height_data = getTextFieldValue(Event,'corner_pixel_height')
   
-  x1_data = x0_data + width_data
-  y1_data = y0_data + height_data
+  x1_data = x0_data + width_data - 1
+  y1_data = y0_data + height_data - 1
   
   x0_device = convert_xdata_into_device(Event,x0_data)
   y0_device = convert_ydata_into_device(Event,y0_data)

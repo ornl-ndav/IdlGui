@@ -110,10 +110,10 @@ PRO getXYposition, Event
     panel_selected = getPanelSelected(Event)
     CASE (panel_selected) OF
       'front': BEGIN
-      ScreenX *= 2
+        ScreenX *= 2
       END
       'back': BEGIN
-      ScreenX = ScreenX * 2 + 1
+        ScreenX = ScreenX * 2 + 1
       END
       ELSE:
     ENDCASE
@@ -176,7 +176,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION  getRealDataX, Event, x0_data
-  
+
   ;go 2 by 2 for front and back panels only
   ;start at 1 if back panel
   panel_selected = getPanelSelected(Event)
@@ -189,6 +189,13 @@ FUNCTION  getRealDataX, Event, x0_data
     END
     ELSE:
   ENDCASE
-
+  
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getBankNumber, tube
+  local_tube = tube - 1
+  bank = local_tube / 8
+  IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
+  RETURN, bank+1
+END
