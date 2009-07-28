@@ -144,11 +144,8 @@ PRO display_excluded_pixels, Event, $
   x_step = coeff * (*global).congrid_x_coeff
   y_step = (*global).congrid_y_coeff
   
-  print, x_step
-  print, y_step
-  
-  FOR x=x_device_max, x_device_min, -x_step DO BEGIN
-    FOR y=y_device_max, y_device_min, -y_step DO BEGIN
+  FOR x=x_device_max, x_device_min+x_step, -x_step DO BEGIN
+    FOR y=y_device_max, y_device_min+ y_step, -y_step DO BEGIN
       PLOTS, x, y, COLOR=100, /DEVICE
       PLOTS, x-x_step, y, COLOR=100, /DEVICE, /CONTINUE
       PLOTS, x-x_step, y-y_step, COLOR=100, /DEVICE, /CONTINUE
