@@ -65,7 +65,7 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   
   dataSourceRow = WIDGET_BASE(dataSourcePrettyBase, /ROW)
   runID= CW_FIELD(dataSourceRow, xsize=29, ysize=1, TITLE="", UVALUE="DGSN_DATARUN", $
-    UNAME="DGSN_DATARUN", /ALL_EVENTS, /LONG)
+    UNAME="DGSN_DATARUN", /ALL_EVENTS)
   checkfileButton = WIDGET_BUTTON(dataSourceRow, VALUE="Check File", UVALUE="DGSN_FINDNEXUS", SENSITIVE=0)
 
   detectorBankBase = WIDGET_BASE(RunDetectorRow)
