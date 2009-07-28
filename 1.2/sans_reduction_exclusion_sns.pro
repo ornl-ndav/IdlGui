@@ -59,17 +59,14 @@ PRO makeExclusionArray_SNS, Event
     'front': BEGIN ;front
       ;      nbr_tubes = tube_width_data / 2
       tube_increment = 2
-      panel = 'front panel'
     END
     'back': BEGIN ;back
       ;      nbr_tubes = tube_width_data / 2
       tube_increment = 2
-      panel = 'back panel'
     END
     ELSE: BEGIN ;Both
       ;      nbr_tubes = tube_width_data
       tube_increment = 1
-      panel = 'both panels'
     END
   ENDCASE
   pixel_increment = pixel_sign
@@ -131,8 +128,6 @@ PRO add_to_global_exclusion_array, event, pixel_array
   ENDIF ELSE BEGIN
     global_exclusion_array = [global_exclusion_array, pixel_array]
   ENDELSE
-  help, global_exclusion_array
-  help, (*global).global_exclusion_array
   (*(*global).global_exclusion_array) = global_exclusion_array
   
 END
@@ -146,7 +141,7 @@ PRO SaveExclusionFile_SNS, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  pixel_array = (*global).global_exclusion_array
+  pixel_array = (*(*global).global_exclusion_array)
   
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -155,6 +150,21 @@ PRO SaveExclusionFile_SNS, Event
   folder         = (*global).selection_path
   file_name      = getTextfieldValue(Event,'save_roi_text_field')
   full_file_name = folder + file_name
+  
+    ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN ;front
+      panel = 'front panel'
+    END
+    'back': BEGIN ;back
+      panel = 'back panel'
+    END
+    ELSE: BEGIN ;Both
+      panel = 'both panels'
+    END
+  ENDCASE
   
   text = '> Saving Exclusion Region for ' + panel
   IDLsendToGeek_addLogBookText, Event, text

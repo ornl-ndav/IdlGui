@@ -169,7 +169,6 @@ PRO MAIN_BASE_event, Event
           IF ((*global).mouse_moved EQ 0) THEN RETURN
           temp_x_device = Event.x
           temp_y_device = Event.y
-          ;lin_or_log_plot, Event ;refresh of main plot
           display_excluded_pixels, Event, $
             temp_x_device=temp_x_device, $
             temp_y_device=temp_y_device
@@ -365,13 +364,13 @@ PRO MAIN_BASE_event, Event
     ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       clear_selection_tool, Event ;_selection
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
       refresh_plot, Event ;_plot
       RefreshRoiExclusionPlot, Event   ;_plot
-      save_background,  Event, GLOBAL=global
     END
     
     ;- Selection Color Button -------------------------------------------------
