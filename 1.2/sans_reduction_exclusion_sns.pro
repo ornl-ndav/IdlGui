@@ -131,7 +131,7 @@ PRO add_to_global_exclusion_array, event, pixel_array
   ENDIF ELSE BEGIN
     global_exclusion_array = [global_exclusion_array, pixel_array]
   ENDELSE
-  (*globla).global_exclusion_array = global_exclusion_array
+  (*global).global_exclusion_array = global_exclusion_array
   
 END
 
