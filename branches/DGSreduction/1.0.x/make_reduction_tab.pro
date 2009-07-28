@@ -272,6 +272,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   hardMaskID = WIDGET_BUTTON(maskRow, VALUE=' HARD Mask', UVALUE='DGSR_HARD_MASK', UNAME='DGSR_HARD_MASK')
   ;maskFileID = CW_FIELD(maskRow, TITLE='Filename:', UVALUE='DGSR_MASK_FILENAME', /ALL_EVENTS)
  
+   ;WIDGET_CONTROL, maskID, MAP=0
+   WIDGET_CONTROL, maskID, SENSITIVE=0, SET_BUTTON=1
+ 
    ; ROI
   roiBase = WIDGET_BASE(maskPrettyBase)
   roiLabel = WIDGET_LABEL(roiBase, VALUE=' Region-of-Interest ', XOFFSET=5)
