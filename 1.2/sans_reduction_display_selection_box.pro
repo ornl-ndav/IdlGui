@@ -62,8 +62,46 @@ PRO display_selection_manually, Event
   width_data = getTextFieldValue(Event,'corner_pixel_width')
   height_data = getTextFieldValue(Event,'corner_pixel_height')
   
-  x1_data = x0_data + width_data - 1
-  y1_data = y0_data + height_data - 1
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      coeff = 2
+      IF (width_data GT 0) THEN BEGIN
+        coeff_width = -2
+      ENDIF ELSE BEGIN
+        coeff_width = 2
+      ENDELSE
+    END
+    'back': BEGIN
+      coeff = 2
+      IF (width_data GT 0) THEN BEGIN
+        coeff_width = -2
+      ENDIF ELSE BEGIN
+        coeff_width = 2
+      ENDELSE
+    END
+    ELSE: BEGIN
+    coeff = 1
+          IF (width_data GT 0) THEN BEGIN
+        coeff_width = -1
+      ENDIF ELSE BEGIN
+        coeff_width = 1
+      ENDELSE
+    END
+  ENDCASE
+  width_data *= coeff
+  
+  
+  IF (height_data GT 0) THEN BEGIN
+    coeff_height = -1
+  ENDIF ELSE BEGIN
+    coeff_height = 1
+  ENDELSE
+  
+  x1_data = x0_data + width_data + coeff_width
+  y1_data = y0_data + height_data + coeff_height
   
   x0_device = convert_xdata_into_device(Event,x0_data)
   y0_device = convert_ydata_into_device(Event,y0_data)
