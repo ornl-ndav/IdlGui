@@ -311,6 +311,9 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB', $
     UNAME='DGSN_DUMP_TIB')
     
+  ; Disable the option to output the norm values, as they are always written now.
+  WIDGET_CONTROL, normButton, SENSITIVE=0
+    
   ; Column #3
   ; Output Options Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
