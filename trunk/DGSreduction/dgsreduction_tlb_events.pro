@@ -161,6 +161,26 @@ PRO DGSreduction_TLB_Events, event
         ; Do nothing!
       ENDIF
     END
+    'DGS_OUTPUT_PREFIX': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      ;TODO: Check to see that the directory is valid
+      dgsr_cmd->SetProperty, OutputPrefix=myValue
+    END
+    'DGS_AUTO_OUTPUT_PREFIX': BEGIN
+      ; For auto prefix - just use ~/results
+      IF (event.select EQ 1) THEN BEGIN
+        dgsr_cmd->SetProperty, OutputPrefix='~/results'
+        ; Update the GUI
+        outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
+        WIDGET_CONTROL, outputPrefixID, SET_VALUE='~/results'
+      ENDIF
+    END
+    'DGS_CUSTOM_OUTPUT_PREFIX': BEGIN
+      IF (event.select EQ 1) THEN BEGIN
+        ;print, 'CUSTOM'
+        ; Do nothing!
+      ENDIF
+    END
     'NOTHING': BEGIN
     END
     ELSE: BEGIN
@@ -216,6 +236,12 @@ PRO DGSreduction_TLB_Events, event
     WIDGET_CONTROL, slurm_queue_ID, SET_VALUE=currentSQ 
   ENDIF
   
+  ; Update the output prefix (on the Admin Tab)
+  outputPrefixID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_OUTPUT_PREFIX')
+  customOutputPrefixButtonID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGS_CUSTOM_OUTPUT_PREFIX')
+  pressed = WIDGET_INFO(customOutputPrefixButtonID, /BUTTON_SET)
+  WIDGET_CONTROL, outputPrefixID, SENSITIVE=pressed
+
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
