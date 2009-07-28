@@ -113,9 +113,9 @@ PRO DGSreduction_LaunchCollector, event
     
     for index = 0L, npoints-1 do begin
       qvec_cmd = "sbatch -q " + queue + " --error=none --output=none " + $
-        " --job-name=" + instrument + "_" + runnumber + "_vtk" + $
+        " --job-name=" + instrument + "_" + runnumber + "_m" + $
         STRCOMPRESS(STRING(index+1), /REMOVE_ALL) + $
-        " make_vtk " + instrument + " " + runnumber + " " + STRING(index+1) + " " + $
+        " merge_slices " + instrument + " " + runnumber + " " + STRING(index+1) + " " + $
         outdir + "/" + runnumber + "-mesh"
         
             
