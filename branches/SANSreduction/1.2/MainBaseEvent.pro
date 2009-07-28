@@ -169,11 +169,26 @@ PRO MAIN_BASE_event, Event
           IF ((*global).mouse_moved EQ 0) THEN RETURN
           temp_x_device = Event.x
           temp_y_device = Event.y
-          display_excluded_pixels, Event, $
-            temp_x_device=temp_x_device, $
-            temp_y_device=temp_y_device
           makeExclusionArray_SNS, Event
-          save_background,  Event, GLOBAL=global
+          
+          ;ask user if he wants to validate his selection or not
+          message = 'Do you want to validate your selection?'
+          title = 'Validate Selection?'
+          id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+          result = DIALOG_MESSAGE(message,$
+          DIALOG_PARENT = id,$
+          /CENTER,$
+            /QUESTION,$
+            title=title)
+          IF (result EQ 'Yes') THEN BEGIN
+            display_excluded_pixels, Event, $
+              temp_x_device=temp_x_device, $
+              temp_y_device=temp_y_device
+            makeExclusionArray_SNS, Event
+            save_background,  Event, GLOBAL=global
+          ENDIF ELSE BEGIN
+            TV, (*(*global).background), true=3
+          ENDELSE
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
