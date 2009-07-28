@@ -52,7 +52,7 @@ PRO make_administrator_tab, baseWidget, myCommandObj
   customQueueLabelYSize = customQueueLabelGeometry.ysize
   
   customQueuePrettyBase = WIDGET_BASE(customQueueBase, /FRAME, /ROW, $
-    XPAD=10, YPAD=10, YOFFSET=customQueueLabelYSize/2)
+    XPAD=10, YPAD=10, YOFFSET=customQueueLabelYSize/2.0)
   
   customQueueRow = WIDGET_BASE(customQueuePrettyBase, /ROW)
 
@@ -63,7 +63,7 @@ PRO make_administrator_tab, baseWidget, myCommandObj
   customSLURMQueueSelectionButtonID = WIDGET_BUTTON(customQueueButtons, VALUE='Custom', $
     UNAME='DGS_CUSTOM_SLURM', UVALUE='DGS_CUSTOM_SLURM')
 
-  queueNameID = CW_FIELD(customQueueRow, YSIZE=1, XSIZE=30, TITLE="SLURM Queue:", UNAME="DGS_SLURM_QUEUE", UVALUE="DGS_SLURM_QUEUE", /ALL_EVENTS)
+  queueNameID = CW_FIELD(customQueueRow, YSIZE=1, XSIZE=30, TITLE="  SLURM Queue:", UNAME="DGS_SLURM_QUEUE", UVALUE="DGS_SLURM_QUEUE", /ALL_EVENTS)
 
   ; Make 'Automatic' the default 
   WIDGET_CONTROL, autoSLURMQueueSelectionButtonID, SET_BUTTON=1
@@ -73,5 +73,29 @@ PRO make_administrator_tab, baseWidget, myCommandObj
   myCommandObj->GetProperty, Queue=queueName
   WIDGET_CONTROL, queueNameID, SET_VALUE=queueName
 
+  
+  ; === Output Prefix ===
+  
+  outputPrefixBase = WIDGET_BASE(baseWidget)
+  outputPrefixLabel = WIDGET_LABEL(outputPrefixBase, VALUE=' Output Directory ', XOFFSET=5)
+  outputPrefixLabelGeometry = WIDGET_INFO(outputPrefixLabel, /GEOMETRY)
+  outputPrefixLabelYSize = outputPrefixLabelGeometry.ysize
+  outputPrefixPrettyBase = WIDGET_BASE(outputPrefixBase, /FRAME, /ROW, XPAD=10, YPAD=10, YOFFSET=outputPrefixLabelYSize/2.0)
+  outputPrefixRow = WIDGET_BASE(outputPrefixPrettyBase, /ROW)
+  outputPrefixButtons = WIDGET_BASE(outputPrefixRow, EXCLUSIVE=1)
+  autoOutputPrefixButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Automatic', $
+    UNAME='DGS_AUTO_OUTPUT_PREFIX', UVALUE='DGS_AUTO_OUTPUT_PREFIX')
+  customOutputPrefixButtonID = WIDGET_BUTTON(outputPrefixButtons, VALUE='Custom', $
+    UNAME='DGS_CUSTOM_OUTPUT_PREFIX', UVALUE='DGS_CUSTOM_OUTPUT_PREFIX')
+  outputPrefixID = CW_FIELD(outputPrefixRow, YSIZE=1, XSIZE=30, TITLE='Output Prefix:', $
+    UNAME='DGS_OUTPUT_PREFIX', UVALUE='DGS_OUTPUT_PREFIX', /ALL_EVENTS)
+  
+  ; Make 'Automatic' the default 
+  WIDGET_CONTROL, autoOutputPrefixButtonID, SET_BUTTON=1
+  WIDGET_CONTROL, outputPrefixID, SENSITIVE=0
+  
+  ; Get the current Queue name and display it
+  myCommandObj->GetProperty, OutputPrefix=outputPrefixName
+  WIDGET_CONTROL, outputPrefixID, SET_VALUE=outputPrefixName
   
 END
