@@ -101,6 +101,7 @@ PRO ReductionCmd::GetProperty, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -179,6 +180,7 @@ PRO ReductionCmd::GetProperty, $
   IF ARG_PRESENT(Split) NE 0 THEN Split = self.split 
   IF ARG_PRESENT(Lo_Threshold) NE 0 THEN Lo_Threshold = self.lo_threshold
   IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
+  IF ARG_PRESENT(OutputPrefix) NE 0 THEN OutputPrefix = self.outputprefix
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
   IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
   
@@ -249,6 +251,7 @@ PRO ReductionCmd::SetProperty, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
     _Extra=extra
@@ -381,6 +384,9 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(split) NE 0 THEN self.split = Split
   IF N_ELEMENTS(lo_threshold) NE 0 THEN self.lo_threshold = Lo_Threshold
   IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
+  
+  IF N_ELEMENTS(OutputPrefix) NE 0 THEN self.outputprefix = OutputPrefix
+  
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
@@ -601,9 +607,9 @@ function ReductionCmd::Generate
     ;IF STRLEN(self.output) GT 1 THEN cmd[i] += " --output="+ self.output
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
-    cmd[i] += " --output=~/results/" + self.instrument + "/" + self->GetRunNumber() + $
-      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-      i+1, self.jobs, /PAD) + ".txt"
+      cmd[i] += " --output=" + self.OutputPrefix + "/" + self.instrument + "/" + self->GetRunNumber() + $
+        "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+        i+1, self.jobs, /PAD) + ".txt"
     
     ; Instrument Name
     IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
@@ -628,9 +634,21 @@ function ReductionCmd::Generate
       i+1, self.jobs)
     IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
+    
+    
     ; normalisation file
-    IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) THEN $
-      cmd[i] += " --norm="+self.normalisation
+    IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
+      AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+      
+        cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
+          self.normalisation + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + ".norm"
+       
+      ;cmd[i] += " --norm="+self.normalisation
+    ENDIF
+      
+      
     ; Empty sample container file
     IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
@@ -724,7 +742,7 @@ function ReductionCmd::Generate
     
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-          cmd[i] += "~/results/" + self.instrument + "/"+ $
+          cmd[i] += self.OutputPrefix + "/" + self.instrument + "/"+ $
           self.normalisation + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
@@ -835,6 +853,7 @@ function ReductionCmd::Init, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
     _Extra=extra
@@ -897,7 +916,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(DumpTIB) EQ 0 THEN dumptib = 0
-  IF N_ELEMENTS(mask) EQ 0 THEN mask = 0
+  IF N_ELEMENTS(mask) EQ 0 THEN mask = 1
   IF N_ELEMENTS(hardmask) EQ 0 THEN hardmask = 0
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
   IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
@@ -911,6 +930,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(split) EQ 0 THEN split = 0
   IF N_ELEMENTS(lo_threshold) EQ 0 THEN lo_threshold = ""
   IF N_ELEMENTS(hi_threshold) EQ 0 THEN hi_threshold = ""
+  IF N_ELEMENTS(OutputPrefix) EQ 0 THEN OutputPrefix = "~/results"
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
   
@@ -978,6 +998,7 @@ function ReductionCmd::Init, $
   self.split = split
   self.lo_threshold = Lo_Threshold
   self.hi_threshold = Hi_Threshold
+  self.outputprefix = OutputPrefix
   self.timing = timing
   self.jobs = jobs
   self.extra = PTR_NEW(extra)
@@ -1058,6 +1079,7 @@ pro ReductionCmd__Define
     split: 0L, $             ; split (distributed mode)
     hi_threshold: "", $      ; Threshold for pixel to be masked (default: infinity)
     lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
+    OutputPrefix: "", $      ; Prefix for where to write the output (normally ~/results/)
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
     extra: PTR_NEW() }       ; Extra keywords
