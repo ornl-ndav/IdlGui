@@ -77,15 +77,19 @@ PRO MAIN_BASE_event, Event
     ;manual input of x0, y0, width and Height
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_x0'): BEGIN
       display_selection_manually, Event
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_y0'): BEGIN
       display_selection_manually, Event
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_width'): BEGIN
       display_selection_manually, Event
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_height'): BEGIN
       display_selection_manually, Event
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Main Plot --------------------------------------------------------------
@@ -165,10 +169,12 @@ PRO MAIN_BASE_event, Event
           IF ((*global).mouse_moved EQ 0) THEN RETURN
           temp_x_device = Event.x
           temp_y_device = Event.y
-          lin_or_log_plot, Event ;refresh of main plot
+          ;lin_or_log_plot, Event ;refresh of main plot
+          save_background,  Event, GLOBAL=global
           display_excluded_pixels, Event, $
             temp_x_device=temp_x_device, $
             temp_y_device=temp_y_device
+          makeExclusionArray_SNS, Event
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
@@ -231,7 +237,8 @@ PRO MAIN_BASE_event, Event
           putTextFieldValue, Event, 'corner_pixel_width', width
           putTextFieldValue, Event, 'corner_pixel_height', height
           
-          lin_or_log_plot, Event ;refresh of main plot
+          TV, (*(*global).background), true=3
+          ;lin_or_log_plot, Event ;refresh of main plot
           display_selection_manually, Event
           
         ENDIF
@@ -249,11 +256,13 @@ PRO MAIN_BASE_event, Event
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Selection Button -------------------------------------------------------
@@ -264,6 +273,7 @@ PRO MAIN_BASE_event, Event
     ;- Browse Selection File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
       browse_selection_file, Event ;_selection
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Preview Selection File -------------------------------------------------
@@ -279,6 +289,7 @@ PRO MAIN_BASE_event, Event
     ;- Selection Load Button --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
       LoadPlotSelection, Event ;_selection
+      save_background,  Event, GLOBAL=global
     END
     
     ;-Exclusion Region Selection Tool -----------------------------------------

@@ -71,3 +71,29 @@ PRO lin_or_log_plot, Event
   ;refresh_scale, Event         ;_plot
   
 END
+
+;------------------------------------------------------------------------------
+PRO save_background,  Event, MAIN_BASE=main_base, GLOBAL=global
+
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='draw_uname')
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global
+    ;select plot area
+    id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xoffset = geometry.xoffset
+  yoffset = geometry.yoffset
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+
+  DEVICE, copy =[xoffset, yoffset, xsize, ysize, 0, 0, id_value]
+  (*(*global).background) = background
+  
+END

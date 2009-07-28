@@ -111,7 +111,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     y0_device: 0L,$
     x1_device: 0L,$
     y1_device: 0L,$
-    global_exclusion_array = STRARR(1),$
+    global_exclusion_array: STRARR(1),$
+    background: PTR_NEW(0L),$
     
     facility: facility, $
     facility_list: ['LENS'],$
