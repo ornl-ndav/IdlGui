@@ -32,17 +32,10 @@
 ;
 ;==============================================================================
 
-PRO SaveExclusionFile_SNS, Event
+PRO makeExclusionArray_SNS, Event
 
-  ;indicate initialization with hourglass icon
-  WIDGET_CONTROL,/HOURGLASS
-  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  PROCESSING = (*global).processing
-  OK         = (*global).ok
-  FAILED     = (*global).failed
   
   ;get tube and pixel of first corner
   tube0_data  = FIX(getTextFieldValue(Event,'corner_pixel_x0'))
@@ -88,17 +81,17 @@ PRO SaveExclusionFile_SNS, Event
   pixel_array = STRARR(nbr_pixels_total)
   
   IF (pixel_height_data GT 0) THEN BEGIN
-  pixel_coeff = -1
+    pixel_coeff = -1
   ENDIF ELSE BEGIN
-  pixel_coeff = +1
+    pixel_coeff = +1
   ENDELSE
   pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * pixel_increment
   from_pixel = MIN([pixel1_data,pixel0_data],MAX=to_pixel)
   
   IF (tube_width_data GT 0) THEN BEGIN
-  tube_coeff = -1
+    tube_coeff = -1
   ENDIF ELSE BEGIN
-  tube_coeff = +1
+    tube_coeff = +1
   ENDELSE
   tube1_data  = tube0_data + (tube_width_data + tube_coeff) * tube_increment
   from_tube = MIN([tube1_data, tube0_data],MAX=to_tube)
@@ -111,7 +104,7 @@ PRO SaveExclusionFile_SNS, Event
     pixel = from_pixel
     WHILE (pixel LE to_pixel) DO BEGIN
       bank = getBankNumber(tube)
-   ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + ', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+      ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + ', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
       line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
       line += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
       line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
@@ -121,6 +114,41 @@ PRO SaveExclusionFile_SNS, Event
     ENDWHILE
     tube += tube_increment
   ENDWHILE
+  
+  add_to_global_exclusion_array, event, pixel_array
+  
+END
+
+;------------------------------------------------------------------------------
+PRO add_to_global_exclusion_array, event, pixel_array
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  global_exclusion_array = (*global).global_exclusion_array
+  IF (global_exclusion_array[0] EQ '') THEN BEGIN ;first time adding pixels
+    global_exclusion_array = pixel_array
+  ENDIF ELSE BEGIN
+    global_exclusion_array = [global_exclusion_array, pixel_array]
+  ENDELSE
+  (*globla).global_exclusion_array = global_exclusion_array
+  
+END
+
+;------------------------------------------------------------------------------
+PRO SaveExclusionFile_SNS, Event
+
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/HOURGLASS
+  
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  pixel_array = (*global).global_exclusion_array
+  
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
   
   folder         = (*global).selection_path
   file_name      = getTextfieldValue(Event,'save_roi_text_field')
