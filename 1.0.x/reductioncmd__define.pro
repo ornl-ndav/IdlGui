@@ -620,9 +620,21 @@ function ReductionCmd::Generate
       i+1, self.jobs)
     IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
+    
+    
     ; normalisation file
-    IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) THEN $
-      cmd[i] += " --norm="+self.normalisation
+    IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
+      AND (STRLEN(self.instrument) GT 1) THEN BEGIN
+      
+        cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
+          self.normalisation + "/" + $
+          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+          i+1, self.jobs, /PAD) + ".norm"
+       
+      ;cmd[i] += " --norm="+self.normalisation
+    ENDIF
+      
+      
     ; Empty sample container file
     IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
@@ -887,7 +899,7 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(DumpTIB) EQ 0 THEN dumptib = 0
-  IF N_ELEMENTS(mask) EQ 0 THEN mask = 0
+  IF N_ELEMENTS(mask) EQ 0 THEN mask = 1
   IF N_ELEMENTS(hardmask) EQ 0 THEN hardmask = 0
   IF N_ELEMENTS(lambdaratio) EQ 0 THEN lambdaratio = 0
   IF N_ELEMENTS(energybins_min) EQ 0 THEN energybins_min = ""
