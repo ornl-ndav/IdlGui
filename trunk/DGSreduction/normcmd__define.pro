@@ -645,7 +645,7 @@ function NormCmd::Generate
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
-    IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
+    ;IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
     IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
@@ -767,7 +767,7 @@ function NormCmd::Init, $
   IF N_ELEMENTS(lambdabins_step) EQ 0 THEN lambdabins_step = ""
   IF N_ELEMENTS(dumptof) EQ 0 THEN dumptof = 0
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
-  IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 0
+  IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 1
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(dumptib) EQ 0 THEN dumptib = 0
   IF N_ELEMENTS(lo_threshold) EQ 0 THEN lo_threshold = ""
