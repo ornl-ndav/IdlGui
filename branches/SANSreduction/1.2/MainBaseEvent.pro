@@ -170,11 +170,11 @@ PRO MAIN_BASE_event, Event
           temp_x_device = Event.x
           temp_y_device = Event.y
           ;lin_or_log_plot, Event ;refresh of main plot
-          save_background,  Event, GLOBAL=global
           display_excluded_pixels, Event, $
             temp_x_device=temp_x_device, $
             temp_y_device=temp_y_device
           makeExclusionArray_SNS, Event
+          save_background,  Event, GLOBAL=global
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
@@ -371,6 +371,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
       refresh_plot, Event ;_plot
       RefreshRoiExclusionPlot, Event   ;_plot
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Selection Color Button -------------------------------------------------
@@ -386,6 +387,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_front_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).front_bank)
       refresh_plot, Event ;_plot
+      save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
@@ -393,6 +395,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_back_bank_button'): BEGIN
       (*(*global).DataArray) = (*(*global).back_bank)
       refresh_plot, Event ;_plot
+      save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
@@ -400,6 +403,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_both_banks_button'): BEGIN
       (*(*global).DataArray) = (*(*global).both_banks)
       refresh_plot, Event ;_plot
+      save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     

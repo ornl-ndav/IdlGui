@@ -125,13 +125,15 @@ PRO add_to_global_exclusion_array, event, pixel_array
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  global_exclusion_array = (*global).global_exclusion_array
+  global_exclusion_array = (*(*global).global_exclusion_array)
   IF (global_exclusion_array[0] EQ '') THEN BEGIN ;first time adding pixels
     global_exclusion_array = pixel_array
   ENDIF ELSE BEGIN
     global_exclusion_array = [global_exclusion_array, pixel_array]
   ENDELSE
-  (*global).global_exclusion_array = global_exclusion_array
+  help, global_exclusion_array
+  help, (*global).global_exclusion_array
+  (*(*global).global_exclusion_array) = global_exclusion_array
   
 END
 

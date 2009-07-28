@@ -73,7 +73,7 @@ PRO display_selection_manually, Event
   (*global).x0_device = x0_device
   (*global).y0_device = y0_device
   
-  lin_or_log_plot, Event ;refresh of main plot
+  ;lin_or_log_plot, Event ;refresh of main plot
   display_selection, Event, x1=x1_device, y1=y1_device
   
 END

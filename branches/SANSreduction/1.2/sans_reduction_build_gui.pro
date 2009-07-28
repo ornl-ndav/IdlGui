@@ -111,7 +111,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     y0_device: 0L,$
     x1_device: 0L,$
     y1_device: 0L,$
-    global_exclusion_array: STRARR(1),$
+    global_exclusion_array: PTR_NEW(0L),$
     background: PTR_NEW(0L),$
     
     facility: facility, $
@@ -313,6 +313,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     '--dump-bmon-rebin'}}$
     })
     
+  (*(*global).global_exclusion_array) = STRARR(1)
+  
   MainBaseTitle  = 'SANS Data Reduction GUI'
   MainBaseTitle += ' for ' + facility
   IF (facility EQ 'LENS') THEN BEGIN
