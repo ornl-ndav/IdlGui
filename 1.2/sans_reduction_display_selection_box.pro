@@ -83,8 +83,8 @@ PRO display_selection_manually, Event
       ENDELSE
     END
     ELSE: BEGIN
-    coeff = 1
-          IF (width_data GT 0) THEN BEGIN
+      coeff = 1
+      IF (width_data GT 0) THEN BEGIN
         coeff_width = -1
       ENDIF ELSE BEGIN
         coeff_width = 1
@@ -92,7 +92,6 @@ PRO display_selection_manually, Event
     END
   ENDCASE
   width_data *= coeff
-  
   
   IF (height_data GT 0) THEN BEGIN
     coeff_height = -1

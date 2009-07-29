@@ -179,6 +179,9 @@ END
 
 ;- Selection Load Button ------------------------------------------------------
 PRO LoadPlotSelection, Event
+  
+  print, 'entering loadPlotSelection'
+  
   ;get global structure
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL, id, GET_UVALUE=global
@@ -195,7 +198,7 @@ PRO LoadPlotSelection, Event
     'ROI file ... ' + PROCESSING
     
   error = 0
-  CATCH, error
+  ;CATCH, error ;remove_me
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
