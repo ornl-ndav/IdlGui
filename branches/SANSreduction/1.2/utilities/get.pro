@@ -57,11 +57,10 @@ END
 ;real_tube 0  1  2  3  4  5  6  7  8  9 10 11
 ;output real tube number (starting at 0)
 FUNCTION getTubeGlobal, bank, tube
-  bank_local = bank - 1
-  IF (bank_local LT 25) THEN BEGIN ;front panel
-  RETURN, bank_local * 8 + 2 * tube
+  IF (bank LT 25) THEN BEGIN ;front panel
+  RETURN, (bank - 1) * 8 + 2 * tube
   ENDIF ELSE BEGIN ;back panel
-  RETURN, (bank_local-25) * 8 + 2*tube + 1
+  RETURN, (bank - 25) * 8 + 2*tube + 1
   ENDELSE
 END
 
