@@ -890,51 +890,67 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;- X/Y base -------------------------------------------------------------------
   wXYbase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = XYbase.size[0],$
-    YOFFSET   = XYbase.size[1],$
-    SCR_XSIZE = XYbase.size[2],$
-    SCR_YSIZE = XYbase.size[3],$
+    XOFFSET   = 590,$
+    YOFFSET   = 600,$
+;    SCR_XSIZE = 80,$
     UNAME     = XYbase.uname,$
+    /COLUMN,$
     FRAME     = XYbase.frame)
     
-  ;x (label and value)
-  wXlabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = xLabel.size[0],$
-    YOFFSET = xLabel.size[1],$
-    VALUE   = xLabel.value)
-  wXvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = xValue.size[0],$
-    YOFFSET = xValue.size[1],$
+  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
+  
+    ;bank number
+    rowa = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowa,$
+      VALUE = 'Bank #:')
+    value = WIDGET_LABEL(rowa,$
+      VALUE = '  ',$
+      UNAME = 'bank_number_value')
+      
+    ;tube local
+    rowb = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowb,$
+      VALUE = 'Tube #:')
+    value = WIDGET_LABEL(rowb,$
+      VALUE = '  ',$
+      UNAME = 'tube_local_number_value')
+      
+  ENDIF
+  
+  ;row1 (Tube# or x#)
+  row1 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wXlabel = WIDGET_LABEL(row1,$
+    VALUE   = 'Tube (global):')
+  wXvalue = WIDGET_LABEL(row1,$
     VALUE   = xValue.value,$
     UNAME   = xValue.uname)
     
-  ;y (label and value)
-  wYlabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = yLabel.size[0],$
-    YOFFSET = yLabel.size[1],$
-    VALUE   = yLabel.value)
-  wYvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = yValue.size[0],$
-    YOFFSET = yValue.size[1],$
+  ;row2 (Pixel# or y#)
+  row2 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wYlabel = WIDGET_LABEL(row2,$
+    VALUE   = 'Pixel #:')
+  wYvalue = WIDGET_LABEL(row2,$
     VALUE   = yValue.value,$
     UNAME   = yValue.uname)
     
-  ;Counts (label and value)
-  wCountslabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = countsLabel.size[0],$
-    YOFFSET = countsLabel.size[1],$
-    VALUE   = countsLabel.value)
-  wCountsvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = countsValue.size[0],$
-    YOFFSET = countsValue.size[1],$
+  ;row3 (Counts)
+  row3 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wCountslabel = WIDGET_LABEL(row3,$
+    VALUE   = 'Counts: ')
+  wCountsvalue = WIDGET_LABEL(row3,$
     VALUE   = countsValue.value,$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = sScaleTypeBase.size[0],$
-    YOFFSET = sScaleTypeBase.size[1],$
+    XOFFSET = 600,$
+    YOFFSET = 730,$
     UNAME = sScaleTypeBase.uname,$
     SENSITIVE = sScaleTypeBase.sensitive,$
     /ROW)
