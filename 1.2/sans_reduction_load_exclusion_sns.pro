@@ -43,7 +43,7 @@ PRO  getBankTubePixelROI, StringArray, $
     TubeArray, $
     PixelArray
     
-  NbrRow = N_ELEMENTS(FileStringArray)
+  NbrRow = N_ELEMENTS(StringArray)
   index = 0
   WHILE (index LT NbrRow) DO BEGIN
     ON_IOERROR, L1
@@ -80,5 +80,11 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
     BankArray, $
     TubeArray, $
     PixelArray
+    
+  (*(*global).BankArray)  = BankArray
+  (*(*global).TubeArray)  = TubeArray
+  (*(*global).PixelArray) = PixelArray  
+    
+  plot_exclusion_roi_for_sns, Event     
     
 END
