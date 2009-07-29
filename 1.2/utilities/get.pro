@@ -144,7 +144,7 @@ PRO getXYposition, Event
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
   
   bank = getBankNumber(ScreenX+1)
-  tube_local = getTubeLocal(ScreenX)
+  tube_local = getTubeLocal(ScreenX+1)
   
   putTextFieldValue, Event, 'bank_number_value', STRCOMPRESS(bank,/REMOVE_ALL)
   putTextFieldValue, Event, 'tube_local_number_value', $
