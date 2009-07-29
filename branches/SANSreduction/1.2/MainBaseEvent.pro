@@ -169,15 +169,14 @@ PRO MAIN_BASE_event, Event
           IF ((*global).mouse_moved EQ 0) THEN RETURN
           temp_x_device = Event.x
           temp_y_device = Event.y
-          makeExclusionArray_SNS, Event
           
           ;ask user if he wants to validate his selection or not
           message = 'Do you want to validate your selection?'
           title = 'Validate Selection?'
           id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
           result = DIALOG_MESSAGE(message,$
-          DIALOG_PARENT = id,$
-          /CENTER,$
+            DIALOG_PARENT = id,$
+            /CENTER,$
             /QUESTION,$
             title=title)
           IF (result EQ 'Yes') THEN BEGIN
@@ -384,8 +383,12 @@ PRO MAIN_BASE_event, Event
     
     ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
-      refresh_plot, Event ;_plot
-      RefreshRoiExclusionPlot, Event   ;_plot
+      IF ((*global).facility EQ 'LENS') THEN BEGIN
+        refresh_plot, Event ;_plot
+        RefreshRoiExclusionPlot, Event   ;_plot
+      ENDIF ELSE BEGIN
+        TV, (*(*global).background), true=3
+      ENDELSE
     END
     
     ;- Selection Color Button -------------------------------------------------
