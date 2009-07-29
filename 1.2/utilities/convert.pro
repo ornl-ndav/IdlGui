@@ -32,7 +32,8 @@
 ;
 ;==============================================================================
 
-FUNCTION convert_xdata_into_device, Event, data_value
+FUNCTION convert_xdata_into_device, Event, imported_data_value
+  data_value = imported_data_value
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;go 2 by 2 for front and back panels only
