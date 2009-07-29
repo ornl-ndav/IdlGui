@@ -84,9 +84,9 @@ PRO retrieveNexus, Event, FullNexusName
     IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
     
       (*(*global).DataArray) = DataArray
-    
-    ENDIF ELSE BEGIN ;SNS
       
+    ENDIF ELSE BEGIN ;SNS
+    
       CASE (is_front_back_or_both_plot(Event)) OF
         'front': BEGIN
           (*(*global).DataArray) = (*(*global).front_bank)
@@ -334,9 +334,16 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN ;first tab
-        refresh_plot, Event     ;_plot
-        RefreshRoiExclusionPlot, Event   ;_selection
-        refresh_scale, Event
+        IF ((*global).facility EQ 'LENS') THEN BEGIN
+          refresh_plot, Event     ;_plot
+          RefreshRoiExclusionPlot, Event   ;_selection
+          refresh_scale, Event
+        ENDIF ELSE BEGIN
+          id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+          WIDGET_CONTROL, id, GET_VALUE = id_value
+          WSET, id_value
+          TV, (*(*global).background), true=3
+        ENDELSE
       END
       1: BEGIN                    ;reduce tab
       
