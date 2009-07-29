@@ -891,8 +891,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ;- X/Y base -------------------------------------------------------------------
   wXYbase = WIDGET_BASE(wTab1Base,$
     XOFFSET   = 590,$
-    YOFFSET   = 600,$
-;    SCR_XSIZE = 80,$
+    YOFFSET   = 587,$
+    ;    SCR_XSIZE = 80,$
     UNAME     = XYbase.uname,$
     /COLUMN,$
     FRAME     = XYbase.frame)
@@ -906,6 +906,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       VALUE = 'Bank #:')
     value = WIDGET_LABEL(rowa,$
       VALUE = '  ',$
+      /ALIGN_LEFT,$
       UNAME = 'bank_number_value')
       
     ;tube local
@@ -915,6 +916,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       VALUE = 'Tube #:')
     value = WIDGET_LABEL(rowb,$
       VALUE = '  ',$
+      /ALIGN_LEFT,$
       UNAME = 'tube_local_number_value')
       
   ENDIF
@@ -926,6 +928,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE   = 'Tube (global):')
   wXvalue = WIDGET_LABEL(row1,$
     VALUE   = xValue.value,$
+    /ALIGN_LEFT,$
     UNAME   = xValue.uname)
     
   ;row2 (Pixel# or y#)
@@ -935,6 +938,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE   = 'Pixel #:')
   wYvalue = WIDGET_LABEL(row2,$
     VALUE   = yValue.value,$
+    /ALIGN_LEFT,$
     UNAME   = yValue.uname)
     
   ;row3 (Counts)
@@ -949,8 +953,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = 600,$
-    YOFFSET = 730,$
+    XOFFSET = 590,$
+    YOFFSET = 735,$
     UNAME = sScaleTypeBase.uname,$
     SENSITIVE = sScaleTypeBase.sensitive,$
     /ROW)
@@ -966,9 +970,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;Selection Color Tool
   wColorBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = sColorBase.size[0],$
+    XOFFSET   = sColorBase.size[0]-40,$
     YOFFSET   = sColorBase.size[1],$
-    SCR_XSIZE = sColorBase.size[2],$
+    SCR_XSIZE = sColorBase.size[2]+100,$
     SCR_YSIZE = sColorBase.size[3],$
     FRAME     = sColorBase.frame,$
     SENSITIVE = sColorBase.sensitive,$
@@ -977,7 +981,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wSelectionColor = WIDGET_BUTTON(wcolorBase,$
     XOFFSET   = sSelectionColor.size[0],$
     YOFFSET   = sSelectionColor.size[1],$
-    SCR_XSIZE = sSelectionColor.size[2],$
+    SCR_XSIZE = sSelectionColor.size[2]+40,$
     UNAME     = sSelectionColor.uname,$
     VALUE     = sSelectionColor.value)
     
