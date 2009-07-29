@@ -467,6 +467,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SCR_XSIZE = sDraw.size[2],$
     SCR_YSIZE = sDraw.size[3],$
     /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     /MOTION_EVENTS)
     
   IF ((*global).facility EQ 'LENS') THEN BEGIN
@@ -905,7 +906,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     label = WIDGET_LABEL(rowa,$
       VALUE = 'Bank #:')
     value = WIDGET_LABEL(rowa,$
-      VALUE = '  ',$
+      VALUE = 'N/A',$
       /ALIGN_LEFT,$
       UNAME = 'bank_number_value')
       
@@ -915,7 +916,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     label = WIDGET_LABEL(rowb,$
       VALUE = 'Tube #:')
     value = WIDGET_LABEL(rowb,$
-      VALUE = '  ',$
+      VALUE = 'N/A',$
       /ALIGN_LEFT,$
       UNAME = 'tube_local_number_value')
       
@@ -927,7 +928,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wXlabel = WIDGET_LABEL(row1,$
     VALUE   = 'Tube (global):')
   wXvalue = WIDGET_LABEL(row1,$
-    VALUE   = xValue.value,$
+    VALUE   = 'N/A',$
     /ALIGN_LEFT,$
     UNAME   = xValue.uname)
     
@@ -937,7 +938,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wYlabel = WIDGET_LABEL(row2,$
     VALUE   = 'Pixel #:')
   wYvalue = WIDGET_LABEL(row2,$
-    VALUE   = yValue.value,$
+    VALUE   = 'N/A',$
     /ALIGN_LEFT,$
     UNAME   = yValue.uname)
     
@@ -947,7 +948,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wCountslabel = WIDGET_LABEL(row3,$
     VALUE   = 'Counts: ')
   wCountsvalue = WIDGET_LABEL(row3,$
-    VALUE   = countsValue.value,$
+    VALUE   = 'N/A',$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
     
