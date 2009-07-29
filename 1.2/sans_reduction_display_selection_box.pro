@@ -1,4 +1,4 @@
-;==============================================================================
+  ;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,7 +33,7 @@
 ;==============================================================================
 
 PRO display_selection, Event, x1=x1, y1=y1
-
+  
   id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value

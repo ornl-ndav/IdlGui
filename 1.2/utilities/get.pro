@@ -32,6 +32,25 @@
 ;
 ;==============================================================================
 ;------------------------------------------------------------------------------
+FUNCTION getBankNumber, tube
+  local_tube = tube - 1
+  bank = local_tube / 8
+  IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
+  RETURN, bank+1
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTubeLocal, tube
+  local_tube = tube - 1
+  IF (local_tube mod 2 EQ 1) THEN BEGIN ;odd
+    local_tube--
+  ENDIF
+  real_local_tube = local_tube MOD 8
+  real_local_tube = real_local_tube / 2
+  RETURN, real_local_tube
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getTextFieldValue, Event, uname
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, GET_VALUE=value
@@ -90,6 +109,7 @@ PRO getXYposition, Event
   x = Event.x
   y = Event.y
   IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
     IF ((*global).Xpixel  EQ 80L) THEN BEGIN
       Xcoeff = 8
     ENDIF ELSE BEGIN
@@ -97,7 +117,8 @@ PRO getXYposition, Event
     ENDELSE
     ScreenX = x / Xcoeff
     ScreenY = y / Xcoeff
-  ENDIF ELSE BEGIN
+    
+  ENDIF ELSE BEGIN ;SNS
   
     ;check if both panels are plotted
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
@@ -121,6 +142,14 @@ PRO getXYposition, Event
   ENDELSE
   putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX+1,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+  
+  bank = getBankNumber(ScreenX+1)
+  tube_local = getTubeLocal(ScreenX)
+  
+  putTextFieldValue, Event, 'bank_number_value', STRCOMPRESS(bank,/REMOVE_ALL)
+  putTextFieldValue, Event, 'tube_local_number_value', $
+  STRCOMPRESS(tube_local,/REMOVE_ALL)
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -190,23 +219,4 @@ FUNCTION  getRealDataX, Event, x0_data
     ELSE:
   ENDCASE
   
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getBankNumber, tube
-  local_tube = tube - 1
-  bank = local_tube / 8
-  IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
-  RETURN, bank+1
-END
-
-;------------------------------------------------------------------------------
-FUNCTION getTubeLocal, tube
-  local_tube = tube - 1
-  IF (local_tube mod 2 EQ 1) THEN BEGIN ;odd
-    local_tube--
-  ENDIF
-  real_local_tube = local_tube MOD 8
-  real_local_tube = real_local_tube / 2
-  RETURN, real_local_tube
 END
