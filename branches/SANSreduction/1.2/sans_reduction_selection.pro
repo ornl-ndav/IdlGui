@@ -278,6 +278,7 @@ PRO clear_selection_tool, Event
   (*global).there_is_a_selection = 0
   putTextFieldValue, Event, 'roi_file_name_text_field', ''
   (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
+  (*(*global).global_exclusion_array) = STRARR(1)
   IDLsendToGeek_ReplaceLogBookText, Event, (*global).processing, (*global).ok
 END
 
