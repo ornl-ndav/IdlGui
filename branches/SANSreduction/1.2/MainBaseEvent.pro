@@ -108,7 +108,7 @@ PRO MAIN_BASE_event, Event
             putCountsValue, Event, Event.x/2., Event.y/2. ;_put
           ENDELSE
         ENDIF ELSE BEGIN
-          ;CATCH, error
+          CATCH, error
           error = 0 ;remove_me
           IF (error NE 0) THEN BEGIN
             CATCH,/CANCEL
