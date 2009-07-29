@@ -948,7 +948,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   wCountslabel = WIDGET_LABEL(row3,$
     VALUE   = 'Counts: ')
   wCountsvalue = WIDGET_LABEL(row3,$
-    VALUE   = 'N/A',$
+    VALUE   = 'N/A          ',$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
     

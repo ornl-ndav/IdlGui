@@ -61,28 +61,29 @@ PRO plot_exclusion_roi_for_sns, Event
       'front': BEGIN ;front
         IF (Bank GE 25) THEN local_continue = 1
         bank_local_data = bank - 1
-        coeff_width = -2
+        ;coeff_width = -2
       END
       'back': BEGIN ;back
         IF (Bank LT 25) THEN local_continue = 1
         bank_local_data = bank - 25
-        coeff_width = -2
+;        coeff_width = -2
       END
       ELSE: BEGIN ;Both
-        coeff_width = -1
+;        coeff_width = -1
         IF (Bank GE 25) THEN BEGIN ;back banks
-          bank_local_data = (bank - 25) * 2 + 1
+          bank_local_data = (bank - 25) * 2 
         ENDIF ELSE BEGIN ;front banks
           bank_local_data = (bank - 1) * 2
         ENDELSE
       END
     ENDCASE
-    coeff_height = -1
+    coeff_height = +1
+    coeff_width = +1
     
     IF (local_continue) THEN CONTINUE
     
     ;determine the real tube offset
-    tube_local_data = bank_local_data * 8 + tube + 1
+    tube_local_data = getTubeGlobal(bank, tube)
     print, 'x0: ' + string(tube_local_data)
     print, 'y0: ' + string(Pixel)
     x0_device = convert_xdata_into_device(Event, tube_local_data)
@@ -117,10 +118,16 @@ PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1
 ;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
 ;  string(ymin) + ',' + string(ymax)
   
-  PLOTS, [xmin, xmin, xmax, xmax, xmin],$
-    [ymin,ymax, ymax, ymin, ymin],$
-    /DEVICE,$
-    LINESTYLE = 3,$
-    COLOR = 200
+    PLOTS, xmin, ymin, /DEVICE, COLOR=200
+    PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=200
+    PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=200
+    PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=200
+    PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=200
+  
+;   PLOTS, [xmin, xmin, xmax, xmax, xmin],$
+;    [ymin,ymax, ymax, ymin, ymin],$
+;    /DEVICE,$
+;;    LINESTYLE = 3,$
+;    COLOR = 200
     
 END
