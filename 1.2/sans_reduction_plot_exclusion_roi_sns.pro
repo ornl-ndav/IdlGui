@@ -84,14 +84,14 @@ PRO plot_exclusion_roi_for_sns, Event
     
     ;determine the real tube offset
     tube_local_data = getTubeGlobal(bank, tube)
-    print, 'x0: ' + string(tube_local_data)
-    print, 'y0: ' + string(Pixel)
+    print, 'bank:' + strcompress(bank,/remove_all) + $
+    ',tube:'+ strcompress(tube,/remove_all) + $
+    ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
     x0_device = convert_xdata_into_device(Event, tube_local_data)
     y0_device = convert_ydata_into_device(Event, Pixel)
     x1_data   =  tube_local_data + coeff_width
     y1_data   =  Pixel + coeff_height
-    print, 'x1: ' + string(x1_data)
-    print, 'y1: ' + string(y1_data)
+;    print, 'x1: ' + string(x1_data)
     print
     x1_device = convert_xdata_into_device(Event, x1_data)
     y1_device = convert_ydata_into_device(Event, y1_data)
