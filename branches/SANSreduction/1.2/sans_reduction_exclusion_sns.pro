@@ -82,7 +82,8 @@ PRO makeExclusionArray_SNS, Event
   ENDIF ELSE BEGIN
     pixel_coeff = +1
   ENDELSE
-  pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * pixel_increment
+  pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * $
+    pixel_increment
   from_pixel = MIN([pixel1_data,pixel0_data],MAX=to_pixel)
   
   IF (tube_width_data GT 0) THEN BEGIN
@@ -93,17 +94,21 @@ PRO makeExclusionArray_SNS, Event
   tube1_data  = tube0_data + (tube_width_data + tube_coeff) * tube_increment
   from_tube = MIN([tube1_data, tube0_data],MAX=to_tube)
   
-  ;print, 'from tube: ' + string(tube0_data) + ' to tube: ' + string(tube1_data) + ' with increment: ' + string(tube_increment)
-  ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + string(pixel1_data) + ' with increment: ' + string(pixel_increment)
+  ;print, 'from tube: ' + string(tube0_data) + ' to tube: ' + $
+  ;string(tube1_data) + ' with increment: ' + string(tube_increment)
+  ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + $
+  ;string(pixel1_data) + ' with increment: ' + string(pixel_increment)
   index = 0
   tube = from_tube
   WHILE (tube LE to_tube) DO BEGIN
     pixel = from_pixel
     WHILE (pixel LE to_pixel) DO BEGIN
       bank = getBankNumber(tube)
-      ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + ', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+      tube_local = getTubeLocal(tube)
+      ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
+      ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
       line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-      line += '_' + STRCOMPRESS(tube,/REMOVE_ALL)
+      line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
       line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
       pixel_array[index] = line
       pixel++
@@ -151,7 +156,7 @@ PRO SaveExclusionFile_SNS, Event
   file_name      = getTextfieldValue(Event,'save_roi_text_field')
   full_file_name = folder + file_name
   
-    ;go 2 by 2 for front and back panels only
+  ;go 2 by 2 for front and back panels only
   ;start at 1 if back panel
   panel_selected = getPanelSelected(Event)
   CASE (panel_selected) OF

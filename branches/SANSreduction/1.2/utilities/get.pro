@@ -199,3 +199,14 @@ FUNCTION getBankNumber, tube
   IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
   RETURN, bank+1
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getTubeLocal, tube
+  local_tube = tube - 1
+  IF (local_tube mod 2 EQ 1) THEN BEGIN ;odd
+    local_tube--
+  ENDIF
+  real_local_tube = local_tube MOD 8
+  real_local_tube = real_local_tube / 2
+  RETURN, real_local_tube
+END

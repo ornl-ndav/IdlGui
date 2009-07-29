@@ -34,20 +34,23 @@
 
 FUNCTION convert_xdata_into_device, Event, data_value
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
+  
   ;go 2 by 2 for front and back panels only
   ;start at 1 if back panel
   panel_selected = getPanelSelected(Event)
   CASE (panel_selected) OF
     'front': BEGIN
-        data_value -= 1
-        device_value = (data_value ) * (*global).congrid_x_coeff
+      data_value -= 1
+      device_value = (data_value ) * (*global).congrid_x_coeff
     END
     'back': BEGIN
-        data_value -= 2
-        device_value = (data_value ) * (*global).congrid_x_coeff
+      data_value -= 2
+      device_value = (data_value ) * (*global).congrid_x_coeff
     END
-    ELSE: device_value = data_value * (*global).congrid_x_coeff
+    ELSE: BEGIN
+      data_value -= 1
+      device_value = data_value * (*global).congrid_x_coeff
+    END
   ENDCASE
   
   RETURN, device_value
@@ -63,7 +66,7 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION convert_xdevice_into_data, Event, device_value
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
+  
   IF ((*global).facility EQ 'LENS') THEN BEGIN
     IF ((*global).Xpixel  EQ 80L) THEN BEGIN
       Xcoeff = 8
@@ -79,20 +82,20 @@ FUNCTION convert_xdevice_into_data, Event, device_value
     coeff = 0.5
     IF (value EQ 1) THEN coeff = 1
     ScreenX = FIX(FLOAT(device_value) / (*global).congrid_x_coeff * coeff)
-  
+    
     panel_selected = getPanelSelected(Event)
     CASE (panel_selected) OF
       'front': BEGIN
-      ScreenX *= 2
+        ScreenX *= 2
       END
       'back': BEGIN
-      ScreenX = ScreenX * 2 + 1
+        ScreenX = ScreenX * 2 + 1
       END
       ELSE:
     ENDCASE
-  
+    
   ENDELSE
-
+  
   RETURN, screenX
 END
 
