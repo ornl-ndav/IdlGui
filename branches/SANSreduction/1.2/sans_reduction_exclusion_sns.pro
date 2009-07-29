@@ -50,7 +50,7 @@ PRO makeExclusionArray_SNS, Event
   IF (tube_width_data LT 0) THEN tube_sign = -1
   
   pixel_sign = 1
-  IF (pixel_height_data LT 0) THEN pixel_sign = -1
+  ;IF (pixel_height_data LT 0) THEN pixel_sign = -1
   
   ;go 2 by 2 for front and back panels only
   ;start at 1 if back panel
