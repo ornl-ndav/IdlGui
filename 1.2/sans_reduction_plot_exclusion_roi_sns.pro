@@ -46,10 +46,10 @@ PRO plot_exclusion_roi_for_sns, Event
   
     local_continue = 0
     
-;    print, 'Bank: ' + strcompress(BankArray[i],/remove_all) + $
-;      ', Tube: ' + strcompress(TubeArray[i],/remove_all) + $
-;      ', Pixel: ' + strcompress(PixelArray[i],/remove_all)
-      
+    ;    print, 'Bank: ' + strcompress(BankArray[i],/remove_all) + $
+    ;      ', Tube: ' + strcompress(TubeArray[i],/remove_all) + $
+    ;      ', Pixel: ' + strcompress(PixelArray[i],/remove_all)
+    
     Bank  = FIX(BankArray[i])
     Tube  = FIX(TubeArray[i])
     Pixel = FIX(PixelArray[i])
@@ -59,39 +59,44 @@ PRO plot_exclusion_roi_for_sns, Event
     panel_selected = getPanelSelected(Event)
     CASE (panel_selected) OF
       'front': BEGIN ;front
+        coeff_width = +2
         IF (Bank GE 25) THEN local_continue = 1
         bank_local_data = bank - 1
-        ;coeff_width = -2
+        tube_coeff = 2
+      ;coeff_width = -2
       END
       'back': BEGIN ;back
+        coeff_width = +2
         IF (Bank LT 25) THEN local_continue = 1
         bank_local_data = bank - 25
-;        coeff_width = -2
+        tube_coeff = 2
+      ;        coeff_width = -2
       END
       ELSE: BEGIN ;Both
-;        coeff_width = -1
+        coeff_width = +1
+        tube_coeff = 2
         IF (Bank GE 25) THEN BEGIN ;back banks
-          bank_local_data = (bank - 25) * 2 
+          bank_local_data = (bank - 25) * 2
         ENDIF ELSE BEGIN ;front banks
           bank_local_data = (bank - 1) * 2
         ENDELSE
       END
     ENDCASE
     coeff_height = +1
-    coeff_width = +1
     
     IF (local_continue) THEN CONTINUE
     
     ;determine the real tube offset
     tube_local_data = getTubeGlobal(bank, tube)
+    tube_local_data += tube_coeff
     print, 'bank:' + strcompress(bank,/remove_all) + $
-    ',tube:'+ strcompress(tube,/remove_all) + $
-    ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
+      ',tube:'+ strcompress(tube,/remove_all) + $
+      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
     x0_device = convert_xdata_into_device(Event, tube_local_data)
     y0_device = convert_ydata_into_device(Event, Pixel)
     x1_data   =  tube_local_data + coeff_width
     y1_data   =  Pixel + coeff_height
-;    print, 'x1: ' + string(x1_data)
+    ;    print, 'x1: ' + string(x1_data)
     print
     x1_device = convert_xdata_into_device(Event, x1_data)
     y1_device = convert_ydata_into_device(Event, y1_data)
@@ -100,6 +105,8 @@ PRO plot_exclusion_roi_for_sns, Event
       x1=x1_device, y1=y1_device
       
   ENDFOR
+  
+  print, '=================================================='
   
 END
 
@@ -115,19 +122,19 @@ PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1
   xmin = MIN([x0, x1],MAX=xmax)
   ymin = MIN([y0, y1],MAX=ymax)
   
-;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
-;  string(ymin) + ',' + string(ymax)
+  ;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
+  ;  string(ymin) + ',' + string(ymax)
   
-    PLOTS, xmin, ymin, /DEVICE, COLOR=200
-    PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=200
-    PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=200
-    PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=200
-    PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=200
+  PLOTS, xmin, ymin, /DEVICE, COLOR=200
+  PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=200
+  PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=200
+  PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=200
+  PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=200
   
 ;   PLOTS, [xmin, xmin, xmax, xmax, xmin],$
 ;    [ymin,ymax, ymax, ymin, ymin],$
 ;    /DEVICE,$
 ;;    LINESTYLE = 3,$
 ;    COLOR = 200
-    
+  
 END
