@@ -77,6 +77,8 @@ PRO makeExclusionArray_SNS, Event
   ;print, 'pixel_height_data: ' + string(pixel_height_data)
   
   IF (nbr_pixels_total GT 0) THEN BEGIN
+    
+    pixel_array = STRARR(nbr_pixels_total)
   
     IF (pixel_height_data GT 0) THEN BEGIN
       pixel_coeff = -1
