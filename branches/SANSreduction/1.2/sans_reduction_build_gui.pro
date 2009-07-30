@@ -116,6 +116,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     BankArray: PTR_NEW(0L),$
     TubeArray: PTR_NEW(0L),$
     PixelArray: PTR_NEW(0L),$
+    dead_tube_nbr: PTR_NEW(0L),$
     
     facility: facility, $
     facility_list: ['LENS'],$

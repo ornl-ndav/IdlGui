@@ -45,3 +45,11 @@ IF (front_SET) THEN RETURN, 'back'
 RETURN, 'both'
 
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isAutoExcludeDeadTubeSelected, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='exclude_dead_tube_auto')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN RETURN, 1
+RETURN, 0
+END

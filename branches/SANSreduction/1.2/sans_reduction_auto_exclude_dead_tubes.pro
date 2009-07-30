@@ -32,30 +32,70 @@
 ;
 ;==============================================================================
 
-PRO plot_exclusion_roi_for_sns, Event
+PRO auto_exclude_dead_tubes, Event
+
+  ;check if user wants to exclude dead tubes or not
+  IF (~isAutoExcludeDeadTubeSelected(Event)) THEN RETURN
+  
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;retrieve data array
+  DataArray = (*(*global).DataArray)
+  
+  nbr_tubes = (size(DataArray))(3)
+  DeadTubeNbr = ''
+  FOR i=0,(nbr_tubes-1) DO BEGIN
+    current_tube = DataArray[*,*,i]
+    total1 = TOTAL(current_tube,1)
+    
+    total_counts_of_tube = TOTAL(total1,1)
+    IF (total_counts_of_tube EQ 0) THEN BEGIN
+      DeadTubeNbr += STRCOMPRESS(i,/REMOVE_ALL) + ','
+    ENDIF
+    
+  ENDFOR
+  
+  IF (DeadTubeNbr NE '') THEN BEGIN
+    message = '> List of dead tubes (or 0 total counts): '
+    array = STRSPLIT(DeadTubeNbr,',',/EXTRACT)
+    list = STRJOIN(array,',')
+    message += list
+    IDLsendToGeek_addLogBookText, Event, message
+    
+    (*(*global).dead_tube_nbr) = array
+    plot_exclusion_of_dead_tubes, Event
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_exclusion_of_dead_tubes, Event
 
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  BankArray  = (*(*global).BankArray)
-  TubeArray  = (*(*global).TubeArray)
-  PixelArray = (*(*global).PixelArray)
-    
-  sz = size(BankArray)
-  IF (sz[0] EQ 0) THEN RETURN ;BankArray = PTR_NEW(0L) (no data)
+  dead_tube_nbr = (*(*global).dead_tube_nbr)
+  sz = N_ELEMENTS(dead_tube_nbr)
+  BankArray = STRARR(sz)
   
-  sz = N_ELEMENTS(BankArray)
-  FOR i=0,  sz-1 DO BEGIN
+  ;get bank of dead tubes
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    ;+1 as getBankNumber start at tube 1
+    BankNumber = getBankNumber(FIX(dead_tube_nbr[index]+1))
+    BankArray[index] = STRCOMPRESS(BankNumber,/REMOVE_ALL)
+    index++
+  ENDWHILE
+  
+  TubeArray = dead_tube_nbr
+  FOR i=0, sz-1 DO BEGIN
   
     local_continue = 0
     
-    ;    print, 'Bank: ' + strcompress(BankArray[i],/remove_all) + $
-    ;      ', Tube: ' + strcompress(TubeArray[i],/remove_all) + $
-    ;      ', Pixel: ' + strcompress(PixelArray[i],/remove_all)
-    
     Bank  = FIX(BankArray[i])
-    Tube  = FIX(TubeArray[i])
-    Pixel = FIX(PixelArray[i])
+    Tube  = FIX(TubeArray[i]) - 1
     
     ;go 2 by 2 for front and back panels only
     ;start at 1 if back panel
@@ -89,45 +129,28 @@ PRO plot_exclusion_roi_for_sns, Event
     
     IF (local_continue) THEN CONTINUE
     
-    ;determine the real tube offset
-    tube_local_data = getTubeGlobal(bank, tube)
-    tube_local_data += tube_coeff
-;    print, 'bank:' + strcompress(bank,/remove_all) + $
-;      ',tube:'+ strcompress(tube,/remove_all) + $
-;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
-    x0_device = convert_xdata_into_device(Event, tube_local_data)
-    y0_device = convert_ydata_into_device(Event, Pixel)
-    x1_data   =  tube_local_data + coeff_width
-    y1_data   =  Pixel + coeff_height
+    tube += tube_coeff
+    x0_device = convert_xdata_into_device(Event, tube)
+    x1_data   =  tube + coeff_width
     x1_device = convert_xdata_into_device(Event, x1_data)
-    y1_device = convert_ydata_into_device(Event, y1_data)
     
-    display_loaded_selection, Event, x0=x0_device, y0=y0_device,$
-      x1=x1_device, y1=y1_device
+    FOR pixel=0,255 DO BEGIN
+    
+      y0_device = convert_ydata_into_device(Event, pixel)
+      y1_data   =  Pixel + coeff_height
+      y1_device = convert_ydata_into_device(Event, y1_data)
       
+      display_loaded_selection, Event, $
+        x0=x0_device, $
+        y0=y0_device,$
+        x1=x1_device, $
+        y1=y1_device
+        
+    ENDFOR
+    
   ENDFOR
   
 END
 
-;------------------------------------------------------------------------------
-PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1
 
-  id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  xmin = MIN([x0, x1],MAX=xmax)
-  ymin = MIN([y0, y1],MAX=ymax)
-  
-  ;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
-  ;  string(ymin) + ',' + string(ymax)
-  
-  PLOTS, xmin, ymin, /DEVICE, COLOR=200
-  PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=200
-  
-END
+
