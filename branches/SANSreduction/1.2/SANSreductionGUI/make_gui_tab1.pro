@@ -504,8 +504,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /NO_RELEASE,$
       UNAME = 'show_both_banks_button')
       
-    WIDGET_CONTROL, both_bank, /SET_BUTTON
-    
+    WIDGET_CONTROL, both_bank, /SET_BUTTON   
+   
   ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
@@ -974,26 +974,37 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;Selection Color Tool
   wColorBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = sColorBase.size[0]-40,$
+    XOFFSET   = sColorBase.size[0]-63,$
     YOFFSET   = sColorBase.size[1],$
-    SCR_XSIZE = sColorBase.size[2]+100,$
-    SCR_YSIZE = sColorBase.size[3],$
     FRAME     = sColorBase.frame,$
     SENSITIVE = sColorBase.sensitive,$
-    UNAME     = sColorBase.uname)
+    UNAME     = sColorBase.uname,$
+    /COLUMN)
     
   wSelectionColor = WIDGET_BUTTON(wcolorBase,$
-    XOFFSET   = sSelectionColor.size[0],$
-    YOFFSET   = sSelectionColor.size[1],$
-    SCR_XSIZE = sSelectionColor.size[2]+40,$
+    SCR_XSIZE = sSelectionColor.size[2]+58,$
     UNAME     = sSelectionColor.uname,$
     VALUE     = sSelectionColor.value)
     
-; wPlotColor = WIDGET_BUTTON(wcolorBase,$
-;                                 XOFFSET   = sPlotColor.size[0],$
-;                                 YOFFSET   = sPlotColor.size[1],$
-;                                 SCR_XSIZE = sPlotColor.size[2],$
-;                                 UNAME     = sPlotColor.uname,$
-;                                 VALUE     = sPlotColor.value)
-    
+    ;Auto. Exclude Dead Tubes
+   auto_base = WIDGET_BASE(wTab1Base,$
+   XOFFSET = sColorBase.size[0]-58,$
+   YOFFSET = sColorBase.size[1] + 47,$
+   /COLUMN,$
+   FRAME = 1)
+   
+   group = CW_BGROUP(auto_base,$
+   ['Yes','No'],$
+   /EXCLUSIVE,$
+   /NO_RELEASE,$
+   SET_VALUE = 0,$
+   UNAME = 'exclude_dead_tube_auto',$
+   LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
+
+
+
+
+
+
+
 END
