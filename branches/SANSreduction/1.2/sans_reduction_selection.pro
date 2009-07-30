@@ -179,7 +179,7 @@ END
 
 ;- Selection Load Button ------------------------------------------------------
 PRO LoadPlotSelection, Event
-  
+
   ;get global structure
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL, id, GET_UVALUE=global
@@ -212,7 +212,7 @@ PRO LoadPlotSelection, Event
       ;parse string array
       
       IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS ----------------------
-
+      
         IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
           PROCESSING
         Xarray = INTARR(NbrElements)
@@ -243,8 +243,11 @@ PRO LoadPlotSelection, Event
         ENDELSE
       ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
       
-        load_exclusion_roi_for_sns, Event, FileStringArray 
-      
+        load_exclusion_roi_for_sns, Event, FileStringArray
+        
+        ;add list of pixel (bank#_x_y) to PixelArray
+        add_to_global_exclusion_array, event, FileStringArray
+        
       ENDELSE
     ENDELSE
   ENDELSE
