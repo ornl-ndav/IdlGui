@@ -110,7 +110,7 @@ PRO plot_exclusion_roi_for_sns, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1
+PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1, COLOR=color
 
   id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -124,10 +124,12 @@ PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1
   ;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
   ;  string(ymin) + ',' + string(ymax)
   
-  PLOTS, xmin, ymin, /DEVICE, COLOR=200
-  PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=200
-  PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=200
+  IF (N_ELEMENTS(color) EQ 0) THEN color=200
+  
+  PLOTS, xmin, ymin, /DEVICE, COLOR=color
+  PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
+  PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color
+  PLOTS, xmin, ymax, /DEVICE, /CONTINUE, COLOR=color
+  PLOTS, xmin, ymin, /DEVICE, /CONTINUE, COLOR=color
   
 END
