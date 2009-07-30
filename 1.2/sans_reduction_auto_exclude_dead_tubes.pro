@@ -57,7 +57,12 @@ PRO auto_exclude_dead_tubes, Event
   ENDFOR
   
   IF (DeadTubeNbr NE '') THEN BEGIN
-    message = '> List of dead tubes (or 0 total counts): '
+  
+    ;go 2 by 2 for front and back panels only
+    ;start at 1 if back panel
+    panel_selected = getPanelSelected(Event)
+    message = '> List of dead tubes (or 0 total counts) for ' + $
+    panel_selected + ' panel(s):' 
     array = STRSPLIT(DeadTubeNbr,',',/EXTRACT)
     list = STRJOIN(array,',')
     message += list
@@ -86,6 +91,8 @@ PRO plot_exclusion_of_dead_tubes, Event
     ;+1 as getBankNumber start at tube 1
     BankNumber = getBankNumber(FIX(dead_tube_nbr[index]+1))
     BankArray[index] = STRCOMPRESS(BankNumber,/REMOVE_ALL)
+    print, 'dead_tube_nbr: ' + string(dead_tube_nbr[index]) + $
+    ', bank: ' + string(bankNumber)
     index++
   ENDWHILE
   
@@ -95,7 +102,7 @@ PRO plot_exclusion_of_dead_tubes, Event
     local_continue = 0
     
     Bank  = FIX(BankArray[i])
-    Tube  = FIX(TubeArray[i]) - 1
+    tube  = FIX(TubeArray[i]) - 1
     
     ;go 2 by 2 for front and back panels only
     ;start at 1 if back panel
@@ -129,6 +136,8 @@ PRO plot_exclusion_of_dead_tubes, Event
     
     IF (local_continue) THEN CONTINUE
     
+;    print, 'tube: ' + string(tube)
+    
     tube += tube_coeff
     x0_device = convert_xdata_into_device(Event, tube)
     x1_data   =  tube + coeff_width
@@ -144,7 +153,8 @@ PRO plot_exclusion_of_dead_tubes, Event
         x0=x0_device, $
         y0=y0_device,$
         x1=x1_device, $
-        y1=y1_device
+        y1=y1_device, $
+        COLOR= 100
         
     ENDFOR
     

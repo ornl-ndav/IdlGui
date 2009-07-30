@@ -393,6 +393,9 @@ PRO MAIN_BASE_event, Event
     ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
       clear_selection_tool, Event ;_selection
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        plot_exclusion_of_dead_tubes, Event
+      ENDIF
       save_background,  Event, GLOBAL=global
     END
     
@@ -420,6 +423,9 @@ PRO MAIN_BASE_event, Event
       (*(*global).DataArray) = (*(*global).front_bank)
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        plot_exclusion_of_dead_tubes, Event
+      ENDIF
       save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
@@ -429,6 +435,9 @@ PRO MAIN_BASE_event, Event
       (*(*global).DataArray) = (*(*global).back_bank)
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        plot_exclusion_of_dead_tubes, Event
+      ENDIF
       save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
@@ -438,6 +447,9 @@ PRO MAIN_BASE_event, Event
       (*(*global).DataArray) = (*(*global).both_banks)
       refresh_plot, Event ;_plot
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        plot_exclusion_of_dead_tubes, Event
+      ENDIF
       save_background,  Event, GLOBAL=global
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
@@ -447,7 +459,7 @@ PRO MAIN_BASE_event, Event
       IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
         refresh_plot, Event ;_plot
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-        auto_exclude_dead_tubes, Event
+        plot_exclusion_of_dead_tubes, Event
         save_background,  Event, GLOBAL=global
       ENDIF ELSE BEGIN
         refresh_plot, Event ;_plot
