@@ -75,47 +75,91 @@ PRO makeExclusionArray_SNS, Event
   ;print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
   ;print, 'nbr_tubes: ' + string(nbr_tubes)
   ;print, 'pixel_height_data: ' + string(pixel_height_data)
-  pixel_array = STRARR(nbr_pixels_total)
   
-  IF (pixel_height_data GT 0) THEN BEGIN
-    pixel_coeff = -1
-  ENDIF ELSE BEGIN
-    pixel_coeff = +1
+  IF (nbr_pixels_total GT 0) THEN BEGIN
+  
+    IF (pixel_height_data GT 0) THEN BEGIN
+      pixel_coeff = -1
+    ENDIF ELSE BEGIN
+      pixel_coeff = +1
+    ENDELSE
+    pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * $
+      pixel_increment
+    from_pixel = MIN([pixel1_data,pixel0_data],MAX=to_pixel)
+    
+    IF (tube_width_data GT 0) THEN BEGIN
+      tube_coeff = -1
+    ENDIF ELSE BEGIN
+      tube_coeff = +1
+    ENDELSE
+    tube1_data  = tube0_data + (tube_width_data + tube_coeff) * tube_increment
+    from_tube = MIN([tube1_data, tube0_data],MAX=to_tube)
+    
+    ;print, 'from tube: ' + string(tube0_data) + ' to tube: ' + $
+    ;string(tube1_data) + ' with increment: ' + string(tube_increment)
+    ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + $
+    ;string(pixel1_data) + ' with increment: ' + string(pixel_increment)
+    
+    index = 0
+    IF (nbr_pixels_total GT 0) THEN BEGIN
+      tube = from_tube
+      WHILE (tube LE to_tube) DO BEGIN
+        pixel = from_pixel
+        WHILE (pixel LE to_pixel) DO BEGIN
+          bank = getBankNumber(tube)
+          tube_local = getTubeLocal(tube)
+          ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
+          ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+          pixel_array[index] = line
+          pixel++
+          index++
+        ENDWHILE
+        tube += tube_increment
+      ENDWHILE
+    ENDIF
+    
+  ENDIF ELSE BEGIN ;end of (if(nbr_pixels_total GT 0))
+  
+    pixel_array = ['']
+    
   ENDELSE
-  pixel1_data = pixel0_data + (pixel_height_data + pixel_coeff) * $
-    pixel_increment
-  from_pixel = MIN([pixel1_data,pixel0_data],MAX=to_pixel)
   
-  IF (tube_width_data GT 0) THEN BEGIN
-    tube_coeff = -1
+  ;check if Automatically Exclude Dead Tubes is ON
+  IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+    dead_tube_nbr = (*(*global).dead_tube_nbr)
+    nbr_dead_tube = N_ELEMENTS(dead_tube_nbr)
+    sz_pixel_array = LONG(nbr_dead_tube) * 256L
+    IF (sz_pixel_array GT 0) THEN BEGIN
+      PixelArray_of_Deadtubes = STRARR(sz_pixel_array)
+      index = 0
+      dead_tube_index = 0
+      WHILE (dead_tube_index LT nbr_dead_tube) DO BEGIN
+        tube_global = dead_tube_nbr[dead_tube_index]
+        bank = getBankNumber(tube_global+1)
+        tube_local = getTubeLocal(tube_global+1)
+        FOR pixel=0,255L DO BEGIN
+          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+          PixelArray_of_DeadTubes[index] = line
+          index++
+        ENDFOR
+        dead_tube_index++
+      ENDWHILE
+      
+    ENDIF ELSE BEGIN;reset PixelArray_of_DeadTubes
+      PixelArray_of_DeadTubes = STRARR(1)
+    ENDELSE
   ENDIF ELSE BEGIN
-    tube_coeff = +1
+    PixelArray_of_DeadTubes = STRARR(1)
+    
   ENDELSE
-  tube1_data  = tube0_data + (tube_width_data + tube_coeff) * tube_increment
-  from_tube = MIN([tube1_data, tube0_data],MAX=to_tube)
   
-  ;print, 'from tube: ' + string(tube0_data) + ' to tube: ' + $
-  ;string(tube1_data) + ' with increment: ' + string(tube_increment)
-  ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + $
-  ;string(pixel1_data) + ' with increment: ' + string(pixel_increment)
-  index = 0
-  tube = from_tube
-  WHILE (tube LE to_tube) DO BEGIN
-    pixel = from_pixel
-    WHILE (pixel LE to_pixel) DO BEGIN
-      bank = getBankNumber(tube)
-      tube_local = getTubeLocal(tube)
-      ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
-      ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
-      line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-      line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
-      line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
-      pixel_array[index] = line
-      pixel++
-      index++
-    ENDWHILE
-    tube += tube_increment
-  ENDWHILE
+  (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
+  
   
   add_to_global_exclusion_array, event, pixel_array
   
@@ -147,6 +191,7 @@ PRO SaveExclusionFile_SNS, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   pixel_array = (*(*global).global_exclusion_array)
+  PixelArray_of_DeadTubes = (*(*global).PixelArray_of_DeadTubes)
   
   PROCESSING = (*global).processing
   OK         = (*global).ok
@@ -156,22 +201,7 @@ PRO SaveExclusionFile_SNS, Event
   file_name      = getTextfieldValue(Event,'save_roi_text_field')
   full_file_name = folder + file_name
   
-  ;go 2 by 2 for front and back panels only
-  ;start at 1 if back panel
-  panel_selected = getPanelSelected(Event)
-  CASE (panel_selected) OF
-    'front': BEGIN ;front
-      panel = 'front panel'
-    END
-    'back': BEGIN ;back
-      panel = 'back panel'
-    END
-    ELSE: BEGIN ;Both
-      panel = 'both panels'
-    END
-  ENDCASE
-  
-  text = '> Saving Exclusion Region for ' + panel
+  text = '> Saving Exclusion Region:'
   IDLsendToGeek_addLogBookText, Event, text
   text = '-> ROI file name: ' + full_file_name
   IDLsendToGeek_addLogBookText, Event, text
@@ -180,16 +210,27 @@ PRO SaveExclusionFile_SNS, Event
   text = '-> Writing file ... ' + PROCESSING
   IDLsendToGeek_addLogBookText, Event, text
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) then begin
     CATCH, /CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
   ENDIF ELSE BEGIN
     ;open output file
     OPENW, 1, full_file_name
-    FOR i=0,N_ELEMENTS(pixel_array)-1 DO BEGIN
-      PRINTF, 1, pixel_array[i]
-    ENDFOR
+    
+    IF (N_ELEMENTS(pixel_array) GT 0) THEN BEGIN ;copy the excluded pixels
+      FOR i=0,N_ELEMENTS(pixel_array)-1 DO BEGIN
+        IF (pixel_array[i] NE '') THEN PRINTF, 1, pixel_array[i]
+      ENDFOR
+    ENDIF
+    
+    IF (N_ELEMENTS(PixelArray_of_DeadTubes) GT 0) THEN BEGIN ;dead tubes
+      FOR i=0,N_ELEMENTS(PixelArray_of_DeadTubes)-1 DO BEGIN
+        IF (PixelArray_of_DeadTubes[i] NE '') THEN $
+          PRINTF, 1, PixelArray_of_DeadTubes[i]
+      ENDFOR
+    ENDIF
+    
     CLOSE, 1
     FREE_LUN, 1
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
