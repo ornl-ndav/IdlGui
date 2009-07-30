@@ -442,6 +442,20 @@ PRO MAIN_BASE_event, Event
     ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
+    ;Automatically Exclude Dead Tubes or not ----------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME = 'exclude_dead_tube_auto'): BEGIN
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        auto_exclude_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+      ENDIF ELSE BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDELSE
+    END
+    
     ;= TAB2 (REDUCE) ==========================================================
     
     ;---- GO DATA REDUCTION button
