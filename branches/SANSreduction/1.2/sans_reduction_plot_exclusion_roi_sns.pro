@@ -40,6 +40,9 @@ PRO plot_exclusion_roi_for_sns, Event
   BankArray  = (*(*global).BankArray)
   TubeArray  = (*(*global).TubeArray)
   PixelArray = (*(*global).PixelArray)
+    
+  sz = size(BankArray)
+  IF (sz[0] EQ 0) THEN RETURN ;BankArray = PTR_NEW(0L) (no data)
   
   sz = N_ELEMENTS(BankArray)
   FOR i=0,  sz-1 DO BEGIN
@@ -89,15 +92,13 @@ PRO plot_exclusion_roi_for_sns, Event
     ;determine the real tube offset
     tube_local_data = getTubeGlobal(bank, tube)
     tube_local_data += tube_coeff
-    print, 'bank:' + strcompress(bank,/remove_all) + $
-      ',tube:'+ strcompress(tube,/remove_all) + $
-      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
+;    print, 'bank:' + strcompress(bank,/remove_all) + $
+;      ',tube:'+ strcompress(tube,/remove_all) + $
+;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
     x0_device = convert_xdata_into_device(Event, tube_local_data)
     y0_device = convert_ydata_into_device(Event, Pixel)
     x1_data   =  tube_local_data + coeff_width
     y1_data   =  Pixel + coeff_height
-    ;    print, 'x1: ' + string(x1_data)
-    print
     x1_device = convert_xdata_into_device(Event, x1_data)
     y1_device = convert_ydata_into_device(Event, y1_data)
     
@@ -105,8 +106,6 @@ PRO plot_exclusion_roi_for_sns, Event
       x1=x1_device, y1=y1_device
       
   ENDFOR
-  
-  print, '=================================================='
   
 END
 

@@ -180,8 +180,6 @@ END
 ;- Selection Load Button ------------------------------------------------------
 PRO LoadPlotSelection, Event
   
-  print, 'entering loadPlotSelection'
-  
   ;get global structure
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL, id, GET_UVALUE=global
@@ -198,7 +196,7 @@ PRO LoadPlotSelection, Event
     'ROI file ... ' + PROCESSING
     
   error = 0
-  ;CATCH, error ;remove_me
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -279,6 +277,9 @@ PRO clear_selection_tool, Event
   putTextFieldValue, Event, 'roi_file_name_text_field', ''
   (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
   (*(*global).global_exclusion_array) = STRARR(1)
+  (*(*global).BankArray) = PTR_NEW(0L)
+  (*(*global).PixelArray) = PTR_NEW(0L)
+  (*(*global).TubeArray) = PTR_NEW(0L)
   IDLsendToGeek_ReplaceLogBookText, Event, (*global).processing, (*global).ok
 END
 
