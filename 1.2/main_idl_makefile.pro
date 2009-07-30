@@ -52,6 +52,7 @@ cd, CurrentFolder
 .run sans_reduction_exclusion_sns.pro
 .run sans_reduction_load_exclusion_sns.pro
 .run sans_reduction_plot_exclusion_roi_sns.pro
+.run sans_reduction_auto_exclude_dead_tubes.pro
 .run sans_reduction_tab_plot.pro
 
 ;procedures

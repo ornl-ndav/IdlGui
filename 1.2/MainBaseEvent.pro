@@ -289,6 +289,7 @@ PRO MAIN_BASE_event, Event
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
+      auto_exclude_dead_tubes, Event
       save_background,  Event, GLOBAL=global
     END
     

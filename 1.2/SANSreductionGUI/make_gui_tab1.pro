@@ -1001,10 +1001,4 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
    UNAME = 'exclude_dead_tube_auto',$
    LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
 
-
-
-
-
-
-
 END
