@@ -284,6 +284,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
       save_background,  Event, GLOBAL=global
+      makeExclusionArray_SNS, Event
     END
     
     ;- Browse Button ----------------------------------------------------------
@@ -291,6 +292,7 @@ PRO MAIN_BASE_event, Event
       browse_nexus, Event ;_eventcb
       auto_exclude_dead_tubes, Event
       save_background,  Event, GLOBAL=global
+      makeExclusionArray_SNS, Event
     END
     
     ;- Selection Button -------------------------------------------------------
@@ -359,10 +361,10 @@ PRO MAIN_BASE_event, Event
     ;        ExclusionRegionCircle, Event ;_exclusion
     END
     
-    ;- SAVE AS ...
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
-      SaveAsExclusionRoi, Event  ;_exclusion
-    END
+    ;    ;- SAVE AS ...
+    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
+    ;      SaveAsExclusionRoi, Event  ;_exclusion
+    ;    END
     
     ;- SAVE
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
@@ -466,6 +468,7 @@ PRO MAIN_BASE_event, Event
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         save_background,  Event, GLOBAL=global
       ENDELSE
+      makeExclusionArray_SNS, Event
     END
     
     ;= TAB2 (REDUCE) ==========================================================
