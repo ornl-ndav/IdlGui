@@ -91,8 +91,8 @@ PRO plot_exclusion_of_dead_tubes, Event
     ;+1 as getBankNumber start at tube 1
     BankNumber = getBankNumber(FIX(dead_tube_nbr[index]+1))
     BankArray[index] = STRCOMPRESS(BankNumber,/REMOVE_ALL)
-    print, 'dead_tube_nbr: ' + string(dead_tube_nbr[index]) + $
-    ', bank: ' + string(bankNumber)
+;    print, 'dead_tube_nbr: ' + string(dead_tube_nbr[index]) + $
+;    ', bank: ' + string(bankNumber)
     index++
   ENDWHILE
   
@@ -135,8 +135,6 @@ PRO plot_exclusion_of_dead_tubes, Event
     coeff_height = +1
     
     IF (local_continue) THEN CONTINUE
-    
-;    print, 'tube: ' + string(tube)
     
     tube += tube_coeff
     x0_device = convert_xdata_into_device(Event, tube)

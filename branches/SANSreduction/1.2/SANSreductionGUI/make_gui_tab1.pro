@@ -299,10 +299,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     sensitive: 1}
   ;SAVE
   XYoff = [5,0]
-  sSaveSelection = { size: [sSaveAsSelection.size[0]+$
-    sSaveAsSelection.size[2]+XYoff[0],$
-    sSaveAsSelection.size[1]+XYoff[1],$
-    sSaveAsSelection.size[2]],$
+  sSaveSelection = { size: [sSaveAsSelection.size[0],$
+    sSaveAsSelection.size[1],$
+    285],$
     value: 'SAVE',$
     uname: 'save_roi_button',$
     sensitive: 1}
@@ -828,13 +827,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDELSE
   
   ;SAVE AS
-  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sSaveAsSelection.size[0],$
-    YOFFSET   = sSaveAsSelection.size[1],$
-    SCR_XSIZE = sSaveAsSelection.size[2],$
-    VALUE     = sSaveAsSelection.value,$
-    UNAME     = sSaveAsSelection.uname,$
-    SENSITIVE = sSaveAsSelection.sensitive)
+;  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
+;    XOFFSET   = sSaveAsSelection.size[0],$
+;    YOFFSET   = sSaveAsSelection.size[1],$
+;    SCR_XSIZE = sSaveAsSelection.size[2],$
+;    VALUE     = sSaveAsSelection.value,$
+;    UNAME     = sSaveAsSelection.uname,$
+;   SENSITIVE = sSaveAsSelection.sensitive)
     
   ;SAVE
   wSaveSelection = WIDGET_BUTTON(wExclusionBase,$
