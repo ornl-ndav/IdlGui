@@ -77,9 +77,9 @@ PRO makeExclusionArray_SNS, Event
   ;print, 'pixel_height_data: ' + string(pixel_height_data)
   
   IF (nbr_pixels_total GT 0) THEN BEGIN
-    
-    pixel_array = STRARR(nbr_pixels_total)
   
+    pixel_array = STRARR(nbr_pixels_total)
+    
     IF (pixel_height_data GT 0) THEN BEGIN
       pixel_coeff = -1
     ENDIF ELSE BEGIN
@@ -161,7 +161,6 @@ PRO makeExclusionArray_SNS, Event
   ENDELSE
   
   (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
-  
   
   add_to_global_exclusion_array, event, pixel_array
   
