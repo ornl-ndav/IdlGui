@@ -491,14 +491,17 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
     front_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'FRONT PANEL',$
+      /NO_RELEASE,$
       UNAME = 'show_front_bank_button')
       
     back_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'BACK PANEL',$
+      /NO_RELEASE,$
       UNAME = 'show_back_bank_button')
       
     both_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'BOTH PANELS',$
+      /NO_RELEASE,$
       UNAME = 'show_both_banks_button')
       
     WIDGET_CONTROL, both_bank, /SET_BUTTON

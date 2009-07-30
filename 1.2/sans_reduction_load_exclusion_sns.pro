@@ -38,7 +38,8 @@
 ; bank1_3_1
 ; ...
 ; and extract the bank number, the tube number and the pixel number
-PRO  getBankTubePixelROI, StringArray, $
+PRO  getBankTubePixelROI, Event, $
+    StringArray, $
     BankArray, $
     TubeArray, $
     PixelArray
@@ -55,14 +56,15 @@ PRO  getBankTubePixelROI, StringArray, $
     L1:
     index++
   ENDWHILE
-  
+    
 END
 
 ;------------------------------------------------------------------------------
 PRO load_exclusion_roi_for_sns, Event, FileStringArray
 
   NbrElements = N_ELEMENTS(FileStringArray)
-
+  IF (FileStringArray[0] EQ '') THEN RETURN
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -76,15 +78,18 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   BankArray  = INTARR(NbrElements)
   TubeArray  = INTARR(NbrElements)
   PixelArray = INTARR(NbrElements)
-  getBankTubePixelROI, FileStringArray, $
+  getBankTubePixelROI, Event, $
+    FileStringArray, $
     BankArray, $
     TubeArray, $
     PixelArray
+  IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+          ;plotting ROI
     
   (*(*global).BankArray)  = BankArray
   (*(*global).TubeArray)  = TubeArray
-  (*(*global).PixelArray) = PixelArray  
-    
-  plot_exclusion_roi_for_sns, Event     
-    
+  (*(*global).PixelArray) = PixelArray
+  
+  plot_exclusion_roi_for_sns, Event
+  
 END
