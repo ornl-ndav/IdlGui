@@ -99,6 +99,7 @@ PRO MAIN_BASE_event, Event
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       error = 0
+      help, event,/structure
       CATCH, error ;if mouse enters the draw or leaves then no error to catch
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
@@ -131,151 +132,150 @@ PRO MAIN_BASE_event, Event
               Event.x/(coeff * (*global).congrid_x_coeff),$
               Event.y/(*global).congrid_y_coeff
           ENDELSE
-        ENDIF
-        IF (Event.press EQ 1) THEN BEGIN
-          IF ((*global).facility EQ 'LENS') THEN BEGIN
-            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-              X = Event.x/8.
-              Y = Event.y/8.
-            ENDIF ELSE BEGIN
-              X = Event.x/2.
-              Y = Event.y/2.
+          IF (Event.press EQ 1) THEN BEGIN
+            IF ((*global).facility EQ 'LENS') THEN BEGIN
+              IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+                X = Event.x/8.
+                Y = Event.y/8.
+              ENDIF ELSE BEGIN
+                X = Event.x/2.
+                Y = Event.y/2.
+              ENDELSE
+            ENDIF ELSE BEGIN ;'SNS'
+            
+              (*global).left_button_clicked = 1
+              (*global).mouse_moved = 0
+              x0_device = Event.x
+              y0_device = Event.y
+              
+              x0_data = convert_xdevice_into_data(Event, x0_device)
+              y0_data = convert_ydevice_into_data(Event, y0_device)
+              
+              X = x0_data
+              Y = y0_data
+              
+              x0_device = convert_xdata_into_device(Event, x0_data)
+              y0_device = convert_ydata_into_device(Event, y0_data)
+              
+              (*global).x0_device = x0_device
+              (*global).y0_device = y0_device
+              
             ENDELSE
-          ENDIF ELSE BEGIN ;'SNS'
+            putTextFieldValue, Event, $
+              'corner_pixel_x0', $
+              STRCOMPRESS(X+1)
+            putTextFieldValue, Event, $
+              'corner_pixel_y0', $
+              STRCOMPRESS(Y)
+          ENDIF
           
-            (*global).left_button_clicked = 1
-            (*global).mouse_moved = 0
-            x0_device = Event.x
-            y0_device = Event.y
+          IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
+          
+            ;display width and height
+            IF (event.release EQ 1) THEN BEGIN ;left button release
+              (*global).left_button_clicked = 0
+              IF ((*global).mouse_moved EQ 0) THEN RETURN
+              temp_x_device = Event.x
+              temp_y_device = Event.y
+              
+              ;ask user if he wants to validate his selection or not
+              message = 'Do you want to validate your selection?'
+              title = 'Validate Selection?'
+              id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+              result = DIALOG_MESSAGE(message,$
+                DIALOG_PARENT = id,$
+                /CENTER,$
+                /QUESTION,$
+                title=title)
+              IF (result EQ 'Yes') THEN BEGIN
+                display_excluded_pixels, Event, $
+                  temp_x_device=temp_x_device, $
+                  temp_y_device=temp_y_device
+                makeExclusionArray_SNS, Event
+                save_background,  Event, GLOBAL=global
+              ENDIF ELSE BEGIN
+                TV, (*(*global).background), true=3
+              ENDELSE
+            ENDIF
             
-            x0_data = convert_xdevice_into_data(Event, x0_device)
-            y0_data = convert_ydevice_into_data(Event, y0_device)
-            
-            X = x0_data
-            Y = y0_data
-            
-            x0_device = convert_xdata_into_device(Event, x0_data)
-            y0_device = convert_ydata_into_device(Event, y0_data)
-            
-            (*global).x0_device = x0_device
-            (*global).y0_device = y0_device
-            
-          ENDELSE
-          putTextFieldValue, Event, $
-            'corner_pixel_x0', $
-            STRCOMPRESS(X+1)
-          putTextFieldValue, Event, $
-            'corner_pixel_y0', $
-            STRCOMPRESS(Y)
-        ENDIF
-        
-        IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
-        
-          ;display width and height
-          IF (event.release EQ 1) THEN BEGIN ;left button release
-            (*global).left_button_clicked = 0
-            IF ((*global).mouse_moved EQ 0) THEN RETURN
-            temp_x_device = Event.x
-            temp_y_device = Event.y
-            
-            ;ask user if he wants to validate his selection or not
-            message = 'Do you want to validate your selection?'
-            title = 'Validate Selection?'
-            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-            result = DIALOG_MESSAGE(message,$
-              DIALOG_PARENT = id,$
-              /CENTER,$
-              /QUESTION,$
-              title=title)
-            IF (result EQ 'Yes') THEN BEGIN
-              display_excluded_pixels, Event, $
-                temp_x_device=temp_x_device, $
-                temp_y_device=temp_y_device
-              makeExclusionArray_SNS, Event
-              save_background,  Event, GLOBAL=global
-            ENDIF ELSE BEGIN
+            IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
+              (*global).left_button_clicked EQ 1) THEN BEGIN
+              
+              (*global).mouse_moved = 1
+              
+              x0_data = getTextFieldValue(Event,'corner_pixel_x0')
+              y0_data = getTextFieldValue(Event,'corner_pixel_y0')
+              
+              x1_device = Event.x
+              y1_device = Event.y
+              
+              x1_data = convert_xdevice_into_data(Event, x1_device)
+              y1_data = convert_ydevice_into_data(Event, y1_device)
+              
+              x1_data++
+              
+              width  = x1_data - x0_data
+              ;go 2 by 2 for front and back panels only
+              ;start at 1 if back panel
+              panel_selected = getPanelSelected(Event)
+              CASE (panel_selected) OF
+                'front': BEGIN ;front
+                  width /= 2
+                END
+                'back': BEGIN ;back
+                  width /= 2
+                END
+                ELSE:
+              ENDCASE
+              
+              IF (width EQ 0) THEN BEGIN
+                width = 1
+              ENDIF ELSE BEGIN
+                IF (width LE 0) THEN BEGIN
+                  width -= 1
+                ENDIF ELSE BEGIN
+                  width += 1
+                ENDELSE
+              ENDELSE
+              
+              height = y1_data - y0_data
+              IF (height EQ 0) THEN BEGIN
+                height = 1
+              ENDIF ELSE BEGIN
+                IF (height LT 0) THEN BEGIN
+                  height -= 1
+                ENDIF ELSE BEGIN
+                  height += 1
+                ENDELSE
+              ENDELSE
+              
+              x1_device = convert_xdata_into_device(Event, x1_data)
+              y1_device = convert_ydata_into_device(Event, y1_data)
+              
+              (*global).x1_device = x1_device
+              (*global).y1_device = y1_device
+              
+              putTextFieldValue, Event, 'corner_pixel_width', width
+              putTextFieldValue, Event, 'corner_pixel_height', height
+              
               TV, (*(*global).background), true=3
-            ENDELSE
-          ENDIF
-          
-          IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
-            (*global).left_button_clicked EQ 1) THEN BEGIN
-            
-            (*global).mouse_moved = 1
-            
-            x0_data = getTextFieldValue(Event,'corner_pixel_x0')
-            y0_data = getTextFieldValue(Event,'corner_pixel_y0')
-            
-            x1_device = Event.x
-            y1_device = Event.y
-            
-            x1_data = convert_xdevice_into_data(Event, x1_device)
-            y1_data = convert_ydevice_into_data(Event, y1_device)
-            
-            x1_data++
-            
-            width  = x1_data - x0_data
-            ;go 2 by 2 for front and back panels only
-            ;start at 1 if back panel
-            panel_selected = getPanelSelected(Event)
-            CASE (panel_selected) OF
-              'front': BEGIN ;front
-                width /= 2
-              END
-              'back': BEGIN ;back
-                width /= 2
-              END
-              ELSE:
-            ENDCASE
-            
-            IF (width EQ 0) THEN BEGIN
-              width = 1
-            ENDIF ELSE BEGIN
-              IF (width LE 0) THEN BEGIN
-                width -= 1
-              ENDIF ELSE BEGIN
-                width += 1
-              ENDELSE
-            ENDELSE
-            
-            height = y1_data - y0_data
-            IF (height EQ 0) THEN BEGIN
-              height = 1
-            ENDIF ELSE BEGIN
-              IF (height LT 0) THEN BEGIN
-                height -= 1
-              ENDIF ELSE BEGIN
-                height += 1
-              ENDELSE
-            ENDELSE
-            
-            x1_device = convert_xdata_into_device(Event, x1_data)
-            y1_device = convert_ydata_into_device(Event, y1_data)
-            
-            (*global).x1_device = x1_device
-            (*global).y1_device = y1_device
-            
-            putTextFieldValue, Event, 'corner_pixel_width', width
-            putTextFieldValue, Event, 'corner_pixel_height', height
-            
-            TV, (*(*global).background), true=3
-            ;lin_or_log_plot, Event ;refresh of main plot
-            display_selection_manually, Event
+              ;lin_or_log_plot, Event ;refresh of main plot
+              display_selection_manually, Event
+              
+            ENDIF
             
           ENDIF
           
-        ENDIF
-        
-      ENDIF ELSE BEGIN ;end of catch /tracking events
-        IF (Event.enter EQ 0) THEN BEGIN
-          putTextFieldValue, Event, 'x_value', 'N/A'
-          putTextFieldValue, Event, 'y_value', 'N/A'
-          putTextFieldValue, Event, 'bank_number_value', 'N/A'
-          putTextFieldValue, Event, 'tube_local_number_value', 'N/A'
-          putTextFieldValue, Event, 'counts_value', 'N/A'
-        ENDIF
-      ENDELSE
-      
+        ENDIF ELSE BEGIN ;end of catch /tracking events
+          IF (Event.enter EQ 0) THEN BEGIN
+            putTextFieldValue, Event, 'x_value', 'N/A'
+            putTextFieldValue, Event, 'y_value', 'N/A'
+            putTextFieldValue, Event, 'bank_number_value', 'N/A'
+            putTextFieldValue, Event, 'tube_local_number_value', 'N/A'
+            putTextFieldValue, Event, 'counts_value', 'N/A'
+          ENDIF
+        ENDELSE
+      ENDIF
     END
     
     ;-Linear of Logarithmic scale
