@@ -105,11 +105,19 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     draw_x: 3*192L,$
     draw_y: 3*256L,$
     left_button_clicked: 0,$
+    mouse_moved: 0,$
     
     x0_device: 0L,$
     y0_device: 0L,$
     x1_device: 0L,$
     y1_device: 0L,$
+    global_exclusion_array: PTR_NEW(0L),$
+    background: PTR_NEW(0L),$
+    BankArray: PTR_NEW(0L),$
+    TubeArray: PTR_NEW(0L),$
+    PixelArray: PTR_NEW(0L),$
+    PixelArray_of_DeadTubes: PTR_NEW(0L),$
+    dead_tube_nbr: PTR_NEW(0L),$
     
     facility: facility, $
     facility_list: ['LENS'],$
@@ -310,6 +318,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     '--dump-bmon-rebin'}}$
     })
     
+  (*(*global).global_exclusion_array) = STRARR(1)
+  
   MainBaseTitle  = 'SANS Data Reduction GUI'
   MainBaseTitle += ' for ' + facility
   IF (facility EQ 'LENS') THEN BEGIN
@@ -380,7 +390,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
     nexus_path           = '~/EQSANS/2009_2_6_SCI/1/33/NeXus/'
     (*global).nexus_path = nexus_path
-    (*global).selection_path = '~/SVN/IdlGui/branches/SANSreduction/1.0/'
+    (*global).selection_path = '~/results/'
     (*global).wave_dep_back_sub_path = $
       '~/SVN/IdlGui/branches/SANScalibration/1.0/'
     ;put run 45 in the Run Number Data (first tab)

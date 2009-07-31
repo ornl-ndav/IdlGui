@@ -7,6 +7,7 @@ resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 resolve_routine, "loadct",/either
 resolve_routine, "errplot",/either
+resolve_routine, "CONGRID",/either
 
 save,/routines,filename = CurrentFolder + '/sans_reduction.sav'
 exit

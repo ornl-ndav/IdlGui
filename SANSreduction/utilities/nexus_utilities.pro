@@ -25,15 +25,21 @@
 ;when we want only the archived one
 FUNCTION find_full_nexus_name, Event, $
                                run_number, $
-                               instrument, $
                                isNexusExist, $
                                proposal_index,$
-                               proposal
+                               proposal,$
+                               FACILITY=facility
+
+IF (facility EQ 'LENS') THEN BEGIN
+instrument = 'SANS'
+ENDIF ELSE BEGIN
+instrument = 'EQSANS'
+ENDELSE
 
 ;cmd = "findnexus --archive -i" + instrument 
-cmd  = 'findnexus '
+cmd  = 'findnexus --facility=' + facility + ' '
 ;cmd  = '~/SVN/ASGIntegration/trunk/python/findnexus '
-cmd += '--archive -i' + instrument 
+cmd += '--archive -i ' + instrument
 IF (proposal_index NE 0) THEN BEGIN
     cmd += ' --proposal=' + proposal
 ENDIF

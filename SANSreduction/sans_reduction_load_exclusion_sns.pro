@@ -32,68 +32,64 @@
 ;
 ;==============================================================================
 
-FUNCTION LinOrLog, Event
-value = getCWBgroupValue(Event,'z_axis_scale')
-RETURN, value
-END
-
-PRO lin_or_log_plot, Event
-
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
-  
-  ;linear or log
-  plot_type = LinOrLog(Event)
-  ;plot_type = Event.value ;0->linear, 1->log
-  
-  ;retrieve the value to plot
-  DataXY = (*(*global).rtDataXY)
-  
-  IF (plot_type EQ 1) THEN BEGIN ;log
-  
-    ;remove 0 values and replace with NAN
-    ;and calculate log
-    index = WHERE(DataXY EQ 0, nbr)
-    IF (nbr GT 0) THEN BEGIN
-      DataXY[index] = !VALUES.D_NAN
-      DataXY = ALOG10(DataXY)
-      DataXY = BYTSCL(DataXY,/NAN)
-    ENDIF
+;This procedure takes a STRARR as input
+; bank1_1_1
+; bank1_2_1
+; bank1_3_1
+; ...
+; and extract the bank number, the tube number and the pixel number
+PRO  getBankTubePixelROI, Event, $
+    StringArray, $
+    BankArray, $
+    TubeArray, $
+    PixelArray
     
-  ENDIF
-  
-  DEVICE, DECOMPOSED = 0
-  LOADCT,5,/SILENT
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-  WIDGET_CONTROL, id, GET_VALUE = id_value
-  WSET, id_value
-  TVSCL, DataXY, /DEVICE
-  
-  ;refresh_scale, Event         ;_plot
-  
+  NbrRow = N_ELEMENTS(StringArray)
+  index = 0
+  WHILE (index LT NbrRow) DO BEGIN
+    ON_IOERROR, L1
+    RoiStringArray = STRSPLIT(StringArray[index],'_',/EXTRACT)
+    TubeArray[index] = FIX(RoiStringArray[1])
+    PixelArray[index] = FIX(RoiStringArray[2])
+    BankStringArray = STRSPLIT(RoiStringArray[0],'bank',/EXTRACT)
+    BankArray[index] = FIX(BankStringArray[0])
+    L1:
+    index++
+  ENDWHILE
+    
 END
 
 ;------------------------------------------------------------------------------
-PRO save_background,  Event, MAIN_BASE=main_base, GLOBAL=global
+PRO load_exclusion_roi_for_sns, Event, FileStringArray
 
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='draw_uname')
-  ENDIF ELSE BEGIN
-    WIDGET_CONTROL, event.top, GET_UVALUE=global
-    ;select plot area
-    id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
-  ENDELSE
+  NbrElements = N_ELEMENTS(FileStringArray)
+  IF (FileStringArray[0] EQ '') THEN RETURN
   
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  background = TVRD(TRUE=3)
-  geometry = WIDGET_INFO(id,/GEOMETRY)
-  xoffset = geometry.xoffset
-  yoffset = geometry.yoffset
-  xsize   = geometry.xsize
-  ysize   = geometry.ysize
-
-  DEVICE, copy =[xoffset, yoffset, xsize, ysize, 0, 0, id_value]
-  (*(*global).background) = background
+  ;retrieve infos
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of banks, ' + $
+    'tubes and pixels ... ' + PROCESSING
+  BankArray  = INTARR(NbrElements)
+  TubeArray  = INTARR(NbrElements)
+  PixelArray = INTARR(NbrElements)
+  getBankTubePixelROI, Event, $
+    FileStringArray, $
+    BankArray, $
+    TubeArray, $
+    PixelArray
+  IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+          ;plotting ROI
+    
+  (*(*global).BankArray)  = BankArray
+  (*(*global).TubeArray)  = TubeArray
+  (*(*global).PixelArray) = PixelArray
+  
+  plot_exclusion_roi_for_sns, Event
   
 END
