@@ -1000,17 +1000,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       SCR_YSIZE = ysize,$
       TOOLTIP = 'Launch the Transmission Calculation Program ...',$
       SENSITIVE = 1,$
+      /BUTTON_EVENTS,$
+      /TRACKING_EVENTS,$
       UNAME = 'transmission_calculation_button')
       
-      space = WIDGET_LABEL(Tran_BC_base,$
+    space = WIDGET_LABEL(Tran_BC_base,$
       VALUE = '')
       
-;    ;beam center calculation
-;    button2 = WIDGET_DRAW(Tran_BC_base,$
-;      SCR_XSIZE = xsize,$
-;      SCR_YSIZE = ysize,$
-;      SENSITIVE = 0,$
-;      UNAME = 'beam_center_calculation_button')
+  ;    ;beam center calculation
+  ;    button2 = WIDGET_DRAW(Tran_BC_base,$
+  ;      SCR_XSIZE = xsize,$
+  ;      SCR_YSIZE = ysize,$
+  ;      SENSITIVE = 0,$
+  ;      UNAME = 'beam_center_calculation_button')
       
   ENDIF
   

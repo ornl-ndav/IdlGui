@@ -140,12 +140,12 @@ PRO MAIN_BASE_event, Event
                 X = Event.x/2.
                 Y = Event.y/2.
               ENDELSE
-            
-            putTextFieldValue, Event, $
-            'x_center_value', STRCOMPRESS(X,/REMOVE_ALL)
-            putTextFieldValue, Event, $
-            'y_center_value', STRCOMPRESS(Y,/REMOVE_ALL)
-            
+              
+              putTextFieldValue, Event, $
+                'x_center_value', STRCOMPRESS(X,/REMOVE_ALL)
+              putTextFieldValue, Event, $
+                'y_center_value', STRCOMPRESS(Y,/REMOVE_ALL)
+                
             ENDIF ELSE BEGIN ;'SNS'
             
               (*global).left_button_clicked = 1
@@ -164,14 +164,14 @@ PRO MAIN_BASE_event, Event
               
               (*global).x0_device = x0_device
               (*global).y0_device = y0_device
-
-            putTextFieldValue, Event, $
-              'corner_pixel_x0', $
-              STRCOMPRESS(X+1)
-            putTextFieldValue, Event, $
-              'corner_pixel_y0', $
-              STRCOMPRESS(Y)
               
+              putTextFieldValue, Event, $
+                'corner_pixel_x0', $
+                STRCOMPRESS(X+1)
+              putTextFieldValue, Event, $
+                'corner_pixel_y0', $
+                STRCOMPRESS(Y)
+                
             ENDELSE
           ENDIF
           
@@ -275,9 +275,9 @@ PRO MAIN_BASE_event, Event
         ENDIF
         
       ENDIF ELSE BEGIN ;endif of catch /tracking events
-
+      
         IF (Event.enter EQ 0) THEN BEGIN
-
+        
           putTextFieldValue, Event, 'x_value', 'N/A'
           putTextFieldValue, Event, 'y_value', 'N/A'
           putTextFieldValue, Event, 'counts_value', 'N/A'
@@ -511,6 +511,31 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         makeExclusionArray_SNS, Event
       ENDIF
+    END
+    
+    ;Transmission calculation button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='transmission_calculation_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_images, EVENT=event, $
+            transmission='on'
+        ENDIF ELSE BEGIN
+          display_images, EVENT=event, $
+            transmission='off'
+        ENDELSE
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='transmission_calculation_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE ;enf of catch statement
     END
     
     ;= TAB2 (REDUCE) ==========================================================
