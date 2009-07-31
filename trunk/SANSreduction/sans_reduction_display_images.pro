@@ -34,16 +34,30 @@
 
 PRO display_images, MAIN_BASE=main_base, EVENT=event
 
+  ;Transmission calculation button
   raw_buttons = READ_PNG('SANSreduction_images/transmission_button.png')
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
-    FIND_BY_UNAME='transmission_calculation_button')
+      FIND_BY_UNAME='transmission_calculation_button')
   ENDIF ELSE BEGIN
     mode_id = WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_calculation_button')
-  ENDELSe
+  ENDELSE
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, raw_buttons, 0, 0,/true
+  
+;  ;beam center button
+;  raw_buttons = READ_PNG('SANSreduction_images/beam_center.png')
+;  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+;    mode_id = WIDGET_INFO(main_base, $
+;      FIND_BY_UNAME='beam_center_calculation_button')
+;  ENDIF ELSE BEGIN
+;    mode_id = WIDGET_INFO(Event.top, $
+;      FIND_BY_UNAME='beam_center_calculation_button')
+;  ENDELSE
+;  WIDGET_CONTROL, mode_id, GET_VALUE=id
+;  WSET, id
+;  TV, raw_buttons, 0, 0,/true
   
 END

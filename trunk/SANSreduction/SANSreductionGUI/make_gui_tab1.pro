@@ -1005,12 +1005,12 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       space = WIDGET_LABEL(Tran_BC_base,$
       VALUE = '')
       
-    ;beam center calculation
-    button2 = WIDGET_DRAW(Tran_BC_base,$
-      SCR_XSIZE = xsize,$
-      SCR_YSIZE = ysize,$
-      SENSITIVE = 1,$
-      UNAME = 'beam_center_calculation_button')
+;    ;beam center calculation
+;    button2 = WIDGET_DRAW(Tran_BC_base,$
+;      SCR_XSIZE = xsize,$
+;      SCR_YSIZE = ysize,$
+;      SENSITIVE = 0,$
+;      UNAME = 'beam_center_calculation_button')
       
   ENDIF
   
