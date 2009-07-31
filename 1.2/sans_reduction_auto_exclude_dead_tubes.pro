@@ -34,11 +34,11 @@
 
 PRO auto_exclude_dead_tubes, Event
 
+  ;get global structurea
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+    
   ;check if user wants to exclude dead tubes or not
   IF (~isAutoExcludeDeadTubeSelected(Event)) THEN RETURN
-  
-  ;get global structure
-  WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   ;retrieve data array
   DataArray = (*(*global).DataArray)
@@ -62,7 +62,7 @@ PRO auto_exclude_dead_tubes, Event
     ;start at 1 if back panel
     panel_selected = getPanelSelected(Event)
     message = '> List of dead tubes (or 0 total counts) for ' + $
-    panel_selected + ' panel(s):' 
+      panel_selected + ' panel(s):'
     array = STRSPLIT(DeadTubeNbr,',',/EXTRACT)
     list = STRJOIN(array,',')
     message += list
@@ -91,8 +91,8 @@ PRO plot_exclusion_of_dead_tubes, Event
     ;+1 as getBankNumber start at tube 1
     BankNumber = getBankNumber(FIX(dead_tube_nbr[index]+1))
     BankArray[index] = STRCOMPRESS(BankNumber,/REMOVE_ALL)
-;    print, 'dead_tube_nbr: ' + string(dead_tube_nbr[index]) + $
-;    ', bank: ' + string(bankNumber)
+    ;    print, 'dead_tube_nbr: ' + string(dead_tube_nbr[index]) + $
+    ;    ', bank: ' + string(bankNumber)
     index++
   ENDWHILE
   

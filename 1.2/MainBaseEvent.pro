@@ -280,24 +280,38 @@ PRO MAIN_BASE_event, Event
     
     ;-Linear of Logarithmic scale
     WIDGET_INFO(wWidget, FIND_BY_UNAME='z_axis_scale'): BEGIN
-      lin_or_log_plot, Event
-      RefreshRoiExclusionPlot, Event   ;_plot
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        plot_exclusion_of_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+      ENDIF ELSE BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDELSE
+    ;      lin_or_log_plot, Event
+    ;      RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
-      auto_exclude_dead_tubes, Event
-     save_background,  Event, GLOBAL=global
-      makeExclusionArray_SNS, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        auto_exclude_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
-      auto_exclude_dead_tubes, Event
-      save_background,  Event, GLOBAL=global
-      makeExclusionArray_SNS, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        auto_exclude_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;- Selection Button -------------------------------------------------------
