@@ -505,6 +505,28 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
     WIDGET_CONTROL, both_bank, /SET_BUTTON   
    
+     ;linear/log scale
+  wGroupBase = WIDGET_BASE(wTab1Base,$
+    XOFFSET = 590,$
+    YOFFSET = 150,$
+    /ALIGN_CENTER,$
+    FRAME = 1,$
+    UNAME = sScaleTypeBase.uname,$
+    SENSITIVE = sScaleTypeBase.sensitive,$
+    /ROW)
+    
+  wGroup = CW_BGROUP(wGroupBase,$
+    sScaleType.list,$
+;    ROW         = 1,$
+    SET_VALUE  = sScaleType.value,$
+    UNAME      = sScaleType.uname,$
+    LABEL_TOP = sScaleType.title,$
+    /NO_RELEASE,$
+    /EXCLUSIVE)
+   
+   
+   
+   
   ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
@@ -953,7 +975,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE   = 'N/A          ',$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
-    
+
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
     XOFFSET = 590,$
@@ -964,12 +988,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   wGroup = CW_BGROUP(wGroupBase,$
     sScaleType.list,$
-    ROW        = 1,$
+    ROW        = 1,$  
     SET_VALUE  = sScaleType.value,$
     UNAME      = sScaleType.uname,$
     LABEL_LEFT = sScaleType.title,$
     /NO_RELEASE,$
     /EXCLUSIVE)
+  
+  ENDIF
     
   ;Selection Color Tool
   wColorBase = WIDGET_BASE(wTab1Base,$
@@ -985,6 +1011,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     UNAME     = sSelectionColor.uname,$
     VALUE     = sSelectionColor.value)
     
+    IF ((*global).facility EQ 'SNS') THEN BEGIN
+    
     ;Auto. Exclude Dead Tubes
    auto_base = WIDGET_BASE(wTab1Base,$
    XOFFSET = sColorBase.size[0]-58,$
@@ -999,5 +1027,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
    SET_VALUE = 0,$
    UNAME = 'exclude_dead_tube_auto',$
    LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
+
+ENDIF
 
 END
