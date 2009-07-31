@@ -40,7 +40,7 @@ PRO plot_exclusion_roi_for_sns, Event
   BankArray  = (*(*global).BankArray)
   TubeArray  = (*(*global).TubeArray)
   PixelArray = (*(*global).PixelArray)
-    
+  
   sz = size(BankArray)
   IF (sz[0] EQ 0) THEN RETURN ;BankArray = PTR_NEW(0L) (no data)
   
@@ -92,9 +92,9 @@ PRO plot_exclusion_roi_for_sns, Event
     ;determine the real tube offset
     tube_local_data = getTubeGlobal(bank, tube)
     tube_local_data += tube_coeff
-;    print, 'bank:' + strcompress(bank,/remove_all) + $
-;      ',tube:'+ strcompress(tube,/remove_all) + $
-;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
+    ;    print, 'bank:' + strcompress(bank,/remove_all) + $
+    ;      ',tube:'+ strcompress(tube,/remove_all) + $
+    ;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
     x0_device = convert_xdata_into_device(Event, tube_local_data)
     y0_device = convert_ydata_into_device(Event, Pixel)
     x1_data   =  tube_local_data + coeff_width
@@ -124,8 +124,13 @@ PRO display_loaded_selection, Event, x0=x0, y0=y0, x1=x1, y1=y1, COLOR=color
   ;  print, 'xmin,xmax,ymin,ymax: ' + string(xmin) + ',' + string(xmax) + ',' + $
   ;  string(ymin) + ',' + string(ymax)
   
-  IF (N_ELEMENTS(color) EQ 0) THEN color=200
-  
+  IF (N_ELEMENTS(color) EQ 0) THEN BEGIN
+    IF (isLinSelected(Event)) THEN BEGIN
+      color=200
+    ENDIF ELSE BEGIN
+      color=0
+    ENDELSE
+  ENDIF
   PLOTS, xmin, ymin, /DEVICE, COLOR=color
   PLOTS, xmax, ymin, /DEVICE, /CONTINUE, COLOR=color
   PLOTS, xmax, ymax, /DEVICE, /CONTINUE, COLOR=color

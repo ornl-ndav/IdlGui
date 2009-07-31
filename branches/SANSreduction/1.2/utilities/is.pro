@@ -53,3 +53,11 @@ WIDGET_CONTROL, id, GET_VALUE=value
 IF (value EQ 0) THEN RETURN, 1
 RETURN, 0
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isLinSelected, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='z_axis_scale')
+WIDGET_CONTROL, id, GET_VALUE=value
+IF (value EQ 0) THEN RETURN, 1
+RETURN, 0
+END
