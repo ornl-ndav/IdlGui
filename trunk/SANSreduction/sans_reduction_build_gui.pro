@@ -452,6 +452,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
       
   ENDIF
   
+  IF (facility EQ 'SNS') THEN BEGIN
+  
+    display_images, MAIN_BASE=main_base
+  
+  END
+  
   ;============================================================================
   ; Date and Checking Packages routines =======================================
   ;============================================================================

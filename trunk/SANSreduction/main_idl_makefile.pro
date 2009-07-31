@@ -63,6 +63,7 @@ cd, CurrentFolder
 .run sans_reduction_run_commandline.pro
 .run sans_reduction_lin_log_plot.pro
 .run sans_reduction_display_selection_box.pro
+.run sans_reduction_display_images.pro
 
 ;main functions
 .run MainBaseEvent.pro
