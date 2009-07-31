@@ -10,6 +10,8 @@ cd, IdlUtilitiesPath
 .run checking_packages.pro
 .run showprogress__define.pro
 .run is.pro
+.run time.pro
+.run get.pro
 .run convert.pro
 
 ;Makefile that automatically compile the necessary modules
@@ -37,10 +39,8 @@ cd, CurrentFolder
 .run error_message.pro
 .run pickcolorname.pro
 .run fsc_color.pro
-.run sans_reduction_time.pro
 .run IDLgetMetadata__define.pro
 .run sans_reduction_put.pro
-.run sans_reduction_get.pro
 .run IDLsendToGeek__define.pro
 .run IDLsendLogBook__define.pro
 .run IDLgetNexusData__define.pro
@@ -49,6 +49,10 @@ cd, CurrentFolder
 .run sans_reduction_xroi.pro
 .run sans_reduction_selection.pro
 .run sans_reduction_exclusion.pro
+.run sans_reduction_exclusion_sns.pro
+.run sans_reduction_load_exclusion_sns.pro
+.run sans_reduction_plot_exclusion_roi_sns.pro
+.run sans_reduction_auto_exclude_dead_tubes.pro
 .run sans_reduction_tab_plot.pro
 
 ;procedures

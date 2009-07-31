@@ -76,139 +76,242 @@ PRO MAIN_BASE_event, Event
     
     ;manual input of x0, y0, width and Height
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_x0'): BEGIN
-      display_selection_manually, Event
+      makeExclusionArray_SNS, Event
+      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_y0'): BEGIN
-      display_selection_manually, Event
+      makeExclusionArray_SNS, Event
+      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_width'): BEGIN
-      display_selection_manually, Event
+      makeExclusionArray_SNS, Event
+      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_height'): BEGIN
-      display_selection_manually, Event
+      makeExclusionArray_SNS, Event
+      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
-      id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
-      WIDGET_CONTROL, id, GET_VALUE=id_value
-      WSET, id_value
-      standard = 31
-      DEVICE, CURSOR_STANDARD=standard
-      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-        getXYposition, Event ;_get
-        IF ((*global).facility EQ 'LENS') THEN BEGIN
-          IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-            putCountsValue, Event, Event.x/8., Event.y/8. ;_put
+      error = 0
+      CATCH, error ;if mouse enters the draw or leaves then no error to catch
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        id = WIDGET_INFO(Event.top,find_by_uname='draw_uname')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        standard = 31
+        DEVICE, CURSOR_STANDARD=standard
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          getXYposition, Event ;_get
+          IF ((*global).facility EQ 'LENS') THEN BEGIN
+            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+              putCountsValue, Event, Event.x/8., Event.y/8. ;_put
+            ENDIF ELSE BEGIN
+              putCountsValue, Event, Event.x/2., Event.y/2. ;_put
+            ENDELSE
           ENDIF ELSE BEGIN
-            putCountsValue, Event, Event.x/2., Event.y/2. ;_put
+            error = 0
+            CATCH, error
+            IF (error NE 0) THEN BEGIN
+              CATCH,/CANCEL
+              RETURN
+            ENDIF
+            ;check if both panels are plotted
+            id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+            value = WIDGET_INFO(id, /BUTTON_SET)
+            coeff = 2
+            IF (value EQ 1) THEN coeff = 1
+            putCountsValue, Event, $
+              Event.x/(coeff * (*global).congrid_x_coeff),$
+              Event.y/(*global).congrid_y_coeff
           ENDELSE
-        ENDIF ELSE BEGIN
-          CATCH, error
-          IF (error NE 0) THEN BEGIN
-            CATCH,/CANCEL
-            RETURN
+        ENDIF
+        IF (Event.press EQ 1) THEN BEGIN
+          IF ((*global).facility EQ 'LENS') THEN BEGIN
+            IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+              X = Event.x/8.
+              Y = Event.y/8.
+            ENDIF ELSE BEGIN
+              X = Event.x/2.
+              Y = Event.y/2.
+            ENDELSE
+          ENDIF ELSE BEGIN ;'SNS'
+          
+            (*global).left_button_clicked = 1
+            (*global).mouse_moved = 0
+            x0_device = Event.x
+            y0_device = Event.y
+            
+            x0_data = convert_xdevice_into_data(Event, x0_device)
+            y0_data = convert_ydevice_into_data(Event, y0_device)
+            
+            X = x0_data
+            Y = y0_data
+            
+            x0_device = convert_xdata_into_device(Event, x0_data)
+            y0_device = convert_ydata_into_device(Event, y0_data)
+            
+            (*global).x0_device = x0_device
+            (*global).y0_device = y0_device
+            
+          ENDELSE
+          putTextFieldValue, Event, $
+            'corner_pixel_x0', $
+            STRCOMPRESS(X+1)
+          putTextFieldValue, Event, $
+            'corner_pixel_y0', $
+            STRCOMPRESS(Y)
+        ENDIF
+        
+        IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
+        
+          ;display width and height
+          IF (event.release EQ 1) THEN BEGIN ;left button release
+            (*global).left_button_clicked = 0
+            IF ((*global).mouse_moved EQ 0) THEN RETURN
+            temp_x_device = Event.x
+            temp_y_device = Event.y
+            
+            ;ask user if he wants to validate his selection or not
+            message = 'Do you want to validate your selection?'
+            title = 'Validate Selection?'
+            id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            result = DIALOG_MESSAGE(message,$
+              DIALOG_PARENT = id,$
+              /CENTER,$
+              /QUESTION,$
+              title=title)
+            IF (result EQ 'Yes') THEN BEGIN
+              display_excluded_pixels, Event, $
+                temp_x_device=temp_x_device, $
+                temp_y_device=temp_y_device
+              makeExclusionArray_SNS, Event
+              save_background,  Event, GLOBAL=global
+            ENDIF ELSE BEGIN
+              TV, (*(*global).background), true=3
+            ENDELSE
           ENDIF
-          ;check if both panels are plotted
-          id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
-          value = WIDGET_INFO(id, /BUTTON_SET)
-          coeff = 2
-          IF (value EQ 1) THEN coeff = 1
-          putCountsValue, Event, $
-            Event.x/(coeff * (*global).congrid_x_coeff),$
-            Event.y/(*global).congrid_y_coeff
-        ENDELSE
-      ENDIF
-      IF (Event.press EQ 1) THEN BEGIN
-        IF ((*global).facility EQ 'LENS') THEN BEGIN
-          IF ((*global).Xpixel  EQ 80L) THEN BEGIN
-            X = Event.x/8.
-            Y = Event.y/8.
-          ENDIF ELSE BEGIN
-            X = Event.x/2.
-            Y = Event.y/2.
-          ENDELSE
-        ENDIF ELSE BEGIN ;'SNS'
-        
-          (*global).left_button_clicked = 1
-          x0_device = Event.x
-          y0_device = Event.y
           
-          x0_data = convert_xdevice_into_data(Event, x0_device)
-          y0_data = convert_ydevice_into_data(Event, y0_device)
-          X = x0_data
-          Y = y0_data
-          
-          x0_device = convert_xdata_into_device(Event, x0_data)
-          y0_device = convert_ydata_into_device(Event, y0_data)
-          
-          (*global).x0_device = x0_device
-          (*global).y0_device = y0_device
-          
-        ENDELSE
-        putTextFieldValue, Event, $
-          'corner_pixel_x0', $
-          STRCOMPRESS(X)
-        putTextFieldValue, Event, $
-          'corner_pixel_y0', $
-          STRCOMPRESS(Y)
-      ENDIF
-      
-      IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
-        ;display width and height
-      
-        IF (event.release EQ 1) THEN BEGIN ;left button release
-          (*global).left_button_clicked = 0
-          display_excluded_pixels, Event
-        ENDIF
-        
-        IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
-          (*global).left_button_clicked EQ 1) THEN BEGIN
-          
-          x0_data = getTextFieldValue(Event,'corner_pixel_x0')
-          y0_data = getTextFieldValue(Event,'corner_pixel_y0')
-
-          x1_device = Event.x
-          y1_device = Event.y
-          
-          x1_data = convert_xdevice_into_data(Event, x1_device)
-          y1_data = convert_ydevice_into_data(Event, y1_device)
-
-          width = x1_data - x0_data
-          height = y1_data - y0_data
-
-          x1_device = convert_xdata_into_device(Event, x1_data)
-          y1_device = convert_ydata_into_device(Event, y1_data)
-          
-          (*global).x1_device = x1_device
-          (*global).y1_device = y1_device
-          
-          putTextFieldValue, Event, 'corner_pixel_width', width
-          putTextFieldValue, Event, 'corner_pixel_height', height
-
-          lin_or_log_plot, Event ;refresh of main plot
-          display_selection_manually, Event
+          IF (event.press EQ 0 AND $ ;moving mouse with left button clicked
+            (*global).left_button_clicked EQ 1) THEN BEGIN
+            
+            (*global).mouse_moved = 1
+            
+            x0_data = getTextFieldValue(Event,'corner_pixel_x0')
+            y0_data = getTextFieldValue(Event,'corner_pixel_y0')
+            
+            x1_device = Event.x
+            y1_device = Event.y
+            
+            x1_data = convert_xdevice_into_data(Event, x1_device)
+            y1_data = convert_ydevice_into_data(Event, y1_device)
+            
+            x1_data++
+            
+            width  = x1_data - x0_data
+            ;go 2 by 2 for front and back panels only
+            ;start at 1 if back panel
+            panel_selected = getPanelSelected(Event)
+            CASE (panel_selected) OF
+              'front': BEGIN ;front
+                width /= 2
+              END
+              'back': BEGIN ;back
+                width /= 2
+              END
+              ELSE:
+            ENDCASE
+            
+            IF (width EQ 0) THEN BEGIN
+              width = 1
+            ENDIF ELSE BEGIN
+              IF (width LE 0) THEN BEGIN
+                width -= 1
+              ENDIF ELSE BEGIN
+                width += 1
+              ENDELSE
+            ENDELSE
+            
+            height = y1_data - y0_data
+            IF (height EQ 0) THEN BEGIN
+              height = 1
+            ENDIF ELSE BEGIN
+              IF (height LT 0) THEN BEGIN
+                height -= 1
+              ENDIF ELSE BEGIN
+                height += 1
+              ENDELSE
+            ENDELSE
+            
+            x1_device = convert_xdata_into_device(Event, x1_data)
+            y1_device = convert_ydata_into_device(Event, y1_data)
+            
+            (*global).x1_device = x1_device
+            (*global).y1_device = y1_device
+            
+            putTextFieldValue, Event, 'corner_pixel_width', width
+            putTextFieldValue, Event, 'corner_pixel_height', height
+            
+            TV, (*(*global).background), true=3
+            ;lin_or_log_plot, Event ;refresh of main plot
+            display_selection_manually, Event
+            
+          ENDIF
           
         ENDIF
         
-      ENDIF
+      ENDIF ELSE BEGIN ;end of catch /tracking events
+        IF (Event.enter EQ 0) THEN BEGIN
+          putTextFieldValue, Event, 'x_value', 'N/A'
+          putTextFieldValue, Event, 'y_value', 'N/A'
+          putTextFieldValue, Event, 'bank_number_value', 'N/A'
+          putTextFieldValue, Event, 'tube_local_number_value', 'N/A'
+          putTextFieldValue, Event, 'counts_value', 'N/A'
+        ENDIF
+      ENDELSE
       
     END
     
     ;-Linear of Logarithmic scale
     WIDGET_INFO(wWidget, FIND_BY_UNAME='z_axis_scale'): BEGIN
-      lin_or_log_plot, Event
-      RefreshRoiExclusionPlot, Event   ;_plot
+      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        plot_exclusion_of_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+      ENDIF ELSE BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        save_background,  Event, GLOBAL=global
+      ENDELSE
+    ;      lin_or_log_plot, Event
+    ;      RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        auto_exclude_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        auto_exclude_dead_tubes, Event
+        save_background,  Event, GLOBAL=global
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;- Selection Button -------------------------------------------------------
@@ -219,6 +322,7 @@ PRO MAIN_BASE_event, Event
     ;- Browse Selection File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_browse_button'): BEGIN
       browse_selection_file, Event ;_selection
+      save_background,  Event, GLOBAL=global
     END
     
     ;- Preview Selection File -------------------------------------------------
@@ -234,6 +338,7 @@ PRO MAIN_BASE_event, Event
     ;- Selection Load Button --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='selection_load_button'): BEGIN
       LoadPlotSelection, Event ;_selection
+      save_background,  Event, GLOBAL=global
     END
     
     ;-Exclusion Region Selection Tool -----------------------------------------
@@ -275,14 +380,18 @@ PRO MAIN_BASE_event, Event
     ;        ExclusionRegionCircle, Event ;_exclusion
     END
     
-    ;- SAVE AS ...
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
-      SaveAsExclusionRoi, Event  ;_exclusion
-    END
+    ;    ;- SAVE AS ...
+    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
+    ;      SaveAsExclusionRoi, Event  ;_exclusion
+    ;    END
     
     ;- SAVE
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
-      SaveExclusionFile, Event ;_exclusion
+      IF ((*global).facility EQ 'LENS') THEN BEGIN
+        SaveExclusionFile, Event ;_exclusion
+      ENDIF ELSE BEGIN
+        SaveExclusionFile_SNS, Event
+      ENDELSE
     END
     
     ;- SAVE AS folder button
@@ -304,13 +413,25 @@ PRO MAIN_BASE_event, Event
     
     ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
-      clear_selection_tool, Event ;_selection
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        clear_selection_tool, Event ;_selection
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     
     ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
-      refresh_plot, Event ;_plot
-      RefreshRoiExclusionPlot, Event   ;_plot
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        IF ((*global).facility EQ 'LENS') THEN BEGIN
+          refresh_plot, Event ;_plot
+          RefreshRoiExclusionPlot, Event   ;_plot
+        ENDIF ELSE BEGIN
+          TV, (*(*global).background), true=3
+        ENDELSE
+      ENDIF
     END
     
     ;- Selection Color Button -------------------------------------------------
@@ -324,23 +445,58 @@ PRO MAIN_BASE_event, Event
     
     ;- Show front panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_front_bank_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).front_bank)
-      refresh_plot, Event ;_plot
-    ;RefreshRoiExclusionPlot, Event   ;_plot
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).front_bank)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     
     ;- Show back panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_back_bank_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).back_bank)
-      refresh_plot, Event ;_plot
-    ;RefreshRoiExclusionPlot, Event   ;_plot
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).back_bank)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
+      ENDIF
     END
     
     ;- Show front and back panels ---------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_both_banks_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).both_banks)
-      refresh_plot, Event ;_plot
-    ;RefreshRoiExclusionPlot, Event   ;_plot
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).both_banks)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
+      ENDIF
+    END
+    
+    ;Automatically Exclude Dead Tubes or not ----------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME = 'exclude_dead_tube_auto'): BEGIN
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          refresh_plot, Event ;_plot
+          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+          plot_exclusion_of_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+        ENDIF ELSE BEGIN
+          refresh_plot, Event ;_plot
+          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+          save_background,  Event, GLOBAL=global
+        ENDELSE
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;= TAB2 (REDUCE) ==========================================================

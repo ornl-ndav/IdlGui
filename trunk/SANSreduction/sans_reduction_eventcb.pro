@@ -76,7 +76,6 @@ PRO retrieveNexus, Event, FullNexusName
     IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
   ENDIF ELSE BEGIN
     (*global).data_nexus_file_name = FullNexusName
-    help, sz_array
     sz_array = size(DataArray)
     Ntof     = (sz_array)(1)
     Y        = (sz_array)(2)
@@ -85,9 +84,9 @@ PRO retrieveNexus, Event, FullNexusName
     IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS
     
       (*(*global).DataArray) = DataArray
-    
-    ENDIF ELSE BEGIN ;SNS
       
+    ENDIF ELSE BEGIN ;SNS
+    
       CASE (is_front_back_or_both_plot(Event)) OF
         'front': BEGIN
           (*(*global).DataArray) = (*(*global).front_bank)
@@ -240,10 +239,10 @@ PRO load_run_number, Event
     isNexusExist = 0
     full_nexus_name = find_full_nexus_name(Event,$
       RunNumber,$
-      'SANS',$
       isNexusExist,$
       proposal_index,$
-      proposal)
+      proposal,$
+      FACILITY = (*global).facility)
     IF (isNexusExist EQ 1 AND $
       full_nexus_name[0] NE '') THEN BEGIN ;success
       message = '-> NeXus File Name : ' + full_nexus_name[0]
@@ -335,9 +334,16 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
       0: BEGIN ;first tab
-        refresh_plot, Event     ;_plot
-        RefreshRoiExclusionPlot, Event   ;_selection
-        refresh_scale, Event
+        IF ((*global).facility EQ 'LENS') THEN BEGIN
+          refresh_plot, Event     ;_plot
+          RefreshRoiExclusionPlot, Event   ;_selection
+          refresh_scale, Event
+        ENDIF ELSE BEGIN
+          id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+          WIDGET_CONTROL, id, GET_VALUE = id_value
+          WSET, id_value
+          TV, (*(*global).background), true=3
+        ENDELSE
       END
       1: BEGIN                    ;reduce tab
       

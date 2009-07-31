@@ -299,10 +299,9 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     sensitive: 1}
   ;SAVE
   XYoff = [5,0]
-  sSaveSelection = { size: [sSaveAsSelection.size[0]+$
-    sSaveAsSelection.size[2]+XYoff[0],$
-    sSaveAsSelection.size[1]+XYoff[1],$
-    sSaveAsSelection.size[2]],$
+  sSaveSelection = { size: [sSaveAsSelection.size[0],$
+    sSaveAsSelection.size[1],$
+    285],$
     value: 'SAVE',$
     uname: 'save_roi_button',$
     sensitive: 1}
@@ -373,7 +372,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   xLabel = { size: [XYoff[0],$
     XYoff[1]],$
     value: x_value}
-  XYoff = [25,0] ;x value
+  XYoff = [27,0] ;x value
   xValue = { size: [xLabel.size[0]+XYoff[0],$
     xLabel.size[1]+XYoff[1]],$
     value: '           ',$
@@ -467,6 +466,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     SCR_XSIZE = sDraw.size[2],$
     SCR_YSIZE = sDraw.size[3],$
     /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     /MOTION_EVENTS)
     
   IF ((*global).facility EQ 'LENS') THEN BEGIN
@@ -490,18 +490,21 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
     front_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'FRONT PANEL',$
+      /NO_RELEASE,$
       UNAME = 'show_front_bank_button')
       
     back_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'BACK PANEL',$
+      /NO_RELEASE,$
       UNAME = 'show_back_bank_button')
       
     both_bank = WIDGET_BUTTON(bsBase,$
       VALUE = 'BOTH PANELS',$
+      /NO_RELEASE,$
       UNAME = 'show_both_banks_button')
       
-    WIDGET_CONTROL, both_bank, /SET_BUTTON
-    
+    WIDGET_CONTROL, both_bank, /SET_BUTTON   
+   
   ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
@@ -824,13 +827,13 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDELSE
   
   ;SAVE AS
-  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
-    XOFFSET   = sSaveAsSelection.size[0],$
-    YOFFSET   = sSaveAsSelection.size[1],$
-    SCR_XSIZE = sSaveAsSelection.size[2],$
-    VALUE     = sSaveAsSelection.value,$
-    UNAME     = sSaveAsSelection.uname,$
-    SENSITIVE = sSaveAsSelection.sensitive)
+;  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
+;    XOFFSET   = sSaveAsSelection.size[0],$
+;    YOFFSET   = sSaveAsSelection.size[1],$
+;    SCR_XSIZE = sSaveAsSelection.size[2],$
+;    VALUE     = sSaveAsSelection.value,$
+;    UNAME     = sSaveAsSelection.uname,$
+;   SENSITIVE = sSaveAsSelection.sensitive)
     
   ;SAVE
   wSaveSelection = WIDGET_BUTTON(wExclusionBase,$
@@ -890,51 +893,71 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;- X/Y base -------------------------------------------------------------------
   wXYbase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = XYbase.size[0],$
-    YOFFSET   = XYbase.size[1],$
-    SCR_XSIZE = XYbase.size[2],$
-    SCR_YSIZE = XYbase.size[3],$
+    XOFFSET   = 590,$
+    YOFFSET   = 587,$
+    ;    SCR_XSIZE = 80,$
     UNAME     = XYbase.uname,$
+    /COLUMN,$
     FRAME     = XYbase.frame)
     
-  ;x (label and value)
-  wXlabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = xLabel.size[0],$
-    YOFFSET = xLabel.size[1],$
-    VALUE   = xLabel.value)
-  wXvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = xValue.size[0],$
-    YOFFSET = xValue.size[1],$
-    VALUE   = xValue.value,$
+  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
+  
+    ;bank number
+    rowa = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowa,$
+      VALUE = 'Bank #:')
+    value = WIDGET_LABEL(rowa,$
+      VALUE = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME = 'bank_number_value')
+      
+    ;tube local
+    rowb = WIDGET_BASE(wXYbase,$
+      /ROW)
+    label = WIDGET_LABEL(rowb,$
+      VALUE = 'Tube #:')
+    value = WIDGET_LABEL(rowb,$
+      VALUE = 'N/A',$
+      /ALIGN_LEFT,$
+      UNAME = 'tube_local_number_value')
+      
+  ENDIF
+  
+  ;row1 (Tube# or x#)
+  row1 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wXlabel = WIDGET_LABEL(row1,$
+    VALUE   = 'Tube (global):')
+  wXvalue = WIDGET_LABEL(row1,$
+    VALUE   = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME   = xValue.uname)
     
-  ;y (label and value)
-  wYlabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = yLabel.size[0],$
-    YOFFSET = yLabel.size[1],$
-    VALUE   = yLabel.value)
-  wYvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = yValue.size[0],$
-    YOFFSET = yValue.size[1],$
-    VALUE   = yValue.value,$
+  ;row2 (Pixel# or y#)
+  row2 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wYlabel = WIDGET_LABEL(row2,$
+    VALUE   = 'Pixel #:')
+  wYvalue = WIDGET_LABEL(row2,$
+    VALUE   = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME   = yValue.uname)
     
-  ;Counts (label and value)
-  wCountslabel = WIDGET_LABEL(wXYbase,$
-    XOFFSET = countsLabel.size[0],$
-    YOFFSET = countsLabel.size[1],$
-    VALUE   = countsLabel.value)
-  wCountsvalue = WIDGET_LABEL(wXYbase,$
-    XOFFSET = countsValue.size[0],$
-    YOFFSET = countsValue.size[1],$
-    VALUE   = countsValue.value,$
+  ;row3 (Counts)
+  row3 = WIDGET_BASE(wXYbase,$
+    /ROW)
+  wCountslabel = WIDGET_LABEL(row3,$
+    VALUE   = 'Counts: ')
+  wCountsvalue = WIDGET_LABEL(row3,$
+    VALUE   = 'N/A          ',$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
     
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = sScaleTypeBase.size[0],$
-    YOFFSET = sScaleTypeBase.size[1],$
+    XOFFSET = 590,$
+    YOFFSET = 735,$
     UNAME = sScaleTypeBase.uname,$
     SENSITIVE = sScaleTypeBase.sensitive,$
     /ROW)
@@ -950,26 +973,31 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     
   ;Selection Color Tool
   wColorBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = sColorBase.size[0],$
+    XOFFSET   = sColorBase.size[0]-63,$
     YOFFSET   = sColorBase.size[1],$
-    SCR_XSIZE = sColorBase.size[2],$
-    SCR_YSIZE = sColorBase.size[3],$
     FRAME     = sColorBase.frame,$
     SENSITIVE = sColorBase.sensitive,$
-    UNAME     = sColorBase.uname)
+    UNAME     = sColorBase.uname,$
+    /COLUMN)
     
   wSelectionColor = WIDGET_BUTTON(wcolorBase,$
-    XOFFSET   = sSelectionColor.size[0],$
-    YOFFSET   = sSelectionColor.size[1],$
-    SCR_XSIZE = sSelectionColor.size[2],$
+    SCR_XSIZE = sSelectionColor.size[2]+58,$
     UNAME     = sSelectionColor.uname,$
     VALUE     = sSelectionColor.value)
     
-; wPlotColor = WIDGET_BUTTON(wcolorBase,$
-;                                 XOFFSET   = sPlotColor.size[0],$
-;                                 YOFFSET   = sPlotColor.size[1],$
-;                                 SCR_XSIZE = sPlotColor.size[2],$
-;                                 UNAME     = sPlotColor.uname,$
-;                                 VALUE     = sPlotColor.value)
-    
+    ;Auto. Exclude Dead Tubes
+   auto_base = WIDGET_BASE(wTab1Base,$
+   XOFFSET = sColorBase.size[0]-58,$
+   YOFFSET = sColorBase.size[1] + 47,$
+   /COLUMN,$
+   FRAME = 1)
+   
+   group = CW_BGROUP(auto_base,$
+   ['Yes','No'],$
+   /EXCLUSIVE,$
+   /NO_RELEASE,$
+   SET_VALUE = 0,$
+   UNAME = 'exclude_dead_tube_auto',$
+   LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
+
 END

@@ -42,7 +42,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   FAILED     = (*global).failed
   
   retrieve_error = 0
-  CATCH, retrieve_error
+  ;CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -182,7 +182,6 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         DataArray = *(sInstance->getData())
         OBJ_DESTROY, sInstance
         
-        print, 'start_index: ' + string(start_index) + '; end_index: ' + string(end_index)
         back_bank[*,*,start_index:end_index] = DataArray
         
         rack_index_front++

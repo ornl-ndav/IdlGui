@@ -31,7 +31,40 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;------------------------------------------------------------------------------
+FUNCTION getBankNumber, tube
+  local_tube = tube - 1
+  bank = local_tube / 8
+  IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
+  RETURN, bank+1
+END
 
+;------------------------------------------------------------------------------
+FUNCTION getTubeLocal, tube
+  local_tube = tube - 1
+  IF (local_tube mod 2 EQ 1) THEN BEGIN ;odd
+    local_tube--
+  ENDIF
+  real_local_tube = local_tube MOD 8
+  real_local_tube = real_local_tube / 2
+  RETURN, real_local_tube
+END
+
+;------------------------------------------------------------------------------
+;Input bank and tube (bank starts at 1)
+;bank      1 25  1 25  1 25  1 25  2 26  2 26 ...
+;tube      0  0  1  1  2  2  3  3  0  0  1  1 ...
+;real_tube 0  1  2  3  4  5  6  7  8  9 10 11
+;output real tube number (starting at 0)
+FUNCTION getTubeGlobal, bank, tube
+  IF (bank LT 25) THEN BEGIN ;front panel
+  RETURN, (bank - 1) * 8 + 2 * tube - 1
+  ENDIF ELSE BEGIN ;back panel
+  RETURN, (bank - 25) * 8 + 2*tube
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getTextFieldValue, Event, uname
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   WIDGET_CONTROL, id, GET_VALUE=value
@@ -67,6 +100,21 @@ FUNCTION getButtonValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION getPanelSelected, Event
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'both'
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_front_bank_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'front'
+  
+  RETURN, 'back'
+  
+END
+
+;------------------------------------------------------------------------------
 PRO getXYposition, Event
 
   ;get global structure
@@ -75,6 +123,7 @@ PRO getXYposition, Event
   x = Event.x
   y = Event.y
   IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
     IF ((*global).Xpixel  EQ 80L) THEN BEGIN
       Xcoeff = 8
     ENDIF ELSE BEGIN
@@ -82,7 +131,8 @@ PRO getXYposition, Event
     ENDELSE
     ScreenX = x / Xcoeff
     ScreenY = y / Xcoeff
-  ENDIF ELSE BEGIN
+    
+  ENDIF ELSE BEGIN ;SNS
   
     ;check if both panels are plotted
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
@@ -91,9 +141,29 @@ PRO getXYposition, Event
     IF (value EQ 1) THEN coeff = 1
     ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff * coeff)
     ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff)
+    
+    panel_selected = getPanelSelected(Event)
+    CASE (panel_selected) OF
+      'front': BEGIN
+        ScreenX *= 2
+      END
+      'back': BEGIN
+        ScreenX = ScreenX * 2 + 1
+      END
+      ELSE:
+    ENDCASE
+    
   ENDELSE
   putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
   putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+  
+  bank = getBankNumber(ScreenX+1)
+  tube_local = getTubeLocal(ScreenX+1)
+  
+  putTextFieldValue, Event, 'bank_number_value', STRCOMPRESS(bank,/REMOVE_ALL)
+  putTextFieldValue, Event, 'tube_local_number_value', $
+  STRCOMPRESS(tube_local,/REMOVE_ALL)
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -145,4 +215,22 @@ END
 FUNCTION getRoiFileName, Event
   FileName = getTextFieldValue(Event,'roi_file_name_text_field')
   RETURN, FileName
+END
+
+;------------------------------------------------------------------------------
+FUNCTION  getRealDataX, Event, x0_data
+
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      x0_data /= 2
+    END
+    'back': BEGIN
+      x0_data = (x0_data - 1 ) / 2
+    END
+    ELSE:
+  ENDCASE
+  
 END

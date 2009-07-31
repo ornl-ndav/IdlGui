@@ -179,6 +179,7 @@ END
 
 ;- Selection Load Button ------------------------------------------------------
 PRO LoadPlotSelection, Event
+
   ;get global structure
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL, id, GET_UVALUE=global
@@ -209,33 +210,44 @@ PRO LoadPlotSelection, Event
         STRCOMPRESS(NbrElements,/REMOVE_ALL) + ' elements)'
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK + InfoText
       ;parse string array
-      IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
-        PROCESSING
-      Xarray = INTARR(NbrElements)
-      Yarray = INTARR(NbrElements)
-      getXYROI, FileStringArray, NbrElements, Xarray, Yarray
-      IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-      ENDIF ELSE BEGIN                 ;WORKED
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-        ;plotting ROI
-        IDLsendToGeek_addLogBookText, Event, $
-          '-> Plotting ROI ... ' + PROCESSING
-        plot_error = 0
-        CATCH, plot_error
-        IF (plot_error NE 0) THEN BEGIN
-          CATCH,/CANCEL
+      
+      IF ((*global).facility EQ 'LENS') THEN BEGIN ;LENS ----------------------
+      
+        IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of X,Y ... ' + $
+          PROCESSING
+        Xarray = INTARR(NbrElements)
+        Yarray = INTARR(NbrElements)
+        getXYROI, FileStringArray, NbrElements, Xarray, Yarray
+        IF (Xarray[0] EQ '' AND Xarray[NbrElements-1] EQ '') THEN BEGIN ;FAILED
           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-        ENDIF ELSE BEGIN
-          RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
-            Xarray, $
-            Yarray)
-          (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
-          
-          PlotROI, Event
+        ENDIF ELSE BEGIN                 ;WORKED
           IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-          (*global).there_is_a_selection = 1
+          ;plotting ROI
+          IDLsendToGeek_addLogBookText, Event, $
+            '-> Plotting ROI ... ' + PROCESSING
+          plot_error = 0
+          CATCH, plot_error
+          IF (plot_error NE 0) THEN BEGIN
+            CATCH,/CANCEL
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+          ENDIF ELSE BEGIN
+            RoiPixelArrayExcluded = getListOfPixelExcluded(Event, $
+              Xarray, $
+              Yarray)
+            (*(*global).RoiPixelArrayExcluded) = RoiPixelArrayExcluded
+            
+            PlotROI, Event
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+            (*global).there_is_a_selection = 1
+          ENDELSE
         ENDELSE
+      ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
+      
+        load_exclusion_roi_for_sns, Event, FileStringArray
+        
+        ;add list of pixel (bank#_x_y) to PixelArray
+        add_to_global_exclusion_array, event, FileStringArray
+        
       ENDELSE
     ENDELSE
   ENDELSE
@@ -267,6 +279,10 @@ PRO clear_selection_tool, Event
   (*global).there_is_a_selection = 0
   putTextFieldValue, Event, 'roi_file_name_text_field', ''
   (*(*global).RoiPixelArrayExcluded) = INTARR(80,80)
+  (*(*global).global_exclusion_array) = STRARR(1)
+  (*(*global).BankArray) = PTR_NEW(0L)
+  (*(*global).PixelArray) = PTR_NEW(0L)
+  (*(*global).TubeArray) = PTR_NEW(0L)
   IDLsendToGeek_ReplaceLogBookText, Event, (*global).processing, (*global).ok
 END
 

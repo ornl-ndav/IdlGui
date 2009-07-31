@@ -777,3 +777,5 @@ PRO AccurateExclusionRegionCircle, Event
   IDLsendToGeek_addLogBookText, Event, text
   ExclusionRegionCircle, Event, TYPE='accurate'
 END
+
+
