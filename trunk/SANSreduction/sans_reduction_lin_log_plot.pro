@@ -88,12 +88,10 @@ PRO save_background,  Event, MAIN_BASE=main_base, GLOBAL=global
   
   background = TVRD(TRUE=3)
   geometry = WIDGET_INFO(id,/GEOMETRY)
-  xoffset = geometry.xoffset
-  yoffset = geometry.yoffset
   xsize   = geometry.xsize
   ysize   = geometry.ysize
 
-  DEVICE, copy =[xoffset, yoffset, xsize, ysize, 0, 0, id_value]
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
   (*(*global).background) = background
   
 END

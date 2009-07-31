@@ -34,30 +34,32 @@
 
 FUNCTION is_front_back_or_both_plot, Event
 
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='show_front_bank_button')
-front_set = WIDGET_INFO(id, /BUTTON_SET)
-IF (front_SET) THEN RETURN, 'front'
-
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='show_back_bank_button')
-front_set = WIDGET_INFO(id, /BUTTON_SET)
-IF (front_SET) THEN RETURN, 'back'
-
-RETURN, 'both'
-
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='show_front_bank_button')
+  front_set = WIDGET_INFO(id, /BUTTON_SET)
+  IF (front_SET) THEN RETURN, 'front'
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='show_back_bank_button')
+  front_set = WIDGET_INFO(id, /BUTTON_SET)
+  IF (front_SET) THEN RETURN, 'back'
+  
+  RETURN, 'both'
+  
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isAutoExcludeDeadTubeSelected, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='exclude_dead_tube_auto')
-WIDGET_CONTROL, id, GET_VALUE=value
-IF (value EQ 0) THEN RETURN, 1
-RETURN, 0
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  IF ((*global).facility EQ 'LENS') THEN RETURN, 0
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='exclude_dead_tube_auto')
+  WIDGET_CONTROL, id, GET_VALUE=value
+  IF (value EQ 0) THEN RETURN, 1
+  RETURN, 0
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isLinSelected, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='z_axis_scale')
-WIDGET_CONTROL, id, GET_VALUE=value
-IF (value EQ 0) THEN RETURN, 1
-RETURN, 0
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='z_axis_scale')
+  WIDGET_CONTROL, id, GET_VALUE=value
+  IF (value EQ 0) THEN RETURN, 1
+  RETURN, 0
 END

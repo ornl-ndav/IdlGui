@@ -336,8 +336,6 @@ PRO refresh_scale, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   facility = (*global).facility
   
-  print, facility
-  
   IF (facility EQ 'SNS') THEN RETURN
   
   ;change color of background
@@ -412,7 +410,7 @@ PRO refresh_plot, Event ;_plot
       Y         = (*global).Y
     ENDIF
     result = plotData(Event, DataArray, X, Y)
-    
+
   ENDIF ELSE BEGIN ;SNS
   
     DataArray = (*(*global).DataArray)
