@@ -287,7 +287,8 @@ PRO MAIN_BASE_event, Event
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
-      save_background,  Event, GLOBAL=global
+      auto_exclude_dead_tubes, Event
+     save_background,  Event, GLOBAL=global
       makeExclusionArray_SNS, Event
     END
     
