@@ -524,9 +524,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     /NO_RELEASE,$
     /EXCLUSIVE)
    
-   
-   
-   
   ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
@@ -912,8 +909,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE     = sRefreshplot.value,$
     UNAME     = sRefreshplot.uname,$
     SENSITIVE = sRefreshplot.sensitive)
-    
-  ;- X/Y base -------------------------------------------------------------------
+        
+  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
+  
+    ;- X/Y base -------------------------------------------------------------------
   wXYbase = WIDGET_BASE(wTab1Base,$
     XOFFSET   = 590,$
     YOFFSET   = 587,$
@@ -921,8 +920,6 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     UNAME     = XYbase.uname,$
     /COLUMN,$
     FRAME     = XYbase.frame)
-    
-  IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
   
     ;bank number
     rowa = WIDGET_BASE(wXYbase,$
@@ -944,7 +941,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /ALIGN_LEFT,$
       UNAME = 'tube_local_number_value')
       
-  ENDIF
+  ENDIF ELSE BEGIN
+  
+    ;- X/Y base -------------------------------------------------------------------
+  wXYbase = WIDGET_BASE(wTab1Base,$
+    XOFFSET   = 710,$
+    YOFFSET   = 587,$
+    ;    SCR_XSIZE = 80,$
+    UNAME     = XYbase.uname,$
+    /COLUMN,$
+    FRAME     = XYbase.frame)
+  
+  ENDELSE
   
   ;row1 (Tube# or x#)
   row1 = WIDGET_BASE(wXYbase,$
@@ -980,36 +988,35 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   
   ;linear/log scale
   wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = 590,$
-    YOFFSET = 735,$
+    XOFFSET = 890,$
+    YOFFSET = 585,$
     UNAME = sScaleTypeBase.uname,$
     SENSITIVE = sScaleTypeBase.sensitive,$
-    /ROW)
+    /COLUMN)
     
   wGroup = CW_BGROUP(wGroupBase,$
     sScaleType.list,$
-    ROW        = 1,$  
     SET_VALUE  = sScaleType.value,$
     UNAME      = sScaleType.uname,$
-    LABEL_LEFT = sScaleType.title,$
+    LABEL_TOP = sScaleType.title,$
     /NO_RELEASE,$
     /EXCLUSIVE)
   
   ENDIF
     
-  ;Selection Color Tool
-  wColorBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = sColorBase.size[0]-63,$
-    YOFFSET   = sColorBase.size[1],$
-    FRAME     = sColorBase.frame,$
-    SENSITIVE = sColorBase.sensitive,$
-    UNAME     = sColorBase.uname,$
-    /COLUMN)
-    
-  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
-    SCR_XSIZE = sSelectionColor.size[2]+58,$
-    UNAME     = sSelectionColor.uname,$
-    VALUE     = sSelectionColor.value)
+;  ;Selection Color Tool
+;  wColorBase = WIDGET_BASE(wTab1Base,$
+;    XOFFSET   = sColorBase.size[0]-63,$
+;    YOFFSET   = sColorBase.size[1],$
+;    FRAME     = sColorBase.frame,$
+;    SENSITIVE = sColorBase.sensitive,$
+;    UNAME     = sColorBase.uname,$
+;    /COLUMN)
+;    
+;  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
+;    SCR_XSIZE = sSelectionColor.size[2]+58,$
+;    UNAME     = sSelectionColor.uname,$
+;    VALUE     = sSelectionColor.value)
     
     IF ((*global).facility EQ 'SNS') THEN BEGIN
     
