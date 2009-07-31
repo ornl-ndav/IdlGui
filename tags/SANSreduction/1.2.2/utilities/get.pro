@@ -1,0 +1,236 @@
+;==============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;==============================================================================
+;------------------------------------------------------------------------------
+FUNCTION getBankNumber, tube
+  local_tube = tube - 1
+  bank = local_tube / 8
+  IF ((tube MOD 2) EQ 0) THEN bank += 24 ;even tube
+  RETURN, bank+1
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTubeLocal, tube
+  local_tube = tube - 1
+  IF (local_tube mod 2 EQ 1) THEN BEGIN ;odd
+    local_tube--
+  ENDIF
+  real_local_tube = local_tube MOD 8
+  real_local_tube = real_local_tube / 2
+  RETURN, real_local_tube
+END
+
+;------------------------------------------------------------------------------
+;Input bank and tube (bank starts at 1)
+;bank      1 25  1 25  1 25  1 25  2 26  2 26 ...
+;tube      0  0  1  1  2  2  3  3  0  0  1  1 ...
+;real_tube 0  1  2  3  4  5  6  7  8  9 10 11
+;output real tube number (starting at 0)
+FUNCTION getTubeGlobal, bank, tube
+  IF (bank LT 25) THEN BEGIN ;front panel
+  RETURN, (bank - 1) * 8 + 2 * tube - 1
+  ENDIF ELSE BEGIN ;back panel
+  RETURN, (bank - 25) * 8 + 2*tube
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTextFieldValue, Event, uname
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value[0]
+END
+
+;------------------------------------------------------------------------------
+;This function retrieves the run number of the First tab
+FUNCTION getRunNumber, Event
+  RETURN, getTextFieldValue(Event,'run_number_cw_field')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getProposalIndex, Event
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+  index = WIDGET_INFO(id, /droplist_select)
+  RETURN, index
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getProposalSelected, Event, index
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+  index = WIDGET_INFO(id, /droplist_select)
+  WIDGET_CONTROL, id, GET_VALUE=list
+  RETURN, list[index]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getButtonValue, Event, uname
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getPanelSelected, Event
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'both'
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_front_bank_button')
+  value = WIDGET_INFO(id, /BUTTON_SET)
+  IF (value EQ 1) THEN RETURN, 'front'
+  
+  RETURN, 'back'
+  
+END
+
+;------------------------------------------------------------------------------
+PRO getXYposition, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  x = Event.x
+  y = Event.y
+  IF ((*global).facility EQ 'LENS') THEN BEGIN
+  
+    IF ((*global).Xpixel  EQ 80L) THEN BEGIN
+      Xcoeff = 8
+    ENDIF ELSE BEGIN
+      Xcoeff = 2
+    ENDELSE
+    ScreenX = x / Xcoeff
+    ScreenY = y / Xcoeff
+    
+  ENDIF ELSE BEGIN ;SNS
+  
+    ;check if both panels are plotted
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='show_both_banks_button')
+    value = WIDGET_INFO(id, /BUTTON_SET)
+    coeff = 0.5
+    IF (value EQ 1) THEN coeff = 1
+    ScreenX = FIX(FLOAT(x) / (*global).congrid_x_coeff * coeff)
+    ScreenY = FIX(FLOAT(y) / (*global).congrid_y_coeff)
+    
+    panel_selected = getPanelSelected(Event)
+    CASE (panel_selected) OF
+      'front': BEGIN
+        ScreenX *= 2
+      END
+      'back': BEGIN
+        ScreenX = ScreenX * 2 + 1
+      END
+      ELSE:
+    ENDCASE
+    
+  ENDELSE
+  putTextFieldValue, Event, 'x_value', STRCOMPRESS(ScreenX,/REMOVE_ALL)
+  putTextFieldValue, Event, 'y_value', STRCOMPRESS(ScreenY,/REMOVE_ALL)
+  
+  bank = getBankNumber(ScreenX+1)
+  tube_local = getTubeLocal(ScreenX+1)
+  
+  putTextFieldValue, Event, 'bank_number_value', STRCOMPRESS(bank,/REMOVE_ALL)
+  putTextFieldValue, Event, 'tube_local_number_value', $
+  STRCOMPRESS(tube_local,/REMOVE_ALL)
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+  IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+      RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+      RunNumber = ''
+    ENDELSE
+  ENDIF
+  default_name = 'SANS'
+  IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+  ENDIF
+  DateIso = GenerateIsoTimeStamp()
+  default_name += '_' + DateIso
+  default_name += '.txt'
+  RETURN, default_name
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getDefaultROIFileName, Event, FullFileName, RunNumber = RunNumber
+  IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
+    iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
+    IF (OBJ_VALID(iObject)) THEN BEGIN
+      RunNumber = iObject->getRunNumber()
+    ENDIF ELSE BEGIN
+      RunNumber = ''
+    ENDELSE
+  ENDIF
+  default_name = 'SANS'
+  IF (RunNumber NE '') THEN BEGIN
+    default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+  ENDIF
+  DateIso = GenerateIsoTimeStamp()
+  default_name += '_' + DateIso
+  default_name += '_ROI.dat'
+  
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  roi_path = (*global).selection_path
+  default_name = roi_path + default_name
+  
+  RETURN, default_name
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getRoiFileName, Event
+  FileName = getTextFieldValue(Event,'roi_file_name_text_field')
+  RETURN, FileName
+END
+
+;------------------------------------------------------------------------------
+FUNCTION  getRealDataX, Event, x0_data
+
+  ;go 2 by 2 for front and back panels only
+  ;start at 1 if back panel
+  panel_selected = getPanelSelected(Event)
+  CASE (panel_selected) OF
+    'front': BEGIN
+      x0_data /= 2
+    END
+    'back': BEGIN
+      x0_data = (x0_data - 1 ) / 2
+    END
+    ELSE:
+  ENDCASE
+  
+END
