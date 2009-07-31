@@ -413,21 +413,25 @@ PRO MAIN_BASE_event, Event
     
     ;- Clear Selection Button -------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='clear_selection_button'): BEGIN
-      clear_selection_tool, Event ;_selection
-      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-        plot_exclusion_of_dead_tubes, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        clear_selection_tool, Event ;_selection
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
       ENDIF
-      save_background,  Event, GLOBAL=global
     END
     
     ;- Refresh Plot -----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
-      IF ((*global).facility EQ 'LENS') THEN BEGIN
-        refresh_plot, Event ;_plot
-        RefreshRoiExclusionPlot, Event   ;_plot
-      ENDIF ELSE BEGIN
-        TV, (*(*global).background), true=3
-      ENDELSE
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        IF ((*global).facility EQ 'LENS') THEN BEGIN
+          refresh_plot, Event ;_plot
+          RefreshRoiExclusionPlot, Event   ;_plot
+        ENDIF ELSE BEGIN
+          TV, (*(*global).background), true=3
+        ENDELSE
+      ENDIF
     END
     
     ;- Selection Color Button -------------------------------------------------
@@ -441,53 +445,58 @@ PRO MAIN_BASE_event, Event
     
     ;- Show front panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_front_bank_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).front_bank)
-      refresh_plot, Event ;_plot
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-        plot_exclusion_of_dead_tubes, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).front_bank)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
       ENDIF
-      save_background,  Event, GLOBAL=global
-    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Show back panels ------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_back_bank_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).back_bank)
-      refresh_plot, Event ;_plot
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-        plot_exclusion_of_dead_tubes, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).back_bank)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
       ENDIF
-      save_background,  Event, GLOBAL=global
-    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;- Show front and back panels ---------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='show_both_banks_button'): BEGIN
-      (*(*global).DataArray) = (*(*global).both_banks)
-      refresh_plot, Event ;_plot
-      load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-        plot_exclusion_of_dead_tubes, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        (*(*global).DataArray) = (*(*global).both_banks)
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          plot_exclusion_of_dead_tubes, Event
+        ENDIF
+        save_background,  Event, GLOBAL=global
       ENDIF
-      save_background,  Event, GLOBAL=global
-    ;RefreshRoiExclusionPlot, Event   ;_plot
     END
     
     ;Automatically Exclude Dead Tubes or not ----------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'exclude_dead_tube_auto'): BEGIN
-      IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-        refresh_plot, Event ;_plot
-        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-        plot_exclusion_of_dead_tubes, Event
-        save_background,  Event, GLOBAL=global
-      ENDIF ELSE BEGIN
-        refresh_plot, Event ;_plot
-        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-        save_background,  Event, GLOBAL=global
-      ENDELSE
-      makeExclusionArray_SNS, Event
+      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
+          refresh_plot, Event ;_plot
+          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+          plot_exclusion_of_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+        ENDIF ELSE BEGIN
+          refresh_plot, Event ;_plot
+          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
+          save_background,  Event, GLOBAL=global
+        ENDELSE
+        makeExclusionArray_SNS, Event
+      ENDIF
     END
     
     ;= TAB2 (REDUCE) ==========================================================
