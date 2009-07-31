@@ -32,10 +32,17 @@
 ;
 ;==============================================================================
 
-PRO display_images, MAIN_BASE=main_base, EVENT=event
-
+PRO display_images, MAIN_BASE=main_base, EVENT=event, $
+    transmission=transmission
+    
+  IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
+  
   ;Transmission calculation button
-  raw_buttons = READ_PNG('SANSreduction_images/transmission_button.png')
+  IF (transmission EQ 'off') THEN BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_off.png')
+  ENDIF ELSE BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_on.png')
+  ENDELSE
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
       FIND_BY_UNAME='transmission_calculation_button')
