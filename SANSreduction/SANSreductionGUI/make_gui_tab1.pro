@@ -503,27 +503,27 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /NO_RELEASE,$
       UNAME = 'show_both_banks_button')
       
-    WIDGET_CONTROL, both_bank, /SET_BUTTON   
-   
-     ;linear/log scale
-  wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = 590,$
-    YOFFSET = 150,$
-    /ALIGN_CENTER,$
-    FRAME = 1,$
-    UNAME = sScaleTypeBase.uname,$
-    SENSITIVE = sScaleTypeBase.sensitive,$
-    /ROW)
+    WIDGET_CONTROL, both_bank, /SET_BUTTON
     
-  wGroup = CW_BGROUP(wGroupBase,$
-    sScaleType.list,$
-;    ROW         = 1,$
-    SET_VALUE  = sScaleType.value,$
-    UNAME      = sScaleType.uname,$
-    LABEL_TOP = sScaleType.title,$
-    /NO_RELEASE,$
-    /EXCLUSIVE)
-   
+    ;linear/log scale
+    wGroupBase = WIDGET_BASE(wTab1Base,$
+      XOFFSET = 590,$
+      YOFFSET = 150,$
+      /ALIGN_CENTER,$
+      FRAME = 1,$
+      UNAME = sScaleTypeBase.uname,$
+      SENSITIVE = sScaleTypeBase.sensitive,$
+      /ROW)
+      
+    wGroup = CW_BGROUP(wGroupBase,$
+      sScaleType.list,$
+      ;    ROW         = 1,$
+      SET_VALUE  = sScaleType.value,$
+      UNAME      = sScaleType.uname,$
+      LABEL_TOP = sScaleType.title,$
+      /NO_RELEASE,$
+      /EXCLUSIVE)
+      
   ENDELSE
   
   ;- Selection tool -------------------------------------------------------------
@@ -846,14 +846,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDELSE
   
   ;SAVE AS
-;  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
-;    XOFFSET   = sSaveAsSelection.size[0],$
-;    YOFFSET   = sSaveAsSelection.size[1],$
-;    SCR_XSIZE = sSaveAsSelection.size[2],$
-;    VALUE     = sSaveAsSelection.value,$
-;    UNAME     = sSaveAsSelection.uname,$
-;   SENSITIVE = sSaveAsSelection.sensitive)
-    
+  ;  wSaveAsSelection = WIDGET_BUTTON(wExclusionBase,$
+  ;    XOFFSET   = sSaveAsSelection.size[0],$
+  ;    YOFFSET   = sSaveAsSelection.size[1],$
+  ;    SCR_XSIZE = sSaveAsSelection.size[2],$
+  ;    VALUE     = sSaveAsSelection.value,$
+  ;    UNAME     = sSaveAsSelection.uname,$
+  ;   SENSITIVE = sSaveAsSelection.sensitive)
+  
   ;SAVE
   wSaveSelection = WIDGET_BUTTON(wExclusionBase,$
     XOFFSET   = sSaveSelection.size[0],$
@@ -909,18 +909,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE     = sRefreshplot.value,$
     UNAME     = sRefreshplot.uname,$
     SENSITIVE = sRefreshplot.sensitive)
-        
+    
   IF ((*global).FACILITY EQ 'SNS') THEN BEGIN
   
     ;- X/Y base -------------------------------------------------------------------
-  wXYbase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = 590,$
-    YOFFSET   = 587,$
-    ;    SCR_XSIZE = 80,$
-    UNAME     = XYbase.uname,$
-    /COLUMN,$
-    FRAME     = XYbase.frame)
-  
+    wXYbase = WIDGET_BASE(wTab1Base,$
+      XOFFSET   = 590,$
+      YOFFSET   = 587,$
+      ;    SCR_XSIZE = 80,$
+      UNAME     = XYbase.uname,$
+      /COLUMN,$
+      FRAME     = XYbase.frame)
+      
     ;bank number
     rowa = WIDGET_BASE(wXYbase,$
       /ROW)
@@ -944,14 +944,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ENDIF ELSE BEGIN
   
     ;- X/Y base -------------------------------------------------------------------
-  wXYbase = WIDGET_BASE(wTab1Base,$
-    XOFFSET   = 710,$
-    YOFFSET   = 587,$
-    ;    SCR_XSIZE = 80,$
-    UNAME     = XYbase.uname,$
-    /COLUMN,$
-    FRAME     = XYbase.frame)
-  
+    wXYbase = WIDGET_BASE(wTab1Base,$
+      XOFFSET   = 710,$
+      YOFFSET   = 587,$
+      ;    SCR_XSIZE = 80,$
+      UNAME     = XYbase.uname,$
+      /COLUMN,$
+      FRAME     = XYbase.frame)
+      
   ENDELSE
   
   ;row1 (Tube# or x#)
@@ -983,58 +983,88 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     VALUE   = 'N/A          ',$
     UNAME   = countsValue.uname,$
     /ALIGN_LEFT)
-
+    
+  ;Transmission and beam center calculation buttons
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+  
+    Tran_BC_base = WIDGET_BASE(wTab1Base,$
+      XOFFSET = 585,$
+      YOFFSET = 730,$
+      /ROW)
+      
+    ;Transmission calculation button
+    xsize = 200
+    ysize = 40
+    button1 = WIDGET_DRAW(Tran_BC_base,$
+      SCR_XSIZE = xsize,$
+      SCR_YSIZE = ysize,$
+      TOOLTIP = 'Launch the Transmission Calculation Program ...',$
+      SENSITIVE = 1,$
+      UNAME = 'transmission_calculation_button')
+      
+      space = WIDGET_LABEL(Tran_BC_base,$
+      VALUE = '')
+      
+    ;beam center calculation
+    button2 = WIDGET_DRAW(Tran_BC_base,$
+      SCR_XSIZE = xsize,$
+      SCR_YSIZE = ysize,$
+      SENSITIVE = 1,$
+      UNAME = 'beam_center_calculation_button')
+      
+  ENDIF
+  
   IF ((*global).facility EQ 'LENS') THEN BEGIN
   
-  ;linear/log scale
-  wGroupBase = WIDGET_BASE(wTab1Base,$
-    XOFFSET = 890,$
-    YOFFSET = 585,$
-    UNAME = sScaleTypeBase.uname,$
-    SENSITIVE = sScaleTypeBase.sensitive,$
-    /COLUMN)
-    
-  wGroup = CW_BGROUP(wGroupBase,$
-    sScaleType.list,$
-    SET_VALUE  = sScaleType.value,$
-    UNAME      = sScaleType.uname,$
-    LABEL_TOP = sScaleType.title,$
-    /NO_RELEASE,$
-    /EXCLUSIVE)
-  
+    ;linear/log scale
+    wGroupBase = WIDGET_BASE(wTab1Base,$
+      XOFFSET = 890,$
+      YOFFSET = 585,$
+      UNAME = sScaleTypeBase.uname,$
+      SENSITIVE = sScaleTypeBase.sensitive,$
+      /COLUMN)
+      
+    wGroup = CW_BGROUP(wGroupBase,$
+      sScaleType.list,$
+      SET_VALUE  = sScaleType.value,$
+      UNAME      = sScaleType.uname,$
+      LABEL_TOP = sScaleType.title,$
+      /NO_RELEASE,$
+      /EXCLUSIVE)
+      
   ENDIF
-    
-;  ;Selection Color Tool
-;  wColorBase = WIDGET_BASE(wTab1Base,$
-;    XOFFSET   = sColorBase.size[0]-63,$
-;    YOFFSET   = sColorBase.size[1],$
-;    FRAME     = sColorBase.frame,$
-;    SENSITIVE = sColorBase.sensitive,$
-;    UNAME     = sColorBase.uname,$
-;    /COLUMN)
-;    
-;  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
-;    SCR_XSIZE = sSelectionColor.size[2]+58,$
-;    UNAME     = sSelectionColor.uname,$
-;    VALUE     = sSelectionColor.value)
-    
-    IF ((*global).facility EQ 'SNS') THEN BEGIN
-    
+  
+  ;  ;Selection Color Tool
+  ;  wColorBase = WIDGET_BASE(wTab1Base,$
+  ;    XOFFSET   = sColorBase.size[0]-63,$
+  ;    YOFFSET   = sColorBase.size[1],$
+  ;    FRAME     = sColorBase.frame,$
+  ;    SENSITIVE = sColorBase.sensitive,$
+  ;    UNAME     = sColorBase.uname,$
+  ;    /COLUMN)
+  ;
+  ;  wSelectionColor = WIDGET_BUTTON(wcolorBase,$
+  ;    SCR_XSIZE = sSelectionColor.size[2]+58,$
+  ;    UNAME     = sSelectionColor.uname,$
+  ;    VALUE     = sSelectionColor.value)
+  
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+  
     ;Auto. Exclude Dead Tubes
-   auto_base = WIDGET_BASE(wTab1Base,$
-   XOFFSET = sColorBase.size[0]-58,$
-   YOFFSET = sColorBase.size[1] + 47,$
-   /COLUMN,$
-   FRAME = 1)
-   
-   group = CW_BGROUP(auto_base,$
-   ['Yes','No'],$
-   /EXCLUSIVE,$
-   /NO_RELEASE,$
-   SET_VALUE = 0,$
-   UNAME = 'exclude_dead_tube_auto',$
-   LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
-
-ENDIF
-
+    auto_base = WIDGET_BASE(wTab1Base,$
+      XOFFSET = sColorBase.size[0]-58,$
+      YOFFSET = sColorBase.size[1] + 47,$
+      /COLUMN,$
+      FRAME = 1)
+      
+    group = CW_BGROUP(auto_base,$
+      ['Yes','No'],$
+      /EXCLUSIVE,$
+      /NO_RELEASE,$
+      SET_VALUE = 0,$
+      UNAME = 'exclude_dead_tube_auto',$
+      LABEL_TOP = 'Automatically Exclude Dead Tubes:    ')
+      
+  ENDIF
+  
 END
