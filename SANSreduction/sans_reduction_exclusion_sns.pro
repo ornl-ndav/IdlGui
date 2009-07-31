@@ -37,6 +37,8 @@ PRO makeExclusionArray_SNS, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  IF ((*global).facility EQ 'LENS') THEN RETURN
+  
   ;get tube and pixel of first corner
   tube0_data  = FIX(getTextFieldValue(Event,'corner_pixel_x0'))
   pixel0_data = FIX(getTextFieldValue(Event,'corner_pixel_y0'))

@@ -36,6 +36,8 @@ PRO auto_exclude_dead_tubes, Event
 
   ;get global structurea
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+
+  IF ((*global).facility EQ 'LENS') THEN RETURN
     
   ;check if user wants to exclude dead tubes or not
   IF (~isAutoExcludeDeadTubeSelected(Event)) THEN RETURN

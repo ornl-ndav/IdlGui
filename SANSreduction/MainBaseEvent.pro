@@ -99,7 +99,6 @@ PRO MAIN_BASE_event, Event
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       error = 0
-      help, event,/structure
       CATCH, error ;if mouse enters the draw or leaves then no error to catch
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
@@ -141,6 +140,12 @@ PRO MAIN_BASE_event, Event
                 X = Event.x/2.
                 Y = Event.y/2.
               ENDELSE
+            
+            putTextFieldValue, Event, $
+            'x_center_value', STRCOMPRESS(X,/REMOVE_ALL)
+            putTextFieldValue, Event, $
+            'y_center_value', STRCOMPRESS(Y,/REMOVE_ALL)
+            
             ENDIF ELSE BEGIN ;'SNS'
             
               (*global).left_button_clicked = 1
@@ -159,14 +164,15 @@ PRO MAIN_BASE_event, Event
               
               (*global).x0_device = x0_device
               (*global).y0_device = y0_device
-              
-            ENDELSE
+
             putTextFieldValue, Event, $
               'corner_pixel_x0', $
               STRCOMPRESS(X+1)
             putTextFieldValue, Event, $
               'corner_pixel_y0', $
               STRCOMPRESS(Y)
+              
+            ENDELSE
           ENDIF
           
           IF ((*global).facility EQ 'SNS') THEN BEGIN ;for SNS only
@@ -266,16 +272,24 @@ PRO MAIN_BASE_event, Event
             
           ENDIF
           
-        ENDIF ELSE BEGIN ;end of catch /tracking events
-          IF (Event.enter EQ 0) THEN BEGIN
-            putTextFieldValue, Event, 'x_value', 'N/A'
-            putTextFieldValue, Event, 'y_value', 'N/A'
+        ENDIF
+        
+      ENDIF ELSE BEGIN ;endif of catch /tracking events
+
+        IF (Event.enter EQ 0) THEN BEGIN
+
+          putTextFieldValue, Event, 'x_value', 'N/A'
+          putTextFieldValue, Event, 'y_value', 'N/A'
+          putTextFieldValue, Event, 'counts_value', 'N/A'
+          IF ((*global).facility EQ 'SNS') THEN BEGIN
             putTextFieldValue, Event, 'bank_number_value', 'N/A'
             putTextFieldValue, Event, 'tube_local_number_value', 'N/A'
-            putTextFieldValue, Event, 'counts_value', 'N/A'
           ENDIF
-        ENDELSE
-      ENDIF
+          
+        ENDIF
+        
+      ENDELSE ;endelse of catch /tracking event
+      
     END
     
     ;-Linear of Logarithmic scale
