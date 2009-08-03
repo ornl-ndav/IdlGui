@@ -32,6 +32,6 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 
 
 make_gui_tab1, MAIN_TAB, sMainTabSize, TabTitles.tab1
-make_gui_tab2, MAIN_TAB, sMainTabSize, TabTitles.tab2
+;make_gui_tab2, MAIN_TAB, sMainTabSize, TabTitles.tab2
 
 END

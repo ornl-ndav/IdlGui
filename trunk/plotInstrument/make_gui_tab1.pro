@@ -22,8 +22,14 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     value: 'N/A',$
     uname: 'fileName'}
     
- 
-   
+  XYoff = [100,0]
+  fileTree = { size: [sLabel1.size[0]+XYoff[0],$
+    sLabel1.size[1]+XYoff[1],$
+    400],$
+    value: 'N/A',$
+    uname: 'fileName'}
+    
+    
   ;==============================================================================
     
   Base = WIDGET_BASE(MAIN_TAB,$
@@ -57,7 +63,23 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
     UNAME     = sLabel2.uname,$
     /ALIGN_LEFT)
     
-
+    tmpStruct = { first: 'first', $
+        second: 'second'}
+    
+   wTree = WIDGET_TREE(Base, $
+    XOFFSET = 100,$
+    YOFFSET = 70,$
+    SCR_XSIZE = 100,$
+    SCR_YSIZE = 100,$
+    UNAME = wTree)
+    
+    
+    tree = WIDGET_TREE(wTree, $
+    XOFFSET = 0,$
+    YOFFSET = 0,$
+    SCR_XSIZE = 10,$
+    SCR_YSIZE = 10,$
+    UNAME = tree)
     
     
 END
