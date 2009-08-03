@@ -12,25 +12,32 @@ PRO fileBrowse, Event
   
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
-  ;  file_name = DIALOG_PICKFILE(FILTER=filter,$
-  ;    GET_PATH=new_path,$
-  ;    /MUST_EXIST,$
-  ;    PATH=path,$
-  ;    TITLE=title,$
-  ;    /READ,$
-  ;    DIALOG_PARENT=id)
-  ;
-  ;  IF (file_name NE '') THEN BEGIN
-  ;    (*global).path = new_path
-  
-  
-  file_name = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
-  
-  print, file_name
-  
-  data = readFile(Event, file_name)
-  help, data
-;  ENDIF
+  file_name = DIALOG_PICKFILE(FILTER=filter,$
+    GET_PATH=new_path,$
+    /MUST_EXIST,$
+    PATH=path,$
+    TITLE=title,$
+    /READ,$
+    DIALOG_PARENT=id)
+    
+  IF (file_name NE '') THEN BEGIN
+    (*global).path = new_path
+    
+    
+    
+    ;file_name = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/BSS_3753.nxs"
+    
+    print, file_name
+    
+    ;data = readFile(Event, file_name)
+    fileStruct = H5_PARSE(file_name)
+    ;browse = H5_BROWSER(file_name)
+    help, fileStruct, /structure
+    structFields = tag_names(filestruct)
+    fileFields = structFields[where(strmatch(structfields, '_*') NE 1)]
+    print, fileFields
+    
+  ENDIF
   
 END
 ;-------------------------------------------------------------------------------
