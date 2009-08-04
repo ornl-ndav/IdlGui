@@ -65,6 +65,9 @@ cd, CurrentFolder
 .run sans_reduction_display_selection_box.pro
 .run sans_reduction_display_images.pro
 
+;transmission
+.run sans_reduction_transmission_launcher_base.pro
+
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_make_facility_selection.pro
