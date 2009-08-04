@@ -517,7 +517,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='transmission_calculation_button'): BEGIN
       error = 0
-      CATCH, error
+      CATCH, error  
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button

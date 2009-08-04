@@ -39,6 +39,57 @@ PRO launch_transmission_auto_manual_base_event, Event
   
   CASE Event.id OF
   
+    ;auto button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='auto_mode_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+      CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_auto_base_launcher_images, Event=event, mode='auto_on'
+        ENDIF ELSE BEGIN
+        ENDELSE
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          display_auto_base_launcher_images, Event=event, mode='auto_over'
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='auto_mode_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          display_auto_base_launcher_images, Event=event, mode='off'
+        ENDELSE
+      ENDELSE ;enf of catch statement
+    END
+    
+    ;manual button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='manual_mode_button'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+      CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_auto_base_launcher_images, Event=event, mode='manual_on'
+        ENDIF ELSE BEGIN
+        ENDELSE
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          display_auto_base_launcher_images, Event=event, mode='manual_over'
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='manual_mode_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          display_auto_base_launcher_images, Event=event, mode='off'
+        ENDELSE
+      ENDELSE ;enf of catch statement
+    END
+    
+    ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='cancel_auto_manual_mode_base'): BEGIN
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='transmission_mode_launcher_base')
@@ -99,7 +150,7 @@ PRO display_auto_base_launcher_images, main_base=main_base, Event=event, $
   auto_button = READ_PNG(auto)
   manual_button = READ_PNG(manual)
   
-  auto_uname = 'auto_mode_draw'
+  auto_uname = 'auto_mode_button'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
       FIND_BY_UNAME=auto_uname)
@@ -111,7 +162,7 @@ PRO display_auto_base_launcher_images, main_base=main_base, Event=event, $
   WSET, id
   TV, auto_button, 0, 0,/true
   
-  manual_uname = 'manual_mode_draw'
+  manual_uname = 'manual_mode_button'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
       FIND_BY_UNAME=manual_uname)
@@ -153,21 +204,23 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
     
   ;auto mode
   auto = WIDGET_DRAW(row1,$
-    UNAME = 'auto_mode_draw',$
+    UNAME = 'auto_mode_button',$
     SCR_XSIZE = 300,$
     SCR_YSIZE = 254,$
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
-    /MOTION_EVENTS)
+    TOOLTIP='The TRANSMISSION signal will be calculated automatically')
     
   ;manual mode
+  message = 'The program is going to quide you step by step to calculate'
+  message += ' the TRANSMISSION signal' 
   manual = WIDGET_DRAW(row1,$
-    UNAME = 'manual_mode_draw',$
+    UNAME = 'manual_mode_button',$
     SCR_XSIZE = 300,$
     SCR_YSIZE = 254,$
     /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    /MOTION_EVENTS)
+    /TRACKING_EVENTS, $
+    TOOLTIP = message) 
     
   ;row2
   cancel = WIDGET_BUTTON(wBase,$
