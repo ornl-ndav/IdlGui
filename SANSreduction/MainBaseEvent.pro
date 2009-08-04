@@ -519,9 +519,11 @@ PRO MAIN_BASE_event, Event
       error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_images, EVENT=event, $
             transmission='on'
+            launch_transmission_auto_manual_base, Event
         ENDIF ELSE BEGIN
           display_images, EVENT=event, $
             transmission='off'
