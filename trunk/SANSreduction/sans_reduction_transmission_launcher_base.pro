@@ -39,6 +39,12 @@ PRO launch_transmission_auto_manual_base_event, Event
   
   CASE Event.id OF
   
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='cancel_auto_manual_mode_base'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_mode_launcher_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ELSE:
     
   ENDCASE
@@ -116,7 +122,7 @@ PRO display_auto_base_launcher_images, main_base=main_base, Event=event, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, manual_button, 0, 0,/true
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -166,6 +172,7 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
   ;row2
   cancel = WIDGET_BUTTON(wBase,$
     VALUE = 'CANCEL',$
+    UNAME = 'cancel_auto_manual_mode_base',$
     SCR_XSIZE = 500)
     
   WIDGET_CONTROL, wBase, /REALIZE
@@ -185,8 +192,8 @@ PRO  launch_transmission_auto_manual_base, main_event
   ;build gui
   wBase = ''
   transmission_launcher_base_gui, wBase, $
-  main_base_geometry
-  
+    main_base_geometry
+    
   global_mask = PTR_NEW({ wbase: wbase,$
     global: global,$
     main_event: main_event})
