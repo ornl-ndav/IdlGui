@@ -365,7 +365,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     x_value = 'X:'
     y_value = 'Y:'
   ENDIF ELSE BEGIN
-    x_value = 'Tube # :'
+    x_value = ' Tube #:'
     y_value = 'Pixel #:'
   ENDELSE
   
