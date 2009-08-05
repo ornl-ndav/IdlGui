@@ -58,7 +58,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
   
   ourGroup = WIDGET_BASE()
-    
+  
   wBase = WIDGET_BASE(TITLE = 'Transmission Calculation: Manual Mode',$
     UNAME        = 'transmission_manual_mode_base',$
     XOFFSET      = xoffset,$
@@ -67,9 +67,9 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     /BASE_ALIGN_CENTER,$
-;    /MODAL,$
+    ;    /MODAL,$
     GROUP_LEADER = ourGroup)
-        
+    
   tab = WIDGET_TAB(wBase,$
     UNAME = 'manual_transmission_tab',$
     LOCATION = 0,$
@@ -78,11 +78,11 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
     SENSITIVE = 1,$
     /TRACKING_EVENTS)
     
-   step1_base = design_transmission_manual_mode_tab1(wBase, tab) 
-    
+  step1_base = design_transmission_manual_mode_tab1(wBase, tab)
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
-    plot_transmission_step1_scale, step1_base 
+  plot_transmission_step1_scale, step1_base
   
   
 END
@@ -110,4 +110,24 @@ PRO launch_transmission_manual_mode_base, main_event
   XMANAGER, "launch_transmission_manual_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  plot_data_around_beam_stop, main_base=wBase, global
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, global
+
+  both_banks = (*(*global).both_banks)
+  zoom_data = both_banks[*,112:152,79:109]
+  
+  t_zoom_data = TOTAL(zoom_data,1)
+  tt_zoom_data = TRANSPOSE(t_zoom_data)
+  rtt_zoom_data = CONGRID(tt_zoom_data, 450, 400)
+  
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='manual_transmission_step1_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TVSCL, rtt_zoom_data
+  
 END
