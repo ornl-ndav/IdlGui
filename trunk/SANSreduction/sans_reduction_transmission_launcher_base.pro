@@ -72,7 +72,7 @@ PRO launch_transmission_auto_manual_base_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_auto_base_launcher_images, Event=event, mode='manual_on'
           main_event = (*global).main_event
-          wait, 1
+          wait, 0.5
           id = WIDGET_INFO(Event.top, $
             FIND_BY_UNAME='transmission_mode_launcher_base')
           WIDGET_CONTROL, id, /DESTROY
