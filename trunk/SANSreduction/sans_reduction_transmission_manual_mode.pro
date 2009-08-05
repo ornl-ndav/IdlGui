@@ -39,6 +39,40 @@ PRO launch_transmission_manual_mode_event, Event
   
   CASE Event.id OF
   
+    ;main_plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='manual_transmission_step1_draw'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='manual_transmission_step1_draw')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 31
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE ;enf of catch statement
+    END
+    
     ;linear plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step1_linear'): BEGIN
