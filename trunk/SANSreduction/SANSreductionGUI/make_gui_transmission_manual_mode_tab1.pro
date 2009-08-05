@@ -70,13 +70,30 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     
   ;second part of gui
   base_part2 = WIDGET_BASE(base,$
-    XOFFSET = 20,$
+    XOFFSET = 0,$
     YOFFSET = ysize_main+2*yoffset,$
     /COLUMN,$
     FRAME = 0)
     
+  message = '   INFO: Left Click to select first corner of beam stop region, ' + $
+    'then right click to switch'
+  help = WIDGET_LABEL(base_part2,$
+    VALUE = message,$
+    /ALIGN_LEFT)
+  message = '      to other corner and left click again to select this corner'
+  help = WIDGET_LABEL(base_part2,$
+    VALUE = message,$
+    /ALIGN_LEFT)
+    
+  space = WIDGET_LABEL(base_part2,$
+    VALUE = '')
+    
+    ;lin/log and x0,y0,x1 and y1
+    rowa = WIDGET_BASE(base_part2,$ ;..........................................
+    /ROW)
+    
   ;lin/log flags
-  row1 = WIDGET_BASE(base_part2,$
+  row1 = WIDGET_BASE(rowa,$
     /ROW,$
     /EXCLUSIVE)
     
@@ -87,6 +104,41 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   log = WIDGET_BUTTON(row1,$
     VALUE = 'Log',$
     UNAME = 'transmission_manual_step1_log')
+    
+    space = WIDGET_LABEL(rowa,$
+    VALUE = '  ')
+    
+    ;x0, y0, x1 and y1
+    base_value = WIDGET_BASE(rowa,$
+    /ROW,$
+    FRAME=1)
+    
+    ;tube 0 and 1
+    label = WIDGET_LABEL(base_value,$
+    VALUE = 'Left Tube:')
+    value = WIDGET_LABEL(base_value,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_x0')
+    label = WIDGET_LABEL(base_value,$
+    VALUE = '   Right Tube:')
+    value = WIDGET_LABEL(base_value,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_x1')
+    
+    ;pixel 0 and 1
+    label = WIDGET_LABEL(base_value,$
+    VALUE = '   Low Pixel:')
+    value = WIDGET_LABEL(base_value,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_y0')
+    label = WIDGET_LABEL(base_value,$
+    VALUE = '   High Pixel:')
+    value = WIDGET_LABEL(base_value,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_y1')
+    
+    
+    
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
