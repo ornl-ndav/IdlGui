@@ -64,6 +64,28 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     SCR_XSIZE = xsize_main+2*xoffset-2,$
     SCR_YSIZE = ysize_main+2*yoffset,$
     UNAME = 'manual_transmission_step1_draw_scale')
+  
+  ;second part of gui  
+  base_part2 = WIDGET_BASE(base,$
+  XOFFSET = 20,$
+  YOFFSET = ysize_main+2*yoffset,$
+  /COLUMN,$
+  FRAME = 0)
+  
+  ;lin/log flags
+  row1 = WIDGET_BASE(base_part2,$
+  /ROW,$
+  /EXCLUSIVE)
+  
+  lin = WIDGET_BUTTON(row1,$
+  VALUE = 'Linear',$
+  UNAME = 'transmission_manual_step1_linear')
+  
+  log = WIDGET_BUTTON(row1,$
+  VALUE = 'Log',$
+  UNAME = 'transmission_manual_step1_log')
+  
+  WIDGET_CONTROL, lin, /SET_BUTTON
     
   RETURN, base
   
