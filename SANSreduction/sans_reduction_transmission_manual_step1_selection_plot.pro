@@ -89,6 +89,8 @@ PRO plot_selection, Event, mode=mode
     
   ENDIF
   
+  plot_trans_manual_step1_central_selection, Event
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -142,5 +144,34 @@ PRO refresh_plot_selection_trans_manual_step1, Event
     
   ENDIF
   
+  plot_trans_manual_step1_central_selection, Event
+  
 END
 
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step1_central_selection, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  
+  IF (x0 + y0 NE 0 AND $
+    x1 + y1 NE 0) THEN BEGIN
+    
+    PLOTS, x0, y0, /DEVICE, COLOR=175, THICK=2
+    PLOTS, x0, y1, /DEVICE, COLOR=175, THICK=2, /CONTINUE
+    PLOTS, x1, y1, /DEVICE, COLOR=175, THICK=2, /CONTINUE
+    PLOTS, x1, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
+    PLOTS, x0, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
+
+  ENDIF
+  
+  
+  
+END
