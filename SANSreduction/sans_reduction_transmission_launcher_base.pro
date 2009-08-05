@@ -48,7 +48,7 @@ PRO launch_transmission_auto_manual_base_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_auto_base_launcher_images, Event=event, mode='auto_on'
         ENDIF
-        ENDIF ELSE BEGIN ;endif of catch statement
+      ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
           display_auto_base_launcher_images, Event=event, mode='auto_over'
           id = WIDGET_INFO(Event.top,$
@@ -108,7 +108,8 @@ END
 
 ;------------------------------------------------------------------------------
 
-PRO display_auto_base_launcher_images, main_base=main_base, Event=event, $
+PRO display_auto_base_launcher_images, main_base=main_base, $
+    Event=event, $
     mode=mode
     
   IF (N_ELEMENTS(mode) EQ 0) THEN mode='off'
@@ -199,14 +200,13 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
     YOFFSET      = yoffset,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
-    /MODAL,$
     GROUP_LEADER = ourGroup,$
     /COLUMN)
     
   ;row1
   row1 = WIDGET_BASE(wBase,$
     /ROW)
-    
+
   ;auto mode
   auto = WIDGET_DRAW(row1,$
     UNAME = 'auto_mode_button',$
@@ -233,8 +233,6 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
     UNAME = 'cancel_auto_manual_mode_base',$
     SCR_XSIZE = 500)
     
-  WIDGET_CONTROL, wBase, /REALIZE
-  
 END
 
 ;------------------------------------------------------------------------------
@@ -248,18 +246,21 @@ PRO  launch_transmission_auto_manual_base, main_event
   WIDGET_CONTROL,main_event.top,GET_UVALUE=global
   
   ;build gui
-  wBase = ''
-  transmission_launcher_base_gui, wBase, $
+  wBase1 = ''
+  transmission_launcher_base_gui, wBase1, $
     main_base_geometry
     
-  global_mask = PTR_NEW({ wbase: wbase,$
+  WIDGET_CONTROL, wBase1, /REALIZE
+  
+  global_mask = PTR_NEW({ wbase: wbase1,$
     global: global,$
     main_event: main_event})
     
-  display_auto_base_launcher_images, main_base=wBase, mode='off'
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_mask
   
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
-  XMANAGER, "launch_transmission_auto_manual_base", wBase, $
+  display_auto_base_launcher_images, main_base=wBase1, mode='off'
+  
+  XMANAGER, "launch_transmission_auto_manual_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
 END
