@@ -128,3 +128,29 @@ PRO plot_transmission_step1_scale, base
     TICKLEN = -0.025
     
 END
+
+;------------------------------------------------------------------------------
+PRO save_transmission_manual_step1_background,  EVENT=event, MAIN_BASE=main_base
+
+  uname = 'manual_transmission_step1_draw'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+    WIDGET_CONTROL,main_base,GET_UVALUE=global_step1
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, event.top, GET_UVALUE=global_step1
+    ;select plot area
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
+  (*(*global_step1).background) = background
+  
+END
