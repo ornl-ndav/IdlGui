@@ -78,9 +78,12 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
     SENSITIVE = 1,$
     /TRACKING_EVENTS)
     
-   design_transmission_manual_mode_tab1, wBase, tab 
+   step1_base = design_transmission_manual_mode_tab1(wBase, tab) 
     
   WIDGET_CONTROL, wBase, /REALIZE
+  
+    plot_transmission_step1_scale, step1_base 
+  
   
 END
 

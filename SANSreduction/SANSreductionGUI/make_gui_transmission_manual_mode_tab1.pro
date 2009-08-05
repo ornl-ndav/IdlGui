@@ -32,13 +32,13 @@
 ;
 ;==============================================================================
 
-PRO design_transmission_manual_mode_tab1, wBase, tab
+FUNCTION design_transmission_manual_mode_tab1, wBase, tab
 
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_tab')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
-    
+  
   base = WIDGET_BASE(tab,$
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysizxe, $
@@ -48,24 +48,59 @@ PRO design_transmission_manual_mode_tab1, wBase, tab
   yoffset = 50 ;yoffset of scale widget_draw
   xsize_main = 450 ;size of main plot
   ysize_main = 400 ;size of main plot
-  main_xoffset = xsize/2 - xsize_main/2 
+  main_xoffset = xsize/2 - xsize_main/2
   main_yoffset = yoffset
   
-  scale_plot = WIDGET_DRAW(base,$
-  XOFFSET = main_xoffset,$
-  YOFFSET = main_yoffset,$
-  SCR_XSIZE = xsize_main,$
-  SCR_YSIZE = ysize_main,$
-  FRAME = 5,$
-  UNAME = 'manual_transmission_step1_draw')  
+  main_plot = WIDGET_DRAW(base,$
+    XOFFSET = main_xoffset,$
+    YOFFSET = main_yoffset,$
+    SCR_XSIZE = xsize_main,$
+    SCR_YSIZE = ysize_main,$
+    UNAME = 'manual_transmission_step1_draw')
+    
+  scale = WIDGET_DRAW(base,$
+    XOFFSET = main_xoffset-xoffset,$
+    YOFFSET = main_yoffset-yoffset,$
+    SCR_XSIZE = xsize_main+2*xoffset-2,$
+    SCR_YSIZE = ysize_main+2*yoffset,$
+    UNAME = 'manual_transmission_step1_draw_scale')
+    
+  RETURN, base
+  
+END
 
-  scale_plot = WIDGET_DRAW(base,$
-  XOFFSET = main_xoffset-xoffset,$
-  YOFFSET = main_yoffset-yoffset,$
-  SCR_XSIZE = xsize_main+2*xoffset,$
-  SCR_YSIZE = ysize_main+2*yoffset,$
-  UNAME = 'manual_transmission_step1_draw_scale')  
-    
-    
+;------------------------------------------------------------------------------
+PRO plot_transmission_step1_scale, base
+
+  ;change color of background
+  id = WIDGET_INFO(base,FIND_BY_UNAME='manual_transmission_step1_draw_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
+  xmargin = 8.2
+  ymargin = 5
+  plot, randomn(s,80), $
+    XRANGE     = [78,109],$
+    YRANGE     = [112,153],$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    BACKGROUND = convert_rgb(sys_color.face_3d),$
+    THICK      = 1, $
+    TICKLEN    = -0.025, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = 15,$
+    YTICKS      = 20,$
+    XTITLE      = 'TUBES',$
+    YTITLE      = 'PIXELS',$
+    XMARGIN     = [xmargin, xmargin],$
+    YMARGIN     = [ymargin, ymargin],$
+    /NODATA
+    AXIS, yaxis=1, YRANGE=[112,153], YTICKS=20, YSTYLE=1, color=2, $
+    TICKLEN = -0.025
+    AXIS, xaxis=1, XRANGE=[78,109], XTICKS=15, XSTYLE=1, color=2,$
+    TICKLEN = -0.025
     
 END
