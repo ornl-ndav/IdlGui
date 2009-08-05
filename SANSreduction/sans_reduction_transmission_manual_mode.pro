@@ -51,24 +51,36 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xoffset = main_base_xoffset + main_base_xsize/2-300
-  yoffset = main_base_yoffset + main_base_ysize/2
+  xsize = 600 ;width of various steps of manual mode
+  ysize = 800 ;height of various steps of manual mode
+  
+  xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
+  yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
   
   ourGroup = WIDGET_BASE()
-  
+    
   wBase = WIDGET_BASE(TITLE = 'Transmission Calculation: Manual Mode',$
     UNAME        = 'transmission_manual_mode_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
     MAP          = 1,$
-    SCR_XSIZE = 500,$
-    SCR_YSIZE = 500,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
     /BASE_ALIGN_CENTER,$
-    /MODAL,$
-    GROUP_LEADER = ourGroup,$
-    /COLUMN)
+;    /MODAL,$
+    GROUP_LEADER = ourGroup)
+        
+  tab = WIDGET_TAB(wBase,$
+    UNAME = 'manual_transmission_tab',$
+    LOCATION = 0,$
+    SCR_XSIZE = xsize, $
+    SCR_YSIZE = ysize, $
+    SENSITIVE = 1,$
+    /TRACKING_EVENTS)
     
-   WIDGET_CONTROL, wBase, /REALIZE
+   design_transmission_manual_mode_tab1, wBase, tab 
+    
+  WIDGET_CONTROL, wBase, /REALIZE
   
 END
 
@@ -91,7 +103,7 @@ PRO launch_transmission_manual_mode_base, main_event
     global: global,$
     main_event: main_event})
     
-   WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
   XMANAGER, "launch_transmission_manual_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     

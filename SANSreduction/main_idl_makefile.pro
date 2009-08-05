@@ -30,6 +30,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run make_gui_reduce_tab3.pro
 .run make_gui_plot.pro
 .run make_gui_log_book.pro
+.run make_gui_transmission_manual_mode_tab1.pro
 
 ;Build all procedures
 cd, CurrentFolder
