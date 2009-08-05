@@ -39,9 +39,26 @@ PRO launch_transmission_manual_mode_event, Event
   
   CASE Event.id OF
   
+    ;linear plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='transmission_manual_step1_linear'): BEGIN
+      refresh_transmission_manual_step1_main_plot, Event
+    END
+    
+    ;log plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='transmission_manual_step1_log'): BEGIN
+      refresh_transmission_manual_step1_main_plot, Event
+    END
+    
     ELSE:
   ENDCASE
+  
+END
 
+;------------------------------------------------------------------------------
+FUNCTION isTranManualStep1LinSelected, Event
+  RETURN, isLinSelected_uname(Event, uname='transmission_manual_step1_linear')
 END
 
 ;------------------------------------------------------------------------------
@@ -84,7 +101,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   WIDGET_CONTROL, wBase, /REALIZE
   
   plot_transmission_step1_scale, step1_base
-    
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -102,32 +119,65 @@ PRO launch_transmission_manual_mode_base, main_event
   transmission_manual_mode_gui, wBase, $
     main_base_geometry
     
-  global_mask = PTR_NEW({ wbase: wbase,$
+  global_step1 = PTR_NEW({ wbase: wbase,$
     global: global,$
+    rtt_zoom_data: PTR_NEW(0L),$
     main_event: main_event})
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_mask
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
   XMANAGER, "launch_transmission_manual_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  plot_data_around_beam_stop, main_base=wBase, global
+  plot_data_around_beam_stop, main_base=wBase, global, global_step1
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, global
-
+PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, $
+    global, $
+    global_step1
+    
   both_banks = (*(*global).both_banks)
   zoom_data = both_banks[*,112:151,80:111]
   
   t_zoom_data = TOTAL(zoom_data,1)
   tt_zoom_data = TRANSPOSE(t_zoom_data)
   rtt_zoom_data = CONGRID(tt_zoom_data, 450, 400)
+  (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
   
   id = WIDGET_INFO(wBase,FIND_BY_UNAME='manual_transmission_step1_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
   TVSCL, rtt_zoom_data
+  
+END
+
+;------------------------------------------------------------------------------
+PRO refresh_transmission_manual_step1_main_plot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global_step1
+  
+  data = (*(*global_step1).rtt_zoom_data)
+  
+  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
+    index = WHERE(data EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      data[index] = !VALUES.D_NAN
+    ENDIF
+    Data_log = ALOG10(Data)
+    Data_log_bytscl = BYTSCL(Data_log,/NAN)
+    data = data_log_bytscl
+  ENDIF
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  DEVICE, DECOMPOSED = 0
+  LOADCT,5,/SILENT
+  
+  TVSCL, data, /DEVICE
   
 END

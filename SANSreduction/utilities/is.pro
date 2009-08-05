@@ -63,3 +63,10 @@ FUNCTION isLinSelected, Event
   IF (value EQ 0) THEN RETURN, 1
   RETURN, 0
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isLinSelected_uname, Event, uname=uname
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  selected = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, selected
+END
