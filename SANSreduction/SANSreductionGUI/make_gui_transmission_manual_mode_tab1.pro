@@ -56,6 +56,8 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     YOFFSET = main_yoffset,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'manual_transmission_step1_draw')
     
   scale = WIDGET_DRAW(base,$
@@ -64,29 +66,29 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     SCR_XSIZE = xsize_main+2*xoffset-2,$
     SCR_YSIZE = ysize_main+2*yoffset,$
     UNAME = 'manual_transmission_step1_draw_scale')
-  
-  ;second part of gui  
+    
+  ;second part of gui
   base_part2 = WIDGET_BASE(base,$
-  XOFFSET = 20,$
-  YOFFSET = ysize_main+2*yoffset,$
-  /COLUMN,$
-  FRAME = 0)
-  
+    XOFFSET = 20,$
+    YOFFSET = ysize_main+2*yoffset,$
+    /COLUMN,$
+    FRAME = 0)
+    
   ;lin/log flags
   row1 = WIDGET_BASE(base_part2,$
-  /ROW,$
-  /EXCLUSIVE)
-  
-  lin = WIDGET_BUTTON(row1,$
-  VALUE = 'Linear',$
-  UNAME = 'transmission_manual_step1_linear')
-  
-  log = WIDGET_BUTTON(row1,$
-  VALUE = 'Log',$
-  UNAME = 'transmission_manual_step1_log')
-  
-  WIDGET_CONTROL, lin, /SET_BUTTON
+    /ROW,$
+    /EXCLUSIVE)
     
+  lin = WIDGET_BUTTON(row1,$
+    VALUE = 'Linear',$
+    UNAME = 'transmission_manual_step1_linear')
+    
+  log = WIDGET_BUTTON(row1,$
+    VALUE = 'Log',$
+    UNAME = 'transmission_manual_step1_log')
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
   RETURN, base
   
 END
@@ -120,9 +122,9 @@ PRO plot_transmission_step1_scale, base
     XMARGIN     = [xmargin, xmargin],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
-    AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, color=2, $
+  AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, color=2, $
     TICKLEN = -0.025
-    AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, color=2,$
+  AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, color=2,$
     TICKLEN = -0.025
     
 END
