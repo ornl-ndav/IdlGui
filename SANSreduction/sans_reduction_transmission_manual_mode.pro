@@ -47,19 +47,19 @@ PRO launch_transmission_manual_mode_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -155,6 +155,7 @@ PRO launch_transmission_manual_mode_base, main_event
     
   global_step1 = PTR_NEW({ wbase: wbase,$
     global: global,$
+    background: PTR_NEW(0L),$
     rtt_zoom_data: PTR_NEW(0L),$
     main_event: main_event})
     
@@ -163,6 +164,9 @@ PRO launch_transmission_manual_mode_base, main_event
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
   plot_data_around_beam_stop, main_base=wBase, global, global_step1
+  
+  ;save background
+  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
   
 END
 
@@ -213,5 +217,7 @@ PRO refresh_transmission_manual_step1_main_plot, Event
   LOADCT,5,/SILENT
   
   TVSCL, data, /DEVICE
+  
+  save_transmission_manual_step1_background,  EVENT=Event
   
 END
