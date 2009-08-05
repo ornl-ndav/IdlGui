@@ -81,7 +81,7 @@ PRO plot_transmission_step1_scale, base
   xmargin = 8.2
   ymargin = 5
   plot, randomn(s,80), $
-    XRANGE     = [78,109],$
+    XRANGE     = [80,111],$
     YRANGE     = [112,153],$
     COLOR      = convert_rgb([0B,0B,255B]), $
     BACKGROUND = convert_rgb(sys_color.face_3d),$
@@ -100,7 +100,7 @@ PRO plot_transmission_step1_scale, base
     /NODATA
     AXIS, yaxis=1, YRANGE=[112,153], YTICKS=20, YSTYLE=1, color=2, $
     TICKLEN = -0.025
-    AXIS, xaxis=1, XRANGE=[78,109], XTICKS=15, XSTYLE=1, color=2,$
+    AXIS, xaxis=1, XRANGE=[80,111], XTICKS=15, XSTYLE=1, color=2,$
     TICKLEN = -0.025
     
 END
