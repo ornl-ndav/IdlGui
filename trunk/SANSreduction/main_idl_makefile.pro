@@ -67,6 +67,7 @@ cd, CurrentFolder
 
 ;transmission
 .run sans_reduction_transmission_launcher_base.pro
+.run sans_reduction_transmission_manual_mode.pro
 
 ;main functions
 .run MainBaseEvent.pro
