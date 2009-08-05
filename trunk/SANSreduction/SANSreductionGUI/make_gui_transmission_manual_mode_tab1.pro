@@ -81,8 +81,8 @@ PRO plot_transmission_step1_scale, base
   xmargin = 8.2
   ymargin = 5
   plot, randomn(s,80), $
-    XRANGE     = [80,111],$
-    YRANGE     = [112,153],$
+    XRANGE     = [80,112],$
+    YRANGE     = [112,152],$
     COLOR      = convert_rgb([0B,0B,255B]), $
     BACKGROUND = convert_rgb(sys_color.face_3d),$
     THICK      = 1, $
@@ -91,16 +91,16 @@ PRO plot_transmission_step1_scale, base
     XSTYLE      = 1,$
     YSTYLE      = 1,$
     YTICKLAYOUT = 0,$
-    XTICKS      = 15,$
+    XTICKS      = 16,$
     YTICKS      = 20,$
     XTITLE      = 'TUBES',$
     YTITLE      = 'PIXELS',$
     XMARGIN     = [xmargin, xmargin],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
-    AXIS, yaxis=1, YRANGE=[112,153], YTICKS=20, YSTYLE=1, color=2, $
+    AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, color=2, $
     TICKLEN = -0.025
-    AXIS, xaxis=1, XRANGE=[80,111], XTICKS=15, XSTYLE=1, color=2,$
+    AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, color=2,$
     TICKLEN = -0.025
     
 END

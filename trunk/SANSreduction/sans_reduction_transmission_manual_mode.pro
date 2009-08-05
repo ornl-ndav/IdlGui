@@ -41,6 +41,7 @@ PRO launch_transmission_manual_mode_event, Event
   
     ELSE:
   ENDCASE
+
 END
 
 ;------------------------------------------------------------------------------
@@ -83,8 +84,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   WIDGET_CONTROL, wBase, /REALIZE
   
   plot_transmission_step1_scale, step1_base
-  
-  
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ END
 PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, global
 
   both_banks = (*(*global).both_banks)
-  zoom_data = both_banks[*,112:152,79:109]
+  zoom_data = both_banks[*,112:151,80:111]
   
   t_zoom_data = TOTAL(zoom_data,1)
   tt_zoom_data = TRANSPOSE(t_zoom_data)
