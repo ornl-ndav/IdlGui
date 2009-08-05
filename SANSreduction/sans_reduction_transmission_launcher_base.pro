@@ -35,7 +35,7 @@
 PRO launch_transmission_auto_manual_base_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_mask
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   CASE Event.id OF
   
@@ -44,12 +44,11 @@ PRO launch_transmission_auto_manual_base_event, Event
       error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
-      CATCH,/CANCEL
+        CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_auto_base_launcher_images, Event=event, mode='auto_on'
-        ENDIF ELSE BEGIN
-        ENDELSE
-      ENDIF ELSE BEGIN ;endif of catch statement
+        ENDIF
+        ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
           display_auto_base_launcher_images, Event=event, mode='auto_over'
           id = WIDGET_INFO(Event.top,$
@@ -69,11 +68,16 @@ PRO launch_transmission_auto_manual_base_event, Event
       error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
-      CATCH,/CANCEL
+        CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_auto_base_launcher_images, Event=event, mode='manual_on'
-        ENDIF ELSE BEGIN
-        ENDELSE
+          main_event = (*global).main_event
+          wait, 1
+          id = WIDGET_INFO(Event.top, $
+            FIND_BY_UNAME='transmission_mode_launcher_base')
+          WIDGET_CONTROL, id, /DESTROY
+          launch_transmission_manual_mode_base, main_event
+        ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
           display_auto_base_launcher_images, Event=event, mode='manual_over'
@@ -195,6 +199,7 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
     YOFFSET      = yoffset,$
     MAP          = 1,$
     /BASE_ALIGN_CENTER,$
+    /MODAL,$
     GROUP_LEADER = ourGroup,$
     /COLUMN)
     
@@ -213,14 +218,14 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
     
   ;manual mode
   message = 'The program is going to quide you step by step to calculate'
-  message += ' the TRANSMISSION signal' 
+  message += ' the TRANSMISSION signal'
   manual = WIDGET_DRAW(row1,$
     UNAME = 'manual_mode_button',$
     SCR_XSIZE = 300,$
     SCR_YSIZE = 254,$
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS, $
-    TOOLTIP = message) 
+    TOOLTIP = message)
     
   ;row2
   cancel = WIDGET_BUTTON(wBase,$
