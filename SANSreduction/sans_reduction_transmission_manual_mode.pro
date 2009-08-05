@@ -47,20 +47,40 @@ PRO launch_transmission_manual_mode_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+          TV, (*(*global).background), true=3
+          (*global).left_button_clicked = 1
+          IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
+            plot_selection, Event, mode='x0y0'
+          ENDIF ElSE BEGIN ;working with x1y1
+            plot_selection, Event, mode='x1y1'
+          ENDELSE
         ENDIF
+        
+        IF (event.press EQ 0 AND $ ;moving mouse with button clicked
+          (*global).left_button_clicked EQ 1) THEN BEGIN
+          TV, (*(*global).background), true=3
+          IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
+            plot_selection, Event, mode='x0y0'
+          ENDIF ElSE BEGIN ;working with x1y1
+            plot_selection, Event, mode='x1y1'
+          ENDELSE
+        ENDIF
+        
+        IF (event.release EQ 1) THEN BEGIN ;left button release
+          (*global).left_button_clicked = 0
+        ENDIF
+        
+        IF (event.press EQ 4) THEN BEGIN ;right click
+          TV, (*(*global).background), true=3
+          IF ((*global).working_with_xy EQ 0) THEN BEGIN
+            (*global).working_with_xy = 1
+            refresh_plot_selection_trans_manual_step1, Event
+          ENDIF ELSE BEGIN
+            (*global).working_with_xy = 0
+            refresh_plot_selection_trans_manual_step1, Event
+          ENDELSE
+        ENDIF
+        
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
           id = WIDGET_INFO(Event.top,$
@@ -139,38 +159,6 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
 END
 
 ;------------------------------------------------------------------------------
-PRO launch_transmission_manual_mode_base, main_event
-
-
-  id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
-  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
-  
-  ;get global structure
-  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
-  
-  ;build gui
-  wBase = ''
-  transmission_manual_mode_gui, wBase, $
-    main_base_geometry
-    
-  global_step1 = PTR_NEW({ wbase: wbase,$
-    global: global,$
-    background: PTR_NEW(0L),$
-    rtt_zoom_data: PTR_NEW(0L),$
-    main_event: main_event})
-    
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
-  XMANAGER, "launch_transmission_manual_mode", wBase, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
-    
-  plot_data_around_beam_stop, main_base=wBase, global, global_step1
-  
-  ;save background
-  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
-  
-END
-
-;------------------------------------------------------------------------------
 PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, $
     global, $
     global_step1
@@ -221,3 +209,41 @@ PRO refresh_transmission_manual_step1_main_plot, Event
   save_transmission_manual_step1_background,  EVENT=Event
   
 END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO launch_transmission_manual_mode_base, main_event
+
+
+  id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  
+  ;get global structure
+  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+  
+  ;build gui
+  wBase = ''
+  transmission_manual_mode_gui, wBase, $
+    main_base_geometry
+    
+  global_step1 = PTR_NEW({ wbase: wbase,$
+    global: global,$
+    background: PTR_NEW(0L),$
+    rtt_zoom_data: PTR_NEW(0L),$
+    left_button_clicked: 0,$
+    working_with_xy: 0,$
+    x0y0x1y1: INTARR(4),$
+    main_event: main_event})
+    
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
+  XMANAGER, "launch_transmission_manual_mode", wBase, $
+    GROUP_LEADER = ourGroup, /NO_BLOCK
+    
+  plot_data_around_beam_stop, main_base=wBase, global, global_step1
+  
+  ;save background
+  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+  
+END
+

@@ -58,6 +58,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     SCR_YSIZE = ysize_main,$
     /BUTTON_EVENTS,$
     /TRACKING_EVENTS,$
+    /MOTION_EVENTS,$
     UNAME = 'manual_transmission_step1_draw')
     
   scale = WIDGET_DRAW(base,$
