@@ -52,6 +52,11 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, MAP=map_status
 END
 
+;This function map or not the given base
+PRO MapBase, Event, uname=uname, map_status
+map_base, Event, uname, map_status
+END
+
 ;------------------------------------------------------------------------------
 ;This function activates or not the GO DATA REDUCTION button
 PRO activate_go_data_reduction, Event, activate_status

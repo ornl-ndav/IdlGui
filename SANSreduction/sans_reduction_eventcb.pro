@@ -205,9 +205,14 @@ PRO browse_nexus, Event
       (*global).data_nexus_file_name = FullNexusName
     ENDELSE
     activate_widget_list, Event, uname_list, status
+    IF ((*global).facility EQ 'SNS') THEN BEGIN
+      MapBase, Event, uname='transmission_launcher_base', status
+      display_images, EVENT=event
+    ENDIF
   ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
+    MapBase, Event, uname='transmission_launcher_base', 0
   ENDELSE
   
 END
@@ -302,7 +307,10 @@ PRO load_run_number, Event
         (*global).data_nexus_file_name = Full_nexus_name
       ENDELSE
       activate_widget_list, Event, uname_list, status
-      
+    IF ((*global).facility EQ 'SNS') THEN BEGIN
+      MapBase, Event, uname='transmission_launcher_base', status
+            display_images, EVENT=event
+    ENDIF
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
       IDLsendToGeek_addLogBookText, Event, message
@@ -314,6 +322,7 @@ PRO load_run_number, Event
       ;clear display
       ClearMainPlot, Event ;_gui
       (*global).data_nexus_file_name = ''
+      activate_widget_list, Event, uname_list, status
     ENDELSE
   ENDIF
   ;turn off hourglass
@@ -339,10 +348,13 @@ PRO tab_event, Event
           RefreshRoiExclusionPlot, Event   ;_selection
           refresh_scale, Event
         ENDIF ELSE BEGIN
-          id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-          WIDGET_CONTROL, id, GET_VALUE = id_value
-          WSET, id_value
-          TV, (*(*global).background), true=3
+          IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+            id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+            WIDGET_CONTROL, id, GET_VALUE = id_value
+            WSET, id_value
+            TV, (*(*global).background), true=3
+            display_images, EVENT=event
+          ENDIF
         ENDELSE
       END
       1: BEGIN                    ;reduce tab

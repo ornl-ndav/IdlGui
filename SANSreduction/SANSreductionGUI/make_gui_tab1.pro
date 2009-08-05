@@ -990,6 +990,8 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     Tran_BC_base = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
       YOFFSET = 730,$
+      UNAME = 'transmission_launcher_base',$
+      MAP = 0,$
       /ROW)
       
     ;Transmission calculation button
