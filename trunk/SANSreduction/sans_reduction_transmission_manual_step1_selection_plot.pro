@@ -114,18 +114,24 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   
   working_with = (*global).working_with_xy
   x0y0x1y1 = (*global).x0y0x1y1
-  color_non_working = 100
-  color_working = 250
+  
+  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
+    color_non_working = 900
+    color_working = 550
+  ENDIF ELSE BEGIN
+    color_non_working = 100
+    color_working = 250
+  ENDELSE
   
   IF (working_with EQ 0) THEN BEGIN ;x0y0
     color_0 = color_working
     color_1 = color_non_working
     linestyle_0 = 0
-    linestyle_1 = 1
+    linestyle_1 = 2
   ENDIF ELSE BEGIN ;x1y1
     color_1 = color_working
     color_0 = color_non_working
-    linestyle_0 = 1
+    linestyle_0 = 2
     linestyle_1 = 0
   ENDELSE
   
@@ -162,7 +168,7 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   ENDIF
   
   plot_trans_manual_step1_central_selection, Event
-  plot_trans_manual_step1_counts_vs_x_and_y, Event
+;  plot_trans_manual_step1_counts_vs_x_and_y, Event
   
 END
 
@@ -179,14 +185,21 @@ PRO plot_trans_manual_step1_central_selection, Event
   x1 = x0y0x1y1[2]
   y1 = x0y0x1y1[3]
   
+  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
+    color = 0
+  ENDIF ELSE BEGIN
+    color = 175
+  ENDELSE
+  
+  
   IF (x0 + y0 NE 0 AND $
     x1 + y1 NE 0) THEN BEGIN
     
-    PLOTS, x0, y0, /DEVICE, COLOR=175, THICK=2
-    PLOTS, x0, y1, /DEVICE, COLOR=175, THICK=2, /CONTINUE
-    PLOTS, x1, y1, /DEVICE, COLOR=175, THICK=2, /CONTINUE
-    PLOTS, x1, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
-    PLOTS, x0, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
+    PLOTS, x0, y0, /DEVICE, COLOR=color, THICK=2
+    PLOTS, x0, y1, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+    PLOTS, x1, y1, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+    PLOTS, x1, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+    PLOTS, x0, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
     
   ENDIF
   
