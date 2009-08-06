@@ -187,12 +187,25 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   base_part2 = WIDGET_BASE(base,$
     XOFFSET = 0,$
     YOFFSET = ysize_main+2*yoffset,$
-    /COLUMN,$
+    /ROW,$
     FRAME = 0)
+    
+  xsize = 340
+  ysize = 300
+  
+  ;plot Counts vs X integrated over Y
+  plot1 = WIDGET_DRAW(base_part2,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step1_counts_vs_x')
     
   space = WIDGET_LABEL(base_part2,$
     VALUE = '')
     
+  plot2 = WIDGET_DRAW(base_part2,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step1_counts_vs_y')
     
   RETURN, base
   
@@ -206,14 +219,17 @@ PRO plot_transmission_step1_scale, base
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
+  device, decomposed=1
   sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
+  
   xmargin = 8.2
   ymargin = 5
   plot, randomn(s,80), $
     XRANGE     = [80,112],$
     YRANGE     = [112,152],$
     COLOR      = convert_rgb([0B,0B,255B]), $
-    BACKGROUND = convert_rgb(sys_color.face_3d),$
+;    BACKGROUND = convert_rgb(sys_color.face_3d),$
+    BACKGROUND = convert_rgb(sys_color.window_bk),$
     THICK      = 1, $
     TICKLEN    = -0.025, $
     XTICKLAYOUT = 0,$
@@ -227,10 +243,12 @@ PRO plot_transmission_step1_scale, base
     XMARGIN     = [xmargin, xmargin],$
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
-  AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, color=2, $
-    TICKLEN = -0.025
-  AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, color=2,$
-    TICKLEN = -0.025
+  AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, $
+  COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+  AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, $
+  COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+    
+    DEVICE, decomposed = 0
     
 END
 

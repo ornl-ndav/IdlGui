@@ -55,7 +55,7 @@ PRO launch_transmission_manual_mode_event, Event
           STRCOMPRESS(pixel,/REMOVE_ALL)
           
         IF (event.press EQ 1) THEN BEGIN ;pressed button
-          TV, (*(*global).background), true=3
+          plot_trans_manual_step1_background, Event
           (*global).left_button_clicked = 1
           IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
             plot_selection, Event, mode='x0y0'
@@ -66,7 +66,7 @@ PRO launch_transmission_manual_mode_event, Event
         
         IF (event.press EQ 0 AND $ ;moving mouse with button clicked
           (*global).left_button_clicked EQ 1) THEN BEGIN
-          TV, (*(*global).background), true=3
+          plot_trans_manual_step1_background, Event
           IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
             plot_selection, Event, mode='x0y0'
           ENDIF ElSE BEGIN ;working with x1y1
@@ -79,7 +79,7 @@ PRO launch_transmission_manual_mode_event, Event
         ENDIF
         
         IF (event.press EQ 4) THEN BEGIN ;right click
-          TV, (*(*global).background), true=3
+          plot_trans_manual_step1_background, Event
           IF ((*global).working_with_xy EQ 0) THEN BEGIN
             (*global).working_with_xy = 1
             refresh_plot_selection_trans_manual_step1, Event
@@ -137,7 +137,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   main_base_ysize = main_base_geometry.ysize
   
   xsize = 700 ;width of various steps of manual mode
-  ysize = 800 ;height of various steps of manual mode
+  ysize = 840 ;height of various steps of manual mode
   
   xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
   yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
@@ -181,6 +181,7 @@ PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, $
   
   t_zoom_data = TOTAL(zoom_data,1)
   tt_zoom_data = TRANSPOSE(t_zoom_data)
+  (*(*global_step1).tt_zoom_data) = tt_zoom_data
   rtt_zoom_data = CONGRID(tt_zoom_data, 450, 400)
   (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
   
@@ -224,6 +225,19 @@ PRO refresh_transmission_manual_step1_main_plot, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_trans_manual_step1_background, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  id = WIDGET_INFO(event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TV, (*(*global).background), true=3
+  
+END
+
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_manual_mode_base, main_event
@@ -244,6 +258,7 @@ PRO launch_transmission_manual_mode_base, main_event
     global: global,$
     background: PTR_NEW(0L),$
     rtt_zoom_data: PTR_NEW(0L),$
+    tt_zoom_data: PTR_NEW(0L),$
     left_button_clicked: 0,$
     working_with_xy: 0,$
     x0y0x1y1: INTARR(4),$
