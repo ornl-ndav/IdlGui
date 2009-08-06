@@ -39,6 +39,8 @@ PRO launch_transmission_manual_mode_event, Event
   
   CASE Event.id OF
   
+    ;STEP1 - STEP1 - STEP1 - STEP1 - STEP1 - STEP1 - STEP1 - STEP1 - STEP1 -
+  
     ;main_plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='manual_transmission_step1_draw'): BEGIN
@@ -122,11 +124,20 @@ PRO launch_transmission_manual_mode_event, Event
     
     ;move on to step2 button
     WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME='move_to_trans_manual_step2'): BEGIN
+      FIND_BY_UNAME='move_to_trans_manual_step2'): BEGIN
       map_base, Event, 'manual_transmission_step1', 0
       ;change title
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
+    END
+    
+    ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_go_to_previous_step'): BEGIN
+      MapBase, event, uname='manual_transmission_step1', 1
+      plot_trans_manual_step1_background, Event
+      refresh_plot_selection_trans_manual_step1, Event
+      plot_transmission_step1_scale_from_event, Event
     END
     
     ELSE:
@@ -140,7 +151,7 @@ FUNCTION isTranManualStep1LinSelected, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO transmission_manual_mode_gui, wBase, main_base_geometry
+PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
 
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
@@ -156,7 +167,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   ourGroup = WIDGET_BASE()
   
   wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1/3: ' + $
-  'Define Beam Stop Region',$
+    'Define Beam Stop Region',$
     UNAME        = 'transmission_manual_mode_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
@@ -174,8 +185,8 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   
   WIDGET_CONTROL, wBase, /REALIZE
   
-    plot_transmission_step1_scale, step1_base
-    
+  plot_transmission_step1_scale, step1_base, sys_color_window_bk
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -258,8 +269,9 @@ PRO launch_transmission_manual_mode_base, main_event
   
   ;build gui
   wBase = ''
+  sys_color_window_bk = 0
   transmission_manual_mode_gui, wBase, $
-    main_base_geometry
+    main_base_geometry, sys_color_window_bk
     
   global_step1 = PTR_NEW({ wbase: wbase,$
     global: global,$
@@ -267,6 +279,7 @@ PRO launch_transmission_manual_mode_base, main_event
     rtt_zoom_data: PTR_NEW(0L),$
     tt_zoom_data: PTR_NEW(0L),$
     left_button_clicked: 0,$
+    sys_color_window_bk: sys_color_window_bk,$
     working_with_xy: 0,$
     x0y0x1y1: INTARR(4),$
     main_event: main_event})

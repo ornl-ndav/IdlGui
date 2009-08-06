@@ -114,17 +114,6 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = '   Next Step >>   ',$
     UNAME = 'trans_manual_step2_go_to_next_step')
       
-  ;
-  ;
-  ;
-  ;  button = WIDGET_BUTTON(rowb,$
-  ;  SCR_YSIZE = 30,$
-  ;  SENSITIVE = 0,$
-  ;  UNAME = 'move_to_trans_manual_step3',$
-  ;  VALUE = "   I am happy with the Background calculated and want " + $
-  ;  " to move to the next step (determine central pixel" + $
-  ;  " and create ascii file)   ")
-    
   RETURN, base
   
 END
