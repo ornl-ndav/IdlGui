@@ -38,7 +38,7 @@ PRO refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH, /CANCEL
     RETURN
@@ -77,4 +77,57 @@ PRO refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO display_trans_step2_algorith_image, Event
 
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  ;build gui
+  wBase = ''
+  transmission_manual_mode_step2_info_gui, Event, wBase
+  
+  XMANAGER, "display_trans_step2_algorith_image", wBase, $
+    GROUP_LEADER = ourGroup, /NO_BLOCK
+    
+END
+
+;------------------------------------------------------------------------------
+PRO transmission_manual_mode_step2_info_gui, Event, wBase
+
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  main_base_xoffset = main_base_geometry.xoffset
+  main_base_yoffset = main_base_geometry.yoffset
+  main_base_xsize = main_base_geometry.xsize
+  main_base_ysize = main_base_geometry.ysize
+  xsize = 500
+  ysize= 375
+  xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
+  yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
+
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'Algorithm used to calculate Background',$
+    MAP          = 1,$
+    XOFFSET = xoffset,$
+    YOFFSET = yoffset,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    GROUP_LEADER = ourGroup)
+    
+  draw = WIDGET_DRAW(wBase,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step2_image')
+    
+  WIDGET_CONTROL, wBase, /REALIZE
+  
+  image = READ_PNG('SANSreduction_images/algorithm_engine.png')
+  mode_id = WIDGET_INFO(wBase, $
+    FIND_BY_UNAME='trans_manual_step2_image')
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, image, 0, 0,/true
+  
+END
