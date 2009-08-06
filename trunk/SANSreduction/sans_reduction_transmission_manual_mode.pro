@@ -46,6 +46,14 @@ PRO launch_transmission_manual_mode_event, Event
       CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
+        
+        tube  = getTransManualStep1Tube(Event.x)
+        pixel = getTransManualStep1Pixel(Event.y)
+        putTextFieldValue, Event, 'trans_manual_step1_cursor_tube', $
+          STRCOMPRESS(tube,/REMOVE_ALL)
+        putTextFieldValue, Event, 'trans_manual_step1_cursor_pixel', $
+          STRCOMPRESS(pixel,/REMOVE_ALL)
+          
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           TV, (*(*global).background), true=3
           (*global).left_button_clicked = 1
@@ -89,7 +97,12 @@ PRO launch_transmission_manual_mode_event, Event
           WSET, id_value
           standard = 31
           DEVICE, CURSOR_STANDARD=standard
-        ENDIF
+        ENDIF ELSE BEGIN
+          putTextFieldValue, Event, 'trans_manual_step1_cursor_tube', $
+            'N/A'
+          putTextFieldValue, Event, 'trans_manual_step1_cursor_pixel', $
+            'N/A'
+        ENDELSE
       ENDELSE ;enf of catch statement
     END
     

@@ -237,3 +237,15 @@ FUNCTION  getRealDataX, Event, x0_data
   ENDCASE
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransManualStep1Tube, event_x
+x_data = FIX(event_x/14.0625)+80
+RETURN, x_data
+END
+
+;------------------------------------------------------------------------------        
+FUNCTION getTransManualStep1Pixel, event_y
+y_data = FIX(event_y/10+112)
+RETURN, y_data
+END
