@@ -86,3 +86,9 @@ WIDGET_CONTROL, id, GET_VALUE = id_value
 WSET, id_value
 ERASE
 END
+
+;------------------------------------------------------------------------------
+PRO ChangeTitle, Event, uname=uname, title
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, BASE_SET_TITLE=title 
+END

@@ -32,9 +32,16 @@
 ;
 ;==============================================================================
 
-FUNCTION design_transmission_manual_mode_tab1, wBase, base
+FUNCTION design_transmission_manual_mode_step1, wBase, base
 
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_tab')
+  base = WIDGET_BASE(wBase,$
+    UNAME = 'manual_transmission_step1',$
+    SCR_XSIZE = xsize, $
+    SCR_YSIZE = ysize, $
+    SENSITIVE = 1,$
+    /TRACKING_EVENTS)    
+
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step1')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
