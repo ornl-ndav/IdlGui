@@ -102,6 +102,7 @@ PRO plot_selection, Event, mode=mode
   ENDIF
   
   plot_trans_manual_step1_central_selection, Event
+  plot_trans_manual_step1_counts_vs_x_and_y, Event
   
 END
 
@@ -138,6 +139,10 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   x1 = x0y0x1y1[2]
   y1 = x0y0x1y1[3]
   
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
   IF (x0 NE 0 AND y0 NE 0) THEN BEGIN
   
     PLOTS, x0, ymin, /DEVICE, COLOR=color_0
@@ -157,6 +162,7 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   ENDIF
   
   plot_trans_manual_step1_central_selection, Event
+  plot_trans_manual_step1_counts_vs_x_and_y, Event
   
 END
 
@@ -184,6 +190,71 @@ PRO plot_trans_manual_step1_central_selection, Event
     
   ENDIF
   
+END
+
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN
+  ENDIF
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  
+  IF (x0 + y0 NE 0 AND $
+    x1 + y1 NE 0) THEN BEGIN
+    
+    ;retrieve tube and pixel edges 1 and 2
+    tube1 = getTextFieldValue(Event,'trans_manual_step1_x0')
+    tube2 = getTextFieldValue(Event,'trans_manual_step1_x1')
+    pixel1 = getTextFieldValue(Event,'trans_manual_step1_y0')
+    pixel2 = getTextFieldValue(Event,'trans_manual_step1_y1')
+    
+    xoffset = 80
+    yoffset = 112
+    
+    tube1_offset = FIX(tube1) - xoffset
+    tube2_offset = FIX(tube2) - xoffset
+    pixel1_offset = FIX(pixel1) - yoffset
+    pixel2_offset = FIX(pixel2) - yoffset
+    
+    tube_min = MIN([tube1_offset,tube2_offset],MAX=tube_max)
+    pixel_min = MIN([pixel1_offset, pixel2_offset],MAX=pixel_max)
+    
+    tt_zoom_data = (*(*global).tt_zoom_data)
+    counts_vs_xy = tt_zoom_data[tube_min:tube_max,pixel_min:pixel_max]
+    counts_vs_x = TOTAL(counts_vs_xy,2)
+    counts_vs_y = TOTAL(counts_vs_xy,1)
+    
+    ;plot data
+    ;Counts vs tube (integrated over y)
+    x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + tube_min + xoffset
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step1_counts_vs_x')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
+      TITLE = 'Counts vs tube integrated over pixel'
+      
+    ;Counts vs tube (integrated over x)
+    x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + pixel_min + yoffset
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step1_counts_vs_y')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+      TITLE = 'Counts vs pixel integrated over tube'
+      
+  ENDIF
   
 END
+
+
