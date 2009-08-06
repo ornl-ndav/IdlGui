@@ -39,18 +39,18 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     SENSITIVE = 1,$
-    MAP = 0,$
-    /TRACKING_EVENTS)    
-
+    MAP = 1,$
+    /TRACKING_EVENTS)
+    
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step1')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
   
-;  base = WIDGET_BASE(tab,$
-;    SCR_XSIZE = xsize, $
-;    SCR_YSIZE = ysizxe, $
-;    TITLE = 'STEP 1/ Define Beam Stop Region')
+  ;  base = WIDGET_BASE(tab,$
+  ;    SCR_XSIZE = xsize, $
+  ;    SCR_YSIZE = ysizxe, $
+  ;    TITLE = 'STEP 1/ Define Beam Stop Region')
   
   xoffset = 50 ;xoffset of scale widget_draw
   yoffset = 50 ;yoffset of scale widget_draw
@@ -214,23 +214,23 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     UNAME = 'trans_manual_step1_counts_vs_y')
-  
+    
   ;third row of gui ==================================
   button = WIDGET_BUTTON(base,$
-  XOFFSET = 10,$
-  YOFFSET = ysize_main+2*yoffset + ysize + 5,$
-  SCR_YSIZE = 30,$
-  SENSITIVE = 0,$
-  UNAME = 'move_to_trans_manual_step2',$
-  VALUE = "   I am happy with the Beam Stop Region I selected and want" + $
-  " to move to the next step (calculate background)   ")
+    XOFFSET = 10,$
+    YOFFSET = ysize_main+2*yoffset + ysize + 5,$
+    SCR_YSIZE = 30,$
+    SENSITIVE = 0,$
+    UNAME = 'move_to_trans_manual_step2',$
+    VALUE = "   I am happy with the Beam Stop Region I selected and want" + $
+    " to move to the next step (calculate background)   ")
     
   RETURN, base
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_transmission_step1_scale, base
+PRO plot_transmission_step1_scale, base, sys_color_window_bk
 
   ;change color of background
   id = WIDGET_INFO(base,FIND_BY_UNAME='manual_transmission_step1_draw_scale')
@@ -239,6 +239,7 @@ PRO plot_transmission_step1_scale, base
   
   device, decomposed=1
   sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
+  sys_color_window_bk = sys_color.window_bk
   
   xmargin = 8.2
   ymargin = 5
@@ -246,8 +247,8 @@ PRO plot_transmission_step1_scale, base
     XRANGE     = [80,112],$
     YRANGE     = [112,152],$
     COLOR      = convert_rgb([0B,0B,255B]), $
-;    BACKGROUND = convert_rgb(sys_color.face_3d),$
-    BACKGROUND = convert_rgb(sys_color.window_bk),$
+    ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
     THICK      = 1, $
     TICKLEN    = -0.025, $
     XTICKLAYOUT = 0,$
@@ -262,12 +263,57 @@ PRO plot_transmission_step1_scale, base
     YMARGIN     = [ymargin, ymargin],$
     /NODATA
   AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, $
-  COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
   AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, $
-  COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
     
-    DEVICE, decomposed = 0
+  DEVICE, decomposed = 0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_transmission_step1_scale_from_event, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  sys_color_window_bk = (*global).sys_color_window_bk
+  
+  ;change color of background
+  id = WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='manual_transmission_step1_draw_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  device, decomposed=1
+  
+  xmargin = 8.2
+  ymargin = 5
+  plot, randomn(s,80), $
+    XRANGE     = [80,112],$
+    YRANGE     = [112,152],$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
+    THICK      = 1, $
+    TICKLEN    = -0.025, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = 16,$
+    YTICKS      = 20,$
+    XTITLE      = 'TUBES',$
+    YTITLE      = 'PIXELS',$
+    XMARGIN     = [xmargin, xmargin],$
+    YMARGIN     = [ymargin, ymargin],$
+    /NODATA
+  AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+  AXIS, xaxis=1, XRANGE=[80,112], XTICKS=16, XSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
     
+  DEVICE, decomposed = 0
+  
 END
 
 ;------------------------------------------------------------------------------

@@ -168,7 +168,7 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   ENDIF
   
   plot_trans_manual_step1_central_selection, Event
-;  plot_trans_manual_step1_counts_vs_x_and_y, Event
+  plot_trans_manual_step1_counts_vs_x_and_y, Event
   
 END
 
