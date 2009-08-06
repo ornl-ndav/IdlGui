@@ -254,6 +254,7 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     
     tt_zoom_data = (*(*global).tt_zoom_data)
     counts_vs_xy = tt_zoom_data[tube_min:tube_max,pixel_min:pixel_max]
+    (*(*global).counts_vs_xy) = counts_vs_xy
     counts_vs_x = TOTAL(counts_vs_xy,2)
     counts_vs_y = TOTAL(counts_vs_xy,1)
     (*(*global).counts_vs_x) = counts_vs_x

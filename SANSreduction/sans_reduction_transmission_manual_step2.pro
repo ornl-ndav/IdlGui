@@ -105,7 +105,7 @@ PRO transmission_manual_mode_step2_info_gui, Event, wBase
   ysize= 375
   xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
   yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
-
+  
   ourGroup = WIDGET_BASE()
   
   wBase = WIDGET_BASE(TITLE = 'Algorithm used to calculate Background',$
@@ -130,4 +130,61 @@ PRO transmission_manual_mode_step2_info_gui, Event, wBase
   WSET, id
   TV, image, 0, 0,/true
   
+END
+
+;------------------------------------------------------------------------------
+PRO trans_manual_step2_calculate_background, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  counts_vs_xy = (*(*global).counts_vs_xy)
+  ;counts_vs_x = (*(*global).counts_vs_x)
+  ;counts_vs_y = (*(*global).counts_vs_y)
+  
+  nbr_pixels = N_ELEMENTS(counts_vs_xy)
+  
+  s_nbr_iterations = getTextFieldValue(Event,$
+    'trans_manual_step2_nbr_iterations')
+  nbr_iterations = FIX(s_nbr_iterations)
+  average = FLTARR(nbr_iterations)
+  
+  array = counts_vs_xy
+  index = 0
+  WHILE (index LT nbr_iterations) DO BEGIN
+    IF (index NE 0) THEN BEGIN
+      array_list = WHERE(array LE average[index-1],counts)
+      IF (counts GT 0) THEN BEGIN
+        array[array_list] = 0
+      ENDIF
+    ENDIF
+    total = TOTAL(array)
+    average_value = FLOAT(total)/FLOAT(nbr_pixels)
+    plot_average_value, Event, average_value, index
+    average[index] = average_value
+    index++
+  ENDWHILE
+  
+  background = FIX(average_value)
+  s_background = STRCOMPRESS(background,/REMOVE_ALL)
+  putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_average_value, Event, average_value
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
+    TITLE = 'Counts vs tube integrated over pixel'
+    
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+    TITLE = 'Counts vs pixel integrated over tube'
+    
+    
 END

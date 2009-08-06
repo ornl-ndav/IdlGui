@@ -98,7 +98,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = '(Counts/pixel)')
   value = WIDGET_LABEL(col2,$
     VALUE = 'N/A',$
-    UNAME = 'trans_manual_step2_nbr_iterations',$
+    UNAME = 'trans_manual_step2_background_value',$
     SCR_XSIZE = 50,$
     FRAME = 1)
     
