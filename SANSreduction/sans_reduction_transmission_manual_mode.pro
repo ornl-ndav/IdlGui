@@ -146,7 +146,8 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation: Manual Mode',$
+  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1: ' + $
+  'Define Beam Stop Region',$
     UNAME        = 'transmission_manual_mode_base',$
     XOFFSET      = xoffset,$
     YOFFSET      = yoffset,$
@@ -154,18 +155,16 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     /BASE_ALIGN_CENTER,$
-    ;    /MODAL,$
     GROUP_LEADER = ourGroup)
     
-  tab = WIDGET_TAB(wBase,$
+  manual_mode_base = WIDGET_BASE(wBase,$
     UNAME = 'manual_transmission_tab',$
-    LOCATION = 0,$
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     SENSITIVE = 1,$
     /TRACKING_EVENTS)
     
-  step1_base = design_transmission_manual_mode_tab1(wBase, tab)
+  step1_base = design_transmission_manual_mode_tab1(wBase, manual_mode_base)
   
   WIDGET_CONTROL, wBase, /REALIZE
   

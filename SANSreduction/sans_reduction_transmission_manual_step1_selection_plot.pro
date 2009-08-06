@@ -201,7 +201,15 @@ PRO plot_trans_manual_step1_central_selection, Event
     PLOTS, x1, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
     PLOTS, x0, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
     
-  ENDIF
+    validate_go_button = 1
+    
+  ENDIF ELSE BEGIN
+  
+    validate_go_button = 0
+    
+  ENDELSE
+  
+  activate_widget, Event, 'move_to_trans_manual_step2', validate_go_button
   
 END
 
