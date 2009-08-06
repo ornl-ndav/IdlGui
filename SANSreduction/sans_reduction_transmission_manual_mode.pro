@@ -110,12 +110,14 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step1_linear'): BEGIN
       refresh_transmission_manual_step1_main_plot, Event
+      refresh_plot_selection_trans_manual_step1, Event
     END
     
     ;log plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step1_log'): BEGIN
       refresh_transmission_manual_step1_main_plot, Event
+      refresh_plot_selection_trans_manual_step1, Event
     END
     
     ELSE:
