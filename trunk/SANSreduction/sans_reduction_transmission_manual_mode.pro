@@ -128,6 +128,7 @@ PRO launch_transmission_manual_mode_event, Event
       map_base, Event, 'manual_transmission_step1', 0
       ;change title
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
+      title += ' and Transmission Intensity'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
     END
@@ -139,6 +140,12 @@ PRO launch_transmission_manual_mode_event, Event
       plot_trans_manual_step1_background, Event
       refresh_plot_selection_trans_manual_step1, Event
       plot_transmission_step1_scale_from_event, Event
+    END
+    
+    ;Algorithm description button
+    WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='trans_manual_step2_algorithm_description'): BEGIN
+    display_trans_step2_algorith_image, Event
     END
     
     ELSE:
@@ -260,7 +267,6 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_manual_mode_base, main_event
-
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
