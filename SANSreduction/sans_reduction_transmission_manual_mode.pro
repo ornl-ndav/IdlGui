@@ -120,6 +120,15 @@ PRO launch_transmission_manual_mode_event, Event
       refresh_plot_selection_trans_manual_step1, Event
     END
     
+    ;move on to step2 button
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='move_to_trans_manual_step2'): BEGIN
+      map_base, Event, 'manual_transmission_step1', 0
+      ;change title
+      title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
+      ChangeTitle, Event, uname='transmission_manual_mode_base', title
+    END
+    
     ELSE:
   ENDCASE
   
@@ -146,7 +155,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1: ' + $
+  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1/3: ' + $
   'Define Beam Stop Region',$
     UNAME        = 'transmission_manual_mode_base',$
     XOFFSET      = xoffset,$
@@ -157,19 +166,16 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
     
-  manual_mode_base = WIDGET_BASE(wBase,$
-    UNAME = 'manual_transmission_tab',$
-    SCR_XSIZE = xsize, $
-    SCR_YSIZE = ysize, $
-    SENSITIVE = 1,$
-    /TRACKING_EVENTS)
-    
-  step1_base = design_transmission_manual_mode_tab1(wBase, manual_mode_base)
+  ;design step1
+  step1_base = design_transmission_manual_mode_step1(wBase)
+  
+  ;design step2
+  step2_base = design_transmission_manual_mode_step2(wBase)
   
   WIDGET_CONTROL, wBase, /REALIZE
   
-  plot_transmission_step1_scale, step1_base
-  
+    plot_transmission_step1_scale, step1_base
+    
 END
 
 ;------------------------------------------------------------------------------
