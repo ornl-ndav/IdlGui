@@ -102,11 +102,20 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     SCR_XSIZE = 50,$
     FRAME = 1)
     
-  FOR i=0,26 DO BEGIN
+  FOR i=0,21 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR
   
+  help = WIDGET_BUTTON(col2,$
+  VALUE = 'Algorithm Description',$
+  UNAME = 'trans_manual_step2_algorithm_description')
+  
+  FOR i=0,3 DO BEGIN
+    space = WIDGET_LABEL(col2,$
+      VALUE = ' ')
+  ENDFOR
+
   button = WIDGET_BUTTON(col2,$
     VALUE = ' << Previous Step ',$
     UNAME= 'trans_manual_step2_go_to_previous_step')
