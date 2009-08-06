@@ -134,175 +134,182 @@ PRO launch_transmission_manual_mode_event, Event
     END
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
+    
     WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='trans_manual_step2_go_to_previous_step'): BEGIN
-      MapBase, event, uname='manual_transmission_step1', 1
-      plot_trans_manual_step1_background, Event
-      refresh_plot_selection_trans_manual_step1, Event
-      plot_transmission_step1_scale_from_event, Event
+      FIND_BY_UNAME='trans_manual_step2_calculate'): BEGIN
+      trans_manual_step2_calculate_background, Event
     END
     
     ;Algorithm description button
     WIDGET_INFO(Event.top,$
-    FIND_BY_UNAME='trans_manual_step2_algorithm_description'): BEGIN
-    display_trans_step2_algorith_image, Event
-    END
+      FIND_BY_UNAME='trans_manual_step2_algorithm_description'): BEGIN
+        display_trans_step2_algorith_image, Event
+      END
+      
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='trans_manual_step2_go_to_previous_step'): BEGIN
+        MapBase, event, uname='manual_transmission_step1', 1
+        plot_trans_manual_step1_background, Event
+        refresh_plot_selection_trans_manual_step1, Event
+        plot_transmission_step1_scale_from_event, Event
+      END
+      
+      ELSE:
+    ENDCASE
     
-    ELSE:
-  ENDCASE
+  END
   
-END
-
-;------------------------------------------------------------------------------
-FUNCTION isTranManualStep1LinSelected, Event
-  RETURN, isLinSelected_uname(Event, uname='transmission_manual_step1_linear')
-END
-
-;------------------------------------------------------------------------------
-PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
-
-  main_base_xoffset = main_base_geometry.xoffset
-  main_base_yoffset = main_base_geometry.yoffset
-  main_base_xsize = main_base_geometry.xsize
-  main_base_ysize = main_base_geometry.ysize
+  ;------------------------------------------------------------------------------
+  FUNCTION isTranManualStep1LinSelected, Event
+    RETURN, isLinSelected_uname(Event, uname='transmission_manual_step1_linear')
+  END
   
-  xsize = 700 ;width of various steps of manual mode
-  ysize = 840 ;height of various steps of manual mode
+  ;------------------------------------------------------------------------------
+  PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
   
-  xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
-  yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
-  
-  ourGroup = WIDGET_BASE()
-  
-  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1/3: ' + $
-    'Define Beam Stop Region',$
-    UNAME        = 'transmission_manual_mode_base',$
-    XOFFSET      = xoffset,$
-    YOFFSET      = yoffset,$
-    MAP          = 1,$
-    SCR_XSIZE = xsize,$
-    SCR_YSIZE = ysize,$
-    /BASE_ALIGN_CENTER,$
-    GROUP_LEADER = ourGroup)
+    main_base_xoffset = main_base_geometry.xoffset
+    main_base_yoffset = main_base_geometry.yoffset
+    main_base_xsize = main_base_geometry.xsize
+    main_base_ysize = main_base_geometry.ysize
     
-  ;design step1
-  step1_base = design_transmission_manual_mode_step1(wBase)
-  
-  ;design step2
-  step2_base = design_transmission_manual_mode_step2(wBase)
-  
-  WIDGET_CONTROL, wBase, /REALIZE
-  
-  plot_transmission_step1_scale, step1_base, sys_color_window_bk
-  
-END
-
-;------------------------------------------------------------------------------
-PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, $
-    global, $
-    global_step1
+    xsize = 700 ;width of various steps of manual mode
+    ysize = 840 ;height of various steps of manual mode
     
-  both_banks = (*(*global).both_banks)
-  zoom_data = both_banks[*,112:151,80:111]
+    xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
+    yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
+    
+    ourGroup = WIDGET_BASE()
+    
+    wBase = WIDGET_BASE(TITLE = 'Transmission Calculation -> STEP 1/3: ' + $
+      'Define Beam Stop Region',$
+      UNAME        = 'transmission_manual_mode_base',$
+      XOFFSET      = xoffset,$
+      YOFFSET      = yoffset,$
+      MAP          = 1,$
+      SCR_XSIZE = xsize,$
+      SCR_YSIZE = ysize,$
+      /BASE_ALIGN_CENTER,$
+      GROUP_LEADER = ourGroup)
+      
+    ;design step1
+    step1_base = design_transmission_manual_mode_step1(wBase)
+    
+    ;design step2
+    step2_base = design_transmission_manual_mode_step2(wBase)
+    
+    WIDGET_CONTROL, wBase, /REALIZE
+    
+    plot_transmission_step1_scale, step1_base, sys_color_window_bk
+    
+  END
   
-  t_zoom_data = TOTAL(zoom_data,1)
-  tt_zoom_data = TRANSPOSE(t_zoom_data)
-  (*(*global_step1).tt_zoom_data) = tt_zoom_data
-  rtt_zoom_data = CONGRID(tt_zoom_data, 450, 400)
-  (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
+  ;------------------------------------------------------------------------------
+  PRO plot_data_around_beam_stop, EVENT=event, MAIN_BASE=wBase, $
+      global, $
+      global_step1
+      
+    both_banks = (*(*global).both_banks)
+    zoom_data = both_banks[*,112:151,80:111]
+    
+    t_zoom_data = TOTAL(zoom_data,1)
+    tt_zoom_data = TRANSPOSE(t_zoom_data)
+    (*(*global_step1).tt_zoom_data) = tt_zoom_data
+    rtt_zoom_data = CONGRID(tt_zoom_data, 450, 400)
+    (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
+    
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME='manual_transmission_step1_draw')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    
+    TVSCL, rtt_zoom_data
+    
+  END
   
-  id = WIDGET_INFO(wBase,FIND_BY_UNAME='manual_transmission_step1_draw')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
+  ;------------------------------------------------------------------------------
+  PRO refresh_transmission_manual_step1_main_plot, Event
   
-  TVSCL, rtt_zoom_data
-  
-END
-
-;------------------------------------------------------------------------------
-PRO refresh_transmission_manual_step1_main_plot, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global_step1
-  
-  data = (*(*global_step1).rtt_zoom_data)
-  
-  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
-    index = WHERE(data EQ 0, nbr)
-    IF (nbr GT 0) THEN BEGIN
-      data[index] = !VALUES.D_NAN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global_step1
+    
+    data = (*(*global_step1).rtt_zoom_data)
+    
+    IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
+      index = WHERE(data EQ 0, nbr)
+      IF (nbr GT 0) THEN BEGIN
+        data[index] = !VALUES.D_NAN
+      ENDIF
+      Data_log = ALOG10(Data)
+      Data_log_bytscl = BYTSCL(Data_log,/NAN)
+      data = data_log_bytscl
     ENDIF
-    Data_log = ALOG10(Data)
-    Data_log_bytscl = BYTSCL(Data_log,/NAN)
-    data = data_log_bytscl
-  ENDIF
-  
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  DEVICE, DECOMPOSED = 0
-  LOADCT,5,/SILENT
-  
-  TVSCL, data, /DEVICE
-  
-  save_transmission_manual_step1_background,  EVENT=Event
-  
-END
-
-;------------------------------------------------------------------------------
-PRO plot_trans_manual_step1_background, Event
-
-  ;get global structure
-  WIDGET_CONTROL,event.top,GET_UVALUE=global
-  
-  id = WIDGET_INFO(event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  TV, (*(*global).background), true=3
-  
-END
-
-;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
-PRO launch_transmission_manual_mode_base, main_event
-
-  id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
-  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
-  
-  ;get global structure
-  WIDGET_CONTROL,main_event.top,GET_UVALUE=global
-  
-  ;build gui
-  wBase = ''
-  sys_color_window_bk = 0
-  transmission_manual_mode_gui, wBase, $
-    main_base_geometry, sys_color_window_bk
     
-  global_step1 = PTR_NEW({ wbase: wbase,$
-    global: global,$
-    background: PTR_NEW(0L),$
-    rtt_zoom_data: PTR_NEW(0L),$
-    tt_zoom_data: PTR_NEW(0L),$
-    counts_vs_x: PTR_NEW(0L),$
-    counts_vs_y: PTR_NEW(0L),$
-    pixel_x_axis: PTR_NEW(0L),$
-    tube_x_axis: PTR_NEW(0L),$
-    left_button_clicked: 0,$
-    sys_color_window_bk: sys_color_window_bk,$
-    working_with_xy: 0,$
-    x0y0x1y1: INTARR(4),$
-    main_event: main_event})
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
-  XMANAGER, "launch_transmission_manual_mode", wBase, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    DEVICE, DECOMPOSED = 0
+    LOADCT,5,/SILENT
     
-  plot_data_around_beam_stop, main_base=wBase, global, global_step1
+    TVSCL, data, /DEVICE
+    
+    save_transmission_manual_step1_background,  EVENT=Event
+    
+  END
   
-  ;save background
-  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+  ;------------------------------------------------------------------------------
+  PRO plot_trans_manual_step1_background, Event
   
-END
-
+    ;get global structure
+    WIDGET_CONTROL,event.top,GET_UVALUE=global
+    
+    id = WIDGET_INFO(event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    
+    TV, (*(*global).background), true=3
+    
+  END
+  
+  ;------------------------------------------------------------------------------
+  ;------------------------------------------------------------------------------
+  PRO launch_transmission_manual_mode_base, main_event
+  
+    id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
+    main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+    
+    ;get global structure
+    WIDGET_CONTROL,main_event.top,GET_UVALUE=global
+    
+    ;build gui
+    wBase = ''
+    sys_color_window_bk = 0
+    transmission_manual_mode_gui, wBase, $
+      main_base_geometry, sys_color_window_bk
+      
+    global_step1 = PTR_NEW({ wbase: wbase,$
+      global: global,$
+      background: PTR_NEW(0L),$
+      rtt_zoom_data: PTR_NEW(0L),$
+      tt_zoom_data: PTR_NEW(0L),$
+      counts_vs_x: PTR_NEW(0L),$
+      counts_vs_y: PTR_NEW(0L),$
+      pixel_x_axis: PTR_NEW(0L),$
+      tube_x_axis: PTR_NEW(0L),$
+      counts_vs_xy: PTR_NEW(0L),$
+      left_button_clicked: 0,$
+      sys_color_window_bk: sys_color_window_bk,$
+      working_with_xy: 0,$
+      x0y0x1y1: INTARR(4),$
+      main_event: main_event})
+      
+    WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
+    XMANAGER, "launch_transmission_manual_mode", wBase, $
+      GROUP_LEADER = ourGroup, /NO_BLOCK
+      
+    plot_data_around_beam_stop, main_base=wBase, global, global_step1
+    
+    ;save background
+    save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+    
+  END
+  
