@@ -256,10 +256,13 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     counts_vs_xy = tt_zoom_data[tube_min:tube_max,pixel_min:pixel_max]
     counts_vs_x = TOTAL(counts_vs_xy,2)
     counts_vs_y = TOTAL(counts_vs_xy,1)
+    (*(*global).counts_vs_x) = counts_vs_x
+    (*(*global).counts_vs_y) = counts_vs_y
     
     ;plot data
     ;Counts vs tube (integrated over y)
     x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + tube_min + xoffset
+    (*(*global).tube_x_axis) = x_axis
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step1_counts_vs_x')
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
@@ -268,6 +271,7 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
       
     ;Counts vs tube (integrated over x)
     x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + pixel_min + yoffset
+    (*(*global).pixel_x_axis) = x_axis
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step1_counts_vs_y')
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
