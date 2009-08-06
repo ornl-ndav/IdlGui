@@ -272,7 +272,7 @@ PRO plot_transmission_step1_scale, base, sys_color_window_bk
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_transmission_step1_scale_from_event, Event
+PRO plot_transmission_step1_scale_from_event, Event 
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global

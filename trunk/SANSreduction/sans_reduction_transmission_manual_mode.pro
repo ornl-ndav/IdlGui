@@ -129,6 +129,7 @@ PRO launch_transmission_manual_mode_event, Event
       ;change title
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
+      refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
     END
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
@@ -278,6 +279,10 @@ PRO launch_transmission_manual_mode_base, main_event
     background: PTR_NEW(0L),$
     rtt_zoom_data: PTR_NEW(0L),$
     tt_zoom_data: PTR_NEW(0L),$
+    counts_vs_x: PTR_NEW(0L),$
+    counts_vs_y: PTR_NEW(0L),$
+    pixel_x_axis: PTR_NEW(0L),$
+    tube_x_axis: PTR_NEW(0L),$
     left_button_clicked: 0,$
     sys_color_window_bk: sys_color_window_bk,$
     working_with_xy: 0,$
