@@ -39,13 +39,91 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     SENSITIVE = 1,$
+    MAP = 1,$
     /TRACKING_EVENTS)
-
+    
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step2')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
   
+  column1 = WIDGET_BASE(base,$
+    /COLUMN)
+    
+  rowa = WIDGET_BASE(column1,$ ;============================
+    /ROW)
+    
+  col1 = WIDGET_BASE(rowa,$ ;...............................
+    /COLUMN)
+    
+  xsize = 540
+  ysize = 410
+  draw1 = WIDGET_DRAW(col1,$
+    XSIZE = xsize, $
+    YSIZE = ysize, $
+    UNAME = 'trans_manual_step2_counts_vs_x')
+    
+  draw2 = WIDGET_DRAW(col1,$
+    XSIZE = xsize, $
+    YSIZE = ysize, $
+    UNAME = 'trans_manual_step2_counts_vs_y')
+    
+  col2 = WIDGET_BASE(rowa,$ ;...............................
+    /BASE_ALIGN_CENTER,$
+    SCR_XSIZE = 130,$
+    /COLUMN)
+    
+  label = WIDGET_LABEL(col2,$
+    VALUE = 'Number of')
+  label = WIDGET_LABEL(col2,$
+    VALUE = 'Iterations')
+  value = WIDGET_TEXT(col2,$
+    VALUE = '3',$
+    UNAME = 'trans_manual_step2_nbr_iterations',$
+    XSIZE = 2)
+    
+  space = WIDGET_LABEL(col2,$
+    VALUE = ' ')
+    
+  calculate = WIDGET_BUTTON(col2,$
+    VALUE = 'Calculate Background',$
+    UNAME = 'trans_manual_step2_calculate')
+    
+  space = WIDGET_LABEL(col2,$
+    VALUE = ' ')
+    
+  label = WIDGET_LABEL(col2,$
+    VALUE = 'Background Value:')
+  label = WIDGET_LABEL(col2,$
+    VALUE = '(Counts/pixel)')
+  value = WIDGET_LABEL(col2,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step2_nbr_iterations',$
+    SCR_XSIZE = 50,$
+    FRAME = 1)
+    
+  FOR i=0,26 DO BEGIN
+    space = WIDGET_LABEL(col2,$
+      VALUE = ' ')
+  ENDFOR
+  
+  button = WIDGET_BUTTON(col2,$
+    VALUE = ' << Previous Step ',$
+    UNAME= 'trans_manual_step2_go_to_previous_step')
+  button = WIDGET_BUTTON(col2,$
+    VALUE = '   Next Step >>   ',$
+    UNAME = 'trans_manual_step2_go_to_next_step')
+      
+  ;
+  ;
+  ;
+  ;  button = WIDGET_BUTTON(rowb,$
+  ;  SCR_YSIZE = 30,$
+  ;  SENSITIVE = 0,$
+  ;  UNAME = 'move_to_trans_manual_step3',$
+  ;  VALUE = "   I am happy with the Background calculated and want " + $
+  ;  " to move to the next step (determine central pixel" + $
+  ;  " and create ascii file)   ")
     
   RETURN, base
   
