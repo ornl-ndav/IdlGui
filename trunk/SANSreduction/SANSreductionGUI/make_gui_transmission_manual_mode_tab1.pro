@@ -32,18 +32,18 @@
 ;
 ;==============================================================================
 
-FUNCTION design_transmission_manual_mode_tab1, wBase, tab
+FUNCTION design_transmission_manual_mode_tab1, wBase, base
 
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_tab')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
   
-  base = WIDGET_BASE(tab,$
-    SCR_XSIZE = xsize, $
-    SCR_YSIZE = ysizxe, $
-    TITLE = 'Define Beam Stop Region')
-    
+;  base = WIDGET_BASE(tab,$
+;    SCR_XSIZE = xsize, $
+;    SCR_YSIZE = ysizxe, $
+;    TITLE = 'STEP 1/ Define Beam Stop Region')
+  
   xoffset = 50 ;xoffset of scale widget_draw
   yoffset = 50 ;yoffset of scale widget_draw
   xsize_main = 450 ;size of main plot
@@ -206,6 +206,16 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     UNAME = 'trans_manual_step1_counts_vs_y')
+  
+  ;third row of gui ==================================
+  button = WIDGET_BUTTON(base,$
+  XOFFSET = 10,$
+  YOFFSET = ysize_main+2*yoffset + ysize + 5,$
+  SCR_YSIZE = 30,$
+  SENSITIVE = 0,$
+  UNAME = 'move_to_trans_manual_step2',$
+  VALUE = "   I am happy with the Beam Stop Region I selected and want" + $
+  " to move to the next step (calculate background)   ")
     
   RETURN, base
   
