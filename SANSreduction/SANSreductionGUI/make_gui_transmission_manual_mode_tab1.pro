@@ -52,7 +52,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   main_yoffset = yoffset
   
   main_plot = WIDGET_DRAW(base,$
-    XOFFSET = main_xoffset,$
+    XOFFSET = xoffset,$
     YOFFSET = main_yoffset,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
@@ -62,86 +62,114 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     UNAME = 'manual_transmission_step1_draw')
     
   scale = WIDGET_DRAW(base,$
-    XOFFSET = main_xoffset-xoffset,$
+    XOFFSET = 0,$
     YOFFSET = main_yoffset-yoffset,$
     SCR_XSIZE = xsize_main+2*xoffset-2,$
     SCR_YSIZE = ysize_main+2*yoffset,$
     UNAME = 'manual_transmission_step1_draw_scale')
     
-  ;second part of gui
+  ;right part of plot
+  base_right = WIDGET_BASE(base,$
+    XOFFSET = xsize_main+2*xoffset,$
+    YOFFSET = 0,$
+    /COLUMN,$
+    FRAME = 0)
+    
+  ;lin/log flags
+  col1 = WIDGET_BASE(base_right,$
+    /COLUMN,$
+    /EXCLUSIVE)
+    
+  lin = WIDGET_BUTTON(col1,$
+    VALUE = 'Linear',$
+    UNAME = 'transmission_manual_step1_linear')
+    
+  log = WIDGET_BUTTON(col1,$
+    VALUE = 'Log',$
+    UNAME = 'transmission_manual_step1_log')
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
+  space = WIDGET_LABEL(base_right,$
+    VALUE = ' ')
+    
+  ;x0, y0, x1 and y1
+  base_values = WIDGET_BASE(base_right,$
+    /COLUMN,$
+    FRAME=1)
+    
+  title = WIDGET_LABEL(base_values,$
+    VALUE = 'Selection Info')
+  space = WIDGET_LABEL(base_values,$
+    VALUE = ' ')
+    
+  ;tube 0 and 1
+  row1 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Left Tube :')
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_x0')
+    
+  row2 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Right Tube:')
+  value = WIDGET_LABEL(row2,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_x1')
+    
+  space = WIDGET_LABEL(base_values,$
+    VALUE = ' ')
+    
+  ;pixel 0 and 1
+  row2 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Low Pixel :')
+  value = WIDGET_LABEL(row2,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_y0')
+    
+  row4 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row4,$
+    VALUE = 'High Pixel:')
+  value = WIDGET_LABEL(row4,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_y1')
+    
+  message = [' ',$
+    ' ',$
+    'SELECTION MANUAL',$
+    'Left Click to select',$
+    'first corner of beam',$
+    'stop region.',$
+    'Then right click',$
+    'to switch to other',$
+    'corner and left',$
+    'click again to',$
+    'select this corner.']
+    
+  sz= N_ELEMENTS(message)
+  FOR i=0,(sz-1) DO BEGIN
+    help = WIDGET_LABEL(base_right,$
+      VALUE = message[i],$
+      /ALIGN_LEFT)
+  ENDFOR
+  
+  ;second part of gui =========================
   base_part2 = WIDGET_BASE(base,$
     XOFFSET = 0,$
     YOFFSET = ysize_main+2*yoffset,$
     /COLUMN,$
     FRAME = 0)
     
-  message = '   INFO: Left Click to select first corner of beam stop region, ' + $
-    'then right click to switch'
-  help = WIDGET_LABEL(base_part2,$
-    VALUE = message,$
-    /ALIGN_LEFT)
-  message = '      to other corner and left click again to select this corner'
-  help = WIDGET_LABEL(base_part2,$
-    VALUE = message,$
-    /ALIGN_LEFT)
-    
   space = WIDGET_LABEL(base_part2,$
     VALUE = '')
     
-    ;lin/log and x0,y0,x1 and y1
-    rowa = WIDGET_BASE(base_part2,$ ;..........................................
-    /ROW)
     
-  ;lin/log flags
-  row1 = WIDGET_BASE(rowa,$
-    /ROW,$
-    /EXCLUSIVE)
-    
-  lin = WIDGET_BUTTON(row1,$
-    VALUE = 'Linear',$
-    UNAME = 'transmission_manual_step1_linear')
-    
-  log = WIDGET_BUTTON(row1,$
-    VALUE = 'Log',$
-    UNAME = 'transmission_manual_step1_log')
-    
-    space = WIDGET_LABEL(rowa,$
-    VALUE = '  ')
-    
-    ;x0, y0, x1 and y1
-    base_value = WIDGET_BASE(rowa,$
-    /ROW,$
-    FRAME=1)
-    
-    ;tube 0 and 1
-    label = WIDGET_LABEL(base_value,$
-    VALUE = 'Left Tube:')
-    value = WIDGET_LABEL(base_value,$
-    VALUE = 'N/A',$
-    UNAME = 'trans_manual_step1_x0')
-    label = WIDGET_LABEL(base_value,$
-    VALUE = '   Right Tube:')
-    value = WIDGET_LABEL(base_value,$
-    VALUE = 'N/A',$
-    UNAME = 'trans_manual_step1_x1')
-    
-    ;pixel 0 and 1
-    label = WIDGET_LABEL(base_value,$
-    VALUE = '   Low Pixel:')
-    value = WIDGET_LABEL(base_value,$
-    VALUE = 'N/A',$
-    UNAME = 'trans_manual_step1_y0')
-    label = WIDGET_LABEL(base_value,$
-    VALUE = '   High Pixel:')
-    value = WIDGET_LABEL(base_value,$
-    VALUE = 'N/A',$
-    UNAME = 'trans_manual_step1_y1')
-    
-    
-    
-    
-  WIDGET_CONTROL, lin, /SET_BUTTON
-  
   RETURN, base
   
 END

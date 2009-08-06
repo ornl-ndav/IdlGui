@@ -123,7 +123,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xsize = 600 ;width of various steps of manual mode
+  xsize = 700 ;width of various steps of manual mode
   ysize = 800 ;height of various steps of manual mode
   
   xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
