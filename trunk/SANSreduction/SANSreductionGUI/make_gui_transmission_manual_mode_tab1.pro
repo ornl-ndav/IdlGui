@@ -77,7 +77,8 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     
   ;lin/log flags
   col1 = WIDGET_BASE(base_right,$
-    /COLUMN,$
+    ;/COLUMN,$
+    /ROW,$
     /EXCLUSIVE)
     
   lin = WIDGET_BUTTON(col1,$
@@ -90,16 +91,13 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
-  space = WIDGET_LABEL(base_right,$
-    VALUE = ' ')
-    
   ;x0, y0, x1 and y1
   base_values = WIDGET_BASE(base_right,$
     /COLUMN,$
     FRAME=1)
     
   title = WIDGET_LABEL(base_values,$
-    VALUE = 'Selection Info')
+    VALUE = '  Selection Info')
   space = WIDGET_LABEL(base_values,$
     VALUE = ' ')
     
@@ -140,16 +138,42 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_y1')
     
-  message = [' ',$
-    ' ',$
-    'SELECTION MANUAL',$
+  ;x and y of cursor
+  base_values = WIDGET_BASE(base_right,$
+    /COLUMN,$
+    FRAME=1)
+    
+  title = WIDGET_LABEL(base_values,$
+    VALUE = '   Cursor Info')
+  space = WIDGET_LABEL(base_values,$
+    VALUE = ' ')
+    
+  ;tube and pixel
+  row1 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Tube  :')
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_cursor_tube')
+  row2 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Pixel :')
+  value = WIDGET_LABEL(row2,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_cursor_pixel')
+    
+  space = WIDGET_LABEL(base_right,$
+    VALUE = ' ')
+    
+  message = ['   SELECTION MANUAL',$
     'Left Click to select',$
     'first corner of beam',$
-    'stop region.',$
-    'Then right click',$
-    'to switch to other',$
-    'corner and left',$
-    'click again to',$
+    'stop region. Then',$
+    'right click to switch',$
+    'to other corner and',$
+    'left click again to',$
     'select this corner.']
     
   sz= N_ELEMENTS(message)
