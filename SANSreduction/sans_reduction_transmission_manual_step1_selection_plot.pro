@@ -49,6 +49,12 @@ PRO plot_selection, Event, mode=mode
     color_1 = color_non_working
     linestyle_0 = 0
     linestyle_1 = 1
+    tube  = getTransManualStep1Tube(Event.x)
+    pixel = getTransManualStep1Pixel(Event.y)
+    putTextFieldValue, Event, 'trans_manual_step1_x0', $
+      STRCOMPRESS(tube,/REMOVE_ALL)
+    putTextFieldValue, Event, 'trans_manual_step1_y0', $
+      STRCOMPRESS(pixel,/REMOVE_ALL)
   ENDIF ELSE BEGIN ;x1y1
     x0y0x1y1[2] = Event.X
     x0y0x1y1[3] = Event.Y
@@ -56,6 +62,12 @@ PRO plot_selection, Event, mode=mode
     color_0 = color_non_working
     linestyle_0 = 1
     linestyle_1 = 0
+    tube  = getTransManualStep1Tube(Event.x)
+    pixel = getTransManualStep1Pixel(Event.y)
+    putTextFieldValue, Event, 'trans_manual_step1_x1', $
+      STRCOMPRESS(tube,/REMOVE_ALL)
+    putTextFieldValue, Event, 'trans_manual_step1_y1', $
+      STRCOMPRESS(pixel,/REMOVE_ALL)
   ENDELSE
   
   (*global).x0y0x1y1 = x0y0x1y1
@@ -169,7 +181,7 @@ PRO plot_trans_manual_step1_central_selection, Event
     PLOTS, x1, y1, /DEVICE, COLOR=175, THICK=2, /CONTINUE
     PLOTS, x1, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
     PLOTS, x0, y0, /DEVICE, COLOR=175, THICK=2, /CONTINUE
-
+    
   ENDIF
   
   

@@ -97,7 +97,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     FRAME=1)
     
   title = WIDGET_LABEL(base_values,$
-    VALUE = '  Selection Info')
+    VALUE = ' Selection Info')
   space = WIDGET_LABEL(base_values,$
     VALUE = ' ')
     
@@ -105,7 +105,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   row1 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row1,$
-    VALUE = 'Left Tube :')
+    VALUE = 'Tube Edge 1 :')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_x0')
@@ -113,7 +113,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   row2 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row2,$
-    VALUE = 'Right Tube:')
+    VALUE = 'Tube Edge 2 :')
   value = WIDGET_LABEL(row2,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_x1')
@@ -125,7 +125,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   row2 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row2,$
-    VALUE = 'Low Pixel :')
+    VALUE = 'Pixel Edge 1 :')
   value = WIDGET_LABEL(row2,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_y0')
@@ -133,7 +133,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   row4 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row4,$
-    VALUE = 'High Pixel:')
+    VALUE = 'Pixel Edge 2 :')
   value = WIDGET_LABEL(row4,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_y1')
@@ -144,7 +144,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
     FRAME=1)
     
   title = WIDGET_LABEL(base_values,$
-    VALUE = '   Cursor Info')
+    VALUE = '    Cursor Info')
   space = WIDGET_LABEL(base_values,$
     VALUE = ' ')
     
@@ -167,7 +167,7 @@ FUNCTION design_transmission_manual_mode_tab1, wBase, tab
   space = WIDGET_LABEL(base_right,$
     VALUE = ' ')
     
-  message = ['   SELECTION MANUAL',$
+  message = ['  SELECTION MANUAL',$
     'Left Click to select',$
     'first corner of beam',$
     'stop region. Then',$
