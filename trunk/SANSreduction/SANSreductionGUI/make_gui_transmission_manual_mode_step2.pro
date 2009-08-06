@@ -102,7 +102,21 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     SCR_XSIZE = 50,$
     FRAME = 1)
     
-  FOR i=0,21 DO BEGIN
+  FOR i=0,8 DO BEGIN
+    space = WIDGET_LABEL(col2,$
+      VALUE = ' ')
+  ENDFOR
+
+  label = WIDGET_LABEL(col2,$
+  VALUE = 'Transmission Intensity:')
+  label = WIDGET_LABEL(col2,$
+  VALUE = '(counts)')
+  value = WIDGET_LABEL(col2,$
+  VALUE = 'N/A',$
+  SCR_XSIZE = 60,$
+  UNAME = 'trans_manual_step2_trans_intensity_value')
+
+  FOR i=0,9 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR
