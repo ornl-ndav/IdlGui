@@ -371,7 +371,7 @@ PRO launch_transmission_manual_mode_base, main_event
     
     trans_manual_step2_ymin_device: 40,$
     trans_manual_step2_ymax_device: 390,$
-    trans_manual_step2_xmin_device: 60, $
+    trans_manual_step2_xmin_device: 61, $
     trans_manual_step2_xmax_device: 522, $
     
     trans_manual_step2_top_plot_ymin_data: 0L,$
