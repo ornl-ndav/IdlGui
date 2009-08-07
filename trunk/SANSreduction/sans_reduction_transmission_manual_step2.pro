@@ -306,8 +306,50 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
   
   y_min = (*global).trans_manual_step2_top_plot_ymin_data
   y_max = (*global).trans_manual_step2_top_plot_ymax_data
+  x_min = (*global).trans_manual_step2_top_plot_xmin_data
+  x_max = (*global).trans_manual_step2_top_plot_xmax_data
+    
+  ;take snapshot
+  ;background = TVREAD(TRUE=3)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
+  POLYFILL, [x_min, X, X, x_min], $
+    [y_min, y_min, y_max, y_max], $
+    color=FSC_COLOR('deep pink'), /data
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
-  PLOTS, x, y_min, /DATA
-  PLOTS, x, y_max, /DATA, /CONTINUE, COLOR=1000
+  ;background = TVREAD(TRUE=3)
+;  background = TVRD(TRUE=3)
+;  (*(*global1).background) = background
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 END

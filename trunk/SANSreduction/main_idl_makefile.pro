@@ -13,6 +13,8 @@ cd, IdlUtilitiesPath
 .run time.pro
 .run get.pro
 .run convert.pro
+.run colorbar.pro
+.run fsc_color.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
