@@ -371,11 +371,19 @@ PRO launch_transmission_manual_mode_base, main_event
     
     trans_manual_step2_ymin_device: 40,$
     trans_manual_step2_ymax_device: 390,$
+    trans_manual_step2_xmin_device: 60, $
+    trans_manual_step2_xmax_device: 522, $
+    
     trans_manual_step2_top_plot_ymin_data: 0L,$
     trans_manual_step2_top_plot_ymax_data: 0L,$
+    trans_manual_step2_top_plot_xmin_data: 0L,$
+    trans_manual_step2_top_plot_xmax_data: 0L,$
+    
     trans_manual_step2_bottom_plot_ymin_data: 0L,$
     trans_manual_step2_bottom_plot_ymax_data: 0L,$
-
+    trans_manual_step2_bottom_plot_xmin_data: 0L,$
+    trans_manual_step2_bottom_plot_xmax_data: 0L, $
+    
     working_with_tube: 1 ,$ ;step2 left or right
     tube_pixel_min_max: INTARR(4),$
     xoffset_plot: 80L,$
