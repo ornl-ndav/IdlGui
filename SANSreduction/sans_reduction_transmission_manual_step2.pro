@@ -122,9 +122,6 @@ PRO trans_manual_step2_calculate_background, Event
   WIDGET_CONTROL,event.top,GET_UVALUE=global
   
   counts_vs_xy = (*(*global).counts_vs_xy)
-  ;counts_vs_x = (*(*global).counts_vs_x)
-  ;counts_vs_y = (*(*global).counts_vs_y)
-  
   nbr_pixels = N_ELEMENTS(counts_vs_xy)
   
   s_nbr_iterations = getTextFieldValue(Event,$
@@ -147,11 +144,13 @@ PRO trans_manual_step2_calculate_background, Event
     average[index] = average_value
     index++
   ENDWHILE
-  
+   
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
   (*global).trans_manual_step2_background = background
+ 
+   calculate_trans_manual_step2_transmission_intensity, Event
   
 END
 
@@ -237,4 +236,24 @@ PRO trans_manual_step2_manual_input_of_background, Event
     
   plot_average_value, Event, average_value
   
+  calculate_trans_manual_step2_transmission_intensity, Event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO calculate_trans_manual_step2_transmission_intensity, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  background_value = (*global).trans_manual_step2_background
+  array            = (*(*global).counts_vs_xy)
+  
+  array_list = WHERE(array GE background_value)
+  array_peak = array[array_list]
+  transmission_intensity = TOTAL(array_peak)
+  (*global).trans_manual_step2_transmission_intensity = transmission_intensity
+  putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+  STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
+
 END
