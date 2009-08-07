@@ -268,7 +268,9 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
-      TITLE = 'Counts vs tube integrated over pixel'
+      TITLE = 'Counts vs tube integrated over pixel', $
+      XTICKS = N_ELEMENTS(x_axis)-1, $
+      PSYM = -1
       
     ;Counts vs tube (integrated over x)
     x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + pixel_min + yoffset
@@ -277,7 +279,9 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
-      TITLE = 'Counts vs pixel integrated over tube'
+      TITLE = 'Counts vs pixel integrated over tube', $
+      XTICKS = N_ELEMENTS(x_axis)-1, $
+      PSYM = -1
       
   ENDIF
   

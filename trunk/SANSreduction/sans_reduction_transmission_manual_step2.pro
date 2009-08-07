@@ -144,13 +144,13 @@ PRO trans_manual_step2_calculate_background, Event
     average[index] = average_value
     index++
   ENDWHILE
-   
+  
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
   (*global).trans_manual_step2_background = background
- 
-   calculate_trans_manual_step2_transmission_intensity, Event
+  
+  calculate_trans_manual_step2_transmission_intensity, Event
   
 END
 
@@ -202,7 +202,8 @@ PRO plot_trans_manual_step2_counts_vs_x, Event
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   plot, x_axis_tube, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
-    TITLE = 'Counts vs tube integrated over pixel'
+    TITLE = 'Counts vs tube integrated over pixel', PSYM=-2, $
+    XTICKS = N_ELEMENTS(x_axis_tube)-1
     
 END
 
@@ -220,7 +221,9 @@ PRO plot_trans_manual_step2_counts_vs_y, Event
   WSET, id_value
   plot, x_axis_pixel, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', $
     YTITLE='Counts', $
-    TITLE = 'Counts vs pixel integrated over tube'
+    TITLE = 'Counts vs pixel integrated over tube', $
+    PSYM = -2, $
+    XTICKS = N_ELEMENTS(x_axis_pixel)-1
     
 END
 
@@ -233,7 +236,7 @@ PRO trans_manual_step2_manual_input_of_background, Event
   average_value = getTextFieldValue(Event,$
     'trans_manual_step2_background_edit')
   (*global).trans_manual_step2_background = average_value
-    
+  
   plot_average_value, Event, average_value
   
   calculate_trans_manual_step2_transmission_intensity, Event
@@ -254,6 +257,6 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   transmission_intensity = TOTAL(array_peak)
   (*global).trans_manual_step2_transmission_intensity = transmission_intensity
   putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
-  STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
-
+    STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
+    
 END
