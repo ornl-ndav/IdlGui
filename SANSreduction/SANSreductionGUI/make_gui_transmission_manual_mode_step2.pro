@@ -97,11 +97,15 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   draw1 = WIDGET_DRAW(col1,$
     XSIZE = xsize, $
     YSIZE = ysize, $
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     UNAME = 'trans_manual_step2_counts_vs_x')
     
   draw2 = WIDGET_DRAW(col1,$
     XSIZE = xsize, $
     YSIZE = ysize, $
+    /BUTTON_EVENTS,$
+    /MOTION_EVENTS,$
     UNAME = 'trans_manual_step2_counts_vs_y')
     
   col2 = WIDGET_BASE(rowa,$ ;...............................

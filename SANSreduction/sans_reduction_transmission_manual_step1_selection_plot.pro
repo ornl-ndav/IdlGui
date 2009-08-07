@@ -241,8 +241,8 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     pixel1 = getTextFieldValue(Event,'trans_manual_step1_y0')
     pixel2 = getTextFieldValue(Event,'trans_manual_step1_y1')
     
-    xoffset = 80
-    yoffset = 112
+    xoffset = (*global).xoffset_plot
+    yoffset = (*global).yoffset_plot
     
     tube1_offset = FIX(tube1) - xoffset
     tube2_offset = FIX(tube2) - xoffset
@@ -251,6 +251,7 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
     
     tube_min = MIN([tube1_offset,tube2_offset],MAX=tube_max)
     pixel_min = MIN([pixel1_offset, pixel2_offset],MAX=pixel_max)
+    (*global).tube_pixel_min_max = [tube_min, tube_max, pixel_min, pixel_max]
     
     tt_zoom_data = (*(*global).tt_zoom_data)
     counts_vs_xy = tt_zoom_data[tube_min:tube_max,pixel_min:pixel_max]
@@ -286,5 +287,3 @@ PRO plot_trans_manual_step1_counts_vs_x_and_y, Event
   ENDIF
   
 END
-
-

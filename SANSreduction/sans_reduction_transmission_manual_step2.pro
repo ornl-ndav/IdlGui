@@ -54,7 +54,32 @@ PRO refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
     x1 + y1 NE 0) THEN BEGIN
     
     plot_trans_manual_step2_counts_vs_x, Event
+    
+    ;get ymin and ymax of top plot
+    x_ref_device = (522-60)/2
+    y_min_device = (*global).trans_manual_step2_ymin_device
+    y_max_device = (*global).trans_manual_step2_ymax_device
+    
+    y_min_data_array = CONVERT_COORD(x_ref_device, y_min_device,/DEVICE,/TO_DATA)
+    y_max_data_array = CONVERT_COORD(x_ref_device, y_max_device,/DEVICE,/TO_DATA)
+    
+    y_min_data = y_min_data_array[1]
+    y_max_data = y_max_data_array[1]
+    
+    (*global).trans_manual_step2_top_plot_ymin_data = y_min_data
+    (*global).trans_manual_step2_top_plot_ymax_data = y_max_data
+    
     plot_trans_manual_step2_counts_vs_y, Event
+    
+    ;get ymin and ymax of bottom plot
+    y_min_data_array = CONVERT_COORD(x_ref_device, y_min_device,/DEVICE,/TO_DATA)
+    y_max_data_array = CONVERT_COORD(x_ref_device, y_max_device,/DEVICE,/TO_DATA)
+    
+    y_min_data = y_min_data_array[1]
+    y_max_data = y_max_data_array[1]
+    
+    (*global).trans_manual_step2_bottom_plot_ymin_data = y_min_data
+    (*global).trans_manual_step2_bottom_plot_ymax_data = y_max_data
     
   ENDIF
   
@@ -259,4 +284,21 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
     STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
     
+END
+
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  plot_trans_manual_step2_counts_vs_x, Event
+  CURSOR, X, Y, /DATA, /NOWAIT
+  
+  y_min = (*global).trans_manual_step2_top_plot_ymin_data
+  y_max = (*global).trans_manual_step2_top_plot_ymax_data
+  
+  PLOTS, x, y_min, /DATA
+  PLOTS, x, y_max, /DATA, /CONTINUE, COLOR=1000
+  
 END
