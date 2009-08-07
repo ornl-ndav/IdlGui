@@ -56,30 +56,39 @@ PRO refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
     plot_trans_manual_step2_counts_vs_x, Event
     
     ;get ymin and ymax of top plot
-    x_ref_device = (522-60)/2
+    x_min_device = (*global).trans_manual_step2_xmin_device
+    x_max_device = (*global).trans_manual_step2_xmax_device
     y_min_device = (*global).trans_manual_step2_ymin_device
     y_max_device = (*global).trans_manual_step2_ymax_device
     
-    y_min_data_array = CONVERT_COORD(x_ref_device, y_min_device,/DEVICE,/TO_DATA)
-    y_max_data_array = CONVERT_COORD(x_ref_device, y_max_device,/DEVICE,/TO_DATA)
+    data_array_min = CONVERT_COORD(x_min_device, y_min_device,/DEVICE,/TO_DATA)
+    data_array_max = CONVERT_COORD(x_max_device, y_max_device,/DEVICE,/TO_DATA)
     
-    y_min_data = y_min_data_array[1]
-    y_max_data = y_max_data_array[1]
+    x_min_data = data_array_min[0]
+    x_max_data = data_array_max[0]
+    y_min_data = data_array_min[1]
+    y_max_data = data_array_max[1]
     
     (*global).trans_manual_step2_top_plot_ymin_data = y_min_data
     (*global).trans_manual_step2_top_plot_ymax_data = y_max_data
+    (*global).trans_manual_step2_top_plot_xmin_data = x_min_data
+    (*global).trans_manual_step2_top_plot_xmax_data = x_max_data
     
     plot_trans_manual_step2_counts_vs_y, Event
     
     ;get ymin and ymax of bottom plot
-    y_min_data_array = CONVERT_COORD(x_ref_device, y_min_device,/DEVICE,/TO_DATA)
-    y_max_data_array = CONVERT_COORD(x_ref_device, y_max_device,/DEVICE,/TO_DATA)
+    data_array_min = CONVERT_COORD(x_min_device, y_min_device,/DEVICE,/TO_DATA)
+    data_array_max = CONVERT_COORD(x_max_device, y_max_device,/DEVICE,/TO_DATA)
     
-    y_min_data = y_min_data_array[1]
-    y_max_data = y_max_data_array[1]
+    x_min_data = data_array_min[0]
+    x_max_data = data_array_max[0]
+    y_min_data = data_array_min[1]
+    y_max_data = data_array_max[1]
     
     (*global).trans_manual_step2_bottom_plot_ymin_data = y_min_data
     (*global).trans_manual_step2_bottom_plot_ymax_data = y_max_data
+    (*global).trans_manual_step2_bottom_plot_xmin_data = x_min_data
+    (*global).trans_manual_step2_bottom_plot_xmax_data = x_max_data
     
   ENDIF
   
