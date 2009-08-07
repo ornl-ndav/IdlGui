@@ -39,7 +39,7 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     SENSITIVE = 1,$
-    MAP = 1,$
+    MAP = 0,$
     /TRACKING_EVENTS)
     
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step1')
