@@ -146,6 +146,20 @@ PRO launch_transmission_manual_mode_event, Event
       trans_manual_step2_calculate_background, Event
     END
     
+    ;edit background value
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='trans_manual_step2_edit_background'): BEGIN
+    map_base, Event, 'trans_manual_step2_edit_background_base', 0
+    map_base, Event, 'trans_manual_step2_lock_edit_background_base', 1
+    END
+    
+    ;lock edit background value
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='trans_manual_step2_lock_edit_background'): BEGIN
+    map_base, Event, 'trans_manual_step2_edit_background_base', 1
+    map_base, Event, 'trans_manual_step2_lock_edit_background_base', 0
+    END
+    
     ;Algorithm description button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_algorithm_description'): BEGIN
