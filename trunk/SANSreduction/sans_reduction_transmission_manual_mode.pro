@@ -176,8 +176,13 @@ PRO launch_transmission_manual_mode_event, Event
       display_trans_step2_algorith_image, Event
     END
     
+    ;previous button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_go_to_previous_step'): BEGIN
+      ;change title
+      title = 'Transmission Calculation -> STEP 1/3: '
+      title += 'Define Beam Stop Region'
+      ChangeTitle, Event, uname='transmission_manual_mode_base', title
       MapBase, event, uname='manual_transmission_step1', 1
       plot_trans_manual_step1_background, Event
       refresh_plot_selection_trans_manual_step1, Event
