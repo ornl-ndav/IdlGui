@@ -53,26 +53,9 @@ PRO refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
   IF (x0 + y0 NE 0 AND $
     x1 + y1 NE 0) THEN BEGIN
     
-    counts_vs_x = (*(*global).counts_vs_x)
-    counts_vs_y = (*(*global).counts_vs_y)
+    plot_trans_manual_step2_counts_vs_x, Event
+    plot_trans_manual_step2_counts_vs_y, Event
     
-    ;plot data
-    ;Counts vs tube (integrated over y)
-    x_axis = (*(*global).tube_x_axis)
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    WSET, id_value
-    plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
-      TITLE = 'Counts vs tube integrated over pixel'
-      
-    ;Counts vs tube (integrated over x)
-    x_axis = (*(*global).pixel_x_axis)
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    WSET, id_value
-    plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
-      TITLE = 'Counts vs pixel integrated over tube'
-      
   ENDIF
   
 END
@@ -152,17 +135,23 @@ PRO trans_manual_step2_calculate_background, Event
   array = counts_vs_xy
   index = 0
   WHILE (index LT nbr_iterations) DO BEGIN
+    print, 'index: ' + string(index)
     IF (index NE 0) THEN BEGIN
-      array_list = WHERE(array LE average[index-1],counts)
+      array_list = WHERE(array GE average[index-1],counts)
+      help, array_list
       IF (counts GT 0) THEN BEGIN
         array[array_list] = 0
       ENDIF
     ENDIF
     total = TOTAL(array)
+    print, '  Total: ' + string(total)
     average_value = FLOAT(total)/FLOAT(nbr_pixels)
+    print, '  average_value (before function): ' + string(average_value)
     plot_average_value, Event, average_value, index
+        print, '  average_value (after function): ' + string(average_value)
     average[index] = average_value
     index++
+    print
   ENDWHILE
   
   background = FIX(average_value)
@@ -172,19 +161,70 @@ PRO trans_manual_step2_calculate_background, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_average_value, Event, average_value
+PRO plot_average_value, Event, average_value, index
 
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  counts_vs_xy = (*(*global).counts_vs_xy)
+  nbr_pixel    = (size(counts_vs_xy))(2)
+  nbr_tube     = (size(counts_vs_xy))(1)
+  
+  ;tube
+  plot_trans_manual_step2_counts_vs_x, Event
+  x_axis = (*(*global).tube_x_axis)
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
-    TITLE = 'Counts vs tube integrated over pixel'
+  average_value_tube = average_value * nbr_pixel
+  plots, x_axis[0], average_value_tube, /DATA
+  plots, x_axis[N_ELEMENTS(x_axis)-1], average_value_tube, /DATA, /CONTINUE, $
+    COLOR=50
     
+  ;pixel
+  plot_trans_manual_step2_counts_vs_y, Event
+  x_axis = (*(*global).pixel_x_axis)
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
-    TITLE = 'Counts vs pixel integrated over tube'
+  average_value_pixel = average_value * nbr_tube
+  plots, x_axis[0], average_value_pixel, /DATA
+  plots, x_axis[N_ELEMENTS(x_axis)-1], average_value_pixel, /DATA, /CONTINUE, $
+    COLOR=50
     
+END
+
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step2_counts_vs_x, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  ;Counts vs tube (integrated over y)
+  x_axis_tube = (*(*global).tube_x_axis)
+  counts_vs_x = (*(*global).counts_vs_x)
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis_tube, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
+    TITLE = 'Counts vs tube integrated over pixel'
+    
+END
+
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step2_counts_vs_y, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  ;Counts vs tube (integrated over x)
+  x_axis_pixel = (*(*global).pixel_x_axis)
+  counts_vs_y = (*(*global).counts_vs_y)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis_pixel, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+    TITLE = 'Counts vs pixel integrated over tube'
     
 END
