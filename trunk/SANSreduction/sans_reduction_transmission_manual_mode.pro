@@ -135,6 +135,38 @@ PRO launch_transmission_manual_mode_event, Event
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
     
+    ;Counts vs tube integratd over pixel plot
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'trans_manual_step2_counts_vs_x'): BEGIN
+      
+      IF (event.press EQ 1) THEN BEGIN ;pressed button
+        (*global).left_button_clicked = 1
+        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+        ENDIF ElSE BEGIN ;working with tube 2
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+        ENDELSE
+        
+      ENDIF
+      
+      IF (event.press EQ 0 AND $ ;moving mouse with button clicked
+        (*global).left_button_clicked EQ 1) THEN BEGIN
+      ENDIF
+      
+      IF (event.release EQ 1) THEN BEGIN ;left button release
+        (*global).left_button_clicked = 0
+      ENDIF
+      
+      IF (event.press EQ 4) THEN BEGIN ;right click
+        IF ((*global).working_with_tube EQ 1) THEN BEGIN
+          (*global).working_with_tube = 2
+        ENDIF ELSE BEGIN
+          (*global).working_with_tube = 1
+        ENDELSE
+      ENDIF
+      
+    END
+    
     ;Number of iteration text box
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_nbr_iterations'): BEGIN
@@ -335,7 +367,20 @@ PRO launch_transmission_manual_mode_base, main_event
     trans_manual_step2_transmission_intensity: 0L, $
     left_button_clicked: 0, $
     sys_color_window_bk: sys_color_window_bk, $
-    working_with_xy: 0, $
+    working_with_xy: 0, $ ;step1
+    
+    trans_manual_step2_ymin_device: 40,$
+    trans_manual_step2_ymax_device: 390,$
+    trans_manual_step2_top_plot_ymin_data: 0L,$
+    trans_manual_step2_top_plot_ymax_data: 0L,$
+    trans_manual_step2_bottom_plot_ymin_data: 0L,$
+    trans_manual_step2_bottom_plot_ymax_data: 0L,$
+
+    working_with_tube: 1 ,$ ;step2 left or right
+    tube_pixel_min_max: INTARR(4),$
+    xoffset_plot: 80L,$
+    yoffset_plot: 112L, $
+    
     x0y0x1y1: INTARR(4), $
     main_event: main_event})
     
