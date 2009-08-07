@@ -78,7 +78,8 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   label = WIDGET_LABEL(col2,$
     VALUE = 'Iterations')
   value = WIDGET_TEXT(col2,$
-    VALUE = '3',$
+    VALUE = '2',$
+    /EDITABLE,$
     UNAME = 'trans_manual_step2_nbr_iterations',$
     XSIZE = 2)
     
