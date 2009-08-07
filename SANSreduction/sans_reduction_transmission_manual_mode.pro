@@ -151,6 +151,14 @@ PRO launch_transmission_manual_mode_event, Event
     FIND_BY_UNAME='trans_manual_step2_edit_background'): BEGIN
     map_base, Event, 'trans_manual_step2_edit_background_base', 0
     map_base, Event, 'trans_manual_step2_lock_edit_background_base', 1
+    putTextFieldValue, Event, 'trans_manual_step2_background_edit', $
+    STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
+    END
+    
+    ;background value edit widget_text
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME = 'trans_manual_step2_background_edit'): BEGIN
+    trans_manual_step2_manual_input_of_background, Event
     END
     
     ;lock edit background value
@@ -158,6 +166,8 @@ PRO launch_transmission_manual_mode_event, Event
     FIND_BY_UNAME='trans_manual_step2_lock_edit_background'): BEGIN
     map_base, Event, 'trans_manual_step2_edit_background_base', 1
     map_base, Event, 'trans_manual_step2_lock_edit_background_base', 0
+    putTextFieldValue, Event, 'trans_manual_step2_background_value', $
+    STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
     END
     
     ;Algorithm description button
@@ -316,6 +326,7 @@ PRO launch_transmission_manual_mode_base, main_event
     pixel_x_axis: PTR_NEW(0L),$
     tube_x_axis: PTR_NEW(0L),$
     counts_vs_xy: PTR_NEW(0L),$
+    trans_manual_step2_background: 0L,$
     left_button_clicked: 0,$
     sys_color_window_bk: sys_color_window_bk,$
     working_with_xy: 0,$

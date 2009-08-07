@@ -135,33 +135,28 @@ PRO trans_manual_step2_calculate_background, Event
   array = counts_vs_xy
   index = 0
   WHILE (index LT nbr_iterations) DO BEGIN
-    print, 'index: ' + string(index)
     IF (index NE 0) THEN BEGIN
       array_list = WHERE(array GE average[index-1],counts)
-      help, array_list
       IF (counts GT 0) THEN BEGIN
         array[array_list] = 0
       ENDIF
     ENDIF
     total = TOTAL(array)
-    print, '  Total: ' + string(total)
     average_value = FLOAT(total)/FLOAT(nbr_pixels)
-    print, '  average_value (before function): ' + string(average_value)
-    plot_average_value, Event, average_value, index
-        print, '  average_value (after function): ' + string(average_value)
+    plot_average_value, Event, average_value
     average[index] = average_value
     index++
-    print
   ENDWHILE
   
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
+  (*global).trans_manual_step2_background = background
   
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_average_value, Event, average_value, index
+PRO plot_average_value, Event, average_value
 
   ;get global structure
   WIDGET_CONTROL,event.top,GET_UVALUE=global
@@ -224,7 +219,22 @@ PRO plot_trans_manual_step2_counts_vs_y, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  plot, x_axis_pixel, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+  plot, x_axis_pixel, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', $
+    YTITLE='Counts', $
     TITLE = 'Counts vs pixel integrated over tube'
     
+END
+
+;------------------------------------------------------------------------------
+PRO trans_manual_step2_manual_input_of_background, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  average_value = getTextFieldValue(Event,$
+    'trans_manual_step2_background_edit')
+  (*global).trans_manual_step2_background = average_value
+    
+  plot_average_value, Event, average_value
+  
 END
