@@ -69,6 +69,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     /ROW)
   value = WIDGET_TEXT(row,$
     VALUE = 'N/A',$
+    /EDITABLE,$
     UNAME = 'trans_manual_step2_background_edit',$
     SCR_XSIZE = 50)
   edit_button = WIDGET_BUTTON(row,$
