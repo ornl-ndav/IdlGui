@@ -42,40 +42,40 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     MAP = 1,$
     /TRACKING_EVENTS)
     
-      ;edit or not background value
+  ;edit or not background value
     
-  xoffset = 565
-  yoffset = 200
-  row = WIDGET_BASE(base,$
-    XOFFSET = xoffset,$
-    YOFFSET = yoffset,$
-    UNAME = 'trans_manual_step2_edit_background_base',$
-    MAP = 1,$
-    /ROW)
-  value = WIDGET_LABEL(row,$
-    VALUE = 'N/A',$
-    UNAME = 'trans_manual_step2_background_value',$
-    SCR_XSIZE = 50,$
-    FRAME = 1)
-  edit_button = WIDGET_BUTTON(row,$
-    VALUE = '  EDIT  ',$
-    UNAME = 'trans_manual_step2_edit_background')
-    
-  row = WIDGET_BASE(base,$
-    XOFFSET = xoffset,$
-    YOFFSET = yoffset,$
-    UNAME = 'trans_manual_step2_lock_edit_background_base',$
-    MAP = 0,$
-    /ROW)
-  value = WIDGET_TEXT(row,$
-    VALUE = 'N/A',$
-    /EDITABLE,$
-    UNAME = 'trans_manual_step2_background_edit',$
-    SCR_XSIZE = 50)
-  edit_button = WIDGET_BUTTON(row,$
-    VALUE = 'LOCK EDIT',$
-    UNAME = 'trans_manual_step2_lock_edit_background')
-    
+  ;  xoffset = 565
+  ;  yoffset = 200
+  ;  row = WIDGET_BASE(base,$
+  ;    XOFFSET = xoffset,$
+  ;    YOFFSET = yoffset,$
+  ;    UNAME = 'trans_manual_step2_edit_background_base',$
+  ;    MAP = 1,$
+  ;    /ROW)
+  ;  value = WIDGET_LABEL(row,$
+  ;    VALUE = 'N/A',$
+  ;    UNAME = 'trans_manual_step2_background_value',$
+  ;    SCR_XSIZE = 50,$
+  ;    FRAME = 1)
+  ;  edit_button = WIDGET_BUTTON(row,$
+  ;    VALUE = '  EDIT  ',$
+  ;    UNAME = 'trans_manual_step2_edit_background')
+  ;
+  ;  row = WIDGET_BASE(base,$
+  ;    XOFFSET = xoffset,$
+  ;    YOFFSET = yoffset,$
+  ;    UNAME = 'trans_manual_step2_lock_edit_background_base',$
+  ;    MAP = 0,$
+  ;    /ROW)
+  ;  value = WIDGET_TEXT(row,$
+  ;    VALUE = 'N/A',$
+  ;    /EDITABLE,$
+  ;    UNAME = 'trans_manual_step2_background_edit',$
+  ;    SCR_XSIZE = 50)
+  ;  edit_button = WIDGET_BUTTON(row,$
+  ;    VALUE = 'LOCK EDIT',$
+  ;    UNAME = 'trans_manual_step2_lock_edit_background')
+  ;
   ;..............................................................
     
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step2')
@@ -104,60 +104,123 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     YSIZE = ysize, $
     UNAME = 'trans_manual_step2_counts_vs_y')
     
-      col2 = WIDGET_BASE(rowa,$ ;...............................
+  col2 = WIDGET_BASE(rowa,$ ;...............................
     /BASE_ALIGN_CENTER,$
     SCR_XSIZE = 130,$
     /COLUMN)
     
-  label = WIDGET_LABEL(col2,$
-    VALUE = 'Number of')
-  label = WIDGET_LABEL(col2,$
-    VALUE = 'Iterations')
-  value = WIDGET_TEXT(col2,$
+  ;range of tubes and pixels base
+  tp_base = WIDGET_BASE(col2,$
+    FRAME = 1,$
+    /COL)
+    
+  label = WIDGET_LABEL(tp_base,$
+    VALUE = 'Range of Tubes:   ')
+  row_tube1 = WIDGET_BASE(tp_base,$
+    /ROW)
+  label = WIDGET_LABEL(row_tube1,$
+    VALUE = 'Tube min: ')
+  value = WIDGET_TEXT(row_tube1,$
+    VALUE = '?',$
+    XSIZE = 2,$
+    /EDITABLE,$
+    UNAME = 'trans_manual_step2_tube_min')
+  row_tube2 = WIDGET_BASE(tp_base,$
+    /ROW)
+  label = WIDGET_LABEL(row_tube2,$
+    VALUE = 'Tube max: ')
+  value = WIDGET_TEXT(row_tube2,$
+    VALUE = '?',$
+    XSIZE = 2,$
+    /EDITABLE,$
+    UNAME = 'trans_manual_step2_tube_max')
+    
+  space = WIDGET_LABEL(tp_base,$
+    VALUE = '')
+    
+  label = WIDGET_LABEL(tp_base,$
+    VALUE = 'Range of Pixels:    ')
+  row_tube1 = WIDGET_BASE(tp_base,$
+    /ROW)
+  label = WIDGET_LABEL(row_tube1,$
+    VALUE = 'Pixel min: ')
+  value = WIDGET_TEXT(row_tube1,$
+    XSIZE = 3,$
+    VALUE = '?',$
+    /EDITABLE,$
+    UNAME = 'trans_manual_step2_pixel_min')
+  row_tube2 = WIDGET_BASE(tp_base,$
+    /ROW)
+  label = WIDGET_LABEL(row_tube2,$
+    VALUE = 'Pixel max: ')
+  value = WIDGET_TEXT(row_tube2,$
+    VALUE = '?',$
+    XSIZE = 3,$
+    /EDITABLE,$
+    UNAME = 'trans_manual_step2_pixel_max')
+    
+  ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+  row_ite = WIDGET_BASE(col2,$
+    UNAME = 'trans_manual_step2_nbr_ite_base',$
+    SENSITIVE = 0,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row_ite,$
+    VALUE = 'Iterations #:')
+  value = WIDGET_TEXT(row_ite,$
     VALUE = '2',$
     /EDITABLE,$
     UNAME = 'trans_manual_step2_nbr_iterations',$
     XSIZE = 2)
     
-  space = WIDGET_LABEL(col2,$
-    VALUE = ' ')
-    
   calculate = WIDGET_BUTTON(col2,$
     VALUE = 'Calculate Background',$
+    SENSITIVE = 0,$
     UNAME = 'trans_manual_step2_calculate')
     
-  space = WIDGET_LABEL(col2,$
-    VALUE = ' ')
-    
-  label = WIDGET_LABEL(col2,$
-    VALUE = 'Background Value:')
-  label = WIDGET_LABEL(col2,$
-    VALUE = '(Counts/pixel)')
-    
-  FOR i=0,8 DO BEGIN
-    space = WIDGET_LABEL(col2,$
-      VALUE = ' ')
-  ENDFOR
-  
-  label = WIDGET_LABEL(col2,$
-    VALUE = 'Transmission Intensity:')
-  label = WIDGET_LABEL(col2,$
-    VALUE = '(counts)')
-  value = WIDGET_LABEL(col2,$
+      ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  row_bkg = WIDGET_BASE(col2,$
+    FRAME = 1,$
+    SENSITIVE = 0,$
+    UNAME = 'trans_manual_step2_bkg_value_base',$
+    /COL)
+  label = WIDGET_LABEL(row_bkg,$
+    VALUE = 'Background Value    ')
+  row_bkg_2 = WIDGET_BASE(row_bkg,$
+    /ROW)
+  value = WIDGET_LABEL(row_bkg_2,$
+    SCR_XSIZE = 45,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 60,$
-    UNAME = 'trans_manual_step2_trans_intensity_value')
+    UNAME = 'trans_manual_step2_background_value')
+  label = WIDGET_LABEL(row_bkg_2,$
+    VALUE = 'counts/pixel')
     
-  FOR i=0,9 DO BEGIN
-    space = WIDGET_LABEL(col2,$
-      VALUE = ' ')
-  ENDFOR
-  
+  ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
+    row_tran = WIDGET_BASE(col2,$
+    UNAME = 'trans_manual_step2_tran_base',$
+    FRAME = 1,$
+    SENSITIVE = 0,$
+    /COL)
+    
+  label = WIDGET_LABEL(row_tran,$
+    VALUE = 'Trans. intensity     ')
+  row_tran_2 = WIDGET_BASE(row_tran,$
+  /ROW)
+  value = WIDGET_LABEL(row_tran_2,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 45,$
+    UNAME = 'trans_manual_step2_trans_intensity_value')
+  label = WIDGET_LABEL(row_tran_2,$
+    VALUE = 'counts')
+    
+      
   help = WIDGET_BUTTON(col2,$
     VALUE = 'Algorithm Description',$
     UNAME = 'trans_manual_step2_algorithm_description')
     
-  FOR i=0,3 DO BEGIN
+  FOR i=0,16 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR
@@ -167,6 +230,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     UNAME= 'trans_manual_step2_go_to_previous_step')
   button = WIDGET_BUTTON(col2,$
     VALUE = '   Next Step >>   ',$
+    SENSITIVE = 0,$
     UNAME = 'trans_manual_step2_go_to_next_step')
     
   RETURN, base
