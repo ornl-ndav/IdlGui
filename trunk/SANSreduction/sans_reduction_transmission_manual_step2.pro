@@ -331,11 +331,15 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
       color=FSC_COLOR('red'), /data
+    putTextFieldValue, Event,'trans_manual_step2_tube_min', $
+      STRCOMPRESS(FIX(X),/REMOVE_ALL)
   ENDIF ELSE BEGIN
     (*global).step2_tube_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
       color=FSC_COLOR('red'), /data
+    putTextFieldValue, Event,'trans_manual_step2_tube_max', $
+      STRCOMPRESS(FIX(X),/REMOVE_ALL)
   ENDELSE
   
   foreground = TVRD(TRUE=3)
@@ -357,7 +361,7 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   y_max = (*global).trans_manual_step2_top_plot_ymax_data
   x_min = (*global).trans_manual_step2_top_plot_xmin_data
   x_max = (*global).trans_manual_step2_top_plot_xmax_data
-
+  
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
@@ -434,7 +438,7 @@ PRO save_transmission_manual_step2_top_plot_background,  $
     END
     ELSE:
   ENDCASE
-
+  
   foreground = TVRD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
