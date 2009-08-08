@@ -168,7 +168,7 @@ ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
         no_error = 0
-        ;CATCH,no_error   
+        CATCH,no_error   
         IF (no_error NE 0) THEN BEGIN
             CATCH,/CANCEL
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
