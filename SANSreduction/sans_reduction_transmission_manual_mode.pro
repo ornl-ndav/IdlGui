@@ -131,6 +131,10 @@ PRO launch_transmission_manual_mode_event, Event
       title += ' and Transmission Intensity'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
+      
+      ;;;make this perform only if the selection of step1 has changed ;FIXME
+      save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
+        working_with_tube='neither'
     END
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
@@ -144,7 +148,7 @@ PRO launch_transmission_manual_mode_event, Event
         IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
-          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=2
         ENDELSE
       ENDIF
       
@@ -157,15 +161,19 @@ PRO launch_transmission_manual_mode_event, Event
         IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
-          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=2
         ENDELSE
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click
         IF ((*global).working_with_tube EQ 1) THEN BEGIN
           (*global).working_with_tube = 2
+          save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
+            working_with_tube = 'right'
         ENDIF ELSE BEGIN
           (*global).working_with_tube = 1
+          save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
+            working_with_tube = 'left'
         ENDELSE
       ENDIF
       
@@ -376,7 +384,7 @@ PRO launch_transmission_manual_mode_base, main_event
     trans_manual_step2_ymin_device: 40,$
     trans_manual_step2_ymax_device: 390,$
     trans_manual_step2_xmin_device: 61, $
-    trans_manual_step2_xmax_device: 522, $
+    trans_manual_step2_xmax_device: 523, $
     
     trans_manual_step2_top_plot_ymin_data: 0L,$
     trans_manual_step2_top_plot_ymax_data: 0L,$
@@ -387,6 +395,12 @@ PRO launch_transmission_manual_mode_base, main_event
     trans_manual_step2_bottom_plot_ymax_data: 0L,$
     trans_manual_step2_bottom_plot_xmin_data: 0L,$
     trans_manual_step2_bottom_plot_xmax_data: 0L, $
+    
+    top_plot_background_with_right_tube: PTR_NEW(0L),$
+    top_plot_background_with_left_tube: PTR_NEW(0L),$
+    bottom_plot_background: PTR_NEW(0L),$
+    step2_tube_right: 0., $
+    step2_tube_left: 0., $
     
     working_with_tube: 1 ,$ ;step2 left or right
     tube_pixel_min_max: INTARR(4),$

@@ -302,54 +302,141 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   plot_trans_manual_step2_counts_vs_x, Event
+  IF (tube EQ 1) THEN BEGIN ;working with left side
+    background = (*(*global).top_plot_background_with_right_tube)
+  ENDIF ELSE BEGIN
+    background = (*(*global).top_plot_background_with_left_tube)
+  ENDELSE
+  
   CURSOR, X, Y, /DATA, /NOWAIT
   
   y_min = (*global).trans_manual_step2_top_plot_ymin_data
   y_max = (*global).trans_manual_step2_top_plot_ymax_data
   x_min = (*global).trans_manual_step2_top_plot_xmin_data
   x_max = (*global).trans_manual_step2_top_plot_xmax_data
-    
+  
   ;take snapshot
   ;background = TVREAD(TRUE=3)
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
+  
+  TV, background, true=3
+  
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
-  POLYFILL, [x_min, X, X, x_min], $
-    [y_min, y_min, y_max, y_max], $
-    color=FSC_COLOR('deep pink'), /data
+  
+  IF (tube EQ 1) THEN BEGIN
+    (*global).step2_tube_left = X
+    POLYFILL, [x_min, X, X, x_min], $
+      [y_min, y_min, y_max, y_max], $
+      color=FSC_COLOR('deep pink'), /data
+  ENDIF ELSE BEGIN
+    (*global).step2_tube_right = X
+    POLYFILL, [X, x_max, x_max, X], $
+      [y_min, y_min, y_max, y_max], $
+      color=FSC_COLOR('deep pink'), /data
+  ENDELSE
+  
   foreground = TVRD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
-  ;background = TVREAD(TRUE=3)
-;  background = TVRD(TRUE=3)
-;  (*(*global1).background) = background
+END
+
+;------------------------------------------------------------------------------
+PRO save_transmission_manual_step2_top_plot_background,  $
+    EVENT=event, $
+    working_with_tube = working_with_tube
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  plot_trans_manual_step2_counts_vs_x, Event
+  y_min = (*global).trans_manual_step2_top_plot_ymin_data
+  y_max = (*global).trans_manual_step2_top_plot_ymax_data
+  x_min = (*global).trans_manual_step2_top_plot_xmin_data
+  x_max = (*global).trans_manual_step2_top_plot_xmax_data
+
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
   
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
   
+  CASE (working_with_tube) OF
+    'right': BEGIN
+      X= (*global).step2_tube_left
+      POLYFILL, [x_min, X, X, x_min], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'left': BEGIN
+      X = (*global).step2_tube_right
+      POLYFILL, [X, x_max, x_max, X], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'neither': BEGIN
+    END
+    ELSE:
+  ENDCASE
   
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
+  ;now I can save as background
+  uname = 'trans_manual_step2_counts_vs_x'
+  id = WIDGET_INFO(Event.top,find_by_uname=uname)
   
+  background = TVRD(TRUE=3)
+  ;  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ;  xsize   = geometry.xsize
+  ;  ysize   = geometry.ysize
   
+  ;  DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
   
+  CASE (working_with_tube) OF
+    'right': BEGIN
+      (*(*global).top_plot_background_with_left_tube) = background
+    END
+    'left': BEGIN
+      (*(*global).top_plot_background_with_right_tube) = background
+    END
+    ELSE: BEGIN
+      (*(*global).top_plot_background_with_left_tube) = background
+      (*(*global).top_plot_background_with_right_tube) = background
+    END
+  ENDCASE
   
+  ;replot other selection if any
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  CASE (working_with_tube) OF
+    'left': BEGIN
+      X= (*global).step2_tube_left
+      IF (X EQ 0.) THEN RETURN
+      POLYFILL, [x_min, X, X, x_min], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'right': BEGIN
+      X = (*global).step2_tube_right
+      IF (X EQ 0.) THEN RETURN
+      POLYFILL, [X, x_max, x_max, X], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'neither': BEGIN
+    END
+    ELSE:
+  ENDCASE
+
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
   
 END
