@@ -146,15 +146,19 @@ PRO launch_transmission_manual_mode_event, Event
         ENDIF ElSE BEGIN ;working with tube 2
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDELSE
-        
-      ENDIF
-      
-      IF (event.press EQ 0 AND $ ;moving mouse with button clicked
-        (*global).left_button_clicked EQ 1) THEN BEGIN
       ENDIF
       
       IF (event.release EQ 1) THEN BEGIN ;left button release
         (*global).left_button_clicked = 0
+      ENDIF
+      
+      IF (event.press EQ 0 AND $ ;moving mouse with button clicked
+        (*global).left_button_clicked EQ 1) THEN BEGIN
+        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+        ENDIF ElSE BEGIN ;working with tube 2
+          plot_counts_vs_tube_step2_tube_selection, Event, tube=1
+        ENDELSE
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click
