@@ -330,12 +330,12 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
     (*global).step2_tube_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('deep pink'), /data
+      color=FSC_COLOR('red'), /data
   ENDIF ELSE BEGIN
     (*global).step2_tube_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('deep pink'), /data
+      color=FSC_COLOR('red'), /data
   ENDELSE
   
   foreground = TVRD(TRUE=3)
@@ -421,14 +421,14 @@ PRO save_transmission_manual_step2_top_plot_background,  $
       IF (X EQ 0.) THEN RETURN
       POLYFILL, [x_min, X, X, x_min], $
         [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('deep pink'), /data
+        color=FSC_COLOR('red'), /data
     END
     'right': BEGIN
       X = (*global).step2_tube_right
       IF (X EQ 0.) THEN RETURN
       POLYFILL, [X, x_max, x_max, X], $
         [y_min, y_min, y_max, y_max], $
-        color=FSC_COLOR('deep pink'), /data
+        color=FSC_COLOR('red'), /data
     END
     'neither': BEGIN
     END
