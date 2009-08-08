@@ -135,6 +135,21 @@ PRO launch_transmission_manual_mode_event, Event
       ;;;make this perform only if the selection of step1 has changed ;FIXME
       save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
         working_with_tube='neither'
+      ;;same thing for this
+      x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
+      putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
+        STRCOMPRESS(x_min_data,/REMOVE_ALL)
+      x_max_data = (*global).trans_manual_step2_top_plot_xmax_data
+      putTextFieldValue, Event, 'trans_manual_step2_tube_max', $
+        STRCOMPRESS(x_max_data,/REMOVE_ALL)
+        
+      x_min_data = (*global).trans_manual_step2_bottom_plot_xmin_data
+      putTextFieldValue, Event, 'trans_manual_step2_pixel_min', $
+        STRCOMPRESS(x_min_data,/REMOVE_ALL)
+      x_max_data = (*global).trans_manual_step2_bottom_plot_xmax_data
+      putTextFieldValue, Event, 'trans_manual_step2_pixel_max', $
+        STRCOMPRESS(x_max_data,/REMOVE_ALL)
+        
     END
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
