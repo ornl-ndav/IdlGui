@@ -327,13 +327,15 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
   DEVICE, copy=[41,60,522,390,41,60,id_value]
   
   IF (tube EQ 1) THEN BEGIN
+    X = FIX(X) + 0.5
     (*global).step2_tube_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
       color=FSC_COLOR('red'), /data
     putTextFieldValue, Event,'trans_manual_step2_tube_min', $
-      STRCOMPRESS(FIX(X),/REMOVE_ALL)
+      STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
   ENDIF ELSE BEGIN
+  X = FIX(X) + 0.5
     (*global).step2_tube_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
