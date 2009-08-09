@@ -135,6 +135,8 @@ PRO launch_transmission_manual_mode_event, Event
       ;;;make this perform only if the selection of step1 has changed ;FIXME
       save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
         working_with_tube='neither'
+      save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
+        working_with_pixel='neither'
       ;;same thing for this
       x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
       putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
@@ -160,7 +162,7 @@ PRO launch_transmission_manual_mode_event, Event
       
       IF (event.press EQ 1) THEN BEGIN ;pressed button
         (*global).left_button_clicked = 1
-        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
+        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tube 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
           plot_counts_vs_tube_step2_tube_selection, Event, tube=2
@@ -173,7 +175,7 @@ PRO launch_transmission_manual_mode_event, Event
       
       IF (event.press EQ 0 AND $ ;moving mouse with button clicked
         (*global).left_button_clicked EQ 1) THEN BEGIN
-        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tueb 1
+        IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tube 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
           plot_counts_vs_tube_step2_tube_selection, Event, tube=2
@@ -192,6 +194,46 @@ PRO launch_transmission_manual_mode_event, Event
         ENDELSE
       ENDIF
       
+    END
+    
+    ;Counts vs pixel integrated over tube plot
+    WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='trans_manual_step2_counts_vs_y'): BEGIN
+
+      IF (event.press EQ 1) THEN BEGIN ;pressed button
+        (*global).left_button_clicked = 1
+        IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
+          plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=1
+        ENDIF ElSE BEGIN ;working with tube 2
+          plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=2
+        ENDELSE
+      ENDIF
+      
+      IF (event.release EQ 1) THEN BEGIN ;left button release
+        (*global).left_button_clicked = 0
+      ENDIF
+      
+      IF (event.press EQ 0 AND $ ;moving mouse with button clicked
+        (*global).left_button_clicked EQ 1) THEN BEGIN
+        IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
+          plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=1
+        ENDIF ElSE BEGIN ;working with pixel 2
+          plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=2
+        ENDELSE
+      ENDIF
+      
+      IF (event.press EQ 4) THEN BEGIN ;right click
+        IF ((*global).working_with_pixel EQ 1) THEN BEGIN
+          (*global).working_with_pixel = 2
+          save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
+            working_with_pixel = 'right'
+        ENDIF ELSE BEGIN
+          (*global).working_with_pixel = 1
+          save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
+            working_with_pixel = 'left'
+        ENDELSE
+      ENDIF
+
     END
     
     ;Number of iteration text box
@@ -413,11 +455,16 @@ PRO launch_transmission_manual_mode_base, main_event
     
     top_plot_background_with_right_tube: PTR_NEW(0L),$
     top_plot_background_with_left_tube: PTR_NEW(0L),$
-    bottom_plot_background: PTR_NEW(0L),$
+    bottom_plot_background_with_right_pixel: PTR_NEW(0L),$
+    bottom_plot_background_with_left_pixel: PTR_NEW(0L),$
+;    bottom_plot_background: PTR_NEW(0L),$
     step2_tube_right: 0., $
     step2_tube_left: 0., $
+    step2_pixel_left: 0., $
+    step2_pixel_right: 0., $
     
     working_with_tube: 1 ,$ ;step2 left or right
+    working_with_pixel: 1, $ ;step2 bottom (1) or top (2) pixel
     tube_pixel_min_max: INTARR(4),$
     xoffset_plot: 80L,$
     yoffset_plot: 112L, $
