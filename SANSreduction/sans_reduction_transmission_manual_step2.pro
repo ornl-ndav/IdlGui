@@ -446,3 +446,156 @@ PRO save_transmission_manual_step2_top_plot_background,  $
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=pixel
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  plot_trans_manual_step2_counts_vs_y, Event
+  IF (pixel EQ 1) THEN BEGIN ;working with botto pixel
+    background = (*(*global).bottom_plot_background_with_right_pixel)
+  ENDIF ELSE BEGIN
+    background = (*(*global).bottom_plot_background_with_left_pixel)
+  ENDELSE
+  
+  CURSOR, X, Y, /DATA, /NOWAIT
+  
+  y_min = (*global).trans_manual_step2_bottom_plot_ymin_data
+  y_max = (*global).trans_manual_step2_bottom_plot_ymax_data
+  x_min = (*global).trans_manual_step2_bottom_plot_xmin_data
+  x_max = (*global).trans_manual_step2_bottom_plot_xmax_data
+  
+  ;take snapshot
+  ;background = TVREAD(TRUE=3)
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TV, background, true=3
+  
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
+  
+  IF (pixel EQ 1) THEN BEGIN
+    X = FIX(X) + 0.5
+    (*global).step2_pixel_left = X
+    POLYFILL, [x_min, X, X, x_min], $
+      [y_min, y_min, y_max, y_max], $
+      color=FSC_COLOR('red'), /data
+    putTextFieldValue, Event,'trans_manual_step2_pixel_min', $
+      STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+  X = FIX(X) + 0.5
+    (*global).step2_pixel_right = X
+    POLYFILL, [X, x_max, x_max, X], $
+      [y_min, y_min, y_max, y_max], $
+      color=FSC_COLOR('red'), /data
+    putTextFieldValue, Event,'trans_manual_step2_pixel_max', $
+      STRCOMPRESS(FIX(X),/REMOVE_ALL)
+  ENDELSE
+  
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_transmission_manual_step2_bottom_plot_background,  $
+    EVENT=event, $
+    working_with_pixel = working_with_pixel
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  plot_trans_manual_step2_counts_vs_y, Event
+  y_min = (*global).trans_manual_step2_bottom_plot_ymin_data
+  y_max = (*global).trans_manual_step2_bottom_plot_ymax_data
+  x_min = (*global).trans_manual_step2_bottom_plot_xmin_data
+  x_max = (*global).trans_manual_step2_bottom_plot_xmax_data
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_y')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
+  
+  CASE (working_with_pixel) OF
+    'right': BEGIN
+      X= (*global).step2_pixel_left
+      POLYFILL, [x_min, X, X, x_min], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'left': BEGIN
+      X = (*global).step2_pixel_right
+      POLYFILL, [X, x_max, x_max, X], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('deep pink'), /data
+    END
+    'neither': BEGIN
+    END
+    ELSE:
+  ENDCASE
+  
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
+  ;now I can save as background
+  uname = 'trans_manual_step2_counts_vs_y'
+  id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  
+  background = TVRD(TRUE=3)
+  ;  geometry = WIDGET_INFO(id,/GEOMETRY)
+  ;  xsize   = geometry.xsize
+  ;  ysize   = geometry.ysize
+  
+  ;  DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
+  
+  CASE (working_with_pixel) OF
+    'right': BEGIN
+      (*(*global).bottom_plot_background_with_left_pixel) = background
+    END
+    'left': BEGIN
+      (*(*global).bottom_plot_background_with_right_pixel) = background
+    END
+    ELSE: BEGIN
+      (*(*global).bottom_plot_background_with_left_pixel) = background
+      (*(*global).bottom_plot_background_with_right_pixel) = background
+    END
+  ENDCASE
+  
+  ;replot other selection if any
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
+  
+  CASE (working_with_pixel) OF
+    'left': BEGIN
+      X= (*global).step2_pixel_left
+      IF (X EQ 0.) THEN RETURN
+      POLYFILL, [x_min, X, X, x_min], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('red'), /data
+    END
+    'right': BEGIN
+      X = (*global).step2_pixel_right
+      IF (X EQ 0.) THEN RETURN
+      POLYFILL, [X, x_max, x_max, X], $
+        [y_min, y_min, y_max, y_max], $
+        color=FSC_COLOR('red'), /data
+    END
+    'neither': BEGIN
+    END
+    ELSE:
+  ENDCASE
+  
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
+END
+
