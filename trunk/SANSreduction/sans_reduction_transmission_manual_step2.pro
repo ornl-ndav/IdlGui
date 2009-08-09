@@ -328,14 +328,20 @@ PRO plot_counts_vs_tube_step2_tube_selection, Event, tube=tube
   
   IF (tube EQ 1) THEN BEGIN
     X = FIX(X) + 0.5
+    IF (X LE x_min) THEN BEGIN
+      X = x_min
+      sX = STRCOMPRESS(FIX(X),/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      sX = STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
+    ENDELSE
     (*global).step2_tube_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
       color=FSC_COLOR('red'), /data
-    putTextFieldValue, Event,'trans_manual_step2_tube_min', $
-      STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
+    putTextFieldValue, Event,'trans_manual_step2_tube_min', sX
   ENDIF ELSE BEGIN
-  X = FIX(X) + 0.5
+    X = FIX(X) + 0.5
+    IF (X GE x_max) THEN X = x_max
     (*global).step2_tube_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
@@ -480,14 +486,20 @@ PRO plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=pixel
   
   IF (pixel EQ 1) THEN BEGIN
     X = FIX(X) + 0.5
+    IF (X LE x_min) THEN BEGIN
+      X = x_min
+      sX = STRCOMPRESS(FIX(X),/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      sX = STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
+    ENDELSE
     (*global).step2_pixel_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
       color=FSC_COLOR('red'), /data
-    putTextFieldValue, Event,'trans_manual_step2_pixel_min', $
-      STRCOMPRESS(FIX(X)+1,/REMOVE_ALL)
+    putTextFieldValue, Event,'trans_manual_step2_pixel_min', sX
   ENDIF ELSE BEGIN
-  X = FIX(X) + 0.5
+    X = FIX(X) + 0.5
+    IF (X GE x_max) THEN X = x_max
     (*global).step2_pixel_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
