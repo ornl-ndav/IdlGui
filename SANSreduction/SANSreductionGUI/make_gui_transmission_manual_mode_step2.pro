@@ -126,7 +126,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = 'Tube min: ')
   value = WIDGET_TEXT(row_tube1,$
     VALUE = '?',$
-    XSIZE = 2,$
+    XSIZE = 3,$
     /EDITABLE,$
     UNAME = 'trans_manual_step2_tube_min')
   row_tube2 = WIDGET_BASE(tp_base,$
@@ -135,7 +135,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     VALUE = 'Tube max: ')
   value = WIDGET_TEXT(row_tube2,$
     VALUE = '?',$
-    XSIZE = 2,$
+    XSIZE = 3,$
     /EDITABLE,$
     UNAME = 'trans_manual_step2_tube_max')
     
