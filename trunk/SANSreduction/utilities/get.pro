@@ -255,10 +255,10 @@ FUNCTION getTransManualStep1Counts, Event, tube, pixel
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  tube = tube - (*global).xoffset_plot
-  pixel = pixel - (*global).yoffset_plot
+  new_tube = tube - (*global).xoffset_plot
+  new_pixel = pixel - (*global).yoffset_plot
   
   tt_zoom_data = (*(*global).tt_zoom_data)
-  counts = tt_zoom_data[tube,pixel]
+  counts = tt_zoom_data[new_tube,new_pixel]
   RETURN, FIX(counts)
 END
