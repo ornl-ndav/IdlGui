@@ -36,9 +36,9 @@ PRO auto_exclude_dead_tubes, Event
 
   ;get global structurea
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
+  
   IF ((*global).facility EQ 'LENS') THEN RETURN
-    
+  
   ;check if user wants to exclude dead tubes or not
   IF (~isAutoExcludeDeadTubeSelected(Event)) THEN RETURN
   
@@ -49,10 +49,19 @@ PRO auto_exclude_dead_tubes, Event
   DeadTubeNbr = ''
   FOR i=0,(nbr_tubes-1) DO BEGIN
     current_tube = DataArray[*,*,i]
+    IF (i LT (nbr_tubes-2)) THEN BEGIN
+      test_tube = DataArray[*,*,i+2]
+    ENDIF ELSE BEGIN
+      test_tube = DataArray[*,*,i-2]
+    ENDELSE
     total1 = TOTAL(current_tube,1)
+    total_test1 = TOTAL(test_tube,1)
     
+    total_counts_of_test_tube = TOTAL(total_test1,1)
     total_counts_of_tube = TOTAL(total1,1)
-    IF (total_counts_of_tube EQ 0) THEN BEGIN
+    IF (FLOAT(total_counts_of_tube) LE $
+      (FLOAT(total_counts_of_test_tube) / $
+      (*global).dead_tube_coeff_ratio)) THEN BEGIN
       DeadTubeNbr += STRCOMPRESS(i,/REMOVE_ALL) + ','
     ENDIF
     

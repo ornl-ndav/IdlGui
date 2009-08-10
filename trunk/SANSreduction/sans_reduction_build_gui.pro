@@ -106,6 +106,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     draw_y: 3*256L,$
     left_button_clicked: 0,$
     mouse_moved: 0,$
+    dead_tube_coeff_ratio: 100., $ ;coeff used to determine if a tube is dead or not
     
     x0_device: 0L,$
     y0_device: 0L,$
