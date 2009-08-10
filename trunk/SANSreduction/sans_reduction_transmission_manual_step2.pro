@@ -637,3 +637,49 @@ PRO trans_manual_step2_calculate_background, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  plot_trans_manual_step2_counts_vs_x, Event
+  
+  x_min_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
+  x_max_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
+  
+  y_min = (*global).trans_manual_step2_top_plot_ymin_data
+  y_max = (*global).trans_manual_step2_top_plot_ymax_data
+  x_min = (*global).trans_manual_step2_top_plot_xmin_data
+  x_max = (*global).trans_manual_step2_top_plot_xmax_data
+  
+  ;take snapshot
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='trans_manual_step2_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  DEVICE, copy=[41,60,522,390,41,60,id_value]
+  
+  ;left size
+  IF (x_min_selection GT x_min) THEN BEGIN
+    X = x_min_selection - 0.5
+    (*global).step2_tube_left = X
+    POLYFILL, [x_min, X, X, x_min], $
+      [y_min, y_min, y_max, y_max], $
+      color=FSC_COLOR('red'), /data
+  ENDIF
+  
+  ;right size
+  IF (x_max_selection LT x_max) THEN BEGIN
+  X = x_max_selection + 0.5
+  POLYFILL, [X, x_max, x_max, X], $
+    [y_min, y_min, y_max, y_max], $
+    color=FSC_COLOR('red'), /data
+    ENDIF
+    
+  foreground = TVRD(TRUE=3)
+  alpha= 0.25
+  TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
+END
