@@ -105,8 +105,9 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     FRAME=1)
     
   title = WIDGET_LABEL(base_values,$
-    VALUE = ' Selection Info')
-  space = WIDGET_LABEL(base_values,$
+    VALUE = '   Selection Info   ', $
+    FRAME = 1)
+    space = WIDGET_LABEL(base_values,$
     VALUE = ' ')
     
   ;tube 0 and 1
@@ -152,28 +153,33 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     FRAME=1)
     
   title = WIDGET_LABEL(base_values,$
-    VALUE = '    Cursor Info')
-  space = WIDGET_LABEL(base_values,$
-    VALUE = ' ')
+    VALUE = '    Cursor Info     ', $
+    FRAME = 1)
+  ;  space = WIDGET_LABEL(base_values,$
+  ;    VALUE = ' ')
     
-  ;tube and pixel
+  ;tube, pixel and counts
   row1 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row1,$
-    VALUE = 'Tube  :')
+    VALUE = 'Tube   :')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_cursor_tube')
   row2 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row2,$
-    VALUE = 'Pixel :')
+    VALUE = 'Pixel  :')
   value = WIDGET_LABEL(row2,$
     VALUE = 'N/A',$
     UNAME = 'trans_manual_step1_cursor_pixel')
-    
-  space = WIDGET_LABEL(base_right,$
-    VALUE = ' ')
+  row3 = WIDGET_BASE(base_values,$
+    /ROW)
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'Counts :')
+  value = WIDGET_LABEL(row3,$
+    VALUE = 'N/A',$
+    UNAME = 'trans_manual_step1_cursor_counts')
     
   message = ['  SELECTION MANUAL',$
     'Left Click to select',$
@@ -272,7 +278,7 @@ PRO plot_transmission_step1_scale, base, sys_color_window_bk
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_transmission_step1_scale_from_event, Event 
+PRO plot_transmission_step1_scale_from_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
