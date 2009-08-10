@@ -254,13 +254,13 @@ PRO launch_transmission_manual_mode_event, Event
     ;Pixel min
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME = 'trans_manual_step2_pixel_min'): BEGIN
-      
+      plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
     ;Pixel max
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME = 'trans_manual_step2_pixel_max'): BEGIN
-      
+      plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
     ;------------------------------
