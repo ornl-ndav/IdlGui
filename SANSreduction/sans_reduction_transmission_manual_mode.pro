@@ -198,8 +198,8 @@ PRO launch_transmission_manual_mode_event, Event
     
     ;Counts vs pixel integrated over tube plot
     WIDGET_INFO(Event.top, $
-    FIND_BY_UNAME='trans_manual_step2_counts_vs_y'): BEGIN
-
+      FIND_BY_UNAME='trans_manual_step2_counts_vs_y'): BEGIN
+      
       IF (event.press EQ 1) THEN BEGIN ;pressed button
         (*global).left_button_clicked = 1
         IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
@@ -233,9 +233,37 @@ PRO launch_transmission_manual_mode_event, Event
             working_with_pixel = 'left'
         ENDELSE
       ENDIF
-
+      
     END
     
+    ;----------------------------------
+    ;Range of tubes
+    ;Tube min
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_tube_min'): BEGIN
+      plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+    END
+    
+    ;Tube max
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_tube_max'): BEGIN
+      plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+    END
+    
+    ;Range of pixels
+    ;Pixel min
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'trans_manual_step2_pixel_min'): BEGIN
+      
+    END
+    
+    ;Pixel max
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'trans_manual_step2_pixel_max'): BEGIN
+      
+    END
+    
+    ;------------------------------
     ;Number of iteration text box
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_nbr_iterations'): BEGIN
@@ -457,7 +485,7 @@ PRO launch_transmission_manual_mode_base, main_event
     top_plot_background_with_left_tube: PTR_NEW(0L),$
     bottom_plot_background_with_right_pixel: PTR_NEW(0L),$
     bottom_plot_background_with_left_pixel: PTR_NEW(0L),$
-;    bottom_plot_background: PTR_NEW(0L),$
+    ;    bottom_plot_background: PTR_NEW(0L),$
     step2_tube_right: 0., $
     step2_tube_left: 0., $
     step2_pixel_left: 0., $
