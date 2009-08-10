@@ -225,12 +225,12 @@ PRO launch_transmission_manual_mode_event, Event
       IF (event.press EQ 4) THEN BEGIN ;right click
         IF ((*global).working_with_pixel EQ 1) THEN BEGIN
           (*global).working_with_pixel = 2
-          save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
-            working_with_pixel = 'right'
+          save_transmission_manual_step2_bottom_plot_background,  $
+            EVENT=Event, working_with_pixel = 'right'
         ENDIF ELSE BEGIN
           (*global).working_with_pixel = 1
-          save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
-            working_with_pixel = 'left'
+          save_transmission_manual_step2_bottom_plot_background,  $
+            EVENT=Event, working_with_pixel = 'left'
         ENDELSE
       ENDIF
       
@@ -490,6 +490,7 @@ PRO launch_transmission_manual_mode_base, main_event
     step2_tube_left: 0., $
     step2_pixel_left: 0., $
     step2_pixel_right: 0., $
+    user_counts_vs_xy: PTR_NEW(0L),$
     
     working_with_tube: 1 ,$ ;step2 left or right
     working_with_pixel: 1, $ ;step2 bottom (1) or top (2) pixel

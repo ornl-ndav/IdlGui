@@ -155,7 +155,7 @@ PRO plot_average_value, Event, average_value
   ;get global structure
   WIDGET_CONTROL,event.top,GET_UVALUE=global
   
-  counts_vs_xy = (*(*global).counts_vs_xy)
+  counts_vs_xy = (*(*global).user_counts_vs_xy)
   nbr_pixel    = (size(counts_vs_xy))(2)
   nbr_tube     = (size(counts_vs_xy))(1)
   
@@ -602,9 +602,8 @@ PRO trans_manual_step2_calculate_background, Event
   nbr_tube = (size(counts_vs_xy))(1)
   nbr_pixel = (size(counts_vs_xy))(2)
   
-  user_counts_vs_xy = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset,$
-    pixel_min_offset:nbr_pixel-pixel_max_offset]
-    
+  user_counts_vs_xy = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset-1,$
+    pixel_min_offset:nbr_pixel-pixel_max_offset-1]
   nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
   
   s_nbr_iterations = getTextFieldValue(Event,$
@@ -613,16 +612,18 @@ PRO trans_manual_step2_calculate_background, Event
   average = FLTARR(nbr_iterations)
   
   array = user_counts_vs_xy
+  (*(*global).user_counts_vs_xy) = array
   index = 0
   WHILE (index LT nbr_iterations) DO BEGIN
     IF (index NE 0) THEN BEGIN
-      array_list = WHERE(array GE average[index-1],counts)
+      array_list = WHERE(array LE average[index-1],counts)
       IF (counts GT 0) THEN BEGIN
-        array[array_list] = 0
+        new_array = array[array_list]
       ENDIF
-    ENDIF
-    total = TOTAL(array)
-    average_value = FLOAT(total)/FLOAT(nbr_pixels)
+      average_value = MEAN(new_array)
+    ENDIF ELSE BEGIN
+      average_value = MEAN(array)
+    ENDELSE
     plot_average_value, Event, average_value
     average[index] = average_value
     index++
