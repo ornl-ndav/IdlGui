@@ -167,7 +167,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     
   row_ite = WIDGET_BASE(col2,$
     UNAME = 'trans_manual_step2_nbr_ite_base',$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     /ROW)
     
   label = WIDGET_LABEL(row_ite,$
@@ -180,13 +180,13 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     
   calculate = WIDGET_BUTTON(col2,$
     VALUE = 'Calculate Background',$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     UNAME = 'trans_manual_step2_calculate')
     
       ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   row_bkg = WIDGET_BASE(col2,$
     FRAME = 1,$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     UNAME = 'trans_manual_step2_bkg_value_base',$
     /COL)
   label = WIDGET_LABEL(row_bkg,$
@@ -205,7 +205,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     row_tran = WIDGET_BASE(col2,$
     UNAME = 'trans_manual_step2_tran_base',$
     FRAME = 1,$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     /COL)
     
   label = WIDGET_LABEL(row_tran,$
