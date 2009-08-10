@@ -245,7 +245,31 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   WIDGET_CONTROL,event.top,GET_UVALUE=global
   
   background_value = (*global).trans_manual_step2_background
-  array            = (*(*global).counts_vs_xy)
+  counts_vs_xy     = (*(*global).counts_vs_xy)
+  
+  ;get pixel min, pixel max, tube min and tube max selected by user
+  tube_min = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
+  tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
+  pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
+  pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
+  
+  ;get true pixel min and max values
+  tube_min_graph = (*global).trans_manual_step2_top_plot_xmin_data
+  tube_max_graph = (*global).trans_manual_step2_top_plot_xmax_data
+  pixel_min_graph = (*global).trans_manual_step2_bottom_plot_xmin_data
+  pixel_max_graph = (*global).trans_manual_step2_bottom_plot_xmax_data
+  
+  tube_min_offset = tube_min - tube_min_graph
+  tube_max_offset = tube_max_graph - tube_max
+  pixel_min_offset = pixel_min - pixel_min_graph
+  pixel_max_offset = pixel_max_graph - pixel_max
+  
+  nbr_tube = (size(counts_vs_xy))(1)
+  nbr_pixel = (size(counts_vs_xy))(2)
+  
+  array = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset-1,$
+    pixel_min_offset:nbr_pixel-pixel_max_offset-1]
+  ;nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
   
   array_list = WHERE(array GE background_value)
   array_peak = array[array_list]
@@ -624,10 +648,34 @@ PRO trans_manual_step2_calculate_background, Event
     ENDIF ELSE BEGIN
       average_value = MEAN(array)
     ENDELSE
-    plot_average_value, Event, average_value
+    ;    plot_average_value, Event, average_value
     average[index] = average_value
     index++
   ENDWHILE
+  
+  DEVICE, decomposed = 0
+
+  xaxis = INDGEN(nbr_tube) + tube_min
+  yaxis = INDGEN(nbr_pixel) + pixel_min
+  
+  iSurface, user_counts_vs_xy ,xaxis, yaxis, $
+  BOTTOM=[0,0,0], $
+  BACKGROUND = [50,50,50], $
+  COLOR= [250, 250, 0], $
+  /DISABLE_SPLASH_SCREEN, $
+  IDENTIFIER = iToolID, $
+  STYLE=6, $
+  TITLE = '3D view of selection (yellow) with background calculated (pink)', $
+  VIEW_TITLE = 'Counts vs Tube and Pixel',$
+  XTITLE = 'Tube #', $
+  YTITLE = 'Pixel #', $
+  ZTITLE = 'Counts', $
+  XMAJOR = N_ELEMENTS(xaxis)-1, $
+  YMAJOR = N_ELEMENTS(yaxis)-1
+  
+  average_plot = user_counts_vs_xy * 0 + average_value
+  iSurface, average_plot, xaxis, yaxis, $
+  overplot=iToolID, COLOR=[250, 0, 250] ;pink
   
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
