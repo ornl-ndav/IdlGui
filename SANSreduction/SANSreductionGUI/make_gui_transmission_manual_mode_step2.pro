@@ -214,7 +214,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   /ROW)
   value = WIDGET_LABEL(row_tran_2,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 45,$
+    SCR_XSIZE = 60,$
     UNAME = 'trans_manual_step2_trans_intensity_value')
   label = WIDGET_LABEL(row_tran_2,$
     VALUE = 'counts')
