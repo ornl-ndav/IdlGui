@@ -78,6 +78,7 @@ PRO launch_transmission_manual_mode_event, Event
         
         IF (event.release EQ 1) THEN BEGIN ;left button release
           (*global).left_button_clicked = 0
+          (*global).need_to_reset_trans_step2 = 1
         ENDIF
         
         IF (event.press EQ 4) THEN BEGIN ;right click
@@ -132,26 +133,29 @@ PRO launch_transmission_manual_mode_event, Event
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
       
-      ;;;make this perform only if the selection of step1 has changed ;FIXME
-      save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
-        working_with_tube='neither'
-      save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
-        working_with_pixel='neither'
-      ;;same thing for this
-      x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
-      putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
-        STRCOMPRESS(x_min_data,/REMOVE_ALL)
-      x_max_data = (*global).trans_manual_step2_top_plot_xmax_data
-      putTextFieldValue, Event, 'trans_manual_step2_tube_max', $
-        STRCOMPRESS(x_max_data,/REMOVE_ALL)
-        
-      x_min_data = (*global).trans_manual_step2_bottom_plot_xmin_data
-      putTextFieldValue, Event, 'trans_manual_step2_pixel_min', $
-        STRCOMPRESS(x_min_data,/REMOVE_ALL)
-      x_max_data = (*global).trans_manual_step2_bottom_plot_xmax_data
-      putTextFieldValue, Event, 'trans_manual_step2_pixel_max', $
-        STRCOMPRESS(x_max_data,/REMOVE_ALL)
-        
+      ;;;make this perform only if the selection of step1 has changed
+      IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
+        save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
+          working_with_tube='neither'
+        save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
+          working_with_pixel='neither'
+        ;;same thing for this
+        x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
+        putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
+          STRCOMPRESS(x_min_data,/REMOVE_ALL)
+        x_max_data = (*global).trans_manual_step2_top_plot_xmax_data
+        putTextFieldValue, Event, 'trans_manual_step2_tube_max', $
+          STRCOMPRESS(x_max_data,/REMOVE_ALL)
+          
+        x_min_data = (*global).trans_manual_step2_bottom_plot_xmin_data
+        putTextFieldValue, Event, 'trans_manual_step2_pixel_min', $
+          STRCOMPRESS(x_min_data,/REMOVE_ALL)
+        x_max_data = (*global).trans_manual_step2_bottom_plot_xmax_data
+        putTextFieldValue, Event, 'trans_manual_step2_pixel_max', $
+          STRCOMPRESS(x_max_data,/REMOVE_ALL)
+        (*global).need_to_reset_trans_step2 = 0
+      ENDIF
+      
     END
     
     ;STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 - STEP2 -
@@ -328,7 +332,7 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 3/3: Determine Beam Center'
       title += ' Pixel'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
-        
+      
     END
     
     ELSE:
@@ -493,6 +497,8 @@ PRO launch_transmission_manual_mode_base, main_event
     trans_manual_step2_bottom_plot_ymax_data: 0L,$
     trans_manual_step2_bottom_plot_xmin_data: 0L,$
     trans_manual_step2_bottom_plot_xmax_data: 0L, $
+    
+    need_to_reset_trans_step2: 1, $ ;will go to 1 everytime the selection of step1 changes
     
     top_plot_background_with_right_tube: PTR_NEW(0L),$
     top_plot_background_with_left_tube: PTR_NEW(0L),$
