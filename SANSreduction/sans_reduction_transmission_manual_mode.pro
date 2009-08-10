@@ -51,10 +51,13 @@ PRO launch_transmission_manual_mode_event, Event
         
         tube  = getTransManualStep1Tube(Event.x)
         pixel = getTransManualStep1Pixel(Event.y)
+        counts = getTransManualStep1Counts(Event, tube, pixel)
         putTextFieldValue, Event, 'trans_manual_step1_cursor_tube', $
           STRCOMPRESS(tube,/REMOVE_ALL)
         putTextFieldValue, Event, 'trans_manual_step1_cursor_pixel', $
           STRCOMPRESS(pixel,/REMOVE_ALL)
+        putTextFieldValue, Event, 'trans_manual_step1_cursor_counts', $
+          STRCOMPRESS(counts,/REMOVE_ALL)
           
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           plot_trans_manual_step1_background, Event
@@ -104,6 +107,8 @@ PRO launch_transmission_manual_mode_event, Event
           putTextFieldValue, Event, 'trans_manual_step1_cursor_tube', $
             'N/A'
           putTextFieldValue, Event, 'trans_manual_step1_cursor_pixel', $
+            'N/A'
+          putTextFieldValue, Event, 'trans_manual_step1_cursor_counts', $
             'N/A'
         ENDELSE
       ENDELSE ;enf of catch statement

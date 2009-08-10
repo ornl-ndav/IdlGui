@@ -240,12 +240,25 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTransManualStep1Tube, event_x
-x_data = FIX(event_x/14.0625)+80
-RETURN, x_data
+  x_data = FIX(event_x/14.0625)+80
+  RETURN, x_data
 END
 
-;------------------------------------------------------------------------------        
+;------------------------------------------------------------------------------
 FUNCTION getTransManualStep1Pixel, event_y
-y_data = FIX(event_y/10+112)
-RETURN, y_data
+  y_data = FIX(event_y/10+112)
+  RETURN, y_data
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransManualStep1Counts, Event, tube, pixel
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tube = tube - (*global).xoffset_plot
+  pixel = pixel - (*global).yoffset_plot
+  
+  tt_zoom_data = (*(*global).tt_zoom_data)
+  counts = tt_zoom_data[tube,pixel]
+  RETURN, FIX(counts)
 END
