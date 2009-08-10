@@ -150,45 +150,6 @@ PRO transmission_manual_mode_step2_info_gui, Event, wBase
 END
 
 ;------------------------------------------------------------------------------
-PRO trans_manual_step2_calculate_background, Event
-
-  ;get global structure
-  WIDGET_CONTROL,event.top,GET_UVALUE=global
-  
-  counts_vs_xy = (*(*global).counts_vs_xy)
-  nbr_pixels = N_ELEMENTS(counts_vs_xy)
-  
-  s_nbr_iterations = getTextFieldValue(Event,$
-    'trans_manual_step2_nbr_iterations')
-  nbr_iterations = FIX(s_nbr_iterations)
-  average = FLTARR(nbr_iterations)
-  
-  array = counts_vs_xy
-  index = 0
-  WHILE (index LT nbr_iterations) DO BEGIN
-    IF (index NE 0) THEN BEGIN
-      array_list = WHERE(array GE average[index-1],counts)
-      IF (counts GT 0) THEN BEGIN
-        array[array_list] = 0
-      ENDIF
-    ENDIF
-    total = TOTAL(array)
-    average_value = FLOAT(total)/FLOAT(nbr_pixels)
-    plot_average_value, Event, average_value
-    average[index] = average_value
-    index++
-  ENDWHILE
-  
-  background = FIX(average_value)
-  s_background = STRCOMPRESS(background,/REMOVE_ALL)
-  putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
-  (*global).trans_manual_step2_background = background
-  
-  calculate_trans_manual_step2_transmission_intensity, Event
-  
-END
-
-;------------------------------------------------------------------------------
 PRO plot_average_value, Event, average_value
 
   ;get global structure
@@ -608,6 +569,71 @@ PRO save_transmission_manual_step2_bottom_plot_background,  $
   foreground = TVRD(TRUE=3)
   alpha= 0.25
   TV, (foreground*alpha)+(1-alpha)*background, true=3
+  
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO trans_manual_step2_calculate_background, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  counts_vs_xy = (*(*global).counts_vs_xy)  ;DBLARR(tube,pixel)
+  
+  ;get pixel min, pixel max, tube min and tube max selected by user
+  tube_min = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
+  tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
+  pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
+  pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
+  
+  ;get true pixel min and max values
+  tube_min_graph = (*global).trans_manual_step2_top_plot_xmin_data
+  tube_max_graph = (*global).trans_manual_step2_top_plot_xmax_data
+  pixel_min_graph = (*global).trans_manual_step2_bottom_plot_xmin_data
+  pixel_max_graph = (*global).trans_manual_step2_bottom_plot_xmax_data
+  
+  tube_min_offset = tube_min - tube_min_graph
+  tube_max_offset = tube_max_graph - tube_max
+  pixel_min_offset = pixel_min - pixel_min_graph
+  pixel_max_offset = pixel_max_graph - pixel_max
+  
+  nbr_tube = (size(counts_vs_xy))(1)
+  nbr_pixel = (size(counts_vs_xy))(2)
+  
+  user_counts_vs_xy = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset,$
+    pixel_min_offset:nbr_pixel-pixel_max_offset]
+    
+  nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
+  
+  s_nbr_iterations = getTextFieldValue(Event,$
+    'trans_manual_step2_nbr_iterations')
+  nbr_iterations = FIX(s_nbr_iterations)
+  average = FLTARR(nbr_iterations)
+  
+  array = user_counts_vs_xy
+  index = 0
+  WHILE (index LT nbr_iterations) DO BEGIN
+    IF (index NE 0) THEN BEGIN
+      array_list = WHERE(array GE average[index-1],counts)
+      IF (counts GT 0) THEN BEGIN
+        array[array_list] = 0
+      ENDIF
+    ENDIF
+    total = TOTAL(array)
+    average_value = FLOAT(total)/FLOAT(nbr_pixels)
+    plot_average_value, Event, average_value
+    average[index] = average_value
+    index++
+  ENDWHILE
+  
+  background = FIX(average_value)
+  s_background = STRCOMPRESS(background,/REMOVE_ALL)
+  putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
+  (*global).trans_manual_step2_background = background
+  
+  calculate_trans_manual_step2_transmission_intensity, Event
   
 END
 
