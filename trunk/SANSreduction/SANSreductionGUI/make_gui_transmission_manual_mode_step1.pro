@@ -107,7 +107,7 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
   title = WIDGET_LABEL(base_values,$
     VALUE = '   Selection Info   ', $
     FRAME = 1)
-    space = WIDGET_LABEL(base_values,$
+  space = WIDGET_LABEL(base_values,$
     VALUE = ' ')
     
   ;tube 0 and 1
@@ -165,6 +165,7 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     VALUE = 'Tube   :')
   value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME = 'trans_manual_step1_cursor_tube')
   row2 = WIDGET_BASE(base_values,$
     /ROW)
@@ -172,13 +173,16 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     VALUE = 'Pixel  :')
   value = WIDGET_LABEL(row2,$
     VALUE = 'N/A',$
+    /ALIGN_LEFT,$
     UNAME = 'trans_manual_step1_cursor_pixel')
   row3 = WIDGET_BASE(base_values,$
     /ROW)
   label = WIDGET_LABEL(row3,$
     VALUE = 'Counts :')
   value = WIDGET_LABEL(row3,$
-    VALUE = 'N/A',$
+    VALUE = 'N/A            ',$
+    SCR_XSIZE = 50,$
+    /ALIGN_LEFT,$
     UNAME = 'trans_manual_step1_cursor_counts')
     
   message = ['  SELECTION MANUAL',$
