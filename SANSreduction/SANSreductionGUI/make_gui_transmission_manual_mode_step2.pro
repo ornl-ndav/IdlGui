@@ -224,6 +224,8 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   threeDview = WIDGET_DRAW(col2, $
     SCR_XSIZE = 130, $
     SCR_YSIZE = 40, $
+    /BUTTON_EVENTS, $
+    /TRACKING_EVENTS, $
     UNAME = 'trans_manual_step2_3d_view_button')
   ;=============================================================================
     

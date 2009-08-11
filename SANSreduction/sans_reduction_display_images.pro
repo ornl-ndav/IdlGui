@@ -144,7 +144,7 @@ PRO display_auto_base_launcher_images, main_base=main_base, $
 END
 
 ;------------------------------------------------------------------------------
-PRO  display_trans_manual_step2_button, Event, MODE=mode
+PRO  display_trans_manual_step2_3Dview_button, Event, MODE=mode
 
 CASE (mode) OF
 'on': image = 'SANSreduction_images/3dview_on.png'

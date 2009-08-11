@@ -270,7 +270,7 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   array = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset-1,$
     pixel_min_offset:nbr_pixel-pixel_max_offset-1]
   ;nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
-  
+    
   array_list = WHERE(array GE background_value)
   array_peak = array[array_list]
   transmission_intensity = TOTAL(array_peak)
@@ -654,35 +654,19 @@ PRO trans_manual_step2_calculate_background, Event
   ENDWHILE
   
   DEVICE, decomposed = 0
-
+  
   new_nbr_tube = (size(user_counts_vs_xy))(1)
   new_nbr_pixel = (size(user_counts_vs_xy))(2)
-
+  
   xaxis = INDGEN(new_nbr_tube) + tube_min
   yaxis = INDGEN(new_nbr_pixel) + pixel_min
   
-  help, user_counts_vs_xy
-  help, xaxis
-  help, yaxis
-  
-  iSurface, user_counts_vs_xy ,xaxis, yaxis, $
-  BOTTOM=[0,0,0], $
-  BACKGROUND = [50,50,50], $
-  COLOR= [250, 250, 0], $
-  /DISABLE_SPLASH_SCREEN, $
-  IDENTIFIER = iToolID, $
-  STYLE=6, $
-  TITLE = '3D view of selection (yellow) with background calculated (pink)', $
-  VIEW_TITLE = 'Counts vs Tube and Pixel',$
-  XTITLE = 'Tube #', $
-  YTITLE = 'Pixel #', $
-  ZTITLE = 'Counts', $
-  XMAJOR = N_ELEMENTS(xaxis)-1, $
-  YMAJOR = N_ELEMENTS(yaxis)-1
-  
-  average_plot = user_counts_vs_xy * 0 + average_value
-  iSurface, average_plot, xaxis, yaxis, $
-  overplot=iToolID, COLOR=[250, 0, 250] ;pink
+  trans_manual_step2 = (*global).trans_manual_step2
+  trans_manual_step2.user_counts_vs_xy = PTR_NEW(user_counts_vs_xy)
+  trans_manual_step2.xaxis = PTR_NEW(xaxis)
+  trans_manual_step2.yaxis = PTR_NEW(yaxis)
+  trans_manual_step2.average_value = average_value
+  (*global).trans_manual_step2 = trans_manual_step2
   
   background = FIX(average_value)
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
@@ -690,6 +674,8 @@ PRO trans_manual_step2_calculate_background, Event
   (*global).trans_manual_step2_background = background
   
   calculate_trans_manual_step2_transmission_intensity, Event
+  
+  display_trans_manual_step2_3Dview_button, Event, MODE='off'
   
 END
 

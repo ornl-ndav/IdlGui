@@ -138,7 +138,7 @@ PRO launch_transmission_manual_mode_event, Event
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
       
-      display_trans_manual_step2_button, Event, MODE='disable'
+      display_trans_manual_step2_3Dview_button, Event, MODE='disable'
       
       ;;;make this perform only if the selection of step1 has changed
       IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
@@ -281,6 +281,7 @@ PRO launch_transmission_manual_mode_event, Event
       trans_manual_step2_calculate_background, Event
     END
     
+    ;calculate background
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_calculate'): BEGIN
       trans_manual_step2_calculate_background, Event
@@ -310,6 +311,34 @@ PRO launch_transmission_manual_mode_event, Event
         STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
     END
     
+    ;3d button view
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step2_3d_view_button'): BEGIN
+      
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        
+        IF (event.press EQ 1) THEN BEGIN
+          show_trans_manual_step2_3dview, Event
+        ENDIF
+        
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='trans_manual_step2_3d_view_button')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+        ENDIF ELSE BEGIN
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+      
+    END
+    
     ;Algorithm description button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_algorithm_description'): BEGIN
@@ -328,6 +357,7 @@ PRO launch_transmission_manual_mode_event, Event
       refresh_plot_selection_trans_manual_step1, Event
       plot_transmission_step1_scale_from_event, Event
     END
+    
     
     ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
     
@@ -494,6 +524,11 @@ PRO launch_transmission_manual_mode_base, main_event
     trans_manual_step2_ymax_device: 390,$
     trans_manual_step2_xmin_device: 61, $
     trans_manual_step2_xmax_device: 523, $
+    
+    trans_manual_step2: { user_counts_vs_xy: PTR_NEW(0L), $
+    xaxis: PTR_NEW(0L), $
+    yaxis: PTR_NEW(0L), $
+    average_value: 0. }, $
     
     trans_manual_step2_top_plot_ymin_data: 0L,$
     trans_manual_step2_top_plot_ymax_data: 0L,$
