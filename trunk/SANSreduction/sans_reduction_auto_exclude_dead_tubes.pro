@@ -44,24 +44,23 @@ PRO auto_exclude_dead_tubes, Event
   
   ;retrieve data array
   DataArray = (*(*global).DataArray)
-  
   nbr_tubes = (size(DataArray))(3)
+  
+  ;get average value of first 8 and last 8 tubes
+  first_tubes = DataArray[*,*,0:7]
+  last_tubes = DataArray[*,*,nbr_tubes-8:nbr_tubes-1]
+  mean_first_tubes = MEAN(first_tubes)
+  mean_last_tubes  = MEAN(last_tubes)
+  mean_tubes = MEAN([mean_first_tubes, mean_last_tubes])
+  
   DeadTubeNbr = ''
   FOR i=0,(nbr_tubes-1) DO BEGIN
     current_tube = DataArray[*,*,i]
-    IF (i LT (nbr_tubes-2)) THEN BEGIN
-      test_tube = DataArray[*,*,i+2]
-    ENDIF ELSE BEGIN
-      test_tube = DataArray[*,*,i-2]
-    ENDELSE
-    total1 = TOTAL(current_tube,1)
-    total_test1 = TOTAL(test_tube,1)
+    total_tube = TOTAL(current_tube)
     
-    total_counts_of_test_tube = TOTAL(total_test1,1)
-    total_counts_of_tube = TOTAL(total1,1)
-    IF (FLOAT(total_counts_of_tube) LE $
-      (FLOAT(total_counts_of_test_tube) / $
-      (*global).dead_tube_coeff_ratio)) THEN BEGIN
+    IF ((total_tube LE $
+    mean_tubes / (*global).dead_tube_coeff_ratio) OR $
+    total_tube EQ 0) THEN BEGIN
       DeadTubeNbr += STRCOMPRESS(i,/REMOVE_ALL) + ','
     ENDIF
     
