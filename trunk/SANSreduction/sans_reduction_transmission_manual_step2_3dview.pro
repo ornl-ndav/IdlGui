@@ -52,6 +52,7 @@ PRO show_trans_manual_step2_3dview, Event
 
   iSurface, user_counts_vs_xy ,xaxis, yaxis, $
   BOTTOM=[0,0,0], $
+  /NO_SAVEPROMPT, $
   BACKGROUND = [50,50,50], $
   COLOR= [250, 250, 0], $
   /DISABLE_SPLASH_SCREEN, $
