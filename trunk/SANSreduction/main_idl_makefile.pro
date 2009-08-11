@@ -75,6 +75,7 @@ cd, CurrentFolder
 .run sans_reduction_transmission_manual_mode.pro
 .run sans_reduction_transmission_manual_step1_selection_plot.pro
 .run sans_reduction_transmission_manual_step2.pro
+.run sans_reduction_transmission_manual_step2_3dview.pro
 
 ;main functions
 .run MainBaseEvent.pro
