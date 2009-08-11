@@ -227,13 +227,11 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     
   ;third row of gui ==================================
   button = WIDGET_BUTTON(base,$
-    XOFFSET = 10,$
-    YOFFSET = ysize_main+2*yoffset + ysize + 5,$
-    SCR_YSIZE = 30,$
+    XOFFSET = 580,$
+    YOFFSET = ysize_main+2*yoffset + ysize + 9,$
     SENSITIVE = 0,$
     UNAME = 'move_to_trans_manual_step2',$
-    VALUE = "   I am happy with the Beam Stop Region I selected and want" + $
-    " to move to the next step (calculate background)   ")
+    VALUE = ' Next Step >> ')
     
   RETURN, base
   

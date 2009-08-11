@@ -49,6 +49,20 @@ FUNCTION design_transmission_manual_mode_step3, wBase
   
   column1 = WIDGET_BASE(base,$
     /COLUMN)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
         
   RETURN, base
   
