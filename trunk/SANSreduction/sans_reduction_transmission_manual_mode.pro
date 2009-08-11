@@ -138,8 +138,9 @@ PRO launch_transmission_manual_mode_event, Event
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
       
-      display_trans_manual_step2_3Dview_button, Event, MODE='disable'
-      
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
+        
       ;;;make this perform only if the selection of step1 has changed
       IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
@@ -173,6 +174,10 @@ PRO launch_transmission_manual_mode_event, Event
       
       IF (event.press EQ 1) THEN BEGIN ;pressed button
         (*global).left_button_clicked = 1
+        (*global).trans_manual_3dview_status = 'disable'
+        display_trans_manual_step2_3Dview_button, Event, $
+          MODE= (*global).trans_manual_3dview_status
+          
         IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tube 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
@@ -212,6 +217,10 @@ PRO launch_transmission_manual_mode_event, Event
       FIND_BY_UNAME='trans_manual_step2_counts_vs_y'): BEGIN
       
       IF (event.press EQ 1) THEN BEGIN ;pressed button
+        (*global).trans_manual_3dview_status = 'disable'
+        display_trans_manual_step2_3Dview_button, Event, $
+          MODE= (*global).trans_manual_3dview_status
+          
         (*global).left_button_clicked = 1
         IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
           plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=1
@@ -252,12 +261,18 @@ PRO launch_transmission_manual_mode_event, Event
     ;Tube min
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_tube_min'): BEGIN
+      (*global).trans_manual_3dview_status = 'disable'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
     ;Tube max
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_tube_max'): BEGIN
+      (*global).trans_manual_3dview_status = 'disable'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
@@ -265,12 +280,18 @@ PRO launch_transmission_manual_mode_event, Event
     ;Pixel min
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME = 'trans_manual_step2_pixel_min'): BEGIN
+      (*global).trans_manual_3dview_status = 'disable'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
     ;Pixel max
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME = 'trans_manual_step2_pixel_max'): BEGIN
+      (*global).trans_manual_3dview_status = 'disable'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
@@ -278,6 +299,9 @@ PRO launch_transmission_manual_mode_event, Event
     ;Number of iteration text box
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_nbr_iterations'): BEGIN
+      (*global).trans_manual_3dview_status = 'disable'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
       trans_manual_step2_calculate_background, Event
     END
     
@@ -285,31 +309,34 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_calculate'): BEGIN
       trans_manual_step2_calculate_background, Event
+      (*global).trans_manual_3dview_status = 'off'
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
     END
     
-    ;edit background value
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='trans_manual_step2_edit_background'): BEGIN
-      map_base, Event, 'trans_manual_step2_edit_background_base', 0
-      map_base, Event, 'trans_manual_step2_lock_edit_background_base', 1
-      putTextFieldValue, Event, 'trans_manual_step2_background_edit', $
-        STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
-    END
-    
-    ;background value edit widget_text
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME = 'trans_manual_step2_background_edit'): BEGIN
-      trans_manual_step2_manual_input_of_background, Event
-    END
-    
-    ;lock edit background value
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='trans_manual_step2_lock_edit_background'): BEGIN
-      map_base, Event, 'trans_manual_step2_edit_background_base', 1
-      map_base, Event, 'trans_manual_step2_lock_edit_background_base', 0
-      putTextFieldValue, Event, 'trans_manual_step2_background_value', $
-        STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
-    END
+    ;    ;edit background value
+    ;    WIDGET_INFO(Event.top, $
+    ;      FIND_BY_UNAME='trans_manual_step2_edit_background'): BEGIN
+    ;      map_base, Event, 'trans_manual_step2_edit_background_base', 0
+    ;      map_base, Event, 'trans_manual_step2_lock_edit_background_base', 1
+    ;      putTextFieldValue, Event, 'trans_manual_step2_background_edit', $
+    ;        STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
+    ;    END
+    ;
+    ;    ;background value edit widget_text
+    ;    WIDGET_INFO(Event.top, $
+    ;      FIND_BY_UNAME = 'trans_manual_step2_background_edit'): BEGIN
+    ;      trans_manual_step2_manual_input_of_background, Event
+    ;    END
+    ;
+    ;    ;lock edit background value
+    ;    WIDGET_INFO(Event.top, $
+    ;      FIND_BY_UNAME='trans_manual_step2_lock_edit_background'): BEGIN
+    ;      map_base, Event, 'trans_manual_step2_edit_background_base', 1
+    ;      map_base, Event, 'trans_manual_step2_lock_edit_background_base', 0
+    ;      putTextFieldValue, Event, 'trans_manual_step2_background_value', $
+    ;        STRCOMPRESS((*global).trans_manual_step2_background,/REMOVE_ALL)
+    ;    END
     
     ;3d button view
     WIDGET_INFO(Event.top, $
@@ -531,6 +558,7 @@ PRO launch_transmission_manual_mode_base, main_event
     xaxis: PTR_NEW(0L), $
     yaxis: PTR_NEW(0L), $
     average_value: 0. }, $
+    trans_manual_3dview_status: 'disable', $
     
     trans_manual_step2_top_plot_ymin_data: 0L,$
     trans_manual_step2_top_plot_ymax_data: 0L,$

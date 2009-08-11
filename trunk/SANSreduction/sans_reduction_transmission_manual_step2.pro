@@ -675,8 +675,6 @@ PRO trans_manual_step2_calculate_background, Event
   
   calculate_trans_manual_step2_transmission_intensity, Event
   
-  display_trans_manual_step2_3Dview_button, Event, MODE='off'
-  
 END
 
 ;------------------------------------------------------------------------------
