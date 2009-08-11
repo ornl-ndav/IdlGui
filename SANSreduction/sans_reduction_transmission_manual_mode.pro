@@ -136,13 +136,15 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
       title += ' and Transmission Intensity'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
-      refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
       
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
         
       ;;;make this perform only if the selection of step1 has changed
       IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
+      
+        refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
+        
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
           working_with_tube='neither'
         save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
@@ -162,7 +164,13 @@ PRO launch_transmission_manual_mode_event, Event
         putTextFieldValue, Event, 'trans_manual_step2_pixel_max', $
           STRCOMPRESS(x_max_data,/REMOVE_ALL)
         (*global).need_to_reset_trans_step2 = 0
-      ENDIF
+        
+      ENDIF ELSE BEGIN
+      
+        plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+        plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
+        
+      ENDELSE
       
     END
     
@@ -559,6 +567,9 @@ PRO launch_transmission_manual_mode_base, main_event
     yaxis: PTR_NEW(0L), $
     average_value: 0. }, $
     trans_manual_3dview_status: 'disable', $
+    
+    selection_not_working_color: 'deep pink', $
+    selection_working_color: 'red', $
     
     trans_manual_step2_top_plot_ymin_data: 0L,$
     trans_manual_step2_top_plot_ymax_data: 0L,$

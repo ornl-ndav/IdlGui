@@ -688,6 +688,9 @@ PRO plot_counts_vs_tube_step2_tube_selection_manual_input, Event
   x_min_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
   x_max_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
   
+  not_working_color = 'deep pink'
+  working_color = 'red'
+  
   y_min = (*global).trans_manual_step2_top_plot_ymin_data
   y_max = (*global).trans_manual_step2_top_plot_ymax_data
   x_min = (*global).trans_manual_step2_top_plot_xmin_data
@@ -701,13 +704,24 @@ PRO plot_counts_vs_tube_step2_tube_selection_manual_input, Event
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
   
+  CASE ((*global).working_with_tube) OF
+    1: BEGIN
+      left_color = working_color
+      right_color = not_working_color
+    END
+    2: BEGIN
+      left_color = not_working_color
+      right_color = working_color
+    END
+  ENDCASE
+  
   ;left size
   IF (x_min_selection GT x_min) THEN BEGIN
     X = x_min_selection - 0.5
     (*global).step2_tube_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('red'), /data
+      color=FSC_COLOR(left_color), /data
   ENDIF
   
   ;right size
@@ -715,7 +729,7 @@ PRO plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     X = x_max_selection + 0.5
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('red'), /data
+      color=FSC_COLOR(right_color), /data
   ENDIF
   
   foreground = TVRD(TRUE=3)
@@ -732,6 +746,9 @@ PRO plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
   
   plot_trans_manual_step2_counts_vs_y, Event
   
+  not_working_color = (*global).selection_not_working_color
+  working_color = (*global).selection_working_color
+  
   x_min_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
   x_max_selection = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
   
@@ -745,6 +762,17 @@ PRO plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
+  CASE ((*global).working_with_pixel) OF
+    1: BEGIN
+      left_color = working_color
+      right_color = not_working_color
+    END
+    2: BEGIN
+      left_color = not_working_color
+      right_color = working_color
+    END
+  ENDCASE
+  
   background = TVRD(TRUE=3)
   DEVICE, copy=[41,60,522,390,41,60,id_value]
   
@@ -753,7 +781,7 @@ PRO plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     (*global).step2_pixel_left = X
     POLYFILL, [x_min, X, X, x_min], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('red'), /data
+      color=FSC_COLOR(left_color), /data
   ENDIF
   
   IF (x_max_selection LT x_max) THEN BEGIN
@@ -761,7 +789,7 @@ PRO plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     (*global).step2_pixel_right = X
     POLYFILL, [X, x_max, x_max, X], $
       [y_min, y_min, y_max, y_max], $
-      color=FSC_COLOR('red'), /data
+      color=FSC_COLOR(right_color), /data
   ENDIF
   
   foreground = TVRD(TRUE=3)
