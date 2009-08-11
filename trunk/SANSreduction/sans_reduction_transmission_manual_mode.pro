@@ -321,7 +321,9 @@ PRO launch_transmission_manual_mode_event, Event
         CATCH,/CANCEL
         
         IF (event.press EQ 1) THEN BEGIN
+          display_trans_manual_step2_3Dview_button, Event, MODE='on'
           show_trans_manual_step2_3dview, Event
+          display_trans_manual_step2_3Dview_button, Event, MODE='off'
         ENDIF
         
       ENDIF ELSE BEGIN ;endif of catch statement
