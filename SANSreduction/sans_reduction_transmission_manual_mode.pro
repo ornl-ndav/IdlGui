@@ -138,6 +138,8 @@ PRO launch_transmission_manual_mode_event, Event
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
       refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
       
+      display_trans_manual_step2_button, Event, MODE='disable'
+      
       ;;;make this perform only if the selection of step1 has changed
       IF ((*global).need_to_reset_trans_step2 EQ 1) THEN BEGIN
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $

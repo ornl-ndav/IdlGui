@@ -183,7 +183,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     SENSITIVE = 1,$
     UNAME = 'trans_manual_step2_calculate')
     
-      ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   row_bkg = WIDGET_BASE(col2,$
     FRAME = 1,$
     SENSITIVE = 1,$
@@ -202,7 +202,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     
   ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-    row_tran = WIDGET_BASE(col2,$
+  row_tran = WIDGET_BASE(col2,$
     UNAME = 'trans_manual_step2_tran_base',$
     FRAME = 1,$
     SENSITIVE = 1,$
@@ -211,7 +211,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   label = WIDGET_LABEL(row_tran,$
     VALUE = 'Trans. intensity     ')
   row_tran_2 = WIDGET_BASE(row_tran,$
-  /ROW)
+    /ROW)
   value = WIDGET_LABEL(row_tran_2,$
     VALUE = 'N/A',$
     SCR_XSIZE = 60,$
@@ -219,12 +219,19 @@ FUNCTION design_transmission_manual_mode_step2, wBase
   label = WIDGET_LABEL(row_tran_2,$
     VALUE = 'counts')
     
-      
+  ;=============================================================================
+  ;3D view button
+  threeDview = WIDGET_DRAW(col2, $
+    SCR_XSIZE = 130, $
+    SCR_YSIZE = 40, $
+    UNAME = 'trans_manual_step2_3d_view_button')
+  ;=============================================================================
+    
   help = WIDGET_BUTTON(col2,$
     VALUE = 'Algorithm Description',$
     UNAME = 'trans_manual_step2_algorithm_description')
     
-  FOR i=0,16 DO BEGIN
+  FOR i=0,14 DO BEGIN
     space = WIDGET_LABEL(col2,$
       VALUE = ' ')
   ENDFOR

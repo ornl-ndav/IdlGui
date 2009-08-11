@@ -655,8 +655,15 @@ PRO trans_manual_step2_calculate_background, Event
   
   DEVICE, decomposed = 0
 
-  xaxis = INDGEN(nbr_tube) + tube_min
-  yaxis = INDGEN(nbr_pixel) + pixel_min
+  new_nbr_tube = (size(user_counts_vs_xy))(1)
+  new_nbr_pixel = (size(user_counts_vs_xy))(2)
+
+  xaxis = INDGEN(new_nbr_tube) + tube_min
+  yaxis = INDGEN(new_nbr_pixel) + pixel_min
+  
+  help, user_counts_vs_xy
+  help, xaxis
+  help, yaxis
   
   iSurface, user_counts_vs_xy ,xaxis, yaxis, $
   BOTTOM=[0,0,0], $
@@ -778,4 +785,3 @@ PRO plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
   TV, (foreground*alpha)+(1-alpha)*background, true=3
   
 END
-
