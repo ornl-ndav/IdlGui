@@ -38,7 +38,6 @@ PRO show_trans_manual_step2_3dview, Event
   WIDGET_CONTROL,event.top,GET_UVALUE=global
 
   trans_manual_step2 = (*global).trans_manual_step2
-  help, trans_manual_step2, /STRUCTURE
   ptr_user_counts_vs_xy = trans_manual_step2.user_counts_vs_xy
   user_counts_vs_xy = *ptr_user_counts_vs_xy
 

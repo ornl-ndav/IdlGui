@@ -313,13 +313,14 @@ PRO launch_transmission_manual_mode_event, Event
       trans_manual_step2_calculate_background, Event
     END
     
-    ;calculate background
+    ;calculate background --------------
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_calculate'): BEGIN
       trans_manual_step2_calculate_background, Event
       (*global).trans_manual_3dview_status = 'off'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      activate_widget, Event, 'trans_manual_step2_go_to_next_step', 1
     END
     
     ;    ;edit background value
