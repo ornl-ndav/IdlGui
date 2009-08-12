@@ -396,10 +396,7 @@ PRO launch_transmission_manual_mode_event, Event
       plot_transmission_step1_scale_from_event, Event
     END
     
-    
-    ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
-    
-    ;move on to step3 button
+        ;move on to step3 button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_go_to_next_step'): BEGIN
       map_base, Event, 'manual_transmission_step2', 0
@@ -407,7 +404,19 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 3/3: Determine Beam Center'
       title += ' Pixel'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
-      
+    END
+    
+    ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
+        
+    ;go back to step2 button
+        ;move on to step3 button
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_manual_step3_previous_button'): BEGIN
+      map_base, Event, 'manual_transmission_step2', 1
+      ;change title
+      title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
+      title += ' and Transmission Intensity'
+      ChangeTitle, Event, uname='transmission_manual_mode_base', title
     END
     
     ELSE:

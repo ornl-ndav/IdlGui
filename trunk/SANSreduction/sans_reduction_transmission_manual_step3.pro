@@ -74,3 +74,8 @@ PRO plot_transmission_step3_scale, base
   DEVICE, decomposed = 0
   
 END
+
+;------------------------------------------------------------------------------
+PRO trans_manual_step3_previous_button, Event
+
+END
