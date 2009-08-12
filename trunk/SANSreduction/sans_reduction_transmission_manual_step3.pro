@@ -75,3 +75,30 @@ PRO plot_transmission_step3_scale, Event
   DEVICE, decomposed = 0
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_transmission_step3_main_plot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  help, (*global).both_banks
+
+  both_banks = (*global).both_banks
+  zoom_data = both_banks[*,116:141,84:107]
+  
+  (*(*global).step3_3d_data) = zoom_data
+  
+  t_zoom_data = TOTAL(zoom_data,1)
+  tt_zoom_data = TRANSPOSE(t_zoom_data)
+  (*(*global).step3_tt_zoom_data) = tt_zoom_data
+  rtt_zoom_data = CONGRID(tt_zoom_data, 400, 300)
+  (*(*global).step3_rtt_zoom_data) = rtt_zoom_data
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step3_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TVSCL, rtt_zoom_data
+
+END

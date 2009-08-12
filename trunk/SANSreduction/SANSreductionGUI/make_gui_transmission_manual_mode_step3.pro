@@ -55,8 +55,8 @@ FUNCTION design_transmission_manual_mode_step3, wBase
   main_yoffset = yoffset
   
   main_plot = WIDGET_DRAW(base,$
-    XOFFSET = xoffset+9,$
-    YOFFSET = main_yoffset-10,$
+    XOFFSET = xoffset+10,$
+    YOFFSET = main_yoffset-9,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
     /BUTTON_EVENTS,$
