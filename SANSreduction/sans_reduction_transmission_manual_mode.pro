@@ -32,11 +32,6 @@
 ;
 ;==============================================================================
 
-FUNCTION isTranManualStep1LinSelected, Event
-  RETURN, isLinSelected_uname(Event, uname='transmission_manual_step1_linear')
-END
-
-;------------------------------------------------------------------------------
 PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
 
   main_base_xoffset = main_base_geometry.xoffset

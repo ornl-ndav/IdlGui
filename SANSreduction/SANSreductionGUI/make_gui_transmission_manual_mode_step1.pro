@@ -91,10 +91,12 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     
   lin = WIDGET_BUTTON(col1,$
     VALUE = 'Linear',$
+    /NO_RELEASE, $
     UNAME = 'transmission_manual_step1_linear')
     
   log = WIDGET_BUTTON(col1,$
     VALUE = 'Log',$
+    /NO_RELEASE, $
     UNAME = 'transmission_manual_step1_log')
     
   WIDGET_CONTROL, lin, /SET_BUTTON

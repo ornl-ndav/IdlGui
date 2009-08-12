@@ -83,11 +83,13 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     
   lin = WIDGET_BUTTON(col1,$
     VALUE = 'Linear ',$
-    UNAME = 'transmission_manual_step1_linear')
+    /NO_RELEASE, $
+    UNAME = 'transmission_manual_step3_linear')
     
   log = WIDGET_BUTTON(col1,$
     VALUE = 'Log ',$
-    UNAME = 'transmission_manual_step1_log')
+    /NO_RELEASE, $
+    UNAME = 'transmission_manual_step3_log')
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
@@ -142,36 +144,36 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     /COLUMN)
     
   rowa = WIDGET_BASE(bottom_base,$ ;.................................
-  /ROW)
-  
+    /ROW)
+    
   xsize = 340
   ysize = 220
   
   counts_vs_tube = WIDGET_DRAW(rowa,$
-  SCR_XSIZE = xsize,$
-  SCR_YSIZE = ysize,$
-  UNAME = 'trans_manual_step3_counts_vs_tube_plot')
-  
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step3_counts_vs_tube_plot')
+    
   space = WIDGET_LABEL(rowa,$
-  VALUE = '')
-  
+    VALUE = '')
+    
   counts_vs_pixel = WIDGET_DRAW(rowa,$
-  SCR_XSIZE = xsize,$
-  SCR_YSIZE = ysize,$
-  UNAME = 'trans_manual_step3_counts_vs_pixel_plot')
-  
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step3_counts_vs_pixel_plot')
+    
   rowb = WIDGET_BASE(bottom_base,$ ;.................................
-  /ROW)
-  
+    /ROW)
+    
   counts_vs_tof = WIDGET_DRAW(rowb,$
-  SCR_XSIZE = 690,$
-  SCR_YSIZE = 200,$
-  UNAME = 'trans_manual_step3_counts_vs_tof_plot')
-  
+    SCR_XSIZE = 690,$
+    SCR_YSIZE = 200,$
+    UNAME = 'trans_manual_step3_counts_vs_tof_plot')
+    
   previous = WIDGET_BUTTON(bottom_base,$
-  VALUE = ' << Previous Step',$
-  UNAME = 'trans_manual_step3_previous_button')
-  
+    VALUE = ' << Previous Step',$
+    UNAME = 'trans_manual_step3_previous_button')
+    
   RETURN, base
   
 END

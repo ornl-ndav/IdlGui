@@ -423,13 +423,13 @@ PRO launch_transmission_manual_mode_event, Event
         tube  = getTransManualStep3Tube(Event.x)
         pixel = getTransManualStep3Pixel(Event.y)
         counts = getTransManualStep3Counts(Event, tube, pixel)
-          putTextFieldValue, Event, 'trans_manual_step3_tube_value', $
+        putTextFieldValue, Event, 'trans_manual_step3_tube_value', $
           STRCOMPRESS(tube,/REMOVE_ALL)
-          putTextFieldValue, Event, 'trans_manual_step3_pixel_value', $
+        putTextFieldValue, Event, 'trans_manual_step3_pixel_value', $
           STRCOMPRESS(pixel,/REMOVE_ALL)
-          putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
+        putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
           STRCOMPRESS(counts,/REMOVE_ALL)
-
+          
         IF (event.press EQ 1) THEN BEGIN ;pressed button
         ENDIF
         
@@ -449,6 +449,16 @@ PRO launch_transmission_manual_mode_event, Event
         ENDELSE
       ENDELSE ;enf of catch statement
       
+    END
+    
+    ;linear and logarithmic buttons
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='transmission_manual_step3_linear'): BEGIN
+      replot_transmission_step3_main_plot, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='transmission_manual_step3_log'): BEGIN
+      replot_transmission_step3_main_plot, Event
     END
     
     ;go back to step2 button

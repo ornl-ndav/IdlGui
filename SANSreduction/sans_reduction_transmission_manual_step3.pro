@@ -81,7 +81,7 @@ PRO plot_transmission_step3_main_plot, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   both_banks = (*global).both_banks
   zoom_data = both_banks[*,116:141,84:107]
   
@@ -98,7 +98,33 @@ PRO plot_transmission_step3_main_plot, Event
   WSET, id_value
   
   TVSCL, rtt_zoom_data
+  
+END
 
+;------------------------------------------------------------------------------
+PRO replot_transmission_step3_main_plot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  data = (*(*global).step3_rtt_zoom_data)
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step3_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  IF (~isTranManualStep3LinSelected(Event)) THEN BEGIN ;log mode
+    index = WHERE(data EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      data[index] = !VALUES.D_NAN
+    ENDIF
+    Data_log = ALOG10(Data)
+    Data_log_bytscl = BYTSCL(Data_log,/NAN)
+    data = data_log_bytscl
+  ENDIF
+  
+  TVSCL, data
+  
 END
 
 
