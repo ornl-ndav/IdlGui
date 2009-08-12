@@ -70,3 +70,13 @@ FUNCTION isLinSelected_uname, Event, uname=uname
   selected = WIDGET_INFO(id, /BUTTON_SET)
   RETURN, selected
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isTranManualStep1LinSelected, Event
+  RETURN, isLinSelected_uname(Event, uname='transmission_manual_step1_linear')
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isTranManualStep3LinSelected, Event
+  RETURN, isLinSelected_uname(Event, uname='transmission_manual_step3_linear')
+END
