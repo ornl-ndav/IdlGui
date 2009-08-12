@@ -82,8 +82,6 @@ PRO plot_transmission_step3_main_plot, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-  help, (*global).both_banks
-
   both_banks = (*global).both_banks
   zoom_data = both_banks[*,116:141,84:107]
   
@@ -102,3 +100,6 @@ PRO plot_transmission_step3_main_plot, Event
   TVSCL, rtt_zoom_data
 
 END
+
+
+

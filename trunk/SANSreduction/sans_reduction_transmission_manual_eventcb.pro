@@ -412,6 +412,45 @@ PRO launch_transmission_manual_mode_event, Event
     
     ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
     
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'manual_transmission_step3_draw'): BEGIN
+      
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        
+        tube  = getTransManualStep3Tube(Event.x)
+        pixel = getTransManualStep3Pixel(Event.y)
+        counts = getTransManualStep3Counts(Event, tube, pixel)
+          putTextFieldValue, Event, 'trans_manual_step3_tube_value', $
+          STRCOMPRESS(tube,/REMOVE_ALL)
+          putTextFieldValue, Event, 'trans_manual_step3_pixel_value', $
+          STRCOMPRESS(pixel,/REMOVE_ALL)
+          putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
+          STRCOMPRESS(counts,/REMOVE_ALL)
+
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+        ENDIF
+        
+      ENDIF ELSE BEGIN ;endif of catch statement
+      
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='manual_transmission_step3_draw')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 31
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN
+          putTextFieldValue, Event, 'trans_manual_step3_tube_value', 'N/A'
+          putTextFieldValue, Event, 'trans_manual_step3_pixel_value', 'N/A'
+          putTextFieldValue, Event, 'trans_manual_step3_counts_value', 'N/A'
+        ENDELSE
+      ENDELSE ;enf of catch statement
+      
+    END
+    
     ;go back to step2 button
     ;move on to step3 button
     WIDGET_INFO(Event.top, $
