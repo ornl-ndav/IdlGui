@@ -127,5 +127,42 @@ PRO replot_transmission_step3_main_plot, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO plot_transmission_step3_bottom_plots, Event
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  counts_vs_xy = (*(*global).step3_tt_zoom_data)
+  counts_vs_x = TOTAL(counts_vs_xy,2)
+  counts_vs_y = TOTAL(counts_vs_xy,1)
+  (*(*global).step3_counts_vs_x) = counts_vs_x
+  (*(*global).step3_counts_vs_y) = counts_vs_y
+  
+  ;plot data
+  ;Counts vs tube (integrated over y)
+  x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + (*global).step3_xoffset_plot
+;  (*(*global).tube_x_axis) = x_axis
+  id = WIDGET_INFO(Event.top,$
+  FIND_BY_UNAME='trans_manual_step3_counts_vs_tube_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
+    TITLE = 'Counts vs tube integrated over pixel', $
+    XTICKS = 12, $
+    PSYM = -1
+    
+  ;Counts vs tube (integrated over x)
+  x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + (*global).step3_yoffset_plot
+;  (*(*global).pixel_x_axis) = x_axis
+  id = WIDGET_INFO(Event.top,$
+  FIND_BY_UNAME='trans_manual_step3_counts_vs_pixel_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+    TITLE = 'Counts vs pixel integrated over tube', $
+    XTICKS = 13, $
+    PSYM = -1
+    
+END
 
