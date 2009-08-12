@@ -453,9 +453,13 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
   ;design step2
   step2_base = design_transmission_manual_mode_step2(wBase)
   
+  ;design step3
+  step3_base = design_transmission_manual_mode_step3(wBase)
+  
   WIDGET_CONTROL, wBase, /REALIZE
   
-  plot_transmission_step1_scale, step1_base, sys_color_window_bk
+  ;plot_transmission_step1_scale, step1_base, sys_color_window_bk
+    plot_transmission_step3_scale, step3_base ;move into step2->step3 button
   
 END
 
@@ -608,10 +612,10 @@ PRO launch_transmission_manual_mode_base, main_event
   XMANAGER, "launch_transmission_manual_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  plot_data_around_beam_stop, main_base=wBase, global, global_step1
-  
+  ;plot_data_around_beam_stop, main_base=wBase, global, global_step1
+    
   ;save background
-  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+ ; save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
   
 END
 

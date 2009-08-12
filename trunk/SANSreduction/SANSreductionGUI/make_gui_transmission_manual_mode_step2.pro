@@ -39,7 +39,7 @@ FUNCTION design_transmission_manual_mode_step2, wBase
     SCR_XSIZE = xsize, $
     SCR_YSIZE = ysize, $
     SENSITIVE = 1,$
-    MAP = 1,$
+    MAP = 0,$
     /TRACKING_EVENTS)
     
   ;edit or not background value
