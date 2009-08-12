@@ -32,69 +32,45 @@
 ;
 ;==============================================================================
 
-FUNCTION design_transmission_manual_mode_step3, wBase
-    
-  id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step2')
-  tab_geometry = WIDGET_INFO(id,/GEOMETRY)
-  xsize = tab_geometry.xsize
-  ysize = tab_geometry.ysize
+PRO plot_transmission_step3_scale, base
 
-  base = WIDGET_BASE(wBase,$
-    UNAME = 'manual_transmission_step3',$
-    SCR_XSIZE = xsize, $
-    SCR_YSIZE = ysize, $
-    SENSITIVE = 1,$
-    MAP = 1,$
-    /TRACKING_EVENTS)
+  ;change color of background
+  id = WIDGET_INFO(base,FIND_BY_UNAME='manual_transmission_step3_draw_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
   
-  xoffset = 40 ;xoffset of scale widget_draw
-  yoffset = 40 ;yoffset of scale widget_draw
-  xsize_main = 400 ;size of main plot
-  ysize_main = 300 ;size of main plot
-  main_xoffset = xsize/2 - xsize_main/2
-  main_yoffset = yoffset
+  device, decomposed=1
+  sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
+  sys_color_window_bk = sys_color.window_bk
   
-  main_plot = WIDGET_DRAW(base,$
-    XOFFSET = xoffset+9,$
-    YOFFSET = main_yoffset-10,$
-    SCR_XSIZE = xsize_main,$
-    SCR_YSIZE = ysize_main,$
-    /BUTTON_EVENTS,$
-    FRAME = 0, $
-    /TRACKING_EVENTS,$
-    /MOTION_EVENTS,$
-    UNAME = 'manual_transmission_step3_draw')
+  xmargin_left   = 8.2
+  xmargin_right  = 5.5
+  ymargin_bottom = 4.9
+  ymargin_top    = 3.1
+  plot, randomn(s,80), $
+    XRANGE     = [84,108],$
+    YRANGE     = [116,142],$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
+    THICK      = 1, $
+    TICKLEN    = -0.025, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = 12,$
+    YTICKS      = 13,$
+    XTITLE      = 'TUBES',$
+    YTITLE      = 'PIXELS',$
+    XMARGIN     = [xmargin_left, xmargin_right],$
+    YMARGIN     = [ymargin_bottom, ymargin_top],$
+    /NODATA
+  AXIS, yaxis=1, YRANGE=[116,142], YTICKS=13, YSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+  AXIS, xaxis=1, XRANGE=[84,108], XTICKS=12, XSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
     
-  scale = WIDGET_DRAW(base,$
-    XOFFSET = 0,$
-    YOFFSET = main_yoffset-yoffset,$
-    SCR_XSIZE = xsize_main+2*xoffset+2,$
-    SCR_YSIZE = ysize_main+2*yoffset,$
-    UNAME = 'manual_transmission_step3_draw_scale')
-  
-  
-  
-  
-  column1 = WIDGET_BASE(base,$
-    /COLUMN)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-        
-  RETURN, base
+  DEVICE, decomposed = 0
   
 END
-
-
-
