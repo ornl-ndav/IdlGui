@@ -71,6 +71,7 @@ cd, CurrentFolder
 .run sans_reduction_display_images.pro
 
 ;transmission
+.run sans_reduction_transmission_manual_eventcb.pro
 .run sans_reduction_transmission_launcher_base.pro
 .run sans_reduction_transmission_manual_mode.pro
 .run sans_reduction_transmission_manual_step1_selection_plot.pro
