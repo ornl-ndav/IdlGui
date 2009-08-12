@@ -396,7 +396,7 @@ PRO launch_transmission_manual_mode_event, Event
       plot_transmission_step1_scale_from_event, Event
     END
     
-        ;move on to step3 button
+    ;move on to step3 button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step2_go_to_next_step'): BEGIN
       map_base, Event, 'manual_transmission_step2', 0
@@ -404,12 +404,13 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 3/3: Determine Beam Center'
       title += ' Pixel'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
+      plot_transmission_step3_scale, Event
     END
     
     ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
-        
+    
     ;go back to step2 button
-        ;move on to step3 button
+    ;move on to step3 button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='trans_manual_step3_previous_button'): BEGIN
       map_base, Event, 'manual_transmission_step2', 1
@@ -417,6 +418,13 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
       title += ' and Transmission Intensity'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
+      
+      display_trans_manual_step2_3Dview_button, Event, $
+        MODE= (*global).trans_manual_3dview_status
+        
+      plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+      plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
+      
     END
     
     ELSE:
@@ -467,8 +475,7 @@ PRO transmission_manual_mode_gui, wBase, main_base_geometry, sys_color_window_bk
   
   WIDGET_CONTROL, wBase, /REALIZE
   
-  ;plot_transmission_step1_scale, step1_base, sys_color_window_bk
-    plot_transmission_step3_scale, step3_base ;move into step2->step3 button
+  plot_transmission_step1_scale, step1_base, sys_color_window_bk
   
 END
 
@@ -621,10 +628,10 @@ PRO launch_transmission_manual_mode_base, main_event
   XMANAGER, "launch_transmission_manual_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  ;plot_data_around_beam_stop, main_base=wBase, global, global_step1
-    
+  plot_data_around_beam_stop, main_base=wBase, global, global_step1
+  
   ;save background
- ; save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+  save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
   
 END
 
