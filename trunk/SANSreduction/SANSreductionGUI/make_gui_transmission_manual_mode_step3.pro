@@ -33,12 +33,12 @@
 ;==============================================================================
 
 FUNCTION design_transmission_manual_mode_step3, wBase
-    
+
   id = WIDGET_INFO(wBase, FIND_BY_UNAME='manual_transmission_step2')
   tab_geometry = WIDGET_INFO(id,/GEOMETRY)
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
-
+  
   base = WIDGET_BASE(wBase,$
     UNAME = 'manual_transmission_step3',$
     SCR_XSIZE = xsize, $
@@ -46,7 +46,7 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     SENSITIVE = 1,$
     MAP = 1,$
     /TRACKING_EVENTS)
-  
+    
   xoffset = 40 ;xoffset of scale widget_draw
   yoffset = 40 ;yoffset of scale widget_draw
   xsize_main = 400 ;size of main plot
@@ -71,27 +71,83 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     SCR_XSIZE = xsize_main+2*xoffset+2,$
     SCR_YSIZE = ysize_main+2*yoffset,$
     UNAME = 'manual_transmission_step3_draw_scale')
-  
-  
-  
-  
+    
   column1 = WIDGET_BASE(base,$
+    XOFFSET = xsize_main+2*xoffset+15,$
     /COLUMN)
+    
+  ;lin/log flags --------------------------------------------------------------
+  col1 = WIDGET_BASE(column1,$
+    /ROW,$
+    /EXCLUSIVE)
+    
+  lin = WIDGET_BUTTON(col1,$
+    VALUE = 'Linear ',$
+    UNAME = 'transmission_manual_step1_linear')
+    
+  log = WIDGET_BUTTON(col1,$
+    VALUE = 'Log ',$
+    UNAME = 'transmission_manual_step1_log')
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-        
+  ;beam center tube, pixel, counts value --------------------------------------
+  bc_base = WIDGET_BASE(column1,$
+    FRAME=1,$
+    /COLUMN)
+    
+  title = WIDGET_LABEL(bc_base,$
+    VALUE = '      Beam Center     ', $
+    FRAME = 1)
+    
+  row1 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Tube   :')
+    
+  value = WIDGET_TEXT(row1,$
+    VALUE = 'N/A',$
+    XSIZE = 3,$
+    UNAME = 'trans_manual_step3_tube_value',$
+    /EDITABLE)
+    
+  row2 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Pixel  :')
+    
+  value = WIDGET_TEXT(row2,$
+    VALUE = 'N/A',$
+    XSIZE = 3,$
+    UNAME = 'trans_manual_step3_pixel_value',$
+    /EDITABLE)
+    
+  row3 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'Counts : ')
+    
+  value = WIDGET_LABEL(row3,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 90,$
+    /ALIGN_LEFT,$
+    UNAME = 'trans_manual_step3_counts_value')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   RETURN, base
   
 END
