@@ -224,7 +224,11 @@ PRO launch_transmission_manual_mode_base, main_event
     step3_yoffset_plot: 116L, $
     step3_counts_vs_x: PTR_NEW(0L), $
     step3_counts_vs_y: PTR_NEW(0L), $
-      
+    step3_tube_min: 0, $
+    step3_tube_max: 0, $
+    step3_pixel_min: 0, $
+    step3_pixel_max: 0, $
+    
     x0y0x1y1: INTARR(4), $
     main_event: main_event})
     

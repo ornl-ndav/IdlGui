@@ -47,36 +47,45 @@ PRO plot_transmission_step3_scale, Event
   
   ;get pixel min, pixel max, tube min and tube max selected by user
   tube_min = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
-  tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))+1
+  tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
   pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
-  pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))+1
+  pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
   
-  IF ((isOdd(tube_min) AND isOdd(tube_max)) OR $ ;both odd or even
-    ~(isOdd(tube_min) AND isOdd(tube_max))) THEN BEGIN
-  ;nothing to do here
-  ENDIF ELSE BEGIN
-    IF (isOdd(tube_min)) THEN tube_min++
-    IF (isOdd(tube_max)) THEN tube_max--
-  ENDELSE
+  tube_diff = (tube_max - tube_min)
+  IF (isOdd(tube_diff)) THEN BEGIN
+    IF (isOdd(tube_min)) THEN BEGIN
+     tube_min++
+     ENDIF
+    IF (isOdd(tube_max)) THEN BEGIN
+    tube_max--
+    ENDIF
+  ENDIF
   
-  IF ((isOdd(pixel_min) AND isOdd(pixel_max)) OR $ ;both odd or even
-    ~(isOdd(pixel_min) AND isOdd(pixel_max))) THEN BEGIN
-  ;nothing to do here
-  ENDIF ELSE BEGIN
-    IF (isOdd(pixel_min)) THEN pixel_min++
-    IF (isOdd(pixel_max)) THEN pixel_max--
-  ENDELSE
+  pixel_diff = (pixel_max - pixel_min)
+  IF (isOdd(pixel_diff)) THEN BEGIN
+    IF (isOdd(pixel_min)) THEN BEGIN
+     pixel_min++
+     ENDIF
+    IF (isOdd(pixel_max)) THEN BEGIN
+    pixel_max--
+    ENDIF
+  ENDIF
 
-  xtick = tube_max - tube_min
-  ytick = pixel_max - pixel_min
+  xtick = tube_diff + 1
+  ytick = pixel_diff + 1
+  
+  (*global).step3_tube_min = tube_min
+  (*global).step3_tube_max = tube_max
+  (*global).step3_pixel_min = pixel_min
+  (*global).step3_pixel_max = pixel_max
   
   xmargin_left   = 8.2
   xmargin_right  = 5.5
   ymargin_bottom = 4.9
   ymargin_top    = 3.1
   plot, randomn(s,80), $
-    XRANGE     = [tube_min, tube_max],$
-    YRANGE     = [pixel_min, pixel_max],$
+    XRANGE     = [tube_min, tube_max+1],$
+    YRANGE     = [pixel_min, pixel_max+1],$
     COLOR      = convert_rgb([0B,0B,255B]), $
     ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
     BACKGROUND = convert_rgb(sys_color_window_bk),$
@@ -93,9 +102,9 @@ PRO plot_transmission_step3_scale, Event
     XMARGIN     = [xmargin_left, xmargin_right],$
     YMARGIN     = [ymargin_bottom, ymargin_top],$
     /NODATA
-  AXIS, yaxis=1, YRANGE=[pixel_min,pixel_max], YTICKS=ytick, YSTYLE=1, $
+  AXIS, yaxis=1, YRANGE=[pixel_min,pixel_max+1], YTICKS=ytick, YSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
-  AXIS, xaxis=1, XRANGE=[tube_min,tube_max], XTICKS=xtick, XSTYLE=1, $
+  AXIS, xaxis=1, XRANGE=[tube_min,tube_max+1], XTICKS=xtick, XSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
     
   DEVICE, decomposed = 0
@@ -109,7 +118,15 @@ PRO plot_transmission_step3_main_plot, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   both_banks = (*global).both_banks
-  zoom_data = both_banks[*,116:141,84:107]
+  
+  tube_min  = (*global).step3_tube_min
+  tube_max  = (*global).step3_tube_max
+  pixel_min = (*global).step3_pixel_min
+  pixel_max = (*global).step3_pixel_max
+  
+  help, both_banks
+  
+  zoom_data = both_banks[*,pixel_min:pixel_max,tube_min:tube_max]
   
   (*(*global).step3_3d_data) = zoom_data
   
