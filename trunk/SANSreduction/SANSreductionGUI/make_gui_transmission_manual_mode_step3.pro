@@ -136,18 +136,42 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     /ALIGN_LEFT,$
     UNAME = 'trans_manual_step3_counts_value')
     
+  ;Bottom Base ----------------------------------------------------------------
+  bottom_base = WIDGET_BASE(base,$
+    YOFFSET = ysize_main + 2*yoffset - 5,$
+    /COLUMN)
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  rowa = WIDGET_BASE(bottom_base,$ ;.................................
+  /ROW)
+  
+  xsize = 340
+  ysize = 220
+  
+  counts_vs_tube = WIDGET_DRAW(rowa,$
+  SCR_XSIZE = xsize,$
+  SCR_YSIZE = ysize,$
+  UNAME = 'trans_manual_step3_counts_vs_tube_plot')
+  
+  space = WIDGET_LABEL(rowa,$
+  VALUE = '')
+  
+  counts_vs_pixel = WIDGET_DRAW(rowa,$
+  SCR_XSIZE = xsize,$
+  SCR_YSIZE = ysize,$
+  UNAME = 'trans_manual_step3_counts_vs_pixel_plot')
+  
+  rowb = WIDGET_BASE(bottom_base,$ ;.................................
+  /ROW)
+  
+  counts_vs_tof = WIDGET_DRAW(rowb,$
+  SCR_XSIZE = 690,$
+  SCR_YSIZE = 200,$
+  UNAME = 'trans_manual_step3_counts_vs_tof_plot')
+  
+  previous = WIDGET_BUTTON(bottom_base,$
+  VALUE = ' << Previous Step',$
+  UNAME = 'trans_manual_step3_previous_button')
+  
   RETURN, base
   
 END
