@@ -404,8 +404,8 @@ PRO launch_transmission_manual_mode_event, Event
       title = 'Transmission Calculation -> STEP 3/3: Determine Beam Center'
       title += ' Pixel'
       ChangeTitle, Event, uname='transmission_manual_mode_base', title
-      plot_transmission_step3_scale, Event
       
+      plot_transmission_step3_scale, Event
       plot_transmission_step3_main_plot, Event
       plot_transmission_step3_bottom_plots, Event
       
