@@ -80,3 +80,8 @@ END
 FUNCTION isTranManualStep3LinSelected, Event
   RETURN, isLinSelected_uname(Event, uname='transmission_manual_step3_linear')
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isOdd, value
+  RETURN, value MOD 2
+END

@@ -35,7 +35,8 @@
 PRO plot_transmission_step3_scale, Event
 
   ;change color of background
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step3_draw_scale')
+  id = WIDGET_INFO(Event.top,$
+    FIND_BY_UNAME='manual_transmission_step3_draw_scale')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
@@ -44,13 +45,38 @@ PRO plot_transmission_step3_scale, Event
   device, decomposed=1
   sys_color_window_bk = (*global).sys_color_window_bk
   
+  ;get pixel min, pixel max, tube min and tube max selected by user
+  tube_min = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_min'))
+  tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))+1
+  pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
+  pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))+1
+  
+  IF ((isOdd(tube_min) AND isOdd(tube_max)) OR $ ;both odd or even
+    ~(isOdd(tube_min) AND isOdd(tube_max))) THEN BEGIN
+  ;nothing to do here
+  ENDIF ELSE BEGIN
+    IF (isOdd(tube_min)) THEN tube_min++
+    IF (isOdd(tube_max)) THEN tube_max--
+  ENDELSE
+  
+  IF ((isOdd(pixel_min) AND isOdd(pixel_max)) OR $ ;both odd or even
+    ~(isOdd(pixel_min) AND isOdd(pixel_max))) THEN BEGIN
+  ;nothing to do here
+  ENDIF ELSE BEGIN
+    IF (isOdd(pixel_min)) THEN pixel_min++
+    IF (isOdd(pixel_max)) THEN pixel_max--
+  ENDELSE
+
+  xtick = tube_max - tube_min
+  ytick = pixel_max - pixel_min
+  
   xmargin_left   = 8.2
   xmargin_right  = 5.5
   ymargin_bottom = 4.9
   ymargin_top    = 3.1
   plot, randomn(s,80), $
-    XRANGE     = [84,108],$
-    YRANGE     = [116,142],$
+    XRANGE     = [tube_min, tube_max],$
+    YRANGE     = [pixel_min, pixel_max],$
     COLOR      = convert_rgb([0B,0B,255B]), $
     ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
     BACKGROUND = convert_rgb(sys_color_window_bk),$
@@ -60,16 +86,16 @@ PRO plot_transmission_step3_scale, Event
     XSTYLE      = 1,$
     YSTYLE      = 1,$
     YTICKLAYOUT = 0,$
-    XTICKS      = 12,$
-    YTICKS      = 13,$
+    XTICKS      = xtick,$
+    YTICKS      = ytick,$
     XTITLE      = 'TUBES',$
     YTITLE      = 'PIXELS',$
     XMARGIN     = [xmargin_left, xmargin_right],$
     YMARGIN     = [ymargin_bottom, ymargin_top],$
     /NODATA
-  AXIS, yaxis=1, YRANGE=[116,142], YTICKS=13, YSTYLE=1, $
+  AXIS, yaxis=1, YRANGE=[pixel_min,pixel_max], YTICKS=ytick, YSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
-  AXIS, xaxis=1, XRANGE=[84,108], XTICKS=12, XSTYLE=1, $
+  AXIS, xaxis=1, XRANGE=[tube_min,tube_max], XTICKS=xtick, XSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
     
   DEVICE, decomposed = 0
@@ -142,9 +168,9 @@ PRO plot_transmission_step3_bottom_plots, Event
   ;plot data
   ;Counts vs tube (integrated over y)
   x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + (*global).step3_xoffset_plot
-;  (*(*global).tube_x_axis) = x_axis
+  ;  (*(*global).tube_x_axis) = x_axis
   id = WIDGET_INFO(Event.top,$
-  FIND_BY_UNAME='trans_manual_step3_counts_vs_tube_plot')
+    FIND_BY_UNAME='trans_manual_step3_counts_vs_tube_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
@@ -154,9 +180,9 @@ PRO plot_transmission_step3_bottom_plots, Event
     
   ;Counts vs tube (integrated over x)
   x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + (*global).step3_yoffset_plot
-;  (*(*global).pixel_x_axis) = x_axis
+  ;  (*(*global).pixel_x_axis) = x_axis
   id = WIDGET_INFO(Event.top,$
-  FIND_BY_UNAME='trans_manual_step3_counts_vs_pixel_plot')
+    FIND_BY_UNAME='trans_manual_step3_counts_vs_pixel_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
