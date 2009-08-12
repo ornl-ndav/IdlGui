@@ -32,16 +32,17 @@
 ;
 ;==============================================================================
 
-PRO plot_transmission_step3_scale, base
+PRO plot_transmission_step3_scale, Event
 
   ;change color of background
-  id = WIDGET_INFO(base,FIND_BY_UNAME='manual_transmission_step3_draw_scale')
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step3_draw_scale')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   device, decomposed=1
-  sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
-  sys_color_window_bk = sys_color.window_bk
+  sys_color_window_bk = (*global).sys_color_window_bk
   
   xmargin_left   = 8.2
   xmargin_right  = 5.5
@@ -73,9 +74,4 @@ PRO plot_transmission_step3_scale, base
     
   DEVICE, decomposed = 0
   
-END
-
-;------------------------------------------------------------------------------
-PRO trans_manual_step3_previous_button, Event
-
 END
