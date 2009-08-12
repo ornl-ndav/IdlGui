@@ -262,3 +262,30 @@ FUNCTION getTransManualStep1Counts, Event, tube, pixel
   counts = tt_zoom_data[new_tube,new_pixel]
   RETURN, FIX(counts)
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransManualStep3Tube, event_x
+  x_data = FIX(event_x/16.666667)+84
+  RETURN, x_data
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransManualStep3Pixel, event_y
+  y_data = FIX(event_y/11.5385+116)
+  RETURN, y_data
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransManualStep3Counts, Event, tube, pixel
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  new_tube = tube - (*global).step3_xoffset_plot
+  new_pixel = pixel - (*global).step3_yoffset_plot
+  
+  tt_zoom_data = (*(*global).step3_tt_zoom_data)
+  counts = tt_zoom_data[new_tube,new_pixel]
+
+  RETURN, FIX(counts)
+END
+

@@ -225,6 +225,8 @@ PRO launch_transmission_manual_mode_base, main_event
     step3_3d_data: PTR_NEW(0L), $
     step3_tt_zoom_data: PTR_NEW(0L), $
     step3_rtt_zoom_data: PTR_NEW(0L), $
+    step3_xoffset_plot: 84L,$
+    step3_yoffset_plot: 116L, $
     
     x0y0x1y1: INTARR(4), $
     main_event: main_event})
