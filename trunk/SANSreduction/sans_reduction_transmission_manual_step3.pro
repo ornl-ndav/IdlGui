@@ -50,29 +50,19 @@ PRO plot_transmission_step3_scale, Event
   tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
   pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
   pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
-  
+
   tube_diff = (tube_max - tube_min)
-  IF (isOdd(tube_diff)) THEN BEGIN
-    IF (isOdd(tube_min)) THEN BEGIN
-     tube_min++
-     ENDIF
-    IF (isOdd(tube_max)) THEN BEGIN
-    tube_max--
-    ENDIF
+  IF (~isOdd(tube_diff)) THEN BEGIN
+    tube_max++
   ENDIF
   
   pixel_diff = (pixel_max - pixel_min)
-  IF (isOdd(pixel_diff)) THEN BEGIN
-    IF (isOdd(pixel_min)) THEN BEGIN
-     pixel_min++
-     ENDIF
-    IF (isOdd(pixel_max)) THEN BEGIN
-    pixel_max--
-    ENDIF
+  IF (~isOdd(pixel_diff)) THEN BEGIN
+    pixel_max++
   ENDIF
 
-  xtick = tube_diff + 1
-  ytick = pixel_diff + 1
+  xtick = tube_max - tube_min + 1
+  ytick = pixel_max - pixel_min + 1
   
   (*global).step3_tube_min = tube_min
   (*global).step3_tube_max = tube_max
