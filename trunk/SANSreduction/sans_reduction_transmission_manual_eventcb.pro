@@ -455,6 +455,13 @@ PRO launch_transmission_manual_mode_event, Event
       
       IF ((*global).trans_manual_step3_refresh EQ 1) THEN BEGIN
         (*global).trans_manual_step3_refresh = 0
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_tube_value', 'N/A'
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_pixel_value', 'N/A'
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_counts_value', 'N/A'
+            
       ENDIF ELSE BEGIN
         plot_counts_vs_tof_step3_beam_center, Event
         replot_pixel_selected_below_cursor, event
