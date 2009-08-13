@@ -437,7 +437,7 @@ PRO launch_transmission_manual_mode_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
         
           plot_transmission_step3_main_plot, Event
-          plot_pixel_selectd_below_cursor, event, tube, pixel
+          plot_pixel_selected_below_cursor, event, tube, pixel
           save_transmission_manual_step3_background,  EVENT=event
           
           putTextFieldValue, Event, $
