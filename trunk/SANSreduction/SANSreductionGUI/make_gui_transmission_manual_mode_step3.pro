@@ -93,13 +93,13 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     
   WIDGET_CONTROL, lin, /SET_BUTTON
   
-  ;beam center tube, pixel, counts value --------------------------------------
+  ;pixel of cursor (tube, pixel, counts value) --------------------------------
   bc_base = WIDGET_BASE(column1,$
     FRAME=1,$
     /COLUMN)
     
   title = WIDGET_LABEL(bc_base,$
-    VALUE = '      Beam Center     ', $
+    VALUE = '    Pixel below Cursor     ', $
     FRAME = 1)
     
   row1 = WIDGET_BASE(bc_base,$
@@ -108,11 +108,11 @@ FUNCTION design_transmission_manual_mode_step3, wBase
   label = WIDGET_LABEL(row1,$
     VALUE = 'Tube   :')
     
-  value = WIDGET_TEXT(row1,$
+  value = WIDGET_LABEL(row1,$
     VALUE = 'N/A',$
-    XSIZE = 3,$
-    UNAME = 'trans_manual_step3_tube_value',$
-    /EDITABLE)
+    XSIZE = 100,$
+    /ALIGN_LEFT, $
+    UNAME = 'trans_manual_step3_tube_value')
     
   row2 = WIDGET_BASE(bc_base,$
     /ROW)
@@ -120,23 +120,67 @@ FUNCTION design_transmission_manual_mode_step3, wBase
   label = WIDGET_LABEL(row2,$
     VALUE = 'Pixel  :')
     
-  value = WIDGET_TEXT(row2,$
+  value = WIDGET_LABEL(row2,$
     VALUE = 'N/A',$
-    XSIZE = 3,$
-    UNAME = 'trans_manual_step3_pixel_value',$
-    /EDITABLE)
+    XSIZE = 100,$
+    /ALIGN_LEFT, $
+    UNAME = 'trans_manual_step3_pixel_value')
     
   row3 = WIDGET_BASE(bc_base,$
     /ROW)
     
   label = WIDGET_LABEL(row3,$
-    VALUE = 'Counts : ')
+    VALUE = 'Counts :')
     
   value = WIDGET_LABEL(row3,$
     VALUE = 'N/A',$
-    SCR_XSIZE = 90,$
+    SCR_XSIZE = 100,$
     /ALIGN_LEFT,$
     UNAME = 'trans_manual_step3_counts_value')
+    
+  ;Beam Center (tube, pixel, counts value) --------------------------------
+  bc_base = WIDGET_BASE(column1,$
+    FRAME=1,$
+    /COLUMN)
+    
+  title = WIDGET_LABEL(bc_base,$
+    VALUE = '      Beam Center       ', $
+    FRAME = 1)
+    
+  row1 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row1,$
+    VALUE = 'Tube   :')
+    
+  value = WIDGET_LABEL(row1,$
+    VALUE = 'N/A',$
+    XSIZE = 100,$
+    /ALIGN_LEFT, $
+    UNAME = 'trans_manual_step3_beam_center_tube_value')
+    
+  row2 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row2,$
+    VALUE = 'Pixel  :')
+    
+  value = WIDGET_LABEL(row2,$
+    VALUE = 'N/A',$
+    XSIZE = 100,$
+    /ALIGN_LEFT, $
+    UNAME = 'trans_manual_step3_beam_center_pixel_value')    
+  row3 = WIDGET_BASE(bc_base,$
+    /ROW)
+    
+  label = WIDGET_LABEL(row3,$
+    VALUE = 'Counts :')
+    
+  value = WIDGET_LABEL(row3,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    /ALIGN_LEFT,$
+    UNAME = 'trans_manual_step3_beam_center_counts_value')
     
   ;Bottom Base ----------------------------------------------------------------
   bottom_base = WIDGET_BASE(base,$
