@@ -440,6 +440,8 @@ PRO launch_transmission_manual_mode_event, Event
           plot_pixel_selected_below_cursor, event, tube, pixel
           save_transmission_manual_step3_background,  EVENT=event
           
+          plot_counts_vs_tof_step3_beam_center, Event, tube, pixel
+          
           putTextFieldValue, Event, $
             'trans_manual_step3_beam_center_tube_value', $
             STRCOMPRESS(tube,/REMOVE_ALL)

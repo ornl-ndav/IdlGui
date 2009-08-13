@@ -189,7 +189,7 @@ PRO plot_transmission_step3_bottom_plots, Event
     FIND_BY_UNAME='trans_manual_step3_counts_vs_pixel_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-  plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+  PLOT, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
     TITLE = 'Counts vs pixel integrated over tube', $
     XTICKS = N_ELEMENTS(counts_vs_y)-1, $
     PSYM = -1
@@ -269,7 +269,7 @@ PRO plot_pixel_selected_below_cursor, event, tube, pixel
   PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
-
+  
   color = 0
   
   PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
@@ -277,5 +277,29 @@ PRO plot_pixel_selected_below_cursor, event, tube, pixel
   
   PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color
   PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+END
 
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_tof_step3_beam_center, Event, tube, pixel
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  zoom_data = (*(*global).step3_3d_data) ;[tof,pixel,tube]
+  
+  new_tube = tube - (*global).step3_tube_min
+  new_pixel = pixel - (*global).step3_pixel_min
+  
+  data = zoom_data[*,new_pixel,new_tube]
+  
+  id = WIDGET_INFO(event.top,$
+    FIND_BY_UNAME='trans_manual_step3_counts_vs_tof_plot')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  PLOT, data, XSTYLE=1, XTITLE='Bin #', YTITLE='Counts', $
+    TITLE = 'Counts vs bin # for Beam Center Selected', $
+    PSYM = -1
+  
 END
