@@ -408,6 +408,7 @@ PRO launch_transmission_manual_mode_event, Event
       plot_transmission_step3_scale, Event
       plot_transmission_step3_main_plot, Event
       plot_transmission_step3_bottom_plots, Event
+      save_transmission_manual_step3_background,  EVENT=event
       
     END
     

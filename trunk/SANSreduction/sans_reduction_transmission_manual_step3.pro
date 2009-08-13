@@ -50,7 +50,7 @@ PRO plot_transmission_step3_scale, Event
   tube_max = FIX(getTextFieldValue(Event,'trans_manual_step2_tube_max'))
   pixel_min = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_min'))
   pixel_max = FIX(getTextFieldValue(Event,'trans_manual_step2_pixel_max'))
-
+  
   tube_diff = (tube_max - tube_min)
   IF (~isOdd(tube_diff)) THEN BEGIN
     tube_max++
@@ -60,7 +60,7 @@ PRO plot_transmission_step3_scale, Event
   IF (~isOdd(pixel_diff)) THEN BEGIN
     pixel_max++
   ENDIF
-
+  
   xtick = tube_max - tube_min + 1
   ytick = pixel_max - pixel_min + 1
   
@@ -174,7 +174,6 @@ PRO plot_transmission_step3_bottom_plots, Event
   ;plot data
   ;Counts vs tube (integrated over y)
   x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + (*global).step3_tube_min
-  help, counts_vs_x
   id = WIDGET_INFO(Event.top,$
     FIND_BY_UNAME='trans_manual_step3_counts_vs_tube_plot')
   WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -197,3 +196,22 @@ PRO plot_transmission_step3_bottom_plots, Event
     
 END
 
+;------------------------------------------------------------------------------
+PRO save_transmission_manual_step3_background,  EVENT=event
+
+  uname = 'manual_transmission_step3_draw'
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  ;select plot area
+  id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  background = TVRD(TRUE=3)
+  geometry = WIDGET_INFO(id,/GEOMETRY)
+  xsize   = geometry.xsize
+  ysize   = geometry.ysize
+  
+  DEVICE, copy =[0, 0, xsize, ysize, 0, 0, id_value]
+  (*(*global).step3_background) = background
+  
+END
