@@ -169,12 +169,12 @@ PRO launch_transmission_manual_mode_event, Event
         (*global).trans_manual_3dview_status = 'disable'
         display_trans_manual_step2_3Dview_button, Event, $
           MODE= (*global).trans_manual_3dview_status
-
+          
         save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
           working_with_tube='neither'
         save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
           working_with_pixel='neither'
-
+          
         (*global).need_to_reset_trans_step2 = 0
         
       ENDIF ELSE BEGIN
@@ -197,7 +197,11 @@ PRO launch_transmission_manual_mode_event, Event
         (*global).trans_manual_3dview_status = 'disable'
         display_trans_manual_step2_3Dview_button, Event, $
           MODE= (*global).trans_manual_3dview_status
-          
+        putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+        putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+          'N/A'
+        activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+        
         IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tube 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
         ENDIF ElSE BEGIN ;working with tube 2
@@ -240,7 +244,11 @@ PRO launch_transmission_manual_mode_event, Event
         (*global).trans_manual_3dview_status = 'disable'
         display_trans_manual_step2_3Dview_button, Event, $
           MODE= (*global).trans_manual_3dview_status
-          
+        putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+        putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+          'N/A'
+        activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+        
         (*global).left_button_clicked = 1
         IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
           plot_counts_vs_pixel_step2_pixel_selection, Event, pixel=1
@@ -284,6 +292,10 @@ PRO launch_transmission_manual_mode_event, Event
       (*global).trans_manual_3dview_status = 'disable'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+      putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+        'N/A'
+      activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
@@ -293,6 +305,10 @@ PRO launch_transmission_manual_mode_event, Event
       (*global).trans_manual_3dview_status = 'disable'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+      putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+        'N/A'
+      activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
@@ -303,6 +319,10 @@ PRO launch_transmission_manual_mode_event, Event
       (*global).trans_manual_3dview_status = 'disable'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+      putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+        'N/A'
+      activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
@@ -312,6 +332,10 @@ PRO launch_transmission_manual_mode_event, Event
       (*global).trans_manual_3dview_status = 'disable'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+      putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+        'N/A'
+      activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
