@@ -201,6 +201,7 @@ PRO launch_transmission_manual_mode_event, Event
         putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
           'N/A'
         activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+        (*global).trans_manual_step3_refresh = 1
         
         IF ((*global).working_with_tube EQ 1) THEN BEGIN ;working with tube 1
           plot_counts_vs_tube_step2_tube_selection, Event, tube=1
@@ -248,6 +249,7 @@ PRO launch_transmission_manual_mode_event, Event
         putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
           'N/A'
         activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+        (*global).trans_manual_step3_refresh = 1
         
         (*global).left_button_clicked = 1
         IF ((*global).working_with_pixel EQ 1) THEN BEGIN ;working with pixel 1
@@ -296,6 +298,7 @@ PRO launch_transmission_manual_mode_event, Event
       putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
         'N/A'
       activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+      (*global).trans_manual_step3_refresh = 1
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
@@ -309,6 +312,7 @@ PRO launch_transmission_manual_mode_event, Event
       putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
         'N/A'
       activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+      (*global).trans_manual_step3_refresh = 1
       plot_counts_vs_tube_step2_tube_selection_manual_input, Event
     END
     
@@ -323,6 +327,7 @@ PRO launch_transmission_manual_mode_event, Event
       putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
         'N/A'
       activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+      (*global).trans_manual_step3_refresh = 1
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
@@ -336,6 +341,7 @@ PRO launch_transmission_manual_mode_event, Event
       putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
         'N/A'
       activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+      (*global).trans_manual_step3_refresh = 1
       plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
     END
     
@@ -356,6 +362,7 @@ PRO launch_transmission_manual_mode_event, Event
       (*global).trans_manual_3dview_status = 'off'
       display_trans_manual_step2_3Dview_button, Event, $
         MODE= (*global).trans_manual_3dview_status
+      (*global).trans_manual_step3_refresh = 1
       activate_widget, Event, 'trans_manual_step2_go_to_next_step', 1
     END
     
@@ -443,11 +450,16 @@ PRO launch_transmission_manual_mode_event, Event
       
       plot_transmission_step3_scale, Event
       plot_transmission_step3_main_plot, Event
-      replot_pixel_selected_below_cursor, event
-      plot_counts_vs_tof_step3_beam_center, Event
       plot_transmission_step3_bottom_plots, Event
       save_transmission_manual_step3_background,  EVENT=event
       
+      IF ((*global).trans_manual_step3_refresh EQ 1) THEN BEGIN
+        (*global).trans_manual_step3_refresh = 0
+      ENDIF ELSE BEGIN
+        plot_counts_vs_tof_step3_beam_center, Event
+        replot_pixel_selected_below_cursor, event
+        (*global).trans_manual_step3_refresh = 0
+      ENDELSE
       
     END
     
