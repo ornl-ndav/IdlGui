@@ -252,7 +252,7 @@ PRO plot_pixel_below_cursor, Event, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_pixel_selectd_below_cursor, event, tube, pixel
+PRO plot_pixel_selected_below_cursor, event, tube, pixel
 
   ;get global structure
   WIDGET_CONTROL,event.top,GET_UVALUE=global
@@ -269,5 +269,13 @@ PRO plot_pixel_selectd_below_cursor, event, tube, pixel
   PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+
+  color = 0
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
 
 END
