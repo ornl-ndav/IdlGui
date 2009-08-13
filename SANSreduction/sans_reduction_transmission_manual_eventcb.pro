@@ -436,10 +436,20 @@ PRO launch_transmission_manual_mode_event, Event
         
         IF (event.press EQ 1) THEN BEGIN ;pressed button
         
-             plot_transmission_step3_main_plot, Event 
+          plot_transmission_step3_main_plot, Event
           plot_pixel_selectd_below_cursor, event, tube, pixel
           save_transmission_manual_step3_background,  EVENT=event
           
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_tube_value', $
+            STRCOMPRESS(tube,/REMOVE_ALL)
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_pixel_value', $
+            STRCOMPRESS(pixel,/REMOVE_ALL)
+          putTextFieldValue, Event, $
+            'trans_manual_step3_beam_center_counts_value', $
+            STRCOMPRESS(counts,/REMOVE_ALL)
+            
         ENDIF ELSE BEGIN
         
           plot_pixel_below_cursor, Event, tube, pixel
