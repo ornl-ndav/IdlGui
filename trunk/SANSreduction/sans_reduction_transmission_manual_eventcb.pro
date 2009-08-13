@@ -131,6 +131,7 @@ PRO launch_transmission_manual_mode_event, Event
     ;move on to step2 button
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='move_to_trans_manual_step2'): BEGIN
+      
       map_base, Event, 'manual_transmission_step1', 0
       ;change title
       title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
@@ -145,10 +146,6 @@ PRO launch_transmission_manual_mode_event, Event
       
         refresh_trans_manual_step2_plots_counts_vs_x_and_y, Event
         
-        save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
-          working_with_tube='neither'
-        save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
-          working_with_pixel='neither'
         ;;same thing for this
         x_min_data = (*global).trans_manual_step2_top_plot_xmin_data
         putTextFieldValue, Event, 'trans_manual_step2_tube_min', $
@@ -163,6 +160,21 @@ PRO launch_transmission_manual_mode_event, Event
         x_max_data = (*global).trans_manual_step2_bottom_plot_xmax_data
         putTextFieldValue, Event, 'trans_manual_step2_pixel_max', $
           STRCOMPRESS(x_max_data,/REMOVE_ALL)
+          
+        putTextFieldValue, Event, 'trans_manual_step2_background_value', 'N/A'
+        putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
+          'N/A'
+        activate_widget, Event, 'trans_manual_step2_go_to_next_step', 0
+        
+        (*global).trans_manual_3dview_status = 'disable'
+        display_trans_manual_step2_3Dview_button, Event, $
+          MODE= (*global).trans_manual_3dview_status
+
+        save_transmission_manual_step2_top_plot_background,  EVENT=Event, $
+          working_with_tube='neither'
+        save_transmission_manual_step2_bottom_plot_background,  EVENT=Event, $
+          working_with_pixel='neither'
+
         (*global).need_to_reset_trans_step2 = 0
         
       ENDIF ELSE BEGIN
