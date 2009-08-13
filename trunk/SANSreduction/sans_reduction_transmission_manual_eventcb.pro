@@ -455,122 +455,162 @@ PRO launch_transmission_manual_mode_event, Event
       
       IF ((*global).trans_manual_step3_refresh EQ 1) THEN BEGIN
         (*global).trans_manual_step3_refresh = 0
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_tube_value', 'N/A'
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_pixel_value', 'N/A'
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_counts_value', 'N/A'
-            
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_tube_value', 'N/A'
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_pixel_value', 'N/A'
+        putTextFieldValue, Event, $
+          'trans_manual_step3_beam_center_counts_value', 'N/A'
+        display_step3_create_trans_button, Event, mode='disable'
       ENDIF ELSE BEGIN
-        plot_counts_vs_tof_step3_beam_center, Event
-        replot_pixel_selected_below_cursor, event
-        (*global).trans_manual_step3_refresh = 0
-      ENDELSE
-      
-      display_step3_create_trans_button, Event, mode='disable'
-      
-    END
-    
-    ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
-    
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME = 'manual_transmission_step3_draw'): BEGIN
-      
-      error = 0
-      CATCH, error
-      IF (error NE 0) THEN BEGIN ;press button or othe events
-        CATCH,/CANCEL
+        IF (getTextFieldValue(Event,$
+          'trans_manual_step3_beam_center_tube_value') NE 'N/A') THEN BEGIN
+            display_step3_create_trans_button, Event, mode='off'
+          ENDIF ELSE BEGIN
+            display_step3_create_trans_button, Event, mode='disable'
+          ENDELSE
+          plot_counts_vs_tof_step3_beam_center, Event
+          replot_pixel_selected_below_cursor, event
+          (*global).trans_manual_step3_refresh = 0
+        ENDELSE
         
-        tube  = getTransManualStep3Tube(Event)
-        pixel = getTransManualStep3Pixel(Event)
-        counts = getTransManualStep3Counts(Event, tube, pixel)
-        putTextFieldValue, Event, 'trans_manual_step3_tube_value', $
-          STRCOMPRESS(tube,/REMOVE_ALL)
-        putTextFieldValue, Event, 'trans_manual_step3_pixel_value', $
-          STRCOMPRESS(pixel,/REMOVE_ALL)
-        putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
-          STRCOMPRESS(counts,/REMOVE_ALL)
+      END
+      
+      ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
+      
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME = 'manual_transmission_step3_draw'): BEGIN
+        
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN ;press button or othe events
+          CATCH,/CANCEL
           
-        plot_trans_manual_step3_background, Event
-        
-        IF (event.press EQ 1) THEN BEGIN ;pressed button
-        
-          plot_transmission_step3_main_plot, Event
-          plot_pixel_selected_below_cursor, event, tube, pixel
-          save_transmission_manual_step3_background,  EVENT=event
-          
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_tube_value', $
+          tube  = getTransManualStep3Tube(Event)
+          pixel = getTransManualStep3Pixel(Event)
+          counts = getTransManualStep3Counts(Event, tube, pixel)
+          putTextFieldValue, Event, 'trans_manual_step3_tube_value', $
             STRCOMPRESS(tube,/REMOVE_ALL)
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_pixel_value', $
+          putTextFieldValue, Event, 'trans_manual_step3_pixel_value', $
             STRCOMPRESS(pixel,/REMOVE_ALL)
-          putTextFieldValue, Event, $
-            'trans_manual_step3_beam_center_counts_value', $
+          putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
             STRCOMPRESS(counts,/REMOVE_ALL)
             
-          plot_counts_vs_tof_step3_beam_center, Event
-          
-        ENDIF ELSE BEGIN
-        
-          plot_pixel_below_cursor, Event, tube, pixel
-          
-        ENDELSE
-        
-        
-      ENDIF ELSE BEGIN ;endif of catch statement
-      
-        IF (event.enter EQ 1) THEN BEGIN
-          id = WIDGET_INFO(Event.top,$
-            find_by_uname='manual_transmission_step3_draw')
-          WIDGET_CONTROL, id, GET_VALUE=id_value
-          WSET, id_value
-          standard = 31
-          DEVICE, CURSOR_STANDARD=standard
-        ENDIF ELSE BEGIN
-          putTextFieldValue, Event, 'trans_manual_step3_tube_value', 'N/A'
-          putTextFieldValue, Event, 'trans_manual_step3_pixel_value', 'N/A'
-          putTextFieldValue, Event, 'trans_manual_step3_counts_value', 'N/A'
           plot_trans_manual_step3_background, Event
-        ENDELSE
-      ENDELSE ;enf of catch statement
-      
-    END
-    
-    ;linear and logarithmic buttons
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='transmission_manual_step3_linear'): BEGIN
-      replot_transmission_step3_main_plot, Event
-      replot_pixel_selected_below_cursor, event
-      save_transmission_manual_step3_background,  EVENT=event
-    END
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='transmission_manual_step3_log'): BEGIN
-      replot_transmission_step3_main_plot, Event
-      replot_pixel_selected_below_cursor, event
-      save_transmission_manual_step3_background,  EVENT=event
-    END
-    
-    ;go back to step2 button
-    ;move on to step3 button
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='trans_manual_step3_previous_button'): BEGIN
-      map_base, Event, 'manual_transmission_step2', 1
-      ;change title
-      title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
-      title += ' and Transmission Intensity'
-      ChangeTitle, Event, uname='transmission_manual_mode_base', title
-      
-      display_trans_manual_step2_3Dview_button, Event, $
-        MODE= (*global).trans_manual_3dview_status
+          
+          IF (event.press EQ 1) THEN BEGIN ;pressed button
+          
+            plot_transmission_step3_main_plot, Event
+            plot_pixel_selected_below_cursor, event, tube, pixel
+            save_transmission_manual_step3_background,  EVENT=event
+            
+            putTextFieldValue, Event, $
+              'trans_manual_step3_beam_center_tube_value', $
+              STRCOMPRESS(tube,/REMOVE_ALL)
+            putTextFieldValue, Event, $
+              'trans_manual_step3_beam_center_pixel_value', $
+              STRCOMPRESS(pixel,/REMOVE_ALL)
+            putTextFieldValue, Event, $
+              'trans_manual_step3_beam_center_counts_value', $
+              STRCOMPRESS(counts,/REMOVE_ALL)
+              
+            plot_counts_vs_tof_step3_beam_center, Event
+            display_step3_create_trans_button, Event, mode='off'
+            
+          ENDIF ELSE BEGIN
+          
+            plot_pixel_below_cursor, Event, tube, pixel
+            
+          ENDELSE
+          
+          
+        ENDIF ELSE BEGIN ;endif of catch statement
         
-      plot_counts_vs_tube_step2_tube_selection_manual_input, Event
-      plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
+          IF (event.enter EQ 1) THEN BEGIN
+            id = WIDGET_INFO(Event.top,$
+              find_by_uname='manual_transmission_step3_draw')
+            WIDGET_CONTROL, id, GET_VALUE=id_value
+            WSET, id_value
+            standard = 31
+            DEVICE, CURSOR_STANDARD=standard
+          ENDIF ELSE BEGIN
+            putTextFieldValue, Event, 'trans_manual_step3_tube_value', 'N/A'
+            putTextFieldValue, Event, 'trans_manual_step3_pixel_value', 'N/A'
+            putTextFieldValue, Event, 'trans_manual_step3_counts_value', 'N/A'
+            plot_trans_manual_step3_background, Event
+          ENDELSE
+        ENDELSE ;enf of catch statement
+        
+      END
       
-    END
+      ;linear and logarithmic buttons
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_manual_step3_linear'): BEGIN
+        replot_transmission_step3_main_plot, Event
+        replot_pixel_selected_below_cursor, event
+        save_transmission_manual_step3_background,  EVENT=event
+      END
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_manual_step3_log'): BEGIN
+        replot_transmission_step3_main_plot, Event
+        replot_pixel_selected_below_cursor, event
+        save_transmission_manual_step3_background,  EVENT=event
+      END
+      
+      ;go back to step2 button
+      ;move on to step3 button
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='trans_manual_step3_previous_button'): BEGIN
+        map_base, Event, 'manual_transmission_step2', 1
+        ;change title
+        title = 'Transmission Calculation -> STEP 2/3: Calculate Background'
+        title += ' and Transmission Intensity'
+        ChangeTitle, Event, uname='transmission_manual_mode_base', title
+        
+        display_trans_manual_step2_3Dview_button, Event, $
+          MODE= (*global).trans_manual_3dview_status
+          
+        plot_counts_vs_tube_step2_tube_selection_manual_input, Event
+        plot_counts_vs_pixel_step2_pixel_selection_manual_input, Event
+        
+      END
+      
+      ;Create Transmission file button
+      WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME = 'trans_manual_step3_create_trans_file'): BEGIN
+        
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN ;press button or othe events
+          CATCH,/CANCEL
+          
+          IF (getTextFieldValue(Event,'trans_manual_step3_beam_center_tube_value') NE 'N/A') THEN BEGIN
+          
+            IF (event.press EQ 1) THEN BEGIN ;pressed button
+              display_step3_create_trans_button, Event, mode='on'
+            ENDIF
+            
+            IF (event.release EQ 1) THEN BEGIN ;left button release
+              display_step3_create_trans_button, Event, mode='off'
+            ENDIF
+            
+          ENDIF
+          
+        ENDIF ELSE BEGIN ;endif of catch statement
+        
+          IF (event.enter EQ 1) THEN BEGIN
+            id = WIDGET_INFO(Event.top,$
+              find_by_uname='trans_manual_step3_create_trans_file')
+            WIDGET_CONTROL, id, GET_VALUE=id_value
+            WSET, id_value
+            standard = 58
+            DEVICE, CURSOR_STANDARD=standard
+          ENDIF
+        ENDELSE ;enf of catch statement
+        
+      END
+      
+      ELSE:
+    ENDCASE
     
-    ELSE:
-  ENDCASE
-  
-END
+  END
