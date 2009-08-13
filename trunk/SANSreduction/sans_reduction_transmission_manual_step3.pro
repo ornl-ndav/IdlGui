@@ -301,5 +301,43 @@ PRO plot_counts_vs_tof_step3_beam_center, Event, tube, pixel
   PLOT, data, XSTYLE=1, XTITLE='Bin #', YTITLE='Counts', $
     TITLE = 'Counts vs bin # for Beam Center Selected', $
     PSYM = -1
+    
+END
+
+;------------------------------------------------------------------------------
+PRO replot_pixel_selected_below_cursor, event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  tube = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_tube_value')
+  pixel = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_pixel_value')
+    
+  IF (tube EQ 'N/A') THEN RETURN
+  tube = FIX(tube)
+  pixel = FIX(pixel)
+  
+  xmin_device = getStep3TubeDeviceFromData(Event, tube)
+  xmax_device = getStep3TubeDeviceFromData(Event, tube+1)
+  ymin_device = getStep3PixelDeviceFromData(Event, pixel)
+  ymax_device = getStep3PixelDeviceFromData(Event, pixel+1)
+  
+  color = 250
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+  color = 0
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   
 END
