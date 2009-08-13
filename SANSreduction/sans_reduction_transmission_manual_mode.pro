@@ -228,6 +228,7 @@ PRO launch_transmission_manual_mode_base, main_event
     step3_tube_max: 0, $
     step3_pixel_min: 0, $
     step3_pixel_max: 0, $
+    step3_background: PTR_NEW(0L), $
     
     x0y0x1y1: INTARR(4), $
     main_event: main_event})
