@@ -376,3 +376,24 @@ PRO replot_pixel_selected_below_cursor, event
   PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
   
 END
+
+;------------------------------------------------------------------------------
+PRO display_step3_create_trans_button, Event, mode=mode
+
+  uname = 'trans_manual_step3_create_trans_file'
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+  id = WIDGET_INFO(Event.top,find_by_uname=uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  
+  CASE (mode) OF
+    'on': image = 'SANSreduction_images/create_transmission_file_on.png'
+    'off': image = 'SANSreduction_images/create_transmission_file_off.png'
+    'disable': image = 'SANSreduction_images/create_transmission_file_disable.png'
+  ENDCASE
+  
+  view_png = READ_PNG(image)
+  TV, view_png, 0, 0, /true
+  
+END

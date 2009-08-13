@@ -461,6 +461,8 @@ PRO launch_transmission_manual_mode_event, Event
         (*global).trans_manual_step3_refresh = 0
       ENDELSE
       
+      display_step3_create_trans_button, Event, mode='disable'
+      
     END
     
     ;STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 - STEP3 -
