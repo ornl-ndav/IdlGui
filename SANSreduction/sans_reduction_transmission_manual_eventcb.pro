@@ -482,10 +482,14 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step3_linear'): BEGIN
       replot_transmission_step3_main_plot, Event
+                replot_pixel_selected_below_cursor, event
+      save_transmission_manual_step3_background,  EVENT=event
     END
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step3_log'): BEGIN
       replot_transmission_step3_main_plot, Event
+      replot_pixel_selected_below_cursor, event
+      save_transmission_manual_step3_background,  EVENT=event
     END
     
     ;go back to step2 button
