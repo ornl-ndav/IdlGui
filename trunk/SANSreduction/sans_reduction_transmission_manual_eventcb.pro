@@ -431,12 +431,21 @@ PRO launch_transmission_manual_mode_event, Event
           STRCOMPRESS(pixel,/REMOVE_ALL)
         putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
           STRCOMPRESS(counts,/REMOVE_ALL)
-
+          
         plot_trans_manual_step3_background, Event
-        plot_pixel_below_cursor, Event, tube, pixel
         
         IF (event.press EQ 1) THEN BEGIN ;pressed button
-        ENDIF
+        
+             plot_transmission_step3_main_plot, Event 
+          plot_pixel_selectd_below_cursor, event, tube, pixel
+          save_transmission_manual_step3_background,  EVENT=event
+          
+        ENDIF ELSE BEGIN
+        
+          plot_pixel_below_cursor, Event, tube, pixel
+          
+        ENDELSE
+        
         
       ENDIF ELSE BEGIN ;endif of catch statement
       

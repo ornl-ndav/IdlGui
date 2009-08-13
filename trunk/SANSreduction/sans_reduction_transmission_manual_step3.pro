@@ -250,3 +250,24 @@ PRO plot_pixel_below_cursor, Event, tube, pixel
   PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_pixel_selectd_below_cursor, event, tube, pixel
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  xmin_device = getStep3TubeDeviceFromData(Event, tube)
+  xmax_device = getStep3TubeDeviceFromData(Event, tube+1)
+  ymin_device = getStep3PixelDeviceFromData(Event, pixel)
+  ymax_device = getStep3PixelDeviceFromData(Event, pixel+1)
+  
+  color = 250
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+
+END
