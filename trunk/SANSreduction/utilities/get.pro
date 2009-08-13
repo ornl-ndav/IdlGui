@@ -264,14 +264,28 @@ FUNCTION getTransManualStep1Counts, Event, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTransManualStep3Tube, event_x
-  x_data = FIX(event_x/16.666667)+84
+FUNCTION getTransManualStep3Tube, Event
+  event_x = Event.x
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  draw_xsize = 400.
+  tube_min =  (*global).step3_tube_min
+  tube_max = (*global).step3_tube_max + 1
+  coeff = draw_xsize / FLOAT(tube_max - tube_min)
+  x_data = FIX(FLOAT(event_x)/coeff + FLOAT(tube_min))
   RETURN, x_data
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getTransManualStep3Pixel, event_y
-  y_data = FIX(event_y/11.5385+116)
+FUNCTION getTransManualStep3Pixel, Event
+  event_y = Event.y
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  draw_ysize = 300.
+  pixel_min = (*global).step3_pixel_min
+  pixel_max = (*global).step3_pixel_max + 1
+  coeff = draw_ysize / FLOAT(pixel_max - pixel_min)
+  y_data = FIX(FLOAT(event_y)/coeff + FLOAT(pixel_min))
   RETURN, y_data
 END
 
@@ -280,12 +294,16 @@ FUNCTION getTransManualStep3Counts, Event, tube, pixel
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  new_tube = tube - (*global).step3_xoffset_plot
-  new_pixel = pixel - (*global).step3_yoffset_plot
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN RETURN, 'N/A'
+
+  new_tube = tube - (*global).step3_tube_min
+  new_pixel = pixel - (*global).step3_pixel_min
   
   tt_zoom_data = (*(*global).step3_tt_zoom_data)
   counts = tt_zoom_data[new_tube,new_pixel]
-
+  
   RETURN, FIX(counts)
 END
 
