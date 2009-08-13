@@ -144,7 +144,7 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     /COLUMN)
     
   title = WIDGET_LABEL(bc_base,$
-    VALUE = '      Beam Center       ', $
+    VALUE = '       Beam Center        ', $
     FRAME = 1)
     
   row1 = WIDGET_BASE(bc_base,$
@@ -169,7 +169,7 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     VALUE = 'N/A',$
     XSIZE = 100,$
     /ALIGN_LEFT, $
-    UNAME = 'trans_manual_step3_beam_center_pixel_value')    
+    UNAME = 'trans_manual_step3_beam_center_pixel_value')
   row3 = WIDGET_BASE(bc_base,$
     /ROW)
     
@@ -182,8 +182,17 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     /ALIGN_LEFT,$
     UNAME = 'trans_manual_step3_beam_center_counts_value')
     
-  ;Bottom Base ----------------------------------------------------------------
-  bottom_base = WIDGET_BASE(base,$
+  ;Create Transmission File logo
+  create_file = WIDGET_DRAW(column1,$
+    SCR_XSIZE = 180,$
+    SCR_YSIZE = 105,$
+    UNAME = 'trans_manual_step3_create_trans_file',$
+    /BUTTON_EVENTS, $
+    /TRACKING_EVENTS, $
+    /MOTION_EVENTS)
+    
+    ;Bottom Base ----------------------------------------------------------------
+    bottom_base = WIDGET_BASE(base,$
     YOFFSET = ysize_main + 2*yoffset - 5,$
     /COLUMN)
     
