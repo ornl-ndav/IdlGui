@@ -431,7 +431,10 @@ PRO launch_transmission_manual_mode_event, Event
           STRCOMPRESS(pixel,/REMOVE_ALL)
         putTextFieldValue, Event, 'trans_manual_step3_counts_value', $
           STRCOMPRESS(counts,/REMOVE_ALL)
-          
+
+        plot_trans_manual_step3_background, Event
+        plot_pixel_below_cursor, Event, tube, pixel
+        
         IF (event.press EQ 1) THEN BEGIN ;pressed button
         ENDIF
         
@@ -448,6 +451,7 @@ PRO launch_transmission_manual_mode_event, Event
           putTextFieldValue, Event, 'trans_manual_step3_tube_value', 'N/A'
           putTextFieldValue, Event, 'trans_manual_step3_pixel_value', 'N/A'
           putTextFieldValue, Event, 'trans_manual_step3_counts_value', 'N/A'
+          plot_trans_manual_step3_background, Event
         ENDELSE
       ENDELSE ;enf of catch statement
       

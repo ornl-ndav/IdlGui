@@ -297,7 +297,7 @@ FUNCTION getTransManualStep3Counts, Event, tube, pixel
   error = 0
   CATCH, error
   IF (error NE 0) THEN RETURN, 'N/A'
-
+  
   new_tube = tube - (*global).step3_tube_min
   new_pixel = pixel - (*global).step3_pixel_min
   
@@ -307,3 +307,41 @@ FUNCTION getTransManualStep3Counts, Event, tube, pixel
   RETURN, FIX(counts)
 END
 
+;------------------------------------------------------------------------------
+FUNCTION getStep3TubeDeviceFromData, Event, tube_data
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  tube_min = (*global).step3_tube_min
+  tube_max = (*global).step3_tube_max + 1
+  
+  offset_tube = tube_data - tube_min
+  xsize = 400.
+  
+  coeff_x = xsize / (FLOAT(tube_max) - FLOAT(tube_min))
+  
+  tube_device = FIX((offset_tube) * coeff_x)
+  
+  RETURN, tube_device
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getStep3PixelDeviceFromData, Event, pixel_data
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  pixel_max = (*global).step3_pixel_max + 1
+  pixel_min = (*global).step3_pixel_min
+  
+  offset_pixel = pixel_data - pixel_min
+  
+  ysize = 300.
+  
+  coeff_y = ysize / (FLOAT(pixel_max) - FLOAT(pixel_min))
+  
+  pixel_device = FIX((offset_pixel) * coeff_y)
+  
+  RETURN, pixel_device
+END

@@ -215,3 +215,38 @@ PRO save_transmission_manual_step3_background,  EVENT=event
   (*(*global).step3_background) = background
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step3_background, Event
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  id = WIDGET_INFO(event.top,FIND_BY_UNAME='manual_transmission_step3_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TV, (*(*global).step3_background), true=3
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_pixel_below_cursor, Event, tube, pixel
+
+  ;get global structure
+  WIDGET_CONTROL,event.top,GET_UVALUE=global
+  
+  xmin_device = getStep3TubeDeviceFromData(Event, tube)
+  xmax_device = getStep3TubeDeviceFromData(Event, tube+1)
+  ymin_device = getStep3PixelDeviceFromData(Event, pixel)
+  ymax_device = getStep3PixelDeviceFromData(Event, pixel+1)
+  
+  color = 100
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0
+  
+END
