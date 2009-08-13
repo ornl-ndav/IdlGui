@@ -123,12 +123,24 @@ PRO plot_transmission_step3_main_plot, Event
   (*(*global).step3_tt_zoom_data) = tt_zoom_data
   rtt_zoom_data = CONGRID(tt_zoom_data, 400, 300)
   (*(*global).step3_rtt_zoom_data) = rtt_zoom_data
-  
+
+  data = rtt_zoom_data
+
+  IF (~isTranManualStep3LinSelected(Event)) THEN BEGIN ;log mode
+    index = WHERE(data EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      data[index] = !VALUES.D_NAN
+    ENDIF
+    Data_log = ALOG10(Data)
+    Data_log_bytscl = BYTSCL(Data_log,/NAN)
+    data = data_log_bytscl
+  ENDIF
+
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step3_draw')
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  TVSCL, rtt_zoom_data
+  TVSCL, data
   
 END
 
@@ -281,11 +293,20 @@ PRO plot_pixel_selected_below_cursor, event, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_counts_vs_tof_step3_beam_center, Event, tube, pixel
+PRO plot_counts_vs_tof_step3_beam_center, Event
 
   ;get global structure
   WIDGET_CONTROL,event.top,GET_UVALUE=global
   
+  tube = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_tube_value')
+  pixel = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_pixel_value')
+    
+  IF (tube EQ 'N/A') THEN RETURN
+  tube = FIX(tube)
+  pixel = FIX(pixel)
+
   zoom_data = (*(*global).step3_3d_data) ;[tof,pixel,tube]
   
   new_tube = tube - (*global).step3_tube_min

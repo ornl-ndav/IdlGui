@@ -407,8 +407,11 @@ PRO launch_transmission_manual_mode_event, Event
       
       plot_transmission_step3_scale, Event
       plot_transmission_step3_main_plot, Event
+      replot_pixel_selected_below_cursor, event
+      plot_counts_vs_tof_step3_beam_center, Event
       plot_transmission_step3_bottom_plots, Event
       save_transmission_manual_step3_background,  EVENT=event
+      
       
     END
     
@@ -440,8 +443,6 @@ PRO launch_transmission_manual_mode_event, Event
           plot_pixel_selected_below_cursor, event, tube, pixel
           save_transmission_manual_step3_background,  EVENT=event
           
-          plot_counts_vs_tof_step3_beam_center, Event, tube, pixel
-          
           putTextFieldValue, Event, $
             'trans_manual_step3_beam_center_tube_value', $
             STRCOMPRESS(tube,/REMOVE_ALL)
@@ -452,6 +453,8 @@ PRO launch_transmission_manual_mode_event, Event
             'trans_manual_step3_beam_center_counts_value', $
             STRCOMPRESS(counts,/REMOVE_ALL)
             
+          plot_counts_vs_tof_step3_beam_center, Event
+          
         ENDIF ELSE BEGIN
         
           plot_pixel_below_cursor, Event, tube, pixel
@@ -482,7 +485,7 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step3_linear'): BEGIN
       replot_transmission_step3_main_plot, Event
-                replot_pixel_selected_below_cursor, event
+      replot_pixel_selected_below_cursor, event
       save_transmission_manual_step3_background,  EVENT=event
     END
     WIDGET_INFO(Event.top, $
