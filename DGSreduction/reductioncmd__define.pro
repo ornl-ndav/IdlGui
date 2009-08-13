@@ -547,14 +547,6 @@ function ReductionCmd::Check
       msg = [msg,['If you are normalising to the monitor, you need to specify a monitor integration range.']]
     ENDIF
   ENDIF
-
-  ; If we say we want to apply a vanadium mask, then we need to specify a normalisation run.
-  IF (self.mask EQ 1) THEN BEGIN
-    IF (STRLEN(self.normalisation) LT 1) THEN BEGIN
-      ok = 0
-      msg = [msg,['If you want to apply a Vanadium Mask, please supply a Run Number for the Normalisation field.']]
-    ENDIF
-  ENDIF
   
   ; And the other way round, if you specify a norm run then you need to turn the mask on!
   IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
