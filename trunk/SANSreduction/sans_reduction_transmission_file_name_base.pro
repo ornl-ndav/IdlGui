@@ -35,7 +35,7 @@
 PRO transmission_file_name_base_event, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
   
   CASE Event.id OF
   
@@ -60,6 +60,11 @@ PRO transmission_file_name_base_event, Event
     ;file name text fiedl
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_file_name'): BEGIN
       check_validity_of_trans_file_name_go_button, Event
+    END
+    
+    ;ok button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_ok_button'): BEGIN
+      create_trans_file, Event
     END
     
     ELSE:
@@ -147,9 +152,9 @@ END
 PRO trans_file_name_base_browse_file_name, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
   
-  main_global = (*global).main_global
+  main_global = (*file_global).main_global
   
   title     = 'Select a file to overwrite'
   path      = (*main_global).output_path
@@ -166,7 +171,7 @@ PRO trans_file_name_base_browse_file_name, Event
     putTextFieldValue, Event, 'trans_file_name_base_file_name', file_basename
     putNewButtonValue, Event, 'trans_file_name_base_path_button', new_path
     
-    (*global).main_global = main_global
+    (*file_global).main_global = main_global
     
   ENDIF
   
@@ -176,9 +181,9 @@ END
 PRO trans_file_name_base_path_file_name, Event
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
   
-  main_global = (*global).main_global
+  main_global = (*file_global).main_global
   
   title     = 'Select where you want to create the transmission file'
   path      = (*main_global).output_path
@@ -191,7 +196,7 @@ PRO trans_file_name_base_path_file_name, Event
   
     (*main_global).output_path = path[0]
     putNewButtonValue, Event, 'trans_file_name_base_path_button', path[0]
-    (*global).main_global = main_global
+    (*file_global).main_global = main_global
     
   ENDIF
   
@@ -229,12 +234,69 @@ PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   
   WIDGET_CONTROL, wBase1, /REALIZE
   
-  global = PTR_NEW({ wbase: wbase1,$
+  file_global = PTR_NEW({ wbase: wbase1,$
+    global_trans: global, $
     main_global: main_global})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global
+  WIDGET_CONTROL, wBase1, SET_UVALUE = file_global
   
   XMANAGER, "transmission_file_name_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
 END
+
+;------------------------------------------------------------------------------
+PRO create_trans_file, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
+  
+  ;Create trans file array
+  create_trans_array, Event
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO create_trans_array, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
+  
+  ;retrieve info about pixel selected and file name
+  global_trans = (*file_global).global_trans
+  bank_tube_pixel = (*global_trans).beam_center_bank_tube_pixel
+  bank = bank_tube_pixel[0]
+  tube = bank_tube_pixel[1]
+  pixel = bank_tube_pixel[2]
+  ;print, format='("bank: ",i4,", tube: ",i4,", pixel: ",i4)',bank,tube,pixel
+  main_global = (*file_global).main_global
+  nexus_file_name = (*main_global).data_nexus_file_name
+  
+  ;retrieve distance sample_moderator
+  distance_moderator_sample = $
+  retrieve_distance_moderator_sample(nexus_file_name)
+  print, 'Distance moderator sample: ' + string(distance_moderator_sample)
+  
+  distance_sample_beam_center_pixel = $
+  retrieve_distance_bc_pixel_sample(nexus_file_name, bank, pixel)
+  print, 'Distance sample pixel: ' + string(distance_sample_beam_center_pixel)
+  
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
