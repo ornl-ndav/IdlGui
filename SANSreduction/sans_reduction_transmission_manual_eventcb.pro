@@ -531,14 +531,15 @@ PRO launch_transmission_manual_mode_event, Event
               find_by_uname='manual_transmission_step3_draw')
             WIDGET_CONTROL, id, GET_VALUE=id_value
             WSET, id_value
-            standard = 31
             DEVICE, CURSOR_STANDARD=standard
+            standard = 31
           ENDIF ELSE BEGIN
             putTextFieldValue, Event, 'trans_manual_step3_tube_value', 'N/A'
             putTextFieldValue, Event, 'trans_manual_step3_pixel_value', 'N/A'
             putTextFieldValue, Event, 'trans_manual_step3_counts_value', 'N/A'
             plot_trans_manual_step3_background, Event
           ENDELSE
+          
         ENDELSE ;enf of catch statement
         
       END
@@ -598,14 +599,16 @@ PRO launch_transmission_manual_mode_event, Event
           
         ENDIF ELSE BEGIN ;endif of catch statement
         
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='trans_manual_step3_create_trans_file')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
           IF (event.enter EQ 1) THEN BEGIN
-            id = WIDGET_INFO(Event.top,$
-              find_by_uname='trans_manual_step3_create_trans_file')
-            WIDGET_CONTROL, id, GET_VALUE=id_value
-            WSET, id_value
             standard = 58
-            DEVICE, CURSOR_STANDARD=standard
-          ENDIF
+          ENDIF ELSE BEGIN
+            standard = 31
+          ENDELSE
+          DEVICE, CURSOR_STANDARD=standard
         ENDELSE ;enf of catch statement
         
       END
