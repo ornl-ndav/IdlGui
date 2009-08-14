@@ -188,6 +188,8 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     SCR_YSIZE = 105,$
     UNAME = 'trans_manual_step3_create_trans_file',$
     /BUTTON_EVENTS, $
+    TOOLTIP = 'Select the beam center pixel to be able to create the ' + $
+    'transmission file',$
     /TRACKING_EVENTS, $
     /MOTION_EVENTS)
     
