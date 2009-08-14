@@ -404,6 +404,15 @@ PRO launch_transmission_file_name_base, Event
   WIDGET_CONTROL, event.top, GET_UVALUE=global
   main_global = (*global).global
   
+  ;get info about pixel selected
+  tube = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_tube_value')
+  pixel = getTextFieldValue(Event,$
+    'trans_manual_step3_beam_center_pixel_value')
+  bank = getBankNumber(tube+1)
+
+  (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
+
   transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   
 END

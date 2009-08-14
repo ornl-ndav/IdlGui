@@ -345,3 +345,22 @@ FUNCTION getStep3PixelDeviceFromData, Event, pixel_data
   
   RETURN, pixel_device
 END
+
+;------------------------------------------------------------------------------
+FUNCTION retrieve_distance_moderator_sample, NexusFileName
+  path    = '/entry/instrument/moderator/distance/'
+  fileID  = H5F_OPEN(NexusFileName)
+  fieldID = H5D_OPEN(fileID, path)
+  distance = H5D_READ(fieldID)
+  RETURN, ABS(distance)
+END
+
+;------------------------------------------------------------------------------
+FUNCTION retrieve_distance_bc_pixel_sample, NexusFileName, bank, pixel
+  path = '/entry/instrument/bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+  path += '/distance/'
+  fileID  = H5F_OPEN(NexusFileName)
+  fieldID = H5D_OPEN(fileID, path)
+  distance_array = H5D_READ(fieldID)
+  RETURN, ABS(distance_array[pixel])
+END
