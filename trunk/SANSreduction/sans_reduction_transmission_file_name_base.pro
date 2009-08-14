@@ -49,6 +49,7 @@ PRO transmission_file_name_base_event, Event
     ;Browse button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_browse_button'): BEGIN
       trans_file_name_base_browse_file_name, Event
+      check_validity_of_trans_file_name_go_button, Event
     END
     
     ;Browse path button
@@ -56,8 +57,10 @@ PRO transmission_file_name_base_event, Event
       trans_file_name_base_path_file_name, Event
     END
     
-    
-    
+    ;file name text fiedl
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_file_name'): BEGIN
+      check_validity_of_trans_file_name_go_button, Event
+    END
     
     ELSE:
     
@@ -114,7 +117,8 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
   text = WIDGET_TEXT(row,$
     VALUE = 'N/A',$
     UNAME = 'trans_file_name_base_file_name',$
-    /EDITABLE,$
+    /EDITABLE, $
+    /ALL_EVENTS, $
     XSIZE = 50)
     
   row2 = WIDGET_BASE(wBase,$
@@ -190,6 +194,22 @@ PRO trans_file_name_base_path_file_name, Event
     (*global).main_global = main_global
     
   ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO check_validity_of_trans_file_name_go_button, Event
+
+  file_name = getTextFieldValue(Event, 'trans_file_name_base_file_name')
+  s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+  
+  IF (s_file_name EQ '' OR $
+    s_file_name EQ 'N/A') THEN BEGIN
+    status = 0
+  ENDIF ELSE BEGIN
+    status = 1
+  ENDELSE
+  activate_widget, Event, 'trans_file_name_base_ok_button', status
   
 END
 
