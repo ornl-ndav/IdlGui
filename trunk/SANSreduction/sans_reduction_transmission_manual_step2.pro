@@ -301,14 +301,18 @@ PRO get_transmission_peak_tube_pixel_value, Event, array, background_value, $
   FOR tube=0,nbr_tube-1 DO BEGIN
     FOR pixel=0, nbr_pixel-1 DO BEGIN
       IF (array[tube,pixel] GT background_value) THEN BEGIN
-        addElementToArray, ARRAY=Trans_peak_tube, ELEMENT=tube
-        addElementToArray, ARRAY=Trans_peak_pixel, ELEMENT=pixel
+        trans_peak_tube = [trans_peak_tube,tube]
+        trans_peak_pixel = [trans_peak_pixel,pixel]
       ENDIF
     ENDFOR
   ENDFOR
-
-  (*(*global).trans_peak_tube) = trans_peak_tube
-  (*(*global).trans_peak_pixel) = trans_peak_pixel
+  
+  ;remove first element
+  trans_peak_tube = trans_peak_tube[1:N_ELEMENTS(trans_peak_tube)-1]
+  trans_peak_pixel = trans_peak_pixel[1:N_ELEMENTS(trans_peak_pixel)-1]
+  
+  (*(*global).trans_peak_tube) = trans_peak_tube + tube_min_offset
+  (*(*global).trans_peak_pixel) = trans_peak_pixel + pixel_min_offset
   
 END
 
