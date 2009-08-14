@@ -198,6 +198,9 @@ PRO launch_transmission_manual_mode_base, main_event
     
     need_to_reset_trans_step2: 1, $ ;will go to 1 everytime the selection of step1 changes
     
+    trans_peak_tube: PTR_NEW(0L), $
+    trans_peak_pixel: PTR_NEW(0L), $
+    
     top_plot_background_with_right_tube: PTR_NEW(0L),$
     top_plot_background_with_left_tube: PTR_NEW(0L),$
     bottom_plot_background_with_right_pixel: PTR_NEW(0L),$
