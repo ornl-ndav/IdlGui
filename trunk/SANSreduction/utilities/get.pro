@@ -356,11 +356,15 @@ FUNCTION retrieve_distance_moderator_sample, NexusFileName
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION retrieve_distance_bc_pixel_sample, NexusFileName, bank, pixel
+FUNCTION retrieve_distance_bc_pixel_sample, NexusFileName, bank, tube, pixel
   path = '/entry/instrument/bank' + STRCOMPRESS(bank,/REMOVE_ALL)
   path += '/distance/'
   fileID  = H5F_OPEN(NexusFileName)
   fieldID = H5D_OPEN(fileID, path)
   distance_array = H5D_READ(fieldID)
-  RETURN, ABS(distance_array[pixel])
+
+  ;get local_tube value within bank
+  tube_local = getTubeLocal(tube+1) ;+1 because tube 1 is supposed to be the 1st tube
+
+  RETURN, ABS(distance_array[tube_local,pixel])
 END
