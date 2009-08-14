@@ -32,11 +32,22 @@
 ;
 ;==============================================================================
 
-PRO transmission_file_name_base_eventcb, Event
+PRO transmission_file_name_base_event, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  CASE Event.id OF
+  
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_cancel'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_file_name_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ELSE:
+    
+  ENDCASE
   
 END
 
@@ -80,7 +91,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
     UNAME = 'trans_file_name_base_path_button',$
     TOOLTIP = 'Select the destination of the transmission file')
     
-    row = WIDGET_BASE(wBase,$
+  row = WIDGET_BASE(wBase,$
     /ROW)
     
   label = WIDGET_LABEL(row,$
@@ -92,10 +103,10 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
     /EDITABLE,$
     XSIZE = 50)
     
-    row2 = WIDGET_BASE(wBase,$
+  row2 = WIDGET_BASE(wBase,$
     /ROW)
     
-    xsize = 120
+  xsize = 120
   cancel = WIDGET_BUTTON(row2,$
     SCR_XSIZE = xsize,$
     VALUE = 'CANCEL',$
