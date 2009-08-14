@@ -397,3 +397,19 @@ PRO display_step3_create_trans_button, Event, mode=mode
   TV, view_png, 0, 0, /true
   
 END
+
+;------------------------------------------------------------------------------
+PRO launch_transmission_file_name_base, Event
+
+  WIDGET_CONTROL, event.top, GET_UVALUE=global
+
+trans_peak_tube = (*(*global).trans_peak_tube)
+  trans_peak_pixel = (*(*global).trans_peak_pixel)
+
+
+help, trans_peak_tube
+print, trans_peak_tube
+
+
+END
+

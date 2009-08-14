@@ -269,15 +269,47 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   
   array = counts_vs_xy[tube_min_offset:nbr_tube-tube_max_offset-1,$
     pixel_min_offset:nbr_pixel-pixel_max_offset-1]
-  ;nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
     
-  array_list = WHERE(array GE background_value)
+  get_transmission_peak_tube_pixel_value, Event, $
+    array, $
+    background_value, $
+    tube_min_offset, $
+    pixel_min_offset
+    
+  array_list = WHERE(array GT background_value)
   array_peak = array[array_list]
   transmission_intensity = TOTAL(array_peak)
   (*global).trans_manual_step2_transmission_intensity = transmission_intensity
   putTextFieldValue, Event, 'trans_manual_step2_trans_intensity_value', $
     STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
     
+END
+
+;------------------------------------------------------------------------------
+PRO get_transmission_peak_tube_pixel_value, Event, array, background_value, $
+    tube_min_offset, pixel_min_offset
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  nbr_tube = (size(array))(1)
+  nbr_pixel = (size(array))(2)
+  
+  trans_peak_tube = ['']
+  trans_peak_pixel = ['']
+  
+  FOR tube=0,nbr_tube-1 DO BEGIN
+    FOR pixel=0, nbr_pixel-1 DO BEGIN
+      IF (array[tube,pixel] GT background_value) THEN BEGIN
+        addElementToArray, ARRAY=Trans_peak_tube, ELEMENT=tube
+        addElementToArray, ARRAY=Trans_peak_pixel, ELEMENT=pixel
+      ENDIF
+    ENDFOR
+  ENDFOR
+
+  (*(*global).trans_peak_tube) = trans_peak_tube
+  (*(*global).trans_peak_pixel) = trans_peak_pixel
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -672,8 +704,6 @@ PRO trans_manual_step2_calculate_background, Event
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   putTextFieldValue, Event, 'trans_manual_step2_background_value', s_background
   (*global).trans_manual_step2_background = background
-  
-  calculate_trans_manual_step2_transmission_intensity, Event
   
 END
 
