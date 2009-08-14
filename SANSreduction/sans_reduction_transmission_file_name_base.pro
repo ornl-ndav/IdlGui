@@ -39,11 +39,25 @@ PRO transmission_file_name_base_event, Event
   
   CASE Event.id OF
   
+    ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_cancel'): BEGIN
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='transmission_file_name_base')
       WIDGET_CONTROL, id, /DESTROY
     END
+    
+    ;Browse button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_browse_button'): BEGIN
+      trans_file_name_base_browse_file_name, Event
+    END
+    
+    ;Browse path button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_path_button'): BEGIN
+      trans_file_name_base_path_file_name, Event
+    END
+    
+    
+    
     
     ELSE:
     
@@ -126,6 +140,60 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
 END
 
 ;------------------------------------------------------------------------------
+PRO trans_file_name_base_browse_file_name, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  main_global = (*global).main_global
+  
+  title     = 'Select a file to overwrite'
+  path      = (*main_global).output_path
+  file_name = DIALOG_PICKFILE(GET_PATH = new_path,$
+    PATH = path,$
+    TITLE = title,$
+    /MUST_EXIST)
+  IF (file_name[0] NE '') THEN BEGIN
+  
+    (*main_global).output_path = new_path
+    
+    file_name = file_name[0]
+    file_basename = FILE_BASENAME(file_name)
+    putTextFieldValue, Event, 'trans_file_name_base_file_name', file_basename
+    putNewButtonValue, Event, 'trans_file_name_base_path_button', new_path
+    
+    (*global).main_global = main_global
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO trans_file_name_base_path_file_name, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  main_global = (*global).main_global
+  
+  title     = 'Select where you want to create the transmission file'
+  path      = (*main_global).output_path
+  path = DIALOG_PICKFILE(/DIRECTORY, $
+    PATH = path,$
+    TITLE = title,$
+    /MUST_EXIST)
+    
+  IF (path[0] NE '') THEN BEGIN
+  
+    (*main_global).output_path = path[0]
+    putNewButtonValue, Event, 'trans_file_name_base_path_button', path[0]
+    (*global).main_global = main_global
+    
+  ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
 PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
 
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
@@ -141,13 +209,12 @@ PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   
   WIDGET_CONTROL, wBase1, /REALIZE
   
-  global_trans_file_name = PTR_NEW({ wbase: wbase1,$
+  global = PTR_NEW({ wbase: wbase1,$
     main_global: main_global})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_trans_file_name
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global
   
   XMANAGER, "transmission_file_name_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
 END
-
