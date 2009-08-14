@@ -402,14 +402,9 @@ END
 PRO launch_transmission_file_name_base, Event
 
   WIDGET_CONTROL, event.top, GET_UVALUE=global
-
-trans_peak_tube = (*(*global).trans_peak_tube)
-  trans_peak_pixel = (*(*global).trans_peak_pixel)
-
-
-help, trans_peak_tube
-print, trans_peak_tube
-
-
+  main_global = (*global).global
+  
+  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
+  
 END
 
