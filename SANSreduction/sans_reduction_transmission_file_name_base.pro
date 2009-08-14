@@ -275,13 +275,16 @@ PRO create_trans_array, Event
   
   ;retrieve distance sample_moderator
   distance_moderator_sample = $
-  retrieve_distance_moderator_sample(nexus_file_name)
-  print, 'Distance moderator sample: ' + string(distance_moderator_sample)
-  
+    retrieve_distance_moderator_sample(nexus_file_name)
   distance_sample_beam_center_pixel = $
-  retrieve_distance_bc_pixel_sample(nexus_file_name, bank, pixel)
-  print, 'Distance sample pixel: ' + string(distance_sample_beam_center_pixel)
-  
+    retrieve_distance_bc_pixel_sample(nexus_file_name, bank, pixel)
+  total_distance = distance_moderator_sample + $
+    distance_sample_beam_center_pixel
+    
+    
+    
+    
+    
 END
 
 
