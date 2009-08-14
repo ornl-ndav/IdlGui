@@ -588,7 +588,7 @@ PRO launch_transmission_manual_mode_event, Event
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         
-        IF (getTextFieldValue(Event,'trans_manual_step3_beam_center_tube_value') NE 'N/A') THEN BEGIN
+        ;IF (getTextFieldValue(Event,'trans_manual_step3_beam_center_tube_value') NE 'N/A') THEN BEGIN
         
           IF (event.press EQ 1) THEN BEGIN ;pressed button
             display_step3_create_trans_button, Event, mode='on'
@@ -599,7 +599,7 @@ PRO launch_transmission_manual_mode_event, Event
             display_step3_create_trans_button, Event, mode='off'
           ENDIF
           
-        ENDIF
+        ;ENDIF
         
       ENDIF ELSE BEGIN ;endif of catch statement
       

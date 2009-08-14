@@ -151,10 +151,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     txt_extension:   'txt',$
     txt_filter:      '*.txt',$
     txt_title:       'Browse for an TXT file',$
-    txt_path:        '~/',$
+    txt_path:        '~/results/',$
+    output_path:     '~/results/',$
     ascii_extension: 'txt',$
     ascii_filter:    '*.txt',$
-    ascii_path:      '~/',$
+    ascii_path:      '~/results/',$
     ascii_title:     'Browse for an ASCII data file',$
     xaxis:           '',$
     xaxis_units:     '',$
@@ -165,7 +166,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     Yarray:          ptr_new(0L),$
     SigmaYarray:     ptr_new(0L),$
     rtDataXY:        ptr_new(0L),$
-    ;                   ROIcolor:        [50L,50L,0L],$
     ROIcolor:        250L,$
     DrawXcoeff:      8,$
     DrawYcoeff:      8,$
@@ -182,7 +182,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     failed:          'FAILED',$
     roi_extension:   '.dat',$
     roi_filter:      '*.dat',$
-    roi_path:        '~/',$
+    roi_path:        '~/results/',$
     geo_extension:   'nxs',$
     geo_filter:      '*.nxs',$
     geo_path:        geo_path,$
@@ -193,7 +193,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     selection_extension: 'dat',$
     selection_filter: '*.dat',$
     selection_title:  'Browse for a ROI file',$
-    selection_path:   '~/',$
+    selection_path:   '~/results/',$
     RoiPixelArrayExcluded: ptr_new(0L),$
     data_nexus_file_name: '',$
     short_data_nexus_file_name: '',$
