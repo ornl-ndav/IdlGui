@@ -362,10 +362,10 @@ FUNCTION retrieve_distance_bc_pixel_sample, NexusFileName, bank, tube, pixel
   fileID  = H5F_OPEN(NexusFileName)
   fieldID = H5D_OPEN(fileID, path)
   distance_array = H5D_READ(fieldID)
-
+  
   ;get local_tube value within bank
   tube_local = getTubeLocal(tube+1) ;+1 because tube 1 is supposed to be the 1st tube
-
+  
   RETURN, ABS(distance_array[pixel,tube_local])
 END
 
@@ -376,4 +376,21 @@ FUNCTION getTOFarray, Event, NexusFileName
   fieldID = H5D_OPEN(fileID, path)
   tof_array = H5D_READ(fieldID)
   RETURN, tof_array
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getNexusRunNumber, nexus_file_name
+  fileID = h5f_open(nexus_file_name)
+  run_number_path = '/entry/run_number/'
+  error_value = 0
+  CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ''
+  ENDIF ELSE BEGIN
+    pathID     = h5d_open(fileID, run_number_path)
+    run_number = h5d_read(pathID)
+    h5d_close, pathID
+    RETURN, run_number
+  ENDELSE
 END
