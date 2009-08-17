@@ -633,7 +633,7 @@ function ReductionCmd::Generate
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
         cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
-          self.normalisation + "/" + $
+          getFirstNumber(self.normalisation) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + ".norm"
        
@@ -705,8 +705,8 @@ function ReductionCmd::Generate
     IF STRLEN(self.datatrans) GE 1 THEN $
       cmd[i] += " --data-trans-coeff=" + self.datatrans + ",0.0"
     ; transmission for norm data background
-    IF STRLEN(self.normtrans) GE 1 THEN $
-      cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
+    ;IF STRLEN(self.normtrans) GE 1 THEN $
+    ;  cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
     IF (STRLEN(self.normrange_min) GE 1 ) $
       AND (STRLEN(self.normrange_max) GE 1) THEN $
@@ -735,7 +735,7 @@ function ReductionCmd::Generate
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
           cmd[i] += self.OutputPrefix + "/" + self.instrument + "/"+ $
-          self.normalisation + "/" + $
+          getFirstNumber(self.normalisation) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
       
