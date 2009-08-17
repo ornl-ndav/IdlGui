@@ -273,8 +273,8 @@ PRO calculate_trans_manual_step2_transmission_intensity, Event
   get_transmission_peak_tube_pixel_value, Event, $
     array, $
     background_value, $
-    tube_min_offset, $
-    pixel_min_offset
+    tube_min, $
+    pixel_min
     
   array_list = WHERE(array GT background_value)
   array_peak = array[array_list]
@@ -314,6 +314,15 @@ PRO get_transmission_peak_tube_pixel_value, Event, array, background_value, $
   (*(*global).trans_peak_tube) = trans_peak_tube + tube_min_offset
   (*(*global).trans_peak_pixel) = trans_peak_pixel + pixel_min_offset
   
+;; For verification only  
+;  trans_peak_tube = (*(*global).trans_peak_tube)
+;  trans_peak_pixel = (*(*global).trans_peak_pixel)
+;  nbr = N_ELEMENTS(trans_peak_tube)
+;  FOR i=0,nbr-1 do begin
+;    print, 'tube/pixel: ' + strcompress(trans_peak_tube[i],/remove_all) + $
+;      ',' + strcompress(trans_peak_pixel[i],/remove_all)
+;  ENDFOR
+    
 END
 
 ;------------------------------------------------------------------------------

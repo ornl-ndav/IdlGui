@@ -386,7 +386,6 @@ PRO display_step3_create_trans_button, Event, mode=mode
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   
-  
   CASE (mode) OF
     'on': image = 'SANSreduction_images/create_transmission_file_on.png'
     'off': image = 'SANSreduction_images/create_transmission_file_off.png'
