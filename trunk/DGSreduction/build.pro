@@ -51,6 +51,7 @@ newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
 .compile construct_datapaths
 .compile getdetectorbankrange
 .compile GetDefaultSlurmQueue
+.compile GetFirstNumber
 
 .compile monitorjob_events
 .compile monitorjob
