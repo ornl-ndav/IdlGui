@@ -7,7 +7,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;******************************************************************************
   APPLICATION       = 'plotInstrument'
   VERSION           = '1.0.0'
- 
+  spawn, 'hostname', cpu
+  instrumentList = ["ARCS", "BSS", "CNCS", "EQSANS", "REF_L", "REF_M", "PG3", "SEQUOIA","SNAP"]
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
@@ -17,12 +18,19 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     application:  APPLICATION,$
     version:      VERSION,$
+    cpuName: cpu + ".sns.gov",$
+    instrumentList: instrumentList, $
     MainBaseSize: [30,25,800,545]})
     
-   
+
+    
+    
+    
+    
+    
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'plotInstrument - ' + VERSION
-
+  
   ;Build Main Base
   MAIN_BASE = Widget_Base(GROUP_LEADER = wGroup,$
     UNAME        = 'MAIN_BASE',$
@@ -44,7 +52,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
   
-    
+  
 END
 
 ;-----------------------------------------------------------------------------
