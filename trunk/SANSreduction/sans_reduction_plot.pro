@@ -42,7 +42,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   FAILED     = (*global).failed
   
   retrieve_error = 0
-  ;CATCH, retrieve_error
+  CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED

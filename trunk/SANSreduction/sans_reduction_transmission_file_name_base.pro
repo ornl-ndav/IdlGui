@@ -73,8 +73,9 @@ PRO transmission_file_name_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
-
+PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path, $
+    output_file_name
+    
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
@@ -119,7 +120,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
     VALUE = 'File Name:')
     
   text = WIDGET_TEXT(row,$
-    VALUE = 'N/A',$
+    VALUE = output_file_name,$
     UNAME = 'trans_file_name_base_file_name',$
     /EDITABLE, $
     ;    /ALL_EVENTS, $
@@ -210,11 +211,18 @@ PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ;provide a default outpt file name
+  nexus_file_name = (*main_global).data_nexus_file_name
+  run_number = getNexusRunNumber(nexus_file_name)
+  output_file_name = 'transmission_' + STRCOMPRESS(run_number,/REMOVE_ALL)
+  output_file_name += '.txt'
+  
   ;build gui
   wBase1 = ''
   output_path = (*main_global).output_path
-  transmission_file_name_base_gui, wBase1, main_base_geometry, output_path
-  
+  transmission_file_name_base_gui, wBase1, main_base_geometry, output_path, $
+    output_file_name
+    
   WIDGET_CONTROL, wBase1, /REALIZE
   
   file_global = PTR_NEW({ wbase: wbase1,$
