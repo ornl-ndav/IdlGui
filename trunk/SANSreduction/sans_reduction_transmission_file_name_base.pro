@@ -49,7 +49,6 @@ PRO transmission_file_name_base_event, Event
     ;Browse button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_browse_button'): BEGIN
       trans_file_name_base_browse_file_name, Event
-      check_validity_of_trans_file_name_go_button, Event
     END
     
     ;Browse path button
@@ -57,9 +56,9 @@ PRO transmission_file_name_base_event, Event
       trans_file_name_base_path_file_name, Event
     END
     
-    ;file name text fiedl
+    ;file name text field
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_file_name'): BEGIN
-      check_validity_of_trans_file_name_go_button, Event
+      create_trans_file, Event
     END
     
     ;ok button
@@ -123,7 +122,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
     VALUE = 'N/A',$
     UNAME = 'trans_file_name_base_file_name',$
     /EDITABLE, $
-    /ALL_EVENTS, $
+    ;    /ALL_EVENTS, $
     XSIZE = 50)
     
   row2 = WIDGET_BASE(wBase,$
@@ -144,7 +143,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path
     SCR_XSIZE = xsize,$
     VALUE = 'CREATE FILE',$
     UNAME = 'trans_file_name_base_ok_button',$
-    SENSITIVE = 0)
+    SENSITIVE = 1)
     
 END
 
@@ -203,22 +202,6 @@ PRO trans_file_name_base_path_file_name, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO check_validity_of_trans_file_name_go_button, Event
-
-  file_name = getTextFieldValue(Event, 'trans_file_name_base_file_name')
-  s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
-  
-  IF (s_file_name EQ '' OR $
-    s_file_name EQ 'N/A') THEN BEGIN
-    status = 0
-  ENDIF ELSE BEGIN
-    status = 1
-  ENDELSE
-  activate_widget, Event, 'trans_file_name_base_ok_button', status
-  
-END
-
-;------------------------------------------------------------------------------
 PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
 
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_manual_mode_base')
@@ -251,6 +234,33 @@ PRO create_trans_file, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
   
+  ;check first that the output file name is valid and does not exit
+  file_name = getTextFieldValue(Event, 'trans_file_name_base_file_name')
+  s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+  path = getButtonValue(Event,'trans_file_name_base_path_button')
+  output_file_name = path + s_file_name
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
+  
+  IF (s_file_name EQ '') THEN BEGIN ;outptu file name is empty
+    result = DIALOG_MESSAGE('Provide a valid transmission output file name', $
+      TITLE = 'ERROR: File Name Invalid!',$
+      /CENTER, $
+      DIALOG_PARENT=id, $
+      /ERROR)
+    RETURN
+  ENDIF
+  
+  IF (FILE_TEST(output_file_name)) THEN BEGIN ;file name already exist
+    message = ['Do you want to overwrite this file: ',$
+      output_file_name]
+    result = DIALOG_MESSAGE(message, $
+      /CENTER, $
+      DIALOG_PARENT=id, $
+      TITLE = 'File with same name already exists!', $
+      /QUESTION)
+    IF (result EQ 'No') THEN RETURN
+  ENDIF
   ;Create trans file array
   create_trans_array, Event
   
