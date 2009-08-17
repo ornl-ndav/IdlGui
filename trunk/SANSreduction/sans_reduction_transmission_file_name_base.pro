@@ -359,11 +359,20 @@ PRO output_trans_file, Event
   first_part[3] = '#N 3'
   first_part[4] = '#L  wavelength(Angstroms)   Ratio()   Sigma()'
   
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
+  
   error = 0
   CATCH, error
   IF (error NE 0) then begin
     CATCH, /CANCEL
-    ;result = DIALOG_MESSA
+    title = 'Transmission File Name Creation FAILED!'
+    message_text = 'Creation of transmission file ' + output_file_name + $
+      ' FAILED!'
+    result = DIALOG_MESSAGE(message_text, $
+      /CENTER, $
+      DIALOG_PARENT=id, $
+      /ERROR, $
+      TITLE = title)
   ;put error statement here
   ENDIF ELSE BEGIN
     ;open output file
@@ -379,9 +388,21 @@ PRO output_trans_file, Event
       PRINTF, 1, line
     ENDFOR
     PRINTF, 1, STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL)
+    title =  'Transmission File has been created with SUCCESS!'
+    message_text = 'Creation of transmission file ' + output_file_name + $
+      ' WORKED!'
+    result = DIALOG_MESSAGE(message_text, $
+      /INFORMATION, $
+      /CENTER, $
+      DIALOG_PARENT=id, $
+      TITLE = title)
   ENDELSE
   CLOSE, 1
   FREE_LUN, 1
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='transmission_file_name_base')
+  WIDGET_CONTROL, id, /DESTROY
   
 END
 
