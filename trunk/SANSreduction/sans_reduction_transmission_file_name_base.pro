@@ -479,19 +479,20 @@ PRO preview_trans_file, Event
     index ++
   ENDWHILE
   
-  j = 0
-  WHILE (j LT N_ELEMENTS(x_axis)-1) DO BEGIN
+  i = 0
+  WHILE (i LT N_ELEMENTS(x_axis)-1) DO BEGIN
     line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + ' '
     line += STRCOMPRESS(y_axis[i],/REMOVE_ALL) + ' '
     line += STRCOMPRESS(y_error_axis[i],/REMOVE_ALL)
     big_array[index] = line
-    j++
+    i++
     index++
   ENDWHILE
   big_array[index] =  STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL) 
 
-  ;xdisplay_file
-
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
+  title = 'Preview of ' + output_file_name
+  XDISPLAYFILE, GROUP=id, TEXT=big_array, TITLE=title
 
 END
 
