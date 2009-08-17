@@ -197,18 +197,18 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   monitorNumberID = CW_FIELD(normOptionsBaseColumn1, TITLE="Monitor Number:", UVALUE="DGSR_USMON", $
     UNAME="DGSR_USMON", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
   ; Also set the default monitor in the ReductionCmd Class
-  dgsr_cmd->SetProperty, USmonPath=1
+  dgsr_cmd->SetProperty, USmonPath=1 
   
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
   normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSR_NORMRUN", $
-    UNAME="DGSR_NORMRUN", /LONG)
+    UNAME="DGSR_NORMRUN")
   emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", $
-    UNAME="DGSR_EMPTYCAN", /LONG)
+    UNAME="DGSR_EMPTYCAN")
   blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", $
-    UNAME="DGSR_BLACKCAN", /LONG)
+    UNAME="DGSR_BLACKCAN")
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSR_DARK", $
-    UNAME="DGSR_DARK", /LONG)
+    UNAME="DGSR_DARK")
 
     ; == Transmission Corrections == 
   transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
