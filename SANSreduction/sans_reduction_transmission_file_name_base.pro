@@ -300,9 +300,12 @@ PRO create_trans_array, Event
     pixel = trans_peak_pixel[index]
     array_of_local_pixel = both_banks[*,pixel,tube] ;pixel from the transmission peak
     trans_peak_array += array_of_local_pixel
-    trans_peak_array_error += SQRT(array_of_local_pixel)
+    trans_peak_array_error += array_of_local_pixel^2
     index++
   ENDWHILE
+  
+  ;take square root of result
+  trans_peak_array_error = SQRT(trans_peak_array_error)
   
   ;get tof array
   tof_array = (*(*global_trans).tof_array)
@@ -357,9 +360,10 @@ PRO output_trans_file, Event
   first_part[4] = '#L  wavelength(Angstroms)   Ratio()   Sigma()'
   
   error = 0
-;  CATCH, error
+  CATCH, error
   IF (error NE 0) then begin
     CATCH, /CANCEL
+    ;result = DIALOG_MESSA
   ;put error statement here
   ENDIF ELSE BEGIN
     ;open output file
