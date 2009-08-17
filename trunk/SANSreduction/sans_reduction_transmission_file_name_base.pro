@@ -61,6 +61,11 @@ PRO transmission_file_name_base_event, Event
       create_trans_file, Event
     END
     
+    ;preview button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_preview'): BEGIN
+      preview_trans_file, Event
+    END
+    
     ;ok button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_file_name_base_ok_button'): BEGIN
       create_trans_file, Event
@@ -269,6 +274,7 @@ PRO create_trans_file, Event
       /QUESTION)
     IF (result EQ 'No') THEN RETURN
   ENDIF
+  
   ;Create trans file array
   create_trans_array, Event
   
@@ -424,7 +430,70 @@ PRO output_trans_file, Event
   
 END
 
+;------------------------------------------------------------------------------
+PRO preview_trans_file, Event
 
+  create_trans_array, Event
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
+  
+  ;retrieve info about pixel selected and file name
+  global_trans = (*file_global).global_trans
+  main_global = (*file_global).main_global
+  
+  y_axis = (*(*global_trans).transmission_peak_value)
+  y_error_axis = (*(*global_trans).transmission_peak_error_value)
+  x_axis = (*(*global_trans).transmission_lambda_axis)
+  
+  ;get full file name
+  file_name = getTextFieldValue(Event, 'trans_file_name_base_file_name')
+  s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
+  path = getButtonValue(Event,'trans_file_name_base_path_button')
+  output_file_name = path + s_file_name
+  
+  nexus_file_name = (*main_global).data_nexus_file_name
+  
+  bank_tube_pixel = (*global_trans).beam_center_bank_tube_pixel
+  bank = STRCOMPRESS(bank_tube_pixel[0],/REMOVE_ALL)
+  tube = STRCOMPRESS(bank_tube_pixel[1],/REMOVE_ALL)
+  pixel = STRCOMPRESS(bank_tube_pixel[2],/REMOVE_ALL)
+  
+  ;first part of file
+  first_part = STRARR(5)
+  first_part[0] = '#F transmission: ' + nexus_file_name
+  first_part[1] = ''
+  first_part[2] = "#S 1 Spectrum ID ('bank" + bank + "', (" + tube + $
+    ", " + pixel + "))"
+  first_part[3] = '#N 3'
+  first_part[4] = '#L  wavelength(Angstroms)   Ratio()   Sigma()'
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
+  
+  ;create big array
+  sz_big_file = 5 + N_ELEMENTS(x_axis)
+  big_array = STRARR(sz_big_file)
+  index = 0
+  WHILE (index LT 5) DO BEGIN
+    big_array[index] = first_part[index]
+    index ++
+  ENDWHILE
+  
+  j = 0
+  WHILE (j LT N_ELEMENTS(x_axis)-1) DO BEGIN
+    line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + ' '
+    line += STRCOMPRESS(y_axis[i],/REMOVE_ALL) + ' '
+    line += STRCOMPRESS(y_error_axis[i],/REMOVE_ALL)
+    big_array[index] = line
+    j++
+    index++
+  ENDWHILE
+  big_array[index] =  STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL) 
+
+  ;xdisplay_file
+
+
+END
 
 
 
