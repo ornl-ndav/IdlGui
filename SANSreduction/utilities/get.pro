@@ -366,5 +366,14 @@ FUNCTION retrieve_distance_bc_pixel_sample, NexusFileName, bank, tube, pixel
   ;get local_tube value within bank
   tube_local = getTubeLocal(tube+1) ;+1 because tube 1 is supposed to be the 1st tube
 
-  RETURN, ABS(distance_array[tube_local,pixel])
+  RETURN, ABS(distance_array[pixel,tube_local])
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getTOFarray, Event, NexusFileName
+  path = '/entry/bank1/time_of_flight/'
+  fileID  = H5F_OPEN(NexusFileName)
+  fieldID = H5D_OPEN(fileID, path)
+  tof_array = H5D_READ(fieldID)
+  RETURN, tof_array
 END

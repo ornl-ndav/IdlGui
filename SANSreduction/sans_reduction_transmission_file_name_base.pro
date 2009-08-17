@@ -254,7 +254,6 @@ PRO create_trans_file, Event
   ;Create trans file array
   create_trans_array, Event
   
-  
 END
 
 ;------------------------------------------------------------------------------
@@ -265,12 +264,13 @@ PRO create_trans_array, Event
   
   ;retrieve info about pixel selected and file name
   global_trans = (*file_global).global_trans
+  main_global = (*file_global).main_global
+  
   bank_tube_pixel = (*global_trans).beam_center_bank_tube_pixel
   bank = bank_tube_pixel[0]
   tube = bank_tube_pixel[1]
   pixel = bank_tube_pixel[2]
   ;print, format='("bank: ",i4,", tube: ",i4,", pixel: ",i4)',bank,tube,pixel
-  main_global = (*file_global).main_global
   nexus_file_name = (*main_global).data_nexus_file_name
   
   ;retrieve distance sample_moderator
@@ -281,10 +281,40 @@ PRO create_trans_array, Event
   total_distance = distance_moderator_sample + $
     distance_sample_beam_center_pixel
     
-    
-    
-    
-    
+  both_banks = (*(*main_global).both_banks) ;[TOF,Pixel,Tube]
+  nbr_tof = (size(both_banks))(1)
+  
+  trans_peak_tube = (*(*global_trans).trans_peak_tube)
+  trans_peak_pixel = (*(*global_trans).trans_peak_pixel)
+  
+  ;check number of pixel part of the transmission file
+  nbr_pixel = N_ELEMENTS(trans_peak_tube)
+  trans_peak_array = LONARR(nbr_tof) ;total counts for each tof
+  trans_peak_array_error = DBLARR(nbr_tof) ;total counts error for each tof
+  index = 0
+  WHILE (index LT nbr_pixel) DO BEGIN
+    tube = trans_peak_tube[index]
+    pixel = trans_peak_pixel[index]
+    array_of_local_pixel = both_banks[*,pixel,tube] ;pixel from the transmission peak
+    trans_peak_array += array_of_local_pixel
+    trans_peak_array_error += SQRT(array_of_local_pixel)
+    index++
+  ENDWHILE
+  
+  ;get tof array
+  tof_array = (*(*global_trans).tof_array)
+  
+  ;do the conversion from tof into Lambda
+  mass_neutron = (*main_global).mass_neutron
+  planck_constant = (*main_global).planck_constant
+  coeff = planck_constant / (mass_neutron * DOUBLE(total_distance))  
+
+  lambda_axis = tof_array * 1e-6 * coeff[0]
+  
+  (*(*global_trans).transmission_peak_value) = trans_peak_array
+  (*(*global_trans).transmission_peak_error_value) = trans_peak_array_error
+  (*(*global_trans).transmission_lambda_axis) = lambda_axis
+  
 END
 
 

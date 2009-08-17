@@ -200,6 +200,11 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     path_data_nexus_file: '',$
     inst_geom:       '',$
     wave_para_value: '',$
+    
+    ;Transmission Fiel Calculation
+    mass_neutron: DOUBLE(1.67493e-27), $  ;kg
+    planck_constant: DOUBLE(6.626068e-34), $ ;m^2 Kg/s
+    
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
     wave_para_help_value: wave_para_help_value,$

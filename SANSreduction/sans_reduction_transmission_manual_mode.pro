@@ -232,8 +232,13 @@ PRO launch_transmission_manual_mode_base, main_event
     step3_pixel_min: 0, $
     step3_pixel_max: 0, $
     step3_background: PTR_NEW(0L), $
-    trans_manual_step3_refresh: 1, $    
+    trans_manual_step3_refresh: 1, $
     x0y0x1y1: INTARR(4), $
+    
+    tof_array: PTR_NEW(0L), $
+    transmission_peak_value: PTR_NEW(0L), $
+    transmission_peak_error_value: PTR_NEW(0L), $
+    transmission_lambda_axis: PTR_NEW(0L), $
     
     beam_center_bank_tube_pixel: INTARR(3), $
     
@@ -247,6 +252,10 @@ PRO launch_transmission_manual_mode_base, main_event
   
   ;save background
   save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
+  
+  ;get TOF array
+  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+  (*(*global_step1).tof_array) = tof_array
   
 END
 
