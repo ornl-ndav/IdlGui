@@ -35,6 +35,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run make_gui_transmission_manual_mode_step1.pro
 .run make_gui_transmission_manual_mode_step2.pro
 .run make_gui_transmission_manual_mode_step3.pro
+.run make_gui_transmission_auto_mode.pro
 
 ;Build all procedures
 cd, CurrentFolder
@@ -80,6 +81,9 @@ cd, CurrentFolder
 .run sans_reduction_transmission_manual_step3.pro
 .run sans_reduction_transmission_file_name_base.pro
 
+.run sans_reduction_transmission_auto_mode.pro
+.run sans_reduction_transmission_auto_mode_routines.pro
+
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_make_facility_selection.pro
@@ -87,4 +91,4 @@ cd, CurrentFolder
 .run sans_reduction_build_gui.pro
 
 ;build all the iProcedures (iPlot...)
-itResolve
+;itResolve
