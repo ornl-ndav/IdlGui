@@ -512,8 +512,8 @@ PRO preview_trans_file, Event
   ERRORBAR_COLOR=[255,0,0], $
   XTEXT_COLOR = [0,0,255], $
   YTEXT_COLOR = [0,255,0], $
-  COLOR = [0,0,0]
- 
+  COLOR = [0,0,0], $
+  TITLE = 'Transmission file: ' + output_file_name
 
 END
 
