@@ -493,6 +493,27 @@ PRO preview_trans_file, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
   title = 'Preview of ' + output_file_name
   XDISPLAYFILE, GROUP=id, TEXT=big_array, TITLE=title, HEIGHT=50
+  
+  x_axis_plot = x_axis[0:N_ELEMENTS(x_axis)-2]
+  
+  iplot, x_axis_plot, y_axis,$
+  /DISABLE_SPLASH_SCREEN, $
+  /NO_SAVEPROMPT, $
+  YERROR=y_error_axis, $
+  /Y_ERRORBARS, $
+  SYM_INDEX=7, $
+  XTITLE = "Lambda (Angstroms)", $
+  YTITLE = "Counts", $
+  LINESTYLE = 6, $
+  USE_DEFAULT_COLOR = 0, $
+  SYS_COLOR=[255,0,0], $
+  VIEW_ZOOM = 1.5, $
+  BACKGROUND_COLOR=[255,255,255], $
+  ERRORBAR_COLOR=[255,0,0], $
+  XTEXT_COLOR = [0,0,255], $
+  YTEXT_COLOR = [0,255,0], $
+  COLOR = [0,0,0]
+ 
 
 END
 
