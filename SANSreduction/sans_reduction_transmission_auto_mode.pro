@@ -32,6 +32,26 @@
 ;
 ;==============================================================================
 
+PRO launch_transmission_auto_mode_event, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  CASE Event.id OF
+  
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_auto_ok_button'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_auto_mode_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ELSE:
+    
+  ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
 PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
 
   main_base_xoffset = main_base_geometry.xoffset
