@@ -103,6 +103,7 @@ FUNCTION design_transmission_auto_mode, wBase
     YOFFSET = main_yoffset,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
+    /motion_events,$
     UNAME = 'auto_transmission_draw')
     
   scale = WIDGET_DRAW(row1_left,$
@@ -138,7 +139,7 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = 'Tube Edge 1  :')
   value = WIDGET_LABEL(rowa,$
     VALUE = 'N/A',$
-    UNAME = 'trans_auto_step1_x0')
+    UNAME = 'trans_auto_x0')
     
   rowb = WIDGET_BASE(base_values,$
     /ROW)
@@ -146,7 +147,7 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = 'Tube Edge 2  :')
   value = WIDGET_LABEL(rowb,$
     VALUE = 'N/A',$
-    UNAME = 'trans_auto_step1_x1')
+    UNAME = 'trans_auto_x1')
     
   ;pixel 0 and 1
   rowc = WIDGET_BASE(base_values,$
@@ -155,7 +156,7 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = 'Pixel Edge 1 :')
   value = WIDGET_LABEL(rowc,$
     VALUE = 'N/A',$
-    UNAME = 'trans_auto_step1_y0')
+    UNAME = 'trans_auto_y0')
     
   rowd = WIDGET_BASE(base_values,$
     /ROW)
@@ -163,7 +164,7 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = 'Pixel Edge 2 :')
   value = WIDGET_LABEL(rowd,$
     VALUE = 'N/A',$
-    UNAME = 'trans_auto_step1_y1')
+    UNAME = 'trans_auto_y1')
     
   ;space
   label = WIDGET_LABEL(row1_center, $
