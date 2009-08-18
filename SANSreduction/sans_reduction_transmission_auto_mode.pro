@@ -39,8 +39,8 @@ PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xsize = 700 ;width of various steps of manual mode
-  ysize = 840 ;height of various steps of manual mode
+  xsize = 900 ;width of various steps of manual mode
+  ysize = 900 ;height of various steps of manual mode
   
   xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
   yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
