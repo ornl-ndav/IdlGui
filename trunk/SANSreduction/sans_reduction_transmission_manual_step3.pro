@@ -314,6 +314,9 @@ PRO plot_counts_vs_tof_step3_beam_center, Event
   tube = FIX(tube)
   pixel = FIX(pixel)
   
+  ;get tof array
+  tof_array = (*(*global).tof_array)
+  
   zoom_data = (*(*global).step3_3d_data) ;[tof,pixel,tube]
   
   new_tube = tube - (*global).step3_tube_min
@@ -327,9 +330,14 @@ PRO plot_counts_vs_tof_step3_beam_center, Event
   WSET, id_value
   
   PLOT, data, XSTYLE=1, XTITLE='Bin #', YTITLE='Counts', $
-    TITLE = 'Counts vs bin # for Beam Center Selected', $
-    PSYM = -1
+    PSYM = -1, $
+    POSITION = [0.05,0.17,0.96,0.85]
     
+  AXIS, XAXIS=1, XRANGE=[tof_array[0], tof_array[N_ELEMENTS(tof_array)-2]], $
+    XTITLE = 'TOF (microS)'
+    
+  XYOUTS, 0.7, 0.6, 'Counts vs bins # and TOF for Beam Center Selected',/DEVICE
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -409,9 +417,9 @@ PRO launch_transmission_file_name_base, Event
   pixel = getTextFieldValue(Event,$
     'trans_manual_step3_beam_center_pixel_value')
   bank = getBankNumber(tube+1)
-
+  
   (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
-
+  
   transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   
 END
