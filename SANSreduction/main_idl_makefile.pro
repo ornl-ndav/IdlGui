@@ -86,3 +86,5 @@ cd, CurrentFolder
 .run sans_reduction_eventcb.pro
 .run sans_reduction_build_gui.pro
 
+;build all the iProcedures (iPlot...)
+itResolve
