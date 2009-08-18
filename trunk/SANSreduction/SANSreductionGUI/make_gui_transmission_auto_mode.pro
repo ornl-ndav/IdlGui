@@ -39,6 +39,38 @@ FUNCTION design_transmission_auto_mode, wBase
   xsize = tab_geometry.xsize
   ysize = tab_geometry.ysize
   
+  ;background value and transmission intensity values
+  back_base = WIDGET_BASE(wBase,$
+  FRAME = 10, $
+  /ROW, $
+  XOFFSET = 5,$
+  YOFFSET = 367)
+  label = WIDGET_LABEL(back_base,$
+  VALUE = 'Background value:')
+  value = WIDGET_LABEL(back_base,$
+  VALUE = 'N/A', $
+  /ALIGN_LEFT, $
+  SCR_XSIZE = 60,$
+  UNAME = 'trans_auto_back_value')
+  units = WIDGET_LABEL(back_base,$
+  VALUE = 'counts/pixel')
+  
+  trans_base = WIDGET_BASE(wBase,$
+  FRAME = 10, $
+  /ROW, $
+  XOFFSET = 285,$
+  YOFFSET = 367)
+  label = WIDGET_LABEL(trans_base,$
+  VALUE = 'Transmission Intensity:')
+  value = WIDGET_LABEL(trans_base,$
+  VALUE = 'N/A', $
+  /ALIGN_LEFT, $
+  SCR_XSIZE = 80,$
+  UNAME = 'trans_auto_trans_value')
+  units = WIDGET_LABEL(trans_base,$
+  VALUE = 'counts')
+  
+  ;=========================================
   base = WIDGET_BASE(wBase,$
     UNAME = 'auto_transmission',$
     SCR_XSIZE = xsize, $
@@ -71,9 +103,6 @@ FUNCTION design_transmission_auto_mode, wBase
     YOFFSET = main_yoffset,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
-    /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    /MOTION_EVENTS,$
     UNAME = 'auto_transmission_draw')
     
   scale = WIDGET_DRAW(row1_left,$
@@ -83,16 +112,16 @@ FUNCTION design_transmission_auto_mode, wBase
     SCR_YSIZE = ysize_scale, $
     UNAME = 'auto_transmission_draw_scale')
     
-  ;row1_right ...........................................
-  row1_right = WIDGET_BASE(row1,$
+  ;row1_center ...........................................
+  row1_center = WIDGET_BASE(row1,$
     /COLUMN)
     
-    ;space
-    label = WIDGET_LABEL(row1_right, $
+  ;space
+  label = WIDGET_LABEL(row1_center, $
     VALUE =  ' ')
-
+    
   ;x0, y0, x1 and y1
-  base_values = WIDGET_BASE(row1_right,$
+  base_values = WIDGET_BASE(row1_center,$
     /COLUMN,$
     FRAME=1)
     
@@ -103,45 +132,45 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = ' ')
     
   ;tube 0 and 1
-  row1 = WIDGET_BASE(base_values,$
+  rowa = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row1,$
+  label = WIDGET_LABEL(rowa,$
     VALUE = 'Tube Edge 1  :')
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(rowa,$
     VALUE = 'N/A',$
     UNAME = 'trans_auto_step1_x0')
     
-  row2 = WIDGET_BASE(base_values,$
+  rowb = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row2,$
+  label = WIDGET_LABEL(rowb,$
     VALUE = 'Tube Edge 2  :')
-  value = WIDGET_LABEL(row2,$
+  value = WIDGET_LABEL(rowb,$
     VALUE = 'N/A',$
     UNAME = 'trans_auto_step1_x1')
     
   ;pixel 0 and 1
-  row2 = WIDGET_BASE(base_values,$
+  rowc = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row2,$
+  label = WIDGET_LABEL(rowc,$
     VALUE = 'Pixel Edge 1 :')
-  value = WIDGET_LABEL(row2,$
+  value = WIDGET_LABEL(rowc,$
     VALUE = 'N/A',$
     UNAME = 'trans_auto_step1_y0')
     
-  row4 = WIDGET_BASE(base_values,$
+  rowd = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row4,$
+  label = WIDGET_LABEL(rowd,$
     VALUE = 'Pixel Edge 2 :')
-  value = WIDGET_LABEL(row4,$
+  value = WIDGET_LABEL(rowd,$
     VALUE = 'N/A',$
     UNAME = 'trans_auto_step1_y1')
     
-    ;space
-    label = WIDGET_LABEL(row1_right, $
+  ;space
+  label = WIDGET_LABEL(row1_center, $
     VALUE =  ' ')
     
   ;x and y of cursor
-  base_values = WIDGET_BASE(row1_right,$
+  base_values = WIDGET_BASE(row1_center,$
     /COLUMN,$
     FRAME=1)
     
@@ -152,31 +181,56 @@ FUNCTION design_transmission_auto_mode, wBase
     VALUE = ' ')
     
   ;tube, pixel and counts
-  row1 = WIDGET_BASE(base_values,$
+  rowa = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row1,$
+  label = WIDGET_LABEL(rowa,$
     VALUE = 'Tube   :')
-  value = WIDGET_LABEL(row1,$
+  value = WIDGET_LABEL(rowa,$
     VALUE = 'N/A',$
     /ALIGN_LEFT,$
     UNAME = 'trans_auto_beam_center_tube')
-  row2 = WIDGET_BASE(base_values,$
+  rowb = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row2,$
+  label = WIDGET_LABEL(rowb,$
     VALUE = 'Pixel  :')
-  value = WIDGET_LABEL(row2,$
+  value = WIDGET_LABEL(rowb,$
     VALUE = 'N/A',$
     /ALIGN_LEFT,$
     UNAME = 'trans_auto_beam_center_pixel')
-  row3 = WIDGET_BASE(base_values,$
+  rowc = WIDGET_BASE(base_values,$
     /ROW)
-  label = WIDGET_LABEL(row3,$
+  label = WIDGET_LABEL(rowc,$
     VALUE = 'Counts :')
-  value = WIDGET_LABEL(row3,$
+  value = WIDGET_LABEL(rowc,$
     VALUE = 'N/A            ',$
     SCR_XSIZE = 50,$
     /ALIGN_LEFT,$
     UNAME = 'trans_auto_beam_center_counts')
+    
+  ;row1_right ...........................................
+  row1_right = WIDGET_BASE(row1,$
+    /COLUMN)
+    
+  xsize = 350
+  ysize = 195
+    
+  ;plot Counts vs X integrated over Y
+  plot1 = WIDGET_DRAW(row1_right,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step1_counts_vs_x')
+    
+  space = WIDGET_LABEL(row1_right,$
+    VALUE = '')
+    
+  plot2 = WIDGET_DRAW(row1_right,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'trans_manual_step1_counts_vs_y')
+    
+    
+    
+    
     
   RETURN, base
   
