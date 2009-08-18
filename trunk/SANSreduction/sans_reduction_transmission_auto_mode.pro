@@ -156,7 +156,69 @@ PRO display_selection_info_values, wBase, global_auto
   putTextFieldValueMainBase, wBase, uname='trans_auto_y0', pixel1
   putTextFieldValueMainBase, wBase, uname='trans_auto_x1', tube2
   putTextFieldValueMainBase, wBase, uname='trans_auto_y1', pixel2
+  
+END
 
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
+
+  error = 0
+  ;CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN
+  ENDIF
+  
+  tube_pixel_edges = (*global).tube_pixel_edges
+  tube1 = tube_pixel_edges[0]
+  tube2 = tube_pixel_edges[2]
+  pixel1 = tube_pixel_edges[1]
+  pixel2 = tube_pixel_edges[3]
+  
+  xoffset = (*global).xoffset_plot
+  yoffset = (*global).yoffset_plot
+  
+  tube1_offset = FIX(tube1) - xoffset
+  tube2_offset = FIX(tube2) - xoffset
+  pixel1_offset = FIX(pixel1) - yoffset
+  pixel2_offset = FIX(pixel2) - yoffset
+  
+  tube_min = MIN([tube1_offset,tube2_offset],MAX=tube_max)
+  pixel_min = MIN([pixel1_offset, pixel2_offset],MAX=pixel_max)
+  (*global).tube_pixel_min_max = [tube_min, tube_max, pixel_min, pixel_max]
+  
+  tt_zoom_data = (*(*global).tt_zoom_data)
+  counts_vs_xy = tt_zoom_data[tube_min:tube_max,pixel_min:pixel_max]
+  (*(*global).counts_vs_xy) = counts_vs_xy
+  counts_vs_x = TOTAL(counts_vs_xy,2)
+  counts_vs_y = TOTAL(counts_vs_xy,1)
+  (*(*global).counts_vs_x) = counts_vs_x
+  (*(*global).counts_vs_y) = counts_vs_y
+  
+  ;plot data
+  ;Counts vs tube (integrated over y)
+  x_axis = INDGEN(N_ELEMENTS(counts_vs_x)) + tube_min + xoffset
+  (*(*global).tube_x_axis) = x_axis
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_x')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_x, XSTYLE=1, XTITLE='Tube #', YTITLE='Counts', $
+    TITLE = 'Counts vs tube integrated over pixel', $
+    XTICKS = N_ELEMENTS(x_axis)-1, $
+    PSYM = -1
+    
+  ;Counts vs tube (integrated over x)
+  x_axis = INDGEN(N_ELEMENTS(counts_vs_y)) + pixel_min + yoffset
+  (*(*global).pixel_x_axis) = x_axis
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='trans_auto_step1_counts_vs_y')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  plot, x_axis, counts_vs_y, XSTYLE=1, XTITLE='Pixel #', YTITLE='Counts', $
+    TITLE = 'Counts vs pixel integrated over tube', $
+    XTICKS = N_ELEMENTS(x_axis)-1, $
+    PSYM = -1
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -274,6 +336,8 @@ PRO launch_transmission_auto_mode_base, main_event
   plot_trans_manual_step1_central_selection, wBase
   
   display_selection_info_values, wBase, global_auto
+  
+  plot_trans_auto_counts_vs_x_and_y, wBase, global_auto
   
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
