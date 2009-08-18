@@ -52,6 +52,30 @@ PRO launch_transmission_auto_mode_event, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_auto_data_around_beam_stop, EVENT=event, $
+    MAIN_BASE=wBase, $
+    global, $
+    global_step1
+    
+  both_banks = (*(*global).both_banks)
+  zoom_data = both_banks[*,112:151,80:111]
+  
+  t_zoom_data = TOTAL(zoom_data,1)
+  tt_zoom_data = TRANSPOSE(t_zoom_data)
+  (*(*global_step1).tt_zoom_data) = tt_zoom_data
+  rtt_zoom_data = CONGRID(tt_zoom_data, 350, 300)
+  (*(*global_step1).rtt_zoom_data) = rtt_zoom_data
+  
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  TVSCL, rtt_zoom_data
+  
+END
+
+
+;------------------------------------------------------------------------------
 PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
 
   main_base_xoffset = main_base_geometry.xoffset
@@ -103,9 +127,10 @@ PRO launch_transmission_auto_mode_base, main_event
     
   global_step1 = PTR_NEW({ wbase: wbase,$
     global: global,$
-    background: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
     tt_zoom_data: PTR_NEW(0L), $
+
+    background: PTR_NEW(0L), $
     counts_vs_x: PTR_NEW(0L), $
     counts_vs_y: PTR_NEW(0L), $
     pixel_x_axis: PTR_NEW(0L), $
@@ -193,7 +218,7 @@ PRO launch_transmission_auto_mode_base, main_event
   XMANAGER, "launch_transmission_auto_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  ; plot_data_around_beam_stop, main_base=wBase, global, global_step1
+  plot_auto_data_around_beam_stop, main_base=wBase, global, global_step1
     
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
