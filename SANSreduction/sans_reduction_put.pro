@@ -37,6 +37,12 @@ WIDGET_CONTROL, id, SET_VALUE=text
 END
 
 ;==============================================================================
+PRO   putTextFieldValueMainBase, wBase, UNAME=uname, value
+id = WIDGET_INFO(wBase, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;==============================================================================
 PRO putArrayTextFieldValue, Event, uname_array, text
 sz = N_ELEMENTS(uname_array)
 FOR i=0,(sz-1) DO BEGIN

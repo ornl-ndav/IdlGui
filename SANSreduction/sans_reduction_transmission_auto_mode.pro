@@ -45,9 +45,42 @@ PRO launch_transmission_auto_mode_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
+    WIDGET_INFO(event.top, find_By_uname='auto_transmission_draw'): BEGIN
+      print, 'event.x: ' + string(event.x)
+      print, 'evnet.y: ' + string(event.y)
+      print
+    END
+    
     ELSE:
     
   ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_trans_manual_step1_central_selection, wBase
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  x0y0x1y1 = (*global).x0y0x1y1
+  
+  x0 = x0y0x1y1[0]
+  y0 = x0y0x1y1[1]
+  x1 = x0y0x1y1[2]
+  y1 = x0y0x1y1[3]
+  
+  color = 175
+  
+  id = WIDGET_INFO(wBase,FIND_BY_UNAME='auto_transmission_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  PLOTS, x0, y0, /DEVICE, COLOR=color, THICK=2
+  PLOTS, x0, y1, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+  PLOTS, x1, y1, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+  PLOTS, x1, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
+  PLOTS, x0, y0, /DEVICE, COLOR=color, THICK=2, /CONTINUE
   
 END
 
@@ -109,6 +142,23 @@ PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
   
 END
 
+;-----------------------------------------------------------------------------
+PRO display_selection_info_values, wBase, global_auto
+
+  tube_pixel_edges = (*global_auto).tube_pixel_edges
+  
+  tube1 = STRCOMPRESS(tube_pixel_edges[0],/REMOVE_ALL)
+  tube2 = STRCOMPRESS(tube_pixel_edges[2],/REMOVE_ALL)
+  pixel1 = STRCOMPRESS(tube_pixel_edges[1],/REMOVE_ALL)
+  pixel2 = STRCOMPRESS(tube_pixel_edges[3],/REMOVE_ALL)
+  
+  putTextFieldValueMainBase, wBase, uname='trans_auto_x0', tube1
+  putTextFieldValueMainBase, wBase, uname='trans_auto_y0', pixel1
+  putTextFieldValueMainBase, wBase, uname='trans_auto_x1', tube2
+  putTextFieldValueMainBase, wBase, uname='trans_auto_y1', pixel2
+
+END
+
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_auto_mode_base, main_event
@@ -125,11 +175,13 @@ PRO launch_transmission_auto_mode_base, main_event
   transmission_auto_mode_gui, wBase, $
     main_base_geometry, sys_color_window_bk
     
-  global_step1 = PTR_NEW({ wbase: wbase,$
+  global_auto = PTR_NEW({ wbase: wbase,$
     global: global,$
     rtt_zoom_data: PTR_NEW(0L), $
     tt_zoom_data: PTR_NEW(0L), $
-
+    x0y0x1y1: [127,83,214,153],$
+    tube_pixel_edges: [91,123,99,133],$
+    
     background: PTR_NEW(0L), $
     counts_vs_x: PTR_NEW(0L), $
     counts_vs_y: PTR_NEW(0L), $
@@ -203,7 +255,6 @@ PRO launch_transmission_auto_mode_base, main_event
     step3_pixel_max: 0, $
     step3_background: PTR_NEW(0L), $
     trans_manual_step3_refresh: 1, $
-    x0y0x1y1: INTARR(4), $
     
     tof_array: PTR_NEW(0L), $
     transmission_peak_value: PTR_NEW(0L), $
@@ -214,15 +265,19 @@ PRO launch_transmission_auto_mode_base, main_event
     
     main_event: main_event})
     
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
+  WIDGET_CONTROL, wBase, SET_UVALUE = global_auto
   XMANAGER, "launch_transmission_auto_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
-  plot_auto_data_around_beam_stop, main_base=wBase, global, global_step1
-    
+  plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
+  
+  plot_trans_manual_step1_central_selection, wBase
+  
+  display_selection_info_values, wBase, global_auto
+  
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
-  (*(*global_step1).tof_array) = tof_array
+  (*(*global_auto).tof_array) = tof_array
   
 END
 
