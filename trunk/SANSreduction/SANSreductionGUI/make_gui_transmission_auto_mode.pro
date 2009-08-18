@@ -41,35 +41,35 @@ FUNCTION design_transmission_auto_mode, wBase
   
   ;background value and transmission intensity values
   back_base = WIDGET_BASE(wBase,$
-  FRAME = 10, $
-  /ROW, $
-  XOFFSET = 5,$
-  YOFFSET = 367)
+    FRAME = 10, $
+    /ROW, $
+    XOFFSET = 5,$
+    YOFFSET = 367)
   label = WIDGET_LABEL(back_base,$
-  VALUE = 'Background value:')
+    VALUE = 'Background value:')
   value = WIDGET_LABEL(back_base,$
-  VALUE = 'N/A', $
-  /ALIGN_LEFT, $
-  SCR_XSIZE = 60,$
-  UNAME = 'trans_auto_back_value')
+    VALUE = 'N/A', $
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 60,$
+    UNAME = 'trans_auto_back_value')
   units = WIDGET_LABEL(back_base,$
-  VALUE = 'counts/pixel')
-  
+    VALUE = 'counts/pixel')
+    
   trans_base = WIDGET_BASE(wBase,$
-  FRAME = 10, $
-  /ROW, $
-  XOFFSET = 285,$
-  YOFFSET = 367)
+    FRAME = 10, $
+    /ROW, $
+    XOFFSET = 285,$
+    YOFFSET = 367)
   label = WIDGET_LABEL(trans_base,$
-  VALUE = 'Transmission Intensity:')
+    VALUE = 'Transmission Intensity:')
   value = WIDGET_LABEL(trans_base,$
-  VALUE = 'N/A', $
-  /ALIGN_LEFT, $
-  SCR_XSIZE = 80,$
-  UNAME = 'trans_auto_trans_value')
+    VALUE = 'N/A', $
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 80,$
+    UNAME = 'trans_auto_trans_value')
   units = WIDGET_LABEL(trans_base,$
-  VALUE = 'counts')
-  
+    VALUE = 'counts')
+    
   ;=========================================
   base = WIDGET_BASE(wBase,$
     UNAME = 'auto_transmission',$
@@ -213,12 +213,12 @@ FUNCTION design_transmission_auto_mode, wBase
     
   xsize = 350
   ysize = 195
-    
+  
   ;plot Counts vs X integrated over Y
   plot1 = WIDGET_DRAW(row1_right,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
-    UNAME = 'trans_manual_step1_counts_vs_x')
+    UNAME = 'trans_auto_step1_counts_vs_x')
     
   space = WIDGET_LABEL(row1_right,$
     VALUE = '')
@@ -226,10 +226,38 @@ FUNCTION design_transmission_auto_mode, wBase
   plot2 = WIDGET_DRAW(row1_right,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
-    UNAME = 'trans_manual_step1_counts_vs_y')
+    UNAME = 'trans_auto_step1_counts_vs_y')
     
+  ;ROW2 .................................................
+  row2 = WIDGET_BASE(base,$
+    /ROW)
     
+  transmission_plot = WIDGET_DRAW(row2,$
+  SCR_XSIZE = 930,$
+  SCR_YSIZE = 420,$
+  UNAMe = 'trans_auto_trans_plot')  
     
+  ;ROW3 -------------------------------
+    
+  button_row = WIDGET_BASE(base,$
+  /ALIGN_CENTER,$
+  /ROW)
+  
+  go_manual = WIDGET_BUTTON(button_row,$
+  VALUE = 'Switch to Manual Mode',$
+  UNAME = 'trans_auto_go_to_manual_button',$
+  SCR_XSIZE = 300,$
+  SCR_YSIZE = 35)
+
+  space = WIDGET_LABEL(button_row,$
+  VALUE = '    ')
+  
+  ok = WIDGET_BUTTON(button_row,$
+  VALUE = 'OK',$
+  UNAME = 'trans_auto_ok_button',$
+  SCR_XSIZE = 200,$
+  SCR_YSIZE = 35)
+  
     
     
   RETURN, base
