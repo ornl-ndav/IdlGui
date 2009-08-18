@@ -63,6 +63,8 @@ FUNCTION design_transmission_manual_mode_step3, wBase
     FRAME = 0, $
     /TRACKING_EVENTS,$
     /MOTION_EVENTS,$
+    TOOLTIP = 'Select the beam center pixel to validate the CREATE ' + $
+    'TRANSMISSION FILE button.' ,$
     UNAME = 'manual_transmission_step3_draw')
     
   scale = WIDGET_DRAW(base,$
