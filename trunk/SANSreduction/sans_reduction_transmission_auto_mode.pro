@@ -164,7 +164,7 @@ END
 PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
 
   error = 0
-  ;CATCH, error
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH, /CANCEL
     RETURN
@@ -222,6 +222,72 @@ PRO plot_trans_auto_counts_vs_x_and_y, wBase, global
 END
 
 ;------------------------------------------------------------------------------
+PRO trans_auto_calculate_background, wBase
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  counts_vs_xy = (*(*global).counts_vs_xy)  ;DBLARR(tube,pixel)
+  
+  tube_pixel_edges = (*global).tube_pixel_edges
+  tube_min = tube_pixel_edges[0]
+  tube_max = tube_pixel_edges[2]
+  pixel_min = tube_pixel_edges[1]
+  pixel_max = tube_pixel_edges[3]
+  
+  tube_min_offset = 0
+  pixel_min_offset = 0
+  
+  nbr_tube = (size(counts_vs_xy))(1)
+  nbr_pixel = (size(counts_vs_xy))(2)
+  
+  user_counts_vs_xy = counts_vs_xy
+  nbr_pixels = N_ELEMENTS(user_counts_vs_xy)
+  
+  nbr_iterations = (*global).nbr_iteration
+  average = FLTARR(nbr_iterations)
+  
+  array = user_counts_vs_xy
+  (*(*global).user_counts_vs_xy) = array
+  index = 0
+  WHILE (index LT nbr_iterations) DO BEGIN
+    IF (index NE 0) THEN BEGIN
+      array_list = WHERE(array LE average[index-1],counts)
+      IF (counts GT 0) THEN BEGIN
+        new_array = array[array_list]
+      ENDIF
+      average_value = MEAN(new_array)
+    ENDIF ELSE BEGIN
+      average_value = MEAN(array)
+    ENDELSE
+    average[index] = average_value
+    index++
+  ENDWHILE
+  
+  DEVICE, decomposed = 0
+  
+  new_nbr_tube = (size(user_counts_vs_xy))(1)
+  new_nbr_pixel = (size(user_counts_vs_xy))(2)
+  
+  xaxis = INDGEN(new_nbr_tube) + tube_min
+  yaxis = INDGEN(new_nbr_pixel) + pixel_min
+  
+  trans_manual_step2 = (*global).trans_manual_step2
+  trans_manual_step2.user_counts_vs_xy = PTR_NEW(user_counts_vs_xy)
+  trans_manual_step2.xaxis = PTR_NEW(xaxis)
+  trans_manual_step2.yaxis = PTR_NEW(yaxis)
+  trans_manual_step2.average_value = average_value
+  (*global).trans_manual_step2 = trans_manual_step2
+  
+  background = FIX(average_value)
+  s_background = STRCOMPRESS(background,/REMOVE_ALL)
+  
+  putTextFieldValueMainBase, wBase, UNAME='trans_auto_back_value', s_background
+  (*global).trans_manual_step2_background = background
+  
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_auto_mode_base, main_event
 
@@ -243,6 +309,7 @@ PRO launch_transmission_auto_mode_base, main_event
     tt_zoom_data: PTR_NEW(0L), $
     x0y0x1y1: [127,83,214,153],$
     tube_pixel_edges: [91,123,99,133],$
+    nbr_iteration: 2,$
     
     background: PTR_NEW(0L), $
     counts_vs_x: PTR_NEW(0L), $
@@ -338,6 +405,8 @@ PRO launch_transmission_auto_mode_base, main_event
   display_selection_info_values, wBase, global_auto
   
   plot_trans_auto_counts_vs_x_and_y, wBase, global_auto
+  
+  trans_auto_calculate_background, wBase
   
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)

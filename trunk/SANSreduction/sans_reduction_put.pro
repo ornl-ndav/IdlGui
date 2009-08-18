@@ -37,7 +37,7 @@ WIDGET_CONTROL, id, SET_VALUE=text
 END
 
 ;==============================================================================
-PRO   putTextFieldValueMainBase, wBase, UNAME=uname, value
+PRO putTextFieldValueMainBase, wBase, UNAME=uname, value
 id = WIDGET_INFO(wBase, FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=value
 END
