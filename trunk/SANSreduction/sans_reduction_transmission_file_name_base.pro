@@ -134,7 +134,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path, $
   row2 = WIDGET_BASE(wBase,$
     /ROW)
     
-  xsize = 120
+  xsize = 125
   cancel = WIDGET_BUTTON(row2,$
     SCR_XSIZE = xsize,$
     VALUE = 'CANCEL',$
@@ -142,7 +142,7 @@ PRO transmission_file_name_base_gui, wBase, main_base_geometry, output_path, $
     
   preview = WIDGET_BUTTON(row2,$
     SCR_XSIZE = xsize,$
-    VALUE = 'PREVIEW...',$
+    VALUE = 'PREVIEW / PLOT ...',$
     UNAME = 'trans_file_name_base_preview')
     
   OK = WIDGET_BUTTON(row2,$
@@ -492,7 +492,7 @@ PRO preview_trans_file, Event
 
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
   title = 'Preview of ' + output_file_name
-  XDISPLAYFILE, GROUP=id, TEXT=big_array, TITLE=title
+  XDISPLAYFILE, GROUP=id, TEXT=big_array, TITLE=title, HEIGHT=50
 
 END
 
