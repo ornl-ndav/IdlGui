@@ -43,13 +43,15 @@ PRO plot_transmission_auto_scale, base, sys_color_window_bk
   sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
   sys_color_window_bk = sys_color.window_bk
   
-  xmargin = 8.2
-  ymargin = 5
+  xmargin_left  = 7.5
+  xmargin_right = 5.8
+  ymargin_bottom = 5.9
+  ymargin_top    = 2.1
+  
   plot, randomn(s,80), $
     XRANGE     = [80,112],$
     YRANGE     = [112,152],$
     COLOR      = convert_rgb([0B,0B,255B]), $
-    ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
     BACKGROUND = convert_rgb(sys_color_window_bk),$
     THICK      = 1, $
     TICKLEN    = -0.025, $
@@ -61,8 +63,8 @@ PRO plot_transmission_auto_scale, base, sys_color_window_bk
     YTICKS      = 20,$
     XTITLE      = 'TUBES',$
     YTITLE      = 'PIXELS',$
-    XMARGIN     = [xmargin, xmargin],$
-    YMARGIN     = [ymargin, ymargin],$
+    XMARGIN     = [xmargin_left, xmargin_right],$
+    YMARGIN     = [ymargin_bottom, ymargin_top],$
     /NODATA
   AXIS, yaxis=1, YRANGE=[112,152], YTICKS=20, YSTYLE=1, $
     COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025

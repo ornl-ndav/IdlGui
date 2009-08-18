@@ -57,11 +57,11 @@ PRO transmission_auto_mode_gui, wBase, main_base_geometry, sys_color_window_bk
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
     
-  WIDGET_CONTROL, wBase, /REALIZE
-  
   base = design_transmission_auto_mode(wBase)
   
- ; plot_transmission_auto_scale, step1_base, sys_color_window_bk
+  WIDGET_CONTROL, wBase, /REALIZE
+  
+  plot_transmission_auto_scale, base, sys_color_window_bk
   
 END
 
@@ -173,8 +173,8 @@ PRO launch_transmission_auto_mode_base, main_event
   XMANAGER, "launch_transmission_auto_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
- ; plot_data_around_beam_stop, main_base=wBase, global, global_step1
-  
+  ; plot_data_around_beam_stop, main_base=wBase, global, global_step1
+    
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
   (*(*global_step1).tof_array) = tof_array
