@@ -411,7 +411,6 @@ PRO create_auto_trans_array, wBase
     array_of_local_pixel = both_banks[*,pixel,tube] ;pixel from the transmission peak
     trans_peak_array += array_of_local_pixel
     trans_peak_array_error += array_of_local_pixel^2
-    print, array_of_local_pixel[0]
     index++
   ENDWHILE
   
