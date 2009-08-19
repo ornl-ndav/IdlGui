@@ -491,6 +491,7 @@ PRO output_trans_file, wBase
   nexus_file_name = (*main_global).data_nexus_file_name
   s_run_number = getNexusRunNumber(nexus_file_name)
   output_file_name = '~/results/transmission_' + s_run_number + '.txt'
+  (*global).output_file_name = output_file_name
   
   bank_tube_pixel = (*global).beam_center_bank_tube_pixel
   bank = STRCOMPRESS(bank_tube_pixel[0],/REMOVE_ALL)
@@ -551,6 +552,31 @@ PRO output_trans_file, wBase
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_transmission_file, wBase
+
+  ;get global structure
+  WIDGET_CONTROL, wBase, GET_UVALUE=global
+  
+  output_file_name = (*global).output_file_name
+
+  y_axis = (*(*global).transmission_peak_value)
+  y_error_axis = (*(*global).transmission_peak_error_value)
+  x_axis = (*(*global).transmission_lambda_axis)
+
+  xtitle = "Lambda (Angstroms)"
+  ytitle = "Counts"
+  title = "Preview of Transmission file " + output_file_name 
+
+  uname = 'trans_auto_trans_plot'
+  id = WIDGET_INFO(wBase,find_by_uname=uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+
+  plot, x_axis, y_axis, XTITLE=xtitle, YTITLE=ytitle, TITLE=title
+
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_auto_mode_base, main_event
 
@@ -575,6 +601,7 @@ PRO launch_transmission_auto_mode_base, main_event
     nbr_iteration: 2,$
     trans_auto_background: 0L, $
     trans_auto_transmission_intensity: 0L, $
+    output_file_name: '',$
     
     tube_beam_center: 95,$
     pixel_beam_center: 127,$
@@ -688,6 +715,8 @@ PRO launch_transmission_auto_mode_base, main_event
   
   create_auto_trans_array, wBase
   output_trans_file, wBase
+  
+  plot_transmission_file, wBase
     
 END
 
