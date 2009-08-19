@@ -369,8 +369,6 @@ PRO create_auto_trans_array, wBase
   ;print, format='("bank: ",i4,", tube: ",i4,", pixel: ",i4)',bank,tube,pixel
   nexus_file_name = (*main_global).data_nexus_file_name
   
-  print, nexus_file_name
-  
   ;retrieve distance sample_moderator
   distance_moderator_sample = $
     retrieve_distance_moderator_sample(nexus_file_name)
@@ -426,6 +424,8 @@ PRO display_beam_center_pixel, wBase
   
   tube = (*global).tube_beam_center
   pixel = (*global).pixel_beam_center
+  bank = getBankNumber(tube+1)
+  (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
   counts = getTransAutoCounts(wBase, tube, pixel)
   
   putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
@@ -471,6 +471,82 @@ PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
   
   PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color
   PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+END
+
+;------------------------------------------------------------------------------
+PRO output_trans_file, wBase
+
+  ;get global structure
+  WIDGET_CONTROL, wBase, GET_UVALUE=global
+  
+  ;retrieve info about pixel selected and file name
+  main_global = (*global).global
+  
+  y_axis = (*(*global).transmission_peak_value)
+  y_error_axis = (*(*global).transmission_peak_error_value)
+  x_axis = (*(*global).transmission_lambda_axis)
+  
+  ;get full file name
+  nexus_file_name = (*main_global).data_nexus_file_name
+  s_run_number = getNexusRunNumber(nexus_file_name)
+  output_file_name = '~/results/transmission_' + s_run_number + '.txt'
+  
+  bank_tube_pixel = (*global).beam_center_bank_tube_pixel
+  bank = STRCOMPRESS(bank_tube_pixel[0],/REMOVE_ALL)
+  tube = STRCOMPRESS(bank_tube_pixel[1],/REMOVE_ALL)
+  pixel = STRCOMPRESS(bank_tube_pixel[2],/REMOVE_ALL)
+  
+  ;first part of file
+  first_part = STRARR(5)
+  first_part[0] = '#F transmission: ' + nexus_file_name
+  first_part[1] = ''
+  first_part[2] = "#S 1 Spectrum ID ('bank" + bank + "', (" + tube + $
+    ", " + pixel + "))"
+  first_part[3] = '#N 3'
+  first_part[4] = '#L  wavelength(Angstroms)   Ratio()   Sigma()'
+  
+  id = WIDGET_INFO(wBase, FIND_BY_UNAME='transmission_auto_mode_base')
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) then begin
+    CATCH, /CANCEL
+    title = 'Transmission File Name Creation FAILED!'
+    message_text = 'Creation of transmission file ' + output_file_name + $
+      ' FAILED!'
+    result = DIALOG_MESSAGE(message_text, $
+      /CENTER, $
+      DIALOG_PARENT=id, $
+      /ERROR, $
+      TITLE = title)
+  ;put error statement here
+  ENDIF ELSE BEGIN
+    ;open output file
+    OPENW, 1, output_file_name
+    ;write first part
+    FOR i=0,N_ELEMENTS(first_part)-1 DO BEGIN
+      PRINTF, 1, first_part[i]
+    ENDFOR
+    FOR i=0,N_ELEMENTS(y_axis)-1 DO BEGIN
+      line = STRCOMPRESS(x_axis[i],/REMOVE_ALL) + ' '
+      line += STRCOMPRESS(y_axis[i],/REMOVE_ALL) + ' '
+      line += STRCOMPRESS(y_error_axis[i],/REMOVE_ALL)
+      PRINTF, 1, line
+    ENDFOR
+    PRINTF, 1, STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL)
+
+    title =  'Transmission File has been created with SUCCESS!'
+    message_text = 'Creation of transmission file ' + output_file_name + $
+      ' WORKED!'
+;    result = DIALOG_MESSAGE(message_text, $
+;      /INFORMATION, $
+;      /CENTER, $
+;      DIALOG_PARENT=id, $
+;      TITLE = title)
+  ENDELSE
+  CLOSE, 1
+  FREE_LUN, 1
   
 END
 
@@ -591,6 +667,10 @@ PRO launch_transmission_auto_mode_base, main_event
   WIDGET_CONTROL, wBase, SET_UVALUE = global_auto
   XMANAGER, "launch_transmission_auto_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
+  
+    ;get TOF array
+  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+  (*(*global_auto).tof_array) = tof_array
     
   plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
   
@@ -606,11 +686,8 @@ PRO launch_transmission_auto_mode_base, main_event
   
   display_beam_center_pixel, wBase
   
-  ;  create_auto_trans_array, wBase
-  
-  ;get TOF array
-  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
-  (*(*global_auto).tof_array) = tof_array
-  
+  create_auto_trans_array, wBase
+  output_trans_file, wBase
+    
 END
 
