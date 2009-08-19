@@ -8,6 +8,8 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "loadct",/either
 resolve_routine, "errplot",/either
 resolve_routine, "CONGRID",/either
+resolve_routine, "MEAN",/either
+resolve_routine, "MOMENT", /either
 
 save,/routines,filename = CurrentFolder + '/sans_reduction.sav'
 exit
