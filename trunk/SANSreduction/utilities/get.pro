@@ -394,3 +394,61 @@ FUNCTION getNexusRunNumber, nexus_file_name
     RETURN, run_number
   ENDELSE
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getTransAutoCounts, wBase, tube, pixel
+  
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN RETURN, 'N/A'
+  
+  new_tube = tube - (*global).tube_min
+  new_pixel = pixel - (*global).pixel_min
+  
+  tt_zoom_data = (*(*global).step3_tt_zoom_data)
+  counts = tt_zoom_data[new_tube,new_pixel]
+  
+  RETURN, FIX(counts)
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getAutoTubeDeviceFromData, wBase, tube_data
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  tube_min = (*global).tube_min
+  tube_max = (*global).tube_max + 1
+  
+  offset_tube = tube_data - tube_min
+  xsize = 350.
+  
+  coeff_x = xsize / (FLOAT(tube_max) - FLOAT(tube_min))
+  
+  tube_device = FIX((offset_tube) * coeff_x)
+  
+  RETURN, tube_device
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getAutoPixelDeviceFromData, wBase, pixel_data
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  pixel_max = (*global).pixel_max + 1
+  pixel_min = (*global).pixel_min
+  
+  offset_pixel = pixel_data - pixel_min
+  
+  ysize = 300.
+  
+  coeff_y = ysize / (FLOAT(pixel_max) - FLOAT(pixel_min))
+  
+  pixel_device = FIX((offset_pixel) * coeff_y)
+  
+  RETURN, pixel_device
+END
