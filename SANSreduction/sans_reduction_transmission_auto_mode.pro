@@ -283,8 +283,44 @@ PRO trans_auto_calculate_background, wBase
   s_background = STRCOMPRESS(background,/REMOVE_ALL)
   
   putTextFieldValueMainBase, wBase, UNAME='trans_auto_back_value', s_background
-  (*global).trans_manual_step2_background = background
+  (*global).trans_auto_background = background
   
+END
+
+;------------------------------------------------------------------------------
+PRO calculate_trans_auto_transmission_intensity, wBase
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  background_value = (*global).trans_auto_background
+  counts_vs_xy     = (*(*global).counts_vs_xy)
+  
+  ;get pixel min, pixel max, tube min and tube max selected by user
+  tube_pixel_edges = (*global).tube_pixel_edges
+  tube_min = tube_pixel_edges[0]
+  tube_max = tube_pixel_edges[2]
+  pixel_min = tube_pixel_edges[1]
+  pixel_max = tube_pixel_edges[3]
+  
+  nbr_tube = (size(counts_vs_xy))(1)
+  nbr_pixel = (size(counts_vs_xy))(2)
+  
+  array = counts_vs_xy
+  
+  ;  get_transmission_peak_tube_pixel_value, Event, $
+  ;    array, $
+  ;    background_value, $
+  ;    tube_min, $
+  ;    pixel_min
+  
+  array_list = WHERE(array GT background_value)
+  array_peak = array[array_list]
+  transmission_intensity = TOTAL(array_peak)
+  (*global).trans_auto_transmission_intensity = transmission_intensity
+  putTextFieldValueMainBase, wBase, uname='trans_auto_trans_value', $
+    STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -310,6 +346,8 @@ PRO launch_transmission_auto_mode_base, main_event
     x0y0x1y1: [127,83,214,153],$
     tube_pixel_edges: [91,123,99,133],$
     nbr_iteration: 2,$
+    trans_auto_background: 0L, $
+    trans_auto_transmission_intensity: 0L, $
     
     background: PTR_NEW(0L), $
     counts_vs_x: PTR_NEW(0L), $
@@ -317,12 +355,10 @@ PRO launch_transmission_auto_mode_base, main_event
     pixel_x_axis: PTR_NEW(0L), $
     tube_x_axis: PTR_NEW(0L), $
     counts_vs_xy: PTR_NEW(0L), $
-    trans_manual_step2_background: 0L, $
-    trans_manual_step2_transmission_intensity: 0L, $
+    
     left_button_clicked: 0, $
     sys_color_window_bk: sys_color_window_bk, $
     working_with_xy: 0, $ ;step1
-    
     trans_manual_step2_ymin_device: 40,$
     trans_manual_step2_ymax_device: 390,$
     trans_manual_step2_xmin_device: 61, $
@@ -407,6 +443,8 @@ PRO launch_transmission_auto_mode_base, main_event
   plot_trans_auto_counts_vs_x_and_y, wBase, global_auto
   
   trans_auto_calculate_background, wBase
+  
+  calculate_trans_auto_transmission_intensity, wBase
   
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
