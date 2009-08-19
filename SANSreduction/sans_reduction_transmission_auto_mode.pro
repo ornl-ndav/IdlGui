@@ -45,12 +45,29 @@ PRO launch_transmission_auto_mode_event, Event
       WIDGET_CONTROL, id, /DESTROY
     END
     
-    WIDGET_INFO(event.top, find_By_uname='auto_transmission_draw'): BEGIN
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='trans_auto_go_to_manual_button'): BEGIN
+      switch_to_manual_mode, Event
     END
     
     ELSE:
     
   ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO switch_to_manual_mode, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  main_event = (*global).main_event
+  launch_transmission_manual_mode_base, main_event
+  
+  id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME='transmission_auto_mode_base')
+  WIDGET_CONTROL, id, /DESTROY
   
 END
 
@@ -429,14 +446,14 @@ PRO display_beam_center_pixel, wBase
   counts = getTransAutoCounts(wBase, tube, pixel)
   
   putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
-  STRCOMPRESS(tube,/REMOVE_ALL)
+    STRCOMPRESS(tube,/REMOVE_ALL)
   putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_pixel', $
-  STRCOMPRESS(pixel,/REMOVE_ALL)
+    STRCOMPRESS(pixel,/REMOVE_ALL)
   putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_counts', $
-  STRCOMPRESS(counts,/REMOVE_ALL)
-  
-  plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
+    STRCOMPRESS(counts,/REMOVE_ALL)
     
+  plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -455,7 +472,7 @@ PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
   xmax_device = getAutoTubeDeviceFromData(wBase, tube+1)
   ymin_device = getAutoPixelDeviceFromData(wBase, pixel)
   ymax_device = getAutoPixelDeviceFromData(wBase, pixel+1)
-    
+  
   color = 250
   
   PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
@@ -536,15 +553,15 @@ PRO output_trans_file, wBase
       PRINTF, 1, line
     ENDFOR
     PRINTF, 1, STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL)
-
+    
     title =  'Transmission File has been created with SUCCESS!'
     message_text = 'Creation of transmission file ' + output_file_name + $
       ' WORKED!'
-;    result = DIALOG_MESSAGE(message_text, $
-;      /INFORMATION, $
-;      /CENTER, $
-;      DIALOG_PARENT=id, $
-;      TITLE = title)
+  ;    result = DIALOG_MESSAGE(message_text, $
+  ;      /INFORMATION, $
+  ;      /CENTER, $
+  ;      DIALOG_PARENT=id, $
+  ;      TITLE = title)
   ENDELSE
   CLOSE, 1
   FREE_LUN, 1
@@ -558,22 +575,22 @@ PRO plot_transmission_file, wBase
   WIDGET_CONTROL, wBase, GET_UVALUE=global
   
   output_file_name = (*global).output_file_name
-
+  
   y_axis = (*(*global).transmission_peak_value)
   y_error_axis = (*(*global).transmission_peak_error_value)
   x_axis = (*(*global).transmission_lambda_axis)
-
+  
   xtitle = "Lambda (Angstroms)"
   ytitle = "Counts"
-  title = "Preview of Transmission file " + output_file_name 
-
+  title = "Preview of Transmission file " + output_file_name
+  
   uname = 'trans_auto_trans_plot'
   id = WIDGET_INFO(wBase,find_by_uname=uname)
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-
+  
   plot, x_axis, y_axis, XTITLE=xtitle, YTITLE=ytitle, TITLE=title
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -694,11 +711,11 @@ PRO launch_transmission_auto_mode_base, main_event
   WIDGET_CONTROL, wBase, SET_UVALUE = global_auto
   XMANAGER, "launch_transmission_auto_mode", wBase, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
-  
-    ;get TOF array
+    
+  ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
   (*(*global_auto).tof_array) = tof_array
-    
+  
   plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
   
   plot_trans_auto_central_selection, wBase
@@ -717,6 +734,6 @@ PRO launch_transmission_auto_mode_base, main_event
   output_trans_file, wBase
   
   plot_transmission_file, wBase
-    
+  
 END
 
