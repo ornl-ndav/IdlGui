@@ -46,9 +46,6 @@ PRO launch_transmission_auto_mode_event, Event
     END
     
     WIDGET_INFO(event.top, find_By_uname='auto_transmission_draw'): BEGIN
-      print, 'event.x: ' + string(event.x)
-      print, 'evnet.y: ' + string(event.y)
-      print
     END
     
     ELSE:
@@ -58,7 +55,7 @@ PRO launch_transmission_auto_mode_event, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_trans_manual_step1_central_selection, wBase
+PRO plot_trans_auto_central_selection, wBase
 
   ;get global structure
   WIDGET_CONTROL,wBase,GET_UVALUE=global
@@ -358,6 +355,126 @@ PRO get_transmission_auto_peak_tube_pixel_value, wBase, $
 END
 
 ;------------------------------------------------------------------------------
+PRO create_auto_trans_array, wBase
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  main_global = (*global).global
+  
+  bank_tube_pixel = (*global).beam_center_bank_tube_pixel
+  bank = bank_tube_pixel[0]
+  tube = bank_tube_pixel[1]
+  pixel = bank_tube_pixel[2]
+  ;print, format='("bank: ",i4,", tube: ",i4,", pixel: ",i4)',bank,tube,pixel
+  nexus_file_name = (*main_global).data_nexus_file_name
+  
+  print, nexus_file_name
+  
+  ;retrieve distance sample_moderator
+  distance_moderator_sample = $
+    retrieve_distance_moderator_sample(nexus_file_name)
+  distance_sample_beam_center_pixel = $
+    retrieve_distance_bc_pixel_sample(nexus_file_name, bank, tube, pixel)
+  total_distance = distance_moderator_sample + $
+    distance_sample_beam_center_pixel
+    
+  both_banks = (*(*main_global).both_banks) ;[TOF,Pixel,Tube]
+  nbr_tof = (size(both_banks))(1)
+  
+  trans_peak_tube = (*(*global).trans_peak_tube)
+  trans_peak_pixel = (*(*global).trans_peak_pixel)
+  
+  ;check number of pixel part of the transmission file
+  nbr_pixel = N_ELEMENTS(trans_peak_tube)
+  trans_peak_array = LONARR(nbr_tof) ;total counts for each tof
+  trans_peak_array_error = DBLARR(nbr_tof) ;total counts error for each tof
+  index = 0
+  WHILE (index LT nbr_pixel) DO BEGIN
+    tube = trans_peak_tube[index]
+    pixel = trans_peak_pixel[index]
+    array_of_local_pixel = both_banks[*,pixel,tube] ;pixel from the transmission peak
+    trans_peak_array += array_of_local_pixel
+    trans_peak_array_error += array_of_local_pixel^2
+    index++
+  ENDWHILE
+  
+  ;take square root of result
+  trans_peak_array_error = SQRT(trans_peak_array_error)
+  
+  ;get tof array
+  tof_array = (*(*global).tof_array)
+  
+  ;do the conversion from tof into Lambda
+  mass_neutron = (*main_global).mass_neutron
+  planck_constant = (*main_global).planck_constant
+  coeff = planck_constant / (mass_neutron * DOUBLE(total_distance))
+  
+  lambda_axis = tof_array * 1e4 * coeff[0] ;1e4 to go into microS and Angstroms
+  
+  (*(*global).transmission_peak_value) = trans_peak_array
+  (*(*global).transmission_peak_error_value) = trans_peak_array_error
+  (*(*global).transmission_lambda_axis) = lambda_axis
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_beam_center_pixel, wBase
+
+  ;get global structure
+  WIDGET_CONTROL,wBase, GET_UVALUE=global
+  
+  tube = (*global).tube_beam_center
+  pixel = (*global).pixel_beam_center
+  counts = getTransAutoCounts(wBase, tube, pixel)
+  
+  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_tube', $
+  STRCOMPRESS(tube,/REMOVE_ALL)
+  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_pixel', $
+  STRCOMPRESS(pixel,/REMOVE_ALL)
+  putTextFieldValueMainBase, wBase, UNAME='trans_auto_beam_center_counts', $
+  STRCOMPRESS(counts,/REMOVE_ALL)
+  
+  plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
+    
+END
+
+;------------------------------------------------------------------------------
+PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
+
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  uname = 'auto_transmission_draw'
+  ;select plot area
+  id = WIDGET_INFO(wBase,find_by_uname=uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  xmin_device = getAutoTubeDeviceFromData(wBase, tube)
+  xmax_device = getAutoTubeDeviceFromData(wBase, tube+1)
+  ymin_device = getAutoPixelDeviceFromData(wBase, pixel)
+  ymax_device = getAutoPixelDeviceFromData(wBase, pixel+1)
+    
+  color = 250
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+  color = 0
+  
+  PLOTS, xmin_device, ymin_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymax_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+  PLOTS, xmin_device, ymax_device, /DEVICE, COLOR=color
+  PLOTS, xmax_device, ymin_device, /DEVICE, COLOR=color, /CONTINUE, THICK=3
+  
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_auto_mode_base, main_event
 
@@ -382,6 +499,9 @@ PRO launch_transmission_auto_mode_base, main_event
     nbr_iteration: 2,$
     trans_auto_background: 0L, $
     trans_auto_transmission_intensity: 0L, $
+    
+    tube_beam_center: 95,$
+    pixel_beam_center: 127,$
     
     background: PTR_NEW(0L), $
     counts_vs_x: PTR_NEW(0L), $
@@ -436,8 +556,12 @@ PRO launch_transmission_auto_mode_base, main_event
     working_with_tube: 1 ,$ ;step2 left or right
     working_with_pixel: 1, $ ;step2 bottom (1) or top (2) pixel
     tube_pixel_min_max: INTARR(4),$
-    xoffset_plot: 80L,$
+    xoffset_plot: 80L, $
+    tube_min: 80L, $
+    tube_max: 111, $
     yoffset_plot: 112L, $
+    pixel_min: 112, $
+    pixel_max: 151,$
     
     ;step3
     both_banks: (*(*global).both_banks), $
@@ -470,7 +594,7 @@ PRO launch_transmission_auto_mode_base, main_event
     
   plot_auto_data_around_beam_stop, main_base=wBase, global, global_auto
   
-  plot_trans_manual_step1_central_selection, wBase
+  plot_trans_auto_central_selection, wBase
   
   display_selection_info_values, wBase, global_auto
   
@@ -479,6 +603,10 @@ PRO launch_transmission_auto_mode_base, main_event
   trans_auto_calculate_background, wBase
   
   calculate_trans_auto_transmission_intensity, wBase
+  
+  display_beam_center_pixel, wBase
+  
+  ;  create_auto_trans_array, wBase
   
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
