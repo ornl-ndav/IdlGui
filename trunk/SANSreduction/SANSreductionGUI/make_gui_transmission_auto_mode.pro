@@ -103,7 +103,6 @@ FUNCTION design_transmission_auto_mode, wBase
     YOFFSET = main_yoffset,$
     SCR_XSIZE = xsize_main,$
     SCR_YSIZE = ysize_main,$
-    /motion_events,$
     UNAME = 'auto_transmission_draw')
     
   scale = WIDGET_DRAW(row1_left,$
