@@ -36,6 +36,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run make_gui_transmission_manual_mode_step2.pro
 .run make_gui_transmission_manual_mode_step3.pro
 .run make_gui_transmission_auto_mode.pro
+.run make_gui_beam_center_base.pro
 
 ;Build all procedures
 cd, CurrentFolder
@@ -83,6 +84,9 @@ cd, CurrentFolder
 
 .run sans_reduction_transmission_auto_mode.pro
 .run sans_reduction_transmission_auto_mode_routines.pro
+
+;beam center
+.run sans_reduction_beam_center_base.pro
 
 ;main functions
 .run MainBaseEvent.pro

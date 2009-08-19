@@ -550,7 +550,7 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_images, EVENT=event, $
             beam_center='on'
-            ;launch_transmission_auto_manual_base, Event
+            launch_beam_center_base, Event
         ENDIF ELSE BEGIN
           display_images, EVENT=event, $
             beam_center='off'
