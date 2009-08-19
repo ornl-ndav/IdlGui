@@ -33,9 +33,10 @@
 ;==============================================================================
 
 PRO display_images, MAIN_BASE=main_base, EVENT=event, $
-    transmission=transmission
+    transmission=transmission, beam_center=beam_center
     
   IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
+  IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
   
   ;Transmission calculation button
   IF (transmission EQ 'off') THEN BEGIN
@@ -54,18 +55,22 @@ PRO display_images, MAIN_BASE=main_base, EVENT=event, $
   WSET, id
   TV, raw_buttons, 0, 0,/true
   
-;  ;beam center button
-;  raw_buttons = READ_PNG('SANSreduction_images/beam_center.png')
-;  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-;    mode_id = WIDGET_INFO(main_base, $
-;      FIND_BY_UNAME='beam_center_calculation_button')
-;  ENDIF ELSE BEGIN
-;    mode_id = WIDGET_INFO(Event.top, $
-;      FIND_BY_UNAME='beam_center_calculation_button')
-;  ENDELSE
-;  WIDGET_CONTROL, mode_id, GET_VALUE=id
-;  WSET, id
-;  TV, raw_buttons, 0, 0,/true
+  ;beam center button
+  IF (beam_center EQ 'off') THEN BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/beam_center_off.png')
+  ENDIF ELSE BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/beam_center_on.png')
+  ENDELSE
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME='beam_center_calculation_button')
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_calculation_button')
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, raw_buttons, 0, 0,/true
   
 END
 
@@ -146,17 +151,17 @@ END
 ;------------------------------------------------------------------------------
 PRO  display_trans_manual_step2_3Dview_button, Event, MODE=mode
 
-CASE (mode) OF
-'on': image = 'SANSreduction_images/3dview_on.png'
-'off': image = 'SANSreduction_images/3dview_off.png'
-'disable': image = 'SANSreduction_images/3dview_off_disable.png'
-ENDCASE
-
-threeD_view_png = READ_PNG(image)
-uname = 'trans_manual_step2_3d_view_button'
-mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-WIDGET_CONTROL, mode_id, GET_VALUE=id
-WSET, id
-TV, threeD_view_png, 0, 0, /true
-
+  CASE (mode) OF
+    'on': image = 'SANSreduction_images/3dview_on.png'
+    'off': image = 'SANSreduction_images/3dview_off.png'
+    'disable': image = 'SANSreduction_images/3dview_off_disable.png'
+  ENDCASE
+  
+  threeD_view_png = READ_PNG(image)
+  uname = 'trans_manual_step2_3d_view_button'
+  mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, threeD_view_png, 0, 0, /true
+  
 END

@@ -540,6 +540,33 @@ PRO MAIN_BASE_event, Event
       ENDELSE ;enf of catch statement
     END
     
+    ;Beam Center Button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='beam_center_calculation_button'): BEGIN
+      error = 0
+      CATCH, error  
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_images, EVENT=event, $
+            beam_center='on'
+            ;launch_transmission_auto_manual_base, Event
+        ENDIF ELSE BEGIN
+          display_images, EVENT=event, $
+            beam_center='off'
+        ENDELSE
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='beam_center_calculation_button')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE ;enf of catch statement
+    END
+    
     ;= TAB2 (REDUCE) ==========================================================
     
     ;---- GO DATA REDUCTION button
