@@ -308,12 +308,12 @@ PRO calculate_trans_auto_transmission_intensity, wBase
   
   array = counts_vs_xy
   
-  ;  get_transmission_peak_tube_pixel_value, Event, $
-  ;    array, $
-  ;    background_value, $
-  ;    tube_min, $
-  ;    pixel_min
-  
+  get_transmission_auto_peak_tube_pixel_value, wBase, $
+    array, $
+    background_value, $
+    tube_min, $
+    pixel_min
+    
   array_list = WHERE(array GT background_value)
   array_peak = array[array_list]
   transmission_intensity = TOTAL(array_peak)
@@ -321,6 +321,40 @@ PRO calculate_trans_auto_transmission_intensity, wBase
   putTextFieldValueMainBase, wBase, uname='trans_auto_trans_value', $
     STRCOMPRESS(transmission_intensity,/REMOVE_ALL)
     
+END
+
+;------------------------------------------------------------------------------
+PRO get_transmission_auto_peak_tube_pixel_value, wBase, $
+    array, $
+    background_value, $
+    tube_min_offset, $
+    pixel_min_offset
+    
+  ;get global structure
+  WIDGET_CONTROL,wBase,GET_UVALUE=global
+  
+  nbr_tube = (size(array))(1)
+  nbr_pixel = (size(array))(2)
+  
+  trans_peak_tube = ['']
+  trans_peak_pixel = ['']
+  
+  FOR tube=0,nbr_tube-1 DO BEGIN
+    FOR pixel=0, nbr_pixel-1 DO BEGIN
+      IF (array[tube,pixel] GT background_value) THEN BEGIN
+        trans_peak_tube = [trans_peak_tube,tube]
+        trans_peak_pixel = [trans_peak_pixel,pixel]
+      ENDIF
+    ENDFOR
+  ENDFOR
+  
+  ;remove first element
+  trans_peak_tube = trans_peak_tube[1:N_ELEMENTS(trans_peak_tube)-1]
+  trans_peak_pixel = trans_peak_pixel[1:N_ELEMENTS(trans_peak_pixel)-1]
+  
+  (*(*global).trans_peak_tube) = trans_peak_tube + tube_min_offset
+  (*(*global).trans_peak_pixel) = trans_peak_pixel + pixel_min_offset
+  
 END
 
 ;------------------------------------------------------------------------------
