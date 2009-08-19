@@ -408,7 +408,8 @@ FUNCTION getTransAutoCounts, wBase, tube, pixel
   new_tube = tube - (*global).tube_min
   new_pixel = pixel - (*global).pixel_min
   
-  tt_zoom_data = (*(*global).step3_tt_zoom_data)
+  tt_zoom_data = (*(*global).tt_zoom_data)
+  
   counts = tt_zoom_data[new_tube,new_pixel]
   
   RETURN, FIX(counts)
