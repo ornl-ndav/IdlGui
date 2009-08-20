@@ -150,6 +150,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     SCR_XSIZE = 3*xsize+60,$
     SCR_YSIZE = 310,$
     SENSITIVE = 1,$
+    UNAME = 'beam_center_tab',$
     /TRACKING_EVENTS)
     
   tab1 = WIDGET_BASE(tab_selection,$

@@ -33,62 +33,71 @@
 ;==============================================================================
 
 PRO activate_widget, Event, uname, activate_status
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SENSITIVE=activate_status
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SENSITIVE=activate_status
 END
 
 ;------------------------------------------------------------------------------
 PRO activate_widget_list, Event, uname_list, activate_status
-sz = N_ELEMENTS(uname_list)
-FOR i=0,(sz-1) DO BEGIN
+  sz = N_ELEMENTS(uname_list)
+  FOR i=0,(sz-1) DO BEGIN
     activate_widget, Event, uname_list[i], activate_status
-ENDFOR
+  ENDFOR
 END
 
 ;------------------------------------------------------------------------------
 ;This function map or not the given base
 PRO map_base, Event, uname, map_status
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, MAP=map_status
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, MAP=map_status
 END
 
 ;This function map or not the given base
 PRO MapBase, Event, uname=uname, map_status
-map_base, Event, uname, map_status
+  map_base, Event, uname, map_status
 END
 
 ;------------------------------------------------------------------------------
 ;This function activates or not the GO DATA REDUCTION button
 PRO activate_go_data_reduction, Event, activate_status
-activate_widget, Event, 'go_data_reduction_button', activate_status
+  activate_widget, Event, 'go_data_reduction_button', activate_status
 END
 
 ;------------------------------------------------------------------------------
 ;This function returns the select value of the CW_BGROUP
 FUNCTION getCWBgroupValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value
 END
 
 ;------------------------------------------------------------------------------
 ;This function put the full path of the file as the new button label
 PRO putNewButtonValue, Event, uname, value
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;------------------------------------------------------------------------------
 ;This function clear off the display of the main plot
 PRO ClearMainPlot, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
-WIDGET_CONTROL, id, GET_VALUE = id_value
-WSET, id_value
-ERASE
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  ERASE
 END
 
 ;------------------------------------------------------------------------------
 PRO ChangeTitle, Event, uname=uname, title
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, BASE_SET_TITLE=title 
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, BASE_SET_TITLE=title
 END
+
+;------------------------------------------------------------------------------
+PRO ActivateTabNbr, Event, uname, tab_nbr
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_TAB_CURRENT=tab_nbr
+END
+
+
+
