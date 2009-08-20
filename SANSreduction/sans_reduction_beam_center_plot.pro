@@ -144,7 +144,8 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   id = WIDGET_INFO(base,FIND_BY_UNAME=draw_uname)
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
-
+  DEVICE, DECOMPOSED=1
+  
   ;Calibration Range
   tube_min_data = (*global).calibration_range_default_selection.tube_min
   tube_max_data = (*global).calibration_range_default_selection.tube_max
@@ -156,16 +157,17 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
   y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
   y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
-    
+  
   color = (*global).calibration_range_default_selection.color
   thick = (*global).calibration_range_default_selection.thick
+  color = convert_rgb(color)
   
   PLOTS, x_min, y_min, /DEVICE, COLOR=color
   PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-
+  
   ;Beam stop region
   tube_min_data = (*global).beam_stop_default_selection.tube_min
   tube_max_data = (*global).beam_stop_default_selection.tube_max
@@ -177,14 +179,17 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
   y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
   y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
-    
+  
   color = (*global).beam_stop_default_selection.color
   thick = (*global).beam_stop_default_selection.thick
+  color = convert_rgb(color)
   
   PLOTS, x_min, y_min, /DEVICE, COLOR=color
   PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-
+ 
+  DEVICE, DECOMPOSED=0
+  
 END

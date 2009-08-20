@@ -151,5 +151,17 @@ PRO populate_defaults_wigets_values, wBase, global
     UNAME='beam_center_beam_stop_pixel_right', $
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
+  ;2D plots
+  tube  = (*global).twoD_default_selection.tube
+  pixel = (*global).twoD_default_selection.pixel
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_2d_plot_tube', $
+    STRCOMPRESS(tube,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_2d_plot_pixel', $
+    STRCOMPRESS(pixel,/REMOVE_ALL)
+
 END
 
