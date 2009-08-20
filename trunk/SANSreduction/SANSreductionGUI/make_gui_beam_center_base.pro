@@ -109,28 +109,31 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   ;button of selection tool
   xsize = 105
   ysize = 100
-  space_value = '  '
+  space_value = ' '
   
   space = WIDGET_LABEL(row1_right_row1,$
     VALUE = ' ')
     
   button1 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
-    YSIZE = ysize)
+    YSIZE = ysize,$
+    UNAME = 'beam_center_button1')
     
   space = WIDGET_LABEL(row1_right_row1,$
     VALUE = space_value)
     
   button2 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
-    YSIZE = ysize)
+    YSIZE = ysize,$
+    UNAME = 'beam_center_button2')
     
   space = WIDGET_LABEL(row1_right_row1,$
     VALUE = space_value)
     
   button2 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
-    YSIZE = ysize)
+    YSIZE = ysize,$
+    UNAME = 'beam_center_button3')
     
   ;second row (base) on the right
   row2_right_row1 = WIDGET_BASE(right_row1,$
