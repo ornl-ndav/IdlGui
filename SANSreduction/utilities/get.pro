@@ -397,7 +397,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getTransAutoCounts, wBase, tube, pixel
-  
+
   ;get global structure
   WIDGET_CONTROL,wBase,GET_UVALUE=global
   
@@ -453,3 +453,11 @@ FUNCTION getAutoPixelDeviceFromData, wBase, pixel_data
   
   RETURN, pixel_device
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getCurrentTabSelect, Event, uname
+  tab_id = widget_info(Event.top,FIND_BY_UNAME=uname)
+  CurrTabSelect = widget_info(tab_id,/TAB_CURRENT)
+  RETURN, CurrTabSelect
+END
+
