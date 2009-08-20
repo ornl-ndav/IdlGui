@@ -131,7 +131,7 @@ PRO launch_beam_center_base_event, Event
     
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
-          id = WIDGET_INFO(Event.top, $
+      id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='transmission_mode_launcher_base')
       WIDGET_CONTROL, id, /DESTROY
     END
@@ -158,16 +158,29 @@ PRO launch_beam_center_base, main_event
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
-  global_mask = PTR_NEW({ wbase: wbase1,$
-    global: global, $
+  global_bc = PTR_NEW({ wbase: wbase1,$
+    main_global: global, $
     main_event: main_event, $
+    
+    min_pixel_plotted: 60,$
+    max_pixel_plotted: 200, $
+    min_tube_plotted: 40,$
+    max_tube_plotted:160,$
+    
+    tt_zoom_data: PTR_NEW(0L), $
+    rtt_zoom_data: PTR_NEW(0L), $
     
     prev_tab_selected: 0})
     
-  WIDGET_CONTROL, wBase1, SET_UVALUE = global_mask
+  WIDGET_CONTROL, wBase1, SET_UVALUE = global_bc
   
   display_beam_stop_images, main_base=wBase1, mode='button1_on'
   
+  plot_data_for_beam_center_base, $
+    BASE=wBase1, $
+    MAIN_GLOBAL=global, $
+    GLOBAL_BC = global_bc
+    
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
