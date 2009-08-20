@@ -112,7 +112,6 @@ PRO plot_beam_center_scale, base, global
     XRANGE     = xrange,$
     YRANGE     = yrange,$
     COLOR      = convert_rgb([0B,0B,255B]), $
-    ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
     BACKGROUND = convert_rgb(sys_color_window_bk),$
     THICK      = 1, $
     TICKLEN    = -0.025, $

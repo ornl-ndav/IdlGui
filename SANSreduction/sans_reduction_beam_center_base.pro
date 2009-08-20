@@ -167,6 +167,11 @@ PRO launch_beam_center_base, main_event
     min_tube_plotted: 40,$
     max_tube_plotted:159,$
     
+    calibration_range_default_selection: {tube_min: 60, $
+    tube_max: 135, $
+    pixel_min: 100, $
+    pixel_max: 160}, $
+    
     tt_zoom_data: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
     background: PTR_NEW(0L), $
@@ -176,6 +181,8 @@ PRO launch_beam_center_base, main_event
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_bc
   
   display_beam_stop_images, main_base=wBase1, mode='button1_on'
+  
+  populate_defaults_wigets_values, wBase1, global_bc
   
   plot_data_for_beam_center_base, $
     BASE=wBase1, $
