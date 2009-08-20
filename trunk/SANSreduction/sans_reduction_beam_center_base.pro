@@ -114,7 +114,20 @@ PRO launch_beam_center_base_event, Event
       ENDELSE ;enf of catch statement
     END
     
-    
+    ;range calculation, beam stop region....etc TAB
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_tab'): BEGIN
+      prev_tab_selected = (*global).prev_tab_selected
+      curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+      IF (curr_tab_selected NE prev_tab_selected) THEN BEGIN
+        (*global).prev_tab_selected = curr_tab_selected
+        CASE (curr_tab_selected) OF
+          0: mode='button1_on'
+          1: mode='button2_on'
+          2: mode='button3_on'
+        ENDCASE
+        display_beam_stop_images, EVENT=event, MODE=mode
+      ENDIF
+    END
     
     ELSE:
     
@@ -139,8 +152,10 @@ PRO launch_beam_center_base, main_event
   WIDGET_CONTROL, wBase1, /REALIZE
   
   global_mask = PTR_NEW({ wbase: wbase1,$
-    global: global,$
-    main_event: main_event})
+    global: global, $
+    main_event: main_event, $
+    
+    prev_tab_selected: 0})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_mask
   
