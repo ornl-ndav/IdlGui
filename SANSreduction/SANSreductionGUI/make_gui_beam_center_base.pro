@@ -153,14 +153,116 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_center_tab',$
     /TRACKING_EVENTS)
     
-  tab1 = WIDGET_BASE(tab_selection,$
-    TITLE = ' Calculation Range ')
+  tab1 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = ' Calculation Range ',$
+    /COLUMN)
     
-  tab2 = WIDGET_BASE(tab_selection,$
-    TITLE = '  Beam Stop Region ')
+  vert_space = WIDGET_LABEL(tab1,$
+  VALUE = ' ')  
     
-  tab3 = WIDGET_BASE(tab_selection,$
-    TITLE = '      2D plots     ')
+  space_value = '       '
+  tab1_row1 = WIDGET_BASE(tab1,$
+    /ROW)
+  tube_left = WIDGET_LABEL(tab1_row1,$
+    VALUE=space_value+'Tube left: ')
+  value     = WIDGET_TEXT(tab1_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab1_row1,$
+    VALUE = '     ')
+  tube_right = WIDGET_LABEL(tab1_row1,$
+    VALUE='Tube right: ')
+  value     = WIDGET_TEXT(tab1_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
+  tab1_row2 = WIDGET_BASE(tab1,$
+    /ROW)
+  pixel_left = WIDGET_LABEL(tab1_row2,$
+    VALUE=space_value+'Pixel left:')
+  value     = WIDGET_TEXT(tab1_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab1_row2,$
+    VALUE = '     ')
+  pixel_right = WIDGET_LABEL(tab1_row2,$
+    VALUE='Pixel right:')
+  value     = WIDGET_TEXT(tab1_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
+  tab2 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = '  Beam Stop Region ',$
+    /COLUMN)
+    
+  vert_space = WIDGET_LABEL(tab2,$
+  VALUE = ' ')  
+    
+  space_value = '       '
+  tab2_row1 = WIDGET_BASE(tab2,$
+    /ROW)
+  tube_left = WIDGET_LABEL(tab2_row1,$
+    VALUE=space_value+'Tube left: ')
+  value     = WIDGET_TEXT(tab2_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab2_row1,$
+    VALUE = '     ')
+  tube_right = WIDGET_LABEL(tab2_row1,$
+    VALUE='Tube right: ')
+  value     = WIDGET_TEXT(tab2_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
+  tab2_row2 = WIDGET_BASE(tab2,$
+    /ROW)
+  pixel_left = WIDGET_LABEL(tab2_row2,$
+    VALUE=space_value+'Pixel left:')
+  value     = WIDGET_TEXT(tab2_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab2_row2,$
+    VALUE = '     ')
+  pixel_right = WIDGET_LABEL(tab2_row2,$
+    VALUE='Pixel right:')
+  value     = WIDGET_TEXT(tab2_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+
+  tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = '      2D plots     ',$
+    /COLUMN)
+    
+  vert_space = WIDGET_LABEL(tab3,$
+  VALUE = ' ')  
+    
+  space_value = '       '
+  tab3_row1 = WIDGET_BASE(tab3,$
+    /ROW)
+  tube_left = WIDGET_LABEL(tab3_row1,$
+    VALUE=space_value+'Tube: ')
+  value     = WIDGET_TEXT(tab3_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab3_row1,$
+    VALUE = '        ')
+  tube_right = WIDGET_LABEL(tab3_row1,$
+    VALUE='Pixel: ')
+  value     = WIDGET_TEXT(tab3_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
+    
     
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
