@@ -67,7 +67,7 @@ PRO launch_beam_center_base, main_event
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_mask
   
-;  display_auto_base_launcher_images, main_base=wBase1, mode='off'
+  display_beam_stop_images, main_base=wBase1, mode='button1_on'
   
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
