@@ -167,10 +167,15 @@ PRO launch_beam_center_base, main_event
     min_tube_plotted: 40,$
     max_tube_plotted:159,$
     
+    main_draw_xsize: 400,$
+    main_draw_ysize: 350,$
+    
     calibration_range_default_selection: {tube_min: 60, $
     tube_max: 135, $
     pixel_min: 100, $
-    pixel_max: 160}, $
+    pixel_max: 160, $
+    color: FSC_COLOR('red'), $
+    thick: 3}, $
     
     tt_zoom_data: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
@@ -182,13 +187,14 @@ PRO launch_beam_center_base, main_event
   
   display_beam_stop_images, main_base=wBase1, mode='button1_on'
   
-  populate_defaults_wigets_values, wBase1, global_bc
-  
   plot_data_for_beam_center_base, $
     BASE=wBase1, $
     MAIN_GLOBAL=global, $
     GLOBAL_BC = global_bc
     
+  populate_defaults_wigets_values, wBase1, global_bc
+  plot_default_beam_center_selection, base=wBase1, global=global_bc
+  
   plot_beam_center_scale, wBase1, global_bc
   
   ;save background

@@ -136,3 +136,33 @@ PRO plot_beam_center_scale, base, global
   DEVICE, decomposed = 0
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_default_beam_center_selection, BASE=base, GLOBAL=global
+
+  draw_uname = 'beam_center_main_draw'
+  id = WIDGET_INFO(base,FIND_BY_UNAME=draw_uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  tube_min_data = (*global).calibration_range_default_selection.tube_min
+  tube_max_data = (*global).calibration_range_default_selection.tube_max
+  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
+  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
+  
+  ;adding +1 for max to have the all tube/pixel included in the selection
+  x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
+  x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
+  y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
+  y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
+    
+  color = (*global).calibration_range_default_selection.color
+  thick = (*global).calibration_range_default_selection.thick
+  
+  PLOTS, x_min, y_min, /DEVICE, COLOR=color
+  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+
+END
