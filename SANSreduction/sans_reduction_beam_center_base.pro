@@ -187,6 +187,7 @@ PRO launch_beam_center_base, main_event
     twoD_default_selection: {tube: 110, $
     pixel: 130, $
     color: [255,255,255],$
+    linestyle: 2, $
     thick: 1}, $
     
     tt_zoom_data: PTR_NEW(0L), $
@@ -205,10 +206,8 @@ PRO launch_beam_center_base, main_event
     GLOBAL_BC = global_bc
     
   populate_defaults_wigets_values, wBase1, global_bc
-  DEVICE, decomposed=1
   plot_default_beam_center_selections, base=wBase1, global=global_bc
   plot_beam_center_scale, wBase1, global_bc
-  DEVICE, decomposed=0
   
   ;save background
   save_beam_center_background,  Event=event, BASE=wBase1
