@@ -39,6 +39,80 @@ PRO launch_beam_center_base_event, Event
   
   CASE Event.id OF
   
+    ;button1 (calibration region)
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button1'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_stop_images, Event=event, mode='button1_on'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='beam_center_button1')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+    
+    ;button2 (beam stop region)
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button2'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_stop_images, Event=event, mode='button2_on'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='beam_center_button2')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+
+    ;button3 (2d plots)
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button3'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_stop_images, Event=event, mode='button3_on'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='beam_center_button3')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+    END
+
+
+
     ELSE:
     
   ENDCASE

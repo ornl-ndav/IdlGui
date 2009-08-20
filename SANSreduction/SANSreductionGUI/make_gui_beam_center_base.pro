@@ -117,6 +117,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   button1 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
     YSIZE = ysize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'beam_center_button1')
     
   space = WIDGET_LABEL(row1_right_row1,$
@@ -125,6 +127,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   button2 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
     YSIZE = ysize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'beam_center_button2')
     
   space = WIDGET_LABEL(row1_right_row1,$
@@ -133,6 +137,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   button2 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
     YSIZE = ysize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'beam_center_button3')
     
   ;second row (base) on the right
