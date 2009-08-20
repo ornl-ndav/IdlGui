@@ -333,6 +333,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   cancel = WIDGET_BUTTON(row4,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 30,$
+    UNAME = 'beam_stop_cancel_button',$
     VALUE = 'CANCEL')
     
   space = WIDGET_LABEL(row4,$

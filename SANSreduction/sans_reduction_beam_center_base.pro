@@ -129,6 +129,13 @@ PRO launch_beam_center_base_event, Event
       ENDIF
     END
     
+    ;CANCEL button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
+          id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_mode_launcher_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     ELSE:
     
   ENDCASE
