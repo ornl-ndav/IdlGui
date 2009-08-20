@@ -163,9 +163,9 @@ PRO launch_beam_center_base, main_event
     main_event: main_event, $
     
     min_pixel_plotted: 60,$
-    max_pixel_plotted: 200, $
+    max_pixel_plotted: 199, $
     min_tube_plotted: 40,$
-    max_tube_plotted:160,$
+    max_tube_plotted:159,$
     
     tt_zoom_data: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
@@ -182,6 +182,8 @@ PRO launch_beam_center_base, main_event
     MAIN_GLOBAL=global, $
     GLOBAL_BC = global_bc
     
+  plot_beam_center_scale, wBase1, global_bc
+  
   ;save background
   save_beam_center_background,  Event=event, BASE=wBase1
   

@@ -84,3 +84,56 @@ PRO save_beam_center_background,  Event=event, BASE=base
   (*(*global).background) = background
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_beam_center_scale, base, global
+
+  ;change color of background
+  id = WIDGET_INFO(base,FIND_BY_UNAME='beam_center_main_draw_scale')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  
+  device, decomposed=1
+  sys_color = WIDGET_INFO(base,/SYSTEM_COLORS)
+  sys_color_window_bk = sys_color.window_bk
+  
+  min_pixel = (*global).min_pixel_plotted
+  max_pixel = (*global).max_pixel_plotted
+  min_tube  = (*global).min_tube_plotted
+  max_tube  = (*global).max_tube_plotted
+  
+  xmargin = 8.2
+  ymargin = 5
+  
+  xrange = [min_tube,max_tube+1]
+  yrange = [min_pixel,max_pixel+1]
+  
+  plot, randomn(s,80), $
+    XRANGE     = xrange,$
+    YRANGE     = yrange,$
+    COLOR      = convert_rgb([0B,0B,255B]), $
+    ;    BACKGROUND = convert_rgb(sys_color.face_3d),$
+    BACKGROUND = convert_rgb(sys_color_window_bk),$
+    THICK      = 1, $
+    TICKLEN    = -0.025, $
+    XTICKLAYOUT = 0,$
+    XSTYLE      = 1,$
+    YSTYLE      = 1,$
+    YTICKLAYOUT = 0,$
+    XTICKS      = 12,$
+    XMINOR      = 2,$
+    YMINOR      = 2,$
+    YTICKS      = 14,$
+    XTITLE      = 'TUBES',$
+    YTITLE      = 'PIXELS',$
+    XMARGIN     = [xmargin, xmargin+0.2],$
+    YMARGIN     = [ymargin, ymargin],$
+    /NODATA
+  AXIS, yaxis=1, YRANGE=yrange, YTICKS=14, YSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+  AXIS, xaxis=1, XRANGE=xrange, XTICKS=12, XSTYLE=1, $
+    COLOR=convert_rgb([0B,0B,255B]), TICKLEN = -0.025
+    
+  DEVICE, decomposed = 0
+  
+END
