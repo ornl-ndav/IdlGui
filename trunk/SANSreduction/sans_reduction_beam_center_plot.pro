@@ -146,7 +146,7 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   WSET, id_value
   DEVICE, DECOMPOSED=1
   
-  ;Calibration Range
+  ;Calibration Range ..........................................................
   tube_min_data = (*global).calibration_range_default_selection.tube_min
   tube_max_data = (*global).calibration_range_default_selection.tube_max
   pixel_min_data = (*global).calibration_range_default_selection.pixel_min
@@ -168,7 +168,7 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
-  ;Beam stop region
+  ;Beam stop region ...........................................................
   tube_min_data = (*global).beam_stop_default_selection.tube_min
   tube_max_data = (*global).beam_stop_default_selection.tube_max
   pixel_min_data = (*global).beam_stop_default_selection.pixel_min
@@ -189,7 +189,35 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
- 
+  
+  ;2D plots selection .........................................................
+  tube_data  = (*global).twoD_default_selection.tube
+  pixel_data = (*global).twoD_default_selection.pixel
+  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
+  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
+  
+  color = (*global).twoD_default_selection.color
+  thick = (*global).twoD_default_selection.thick
+  linestyle = (*global).twoD_default_selection.linestyle
+  color = convert_rgb(color)
+  
+  x_min = 0
+  y_min = 0
+  x_max = (*global).main_draw_xsize
+  y_max = (*global).main_draw_ysize
+  
+  PLOTS, 0, pixel, /DEVICE, COLOR=color
+  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=linestyle, $
+    THICK=thick
+    
+  PLOTS, tube, 0, /DEVICE, COLOR=color
+  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=linestyle, $
+    THICK=thick
+    
   DEVICE, DECOMPOSED=0
+  
+  
   
 END
