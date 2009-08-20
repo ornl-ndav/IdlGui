@@ -88,6 +88,7 @@ cd, CurrentFolder
 ;beam center
 .run sans_reduction_beam_center_base.pro
 .run sans_reduction_beam_center_display_images.pro
+.run sans_reduction_beam_center_tab.pro
 
 ;main functions
 .run MainBaseEvent.pro

@@ -47,6 +47,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button1_on'
+          show_beam_stop_tab, Event, tab='button1'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         id = WIDGET_INFO(Event.top,$
@@ -71,6 +72,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button2_on'
+          show_beam_stop_tab, Event, tab='button2'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         id = WIDGET_INFO(Event.top,$
@@ -86,7 +88,7 @@ PRO launch_beam_center_base_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
-
+    
     ;button3 (2d plots)
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button3'): BEGIN
       error = 0
@@ -95,6 +97,7 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_beam_stop_images, Event=event, mode='button3_on'
+          show_beam_stop_tab, Event, tab='button3'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         id = WIDGET_INFO(Event.top,$
@@ -110,9 +113,9 @@ PRO launch_beam_center_base_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
-
-
-
+    
+    
+    
     ELSE:
     
   ENDCASE
