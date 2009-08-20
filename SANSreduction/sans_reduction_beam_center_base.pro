@@ -169,6 +169,7 @@ PRO launch_beam_center_base, main_event
     
     tt_zoom_data: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
+    background: PTR_NEW(0L), $
     
     prev_tab_selected: 0})
     
@@ -181,6 +182,9 @@ PRO launch_beam_center_base, main_event
     MAIN_GLOBAL=global, $
     GLOBAL_BC = global_bc
     
+  ;save background
+  save_beam_center_background,  Event=event, BASE=wBase1
+  
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
