@@ -214,6 +214,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab2_row1,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_beam_stop_tube_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab2_row1,$
     VALUE = '     ')
@@ -221,6 +222,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE='Tube right: ')
   value     = WIDGET_TEXT(tab2_row1,$
     VALUE='N/A',$
+    UNAME = 'beam_center_beam_stop_tube_right',$
     XSIZE = 3,$
     /EDITABLE)
     
@@ -231,6 +233,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab2_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_beam_stop_pixel_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab2_row2,$
     VALUE = '     ')
@@ -239,6 +242,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab2_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_beam_stop_pixel_right',$
     /EDITABLE)
     
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

@@ -174,8 +174,17 @@ PRO launch_beam_center_base, main_event
     tube_max: 135, $
     pixel_min: 100, $
     pixel_max: 160, $
-    color: FSC_COLOR('red'), $
+    ;    color: FSC_COLOR('red'), $
+    color: 0L,$
     thick: 3}, $
+    
+    beam_stop_default_selection: {tube_min: 90, $
+    tube_max: 101, $
+    pixel_min: 121, $
+    pixel_max: 134, $
+    ;    color: FSC_COLOR('green'), $
+    color: 0L, $
+    thick: 2}, $
     
     tt_zoom_data: PTR_NEW(0L), $
     rtt_zoom_data: PTR_NEW(0L), $
@@ -192,8 +201,12 @@ PRO launch_beam_center_base, main_event
     MAIN_GLOBAL=global, $
     GLOBAL_BC = global_bc
     
+  ;FSC_COLOR called needs to be after the plot_data_for_beam_center_base !!!!  
+  (*global_bc).calibration_range_default_selection.color = FSC_COLOR('red')
+  (*global_bc).beam_stop_default_selection.color = FSC_COLOR('green')
+  
   populate_defaults_wigets_values, wBase1, global_bc
-  plot_default_beam_center_selection, base=wBase1, global=global_bc
+  plot_default_beam_center_selections, base=wBase1, global=global_bc
   
   plot_beam_center_scale, wBase1, global_bc
   

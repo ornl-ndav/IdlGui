@@ -128,6 +128,28 @@ PRO populate_defaults_wigets_values, wBase, global
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_calculation_pixel_right', $
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
+
+  ;Beam Stop Region
+  tube_min = (*global).beam_stop_default_selection.tube_min
+  tube_max = (*global).beam_stop_default_selection.tube_max
+  pixel_min = (*global).beam_stop_default_selection.pixel_min
+  pixel_max = (*global).beam_stop_default_selection.pixel_max
+  
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_beam_stop_tube_left', $
+    STRCOMPRESS(tube_min,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_beam_stop_tube_right', $
+    STRCOMPRESS(tube_max,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_beam_stop_pixel_left', $
+    STRCOMPRESS(pixel_min,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_beam_stop_pixel_right', $
+    STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
 END
 
