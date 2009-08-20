@@ -260,6 +260,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab3_row1,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_2d_plot_tube',$
     /EDITABLE)
   space = WIDGET_LABEL(tab3_row1,$
     VALUE = '        ')
@@ -268,9 +269,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab3_row1,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_2d_plot_pixel',$
     /EDITABLE)
-    
-    
     
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
