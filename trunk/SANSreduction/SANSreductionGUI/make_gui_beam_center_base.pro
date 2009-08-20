@@ -158,7 +158,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab1,$
-  VALUE = ' ')  
+    VALUE = ' ')
     
   space_value = '       '
   tab1_row1 = WIDGET_BASE(tab1,$
@@ -168,6 +168,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab1_row1,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_calculation_tube_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab1_row1,$
     VALUE = '     ')
@@ -175,6 +176,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE='Tube right: ')
   value     = WIDGET_TEXT(tab1_row1,$
     VALUE='N/A',$
+    UNAME = 'beam_center_calculation_tube_right',$
     XSIZE = 3,$
     /EDITABLE)
     
@@ -185,6 +187,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab1_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_calculation_pixel_left',$
     /EDITABLE)
   space = WIDGET_LABEL(tab1_row2,$
     VALUE = '     ')
@@ -193,6 +196,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value     = WIDGET_TEXT(tab1_row2,$
     VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_calculation_pixel_right',$
     /EDITABLE)
     
   tab2 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -200,7 +204,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab2,$
-  VALUE = ' ')  
+    VALUE = ' ')
     
   space_value = '       '
   tab2_row1 = WIDGET_BASE(tab2,$
@@ -236,13 +240,13 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE='N/A',$
     XSIZE = 3,$
     /EDITABLE)
-
+    
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     TITLE = '      2D plots     ',$
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab3,$
-  VALUE = ' ')  
+    VALUE = ' ')
     
   space_value = '       '
   tab3_row1 = WIDGET_BASE(tab3,$

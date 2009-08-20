@@ -89,7 +89,7 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, beam_button, 0, 0,/true
-
+  
   button3_uname = 'beam_center_button3'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
@@ -101,5 +101,33 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, twoD_button, 0, 0,/true
-
+  
 END
+
+;------------------------------------------------------------------------------
+PRO populate_defaults_wigets_values, wBase, global
+
+  ;Calculation Range
+  tube_min = (*global).calibration_range_default_selection.tube_min
+  tube_max = (*global).calibration_range_default_selection.tube_max
+  pixel_min = (*global).calibration_range_default_selection.pixel_min
+  pixel_max = (*global).calibration_range_default_selection.pixel_max
+  
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_calculation_tube_left', $
+    STRCOMPRESS(tube_min,/REMOVE_ALL)
+    
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_calculation_tube_right', $
+    STRCOMPRESS(tube_max,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_calculation_pixel_left', $
+    STRCOMPRESS(pixel_min,/REMOVE_ALL)
+
+  putTextFieldValueMainBase, wBase, $
+    UNAME='beam_center_calculation_pixel_right', $
+    STRCOMPRESS(pixel_max,/REMOVE_ALL)
+    
+END
+
