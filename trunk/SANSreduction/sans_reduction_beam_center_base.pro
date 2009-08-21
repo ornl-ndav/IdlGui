@@ -47,6 +47,37 @@ PRO launch_beam_center_base_event, Event
         CATCH,/CANCEL
         
         IF (event.press EQ 1) THEN BEGIN ;pressed button
+          (*global).left_button_pressed = 1
+        ENDIF
+        
+        IF (event.press EQ 0 AND $ ;moving mouse with button pressed
+          (*global).left_button_pressed EQ 1) THEN BEGIN
+          plot_beam_center_background, Event
+          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          CASE (curr_tab_selected) OF
+            0: BEGIN
+              ;replot_beam_center_calibration_range, Event
+              replot_beam_center_beam_stop, Event
+              replot_2d_plot_cursor, Event
+            END
+            1: BEGIN
+              replot_beam_center_calibration_range, Event
+              ;replot_beam_center_beam_stop, Event
+              replot_2d_plot_cursor, Event
+            END
+            2: BEGIN
+              replot_beam_center_calibration_range, Event
+              replot_beam_center_beam_stop, Event
+              ;replot_2d_plot_cursor, Event
+            END
+          ENDCASE
+          
+        ENDIF
+        
+        IF (event.release EQ 1 AND $ ;releasing left button
+          (*global).left_button_pressed EQ 1) THEN BEGIN
+          (*global).left_button_pressed = 0
+          
         ENDIF
         
         IF (event.press EQ 4) THEN BEGIN ;right click
@@ -203,6 +234,7 @@ PRO launch_beam_center_base, main_event
     current_cursor_status: 31,$ ;31(cross) or 52(move selection)
     cursor_selection: 31, $
     cursor_moving: 52, $
+    left_button_pressed: 0,$
     
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $
@@ -248,12 +280,13 @@ PRO launch_beam_center_base, main_event
     GLOBAL_BC = global_bc
     
   populate_defaults_wigets_values, wBase1, global_bc
-  plot_default_beam_center_selections, base=wBase1, global=global_bc
-  plot_beam_center_scale, wBase1, global_bc
-  
+
   ;save background
   save_beam_center_background,  Event=event, BASE=wBase1
-  
+
+  plot_default_beam_center_selections, base=wBase1, global=global_bc
+  plot_beam_center_scale, wBase1, global_bc
+    
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
