@@ -48,7 +48,7 @@ FUNCTION validate_or_not_calibration_range_moving, Event
     
   tube_data = (*global).calibration_range_moving_tube_start
   pixel_data = (*global).calibration_range_moving_pixel_start
-
+  
   offset_tube_max = ABS(tube_max_data - tube_data)
   offset_tube_min = ABS(tube_min_data - tube_data)
   offset_pixel_max = ABS(pixel_max_data - pixel_data)
@@ -61,7 +61,7 @@ FUNCTION validate_or_not_calibration_range_moving, Event
   IF (offset_tube_min LE moving_tube_range) THEN RETURN, 1
   IF (offset_pixel_max LE moving_pixel_range) THEN RETURN, 1
   IF (offset_pixel_min LE moving_pixel_range) THEN RETURN, 1
-
+  
   RETURN, 0
   
 END
@@ -83,7 +83,7 @@ FUNCTION validate_or_not_beam_stop_range_moving, Event
     
   tube_data = (*global).beam_stop_range_moving_tube_start
   pixel_data = (*global).beam_stop_range_moving_pixel_start
-
+  
   offset_tube_max = ABS(tube_max_data - tube_data)
   offset_tube_min = ABS(tube_min_data - tube_data)
   offset_pixel_max = ABS(pixel_max_data - pixel_data)
@@ -96,10 +96,107 @@ FUNCTION validate_or_not_beam_stop_range_moving, Event
   IF (offset_tube_min LE moving_tube_range) THEN RETURN, 1
   IF (offset_pixel_max LE moving_pixel_range) THEN RETURN, 1
   IF (offset_pixel_min LE moving_pixel_range) THEN RETURN, 1
-
+  
   RETURN, 0
   
 END
 
 
+;------------------------------------------------------------------------------
+FUNCTION cleanup_calculation_range_input, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  tube_min_data = FIX(getTextFieldValue(event,$
+    'beam_center_calculation_tube_left'))
+  tube_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_calculation_tube_right'))
+  pixel_min_data = FIX(getTextFieldValue(Event,$
+    'beam_center_calculation_pixel_left'))
+  pixel_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_calculation_pixel_right'))
+    
+  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
+  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
+  
+  min_pixel_plotted = (*global).min_pixel_plotted
+  max_pixel_plotted = (*global).max_pixel_plotted+1
+  min_tube_plotted = (*global).min_tube_plotted
+  max_tube_plotted = (*global).max_tube_plotted+1
+  
+  IF (tube_min LT min_tube_plotted) THEN tube_min = min_tube_plotted
+  IF (tube_max GT max_tube_plotted) THEN tube_max = max_tube_plotted
+  IF (pixel_min LT min_pixel_plotted) THEN pixel_min = min_pixel_plotted
+  IF (pixel_max GT max_pixel_plotted) THEN pixel_max = max_pixel_plotted
+  
+  sTmin = STRCOMPRESS(tube_min,/REMOVE_ALL)
+  sTmax = STRCOMPRESS(tube_max,/REMOVE_ALL)
+  sPmin = STRCOMPRESS(pixel_min,/REMOVE_ALL)
+  sPmax = STRCOMPRESS(pixel_max,/REMOVE_ALL)
+  
+  putTextFieldValue, Event, 'beam_center_calculation_tube_left', sTmin
+  putTextFieldValue, Event, 'beam_center_calculation_tube_right', sTmax
+  putTextFieldValue, Event, 'beam_center_calculation_pixel_left', sPmin
+  putTextFieldValue, Event, 'beam_center_calculation_pixel_right', sPmax
+  
+  (*global).calculation_tubeLR_pixelLR_backup = [sTmin, sTmax, $
+    sPmin, sPmax]
+    
+  RETURN, 1
+  
+  error: RETURN, 0
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION cleanup_beam_stop_range_input, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  tube_min_data = FIX(getTextFieldValue(event,$
+    'beam_center_beam_stop_tube_left'))
+  tube_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_tube_right'))
+  pixel_min_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_pixel_left'))
+  pixel_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_pixel_right'))
+    
+  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
+  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
+  
+  min_pixel_plotted = (*global).min_pixel_plotted
+  max_pixel_plotted = (*global).max_pixel_plotted+1
+  min_tube_plotted = (*global).min_tube_plotted
+  max_tube_plotted = (*global).max_tube_plotted+1
+  
+  IF (tube_min LT min_tube_plotted) THEN tube_min = min_tube_plotted
+  IF (tube_max GT max_tube_plotted) THEN tube_max = max_tube_plotted
+  IF (pixel_min LT min_pixel_plotted) THEN pixel_min = min_pixel_plotted
+  IF (pixel_max GT max_pixel_plotted) THEN pixel_max = max_pixel_plotted
+  
+  sTmin = STRCOMPRESS(tube_min,/REMOVE_ALL)
+  sTmax = STRCOMPRESS(tube_max,/REMOVE_ALL)
+  sPmin = STRCOMPRESS(pixel_min,/REMOVE_ALL)
+  sPmax = STRCOMPRESS(pixel_max,/REMOVE_ALL)
+  
+  putTextFieldValue, Event, 'beam_center_beam_stop_tube_left', sTmin
+  putTextFieldValue, Event, 'beam_center_beam_stop_tube_right', sTmax
+  putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', sPmin
+  putTextFieldValue, Event, 'beam_center_beam_stop_pixel_right', sPmax
+  
+  (*global).beam_stop_tubeLR_pixelLR_backup = [sTmin, sTmax, $
+    sPmin, sPmax]
+    
+  RETURN, 1
+  
+  error: RETURN, 0
+  
+END
 

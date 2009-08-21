@@ -113,22 +113,30 @@ PRO populate_defaults_wigets_values, wBase, global
   pixel_min = (*global).calibration_range_default_selection.pixel_min
   pixel_max = (*global).calibration_range_default_selection.pixel_max
   
+  stube_min = STRCOMPRESS(tube_min,/REMOVE_ALL)
+  stube_max = STRCOMPRESS(tube_max,/REMOVE_ALL)
+  spixel_min = STRCOMPRESS(pixel_min,/REMOVE_ALL)
+  spixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
+  
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_tube_left', $
-    STRCOMPRESS(tube_min,/REMOVE_ALL)
+    UNAME='beam_center_calculation_tube_left', stube_min
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_tube_right', $
-    STRCOMPRESS(tube_max,/REMOVE_ALL)
-
+    UNAME='beam_center_calculation_tube_right', stube_max
+    
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_pixel_left', $
-    STRCOMPRESS(pixel_min,/REMOVE_ALL)
-
+    UNAME='beam_center_calculation_pixel_left', spixel_min
+    
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_pixel_right', $
-    STRCOMPRESS(pixel_max,/REMOVE_ALL)
-
+    UNAME='beam_center_calculation_pixel_right', spixel_max
+    
+  calculation_tubeLR_pixelLR_backup = [stube_min, $
+    stube_max, $
+    spixel_min, $
+    spixel_max]
+  (*global).calculation_tubeLR_pixelLR_backup = $
+    calculation_tubeLR_pixelLR_backup
+    
   ;Beam Stop Region
   tube_min = (*global).beam_stop_default_selection.tube_min
   tube_max = (*global).beam_stop_default_selection.tube_max
@@ -138,15 +146,15 @@ PRO populate_defaults_wigets_values, wBase, global
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_tube_left', $
     STRCOMPRESS(tube_min,/REMOVE_ALL)
-
+    
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_tube_right', $
     STRCOMPRESS(tube_max,/REMOVE_ALL)
-
+    
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_pixel_left', $
     STRCOMPRESS(pixel_min,/REMOVE_ALL)
-
+    
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_beam_stop_pixel_right', $
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
@@ -154,14 +162,14 @@ PRO populate_defaults_wigets_values, wBase, global
   ;2D plots
   tube  = (*global).twoD_default_selection.tube
   pixel = (*global).twoD_default_selection.pixel
-
+  
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_2d_plot_tube', $
     STRCOMPRESS(tube,/REMOVE_ALL)
-
+    
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_2d_plot_pixel', $
     STRCOMPRESS(pixel,/REMOVE_ALL)
-
+    
 END
 

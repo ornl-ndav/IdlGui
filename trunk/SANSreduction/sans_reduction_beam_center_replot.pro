@@ -171,16 +171,22 @@ END
 
 ;------------------------------------------------------------------------------
 PRO calculation_range_manual_input, Event
-  plot_beam_center_background, Event
-  replot_beam_center_calibration_range, Event
-  replot_beam_center_beam_stop, Event
-  replot_2d_plot_cursor, Event
+  valid_input = cleanup_calculation_range_input(Event)
+  IF (valid_input) THEN BEGIN
+    plot_beam_center_background, Event
+    replot_beam_center_calibration_range, Event
+    replot_beam_center_beam_stop, Event
+    replot_2d_plot_cursor, Event
+  ENDIF
 END
 
 ;------------------------------------------------------------------------------
 PRO beam_stop_range_manual_input, Event
+  valid_input = cleanup_beam_stop_range_input(Event)
+  IF (valid_input) THEN BEGIN
   plot_beam_center_background, Event
   replot_beam_center_calibration_range, Event
   replot_beam_center_beam_stop, Event
   replot_2d_plot_cursor, Event
+ENDIF
 END
