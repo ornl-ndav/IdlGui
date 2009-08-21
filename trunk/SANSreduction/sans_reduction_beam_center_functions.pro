@@ -49,16 +49,6 @@ FUNCTION validate_or_not_calibration_range_moving, Event
   tube_data = (*global).calibration_range_moving_tube_start
   pixel_data = (*global).calibration_range_moving_pixel_start
 
-  print, tube_min_data
-  print, tube_max_data
-  print, pixel_min_data
-  print, pixel_max_data
-  print
-  print, tube_data
-  print, pixel_data
-  
-  
-  
   offset_tube_max = ABS(tube_max_data - tube_data)
   offset_tube_min = ABS(tube_min_data - tube_data)
   offset_pixel_max = ABS(pixel_max_data - pixel_data)
