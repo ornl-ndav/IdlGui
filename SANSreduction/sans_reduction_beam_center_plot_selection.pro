@@ -115,3 +115,10 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   
 END
 
+;------------------------------------------------------------------------------
+PRO calculation_range_manual_input, Event
+  plot_beam_center_background, Event
+  replot_beam_center_calibration_range, Event
+  replot_beam_center_beam_stop, Event
+  replot_2d_plot_cursor, Event
+END

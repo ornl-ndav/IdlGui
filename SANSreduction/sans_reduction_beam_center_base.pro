@@ -170,7 +170,7 @@ PRO launch_beam_center_base_event, Event
       
     END
     
-    ;button1 (calibration region)
+    ;button1 (calibration region) -------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button1'): BEGIN
       error = 0
       CATCH, error
@@ -195,7 +195,25 @@ PRO launch_beam_center_base_event, Event
       ENDELSE ;enf of catch statement
     END
     
-    ;button2 (beam stop region)
+    ;tube left, right, pixel left and right of calibration base
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_calculation_tube_left'): BEGIN
+      calculation_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_calculation_tube_right'): BEGIN
+      calculation_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_calculation_pixel_left'): BEGIN
+      calculation_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_calculation_pixel_right'): BEGIN
+      calculation_range_manual_input, Event
+    END
+    
+    ;button2 (beam stop region) ----------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button2'): BEGIN
       error = 0
       CATCH, error
