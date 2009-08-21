@@ -187,14 +187,16 @@ FUNCTION design_transmission_manual_mode_step1, wBase, base
     /ALIGN_LEFT,$
     UNAME = 'trans_manual_step1_cursor_counts')
     
+    space = WIDGET_LABEL(base_right,$
+    VALUE = ' ')
+;    space = WIDGET_LABEL(base_right,$
+;    VALUE = ' ')
+
   message = ['  SELECTION MANUAL',$
-    'Left Click to select',$
-    'first corner of beam',$
-    'stop region. Then',$
-    'right click to switch',$
-    'to other corner and',$
-    'left click again to',$
-    'select this corner.']
+    'Left click to select',$
+    'first corner then',$
+    'release click on',$
+    'second corner.']
     
   sz= N_ELEMENTS(message)
   FOR i=0,(sz-1) DO BEGIN
