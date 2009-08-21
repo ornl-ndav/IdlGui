@@ -114,10 +114,14 @@ PRO launch_beam_center_base_event, Event
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
               0: BEGIN ;calculation range
-                print, validate_or_not_calibration_range_moving(Event)
+              
                 IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
-                  tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                  pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                
+                  X = Event.x
+                  Y = Event.y
+                  
+                  tube_data  = getBeamCenterTubeData_from_device(X, global)
+                  pixel_data = getBeamCenterPixelData_from_device(Y, global)
                   offset_tube = tube_data - $
                     (*global).calibration_range_moving_tube_start
                   offset_pixel = pixel_data - $
@@ -132,23 +136,53 @@ PRO launch_beam_center_base_event, Event
                   pixel_max_data = FIX(getTextFieldValue(Event,$
                     'beam_center_calculation_pixel_right'))
                     
+                  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
+                  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
+                  
+                  new_tube_min = tube_min_data + offset_tube
+                  new_tube_max = tube_max_data + offset_tube
+                  
+                  IF (new_tube_min LT (*global).min_tube_plotted) THEN BEGIN
+                    new_tube_min = (*global).min_tube_plotted
+                    new_tube_max = tube_max_data
+                  ENDIF
+                  IF (new_tube_max GT (*global).max_tube_plotted) THEN BEGIN
+                    new_tube_max = (*global).max_tube_plotted
+                    new_tube_min = tube_min_data
+                  ENDIF
+                  
                   putTextFieldValue, Event, $
                     'beam_center_calculation_tube_left', $
-                    STRCOMPRESS(tube_min_data + offset_tube,/REMOVE_ALL)
+                    STRCOMPRESS(new_tube_min,/REMOVE_ALL)
                   putTextFieldValue, Event, $
                     'beam_center_calculation_tube_right', $
-                    STRCOMPRESS(tube_max_data + offset_tube,/REMOVE_ALL)
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_pixel_left', $
-                    STRCOMPRESS(pixel_min_data + offset_pixel,/REMOVE_ALL)
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_pixel_right', $
-                    STRCOMPRESS(pixel_max_data + offset_pixel,/REMOVE_ALL)
+                    STRCOMPRESS(new_tube_max,/REMOVE_ALL)
                     
                   tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                   (*global).calibration_range_moving_tube_start = tube_data
+                  
+                  new_pixel_min = pixel_min_data + offset_pixel
+                  new_pixel_max = pixel_max_data + offset_pixel
+                  
+                  IF (new_pixel_min LT (*global).min_pixel_plotted) THEN BEGIN
+                    new_pixel_min = (*global).min_pixel_plotted
+                    new_pixel_max = pixel_max_data
+                  ENDIF
+                  IF (new_pixel_max GT (*global).max_pixel_plotted) THEN BEGIN
+                    new_pixel_max = (*global).max_pixel_plotted
+                    new_pixel_min = pixel_min_data
+                  ENDIF
+                  
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_pixel_left', $
+                    STRCOMPRESS(new_pixel_min,/REMOVE_ALL)
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_pixel_right', $
+                    STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
+                    
                   pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                   (*global).calibration_range_moving_pixel_start = pixel_data
+                  
                   
                 ENDIF
                 replot_beam_center_calibration_range, Event
