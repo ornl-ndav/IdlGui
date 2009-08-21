@@ -991,7 +991,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       XOFFSET = 585,$
       YOFFSET = 730,$
       UNAME = 'transmission_launcher_base',$
-      MAP = 1,$
+      MAP = 0,$
       /ROW)
       
     ;Transmission calculation button

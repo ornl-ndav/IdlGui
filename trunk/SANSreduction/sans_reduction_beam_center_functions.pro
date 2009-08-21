@@ -200,3 +200,39 @@ FUNCTION cleanup_beam_stop_range_input, Event
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION cleanup_twoD_plot_range_input, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  tube_data = FIX(getTextFieldValue(event,$
+    'beam_center_2d_plot_tube'))
+  pixel_data = FIX(getTextFieldValue(Event,$
+    'beam_center_2d_plot_pixel'))
+    
+  min_pixel_plotted = (*global).min_pixel_plotted
+  max_pixel_plotted = (*global).max_pixel_plotted+1
+  min_tube_plotted = (*global).min_tube_plotted
+  max_tube_plotted = (*global).max_tube_plotted+1
+  
+  IF (tube_data LT min_tube_plotted) THEN tube_data = min_tube_plotted
+  IF (tube_data GT max_tube_plotted) THEN tube_data = max_tube_plotted
+  IF (pixel_data LT min_pixel_plotted) THEN pixel_data = min_pixel_plotted
+  IF (pixel_data GT max_pixel_plotted) THEN pixel_data = max_pixel_plotted
+  
+  sT = STRCOMPRESS(tube_data,/REMOVE_ALL)
+  sP = STRCOMPRESS(pixel_data,/REMOVE_ALL)
+  
+  putTextFieldValue, Event, 'beam_center_2d_plot_tube', sT
+  putTextFieldValue, Event, 'beam_center_2d_plot_pixel', sP
+  
+  (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
+    
+  RETURN, 1
+  
+  error: RETURN, 0
+  
+END

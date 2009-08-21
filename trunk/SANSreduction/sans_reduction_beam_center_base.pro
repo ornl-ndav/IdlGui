@@ -311,7 +311,6 @@ PRO launch_beam_center_base_event, Event
             ENDCASE
           ENDELSE
           
-          
         ENDIF
         
         IF (event.release EQ 1 AND $ ;releasing left button
@@ -366,7 +365,17 @@ PRO launch_beam_center_base_event, Event
                 [sTmin, sTmax, sPmin, sPmax]
                 
             END
-            2:
+            2: BEGIN
+            
+              tube_data = getTextFieldValue(event,'beam_center_2d_plot_tube')
+              pixel_data = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
+              
+              sT = STRCOMPRESS(tube_data,/REMOVE_ALL)
+              sP = STRCOMPRESS(pixel_data,/REMOVE_ALL)
+              (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
+              
+            END
+            
           ENDCASE
           
         ENDIF
@@ -510,6 +519,17 @@ PRO launch_beam_center_base_event, Event
       ENDELSE ;enf of catch statement
     END
     
+    ;tube and pixel input
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_2d_plot_tube'): BEGIN
+      twoD_plot_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_2d_plot_pixel'): BEGIN
+      twoD_plot_range_manual_input, Event
+    END
+    
+    ;--------------------------------------------------------------------------
     ;range calculation, beam stop region....etc TAB
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_tab'): BEGIN
       prev_tab_selected = (*global).prev_tab_selected
@@ -573,6 +593,8 @@ PRO launch_beam_center_base, main_event
     beam_stop_range_moving_tube_start: 0,$
     beam_stop_range_moving_pixel_start: 0,$
     beam_stop_tubeLR_pixelLR_backup: STRARR(4), $
+    
+    twoD_plots_tubeLR_pixelLR_backup: STRARR(4), $
     
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $
