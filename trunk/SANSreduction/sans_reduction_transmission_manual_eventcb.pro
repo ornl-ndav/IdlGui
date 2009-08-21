@@ -59,41 +59,65 @@ PRO launch_transmission_manual_mode_event, Event
         putTextFieldValue, Event, 'trans_manual_step1_cursor_counts', $
           STRCOMPRESS(counts,/REMOVE_ALL)
           
+        plot_trans_manual_step1_background, Event
+        plot_big_cross_bar, event
+        
         IF (event.press EQ 1) THEN BEGIN ;pressed button
-          plot_trans_manual_step1_background, Event
           (*global).left_button_clicked = 1
-          IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
-            plot_selection, Event, mode='x0y0'
-          ENDIF ElSE BEGIN ;working with x1y1
-            plot_selection, Event, mode='x1y1'
-          ENDELSE
+          
+          ;first thing to do is to fully reset the x0y0x1y1 array
+          x0y0x1y1 = INTARR(4)
+          x0y0x1y1[0] = Event.X
+          x0y0x1y1[1] = Event.Y
+          (*global).x0y0x1y1 = x0y0x1y1
+          tube  = getTransManualStep1Tube(Event.x)
+          pixel = getTransManualStep1Pixel(Event.y)
+          putTextFieldValue, Event, 'trans_manual_step1_x0', $
+            STRCOMPRESS(tube,/REMOVE_ALL)
+          putTextFieldValue, Event, 'trans_manual_step1_y0', $
+            STRCOMPRESS(pixel,/REMOVE_ALL)
+            
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with button clicked
           (*global).left_button_clicked EQ 1) THEN BEGIN
-          plot_trans_manual_step1_background, Event
-          IF ((*global).working_with_xy EQ 0) THEN BEGIN ;working with x0y0
-            plot_selection, Event, mode='x0y0'
-          ENDIF ElSE BEGIN ;working with x1y1
-            plot_selection, Event, mode='x1y1'
-          ENDELSE
+          
+          x0y0x1y1 = (*global).x0y0x1y1
+          x0y0x1y1[2] = Event.X
+          x0y0x1y1[3] = Event.Y
+          (*global).x0y0x1y1 = x0y0x1y1
+          tube  = getTransManualStep1Tube(Event.x)
+          pixel = getTransManualStep1Pixel(Event.y)
+          putTextFieldValue, Event, 'trans_manual_step1_x1', $
+            STRCOMPRESS(tube,/REMOVE_ALL)
+          putTextFieldValue, Event, 'trans_manual_step1_y1', $
+            STRCOMPRESS(pixel,/REMOVE_ALL)
+            
+          plot_trans_manual_step1_counts_vs_x_and_y, Event
+          
         ENDIF
         
         IF (event.release EQ 1) THEN BEGIN ;left button release
+        
+          x0y0x1y1 = (*global).x0y0x1y1
+          x0y0x1y1[2] = Event.X
+          x0y0x1y1[3] = Event.Y
+          (*global).x0y0x1y1 = x0y0x1y1
+          tube  = getTransManualStep1Tube(Event.x)
+          pixel = getTransManualStep1Pixel(Event.y)
+          putTextFieldValue, Event, 'trans_manual_step1_x1', $
+            STRCOMPRESS(tube,/REMOVE_ALL)
+          putTextFieldValue, Event, 'trans_manual_step1_y1', $
+            STRCOMPRESS(pixel,/REMOVE_ALL)
+            
           (*global).left_button_clicked = 0
           (*global).need_to_reset_trans_step2 = 1
+          
+          plot_trans_manual_step1_counts_vs_x_and_y, Event
+          
         ENDIF
         
-        IF (event.press EQ 4) THEN BEGIN ;right click
-          plot_trans_manual_step1_background, Event
-          IF ((*global).working_with_xy EQ 0) THEN BEGIN
-            (*global).working_with_xy = 1
-            refresh_plot_selection_trans_manual_step1, Event
-          ENDIF ELSE BEGIN
-            (*global).working_with_xy = 0
-            refresh_plot_selection_trans_manual_step1, Event
-          ENDELSE
-        ENDIF
+        plot_trans_manual_step1_central_selection, Event
         
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -104,6 +128,8 @@ PRO launch_transmission_manual_mode_event, Event
           standard = 31
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN
+          plot_trans_manual_step1_background, Event
+          plot_trans_manual_step1_central_selection, Event
           putTextFieldValue, Event, 'trans_manual_step1_cursor_tube', $
             'N/A'
           putTextFieldValue, Event, 'trans_manual_step1_cursor_pixel', $
@@ -118,14 +144,16 @@ PRO launch_transmission_manual_mode_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step1_linear'): BEGIN
       refresh_transmission_manual_step1_main_plot, Event
-      refresh_plot_selection_trans_manual_step1, Event
+      plot_trans_manual_step1_central_selection, Event
+      plot_trans_manual_step1_counts_vs_x_and_y, Event
     END
     
     ;log plot
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='transmission_manual_step1_log'): BEGIN
       refresh_transmission_manual_step1_main_plot, Event
-      refresh_plot_selection_trans_manual_step1, Event
+      plot_trans_manual_step1_central_selection, Event
+      plot_trans_manual_step1_counts_vs_x_and_y, Event
     END
     
     ;move on to step2 button

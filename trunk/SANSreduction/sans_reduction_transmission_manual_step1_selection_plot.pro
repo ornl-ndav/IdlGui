@@ -32,7 +32,30 @@
 ;
 ;==============================================================================
 
-PRO plot_selection, Event, mode=mode
+PRO plot_big_cross_bar, Event
+
+  color_working = 250
+  linestyle_working = 0
+  
+  xmin = 0
+  xmax = 450
+  ymin = 0
+  ymax = 400
+  
+  x0 = Event.x
+  y0 = Event.y
+  
+  PLOTS, x0, ymin, /DEVICE, COLOR=color_working
+  PLOTS, x0, ymax, /DEVICE, COLOR=color_working, /CONTINUE, $
+    LINESTYLE=linestyle_working
+  PLOTS, xmin, y0, /DEVICE, COLOR=color_working
+  PLOTS, xmax, y0, /DEVICE, COLOR=color_working, /CONTINUE, $
+    LINESTYLE=linestyle_working
+    
+END
+
+;------------------------------------------------------------------------------
+PRO backup_plot_selection, Event, mode=mode
   ;mode = 'x0y0' or 'x1y1'
 
   ;get global structure
@@ -45,7 +68,7 @@ PRO plot_selection, Event, mode=mode
   IF (mode EQ 'x0y0') THEN BEGIN ;x0y0
     x0y0x1y1[0] = Event.X
     x0y0x1y1[1] = Event.Y
-    color_0 = color_working
+    color_working = color_working
     color_1 = color_non_working
     linestyle_0 = 0
     linestyle_1 = 1
@@ -112,60 +135,60 @@ PRO refresh_plot_selection_trans_manual_step1, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  working_with = (*global).working_with_xy
-  x0y0x1y1 = (*global).x0y0x1y1
-  
-  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
-    color_non_working = 900
-    color_working = 550
-  ENDIF ELSE BEGIN
-    color_non_working = 100
-    color_working = 250
-  ENDELSE
-  
-  IF (working_with EQ 0) THEN BEGIN ;x0y0
-    color_0 = color_working
-    color_1 = color_non_working
-    linestyle_0 = 0
-    linestyle_1 = 2
-  ENDIF ELSE BEGIN ;x1y1
-    color_1 = color_working
-    color_0 = color_non_working
-    linestyle_0 = 2
-    linestyle_1 = 0
-  ENDELSE
-  
-  xmin = 0
-  xmax = 450
-  ymin = 0
-  ymax = 400
-  
-  x0 = x0y0x1y1[0]
-  y0 = x0y0x1y1[1]
-  x1 = x0y0x1y1[2]
-  y1 = x0y0x1y1[3]
-  
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  
-  IF (x0 NE 0 AND y0 NE 0) THEN BEGIN
-  
-    PLOTS, x0, ymin, /DEVICE, COLOR=color_0
-    PLOTS, x0, ymax, /DEVICE, COLOR=color_0, /CONTINUE, LINESTYLE=linestyle_0
-    PLOTS, xmin, y0, /DEVICE, COLOR=color_0
-    PLOTS, xmax, y0, /DEVICE, COLOR=color_0, /CONTINUE, LINESTYLE=linestyle_0
-    
-  ENDIF
-  
-  IF (x1 NE 0 AND y1 NE 0) THEN BEGIN
-  
-    PLOTS, x1, ymin, /DEVICE, COLOR=color_1
-    PLOTS, x1, ymax, /DEVICE, COLOR=color_1, /CONTINUE, LINESTYLE=linestyle_1
-    PLOTS, xmin, y1, /DEVICE, COLOR=color_1
-    PLOTS, xmax, y1, /DEVICE, COLOR=color_1, /CONTINUE, LINESTYLE=linestyle_1
-    
-  ENDIF
+;  working_with = (*global).working_with_xy
+;  x0y0x1y1 = (*global).x0y0x1y1
+;  
+;  IF (~isTranManualStep1LinSelected(Event)) THEN BEGIN ;log mode
+;    color_non_working = 900
+;    color_working = 550
+;  ENDIF ELSE BEGIN
+;    color_non_working = 100
+;    color_working = 250
+;  ENDELSE
+;  
+;  IF (working_with EQ 0) THEN BEGIN ;x0y0
+;    color_0 = color_working
+;    color_1 = color_non_working
+;    linestyle_0 = 0
+;    linestyle_1 = 2
+;  ENDIF ELSE BEGIN ;x1y1
+;    color_1 = color_working
+;    color_0 = color_non_working
+;    linestyle_0 = 2
+;    linestyle_1 = 0
+;  ENDELSE
+;  
+;  xmin = 0
+;  xmax = 450
+;  ymin = 0
+;  ymax = 400
+;  
+;  x0 = x0y0x1y1[0]
+;  y0 = x0y0x1y1[1]
+;  x1 = x0y0x1y1[2]
+;  y1 = x0y0x1y1[3]
+;  
+;  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+;  WIDGET_CONTROL, id, GET_VALUE=id_value
+;  WSET, id_value
+;  
+;  IF (x0 NE 0 AND y0 NE 0) THEN BEGIN
+;  
+;    PLOTS, x0, ymin, /DEVICE, COLOR=color_0
+;    PLOTS, x0, ymax, /DEVICE, COLOR=color_0, /CONTINUE, LINESTYLE=linestyle_0
+;    PLOTS, xmin, y0, /DEVICE, COLOR=color_0
+;    PLOTS, xmax, y0, /DEVICE, COLOR=color_0, /CONTINUE, LINESTYLE=linestyle_0
+;    
+;  ENDIF
+;  
+;  IF (x1 NE 0 AND y1 NE 0) THEN BEGIN
+;  
+;    PLOTS, x1, ymin, /DEVICE, COLOR=color_1
+;    PLOTS, x1, ymax, /DEVICE, COLOR=color_1, /CONTINUE, LINESTYLE=linestyle_1
+;    PLOTS, xmin, y1, /DEVICE, COLOR=color_1
+;    PLOTS, xmax, y1, /DEVICE, COLOR=color_1, /CONTINUE, LINESTYLE=linestyle_1
+;    
+;  ENDIF
   
   plot_trans_manual_step1_central_selection, Event
   plot_trans_manual_step1_counts_vs_x_and_y, Event
@@ -191,6 +214,9 @@ PRO plot_trans_manual_step1_central_selection, Event
     color = 175
   ENDELSE
   
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='manual_transmission_step1_draw')
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
   
   IF (x0 + y0 NE 0 AND $
     x1 + y1 NE 0) THEN BEGIN
