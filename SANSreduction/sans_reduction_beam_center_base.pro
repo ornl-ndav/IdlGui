@@ -401,7 +401,25 @@ PRO launch_beam_center_base_event, Event
       ENDELSE ;enf of catch statement
     END
     
-    ;button3 (2d plots)
+    ;tube left, right, pixel left and right of beam stop region
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_beam_stop_tube_left'): BEGIN
+      beam_stop_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_beam_stop_tube_right'): BEGIN
+      beam_stop_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_beam_stop_pixel_left'): BEGIN
+      beam_stop_range_manual_input, Event
+    END
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_beam_stop_pixel_right'): BEGIN
+      beam_stop_range_manual_input, Event
+    END
+
+    ;button3 (2d plots) -------------------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button3'): BEGIN
       error = 0
       CATCH, error
