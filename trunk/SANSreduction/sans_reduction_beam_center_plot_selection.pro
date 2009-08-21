@@ -31,29 +31,22 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
-PRO replot_beam_center_calibration_range, Event
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ON_IOERROR, leave
-  
+;------------------------------------------------------------------------------
+PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
+
   draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  id = WIDGET_INFO(base,FIND_BY_UNAME=draw_uname)
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   DEVICE, DECOMPOSED=1
   
   ;Calibration Range ..........................................................
-  tube_min_data = FIX(getTextFieldValue(event,$
-    'beam_center_calculation_tube_left'))
-  tube_max_data = FIX(getTextFieldValue(Event,$
-    'beam_center_calculation_tube_right'))
-  pixel_min_data = FIX(getTextFieldValue(Event,$
-    'beam_center_calculation_pixel_left'))
-  pixel_max_data = FIX(getTextFieldValue(Event,$
-    'beam_center_calculation_pixel_right))
-    
+  tube_min_data = (*global).calibration_range_default_selection.tube_min
+  tube_max_data = (*global).calibration_range_default_selection.tube_max
+  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
+  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
+  
   ;adding +1 for max to have the all tube/pixel included in the selection
   x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
   x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
@@ -70,35 +63,12 @@ PRO replot_beam_center_calibration_range, Event
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
-  leave:
+  ;Beam stop region ...........................................................
+  tube_min_data = (*global).beam_stop_default_selection.tube_min
+  tube_max_data = (*global).beam_stop_default_selection.tube_max
+  pixel_min_data = (*global).beam_stop_default_selection.pixel_min
+  pixel_max_data = (*global).beam_stop_default_selection.pixel_max
   
-  DEVICE, DECOMPOSED=0
-  
-END
-
-;------------------------------------------------------------------------------
-PRO replot_beam_center_beam_stop, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ON_IOERROR, leave
-  
-  draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  DEVICE, DECOMPOSED=1
-  
-  tube_min_data = FIX(getTextFieldValue(Event,$
-    'beam_center_beam_stop_tube_left'))
-  tube_max_data = FIX(getTextFieldValue(Event,$
-    'beam_center_beam_stop_tube_right'))
-  pixel_min_data = FIX(getTextFieldValue(Event,$
-    'beam_center_beam_stop_pixel_left'))
-  pixel_max_data = FIX(getTextFieldValue(Event,$
-    'beam_center_beam_stop_pixel_right'))
-    
   ;adding +1 for max to have the all tube/pixel included in the selection
   x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
   x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
@@ -115,31 +85,9 @@ PRO replot_beam_center_beam_stop, Event
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
-  leave:
-  
-  DEVICE, DECOMPOSED=0
-  
-END
-
-;------------------------------------------------------------------------------
-PRO replot_2d_plot_cursor, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  ON_IOERROR, leave
-  
-  draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  DEVICE, DECOMPOSED=1
-  
-  tube_data = FIX(getTextFieldValue(Event,$
-    'beam_center_2d_plot_tube'))
-  pixel_data = FIX(getTextFieldValue(Event,$
-    'beam_center_2d_plot_pixel'))
-    
+  ;2D plots selection .........................................................
+  tube_data  = (*global).twoD_default_selection.tube
+  pixel_data = (*global).twoD_default_selection.pixel
   tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
   pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
   
@@ -163,8 +111,28 @@ PRO replot_2d_plot_cursor, Event
     LINESTYLE=linestyle, $
     THICK=thick
     
-  leave:
-  
   DEVICE, DECOMPOSED=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_beam_center_calibration_range, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  draw_uname = 'beam_center_main_draw'
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  DEVICE, DECOMPOSED=1
+  
+  ;determine if we want to move or create selection
+  IF ((*global).current_cursor_status EQ (*global).cursor_selection) THEN BEGIN
+  ;we want to start selection from scratch
+  
+  ENDIF ELSE BEGIN ;we want to move selection
+  
+  ENDELSE
   
 END

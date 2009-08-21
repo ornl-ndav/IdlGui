@@ -48,6 +48,28 @@ PRO launch_beam_center_base_event, Event
         
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           (*global).left_button_pressed = 1
+          curr_cursor = (*global).current_cursor_status
+          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
+            CASE (curr_tab_selected) OF
+              0: ;calculation range
+              1: ;beam stop region
+              2: ;2d plot cross
+            ENDCASE
+          ENDIF ELSE BEGIN ;moving selection
+            CASE (curr_tab_selected) OF
+              0: BEGIN;calculation range
+              ;need to reset the tube and pixel values
+              putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
+              'N/A' 
+              putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
+              'N/A' 
+              
+              END
+              1: ;beam stop region
+              2: ;2d plot cross
+            ENDCASE
+          ENDELSE
         ENDIF
         
         IF (event.press EQ 0 AND $ ;moving mouse with button pressed
@@ -55,20 +77,20 @@ PRO launch_beam_center_base_event, Event
           plot_beam_center_background, Event
           curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            0: BEGIN
-              ;replot_beam_center_calibration_range, Event
+            0: BEGIN ;calculation range
+              plot_beam_center_calibration_range, Event
               replot_beam_center_beam_stop, Event
               replot_2d_plot_cursor, Event
             END
-            1: BEGIN
+            1: BEGIN ;beam stop region
               replot_beam_center_calibration_range, Event
               ;replot_beam_center_beam_stop, Event
               replot_2d_plot_cursor, Event
             END
-            2: BEGIN
+            2: BEGIN ;2d plot cross
               replot_beam_center_calibration_range, Event
               replot_beam_center_beam_stop, Event
-              ;replot_2d_plot_cursor, Event
+            ;replot_2d_plot_cursor, Event
             END
           ENDCASE
           
@@ -280,13 +302,13 @@ PRO launch_beam_center_base, main_event
     GLOBAL_BC = global_bc
     
   populate_defaults_wigets_values, wBase1, global_bc
-
+  
   ;save background
   save_beam_center_background,  Event=event, BASE=wBase1
-
+  
   plot_default_beam_center_selections, base=wBase1, global=global_bc
   plot_beam_center_scale, wBase1, global_bc
-    
+  
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     

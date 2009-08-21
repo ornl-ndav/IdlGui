@@ -91,6 +91,7 @@ cd, CurrentFolder
 .run sans_reduction_beam_center_tab.pro
 .run sans_reduction_beam_center_plot.pro
 .run sans_reduction_beam_center_replot.pro
+.run sans_reduction_beam_cneter_plot_selection.pro
 
 ;main functions
 .run MainBaseEvent.pro
