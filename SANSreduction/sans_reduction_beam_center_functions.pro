@@ -66,7 +66,40 @@ FUNCTION validate_or_not_calibration_range_moving, Event
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION validate_or_not_beam_stop_range_moving, Event
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tube_min_data = FIX(getTextFieldValue(event,$
+    'beam_center_beam_stop_tube_left'))
+  tube_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_tube_right'))
+  pixel_min_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_pixel_left'))
+  pixel_max_data = FIX(getTextFieldValue(Event,$
+    'beam_center_beam_stop_pixel_right'))
+    
+  tube_data = (*global).beam_stop_range_moving_tube_start
+  pixel_data = (*global).beam_stop_range_moving_pixel_start
+
+  offset_tube_max = ABS(tube_max_data - tube_data)
+  offset_tube_min = ABS(tube_min_data - tube_data)
+  offset_pixel_max = ABS(pixel_max_data - pixel_data)
+  offset_pixel_min = ABS(pixel_min_data - pixel_data)
+  
+  moving_pixel_range = (*global).moving_pixel_range
+  moving_tube_range = (*global).moving_tube_range
+  
+  IF (offset_tube_max LE moving_tube_range) THEN RETURN, 1
+  IF (offset_tube_min LE moving_tube_range) THEN RETURN, 1
+  IF (offset_pixel_max LE moving_pixel_range) THEN RETURN, 1
+  IF (offset_pixel_min LE moving_pixel_range) THEN RETURN, 1
+
+  RETURN, 0
+  
+END
 
 
 
