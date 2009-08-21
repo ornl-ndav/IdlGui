@@ -78,7 +78,18 @@ PRO launch_beam_center_base_event, Event
                 putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', $
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
               END
-              2: ;2d plot cross
+              2: BEGIN ;2d plot cross
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
+                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
+                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+                plot_beam_center_background, Event
+                replot_beam_center_calibration_range, Event
+                replot_beam_center_beam_stop, Event
+                replot_2d_plot_cursor, Event
+              END
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
@@ -129,9 +140,16 @@ PRO launch_beam_center_base_event, Event
                 replot_2d_plot_cursor, Event
               END
               2: BEGIN ;2d plot cross
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
+                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
+                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+                plot_beam_center_background, Event
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-              ;replot_2d_plot_cursor, Event
+                replot_2d_plot_cursor, Event
               END
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
@@ -289,9 +307,6 @@ PRO launch_beam_center_base_event, Event
                 replot_2d_plot_cursor, Event
               END
               2: BEGIN ;2d plot cross
-                replot_beam_center_calibration_range, Event
-                replot_beam_center_beam_stop, Event
-              ;replot_2d_plot_cursor, Event
               END
             ENDCASE
           ENDELSE
@@ -513,7 +528,7 @@ PRO launch_beam_center_base_event, Event
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
-        FIND_BY_UNAME='transmission_mode_launcher_base')
+        FIND_BY_UNAME='beam_center_calculation_base')
       WIDGET_CONTROL, id, /DESTROY
     END
     

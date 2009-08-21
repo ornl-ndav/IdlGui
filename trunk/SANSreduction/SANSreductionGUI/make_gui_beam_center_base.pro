@@ -47,8 +47,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   
   ourGroup = WIDGET_BASE()
   
-  wBase = WIDGET_BASE(TITLE = 'Transmission Calculation Mode',$
-    UNAME        = 'transmission_mode_launcher_base',$
+  wBase = WIDGET_BASE(TITLE = 'Beam Center Calculation Tool',$
+    UNAME        = 'beam_center_calculation_base',$
     SCR_XSIZE        = xsize, $
     SCR_YSIZE        = ysize, $
     XOFFSET      = xoffset,$
