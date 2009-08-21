@@ -138,7 +138,7 @@ PRO launch_beam_center_base_event, Event
             CASE (curr_tab_selected) OF
               0: BEGIN ;calculation range
                 IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
-
+                
                   X = Event.x
                   Y = Event.y
                   tube_data  = getBeamCenterTubeData_from_device(X, global)
@@ -214,7 +214,7 @@ PRO launch_beam_center_base_event, Event
               END
               1: BEGIN ;beam stop region
                 IF (validate_or_not_beam_stop_range_moving(Event)) THEN BEGIN
-
+                
                   X = Event.x
                   Y = Event.y
                   tube_data  = getBeamCenterTubeData_from_device(X, global)
@@ -302,6 +302,57 @@ PRO launch_beam_center_base_event, Event
         IF (event.release EQ 1 AND $ ;releasing left button
           (*global).left_button_pressed EQ 1) THEN BEGIN
           (*global).left_button_pressed = 0
+          
+          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          CASE (curr_tab_selected) OF
+            0: BEGIN
+            
+              tube_min = getTextFieldValue(Event,$
+                'beam_center_calculation_tube_left')
+              tube_max = getTextFieldValue(Event,$
+                'beam_center_calculation_tube_right')
+              pixel_min = getTextFieldValue(Event,$
+                'beam_center_calculation_pixel_left')
+              pixel_max = getTextFieldValue(Event,$
+                'beam_center_calculation_pixel_right')
+                
+              Tmin = MIN([tube_min,tube_max],MAX=tmax)
+              Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
+              
+              sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
+              sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
+              sPmin = STRCOMPRESS(Pmin,/REMOVE_ALL)
+              sPmax = STRCOMPRESS(Pmax,/REMOVE_ALL)
+              
+              (*global).calculation_tubeLR_pixelLR_backup = $
+                [sTmin, sTmax, sPmin, sPmax]
+                
+            END
+            1: BEGIN
+            
+              tube_min = getTextFieldValue(Event,$
+                'beam_center_beam_stop_tube_left')
+              tube_max = getTextFieldValue(Event,$
+                'beam_center_beam_stop_tube_right')
+              pixel_min = getTextFieldValue(Event,$
+                'beam_center_beam_stop_pixel_left')
+              pixel_max = getTextFieldValue(Event,$
+                'beam_center_beam_stop_pixel_right')
+                
+              Tmin = MIN([tube_min,tube_max],MAX=tmax)
+              Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
+              
+              sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
+              sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
+              sPmin = STRCOMPRESS(Pmin,/REMOVE_ALL)
+              sPmax = STRCOMPRESS(Pmax,/REMOVE_ALL)
+              
+              (*global).beam_stop_tubeLR_pixelLR_backup = $
+                [sTmin, sTmax, sPmin, sPmax]
+                
+            END
+            2:
+          ENDCASE
           
         ENDIF
         
@@ -418,7 +469,7 @@ PRO launch_beam_center_base_event, Event
       FIND_BY_UNAME='beam_center_beam_stop_pixel_right'): BEGIN
       beam_stop_range_manual_input, Event
     END
-
+    
     ;button3 (2d plots) -------------------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button3'): BEGIN
       error = 0
@@ -502,9 +553,11 @@ PRO launch_beam_center_base, main_event
     
     calibration_range_moving_tube_start: 0,$
     calibration_range_moving_pixel_start: 0,$
+    calculation_tubeLR_pixelLR_backup: STRARR(4), $
     
     beam_stop_range_moving_tube_start: 0,$
     beam_stop_range_moving_pixel_start: 0,$
+    beam_stop_tubeLR_pixelLR_backup: STRARR(4), $
     
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $
