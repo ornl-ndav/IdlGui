@@ -56,6 +56,13 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     MAP          = 1,$
     GROUP_LEADER = ourGroup)
     
+    message = 'INFO : right click on the main plot to switch between' + $
+    ' Selection and Moving selection'
+  label = WIDGET_LABEL(wBase, $
+  XOFFSET = 10,$
+  YOFFSET = 10,$
+  VALUE = message)  
+    
   ;big_base ==================================================
   big_base = WIDGET_BASE(wBase,$
     /COLUMN)
