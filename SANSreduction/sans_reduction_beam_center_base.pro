@@ -145,10 +145,12 @@ PRO launch_beam_center_base_event, Event
                   IF (new_tube_min LT (*global).min_tube_plotted) THEN BEGIN
                     new_tube_min = (*global).min_tube_plotted
                     new_tube_max = tube_max_data
+                    tube_data = (*global).calibration_range_moving_tube_start
                   ENDIF
                   IF (new_tube_max GT (*global).max_tube_plotted) THEN BEGIN
                     new_tube_max = (*global).max_tube_plotted
                     new_tube_min = tube_min_data
+                    tube_data = (*global).calibration_range_moving_tube_start
                   ENDIF
                   
                   putTextFieldValue, Event, $
@@ -158,7 +160,6 @@ PRO launch_beam_center_base_event, Event
                     'beam_center_calculation_tube_right', $
                     STRCOMPRESS(new_tube_max,/REMOVE_ALL)
                     
-                  tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                   (*global).calibration_range_moving_tube_start = tube_data
                   
                   new_pixel_min = pixel_min_data + offset_pixel
@@ -167,10 +168,12 @@ PRO launch_beam_center_base_event, Event
                   IF (new_pixel_min LT (*global).min_pixel_plotted) THEN BEGIN
                     new_pixel_min = (*global).min_pixel_plotted
                     new_pixel_max = pixel_max_data
+                    pixel_data = (*global).calibration_range_moving_pixel_start
                   ENDIF
                   IF (new_pixel_max GT (*global).max_pixel_plotted) THEN BEGIN
                     new_pixel_max = (*global).max_pixel_plotted
                     new_pixel_min = pixel_min_data
+                    pixel_data = (*global).calibration_range_moving_pixel_start
                   ENDIF
                   
                   putTextFieldValue, Event, $
@@ -180,7 +183,6 @@ PRO launch_beam_center_base_event, Event
                     'beam_center_calculation_pixel_right', $
                     STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
                     
-                  pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                   (*global).calibration_range_moving_pixel_start = pixel_data
                   
                   
