@@ -39,6 +39,44 @@ PRO launch_beam_center_base_event, Event
   
   CASE Event.id OF
   
+    ;Main plot
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_main_draw'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+        ENDIF
+        
+        IF (event.press EQ 4) THEN BEGIN ;right click
+          switch_cursor_shape, Event
+        ENDIF
+        
+        
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='beam_center_main_draw')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        
+        IF (event.enter EQ 1) THEN BEGIN
+          ;check activated button
+          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          CASE (curr_tab_selected) OF
+            0: standard = (*global).current_cursor_status
+            1: standard = (*global).current_cursor_status
+            2: standard = (*global).cursor_selection
+          ENDCASE
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave main plot
+          standard = (*global).cursor_selection
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
+      
+    END
+    
     ;button1 (calibration region)
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button1'): BEGIN
       error = 0
@@ -161,6 +199,10 @@ PRO launch_beam_center_base, main_event
   global_bc = PTR_NEW({ wbase: wbase1,$
     main_global: global, $
     main_event: main_event, $
+    
+    current_cursor_status: 31,$ ;31(cross) or 52(move selection)
+    cursor_selection: 31, $
+    cursor_moving: 52, $
     
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $

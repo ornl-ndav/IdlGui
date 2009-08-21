@@ -218,6 +218,31 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
     
   DEVICE, DECOMPOSED=0
   
+END
+
+;------------------------------------------------------------------------------
+PRO switch_cursor_shape, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+  IF (curr_tab_selected EQ 2) THEN RETURN
+  
+  current_cursor_status = (*global).current_cursor_status
+  IF (current_cursor_status EQ (*global).cursor_selection) THEN BEGIN
+    (*global).current_cursor_status = (*global).cursor_moving
+  ENDIF ELSE BEGIN
+    (*global).current_cursor_status = (*global).cursor_selection
+  ENDELSE
+  
+  draw_uname = 'beam_center_main_draw'
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  DEVICE, CURSOR_STANDARD=(*global).current_cursor_status
   
 END
+
+
+
