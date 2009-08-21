@@ -464,25 +464,54 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION getBeamCenterTubeDevice_from_data, data_value, global
 
-draw_xsize = (*global).main_draw_xsize
-tube_max   = (*global).max_tube_plotted+1
-tube_min   = (*global).min_tube_plotted
+  draw_xsize = (*global).main_draw_xsize
+  tube_max   = (*global).max_tube_plotted+1
+  tube_min   = (*global).min_tube_plotted
+  
+  offset_tube = data_value - tube_min
+  coeff_x = FLOAT(draw_xsize) / (FLOAT(tube_max) - FLOAT(tube_min))
+  tube_device = FIX((offset_tube * coeff_x))
+  RETURN, tube_device
+END
 
-offset_tube = data_value - tube_min
-coeff_x = FLOAT(draw_xsize) / (FLOAT(tube_max) - FLOAT(tube_min))
-tube_device = FIX((offset_tube * coeff_x))
-RETURN, tube_device
+;..............................................................................
+FUNCTION getBeamCenterTubeData_from_device, device_value, global
+
+  draw_xsize = FLOAT((*global).main_draw_xsize)
+  tube_max   = FLOAT((*global).max_tube_plotted+1)
+  tube_min   = FLOAT((*global).min_tube_plotted)
+  
+  data = FLOAT(device_value) * (tube_max + 1 - tube_min)
+  data /= draw_xsize
+  data += tube_min
+  
+  RETURN, FIX(data)
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION getBeamCenterPixelDevice_from_data, data_value, global
 
-draw_ysize  = (*global).main_draw_ysize
-pixel_max   = (*global).max_pixel_plotted+1
-pixel_min   = (*global).min_pixel_plotted
-
-offset_pixel = data_value - pixel_min
-coeff_x = FLOAT(draw_ysize) / (FLOAT(pixel_max) - FLOAT(pixel_min))
-pixel_device = FIX((offset_pixel * coeff_x))
-RETURN, pixel_device
+  draw_ysize  = (*global).main_draw_ysize
+  pixel_max   = (*global).max_pixel_plotted+1
+  pixel_min   = (*global).min_pixel_plotted
+  
+  offset_pixel = data_value - pixel_min
+  coeff_x = FLOAT(draw_ysize) / (FLOAT(pixel_max) - FLOAT(pixel_min))
+  pixel_device = FIX((offset_pixel * coeff_x))
+  RETURN, pixel_device
 END
+
+;..............................................................................
+FUNCTION getBeamCenterPixelData_from_device, device_value, global
+
+  draw_ysize = FLOAT((*global).main_draw_ysize)
+  pixel_max   = FLOAT((*global).max_pixel_plotted+1)
+  pixel_min   = FLOAT((*global).min_pixel_plotted)
+  
+  data = FLOAT(device_value) * (pixel_max + 1 - pixel_min)
+  data /= draw_ysize
+  data += pixel_min
+  
+  RETURN, FIX(data)
+END
+

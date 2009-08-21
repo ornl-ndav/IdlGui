@@ -115,24 +115,3 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   
 END
 
-;------------------------------------------------------------------------------
-PRO plot_beam_center_calibration_range, Event
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  
-  draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  DEVICE, DECOMPOSED=1
-  
-  ;determine if we want to move or create selection
-  IF ((*global).current_cursor_status EQ (*global).cursor_selection) THEN BEGIN
-  ;we want to start selection from scratch
-  
-  ENDIF ELSE BEGIN ;we want to move selection
-  
-  ENDELSE
-  
-END
