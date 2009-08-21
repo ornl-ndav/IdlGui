@@ -71,6 +71,10 @@ PRO launch_beam_center_base_event, Event
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
               0: BEGIN;calculation range
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                (*global).calibration_range_moving_tube_start = tube_data
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                (*global).calibration_range_moving_pixel_start = pixel_data
               END
               1: ;beam stop region
               2: ;2d plot cross
@@ -110,13 +114,45 @@ PRO launch_beam_center_base_event, Event
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
               0: BEGIN ;calculation range
-                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
-                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
-                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-                plot_beam_center_calibration_range, Event
+                print, validate_or_not_calibration_range_moving(Event)
+                IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
+                  tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                  pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                  offset_tube = tube_data - $
+                    (*global).calibration_range_moving_tube_start
+                  offset_pixel = pixel_data - $
+                    (*global).calibration_range_moving_pixel_start
+                    
+                  tube_min_data = FIX(getTextFieldValue(Event,$
+                    'beam_center_calculation_tube_left'))
+                  tube_max_data = FIX(getTextFieldValue(Event,$
+                    'beam_center_calculation_tube_right'))
+                  pixel_min_data = FIX(getTextFieldValue(Event,$
+                    'beam_center_calculation_pixel_left'))
+                  pixel_max_data = FIX(getTextFieldValue(Event,$
+                    'beam_center_calculation_pixel_right'))
+                    
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_tube_left', $
+                    STRCOMPRESS(tube_min_data + offset_tube,/REMOVE_ALL)
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_tube_right', $
+                    STRCOMPRESS(tube_max_data + offset_tube,/REMOVE_ALL)
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_pixel_left', $
+                    STRCOMPRESS(pixel_min_data + offset_pixel,/REMOVE_ALL)
+                  putTextFieldValue, Event, $
+                    'beam_center_calculation_pixel_right', $
+                    STRCOMPRESS(pixel_max_data + offset_pixel,/REMOVE_ALL)
+                    
+                  tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                  (*global).calibration_range_moving_tube_start = tube_data
+                  pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                  (*global).calibration_range_moving_pixel_start = pixel_data
+                  
+                ENDIF
+                replot_beam_center_calibration_range, Event
+                
                 replot_beam_center_beam_stop, Event
                 replot_2d_plot_cursor, Event
               END
@@ -315,6 +351,12 @@ PRO launch_beam_center_base, main_event
     cursor_selection: 31, $
     cursor_moving: 52, $
     left_button_pressed: 0,$
+    
+    moving_pixel_range: 5,$ ;user has to click within that range to move it
+    moving_tube_range: 2, $
+    
+    calibration_range_moving_tube_start: 0,$
+    calibration_range_moving_pixel_start: 0,$
     
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $

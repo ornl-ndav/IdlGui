@@ -86,6 +86,7 @@ cd, CurrentFolder
 .run sans_reduction_transmission_auto_mode_routines.pro
 
 ;beam center
+.run sans_reduction_beam_center_functions.pro
 .run sans_reduction_beam_center_base.pro
 .run sans_reduction_beam_center_display_images.pro
 .run sans_reduction_beam_center_tab.pro
