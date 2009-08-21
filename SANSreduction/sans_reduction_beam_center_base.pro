@@ -52,19 +52,25 @@ PRO launch_beam_center_base_event, Event
           curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              0: ;calculation range
+              0: BEGIN ;calculation range
+                ;need to reset the tube and pixel values
+                putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
+                  'N/A'
+                putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
+                  'N/A'
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
+                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
+                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+              END
               1: ;beam stop region
               2: ;2d plot cross
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
               0: BEGIN;calculation range
-              ;need to reset the tube and pixel values
-              putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
-              'N/A' 
-              putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
-              'N/A' 
-              
               END
               1: ;beam stop region
               2: ;2d plot cross
@@ -76,23 +82,57 @@ PRO launch_beam_center_base_event, Event
           (*global).left_button_pressed EQ 1) THEN BEGIN
           plot_beam_center_background, Event
           curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
-          CASE (curr_tab_selected) OF
-            0: BEGIN ;calculation range
-              plot_beam_center_calibration_range, Event
-              replot_beam_center_beam_stop, Event
-              replot_2d_plot_cursor, Event
-            END
-            1: BEGIN ;beam stop region
-              replot_beam_center_calibration_range, Event
-              ;replot_beam_center_beam_stop, Event
-              replot_2d_plot_cursor, Event
-            END
-            2: BEGIN ;2d plot cross
-              replot_beam_center_calibration_range, Event
-              replot_beam_center_beam_stop, Event
-            ;replot_2d_plot_cursor, Event
-            END
-          ENDCASE
+          curr_cursor = (*global).current_cursor_status
+          IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
+            CASE (curr_tab_selected) OF
+              0: BEGIN ;calculation range
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                putTextFieldValue, Event, 'beam_center_calculation_tube_right', $
+                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                putTextFieldValue, Event, 'beam_center_calculation_pixel_right', $
+                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+                replot_beam_center_calibration_range, Event
+                replot_beam_center_beam_stop, Event
+                replot_2d_plot_cursor, Event
+              END
+              1: BEGIN ;beam stop region
+                replot_beam_center_calibration_range, Event
+                ;replot_beam_center_beam_stop, Event
+                replot_2d_plot_cursor, Event
+              END
+              2: BEGIN ;2d plot cross
+                replot_beam_center_calibration_range, Event
+                replot_beam_center_beam_stop, Event
+              ;replot_2d_plot_cursor, Event
+              END
+            ENDCASE
+          ENDIF ELSE BEGIN ;moving selection
+            CASE (curr_tab_selected) OF
+              0: BEGIN ;calculation range
+                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
+                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
+                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+                plot_beam_center_calibration_range, Event
+                replot_beam_center_beam_stop, Event
+                replot_2d_plot_cursor, Event
+              END
+              1: BEGIN ;beam stop region
+                replot_beam_center_calibration_range, Event
+                ;replot_beam_center_beam_stop, Event
+                replot_2d_plot_cursor, Event
+              END
+              2: BEGIN ;2d plot cross
+                replot_beam_center_calibration_range, Event
+                replot_beam_center_beam_stop, Event
+              ;replot_2d_plot_cursor, Event
+              END
+            ENDCASE
+          ENDELSE
+          
           
         ENDIF
         

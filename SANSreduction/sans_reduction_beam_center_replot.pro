@@ -52,7 +52,7 @@ PRO replot_beam_center_calibration_range, Event
   pixel_min_data = FIX(getTextFieldValue(Event,$
     'beam_center_calculation_pixel_left'))
   pixel_max_data = FIX(getTextFieldValue(Event,$
-    'beam_center_calculation_pixel_right))
+    'beam_center_calculation_pixel_right'))
     
   ;adding +1 for max to have the all tube/pixel included in the selection
   x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
