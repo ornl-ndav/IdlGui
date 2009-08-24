@@ -34,13 +34,17 @@
 
 PRO show_beam_stop_tab, Event, tab=tab
 
+  print, 'heredfdfdfdfdfd'
+
   ;tab = button1, button2 or button3
   CASE (tab) OF
     'button1': tab_nbr = 0
     'button2': tab_nbr = 1
     'button3': tab_nbr = 2
   ENDCASE
- 
- ActivateTabNbr, Event, 'beam_center_tab', tab_nbr
+  
+  ActivateTabNbr, Event, 'beam_center_tab', tab_nbr
+
+  IF (tab_nbr EQ 1) THEN display_beam_center_tab2_buttons, Event
   
 END
