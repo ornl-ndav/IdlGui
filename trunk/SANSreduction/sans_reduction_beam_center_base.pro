@@ -408,7 +408,7 @@ PRO launch_beam_center_base_event, Event
       
     END
     
-    ;button1 (calibration region) -------------------------------------------
+    ;button1 (beam stop region) -------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button1'): BEGIN
       error = 0
       CATCH, error
@@ -451,7 +451,7 @@ PRO launch_beam_center_base_event, Event
       calculation_range_manual_input, Event
     END
     
-    ;button2 (beam stop region) ----------------------------------------------
+    ;button2 (calculation region) ----------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button2'): BEGIN
       error = 0
       CATCH, error
@@ -476,25 +476,21 @@ PRO launch_beam_center_base_event, Event
       ENDELSE ;enf of catch statement
     END
     
-    ;tube left, right, pixel left and right of beam stop region
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='beam_center_beam_stop_tube_left'): BEGIN
-      beam_stop_range_manual_input, Event
+    ;tube edge1, 2 and pixel edge1 and 2
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tube1_button_uname'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='tube1'
     END
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='beam_center_beam_stop_tube_right'): BEGIN
-      beam_stop_range_manual_input, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tube2_button_uname'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='tube2'
     END
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='beam_center_beam_stop_pixel_left'): BEGIN
-      beam_stop_range_manual_input, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel1_button_uname'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='pixel1'
     END
-    WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='beam_center_beam_stop_pixel_right'): BEGIN
-      beam_stop_range_manual_input, Event
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_uname'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='pixel2'
     END
     
-    ;button3 (2d plots) -------------------------------------------------------
+    ;button3 (data range displayed) ------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_button3'): BEGIN
       error = 0
       CATCH, error
@@ -548,6 +544,18 @@ PRO launch_beam_center_base_event, Event
       ENDIF
     END
     
+    ;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -592,6 +600,8 @@ PRO launch_beam_center_base, main_event
     calibration_range_moving_tube_start: 0,$
     calibration_range_moving_pixel_start: 0,$
     calculation_tubeLR_pixelLR_backup: STRARR(4), $
+    
+    calculation_range_tab_mode: 'tube1', $
     
     beam_stop_range_moving_tube_start: 0,$
     beam_stop_range_moving_pixel_start: 0,$

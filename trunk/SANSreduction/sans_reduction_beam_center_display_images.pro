@@ -174,7 +174,7 @@ PRO populate_defaults_wigets_values, wBase, global
 END
 
 ;------------------------------------------------------------------------------
-PRO display_beam_center_tab2_buttons, Event
+PRO display_beam_center_tab2_buttons, Event, MODE=mode
 
   path = 'SANSreduction_images/'
   tube1 = path + ['tube1_on',$
@@ -186,10 +186,37 @@ PRO display_beam_center_tab2_buttons, Event
   pixel2 = path + ['pixel2_on',$
     'pixel2_off'] + '.png'
     
-  tube1_button = READ_PNG(tube1[0])
-  tube2_button = READ_PNG(tube2[1])
-  pixel1_button = READ_PNG(pixel1[1])
-  pixel2_button = READ_PNG(pixel2[1])
+  IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    mode = (*global).calculation_range_tab_mode
+  ENDIF
+  
+  CASE (mode) OF
+    'tube1': BEGIN
+      tube1_button = READ_PNG(tube1[0])
+      tube2_button = READ_PNG(tube2[1])
+      pixel1_button = READ_PNG(pixel1[1])
+      pixel2_button = READ_PNG(pixel2[1])
+    END
+    'tube2': BEGIN
+      tube1_button = READ_PNG(tube1[1])
+      tube2_button = READ_PNG(tube2[0])
+      pixel1_button = READ_PNG(pixel1[1])
+      pixel2_button = READ_PNG(pixel2[1])
+    END
+    'pixel1': BEGIN
+      tube1_button = READ_PNG(tube1[1])
+      tube2_button = READ_PNG(tube2[1])
+      pixel1_button = READ_PNG(pixel1[0])
+      pixel2_button = READ_PNG(pixel2[1])
+    END
+    'pixel2': BEGIN
+      tube1_button = READ_PNG(tube1[1])
+      tube2_button = READ_PNG(tube2[1])
+      pixel1_button = READ_PNG(pixel1[1])
+      pixel2_button = READ_PNG(pixel2[0])
+    END
+  ENDCASE
   
   tube1_uname = 'tube1_button_uname'
   mode_id = WIDGET_INFO(Event.top, $
@@ -204,19 +231,19 @@ PRO display_beam_center_tab2_buttons, Event
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, tube2_button, 0, 0,/true
-
+  
   pixel1_uname = 'pixel1_button_uname'
   mode_id = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME=pixel1_uname)
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, pixel1_button, 0, 0,/true
-
+  
   pixel2_uname = 'pixel2_button_uname'
   mode_id = WIDGET_INFO(Event.top, $
     FIND_BY_UNAME=pixel2_uname)
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, pixel2_button, 0, 0,/true
-
+  
 END
