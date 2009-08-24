@@ -41,11 +41,8 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
     'calibration_range_off'] + '.png'
   button1 = path + ['beam_stop_on', $
     'beam_stop_off'] + '.png'
-;  button2 = path + ['twoD_plots_on', $
-;    'twoD_plots_off'] + '.png'
   button2 = path + ['calculation_range_on', $
-  'calculation_range_off'] + '.png'
-
+    'calculation_range_off'] + '.png'
     
   CASE (mode) OF
     'button1_on': BEGIN
@@ -176,3 +173,50 @@ PRO populate_defaults_wigets_values, wBase, global
     
 END
 
+;------------------------------------------------------------------------------
+PRO display_beam_center_tab2_buttons, Event
+
+  path = 'SANSreduction_images/'
+  tube1 = path + ['tube1_on',$
+    'tube1_off'] + '.png'
+  tube2 = path + ['tube2_on',$
+    'tube2_off'] + '.png'
+  pixel1 = path + ['pixel1_on',$
+    'pixel1_off'] + '.png'
+  pixel2 = path + ['pixel2_on',$
+    'pixel2_off'] + '.png'
+    
+  tube1_button = READ_PNG(tube1[0])
+  tube2_button = READ_PNG(tube2[1])
+  pixel1_button = READ_PNG(pixel1[1])
+  pixel2_button = READ_PNG(pixel2[1])
+  
+  tube1_uname = 'tube1_button_uname'
+  mode_id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME=tube1_uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, tube1_button, 0, 0,/true
+  
+  tube2_uname = 'tube2_button_uname'
+  mode_id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME=tube2_uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, tube2_button, 0, 0,/true
+
+  pixel1_uname = 'pixel1_button_uname'
+  mode_id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME=pixel1_uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, pixel1_button, 0, 0,/true
+
+  pixel2_uname = 'pixel2_button_uname'
+  mode_id = WIDGET_INFO(Event.top, $
+    FIND_BY_UNAME=pixel2_uname)
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, pixel2_button, 0, 0,/true
+
+END
