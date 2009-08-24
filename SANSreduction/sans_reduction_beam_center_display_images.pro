@@ -37,11 +37,11 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   IF (N_ELEMENTS(mode) EQ 0) THEN mode='button1_on'
   
   path = 'SANSreduction_images/'
-  button1 = path + ['calibration_range_on', $
+  button3 = path + ['calibration_range_on', $
     'calibration_range_off'] + '.png'
-  button2 = path + ['beam_stop_on', $
+  button1 = path + ['beam_stop_on', $
     'beam_stop_off'] + '.png'
-  button3 = path + ['twoD_plots_on', $
+  button2 = path + ['twoD_plots_on', $
     'twoD_plots_off'] + '.png'
     
   CASE (mode) OF

@@ -144,7 +144,7 @@ PRO switch_cursor_shape, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
-  IF (curr_tab_selected EQ 2) THEN RETURN
+  IF (curr_tab_selected EQ 1) THEN RETURN
   
   current_cursor_status = (*global).current_cursor_status
   IF (current_cursor_status EQ (*global).cursor_selection) THEN BEGIN
