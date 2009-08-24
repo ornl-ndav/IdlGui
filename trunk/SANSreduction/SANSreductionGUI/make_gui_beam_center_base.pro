@@ -119,7 +119,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   space_value = ' '
   
   space = WIDGET_LABEL(row1_right_row1,$
-    VALUE = ' ')
+    VALUE = '')
     
   button1 = WIDGET_DRAW(row1_right_row1,$
     XSIZE = xsize,$
@@ -160,54 +160,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_center_tab',$
     /TRACKING_EVENTS)
     
-  tab1 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-    TITLE = ' Calculation Range ',$
-    /COLUMN)
-    
-  vert_space = WIDGET_LABEL(tab1,$
-    VALUE = ' ')
-    
-  space_value = '       '
-  tab1_row1 = WIDGET_BASE(tab1,$
-    /ROW)
-  tube_left = WIDGET_LABEL(tab1_row1,$
-    VALUE=space_value+'Tube left: ')
-  value     = WIDGET_TEXT(tab1_row1,$
-    VALUE='N/A',$
-    XSIZE = 3,$
-    UNAME = 'beam_center_calculation_tube_left',$
-    /EDITABLE)
-  space = WIDGET_LABEL(tab1_row1,$
-    VALUE = '     ')
-  tube_right = WIDGET_LABEL(tab1_row1,$
-    VALUE='Tube right: ')
-  value     = WIDGET_TEXT(tab1_row1,$
-    VALUE='N/A',$
-    UNAME = 'beam_center_calculation_tube_right',$
-    XSIZE = 3,$
-    /EDITABLE)
-    
-  tab1_row2 = WIDGET_BASE(tab1,$
-    /ROW)
-  pixel_left = WIDGET_LABEL(tab1_row2,$
-    VALUE=space_value+'Pixel left:')
-  value     = WIDGET_TEXT(tab1_row2,$
-    VALUE='N/A',$
-    XSIZE = 3,$
-    UNAME = 'beam_center_calculation_pixel_left',$
-    /EDITABLE)
-  space = WIDGET_LABEL(tab1_row2,$
-    VALUE = '     ')
-  pixel_right = WIDGET_LABEL(tab1_row2,$
-    VALUE='Pixel right:')
-  value     = WIDGET_TEXT(tab1_row2,$
-    VALUE='N/A',$
-    XSIZE = 3,$
-    UNAME = 'beam_center_calculation_pixel_right',$
-    /EDITABLE)
-    
   tab2 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-    TITLE = '  Beam Stop Region ',$
+    TITLE = ' Beam Stop Region ',$
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab2,$
@@ -251,9 +205,9 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     XSIZE = 3,$
     UNAME = 'beam_center_beam_stop_pixel_right',$
     /EDITABLE)
-    
+
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-    TITLE = '      2D plots     ',$
+    TITLE = 'Data Range Displayed',$
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab3,$
@@ -277,6 +231,52 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE='N/A',$
     XSIZE = 3,$
     UNAME = 'beam_center_2d_plot_pixel',$
+    /EDITABLE)
+    
+  tab1 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = 'Calculation Range',$
+    /COLUMN)
+    
+  vert_space = WIDGET_LABEL(tab1,$
+    VALUE = ' ')
+    
+  space_value = '       '
+  tab1_row1 = WIDGET_BASE(tab1,$
+    /ROW)
+  tube_left = WIDGET_LABEL(tab1_row1,$
+    VALUE=space_value+'Tube left: ')
+  value     = WIDGET_TEXT(tab1_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_calculation_tube_left',$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab1_row1,$
+    VALUE = '     ')
+  tube_right = WIDGET_LABEL(tab1_row1,$
+    VALUE='Tube right: ')
+  value     = WIDGET_TEXT(tab1_row1,$
+    VALUE='N/A',$
+    UNAME = 'beam_center_calculation_tube_right',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
+  tab1_row2 = WIDGET_BASE(tab1,$
+    /ROW)
+  pixel_left = WIDGET_LABEL(tab1_row2,$
+    VALUE=space_value+'Pixel left:')
+  value     = WIDGET_TEXT(tab1_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_calculation_pixel_left',$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab1_row2,$
+    VALUE = '     ')
+  pixel_right = WIDGET_LABEL(tab1_row2,$
+    VALUE='Pixel right:')
+  value     = WIDGET_TEXT(tab1_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_calculation_pixel_right',$
     /EDITABLE)
     
   ;row2 ......................................................
