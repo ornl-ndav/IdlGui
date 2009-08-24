@@ -77,6 +77,7 @@ CASE (hostname) OF
     'arcs1'       : instrumentIndex = 4
     'arcs2'       : instrumentIndex = 4
     'cncs'        : instrumentIndex = 5
+    'cncs2'       : instrumentIndex = 5
     'snap'        : instrumentIndex = 6
     'powgen'      : instrumentIndex = 7
     'eqsans'      : instrumentIndex = 8
