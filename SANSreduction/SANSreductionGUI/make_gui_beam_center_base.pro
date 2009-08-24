@@ -241,6 +241,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ROW)
   button = WIDGET_DRAW(tab2_row2,$
     XSIZE = xsize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'tube1_button_uname',$
     YSIZE = ysize)
   value = WIDGET_TEXT(tab2_row2,$
@@ -252,6 +254,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ROW)
   button = WIDGET_DRAW(tab2_row3,$
     XSIZE = xsize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'tube2_button_uname',$
     YSIZE = ysize)
   value = WIDGET_TEXT(tab2_row3,$
@@ -263,6 +267,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ROW)
   button = WIDGET_DRAW(tab2_row4,$
     XSIZE = xsize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'pixel1_button_uname',$
     YSIZE = ysize)
   value = WIDGET_TEXT(tab2_row4,$
@@ -274,16 +280,14 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ROW)
   button = WIDGET_DRAW(tab2_row5,$
     XSIZE = xsize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
     UNAME = 'pixel2_button_uname',$
     YSIZE = ysize)
   value = WIDGET_TEXT(tab2_row5,$
     VALUE = 'N/A',$
     XSIZE = 3,$
     /EDITABLE)
-    
-    
-    
-    
     
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     TITLE = 'Data Range Displayed',$
