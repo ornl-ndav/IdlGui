@@ -270,6 +270,22 @@ PRO MakeGuiMainPLot_Event, event
         display_excluded_pixels, Event, excluded_pixel_array
       ENDELSE
       saving_background, Event
+      ;refresh plot widgets
+      display_buttons_main_plot, EVENT=event
+      ;refresh counts vs tof preview plot
+      check_from_to_bin_input, Event
+      change_from_and_to_bins, Event
+      IF (isSelectionModeSelected(Event)) THEN BEGIN
+        plot_selection_box, Event
+      ENDIF ELSE BEGIN
+        excluded_pixel_array = (*(*global1).excluded_pixel_array)
+        display_excluded_pixels, Event, excluded_pixel_array
+      ENDELSE
+      saving_background, Event
+      
+      
+      
+      
       WIDGET_CONTROL, HOURGLASS=0
     END
     

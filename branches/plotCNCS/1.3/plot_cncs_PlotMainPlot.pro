@@ -599,7 +599,7 @@ PRO PlotMainPlot, histo_mapped_file, timemap_file
   loadct, 5, /SILENT
   
   ;display buttons (play, stop, next, previous, pause, selection modes...)
-  display_buttons_main_plot, wBase
+  display_buttons_main_plot, WBASE=wBase
   
   ;open histo_mapped file
   OPENR,u,histo_mapped_file,/get
@@ -765,7 +765,7 @@ PRO PlotMainPlotFromNexus, NexusFileName
   loadct, 5, /SILENT
   
   ;display buttons (play, stop, next, previous, pause, selection modes...)
-  display_buttons_main_plot, wBase
+  display_buttons_main_plot, WBASE=wBase
   
   Nstep  = FLOAT(50) ;number of steps
   progressBarCancel = 0
