@@ -207,7 +207,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /EDITABLE)
 
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-    TITLE = 'Data Range Displayed',$
+    TITLE = ' Calculation Range ',$
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab3,$
@@ -234,7 +234,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /EDITABLE)
     
   tab1 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-    TITLE = 'Calculation Range',$
+    TITLE = 'Data Range Displayed',$
     /COLUMN)
     
   vert_space = WIDGET_LABEL(tab1,$

@@ -41,8 +41,11 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
     'calibration_range_off'] + '.png'
   button1 = path + ['beam_stop_on', $
     'beam_stop_off'] + '.png'
-  button2 = path + ['twoD_plots_on', $
-    'twoD_plots_off'] + '.png'
+;  button2 = path + ['twoD_plots_on', $
+;    'twoD_plots_off'] + '.png'
+  button2 = path + ['calculation_range_on', $
+  'calculation_range_off'] + '.png'
+
     
   CASE (mode) OF
     'button1_on': BEGIN
