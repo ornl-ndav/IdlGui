@@ -34,8 +34,6 @@
 
 PRO show_beam_stop_tab, Event, tab=tab
 
-  print, 'heredfdfdfdfdfd'
-
   ;tab = button1, button2 or button3
   CASE (tab) OF
     'button1': tab_nbr = 0

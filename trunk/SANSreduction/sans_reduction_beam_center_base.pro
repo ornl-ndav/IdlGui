@@ -542,6 +542,9 @@ PRO launch_beam_center_base_event, Event
           2: mode='button3_on'
         ENDCASE
         display_beam_stop_images, EVENT=event, MODE=mode
+        IF (curr_tab_selected EQ 1) THEN BEGIN
+          display_beam_center_tab2_buttons, Event
+        ENDIF
       ENDIF
     END
     
