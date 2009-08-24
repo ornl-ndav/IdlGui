@@ -297,7 +297,7 @@ PRO MakeGuiMainPlot, wBase
     /ROW)
     
   refresh = WIDGET_BUTTON(refresh_base,$
-    VALUE = 'R E F R E S H   P L O T',$
+    VALUE = 'R E F R E S H   G U I',$
     UNAME = 'refresh_plot')
     
   space_value = '     '
