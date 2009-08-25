@@ -65,11 +65,15 @@ PRO replot_beam_center_calibration_range, Event
   color = convert_rgb(color)
   
   PLOTS, x_min, y_min, /DEVICE, COLOR=color
-  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  
+  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+    
   leave:
   
   DEVICE, DECOMPOSED=0
@@ -110,11 +114,15 @@ PRO replot_beam_center_beam_stop, Event
   color = convert_rgb(color)
   
   PLOTS, x_min, y_min, /DEVICE, COLOR=color
-  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  
+  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, $
+    THICK=thick
+    
   leave:
   
   DEVICE, DECOMPOSED=0
@@ -252,7 +260,8 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
-    title = 'Counts vs tube for pixel ' + STRCOMPRESS(pixel_selected,/REMOVE_ALL)
+    title = 'Counts vs tube for pixel ' + $
+      STRCOMPRESS(pixel_selected,/REMOVE_ALL)
     xtitle = 'Pixel'
     ytitle = 'Counts'
     PLOT, tube_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
@@ -262,7 +271,8 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
-    title = 'Counts vs pixel for tube ' + STRCOMPRESS(tube_selected,/REMOVE_ALL)
+    title = 'Counts vs pixel for tube ' + $
+      STRCOMPRESS(tube_selected,/REMOVE_ALL)
     xtitle = 'Tube'
     ytitle = 'Counts'
     PLOT, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
