@@ -205,6 +205,8 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  ON_IOERROR, leave
+  
   IF (N_ELEMENTS(erase) EQ 0) THEN BEGIN
     data = (*(*global).tt_zoom_data)
     min_tube_plotted = (*global).min_tube_plotted
@@ -217,7 +219,31 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     
     IF (tube_selected EQ (max_tube_plotted+1)) THEN RETURN
     iF (pixel_selected EQ (max_pixel_plotted + 1)) THEN RETURN
-
+    
+    ;remove beam stop region from plot
+    bs_tube_left = getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_left')
+    bs_tube_right = getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_right')
+    bs_pixel_left = getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_left')
+    bs_pixel_right = getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_right')
+      
+    i_bs_TL = FIX(bs_tube_left)
+    i_bs_TR = FIX(bs_tube_right)
+    i_bs_PL = FIX(bs_pixel_left)
+    i_bs_PR = FIX(bs_pixel_right)
+    
+    tube_left_offset = i_bs_TL - min_tube_plotted
+    tube_right_offset = i_bs_TR - min_tube_plotted
+    pixel_left_offset = i_bs_PL - min_pixel_plotted
+    pixel_right_offset = i_bs_PR - min_pixel_plotted
+    
+    x_min = MIN([tube_left_offset,tube_right_offset],MAX=x_max)
+    y_min = MIN([pixel_left_offset,pixel_right_offset],MAX=y_max)
+    data[x_min:x_max,y_min:y_max] = 0
+    
     pixel_data  = data[tube_selected - min_tube_plotted,*]
     tube_data = data[*, pixel_selected - min_pixel_plotted]
     
@@ -258,5 +284,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     ERASE
     
   ENDELSE
+  
+  leave:
   
 END
