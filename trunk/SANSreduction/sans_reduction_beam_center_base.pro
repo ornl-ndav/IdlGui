@@ -41,18 +41,37 @@ PRO launch_beam_center_base_event, Event
   
     ;Main plot
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_main_draw'): BEGIN
+    
+      curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+      
       error = 0
       CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         
+        ;just moving the mouse over the main plot
+        CASE (curr_tab_selected) OF
+          1: BEGIN ;Calculation range
+            tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+            putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
+              STRCOMPRESS(tube_data,/REMOVE_ALL)
+            pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+            putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
+              STRCOMPRESS(pixel_data,/REMOVE_ALL)
+            plot_beam_center_background, Event
+            replot_beam_center_calibration_range, Event
+            replot_beam_center_beam_stop, Event
+            replot_calculation_range_cursor, Event
+          END
+          ELSE:
+        ENDCASE
+        
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           (*global).left_button_pressed = 1
           curr_cursor = (*global).current_cursor_status
-          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;calculation range
+              2: BEGIN ;Data Range Displayed
                 ;need to reset the tube and pixel values
                 putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
                   'N/A'
@@ -78,34 +97,24 @@ PRO launch_beam_center_base_event, Event
                 putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', $
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
               END
-              1: BEGIN ;2d plot cross
-                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
-                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-                putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
-                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-                plot_beam_center_background, Event
-                replot_beam_center_calibration_range, Event
-                replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+              1: BEGIN ;Calculation Range
               END
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              2: BEGIN;calculation range
+              2: BEGIN;Data Range Displayed
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 (*global).calibration_range_moving_tube_start = tube_data
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 (*global).calibration_range_moving_pixel_start = pixel_data
               END
-              0: BEGIN ;beam stop region
+              0: BEGIN ;Beam Stop Region
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 (*global).beam_stop_range_moving_tube_start = tube_data
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 (*global).beam_stop_range_moving_pixel_start = pixel_data
               END
-              1: ;2d plot cross
+              1: ;Calculation Range
             ENDCASE
           ENDELSE
         ENDIF
@@ -113,11 +122,11 @@ PRO launch_beam_center_base_event, Event
         IF (event.press EQ 0 AND $ ;moving mouse with button pressed
           (*global).left_button_pressed EQ 1) THEN BEGIN
           plot_beam_center_background, Event
-          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          ;          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;calculation range
+              2: BEGIN ;Data Range Displayed
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 putTextFieldValue, Event, 'beam_center_calculation_tube_right', $
                   STRCOMPRESS(tube_data,/REMOVE_ALL)
@@ -126,9 +135,9 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+                replot_calculation_range_cursor, Event
               END
-              0: BEGIN ;beam stop region
+              0: BEGIN ;Beam Stop Region
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 putTextFieldValue, Event, 'beam_center_beam_stop_tube_right', $
                   STRCOMPRESS(tube_data,/REMOVE_ALL)
@@ -137,9 +146,9 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+                replot_calculation_range_cursor, Event
               END
-              1: BEGIN ;2d plot cross
+              1: BEGIN ;Calculation Range
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
                   STRCOMPRESS(tube_data,/REMOVE_ALL)
@@ -149,12 +158,12 @@ PRO launch_beam_center_base_event, Event
                 plot_beam_center_background, Event
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+                replot_calculation_range_cursor, Event
               END
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;calculation range
+              2: BEGIN ;Data Range Displayed
                 IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
                 
                   X = Event.x
@@ -228,7 +237,7 @@ PRO launch_beam_center_base_event, Event
                 ENDIF
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+                replot_calculation_range_cursor, Event
               END
               0: BEGIN ;beam stop region
                 IF (validate_or_not_beam_stop_range_moving(Event)) THEN BEGIN
@@ -304,9 +313,9 @@ PRO launch_beam_center_base_event, Event
                 ENDIF
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_2d_plot_cursor, Event
+                replot_calculation_range_cursor, Event
               END
-              1: BEGIN ;2d plot cross
+              1: BEGIN ;Calculation Range
               END
             ENDCASE
           ENDELSE
@@ -317,9 +326,9 @@ PRO launch_beam_center_base_event, Event
           (*global).left_button_pressed EQ 1) THEN BEGIN
           (*global).left_button_pressed = 0
           
-          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          ;    curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            2: BEGIN
+            2: BEGIN ;Data Range Displayed
             
               tube_min = getTextFieldValue(Event,$
                 'beam_center_calculation_tube_left')
@@ -342,7 +351,7 @@ PRO launch_beam_center_base_event, Event
                 [sTmin, sTmax, sPmin, sPmax]
                 
             END
-            0: BEGIN
+            0: BEGIN ;Beam Stop Region
             
               tube_min = getTextFieldValue(Event,$
                 'beam_center_beam_stop_tube_left')
@@ -365,7 +374,7 @@ PRO launch_beam_center_base_event, Event
                 [sTmin, sTmax, sPmin, sPmax]
                 
             END
-            1: BEGIN
+            1: BEGIN ;Calculation Range
             
               tube_data = getTextFieldValue(event,'beam_center_2d_plot_tube')
               pixel_data = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
@@ -393,7 +402,7 @@ PRO launch_beam_center_base_event, Event
         
         IF (event.enter EQ 1) THEN BEGIN
           ;check activated button
-          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
             2: standard = (*global).current_cursor_status
             0: standard = (*global).current_cursor_status
@@ -545,7 +554,7 @@ PRO launch_beam_center_base_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
-
+    
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_uname'): BEGIN
       error = 0
       CATCH, error
@@ -623,18 +632,6 @@ PRO launch_beam_center_base_event, Event
       ENDIF
     END
     
-    ;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -710,10 +707,11 @@ PRO launch_beam_center_base, main_event
     color: [0,255,0], $ ;blue but I want GREEN
     thick: 2}, $
     
-    twoD_default_selection: {tube: 110, $
+    calculation_range_default: {tube: 110, $
     pixel: 130, $
     color: [255,255,255],$
-    linestyle: 2, $
+    working_linestyle: 0, $
+    not_working_linestyle: 1,$
     thick: 1}, $
     
     tt_zoom_data: PTR_NEW(0L), $
