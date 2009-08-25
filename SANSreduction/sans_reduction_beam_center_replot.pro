@@ -200,39 +200,63 @@ PRO twoD_plot_range_manual_input, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_counts_vs_pixel_and_tube_live, Event
+PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  data = (*(*global).tt_zoom_data)
-  min_tube_plotted = (*global).min_tube_plotted
-  min_pixel_plotted = (*global).min_pixel_plotted
+  IF (N_ELEMENTS(erase) EQ 0) THEN BEGIN
+    data = (*(*global).tt_zoom_data)
+    min_tube_plotted = (*global).min_tube_plotted
+    min_pixel_plotted = (*global).min_pixel_plotted
+    max_tube_plotted = (*global).max_tube_plotted
+    max_pixel_plotted = (*global).max_pixel_plotted
+    
+    tube_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_tube'))
+    pixel_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_pixel'))
+    
+    IF (tube_selected EQ (max_tube_plotted+1)) THEN RETURN
+    iF (pixel_selected EQ (max_pixel_plotted + 1)) THEN RETURN
+
+    pixel_data  = data[tube_selected - min_tube_plotted,*]
+    tube_data = data[*, pixel_selected - min_pixel_plotted]
+    
+    ;plot counts vs tube
+    draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    title = 'Counts vs tube for pixel ' + STRCOMPRESS(pixel_selected,/REMOVE_ALL)
+    xtitle = 'Pixel'
+    ytitle = 'Counts'
+    PLOT, tube_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
+    
+    ;plot counts vs pixel
+    draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    title = 'Counts vs pixel for tube ' + STRCOMPRESS(tube_selected,/REMOVE_ALL)
+    xtitle = 'Tube'
+    ytitle = 'Counts'
+    PLOT, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
+    
+  ENDIF ELSE BEGIN
   
-  tube_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_tube'))
-  pixel_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_pixel'))
-  
-  pixel_data  = data[tube_selected - min_tube_plotted,*]
-  tube_data = data[*, pixel_selected - min_pixel_plotted]
-  
-  ;plot counts vs tube
-  draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  title = 'Counts vs tube for pixel ' + STRCOMPRESS(pixel_selected,/REMOVE_ALL)
-  xtitle = 'Pixel'
-  ytitle = 'Counts'
-  PLOT, tube_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
-  
-  ;plot counts vs pixel
-  draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-  WIDGET_CONTROL, id, GET_VALUE=id_value
-  WSET, id_value
-  title = 'Counts vs pixel for tube ' + STRCOMPRESS(tube_selected,/REMOVE_ALL)
-  xtitle = 'Tube'
-  ytitle = 'Counts'
-  PLOT, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle
+    ;plot counts vs tube
+    draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ERASE
+    
+    ;plot counts vs pixel
+    draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ERASE
+    
+  ENDELSE
   
 END
