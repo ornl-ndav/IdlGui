@@ -62,6 +62,7 @@ PRO launch_beam_center_base_event, Event
             replot_beam_center_calibration_range, Event
             replot_beam_center_beam_stop, Event
             replot_calculation_range_cursor, Event
+            display_counts_vs_pixel_and_tube_live, Event
           END
           ELSE:
         ENDCASE
@@ -728,7 +729,7 @@ PRO launch_beam_center_base, main_event
     not_working_linestyle: 1,$
     thick: 1}, $
     
-    tt_zoom_data: PTR_NEW(0L), $
+    tt_zoom_data: PTR_NEW(0L), $ [tube,pixel]
     rtt_zoom_data: PTR_NEW(0L), $
     background: PTR_NEW(0L), $
     
