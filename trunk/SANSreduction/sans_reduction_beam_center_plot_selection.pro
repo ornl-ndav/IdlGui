@@ -85,39 +85,39 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
-  ;calculation range.........................................................
-  tube_data  = (*global).calculation_range_default.tube
-  pixel_data = (*global).calculation_range_default.pixel
-  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
-  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
-  
-  color = (*global).calculation_range_default.color
-  thick = (*global).calculation_range_default.thick
-  
-  IF ((*global).calculation_range_tab_mode EQ 'tube1' OR $
-    (*global).calculation_range_tab_mode EQ 'tube2') THEN BEGIN
-    tube_linestyle = (*global).calculation_range_default.working_linestyle
-    pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
-  ENDIF ELSE BEGIN
-    tube_linestyle = (*global).calculation_range_default.not_working_linestyle
-    pixel_linestyle = (*global).calculation_range_default.working_linestyle
-  ENDELSE
-  color = convert_rgb(color)
-  
-  x_min = 0
-  y_min = 0
-  x_max = (*global).main_draw_xsize
-  y_max = (*global).main_draw_ysize
-  
-  PLOTS, 0, pixel, /DEVICE, COLOR=color
-  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=tube_linestyle, $
-    THICK=thick
-    
-  PLOTS, tube, 0, /DEVICE, COLOR=color
-  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=pixel_linestyle, $
-    THICK=thick
+;  ;calculation range.........................................................
+;  tube_data  = (*global).calculation_range_default.tube
+;  pixel_data = (*global).calculation_range_default.pixel
+;  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
+;  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
+;  
+;  color = (*global).calculation_range_default.color
+;  thick = (*global).calculation_range_default.thick
+;  
+;  IF ((*global).calculation_range_tab_mode EQ 'tube1' OR $
+;    (*global).calculation_range_tab_mode EQ 'tube2') THEN BEGIN
+;    tube_linestyle = (*global).calculation_range_default.working_linestyle
+;    pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
+;  ENDIF ELSE BEGIN
+;    tube_linestyle = (*global).calculation_range_default.not_working_linestyle
+;    pixel_linestyle = (*global).calculation_range_default.working_linestyle
+;  ENDELSE
+;  color = convert_rgb(color)
+;  
+;  x_min = 0
+;  y_min = 0
+;  x_max = (*global).main_draw_xsize
+;  y_max = (*global).main_draw_ysize
+;  
+;  PLOTS, 0, pixel, /DEVICE, COLOR=color
+;  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+;    LINESTYLE=tube_linestyle, $
+;    THICK=thick
+;    
+;  PLOTS, tube, 0, /DEVICE, COLOR=color
+;  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+;    LINESTYLE=pixel_linestyle, $
+;    THICK=thick
     
   DEVICE, DECOMPOSED=0
   

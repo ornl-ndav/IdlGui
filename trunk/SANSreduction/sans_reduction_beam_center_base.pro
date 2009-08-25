@@ -135,7 +135,6 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_calculation_range_cursor, Event
               END
               0: BEGIN ;Beam Stop Region
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -146,7 +145,6 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_calculation_range_cursor, Event
               END
               1: BEGIN ;Calculation Range
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -237,7 +235,7 @@ PRO launch_beam_center_base_event, Event
                 ENDIF
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_calculation_range_cursor, Event
+;                replot_calculation_range_cursor, Event
               END
               0: BEGIN ;beam stop region
                 IF (validate_or_not_beam_stop_range_moving(Event)) THEN BEGIN
@@ -313,7 +311,7 @@ PRO launch_beam_center_base_event, Event
                 ENDIF
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                replot_calculation_range_cursor, Event
+;                replot_calculation_range_cursor, Event
               END
               1: BEGIN ;Calculation Range
               END
@@ -393,7 +391,6 @@ PRO launch_beam_center_base_event, Event
           switch_cursor_shape, Event
         ENDIF
         
-        
       ENDIF ELSE BEGIN ;endif of catch statement
         id = WIDGET_INFO(Event.top,$
           find_by_uname='beam_center_main_draw')
@@ -411,7 +408,10 @@ PRO launch_beam_center_base_event, Event
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN ;leave main plot
           standard = (*global).cursor_selection
-        ENDELSE
+          plot_beam_center_background, Event
+          replot_beam_center_calibration_range, Event
+          replot_beam_center_beam_stop, Event
+          ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
       
