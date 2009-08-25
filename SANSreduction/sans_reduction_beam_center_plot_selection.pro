@@ -41,27 +41,27 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   WSET, id_value
   DEVICE, DECOMPOSED=1
   
-;  ;Calibration Range ..........................................................
-;  tube_min_data = (*global).calibration_range_default_selection.tube_min
-;  tube_max_data = (*global).calibration_range_default_selection.tube_max
-;  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
-;  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
-;  
-;  ;adding +1 for max to have the all tube/pixel included in the selection
-;  x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
-;  x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
-;  y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
-;  y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
-;  
-;  color = (*global).calibration_range_default_selection.color
-;  thick = (*global).calibration_range_default_selection.thick
-;  color = convert_rgb(color)
-;  
-;  PLOTS, x_min, y_min, /DEVICE, COLOR=color
-;  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-;  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-;  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-;  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  ;  ;Calibration Range ..........................................................
+  ;  tube_min_data = (*global).calibration_range_default_selection.tube_min
+  ;  tube_max_data = (*global).calibration_range_default_selection.tube_max
+  ;  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
+  ;  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
+  ;
+  ;  ;adding +1 for max to have the all tube/pixel included in the selection
+  ;  x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
+  ;  x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
+  ;  y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
+  ;  y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
+  ;
+  ;  color = (*global).calibration_range_default_selection.color
+  ;  thick = (*global).calibration_range_default_selection.thick
+  ;  color = convert_rgb(color)
+  ;
+  ;  PLOTS, x_min, y_min, /DEVICE, COLOR=color
+  ;  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  ;  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  ;  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+  ;  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
   ;Beam stop region ...........................................................
   tube_min_data = (*global).beam_stop_default_selection.tube_min
@@ -85,40 +85,108 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
-;  ;calculation range.........................................................
-;  tube_data  = (*global).calculation_range_default.tube
-;  pixel_data = (*global).calculation_range_default.pixel
-;  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
-;  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
-;  
-;  color = (*global).calculation_range_default.color
-;  thick = (*global).calculation_range_default.thick
-;  
-;  IF ((*global).calculation_range_tab_mode EQ 'tube1' OR $
-;    (*global).calculation_range_tab_mode EQ 'tube2') THEN BEGIN
-;    tube_linestyle = (*global).calculation_range_default.working_linestyle
-;    pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
-;  ENDIF ELSE BEGIN
-;    tube_linestyle = (*global).calculation_range_default.not_working_linestyle
-;    pixel_linestyle = (*global).calculation_range_default.working_linestyle
-;  ENDELSE
-;  color = convert_rgb(color)
-;  
-;  x_min = 0
-;  y_min = 0
-;  x_max = (*global).main_draw_xsize
-;  y_max = (*global).main_draw_ysize
-;  
-;  PLOTS, 0, pixel, /DEVICE, COLOR=color
-;  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
-;    LINESTYLE=tube_linestyle, $
-;    THICK=thick
-;    
-;  PLOTS, tube, 0, /DEVICE, COLOR=color
-;  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-;    LINESTYLE=pixel_linestyle, $
-;    THICK=thick
-    
+  ;  ;calculation range.........................................................
+  ;  tube_data  = (*global).calculation_range_default.tube
+  ;  pixel_data = (*global).calculation_range_default.pixel
+  ;  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
+  ;  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
+  ;
+  ;  color = (*global).calculation_range_default.color
+  ;  thick = (*global).calculation_range_default.thick
+  ;
+  ;  IF ((*global).calculation_range_tab_mode EQ 'tube1' OR $
+  ;    (*global).calculation_range_tab_mode EQ 'tube2') THEN BEGIN
+  ;    tube_linestyle = (*global).calculation_range_default.working_linestyle
+  ;    pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
+  ;  ENDIF ELSE BEGIN
+  ;    tube_linestyle = (*global).calculation_range_default.not_working_linestyle
+  ;    pixel_linestyle = (*global).calculation_range_default.working_linestyle
+  ;  ENDELSE
+  ;  color = convert_rgb(color)
+  ;
+  ;  x_min = 0
+  ;  y_min = 0
+  ;  x_max = (*global).main_draw_xsize
+  ;  y_max = (*global).main_draw_ysize
+  ;
+  ;  PLOTS, 0, pixel, /DEVICE, COLOR=color
+  ;  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+  ;    LINESTYLE=tube_linestyle, $
+  ;    THICK=thick
+  ;
+  ;  PLOTS, tube, 0, /DEVICE, COLOR=color
+  ;  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+  ;    LINESTYLE=pixel_linestyle, $
+  ;    THICK=thick
+  
   DEVICE, DECOMPOSED=0
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_calculation_range_selection, Event
+
+  Tube1 = getTextFieldValue(Event,'tube1_button_value')
+  Tube2 = getTextFieldValue(Event,'tube2_button_value')
+  Pixel1 = getTextFieldValue(Event,'pixel1_button_value')
+  Pixel2 = getTextFieldValue(Event,'pixel2_button_value')
+  
+  ON_IOERROR, leave
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  x_min = 0
+  y_min = 0
+  x_max = (*global).main_draw_xsize
+  y_max = (*global).main_draw_ysize
+  
+  draw_uname = 'beam_center_main_draw'
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  DEVICE, DECOMPOSED=1
+  
+  color = (*global).calibration_range_default_selection.color_selected
+  thick = (*global).calibration_range_default_selection.thick_selected
+  linestyle = (*global).calibration_range_default_selection.linestyle
+  color = convert_rgb(color)
+  
+  IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube1
+    iTube1 = FIX(Tube1)
+    x = getBeamCenterTubeDevice_from_data(iTube1, global)
+    PLOTS, x, y_min, /DEVICE, COLOR=color
+    PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+      LINESTYLE=linestyle, THICK=thick
+  ENDIF
+  
+  IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube2
+    iTube2 = FIX(Tube2)
+    x = getBeamCenterTubeDevice_from_data(iTube2, global)
+    PLOTS, x, y_min, /DEVICE, COLOR=color
+    PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+      LINESTYLE=linestyle, THICK=thick
+  ENDIF
+ 
+  IF (Pixel1 NE 'N/A') THEN BEGIN ;plot Pixel1
+    iPixel1 = FIX(Pixel1)
+    y = getBeamCenterPixelDevice_from_data(iPixel1, global)
+    PLOTS, x_min, y, /DEVICE, COLOR=color
+    PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
+      LINESTYLE=linestyle, THICK=thick
+  ENDIF
+
+  IF (Pixel2 NE 'N/A') THEN BEGIN ;plot Pixel2
+    iPixel2 = FIX(Pixel2)
+    y = getBeamCenterPixelDevice_from_data(iPixel2, global)
+    PLOTS, x_min, y, /DEVICE, COLOR=color
+    PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
+      LINESTYLE=linestyle, THICK=thick
+  ENDIF
+
+  leave:
+  
+  DEVICE, DECOMPOSED=0
+  
+END
+
