@@ -68,6 +68,7 @@ PRO launch_beam_center_base_event, Event
           ELSE:
         ENDCASE
         
+        ;presses button - presses button - presses button - presses button
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           (*global).left_button_pressed = 1
           curr_cursor = (*global).current_cursor_status
@@ -132,6 +133,7 @@ PRO launch_beam_center_base_event, Event
           ENDELSE
         ENDIF
         
+        ;MOVING MOUSE - MOVING MOUSE - MOVING MOUSE - MOVING MOUSE - MOVING MOUSE
         IF (event.press EQ 0 AND $ ;moving mouse with button pressed
           (*global).left_button_pressed EQ 1) THEN BEGIN
           ;          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
@@ -329,7 +331,6 @@ PRO launch_beam_center_base_event, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
                 plot_calculation_range_selection, Event
-                switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
