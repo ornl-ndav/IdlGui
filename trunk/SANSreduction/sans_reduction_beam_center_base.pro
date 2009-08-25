@@ -59,7 +59,7 @@ PRO launch_beam_center_base_event, Event
             putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
             plot_beam_center_background, Event
-            replot_beam_center_calibration_range, Event
+;            replot_beam_center_calibration_range, Event
             replot_beam_center_beam_stop, Event
             replot_calculation_range_cursor, Event
             display_counts_vs_pixel_and_tube_live, Event
@@ -72,19 +72,19 @@ PRO launch_beam_center_base_event, Event
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;Data Range Displayed
-                ;need to reset the tube and pixel values
-                putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
-                  'N/A'
-                putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
-                  'N/A'
-                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
-                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
-                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-              END
+;              2: BEGIN ;Data Range Displayed
+;                ;need to reset the tube and pixel values
+;                putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
+;                  'N/A'
+;                putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
+;                  'N/A'
+;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+;                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
+;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+;                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
+;                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+;              END
               0: BEGIN;beam stop region
                 ;need to reset the tube and pixel values
                 putTextFieldValue, Event, 'beam_center_beam_stop_tube_right',$
@@ -100,7 +100,7 @@ PRO launch_beam_center_base_event, Event
               END
               1: BEGIN ;Calculation Range
                 plot_beam_center_background, Event
-                replot_beam_center_calibration_range, Event
+;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
                 switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
@@ -108,12 +108,12 @@ PRO launch_beam_center_base_event, Event
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              2: BEGIN;Data Range Displayed
-                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                (*global).calibration_range_moving_tube_start = tube_data
-                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-                (*global).calibration_range_moving_pixel_start = pixel_data
-              END
+;              2: BEGIN;Data Range Displayed
+;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+;                (*global).calibration_range_moving_tube_start = tube_data
+;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+;                (*global).calibration_range_moving_pixel_start = pixel_data
+;              END
               0: BEGIN ;Beam Stop Region
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 (*global).beam_stop_range_moving_tube_start = tube_data
@@ -131,17 +131,17 @@ PRO launch_beam_center_base_event, Event
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;Data Range Displayed
-                plot_beam_center_background, Event
-                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-                putTextFieldValue, Event, 'beam_center_calculation_tube_right', $
-                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-                putTextFieldValue, Event, 'beam_center_calculation_pixel_right', $
-                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-                replot_beam_center_calibration_range, Event
-                replot_beam_center_beam_stop, Event
-              END
+;              2: BEGIN ;Data Range Displayed
+;                plot_beam_center_background, Event
+;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+;                putTextFieldValue, Event, 'beam_center_calculation_tube_right', $
+;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
+;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+;                putTextFieldValue, Event, 'beam_center_calculation_pixel_right', $
+;                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
+;                replot_beam_center_calibration_range, Event
+;                replot_beam_center_beam_stop, Event
+;              END
               0: BEGIN ;Beam Stop Region
                 plot_beam_center_background, Event
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -150,7 +150,7 @@ PRO launch_beam_center_base_event, Event
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 putTextFieldValue, Event, 'beam_center_beam_stop_pixel_right', $
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
-                replot_beam_center_calibration_range, Event
+;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
               END
               1: BEGIN ;Calculation Range
@@ -168,83 +168,83 @@ PRO launch_beam_center_base_event, Event
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              2: BEGIN ;Data Range Displayed
-                plot_beam_center_background, Event
-                IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
-                
-                  X = Event.x
-                  Y = Event.y
-                  tube_data  = getBeamCenterTubeData_from_device(X, global)
-                  pixel_data = getBeamCenterPixelData_from_device(Y, global)
-                  offset_tube = tube_data - $
-                    (*global).calibration_range_moving_tube_start
-                  offset_pixel = pixel_data - $
-                    (*global).calibration_range_moving_pixel_start
-                    
-                  tube_min_data = FIX(getTextFieldValue(Event,$
-                    'beam_center_calculation_tube_left'))
-                  tube_max_data = FIX(getTextFieldValue(Event,$
-                    'beam_center_calculation_tube_right'))
-                  pixel_min_data = FIX(getTextFieldValue(Event,$
-                    'beam_center_calculation_pixel_left'))
-                  pixel_max_data = FIX(getTextFieldValue(Event,$
-                    'beam_center_calculation_pixel_right'))
-                    
-                  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
-                  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
-                  
-                  new_tube_min = tube_min_data + offset_tube
-                  new_tube_max = tube_max_data + offset_tube
-                  
-                  IF (new_tube_min LT (*global).min_tube_plotted) THEN BEGIN
-                    new_tube_min = (*global).min_tube_plotted
-                    new_tube_max = tube_max_data
-                    tube_data = (*global).calibration_range_moving_tube_start
-                  ENDIF
-                  IF (new_tube_max GT (*global).max_tube_plotted) THEN BEGIN
-                    new_tube_max = (*global).max_tube_plotted
-                    new_tube_min = tube_min_data
-                    tube_data = (*global).calibration_range_moving_tube_start
-                  ENDIF
-                  
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_tube_left', $
-                    STRCOMPRESS(new_tube_min,/REMOVE_ALL)
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_tube_right', $
-                    STRCOMPRESS(new_tube_max,/REMOVE_ALL)
-                    
-                  (*global).calibration_range_moving_tube_start = tube_data
-                  
-                  new_pixel_min = pixel_min_data + offset_pixel
-                  new_pixel_max = pixel_max_data + offset_pixel
-                  
-                  IF (new_pixel_min LT (*global).min_pixel_plotted) THEN BEGIN
-                    new_pixel_min = (*global).min_pixel_plotted
-                    new_pixel_max = pixel_max_data
-                    pixel_data = (*global).calibration_range_moving_pixel_start
-                  ENDIF
-                  IF (new_pixel_max GT (*global).max_pixel_plotted) THEN BEGIN
-                    new_pixel_max = (*global).max_pixel_plotted
-                    new_pixel_min = pixel_min_data
-                    pixel_data = (*global).calibration_range_moving_pixel_start
-                  ENDIF
-                  
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_pixel_left', $
-                    STRCOMPRESS(new_pixel_min,/REMOVE_ALL)
-                  putTextFieldValue, Event, $
-                    'beam_center_calculation_pixel_right', $
-                    STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
-                    
-                  (*global).calibration_range_moving_pixel_start = pixel_data
-                  
-                  
-                ENDIF
-                replot_beam_center_calibration_range, Event
-                replot_beam_center_beam_stop, Event
-              ;                replot_calculation_range_cursor, Event
-              END
+;              2: BEGIN ;Data Range Displayed
+;                plot_beam_center_background, Event
+;                IF (validate_or_not_calibration_range_moving(Event)) THEN BEGIN
+;                
+;                  X = Event.x
+;                  Y = Event.y
+;                  tube_data  = getBeamCenterTubeData_from_device(X, global)
+;                  pixel_data = getBeamCenterPixelData_from_device(Y, global)
+;                  offset_tube = tube_data - $
+;                    (*global).calibration_range_moving_tube_start
+;                  offset_pixel = pixel_data - $
+;                    (*global).calibration_range_moving_pixel_start
+;                    
+;                  tube_min_data = FIX(getTextFieldValue(Event,$
+;                    'beam_center_calculation_tube_left'))
+;                  tube_max_data = FIX(getTextFieldValue(Event,$
+;                    'beam_center_calculation_tube_right'))
+;                  pixel_min_data = FIX(getTextFieldValue(Event,$
+;                    'beam_center_calculation_pixel_left'))
+;                  pixel_max_data = FIX(getTextFieldValue(Event,$
+;                    'beam_center_calculation_pixel_right'))
+;                    
+;                  tube_min = MIN([tube_min_data,tube_max_data],MAX=tube_max)
+;                  pixel_min = MIN([pixel_min_data,pixel_max_data],MAX=pixel_max)
+;                  
+;                  new_tube_min = tube_min_data + offset_tube
+;                  new_tube_max = tube_max_data + offset_tube
+;                  
+;                  IF (new_tube_min LT (*global).min_tube_plotted) THEN BEGIN
+;                    new_tube_min = (*global).min_tube_plotted
+;                    new_tube_max = tube_max_data
+;                    tube_data = (*global).calibration_range_moving_tube_start
+;                  ENDIF
+;                  IF (new_tube_max GT (*global).max_tube_plotted) THEN BEGIN
+;                    new_tube_max = (*global).max_tube_plotted
+;                    new_tube_min = tube_min_data
+;                    tube_data = (*global).calibration_range_moving_tube_start
+;                  ENDIF
+;                  
+;                  putTextFieldValue, Event, $
+;                    'beam_center_calculation_tube_left', $
+;                    STRCOMPRESS(new_tube_min,/REMOVE_ALL)
+;                  putTextFieldValue, Event, $
+;                    'beam_center_calculation_tube_right', $
+;                    STRCOMPRESS(new_tube_max,/REMOVE_ALL)
+;                    
+;                  (*global).calibration_range_moving_tube_start = tube_data
+;                  
+;                  new_pixel_min = pixel_min_data + offset_pixel
+;                  new_pixel_max = pixel_max_data + offset_pixel
+;                  
+;                  IF (new_pixel_min LT (*global).min_pixel_plotted) THEN BEGIN
+;                    new_pixel_min = (*global).min_pixel_plotted
+;                    new_pixel_max = pixel_max_data
+;                    pixel_data = (*global).calibration_range_moving_pixel_start
+;                  ENDIF
+;                  IF (new_pixel_max GT (*global).max_pixel_plotted) THEN BEGIN
+;                    new_pixel_max = (*global).max_pixel_plotted
+;                    new_pixel_min = pixel_min_data
+;                    pixel_data = (*global).calibration_range_moving_pixel_start
+;                  ENDIF
+;                  
+;                  putTextFieldValue, Event, $
+;                    'beam_center_calculation_pixel_left', $
+;                    STRCOMPRESS(new_pixel_min,/REMOVE_ALL)
+;                  putTextFieldValue, Event, $
+;                    'beam_center_calculation_pixel_right', $
+;                    STRCOMPRESS(new_pixel_max,/REMOVE_ALL)
+;                    
+;                  (*global).calibration_range_moving_pixel_start = pixel_data
+;                  
+;                  
+;                ENDIF
+;                replot_beam_center_calibration_range, Event
+;                replot_beam_center_beam_stop, Event
+;              ;                replot_calculation_range_cursor, Event
+;              END
               0: BEGIN ;beam stop region
                 plot_beam_center_background, Event
                 IF (validate_or_not_beam_stop_range_moving(Event)) THEN BEGIN
@@ -318,7 +318,7 @@ PRO launch_beam_center_base_event, Event
                   
                   
                 ENDIF
-                replot_beam_center_calibration_range, Event
+;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
               ;                replot_calculation_range_cursor, Event
               END
@@ -335,29 +335,29 @@ PRO launch_beam_center_base_event, Event
           
           ;    curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            2: BEGIN ;Data Range Displayed
-            
-              tube_min = getTextFieldValue(Event,$
-                'beam_center_calculation_tube_left')
-              tube_max = getTextFieldValue(Event,$
-                'beam_center_calculation_tube_right')
-              pixel_min = getTextFieldValue(Event,$
-                'beam_center_calculation_pixel_left')
-              pixel_max = getTextFieldValue(Event,$
-                'beam_center_calculation_pixel_right')
-                
-              Tmin = MIN([tube_min,tube_max],MAX=tmax)
-              Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
-              
-              sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
-              sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
-              sPmin = STRCOMPRESS(Pmin,/REMOVE_ALL)
-              sPmax = STRCOMPRESS(Pmax,/REMOVE_ALL)
-              
-              (*global).calculation_tubeLR_pixelLR_backup = $
-                [sTmin, sTmax, sPmin, sPmax]
-                
-            END
+;            2: BEGIN ;Data Range Displayed
+;            
+;              tube_min = getTextFieldValue(Event,$
+;                'beam_center_calculation_tube_left')
+;              tube_max = getTextFieldValue(Event,$
+;                'beam_center_calculation_tube_right')
+;              pixel_min = getTextFieldValue(Event,$
+;                'beam_center_calculation_pixel_left')
+;              pixel_max = getTextFieldValue(Event,$
+;                'beam_center_calculation_pixel_right')
+;                
+;              Tmin = MIN([tube_min,tube_max],MAX=tmax)
+;              Pmin = MIN([pixel_min,pixel_max],MAX=pmax)
+;              
+;              sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
+;              sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
+;              sPmin = STRCOMPRESS(Pmin,/REMOVE_ALL)
+;              sPmax = STRCOMPRESS(Pmax,/REMOVE_ALL)
+;              
+;              (*global).calculation_tubeLR_pixelLR_backup = $
+;                [sTmin, sTmax, sPmin, sPmax]
+;                
+;            END
             0: BEGIN ;Beam Stop Region
             
               tube_min = getTextFieldValue(Event,$
@@ -416,7 +416,7 @@ PRO launch_beam_center_base_event, Event
           ;check activated button
           ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            2: standard = (*global).current_cursor_status
+;            2: standard = (*global).current_cursor_status
             0: standard = (*global).current_cursor_status
             1: standard = (*global).cursor_selection
           ENDCASE
@@ -424,7 +424,7 @@ PRO launch_beam_center_base_event, Event
         ENDIF ELSE BEGIN ;leave main plot
           standard = (*global).cursor_selection
           plot_beam_center_background, Event
-          replot_beam_center_calibration_range, Event
+;          replot_beam_center_calibration_range, Event
           replot_beam_center_beam_stop, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard

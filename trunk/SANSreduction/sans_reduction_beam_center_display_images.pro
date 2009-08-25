@@ -90,53 +90,53 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   WSET, id
   TV, beam_button, 0, 0,/true
   
-  button3_uname = 'beam_center_button3'
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, $
-      FIND_BY_UNAME=button3_uname)
-  ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME=button3_uname)
-  ENDELSE
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, twoD_button, 0, 0,/true
+;  button3_uname = 'beam_center_button3'
+;  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+;    mode_id = WIDGET_INFO(main_base, $
+;      FIND_BY_UNAME=button3_uname)
+;  ENDIF ELSE BEGIN
+;    mode_id = WIDGET_INFO(Event.top, $
+;      FIND_BY_UNAME=button3_uname)
+;  ENDELSE
+;  WIDGET_CONTROL, mode_id, GET_VALUE=id
+;  WSET, id
+;  TV, twoD_button, 0, 0,/true
   
 END
 
 ;------------------------------------------------------------------------------
 PRO populate_defaults_wigets_values, wBase, global
 
-  ;Calculation Range
-  tube_min = (*global).calibration_range_default_selection.tube_min
-  tube_max = (*global).calibration_range_default_selection.tube_max
-  pixel_min = (*global).calibration_range_default_selection.pixel_min
-  pixel_max = (*global).calibration_range_default_selection.pixel_max
-  
-  stube_min = STRCOMPRESS(tube_min,/REMOVE_ALL)
-  stube_max = STRCOMPRESS(tube_max,/REMOVE_ALL)
-  spixel_min = STRCOMPRESS(pixel_min,/REMOVE_ALL)
-  spixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
-  
-  putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_tube_left', stube_min
-    
-  putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_tube_right', stube_max
-    
-  putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_pixel_left', spixel_min
-    
-  putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_calculation_pixel_right', spixel_max
-    
-  calculation_tubeLR_pixelLR_backup = [stube_min, $
-    stube_max, $
-    spixel_min, $
-    spixel_max]
-  (*global).calculation_tubeLR_pixelLR_backup = $
-    calculation_tubeLR_pixelLR_backup
-    
+;  ;Calculation Range
+;  tube_min = (*global).calibration_range_default_selection.tube_min
+;  tube_max = (*global).calibration_range_default_selection.tube_max
+;  pixel_min = (*global).calibration_range_default_selection.pixel_min
+;  pixel_max = (*global).calibration_range_default_selection.pixel_max
+;  
+;  stube_min = STRCOMPRESS(tube_min,/REMOVE_ALL)
+;  stube_max = STRCOMPRESS(tube_max,/REMOVE_ALL)
+;  spixel_min = STRCOMPRESS(pixel_min,/REMOVE_ALL)
+;  spixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
+;  
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_calculation_tube_left', stube_min
+;    
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_calculation_tube_right', stube_max
+;    
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_calculation_pixel_left', spixel_min
+;    
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_calculation_pixel_right', spixel_max
+;    
+;  calculation_tubeLR_pixelLR_backup = [stube_min, $
+;    stube_max, $
+;    spixel_min, $
+;    spixel_max]
+;  (*global).calculation_tubeLR_pixelLR_backup = $
+;    calculation_tubeLR_pixelLR_backup
+;    
   ;Beam Stop Region
   tube_min = (*global).beam_stop_default_selection.tube_min
   tube_max = (*global).beam_stop_default_selection.tube_max
@@ -159,7 +159,7 @@ PRO populate_defaults_wigets_values, wBase, global
     UNAME='beam_center_beam_stop_pixel_right', $
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
-  ;2D plots
+  ;Calculation range
   tube  = (*global).calculation_range_default.tube
   pixel = (*global).calculation_range_default.pixel
   
