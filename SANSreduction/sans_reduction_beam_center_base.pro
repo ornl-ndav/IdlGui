@@ -154,7 +154,7 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                plot_calculation_range_selection, Event
+                plot_calculation_range_selection, Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
               ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -321,10 +321,8 @@ PRO launch_beam_center_base_event, Event
                   
                   
                 ENDIF
-                ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                plot_calculation_range_selection, Event
-              ;                replot_calculation_range_cursor, Event
+                plot_calculation_range_selection, Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
               END
@@ -431,7 +429,7 @@ PRO launch_beam_center_base_event, Event
           display_counts_vs_pixel_and_tube_live, Event, ERASE=1
           standard = (*global).cursor_selection
           plot_beam_center_background, Event
-          plot_calculation_range_selection, Event
+          plot_calculation_range_selection, Event, MODE_DISABLE=1
           replot_beam_center_beam_stop, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
@@ -722,7 +720,8 @@ PRO launch_beam_center_base, main_event
     color: [255,0,0],$ ;red
     color_selected: [255,0,255],$
     thick: 1,$
-    linestyle: 0,$
+    working_linestyle: 0,$
+    not_working_linestyle: 2,$
     thick_selected: 1}, $
     
     beam_stop_default_selection: {tube_min: 90, $
@@ -737,7 +736,7 @@ PRO launch_beam_center_base, main_event
     color: [255,255,255],$
     working_linestyle: 0, $
     not_working_linestyle: 1,$
-    thick: 1}, $
+    thick: 2}, $
     
     tt_zoom_data: PTR_NEW(0L), $ [tube,pixel]
   rtt_zoom_data: PTR_NEW(0L), $

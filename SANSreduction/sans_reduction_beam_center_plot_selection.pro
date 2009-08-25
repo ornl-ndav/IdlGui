@@ -124,7 +124,7 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_calculation_range_selection, Event
+PRO plot_calculation_range_selection, Event, MODE_DISABLE=mode_disable
 
   Tube1 = getTextFieldValue(Event,'tube1_button_value')
   Tube2 = getTextFieldValue(Event,'tube2_button_value')
@@ -135,6 +135,33 @@ PRO plot_calculation_range_selection, Event
   
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  working = (*global).calibration_range_default_selection.working_linestyle
+  not_working = $
+    (*global).calibration_range_default_selection.not_working_linestyle
+    
+  tube1_linestyle = not_working
+  tube2_linestyle = not_working
+  pixel1_linestyle = not_working
+  pixel2_linestyle = not_working
+  
+  IF (N_ELEMENTS(mode_disable) EQ 0) THEN BEGIN
+    mode = (*global).calculation_range_tab_mode
+    CASE (mode) OF
+      'tube1': BEGIN
+        tube1_linestyle = working
+      END
+      'tube2': BEGIN
+        tube2_linestyle = working
+      END
+      'pixel1': BEGIN
+        pixel1_linestyle = working
+      END
+      'pixel2': BEGIN
+        pixel2_linestyle = working
+      END
+    ENDCASE
+  ENDIF
   
   x_min = 0
   y_min = 0
@@ -149,7 +176,7 @@ PRO plot_calculation_range_selection, Event
   
   color = (*global).calibration_range_default_selection.color_selected
   thick = (*global).calibration_range_default_selection.thick_selected
-  linestyle = (*global).calibration_range_default_selection.linestyle
+  
   color = convert_rgb(color)
   
   IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube1
@@ -157,33 +184,33 @@ PRO plot_calculation_range_selection, Event
     x = getBeamCenterTubeDevice_from_data(iTube1, global)
     PLOTS, x, y_min, /DEVICE, COLOR=color
     PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=linestyle, THICK=thick
+      LINESTYLE=tube1_linestyle, THICK=thick
   ENDIF
   
-  IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube2
+  IF (Tube2 NE 'N/A') THEN BEGIN ;plot Tube2
     iTube2 = FIX(Tube2)
     x = getBeamCenterTubeDevice_from_data(iTube2, global)
     PLOTS, x, y_min, /DEVICE, COLOR=color
     PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=linestyle, THICK=thick
+      LINESTYLE=tube2_linestyle, THICK=thick
   ENDIF
- 
+  
   IF (Pixel1 NE 'N/A') THEN BEGIN ;plot Pixel1
     iPixel1 = FIX(Pixel1)
     y = getBeamCenterPixelDevice_from_data(iPixel1, global)
     PLOTS, x_min, y, /DEVICE, COLOR=color
     PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=linestyle, THICK=thick
+      LINESTYLE=pixel1_linestyle, THICK=thick
   ENDIF
-
+  
   IF (Pixel2 NE 'N/A') THEN BEGIN ;plot Pixel2
     iPixel2 = FIX(Pixel2)
     y = getBeamCenterPixelDevice_from_data(iPixel2, global)
     PLOTS, x_min, y, /DEVICE, COLOR=color
     PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=linestyle, THICK=thick
+      LINESTYLE=pixel2_linestyle, THICK=thick
   ENDIF
-
+  
   leave:
   
   DEVICE, DECOMPOSED=0
