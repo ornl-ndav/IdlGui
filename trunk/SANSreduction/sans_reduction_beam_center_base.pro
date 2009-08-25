@@ -536,6 +536,12 @@ PRO launch_beam_center_base_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tube1_button_value'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='tube1'
+      plot_beam_center_background, Event
+      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      replot_beam_center_beam_stop, Event
+    END
     
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tube2_button_uname'): BEGIN
       error = 0
@@ -558,6 +564,12 @@ PRO launch_beam_center_base_event, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='tube2_button_value'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='tube2'
+      plot_beam_center_background, Event
+      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      replot_beam_center_beam_stop, Event
     END
     
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel1_button_uname'): BEGIN
@@ -582,6 +594,12 @@ PRO launch_beam_center_base_event, Event
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
     END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel1_button_value'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='pixel1'
+      plot_beam_center_background, Event
+      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      replot_beam_center_beam_stop, Event
+    END
     
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_uname'): BEGIN
       error = 0
@@ -604,6 +622,12 @@ PRO launch_beam_center_base_event, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
+    END
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_value'): BEGIN
+      display_beam_center_tab2_buttons, Event, MODE='pixel2'
+      plot_beam_center_background, Event
+      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      replot_beam_center_beam_stop, Event
     END
     
     ;button3 (data range displayed) ------------------------------------------
