@@ -163,12 +163,12 @@ PRO replot_calculation_range_cursor, Event
   
   PLOTS, 0, pixel, /DEVICE, COLOR=color
   PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=tube_linestyle, $
+    LINESTYLE=pixel_linestyle, $
     THICK=thick
     
   PLOTS, tube, 0, /DEVICE, COLOR=color
   PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=pixel_linestyle, $
+    LINESTYLE=tube_linestyle, $
     THICK=thick
     
   leave:
