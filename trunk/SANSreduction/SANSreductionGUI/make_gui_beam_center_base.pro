@@ -362,12 +362,14 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   ;counts vs tube
   plot1 = WIDGET_DRAW(row2,$
     XSIZE = plot_xsize,$
-    YSIZE = plot_ysize)
+    YSIZE = plot_ysize,$
+    UNAME = 'beam_center_calculation_counts_vs_tube_draw')
     
   ;counts vs pixel
   plot2 = WIDGET_DRAW(row2,$
     XSIZE = plot_xsize,$
-    YSIZE = plot_ysize)
+    YSIZE = plot_ysize,$
+    UNAME = 'beam_center_calculation_counts_vs_pixel_draw')
     
   ;row3 ...........................................................
   row3 = WIDGET_BASE(big_base,$
