@@ -100,8 +100,8 @@ PRO launch_beam_center_base_event, Event
               END
               1: BEGIN ;Calculation Range
                 plot_beam_center_background, Event
-                ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
+                record_calculation_range_value, Event
                 switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
@@ -427,7 +427,7 @@ PRO launch_beam_center_base_event, Event
           putTextFieldValue, Event, 'beam_center_2d_plot_pixel', 'N/A'
           display_counts_vs_pixel_and_tube_live, Event, ERASE=1
           
-            standard = (*global).cursor_selection
+          standard = (*global).cursor_selection
           plot_beam_center_background, Event
           ;          replot_beam_center_calibration_range, Event
           replot_beam_center_beam_stop, Event
