@@ -62,6 +62,7 @@ PRO launch_beam_center_base_event, Event
             ;            replot_beam_center_calibration_range, Event
             replot_beam_center_beam_stop, Event
             replot_calculation_range_cursor, Event
+            plot_calculation_range_selection, Event
             display_counts_vs_pixel_and_tube_live, Event
           END
           ELSE:
@@ -102,6 +103,7 @@ PRO launch_beam_center_base_event, Event
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
+                plot_calculation_range_selection, Event
                 switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
@@ -152,6 +154,7 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
+                plot_calculation_range_selection, Event
               END
               1: BEGIN ;Calculation Range
               ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
@@ -320,6 +323,7 @@ PRO launch_beam_center_base_event, Event
                 ENDIF
                 ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
+                plot_calculation_range_selection, Event
               ;                replot_calculation_range_cursor, Event
               END
               1: BEGIN ;Calculation Range
@@ -422,14 +426,12 @@ PRO launch_beam_center_base_event, Event
           ENDCASE
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN ;leave main plot
-        
           putTextFieldValue, Event, 'beam_center_2d_plot_tube', 'N/A'
           putTextFieldValue, Event, 'beam_center_2d_plot_pixel', 'N/A'
           display_counts_vs_pixel_and_tube_live, Event, ERASE=1
-          
           standard = (*global).cursor_selection
           plot_beam_center_background, Event
-          ;          replot_beam_center_calibration_range, Event
+          plot_calculation_range_selection, Event
           replot_beam_center_beam_stop, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
@@ -718,7 +720,10 @@ PRO launch_beam_center_base, main_event
     pixel_min: 100, $
     pixel_max: 160, $
     color: [255,0,0],$ ;red
-    thick: 1}, $
+    color_selected: [255,0,255],$
+    thick: 1,$
+    linestyle: 0,$
+    thick_selected: 1}, $
     
     beam_stop_default_selection: {tube_min: 90, $
     tube_max: 101, $
