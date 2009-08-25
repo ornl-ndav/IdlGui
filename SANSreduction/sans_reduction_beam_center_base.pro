@@ -122,7 +122,14 @@ PRO launch_beam_center_base_event, Event
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 (*global).beam_stop_range_moving_pixel_start = pixel_data
               END
-              1: ;Calculation Range
+              1: BEGIN ;Calculation Range
+                              plot_beam_center_background, Event
+                replot_beam_center_beam_stop, Event
+                record_calculation_range_value, Event
+                plot_calculation_range_selection, Event
+                switch_calculation_range_button, Event, WAY='forward'
+                replot_calculation_range_cursor, Event
+              END
             ENDCASE
           ENDELSE
         ENDIF
