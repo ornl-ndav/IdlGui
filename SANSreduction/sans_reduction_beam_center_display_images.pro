@@ -160,8 +160,8 @@ PRO populate_defaults_wigets_values, wBase, global
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
   ;2D plots
-  tube  = (*global).twoD_default_selection.tube
-  pixel = (*global).twoD_default_selection.pixel
+  tube  = (*global).calculation_range_default.tube
+  pixel = (*global).calculation_range_default.pixel
   
   putTextFieldValueMainBase, wBase, $
     UNAME='beam_center_2d_plot_tube', $
@@ -186,10 +186,12 @@ PRO display_beam_center_tab2_buttons, Event, MODE=mode
   pixel2 = path + ['pixel2_on',$
     'pixel2_off'] + '.png'
     
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
   IF (N_ELEMENTS(MODE) EQ 0) THEN BEGIN
-    WIDGET_CONTROL,Event.top,GET_UVALUE=global
     mode = (*global).calculation_range_tab_mode
-  ENDIF
+  ENDIF ELSE BEGIN
+    (*global).calculation_range_tab_mode = mode
+  ENDELSE
   
   CASE (mode) OF
     'tube1': BEGIN

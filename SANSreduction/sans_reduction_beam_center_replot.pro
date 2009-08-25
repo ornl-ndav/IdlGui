@@ -122,7 +122,7 @@ PRO replot_beam_center_beam_stop, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO replot_2d_plot_cursor, Event
+PRO replot_calculation_range_cursor, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -143,9 +143,8 @@ PRO replot_2d_plot_cursor, Event
   tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
   pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
   
-  color = (*global).twoD_default_selection.color
-  thick = (*global).twoD_default_selection.thick
-  linestyle = (*global).twoD_default_selection.linestyle
+  color = (*global).calculation_range_default.color
+  thick = (*global).calculation_range_default.thick
   color = convert_rgb(color)
   
   x_min = 0
@@ -153,14 +152,23 @@ PRO replot_2d_plot_cursor, Event
   x_max = (*global).main_draw_xsize
   y_max = (*global).main_draw_ysize
   
+  IF ((*global).calculation_range_tab_mode EQ 'tube1' OR $
+    (*global).calculation_range_tab_mode EQ 'tube2') THEN BEGIN
+    tube_linestyle = (*global).calculation_range_default.working_linestyle
+    pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
+  ENDIF ELSE BEGIN
+    tube_linestyle = (*global).calculation_range_default.not_working_linestyle
+    pixel_linestyle = (*global).calculation_range_default.working_linestyle
+  ENDELSE
+  
   PLOTS, 0, pixel, /DEVICE, COLOR=color
   PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=linestyle, $
+    LINESTYLE=tube_linestyle, $
     THICK=thick
     
   PLOTS, tube, 0, /DEVICE, COLOR=color
   PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-    LINESTYLE=linestyle, $
+    LINESTYLE=pixel_linestyle, $
     THICK=thick
     
   leave:
