@@ -393,8 +393,13 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ALIGN_LEFT)
     
   space = WIDGET_LABEL(row3,$
-    VALUE = '             ')
+    VALUE = '     ')
     
+  calculate_beam_center = WIDGET_BUTTON(row3,$
+  VALUE = '  CALCULATE BEAM CENTER --->  ',$
+  UNAME = 'beam_center_run_calculation_button',$
+  FRAME = 0)
+  
   ;right part of row3
   right_row3 = WIDGET_BASE(row3,$
     FRAME=5,$
