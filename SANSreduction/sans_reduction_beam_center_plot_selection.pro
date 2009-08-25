@@ -41,27 +41,27 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
   WSET, id_value
   DEVICE, DECOMPOSED=1
   
-  ;Calibration Range ..........................................................
-  tube_min_data = (*global).calibration_range_default_selection.tube_min
-  tube_max_data = (*global).calibration_range_default_selection.tube_max
-  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
-  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
-  
-  ;adding +1 for max to have the all tube/pixel included in the selection
-  x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
-  x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
-  y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
-  y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
-  
-  color = (*global).calibration_range_default_selection.color
-  thick = (*global).calibration_range_default_selection.thick
-  color = convert_rgb(color)
-  
-  PLOTS, x_min, y_min, /DEVICE, COLOR=color
-  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+;  ;Calibration Range ..........................................................
+;  tube_min_data = (*global).calibration_range_default_selection.tube_min
+;  tube_max_data = (*global).calibration_range_default_selection.tube_max
+;  pixel_min_data = (*global).calibration_range_default_selection.pixel_min
+;  pixel_max_data = (*global).calibration_range_default_selection.pixel_max
+;  
+;  ;adding +1 for max to have the all tube/pixel included in the selection
+;  x_min = getBeamCenterTubeDevice_from_data(tube_min_data, global)
+;  x_max = getBeamCenterTubeDevice_from_data(tube_max_data+1, global)
+;  y_min = getBeamCenterPixelDevice_from_data(pixel_min_data, global)
+;  y_max = getBeamCenterPixelDevice_from_data(pixel_max_data+1, global)
+;  
+;  color = (*global).calibration_range_default_selection.color
+;  thick = (*global).calibration_range_default_selection.thick
+;  color = convert_rgb(color)
+;  
+;  PLOTS, x_min, y_min, /DEVICE, COLOR=color
+;  PLOTS, x_min, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+;  PLOTS, x_max, y_max, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+;  PLOTS, x_max, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+;  PLOTS, x_min, y_min, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
   
   ;Beam stop region ...........................................................
   tube_min_data = (*global).beam_stop_default_selection.tube_min
