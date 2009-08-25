@@ -104,7 +104,6 @@ PRO launch_beam_center_base_event, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
                 plot_calculation_range_selection, Event
-                switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -123,11 +122,10 @@ PRO launch_beam_center_base_event, Event
                 (*global).beam_stop_range_moving_pixel_start = pixel_data
               END
               1: BEGIN ;Calculation Range
-                              plot_beam_center_background, Event
+                plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
                 plot_calculation_range_selection, Event
-                switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -164,16 +162,11 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
-              ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-              ;                putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
-              ;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-              ;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-              ;                putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
-              ;                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-              ;                plot_beam_center_background, Event
-              ;                replot_beam_center_calibration_range, Event
-              ;                replot_beam_center_beam_stop, Event
-              ;                replot_calculation_range_cursor, Event
+                plot_beam_center_background, Event
+                replot_beam_center_beam_stop, Event
+                record_calculation_range_value, Event
+                plot_calculation_range_selection, Event
+                replot_calculation_range_cursor, Event
               END
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
@@ -332,6 +325,12 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
+                plot_beam_center_background, Event
+                replot_beam_center_beam_stop, Event
+                record_calculation_range_value, Event
+                plot_calculation_range_selection, Event
+                switch_calculation_range_button, Event, WAY='forward'
+                replot_calculation_range_cursor, Event
               END
             ENDCASE
           ENDELSE
@@ -392,6 +391,8 @@ PRO launch_beam_center_base_event, Event
             END
             1: BEGIN ;Calculation Range
             
+              switch_calculation_range_button, Event, WAY='forward'
+              
               tube_data = getTextFieldValue(event,'beam_center_2d_plot_tube')
               pixel_data = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
               
