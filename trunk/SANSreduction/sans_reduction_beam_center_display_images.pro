@@ -249,3 +249,44 @@ PRO display_beam_center_tab2_buttons, Event, MODE=mode
   TV, pixel2_button, 0, 0,/true
   
 END
+
+;------------------------------------------------------------------------------
+PRO switch_calculation_range_button, Event, WAY=way
+
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  mode = (*global).calculation_range_tab_mode
+  
+  CASE (mode) OF
+    'tube1': BEGIN
+      IF (WAY EQ 'forward') THEN BEGIN
+        mode = 'tube2'
+      ENDIF ELSE BEGIN
+        mode = 'pixel2'
+      ENDELSE
+    END
+    'tube2': BEGIN
+      IF (WAY EQ 'forward') THEN BEGIN
+        mode = 'pixel1'
+      ENDIF ELSE BEGIN
+        mode = 'tube1'
+      ENDELSE
+    END
+    'pixel1': BEGIN
+      IF (WAY EQ 'forward') THEN BEGIN
+        mode = 'pixel2'
+      ENDIF ELSE BEGIN
+        mode = 'tube2'
+      ENDELSE
+    END
+    'pixel2': BEGIN
+      IF (WAY EQ 'forward') THEN BEGIN
+        mode = 'tube1'
+      ENDIF ELSE BEGIN
+        mode = 'pixel1'
+      ENDELSE
+    END
+  ENDCASE
+  
+  display_beam_center_tab2_buttons, Event, MODE=mode
+  
+END
