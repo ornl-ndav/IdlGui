@@ -101,6 +101,7 @@ PRO launch_beam_center_base_event, Event
                 plot_beam_center_background, Event
                 replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
+                switch_calculation_range_button, Event, WAY='forward'
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -152,9 +153,6 @@ PRO launch_beam_center_base_event, Event
                 replot_beam_center_beam_stop, Event
               END
               1: BEGIN ;Calculation Range
-                switch_calculation_range_button, Event, WAY='forward'
-                
-                
               ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
               ;                putTextFieldValue, Event, 'beam_center_2d_plot_tube', $
               ;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
