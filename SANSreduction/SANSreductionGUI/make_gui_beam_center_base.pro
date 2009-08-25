@@ -289,6 +289,23 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     XSIZE = 3,$
     /EDITABLE)
     
+  tab2_row6_col1 = WIDGET_BASE(tab2,$ ;help text
+    FRAME = 1,$
+    /COLUMN)
+    
+  message = ['-> Each left click on the main plot will automatically',$
+    'select the next button.', $
+    '-> Right click to move back to previous selection.']
+  help = WIDGET_LABEL(tab2_row6_col1,$
+    /ALIGN_LEFT,$
+    VALUE = message[0])
+  help = WIDGET_LABEL(tab2_row6_col1,$
+    /ALIGN_LEFT,$
+    VALUE = message[1])
+  help = WIDGET_LABEL(tab2_row6_col1,$
+    /ALIGN_LEFT,$
+    VALUE = message[2])
+    
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     TITLE = 'Data Range Displayed',$
     /COLUMN)
