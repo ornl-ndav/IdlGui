@@ -478,16 +478,95 @@ PRO launch_beam_center_base_event, Event
     
     ;tube edge1, 2 and pixel edge1 and 2
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tube1_button_uname'): BEGIN
-      display_beam_center_tab2_buttons, Event, MODE='tube1'
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_center_tab2_buttons, Event, MODE='tube1'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='tube1_button_uname')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
     END
+    
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tube2_button_uname'): BEGIN
-      display_beam_center_tab2_buttons, Event, MODE='tube2'
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_center_tab2_buttons, Event, MODE='tube2'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='tube2_button_uname')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
     END
+    
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel1_button_uname'): BEGIN
-      display_beam_center_tab2_buttons, Event, MODE='pixel1'
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_center_tab2_buttons, Event, MODE='pixel1'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='pixel1_button_uname')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
     END
+
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_uname'): BEGIN
-      display_beam_center_tab2_buttons, Event, MODE='pixel2'
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_beam_center_tab2_buttons, Event, MODE='pixel2'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        id = WIDGET_INFO(Event.top,$
+          find_by_uname='pixel2_button_uname')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        IF (event.enter EQ 1) THEN BEGIN
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF ELSE BEGIN ;leave
+          standard = 31
+        ENDELSE
+        DEVICE, CURSOR_STANDARD=standard
+      ENDELSE ;enf of catch statement
     END
     
     ;button3 (data range displayed) ------------------------------------------
