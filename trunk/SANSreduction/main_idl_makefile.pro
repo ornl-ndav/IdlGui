@@ -94,6 +94,7 @@ cd, CurrentFolder
 .run sans_reduction_beam_center_replot.pro
 .run sans_reduction_beam_center_plot_selection.pro
 .run sans_reduction_beam_center_calculation_range.pro
+.run sans_reduction_beam_center_calculation.pro
 
 ;main functions
 .run MainBaseEvent.pro
