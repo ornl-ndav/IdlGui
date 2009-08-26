@@ -262,7 +262,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     WSET, id_value
     title = 'Counts vs tube for pixel ' + $
       STRCOMPRESS(pixel_selected,/REMOVE_ALL)
-    xtitle = 'Pixel'
+    xtitle = 'Tube'
     ytitle = 'Counts'
     xrange = INDGEN(N_ELEMENTS(tube_data)) + min_tube_plotted
     PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
@@ -275,7 +275,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     WSET, id_value
     title = 'Counts vs pixel for tube ' + $
       STRCOMPRESS(tube_selected,/REMOVE_ALL)
-    xtitle = 'Tube'
+    xtitle = 'Pixel'
     ytitle = 'Counts'
     xrange = INDGEN(N_ELEMENTS(pixel_data)) + min_pixel_plotted
     PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
