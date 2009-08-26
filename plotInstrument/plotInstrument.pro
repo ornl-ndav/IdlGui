@@ -5,24 +5,30 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;******************************************************************************
   ;******************************************************************************
-  APPLICATION       = 'plotInstrument'
-  VERSION           = '1.0.0'
+  APPLICATION        = 'plotInstrument'
+  VERSION            = '1.0.0'
+  FASCILITY = 'SNS'
+  pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
+  
   spawn, 'hostname', cpu
-  instrumentList = ["ARCS", "BSS", "CNCS", "EQSANS", "REF_L", "REF_M", "PG3", "SEQUOIA","SNAP"]
+  
+  xmlParser = OBJ_NEW('idlxmlparser', pathInstrumentList)
+  instrumentList = xmlParser -> getValue(tag = ['name = ' + fascility, 'shortname'])
+  
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$
     cl_array: STRARR(2),$
-    
+    fascility: fascility, $
     application:  APPLICATION,$
     version:      VERSION,$
     cpuName: cpu + ".sns.gov",$
     instrumentList: instrumentList, $
     MainBaseSize: [30,25,800,545]})
     
-
+    
     
     
     
