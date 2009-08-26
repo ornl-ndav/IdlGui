@@ -20,21 +20,15 @@ PRO MAIN_BASE_event, Event
       fileBrowse, Event ;_browse
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='txtRunNbr'): BEGIN
-      INSTRUMENT = WIDGET_INFO(WIDGET_INFO(wWidget, FIND_BY_UNAME='instChoice'), /COMBOBOX_GETTEXT)
-      WIDGET_CONTROL,Event.id, GET_VALUE = runNbr
-
-      command = 'findnexus -f SNS -i ' + instrument + ' ' + runNbr
-      print, command
-      SPAWN, command, path
-      IF (path NE '') THEN BEGIN
-        (*global).path = path
-        print, (*global).path
-      END
+      findByRunNbr, Event
     END
-    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='Search'): BEGIN
+      findByRunNbr, Event
+    END
     
     ELSE:
     
   ENDCASE
   
 END
+
