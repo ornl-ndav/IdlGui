@@ -56,13 +56,6 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     MAP          = 1,$
     GROUP_LEADER = ourGroup)
     
-  message = 'INFO : right click on the main plot to switch between' + $
-    ' Selection and Moving selection'
-  label = WIDGET_LABEL(wBase, $
-    XOFFSET = 10,$
-    YOFFSET = 10,$
-    VALUE = message)
-    
   ;big_base ==================================================
   big_base = WIDGET_BASE(wBase,$
     /COLUMN)
@@ -205,6 +198,22 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     XSIZE = 3,$
     UNAME = 'beam_center_beam_stop_pixel_right',$
     /EDITABLE)
+    
+  FOR i=0,5 DO BEGIN
+    space = WIDGET_LABEL(tab1,$
+      VALUE = ' ')
+  ENDFOR
+  
+  help_base = WIDGET_BASE(tab1,$
+  /COLUMN,$
+  FRAME=1)
+  message = ['INFO : right click on the main plot to switch between     ',$
+    'Selection and Moving selection']
+  label = WIDGET_LABEL(help_base, $
+    VALUE = message[0])
+  label = WIDGET_LABEL(help_base, $
+  /ALIGN_LEFT,$
+    VALUE = message[1])
     
   tab2 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     TITLE = ' Calculation Range ',$
@@ -396,10 +405,10 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE = '     ')
     
   calculate_beam_center = WIDGET_BUTTON(row3,$
-  VALUE = '  CALCULATE BEAM CENTER --->  ',$
-  UNAME = 'beam_center_run_calculation_button',$
-  FRAME = 0)
-  
+    VALUE = '  CALCULATE BEAM CENTER --->  ',$
+    UNAME = 'beam_center_run_calculation_button',$
+    FRAME = 0)
+    
   ;right part of row3
   right_row3 = WIDGET_BASE(row3,$
     FRAME=5,$
