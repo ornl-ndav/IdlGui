@@ -247,7 +247,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     tube_right_offset = i_bs_TR - min_tube_plotted
     pixel_left_offset = i_bs_PL - min_pixel_plotted
     pixel_right_offset = i_bs_PR - min_pixel_plotted
-    
+     
     x_min = MIN([tube_left_offset,tube_right_offset],MAX=x_max)
     y_min = MIN([pixel_left_offset,pixel_right_offset],MAX=y_max)
     data[x_min:x_max,y_min:y_max] = 0
