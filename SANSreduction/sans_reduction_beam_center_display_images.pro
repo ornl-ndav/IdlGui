@@ -107,36 +107,6 @@ END
 ;------------------------------------------------------------------------------
 PRO populate_defaults_wigets_values, wBase, global
 
-;  ;Calculation Range
-;  tube_min = (*global).calibration_range_default_selection.tube_min
-;  tube_max = (*global).calibration_range_default_selection.tube_max
-;  pixel_min = (*global).calibration_range_default_selection.pixel_min
-;  pixel_max = (*global).calibration_range_default_selection.pixel_max
-;  
-;  stube_min = STRCOMPRESS(tube_min,/REMOVE_ALL)
-;  stube_max = STRCOMPRESS(tube_max,/REMOVE_ALL)
-;  spixel_min = STRCOMPRESS(pixel_min,/REMOVE_ALL)
-;  spixel_max = STRCOMPRESS(pixel_max,/REMOVE_ALL)
-;  
-;  putTextFieldValueMainBase, wBase, $
-;    UNAME='beam_center_calculation_tube_left', stube_min
-;    
-;  putTextFieldValueMainBase, wBase, $
-;    UNAME='beam_center_calculation_tube_right', stube_max
-;    
-;  putTextFieldValueMainBase, wBase, $
-;    UNAME='beam_center_calculation_pixel_left', spixel_min
-;    
-;  putTextFieldValueMainBase, wBase, $
-;    UNAME='beam_center_calculation_pixel_right', spixel_max
-;    
-;  calculation_tubeLR_pixelLR_backup = [stube_min, $
-;    stube_max, $
-;    spixel_min, $
-;    spixel_max]
-;  (*global).calculation_tubeLR_pixelLR_backup = $
-;    calculation_tubeLR_pixelLR_backup
-;    
   ;Beam Stop Region
   tube_min = (*global).beam_stop_default_selection.tube_min
   tube_max = (*global).beam_stop_default_selection.tube_max
@@ -159,18 +129,42 @@ PRO populate_defaults_wigets_values, wBase, global
     UNAME='beam_center_beam_stop_pixel_right', $
     STRCOMPRESS(pixel_max,/REMOVE_ALL)
     
-  ;Calculation range
-  tube  = (*global).calculation_range_default.tube
-  pixel = (*global).calculation_range_default.pixel
+;  ;Calculation range
+;  tube  = (*global).calculation_range_default.tube
+;  pixel = (*global).calculation_range_default.pixel
+;  
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_2d_plot_tube', $
+;    STRCOMPRESS(tube,/REMOVE_ALL)
+;    
+;  putTextFieldValueMainBase, wBase, $
+;    UNAME='beam_center_2d_plot_pixel', $
+;    STRCOMPRESS(pixel,/REMOVE_ALL)
+
+  ;Calculation Range
+  tube1 = (*global).calculation_range_default.tube1
+  tube2 = (*global).calculation_range_default.tube2
+  pixel1 = (*global).calculation_range_default.pixel1
+  pixel2 = (*global).calculation_range_default.pixel2
+  
+  stube_min = STRCOMPRESS(tube1,/REMOVE_ALL)
+  stube_max = STRCOMPRESS(tube2,/REMOVE_ALL)
+  spixel_min = STRCOMPRESS(pixel1,/REMOVE_ALL)
+  spixel_max = STRCOMPRESS(pixel2,/REMOVE_ALL)
   
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_2d_plot_tube', $
-    STRCOMPRESS(tube,/REMOVE_ALL)
+    UNAME='tube1_button_value', stube_min
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='beam_center_2d_plot_pixel', $
-    STRCOMPRESS(pixel,/REMOVE_ALL)
+    UNAME='tube2_button_value', stube_max
     
+  putTextFieldValueMainBase, wBase, $
+    UNAME='pixel1_button_value', spixel_min
+    
+  putTextFieldValueMainBase, wBase, $
+    UNAME='pixel2_button_value', spixel_max
+    
+        
 END
 
 ;------------------------------------------------------------------------------

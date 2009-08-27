@@ -62,7 +62,7 @@ PRO launch_beam_center_base_event, Event
             ;            replot_beam_center_calibration_range, Event
             replot_beam_center_beam_stop, Event
             replot_calculation_range_cursor, Event
-            plot_calculation_range_selection, Event
+            plot_calculation_range_selection, EVENT=Event
             display_counts_vs_pixel_and_tube_live, Event
           END
           ELSE:
@@ -104,7 +104,7 @@ PRO launch_beam_center_base_event, Event
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
-                plot_calculation_range_selection, Event
+                plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -126,7 +126,7 @@ PRO launch_beam_center_base_event, Event
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
-                plot_calculation_range_selection, Event
+                plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -161,13 +161,13 @@ PRO launch_beam_center_base_event, Event
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
                 ;                replot_beam_center_calibration_range, Event
                 replot_beam_center_beam_stop, Event
-                plot_calculation_range_selection, Event, MODE_DISABLE=1
+                plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
-                plot_calculation_range_selection, Event
+                plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -324,13 +324,13 @@ PRO launch_beam_center_base_event, Event
                   
                 ENDIF
                 replot_beam_center_beam_stop, Event
-                plot_calculation_range_selection, Event, MODE_DISABLE=1
+                plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
-                plot_calculation_range_selection, Event
+                plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
             ENDCASE
@@ -438,7 +438,7 @@ PRO launch_beam_center_base_event, Event
           display_counts_vs_pixel_and_tube_live, Event, ERASE=1
           standard = (*global).cursor_selection
           plot_beam_center_background, Event
-          plot_calculation_range_selection, Event, MODE_DISABLE=1
+          plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
           replot_beam_center_beam_stop, Event
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
@@ -540,7 +540,7 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tube1_button_value'): BEGIN
       display_beam_center_tab2_buttons, Event, MODE='tube1'
       plot_beam_center_background, Event
-      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       replot_beam_center_beam_stop, Event
     END
     
@@ -569,7 +569,7 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='tube2_button_value'): BEGIN
       display_beam_center_tab2_buttons, Event, MODE='tube2'
       plot_beam_center_background, Event
-      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       replot_beam_center_beam_stop, Event
     END
     
@@ -598,7 +598,7 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel1_button_value'): BEGIN
       display_beam_center_tab2_buttons, Event, MODE='pixel1'
       plot_beam_center_background, Event
-      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       replot_beam_center_beam_stop, Event
     END
     
@@ -627,7 +627,7 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, FIND_BY_UNAME='pixel2_button_value'): BEGIN
       display_beam_center_tab2_buttons, Event, MODE='pixel2'
       plot_beam_center_background, Event
-      plot_calculation_range_selection, Event, MODE_DISABLE=1
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
       replot_beam_center_beam_stop, Event
     END
     
@@ -764,11 +764,13 @@ PRO launch_beam_center_base, main_event
     color: [0,255,0], $ ;blue but I want GREEN
     thick: 2}, $
     
-    calculation_range_default: {tube: 110, $
-    pixel: 130, $
-    color: [255,255,255],$
+    calculation_range_default: {tube1: 82, $
+    tube2: 113, $
+    pixel1: 112, $
+    pixel2: 150, $
+    color: [255,255,255], $
     working_linestyle: 0, $
-    not_working_linestyle: 1,$
+    not_working_linestyle: 1, $
     thick: 2}, $
     
     tt_zoom_data: PTR_NEW(0L), $ [tube,pixel]
@@ -792,6 +794,7 @@ PRO launch_beam_center_base, main_event
   save_beam_center_background,  Event=event, BASE=wBase1
   
   plot_default_beam_center_selections, base=wBase1, global=global_bc
+  plot_calculation_range_selection, wBase=wBase1, MODE_DISABLE=1
   plot_beam_center_scale, wBase1, global_bc
   
   XMANAGER, "launch_beam_center_base", wBase1, $

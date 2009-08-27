@@ -124,17 +124,29 @@ PRO plot_default_beam_center_selections, BASE=base, GLOBAL=global
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_calculation_range_selection, Event, MODE_DISABLE=mode_disable
-
-  Tube1 = getTextFieldValue(Event,'tube1_button_value')
-  Tube2 = getTextFieldValue(Event,'tube2_button_value')
-  Pixel1 = getTextFieldValue(Event,'pixel1_button_value')
-  Pixel2 = getTextFieldValue(Event,'pixel2_button_value')
-  
+PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
+    MODE_DISABLE=mode_disable
+    
+    
   ON_IOERROR, leave
   
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
+    WIDGET_CONTROL,wBase,GET_UVALUE=global
+    draw_uname = 'beam_center_main_draw'
+    id = WIDGET_INFO(wBase,FIND_BY_UNAME=draw_uname)
+    Tube1  = getTextFieldValue_from_base(wBase,'tube1_button_value')
+    Tube2  = getTextFieldValue_from_base(wBase,'tube2_button_value')
+    Pixel1 = getTextFieldValue_from_base(wBase,'pixel1_button_value')
+    Pixel2 = getTextFieldValue_from_base(wBase,'pixel2_button_value')
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    draw_uname = 'beam_center_main_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    Tube1 = getTextFieldValue(Event,'tube1_button_value')
+    Tube2 = getTextFieldValue(Event,'tube2_button_value')
+    Pixel1 = getTextFieldValue(Event,'pixel1_button_value')
+    Pixel2 = getTextFieldValue(Event,'pixel2_button_value')
+  ENDELSE
   
   working = (*global).calibration_range_default_selection.working_linestyle
   not_working = $
@@ -168,8 +180,6 @@ PRO plot_calculation_range_selection, Event, MODE_DISABLE=mode_disable
   x_max = (*global).main_draw_xsize
   y_max = (*global).main_draw_ysize
   
-  draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   DEVICE, DECOMPOSED=1
