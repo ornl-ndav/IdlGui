@@ -427,7 +427,9 @@ PRO launch_beam_center_base_event, Event
           ;check activated button
           ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
-            ;            2: standard = (*global).current_cursor_status
+            2: BEGIN
+            ;standard = (*global).current_cursor_status
+            END
             0: standard = (*global).current_cursor_status
             1: standard = (*global).cursor_selection
           ENDCASE
