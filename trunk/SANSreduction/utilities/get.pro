@@ -71,6 +71,11 @@ FUNCTION getTextFieldValue, Event, uname
   RETURN, value[0]
 END
 
+FUNCTION getTextFieldValue_from_base, base, uname
+  id = WIDGET_INFO(base,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, GET_VALUE=value
+  RETURN, value[0]
+END
 ;------------------------------------------------------------------------------
 ;This function retrieves the run number of the First tab
 FUNCTION getRunNumber, Event
