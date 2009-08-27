@@ -107,6 +107,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
+              2:
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
@@ -129,6 +130,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
+              2:
             ENDCASE
           ENDELSE
         ENDIF
@@ -170,6 +172,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
+              2:
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
@@ -333,6 +336,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event
                 replot_calculation_range_cursor, Event
               END
+              2:
             ENDCASE
           ENDELSE
           
@@ -402,6 +406,7 @@ PRO launch_beam_center_base_event, Event
               (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
               
             END
+            2:
             
           ENDCASE
           
@@ -427,11 +432,11 @@ PRO launch_beam_center_base_event, Event
           ;check activated button
           ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
+            0: standard = (*global).current_cursor_status
+            1: standard = (*global).cursor_selection
             2: BEGIN
             ;standard = (*global).current_cursor_status
             END
-            0: standard = (*global).current_cursor_status
-            1: standard = (*global).cursor_selection
           ENDCASE
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN ;leave main plot
