@@ -127,9 +127,9 @@ END
 PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
     MODE_DISABLE=mode_disable
     
-    
   ON_IOERROR, leave
   
+  id=0
   IF (N_ELEMENTS(wBase) NE 0) THEN BEGIN
     WIDGET_CONTROL,wBase,GET_UVALUE=global
     draw_uname = 'beam_center_main_draw'
@@ -147,13 +147,13 @@ PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
     Pixel1 = getTextFieldValue(Event,'pixel1_button_value')
     Pixel2 = getTextFieldValue(Event,'pixel2_button_value')
   ENDELSE
-  
+
   working = (*global).calibration_range_default_selection.working_linestyle
   not_working = $
     (*global).calibration_range_default_selection.not_working_linestyle
     
-  tube1_linestyle = not_working
-  tube2_linestyle = not_working
+  tube1_linestyle  = not_working
+  tube2_linestyle  = not_working
   pixel1_linestyle = not_working
   pixel2_linestyle = not_working
   
