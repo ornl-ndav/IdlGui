@@ -59,14 +59,22 @@ PRO launch_beam_center_base_event, Event
             putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
             plot_beam_center_background, Event
-            ;            replot_beam_center_calibration_range, Event
             replot_beam_center_beam_stop, Event
             replot_calculation_range_cursor, Event
             plot_calculation_range_selection, EVENT=Event
             display_counts_vs_pixel_and_tube_live, Event
           END
           2: BEGIN ;cursor info
-          
+            tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
+            putTextFieldValue, Event, 'beam_center_cursor_live_tube_value', $
+              STRCOMPRESS(tube_data,/REMOVE_ALL)
+            pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
+            putTextFieldValue, Event, 'beam_center_cursor_live_pixel_value', $
+              STRCOMPRESS(pixel_data,/REMOVE_ALL)
+            plot_beam_center_background, Event
+            replot_beam_center_beam_stop, Event
+            plot_live_cursor_cursor, Event
+            plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
           END
           ELSE:
         ENDCASE
@@ -443,13 +451,27 @@ PRO launch_beam_center_base_event, Event
           ENDCASE
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN ;leave main plot
-          putTextFieldValue, Event, 'beam_center_2d_plot_tube', 'N/A'
-          putTextFieldValue, Event, 'beam_center_2d_plot_pixel', 'N/A'
-          display_counts_vs_pixel_and_tube_live, Event, ERASE=1
-          standard = (*global).cursor_selection
-          plot_beam_center_background, Event
-          plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
-          replot_beam_center_beam_stop, Event
+          CASE (curr_tab_selected) OF
+            1: BEGIN
+              putTextFieldValue, Event, 'beam_center_2d_plot_tube', 'N/A'
+              putTextFieldValue, Event, 'beam_center_2d_plot_pixel', 'N/A'
+              display_counts_vs_pixel_and_tube_live, Event, ERASE=1
+              standard = (*global).cursor_selection
+              plot_beam_center_background, Event
+              plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+              replot_beam_center_beam_stop, Event
+            END
+            2: BEGIN
+              putTextFieldValue, Event, $
+                'beam_center_cursor_live_tube_value', 'N/A'
+              putTextFieldValue, Event, $
+                'beam_center_cursor_live_pixel_value', 'N/A'
+              plot_beam_center_background, Event
+              plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+              replot_beam_center_beam_stop, Event
+            END
+            ELSE:
+          ENDCASE
         ENDELSE
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE ;enf of catch statement
