@@ -37,8 +37,8 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   IF (N_ELEMENTS(mode) EQ 0) THEN mode='button1_on'
   
   path = 'SANSreduction_images/'
-  button3 = path + ['calibration_range_on', $
-    'calibration_range_off'] + '.png'
+  button3 = path + ['cursor_plot_on', $
+    'cursor_plot_off'] + '.png'
   button1 = path + ['beam_stop_on', $
     'beam_stop_off'] + '.png'
   button2 = path + ['calculation_range_on', $
@@ -90,17 +90,17 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
   WSET, id
   TV, beam_button, 0, 0,/true
   
-;  button3_uname = 'beam_center_button3'
-;  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-;    mode_id = WIDGET_INFO(main_base, $
-;      FIND_BY_UNAME=button3_uname)
-;  ENDIF ELSE BEGIN
-;    mode_id = WIDGET_INFO(Event.top, $
-;      FIND_BY_UNAME=button3_uname)
-;  ENDELSE
-;  WIDGET_CONTROL, mode_id, GET_VALUE=id
-;  WSET, id
-;  TV, twoD_button, 0, 0,/true
+  button3_uname = 'beam_center_button3'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=button3_uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=button3_uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, twoD_button, 0, 0,/true
   
 END
 
