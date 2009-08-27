@@ -65,6 +65,9 @@ PRO launch_beam_center_base_event, Event
             plot_calculation_range_selection, EVENT=Event
             display_counts_vs_pixel_and_tube_live, Event
           END
+          2: BEGIN ;cursor info
+          
+          END
           ELSE:
         ENDCASE
         
