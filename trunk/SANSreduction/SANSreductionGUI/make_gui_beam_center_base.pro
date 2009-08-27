@@ -131,15 +131,15 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /TRACKING_EVENTS,$
     UNAME = 'beam_center_button2')
     
-    space = WIDGET_LABEL(row1_right_row1,$
-      VALUE = space_value)
-  
-    button2 = WIDGET_DRAW(row1_right_row1,$
-      XSIZE = xsize,$
-      YSIZE = ysize,$
-      /BUTTON_EVENTS,$
-      /TRACKING_EVENTS,$
-      UNAME = 'beam_center_button3')
+  space = WIDGET_LABEL(row1_right_row1,$
+    VALUE = space_value)
+    
+  button2 = WIDGET_DRAW(row1_right_row1,$
+    XSIZE = xsize,$
+    YSIZE = ysize,$
+    /BUTTON_EVENTS,$
+    /TRACKING_EVENTS,$
+    UNAME = 'beam_center_button3')
     
   ;second row (base) on the right
   row2_right_row1 = WIDGET_BASE(right_row1,$
@@ -205,14 +205,14 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   ENDFOR
   
   help_base = WIDGET_BASE(tab1,$
-  /COLUMN,$
-  FRAME=1)
+    /COLUMN,$
+    FRAME=1)
   message = ['INFO : right click on the main plot to switch between     ',$
     'Selection and Moving selection']
   label = WIDGET_LABEL(help_base, $
     VALUE = message[0])
   label = WIDGET_LABEL(help_base, $
-  /ALIGN_LEFT,$
+    /ALIGN_LEFT,$
     VALUE = message[1])
     
   tab2 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -319,52 +319,52 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /ALIGN_LEFT,$
     VALUE = message[2])
     
-    tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-      TITLE = 'Cursor Information',$
-      /COLUMN)
-  
-;    vert_space = WIDGET_LABEL(tab3,$
-;      VALUE = ' ')
-;  
-;    space_value = '       '
-;    tab3_row1 = WIDGET_BASE(tab3,$
-;      /ROW)
-;    tube_left = WIDGET_LABEL(tab3_row1,$
-;      VALUE=space_value+'Tube left: ')
-;    value     = WIDGET_TEXT(tab3_row1,$
-;      VALUE='N/A',$
-;      XSIZE = 3,$
-;      UNAME = 'beam_center_calculation_tube_left',$
-;      /EDITABLE)
-;    space = WIDGET_LABEL(tab3_row1,$
-;      VALUE = '     ')
-;    tube_right = WIDGET_LABEL(tab3_row1,$
-;      VALUE='Tube right: ')
-;    value     = WIDGET_TEXT(tab3_row1,$
-;      VALUE='N/A',$
-;      UNAME = 'beam_center_calculation_tube_right',$
-;      XSIZE = 3,$
-;      /EDITABLE)
-;  
-;    tab3_row2 = WIDGET_BASE(tab3,$
-;      /ROW)
-;    pixel_left = WIDGET_LABEL(tab3_row2,$
-;      VALUE=space_value+'Pixel left:')
-;    value     = WIDGET_TEXT(tab3_row2,$
-;      VALUE='N/A',$
-;      XSIZE = 3,$
-;      UNAME = 'beam_center_calculation_pixel_left',$
-;      /EDITABLE)
-;    space = WIDGET_LABEL(tab3_row2,$
-;      VALUE = '     ')
-;    pixel_right = WIDGET_LABEL(tab3_row2,$
-;      VALUE='Pixel right:')
-;    value     = WIDGET_TEXT(tab3_row2,$
-;      VALUE='N/A',$
-;      XSIZE = 3,$
-;      UNAME = 'beam_center_calculation_pixel_right',$
-;      /EDITABLE)
-  
+  tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = 'Cursor Information',$
+    /COLUMN)
+    
+  vert_space = WIDGET_LABEL(tab3,$
+    VALUE = ' ')
+    
+  label = WIDGET_LABEL(tab3,$
+    VALUE = '      Information about the saved cursor position')
+    
+  vert_space = WIDGET_LABEL(tab3,$
+    VALUE = ' ')
+
+  tab3_row1 = WIDGET_BASE(tab3,$
+    /ROW,$
+    /ALIGN_CENTER)
+  tube_left = WIDGET_LABEL(tab3_row1,$
+    VALUE= '  Tube: ')
+  value     = WIDGET_TEXT(tab3_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_cursor_info_tube_value',$
+    /EDITABLE)
+    
+  tab3_row2 = WIDGET_BASE(tab3,$
+    /ROW,$
+    /ALIGN_CENTER)
+  tube_left = WIDGET_LABEL(tab3_row2,$
+    VALUE=' Pixel: ')
+  value     = WIDGET_TEXT(tab3_row2,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_cursor_info_pixel_value',$
+    /EDITABLE)
+    
+  tab3_row3 = WIDGET_BASE(tab3,$
+    /ROW,$
+        /ALIGN_CENTER)
+  tube_left = WIDGET_LABEL(tab3_row3,$
+    VALUE='Counts: ')
+  value     = WIDGET_TEXT(tab3_row3,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_cursor_info_counts_value',$
+    /EDITABLE)
+    
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
     /ROW)
