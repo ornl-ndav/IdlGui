@@ -806,7 +806,7 @@ PRO launch_beam_center_base, main_event
     thick: 2}, $
     
     tt_zoom_data: PTR_NEW(0L), $ [tube,pixel]
-  rtt_zoom_data: PTR_NEW(0L), $
+    rtt_zoom_data: PTR_NEW(0L), $
     background: PTR_NEW(0L), $
     
     prev_tab_selected: 0})
@@ -828,7 +828,9 @@ PRO launch_beam_center_base, main_event
   plot_default_beam_center_selections, base=wBase1, global=global_bc
   plot_calculation_range_selection, wBase=wBase1, MODE_DISABLE=1
   plot_beam_center_scale, wBase1, global_bc
-  
+
+  plot_iSurface_tab1, BASE=wBase1
+
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     

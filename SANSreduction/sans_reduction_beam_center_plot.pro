@@ -176,4 +176,68 @@ PRO plot_beam_center_background, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_iSurface_tab1, BASE=base, EVENT=event
 
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+    WIDGET_CONTROL, BASE, GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDELSE
+  
+  ;retrieve data and tube and pixel offset
+  tt_zoom_data      = (*(*global).tt_zoom_data)
+  min_tube_plotted  = (*global).min_tube_plotted
+  min_pixel_plotted = (*global).min_pixel_plotted
+  
+  ;get beam stop region
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+    tube_left = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_beam_stop_tube_left'))
+    tube_right = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_beam_stop_tube_right'))
+    pixel_left = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_beam_stop_pixel_left'))
+    pixel_right = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_beam_stop_pixel_right'))
+  ENDIF ELSE BEGIN
+    tube_left = FIX(getTextFieldValue(Event, $
+      'beam_center_beam_stop_tube_left'))
+    tube_right = FIX(getTextFieldValue(Event, $
+      'beam_center_beam_stop_tube_right'))
+    pixel_left = FIX(getTextFieldValue(Event, $
+      'beam_center_beam_stop_pixel_left'))
+    pixel_right = FIX(getTextFieldValue(Event, $
+      'beam_center_beam_stop_pixel_right'))
+  ENDELSE
+  
+  x_min = MIN([tube_left, tube_right], MAX=x_max)
+  y_min = MIN([pixel_left, pixel_right], MAX=y_max)
+  
+  x0 = x_min - min_tube_plotted
+  x1 = x_max - min_tube_plotted
+  y0 = y_min - min_pixel_plotted
+  y1 = y_max - min_pixel_plotted
+  
+  print, x0
+  print, x1
+  print, y0
+  print, y1
+  help, tt_zoom_data
+  
+  tt_zoom_data[x0:x1,y0:y1] = 0
+  
+  draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+    id = WIDGET_INFO(base,FIND_BY_UNAME=draw_uname)
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  ENDELSE
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+ 
+   DEVICE, decomposed=1
+  Surface, tt_zoom_data, /LEGO, COLOR=convert_rgb([255B,0B,255B])
+   DEVICE, decomposed=0
+ 
+   
+END
