@@ -230,9 +230,45 @@ FUNCTION cleanup_twoD_plot_range_input, Event
   putTextFieldValue, Event, 'beam_center_2d_plot_pixel', sP
   
   (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
-    
+  
   RETURN, 1
   
   error: RETURN, 0
+  
+END
+
+;-----------------------------------------------------------------------------
+FUNCTION getBScalculationRange, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  ;get tube and pixel calculation range
+  bs_calculation_tube_left = FIX(getTextFieldvalue(Event, $
+    'tube1_button_value'))
+  bs_calculation_tube_right = FIX(getTextFieldValue(Event, $
+    'tube2_button_value'))
+  bs_calculation_pixel_left = FIX(getTextFieldValue(Event, $
+    'pixel1_button_value'))
+  bs_calculation_pixel_right = FIX(getTextFieldValue(Event, $
+    'pixel2_button_value'))
+    
+  tube_min = MIN([bs_calculation_tube_left, bs_calculation_tube_right], $
+    MAX=tube_max)
+  pixel_min = MIN([bs_calculation_pixel_left, bs_calculation_pixel_right], $
+    MAX=pixel_max)
+    
+  RETURN, [tube_min,tube_max,pixel_min,pixel_max]
+  
+  error:
+  
+  default = (*global).calculation_range_default
+  result = [default.tube1, $
+    default.tube2, $
+    default.pixel1, $
+    default.pixel2]
+  RETURN, result
   
 END
