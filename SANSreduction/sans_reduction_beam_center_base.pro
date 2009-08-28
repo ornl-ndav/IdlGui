@@ -87,22 +87,38 @@ PRO launch_beam_center_base_event, Event
         ;presses button - presses button - presses button - presses button
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           (*global).left_button_pressed = 1
+          
+          CASE (curr_tab_selected) OF ;does not depend on the status of the cursor
+            1: BEGIN ;Calculation Range
+              plot_beam_center_background, Event
+              replot_beam_center_beam_stop, Event
+              record_calculation_range_value, Event
+              plot_calculation_range_selection, EVENT=Event
+              replot_calculation_range_cursor, Event
+            END
+            2: BEGIN ;cursor information
+              tube = getTextFieldValue(Event,$
+                'beam_center_cursor_live_tube_value')
+              pixel = getTextFieldValue(Event,$
+                'beam_center_cursor_live_pixel_value')
+              counts = getTextFieldValue(Event,$
+                'beam_center_cursor_live_counts_value')
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_tube_value', $
+                STRCOMPRESS(tube,/REMOVE_ALL)
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_pixel_value', $
+                STRCOMPRESS(pixel,/REMOVE_ALL)
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_counts_value', $
+                STRCOMPRESS(counts,/REMOVE_ALL)
+            END
+            ELSE:
+          ENDCASE
+          
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
-              ;              2: BEGIN ;Data Range Displayed
-              ;                ;need to reset the tube and pixel values
-              ;                putTextFieldValue, Event, 'beam_center_calculation_tube_right',$
-              ;                  'N/A'
-              ;                putTextFieldValue, Event, 'beam_center_calculation_pixel_right',$
-              ;                  'N/A'
-              ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-              ;                putTextFieldValue, Event, 'beam_center_calculation_tube_left', $
-              ;                  STRCOMPRESS(tube_data,/REMOVE_ALL)
-              ;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-              ;                putTextFieldValue, Event, 'beam_center_calculation_pixel_left', $
-              ;                  STRCOMPRESS(pixel_data,/REMOVE_ALL)
-              ;              END
               0: BEGIN;beam stop region
                 ;need to reset the tube and pixel values
                 putTextFieldValue, Event, 'beam_center_beam_stop_tube_right',$
@@ -116,37 +132,17 @@ PRO launch_beam_center_base_event, Event
                 putTextFieldValue, Event, 'beam_center_beam_stop_pixel_left', $
                   STRCOMPRESS(pixel_data,/REMOVE_ALL)
               END
-              1: BEGIN ;Calculation Range
-                plot_beam_center_background, Event
-                replot_beam_center_beam_stop, Event
-                record_calculation_range_value, Event
-                plot_calculation_range_selection, EVENT=Event
-                replot_calculation_range_cursor, Event
-              END
-              2:
+              ELSE:
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
-              ;              2: BEGIN;Data Range Displayed
-              ;                tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
-              ;                (*global).calibration_range_moving_tube_start = tube_data
-              ;                pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
-              ;                (*global).calibration_range_moving_pixel_start = pixel_data
-              ;              END
               0: BEGIN ;Beam Stop Region
                 tube_data  = getBeamCenterTubeData_from_device(Event.x, global)
                 (*global).beam_stop_range_moving_tube_start = tube_data
                 pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
                 (*global).beam_stop_range_moving_pixel_start = pixel_data
               END
-              1: BEGIN ;Calculation Range
-                plot_beam_center_background, Event
-                replot_beam_center_beam_stop, Event
-                record_calculation_range_value, Event
-                plot_calculation_range_selection, EVENT=Event
-                replot_calculation_range_cursor, Event
-              END
-              2:
+              ELSE:
             ENDCASE
           ENDELSE
         ENDIF

@@ -400,7 +400,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE='Counts: ')
   value     = WIDGET_TEXT(tab3_row3,$
     VALUE='N/A',$
-    XSIZE = 3,$
+    XSIZE = 9,$
     UNAME = 'beam_center_cursor_info_counts_value',$
     /EDITABLE)
     
