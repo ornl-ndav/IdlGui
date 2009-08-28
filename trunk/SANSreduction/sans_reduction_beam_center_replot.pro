@@ -354,7 +354,7 @@ PRO plot_live_cursor, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_saved_lived_cursor, Event
+PRO plot_saved_live_cursor, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -394,8 +394,115 @@ PRO plot_saved_lived_cursor, Event
     LINESTYLE=tube_linestyle, $
     THICK=thick
     
+  ;plot counts vs tof of saved cursor position
+  plot_counts_vs_tof_of_saved_live_cursor, Event
+  
+  
   leave:
   
+  
+  
   DEVICE, DECOMPOSED=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, leave
+  
+  IF (N_ELEMENTS(erase) EQ 0) THEN BEGIN
+    data = (*(*global).tt_zoom_data)
+    min_tube_plotted = (*global).min_tube_plotted
+    min_pixel_plotted = (*global).min_pixel_plotted
+    max_tube_plotted = (*global).max_tube_plotted
+    max_pixel_plotted = (*global).max_pixel_plotted
+    
+    tube_data = FIX(getTextFieldValue(Event,$
+      'beam_center_cursor_info_tube_value'))
+    pixel_data = FIX(getTextFieldValue(Event,$
+      'beam_center_cursor_info_pixel_value'))
+      
+    tube_selected = FIX(tube_data)
+    pixel_selected = FIX(pixel_data)
+    
+    IF (tube_selected EQ (max_tube_plotted+1)) THEN RETURN
+    iF (pixel_selected EQ (max_pixel_plotted + 1)) THEN RETURN
+    
+    ;remove beam stop region from plot
+    bs_tube_left = getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_left')
+    bs_tube_right = getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_right')
+    bs_pixel_left = getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_left')
+    bs_pixel_right = getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_right')
+      
+    i_bs_TL = FIX(bs_tube_left)
+    i_bs_TR = FIX(bs_tube_right)
+    i_bs_PL = FIX(bs_pixel_left)
+    i_bs_PR = FIX(bs_pixel_right)
+    
+    tube_left_offset = i_bs_TL - min_tube_plotted
+    tube_right_offset = i_bs_TR - min_tube_plotted
+    pixel_left_offset = i_bs_PL - min_pixel_plotted
+    pixel_right_offset = i_bs_PR - min_pixel_plotted
+    
+    x_min = MIN([tube_left_offset,tube_right_offset],MAX=x_max)
+    y_min = MIN([pixel_left_offset,pixel_right_offset],MAX=y_max)
+    data[x_min:x_max,y_min:y_max] = 0
+    
+    pixel_data  = data[tube_selected - min_tube_plotted,*]
+    tube_data = data[*, pixel_selected - min_pixel_plotted]
+    
+    ;plot counts vs tube
+    draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    title = 'Counts vs tube for pixel ' + $
+      STRCOMPRESS(pixel_selected,/REMOVE_ALL)
+    xtitle = 'Tube'
+    ytitle = 'Counts'
+    xrange = INDGEN(N_ELEMENTS(tube_data)) + min_tube_plotted
+    PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
+      XSTYLE=1, PSYM=-1
+      
+    ;plot counts vs pixel
+    draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    title = 'Counts vs pixel for tube ' + $
+      STRCOMPRESS(tube_selected,/REMOVE_ALL)
+    xtitle = 'Pixel'
+    ytitle = 'Counts'
+    xrange = INDGEN(N_ELEMENTS(pixel_data)) + min_pixel_plotted
+    PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
+      XSTYLE=1, PSYM=-1
+      
+  ENDIF ELSE BEGIN
+  
+    ;plot counts vs tube
+    draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ERASE
+    
+    ;plot counts vs pixel
+    draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    ERASE
+    
+  ENDELSE
+  
+  leave:
   
 END
