@@ -255,6 +255,18 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     y_min = MIN([pixel_left_offset,pixel_right_offset],MAX=y_max)
     data[x_min:x_max,y_min:y_max] = 0
     
+    ;retrieve data for calculation range threshold data
+    bs_calculation_range = getBScalculationRange(Event)
+    bs_calculation_tube_min = bs_calculation_range[0]
+    bs_calculation_tube_max = bs_calculation_range[1]
+    bs_calculation_pixel_min = bs_calculation_range[2]
+    bs_calculation_pixel_max = bs_calculation_range[3]
+    
+    bs_cal_tube_min_offset  = bs_calculation_tube_min - min_tube_plotted
+    bs_cal_tube_max_offset  = bs_calculation_tube_max - min_tube_plotted
+    bs_cal_pixel_min_offset = bs_calculation_pixel_min - min_pixel_plotted
+    bs_cal_pixel_max_offset = bs_calculation_pixel_max - min_pixel_plotted
+    
     pixel_data  = data[tube_selected - min_tube_plotted,*]
     tube_data = data[*, pixel_selected - min_pixel_plotted]
     
@@ -278,6 +290,14 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOTS, tube_selected, tube_data[tube_selected - min_tube_plotted], $
       PSYM = 6, COLOR = FSC_COLOR('green'), /DATA, THICK=3
       
+    PLOTS, bs_calculation_tube_min, 0, /DATA
+    PLOTS, bs_calculation_tube_min, tube_data[bs_cal_tube_min_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
+    PLOTS, bs_calculation_tube_max, 0, /DATA
+    PLOTS, bs_calculation_tube_max, tube_data[bs_cal_tube_max_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -297,6 +317,14 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     ;plot the cursor at the tube position
     PLOTS, pixel_selected, pixel_data[pixel_selected - min_pixel_plotted], $
       PSYM = 6, COLOR = FSC_COLOR('green'), /DATA, THICK=3
+      
+    PLOTS, bs_calculation_pixel_min, 0, /DATA
+    PLOTS, bs_calculation_pixel_min, pixel_data[bs_cal_pixel_min_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
+    PLOTS, bs_calculation_pixel_max, 0, /DATA
+    PLOTS, bs_calculation_pixel_max, pixel_data[bs_cal_pixel_max_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
   ENDIF ELSE BEGIN
   
@@ -471,7 +499,20 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     
     x_min = MIN([tube_left_offset,tube_right_offset],MAX=x_max)
     y_min = MIN([pixel_left_offset,pixel_right_offset],MAX=y_max)
+    
     data[x_min:x_max,y_min:y_max] = 0
+    
+    ;retrieve data for calculation range threshold data
+    bs_calculation_range = getBScalculationRange(Event)
+    bs_calculation_tube_min = bs_calculation_range[0]
+    bs_calculation_tube_max = bs_calculation_range[1]
+    bs_calculation_pixel_min = bs_calculation_range[2]
+    bs_calculation_pixel_max = bs_calculation_range[3]
+    
+    bs_cal_tube_min_offset  = bs_calculation_tube_min - min_tube_plotted
+    bs_cal_tube_max_offset  = bs_calculation_tube_max - min_tube_plotted
+    bs_cal_pixel_min_offset = bs_calculation_pixel_min - min_pixel_plotted
+    bs_cal_pixel_max_offset = bs_calculation_pixel_max - min_pixel_plotted
     
     pixel_data  = data[tube_selected - min_tube_plotted,*]
     tube_data = data[*, pixel_selected - min_pixel_plotted]
@@ -496,6 +537,14 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOTS, tube_selected, tube_data[tube_selected - min_tube_plotted], $
       PSYM = 6, COLOR = FSC_COLOR('green'), /DATA, THICK=3
       
+    PLOTS, bs_calculation_tube_min, 0, /DATA
+    PLOTS, bs_calculation_tube_min, tube_data[bs_cal_tube_min_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
+    PLOTS, bs_calculation_tube_max, 0, /DATA
+    PLOTS, bs_calculation_tube_max, tube_data[bs_cal_tube_max_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -515,6 +564,14 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     ;plot the cursor at the tube position
     PLOTS, pixel_selected, pixel_data[pixel_selected - min_pixel_plotted], $
       PSYM = 6, COLOR = FSC_COLOR('green'), /DATA, THICK=3
+      
+    PLOTS, bs_calculation_pixel_min, 0, /DATA
+    PLOTS, bs_calculation_pixel_min, pixel_data[bs_cal_pixel_min_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
+      
+    PLOTS, bs_calculation_pixel_max, 0, /DATA
+    PLOTS, bs_calculation_pixel_max, pixel_data[bs_cal_pixel_max_offset], $
+      /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
   ENDIF ELSE BEGIN
   
