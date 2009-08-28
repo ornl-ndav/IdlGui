@@ -423,8 +423,19 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   tab4_row2 = WIDGET_BASE(tab4,$
     /ROW)
   label = WIDGET_LABEL(tab4_row2,$
-    VALUE = 'Smooth coeff to use in Counts vs T/P functions:')
+    VALUE = 'Offset from peak position to start calculation:')
   text = WIDGET_TEXT(tab4_row2,$
+    VALUE = '3',$
+    XSIZE = 2,$
+    UNAME = 'beam_center_peak_offset',$
+    /EDITABLE,$
+    /ALIGN_LEFT)
+    
+  tab4_row3 = WIDGET_BASE(tab4,$
+    /ROW)
+  label = WIDGET_LABEL(tab4_row3,$
+    VALUE = 'Smooth coeff to use in Counts vs T/P functions:')
+  text = WIDGET_TEXT(tab4_row3,$
     VALUE = '6',$
     XSIZE = 2,$
     UNAME = 'beam_center_smooth_parameter',$
