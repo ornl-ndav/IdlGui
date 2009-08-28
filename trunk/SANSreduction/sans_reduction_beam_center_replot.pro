@@ -268,6 +268,9 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
       XSTYLE=1, PSYM=-1
       
+    new_array = smooth(tube_data, 6)
+    OPLOT, xrange, new_array, color=FSC_COLOR('red')
+
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -281,6 +284,9 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
       XSTYLE=1, PSYM=-1
       
+    new_array = smooth(pixel_data, 6)
+    OPLOT, xrange, new_array, color=FSC_COLOR('red')
+    
   ENDIF ELSE BEGIN
   
     ;plot counts vs tube
@@ -397,10 +403,7 @@ PRO plot_saved_live_cursor, Event
   ;plot counts vs tof of saved cursor position
   plot_counts_vs_tof_of_saved_live_cursor, Event
   
-  
   leave:
-  
-  
   
   DEVICE, DECOMPOSED=0
   
@@ -472,6 +475,9 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
       XSTYLE=1, PSYM=-1
       
+    new_array = smooth(tube_data, 6)
+    OPLOT, xrange, new_array, color=FSC_COLOR('red')
+    
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -485,6 +491,9 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
       XSTYLE=1, PSYM=-1
       
+    new_array = smooth(pixel_data, 6)
+    OPLOT, xrange, new_array, color=FSC_COLOR('red')
+    
   ENDIF ELSE BEGIN
   
     ;plot counts vs tube

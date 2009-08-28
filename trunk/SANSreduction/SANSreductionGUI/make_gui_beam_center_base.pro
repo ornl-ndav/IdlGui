@@ -427,15 +427,15 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   row3 = WIDGET_BASE(big_base,$
     /ROW)
     
-  basea = WIDGET_BASE(row3)
+  basea = WIDGET_BASE(row3) 
   
   label = WIDGET_LABEL(basea,$
     yoffset = 5,$
-    VALUE = 'Number of point to use in calculation:')
+    VALUE = 'Number of points to use in calculation:')
   text = WIDGET_TEXT(basea,$
-    xoffset= 235,$
+    xoffset= 240,$
     yoffset= 0,$
-    VALUE = '3',$
+    VALUE = '6',$
     XSIZE = 2,$
     /EDITABLE,$
     /ALIGN_LEFT)
