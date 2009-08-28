@@ -326,7 +326,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   tab3_rowa = WIDGET_BASE(tab3,$
   /ROW)
   label = WIDGET_LABEL(tab3_rowa,$
-  VALUE = '   Live Infos:')
+  VALUE = ' Live Infos:')
   base1 = WIDGET_BASE(tab3_rowa,$
   /ROW,$
   FRAME=1)
@@ -338,7 +338,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   UNAME = 'beam_center_cursor_live_tube_value',$
   /ALIGN_LEFT)
   space = WIDGET_LABEL(tab3_rowa,$
-  VALUE = ' ')
+  VALUE = '')
   base1 = WIDGET_BASE(tab3_rowa,$
   /ROW,$
   FRAME=1)
@@ -350,7 +350,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   UNAME = 'beam_center_cursor_live_pixel_value',$
   /ALIGN_LEFT)
   space = WIDGET_LABEL(tab3_rowa,$
-  VALUE = ' ')
+  VALUE = '')
   base1 = WIDGET_BASE(tab3_rowa,$
   /ROW,$
   FRAME=1)
@@ -358,7 +358,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   VALUE = 'Counts:')
   value = WIDGET_LABEL(base1,$
   VALUE = 'N/A',$
-  SCR_XSIZE = 20,$
+  SCR_XSIZE = 50,$
   UNAME = 'beam_center_cursor_live_counts_value',$
   /ALIGN_LEFT)
     
