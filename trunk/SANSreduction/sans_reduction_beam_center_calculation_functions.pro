@@ -32,14 +32,37 @@
 ;
 ;==============================================================================
 
-PRO beam_center_calculation, Event
+FUNCTION retrieve_calculation_range, Event
 
+  ON_IOERROR, error
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-  ;retrieve 2d array of data defined by calclation range
-  data = retrieve_calculation_range(Event)
-
-
-
+  
+  data = (*(*global).tt_zoom_data)
+  min_tube_plotted  = (*global).min_tube_plotted
+  min_pixel_plotted = (*global).min_pixel_plotted
+  
+  ;calculation range
+  tube1  = FIX(getTextFieldValue(Event,'tube1_button_value'))
+  tube2  = FIX(getTextFieldValue(Event,'tube2_button_value'))
+  pixel1 = FIX(getTextFieldValue(Event,'pixel1_button_value'))
+  pixel2 = FIX(getTextFieldValue(Event,'pixel2_button_value'))
+  
+  tube_min  = MIN([tube1,tube2], MAX=tube_max)
+  pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
+  
+  tube_min_offset  = tube_min - min_tube_plotted
+  tube_max_offset  = tube_max - max_tube_plotted
+  pixel_min_offset = pixel_min - min_pixel_plotted
+  pixel_max_offset = pixel_max - max_pixel_plotted
+  
+  array = data[tube_min_offset:tube_max_offset, $
+    pixel_min_offset:pixel_max_offset]
+    
+  RETURN, array
+  
+  error:
+  RETURN, ''
+  
 END

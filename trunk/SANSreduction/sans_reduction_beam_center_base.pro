@@ -742,6 +742,13 @@ PRO launch_beam_center_base_event, Event
       ENDIF
     END
     
+    ;--------------------------------------------------------------------------
+    ;CALCULATE BEAM CENTER
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_run_calculation_button'): BEGIN
+      beam_center_calculation, Event
+    END
+    
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
@@ -814,10 +821,10 @@ PRO launch_beam_center_base, main_event
     not_working_linestyle: 2,$
     thick_selected: 1}, $
     
-    beam_stop_default_selection: {tube_min: 90, $
-    tube_max: 101, $
-    pixel_min: 121, $
-    pixel_max: 134, $
+    beam_stop_default_selection: {tube_min: 75, $
+    tube_max: 120, $
+    pixel_min: 100, $
+    pixel_max: 160, $
     color: [0,255,0], $ ;blue but I want GREEN
     thick: 2}, $
     
@@ -857,7 +864,6 @@ PRO launch_beam_center_base, main_event
   plot_default_beam_center_selections, base=wBase1, global=global_bc
   plot_calculation_range_selection, wBase=wBase1, MODE_DISABLE=1
   plot_beam_center_scale, wBase1, global_bc
-  
   ;plot_iSurface_tab1, BASE=wBase1
   
   XMANAGER, "launch_beam_center_base", wBase1, $
