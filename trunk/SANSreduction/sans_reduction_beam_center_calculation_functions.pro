@@ -73,27 +73,45 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
     MODE=mode, $
     DATA=data
     
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   ;initialize bc_pixel
   bc_pixel = 0
   
   ;get number of tubes (how many times we need to repeat the calculation)
   nbr_tubes = (size(data))(1)
+  
+  ;nbr of points to use in calculation
+  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use')
+  
+  up_array_of_pixels = INTARR(nbr_cal, nbr_tubes)
+  
   index = 0
   WHILE (index LT nbr_tubes) DO BEGIN
   
     ;counts vs pixel of current tube
     data_IvsPixel = DATA[index,*]
     
+    ;we retrieves for each tube the pixel of the maximum counts on the left
+    ;side of the plot
     ;mode: 'up' or 'down'
     CASE (mode) OF
       'up': BEGIN
-        last_pixel_to_used = getLastPixelOfIncreasingCounts(data_IvsPixel)
-        print, last_pixel_to_used
-        
+        up_last_pixel_to_used_offset = $
+          getLastPixelOfIncreasingCounts(data_IvsPixel)
       END
       'down': BEGIN
       END
     ENDCASE
+    
+    
+    
+    
+    
+    
+    
+    
     
     index++
   ENDWHILE
