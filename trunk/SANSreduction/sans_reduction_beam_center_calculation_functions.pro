@@ -53,9 +53,9 @@ FUNCTION retrieve_calculation_range, Event
   pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
   
   tube_min_offset  = tube_min - min_tube_plotted
-  tube_max_offset  = tube_max - max_tube_plotted
+  tube_max_offset  = tube_max - min_tube_plotted
   pixel_min_offset = pixel_min - min_pixel_plotted
-  pixel_max_offset = pixel_max - max_pixel_plotted
+  pixel_max_offset = pixel_max - min_pixel_plotted
   
   array = data[tube_min_offset:tube_max_offset, $
     pixel_min_offset:pixel_max_offset]

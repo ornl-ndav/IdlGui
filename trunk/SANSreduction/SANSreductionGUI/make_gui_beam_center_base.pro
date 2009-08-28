@@ -324,53 +324,53 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /COLUMN)
     
   tab3_rowa = WIDGET_BASE(tab3,$
-  /ROW)
+    /ROW)
   label = WIDGET_LABEL(tab3_rowa,$
-  VALUE = ' Live Infos:')
+    VALUE = ' Live Infos:')
   base1 = WIDGET_BASE(tab3_rowa,$
-  /ROW,$
-  FRAME=1)
+    /ROW,$
+    FRAME=1)
   value = WIDGET_LABEL(base1,$
-  VALUE = 'Tube:')
+    VALUE = 'Tube:')
   value = WIDGET_LABEL(base1,$
-  VALUE = 'N/A',$
-  SCR_XSIZE = 20,$
-  UNAME = 'beam_center_cursor_live_tube_value',$
-  /ALIGN_LEFT)
+    VALUE = 'N/A',$
+    SCR_XSIZE = 20,$
+    UNAME = 'beam_center_cursor_live_tube_value',$
+    /ALIGN_LEFT)
   space = WIDGET_LABEL(tab3_rowa,$
-  VALUE = '')
+    VALUE = '')
   base1 = WIDGET_BASE(tab3_rowa,$
-  /ROW,$
-  FRAME=1)
+    /ROW,$
+    FRAME=1)
   value = WIDGET_LABEL(base1,$
-  VALUE = 'Pixel:')
+    VALUE = 'Pixel:')
   value = WIDGET_LABEL(base1,$
-  VALUE = 'N/A',$
-  SCR_XSIZE = 20,$
-  UNAME = 'beam_center_cursor_live_pixel_value',$
-  /ALIGN_LEFT)
+    VALUE = 'N/A',$
+    SCR_XSIZE = 20,$
+    UNAME = 'beam_center_cursor_live_pixel_value',$
+    /ALIGN_LEFT)
   space = WIDGET_LABEL(tab3_rowa,$
-  VALUE = '')
+    VALUE = '')
   base1 = WIDGET_BASE(tab3_rowa,$
-  /ROW,$
-  FRAME=1)
+    /ROW,$
+    FRAME=1)
   value = WIDGET_LABEL(base1,$
-  VALUE = 'Counts:')
+    VALUE = 'Counts:')
   value = WIDGET_LABEL(base1,$
-  VALUE = 'N/A',$
-  SCR_XSIZE = 50,$
-  UNAME = 'beam_center_cursor_live_counts_value',$
-  /ALIGN_LEFT)
+    VALUE = 'N/A',$
+    SCR_XSIZE = 50,$
+    UNAME = 'beam_center_cursor_live_counts_value',$
+    /ALIGN_LEFT)
     
   vert_space = WIDGET_LABEL(tab3,$
     VALUE = ' ')
-  
+    
   label = WIDGET_LABEL(tab3,$
     VALUE = '    Information about the saved cursor position')
     
   vert_space = WIDGET_LABEL(tab3,$
     VALUE = ' ')
-
+    
   tab3_row1 = WIDGET_BASE(tab3,$
     /ROW,$
     /ALIGN_CENTER)
@@ -395,7 +395,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     
   tab3_row3 = WIDGET_BASE(tab3,$
     /ROW,$
-        /ALIGN_CENTER)
+    /ALIGN_CENTER)
   tube_left = WIDGET_LABEL(tab3_row3,$
     VALUE='Counts: ')
   value     = WIDGET_TEXT(tab3_row3,$
@@ -403,6 +403,15 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     XSIZE = 9,$
     UNAME = 'beam_center_cursor_info_counts_value',$
     /EDITABLE)
+    
+  ;------------------------------------------------------------------------
+  tab4 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    TITLE = '?',$
+    /COLUMN)
+    
+
+
+    
     
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
@@ -427,7 +436,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   row3 = WIDGET_BASE(big_base,$
     /ROW)
     
-  basea = WIDGET_BASE(row3) 
+  basea = WIDGET_BASE(row3)
   
   label = WIDGET_LABEL(basea,$
     yoffset = 5,$
