@@ -520,3 +520,14 @@ FUNCTION getBeamCenterPixelData_from_device, device_value, global
   RETURN, FIX(data)
 END
 
+;----------------------------------------------------------------------------
+FUNCTION getBeamCenterCounts, Event, tube, pixel
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  tt_zoom_data = (*(*global).tt_zoom_data)
+  help, tt_zoom_data
+  print, 'tube: ' + string(tube)
+  print, 'pixel: ' + string(pixel)
+  counts = tt_zoom_data[tube,pixel]
+  RETURN, counts
+END

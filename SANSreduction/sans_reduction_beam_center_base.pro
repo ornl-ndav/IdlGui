@@ -71,6 +71,9 @@ PRO launch_beam_center_base_event, Event
             pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
             putTextFieldValue, Event, 'beam_center_cursor_live_pixel_value', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
+            counts = getBeamCenterCounts(Event, tube_data, pixel_data)
+            putTextFieldValue, Event, 'beam_center_cursor_live_counts_value', $
+              STRCOMPRESS(counts,/REMOVE_ALL)
             plot_beam_center_background, Event
             replot_beam_center_beam_stop, Event
             plot_live_cursor_cursor, Event
