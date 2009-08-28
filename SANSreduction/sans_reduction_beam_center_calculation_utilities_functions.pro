@@ -45,8 +45,6 @@ FUNCTION getLastPixelOfIncreasingCounts, data
   index = 0
   WHILE (index LT nbr_pixels-(step+1)) DO BEGIN
     counts = data[index+step]
-    print, 'index: ' + string(index) + ', counts: '+ string(counts) + $
-    ', previous_counts: ' + string(counts_previous)
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
       sub_array = data[index:index+step]
       max = MAX(sub_array, max_index)
