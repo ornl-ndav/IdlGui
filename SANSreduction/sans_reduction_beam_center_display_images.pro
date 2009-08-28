@@ -60,6 +60,11 @@ PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
       button2_png = button2[1]
       button3_png = button3[0]
     END
+    'off': BEGIN
+      button1_png = button1[1]
+      button2_png = button2[1]
+      button3_png = button3[1]
+    END
   ENDCASE
   
   cali_button = READ_PNG(button1_png)

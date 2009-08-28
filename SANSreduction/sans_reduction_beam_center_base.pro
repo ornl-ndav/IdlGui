@@ -208,6 +208,7 @@ PRO launch_beam_center_base_event, Event
                 replot_calculation_range_cursor, Event
               END
               2:
+              ELSE:
             ENDCASE
           ENDIF ELSE BEGIN ;moving selection
             CASE (curr_tab_selected) OF
@@ -372,6 +373,7 @@ PRO launch_beam_center_base_event, Event
                 replot_calculation_range_cursor, Event
               END
               2:
+              ELSE:
             ENDCASE
           ENDELSE
           
@@ -442,7 +444,7 @@ PRO launch_beam_center_base_event, Event
               
             END
             2:
-            
+            ELSE:
           ENDCASE
           
         ENDIF
@@ -472,6 +474,7 @@ PRO launch_beam_center_base_event, Event
             2: BEGIN
             ;standard = (*global).current_cursor_status
             END
+            ELSE:
           ENDCASE
           DEVICE, CURSOR_STANDARD=standard
         ENDIF ELSE BEGIN ;leaving main plot
@@ -734,6 +737,7 @@ PRO launch_beam_center_base_event, Event
           0: mode='button1_on'
           1: mode='button2_on'
           2: mode='button3_on'
+          ELSE: mode='off'
         ENDCASE
         display_beam_stop_images, EVENT=event, MODE=mode
         IF (curr_tab_selected EQ 1) THEN BEGIN
@@ -821,17 +825,17 @@ PRO launch_beam_center_base, main_event
     not_working_linestyle: 2,$
     thick_selected: 1}, $
     
-    beam_stop_default_selection: {tube_min: 75, $
-    tube_max: 120, $
-    pixel_min: 100, $
-    pixel_max: 160, $
+    beam_stop_default_selection: {tube_min: 90, $
+    tube_max: 100, $
+    pixel_min: 120, $
+    pixel_max: 135, $
     color: [0,255,0], $ ;blue but I want GREEN
     thick: 2}, $
     
-    calculation_range_default: {tube1: 82, $
-    tube2: 113, $
-    pixel1: 112, $
-    pixel2: 150, $
+    calculation_range_default: {tube1: 75, $
+    tube2: 120, $
+    pixel1: 100, $
+    pixel2: 160, $
     color: [255,255,255], $
     working_linestyle: 0, $
     not_working_linestyle: 1, $

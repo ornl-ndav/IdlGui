@@ -37,9 +37,21 @@ PRO beam_center_calculation, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
-  ;retrieve 2d array of data defined by calclation range
+  ;retrieve 2d array of data defined by calculation range
   data = retrieve_calculation_range(Event)
 
+  ;calculate beam center pixel
+  beam_center_pixel_calculation, Event, DATA=data
+
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;Work on PIXELS
+PRO beam_center_pixel_calculation, Event, DATA=data
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
 
 END
