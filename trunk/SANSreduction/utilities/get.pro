@@ -522,12 +522,19 @@ END
 
 ;----------------------------------------------------------------------------
 FUNCTION getBeamCenterCounts, Event, tube, pixel
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+  CATCH,/CANCEL
+  RETURN, 'N/A'
+  ENDIF
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   tt_zoom_data = (*(*global).tt_zoom_data)
-  help, tt_zoom_data
-  print, 'tube: ' + string(tube)
-  print, 'pixel: ' + string(pixel)
-  counts = tt_zoom_data[tube,pixel]
-  RETURN, counts
+  min_pixel_plotted = (*global).min_pixel_plotted
+  min_tube_plotted  = (*global).min_tube_plotted
+  tube_offset = tube - min_tube_plotted
+  pixel_offset = pixel - min_pixel_plotted
+  counts = tt_zoom_data[tube_offset, pixel_offset]
+  RETURN, LONG(counts)
 END
