@@ -66,3 +66,37 @@ FUNCTION retrieve_calculation_range, Event
   RETURN, ''
   
 END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+FUNCTION beam_center_pixel_calculation_function, Event, $
+    MODE=mode, $
+    DATA=data
+    
+  ;initialize bc_pixel
+  bc_pixel = 0
+  
+  ;get number of tubes (how many times we need to repeat the calculation)
+  nbr_tubes = (size(data))(1)
+  index = 0
+  WHILE (index LT nbr_tubes) DO BEGIN
+  
+    ;counts vs pixel of current tube
+    data_IvsPixel = DATA[index,*]
+    
+    ;mode: 'up' or 'down'
+    CASE (mode) OF
+      'up': BEGIN
+        last_pixel_to_used = getLastPixelOfIncreasingCounts(data_IvsPixel)
+        print, last_pixel_to_used
+        
+      END
+      'down': BEGIN
+      END
+    ENDCASE
+    
+    index++
+  ENDWHILE
+  
+  RETURN, ''
+END

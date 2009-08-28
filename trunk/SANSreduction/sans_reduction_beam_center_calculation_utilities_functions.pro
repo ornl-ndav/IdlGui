@@ -32,33 +32,30 @@
 ;
 ;==============================================================================
 
-PRO beam_center_calculation, Event
+FUNCTION getLastPixelOfIncreasingCounts, data
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  pixel = 0
+  nbr_pixels = N_ELEMENTS(data)
   
-  ;retrieve 2d array of data defined by calculation range
-  data = retrieve_calculation_range(Event)
+  counts_previous = data[0]
+  counts = 0
   
-  ;calculate beam center pixel
-  beam_center_pixel_calculation, Event, DATA=data
+  step = 20
   
-END
-
-;------------------------------------------------------------------------------
-;------------------------------------------------------------------------------
-;Work on PIXELS
-PRO beam_center_pixel_calculation, Event, DATA=data
-
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  index = 0
+  WHILE (index LT nbr_pixels-(step+1)) DO BEGIN
+    counts = data[index+step]
+    print, 'index: ' + string(index) + ', counts: '+ string(counts) + $
+    ', previous_counts: ' + string(counts_previous)
+    IF (counts LT counts_previous) THEN BEGIN ;we started to move down
+      sub_array = data[index:index+step]
+      max = MAX(sub_array, max_index)
+      RETURN, index + max_index
+    ENDIF ELSE BEGIN
+      counts_previous = counts
+    ENDELSE
+    index += step
+  ENDWHILE
   
-  ;calculate beam center pixel starting at the bottom (pixel_min)
-  bc_pixel = beam_center_pixel_calculation_function(Event, MODE='up', $
-  DATA=data)
-  
-;  ;calculate beam center pixel starting at the top (pixel_max)
-;  bc_pixel = beam_center_pixel_calculation_function(Event, MODE='down', $
-;  DATA=data)
-  
+  RETURN, -1
 END
