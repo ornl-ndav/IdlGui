@@ -292,8 +292,6 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
       XSTYLE=1, PSYM=-1
       
     new_array = smooth(pixel_data, smooth_parameter)
-    help, new_array
-    help, pixel_data
     OPLOT, xrange, new_array, color=FSC_COLOR('red')
     
     ;plot the cursor at the tube position
