@@ -409,8 +409,28 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     TITLE = '?',$
     /COLUMN)
     
-
-
+  tab4_row1 = WIDGET_BASE(tab4,$
+    /ROW)
+  label = WIDGET_LABEL(tab4_row1,$
+    VALUE = '        Number of points to use in calculation:')
+  text = WIDGET_TEXT(tab4_row1,$
+    VALUE = '6',$
+    XSIZE = 2,$
+    UNAME = 'beam_center_nbr_points_to_use',$
+    /EDITABLE,$
+    /ALIGN_LEFT)
+    
+  tab4_row2 = WIDGET_BASE(tab4,$
+    /ROW)
+  label = WIDGET_LABEL(tab4_row2,$
+    VALUE = 'Smooth coeff to use in Counts vs T/P functions:')
+  text = WIDGET_TEXT(tab4_row2,$
+    VALUE = '6',$
+    XSIZE = 2,$
+    UNAME = 'beam_center_smooth_parameter',$
+    /EDITABLE,$
+    /ALIGN_LEFT)
+    
     
     
   ;row2 ......................................................
@@ -438,19 +458,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     
   basea = WIDGET_BASE(row3)
   
-  label = WIDGET_LABEL(basea,$
-    yoffset = 5,$
-    VALUE = 'Number of points to use in calculation:')
-  text = WIDGET_TEXT(basea,$
-    xoffset= 240,$
-    yoffset= 0,$
-    VALUE = '6',$
-    XSIZE = 2,$
-    /EDITABLE,$
-    /ALIGN_LEFT)
-    
   space = WIDGET_LABEL(row3,$
-    VALUE = '     ')
+    VALUE = '                                        ')
     
   calculate_beam_center = WIDGET_BUTTON(row3,$
     VALUE = '  CALCULATE BEAM CENTER --->  ',$
