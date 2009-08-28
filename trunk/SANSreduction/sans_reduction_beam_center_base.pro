@@ -78,7 +78,8 @@ PRO launch_beam_center_base_event, Event
               STRCOMPRESS(counts,/REMOVE_ALL)
             plot_beam_center_background, Event
             replot_beam_center_beam_stop, Event
-            plot_live_cursor_cursor, Event
+            plot_live_cursor, Event
+            plot_saved_lived_cursor, Event
             plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
           END
           ELSE:
@@ -151,6 +152,28 @@ PRO launch_beam_center_base_event, Event
         IF (event.press EQ 0 AND $ ;moving mouse with button pressed
           (*global).left_button_pressed EQ 1) THEN BEGIN
           ;          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
+          CASE (curr_tab_selected) OF
+            2: BEGIN
+              tube = getTextFieldValue(Event,$
+                'beam_center_cursor_live_tube_value')
+              pixel = getTextFieldValue(Event,$
+                'beam_center_cursor_live_pixel_value')
+              counts = getTextFieldValue(Event,$
+                'beam_center_cursor_live_counts_value')
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_tube_value', $
+                STRCOMPRESS(tube,/REMOVE_ALL)
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_pixel_value', $
+                STRCOMPRESS(pixel,/REMOVE_ALL)
+              putTextFieldValue, Event, $
+                'beam_center_cursor_info_counts_value', $
+                STRCOMPRESS(counts,/REMOVE_ALL)
+              plot_saved_lived_cursor, Event
+            END
+            ELSE:
+          ENDCASE
+          
           curr_cursor = (*global).current_cursor_status
           IF (curr_cursor EQ (*global).cursor_selection) THEN BEGIN ;selection
             CASE (curr_tab_selected) OF
@@ -440,7 +463,7 @@ PRO launch_beam_center_base_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         
-        IF (event.enter EQ 1) THEN BEGIN
+        IF (event.enter EQ 1) THEN BEGIN ;enter main plot
           ;check activated button
           ;       curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
@@ -451,7 +474,7 @@ PRO launch_beam_center_base_event, Event
             END
           ENDCASE
           DEVICE, CURSOR_STANDARD=standard
-        ENDIF ELSE BEGIN ;leave main plot
+        ENDIF ELSE BEGIN ;leaving main plot
           CASE (curr_tab_selected) OF
             1: BEGIN
               putTextFieldValue, Event, 'beam_center_2d_plot_tube', 'N/A'
@@ -470,6 +493,7 @@ PRO launch_beam_center_base_event, Event
               plot_beam_center_background, Event
               plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               replot_beam_center_beam_stop, Event
+              plot_saved_lived_cursor, Event
             END
             ELSE:
           ENDCASE
@@ -806,8 +830,12 @@ PRO launch_beam_center_base, main_event
     not_working_linestyle: 1, $
     thick: 2}, $
     
-    tt_zoom_data: PTR_NEW(0L), $ [tube,pixel]
-  rtt_zoom_data: PTR_NEW(0L), $
+    cursor_save_position: { color: 'yellow', $
+    thick: 2, $
+    linestyle: 0}, $
+    
+    tt_zoom_data: PTR_NEW(0L), $ ;[tube,pixel]
+    rtt_zoom_data: PTR_NEW(0L), $
     background: PTR_NEW(0L), $
     
     prev_tab_selected: 0})
@@ -830,7 +858,7 @@ PRO launch_beam_center_base, main_event
   plot_calculation_range_selection, wBase=wBase1, MODE_DISABLE=1
   plot_beam_center_scale, wBase1, global_bc
   
-  plot_iSurface_tab1, BASE=wBase1
+  ;plot_iSurface_tab1, BASE=wBase1
   
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK

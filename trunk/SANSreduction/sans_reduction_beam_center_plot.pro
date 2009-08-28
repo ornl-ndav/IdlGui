@@ -218,12 +218,6 @@ PRO plot_iSurface_tab1, BASE=base, EVENT=event
   y0 = y_min - min_pixel_plotted
   y1 = y_max - min_pixel_plotted
   
-  print, x0
-  print, x1
-  print, y0
-  print, y1
-  help, tt_zoom_data
-  
   tt_zoom_data[x0:x1,y0:y1] = 0
   
   draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
@@ -234,10 +228,18 @@ PRO plot_iSurface_tab1, BASE=base, EVENT=event
   ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
- 
-   DEVICE, decomposed=1
-  Surface, tt_zoom_data, /LEGO, COLOR=convert_rgb([255B,0B,255B])
-   DEVICE, decomposed=0
- 
-   
+  
+  DEVICE, decomposed=1
+  ;Surface, tt_zoom_data, /LEGO, COLOR=convert_rgb([255B,0B,255B])
+  ;Surface, tt_zoom_data, /NoData, COLOR=FSC_COLOR('red'), $
+  ;  XTITLE='Tube', YTITLE='Pixel', ZTITLE='Counts', $
+  ;  CHARSIZE = 1.5
+  ;Surface, tt_zoom_data, /LEGO, COLOR=FSC_COLOR('blue'), /NoErase, $
+  ;  XSTYLE = 4, YSTYLE = 4, ZSTYLE = 4
+   CONTOUR, tt_zoom_data, NLEVELS=2
+    
+    
+  DEVICE, decomposed=0
+  
+  
 END

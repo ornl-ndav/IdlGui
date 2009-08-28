@@ -304,7 +304,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_live_cursor_cursor, Event
+PRO plot_live_cursor, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -336,6 +336,53 @@ PRO plot_live_cursor_cursor, Event
   
   tube_linestyle = (*global).calculation_range_default.not_working_linestyle
   pixel_linestyle = (*global).calculation_range_default.not_working_linestyle
+  
+  PLOTS, 0, pixel, /DEVICE, COLOR=color
+  PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=pixel_linestyle, $
+    THICK=thick
+    
+  PLOTS, tube, 0, /DEVICE, COLOR=color
+  PLOTS, tube, y_max, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=tube_linestyle, $
+    THICK=thick
+    
+  leave:
+  
+  DEVICE, DECOMPOSED=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_saved_lived_cursor, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, leave
+  
+  draw_uname = 'beam_center_main_draw'
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  WIDGET_CONTROL, id, GET_VALUE=id_value
+  WSET, id_value
+  DEVICE, DECOMPOSED=1
+  
+  tube_data = FIX(getTextFieldValue(Event,$
+    'beam_center_cursor_info_tube_value'))
+  pixel_data = FIX(getTextFieldValue(Event,$
+    'beam_center_cursor_info_pixel_value'))
+    
+  tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
+  pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
+  
+  color = (*global).cursor_save_position.color
+  thick = (*global).cursor_save_position.thick
+  color = FSC_COLOR(color)
+  
+  x_min = 0
+  y_min = 0
+  x_max = (*global).main_draw_xsize
+  y_max = (*global).main_draw_ysize
   
   PLOTS, 0, pixel, /DEVICE, COLOR=color
   PLOTS, x_max, pixel, /DEVICE, COLOR=color, /CONTINUE, $
