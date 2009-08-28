@@ -222,6 +222,9 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     max_tube_plotted = (*global).max_tube_plotted
     max_pixel_plotted = (*global).max_pixel_plotted
     
+    smooth_parameter = FIX(getTextFieldValue(Event, $
+      'beam_center_smooth_parameter'))
+      
     tube_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_tube'))
     pixel_selected = FIX(getTextFieldValue(Event,'beam_center_2d_plot_pixel'))
     
@@ -268,7 +271,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
       XSTYLE=1, PSYM=-1
       
-    new_array = smooth(tube_data, 6)
+    new_array = smooth(tube_data, smooth_parameter)
     OPLOT, xrange, new_array, color=FSC_COLOR('red')
     
     ;plot the cursor at the pixel position
@@ -288,7 +291,7 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
       XSTYLE=1, PSYM=-1
       
-    new_array = smooth(pixel_data, 6)
+    new_array = smooth(pixel_data, smooth_parameter)
     help, new_array
     help, pixel_data
     OPLOT, xrange, new_array, color=FSC_COLOR('red')
@@ -434,6 +437,9 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     max_tube_plotted = (*global).max_tube_plotted
     max_pixel_plotted = (*global).max_pixel_plotted
     
+    smooth_parameter = FIX(getTextFieldValue(Event, $
+      'beam_center_smooth_parameter'))
+      
     tube_data = FIX(getTextFieldValue(Event,$
       'beam_center_cursor_info_tube_value'))
     pixel_data = FIX(getTextFieldValue(Event,$
@@ -485,7 +491,7 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOT, xrange, tube_data, TITLE=title, YTITLE=ytitle, XTITLE=xtitle, $
       XSTYLE=1, PSYM=-1
       
-    new_array = smooth(tube_data, 6)
+    new_array = smooth(tube_data, smooth_parameter)
     OPLOT, xrange, new_array, color=FSC_COLOR('red')
     
     ;plot the cursor at the pixel position
@@ -505,7 +511,7 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOT, xrange, pixel_data, TITLE=title, XTITLE=xtitle, YTITLE=ytitle, $
       XSTYLE=1, PSYM=-1
       
-    new_array = smooth(pixel_data, 6)
+    new_array = smooth(pixel_data, smooth_parameter)
     OPLOT, xrange, new_array, color=FSC_COLOR('red')
     
     ;plot the cursor at the tube position
