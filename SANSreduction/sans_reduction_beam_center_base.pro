@@ -79,7 +79,7 @@ PRO launch_beam_center_base_event, Event
             plot_beam_center_background, Event
             replot_beam_center_beam_stop, Event
             plot_live_cursor, Event
-            plot_saved_lived_cursor, Event
+            plot_saved_live_cursor, Event
             plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
           END
           ELSE:
@@ -169,7 +169,7 @@ PRO launch_beam_center_base_event, Event
               putTextFieldValue, Event, $
                 'beam_center_cursor_info_counts_value', $
                 STRCOMPRESS(counts,/REMOVE_ALL)
-              plot_saved_lived_cursor, Event
+              plot_saved_live_cursor, Event
             END
             ELSE:
           ENDCASE
@@ -493,7 +493,7 @@ PRO launch_beam_center_base_event, Event
               plot_beam_center_background, Event
               plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               replot_beam_center_beam_stop, Event
-              plot_saved_lived_cursor, Event
+              plot_saved_live_cursor, Event
             END
             ELSE:
           ENDCASE

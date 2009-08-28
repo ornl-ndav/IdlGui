@@ -48,7 +48,9 @@ PRO show_beam_stop_tab, Event, tab=tab
   plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
   replot_beam_center_beam_stop, Event
   IF (tab_nbr EQ 2) THEN BEGIN
-    plot_saved_lived_cursor, Event
-  ENDIF
+    plot_saved_live_cursor, Event
+  ENDIF ELSE BEGIN
+    plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=1
+  ENDELSE
   
 END
