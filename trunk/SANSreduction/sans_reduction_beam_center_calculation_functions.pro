@@ -83,7 +83,7 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
   nbr_tubes = (size(data))(1)
   
   ;nbr of points to use in calculation
-  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use')
+  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
   
   up_array_of_pixels = INTARR(nbr_cal, nbr_tubes)
   
