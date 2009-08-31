@@ -806,6 +806,11 @@ PRO launch_beam_center_base, main_event
     
     twoD_plots_tubeLR_pixelLR_backup: STRARR(4), $
     
+    ideal_beam_center: { tube: 96,$  ;the position of the ideal beam center
+    pixel: 128,$
+    tube_offset: 4,$
+    pixel_offset: 5}, $
+    
     min_pixel_plotted: 60,$
     max_pixel_plotted: 199, $
     min_tube_plotted: 40,$
@@ -840,6 +845,9 @@ PRO launch_beam_center_base, main_event
     working_linestyle: 0, $
     not_working_linestyle: 1, $
     thick: 2}, $
+    
+    calculation_range_offset: { tube: 0L, $
+    pixel: 0L}, $
     
     cursor_save_position: { color: 'yellow', $
     thick: 2, $
