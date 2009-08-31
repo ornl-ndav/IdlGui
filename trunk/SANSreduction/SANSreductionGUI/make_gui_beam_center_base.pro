@@ -493,6 +493,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE = 'Tube:')
   value = WIDGET_LABEL(row2_right_row3,$
     VALUE = 'N/A',$
+    SCR_XSIZE = 90,$
     /ALIGN_LEFT)
   space = WIDGET_LABEL(row2_right_row3,$
     VALUE = '   ')
@@ -500,6 +501,8 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     VALUE = 'Pixel:')
   value = WIDGET_LABEL(row2_right_row3,$
     VALUE = 'N/A',$
+    SCR_XSIZE = 90, $
+    UNAME = 'beam_center_pixel_center_value',$
     /ALIGN_LEFT)
     
   ;row4 ...........................................................

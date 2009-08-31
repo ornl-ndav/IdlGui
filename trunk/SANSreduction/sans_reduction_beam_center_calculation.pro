@@ -46,6 +46,13 @@ PRO beam_center_calculation, Event
 END
 
 ;------------------------------------------------------------------------------
+;return array without -1 values
+FUNCTION cleanup_bc_array, array
+  index = WHERE(array NE -1)
+  RETURN, array[index]
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;Work on PIXELS
 PRO beam_center_pixel_calculation, Event, DATA=data
@@ -53,15 +60,28 @@ PRO beam_center_pixel_calculation, Event, DATA=data
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  ;calculate beam center pixel starting at the bottom (pixel_min)
-  bc_pixel = beam_center_pixel_calculation_function(Event, MODE='up', $
-  DATA=data)
-
-  print, 'offset: ' + string((*global).calculation_range_offset.pixel)
-  print, bc_pixel + (*global).calculation_range_offset.pixel
-
-;  ;calculate beam center pixel starting at the top (pixel_max)
-;  bc_pixel = beam_center_pixel_calculation_function(Event, MODE='down', $
-;  DATA=data)
+  ;  print, 'offset: ' + string((*global).calculation_range_offset.pixel)
   
+  ;calculate beam center pixel starting at the bottom (pixel_min)
+  bc_up_pixel = beam_center_pixel_calculation_function(Event, MODE='up', $
+    DATA=data)
+  ;  print, bc_up_pixel + (*global).calculation_range_offset.pixel
+    
+  ;  ;calculate beam center pixel starting at the top (pixel_max)
+  bc_down_pixel = beam_center_pixel_calculation_function(Event, MODE='down', $
+    DATA=data)
+  ;  print, bc_down_pixel + (*global).calculation_range_offset.pixel
+    
+  ;remove -1 value from up and down arrays
+  bc_up_pixel_array = cleanup_bc_array(bc_up_pixel)
+  bc_down_pixel_array = cleanup_bc_array(bc_down_pixel)
+  
+  ;calculate average value of both arrays
+  big_bc_array = [bc_up_pixel_array,bc_down_pixel_array]
+  bc_pixel = MEAN(big_bc_array) + (*global).calculation_range_offset.pixel
+  
+  ;put value in its box
+  putTextFieldValue, Event, 'beam_center_pixel_center_value', $
+    STRCOMPRESS(bc_pixel,/REMOVE_ALL)
+    
 END
