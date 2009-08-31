@@ -36,10 +36,10 @@
 ;to the counts of the left pixel
 FUNCTION extrapolate_exact_pixel, left_pixel_intensity, data, pixel_right
 
-  Num1 = FLOAT(data(pixel_right) - dat(pixel_right + 1))
-  Num2 = FLOAT(data(pixel_right) - left_pixel_intensity)
+  Num1 = FLOAT(data(pixel_right + 1) - data(pixel_right))
+  Num2 = FLOAT(left_pixel_intensity - data(pixel_right))
   
-  exact_right_pixel = FLOAT(pixel_right) - Num1/Num2
+  exact_right_pixel = FLOAT(pixel_right) + Num2/Num1
   
   RETURN, exact_right_pixel
   
@@ -87,7 +87,7 @@ END
 ;pixel is the pixel value on the left side
 ;data are the array of the 2d data counts vs pixels for only the range
 ;specified in the calculation range
-FUNCTION find_beam_center_using_pixel_on_right_side, Event, data, pixel
+FUNCTION find_equivalent_right_pixel_from_pixel_on_left_side, Event, data, pixel
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -102,6 +102,7 @@ FUNCTION find_beam_center_using_pixel_on_right_side, Event, data, pixel
     ibc_pixel_offset)
     
   left_pixel_intensity = data[pixel]
+  pixel_left = pixel
   
   nbr_data = N_ELEMENTS(data)
   index=(nbr_data-1)
@@ -109,9 +110,10 @@ FUNCTION find_beam_center_using_pixel_on_right_side, Event, data, pixel
   
     pixel_right = index
     IF (data[pixel_right] GT left_pixel_intensity) THEN BEGIN
+    
       ;check that the beam center won't be offside of the range specified
-      IF (((FLOAT(pixel_right) - FLOAT(pixel_left))/2 GE range_pixel_min) AND $
-        ((FLOAT(pixel_right) - FLOAT(pixel_left))/2 LE range_pixel_max)) THEN BEGIN
+      IF (((FLOAT(pixel_right) + FLOAT(pixel_left))/2 GE range_pixel_min) AND $
+        ((FLOAT(pixel_right) + FLOAT(pixel_left))/2 LE range_pixel_max)) THEN BEGIN
         extrapolated_pixel_right = $
           extrapolate_exact_pixel(left_pixel_intensity, $
           data, $
@@ -148,6 +150,8 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
   
   up_array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
   
+  pixel_offset = (*global).calculation_range_offset.pixel
+  
   index = 0
   WHILE (index LT nbr_tubes) DO BEGIN
   
@@ -161,12 +165,15 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
       'up': BEGIN
         up_last_pixel_to_used_offset = $
           getLastPixelOfIncreasingCounts(data_IvsPixel)
+          
         IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
-            beam_center = find_beam_center_using_pixel_on_right_side(Event, $
+            right_pixel = $
+              find_equivalent_right_pixel_from_pixel_on_left_side(Event, $
               data_IvsPixel, pixel_to_use)
-            up_arrray_of_pixels[i,index] = beam_center
+              beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2 
+            up_array_of_pixels[i,index] = beam_center
           ENDFOR
         ENDIF ELSE BEGIN
           up_arrray_of_pixels[*,index] = -1
@@ -181,5 +188,5 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
     index++
   ENDWHILE
   
-  RETURN, ''
+  RETURN, up_array_of_pixels
 END
