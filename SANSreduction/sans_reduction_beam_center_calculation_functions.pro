@@ -128,6 +128,47 @@ FUNCTION find_equivalent_right_pixel_from_pixel_on_left_side, Event, data, pixel
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION find_equivalent_left_pixel_from_pixel_on_right_side, Event, data, pixel
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ideal_beam_center = (*global).ideal_beam_center
+  ibc_pixel = ideal_beam_center.pixel
+  ibc_pixel_offset = ideal_beam_center.pixel_offset
+  calculation_range_pixel_offset = (*global).calculation_range_offset.pixel
+  range_pixel_min = FLOAT((ibc_pixel - calculation_range_pixel_offset) - $
+    ibc_pixel_offset)
+  range_pixel_max = FLOAT((ibc_pixel - calculation_range_pixel_offset) + $
+    ibc_pixel_offset)
+    
+  right_pixel_intensity = data[pixel]
+  pixel_right = pixel
+  
+  nbr_data = N_ELEMENTS(data)
+  index = 0
+  WHILE (index LT pixel) DO BEGIN
+  
+    pixel_left = index
+    IF (data[pixel_left] GT right_pixel_intensity) THEN BEGIN
+    
+      ;check that the beam center won't be offside of the range specified
+      IF (((FLOAT(pixel_right) + FLOAT(pixel_left))/2 GE range_pixel_min) AND $
+        ((FLOAT(pixel_right) + FLOAT(pixel_left))/2 LE range_pixel_max)) THEN BEGIN
+        extrapolated_pixel_left = $
+          extrapolate_exact_pixel(right_pixel_intensity, $
+          data, $
+          pixel_left)
+        RETURN, extrapolated_pixel_left
+      ENDIF
+    ENDIF
+    index++
+  ENDWHILE
+  
+  RETURN, -1
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 FUNCTION beam_center_pixel_calculation_function, Event, $
     MODE=mode, $
@@ -148,7 +189,7 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
   ;get offset of first pixel to used
   first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
   
-  up_array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
+  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
   
   pixel_offset = (*global).calculation_range_offset.pixel
   
@@ -162,31 +203,45 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
     ;side of the plot
     ;mode: 'up' or 'down'
     CASE (mode) OF
+    
       'up': BEGIN
         up_last_pixel_to_used_offset = $
           getLastPixelOfIncreasingCounts(data_IvsPixel)
-          
         IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
             right_pixel = $
               find_equivalent_right_pixel_from_pixel_on_left_side(Event, $
               data_IvsPixel, pixel_to_use)
-              beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2 
-            up_array_of_pixels[i,index] = beam_center
+            beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
+            array_of_pixels[i,index] = beam_center
           ENDFOR
         ENDIF ELSE BEGIN
-          up_arrray_of_pixels[*,index] = -1
+          arrray_of_pixels[*,index] = -1
         ENDELSE
-        
-        
       END
+      
       'down': BEGIN
+        down_last_pixel_to_used_offset = $
+          getLastPixelOfDecreasingCounts(data_IvsPixel)
+        IF (down_last_pixel_to_used_offset NE -1) THEN BEGIN
+          FOR i=0,(nbr_cal-1) DO BEGIN
+            pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
+            left_pixel = $
+              find_equivalent_left_pixel_from_pixel_on_right_side(Event, $
+              data_IvsPixel, pixel_to_use)
+            beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
+            array_of_pixels[i,index] = beam_center
+          ENDFOR
+        ENDIF ELSE BEGIN
+          array_of_pixels[*,index] = -1
+        ENDELSE
       END
+      
     ENDCASE
     
     index++
   ENDWHILE
   
-  RETURN, up_array_of_pixels
+  RETURN, array_of_pixels
 END

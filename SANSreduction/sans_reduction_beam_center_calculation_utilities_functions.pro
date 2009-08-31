@@ -58,3 +58,33 @@ FUNCTION getLastPixelOfIncreasingCounts, data
   
   RETURN, -1
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getLastPixelOfDecreasingCounts, data
+
+  pixel = 0
+  nbr_pixels = N_ELEMENTS(data)
+  
+  counts_previous = data[nbr_pixels-1]
+  counts = 0
+  
+  big_step = 20
+  small_step = 5
+  
+  index = nbr_pixels-1
+  WHILE (index GT nbr_pixels-(big_step-1)) DO BEGIN
+    counts = data[index-big_step]
+    IF (counts LT counts_previous) THEN BEGIN ;we started to move down
+      sub_array = data[index-big_step:index]
+      max = MAX(sub_array, max_index)
+      RETURN, index - big_step + max_index
+    ENDIF ELSE BEGIN
+      counts_previous = counts
+    ENDELSE
+    index -= small_step
+  ENDWHILE
+  
+  RETURN, -1
+END
+  
+  
