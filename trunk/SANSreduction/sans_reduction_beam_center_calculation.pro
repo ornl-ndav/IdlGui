@@ -56,7 +56,10 @@ PRO beam_center_pixel_calculation, Event, DATA=data
   ;calculate beam center pixel starting at the bottom (pixel_min)
   bc_pixel = beam_center_pixel_calculation_function(Event, MODE='up', $
   DATA=data)
-  
+
+  print, 'offset: ' + string((*global).calculation_range_offset.pixel)
+  print, bc_pixel + (*global).calculation_range_offset.pixel
+
 ;  ;calculate beam center pixel starting at the top (pixel_max)
 ;  bc_pixel = beam_center_pixel_calculation_function(Event, MODE='down', $
 ;  DATA=data)
