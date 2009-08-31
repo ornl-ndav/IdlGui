@@ -43,6 +43,9 @@ PRO beam_center_calculation, Event
   ;calculate beam center pixel
   beam_center_pixel_calculation, Event, DATA=data
   
+  ;calculate beam center tube
+  beam_center_tube_calculation, Event, DATA=data
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -50,6 +53,25 @@ END
 FUNCTION cleanup_bc_array, array
   index = WHERE(array NE -1)
   RETURN, array[index]
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;calculate beam center tube
+PRO beam_center_tube_calculation, Event, DATA=data
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  bc_up_tube_front_up = beam_center_tube_calculation_function (Event, $
+    MODE='up', BANK='front', DATA=data)
+;  bc_up_tube_back_up = beam_center_tube_calculation_function (Event, $
+;    MODE='up', BANK='back', DATA=data)
+;  bc_up_tube_front_down = beam_center_tube_calculation_function (Event, $
+;    MODE='down', BANK='front', DATA=data)
+;  bc_up_tube_back_down = beam_center_tube_calculation_function (Event, $
+;    MODE='down', BANK='back', DATA=data)
+    
 END
 
 ;------------------------------------------------------------------------------

@@ -245,3 +245,121 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
   
   RETURN, array_of_pixels
 END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+FUNCTION beam_center_tube_calculation_function, Event, $
+    MODE = mode, $
+    DATA = data, $
+    BANK = bank
+    
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;initialize bc_tube
+  bc_tube = 0
+  
+  ;get number of tubes (how many times we need to repeat the calculation)
+  nbr_pixel = (size(data))(2)
+  nbr_tube  = (size(data))(1)
+  
+  ;nbr of points to use in calculation
+  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
+  
+  ;get offset of first tube to used
+  first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
+  
+  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
+  
+  tube_offset = (*global).calculation_range_offset.tube
+  
+  data_front = INTARR(nbr_tube, nbr_pixels)
+  
+  IF ((first_offset MOD 2) EQ 0) THEN BEGIN ;even number
+    CASE (bank) OF
+      'front': data_offset = 0
+      'back' : data_offset = 1
+    ENDCASE
+  ENDIF ELSE BEGIN
+    CASE (bank) OF
+      'front': data_offset = 1
+      'back' : data_offset = 0
+    ENDCASE
+  ENDELSE
+  
+  index = 0
+  WHILE (index LT nbr_pixels) DO BEGIN
+  
+    ;counts vs pixel of current tube
+    data_IvsTube = DATA[*,index]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ;we retrieves for each tube the pixel of the maximum counts on the left
+    ;side of the plot
+    ;mode: 'up' or 'down'
+    CASE (mode) OF
+    
+      'up': BEGIN
+        up_last_pixel_to_used_offset = $
+          getLastPixelOfIncreasingCounts(data_IvsPixel)
+        IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
+          FOR i=0,(nbr_cal-1) DO BEGIN
+            pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
+            right_pixel = $
+              find_equivalent_right_pixel_from_pixel_on_left_side(Event, $
+              data_IvsPixel, pixel_to_use)
+            beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
+            array_of_pixels[i,index] = beam_center
+          ENDFOR
+        ENDIF ELSE BEGIN
+          arrray_of_pixels[*,index] = -1
+        ENDELSE
+      END
+      
+      'down': BEGIN
+        down_last_pixel_to_used_offset = $
+          getLastPixelOfDecreasingCounts(data_IvsPixel)
+        IF (down_last_pixel_to_used_offset NE -1) THEN BEGIN
+          FOR i=0,(nbr_cal-1) DO BEGIN
+            pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
+            left_pixel = $
+              find_equivalent_left_pixel_from_pixel_on_right_side(Event, $
+              data_IvsPixel, pixel_to_use)
+            beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
+            array_of_pixels[i,index] = beam_center
+          ENDFOR
+        ENDIF ELSE BEGIN
+          array_of_pixels[*,index] = -1
+        ENDELSE
+      END
+      
+    ENDCASE
+    
+    index++
+  ENDWHILE
+  
+  RETURN, array_of_pixels
+END
