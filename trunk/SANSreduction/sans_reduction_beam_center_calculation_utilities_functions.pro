@@ -40,19 +40,20 @@ FUNCTION getLastPixelOfIncreasingCounts, data
   counts_previous = data[0]
   counts = 0
   
-  step = 20
+  big_step = 20
+  small_step = 5
   
   index = 0
-  WHILE (index LT nbr_pixels-(step+1)) DO BEGIN
-    counts = data[index+step]
+  WHILE (index LT nbr_pixels-(big_step+1)) DO BEGIN
+    counts = data[index+big_step]
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
-      sub_array = data[index:index+step]
+      sub_array = data[index:index+big_step]
       max = MAX(sub_array, max_index)
       RETURN, index + max_index
     ENDIF ELSE BEGIN
       counts_previous = counts
     ENDELSE
-    index += step
+    index += small_step
   ENDWHILE
   
   RETURN, -1
