@@ -32,32 +32,64 @@
 ;
 ;==============================================================================
 
-PRO beam_center_calculation, Event
+PRO beam_center_calculation, EVENT=Event, BASE=base
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(Event) NE 0) THEN BEGIN
   
-  ;retrieve 2d array of data defined by calculation range
-  data = retrieve_calculation_range(Event)
-  
-  error = 0
-  CATCH, error
-  IF (error NE 0) THEN BEGIN
-    CATCH, /CANCEL
-    title = 'Calculate Beam Center ERROR !'
-    text = 'Please select a different Calculation Range!'
-    parent_id = WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='beam_center_calculation_base')
-    result = DIALOG_MESSAGE(text, $
-      title = title, $
-      /ERROR, $
-      DIALOG_PARENT = parent_id)
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    ;retrieve 2d array of data defined by calculation range
+    data = retrieve_calculation_range(Event=event)
+    
+    error = 0
+    ; CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH, /CANCEL
+      title = 'Calculate Beam Center ERROR !'
+      text = 'Please select a different Calculation Range!'
+      parent_id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='beam_center_calculation_base')
+      result = DIALOG_MESSAGE(text, $
+        title = title, $
+        /ERROR, $
+        DIALOG_PARENT = parent_id)
+    ENDIF ELSE BEGIN
+      ;calculate beam center pixel
+      beam_center_pixel_calculation, event=Event, DATA=data
+      ;calculate beam center tube
+      beam_center_tube_calculation, event=Event, DATA=data
+      CATCH, /CANCEL
+    ENDELSE
+    
   ENDIF ELSE BEGIN
-    ;calculate beam center pixel
-    beam_center_pixel_calculation, Event, DATA=data
-    ;calculate beam center tube
-    beam_center_tube_calculation, Event, DATA=data
-    CATCH, /CANCEL
+  
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+    
+    ;retrieve 2d array of data defined by calculation range
+    data = retrieve_calculation_range(base=base)
+    
+    error = 0
+    ;CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH, /CANCEL
+      title = 'Calculate Beam Center ERROR !'
+      text = 'Please select a different Calculation Range!'
+      parent_id = WIDGET_INFO(base, $
+        FIND_BY_UNAME='beam_center_calculation_base')
+      result = DIALOG_MESSAGE(text, $
+        title = title, $
+        /ERROR, $
+        DIALOG_PARENT = parent_id)
+    ENDIF ELSE BEGIN
+      ;calculate beam center pixel
+      beam_center_pixel_calculation, base=base, DATA=data
+      ;calculate beam center tube
+      beam_center_tube_calculation, base=base, DATA=data
+      CATCH, /CANCEL
+    ENDELSE
+    
   ENDELSE
   
 END
@@ -72,61 +104,115 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;calculate beam center tube
-PRO beam_center_tube_calculation, Event, DATA=data
+PRO beam_center_tube_calculation, Event=event, base=base, DATA=data
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
   
-  bc_up_tube_front = beam_center_tube_calculation_function (Event, $
-    MODE='up', BANK='front', DATA=data)
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
     
-  bc_up_tube_back = beam_center_tube_calculation_function (Event, $
-    MODE='up', BANK='back', DATA=data)
+    bc_up_tube_front = beam_center_tube_calculation_function (Event=event, $
+      MODE='up', BANK='front', DATA=data)
+      
+    bc_up_tube_back = beam_center_tube_calculation_function (Event=event, $
+      MODE='up', BANK='back', DATA=data)
+      
+    bc_down_tube_front = beam_center_tube_calculation_function (Event=event, $
+      MODE='down', BANK='front', DATA=data)
+      
+    bc_down_tube_back = beam_center_tube_calculation_function (Event=event, $
+      MODE='down', BANK='back', DATA=data)
+      
+    ;  ;remove -1 value from up and down arrays
+    bc_up_tube_front_array = cleanup_bc_array(bc_up_tube_front)
+    bc_up_tube_back_array  = cleanup_bc_array(bc_up_tube_back)
+    bc_down_tube_front_array = cleanup_bc_array(bc_down_tube_front)
+    bc_down_tube_back_array  = cleanup_bc_array(bc_down_tube_back)
     
-  bc_down_tube_front = beam_center_tube_calculation_function (Event, $
-    MODE='down', BANK='front', DATA=data)
+    ;  ;calculate average value for front and back tubes
+    big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
+    big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
     
-  bc_down_tube_back = beam_center_tube_calculation_function (Event, $
-    MODE='down', BANK='back', DATA=data)
+    bc_tube_front = MEAN(big_front_array) + (*global).calculation_range_offset.tube
+    bc_tube_back = MEAN(big_back_array) + (*global).calculation_range_offset.tube
     
-  ;  ;remove -1 value from up and down arrays
-  bc_up_tube_front_array = cleanup_bc_array(bc_up_tube_front)
-  bc_up_tube_back_array  = cleanup_bc_array(bc_up_tube_back)
-  bc_down_tube_front_array = cleanup_bc_array(bc_down_tube_front)
-  bc_down_tube_back_array  = cleanup_bc_array(bc_down_tube_back)
+    ;put value in its box
+    mean_value = MEAN([bc_tube_front, bc_tube_back])
+    putTextFieldValue, Event, 'beam_center_tube_center_value', $
+      STRCOMPRESS(mean_value,/REMOVE_ALL)
+      
+  ENDIF ELSE BEGIN
   
-  ;  ;calculate average value for front and back tubes
-  big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
-  big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
-  
-  bc_tube_front = MEAN(big_front_array) + (*global).calculation_range_offset.tube
-  bc_tube_back = MEAN(big_back_array) + (*global).calculation_range_offset.tube
-
-  ;put value in its box
-  mean_value = MEAN([bc_tube_front, bc_tube_back])
-  putTextFieldValue, Event, 'beam_center_tube_center_value', $
-    STRCOMPRESS(mean_value,/REMOVE_ALL)
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+    
+    bc_up_tube_front = beam_center_tube_calculation_function (base=base, $
+      MODE='up', BANK='front', DATA=data)
+      
+    bc_up_tube_back = beam_center_tube_calculation_function (base=base, $
+      MODE='up', BANK='back', DATA=data)
+      
+    bc_down_tube_front = beam_center_tube_calculation_function (base=base, $
+      MODE='down', BANK='front', DATA=data)
+      
+    bc_down_tube_back = beam_center_tube_calculation_function (base=base, $
+      MODE='down', BANK='back', DATA=data)
+      
+    ;  ;remove -1 value from up and down arrays
+    bc_up_tube_front_array = cleanup_bc_array(bc_up_tube_front)
+    bc_up_tube_back_array  = cleanup_bc_array(bc_up_tube_back)
+    bc_down_tube_front_array = cleanup_bc_array(bc_down_tube_front)
+    bc_down_tube_back_array  = cleanup_bc_array(bc_down_tube_back)
+    
+    ;  ;calculate average value for front and back tubes
+    big_front_array = [bc_up_tube_front_array, bc_down_tube_front_array]
+    big_back_array  = [bc_up_tube_back_array, bc_down_tube_back_array]
+    
+    bc_tube_front = MEAN(big_front_array) + (*global).calculation_range_offset.tube
+    bc_tube_back = MEAN(big_back_array) + (*global).calculation_range_offset.tube
+    
+    ;put value in its box
+    mean_value = MEAN([bc_tube_front, bc_tube_back])
+    putTextFieldValueMainBase, base, UNAME='beam_center_tube_center_value', $
+      STRCOMPRESS(mean_value,/REMOVE_ALL)
+      
+  ENDELSE
   
 END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;Work on PIXELS
-PRO beam_center_pixel_calculation, Event, DATA=data
+PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN ;event
   
-  ;  print, 'offset: ' + string((*global).calculation_range_offset.pixel)
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    ;calculate beam center pixel starting at the bottom (pixel_min)
+    bc_up_pixel = beam_center_pixel_calculation_function(Event=event, MODE='up', $
+      DATA=data)
+      
+    ;  ;calculate beam center pixel starting at the top (pixel_max)
+    bc_down_pixel = beam_center_pixel_calculation_function(Event=event, MODE='down', $
+      DATA=data)
+      
+  ENDIF ELSE BEGIN
   
-  ;calculate beam center pixel starting at the bottom (pixel_min)
-  bc_up_pixel = beam_center_pixel_calculation_function(Event, MODE='up', $
-    DATA=data)
-    
-  ;  ;calculate beam center pixel starting at the top (pixel_max)
-  bc_down_pixel = beam_center_pixel_calculation_function(Event, MODE='down', $
-    DATA=data)
-    
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+ 
+    ;calculate beam center pixel starting at the bottom (pixel_min)
+    bc_up_pixel = beam_center_pixel_calculation_function(base=base, MODE='up', $
+      DATA=data)
+      
+    ;  ;calculate beam center pixel starting at the top (pixel_max)
+    bc_down_pixel = beam_center_pixel_calculation_function(base=base, MODE='down', $
+      DATA=data)
+      
+  ENDELSE
+  
   ;remove -1 value from up and down arrays
   bc_up_pixel_array = cleanup_bc_array(bc_up_pixel)
   bc_down_pixel_array = cleanup_bc_array(bc_down_pixel)
@@ -136,7 +222,12 @@ PRO beam_center_pixel_calculation, Event, DATA=data
   bc_pixel = MEAN(big_bc_array) + (*global).calculation_range_offset.pixel
   
   ;put value in its box
-  putTextFieldValue, Event, 'beam_center_pixel_center_value', $
-    STRCOMPRESS(bc_pixel,/REMOVE_ALL)
-    
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    putTextFieldValue, Event, 'beam_center_pixel_center_value', $
+      STRCOMPRESS(bc_pixel,/REMOVE_ALL)
+  ENDIF ELSE BEGIN
+    putTextFieldValueMainBase, base, uname='beam_center_pixel_center_value', $
+      STRCOMPRESS(bc_pixel,/REMOVE_ALL)
+  ENDELSE
+  
 END

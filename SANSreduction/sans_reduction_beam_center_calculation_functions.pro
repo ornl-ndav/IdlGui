@@ -46,38 +46,73 @@ FUNCTION extrapolate_exact_element, left_element_intensity, data, element_right
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION retrieve_calculation_range, Event
+FUNCTION retrieve_calculation_range, Event=event, base=base
 
   ON_IOERROR, error
   
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN ;with event
   
-  data = (*(*global).tt_zoom_data)
-  min_tube_plotted  = (*global).min_tube_plotted
-  min_pixel_plotted = (*global).min_pixel_plotted
-  
-  ;calculation range
-  tube1  = FIX(getTextFieldValue(Event,'tube1_button_value'))
-  tube2  = FIX(getTextFieldValue(Event,'tube2_button_value'))
-  pixel1 = FIX(getTextFieldValue(Event,'pixel1_button_value'))
-  pixel2 = FIX(getTextFieldValue(Event,'pixel2_button_value'))
-  
-  tube_min  = MIN([tube1,tube2], MAX=tube_max)
-  pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
-  
-  (*global).calculation_range_offset.pixel = pixel_min
-  (*global).calculation_range_offset.tube  = tube_min
-  
-  tube_min_offset  = tube_min - min_tube_plotted
-  tube_max_offset  = tube_max - min_tube_plotted
-  pixel_min_offset = pixel_min - min_pixel_plotted
-  pixel_max_offset = pixel_max - min_pixel_plotted
-  
-  array = data[tube_min_offset:tube_max_offset, $
-    pixel_min_offset:pixel_max_offset]
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
     
-  RETURN, array
+    data = (*(*global).tt_zoom_data)
+    min_tube_plotted  = (*global).min_tube_plotted
+    min_pixel_plotted = (*global).min_pixel_plotted
+    
+    ;calculation range
+    tube1  = FIX(getTextFieldValue(Event,'tube1_button_value'))
+    tube2  = FIX(getTextFieldValue(Event,'tube2_button_value'))
+    pixel1 = FIX(getTextFieldValue(Event,'pixel1_button_value'))
+    pixel2 = FIX(getTextFieldValue(Event,'pixel2_button_value'))
+    
+    tube_min  = MIN([tube1,tube2], MAX=tube_max)
+    pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
+    
+    (*global).calculation_range_offset.pixel = pixel_min
+    (*global).calculation_range_offset.tube  = tube_min
+    
+    tube_min_offset  = tube_min - min_tube_plotted
+    tube_max_offset  = tube_max - min_tube_plotted
+    pixel_min_offset = pixel_min - min_pixel_plotted
+    pixel_max_offset = pixel_max - min_pixel_plotted
+    
+    array = data[tube_min_offset:tube_max_offset, $
+      pixel_min_offset:pixel_max_offset]
+      
+    RETURN, array
+    
+  ENDIF ELSE BEGIN ;with wbase
+  
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+    
+    data = (*(*global).tt_zoom_data)
+    min_tube_plotted  = (*global).min_tube_plotted
+    min_pixel_plotted = (*global).min_pixel_plotted
+    
+    ;calculation range
+    tube1  = FIX(getTextFieldValue_from_base(base,'tube1_button_value'))
+    tube2  = FIX(getTextfieldValue_from_base(base,'tube2_button_value'))
+    pixel1 = FIX(getTextFieldValue_from_base(base,'pixel1_button_value'))
+    pixel2 = FIX(getTextFieldValue_from_base(base,'pixel2_button_value'))
+    
+    tube_min  = MIN([tube1,tube2], MAX=tube_max)
+    pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
+    
+    (*global).calculation_range_offset.pixel = pixel_min
+    (*global).calculation_range_offset.tube  = tube_min
+    
+    tube_min_offset  = tube_min - min_tube_plotted
+    tube_max_offset  = tube_max - min_tube_plotted
+    pixel_min_offset = pixel_min - min_pixel_plotted
+    pixel_max_offset = pixel_max - min_pixel_plotted
+    
+    array = data[tube_min_offset:tube_max_offset, $
+      pixel_min_offset:pixel_max_offset]
+      
+    RETURN, array
+    
+  ENDELSE
   
   error:
   RETURN, ''
@@ -89,14 +124,20 @@ END
 ;data are the array of the 2d data counts vs pixels/tubes for only the range
 ;specified in the calculation range
 ;mode is 'tube' or 'pixel'
-FUNCTION find_equivalent_right_element_from_element_on_left_side, Event, $
+FUNCTION find_equivalent_right_element_from_element_on_left_side, Event=event, $
+    base=base,$
     data, $
     element, $
     MODE=mode, $
     DATA_OFFSET = data_offset
     
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+  ENDELSE
   
   ideal_beam_center = (*global).ideal_beam_center
   IF (MODE EQ 'tube') THEN BEGIN
@@ -165,14 +206,20 @@ FUNCTION find_equivalent_right_element_from_element_on_left_side, Event, $
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION find_equivalent_left_element_from_element_on_right_side, Event, $
+FUNCTION find_equivalent_left_element_from_element_on_right_side, Event=event, $
+    base=base,$
     data, $
     element, $
     MODE=mode, $
     DATA_OFFSET = data_offset
     
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+  ENDELSE
   
   ideal_beam_center = (*global).ideal_beam_center
   IF (MODE EQ 'tube') THEN BEGIN
@@ -243,25 +290,50 @@ END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION beam_center_pixel_calculation_function, Event, $
+FUNCTION beam_center_pixel_calculation_function, Event=event, $
+    base=base,$
     MODE=mode, $
     DATA=data
     
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
   
-  ;initialize bc_pixel
-  bc_pixel = 0
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+    
+    ;initialize bc_pixel
+    bc_pixel = 0
+    
+    ;get number of tubes (how many times we need to repeat the calculation)
+    nbr_tubes = (size(data))(1)
+    nbr_pixels = (size(data))(2)
+    
+    ;nbr of points to use in calculation
+    nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
+    
+    ;get offset of first pixel to used
+    first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
+    
+  ENDIF ELSE BEGIN
   
-  ;get number of tubes (how many times we need to repeat the calculation)
-  nbr_tubes = (size(data))(1)
-  nbr_pixels = (size(data))(2)
-  
-  ;nbr of points to use in calculation
-  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
-  
-  ;get offset of first pixel to used
-  first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+
+    ;initialize bc_pixel
+    bc_pixel = 0
+    
+    ;get number of tubes (how many times we need to repeat the calculation)
+    nbr_tubes = (size(data))(1)
+    nbr_pixels = (size(data))(2)
+    
+    ;nbr of points to use in calculation
+    nbr_cal = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_nbr_points_to_use'))
+      
+    ;get offset of first pixel to used
+    first_offset = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_peak_offset'))
+      
+  ENDELSE
   
   array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
   
@@ -285,9 +357,15 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
             IF (pixel_to_use GT 0) THEN BEGIN
-              right_pixel = $
-                find_equivalent_right_element_from_element_on_left_side(Event, $
-                data_IvsPixel, pixel_to_use, MODE='pixel')
+              IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+                right_pixel = $
+                  find_equivalent_right_element_from_element_on_left_side(Event=event, $
+                  data_IvsPixel, pixel_to_use, MODE='pixel')
+              ENDIF ELSE BEGIN
+                right_pixel = $
+                  find_equivalent_right_element_from_element_on_left_side(base=base, $
+                  data_IvsPixel, pixel_to_use, MODE='pixel')
+              ENDELSE
               beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
               array_of_pixels[i,index] = beam_center
             ENDIF ELSE BEGIN
@@ -306,9 +384,15 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
             IF (pixel_to_use LT nbr_pixels) THEN BEGIN
-              left_pixel = $
-                find_equivalent_left_element_from_element_on_right_side(Event, $
-                data_IvsPixel, pixel_to_use, MODE='pixel')
+              IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+                left_pixel = $
+                  find_equivalent_left_element_from_element_on_right_side(Event=event, $
+                  data_IvsPixel, pixel_to_use, MODE='pixel')
+              ENDIF ELSE BEGIN
+                left_pixel = $
+                  find_equivalent_left_element_from_element_on_right_side(base=base, $
+                  data_IvsPixel, pixel_to_use, MODE='pixel')
+              ENDELSE
               beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
               array_of_pixels[i,index] = beam_center
             ENDIF ELSE BEGIN
@@ -330,50 +414,98 @@ END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-FUNCTION beam_center_tube_calculation_function, Event, $
+FUNCTION beam_center_tube_calculation_function, Event=event, $
+    base=base,$
     MODE = mode, $
     DATA = data, $
     BANK = bank
     
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN ;event
   
-  ;initialize bc_tube
-  bc_tube = 0
-  
-  ;get number of tubes (how many times we need to repeat the calculation)
-  nbr_pixels = (size(data))(2)
-  nbr_tubes  = (size(data))(1)
-  
-  ;nbr of points to use in calculation
-  nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
-  
-  ;get offset of first tube to used
-  first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
-  
-  array_of_tubes = FLTARR(nbr_cal, nbr_pixels)
-  
-  tube_offset = (*global).calculation_range_offset.tube
-  
-  local_nbr_tubes = FIX(nbr_tubes)/2
-  DATA_LOCAL = INTARR(local_nbr_tubes, nbr_pixels)
-  
-  data_offset = 0
-  IF ((first_offset MOD 2) EQ 0) THEN BEGIN ;even number
-    CASE (bank) OF
-      'front': data_offset = 0
-      'back' : data_offset = 1
-    ENDCASE
-  ENDIF ELSE BEGIN
-    CASE (bank) OF
-      'front': data_offset = 1
-      'back' : data_offset = 0
-    ENDCASE
-  ENDELSE
-  
-  smooth_parameter = FIX(getTextFieldValue(Event, $
-    'beam_center_smooth_parameter'))
+    ;get global structure
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
     
+    ;initialize bc_tube
+    bc_tube = 0
+    
+    ;get number of tubes (how many times we need to repeat the calculation)
+    nbr_pixels = (size(data))(2)
+    nbr_tubes  = (size(data))(1)
+    
+    ;nbr of points to use in calculation
+    nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
+    
+    ;get offset of first tube to used
+    first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
+    
+    array_of_tubes = FLTARR(nbr_cal, nbr_pixels)
+    
+    tube_offset = (*global).calculation_range_offset.tube
+    
+    local_nbr_tubes = FIX(nbr_tubes)/2
+    DATA_LOCAL = INTARR(local_nbr_tubes, nbr_pixels)
+    
+    data_offset = 0
+    IF ((first_offset MOD 2) EQ 0) THEN BEGIN ;even number
+      CASE (bank) OF
+        'front': data_offset = 0
+        'back' : data_offset = 1
+      ENDCASE
+    ENDIF ELSE BEGIN
+      CASE (bank) OF
+        'front': data_offset = 1
+        'back' : data_offset = 0
+      ENDCASE
+    ENDELSE
+    
+    smooth_parameter = FIX(getTextFieldValue(Event, $
+      'beam_center_smooth_parameter'))
+      
+  ENDIF ELSE BEGIN ;base
+  
+    ;get global structure
+    WIDGET_CONTROL,base,GET_UVALUE=global
+    
+    ;initialize bc_tube
+    bc_tube = 0
+    
+    ;get number of tubes (how many times we need to repeat the calculation)
+    nbr_pixels = (size(data))(2)
+    nbr_tubes  = (size(data))(1)
+    
+    ;nbr of points to use in calculation
+    nbr_cal = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_nbr_points_to_use'))
+      
+    ;get offset of first tube to used
+    first_offset = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_peak_offset'))
+      
+    array_of_tubes = FLTARR(nbr_cal, nbr_pixels)
+    
+    tube_offset = (*global).calculation_range_offset.tube
+    
+    local_nbr_tubes = FIX(nbr_tubes)/2
+    DATA_LOCAL = INTARR(local_nbr_tubes, nbr_pixels)
+    
+    data_offset = 0
+    IF ((first_offset MOD 2) EQ 0) THEN BEGIN ;even number
+      CASE (bank) OF
+        'front': data_offset = 0
+        'back' : data_offset = 1
+      ENDCASE
+    ENDIF ELSE BEGIN
+      CASE (bank) OF
+        'front': data_offset = 1
+        'back' : data_offset = 0
+      ENDCASE
+    ENDELSE
+    
+    smooth_parameter = FIX(getTextFieldValue_from_base(base, $
+      'beam_center_smooth_parameter'))
+      
+  ENDELSE ;end of event or base
+  
   index = data_offset
   i = 0
   WHILE (index LT nbr_tubes AND $
@@ -405,12 +537,21 @@ FUNCTION beam_center_tube_calculation_function, Event, $
             IF (tube_to_use LT 0) THEN BEGIN
               array_of_tubes[*,index] = -1
             ENDIF ELSE BEGIN
-              right_tube =  $
-                find_equivalent_right_element_from_element_on_left_side(Event, $
-                data_IvsTube, $
-                tube_to_use, $
-                MODE='tube', $
-                DATA_OFFSET = data_offset)
+              IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+                right_tube =  $
+                  find_equivalent_right_element_from_element_on_left_side(Event=event, $
+                  data_IvsTube, $
+                  tube_to_use, $
+                  MODE='tube', $
+                  DATA_OFFSET = data_offset)
+              ENDIF ELSE BEGIN
+                right_tube =  $
+                  find_equivalent_right_element_from_element_on_left_side(base=base, $
+                  data_IvsTube, $
+                  tube_to_use, $
+                  MODE='tube', $
+                  DATA_OFFSET = data_offset)
+              ENDELSE
               IF (right_tube LT 0) THEN BEGIN
                 beam_center = -1
               ENDIF ELSE BEGIN
@@ -431,12 +572,21 @@ FUNCTION beam_center_tube_calculation_function, Event, $
           FOR i=0,(nbr_cal-1) DO BEGIN
             tube_to_use = down_last_tube_to_used_offset + first_offset + i
             IF (tube_to_use LT local_nbr_tubes) THEN BEGIN
-              left_tube = $
-                find_equivalent_left_element_from_element_on_right_side(Event, $
-                data_IvsTube, $
-                tube_to_use, $
-                MODE='tube', $
-                DATA_OFFSET = data_offset)
+              IF (N_ELEMENTS(Event) NE 0) THEN BEGIN
+                left_tube = $
+                  find_equivalent_left_element_from_element_on_right_side(Event=event, $
+                  data_IvsTube, $
+                  tube_to_use, $
+                  MODE='tube', $
+                  DATA_OFFSET = data_offset)
+              ENDIF ELSE BEGIN
+                left_tube = $
+                  find_equivalent_left_element_from_element_on_right_side(base=base, $
+                  data_IvsTube, $
+                  tube_to_use, $
+                  MODE='tube', $
+                  DATA_OFFSET = data_offset)
+              ENDELSE
               IF (left_tube LT 0) THEN BEGIN
                 beam_center = -1
               ENDIF ELSE BEGIN
