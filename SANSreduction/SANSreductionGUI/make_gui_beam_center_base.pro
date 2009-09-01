@@ -493,6 +493,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   value = WIDGET_LABEL(row2_right_row3,$
     VALUE = 'N/A',$
     SCR_XSIZE = 90,$
+    UNAME = 'beam_center_tube_center_value',$
     /ALIGN_LEFT)
   space = WIDGET_LABEL(row2_right_row3,$
     VALUE = '   ')

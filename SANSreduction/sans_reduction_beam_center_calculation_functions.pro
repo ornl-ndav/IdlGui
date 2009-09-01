@@ -280,7 +280,7 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
     
       'up': BEGIN
         up_last_pixel_to_used_offset = $
-          getLastElementOfIncreasingCounts(data_IvsPixel)
+          getLastElementOfIncreasingCounts(data_IvsPixel, MODE='pixel')
         IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
@@ -301,7 +301,7 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
       
       'down': BEGIN
         down_last_pixel_to_used_offset = $
-          getLastElementOfDecreasingCounts(data_IvsPixel)
+          getLastElementOfDecreasingCounts(data_IvsPixel, MODE='pixel')
         IF (down_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
@@ -373,8 +373,7 @@ FUNCTION beam_center_tube_calculation_function, Event, $
   
   smooth_parameter = FIX(getTextFieldValue(Event, $
     'beam_center_smooth_parameter'))
-  data = smooth(data, smooth_parameter)
-  
+    
   index = data_offset
   i = 0
   WHILE (index LT nbr_tubes AND $
@@ -383,6 +382,8 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     i++
     index += 2
   ENDWHILE
+  
+  data_local = smooth(data_local, smooth_parameter)
   
   index = 0
   WHILE (index LT nbr_pixels) DO BEGIN
@@ -397,7 +398,7 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     
       'up': BEGIN
         up_last_tube_to_used_offset = $
-          getLastElementOfIncreasingCounts(data_IvsTube)
+          getLastElementOfIncreasingCounts(data_IvsTube, MODE='tube')
         IF (up_last_tube_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             tube_to_use = up_last_tube_to_used_offset - first_offset - i
@@ -410,7 +411,11 @@ FUNCTION beam_center_tube_calculation_function, Event, $
                 tube_to_use, $
                 MODE='tube', $
                 DATA_OFFSET = data_offset)
-              beam_center = (FLOAT(tube_to_use) + FLOAT(right_tube)) / 2
+              IF (right_tube LT 0) THEN BEGIN
+                beam_center = -1
+              ENDIF ELSE BEGIN
+                beam_center = (FLOAT(tube_to_use) + FLOAT(right_tube)) / 2
+              ENDELSE
               array_of_tubes[i,index] = beam_center
             ENDELSE
           ENDFOR
@@ -420,8 +425,8 @@ FUNCTION beam_center_tube_calculation_function, Event, $
       END
       'down': BEGIN
         down_last_tube_to_used_offset = $
-          getLastElementOfDecreasingCounts(data_IvsTube)
-          print, 'down_last_tube_to_used_offset: ' + string(down_last_tube_to_used_offset)
+          getLastElementOfDecreasingCounts(data_IvsTube, MODE='tube')
+        ;          print, 'down_last_tube_to_used_offset: ' + string(down_last_tube_to_used_offset)
         IF (down_last_tube_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             tube_to_use = down_last_tube_to_used_offset + first_offset + i
@@ -432,7 +437,11 @@ FUNCTION beam_center_tube_calculation_function, Event, $
                 tube_to_use, $
                 MODE='tube', $
                 DATA_OFFSET = data_offset)
-              beam_center = (FLOAT(tube_to_use) + FLOAT(left_tube)) / 2
+              IF (left_tube LT 0) THEN BEGIN
+                beam_center = -1
+              ENDIF ELSE BEGIN
+                beam_center = (FLOAT(tube_to_use) + FLOAT(left_tube)) / 2
+              ENDELSE
               array_of_tubes[i,index] = beam_center
             ENDIF ELSE BEGIN
               array_of_tubes[*,index] = 1
@@ -448,7 +457,5 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     index++
   ENDWHILE
   
-  print
-  ;print, 2*array_of_tubes+data_offset
   RETURN, 2*array_of_tubes + data_offset
 END
