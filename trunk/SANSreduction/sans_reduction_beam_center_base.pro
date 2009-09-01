@@ -917,6 +917,8 @@ PRO launch_beam_center_base, main_event
   XMANAGER, "launch_beam_center_base", wBase1, $
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
+  beam_center_calculation, BASE=wbase1
+  
 END
 
 
