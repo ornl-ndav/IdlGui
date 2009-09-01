@@ -727,6 +727,42 @@ PRO launch_beam_center_base_event, Event
     END
     
     ;--------------------------------------------------------------------------
+    ;Cursor Information (manual input of tube and pixel)
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_cursor_info_tube_value'): BEGIN
+      tube_data  = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_tube_value'))
+      pixel_data = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_pixel_value'))
+      counts = getBeamCenterCounts(Event, tube_data, pixel_data)
+      putTextFieldValue, Event, 'beam_center_cursor_info_counts_value', $
+        STRCOMPRESS(counts,/REMOVE_ALL)
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+      
+    END
+    
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='beam_center_cursor_info_pixel_value'): BEGIN
+      tube_data  = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_tube_value'))
+      pixel_data = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_pixel_value'))
+      counts = getBeamCenterCounts(Event, tube_data, pixel_data)
+      putTextFieldValue, Event, 'beam_center_cursor_info_counts_value', $
+        STRCOMPRESS(counts,/REMOVE_ALL)
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+      
+    END
+    
+    ;--------------------------------------------------------------------------
     ;range calculation, beam stop region....etc TAB
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_center_tab'): BEGIN
       prev_tab_selected = (*global).prev_tab_selected
@@ -837,8 +873,8 @@ PRO launch_beam_center_base, main_event
     color: [0,255,0], $ ;blue but I want GREEN
     thick: 2}, $
     
-    calculation_range_default: {tube1: 75, $
-    tube2: 120, $
+    calculation_range_default: {tube1: 66, $
+    tube2: 133, $
     pixel1: 100, $
     pixel2: 160, $
     color: [255,255,255], $
