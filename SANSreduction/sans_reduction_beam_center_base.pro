@@ -63,6 +63,7 @@ PRO launch_beam_center_base_event, Event
             replot_calculation_range_cursor, Event
             plot_calculation_range_selection, EVENT=Event
             display_counts_vs_pixel_and_tube_live, Event
+            beam_center_plot, Event=event
           END
           2: BEGIN ;cursor info
             tube_data  = FIX(getBeamCenterTubeData_from_device(Event.x, $
@@ -81,6 +82,7 @@ PRO launch_beam_center_base_event, Event
             plot_live_cursor, Event
             plot_saved_live_cursor, Event
             plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+            beam_center_plot, Event=event
           END
           ELSE:
         ENDCASE
@@ -487,6 +489,7 @@ PRO launch_beam_center_base_event, Event
               plot_beam_center_background, Event
               plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               replot_beam_center_beam_stop, Event
+              beam_center_plot, Event=event
             END
             2: BEGIN
               putTextFieldValue, Event, $
@@ -497,6 +500,7 @@ PRO launch_beam_center_base_event, Event
               plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               replot_beam_center_beam_stop, Event
               plot_saved_live_cursor, Event
+              beam_center_plot, Event=event
             END
             ELSE:
           ENDCASE
@@ -786,7 +790,8 @@ PRO launch_beam_center_base_event, Event
     ;CALCULATE BEAM CENTER
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='beam_center_run_calculation_button'): BEGIN
-      beam_center_calculation, Event
+      beam_center_calculation, Event=event
+      beam_center_plot, Event=event
     END
     
     ;CANCEL button
@@ -918,6 +923,7 @@ PRO launch_beam_center_base, main_event
     GROUP_LEADER = ourGroup, /NO_BLOCK
     
   beam_center_calculation, BASE=wbase1
+  beam_center_plot, Base=wbase1
   
 END
 

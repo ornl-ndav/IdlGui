@@ -236,10 +236,63 @@ PRO plot_iSurface_tab1, BASE=base, EVENT=event
   ;  CHARSIZE = 1.5
   ;Surface, tt_zoom_data, /LEGO, COLOR=FSC_COLOR('blue'), /NoErase, $
   ;  XSTYLE = 4, YSTYLE = 4, ZSTYLE = 4
-   CONTOUR, tt_zoom_data, NLEVELS=2
-    
-    
+  CONTOUR, tt_zoom_data, NLEVELS=2
+  
+  
   DEVICE, decomposed=0
   
+END
+
+;------------------------------------------------------------------------------
+PRO beam_center_plot, Base=base, Event=event
+
+  DEVICE, DECOMPOSED=1
+  
+  uname = 'beam_center_main_draw'
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+  
+    WIDGET_CONTROL, event.top, GET_UVALUE=global
+    id = WIDGET_INFO(Event.top,find_by_uname=uname)
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    
+    bc_tube = getTextFieldValue(event, 'beam_center_tube_center_value')
+    bc_pixel = getTextFieldValue(event, 'beam_center_pixel_center_value')
+    
+  ENDIF ELSE BEGIN
+  
+    id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+    WIDGET_CONTROL,base,GET_UVALUE=global
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    
+    bc_tube = getTextFieldValue_from_base(base, $
+      'beam_center_tube_center_value')
+    bc_pixel = getTextFieldValue_from_base(base, $
+      'beam_center_pixel_center_value')
+      
+  ENDELSE
+  
+  IF (bc_tube NE 'N/A' AND $
+    bc_pixel NE 'N/A') THEN BEGIN
+    
+    bc_tube_value = FIX(bc_tube)
+    bc_pixel_value = FIX(bc_pixel)
+    
+    tube  = getBeamCenterTubeDevice_from_data(bc_tube_value, global)
+    pixel = getBeamCenterPixelDevice_from_data(bc_pixel_value, global)
+    
+    color = FSC_COLOR('white')
+    thick = 3
+    
+    PLOTS, tube, pixel, /DEVICE, COLOR=color
+    PLOTS, tube, pixel+1, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+    PLOTS, tube+1, pixel+1, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+    PLOTS, tube+1, pixel, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+    PLOTS, tube, pixel, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+    
+  ENDIF
+  
+  DEVICE, DECOMPOSED=0
   
 END
