@@ -298,6 +298,17 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOTS, bs_calculation_tube_max, tube_data[bs_cal_tube_max_offset], $
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
+    ;display tube beam center found (if any)
+    bc_tube = getTextFieldValue(Event,'beam_center_tube_center_value')
+    IF (bc_tube NE 'N/A') THEN BEGIN
+      bc_tube_value = FLOAT(bc_tube)
+      max_counts = MAX(tube_data)
+      PLOTS, bc_tube_value, 0, /DATA
+      PLOTS, bc_tube_value, 2*max_counts, /DATA, /CONTINUE, $
+        COLOR = FSC_COLOR('blue'), $
+        LINESTYLE=0
+    ENDIF
+    
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -326,6 +337,17 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
     PLOTS, bs_calculation_pixel_max, pixel_data[bs_cal_pixel_max_offset], $
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
+    ;display pixel beam center found (if any)
+    bc_pixel = getTextFieldValue(Event,'beam_center_pixel_center_value')
+    IF (bc_pixel NE 'N/A') THEN BEGIN
+      bc_pixel_value = FLOAT(bc_pixel)
+      max_counts = MAX(pixel_data)
+      PLOTS, bc_pixel_value, 0, /DATA
+      PLOTS, bc_pixel_value, 2*max_counts, /DATA, /CONTINUE, $
+        COLOR = FSC_COLOR('blue'), $
+        LINESTYLE=0
+    ENDIF
+    
   ENDIF ELSE BEGIN
   
     ;plot counts vs tube
@@ -545,6 +567,17 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOTS, bs_calculation_tube_max, tube_data[bs_cal_tube_max_offset], $
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
+    ;display tube beam center found (if any)
+    bc_tube = getTextFieldValue(Event,'beam_center_tube_center_value')
+    IF (bc_tube NE 'N/A') THEN BEGIN
+      bc_tube_value = FLOAT(bc_tube)
+      max_counts = MAX(tube_data)
+      PLOTS, bc_tube_value, 0, /DATA
+      PLOTS, bc_tube_value, 2*max_counts, /DATA, /CONTINUE, $
+        COLOR = FSC_COLOR('blue'), $
+        LINESTYLE=0
+    ENDIF
+    
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
@@ -573,6 +606,17 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     PLOTS, bs_calculation_pixel_max, pixel_data[bs_cal_pixel_max_offset], $
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
+    ;display pixel beam center found (if any)
+    bc_pixel = getTextFieldValue(Event,'beam_center_pixel_center_value')
+    IF (bc_pixel NE 'N/A') THEN BEGIN
+      bc_pixel_value = FLOAT(bc_pixel)
+      max_counts = MAX(pixel_data)
+      PLOTS, bc_pixel_value, 0, /DATA
+      PLOTS, bc_pixel_value, 2*max_counts, /DATA, /CONTINUE, $
+        COLOR = FSC_COLOR('blue'), $
+        LINESTYLE=0
+    ENDIF
+    
   ENDIF ELSE BEGIN
   
     ;plot counts vs tube
