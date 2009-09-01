@@ -32,14 +32,18 @@
 ;
 ;==============================================================================
 
-FUNCTION getLastElementOfIncreasingCounts, data
+FUNCTION getLastElementOfIncreasingCounts, data, MODE=mode
 
   nbr_data_values = N_ELEMENTS(data)
   
   counts_previous = data[0]
   counts = 0
   
-  big_step = 10
+  IF (mode EQ 'pixel') THEN BEGIN
+    big_step = 15
+  ENDIF ELSE BEGIN
+    big_step = 10
+  ENDELSE
   small_step = 5
   
   error = 0
@@ -48,7 +52,7 @@ FUNCTION getLastElementOfIncreasingCounts, data
     CATCH,/CANCEL
     RETURN, -1
   ENDIF
-
+  
   index = 0
   WHILE (index LT nbr_data_values-(big_step+1)) DO BEGIN
     counts = data[index+big_step]
@@ -66,14 +70,18 @@ FUNCTION getLastElementOfIncreasingCounts, data
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getLastElementOfDecreasingCounts, data
+FUNCTION getLastElementOfDecreasingCounts, data, MODE=mode
 
   nbr_data_values = N_ELEMENTS(data)
   
   counts_previous = data[nbr_data_values-1]
   counts = 0
   
-  big_step = 10
+  IF (mode EQ 'pixel') THEN BEGIN
+    big_step = 15
+  ENDIF ELSE BEGIN
+    big_step = 10
+  ENDELSE
   small_step = 5
   
   error = 0
@@ -83,23 +91,20 @@ FUNCTION getLastElementOfDecreasingCounts, data
     RETURN, -1
   ENDIF
   
-  print, '-------------------'
-  
   index = nbr_data_values-1
   WHILE (index GT (big_step+1)) DO BEGIN
     counts = data[index-big_step]
-    print, '(index:' + string(index) + '), counts: ' + string(counts) + ', counts_previous: ' + string(counts_previous)
+    ;    print, '(index:' + string(index) + '), counts: ' + string(counts) + ', counts_previous: ' + string(counts_previous)
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
       sub_array = data[index-big_step:index]
       max = MAX(sub_array, max_index)
-      print, ' --> return value: ' + string(index-big_step+max_index)
+      ;      print, ' --> return value: ' + string(index-big_step+max_index)
       RETURN, index - big_step + max_index
     ENDIF ELSE BEGIN
       counts_previous = counts
     ENDELSE
     index -= small_step
   ENDWHILE
-  print
   RETURN, -1
 END
 
