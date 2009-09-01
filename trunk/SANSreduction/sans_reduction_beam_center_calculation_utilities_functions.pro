@@ -32,19 +32,25 @@
 ;
 ;==============================================================================
 
-FUNCTION getLastPixelOfIncreasingCounts, data
+FUNCTION getLastElementOfIncreasingCounts, data
 
-  pixel = 0
-  nbr_pixels = N_ELEMENTS(data)
+  nbr_data_values = N_ELEMENTS(data)
   
   counts_previous = data[0]
   counts = 0
   
-  big_step = 20
+  big_step = 10
   small_step = 5
   
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, -1
+  ENDIF
+
   index = 0
-  WHILE (index LT nbr_pixels-(big_step+1)) DO BEGIN
+  WHILE (index LT nbr_data_values-(big_step+1)) DO BEGIN
     counts = data[index+big_step]
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
       sub_array = data[index:index+big_step]
@@ -60,31 +66,40 @@ FUNCTION getLastPixelOfIncreasingCounts, data
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getLastPixelOfDecreasingCounts, data
+FUNCTION getLastElementOfDecreasingCounts, data
 
-  pixel = 0
-  nbr_pixels = N_ELEMENTS(data)
+  nbr_data_values = N_ELEMENTS(data)
   
-  counts_previous = data[nbr_pixels-1]
+  counts_previous = data[nbr_data_values-1]
   counts = 0
   
-  big_step = 20
+  big_step = 10
   small_step = 5
   
-  index = nbr_pixels-1
-  WHILE (index GT nbr_pixels-(big_step-1)) DO BEGIN
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, -1
+  ENDIF
+  
+  print, '-------------------'
+  
+  index = nbr_data_values-1
+  WHILE (index GT (big_step+1)) DO BEGIN
     counts = data[index-big_step]
+    print, '(index:' + string(index) + '), counts: ' + string(counts) + ', counts_previous: ' + string(counts_previous)
     IF (counts LT counts_previous) THEN BEGIN ;we started to move down
       sub_array = data[index-big_step:index]
       max = MAX(sub_array, max_index)
+      print, ' --> return value: ' + string(index-big_step+max_index)
       RETURN, index - big_step + max_index
     ENDIF ELSE BEGIN
       counts_previous = counts
     ENDELSE
     index -= small_step
   ENDWHILE
-  
+  print
   RETURN, -1
 END
-  
-  
+

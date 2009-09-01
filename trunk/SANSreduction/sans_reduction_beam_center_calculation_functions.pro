@@ -32,16 +32,16 @@
 ;
 ;==============================================================================
 
-;This function extrapolates the exact right pixel position that corresponds
-;to the counts of the left pixel
-FUNCTION extrapolate_exact_pixel, left_pixel_intensity, data, pixel_right
+;This function extrapolates the exact right element position that corresponds
+;to the counts of the left element
+FUNCTION extrapolate_exact_element, left_element_intensity, data, element_right
 
-  Num1 = FLOAT(data(pixel_right + 1) - data(pixel_right))
-  Num2 = FLOAT(left_pixel_intensity - data(pixel_right))
+  Num1 = FLOAT(data(element_right + 1) - data(element_right))
+  Num2 = FLOAT(left_element_intensity - data(element_right))
   
-  exact_right_pixel = FLOAT(pixel_right) + Num2/Num1
+  exact_right_element = FLOAT(element_right) + Num2/Num1
   
-  RETURN, exact_right_pixel
+  RETURN, exact_right_element
   
 END
 
@@ -67,6 +67,7 @@ FUNCTION retrieve_calculation_range, Event
   pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
   
   (*global).calculation_range_offset.pixel = pixel_min
+  (*global).calculation_range_offset.tube  = tube_min
   
   tube_min_offset  = tube_min - min_tube_plotted
   tube_max_offset  = tube_max - min_tube_plotted
@@ -84,42 +85,78 @@ FUNCTION retrieve_calculation_range, Event
 END
 
 ;------------------------------------------------------------------------------
-;pixel is the pixel value on the left side
-;data are the array of the 2d data counts vs pixels for only the range
+;element is the element value on the left side (tube or pixel)
+;data are the array of the 2d data counts vs pixels/tubes for only the range
 ;specified in the calculation range
-FUNCTION find_equivalent_right_pixel_from_pixel_on_left_side, Event, data, pixel
-
+;mode is 'tube' or 'pixel'
+FUNCTION find_equivalent_right_element_from_element_on_left_side, Event, $
+    data, $
+    element, $
+    MODE=mode, $
+    DATA_OFFSET = data_offset
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ideal_beam_center = (*global).ideal_beam_center
-  ibc_pixel = ideal_beam_center.pixel
-  ibc_pixel_offset = ideal_beam_center.pixel_offset
-  calculation_range_pixel_offset = (*global).calculation_range_offset.pixel
-  range_pixel_min = FLOAT((ibc_pixel - calculation_range_pixel_offset) - $
-    ibc_pixel_offset)
-  range_pixel_max = FLOAT((ibc_pixel - calculation_range_pixel_offset) + $
-    ibc_pixel_offset)
+  IF (MODE EQ 'tube') THEN BEGIN
+    ibc_element = ideal_beam_center.tube
+    ibc_element_offset = ideal_beam_center.tube_offset
+    calculation_range_element_offset = (*global).calculation_range_offset.tube
+    tube_offset = DATA_OFFSET
+  ENDIF ELSE BEGIN
+    ibc_element = ideal_beam_center.pixel
+    ibc_element_offset = ideal_beam_center.pixel_offset
+    calculation_range_element_offset = (*global).calculation_range_offset.pixel
+  ENDELSE
+  
+  range_element_min = FLOAT((ibc_element - $
+    calculation_range_element_offset) - ibc_element_offset)
+  range_element_max = FLOAT((ibc_element - $
+    calculation_range_element_offset) + ibc_element_offset)
     
-  left_pixel_intensity = data[pixel]
-  pixel_left = pixel
+  left_element_intensity = data[element]
+  element_left = element
   
   nbr_data = N_ELEMENTS(data)
   index=(nbr_data-1)
-  WHILE (index GT pixel) DO BEGIN
+  WHILE (index GT element) DO BEGIN
   
-    pixel_right = index
-    IF (data[pixel_right] GT left_pixel_intensity) THEN BEGIN
+    element_right = index
+    IF (data[element_right] GT left_element_intensity) THEN BEGIN
     
-      ;check that the beam center won't be offside of the range specified
-      IF (((FLOAT(pixel_right) + FLOAT(pixel_left))/2 GE range_pixel_min) AND $
-        ((FLOAT(pixel_right) + FLOAT(pixel_left))/2 LE range_pixel_max)) THEN BEGIN
-        extrapolated_pixel_right = $
-          extrapolate_exact_pixel(left_pixel_intensity, $
-          data, $
-          pixel_right)
-        RETURN, extrapolated_pixel_right
-      ENDIF
+      IF (MODE EQ 'pixel') THEN BEGIN
+      
+        ;check that the beam center won't be offside of the range specified
+        IF (((FLOAT(element_right) + $
+          FLOAT(element_left))/2 GE range_element_min) AND $
+          ((FLOAT(element_right) + $
+          FLOAT(element_left))/2 LE range_element_max)) THEN BEGIN
+          extrapolated_element_right = $
+            extrapolate_exact_element(left_element_intensity, $
+            data, $
+            element_right)
+          RETURN, extrapolated_element_right
+        ENDIF
+        
+      ENDIF ELSE BEGIN
+      
+        element_right_test = 2*element_right + tube_offset
+        element_left_test = 2*element_left + tube_offset
+        ;check that the beam center won't be offside of the range specified
+        IF (((FLOAT(element_right_test) + $
+          FLOAT(element_left_test))/2 GE range_element_min) AND $
+          ((FLOAT(element_right_test) + $
+          FLOAT(element_left_test))/2 LE range_element_max)) THEN BEGIN
+          extrapolated_element_right = $
+            extrapolate_exact_element(left_element_intensity, $
+            data, $
+            element_right)
+          RETURN, extrapolated_element_right
+        ENDIF
+        
+      ENDELSE
+      
     ENDIF
     index--
   ENDWHILE
@@ -128,39 +165,75 @@ FUNCTION find_equivalent_right_pixel_from_pixel_on_left_side, Event, data, pixel
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION find_equivalent_left_pixel_from_pixel_on_right_side, Event, data, pixel
-
+FUNCTION find_equivalent_left_element_from_element_on_right_side, Event, $
+    data, $
+    element, $
+    MODE=mode, $
+    DATA_OFFSET = data_offset
+    
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ideal_beam_center = (*global).ideal_beam_center
-  ibc_pixel = ideal_beam_center.pixel
-  ibc_pixel_offset = ideal_beam_center.pixel_offset
-  calculation_range_pixel_offset = (*global).calculation_range_offset.pixel
-  range_pixel_min = FLOAT((ibc_pixel - calculation_range_pixel_offset) - $
-    ibc_pixel_offset)
-  range_pixel_max = FLOAT((ibc_pixel - calculation_range_pixel_offset) + $
-    ibc_pixel_offset)
+  IF (MODE EQ 'tube') THEN BEGIN
+    ibc_element = ideal_beam_center.tube
+    ibc_element_offset = ideal_beam_center.tube_offset
+    calculation_range_element_offset = (*global).calculation_range_offset.tube
+    tube_offset = DATA_OFFSET
+  ENDIF ELSE BEGIN
+    ibc_element = ideal_beam_center.pixel
+    ibc_element_offset = ideal_beam_center.pixel_offset
+    calculation_range_element_offset = (*global).calculation_range_offset.pixel
+  ENDELSE
+  
+  range_element_min = FLOAT((ibc_element - $
+    calculation_range_element_offset) - ibc_element_offset)
+  range_element_max = FLOAT((ibc_element - $
+    calculation_range_element_offset) + ibc_element_offset)
     
-  right_pixel_intensity = data[pixel]
-  pixel_right = pixel
+  right_element_intensity = data[element]
+  element_right = element
   
   nbr_data = N_ELEMENTS(data)
   index = 0
-  WHILE (index LT pixel) DO BEGIN
+  WHILE (index LT element) DO BEGIN
   
-    pixel_left = index
-    IF (data[pixel_left] GT right_pixel_intensity) THEN BEGIN
+    element_left = index
+    IF (data[element_left] GT right_element_intensity) THEN BEGIN
     
-      ;check that the beam center won't be offside of the range specified
-      IF (((FLOAT(pixel_right) + FLOAT(pixel_left))/2 GE range_pixel_min) AND $
-        ((FLOAT(pixel_right) + FLOAT(pixel_left))/2 LE range_pixel_max)) THEN BEGIN
-        extrapolated_pixel_left = $
-          extrapolate_exact_pixel(right_pixel_intensity, $
-          data, $
-          pixel_left)
-        RETURN, extrapolated_pixel_left
-      ENDIF
+      IF (MODE EQ 'pixel') THEN BEGIN
+      
+        ;check that the beam center won't be offside of the range specified
+        IF (((FLOAT(element_right) + $
+          FLOAT(element_left))/2 GE range_element_min) AND $
+          ((FLOAT(element_right) + $
+          FLOAT(element_left))/2 LE range_element_max)) THEN BEGIN
+          extrapolated_element_left = $
+            extrapolate_exact_element(right_element_intensity, $
+            data, $
+            element_left)
+          RETURN, extrapolated_element_left
+        ENDIF
+        
+      ENDIF ELSE BEGIN ;mode is tube
+      
+        element_right_test = 2*element_right + tube_offset
+        element_left_test = 2*element_left + tube_offset
+        
+        ;check that the beam center won't be offside of the range specified
+        IF (((FLOAT(element_right_test) + $
+          FLOAT(element_left_test))/2 GE range_element_min) AND $
+          ((FLOAT(element_right_test) + $
+          FLOAT(element_left_test))/2 LE range_element_max)) THEN BEGIN
+          extrapolated_element_left = $
+            extrapolate_exact_element(right_element_intensity, $
+            data, $
+            element_left)
+          RETURN, extrapolated_element_left
+        ENDIF
+        
+      ENDELSE
+      
     ENDIF
     index++
   ENDWHILE
@@ -182,6 +255,7 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
   
   ;get number of tubes (how many times we need to repeat the calculation)
   nbr_tubes = (size(data))(1)
+  nbr_pixels = (size(data))(2)
   
   ;nbr of points to use in calculation
   nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
@@ -206,32 +280,40 @@ FUNCTION beam_center_pixel_calculation_function, Event, $
     
       'up': BEGIN
         up_last_pixel_to_used_offset = $
-          getLastPixelOfIncreasingCounts(data_IvsPixel)
+          getLastElementOfIncreasingCounts(data_IvsPixel)
         IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
-            right_pixel = $
-              find_equivalent_right_pixel_from_pixel_on_left_side(Event, $
-              data_IvsPixel, pixel_to_use)
-            beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
-            array_of_pixels[i,index] = beam_center
+            IF (pixel_to_use GT 0) THEN BEGIN
+              right_pixel = $
+                find_equivalent_right_element_from_element_on_left_side(Event, $
+                data_IvsPixel, pixel_to_use, MODE='pixel')
+              beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
+              array_of_pixels[i,index] = beam_center
+            ENDIF ELSE BEGIN
+              array_of_pixels[*,index] = -1
+            ENDELSE
           ENDFOR
         ENDIF ELSE BEGIN
-          arrray_of_pixels[*,index] = -1
+          array_of_pixels[*,index] = -1
         ENDELSE
       END
       
       'down': BEGIN
         down_last_pixel_to_used_offset = $
-          getLastPixelOfDecreasingCounts(data_IvsPixel)
+          getLastElementOfDecreasingCounts(data_IvsPixel)
         IF (down_last_pixel_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
             pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
-            left_pixel = $
-              find_equivalent_left_pixel_from_pixel_on_right_side(Event, $
-              data_IvsPixel, pixel_to_use)
-            beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
-            array_of_pixels[i,index] = beam_center
+            IF (pixel_to_use LT nbr_pixels) THEN BEGIN
+              left_pixel = $
+                find_equivalent_left_element_from_element_on_right_side(Event, $
+                data_IvsPixel, pixel_to_use, MODE='pixel')
+              beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
+              array_of_pixels[i,index] = beam_center
+            ENDIF ELSE BEGIN
+              array_of_pixels[*,index] = -1
+            ENDELSE
           ENDFOR
         ENDIF ELSE BEGIN
           array_of_pixels[*,index] = -1
@@ -260,8 +342,8 @@ FUNCTION beam_center_tube_calculation_function, Event, $
   bc_tube = 0
   
   ;get number of tubes (how many times we need to repeat the calculation)
-  nbr_pixel = (size(data))(2)
-  nbr_tube  = (size(data))(1)
+  nbr_pixels = (size(data))(2)
+  nbr_tubes  = (size(data))(1)
   
   ;nbr of points to use in calculation
   nbr_cal = FIX(getTextFieldValue(Event,'beam_center_nbr_points_to_use'))
@@ -269,12 +351,14 @@ FUNCTION beam_center_tube_calculation_function, Event, $
   ;get offset of first tube to used
   first_offset = FIX(getTextFieldValue(Event,'beam_center_peak_offset'))
   
-  array_of_pixels = FLTARR(nbr_cal, nbr_tubes)
+  array_of_tubes = FLTARR(nbr_cal, nbr_pixels)
   
   tube_offset = (*global).calculation_range_offset.tube
   
-  data_front = INTARR(nbr_tube, nbr_pixels)
+  local_nbr_tubes = FIX(nbr_tubes)/2
+  DATA_LOCAL = INTARR(local_nbr_tubes, nbr_pixels)
   
+  data_offset = 0
   IF ((first_offset MOD 2) EQ 0) THEN BEGIN ;even number
     CASE (bank) OF
       'front': data_offset = 0
@@ -287,35 +371,24 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     ENDCASE
   ENDELSE
   
+  smooth_parameter = FIX(getTextFieldValue(Event, $
+    'beam_center_smooth_parameter'))
+  data = smooth(data, smooth_parameter)
+  
+  index = data_offset
+  i = 0
+  WHILE (index LT nbr_tubes AND $
+    i LT local_nbr_tubes) DO BEGIN
+    DATA_LOCAL[i,*] = data[index,*]
+    i++
+    index += 2
+  ENDWHILE
+  
   index = 0
   WHILE (index LT nbr_pixels) DO BEGIN
   
     ;counts vs pixel of current tube
-    data_IvsTube = DATA[*,index]
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    data_IvsTube = DATA_LOCAL[*,index]
     
     ;we retrieves for each tube the pixel of the maximum counts on the left
     ;side of the plot
@@ -323,36 +396,50 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     CASE (mode) OF
     
       'up': BEGIN
-        up_last_pixel_to_used_offset = $
-          getLastPixelOfIncreasingCounts(data_IvsPixel)
-        IF (up_last_pixel_to_used_offset NE -1) THEN BEGIN
+        up_last_tube_to_used_offset = $
+          getLastElementOfIncreasingCounts(data_IvsTube)
+        IF (up_last_tube_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
-            pixel_to_use = up_last_pixel_to_used_offset - first_offset - i
-            right_pixel = $
-              find_equivalent_right_pixel_from_pixel_on_left_side(Event, $
-              data_IvsPixel, pixel_to_use)
-            beam_center = (FLOAT(pixel_to_use) + FLOAT(right_pixel)) / 2
-            array_of_pixels[i,index] = beam_center
+            tube_to_use = up_last_tube_to_used_offset - first_offset - i
+            IF (tube_to_use LT 0) THEN BEGIN
+              array_of_tubes[*,index] = -1
+            ENDIF ELSE BEGIN
+              right_tube =  $
+                find_equivalent_right_element_from_element_on_left_side(Event, $
+                data_IvsTube, $
+                tube_to_use, $
+                MODE='tube', $
+                DATA_OFFSET = data_offset)
+              beam_center = (FLOAT(tube_to_use) + FLOAT(right_tube)) / 2
+              array_of_tubes[i,index] = beam_center
+            ENDELSE
           ENDFOR
         ENDIF ELSE BEGIN
-          arrray_of_pixels[*,index] = -1
+          array_of_tubes[*,index] = -1
         ENDELSE
       END
-      
       'down': BEGIN
-        down_last_pixel_to_used_offset = $
-          getLastPixelOfDecreasingCounts(data_IvsPixel)
-        IF (down_last_pixel_to_used_offset NE -1) THEN BEGIN
+        down_last_tube_to_used_offset = $
+          getLastElementOfDecreasingCounts(data_IvsTube)
+          print, 'down_last_tube_to_used_offset: ' + string(down_last_tube_to_used_offset)
+        IF (down_last_tube_to_used_offset NE -1) THEN BEGIN
           FOR i=0,(nbr_cal-1) DO BEGIN
-            pixel_to_use = down_last_pixel_to_used_offset + first_offset + i
-            left_pixel = $
-              find_equivalent_left_pixel_from_pixel_on_right_side(Event, $
-              data_IvsPixel, pixel_to_use)
-            beam_center = (FLOAT(pixel_to_use) + FLOAT(left_pixel)) / 2
-            array_of_pixels[i,index] = beam_center
+            tube_to_use = down_last_tube_to_used_offset + first_offset + i
+            IF (tube_to_use LT local_nbr_tubes) THEN BEGIN
+              left_tube = $
+                find_equivalent_left_element_from_element_on_right_side(Event, $
+                data_IvsTube, $
+                tube_to_use, $
+                MODE='tube', $
+                DATA_OFFSET = data_offset)
+              beam_center = (FLOAT(tube_to_use) + FLOAT(left_tube)) / 2
+              array_of_tubes[i,index] = beam_center
+            ENDIF ELSE BEGIN
+              array_of_tubes[*,index] = 1
+            ENDELSE
           ENDFOR
         ENDIF ELSE BEGIN
-          array_of_pixels[*,index] = -1
+          array_of_tubes[*,index] = -1
         ENDELSE
       END
       
@@ -361,5 +448,7 @@ FUNCTION beam_center_tube_calculation_function, Event, $
     index++
   ENDWHILE
   
-  RETURN, array_of_pixels
+  print
+  ;print, 2*array_of_tubes+data_offset
+  RETURN, 2*array_of_tubes + data_offset
 END
