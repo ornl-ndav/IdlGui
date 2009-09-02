@@ -22,7 +22,7 @@ test:
 	cp sans_reduction.sav /usr/local/SNS/idltools/
 	cp SANSreduction.cfg /usr/local/SNS/idltools/
 	cp SANSreduction_images/*.bmp /usr/local/SNS/idltools/SANSreduction_images/
-	cp SANSreduction_images/*.png /SNS/software/idltools/sav/SANSreduction_images/
+	cp SANSreduction_images/*.png /usr/local/SNS/idltools/SANSreduction_images/
 	cp SANSreductionHelp/*.* /usr/local/SNS/idltools/SANSreductionHelp/
 	cp mini_sans_reduction.sav /usr/local/SNS/idltools/
 	
