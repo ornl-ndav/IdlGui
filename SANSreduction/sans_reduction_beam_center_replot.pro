@@ -213,6 +213,8 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  DEVICE, DECOMPOSED=1
+  
   ON_IOERROR, leave
   
   IF (N_ELEMENTS(erase) EQ 0) THEN BEGIN
@@ -368,6 +370,8 @@ PRO display_counts_vs_pixel_and_tube_live, Event, ERASE=erase
   
   leave:
   
+  DEVICE, DECOMPOSED=1
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -475,6 +479,8 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  DEVICE, DECOMPOSED=1
   
   ON_IOERROR, leave
   
@@ -636,5 +642,7 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
   ENDELSE
   
   leave:
+  
+  DEVICE, DECOMPOSED=0
   
 END
