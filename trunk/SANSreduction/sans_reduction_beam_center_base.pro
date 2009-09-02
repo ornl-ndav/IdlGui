@@ -796,6 +796,7 @@ PRO launch_beam_center_base_event, Event
     
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
+      DEVICE, DECOMPOSED=0
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       WIDGET_CONTROL, id, /DESTROY
