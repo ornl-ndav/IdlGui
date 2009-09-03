@@ -393,12 +393,7 @@ PRO MAIN_BASE_event, Event
       exclusion_type, Event, INDEX=3 ;_exclusion
     ;        ExclusionRegionCircle, Event ;_exclusion
     END
-    
-    ;    ;- SAVE AS ...
-    ;    WIDGET_INFO(wWidget, FIND_BY_UNAME='save_as_roi_button'): BEGIN
-    ;      SaveAsExclusionRoi, Event  ;_exclusion
-    ;    END
-    
+
     ;- SAVE
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
       IF ((*global).facility EQ 'LENS') THEN BEGIN
