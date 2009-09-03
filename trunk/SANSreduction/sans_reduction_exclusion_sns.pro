@@ -221,16 +221,36 @@ PRO SaveExclusionFile_SNS, Event
     ;open output file
     OPENW, 1, full_file_name
     
-    IF (N_ELEMENTS(pixel_array) GT 0) THEN BEGIN ;copy the excluded pixels
-      FOR i=0,N_ELEMENTS(pixel_array)-1 DO BEGIN
-        IF (pixel_array[i] NE '') THEN PRINTF, 1, pixel_array[i]
+    IF (pixel_array[0] NE '') THEN BEGIN
+      inclusion_pixel_array = InverseROI(pixel_array)
+      ;copy the excluded pixels
+      FOR bank=0,47 DO BEGIN
+        FOR tube=0,3 DO BEGIN
+          FOR pixel=0,255 DO BEGIN
+            IF (inclusion_pixel_array[bank,tube,pixel] EQ 1) THEN BEGIN
+              line = 'bank' + STRCOMPRESS(bank+1,/REMOVE_ALL) + '_' + $
+                STRCOMPRESS(tube,/REMOVE_ALL) + '_' + $
+                STRCOMPRESS(pixel,/REMOVE_ALL)
+              PRINTF, 1, line
+            ENDIF
+          ENDFOR
+        ENDFOR
       ENDFOR
     ENDIF
     
-    IF (N_ELEMENTS(PixelArray_of_DeadTubes) GT 0) THEN BEGIN ;dead tubes
-      FOR i=0,N_ELEMENTS(PixelArray_of_DeadTubes)-1 DO BEGIN
-        IF (PixelArray_of_DeadTubes[i] NE '') THEN $
-          PRINTF, 1, PixelArray_of_DeadTubes[i]
+    IF (PixelArray_of_DeadTubes[0] NE '') THEN BEGIN
+      DeadTubes = InverseROI(PixelArray_of_DeadTubes)
+      FOR bank=0,47 DO BEGIN
+        FOR tube=0,3 DO BEGIN
+          FOR pixel=0,255 DO BEGIN
+            IF (DeadTubes[bank,tube,pixel] EQ 1) THEN BEGIN
+              line = 'bank' + STRCOMPRESS(bank+1,/REMOVE_ALL) + '_' + $
+                STRCOMPRESS(tube,/REMOVE_ALL) + '_' + $
+                STRCOMPRESS(pixel,/REMOVE_ALL)
+              PRINTF, 1, line
+            ENDIF
+          ENDFOR
+        ENDFOR
       ENDFOR
     ENDIF
     
