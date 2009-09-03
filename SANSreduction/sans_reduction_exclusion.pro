@@ -718,7 +718,7 @@ PRO PreviewRoiExclusionFile, Event
   folder         = (*global).selection_path
   file_name      = getTextfieldValue(Event,'save_roi_text_field')
   full_file_name = folder + file_name
-  XDISPLAYFILE, full_file_name
+  sans_reduction_xdisplayFile, full_file_name
 END
 
 ;------------------------------------------------------------------------------

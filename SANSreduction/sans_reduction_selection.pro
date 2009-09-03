@@ -161,7 +161,7 @@ END
 PRO preview_selection_file, Event
   roi_file_name = getTextFieldValue(Event,'selection_file_name_text_field')
   title = roi_file_name
-  XDISPLAYFILE, roi_file_name, TITLE=title
+  sans_reduction_xdisplayFile, roi_file_name, TITLE=title
 END
 
 ;- Selection File Name Text Field ---------------------------------------------

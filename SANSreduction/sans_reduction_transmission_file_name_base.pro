@@ -492,7 +492,7 @@ PRO preview_trans_file, Event
 
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
   title = 'Preview of ' + output_file_name
-  XDISPLAYFILE, GROUP=id, TEXT=big_array, TITLE=title, HEIGHT=50
+  sans_reduction_xdisplayFile, GROUP=id, TEXT=big_array, TITLE=title, HEIGHT=50
   
   x_axis_plot = x_axis[0:N_ELEMENTS(x_axis)-2]
   

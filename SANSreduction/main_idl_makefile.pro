@@ -15,6 +15,7 @@ cd, IdlUtilitiesPath
 .run convert.pro
 .run colorbar.pro
 .run fsc_color.pro
+.run xdisplayfile.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -42,6 +43,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run sans_reduction_inverse_roi.pro
 .run IDL3columnsASCIIparser__define.pro
 .run error_message.pro
 .run pickcolorname.pro
