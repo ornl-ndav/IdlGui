@@ -45,7 +45,7 @@ PRO  getBankTubePixelROI, Event, $
     PixelArray
     
   NbrRow = N_ELEMENTS(StringArray)
-  index = 0
+  index = 0L
   WHILE (index LT NbrRow) DO BEGIN
     ON_IOERROR, L1
     RoiStringArray = STRSPLIT(StringArray[index],'_',/EXTRACT)
@@ -62,9 +62,13 @@ END
 ;------------------------------------------------------------------------------
 PRO load_exclusion_roi_for_sns, Event, FileStringArray
 
+  print, 'entering load_exclusion_roi_for_sns'
+
   NbrElements = N_ELEMENTS(FileStringArray)
   IF (FileStringArray[0] EQ '') THEN RETURN
-  
+    
+   print, 'nbr_element: ' + string(NbrElements)
+    
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -83,9 +87,13 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
     BankArray, $
     TubeArray, $
     PixelArray
+
+  help, BankArray
+  help, TubeArray
+
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
           ;plotting ROI
-    
+  
   (*(*global).BankArray)  = BankArray
   (*(*global).TubeArray)  = TubeArray
   (*(*global).PixelArray) = PixelArray

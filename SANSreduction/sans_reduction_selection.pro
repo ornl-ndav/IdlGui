@@ -196,7 +196,7 @@ PRO LoadPlotSelection, Event
     'ROI file ... ' + PROCESSING
     
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED

@@ -48,12 +48,14 @@ FUNCTION InverseROI, source_array
   ;by default, we want to keep everything
   full_detector_array = INTARR(48,4,256) + 1
   
-  FOR i=0,(NbrElements-1) DO BEGIN
-    bank  = BankArray[i] - 1
-    Tube  = TubeArray[i]
-    Pixel = PixelArray[i]
+  index = 0
+  WHILE (index LT (NbrElements-1)) DO BEGIN
+    bank  = BankArray[index] - 1
+    Tube  = TubeArray[index]
+    Pixel = PixelArray[index]
     full_detector_array[bank,tube,pixel] = 0
-  ENDFOR
+    index++
+  ENDWHILE
   
   RETURN, full_detector_array
   
