@@ -242,12 +242,9 @@ PRO LoadPlotSelection, Event
           ENDELSE
         ENDELSE
       ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
-      
         load_exclusion_roi_for_sns, Event, FileStringArray
-        
         ;add list of pixel (bank#_x_y) to PixelArray
         add_to_global_exclusion_array, event, FileStringArray
-        
       ENDELSE
     ENDELSE
   ENDELSE

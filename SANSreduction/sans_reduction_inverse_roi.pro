@@ -48,7 +48,7 @@ FUNCTION InverseROI, source_array
   ;by default, we want to keep everything
   full_detector_array = INTARR(48,4,256) + 1
   
-  index = 0
+  index = 0L
   WHILE (index LT (NbrElements-1)) DO BEGIN
     bank  = BankArray[index] - 1
     Tube  = TubeArray[index]

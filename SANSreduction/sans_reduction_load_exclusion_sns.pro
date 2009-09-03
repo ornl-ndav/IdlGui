@@ -56,19 +56,15 @@ PRO  getBankTubePixelROI, Event, $
     L1:
     index++
   ENDWHILE
-    
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO load_exclusion_roi_for_sns, Event, FileStringArray
 
-  print, 'entering load_exclusion_roi_for_sns'
-
   NbrElements = N_ELEMENTS(FileStringArray)
   IF (FileStringArray[0] EQ '') THEN RETURN
-    
-   print, 'nbr_element: ' + string(NbrElements)
-    
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -87,17 +83,57 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
     BankArray, $
     TubeArray, $
     PixelArray
-
-  help, BankArray
-  help, TubeArray
-
-  IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-          ;plotting ROI
-  
+    
   (*(*global).BankArray)  = BankArray
   (*(*global).TubeArray)  = TubeArray
   (*(*global).PixelArray) = PixelArray
   
+  ;size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1
+  ;excluded_BankArray  = INTARR(size_excluded)
+  ;excluded_TubeArray  = INTARR(size_excluded)
+  ;excluded_PixelArray = INTARR(size_excluded)
+  
+  ;getInverseSelection, BankArray, TubeArray, PixelArray, $
+  ;  excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
+    
+  IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+  ;plotting ROI
+  
+  ;(*(*global).BankArray)  = excluded_BankArray
+  ;(*(*global).TubeArray)  = excluded_TubeArray
+  ;(*(*global).PixelArray) = excluded_PixelArray
+  
   plot_exclusion_roi_for_sns, Event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO getInverseSelection, BankArray, TubeArray, PixelArray, $
+    excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
+    
+  ;by default, we want to keep everything
+  full_detector_array = INTARR(48,4,256)
+  index = 0L
+  WHILE (index LT (N_ELEMENTS(BankArray)-1)) DO BEGIN
+    bank  = BankArray[index] - 1
+    Tube  = TubeArray[index]
+    Pixel = PixelArray[index]
+    full_detector_array[bank,tube,pixel] = 1
+    index++
+  ENDWHILE
+  
+  index = 0L
+  FOR bank=0,47 DO BEGIN
+    FOR tube=0,3 DO BEGIN
+      FOR pixel=0,255 DO BEGIN
+        IF (full_detector_array[bank,tube,pixel] EQ 0) THEN BEGIN
+          excluded_BankArray[index] = bank + 1
+          excluded_TubeArray[index] = tube
+          excluded_PixelArray[index] = pixel
+          index++
+        ENDIF
+      ENDFOR
+    ENDFOR
+  ENDFOR
   
 END

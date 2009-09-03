@@ -44,14 +44,14 @@ PRO plot_exclusion_roi_for_sns, Event
   PixelArray = (*(*global).PixelArray)
   
   ;by default, we want to keep everything
-  full_detector_array = INTARR(48,4,256)
+  full_detector_array = INTARR(48,4,256) + 1
   
   index = 0L
   WHILE (index LT (N_ELEMENTS(BankArray)-1)) DO BEGIN
     bank  = BankArray[index] - 1
     Tube  = TubeArray[index]
     Pixel = PixelArray[index]
-    full_detector_array[bank,tube,pixel] = 1
+    full_detector_array[bank,tube,pixel] = 0
     index++
   ENDWHILE
 
@@ -102,9 +102,6 @@ PRO plot_exclusion_roi_for_sns, Event
         ;determine the real tube offset
         tube_local_data = getTubeGlobal(bank, tube)
         tube_local_data += tube_coeff
-        ;    print, 'bank:' + strcompress(bank,/remove_all) + $
-        ;      ',tube:'+ strcompress(tube,/remove_all) + $
-        ;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
         x0_device = convert_xdata_into_device(Event, tube_local_data)
         y0_device = convert_ydata_into_device(Event, Pixel)
         x1_data   =  tube_local_data + coeff_width
