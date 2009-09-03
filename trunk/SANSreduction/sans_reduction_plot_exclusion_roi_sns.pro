@@ -34,6 +34,8 @@
 
 PRO plot_exclusion_roi_for_sns, Event
 
+  print, 'entering plot_exclusion_roi_for_sns'
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -41,70 +43,80 @@ PRO plot_exclusion_roi_for_sns, Event
   TubeArray  = (*(*global).TubeArray)
   PixelArray = (*(*global).PixelArray)
   
-  sz = size(BankArray)
-  IF (sz[0] EQ 0) THEN RETURN ;BankArray = PTR_NEW(0L) (no data)
+  ;by default, we want to keep everything
+  full_detector_array = INTARR(48,4,256)
   
-  sz = N_ELEMENTS(BankArray)
-  FOR i=0,  sz-1 DO BEGIN
-  
-    local_continue = 0
-    
-    ;    print, 'Bank: ' + strcompress(BankArray[i],/remove_all) + $
-    ;      ', Tube: ' + strcompress(TubeArray[i],/remove_all) + $
-    ;      ', Pixel: ' + strcompress(PixelArray[i],/remove_all)
-    
-    Bank  = FIX(BankArray[i])
-    Tube  = FIX(TubeArray[i])
-    Pixel = FIX(PixelArray[i])
-    
-    ;go 2 by 2 for front and back panels only
-    ;start at 1 if back panel
-    panel_selected = getPanelSelected(Event)
-    CASE (panel_selected) OF
-      'front': BEGIN ;front
-        coeff_width = +2
-        IF (Bank GE 25) THEN local_continue = 1
-        bank_local_data = bank - 1
-        tube_coeff = 2
-      ;coeff_width = -2
-      END
-      'back': BEGIN ;back
-        coeff_width = +2
-        IF (Bank LT 25) THEN local_continue = 1
-        bank_local_data = bank - 25
-        tube_coeff = 2
-      ;        coeff_width = -2
-      END
-      ELSE: BEGIN ;Both
-        coeff_width = +1
-        tube_coeff = 2
-        IF (Bank GE 25) THEN BEGIN ;back banks
-          bank_local_data = (bank - 25) * 2
-        ENDIF ELSE BEGIN ;front banks
-          bank_local_data = (bank - 1) * 2
-        ENDELSE
-      END
-    ENDCASE
-    coeff_height = +1
-    
-    IF (local_continue) THEN CONTINUE
-    
-    ;determine the real tube offset
-    tube_local_data = getTubeGlobal(bank, tube)
-    tube_local_data += tube_coeff
-    ;    print, 'bank:' + strcompress(bank,/remove_all) + $
-    ;      ',tube:'+ strcompress(tube,/remove_all) + $
-    ;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
-    x0_device = convert_xdata_into_device(Event, tube_local_data)
-    y0_device = convert_ydata_into_device(Event, Pixel)
-    x1_data   =  tube_local_data + coeff_width
-    y1_data   =  Pixel + coeff_height
-    x1_device = convert_xdata_into_device(Event, x1_data)
-    y1_device = convert_ydata_into_device(Event, y1_data)
-    
-    display_loaded_selection, Event, x0=x0_device, y0=y0_device,$
-      x1=x1_device, y1=y1_device
+  index = 0L
+  WHILE (index LT (N_ELEMENTS(BankArray)-1)) DO BEGIN
+    bank  = BankArray[index] - 1
+    Tube  = TubeArray[index]
+    Pixel = PixelArray[index]
+    full_detector_array[bank,tube,pixel] = 1
+    index++
+  ENDWHILE
+
+  FOR g_bank=0,47 DO BEGIN
+    FOR tube=0,3 DO BEGIN
+      FOR pixel=0,255 DO BEGIN
       
+        local_continue = 0
+        IF (full_detector_array[g_bank,tube,pixel] EQ 1) THEN BEGIN
+          continue
+          local_continue = 1
+        ENDIF
+        
+        bank = g_bank + 1
+        
+        ;go 2 by 2 for front and back panels only
+        ;start at 1 if back panel
+        panel_selected = getPanelSelected(Event)
+        CASE (panel_selected) OF
+          'front': BEGIN ;front
+            coeff_width = +2
+            IF (Bank GE 25) THEN local_continue = 1
+            bank_local_data = bank - 1
+            tube_coeff = 2
+          ;coeff_width = -2
+          END
+          'back': BEGIN ;back
+            coeff_width = +2
+            IF (Bank LT 25) THEN local_continue = 1
+            bank_local_data = bank - 25
+            tube_coeff = 2
+          ;        coeff_width = -2
+          END
+          ELSE: BEGIN ;Both
+            coeff_width = +1
+            tube_coeff = 2
+            IF (Bank GE 25) THEN BEGIN ;back banks
+              bank_local_data = (bank - 25) * 2
+            ENDIF ELSE BEGIN ;front banks
+              bank_local_data = (bank - 1) * 2
+            ENDELSE
+          END
+        ENDCASE
+        coeff_height = +1
+        
+        IF (local_continue) THEN CONTINUE
+        
+        ;determine the real tube offset
+        tube_local_data = getTubeGlobal(bank, tube)
+        tube_local_data += tube_coeff
+        ;    print, 'bank:' + strcompress(bank,/remove_all) + $
+        ;      ',tube:'+ strcompress(tube,/remove_all) + $
+        ;      ' -> tube_local_data= ' + strcompress(tube_local_data,/remove_all)
+        x0_device = convert_xdata_into_device(Event, tube_local_data)
+        y0_device = convert_ydata_into_device(Event, Pixel)
+        x1_data   =  tube_local_data + coeff_width
+        y1_data   =  Pixel + coeff_height
+        x1_device = convert_xdata_into_device(Event, x1_data)
+        y1_device = convert_ydata_into_device(Event, y1_data)
+        
+        display_loaded_selection, Event, x0=x0_device, y0=y0_device,$
+          x1=x1_device, y1=y1_device
+          
+      ENDFOR
+    ENDFOR
   ENDFOR
   
 END
