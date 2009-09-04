@@ -112,9 +112,14 @@ END
 
 ;- Browse Selection File ------------------------------------------------------
 PRO browse_selection_file, Event
+  
   ;get global structure
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   WIDGET_CONTROL, id, GET_UVALUE=global
+  
+  print, '#1'
+  help, (*(*global).global_exclusion_array)
+  
   
   ;retrieve infos
   extension  = (*global).selection_extension
@@ -147,6 +152,10 @@ PRO browse_selection_file, Event
     activate_widget_list, Event, uname_list, 1
     ;Load ROI button (Load, extract and plot)
     LoadPlotSelection, Event
+
+  print, '#2'
+  help, (*(*global).global_exclusion_array)
+
     
     ;turn off hourglass
     WIDGET_CONTROL,hourglass=0
@@ -242,9 +251,18 @@ PRO LoadPlotSelection, Event
           ENDELSE
         ENDELSE
       ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
+          print, '#a'
+  help, (*(*global).global_exclusion_array)
+        
         load_inclusion_roi_for_sns, Event, FileStringArray
-        ;add list of pixel (bank#_x_y) to PixelArray
-        add_to_global_exclusion_array, event, FileStringArray
+          print, '#b'
+  help, (*(*global).global_exclusion_array)
+        
+        ;;add list of pixel (bank#_x_y) to PixelArray
+        ;add_to_global_exclusion_array, event, (*(*global).global_exclusion_array)
+          print, '#c'
+  help, (*(*global).global_exclusion_array)
+        
       ENDELSE
     ENDELSE
   ENDELSE

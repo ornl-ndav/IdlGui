@@ -73,6 +73,8 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   OK         = (*global).ok
   FAILED     = (*global).failed
   
+  help, FileStringArray
+  
   IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of banks, ' + $
     'tubes and pixels ... ' + PROCESSING
   BankArray  = INTARR(NbrElements)
@@ -113,6 +115,9 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   NbrElements = N_ELEMENTS(FileStringArray)
   IF (FileStringArray[0] EQ '') THEN RETURN
   
+  print, 'i'
+  help, filestringarray
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -132,14 +137,36 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     TubeArray, $
     PixelArray
     
-  size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1
+  print, 'ii'
+  help, filestringarray
+  
+  size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1 ;??????
   excluded_BankArray  = INTARR(size_excluded)
   excluded_TubeArray  = INTARR(size_excluded)
   excluded_PixelArray = INTARR(size_excluded)
   
   getInverseSelection, BankArray, TubeArray, PixelArray, $
     excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
+  
+  print, 'iii'
+  help, filestringarray
     
+  index=0
+  FileStringArray = STRARR(N_ELEMENTS(excluded_BankArray))
+  WHILE (index LT N_ELEMENTS(excluded_BankArray)) DO BEGIN
+    line = 'bank' + STRCOMPRESS(excluded_BankArray[index],/REMOVE_ALL)
+    line += '_' + STRCOMPRESS(excluded_TubeArray[index],/REMOVE_ALL)
+    line += '_' + STRCOMPRESS(excluded_PixelArray[index],/REMOVE_ALL)
+    FileStringArray[index] = line
+    index++
+  ENDWHILE
+  
+  (*(*global).global_exclusion_array) = FileStringArray
+
+print, 'iv'
+  help, filestringarray
+  
+
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   
   (*(*global).BankArray)  = excluded_BankArray
@@ -149,13 +176,17 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   ;plotting ROI
   plot_exclusion_roi_for_sns, Event
   
+  print, 'v'
+  help, filestringarray
+  
+  
 END
 
 ;------------------------------------------------------------------------------
 PRO getInverseSelection, BankArray, TubeArray, PixelArray, $
     excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
     
-  ;by default, we want to keep everything
+  ;by default, we want to keep nothing
   full_detector_array = INTARR(48,4,256)
   index = 0L
   WHILE (index LT (N_ELEMENTS(BankArray)-1)) DO BEGIN
