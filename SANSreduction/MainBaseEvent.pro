@@ -393,7 +393,7 @@ PRO MAIN_BASE_event, Event
       exclusion_type, Event, INDEX=3 ;_exclusion
     ;        ExclusionRegionCircle, Event ;_exclusion
     END
-
+    
     ;- SAVE
     WIDGET_INFO(wWidget, FIND_BY_UNAME='save_roi_button'): BEGIN
       IF ((*global).facility EQ 'LENS') THEN BEGIN
@@ -512,13 +512,13 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='transmission_calculation_button'): BEGIN
       error = 0
-      CATCH, error  
+      CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_images, EVENT=event, $
             transmission='on'
-            launch_transmission_auto_manual_base, Event
+          launch_transmission_auto_manual_base, Event
         ENDIF ELSE BEGIN
           display_images, EVENT=event, $
             transmission='off'
@@ -539,13 +539,13 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='beam_center_calculation_button'): BEGIN
       error = 0
-      CATCH, error  
+      CATCH, error
       IF (error NE 0) THEN BEGIN ;press button or othe events
         CATCH,/CANCEL
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_images, EVENT=event, $
             beam_center='on'
-            launch_beam_center_base, Event
+          launch_beam_center_base, Event
         ENDIF ELSE BEGIN
           display_images, EVENT=event, $
             beam_center='off'
