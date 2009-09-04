@@ -95,7 +95,7 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   
   ;getInverseSelection, BankArray, TubeArray, PixelArray, $
   ;  excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
-    
+  
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   ;plotting ROI
   
@@ -103,6 +103,50 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   ;(*(*global).TubeArray)  = excluded_TubeArray
   ;(*(*global).PixelArray) = excluded_PixelArray
   
+  plot_exclusion_roi_for_sns, Event
+  
+END
+
+;------------------------------------------------------------------------------
+PRO load_inclusion_roi_for_sns, Event, FileStringArray
+
+  NbrElements = N_ELEMENTS(FileStringArray)
+  IF (FileStringArray[0] EQ '') THEN RETURN
+  
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;retrieve infos
+  PROCESSING = (*global).processing
+  OK         = (*global).ok
+  FAILED     = (*global).failed
+  
+  IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of banks, ' + $
+    'tubes and pixels ... ' + PROCESSING
+  BankArray  = INTARR(NbrElements)
+  TubeArray  = INTARR(NbrElements)
+  PixelArray = INTARR(NbrElements)
+  getBankTubePixelROI, Event, $
+    FileStringArray, $
+    BankArray, $
+    TubeArray, $
+    PixelArray
+    
+  size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1
+  excluded_BankArray  = INTARR(size_excluded)
+  excluded_TubeArray  = INTARR(size_excluded)
+  excluded_PixelArray = INTARR(size_excluded)
+  
+  getInverseSelection, BankArray, TubeArray, PixelArray, $
+    excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
+    
+  IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+  
+  (*(*global).BankArray)  = excluded_BankArray
+  (*(*global).TubeArray)  = excluded_TubeArray
+  (*(*global).PixelArray) = excluded_PixelArray
+  
+  ;plotting ROI
   plot_exclusion_roi_for_sns, Event
   
 END

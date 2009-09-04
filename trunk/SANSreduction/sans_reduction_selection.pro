@@ -242,7 +242,7 @@ PRO LoadPlotSelection, Event
           ENDELSE
         ENDELSE
       ENDIF ELSE BEGIN ;SNS ---------------------------------------------------
-        load_exclusion_roi_for_sns, Event, FileStringArray
+        load_inclusion_roi_for_sns, Event, FileStringArray
         ;add list of pixel (bank#_x_y) to PixelArray
         add_to_global_exclusion_array, event, FileStringArray
       ENDELSE
@@ -280,6 +280,12 @@ PRO clear_selection_tool, Event
   (*(*global).BankArray) = PTR_NEW(0L)
   (*(*global).PixelArray) = PTR_NEW(0L)
   (*(*global).TubeArray) = PTR_NEW(0L)
+  
+  putTextFieldValue, Event, 'corner_pixel_x0', 'N/A'
+  putTextFieldValue, Event, 'corner_pixel_y0', 'N/A'
+  putTextFieldValue, Event, 'corner_pixel_width', 'N/A'
+  putTextFieldValue, Event, 'corner_pixel_height', 'N/A'
+    
   IDLsendToGeek_ReplaceLogBookText, Event, (*global).processing, (*global).ok
 END
 
