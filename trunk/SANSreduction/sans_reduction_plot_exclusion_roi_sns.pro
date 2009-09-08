@@ -34,10 +34,12 @@
 
 PRO plot_exclusion_roi_for_sns, Event
 
-  print, 'entering plot_exclusion_roi_for_sns'
-  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  print, 'entering plot_exclusion_roi_for_sns'
+  help, (*(*global).global_exclusion_array)
+  print
   
   BankArray  = (*(*global).BankArray)
   TubeArray  = (*(*global).TubeArray)
@@ -47,14 +49,14 @@ PRO plot_exclusion_roi_for_sns, Event
   full_detector_array = INTARR(48,4,256) + 1
   
   index = 0L
-  WHILE (index LT (N_ELEMENTS(BankArray)-1)) DO BEGIN
+  WHILE (index LE (N_ELEMENTS(BankArray)-1)) DO BEGIN
     bank  = BankArray[index] - 1
     Tube  = TubeArray[index]
     Pixel = PixelArray[index]
     full_detector_array[bank,tube,pixel] = 0
     index++
   ENDWHILE
-
+  
   FOR g_bank=0,47 DO BEGIN
     FOR tube=0,3 DO BEGIN
       FOR pixel=0,255 DO BEGIN
@@ -115,6 +117,11 @@ PRO plot_exclusion_roi_for_sns, Event
       ENDFOR
     ENDFOR
   ENDFOR
+  
+  print, 'leaving plot_exclusion_roi_for_sns'
+  help, (*(*global).global_exclusion_array)
+  print
+  
   
 END
 

@@ -197,7 +197,7 @@ PRO MAIN_BASE_event, Event
                 display_excluded_pixels, Event, $
                   temp_x_device=temp_x_device, $
                   temp_y_device=temp_y_device
-                makeExclusionArray_SNS, Event
+                makeExclusionArray_SNS, Event, ADD=1
                 save_background,  Event, GLOBAL=global
               ENDIF ELSE BEGIN
                 TV, (*(*global).background), true=3
@@ -493,18 +493,18 @@ PRO MAIN_BASE_event, Event
     
     ;Automatically Exclude Dead Tubes or not ----------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'exclude_dead_tube_auto'): BEGIN
+      print, 'when starting automatically excluded dead tubes'
+      help, (*(*global).global_exclusion_array)
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+        refresh_plot, Event ;_plot
+        load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
         IF (isAutoExcludeDeadTubeSelected(Event)) THEN BEGIN
-          refresh_plot, Event ;_plot
-          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
           plot_exclusion_of_dead_tubes, Event
-          save_background,  Event, GLOBAL=global
-        ENDIF ELSE BEGIN
-          refresh_plot, Event ;_plot
-          load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
-          save_background,  Event, GLOBAL=global
-        ENDELSE
+        ENDIF
+        save_background,  Event, GLOBAL=global
         makeExclusionArray_SNS, Event
+        print, 'about to leave auto excluded dead tubes'
+        help, (*(*global).global_exclusion_array)
       ENDIF
     END
     

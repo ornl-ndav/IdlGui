@@ -48,6 +48,7 @@ PRO  getBankTubePixelROI, Event, $
   index = 0L
   WHILE (index LT NbrRow) DO BEGIN
     ON_IOERROR, L1
+    ;print, 'index: ' + string(index) + ' -> ' + StringArray[index]
     RoiStringArray = STRSPLIT(StringArray[index],'_',/EXTRACT)
     TubeArray[index] = FIX(RoiStringArray[1])
     PixelArray[index] = FIX(RoiStringArray[2])
@@ -72,8 +73,6 @@ PRO load_exclusion_roi_for_sns, Event, FileStringArray
   PROCESSING = (*global).processing
   OK         = (*global).ok
   FAILED     = (*global).failed
-  
-  help, FileStringArray
   
   IDLsendToGeek_addLogBookText, Event, '-> Retrieve list of banks, ' + $
     'tubes and pixels ... ' + PROCESSING

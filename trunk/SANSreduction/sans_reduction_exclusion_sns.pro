@@ -32,12 +32,16 @@
 ;
 ;==============================================================================
 
-PRO makeExclusionArray_SNS, Event
+PRO makeExclusionArray_SNS, Event, ADD=add
 
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
   IF ((*global).facility EQ 'LENS') THEN RETURN
+  
+  print, '---------------------------'
+  print, 'Entering makeExclusionArray_SNS'
+  help, (*(*global).global_exclusion_array)
   
   ;get tube and pixel of first corner
   tube0_data  = FIX(getTextFieldValue(Event,'corner_pixel_x0'))
@@ -164,7 +168,13 @@ PRO makeExclusionArray_SNS, Event
   
   (*(*global).PixelArray_of_DeadTubes) = PixelArray_of_DeadTubes
   
-  add_to_global_exclusion_array, event, pixel_array
+  IF (N_ELEMENTS(add) NE 0) THEN BEGIN
+    add_to_global_exclusion_array, event, pixel_array
+  ENDIF
+  
+  print, 'Leaving makeExclusionArray_SNS'
+  help, (*(*global).global_exclusion_array)
+  print
   
 END
 
@@ -174,13 +184,22 @@ PRO add_to_global_exclusion_array, event, pixel_array
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  print
+  print, 'Entering add_to_global_exclusion_array'
+  help, (*(*global).global_exclusion_array)
+  
   global_exclusion_array = (*(*global).global_exclusion_array)
+  print, 'global_exclusion_array[0]: ' + string(global_exclusion_array[0])
   IF (global_exclusion_array[0] EQ '') THEN BEGIN ;first time adding pixels
     global_exclusion_array = pixel_array
   ENDIF ELSE BEGIN
     global_exclusion_array = [global_exclusion_array, pixel_array]
   ENDELSE
   (*(*global).global_exclusion_array) = global_exclusion_array
+  
+  print, 'Leaving add_to_global_exclusion_array'
+  help, (*(*global).global_exclusion_array)
+  print
   
 END
 
