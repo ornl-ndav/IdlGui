@@ -966,7 +966,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     XOFFSET   = sBMgroup.size[0],$
     YOFFSET   = sBMgroup.size[1],$
     ROW       = 1,$
-    SET_VALUE = 0,$
+    SET_VALUE = 1,$
     UNAME     = sBMgroup.uname,$
     /NO_RELEASE,$
     /EXCLUSIVE)
