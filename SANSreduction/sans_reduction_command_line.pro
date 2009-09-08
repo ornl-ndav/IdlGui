@@ -95,7 +95,7 @@
     
     cmd +=  ' ' + (*global).instrument_flag
     instrument = (*global).instrument
-    cmd += '=' + instrument  
+    cmd += '=' + instrument
     
     ;get monitor path
     cmd += ' --bmon-path='
@@ -105,6 +105,11 @@
       path = getBmonPath(Event, file_run)
       cmd += path
     ENDELSE
+    
+    ;add list of banks mandatory flag for sns instrument only
+    IF ((*global).facility EQ 'SNS') THEN BEGIN
+      cmd += ' --data-paths=1-48'
+    ENDIF
     
     ;-ROI File-
     file_run = getTextFieldValue(Event,'roi_file_name_text_field')
@@ -294,7 +299,7 @@
           '- Scaling Detector Efficiency Value ' + $
           '(PARAMETERS)']
       ENDELSE
-
+      
       cmd += ' ' + (*global).ReducePara.detector_efficiency_attenuator + '='
       value = getTextFieldValue(Event, 'detector_efficiency_attenuator_value')
       IF (value NE '') THEN BEGIN
@@ -308,11 +313,11 @@
           '- Attenuator Detector Efficiency Value ' + $
           '(PARAMETERS)']
       ENDELSE
-
+      
     ENDIF ELSE BEGIN
       activate_intermediate_base = 1
     ENDELSE
-
+    
     ;-Q min, max, width and unit
     Qmin   = getTextFieldValue(Event,'qmin_text_field')
     Qmax   = getTextFieldValue(Event,'qmax_text_field')
