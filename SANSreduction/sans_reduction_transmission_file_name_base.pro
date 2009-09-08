@@ -232,6 +232,7 @@ PRO  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
   
   file_global = PTR_NEW({ wbase: wbase1,$
     global_trans: global, $
+    main_event: (*global).main_event, $
     main_global: main_global})
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = file_global
@@ -348,7 +349,7 @@ PRO create_trans_array, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO output_trans_file, Event
+PRO output_trans_file, Event, filename
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=file_global
@@ -356,6 +357,7 @@ PRO output_trans_file, Event
   ;retrieve info about pixel selected and file name
   global_trans = (*file_global).global_trans
   main_global = (*file_global).main_global
+  main_event = (*file_global).main_event
   
   y_axis = (*(*global_trans).transmission_peak_value)
   y_error_axis = (*(*global_trans).transmission_peak_error_value)
@@ -366,7 +368,10 @@ PRO output_trans_file, Event
   s_file_name = STRCOMPRESS(file_name,/REMOVE_ALL)
   path = getButtonValue(Event,'trans_file_name_base_path_button')
   output_file_name = path + s_file_name
-  
+    
+  putTextFieldValue, main_event, $
+    'sample_data_transmission_file_name_text_field', output_file_name
+    
   nexus_file_name = (*main_global).data_nexus_file_name
   
   bank_tube_pixel = (*global_trans).beam_center_bank_tube_pixel
@@ -488,8 +493,8 @@ PRO preview_trans_file, Event
     i++
     index++
   ENDWHILE
-  big_array[index] =  STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL) 
-
+  big_array[index] =  STRCOMPRESS(x_axis[N_ELEMENTS(x_axis)-1],/REMOVE_ALL)
+  
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='transmission_file_name_base')
   title = 'Preview of ' + output_file_name
   sans_reduction_xdisplayFile, GROUP=id, TEXT=big_array, TITLE=title, HEIGHT=50
@@ -497,24 +502,24 @@ PRO preview_trans_file, Event
   x_axis_plot = x_axis[0:N_ELEMENTS(x_axis)-2]
   
   iplot, x_axis_plot, y_axis,$
-  /DISABLE_SPLASH_SCREEN, $
-  /NO_SAVEPROMPT, $
-  YERROR=y_error_axis, $
-  /Y_ERRORBARS, $
-  SYM_INDEX=7, $
-  XTITLE = "Lambda (Angstroms)", $
-  YTITLE = "Counts", $
-  LINESTYLE = 6, $
-  USE_DEFAULT_COLOR = 0, $
-  SYS_COLOR=[255,0,0], $
-  VIEW_ZOOM = 1.5, $
-  BACKGROUND_COLOR=[255,255,255], $
-  ERRORBAR_COLOR=[255,0,0], $
-  XTEXT_COLOR = [0,0,255], $
-  YTEXT_COLOR = [0,255,0], $
-  COLOR = [0,0,0], $
-  TITLE = 'Transmission file: ' + output_file_name
-
+    /DISABLE_SPLASH_SCREEN, $
+    /NO_SAVEPROMPT, $
+    YERROR=y_error_axis, $
+    /Y_ERRORBARS, $
+    SYM_INDEX=7, $
+    XTITLE = "Lambda (Angstroms)", $
+    YTITLE = "Counts", $
+    LINESTYLE = 6, $
+    USE_DEFAULT_COLOR = 0, $
+    SYS_COLOR=[255,0,0], $
+    VIEW_ZOOM = 1.5, $
+    BACKGROUND_COLOR=[255,255,255], $
+    ERRORBAR_COLOR=[255,0,0], $
+    XTEXT_COLOR = [0,0,255], $
+    YTEXT_COLOR = [0,255,0], $
+    COLOR = [0,0,0], $
+    TITLE = 'Transmission file: ' + output_file_name
+    
 END
 
 

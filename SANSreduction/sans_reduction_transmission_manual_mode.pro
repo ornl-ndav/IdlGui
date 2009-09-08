@@ -242,6 +242,8 @@ PRO launch_transmission_manual_mode_base, main_event
     
     beam_center_bank_tube_pixel: INTARR(3), $
     
+    trans_output_file_name: '', $
+    
     main_event: main_event})
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_step1

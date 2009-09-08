@@ -39,10 +39,20 @@ PRO launch_transmission_auto_mode_event, Event
   
   CASE Event.id OF
   
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_auto_cancel_button'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='transmission_auto_mode_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
     WIDGET_INFO(Event.top, FIND_BY_UNAME='trans_auto_ok_button'): BEGIN
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='transmission_auto_mode_base')
       WIDGET_CONTROL, id, /DESTROY
+      main_event  = (*global).main_event
+      output_file_name = (*global).output_file_name
+      putTextFieldValue, main_event, $
+        'sample_data_transmission_file_name_text_field', output_file_name
     END
     
     WIDGET_INFO(Event.top, $
@@ -492,7 +502,7 @@ PRO plot_pixel_auto_selected_below_cursor, wBase, tube, pixel
 END
 
 ;------------------------------------------------------------------------------
-PRO output_trans_file, wBase
+PRO output_trans_file_from_base, wBase
 
   ;get global structure
   WIDGET_CONTROL, wBase, GET_UVALUE=global
@@ -731,7 +741,8 @@ PRO launch_transmission_auto_mode_base, main_event
   display_beam_center_pixel, wBase
   
   create_auto_trans_array, wBase
-  output_trans_file, wBase
+  
+  output_trans_file_from_base, wBase
   
   plot_transmission_file, wBase
   

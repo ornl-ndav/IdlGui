@@ -420,7 +420,7 @@ PRO launch_transmission_file_name_base, Event
   
   (*global).beam_center_bank_tube_pixel = [bank, tube, pixel]
   
-  transmission_file_name_base, Event, MAIN_GLOBAL=main_global
+  transmission_file_name_base, Event, MAIN_GLOBAL=main_global  
   
 END
 
