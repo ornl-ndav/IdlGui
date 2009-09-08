@@ -114,9 +114,6 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   NbrElements = N_ELEMENTS(FileStringArray)
   IF (FileStringArray[0] EQ '') THEN RETURN
   
-  print, 'i'
-  help, filestringarray
-  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -136,9 +133,6 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     TubeArray, $
     PixelArray
     
-  print, 'ii'
-  help, filestringarray
-  
   size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1 ;??????
   excluded_BankArray  = INTARR(size_excluded)
   excluded_TubeArray  = INTARR(size_excluded)
@@ -147,9 +141,6 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   getInverseSelection, BankArray, TubeArray, PixelArray, $
     excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
   
-  print, 'iii'
-  help, filestringarray
-    
   index=0
   FileStringArray = STRARR(N_ELEMENTS(excluded_BankArray))
   WHILE (index LT N_ELEMENTS(excluded_BankArray)) DO BEGIN
@@ -162,10 +153,6 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   
   (*(*global).global_exclusion_array) = FileStringArray
 
-print, 'iv'
-  help, filestringarray
-  
-
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   
   (*(*global).BankArray)  = excluded_BankArray
@@ -174,10 +161,6 @@ print, 'iv'
   
   ;plotting ROI
   plot_exclusion_roi_for_sns, Event
-  
-  print, 'v'
-  help, filestringarray
-  
   
 END
 

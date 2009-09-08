@@ -493,8 +493,6 @@ PRO MAIN_BASE_event, Event
     
     ;Automatically Exclude Dead Tubes or not ----------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'exclude_dead_tube_auto'): BEGIN
-      print, 'when starting automatically excluded dead tubes'
-      help, (*(*global).global_exclusion_array)
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         refresh_plot, Event ;_plot
         load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
@@ -503,8 +501,6 @@ PRO MAIN_BASE_event, Event
         ENDIF
         save_background,  Event, GLOBAL=global
         makeExclusionArray_SNS, Event
-        print, 'about to leave auto excluded dead tubes'
-        help, (*(*global).global_exclusion_array)
       ENDIF
     END
     

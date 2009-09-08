@@ -37,10 +37,6 @@ PRO plot_exclusion_roi_for_sns, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  print, 'entering plot_exclusion_roi_for_sns'
-  help, (*(*global).global_exclusion_array)
-  print
-  
   BankArray  = (*(*global).BankArray)
   TubeArray  = (*(*global).TubeArray)
   PixelArray = (*(*global).PixelArray)
@@ -117,11 +113,6 @@ PRO plot_exclusion_roi_for_sns, Event
       ENDFOR
     ENDFOR
   ENDFOR
-  
-  print, 'leaving plot_exclusion_roi_for_sns'
-  help, (*(*global).global_exclusion_array)
-  print
-  
   
 END
 
