@@ -59,6 +59,26 @@ FUNCTION retrieve_calculation_range, Event=event, base=base
     min_tube_plotted  = (*global).min_tube_plotted
     min_pixel_plotted = (*global).min_pixel_plotted
     
+    ;remove beam stop region (if any)
+    tube_left = FIX(getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_left'))
+    tube_right = FIX(getTextFieldValue(Event,$
+      'beam_center_beam_stop_tube_right'))
+    pixel_left = FIX(getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_left'))
+    pixel_right = FIX(getTextFieldValue(Event,$
+      'beam_center_beam_stop_pixel_right'))
+    bs_tube_min = MIN([tube_left,tube_right],MAX=bs_tube_max)
+    bs_pixel_min = MIN([pixel_left,pixel_right],MAX=bs_pixel_max)
+    
+    bs_tube_min_offset = bs_tube_min - min_tube_plotted
+    bs_tube_max_offset = bs_tube_max - min_tube_plotted
+    bs_pixel_min_offset = bs_pixel_min - min_pixel_plotted
+    bs_pixel_max_offset = bs_pixel_max - min_pixel_plotted
+    
+    data[bs_tube_min_offset:bs_tube_max_offset, $
+      bs_pixel_min_offset:bs_pixel_max_offset] = 0
+      
     ;calculation range
     tube1  = FIX(getTextFieldValue(Event,'tube1_button_value'))
     tube2  = FIX(getTextFieldValue(Event,'tube2_button_value'))
@@ -90,6 +110,26 @@ FUNCTION retrieve_calculation_range, Event=event, base=base
     min_tube_plotted  = (*global).min_tube_plotted
     min_pixel_plotted = (*global).min_pixel_plotted
     
+    ;remove beam stop region (if any)
+    tube_left = FIX(getTextFieldValue_from_base(base, $
+      'beam_center_beam_stop_tube_left'))
+    tube_right = FIX(getTextFieldValue_from_base(base, $
+      'beam_center_beam_stop_tube_right'))
+    pixel_left = FIX(getTextFieldValue_from_base(base, $
+      'beam_center_beam_stop_pixel_left'))
+    pixel_right = FIX(getTextFieldValue_from_base(base, $
+      'beam_center_beam_stop_pixel_right'))
+    bs_tube_min = MIN([tube_left,tube_right],MAX=bs_tube_max)
+    bs_pixel_min = MIN([pixel_left,pixel_right],MAX=bs_pixel_max)
+    
+    bs_tube_min_offset = bs_tube_min - min_tube_plotted
+    bs_tube_max_offset = bs_tube_max - min_tube_plotted
+    bs_pixel_min_offset = bs_pixel_min - min_pixel_plotted
+    bs_pixel_max_offset = bs_pixel_max - min_pixel_plotted
+    
+    data[bs_tube_min_offset:bs_tube_max_offset, $
+      bs_pixel_min_offset:bs_pixel_max_offset] = 0
+      
     ;calculation range
     tube1  = FIX(getTextFieldValue_from_base(base,'tube1_button_value'))
     tube2  = FIX(getTextfieldValue_from_base(base,'tube2_button_value'))
@@ -317,7 +357,7 @@ FUNCTION beam_center_pixel_calculation_function, Event=event, $
   
     ;get global structure
     WIDGET_CONTROL,base,GET_UVALUE=global
-
+    
     ;initialize bc_pixel
     bc_pixel = 0
     
