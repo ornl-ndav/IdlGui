@@ -238,23 +238,37 @@ FUNCTION cleanup_twoD_plot_range_input, Event
 END
 
 ;-----------------------------------------------------------------------------
-FUNCTION getBScalculationRange, Event
+FUNCTION getBScalculationRange, Event, BASE=base
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,base,GET_UVALUE=global
+  ENDELSE
   
   ON_IOERROR, error
   
   ;get tube and pixel calculation range
-  bs_calculation_tube_left = FIX(getTextFieldvalue(Event, $
-    'tube1_button_value'))
-  bs_calculation_tube_right = FIX(getTextFieldValue(Event, $
-    'tube2_button_value'))
-  bs_calculation_pixel_left = FIX(getTextFieldValue(Event, $
-    'pixel1_button_value'))
-  bs_calculation_pixel_right = FIX(getTextFieldValue(Event, $
-    'pixel2_button_value'))
-    
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    bs_calculation_tube_left = FIX(getTextFieldvalue(Event, $
+      'tube1_button_value'))
+    bs_calculation_tube_right = FIX(getTextFieldValue(Event, $
+      'tube2_button_value'))
+    bs_calculation_pixel_left = FIX(getTextFieldValue(Event, $
+      'pixel1_button_value'))
+    bs_calculation_pixel_right = FIX(getTextFieldValue(Event, $
+      'pixel2_button_value'))
+  ENDIF ELSE BEGIN
+    bs_calculation_tube_left = FIX(getTextFieldvalue_from_base(base, $
+      'tube1_button_value'))
+    bs_calculation_tube_right = FIX(getTextFieldValue_from_base(base, $
+      'tube2_button_value'))
+    bs_calculation_pixel_left = FIX(getTextFieldValue_from_base(base, $
+      'pixel1_button_value'))
+    bs_calculation_pixel_right = FIX(getTextFieldValue_from_base(base, $
+      'pixel2_button_value'))
+  ENDELSE
+  
   tube_min = MIN([bs_calculation_tube_left, bs_calculation_tube_right], $
     MAX=tube_max)
   pixel_min = MIN([bs_calculation_pixel_left, bs_calculation_pixel_right], $

@@ -809,6 +809,33 @@ PRO launch_beam_center_base_event, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO populate_cursor_info_with_beam_center_values, BASE=base
+
+  ON_IOERROR, exit
+  
+  ;get value of beam center tube and pixel calculated
+  tube_center = getTextFieldValue_from_base(BASE, $
+    'beam_center_tube_center_value')
+  pixel_center = getTextFieldValue_from_base(BASE, $
+    'beam_center_pixel_center_value')
+    
+  value_tube_center  = ROUND(FLOAT(tube_center))
+  value_pixel_center = ROUND(FLOAT(pixel_center))
+  
+  putTextFieldValueMainBase, Base, $
+    UNAME='beam_center_cursor_info_tube_value', $
+    STRCOMPRESS(value_tube_center,/REMOVE_ALL)
+  putTextFieldValueMainBase, Base, $
+    UNAME='beam_center_cursor_info_pixel_value', $
+    STRCOMPRESS(value_pixel_center,/REMOVE_ALL)
+    
+  plot_saved_live_cursor, 0, BASE=base
+  
+  exit:
+  
+END
+
+;------------------------------------------------------------------------------
 PRO launch_beam_center_base, main_event
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -903,7 +930,7 @@ PRO launch_beam_center_base, main_event
     
   WIDGET_CONTROL, wBase1, SET_UVALUE = global_bc
   
-  display_beam_stop_images, main_base=wBase1, mode='button1_on'
+  display_beam_stop_images, main_base=wBase1, mode='button3_on'
   
   plot_data_for_beam_center_base, $
     BASE=wBase1, $
@@ -925,6 +952,10 @@ PRO launch_beam_center_base, main_event
     
   beam_center_calculation, BASE=wbase1
   beam_center_plot, Base=wbase1
+  
+  ;activate third base by default (cursor information)
+  ActivateTabNbr, BASE=wbase1, 'beam_center_tab', 2
+  populate_cursor_info_with_beam_center_values, BASE=wbase1
   
 END
 
