@@ -175,7 +175,7 @@ PRO getXYposition, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
+FUNCTION getDefaultReduceFileName, Event, FullFileName, RunNumber = RunNumber
   IF (N_ELEMENTS(RunNumber) EQ 0) THEN BEGIN
     iObject = OBJ_NEW('IDLgetMetadata',FullFileName)
     IF (OBJ_VALID(iObject)) THEN BEGIN
@@ -184,7 +184,13 @@ FUNCTION getDefaultReduceFileName, FullFileName, RunNumber = RunNumber
       RunNumber = ''
     ENDELSE
   ENDIF
-  default_name = 'SANS'
+    ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+    default_name = 'EQSANS'
+  ENDIF ELSE BEGIN
+    default_name = 'SANS'
+  ENDELSE
   IF (RunNumber NE '') THEN BEGIN
     default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
   ENDIF
@@ -204,7 +210,13 @@ FUNCTION getDefaultROIFileName, Event, FullFileName, RunNumber = RunNumber
       RunNumber = ''
     ENDELSE
   ENDIF
-  default_name = 'SANS'
+    ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  IF ((*global).facility EQ 'SNS') THEN BEGIN
+    default_name = 'EQSANS'
+  ENDIF ELSE BEGIN
+    default_name = 'SANS'
+  ENDELSE
   IF (RunNumber NE '') THEN BEGIN
     default_name += '_' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
   ENDIF
@@ -525,8 +537,8 @@ FUNCTION getBeamCenterCounts, Event, tube, pixel
   error = 0
   CATCH, error
   IF (error NE 0) THEN BEGIN
-  CATCH,/CANCEL
-  RETURN, 'N/A'
+    CATCH,/CANCEL
+    RETURN, 'N/A'
   ENDIF
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
