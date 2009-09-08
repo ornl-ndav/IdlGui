@@ -165,7 +165,7 @@ PRO browse_nexus, Event
       
     IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
       ;predefined default reduce output file name
-      defaultReduceFileName = getDefaultReduceFileName(FullNexusName)
+      defaultReduceFileName = getDefaultReduceFileName(Event, FullNexusName)
       putTextFieldValue, $
         Event, $
         'output_file_name', $
@@ -279,7 +279,7 @@ PRO load_run_number, Event
       IF ((*global).auto_output_file_name EQ 1) THEN BEGIN
         ;predefined default reduce output file name
         defaultReduceFileName = $
-          getDefaultReduceFileName(full_nexus_name[0])
+          getDefaultReduceFileName(Event, full_nexus_name[0])
         putTextFieldValue, $
           Event, $
           'output_file_name', $
@@ -358,7 +358,6 @@ PRO tab_event, Event
         ENDELSE
       END
       1: BEGIN                    ;reduce tab
-      
       END
       2: BEGIN                    ;log book
       

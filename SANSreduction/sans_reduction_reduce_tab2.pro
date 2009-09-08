@@ -53,6 +53,6 @@ PRO ResetOutputFileName, Event
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
 FullFileName = (*global).data_nexus_file_name
-FileName = getDefaultReduceFileName(FullFileName)
+FileName = getDefaultReduceFileName(Event, FullFileName)
 putTextFieldValue, Event, 'output_file_name', FileName
 END
