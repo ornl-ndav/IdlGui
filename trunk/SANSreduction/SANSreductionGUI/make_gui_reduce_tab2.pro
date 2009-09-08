@@ -145,7 +145,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     value: '',$
     sensitive: 0,$
     uname: 'detector_efficiency_scaling_value'}
-  
+    
   XYoff = [100,5]
   sDEAlabel = { size: [sDEvalue.size[0]+XYoff[0],$
     sDEgroup.size[1]+XYoff[1]],$
@@ -165,7 +165,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     value: '(1/Angstroms)',$
     sensitive: 0,$
     uname: 'detector_efficiency_attenuator_units'}
-
+    
   ;- Q --------------------------------------------------------------------------
   XYoff = [0,20]
   sQbase = { size:  [sDEbase.size[0]+XYoff[0],$
@@ -435,7 +435,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sFlagsBase = { size: [sScaleBase.size[0]+XYoff[0],$
     sScaleBase.size[1]+sScaleBase.size[3]+XYoff[1],$
     sWaveBase.size[2],$
-    50],$
+    80],$
     frame: sWaveBase.frame}
   XYoff = [20,-8]
   sFlagsTitle = { size:  [sFlagsBase.size[0]+XYoff[0],$
@@ -465,6 +465,16 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     sOGbase.size[3]],$
     value: 'Select a Geometry File ...',$
     uname: 'overwrite_geometry_button'}
+    
+  XYoff    = [0,30]
+  sBM      = {size:  [sOG.size[0]+XYoff[0],$
+    sOG.size[1]+XYoff[1]],$
+    value: '* With Beam Monitor Normalization'}
+  XYoff    = [230,-6]
+  sBMgroup = {size:  [XYoff[0],$
+    sBM.size[1]+XYoff[1]],$
+    list:  ['YES','NO'],$
+    uname: 'beam_monitor_normalization_group'}
     
   ;- Verbose Mode ---------------------------------------------------------------
   XYoff = [0,20]
@@ -582,7 +592,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     YOFFSET = sMEhelp.size[1],$
     VALUE   = sMEhelp.value)
     
-  ;- Detector Efficiency ---------------------------------------------------------
+  ;- Detector Efficiency ------------------------------------------------------
   label = WIDGET_LABEL(Basetab,$
     XOFFSET = sDEtitle.size[0],$
     YOFFSET = sDEtitle.size[1],$
@@ -645,7 +655,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     /EDITABLE,$
     /ALL_EVENTS,$
     /ALIGN_LEFT)
-  
+    
   ;units
   wunits = WIDGET_LABEL(Base,$
     XOFFSET = sDEAunits.size[0],$
@@ -911,7 +921,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = sFlagsBase.size[3],$
     FRAME     = sFlagsBase.frame)
     
-  ;- Overwrite Geometry ---------------------------------------------------------
+  ;- Overwrite Geometry ----------------------
   label = WIDGET_LABEL(Base,$
     XOFFSET = sOG.size[0],$
     YOFFSET = sOG.size[1],$
@@ -943,6 +953,23 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     SCR_YSIZE = sOGbutton.size[3],$
     VALUE     = sOGbutton.value,$
     UNAME     = sOGbutton.uname)
+    
+  ;- beam monitor normalization ----------------------
+  label = WIDGET_LABEL(Base,$
+    XOFFSET = sBM.size[0],$
+    YOFFSET = sBM.size[1],$
+    VALUE   = sBM.value,$
+    /ALIGN_LEFT)
+    
+  group = CW_BGROUP(Base,$
+    sOGgroup.list,$
+    XOFFSET   = sBMgroup.size[0],$
+    YOFFSET   = sBMgroup.size[1],$
+    ROW       = 1,$
+    SET_VALUE = 0,$
+    UNAME     = sBMgroup.uname,$
+    /NO_RELEASE,$
+    /EXCLUSIVE)
     
   ;- Verbose Mode ---------------------------------------------------------------
   ; group = CW_BGROUP(Base,$
