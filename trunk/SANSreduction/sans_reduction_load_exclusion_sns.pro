@@ -127,13 +127,14 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   BankArray  = INTARR(NbrElements)
   TubeArray  = INTARR(NbrElements)
   PixelArray = INTARR(NbrElements)
+  
   getBankTubePixelROI, Event, $
     FileStringArray, $
     BankArray, $
     TubeArray, $
     PixelArray
-    
-  size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray)) + 1 ;??????
+
+  size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray))+1 ;??????
   excluded_BankArray  = INTARR(size_excluded)
   excluded_TubeArray  = INTARR(size_excluded)
   excluded_PixelArray = INTARR(size_excluded)
