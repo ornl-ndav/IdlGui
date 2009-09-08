@@ -227,7 +227,7 @@ PRO SaveExclusionFile_SNS, Event
     IF (pixel_array[0] NE '') THEN BEGIN
       inclusion_pixel_array = InverseROI(pixel_array)
     ENDIF
-    
+
     DeadTubes = INTARR(48,4,256) + 1
     IF (PixelArray_of_Deadtubes[0] NE '') THEN BEGIN
       DeadTubes = InverseROI(PixelArray_of_DeadTubes)
