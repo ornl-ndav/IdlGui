@@ -526,6 +526,11 @@
       cmd +=  ' ' + (*global).scaling_value_flag + '=' + scaling_value
     ENDIF
     
+    IF (getCWBgroupValue(Event, $
+      'beam_monitor_normalization_group') EQ 1) THEN BEGIN ;without beam monitor
+      cmd += ' --no-bmon-norm'
+    ENDIF
+    
     ;- INTERMEDIATE ---------------------------------------------------------------
     IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
     ;beam monitor after conversion to Wavelength
