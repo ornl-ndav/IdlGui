@@ -41,7 +41,7 @@ PRO show_beam_stop_tab, Event, tab=tab
     'button3': tab_nbr = 2
   ENDCASE
   
-  ActivateTabNbr, Event, 'beam_center_tab', tab_nbr
+  ActivateTabNbr, EVENT=Event, 'beam_center_tab', tab_nbr
   
   IF (tab_nbr EQ 1) THEN display_beam_center_tab2_buttons, Event
   plot_beam_center_background, Event

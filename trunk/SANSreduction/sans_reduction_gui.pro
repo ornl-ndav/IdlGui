@@ -94,8 +94,12 @@ PRO ChangeTitle, Event, uname=uname, title
 END
 
 ;------------------------------------------------------------------------------
-PRO ActivateTabNbr, Event, uname, tab_nbr
+PRO ActivateTabNbr, Event=event, base=base, uname, tab_nbr
+  IF (N_ELEMENTS(event) NE 0) THEN BEGIN
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+  id = WIDGET_INFO(BASE, FIND_BY_UNAME=uname)
+  ENDELSE
   WIDGET_CONTROL, id, SET_TAB_CURRENT=tab_nbr
 END
 

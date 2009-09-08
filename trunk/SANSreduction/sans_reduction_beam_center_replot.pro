@@ -425,24 +425,38 @@ PRO plot_live_cursor, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_saved_live_cursor, Event
+PRO plot_saved_live_cursor, Event, BASE=base
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,BASE,GET_UVALUE=global
+  ENDELSE
   
   ON_IOERROR, leave
   
   draw_uname = 'beam_center_main_draw'
-  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+  ENDIF ELSE BEGIN
+    id = WIDGET_INFO(BASE,FIND_BY_UNAME=draw_uname)
+  ENDELSE
   WIDGET_CONTROL, id, GET_VALUE=id_value
   WSET, id_value
   DEVICE, DECOMPOSED=1
   
-  tube_data = FIX(getTextFieldValue(Event,$
-    'beam_center_cursor_info_tube_value'))
-  pixel_data = FIX(getTextFieldValue(Event,$
-    'beam_center_cursor_info_pixel_value'))
-    
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    tube_data = FIX(getTextFieldValue(Event,$
+      'beam_center_cursor_info_tube_value'))
+    pixel_data = FIX(getTextFieldValue(Event,$
+      'beam_center_cursor_info_pixel_value'))
+  ENDIF ELSE BEGIN
+    tube_data = FIX(getTextFieldValue_from_base(BASE,$
+      'beam_center_cursor_info_tube_value'))
+    pixel_data = FIX(getTextFieldValue_from_base(BASE,$
+      'beam_center_cursor_info_pixel_value'))
+  ENDELSE
+  
   tube  = getBeamCenterTubeDevice_from_data(tube_data, global)
   pixel = getBeamCenterPixelDevice_from_data(pixel_data, global)
   
@@ -466,7 +480,11 @@ PRO plot_saved_live_cursor, Event
     THICK=thick
     
   ;plot counts vs tof of saved cursor position
-  plot_counts_vs_tof_of_saved_live_cursor, Event
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    plot_counts_vs_tof_of_saved_live_cursor, Event
+  ENDIF ELSE BEGIN
+    plot_counts_vs_tof_of_saved_live_cursor, 0, BASE=base
+  ENDELSE
   
   leave:
   
@@ -475,10 +493,14 @@ PRO plot_saved_live_cursor, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
+PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase, BASE=base
 
   ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,BASE,GET_UVALUE=global
+  ENDELSE
   
   DEVICE, DECOMPOSED=1
   
@@ -491,14 +513,22 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     max_tube_plotted = (*global).max_tube_plotted
     max_pixel_plotted = (*global).max_pixel_plotted
     
-    smooth_parameter = FIX(getTextFieldValue(Event, $
-      'beam_center_smooth_parameter'))
-      
-    tube_data = FIX(getTextFieldValue(Event,$
-      'beam_center_cursor_info_tube_value'))
-    pixel_data = FIX(getTextFieldValue(Event,$
-      'beam_center_cursor_info_pixel_value'))
-      
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      smooth_parameter = FIX(getTextFieldValue(Event, $
+        'beam_center_smooth_parameter'))
+      tube_data = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_tube_value'))
+      pixel_data = FIX(getTextFieldValue(Event,$
+        'beam_center_cursor_info_pixel_value'))
+    ENDIF ELSE BEGIN
+      smooth_parameter = FIX(getTextFieldValue_from_base(base, $
+        'beam_center_smooth_parameter'))
+      tube_data = FIX(getTextFieldValue_from_base(base, $
+        'beam_center_cursor_info_tube_value'))
+      pixel_data = FIX(getTextFieldValue_from_base(base, $
+        'beam_center_cursor_info_pixel_value'))
+    ENDELSE
+    
     tube_selected = FIX(tube_data)
     pixel_selected = FIX(pixel_data)
     
@@ -506,15 +536,26 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     iF (pixel_selected EQ (max_pixel_plotted + 1)) THEN RETURN
     
     ;remove beam stop region from plot
-    bs_tube_left = getTextFieldValue(Event,$
-      'beam_center_beam_stop_tube_left')
-    bs_tube_right = getTextFieldValue(Event,$
-      'beam_center_beam_stop_tube_right')
-    bs_pixel_left = getTextFieldValue(Event,$
-      'beam_center_beam_stop_pixel_left')
-    bs_pixel_right = getTextFieldValue(Event,$
-      'beam_center_beam_stop_pixel_right')
-      
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      bs_tube_left = getTextFieldValue(Event,$
+        'beam_center_beam_stop_tube_left')
+      bs_tube_right = getTextFieldValue(Event,$
+        'beam_center_beam_stop_tube_right')
+      bs_pixel_left = getTextFieldValue(Event,$
+        'beam_center_beam_stop_pixel_left')
+      bs_pixel_right = getTextFieldValue(Event,$
+        'beam_center_beam_stop_pixel_right')
+    ENDIF ELSE BEGIN
+      bs_tube_left = getTextFieldValue_from_base(base, $
+        'beam_center_beam_stop_tube_left')
+      bs_tube_right = getTextFieldValue_from_base(base, $
+        'beam_center_beam_stop_tube_right')
+      bs_pixel_left = getTextFieldValue_from_base(base, $
+        'beam_center_beam_stop_pixel_left')
+      bs_pixel_right = getTextFieldValue_from_base(base, $
+        'beam_center_beam_stop_pixel_right')
+    ENDELSE
+    
     i_bs_TL = FIX(bs_tube_left)
     i_bs_TR = FIX(bs_tube_right)
     i_bs_PL = FIX(bs_pixel_left)
@@ -531,7 +572,11 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     data[x_min:x_max,y_min:y_max] = 0
     
     ;retrieve data for calculation range threshold data
-    bs_calculation_range = getBScalculationRange(Event)
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      bs_calculation_range = getBScalculationRange(Event)
+    ENDIF ELSE BEGIN
+      bs_calculation_range = getBScalculationRange(0, BASE=base)
+    ENDELSE
     bs_calculation_tube_min = bs_calculation_range[0]
     bs_calculation_tube_max = bs_calculation_range[1]
     bs_calculation_pixel_min = bs_calculation_range[2]
@@ -547,7 +592,11 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     
     ;plot counts vs tube
     draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    ENDIF ELSE BEGIN
+      id = WIDGET_INFO(BASE,FIND_BY_UNAME=draw_uname)
+    ENDELSE
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     title = 'Counts vs tube for pixel ' + $
@@ -574,7 +623,12 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
     ;display tube beam center found (if any)
-    bc_tube = getTextFieldValue(Event,'beam_center_tube_center_value')
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      bc_tube = getTextFieldValue(Event,'beam_center_tube_center_value')
+    ENDIF ELSE BEGIN
+      bc_tube = getTextFieldValue_from_base(base, $
+        'beam_center_tube_center_value')
+    ENDELSE
     IF (bc_tube NE 'N/A') THEN BEGIN
       bc_tube_value = FLOAT(bc_tube)
       max_counts = MAX(tube_data)
@@ -586,7 +640,11 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
     
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    ENDIF ELSE BEGIN
+      id = WIDGET_INFO(BASE,FIND_BY_UNAME=draw_uname)
+    ENDELSE
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     title = 'Counts vs pixel for tube ' + $
@@ -613,7 +671,12 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
       /DATA, /CONTINUE, COLOR = FSC_COLOR('pink'), LINESTYLE=4
       
     ;display pixel beam center found (if any)
-    bc_pixel = getTextFieldValue(Event,'beam_center_pixel_center_value')
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      bc_pixel = getTextFieldValue(Event,'beam_center_pixel_center_value')
+    ENDIF ELSE BEGIN
+      bc_pixel = getTextFieldValue_from_base(base, $
+        'beam_center_pixel_center_value')
+    ENDELSE
     IF (bc_pixel NE 'N/A') THEN BEGIN
       bc_pixel_value = FLOAT(bc_pixel)
       max_counts = MAX(pixel_data)
@@ -627,14 +690,22 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase
   
     ;plot counts vs tube
     draw_uname = 'beam_center_calculation_counts_vs_tube_draw'
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    ENDIF ELSE BEGIN
+      id = WIDGET_INFO(BASE,FIND_BY_UNAME=draw_uname)
+    ENDELSE
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     ERASE
     
     ;plot counts vs pixel
     draw_uname = 'beam_center_calculation_counts_vs_pixel_draw'
-    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
+    ENDIF ELSE BEGIN
+      id = WIDGET_INFO(BASE,FIND_BY_UNAME=draw_uname)
+    ENDELSE
     WIDGET_CONTROL, id, GET_VALUE=id_value
     WSET, id_value
     ERASE

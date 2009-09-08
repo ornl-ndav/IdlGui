@@ -34,7 +34,7 @@
 
 PRO display_beam_stop_images, main_base=main_base, mode=mode, Event=event
 
-  IF (N_ELEMENTS(mode) EQ 0) THEN mode='button1_on'
+  IF (N_ELEMENTS(mode) EQ 0) THEN mode='button3_on'
   
   path = 'SANSreduction_images/'
   button3 = path + ['cursor_plot_on', $
