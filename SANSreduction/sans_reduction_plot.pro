@@ -387,7 +387,7 @@ PRO refresh_scale, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO refresh_plot, Event ;_plot
+PRO  , Event ;_plot
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
   ;get global structure
