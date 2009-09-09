@@ -61,6 +61,11 @@ PRO MAIN_BASE_event, Event
       facility_selected, Event, (*global).scroll
     end
     
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='config_base_no'): BEGIN
+      MapBase, Event, uname='config_base', 0
+      activate_widget, Event, 'main_tab', 1
+    END
+    
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
