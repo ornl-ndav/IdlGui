@@ -836,6 +836,20 @@ PRO populate_cursor_info_with_beam_center_values, BASE=base
 END
 
 ;------------------------------------------------------------------------------
+PRO beam_center_Cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  IF N_ELEMENTS(global) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  PTR_FREE, (*global).tt_zoom_data
+  PTR_FREE, (*global).rtt_zoom_data
+  PTR_FREE, (*global).background
+  PTR_FREE, global
+  
+END
+
+;------------------------------------------------------------------------------
 PRO launch_beam_center_base, main_event
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -948,7 +962,7 @@ PRO launch_beam_center_base, main_event
   ;plot_iSurface_tab1, BASE=wBase1
   
   XMANAGER, "launch_beam_center_base", wBase1, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='beam_center_Cleanup'
     
   beam_center_calculation, BASE=wbase1
   beam_center_plot, Base=wbase1
