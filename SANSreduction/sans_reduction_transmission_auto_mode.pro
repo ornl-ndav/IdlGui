@@ -604,6 +604,44 @@ PRO plot_transmission_file, wBase
 END
 
 ;------------------------------------------------------------------------------
+PRO transmission_auto_Cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global_auto, /NO_COPY
+  IF N_ELEMENTS(global_auto) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  PTR_FREE, (*global_auto).rtt_zoom_data
+  PTR_FREE, (*global_auto).tt_zoom_data
+  PTR_FREE, (*global_auto).background
+  PTR_FREE, (*global_auto).counts_vs_x
+  PTR_FREE, (*global_auto).counts_vs_y
+  PTR_FREE, (*global_auto).pixel_x_axis
+  PTR_FREE, (*global_auto).tube_x_axis
+  PTR_FREE, (*global_auto).counts_vs_xy
+  PTR_FREE, (*global_auto).trans_manual_step2.user_counts_vs_xy
+  PTR_FREE, (*global_auto).trans_manual_step2.xaxis
+  PTR_FREE, (*global_auto).trans_manual_step2.yaxis
+  PTR_FREE, (*global_auto).trans_peak_tube
+  PTR_FREE, (*global_auto).trans_peak_pixel
+  PTR_FREE, (*global_auto).top_plot_background_with_right_tube
+  PTR_FREE, (*global_auto).top_plot_background_with_left_tube
+  PTR_FREE, (*global_auto).bottom_plot_background_with_right_pixel
+  PTR_FREE, (*global_auto).bottom_plot_background_with_left_pixel
+  PTR_FREE, (*global_auto).user_counts_vs_xy
+  PTR_FREE, (*global_auto).step3_3d_data
+  PTR_FREE, (*global_auto).step3_tt_zoom_data
+  PTR_FREE, (*global_auto).step3_rtt_zoom_data
+  PTR_FREE, (*global_auto).step3_counts_vs_x
+  PTR_FREE, (*global_auto).step3_counts_vs_y
+  PTR_FREE, (*global_auto).step3_background
+  PTR_FREE, (*global_auto).tof_array
+  PTR_FREE, (*global_auto).transmission_peak_value
+  PTR_FREE, (*global_auto).transmission_peak_error_value
+  PTR_FREE, (*global_auto).transmission_lambda_axis
+
+END
+
+;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 PRO launch_transmission_auto_mode_base, main_event
 
@@ -720,7 +758,7 @@ PRO launch_transmission_auto_mode_base, main_event
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_auto
   XMANAGER, "launch_transmission_auto_mode", wBase, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='transmission_auto_Cleanup'
     
   ;get TOF array
   tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
