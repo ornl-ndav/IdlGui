@@ -69,20 +69,24 @@ PRO fileBrowse, Event
     
     print, file_name
     
-    ;data = readFile(Event, file_name)
-    fileStruct = H5_PARSE(file_name)
-    ;browse = H5_BROWSER(file_name)
-    help, fileStruct, /structure
-    structFields = tag_names(filestruct)
-    fileFields = structFields[where(strmatch(structfields, '_*') NE 1)]
-    print, fileFields
+  ;    ;data = readFile(Event, file_name)
+  ;    fileStruct = H5_PARSE(file_name)
+  ;    ;browse = H5_BROWSER(file_name)
+  ;    help, fileStruct, /structure
+  ;    structFields = tag_names(filestruct)
+  ;    fileFields = structFields[where(strmatch(structfields, '_*') NE 1)]
+  ;    print, fileFields
     
   ENDIF
   
 END
 ;-------------------------------------------------------------------------------
 
-FUNCTION readFile, Event, path
+PRO readFile, Event
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;for testing
+  path = "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/REF_M_5094.nxs"
   not_hdf5_format = 0
   CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
@@ -90,13 +94,13 @@ FUNCTION readFile, Event, path
     ;display message about invalid file format
     print, "ERROR **********"
     print, not_hdf5_format
-    RETURN, 0
+  ;   RETURN, 0
   ENDIF ELSE BEGIN
     print, 'opening file...'
     fileID    = H5F_OPEN(path)
     print, 'fileID'
     print, fileID
-    data_path = '/entry/instrument/bank1/data'
+    data_path = '/entry-On_On/instrument/bank1/data'
     print, 'opening data path...'
     fieldID = H5D_OPEN(fileID,data_path)
     print, 'fieldID'
@@ -106,12 +110,25 @@ FUNCTION readFile, Event, path
     ;    print, data
     print, 'copied data...'
     H5D_CLOSE, fieldID
+    H5F_CLOSE, fileID
     
-  ; H5D_CLOSE, fileID
-    
-    
+    print, "saving data"
   ENDELSE
-  RETURN, data
+  
+  (*global).data = ptr_new(data)
+  graph, Event
+  
+;RETURN, data
+END
+
+PRO graph, Event
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  print, "graph"
+  data = TOTAL(*(*global).data, 1)
+  help, data
+  T_2d_data = REBIN(TRANSPOSE(data), 304*10, 256*10)
+  help, t_2d_data
+  TVSCL, T_2d_data 
 END
 
 ;------------------------------------------------------------------------------
