@@ -39,6 +39,38 @@ PRO BuildFacilityGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, SCROLL=scroll
 END
 
 ;------------------------------------------------------------------------------
+PRO SANSreduction_Cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  IF N_ELEMENTS(global) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  ;  PTR_FREE, info.dgsr_cmd
+  PTR_FREE, (*global).global_exclusion_array
+  PTR_FREE, (*global).background
+  PTR_FREE, (*global).BankArray
+  PTR_FREE, (*global).TubeArray
+  PTR_FREE, (*global).PixelArray
+  PTR_FREE, (*global).PixelArray_of_DeadTubes
+  PTR_FREE, (*global).dead_tube_nbr
+  PTR_FREE, (*global).back_bank
+  PTR_FREE, (*global).front_bank
+  PTR_FREE, (*global).both_banks
+  PTR_FREE, (*global).package_required_base
+  PTR_FREE, (*global).list_OF_files_to_send
+  PTR_FREE, (*global).Xarray
+  PTR_FREE, (*global).Xarray_untouched
+  PTR_FREE, (*global).Yarray
+  PTR_FREE, (*global).SigmaYarray
+  PTR_FREE, (*global).rtDataXY
+  PTR_FREE, (*global).DataArray
+  PTR_FREE, (*global).img
+  PTR_FREE, (*global).RoiPixelArrayExcluded
+  PTR_FREE, global
+  
+END
+
+;------------------------------------------------------------------------------
 PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
 
   ;get the current folder
@@ -387,7 +419,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   make_gui_main_tab, MAIN_BASE, MainBaseSize, global
   
   Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='SANSreduction_Cleanup'
   
   ;============================================================================
   ;debugging version of program
@@ -442,7 +474,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     WSET, id_value
     ;ERASE, COLOR=convert_rgb(sys_color.face_3d)
     
-    plot, randomn(s,80), $
+    PLOT, randomn(s,80), $
       XRANGE     = [0,80],$
       YRANGE     = [0,80],$
       COLOR      = convert_rgb([0B,0B,255B]), $

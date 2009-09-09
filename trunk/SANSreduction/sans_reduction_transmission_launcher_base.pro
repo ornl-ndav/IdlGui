@@ -167,6 +167,18 @@ PRO transmission_launcher_base_gui, wBase, main_base_geometry
 END
 
 ;------------------------------------------------------------------------------
+PRO transmission_Cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  IF N_ELEMENTS(global) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  ;  PTR_FREE, info.dgsr_cmd
+  PTR_FREE, global
+
+END
+
+;------------------------------------------------------------------------------
 
 PRO  launch_transmission_auto_manual_base, main_event
 
@@ -192,7 +204,7 @@ PRO  launch_transmission_auto_manual_base, main_event
   display_auto_base_launcher_images, main_base=wBase1, mode='off'
   
   XMANAGER, "launch_transmission_auto_manual_base", wBase1, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='transmission_Cleanup'
     
 END
 
