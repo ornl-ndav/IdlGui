@@ -45,7 +45,6 @@ PRO SANSreduction_Cleanup, tlb
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
-  ;  PTR_FREE, info.dgsr_cmd
   PTR_FREE, (*global).global_exclusion_array
   PTR_FREE, (*global).background
   PTR_FREE, (*global).BankArray
