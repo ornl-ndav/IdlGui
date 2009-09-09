@@ -10,23 +10,34 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   FASCILITY = 'SNS'
   pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
   
-  spawn, 'hostname', cpu
+  spawn, 'hostname', hostname
+  
+  ;for testing
+  hostname = 'mrac'
+  
+  hostname = "computer = " + STRTRIM(hostname, 2) + ".sns.gov"
+ 
   
   xmlParser = OBJ_NEW('idlxmlparser', pathInstrumentList)
-  instrumentList = xmlParser -> getValue(tag = ['name = ' + fascility, 'shortname'])
   
+  instrumentList = xmlParser -> getValue(location = $
+  ['name = ' + fascility, 'instrument'], searchTag = 'shortname')
+  
+  cpuName =  xmlParser -> getValue(location = $
+  ['name = ' + fascility, 'instrument'], searchTag = 'shortname', condition = hostname)
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
     column_sequence: PTR_NEW(0L),$
     column_cl: PTR_NEW(0L),$
     cl_array: STRARR(2),$
+    data: ptr_new(), $
     fascility: fascility, $
     application:  APPLICATION,$
     version:      VERSION,$
-    cpuName: cpu + ".sns.gov",$
+    cpuName: cpuName,$
     instrumentList: instrumentList, $
-    MainBaseSize: [30,25,800,545]})
+    MainBaseSize: [30,25,600,200]})
     
     
     
