@@ -142,6 +142,45 @@ END
 
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
+PRO transmission_manual_Cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  IF N_ELEMENTS(global) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  PTR_FREE, (*global).background
+  PTR_FREE, (*global).rtt_zoom_data
+  PTR_FREE, (*global).tt_zoom_data
+  PTR_FREE, (*global).counts_vs_x
+  PTR_FREE, (*global).counts_vs_y
+  PTR_FREE, (*global).pixel_x_axis
+  PTR_FREE, (*global).tube_x_axis
+  PTR_FREE, (*global).counts_vs_xy
+  PTR_FREE, (*global).trans_manual_step2.user_counts_vs_xy
+  PTR_FREE, (*global).trans_manual_step2.xaxis
+  PTR_FREE, (*global).trans_manual_step2.yaxis
+  PTR_FREE, (*global).trans_peak_tube
+  PTR_FREE, (*global).trans_peak_pixel
+  PTR_FREE, (*global).top_plot_background_with_right_tube
+  PTR_FREE, (*global).top_plot_background_with_left_tube
+  PTR_FREE, (*global).bottom_plot_background_with_right_pixel
+  PTR_FREE, (*global).bottom_plot_background_with_left_pixel
+  PTR_FREE, (*global).user_counts_vs_xy
+  PTR_FREE, (*global).step3_3d_data
+  PTR_FREE, (*global).step3_tt_zoom_data
+  PTR_FREE, (*global).step3_rtt_zoom_data
+  PTR_FREE, (*global).step3_counts_vs_x
+  PTR_FREE, (*global).step3_counts_vs_y
+  PTR_FREE, (*global).step3_background
+  PTR_FREE, (*global).tof_array
+  PTR_FREE, (*global).transmission_peak_value
+  PTR_FREE, (*global).transmission_peak_error_value
+  PTR_FREE, (*global).transmission_lambda_axis
+  PTR_FREE, global
+  
+END
+
+;------------------------------------------------------------------------------
 PRO launch_transmission_manual_mode_base, main_event
 
   id = WIDGET_INFO(main_event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -248,7 +287,7 @@ PRO launch_transmission_manual_mode_base, main_event
     
   WIDGET_CONTROL, wBase, SET_UVALUE = global_step1
   XMANAGER, "launch_transmission_manual_mode", wBase, $
-    GROUP_LEADER = ourGroup, /NO_BLOCK
+    GROUP_LEADER = ourGroup, /NO_BLOCK, CLEANUP='transmission_manual_Cleanup'
     
   plot_data_around_beam_stop, main_base=wBase, global, global_step1
   
@@ -260,4 +299,3 @@ PRO launch_transmission_manual_mode_base, main_event
   (*(*global_step1).tof_array) = tof_array
   
 END
-
