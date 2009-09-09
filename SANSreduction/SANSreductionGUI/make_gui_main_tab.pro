@@ -34,39 +34,74 @@
 
 PRO make_gui_main_tab, MAIN_BASE, MainBaseSize, global
 
-;define widget variables
-;[xoffset, yoffset, scr_xsize, scr_ysize]
-sMainTabSize = {size : [0,0,MainBaseSize[2],MainBaseSize[3]],$
-                uname : 'main_tab'}
-
-;Tab titles
-TabTitles = { tab1:     ' LOAD DATA ',$
-              log_book: ' LOG BOOK ',$
-              plot:     ' PLOT',$
-              reduce:   ' REDUCE '}
-
-;build widgets
-MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTabSize.size[0],$
-                      YOFFSET   = sMainTabSize.size[1],$
-                      SCR_XSIZE = sMainTabSize.size[2],$
-                      SCR_YSIZE = sMainTabSize.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
-
-;Build Load Data Tab
-make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles, global
-
-;Build REDUCE tab
-make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;Build PLOT tab
-make_gui_plot, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;Build LogBook
-make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
-
+  ;define widget variables
+  ;[xoffset, yoffset, scr_xsize, scr_ysize]
+  sMainTabSize = {size : [0,0,MainBaseSize[2],MainBaseSize[3]],$
+    uname : 'main_tab'}
+    
+  ;Tab titles
+  TabTitles = { tab1:     ' LOAD DATA ',$
+    log_book: ' LOG BOOK ',$
+    plot:     ' PLOT',$
+    reduce:   ' REDUCE '}
+    
+  ;Use configure file or not
+  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
+  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  
+  config_size = [200,80]
+  config_offset = [(main_base_geometry.xsize - config_size[0])/2,$
+    (main_base_geometry.ysize - config_size[1]) / 2]
+  config_base = WIDGET_BASE(MAIN_BASE,$
+    XOFFSET = config_offset[0],$
+    YOFFSET = config_offset[1],$
+    SCR_XSIZE = config_size[0],$
+    SCR_YSIZE = config_size[1],$
+    MAP       = 1,$
+    UNAME     = 'config_base',$
+    FRAME = 5,$
+    /ALIGN_CENTER,$
+    /COLUMN)
+  label = WIDGET_LABEL(config_base,$
+    VALUE = 'Do you want to load the')
+  label = WIDGET_LABEL(config_base,$
+    VALUE = 'configuration file ?')
+  row = WIDGET_BASE(config_base,$
+    /ROW,$
+    /ALIGN_CENTER)
+  yes = WIDGET_BUTTON(row,$
+    VALUE = 'YES',$
+    SCR_XSIZE = 60,$
+    UNAME = 'config_base_yes')
+  space = WIDGET_LABEL(row,$
+    VALUE = '    ')
+  no = WIDGET_BUTTON(row,$
+    VALUE = 'NO',$
+    SCR_XSIZE = 60,$
+    UNAME = 'config_base_no')
+    
+  ;build widgets
+  MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
+    UNAME     = sMainTabSize.uname,$
+    LOCATION  = 0,$
+    XOFFSET   = sMainTabSize.size[0],$
+    YOFFSET   = sMainTabSize.size[1],$
+    SCR_XSIZE = sMainTabSize.size[2],$
+    SCR_YSIZE = sMainTabSize.size[3],$
+    SENSITIVE = 0,$
+    /TRACKING_EVENTS)
+    
+  ;Build Load Data Tab
+  make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles, global
+  
+  ;Build REDUCE tab
+  make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles
+  
+  ;Build PLOT tab
+  make_gui_plot, MAIN_TAB, sMainTabSize.size, TabTitles
+  
+  ;Build LogBook
+  make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
+  
 END
 
