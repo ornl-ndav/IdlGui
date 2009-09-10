@@ -791,12 +791,14 @@ PRO launch_beam_center_base_event, Event
     WIDGET_INFO(Event.top, $
       FIND_BY_UNAME='beam_center_run_calculation_button'): BEGIN
       beam_center_calculation, Event=event
+      ;activate OK button if valid beam and pixel center have been found
+      validate_or_not_beam_center_ok_button, EVENT=event
       beam_center_plot, Event=event
     END
     
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
-;      DEVICE, DECOMPOSED=0
+      ;      DEVICE, DECOMPOSED=0
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       WIDGET_CONTROL, id, /DESTROY
@@ -804,14 +806,14 @@ PRO launch_beam_center_base_event, Event
     
     ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
-    create_tmp_geometry, Event
- 
- 
+      create_tmp_geometry, Event
+      
+      
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       WIDGET_CONTROL, id, /DESTROY
     END
-        
+    
     ELSE:
     
   ENDCASE
@@ -842,6 +844,33 @@ PRO populate_cursor_info_with_beam_center_values, BASE=base
   plot_saved_live_cursor, 0, BASE=base
   
   exit:
+  
+END
+
+;------------------------------------------------------------------------------
+PRO validate_or_not_beam_center_ok_button, BASE=base, EVENT=event
+
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+    bc_tube = getTextFieldValue_from_base(BASE, $
+      'beam_center_tube_center_value')
+    bc_pixel = getTextFieldValue_from_base(BASE, $
+      'beam_center_pixel_center_value')
+  ENDIF ELSE BEGIN
+    bc_tube = getTextFieldValue(Event, 'beam_center_tube_center_value')
+    bc_pixel = getTextFieldValue(Event, 'beam_center_pixel_center_value')
+  ENDELSE
+  
+  IF (bc_tube NE 'N/A' AND bc_pixel NE 'N/A') THEN BEGIN
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  
+  IF (N_ELEMENTS(base) NE 0) THEN BEGIN
+    activate_widget_from_base, base, 'beam_stop_ok_button', status
+  ENDIF ELSE BEGIN
+    activate_widget, Event, 'beam_stop_ok_button', status
+  ENDELSE
   
 END
 
@@ -980,6 +1009,9 @@ PRO launch_beam_center_base, main_event
   ;activate third base by default (cursor information)
   ActivateTabNbr, BASE=wbase1, 'beam_center_tab', 2
   populate_cursor_info_with_beam_center_values, BASE=wbase1
+  
+  ;activate OK button if valid beam and pixel center have been found
+  validate_or_not_beam_center_ok_button, BASE=wbase1
   
 END
 

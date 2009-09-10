@@ -43,7 +43,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
     data = retrieve_calculation_range(Event=event)
     
     error = 0
-    ;CATCH, error
+    CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH, /CANCEL
       title = 'Calculate Beam Center ERROR !'
@@ -54,6 +54,13 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
         title = title, $
         /ERROR, $
         DIALOG_PARENT = parent_id)
+      IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+        putTextFieldValue, Event, 'beam_center_pixel_center_value', 'N/A'
+      ENDIF ELSE BEGIN
+        putTextFieldValueMainBase, base, $
+          uname='beam_center_pixel_center_value', $
+          'N/A'
+      ENDELSE
     ENDIF ELSE BEGIN
       ;calculate beam center pixel
       beam_center_pixel_calculation, event=Event, DATA=data
@@ -71,7 +78,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
     data = retrieve_calculation_range(base=base)
     
     error = 0
-    ;CATCH, error
+    CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH, /CANCEL
       title = 'Calculate Beam Center ERROR !'
@@ -82,6 +89,13 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
         title = title, $
         /ERROR, $
         DIALOG_PARENT = parent_id)
+      IF (N_ELEMENTS(event) NE 0) THEN BEGIN
+        putTextFieldValue, Event, 'beam_center_tube_center_value', 'N/A'
+      ENDIF ELSE BEGIN
+        putTextFieldValueMainBase, base, $
+          uname='beam_center_tube_center_value', $
+          'N/A'
+      ENDELSE
     ENDIF ELSE BEGIN
       ;calculate beam center pixel
       beam_center_pixel_calculation, base=base, DATA=data
@@ -202,7 +216,7 @@ PRO beam_center_pixel_calculation, Event=event, base=base, DATA=data
   
     ;get global structure
     WIDGET_CONTROL,base,GET_UVALUE=global
- 
+    
     ;calculate beam center pixel starting at the bottom (pixel_min)
     bc_up_pixel = beam_center_pixel_calculation_function(base=base, MODE='up', $
       DATA=data)
