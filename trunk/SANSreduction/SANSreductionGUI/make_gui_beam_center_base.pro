@@ -441,8 +441,6 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     /EDITABLE,$
     /ALIGN_LEFT)
     
-    
-    
   ;row2 ......................................................
   row2 = WIDGET_BASE(big_base,$
     /ROW)
@@ -469,7 +467,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   basea = WIDGET_BASE(row3)
   
   space = WIDGET_LABEL(row3,$
-    VALUE = '                                        ')
+    VALUE = '               ')
     
   calculate_beam_center = WIDGET_BUTTON(row3,$
     VALUE = '  CALCULATE BEAM CENTER --->  ',$
@@ -481,9 +479,6 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     FRAME=5,$
     /ALIGN_CENTER,$
     /COLUMN)
-    
-  title = WIDGET_LABEL(right_row3,$
-    VALUE = 'BEAM CENTER')
     
   row2_right_row3 = WIDGET_BASE(right_row3,$
     /ROW)
@@ -504,7 +499,19 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     SCR_XSIZE = 90, $
     UNAME = 'beam_center_pixel_center_value',$
     /ALIGN_LEFT)
+      space = WIDGET_LABEL(row2_right_row3,$
+    VALUE = '   ')
+  label = WIDGET_LABEL(row2_right_row3,$
+    VALUE = 'Z offset:')
+  value = WIDGET_TEXT(row2_right_row3,$
+    VALUE = 'N/A',$
+    XSIZE = 5, $
+    UNAME = 'beam_center_z_offset_value',$
+    /EDITABLE)
+      label = WIDGET_LABEL(row2_right_row3,$
+    VALUE = 'metres')
     
+
   ;row4 ...........................................................
   row4 = WIDGET_BASE(big_base,$
     /ROW)
