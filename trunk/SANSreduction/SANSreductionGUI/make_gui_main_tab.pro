@@ -57,7 +57,7 @@ PRO make_gui_main_tab, MAIN_BASE, MainBaseSize, global
     YOFFSET = config_offset[1],$
     SCR_XSIZE = config_size[0],$
     SCR_YSIZE = config_size[1],$
-    MAP       = 1,$
+    MAP       = 0,$
     UNAME     = 'config_base',$
     FRAME = 5,$
     /ALIGN_CENTER,$
@@ -88,7 +88,7 @@ PRO make_gui_main_tab, MAIN_BASE, MainBaseSize, global
     YOFFSET   = sMainTabSize.size[1],$
     SCR_XSIZE = sMainTabSize.size[2],$
     SCR_YSIZE = sMainTabSize.size[3],$
-    SENSITIVE = 0,$
+    SENSITIVE = 1,$
     /TRACKING_EVENTS)
     
   ;Build Load Data Tab

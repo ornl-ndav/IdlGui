@@ -868,7 +868,6 @@ PRO MAIN_BASE_event, Event
       preview_ascii_file, event ;_tab_plot
     END
     
-    
     ;= TAB4 (LOG BOOK) ========================================================
     WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
       SendToGeek, Event       ;_IDLsendToGeek
