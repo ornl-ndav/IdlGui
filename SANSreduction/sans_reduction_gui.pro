@@ -38,6 +38,12 @@ PRO activate_widget, Event, uname, activate_status
 END
 
 ;------------------------------------------------------------------------------
+PRO activate_widget_from_base, base, uname, status
+id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SENSITIVE=status
+END
+
+;------------------------------------------------------------------------------
 PRO activate_widget_list, Event, uname_list, activate_status
   sz = N_ELEMENTS(uname_list)
   FOR i=0,(sz-1) DO BEGIN

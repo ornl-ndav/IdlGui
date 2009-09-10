@@ -93,6 +93,8 @@ PRO create_tmp_geometry, Event
     ENDCASE
   ENDIF
   
+  
+  
 ;  print, 'bc_pixel_offset_distance_m: ' + string(bc_pixel_offset_distance_m)
 ;  print, 'bc_tube_offset_distance_m: ' + string(bc_tube_offset_distance_m)
   

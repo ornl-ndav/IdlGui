@@ -522,6 +522,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   ok = WIDGET_BUTTON(row4,$
     SCR_XSIZE = 200,$
     SCR_YSIZE = 30,$
+    SENSITIVE = 0,$
     UNAME = 'beam_stop_ok_button',$
     VALUE = 'OK')
     
