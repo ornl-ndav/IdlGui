@@ -63,6 +63,7 @@ cd, CurrentFolder
 .run sans_reduction_plot_exclusion_roi_sns.pro
 .run sans_reduction_auto_exclude_dead_tubes.pro
 .run sans_reduction_tab_plot.pro
+.run sans_reduction_config__define.pro
 
 ;procedures
 .run sans_reduction_reduce_tab1.pro
