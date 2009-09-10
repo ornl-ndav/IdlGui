@@ -796,12 +796,22 @@ PRO launch_beam_center_base_event, Event
     
     ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
-      DEVICE, DECOMPOSED=0
+;      DEVICE, DECOMPOSED=0
       id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
       WIDGET_CONTROL, id, /DESTROY
     END
     
+    ;OK button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
+    create_tmp_geometry, Event
+ 
+ 
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='beam_center_calculation_base')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+        
     ELSE:
     
   ENDCASE
