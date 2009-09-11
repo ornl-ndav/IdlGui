@@ -36,11 +36,21 @@ PRO show_trans_manual_step2_3dview, Event
 
   ;get global structure
   WIDGET_CONTROL,event.top,GET_UVALUE=global
-
+  
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    result = DIALOG_MESSAGE('3d View Plot can not be rendered',$
+      TITLE='ERROR while ploating 3d view !', $
+      /ERROR)
+    RETURN
+  ENDIF
+  
   trans_manual_step2 = (*global).trans_manual_step2
   ptr_user_counts_vs_xy = trans_manual_step2.user_counts_vs_xy
   user_counts_vs_xy = *ptr_user_counts_vs_xy
-
+  
   ptr_xaxis = trans_manual_step2.xaxis
   xaxis = *ptr_xaxis
   
@@ -48,25 +58,25 @@ PRO show_trans_manual_step2_3dview, Event
   yaxis = *ptr_yaxis
   
   average_value = trans_manual_step2.average_value
-
-  iSurface, user_counts_vs_xy ,xaxis, yaxis, $
-  BOTTOM=[0,0,0], $
-  /NO_SAVEPROMPT, $
-  BACKGROUND = [50,50,50], $
-  COLOR= [250, 250, 0], $
-  /DISABLE_SPLASH_SCREEN, $
-  IDENTIFIER = iToolID, $
-  STYLE=6, $
-  TITLE = '3D view of selection (yellow) with background calculated (pink)', $
-  VIEW_TITLE = 'Counts vs Tube and Pixel',$
-  XTITLE = 'Tube #', $
-  YTITLE = 'Pixel #', $
-  ZTITLE = 'Counts', $
-  XMAJOR = N_ELEMENTS(xaxis)-1, $
-  YMAJOR = N_ELEMENTS(yaxis)-1
   
+  iSurface, user_counts_vs_xy ,xaxis, yaxis, $
+    BOTTOM=[0,0,0], $
+    /NO_SAVEPROMPT, $
+    BACKGROUND = [50,50,50], $
+    COLOR= [250, 250, 0], $
+    /DISABLE_SPLASH_SCREEN, $
+    IDENTIFIER = iToolID, $
+    STYLE=6, $
+    TITLE = '3D view of selection (yellow) with background calculated (pink)', $
+    VIEW_TITLE = 'Counts vs Tube and Pixel',$
+    XTITLE = 'Tube #', $
+    YTITLE = 'Pixel #', $
+    ZTITLE = 'Counts', $
+    XMAJOR = N_ELEMENTS(xaxis)-1, $
+    YMAJOR = N_ELEMENTS(yaxis)-1
+    
   average_plot = user_counts_vs_xy * 0 + average_value
   iSurface, average_plot, xaxis, yaxis, $
-  overplot=iToolID, COLOR=[250, 0, 250] ;pink
-
+    overplot=iToolID, COLOR=[250, 0, 250] ;pink
+    
 END

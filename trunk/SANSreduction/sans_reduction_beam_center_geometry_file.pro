@@ -114,7 +114,13 @@ FUNCTION create_tmp_geometry, Event
   cmd += ' -o ~/results/tmp_geometry.nxs'
       
   spawn, cmd, listening, err_listening
-  IF (err_listening[0] EQ '') THEN BEGIN ;worked
+  print, cmd
+  print, listening
+  help, listening
+  print
+  print, err_listening
+  help, err_listening
+  IF (listening[0] EQ '') THEN BEGIN ;worked
     main_event = (*global).main_event
     mapbase, main_event, UNAME='overwrite_geometry_base', 1
     putNewButtonValue, main_event, 'overwrite_geometry_button', $
