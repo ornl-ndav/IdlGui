@@ -9,6 +9,7 @@ resolve_routine, "errplot",/either
 resolve_routine, "CONGRID",/either
 resolve_routine, "MEAN",/either
 resolve_routine, "MOMENT", /either
+resolve_routine, "SURFACE", /either
 
 save,/routines,filename = CurrentFolder + '/sans_reduction.sav'
 exit
