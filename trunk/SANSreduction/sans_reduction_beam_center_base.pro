@@ -928,6 +928,8 @@ PRO launch_beam_center_base, main_event
     main_global: global, $
     main_event: main_event, $
     
+    geo_file: '',$
+    
     current_cursor_status: 31,$ ;31(cross) or 52(move selection)
     cursor_selection: 31, $
     cursor_moving: 52, $
