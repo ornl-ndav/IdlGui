@@ -34,8 +34,10 @@
 
 ;This procedure will create the temporary geometry file using the
 ;beam center pixel and tube offset calculated by the program
-PRO create_tmp_geometry, Event
+FUNCTION create_tmp_geometry, Event
 
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
   ;retrieve beam center tube and pixel calculated
   bc_tube  = FLOAT(getTextFieldValue(Event,'beam_center_tube_center_value'))
   bc_pixel = FLOAT(getTextFieldValue(Event,'beam_center_pixel_center_value'))
@@ -93,25 +95,56 @@ PRO create_tmp_geometry, Event
     ENDCASE
   ENDIF
   
-;  print, 'bc_pixel_offset_distance_m: ' + string(bc_pixel_offset_distance_m)
-;  print, 'bc_tube_offset_distance_m: ' + string(bc_tube_offset_distance_m)
+  ;retrieve z offset
+  z_offset_value = getTextFieldValue(event,'beam_center_z_offset_value')
+  z_offset_units = getTextFieldValue(event,'beam_center_z_offset_units')
+  
+  ;TS_geom_calc.sh  -DdetXoffset=-0.0149761metre 
+  ;–DdetYoffset=0.000867984metre  -o  ~/results/my_tmp_geometry.nxs
+  
+  cmd = 'TS_geom_calc.sh -DdetXoffset='
+  cmd += STRCOMPRESS(bc_tube_offset_distance_m,/REMOVE_ALL)
+  cmd += 'metre'
+  cmd += ' -DdetYoffset='
+  cmd += STRCOMPRESS(bc_pixel_offset_distance_m,/REMOVE_ALL)
+  cmd += 'metre'
+  cmd += ' -DdetZoffset='
+  cmd += STRCOMPRESS(z_offset_value,/REMOVE_ALL)
+  cmd += STRCOMPRESS(z_offset_units,/REMOVE_ALL)
+  cmd += ' -o ~/results/tmp_geometry.nxs'
+      
+  spawn, cmd, listening, err_listening
+  IF (err_listening[0] EQ '') THEN BEGIN ;worked
+    main_event = (*global).main_event
+    mapbase, main_event, UNAME='overwrite_geometry_base', 1
+    putNewButtonValue, main_event, 'overwrite_geometry_button', $
+      '~/results/tmp_geometry.nxs'
+    setCWBgroupValue, main_event, 'overwrite_geometry_group', 0
+    RETURN, 1
+  ENDIF ELSE BEGIN
+    RETURN, 0
+  ENDELSE
   
 END
 
 ;------------------------------------------------------------------------------
 PRO retrieve_default_z_offset_value, BASE=base
 
-;GeoFile = get_up_to_date_geo_file()
-GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me 
-
-iXML = OBJ_NEW('myXMLparser')
-iXML->parseFile, GeoFile
-result = iXML->getArray()
-print, 'result[0]: ' + result[0]
-print, 'result[1]: ' + result[1]
-
-
-
-
-
+  GeoFile = get_up_to_date_geo_file()
+  ;GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me
+  
+  iXML = OBJ_NEW('myXMLparser')
+  iXML->parseFile, GeoFile
+  ValueUnits = iXML->getArray()
+  value = ValueUnits[0]
+  units = ValueUnits[1]
+  
+  IF (value EQ '') THEN value = 'N/A'
+  IF (units EQ '') THEN units = 'N/A'
+  
+  putTextFieldValueMainBase, BASE, UNAME='beam_center_z_offset_value', $
+    STRCOMPRESS(value,/REMOVE_ALL)
+  putTextFieldValueMainBase, BASE, UNAME='beam_center_z_offset_units', $
+    STRCOMPRESS(units,/REMOVE_ALL)
+    
 END

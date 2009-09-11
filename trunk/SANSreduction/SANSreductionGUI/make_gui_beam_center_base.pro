@@ -499,7 +499,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     SCR_XSIZE = 90, $
     UNAME = 'beam_center_pixel_center_value',$
     /ALIGN_LEFT)
-      space = WIDGET_LABEL(row2_right_row3,$
+  space = WIDGET_LABEL(row2_right_row3,$
     VALUE = '   ')
   label = WIDGET_LABEL(row2_right_row3,$
     VALUE = 'Z offset:')
@@ -508,10 +508,12 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     XSIZE = 5, $
     UNAME = 'beam_center_z_offset_value',$
     /EDITABLE)
-      label = WIDGET_LABEL(row2_right_row3,$
-    VALUE = 'metres')
+  label = WIDGET_LABEL(row2_right_row3,$
+    SCR_XSIZE = 60,$
+    /ALIGN_LEFT, $
+    UNAME = 'beam_center_z_offset_units',$
+    VALUE = 'N/A')
     
-
   ;row4 ...........................................................
   row4 = WIDGET_BASE(big_base,$
     /ROW)
