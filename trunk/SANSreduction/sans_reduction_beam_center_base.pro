@@ -1013,6 +1013,9 @@ PRO launch_beam_center_base, main_event
   ;activate OK button if valid beam and pixel center have been found
   validate_or_not_beam_center_ok_button, BASE=wbase1
   
+  ;retrieve z offset devault value
+  retrieve_default_z_offset_value, BASE=wbase1
+  
 END
 
 

@@ -92,13 +92,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     found: 0,$
     sub_pkg_version:   ''}
   ;sub_pkg_version: python program that gives pkg v.
-  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,2)
+  my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
   my_package[0].driver           = 'findnexus'
   my_package[0].version_required = '1.5'
   my_package[1].driver           = 'sas_reduction'
   my_package[1].version_required = ''
   my_package[1].sub_pkg_version  = './drversion'
-  ;************************************************************************
+  my_package[2].driver           = 'findcalib'
+    ;************************************************************************
   ;************************************************************************
   
   ;works only on dev and pick up ~/bin/runenv before the command line

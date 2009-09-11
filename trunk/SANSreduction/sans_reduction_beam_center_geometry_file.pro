@@ -97,3 +97,21 @@ PRO create_tmp_geometry, Event
 ;  print, 'bc_tube_offset_distance_m: ' + string(bc_tube_offset_distance_m)
   
 END
+
+;------------------------------------------------------------------------------
+PRO retrieve_default_z_offset_value, BASE=base
+
+;GeoFile = get_up_to_date_geo_file()
+GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me 
+
+iXML = OBJ_NEW('myXMLparser')
+iXML->parseFile, GeoFile
+result = iXML->getArray()
+print, 'result[0]: ' + result[0]
+print, 'result[1]: ' + result[1]
+
+
+
+
+
+END

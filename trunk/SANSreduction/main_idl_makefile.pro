@@ -6,6 +6,7 @@ cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run nexus_utilities.pro
 .run IDLxmlParser__define.pro
+.run myXMLparser__define.pro
 .run logger.pro
 .run checking_packages.pro
 .run showprogress__define.pro
