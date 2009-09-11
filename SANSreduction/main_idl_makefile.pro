@@ -90,6 +90,7 @@ cd, CurrentFolder
 .run sans_reduction_transmission_auto_mode_routines.pro
 
 ;beam center
+.run sans_reduction_beam_center_geometry_file.pro
 .run sans_reduction_beam_center_functions.pro
 .run sans_reduction_beam_center_base.pro
 .run sans_reduction_beam_center_display_images.pro
@@ -101,7 +102,6 @@ cd, CurrentFolder
 .run sans_reduction_beam_center_calculation_utilities_functions.pro
 .run sans_reduction_beam_center_calculation_functions.pro
 .run sans_reduction_beam_center_calculation.pro
-.run sans_reduction_beam_center_geometry_file.pro
 
 ;main functions
 .run MainBaseEvent.pro

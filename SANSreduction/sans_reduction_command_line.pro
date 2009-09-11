@@ -219,9 +219,10 @@
     ;-geometry file to overwrite
     IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
       cmd += ' --inst-geom='
-      IF ((*global).inst_geom NE '') THEN BEGIN
-        cmd += (*global).inst_geom
-        Add_file_to_lis_OF_files, list_OF_files_to_send, (*global).inst_geom
+      inst_geom = getButtonValue(Event,'overwrite_geometry_button')
+      IF (inst_geom NE '') THEN BEGIN
+        cmd += inst_geom
+        Add_file_to_lis_OF_files, list_OF_files_to_send, inst_geom
       ENDIF ELSE BEGIN
         cmd += '?'
         cmd_status = 0

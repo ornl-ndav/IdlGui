@@ -78,6 +78,12 @@ FUNCTION getCWBgroupValue, Event, uname
 END
 
 ;------------------------------------------------------------------------------
+PRO setCWBgroupValue, Event, uname, value
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+  WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;------------------------------------------------------------------------------
 ;This function put the full path of the file as the new button label
 PRO putNewButtonValue, Event, uname, value
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)

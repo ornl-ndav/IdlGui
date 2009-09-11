@@ -806,12 +806,32 @@ PRO launch_beam_center_base_event, Event
     
     ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
-      create_tmp_geometry, Event
-      
-      
-      id = WIDGET_INFO(Event.top, $
+      result = create_tmp_geometry(Event)
+      ;get the beam center main base id
+      parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
-      WIDGET_CONTROL, id, /DESTROY
+      IF (result EQ 1) THEN BEGIN ;worked
+        message_text = ['Temporary geometry file has been created with success',$
+          'and will be used by default in the data reduction process']
+        title = 'Geometry File created with SUCCESS !'
+        result = DIALOG_MESSAGE(message_text,$
+          /INFORMATION, $
+          TITLE = title, $
+          /CENTER, $
+          DIALOG_PARENT=parent_id)
+        id = WIDGET_INFO(Event.top, $
+          FIND_BY_UNAME='beam_center_calculation_base')
+        WIDGET_CONTROL, id, /DESTROY
+      ENDIF ELSE BEGIN
+        message_text = ['ERROR when creating the temporary geometry file']
+        title = 'ERROR!'
+        result = DIALOG_MESSAGE(message_text,$
+          /ERROR, $
+          TITLE = title, $
+          /CENTER, $
+          DIALOG_PARENT=parent_id)
+      ENDELSE
+      
     END
     
     ELSE:
