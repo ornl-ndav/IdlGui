@@ -102,25 +102,22 @@ FUNCTION create_tmp_geometry, Event
   ;TS_geom_calc.sh  -DdetXoffset=-0.0149761metre 
   ;–DdetYoffset=0.000867984metre  -o  ~/results/my_tmp_geometry.nxs
   
-  cmd = 'TS_geom_calc.sh -DdetXoffset='
+  cmd = 'TS_geom_calc.sh '
+  cmd += (*global).geo_file 
+  cmd += ' -D detXoffset='
   cmd += STRCOMPRESS(bc_tube_offset_distance_m,/REMOVE_ALL)
   cmd += 'metre'
-  cmd += ' -DdetYoffset='
+  cmd += ' -D detYoffset='
   cmd += STRCOMPRESS(bc_pixel_offset_distance_m,/REMOVE_ALL)
   cmd += 'metre'
-  cmd += ' -DdetZoffset='
+  cmd += ' -D detZoffset='
   cmd += STRCOMPRESS(z_offset_value,/REMOVE_ALL)
   cmd += STRCOMPRESS(z_offset_units,/REMOVE_ALL)
   cmd += ' -o ~/results/tmp_geometry.nxs'
       
   spawn, cmd, listening, err_listening
-  print, cmd
-  print, listening
-  help, listening
-  print
-  print, err_listening
-  help, err_listening
-  IF (listening[0] EQ '') THEN BEGIN ;worked
+  result = STRMATCH(listening[N_ELEMENTS(listening)-1],'*ERROR*')
+  IF (result EQ 0) THEN BEGIN 
     main_event = (*global).main_event
     mapbase, main_event, UNAME='overwrite_geometry_base', 1
     putNewButtonValue, main_event, 'overwrite_geometry_button', $
@@ -138,6 +135,8 @@ PRO retrieve_default_z_offset_value, BASE=base
 
   GeoFile = get_up_to_date_geo_file()
   ;GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me
+  WIDGET_CONTROL, BASE, GET_UVALUE=global
+  (*global).geo_file = GeoFile
   
   iXML = OBJ_NEW('myXMLparser')
   iXML->parseFile, GeoFile
