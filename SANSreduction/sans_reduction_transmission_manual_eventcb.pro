@@ -425,7 +425,7 @@ PRO launch_transmission_manual_mode_event, Event
       
       error = 0
       CATCH, error
-      IF (error NE 0) THEN BEGIN ;press button or othe events
+      IF (error NE 0) THEN BEGIN ;press button or other events
         CATCH,/CANCEL
         
         IF (event.press EQ 1) THEN BEGIN
