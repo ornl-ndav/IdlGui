@@ -550,3 +550,28 @@ FUNCTION getBeamCenterCounts, Event, tube, pixel
   counts = tt_zoom_data[tube_offset, pixel_offset]
   RETURN, LONG(counts)
 END
+
+;-----------------------------------------------------------------------------
+;returns [geometry file,translation file,mapping file] 
+FUNCTION get_up_to_date_geo_tran_map_file, instrument=instrument
+IF (N_ELEMENTS(instrument) EQ 0) THEN instrument = 'EQSANS'
+cmd = 'findcalib -i' + instrument
+spawn, cmd, listening, err_listening
+IF (err_listening[0] NE '') THEN BEGIN
+    RETURN = STRARR(3)
+ENDIF ELSE BEGIN
+    RETURN, listening
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_up_to_date_geo_file, instrument=instrument
+IF (N_ELEMENTS(instrument) EQ 0) THEN instrument = 'EQSANS'
+cmd = 'findcalib -g -i' + instrument
+spawn, cmd, listening, err_listening
+IF (err_listening[0] NE '') THEN BEGIN
+    RETURN = ''
+ENDIF ELSE BEGIN
+    RETURN, listening[0]
+ENDELSE
+END
