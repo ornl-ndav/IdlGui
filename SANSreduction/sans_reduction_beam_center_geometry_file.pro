@@ -115,7 +115,8 @@ FUNCTION create_tmp_geometry, Event
   cmd += STRCOMPRESS(z_offset_units,/REMOVE_ALL)
   cmd += ' -o ~/results/tmp_geometry.nxs'
       
-  spawn, cmd, listening, err_listening
+  ;spawn, cmd, listening, err_listening
+  listening = ''
   result = STRMATCH(listening[N_ELEMENTS(listening)-1],'*ERROR*')
   IF (result EQ 0) THEN BEGIN 
     main_event = (*global).main_event
@@ -133,8 +134,8 @@ END
 ;------------------------------------------------------------------------------
 PRO retrieve_default_z_offset_value, BASE=base
 
-  GeoFile = get_up_to_date_geo_file()
-  ;GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me
+  ;GeoFile = get_up_to_date_geo_file()
+  GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me
   WIDGET_CONTROL, BASE, GET_UVALUE=global
   (*global).geo_file = GeoFile
   
