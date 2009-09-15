@@ -117,7 +117,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,800,545]})
+    MainBaseSize: [30,25,800,650]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Dave Ascii Division (DAD)'
