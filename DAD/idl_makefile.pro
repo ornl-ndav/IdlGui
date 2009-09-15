@@ -23,22 +23,13 @@ cd , CurrentFolder + '/Classes/'
 ;and create the VM file.
 
 ;Build CLoop GUI
-cd, CurrentFolder + '/CLoopGUI/'
+cd, CurrentFolder + '/DADgui/'
 .run MakeGuiMainBase.pro
-.run make_gui_tab1.pro
-.run make_gui_tab2.pro
 
 ;Build all procedures
 cd, CurrentFolder
 
-;procedures
-.run cloop_srun.pro
-.run cloop_browse_cl_file.pro
-.run cloop_help.pro
-.run cloop_input_parser.pro
-.run cloop_run_jobs.pro
-
 ;main functions
 .run MainBaseEvent.pro
-.run cloop_eventcb.pro
-.run cloop.pro
+.run dad_eventcb.pro
+.run dad.pro
