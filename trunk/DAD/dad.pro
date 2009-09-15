@@ -109,6 +109,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     srun_driver: 'srun',$
     sbatch_driver: 'sbatch',$
     
+    default_path: '~/results/',$
+    
     debugging:    debugging,$ ;yes or no
     ucams:        ucams,$
     application:  APPLICATION,$

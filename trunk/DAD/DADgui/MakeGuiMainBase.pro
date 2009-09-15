@@ -70,7 +70,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   button = WIDGET_BUTTON(row_a_1,$
     VALUE = '~/results/',$
     SCR_XSIZE = 330,$
-    UNAME = 'tab2_manual_input_folder')
+    UNAME = 'browse_path_button')
     
   label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
