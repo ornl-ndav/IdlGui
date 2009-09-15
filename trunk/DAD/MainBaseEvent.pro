@@ -101,7 +101,11 @@ PRO MAIN_BASE_event, Event
         FIND_BY_UNAME='MAIN_BASE')
       WIDGET_CONTROL, id, /DESTROY
     END
-    
+   
+    ;run jobs
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_uname'): BEGIN
+    run_divisions, Event
+    END
     
     ELSE:
     

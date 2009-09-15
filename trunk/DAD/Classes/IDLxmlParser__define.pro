@@ -11,7 +11,7 @@
 ; USING CLASS:
 ;    To make an instance of the class:
 ;      file = OBJ_NEW('idlxmlparser', file_name)
-;    file_name hols the location of the XML file
+;    file_name holds the location of the XML file
 ;    
 ;    To get the text under a certain tag:
 ;      text = file -> getValue(tag = ['tag1', 'tag2']) 
