@@ -80,6 +80,11 @@ PRO MAIN_BASE_event, Event
       es_input_file_name, Event
     END
     
+    ;Preview button of ES file
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_file_preview_button'): BEGIN
+      es_preview_file, Event
+    END
+    
     ELSE:
     
   ENDCASE
