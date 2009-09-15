@@ -32,6 +32,36 @@
 ;
 ;==============================================================================
 
+PRO DAD_cleanup, tlb
+
+  WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  IF N_ELEMENTS(global) EQ 0 THEN RETURN
+  
+  ; Free up the pointers
+  ;  PTR_FREE, (*global).background
+  ;  PTR_FREE, (*global).BankArray
+  ;  PTR_FREE, (*global).TubeArray
+  ;  PTR_FREE, (*global).PixelArray
+  ;  PTR_FREE, (*global).PixelArray_of_DeadTubes
+  ;  PTR_FREE, (*global).dead_tube_nbr
+  ;  PTR_FREE, (*global).back_bank
+  ;  PTR_FREE, (*global).front_bank
+  ;  PTR_FREE, (*global).both_banks
+  ;  PTR_FREE, (*global).package_required_base
+  ;  PTR_FREE, (*global).list_OF_files_to_send
+  ;  PTR_FREE, (*global).Xarray
+  ;  PTR_FREE, (*global).Xarray_untouched
+  ;  PTR_FREE, (*global).Yarray
+  ;  PTR_FREE, (*global).SigmaYarray
+  ;  PTR_FREE, (*global).rtDataXY
+  ;  PTR_FREE, (*global).DataArray
+  ;  PTR_FREE, (*global).img
+  ;  PTR_FREE, (*global).RoiPixelArrayExcluded
+  PTR_FREE, global
+  
+END
+
+;------------------------------------------------------------------------------
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
   ;get the current folder
@@ -44,7 +74,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
   TESTING = file->getValue(tag=['configuration','testing'])
-    ;CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  ;CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   ;****************************************************************************
   ;============================================================================
   
@@ -73,30 +103,22 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({ path: '~/',$
-    old_input_text: PTR_NEW(0L),$
-    old_help_text1: '',$
-    old_help_text2: '',$
-    
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
     'squeue.php?view=all',$
     srun_driver: 'srun',$
     sbatch_driver: 'sbatch',$
     
-    column_sequence: PTR_NEW(0L),$
-    column_cl: PTR_NEW(0L),$
-    cl_array: STRARR(2),$
-    
     debugging:    debugging,$ ;yes or no
     ucams:        ucams,$
     application:  APPLICATION,$
+
     processing:   '(PROCESSING)',$
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
     MainBaseSize: [30,25,800,545]})
     
-   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Dave Ascii Division (DAD)'
   MainBaseTitle += ' - ' + VERSION
@@ -119,7 +141,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MakeGuiMainBase, MAIN_BASE, global
   
   Widget_Control, /REALIZE, MAIN_BASE
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='DAD_cleanup'
   
   ;==============================================================================
   ; Date Information
