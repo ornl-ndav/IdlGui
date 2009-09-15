@@ -169,7 +169,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     /ROW)
     
   Table = WIDGET_TABLE(row2,$
-    UNAME = 'tab2_table_uname',$
+    UNAME = 'table_uname',$
     XSIZE = 2,$
     YSIZE = 200,$
     SCR_XSIZE = 785,$
@@ -187,7 +187,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   button1 = WIDGET_BUTTON(row3,$
     VALUE = 'REFRESH TABLE (check status of files)',$
-    UNAME = 'tab2_refresh_table_uname',$
+    UNAME = 'refresh_table_uname',$
     XSIZE = 785,$
     SENSITIVE = 0)
     
