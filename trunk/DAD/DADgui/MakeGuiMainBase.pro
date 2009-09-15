@@ -158,7 +158,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   help = WIDGET_BUTTON(row_a_2,$
     VALUE = 'PREVIEW',$
     SCR_XSIZE = 110,$
-    UNAME = 'tab2_manual_input_sequence_help',$
+    SENSITIVE = 0,$
+    UNAME = 'es_file_preview_button',$
     /PUSHBUTTON_EVENTS)
     
   ;***********************************************************************

@@ -49,9 +49,13 @@ PRO browse_es_file, Event
     /READ)
     
   IF (result[0] NE '')  THEN BEGIN
-  (*global).default_path = new_path
+    (*global).default_path = new_path
     putValue, Event, 'es_file_name', result[0]
-  ENDIF
+    status = 1
+  ENDIF ELSE BEGIN
+    status = 0
+  ENDELSE
+  activate_widget, Event, 'es_file_preview_button', status
   
 END
 
@@ -61,6 +65,7 @@ PRO es_input_file_name, Event
   file_name = getTextFieldValue(Event, 'es_input_file_name')
   IF (FILE_TEST(file_name[0])) THEN BEGIN ;file exist
     putValue, Event, 'es_file_name', file_name[0]
+    status = 1
   ENDIF ELSE BEGIN
     widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
     message = file_name + ' does not exist!'
@@ -68,7 +73,24 @@ PRO es_input_file_name, Event
       /ERROR, $
       DIALOG_PARENT=widget_id, $
       TITLE = 'ES file does not exist!')
+    status = 0
   ENDELSE
   putValue, Event, 'es_input_file_name', ''
+  activate_widget, Event, 'es_file_preview_button', status
+  
+END
+
+;------------------------------------------------------------------------------
+PRO es_preview_file, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;get file name
+  file_name = getTextFieldValue(Event, 'es_file_name')
+  
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  title = 'Preview of ' + file_name
+  XDISPLAYFILE, file_name, GROUP=widget_id, TITLE = title
   
 END
