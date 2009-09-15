@@ -32,74 +32,24 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO refresh_status_of_table, Event
 
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ;get table value
+  table = getTableValue(Event, 'table_uname')
+  sz = (SIZE(table))(2)
   
-  wWidget =  Event.top            ;widget id
+  ;check that all the files exist and temperature defined
+  index = 0
+  WHILE (index LT sz) DO BEGIN
+    IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) EQ '') THEN BREAK
+    IF (FILE_TEST(table[0,index])) THEN BEGIN
+      table[1,index] = 'READY'
+    ENDIF ELSE BEGIN
+      table[1,index] = 'NOT READY'
+    ENDELSE
+    index++
+  ENDWHILE
   
-  CASE Event.id OF
-  
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-    ;Load Command Line File Button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
-      input_dave_ascii_path_button, Event
-    END
-    
-    ;prefix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name'): BEGIN
-      parse_input_field_tab2, Event
-    END
-    
-    ;suffix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix_name'): BEGIN
-      parse_input_field_tab2, Event
-    END
-    
-    ;<User_defined>
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN
-      parse_input_field_tab2, Event
-    ;      check_tab2_run_jobs_button, Event
-    END
-    
-    ;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence_help'): BEGIN
-      help_button, Event
-    END
-    
-    ;Browse ES button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_es_file_button'): BEGIN
-      browse_es_file, Event
-    END
-    
-    ;ES input text field
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_input_file_name'): BEGIN
-      es_input_file_name, Event
-    END
-    
-    ;Preview button of ES file
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_file_preview_button'): BEGIN
-      es_preview_file, Event
-    END
-    
-    ;refresh status of file in table
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_table_uname'): BEGIN
-    refresh_status_of_table, Event
-    END
-    
-    ;Quit button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='quit_uname'): BEGIN
-      id = WIDGET_INFO(Event.top, $
-        FIND_BY_UNAME='MAIN_BASE')
-      WIDGET_CONTROL, id, /DESTROY
-     END
-    
-    
-    ELSE:
-    
-  ENDCASE
-  
+  putValue, Event, 'table_uname', table
+
 END

@@ -234,7 +234,7 @@ PRO parse_input_field_tab2, Event
   suffix = getTextFieldValue(Event,'input_prefix_name')
   
   nbr_files = N_ELEMENTS(column_seq_number)
-  table = STRARR(3,nbr_files)
+  table = STRARR(2,nbr_files)
   index = 0
   table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
@@ -265,12 +265,12 @@ PRO parse_input_field_tab2, Event
   
   IF (nbr_files GT 0 AND $
     table[0,0] NE '') THEN BEGIN
-    activate_widget, Event, 'tab2_refresh_table_uname', 1
+    activate_widget, Event, 'refresh_table_uname', 1
   ENDIF ELSE BEGIN
-    activate_widget, Event, 'tab2_refresh_table_uname', 0
+    activate_widget, Event, 'refresh_table_uname', 0
   ENDELSE
   
-  putValue, Event,'tab2_table_uname', table
+  putValue, Event,'table_uname', table
   
 END
 
