@@ -180,7 +180,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     VALUE = 'ES File Name:')
     
   label = WIDGET_LABEL(row_a_2,$
-    VALUE = 'N/A',$
+    ;VALUE = 'N/A',$
+    VALUE = '/Users/j35/results/D20_50_ElasticScan.txt', $
     SCR_XSIZE = 580,$
     UNAME = 'es_file_name',$
     /ALIGN_LEFT)
@@ -189,8 +190,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     VALUE = 'PREVIEW',$
     SCR_XSIZE = 110,$
     SENSITIVE = 0,$
-    UNAME = 'es_file_preview_button',$
-    /PUSHBUTTON_EVENTS)
+    UNAME = 'es_file_preview_button')
     
   ;**************************************************************************
     
@@ -210,6 +210,6 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   run = WIDGET_BUTTON(row3,$
     VALUE = ' R U N   D I V I S I I O N S ',$
     UNAME = 'run_uname',$
-    SENSITIVE = 0)
+    SENSITIVE = 1) ;remove_me 0
     
 END

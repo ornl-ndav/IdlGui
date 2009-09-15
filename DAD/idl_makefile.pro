@@ -18,6 +18,7 @@ cd, IdlUtilitiesPath
 cd , CurrentFolder + '/Classes/'
 .run IDLxmlParser__define.pro
 .run IDLsendLogBook__define.pro
+.run IDL3columnsASCIIparser__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -32,6 +33,7 @@ cd, CurrentFolder
 .run dad_input_dave_ascii.pro
 .run dad_input_es_file.pro
 .run dad_table.pro
+.run dad_run.pro
 
 ;main functions
 .run MainBaseEvent.pro
