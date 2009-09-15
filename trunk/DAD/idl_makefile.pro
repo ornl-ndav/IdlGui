@@ -28,6 +28,7 @@ cd, CurrentFolder + '/DADgui/'
 
 ;Build all procedures
 cd, CurrentFolder
+.run dad_check_gui_status.pro
 .run dad_input_dave_ascii.pro
 .run dad_input_es_file.pro
 .run dad_table.pro
