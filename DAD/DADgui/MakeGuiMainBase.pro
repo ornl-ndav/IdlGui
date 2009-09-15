@@ -82,7 +82,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'BSS',$
-    UNAME = 'tab2_manual_input_suffix_name',$
+    UNAME = 'input_suffix_name',$
     /EDITABLE,$
     XSIZE = 20)
     
@@ -91,7 +91,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'txt',$
-    UNAME = 'tab2_manual_input_prefix_name',$
+    UNAME = 'input_prefix_name',$
     /EDITABLE,$
     XSIZE = 10)
     
@@ -105,7 +105,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     VALUE = '',$
     XSIZE = 107,$
     /EDITABLE,$
-    UNAME = 'tab2_manual_input_sequence')
+    UNAME = 'input_sequence')
     
   help = WIDGET_BUTTON(row_a_2,$
     VALUE = '?',$
