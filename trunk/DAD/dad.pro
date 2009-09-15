@@ -37,22 +37,32 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  ;******************************************************************************
-  ;******************************************************************************
-  APPLICATION       = 'CLoop'
-  VERSION           = '1.0.0'
-  DEBUGGING         = 'no' ;yes/no
-  TESTING           = 'no'
-  CHECKING_PACKAGES = 'yes'
+  file = OBJ_NEW('IDLxmlParser','.DAD.cfg')
+  ;============================================================================
+  ;****************************************************************************
+  APPLICATION = file->getValue(tag=['configuration','application'])
+  VERSION = file->getValue(tag=['configuration','version'])
+  DEBUGGING = file->getValue(tag=['configuration','debugging'])
+  TESTING = file->getValue(tag=['configuration','testing'])
+    ;CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
+  ;****************************************************************************
+  ;============================================================================
   
-  ;DEBUGGINGiî
-  sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/CLoop/',$ ;path to CL file
-    input_text: ''}
-  ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
-  ;******************************************************************************
-  ;******************************************************************************
-    
+  ;PACKAGE_REQUIRED_BASE = { driver:           '',$
+  ;  version_required: '',$
+  ;  found: 0,$
+  ;  sub_pkg_version:   ''}
+  ;;sub_pkg_version: python program that gives pkg v.
+  ;my_package = REPLICATE(PACKAGE_REQUIRED_BASE,3)
+  ;my_package[0].driver           = 'findnexus'
+  ;my_package[0].version_required = '1.5'
+  ;my_package[1].driver           = 'sas_reduction'
+  ;my_package[1].version_required = ''
+  ;my_package[1].sub_pkg_version  = './drversion'
+  ;my_package[2].driver           = 'findcalib'
+  ;************************************************************************
+  ;************************************************************************
+  
   ;get ucams of user if running on linux
   ;and set ucams to 'j35' if running on darwin
   IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -78,7 +88,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     cl_array: STRARR(2),$
     
     debugging:    debugging,$ ;yes or no
-    debugging_structure: sDebugging,$
     ucams:        ucams,$
     application:  APPLICATION,$
     processing:   '(PROCESSING)',$
@@ -89,7 +98,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
    
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Command Line Looper (CLoop)'
+  MainBaseTitle  = 'Dave Ascii Division (DAD)'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
   MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -116,16 +125,16 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ; Date Information
   ;==============================================================================
   ;Put date/time when user started application in first line of log book
-  time_stamp = GenerateReadableIsoTimeStamp()
-  message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-  IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
+  ;time_stamp = GenerateReadableIsoTimeStamp()
+  ;message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+  ;IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='input_text_field')
-    WIDGET_CONTROL, id, SET_VALUE=sDebugging.input_text
+  ;  id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+  ;  WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
+  ;  id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='input_text_field')
+  ; WIDGET_CONTROL, id, SET_VALUE=sDebugging.input_text
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
   
@@ -136,7 +145,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
-PRO cloop, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO dad, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 

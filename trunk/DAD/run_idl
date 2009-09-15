@@ -1,5 +1,6 @@
+spawn, 'cp DAD.cfg .DAD.cfg'
 @idl_makefile.pro
-cloop
+dad
 
 
 
