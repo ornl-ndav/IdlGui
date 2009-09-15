@@ -135,7 +135,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   button = WIDGET_BUTTON(row_a_1,$
     VALUE = 'BROWSE',$
     SCR_XSIZE = 100,$
-    UNAME = 'tab2_manual_input_folder')
+    UNAME = 'browse_es_file_button')
     
   text = WIDGET_TEXT(row_a_1,$
     VALUE = '',$
@@ -151,7 +151,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   label = WIDGET_LABEL(row_a_2,$
     VALUE = 'N/A',$
     SCR_XSIZE = 580,$
-    UNAME = 'aa',$
+    UNAME = 'es_file_name',$
     /ALIGN_LEFT)
     
   help = WIDGET_BUTTON(row_a_2,$

@@ -32,51 +32,23 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO browse_es_file, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  wWidget =  Event.top            ;widget id
+  path = (*global).default_path
+  title = 'Select Elastic Scan ASCII File'
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
   
-  CASE Event.id OF
-  
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
+  result = DIALOG_PICKFILE(DIALOG_PARENT = widget_id, $
+    /MUST_EXIST, $
+    TITLE = title, $
+    /READ)
     
-    ;Load Command Line File Button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
-      input_dave_ascii_path_button, Event
-    END
-    
-    ;prefix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_prefix_name'): BEGIN
-      parse_input_field_tab2, Event
-    END
-    
-    ;suffix
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix_name'): BEGIN
-      parse_input_field_tab2, Event
-    END
-    
-    ;<User_defined>
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN
-      parse_input_field_tab2, Event
-    ;      check_tab2_run_jobs_button, Event
-    END
-    
-    ;Help button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence_help'): BEGIN
-      help_button, Event
-    END
-    
-    ;Browse ES button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_es_file_button'): BEGIN
-      browse_es_file, Event
-    END
-    
-    ELSE:
-    
-  ENDCASE
-  
+  IF (result[0] NE '')  THEN BEGIN
+    putValue, Event, 'es_file_name', result[0]
+  ENDIF
+
+
 END

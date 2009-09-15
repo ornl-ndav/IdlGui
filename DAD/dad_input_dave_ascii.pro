@@ -326,23 +326,9 @@ IF (Event.select EQ 1) THEN BEGIN ;button pressed
     (*(*global).old_input_text) = old_input_text
     new_input_text = '[1001-1003,1010],1020,1025-1027'
     putValue, Event, 'input_sequence', new_input_text
-;    help_text1 = '[1001-1003,1010] = 1001,1002,1003 and 1010 are ' + $
-;    'combined into 1 run (1 CL).'
-;    old_help_text1 = getTextFieldvalue(Event,'info_line1_label')
-;    (*global).old_help_text1 = old_help_text1
-;    putValue, Event, 'info_line1_label', help_text1
-;    help_text2 = '1020,1025-1027 = 1020,1025,1026 and 1027 creates ' + $
-;    '4 runs (4 CLs).'
-;    old_help_text2 = getTextFieldvalue(Event,'info_line2_label')
-;    (*global).old_help_text2 = old_help_text2
-;    putValue, Event, 'info_line2_label', help_text2
 ENDIF ELSE BEGIN ;button released
     new_input_text = (*(*global).old_input_text)
-;    new_help_text1 = (*global).old_help_text1
-;    new_help_text2 = (*global).old_help_text2
     putValue, Event, 'input_sequence', new_input_text
-;    putValue, Event, 'info_line1_label', new_help_text1
-;    putValue, Event, 'info_line2_label', new_help_text2  
 ENDELSE
 
 END
