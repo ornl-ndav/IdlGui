@@ -112,6 +112,36 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     UNAME = 'input_sequence_help',$
     /PUSHBUTTON_EVENTS)
     
+  ;***********************************************************************
+    
+  ;row2 (big table)
+  row2 = WIDGET_BASE(Base,$
+    /ROW)
+    
+  Table = WIDGET_TABLE(row2,$
+    UNAME = 'table_uname',$
+    XSIZE = 2,$
+    YSIZE = 200,$
+    SCR_XSIZE = 785,$
+    SCR_YSIZE = 320,$
+    ;    /SCROLL,$
+    EDITABLE = [1,0],$ ;output file  is editable
+    COLUMN_WIDTHS = [650,110],$
+    /NO_ROW_HEADERS,$
+    COLUMN_LABELS = ['Output File','Status'],$
+    /RESIZEABLE_COLUMNS)
+    
+  ;row3
+  row3 = WIDGET_BASE(Base,$
+    /ROW)
+    
+  button1 = WIDGET_BUTTON(row3,$
+    VALUE = 'REFRESH TABLE (check status of files)',$
+    UNAME = 'refresh_table_uname',$
+    XSIZE = 785,$
+    SENSITIVE = 0)
+    
+    
   ;ELASTIC SCAN ASCII FILE ***************************************************
   row_a = WIDGET_BASE(base,$
     /COLUMN,$
@@ -162,53 +192,24 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     UNAME = 'es_file_preview_button',$
     /PUSHBUTTON_EVENTS)
     
-  ;***********************************************************************
+  ;**************************************************************************
     
-  ;row2 (big table)
-  row2 = WIDGET_BASE(Base,$
-    /ROW)
-    
-  Table = WIDGET_TABLE(row2,$
-    UNAME = 'table_uname',$
-    XSIZE = 2,$
-    YSIZE = 200,$
-    SCR_XSIZE = 785,$
-    SCR_YSIZE = 320,$
-    ;    /SCROLL,$
-    EDITABLE = [1,0],$ ;output file  is editable
-    COLUMN_WIDTHS = [650,110],$
-    /NO_ROW_HEADERS,$
-    COLUMN_LABELS = ['Output File','Status'],$
-    /RESIZEABLE_COLUMNS)
-    
-  ;row3
+  ;last base
   row3 = WIDGET_BASE(Base,$
     /ROW)
     
-  button1 = WIDGET_BUTTON(row3,$
-    VALUE = 'REFRESH TABLE (check status of files)',$
-    UNAME = 'refresh_table_uname',$
-    XSIZE = 785,$
+  quit = WIDGET_BUTTON(row3,$
+    VALUE = 'Q U I T',$
+    UNAME = 'quit_uname')
+    
+  text = '                                            '
+  text = text + '                                             '
+  space = WIDGET_LABEL(row3,$
+    VALUE = text)
+    
+  run = WIDGET_BUTTON(row3,$
+    VALUE = ' R U N   D I V I S I I O N S ',$
+    UNAME = 'run_uname',$
     SENSITIVE = 0)
-    
-;**************************************************************************
-    
-   ;last base
-   row3 = WIDGET_BASE(Base,$
-   /ROW)
-   
-   quit = WIDGET_BUTTON(row3,$
-   VALUE = 'Q U I T',$
-   UNAME = 'quit_uname')
-   
-   text = '                                            '
-   text = text + '                                             '
-   space = WIDGET_LABEL(row3,$
-   VALUE = text) 
-    
-   run = WIDGET_BUTTON(row3,$
-   VALUE = ' R U N   D I V I S I I O N S ',$
-   UNAME = 'run_uname',$
-   SENSITIVE = 0)
     
 END
