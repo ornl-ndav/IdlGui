@@ -38,25 +38,9 @@ PRO DAD_cleanup, tlb
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
-  ;  PTR_FREE, (*global).background
-  ;  PTR_FREE, (*global).BankArray
-  ;  PTR_FREE, (*global).TubeArray
-  ;  PTR_FREE, (*global).PixelArray
-  ;  PTR_FREE, (*global).PixelArray_of_DeadTubes
-  ;  PTR_FREE, (*global).dead_tube_nbr
-  ;  PTR_FREE, (*global).back_bank
-  ;  PTR_FREE, (*global).front_bank
-  ;  PTR_FREE, (*global).both_banks
-  ;  PTR_FREE, (*global).package_required_base
-  ;  PTR_FREE, (*global).list_OF_files_to_send
-  ;  PTR_FREE, (*global).Xarray
-  ;  PTR_FREE, (*global).Xarray_untouched
-  ;  PTR_FREE, (*global).Yarray
-  ;  PTR_FREE, (*global).SigmaYarray
-  ;  PTR_FREE, (*global).rtDataXY
-  ;  PTR_FREE, (*global).DataArray
-  ;  PTR_FREE, (*global).img
-  ;  PTR_FREE, (*global).RoiPixelArrayExcluded
+  PTR_FREE, (*global).old_input_text
+  PTR_FREE, (*global).tab2_table
+  PTR_FREE, (*global).column_file_name_tab2
   PTR_FREE, global
   
 END

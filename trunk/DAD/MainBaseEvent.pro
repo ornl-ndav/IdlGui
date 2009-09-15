@@ -85,6 +85,14 @@ PRO MAIN_BASE_event, Event
       es_preview_file, Event
     END
     
+    ;Quit button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='quit_uname'): BEGIN
+      id = WIDGET_INFO(Event.top, $
+        FIND_BY_UNAME='MAIN_BASE')
+      WIDGET_CONTROL, id, /DESTROY
+     END
+    
+    
     ELSE:
     
   ENDCASE
