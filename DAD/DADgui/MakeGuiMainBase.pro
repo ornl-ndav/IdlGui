@@ -109,7 +109,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   help = WIDGET_BUTTON(row_a_2,$
     VALUE = '?',$
-    UNAME = 'tab2_manual_input_sequence_help',$
+    UNAME = 'input_sequence_help',$
     /PUSHBUTTON_EVENTS)
     
   ;ELASTIC SCAN ASCII FILE ***************************************************

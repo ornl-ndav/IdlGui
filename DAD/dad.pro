@@ -110,6 +110,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sbatch_driver: 'sbatch',$
     
     default_path: '~/results/',$
+    old_input_text: PTR_NEW(0L), $
     
     debugging:    debugging,$ ;yes or no
     ucams:        ucams,$

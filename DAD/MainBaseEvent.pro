@@ -58,13 +58,17 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='input_suffix_name'): BEGIN
       parse_input_field_tab2, Event
     END
-   
+    
     ;<User_defined>
     WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence'): BEGIN
       parse_input_field_tab2, Event
     ;      check_tab2_run_jobs_button, Event
     END
     
+    ;Help button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='input_sequence_help'): BEGIN
+      help_button, Event
+    END
     
     ELSE:
     
