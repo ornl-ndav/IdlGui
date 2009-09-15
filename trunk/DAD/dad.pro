@@ -114,7 +114,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     debugging:    debugging,$ ;yes or no
     ucams:        ucams,$
     application:  APPLICATION,$
-
+    
+    tab2_table: PTR_NEW(0L),$
+    column_file_name_tab2: PTR_NEW(0L),$
+    
     processing:   '(PROCESSING)',$
     ok:           'OK',$
     failed:       'FAILED',$
