@@ -39,16 +39,36 @@ PRO browse_es_file, Event
   
   path = (*global).default_path
   title = 'Select Elastic Scan ASCII File'
-  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   result = DIALOG_PICKFILE(DIALOG_PARENT = widget_id, $
+    PATH = path, $
     /MUST_EXIST, $
+    get_path = new_path, $
     TITLE = title, $
     /READ)
     
   IF (result[0] NE '')  THEN BEGIN
+  (*global).default_path = new_path
     putValue, Event, 'es_file_name', result[0]
   ENDIF
+  
+END
 
+;------------------------------------------------------------------------------
+PRO es_input_file_name, Event
 
+  file_name = getTextFieldValue(Event, 'es_input_file_name')
+  IF (FILE_TEST(file_name[0])) THEN BEGIN ;file exist
+    putValue, Event, 'es_file_name', file_name[0]
+  ENDIF ELSE BEGIN
+    widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    message = file_name + ' does not exist!'
+    result = DIALOG_MESSAGE(message,$
+      /ERROR, $
+      DIALOG_PARENT=widget_id, $
+      TITLE = 'ES file does not exist!')
+  ENDELSE
+  putValue, Event, 'es_input_file_name', ''
+  
 END

@@ -101,7 +101,7 @@ PRO input_dave_ascii_path_button, Event
   
   path = (*global).default_path
   title = 'Select Input Path'
-  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   result = DIALOG_PICKFILE(/DIRECTORY, $
     DIALOG_PARENT = widget_id, $

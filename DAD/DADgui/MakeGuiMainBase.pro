@@ -139,6 +139,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   text = WIDGET_TEXT(row_a_1,$
     VALUE = '',$
+    UNAME = 'es_input_file_name',$
     XSIZE = 110,$
     /EDITABLE)
     
