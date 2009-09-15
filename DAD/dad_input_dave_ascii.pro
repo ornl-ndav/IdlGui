@@ -32,25 +32,22 @@
 ;
 ;==============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO input_dave_ascii_path_button, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  wWidget =  Event.top            ;widget id
+  path = (*global).default_path
+  title = 'Select Input Path'
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_base')
   
-  CASE Event.id OF
-  
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
+  result = DIALOG_PICKFILE(/DIRECTORY, $
+    DIALOG_PARENT = widget_id, $
+    /MUST_EXIST, $
+    TITLE = title)
     
-    ;Load Command Line File Button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_path_button'): BEGIN
-    input_dave_ascii_path_button, Event
-    END
-    
-    ELSE:
-    
-  ENDCASE
+  IF (result[0] NE '')  THEN BEGIN
+    putValue, Event, 'browse_path_button', result[0]
+  ENDIF
   
 END

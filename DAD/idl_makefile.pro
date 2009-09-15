@@ -28,6 +28,7 @@ cd, CurrentFolder + '/DADgui/'
 
 ;Build all procedures
 cd, CurrentFolder
+.run dad_input_dave_ascii.pro
 
 ;main functions
 .run MainBaseEvent.pro
