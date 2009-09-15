@@ -75,6 +75,11 @@ PRO MAIN_BASE_event, Event
       browse_es_file, Event
     END
     
+    ;ES input text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='es_input_file_name'): BEGIN
+      es_input_file_name, Event
+    END
+    
     ELSE:
     
   ENDCASE
