@@ -32,36 +32,30 @@
 ;
 ;==============================================================================
 
+FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
+
+  iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
+  iData = iASCII->getDataQuickly(TRange, QRange)
+  ;if there is more than 1 temperature, ask user to select which temperature
+  ;he wants to use
+  nbr_t = (size(TRange))(1)
+  IF (nbr_t GT 1) THEN BEGIN
+    es_temperature_selection_base, Event, TRange
+  
+  
+  ENDIF ELSE BEGIN
+  ENDELSE  
+  
+END
+
+;==============================================================================
+;==============================================================================
 PRO run_divisions, Event
 
   ;get ES file name
   es_file_name = getTextFieldValue(event, 'es_file_name')
-  retrieve_info_from_es_file, Event, FILE_NAME=es_file_name
-  
-  
-  
-END
-
-;==============================================================================
-;==============================================================================
-
-PRO retrieve_info_from_es_file, Event, FILE_NAME = file_name
-
-;  no_error = 0
-;  CATCH, no_error
-;  IF (no_error NE 0) THEN BEGIN
-;    CATCH, /CANCEL
-;    RETURN, ['']
-;  ENDIF ELSE BEGIN
-;    OPENR, unit, file_name, /GET_LUN
-;    NbrLine   = FILE_LINES(file_name)
-;    FileArray = STRARR(NbrLine)
-;    READF, unit, FileArray
-;    FREE_LUN, unit
-;    RETURN, FileArray
-;  ENDELSE
-  
-  iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
-    print, iASCII->getData()
+  status = retrieve_info_from_es_file(Event, FILE_NAME=es_file_name)
+  IF (status EQ 0) THEN RETURN ;quit run divisions
   
 END
+
