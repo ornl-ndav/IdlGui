@@ -32,8 +32,33 @@
 ;
 ;==============================================================================
 
-PRO es_temperature_selection_base_gui, main_base_id, wBase, main_base_geometry, TRange
+PRO es_temperature_selection_base_event, Event
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;retrieve main global
+  main_global = (*global).global
+  
+  CASE Event.id OF
+  
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_cancel'): BEGIN
+      (*main_global).continue_to_run_divisions = 0
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ELSE:
+    
+  ENDCASE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO es_temperature_selection_base_gui, main_base_id, wBase, $
+    main_base_geometry, $
+    TRange
+    
   main_base_xoffset = main_base_geometry.xoffset
   main_base_yoffset = main_base_geometry.yoffset
   main_base_xsize = main_base_geometry.xsize
@@ -108,7 +133,7 @@ PRO es_temperature_selection_base, Event, TRange
   wBase = ''
   es_temperature_selection_base_gui, id, wBase, main_base_geometry, TRange
   
-  global_step1 = PTR_NEW({ wbase: wbase, $
+  local_global = PTR_NEW({ wbase: wbase, $
     global: global, $
     TRange: PTR_NEW(0L), $
     main_event: Event})

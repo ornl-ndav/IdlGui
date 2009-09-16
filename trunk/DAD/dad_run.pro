@@ -34,6 +34,9 @@
 
 FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
 
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
   iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
   iData = iASCII->getDataQuickly(TRange, QRange)
   ;if there is more than 1 temperature, ask user to select which temperature
@@ -41,16 +44,25 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   nbr_t = (size(TRange))(1)
   IF (nbr_t GT 1) THEN BEGIN
     es_temperature_selection_base, Event, TRange
-  
-  
+    IF ((*global).continue_to_run_divisions) THEN BEGIN
+    ;temp_index = (*global).es_temp_index
+    ENDIF ELSE BEGIN
+      RETURN, 0
+    ENDELSE
   ENDIF ELSE BEGIN
-  ENDELSE  
+    temp_index = 0
+  ENDELSE
+  
+  RETURN, 1
   
 END
 
 ;==============================================================================
 ;==============================================================================
 PRO run_divisions, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
 
   ;get ES file name
   es_file_name = getTextFieldValue(event, 'es_file_name')
