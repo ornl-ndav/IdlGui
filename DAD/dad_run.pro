@@ -45,7 +45,8 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   IF (nbr_t GT 1) THEN BEGIN
     es_temperature_selection_base, Event, TRange
     IF ((*global).continue_to_run_divisions) THEN BEGIN
-    ;temp_index = (*global).es_temp_index
+    temp_index = (*global).es_temp_index
+    print, 'temp_index: ' + string(temp_index)
     ENDIF ELSE BEGIN
       RETURN, 0
     ENDELSE

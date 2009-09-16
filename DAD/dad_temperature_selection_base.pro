@@ -42,8 +42,18 @@ PRO es_temperature_selection_base_event, Event
   
   CASE Event.id OF
   
+    ;CANCEL button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_cancel'): BEGIN
       (*main_global).continue_to_run_divisions = 0
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_uname')
+      WIDGET_CONTROL, id, /DESTROY
+    END
+    
+    ;OK button
+    WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_ok'): BEGIN
+      index = getDroplistSelect(Event, 'es_temperature_droplist')
+      (*main_global).es_temp_index = index
+      (*main_global).continue_to_run_divisions = 1
       id = WIDGET_INFO(Event.top, FIND_BY_UNAME='es_temperature_base_uname')
       WIDGET_CONTROL, id, /DESTROY
     END

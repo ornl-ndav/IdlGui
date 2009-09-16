@@ -51,3 +51,10 @@ FUNCTION getButtonValue, Event, uname
   WIDGET_CONTROL, id, GET_VALUE=value
   RETURN, value
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getDroplistSelect, Event, uname
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+value = WIDGET_INFO(id, /DROPLIST_SELECT)
+RETURN, value
+END
