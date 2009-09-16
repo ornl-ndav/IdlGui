@@ -34,6 +34,7 @@ cd, CurrentFolder
 .run dad_input_es_file.pro
 .run dad_table.pro
 .run dad_run.pro
+.run dad_temperature_selection_base.pro
 
 ;main functions
 .run MainBaseEvent.pro
