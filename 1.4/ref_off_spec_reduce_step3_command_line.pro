@@ -51,7 +51,7 @@ PRO  reduce_step3_run_jobs, Event
       cmd_srun = 'sbatch -p heaterq '
     END
   ENDCASE
-  
+    
   ;get path
   output_path = getButtonValue(Event, 'reduce_tab3_output_folder_button')
   
@@ -70,6 +70,8 @@ PRO  reduce_step3_run_jobs, Event
     
     ;driver
     cmd = cmd_srun + reduce_structure.driver
+  
+    cmd += ' --inst=' + instrument + ' '
     
     ;data full nexus name
     data = big_table[1,row]
@@ -79,7 +81,7 @@ PRO  reduce_step3_run_jobs, Event
     IF (instrument EQ 'REF_M') THEN BEGIN
       data_path = '/entry-' + big_table[2,row] + '/bank1,1'
     ENDIF ELSE BEGIN
-      data_path = '/entry/'
+      data_path = '/entry/bank1,1'
     ENDELSE
     cmd += ' ' + reduce_structure.data_paths + '=' + data_path
     
@@ -96,7 +98,7 @@ PRO  reduce_step3_run_jobs, Event
     IF (instrument EQ 'REF_M') THEN BEGIN
       norm_path = '/entry-' + big_table[5,row] + '/bank1,1'
     ENDIF ELSE BEGIN
-      norm_path = '/entry/
+      norm_path = '/entry/bank1,1'
     ENDELSE
     cmd += ' ' + reduce_structure.norm_paths + '=' + norm_path
     
