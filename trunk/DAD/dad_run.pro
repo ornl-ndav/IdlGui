@@ -34,9 +34,23 @@
 
 FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
 
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+
+  error = 0
+  ;CATCH, error ;REMOVE_ME
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    message = 'ERROR in the parsing of the Elascic Scan File!'
+    result = DIALOG_MESSAGE(message,$
+    /ERROR, $
+    /CENTER, $
+    DIALOG_PARENT = widget_id)
+    RETURN, 0
+  ENDIF
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
   iData = iASCII->getDataQuickly(TRange, QRange)
   ;if there is more than 1 temperature, ask user to select which temperature
@@ -45,14 +59,35 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   IF (nbr_t GT 1) THEN BEGIN
     es_temperature_selection_base, Event, TRange
     IF ((*global).continue_to_run_divisions) THEN BEGIN
-    temp_index = (*global).es_temp_index
-    print, 'temp_index: ' + string(temp_index)
     ENDIF ELSE BEGIN
       RETURN, 0
     ENDELSE
   ENDIF ELSE BEGIN
-    temp_index = 0
+    (*global).es_temp_index = 0
   ENDELSE
+  ;[nbr_T, nbr_Q] where each element is [value error_value]
+  (*(*global).iESdata) = iData
+  ;[nbr_Q]
+  (*(*global).esQrange) = QRange
+  
+  ;create 3d Arrays [Q, scaling_factor, scaling_factor_error]
+  ;index of temperature to look for scaling in each Q data set
+  temp_index = (*global).es_temp_index
+  nbr_Q = (size(Qrange))(1)
+  
+  es_Q_sf_sferror = DBLARR(3,nbr_Q)
+  index = 0
+  WHILE (index LT nbr_Q) DO BEGIN
+    T_of_interest = iData[temp_index,index]
+    T_of_interest = STRCOMPRESS(T_of_interest)
+    value_error_array = STRSPLIT(T_of_interest,' ',/EXTRACT)
+    es_Q_sf_sferror[0,index] = DOUBLE(Qrange[index])
+    es_Q_sf_sferror[1,index] = DOUBLE(value_error_array[0])
+    es_Q_sf_sferror[2,index] = DOUBLE(value_error_array[1])
+    index++
+  ENDWHILE
+  
+  (*(*global).es_Q_sf_sferror) = es_Q_sf_sferror
   
   RETURN, 1
   
@@ -64,11 +99,13 @@ PRO run_divisions, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   ;get ES file name
   es_file_name = getTextFieldValue(event, 'es_file_name')
   status = retrieve_info_from_es_file(Event, FILE_NAME=es_file_name)
   IF (status EQ 0) THEN RETURN ;quit run divisions
+
+  
   
 END
 

@@ -89,6 +89,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     
     continue_to_run_divisions: 0b,$
     es_temp_index: 0, $
+    iESdata: PTR_NEW(0L), $ ;instance of elastic scan object ('blue' file)
+    esQrange: PTR_NEW(0L), $ ;array of Q values from elastic scan file
+    es_Q_sf_sferror: PTR_NEW(0L), $ [Q, scaling_factor, scaling_factor_error]
     
     processing:   '(PROCESSING)',$
     ok:           'OK',$
