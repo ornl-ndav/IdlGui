@@ -213,23 +213,25 @@ PRO MAIN_BASE_event, Event
     FIND_BY_UNAME='reduce_step2_normalization_text_field'): BEGIN
     reduce_step2_run_number_normalization, Event
     putTextFieldValue, Event, 'reduce_step2_normalization_text_field', ''
-    tab_id = WIDGET_INFO(Event.top,$
-      FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
-    CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
-    CASE (currTabSelect) OF
-      0: BEGIN ;off_off
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
-      END
-      1: BEGIN ;off_on
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
-      END
-      2: BEGIN ;on_off
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
-      END
-      3: BEGIN ;on_on
-        check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
-      END
-    ENDCASE
+    IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+      tab_id = WIDGET_INFO(Event.top,$
+        FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+      CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+      CASE (currTabSelect) OF
+        0: BEGIN ;off_off
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=1
+        END
+        1: BEGIN ;off_on
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=2
+        END
+        2: BEGIN ;on_off
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=3
+        END
+        3: BEGIN ;on_on
+          check_status_of_reduce_step2_data_spin_state_hidden_base, Event, tab=4
+        END
+      ENDCASE
+    ENDIF
   END
   
   ;remove normalization button
@@ -1176,33 +1178,33 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_draw'): BEGIN
     CATCH, error
     IF (error NE 0) THEN BEGIN
-    CATCH,/CANCEL
+      CATCH,/CANCEL
     ENDIF ELSE BEGIN
-    DEVICE, CURSOR_STANDARD=31
-    current_list_OF_files = (*(*global).list_OF_ascii_files)
-    IF (current_list_OF_files[0] NE '') THEN BEGIN
-      delta_x = (*global).delta_x
-      x = Event.x
-      x1 = FLOAT(delta_x) * FLOAT(x)
-      y = Event.y
-      y1 = y / 2
-      text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
-      text += '  |  y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
-      
-      total_array = (*(*global).total_array_untouched)
-      size_x = (SIZE(total_array,/DIMENSION))[0]
-      size_y = (SIZE(total_array,/DIMENSION))[1]
-      IF (x LT size_x AND $
-        y LT size_y) THEN BEGIN
-        counts = total_array(x,y)
-        sIntensity = STRING(counts,FORMAT='(e8.1)')
-        intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
-      ENDIF ELSE BEGIN
-        intensity = 'N/A'
-      ENDELSE
-      text += '  |  counts: ' + intensity
-      putTextFieldValue, Event, 'xy_display_step2', text
-    ENDIF
+      DEVICE, CURSOR_STANDARD=31
+      current_list_OF_files = (*(*global).list_OF_ascii_files)
+      IF (current_list_OF_files[0] NE '') THEN BEGIN
+        delta_x = (*global).delta_x
+        x = Event.x
+        x1 = FLOAT(delta_x) * FLOAT(x)
+        y = Event.y
+        y1 = y / 2
+        text  = 'x: ' + STRCOMPRESS(x1,/REMOVE_ALL)
+        text += '  |  y: ' + STRCOMPRESS(y1,/REMOVE_ALL)
+        
+        total_array = (*(*global).total_array_untouched)
+        size_x = (SIZE(total_array,/DIMENSION))[0]
+        size_y = (SIZE(total_array,/DIMENSION))[1]
+        IF (x LT size_x AND $
+          y LT size_y) THEN BEGIN
+          counts = total_array(x,y)
+          sIntensity = STRING(counts,FORMAT='(e8.1)')
+          intensity = STRCOMPRESS(sIntensity,/REMOVE_ALL)
+        ENDIF ELSE BEGIN
+          intensity = 'N/A'
+        ENDELSE
+        text += '  |  counts: ' + intensity
+        putTextFieldValue, Event, 'xy_display_step2', text
+      ENDIF
     ENDELSE
   END
   
