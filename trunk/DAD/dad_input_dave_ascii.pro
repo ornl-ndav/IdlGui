@@ -234,7 +234,7 @@ PRO parse_input_field_tab2, Event
   suffix = getTextFieldValue(Event,'input_prefix_name')
   
   nbr_files = N_ELEMENTS(column_seq_number)
-  table = STRARR(2,nbr_files)
+  table = STRARR(4,nbr_files)
   index = 0
   table_index = 0
   WHILE (index LT nbr_files) DO BEGIN
@@ -249,14 +249,21 @@ PRO parse_input_field_tab2, Event
       ENDCASE
       
       ;update big table
-      file_name = path + prefix + '_' + add_string + '.' + suffix
+      file_name_first_part = path + prefix + '_' + add_string
+      file_name = file_name_first_part + '.' + suffix
       table[0,table_index]= file_name
       IF (FILE_TEST(file_name)) THEN BEGIN
-        message = 'READY'
+        message = 'FOUND'
       ENDIF ELSE BEGIN
-        message = 'NOT READY'
+        message = 'NOT FOUND'
       ENDELSE
       table[1,table_index] = message
+      
+      ;define name of output file
+      output_file_name = file_name_first_part + '_divided'
+      output_file_name += '.' + suffix
+      table[2,table_index]= output_file_name
+      
       table_index++
       
     ENDIF
@@ -318,17 +325,17 @@ END
 
 ;------------------------------------------------------------------------------
 PRO help_button, Event
-;get global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-IF (Event.select EQ 1) THEN BEGIN ;button pressed
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  IF (Event.select EQ 1) THEN BEGIN ;button pressed
     old_input_text = getTextFieldValue(Event,'input_sequence')
     (*(*global).old_input_text) = old_input_text
     new_input_text = '[1001-1003,1010],1020,1025-1027'
     putValue, Event, 'input_sequence', new_input_text
-ENDIF ELSE BEGIN ;button released
+  ENDIF ELSE BEGIN ;button released
     new_input_text = (*(*global).old_input_text)
     putValue, Event, 'input_sequence', new_input_text
-ENDELSE
-
+  ENDELSE
+  
 END
