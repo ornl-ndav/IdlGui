@@ -118,6 +118,9 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = WIDGET_BASE(Base,$
     /ROW)
     
+    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_division.dat',''],$
+    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_division.dat','']]
+    
   Table = WIDGET_TABLE(row2,$
     UNAME = 'table_uname',$
     XSIZE = 4,$
@@ -127,6 +130,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     ;    /SCROLL,$
     EDITABLE = [1,0,1,0],$ ;output file  is editable
     COLUMN_WIDTHS = [300,70,300,90],$
+    VALUE = big_table, $ ;REMOVE_ME
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Input Files','Exist?','Output Files','Run Status'],$
     /RESIZEABLE_COLUMNS)

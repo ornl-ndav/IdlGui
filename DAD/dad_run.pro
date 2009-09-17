@@ -35,16 +35,16 @@
 FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
 
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-
+  
   error = 0
   ;CATCH, error ;REMOVE_ME
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'ERROR in the parsing of the Elascic Scan File!'
     result = DIALOG_MESSAGE(message,$
-    /ERROR, $
-    /CENTER, $
-    DIALOG_PARENT = widget_id)
+      /ERROR, $
+      /CENTER, $
+      DIALOG_PARENT = widget_id)
     RETURN, 0
   ENDIF
   
@@ -94,6 +94,34 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   
 END
 
+;------------------------------------------------------------------------------
+FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, QRANGE, iData
+
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  
+  error = 0
+  ;CATCH, error ;REMOVE_ME
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    message = 'ERROR in the parsing of the Elascic Scan File!'
+    result = DIALOG_MESSAGE(message,$
+      /ERROR, $
+      /CENTER, $
+      DIALOG_PARENT = widget_id)
+    RETURN, 0
+  ENDIF
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
+  IF (~OBJ_VALID(iASCII)) THEN RETURN, 0
+  
+  iData = iASCII->getDataQuickly(TRange, QRange)
+  
+  RETURN, 1
+END
+
 ;==============================================================================
 ;==============================================================================
 PRO run_divisions, Event
@@ -105,8 +133,34 @@ PRO run_divisions, Event
   es_file_name = getTextFieldValue(event, 'es_file_name')
   status = retrieve_info_from_es_file(Event, FILE_NAME=es_file_name)
   IF (status EQ 0) THEN RETURN ;quit run divisions
-
-  ;
+  
+  ;get big_table
+  table = getTableValue(Event, 'table_uname')
+  nbr_files = (size(table))(2)
+  index_file = 0
+  WHILE (index_file LT nbr_files) DO BEGIN
+  
+    ;current input working file
+    input_ascii_file = table[0,index_file]
+    ;current output ascii file
+    output_ascii_file = table[2,index_file]
+    status = retrieve_data_from_ascii_file(Event, $
+      FILE_NAME=input_ascii_file, $
+      Qrange, $
+      iData)
+    IF (status EQ 0) THEN BEGIN
+      table[3,index_file] = FAILED
+      CONTINUE
+    ENDIF
+    
+  ;check that the Q matches
+  
+    
+    
+    
+    index_file++
+  ENDWHILE
+  
   
 END
 
