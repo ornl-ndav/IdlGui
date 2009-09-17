@@ -43,9 +43,9 @@ PRO refresh_status_of_table, Event
   WHILE (index LT sz) DO BEGIN
     IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) EQ '') THEN BREAK
     IF (FILE_TEST(table[0,index])) THEN BEGIN
-      table[1,index] = 'READY'
+      table[1,index] = 'FOUND'
     ENDIF ELSE BEGIN
-      table[1,index] = 'NOT READY'
+      table[1,index] = 'NOT FOUND'
     ENDELSE
     index++
   ENDWHILE

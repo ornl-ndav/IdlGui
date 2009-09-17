@@ -120,15 +120,15 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   Table = WIDGET_TABLE(row2,$
     UNAME = 'table_uname',$
-    XSIZE = 2,$
+    XSIZE = 4,$
     YSIZE = 200,$
     SCR_XSIZE = 785,$
     SCR_YSIZE = 320,$
     ;    /SCROLL,$
-    EDITABLE = [1,0],$ ;output file  is editable
-    COLUMN_WIDTHS = [650,110],$
+    EDITABLE = [1,0,1,0],$ ;output file  is editable
+    COLUMN_WIDTHS = [300,70,300,90],$
     /NO_ROW_HEADERS,$
-    COLUMN_LABELS = ['Output File','Status'],$
+    COLUMN_LABELS = ['Input Files','Exist?','Output Files','Run Status'],$
     /RESIZEABLE_COLUMNS)
     
   ;row3

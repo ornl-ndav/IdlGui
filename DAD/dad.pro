@@ -84,7 +84,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ucams:        ucams,$
     application:  APPLICATION,$
     
-    tab2_table: PTR_NEW(0L),$
+    table: PTR_NEW(0L),$
     column_file_name_tab2: PTR_NEW(0L),$
     
     continue_to_run_divisions: 0b,$

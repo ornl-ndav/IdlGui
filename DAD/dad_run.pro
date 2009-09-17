@@ -87,7 +87,8 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
     index++
   ENDWHILE
   
-  (*(*global).es_Q_sf_sferror) = es_Q_sf_sferror
+  ;[Q, scaling_factor, scaling_factor_error]
+  (*(*global).es_Q_sf_sferror) = es_Q_sf_sferror ;
   
   RETURN, 1
   
@@ -105,7 +106,7 @@ PRO run_divisions, Event
   status = retrieve_info_from_es_file(Event, FILE_NAME=es_file_name)
   IF (status EQ 0) THEN RETURN ;quit run divisions
 
-  
+  ;
   
 END
 
