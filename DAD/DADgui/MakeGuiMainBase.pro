@@ -185,7 +185,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     
   label = WIDGET_LABEL(row_a_2,$
     ;VALUE = 'N/A',$
-    VALUE = '/Users/j35/results/D2O_50_ElasticScan.txt', $
+    VALUE = '/Users/j35/results/D2O_50_ElasticScan_1T.txt', $
     SCR_XSIZE = 580,$
     UNAME = 'es_file_name',$
     /ALIGN_LEFT)
