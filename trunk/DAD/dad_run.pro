@@ -95,8 +95,10 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, QRANGE, iData
-
+FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
+    QRANGE, $
+    iData
+    
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   error = 0
@@ -122,6 +124,78 @@ FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, QRANGE, iDat
   RETURN, 1
 END
 
+;------------------------------------------------------------------------------
+FUNCTION QrangeMatch, esQrange=esQrange, daveQrange=daveQrange
+  RETURN, ARRAY_EQUAL(esQrange, daveQrange)
+END
+
+;------------------------------------------------------------------------------
+;This function create the big array of the dave ascii file
+;input is [value value_error]
+;ouput will be [value],[value_error]
+FUNCTION create_value_value_error, iDAta, dave_value_valueerror
+
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH, /CANCEL
+    RETURN, 0
+  ENDIF
+  
+  nbr_row = (size(iDAta))(1)
+  nbr_Q   = (size(iData))(2)
+  ;dave_value_valueerror = [nbr_Q, nbr_row, 2]
+  dave_value_valueerror = DBLARR(nbr_Q, nbr_row, 2)
+  index = 0
+  FOR i=0,(nbr_Q-1) DO BEGIN
+    WHILE (index LT nbr_row) DO BEGIN
+      line_compressed = STRCOMPRESS(iData[index,i])
+      split_array = STRSPLIT(line_compressed, ' ', /EXTRACT)
+      dave_value_valueerror[i,index,0] = DOUBLE(split_array[0])
+      dave_value_valueerror[i,index,1] = DOUBLE(split_array[1])
+      index++
+    ENDWHILE
+  ENDFOR
+  
+  RETURN, 1
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
+    DIVIDED_DAVE_DATA=divided_dave_data
+    
+  nbr_Q = (size(dave_data))(1)
+  nbr_row = (size(dave_data))(2)
+  
+  divided_dave_data = DBLARR(nbr_Q, nbr_row, 2)
+  
+  FOR i=0,(nbr_Q-1) DO BEGIN
+    FOR j=0,(nbr_row-1) DO BEGIN
+      A = dave_data[i,j,0]
+      B = ES_DATA[0,i]
+      sigmaA = dave_data[i,j,1]
+      sigmaB = ES_DATA[1,i]
+      
+      value = A / B
+      
+      error_term1 = ((A^2) / (B^4)) * sigmaB^2
+      error_term2 = sigmaA^2 / (B^2)
+      value_error_2 = error_term1 + error_term2
+      value_error   = SQRT(value_error_2)
+      
+      divided_dave_data[i,j,0] = value
+      divided_dave_data[i,j,1] = value_error
+      
+    ENDFOR
+  ENDFOR
+    
+  RETURN, 1
+  
+END
+
+
+
 ;==============================================================================
 ;==============================================================================
 PRO run_divisions, Event
@@ -142,25 +216,55 @@ PRO run_divisions, Event
   
     ;current input working file
     input_ascii_file = table[0,index_file]
-    ;current output ascii file
-    output_ascii_file = table[2,index_file]
+
     status = retrieve_data_from_ascii_file(Event, $
       FILE_NAME=input_ascii_file, $
       Qrange, $
       iData)
     IF (status EQ 0) THEN BEGIN
-      table[3,index_file] = FAILED
+      table[3,index_file] = 'FAILED'
       CONTINUE
     ENDIF
     
-  ;check that the Q matches
-  
+    ;check that the Q matches
+    es_Q_sf_sferror = (*(*global).es_Q_sf_sferror)
+    nbr_q_esQrange = (size(es_Q_sf_sferror[0,*]))(2)
+    esQrange = FLTARR(nbr_q_esQrange)
+    esQrange[*] = es_Q_sf_sferror[0,*]
+    ;if Q range axes do not match
+    IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
+      table[3,index_file] = 'FAILED'
+      CONTINUE
+    ENDIF
     
+    ;split value and value_error of dave data
+    status = create_value_value_error(iDAta, dave_value_valueerror)
+    IF (status EQ 0) THEN BEGIN
+      table[3,index_file] = 'FAILED'
+      CONTINUE
+    ENDIF
     
+    ;perform division
+    es_sf_sferror = FLTARR(2,nbr_q_esQrange)
+    es_sf_sferror[0,*] = es_Q_sf_sferror[1,*]
+    es_sf_sferror[1,*] = es_Q_sf_sferror[2,*]
     
+    status = perform_division( Event, $
+      ES_DATA = es_sf_sferror, $
+      DAVE_DATA = dave_value_valueerror, $
+      DIVIDED_DAVE_DATA = divided_dave_data)
+      
+    ;current output ascii file
+    output_ascii_file = table[2,index_file]
+
+    ;create output ascii file
+    status = create_output_ascii_file(Event, $
+    
+
     index_file++
   ENDWHILE
   
   
 END
 
+;------------------------------------------------------------------------------
