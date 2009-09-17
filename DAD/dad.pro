@@ -39,7 +39,7 @@ PRO DAD_cleanup, tlb
   
   ; Free up the pointers
   PTR_FREE, (*global).old_input_text
-  PTR_FREE, (*global).tab2_table
+  PTR_FREE, (*global).table
   PTR_FREE, (*global).column_file_name_tab2
   PTR_FREE, global
   
@@ -93,7 +93,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     esQrange: PTR_NEW(0L), $ ;array of Q values from elastic scan file
     es_Q_sf_sferror: PTR_NEW(0L), $ [Q, scaling_factor, scaling_factor_error]
     
-    processing:   '(PROCESSING)',$
+  processing:   '(PROCESSING)',$
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$

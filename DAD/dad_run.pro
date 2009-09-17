@@ -97,7 +97,8 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
     QRANGE, $
-    iData
+    iData, $
+    Metadata
     
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
@@ -119,7 +120,7 @@ FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
   iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
   IF (~OBJ_VALID(iASCII)) THEN RETURN, 0
   
-  iData = iASCII->getDataQuickly(TRange, QRange)
+  iData = iASCII->getDataQuickly(TRange, QRange, Metadata)
   
   RETURN, 1
 END
@@ -220,7 +221,12 @@ PRO run_divisions, Event
     status = retrieve_data_from_ascii_file(Event, $
       FILE_NAME=input_ascii_file, $
       Qrange, $
-      iData)
+      iData, $
+      Metadata)
+      
+      print, Metadata
+      help, metadata
+      
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
       CONTINUE
@@ -258,7 +264,7 @@ PRO run_divisions, Event
     output_ascii_file = table[2,index_file]
 
     ;create output ascii file
-    status = create_output_ascii_file(Event, $
+    ;status = create_output_ascii_file(Event, $
     
 
     index_file++
