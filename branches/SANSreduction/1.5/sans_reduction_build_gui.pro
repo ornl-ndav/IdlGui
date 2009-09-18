@@ -82,6 +82,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   VERSION = file->getValue(tag=['configuration','version'])
   DEBUGGING = file->getValue(tag=['configuration','debugging'])
   TESTING = file->getValue(tag=['configuration','testing'])
+  TESTING_ON_MAC = file->getValue(tag=['configuration','testing_on_mac'])
   SCROLLING = scroll
   CHECKING_PACKAGES = file->getValue(tag=['configuration','checking_packages'])
   ;****************************************************************************
@@ -133,6 +134,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   global = PTR_NEW ({version:         VERSION,$
     scaling_value: '',$
     build_command_line: 1,$
+    testing_on_mac: testing_on_mac, $
     
     draw_x: 3*192L,$
     draw_y: 3*256L,$
@@ -426,7 +428,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
     ;nexus_path           = '~/SVN/IdlGui/branches/SANSreduction/1.0'
-    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/39/NeXus/'
+    ;nexus_path           = '~/EQSANS/2009_2_6_SCI/1/39/NeXus/'
+    nexus_path           = '~/EQSANS/2009_2_6_SCI/1/40/NeXus/'
     (*global).nexus_path = nexus_path
     (*global).selection_path = '~/results/'
     (*global).wave_dep_back_sub_path = $

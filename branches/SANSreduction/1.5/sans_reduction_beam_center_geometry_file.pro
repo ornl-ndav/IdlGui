@@ -99,11 +99,11 @@ FUNCTION create_tmp_geometry, Event
   z_offset_value = getTextFieldValue(event,'beam_center_z_offset_value')
   z_offset_units = getTextFieldValue(event,'beam_center_z_offset_units')
   
-  ;TS_geom_calc.sh  -DdetXoffset=-0.0149761metre 
+  ;TS_geom_calc.sh  -DdetXoffset=-0.0149761metre
   ;–DdetYoffset=0.000867984metre  -o  ~/results/my_tmp_geometry.nxs
   
   cmd = 'TS_geom_calc.sh '
-  cmd += (*global).geo_file 
+  cmd += (*global).geo_file
   cmd += ' -D detXoffset='
   cmd += STRCOMPRESS(bc_tube_offset_distance_m,/REMOVE_ALL)
   cmd += 'metre'
@@ -114,11 +114,14 @@ FUNCTION create_tmp_geometry, Event
   cmd += STRCOMPRESS(z_offset_value,/REMOVE_ALL)
   cmd += STRCOMPRESS(z_offset_units,/REMOVE_ALL)
   cmd += ' -o ~/results/tmp_geometry.nxs'
-      
-  spawn, cmd, listening, err_listening
-  listening = ''
+  
+  IF ((*global).testing_on_mac EQ 'no') THEN BEGIN
+    spawn, cmd, listening, err_listening
+  ENDIF ELSE BEGIN
+    listening = ''
+  ENDELSE
   result = STRMATCH(listening[N_ELEMENTS(listening)-1],'*ERROR*')
-  IF (result EQ 0) THEN BEGIN 
+  IF (result EQ 0) THEN BEGIN
     main_event = (*global).main_event
     mapbase, main_event, UNAME='overwrite_geometry_base', 1
     putNewButtonValue, main_event, 'overwrite_geometry_button', $
@@ -134,9 +137,13 @@ END
 ;------------------------------------------------------------------------------
 PRO retrieve_default_z_offset_value, BASE=base
 
-  GeoFile = get_up_to_date_geo_file()
-  ;GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'      ;remove_me
   WIDGET_CONTROL, BASE, GET_UVALUE=global
+    
+  IF ((*global).testing_on_mac EQ 'no') THEN BEGIN
+    GeoFile = get_up_to_date_geo_file()
+  ENDIF ELSE BEGIN
+    GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'
+  ENDELSE
   (*global).geo_file = GeoFile
   
   iXML = OBJ_NEW('myXMLparser')
