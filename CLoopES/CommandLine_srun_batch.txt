@@ -1,1 +1,0 @@
-srun --batch -p bac amorphous_reduction_sqe --data=/SNS/BSS/IPTS-493/7/638/NeXus/BSS_638.nxs --verbose --energy-bins=-600.2,600.6,0.4 --mom-trans-bins=0.1,2.2,0.3 --time-zero-offset=-5.0,0 --time-zero-slope=11.967,0 --output=Test01.txt --roi-file=NewerGeometryFullROI.dat --inst-geom=BSS_geom_Si111_2008_02_11.nxs 
