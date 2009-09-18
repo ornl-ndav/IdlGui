@@ -196,8 +196,6 @@ FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
   
 END
 
-
-
 ;==============================================================================
 ;==============================================================================
 PRO run_divisions, Event
@@ -228,8 +226,8 @@ PRO run_divisions, Event
         /CENTER, $
         DIALOG_PARENT = widget_id)
       IF (result EQ 'No') THEN BEGIN
-      index_file++
-      CONTINUE
+        index_file++
+        CONTINUE
       ENDIF
     ENDIF
     
@@ -280,13 +278,13 @@ PRO run_divisions, Event
       DIVIDED_DAVE_DATA = divided_dave_data)
       
     ;create output ascii file
-;    status = create_output_ascii_file(Event, $
-;      output_ascii_file, $
-;      Erange, $
-;      Qrange, $
-;      divided_dave_data, $
-;      metadata)
-;      
+    status = create_output_ascii_file(Event, $
+      output_ascii_file, $
+      Erange, $
+      Qrange, $
+      divided_dave_data, $
+      metadata)
+      
     index_file++
     
   ENDWHILE
