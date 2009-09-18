@@ -91,6 +91,7 @@ PRO es_preview_file, Event
   
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   title = 'Preview of ' + file_name
-  XDISPLAYFILE, file_name, GROUP=widget_id, TITLE = title
+  XDISPLAYFILE, file_name, GROUP=widget_id, TITLE = title, $
+  /EDITABLE, EVENT = Event, PATH=(*global).default_path
   
 END

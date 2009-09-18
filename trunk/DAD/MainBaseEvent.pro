@@ -84,7 +84,7 @@ PRO MAIN_BASE_event, Event
       check_run_jobs_button, Event
     END
     
-    ;Preview button of ES file
+    ;Preview and / or edit button of ES file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='es_file_preview_button'): BEGIN
       es_preview_file, Event
     END

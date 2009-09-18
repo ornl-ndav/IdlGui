@@ -13,6 +13,7 @@ cd, IdlUtilitiesPath
 .run time_utilities.pro
 .run time.pro
 .run logger.pro
+.run xdisplayfile.pro
 
 ;classes
 cd , CurrentFolder + '/Classes/'
