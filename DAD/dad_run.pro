@@ -37,7 +37,7 @@ FUNCTION retrieve_info_from_es_file, Event, FILE_NAME = file_name
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   error = 0
-  ;CATCH, error ;REMOVE_ME
+  CATCH, error ;REMOVE_ME
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'ERROR in the parsing of the Elascic Scan File!'
@@ -104,7 +104,7 @@ FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
   widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   
   error = 0
-  ;CATCH, error ;REMOVE_ME
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     message = 'ERROR in the parsing of the Elascic Scan File!'
@@ -121,6 +121,7 @@ FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
   iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
   IF (~OBJ_VALID(iASCII)) THEN RETURN, 0
   
+  ;[E,Q]
   iData = iASCII->getDataQuickly(ERange, QRange, Metadata)
   
   RETURN, 1
@@ -144,12 +145,14 @@ FUNCTION create_value_value_error, iDAta, dave_value_valueerror
     RETURN, 0
   ENDIF
   
-  nbr_row = (size(iDAta))(1)
-  nbr_Q   = (size(iData))(2)
+  nbr_row = (size(iDAta))(1) ;E
+  nbr_Q   = (size(iData))(2) ;Q
+  
   ;dave_value_valueerror = [nbr_Q, nbr_row, 2]
   dave_value_valueerror = DBLARR(nbr_Q, nbr_row, 2)
-  index = 0
+  
   FOR i=0,(nbr_Q-1) DO BEGIN
+    index = 0
     WHILE (index LT nbr_row) DO BEGIN
       line_compressed = STRCOMPRESS(iData[index,i])
       split_array = STRSPLIT(line_compressed, ' ', /EXTRACT)
@@ -164,8 +167,10 @@ FUNCTION create_value_value_error, iDAta, dave_value_valueerror
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
-    DIVIDED_DAVE_DATA=divided_dave_data
+FUNCTION perform_division, Event, $
+    ES_DATA = es_data, $
+    DAVE_DATA = dave_data, $
+    DIVIDED_DAVE_DATA = divided_dave_data
     
   nbr_Q = (size(dave_data))(1)
   nbr_row = (size(dave_data))(2)
@@ -173,9 +178,12 @@ FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
   divided_dave_data = DBLARR(nbr_Q, nbr_row, 2)
   
   FOR i=0,(nbr_Q-1) DO BEGIN
+  
     FOR j=0,(nbr_row-1) DO BEGIN
+    
       A = dave_data[i,j,0]
       B = ES_DATA[0,i]
+      
       sigmaA = dave_data[i,j,1]
       sigmaB = ES_DATA[1,i]
       
@@ -190,6 +198,7 @@ FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
       divided_dave_data[i,j,1] = value_error
       
     ENDFOR
+    
   ENDFOR
   
   RETURN, 1
@@ -284,7 +293,12 @@ PRO run_divisions, Event
       Qrange, $
       divided_dave_data, $
       metadata)
-      
+    IF (status EQ 0) THEN BEGIN
+      table[3,index_file] = 'FAILED'
+      index_file++
+      CONTINUE
+    ENDIF
+    
     index_file++
     
   ENDWHILE

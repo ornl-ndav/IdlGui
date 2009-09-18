@@ -81,7 +81,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     FRAME = 1)
     
   text = WIDGET_TEXT(inter_base,$
-    VALUE = 'BSS',$
+    VALUE = 'BASIS',$
     UNAME = 'input_suffix_name',$
     /EDITABLE,$
     XSIZE = 20)
@@ -90,7 +90,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     VALUE = '_<User_Defined>.')
     
   text = WIDGET_TEXT(inter_base,$
-    VALUE = 'txt',$
+    VALUE = 'dat',$
     UNAME = 'input_prefix_name',$
     /EDITABLE,$
     XSIZE = 10)
@@ -118,8 +118,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = WIDGET_BASE(Base,$
     /ROW)
     
-    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_divided.dat',''],$
-    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_divided.dat','']]
+;    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_divided.dat',''],$
+;    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_divided.dat','']]
     
   Table = WIDGET_TABLE(row2,$
     UNAME = 'table_uname',$
@@ -130,7 +130,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     ;    /SCROLL,$
     EDITABLE = [1,0,1,0],$ ;output file  is editable
     COLUMN_WIDTHS = [300,70,300,90],$
-    VALUE = big_table, $ ;REMOVE_ME
+;    VALUE = big_table, $ ;REMOVE_ME
     /NO_ROW_HEADERS,$
     COLUMN_LABELS = ['Input Files','Exist?','Output Files','Run Status'],$
     /RESIZEABLE_COLUMNS)
@@ -184,8 +184,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     VALUE = 'ES File Name:')
     
   label = WIDGET_LABEL(row_a_2,$
-    ;VALUE = 'N/A',$
-    VALUE = '/Users/j35/results/D2O_50_ElasticScan_1T.txt', $
+    VALUE = 'N/A',$
+    ;VALUE = '/Users/j35/results/D2O_50_ElasticScan_1T.txt', $ 
     SCR_XSIZE = 580,$
     UNAME = 'es_file_name',$
     /ALIGN_LEFT)
