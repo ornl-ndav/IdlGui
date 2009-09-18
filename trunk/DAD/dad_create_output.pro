@@ -40,7 +40,7 @@ FUNCTION create_output_ascii_file, Event, $
     metadata
     
   error = 0
-  ;CATCH, error  ;REMOVE_ME
+  CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, 0
@@ -67,8 +67,6 @@ FUNCTION create_output_ascii_file, Event, $
   FOR i=0, (nbr_Q - 1) DO BEGIN
     PRINTF, 1, STRCOMPRESS(Qrange[i],/REMOVE_ALL)
   ENDFOR
-  
-  help, divided_dave_data
   
   ;Write big axis
   FOR i=0L, (nbr_Q - 1) DO BEGIN
