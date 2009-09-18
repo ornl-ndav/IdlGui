@@ -118,8 +118,8 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   row2 = WIDGET_BASE(Base,$
     /ROW)
     
-    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_division.dat',''],$
-    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_division.dat','']]
+    big_table = [['~/results/BASIS_5768_1run.dat','','~/results/BASIS_5768_1run_divided.dat',''],$
+    ['~/results/BASIS_5769_1run.dat','','~/results/BASIS_5769_1run_divided.dat','']]
     
   Table = WIDGET_TABLE(row2,$
     UNAME = 'table_uname',$
