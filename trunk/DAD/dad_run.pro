@@ -96,6 +96,7 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
+    Erange, $
     QRANGE, $
     iData, $
     Metadata
@@ -120,7 +121,7 @@ FUNCTION retrieve_data_from_ascii_file, Event, FILE_NAME=file_name, $
   iASCII = OBJ_NEW('IDL3columnsASCIIparser', file_name, TYPE='Sq(E)')
   IF (~OBJ_VALID(iASCII)) THEN RETURN, 0
   
-  iData = iASCII->getDataQuickly(TRange, QRange, Metadata)
+  iData = iASCII->getDataQuickly(ERange, QRange, Metadata)
   
   RETURN, 1
 END
@@ -190,7 +191,7 @@ FUNCTION perform_division, Event, ES_DATA = es_data, DAVE_DATA = dave_data, $
       
     ENDFOR
   ENDFOR
-    
+  
   RETURN, 1
   
 END
@@ -215,20 +216,36 @@ PRO run_divisions, Event
   index_file = 0
   WHILE (index_file LT nbr_files) DO BEGIN
   
+    ;current output ascii file
+    output_ascii_file = table[2,index_file]
+    IF (FILE_TEST(output_ascii_file)) THEN BEGIN ;file exists already
+      message = 'Do you want to overwrite ' + output_ascii_file
+      title = 'File with same name was found!'
+      widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+      result = DIALOG_MESSAGE(message, $
+        TITLE = title, $
+        /QUESTION, $
+        /CENTER, $
+        DIALOG_PARENT = widget_id)
+      IF (result EQ 'No') THEN BEGIN
+      index_file++
+      CONTINUE
+      ENDIF
+    ENDIF
+    
     ;current input working file
     input_ascii_file = table[0,index_file]
-
+    
     status = retrieve_data_from_ascii_file(Event, $
       FILE_NAME=input_ascii_file, $
+      Erange, $
       Qrange, $
       iData, $
       Metadata)
       
-      print, Metadata
-      help, metadata
-      
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      index_file++
       CONTINUE
     ENDIF
     
@@ -240,6 +257,7 @@ PRO run_divisions, Event
     ;if Q range axes do not match
     IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      index_file++
       CONTINUE
     ENDIF
     
@@ -247,6 +265,7 @@ PRO run_divisions, Event
     status = create_value_value_error(iDAta, dave_value_valueerror)
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      index_file++
       CONTINUE
     ENDIF
     
@@ -260,14 +279,16 @@ PRO run_divisions, Event
       DAVE_DATA = dave_value_valueerror, $
       DIVIDED_DAVE_DATA = divided_dave_data)
       
-    ;current output ascii file
-    output_ascii_file = table[2,index_file]
-
     ;create output ascii file
-    ;status = create_output_ascii_file(Event, $
-    
-
+;    status = create_output_ascii_file(Event, $
+;      output_ascii_file, $
+;      Erange, $
+;      Qrange, $
+;      divided_dave_data, $
+;      metadata)
+;      
     index_file++
+    
   ENDWHILE
   
   
