@@ -284,10 +284,10 @@ PRO clear_selection_tool, Event
   (*(*global).PixelArray) = PTR_NEW(0L)
   (*(*global).TubeArray) = PTR_NEW(0L)
   
-  putTextFieldValue, Event, 'corner_pixel_x0', 'N/A'
-  putTextFieldValue, Event, 'corner_pixel_y0', 'N/A'
-  putTextFieldValue, Event, 'corner_pixel_width', 'N/A'
-  putTextFieldValue, Event, 'corner_pixel_height', 'N/A'
+  putTextFieldValue, Event, 'corner_pixel_x0', '1'
+  putTextFieldValue, Event, 'corner_pixel_y0', '0'
+  putTextFieldValue, Event, 'corner_pixel_width', '1'
+  putTextFieldValue, Event, 'corner_pixel_height', '1'
     
   IDLsendToGeek_ReplaceLogBookText, Event, (*global).processing, (*global).ok
 END
