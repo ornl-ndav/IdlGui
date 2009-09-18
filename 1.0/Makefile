@@ -7,6 +7,7 @@ all:
 	cp DAD.cfg .DAD.cfg
 	idl ./makefile.pro;
 install:
+	cp .DAD.cfg /SNS/software/idltools/sav/
 	cp dad.sav /SNS/software/idltools/sav/
 	cp DAD /SNS/software/idltools/
 
