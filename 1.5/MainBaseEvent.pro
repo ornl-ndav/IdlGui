@@ -81,22 +81,22 @@ PRO MAIN_BASE_event, Event
     
     ;manual input of x0, y0, width and Height
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_x0'): BEGIN
-      makeExclusionArray_SNS, Event
+      makeExclusionArray_SNS, Event, add=1
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_y0'): BEGIN
-      makeExclusionArray_SNS, Event
+      makeExclusionArray_SNS, Event, add=1
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_width'): BEGIN
-      makeExclusionArray_SNS, Event
+      makeExclusionArray_SNS, Event, add=1
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       save_background,  Event, GLOBAL=global
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAMe='corner_pixel_height'): BEGIN
-      makeExclusionArray_SNS, Event
+      makeExclusionArray_SNS, Event, add=1
       load_exclusion_roi_for_sns, Event, (*(*global).global_exclusion_array)
       save_background,  Event, GLOBAL=global
     END

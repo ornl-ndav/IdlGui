@@ -805,41 +805,46 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     base = WIDGET_BASE(wExclusionBase,$
       /COLUMN)
       
-    space = WIDGET_LABEL(base,$
+      space = WIDGET_LABEL(base,$
       VALUE = '')
       
-    label = WIDGET_LABEL(base,$
-      VALUE = '         Rectangle Selection Definition')
-      
-    value = CW_FIELD(base,$
-      VALUE = '0',$
-      TITLE = '  Tube # of 1st corner    : ',$
+    row1 = WIDGET_BASE(base,$
+    /ROW)
+    value = CW_FIELD(row1,$
+      VALUE = '1',$
+      TITLE = '  Tube # of 1st corner : ',$
       XSIZE = 4,$
       /RETURN_EVENTS,$
       UNAME = 'corner_pixel_x0',$
       /INTEGER)
+      label = WIDGET_LABEL(row1,$
+      VALUE = '(1-192)')
       
-    value = CW_FIELD(base,$
+      row2= WIDGET_BASE(base,$
+      /ROW)
+    value = CW_FIELD(row2,$
       VALUE = '0',$
       XSIZE = 4,$
       /RETURN_EVENTS,$
-      TITLE = '  Pixel # of 1st corner   : ',$
+      TITLE = '  Pixel # of 1st corner: ',$
       UNAME = 'corner_pixel_y0',$
       /INTEGER)
+      value = WIDGET_LABEL(row2,$
+      VALUE = '(0-255)')
       
     value = CW_FIELD(base,$
-      VALUE = '0',$
+      VALUE = '1',$
       XSIZE = 4,$
       /RETURN_EVENTS,$
-      TITLE = '  Width (# of tubes)      : ',$
+      TITLE = '  Width (# of tubes)  : ',$
       UNAME = 'corner_pixel_width',$
       /INTEGER)
       
     value = CW_FIELD(base,$
-      VALUE = '0',$
+      VALUE = '1',$
       XSIZE = 4,$
       /RETURN_EVENTS,$
-      TITLE = '  Height (# of pixels)    : ',$
+      TITLE = '  Height (# of pixels): ',$
       UNAME = 'corner_pixel_height',$
       /INTEGER)
       
