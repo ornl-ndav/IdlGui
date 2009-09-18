@@ -235,6 +235,8 @@ PRO run_divisions, Event
         /CENTER, $
         DIALOG_PARENT = widget_id)
       IF (result EQ 'No') THEN BEGIN
+        table[3,index_file] = 'NO OVERWRITE'
+        putValue, Event,'table_uname', table
         index_file++
         CONTINUE
       ENDIF
@@ -252,6 +254,7 @@ PRO run_divisions, Event
       
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      putValue, Event,'table_uname', table
       index_file++
       CONTINUE
     ENDIF
@@ -264,6 +267,7 @@ PRO run_divisions, Event
     ;if Q range axes do not match
     IF (~QrangeMatch(esQrange=esQrange, daveQrange=Qrange)) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      putValue, Event,'table_uname', table
       index_file++
       CONTINUE
     ENDIF
@@ -272,6 +276,7 @@ PRO run_divisions, Event
     status = create_value_value_error(iDAta, dave_value_valueerror)
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      putValue, Event,'table_uname', table
       index_file++
       CONTINUE
     ENDIF
@@ -295,10 +300,13 @@ PRO run_divisions, Event
       metadata)
     IF (status EQ 0) THEN BEGIN
       table[3,index_file] = 'FAILED'
+      putValue, Event,'table_uname', table
       index_file++
       CONTINUE
     ENDIF
     
+    table[3,index_file] = 'DONE'
+    putValue, Event,'table_uname', table
     index_file++
     
   ENDWHILE
