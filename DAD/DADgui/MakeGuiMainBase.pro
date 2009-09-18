@@ -191,7 +191,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     /ALIGN_LEFT)
     
   help = WIDGET_BUTTON(row_a_2,$
-    VALUE = 'PREVIEW',$
+    VALUE = 'PREVIEW / EDIT',$
     SCR_XSIZE = 110,$
     SENSITIVE = 0,$
     UNAME = 'es_file_preview_button')
