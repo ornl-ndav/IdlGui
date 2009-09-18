@@ -927,6 +927,7 @@ PRO launch_beam_center_base, main_event
   global_bc = PTR_NEW({ wbase: wbase1,$
     main_global: global, $
     main_event: main_event, $
+    testing_on_mac: (*global).testing_on_mac, $
     
     geo_file: '',$
     
