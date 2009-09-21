@@ -98,7 +98,7 @@ FUNCTION create_cmd, Event
       index++
     ENDWHILE
     
-  ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN ;just one file
   
     file_name = table[0]
     cmd += file_name
@@ -124,7 +124,11 @@ END
 PRO run_job_tab2, Event
 
   cmd = create_cmd(Event)
-  
+
+  ;output folder
+  output_path = getButtonValue(Event, 'tab2_output_folder_button_uname')
+  CD, output_path
+
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
