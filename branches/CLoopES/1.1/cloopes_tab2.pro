@@ -469,21 +469,33 @@ PRO check_tab2_run_jobs_button, Event
 
   ;get table value
   table = getTableValue(Event, 'tab2_table_uname')
-  sz = (SIZE(table))(2)
   
-  ;check that all the files exist and temperature defined
-  index = 0
-  WHILE (index LT sz) DO BEGIN
-    IF (~FILE_TEST(table[0,index])) THEN BEGIN
-      activate_widget, Event, 'tab2_run_jobs_uname', 0
-      RETURN
-    ENDIF
-    IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-      activate_widget, Event, 'tab2_run_jobs_uname', 0
-      RETURN
-    ENDIF
-    index++
-  ENDWHILE
+  dim_table = (size(table))(0) ;1 for 1 file, 2 for 2 or more files
+  IF (dim_table EQ 2) THEN BEGIN
+    sz = (SIZE(table))(2)
+    ;check that all the files exist and temperature defined
+    index = 0
+    WHILE (index LT sz) DO BEGIN
+      IF (~FILE_TEST(table[0,index])) THEN BEGIN
+        activate_widget, Event, 'tab2_run_jobs_uname', 0
+        RETURN
+      ENDIF
+      IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+        activate_widget, Event, 'tab2_run_jobs_uname', 0
+        RETURN
+      ENDIF
+      index++
+    ENDWHILE
+  ENDIF ELSE BEGIN
+      IF (~FILE_TEST(table[0])) THEN BEGIN
+        activate_widget, Event, 'tab2_run_jobs_uname', 0
+        RETURN
+      ENDIF
+      IF (STRCOMPRESS(table[2],/REMOVE_ALL) EQ '') THEN BEGIN
+        activate_widget, Event, 'tab2_run_jobs_uname', 0
+        RETURN
+      ENDIF
+  ENDELSE
   
   ;check that there is an output file name
   output_file_name = getTextFieldValue(Event,$
