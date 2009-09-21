@@ -55,45 +55,66 @@ FUNCTION create_cmd, Event
   cmd += ' --data='
   ;get table value
   table = getTableValue(Event, 'tab2_table_uname')
-  sz = (SIZE(table))(2)
-  index = 0
-  first_data = 1
-  WHILE (index LT sz) DO BEGIN
-    file_name = table[0,index]
-    IF (file_name NE '') THEN BEGIN
-      IF (first_data) THEN BEGIN
-        cmd += file_name
-        first_data = 0
-      ENDIF ELSE BEGIN
-        cmd += ',' + file_name
-      ENDELSE
-    ENDIF
-    index++
-  ENDWHILE
   
-  ;add Energy integration range
-  inte_min = getTextFieldValue(Event,'energy_integration_range_min_value')
-  inte_max = getTextFieldValue(Event,'energy_integration_range_max_value')
-  cmd += ' --int-range=' + STRCOMPRESS(inte_min,/REMOVE_ALL)
-  cmd += ' ' + STRCOMPRESS(inte_max,/REMOVE_ALL)
+  dim = (size(table))(0)
+  IF (dim EQ 2) THEN BEGIN ;more than 1 file
+    sz = (SIZE(table))(2)
+    index = 0
+    first_data = 1
+    WHILE (index LT sz) DO BEGIN
+      file_name = table[0,index]
+      IF (file_name NE '') THEN BEGIN
+        IF (first_data) THEN BEGIN
+          cmd += file_name
+          first_data = 0
+        ENDIF ELSE BEGIN
+          cmd += ',' + file_name
+        ENDELSE
+      ENDIF
+      index++
+    ENDWHILE
+    
+    ;add Energy integration range
+    inte_min = getTextFieldValue(Event,'energy_integration_range_min_value')
+    inte_max = getTextFieldValue(Event,'energy_integration_range_max_value')
+    cmd += ' --int-range=' + STRCOMPRESS(inte_min,/REMOVE_ALL)
+    cmd += ' ' + STRCOMPRESS(inte_max,/REMOVE_ALL)
+    
+    ;add temperature
+    cmd += ' --temps='
+    ;get table value
+    index = 0
+    first_data = 1
+    WHILE (index LT sz) DO BEGIN
+      temperature = STRCOMPRESS(table[2,index],/REMOVE_ALL)
+      IF (table[0,index] NE '') THEN BEGIN
+        IF (first_data) THEN BEGIN
+          cmd += temperature
+          first_data = 0
+        ENDIF ELSE BEGIN
+          cmd += ',' + temperature
+        ENDELSE
+      ENDIF
+      index++
+    ENDWHILE
+    
+  ENDIF ELSE BEGIN
   
-  ;add temperature
-  cmd += ' --temps='
-  ;get table value
-  index = 0
-  first_data = 1
-  WHILE (index LT sz) DO BEGIN
-    temperature = STRCOMPRESS(table[2,index],/REMOVE_ALL)
-    IF (table[0,index] NE '') THEN BEGIN
-      IF (first_data) THEN BEGIN
-        cmd += temperature
-        first_data = 0
-      ENDIF ELSE BEGIN
-        cmd += ',' + temperature
-      ENDELSE
-    ENDIF
-    index++
-  ENDWHILE
+    file_name = table[0]
+    cmd += file_name
+    
+    ;add Energy integration range
+    inte_min = getTextFieldValue(Event,'energy_integration_range_min_value')
+    inte_max = getTextFieldValue(Event,'energy_integration_range_max_value')
+    cmd += ' --int-range=' + STRCOMPRESS(inte_min,/REMOVE_ALL)
+    cmd += ' ' + STRCOMPRESS(inte_max,/REMOVE_ALL)
+    
+    ;add temperature
+    cmd += ' --temps='
+    temperature = STRCOMPRESS(table[2],/REMOVE_ALL)
+    cmd += temperature
+    
+  ENDELSE
   
   RETURN, cmd
   
