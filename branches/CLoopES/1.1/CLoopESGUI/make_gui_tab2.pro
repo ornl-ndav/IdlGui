@@ -97,7 +97,7 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     VALUE = '<User_Defined>')
     
   text = WIDGET_TEXT(row_a_2,$
-    VALUE = ' ',$
+    VALUE = '',$
     XSIZE = 107,$
     /EDITABLE,$
     UNAME = 'tab2_manual_input_sequence')
