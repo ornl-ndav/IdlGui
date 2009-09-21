@@ -125,6 +125,9 @@ PRO run_job_tab2, Event
 
   cmd = create_cmd(Event)
   
+  cd, current=old_dir
+  print, 'old_dir is: ' + old_dir
+  
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
