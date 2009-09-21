@@ -56,10 +56,22 @@ FUNCTION create_temperature_file, Event, output_file_name
   output_file_name = path + file_name
   
   OPENW, 1, output_file_name
-  nbr_row = (SIZE(table))(2)
-  FOR i=0,(nbr_row - 1) DO BEGIN
-    PRINTF, 1, STRCOMPRESS(table[2,i],/REMOVE_ALL)
-  ENDFOR
+  
+  dim = (size(table))(0)
+  
+  IF (dim EQ 2) THEN BEGIN
+  
+    nbr_row = (SIZE(table))(2)
+    FOR i=0,(nbr_row - 1) DO BEGIN
+      PRINTF, 1, STRCOMPRESS(table[2,i],/REMOVE_ALL)
+    ENDFOR
+    
+  ENDIF ELSE BEGIN
+  
+    PRINTF, 1, STRCOMPRESS(table[2],/REMOVE_ALL)
+    
+  ENDELSE
+  
   CLOSE, 1
   FREE_LUN, 1
   
@@ -289,12 +301,21 @@ PRO save_temperature_base, main_event
   
   ;determine default output file name for file
   table = getTableValue(main_event,'tab2_table_uname')
-  nbr_row = (SIZE(table))(2)
-  Tmin = STRING(table[2,0],format='(f10.1)')
-  Tmax = STRING(table[2,nbr_row-1],format='(f10.1)')
-  sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
-  sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
-  output_file_name = 'cloopes_temp_from_' + sTmin + '_to_' + sTmax + '.txt'
+  
+  dim = (size(table))(0)
+  
+  IF (dim EQ 2) THEN BEGIN
+    nbr_row = (SIZE(table))(2)
+    Tmin = STRING(table[2,0],format='(f10.1)')
+    Tmax = STRING(table[2,nbr_row-1],format='(f10.1)')
+    sTmin = STRCOMPRESS(Tmin,/REMOVE_ALL)
+    sTmax = STRCOMPRESS(Tmax,/REMOVE_ALL)
+    output_file_name = 'cloopes_temp_from_' + sTmin + '_to_' + sTmax + '.txt'
+  ENDIF ELSE BEGIN
+    T = STRING(table[2],format='(f10.1)')
+    sT = STRCOMPRESS(T,/REMOVE_ALL)
+    output_file_name = 'cloopes_temp_' + sT + '.txt'
+  ENDELSE
   
   ;build gui
   wBase = ''
