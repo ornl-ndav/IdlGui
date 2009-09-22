@@ -74,7 +74,10 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   pixel_increment = pixel_sign
   
   ;calculate size of pixel_array STRARR
-  nbr_pixels_total = (ABS(nbr_tubes)) * (ABS(pixel_height_data))
+  nbr_pixels_total = LONG(ABS(nbr_tubes)) * LONG(ABS(pixel_height_data))
+  print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
+  print, 'nbr_tubes: ' + string(nbr_tubes)
+  print, 'pixel_height_data: ' + string(pixel_height_data)
   IF ((*global).selection_type EQ 'outside') THEN BEGIN ;outside selection
     nbr_pixels_total = 192L * 256L - nbr_pixels_total
   ENDIF
@@ -142,8 +145,6 @@ PRO makeExclusionArray_SNS, Event, ADD=add
               bank = getBankNumber(tube)
               tube_local = getTubeLocal(tube)
               
-              ;
-              ;
               ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
               ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
               line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
@@ -155,9 +156,7 @@ PRO makeExclusionArray_SNS, Event, ADD=add
           ENDFOR
         ENDFOR
       ENDIF
-      
-    ;print, pixel_array
-      
+            
     ENDELSE
     
   ENDIF ELSE BEGIN ;end of (if(nbr_pixels_total GT 0))
@@ -203,7 +202,7 @@ PRO makeExclusionArray_SNS, Event, ADD=add
     add_to_global_exclusion_array, event, pixel_array
   ENDIF
   
-END
+ END
 
 ;------------------------------------------------------------------------------
 PRO add_to_global_exclusion_array, event, pixel_array
