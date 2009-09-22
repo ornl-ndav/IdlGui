@@ -101,6 +101,52 @@ PRO MAIN_BASE_event, Event
       save_background,  Event, GLOBAL=global
     END
     
+    ;Selection inside button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='selection_inside_draw_uname'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_selection_images, EVENT=event, $
+            selection='inside'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='selection_inside_draw_uname')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE ;enf of catch statement
+    END
+    
+    ;Selection outside button
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='selection_outside_draw_uname'): BEGIN
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN ;press button or othe events
+        CATCH,/CANCEL
+        IF (event.press EQ 1) THEN BEGIN ;pressed button
+          display_selection_images, EVENT=event, $
+            selection='outside'
+        ENDIF
+      ENDIF ELSE BEGIN ;endif of catch statement
+        IF (event.enter EQ 1) THEN BEGIN
+          id = WIDGET_INFO(Event.top,$
+            find_by_uname='selection_outside_draw_uname')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          standard = 58
+          DEVICE, CURSOR_STANDARD=standard
+        ENDIF
+      ENDELSE ;enf of catch statement
+    END
+    
     ;- Main Plot --------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='draw_uname'): BEGIN
       error = 0
