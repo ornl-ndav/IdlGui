@@ -1,4 +1,5 @@
-;==============================================================================
+;+
+; :Copyright:
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,55 +29,36 @@
 ;   promote products derived from this software without specific prior written
 ;   permission.
 ;
-; :Author: scu (campbellsi@ornl.gov)
+; :Description:
 ; 
+;    Returns the first run number from the RunNumbers variable.
+;    This is used for naming files/directories/jobs when more than 
+;    one file is specified.
+;    
+;    e.g. RunNumbers="1234-1250" would return "1234"
+;         RunNumbers="1234,1235" would return "1234"
+;         RunNumbers="1250,1243-1249" would return "1250"
 ;
-;==============================================================================
+; :Params:
+;    RunNumbers - A string containing the run numbers.
+;
+; :Author: scu
+;-
+FUNCTION GetFirstNumber, RunNumbers
 
-;define path to dependencies and current folder
-CD,CURRENT=thisDirectory
-
-; Add all subdirectories onto the path
-newPath = EXPAND_PATH('+./') + PATH_SEP(/SEARCH_PATH) + !PATH
-;PREF_SET, 'IDL_PATH', newPath, /COMMIT
-
-!PATH = newPath
-
-; Now we can just compile!
-
-.compile logger
-.compile error_message
-.compile get_ucams
-.compile formatbanknumber
-.compile construct_datapaths
-.compile getdetectorbankrange
-.compile GetFirstNumber
-
-.compile monitorjob_events
-.compile monitorjob
-
-.compile load_parameters
-.compile save_parameters
-.compile dgsreduction_updategui
-.compile dgsr_updategui
-.compile dgsn_updategui
-.compile dgsreduction_save_defaults
-
-.compile dgsnorm_launchcollector
-.compile dgsnorm_events
-.compile dgsreduction_events
-.compile dgsreduction_tlb_events
-.compile dgsreduction_launchcollector
-.compile dgsreduction_launchjobmonitor
-.compile dgsreduction_saveparameters
-.compile dgsreduction_loadparameters
-.compile dgsreduction_exportscript
-.compile make_reduction_tab
-.compile make_vanmask_tab
-.compile dgsreduction
-.compile reductioncmd__define
-.compile normcmd__define
-
-resolve_all
-
-
+  largeNumber = 9999999
+  
+  ; The runs should be delimited by either a - or ,
+  
+  ; Lets find see if there are any commas
+  commaPosition = STRPOS(RunNumbers, ',')
+  IF commaPosition EQ -1 THEN commaPosition = largeNumber
+  
+  hyphenPosition = STRPOS(RunNumbers, '-')
+  IF hyphenPosition EQ -1 THEN hyphenPosition = largeNumber
+  
+  firstDelimiter = MIN([commaPosition, hyphenPosition])
+  
+  RETURN, STRMID(RunNumbers, 0, firstDelimiter)
+  
+END

@@ -202,13 +202,13 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ; Normalisation Files
   normFilesBase = WIDGET_BASE(normOptionsBaseColumn2, /COLUMN, /ALIGN_RIGHT)
   normFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE="Normalisation: ", UVALUE="DGSR_NORMRUN", $
-    UNAME="DGSR_NORMRUN", /LONG)
+    UNAME="DGSR_NORMRUN")
   emptycanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Empty Can: ", UVALUE="DGSR_EMPTYCAN", $
-    UNAME="DGSR_EMPTYCAN", /LONG)
+    UNAME="DGSR_EMPTYCAN")
   blackcanFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS, TITLE="    Black Can: ", UVALUE="DGSR_BLACKCAN", $
-    UNAME="DGSR_BLACKCAN", /LONG)
+    UNAME="DGSR_BLACKCAN")
   darkFileID = CW_FIELD(normFilesBase, XSIZE=30, /ALL_EVENTS,     TITLE=" Dark Current: ", UVALUE="DGSR_DARK", $
-    UNAME="DGSR_DARK", /LONG)
+    UNAME="DGSR_DARK")
 
     ; == Transmission Corrections == 
   transBase = WIDGET_BASE(normOptionsBaseRow2, /ALIGN_BOTTOM)
@@ -251,7 +251,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   normMaxID = CW_FIELD(normRangePrettyBase, /ALL_EVENTS, TITLE="Max:", UVALUE="DGSR_NORM-INT-MAX", $
     UNAME="DGSR_NORM-INT-MAX", XSIZE=10)
             
-
+  ; Disable the normalisation options that are no longer needed for dgs_reduction          
+  WIDGET_CONTROL, normRangeBase, SENSITIVE=0
+  WIDGET_CONTROL, normTransID, SENSITIVE=0
   
 
 ; == ROI and MASKS ==
