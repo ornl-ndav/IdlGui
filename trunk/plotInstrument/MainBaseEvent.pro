@@ -28,10 +28,17 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, FIND_BY_UNAME='graph'): BEGIN
       readFile, Event
     END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='cmbInst'): BEGIN
+      findByRunNbr, Event
+    END
+    
     
     ELSE:
     
   ENDCASE
+  
+;updateStatus, Event
+  
   
 END
 

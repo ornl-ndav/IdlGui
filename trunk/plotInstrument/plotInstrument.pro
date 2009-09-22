@@ -13,31 +13,41 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   spawn, 'hostname', hostname
   
   ;for testing
-  hostname = 'mrac'
+  hostname = 'lrac'
   
   hostname = "computer = " + STRTRIM(hostname, 2) + ".sns.gov"
- 
+  
   
   xmlParser = OBJ_NEW('idlxmlparser', pathInstrumentList)
   
   instrumentList = xmlParser -> getValue(location = $
-  ['name = ' + fascility, 'instrument'], searchTag = 'shortname')
-  
+    ['name = ' + fascility, 'instrument'], searchTag = 'shortname')
+    
   cpuName =  xmlParser -> getValue(location = $
-  ['name = ' + fascility, 'instrument'], searchTag = 'shortname', condition = hostname)
+    ['name = ' + fascility, 'instrument'], searchTag = 'shortname', condition = hostname)
+    
+  print, cpuName
+  
+  ; instConst =  {X: 0,$
+  ;  Y: 0,$
+  ;    rebinBy: 0}
   
   ;define global variables
-  global = PTR_NEW ({ path: '~/',$
-    column_sequence: PTR_NEW(0L),$
-    column_cl: PTR_NEW(0L),$
-    cl_array: STRARR(2),$
+  global = PTR_NEW ({path: "", $
+    ;path: "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/REF_M_118.nxs",$
+    ;    column_sequence: PTR_NEW(0L),$
+    ;    column_cl: PTR_NEW(0L),$
+    ;    cl_array: STRARR(2),$
     data: ptr_new(), $
     fascility: fascility, $
     application:  APPLICATION,$
     version:      VERSION,$
     cpuName: cpuName,$
+    instConst: {X: 0,$
+    Y: 0,$
+    rebinBy: 0}, $
     instrumentList: instrumentList, $
-    MainBaseSize: [30,25,600,200]})
+    MainBaseSize: [30,25,600,150]})
     
     
     
@@ -68,6 +78,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+  
+  
   
   
 END
