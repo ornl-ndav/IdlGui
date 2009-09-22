@@ -402,6 +402,10 @@ PRO refresh_plot, Event ;_plot
   ;
   ;  ENDIF
   
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
   ;retrieve parameters from global pointer
   IF ((*global).facility EQ 'LENS') THEN BEGIN
     X         = (*global).X
