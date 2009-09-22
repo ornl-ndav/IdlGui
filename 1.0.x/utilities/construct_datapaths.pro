@@ -24,7 +24,7 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
   IF (lower LT 0) THEN lower = 0
   IF (upper LT 0) THEN upper = 0
   
-  ; Work out what the lower/upper are for this jo
+  ; Work out what the lower/upper are for this job
 
   IF (lower NE 0) AND (upper NE 0) THEN BEGIN
     IF (totaljobs EQ 1) THEN BEGIN
@@ -37,6 +37,8 @@ FUNCTION Construct_DataPaths, lower, upper, job, totaljobs, PAD=pad
       this_lower = ceil((job-1)*banks_per_job)+lower
       this_upper = ceil(job*banks_per_job)+(lower-1)
       IF (this_upper GT upper) THEN this_upper = upper
+      ; Just make sure that the lower value isn't too big as well.
+      IF (this_lower GT upper) THEN this_lower = upper
       IF (job EQ TotalJobs) THEN this_upper = upper
     ENDELSE
     
