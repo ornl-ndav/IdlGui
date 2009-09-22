@@ -43,7 +43,7 @@ pro load_parameters, widgetBase, Filename=filename
    ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
   
-  RESTORE, FILENAME=filename
+  RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
