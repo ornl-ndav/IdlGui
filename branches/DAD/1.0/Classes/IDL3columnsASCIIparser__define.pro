@@ -421,7 +421,7 @@ FUNCTION IDL3columnsASCIIparser::getDataQuickly, xaxis, yaxis, metadata
         Qindex++
       ENDWHILE
       ;get metadata at the end of the file
-      metadata = data[LnStop+1:sz-1]
+      metadata = data[LnStop:sz-1]
 
       RETURN, FinalArray
     END
