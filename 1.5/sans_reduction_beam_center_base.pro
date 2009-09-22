@@ -969,11 +969,12 @@ PRO launch_beam_center_base, main_event
     pixel_min: 100, $
     pixel_max: 160, $
     color: [255,0,0],$ ;red
-    color_selected: [255,0,255],$
-    thick: 1,$
+    ;color_selected: [255,0,255],$
+    color_selected: 'green', $
+    thick: 3,$
     working_linestyle: 0,$
     not_working_linestyle: 2,$
-    thick_selected: 1}, $
+    thick_selected: 3}, $
     
     beam_stop_default_selection: {tube_min: 90, $
     tube_max: 100, $

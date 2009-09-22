@@ -187,7 +187,8 @@ PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
   color = (*global).calibration_range_default_selection.color_selected
   thick = (*global).calibration_range_default_selection.thick_selected
   
-  color = convert_rgb(color)
+  ;color = convert_rgb(color)
+  color = FSC_COLOR(color)
   
   IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube1
     iTube1 = FIX(Tube1)
