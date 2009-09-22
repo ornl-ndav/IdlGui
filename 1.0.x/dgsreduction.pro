@@ -249,7 +249,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
 
   ; Program Details
   APPLICATION       = 'DGSreduction'
-  VERSION           = '1.0.1'
+  VERSION           = '1.0.2'
   
   Catch, errorStatus
   
