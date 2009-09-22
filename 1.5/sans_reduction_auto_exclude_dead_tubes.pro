@@ -32,6 +32,9 @@
 ;
 ;==============================================================================
 
+;tube that have intensity below average 8 first and last tubes, or total
+;insensity of 0 are automatically considered as dead tubes
+
 PRO auto_exclude_dead_tubes, Event
 
   ;get global structurea
@@ -60,7 +63,7 @@ PRO auto_exclude_dead_tubes, Event
     
     IF ((total_tube LE $
     mean_tubes / (*global).dead_tube_coeff_ratio) OR $
-    total_tube EQ 0) THEN BEGIN
+    total_tube LT 256L) THEN BEGIN
       DeadTubeNbr += STRCOMPRESS(i,/REMOVE_ALL) + ','
     ENDIF
     
