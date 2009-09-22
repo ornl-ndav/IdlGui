@@ -73,10 +73,11 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   ENDCASE
   pixel_increment = pixel_sign
   
+  ;calculate size of pixel_array STRARR
   nbr_pixels_total = (ABS(nbr_tubes)) * (ABS(pixel_height_data))
-  ;print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
-  ;print, 'nbr_tubes: ' + string(nbr_tubes)
-  ;print, 'pixel_height_data: ' + string(pixel_height_data)
+  IF ((*global).selection_type EQ 'outside') THEN BEGIN ;outside selection
+    nbr_pixels_total = 192L * 256L - nbr_pixels_total
+  ENDIF
   
   IF (nbr_pixels_total GT 0) THEN BEGIN
   
@@ -104,26 +105,54 @@ PRO makeExclusionArray_SNS, Event, ADD=add
     ;print, 'from pixel: ' + string(pixel0_data) + ' to pixel: ' + $
     ;string(pixel1_data) + ' with increment: ' + string(pixel_increment)
     
-    index = 0
-    IF (nbr_pixels_total GT 0) THEN BEGIN
-      tube = from_tube
-      WHILE (tube LE to_tube) DO BEGIN
-        pixel = from_pixel
-        WHILE (pixel LE to_pixel) DO BEGIN
-          bank = getBankNumber(tube)
-          tube_local = getTubeLocal(tube)
-          ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
-          ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
-          line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
-          line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
-          line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
-          pixel_array[index] = line
-          pixel++
-          index++
+    IF ((*global).selection_type EQ 'inside') THEN BEGIN ;inside selection
+    
+      index = 0
+      IF (nbr_pixels_total GT 0) THEN BEGIN
+        tube = from_tube
+        WHILE (tube LE to_tube) DO BEGIN
+          pixel = from_pixel
+          WHILE (pixel LE to_pixel) DO BEGIN
+            bank = getBankNumber(tube)
+            tube_local = getTubeLocal(tube)
+            ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
+            ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+            line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+            line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+            line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+            pixel_array[index] = line
+            pixel++
+            index++
+          ENDWHILE
+          tube += tube_increment
         ENDWHILE
-        tube += tube_increment
-      ENDWHILE
-    ENDIF
+      ENDIF
+      
+    ENDIF ELSE BEGIN ;outside selection
+    
+      index = 0L
+      IF (nbr_pixels_total GT 0) THEN BEGIN
+        FOR tube=0,191L DO BEGIN
+          FOR pixel=0,255L DO BEGIN
+            IF (~(tube GE from_tube AND $
+              tube LE to_tube AND $
+              pixel GE from_pixel AND $
+              pixel LE to_pixel)) THEN BEGIN
+              bank = getBankNumber(tube)
+              tube_local = getTubeLocal(tube)
+              ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
+              ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
+              line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
+              line += '_' + STRCOMPRESS(tube_local,/REMOVE_ALL)
+              line += '_' + STRCOMPRESS(pixel,/REMOVE_ALL)
+              pixel_array[index] = line
+              index++
+            ENDIF
+          ENDFOR
+        ENDFOR
+      ENDIF
+      
+    ENDELSE
     
   ENDIF ELSE BEGIN ;end of (if(nbr_pixels_total GT 0))
   
@@ -167,7 +196,7 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   IF (N_ELEMENTS(add) NE 0) THEN BEGIN
     add_to_global_exclusion_array, event, pixel_array
   ENDIF
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -227,7 +256,7 @@ PRO SaveExclusionFile_SNS, Event
     IF (pixel_array[0] NE '') THEN BEGIN
       inclusion_pixel_array = InverseROI(pixel_array)
     ENDIF
-
+    
     DeadTubes = INTARR(48,4,256) + 1
     IF (PixelArray_of_Deadtubes[0] NE '') THEN BEGIN
       DeadTubes = InverseROI(PixelArray_of_DeadTubes)
