@@ -48,6 +48,7 @@ PRO  getBankTubePixelROI, Event, $
   index = 0L
   WHILE (index LT NbrRow) DO BEGIN
     ON_IOERROR, L1
+    IF (StringArray[index] EQ '') THEN RETURN
     ;print, 'index: ' + string(index) + ' -> ' + StringArray[index]
     RoiStringArray = STRSPLIT(StringArray[index],'_',/EXTRACT)
     TubeArray[index] = FIX(RoiStringArray[1])
@@ -133,7 +134,7 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
     BankArray, $
     TubeArray, $
     PixelArray
-
+    
   size_excluded = 4L * 256L * 48L - LONG(N_ELEMENTS(BankArray))+1 ;??????
   excluded_BankArray  = INTARR(size_excluded)
   excluded_TubeArray  = INTARR(size_excluded)
@@ -141,7 +142,7 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   
   getInverseSelection, BankArray, TubeArray, PixelArray, $
     excluded_BankArray, Excluded_TubeArray, Excluded_PixelArray
-  
+    
   index=0
   FileStringArray = STRARR(N_ELEMENTS(excluded_BankArray))
   WHILE (index LT N_ELEMENTS(excluded_BankArray)) DO BEGIN
@@ -153,7 +154,7 @@ PRO load_inclusion_roi_for_sns, Event, FileStringArray
   ENDWHILE
   
   (*(*global).global_exclusion_array) = FileStringArray
-
+  
   IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   
   (*(*global).BankArray)  = excluded_BankArray

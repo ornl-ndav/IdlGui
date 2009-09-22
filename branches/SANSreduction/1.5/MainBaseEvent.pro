@@ -247,6 +247,7 @@ PRO MAIN_BASE_event, Event
                 /QUESTION,$
                 title=title)
               IF (result EQ 'Yes') THEN BEGIN
+                CATCH, /CANCEL
                 display_excluded_pixels, Event, $
                   temp_x_device=temp_x_device, $
                   temp_y_device=temp_y_device

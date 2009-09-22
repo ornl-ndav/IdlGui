@@ -53,7 +53,11 @@ FUNCTION InverseROI, source_array
     bank  = BankArray[index] - 1
     Tube  = TubeArray[index]
     Pixel = PixelArray[index]
-    full_detector_array[bank,tube,pixel] = 0
+    IF (bank GE 0 AND $
+      tube GE 0 AND $
+      pixel GE 0) THEN BEGIN
+      full_detector_array[bank,tube,pixel] = 0
+    ENDIF
     index++
   ENDWHILE
   
