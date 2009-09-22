@@ -802,6 +802,30 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       
   ENDIF ELSE BEGIN
   
+    xsize = 60
+    ysize = 40
+    xoff = 220
+    yoff = 100
+    
+    select_inside = WIDGET_DRAW(wExclusionBase,$
+    XOFFSET = xoff,$
+    YOFFSET = yoff,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize)
+  
+    select_outside = WIDGET_DRAW(wExclusionBase,$
+    XOFFSET = xoff,$
+    YOFFSET = yoff + ysize + 5,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize)
+
+    frame = WIDGET_BASE(wExclusionBase,$
+    XOFFSET = xoff -5,$
+    YOFFSET = yoff -5,$
+    SCR_XSIZE = xsize + 7,$
+    SCR_YSIZE = 2*ysize + 12,$
+    FRAME = 1)
+
     base = WIDGET_BASE(wExclusionBase,$
       /COLUMN)
       
