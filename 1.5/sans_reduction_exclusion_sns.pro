@@ -132,14 +132,18 @@ PRO makeExclusionArray_SNS, Event, ADD=add
     
       index = 0L
       IF (nbr_pixels_total GT 0) THEN BEGIN
-        FOR tube=0,191L DO BEGIN
+        FOR tube=1,192L DO BEGIN
           FOR pixel=0,255L DO BEGIN
             IF (~(tube GE from_tube AND $
               tube LE to_tube AND $
               pixel GE from_pixel AND $
               pixel LE to_pixel)) THEN BEGIN
+              
               bank = getBankNumber(tube)
               tube_local = getTubeLocal(tube)
+              
+              ;
+              ;
               ;   print, 'index: ' + string(index) + ', tube: ' + string(tube) + $
               ;', pixel: ' + string(pixel) + ' -> bank: ' + string(bank)
               line = 'bank' + STRCOMPRESS(bank,/REMOVE_ALL)
@@ -151,6 +155,8 @@ PRO makeExclusionArray_SNS, Event, ADD=add
           ENDFOR
         ENDFOR
       ENDIF
+      
+    ;print, pixel_array
       
     ENDELSE
     
