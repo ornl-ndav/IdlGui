@@ -216,7 +216,8 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   
    ; Norm integration range
   normRangeBase = WIDGET_BASE(normOptionsBaseRow1, UNAME="DGSN_NORM-INT-RANGE", /ALIGN_BOTTOM)
-  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', XOFFSET=5)
+  normRangeBaseLabel = WIDGET_LABEL(normRangeBase, VALUE=' Normalisation Integration Range (meV) ', $
+    UNAME="DGSN_NORM-INT-RANGE_LABEL", XOFFSET=5)
   normRangeBaseLabelGeometry = WIDGET_INFO(normRangeBaseLabel, /GEOMETRY)
   normRangeBaseLabelGeometryYSize = normRangeBaseLabelGeometry.ysize
   normRangePrettyBase = WIDGET_BASE(normRangeBase, /FRAME, /ROW, $
@@ -304,15 +305,12 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
   ; Column #2
   tofButton = Widget_Button(outputBaseCol2, Value='Combined Time-of-Flight', UVALUE='DGSN_MAKE_COMBINED_TOF', $
     UNAME='DGSN_MAKE_COMBINED_TOF')
-  normButton = Widget_Button(outputBaseCol2, Value='Vanadium Normalisation', UVALUE='DGSN_DUMP_NORM', $
-    UNAME='DGSN_DUMP_NORM')
+  normButton = Widget_Button(outputBaseCol2, Value='White Beam Normalisation', UVALUE='DGSN_WHITE_NORM', $
+    UNAME='DGSN_WHITE_NORM')
   waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSN_MAKE_COMBINED_WAVE', $
     UNAME='DGSN_MAKE_COMBINED_WAVE')
   tibButton = WIDGET_BUTTON(outputBaseCol2, VALUE='TIB constant per pixels', UVALUE='DGSN_DUMP_TIB', $
     UNAME='DGSN_DUMP_TIB')
-    
-  ; Disable the option to output the norm values, as they are always written now.
-  WIDGET_CONTROL, normButton, SENSITIVE=0
     
   ; Column #3
   ; Output Options Pretty Frame
