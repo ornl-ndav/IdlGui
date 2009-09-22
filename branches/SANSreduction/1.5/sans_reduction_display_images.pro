@@ -33,10 +33,13 @@
 ;==============================================================================
 
 PRO display_images, MAIN_BASE=main_base, EVENT=event, $
-    transmission=transmission, beam_center=beam_center
+    transmission=transmission, $
+    beam_center=beam_center, $
+    selection_button = selection_button
     
   IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
   IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
+  IF (N_ELEMENTS(selection_button) EQ 0) THEN selection_button = 'inside'
   
   ;Transmission calculation button
   IF (transmission EQ 'off') THEN BEGIN
@@ -72,6 +75,42 @@ PRO display_images, MAIN_BASE=main_base, EVENT=event, $
   WSET, id
   TV, raw_buttons, 0, 0,/true
   
+  ;selection buttons
+  CASE (selection_button) OF
+    'inside' : BEGIN
+      inside_image = READ_PNG('SANSreduction_images/selection_inside_on.png')
+      outside_image = READ_PNG('SANSreduction_images/selection_outside_off.png')
+    END
+    'outside' : BEGIN
+      inside_image = READ_PNG('SANSreduction_images/selection_inside_off.png')
+      outside_image = READ_PNG('SANSreduction_images/selection_outside_on.png')
+    END
+    ELSE:
+  ENDCASE
+  uname = 'selection_inside_draw_uname'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, inside_image, 0, 0,/true
+ 
+  uname = 'selection_outside_draw_uname'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME=uname)
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, outside_image, 0, 0,/true
+ 
 END
 
 ;------------------------------------------------------------------------------

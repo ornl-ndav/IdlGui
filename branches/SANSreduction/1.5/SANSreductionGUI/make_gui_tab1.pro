@@ -808,32 +808,34 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     yoff = 100
     
     select_inside = WIDGET_DRAW(wExclusionBase,$
-    XOFFSET = xoff,$
-    YOFFSET = yoff,$
-    SCR_XSIZE = xsize,$
-    SCR_YSIZE = ysize)
-  
+      UNAME = 'selection_inside_draw_uname', $
+      XOFFSET = xoff,$
+      YOFFSET = yoff,$
+      SCR_XSIZE = xsize,$
+      SCR_YSIZE = ysize)
+      
     select_outside = WIDGET_DRAW(wExclusionBase,$
-    XOFFSET = xoff,$
-    YOFFSET = yoff + ysize + 5,$
-    SCR_XSIZE = xsize,$
-    SCR_YSIZE = ysize)
-
+      UNAME = 'selection_outside_draw_uname', $
+      XOFFSET = xoff,$
+      YOFFSET = yoff + ysize + 5,$
+      SCR_XSIZE = xsize,$
+      SCR_YSIZE = ysize)
+      
     frame = WIDGET_BASE(wExclusionBase,$
-    XOFFSET = xoff -5,$
-    YOFFSET = yoff -5,$
-    SCR_XSIZE = xsize + 7,$
-    SCR_YSIZE = 2*ysize + 12,$
-    FRAME = 1)
-
+      XOFFSET = xoff -5,$
+      YOFFSET = yoff -5,$
+      SCR_XSIZE = xsize + 7,$
+      SCR_YSIZE = 2*ysize + 12,$
+      FRAME = 1)
+      
     base = WIDGET_BASE(wExclusionBase,$
       /COLUMN)
       
-      space = WIDGET_LABEL(base,$
+    space = WIDGET_LABEL(base,$
       VALUE = '')
       
     row1 = WIDGET_BASE(base,$
-    /ROW)
+      /ROW)
     value = CW_FIELD(row1,$
       VALUE = '1',$
       TITLE = '  Tube # of 1st corner : ',$
@@ -841,10 +843,10 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       /RETURN_EVENTS,$
       UNAME = 'corner_pixel_x0',$
       /INTEGER)
-      label = WIDGET_LABEL(row1,$
+    label = WIDGET_LABEL(row1,$
       VALUE = '(1-192)')
       
-      row2= WIDGET_BASE(base,$
+    row2= WIDGET_BASE(base,$
       /ROW)
     value = CW_FIELD(row2,$
       VALUE = '0',$
@@ -853,7 +855,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       TITLE = '  Pixel # of 1st corner: ',$
       UNAME = 'corner_pixel_y0',$
       /INTEGER)
-      value = WIDGET_LABEL(row2,$
+    value = WIDGET_LABEL(row2,$
       VALUE = '(0-255)')
       
     value = CW_FIELD(base,$
