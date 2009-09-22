@@ -105,7 +105,19 @@ PRO DGSN_UpdateGUI, tlb, dgsn_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_MON-INT-MAX')
   dgsn_cmd->GetProperty, MonRange_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
+  ; White Beam Norm
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_WHITE_NORM')
+  dgsn_cmd->GetProperty, WhiteNorm=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ; Also set the label on the normalisation range
+  normLabel = WIDGET_INFO(tlb, FIND_BY_UNAME="DGSN_NORM-INT-RANGE_LABEL")
+  IF (myValue) THEN BEGIN
+    WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (A)   "
+  ENDIF ELSE BEGIN       
+    WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
+  ENDELSE
+  
   ; Normalisation Integration Range (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_NORM-INT-MIN')
   dgsn_cmd->GetProperty, NormRange_Min=myValue
@@ -163,11 +175,6 @@ PRO DGSN_UpdateGUI, tlb, dgsn_cmd
   dgsn_cmd->GetProperty, DumpTOF=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
 
-  ; Combined Norm
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_DUMP_NORM')
-  dgsn_cmd->GetProperty, DumpNorm=myValue
-  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
-  
     ; Combined Wavelength
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSN_MAKE_COMBINED_WAVE')
   dgsn_cmd->GetProperty, DumpWave=myValue
