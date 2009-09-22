@@ -208,6 +208,7 @@ PRO browse_nexus, Event
     IF ((*global).facility EQ 'SNS') THEN BEGIN
       MapBase, Event, uname='transmission_launcher_base', status
       display_images, EVENT=event
+      display_selection_images, Event=event
     ENDIF
   ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
@@ -307,10 +308,10 @@ PRO load_run_number, Event
         (*global).data_nexus_file_name = Full_nexus_name
       ENDELSE
       activate_widget_list, Event, uname_list, status
-    IF ((*global).facility EQ 'SNS') THEN BEGIN
-      MapBase, Event, uname='transmission_launcher_base', status
-            display_images, EVENT=event
-    ENDIF
+      IF ((*global).facility EQ 'SNS') THEN BEGIN
+        MapBase, Event, uname='transmission_launcher_base', status
+        display_images, EVENT=event
+      ENDIF
     ENDIF ELSE BEGIN            ;failed
       message = '-> NeXus has not been found'
       IDLsendToGeek_addLogBookText, Event, message

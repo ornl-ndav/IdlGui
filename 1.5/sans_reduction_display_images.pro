@@ -34,12 +34,10 @@
 
 PRO display_images, MAIN_BASE=main_base, EVENT=event, $
     transmission=transmission, $
-    beam_center=beam_center, $
-    selection_button = selection_button
-    
+    beam_center=beam_center
+        
   IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
   IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
-  IF (N_ELEMENTS(selection_button) EQ 0) THEN selection_button = 'inside'
   
   ;Transmission calculation button
   IF (transmission EQ 'off') THEN BEGIN
@@ -75,8 +73,16 @@ PRO display_images, MAIN_BASE=main_base, EVENT=event, $
   WSET, id
   TV, raw_buttons, 0, 0,/true
   
-  ;selection buttons
-  CASE (selection_button) OF
+END
+
+;------------------------------------------------------------------------------
+PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
+    selection = selection
+    
+  IF (N_ELEMENTS(selection) EQ 0) THEN selection = 'inside'
+  
+  ;selection
+  CASE (selection) OF
     'inside' : BEGIN
       inside_image = READ_PNG('SANSreduction_images/selection_inside_on.png')
       outside_image = READ_PNG('SANSreduction_images/selection_outside_off.png')
@@ -87,6 +93,7 @@ PRO display_images, MAIN_BASE=main_base, EVENT=event, $
     END
     ELSE:
   ENDCASE
+  
   uname = 'selection_inside_draw_uname'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $

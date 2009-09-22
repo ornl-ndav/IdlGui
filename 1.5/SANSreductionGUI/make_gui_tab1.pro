@@ -812,14 +812,18 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
       XOFFSET = xoff,$
       YOFFSET = yoff,$
       SCR_XSIZE = xsize,$
-      SCR_YSIZE = ysize)
+      SCR_YSIZE = ysize, $
+      /BUTTON_EVENTS,$
+      /TRACKING_EVENTS)
       
     select_outside = WIDGET_DRAW(wExclusionBase,$
       UNAME = 'selection_outside_draw_uname', $
       XOFFSET = xoff,$
       YOFFSET = yoff + ysize + 5,$
       SCR_XSIZE = xsize,$
-      SCR_YSIZE = ysize)
+      SCR_YSIZE = ysize, $
+      /BUTTON_EVENTS,$
+      /TRACKING_EVENTS)
       
     frame = WIDGET_BASE(wExclusionBase,$
       XOFFSET = xoff -5,$
