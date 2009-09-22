@@ -55,11 +55,11 @@ PRO MakeGuiMainBase, MAIN_BASE, global
     FRAME = 0)
     
   ;label of first frame
-  text = '*********************************'
+  text = '*******************'
   label = WIDGET_LABEL(row_a_0,$
     SCR_XSIZE = main_base_geometry.xsize - 30,$
-    VALUE = text + '  Input  Dave  Ascii  Files  (produced ' + $
-    ' by  step1  of  CLoopES) ' + text)
+    VALUE = text + '  Input  Dave  Ascii  Files  (produced by regular' + $
+    ' data reduction or by  step 1  of  CLoopES) ' + text)
     
   row_a_1 = WIDGET_BASE(row_a, $ ;------------------ row1
     /ROW)
@@ -161,7 +161,7 @@ PRO MakeGuiMainBase, MAIN_BASE, global
   label = WIDGET_LABEL(row_a_0,$
     SCR_XSIZE = main_base_geometry.xsize - 30,$
     VALUE = text + '  Elastic  Scan  ASCII  File (produced by ' + $
-    ' step2  of  CLoopES) ' + text)
+    ' step 2  of  CLoopES) ' + text)
     
   row_a_1 = WIDGET_BASE(row_a, $ ;------------------ row1
     /ROW)
