@@ -84,8 +84,14 @@ PRO dgsnorm_events, event, dgsn_cmd
     'DGSN_DUMP_TIB': BEGIN
       dgsn_cmd->SetProperty, DumpTIB=event.SELECT
     END
-    'DGSN_DUMP_NORM': BEGIN
-      dgsn_cmd->SetProperty, DumpNorm=event.SELECT
+    'DGSN_WHITE_NORM': BEGIN
+      dgsn_cmd->SetProperty, WhiteNorm=event.SELECT
+      normLabel = WIDGET_INFO(event.top,FIND_BY_UNAME="DGSN_NORM-INT-RANGE_LABEL")
+      IF (event.SELECT) THEN BEGIN
+        WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (A)   "
+      ENDIF ELSE BEGIN
+       WIDGET_CONTROL, normLabel, SET_VALUE=" Normalisation Integration Range (meV) "
+      ENDELSE
     END
     'DGSN_LAMBDA_MIN': BEGIN
       ; Minimum Wavelength
