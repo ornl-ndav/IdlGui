@@ -35,7 +35,7 @@
 PRO display_images, MAIN_BASE=main_base, EVENT=event, $
     transmission=transmission, $
     beam_center=beam_center
-        
+    
   IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
   IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
   
@@ -79,6 +79,13 @@ END
 PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
     selection = selection
     
+  uname = 'selection_inside_outside_base_uname'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    MapBase_from_base, BASE=MAIN_BASE, UNAME=uname, 1
+  ENDIF ELSE BEGIN
+    MapBase, Event, UNAME=uname, 1
+  ENDELSE
+  
   IF (N_ELEMENTS(selection) EQ 0) THEN selection = 'inside'
   
   ;selection
@@ -105,7 +112,7 @@ PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, inside_image, 0, 0,/true
- 
+  
   uname = 'selection_outside_draw_uname'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, $
@@ -117,7 +124,7 @@ PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, outside_image, 0, 0,/true
- 
+  
 END
 
 ;------------------------------------------------------------------------------

@@ -355,6 +355,8 @@ PRO tab_event, Event
             WSET, id_value
             TV, (*(*global).background), true=3
             display_images, EVENT=event
+            display_selection_images, EVENT=event, $
+            SELECTION=(*global).selection_type
           ENDIF
         ENDELSE
       END

@@ -111,6 +111,7 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_selection_images, EVENT=event, $
             selection='inside'
+          (*global).selection_type = 'inside'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -134,6 +135,7 @@ PRO MAIN_BASE_event, Event
         IF (event.press EQ 1) THEN BEGIN ;pressed button
           display_selection_images, EVENT=event, $
             selection='outside'
+          (*global).selection_type = 'outside'
         ENDIF
       ENDIF ELSE BEGIN ;endif of catch statement
         IF (event.enter EQ 1) THEN BEGIN
@@ -489,6 +491,9 @@ PRO MAIN_BASE_event, Event
           refresh_plot, Event ;_plot
           RefreshRoiExclusionPlot, Event   ;_plot
         ENDIF ELSE BEGIN
+          id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+          WIDGET_CONTROL, id, GET_VALUE = id_value
+          WSET, id_value
           TV, (*(*global).background), true=3
         ENDELSE
       ENDIF

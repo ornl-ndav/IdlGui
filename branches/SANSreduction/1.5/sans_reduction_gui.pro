@@ -63,6 +63,11 @@ PRO MapBase, Event, uname=uname, map_status
   map_base, Event, uname, map_status
 END
 
+PRO MapBase_from_base, BASE=base, uname=uname, status
+id = WIDGET_INFO(base, FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, MAP=status
+END
+
 ;------------------------------------------------------------------------------
 ;This function activates or not the GO DATA REDUCTION button
 PRO activate_go_data_reduction, Event, activate_status
