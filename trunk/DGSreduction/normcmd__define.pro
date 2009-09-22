@@ -80,7 +80,7 @@ PRO NormCmd::GetProperty, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
-    DumpNorm=dumpnorm, $                 ; Dump combined Norm file
+    WhiteNorm=whitenorm, $               ; White Beam Normalisation
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
@@ -141,7 +141,7 @@ PRO NormCmd::GetProperty, $
           LambdaBins_Step = self.lambdabins_step 
   IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof 
   IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
-  IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm 
+  IF ARG_PRESENT(WhiteNorm) NE 0 THEN WhiteNorm = self.whitenorm 
   IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
   IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
@@ -200,7 +200,7 @@ END
 ;    LambdaBins_Step
 ;    DumpTOF
 ;    DumpWave
-;    DumpNorm
+;    WhiteNorm
 ;    DumpEt
 ;    DumpTIB
 ;    Lo_Threshold
@@ -255,7 +255,7 @@ PRO NormCmd::SetProperty, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
-    DumpNorm=dumpnorm, $                 ; Dump combined Norm file
+    WhiteNorm=whitenorm, $               ; White beam normalisation
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
@@ -360,7 +360,7 @@ PRO NormCmd::SetProperty, $
           self.lambdabins_step = lambdabins_step
   IF N_ELEMENTS(dumptof) NE 0 THEN self.dumptof = DumpTOF
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
-  IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
+  IF N_ELEMENTS(whitenorm) NE 0 THEN self.whitenorm = WhiteNorm
   IF N_ELEMENTS(dumpet) NE 0 THEN self.dumpet = DumpEt
   IF N_ELEMENTS(dumptib) NE 0 THEN self.dumptib = DumpTIB
   IF N_ELEMENTS(lo_threshold) NE 0 THEN self.lo_threshold = Lo_Threshold
@@ -645,7 +645,9 @@ function NormCmd::Generate
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
-    ;IF (self.dumpnorm EQ 1) THEN cmd[i] += " --dump-norm"
+    
+    IF (self.whitenorm EQ 1) THEN cmd[i] += " --wb-norm"
+    
     IF (self.dumpet EQ 1) THEN cmd[i] += " --dump-et-comb"
     
     IF (self.dumptib EQ 1) THEN cmd[i] += " --dump-tib"
@@ -707,7 +709,7 @@ function NormCmd::Init, $
     LambdaBins_Step=lambdabins_step, $   ; wavelength bins (step)
     DumpTOF=dumptof, $                   ; Dump combined TOF file
     DumpWave=dumpwave, $                 ; Dump combined wavelength file
-    DumpNorm=dumpnorm, $                 ; Dump combined Norm file
+    WhiteNorm=whitenorm, $               ; White beam normalisation
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
@@ -767,7 +769,7 @@ function NormCmd::Init, $
   IF N_ELEMENTS(lambdabins_step) EQ 0 THEN lambdabins_step = ""
   IF N_ELEMENTS(dumptof) EQ 0 THEN dumptof = 0
   IF N_ELEMENTS(dumpwave) EQ 0 THEN dumpwave = 0
-  IF N_ELEMENTS(dumpnorm) EQ 0 THEN dumpnorm = 1
+  IF N_ELEMENTS(whitenorm) EQ 0 THEN whitenorm = 0
   IF N_ELEMENTS(dumpet) EQ 0 THEN dumpet = 0
   IF N_ELEMENTS(dumptib) EQ 0 THEN dumptib = 0
   IF N_ELEMENTS(lo_threshold) EQ 0 THEN lo_threshold = ""
@@ -818,9 +820,9 @@ function NormCmd::Init, $
   self.lambdabins_step = lambdabins_step
   self.dumptof = dumptof
   self.dumpwave = dumpwave
-  self.dumpnorm = dumpnorm
   self.dumpet = dumpet
   self.dumptib = dumptib
+  self.whitenorm = whitenorm
   self.lo_threshold = lo_threshold
   self.hi_threshold = hi_threshold
   self.timing = timing
@@ -882,9 +884,9 @@ pro NormCmd__Define
     lambdabins_step: "", $   ; wavelength bins (step)
     dumptof: 0L, $           ; Dump combined TOF file
     dumpwave: 0L, $          ; Dump combined wavelength file
-    dumpnorm: 0L, $          ; Dump combined Norm file
     dumpet: 0L, $            ; Dump combined Et file
     dumptib: 0L, $           ; Dump the TIB constant for all pixels
+    whitenorm: 0L, $         ; White beam normalisation
     hi_threshold: "", $      ; Threshold for pixel to be masked (default: infinity)
     lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
     timing: 0L, $            ; Timing of code
