@@ -127,6 +127,8 @@ PRO  reduce_step3_run_jobs, Event
   text = '> About to submit ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs:'
   IDLsendLogBook_addLogBookText, Event, text
   
+  CD, '~/results/', CURRENT = current
+  
   index = 0
   WHILE (cl_table[index] NE '') DO BEGIN
     text = '-> Job # ' + STRCOMPRESS(index,/REMOVE_ALL) + ':'
@@ -136,6 +138,8 @@ PRO  reduce_step3_run_jobs, Event
     SPAWN, cl_table[index]
     index++
   ENDWHILE
+  
+  CD, current
   
   message = ['Your ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs have ' + $
     'submited','','Click CHECK JOB MANAGER to check the status of your jobs!']

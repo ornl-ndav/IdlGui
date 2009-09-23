@@ -76,7 +76,7 @@ left_index++
 ENDWHILE
 
 ;Remove form the table the rows where the 'col' element is an empty string
-array_ele_to_keep = WHERE(WORKING_TABLE[0,*] NE '', count)
+array_ele_to_keep = WHERE(WORKING_TABLE[1,*] NE '', count)
 NEW_FINAL = STRARR(nbr_col, count)
 
 index = 0
