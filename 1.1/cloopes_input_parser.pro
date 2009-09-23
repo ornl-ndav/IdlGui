@@ -131,6 +131,10 @@ PRO create_cl_array, Event
   
   cl_array = getCLtextArray(Event)
   
+      (*global).cl_array = cl_array
+      
+      RETURN
+  
   ;check if sbatch has been found
   sbatch = (*global).sbatch_driver
   match_sbatch = '*' + sbatch + '*'

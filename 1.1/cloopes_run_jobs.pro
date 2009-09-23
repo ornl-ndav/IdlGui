@@ -62,6 +62,9 @@ PRO launch_jobs, Event
   ;tab2 table ['output file','status','temperature']
   tab2_table = STRARR(3,sz+1)
   
+  ;output folder
+  CD, '~/results/', CURRENT=old_path
+
   index = 0
   WHILE (index LT sz) DO BEGIN
   
@@ -83,6 +86,8 @@ PRO launch_jobs, Event
     
     index++
   ENDWHILE
+
+  CD, old_path
   
   (*(*global).tab2_table) = tab2_table
   

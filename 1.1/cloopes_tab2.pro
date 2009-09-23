@@ -487,14 +487,14 @@ PRO check_tab2_run_jobs_button, Event
       index++
     ENDWHILE
   ENDIF ELSE BEGIN
-      IF (~FILE_TEST(table[0])) THEN BEGIN
-        activate_widget, Event, 'tab2_run_jobs_uname', 0
-        RETURN
-      ENDIF
-      IF (STRCOMPRESS(table[2],/REMOVE_ALL) EQ '') THEN BEGIN
-        activate_widget, Event, 'tab2_run_jobs_uname', 0
-        RETURN
-      ENDIF
+    IF (~FILE_TEST(table[0])) THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
+    IF (STRCOMPRESS(table[2],/REMOVE_ALL) EQ '') THEN BEGIN
+      activate_widget, Event, 'tab2_run_jobs_uname', 0
+      RETURN
+    ENDIF
   ENDELSE
   
   ;check that there is an output file name
@@ -536,13 +536,14 @@ PRO refresh_tab2_table, Event
   
     ;check that all the files exist and temperature defined
     index = 0
-    WHILE (index LT sz OR $
-      STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') DO BEGIN
-      IF (FILE_TEST(table[0,index])) THEN BEGIN
-        table[1,index] = 'READY'
-      ENDIF ELSE BEGIN
-        table[1,index] = 'NOT READY'
-      ENDELSE
+    WHILE (index LT sz) DO BEGIN
+      IF (STRCOMPRESS(table[0,index],/REMOVE_ALL) NE '') THEN BEGIN
+        IF (FILE_TEST(table[0,index])) THEN BEGIN
+          table[1,index] = 'READY'
+        ENDIF ELSE BEGIN
+          table[1,index] = 'NOT READY'
+        ENDELSE
+      ENDIF
       index++
     ENDWHILE
     
