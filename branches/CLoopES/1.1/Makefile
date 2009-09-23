@@ -11,4 +11,5 @@ install:
 	cp CLoopES /SNS/software/idltools/
 	cp .cloopes.cfg /SNS/software/idltools/sav/
 	cp -r CLoopES_images/*.png /SNS/software/idltools/sav/CLoopES_images/
+	cp slurm.xml /SNS/software/idltools/sav/
 
