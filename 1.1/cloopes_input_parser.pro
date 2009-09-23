@@ -131,10 +131,8 @@ PRO create_cl_array, Event
   
   cl_array = getCLtextArray(Event)
   
-      (*global).cl_array = cl_array
+  (*global).cl_array = cl_array
       
-      RETURN
-  
   ;check if sbatch has been found
   sbatch = (*global).sbatch_driver
   match_sbatch = '*' + sbatch + '*'
@@ -435,13 +433,14 @@ PRO parse_input_field, Event
   column_sequence = (*(*global).column_sequence)
   column_cl = (*(*global).column_cl)
   sz = N_ELEMENTS(column_sequence)
+
   Table = STRARR(2,sz)
   Table[0,*] = column_sequence[*]
   Table[1,*] = column_cl[*]
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
   WIDGET_CONTROL, id, TABLE_YSIZE = sz
   putValue, Event, 'runs_table', Table
-  
+
   displayNumberOfCLs, Event, column_sequence
   
   ;activate or not the 'Launch Jobs in Background'

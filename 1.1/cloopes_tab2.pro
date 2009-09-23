@@ -88,14 +88,13 @@ PRO populate_tab2, Event
   tab2_table = (*(*global).tab2_table)
   
   error = 0
-  CATCH, error
+  ;CATCH, error
   IF (error NE 0) THEN BEGIN
     CATCH,/CANCEL
     refresh_button_status = 0
     putValue, Event, 'tab2_table_uname', STRARR(1,3)
   ENDIF ELSE BEGIN
     ;get table
-    tab2_table = (*(*global).tab2_table)
     temperature_array = (*(*global).temperature_array)
     sz_temp = N_ELEMENTS(temperature_array)
     
@@ -476,17 +475,19 @@ PRO check_tab2_run_jobs_button, Event
     ;check that all the files exist and temperature defined
     index = 0
     WHILE (index LT sz) DO BEGIN
-      IF (~FILE_TEST(table[0,index])) THEN BEGIN
-        activate_widget, Event, 'tab2_run_jobs_uname', 0
-        RETURN
-      ENDIF
-      IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
-        activate_widget, Event, 'tab2_run_jobs_uname', 0
-        RETURN
+      IF (table[0,index] NE '') THEN BEGIN
+        IF (~FILE_TEST(table[0,index])) THEN BEGIN
+          activate_widget, Event, 'tab2_run_jobs_uname', 0
+          RETURN
+        ENDIF
+        IF (STRCOMPRESS(table[2,index],/REMOVE_ALL) EQ '') THEN BEGIN
+          activate_widget, Event, 'tab2_run_jobs_uname', 0
+          RETURN
+        ENDIF
       ENDIF
       index++
     ENDWHILE
-  ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN ;just 1 file
     IF (~FILE_TEST(table[0])) THEN BEGIN
       activate_widget, Event, 'tab2_run_jobs_uname', 0
       RETURN

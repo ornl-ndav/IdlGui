@@ -125,6 +125,7 @@ PRO MAIN_BASE_event, Event
       IF (isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         populate_tab2, Event
         check_load_save_temperature_widgets, Event
+        check_tab2_run_jobs_button, Event
       ENDIF
     END
     
@@ -133,23 +134,27 @@ PRO MAIN_BASE_event, Event
       IF (~isLooperInputSelected(Event)) THEN BEGIN ;looper selected
         parse_input_field_tab2, Event
         check_load_save_temperature_widgets, Event
+        check_tab2_run_jobs_button, Event
       ENDIF
     END
     
     ;load temperature button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='load_temperature'): BEGIN
       load_temperature, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;update table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_table_uname'): BEGIN
       update_temperature, Event
       check_load_save_temperature_widgets, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;Refresh table
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_refresh_table_uname'): BEGIN
       refresh_tab2_table, Event
+      check_tab2_run_jobs_button, Event
     END
     
     ;save command line
