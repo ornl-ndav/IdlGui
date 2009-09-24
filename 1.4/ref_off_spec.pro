@@ -328,7 +328,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     first_realign:       1,$
     manual_ref_pixel:    0,$
     pData_x:             PTR_NEW(0L),$
+
     x_axis:              PTR_NEW(0L),$
+    x_axis_max_values:   PTR_NEW(0L), $
+    
     total_array:         PTR_NEW(0L),$
     total_array_untouched: PTR_NEW(0L),$
     total_array_error:    PTR_NEW(0L),$
