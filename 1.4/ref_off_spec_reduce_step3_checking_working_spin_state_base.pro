@@ -100,6 +100,9 @@ PRO checking_spin_base_event, event
         ENDIF ELSE BEGIN
           standard = 31
         ENDELSE
+        draw_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_step3_working_spin_state_go_shift_scale')
+        WIDGET_CONTROL, draw_id, GET_VALUE=id
+        WSET, id
         DEVICE, CURSOR_STANDARD=standard
       ENDELSE
     END
