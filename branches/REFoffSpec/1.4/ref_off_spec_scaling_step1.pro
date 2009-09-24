@@ -313,6 +313,8 @@ WHILE (index LT nbr_plot) DO BEGIN
     
 ENDWHILE
 
+(*(*global).x_axis_max_values) = x_axis
+
 ;rebin by 2 in y-axis final array
 rData = REBIN(base_array,(size(base_array))(1)*x_coeff, $
               (size(base_array))(2)*y_coeff,/SAMPLE)
@@ -396,6 +398,24 @@ WSET,id_value
 
 ;plot main plot
 TVSCL, total_array, /DEVICE
+
+y_coeff             = 2
+x_coeff             = 1
+x_axis = (*(*global).x_axis_max_values)
+
+;get number of files loaded
+nbr_plot = getNbrFiles(Event)
+
+i = 0
+box_color = (*global).box_color
+WHILE (i LT nbr_plot) DO BEGIN
+    plotBox, x_coeff, $
+      y_coeff, $
+      0, $
+      x_axis[i], $
+      COLOR=box_color[i]
+    ++i
+ENDWHILE
 
 END
 
