@@ -309,7 +309,7 @@ ENDWHILE
 auto_scale_status = 1 ;ok by default
 
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IdlSendToGeek_addLogBookText, Event, '-> Automatic Rescaling FAILED' + $
