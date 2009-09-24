@@ -75,9 +75,6 @@ PRO makeExclusionArray_SNS, Event, ADD=add
   
   ;calculate size of pixel_array STRARR
   nbr_pixels_total = LONG(ABS(nbr_tubes)) * LONG(ABS(pixel_height_data))
-  print, 'nbr_pixels_total: ' + string(nbr_pixels_total)
-  print, 'nbr_tubes: ' + string(nbr_tubes)
-  print, 'pixel_height_data: ' + string(pixel_height_data)
   IF ((*global).selection_type EQ 'outside') THEN BEGIN ;outside selection
     nbr_pixels_total = 192L * 256L - nbr_pixels_total
   ENDIF
