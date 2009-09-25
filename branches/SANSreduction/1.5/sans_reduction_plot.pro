@@ -45,6 +45,12 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
   CATCH, retrieve_error
   IF (retrieve_error NE 0) THEN BEGIN
     CATCH,/CANCEL
+    progressBar->Destroy
+    widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    result = DIALOG_MESSAGE("Loading new NeXus file failed!",$
+    /ERROR, TITLE='Loading Error!', $
+    /CENTER, $
+    DIALOG_PARENT=widget_id)
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     RETURN, 0
   ENDIF ELSE BEGIN
@@ -60,7 +66,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
       
       OBJ_DESTROY, sInstance
       
-    ENDIF ELSE BEGIN
+    ENDIF ELSE BEGIN ;SNS
     
       Nstep  = FLOAT(48) ;number of steps
       step   = 0
