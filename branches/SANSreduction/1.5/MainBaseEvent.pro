@@ -375,10 +375,18 @@ PRO MAIN_BASE_event, Event
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
+      ;      error
+      ;      CATCH
       IF ((*global).data_nexus_file_name NE '') THEN BEGIN
         auto_exclude_dead_tubes, Event
         save_background,  Event, GLOBAL=global
         makeExclusionArray_SNS, Event
+        IF ((*global).facility EQ 'SNS') THEN BEGIN
+          display_images, EVENT=event
+          display_selection_images, Event=event
+          MapBase, Event, uname='transmission_launcher_base', 1
+        ENDIF
+        
       ENDIF
     END
     
