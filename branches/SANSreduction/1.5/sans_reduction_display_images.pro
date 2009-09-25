@@ -77,13 +77,19 @@ END
 
 ;------------------------------------------------------------------------------
 PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
-    selection = selection
+    selection = selection, OFF=off
     
   uname = 'selection_inside_outside_base_uname'
+  IF (N_ELEMENTS(off) NE 0) THEN BEGIN
+  status = 0
+  ENDIF ELSE BEGIN 
+  status = 1
+  ENDELSE
+  
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    MapBase_from_base, BASE=MAIN_BASE, UNAME=uname, 1
+    MapBase_from_base, BASE=MAIN_BASE, UNAME=uname, status
   ENDIF ELSE BEGIN
-    MapBase, Event, UNAME=uname, 1
+    MapBase, Event, UNAME=uname, status
   ENDELSE
   
   IF (N_ELEMENTS(selection) EQ 0) THEN selection = 'inside'
