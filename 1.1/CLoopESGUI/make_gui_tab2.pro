@@ -70,9 +70,12 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
     
+  tab = WIDGET_TAB(row_a_1) ;.....................................
+  
   ;internal_base
-  inter_base = WIDGET_BASE(row_a_1,$
+  inter_base = WIDGET_BASE(tab,$
     /ROW,$
+    TITLE = 'CLoopES convention',$
     FRAME = 1)
     
   text = WIDGET_TEXT(inter_base,$
@@ -82,13 +85,50 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     XSIZE = 14)
     
   label = WIDGET_LABEL(inter_base,$
-    VALUE = '_<User_Defined>run[s].')
+    VALUE = '_<User_Defined>_run[s].')
+  ;
+  ;  text = WIDGET_TEXT(inter_base, $
+  ;    VALUE = 'run',$
+  ;    /EDITABLE)
+  ;
+  ;    label = WIDGET_LABEL(inter_base,$
+  ;    VALUE = '.')
     
   text = WIDGET_TEXT(inter_base,$
     VALUE = 'dat',$
     UNAME = 'tab2_manual_input_prefix_name',$
     /EDITABLE,$
     XSIZE = 10)
+    
+  ;internal_base
+  inter_base = WIDGET_BASE(tab,$
+    /ROW,$
+    TITLE = 'User convention',$
+    FRAME = 1)
+    
+  text = WIDGET_TEXT(inter_base,$
+    VALUE = 'BASIS',$
+    UNAME = 'tab2_user_manual_input_suffix_name',$
+    /EDITABLE,$
+    XSIZE = 21)
+    
+  label = WIDGET_LABEL(inter_base,$
+    VALUE = '_<User_Defined>.')
+  ;
+  ;  text = WIDGET_TEXT(inter_base, $
+  ;    VALUE = 'run',$
+  ;    /EDITABLE)
+  ;
+  ;    label = WIDGET_LABEL(inter_base,$
+  ;    VALUE = '.')
+    
+  text = WIDGET_TEXT(inter_base,$
+    VALUE = 'dat',$
+    UNAME = 'tab2_user_manual_input_prefix_name',$
+    /EDITABLE,$
+    XSIZE = 10)
+    
+  ;-----------------------------------------------------
     
   row_a_2 = WIDGET_BASE(row_a, $ ;----------------row2
     /ROW)
@@ -172,15 +212,15 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   WIDGET_CONTROL, b1, /SET_BUTTON
   
   ;Load temperature button ----------------------------------------------------
-;  space = WIDGET_LABEL(row1,$
-;  VALUE = '')
+  ;  space = WIDGET_LABEL(row1,$
+  ;  VALUE = '')
   
   load_T = WIDGET_BUTTON(row1,$
-  VALUE = ' Load Temperature ...',$
-  UNAME = 'load_temperature',$
-  TOOLTIP = 'Populate table with a Temperature file',$
-  SENSITIVE = 0)
-  
+    VALUE = ' Load Temperature ...',$
+    UNAME = 'load_temperature',$
+    TOOLTIP = 'Populate table with a Temperature file',$
+    SENSITIVE = 0)
+    
   ;----------------------------------------------------------------------------
   ;row2 (big table)
   row2 = WIDGET_BASE(Base,$
@@ -210,17 +250,17 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
     SENSITIVE = 0)
     
   button2 = WIDGET_BUTTON(row3,$
-  VALUE = 'PREVIEW / SAVE COMMNAND LINE ...',$
-  UNAME = 'tab2_save_command_line',$
-  XSIZE = 250, $
-  SENSITIVE = 1) ;remove_me and put back 0  
+    VALUE = 'PREVIEW / SAVE COMMNAND LINE ...',$
+    UNAME = 'tab2_save_command_line',$
+    XSIZE = 250, $
+    SENSITIVE = 1) ;remove_me and put back 0
     
   save_temperature = WIDGET_BUTTON(row3,$
-  VALUE = 'Save Temperature ...',$
-  UNAME = 'save_temperature',$
-  XSIZE = 200,$
-  TOOLTIP = 'Create output file of Temperature column',$
-  SENSITIVE = 0)
+    VALUE = 'Save Temperature ...',$
+    UNAME = 'save_temperature',$
+    XSIZE = 200,$
+    TOOLTIP = 'Create output file of Temperature column',$
+    SENSITIVE = 0)
     
   space = WIDGET_LABEL(row3,$
     VALUE = '')
