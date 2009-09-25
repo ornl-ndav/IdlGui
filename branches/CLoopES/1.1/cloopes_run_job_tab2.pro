@@ -37,7 +37,8 @@ FUNCTION create_cmd, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-  cmd = 'srun --batch -p bac2q'
+  ;cmd = 'srun --batch -p bac2q'
+  cmd = 'amrun_dev -p bac2q --batch'
   
   ;get driver
   driver = (*global).es_driver
@@ -127,11 +128,13 @@ PRO run_job_tab2, Event
 
   ;output folder
   output_path = getButtonValue(Event, 'tab2_output_folder_button_uname')
-  CD, output_path
+  CD, output_path, CURRENT=old_path
 
   cmd_text = '-> Launching job: '
   cmd_text += cmd
   IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
   SPAWN, cmd
+  
+  CD, old_path
   
 END
