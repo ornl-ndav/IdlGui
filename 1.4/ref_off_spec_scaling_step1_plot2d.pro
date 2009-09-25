@@ -120,15 +120,8 @@ PRO display_step4_step1_plot2d, Event
   index_ymax = 0
   ymax_value = 0
   WHILE (index_ymax LT nbr_plot) DO BEGIN
+  
     local_tfpData       = *tfpData[index_ymax]
-    ;    bLogPlot      = isLogZaxisScalingStep1Selected(Event)
-    ;    IF (bLogPlot) THEN BEGIN
-    ;        local_tfpData       = ALOG10(local_tfpData)
-    ;        index_inf = WHERE(local_tfpData LT 0, nIndex)
-    ;        IF (nIndex GT 0) THEN BEGIN
-    ;            local_tfpData[index_inf]       = 0
-    ;        ENDIF
-    ;    ENDIF
     
     sz = (size(local_tfpDAta))(1)
     xmin = (xmin GE sz) ? (sz-1) : xmin
@@ -148,9 +141,10 @@ PRO display_step4_step1_plot2d, Event
     ymax_local     = MAX(t_data_to_plot)
     ymax_value     = (ymax_local GT ymax_value) ? ymax_local : ymax_value
     (*global).step4_step1_ymax_value = ymax_value
+    
     index_ymax++
   ENDWHILE
-  
+    
   (*global).step4_step1_ymax_value        = ymax_value
   (*(*global).IvsLambda_selection)        = IvsLambda_selection
   (*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup

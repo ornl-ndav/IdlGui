@@ -1744,8 +1744,6 @@ PRO MAIN_BASE_event, Event
         replotAsciiData_scaling_step1, Event ;scaling_step1
         IF (bClick) THEN BEGIN
           plotStep4Step1Selection, Event ;scaling_step1
-        ;                    save_selection_left_position_step4_step1, $
-        ;                      Event     ;_scaling_step1
         ENDIF ELSE BEGIN ;move region
           move_selection_step4_step1, Event ;scaling_step1
           refresh_plotStep4Step1Selection, Event

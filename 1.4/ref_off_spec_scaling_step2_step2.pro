@@ -369,7 +369,7 @@ END
 PRO display_error_message, Event, STEP=step
   Message = ['Error during the ' + STEP + ' process!',$
     '',$
-    'Try to rerun the process without taking into account error bars']
+    'Please modify the selection and try again']
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_2_2_auto_button')
   result = DIALOG_MESSAGE(Message,$
     /INFORMATION, $
@@ -490,6 +490,32 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
   *new_IvsLambda_selection_error[0]      = y_error_array_rescale
   (*(*global).IvsLambda_selection)       = new_IvsLambda_selection
   (*(*global).IvsLambda_selection_error) = new_IvsLambda_selection_error
+  
+  ;make sure they all have the same size
+  ;get the biggest size
+  sz_max = 0
+  FOR i=0, (nbr_files-1) DO BEGIN
+    sz = N_ELEMENTS(*new_IvsLambda_selection[i])
+    IF (sz GT sz_max) THEN sz_max = sz
+  ENDFOR
+  FOR i=0, (nbr_files-1) DO BEGIN
+
+    sz = N_ELEMENTS(*new_IvsLambda_selection[i])
+    IF (sz LT sz_max) THEN BEGIN
+    local_IvsLambda_selection = FLTARR(sz_max)
+    local_IvsLambda_selection_error = FLTARR(sz_max)
+
+    local_IvsLambda_selection[0:sz-1] = *new_IvsLambda_selection[i]
+    local_IvsLambda_selection_error[0:sz-1] = *new_IvsLambda_selection_error[i]
+
+    local_IvsLambda_selection[sz:sz_max-1] = !VALUES.F_NAN
+    local_IvsLambda_selection_error[sz:sz_max-1] = !VALUES.F_NAN
+
+    *new_IvsLambda_selection[i] = local_IvsLambda_selection
+    *new_IvsLambda_selection_error[i] = local_IvsLambda_selection_error
+    
+    ENDIF
+  ENDFOR
   
   (*(*global).IvsLambda_selection_step3_backup) = new_IvsLambda_selection
   (*(*global).IvsLambda_selection_error_step3_backup) = $
