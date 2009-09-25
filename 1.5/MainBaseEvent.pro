@@ -365,29 +365,51 @@ PRO MAIN_BASE_event, Event
     ;- Run Number cw_field ----------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
       load_run_number, Event     ;_eventcb
-      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-        auto_exclude_dead_tubes, Event
-        save_background,  Event, GLOBAL=global
-        makeExclusionArray_SNS, Event
-      ENDIF
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        result = DIALOG_MESSAGE('Wrong input file',/ERROR,$
+          /CENTER, TITLE='LOADING ERROR!', $
+          DIALOG_PARENT=widget_id)
+      ENDIF ELSE BEGIN
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          auto_exclude_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+          makeExclusionArray_SNS, Event
+          IF ((*global).facility EQ 'SNS') THEN BEGIN
+            display_images, EVENT=event
+            display_selection_images, Event=event
+            MapBase, Event, uname='transmission_launcher_base', 1
+          ENDIF
+        ENDIF
+      ENDELSE
     END
     
     ;- Browse Button ----------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
       browse_nexus, Event ;_eventcb
-      ;      error
-      ;      CATCH
-      IF ((*global).data_nexus_file_name NE '') THEN BEGIN
-        auto_exclude_dead_tubes, Event
-        save_background,  Event, GLOBAL=global
-        makeExclusionArray_SNS, Event
-        IF ((*global).facility EQ 'SNS') THEN BEGIN
-          display_images, EVENT=event
-          display_selection_images, Event=event
-          MapBase, Event, uname='transmission_launcher_base', 1
+      error = 0
+      CATCH, error
+      IF (error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        result = DIALOG_MESSAGE('Wrong input file',/ERROR,$
+          /CENTER, TITLE='LOADING ERROR!', $
+          DIALOG_PARENT=widget_id)
+      ENDIF ELSE BEGIN
+        IF ((*global).data_nexus_file_name NE '') THEN BEGIN
+          auto_exclude_dead_tubes, Event
+          save_background,  Event, GLOBAL=global
+          makeExclusionArray_SNS, Event
+          IF ((*global).facility EQ 'SNS') THEN BEGIN
+            display_images, EVENT=event
+            display_selection_images, Event=event
+            MapBase, Event, uname='transmission_launcher_base', 1
+          ENDIF
         ENDIF
-        
-      ENDIF
+      ENDELSE
     END
     
     ;- Selection Button -------------------------------------------------------
