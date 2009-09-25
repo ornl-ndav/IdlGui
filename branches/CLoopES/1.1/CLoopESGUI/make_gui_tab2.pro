@@ -70,7 +70,8 @@ PRO make_gui_tab2, MAIN_TAB, MainTabSize, title
   label = WIDGET_LABEL(row_a_1,$
     VALUE = 'File Name:')
     
-  tab = WIDGET_TAB(row_a_1) ;.....................................
+  tab = WIDGET_TAB(row_a_1,$ ;.....................................  
+  UNAME = 'tab2_convention_tab')
   
   ;internal_base
   inter_base = WIDGET_BASE(tab,$

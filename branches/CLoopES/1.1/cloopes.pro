@@ -124,7 +124,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ok:           'OK',$
     failed:       'FAILED',$
     version:      VERSION,$
-    MainBaseSize: [30,25,800,750]})
+    MainBaseSize: [30,25,800,770]})
     
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
