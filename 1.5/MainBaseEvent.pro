@@ -370,8 +370,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        result = DIALOG_MESSAGE('Wrong input file',/ERROR,$
-          /CENTER, TITLE='LOADING ERROR!', $
+        result = DIALOG_MESSAGE('Wrong input file', $
+          /ERROR, $
+          /CENTER, $
+          TITLE='LOADING ERROR!', $
           DIALOG_PARENT=widget_id)
       ENDIF ELSE BEGIN
         IF ((*global).data_nexus_file_name NE '') THEN BEGIN
@@ -379,11 +381,15 @@ PRO MAIN_BASE_event, Event
           save_background,  Event, GLOBAL=global
           makeExclusionArray_SNS, Event
           IF ((*global).facility EQ 'SNS') THEN BEGIN
+            MapBase, Event, uname='transmission_launcher_base', 1
             display_images, EVENT=event
             display_selection_images, Event=event
-            MapBase, Event, uname='transmission_launcher_base', 1
           ENDIF
-        ENDIF
+        ENDIF ELSE BEGIN
+          MapBase, Event, uname='transmission_launcher_base', 0
+          display_selection_images, EVENT=event, OFF=1
+        ENDELSE
+        
       ENDELSE
     END
     
@@ -395,8 +401,10 @@ PRO MAIN_BASE_event, Event
       IF (error NE 0) THEN BEGIN
         CATCH,/CANCEL
         widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        result = DIALOG_MESSAGE('Wrong input file',/ERROR,$
-          /CENTER, TITLE='LOADING ERROR!', $
+        result = DIALOG_MESSAGE('Wrong input file', $
+          /ERROR, $
+          /CENTER, $
+          TITLE='LOADING ERROR!', $
           DIALOG_PARENT=widget_id)
       ENDIF ELSE BEGIN
         IF ((*global).data_nexus_file_name NE '') THEN BEGIN
@@ -404,9 +412,9 @@ PRO MAIN_BASE_event, Event
           save_background,  Event, GLOBAL=global
           makeExclusionArray_SNS, Event
           IF ((*global).facility EQ 'SNS') THEN BEGIN
+            MapBase, Event, uname='transmission_launcher_base', 1
             display_images, EVENT=event
             display_selection_images, Event=event
-            MapBase, Event, uname='transmission_launcher_base', 1
           ENDIF
         ENDIF
       ENDELSE
