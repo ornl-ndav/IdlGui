@@ -127,7 +127,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, title
   sTable = { size: [sInfoFrame.size[0]+XYoff[0],$
     sInfoFrame.size[1]+sInfoFrame.size[3]+XYoff[1],$
     sPreview.size[2],$
-    455,$
+    475,$ ;455
     2,$
     1],$
     uname: 'runs_table',$

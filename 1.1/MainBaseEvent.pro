@@ -91,9 +91,44 @@ PRO MAIN_BASE_event, Event
     
     ;tab22222222222222222222222222222222222222222222222222222222222222222222222
     
+    ;user and CLoopES convention tab
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_convention_tab'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    
+    ;suffix and prefix of user and CLoopES convention
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_suffix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_prefix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_user_manual_input_suffix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_user_manual_input_prefix_name'): BEGIN
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
+    END
+    
     ;Input File path button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_folder'): BEGIN
       define_input_folder_tab2, Event
+      parse_input_field_tab2, Event
+      check_tab2_run_jobs_button, Event
+      check_load_save_temperature_widgets, Event
     END
     
     ;<User_defined>
@@ -104,7 +139,8 @@ PRO MAIN_BASE_event, Event
     END
     
     ;help button of manual input
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='tab2_manual_input_sequence_help'): BEGIN
+    WIDGET_INFO(wWidget, $
+      FIND_BY_UNAME='tab2_manual_input_sequence_help'): BEGIN
       help_button_tab2, Event ;_help
     END
     
