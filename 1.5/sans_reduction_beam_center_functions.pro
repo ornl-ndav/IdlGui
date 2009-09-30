@@ -286,3 +286,68 @@ FUNCTION getBScalculationRange, Event, BASE=base
   RETURN, result
   
 END
+
+;------------------------------------------------------------------------------
+FUNCTION input_is_a_valid_number, value
+
+  ON_IOERROR, error
+  
+  d_value = DOUBLE(value)
+  
+  RETURN, 1
+  
+  error:
+  
+  RETURN, 0
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION tube_is_in_expected_range, BASE=base, EVENT=event, tube
+
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,base,GET_UVALUE=global
+  ENDELSE
+  
+  tube = DOUBLE(tube)
+  
+  min_tube_plotted = (*global).min_tube_plotted
+  max_tube_plotted = (*global).max_tube_plotted
+  
+  IF (tube LT min_tube_plotted) THEN RETURN, 0
+  IF (tube GT max_tube_plotted) THEN RETURN, 0
+
+  RETURN, 1
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION pixel_is_in_expected_range, BASE=base, EVENT=event, pixel
+
+  IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
+    WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL,base,GET_UVALUE=global
+  ENDELSE
+  
+  pixel = DOUBLE(pixel)
+  
+  min_pixel_plotted = (*global).min_pixel_plotted
+  max_pixel_plotted = (*global).max_pixel_plotted
+  
+  IF (pixel LT min_pixel_plotted) THEN RETURN, 0
+  IF (pixel GT max_pixel_plotted) THEN RETURN, 0
+  
+  RETURN, 1
+
+END
+
+
+
+
+
+
+
+

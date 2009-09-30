@@ -276,20 +276,34 @@ PRO beam_center_plot, Base=base, Event=event
   IF (bc_tube NE 'N/A' AND $
     bc_pixel NE 'N/A') THEN BEGIN
     
-    bc_tube_value = FIX(bc_tube)
-    bc_pixel_value = FIX(bc_pixel)
-    
-    tube  = getBeamCenterTubeDevice_from_data(bc_tube_value, global)
-    pixel = getBeamCenterPixelDevice_from_data(bc_pixel_value, global)
-    
-    color = FSC_COLOR('white')
-    thick = 3
-    
-    PLOTS, tube, pixel, /DEVICE, COLOR=color
-    PLOTS, tube, pixel+1, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-    PLOTS, tube+1, pixel+1, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-    PLOTS, tube+1, pixel, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
-    PLOTS, tube, pixel, /DEVICE, COLOR=color, /CONTINUE, LINESTYLE=0, THICK=thick
+    IF (input_is_a_valid_number(bc_tube) AND $
+      input_is_a_valid_number(bc_pixel)) THEN BEGIN ;valid numbers
+      
+      IF (tube_is_in_expected_range(BASE=base, EVENT=event, bc_tube) AND $
+        pixel_is_in_expected_range(BASE=base, EVENT=event, bc_pixel)) THEN BEGIN
+        
+        bc_tube_value = FIX(bc_tube)
+        bc_pixel_value = FIX(bc_pixel)
+        
+        tube  = getBeamCenterTubeDevice_from_data(bc_tube_value, global)
+        pixel = getBeamCenterPixelDevice_from_data(bc_pixel_value, global)
+        
+        color = FSC_COLOR('white')
+        thick = 3
+        
+        PLOTS, tube, pixel, /DEVICE, COLOR=color
+        PLOTS, tube, pixel+1, /DEVICE, COLOR=color, /CONTINUE, $
+          LINESTYLE=0, THICK=thick
+        PLOTS, tube+1, pixel+1, /DEVICE, COLOR=color, /CONTINUE, $
+          LINESTYLE=0, THICK=thick
+        PLOTS, tube+1, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+          LINESTYLE=0, THICK=thick
+        PLOTS, tube, pixel, /DEVICE, COLOR=color, /CONTINUE, $
+          LINESTYLE=0, THICK=thick
+          
+      ENDIF
+      
+    ENDIF
     
   ENDIF
   

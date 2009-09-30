@@ -796,7 +796,31 @@ PRO launch_beam_center_base_event, Event
       beam_center_plot, Event=event
     END
     
-    ;CANCEL button
+    ;Tube beam center ---------------------------------------------------------
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'beam_center_tube_center_value'): BEGIN
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+      beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
+    END
+    
+    ;pixel beam center --------------------------------------------------------
+    WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME = 'beam_center_pixel_center_value'): BEGIN
+      plot_beam_center_background, Event
+      replot_beam_center_beam_stop, Event
+      plot_live_cursor, Event
+      plot_saved_live_cursor, Event ;display bottom counts vs tof plots
+      plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
+      beam_center_plot, Event=event
+      validate_or_not_beam_center_ok_button, EVENT=event
+    END
+    
+    ;CANCEL button ------------------------------------------------------------
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_cancel_button'): BEGIN
       ;      DEVICE, DECOMPOSED=0
       id = WIDGET_INFO(Event.top, $
@@ -885,6 +909,18 @@ PRO validate_or_not_beam_center_ok_button, BASE=base, EVENT=event
   ENDIF ELSE BEGIN
     status = 0
   ENDELSE
+  
+  IF (~input_is_a_valid_number(bc_tube)) THEN status = 0
+  IF (~input_is_a_valid_number(bc_pixel)) THEN status = 0
+  
+  IF (status) THEN BEGIN
+    IF (~tube_is_in_expected_range(BASE=base, $
+      EVENT=event, $
+      bc_tube)) THEN status = 0
+    IF (~pixel_is_in_expected_range(BASE=base, $
+      EVENT=event, $
+      bc_pixel)) THEN status = 0
+  ENDIF
   
   IF (N_ELEMENTS(base) NE 0) THEN BEGIN
     activate_widget_from_base, base, 'beam_stop_ok_button', status
