@@ -343,6 +343,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PrevScalingTabSelect: 0,$
     PrevScalingStep2TabSelect: 0,$
     step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
+    step4_2_2_lambda_value_array: [0,0], $ [Qmin, Qmax] data value (not device)
     plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
