@@ -174,27 +174,35 @@ PRO step4_2_left_click, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
-  
+  step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
+
   ;refresh plot 2d of step4_2_2
   display_step4_step2_step2_selection, Event
   
   CASE ((*global).step4_2_2_lambda_selected) OF
     'min': BEGIN
       step4_2_2_lambda_array[0] = Event.x
+      cursor, X, Y, /DATA, /NOWAIT
+      step4_2_2_lambda_value_array[0] = X
     END
     'max': BEGIN
       step4_2_2_lambda_array[1] = Event.x
+      cursor, X, Y, /DATA, /NOWAIT
+      step4_2_2_lambda_value_array[1] = X
     END
     ELSE:
   ENDCASE
   
   (*global).step4_2_2_lambda_array = step4_2_2_lambda_array
+  (*global).step4_2_2_lambda_value_array = step4_2_2_lambda_value_array
   
-  ;plot Lambda on top of plot
-  plotLambdaSelected, Event
+  ;  ;plot Lambda on top of plot
+  ;  plotLambdaSelected, Event
   
   ;display lambda in boxes
   display_lambda_selected, Event
+  
+  re_plot_lambda_selected, Event
   
 END
 
@@ -203,6 +211,7 @@ PRO step4_2_move, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
+    step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
   
   ;refresh plot 2d of step4_2_2
   display_step4_step2_step2_selection, Event
@@ -210,20 +219,25 @@ PRO step4_2_move, Event
   CASE ((*global).step4_2_2_lambda_selected) OF
     'min': BEGIN
       step4_2_2_lambda_array[0] = Event.x
+      cursor, X, Y, /DATA, /NOWAIT
+      step4_2_2_lambda_value_array[0] = X
     END
     'max': BEGIN
       step4_2_2_lambda_array[1] = Event.x
+      cursor, X, Y, /DATA, /NOWAIT
+      step4_2_2_lambda_value_array[1] = X
     END
     ELSE:
   ENDCASE
   
   (*global).step4_2_2_lambda_array = step4_2_2_lambda_array
-  
-  ;plot Lambda on top of plot
-  plotLambdaSelected, Event
+  (*global).step4_2_2_lambda_value_array = step4_2_2_lambda_value_array
   
   ;display lambda in boxes
   display_lambda_selected, Event
+
+  ;plot Lambda on top of plot
+  plotLambdaSelected, Event
   
 END
 
@@ -266,20 +280,26 @@ PRO display_lambda_selected, Event
   xmin         = xrange[0]
   
   ratio        = (FLOAT(xmax) - FLOAT(xmin))/(FLOAT(gr_xmax) - FLOAT(gr_xmin))
-  Lambda_value = FLOAT(Event.x - gr_xmin) * ratio + xmin
   
-  CASE ((*global).step4_2_2_lambda_selected) OF
-    'min': BEGIN
-      uname = 'step4_2_2_lambda1_text_field'
-    END
-    'max': BEGIN
-      uname = 'step4_2_2_lambda2_text_field'
-    END
-    ELSE:
-  ENDCASE
+  Lambda_value_0 = FLOAT(step4_2_2_lambda_array[0] - gr_xmin) * ratio + xmin
+  Lambda_value_1 = FLOAT(step4_2_2_lambda_array[1] - gr_xmin) * ratio + xmin
   
-  putTextFieldValue, Event, uname, STRCOMPRESS(lambda_value,/REMOVE_ALL)
+  uname_0 = 'step4_2_2_lambda1_text_field'
+  uname_1 = 'step4_2_2_lambda2_text_field'
   
+  step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
+  
+  Q1 = step4_2_2_lambda_value_array[0]
+  Q2 = step4_2_2_lambda_value_array[1]
+  
+  Qmin = MIN([Q1,Q2], MAX=Qmax)
+  
+;  putTextFieldValue, Event, uname_0, STRCOMPRESS(lambda_value_0,/REMOVE_ALL)
+;  putTextFieldValue, Event, uname_1, STRCOMPRESS(lambda_value_1,/REMOVE_ALL)
+  
+  putTextFieldValue, Event, uname_0, STRCOMPRESS(Qmin,/REMOVE_ALL)
+  putTextFieldValue, Event, uname_1, STRCOMPRESS(Qmax,/REMOVE_ALL)
+
 END
 
 ;------------------------------------------------------------------------------

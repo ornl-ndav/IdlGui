@@ -1922,6 +1922,7 @@ PRO MAIN_BASE_event, Event
       xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
       tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
       CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
+      
       IF (CurrTabSelect EQ 1) THEN BEGIN ;CE file
       
         IF (Event.press EQ 1) THEN BEGIN ;left click
@@ -1950,6 +1951,7 @@ PRO MAIN_BASE_event, Event
         check_step4_step2_step2, Event ;scaling_step2_step2
         
       ENDIF
+
     ENDIF
   END
   
