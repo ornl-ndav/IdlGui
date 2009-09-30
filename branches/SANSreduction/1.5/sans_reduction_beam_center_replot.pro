@@ -629,13 +629,16 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase, BASE=base
       bc_tube = getTextFieldValue_from_base(base, $
         'beam_center_tube_center_value')
     ENDELSE
-    IF (bc_tube NE 'N/A') THEN BEGIN
-      bc_tube_value = FLOAT(bc_tube)
-      max_counts = MAX(tube_data)
-      PLOTS, bc_tube_value, 0, /DATA
-      PLOTS, bc_tube_value, 2*max_counts, /DATA, /CONTINUE, $
-        COLOR = FSC_COLOR('blue'), $
-        LINESTYLE=0
+    
+    IF (input_is_a_valid_number(bc_tube)) THEN BEGIN
+      IF (tube_is_in_expected_range(BASE=base, EVENT=event, bc_tube)) THEN BEGIN
+        bc_tube_value = FLOAT(bc_tube)
+        max_counts = MAX(tube_data)
+        PLOTS, bc_tube_value, 0, /DATA
+        PLOTS, bc_tube_value, 2*max_counts, /DATA, /CONTINUE, $
+          COLOR = FSC_COLOR('blue'), $
+          LINESTYLE=0
+      ENDIF
     ENDIF
     
     ;plot counts vs pixel
@@ -677,13 +680,15 @@ PRO plot_counts_vs_tof_of_saved_live_cursor, Event, ERASE=erase, BASE=base
       bc_pixel = getTextFieldValue_from_base(base, $
         'beam_center_pixel_center_value')
     ENDELSE
-    IF (bc_pixel NE 'N/A') THEN BEGIN
-      bc_pixel_value = FLOAT(bc_pixel)
-      max_counts = MAX(pixel_data)
-      PLOTS, bc_pixel_value, 0, /DATA
-      PLOTS, bc_pixel_value, 2*max_counts, /DATA, /CONTINUE, $
-        COLOR = FSC_COLOR('blue'), $
-        LINESTYLE=0
+    IF (input_is_a_valid_number(bc_pixel)) THEN BEGIN
+      IF (pixel_is_in_expected_range(BASE=base, EVENT=event, bc_pixel)) THEN BEGIN
+        bc_pixel_value = FLOAT(bc_pixel)
+        max_counts = MAX(pixel_data)
+        PLOTS, bc_pixel_value, 0, /DATA
+        PLOTS, bc_pixel_value, 2*max_counts, /DATA, /CONTINUE, $
+          COLOR = FSC_COLOR('blue'), $
+          LINESTYLE=0
+      ENDIF
     ENDIF
     
   ENDIF ELSE BEGIN
