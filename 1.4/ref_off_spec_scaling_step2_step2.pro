@@ -102,8 +102,12 @@ PRO display_step4_step2_step2_selection, Event
     xrange = (*(*global).step4_step2_step1_xrange)
     xtitle = 'Wavelength'
     ytitle = 'Counts'
-;    ymax_value = (*global).step4_step1_ymax_value
-    ymax_value = getTextFieldValue(Event,'step4_2_zoom_y_max')
+    ;    ymax_value = (*global).step4_step1_ymax_value
+    ymax_value = DOUBLE(getTextFieldValue(Event,'step4_2_zoom_y_max'))
+    ymin_value = DOUBLE(getTextFieldValue(Event,'step4_2_zoom_y_min'))
+    
+    xmin_value = getTextFieldValue(Event,'step4_2_zoom_x_min')
+    xmax_value = getTextFieldValue(Event,'step4_2_zoom_x_max')
     
     psym       = getStep4Step2PSYMselected(Event)
     isLog      = getStep4Step2PlotType(Event)
@@ -114,7 +118,9 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
-        YRANGE = [(*global).ymin_log_mode,ymax_value],$
+        ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
+        YRANGE = [ymin_value,ymax_value],$
+        XRANGE = [xmin_value,xmax_value],$
         XSTYLE = 1,$
         PSYM   = psym,$
         /YLOG
@@ -124,7 +130,8 @@ PRO display_step4_step2_step2_selection, Event
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
-        YRANGE = [0,ymax_value],$
+        XRANGE = [xmin_value,xmax_value],$
+        YRANGE = [ymin_value,ymax_value],$
         XSTYLE = 1,$
         PSYM   = psym
     ENDELSE
@@ -499,21 +506,21 @@ PRO step4_step2_step2_scaleCE, Event, RESET=reset
     IF (sz GT sz_max) THEN sz_max = sz
   ENDFOR
   FOR i=0, (nbr_files-1) DO BEGIN
-
+  
     sz = N_ELEMENTS(*new_IvsLambda_selection[i])
     IF (sz LT sz_max) THEN BEGIN
-    local_IvsLambda_selection = FLTARR(sz_max)
-    local_IvsLambda_selection_error = FLTARR(sz_max)
-
-    local_IvsLambda_selection[0:sz-1] = *new_IvsLambda_selection[i]
-    local_IvsLambda_selection_error[0:sz-1] = *new_IvsLambda_selection_error[i]
-
-    local_IvsLambda_selection[sz:sz_max-1] = !VALUES.F_NAN
-    local_IvsLambda_selection_error[sz:sz_max-1] = !VALUES.F_NAN
-
-    *new_IvsLambda_selection[i] = local_IvsLambda_selection
-    *new_IvsLambda_selection_error[i] = local_IvsLambda_selection_error
-    
+      local_IvsLambda_selection = FLTARR(sz_max)
+      local_IvsLambda_selection_error = FLTARR(sz_max)
+      
+      local_IvsLambda_selection[0:sz-1] = *new_IvsLambda_selection[i]
+      local_IvsLambda_selection_error[0:sz-1] = *new_IvsLambda_selection_error[i]
+      
+      local_IvsLambda_selection[sz:sz_max-1] = !VALUES.F_NAN
+      local_IvsLambda_selection_error[sz:sz_max-1] = !VALUES.F_NAN
+      
+      *new_IvsLambda_selection[i] = local_IvsLambda_selection
+      *new_IvsLambda_selection_error[i] = local_IvsLambda_selection_error
+      
     ENDIF
   ENDFOR
   
@@ -563,8 +570,8 @@ PRO Step4_step2_step2_fitCE, Event, lda_min, lda_max
   ;calculate the average value over the range selected
   AverageValue = MEAN(y_array_to_fit)
   (*global).AverageValue = AverageValue
-    
-    putTextFieldValue, Event, $
+  
+  putTextFieldValue, Event, $
     'step2_y_before_text_field',$
     STRCOMPRESS(AverageValue,/REMOVE_ALL)
   putTextFieldValue, Event,$
@@ -622,13 +629,13 @@ PRO check_step4_2_2_gui, Event ;scaling_step4_step2
 
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
-;  ;check if a and b are not 'N/A', if yes, activate SF text_field
-;  a = getTextFieldValue(Event, 'step2_fitting_equation_a_text_field')
-;  b = getTextFieldValue(Event, 'step2_fitting_equation_b_text_field')
-;  IF (a EQ 'NaN' OR $
-;    a EQ '-NaN' OR $
-;    b EQ 'NaN' OR $
-;    b EQ '-NaN') THEN BEGIN
+  ;  ;check if a and b are not 'N/A', if yes, activate SF text_field
+  ;  a = getTextFieldValue(Event, 'step2_fitting_equation_a_text_field')
+  ;  b = getTextFieldValue(Event, 'step2_fitting_equation_b_text_field')
+  ;  IF (a EQ 'NaN' OR $
+  ;    a EQ '-NaN' OR $
+  ;    b EQ 'NaN' OR $
+  ;    b EQ '-NaN') THEN BEGIN
   IF ((*global).AverageValue EQ 0) THEN BEGIN
     sensitive_status = 0
   ENDIF ELSE BEGIN
