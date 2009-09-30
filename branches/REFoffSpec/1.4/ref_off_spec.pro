@@ -342,7 +342,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     PrevTabSelect:       0,$
     PrevScalingTabSelect: 0,$
     PrevScalingStep2TabSelect: 0,$
-    step4_step1_selection: [0,0,0,0],$
+    step4_step1_selection: [0,0,0,0],$ ;[xmin, ymin, xmax, ymax]
     plot2d_x_left:       0,$
     plot2d_y_left:       0,$
     plot2d_x_right:      0,$
