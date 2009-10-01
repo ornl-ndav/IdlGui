@@ -179,7 +179,7 @@ PRO display_step4_step1_plot2d, Event
       xtitle = 'Wavelength'
       ytitle = 'Counts'
       
-      ymin = 0.001
+      ymin = (*global).step4_ymin_global_value
       ymin_value = (ymin LT ymax_value) ? ymin : (ymax_value/10.)
       
       ymin_ymax = [ymin_value, ymax_value]
