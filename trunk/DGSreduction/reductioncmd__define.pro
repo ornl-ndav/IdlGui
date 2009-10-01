@@ -530,15 +530,15 @@ function ReductionCmd::Check
   
   
   ; If Normalisation defined and empty or black then need to define norm-coeff
-  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
-    IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
-      IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
-        ok = 0
-        msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
-          "if you have specified a Normalisation Run and either an Empty Can or a Black Can."]]
-      ENDIF
-    ENDIF
-  ENDIF
+;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+;    IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+;      IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
+;        ok = 0
+;        msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
+;          "if you have specified a Normalisation Run and either an Empty Can or a Black Can."]]
+;      ENDIF
+;    ENDIF
+;  ENDIF
 
   ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
   IF (self.nomonitornorm EQ 0) THEN BEGIN
@@ -549,12 +549,12 @@ function ReductionCmd::Check
   ENDIF
   
   ; And the other way round, if you specify a norm run then you need to turn the mask on!
-  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
-    IF (self.mask NE 1) THEN BEGIN
-      ok = 0
-      msg = [msg,['If you specify a Normalisation Run then you need to turn on the Vanadium Mask.']]
-    ENDIF
-  ENDIF
+;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+;    IF (self.mask NE 1) THEN BEGIN
+;      ok = 0
+;      msg = [msg,['If you specify a Normalisation Run then you need to turn on the Vanadium Mask.']]
+;    ENDIF
+;  ENDIF
 
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
@@ -704,14 +704,18 @@ function ReductionCmd::Generate
     ; transmission for sample data background
     IF STRLEN(self.datatrans) GE 1 THEN $
       cmd[i] += " --data-trans-coeff=" + self.datatrans + ",0.0"
+
+  ; These are no longer needed in dgs_reduction
+    
     ; transmission for norm data background
     ;IF STRLEN(self.normtrans) GE 1 THEN $
     ;  cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
-    IF (STRLEN(self.normrange_min) GE 1 ) $
-      AND (STRLEN(self.normrange_max) GE 1) THEN $
-      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
-                + self.normrange_max    
+;    IF (STRLEN(self.normrange_min) GE 1 ) $
+;      AND (STRLEN(self.normrange_max) GE 1) THEN $
+;      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
+;                + self.normrange_max    
+
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
       AND (STRLEN(self.lambdabins_max) GE 1) $
