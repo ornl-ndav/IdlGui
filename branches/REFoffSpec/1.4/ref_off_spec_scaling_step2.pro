@@ -89,7 +89,7 @@ PRO  reset_zoom_widgets, Event
     sXmax = X_Y_min_max_array[2]
     sYmax = X_Y_min_max_array[3]
     
-    symin = 0.001
+    symin = STRCOMPRESS((*global).step4_ymin_global_value,/REMOVE_ALL)
     
     putTextFieldValue, Event, 'step4_2_zoom_x_min', sxmin
     putTextFieldValue, Event, 'step4_2_zoom_x_max', sxmax
