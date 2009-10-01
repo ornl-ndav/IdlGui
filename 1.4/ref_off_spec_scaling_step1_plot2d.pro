@@ -133,6 +133,7 @@ PRO display_step4_step1_plot2d, Event
       data_to_plot       = FLOAT(local_tfpData(xmin:xmax, $
         (304L+ymin):(304L+ymax)))
     ENDELSE
+
     nbr_pixels = (size(data_to_plot))(2)
     t_data_to_plot = total(data_to_plot,2)/FLOAT(nbr_pixels)
     
@@ -155,16 +156,7 @@ PRO display_step4_step1_plot2d, Event
     box_color     = (*global).box_color
     color         = box_color[index]
     local_tfpData = *tfpData[index]
-    
-    ;    bLogPlot = isLogZaxisScalingStep1Selected(Event)
-    ;    IF (bLogPlot) THEN BEGIN
-    ;        local_tfpData = ALOG10(local_tfpData)
-    ;        index_inf = WHERE(local_tfpData LT 0, nIndex)
-    ;        IF (nIndex GT 0) THEN BEGIN
-    ;            local_tfpData[index_inf] = 0
-    ;        ENDIF
-    ;    ENDIF
-    
+
     psym = getStep4Step2PSYMselected(Event)
     IF (index EQ 0) THEN BEGIN
       data_to_plot   = FLOAT(local_tfpData(xmin:xmax,ymin:ymax))
@@ -179,8 +171,8 @@ PRO display_step4_step1_plot2d, Event
       xtitle = 'Wavelength'
       ytitle = 'Counts'
       
-      ymin = (*global).step4_ymin_global_value
-      ymin_value = (ymin LT ymax_value) ? ymin : (ymax_value/10.)
+      ymin_local = (*global).step4_ymin_global_value
+      ymin_value = (ymin_local LT ymax_value) ? ymin_local : (ymax_value/10.)
       
       ymin_ymax = [ymin_value, ymax_value]
       (*global).scaling_step2_ymin_ymax = ymin_ymax
@@ -205,6 +197,8 @@ PRO display_step4_step1_plot2d, Event
     ENDELSE
     index++
   ENDWHILE
+  
+  print, '-------------------------------'
   
 END
 
