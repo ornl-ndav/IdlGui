@@ -241,9 +241,9 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Combined Norm
-  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_NORM')
-  dgsr_cmd->GetProperty, DumpNorm=myValue
-  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_NORM')
+;  dgsr_cmd->GetProperty, DumpNorm=myValue
+;  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Combined Wavelength
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_COMBINED_WAVE')
