@@ -55,10 +55,16 @@ END
 ;------------------------------------------------------------------------------
 ;This function return the index of the last non-zero value
 FUNCTION RetrieveLdaMaxIndex, array
-sz          = N_ELEMENTS(array)
+;sz          = N_ELEMENTS(array)
 index_array = WHERE(array NE 0,nbr)
-IF (nbr GT 0) THEN BEGIN
-    RETURN, index_array[nbr-1]
+index_array_2 = WHERE(array NE !VALUES.D_NAN, nbr_2)
+
+final_array = [index_array, index_array_2]
+sorted_final_array = final_array[SORT(final_array)]
+sz = N_ELEMENTS(sorted_final_array)
+
+IF ((nbr + nbr_2) GT 0) THEN BEGIN
+    RETURN, sorted_final_array[sz-1]
 ENDIF ELSE BEGIN
     RETURN, -1
 ENDELSE
@@ -105,7 +111,7 @@ ENDIF ELSE BEGIN
     auto_scale_status = 1       ;ok by default
     
     no_error = 0
-    CATCH, no_error
+ ;   CATCH, no_error
     IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IdlSendToGeek_addLogBookText, Event, $
