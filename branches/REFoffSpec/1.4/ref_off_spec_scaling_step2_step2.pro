@@ -175,7 +175,7 @@ PRO step4_2_left_click, Event
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
   step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
-
+  
   ;refresh plot 2d of step4_2_2
   display_step4_step2_step2_selection, Event
   
@@ -211,7 +211,7 @@ PRO step4_2_move, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   step4_2_2_lambda_array = (*global).step4_2_2_lambda_array
-    step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
+  step4_2_2_lambda_value_array = (*global).step4_2_2_lambda_value_array
   
   ;refresh plot 2d of step4_2_2
   display_step4_step2_step2_selection, Event
@@ -235,9 +235,10 @@ PRO step4_2_move, Event
   
   ;display lambda in boxes
   display_lambda_selected, Event
-
+  
   ;plot Lambda on top of plot
-  plotLambdaSelected, Event
+  re_plot_lambda_selected, Event
+;  plotLambdaSelected, Event
   
 END
 
@@ -294,12 +295,12 @@ PRO display_lambda_selected, Event
   
   Qmin = MIN([Q1,Q2], MAX=Qmax)
   
-;  putTextFieldValue, Event, uname_0, STRCOMPRESS(lambda_value_0,/REMOVE_ALL)
-;  putTextFieldValue, Event, uname_1, STRCOMPRESS(lambda_value_1,/REMOVE_ALL)
+  ;  putTextFieldValue, Event, uname_0, STRCOMPRESS(lambda_value_0,/REMOVE_ALL)
+  ;  putTextFieldValue, Event, uname_1, STRCOMPRESS(lambda_value_1,/REMOVE_ALL)
   
   putTextFieldValue, Event, uname_0, STRCOMPRESS(Qmin,/REMOVE_ALL)
   putTextFieldValue, Event, uname_1, STRCOMPRESS(Qmax,/REMOVE_ALL)
-
+  
 END
 
 ;------------------------------------------------------------------------------
