@@ -68,8 +68,8 @@ sXaxisLabel = { size: [XYoff[0],$
 XYoff = [50,-10]
 sXMinBaseField = { size: [sXaxisLabel.size[0]+XYoff[0],$
                           sXaxisLabel.size[1]+XYoff[1],$
-                          125,$
-                          10],$
+                          135,$
+                          13],$
                    label_left: 'Min:',$
                    value: '',$
                    uname: 'step4_2_zoom_x_min'}
@@ -122,7 +122,7 @@ sLinLog = { size: [sYmaxBaseField.size[0]+$
                    sYmaxBaseField.size[2]+XYoff[0],$
                    sYmaxBaseField.size[1]+XYoff[1]],$
             list: ['Linear','Log'],$
-            label: 'Y-axis:',$
+            label: '',$
             uname: 'step4_step2_z_axis_linear_log',$
             value: 1.0}
 
