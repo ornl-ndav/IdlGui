@@ -1691,7 +1691,11 @@ PRO MAIN_BASE_event, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step1_draw'): BEGIN
+    id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step1_draw')
+    WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+    WSET,id_value
     DEVICE, CURSOR_STANDARD=31
+
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     

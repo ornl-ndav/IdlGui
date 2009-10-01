@@ -33,73 +33,79 @@
 ;==============================================================================
 
 PRO display_step4_step2_step1_selection, Event
-;get global structure
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-;first check that there is something to plot (that a selection of
-;step1 of scaling has been done). If not, display a message asking for
-;a selection first.
-
-DEVICE, DECOMPOSED=0
-LOADCT, 5, /SILENT
-
-xy_position = (*global).step4_step1_selection
-IF (xy_position[0]+xy_position[2] NE 0 AND $
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;first check that there is something to plot (that a selection of
+  ;step1 of scaling has been done). If not, display a message asking for
+  ;a selection first.
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  
+  xy_position = (*global).step4_step1_selection
+  IF (xy_position[0]+xy_position[2] NE 0 AND $
     xy_position[1]+xy_position[3] NE 0) THEN BEGIN ;valid selection
-
+    
     id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='draw_step4_step2')
     WIDGET_CONTROL, id_draw, GET_VALUE=id_value
     WSET,id_value
-
+    
     nbr_plot = getNbrFiles(Event)
-;array that will contain the counts vs wavelenght of each data file
+    ;array that will contain the counts vs wavelenght of each data file
     IvsLambda_selection = (*(*global).IvsLambda_selection)
-
+    
     index = 0
     box_color     = (*global).box_color
+    
+    ymin_value = getTextFieldValue(Event,'step4_2_zoom_y_min')
+    ymax_value = getTextFieldValue(Event,'step4_2_zoom_y_max')
+    
     WHILE (index LT nbr_plot) DO BEGIN
+    
+      t_data_to_plot = *IvsLambda_selection[index]
+      color          = box_color[index]
+      psym = getStep4Step2PSYMselected(Event)
+      
+      isLog = getStep4Step2PlotType(Event)
+      IF (index EQ 0) THEN BEGIN
+        xrange = (*(*global).step4_step2_step1_xrange)
+        xtitle = 'Wavelength'
+        ytitle = 'Counts'
+        ;        ymax_value = (*global).step4_step1_ymax_value
         
-        t_data_to_plot = *IvsLambda_selection[index]
-        color          = box_color[index]
-        psym = getStep4Step2PSYMselected(Event)
-        
-        isLog = getStep4Step2PlotType(Event)
-
-        IF (index EQ 0) THEN BEGIN
-            xrange = (*(*global).step4_step2_step1_xrange)
-            xtitle = 'Wavelength'
-            ytitle = 'Counts'
-            ymax_value = (*global).step4_step1_ymax_value
-            IF (isLog) THEN BEGIN
-                plot, xrange, $
-                  t_data_to_plot, $
-                  XTITLE = xtitle, $
-                  YTITLE = ytitle,$
-                  COLOR  = color,$
-                  YRANGE = [(*global).ymin_log_mode,ymax_value],$
-                  XSTYLE = 1,$
-                  PSYM   = psym,$
-                  /YLOG
-            ENDIF ELSE BEGIN
-                plot, xrange, $
-                  t_data_to_plot, $
-                  XTITLE = xtitle, $
-                  YTITLE = ytitle,$
-                  COLOR  = color,$
-                  YRANGE = [0,ymax_value],$
-                  XSTYLE = 1,$
-                  PSYM   = psym
-            ENDELSE
+        IF (isLog) THEN BEGIN
+          plot, xrange, $
+            t_data_to_plot, $
+            XTITLE = xtitle, $
+            YTITLE = ytitle,$
+            COLOR  = color,$
+            ;YRANGE = [(*global).ymin_log_mode,ymax_value],$
+            YRANGE = [ymin_value, ymax_value], $
+          XSTYLE = 1,$
+            PSYM   = psym,$
+            /YLOG
         ENDIF ELSE BEGIN
-            oplot, xrange,$
-              t_data_to_plot, $
-              COLOR  = color,$
-              PSYM   = psym
+          plot, xrange, $
+            t_data_to_plot, $
+            XTITLE = xtitle, $
+            YTITLE = ytitle,$
+            COLOR  = color,$
+            YRANGE = [ymin_value, ymax_value],$
+            ;            YRANGE = [0, ymax_value],$
+            XSTYLE = 1,$
+            PSYM   = psym
         ENDELSE
-        index++
+      ENDIF ELSE BEGIN
+        oplot, xrange,$
+          t_data_to_plot, $
+          COLOR  = color,$
+          PSYM   = psym
+      ENDELSE
+      index++
     ENDWHILE
-ENDIF
-
+  ENDIF
+  
 END
 
 ;------------------------------------------------------------------------------

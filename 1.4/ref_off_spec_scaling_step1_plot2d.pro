@@ -144,7 +144,7 @@ PRO display_step4_step1_plot2d, Event
     
     index_ymax++
   ENDWHILE
-    
+  
   (*global).step4_step1_ymax_value        = ymax_value
   (*(*global).IvsLambda_selection)        = IvsLambda_selection
   (*(*global).IvsLambda_selection_backup) = IvsLambda_selection_backup
@@ -178,12 +178,19 @@ PRO display_step4_step1_plot2d, Event
       (*(*global).step4_step2_step1_xrange) = xrange
       xtitle = 'Wavelength'
       ytitle = 'Counts'
+      
+      ymin = 0.001
+      ymin_value = (ymin LT ymax_value) ? ymin : (ymax_value/10.)
+      
+      ymin_ymax = [ymin_value, ymax_value]
+      (*global).scaling_step2_ymin_ymax = ymin_ymax
+      
       plot, xrange, $
         t_data_to_plot, $
         XTITLE = xtitle, $
         YTITLE = ytitle,$
         COLOR  = color,$
-        YRANGE = [0.001,ymax_value],$
+        YRANGE = [ymin_value,ymax_value],$
         PSYM   = psym,$
         /YLOG,$
         XSTYLE = 1

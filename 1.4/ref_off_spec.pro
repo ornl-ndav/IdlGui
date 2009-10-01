@@ -270,6 +270,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     pixel_offset_array: PTR_NEW(0L),$
     X_Y_min_max_backup: STRARR(4),$
     ymin_log_mode: 0.001,$
+    scaling_step2_ymin_ymax: DBLARR(2), $ ;ymin and ymax for zoom widgets of step2
     step4_2_2_fitting_status: 0,$
     step4_2_2_lambda_selected: 'min',$
     step4_2_2_fitting_parameters: FLTARR(2),$
