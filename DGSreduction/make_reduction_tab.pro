@@ -335,7 +335,7 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   outputBaseColumns = WIDGET_BASE(outputBase, COLUMN=3)
   outputBaseCol1 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)
   outputBaseCol2 = WIDGET_BASE(outputBaseColumns, /NONEXCLUSIVE)
-  outputBaseCol3 = WIDGET_BASE(outputBaseColumns)
+  outputBaseCol3 = WIDGET_BASE(outputBaseColumns, /COLUMN)
   outputBaseRow = WIDGET_BASE(outputBase, /ROW)
   
   ; Column #1
@@ -352,8 +352,10 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   ;  UNAME='DGSR_DUMP_NORM')
   waveButton = Widget_Button(outputBaseCol2, Value='Combined Wavelength', UVALUE='DGSR_MAKE_COMBINED_WAVE', $
     UNAME='DGSR_MAKE_COMBINED_WAVE')
+  dosButton = WIDGET_BUTTON(outputBaseCol2, VALUE='Phonon DOS', UVALUE='DGSR_PHONON_DOS', UNAME='DGSR_PHONON_DOS')
+  
   ; Column #3
-  ; Output Options Pretty Frame
+  ; Combined Wavelength Output Option Pretty Frame
   formatOptionsBase = WIDGET_BASE(outputBaseCol3)
   formatOptionsLabel = WIDGET_LABEL(formatOptionsBase, value=' Combined Wavelength Range ', XOFFSET=5)
   formatOptionsLabelGeometry = WIDGET_INFO(formatOptionsLabel, /GEOMETRY)
@@ -370,7 +372,20 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
     XSIZE=7, UVALUE="DGSR_LAMBDA_MAX", UNAME="DGSR_LAMBDA_MAX", /ALL_EVENTS)
   stepWavelengthID = CW_FIELD(formatOptionsPrettyBaseWavelengthRow, TITLE="Step:", $
     XSIZE=7, UVALUE="DGSR_LAMBDA_STEP", UNAME="DGSR_LAMBDA_STEP", /ALL_EVENTS)
-    
+
+  ; Debye Waller Factor Pretty Frame
+  debyeWallerBase = WIDGET_BASE(outputBaseCol3)
+  debyeWallerLabel = WIDGET_LABEL(debyeWallerBase, VALUE=' Debye-Waller Factor ', XOFFSET=5)
+  debyeWallerLabelGeometry = WIDGET_INFO(debyeWallerLabel, /GEOMETRY)
+  debyeWallerLabelYSize = debyeWallerLabelGeometry.ysize
+  debyeWallerPrettyBase = WIDGET_BASE(debyeWallerBase, COLUMN=1, SCR_XSIZE=330, /FRAME, $
+    YOFFSET=debyeWallerLabelYSize/2, YPAD=10, XPAD=10)
+  ; Debye Waller Factor inputs
+  debyeWallerPrettyBaseInputRow = WIDGET_BASE(debyeWallerPrettyBase, /ROW, UNAME='DGSR_DEBYE_WALLER_FACTOR')
+  factorID = CW_FIELD(debyeWallerPrettyBaseInputRow, TITLE="Factor:", UVALUE="DGSR_DWF", UNAME="DGSR_DWF", $
+    /ALL_EVENTS, XSIZE=13, VALUE='0.0')
+  ;factorErrorID = CW_FIELD(debyeWallerPrettyBaseInputRow, TITLE="Error:", UVALUE="DGSR_DWF_ERROR", $
+  ;  UNAME="DGSR_DWF_ERROR", /ALL_EVENTS, XSIZE=13, VALUE='0.0')
     
   ; == DEFAULTS ==
     
@@ -383,6 +398,9 @@ PRO make_Reduction_Tab, baseWidget, dgsr_cmd
   qvector_status = WIDGET_INFO(qvectorButton, /BUTTON_SET)
   ; Now set the sensitivity of the fixed Grid button
   WIDGET_CONTROL, fixedButton, SENSITIVE=qvector_status
+  
+  ; Don't enable the Debye-Waller Factor until it's selected
+  WIDGET_CONTROL, debyeWallerPrettyBaseInputRow, SENSITIVE=0
   
   ; Don't enable wavelength range until it's selected.
   WIDGET_CONTROL, formatOptionsPrettyBaseWavelengthRow, SENSITIVE=0
