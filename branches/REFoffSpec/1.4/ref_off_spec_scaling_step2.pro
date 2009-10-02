@@ -154,12 +154,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
           
           isLog = getStep4Step2PlotType(Event)
           
-;          IF (index NE 0) THEN BEGIN
-;            scaling_factor = (*(*global).scaling_factor)
-;            SF = scaling_factor[index]
-;            t_data_to_plot /= SF
-;          ENDIF
-                   
           IF (index EQ 0) THEN BEGIN
           
             xrange = (*(*global).step4_step2_step1_xrange)
@@ -249,12 +243,6 @@ PRO re_display_step4_step2_step1_selection, Event, MODE=mode
             t_data_to_plot = IvsLambda_selection[index,*]
           ENDELSE
           
-;          IF (index NE 0) THEN BEGIN
-;            scaling_factor = (*(*global).scaling_factor)
-;            SF = scaling_factor[index]
-;            t_data_to_plot /= SF
-;          ENDIF
-;          
           color = box_color[index]
           psym  = getStep4Step2PSYMselected(Event)
           
