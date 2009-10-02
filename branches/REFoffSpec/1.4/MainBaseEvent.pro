@@ -2002,6 +2002,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='step4_2_3_automatic_rescale_button'): BEGIN
     step4_2_3_auto_scaling, Event ;scaling_step2_step3
+    step4_2_3_droplist, Event ;scaling_step2_step3
   END
   
   ;Reset Rescaling button -----------------------------------------------------
