@@ -92,9 +92,12 @@ PRO DGSreduction_Execute, event
   spawn, 'mkdir -p ' + outputDir
  
  
-  ; Check for existance of SPE file and ask if the user wants to override it.
+  ;TODO Check for existance of SPE file and ask if the user wants to override it.
   ; (only check if we are asking to produce an SPE file)
   ;if (
+ 
+  ; Create an array to hold the SLURM jobID numbers
+  jobID = STRARR(N_ELEMENTS(commands))
  
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
@@ -117,10 +120,15 @@ PRO DGSreduction_Execute, event
     endelse
 
     ; Actually Launch the jobs
-    spawn, cmd
+    spawn, cmd, dummy, job_string
+    
+    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
+    jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
 
   endfor
   
+  ;print, jobID
+    
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
