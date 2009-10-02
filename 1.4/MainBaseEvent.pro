@@ -1695,7 +1695,7 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, id_draw, GET_VALUE=id_value
     WSET,id_value
     DEVICE, CURSOR_STANDARD=31
-
+    
     current_list_OF_files = (*(*global).list_OF_ascii_files)
     IF (current_list_OF_files[0] NE '') THEN BEGIN
     
@@ -1853,7 +1853,8 @@ PRO MAIN_BASE_event, Event
   
   ;lin/log
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_step2_z_axis_linear_log'): BEGIN
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1864,7 +1865,8 @@ PRO MAIN_BASE_event, Event
   
   ;X/Y/Min/Max
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_x_min'): BEGIN
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1874,7 +1876,8 @@ PRO MAIN_BASE_event, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_x_max'): BEGIN
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1885,7 +1888,8 @@ PRO MAIN_BASE_event, Event
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_reset_axis'): BEGIN
     reset_zoom_widgets, Event ;scaling_step2
-    re_display_step4_step2_step1_selection, Event ;scaling_step2_step1
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+    ;    re_display_step4_step2_step1_selection, Event ;scaling_step2_step1
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1895,7 +1899,8 @@ PRO MAIN_BASE_event, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_y_min'): BEGIN
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1905,7 +1910,8 @@ PRO MAIN_BASE_event, Event
   END
   
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step4_2_zoom_y_max'): BEGIN
-    re_display_step4_step2_step1_selection, Event ;scaling_step2
+    ;re_display_step4_step2_step1_selection, Event ;scaling_step2
+    step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
     tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step4_step2_tab')
     CurrTabSelect = WIDGET_INFO(tab_id,/TAB_CURRENT)
     IF (CurrTabSelect EQ 1) THEN BEGIN
@@ -1955,7 +1961,7 @@ PRO MAIN_BASE_event, Event
         check_step4_step2_step2, Event ;scaling_step2_step2
         
       ENDIF
-
+      
     ENDIF
   END
   
