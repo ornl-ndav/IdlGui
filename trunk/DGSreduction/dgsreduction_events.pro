@@ -33,13 +33,13 @@
 ;-
 
 PRO dgsreduction_events, event, dgsr_cmd
-  
+
   WIDGET_CONTROL, event.id, GET_UVALUE=myUVALUE
   
   ; Check that we actually got something back in the UVALUE
   IF N_ELEMENTS(myUVALUE) EQ 0 THEN myUVALUE="NOTHING"
   
-
+  
   CASE (myUVALUE) OF
     'NOTHING': BEGIN
     END
@@ -53,7 +53,7 @@ PRO dgsreduction_events, event, dgsr_cmd
     END
     'DGSR_TZERO': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, Tzero=myValue      
+      dgsr_cmd->SetProperty, Tzero=myValue
     END
     'DGSR_DATAPATHS_LOWER': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=lowerValue
@@ -173,23 +173,23 @@ PRO dgsreduction_events, event, dgsr_cmd
     'DGSR_NORMRUN': BEGIN
       ; Norm Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, Normalisation=myValue  
-          
-    END    
+      dgsr_cmd->SetProperty, Normalisation=myValue
+      
+    END
     'DGSR_EMPTYCAN': BEGIN
       ; Empty Can Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, EmptyCan=myValue      
-    END    
+      dgsr_cmd->SetProperty, EmptyCan=myValue
+    END
     'DGSR_BLACKCAN': BEGIN
       ; Black Can Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, BlackCan=myValue      
-    END    
+      dgsr_cmd->SetProperty, BlackCan=myValue
+    END
     'DGSR_DARK': BEGIN
       ; Dark Current Filename
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
-      dgsr_cmd->SetProperty, Dark=myValue      
+      dgsr_cmd->SetProperty, Dark=myValue
     END
     'DGSR_TIBCONST': BEGIN
       ; Time Independent Background Constant
@@ -240,9 +240,23 @@ PRO dgsreduction_events, event, dgsr_cmd
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
       dgsr_cmd->SetProperty, DetEff=myValue
     END
+    'DGSR_PHONON_DOS': BEGIN
+      dgsr_cmd->SetProperty, DOS=event.SELECT
+      ; Also make the wavelength range fields active (or inactive!)
+      DebyeWallerID = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_DEBYE_WALLER_FACTOR')
+      WIDGET_CONTROL, DebyeWallerID, SENSITIVE=event.SELECT
+    END
+    'DGSR_DWF': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, DebyeWaller=myValue
+    END
+    'DGSR_DWF_ERROR': BEGIN
+      WIDGET_CONTROL, event.ID, GET_VALUE=myValue
+      dgsr_cmd->SetProperty, Error_DebyeWaller=myValue
+    END
     ELSE: begin
-    ; Do nowt
-      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***' 
+      ; Do nowt
+      print, '*** UVALUE: ' + myUVALUE + ' not handled! ***'
     END
   ENDCASE
   
