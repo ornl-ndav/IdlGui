@@ -296,16 +296,14 @@ PRO scaling_tab_event, Event
       1: BEGIN ;step2 (scaling)
       
         populate_zoom_widgets, Event ;scaling_step2
-        tab_step4_step2_event, Event
+      ;  tab_step4_step2_event, Event
         
         CASE ((*global).PrevScalingStep2TabSelect) OF
           0: BEGIN ;all files
-            display_step4_step2_step1_selection, $
-              Event     ;scaling_step2_step1
+            display_step4_step2_step1_selection, Event
           END
           1: BEGIN ;CE files
-            display_step4_step2_step2_selection, $
-              Event     ;scaling_step2_step2
+            display_step4_step2_step2_selection, Event
             re_plot_lambda_selected, Event ;scaling_step2
             re_plot_fitting, Event ;scaling_step2_step2
           END
