@@ -209,11 +209,11 @@ PRO tab_event, Event
             refresh_step4_step1_plot, Event ;_scaling
             checkScalingGui, Event ;_gui
           ENDIF ELSE BEGIN    ;scaling_step2
-            ;    scaling_tab_event, Event
-          
-            display_step4_step2_step2_selection, $
-              Event         ;scaling_step2_step1
-            plotLambdaSelected, Event ;scaling_step2_step2
+                (*global).PrevScalingTabSelect = -1 ;this force a refresh
+                scaling_tab_event, Event
+            ;display_step4_step2_step2_selection, $
+            ;  Event         ;scaling_step2_step1
+            ;plotLambdaSelected, Event ;scaling_step2_step2
           ENDELSE
         ENDIF
       END
@@ -296,25 +296,48 @@ PRO scaling_tab_event, Event
       1: BEGIN ;step2 (scaling)
       
         populate_zoom_widgets, Event ;scaling_step2
-      ;  tab_step4_step2_event, Event
+        ;  tab_step4_step2_event, Event
         
         CASE ((*global).PrevScalingStep2TabSelect) OF
-          0: BEGIN ;all files
-            display_step4_step2_step1_selection, Event
+          0: BEGIN                ;all files
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
           END
-          1: BEGIN ;CE files
-            display_step4_step2_step2_selection, Event
+          1: BEGIN                ;CE files
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
             re_plot_lambda_selected, Event ;scaling_step2
             re_plot_fitting, Event ;scaling_step2_step2
           END
-          2: BEGIN ;other files
+          2: BEGIN                ;other files
+            re_display_step4_step2_step1_selection, Event ;scaling_step2
             check_step4_2_3_gui, Event ;scaling_step2_step3
           END
           ELSE:
         ENDCASE
+        error = 0
+        CATCH, error
+        IF (error NE 0) THEN BEGIN
+          CATCH,/CANCEL
+        ENDIF ELSE BEGIN
+          step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+        ENDELSE
+        
+      ;          0: BEGIN ;all files
+      ;            display_step4_step2_step1_selection, Event
+      ;          END
+      ;          1: BEGIN ;CE files
+      ;            display_step4_step2_step2_selection, Event
+      ;            re_plot_lambda_selected, Event ;scaling_step2
+      ;            re_plot_fitting, Event ;scaling_step2_step2
+      ;          END
+      ;          2: BEGIN ;other files
+      ;            check_step4_2_3_gui, Event ;scaling_step2_step3
+      ;          END
+      ;          ELSE:
+      ;        ENDCASE
       END
       ELSE:
     ENDCASE
+    
     (*global).PrevScalingTabSelect = CurrTabSelect
   ENDIF
 END
@@ -330,7 +353,6 @@ PRO tab_step4_step2_event, Event
   
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-    
       0: BEGIN                ;all files
         re_display_step4_step2_step1_selection, Event ;scaling_step2
       END
@@ -345,6 +367,14 @@ PRO tab_step4_step2_event, Event
       END
       ELSE:
     ENDCASE
+    error = 0
+    CATCH, error
+    IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+    ENDIF ELSE BEGIN
+      step4_2_3_manual_scaling, Event, FACTOR='manual' ;scaling_step2_step3
+    ENDELSE
+    
     (*global).PrevScalingStep2TabSelect = CurrTabSelect
   ENDIF
   
