@@ -64,8 +64,8 @@ PRO ReductionCmd::GetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -87,8 +87,8 @@ PRO ReductionCmd::GetProperty, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
-    Mask=mask, $                         ; Apply Mask 
-    HardMask=hardmask, $                 ; Apply Hard Mask 
+    Mask=mask, $                         ; Apply Mask
+    HardMask=hardmask, $                 ; Apply Hard Mask
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -101,6 +101,9 @@ PRO ReductionCmd::GetProperty, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
+    DebyeWaller=debyewaller, $           ; Debye-Waller factor
+    DebyeWaller_error=debyewaller_error, $ ; Error in Debye-Waller factor
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -113,76 +116,79 @@ PRO ReductionCmd::GetProperty, $
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-   
+  
   IF ARG_PRESENT(Program) NE 0 THEN Program = self.program
   IF ARG_PRESENT(Version) NE 0 THEN Version = self.version
   IF ARG_PRESENT(Queue) NE 0 THEN Queue = self.queue
   IF ARG_PRESENT(Verbose) NE 0 THEN self.verbose = verbose
   IF ARG_PRESENT(Quiet) NE 0 THEN Quiet = self.quiet
-  IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun 
+  IF ARG_PRESENT(DataRun) NE 0 THEN DataRun = self.datarun
   IF ARG_PRESENT(Output) NE 0 THEN Output = self.output
   IF ARG_PRESENT(Instrument) NE 0 THEN Instrument = self.instrument
   IF ARG_PRESENT(Facility) NE 0 THEN Facility = self.facility
   IF ARG_PRESENT(Proposal) NE 0 THEN Proposal = self.proposal
-  IF ARG_PRESENT(SPE) NE 0 THEN SPE = self.spe 
+  IF ARG_PRESENT(SPE) NE 0 THEN SPE = self.spe
   IF ARG_PRESENT(ConfigFile) NE 0 THEN ConfigFile = self.configfile
   IF ARG_PRESENT(instgeometry) NE 0 THEN InstGeometry = self.instgeometry
-  IF ARG_PRESENT(CornerGeometry) NE 0 THEN CornerGeometry = self.cornergeometry 
-  IF ARG_PRESENT(LowerBank) NE 0 THEN LowerBank  = self.lowerbank 
+  IF ARG_PRESENT(CornerGeometry) NE 0 THEN CornerGeometry = self.cornergeometry
+  IF ARG_PRESENT(LowerBank) NE 0 THEN LowerBank  = self.lowerbank
   IF ARG_PRESENT(UpperBank) NE 0 THEN UpperBank = self.upperbank
   IF ARG_PRESENT(DataPaths) NE 0 THEN DataPaths = self.datapaths
-  IF ARG_PRESENT(Normalisation) NE 0 THEN Normalisation = self.normalisation 
+  IF ARG_PRESENT(Normalisation) NE 0 THEN Normalisation = self.normalisation
   IF ARG_PRESENT(EmptyCan) NE 0 THEN EmptyCan = self.emptycan
   IF ARG_PRESENT(BlackCan) EQ 0 THEN BlackCan = self.blackcan
-  IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark 
-  IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath 
-  IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath 
+  IF ARG_PRESENT(Dark) NE 0 THEN Dark = self.dark
+  IF ARG_PRESENT(USmonPath) NE 0 THEN USmonPath = self.usmonpath
+  IF ARG_PRESENT(DSmonPath) NE 0 THEN DSmonPath = self.dsmonpath
   IF ARG_PRESENT(ROIfile) NE 0 THEN ROIfile = self.roifile
   IF ARG_PRESENT(Tmin) NE 0 THEN Tmin = self.tmin
   IF ARG_PRESENT(Tmax) NE 0 THEN Tmax = self.tmax
-  IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst 
+  IF ARG_PRESENT(TIBconst) NE 0 THEN TIBconst = self.tibconst
   IF ARG_PRESENT(TIBrange_Min) NE 0 THEN TIBrange_Min = self.tibrange_min
   IF ARG_PRESENT(TIBrange_Max) NE 0 THEN TIBrange_Max = self.tibrange_max
-  IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei 
-  IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero 
+  IF ARG_PRESENT(Ei) NE 0 THEN Ei = self.ei
+  IF ARG_PRESENT(Tzero) NE 0 THEN Tzero = self.tzero
   IF ARG_PRESENT(error_ei) NE 0 THEN error_ei = self.error_ei
-  IF ARG_PRESENT(error_tzero) NE 0 THEN error_tzero = self.error_tzero 
-  IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm 
-  IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm 
+  IF ARG_PRESENT(error_tzero) NE 0 THEN error_tzero = self.error_tzero
+  IF ARG_PRESENT(NoMonitorNorm) NE 0 THEN NoMonitorNorm = self.nomonitornorm
+  IF ARG_PRESENT(PCnorm) NE 0 THEN PCnorm = self.pcnorm
   IF ARG_PRESENT(MonRange_Min) NE 0 THEN MonRange_Min = self.monrange_min
   IF ARG_PRESENT(MonRange_Max) NE 0 THEN MonRange_Max = self.monrange_max
-  IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff 
-  IF ARG_PRESENT(DataTrans) NE 0 THEN DataTrans = self.datatrans 
-  IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans 
+  IF ARG_PRESENT(DetEff) NE 0 THEN DetEff = self.deteff
+  IF ARG_PRESENT(DataTrans) NE 0 THEN DataTrans = self.datatrans
+  IF ARG_PRESENT(NormTrans) NE 0 THEN NormTrans = self.normtrans
   IF ARG_PRESENT(NormRange_Min) NE 0 THEN NormRange_Min = self.normrange_min
-  IF ARG_PRESENT(NormRange_Max) NE 0 THEN NormRange_Max = self.normrange_max 
-  IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min 
+  IF ARG_PRESENT(NormRange_Max) NE 0 THEN NormRange_Max = self.normrange_max
+  IF ARG_PRESENT(LambdaBins_Min) NE 0 THEN LambdaBins_Min = self.lambdabins_min
   IF ARG_PRESENT(LambdaBins_Max) NE 0 THEN LambdaBins_Max = self.lambdabins_max
-  IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $ 
-          LambdaBins_Step = self.lambdabins_step 
-  IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof 
-  IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave 
-  IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm 
-  IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet 
-  IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib 
+  IF ARG_PRESENT(LambdaBins_Step) NE 0 THEN $
+    LambdaBins_Step = self.lambdabins_step
+  IF ARG_PRESENT(DumpTOF) NE 0 THEN DumpTOF = self.dumptof
+  IF ARG_PRESENT(DumpWave) NE 0 THEN DumpWave = self.dumpwave
+  IF ARG_PRESENT(DumpNorm) NE 0 THEN DumpNorm = self.dumpnorm
+  IF ARG_PRESENT(DumpEt) NE 0 THEN DumpEt = self.dumpet
+  IF ARG_PRESENT(DumpTIB) NE 0 THEN DumpTIB = self.dumptib
   IF ARG_PRESENT(Mask) NE 0 THEN Mask = self.mask
   IF ARG_PRESENT(HardMask) NE 0 THEN HardMask = self.hardmask
   IF ARG_PRESENT(LambdaRatio) NE 0 THEN LambdaRatio = self.lambdaratio
-  IF ARG_PRESENT(EnergyBins_Min) NE 0 THEN EnergyBins_Min = self.energybins_min 
-  IF ARG_PRESENT(EnergyBins_Max) NE 0 THEN EnergyBins_Max = self.energybins_max 
-  IF ARG_PRESENT(EnergyBins_Step) NE 0 THEN $  
-          EnergyBins_step = self.energybins_step
-  IF ARG_PRESENT(QBins_Min) NE 0 THEN QBins_Min = self.qbins_min 
-  IF ARG_PRESENT(QBins_Max) NE 0 THEN QBins_Max = self.qbins_max 
-  IF ARG_PRESENT(QBins_Step) NE 0 THEN QBins_Step = self.qbins_step 
-  IF ARG_PRESENT(Qvector) NE 0 THEN Qvector = self.qvector 
-  IF ARG_PRESENT(Fixed) NE 0 THEN Fixed = self.fixed 
-  IF ARG_PRESENT(Split) NE 0 THEN Split = self.split 
+  IF ARG_PRESENT(EnergyBins_Min) NE 0 THEN EnergyBins_Min = self.energybins_min
+  IF ARG_PRESENT(EnergyBins_Max) NE 0 THEN EnergyBins_Max = self.energybins_max
+  IF ARG_PRESENT(EnergyBins_Step) NE 0 THEN $
+    EnergyBins_step = self.energybins_step
+  IF ARG_PRESENT(QBins_Min) NE 0 THEN QBins_Min = self.qbins_min
+  IF ARG_PRESENT(QBins_Max) NE 0 THEN QBins_Max = self.qbins_max
+  IF ARG_PRESENT(QBins_Step) NE 0 THEN QBins_Step = self.qbins_step
+  IF ARG_PRESENT(Qvector) NE 0 THEN Qvector = self.qvector
+  IF ARG_PRESENT(Fixed) NE 0 THEN Fixed = self.fixed
+  IF ARG_PRESENT(Split) NE 0 THEN Split = self.split
   IF ARG_PRESENT(Lo_Threshold) NE 0 THEN Lo_Threshold = self.lo_threshold
   IF ARG_PRESENT(Hi_Threshold) NE 0 THEN Hi_Threshold = self.hi_threshold
+  IF ARG_PRESENT(DOS) NE 0 THEN DOS = self.DOS
+  IF ARG_PRESENT(DebyeWaller) NE 0 THEN DebyeWaller = self.DebyeWaller
+  IF ARG_PRESENT(DebyeWaller_error) NE 0 THEN DebyeWaller_error = self.DebyeWaller_error
   IF ARG_PRESENT(OutputPrefix) NE 0 THEN OutputPrefix = self.outputprefix
   IF ARG_PRESENT(Timing) NE 0 THEN Timing = self.timing
-  IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs 
+  IF ARG_PRESENT(Jobs) NE 0 THEN Jobs = self.jobs
   
 END
 
@@ -214,8 +220,8 @@ PRO ReductionCmd::SetProperty, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -237,8 +243,8 @@ PRO ReductionCmd::SetProperty, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
-    Mask=mask, $                         ; Apply Mask 
-    HardMask=hardmask, $                 ; Apply Hard Mask 
+    Mask=mask, $                         ; Apply Mask
+    HardMask=hardmask, $                 ; Apply Hard Mask
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -251,6 +257,9 @@ PRO ReductionCmd::SetProperty, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
+    DebyeWaller=debyewaller, $           ; Debye-Waller factor
+    DebyeWaller_error=debyewaller_error, $ ; Error in Debye-Waller factor
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs to run
@@ -328,17 +337,17 @@ PRO ReductionCmd::SetProperty, $
     self.emptycan = STRCOMPRESS(STRING(EmptyCan), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.emptycan EQ '0') THEN self.emptycan = ""
-    
+  
   IF N_ELEMENTS(blackcan) NE 0 THEN $
     self.blackcan = STRCOMPRESS(STRING(BlackCan), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.blackcan EQ '0') THEN self.blackcan = ""
-    
+  
   IF N_ELEMENTS(dark) NE 0 THEN $
     self.dark = STRCOMPRESS(STRING(dark), /REMOVE_ALL)
   ; Don't let it be set to 0
   IF (self.dark EQ '0') THEN self.dark = ""
-    
+  
   IF N_ELEMENTS(usmonpath) NE 0 THEN self.usmonpath = USmonPath
   IF N_ELEMENTS(dsmonpath) NE 0 THEN self.dsmonpath = DSmonPath
   IF N_ELEMENTS(roifile) NE 0 THEN self.roifile = ROIfile
@@ -362,8 +371,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(normrange_max) NE 0 THEN self.normrange_max = normrange_max
   IF N_ELEMENTS(lambdabins_min) NE 0 THEN self.lambdabins_min = lambdabins_min
   IF N_ELEMENTS(lambdabins_max) NE 0 THEN self.lambdabins_max = lambdabins_max
-  IF N_ELEMENTS(lambdabins_step) NE 0 THEN $ 
-          self.lambdabins_step = lambdabins_step
+  IF N_ELEMENTS(lambdabins_step) NE 0 THEN $
+    self.lambdabins_step = lambdabins_step
   IF N_ELEMENTS(dumptof) NE 0 THEN self.dumptof = DumpTOF
   IF N_ELEMENTS(dumpwave) NE 0 THEN self.dumpwave = DumpWave
   IF N_ELEMENTS(dumpnorm) NE 0 THEN self.dumpnorm = DumpNorm
@@ -374,8 +383,8 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(lambdaratio) NE 0 THEN self.lambdaratio = LambdaRatio
   IF N_ELEMENTS(energybins_min) NE 0 THEN self.energybins_min = EnergyBins_Min
   IF N_ELEMENTS(energybins_max) NE 0 THEN self.energybins_max = EnergyBins_Max
-  IF N_ELEMENTS(energybins_step) NE 0 THEN $  
-          self.energybins_step = EnergyBins_step
+  IF N_ELEMENTS(energybins_step) NE 0 THEN $
+    self.energybins_step = EnergyBins_step
   IF N_ELEMENTS(qbins_min) NE 0 THEN self.qbins_min = qbins_min
   IF N_ELEMENTS(qbins_max) NE 0 THEN self.qbins_max = qbins_max
   IF N_ELEMENTS(qbins_step) NE 0 THEN self.qbins_step = qbins_step
@@ -385,23 +394,27 @@ PRO ReductionCmd::SetProperty, $
   IF N_ELEMENTS(lo_threshold) NE 0 THEN self.lo_threshold = Lo_Threshold
   IF N_ELEMENTS(hi_threshold) NE 0 THEN self.hi_threshold = Hi_Threshold
   
+  IF N_ELEMENTS(DOS) NE 0 THEN self.DOS = DOS
+  IF N_ELEMENTS(DebyeWaller) NE 0 THEN self.DebyeWaller = DebyeWaller
+  IF N_ELEMENTS(DebyeWaller_error) NE 0 THEN self.DebyeWaller_error = DebyeWaller_error
+  
   IF N_ELEMENTS(OutputPrefix) NE 0 THEN self.outputprefix = OutputPrefix
   
   IF N_ELEMENTS(timing) NE 0 THEN self.timing = Timing
   IF N_ELEMENTS(jobs) NE 0 THEN self.jobs = jobs
   IF N_ELEMENTS(extra) NE 0 THEN *self.extra = extra
-
-	;print, '--SetProperty--'
-	;print, self.TIBrange_Min, self.TIBrange_Max
+  
+;print, '--SetProperty--'
+;print, self.TIBrange_Min, self.TIBrange_Max
   
 END
 
 ;+
 ; :Description:
 ;    Returns the first run number from the datarun property.
-;    This is used for naming files/directories/jobs when more than 
+;    This is used for naming files/directories/jobs when more than
 ;    one file is specified.
-;    
+;
 ;    e.g. datarun="1234-1250" would return "1234"
 ;         datarun="1234,1235" would return "1234"
 ;         datarun="1250,1243-1249" would return "1250"
@@ -411,7 +424,7 @@ END
 FUNCTION ReductionCmd::GetRunNumber
 
   largeNumber = 9999999
-
+  
   ; The runs should be delimited by either a - or ,
   
   ; Lets find see if there are any commas
@@ -424,17 +437,17 @@ FUNCTION ReductionCmd::GetRunNumber
   firstDelimiter = MIN([commaPosition, hyphenPosition])
   
   RETURN, STRMID(self.datarun, 0, firstDelimiter)
-
+  
 END
 
 ;+
 ; :Description:
-;    Procedure to check that all essential parameters have 
-;    been defined.  Also, that we haven't specified any 
+;    Procedure to check that all essential parameters have
+;    been defined.  Also, that we haven't specified any
 ;    conflicting options.
-;    
-;    It is intended for producing a string array for display 
-;    in the bottom of the GUI and a status flag to enable/disable 
+;
+;    It is intended for producing a string array for display
+;    in the bottom of the GUI and a status flag to enable/disable
 ;    the execute button.
 ;
 ;
@@ -442,7 +455,7 @@ END
 ;-
 function ReductionCmd::Check
 
-; Let's start out with everything well in the world!
+  ; Let's start out with everything well in the world!
   ok = 1
   datapaths_bad = 0
   msg = ['Everything looks good.']
@@ -452,12 +465,12 @@ function ReductionCmd::Check
     ok = 0
     msg = [msg,['There is no Instrument selected.']]
   ENDIF
-
+  
   IF (STRLEN(self.datarun) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,["There doesn't seem to be a RUN NUMBER defined."]]
   ENDIF
-
+  
   ; Just construct the DataPaths for the first job.
   datapaths = Construct_DataPaths(self.lowerbank, self.upperbank, 1, self.jobs)
   IF (STRLEN(datapaths) LT 1) THEN BEGIN
@@ -473,7 +486,7 @@ function ReductionCmd::Check
     msg = [msg,['The Detector Banks are not specified correctly.']]
   END
   
-  ; Incident Energy 
+  ; Incident Energy
   IF (STRLEN(self.ei) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,['You need to define the Incident Energy (Ei).']]
@@ -486,21 +499,21 @@ function ReductionCmd::Check
   ENDIF
   
   ; Energy Bins
-  IF (STRLEN(self.energybins_min) LT 1) $ 
+  IF (STRLEN(self.energybins_min) LT 1) $
     OR (STRLEN(self.energybins_max) LT 1) $
     OR (STRLEN(self.energybins_step) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,["The Energy Transfer Range isn't defined correctly."]]
   ENDIF
-
+  
   ; Q Bins
-  IF (STRLEN(self.qbins_min) LT 1) $ 
+  IF (STRLEN(self.qbins_min) LT 1) $
     OR (STRLEN(self.qbins_max) LT 1) $
     OR (STRLEN(self.qbins_step) LT 1) THEN BEGIN
     ok = 0
     msg = [msg,["The Q-Range isn't defined correctly."]]
   ENDIF
-
+  
   ; Now let's do some more complicated dependencies
   
   ; If Empty Can OR Black Can then we must specify Data Coeff
@@ -511,17 +524,17 @@ function ReductionCmd::Check
         "if you have specified either an Empty Can or a Black Can."]]
     ENDIF
   ENDIF
-
+  
   ; You cannot have a Dark current and any TIB
   IF (STRLEN(self.tibconst) GE 1) OR (STRLEN(self.tibrange_min) GE 1) $
     OR (STRLEN(self.tibrange_min) GE 1) THEN BEGIN
-      IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
-        ok = 0
-        msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
-          "Time-Independent-Background."]]
-      ENDIF
+    IF (STRLEN(self.dark) GE 1) AND (self.dark NE 0) THEN BEGIN
+      ok = 0
+      msg = [msg,["ERROR: You cannot specify a Dark Current together with a " + $
+        "Time-Independent-Background."]]
+    ENDIF
   ENDIF
-
+  
   ; Cannot have both a TIB constant and a TIB range
   IF (STRLEN(self.tibconst) GE 1) AND ((STRLEN(self.tibrange_min) GE 1) OR (STRLEN(self.tibrange_max) GE 1)) THEN BEGIN
     ok = 0
@@ -530,16 +543,16 @@ function ReductionCmd::Check
   
   
   ; If Normalisation defined and empty or black then need to define norm-coeff
-;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
-;    IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
-;      IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
-;        ok = 0
-;        msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
-;          "if you have specified a Normalisation Run and either an Empty Can or a Black Can."]]
-;      ENDIF
-;    ENDIF
-;  ENDIF
-
+  ;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+  ;    IF (STRLEN(self.emptycan) GE 1) OR (STRLEN(self.blackcan) GE 1) THEN BEGIN
+  ;      IF (STRLEN(self.normtrans) LT 1) THEN BEGIN
+  ;        ok = 0
+  ;        msg = [msg,["ERROR: You need to specify and value for 'Norm Coeff' " + $
+  ;          "if you have specified a Normalisation Run and either an Empty Can or a Black Can."]]
+  ;      ENDIF
+  ;    ENDIF
+  ;  ENDIF
+  
   ; Need to specify a min/max for the monitor integration if we are normalising to the monitor
   IF (self.nomonitornorm EQ 0) THEN BEGIN
     IF (STRLEN(self.monrange_min) LT 1) OR (STRLEN(self.monrange_max) LT 1) THEN BEGIN
@@ -549,19 +562,28 @@ function ReductionCmd::Check
   ENDIF
   
   ; And the other way round, if you specify a norm run then you need to turn the mask on!
-;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
-;    IF (self.mask NE 1) THEN BEGIN
-;      ok = 0
-;      msg = [msg,['If you specify a Normalisation Run then you need to turn on the Vanadium Mask.']]
-;    ENDIF
-;  ENDIF
-
+  ;  IF (STRLEN(self.normalisation) GE 1) THEN BEGIN
+  ;    IF (self.mask NE 1) THEN BEGIN
+  ;      ok = 0
+  ;      msg = [msg,['If you specify a Normalisation Run then you need to turn on the Vanadium Mask.']]
+  ;    ENDIF
+  ;  ENDIF
+  
+  ; Phonon Density of States
+  IF (self.DOS EQ 1) THEN BEGIN
+    ; If we want the DOS produced then we need to have a Debye Waller Factor specified.
+    IF (STRLEN(self.DebyeWaller) LT 1) THEN BEGIN
+      ok = 0
+      msg = [msg,['The creation of a Phonon DOS representation requires a Debye-Waller factor.']]
+    ENDIF
+  ENDIF
+  
   ; Remove the first blank String
   IF (N_ELEMENTS(msg) GT 1) THEN msg = msg(1:*)
-
+  
   data = { ok : ok, $
-           message : msg}
-
+    message : msg}
+    
   return, data
 end
 
@@ -579,12 +601,12 @@ function ReductionCmd::Generate
   cmd = STRARR(self.jobs)
   
   for i = 0L, self.jobs-1 do begin
-   
-    cmd[i] = ""
   
+    cmd[i] = ""
+    
     ; Queue name
     ;IF STRLEN(self.queue) GT 1 THEN cmd[i] += "sbatch -p " + self.queue + " "
-  
+    
     ; Let's first start with the program name!
     cmd[i] += self.program
     
@@ -600,9 +622,9 @@ function ReductionCmd::Generate
     
     IF (STRLEN(self.instrument) GT 1) AND (STRLEN(self.datarun) GE 1) THEN $
       cmd[i] += " --output=" + self.OutputPrefix + "/" + self.instrument + "/" + self->GetRunNumber() + $
-        "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-        i+1, self.jobs, /PAD) + ".txt"
-    
+      "/" + self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+      i+1, self.jobs, /PAD) + ".txt"
+      
     ; Instrument Name
     IF STRLEN(self.instrument) GT 1 THEN cmd[i] += " --inst="+self.instrument
     ; Facility
@@ -626,21 +648,21 @@ function ReductionCmd::Generate
       i+1, self.jobs)
     IF STRLEN(self.datapaths) GE 1 THEN $
       cmd[i] += " --data-paths="+self.datapaths
-    
-    
+      
+      
     ; normalisation file
     IF (STRLEN(self.normalisation) GE 1) AND (self.normalisation NE 0) $
       AND (STRLEN(self.instrument) GT 1) THEN BEGIN
       
-        cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
-          getFirstNumber(self.normalisation) + "/" + $
-          self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
-          i+1, self.jobs, /PAD) + ".norm"
-       
-      ;cmd[i] += " --norm="+self.normalisation
+      cmd[i] += " --norm=~/results/" + self.instrument + "/"+ $
+        getFirstNumber(self.normalisation) + "/" + $
+        self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
+        i+1, self.jobs, /PAD) + ".norm"
+        
+    ;cmd[i] += " --norm="+self.normalisation
     ENDIF
-      
-      
+    
+    
     ; Empty sample container file
     IF (STRLEN(self.emptycan) GE 1) AND (self.emptycan NE 0) THEN $
       cmd[i] += " --ecan="+self.emptycan
@@ -652,7 +674,7 @@ function ReductionCmd::Generate
       cmd[i] += " --dkcur="+self.dark
     ; Upstream monitor path
     IF (STRLEN(self.usmonpath) GE 1) AND $
-       (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
+      (STRCOMPRESS(self.usmonpath, /REMOVE_ALL) NE '0') THEN $
       cmd[i] += " --usmon-path=/entry/monitor" + STRCOMPRESS(self.usmonpath, /REMOVE_ALL) + ",1"
     ; Downstream monitor path
     IF STRLEN(self.dsmonpath) GE 1 THEN $
@@ -666,24 +688,22 @@ function ReductionCmd::Generate
     ; Tmax
     IF STRLEN(self.tmax) GE 1 THEN $
       cmd[i] += " --tof-cut-max="+self.tmax
-    
+      
     ; Time Independent Background (TIB)
     IF STRLEN(self.tibconst) GE 1 THEN $
       cmd[i] += " --tib-const="+self.tibconst+',0'
-   
-	;print, '--Generate--'
-	;print, self.tibrange_min,' ', self.tibrange_max
-	;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
-;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
- 
+      
+    ;print, '--Generate--'
+    ;print, self.tibrange_min,' ', self.tibrange_max
+    ;print, STRLEN(STRCOMPRESS(STRING(self.tibrange_min)),/REMOVE_ALL), ' ', $
+    ;		STRLEN(STRCOMPRESS(STRING(self.tibrange_max GE 1)),/REMOVE_ALL)
+      
     ;  TIB constant determination range
     IF (STRLEN(STRING(self.tibrange_min)) GE 1) $
       AND (STRLEN(STRING(self.tibrange_max)) GE 1) THEN BEGIN
       cmd[i] += " --tib-range=" + self.tibrange_min + " " + self.tibrange_max
-      ;print, 'got here'
-;	print, cmd[i]
-	ENDIF
-
+    ENDIF
+    
     ; Ei
     IF STRLEN(self.ei) GE 1 THEN $
       cmd[i] += " --initial-energy="+self.ei+","+self.error_ei
@@ -704,25 +724,25 @@ function ReductionCmd::Generate
     ; transmission for sample data background
     IF STRLEN(self.datatrans) GE 1 THEN $
       cmd[i] += " --data-trans-coeff=" + self.datatrans + ",0.0"
-
-  ; These are no longer needed in dgs_reduction
-    
+      
+    ; These are no longer needed in dgs_reduction
+      
     ; transmission for norm data background
     ;IF STRLEN(self.normtrans) GE 1 THEN $
     ;  cmd[i] += " --norm-trans-coeff=" + self.normtrans + ",0.0"
     ; Normalisation integration range
-;    IF (STRLEN(self.normrange_min) GE 1 ) $
-;      AND (STRLEN(self.normrange_max) GE 1) THEN $
-;      cmd[i] += " --norm-int-range " + self.normrange_min + " " $ 
-;                + self.normrange_max    
-
+    ;    IF (STRLEN(self.normrange_min) GE 1 ) $
+    ;      AND (STRLEN(self.normrange_max) GE 1) THEN $
+    ;      cmd[i] += " --norm-int-range " + self.normrange_min + " " $
+    ;                + self.normrange_max
+      
     ; Lambda Bins
     IF (STRLEN(self.lambdabins_min) GE 1) $
       AND (STRLEN(self.lambdabins_max) GE 1) $
-      AND (STRLEN(self.lambdabins_step) GE 1) $ 
+      AND (STRLEN(self.lambdabins_step) GE 1) $
       AND (self.dumpwave EQ 1) THEN $
       cmd[i] += " --lambda-bins=" + self.lambdabins_min + "," + $
-          self.lambdabins_max + "," + self.lambdabins_step
+      self.lambdabins_max + "," + self.lambdabins_step
       
     IF (self.dumptof EQ 1) THEN cmd[i] += " --dump-ctof-comb"
     IF (self.dumpwave EQ 1) THEN cmd[i] += " --dump-wave-comb"
@@ -733,19 +753,19 @@ function ReductionCmd::Generate
     
     ; Mask File(s)
     IF (((self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) AND (STRLEN(self.instrument) GT 1)) $
-        OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
+      OR ((self.hardmask EQ 1) AND (STRLEN(self.instrument) GT 1))) THEN BEGIN
       cmd[i] += " --mask-file="
-    
+      
       IF (self.mask EQ 1) AND (STRLEN(self.normalisation) GE 1) $
         AND (STRLEN(self.instrument) GT 1) THEN BEGIN
-          cmd[i] += self.OutputPrefix + "/" + self.instrument + "/"+ $
+        cmd[i] += self.OutputPrefix + "/" + self.instrument + "/"+ $
           getFirstNumber(self.normalisation) + "/" + $
           self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
           i+1, self.jobs, /PAD) + "_mask.dat"
-      
-          ; Put a ',' in if the hardmask is defined as well.
-          IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
-      
+          
+        ; Put a ',' in if the hardmask is defined as well.
+        IF (self.mask EQ 1) AND (self.hardmask EQ 1) THEN cmd[i] += ","
+        
       ENDIF
       
       
@@ -753,7 +773,7 @@ function ReductionCmd::Generate
         cmd[i] += "~/mask/" + self.instrument + "/" + $
         self.instrument + "_bank" + Construct_DataPaths(self.lowerbank, self.upperbank, $
         i+1, self.jobs, /PAD) + "_mask.dat"
-    
+        
     ENDIF
     
     
@@ -761,19 +781,26 @@ function ReductionCmd::Generate
     IF (self.lambdaratio EQ 1) THEN cmd[i] += " --lambda-ratio"
     
     ; Energy Bins
-    IF (STRLEN(self.energybins_min) GE 1) $ 
+    IF (STRLEN(self.energybins_min) GE 1) $
       AND (STRLEN(self.energybins_max) GE 1) $
       AND (STRLEN(self.energybins_step) GE 1) THEN $
       cmd[i] += " --energy-bins=" + self.energybins_min + "," + $
-          self.energybins_max + "," + self.energybins_step
-          
+      self.energybins_max + "," + self.energybins_step
+      
     ; Momentum Transfer Bins
-    IF (STRLEN(self.qbins_min) GE 1) $ 
+    IF (STRLEN(self.qbins_min) GE 1) $
       AND (STRLEN(self.qbins_max) GE 1) $
       AND (STRLEN(self.qbins_step) GE 1) THEN $
       cmd[i] += " --mom-trans-bins=" + self.qbins_min + "," + $
-          self.qbins_max + "," + self.qbins_step
-          
+      self.qbins_max + "," + self.qbins_step
+      
+    ; Phonon Density of States
+    IF (self.DOS EQ 1) THEN BEGIN
+      IF (STRLEN(self.DebyeWaller) GE 1) THEN $
+        cmd[i] += " --pdos-Q --debye-waller=" + self.DebyeWaller + "," + $
+        self.DebyeWaller_error
+    ENDIF
+    
     IF (self.qvector EQ 1) THEN cmd[i] += " --qmesh"
     IF (self.fixed EQ 1) AND (self.qvector EQ 1) THEN cmd[i] += " --fixed"
     IF (self.split EQ 1) THEN cmd[i] += " --split"
@@ -812,8 +839,8 @@ function ReductionCmd::Init, $
     Tmin=tmin, $                         ; minimum tof
     Tmax=tmax, $                         ; maximum tof
     TIBconst=tibconst, $                 ; Time Independent Bkgrd constant
-    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant 
-    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant 
+    TIBrange_Min=tibrange_min, $         ; Range for calculating TIB constant
+    TIBrange_Max=tibrange_max, $         ; Range for calculating TIB constant
     Ei=ei, $                             ; Incident Energy (meV)
     Tzero=tzero, $                       ; T0
     error_ei=error_ei, $                 ; Error in Incident Energy (meV)
@@ -835,8 +862,8 @@ function ReductionCmd::Init, $
     DumpNorm=dumpnorm, $                 ; Dump combined Norm file
     DumpEt=dumpet, $                     ; Dump combined Et file
     DumpTIB=dumptib, $                   ; Dump the TIB constant for all pixels
-    Mask=mask, $                         ; Apply Mask 
-    HardMask=hardmask, $                 ; Apply Hard Mask 
+    Mask=mask, $                         ; Apply Mask
+    HardMask=hardmask, $                 ; Apply Hard Mask
     LambdaRatio=lambdaratio, $           ; Lambda ratio
     EnergyBins_min=energybins_min, $     ; Energy transfer bins (min)
     EnergyBins_max=energybins_max, $     ; Energy transfer bins (max)
@@ -849,6 +876,9 @@ function ReductionCmd::Init, $
     Split=split, $                       ; split (distributed mode)
     Lo_Threshold=lo_threshold, $         ; Threshold for pixel to be masked (default: 0)
     Hi_Threshold=hi_threshold, $         ; Threshold for pixel to be masked (default: infinity)
+    DOS=dos, $                           ; Flag to indicate production of Phonon DOS for S(Q,w)
+    DebyeWaller=debyewaller, $           ; Debye-Waller factor
+    DebyeWaller_error=debyewaller_error, $ ; Error in Debye-Waller factor
     OutputPrefix=outputprefix, $         ; Prefix for where to write the output
     Timing=timing, $                     ; Timing of code
     Jobs=jobs, $                         ; Number of Jobs
@@ -926,6 +956,9 @@ function ReductionCmd::Init, $
   IF N_ELEMENTS(split) EQ 0 THEN split = 0
   IF N_ELEMENTS(lo_threshold) EQ 0 THEN lo_threshold = ""
   IF N_ELEMENTS(hi_threshold) EQ 0 THEN hi_threshold = ""
+  IF N_ELEMENTS(DOS) EQ 0 THEN dos = 0
+  IF N_ELEMENTS(DebyeWaller) EQ 0 THEN debyewaller = '0.0'
+  IF N_ELEMENTS(DebyeWaller_Error) EQ 0 THEN debyewaller_error = '0.0'
   IF N_ELEMENTS(OutputPrefix) EQ 0 THEN OutputPrefix = "~/results"
   IF N_ELEMENTS(timing) EQ 0 THEN timing = 0
   IF N_ELEMENTS(jobs) EQ 0 THEN jobs = 1
@@ -994,6 +1027,9 @@ function ReductionCmd::Init, $
   self.split = split
   self.lo_threshold = Lo_Threshold
   self.hi_threshold = Hi_Threshold
+  self.dos = dos
+  self.debyewaller = debyewaller
+  self.debyewaller_error = debyewaller_error
   self.outputprefix = OutputPrefix
   self.timing = timing
   self.jobs = jobs
@@ -1022,7 +1058,7 @@ pro ReductionCmd__Define
     facility: "", $          ; Facility name
     proposal: "", $          ; Proposal ID
     spe: 0L, $               : SPE file creation
-    configfile: "", $        ; Config (.rmd) filename
+  configfile: "", $        ; Config (.rmd) filename
     instgeometry: "", $      ; Instrument Geometry filename
     cornergeometry: "", $    ; Corner Geometry filename
     lowerbank: 0L, $         ; Lower Detector Bank
@@ -1038,8 +1074,8 @@ pro ReductionCmd__Define
     tmin: "", $              ; minimum tof
     tmax: "", $              ; maximum tof
     tibconst: "", $          ; Time Independant Background constant
-    tibrange_min: "", $      ; Range for calculating TIB constant 
-    tibrange_max: "", $      ; Range for calculating TIB constant 
+    tibrange_min: "", $      ; Range for calculating TIB constant
+    tibrange_max: "", $      ; Range for calculating TIB constant
     ei: "", $                ; Incident Energy (meV)
     error_ei: "", $          ; Error in Incident Energy (meV)
     tzero: "", $             ; T0
@@ -1074,7 +1110,10 @@ pro ReductionCmd__Define
     fixed: 0L, $             ; dump Qvector info onto a fixed mesh
     split: 0L, $             ; split (distributed mode)
     hi_threshold: "", $      ; Threshold for pixel to be masked (default: infinity)
-    lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0) 
+    lo_threshold: "", $      ; Threshold for pixel to be masked (default: 0.0)
+    DOS: 0L, $               ; Flag to indicate production of Phonon DOS for S(Q,w)
+    DebyeWaller: "", $       ; Debye-Waller factor
+    DebyeWaller_error: "", $ ; Error in Debye-Waller factor
     OutputPrefix: "", $      ; Prefix for where to write the output (normally ~/results/)
     timing: 0L, $            ; Timing of code
     jobs : 0L, $             ; Number of Jobs to Run
