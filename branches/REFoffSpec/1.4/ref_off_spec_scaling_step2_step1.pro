@@ -67,6 +67,10 @@ PRO display_step4_step2_step1_selection, Event
       color          = box_color[index]
       psym = getStep4Step2PSYMselected(Event)
       
+      scaling_factor = (*(*global).scaling_factor)
+      SF = scaling_factor[index]
+      t_data_to_plot /= SF
+      
       isLog = getStep4Step2PlotType(Event)
       IF (index EQ 0) THEN BEGIN
         xrange = (*(*global).step4_step2_step1_xrange)
