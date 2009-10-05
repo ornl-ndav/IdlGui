@@ -33,25 +33,27 @@
 ;-
 pro save_parameters, event, Filename=filename
 
-  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
-    filename = DIALOG_PICKFILE(PAth='~', Filter='*.par')
-  ENDIF
- 
-   ; Get the info structure
+  ; Get the info structure
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   
-    ; extract the command object into a separate
+  ; extract the command object into a separate
   dgsr_cmd = info.dgsr_cmd    ; ReductionCMD object
-  dgsn_cmd = info.dgsn_cmd   ; NormCMD object
+  dgsn_cmd = info.dgsn_cmd    ; NormCMD object
+  
+  print, "Using Working Directory of " + info.WorkingDir
+  
+  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
+    filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.par')
+  ENDIF
   
   SAVE, dgsr_cmd, dgsn_cmd, FILENAME=filename
-
+  
   print, 'Saving ALL parameters to ... ' + filename
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
-
-  ;openw, unit, /GET_LUN
+  
+;openw, unit, /GET_LUN
   
 ;  uname_list = ['DGSR_DATARUN', $
 ;                'DGSR_MAKE_SPE', $
@@ -88,18 +90,18 @@ pro save_parameters, event, Filename=filename
 ;                ]
   
   
-;  
+;
 ;  length = N_ELEMENTS(uname_list)
 ;  for index = 0L, length-1 do begin
 ;    widget_ID = WIDGET_INFO(event.top,FIND_BY_UNAME=uname_list[index])
 ;    WIDGET_CONTROL, widget_ID, GET_VALUE=myValue
-;    
+;
 ;  endfor
-
-  ;FREE_LUN, unit
+  
+;FREE_LUN, unit
   
 end
- 
+
 ;    UNAME="", VALUE=1, /INTEGER, /ALL_EVENTS, XSIZE=5)
 ;    UNAME="", /LONG)
 ;    UNAME="", /LONG)
@@ -131,7 +133,7 @@ end
 ;        XSIZE=7, UVALUE="DGSR_LAMBDA_MIN", UNAME="DGSR_LAMBDA_MIN", /ALL_EVENTS)
 ;        XSIZE=7, UVALUE="DGSR_LAMBDA_MAX", UNAME="DGSR_LAMBDA_MAX", /ALL_EVENTS)
 ;        XSIZE=7, UVALUE="DGSR_LAMBDA_STEP", UNAME="DGSR_LAMBDA_STEP", /ALL_EVENTS)
-;        
+;
 ;    VALUE=dgsr_cmd->generate(), UNAME='DGSR_CMD_TEXT')
 ;    'DGSR_LAUNCH_COLLECTOR_BUTTON', $
 ;    'DGSR_EXECUTE_BUTTON'
