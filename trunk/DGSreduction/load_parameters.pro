@@ -34,20 +34,27 @@
 
 pro load_parameters, widgetBase, Filename=filename
 
-  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
-    filename = DIALOG_PICKFILE(Path='~', Filter='*.par')
-  ENDIF
-
-  print, 'Loading ALL parameters from ' + filename
- 
-   ; Get the info structure
+  ; Get the info structure
   WIDGET_CONTROL, widgetBase, GET_UVALUE=info, /NO_COPY
+  
+  IF N_ELEMENTS(filename) EQ 0 THEN BEGIN
+    filename = DIALOG_PICKFILE(PATH=info.workingDir, Filter='*.par', GET_PATH=path)
+  ENDIF
+  
+  print, 'Loading ALL parameters from ' + filename
+  
+  ; Set the current working directory to wherever we have loaded this file from.
+  IF STRLEN(path) GT 1 THEN info.workingDir = path
+  print, 'Saving Working Directory to be ' + info.workingDir
+
   
   RESTORE, FILENAME=filename, /RELAXED_STRUCTURE_ASSIGNMENT
   
+  ; Set the mask to be always on.
+  dgsr_cmd->SetProperty, Mask=1
+  
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
- 
   
   ; Find the output window (DGS)
   dgsr_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_CMD_TEXT')
@@ -58,11 +65,11 @@ pro load_parameters, widgetBase, Filename=filename
   dgsn_cmd_outputID = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_CMD_TEXT')
   ; Update the output command window
   WIDGET_CONTROL, dgsn_cmd_outputID, SET_VALUE=dgsn_cmd->generate()
-    
+  
   ; Put info back
   WIDGET_CONTROL, widgetBase, SET_UVALUE=info, /NO_COPY
-
+  
   ; Now lets update the GUI
   DGSreduction_UpdateGUI, widgetBase
-
+  
 end

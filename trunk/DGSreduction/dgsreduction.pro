@@ -422,6 +422,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     title:title, $
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
+    workingDir:"", $ ; The current working directory
     extra:ptr_new(extra) $
     }
     
