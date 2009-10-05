@@ -38,7 +38,7 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATARUN')
   dgsr_cmd->GetProperty, DataRun=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-
+  
   ; Detector Bank (lower)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATAPATHS_LOWER')
   dgsr_cmd->GetProperty,LowerBank =myValue
@@ -47,28 +47,28 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Detector Bank (higher)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATAPATHS_UPPER')
   dgsr_cmd->GetProperty, UpperBank=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
-
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
   ; Ei
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EI')
   dgsr_cmd->GetProperty, Ei=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; T0
-    widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TZERO')
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TZERO')
   dgsr_cmd->GetProperty, Tzero=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
   ; Energy Transfer Range (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ET_MIN')
   dgsr_cmd->GetProperty, EnergyBins_Min=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ; Energy Transfer Range (max)
-    widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ET_MAX')
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ET_MAX')
   dgsr_cmd->GetProperty, EnergyBins_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   ; Energy Transfer Range (step)
-    widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ET_STEP')
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ET_STEP')
   dgsr_cmd->GetProperty, EnergyBins_Step=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
   
@@ -83,38 +83,38 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; Q Range (step)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_Q_STEP')
   dgsr_cmd->GetProperty, QBins_Step=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
-
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
   ; No monitor Normalisation
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NO-MON-NORM')
   dgsr_cmd->GetProperty, NoMonitorNorm=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   ; Store the state of this button
   NoMonitorNorm_State = myValue
-    
+  
   ; Proton Charge Normalisation
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_PC-NORM')
   dgsr_cmd->GetProperty, PCnorm=myValue
-  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue  
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   ; Set the sensitivity of this button based on the value
   ; of the No-Monitor Normalisation button
   WIDGET_CONTROL, widget_ID, SENSITIVE=NoMonitorNorm_State
-
+  
   ; Lambda Scaling
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA-RATIO')
   dgsr_cmd->GetProperty, LambdaRatio=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
-    
+  
   ; Monitor Number
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_USMON')
   dgsr_cmd->GetProperty, USmonPath=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; Normalisation Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORMRUN')
   dgsr_cmd->GetProperty, Normalisation=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-;  IF (LONG(myValue) LE 0) THEN WIDGET_CONTROL, widget_ID, SET_VALUE=NULL
+  ;  IF (LONG(myValue) LE 0) THEN WIDGET_CONTROL, widget_ID, SET_VALUE=NULL
   
   ; Empty Can Run
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_EMPTYCAN')
@@ -143,7 +143,7 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MON-INT-MAX')
   dgsr_cmd->GetProperty, MonRange_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; Normalisation Integration Range (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MIN')
   dgsr_cmd->GetProperty, NormRange_Min=myValue
@@ -152,12 +152,12 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-INT-MAX')
   dgsr_cmd->GetProperty, NormRange_Max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; Data Trans Coeff
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DATA-TRANS')
   dgsr_cmd->GetProperty, DataTrans=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; Norm Trans Coeff
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_NORM-TRANS')
   dgsr_cmd->GetProperty, NormTrans=myValue
@@ -178,11 +178,11 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   dgsr_cmd->GetProperty, HardMask=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
-  ; ROI 
+  ; ROI
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_ROI_FILENAME')
   dgsr_cmd->GetProperty, ROIfile=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; TOF Spectrum Cutting (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TOF-CUT-MIN')
   dgsr_cmd->GetProperty, Tmin=myValue
@@ -190,13 +190,13 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   ; TOF Spectrum Cutting (max)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TOF-CUT-MAX')
   dgsr_cmd->GetProperty, Tmax=myValue
-  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue  
-
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
   ; TIB constant
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TIBCONST')
   dgsr_cmd->GetProperty, TIBconst=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; TIB range (min)
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TIB-MIN')
   dgsr_cmd->GetProperty, TIBrange_min=myValue
@@ -205,11 +205,11 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_TIB-MAX')
   dgsr_cmd->GetProperty, TIBrange_max=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-    
+  
   ; SPE output
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_SPE')
   dgsr_cmd->GetProperty, SPE=myValue
-  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue  
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Qvector output
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_QVECTOR')
@@ -224,12 +224,12 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   ; Set the sensitvity based on the value of the Qvector button
   WIDGET_CONTROL, widget_ID, SENSITIVE=QvectorState
-    
+  
   ; TIB const output
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_TIB')
   dgsr_cmd->GetProperty, DumpTIB=myValue
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
-    
+  
   ; Combined Et
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_COMBINED_ET')
   dgsr_cmd->GetProperty, DumpEt=myValue
@@ -241,9 +241,9 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Combined Norm
-;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_NORM')
-;  dgsr_cmd->GetProperty, DumpNorm=myValue
-;  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  ;  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DUMP_NORM')
+  ;  dgsr_cmd->GetProperty, DumpNorm=myValue
+  ;  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
   
   ; Combined Wavelength
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_MAKE_COMBINED_WAVE')
@@ -270,6 +270,15 @@ PRO DGSR_UpdateGUI, tlb, dgsr_cmd
   widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_LAMBDA_STEP')
   dgsr_cmd->GetProperty, LambdaBins_Step=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
-
-
+  
+  ; Phonon D-O-S
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_PHONON_DOS')
+  dgsr_cmd->GetProperty, DOS=myValue
+  WIDGET_CONTROL, widget_ID, SET_BUTTON=myValue
+  
+  ; Debye Waller Factor
+  widget_ID = WIDGET_INFO(tlb, FIND_BY_UNAME='DGSR_DWF')
+  dgsr_cmd->GetProperty, DebyeWaller=myValue
+  WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
+  
 END
