@@ -221,13 +221,13 @@ PRO tab_event, Event
       4: BEGIN ;recap
         check_step5_gui, Event ;_step5
         LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
-        ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
-        IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
+        ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+        IF (LoadBaseStatus EQ 0) THEN BEGIN
           id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='step5_draw')
           WIDGET_CONTROL, id_draw, GET_VALUE=id_value
           WSET,id_value
           error = 0
-          ; CATCH, error
+          CATCH, error
           IF (error NE 0) THEN BEGIN
             CATCH,/CANCEL
             refresh_recap_plot, Event ;_step5
