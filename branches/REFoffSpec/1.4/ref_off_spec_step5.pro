@@ -128,12 +128,12 @@ PRO check_step5_gui, Event
     image = read_bmp('REFoffSpec_images/RecapShifting.bmp')
     tv, image, 0,0,/true
     
-    id2 = widget_info(Event.top,find_by_uname='step5_scaling_draw')
-    widget_control, id2, get_value=id
-    wset, id
-    image = read_bmp('REFoffSpec_images/RecapScaling.bmp')
-    tv, image, 0,0,/true
-    MapBase, Event, 'scaling_base_step5', 1
+  ;  id2 = widget_info(Event.top,find_by_uname='step5_scaling_draw')
+  ;  widget_control, id2, get_value=id
+  ;  wset, id
+  ;  image = read_bmp('REFoffSpec_images/RecapScaling.bmp')
+  ;  tv, image, 0,0,/true
+  ;    MapBase, Event, 'scaling_base_step5', 1
     
   ENDIF ELSE BEGIN
   
@@ -151,14 +151,14 @@ PRO check_step5_gui, Event
       ++index
     ENDWHILE
     
-    IF (scale_map_status EQ 1) THEN BEGIN
-      id2 = widget_info(Event.top,find_by_uname='step5_scaling_draw')
-      widget_control, id2, get_value=id
-      wset, id
-      image = read_bmp('REFoffSpec_images/RecapScaling.bmp')
-      tv, image, 0,0,/true
-    ENDIF
-    MapBase, Event, 'scaling_base_step5', scale_map_status
+   ; IF (scale_map_status EQ 1) THEN BEGIN
+   ;   id2 = widget_info(Event.top,find_by_uname='step5_scaling_draw')
+   ;   widget_control, id2, get_value=id
+   ;   wset, id
+   ;   image = read_bmp('REFoffSpec_images/RecapScaling.bmp')
+   ;   tv, image, 0,0,/true
+   ; ENDIF
+   ; MapBase, Event, 'scaling_base_step5', scale_map_status
     
     uname_list = ['step5_zmax',$
       'step5_zmin',$

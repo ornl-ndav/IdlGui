@@ -136,16 +136,16 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
   sShiftingDraw = { size: [0,0,300,50],$
     uname: 'step5_shifting_draw'}
     
-  ;Scaling base ----------------------------------------------------------------
-  XYoff = [0,70]
-  sScalebase = { size: [sShiftBase.size[0]+XYoff[0],$
-    sShiftBase.size[1]+$
-    sShiftBase.size[3]+XYoff[1],$
-    300,50],$
-    uname: 'scaling_base_step5',$
-    frame: 3,$
-    map: 1}
-    
+;  ;Scaling base ----------------------------------------------------------------
+;  XYoff = [0,70]
+;  sScalebase = { size: [sShiftBase.size[0]+XYoff[0],$
+;    sShiftBase.size[1]+$
+;    sShiftBase.size[3]+XYoff[1],$
+;    300,50],$
+;    uname: 'scaling_base_step5',$
+;    frame: 3,$
+;    map: 1}
+;    
   ;scaling button --------------------------------------------------------------
   sScalingDraw = { size: [0,0,300,50],$
     uname: 'step5_scaling_draw'}
@@ -459,23 +459,23 @@ PRO make_gui_step5, REDUCE_TAB, tab_size, TabTitles, global
     /MOTION_EVENTS,$
     /TRACKING_EVENTS)
     
-  ;Shifting base ---------------------------------------------------------------
-  wScalebase = WIDGET_BASE(BaseTab,$
-    XOFFSET   = sScaleBase.size[0],$
-    YOFFSET   = sScaleBase.size[1],$
-    SCR_XSIZE = sScaleBase.size[2],$
-    SCR_YSIZE = sScaleBase.size[3],$
-    UNAME     = sScaleBase.uname,$
-    FRAME     = sScaleBase.frame)
-    
-  ;Scaling button --------------------------------------------------------------
-  wScalingDraw = WIDGET_DRAW(wScalebase,$
-    XOFFSET   = sScalingDraw.size[0],$
-    YOFFSET   = sScalingDraw.size[1],$
-    SCR_XSIZE = sScalingDraw.size[2],$
-    SCR_YSIZE = sScalingDraw.size[3],$
-    UNAME     = sScalingDraw.uname)
-    
+;  ;Shifting base ---------------------------------------------------------------
+;  wScalebase = WIDGET_BASE(BaseTab,$
+;    XOFFSET   = sScaleBase.size[0],$
+;    YOFFSET   = sScaleBase.size[1],$
+;    SCR_XSIZE = sScaleBase.size[2],$
+;    SCR_YSIZE = sScaleBase.size[3],$
+;    UNAME     = sScaleBase.uname,$
+;    FRAME     = sScaleBase.frame)
+;    
+;  ;Scaling button --------------------------------------------------------------
+;  wScalingDraw = WIDGET_DRAW(wScalebase,$
+;    XOFFSET   = sScalingDraw.size[0],$
+;    YOFFSET   = sScalingDraw.size[1],$
+;    SCR_XSIZE = sScalingDraw.size[2],$
+;    SCR_YSIZE = sScalingDraw.size[3],$
+;    UNAME     = sScalingDraw.uname)
+;    
   ;x/y and counts values -------------------------------------------------------
   wXLabel = WIDGET_LABEL(BaseTab,$
     XOFFSET   = sXlabel.size[0],$

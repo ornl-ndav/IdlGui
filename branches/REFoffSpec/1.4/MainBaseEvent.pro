@@ -2191,8 +2191,8 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step5_draw'): BEGIN
     DEVICE, CURSOR_STANDARD=31
     LoadBaseStatus  = isBaseMapped(Event,'shifting_base_step5')
-    ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
-    IF (LoadBaseStatus + ScaleBaseStatus EQ 0) THEN BEGIN
+    ;ScaleBaseStatus = isBaseMapped(Event,'scaling_base_step5')
+    IF (LoadBaseStatus EQ 0) THEN BEGIN
       delta_x = (*global).delta_x
       x = Event.x
       x1 = FLOAT(delta_x) * FLOAT(x)
