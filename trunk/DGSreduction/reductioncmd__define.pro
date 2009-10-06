@@ -600,6 +600,9 @@ function ReductionCmd::Generate
   
   cmd = STRARR(self.jobs)
   
+  ; If the outputPrefix is blank then use the default
+  IF STRLEN(self.OutputPrefix) EQ 0 THEN self.OutputPrefix = "~/results"
+  
   for i = 0L, self.jobs-1 do begin
   
     cmd[i] = ""
