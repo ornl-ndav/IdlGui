@@ -43,7 +43,7 @@ PRO DGSreduction_Execute, event
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-
+  
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgsr_cmd = info.dgsr_cmd
@@ -54,8 +54,8 @@ PRO DGSreduction_Execute, event
   dgsr_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
     ; First put back the info structure
-    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY 
-    ; Then show an error message!   
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    ; Then show an error message!
     ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
     return
   END
@@ -75,7 +75,7 @@ PRO DGSreduction_Execute, event
   ; Number of Jobs
   dgsr_cmd->GetProperty, Jobs=jobs
   
-  jobcmd = "sbatch -p " + queue + " " 
+  jobcmd = "sbatch -p " + queue + " "
   
   ; Log Directory
   cd, CURRENT=thisDir
@@ -83,57 +83,59 @@ PRO DGSreduction_Execute, event
     instrument + '/' + runnumber + '/logs'
   ; Make the directory
   spawn, 'mkdir -p ' + logDir
-
+  
   ; Array for job numbers
-  jobIDs = STRARR(N_ELEMENTS(commands))
-
+  ;jobIDs = STRARR(N_ELEMENTS(commands))
+  
   ; Make sure that the output directory exists
   outputDir = '~/results/' + instrument + '/' + runnumber
   spawn, 'mkdir -p ' + outputDir
- 
- 
+  
+  
   ;TODO Check for existance of SPE file and ask if the user wants to override it.
   ; (only check if we are asking to produce an SPE file)
   ;if (
- 
+  
   ; Create an array to hold the SLURM jobID numbers
   jobID = STRARR(N_ELEMENTS(commands))
- 
+  
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
     jobname = instrument + "_" + runnumber + "_bank" + $
       Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-    
+      
     logfile = logDir + '/' + instrument + '_bank' + $
       Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
       '.log'
-  
+      
     cmd = jobcmd + " --output=" + logfile + $
-        " --job-name=" + jobname + $
- 	" " + commands[index]
-    
+      " --job-name=" + jobname + $
+      " " + commands[index]
+      
     if (index EQ 0) then begin
       spawn, "echo " + cmd + " > /tmp/" + info.username + "_commands"
     endif else begin
       spawn, "echo " + cmd + " >> /tmp/" + info.username + "_commands"
     endelse
-
+    
     ; Actually Launch the jobs
     spawn, cmd, dummy, job_string
     
     job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
     jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
-
+    
   endfor
   
-  ;print, jobID
-    
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
-  ; Start the sub window widget
-  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  ; Launch the collectors - waiting for the reduction jobs to finish first
+  DGSreduction_LaunchCollector, event, WAITFORJOBS=jobID
+  
+  
+; Start the sub window widget
+;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
   
 END
 
@@ -154,7 +156,7 @@ PRO DGSnorm_Execute, event
     ok = ERROR_MESSAGE(!ERROR_STATE.MSG + ' Returning...', TRACEBACK=1, /error)
     return
   ENDIF
-
+  
   ; Get the info structure and copy it here
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgsn_cmd = info.dgsn_cmd
@@ -165,8 +167,8 @@ PRO DGSnorm_Execute, event
   dgsn_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
     ; First put back the info structure
-    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY 
-    ; Then show an error message!   
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    ; Then show an error message!
     ok=ERROR_MESSAGE("Please select an Instrument from the list.", /INFORMATIONAL)
     return
   END
@@ -186,53 +188,60 @@ PRO DGSnorm_Execute, event
   ; Number of Jobs
   dgsn_cmd->GetProperty, Jobs=jobs
   
-  jobcmd = "sbatch -p " + queue + " " 
+  
+  jobcmd = "sbatch -p " + queue + " "
   
   ; Log Directory
   cd, CURRENT=thisDir
-    logDir = '/SNS/users/' + info.username + '/results/' + $
-   instrument + '/' + runnumber + '/logs'
-   
+  logDir = '/SNS/users/' + info.username + '/results/' + $
+    instrument + '/' + runnumber + '/logs'
+    
   ; Make the directory
   spawn, 'mkdir -p ' + logDir
-
-  ; Array for job numbers
-  jobIDs = STRARR(N_ELEMENTS(commands))
-
+  
   ; Make sure that the output directory exists
   outputDir = '~/results/' + instrument + '/' + runnumber
   spawn, 'mkdir -p ' + outputDir
- 
+  
+  ; Create an array to hold the SLURM jobID numbers
+  jobID = STRARR(N_ELEMENTS(commands))
+  
   ; Loop over the command array
   for index = 0L, N_ELEMENTS(commands)-1 do begin
   
     jobname = instrument + "_" + runnumber + "_bank" + $
       Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-    
+      
     logfile = logDir + '/' + instrument + '_bank' + $
       Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
       '.log'
-  
+      
     cmd = jobcmd + " --output=" + logfile + $
-        " --job-name=" + jobname + $
-  " " + commands[index]
-    
+      " --job-name=" + jobname + $
+      " " + commands[index]
+      
     if (index EQ 0) then begin
       spawn, "echo " + cmd + " > /tmp/" + info.username + "_norm_commands"
     endif else begin
       spawn, "echo " + cmd + " >> /tmp/" + info.username + "_norm_commands"
     endelse
-
+    
     ; Actually Launch the jobs
-    spawn, cmd
-
+    spawn, cmd, dummy, job_string
+    
+    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
+    jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
+    
   endfor
   
   ; Put info back
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
-  ; Start the sub window widget
-  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  ; Launch the collectors - waiting for the reduction jobs to finish first
+  DGSnorm_LaunchCollector, event, WAITFORJOBS=jobID
+  
+; Start the sub window widget
+;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
   
 END
 
@@ -252,9 +261,9 @@ END
 ;---------------------------------------------------------
 
 PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
-      DGSN_cmd=dgsn_cmd, $
-      _Extra=extra
-
+    DGSN_cmd=dgsn_cmd, $
+    _Extra=extra
+    
   ; Program Details
   APPLICATION       = 'DGSreduction'
   VERSION           = '1.1.0'
@@ -296,24 +305,24 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     EVENT_PRO='DGSreduction_Execute')
   gatherReductionMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Gather Reduction', $
     EVENT_PRO='DGSreduction_LaunchCollector')
-  
+    
   executeNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Execute Vanadium Mask Generation', $
     EVENT_PRO='DGSnorm_Execute', /SEPARATOR)
   gatherNormMenuID = WIDGET_BUTTON(actionMenuID, VALUE='Gather Vanadium Mask Generation', $
     EVENT_PRO='DGSnorm_LaunchCollector', /SEPARATOR)
-  
-  
+    
+    
   ; Monitoring Menu
   monitoringMenuID = WIDGET_BUTTON(menubarID, VALUE='Monitoring')
   launchJobMonitorMenuID = WIDGET_BUTTON(monitoringMenuID, VALUE='Launch SLURM Monitor', $
     EVENT_PRO='DGSreduction_LaunchJobMonitor')
-  
-  
-  
+    
+    
+    
   ; Help Menu
   helpMenuID = WIDGET_BUTTON(menubarID, VALUE='Help')
   helpfileMenuID = WIDGET_BUTTON(helpMenuID, VALUE='Sorry no help available at the moment')
-    
+  
   
   toprow = WIDGET_BASE(tlb, COLUMN=4)
   
@@ -322,33 +331,33 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   instrumentID = WIDGET_COMBOBOX(instrumentSelectRow, UVALUE="INSTRUMENT_SELECTED", $
     UNAME='INSTRUMENT_SELECTED', VALUE=[' ','ARCS','CNCS','SEQUOIA'], $
     XSIZE=90, YSIZE=30)
-  
-;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
-;  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
-;  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
-;  jobLabelGeometryYSize = jobLabelGeometry.ysize
-;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
-;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
+    
+  ;  jobBase = WIDGET_BASE(toprow, /ALIGN_RIGHT)
+  ;  jobLabel = WIDGET_LABEL(jobBase, VALUE=' Job Submission ', XOFFSET=5)
+  ;  jobLabelGeometry = WIDGET_INFO(jobLabel, /GEOMETRY)
+  ;  jobLabelGeometryYSize = jobLabelGeometry.ysize
+  ;  jobPrettyBase = WIDGET_BASE(jobBase, /FRAME, $
+  ;        YOFFSET=jobLabelGeometryYSize/2, XPAD=10, YPAD=10)
   jobID = CW_FIELD(toprow, TITLE="                      No. of Jobs:", $
-        UVALUE="DGS_REDUCTION_JOBS", UNAME='DGS_REDUCTION_JOBS', $
-        VALUE=1, /INTEGER, /ALL_EVENTS)
- 
+    UVALUE="DGS_REDUCTION_JOBS", UNAME='DGS_REDUCTION_JOBS', $
+    VALUE=1, /INTEGER, /ALL_EVENTS)
+    
   paddingText = "                       "
   paddingLabel = WIDGET_LABEL(toprow, VALUE=paddingText)
-
+  
   WFONT = '-*-HELVETICA-BOLD-R-NORMAL-*-12-*-*-*-*-*-*-*'
-
+  
   warningBase = WIDGET_BASE(toprow, /COLUMN)
-
+  
   warningText1 = "DANGER: This is a very early development version."
   warningText2 = "It WILL crash - there is no sanity checking at the moment."
   warningText3 = "Otherwise, enjoy! and please be kind :-)"
-
+  
   ; Hide the warning for a release version!
   ;warningLabel1 = WIDGET_LABEL(warningBase, VALUE=warningText1, font=wfont)
   ;warningLabel2 = WIDGET_LABEL(warningBase, VALUE=warningText2)
   ;warningLabel3 = WIDGET_LABEL(warningBase, VALUE=warningText3)
- 
+  
   ; Tabs
   tabID = WIDGET_TAB(tlb)
   
@@ -360,24 +369,24 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   vanmaskTabBase = WIDGET_BASE(tabID, Title='Vanadium Mask', /COLUMN)
   ;label = WIDGET_LABEL(vanmaskTabBase, VALUE="Nothing to see here! - Move along :-)")
   make_VanMask_Tab, vanmaskTabBase, dgsn_cmd
- 
- 
+  
+  
   ; Administrator Tab
   adminTabBase = WIDGET_BASE(tabID, TITLE='Administrator', /COLUMN)
   make_administrator_tab, adminTabBase, DGSR_cmd
- 
-; Remove the LOG Tab (for the moment) as we are not using it!  
-;  logTab = WIDGET_BASE(tabID, Title='Log')
-;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
-;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
-;    UNAME='DGS_REDUCTION_LOGBOOK')
-    
-    
+  
+  ; Remove the LOG Tab (for the moment) as we are not using it!
+  ;  logTab = WIDGET_BASE(tabID, Title='Log')
+  ;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")
+  ;  logbookID = WIDGET_TEXT(logTab, xsize=80, ysize=20, /SCROLL, /WRAP, $
+  ;    UNAME='DGS_REDUCTION_LOGBOOK')
+  
+  
   ;wMainButtons = WIDGET_BASE(tlb, /ROW)
   mainButtonsColumns = WIDGET_BASE(tlb, COLUMN=3)
   mainButtonsCol1 = WIDGET_BASE(mainButtonsColumns, /ROW)
-  mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns, /ROW)  
-  mainButtonsCol3 = WIDGET_BASE(mainButtonsColumns, /ROW)  
+  mainButtonsCol2 = WIDGET_BASE(mainButtonsColumns, /ROW)
+  mainButtonsCol3 = WIDGET_BASE(mainButtonsColumns, /ROW)
   mainButtonsCol1Row1 = WIDGET_BASE(mainButtonsCol1, /ROW, /ALIGN_LEFT)
   mainButtonsCol2Row1 = WIDGET_BASE(mainButtonsCol2, /ROW)
   mainButtonsCol3Row1 = WIDGET_BASE(mainButtonsCol3, /ROW, /ALIGN_RIGHT, XOFFSET=750)
@@ -386,8 +395,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   quitID = WIDGET_BUTTON(mainButtonsCol1Row1, Value=' QUIT ', EVENT_PRO='DGSreduction_Quit')
   
   ;TODO: Save Defaults
-;  saveDefaultsButton = WIDGET_BUTTON(mainButtonsCol1Row1, VALUE='Save Current Values as Default', $
-;    UNAME='DGS_SAVE_DEFAULTS', EVENT_PRO='DGSreduction_save_defaults')
+  ;  saveDefaultsButton = WIDGET_BUTTON(mainButtonsCol1Row1, VALUE='Save Current Values as Default', $
+  ;    UNAME='DGS_SAVE_DEFAULTS', EVENT_PRO='DGSreduction_save_defaults')
   
   ; Define an export to script button
   ;exportScriptID = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='Export to Script', $
@@ -402,13 +411,13 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     
   saveParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='SAVE ALL Parameters', $
     UNAME='DGS_SAVEPARAMETERS', EVENT_PRO='save_parameters')
-  
+    
   loadParametersButton = WIDGET_BUTTON(mainButtonsCol2Row1, VALUE='LOAD ALL Parameters', $
     UNAME='DGS_LOADPARAMETERS', EVENT_PRO='DGSreduction_LoadParameters')
-  
+    
   ;TODO: Load in the default Value
-
-  
+    
+    
   ; Realise the widget hierarchy
   WIDGET_CONTROL, tlb, /REALIZE
   
@@ -422,7 +431,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     title:title, $
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
-    workingDir:"", $ ; The current working directory
+    workingDir:"~", $ ; The current working directory
     extra:ptr_new(extra) $
     }
     
@@ -436,6 +445,6 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=username
   
-  ; Print a lovely welcome!
-  ;write2log, 'Welcome to DGSreduction..."
+; Print a lovely welcome!
+;write2log, 'Welcome to DGSreduction..."
 END
