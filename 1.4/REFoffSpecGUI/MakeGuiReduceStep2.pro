@@ -38,9 +38,14 @@ PRO make_gui_Reduce_step2, REDUCE_TAB, sTab, TabTitles, global
   ;            DEFINE STRUCTURE
   ;****************************************************************************
 
+  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
+    tab_title = TabTitles.step2
+  ENDIF ELSE BEGIN
+    tab_title = TabTitles.step3
+  ENDELSE
   sBase = { size:  stab.size,$
     uname: 'reduce_step2_tab_base',$
-    title: TabTitles.step2}
+    title: tab_title}
     
   ;****************************************************************************
   ;            BUILD GUI

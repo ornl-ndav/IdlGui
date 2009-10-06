@@ -32,43 +32,21 @@
 ;
 ;==============================================================================
 
-PRO make_gui_step1, REDUCE_TAB, tab_size, TabTitles, global
+PRO make_gui_reduce_step2_REF_M, REDUCE_TAB, sTab, TabTitles, global
 
-  ;******************************************************************************
+  ;****************************************************************************
   ;            DEFINE STRUCTURE
-  ;******************************************************************************
+  ;****************************************************************************
 
-  sBase = { size:  tab_size,$
-    uname: 'step1_tab_base',$
-    title: TabTitles.step1}
+  sBase = { size:  stab.size,$
+    uname: 'reduce_step2_tab_base',$
+    title: TabTitles.step2}
     
-  ;Reduce Tab
-  XYoff = [0,0]
-  sTab = { size: [XYoff[0],$
-    XYoff[1],$
-    tab_size[2],$
-    tab_size[3]],$
-    uname: 'reduce_tab',$
-    location: 0,$
-    sensitive: 1 }
-    
-  ;Tab titles
-  IF ((*global).instrument EQ 'REF_L') THEN BEGIN
-    ReduceTabTitles = { step1: ' Step 1:  DATA  ',$
-      step2: ' Step 2:  NORMALIZATION  ',$
-      step3: ' Step 3:  RECAPITULATION  '}
-  ENDIF ELSE BEGIN
-    ReduceTabTitles = { step1: ' Step 1:  DATA  ',$
-      step2: ' Step 2: SANGLE  ',$
-      step3: ' Step 3:  NORMALIZATION  ',$
-      step4: ' Step 4:  RECAPITULATION  '}
-  ENDELSE
-  
-  ;******************************************************************************
+  ;****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
-  
-  Base1 = WIDGET_BASE(REDUCE_TAB,$
+  ;****************************************************************************
+    
+  Base = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = sBase.uname,$
     XOFFSET   = sBase.size[0],$
     YOFFSET   = sBase.size[1],$
@@ -76,29 +54,6 @@ PRO make_gui_step1, REDUCE_TAB, tab_size, TabTitles, global
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
     
-  REDUCE_STEPS_TAB = WIDGET_TAB(Base1,$
-    UNAME     = sTab.uname,$
-    LOCATION  = sTab.location,$
-    XOFFSET   = sTab.size[0],$
-    YOFFSET   = sTab.size[1],$
-    SCR_XSIZE = sTab.size[2],$
-    SCR_YSIZE = sTab.size[3],$
-    SENSITIVE = sTab.sensitive,$
-    /TRACKING_EVENTS)
-    
-    
-  ;reduce_step1
-  make_gui_reduce_step1, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
-  
-  ;REF_M only
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    make_gui_reduce_step2_REF_M, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
-  ENDIF
-  
-  ;REF_L: reduce_step2
-  make_gui_reduce_step2, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
-  
-  ;reduce_step3
-  make_gui_reduce_step3, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
+   
   
 END
