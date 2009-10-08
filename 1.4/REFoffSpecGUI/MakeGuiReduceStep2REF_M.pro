@@ -54,6 +54,4 @@ PRO make_gui_reduce_step2_REF_M, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = sBase.size[3],$
     TITLE     = sBase.title)
     
-   
-  
 END
