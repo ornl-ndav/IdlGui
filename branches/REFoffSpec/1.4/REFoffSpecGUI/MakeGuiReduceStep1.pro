@@ -74,8 +74,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
    YSIZE = 100,$
    XOFFSET = 530,$
    YOFFSET = 675) 
-    
-    
+
   ;SANGLE base
   SangleBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_sangle_base',$
@@ -129,6 +128,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 10,$
     XSIZE = 800,$
     YSIZE = 304*2)
+    
+  ;scale
+  scale = WIDGET_DRAW(TabBase, $
+  UNAME = 'reduce_sangle_y_scale', $
+  XSIZE = 50,$
+  YSIZE = 2*304+20,$
+  YOFFSET = 0)
     
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
