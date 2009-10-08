@@ -258,3 +258,24 @@ PRO display_reduce_step1_buttons, MAIN_BASE = main_base,$
     ACTIVATE = activate_no_match_user,$
     global
 END
+
+;------------------------------------------------------------------------------
+PRO display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, $
+    EVENT=event, $
+    global
+    
+  mode = READ_PNG((*global).reduce_step1_sangle_equation)
+  
+  uname = 'reduce_step1_sangle_equation'
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  ;mode
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, mode, 0,0,/true
+  
+END
