@@ -36,19 +36,19 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
 
   instrument = (*global).instrument
   
-  ;******************************************************************************
+  ;****************************************************************************
   ;            DEFINE STRUCTURE
-  ;******************************************************************************
+  ;****************************************************************************
   
   sBase = { size:  stab.size,$
     uname: 'reduce_step1_tab_base',$
     title: TabTitles.step1}
     
-  ;******************************************************************************
+  ;****************************************************************************
   ;            BUILD GUI
-  ;******************************************************************************
+  ;****************************************************************************
     
-  TopBase = WIDGET_BASE(REDUCE_TAB,$
+  TabBase = WIDGET_BASE(REDUCE_TAB,$
     UNAME     = 'reduce_step1_top_base',$
     XOFFSET   = sBase.size[0],$
     YOFFSET   = sBase.size[1],$
@@ -57,7 +57,194 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     TITLE     = sBase.title,$
     map = 1)
     
-  ;list of polarization states --------------------------------------------------
+  ;****************************************************************************
+    
+  ;Sangle info base title
+  title = WIDGET_LABEL(TabBase,$
+    VALUE = 'Run Number: N/A',$
+    SCR_XSIZE = 150,$
+    UNAME = 'reduce_sangle_info_title_base',$
+    XOFFSET = 15,$
+    YOFFSET = 625)
+    
+   ;equation
+   equation = WIDGET_DRAW(TabBase,$
+   UNAME = 'reduce_step1_sangle_equation',$
+   XSIZE = 300,$
+   YSIZE = 100,$
+   XOFFSET = 530,$
+   YOFFSET = 675) 
+    
+    
+  ;SANGLE base
+  SangleBase = WIDGET_BASE(TabBase,$
+    UNAME     = 'reduce_step1_sangle_base',$
+    XOFFSET   = sBase.size[0],$
+    YOFFSET   = sBase.size[1],$
+    SCR_XSIZE = sBase.size[2],$
+    SCR_YSIZE = sBase.size[3],$
+    FRAME = 0,$
+    /COLUMN, $
+    map = 1)
+    
+  row1 = WIDGET_BASE(SangleBase,$ ;.................................
+    /ROW)
+    
+  row1col1 = WIDGET_BASE(row1,$ ;...................................
+    /COLUMN)
+    
+  table = WIDGET_TABLE(row1col1,$
+    COLUMN_LABELS = ['Data Run #',$
+    'Sangle (radians)'],$
+    UNAME = 'reduce_sangle_tab_table_uname',$
+    /NO_ROW_HEADERS,$
+    ;    /RESIZEABLE_COLUMNS,$
+    ALIGNMENT = 0,$
+    XSIZE = 2,$
+    YSIZE = 18,$
+    SCR_XSIZE = 232,$
+    SCR_YSIZE = 380,$
+    COLUMN_WIDTHS = [105,148],$
+    ;/SCROLL,$
+    /ALL_EVENTS)
+  WIDGET_CONTROL, table, SET_TABLE_SELECT=[0,0,1,0]
+  
+  reset_sangle = WIDGET_BUTTON(row1col1,$
+    VALUE = 'Reset SANGLE value of selected run number',$
+    UNAME = 'reduce_sangle_tab_reset_button',$
+    SENSITIVE = 0)
+    
+  row1col2 = WIDGET_BASE(row1,$ ;............................
+    UNAME = 'reduce_sangle_plot_base')
+    
+  label = WIDGET_LABEL(row1col2,$
+    VALUE = '                  ', $
+    UNAME = 'reduce_sangle_plot_title',$
+    XOFFSET = 700,$
+    YOFFSET = 50)
+    
+  plot = WIDGET_DRAW(row1col2,$
+    UNAME = 'reduce_sangle_plot',$
+    XOFFSET = 40,$
+    YOFFSET = 10,$
+    XSIZE = 800,$
+    YSIZE = 304*2)
+    
+  row2 = WIDGET_BASE(SangleBase, $ ;...........................
+    /ROW)
+    
+  row2col1 = WIDGET_BASE(row2,$ ;.............................
+    /COLUMN,$
+    FRAME = 1)
+    
+  empty = WIDGET_LABEL(row2col1,$
+    VALUE = '')
+    
+  rowa = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowa,$
+    /ALIGN_LEFT, $
+    VALUE = '          Full file name: ')
+  value = WIDGET_LABEL(rowa,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 500,$
+    UNAME = 'reduce_sangle_base_full_file_name')
+    
+  rowb = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowb,$
+    /ALIGN_LEFT, $
+    VALUE = '        Dangle (radians): ')
+  value = WIDGET_LABEL(rowb,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_dangle_value')
+    
+  rowc = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowc,$
+    /ALIGN_LEFT, $
+    VALUE = '        Sangle (radians): ')
+  value = WIDGET_LABEL(rowc,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_sangle_value')
+    
+  rowd = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowd,$
+    /ALIGN_LEFT, $
+    VALUE = '                  Dirpix: ')
+  value = WIDGET_LABEL(rowd,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_dirpix_value')
+    
+  rowe = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowe,$
+    /ALIGN_LEFT, $
+    VALUE = '                  RefPix: ')
+  value = WIDGET_LABEL(rowe,$
+    /ALIGN_LEFT, $
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_refpix_value')
+    
+  rowf = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowf,$
+    /ALIGN_LEFT, $
+    VALUE = 'Sample-Det. distance (m): ')
+  value = WIDGET_LABEL(rowf,$
+    /ALIGN_LEFT, $
+    VALUE = 'N/A',$
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_sampledetdis_value')
+
+  row2col2 = WIDGET_BASE(row2,$ ;.............................
+    FRAME = 0)
+    
+    base1 = WIDGET_BASE(row2col2,$
+    XOFFSET = 155,$
+    YOFFSET = 40,$
+    /ROW)
+    label = WIDGET_LABEL(base1,$
+    /ALIGN_LEFT,$
+    VALUE = 'RefPix: ')
+    value = WIDGET_TEXT(base1,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_refpix_user_value',$
+    XSIZE = 10)
+
+   base2 = WIDGET_BASE(row2col2,$
+   XOFFSET = 155,$
+   YOFFSET = 110,$
+   /ROW)
+   label = WIDGET_LABEL(base2,$
+   /ALIGN_LEFT,$
+   VALUE = 'Sangle (radians): ')
+   value = WIDGET_LABEL(base2,$
+   VALUE = 'N/A',$
+   UNAME = 'reduce_sangle_base_sangle_user_value',$
+   SCR_XSIZE = 140,$
+   /ALIGN_LEFT)
+   
+  ;****************************************************************************
+    
+  TopBase = WIDGET_BASE(TabBase,$
+    UNAME     = 'reduce_step1_top_base',$
+    XOFFSET   = sBase.size[0],$
+    YOFFSET   = sBase.size[1],$
+    SCR_XSIZE = sBase.size[2],$
+    SCR_YSIZE = sBase.size[3],$
+    map = 1)
+    
+  ;list of polarization states ------------------------------------------------
   wPolaBase = WIDGET_BASE(TopBase,$
     XOFFSET   = 400,$
     YOFFSET   = 130,$
@@ -188,16 +375,23 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_step1_remove_selection_button',$
     SENSITIVE = 0)
     
-  button2 = WIDGET_BUTTON(Row3,$
-    VALUE = 'Display Y vs TOF of Selected Run',$
-    UNAME = 'reduce_step1_display_y_vs_tof_button',$
-    SENSITIVE = 0)
+  ;  button2 = WIDGET_BUTTON(Row3,$
+  ;    VALUE = 'Display Y vs TOF of Selected Run',$
+  ;    UNAME = 'reduce_step1_display_y_vs_tof_button',$
+  ;    SENSITIVE = 0)
+  ;
+  ;  button3 = WIDGET_BUTTON(Row3,$
+  ;    VALUE = 'Display Y vs X of Selected Run',$
+  ;    UNAME = 'reduce_step1_display_y_vs_x_button',$
+  ;    SENSITIVE = 0)
     
-  button3 = WIDGET_BUTTON(Row3,$
-    VALUE = 'Display Y vs X of Selected Run',$
-    UNAME = 'reduce_step1_display_y_vs_x_button',$
-    SENSITIVE = 0)
-    
+  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+    sangle_button = WIDGET_BUTTON(Row3,$
+      VALUE = ' VIEW / EDIT SANGLE ',$
+      UNAME = 'reduce_step1_sangle_button', $
+      SENSITIVE = 0)
+  ENDIF
+  
   ;space
   space = WIDGET_LABEL(Base,$
     VALUE = ' ')

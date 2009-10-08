@@ -134,6 +134,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_step1_spin_do_not_match_user_defined_enable: $
     'REFoffSpec_images/spin_states_do_not_match_user_defined_selected.png',$
     
+    reduce_step1_sangle_equation: $
+    'REFoffSpec_images/sangle_equation.png', $
+    
     tmp_reduce_step2_row: 0L,$
     tmp_reduce_step2_data_spin_state: '',$
     
@@ -488,6 +491,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     display_reduce_step1_buttons, MAIN_BASE=main_base, $
       ACTIVATE=(*global).reduce_step1_spin_state_mode, global
   ENDIF
+  
+  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
   
   
   

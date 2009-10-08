@@ -27,7 +27,6 @@ cd, CurrentFolder + '/REFoffSpecGUI/'
 .run MakeGuiStep1.pro
 .run MakeGuiReduceStep1.pro
 .run MakeGuiReduceStep2.pro
-.run MakeGuiReduceStep2REF_M.pro
 .run MakeGuiReduceStep3.pro
 .run MakeGuiReduceStep4.pro
 .run MakeGuiStep2.pro

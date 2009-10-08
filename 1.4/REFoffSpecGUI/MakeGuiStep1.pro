@@ -90,12 +90,7 @@ PRO make_gui_step1, REDUCE_TAB, tab_size, TabTitles, global
   ;reduce_step1
   make_gui_reduce_step1, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
   
-  ;REF_M only
-  IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-    make_gui_reduce_step2_REF_M, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
-  ENDIF
-  
-  ;REF_L: reduce_step2
+  ;reduce_step2
   make_gui_reduce_step2, REDUCE_STEPS_TAB, sTab, ReduceTabTitles, global
   
   ;reduce_step3

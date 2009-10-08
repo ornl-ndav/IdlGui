@@ -353,9 +353,13 @@ PRO check_status_of_reduce_step1_buttons, Event
   ENDIF ELSE BEGIN
     status = 1
   ENDELSE
-  uname_list = ['reduce_step1_remove_selection_button',$
-    'reduce_step1_display_y_vs_tof_button',$
-    'reduce_step1_display_y_vs_x_button']
+  uname_list = ['reduce_step1_remove_selection_button']
+  IF ((*global).instrument EQ 'REF_M' ) THEN BEGIN
+    uname_list = [uname_list, 'reduce_step1_sangle_button']
+  ENDIF
+  
+  ;'reduce_step1_display_y_vs_tof_button',$
+  ;reduce_step1_display_y_vs_x_button']
   activate_widget_list, Event, uname_list, status
   
 END
@@ -370,7 +374,7 @@ END
 PRO create_output_i_vs_q_gui, Event, status
   title_status = 0^FIX(status)
   putTextFieldValue, Event, 'i_vs_q_output_base_title', $
-  'List of I vs Q or TOF files'
+    'List of I vs Q or TOF files'
   MapBase, Event, 'i_vs_q_output_base', status
-  ;MapBase, Event, 'i_vs_q_output_hidden_title_base', title_status
+;MapBase, Event, 'i_vs_q_output_hidden_title_base', title_status
 END
