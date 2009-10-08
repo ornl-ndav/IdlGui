@@ -493,9 +493,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ENDIF
   
   display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
-  
-  
-  
+  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
   
   ;=============================================================================
   ;=============================================================================
