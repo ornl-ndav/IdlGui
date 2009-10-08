@@ -73,7 +73,7 @@ PRO  preview_ascii_file, Event ;_eventcb
 END
 
 ;-----------------------------------------------------------------------------
-PRO  reduce_tab_event, Event
+PRO reduce_tab_event, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -82,29 +82,60 @@ PRO  reduce_tab_event, Event
   PrevTabSelect = (*global).PrevReduceTabSelect
   
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
-    CASE (currTabSelect) OF
-      0: BEGIN
-        display_reduce_step1_buttons, EVENT=EVENT,$
-          ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-          global
-      END
-      1: BEGIN
-        base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
-        IF (~base_mapped) THEN BEGIN
-          refresh_reduce_step2_big_table, Event
-          IF ((*global).instrument EQ 'REF_M') THEN BEGIN
-            refresh_reduce_step2_data_spin_state_table, Event
+  
+    IF ((*global).instrument EQ 'REF_L') THEN BEGIN ;REF_L ********************
+    
+      CASE (currTabSelect) OF
+        0: BEGIN
+          display_reduce_step1_buttons, EVENT=EVENT,$
+            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+            global
+        END
+        1: BEGIN
+          base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
+          IF (~base_mapped) THEN BEGIN
+            refresh_reduce_step2_big_table, Event
+            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+              refresh_reduce_step2_data_spin_state_table, Event
+            ENDIF
+            refresh_roi_file_name, Event
           ENDIF
-          refresh_roi_file_name, Event
-        ENDIF
-      END
-      2: BEGIN ;step3: recapitulation tab
-        ;checking_spin_state, Event, working_spin_state = 'Off_Off' ;REMOVE_ME
-        refresh_reduce_step3_table, Event
-      ;reduce_step3_plot_jobs, Event ;REMOVE_ME
-      END
-      ELSE:
-    ENDCASE
+        END
+        2: BEGIN ;step3: recapitulation tab
+          refresh_reduce_step3_table, Event
+        ;reduce_step3_plot_jobs, Event ;REMOVE_ME
+        END
+        ELSE:
+      ENDCASE
+      
+    ENDIF ELSE BEGIN ; REF_M **************************************************
+    
+      CASE (currTabSelect) OF
+        0: BEGIN ;DATA
+          display_reduce_step1_buttons, EVENT=EVENT,$
+            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+            global
+        END
+        1: ;SANGLE
+        2: BEGIN ;Normalization
+          base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
+          IF (~base_mapped) THEN BEGIN
+            refresh_reduce_step2_big_table, Event
+            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+              refresh_reduce_step2_data_spin_state_table, Event
+            ENDIF
+            refresh_roi_file_name, Event
+          ENDIF
+        END
+        3: BEGIN ;step3: recapitulation tab
+          refresh_reduce_step3_table, Event
+        ;reduce_step3_plot_jobs, Event ;REMOVE_ME
+        END
+        ELSE:
+      ENDCASE
+      
+    ENDELSE
+    
     (*global).PrevReduceTabSelect = CurrTabSelect
   ENDIF
   
@@ -156,27 +187,58 @@ PRO tab_event, Event
   IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
     
+      ;*************************************************************************
       0: BEGIN ;step1 (reduction)
+      
         reduce_tab_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab')
         CurrReduceTabSelect = WIDGET_INFO(reduce_tab_id,/TAB_CURRENT)
-        CASE (CurrReduceTabSelect) OF
-          0: BEGIN
-            display_reduce_step1_buttons, EVENT=EVENT,$
-              ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-              global
-          END
-          1: BEGIN
-            step2_tab_id = WIDGET_INFO(Event.top,$
-              FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
-            Step2CurrTabSelect = WIDGET_INFO(step2_tab_id,/TAB_CURRENT)
-            check_status_of_reduce_step2_data_spin_state_hidden_base, $
-              Event, $
-              tab=(Step2CurrTabSelect+1)
-          END
-          2:
-          ELSE:
-        ENDCASE
-      END
+        
+        IF ((*global).instrument EQ 'REF_L') THEN BEGIN ;REF_L
+          CASE (CurrReduceTabSelect) OF
+            0: BEGIN
+              display_reduce_step1_buttons, EVENT=EVENT,$
+                ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+                global
+            END
+            1: BEGIN
+          base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
+          IF (~base_mapped) THEN BEGIN
+            refresh_reduce_step2_big_table, Event
+            IF ((*global).instrument EQ 'REF_M') THEN BEGIN
+              refresh_reduce_step2_data_spin_state_table, Event
+            ENDIF
+            refresh_roi_file_name, Event
+          ENDIF
+;              step2_tab_id = WIDGET_INFO(Event.top,$
+;                FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+;              Step2CurrTabSelect = WIDGET_INFO(step2_tab_id,/TAB_CURRENT)
+;              check_status_of_reduce_step2_data_spin_state_hidden_base, $
+;                Event, $
+;                tab=(Step2CurrTabSelect+1)
+            END
+            ELSE:
+          ENDCASE
+        ENDIF ELSE BEGIN ;REF_M
+          CASE (CurrReduceTabSelect) OF
+            0: BEGIN
+              display_reduce_step1_buttons, EVENT=EVENT,$
+                ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+                global
+            END
+            2: BEGIN
+              step2_tab_id = WIDGET_INFO(Event.top,$
+                FIND_BY_UNAME='reduce_step2_data_spin_state_tab_uname')
+              Step2CurrTabSelect = WIDGET_INFO(step2_tab_id,/TAB_CURRENT)
+              check_status_of_reduce_step2_data_spin_state_hidden_base, $
+                Event, $
+                tab=(Step2CurrTabSelect+1)
+            END
+            ELSE:
+          ENDCASE
+          
+        ENDELSE
+        
+      END ;end of step1 *******************************************************
       
       1: BEGIN ;load
         IF((*global).something_to_plot) THEN BEGIN
@@ -209,11 +271,11 @@ PRO tab_event, Event
             refresh_step4_step1_plot, Event ;_scaling
             checkScalingGui, Event ;_gui
           ENDIF ELSE BEGIN    ;scaling_step2
-                (*global).PrevScalingTabSelect = -1 ;this force a refresh
-                scaling_tab_event, Event
-            ;display_step4_step2_step2_selection, $
-            ;  Event         ;scaling_step2_step1
-            ;plotLambdaSelected, Event ;scaling_step2_step2
+            (*global).PrevScalingTabSelect = -1 ;this force a refresh
+            scaling_tab_event, Event
+          ;display_step4_step2_step2_selection, $
+          ;  Event         ;scaling_step2_step1
+          ;plotLambdaSelected, Event ;scaling_step2_step2
           ENDELSE
         ENDIF
       END
