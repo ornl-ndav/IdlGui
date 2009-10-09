@@ -202,6 +202,17 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 100,$
     UNAME = 'reduce_sangle_base_dangle_value')
     
+  rowbb = WIDGET_BASE(row2col1,$
+    /ROW)
+  label = WIDGET_LABEL(rowbb,$
+    /ALIGN_LEFT, $
+    VALUE = '       Dangle0 (radians): ')
+  value = WIDGET_LABEL(rowbb,$
+    VALUE = 'N/A',$
+    /ALIGN_LEFT, $
+    SCR_XSIZE = 100,$
+    UNAME = 'reduce_sangle_base_dangle0_value')
+
   rowc = WIDGET_BASE(row2col1,$
     /ROW)
   label = WIDGET_LABEL(rowc,$

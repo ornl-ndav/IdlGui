@@ -69,6 +69,25 @@ FUNCTION get_dangle, fileID
   ENDELSE
 END
 
+;-------------------------------------------------------------------------------
+FUNCTION get_dangle0, fileID
+  dangle_value_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/'
+  dangle_units_path = '/entry-Off_Off/instrument/bank1/DANGLE0/readback/units/'
+  error_value = 0
+  CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['','']
+  ENDIF ELSE BEGIN
+    pathID = h5d_open(fileID, dangle_value_path)
+    dangle = h5d_read(pathID)
+    unitID = h5a_open_name(pathID,'units')
+    units  = h5a_read(unitID)
+    h5d_close, pathID
+    RETURN, [STRCOMPRESS(dangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+  ENDELSE
+END
+
 ;------------------------------------------------------------------------------
 FUNCTION get_dirpix, fileID
   dirpix_path = '/entry-Off_Off/instrument/bank1/DIRPIX/readback/'
@@ -104,7 +123,6 @@ FUNCTION get_sample_det_distance, fileID
   ENDELSE
 END
 
-
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLgetMetadata_REF_M::getSangle
   angle_units = get_sangle(self.fileID)
@@ -119,6 +137,17 @@ END
 
 FUNCTION IDLgetMetadata_REF_M::getDangle
   angle_units = get_dangle(self.fileID)
+  units = angle_units[1]
+  IF (units EQ '') THEN RETURN, ''
+  angle = FLOAT(angle_units[0])
+  IF (units EQ 'degree') THEN BEGIN
+    angle = convert_to_rad(angle)
+  ENDIF
+  RETURN, angle
+END
+
+FUNCTION IDLgetMetadata_REF_M::getDangle0
+  angle_units = get_dangle0(self.fileID)
   units = angle_units[1]
   IF (units EQ '') THEN RETURN, ''
   angle = FLOAT(angle_units[0])
