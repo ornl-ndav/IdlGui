@@ -33,61 +33,73 @@
 ;==============================================================================
 
 FUNCTION isWithStep4_step2_step2_error_bars, Event
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
-                 'step4_step2_step2_with_error_bars_cw_bgroup')
-WIDGET_CONTROL, id, GET_VALUE=index
-RETURN, 0^index
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME= $
+    'step4_step2_step2_with_error_bars_cw_bgroup')
+  WIDGET_CONTROL, id, GET_VALUE=index
+  RETURN, 0^index
 END
 
 ;------------------------------------------------------------------------------
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn_23s
 PRO fit_data, Event, flt0, flt1, flt2, a, b
-;retrieve global structure
-WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
-; Compute the second degree polynomial fit to the data:
-;check if we want with error bars or not
-IF (isWithStep4_step2_step2_error_bars(Event)) THEN BEGIN
+  ;retrieve global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ; Compute the second degree polynomial fit to the data:
+  ;check if we want with error bars or not
+  IF (isWithStep4_step2_step2_error_bars(Event)) THEN BEGIN
     cooef = POLY_FIT(flt0, $
-                     flt1, $
-                     1, $
-                     MEASURE_ERRORS = flt2, $
-                     /DOUBLE,$
-                     STATUS         = status,$
-                     SIGMA          = sigma) ;standard error
-ENDIF ELSE BEGIN
+      flt1, $
+      1, $
+      MEASURE_ERRORS = flt2, $
+      /DOUBLE,$
+      STATUS         = status,$
+      SIGMA          = sigma) ;standard error
+  ENDIF ELSE BEGIN
     cooef = POLY_FIT(flt0, $
-                     flt1, $
-                     1, $
-                     STATUS         = status,$
-                     /DOUBLE,$
-                     SIGMA          = sigma) ;standard error
-ENDELSE
-
-a = cooef[0]
-b = cooef[1]
-
+      flt1, $
+      1, $
+      STATUS         = status,$
+      /DOUBLE,$
+      SIGMA          = sigma) ;standard error
+  ENDELSE
+  
+  a = cooef[0]
+  b = cooef[1]
+  
 END
 
 ;------------------------------------------------------------------------------
 
 FUNCTION convert_from_lambda_to_Q, axis_before
-axis_after = (4. * !PI)/axis_before
-RETURN, axis_after
+  axis_after = (4. * !PI)/axis_before
+  RETURN, axis_after
 END
 
 ;------------------------------------------------------------------------------
 ;This function converts the input angle into deg
 FUNCTION convert_to_deg, f_angle_rad
-f_angle_deg_local = (180. * f_angle_rad) / !PI
-RETURN, f_angle_deg_local
+  f_angle_deg_local = (180. * f_angle_rad) / !PI
+  RETURN, f_angle_deg_local
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION convert_to_rad, f_angle_deg
-f_angle_rad_local = (!PI * f_angle_deg) / 180.
-RETURN, f_angle_rad_local
+  f_angle_rad_local = (!PI * f_angle_deg) / 180.
+  RETURN, f_angle_rad_local
+END
+
+;------------------------------------------------------------------------------
+FUNCTION convert_to_metre, distance, units
+  units = STRLOWCASE(units)
+  CASE (units) OF
+    'millimetre': coeff = 0.001
+    'decimetre': coeff = 0.01
+    'centimetre': coeff = 0.1
+    ELSE: coeff = 1
+  ENDCASE
+  RETURN, (FLOAT(distance) * coeff)
 END
 
 

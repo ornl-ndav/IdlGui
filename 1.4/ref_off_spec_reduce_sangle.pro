@@ -32,6 +32,52 @@
 ;
 ;==============================================================================
 
+FUNCTION getSangleRowSelected, Event
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_sangle_tab_table_uname')
+  selection = WIDGET_INFO(id, /TABLE_SELECT)
+  RETURN, selection[1]
+END
+
+;------------------------------------------------------------------------------
+PRO select_sangle_first_run_number_by_default, Event
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_sangle_tab_table_uname')
+  WIDGET_CONTROL, id, SET_TABLE_SELECT=[0,0,1,1]
+END
+
+;------------------------------------------------------------------------------
+PRO display_metatada_of_sangle_selected_row, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  reduce_run_sangle_table = (*(*global).reduce_run_sangle_table)
+  reduce_tab1_table = (*(*global).reduce_tab1_table)
+  
+  ;get sangle row selected
+  row_selected = getSangleRowSelected(Event)
+  
+  ;retrieve full nexus name of run selected
+  full_nexus_file_name = reduce_tab1_table[1,row_selected]
+  putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
+    full_nexus_file_name
+    
+  iNexus = OBJ_NEW('IDLgetMetadata_REF_M', full_nexus_file_name)
+  dangle = STRCOMPRESS(iNexus->getDangle(),/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle
+  sangle = STRCOMPRESS(iNexus->getSangle(),/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle
+  dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
+  SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
+    SampleDetDistance
+    
+  OBJ_DESTROY, iNexus
+  
+  
+END
+
+;------------------------------------------------------------------------------
 ;This procedures checks the working polarization states defined in the reduce
 ;tab1 and make the corresponding spin states in the sangle base enabled
 PRO check_sangle_spin_state_buttons, Event
@@ -49,15 +95,14 @@ PRO check_sangle_spin_state_buttons, Event
   nbr_spin_states = N_ELEMENTS(spin_state_to_check)
   
   ;will be 1 as soon as a sangle spin state has been selected
-  sangle_spin_state_selected = 0 
+  sangle_spin_state_selected = 0
   FOR i=0,(nbr_spin_states-1) DO BEGIN
     IF (isButtonSelected(Event,spin_state_to_check[i])) THEN BEGIN
-    print, 'here'
       enabled_status = 1
       IF (sangle_spin_state_selected EQ 0) THEN BEGIN
-      id = WIDGET_INFO(Event.top, FIND_BY_UNAME=spin_state_to_change[i])
-      WIDGET_CONTROL, id, /SET_BUTTON
-      sangle_spin_state_selected = 1
+        id = WIDGET_INFO(Event.top, FIND_BY_UNAME=spin_state_to_change[i])
+        WIDGET_CONTROL, id, /SET_BUTTON
+        sangle_spin_state_selected = 1
       ENDIF
     ENDIF ELSE BEGIN
       enabled_status = 0
