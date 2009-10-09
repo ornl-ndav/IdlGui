@@ -492,8 +492,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
       ACTIVATE=(*global).reduce_step1_spin_state_mode, global
   ENDIF
   
-  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
-  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
+;  display_reduce_step1_sangle_buttons, MAIN_BASE=main_base, global
+;  display_reduce_step1_sangle_scale, MAIN_BASE=main_base, global
   
   ;=============================================================================
   ;=============================================================================

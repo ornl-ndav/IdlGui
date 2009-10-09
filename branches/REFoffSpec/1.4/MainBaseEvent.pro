@@ -103,6 +103,14 @@ PRO MAIN_BASE_event, Event
     remove_selected_run, Event
   END
   
+  ;Map Sangle base
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_sangle_button'): BEGIN
+    MapBase, Event, 'reduce_step1_sangle_base', 1
+    MapBase, Event, 'reduce_step1_sangle_base_label', 1
+    MapBase, Event, 'reduce_step1_sangle_base_equation', 1
+    display_reduce_step1_sangle_buttons, Event=event, global
+  END
+  
   ;spin states mode selection buttons
   ;spin states match
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_spin_match'): BEGIN
