@@ -121,6 +121,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_input_table_nbr_column: 2,$
     reduce_step1_spin_state_mode: 2,$
     
+    ;SANGLE BASE
+    reduce_run_sangle_table: PTR_NEW(0L), $
+    
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$
     reduce_step1_spin_match_enable: $
@@ -373,6 +376,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;initialize variables
   (*(*global).list_OF_ascii_files) = STRARR(1)
   (*(*global).reduce_tab1_table) = STRARR(2,1)
+  (*(*global).reduce_run_sangle_table) = STRARR(2,1)
   
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'Reflectometer Off Specular Application'

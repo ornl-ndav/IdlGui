@@ -34,54 +34,86 @@
 
 ;This class method returns the Run Number of the given nexus
 FUNCTION get_RunNumber, fileID, pola_state_name
-IF (N_ELEMENTS(POLA_STATE_NAME) EQ 0) THEN BEGIN
+  IF (N_ELEMENTS(POLA_STATE_NAME) EQ 0) THEN BEGIN
     run_number_path = '/entry/run_number/'
-ENDIF ELSE BEGIN
-   run_number_path = '/' + pola_state_name + '/run_number/'
-ENDELSE
-error_value = 0
-CATCH, error_value
-IF (error_value NE 0) THEN BEGIN
+  ENDIF ELSE BEGIN
+    run_number_path = '/' + pola_state_name + '/run_number/'
+  ENDELSE
+  error_value = 0
+  CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN, ''
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     pathID     = h5d_open(fileID, run_number_path)
     run_number = h5d_read(pathID)
     h5d_close, pathID
     RETURN, run_number
-ENDELSE
+  ENDELSE
+END
+
+;------------------------------------------------------------------------------
+FUNCTION get_sangle, fileID
+  sangle_value_path = '/entry-Off_Off/sample/SANGLE/readback/'
+  sangle_units_path = '/entry-Off_Off/sample/SANGLE/readback/units/'
+  error_value = 0
+  ;CATCH, error_value
+  IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ['','']
+  ENDIF ELSE BEGIN
+    pathID = h5d_open(fileID, sangle_value_path)
+    sangle = h5d_read(pathID)
+    unitID = h5a_open_name(pathID,'units')
+    units  = h5a_read(unitID)
+    h5d_close, pathID
+    RETURN, [STRCOMPRESS(sangle,/REMOVE_ALL), STRCOMPRESS(units,/REMOVE_ALL)]
+  ENDELSE
 END
 
 ;*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 FUNCTION IDLgetMetadata::getRunNumber
-RETURN, self.RunNumber
+  RETURN, self.RunNumber
+END
+
+FUNCTION IDLgetMetadata::getSangle
+  angle_units = get_sangle(self.fileID)
+  units = angle_units[1]
+  IF (units EQ '') THEN RETURN, ''
+  angle = FLOAT(angle_units[0])
+  IF (units EQ 'degree') THEN BEGIN
+    angle = convert_to_rad(angle)
+  ENDIF
+  RETURN, angle
 END
 
 ;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION IDLgetMetadata::init, nexus_full_path, pola_state_path
 
-;open hdf5 nexus file
-error_file = 0
-CATCH, error_file
-IF (error_file NE 0) THEN BEGIN
+  ;open hdf5 nexus file
+  error_file = 0
+  CATCH, error_file
+  IF (error_file NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN,0
-ENDIF ELSE BEGIN
+  ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
-ENDELSE
-
-self.RunNumber = get_RunNumber(fileID, pola_state_path)
-
-RETURN, 1
+    self.fileID = fileID
+  ENDELSE
+  
+  self.RunNumber = get_RunNumber(fileID, pola_state_path)
+  
+  RETURN, 1
 END
 
 ;******************************************************************************
 ;******  Class Define ****;****************************************************
 PRO IDLgetMetadata__define
-struct = {IDLgetMetadata,$
-          RunNumber       : '',$
-          nexus_full_path : ''}
+  struct = {IDLgetMetadata,$
+    RunNumber       : '',$
+    fileID: 0L, $
+    nexus_full_path : ''}
 END
 ;******************************************************************************
 ;******************************************************************************

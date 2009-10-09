@@ -4,6 +4,7 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run array.pro
+.run math_utilities.pro
 .run system_utilities.pro
 .run time.pro
 .run IDLsendLogBook__define.pro
@@ -11,7 +12,6 @@ cd, IdlUtilitiesPath
 .run IDL3columnsASCIIparser__define.pro
 .run IDLgetMetadata__define.pro
 .run xdisplayfile.pro
-.run math_utilities.pro
 .run findnexus.pro
 .run uniq_element_table.pro
 .run logger.pro
