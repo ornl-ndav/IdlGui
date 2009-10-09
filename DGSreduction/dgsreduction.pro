@@ -375,6 +375,8 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
   adminTabBase = WIDGET_BASE(tabID, TITLE='Administrator', /COLUMN)
   make_administrator_tab, adminTabBase, DGSR_cmd
   
+  WIDGET_CONTROL, adminTabBase, SENSITIVE=0
+  
   ; Remove the LOG Tab (for the moment) as we are not using it!
   ;  logTab = WIDGET_BASE(tabID, Title='Log')
   ;  label = WIDGET_LABEL(logTab, VALUE="Nothing to see here!")

@@ -62,12 +62,12 @@ PRO DGSreduction_UpdateGUI, widgetBase
   dgsr_cmd->GetProperty, Jobs=myValue
   WIDGET_CONTROL, widget_ID, SET_VALUE=myValue
  
-  IF (myValue GT 1) THEN BEGIN
-    dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-    WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
-    dgsn_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
-    WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=1
-  ENDIF
+;  IF (myValue GT 1) THEN BEGIN
+;    dgsr_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+;    WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
+;    dgsn_collector_button = WIDGET_INFO(widgetBase,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+;    WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=1
+;  ENDIF
  
   ; === Update the Reduction Tab ===
   DGSR_UpdateGUI, widgetBase, dgsr_cmd

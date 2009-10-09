@@ -367,10 +367,10 @@ PRO make_VanMask_Tab, baseWidget, dgsn_cmd
 
   ButtonRow = WIDGET_BASE(baseWidget, /ROW, /ALIGN_RIGHT)
   
-  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
-    EVENT_PRO='DGSnorm_LaunchCollector', UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
-  ; As by default we have 1 job - we should disable the collector button
-  WIDGET_CONTROL, GatherButton, SENSITIVE=0 
+;  GatherButton = WIDGET_BUTTON(ButtonRow, VALUE='GATHER (Only Run when SLURM Jobs Completed)', $
+;    EVENT_PRO='DGSnorm_LaunchCollector', UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+;  ; As by default we have 1 job - we should disable the collector button
+;  WIDGET_CONTROL, GatherButton, SENSITIVE=0 
   
   ; Define a Run button
   executeID = WIDGET_BUTTON(ButtonRow, Value=' EXECUTE >>> ', $

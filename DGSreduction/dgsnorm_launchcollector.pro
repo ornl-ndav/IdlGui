@@ -88,7 +88,7 @@ PRO DGSnorm_LaunchCollector, event, WaitForJobs=waitforjobs
     ENDFOR
   ENDIF
   
-  agg_cmd += "agg_files " + instrument + " " + runnumber + " " + outdir
+  agg_cmd += " agg_files " + instrument + " " + runnumber + " " + outdir
   
   spawn, agg_cmd
   spawn, "echo " + agg_cmd + " > /tmp/" + info.username + "_agg_commands"
