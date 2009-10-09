@@ -153,20 +153,20 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   button1 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_Off',$
-    UNAME = 'reduce_sangle_off_off',$
+    UNAME = 'reduce_sangle_1',$
     SENSITIVE = 1)
   button2 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_On',$
-    UNAME = 'reduce_sangle_off_on', $
-    SENSITIVE = 1)
+    UNAME = 'reduce_sangle_2', $
+    SENSITIVE = 0)
   button3 = WIDGET_BUTTON(row1col3,$
     VALUE = 'On_Off',$
-    UNAME = 'reduce_sangle_on_off', $
+    UNAME = 'reduce_sangle_3', $
     SENSITIVE = 1)
   button4 = WIDGET_BUTTON(row1col3,$
     VALUE = 'On_On',$
-    UNAME = 'reduce_sangle_on_on', $
-    SENSITIVE = 1)
+    UNAME = 'reduce_sangle_4', $
+    SENSITIVE = 0)
     
   WIDGET_CONTROL, button1, /SET_BUTTON
   
@@ -504,7 +504,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /NO_RELEASE,$
     SENSITIVE = 1)
     
-  WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
+  ;WIDGET_CONTROL, Row4Base, SET_BUTTON=1 ;all spin states are selected by default
+  WIDGET_CONTROL, button1, /SET_BUTTON
+  WIDGET_CONTROL, button3, /SET_BUTTON
   
   ;space base
   space = WIDGET_BASE(Base,$

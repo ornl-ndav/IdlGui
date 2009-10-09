@@ -32,13 +32,49 @@
 ;
 ;==============================================================================
 
+;This procedures checks the working polarization states defined in the reduce
+;tab1 and make the corresponding spin states in the sangle base enabled
+PRO check_sangle_spin_state_buttons, Event
+
+  spin_state_to_check = ['reduce_tab1_pola_1', $
+    'reduce_tab1_pola_2',$
+    'reduce_tab1_pola_3',$
+    'reduce_tab1_pola_4']
+    
+  spin_state_to_change = ['reduce_sangle_1',$
+    'reduce_sangle_2',$
+    'reduce_sangle_3',$
+    'reduce_sangle_4']
+    
+  nbr_spin_states = N_ELEMENTS(spin_state_to_check)
+  
+  ;will be 1 as soon as a sangle spin state has been selected
+  sangle_spin_state_selected = 0 
+  FOR i=0,(nbr_spin_states-1) DO BEGIN
+    IF (isButtonSelected(Event,spin_state_to_check[i])) THEN BEGIN
+    print, 'here'
+      enabled_status = 1
+      IF (sangle_spin_state_selected EQ 0) THEN BEGIN
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME=spin_state_to_change[i])
+      WIDGET_CONTROL, id, /SET_BUTTON
+      sangle_spin_state_selected = 1
+      ENDIF
+    ENDIF ELSE BEGIN
+      enabled_status = 0
+    ENDELSE
+    activate_widget, Event, spin_state_to_change[i], enabled_status
+  ENDFOR
+  
+END
+
+;------------------------------------------------------------------------------
 PRO   display_reduce_step1_sangle_scale, $
     MAIN_BASE=main_base, $
     EVENT=event, $
     global
     
   uname = 'reduce_sangle_y_scale'
-    IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
+  IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
     id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
   ENDIF ELSE BEGIN
@@ -50,34 +86,34 @@ PRO   display_reduce_step1_sangle_scale, $
   
   LOADCT, 0,/SILENT
   
-;  IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
-;  IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
-;  IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
-;    sDraw = WIDGET_INFO(id,/GEOMETRY)
-    position = [42,40,0,0]
-;  ENDIF
+  ;  IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
+  ;  IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
+  ;  IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
+  ;    sDraw = WIDGET_INFO(id,/GEOMETRY)
+  position = [42,40,0,0]
+  ;  ENDIF
   
   PLOT, RANDOMN(s,303L), $
-;    XRANGE        = xscale,$
+    ;    XRANGE        = xscale,$
     YRANGE        = [0L,303L],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $
     TICKLEN       = -0.015, $
-;    XTICKLAYOUT   = 0,$
+    ;    XTICKLAYOUT   = 0,$
     YTICKLAYOUT   = 0,$
-;    XTICKS        = xticks,$
+    ;    XTICKS        = xticks,$
     YTICKS        = 25,$
     YSTYLE        = 1,$
-;    XSTYLE        = 1,$
+    ;    XSTYLE        = 1,$
     YTICKINTERVAL = 10,$
     POSITION      = position,$
     NOCLIP        = 0,$
     /NODATA,$
-     /DEVICE
-  
-  
-  
-  
-  
+    /DEVICE
+    
+    
+    
+    
+    
 END
