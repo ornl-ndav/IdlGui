@@ -265,7 +265,8 @@ END
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------
-;This function populates the big table
+;This function populates the big table and also retrieves the sangle value
+;for the REF_M instrument
 PRO AddNexusToReduceTab1Table, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
@@ -335,7 +336,7 @@ PRO AddNexusToReduceTab1Table, Event
     y = N_ELEMENTS(run_sangle_table)/2
     run_sangle_table = REFORM(run_sangle_table,x,y,/OVERWRITE)
   ENDIF
-
+  
   sz = (SIZE(reduce_tab1_table))(2)
   IF (sz GT 1) THEN BEGIN
   
@@ -354,8 +355,23 @@ PRO AddNexusToReduceTab1Table, Event
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_tab1_table_uname')
   WIDGET_CONTROL, id, SET_VALUE = new_table
   
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    ;check that there is no duplicates of the sangle table as well
+    sz = (SIZE(run_sangle_table))(2)
+    IF (sz GT 1) THEN BEGIN
+      new_run_sangle_table = $
+        uniq_element_table(INPUT_TABLE = run_sangle_table,$
+        COL = 0)
+      run_sangle_table = new_run_sangle_table
+    ENDIF
+  ENDIF
+  
   (*(*global).reduce_tab1_table) = new_table
   (*(*global).reduce_run_sangle_table) = run_sangle_table
+  
+  id = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_tab_table_uname')
+  WIDGET_CONTROL, id, SET_VALUE = run_sangle_table
+  
 END
 
 ;------------------------------------------------------------------------------
