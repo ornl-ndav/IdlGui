@@ -147,6 +147,31 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YSIZE = 2*304+20,$
     YOFFSET = 0)
     
+  row1col3 = WIDGET_BASE(row1,$ ;..................................
+  /COLUMN, $
+  /EXCLUSIVE)
+  
+  button1 = WIDGET_BUTTON(row1col3,$
+  VALUE = 'Off_Off',$
+  UNAME = 'reduce_sangle_off_off')
+  button2 = WIDGET_BUTTON(row1col3,$
+  VALUE = 'Off_On',$
+  UNAME = 'reduce_sangle_off_on')
+  button3 = WIDGET_BUTTON(row1col3,$
+  VALUE = 'On_Off',$
+  UNAME = 'reduce_sangle_on_off')
+  button4 = WIDGET_BUTTON(row1col3,$
+  VALUE = 'On_On',$
+  UNAME = 'reduce_sangle_on_on')
+  
+  WIDGET_CONTROL, button1, /SET_BUTTON
+  
+  
+  
+  
+  
+  
+  
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
     
