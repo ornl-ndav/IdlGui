@@ -59,22 +59,33 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   ;****************************************************************************
     
+  SangleBaseEquation = WIDGET_BASE(TabBase, $
+    UNAME = 'reduce_step1_sangle_base_equation', $
+    XOFFSET   = 530, $
+    YOFFSET   = 675, $
+    SCR_XSIZE = 300, $
+    SCR_YSIZE = 100, $
+    map = 0)
+    
+  ;equation
+  equation = WIDGET_DRAW(SangleBaseEquation,$
+    UNAME = 'reduce_step1_sangle_equation',$
+    XSIZE = 300,$
+    YSIZE = 100)
+    
+   SangleBaseLabel = WIDGET_BASE(TabBase, $
+   UNAME = 'reduce_step1_sangle_base_label', $
+   XOFFSET = 15, $
+   YOFFSET = 628, $
+   MAP = 0, $
+   /ROW)
+    
   ;Sangle info base title
-  title = WIDGET_LABEL(TabBase,$
+  title = WIDGET_LABEL(SangleBaseLabel,$
     VALUE = 'Run Number: N/A',$
     SCR_XSIZE = 150,$
-    UNAME = 'reduce_sangle_info_title_base',$
-    XOFFSET = 15,$
-    YOFFSET = 625)
+    UNAME = 'reduce_sangle_info_title_base')
     
-   ;equation
-   equation = WIDGET_DRAW(TabBase,$
-   UNAME = 'reduce_step1_sangle_equation',$
-   XSIZE = 300,$
-   YSIZE = 100,$
-   XOFFSET = 530,$
-   YOFFSET = 675) 
-
   ;SANGLE base
   SangleBase = WIDGET_BASE(TabBase,$
     UNAME     = 'reduce_step1_sangle_base',$
@@ -84,7 +95,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_YSIZE = sBase.size[3],$
     FRAME = 0,$
     /COLUMN, $
-    map = 1)
+    map = 0)
     
   row1 = WIDGET_BASE(SangleBase,$ ;.................................
     /ROW)
@@ -130,11 +141,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YSIZE = 304*2)
     
   ;scale
-  scale = WIDGET_DRAW(TabBase, $
-  UNAME = 'reduce_sangle_y_scale', $
-  XSIZE = 50,$
-  YSIZE = 2*304+20,$
-  YOFFSET = 0)
+  scale = WIDGET_DRAW(row1col2, $
+    UNAME = 'reduce_sangle_y_scale', $
+    XSIZE = 50,$
+    YSIZE = 2*304+20,$
+    YOFFSET = 0)
     
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
@@ -211,35 +222,35 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     VALUE = 'N/A',$
     SCR_XSIZE = 100,$
     UNAME = 'reduce_sangle_base_sampledetdis_value')
-
+    
   row2col2 = WIDGET_BASE(row2,$ ;.............................
     FRAME = 0)
     
-    base1 = WIDGET_BASE(row2col2,$
+  base1 = WIDGET_BASE(row2col2,$
     XOFFSET = 155,$
     YOFFSET = 40,$
     /ROW)
-    label = WIDGET_LABEL(base1,$
+  label = WIDGET_LABEL(base1,$
     /ALIGN_LEFT,$
     VALUE = 'RefPix: ')
-    value = WIDGET_TEXT(base1,$
+  value = WIDGET_TEXT(base1,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_refpix_user_value',$
     XSIZE = 10)
-
-   base2 = WIDGET_BASE(row2col2,$
-   XOFFSET = 155,$
-   YOFFSET = 110,$
-   /ROW)
-   label = WIDGET_LABEL(base2,$
-   /ALIGN_LEFT,$
-   VALUE = 'Sangle (radians): ')
-   value = WIDGET_LABEL(base2,$
-   VALUE = 'N/A',$
-   UNAME = 'reduce_sangle_base_sangle_user_value',$
-   SCR_XSIZE = 140,$
-   /ALIGN_LEFT)
-   
+    
+  base2 = WIDGET_BASE(row2col2,$
+    XOFFSET = 155,$
+    YOFFSET = 110,$
+    /ROW)
+  label = WIDGET_LABEL(base2,$
+    /ALIGN_LEFT,$
+    VALUE = 'Sangle (radians): ')
+  value = WIDGET_LABEL(base2,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_sangle_user_value',$
+    SCR_XSIZE = 140,$
+    /ALIGN_LEFT)
+    
   ;****************************************************************************
     
   TopBase = WIDGET_BASE(TabBase,$
