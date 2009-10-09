@@ -105,6 +105,7 @@ PRO MAIN_BASE_event, Event
   
   ;Map Sangle base ------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_sangle_button'): BEGIN
+    check_sangle_spin_state_buttons, Event
     MapBase, Event, 'reduce_step1_sangle_base', 1
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
     MapBase, Event, 'reduce_step1_sangle_base_equation', 1
@@ -119,6 +120,20 @@ PRO MAIN_BASE_event, Event
   END
   
   ;----------------------------------------------------------------------------
+  
+;  ;"work with the following Polarization states"
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_1'): BEGIN
+;  check_sangle_spin_state_buttons, Event
+;  END
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_2'): BEGIN
+;  check_sangle_spin_state_buttons, Event
+;  END
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_3'): BEGIN
+;  check_sangle_spin_state_buttons, Event
+;  END
+;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_4'): BEGIN
+;  check_sangle_spin_state_buttons, Event
+;  END
   
   ;spin states mode selection buttons
   ;spin states match
