@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 .run IDLsendToGeek__define.pro
 .run IDL3columnsASCIIparser__define.pro
 .run IDLgetMetadata__define.pro
+.run IDLgetMetadata_REF_M__define.pro
 .run xdisplayfile.pro
 .run findnexus.pro
 .run uniq_element_table.pro
