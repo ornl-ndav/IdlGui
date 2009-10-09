@@ -52,7 +52,7 @@ pro load_parameters, widgetBase, Filename=filename
   
   ; Set the mask to be always on.
   dgsr_cmd->SetProperty, Mask=1
-  
+
   info.dgsr_cmd = dgsr_cmd
   info.dgsn_cmd = dgsn_cmd
   
