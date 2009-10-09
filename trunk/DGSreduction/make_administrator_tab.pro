@@ -41,7 +41,7 @@
 ;-
 PRO make_administrator_tab, baseWidget, myCommandObj
 
-
+  ; === Super Secret Password ===
 
 
   ; === Custom execution queue name ===

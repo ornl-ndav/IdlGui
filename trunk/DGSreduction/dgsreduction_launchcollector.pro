@@ -64,17 +64,16 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   ;Construct the jobname
   jobname = instrument + "_" + runnumber + "_collector"
   
-  ; log Directory
-  logDir = '/SNS/users/' + info.username + '/results/' + $
-    instrument + '/' + runnumber + '/logs'
-  ;Make sure the that logfile directory exists.
-  spawn, 'mkdir -p ' + logDir
-  
   ; Output Directory
   outDir = "~/results/" + instrument + "/" + runnumber
   ; Make sure that the output directory exists
   spawn, 'mkdir -p ' + outDir
   
+    ; log Directory
+  logDir = '/SNS/users/' + info.username + '/results/' + $
+    instrument + '/' + runnumber + '/logs'
+  ;Make sure the that logfile directory exists.
+  spawn, 'mkdir -p ' + logDir
   
   ; launch agg_files
   agg_cmd = "sbatch -p " + queue + $
@@ -91,7 +90,7 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
   
   agg_cmd +=  " agg_files " + instrument + " " + runnumber + " " + outdir
   
-   
+  
   spawn, agg_cmd
   spawn, "echo " + agg_cmd + " > /tmp/" + info.username + "_agg_commands"
   
@@ -134,8 +133,17 @@ PRO DGSreduction_LaunchCollector, event, WaitForJobs=waitforjobs
     for index = 0L, npoints-1 do begin
       qvec_cmd = "sbatch -p " + queue + " --error=none --output=none " + $
         " --job-name=" + instrument + "_" + runnumber + "_m" + $
-        STRCOMPRESS(STRING(index+1), /REMOVE_ALL) + $
-        " merge_slices " + instrument + " " + runnumber + " " + STRING(index+1) + " " + $
+        STRCOMPRESS(STRING(index+1), /REMOVE_ALL)
+        
+      IF KEYWORD_SET(WAITFORJOBS) THEN BEGIN
+        qvec_cmd += " --dependency="
+        FOR N = 0L, jobs-1 DO BEGIN
+          IF N GT 0 THEN qvec_cmd += ","
+          qvec_cmd += "afterok:" + WAITFORJOBS[N]
+        ENDFOR
+      ENDIF
+      
+      qvec_cmd += " merge_slices " + instrument + " " + runnumber + " " + STRING(index+1) + " " + $
         outdir + "/" + runnumber + "-mesh"
         
         

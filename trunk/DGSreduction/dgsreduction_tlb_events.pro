@@ -128,13 +128,13 @@ PRO DGSreduction_TLB_Events, event
       endif
       
       ; Disable the "Launch Collector" button if there is only one job
-      dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-      
-      IF (myValue EQ 1) THEN BEGIN
-        WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=0
-      ENDIF ELSE BEGIN
-         WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
-      ENDELSE
+;      dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')      
+;      IF (myValue EQ 1) THEN BEGIN
+;        WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=0
+;      ENDIF ELSE BEGIN
+;         WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=1
+;      ENDELSE
+
     END
     'DGS_SLURM_QUEUE': BEGIN
       WIDGET_CONTROL, event.ID, GET_VALUE=myValue
@@ -195,11 +195,11 @@ PRO DGSreduction_TLB_Events, event
   dgsn_status = dgsn_cmd->check()
   
   ; Disable the "Launch Collector" button if we are not ok to run!
-  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
-  WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=status.ok
+;  dgsr_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSR_LAUNCH_COLLECTOR_BUTTON')
+;  WIDGET_CONTROL, dgsr_collector_button, SENSITIVE=status.ok
     ; Disable the "Launch Collector" button if we are not ok to run!
-  dgsn_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
-  WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=dgsn_status.ok
+;  dgsn_collector_button = WIDGET_INFO(event.top,FIND_BY_UNAME='DGSN_LAUNCH_COLLECTOR_BUTTON')
+;  WIDGET_CONTROL, dgsn_collector_button, SENSITIVE=dgsn_status.ok
   
   ; Find the Messages Window (DGSR)
   dgsr_info_outputID = WIDGET_INFO(event.top, FIND_BY_UNAME='DGSR_INFO_TEXT')
