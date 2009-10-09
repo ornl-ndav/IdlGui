@@ -73,12 +73,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 300,$
     YSIZE = 100)
     
-   SangleBaseLabel = WIDGET_BASE(TabBase, $
-   UNAME = 'reduce_step1_sangle_base_label', $
-   XOFFSET = 15, $
-   YOFFSET = 628, $
-   MAP = 0, $
-   /ROW)
+  SangleBaseLabel = WIDGET_BASE(TabBase, $
+    UNAME = 'reduce_step1_sangle_base_label', $
+    XOFFSET = 15, $
+    YOFFSET = 628, $
+    MAP = 0, $
+    /ROW)
     
   ;Sangle info base title
   title = WIDGET_LABEL(SangleBaseLabel,$
@@ -148,29 +148,27 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     YOFFSET = 0)
     
   row1col3 = WIDGET_BASE(row1,$ ;..................................
-  /COLUMN, $
-  /EXCLUSIVE)
-  
+    /COLUMN, $
+    /EXCLUSIVE)
+    
   button1 = WIDGET_BUTTON(row1col3,$
-  VALUE = 'Off_Off',$
-  UNAME = 'reduce_sangle_off_off')
+    VALUE = 'Off_Off',$
+    UNAME = 'reduce_sangle_off_off',$
+    SENSITIVE = 1)
   button2 = WIDGET_BUTTON(row1col3,$
-  VALUE = 'Off_On',$
-  UNAME = 'reduce_sangle_off_on')
+    VALUE = 'Off_On',$
+    UNAME = 'reduce_sangle_off_on', $
+    SENSITIVE = 1)
   button3 = WIDGET_BUTTON(row1col3,$
-  VALUE = 'On_Off',$
-  UNAME = 'reduce_sangle_on_off')
+    VALUE = 'On_Off',$
+    UNAME = 'reduce_sangle_on_off', $
+    SENSITIVE = 1)
   button4 = WIDGET_BUTTON(row1col3,$
-  VALUE = 'On_On',$
-  UNAME = 'reduce_sangle_on_on')
-  
+    VALUE = 'On_On',$
+    UNAME = 'reduce_sangle_on_on', $
+    SENSITIVE = 1)
+    
   WIDGET_CONTROL, button1, /SET_BUTTON
-  
-  
-  
-  
-  
-  
   
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
@@ -278,16 +276,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   row3 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
-
+    
   space = WIDGET_LABEL(row3,$
-  VALUE = '                                                           ' + $
-  '          ')
-
+    VALUE = '                                                           ' + $
+    '          ')
+    
   done = WIDGET_BUTTON(row3,$
-  VALUE = 'DONE WITH SANGLE CALCULATION',$
-  UNAME = 'reduce_sangle_done_button',$
-  SCR_XSIZE = 500)
-
+    VALUE = 'DONE WITH SANGLE CALCULATION',$
+    UNAME = 'reduce_sangle_done_button',$
+    SCR_XSIZE = 500)
+    
   ;****************************************************************************
     
   TopBase = WIDGET_BASE(TabBase,$
