@@ -77,4 +77,19 @@ axis_after = (4. * !PI)/axis_before
 RETURN, axis_after
 END
 
+;------------------------------------------------------------------------------
+;This function converts the input angle into deg
+FUNCTION convert_to_deg, f_angle_rad
+f_angle_deg_local = (180. * f_angle_rad) / !PI
+RETURN, f_angle_deg_local
+END
+
+;------------------------------------------------------------------------------
+FUNCTION convert_to_rad, f_angle_deg
+f_angle_rad_local = (!PI * f_angle_deg) / 180.
+RETURN, f_angle_rad_local
+END
+
+
+
 

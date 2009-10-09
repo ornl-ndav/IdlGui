@@ -277,7 +277,8 @@ PRO AddNexusToReduceTab1Table, Event
     reduce_tab1_working_pola_state = '/entry/'
   ENDELSE
   reduce_tab1_table = (*(*global).reduce_tab1_table)
-  nexus_file_list = (*(*global).reduce_tab1_nexus_file_list)
+  run_sangle_table  = (*(*global).reduce_run_sangle_table)
+  nexus_file_list   = (*(*global).reduce_tab1_nexus_file_list)
   
   sz = N_ELEMENTS(nexus_file_list)
   index = 0
@@ -292,31 +293,35 @@ PRO AddNexusToReduceTab1Table, Event
       CONTINUE
     ENDIF
     RunNumber = iNexus->getRunNumber()
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      sangle    = iNexus->getSangle()
+    ENDIF
     OBJ_DESTROY, iNexus
     
     ;check if it's the first time we add NeXus files (file name is empty)
     IF (reduce_tab1_table[1,0] EQ '') THEN BEGIN
       reduce_tab1_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
       reduce_tab1_table[1,0] = nexus_file_list[index]
-    ;      IF (stateFoundInThisNexus(nexus_file_list[index],$
-    ;        reduce_tab1_working_pola_state)) THEN BEGIN
-    ;          reduce_tab1_table[2,0] = 'Pola. State FOUND'
-    ;        ENDIF ELSE BEGIN
-    ;          reduce_tab1_table[2,0] = 'Pola. State MISSING!'
-    ;        ENDELSE
+      IF (instrument EQ 'REF_M') THEN BEGIN
+        run_sangle_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        run_sangle_table[1,0] = STRCOMPRESS(sangle,/REMOVE_ALL)
+      ENDIF
     ENDIF ELSE BEGIN
       sz1 = N_ELEMENTS(reduce_tab1_table)
       reduce_tab1_table = REFORM(reduce_tab1_table,sz1,/OVERWRITE)
       tmp_table = STRARR(2,1)
       tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
       tmp_table[1,0] = nexus_file_list[index]
-      ;        IF (stateFoundInThisNexus(nexus_file_list[index], $
-      ;          reduce_tab1_working_pola_state)) THEN BEGIN
-      ;          tmp_table[2,0] = 'Pola. State FOUND'
-      ;        ENDIF ELSE BEGIN
-      ;          tmp_table[2,0] = 'Pola. State MISSING!'
-      ;        ENDELSE
       reduce_tab1_table = [reduce_tab1_table,tmp_table]
+      IF (instrument EQ 'REF_M') THEN BEGIN
+        sz1 = N_ELEMENTS(run_sangle_table)
+        run_sangle_table = REFORM(run_sangle_table,sz1,/OVERWRITE)
+        tmp_table = STRARR(2,1)
+        tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        tmp_table[1,0] = STRCOMPRESS(sangle,/REMOVE_ALL)
+        run_sangle_table = [run_sangle_table,tmp_table]
+      ENDIF
+      
     ENDELSE
     
     index++
@@ -326,7 +331,11 @@ PRO AddNexusToReduceTab1Table, Event
   y = N_ELEMENTS(reduce_tab1_table)/2
   
   reduce_tab1_table = REFORM(reduce_tab1_table,x,y,/OVERWRITE)
-  
+  IF (instrument EQ 'REF_M') THEN BEGIN
+    y = N_ELEMENTS(run_sangle_table)/2
+    run_sangle_table = REFORM(run_sangle_table,x,y,/OVERWRITE)
+  ENDIF
+
   sz = (SIZE(reduce_tab1_table))(2)
   IF (sz GT 1) THEN BEGIN
   
@@ -346,7 +355,7 @@ PRO AddNexusToReduceTab1Table, Event
   WIDGET_CONTROL, id, SET_VALUE = new_table
   
   (*(*global).reduce_tab1_table) = new_table
-  
+  (*(*global).reduce_run_sangle_table) = run_sangle_table
 END
 
 ;------------------------------------------------------------------------------
