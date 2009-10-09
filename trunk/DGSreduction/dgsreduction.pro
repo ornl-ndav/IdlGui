@@ -48,8 +48,6 @@ PRO DGSreduction_Execute, event
   WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
   dgsr_cmd = info.dgsr_cmd
   
-  ; Do some sanity checking.
-  
   ; First lets check that an instrument has been selected!
   dgsr_cmd->GetProperty, Instrument=instrument
   IF (STRLEN(instrument) LT 2) THEN BEGIN
@@ -60,82 +58,116 @@ PRO DGSreduction_Execute, event
     return
   END
   
-  ; Generate the array of commands to run
-  commands = dgsr_cmd->generate()
+  dgsr_cmd->GetProperty, DataRun=DataRun
   
-  ; Get the queue name
-  dgsr_cmd->GetProperty, Queue=queue
-  ; Get the instrument name
-  dgsr_cmd->GetProperty, Instrument=instrument
-  ; Get the detector bank limits
-  dgsr_cmd->GetProperty, LowerBank=lowerbank
-  dgsr_cmd->GetProperty, UpperBank=upperbank
-  ; Get the Run Number (the first integer in the datarun)
-  runnumber = dgsr_cmd->GetRunNumber()
-  ; Number of Jobs
-  dgsr_cmd->GetProperty, Jobs=jobs
+  RunNumbers = ExpandRunNumbers(DataRun)
   
-  jobcmd = "sbatch -p " + queue + " "
-  
-  ; Log Directory
-  cd, CURRENT=thisDir
-  logDir = '/SNS/users/' + info.username + '/results/' + $
-    instrument + '/' + runnumber + '/logs'
-  ; Make the directory
-  spawn, 'mkdir -p ' + logDir
-  
-  ; Array for job numbers
-  ;jobIDs = STRARR(N_ELEMENTS(commands))
-  
-  ; Make sure that the output directory exists
-  outputDir = '~/results/' + instrument + '/' + runnumber
-  spawn, 'mkdir -p ' + outputDir
-  
-  
-  ;TODO Check for existance of SPE file and ask if the user wants to override it.
-  ; (only check if we are asking to produce an SPE file)
-  ;if (
-  
-  ; Create an array to hold the SLURM jobID numbers
-  jobID = STRARR(N_ELEMENTS(commands))
-  
-  ; Loop over the command array
-  for index = 0L, N_ELEMENTS(commands)-1 do begin
-  
-    jobname = instrument + "_" + runnumber + "_bank" + $
-      Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
-      
-    logfile = logDir + '/' + instrument + '_bank' + $
-      Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
-      '.log'
-      
-    cmd = jobcmd + " --output=" + logfile + $
-      " --job-name=" + jobname + $
-      " " + commands[index]
-      
-    if (index EQ 0) then begin
-      spawn, "echo " + cmd + " > /tmp/" + info.username + "_commands"
-    endif else begin
-      spawn, "echo " + cmd + " >> /tmp/" + info.username + "_commands"
-    endelse
-    
-    ; Actually Launch the jobs
-    spawn, cmd, dummy, job_string
-    
-    job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
-    jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
-    
-  endfor
-  
-  ; Put info back
+  ; Now put the info structure back for consistency
   WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
-  ; Launch the collectors - waiting for the reduction jobs to finish first
-  DGSreduction_LaunchCollector, event, WAITFORJOBS=jobID
+  ; Now let's check to see if everything returned ok from the run number parsing.
+  IF (RunNumbers[0] EQ "ERROR") THEN BEGIN
+    ; Then show an error message!
+    ok=ERROR_MESSAGE(RunNumbers[1], /INFORMATIONAL)
+    return
+  ENDIF
   
+  ; Loop over separate reduction jobs
+  FOR i = 0L, N_ELEMENTS(RunNumbers)-1 do begin
   
-; Start the sub window widget
-;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+    ; We now get the info structure out again - seems silly I know,
+    ; but we need to have it available to put back into the UVALUE
+    ; so we can pass it to the collector launcher for each separate
+    ; job.
+    WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+    dgsr_cmd = info.dgsr_cmd
+    
+    ; Set the run number in the object
+    dgsr_cmd->SetProperty, DataRun=RunNumbers[i]
+    
+    ; Generate the array of commands to run
+    commands = dgsr_cmd->generate()
+    
+    ; Get the queue name
+    dgsr_cmd->GetProperty, Queue=queue
+    ; Get the instrument name
+    dgsr_cmd->GetProperty, Instrument=instrument
+    ; Get the detector bank limits
+    dgsr_cmd->GetProperty, LowerBank=lowerbank
+    dgsr_cmd->GetProperty, UpperBank=upperbank
+    ; Get the Run Number (the first integer in the datarun)
+    runnumber = dgsr_cmd->GetRunNumber()
+    ; Number of Jobs
+    dgsr_cmd->GetProperty, Jobs=jobs
+    
+    jobcmd = "sbatch -p " + queue + " "
+    
+    ; Log Directory
+    cd, CURRENT=thisDir
+    logDir = '/SNS/users/' + info.username + '/results/' + $
+      instrument + '/' + runnumber + '/logs'
+    ; Make the directory
+    spawn, 'mkdir -p ' + logDir
+    
+    ; Array for job numbers
+    ;jobIDs = STRARR(N_ELEMENTS(commands))
+    
+    ; Make sure that the output directory exists
+    outputDir = '~/results/' + instrument + '/' + runnumber
+    spawn, 'mkdir -p ' + outputDir
+    
+    
+    ;TODO Check for existance of SPE file and ask if the user wants to override it.
+    ; (only check if we are asking to produce an SPE file)
+    ;if (
+    
+    ; Create an array to hold the SLURM jobID numbers
+    jobID = STRARR(N_ELEMENTS(commands))
+    
+    ; Loop over the command array
+    for index = 0L, N_ELEMENTS(commands)-1 do begin
+    
+      jobname = instrument + "_" + runnumber + "_bank" + $
+        Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD)
+        
+      logfile = logDir + '/' + instrument + '_bank' + $
+        Construct_DataPaths(lowerbank, upperbank, index+1, jobs, /PAD) + $
+        '.log'
+        
+      cmd = jobcmd + " --output=" + logfile + $
+        " --job-name=" + jobname + $
+        " " + commands[index]
+        
+      if (index EQ 0) then begin
+        spawn, "echo " + cmd + " > /tmp/" + info.username + "_commands"
+      endif else begin
+        spawn, "echo " + cmd + " >> /tmp/" + info.username + "_commands"
+      endelse
+      
+      ; Actually Launch the jobs
+      spawn, cmd, dummy, job_string
+      
+      job_string_array = STRSPLIT(job_string, ' ', /EXTRACT)
+      jobID[index] = job_string_array[N_ELEMENTS(job_string_array)-1]
+      
+    endfor
+    
+    ; Put info back
+    WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
+    
+    ; Launch the collectors - waiting for the reduction jobs to finish first
+    DGSreduction_LaunchCollector, event, WAITFORJOBS=jobID
+    
+  ENDFOR
+  ; Start the sub window widget
+  ;MonitorJob, Group_Leader=event.top, JobName="My first jobby"
+  
+  ; Now we need to reset the DataRun property in the dgsr_cmd object to be what is displayed on the GUI
+  WIDGET_CONTROL, event.top, GET_UVALUE=info, /NO_COPY
+  dgsr_cmd = info.dgsr_cmd
+  dgsr_cmd->SetProperty, DataRun=DataRun
+  ; Put info back
+  WIDGET_CONTROL, event.top, SET_UVALUE=info, /NO_COPY
   
 END
 
@@ -431,6 +463,7 @@ PRO DGSreduction, DGSR_cmd=dgsr_cmd, $
     max_jobs:1000, $  ; Max No. of jobs (to stop a large -ve Integer becoming a valid number in the input box!)
     username:username, $
     title:title, $
+    ;    runs:runs, $ ; the list of run numbers to use for reduction (this will largely be the same as that in the dgsr_cmd object - except for the case of separate jobs ":")
     adminMode:0L, $ ; Flag to toggle Superuser mode.
     queue:"", $ ; Place holder for a custom queue name
     workingDir:"~", $ ; The current working directory
