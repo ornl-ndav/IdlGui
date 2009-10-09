@@ -212,7 +212,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT, $
     SCR_XSIZE = 100,$
     UNAME = 'reduce_sangle_base_dangle0_value')
-
+    
   rowc = WIDGET_BASE(row2col1,$
     /ROW)
   label = WIDGET_LABEL(rowc,$
@@ -285,17 +285,12 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     SCR_XSIZE = 140,$
     /ALIGN_LEFT)
     
-  row3 = WIDGET_BASE(SangleBase, $ ;...........................
-    /ROW)
-    
-  space = WIDGET_LABEL(row3,$
-    VALUE = '                                                           ' + $
-    '          ')
-    
-  done = WIDGET_BUTTON(row3,$
+  done = WIDGET_BUTTON(row2col2,$
     VALUE = 'DONE WITH SANGLE CALCULATION',$
     UNAME = 'reduce_sangle_done_button',$
-    SCR_XSIZE = 500)
+    YOFFSET = 165, $
+    XOFFSET = 20, $
+    SCR_XSIZE = 450)
     
   ;****************************************************************************
     

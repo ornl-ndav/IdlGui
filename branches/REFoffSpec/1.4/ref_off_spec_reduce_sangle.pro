@@ -85,7 +85,9 @@ PRO display_metatada_of_sangle_selected_row, Event
   SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
   putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
     SampleDetDistance
-    
+  refpix = '200'
+  putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
+
   OBJ_DESTROY, iNexus
   
   
