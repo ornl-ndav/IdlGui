@@ -32,22 +32,12 @@
 ;
 ;==============================================================================
 
-spawn, 'pwd', CurrentFolder
+PRO check_create_output_folder, Event, PATH=path
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-cd, CurrentFolder + '/utilities'
+  WIDGET_CONTROL,id,get_uvalue=global
 
-;Makefile that automatically compile the necessary modules
-;and create the VM file.
-.run nexus_utilities.pro
-.run get.pro
-.run system_utilities.pro
-.run nexus_utilities.pro
-.run math_conversion.pro
-.run time.pro
-.run list_of_proposal.pro
-.run IDLxmlParser__define.pro
-.run xmlParser__define.pro
-.run logger.pro
-.run file_utilities.pro
+  IF (FILE_TEST(path,/DIRECTORY)) THEN RETURN ;if directory exists already
+  ;if not, create it
+  spawn, 'mkdir ' + path, listening, err_listening
+
+END

@@ -290,6 +290,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
+      file_name = $
+        getTextFieldValue(Event,$
+        'data_roi_selection_file_text_field')
+      file_name = file_name[0]
+      path = FILE_DIRNAME(file_name)
+      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
     
@@ -339,6 +345,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE Background Selection into a file ------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_back_save_button'): begin
+      file_name = $
+        getTextFieldValue(Event,$
+        'data_back_d_selection_file_text_field')
+      file_name = file_name[0]
+      path = FILE_DIRNAME(file_name)
+      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'back'
     end
     
@@ -779,6 +791,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='norm_roi_save_button'): begin
+      file_name = $
+        getTextFieldValue(Event,$
+        'norm_roi_selection_file_text_field')
+      file_name = file_name[0]
+      path = FILE_DIRNAME(file_name)
+      check_create_output_folder, Event, PATH=path
       REFreduction_CreateNormBackgroundROIFile, Event, 'roi'
     end
     
@@ -813,6 +831,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE Background Selection into a file ------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='norm_back_save_button'): begin
+      file_name = $
+        getTextFieldValue(Event,$
+        'norm_back_d_selection_file_text_field')
+      file_name = file_name[0]
+      path = FILE_DIRNAME(file_name)
+      check_create_output_folder, Event, PATH=path
       REFreduction_CreateNormBackgroundROIFile, Event, 'back'
     end
     
@@ -1221,6 +1245,8 @@ PRO MAIN_BASE_event, Event
     ;create empty cell output file -------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='empty_cell_create_output_file_button'): begin
+      path = getButtonValue(Event,'empty_cell_output_folder_button')
+      check_create_output_folder, Event, PATH=path
       create_empty_cell_output_file, Event ;_output_empty_cell
     end
     
