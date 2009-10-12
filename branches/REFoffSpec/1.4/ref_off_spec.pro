@@ -54,6 +54,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   TESTING = file->getValue(tag=['configuration','testing'])
   SCROLLING = file->getValue(tag=['configuration','scrolling'])
   FAKING_DATA = file->getValue(tag=['configuration','faking','data'])
+  AM = file->getValue(tag=['configuration','am'])
   SUPER_USERS = ['j35']
   ;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   ;============================================================================
@@ -96,6 +97,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     instrument: instrument,$
     debugging: DEBUGGING,$
     sDebugging: sDebugging,$
+    am: AM, $
     
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
