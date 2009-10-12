@@ -43,15 +43,23 @@ PRO  reduce_step3_run_jobs, Event
   nbr_row = (SIZE(big_table))(2)
   cl_table = STRARR(nbr_row)
   
-  SPAWN, 'hostname', listening
-  CASE (listening[0]) OF
-    'lrac' : cmd_srun = 'sbatch -p lracq '
-    'mrac' : cmd_srun = 'sbatch -p mracq '
-    ELSE: BEGIN
-      cmd_srun = 'sbatch -p heaterq '
+  CASE ((*global).am) OF
+    'slurm': BEGIN
+      SPAWN, 'hostname', listening
+      CASE (listening[0]) OF
+        'lrac' : cmd_srun = 'sbatch -p lracq '
+        'mrac' : cmd_srun = 'sbatch -p mracq '
+        ELSE: BEGIN
+          cmd_srun = 'sbatch -p heaterq '
+        END
+      ENDCASE
     END
+    'oic': BEGIN
+      cmd_srun = 'amrun_dev -p oic --batch '
+    END
+    ELSE:
   ENDCASE
-    
+  
   ;get path
   output_path = getButtonValue(Event, 'reduce_tab3_output_folder_button')
   
@@ -70,7 +78,7 @@ PRO  reduce_step3_run_jobs, Event
     
     ;driver
     cmd = cmd_srun + reduce_structure.driver
-  
+    
     cmd += ' --inst=' + instrument + ' '
     
     ;data full nexus name
