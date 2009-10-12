@@ -146,8 +146,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 50,$
     YSIZE = 2*304+20,$
     YOFFSET = 0)
+  
+  row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
+  /COLUMN)
     
-  row1col3 = WIDGET_BASE(row1,$ ;..................................
+  row1col3 = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
     /EXCLUSIVE)
     
@@ -170,6 +173,24 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   WIDGET_CONTROL, button1, /SET_BUTTON
   
+  space = WIDGET_LABEL(row1col3Main, $
+  VALUE = ' ')
+  
+  row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN, $
+    /EXCLUSIVE)
+    
+  button1 = WIDGET_BUTTON(row1col3b,$
+    VALUE = 'Linear',$
+    UNAME = 'reduce_sangle_lin',$
+    SENSITIVE = 1)
+  button2 = WIDGET_BUTTON(row1col3b,$
+    VALUE = 'Log',$
+    UNAME = 'reduce_sangle_log', $
+    SENSITIVE = 1)
+    
+  WIDGET_CONTROL, button2, /SET_BUTTON
+
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
     
