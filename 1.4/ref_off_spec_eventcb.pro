@@ -85,9 +85,14 @@ PRO reduce_tab_event, Event
   
     CASE (currTabSelect) OF
       0: BEGIN
-        display_reduce_step1_buttons, EVENT=EVENT,$
-          ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-          global
+        ;sangle base
+        IF (isBaseMapped(Event, 'reduce_step1_sangle_base')) THEN BEGIN
+        display_reduce_step1_sangle_buttons, Event=event, global
+        ENDIF ELSE BEGIN
+          display_reduce_step1_buttons, EVENT=EVENT,$
+            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+            global
+        ENDELSE
       END
       1: BEGIN
         base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
@@ -164,12 +169,17 @@ PRO tab_event, Event
         CurrReduceTabSelect = WIDGET_INFO(reduce_tab_id,/TAB_CURRENT)
         
         CASE (CurrReduceTabSelect) OF
-          
+        
           0: BEGIN
-            display_reduce_step1_buttons, EVENT=EVENT,$
-              ACTIVATE=(*global).reduce_step1_spin_state_mode, $
-              global
-          END
+                ;sangle base
+        IF (isBaseMapped(Event, 'reduce_step1_sangle_base')) THEN BEGIN
+        display_reduce_step1_sangle_buttons, Event=event, global
+        ENDIF ELSE BEGIN
+          display_reduce_step1_buttons, EVENT=EVENT,$
+            ACTIVATE=(*global).reduce_step1_spin_state_mode, $
+            global
+        ENDELSE
+            END
           1: BEGIN
             base_mapped = isBaseMapped(Event,'reduce_step2_create_roi_base')
             IF (~base_mapped) THEN BEGIN
