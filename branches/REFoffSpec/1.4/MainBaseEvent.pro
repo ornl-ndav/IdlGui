@@ -112,7 +112,8 @@ PRO MAIN_BASE_event, Event
     display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
-  ;display_data_run_in_sangle_base, Event
+    plot_selected_data_in_sangle_base, Event
+   ;display_data_run_in_sangle_base, Event
   END
   
   ;SANGLE table
@@ -121,6 +122,7 @@ PRO MAIN_BASE_event, Event
     IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
     select_full_line_of_selected_row, Event
     display_metatada_of_sangle_selected_row, Event
+        plot_selected_data_in_sangle_base, Event
     (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
     (*global).sangle_table_press_click = 1

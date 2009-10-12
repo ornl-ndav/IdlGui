@@ -99,14 +99,12 @@ PRO display_metatada_of_sangle_selected_row, Event
   
     putTextFieldValue, Event, 'reduce_sangle_info_title_base', $
       'Run Number: N/A'
-    putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
-      'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', 'N/A'
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', 'N/A'
-    putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
-      'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', 'N/A'
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', 'N/A'
     
   ENDELSE
@@ -193,8 +191,29 @@ PRO   display_reduce_step1_sangle_scale, $
     /NODATA,$
     /DEVICE
     
-    
-    
-    
-    
+END
+
+;-----------------------------------------------------------------------------
+PRO plot_selected_data_in_sangle_base, Event
+
+ ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  reduce_tab1_table = (*(*global).reduce_tab1_table)
+  
+  ;get sangle row selected
+  row_selected = getSangleRowSelected(Event)
+  
+  ;retrieve full nexus name of run selected
+  full_nexus_file_name = reduce_tab1_table[1,row_selected]
+  s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
+  IF (s_full_nexus_file_name EQ '') THEN RETURN
+
+  ;get spin state selected
+  sangle_spin_state_selected = getSangleSpinStateSelected(Event)
+  IF (sangle_spin_state_selected EQ '') THEN RETURN
+  
+  
+
+
 END

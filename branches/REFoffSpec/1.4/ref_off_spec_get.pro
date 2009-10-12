@@ -484,10 +484,33 @@ FUNCTION getRunNumbersFromAscii, list_of_ascii_files
   index = 0
   WHILE (index LT sz) DO BEGIN
     ascii_object = OBJ_NEW('IDL3columnsASCIIparser', $
-    list_of_ascii_files[index])
+      list_of_ascii_files[index])
     run_number = ascii_object->get_tag('#C data Run Number:')
     list_of_runs[index] = run_number
     index++
   ENDWHILE
   RETURN, list_of_runs
+END
+
+;----------------------------------------------------------------------------
+FUNCTION getSangleSpinStateSelected, Event
+
+  spin_state_to_change = ['reduce_sangle_1',$
+    'reduce_sangle_2',$
+    'reduce_sangle_3',$
+    'reduce_sangle_4']
+    
+  spin_state = ['Off_Off',$
+    'Off_On',$
+    'On_Off',$
+    'On_On']
+    
+  nbr_spin_states = N_ELEMENTS(spin_state_to_change)
+  
+  FOR i=0,(nbr_spin_states-1) DO BEGIN
+    IF (isButtonSelected(Event,spin_state_to_change[i])) THEN $
+      RETURN, spin_state[i]
+  ENDFOR
+  
+  RETURN, ''
 END
