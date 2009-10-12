@@ -115,8 +115,7 @@ PRO fileBrowse, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  path = '~/'
-  
+  path = (*global).path
   
   title = 'Select a NeXus File to Load'
   filter = '*.nxs'

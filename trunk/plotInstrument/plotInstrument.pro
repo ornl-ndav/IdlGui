@@ -8,7 +8,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   APPLICATION        = 'plotInstrument'
   VERSION            = '1.0.0'
   FASCILITY = 'SNS'
-  pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
+  TESTING = 'yes'
+  ;pathInstrumentList = '/SNS/software/etc/instrumentlist.xml'
+  pathInstrumentList = 'instrumentlist.xml'
   
   spawn, 'hostname', hostname
   
@@ -26,12 +28,12 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   cpuName =  xmlParser -> getValue(location = $
     ['name = ' + fascility, 'instrument'], searchTag = 'shortname', condition = hostname)
     
-  print, cpuName
-  
+  ;print, cpuName
+    
   ; instConst =  {X: 0,$
   ;  Y: 0,$
   ;    rebinBy: 0}
-  
+    
   ;define global variables
   global = PTR_NEW ({path: "", $
     ;path: "/SNS/users/dfp/IdlGui/trunk/plotInstrument/NeXus/REF_M_118.nxs",$
@@ -49,12 +51,10 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     instrumentList: instrumentList, $
     MainBaseSize: [30,25,600,150]})
     
-    
-    
-    
-    
-    
-    
+  IF (testing EQ 'yes') THEN BEGIN
+    (*global).path = '~/IDLWorkspace/plotInstrument'
+  ENDIF
+  
   MainBaseSize   = (*global).MainBaseSize
   MainBaseTitle  = 'plotInstrument - ' + VERSION
   
