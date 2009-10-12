@@ -112,12 +112,19 @@ PRO MAIN_BASE_event, Event
     display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
-    display_data_run_in_sangle_base, Event
+  ;display_data_run_in_sangle_base, Event
   END
   
   ;SANGLE table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_tab_table_uname'): BEGIN
-  display_data_run_in_sangle_base, Event
+    ;if sangle_table_press_click eq 1 = user click (no release)
+    IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
+    select_full_line_of_selected_row, Event
+    display_metatada_of_sangle_selected_row, Event
+    (*global).sangle_table_press_click = 0
+    ENDIF ELSE BEGIN
+    (*global).sangle_table_press_click = 1
+    ENDELSE
   END
   
   ;Done with SANGLE base
@@ -129,19 +136,19 @@ PRO MAIN_BASE_event, Event
   
   ;----------------------------------------------------------------------------
   
-;  ;"work with the following Polarization states"
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_1'): BEGIN
-;  check_sangle_spin_state_buttons, Event
-;  END
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_2'): BEGIN
-;  check_sangle_spin_state_buttons, Event
-;  END
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_3'): BEGIN
-;  check_sangle_spin_state_buttons, Event
-;  END
-;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_4'): BEGIN
-;  check_sangle_spin_state_buttons, Event
-;  END
+  ;  ;"work with the following Polarization states"
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_1'): BEGIN
+  ;  check_sangle_spin_state_buttons, Event
+  ;  END
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_2'): BEGIN
+  ;  check_sangle_spin_state_buttons, Event
+  ;  END
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_3'): BEGIN
+  ;  check_sangle_spin_state_buttons, Event
+  ;  END
+  ;  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab1_pola_4'): BEGIN
+  ;  check_sangle_spin_state_buttons, Event
+  ;  END
   
   ;spin states mode selection buttons
   ;spin states match

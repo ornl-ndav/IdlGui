@@ -39,7 +39,7 @@ FUNCTION getSangleRowSelected, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO display_data_run_in_sangle_base, Event
+PRO select_full_line_of_selected_row, Event
   row = getSangleRowSelected(Event)
   select_sangle_row, Event, row
 END
@@ -47,7 +47,7 @@ END
 ;------------------------------------------------------------------------------
 PRO select_sangle_first_run_number_by_default, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_sangle_tab_table_uname')
-  WIDGET_CONTROL, id, SET_TABLE_SELECT=[0,0,1,1]
+  WIDGET_CONTROL, id, SET_TABLE_SELECT=[0,0,1,0]
 END
 
 ;------------------------------------------------------------------------------
@@ -70,26 +70,46 @@ PRO display_metatada_of_sangle_selected_row, Event
   
   ;retrieve full nexus name of run selected
   full_nexus_file_name = reduce_tab1_table[1,row_selected]
-  putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
-    full_nexus_file_name
-    
-  iNexus = OBJ_NEW('IDLgetMetadata_REF_M', full_nexus_file_name)
-  dangle = STRCOMPRESS(iNexus->getDangle(),/REMOVE_ALL)
-  putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle
-  dangle0 = STRCOMPRESS(iNexus->getDangle0(),/REMOVE_ALL)
-  putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0
-  sangle = STRCOMPRESS(iNexus->getSangle(),/REMOVE_ALL)
-  putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle
-  dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
-  putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
-  SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
-  putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
-    SampleDetDistance
-  refpix = '200'
-  putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
-
-  OBJ_DESTROY, iNexus
   
+  iNexus = OBJ_NEW('IDLgetMetadata_REF_M', full_nexus_file_name)
+  IF (OBJ_VALID(iNexus)) THEN BEGIN
+  
+    run_number = reduce_tab1_table[0,row_selected]
+    run_number = 'Run Number: ' + STRCOMPRESS(run_number,/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_info_title_base', run_number
+    putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
+      full_nexus_file_name
+    dangle = STRCOMPRESS(iNexus->getDangle(),/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle
+    dangle0 = STRCOMPRESS(iNexus->getDangle0(),/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0
+    sangle = STRCOMPRESS(iNexus->getSangle(),/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle
+    dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
+    SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
+    putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
+      SampleDetDistance
+    refpix = '200'
+    putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
+    
+    OBJ_DESTROY, iNexus
+    
+  ENDIF ELSE BEGIN
+  
+    putTextFieldValue, Event, 'reduce_sangle_info_title_base', $
+      'Run Number: N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
+      'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', 'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', 'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', 'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', 'N/A'
+    putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
+      'N/A'
+    putTextFieldValue, event, 'reduce_sangle_base_refpix_value', 'N/A'
+    
+  ENDELSE
   
 END
 
