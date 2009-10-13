@@ -127,11 +127,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
-;  label = WIDGET_LABEL(row1col2,$
-;    VALUE = '                  ', $
-;    UNAME = 'reduce_sangle_plot_title',$
-;    XOFFSET = 700,$
-;    YOFFSET = 50)
+  ;  label = WIDGET_LABEL(row1col2,$
+  ;    VALUE = '                  ', $
+  ;    UNAME = 'reduce_sangle_plot_title',$
+  ;    XOFFSET = 700,$
+  ;    YOFFSET = 50)
     
   plot = WIDGET_DRAW(row1col2,$
     UNAME = 'reduce_sangle_plot',$
@@ -146,9 +146,9 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XSIZE = 50,$
     YSIZE = 2*304+20,$
     YOFFSET = 0)
-  
+    
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
-  /COLUMN)
+    /COLUMN)
     
   row1col3 = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
@@ -174,23 +174,25 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   WIDGET_CONTROL, button1, /SET_BUTTON
   
   space = WIDGET_LABEL(row1col3Main, $
-  VALUE = ' ')
-  
+    VALUE = ' ')
+    
   row1col3b = WIDGET_BASE(row1col3Main,$ ;..................................
     /COLUMN, $
     /EXCLUSIVE)
     
   button1 = WIDGET_BUTTON(row1col3b,$
     VALUE = 'Linear',$
+    /NO_RELEASE, $
     UNAME = 'reduce_sangle_lin',$
     SENSITIVE = 1)
   button2 = WIDGET_BUTTON(row1col3b,$
     VALUE = 'Log',$
+    /NO_RELEASE, $
     UNAME = 'reduce_sangle_log', $
     SENSITIVE = 1)
     
   WIDGET_CONTROL, button2, /SET_BUTTON
-
+  
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
     
