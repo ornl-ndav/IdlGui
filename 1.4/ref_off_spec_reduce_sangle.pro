@@ -50,6 +50,24 @@ FUNCTION retrieve_nexus_data, FullNexusName, spin_state, data
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION retrieve_tof_from_nexus_data, FullNexusName, spin_state, tof
+
+  not_hdf5_format = 0
+  CATCH, not_hdf5_format
+  IF (not_hdf5_format NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN,0
+  ENDIF ELSE BEGIN
+    fileID    = H5F_OPEN(FullNexusName)
+    tof_path = '/entry-' + spin_state + '/bank1/time_of_flight'
+    fieldID = H5D_OPEN(fileID,tof_path)
+    tof = H5D_READ(fieldID)
+    RETURN, 1
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getSangleRowSelected, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_sangle_tab_table_uname')
   selection = WIDGET_INFO(id, /TABLE_SELECT)
@@ -167,8 +185,7 @@ END
 ;------------------------------------------------------------------------------
 PRO   display_reduce_step1_sangle_scale, $
     MAIN_BASE=main_base, $
-    EVENT=event, $
-    global
+    EVENT=event
     
   uname = 'reduce_sangle_y_scale'
   IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
@@ -190,21 +207,25 @@ PRO   display_reduce_step1_sangle_scale, $
   position = [42,40,0,0]
   ;  ENDIF
   
+  tof = (*(*global).sangle_tof)
+  sz = N_ELEMENTS(tof)
+  XRANGE = [tof[0], tof[sz-1]]
+  
   PLOT, RANDOMN(s,303L), $
-    ;    XRANGE        = xscale,$
+    XRANGE        = xrange, $
     YRANGE        = [0L,303L],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $
     TICKLEN       = -0.015, $
-    ;    XTICKLAYOUT   = 0,$
+        XTICKLAYOUT   = 0,$
     YTICKLAYOUT   = 0,$
-    ;    XTICKS        = xticks,$
+        XTICKS        = 8,$
     YTICKS        = 25,$
     YSTYLE        = 1,$
-    ;    XSTYLE        = 1,$
+        XSTYLE        = 1,$
     YTICKINTERVAL = 10,$
-    POSITION      = position,$
+ ;   POSITION      = position,$
     NOCLIP        = 0,$
     /NODATA,$
     /DEVICE
@@ -292,4 +313,33 @@ PRO replot_selected_data_in_sangle_base, Event
   LOADCT, 5, /SILENT
   TVSCL, rtData, /DEVICE
   
+END
+
+;------------------------------------------------------------------------------
+PRO retrieve_tof_array_from_nexus, Event
+
+ ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ;retrieve full nexus name of run selected
+  full_nexus_file_name = getTextFieldValue(Event,$
+  'reduce_sangle_base_full_file_name')
+  s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
+  IF (s_full_nexus_file_name EQ 'N/A') THEN RETURN
+  
+  ;get spin state selected
+  sangle_spin_state_selected = getSangleSpinStateSelected(Event)
+  IF (sangle_spin_state_selected EQ '') THEN RETURN
+  
+  ;retrieve data of run and spin state selected
+  result = retrieve_tof_from_nexus_data(s_full_nexus_file_name, $
+    sangle_spin_state_selected, $
+    tof)
+  IF (result EQ 0) THEN RETURN
+  sz = N_ELEMENTS(tof)
+  tof = tof[0:sz-2] ;remove last element
+  (*(*global).sangle_tof) = tof
+
+
+
 END

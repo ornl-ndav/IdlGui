@@ -114,6 +114,8 @@ PRO MAIN_BASE_event, Event
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     plot_selected_data_in_sangle_base, Event
+    retrieve_tof_array_from_nexus, Event
+    display_reduce_step1_sangle_scale, EVENT=event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
