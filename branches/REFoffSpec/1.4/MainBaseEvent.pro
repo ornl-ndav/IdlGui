@@ -114,6 +114,7 @@ PRO MAIN_BASE_event, Event
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     plot_selected_data_in_sangle_base, Event
+    saving_background, Event
     retrieve_tof_array_from_nexus, Event
     display_reduce_step1_sangle_scale, EVENT=event
     plot_sangle_refpix, Event
@@ -128,6 +129,8 @@ PRO MAIN_BASE_event, Event
       select_full_line_of_selected_row, Event
       display_metatada_of_sangle_selected_row, Event
       plot_selected_data_in_sangle_base, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
       (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
       (*global).sangle_table_press_click = 1
