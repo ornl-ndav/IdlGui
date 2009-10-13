@@ -200,6 +200,7 @@ PRO MAIN_BASE_event, Event
     WSET, id_value
     TV, (*(*global).sangle_background_plot), true=3
     plot_sangle_refpix, Event
+    calculate_new_sangle_value, Event
   END
   
   ;Done with SANGLE base
