@@ -33,7 +33,7 @@
 ;==============================================================================
 ;
 ;code to replot background
-;TV, (*(*global1).sanglebackground_plot), true=3
+;TV, (*(*global).sangle_background_plot), true=3
 ;This function will save the background of the sangle plot
 PRO saving_background, Event, MAIN_BASE=main_base
 
