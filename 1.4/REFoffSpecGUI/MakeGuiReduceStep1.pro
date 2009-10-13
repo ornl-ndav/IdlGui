@@ -127,11 +127,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
-  ;  label = WIDGET_LABEL(row1col2,$
-  ;    VALUE = '                  ', $
-  ;    UNAME = 'reduce_sangle_plot_title',$
-  ;    XOFFSET = 700,$
-  ;    YOFFSET = 50)
+    label = WIDGET_LABEL(row1col2,$
+      VALUE = 'Pixel vs TOF (microsS)', $
+      UNAME = 'reduce_sangle_plot_title',$
+      XOFFSET = 720,$
+      YOFFSET = 35)
     
   plot = WIDGET_DRAW(row1col2,$
     UNAME = 'reduce_sangle_plot',$
@@ -143,8 +143,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   ;scale
   scale = WIDGET_DRAW(row1col2, $
     UNAME = 'reduce_sangle_y_scale', $
-    XSIZE = (*global).sangle_xsize_draw + 40,$
-    YSIZE = 2*304+25,$
+    XSIZE = (*global).sangle_xsize_draw + 55,$
+    YSIZE = 2*304+30,$
     YOFFSET = 0)
     
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------

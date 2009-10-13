@@ -204,28 +204,28 @@ PRO   display_reduce_step1_sangle_scale, $
   ;  IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
   ;  IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
   ;    sDraw = WIDGET_INFO(id,/GEOMETRY)
-  position = [42,40,0,0]
+  position = [40,25,(*global).sangle_xsize_draw+40,(*global).sangle_ysize_draw+25]
   ;  ENDIF
   
   tof = (*(*global).sangle_tof)
   sz = N_ELEMENTS(tof)
   XRANGE = [tof[0], tof[sz-1]]
   
-  PLOT, RANDOMN(s,303L), $
+  PLOT, RANDOMN(s,304L), $
     XRANGE        = xrange, $
-    YRANGE        = [0L,303L],$
+    YRANGE        = [0L,304L],$
     COLOR         = convert_rgb([0B,0B,255B]), $
     BACKGROUND    = convert_rgb((*global).sys_color_face_3d),$
     THICK         = 1, $
     TICKLEN       = -0.015, $
-        XTICKLAYOUT   = 0,$
+    XTICKLAYOUT   = 0,$
     YTICKLAYOUT   = 0,$
-        XTICKS        = 8,$
+    XTICKS        = 10,$ ;number of ticks on x-axis
     YTICKS        = 25,$
     YSTYLE        = 1,$
-        XSTYLE        = 1,$
+    XSTYLE        = 1,$
     YTICKINTERVAL = 10,$
- ;   POSITION      = position,$
+    POSITION      = position,$
     NOCLIP        = 0,$
     /NODATA,$
     /DEVICE
@@ -318,12 +318,12 @@ END
 ;------------------------------------------------------------------------------
 PRO retrieve_tof_array_from_nexus, Event
 
- ;get global structure
+  ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   ;retrieve full nexus name of run selected
   full_nexus_file_name = getTextFieldValue(Event,$
-  'reduce_sangle_base_full_file_name')
+    'reduce_sangle_base_full_file_name')
   s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
   IF (s_full_nexus_file_name EQ 'N/A') THEN RETURN
   
@@ -339,7 +339,7 @@ PRO retrieve_tof_array_from_nexus, Event
   sz = N_ELEMENTS(tof)
   tof = tof[0:sz-2] ;remove last element
   (*(*global).sangle_tof) = tof
-
-
-
+  
+  
+  
 END
