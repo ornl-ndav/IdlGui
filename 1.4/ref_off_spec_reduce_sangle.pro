@@ -237,7 +237,39 @@ PRO plot_selected_data_in_sangle_base, Event
     data)
   IF (result EQ 0) THEN RETURN
   
-  tdata = TOTAL(data,2)
+  tData = TOTAL(data,2)
+  (*(*global).sangle_tData) = tData
+  x = (size(tdata))(1)
+  y = (size(tdata))(2)
+  IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+    index = WHERE(tData EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      tData[index] = !VALUES.D_NAN
+    ENDIF
+    tData = ALOG10(tData)
+    tData = BYTSCL(tData,/NAN)
+  ENDIF
+  
+  x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
+  rtData = CONGRID(tData, x_coeff*x, 2*y)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  TVSCL, rtData, /DEVICE
+  
+END
+
+;-----------------------------------------------------------------------------
+PRO replot_selected_data_in_sangle_base, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tData = (*(*global).sangle_tData)
   x = (size(tdata))(1)
   y = (size(tdata))(2)
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log

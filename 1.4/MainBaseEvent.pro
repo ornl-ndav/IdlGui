@@ -132,6 +132,18 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
+  ;linear/log sangle plot
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_lin'): BEGIN
+    WIDGET_CONTROL, /HOURGLASS
+    replot_selected_data_in_sangle_base, Event
+    WIDGET_CONTROL, HOURGLASS=0
+  END
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_log'): BEGIN
+    WIDGET_CONTROL, /HOURGLASS
+    replot_selected_data_in_sangle_base, Event
+    WIDGET_CONTROL, HOURGLASS=0
+  END
+  
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
     MapBase, Event, 'reduce_step1_sangle_base', 0
