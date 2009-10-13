@@ -200,17 +200,13 @@ PRO   display_reduce_step1_sangle_scale, $
   
   LOADCT, 0,/SILENT
   
-  ;  IF (N_ELEMENTS(XSCALE) EQ 0) THEN xscale = [0,80]
-  ;  IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
-  ;  IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
-  ;    sDraw = WIDGET_INFO(id,/GEOMETRY)
   position = [40,25,(*global).sangle_xsize_draw+40,$
     (*global).sangle_ysize_draw+25]
-  ;  ENDIF
     
   tof = (*(*global).sangle_tof)
+  delta_tof = tof[1]-tof[0]
   sz = N_ELEMENTS(tof)
-  XRANGE = [tof[0], tof[sz-1]]
+  XRANGE = [tof[0], tof[sz-1]+delta_tof]
   
   PLOT, RANDOMN(s,304L), $
     XRANGE        = xrange, $
@@ -341,7 +337,5 @@ PRO retrieve_tof_array_from_nexus, Event
   sz = N_ELEMENTS(tof)
   tof = tof[0:sz-2] ;remove last element
   (*(*global).sangle_tof) = tof
-  
-  
   
 END
