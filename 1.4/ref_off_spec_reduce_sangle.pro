@@ -347,13 +347,13 @@ PRO plot_sangle_refpix, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   ON_IOERROR, error
-
+  
   ;retrieve RefPix value (from text field)
   RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
   fix_RefPix = FIX(RefPix)
-
+  
   xdevice_max = (*global).sangle_xsize_draw
   
   RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
@@ -361,11 +361,43 @@ PRO plot_sangle_refpix, Event
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
-
+  
   PLOTS, 0, RefPix_device, /DEVICE
   PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, COLOR=[255,255,0]
-
+  
   error:
   RETURN
+  
+END
 
+;------------------------------------------------------------------------------
+PRO calculate_new_sangle_value, Event
+
+  ON_IOERROR, error
+  
+  ;retrieve various parameters needed
+  Dangle  = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_dangle_value'))
+  Dangle0 = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_dangle0_value'))
+  DirPix  = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_dirpix_value'))
+  RefPix  = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_refpix_user_value'))
+  SDdist  = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_sampledetdis_value'))
+    
+  part1 = (Dangle - Dangle0 ) / 2.
+  part2 = (DirPix - RefPix) * 7.e-4
+  part3 = 2. * SDdist
+  
+  Sangle = part1 + part2 / part3
+  sSangle = STRCOMPRESS(Sangle,/REMOVE_ALL)
+  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
+  RETURN
+  
+  error:
+  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', 'N/A'
+  RETURN
+  
 END
