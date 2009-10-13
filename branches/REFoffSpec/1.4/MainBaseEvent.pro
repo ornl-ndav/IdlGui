@@ -116,6 +116,7 @@ PRO MAIN_BASE_event, Event
     plot_selected_data_in_sangle_base, Event
     retrieve_tof_array_from_nexus, Event
     display_reduce_step1_sangle_scale, EVENT=event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   

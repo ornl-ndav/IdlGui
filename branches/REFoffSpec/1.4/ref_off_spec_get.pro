@@ -521,15 +521,15 @@ FUNCTION getSangleTof, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   X = Event.x
   x_coeff = (*global).sangle_main_plot_congrid_x_coeff
   tof = (*(*global).sangle_tof)
   sz_tof = N_ELEMENTS(tof)
-
-  tof_congrid = CONGRID(tof, sz_tof * x_coeff) 
+  
+  tof_congrid = CONGRID(tof, sz_tof * x_coeff)
   RETURN, tof_congrid[X]
-
+  
 END
 
 ;------------------------------------------------------------------------------
@@ -539,5 +539,20 @@ FUNCTION getSanglePixel, Event
   y_coeff = 2.
   Y = Event.y
   RETURN, FIX(Y/y_coeff)
+  
+END
 
+;------------------------------------------------------------------------------
+FUNCTIOn getSangleYDeviceValue, Event, data_value
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  sangle_ysize_draw = (*global).sangle_ysize_draw
+  y_coeff = (*global).sangle_main_plot_congrid_y_coeff
+  
+  device = FLOAT(sangle_ysize_draw) * FLOaT(data_value) / FLOAT(304L)
+  
+  RETURN, device
+  
 END

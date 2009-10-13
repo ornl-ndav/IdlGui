@@ -330,6 +330,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   value = WIDGET_TEXT(base1,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_refpix_user_value',$
+    /EDITABLE, $
     XSIZE = 10)
     
   base2 = WIDGET_BASE(row2col2,$
