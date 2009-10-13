@@ -157,17 +157,21 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   button1 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_Off',$
     UNAME = 'reduce_sangle_1',$
+    /NO_RELEASE, $
     SENSITIVE = 1)
   button2 = WIDGET_BUTTON(row1col3,$
     VALUE = 'Off_On',$
+    /NO_RELEASE, $
     UNAME = 'reduce_sangle_2', $
     SENSITIVE = 0)
   button3 = WIDGET_BUTTON(row1col3,$
     VALUE = 'On_Off',$
+    /NO_RELEASE, $
     UNAME = 'reduce_sangle_3', $
     SENSITIVE = 1)
   button4 = WIDGET_BUTTON(row1col3,$
     VALUE = 'On_On',$
+    /NO_RELEASE, $
     UNAME = 'reduce_sangle_4', $
     SENSITIVE = 0)
     
