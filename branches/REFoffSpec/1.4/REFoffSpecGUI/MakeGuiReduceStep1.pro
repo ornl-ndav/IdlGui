@@ -207,7 +207,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /COLUMN,$
     FRAME=1)
   title = WIDGET_LABEL(row1col3c,$
-    VALUE = 'Live Info')
+    VALUE = 'Live Infos')
     space = WIDGET_LABEL(row1col3c,$
     VALUE = '-------------')
   
