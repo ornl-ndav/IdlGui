@@ -127,6 +127,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_run_sangle_table: PTR_NEW(0L), $
     sangle_tData: PTR_NEW(0L), $
     sangle_tof: PTR_NEW(0L), $
+    sangle_background_plot: PTR_NEW(0L), $
     sangle_table_press_click: 1,$
     sangle_xsize_draw: 845., $
     sangle_ysize_draw: 608., $
