@@ -204,9 +204,10 @@ PRO   display_reduce_step1_sangle_scale, $
   ;  IF (N_ELEMENTS(XTICKS) EQ 0) THEN xticks = 8
   ;  IF (N_ELEMENTS(POSITION) EQ 0) THEN BEGIN
   ;    sDraw = WIDGET_INFO(id,/GEOMETRY)
-  position = [40,25,(*global).sangle_xsize_draw+40,(*global).sangle_ysize_draw+25]
+  position = [40,25,(*global).sangle_xsize_draw+40,$
+    (*global).sangle_ysize_draw+25]
   ;  ENDIF
-  
+    
   tof = (*(*global).sangle_tof)
   sz = N_ELEMENTS(tof)
   XRANGE = [tof[0], tof[sz-1]]
@@ -272,6 +273,7 @@ PRO plot_selected_data_in_sangle_base, Event
   ENDIF
   
   x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
+  (*global).sangle_main_plot_congrid_x_coeff = x_coeff
   rtData = CONGRID(tData, x_coeff*x, 2*y)
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
