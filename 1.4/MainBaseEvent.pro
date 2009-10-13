@@ -60,7 +60,7 @@ PRO MAIN_BASE_event, Event
       tab_step4_step2_event, Event ;_eventcb
     END
     
-    ;11111111111111111111111111111111111111111111111111111111111111111111111111
+    ;111111F11111111111111111111111111111111111111111111111111111111111111111111
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_tab'): BEGIN
       reduce_tab_event, Event ;_eventcb
@@ -105,6 +105,7 @@ PRO MAIN_BASE_event, Event
   
   ;Map Sangle base ------------------------------------------------------------
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_step1_sangle_button'): BEGIN
+    WIDGET_CONTROL, /HOURGLASS
     check_sangle_spin_state_buttons, Event
     MapBase, Event, 'reduce_step1_sangle_base', 1
     MapBase, Event, 'reduce_step1_sangle_base_label', 1
@@ -113,20 +114,22 @@ PRO MAIN_BASE_event, Event
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     plot_selected_data_in_sangle_base, Event
-   ;display_data_run_in_sangle_base, Event
+    WIDGET_CONTROL, HOURGLASS=0
   END
   
   ;SANGLE table
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_tab_table_uname'): BEGIN
+    WIDGET_CONTROL, /HOURGLASS
     ;if sangle_table_press_click eq 1 = user click (no release)
     IF ((*global).sangle_table_press_click EQ 1) THEN BEGIN
-    select_full_line_of_selected_row, Event
-    display_metatada_of_sangle_selected_row, Event
-        plot_selected_data_in_sangle_base, Event
-    (*global).sangle_table_press_click = 0
+      select_full_line_of_selected_row, Event
+      display_metatada_of_sangle_selected_row, Event
+      plot_selected_data_in_sangle_base, Event
+      (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
-    (*global).sangle_table_press_click = 1
+      (*global).sangle_table_press_click = 1
     ENDELSE
+    WIDGET_CONTROL, HOURGLASS=0
   END
   
   ;Done with SANGLE base

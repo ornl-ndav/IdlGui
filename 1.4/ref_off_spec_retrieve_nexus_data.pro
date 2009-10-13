@@ -41,7 +41,7 @@ FUNCTION retrieve_Data, Event, $
   instrument = (*global).instrument
   
   not_hdf5_format = 0
-  ;CATCH, not_hdf5_format
+  CATCH, not_hdf5_format
   IF (not_hdf5_format NE 0) THEN BEGIN
     CATCH,/CANCEL
     ;display message about invalid file format
