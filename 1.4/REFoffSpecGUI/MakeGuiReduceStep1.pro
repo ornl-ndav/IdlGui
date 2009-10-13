@@ -127,16 +127,18 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
-    label = WIDGET_LABEL(row1col2,$
-      VALUE = 'Pixel vs TOF (microsS)', $
-      UNAME = 'reduce_sangle_plot_title',$
-      XOFFSET = 720,$
-      YOFFSET = 35)
+  label = WIDGET_LABEL(row1col2,$
+    VALUE = 'Pixel vs TOF (microsS)', $
+    UNAME = 'reduce_sangle_plot_title',$
+    XOFFSET = 720,$
+    YOFFSET = 35)
     
   plot = WIDGET_DRAW(row1col2,$
     UNAME = 'reduce_sangle_plot',$
     XOFFSET = 40,$
     YOFFSET = 5,$
+    /TRACKING_EVENTS, $
+    /MOTION_EVENTS,$
     XSIZE = (*global).sangle_xsize_draw,$
     YSIZE = (*global).sangle_ysize_draw)
     
@@ -197,6 +199,37 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   WIDGET_CONTROL, button2, /SET_BUTTON
   
+  space = WIDGET_LABEL(row1col3Main, $
+    VALUE = ' ')
+    
+  ;live cursor info
+  row1col3c = WIDGET_BASE(row1col3Main,$ ;..................................
+    /COLUMN,$
+    FRAME=1)
+  title = WIDGET_LABEL(row1col3c,$
+    VALUE = 'Live Info')
+    space = WIDGET_LABEL(row1col3c,$
+    VALUE = '-------------')
+  
+  tof = WIDGET_LABEL(row1col3c,$
+    VALUE = 'TOF (microS):',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(row1col3c,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_tof',$
+    /ALIGN_LEFT)
+  space = WIDGET_LABEL(row1col3c,$
+    VALUE = '')
+  tof = WIDGET_LABEL(row1col3c,$
+    VALUE = 'Pixel:',$
+    /ALIGN_LEFT)
+  value = WIDGET_LABEL(row1col3c,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = 80,$
+    UNAME = 'reduce_sangle_live_info_pixel',$
+    /ALIGN_LEFT)
+    
   row2 = WIDGET_BASE(SangleBase, $ ;...........................
     /ROW)
     

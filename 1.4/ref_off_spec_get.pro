@@ -514,3 +514,30 @@ FUNCTION getSangleSpinStateSelected, Event
   
   RETURN, ''
 END
+
+;------------------------------------------------------------------------------
+;This function returns the TOF value of the cursor in the sangle main plot
+FUNCTION getSangleTof, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  X = Event.x
+  x_coeff = (*global).sangle_main_plot_congrid_x_coeff
+  tof = (*(*global).sangle_tof)
+  sz_tof = N_ELEMENTS(tof)
+
+  tof_congrid = CONGRID(tof, sz_tof * x_coeff) 
+  RETURN, tof_congrid[X]
+
+END
+
+;------------------------------------------------------------------------------
+;This function returns the pixel value of the cursor in the sangle main plot
+FUNCTION getSanglePixel, Event
+
+  y_coeff = 2.
+  Y = Event.y
+  RETURN, FIX(Y/y_coeff)
+
+END

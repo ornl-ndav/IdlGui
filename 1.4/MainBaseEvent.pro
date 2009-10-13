@@ -134,6 +134,26 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
+  ;sangle plot
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_plot'): BEGIN
+    enter_error = 0
+    CATCH, enter_error
+    IF (enter_error NE 0) THEN BEGIN ;moving inside draw
+      CATCH, /CANCEL
+      tof = getSangleTof(Event)
+      tof_value = STRCOMPRESS(tof,/REMOVE_ALL)
+      pixel = getSanglePixel(Event)
+      pixel_value = STRCOMPRESS(pixel,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+      IF (Event.enter EQ 0) THEN BEGIN
+        tof_value = 'N/A'
+        pixel_value = 'N/A'
+      ENDIF
+    ENDELSE
+    putTextFieldValue, Event, 'reduce_sangle_live_info_tof', tof_value
+    putTextFieldValue, Event, 'reduce_sangle_live_info_pixel', pixel_value
+  END
+  
   ;spin state selection
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_1'): BEGIN ;Off_Off
     WIDGET_CONTROL, /HOURGLASS
