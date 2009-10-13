@@ -126,7 +126,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     ;SANGLE BASE
     reduce_run_sangle_table: PTR_NEW(0L), $
     sangle_table_press_click: 1,$
-    sangle_xsize_draw: 800., $
+    sangle_xsize_draw: 860., $
     sangle_ysize_draw: 608., $
     
     reduce_step1_spin_match_disable: $
