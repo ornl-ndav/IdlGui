@@ -34,7 +34,6 @@
 
 PRO plot_reduce_step2_norm, Event
 
-
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   

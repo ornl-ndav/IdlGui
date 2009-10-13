@@ -32,6 +32,24 @@
 ;
 ;==============================================================================
 
+FUNCTION retrieve_nexus_data, FullNexusName, spin_state, data
+
+  not_hdf5_format = 0
+  CATCH, not_hdf5_format
+  IF (not_hdf5_format NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN,0
+  ENDIF ELSE BEGIN
+    fileID    = H5F_OPEN(FullNexusName)
+    data_path = '/entry-' + spin_state + '/bank1/data'
+    fieldID = H5D_OPEN(fileID,data_path)
+    data = H5D_READ(fieldID)
+    RETURN, 1
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
 FUNCTION getSangleRowSelected, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='reduce_sangle_tab_table_uname')
   selection = WIDGET_INFO(id, /TABLE_SELECT)
@@ -196,7 +214,7 @@ END
 ;-----------------------------------------------------------------------------
 PRO plot_selected_data_in_sangle_base, Event
 
- ;get global structure
+  ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   reduce_tab1_table = (*(*global).reduce_tab1_table)
@@ -208,12 +226,37 @@ PRO plot_selected_data_in_sangle_base, Event
   full_nexus_file_name = reduce_tab1_table[1,row_selected]
   s_full_nexus_file_name = STRCOMPRESS(full_nexus_file_name,/REMOVE_ALL)
   IF (s_full_nexus_file_name EQ '') THEN RETURN
-
+  
   ;get spin state selected
   sangle_spin_state_selected = getSangleSpinStateSelected(Event)
   IF (sangle_spin_state_selected EQ '') THEN RETURN
   
+  ;retrieve data of run and spin state selected
+  result = retrieve_nexus_data(s_full_nexus_file_name, $
+    sangle_spin_state_selected, $
+    data)
+  IF (result EQ 0) THEN RETURN
   
-
-
+  tdata = TOTAL(data,2)
+  x = (size(tdata))(1)
+  y = (size(tdata))(2)
+  IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+    index = WHERE(tData EQ 0, nbr)
+    IF (nbr GT 0) THEN BEGIN
+      tData[index] = !VALUES.D_NAN
+    ENDIF
+    tData = ALOG10(tData)
+    tData = BYTSCL(tData,/NAN)
+  ENDIF
+  
+  rtData = REBIN(tData, x, 2*y)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  
+  DEVICE, DECOMPOSED=0
+  LOADCT, 5, /SILENT
+  TVSCL, rtData, /DEVICE
+  
 END
