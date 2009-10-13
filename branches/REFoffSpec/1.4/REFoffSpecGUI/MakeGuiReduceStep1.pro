@@ -136,15 +136,15 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   plot = WIDGET_DRAW(row1col2,$
     UNAME = 'reduce_sangle_plot',$
     XOFFSET = 40,$
-    YOFFSET = 10,$
+    YOFFSET = 5,$
     XSIZE = (*global).sangle_xsize_draw,$
     YSIZE = (*global).sangle_ysize_draw)
     
   ;scale
   scale = WIDGET_DRAW(row1col2, $
     UNAME = 'reduce_sangle_y_scale', $
-    XSIZE = 50,$
-    YSIZE = 2*304+20,$
+    XSIZE = (*global).sangle_xsize_draw + 40,$
+    YSIZE = 2*304+25,$
     YOFFSET = 0)
     
   row1col3Main = WIDGET_BASE(row1,$ ;---------------------------------------
