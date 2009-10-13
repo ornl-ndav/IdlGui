@@ -121,6 +121,7 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0
     sangle = STRCOMPRESS(iNexus->getSangle(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle
+    putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sangle
     dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
     SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
@@ -128,6 +129,7 @@ PRO display_metatada_of_sangle_selected_row, Event
       SampleDetDistance
     refpix = '200'
     putTextFieldValue, event, 'reduce_sangle_base_refpix_value', refpix
+    putTextFieldValue, Event, 'reduce_sangle_base_refpix_user_value', refpix
     
     OBJ_DESTROY, iNexus
     
@@ -200,7 +202,7 @@ PRO   display_reduce_step1_sangle_scale, $
   
   LOADCT, 0,/SILENT
   
-  position = [40,25,(*global).sangle_xsize_draw+40,$
+  position = [40,26,(*global).sangle_xsize_draw+40,$
     (*global).sangle_ysize_draw+25]
     
   tof = (*(*global).sangle_tof)
@@ -338,4 +340,32 @@ PRO retrieve_tof_array_from_nexus, Event
   tof = tof[0:sz-2] ;remove last element
   (*(*global).sangle_tof) = tof
   
+END
+
+;------------------------------------------------------------------------------
+PRO plot_sangle_refpix, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  ON_IOERROR, error
+
+  ;retrieve RefPix value (from text field)
+  RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
+  fix_RefPix = FIX(RefPix)
+
+  xdevice_max = (*global).sangle_xsize_draw
+  
+  RefPix_device = getSangleYDeviceValue(Event,fix_RefPix)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+
+  PLOTS, 0, RefPix_device, /DEVICE
+  PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, COLOR=[255,255,0]
+
+  error:
+  RETURN
+
 END
