@@ -249,7 +249,8 @@ PRO plot_selected_data_in_sangle_base, Event
     tData = BYTSCL(tData,/NAN)
   ENDIF
   
-  rtData = REBIN(tData, x, 2*y)
+  x_coeff = FLOAT((*global).sangle_xsize_draw / FLOAT(x))
+  rtData = CONGRID(tData, x_coeff*x, 2*y)
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
