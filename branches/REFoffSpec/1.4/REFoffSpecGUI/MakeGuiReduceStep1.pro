@@ -124,6 +124,13 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     UNAME = 'reduce_sangle_tab_reset_button',$
     SENSITIVE = 0)
     
+   ;Counts vs pixel plot
+   help_plot = WIDGET_DRAW(row1col1,$
+   SCR_XSIZE = 255,$
+   SCR_YSIZE = 215,$
+   /BUTTON_EVENTS,$
+   UNAME = 'sangle_help_draw') 
+    
   row1col2 = WIDGET_BASE(row1,$ ;............................
     UNAME = 'reduce_sangle_plot_base')
     
