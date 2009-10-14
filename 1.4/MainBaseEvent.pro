@@ -189,21 +189,29 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_1'): BEGIN ;Off_Off
     WIDGET_CONTROL, /HOURGLASS
     plot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_2'): BEGIN ;Off_On
     WIDGET_CONTROL, /HOURGLASS
     plot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
     WIDGET_CONTROL, /HOURGLASS
     plot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_4'): BEGIN ;On_On
     WIDGET_CONTROL, /HOURGLASS
     plot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
@@ -211,11 +219,15 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_lin'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
     replot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_log'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
     replot_selected_data_in_sangle_base, Event
+    saving_background, Event
+    plot_sangle_refpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
