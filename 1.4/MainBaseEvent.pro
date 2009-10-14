@@ -159,7 +159,7 @@ PRO MAIN_BASE_event, Event
         PLOTS, (*global).sangle_xsize_draw, Event.y, /DEVICE, /CONTINUE, $
         COLOR=[255,255,0]
         determine_sangle_refpix_data_from_device_value, Event
-            calculate_new_sangle_value, Event
+        calculate_new_sangle_value, Event
       ENDIF
       
       ;moving mouse with button pressed
@@ -172,7 +172,7 @@ PRO MAIN_BASE_event, Event
         PLOTS, (*global).sangle_xsize_draw, Event.y, /DEVICE, /CONTINUE, $
         COLOR=[255,255,0]
         determine_sangle_refpix_data_from_device_value, Event
-            calculate_new_sangle_value, Event
+        calculate_new_sangle_value, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;mouse released
