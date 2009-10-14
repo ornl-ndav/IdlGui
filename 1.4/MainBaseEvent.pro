@@ -132,6 +132,7 @@ PRO MAIN_BASE_event, Event
       plot_selected_data_in_sangle_base, Event
       saving_background, Event
       plot_sangle_refpix, Event
+      plot_sangle_dirpix, Event
       (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
       (*global).sangle_table_press_click = 1
@@ -157,6 +158,7 @@ PRO MAIN_BASE_event, Event
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
         plot_sangle_refpix_live, Event
+        plot_sangle_dirpix, Event
         determine_sangle_refpix_data_from_device_value, Event
         calculate_new_sangle_value, Event
       ENDIF
@@ -168,6 +170,7 @@ PRO MAIN_BASE_event, Event
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
         plot_sangle_refpix_live, Event
+        plot_sangle_dirpix, Event
         determine_sangle_refpix_data_from_device_value, Event
         calculate_new_sangle_value, Event
       ENDIF
@@ -192,6 +195,7 @@ PRO MAIN_BASE_event, Event
     plot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_2'): BEGIN ;Off_On
@@ -199,6 +203,7 @@ PRO MAIN_BASE_event, Event
     plot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
@@ -206,6 +211,7 @@ PRO MAIN_BASE_event, Event
     plot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_4'): BEGIN ;On_On
@@ -213,6 +219,7 @@ PRO MAIN_BASE_event, Event
     plot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
@@ -222,6 +229,7 @@ PRO MAIN_BASE_event, Event
     replot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_log'): BEGIN
@@ -229,6 +237,7 @@ PRO MAIN_BASE_event, Event
     replot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
@@ -240,6 +249,7 @@ PRO MAIN_BASE_event, Event
     WSET, id_value
     TV, (*(*global).sangle_background_plot), true=3
     plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
     calculate_new_sangle_value, Event
   END
   
