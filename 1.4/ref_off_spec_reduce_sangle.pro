@@ -418,7 +418,7 @@ PRO plot_sangle_refpix, Event
     
   ;left and right arrows
   IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-  plot_sangle_arrows, Event, RefPix_device, color='red'
+    plot_sangle_arrows, Event, RefPix_device, color='red'
   ENDIF
   
   device, decomposed=0
@@ -460,9 +460,9 @@ PRO plot_sangle_dirpix, Event
     
   ;left and right arrows
   IF ((*global).sangle_mode EQ 'dirpix') THEN BEGIN
-  plot_sangle_arrows, Event, DirPix_device, color='white'
+    plot_sangle_arrows, Event, DirPix_device, color='white'
   ENDIF
-
+  
   device, decomposed=0
   
   error:
@@ -536,12 +536,12 @@ PRO calculate_new_sangle_value, Event
     'reduce_sangle_base_dangle_value'))
   Dangle0 = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_dangle0_value'))
-  DirPix  = FLOAT(getTextFieldValue(Event,$
-    'reduce_sangle_base_dirpix_value'))
   RefPix  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_refpix_user_value'))
   SDdist  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_sampledetdis_value'))
+  DirPix  = FLOAT(getTextFieldValue(Event,$
+    'reduce_sangle_base_dirpix_user_value'))
     
   part1 = (Dangle - Dangle0 ) / 2.
   part2 = (DirPix - RefPix) * 7.e-4
