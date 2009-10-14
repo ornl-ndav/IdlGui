@@ -157,9 +157,15 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
-        plot_sangle_refpix_live, Event
-        plot_sangle_dirpix, Event
-        determine_sangle_refpix_data_from_device_value, Event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+          plot_sangle_refpix_live, Event
+          plot_sangle_dirpix, Event
+          determine_sangle_refpix_data_from_device_value, Event
+        ENDIF ELSE BEGIN
+          plot_sangle_dirpix_live, Event
+          plot_sangle_refpix, Event
+          determine_sangle_dirpix_data_from_device_value, Event
+        ENDELSE
         calculate_new_sangle_value, Event
       ENDIF
       
@@ -173,8 +179,8 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
-      plot_sangle_refpix, Event
-      plot_sangle_dirpix, Event
+        plot_sangle_refpix, Event
+        plot_sangle_dirpix, Event
       ENDIF
       
       ;moving mouse with button pressed
@@ -183,9 +189,15 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
-        plot_sangle_refpix_live, Event
-        plot_sangle_dirpix, Event
-        determine_sangle_refpix_data_from_device_value, Event
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
+          plot_sangle_refpix_live, Event
+          plot_sangle_dirpix, Event
+          determine_sangle_refpix_data_from_device_value, Event
+        ENDIF ELSE BEGIN ;dirpix mode
+          plot_sangle_dirpix_live, Event
+          plot_sangle_refpix, Event
+          determine_sangle_dirpix_data_from_device_value, Event
+        ENDELSE
         calculate_new_sangle_value, Event
       ENDIF
       
