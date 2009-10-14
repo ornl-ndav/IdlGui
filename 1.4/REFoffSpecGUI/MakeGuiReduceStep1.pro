@@ -62,7 +62,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   SangleBaseEquation = WIDGET_BASE(TabBase, $
     UNAME = 'reduce_step1_sangle_base_equation', $
     XOFFSET   = 530, $
-    YOFFSET   = 675, $
+    YOFFSET   = 695, $
     SCR_XSIZE = 300, $
     SCR_YSIZE = 100, $
     map = 0)
@@ -76,7 +76,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   SangleBaseLabel = WIDGET_BASE(TabBase, $
     UNAME = 'reduce_step1_sangle_base_label', $
     XOFFSET = 15, $
-    YOFFSET = 628, $
+    YOFFSET = 638, $
     MAP = 0, $
     /ROW)
     
@@ -347,22 +347,24 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
   base2 = WIDGET_BASE(row2col2,$
     XOFFSET = 155,$
     YOFFSET = 110,$
+    FRAME = 1,$
+    /BASE_ALIGN_CENTER,$
     /ROW)
   label = WIDGET_LABEL(base2,$
-    /ALIGN_LEFT,$
+;    /ALIGN_LEFT,$
     VALUE = 'Sangle [rad (deg)]: ')
   value = WIDGET_LABEL(base2,$
     VALUE = 'N/A (N/A)',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
-    SCR_XSIZE = 200,$
-    /ALIGN_LEFT)
+    SCR_XSIZE = 200)
+;    /ALIGN_LEFT)
     
   done = WIDGET_BUTTON(row2col2,$
     VALUE = 'DONE WITH SANGLE CALCULATION',$
     UNAME = 'reduce_sangle_done_button',$
     YOFFSET = 165, $
     XOFFSET = 20, $
-    SCR_XSIZE = 450)
+    SCR_XSIZE = 475)
     
   ;****************************************************************************
     
