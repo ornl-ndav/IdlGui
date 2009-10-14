@@ -279,6 +279,18 @@ PRO MAIN_BASE_event, Event
     calculate_new_sangle_value, Event
   END
   
+  ;DirPix text field
+  WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='reduce_sangle_base_dirpix_user_value'): BEGIN
+    id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    WSET, id_value
+    TV, (*(*global).sangle_background_plot), true=3
+    plot_sangle_refpix, Event
+    plot_sangle_dirpix, Event
+    calculate_new_sangle_value, Event
+  END
+
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
     MapBase, Event, 'reduce_step1_sangle_base', 0
