@@ -17,6 +17,7 @@ cd, IdlUtilitiesPath
 .run uniq_element_table.pro
 .run logger.pro
 .run IDLxmlParser__define.pro 
+.run fsc_color.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

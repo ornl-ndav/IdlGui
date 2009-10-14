@@ -327,10 +327,20 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
   label = WIDGET_LABEL(base1,$
     /ALIGN_LEFT,$
-    VALUE = 'RefPix: ')
+    VALUE = 'RefPix:')
   value = WIDGET_TEXT(base1,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_refpix_user_value',$
+    /EDITABLE, $
+    XSIZE = 10)
+    space = WIDGET_LABEL(base1,$
+    VALUE = '  ')
+  label = WIDGET_LABEL(base1,$
+    /ALIGN_LEFT,$
+    VALUE = 'DirPix:')
+  value = WIDGET_TEXT(base1,$
+    VALUE = 'N/A',$
+    UNAME = 'reduce_sangle_base_dirpix_user_value',$
     /EDITABLE, $
     XSIZE = 10)
     
@@ -342,7 +352,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ALIGN_LEFT,$
     VALUE = 'Sangle [rad (deg)]: ')
   value = WIDGET_LABEL(base2,$
-    VALUE = 'N/A',$
+    VALUE = 'N/A (N/A)',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
     SCR_XSIZE = 200,$
     /ALIGN_LEFT)
