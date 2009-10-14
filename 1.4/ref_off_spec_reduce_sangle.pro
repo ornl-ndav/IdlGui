@@ -359,10 +359,10 @@ END
 
 ;------------------------------------------------------------------------------
 PRO  plot_sangle_arrows, Event, Y, color=color
-  
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-
+  
   xoffset = (*global).sangle_refpix_arrow_xoffset
   yoffset = (*global).sangle_refpix_arrow_yoffset
   
@@ -371,15 +371,21 @@ PRO  plot_sangle_arrows, Event, Y, color=color
   PLOTS, xoffset, Y, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, 0, Y-yoffset, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, 0, Y+yoffset,/DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
-
+  
   ;plot right arrow
   xmax = (*global).sangle_xsize_draw - 1
   PLOTS, xmax, Y+yoffset, /DEVICE
   PLOTS, xmax-xoffset, Y, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, xmax, Y-yoffset, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, xmax, Y+yoffset,/DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
-
+  
 END
+
+;------------------------------------------------------------------------------
+;add legend
+PRO plot_sangle_selection_legend, Event, string=string, color=color, x, y
+  XYouts, x, y, string, /DEVICE, COLOR=FSC_COLOR(color)
+END 
 
 ;------------------------------------------------------------------------------
 PRO plot_sangle_refpix, Event
@@ -403,7 +409,12 @@ PRO plot_sangle_refpix, Event
   device, decomposed=1
   
   PLOTS, 0, RefPix_device, /DEVICE
-  PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, COLOR=[255,255,0]
+  PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, $
+  COLOR=FSC_COLOR('red')
+  
+  ;add legend
+  plot_sangle_selection_legend, Event, string='RefPix', $
+  color='red', xdevice_max - 100, RefPix_device + 10
   
   ;left and right arrows
   plot_sangle_arrows, Event, RefPix_device, color='red'
@@ -432,9 +443,13 @@ PRO plot_sangle_refpix_live, Event
   PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
     COLOR=[255,255,0]
     
+  ;add legend
+  plot_sangle_selection_legend, Event, string='RefPix', $
+  color='red', (*global).sangle_xsize_draw - 100, Y + 10
+    
   ;left and right arrows
   plot_sangle_arrows, Event, Y, color='red'
-
+  
   device, decomposed=0
   
 END
