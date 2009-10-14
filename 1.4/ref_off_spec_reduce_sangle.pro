@@ -115,7 +115,7 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, Event, 'reduce_sangle_info_title_base', run_number
     putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
       full_nexus_file_name
-    
+      
     dangle = iNexus->getDangle()
     s_dangle_rad = STRCOMPRESS(dangle,/REMOVE_ALL)
     s_dangle_deg = STRCOMPRESS(convert_to_deg(dangle),/REMOVE_ALL)
@@ -127,7 +127,7 @@ PRO display_metatada_of_sangle_selected_row, Event
     s_dangle0_deg = STRCOMPRESS(convert_to_deg(dangle0),/REMOVE_ALL)
     dangle0_text = s_dangle0_rad + ' (' + s_dangle0_deg + ')'
     putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0_text
-
+    
     sangle = iNexus->getSangle()
     s_sangle_rad = STRCOMPRESS(sangle,/REMOVE_ALL)
     s_sangle_deg = STRCOMPRESS(convert_to_deg(sangle),/REMOVE_ALL)
@@ -137,6 +137,8 @@ PRO display_metatada_of_sangle_selected_row, Event
     
     dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
+    putTextFieldValue, Event, 'reduce_sangle_base_dirpix_user_value', dirpix
+    
     SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_sampledetdis_value', $
       SampleDetDistance
@@ -356,6 +358,30 @@ PRO retrieve_tof_array_from_nexus, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO  plot_sangle_arrows, Event, Y, color=color
+  
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  xoffset = (*global).sangle_refpix_arrow_xoffset
+  yoffset = (*global).sangle_refpix_arrow_yoffset
+  
+  ;plot left arrow
+  PLOTS, 0, Y+yoffset, /DEVICE
+  PLOTS, xoffset, Y, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, 0, Y-yoffset, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, 0, Y+yoffset,/DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+
+  ;plot right arrow
+  xmax = (*global).sangle_xsize_draw - 1
+  PLOTS, xmax, Y+yoffset, /DEVICE
+  PLOTS, xmax-xoffset, Y, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, xmax, Y-yoffset, /DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, xmax, Y+yoffset,/DEVICE, /CONTINUE, COLOR=FSC_COLOR(color)
+
+END
+
+;------------------------------------------------------------------------------
 PRO plot_sangle_refpix, Event
 
   ;get global structure
@@ -374,12 +400,42 @@ PRO plot_sangle_refpix, Event
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
+  device, decomposed=1
   
   PLOTS, 0, RefPix_device, /DEVICE
   PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, COLOR=[255,255,0]
   
+  ;left and right arrows
+  plot_sangle_arrows, Event, RefPix_device, color='red'
+  
+  device, decomposed=0
+  
   error:
   RETURN
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_sangle_refpix_live, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  device, decomposed=1
+  
+  Y = Event.y
+  
+  PLOTS, 0, Y, /DEVICE
+  PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
+    COLOR=[255,255,0]
+    
+  ;left and right arrows
+  plot_sangle_arrows, Event, Y, color='red'
+
+  device, decomposed=0
   
 END
 
@@ -405,10 +461,10 @@ PRO calculate_new_sangle_value, Event
   part3 = 2. * SDdist
   
   Sangle = part1 + part2 / part3
-
+  
   s_Sangle_rad = STRCOMPRESS(Sangle,/REMOVE_ALL)
   s_Sangle_deg = STRCOMPRESS(convert_to_deg(Sangle),/REMOVE_ALL)
-
+  
   sSangle = s_Sangle_rad + ' (' + s_Sangle_deg + ')'
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
   RETURN
@@ -426,7 +482,9 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   RefPix_data = getSangleYDataValue(Event,RefPix_device)
   sRefPix_data = STRCOMPRESS(RefPix_data,/REMOVE_ALL)
   putTextFieldValue, Event, $
-  'reduce_sangle_base_refpix_user_value',$
-  sRefPix_data
-  
+    'reduce_sangle_base_refpix_user_value',$
+    sRefPix_data
+    
 END
+
+;------------------------------------------------------------------------------
