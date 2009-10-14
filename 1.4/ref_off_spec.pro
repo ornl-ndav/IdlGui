@@ -133,6 +133,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_ysize_draw: 608., $
     sangle_main_plot_congrid_x_coeff: 0.,$
     sangle_main_plot_congrid_y_coeff: 2., $
+    sangle_mouse_pressed: 0b, $
     
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$

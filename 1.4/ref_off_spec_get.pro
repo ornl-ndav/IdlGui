@@ -543,7 +543,7 @@ FUNCTION getSanglePixel, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTIOn getSangleYDeviceValue, Event, data_value
+FUNCTION getSangleYDeviceValue, Event, data_value
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
@@ -551,8 +551,23 @@ FUNCTIOn getSangleYDeviceValue, Event, data_value
   sangle_ysize_draw = (*global).sangle_ysize_draw
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
   
-  device = FLOAT(sangle_ysize_draw) * FLOaT(data_value) / FLOAT(304L)
+  device = FLOAT(sangle_ysize_draw) * FLOAT(data_value) / FLOAT(304L)
   
   RETURN, device
+  
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getSangleYDataValue, Event, device_value
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  sangle_ysize_draw = (*global).sangle_ysize_draw
+  y_coeff = (*global).sangle_main_plot_congrid_y_coeff
+  
+  data = (FLOAT(device_value) * FLOAT(304L)) / FLOAT(sangle_ysize_draw)
+    
+  RETURN, data
   
 END
