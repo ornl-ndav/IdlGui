@@ -485,7 +485,7 @@ PRO plot_sangle_refpix_live, Event
   
   PLOTS, 0, Y, /DEVICE
   PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
-    COLOR=[255,255,0]
+    COLOR=FSC_COLOR('red')
     
   ;add legend
   plot_sangle_selection_legend, Event, string='RefPix', $
@@ -493,6 +493,34 @@ PRO plot_sangle_refpix_live, Event
     
   ;left and right arrows
   plot_sangle_arrows, Event, Y, color='red'
+  
+  device, decomposed=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_sangle_dirpix_live, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  device, decomposed=1
+  
+  Y = Event.y
+  
+  PLOTS, 0, Y, /DEVICE
+  PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
+    COLOR=FSC_COLOR('white')
+    
+  ;add legend
+  plot_sangle_selection_legend, Event, string='DirPix', $
+    color='white', (*global).sangle_xsize_draw - 100, Y + 10
+    
+  ;left and right arrows
+  plot_sangle_arrows, Event, Y, color='white'
   
   device, decomposed=0
   
@@ -563,6 +591,18 @@ PRO determine_sangle_refpix_data_from_device_value, Event
   putTextFieldValue, Event, $
     'reduce_sangle_base_refpix_user_value',$
     sRefPix_data
+    
+END
+
+;------------------------------------------------------------------------------
+PRO determine_sangle_dirpix_data_from_device_value, Event
+
+  DirPix_device = Event.y
+  DirPix_data = getSangleYDataValue(Event,DirPix_device)
+  sDirPix_data = STRCOMPRESS(DirPix_data,/REMOVE_ALL)
+  putTextFieldValue, Event, $
+    'reduce_sangle_base_dirpix_user_value',$
+    sDirPix_data
     
 END
 
