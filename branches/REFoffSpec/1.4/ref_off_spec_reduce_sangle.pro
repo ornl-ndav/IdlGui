@@ -385,7 +385,7 @@ END
 ;add legend
 PRO plot_sangle_selection_legend, Event, string=string, color=color, x, y
   XYouts, x, y, string, /DEVICE, COLOR=FSC_COLOR(color)
-END 
+END
 
 ;------------------------------------------------------------------------------
 PRO plot_sangle_refpix, Event
@@ -410,12 +410,12 @@ PRO plot_sangle_refpix, Event
   
   PLOTS, 0, RefPix_device, /DEVICE
   PLOTS, xdevice_max, RefPix_device, /DEVICE, /CONTINUE, $
-  COLOR=FSC_COLOR('red')
-  
+    COLOR=FSC_COLOR('red')
+    
   ;add legend
   plot_sangle_selection_legend, Event, string='RefPix', $
-  color='red', xdevice_max - 100, RefPix_device + 10
-  
+    color='red', xdevice_max - 100, RefPix_device + 10
+    
   ;left and right arrows
   plot_sangle_arrows, Event, RefPix_device, color='red'
   
@@ -445,7 +445,7 @@ PRO plot_sangle_refpix_live, Event
     
   ;add legend
   plot_sangle_selection_legend, Event, string='RefPix', $
-  color='red', (*global).sangle_xsize_draw - 100, Y + 10
+    color='red', (*global).sangle_xsize_draw - 100, Y + 10
     
   ;left and right arrows
   plot_sangle_arrows, Event, Y, color='red'
@@ -482,11 +482,31 @@ PRO calculate_new_sangle_value, Event
   
   sSangle = s_Sangle_rad + ' (' + s_Sangle_deg + ')'
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
+  update_sangle_big_table, Event, sSangle
+  
   RETURN
   
   error:
-  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', 'N/A (N/A)'
+  sSangle = 'N/A (N/A)'
+  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
+  update_sangle_big_table, Event, sSangle
+  
   RETURN
+  
+END
+
+;------------------------------------------------------------------------------
+PRO update_sangle_big_table, Event, sSangle
+
+  table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
+  IF ((size(table))(0) EQ 1) THEN BEGIN ;1d array
+    table[1] = sSangle
+  ENDIF ELSE BEGIN ;2d array
+    ;get sangle row selected
+    row_selected = getSangleRowSelected(Event)
+    table[1,row_selected] = sSangle
+  ENDELSE
+  putValueInTable, Event, 'reduce_sangle_tab_table_uname', table
   
 END
 
