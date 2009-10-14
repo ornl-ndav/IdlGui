@@ -163,6 +163,20 @@ PRO MAIN_BASE_event, Event
         calculate_new_sangle_value, Event
       ENDIF
       
+      IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
+        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
+          (*global).sangle_mode = 'dirpix'
+        ENDIF ELSE BEGIN
+          (*global).sangle_mode = 'refpix'
+        ENDELSE
+        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        TV, (*(*global).sangle_background_plot), true=3
+      plot_sangle_refpix, Event
+      plot_sangle_dirpix, Event
+      ENDIF
+      
       ;moving mouse with button pressed
       IF ((*global).sangle_mouse_pressed) THEN BEGIN
         id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')

@@ -417,7 +417,9 @@ PRO plot_sangle_refpix, Event
     color='red', xdevice_max - 100, RefPix_device + 10
     
   ;left and right arrows
+  IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
   plot_sangle_arrows, Event, RefPix_device, color='red'
+  ENDIF
   
   device, decomposed=0
   
@@ -456,6 +458,11 @@ PRO plot_sangle_dirpix, Event
   plot_sangle_selection_legend, Event, string='DirPix', $
     color='white', xdevice_max - 100, DirPix_device + 10
     
+  ;left and right arrows
+  IF ((*global).sangle_mode EQ 'dirpix') THEN BEGIN
+  plot_sangle_arrows, Event, DirPix_device, color='white'
+  ENDIF
+
   device, decomposed=0
   
   error:

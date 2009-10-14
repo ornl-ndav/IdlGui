@@ -136,6 +136,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_mouse_pressed: 0b, $
     sangle_refpix_arrow_xoffset: 10, $ ;xoffset for arrow
     sangle_refpix_arrow_yoffset: 10, $ ;yoffset for arrow
+    sangle_mode: 'refpix', $ ;either 'refpix' or 'dirpix'
     
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$
