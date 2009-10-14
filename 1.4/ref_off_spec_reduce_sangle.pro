@@ -427,6 +427,43 @@ PRO plot_sangle_refpix, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_sangle_dirpix, Event
+
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  ON_IOERROR, error
+  
+  ;retrieve DirPix value (from text field)
+  DirPix = getTextFieldValue(Event,'reduce_sangle_base_dirpix_user_value')
+  fix_DirPix = FIX(DirPix)
+  
+  xdevice_max = (*global).sangle_xsize_draw
+  
+  DirPix_device = getSangleYDeviceValue(Event,fix_DirPix)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  device, decomposed=1
+  
+  PLOTS, 0, DirPix_device, /DEVICE
+  PLOTS, xdevice_max, DirPix_device, /DEVICE, /CONTINUE, $
+    COLOR=FSC_COLOR('white')
+    
+  ;add legend
+  plot_sangle_selection_legend, Event, string='DirPix', $
+    color='white', xdevice_max - 100, DirPix_device + 10
+    
+  device, decomposed=0
+  
+  error:
+  RETURN
+  
+END
+
+;------------------------------------------------------------------------------
 PRO plot_sangle_refpix_live, Event
 
   ;get global structure
