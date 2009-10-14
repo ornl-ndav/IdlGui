@@ -138,7 +138,8 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     XOFFSET = 40,$
     YOFFSET = 5,$
     /TRACKING_EVENTS, $
-    /MOTION_EVENTS,$
+    /MOTION_EVENTS, $
+    /BUTTON_EVENTS, $
     XSIZE = (*global).sangle_xsize_draw,$
     YSIZE = (*global).sangle_ysize_draw)
     

@@ -351,7 +351,7 @@ PRO plot_sangle_refpix, Event
   ON_IOERROR, error
   
   ;retrieve RefPix value (from text field)
-  RefPix = getTextFieldValue(Event,'reduce_sangle_base_refpix_user_value')
+  RefPix = getTextFieldValue(Event,w'reduce_sangle_base_refpix_user_value')
   fix_RefPix = FIX(RefPix)
   
   xdevice_max = (*global).sangle_xsize_draw
@@ -399,5 +399,17 @@ PRO calculate_new_sangle_value, Event
   error:
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', 'N/A'
   RETURN
+  
+END
+
+;------------------------------------------------------------------------------
+PRO determine_sangle_refpix_data_from_device_value, Event
+
+  RefPix_device = Event.y
+  RefPix_data = getSangleYDataValue(Event,RefPix_device)
+  sRefPix_data = STRCOMPRESS(RefPix_data,/REMOVE_ALL)
+  putTextFieldValue, Event, $
+  'determine_sangle_refpix_data_from_device_value',$
+  sRefPix_data
   
 END

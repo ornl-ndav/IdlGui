@@ -148,6 +148,37 @@ PRO MAIN_BASE_event, Event
       tof_value = STRCOMPRESS(tof,/REMOVE_ALL)
       pixel = getSanglePixel(Event)
       pixel_value = STRCOMPRESS(pixel,/REMOVE_ALL)
+
+      IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
+        (*global).sangle_mouse_pressed = 1b
+        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        TV, (*(*global).sangle_background_plot), true=3
+        PLOTS, 0, Event.y, /DEVICE
+        PLOTS, (*global).sangle_xsize_draw, Event.y, /DEVICE, /CONTINUE, $
+        COLOR=[255,255,0]
+        determine_sangle_refpix_data_from_device_value, Event
+            calculate_new_sangle_value, Event
+      ENDIF
+      
+      ;moving mouse with button pressed
+      IF ((*global).sangle_mouse_pressed) THEN BEGIN
+        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        WSET, id_value
+        TV, (*(*global).sangle_background_plot), true=3
+        PLOTS, 0, Event.y, /DEVICE
+        PLOTS, (*global).sangle_xsize_draw, Event.y, /DEVICE, /CONTINUE, $
+        COLOR=[255,255,0]
+        determine_sangle_refpix_data_from_device_value, Event
+            calculate_new_sangle_value, Event
+      ENDIF
+      
+      IF (Event.release EQ 1) THEN BEGIN ;mouse released
+        (*global).sangle_mouse_pressed = 0b
+      ENDIF
+      
     ENDIF ELSE BEGIN
       IF (Event.enter EQ 0) THEN BEGIN
         tof_value = 'N/A'
