@@ -295,7 +295,10 @@ PRO AddNexusToReduceTab1Table, Event
     ENDIF
     RunNumber = iNexus->getRunNumber()
     IF (instrument EQ 'REF_M') THEN BEGIN
-      sangle    = iNexus->getSangle()
+      sangle_rad    = iNexus->getSangle()
+      sangle_deg    = convert_to_deg(sangle_rad)
+      sangle = STRCOMPRESS(sangle_rad,/REMOVE_ALL) + ' (' + $
+      STRCOMPRESS(sangle_deg,/REMOVE_ALL) + ')'
     ENDIF
     OBJ_DESTROY, iNexus
     
@@ -305,7 +308,7 @@ PRO AddNexusToReduceTab1Table, Event
       reduce_tab1_table[1,0] = nexus_file_list[index]
       IF (instrument EQ 'REF_M') THEN BEGIN
         run_sangle_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
-        run_sangle_table[1,0] = STRCOMPRESS(sangle,/REMOVE_ALL)
+        run_sangle_table[1,0] = sangle
       ENDIF
     ENDIF ELSE BEGIN
       sz1 = N_ELEMENTS(reduce_tab1_table)
@@ -319,7 +322,7 @@ PRO AddNexusToReduceTab1Table, Event
         run_sangle_table = REFORM(run_sangle_table,sz1,/OVERWRITE)
         tmp_table = STRARR(2,1)
         tmp_table[0,0] = STRCOMPRESS(RunNumber,/REMOVE_ALL)
-        tmp_table[1,0] = STRCOMPRESS(sangle,/REMOVE_ALL)
+        tmp_table[1,0] = sangle
         run_sangle_table = [run_sangle_table,tmp_table]
       ENDIF
       

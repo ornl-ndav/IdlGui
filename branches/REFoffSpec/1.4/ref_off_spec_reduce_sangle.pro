@@ -115,13 +115,26 @@ PRO display_metatada_of_sangle_selected_row, Event
     putTextFieldValue, Event, 'reduce_sangle_info_title_base', run_number
     putTextFieldValue, Event, 'reduce_sangle_base_full_file_name', $
       full_nexus_file_name
-    dangle = STRCOMPRESS(iNexus->getDangle(),/REMOVE_ALL)
-    putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle
-    dangle0 = STRCOMPRESS(iNexus->getDangle0(),/REMOVE_ALL)
-    putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0
-    sangle = STRCOMPRESS(iNexus->getSangle(),/REMOVE_ALL)
-    putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle
-    putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sangle
+    
+    dangle = iNexus->getDangle()
+    s_dangle_rad = STRCOMPRESS(dangle,/REMOVE_ALL)
+    s_dangle_deg = STRCOMPRESS(convert_to_deg(dangle),/REMOVE_ALL)
+    dangle_text = s_dangle_rad + ' (' + s_dangle_deg + ')'
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle_value', dangle_text
+    
+    dangle0 = iNexus->getDangle0()
+    s_dangle0_rad = STRCOMPRESS(dangle0,/REMOVE_ALL)
+    s_dangle0_deg = STRCOMPRESS(convert_to_deg(dangle0),/REMOVE_ALL)
+    dangle0_text = s_dangle0_rad + ' (' + s_dangle0_deg + ')'
+    putTextFieldValue, Event, 'reduce_sangle_base_dangle0_value', dangle0_text
+
+    sangle = iNexus->getSangle()
+    s_sangle_rad = STRCOMPRESS(sangle,/REMOVE_ALL)
+    s_sangle_deg = STRCOMPRESS(convert_to_deg(sangle),/REMOVE_ALL)
+    sangle_text = s_sangle_rad + ' (' + s_sangle_deg + ')'
+    putTextFieldValue, Event, 'reduce_sangle_base_sangle_value', sangle_text
+    putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sangle_text
+    
     dirpix = STRCOMPRESS(iNexus->getDirPix(),/REMOVE_ALL)
     putTextFieldValue, Event, 'reduce_sangle_base_dirpix_value', dirpix
     SampleDetDistance = STRCOMPRESS(iNexus->getSampleDetDist(),/REMOVE_ALL)
@@ -387,21 +400,21 @@ PRO calculate_new_sangle_value, Event
   SDdist  = FLOAT(getTextFieldValue(Event,$
     'reduce_sangle_base_sampledetdis_value'))
     
-    print, 'RefPix: ' + string(RefPix)
-    print, 'DirPix: ' + string(DirPix)
-
-
   part1 = (Dangle - Dangle0 ) / 2.
   part2 = (DirPix - RefPix) * 7.e-4
   part3 = 2. * SDdist
   
   Sangle = part1 + part2 / part3
-  sSangle = STRCOMPRESS(Sangle,/REMOVE_ALL)
+
+  s_Sangle_rad = STRCOMPRESS(Sangle,/REMOVE_ALL)
+  s_Sangle_deg = STRCOMPRESS(convert_to_deg(Sangle),/REMOVE_ALL)
+
+  sSangle = s_Sangle_rad + ' (' + s_Sangle_deg + ')'
   putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', sSangle
   RETURN
   
   error:
-  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', 'N/A'
+  putTextFieldValue, Event, 'reduce_sangle_base_sangle_user_value', 'N/A (N/A)'
   RETURN
   
 END

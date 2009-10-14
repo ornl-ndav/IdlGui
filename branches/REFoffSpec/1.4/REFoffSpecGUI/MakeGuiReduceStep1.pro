@@ -105,7 +105,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   table = WIDGET_TABLE(row1col1,$
     COLUMN_LABELS = ['Data Run #',$
-    'Sangle (radians)'],$
+    'Sangle [rad (deg)]'],$
     UNAME = 'reduce_sangle_tab_table_uname',$
     /NO_ROW_HEADERS,$
     ;    /RESIZEABLE_COLUMNS,$
@@ -256,33 +256,33 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
   label = WIDGET_LABEL(rowb,$
     /ALIGN_LEFT, $
-    VALUE = '        Dangle (radians): ')
+    VALUE = '      Dangle [rad (deg)]: ')
   value = WIDGET_LABEL(rowb,$
     VALUE = 'N/A',$
     /ALIGN_LEFT, $
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 200,$
     UNAME = 'reduce_sangle_base_dangle_value')
     
   rowbb = WIDGET_BASE(row2col1,$
     /ROW)
   label = WIDGET_LABEL(rowbb,$
     /ALIGN_LEFT, $
-    VALUE = '       Dangle0 (radians): ')
+    VALUE = '     Dangle0 [rad (deg)]: ')
   value = WIDGET_LABEL(rowbb,$
     VALUE = 'N/A',$
     /ALIGN_LEFT, $
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 200,$
     UNAME = 'reduce_sangle_base_dangle0_value')
     
   rowc = WIDGET_BASE(row2col1,$
     /ROW)
   label = WIDGET_LABEL(rowc,$
     /ALIGN_LEFT, $
-    VALUE = '        Sangle (radians): ')
+    VALUE = '      Sangle [rad (deg)]: ')
   value = WIDGET_LABEL(rowc,$
     VALUE = 'N/A',$
     /ALIGN_LEFT, $
-    SCR_XSIZE = 100,$
+    SCR_XSIZE = 200,$
     UNAME = 'reduce_sangle_base_sangle_value')
     
   rowd = WIDGET_BASE(row2col1,$
@@ -311,7 +311,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
   label = WIDGET_LABEL(rowf,$
     /ALIGN_LEFT, $
-    VALUE = 'Sample-Det. distance (m): ')
+    VALUE = 'Sample-Det. distance [m]: ')
   value = WIDGET_LABEL(rowf,$
     /ALIGN_LEFT, $
     VALUE = 'N/A',$
@@ -340,11 +340,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     /ROW)
   label = WIDGET_LABEL(base2,$
     /ALIGN_LEFT,$
-    VALUE = 'Sangle (radians): ')
+    VALUE = 'Sangle [rad (deg)]: ')
   value = WIDGET_LABEL(base2,$
     VALUE = 'N/A',$
     UNAME = 'reduce_sangle_base_sangle_user_value',$
-    SCR_XSIZE = 140,$
+    SCR_XSIZE = 200,$
     /ALIGN_LEFT)
     
   done = WIDGET_BUTTON(row2col2,$
