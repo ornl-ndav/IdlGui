@@ -105,6 +105,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     reduce_structure: {driver: 'refred_lp',$
     data_paths: '--data-path',$
     data: '--data',$
+    sangle: '--omega', $
     norm: '--norm',$
     norm_paths: '--norm-data-paths',$
     norm_roi: '--norm-roi-file',$

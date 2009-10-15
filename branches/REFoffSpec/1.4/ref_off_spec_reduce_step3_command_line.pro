@@ -87,15 +87,24 @@ PRO  reduce_step3_run_jobs, Event
     
     ;data path
     IF (instrument EQ 'REF_M') THEN BEGIN
-      data_path = '/entry-' + big_table[2,row] + '/bank1,1'
+      data_path = '/entry-' + big_table[3,row] + '/bank1,1'
     ENDIF ELSE BEGIN
       data_path = '/entry/bank1,1'
     ENDELSE
     cmd += ' ' + reduce_structure.data_paths + '=' + data_path
     
+    ;sangle value (in radians)
+    IF (instrument EQ 'REF_M') THEN BEGIN
+      sangle_rad_deg = big_table[2,row]
+      sangle_rad_deg_array = STRSPLIT(sangle_rad_deg,'(',/EXTRACT)
+      sangle_rad = sangle_rad_deg_array[0]
+      cmd += ' ' + reduce_structure.sangle + '=' + sangle_rad + $
+        ',0.0,units=radians'
+    ENDIF
+    
     ;norm full nexus name
     IF (instrument EQ 'REF_M') THEN BEGIN
-      col_index = 4
+      col_index = 5
     ENDIF ELSE BEGIN
       col_index = 3
     ENDELSE
@@ -104,7 +113,7 @@ PRO  reduce_step3_run_jobs, Event
     
     ;norm path
     IF (instrument EQ 'REF_M') THEN BEGIN
-      norm_path = '/entry-' + big_table[5,row] + '/bank1,1'
+      norm_path = '/entry-' + big_table[6,row] + '/bank1,1'
     ENDIF ELSE BEGIN
       norm_path = '/entry/bank1,1'
     ENDELSE
@@ -112,7 +121,7 @@ PRO  reduce_step3_run_jobs, Event
     
     ;norm roi file
     IF (instrument EQ 'REF_M') THEN BEGIN
-      col_index = 6
+      col_index = 7
     ENDIF ELSE BEGIN
       col_index = 4
     ENDELSE
@@ -121,7 +130,7 @@ PRO  reduce_step3_run_jobs, Event
     
     ;output_path
     IF (instrument EQ 'REF_M') THEN BEGIN
-      col_index = 7
+      col_index = 8
     ENDIF ELSE BEGIN
       col_index = 5
     ENDELSE
