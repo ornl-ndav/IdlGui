@@ -200,7 +200,7 @@ PRO check_sangle_spin_state_buttons, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO   display_reduce_step1_sangle_scale, $
+PRO display_reduce_step1_sangle_scale, $
     MAIN_BASE=main_base, $
     EVENT=event
     
@@ -653,7 +653,75 @@ PRO save_sangle_table, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  run_sangle_table = getTableValue(Event, 'reduce_sangle_tab_table_uname') 
+  run_sangle_table = getTableValue(Event, 'reduce_sangle_tab_table_uname')
   (*(*global).reduce_run_sangle_table) = run_sangle_table
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_tof_range_on_main_plot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  DEVICE, decomposed=1
+  
+  tof_sangle_device_range = (*global).tof_sangle_device_range
+  IF (tof_sangle_device_range[1] LT 1.0) THEN BEGIN ;first time
+    tData = (*(*global).sangle_tData)
+    x = (size(tdata))(1)
+    tof_sangle_device_range[1] = x
+  ENDIF
+  
+  tof1 = tof_sangle_device_range[0]
+  tof2 = tof_sangle_device_range[1]
+  
+  tof_min = MIN([tof1,tof2], MAX=tof_max)
+  
+  x_coeff = (*global).sangle_main_plot_congrid_x_coeff
+  tof_min_device = tof_min * x_coeff
+  tof_max_device = (tof_max) * x_coeff - 1
+  
+  xoff = 10
+  yoff = 15
+  
+  PLOTS, tof_min_device, 0, /DEVICE, COLOR=FSC_COLOR('green')
+  PLOTS, tof_min_device, (*global).sangle_ysize_draw, /DEVICE, $
+    COLOR=FSC_COLOR('green'), /CONTINUE
+  XYOUTS, tof_min_device+5,11, 'TOF min',/DEVICE
+  PLOTS, tof_min_device-50, 0, /DEVICE, COLOR=FSC_COLOR('green')
+  PLOTS, tof_min_device+50, 0, /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_min_device+50, 10, /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_min_device-50, 10, /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_min_device-50, 0, /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+    
+  PLOTS, tof_max_device, 0, /DEVICE, COLOR=FSC_COLOR('green')
+  PLOTS, tof_max_device, (*global).sangle_ysize_draw, /DEVICE, $
+    COLOR=FSC_COLOR('green'), /CONTINUE
+  XYOUTS, tof_max_device-45,(*global).sangle_ysize_draw-21, $
+    'TOF max',/DEVICE
+  PLOTS, tof_max_device-50, (*global).sangle_ysize_draw-1, $
+    /DEVICE, COLOR=FSC_COLOR('green')
+  PLOTS, tof_max_device+50, (*global).sangle_ysize_draw-1, $
+    /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_max_device+50, (*global).sangle_ysize_draw-10, $
+    /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_max_device-50, (*global).sangle_ysize_draw-10, $
+    /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+  PLOTS, tof_max_device-50, (*global).sangle_ysize_draw-1, $
+    /DEVICE, COLOR=FSC_COLOR('green'), $
+    /CONTINUE
+    
+  DEVICE, decomposed=0
   
 END

@@ -113,6 +113,7 @@ PRO MAIN_BASE_event, Event
     display_metatada_of_sangle_selected_row, Event
     plot_selected_data_in_sangle_base, Event
     plot_sangle_dirpix, Event
+    plot_tof_range_on_main_plot, Event
     saving_background, Event
     retrieve_tof_array_from_nexus, Event
     display_reduce_step1_sangle_scale, EVENT=event
