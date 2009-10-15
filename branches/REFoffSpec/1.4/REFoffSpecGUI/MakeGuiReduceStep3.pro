@@ -74,14 +74,15 @@ PRO make_gui_Reduce_step3, REDUCE_TAB, sTab, TabTitles, global
   IF (instrument EQ 'REF_M') THEN BEGIN
     COLUMN_LABELS = ['DATA Run',$
       'DATA NeXus',$
+      'Sangle [rad(deg)]',$
       'D. Spin State',$
       'NORM. Run',$
       'NORM. NeXus',$
       'N. Spin State',$
       'ROI',$
       'Output File Name']
-    xsize = 8
-    column_widths = [55,300,90,70,300,90,300,300]
+    xsize = 9
+    column_widths = [55,300,140,90,70,300,90,300,300]
     scr_xsize = 1260
   ENDIF ELSE BEGIN
     COLUMN_LABELS = ['DATA Run',$

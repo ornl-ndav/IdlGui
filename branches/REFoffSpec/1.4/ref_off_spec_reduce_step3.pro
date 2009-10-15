@@ -41,7 +41,7 @@ PRO refresh_reduce_step3_table, Event
   instrument = (*global).instrument
   
   IF (instrument EQ 'REF_M') THEN BEGIN
-    ysize = 8
+    ysize = 9
   ENDIF ELSE BEGIN
     ysize = 6
   ENDELSE
@@ -76,6 +76,8 @@ PRO refresh_reduce_step3_table, Event
   
   IF (instrument EQ 'REF_M') THEN BEGIN ;REF_M
   
+    run_sangle_table = (*(*global).reduce_run_sangle_table)
+    
     table_index = 0
     ;loop over all the working pola state to populate big table
     FOR pola_index=0,3 DO BEGIN
@@ -87,6 +89,7 @@ PRO refresh_reduce_step3_table, Event
         WHILE (data_index LT nbr_data) DO BEGIN
         
           data_run     = short_data_run_number[data_index]
+          sangle       = STRCOMPRESS(run_sangle_table[1,data_index],/REMOVE_ALL) 
           data_nexus   = short_data_nexus_file_name[data_index]
           d_spin_state = list_data_spin[pola_index]
           
@@ -121,16 +124,17 @@ PRO refresh_reduce_step3_table, Event
           ;populate Recap. Big table
           step3_big_table[table_index,0] = data_run
           step3_big_table[table_index,1] = data_nexus
-          step3_big_table[table_index,2] = d_spin_state
-          step3_big_table[table_index,3] = norm_run
-          step3_big_table[table_index,4] = norm_nexus
-          step3_big_table[table_index,5] = n_spin_state
-          step3_big_table[table_index,6] = roi_file
+          step3_big_table[table_index,2] = sangle
+          step3_big_table[table_index,3] = d_spin_state
+          step3_big_table[table_index,4] = norm_run
+          step3_big_table[table_index,5] = norm_nexus
+          step3_big_table[table_index,6] = n_spin_state
+          step3_big_table[table_index,7] = roi_file
           
           ;define the output file name
           output_file_name = 'REF_M_' + data_run
           output_file_name += '_' + d_spin_state + '.txt'
-          step3_big_table[table_index,7] = output_file_name
+          step3_big_table[table_index,8] = output_file_name
           
           data_index++
           table_index++
