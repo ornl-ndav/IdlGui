@@ -114,11 +114,11 @@ PRO MAIN_BASE_event, Event
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
     plot_selected_data_in_sangle_base, Event
+    plot_sangle_dirpix, Event
     saving_background, Event
     retrieve_tof_array_from_nexus, Event
     display_reduce_step1_sangle_scale, EVENT=event
     plot_sangle_refpix, Event
-    plot_sangle_dirpix, Event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
@@ -134,6 +134,7 @@ PRO MAIN_BASE_event, Event
       saving_background, Event
       plot_sangle_refpix, Event
       plot_sangle_dirpix, Event
+      plot_counts_vs_pixel_help, Event
       (*global).sangle_table_press_click = 0
     ENDIF ELSE BEGIN
       (*global).sangle_table_press_click = 1
@@ -160,28 +161,28 @@ PRO MAIN_BASE_event, Event
         TV, (*(*global).sangle_background_plot), true=3
         IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
           plot_sangle_refpix_live, Event
-          plot_sangle_dirpix, Event
           determine_sangle_refpix_data_from_device_value, Event
         ENDIF ELSE BEGIN
           plot_sangle_dirpix_live, Event
-          plot_sangle_refpix, Event
           determine_sangle_dirpix_data_from_device_value, Event
         ENDELSE
         calculate_new_sangle_value, Event
+        plot_counts_vs_pixel_help, Event
       ENDIF
       
       IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
+        replot_selected_data_in_sangle_base, Event
         IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
           (*global).sangle_mode = 'dirpix'
+          plot_sangle_refpix, Event
+          saving_background, Event
+          plot_sangle_dirpix, Event
         ENDIF ELSE BEGIN
           (*global).sangle_mode = 'refpix'
+          plot_sangle_dirpix, Event
+          saving_background, Event
+          plot_sangle_refpix, Event
         ENDELSE
-        id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-        WIDGET_CONTROL, id, GET_VALUE=id_value
-        WSET, id_value
-        TV, (*(*global).sangle_background_plot), true=3
-        plot_sangle_refpix, Event
-        plot_sangle_dirpix, Event
       ENDIF
       
       ;moving mouse with button pressed
@@ -192,14 +193,13 @@ PRO MAIN_BASE_event, Event
         TV, (*(*global).sangle_background_plot), true=3
         IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
           plot_sangle_refpix_live, Event
-          plot_sangle_dirpix, Event
           determine_sangle_refpix_data_from_device_value, Event
         ENDIF ELSE BEGIN ;dirpix mode
           plot_sangle_dirpix_live, Event
-          plot_sangle_refpix, Event
           determine_sangle_dirpix_data_from_device_value, Event
         ENDELSE
         calculate_new_sangle_value, Event
+        plot_counts_vs_pixel_help, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;mouse released
@@ -223,6 +223,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_2'): BEGIN ;Off_On
@@ -231,6 +232,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_3'): BEGIN ;On_Off
@@ -239,6 +241,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_4'): BEGIN ;On_On
@@ -247,6 +250,7 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
@@ -257,38 +261,52 @@ PRO MAIN_BASE_event, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
+  
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_log'): BEGIN
     WIDGET_CONTROL, /HOURGLASS
     replot_selected_data_in_sangle_base, Event
     saving_background, Event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
   ;RefPix text field
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_sangle_base_refpix_user_value'): BEGIN
-    id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    plot_sangle_dirpix, Event
-    calculate_new_sangle_value, Event
+    replot_selected_data_in_sangle_base, Event
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN ;dirpix mode
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
+    plot_counts_vs_pixel_help, Event
   END
   
   ;DirPix text field
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_sangle_base_dirpix_user_value'): BEGIN
-    id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    WSET, id_value
-    TV, (*(*global).sangle_background_plot), true=3
-    plot_sangle_refpix, Event
-    plot_sangle_dirpix, Event
-    calculate_new_sangle_value, Event
+    replot_selected_data_in_sangle_base, Event
+    IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
+      plot_sangle_dirpix, Event
+      saving_background, Event
+      plot_sangle_refpix, Event
+    ENDIF ELSE BEGIN ;dirpix mode
+      plot_sangle_refpix, Event
+      saving_background, Event
+      plot_sangle_dirpix, Event
+    ENDELSE
+    plot_counts_vs_pixel_help, Event
   END
-
+  
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
     MapBase, Event, 'reduce_step1_sangle_base', 0
