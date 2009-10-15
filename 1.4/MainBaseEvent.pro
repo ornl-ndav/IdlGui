@@ -86,10 +86,8 @@ PRO MAIN_BASE_event, Event
     update_polarization_states_widgets, Event ;reduce_step1
     MapBase, Event, 'reduce_tab1_polarization_base', 0
     activate_widget, Event, 'reduce_step1_tab_base', 1
-    
     AddNexusToReduceTab1Table, Event ;update the table
     check_reduce_step1_gui, Event ;_reduce_step1
-    
     select_full_line, Event  ;_reduce_step1
   END
   
@@ -309,6 +307,7 @@ PRO MAIN_BASE_event, Event
   
   ;Done with SANGLE base
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_done_button'): BEGIN
+    save_sangle_table, Event
     MapBase, Event, 'reduce_step1_sangle_base', 0
     MapBase, Event, 'reduce_step1_sangle_base_label', 0
     MapBase, Event, 'reduce_step1_sangle_base_equation', 0

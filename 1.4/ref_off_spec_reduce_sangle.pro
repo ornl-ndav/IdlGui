@@ -621,12 +621,12 @@ PRO plot_counts_vs_pixel_help, Event
   device, decomposed=1
   
   min_counts = MIN(Data,MAX=max_counts)
-
+  
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
     min_counts = 0.1
     YRANGE = [min_counts, max_counts]
     PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1,$
-    YRANGE=yrange
+      YRANGE=yrange
   ENDIF ELSE BEGIN ;linear plot
     PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
   ENDELSE
@@ -644,5 +644,16 @@ PRO plot_counts_vs_pixel_help, Event
   PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
   
   device, decomposed=0
+  
+END
+
+;------------------------------------------------------------------------------
+PRO save_sangle_table, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  run_sangle_table = getTableValue(Event, 'reduce_sangle_tab_table_uname') 
+  (*(*global).reduce_run_sangle_table) = run_sangle_table
   
 END
