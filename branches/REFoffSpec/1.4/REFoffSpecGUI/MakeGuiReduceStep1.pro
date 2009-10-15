@@ -61,16 +61,16 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
   SangleBaseEquation = WIDGET_BASE(TabBase, $
     UNAME = 'reduce_step1_sangle_base_equation', $
-    XOFFSET   = 530, $
+    XOFFSET   = 450, $
     YOFFSET   = 695, $
-    SCR_XSIZE = 300, $
+    SCR_XSIZE = 350, $
     SCR_YSIZE = 100, $
     map = 0)
     
   ;equation
   equation = WIDGET_DRAW(SangleBaseEquation,$
     UNAME = 'reduce_step1_sangle_equation',$
-    XSIZE = 300,$
+    XSIZE = 350,$
     YSIZE = 100)
     
   SangleBaseLabel = WIDGET_BASE(TabBase, $
