@@ -75,6 +75,49 @@ FUNCTION getSangleRowSelected, Event
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION isClickInTofMinBox, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  x = Event.x
+  y = Event.y
+
+  tof_sangle_data_range = (*global).tof_sangle_data_range
+  tof_x_data = tof_sangle_data_range[0]
+
+  xoffset = ABS(x - tof_x_data)
+  
+  IF (xoffset LE 50 AND $
+  y LE 10) THEN RETURN, 1
+  RETURN, 0
+
+END
+
+;------------------------------------------------------------------------------
+FUNCTION isClickInTofMaxBox, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+
+  x = Event.x
+  y = Event.y
+
+  tof_sangle_data_range = (*global).tof_sangle_data_range
+  tof_x_data = tof_sangle_data_range[1]
+
+  x_coeff = (*global).sangle_main_plot_congrid_x_coeff
+  xoffset = ABS(x - tof_x_data*x_coeff)
+  yoffset = ABS(y - (*global).sangle_ysize_draw)
+
+  IF (xoffset LE 50 AND $
+  yoffset LE 10) THEN RETURN, 1
+  RETURN, 0
+
+END
+
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO select_full_line_of_selected_row, Event
   row = getSangleRowSelected(Event)
   select_sangle_row, Event, row
@@ -661,6 +704,13 @@ END
 ;------------------------------------------------------------------------------
 PRO plot_tof_range_on_main_plot, Event
 
+plot_tof_min_range_on_main_plot, Event
+plot_tof_max_range_on_main_plot, Event
+
+END
+
+PRO plot_tof_min_range_on_main_plot, Event
+
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -669,17 +719,21 @@ PRO plot_tof_range_on_main_plot, Event
   WSET,id_value
   DEVICE, decomposed=1
   
-  tof_sangle_device_range = (*global).tof_sangle_device_range
-  IF (tof_sangle_device_range[1] LT 1.0) THEN BEGIN ;first time
+  tof_sangle_data_range = (*global).tof_sangle_data_range
+  IF (tof_sangle_data_range[1] LT 1.0) THEN BEGIN ;first time
     tData = (*(*global).sangle_tData)
     x = (size(tdata))(1)
-    tof_sangle_device_range[1] = x
+    tof_sangle_data_range[1] = x
   ENDIF
   
-  tof1 = tof_sangle_device_range[0]
-  tof2 = tof_sangle_device_range[1]
+  tof1 = tof_sangle_data_range[0]
+  tof2 = tof_sangle_data_range[1]
   
   tof_min = MIN([tof1,tof2], MAX=tof_max)
+
+  tof_sangle_data_range[0] = tof_min
+  tof_sangle_data_range[1] = tof_max
+  (*global).tof_sangle_data_range = tof_sangle_data_range
   
   x_coeff = (*global).sangle_main_plot_congrid_x_coeff
   tof_min_device = tof_min * x_coeff
@@ -702,6 +756,43 @@ PRO plot_tof_range_on_main_plot, Event
   PLOTS, tof_min_device-50, 0, /DEVICE, COLOR=FSC_COLOR('green'), $
     /CONTINUE
     
+    DEVICE, decomposed=0
+  
+END
+
+PRO plot_tof_max_range_on_main_plot, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='reduce_sangle_plot')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  DEVICE, decomposed=1
+  
+  tof_sangle_data_range = (*global).tof_sangle_data_range
+  IF (tof_sangle_data_range[1] LT 1.0) THEN BEGIN ;first time
+    tData = (*(*global).sangle_tData)
+    x = (size(tdata))(1)
+    tof_sangle_data_range[1] = x
+  ENDIF
+  
+  tof1 = tof_sangle_data_range[0]
+  tof2 = tof_sangle_data_range[1]
+  
+  tof_min = MIN([tof1,tof2], MAX=tof_max)
+
+  tof_sangle_data_range[0] = tof_min
+  tof_sangle_data_range[1] = tof_max
+  (*global).tof_sangle_data_range = tof_sangle_data_range
+  
+  x_coeff = (*global).sangle_main_plot_congrid_x_coeff
+  tof_min_device = tof_min * x_coeff
+  tof_max_device = (tof_max) * x_coeff - 1
+  
+  xoff = 10
+  yoff = 15
+  
   PLOTS, tof_max_device, 0, /DEVICE, COLOR=FSC_COLOR('green')
   PLOTS, tof_max_device, (*global).sangle_ysize_draw, /DEVICE, $
     COLOR=FSC_COLOR('green'), /CONTINUE

@@ -154,6 +154,30 @@ PRO MAIN_BASE_event, Event
       
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
         (*global).sangle_mouse_pressed = 1b
+        
+        IF (isClickInTofMinBox(Event)) THEN BEGIN ;user click the tof min slide
+          (*global).sangle_mode = 'tof_min'
+          id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          TV, (*(*global).sangle_background_plot), true=3
+          plot_sangle_dirpix, Event
+          plot_sangle_refpix, Event
+          saving_background, Event
+          RETURN
+        ENDIF
+        IF (isClickInTofMaxBox(Event)) THEN BEGIN
+          (*global).sangle_mode = 'tof_min'
+          id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
+          WIDGET_CONTROL, id, GET_VALUE=id_value
+          WSET, id_value
+          TV, (*(*global).sangle_background_plot), true=3
+          plot_sangle_dirpix, Event
+          plot_sangle_refpix, Event
+          saving_background, Event
+          RETURN
+        ENDIF
+        
         id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
