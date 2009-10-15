@@ -621,10 +621,24 @@ PRO plot_counts_vs_pixel_help, Event
   device, decomposed=1
   
   IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
-    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1
+    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1
   ENDIF ELSE BEGIN ;linear plot
-    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1 
+    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
   ENDELSE
+  
+;  min_counts = MIN(Data,MAX=max_counts)
+;  
+;  ;plot DirPix
+;  DirPix  = FLOAT(getTextFieldValue(Event,$
+;    'reduce_sangle_base_dirpix_user_value'))
+;  PLOTS, DirPix, min_counts, /DATA, COLOR=FSC_COLOR('white')
+;  PLOTS, DirPix, max_counts, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
+;  
+;  ;plot RefPix
+;  RefPix  = FLOAT(getTextFieldValue(Event,$
+;    'reduce_sangle_base_refpix_user_value'))
+;  PLOTS, RefPix, min_counts, /DATA, COLOR=FSC_COLOR('red')
+;  PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
   
   device, decomposed=0
   
