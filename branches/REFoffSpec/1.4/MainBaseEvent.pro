@@ -119,6 +119,7 @@ PRO MAIN_BASE_event, Event
     display_reduce_step1_sangle_scale, EVENT=event
     plot_sangle_refpix, Event
     plot_sangle_dirpix, Event
+    plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
@@ -271,7 +272,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_sangle_base_refpix_user_value'): BEGIN
     id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-    WIDGET_CONTROL, id, GET_VALUE=id_valuekn c x
+    WIDGET_CONTROL, id, GET_VALUE=id_value
     plot_sangle_dirpix, Event
     calculate_new_sangle_value, Event
   END

@@ -607,3 +607,25 @@ PRO determine_sangle_dirpix_data_from_device_value, Event
 END
 
 ;------------------------------------------------------------------------------
+PRO plot_counts_vs_pixel_help, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tData = (*(*global).sangle_tData)
+  Data = TOTAL(tData,1)
+  
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='sangle_help_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  device, decomposed=1
+  
+  IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1
+  ENDIF ELSE BEGIN ;linear plot
+    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1 
+  ENDELSE
+  
+  device, decomposed=0
+  
+END
