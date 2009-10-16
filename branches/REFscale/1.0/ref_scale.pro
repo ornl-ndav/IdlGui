@@ -292,7 +292,7 @@ file = OBJ_NEW('idlxmlparser', '.REFscale.cfg')
     ;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0 ;output_file
     ;change default path of batch file
     (*global).BatchDefaultPath = '~/results/'
-    (*global).input_path       = '~/results/'
+    (*global).input_path       = '/SNS/REF_L/shared/'
   ENDIF
   ;- END OF DEBUGGER MODE ONLY --------------------------------------------------
   ;------------------------------------------------------------------------------
