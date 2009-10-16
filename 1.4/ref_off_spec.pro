@@ -140,6 +140,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_mode: 'refpix', $ ;either 'refpix','dirpix', 'tof_min','tof_max'
     old_sangle_mode: 'refpix', $ ;
     tof_sangle_data_range: LONARR(2), $
+    tof_sangle_offset: 0,$
     
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$

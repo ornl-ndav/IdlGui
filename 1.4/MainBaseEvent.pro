@@ -165,6 +165,10 @@ PRO MAIN_BASE_event, Event
           plot_sangle_refpix, Event
           plot_tof_max_range_on_main_plot, Event
           saving_background, Event
+          ;x offset between the tof vertical line and the cursor click
+          tof_sangle_data_range = (*global).tof_sangle_data_range
+          tof_sangle_min = tof_sangle_data_range[0]
+          (*global).tof_sangle_offset = tof_sangle_min - Event.x
           RETURN
         ENDIF
         
@@ -178,6 +182,10 @@ PRO MAIN_BASE_event, Event
           plot_sangle_refpix, Event
           plot_tof_min_range_on_main_plot, Event
           saving_background, Event
+          ;x offset between the tof vertical line and the cursor click
+          tof_sangle_data_range = (*global).tof_sangle_data_range
+          tof_sangle_min = tof_sangle_data_range[1]
+          (*global).tof_sangle_offset = tof_sangle_min - Event.x
           RETURN
         ENDIF
         
