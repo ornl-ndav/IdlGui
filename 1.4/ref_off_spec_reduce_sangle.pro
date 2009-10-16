@@ -649,17 +649,20 @@ PRO determine_sangle_dirpix_data_from_device_value, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_counts_vs_pixel_help, Event
+PRO plot_counts_vs_pixel_help, Event, RESET=reset
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tData = (*(*global).sangle_tData)
+  
+  IF (N_ELEMENTS(reset) EQ 0) THEN BEGIN
   tof_index = (*global).tof_sangle_index_range
   tof1 = tof_index[0]
   tof2 = tof_index[1]
   IF(tof1 + tof2 NE 0) THEN BEGIN
     tData = tData[tof1:tof2-1,*]
+  ENDIF
   ENDIF
   
   Data = TOTAL(tData,1)
