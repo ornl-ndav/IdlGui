@@ -348,7 +348,8 @@ PRO replot_main_plot, Event
   WIDGET_CONTROL,id,get_uvalue=global
   
   IF (((*global).replot_me) EQ 1) THEN BEGIN
-    steps_tab, Event, 1 ;_Tab
+    plot_loaded_file, Event, 'CE' ;_Plot
+    ;steps_tab, Event, 1 ;_Tab
     (*global).replot_me = 0
   ENDIF
   
@@ -492,6 +493,7 @@ PRO PlotQs, Event, Q1, Q2
   xmax = DOUBLE(XMinMax[1])
   ymin = DOUBLE(XMinMax[2])
   ymax = DOUBLE(XMinMax[3])
+  
   IF (Q1 GT xmin AND $
     Q1 LT xmax) THEN BEGIN
     ;plot Q1

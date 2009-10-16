@@ -448,7 +448,7 @@ END
 ;##############################################################################
 ;******************************************************************************
 ;This is reach when the user released the button on the plot of step2
-PRO Step2ReleaseClick, Event, XMinMax
+PRO Step2ReleaseClick, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   Q_selection = (*global).Q_selection
@@ -582,15 +582,15 @@ PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
     Q  = (*global).Q2
   ENDELSE
   
-  print, 'Q: ' + strcompress(Q)
+  ;print, 'Q: ' + strcompress(Q)
   
   ;Xmin and Xmax
   XMinMax   = getDrawXMin(Event)
   draw_Qmin = XMinMax[0]
   draw_Qmax = XMinMax[1]
   
-  print, 'XminMax:'
-  print, XminMax
+  ;print, 'XminMax:'
+  ;print, XminMax
   
   ;X position of left and right margins
   draw_xmin = (*global).draw_xmin
@@ -610,9 +610,9 @@ PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
     (*global).Q2x = newX
   ENDELSE
   
-  print, '(*global).Q1x: ' + string(newX)
+  ;print, '(*global).Q1x: ' + string(newX)
   
-  print, 'leaving SaveQxFromQ'
+  ;print, 'leaving SaveQxFromQ'
   
 END
 
@@ -636,17 +636,15 @@ PRO ManualNewQ, Event
   saveQxFromQ, Event, Q_NUMBER=2
   ;replot new Qs
   IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
-    plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
+    plotQs, Event, (*global).Q1, (*global).Q2 ;_Plot
   ENDIF ELSE BEGIN
     IF (Q2 EQ 0 AND Q1 NE 0) THEN BEGIN
-      plotQ, Event, (*global).Q1x ;_Plot
+      plotQ, Event, (*global).Q1 ;_Plot
     ENDIF
     IF (Q1 EQ 0 AND Q2 NE 0) THEN BEGIN
-      plotQ, Event, (*global).Q2x
+      plotQ, Event, (*global).Q2
     ENDIF
   ENDELSE
-  ;Check if Automatic Button can be validated or not
-  CheckAutoModeStep2Button, Event
 END
 
 ;##############################################################################
