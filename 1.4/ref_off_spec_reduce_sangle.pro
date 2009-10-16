@@ -659,7 +659,7 @@ PRO plot_counts_vs_pixel_help, Event
   tof1 = tof_index[0]
   tof2 = tof_index[1]
   IF(tof1 + tof2 NE 0) THEN BEGIN
-  tData = tData[tof1:tof2,*]
+    tData = tData[tof1:tof2-1,*]
   ENDIF
   
   Data = TOTAL(tData,1)
@@ -783,10 +783,10 @@ PRO plot_tof_max_range_on_main_plot, Event
   
   tof1 = tof_sangle_device_range[0]
   tof2 = tof_sangle_device_range[1]
-
+  
   tof_min_device = MIN([tof1,tof2], MAX=tof_max_device)
   
-  tof_sangle_device_range[0] = tof_min_device 
+  tof_sangle_device_range[0] = tof_min_device
   tof_sangle_device_range[1] = tof_max_device
   (*global).tof_sangle_device_range = tof_sangle_device_range
   
@@ -826,14 +826,14 @@ PRO retrieve_tof_data_range_from_device_values, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tof_sangle_device_range = (*global).tof_sangle_device_range
-    
+  
   tof1 = tof_sangle_device_range[0]
   tof2 = tof_sangle_device_range[1]
-
+  
   xcoeff = (*global).sangle_main_plot_congrid_x_coeff
   tof1_index = FIX(tof1/xcoeff)
   tof2_index = FIX(tof2/xcoeff)
   
   (*global).tof_sangle_index_range = [tof1_index, tof2_index]
-
+  
 END
