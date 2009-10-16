@@ -450,43 +450,42 @@ END
 ;This is reach when the user released the button on the plot of step2
 PRO Step2ReleaseClick, Event, XMinMax
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-;  IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
-;;    CURSOR, x, y, /DATA
-;    CASE ((*global).Q_selection) OF
-;      1: BEGIN
-;;        saveQ, Event, Q_NUMBER = 1, x
-;        Q = (*global).Q1
-;        ;display Q1
-;        putValueInTextField, Event, 'step2_q1_text_field', $
-;          STRCOMPRESS(Q,/REMOVE_ALL)
-;        IF ((*global).Q2 NE 0) THEN BEGIN
-;          plot_loaded_file, Event, 'CE' ;_Plot
-;          plotQs, Event, (*global).Q2, x ;_Plot
-;        ENDIF ELSE BEGIN
-;          plot_loaded_file, Event, 'CE' ;_Plot
-;;          plotQ, Event, x ;_Plot
-;        ENDELSE
-;      END
-;      2: BEGIN
-;;        saveQ, Event, Q_NUMBER = 2, Event.x ;_Step2
-;        Q = (*global).Q2
-;        ;display Q2
-;        putValueInTextField, Event, 'step2_q2_text_field', $
-;          STRCOMPRESS(Q,/REMOVE_ALL)
-;        IF ((*global).Q1 NE 0) THEN BEGIN
-;          plot_loaded_file, Event, 'CE' ;_Plot
-;          plotQs, Event, (*global).Q1, x ;_Plot
-;        ENDIF ELSE BEGIN
-;          plot_loaded_file, Event, 'CE' ;_Plot
-;          plotQ, Event, x ;_Plot
-;        ENDELSE
-;      END
-;      ELSE:
-;    ENDCASE
-;  ENDIF
+  
+  Q_selection = (*global).Q_selection
+  
+  ;order Q1 and Q2
+  Q1 = FLOAT(getValue(Event,'step2_q1_text_field'))
+  Q2 = FLOAT(getValue(Event,'step2_q2_text_field'))
+  
+  IF (Q1 GT 0 AND Q2 GT 0) THEN BEGIN
+  
+    CASE (Q_selection) OF
+      1: BEGIN
+        IF (Q1 GT Q2) THEN BEGIN ;reverse working Q
+          (*global).Q_selection = 2
+          ActivateQSelection, Event, 2 ;show that we are working with Qmax
+        ENDIF
+      END
+      2: BEGIN
+        IF (Q2 LT Q1) THEN BEGIN ;reverse working Q
+          (*global).Q_selection = 1
+          ActivateQSelection, Event, 1 ;show that we are working with Qmax
+        ENDIF
+      END
+    ENDCASE
+    
+    Qmin = MIN([Q1,Q2],MAX=Qmax)
+    
+    putValueInTextField, Event, 'step2_q1_text_field', Qmin
+    putValueInTextField, Event, 'step2_q2_text_field', Qmax
+    
+    (*global).Q1  = Qmin
+    (*global).Q2  = Qmax
+    
+  ENDIF
+  
   (*global).left_mouse_pressed = 0
-  ;Sort Q1 and Q2 values
-  ;SortQs, Event
+  
   ;Check if Automatic Button can be validated or not
   CheckAutoModeStep2Button, Event
 END
@@ -506,10 +505,10 @@ PRO Step2MoveClick, Event, XMinMax
         plot_loaded_file, Event, 'CE' ;_Plot
         IF ((*global).Q2 NE 0) THEN BEGIN
           plotQs, Event, x, (*global).Q2 ;_Plot
-;          print, '-> Move Q1 plot and replot Q2'
+        ;          print, '-> Move Q1 plot and replot Q2'
         ENDIF ELSE BEGIN
           plotQ, Event, x ;_Plot
-;          print, '-> Move Q1 plot'
+        ;          print, '-> Move Q1 plot'
         ENDELSE
         putValueInTextField, Event, $
           'step2_q1_text_field', $
@@ -522,10 +521,10 @@ PRO Step2MoveClick, Event, XMinMax
         plot_loaded_file, Event, 'CE' ;_Plot
         IF ((*global).Q1 NE 0) THEN BEGIN
           plotQs, Event, (*global).Q1, x ;_Plot
-;          print, '-> Move Q2 plot and replot Q1'
+        ;          print, '-> Move Q2 plot and replot Q1'
         ENDIF ELSE BEGIN
           plotQ, Event, x ;_Plot
-;          print, '-> Move Q2 plot'
+        ;          print, '-> Move Q2 plot'
         ENDELSE
         putValueInTextField, Event, $
           'step2_q2_text_field', $
@@ -535,19 +534,19 @@ PRO Step2MoveClick, Event, XMinMax
     ENDCASE
   ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
     IF ((*global).replotQnew) THEN BEGIN
-;      print, 'in (*global).replotQnew = 1'
+      ;      print, 'in (*global).replotQnew = 1'
       saveQxFromQ, Event, Q_NUMBER = 1 ;_Step2
     ENDIF
     IF ((*global).Q1 NE 0) THEN BEGIN
-;      print, 'in (*global).Q1 = 1'
+      ;      print, 'in (*global).Q1 = 1'
       plotQ, Event, (*global).Q1
     ENDIF
     IF ((*global).replotQnew) THEN BEGIN
-;      print, 'in (*global).replotQnew = 1'
+      ;      print, 'in (*global).replotQnew = 1'
       saveQxFromQ, Event, Q_NUMBER = 2 ;_Step2
     ENDIF
     IF ((*global).Q2 NE 0) THEN BEGIN
-;      print, 'in (*global).Q2 = 1'
+      ;      print, 'in (*global).Q2 = 1'
       plotQ, Event, (*global).Q2
     ENDIF
     (*global).replotQnew = 0
