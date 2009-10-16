@@ -141,6 +141,17 @@ PRO MAIN_BASE_event, Event
     WIDGET_CONTROL, HOURGLASS=0
   END
   
+  ;Counts vs Pixel Help plot
+  WIDGET_INFO(wWidget, FIND_BY_UNAME='sangle_help_draw'): BEGIN
+  CURSOR, X, Y, /DATA
+  print, 'X: ' + string(x)
+  print, 'Y: ' + string(y)
+  print
+  IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
+      plot_counts_vs_pixel_help, Event, RESET=1b
+  ENDIF
+  END
+  
   ;sangle plot
   WIDGET_INFO(wWidget, FIND_BY_UNAME='reduce_sangle_plot'): BEGIN
     enter_error = 0

@@ -129,6 +129,7 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
    SCR_XSIZE = 255,$
    SCR_YSIZE = 215,$
    /BUTTON_EVENTS,$
+   /MOTION_EVENTS,$
    UNAME = 'sangle_help_draw') 
     
   row1col2 = WIDGET_BASE(row1,$ ;............................
