@@ -114,9 +114,7 @@ PRO MAIN_BASE_ref_scale_event, Event
                 END
                 1 : BEGIN ;release click
                   ;print, 'entering release click'
-                  Step2ReleaseClick, $
-                    Event, $
-                    XMinMax ;button released
+                  Step2ReleaseClick, Event;button released
                 END
                 2 : BEGIN ;move click
                   ;print, '-> move click'
@@ -234,11 +232,13 @@ PRO MAIN_BASE_ref_scale_event, Event
   ;Event trigerred by Qmin cw_field
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q1_text_field'): BEGIN
     ManualNewQ, Event ;_Step2
+    Step2ReleaseClick, Event ;this reorder the Q1 and Q2
   END
   
   ;Event trigerred by Qmin cw_field
   WIDGET_INFO(wWidget, FIND_BY_UNAME='step2_q2_text_field'): BEGIN
     ManualNewQ, Event ;_Step2
+    Step2ReleaseClick, Event ;this reorder the Q1 and Q2
   END
   
   ;------------------------------------------------------------------------------
