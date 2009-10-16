@@ -156,7 +156,12 @@ PRO MAIN_BASE_event, Event
         isClickInTofMaxBox(Event)) THEN BEGIN
         DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
       ENDIF ELSE BEGIN
-        DEVICE, CURSOR_STANDARD=(*global).standard
+        IF ((*global).sangle_mode EQ 'tof_min' OR $
+          (*global).sangle_mode EQ 'tof_max') THEN BEGIN
+          DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
+        ENDIF ELSE BEGIN
+          DEVICE, CURSOR_STANDARD=(*global).standard
+        ENDELSE
       ENDELSE
       
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
@@ -289,6 +294,12 @@ PRO MAIN_BASE_event, Event
             plot_sangle_dirpix, Event
           END
         ENDCASE
+        IF (isClickInTofMinBox(Event) OR $
+          isClickInTofMaxBox(Event)) THEN BEGIN
+          DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
+        ENDIF ELSE BEGIN
+          DEVICE, CURSOR_STANDARD=(*global).standard
+        ENDELSE
       ENDIF
       
     ENDIF ELSE BEGIN

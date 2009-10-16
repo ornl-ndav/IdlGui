@@ -144,7 +144,6 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     old_sangle_mode: 'refpix', $ ;either 'refpix' or 'dirpix'
     tof_sangle_device_range: LONARR(2), $
     tof_sangle_offset: 0,$
-    tof_sangle_offset: 0,$
     
     reduce_step1_spin_match_disable: $
     'REFoffSpec_images/spin_states_match_button_unselected.png',$
