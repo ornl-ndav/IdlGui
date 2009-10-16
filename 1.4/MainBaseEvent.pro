@@ -111,12 +111,12 @@ PRO MAIN_BASE_event, Event
     display_reduce_step1_sangle_buttons, Event=event, global
     select_sangle_first_run_number_by_default, Event
     display_metatada_of_sangle_selected_row, Event
+    retrieve_tof_array_from_nexus, Event
     plot_selected_data_in_sangle_base, Event
+    display_reduce_step1_sangle_scale, EVENT=event
     plot_sangle_dirpix, Event
     plot_tof_range_on_main_plot, Event
     saving_background, Event
-    retrieve_tof_array_from_nexus, Event
-    display_reduce_step1_sangle_scale, EVENT=event
     plot_sangle_refpix, Event
     plot_counts_vs_pixel_help, Event
     WIDGET_CONTROL, HOURGLASS=0
@@ -152,42 +152,48 @@ PRO MAIN_BASE_event, Event
       pixel = getSanglePixel(Event)
       pixel_value = STRCOMPRESS(pixel,/REMOVE_ALL)
       
+      IF (isClickInTofMinBox(Event) OR $
+        isClickInTofMaxBox(Event)) THEN BEGIN
+        DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
+      ENDIF ELSE BEGIN
+        DEVICE, CURSOR_STANDARD=(*global).standard
+      ENDELSE
+      
       IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
         (*global).sangle_mouse_pressed = 1b
         
         IF (isClickInTofMinBox(Event)) THEN BEGIN ;user click the tof min slide
+          DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
           (*global).sangle_mode = 'tof_min'
-          id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-          WIDGET_CONTROL, id, GET_VALUE=id_value
-          WSET, id_value
-          TV, (*(*global).sangle_background_plot), true=3
+          replot_selected_data_in_sangle_base, Event
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
           plot_tof_max_range_on_main_plot, Event
           saving_background, Event
+          plot_tof_min_range_on_main_plot, Event
           ;x offset between the tof vertical line and the cursor click
-          tof_sangle_data_range = (*global).tof_sangle_data_range
-          tof_sangle_min = tof_sangle_data_range[0]
+          tof_sangle_device_range = (*global).tof_sangle_device_range
+          tof_sangle_min = tof_sangle_device_range[0]
           (*global).tof_sangle_offset = tof_sangle_min - Event.x
           RETURN
         ENDIF
         
         IF (isClickInTofMaxBox(Event)) THEN BEGIN
+          DEVICE, CURSOR_STANDARD=(*global).left_right_cursor
           (*global).sangle_mode = 'tof_max'
-          id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
-          WIDGET_CONTROL, id, GET_VALUE=id_value
-          WSET, id_value
-          TV, (*(*global).sangle_background_plot), true=3
+          replot_selected_data_in_sangle_base, Event
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
           plot_tof_min_range_on_main_plot, Event
           saving_background, Event
-          ;x offset between the tof vertical line and the cursor click
-          tof_sangle_data_range = (*global).tof_sangle_data_range
-          tof_sangle_min = tof_sangle_data_range[1]
-          (*global).tof_sangle_offset = tof_sangle_min - Event.x
+          plot_tof_max_range_on_main_plot, Event
+          tof_sangle_device_range = (*global).tof_sangle_device_range
+          tof_sangle_max = tof_sangle_device_range[1]
+          (*global).tof_sangle_offset = tof_sangle_max - Event.x
           RETURN
         ENDIF
+        
+        DEVICE, CURSOR_STANDARD=(*global).standard
         
         id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
         WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -202,7 +208,8 @@ PRO MAIN_BASE_event, Event
         ENDELSE
         calculate_new_sangle_value, Event
         plot_counts_vs_pixel_help, Event
-      ENDIF
+        
+      ENDIF ;end of if button pressed
       
       IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
         replot_selected_data_in_sangle_base, Event
@@ -211,6 +218,7 @@ PRO MAIN_BASE_event, Event
             (*global).sangle_mode = 'dirpix'
             (*global).old_sangle_mode = 'dirpix'
             plot_sangle_refpix, Event
+            plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_dirpix, Event
           END
@@ -218,6 +226,7 @@ PRO MAIN_BASE_event, Event
             (*global).sangle_mode = 'refpix'
             (*global).old_sangle_mode = 'refpix'
             plot_sangle_dirpix, Event
+            plot_tof_range_on_main_plot, Event
             saving_background, Event
             plot_sangle_refpix, Event
           END
@@ -232,21 +241,30 @@ PRO MAIN_BASE_event, Event
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
         CASE ((*global).sangle_mode) OF
-        'refpix': BEGIN
-          plot_sangle_refpix_live, Event
-          determine_sangle_refpix_data_from_device_value, Event
-        END
-        'dirpix': BEGIN
-          plot_sangle_dirpix_live, Event
-          determine_sangle_dirpix_data_from_device_value, Event
-        END
-        'tof_min': BEGIN
-        END
-        'tof_max': BEGIN
-        END
-        ELSE:
+          'refpix': BEGIN
+            plot_sangle_refpix_live, Event
+            determine_sangle_refpix_data_from_device_value, Event
+            calculate_new_sangle_value, Event
+          END
+          'dirpix': BEGIN
+            plot_sangle_dirpix_live, Event
+            determine_sangle_dirpix_data_from_device_value, Event
+            calculate_new_sangle_value, Event
+          END
+          'tof_min': BEGIN
+            tof_sangle_device_range = (*global).tof_sangle_device_range
+            tof_sangle_device_range[0] = event.x + (*global).tof_sangle_offset
+            (*global).tof_sangle_device_range = tof_sangle_device_range
+            plot_tof_min_range_on_main_plot, Event
+          END
+          'tof_max': BEGIN
+            tof_sangle_device_range = (*global).tof_sangle_device_range
+            tof_sangle_device_range[1] = event.x + (*global).tof_sangle_offset
+            (*global).tof_sangle_device_range = tof_sangle_device_range
+            plot_tof_max_range_on_main_plot, Event
+          END
+          ELSE:
         ENDCASE
-        calculate_new_sangle_value, Event
         plot_counts_vs_pixel_help, Event
       ENDIF
       
@@ -256,12 +274,28 @@ PRO MAIN_BASE_event, Event
           (*global).sangle_mode EQ 'tof_max') THEN BEGIN
           (*global).sangle_mode = (*global).old_sangle_mode
         ENDIF
+        replot_selected_data_in_sangle_base, Event
+        CASE ((*global).sangle_mode) OF
+          'refpix': BEGIN
+            plot_sangle_dirpix, Event
+            plot_tof_range_on_main_plot, Event
+            saving_background, Event
+            plot_sangle_refpix, Event
+          END
+          'dirpix': BEGIN
+            plot_sangle_refpix, Event
+            plot_tof_range_on_main_plot, Event
+            saving_background, Event
+            plot_sangle_dirpix, Event
+          END
+        ENDCASE
       ENDIF
       
     ENDIF ELSE BEGIN
       IF (Event.enter EQ 0) THEN BEGIN
         tof_value = 'N/A'
         pixel_value = 'N/A'
+        DEVICE, CURSOR_STANDARD=(*global).standard
       ENDIF
     ENDELSE
     putTextFieldValue, Event, 'reduce_sangle_live_info_tof', tof_value
