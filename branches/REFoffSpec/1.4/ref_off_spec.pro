@@ -137,7 +137,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_mouse_pressed: 0b, $
     sangle_refpix_arrow_xoffset: 10, $ ;xoffset for arrow
     sangle_refpix_arrow_yoffset: 10, $ ;yoffset for arrow
-    sangle_mode: 'refpix', $ ;either 'refpix' or 'dirpix'
+    sangle_mode: 'refpix', $ ;either 'refpix','dirpix', 'tof_min','tof_max'
+    old_sangle_mode: 'refpix', $ ;
     tof_sangle_data_range: LONARR(2), $
     
     reduce_step1_spin_match_disable: $

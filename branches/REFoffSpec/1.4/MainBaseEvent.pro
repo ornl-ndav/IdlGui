@@ -163,17 +163,20 @@ PRO MAIN_BASE_event, Event
           TV, (*(*global).sangle_background_plot), true=3
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
+          plot_tof_max_range_on_main_plot, Event
           saving_background, Event
           RETURN
         ENDIF
+        
         IF (isClickInTofMaxBox(Event)) THEN BEGIN
-          (*global).sangle_mode = 'tof_min'
+          (*global).sangle_mode = 'tof_max'
           id = WIDGET_INFO(Event.top,find_by_uname='reduce_sangle_plot')
           WIDGET_CONTROL, id, GET_VALUE=id_value
           WSET, id_value
           TV, (*(*global).sangle_background_plot), true=3
           plot_sangle_dirpix, Event
           plot_sangle_refpix, Event
+          plot_tof_min_range_on_main_plot, Event
           saving_background, Event
           RETURN
         ENDIF
@@ -195,17 +198,23 @@ PRO MAIN_BASE_event, Event
       
       IF (event.press EQ 4) THEN BEGIN ;right click, switch mode
         replot_selected_data_in_sangle_base, Event
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN
-          (*global).sangle_mode = 'dirpix'
-          plot_sangle_refpix, Event
-          saving_background, Event
-          plot_sangle_dirpix, Event
-        ENDIF ELSE BEGIN
-          (*global).sangle_mode = 'refpix'
-          plot_sangle_dirpix, Event
-          saving_background, Event
-          plot_sangle_refpix, Event
-        ENDELSE
+        CASE ((*global).sangle_mode) OF
+          'refpix': BEGIN
+            (*global).sangle_mode = 'dirpix'
+            (*global).old_sangle_mode = 'dirpix'
+            plot_sangle_refpix, Event
+            saving_background, Event
+            plot_sangle_dirpix, Event
+          END
+          'dirpix': BEGIN
+            (*global).sangle_mode = 'refpix'
+            (*global).old_sangle_mode = 'refpix'
+            plot_sangle_dirpix, Event
+            saving_background, Event
+            plot_sangle_refpix, Event
+          END
+          ELSE:
+        ENDCASE
       ENDIF
       
       ;moving mouse with button pressed
@@ -214,19 +223,31 @@ PRO MAIN_BASE_event, Event
         WIDGET_CONTROL, id, GET_VALUE=id_value
         WSET, id_value
         TV, (*(*global).sangle_background_plot), true=3
-        IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
+        CASE ((*global).sangle_mode) OF
+        'refpix': BEGIN
           plot_sangle_refpix_live, Event
           determine_sangle_refpix_data_from_device_value, Event
-        ENDIF ELSE BEGIN ;dirpix mode
+        END
+        'dirpix': BEGIN
           plot_sangle_dirpix_live, Event
           determine_sangle_dirpix_data_from_device_value, Event
-        ENDELSE
+        END
+        'tof_min': BEGIN
+        END
+        'tof_max': BEGIN
+        END
+        ELSE:
+        ENDCASE
         calculate_new_sangle_value, Event
         plot_counts_vs_pixel_help, Event
       ENDIF
       
       IF (Event.release EQ 1) THEN BEGIN ;mouse released
         (*global).sangle_mouse_pressed = 0b
+        IF ((*global).sangle_mode EQ 'tof_min' OR $
+          (*global).sangle_mode EQ 'tof_max') THEN BEGIN
+          (*global).sangle_mode = (*global).old_sangle_mode
+        ENDIF
       ENDIF
       
     ENDIF ELSE BEGIN
