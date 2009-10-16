@@ -655,6 +655,13 @@ PRO plot_counts_vs_pixel_help, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tData = (*(*global).sangle_tData)
+  tof_index = (*global).tof_sangle_index_range
+  tof1 = tof_index[0]
+  tof2 = tof_index[1]
+  IF(tof1 + tof2 NE 0) THEN BEGIN
+  tData = tData[tof1:tof2,*]
+  ENDIF
+  
   Data = TOTAL(tData,1)
   
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='sangle_help_draw')
@@ -810,4 +817,23 @@ PRO plot_tof_max_range_on_main_plot, Event
     
   DEVICE, decomposed=0
   
+END
+
+;------------------------------------------------------------------------------
+PRO retrieve_tof_data_range_from_device_values, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  tof_sangle_device_range = (*global).tof_sangle_device_range
+    
+  tof1 = tof_sangle_device_range[0]
+  tof2 = tof_sangle_device_range[1]
+
+  xcoeff = (*global).sangle_main_plot_congrid_x_coeff
+  tof1_index = FIX(tof1/xcoeff)
+  tof2_index = FIX(tof2/xcoeff)
+  
+  (*global).tof_sangle_index_range = [tof1_index, tof2_index]
+
 END
