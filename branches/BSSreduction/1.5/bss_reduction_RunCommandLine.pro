@@ -69,6 +69,8 @@ ENDIF
 
 IF (ok_to_CONTINUE) THEN BEGIN
     
+    CD, '~/', CURRENT=old_path
+    
 ;check if use iterative background subtraction is active or not
     ibs_value = $
       getCWBgroupValue(Event, $
@@ -180,6 +182,8 @@ IF (ok_to_CONTINUE) THEN BEGIN
         putDRstatusInfo, Event, status_text + OK
 
     ENDELSE
+    
+    CD, old_path
     
 ENDIF ELSE BEGIN 
 
