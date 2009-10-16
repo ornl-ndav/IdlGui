@@ -522,6 +522,13 @@ FUNCTION getSangleTof, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 'N/A'
+  ENDIF
+  
   X = Event.x
   x_coeff = (*global).sangle_main_plot_congrid_x_coeff
   tof = (*(*global).sangle_tof)
@@ -538,8 +545,12 @@ FUNCTION getSanglePixel, Event
 
   y_coeff = 2.
   Y = Event.y
-  RETURN, FIX(Y/y_coeff)
+  pixel = FIX(Y/y_coeff)
   
+  IF (pixel GE 304) THEN RETURN, 'N/A'
+  IF (pixel LT 0) THEN RETURN, 'N/A'
+  RETURN, pixel
+
 END
 
 ;------------------------------------------------------------------------------
@@ -567,7 +578,7 @@ FUNCTION getSangleYDataValue, Event, device_value
   y_coeff = (*global).sangle_main_plot_congrid_y_coeff
   
   data = (FLOAT(device_value) * FLOAT(304L)) / FLOAT(sangle_ysize_draw)
-    
+  
   RETURN, data
   
 END

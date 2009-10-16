@@ -99,6 +99,9 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sDebugging: sDebugging,$
     am: AM, $
     
+    left_right_cursor: 96, $
+    standard: 31, $
+    
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/squeue.php?view=all',$
     
@@ -137,9 +140,10 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_mouse_pressed: 0b, $
     sangle_refpix_arrow_xoffset: 10, $ ;xoffset for arrow
     sangle_refpix_arrow_yoffset: 10, $ ;yoffset for arrow
-    sangle_mode: 'refpix', $ ;either 'refpix','dirpix', 'tof_min','tof_max'
-    old_sangle_mode: 'refpix', $ ;
-    tof_sangle_data_range: LONARR(2), $
+    sangle_mode: 'refpix', $ ;either 'refpix','dirpix','tof_min','tof_max'
+    old_sangle_mode: 'refpix', $ ;either 'refpix' or 'dirpix'
+    tof_sangle_device_range: LONARR(2), $
+    tof_sangle_offset: 0,$
     tof_sangle_offset: 0,$
     
     reduce_step1_spin_match_disable: $
