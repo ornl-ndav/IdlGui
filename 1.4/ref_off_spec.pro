@@ -146,6 +146,7 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     tof_sangle_offset: 0,$
     tof_sangle_index_range: INTARR(2), $
     sangle_zoom_xy_minmax: FLTARR(4),$ ;corners of zoom sangle help plot box
+    sangle_current_zoom_para: FLTARR(4), $ ;para used for current zoom plot
     zoom_left_click_pressed: 0b, $ ;boolean button pressed or not (zoom help)
     
     reduce_step1_spin_match_disable: $

@@ -677,15 +677,12 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tData = (*(*global).sangle_tData)
-  
-  IF (N_ELEMENTS(reset) EQ 0) THEN BEGIN
-    tof_index = (*global).tof_sangle_index_range
-    tof1 = tof_index[0]
-    tof2 = tof_index[1]
-    IF (tof2 - tof1 EQ 1) THEN tof2++
-    IF(tof1 + tof2 NE 0) THEN BEGIN
-      tData = tData[tof1:tof2-1,*]
-    ENDIF
+  tof_index = (*global).tof_sangle_index_range
+  tof1 = tof_index[0]
+  tof2 = tof_index[1]
+  IF (tof2 - tof1 EQ 1) THEN tof2++
+  IF(tof1 + tof2 NE 0) THEN BEGIN
+    tData = tData[tof1:tof2-1,*]
   ENDIF
   
   Data = TOTAL(tData,1)
@@ -697,13 +694,32 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
   
   min_counts = MIN(Data,MAX=max_counts)
   
-  IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
-    min_counts = 0.1
-    YRANGE = [min_counts, max_counts]
-    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1,$
-      YRANGE=yrange
-  ENDIF ELSE BEGIN ;linear plot
-    PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
+  sangle_current_zoom_para = (*global).sangle_current_zoom_para
+  xmin = sangle_current_zoom_para[0]
+  ymin = sangle_current_zoom_para[1]
+  xmax = sangle_current_zoom_para[2]
+  ymax = sangle_current_zoom_para[3]
+  
+  IF (xmin+ymin GT 0 AND $
+    ymin+ymax GT 0) THEN BEGIN ;there is a zoom
+    IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+      min_counts = 0.1
+      YRANGE = [min_counts, max_counts]
+      PLOT, Data, XTITLE='Pixel', XRANGE = [xmin,xmax], $
+        YRANGE = [ymin,ymax], YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1
+    ENDIF ELSE BEGIN ;linear plot
+      PLOT, Data, XTITLE='Pixel', XRANGE = [xmin,xmax], $
+        YRANGE = [ymin,ymax], YTITLE='Counts', XSTYLE=1, YSTYLE=1
+    ENDELSE
+  ENDIF ELSE BEGIN ;no zoom applied yet
+    IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
+      min_counts = 0.1
+      YRANGE = [min_counts, max_counts]
+      PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1,$
+        YRANGE=yrange
+    ENDIF ELSE BEGIN ;linear plot
+      PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
+    ENDELSE
   ENDELSE
   
   ;plot DirPix
@@ -880,14 +896,14 @@ PRO plot_sangle_zoom_selection, Event
   x2 = sangle_zoom_xy_minmax[2]
   y2 = sangle_zoom_xy_minmax[3]
   
-;  xmin = MIN([x1,x2],MAX=xmax)
-;  ymin = MIN([y1,y2],MAX=ymax)
+  ;  xmin = MIN([x1,x2],MAX=xmax)
+  ;  ymin = MIN([y1,y2],MAX=ymax)
   
-;  sangle_zoom_xy_minmax[0] = xmin
-;  sangle_zoom_xy_minmax[1] = ymin
-;  sangle_zoom_xy_minmax[2] = xmax
-;  sangle_zoom_xy_minmax[3] = ymax
-;  (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+  ;  sangle_zoom_xy_minmax[0] = xmin
+  ;  sangle_zoom_xy_minmax[1] = ymin
+  ;  sangle_zoom_xy_minmax[2] = xmax
+  ;  sangle_zoom_xy_minmax[3] = ymax
+  ;  (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
   
   ;display box
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='sangle_help_draw')
@@ -897,12 +913,12 @@ PRO plot_sangle_zoom_selection, Event
   
   plot_counts_vs_pixel_help, Event, RESET=reset
   
-;  PLOTS, xmin, ymin, /DATA, COLOR=FSC_COLOR('pink')
-;  PLOTS, xmin, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-;  PLOTS, xmax, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-;  PLOTS, xmax, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-;  PLOTS, xmin, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-
+  ;  PLOTS, xmin, ymin, /DATA, COLOR=FSC_COLOR('pink')
+  ;  PLOTS, xmin, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  ;  PLOTS, xmax, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  ;  PLOTS, xmax, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  ;  PLOTS, xmin, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  
   PLOTS, x1, y1, /DATA, COLOR=FSC_COLOR('pink')
   PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
   PLOTS, x2, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
@@ -910,5 +926,24 @@ PRO plot_sangle_zoom_selection, Event
   PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
   
   DEVICE, decomposed=0
-
+  
 END
+
+;------------------------------------------------------------------------------
+PRO order_data, sangle_zoom_xy_minmax
+
+  x1 = sangle_zoom_xy_minmax[0]
+  y1 = sangle_zoom_xy_minmax[1]
+  x2 = sangle_zoom_xy_minmax[2]
+  y2 = sangle_zoom_xy_minmax[3]
+  
+  xmin = MIN([x1,x2],MAX=xmax)
+  ymin = MIN([y1,y2],MAX=ymax)
+  
+  sangle_zoom_xy_minmax[0] = xmin
+  sangle_zoom_xy_minmax[1] = ymin
+  sangle_zoom_xy_minmax[2] = xmax
+  sangle_zoom_xy_minmax[3] = ymax
+  
+END
+
