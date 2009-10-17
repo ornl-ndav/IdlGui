@@ -700,8 +700,8 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
   xmax = sangle_current_zoom_para[2]
   ymax = sangle_current_zoom_para[3]
   
-  IF (xmin+ymin GT 0 AND $
-    ymin+ymax GT 0) THEN BEGIN ;there is a zoom
+  IF (xmin NE ymin AND $
+    ymin NE ymax) THEN BEGIN ;there is a zoom
     IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
       min_counts = 0.1
       YRANGE = [min_counts, max_counts]
@@ -725,6 +725,7 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
     PLOTS, RefPix, ymax, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     
   ENDIF ELSE BEGIN ;no zoom applied yet
+
     IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
       min_counts = 0.1
       YRANGE = [min_counts, max_counts]
@@ -747,7 +748,6 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
     PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
     
   ENDELSE
-  
   
   device, decomposed=0
   
