@@ -525,6 +525,9 @@ PRO plot_sangle_refpix_live, Event
   
   Y = Event.y
   
+  IF (Y LT 0) THEN Y = 0
+  IF (Y GT (*global).sangle_ysize_draw) THEN Y = (*global).sangle_ysize_draw-1
+  
   PLOTS, 0, Y, /DEVICE
   PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
     COLOR=FSC_COLOR('red')
@@ -552,6 +555,9 @@ PRO plot_sangle_dirpix_live, Event
   device, decomposed=1
   
   Y = Event.y
+  
+  IF (Y LT 0) THEN Y = 0
+  IF (Y GT (*global).sangle_ysize_draw) THEN Y = (*global).sangle_ysize_draw-1
   
   PLOTS, 0, Y, /DEVICE
   PLOTS, (*global).sangle_xsize_draw, Y, /DEVICE, /CONTINUE, $
@@ -627,7 +633,15 @@ END
 ;------------------------------------------------------------------------------
 PRO determine_sangle_refpix_data_from_device_value, Event
 
-  RefPix_device = Event.y
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  Y = Event.y
+  
+  IF (Y LT 0) THEN Y = 0
+  IF (Y GT (*global).sangle_ysize_draw) THEN Y = (*global).sangle_ysize_draw-1
+  
+  RefPix_device = Y
   RefPix_data = getSangleYDataValue(Event,RefPix_device)
   sRefPix_data = STRCOMPRESS(RefPix_data,/REMOVE_ALL)
   putTextFieldValue, Event, $
@@ -639,7 +653,15 @@ END
 ;------------------------------------------------------------------------------
 PRO determine_sangle_dirpix_data_from_device_value, Event
 
-  DirPix_device = Event.y
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  Y = Event.y
+  
+  IF (Y LT 0) THEN Y = 0
+  IF (Y GT (*global).sangle_ysize_draw) THEN Y = (*global).sangle_ysize_draw-1
+  
+  DirPix_device = Y
   DirPix_data = getSangleYDataValue(Event,DirPix_device)
   sDirPix_data = STRCOMPRESS(DirPix_data,/REMOVE_ALL)
   putTextFieldValue, Event, $
@@ -657,13 +679,13 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
   tData = (*(*global).sangle_tData)
   
   IF (N_ELEMENTS(reset) EQ 0) THEN BEGIN
-  tof_index = (*global).tof_sangle_index_range
-  tof1 = tof_index[0]
-  tof2 = tof_index[1]
-  IF (tof2 - tof1 EQ 1) THEN tof2++
-  IF(tof1 + tof2 NE 0) THEN BEGIN
-    tData = tData[tof1:tof2-1,*]
-  ENDIF
+    tof_index = (*global).tof_sangle_index_range
+    tof1 = tof_index[0]
+    tof2 = tof_index[1]
+    IF (tof2 - tof1 EQ 1) THEN tof2++
+    IF(tof1 + tof2 NE 0) THEN BEGIN
+      tData = tData[tof1:tof2-1,*]
+    ENDIF
   ENDIF
   
   Data = TOTAL(tData,1)
