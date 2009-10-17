@@ -863,3 +863,52 @@ PRO retrieve_tof_data_range_from_device_values, Event
   (*global).tof_sangle_index_range = [tof1_index, tof2_index]
   
 END
+
+;------------------------------------------------------------------------------
+PRO plot_sangle_zoom_selection, Event
+
+  ;get global structure
+  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  
+  sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
+  
+  print, sangle_zoom_xy_minmax
+  print
+  
+  x1 = sangle_zoom_xy_minmax[0]
+  y1 = sangle_zoom_xy_minmax[1]
+  x2 = sangle_zoom_xy_minmax[2]
+  y2 = sangle_zoom_xy_minmax[3]
+  
+;  xmin = MIN([x1,x2],MAX=xmax)
+;  ymin = MIN([y1,y2],MAX=ymax)
+  
+;  sangle_zoom_xy_minmax[0] = xmin
+;  sangle_zoom_xy_minmax[1] = ymin
+;  sangle_zoom_xy_minmax[2] = xmax
+;  sangle_zoom_xy_minmax[3] = ymax
+;  (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+  
+  ;display box
+  id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='sangle_help_draw')
+  WIDGET_CONTROL, id_draw, GET_VALUE=id_value
+  WSET,id_value
+  DEVICE, decomposed=1
+  
+  plot_counts_vs_pixel_help, Event, RESET=reset
+  
+;  PLOTS, xmin, ymin, /DATA, COLOR=FSC_COLOR('pink')
+;  PLOTS, xmin, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+;  PLOTS, xmax, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+;  PLOTS, xmax, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+;  PLOTS, xmin, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+
+  PLOTS, x1, y1, /DATA, COLOR=FSC_COLOR('pink')
+  PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  PLOTS, x2, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  PLOTS, x2, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
+  
+  DEVICE, decomposed=0
+
+END

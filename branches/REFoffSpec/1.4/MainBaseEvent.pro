@@ -143,13 +143,32 @@ PRO MAIN_BASE_event, Event
   
   ;Counts vs Pixel Help plot
   WIDGET_INFO(wWidget, FIND_BY_UNAME='sangle_help_draw'): BEGIN
-  CURSOR, X, Y, /DATA
-  print, 'X: ' + string(x)
-  print, 'Y: ' + string(y)
-  print
-  IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
+  
+    IF ((*global).zoom_left_click_pressed) THEN BEGIN ;moving mouse with button
+      ;pressed
+      CURSOR, X, Y, /DATA, /NOWAIT
+      sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
+      sangle_zoom_xy_minmax[2] = X
+      sangle_zoom_xy_minmax[3] = Y
+      (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+      plot_sangle_zoom_selection, Event
+    ENDIF
+    
+    IF (Event.press EQ 1) THEN BEGIN ;click left button
+      (*global).zoom_left_click_pressed = 1b
+      CURSOR, X, Y, /DATA
+      sangle_zoom_xy_minmax = FLTARR(4)
+      sangle_zoom_xy_minmax[0] = X
+      sangle_zoom_xy_minmax[1] = Y
+      (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+    ENDIF
+    
+    IF (Event.release EQ 1) THEN BEGIN
+      (*global).zoom_left_click_pressed = 0b
+    ENDIF
+    IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
       plot_counts_vs_pixel_help, Event, RESET=1b
-  ENDIF
+    ENDIF
   END
   
   ;sangle plot
@@ -281,7 +300,7 @@ PRO MAIN_BASE_event, Event
             tof_sangle_device_range[1] = event.x + (*global).tof_sangle_offset
             IF (tof_sangle_device_range[0] LT tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
-          ENDIF
+            ENDIF
             plot_tof_max_range_on_main_plot, Event
             retrieve_tof_data_range_from_device_values, Event
           END
