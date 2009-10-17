@@ -711,6 +711,19 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
       PLOT, Data, XTITLE='Pixel', XRANGE = [xmin,xmax], $
         YRANGE = [ymin,ymax], YTITLE='Counts', XSTYLE=1, YSTYLE=1
     ENDELSE
+    
+    ;plot DirPix
+    DirPix  = FLOAT(getTextFieldValue(Event,$
+      'reduce_sangle_base_dirpix_user_value'))
+    PLOTS, DirPix, ymin, /DATA, COLOR=FSC_COLOR('white')
+    PLOTS, DirPix, ymax, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
+    
+    ;plot RefPix
+    RefPix  = FLOAT(getTextFieldValue(Event,$
+      'reduce_sangle_base_refpix_user_value'))
+    PLOTS, RefPix, ymin, /DATA, COLOR=FSC_COLOR('red')
+    PLOTS, RefPix, ymax, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
+    
   ENDIF ELSE BEGIN ;no zoom applied yet
     IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
       min_counts = 0.1
@@ -720,19 +733,21 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
     ENDIF ELSE BEGIN ;linear plot
       PLOT, Data, XTITLE='Pixel', YTITLE='Counts', XSTYLE=1, YSTYLE=1
     ENDELSE
+    
+    ;plot DirPix
+    DirPix  = FLOAT(getTextFieldValue(Event,$
+      'reduce_sangle_base_dirpix_user_value'))
+    PLOTS, DirPix, min_counts, /DATA, COLOR=FSC_COLOR('white')
+    PLOTS, DirPix, max_counts, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
+    
+    ;plot RefPix
+    RefPix  = FLOAT(getTextFieldValue(Event,$
+      'reduce_sangle_base_refpix_user_value'))
+    PLOTS, RefPix, min_counts, /DATA, COLOR=FSC_COLOR('red')
+    PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
+    
   ENDELSE
   
-  ;plot DirPix
-  DirPix  = FLOAT(getTextFieldValue(Event,$
-    'reduce_sangle_base_dirpix_user_value'))
-  PLOTS, DirPix, min_counts, /DATA, COLOR=FSC_COLOR('white')
-  PLOTS, DirPix, max_counts, /DATA, COLOR=FSC_COLOR('white'), /CONTINUE
-  
-  ;plot RefPix
-  RefPix  = FLOAT(getTextFieldValue(Event,$
-    'reduce_sangle_base_refpix_user_value'))
-  PLOTS, RefPix, min_counts, /DATA, COLOR=FSC_COLOR('red')
-  PLOTS, RefPix, max_counts, /DATA, COLOR=FSC_COLOR('red'), /CONTINUE
   
   device, decomposed=0
   
@@ -888,22 +903,10 @@ PRO plot_sangle_zoom_selection, Event
   
   sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
   
-  print, sangle_zoom_xy_minmax
-  print
-  
   x1 = sangle_zoom_xy_minmax[0]
   y1 = sangle_zoom_xy_minmax[1]
   x2 = sangle_zoom_xy_minmax[2]
   y2 = sangle_zoom_xy_minmax[3]
-  
-  ;  xmin = MIN([x1,x2],MAX=xmax)
-  ;  ymin = MIN([y1,y2],MAX=ymax)
-  
-  ;  sangle_zoom_xy_minmax[0] = xmin
-  ;  sangle_zoom_xy_minmax[1] = ymin
-  ;  sangle_zoom_xy_minmax[2] = xmax
-  ;  sangle_zoom_xy_minmax[3] = ymax
-  ;  (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
   
   ;display box
   id_draw = WIDGET_INFO(Event.top,FIND_BY_UNAME='sangle_help_draw')
@@ -912,12 +915,6 @@ PRO plot_sangle_zoom_selection, Event
   DEVICE, decomposed=1
   
   plot_counts_vs_pixel_help, Event, RESET=reset
-  
-  ;  PLOTS, xmin, ymin, /DATA, COLOR=FSC_COLOR('pink')
-  ;  PLOTS, xmin, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-  ;  PLOTS, xmax, ymax, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-  ;  PLOTS, xmax, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
-  ;  PLOTS, xmin, ymin, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
   
   PLOTS, x1, y1, /DATA, COLOR=FSC_COLOR('pink')
   PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
