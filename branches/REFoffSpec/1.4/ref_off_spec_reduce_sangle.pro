@@ -660,6 +660,7 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
   tof_index = (*global).tof_sangle_index_range
   tof1 = tof_index[0]
   tof2 = tof_index[1]
+  IF (tof2 - tof1 EQ 1) THEN tof2++
   IF(tof1 + tof2 NE 0) THEN BEGIN
     tData = tData[tof1:tof2-1,*]
   ENDIF
