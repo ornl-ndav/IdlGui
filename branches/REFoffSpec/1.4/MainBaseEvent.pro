@@ -165,7 +165,12 @@ PRO MAIN_BASE_event, Event
     
     IF (Event.release EQ 1) THEN BEGIN
       (*global).zoom_left_click_pressed = 0b
+      sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
+      order_data, sangle_zoom_xy_minmax
+      (*global).sangle_current_zoom_para = sangle_zoom_xy_minmax
+      plot_counts_vs_pixel_help, Event
     ENDIF
+    
     IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
       plot_counts_vs_pixel_help, Event, RESET=1b
     ENDIF
