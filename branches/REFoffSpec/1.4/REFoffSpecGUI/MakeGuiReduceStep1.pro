@@ -126,10 +126,11 @@ PRO make_gui_Reduce_step1, REDUCE_TAB, sTab, TabTitles, global
     
    ;Counts vs pixel plot
    help_plot = WIDGET_DRAW(row1col1,$
-   SCR_XSIZE = 255,$
-   SCR_YSIZE = 215,$
+   SCR_XSIZE = (*global).sangle_help_xsize_draw,$
+   SCR_YSIZE = (*global).sangle_help_ysize_draw,$
    /BUTTON_EVENTS,$
    /MOTION_EVENTS,$
+   /TRACKING_EVENTS,$
    UNAME = 'sangle_help_draw') 
     
   row1col2 = WIDGET_BASE(row1,$ ;............................
