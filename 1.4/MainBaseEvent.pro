@@ -144,36 +144,61 @@ PRO MAIN_BASE_event, Event
   ;Counts vs Pixel Help plot
   WIDGET_INFO(wWidget, FIND_BY_UNAME='sangle_help_draw'): BEGIN
   
-    IF ((*global).zoom_left_click_pressed) THEN BEGIN ;moving mouse with button
-      ;pressed
-      CURSOR, X, Y, /DATA, /NOWAIT
-      sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
-      sangle_zoom_xy_minmax[2] = X
-      sangle_zoom_xy_minmax[3] = Y
-      (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
-      plot_sangle_zoom_selection, Event
-    ENDIF
+    enter_error = 0
+    CATCH, enter_error
+    IF (enter_error NE 0) THEN BEGIN ;moving inside draw
+      CATCH, /CANCEL
+      
+      IF ((*global).zoom_left_click_pressed) THEN BEGIN ;moving mouse with button
+        ;pressed
+        CURSOR, X, Y, /DATA, /NOWAIT
+        ;make sure we didn't move outside of the plotting region
+        x_event = Event.x
+        y_event = Event.y
+        IF (x_event LT 0) THEN RETURN
+        IF (x_event GE (*global).sangle_help_xsize_draw) THEN RETURN
+        IF (y_event LT 0) THEN RETURN
+        IF (y_event GE (*global).sangle_help_ysize_draw) THEN RETURN
+        
+        sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
+        sangle_zoom_xy_minmax[2] = X
+        sangle_zoom_xy_minmax[3] = Y
+        (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+        plot_sangle_zoom_selection, Event
+      ENDIF
+      
+      IF (Event.press EQ 1) THEN BEGIN ;click left button
+        (*global).zoom_left_click_pressed = 1b
+        CURSOR, X, Y, /DATA
+        sangle_zoom_xy_minmax = FLTARR(4)
+        sangle_zoom_xy_minmax[0] = X
+        sangle_zoom_xy_minmax[1] = Y
+        (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+      ENDIF
+      
+      IF (Event.release EQ 1) THEN BEGIN
+        (*global).zoom_left_click_pressed = 0b
+        sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
+        order_data, sangle_zoom_xy_minmax
+        (*global).sangle_current_zoom_para = sangle_zoom_xy_minmax
+        plot_counts_vs_pixel_help, Event
+      ENDIF
+      
+      IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
+        plot_counts_vs_pixel_help, Event, RESET=1b
+      ENDIF
+      
+    ENDIF ELSE BEGIN
     
-    IF (Event.press EQ 1) THEN BEGIN ;click left button
-      (*global).zoom_left_click_pressed = 1b
-      CURSOR, X, Y, /DATA
-      sangle_zoom_xy_minmax = FLTARR(4)
-      sangle_zoom_xy_minmax[0] = X
-      sangle_zoom_xy_minmax[1] = Y
-      (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
-    ENDIF
+      IF (Event.enter EQ 0) THEN BEGIN
+        (*global).zoom_left_click_pressed = 0b
+        plot_counts_vs_pixel_help, Event
+        sangle_zoom_xy_minmax = FLTARR(4)
+        (*global).sangle_zoom_xy_minmax = sangle_zoom_xy_minmax
+      ENDIF
+      
+    ENDELSE
     
-    IF (Event.release EQ 1) THEN BEGIN
-      (*global).zoom_left_click_pressed = 0b
-      sangle_zoom_xy_minmax = (*global).sangle_zoom_xy_minmax
-      order_data, sangle_zoom_xy_minmax
-      (*global).sangle_current_zoom_para = sangle_zoom_xy_minmax
-      plot_counts_vs_pixel_help, Event
-    ENDIF
-    
-    IF (Event.press EQ 4) THEN BEGIN ;right click to reset the zoom
-      plot_counts_vs_pixel_help, Event, RESET=1b
-    ENDIF
   END
   
   ;sangle plot

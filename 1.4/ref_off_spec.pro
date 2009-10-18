@@ -135,6 +135,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sangle_table_press_click: 1,$
     sangle_xsize_draw: 845., $
     sangle_ysize_draw: 608., $
+    sangle_help_xsize_draw: 255, $
+    sangle_help_ysize_draw: 215, $
     sangle_main_plot_congrid_x_coeff: 0.,$
     sangle_main_plot_congrid_y_coeff: 2., $
     sangle_mouse_pressed: 0b, $
