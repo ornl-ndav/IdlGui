@@ -297,6 +297,10 @@ PRO MAIN_BASE_event, Event
             IF (tof_sangle_device_range[0] LT tof_sangle_device_range[1]) THEN BEGIN
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
+            IF (tof_sangle_device_range[0] LT 0) THEN BEGIN
+              tof_sangle_device_range[0] = 0
+              (*global).tof_sangle_device_range = tof_sangle_device_range
+            ENDIF
             plot_tof_min_range_on_main_plot, Event
             retrieve_tof_data_range_from_device_values, Event
           END
@@ -304,6 +308,10 @@ PRO MAIN_BASE_event, Event
             tof_sangle_device_range = (*global).tof_sangle_device_range
             tof_sangle_device_range[1] = event.x + (*global).tof_sangle_offset
             IF (tof_sangle_device_range[0] LT tof_sangle_device_range[1]) THEN BEGIN
+              (*global).tof_sangle_device_range = tof_sangle_device_range
+            ENDIF
+            IF (tof_sangle_device_range[1] GT (*global).sangle_xsize_draw) THEN BEGIN
+              tof_sangle_device_range[1] = (*global).sangle_xsize_draw
               (*global).tof_sangle_device_range = tof_sangle_device_range
             ENDIF
             plot_tof_max_range_on_main_plot, Event

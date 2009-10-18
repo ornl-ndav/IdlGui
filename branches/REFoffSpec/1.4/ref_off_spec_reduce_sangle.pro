@@ -671,16 +671,24 @@ PRO determine_sangle_dirpix_data_from_device_value, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO plot_counts_vs_pixel_help, Event, RESET=reset
+PRO plot_counts_vs_pixel_help, Event
 
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   tData = (*(*global).sangle_tData)
   tof_index = (*global).tof_sangle_index_range
+  tof_max_possible = (size(tData))(1)-1
+  
   tof1 = tof_index[0]
   tof2 = tof_index[1]
+
   IF (tof2 - tof1 EQ 1) THEN tof2++
+  IF (tof2 - tof1 EQ 0) THEN BEGIN
+  tof2 = (size(tData))(1)-1
+  ENDIF
+  IF (tof1 LT 0) THEN tof1=0
+  IF (tof2 GT tof_max_possible) THEN tof2=tof_max_possible
   IF(tof1 + tof2 NE 0) THEN BEGIN
     tData = tData[tof1:tof2-1,*]
   ENDIF
@@ -729,6 +737,9 @@ PRO plot_counts_vs_pixel_help, Event, RESET=reset
     IF (isButtonSelected(Event, 'reduce_sangle_log')) THEN BEGIN ;log
       min_counts = 0.1
       YRANGE = [min_counts, max_counts]
+      IF (max_counts LE min_counts) THEN BEGIN
+      YRANGE = [min_counts, 1]
+      ENDIF
       PLOT, Data, XTITLE='Pixel', YTITLE='Counts', /YLOG, XSTYLE=1, YSTYLE=1,$
         YRANGE=yrange
     ENDIF ELSE BEGIN ;linear plot
@@ -784,8 +795,6 @@ PRO plot_tof_min_range_on_main_plot, Event
   
   tof_sangle_device_range = (*global).tof_sangle_device_range
   IF (tof_sangle_device_range[1] LT 1.0) THEN BEGIN ;first time
-    ;tData = (*(*global).sangle_tData)
-    ;x = (size(tdata))(1)
     tof_sangle_device_range[1] = (*global).sangle_xsize_draw
   ENDIF
   
@@ -797,11 +806,7 @@ PRO plot_tof_min_range_on_main_plot, Event
   tof_sangle_device_range[0] = tof_min_device
   tof_sangle_device_range[1] = tof_max_device
   (*global).tof_sangle_device_range = tof_sangle_device_range
-  
-  ;  x_coeff = (*global).sangle_main_plot_congrid_x_coeff
-  ;  tof_min_device = tof_min * x_coeff
-  ;  tof_max_device = (tof_max) * x_coeff - 1
-  
+
   xoff = 10
   yoff = 15
   
@@ -914,7 +919,7 @@ PRO plot_sangle_zoom_selection, Event
   WSET,id_value
   DEVICE, decomposed=1
   
-  plot_counts_vs_pixel_help, Event, RESET=reset
+  plot_counts_vs_pixel_help, Event
   
   PLOTS, x1, y1, /DATA, COLOR=FSC_COLOR('pink')
   PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR('pink')
