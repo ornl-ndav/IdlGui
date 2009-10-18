@@ -433,6 +433,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_sangle_base_refpix_user_value'): BEGIN
     replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
     IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
       plot_sangle_dirpix, Event
       saving_background, Event
@@ -449,6 +450,7 @@ PRO MAIN_BASE_event, Event
   WIDGET_INFO(wWidget, $
     FIND_BY_UNAME='reduce_sangle_base_dirpix_user_value'): BEGIN
     replot_selected_data_in_sangle_base, Event
+    plot_tof_range_on_main_plot, Event
     IF ((*global).sangle_mode EQ 'refpix') THEN BEGIN ;refpix mode
       plot_sangle_dirpix, Event
       saving_background, Event
