@@ -169,8 +169,9 @@ PRO makeExclusionArray_SNS, Event, ADD=add
     sz_pixel_array = LONG(nbr_dead_tube) * 256L
     IF (sz_pixel_array GT 0) THEN BEGIN
       PixelArray_of_Deadtubes = STRARR(sz_pixel_array)
-      index = 0
-      dead_tube_index = 0
+      
+      index = 0L ;make sure the index is long
+      dead_tube_index = 0L
       WHILE (dead_tube_index LT nbr_dead_tube) DO BEGIN
         tube_global = dead_tube_nbr[dead_tube_index]
         bank = getBankNumber(tube_global+1)
