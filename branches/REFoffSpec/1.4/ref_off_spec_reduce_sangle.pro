@@ -41,7 +41,7 @@ FUNCTION retrieve_nexus_data, FullNexusName, spin_state, data
     RETURN,0
   ENDIF ELSE BEGIN
     fileID    = H5F_OPEN(FullNexusName)
-    data_path = '/entry-' + spin_state + '/bank1/data'
+    data_path = '/entry-' + spin_stiate + '/bank1/data'
     fieldID = H5D_OPEN(fileID,data_path)
     data = H5D_READ(fieldID)
     RETURN, 1

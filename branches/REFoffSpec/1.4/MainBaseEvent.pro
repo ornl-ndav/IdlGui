@@ -130,6 +130,7 @@ PRO MAIN_BASE_event, Event
       select_full_line_of_selected_row, Event
       display_metatada_of_sangle_selected_row, Event
       plot_selected_data_in_sangle_base, Event
+      plot_tof_range_on_main_plot, Event
       saving_background, Event
       plot_sangle_refpix, Event
       plot_sangle_dirpix, Event
