@@ -251,22 +251,22 @@ FUNCTION getBScalculationRange, Event, BASE=base
   ;get tube and pixel calculation range
   IF (N_ELEMENTS(base) EQ 0) THEN BEGIN
     bs_calculation_tube_left = FIX(getTextFieldvalue(Event, $
-      'tube1_button_value'))
+      'beam_center_calculation_range_tube_left'))
     bs_calculation_tube_right = FIX(getTextFieldValue(Event, $
-      'tube2_button_value'))
+      'beam_center_calculation_range_tube_right'))
     bs_calculation_pixel_left = FIX(getTextFieldValue(Event, $
-      'pixel1_button_value'))
+      'beam_center_calculation_range_pixel_left'))
     bs_calculation_pixel_right = FIX(getTextFieldValue(Event, $
-      'pixel2_button_value'))
+      'beam_center_calculation_range_pixel_right'))
   ENDIF ELSE BEGIN
     bs_calculation_tube_left = FIX(getTextFieldvalue_from_base(base, $
-      'tube1_button_value'))
+      'beam_center_calculation_range_tube_left'))
     bs_calculation_tube_right = FIX(getTextFieldValue_from_base(base, $
-      'tube2_button_value'))
+      'beam_center_calculation_range_tube_right'))
     bs_calculation_pixel_left = FIX(getTextFieldValue_from_base(base, $
-      'pixel1_button_value'))
+      'beam_center_calculation_range_pixel_left'))
     bs_calculation_pixel_right = FIX(getTextFieldValue_from_base(base, $
-      'pixel2_button_value'))
+      'beam_center_calculation_range_pixel_right'))
   ENDELSE
   
   tube_min = MIN([bs_calculation_tube_left, bs_calculation_tube_right], $
@@ -318,7 +318,7 @@ FUNCTION tube_is_in_expected_range, BASE=base, EVENT=event, tube
   
   IF (tube LT min_tube_plotted) THEN RETURN, 0
   IF (tube GT max_tube_plotted) THEN RETURN, 0
-
+  
   RETURN, 1
   
 END
@@ -341,7 +341,7 @@ FUNCTION pixel_is_in_expected_range, BASE=base, EVENT=event, pixel
   IF (pixel GT max_pixel_plotted) THEN RETURN, 0
   
   RETURN, 1
-
+  
 END
 
 

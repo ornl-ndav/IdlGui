@@ -35,7 +35,6 @@
 PRO record_calculation_range_value, Event
 
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
-  mode = (*global).calculation_range_tab_mode
   
   CASE (mode) OF
     'tube1': BEGIN
