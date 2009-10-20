@@ -48,8 +48,6 @@ PRO activate_widget_list, Event, uname_list, activate_status
   sz = N_ELEMENTS(uname_list)
   FOR i=0,(sz-1) DO BEGIN
     activate_widget, Event, uname_list[i], activate_status
-    print, uname_list[i]
-    print, activate_status
   ENDFOR
   
 END
