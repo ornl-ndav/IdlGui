@@ -138,19 +138,29 @@ END
 PRO retrieve_default_z_offset_value, BASE=base
 
   WIDGET_CONTROL, BASE, GET_UVALUE=global
-    
-  IF ((*global).testing_on_mac EQ 'no') THEN BEGIN
-    GeoFile = get_up_to_date_geo_file()
-  ENDIF ELSE BEGIN
-    GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'
-  ENDELSE
-  (*global).geo_file = GeoFile
   
-  iXML = OBJ_NEW('myXMLparser')
-  iXML->parseFile, GeoFile
-  ValueUnits = iXML->getArray()
-  value = ValueUnits[0]
-  units = ValueUnits[1]
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    value = ''
+    units = ''
+  ENDIF ELSE BEGIN
+  
+    IF ((*global).testing_on_mac EQ 'no') THEN BEGIN
+      GeoFile = get_up_to_date_geo_file()
+    ENDIF ELSE BEGIN
+      GeoFile = '~/results/EQSANS_geom_2009_09_10.xml'
+    ENDELSE
+    (*global).geo_file = GeoFile
+    
+    iXML = OBJ_NEW('myXMLparser')
+    iXML->parseFile, GeoFile
+    ValueUnits = iXML->getArray()
+    value = ValueUnits[0]
+    units = ValueUnits[1]
+    
+  ENDELSE
   
   IF (value EQ '') THEN value = 'N/A'
   IF (units EQ '') THEN units = 'N/A'
