@@ -32,40 +32,40 @@
 ;
 ;==============================================================================
 
-PRO display_images, MAIN_BASE=main_base, EVENT=event, $
+PRO display_images, MAIN_BASE=main_base, $
+    EVENT=event, $
     transmission=transmission, $
     beam_center=beam_center
-  
-  IF (isBaseMap(Event,'transmission_launcher_base')) THEN BEGIN    
-  IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
-  
-  
-  
-  
-  
-  
-  
-  
-  IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
-  
-  ;Transmission calculation button
-  IF (transmission EQ 'off') THEN BEGIN
-    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_off.png')
-  ENDIF ELSE BEGIN
-    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_on.png')
-  ENDELSE
+    
+  ;transmission button
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, $
-      FIND_BY_UNAME='transmission_calculation_button')
+    display_transmission_image, MAIN_BASE=main_base, $
+      TRANSMISSION=transmission
   ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, $
-      FIND_BY_UNAME='transmission_calculation_button')
+    IF (isBaseMap(Event,'transmission_launcher_base')) THEN BEGIN
+      display_transmission_image, EVENT=event, $
+        TRANSMISSION=transmission
+    ENDIF
   ENDELSE
-  WIDGET_CONTROL, mode_id, GET_VALUE=id
-  WSET, id
-  TV, raw_buttons, 0, 0,/true
   
   ;beam center button
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    display_beam_center_image, MAIN_BASE=main_base, $
+      BEAM_CENTER=beam_center
+  ENDIF ELSE BEGIN
+    IF (isBaseMap(Event,'transmission_launcher_base')) THEN BEGIN
+      display_beam_center_image, EVENT=event,$
+        BEAM_CENTER=beam_center
+    ENDIF
+  ENDELSE
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_beam_center_image, EVENT=event, MAIN_BASE=main_base, $
+    BEAM_CENTER=beam_center
+    
+  IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
   IF (beam_center EQ 'off') THEN BEGIN
     raw_buttons = READ_PNG('SANSreduction_images/beam_center_off.png')
   ENDIF ELSE BEGIN
@@ -85,14 +85,37 @@ PRO display_images, MAIN_BASE=main_base, EVENT=event, $
 END
 
 ;------------------------------------------------------------------------------
+PRO display_transmission_image, EVENT=event, MAIN_BASE=main_base, $
+    TRANSMISSION=transmission
+    
+  IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
+  ;Transmission calculation button
+  IF (transmission EQ 'off') THEN BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_off.png')
+  ENDIF ELSE BEGIN
+    raw_buttons = READ_PNG('SANSreduction_images/transmission_button_on.png')
+  ENDELSE
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, $
+      FIND_BY_UNAME='transmission_calculation_button')
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, $
+      FIND_BY_UNAME='transmission_calculation_button')
+  ENDELSE
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, raw_buttons, 0, 0,/true
+  
+END
+;------------------------------------------------------------------------------
 PRO display_selection_images, MAIN_BASE=main_base, EVENT=event, $
     selection = selection, OFF=off
     
   uname = 'selection_inside_outside_base_uname'
   IF (N_ELEMENTS(off) NE 0) THEN BEGIN
-  status = 0
-  ENDIF ELSE BEGIN 
-  status = 1
+    status = 0
+  ENDIF ELSE BEGIN
+    status = 1
   ENDELSE
   
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
