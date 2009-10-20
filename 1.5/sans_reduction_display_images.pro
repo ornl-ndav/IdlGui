@@ -35,8 +35,17 @@
 PRO display_images, MAIN_BASE=main_base, EVENT=event, $
     transmission=transmission, $
     beam_center=beam_center
-    
+  
+  IF (isBaseMap(Event,'transmission_launcher_base')) THEN BEGIN    
   IF (N_ELEMENTS(transmission) EQ 0) THEN transmission = 'off'
+  
+  
+  
+  
+  
+  
+  
+  
   IF (N_ELEMENTS(beam_center) EQ 0) THEN beam_center = 'off'
   
   ;Transmission calculation button

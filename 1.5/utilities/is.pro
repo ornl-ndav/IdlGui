@@ -85,3 +85,10 @@ END
 FUNCTION isOdd, value
   RETURN, value MOD 2
 END
+
+;------------------------------------------------------------------------------
+FUNCTION isBaseMap, Event, uname
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+mapped = WIDGET_INFO(id, /MAP)
+RETURN, mapped
+END
