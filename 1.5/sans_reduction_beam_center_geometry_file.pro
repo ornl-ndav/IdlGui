@@ -55,6 +55,7 @@ FUNCTION create_tmp_geometry, Event
   tube_back_size  = 0.0031 ;back tube size (m)
   
   bc_tube_offset_distance_m = 0
+  type = ''
   IF (bc_tube_offset LT 0) THEN BEGIN ;tube center is on the left of default
     WHILE (bc_tube_offset LT -1) DO BEGIN
       decimal_part = FIX(bc_tube_offset)
