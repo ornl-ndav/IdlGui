@@ -197,9 +197,9 @@ PRO browse_nexus, Event
       uname_list = [uname_list,$
         'selection_tool_button']
     ENDIF
-    
+      
       (*global).data_nexus_file_name = FullNexusName
-    activate_widget_list, Event, uname_list, status
+    activate_widget_list, Event, uname_list, 1
   ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message

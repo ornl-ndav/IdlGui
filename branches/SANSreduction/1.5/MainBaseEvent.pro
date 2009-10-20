@@ -534,6 +534,8 @@ PRO MAIN_BASE_event, Event
           WIDGET_CONTROL, id, GET_VALUE = id_value
           WSET, id_value
           TV, (*(*global).background), true=3
+          display_images, EVENT=event
+          display_selection_images, Event=event
         ENDELSE
       ENDIF
     END
