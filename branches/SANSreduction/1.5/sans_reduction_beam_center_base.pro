@@ -58,12 +58,12 @@ PRO launch_beam_center_base_event, Event
             pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
             putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
-            plot_beam_center_background, Event
-            replot_beam_center_beam_stop, Event
-            replot_calculation_range_cursor, Event
-            plot_calculation_range_selection, EVENT=Event
-            display_counts_vs_pixel_and_tube_live, Event
-            beam_center_plot, Event=event
+;            plot_beam_center_background, Event
+;            replot_beam_center_beam_stop, Event
+;            replot_calculation_range_cursor, Event
+;            plot_calculation_range_selection, EVENT=Event
+;            display_counts_vs_pixel_and_tube_live, Event
+;            beam_center_plot, Event=event
           END
           2: BEGIN ;cursor info
             tube_data  = FIX(getBeamCenterTubeData_from_device(Event.x, $
@@ -95,8 +95,8 @@ PRO launch_beam_center_base_event, Event
             1: BEGIN ;Calculation Range
               plot_beam_center_background, Event
               replot_beam_center_beam_stop, Event
-;              record_calculation_range_value, Event
-              plot_calculation_range_selection, EVENT=Event
+              record_calculation_range_value, Event, MODE='click'
+              ;              plot_calculation_range_selection, EVENT=Event
               replot_calculation_range_cursor, Event
             END
             2: BEGIN ;cursor information
@@ -155,6 +155,13 @@ PRO launch_beam_center_base_event, Event
           (*global).left_button_pressed EQ 1) THEN BEGIN
           ;          curr_tab_selected = getCurrentTabSelect(Event,'beam_center_tab')
           CASE (curr_tab_selected) OF
+            1: BEGIN ;Calculation Range
+              plot_beam_center_background, Event
+              replot_beam_center_beam_stop, Event
+              record_calculation_range_value, Event, MODE='move'
+              plot_calculation_range_selection, EVENT=Event
+              replot_calculation_range_cursor, Event
+            END
             2: BEGIN
               tube = getTextFieldValue(Event,$
                 'beam_center_cursor_live_tube_value')
@@ -203,12 +210,11 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
-              print, 'in #1'
-                plot_beam_center_background, Event
-                replot_beam_center_beam_stop, Event
-                record_calculation_range_value, Event
-                plot_calculation_range_selection, EVENT=Event
-                replot_calculation_range_cursor, Event
+              ;                plot_beam_center_background, Event
+              ;                replot_beam_center_beam_stop, Event
+              ;                record_calculation_range_value, Event
+              ;                plot_calculation_range_selection, EVENT=Event
+              ;                replot_calculation_range_cursor, Event
               END
               2:
               ELSE:
@@ -369,7 +375,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
-              print, 'in #2'
+                print, 'in #2'
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
@@ -436,16 +442,11 @@ PRO launch_beam_center_base_event, Event
                 
             END
             1: BEGIN ;Calculation Range
-            
-              switch_calculation_range_button, Event, WAY='forward'
-              
               tube_data = getTextFieldValue(event,'beam_center_2d_plot_tube')
               pixel_data = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
-              
               sT = STRCOMPRESS(tube_data,/REMOVE_ALL)
               sP = STRCOMPRESS(pixel_data,/REMOVE_ALL)
               (*global).twoD_plots_tubeLR_pixelLR_backup = [sT, sP]
-              
             END
             2:
             ELSE:
@@ -457,14 +458,14 @@ PRO launch_beam_center_base_event, Event
           switch_cursor_shape, Event
           CASE (curr_tab_selected) OF
             1: BEGIN ;Calculation Range
-              switch_calculation_range_button, Event, WAY='backward'
+            ;         switch_calculation_range_button, Event, WAY='backward'
             END
             ELSE:
           ENDCASE
         ENDIF
         
       ENDIF ELSE BEGIN ;endif of catch statement
-        
+      
         id = WIDGET_INFO(Event.top,$
           find_by_uname='beam_center_main_draw')
         WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -783,9 +784,9 @@ PRO launch_beam_center_base_event, Event
           ELSE: mode='off'
         ENDCASE
         display_beam_stop_images, EVENT=event, MODE=mode
-;        IF (curr_tab_selected EQ 1) THEN BEGIN
-;          display_beam_center_tab2_buttons, Event
-;        ENDIF
+      ;        IF (curr_tab_selected EQ 1) THEN BEGIN
+      ;          display_beam_center_tab2_buttons, Event
+      ;        ENDIF
       ENDIF
     END
     
@@ -1010,10 +1011,9 @@ PRO launch_beam_center_base, main_event
     color: [255,0,0],$ ;red
     ;color_selected: [255,0,255],$
     color_selected: 'green', $
-    thick: 3,$
+    thick: 1,$
     working_linestyle: 0,$
-    not_working_linestyle: 2,$
-    thick_selected: 3}, $
+    thick_selected: 1}, $
     
     beam_stop_default_selection: {tube_min: 90, $
     tube_max: 100, $
@@ -1029,7 +1029,7 @@ PRO launch_beam_center_base, main_event
     color: [255,255,255], $
     working_linestyle: 0, $
     not_working_linestyle: 1, $
-    thick: 2}, $
+    thick: 1}, $
     
     calculation_range_offset: { tube: 0L, $
     pixel: 0L}, $

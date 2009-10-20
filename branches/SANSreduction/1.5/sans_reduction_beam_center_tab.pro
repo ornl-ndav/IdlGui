@@ -43,7 +43,7 @@ PRO show_beam_stop_tab, Event, tab=tab
   
   ActivateTabNbr, EVENT=Event, 'beam_center_tab', tab_nbr
   
-  IF (tab_nbr EQ 1) THEN display_beam_center_tab2_buttons, Event
+  ;IF (tab_nbr EQ 1) THEN display_beam_center_tab2_buttons, Event
   plot_beam_center_background, Event
   plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
   replot_beam_center_beam_stop, Event

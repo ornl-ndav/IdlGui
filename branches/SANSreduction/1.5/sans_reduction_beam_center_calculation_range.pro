@@ -32,36 +32,36 @@
 ;
 ;==============================================================================
 
-PRO record_calculation_range_value, Event
+PRO record_calculation_range_value, Event, MODE=mode
 
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
+  tube = getTextFieldValue(Event,'beam_center_2d_plot_tube')
+  pixel = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
+  
   CASE (mode) OF
-    'tube1': BEGIN
-      type_to_get = 'tube'
-      uname = 'tube1_button_value'
+    'click': BEGIN
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_tube_left',$
+        STRCOMPRESS(tube,/REMOVE_ALL)
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_pixel_left', $
+        STRCOMPRESS(pixel,/REMOVE_ALL)
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_tube_right', 'N/A'
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_pixel_right', 'N/A'
     END
-    'tube2': BEGIN
-      type_to_get = 'tube'
-      uname = 'tube2_button_value'
+    'move': BEGIN
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_tube_right',$
+        STRCOMPRESS(tube,/REMOVE_ALL)
+      putTextFieldValue, Event, $
+        'beam_center_calculation_range_pixel_right', $
+        STRCOMPRESS(pixel,/REMOVE_ALL)
     END
-    'pixel1': BEGIN
-      type_to_get = 'pixel'
-      uname = 'pixel1_button_value'
-    END
-    'pixel2': BEGIN
-      type_to_get = 'pixel'
-      uname = 'pixel2_button_value'
-    END
+    ELSE:
   ENDCASE
   
-  IF (type_to_get EQ 'tube') THEN BEGIN
-    value = getTextFieldValue(Event,'beam_center_2d_plot_tube')
-  ENDIF ELSE BEGIN
-    value = getTextFieldValue(Event,'beam_center_2d_plot_pixel')
-  ENDELSE
-  
-  s_value = STRCOMPRESS(value,/REMOVE_ALL)
-  putTextFieldValue, Event, uname, s_value
   
 END
