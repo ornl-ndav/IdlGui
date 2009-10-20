@@ -158,16 +158,16 @@ PRO populate_defaults_wigets_values, wBase, global
   spixel_max = STRCOMPRESS(pixel2,/REMOVE_ALL)
   
   putTextFieldValueMainBase, wBase, $
-    UNAME='tube1_button_value', stube_min
+    UNAME='beam_center_calculation_range_tube_left', stube_min
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='tube2_button_value', stube_max
+    UNAME='beam_center_calculation_range_tube_right', stube_max
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='pixel1_button_value', spixel_min
+    UNAME='beam_center_calculation_range_pixel_left', spixel_min
     
   putTextFieldValueMainBase, wBase, $
-    UNAME='pixel2_button_value', spixel_max
+    UNAME='beam_center_calculation_range_pixel_right', spixel_max
     
         
 END

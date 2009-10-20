@@ -243,81 +243,124 @@ PRO beam_center_base_gui, wBase, main_base_geometry
     UNAME = 'beam_center_2d_plot_pixel')
   space = WIDGET_LABEL(tab2_row1,$
     VALUE = '  ')
+      
+  ;tube and pixel - left and right
+  vert_space = WIDGET_LABEL(tab1,$
+    VALUE = ' ')
     
-  xsize = 100
-  ysize = 30
+  space_value = '       '
+  tab2_row1 = WIDGET_BASE(tab2,$
+    /ROW)
+  tube_left = WIDGET_LABEL(tab2_row1,$
+    VALUE=space_value+'Tube left: ')
+  value     = WIDGET_TEXT(tab2_row1,$
+    VALUE='N/A',$
+    XSIZE = 3,$
+    UNAME = 'beam_center_calculation_range_tube_left',$
+    /EDITABLE)
+  space = WIDGET_LABEL(tab2_row1,$
+    VALUE = '     ')
+  tube_right = WIDGET_LABEL(tab2_row1,$
+    VALUE='Tube right: ')
+  value     = WIDGET_TEXT(tab2_row1,$
+    VALUE='N/A',$
+    UNAME = 'beam_center_calculation_range_tube_right',$
+    XSIZE = 3,$
+    /EDITABLE)
+    
   tab2_row2 = WIDGET_BASE(tab2,$
     /ROW)
-  button = WIDGET_DRAW(tab2_row2,$
-    XSIZE = xsize,$
-    /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    UNAME = 'tube1_button_uname',$
-    YSIZE = ysize)
-  value = WIDGET_TEXT(tab2_row2,$
-    VALUE = 'N/A',$
-    UNAME = 'tube1_button_value',$
+  pixel_left = WIDGET_LABEL(tab2_row2,$
+    VALUE=space_value+'Pixel left:')
+  value     = WIDGET_TEXT(tab2_row2,$
+    VALUE='N/A',$
     XSIZE = 3,$
+    UNAME = 'beam_center_calculation_range_pixel_left',$
     /EDITABLE)
-    
-  tab2_row3 = WIDGET_BASE(tab2,$
-    /ROW)
-  button = WIDGET_DRAW(tab2_row3,$
-    XSIZE = xsize,$
-    /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    UNAME = 'tube2_button_uname',$
-    YSIZE = ysize)
-  value = WIDGET_TEXT(tab2_row3,$
-    VALUE = 'N/A',$
+  space = WIDGET_LABEL(tab2_row2,$
+    VALUE = '     ')
+  pixel_right = WIDGET_LABEL(tab2_row2,$
+    VALUE='Pixel right:')
+  value     = WIDGET_TEXT(tab2_row2,$
+    VALUE='N/A',$
     XSIZE = 3,$
-    UNAME = 'tube2_button_value',$
+    UNAME = 'beam_center_calculation_range_pixel_right',$
     /EDITABLE)
-    
-  tab2_row4 = WIDGET_BASE(tab2,$
-    /ROW)
-  button = WIDGET_DRAW(tab2_row4,$
-    XSIZE = xsize,$
-    /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    UNAME = 'pixel1_button_uname',$
-    YSIZE = ysize)
-  value = WIDGET_TEXT(tab2_row4,$
-    VALUE = 'N/A',$
-    UNAME = 'pixel1_button_value',$
-    XSIZE = 3,$
-    /EDITABLE)
-    
-  tab2_row5 = WIDGET_BASE(tab2,$
-    /ROW)
-  button = WIDGET_DRAW(tab2_row5,$
-    XSIZE = xsize,$
-    /BUTTON_EVENTS,$
-    /TRACKING_EVENTS,$
-    UNAME = 'pixel2_button_uname',$
-    YSIZE = ysize)
-  value = WIDGET_TEXT(tab2_row5,$
-    VALUE = 'N/A',$
-    UNAME = 'pixel2_button_value',$
-    XSIZE = 3,$
-    /EDITABLE)
-    
-  tab2_row6_col1 = WIDGET_BASE(tab2,$ ;help text
-    FRAME = 1,$
-    /COLUMN)
-    
-  message = ['-> Each left click on the main plot will automatically',$
-    'select the next button.', $
-    '-> Right click to move back to previous selection.']
-  help = WIDGET_LABEL(tab2_row6_col1,$
-    /ALIGN_LEFT,$
-    VALUE = message[0])
-  help = WIDGET_LABEL(tab2_row6_col1,$
-    /ALIGN_LEFT,$
-    VALUE = message[1])
-  help = WIDGET_LABEL(tab2_row6_col1,$
-    /ALIGN_LEFT,$
-    VALUE = message[2])
+  
+;  xsize = 100
+;  ysize = 30
+;  tab2_row2 = WIDGET_BASE(tab2,$
+;    /ROW)
+;  button = WIDGET_DRAW(tab2_row2,$
+;    XSIZE = xsize,$
+;    /BUTTON_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    UNAME = 'tube1_button_uname',$
+;    YSIZE = ysize)
+;  value = WIDGET_TEXT(tab2_row2,$
+;    VALUE = 'N/A',$
+;    UNAME = 'tube1_button_value',$
+;    XSIZE = 3,$
+;    /EDITABLE)
+;    
+;  tab2_row3 = WIDGET_BASE(tab2,$
+;    /ROW)
+;  button = WIDGET_DRAW(tab2_row3,$
+;    XSIZE = xsize,$
+;    /BUTTON_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    UNAME = 'tube2_button_uname',$
+;    YSIZE = ysize)
+;  value = WIDGET_TEXT(tab2_row3,$
+;    VALUE = 'N/A',$
+;    XSIZE = 3,$
+;    UNAME = 'tube2_button_value',$
+;    /EDITABLE)
+;    
+;  tab2_row4 = WIDGET_BASE(tab2,$
+;    /ROW)
+;  button = WIDGET_DRAW(tab2_row4,$
+;    XSIZE = xsize,$
+;    /BUTTON_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    UNAME = 'pixel1_button_uname',$
+;    YSIZE = ysize)
+;  value = WIDGET_TEXT(tab2_row4,$
+;    VALUE = 'N/A',$
+;    UNAME = 'pixel1_button_value',$
+;    XSIZE = 3,$
+;    /EDITABLE)
+;    
+;  tab2_row5 = WIDGET_BASE(tab2,$
+;    /ROW)
+;  button = WIDGET_DRAW(tab2_row5,$
+;    XSIZE = xsize,$
+;    /BUTTON_EVENTS,$
+;    /TRACKING_EVENTS,$
+;    UNAME = 'pixel2_button_uname',$
+;    YSIZE = ysize)
+;  value = WIDGET_TEXT(tab2_row5,$
+;    VALUE = 'N/A',$
+;    UNAME = 'pixel2_button_value',$
+;    XSIZE = 3,$
+;    /EDITABLE)
+;    
+;  tab2_row6_col1 = WIDGET_BASE(tab2,$ ;help text
+;    FRAME = 1,$
+;    /COLUMN)
+;    
+;  message = ['-> Each left click on the main plot will automatically',$
+;    'select the next button.', $
+;    '-> Right click to move back to previous selection.']
+;  help = WIDGET_LABEL(tab2_row6_col1,$
+;    /ALIGN_LEFT,$
+;    VALUE = message[0])
+;  help = WIDGET_LABEL(tab2_row6_col1,$
+;    /ALIGN_LEFT,$
+;    VALUE = message[1])
+;  help = WIDGET_LABEL(tab2_row6_col1,$
+;    /ALIGN_LEFT,$
+;    VALUE = message[2])
     
   tab3 = WIDGET_BASE(tab_selection,$ ;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     TITLE = 'Cursor Information',$

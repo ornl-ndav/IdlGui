@@ -80,11 +80,15 @@ FUNCTION retrieve_calculation_range, Event=event, base=base
       bs_pixel_min_offset:bs_pixel_max_offset] = 0
       
     ;calculation range
-    tube1  = FIX(getTextFieldValue(Event,'tube1_button_value'))
-    tube2  = FIX(getTextFieldValue(Event,'tube2_button_value'))
-    pixel1 = FIX(getTextFieldValue(Event,'pixel1_button_value'))
-    pixel2 = FIX(getTextFieldValue(Event,'pixel2_button_value'))
-    
+    tube1  = FIX(getTextFieldValue(Event,$
+      'beam_center_calculation_range_tube_left'))
+    tube2  = FIX(getTextFieldValue(Event,$
+      'beam_center_calculation_range_tube_right'))
+    pixel1 = FIX(getTextFieldValue(Event,$
+      'beam_center_calculation_range_pixel_left'))
+    pixel2 = FIX(getTextFieldValue(Event,$
+      'beam_center_calculation_range_pixel_right'))
+      
     tube_min  = MIN([tube1,tube2], MAX=tube_max)
     pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
     
@@ -131,11 +135,15 @@ FUNCTION retrieve_calculation_range, Event=event, base=base
       bs_pixel_min_offset:bs_pixel_max_offset] = 0
       
     ;calculation range
-    tube1  = FIX(getTextFieldValue_from_base(base,'tube1_button_value'))
-    tube2  = FIX(getTextfieldValue_from_base(base,'tube2_button_value'))
-    pixel1 = FIX(getTextFieldValue_from_base(base,'pixel1_button_value'))
-    pixel2 = FIX(getTextFieldValue_from_base(base,'pixel2_button_value'))
-    
+    tube1  = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_calculation_range_tube_left'))
+    tube2  = FIX(getTextfieldValue_from_base(base,$
+      'beam_center_calculation_range_tube_right'))
+    pixel1 = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_calculation_range_pixel_left'))
+    pixel2 = FIX(getTextFieldValue_from_base(base,$
+      'beam_center_calculation_range_pixel_right'))
+      
     tube_min  = MIN([tube1,tube2], MAX=tube_max)
     pixel_min = MIN([pixel1,pixel2], MAX=pixel_max)
     

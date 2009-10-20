@@ -95,7 +95,7 @@ PRO launch_beam_center_base_event, Event
             1: BEGIN ;Calculation Range
               plot_beam_center_background, Event
               replot_beam_center_beam_stop, Event
-              record_calculation_range_value, Event
+;              record_calculation_range_value, Event
               plot_calculation_range_selection, EVENT=Event
               replot_calculation_range_cursor, Event
             END
@@ -203,6 +203,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
+              print, 'in #1'
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
@@ -368,6 +369,7 @@ PRO launch_beam_center_base_event, Event
                 plot_calculation_range_selection, EVENT=Event, MODE_DISABLE=1
               END
               1: BEGIN ;Calculation Range
+              print, 'in #2'
                 plot_beam_center_background, Event
                 replot_beam_center_beam_stop, Event
                 record_calculation_range_value, Event
@@ -462,6 +464,7 @@ PRO launch_beam_center_base_event, Event
         ENDIF
         
       ENDIF ELSE BEGIN ;endif of catch statement
+        
         id = WIDGET_INFO(Event.top,$
           find_by_uname='beam_center_main_draw')
         WIDGET_CONTROL, id, GET_VALUE=id_value
@@ -780,9 +783,9 @@ PRO launch_beam_center_base_event, Event
           ELSE: mode='off'
         ENDCASE
         display_beam_stop_images, EVENT=event, MODE=mode
-        IF (curr_tab_selected EQ 1) THEN BEGIN
-          display_beam_center_tab2_buttons, Event
-        ENDIF
+;        IF (curr_tab_selected EQ 1) THEN BEGIN
+;          display_beam_center_tab2_buttons, Event
+;        ENDIF
       ENDIF
     END
     

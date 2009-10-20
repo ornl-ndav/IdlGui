@@ -134,46 +134,30 @@ PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
     WIDGET_CONTROL,wBase,GET_UVALUE=global
     draw_uname = 'beam_center_main_draw'
     id = WIDGET_INFO(wBase,FIND_BY_UNAME=draw_uname)
-    Tube1  = getTextFieldValue_from_base(wBase,'tube1_button_value')
-    Tube2  = getTextFieldValue_from_base(wBase,'tube2_button_value')
-    Pixel1 = getTextFieldValue_from_base(wBase,'pixel1_button_value')
-    Pixel2 = getTextFieldValue_from_base(wBase,'pixel2_button_value')
+    Tube1  = getTextFieldValue_from_base(wBase,$
+      'beam_center_calculation_range_tube_left')
+    Tube2  = getTextFieldValue_from_base(wBase,$
+      'beam_center_calculation_range_tube_right')
+    Pixel1 = getTextFieldValue_from_base(wBase,$
+      'beam_center_calculation_range_pixel_left')
+    Pixel2 = getTextFieldValue_from_base(wBase,$
+      'beam_center_calculation_range_pixel_right')
   ENDIF ELSE BEGIN
     WIDGET_CONTROL,Event.top,GET_UVALUE=global
     draw_uname = 'beam_center_main_draw'
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=draw_uname)
-    Tube1 = getTextFieldValue(Event,'tube1_button_value')
-    Tube2 = getTextFieldValue(Event,'tube2_button_value')
-    Pixel1 = getTextFieldValue(Event,'pixel1_button_value')
-    Pixel2 = getTextFieldValue(Event,'pixel2_button_value')
+    Tube1 = getTextFieldValue(Event,$
+      'beam_center_calculation_range_tube_left')
+    Tube2 = getTextFieldValue(Event,$
+      'beam_center_calculation_range_tube_right')
+    Pixel1 = getTextFieldValue(Event,$
+      'beam_center_calculation_range_pixel_left')
+    Pixel2 = getTextFieldValue(Event,$
+      'beam_center_calculation_range_pixel_right')
   ENDELSE
-
-  working = (*global).calibration_range_default_selection.working_linestyle
-  not_working = $
-    (*global).calibration_range_default_selection.not_working_linestyle
-    
-  tube1_linestyle  = not_working
-  tube2_linestyle  = not_working
-  pixel1_linestyle = not_working
-  pixel2_linestyle = not_working
   
-  IF (N_ELEMENTS(mode_disable) EQ 0) THEN BEGIN
-    mode = (*global).calculation_range_tab_mode
-    CASE (mode) OF
-      'tube1': BEGIN
-        tube1_linestyle = working
-      END
-      'tube2': BEGIN
-        tube2_linestyle = working
-      END
-      'pixel1': BEGIN
-        pixel1_linestyle = working
-      END
-      'pixel2': BEGIN
-        pixel2_linestyle = working
-      END
-    ENDCASE
-  ENDIF
+  working = (*global).calibration_range_default_selection.working_linestyle
+  tube_pixel_linestyle = working
   
   x_min = 0
   y_min = 0
@@ -190,38 +174,28 @@ PRO plot_calculation_range_selection, wBase=wbase, Event=Event, $
   ;color = convert_rgb(color)
   color = FSC_COLOR(color)
   
-  IF (Tube1 NE 'N/A') THEN BEGIN ;plot Tube1
-    iTube1 = FIX(Tube1)
-    x = getBeamCenterTubeDevice_from_data(iTube1, global)
-    PLOTS, x, y_min, /DEVICE, COLOR=color
-    PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=tube1_linestyle, THICK=thick
-  ENDIF
+  iTube1 = FIX(Tube1)
+  iTube2 = FIX(Tube2)
+  x1 = getBeamCenterTubeDevice_from_data(iTube1, global)
+  x2 = getBeamCenterTubeDevice_from_data(iTube2, global)
+  xmin = MIN([x1,x2],MAX=xmax)
   
-  IF (Tube2 NE 'N/A') THEN BEGIN ;plot Tube2
-    iTube2 = FIX(Tube2)
-    x = getBeamCenterTubeDevice_from_data(iTube2, global)
-    PLOTS, x, y_min, /DEVICE, COLOR=color
-    PLOTS, x, y_max, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=tube2_linestyle, THICK=thick
-  ENDIF
+  iPixel1 = FIX(Pixel1)
+  iPixel2 = FIX(Pixel2)
+  y1 = getBeamCenterPixelDevice_from_data(iPixel1, global)
+  y2 = getBeamCenterPixelDevice_from_data(iPixel2, global)
+  ymin = MIN([y1,y2],MAX=ymax)
   
-  IF (Pixel1 NE 'N/A') THEN BEGIN ;plot Pixel1
-    iPixel1 = FIX(Pixel1)
-    y = getBeamCenterPixelDevice_from_data(iPixel1, global)
-    PLOTS, x_min, y, /DEVICE, COLOR=color
-    PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=pixel1_linestyle, THICK=thick
-  ENDIF
-  
-  IF (Pixel2 NE 'N/A') THEN BEGIN ;plot Pixel2
-    iPixel2 = FIX(Pixel2)
-    y = getBeamCenterPixelDevice_from_data(iPixel2, global)
-    PLOTS, x_min, y, /DEVICE, COLOR=color
-    PLOTS, x_max, y, /DEVICE, COLOR=color, /CONTINUE, $
-      LINESTYLE=pixel2_linestyle, THICK=thick
-  ENDIF
-  
+  PLOTS, xmin, ymin, /DEVICE, COLOR=color
+  PLOTS, xmin, ymax, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=tube_pixel_linestyle, THICK=thick
+  PLOTS, xmax, ymax, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=tube_pixel_linestyle, THICK=thick
+  PLOTS, xmax, ymin, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=tube_pixel_linestyle, THICK=thick
+  PLOTS, xmin, ymin, /DEVICE, COLOR=color, /CONTINUE, $
+    LINESTYLE=tube_pixel_linestyle, THICK=thick
+    
   leave:
   
   DEVICE, DECOMPOSED=0
