@@ -87,6 +87,24 @@ PRO retrieveNexus, Event, FullNexusName
       
     ENDIF ELSE BEGIN ;SNS
     
+      progressBar = OBJ_NEW("SHOWPROGRESS", $
+        XOFFSET = 100, $
+        YOFFSET = 50, $
+        XSIZE   = 200,$
+        TITLE   = 'Plotting Data',$
+        /CANCELBUTTON)
+      progressBar->SetColor, 250
+      title = 'Plotting Data ... '
+      ;progressBar->SetLabel, title
+      progressBar->Start
+      
+      IF (UpdateProgressBar(progressBar,50)) THEN BEGIN
+        progressBarCancel = 1
+        progressBar->Destroy
+        OBJ_DESTROY, progressBar
+        RETURN
+      ENDIF
+      
       CASE (is_front_back_or_both_plot(Event)) OF
         'front': BEGIN
           (*(*global).DataArray) = (*(*global).front_bank)
@@ -121,6 +139,10 @@ PRO retrieveNexus, Event, FullNexusName
     ENDIF ELSE BEGIN
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
+    
+    progressBar->Destroy
+    OBJ_DESTROY, progressBar
+    
   ENDELSE
   
   ;turn off hourglass
@@ -197,8 +219,8 @@ PRO browse_nexus, Event
       uname_list = [uname_list,$
         'selection_tool_button']
     ENDIF
-      
-      (*global).data_nexus_file_name = FullNexusName
+    
+    (*global).data_nexus_file_name = FullNexusName
     activate_widget_list, Event, uname_list, 1
   ENDIF ELSE BEGIN
     message = '-> No NeXus File Loaded'
@@ -345,7 +367,7 @@ PRO tab_event, Event
             TV, (*(*global).background), true=3
             display_images, EVENT=event
             display_selection_images, EVENT=event, $
-            SELECTION=(*global).selection_type
+              SELECTION=(*global).selection_type
           ENDIF
         ENDELSE
       END

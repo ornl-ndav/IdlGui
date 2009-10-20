@@ -33,6 +33,7 @@
 ;==============================================================================
 
 FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
@@ -195,7 +196,7 @@ FUNCTION retrieveData, Event, FullNexusName, DataArrayResult
         
       ENDWHILE
       
-      progressBar->SetLabel, 'Plotting data ...'
+      progressBar->SetLabel, 'Stagging data ...'
       
       method = '' ;'debug' for debugging mode
       
