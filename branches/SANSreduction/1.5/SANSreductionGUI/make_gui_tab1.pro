@@ -347,7 +347,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
     sClearSelection.size[1]+XYoff[1],$
     sClearSelection.size[2]],$
-    value: 'REFRESH PLOT',$
+    value: 'REFRESH APPLICATION',$
     uname: 'refresh_plot_button',$
     sensitive: 0}
     
