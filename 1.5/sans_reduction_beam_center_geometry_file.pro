@@ -53,11 +53,11 @@ FUNCTION create_tmp_geometry, Event
   bc_tube_offset = bc_tube - default_bc_tube ;tube offset (tube)
   tube_front_size = 0.0079 ;front tube size (m)
   tube_back_size  = 0.0031 ;back tube size (m)
-  
+
   bc_tube_offset_distance_m = 0
   type = ''
   IF (bc_tube_offset LT 0) THEN BEGIN ;tube center is on the left of default
-    WHILE (bc_tube_offset LT -1) DO BEGIN
+    WHILE (bc_tube_offset LE -1) DO BEGIN
       decimal_part = FIX(bc_tube_offset)
       IF ((decimal_part MOD 2) EQ 0) THEN BEGIN ;even number (means front tube)
         bc_tube_offset_distance_m -= tube_front_size
@@ -78,8 +78,9 @@ FUNCTION create_tmp_geometry, Event
     ENDCASE
   ENDIF ;end of if (bc_tube_offset LT 0)
   
+  type = ''
   IF (bc_tube_offset GT 0) THEN BEGIN ;tube center is on the right of default
-    WHILE (bc_tube_offset GT 1) DO BEGIN
+    WHILE (bc_tube_offset GE 1) DO BEGIN
       decimal_part = FIX(bc_tube_offset)
       IF ((decimal_part MOD 2) EQ 1) THEN BEGIN ;odd number (means front tube)
         bc_tube_offset_distance_m += tube_front_size
