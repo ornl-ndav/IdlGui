@@ -43,7 +43,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
     data = retrieve_calculation_range(Event=event)
     
     error = 0
-    CATCH, error
+    ;CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH, /CANCEL
       title = 'Calculate Beam Center ERROR !'
@@ -78,7 +78,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
     data = retrieve_calculation_range(base=base)
     
     error = 0
-    CATCH, error
+    ;CATCH, error
     IF (error NE 0) THEN BEGIN
       CATCH, /CANCEL
       title = 'Calculate Beam Center ERROR !'
@@ -98,7 +98,7 @@ PRO beam_center_calculation, EVENT=Event, BASE=base
       ENDELSE
     ENDIF ELSE BEGIN
       ;calculate beam center pixel
-      beam_center_pixel_calculation, base=base, DATA=data
+     beam_center_pixel_calculation, base=base, DATA=data
       ;calculate beam center tube
       beam_center_tube_calculation, base=base, DATA=data
       CATCH, /CANCEL
