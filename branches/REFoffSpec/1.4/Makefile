@@ -4,6 +4,7 @@
 # Copy the VM programs in their final location
 
 all:
+	cp REFoffSpec.cfg .REFoffSpec.cfg
 	idl ./makefile.pro;
 install:
 	cp ref_off_spec.sav /SNS/software/idltools/sav/
