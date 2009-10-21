@@ -375,3 +375,9 @@ FUNCTION isNormPeakBaseMap, Event
 RETURN, isBaseMap(Event, 'norm_peak_base')
 END
 
+;------------------------------------------------------------------------------
+FUNCTION isPathExist, file_name
+path = FILE_DIRNAME(file_name)
+RETURN, FILE_TEST(path,/DIRECTORY)
+END
+

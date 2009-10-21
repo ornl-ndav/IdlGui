@@ -518,3 +518,9 @@ run_number_min = MIN(runs_and_full_path[*,0])
 
 return, strcompress(run_number_min,/remove_all)
 end
+
+;------------------------------------------------------------------------------
+PRO create_path, file_name
+path = FILE_DIRNAME(file_name)
+spawn, 'mkdir ' + path, listening, err_listening
+END
