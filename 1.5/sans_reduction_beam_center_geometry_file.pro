@@ -112,7 +112,7 @@ FUNCTION create_tmp_geometry, Event
   cmd += ' -D detYoffset='
   cmd += STRCOMPRESS(bc_pixel_offset_distance_m,/REMOVE_ALL)
   cmd += 'metre'
-  cmd += ' -D detZoffset='
+  cmd += ' -D detZoffset= -'
   cmd += STRCOMPRESS(z_offset_value,/REMOVE_ALL)
   cmd += STRCOMPRESS(z_offset_units,/REMOVE_ALL)
   cmd += ' -o ~/results/tmp_geometry.nxs'
@@ -156,10 +156,10 @@ PRO retrieve_default_z_offset_value, BASE=base
     ENDELSE
     (*global).geo_file = GeoFile
     
-    iXML = OBJ_NEW('myXMLparser')3
+    iXML = OBJ_NEW('myXMLparser')
     iXML->parseFile, GeoFile
     ValueUnits = iXML->getArray()
-    value = ValueUnits[0]
+    value = ABS(ValueUnits[0])
     units = ValueUnits[1]
     
   ENDELSE
