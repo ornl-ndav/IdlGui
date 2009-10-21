@@ -34,6 +34,7 @@
 
 PRO myXMLparser::StartElement, URI, Local, strName, attrName, attrValue
 
+  ;Modify code here if the value of tags need to be saved
   IF (self.insideTag) THEN BEGIN
     CASE strName OF
       ;      'units':self.charbuffer=''
@@ -42,30 +43,23 @@ PRO myXMLparser::StartElement, URI, Local, strName, attrName, attrValue
     ENDCASE
   ENDIF
 
+  ;because right now we only care about CDATA, charbuffer is reset to empty
+  ;string each time StartElement is reached
   self.charbuffer = ''
 
-  CASE strName OF
-    ;    'parameter': BEGIN
-    ;      IF (attrName[0] EQ 'name' AND attrValue[0] EQ 'detZoffset') THEN BEGIN
-    ;        self.insideTag = 1b
-    ;      ENDIF
-    ;    END
-    ELSE:
-  ENDCASE
-  
 END
 
 
 PRO myXMLparser::EndElement, URI, Local, strName
 
-    print, 'in end'
-
+  ;record the contain of charbuffer when we leave the EndElement (which is
+  ;our CDATA tag in our case
     IF (self.insideCDATA EQ 0) THEN BEGIN
     self.value[self.index] = self.charbuffer
     ENDIF
   
+  ;edit to do something with value of tags
 IF (self.insideTag) THEN BEGIN
-
     CASE strName OF
       ;      'units':      self.Units = self.charbuffer
       ;      'floatvalue': self.value = self.charbuffer
@@ -79,14 +73,12 @@ END
 
 
 PRO myXMLparser::StartCDATA
-  self.insideCDATA = 1b
-  print, 'starting cdata'
+;  self.insideCDATA = 1b
 END
 
 PRO myXMLparser::EndCDATA
   self.index++
-  self.insideCDATA = 0b
-  print, 'ending cdata'
+;  self.insideCDATA = 0b
 END
 
 
@@ -113,7 +105,7 @@ PRO myXMLparser__define
     insideTag: 0b, $
     insideCDATA: 0b, $
     units: '',$
-    value: STRARR(20000),$
+    value: STRARR(20000),$ ;value hard coded but can be calculated ahead
     index: 0L,$
     charbuffer: '',$
     myPtr: PTR_NEW(0L)}

@@ -1,1 +1,1 @@
-.run myXMLparser__define.pro
+.run XMLparser__define.pro
