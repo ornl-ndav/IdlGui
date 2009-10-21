@@ -510,7 +510,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   basea = WIDGET_BASE(row3)
   
   space = WIDGET_LABEL(row3,$
-    VALUE = '               ')
+    VALUE = '     ')
     
   calculate_beam_center = WIDGET_BUTTON(row3,$
     VALUE = '  CALCULATE BEAM CENTER --->  ',$
@@ -545,7 +545,7 @@ PRO beam_center_base_gui, wBase, main_base_geometry
   space = WIDGET_LABEL(row2_right_row3,$
     VALUE = '   ')
   label = WIDGET_LABEL(row2_right_row3,$
-    VALUE = 'Z offset:')
+    VALUE = 'Distance sample-detector:')
   value = WIDGET_TEXT(row2_right_row3,$
     VALUE = 'N/A',$
     XSIZE = 5, $
