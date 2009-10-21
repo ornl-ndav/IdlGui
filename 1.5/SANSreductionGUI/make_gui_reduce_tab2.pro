@@ -239,7 +239,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sMinLambdaGroup = { size:  [XYoff[0],$
     XYoff[1]],$
     list:  ['ON','OFF'],$
-    value: 0.0,$
+    value: 1.0,$
     uname: 'minimum_lambda_cut_off_group',$
     title: 'Minimum:'}
   XYoff    = [180,2]
@@ -248,7 +248,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     50],$
     value: '4.0',$
     uname: 'minimum_lambda_cut_off_value',$
-    sensitive: 1}
+    sensitive: 0}
     
   ;- Maximum
   XYoff = [350,0]
