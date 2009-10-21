@@ -218,7 +218,7 @@ PROCESSING = (*global).processing_message ;processing message
 cmd_text = '-> Retrieving data ... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
    CATCH,/CANCEL
    IDLsendLogBook_ReplaceLogBookText, Event, PROCESSING, (*global).failed
