@@ -336,7 +336,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ' after Beam Monitor ' + $
     'Normalization',$
     flag: $
-    '--dump-wave-bmnom',$
+    '--dump-wave-bmnorm',$
     flag1: $
     '--lambda-bins'},$
     wave:        {title: $
