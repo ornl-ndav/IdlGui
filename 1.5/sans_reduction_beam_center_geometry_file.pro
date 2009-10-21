@@ -156,7 +156,7 @@ PRO retrieve_default_z_offset_value, BASE=base
     ENDELSE
     (*global).geo_file = GeoFile
     
-    iXML = OBJ_NEW('myXMLparser')
+    iXML = OBJ_NEW('myXMLparser')3
     iXML->parseFile, GeoFile
     ValueUnits = iXML->getArray()
     value = ValueUnits[0]
