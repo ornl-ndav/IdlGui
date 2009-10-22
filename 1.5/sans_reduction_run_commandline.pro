@@ -131,14 +131,14 @@ PRO RunCommandLine, Event
       full_output_file_name += '.txt'
     ENDELSE
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
+      ;move to fitting tab
+      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
+      WIDGET_CONTROL, id, SET_TAB_CURRENT=2
       putTextFieldValue, Event, $
         'plot_input_file_text_field', $
         full_output_file_name
       ;load ascii file and plot it
       LoadAsciiFile, Event
-      ;move to fitting tab
-      id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
-      WIDGET_CONTROL, id, SET_TAB_CURRENT=2
       ;check if file exist and if it does, activate buttons
       check_IF_file_exist, Event
     ENDIF ELSE BEGIN
