@@ -45,6 +45,12 @@ sRefreshButton = { size: [10,10,150],$
                    value: 'REFRESH PLOT',$
                    sensitive: 0}
 
+;- Advanced Plot --------------------------------------------------------------
+sAdvancedButton = { size: [750,10,250],$
+                   uname: 'plot_advanced_plot_ascii_button',$
+                   value: 'ADVANCED PLOT',$
+                   sensitive: 0}
+
 ;- Plot -----------------------------------------------------------------------
 XYoff = [0,0]
 sDraw = { size: [XYoff[0],$
@@ -109,6 +115,14 @@ wRefresh = WIDGET_BUTTON(wTabBase,$
                          UNAME     = sRefreshButton.uname,$
                          SENSITIVE = sRefreshButton.sensitive)
 
+;- advanced Button -------------------------------------------------------------
+wadvanced = WIDGET_BUTTON(wTabBase,$
+                         XOFFSET   = sadvancedButton.size[0],$
+                         YOFFSET   = sadvancedButton.size[1],$
+                         SCR_XSIZE = sadvancedButton.size[2],$
+                         VALUE     = sadvancedButton.value,$
+                         UNAME     = sadvancedButton.uname,$
+                         SENSITIVE = sadvancedButton.sensitive)
 
 ;- Draw -----------------------------------------------------------------------
 wDraw = WIDGET_DRAW(wTabBase,$

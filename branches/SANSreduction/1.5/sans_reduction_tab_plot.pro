@@ -143,6 +143,7 @@ END
 ;------------------------------------------------------------------------------
 ;Load data
 PRO LoadAsciiFile, Event
+
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
   ;get global structure
@@ -164,6 +165,7 @@ PRO LoadAsciiFile, Event
     text = 'Error while loading ' + file_name
     result = DIALOG_MESSAGE(text,/ERROR)
     activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
+    activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
   ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
@@ -175,6 +177,7 @@ PRO LoadAsciiFile, Event
         text = 'Error while loading ' + file_name
         result = DIALOG_MESSAGE(text,/ERROR)
         activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
+        activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
       ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
         (*global).xaxis       = sAscii.xaxis
@@ -212,16 +215,58 @@ PRO LoadAsciiFile, Event
         (*global).ascii_file_load_status = 1
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         activate_widget, Event, 'plot_refresh_plot_ascii_button', 1
+        activate_widget, Event, 'plot_advanced_plot_ascii_button', 1
       ENDELSE
     ENDIF ELSE BEGIN
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
       text = 'Error while loading ' + file_name
       result = DIALOG_MESSAGE(text,/ERROR)
       activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
+      activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
     ENDELSE
   ENDELSE
   ;turn off hourglass
-  widget_control,hourglass=0
+  WIDGET_CONTROL,HOURGLASS=0
+END
+
+;------------------------------------------------------------------------------
+PRO plot_advanced_ascii_data, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;indicate initialization with hourglass icon
+  WIDGET_CONTROL,/HOURGLASS
+  
+  Xarray = (*(*global).Xarray)
+  Yarray = (*(*global).Yarray)
+  SigmaYarray = (*(*global).SigmaYarray)
+  
+  xaxis_label = (*global).xaxis
+  xaxis_units = (*global).xaxis_units
+  yaxis_label = (*global).yaxis
+  yaxis_units = (*global).yaxis_units
+  
+  file_name = getTextFieldValue(Event, 'plot_input_file_text_field')
+  
+  xaxis_title = xaxis_label + ' (' + xaxis_units + ')'
+  yaxis_title = yaxis_label + ' (' + yaxis_units + ')'
+  title = file_name
+  
+  IPLOT, Xarray, Yarray, YERROR=SigmaYarray, $
+    ERRORBAR_COLOR=[0,200,0],$
+    LINESTYLE = 6, $
+    SYM_INDEX = 2, $
+    /DISABLE_SPLASH_SCREEN, $
+    /STRETCH_TO_FIT, $
+    /ZOOM_ON_RESIZE, $
+    /NO_SAVEPROMPT, $
+    ERRORBAR_CAPSIZE = 0.3,$
+    TITLE=title, $
+    XTITLE=xaxis_title, YTITLE=yaxis_title
+    
+  WIDGET_CONTROL,HOURGLASS=0
+  
 END
 
 ;------------------------------------------------------------------------------
