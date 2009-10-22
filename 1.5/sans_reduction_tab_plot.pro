@@ -235,6 +235,18 @@ PRO plot_advanced_ascii_data, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+  CATCH,/CANCEL
+  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  result = DIALOG_MESSAGE('Error plotting Advanced Plot!',$
+  /ERROR, $
+  DIALOG_PARENT=widget_id, $
+  TITLE = 'ERROR Loading iPlot!')
+  RETURN
+ENDIF  
+
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
   
