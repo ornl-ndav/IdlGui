@@ -58,12 +58,12 @@ PRO launch_beam_center_base_event, Event
             pixel_data = getBeamCenterPixelData_from_device(Event.y, global)
             putTextFieldValue, Event, 'beam_center_2d_plot_pixel', $
               STRCOMPRESS(pixel_data,/REMOVE_ALL)
-;            plot_beam_center_background, Event
-;            replot_beam_center_beam_stop, Event
-;            replot_calculation_range_cursor, Event
-;            plot_calculation_range_selection, EVENT=Event
-;            display_counts_vs_pixel_and_tube_live, Event
-;            beam_center_plot, Event=event
+          ;            plot_beam_center_background, Event
+          ;            replot_beam_center_beam_stop, Event
+          ;            replot_calculation_range_cursor, Event
+          ;            plot_calculation_range_selection, EVENT=Event
+          ;            display_counts_vs_pixel_and_tube_live, Event
+          ;            beam_center_plot, Event=event
           END
           2: BEGIN ;cursor info
             tube_data  = FIX(getBeamCenterTubeData_from_device(Event.x, $
@@ -834,7 +834,9 @@ PRO launch_beam_center_base_event, Event
     
     ;OK button
     WIDGET_INFO(Event.top, FIND_BY_UNAME='beam_stop_ok_button'): BEGIN
+      WIDGET_CONTROL, /HOURGLASS
       result = create_tmp_geometry(Event)
+      WIDGET_CONTROL, HOURGLASS=0
       ;get the beam center main base id
       parent_id = WIDGET_INFO(Event.top, $
         FIND_BY_UNAME='beam_center_calculation_base')
@@ -859,7 +861,6 @@ PRO launch_beam_center_base_event, Event
           /CENTER, $
           DIALOG_PARENT=parent_id)
       ENDELSE
-      
     END
     
     ELSE:
