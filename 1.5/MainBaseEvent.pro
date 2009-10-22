@@ -937,6 +937,12 @@ PRO MAIN_BASE_event, Event
       rePlotAsciiData, Event ;_tab_plot
     END
     
+    ;----- Advanced Plot ------------------------------------------------------
+    WIDGET_INFO(wWidget, $
+    FIND_BY_UNAME='plot_advanced_plot_ascii_button'): BEGIN
+    plot_advanced_ascii_data, Event
+    END
+    
     ;---- Browse ASCII file ---------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_browse_button'): BEGIN

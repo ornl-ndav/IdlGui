@@ -131,7 +131,7 @@ PRO RunCommandLine, Event
       full_output_file_name += '.txt'
     ENDELSE
     IF (FILE_TEST(full_output_file_name,/READ)) THEN BEGIN
-      ;move to fitting tab
+      ;move to plot tab
       id = WIDGET_INFO(Event.top,FIND_BY_UNAME='main_tab')
       WIDGET_CONTROL, id, SET_TAB_CURRENT=2
       putTextFieldValue, Event, $
