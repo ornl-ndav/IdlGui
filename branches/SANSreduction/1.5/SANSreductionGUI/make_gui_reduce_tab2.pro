@@ -60,7 +60,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sTZO_detector_field = {size:  [sTZO_detector_value.size[0]+XYoff[0],$
     sTZO_detector_value.size[1]+XYoff[1],$
     70,30],$
-    value: '',$
+    value: '0.0',$
     uname: 'time_zero_offset_detector_uname'}
   XYoff = [120,0]
   sTZO_beam_value = {size:  [sTZO_detector_field.size[0]+XYoff[0],$
@@ -70,7 +70,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sTZO_beam_field = {size:  [sTZO_beam_value.size[0]+XYoff[0],$
     sTZO_detector_field.size[1]+XYoff[1],$
     sTZO_detector_field.size[2:3]],$
-    value: '',$
+    value: '0.0',$
     uname: 'time_zero_offset_beam_monitor_uname'}
   XYOff = [60,0]
   sTZOhelp = { size: [sTZO_beam_field.size[0]+sTZO_beam_field.size[2]+XYoff[0],$
