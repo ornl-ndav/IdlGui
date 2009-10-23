@@ -99,6 +99,7 @@ END
 ;==============================================================================
 ;Plot Data in widget_draw
 PRO rePlotAsciiData, Event
+  
   draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   wset,view_plot_id
@@ -110,7 +111,7 @@ PRO rePlotAsciiData, Event
   Yarray      = (*(*global).Yarray)
   SigmaYarray = (*(*global).SigmaYarray)
   plot_error = 0
-  CATCH, plot_error
+  ;CATCH, plot_error
   IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN
@@ -140,26 +141,147 @@ PRO rePlotAsciiData, Event
     
     ;check which yaxis scale the user wants
     yaxis_type = getPlotTabYaxisScale(Event)
+    ;check which xaxis scale the user wants
+    xaxis_type = getPlotTabXaxisScale(Event)
+    
+    print, yaxis_type
+    print, xaxis_type
+    
     CASE (yaxis_type) OF
-    'lin':
-    'log':
-    'log_Q_IQ':
-    'log_Q2_IQ':
-    ELSE:
+      'lin': BEGIN
+        CASE (xaxis_type) OF
+          'lin': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
+          END
+          'log': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /XLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
+          END
+          'Q2': BEGIN
+          END
+          ELSE:
+        ENDCASE
+      END
+      'log': BEGIN
+        CASE (xaxis_type) OF
+          'lin': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /YLOG, $
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /YLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
+          END
+          'log': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                /YLGO, $
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /XLOG, $
+                /YLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
+            
+          END
+          'Q2': BEGIN
+          END
+          ELSE:
+        ENDCASE
+      END
+      'log_Q_IQ': BEGIN
+        CASE (xaxis_type) OF
+          'lin': BEGIN
+          END
+          'log': BEGIN
+          END
+          'Q2': BEGIN
+          END
+          ELSE:
+        ENDCASE
+      END
+      'log_Q2_IQ': BEGIN
+        CASE (xaxis_type) OF
+          'lin': BEGIN
+          END
+          'log': BEGIN
+          END
+          'Q2': BEGIN
+          END
+          ELSE:
+        ENDCASE
+      END
+      ELSE:
     ENDCASE
     
-    
-    
-    
-    IF (zoom_on) THEN BEGIN
-      xmin = MIN([x1,x2],MAX=xmax)
-      ymin = MIN([y1,y2],MAX=ymax)
-      plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel,$
-        XRANGE = [xmin,xmax], YRANGE=[ymin,ymax]
-    ENDIF ELSE BEGIN
-      plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel
-    ENDELSE
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+    
   ENDELSE
 END
 
@@ -204,7 +326,7 @@ PRO LoadAsciiFile, Event
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
       no_error = 0
-      CATCH,no_error
+    ;  CATCH,no_error
       IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -376,11 +498,11 @@ PRO plot_zoom_selection_plot_tab, Event
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'plot_draw_uname')
   WIDGET_CONTROL, id, GET_VALUE = id_value
   WSET, id_value
- 
+  
   PLOTS, x1, y1, /DATA
   PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, x2, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, x2, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
   PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
-
+  
 END

@@ -974,6 +974,29 @@ PRO MAIN_BASE_event, Event
       
     END
     
+    ;yaxis scale
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_lin'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q_IQ'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q2_IQ'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_lin'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_log'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_Q2'): BEGIN
+      rePlotAsciiData, Event
+    END
+    
     ;---- Browse ASCII file ---------------------------------------------------
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_input_file_browse_button'): BEGIN
