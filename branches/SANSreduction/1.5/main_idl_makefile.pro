@@ -103,9 +103,6 @@ cd, CurrentFolder
 .run sans_reduction_beam_center_calculation_functions.pro
 .run sans_reduction_beam_center_calculation.pro
 
-;plot tab
-.run sans_reduction_plot_tab.pro
-
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_make_facility_selection.pro

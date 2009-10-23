@@ -92,3 +92,4 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
 mapped = WIDGET_INFO(id, /MAP)
 RETURN, mapped
 END
+
