@@ -75,6 +75,7 @@ FUNCTION create_tmp_geometry, Event
       'last state was back': BEGIN
         bc_tube_offset_distance_m += bc_tube_offset * tube_front_size
       END
+      ELSE: bc_tube_offset_distance = 0
     ENDCASE
   ENDIF ;end of if (bc_tube_offset LT 0)
   
@@ -94,6 +95,7 @@ FUNCTION create_tmp_geometry, Event
     CASE (type) OF
       'front': bc_tube_offset_distance_m += bc_tube_offset * tube_back_size
       'back':  bc_tube_offset_distance_m += bc_tube_offset * tube_front_size
+      ELSE: bc_tube_offset_distance_m = 0
     ENDCASE
   ENDIF
   
