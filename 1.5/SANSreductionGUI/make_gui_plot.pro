@@ -136,27 +136,31 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     
   ;y-axis scale options
   ybase = WIDGET_BASE(wTabBase,$
-  XOFFSET = 0,$
-  YOFFSET = 350,$
-  /COLUMN, $
-  /EXCLUSIVE, $
-  UNAME = 'plot_tab_y_axis_base')
-  
-  button1 = WIDGET_BUTTON(ybase,$
-  VALUE = 'Lin',$
-  UNAME = 'plot_tab_y_axis_lin')
-  button2 = WIDGET_BUTTON(ybase,$
-  VALUE = 'Log',$
-  UNAME = 'plot_tab_y_axis_log')
-  button3 = WIDGET_BUTTON(ybase,$
-  VALUE = 'Log(Q.I(Q))',$
-  UNAME = 'plot_tab_y_axis_log_Q_IQ')
-  button4 = WIDGET_BUTTON(ybase,$
-  VALUE = 'Log(Q^2.I(Q))',$
-  UNAME = 'plot_tab_y_axis_log_Q2_IQ')
-  
-  WIDGET_CONTROL, button1, /SET_BUTTON
+    XOFFSET = 0,$
+    YOFFSET = 350,$
+    /COLUMN, $
+    /EXCLUSIVE, $
+    UNAME = 'plot_tab_y_axis_base')
     
+  button1 = WIDGET_BUTTON(ybase,$
+    VALUE = 'Lin',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_y_axis_lin')
+  button2 = WIDGET_BUTTON(ybase,$
+    VALUE = 'Log',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_y_axis_log')
+  button3 = WIDGET_BUTTON(ybase,$
+    VALUE = 'Log(Q.I(Q))',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_y_axis_log_Q_IQ')
+  button4 = WIDGET_BUTTON(ybase,$
+    VALUE = 'Log(Q^2.I(Q))',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_y_axis_log_Q2_IQ')
+    
+  WIDGET_CONTROL, button1, /SET_BUTTON
+  
   ;- Draw -----------------------------------------------------------------------
   wDraw = WIDGET_DRAW(wTabBase,$
     XOFFSET   = sDraw.size[0],$
@@ -169,24 +173,27 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     
   ;x-axis scale options
   xbase = WIDGET_BASE(wTabBase,$
-  XOFFSET = 500,$
-  YOFFSET = 800,$
-  /ROW, $
-  /EXCLUSIVE, $
-  UNAME = 'plot_tab_x_axis_base')
-  
+    XOFFSET = 500,$
+    YOFFSET = 800,$
+    /ROW, $
+    /EXCLUSIVE, $
+    UNAME = 'plot_tab_x_axis_base')
+    
   button1 = WIDGET_BUTTON(xbase,$
-  VALUE = 'Lin',$
-  UNAME = 'plot_tab_x_axis_lin')
+    VALUE = 'Lin',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_x_axis_lin')
   button2 = WIDGET_BUTTON(xbase,$
-  VALUE = 'Log',$
-  UNAME = 'plot_tab_x_axis_log')
+    VALUE = 'Log',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_x_axis_log')
   button3 = WIDGET_BUTTON(xbase,$
-  VALUE = 'Q^2',$
-  UNAME = 'plot_tab_x_axis_log_Q_IQ')
-
+    VALUE = 'Q^2',$
+    /NO_RELEASE, $
+    UNAME = 'plot_tab_x_axis_Q2')
+    
   WIDGET_CONTROL, button1, /SET_BUTTON
-
+  
   ;input file name -------------------------------------------------------------
   ;label
   wLabel = WIDGET_LABEL(wTabBase,$

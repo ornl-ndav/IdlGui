@@ -579,8 +579,8 @@ END
 ;------------------------------------------------------------------------------
 FUNCTION isButtonSelected, Event, uname
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-  WIDGET_CONTROL, id, GET_VALUE=value
-  RETURN, value
+  result = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, result
 END
 
 FUNCTION getPlotTabYaxisScale, Event
@@ -599,3 +599,15 @@ IF (isButtonSelected(Event,uname)) THEN RETURN, 'log_Q2_IQ'
 RETURN, ''
 END
 
+FUNCTION getPlotTabXaxisScale, Event
+;linear
+uname = 'plot_tab_x_axis_lin'
+IF (isButtonSelected(Event,uname)) THEN RETURN, 'lin'
+;log
+uname = 'plot_tab_x_axis_log'
+IF (isButtonSelected(Event,uname)) THEN RETURN, 'log'
+;log(Q.I(Q))
+uname = 'plot_tab_x_axis_Q2'
+IF (isButtonSelected(Event,uname)) THEN RETURN, 'Q2'
+RETURN, ''
+END
