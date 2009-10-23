@@ -46,7 +46,7 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     sensitive: 0}
     
   ;- help info about zoom
-  sHelp = { size: [290,0],$
+  sHelp = { size: [290,15],$
     value: 'Click-Move-Release to zoom - double click to reset zoom'}
     
   ;- Advanced Plot --------------------------------------------------------------
@@ -56,17 +56,17 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     sensitive: 0}
     
   ;- Plot -----------------------------------------------------------------------
-  XYoff = [0,0]
+  XYoff = [100,40]
   sDraw = { size: [XYoff[0],$
     XYoff[1],$
-    MainTabSize[2], $
-    MainTabSize[3]-80],$
+    MainTabSize[2]-XYoff[0], $
+    MainTabSize[3]-120-XYoff[1]],$
     uname: 'plot_draw_uname'}
     
   ;Loading ascii file -----------------------------------------------------------
-  XYoff = [5,15]
+  XYoff = [5,65]
   sInputFileLabel = { size: [XYoff[0],$
-    sDraw.size[1]+sDraw.size[3]+XYoff[1]],$
+    MainTabSize[3] - XYoff[1]],$
     value: 'Input File Name:'}
   XYoff = [115,-5]
   sInputBrowse = { size: [XYoff[0],$
