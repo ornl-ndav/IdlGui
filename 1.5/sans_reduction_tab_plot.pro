@@ -138,6 +138,19 @@ PRO rePlotAsciiData, Event
         y1 NE y2) THEN zoom_on = 1
     ENDIF
     
+    ;check which yaxis scale the user wants
+    yaxis_type = getPlotTabYaxisScale(Event)
+    CASE (yaxis_type) OF
+    'lin':
+    'log':
+    'log_Q_IQ':
+    'log_Q2_IQ':
+    ELSE:
+    ENDCASE
+    
+    
+    
+    
     IF (zoom_on) THEN BEGIN
       xmin = MIN([x1,x2],MAX=xmax)
       ymin = MIN([y1,y2],MAX=ymax)
@@ -340,4 +353,34 @@ PRO BrowseInputAsciiFile, Event
   check_IF_file_exist, Event
   ;Load File
   LoadAsciiFile, Event
+END
+
+;------------------------------------------------------------------------------
+PRO plot_zoom_selection_plot_tab, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  xyminmax = (*global).xyminmax
+  
+  x1 = xyminmax[0]
+  y1 = xyminmax[1]
+  x2 = xyminmax[2]
+  y2 = xyminmax[3]
+  
+  plot_selection_style = (*global).plot_selection_style
+  color = plot_selection_style.color
+  linestyle = plot_selection_style.linestyle
+  thick = plot_selection_style.thick
+  
+  DEVICE, DECOMPOSED = 1
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'plot_draw_uname')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+ 
+  PLOTS, x1, y1, /DATA
+  PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x2, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x2, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+
 END
