@@ -195,6 +195,26 @@ PRO rePlotAsciiData, Event
             ENDELSE
           END
           'Q2': BEGIN
+          Xarray = Xarray^2
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
@@ -251,6 +271,28 @@ PRO rePlotAsciiData, Event
             
           END
           'Q2': BEGIN
+            Xarray = Xarray^2
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /YLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                /YLOG, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
