@@ -100,7 +100,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   my_package[1].version_required = ''
   my_package[1].sub_pkg_version  = './drversion'
   my_package[2].driver           = 'findcalib'
-    ;************************************************************************
+  ;************************************************************************
   ;************************************************************************
   
   ;works only on dev and pick up ~/bin/runenv before the command line
@@ -141,7 +141,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     left_button_clicked: 0,$
     mouse_moved: 0,$
     dead_tube_coeff_ratio: 100., $ ;coeff used to determine if a tube is dead or not
-  
+    
     selection_type: 'inside', $ ;'inside' or 'outside'
     
     x0_device: 0L,$
@@ -240,6 +240,14 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     ;Transmission Fiel Calculation
     mass_neutron: DOUBLE(1.67493e-27), $  ;kg
     planck_constant: DOUBLE(6.626068e-34), $ ;m^2 Kg/s
+    
+    ;Plot tab
+    plot_left_click: 0b, $ ;1b when left click pressed (for zoom)
+    xyminmax: FLTARR(4), $ ;xmin, ymin, xmax and ymax data values for zoom
+    old_xyminmax: FLTARR(4), $
+    plot_selection_style: { linestyle: 0,$ ;information about style of selection
+    color: 'blue',$
+    thick: 2},$
     
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
@@ -464,7 +472,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     
     ;show tab #2 'REDUCE
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
     ;show tab of the REDUCE tab
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
@@ -497,7 +505,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
   
   IF (facility EQ 'SNS') THEN BEGIN
     display_images, MAIN_BASE=main_base
-  END 
+  END
   
   ;============================================================================
   ; Date and Checking Packages routines =======================================

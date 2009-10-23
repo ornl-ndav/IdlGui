@@ -130,6 +130,8 @@ wDraw = WIDGET_DRAW(wTabBase,$
                     YOFFSET   = sDraw.size[1],$
                     SCR_XSIZE = sDraw.size[2],$
                     SCR_YSIZE = sDraw.size[3],$
+                    /MOTION_EVENTS, $
+                    /BUTTON_EVENTS, $
                     UNAME     = sDraw.uname)
 
 ;input file name -------------------------------------------------------------

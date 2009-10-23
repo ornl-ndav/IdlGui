@@ -124,7 +124,28 @@ PRO rePlotAsciiData, Event
     xLabel = xaxis + ' (' + xaxis_units + ')'
     yLabel = yaxis + ' (' + yaxis_units + ')'
     ;plot
-    plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel
+    
+    xyminmax = (*global).old_xyminmax
+    x1 = xyminmax[0]
+    y1 = xyminmax[1]
+    x2 = xyminmax[2]
+    y2 = xyminmax[3]
+    
+    zoom_on = 1
+    IF (x2 EQ 0 AND y2 EQ 0) THEN zoom_on = 0
+    IF (zoom_on) THEN BEGIN
+      IF (x1 NE x2 AND $
+        y1 NE y2) THEN zoom_on = 1
+    ENDIF
+    
+    IF (zoom_on) THEN BEGIN
+      xmin = MIN([x1,x2],MAX=xmax)
+      ymin = MIN([y1,y2],MAX=ymax)
+      plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel,$
+        XRANGE = [xmin,xmax], YRANGE=[ymin,ymax]
+    ENDIF ELSE BEGIN
+      plot, Xarray, Yarray, color=250, PSYM=2, XTITLE=xLabel, YTITLE=yLabel
+    ENDELSE
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
   ENDELSE
 END
@@ -238,15 +259,15 @@ PRO plot_advanced_ascii_data, Event
   error = 0
   CATCH, error
   IF (error NE 0) THEN BEGIN
-  CATCH,/CANCEL
-  widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  result = DIALOG_MESSAGE('Error plotting Advanced Plot!',$
-  /ERROR, $
-  DIALOG_PARENT=widget_id, $
-  TITLE = 'ERROR Loading iPlot!')
-  RETURN
-ENDIF  
-
+    CATCH,/CANCEL
+    widget_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    result = DIALOG_MESSAGE('Error plotting Advanced Plot!',$
+      /ERROR, $
+      DIALOG_PARENT=widget_id, $
+      TITLE = 'ERROR Loading iPlot!')
+    RETURN
+  ENDIF
+  
   ;indicate initialization with hourglass icon
   WIDGET_CONTROL,/HOURGLASS
   
