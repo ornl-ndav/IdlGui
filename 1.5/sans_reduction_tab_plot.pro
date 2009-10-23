@@ -99,7 +99,7 @@ END
 ;==============================================================================
 ;Plot Data in widget_draw
 PRO rePlotAsciiData, Event
-  
+
   draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   wset,view_plot_id
@@ -111,7 +111,7 @@ PRO rePlotAsciiData, Event
   Yarray      = (*(*global).Yarray)
   SigmaYarray = (*(*global).SigmaYarray)
   plot_error = 0
-  ;CATCH, plot_error
+  CATCH, plot_error
   IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     RETURN
@@ -143,9 +143,6 @@ PRO rePlotAsciiData, Event
     yaxis_type = getPlotTabYaxisScale(Event)
     ;check which xaxis scale the user wants
     xaxis_type = getPlotTabXaxisScale(Event)
-    
-    print, yaxis_type
-    print, xaxis_type
     
     CASE (yaxis_type) OF
       'lin': BEGIN
@@ -195,7 +192,7 @@ PRO rePlotAsciiData, Event
             ENDELSE
           END
           'Q2': BEGIN
-          Xarray = Xarray^2
+            Xarray = Xarray^2
             IF (zoom_on) THEN BEGIN
               xmin = MIN([x1,x2],MAX=xmax)
               ymin = MIN([y1,y2],MAX=ymax)
@@ -298,23 +295,146 @@ PRO rePlotAsciiData, Event
         ENDCASE
       END
       'log_Q_IQ': BEGIN
+        yarray = xarray * yarray
         CASE (xaxis_type) OF
           'lin': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'log': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /XLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'Q2': BEGIN
+            xarray = xarray^2
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
       END
       'log_Q2_IQ': BEGIN
+        xarray_2 = xarray^2
+        yarray = xarray_2 * yarray
         CASE (xaxis_type) OF
           'lin': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'log': BEGIN
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                /XLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'Q2': BEGIN
+            xarray = xarray_2
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XRANGE = [xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=250, $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
@@ -356,7 +476,7 @@ PRO LoadAsciiFile, Event
     file_name
   IDLsendToGeek_addLogBookText, Event, '-> Retrieving data ... ' + PROCESSING
   loading_error = 0
-  ;CATCH,loading_error
+  CATCH,loading_error
   IF (loading_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
@@ -368,7 +488,7 @@ PRO LoadAsciiFile, Event
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
       no_error = 0
-    ;  CATCH,no_error
+      CATCH,no_error
       IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
