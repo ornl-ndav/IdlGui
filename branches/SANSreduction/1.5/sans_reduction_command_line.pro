@@ -323,10 +323,30 @@
     Qmin   = getTextFieldValue(Event,'qmin_text_field')
     Qmax   = getTextFieldValue(Event,'qmax_text_field')
     Qwidth = getTextFieldValue(Event,'qwidth_text_field')
-    Qunits = getCWBgroupValue(Event,'q_scale_group')
+    ;    Qunits = getCWBgroupValue(Event,'q_scale_group')
     cmd += ' ' + (*global).ReducePara.monitor_rebin + '='
     IF (Qmin NE '') THEN BEGIN
-      cmd += STRCOMPRESS(Qmin,/REMOVE_ALL)
+      format_error = 1
+      ON_IOERROR, error
+      fQmin = FLOAT(Qmin)
+      IF (fQmin EQ FLOAT(0)) THEN BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+        '- Qmin MUST be > 0 (PARAMETERS)']
+      ENDIF ELSE BEGIN
+        cmd += STRCOMPRESS(Qmin,/REMOVE_ALL)
+      ENDELSE
+      format_error = 0
+      error:
+      IF (format_error EQ 1) THEN BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, $
+        '- Qmin MUST be valid number (PARAMETERS)']
+            ENDIF
     ENDIF ELSE BEGIN
       cmd += '?'
       cmd_status = 0
@@ -355,11 +375,11 @@
         '(PARAMETERS)']
     ENDELSE
     cmd += ','
-    IF (Qunits EQ 0) THEN BEGIN
-      cmd += 'lin'
-    ENDIF ELSE BEGIN
-      cmd += 'log'
-    ENDELSE
+    ;    IF (Qunits EQ 0) THEN BEGIN
+    ;      cmd += 'lin'
+    ;    ENDIF ELSE BEGIN
+    cmd += 'log'
+    ;    ENDELSE
     
     ;-verbose mode
     ;IF (getCWBgroupValue(Event, 'verbose_mode_group') EQ 0) THEN BEGIN

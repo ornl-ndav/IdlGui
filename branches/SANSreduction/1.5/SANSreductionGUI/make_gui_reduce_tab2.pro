@@ -187,7 +187,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sQminText = {  size:  [sQminLabel.size[0]+XYoff[0],$
     sQminLabel.size[1]+XYoff[1],$
     70,30],$
-    value: '',$
+    value: '0.001',$
     uname: 'qmin_text_field'}
     
   ;Qmax
@@ -199,7 +199,7 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sQmaxText = {  size:  [sQmaxLabel.size[0]+XYoff[0],$
     sQminText.size[1]+XYoff[1],$
     sQminText.size[2:3]],$
-    value: '',$
+    value: '1.0',$
     uname: 'qmax_text_field'}
     
   ;Qwidth
@@ -211,11 +211,11 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
   sQwidthText = {  size:  [sQwidthLabel.size[0]+XYoff[0],$
     sQminText.size[1]+XYoff[1],$
     sQminText.size[2:3]],$
-    value: '',$
+    value: '0.01',$
     uname: 'qwidth_text_field'}
     
   ;Q scale
-  XYoff = [Qxoff+5,0]
+  XYoff = [Qxoff+5,5]
   sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
     sQwidthText.size[1]+XYoff[1]],$
     list:  ['Linear','Logarithmic'],$
@@ -731,15 +731,20 @@ PRO make_gui_reduce_tab2, REDUCE_TAB, tab_size, tab_title
     /EDITABLE,$
     /ALIGN_LEFT)
     
-  ;Q scale
-  wQscaleGroup =  CW_BGROUP(Base,$
-    sQscaleGroup.list,$
-    XOFFSET    = sQscaleGroup.size[0],$
-    YOFFSET    = sQscaleGroup.size[1],$
-    ROW        = 1,$
-    SET_VALUE  = sQscaleGroup.value,$
-    UNAME      = sQscaleGroup.uname,$
-    /EXCLUSIVE)
+    label = WIDGET_LABEL(Base,$
+    XOFFSET = sQscaleGroup.size[0],$
+    YOFFSET = sQscaleGroup.size[1],$
+    VALUE = '(Logarithmic binning)')
+    
+;  ;Q scale
+;  wQscaleGroup =  CW_BGROUP(Base,$
+;    sQscaleGroup.list,$
+;    XOFFSET    = sQscaleGroup.size[0],$
+;    YOFFSET    = sQscaleGroup.size[1],$
+;    ROW        = 1,$
+;    SET_VALUE  = sQscaleGroup.value,$
+;    UNAME      = sQscaleGroup.uname,$
+;    /EXCLUSIVE)
     
   ;- Lambda cut-off -------------------------------------------------------------
   wQLTitle = WIDGET_LABEL(Basetab,$
