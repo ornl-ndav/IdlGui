@@ -56,7 +56,7 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     sensitive: 0}
     
   ;- Plot -----------------------------------------------------------------------
-  XYoff = [100,40]
+  XYoff = [110,40]
   sDraw = { size: [XYoff[0],$
     XYoff[1],$
     MainTabSize[2]-XYoff[0], $
@@ -134,6 +134,29 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     UNAME     = sadvancedButton.uname,$
     SENSITIVE = sadvancedButton.sensitive)
     
+  ;y-axis scale options
+  ybase = WIDGET_BASE(wTabBase,$
+  XOFFSET = 0,$
+  YOFFSET = 350,$
+  /COLUMN, $
+  /EXCLUSIVE, $
+  UNAME = 'plot_tab_y_axis_base')
+  
+  button1 = WIDGET_BUTTON(ybase,$
+  VALUE = 'Lin',$
+  UNAME = 'plot_tab_y_axis_lin')
+  button2 = WIDGET_BUTTON(ybase,$
+  VALUE = 'Log',$
+  UNAME = 'plot_tab_y_axis_log')
+  button3 = WIDGET_BUTTON(ybase,$
+  VALUE = 'Log(Q.I(Q))',$
+  UNAME = 'plot_tab_y_axis_log_Q_IQ')
+  button4 = WIDGET_BUTTON(ybase,$
+  VALUE = 'Log(Q^2.I(Q))',$
+  UNAME = 'plot_tab_y_axis_log_Q2_IQ')
+  
+  WIDGET_CONTROL, button1, /SET_BUTTON
+    
   ;- Draw -----------------------------------------------------------------------
   wDraw = WIDGET_DRAW(wTabBase,$
     XOFFSET   = sDraw.size[0],$
@@ -144,6 +167,26 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     /BUTTON_EVENTS, $
     UNAME     = sDraw.uname)
     
+  ;x-axis scale options
+  xbase = WIDGET_BASE(wTabBase,$
+  XOFFSET = 500,$
+  YOFFSET = 800,$
+  /ROW, $
+  /EXCLUSIVE, $
+  UNAME = 'plot_tab_x_axis_base')
+  
+  button1 = WIDGET_BUTTON(xbase,$
+  VALUE = 'Lin',$
+  UNAME = 'plot_tab_x_axis_lin')
+  button2 = WIDGET_BUTTON(xbase,$
+  VALUE = 'Log',$
+  UNAME = 'plot_tab_x_axis_log')
+  button3 = WIDGET_BUTTON(xbase,$
+  VALUE = 'Q^2',$
+  UNAME = 'plot_tab_x_axis_log_Q_IQ')
+
+  WIDGET_CONTROL, button1, /SET_BUTTON
+
   ;input file name -------------------------------------------------------------
   ;label
   wLabel = WIDGET_LABEL(wTabBase,$
