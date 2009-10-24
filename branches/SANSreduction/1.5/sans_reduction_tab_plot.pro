@@ -630,13 +630,13 @@ PRO BrowseInputAsciiFile, Event
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
     text = '-> Ascii file loaded: ' + ascii_file_name
     IDLsendToGeek_addLogBookText, Event, text
+    ;check if we can activate or not the preview and load button
+    check_IF_file_exist, Event
+    ;Load File
+    LoadAsciiFile, Event
   ENDIF ELSE BEGIN
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, 'INCOMPLETE!'
   ENDELSE
-  ;check if we can activate or not the preview and load button
-  check_IF_file_exist, Event
-  ;Load File
-  LoadAsciiFile, Event
 END
 
 ;------------------------------------------------------------------------------
