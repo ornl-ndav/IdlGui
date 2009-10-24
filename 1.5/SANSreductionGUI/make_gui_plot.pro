@@ -40,17 +40,18 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     uname : 'base_plot'}
     
   ;- Refresh Plot ---------------------------------------------------------------
-  sRefreshButton = { size: [10,10,150],$
+  sRefreshButton = { size: [0,10,100],$
     uname: 'plot_refresh_plot_ascii_button',$
     value: 'REFRESH PLOT',$
     sensitive: 0}
     
   ;- help info about zoom
-  sHelp = { size: [290,15],$
+  sHelp = { size: [350,15],$
+  uname: 'plot_tab_help_label',$
     value: 'Click-Move-Release to zoom - double click to reset zoom'}
     
   ;- Advanced Plot --------------------------------------------------------------
-  sAdvancedButton = { size: [750,10,250],$
+  sAdvancedButton = { size: [0,40,100],$
     uname: 'plot_advanced_plot_ascii_button',$
     value: 'ADVANCED PLOT',$
     sensitive: 0}
@@ -122,6 +123,7 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
   ;- Help message about zoom ----------------------------------------------------
   wHelp = WIDGET_LABEL(wTabBase,$
     VALUE = sHelp.value,$
+    UNAME = sHelp.uname,$
     XOFFSET = sHelp.size[0],$
     YOFFSET = sHelp.size[1])
     
@@ -133,6 +135,25 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     VALUE     = sadvancedButton.value,$
     UNAME     = sadvancedButton.uname,$
     SENSITIVE = sadvancedButton.sensitive)
+    
+  ;- zoom or fitting buttons
+  zf_base = WIDGET_BASE(wTabBase,$
+  /ROW,$
+  FRAME = 1,$
+  UNAME = 'plot_tab_zoom_fitting_base',$
+  SENSITIVE = 0,$
+  XOFFSET = 880,$
+  /EXCLUSIVE)
+  
+  button1 = WIDGET_BUTTON(zf_base,$
+  VALUE = 'ZOOM',$
+  UNAME = 'plot_tab_zoom_button')
+  
+  button2 = WIDGET_BUTTON(zf_base,$
+  VALUE = 'FITTING',$
+  UNAME = 'plot_tab_fitting_button')
+  
+  WIDGET_CONTROL, button1, /SET_BUTTON
     
   ;y-axis scale options
   ybase = WIDGET_BASE(wTabBase,$
