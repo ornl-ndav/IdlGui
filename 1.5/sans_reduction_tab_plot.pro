@@ -482,8 +482,8 @@ PRO LoadAsciiFile, Event
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
     text = 'Error while loading ' + file_name
     result = DIALOG_MESSAGE(text,/ERROR)
-    activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
-    activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
+    ERASE
+    activate_plot_tab_widgets, Event, status=0
   ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
@@ -494,8 +494,8 @@ PRO LoadAsciiFile, Event
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
         text = 'Error while loading ' + file_name
         result = DIALOG_MESSAGE(text,/ERROR)
-        activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
-        activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
+        ERASE
+        activate_plot_tab_widgets, Event, status=0
       ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
         (*global).xaxis       = sAscii.xaxis
@@ -532,15 +532,14 @@ PRO LoadAsciiFile, Event
         ;file has been loaded with success
         (*global).ascii_file_load_status = 1
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-        activate_widget, Event, 'plot_refresh_plot_ascii_button', 1
-        activate_widget, Event, 'plot_advanced_plot_ascii_button', 1
+        activate_plot_tab_widgets, Event, status=1
       ENDELSE
     ENDIF ELSE BEGIN
       IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
       text = 'Error while loading ' + file_name
       result = DIALOG_MESSAGE(text,/ERROR)
-      activate_widget, Event, 'plot_refresh_plot_ascii_button', 0
-      activate_widget, Event, 'plot_advanced_plot_ascii_button', 0
+      ERASE
+      activate_plot_tab_widgets, Event, status=0
     ENDELSE
   ENDELSE
   ;turn off hourglass
