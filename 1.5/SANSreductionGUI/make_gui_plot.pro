@@ -147,12 +147,10 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     /EXCLUSIVE)
     
   button1 = WIDGET_BUTTON(zf_base,$
-    VALUE = 'ZOOM',$
-    UNAME = 'plot_tab_zoom_button')
+    VALUE='SANSreduction_images/zoom_off.bmp',/BITMAP)
     
   button2 = WIDGET_BUTTON(zf_base,$
-    VALUE = 'FITTING',$
-    UNAME = 'plot_tab_fitting_button')
+    VALUE='SANSreduction_images/fit_off.bmp',/BITMAP)
     
   WIDGET_CONTROL, button1, /SET_BUTTON
   
