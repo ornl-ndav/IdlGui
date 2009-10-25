@@ -57,10 +57,52 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
     
+  xyoffb = [95,258]
+  text_xsize = 13
+  b = WIDGET_TEXT(wBase,$
+    /EDITABLE, $
+    UNAME = 'plot_tab_fitting_b_coeff',$
+    XOFFSET = xyoffb[0],$
+    YOFFSET = xyoffb[1],$
+    XSIZE = text_xsize)
+  XYoffa = [220,xyoffb[1]]
+  a = WIDGET_TEXT(wBase,$
+    XOFFSET = xyoffa[0],$
+    UNAME = 'plot_tab_fitting_a_coeff',$
+    /EDITABLE, $
+    YOFFSET = xyoffa[1],$
+    XSIZE = text_xsize)
+    
+  xyoffi0 = [200,330]
+  label_xsize = 100
+  i0 = WIDGET_LABEL(wBase,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = label_xsize,$
+    FRAME=1,$
+    /ALIGN_LEFT,$
+    XOFFSET = xyoffi0[0],$
+    yoffset = xyoffi0[1])
+  xyoffrg_value = [xyoffi0[0],385]
+  rg_value = WIDGET_LABEL(wBase,$
+    VALUE = 'N/A',$
+    SCR_XSIZE = label_xsize,$
+    FRAME=1,$
+    /ALIGN_LEFT,$
+    XOFFSET = xyoffrg_value[0],$
+    yoffset = xyoffrg_value[1])
+  xyoffrg_units = [320,xyoffrg_value[1]]
+  rg_units = WIDGET_LABEL(wBase,$
+    VALUE = 'Angstroms',$
+    SCR_XSIZE = label_xsize,$
+    FRAME=1,$
+    /ALIGN_LEFT,$
+    XOFFSET = xyoffrg_units[0],$
+    yoffset = xyoffrg_units[1])
+    
   draw = WIDGET_DRAW(wBase,$
-  SCR_XSIZE = xsize,$
-  SCR_YSIZE = ysize,$
-  UNAME = 'plot_tab_fitting_base_draw')
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'plot_tab_fitting_base_draw')
     
   WIDGET_CONTROL, wBase, /REALIZE
   
