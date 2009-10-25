@@ -373,8 +373,10 @@ PRO tab_event, Event
       END
       1: BEGIN                    ;reduce tab
       END
-      2: BEGIN                    ;log book
-      
+      2: BEGIN                    ;plot tab
+        rePlotAsciiData, Event
+      END
+      3: BEGIN  ;log book
       END
       ELSE:
     ENDCASE
