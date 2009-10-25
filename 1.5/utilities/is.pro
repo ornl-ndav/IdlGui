@@ -93,3 +93,10 @@ mapped = WIDGET_INFO(id, /MAP)
 RETURN, mapped
 END
 
+;------------------------------------------------------------------------------
+FUNCTION isPlotTabZoomSelected, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_tab_zoom_button')
+selected = WIDGET_INFO(id, /BUTTON_SET)
+RETURN, selected
+END
+

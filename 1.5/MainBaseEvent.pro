@@ -947,29 +947,33 @@ PRO MAIN_BASE_event, Event
     WIDGET_INFO(wWidget, $
       FIND_BY_UNAME='plot_draw_uname'): BEGIN
       
-      IF (Event.press EQ 1) THEN BEGIN ;left click
-        (*global).plot_left_click = 1
-        CURSOR, X, Y, /DATA
-        xyminmax = FLTARR(4)
-        xyminmax[0] = X
-        xyminmax[1] = Y
-        (*global).xyminmax = xyminmax
-      ENDIF
+      IF (isPlotTabZoomSelected(Event)) THEN BEGIN ;ZOOM
       
-      IF ((*global).plot_left_click) THEN BEGIN ;moving mouse with left click
-        rePlotAsciiData, Event ;_tab_plot
-        xyminmax = (*global).xyminmax
-        CURSOR, X, Y, /DATA, /NOWAIT
-        xyminmax[2] = X
-        xyminmax[3] = Y
-        (*global).xyminmax = xyminmax
-        plot_zoom_selection_plot_tab, Event
-      ENDIF
-      
-      IF (Event.release EQ 1) THEN BEGIN ;release left click
-        (*global).old_xyminmax = (*global).xyminmax
-        rePlotAsciiData, Event ;_tab_plot
-        (*global).plot_left_click = 0
+        IF (Event.press EQ 1) THEN BEGIN ;left click
+          (*global).plot_left_click = 1
+          CURSOR, X, Y, /DATA
+          xyminmax = FLTARR(4)
+          xyminmax[0] = X
+          xyminmax[1] = Y
+          (*global).xyminmax = xyminmax
+        ENDIF
+        
+        IF ((*global).plot_left_click) THEN BEGIN ;moving mouse with left click
+          rePlotAsciiData, Event ;_tab_plot
+          xyminmax = (*global).xyminmax
+          CURSOR, X, Y, /DATA, /NOWAIT
+          xyminmax[2] = X
+          xyminmax[3] = Y
+          (*global).xyminmax = xyminmax
+          plot_zoom_selection_plot_tab, Event
+        ENDIF
+        
+        IF (Event.release EQ 1) THEN BEGIN ;release left click
+          (*global).old_xyminmax = (*global).xyminmax
+          rePlotAsciiData, Event ;_tab_plot
+          (*global).plot_left_click = 0
+        ENDIF
+        
       ENDIF
       
     END
