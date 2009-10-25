@@ -252,7 +252,7 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
-                /YLGO, $
+                /YLOG, $
                 XRANGE = [xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
