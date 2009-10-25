@@ -105,6 +105,7 @@ cd, CurrentFolder
 
 ;plot tab
 .run sans_reduction_plot_tab_widgets.pro
+.run sans_reduction_plot_tab_fitting.pro
 
 ;main functions
 .run MainBaseEvent.pro
