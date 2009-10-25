@@ -978,6 +978,15 @@ PRO MAIN_BASE_event, Event
       
     END
     
+    ;fitting button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_fit_button'): BEGIN
+      id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_tab_fitting_base')
+      ;not a valid id so we need to mapped it
+      IF (~WIDGET_INFO(id, /VALID_ID)) THEN BEGIN
+        display_plot_tab_fitting_base, Event
+      ENDIF
+    END
+    
     ;yaxis scale
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_lin'): BEGIN
       rePlotAsciiData, Event
