@@ -248,6 +248,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     plot_selection_style: { linestyle: 0,$ ;information about style of selection
     color: 'blue',$
     thick: 2},$
+    plot_tab_fitting_wBase: 0L, $
     
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$

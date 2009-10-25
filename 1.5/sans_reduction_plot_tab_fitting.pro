@@ -34,6 +34,8 @@
 
 PRO display_plot_tab_fitting_base, Event
 
+  COMPILE_OPT idl2, hidden
+  
   id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
   main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
   
@@ -51,10 +53,12 @@ PRO display_plot_tab_fitting_base, Event
     global: global,$
     main_event: Event})
     
+  (*global).plot_tab_fitting_wBase = wBase
+  
   WIDGET_CONTROL, wBase, SET_UVALUE = global_fitting
   XMANAGER, "display_plot_tab_fitting_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK
-    ;CLEANUP='transmission_manual_Cleanup'
+;CLEANUP='transmission_manual_Cleanup'
     
 END
