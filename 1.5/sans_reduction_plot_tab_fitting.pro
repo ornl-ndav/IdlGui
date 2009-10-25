@@ -59,6 +59,31 @@ PRO display_plot_tab_fitting_base, Event
   XMANAGER, "display_plot_tab_fitting_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK
-;CLEANUP='transmission_manual_Cleanup'
+  ;CLEANUP='transmission_manual_Cleanup'
     
+  display_fitting_base_draw, MAIN_BASE=wBase, equation='rg'
+  
+END
+
+;------------------------------------------------------------------------------
+PRO display_fitting_base_draw, $
+    MAIN_BASE=main_base, $
+    EVENT=event, EQUATION=equation
+    
+   CASE (equation) OF
+   'rg': button_image = READ_PNG('SANSreduction_images/RgEquation.png')
+   ELSE:
+   ENDCASE
+   
+  uname = 'plot_tab_fitting_base_draw'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  ENDELSE
+  
+  WIDGET_CONTROL, mode_id, GET_VALUE=id
+  WSET, id
+  TV, button_image, 0, 0,/true
+
 END

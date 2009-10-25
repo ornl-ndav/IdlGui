@@ -39,8 +39,8 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
   main_base_xsize = main_base_geometry.xsize
   main_base_ysize = main_base_geometry.ysize
   
-  xsize = 500 ;width of various steps of manual mode
-  ysize = 500 ;height of various steps of manual mode
+  xsize = 450 ;width of various steps of manual mode
+  ysize = 450 ;height of various steps of manual mode
   
   xoffset = main_base_xoffset + main_base_xsize
   yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
@@ -56,6 +56,11 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     SCR_YSIZE = ysize,$
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
+    
+  draw = WIDGET_DRAW(wBase,$
+  SCR_XSIZE = xsize,$
+  SCR_YSIZE = ysize,$
+  UNAME = 'plot_tab_fitting_base_draw')
     
   WIDGET_CONTROL, wBase, /REALIZE
   
