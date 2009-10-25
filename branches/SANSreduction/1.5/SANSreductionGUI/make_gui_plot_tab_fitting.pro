@@ -32,29 +32,31 @@
 ;
 ;==============================================================================
 
-PRO display_plot_tab_fitting_base, Event
+PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
 
-  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  main_base_geometry = WIDGET_INFO(id,/GEOMETRY)
+  main_base_xoffset = main_base_geometry.xoffset
+  main_base_yoffset = main_base_geometry.yoffset
+  main_base_xsize = main_base_geometry.xsize
+  main_base_ysize = main_base_geometry.ysize
   
-  ;get global structure
-  WIDGET_CONTROL,Event.top,GET_UVALUE=global
+  xsize = 700 ;width of various steps of manual mode
+  ysize = 840 ;height of various steps of manual mode
   
-  ;build gui
-  wBase = ''
-  sys_color_window_bk = 0
-  plot_tab_fitting_gui, wBase, $
-    main_base_geometry, $
-    sys_color_window_bk
+  xoffset = main_base_xoffset + main_base_xsize/2-xsize/2
+  yoffset = main_base_yoffset + main_base_ysize/2-ysize/2
+  
+  ourGroup = WIDGET_BASE()
+  
+  wBase = WIDGET_BASE(TITLE = 'Fitting',$
+    UNAME        = 'plot_tab_fitting_base',$
+    XOFFSET      = xoffset,$
+    YOFFSET      = yoffset,$
+    MAP          = 1,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    /BASE_ALIGN_CENTER,$
+    GROUP_LEADER = ourGroup)
     
-  global_fitting = PTR_NEW({ wbase: wbase,$
-    global: global,$
-    main_event: Event})
-    
-  WIDGET_CONTROL, wBase, SET_UVALUE = global_fitting
-  XMANAGER, "display_plot_tab_fitting_base", wBase, $
-    GROUP_LEADER = ourGroup, $
-    /NO_BLOCK
-    ;CLEANUP='transmission_manual_Cleanup'
-    
+  WIDGET_CONTROL, wBase, /REALIZE
+  
 END
