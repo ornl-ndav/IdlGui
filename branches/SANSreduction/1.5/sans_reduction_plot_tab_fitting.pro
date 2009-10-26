@@ -70,8 +70,6 @@ PRO display_fitting_base_draw, $
     MAIN_BASE=main_base, $
     EVENT=event, EQUATION=equation
     
-    print, equation
-    
   CASE (equation) OF
     'rg': button_image = READ_PNG('SANSreduction_images/RgEquation.png')
     'rt': button_image = READ_PNG('SANSreduction_images/RtEquation.png')
@@ -82,18 +80,20 @@ PRO display_fitting_base_draw, $
   
   IF (equation EQ 'no') THEN BEGIN
     status = 1
+    draw_uname = 'plot_tab_fitting_base_no_equation_draw'
   ENDIF ELSE BEGIN
     status = 0
+    draw_uname = 'plot_tab_fitting_base_draw'
   ENDELSE
   
   base_uname = 'plot_tab_fitting_no_base'
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    MapBase_from_base, BASE=main_base, uname=base_uname, 1
-    draw_uname = 'plot_tab_fitting_base_no_equation_draw'
+    MapBase_from_base, BASE=main_base, uname=base_uname, status
   ENDIF ELSE BEGIN
-    MapBase, Event, uname=uname, 1
-    draw_uname = 'plot_tab_fitting_base_draw'
+    MapBase, Event, uname=uname, status
   ENDELSE
+  
+  print, draw_uname
   
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=draw_uname)
