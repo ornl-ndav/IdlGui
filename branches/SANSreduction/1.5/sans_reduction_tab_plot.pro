@@ -139,6 +139,14 @@ PRO rePlotAsciiData, Event
         y1 NE y2) THEN zoom_on = 1
     ENDIF
     
+    IF (zoom_on) THEN BEGIN ;zoom
+      ymin = MIN(yaxis,MAX=ymax)
+    ENDIF ELSE BEGIN ;no zoom
+      ymin = MIN([y1,y2],MAX=ymax)
+    ENDELSE
+    Yminmax = [ymin,ymax]
+    (*global).Yminmax = Yminmax
+    
     ;check which yaxis scale the user wants
     yaxis_type = getPlotTabYaxisScale(Event)
     ;check which xaxis scale the user wants
@@ -423,7 +431,7 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 /XLOG, $
                 XSTYLE=1,$
-                YSTYLE=1,$                
+                YSTYLE=1,$
                 XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
@@ -467,7 +475,7 @@ PRO rePlotAsciiData, Event
     ENDCASE
     
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
-    
+        
   ENDELSE
 END
 
@@ -694,3 +702,4 @@ PRO plot_zoom_selection_plot_tab, Event
   PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
   
 END
+

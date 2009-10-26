@@ -249,6 +249,12 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     thick: 2},$
     plot_tab_fitting_wBase: 0L, $
     ascii_file_load_status: 0b, $
+    plot_tab_fitting_help_message: 'Select range of data to use for fitting', $
+    Yminmax: FLTARR(2), $ ;min and max value of y
+    xminmax_fitting: FLTARR(2), $ ;min and max value of fitting range
+    Xarray_fitting: PTR_NEW(0L), $
+    Yarray_fitting: PTR_NEW(0L), $
+    fitting_to_plot: 0b, $
     
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
