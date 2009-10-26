@@ -978,8 +978,16 @@ PRO MAIN_BASE_event, Event
       
     END
     
+    ;zoom button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_zoom_button'): BEGIN
+      help_label = 'Click-Move-Release to zoom - double click to reset zoom'
+      putTextFieldValue, Event, 'plot_tab_help_label', help_label
+    END
+    
     ;fitting button
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_fit_button'): BEGIN
+      help_label = 'Left clicks to select fitting range'
+      putTextFieldValue, Event, 'plot_tab_help_label', help_label
       id = (*global).plot_tab_fitting_wBase
       ;not a valid id so we need to mapped it
       IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
