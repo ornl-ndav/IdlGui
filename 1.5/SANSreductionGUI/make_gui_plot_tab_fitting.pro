@@ -57,16 +57,33 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     /BASE_ALIGN_CENTER,$
     GROUP_LEADER = ourGroup)
     
+  NoEqBase = WIDGET_BASE(wBase, $
+    UNAME = 'plot_tab_fitting_no_base',$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    MAP = 0,$
+    /BASE_ALIGN_CENTER)
+  
+    draw = WIDGET_DRAW(NoEqBase,$
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    UNAME = 'plot_tab_fitting_base_no_equation_draw')
+    
+  EqBase = WIDGET_BASE(wBase, $
+    SCR_XSIZE = xsize,$
+    SCR_YSIZE = ysize,$
+    /BASE_ALIGN_CENTER)
+    
   xyoffb = [95,258]
   text_xsize = 13
-  b = WIDGET_TEXT(wBase,$
+  b = WIDGET_TEXT(EqBase,$
     /EDITABLE, $
     UNAME = 'plot_tab_fitting_b_coeff',$
     XOFFSET = xyoffb[0],$
     YOFFSET = xyoffb[1],$
     XSIZE = text_xsize)
   XYoffa = [220,xyoffb[1]]
-  a = WIDGET_TEXT(wBase,$
+  a = WIDGET_TEXT(EqBase,$
     XOFFSET = xyoffa[0],$
     UNAME = 'plot_tab_fitting_a_coeff',$
     /EDITABLE, $
@@ -75,7 +92,7 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     
   xyoffi0 = [200,330]
   label_xsize = 100
-  i0 = WIDGET_LABEL(wBase,$
+  i0 = WIDGET_LABEL(EqBase,$
     VALUE = 'N/A',$
     SCR_XSIZE = label_xsize,$
     FRAME=1,$
@@ -83,7 +100,7 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     XOFFSET = xyoffi0[0],$
     yoffset = xyoffi0[1])
   xyoffrg_value = [xyoffi0[0],385]
-  rg_value = WIDGET_LABEL(wBase,$
+  rg_value = WIDGET_LABEL(EqBase,$
     VALUE = 'N/A',$
     SCR_XSIZE = label_xsize,$
     FRAME=1,$
@@ -91,7 +108,7 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     XOFFSET = xyoffrg_value[0],$
     yoffset = xyoffrg_value[1])
   xyoffrg_units = [320,xyoffrg_value[1]]
-  rg_units = WIDGET_LABEL(wBase,$
+  rg_units = WIDGET_LABEL(EqBase,$
     VALUE = 'Angstroms',$
     SCR_XSIZE = label_xsize,$
     FRAME=1,$
@@ -99,7 +116,7 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     XOFFSET = xyoffrg_units[0],$
     yoffset = xyoffrg_units[1])
     
-  draw = WIDGET_DRAW(wBase,$
+  draw = WIDGET_DRAW(EqBase,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     UNAME = 'plot_tab_fitting_base_draw')

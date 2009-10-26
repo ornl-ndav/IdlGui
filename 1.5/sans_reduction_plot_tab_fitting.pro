@@ -59,10 +59,10 @@ PRO display_plot_tab_fitting_base, Event
   XMANAGER, "display_plot_tab_fitting_base", wBase, $
     GROUP_LEADER = ourGroup, $
     /NO_BLOCK
-  ;CLEANUP='transmission_manual_Cleanup'
+;CLEANUP='transmission_manual_Cleanup'
     
-  display_fitting_base_draw, MAIN_BASE=wBase, equation='rg'
-  
+;display_fitting_base_draw, MAIN_BASE=wBase, equation='rg'
+    
 END
 
 ;------------------------------------------------------------------------------
@@ -70,20 +70,39 @@ PRO display_fitting_base_draw, $
     MAIN_BASE=main_base, $
     EVENT=event, EQUATION=equation
     
-   CASE (equation) OF
-   'rg': button_image = READ_PNG('SANSreduction_images/RgEquation.png')
-   ELSE:
-   ENDCASE
-   
-  uname = 'plot_tab_fitting_base_draw'
-  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
-    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=uname)
+    print, equation
+    
+  CASE (equation) OF
+    'rg': button_image = READ_PNG('SANSreduction_images/RgEquation.png')
+    'rt': button_image = READ_PNG('SANSreduction_images/RtEquation.png')
+    'rc': button_image = READ_PNG('SANSreduction_images/RcEquation.png')
+    'no': button_image = READ_PNG('SANSreduction_images/NoEquation.png')
+    ELSE:
+  ENDCASE
+  
+  IF (equation EQ 'no') THEN BEGIN
+    status = 1
   ENDIF ELSE BEGIN
-    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+    status = 0
+  ENDELSE
+  
+  base_uname = 'plot_tab_fitting_no_base'
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    MapBase_from_base, BASE=main_base, uname=base_uname, 1
+    draw_uname = 'plot_tab_fitting_base_no_equation_draw'
+  ENDIF ELSE BEGIN
+    MapBase, Event, uname=uname, 1
+    draw_uname = 'plot_tab_fitting_base_draw'
+  ENDELSE
+  
+  IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
+    mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=draw_uname)
+  ENDIF ELSE BEGIN
+    mode_id = WIDGET_INFO(Event.top, FIND_BY_UNAME=draw_uname)
   ENDELSE
   
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, button_image, 0, 0,/true
-
+  
 END

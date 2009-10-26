@@ -611,3 +611,19 @@ uname = 'plot_tab_x_axis_Q2'
 IF (isButtonSelected(Event,uname)) THEN RETURN, 'Q2'
 RETURN, ''
 END
+
+;------------------------------------------------------------------------------
+FUNCTION getFittingEquationToShow, Event
+
+xaxis = getPlotTabXaxisScale(Event)
+yaxis = getPlotTabYaxisScale(Event)
+
+IF( xaxis NE 'Q2') THEN RETURN, 'no'
+
+IF (yaxis EQ 'log') THEN RETURN, 'rg'
+IF (yaxis EQ 'log_Q_IQ') THEN RETURN, 'rc'
+IF (yaxis EQ 'log_Q2_IQ') THEN RETURN, 'rt'
+
+RETURN, 'no'
+
+END
