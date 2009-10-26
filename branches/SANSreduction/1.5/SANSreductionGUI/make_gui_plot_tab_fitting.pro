@@ -63,8 +63,8 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     SCR_YSIZE = ysize,$
     MAP = 0,$
     /BASE_ALIGN_CENTER)
-  
-    draw = WIDGET_DRAW(NoEqBase,$
+    
+  draw = WIDGET_DRAW(NoEqBase,$
     SCR_XSIZE = xsize,$
     SCR_YSIZE = ysize,$
     UNAME = 'plot_tab_fitting_base_no_equation_draw')
@@ -74,24 +74,27 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
     SCR_YSIZE = ysize,$
     /BASE_ALIGN_CENTER)
     
-  xyoffb = [95,258]
-  text_xsize = 13
-  b = WIDGET_TEXT(EqBase,$
-    /EDITABLE, $
+  xyoffb = [91,265]
+  label_xsize = 100
+  b = WIDGET_LABEL(EqBase,$
     UNAME = 'plot_tab_fitting_b_coeff',$
     XOFFSET = xyoffb[0],$
     YOFFSET = xyoffb[1],$
-    XSIZE = text_xsize)
+    /ALIGN_LEFT,$
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = label_xsize)
   XYoffa = [220,xyoffb[1]]
-  a = WIDGET_TEXT(EqBase,$
+  a = WIDGET_LABEL(EqBase,$
     XOFFSET = xyoffa[0],$
     UNAME = 'plot_tab_fitting_a_coeff',$
-    /EDITABLE, $
     YOFFSET = xyoffa[1],$
-    XSIZE = text_xsize)
+    /ALIGN_LEFT, $
+    VALUE = 'N/A',$
+    FRAME = 1,$
+    SCR_XSIZE = label_xsize)
     
   xyoffi0 = [200,330]
-  label_xsize = 100
   i0 = WIDGET_LABEL(EqBase,$
     VALUE = 'N/A',$
     SCR_XSIZE = label_xsize,$
