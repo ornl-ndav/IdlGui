@@ -985,8 +985,12 @@ PRO MAIN_BASE_event, Event
       IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
         display_plot_tab_fitting_base, Event
       ENDIF ELSE BEGIN
-      WIDGET_CONTROL, id, /SHOW
+        WIDGET_CONTROL, id, /SHOW
       ENDELSE
+      equation_to_show = getFittingEquationToShow(Event)
+      display_fitting_base_draw, $
+      MAIN_BASE=(*global).plot_tab_fitting_wBase, $
+      EQUATION=equation_to_show
     END
     
     ;yaxis scale
