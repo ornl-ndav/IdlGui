@@ -989,31 +989,38 @@ PRO MAIN_BASE_event, Event
       ENDELSE
       equation_to_show = getFittingEquationToShow(Event)
       display_fitting_base_draw, $
-      MAIN_BASE=(*global).plot_tab_fitting_wBase, $
-      EQUATION=equation_to_show
+        MAIN_BASE=(*global).plot_tab_fitting_wBase, $
+        EQUATION=equation_to_show
     END
     
-    ;yaxis scale
+    ;yaxis and xaxis scales
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_lin'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q_IQ'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q2_IQ'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_lin'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_log'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_Q2'): BEGIN
       rePlotAsciiData, Event
+      display_right_equation_in_fitting_base, Event
     END
     
     ;---- Browse ASCII file ---------------------------------------------------
