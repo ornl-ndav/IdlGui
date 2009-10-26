@@ -484,6 +484,7 @@ PRO LoadAsciiFile, Event
     result = DIALOG_MESSAGE(text,/ERROR)
     ERASE
     activate_plot_tab_widgets, Event, status=0
+    (*global).ascii_file_load_status = 0b
   ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name)
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
@@ -496,6 +497,7 @@ PRO LoadAsciiFile, Event
         result = DIALOG_MESSAGE(text,/ERROR)
         ERASE
         activate_plot_tab_widgets, Event, status=0
+        (*global).ascii_file_load_status = 0b
       ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
         (*global).xaxis       = sAscii.xaxis
@@ -530,7 +532,7 @@ PRO LoadAsciiFile, Event
           PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
         ENDIF
         ;file has been loaded with success
-        (*global).ascii_file_load_status = 1
+        (*global).ascii_file_load_status = 1b
         IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
         activate_plot_tab_widgets, Event, status=1
       ENDELSE
@@ -540,6 +542,7 @@ PRO LoadAsciiFile, Event
       result = DIALOG_MESSAGE(text,/ERROR)
       ERASE
       activate_plot_tab_widgets, Event, status=0
+      (*global).ascii_file_load_status = 0b
     ENDELSE
   ENDELSE
   ;turn off hourglass

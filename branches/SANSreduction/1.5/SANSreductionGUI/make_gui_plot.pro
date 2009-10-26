@@ -194,6 +194,7 @@ PRO make_gui_plot, MAIN_TAB, MainTabSize, TabTitles
     SCR_YSIZE = sDraw.size[3],$
     /MOTION_EVENTS, $
     /BUTTON_EVENTS, $
+    /TRACKING_EVENTS, $
     UNAME     = sDraw.uname)
     
   ;x-axis scale options
