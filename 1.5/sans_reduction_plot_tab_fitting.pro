@@ -70,6 +70,8 @@ PRO display_fitting_base_draw, $
     MAIN_BASE=main_base, $
     EVENT=event, EQUATION=equation
     
+  COMPILE_OPT idl2, hidden
+  
   CASE (equation) OF
     'rg': button_image = READ_PNG('SANSreduction_images/RgEquation.png')
     'rt': button_image = READ_PNG('SANSreduction_images/RtEquation.png')
@@ -93,8 +95,6 @@ PRO display_fitting_base_draw, $
     MapBase, Event, uname=uname, status
   ENDELSE
   
-  print, draw_uname
-  
   IF (N_ELEMENTS(main_base) NE 0) THEN BEGIN
     mode_id = WIDGET_INFO(main_base, FIND_BY_UNAME=draw_uname)
   ENDIF ELSE BEGIN
@@ -104,5 +104,23 @@ PRO display_fitting_base_draw, $
   WIDGET_CONTROL, mode_id, GET_VALUE=id
   WSET, id
   TV, button_image, 0, 0,/true
+  
+END
+
+;------------------------------------------------------------------------------
+;This function will display the right equation corresponding to the axis
+;scales selected, if the fitting base is shown
+PRO display_right_equation_in_fitting_base, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  id = (*global).plot_tab_fitting_wBase
+  IF (WIDGET_INFO(id, /VALID_ID)) THEN BEGIN
+    equation_to_show = getFittingEquationToShow(Event)
+    display_fitting_base_draw, $
+      MAIN_BASE=(*global).plot_tab_fitting_wBase, $
+      EQUATION=equation_to_show
+  ENDIF
   
 END
