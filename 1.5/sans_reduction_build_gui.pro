@@ -183,7 +183,6 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     there_is_a_selection: 0,$
     exclusion_type_index: 0,$ ;0,1,2 or 3
     fitting_status:  1,$ ;0:succes, 1:failed
-    ascii_file_load_status: 0,$ ;1:success, 0:failedxs
     txt_extension:   'txt',$
     txt_filter:      '*.txt',$
     txt_title:       'Browse for an TXT file',$
@@ -249,7 +248,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     color: 'blue',$
     thick: 2},$
     plot_tab_fitting_wBase: 0L, $
-
+    ascii_file_load_status: 0b, $
+    
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
     wave_para_help_value: wave_para_help_value,$
