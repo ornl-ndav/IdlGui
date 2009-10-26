@@ -954,12 +954,12 @@ PRO MAIN_BASE_event, Event
         IF (error NE 0) THEN BEGIN
           CATCH,/CANCEL
           
+          draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
+          WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+          wset,view_plot_id
+          
           IF (isPlotTabZoomSelected(Event)) THEN BEGIN ;ZOOM
           
-            draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
-            WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
-            wset,view_plot_id
-            
             IF (Event.press EQ 1) THEN BEGIN ;left click
               (*global).plot_left_click = 1
               CURSOR, X, Y, /DATA
@@ -985,7 +985,35 @@ PRO MAIN_BASE_event, Event
               (*global).plot_left_click = 0
             ENDIF
             
-          ENDIF ;end of zoom button selected
+          ENDIF ELSE BEGIN ;if fitting selected
+          
+            IF (Event.press EQ 1) THEN BEGIN ;left click
+              (*global).plot_left_click = 1
+              CURSOR, X, Y, /DATA
+              xminmax_fitting = FLTARR(2)
+              xminmax_fitting[0] = X
+              (*global).xminmax_fitting = xminmax_fitting
+              (*global).fitting_to_plot = 1b
+            ENDIF
+            
+            IF ((*global).plot_left_click) THEN BEGIN ;moving mouse with left click
+              xminmax_fitting = (*global).xminmax_fitting
+              CURSOR, X, Y, /DATA, /NOWAIT
+              xminmax_fitting[1] = X
+              (*global).xminmax_fitting = xminmax_fitting
+              (*global).fitting_to_plot = 1b
+              retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
+              rePlotAsciiData, Event ;_tab_plot
+            ENDIF
+            
+            IF (Event.release EQ 1) THEN BEGIN ;release left click
+              retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
+              rePlotAsciiData, Event ;_tab_plot
+              (*global).plot_left_click = 0
+              (*global).fitting_to_plot = 0b
+            ENDIF
+            
+          ENDELSE ;end of if zoom or fitting selected
           
         ENDIF ELSE BEGIN ;end of catch statement
         
@@ -1012,7 +1040,7 @@ PRO MAIN_BASE_event, Event
       IF (equation_to_show EQ 'no') THEN BEGIN
         help_label = ''
       ENDIF ELSE BEGIN
-        help_label = 'Left clicks to select fitting range'
+        help_label = (*global).plot_tab_fitting_help_message
       ENDELSE
       putTextFieldValue, Event, 'plot_tab_help_label', help_label
       

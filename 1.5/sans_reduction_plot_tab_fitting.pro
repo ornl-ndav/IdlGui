@@ -119,7 +119,7 @@ PRO display_right_equation_in_fitting_base, Event
   IF (equation_to_show EQ 'no') THEN BEGIN
     help_label = ''
   ENDIF ELSE BEGIN
-    help_label = 'Left clicks to select fitting range'
+    help_label = (*global).plot_tab_fitting_help_message
   ENDELSE
   putTextFieldValue, Event, 'plot_tab_help_label', help_label
   
@@ -130,5 +130,38 @@ PRO display_right_equation_in_fitting_base, Event
       MAIN_BASE=(*global).plot_tab_fitting_wBase, $
       EQUATION=equation_to_show
   ENDIF
+  
+END
+
+;------------------------------------------------------------------------------
+PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  xminmax = (*global).xminmax_fitting ;range of x used for the fitting
+  
+  Xarray      = (*(*global).Xarray)
+  Yarray      = (*(*global).Yarray)
+  SigmaYarray = (*(*global).SigmaYarray)
+  
+  xmin = MIN(xminmax,MAX=xmax)
+  
+  IF (xmin LT Xarray[0]) THEN RETURN
+  IF (xmin GT Xarray[N_ELEMENTS(Xarray)-1])) THEN RETURN
+  IF (xmax LT Xarray[0]) THEN RETURN
+  IF (xmax GT Xarray[N_ELEMENTS(Xarray)-1])) THEN RETURN
+  
+  xmin_index = WHERE(Xarray GE xmin)
+  xmax_index = WHERE(Xarray LE xmax)
+  
+  IF (xmin_index EQ xmax_index) THEN RETURN
+  
+  Xarray_fitting = Xarray[xmin_index,xmax_index]
+  Yarray_fitting = Yarray[xmin_index,xmax_index]
+  
+  (*(*global).Xarray_fitting) = Xarray_fitting
+  (*(*global).Yarray_fitting) = Yarray_fitting
+  (*global).fitting_to_plot = 1b
   
 END
