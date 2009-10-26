@@ -157,7 +157,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -179,7 +181,9 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -202,7 +206,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -229,7 +235,9 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /YLOG, $
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -253,7 +261,9 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 /XLOG, $
                 /YLOG, $
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -279,7 +289,9 @@ PRO rePlotAsciiData, Event
                 /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -307,7 +319,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -329,7 +343,9 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -352,7 +368,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -380,7 +398,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -402,7 +422,9 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$                
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
@@ -425,7 +447,9 @@ PRO rePlotAsciiData, Event
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
-                XRANGE = [xmin,xmax], $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
               plot, Xarray, $
