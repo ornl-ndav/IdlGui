@@ -115,6 +115,14 @@ PRO display_right_equation_in_fitting_base, Event
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  equation_to_show = getFittingEquationToShow(Event)
+  IF (equation_to_show EQ 'no') THEN BEGIN
+    help_label = ''
+  ENDIF ELSE BEGIN
+    help_label = 'Left clicks to select fitting range'
+  ENDELSE
+  putTextFieldValue, Event, 'plot_tab_help_label', help_label
+  
   id = (*global).plot_tab_fitting_wBase
   IF (WIDGET_INFO(id, /VALID_ID)) THEN BEGIN
     equation_to_show = getFittingEquationToShow(Event)
