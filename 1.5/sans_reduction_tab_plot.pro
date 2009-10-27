@@ -476,21 +476,40 @@ PRO rePlotAsciiData, Event
     
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
     
-    print, (*global).fitting_to_plot
-    
     IF ((*global).fitting_to_plot) THEN BEGIN ;plot fitting selected points
-    
-    print, 'inside fitting to plot'
     
       Xarray_fitting = (*(*global).Xarray_fitting)
       Yarray_fitting = (*(*global).Yarray_fitting)
       
       DEVICE, DECOMPOSED = 1
       
-      OPLOT, Xarray_fitting, Yarray_fitting, $
-      COLOR=FSC_COLOR('green'),$
-      PSYM = 6
+      print, yaxis_type
+      print, xaxis_type
       
+      CASE (yaxis_type) OF
+        'log_Q_IQ': BEGIN
+          yarray_fitting = xarray_fitting * yarray_fitting
+          IF (xaxis_type EQ 'Q2') THEN BEGIN
+            xarray_fitting = xarray_fitting^2
+          ENDIF
+        END
+        'log_Q2_IQ': BEGIN
+          yarray_fitting = xarray_fitting^2 * yarray_fitting
+          IF (xaxis_type EQ 'Q2') THEN BEGIN
+            xarray_fitting = xarray_fitting^2
+          ENDIF
+        END
+        ELSE: BEGIN
+          IF (xaxis_type EQ 'Q2') THEN BEGIN
+            xarray_fitting = xarray_fitting^2
+          ENDIF
+        END
+      ENDCASE
+      
+      OPLOT, Xarray_fitting, Yarray_fitting, $
+        COLOR=FSC_COLOR('green'),$
+        PSYM = 6
+        
       DEVICE, DECOMPOSED = 0
       
     ENDIF
