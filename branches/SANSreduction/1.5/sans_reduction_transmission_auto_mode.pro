@@ -657,6 +657,8 @@ PRO launch_transmission_auto_mode_base, main_event
   transmission_auto_mode_gui, wBase, $
     main_base_geometry, sys_color_window_bk
     
+  (*global).transmission_auto_mode_id = wBase  
+    
   global_auto = PTR_NEW({ wbase: wbase,$
     global: global,$
     rtt_zoom_data: PTR_NEW(0L), $

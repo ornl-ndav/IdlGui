@@ -180,6 +180,8 @@ PRO  launch_transmission_auto_manual_base, main_event
   wBase1 = ''
   transmission_launcher_base_gui, wBase1, $
     main_base_geometry
+  
+  (*global).transmission_launcher_base_id = wBase1
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
