@@ -140,7 +140,7 @@ PRO rePlotAsciiData, Event
     ENDIF
     
     IF (zoom_on) THEN BEGIN ;zoom
-      ymin = MIN(yaxis,MAX=ymax)
+      ymin = MIN(FLOAT(Yarray),MAX=ymax)
     ENDIF ELSE BEGIN ;no zoom
       ymin = MIN([y1,y2],MAX=ymax)
     ENDELSE
@@ -475,7 +475,22 @@ PRO rePlotAsciiData, Event
     ENDCASE
     
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
-        
+    
+    IF ((*global).fitting_to_plot) THEN BEGIN ;plot fitting selected points
+    
+      Xarray_fitting = (*(*global).Xarray_fitting)
+      Yarray_fitting = (*(*global).Yarray_fitting)
+      
+      DEVICE, DECOMPOSED = 1
+      
+      OPLOT, Xarray_fitting, Yarray_fitting, $
+      COLOR=FSC_COLOR('green'),$
+      PSYM = 6
+      
+      DEVICE, DECOMPOSED = 0
+      
+    ENDIF
+    
   ENDELSE
 END
 

@@ -141,6 +141,8 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   
   xminmax = (*global).xminmax_fitting ;range of x used for the fitting
   
+  IF (xminmax[0] EQ xminmax[1]) THEN RETURN
+  
   Xarray      = (*(*global).Xarray)
   Yarray      = (*(*global).Yarray)
   SigmaYarray = (*(*global).SigmaYarray)
@@ -148,17 +150,20 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   xmin = MIN(xminmax,MAX=xmax)
   
   IF (xmin LT Xarray[0]) THEN RETURN
-  IF (xmin GT Xarray[N_ELEMENTS(Xarray)-1])) THEN RETURN
+  IF (xmin GT Xarray[N_ELEMENTS(Xarray)-1]) THEN RETURN
   IF (xmax LT Xarray[0]) THEN RETURN
-  IF (xmax GT Xarray[N_ELEMENTS(Xarray)-1])) THEN RETURN
+  IF (xmax GT Xarray[N_ELEMENTS(Xarray)-1]) THEN RETURN
   
   xmin_index = WHERE(Xarray GE xmin)
   xmax_index = WHERE(Xarray LE xmax)
   
-  IF (xmin_index EQ xmax_index) THEN RETURN
+  xmin_index = xmin_index[0]
+  xmax_index = xmax_index[N_ELEMENTS(xmax_index)-1]
   
-  Xarray_fitting = Xarray[xmin_index,xmax_index]
-  Yarray_fitting = Yarray[xmin_index,xmax_index]
+  IF (xmin_index GE xmax_index) THEN RETURN
+  
+  Xarray_fitting = Xarray[xmin_index:xmax_index]
+  Yarray_fitting = Yarray[xmin_index:xmax_index]
   
   (*(*global).Xarray_fitting) = Xarray_fitting
   (*(*global).Yarray_fitting) = Yarray_fitting
