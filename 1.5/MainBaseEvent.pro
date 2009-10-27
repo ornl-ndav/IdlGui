@@ -1011,7 +1011,7 @@ PRO MAIN_BASE_event, Event
               retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
               rePlotAsciiData, Event ;_tab_plot
               (*global).plot_left_click = 0
-              (*global).fitting_to_plot = 0b
+              (*global).fitting_to_plot = 1b
             ENDIF
             
           ENDELSE ;end of if zoom or fitting selected
