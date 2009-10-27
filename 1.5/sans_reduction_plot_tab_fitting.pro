@@ -141,7 +141,14 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   
   xminmax = (*global).xminmax_fitting ;range of x used for the fitting
   
-  IF (xminmax[0] EQ xminmax[1]) THEN RETURN
+  ;  ;check which xaxis scale the user wants
+;  xaxis_type = getPlotTabXaxisScale(Event)
+;  IF (xaxis_type EQ 'Q2') THEN BEGIN
+;    xminmax = SQRT(xminmax)
+;;    Xarray = Xarray^2
+;  ENDIF
+  
+    IF (xminmax[0] EQ xminmax[1]) THEN RETURN
   
   Xarray      = (*(*global).Xarray)
   Yarray      = (*(*global).Yarray)
@@ -161,7 +168,7 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   xmax_index = xmax_index[N_ELEMENTS(xmax_index)-1]
   
   IF (xmin_index GE xmax_index) THEN RETURN
-  
+    
   Xarray_fitting = Xarray[xmin_index:xmax_index]
   Yarray_fitting = Yarray[xmin_index:xmax_index]
   
