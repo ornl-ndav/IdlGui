@@ -36,8 +36,10 @@
 ;to the counts of the left element
 FUNCTION extrapolate_exact_element, left_element_intensity, data, element_right
 
-  Num1 = FLOAT(data(element_right + 1) - data(element_right))
-  Num2 = FLOAT(left_element_intensity - data(element_right))
+  IF ((element_right + 1) GE N_ELEMENTS(data)) THEN element_right--
+
+  Num1 = FLOAT(data[element_right + 1] - data[element_right])
+  Num2 = FLOAT(left_element_intensity - data[element_right])
   
   exact_right_element = FLOAT(element_right) + Num2/Num1
   
