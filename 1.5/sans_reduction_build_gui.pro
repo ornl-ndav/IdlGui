@@ -42,6 +42,20 @@ END
 PRO SANSreduction_Cleanup, tlb
 
   WIDGET_CONTROL, tlb, GET_UVALUE=global, /NO_COPY
+  
+  ;destroy based mapped
+  id_array = [(*global).plot_tab_fitting_wBase,$ ;fitting equation
+    (*global).transmission_launcher_base_id, $ ;transmission launcher
+    (*global).transmission_auto_mode_id, $ ;auto transmission
+    (*global).transmission_manual_mode_id,$] ;manual transmission
+    (*global).beam_center_base_id] ;beam center calculation
+  sz = N_ELEMENTS(id_array)
+  FOR i=0,sz-1 DO BEGIN
+    IF (WIDGET_INFO(id_array[i], /VALID_ID) NE 0) THEN BEGIN
+      WIDGET_CONTROL, id_array[i], /DESTROY
+    ENDIF
+  ENDFOR
+  
   IF N_ELEMENTS(global) EQ 0 THEN RETURN
   
   ; Free up the pointers
@@ -236,9 +250,15 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     inst_geom:       '',$
     wave_para_value: '',$
     
-    ;Transmission Fiel Calculation
+    ;Transmission Field Calculation
     mass_neutron: DOUBLE(1.67493e-27), $  ;kg
     planck_constant: DOUBLE(6.626068e-34), $ ;m^2 Kg/s
+    
+    ;Bases ids
+    transmission_launcher_base_id: 0, $
+    transmission_auto_mode_id: 0, $
+    transmission_manual_mode_id: 0, $
+    beam_center_base_id: 0,$
     
     ;Plot tab
     plot_left_click: 0b, $ ;1b when left click pressed (for zoom)

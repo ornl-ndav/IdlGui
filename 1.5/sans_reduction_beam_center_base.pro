@@ -962,6 +962,7 @@ PRO launch_beam_center_base, main_event
   wBase1 = ''
   beam_center_base_gui, wBase1, $
     main_base_geometry
+    (*global).beam_center_base_id = wBase1
     
   WIDGET_CONTROL, wBase1, /REALIZE
   
