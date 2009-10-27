@@ -990,6 +990,10 @@ PRO MAIN_BASE_event, Event
             IF ((*global).plot_left_click) THEN BEGIN ;moving mouse with left click
               xminmax_fitting = (*global).xminmax_fitting
               CURSOR, X, Y, /DATA, /NOWAIT
+              xaxis_type = getPlotTabXaxisScale(Event)
+              IF (xaxis_type EQ 'Q2') THEN BEGIN
+                X = SQRT(X)
+              ENDIF
               xminmax_fitting[1] = X
               (*global).xminmax_fitting = xminmax_fitting
               (*global).fitting_to_plot = 1b
@@ -1000,6 +1004,10 @@ PRO MAIN_BASE_event, Event
             IF (Event.press EQ 1) THEN BEGIN ;left click
               (*global).plot_left_click = 1
               CURSOR, X, Y, /DATA
+              xaxis_type = getPlotTabXaxisScale(Event)
+              IF (xaxis_type EQ 'Q2') THEN BEGIN
+                X = SQRT(X)
+              ENDIF
               xminmax_fitting = FLTARR(2)
               xminmax_fitting[0] = X
               (*global).xminmax_fitting = xminmax_fitting

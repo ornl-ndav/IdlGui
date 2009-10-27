@@ -483,9 +483,6 @@ PRO rePlotAsciiData, Event
       
       DEVICE, DECOMPOSED = 1
       
-      print, yaxis_type
-      print, xaxis_type
-      
       CASE (yaxis_type) OF
         'log_Q_IQ': BEGIN
           yarray_fitting = xarray_fitting * yarray_fitting
