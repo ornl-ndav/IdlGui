@@ -476,7 +476,11 @@ PRO rePlotAsciiData, Event
     
     errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
     
+    print, (*global).fitting_to_plot
+    
     IF ((*global).fitting_to_plot) THEN BEGIN ;plot fitting selected points
+    
+    print, 'inside fitting to plot'
     
       Xarray_fitting = (*(*global).Xarray_fitting)
       Yarray_fitting = (*(*global).Yarray_fitting)
