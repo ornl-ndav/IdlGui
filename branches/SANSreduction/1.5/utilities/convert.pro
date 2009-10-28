@@ -106,3 +106,9 @@ FUNCTION convert_ydevice_into_data, Event, device_value
   data_value = device_value / (*global).congrid_y_coeff
   RETURN, data_value
 END
+
+;------------------------------------------------------------------------------
+FUNCTION m_to_angstroms, r
+  RETURN, r * 1e10
+END
+

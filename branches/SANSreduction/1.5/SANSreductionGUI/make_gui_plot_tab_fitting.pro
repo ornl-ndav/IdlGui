@@ -98,20 +98,22 @@ PRO plot_tab_fitting_gui, wBase, main_base_geometry, sys_color_window_bk
   i0 = WIDGET_LABEL(EqBase,$
     VALUE = 'N/A',$
     SCR_XSIZE = label_xsize,$
+    UNAME = 'plot_tab_fitting_i0_coeff',$
     FRAME=1,$
     /ALIGN_LEFT,$
     XOFFSET = xyoffi0[0],$
     yoffset = xyoffi0[1])
   xyoffrg_value = [xyoffi0[0],385]
-  rg_value = WIDGET_LABEL(EqBase,$
+  r_value = WIDGET_LABEL(EqBase,$
     VALUE = 'N/A',$
     SCR_XSIZE = label_xsize,$
     FRAME=1,$
+    UNAME = 'plot_tab_fitting_r_coeff',$
     /ALIGN_LEFT,$
     XOFFSET = xyoffrg_value[0],$
     yoffset = xyoffrg_value[1])
   xyoffrg_units = [320,xyoffrg_value[1]]
-  rg_units = WIDGET_LABEL(EqBase,$
+  r_units = WIDGET_LABEL(EqBase,$
     VALUE = 'Angstroms',$
     SCR_XSIZE = label_xsize,$
     FRAME=1,$
