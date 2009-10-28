@@ -181,6 +181,31 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
 END
 
 ;------------------------------------------------------------------------------
+FUNCTION calculate_io, b
+  RETURN, exp(b)
+END
+
+;------------------------------------------------------------------------------
+FUNCTION calculate_r, Event, a
+
+  equation = getFittingEquationToShow(Event)
+  CASE (equation) OF
+    'rg': BEGIN
+      RETURN, SQRT(-3*a)
+    END
+    'rc': BEGIN
+      RETURN, SQRT(-2*a)
+    END
+    'rt': BEGIN
+      RETURN, SQRT(-a)
+    END
+    ELSE:
+  ENDCASE
+  
+  
+END
+
+;------------------------------------------------------------------------------
 PRO calculate_fitting_function, Event
 
   ;calculate fitting function only if there is an equation valid
@@ -194,9 +219,11 @@ PRO calculate_fitting_function, Event
   ;not a valid id so we need to mapped it
   IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
     display_plot_tab_fitting_base, Event
+    display_right_equation_in_fitting_base, Event
   ENDIF ELSE BEGIN
     WIDGET_CONTROL, id, /SHOW
   ENDELSE
+  id = (*global).plot_tab_fitting_wBase
   
   xarray = (*(*global).Xarray_fitting)
   yarray = (*(*global).Yarray_fitting)
@@ -214,4 +241,15 @@ PRO calculate_fitting_function, Event
   putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_b_coeff', sb
   putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_a_coeff', sa
   
+  i0 = calculate_io(b)
+  r = calculate_r(Event, a)
+  
+  si0 = STRCOMPRESS(i0,/REMOVE_ALL)
+  sr  = STRCOMPRESS(r,/REMOVE_ALL) 
+  
+  putTextFieldValueMainBase, id, $
+    UNAME ='plot_tab_fitting_i0_coeff', si0
+  putTextFieldValueMainBase, id, $
+    UNAME ='plot_tab_fitting_r_coeff', sr
+    
 END
