@@ -119,11 +119,13 @@ PRO rePlotAsciiData, Event
     ;get global structure
     WIDGET_CONTROL, Event.top, GET_UVALUE=global
     xaxis = (*global).xaxis
-    xaxis_units = (*global).xaxis_units
     yaxis = (*global).yaxis
-    yaxis_units = (*global).yaxis_units
-    xLabel = xaxis + ' (' + xaxis_units + ')'
-    yLabel = yaxis + ' (' + yaxis_units + ')'
+    
+    ;xaxis_units = (*global).xaxis_units
+
+    ;yaxis_units = (*global).yaxis_units
+    ;xLabel = xaxis + ' (' + xaxis_units + ')'
+    ;yLabel = yaxis + ' (' + yaxis_units + ')'
     ;plot
     
     xyminmax = (*global).old_xyminmax
@@ -152,6 +154,24 @@ PRO rePlotAsciiData, Event
     ;check which xaxis scale the user wants
     xaxis_type = getPlotTabXaxisScale(Event)
     
+    ;define label
+    CASE (xaxis_type) OF
+    'lin': xaxis_units = '1/Angstroms'
+    'log': xaxis_units = '1/Angstroms'
+    'Q2' : xaxis_units = '1/Angstroms^2'
+    ELSE: xaxis_units = 'undefined'
+    ENDCASE
+    xlabel = xaxis + ' (' + xaxis_units + ')'
+    
+    CASE(yaxis_type) OF
+    'lin': yaxis_units = 'Counts'
+    'log': yaxis_units = 'Counts'
+    'log_Q_IQ' : yaxis_units = 'Counts/Angstroms'
+    'log_Q2_IQ' : yaxis_units = 'Counts/Angstroms^2'
+    ELSE: yaxis_units = 'undefined'
+    ENDCASE
+    ylabel = yaxis + ' (' + yaxis_units + ')'
+  
     CASE (yaxis_type) OF
       'lin': BEGIN
         CASE (xaxis_type) OF
@@ -568,9 +588,9 @@ PRO LoadAsciiFile, Event
       ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
         (*global).xaxis       = sAscii.xaxis
-        (*global).xaxis_units = sAScii.xaxis_units
+        ;(*global).xaxis_units = sAscii.xaxis_units
         (*global).yaxis       = sAscii.yaxis
-        (*global).yaxis_units = sAscii.yaxis_units
+        ;(*global).yaxis_units = sAscii.yaxis_units
         
         DataStringArray = *(*sAscii.data)[0].data
         ;this method will creates a 3 columns array (x,y,sigma_y)
