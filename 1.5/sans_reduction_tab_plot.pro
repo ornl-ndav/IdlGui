@@ -122,7 +122,7 @@ PRO rePlotAsciiData, Event
     yaxis = (*global).yaxis
     
     ;xaxis_units = (*global).xaxis_units
-
+    
     ;yaxis_units = (*global).yaxis_units
     ;xLabel = xaxis + ' (' + xaxis_units + ')'
     ;yLabel = yaxis + ' (' + yaxis_units + ')'
@@ -156,10 +156,10 @@ PRO rePlotAsciiData, Event
     
     ;define label
     CASE (xaxis_type) OF
-    'lin': xaxis_units = '1/Angstroms'
-    'log': xaxis_units = '1/Angstroms'
-    'Q2' : xaxis_units = '1/Angstroms^2'
-    ELSE: xaxis_units = 'undefined'
+      'lin': xaxis_units = '1/Angstroms'
+      'log': xaxis_units = '1/Angstroms'
+      'Q2' : xaxis_units = '1/Angstroms^2'
+      ELSE: xaxis_units = 'undefined'
     ENDCASE
     xlabel = xaxis + ' (' + xaxis_units + ')'
     
@@ -169,381 +169,473 @@ PRO rePlotAsciiData, Event
     'log_Q_IQ' : yaxis_units = 'Counts/Angstroms'
     'log_Q2_IQ' : yaxis_units = 'Counts/Angstroms^2'
     ELSE: yaxis_units = 'undefined'
-    ENDCASE
-    ylabel = yaxis + ' (' + yaxis_units + ')'
+  ENDCASE
+  ylabel = yaxis + ' (' + yaxis_units + ')'
   
+  CASE (yaxis_type) OF
+    'lin': BEGIN
+      CASE (xaxis_type) OF
+        'lin': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'log': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              /XLOG, $
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /XLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'Q2': BEGIN
+          Xarray = Xarray^2
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        ELSE:
+      ENDCASE
+    END
+    'log': BEGIN
+      CASE (xaxis_type) OF
+        'lin': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              /YLOG, $
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'log': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              /XLOG, $
+              /YLOG, $
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /XLOG, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+          
+        END
+        'Q2': BEGIN
+          Xarray = Xarray^2
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              /YLOG, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        ELSE:
+      ENDCASE
+    END
+    'log_Q_IQ': BEGIN
+      yarray = xarray * yarray
+      CASE (xaxis_type) OF
+        'lin': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              /YLOG, $
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'log': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              /XLOG, $
+              /YLOG, $
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /XLOG, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'Q2': BEGIN
+          xarray = xarray^2
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              /YLOG, $
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        ELSE:
+      ENDCASE
+    END
+    'log_Q2_IQ': BEGIN
+      xarray_2 = xarray^2
+      yarray = xarray_2 * yarray
+      CASE (xaxis_type) OF
+        'lin': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              /YLOG, $
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'log': BEGIN
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              /XLOG, $
+              /YLOG, $
+              XSTYLE=1,$
+              YSTYLE=1,$
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /XLOG, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        'Q2': BEGIN
+          xarray = xarray_2
+          IF (zoom_on) THEN BEGIN
+            xmin = MIN([x1,x2],MAX=xmax)
+            ymin = MIN([y1,y2],MAX=ymax)
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel,$
+              XSTYLE=1,$
+              YSTYLE=1,$
+              /YLOG, $
+              XRANGE=[xmin,xmax], $
+              YRANGE=[ymin,ymax]
+          ENDIF ELSE BEGIN
+            plot, Xarray, $
+              Yarray, $
+              color=250, $
+              PSYM=2, $
+              /YLOG, $
+              XTITLE=xLabel, $
+              YTITLE=yLabel
+          ENDELSE
+        END
+        ELSE:
+      ENDCASE
+    END
+    ELSE:
+  ENDCASE
+  
+  errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+  
+  IF ((*global).fitting_to_plot) THEN BEGIN ;plot fitting selected points
+  
+    Xarray_fitting = (*(*global).Xarray_fitting)
+    Yarray_fitting = (*(*global).Yarray_fitting)
+    
+    DEVICE, DECOMPOSED = 1
+    
     CASE (yaxis_type) OF
-      'lin': BEGIN
-        CASE (xaxis_type) OF
-          'lin': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'log': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                /XLOG, $
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /XLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'Q2': BEGIN
-            Xarray = Xarray^2
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          ELSE:
-        ENDCASE
-      END
-      'log': BEGIN
-        CASE (xaxis_type) OF
-          'lin': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                /YLOG, $
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'log': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                /XLOG, $
-                /YLOG, $
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /XLOG, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-            
-          END
-          'Q2': BEGIN
-            Xarray = Xarray^2
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                /YLOG, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          ELSE:
-        ENDCASE
-      END
       'log_Q_IQ': BEGIN
-        yarray = xarray * yarray
-        CASE (xaxis_type) OF
-          'lin': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                /YLOG, $
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'log': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                /XLOG, $
-                /YLOG, $
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /XLOG, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'Q2': BEGIN
-            xarray = xarray^2
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                /YLOG, $
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          ELSE:
-        ENDCASE
+        yarray_fitting = xarray_fitting * yarray_fitting
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
       END
       'log_Q2_IQ': BEGIN
-        xarray_2 = xarray^2
-        yarray = xarray_2 * yarray
-        CASE (xaxis_type) OF
-          'lin': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                /YLOG, $
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'log': BEGIN
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                /XLOG, $
-                /YLOG, $
-                XSTYLE=1,$
-                YSTYLE=1,$
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /XLOG, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          'Q2': BEGIN
-            xarray = xarray_2
-            IF (zoom_on) THEN BEGIN
-              xmin = MIN([x1,x2],MAX=xmax)
-              ymin = MIN([y1,y2],MAX=ymax)
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel,$
-                XSTYLE=1,$
-                YSTYLE=1,$
-                /YLOG, $
-                XRANGE=[xmin,xmax], $
-                YRANGE=[ymin,ymax]
-            ENDIF ELSE BEGIN
-              plot, Xarray, $
-                Yarray, $
-                color=250, $
-                PSYM=2, $
-                /YLOG, $
-                XTITLE=xLabel, $
-                YTITLE=yLabel
-            ENDELSE
-          END
-          ELSE:
-        ENDCASE
+        yarray_fitting = xarray_fitting^2 * yarray_fitting
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
       END
-      ELSE:
+      ELSE: BEGIN
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
+      END
     ENDCASE
     
-    errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+    OPLOT, Xarray_fitting, Yarray_fitting, $
+      COLOR=FSC_COLOR('green'),$
+      PSYM = 6
+      
+    DEVICE, DECOMPOSED = 0
     
-    IF ((*global).fitting_to_plot) THEN BEGIN ;plot fitting selected points
+  ENDIF
+  
+ENDELSE
+END
+
+;------------------------------------------------------------------------------
+PRO plot_fitting, Event
+
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
+  WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+  wset,view_plot_id
+  
+    Xarray_fitting = (*(*global).Xarray_fitting)
+    Yarray_fitting = (*(*global).Yarray_fitting)
     
-      Xarray_fitting = (*(*global).Xarray_fitting)
-      Yarray_fitting = (*(*global).Yarray_fitting)
-      
-      DEVICE, DECOMPOSED = 1
-      
-      CASE (yaxis_type) OF
-        'log_Q_IQ': BEGIN
-          yarray_fitting = xarray_fitting * yarray_fitting
-          IF (xaxis_type EQ 'Q2') THEN BEGIN
-            xarray_fitting = xarray_fitting^2
-          ENDIF
-        END
-        'log_Q2_IQ': BEGIN
-          yarray_fitting = xarray_fitting^2 * yarray_fitting
-          IF (xaxis_type EQ 'Q2') THEN BEGIN
-            xarray_fitting = xarray_fitting^2
-          ENDIF
-        END
-        ELSE: BEGIN
-          IF (xaxis_type EQ 'Q2') THEN BEGIN
-            xarray_fitting = xarray_fitting^2
-          ENDIF
-        END
-      ENDCASE
-      
-      OPLOT, Xarray_fitting, Yarray_fitting, $
-        COLOR=FSC_COLOR('green'),$
-        PSYM = 6
-        
-      DEVICE, DECOMPOSED = 0
-      
-    ENDIF
+    DEVICE, DECOMPOSED = 1
     
-  ENDELSE
+  xaxis_type = getPlotTabXaxisScale(Event)
+  yaxis_type = getPlotTabYaxisScale(Event)
+
+    CASE (yaxis_type) OF
+      'log_Q_IQ': BEGIN
+        yarray_fitting = xarray_fitting * yarray_fitting
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
+      END
+      'log_Q2_IQ': BEGIN
+        yarray_fitting = xarray_fitting^2 * yarray_fitting
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
+      END
+      ELSE: BEGIN
+        IF (xaxis_type EQ 'Q2') THEN BEGIN
+          xarray_fitting = xarray_fitting^2
+        ENDIF
+      END
+    ENDCASE
+    
+    OPLOT, Xarray_fitting, Yarray_fitting, $
+      COLOR=FSC_COLOR('green'),$
+      PSYM = 6
+      
+    ;plot fitting
+    a = (*global).fitting_a_coeff
+    b = (*global).fitting_b_coeff
+    
+    OPLOT, XARRAY_fitting, b + a* xarray_fitting, COLOR=FSC_COLOR('blue')
+    
+    DEVICE, DECOMPOSED = 0
+  
+;  DEVICE, DECOMPOSED = 1
+;  
+;  Xarray_fitting = (*(*global).Xarray_fitting)
+;  
+;  Xarray_fitting = (*(*global).Xarray_fitting)
+;  Yarray_fitting = (*(*global).Yarray_fitting)
+;  
+;  DEVICE, DECOMPOSED = 1
+;  
+;  xaxis_type = getPlotTabXaxisScale(Event)
+;  yaxis_type = getPlotTabYaxisScale(Event)
+;  
+;  CASE (yaxis_type) OF
+;    'log_Q_IQ': BEGIN
+;      yarray_fitting = xarray_fitting * yarray_fitting
+;      IF (xaxis_type EQ 'Q2') THEN BEGIN
+;        xarray_fitting = xarray_fitting^2
+;      ENDIF
+;    END
+;    'log_Q2_IQ': BEGIN
+;      yarray_fitting = xarray_fitting^2 * yarray_fitting
+;      IF (xaxis_type EQ 'Q2') THEN BEGIN
+;        xarray_fitting = xarray_fitting^2
+;      ENDIF
+;    END
+;    ELSE: BEGIN
+;      IF (xaxis_type EQ 'Q2') THEN BEGIN
+;        xarray_fitting = xarray_fitting^2
+;      ENDIF
+;    END
+;  ENDCASE
+;  
+;  ;plot fitting
+;  a = (*global).fitting_a_coeff
+;  b = (*global).fitting_b_coeff
+;  
+;  OPLOT, Xarray_fitting, b+a*Xarray_fitting, COLOR=FSC_COLOR('blue')
+;  
+;  DEVICE, DECOMPOSED = 0
+  
 END
 
 ;==============================================================================

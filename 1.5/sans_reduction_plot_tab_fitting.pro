@@ -202,7 +202,6 @@ FUNCTION calculate_r, Event, a
     ELSE:
   ENDCASE
   
-  
 END
 
 ;------------------------------------------------------------------------------
@@ -219,21 +218,47 @@ PRO calculate_fitting_function, Event
   ;not a valid id so we need to mapped it
   IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
     display_plot_tab_fitting_base, Event
-    display_right_equation_in_fitting_base, Event
   ENDIF ELSE BEGIN
     WIDGET_CONTROL, id, /SHOW
   ENDELSE
+  display_right_equation_in_fitting_base, Event
   id = (*global).plot_tab_fitting_wBase
   
-  xarray = (*(*global).Xarray_fitting)
-  yarray = (*(*global).Yarray_fitting)
+  xarray_fitting = (*(*global).Xarray_fitting)
+  yarray_fitting = (*(*global).Yarray_fitting)
   SigmaYarray = (*(*global).SigmaYarray_fitting)
   
-  result = POLY_FIT(xarray, yarray, 1, /DOUBLE, $
+  xaxis_type = getPlotTabXaxisScale(Event)
+  yaxis_type = getPlotTabYaxisScale(Event)
+  
+  CASE (yaxis_type) OF
+    'log_Q_IQ': BEGIN
+      yarray_fitting = xarray_fitting * yarray_fitting
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+    'log_Q2_IQ': BEGIN
+      yarray_fitting = xarray_fitting^2 * yarray_fitting
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+    ELSE: BEGIN
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+  ENDCASE
+  
+  result = POLY_FIT(xarray_fitting, yarray_fitting, 1, /DOUBLE, $
     MEASURE_ERRORS = SigmaYarray)
     
   b = result[0]
   a = result[1]
+  
+  (*global).fitting_a_coeff = a
+  (*global).fitting_b_coeff = b
   
   sb = STRCOMPRESS(b,/REMOVE_ALL)
   sa = STRCOMPRESS(a,/REMOVE_ALL)
@@ -245,7 +270,7 @@ PRO calculate_fitting_function, Event
   r = calculate_r(Event, a)
   
   si0 = STRCOMPRESS(i0,/REMOVE_ALL)
-  sr  = STRCOMPRESS(r,/REMOVE_ALL) 
+  sr  = STRCOMPRESS(r,/REMOVE_ALL)
   
   putTextFieldValueMainBase, id, $
     UNAME ='plot_tab_fitting_i0_coeff', si0
