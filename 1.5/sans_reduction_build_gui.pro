@@ -280,6 +280,8 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     fitting_b_coeff: 0., $
     Xarray_fitting_for_fitting_plot: PTR_NEW(0L), $
     Yarray_fitting_for_fitting_plot: PTR_NEW(0L), $
+    last_fitting_performed: {xaxis_type:'',$
+    yaxis_type: ''},$
     
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
