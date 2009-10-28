@@ -348,8 +348,8 @@ PRO replot_main_plot, Event
   WIDGET_CONTROL,id,get_uvalue=global
   
   IF (((*global).replot_me) EQ 1) THEN BEGIN
-    plot_loaded_file, Event, 'CE' ;_Plot
-    ;steps_tab, Event, 1 ;_Tab
+    steps_tab, Event, 1   ;_Tab
+    ;plot_loaded_file, Event, 'CE' ;_Plot
     (*global).replot_me = 0
   ENDIF
   
