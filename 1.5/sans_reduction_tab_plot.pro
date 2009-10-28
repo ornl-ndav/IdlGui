@@ -349,6 +349,7 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 XSTYLE=1,$
                 YSTYLE=1,$
+                /YLOG, $
                 XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
@@ -356,6 +357,7 @@ PRO rePlotAsciiData, Event
                 Yarray, $
                 color=250, $
                 PSYM=2, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
@@ -371,6 +373,7 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
+                /YLOG, $
                 XSTYLE=1,$
                 YSTYLE=1,$
                 XRANGE=[xmin,xmax], $
@@ -381,6 +384,7 @@ PRO rePlotAsciiData, Event
                 color=250, $
                 PSYM=2, $
                 /XLOG, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
@@ -398,6 +402,7 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 XSTYLE=1,$
                 YSTYLE=1,$
+                /YLOG, $
                 XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
@@ -405,6 +410,7 @@ PRO rePlotAsciiData, Event
                 Yarray, $
                 color=250, $
                 PSYM=2, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
@@ -428,6 +434,7 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 XSTYLE=1,$
                 YSTYLE=1,$
+                /YLOG, $
                 XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
@@ -435,6 +442,7 @@ PRO rePlotAsciiData, Event
                 Yarray, $
                 color=250, $
                 PSYM=2, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
@@ -450,6 +458,7 @@ PRO rePlotAsciiData, Event
                 XTITLE=xLabel, $
                 YTITLE=yLabel,$
                 /XLOG, $
+                /YLOG, $
                 XSTYLE=1,$
                 YSTYLE=1,$
                 XRANGE=[xmin,xmax], $
@@ -460,6 +469,7 @@ PRO rePlotAsciiData, Event
                 color=250, $
                 PSYM=2, $
                 /XLOG, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
@@ -477,6 +487,7 @@ PRO rePlotAsciiData, Event
                 YTITLE=yLabel,$
                 XSTYLE=1,$
                 YSTYLE=1,$
+                /YLOG, $
                 XRANGE=[xmin,xmax], $
                 YRANGE=[ymin,ymax]
             ENDIF ELSE BEGIN
@@ -484,6 +495,7 @@ PRO rePlotAsciiData, Event
                 Yarray, $
                 color=250, $
                 PSYM=2, $
+                /YLOG, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
             ENDELSE
