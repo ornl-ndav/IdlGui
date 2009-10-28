@@ -48,7 +48,7 @@ PRO SANSreduction_Cleanup, tlb
     (*global).transmission_launcher_base_id, $ ;transmission launcher
     (*global).transmission_auto_mode_id, $ ;auto transmission
     (*global).transmission_manual_mode_id,$] ;manual transmission
-    (*global).beam_center_base_id] ;beam center calculation
+  (*global).beam_center_base_id] ;beam center calculation
   sz = N_ELEMENTS(id_array)
   FOR i=0,sz-1 DO BEGIN
     IF (WIDGET_INFO(id_array[i], /VALID_ID) NE 0) THEN BEGIN
@@ -276,6 +276,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     Yarray_fitting: PTR_NEW(0L), $
     SigmaYarray_fitting: PTR_NEW(0L), $
     fitting_to_plot: 0b, $
+    fitting_a_coeff: 0., $
+    fitting_b_coeff: 0., $
+    Xarray_fitting_for_fitting_plot: PTR_NEW(0L), $
+    Yarray_fitting_for_fitting_plot: PTR_NEW(0L), $
     
     wave_para_label: wave_para_label,$
     wave_para_help_label: wave_para_help_label,$
