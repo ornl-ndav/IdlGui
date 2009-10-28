@@ -274,6 +274,7 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     xminmax_fitting: FLTARR(2), $ ;min and max value of fitting range
     Xarray_fitting: PTR_NEW(0L), $
     Yarray_fitting: PTR_NEW(0L), $
+    SigmaYarray_fitting: PTR_NEW(0L), $
     fitting_to_plot: 0b, $
     
     wave_para_label: wave_para_label,$

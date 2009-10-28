@@ -1020,6 +1020,7 @@ PRO MAIN_BASE_event, Event
               rePlotAsciiData, Event ;_tab_plot
               (*global).plot_left_click = 0
               (*global).fitting_to_plot = 1b
+              calculate_fitting_function, Event
             ENDIF
             
           ENDELSE ;end of if zoom or fitting selected
