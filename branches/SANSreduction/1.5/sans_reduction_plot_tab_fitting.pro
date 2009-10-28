@@ -251,6 +251,9 @@ PRO calculate_fitting_function, Event
     END
   ENDCASE
   
+  (*global).last_fitting_performed.xaxis_type = xaxis_type
+  (*global).last_fitting_performed.yaxis_type = yaxis_type
+  
   result = POLY_FIT(xarray_fitting, yarray_fitting, 1, /DOUBLE, $
     MEASURE_ERRORS = SigmaYarray)
     

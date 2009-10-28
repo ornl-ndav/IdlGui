@@ -549,65 +549,71 @@ END
 ;------------------------------------------------------------------------------
 PRO plot_fitting, Event
 
+  ;calculate fitting function only if there is an equation valid
+  equation_to_show = getFittingEquationToShow(Event)
+  IF (equation_to_show EQ 'no') THEN RETURN
+  
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
+  IF ((*global).last_fitting_performed.xaxis_type EQ '') THEN RETURN
+      
   draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   wset,view_plot_id
   
-    Xarray_fitting = (*(*global).Xarray_fitting)
-    Yarray_fitting = (*(*global).Yarray_fitting)
-    
-    DEVICE, DECOMPOSED = 1
-    
+  Xarray_fitting = (*(*global).Xarray_fitting)
+  Yarray_fitting = (*(*global).Yarray_fitting)
+  
+  DEVICE, DECOMPOSED = 1
+  
   xaxis_type = getPlotTabXaxisScale(Event)
   yaxis_type = getPlotTabYaxisScale(Event)
-
-    CASE (yaxis_type) OF
-      'log_Q_IQ': BEGIN
-        yarray_fitting = xarray_fitting * yarray_fitting
-        IF (xaxis_type EQ 'Q2') THEN BEGIN
-          xarray_fitting = xarray_fitting^2
-        ENDIF
-      END
-      'log_Q2_IQ': BEGIN
-        yarray_fitting = xarray_fitting^2 * yarray_fitting
-        IF (xaxis_type EQ 'Q2') THEN BEGIN
-          xarray_fitting = xarray_fitting^2
-        ENDIF
-      END
-      ELSE: BEGIN
-        IF (xaxis_type EQ 'Q2') THEN BEGIN
-          xarray_fitting = xarray_fitting^2
-        ENDIF
-      END
-    ENDCASE
+  
+  CASE (yaxis_type) OF
+    'log_Q_IQ': BEGIN
+      yarray_fitting = xarray_fitting * yarray_fitting
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+    'log_Q2_IQ': BEGIN
+      yarray_fitting = xarray_fitting^2 * yarray_fitting
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+    ELSE: BEGIN
+      IF (xaxis_type EQ 'Q2') THEN BEGIN
+        xarray_fitting = xarray_fitting^2
+      ENDIF
+    END
+  ENDCASE
+  
+  OPLOT, Xarray_fitting, Yarray_fitting, $
+    COLOR=FSC_COLOR('green'),$
+    PSYM = 6
     
-    OPLOT, Xarray_fitting, Yarray_fitting, $
-      COLOR=FSC_COLOR('green'),$
-      PSYM = 6
-      
-    ;plot fitting
-    a = (*global).fitting_a_coeff
-    b = (*global).fitting_b_coeff
-    
-    OPLOT, XARRAY_fitting, b + a* xarray_fitting, COLOR=FSC_COLOR('blue')
-    
-    DEVICE, DECOMPOSED = 0
+  ;plot fitting
+  a = (*global).fitting_a_coeff
+  b = (*global).fitting_b_coeff
+  
+  OPLOT, XARRAY_fitting, b + a* xarray_fitting, COLOR=FSC_COLOR('blue')
+  
+  DEVICE, DECOMPOSED = 0
   
 ;  DEVICE, DECOMPOSED = 1
-;  
+;
 ;  Xarray_fitting = (*(*global).Xarray_fitting)
-;  
+;
 ;  Xarray_fitting = (*(*global).Xarray_fitting)
 ;  Yarray_fitting = (*(*global).Yarray_fitting)
-;  
+;
 ;  DEVICE, DECOMPOSED = 1
-;  
+;
 ;  xaxis_type = getPlotTabXaxisScale(Event)
 ;  yaxis_type = getPlotTabYaxisScale(Event)
-;  
+;
 ;  CASE (yaxis_type) OF
 ;    'log_Q_IQ': BEGIN
 ;      yarray_fitting = xarray_fitting * yarray_fitting
@@ -627,13 +633,13 @@ PRO plot_fitting, Event
 ;      ENDIF
 ;    END
 ;  ENDCASE
-;  
+;
 ;  ;plot fitting
 ;  a = (*global).fitting_a_coeff
 ;  b = (*global).fitting_b_coeff
-;  
+;
 ;  OPLOT, Xarray_fitting, b+a*Xarray_fitting, COLOR=FSC_COLOR('blue')
-;  
+;
 ;  DEVICE, DECOMPOSED = 0
   
 END
