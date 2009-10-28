@@ -142,13 +142,13 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   xminmax = (*global).xminmax_fitting ;range of x used for the fitting
   
   ;  ;check which xaxis scale the user wants
-;  xaxis_type = getPlotTabXaxisScale(Event)
-;  IF (xaxis_type EQ 'Q2') THEN BEGIN
-;    xminmax = SQRT(xminmax)
-;;    Xarray = Xarray^2
-;  ENDIF
+  ;  xaxis_type = getPlotTabXaxisScale(Event)
+  ;  IF (xaxis_type EQ 'Q2') THEN BEGIN
+  ;    xminmax = SQRT(xminmax)
+  ;;    Xarray = Xarray^2
+  ;  ENDIF
   
-    IF (xminmax[0] EQ xminmax[1]) THEN RETURN
+  IF (xminmax[0] EQ xminmax[1]) THEN RETURN
   
   Xarray      = (*(*global).Xarray)
   Yarray      = (*(*global).Yarray)
@@ -168,12 +168,50 @@ PRO retrieve_xarray_yarray_SigmaYarray_for_fitting, Event
   xmax_index = xmax_index[N_ELEMENTS(xmax_index)-1]
   
   IF (xmin_index GE xmax_index) THEN RETURN
-    
+  
   Xarray_fitting = Xarray[xmin_index:xmax_index]
   Yarray_fitting = Yarray[xmin_index:xmax_index]
+  SigmaYarray_fitting = SigmaYarray[xmin_index:xmax_index]
   
   (*(*global).Xarray_fitting) = Xarray_fitting
   (*(*global).Yarray_fitting) = Yarray_fitting
+  (*(*global).SigmaYarray_fitting) = SigmaYarray_fitting
   (*global).fitting_to_plot = 1b
+  
+END
+
+;------------------------------------------------------------------------------
+PRO calculate_fitting_function, Event
+
+  ;calculate fitting function only if there is an equation valid
+  equation_to_show = getFittingEquationToShow(Event)
+  IF (equation_to_show EQ 'no') THEN RETURN
+  
+  ;get global structure
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  id = (*global).plot_tab_fitting_wBase
+  ;not a valid id so we need to mapped it
+  IF (WIDGET_INFO(id, /VALID_ID) EQ 0) THEN BEGIN
+    display_plot_tab_fitting_base, Event
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, id, /SHOW
+  ENDELSE
+  
+  xarray = (*(*global).Xarray_fitting)
+  yarray = (*(*global).Yarray_fitting)
+  SigmaYarray = (*(*global).SigmaYarray_fitting)
+  
+  result = POLY_FIT(xarray, yarray, 1, /DOUBLE, $
+    MEASURE_ERRORS = SigmaYarray)
+    
+  b = result[0]
+  a = result[1]
+  
+  sb = STRCOMPRESS(b,/REMOVE_ALL)
+  sa = STRCOMPRESS(a,/REMOVE_ALL)
+  
+  putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_b_coeff', sb
+  putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_a_coeff', sa
   
 END
