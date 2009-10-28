@@ -129,6 +129,25 @@ PRO display_right_equation_in_fitting_base, Event
     display_fitting_base_draw, $
       MAIN_BASE=(*global).plot_tab_fitting_wBase, $
       EQUATION=equation_to_show
+      
+    last_fitting_performed = (*global).last_fitting_performed
+    last_xaxis = last_fitting_performed.xaxis_type
+    last_yaxis = last_fitting_performed.yaxis_type
+    
+    ;is_equation_to_show_and_last_fitting_performed_matched
+    IF (is_eq_and_fit_matched(equation_to_show,last_fitting_performed)) THEN BEGIN
+      fitted_coeff_equation = (*global).fitted_coeff_equation
+      a = fitted_coeff_equation.a
+      b = fitted_coeff_equation.b
+      I = fitted_coeff_equation.I
+      R = fitted_coeff_equation.R
+    ENDIF ELSE BEGIN
+      a = 'N/A'
+      b = 'N/A'
+      I = 'N/A'
+      R = 'N/A'
+    ENDELSE
+    
   ENDIF
   
 END
@@ -280,4 +299,11 @@ PRO calculate_fitting_function, Event
   putTextFieldValueMainBase, id, $
     UNAME ='plot_tab_fitting_r_coeff', sr
     
+  fitted_coeff_equation = (*global).fitted_coeff_equation
+  fitted_coeff_equation.a = sa
+  fitted_coeff_equation.b = sb
+  fitted_coeff_equation.I = si0
+  fitted_coeff_equation.R = sr
+  (*global).fitted_coeff_equation = fitted_coeff_equation 
+  
 END

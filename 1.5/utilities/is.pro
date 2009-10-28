@@ -88,15 +88,21 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION isBaseMap, Event, uname
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
-mapped = WIDGET_INFO(id, /MAP)
-RETURN, mapped
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME=uname)
+  mapped = WIDGET_INFO(id, /MAP)
+  RETURN, mapped
 END
 
 ;------------------------------------------------------------------------------
 FUNCTION isPlotTabZoomSelected, Event
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_tab_zoom_button')
-selected = WIDGET_INFO(id, /BUTTON_SET)
-RETURN, selected
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME='plot_tab_zoom_button')
+  selected = WIDGET_INFO(id, /BUTTON_SET)
+  RETURN, selected
 END
 
+;------------------------------------------------------------------------------
+FUNCTION is_eq_and_fit_matched, equation, $
+    last_fitting
+    
+  RETURN, 1
+END

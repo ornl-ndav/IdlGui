@@ -278,6 +278,10 @@ PRO BuildGui, SCROLL=scroll, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, facility
     fitting_to_plot: 0b, $
     fitting_a_coeff: 0., $
     fitting_b_coeff: 0., $
+    fitted_coeff_equation: {b: '',$ ;all the coeff displayed in the equation base
+    a: '',$
+    I: '',$
+    R: ''},$
     Xarray_fitting_for_fitting_plot: PTR_NEW(0L), $
     Yarray_fitting_for_fitting_plot: PTR_NEW(0L), $
     last_fitting_performed: {xaxis_type:'',$
