@@ -197,7 +197,6 @@ PRO create_cl_array, Event
     srun_queue = getSrunQueue()
     added_word = ' -p ' + srun_queue
     new_cmd = sbatch + added_word + ' ' + cl_array[0]
-    print, cl_array[0]
     cl_array[0] = new_cmd
     (*global).cl_array = cl_array
     RETURN
@@ -482,14 +481,8 @@ PRO remove_output_file_name, Event
     CL_text_array = (*global).cl_array
     
     part2 = CL_text_array[1]
-    print, 'part2: ' 
-    print, part2
-    print
     part2_parsed = split_string(part2, PATTERN='--output=')
-    print, 'part2_parsed: ' 
-    print, part2_parsed
-    print
-    
+
     ;keep path
     IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
@@ -532,10 +525,6 @@ PRO remove_output_file_name, Event
       (*global).step1_output_path = '~/results/'
       
     ENDELSE
-    
-    print, '(*global).step1_output_path = ' + (*global).step1_output_path
-    print, (*global).cl_array
-    print, '--------------------------'
     
   ENDELSE
 END

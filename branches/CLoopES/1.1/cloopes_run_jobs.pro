@@ -63,10 +63,7 @@ PRO launch_jobs, Event
   tab2_table = STRARR(3,sz+1)
     
   ;output folder
-  print, (*global).step1_output_path
   CD, (*global).step1_output_path, CURRENT=old_path
-
-  print, (*global).step1_output_path ;remove_me
 
   index = 0
   WHILE (index LT sz) DO BEGIN
@@ -75,7 +72,7 @@ PRO launch_jobs, Event
     cmd_text = '-> Job #' + STRCOMPRESS(index,/REMOVE_ALL)
     cmd_text += ': ' + cmd
     IDLsendLogBook_addLogBookText, Event, ALT=alt, cmd_text
-  ;  SPAWN, cmd
+    SPAWN, cmd
     
     ;get output file
     parse_array = split_string(column_cl[index], PATTERN='--output=')
