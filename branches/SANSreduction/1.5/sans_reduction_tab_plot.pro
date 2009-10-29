@@ -549,21 +549,21 @@ END
 ;------------------------------------------------------------------------------
 PRO plot_fitting, Event
 
- 
+
   ;get global structure
   WIDGET_CONTROL, Event.top, GET_UVALUE=global
   
-   ;calculate fitting function only if there is an equation valid
+  ;calculate fitting function only if there is an equation valid
   equation_to_show = getFittingEquationToShow(Event)
   last_fitting_performed = (*global).last_fitting_performed
-    
+  
   ;is_equation_to_show_and_last_fitting_performed_matched
   IF (is_eq_and_fit_matched(equation_to_show,last_fitting_performed) EQ 0) THEN BEGIN
-  RETURN
+    RETURN
   ENDIF
- 
+  
   IF ((*global).last_fitting_performed.xaxis_type EQ '') THEN RETURN
-      
+  
   draw_id = widget_info(Event.top, find_by_uname='plot_draw_uname')
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   wset,view_plot_id
