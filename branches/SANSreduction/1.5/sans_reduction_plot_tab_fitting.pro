@@ -148,6 +148,11 @@ PRO display_right_equation_in_fitting_base, Event
       R = 'N/A'
     ENDELSE
     
+    putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_b_coeff', b
+    putTextFieldValueMainBase, id, UNAME='plot_tab_fitting_a_coeff', a
+    putTextFieldValueMainBase, id, UNAME ='plot_tab_fitting_i0_coeff', I
+    putTextFieldValueMainBase, id, UNAME ='plot_tab_fitting_r_coeff', R
+    
   ENDIF
   
 END
@@ -304,6 +309,6 @@ PRO calculate_fitting_function, Event
   fitted_coeff_equation.b = sb
   fitted_coeff_equation.I = si0
   fitted_coeff_equation.R = sr
-  (*global).fitted_coeff_equation = fitted_coeff_equation 
+  (*global).fitted_coeff_equation = fitted_coeff_equation
   
 END
