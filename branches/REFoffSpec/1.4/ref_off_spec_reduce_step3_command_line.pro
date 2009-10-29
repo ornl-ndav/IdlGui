@@ -144,7 +144,7 @@ PRO  reduce_step3_run_jobs, Event
   text = '> About to submit ' + STRCOMPRESS(nbr_jobs,/REMOVE_ALL) + ' jobs:'
   IDLsendLogBook_addLogBookText, Event, text
   
-  CD, '~/results/', CURRENT = current
+  CD, output_path, CURRENT = current
   
   index = 0
   WHILE (cl_table[index] NE '') DO BEGIN
@@ -152,7 +152,7 @@ PRO  reduce_step3_run_jobs, Event
     IDLsendLogBook_addLogBookText, Event, text
     text = '--> ' + cl_table[index]
     IDLsendLogBook_addLogBookText, Event, text
-  ;  SPAWN, cl_table[index]  ;REMOVE_ME
+    SPAWN, cl_table[index]
     index++
   ENDWHILE
   
