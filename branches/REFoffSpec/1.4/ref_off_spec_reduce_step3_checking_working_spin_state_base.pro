@@ -204,7 +204,7 @@ PRO checking_spin_state, Event, working_spin_state = working_spin_state
     event: event,$
     output_path: (*global).ascii_path,$
     ourGroup: checking_spin_base }
-    
+   
   ;this will populate the table
   populate_checking_spin_state_table, Event, $
     table_uname, $
@@ -225,8 +225,8 @@ PRO populate_checking_spin_state_table, Event, $
   
   table = getTableValue(Event, 'reduce_tab3_main_spin_state_table_uname')
   IF (instrument EQ 'REF_M') THEN BEGIN
-    d_spin_state = table[2,*]
-    list_of_output_files = table[7,*]
+    d_spin_state = table[3,*]
+    list_of_output_files = table[8,*]
   ENDIF ELSE BEGIN
     list_of_output_files = table[5,*]
   ENDELSE
