@@ -66,7 +66,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
 ;    path: '~/results/',$ ;path to CL file
-    path: '~/SVN/IdlGui/branches/CLoopES/1.1/',$
+    path: '~/IDLWorkspace/CLoopES 1.1/',$
     input_text: '4056-4126'}
   ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
   ;******************************************************************************
@@ -95,6 +95,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     'CLoopES_images/job_manager_is_coming.png',$
     ascii_path: '~/results/',$
     ascii_input_path: '~/results/',$
+    step1_output_path: '',$
     
     firefox: '/usr/bin/firefox',$
     srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$

@@ -49,11 +49,11 @@ FUNCTION getCLtextArray, Event
     
     start  = 0
     length = text_selected_index[0]
-    cl_array[0] = STRMID(cl_text, start, length)
+    cl_array[0] = STRMID(cl_text[0], start, length)
     
     start  = text_selected_index[0] + text_selected_index[1]
-    length = STRLEN(cl_text) - start
-    cL_array[1] = STRMID(cl_text, start, length)
+    length = STRLEN(cl_text[0]) - start
+    cL_array[1] = STRMID(cl_text[0], start, length)
     
     return, cl_array
   ENDELSE
@@ -130,9 +130,8 @@ PRO create_cl_array, Event
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
   cl_array = getCLtextArray(Event)
-  
   (*global).cl_array = cl_array
-      
+  
   ;check if sbatch has been found
   sbatch = (*global).sbatch_driver
   match_sbatch = '*' + sbatch + '*'
@@ -198,6 +197,7 @@ PRO create_cl_array, Event
     srun_queue = getSrunQueue()
     added_word = ' -p ' + srun_queue
     new_cmd = sbatch + added_word + ' ' + cl_array[0]
+    print, cl_array[0]
     cl_array[0] = new_cmd
     (*global).cl_array = cl_array
     RETURN
@@ -433,14 +433,14 @@ PRO parse_input_field, Event
   column_sequence = (*(*global).column_sequence)
   column_cl = (*(*global).column_cl)
   sz = N_ELEMENTS(column_sequence)
-
+  
   Table = STRARR(2,sz)
   Table[0,*] = column_sequence[*]
   Table[1,*] = column_cl[*]
   id = WIDGET_INFO(Event.top,FIND_BY_UNAME='runs_table')
   WIDGET_CONTROL, id, TABLE_YSIZE = sz
   putValue, Event, 'runs_table', Table
-
+  
   displayNumberOfCLs, Event, column_sequence
   
   ;activate or not the 'Launch Jobs in Background'
@@ -482,30 +482,60 @@ PRO remove_output_file_name, Event
     CL_text_array = (*global).cl_array
     
     part2 = CL_text_array[1]
+    print, 'part2: ' 
+    print, part2
+    print
     part2_parsed = split_string(part2, PATTERN='--output=')
+    print, 'part2_parsed: ' 
+    print, part2_parsed
+    print
     
     ;keep path
     IF (N_ELEMENTS(part2_parsed) GT 1) THEN BEGIN ;there is the tag --output
     
-      path = FILE_DIRNAME(part2_parsed[1])
-      path += '/'
+      ;keep text between '--output=' and next space
+      string_to_keep = split_string(part2_parsed[1],PATTERN=' ')
       
-      part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
-      sz = N_ELEMENTS(part2_2_parsed)
-      IF (sz GT 1) THEN BEGIN
-        new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
-        CL_text_array[1] = part2_parsed[0] + ' ' + new_part
-      ENDIF
-
-      cl_text_array[1] += ' --output=' + path + (*global).output_suffix
+      ;path = FILE_DIRNAME(part2_parsed[1])
+      path = FILE_DIRNAME(string_to_keep[0])
+      path += '/'
+      (*global).step1_output_path = path
+      
+      IF (N_ELEMENTS(string_to_keep) GT 1) THEN BEGIN ;output path was not last
+      
+        ;part2_2_parsed = split_string(part2_parsed[1], PATTERN=' ')
+        part2_2_parsed = split_string(string_to_keep[1], PATTERN=' ')
+        sz = N_ELEMENTS(part2_2_parsed)
+        IF (sz GT 1) THEN BEGIN ;join all the other part after 'output=....'
+          ;new_part = STRJOIN(part2_2_parsed[1:sz-1],' ')
+          new_part = STRJOIN(string_to_keep[1:sz-1],' ')
+          ;CL_text_array[1] = part2_parsed[0] + ' ' + new_part
+          end_string  = string_to_keep[0] + ' ' + new_part
+        ENDIF ELSE BEGIN
+         end_string = '' 
+        ENDELSE
+          cl_text_array[1] = part2_parsed[0] + ' ' + end_string + $
+          ' --output=' + path + (*global).output_suffix
+        
+      ENDIF ELSE BEGIN ;output path was last
+      
+        cl_text_array[1] = part2_parsed[0] + ' --output=' + path + (*global).output_suffix
+      
+      ENDELSE
+      
       (*global).cl_array = CL_text_array
       
     ENDIF ELSE BEGIN
     
       (*global).cl_array = cl_text_array + ' --output=~/results/' +  $
-      (*global).output_suffix
-        
+        (*global).output_suffix
+      (*global).step1_output_path = '~/results/'
+      
     ENDELSE
+    
+    print, '(*global).step1_output_path = ' + (*global).step1_output_path
+    print, (*global).cl_array
+    print, '--------------------------'
     
   ENDELSE
 END
