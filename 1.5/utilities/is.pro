@@ -101,8 +101,23 @@ FUNCTION isPlotTabZoomSelected, Event
 END
 
 ;------------------------------------------------------------------------------
-FUNCTION is_eq_and_fit_matched, equation, $
-    last_fitting
-    
-  RETURN, 1
+FUNCTION is_eq_and_fit_matched, equation, last_fitting
+  IF (equation EQ 'no') THEN RETURN, 0
+  xaxis = last_fitting.xaxis_type
+  yaxis = last_fitting.yaxis_type
+  CASE (equation) OF
+  'rg': BEGIN
+  IF (xaxis EQ 'Q2' AND yaxis EQ 'log') THEN RETURN, 1
+  RETURN, 0
+  END
+  'rc': BEGIN
+  IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q_IQ') THEN RETURN, 1
+  RETURN, 0
+  END
+  'rt': BEGIN
+  IF (xaxis EQ 'Q2' AND yaxis EQ 'log_Q2_IQ') THEN RETURN, 1
+  RETURN, 0
+  END
+  ELSE: RETURN, 0
+  ENDCASE
 END

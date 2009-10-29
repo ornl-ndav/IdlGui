@@ -991,7 +991,7 @@ PRO MAIN_BASE_event, Event
             IF (xaxis_type NE 'Q2') THEN RETURN
             yaxis_type = getPlotTabYaxisScale(Event)
             IF (xaxis_type EQ 'lin') THEN RETURN
-          
+            
             IF ((*global).plot_left_click) THEN BEGIN ;moving mouse with left click
               xminmax_fitting = (*global).xminmax_fitting
               CURSOR, X, Y, /DATA, /NOWAIT
@@ -1076,38 +1076,38 @@ PRO MAIN_BASE_event, Event
     ;yaxis and xaxis scales
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_lin'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q_IQ'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log_Q2_IQ'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_lin'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_log'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_x_axis_Q2'): BEGIN
       rePlotAsciiData, Event
-      plot_fitting, Event
       display_right_equation_in_fitting_base, Event
+      plot_fitting, Event
     END
     
     ;---- Browse ASCII file ---------------------------------------------------
