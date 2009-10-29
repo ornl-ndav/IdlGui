@@ -152,7 +152,7 @@ PRO  reduce_step3_run_jobs, Event
     IDLsendLogBook_addLogBookText, Event, text
     text = '--> ' + cl_table[index]
     IDLsendLogBook_addLogBookText, Event, text
-    SPAWN, cl_table[index]
+  ;  SPAWN, cl_table[index]  ;REMOVE_ME
     index++
   ENDWHILE
   
