@@ -67,7 +67,8 @@ PRO REFreduction_DataSelectionPressLeft, event
   IF (ROISignalBackZoomStatus NE 3) THEN BEGIN
   
     ;where to stop the plot of the lines
-    xsize_1d_draw = (*global).Ntof_DATA-1
+  ;  xsize_1d_draw = (*global).Ntof_DATA-1
+  xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -79,7 +80,6 @@ PRO REFreduction_DataSelectionPressLeft, event
         ;refresh plot
         REFReduction_RescaleDataPlot, Event
         
-        ;plot y1
         y1=event.y
         PLOTS, 0, y1, /device, color=color
         PLOTS, xsize_1d_draw, y1, /device, /continue, color=color
@@ -234,7 +234,8 @@ PRO REFreduction_DataSelectionPressRight, event
     ;    RePlot1DDataFile, Event
     
     ;where to stop the plot of the lines
-    xsize_1d_draw = (*global).Ntof_DATA-1
+    ;xsize_1d_draw = (*global).Ntof_DATA-1
+    xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -298,7 +299,8 @@ PRO REFreduction_DataSelectionMove, event
   IF (ROISignalBackZoomStatus NE 3) then begin
   
     ;where to stop the plot of the lines
-    xsize_1d_draw = (*global).Ntof_DATA-1
+    ;xsize_1d_draw = (*global).Ntof_DATA-1
+    xsize_1d_draw = 608L
     
     mouse_status = (*global).select_data_status
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
@@ -418,7 +420,8 @@ PRO REFreduction_DataSelectionRelease, event
   IF (ROISignalBackZoomStatus NE 3) then begin
   
     ;where to stop the plot of the lines
-    xsize_1d_draw = (*global).Ntof_DATA-1
+    ;xsize_1d_draw = (*global).Ntof_DATA-1
+    xsize_1d_draw = 608L
     
     IF ((*global).mouse_debugging EQ 'yes') THEN BEGIN
       PRINT, 'Release mouse_status: ' + STRCOMPRESS(mouse_status)
