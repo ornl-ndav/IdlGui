@@ -257,6 +257,8 @@ BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
 NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
 loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
 
+help, tvimg
+
 tvscl, tvimg
 
 END

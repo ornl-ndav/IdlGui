@@ -174,10 +174,6 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 
-;if (!VERSION.os EQ 'darwin') then begin
-;   img = swap_endian(img)
-;endif
-
 ;rebin data to fill up all graph
 display_Ntof = (*global).Ntof_DATA
 file_Ntof    = (size(img))(1)
@@ -186,9 +182,17 @@ if ((*global).miniVersion) then begin
 endif else begin
     new_N = 2 * N
 endelse
+
+IF (file_Ntof LT 608L) THEN BEGIN
+coeff_congrid_tof = 608L / FLOAT(file_Ntof)
+ENDIF ELSE BEGIN
+coeff_congrid_tof = 1
+ENDELSE
+
 ;change the size of the data draw true plotting area
-widget_control, id_draw, DRAW_XSIZE=file_Ntof
-tvimg = rebin(img, file_Ntof, new_N,/sample)
+;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+;tvimg = rebin(img, file_Ntof, new_N,/sample)
+tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N) 
 (*(*global).tvimg_data_ptr) = tvimg
 tvscl, tvimg, /device
 ;remove PROCESSING_message from logbook and say ok
