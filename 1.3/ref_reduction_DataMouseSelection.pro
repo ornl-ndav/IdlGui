@@ -526,7 +526,8 @@ PRO ReplotOtherSelection, Event, ROIsignalBackZoomStatus
   WIDGET_CONTROL,id,GET_UVALUE=global
   
   ;where to stop the plot of the lines
-  xsize_1d_draw = (*global).Ntof_DATA-1
+  ;xsize_1d_draw = (*global).Ntof_DATA-1
+  xsize_1d_draw = 608L
   
   ;check if user wants peak or background
   isPeakSelected = isDataPeakSelected(Event)
@@ -650,7 +651,8 @@ PRO ReplotAllSelection, Event
   WIDGET_CONTROL,id,GET_UVALUE=global
   
   ;where to stop the plot of the lines
-  xsize_1d_draw = (*global).Ntof_DATA-1
+  ;xsize_1d_draw = (*global).Ntof_DATA-1
+  xsize_1d_draw = 608L
   
   ;check if user wants peak or background
   isPeakSelected = isDataPeakSelected(Event)
@@ -748,7 +750,8 @@ PRO plot_average_data_peak_value, Event
   geo_dirpix = coefficient * dirpix
   
   ;where to stop the plot of the lines
-  xsize_1d_draw = (*global).Ntof_DATA-1
+  ;xsize_1d_draw = (*global).Ntof_DATA-1
+  xsize_1d_draw = 608L
   
   id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='load_data_D_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value

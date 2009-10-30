@@ -40,6 +40,8 @@ widget_control,id,get_uvalue=global
 
 if ((*global).DataNexusFound) then begin
 
+    coeff_congrid_tof = (*global).congrid_x_coeff
+
     DataXYZminmaxArray = (*(*global).DataXYZminmaxArray)
     
     tvimg = (*(*global).tvimg_data_ptr)
@@ -75,6 +77,9 @@ if ((*global).DataNexusFound) then begin
     if (Xupdate[1] EQ 1) then begin
         putTextFieldValue, Event, 'data_rescale_xmax_cwfield', xmax, 0
     endif
+    
+    xmin *= coeff_congrid_tof
+    xmax *= coeff_congrid_tof
     
     new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
     tvimg=new_tvimg
@@ -256,8 +261,6 @@ BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
 ;get number of color
 NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
 loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue,/SILENT
-
-help, tvimg
 
 tvscl, tvimg
 

@@ -189,6 +189,8 @@ ENDIF ELSE BEGIN
 coeff_congrid_tof = 1
 ENDELSE
 
+(*global).congrid_x_coeff = coeff_congrid_tof
+
 ;change the size of the data draw true plotting area
 ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
 ;tvimg = rebin(img, file_Ntof, new_N,/sample)
