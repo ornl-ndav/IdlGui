@@ -34,73 +34,80 @@
 
 PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
-;define widgets variables
-;[xoffset, yoffset, scr_xsize, scr_ysize]
-PlotsFileNameButton = {size: [150,$
-                              2,$
-                              600,$
-                              30],$
-                       value: 'N/A',$
-                       uname: 'plot_file_name_button',$
-                       sensitive: 0}
+  input_file = WIDGET_LABEL(PLOTS_BASE,$
+  VALUE = 'Input ASCII File',$
+  XOFFSET = 20,$
+  YOFFSET = 535)
 
-RefreshButton = { size: [0,2,150,30],$
-                  uname: 'refresh_plot_button',$
-                  value: 'REFRESH PLOT',$
-                  sensitive: 0}
+  main_base = WIDGET_BASE(PLOTS_BASE,$
+  /COLUMN)
 
-MainPlotBaseSize          = [150, $
-                             5, $
-                             600, $
-                             800]
-
-MainPlotDrawSize          = [50, $
-                             35, $
-                             500, $
-                             450]
-
-PlotTextFieldSize         = [0, $
-                             MainPlotDrawSize[1]+MainPlotDrawSize[3]+5,$
-                             MainPlotBaseSize[2], $
-                             140]
-
-;##############################################################################
-;############################## Create GUI ####################################
-;##############################################################################
-
-;;Plot output File name button
-wPlotFileNameButton = WIDGET_BUTTON(PLOTS_BASE,$
-                                    XOFFSET   = PlotsFileNameButton.size[0],$
-                                    YOFFSET   = PlotsFileNameButton.size[1],$
-                                    SCR_XSIZE = PlotsFileNameButton.size[2],$
-                                    SCR_YSIZE = PlotsFileNameButton.size[3],$
-                                    VALUE     = PlotsFileNameButton.value,$
-                                    UNAME     = PlotsFileNameButton.uname,$
-                                    SENSITIVE = PlotsFileNameButton.sensitive)
-
-MainPlotBase = Widget_base(PLOTS_BASE,$
-                           UNAME     = 'main_plot_base',$
-                           XOFFSET   = MainPlotBaseSize[0],$
-                           YOFFSET   = MainPlotBaseSize[1],$
-                           SCR_XSIZE = MainPlotBaseSize[2],$
-                           SCR_YSIZE = MainPlotBaseSize[3])
-
-;Refresh plot button
-wRefreshButton =  WIDGET_BUTTON(PLOTS_BASE,$
-                                XOFFSET   = RefreshButton.size[0],$
-                                YOFFSET   = RefreshButton.size[1],$
-                                SCR_XSIZE = RefreshButton.size[2],$
-                                SCR_YSIZE = RefreshButton.size[3],$
-                                UNAME     = RefreshButton.uname,$
-                                VALUE     = RefreshButton.value,$
-                                SENSITIVE = RefreshButton.sensitive)
-                          
-;Drawing region
-MainPlotDraw = widget_draw(MainPlotBase,$
-                           UNAME     = 'main_plot_draw',$
-                           XOFFSET   = MainPlotDrawSize[0],$
-                           YOFFSET   = MainPlotDrawSize[1],$
-                           SCR_XSIZE = MainPlotDrawSize[2],$
-                           SCR_YSIZE = MainPlotDrawSize[3])
+  row1 = WIDGET_BASE(main_base,$ ;--------------------------------------------
+    /ROW)
+    
+  refresh = WIDGET_BUTTON(row1,$
+    VALUE = '  REFRESH PLOT  ',$
+    UNAME = 'refresh_plot_button',$
+    SENSITIVE = 1)
+    
+  row2 = WIDGET_BASE(main_base,$ ;--------------------------------------------
+    /ROW)
+    
+  row2col1 = WIDGET_BASE(row2,$ ;||||||||||||||||||||||||||||||||||||||||||||||
+    /COLUMN,$
+    SENSITIVE = 1,$
+    /ALIGN_CENTER, $
+    UNAME = 'plot_tab_y_axis_lin_log_base',$
+    /EXCLUSIVE)
+    
+  lin = WIDGET_BUTTON(row2col1,$
+    VALUE = 'Lin',$
+    UNAME = 'plot_tab_y_axis_lin')
+    
+  log = WIDGET_BUTTON(row2col1,$
+    VALUE = 'Log',$
+    UNAME = 'plot_tab_y_axis_log')
+    
+  WIDGET_CONTROL, lin, /SET_BUTTON
+  
+  draw = WIDGET_DRAW(row2,$
+    SCR_XSIZE = 820,$
+    SCR_YSIZE = 490,$
+    UNAME = 'main_plot_draw',$
+    /MOTION_EVENTS, $
+    /BUTTON_EVENTS)
+    
+    empty_space = WIDGET_LABEL(main_base,$
+    VALUE = '')
+    
+    row3 = WIDGET_BASE(main_base, $ ;||||||||||||||||||||||||||||||||||||||||||
+    /COLUMN,$
+    FRAME = 1)
+    
+    empty = WIDGET_LABEL(row3,$
+    VALUE = '')
+    
+    row3row2 = WIDGET_BASE(row3,$
+    /ROW)
+    
+    browse = WIDGET_BUTTON(row3row2,$
+    VALUE = '   BROWSE ...   ',$
+    UNAME = 'plot_tab_browse_input_file_button')
+    
+    text = WIDGET_TEXT(row3row2,$
+    VALUE = '',$
+    UNAME = 'plot_tab_input_file_text_field',$
+    XSIZE = 145,$
+    /EDITABLE)
+    
+    load = WIDGET_BUTTON(row3row2,$
+    VALUE = '  LOAD FILE  ',$
+    UNAME = 'plot_tab_load_file_button',$
+    SENSITIVE = 0)
+    
+    preview = WIDGET_BUTTON(row3row2,$
+    VALUE = '  PREVIEW  ',$
+    UNAME = 'plot_tab_preview_button',$
+    SENSITIVE = 0)
 
 END
