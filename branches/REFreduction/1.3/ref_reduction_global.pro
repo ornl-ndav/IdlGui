@@ -75,7 +75,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     instrument:        STRCOMPRESS(INSTRUMENT,/remove_all),$
     with_launch_switch: WITH_LAUNCH_SWITCH,$
     
-    congrid_x_coeff: 0., $ ;congrid x coeff
+    congrid_x_coeff: 0., $ ;congrid x coeff for data file
+    congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
     
     substrate_type: PTR_NEW(0L),$
     findcalib: 'findcalib',$
