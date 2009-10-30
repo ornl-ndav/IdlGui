@@ -1658,6 +1658,11 @@ PRO MAIN_BASE_event, Event
     ;**PLOTS TAB*
     ;*************************************************************************
     
+    ;browse button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME = 'plot_tab_browse_input_file_button'): BEGIN
+    plot_tab_browse_button, Event
+    END
+    
     ;PREVIEW of file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_file_name_button'): begin
       DisplayPreviewOfFile, Event ;_PlotOutputFiles
