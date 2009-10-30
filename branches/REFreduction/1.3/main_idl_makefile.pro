@@ -90,6 +90,9 @@
 .run ref_reduction_OutputPath.pro
 .run ref_reduction_jpeg.pro
 
+;plot tab
+.run ref_reduction_plot_tab.pro
+
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
 .run ref_reduction_BatchDataNorm.pro
