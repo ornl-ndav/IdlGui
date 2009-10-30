@@ -77,6 +77,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
+    congrid_empty_cell_x_coeff: 0., $ ;congrid x coeff for empty cell file
     
     substrate_type: PTR_NEW(0L),$
     findcalib: 'findcalib',$
@@ -90,8 +91,9 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     in_empty_cell_data_ptr: PTR_NEW(0L),$
     
     empty_cell_images: PTR_NEW(0L),$
-    sf_equation_file: $
-    'REFreduction_images/miniSFequation.png',$
+    sf_equation_file_array: ['REFreduction_images/miniSFequation.png',$
+    'REFreduction_images/SFequation.png'],$
+    sf_equation_file: '',$
     PrevDNECtabSelect: 0,$
     nexus_tof_path: '/entry/bank1/time_of_flight/',$
     sf_data_tof: PTR_NEW(0L),$
@@ -471,11 +473,20 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     ;Version of REFreduction Tool
     })
     
+  ;make sure the right SF equation (format) is displayed
+  sf_equation_file_array = (*global).sf_equation_file_array
+  IF (MINIversion) THEN BEGIN
+    sf_equation_file = sf_equation_file_array[0]
+  ENDIF ELSE BEGIN
+    sf_equation_file = sf_equation_file_array[1]
+  ENDELSE
+  (*global).sf_equation_file = sf_equation_file
+  
   ;assign values to global variables
-    
+  
   ;define initial global values - these could be input via external file
   ;or other means
-    
+  
   (*(*global).empty_cell_images) = getEmptyCellImages()
   (*(*global).substrate_type)    = getSubstrateType()
   
@@ -520,7 +531,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
   MainPlotTitle = 'Main Data Reduction Plot'
   (*global).MainPlotTitle = MainPlotTitle
   
-    ;instrument geometry
+  ;instrument geometry
   if (instrument EQ 'REF_L') then begin ;REF_L
     InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
   endif else begin
