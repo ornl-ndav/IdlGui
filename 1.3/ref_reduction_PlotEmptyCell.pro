@@ -146,7 +146,8 @@ LogBookText = '--> Plotting Y vs X view ... ' + PROCESSING
 putLogBookMessage, Event, LogBookText, Append=1
 img = (*(*global).bank1_empty_cell)
 
-(*global).Ntof_empty_cell = (size(img))(1)
+file_Ntof = (size(img))(1)
+(*global).Ntof_empty_cell = file_Ntof
 
 ;plot y vs x ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -167,14 +168,16 @@ ERASE
 IF ((*global).miniVersion) THEN BEGIN
     New_Ny = Ny
     New_Nx = Nx
-ENDIF ELSE BEGIN
+    xsize = 304.
+    ENDIF ELSE BEGIN
     New_Ny = 2*Ny
     New_Nx = 2*Nx
+    xsize = 608.
 ENDELSE
 
 tvimg = REBIN(img, New_Nx, New_Ny,/SAMPLE)
-
 TVSCL, tvimg, /DEVICE
+
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
@@ -198,6 +201,7 @@ id_draw = WIDGET_INFO(Event.top, FIND_BY_UNAME='empty_cell_draw1_uname')
 WIDGET_CONTROL, id_draw, GET_VALUE=id_value
 WSET,id_value
 ERASE
+
 ;IF (!VERSION.os EQ 'darwin') THEN BEGIN
 ;   img = SWAP_ENDIAN(img)
 ;ENDIF
@@ -210,10 +214,18 @@ if ((*global).miniVersion) then begin
 endif else begin
     new_N = 2 * N
 endelse
-;change the size of the data draw true plotting area
-WIDGET_CONTROL, id_draw, DRAW_XSIZE=file_Ntof
 
-tvimg = REBIN(img, file_Ntof, new_N,/SAMPLE)
+IF ((*global).Ntof_empty_cell LT xsize) THEN BEGIN
+coeff_congrid_tof = xsize / FLOAT((*global).Ntof_empty_cell)
+ENDIF ELSE BEGIN
+coeff_congrid_tof = 1
+ENDELSE
+
+(*global).congrid_empty_cell_x_coeff = coeff_congrid_tof
+
+;change the size of the data draw true plotting area
+;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
 (*(*global).tvimg_empty_cell_ptr) = tvimg
 TVSCL, tvimg, /DEVICE
 
