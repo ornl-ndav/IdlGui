@@ -92,6 +92,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     in_empty_cell_data_ptr: PTR_NEW(0L),$
     empty_cell_draw_xsize_mini_version: 450.,$
     empty_cell_draw_xsize_big_version: 575., $
+    empty_cell_d_tvimg: PTR_NEW(0L), $
+    empty_cell_ec_tvimg: PTR_NEW(0L), $
     
     empty_cell_images: PTR_NEW(0L),$
     sf_equation_file_array: ['REFreduction_images/miniSFequation.png',$

@@ -271,7 +271,7 @@ PRO plot_file_in_sf_calculation_base, Event,$
   WSET,id_value
   
   Ntof_size = (size(data))(1)
-;  WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
+  ;  WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
   
   lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
   case (type) OF
@@ -316,13 +316,18 @@ PRO plot_file_in_sf_calculation_base, Event,$
   ENDELSE
   
   (*global).congrid_x_coeff_empty_cell_sf = coeff_congrid_tof
-  print, 'coeff_congrid_tof: ' + string(coeff_congrid_tof)
   
   ;change the size of the data draw true plotting area
   ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
   ;tvimg = rebin(img, file_Ntof, new_N,/sample)
   new_N = (size(data))(2)
   tvimg = CONGRID(data, file_Ntof * coeff_congrid_tof, new_N)
+  
+  IF (type EQ 'data') THEN BEGIN
+  (*(*global).empty_cell_d_tvimg) = tvimg
+  ENDIF ELSE BEGIN
+  (*(*global).empty_cell_ec_tvimg) = tvimg
+  ENDELSE
   
   TVSCL, tvimg, /DEVICE
   
@@ -369,18 +374,12 @@ PRO display_sf_calculation_base_info, Event, $
   putTextFieldValue, Event, PIXEL_UNAME, STRCOMPRESS(Y,/REMOVE_ALL), 0
   
   ;TOF
-  print, '(*global).congrid_x_coeff_empty_cell_sf: ' + string((*global).congrid_x_coeff_empty_cell_sf)
-  print, 'X before: ' + string(x)
   x /= (*global).congrid_x_coeff_empty_cell_sf
   x = FIX(x)
-  help, TOF_ARRAY
-  print, x
-  print
   tof_value = TOF_ARRAY[x]
   putTextFieldValue, Event, TOF_UNAME, STRCOMPRESS(tof_value,/REMOVE_ALL), 0
   
   ;Counts
-  help, DATA
   counts_value = DATA[x,y]
   putTextFieldValue, Event, COUNTS_UNAME, $
     STRCOMPRESS(counts_value,/REMOVE_ALL), 0
@@ -549,7 +548,7 @@ PRO refresh_sf_data_plot_plot, Event
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
-  data = (*(*global).DATA_D_TOTAL_ptr)
+  ;data = (*(*global).DATA_D_TOTAL_ptr)
   
   DEVICE, DECOMPOSED = 0
   id_draw = WIDGET_INFO(Event.top, $
@@ -557,17 +556,19 @@ PRO refresh_sf_data_plot_plot, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-  lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
-  IF (lin_log_value EQ 1) THEN BEGIN
-    zero_index = WHERE(data EQ 0., nbr)
-    IF (nbr GT 0) THEN BEGIN
-      data[zero_index] = !VALUES.D_NAN
-    ENDIF
-    data = ALOG10(data)
-    cleanup_array, data
-  ENDIF
+  tvimg = (*(*global).empty_cell_d_tvimg)
   
-  TVSCL, data, /DEVICE
+  ;  lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
+  ;  IF (lin_log_value EQ 1) THEN BEGIN
+  ;    zero_index = WHERE(data EQ 0., nbr)
+  ;    IF (nbr GT 0) THEN BEGIN
+  ;      data[zero_index] = !VALUES.D_NAN
+  ;    ENDIF
+  ;    data = ALOG10(data)
+  ;    cleanup_array, data
+  ;  ENDIF
+  
+  TVSCL, tvimg, /DEVICE
   
 END
 
@@ -656,6 +657,13 @@ PRO calculate_sf, Event
   ;start the calculation of SF
   
   ;#1 calculate the numerator (sigma over x and y of data)
+
+  xmin = FLOAT(xmin) / (*global).congrid_x_coeff_empty_cell_sf
+  xmax = FLOAT(xmax) / (*global).congrid_x_coeff_empty_cell_sf
+  
+  xmin = FIX(xmin)
+  xmax = FIX(xmax)
+
   Num1 = data_data[xmin:xmax,ymin:ymax]
   Num = TOTAL(Num1)
   
