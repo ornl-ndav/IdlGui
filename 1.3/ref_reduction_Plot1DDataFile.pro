@@ -179,12 +179,14 @@ display_Ntof = (*global).Ntof_DATA
 file_Ntof    = (size(img))(1)
 if ((*global).miniVersion) then begin
     new_N = N
+    xsize = 304.
 endif else begin
     new_N = 2 * N
+    xsize = 608.
 endelse
 
-IF (file_Ntof LT 608L) THEN BEGIN
-coeff_congrid_tof = 608L / FLOAT(file_Ntof)
+IF (file_Ntof LT xsize) THEN BEGIN
+coeff_congrid_tof = xsize / FLOAT(file_Ntof)
 ENDIF ELSE BEGIN
 coeff_congrid_tof = 1
 ENDELSE
