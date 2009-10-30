@@ -1064,8 +1064,31 @@ PRO empty_cell_lin_log, Event
     FIND_BY_UNAME='empty_cell_scaling_factor_base_data_draw')
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
-  TVSCL, data, /DEVICE
   
+  IF ((*global).miniVersion) THEN BEGIN
+    xsize = (*global).empty_cell_draw_xsize_mini_version
+  ENDIF ELSE BEGIN
+    xsize = (*global).empty_cell_draw_xsize_big_version
+  ENDELSE
+  
+  file_Ntof = (size(data))(1)
+  IF (file_Ntof LT xsize) THEN BEGIN
+    coeff_congrid_tof = xsize / FLOAT(file_Ntof)
+  ENDIF ELSE BEGIN
+    coeff_congrid_tof = 1
+  ENDELSE
+  
+  (*global).congrid_x_coeff_empty_cell_sf = coeff_congrid_tof
+  
+  ;change the size of the data draw true plotting area
+  ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+  ;tvimg = rebin(img, file_Ntof, new_N,/sample)
+  new_N = (size(data))(2)
+  tvimg = CONGRID(data, file_Ntof * coeff_congrid_tof, new_N)
+  
+  (*(*global).tvimg_empty_cell_ptr) = tvimg
+  TVSCL, tvimg, /DEVICE
+
   ;replot selection if there is one
   x0 = (*global).sf_x0
   y0 = (*global).sf_y0
@@ -1096,8 +1119,30 @@ PRO empty_cell_lin_log, Event
   WIDGET_CONTROL, id_draw, GET_VALUE=id_value
   WSET,id_value
   
-  TVSCL, data, /DEVICE
+  IF ((*global).miniVersion) THEN BEGIN
+    xsize = (*global).empty_cell_draw_xsize_mini_version
+  ENDIF ELSE BEGIN
+    xsize = (*global).empty_cell_draw_xsize_big_version
+  ENDELSE
   
+  file_Ntof = (size(data))(1)
+  IF (file_Ntof LT xsize) THEN BEGIN
+    coeff_congrid_tof = xsize / FLOAT(file_Ntof)
+  ENDIF ELSE BEGIN
+    coeff_congrid_tof = 1
+  ENDELSE
+  
+  (*global).congrid_x_coeff_empty_cell_sf = coeff_congrid_tof
+  
+  ;change the size of the data draw true plotting area
+  ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+  ;tvimg = rebin(img, file_Ntof, new_N,/sample)
+  new_N = (size(data))(2)
+  tvimg = CONGRID(data, file_Ntof * coeff_congrid_tof, new_N)
+  
+  (*(*global).tvimg_empty_cell_ptr) = tvimg
+  TVSCL, tvimg, /DEVICE
+
 END
 
 
