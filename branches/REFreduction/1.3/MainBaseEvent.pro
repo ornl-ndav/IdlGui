@@ -1614,7 +1614,7 @@ PRO MAIN_BASE_event, Event
     end
     
     WIDGET_INFO(wWidget, FIND_BY_UNAME='of_text'): begin
-      REFreduciton_DefineOutputFile, Event ;in ref_reduction_OutputPath.pro
+      REFreduction_DefineOutputFile, Event ;in ref_reduction_OutputPath.pro
       REFreduction_CommandLineGenerator, Event
     end
     

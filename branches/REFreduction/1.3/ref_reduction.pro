@@ -209,9 +209,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   id = WIDGET_INFO(Main_Base, find_by_uname='cl_file_text')
   WIDGET_CONTROL, id, set_value=file_name
   
-  IF ((*global).ucams EQ 'j35' OR $
-    (*global).ucams EQ '2zr') THEN BEGIN
-    id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+  IF ((*global).ucams EQ 'j35') THEN BEGIN
+      id = WIDGET_INFO(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     WIDGET_CONTROL, id, /editable
     WIDGET_CONTROL, /CONTEXT_EVENTS
   ENDIF
