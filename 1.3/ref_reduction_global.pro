@@ -78,6 +78,7 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     congrid_x_coeff: 0., $ ;congrid x coeff for data file
     congrid_norm_x_coeff: 0., $ ;congrid x coeff for normalization file
     congrid_empty_cell_x_coeff: 0., $ ;congrid x coeff for empty cell file
+    congrid_x_coeff_empty_cell_sf: 0., $ ;congrid x coeff for empty cell file in sf calculation
     
     substrate_type: PTR_NEW(0L),$
     findcalib: 'findcalib',$
@@ -89,6 +90,8 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     in_empty_cell_empty_cell_ptr: PTR_NEW(0L),$
     in_empty_cell_data_ptr: PTR_NEW(0L),$
+    empty_cell_draw_xsize_mini_version: 450.,$
+    empty_cell_draw_xsize_big_version: 575., $
     
     empty_cell_images: PTR_NEW(0L),$
     sf_equation_file_array: ['REFreduction_images/miniSFequation.png',$

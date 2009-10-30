@@ -222,15 +222,15 @@ PRO start_sf_scaling_factor_calculation_mode, Event
     distance_sample_pixel_array = distance_sample_pixel_array[*,127]
   ENDELSE
   (*(*global).distance_sample_pixel_array) = distance_sample_pixel_array
-
+  
   ;copy SF value into sf_calculation base
   SFvalue = getTextFieldValue(Event,'empty_cell_scaling_factor')
   putTextFieldValue, Event, 'scaling_factor_equation_value', $
     STRCOMPRESS(SFvalue,/REMOVE_ALL), 0
-
+    
   ;show recap plot using SF
   replot_recap_with_manual_sf, Event
-    
+  
   ;show up calculation base
   MapBase, Event, 'empty_cell_scaling_factor_calculation_base', 1
   
@@ -271,7 +271,7 @@ PRO plot_file_in_sf_calculation_base, Event,$
   WSET,id_value
   
   Ntof_size = (size(data))(1)
-  WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
+;  WIDGET_CONTROL, id_draw, DRAW_XSIZE=Ntof_size
   
   lin_log_value = getCWBgroupValue(Event, 'empty_cell_sf_z_axis')
   case (type) OF
@@ -302,7 +302,29 @@ PRO plot_file_in_sf_calculation_base, Event,$
     ELSE:
   ENDCASE
   
-  TVSCL, data, /DEVICE
+  IF ((*global).miniVersion) THEN BEGIN
+    xsize = (*global).empty_cell_draw_xsize_mini_version
+  ENDIF ELSE BEGIN
+    xsize = (*global).empty_cell_draw_xsize_big_version
+  ENDELSE
+  
+  file_Ntof = (size(data))(1)
+  IF (file_Ntof LT xsize) THEN BEGIN
+    coeff_congrid_tof = xsize / FLOAT(file_Ntof)
+  ENDIF ELSE BEGIN
+    coeff_congrid_tof = 1
+  ENDELSE
+  
+  (*global).congrid_x_coeff_empty_cell_sf = coeff_congrid_tof
+  print, 'coeff_congrid_tof: ' + string(coeff_congrid_tof)
+  
+  ;change the size of the data draw true plotting area
+  ;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+  ;tvimg = rebin(img, file_Ntof, new_N,/sample)
+  new_N = (size(data))(2)
+  tvimg = CONGRID(data, file_Ntof * coeff_congrid_tof, new_N)
+  
+  TVSCL, tvimg, /DEVICE
   
 END
 
@@ -347,10 +369,18 @@ PRO display_sf_calculation_base_info, Event, $
   putTextFieldValue, Event, PIXEL_UNAME, STRCOMPRESS(Y,/REMOVE_ALL), 0
   
   ;TOF
+  print, '(*global).congrid_x_coeff_empty_cell_sf: ' + string((*global).congrid_x_coeff_empty_cell_sf)
+  print, 'X before: ' + string(x)
+  x /= (*global).congrid_x_coeff_empty_cell_sf
+  x = FIX(x)
+  help, TOF_ARRAY
+  print, x
+  print
   tof_value = TOF_ARRAY[x]
   putTextFieldValue, Event, TOF_UNAME, STRCOMPRESS(tof_value,/REMOVE_ALL), 0
   
   ;Counts
+  help, DATA
   counts_value = DATA[x,y]
   putTextFieldValue, Event, COUNTS_UNAME, $
     STRCOMPRESS(counts_value,/REMOVE_ALL), 0
@@ -368,7 +398,7 @@ PRO display_sf_calculation_base_data_info, Event
   pixel_uname  = 'empty_cell_data_draw_y_value'
   tof_uname    = 'empty_cell_data_draw_x_value'
   counts_uname = 'empty_cell_data_draw_counts_value'
-    
+  
   data     = (*(*global).EMPTY_CELL_D_TOTAL_ptr)
   data_tof = (*(*global).sf_empty_cell_tof)
   
