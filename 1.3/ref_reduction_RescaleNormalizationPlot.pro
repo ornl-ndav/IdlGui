@@ -75,6 +75,9 @@ if ((*global).NormNexusFound) then begin
         putTextFieldValue, Event, 'normalization_rescale_xmax_cwfield', xmax, 0
     endif
     
+    xmin *= (*global).congrid_norm_x_coeff
+    xmax *= (*global).congrid_norm_x_coeff
+    
     new_tvimg(xmin:xmax,*) = tvimg(xmin:xmax,*)
     tvimg=new_tvimg
     

@@ -181,15 +181,26 @@ erase
 ;rebin data to fill up all graph
 new_Ntof  = (*global).Ntof_NORM
 file_Ntof = (size(img))(1)
-
 if ((*global).miniVersion) then begin
     new_N = N
+    xsize = 304.
 endif else begin
     new_N = 2 * N
+    xsize = 608.
 endelse
+
+IF (file_Ntof LT xsize) THEN BEGIN
+coeff_congrid_tof = xsize / FLOAT(file_Ntof)
+ENDIF ELSE BEGIN
+coeff_congrid_tof = 1
+ENDELSE
+
+(*global).congrid_norm_x_coeff = coeff_congrid_tof
+
 ;change the size of the data draw true plotting area
-widget_control, id_draw, DRAW_XSIZE=file_Ntof
-tvimg = rebin(img, new_Ntof, new_N,/sample)
+;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
+;tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_norm_ptr) = tvimg
 tvscl, tvimg, /device
 ;remove PROCESSING_message from logbook and say ok
@@ -228,15 +239,26 @@ erase
 ;rebin data to fill up all graph
 new_Ntof  = (*global).Ntof_NORM
 file_Ntof = (size(img))(1)
-
 if ((*global).miniVersion) then begin
     new_N = N
+    xsize = 304.
 endif else begin
     new_N = 2 * N
+    xsize = 608.
 endelse
+
+IF (file_Ntof LT xsize) THEN BEGIN
+coeff_congrid_tof = xsize / FLOAT(file_Ntof)
+ENDIF ELSE BEGIN
+coeff_congrid_tof = 1
+ENDELSE
+
+(*global).congrid_norm_x_coeff = coeff_congrid_tof
+
 ;change the size of the data draw true plotting area
-widget_control, id_draw, DRAW_XSIZE=file_Ntof
-tvimg = rebin(img, new_Ntof, new_N,/sample)
+;widget_control, id_draw, DRAW_XSIZE=file_Ntof
+tvimg = CONGRID(img,file_Ntof * coeff_congrid_tof, new_N)
+
 (*(*global).tvimg_norm_ptr) = tvimg
 tvscl, tvimg, /device
 END
