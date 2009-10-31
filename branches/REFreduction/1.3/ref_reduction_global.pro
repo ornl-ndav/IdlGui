@@ -167,7 +167,10 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     PreviousRunReductionValidated : 0,$
     BatchTable : PTR_NEW(0L),$ ;big array of batch table
     isHDF5format : 1,$
-    dr_output_path : '~/results/',$
+    
+    dr_output_path : '~/results/', $
+    plot_ascii_extension: '.txt', $
+    
     archived_data_flag : 1,$
     archived_norm_flag : 1,$
     archived_empty_cell_flag: 1,$
