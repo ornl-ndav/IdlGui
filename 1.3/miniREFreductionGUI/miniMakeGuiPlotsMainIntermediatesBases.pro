@@ -97,7 +97,7 @@ PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
     text = WIDGET_TEXT(row3row2,$
     VALUE = '',$
     UNAME = 'plot_tab_input_file_text_field',$
-    XSIZE = 145,$
+    XSIZE = 93,$
     /EDITABLE)
     
     load = WIDGET_BUTTON(row3row2,$
