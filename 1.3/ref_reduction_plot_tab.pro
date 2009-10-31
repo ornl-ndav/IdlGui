@@ -34,10 +34,46 @@
 
 PRO plot_tab_browse_button, Event
 
-WIDGET_CONTROL, Event.top, GET_UVALUE=global
-
-
-
-
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  ;retrieve parameters
+  OK         = (*global).ok
+  PROCESSING = (*global).processing
+  FAILED     = (*global).failed
+  
+  extension  = (*global).plot_ascii_extension
+  ;filter     = (*global).ascii_filter
+  path       = (*global).dr_output_path
+  title      = 'Browsing for an ASCII file ...'
+  
+  ;text = 'Browsing for an ASCII file ... ' + PROCESSING
+  ;IDLsendToGeek_addLogBookText, Event, text
+  
+  ascii_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = extension,$
+    ;FILTER            = filter,$
+    GET_PATH          = new_path,$
+    PATH              = path,$
+    TITLE             = title,$
+    /MUST_EXIST)
+    
+  IF (ascii_file_name NE '') THEN BEGIN ;get one
+ 
+  putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+  ascii_file_name, 0
+  
+;    (*global).ascii_path = new_path
+    
+  ;    putTextFieldValue, Event, 'plot_input_file_text_field', ascii_file_name
+  ;    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+  ;    text = '-> Ascii file loaded: ' + ascii_file_name
+  ;    IDLsendToGeek_addLogBookText, Event, text
+  ;check if we can activate or not the preview and load button
+  ;    check_IF_file_exist, Event
+  ;Load File
+  ;    LoadAsciiFile, Event
+  ENDIF ELSE BEGIN
+  ;    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, 'INCOMPLETE!'
+  ENDELSE
+  
 END
 
