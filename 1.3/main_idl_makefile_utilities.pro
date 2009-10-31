@@ -51,3 +51,4 @@ cd, CurrentFolder + '/utilities'
 .run xmlParser__define.pro
 .run logger.pro
 .run file_utilities.pro
+.run xdisplayfile.pro

@@ -57,23 +57,34 @@ PRO plot_tab_browse_button, Event
     /MUST_EXIST)
     
   IF (ascii_file_name NE '') THEN BEGIN ;get one
- 
-  putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
-  ascii_file_name, 0
   
-;    (*global).ascii_path = new_path
-    
+    putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
+      ascii_file_name, 0
+      
+    ActivateWidget, Event, 'plot_tab_preview_button', 1  
+      
+  ;    (*global).ascii_path = new_path
+      
   ;    putTextFieldValue, Event, 'plot_input_file_text_field', ascii_file_name
   ;    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   ;    text = '-> Ascii file loaded: ' + ascii_file_name
   ;    IDLsendToGeek_addLogBookText, Event, text
-  ;check if we can activate or not the preview and load button
-  ;    check_IF_file_exist, Event
+      
   ;Load File
   ;    LoadAsciiFile, Event
   ENDIF ELSE BEGIN
   ;    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, 'INCOMPLETE!'
   ENDELSE
   
+END
+
+;------------------------------------------------------------------------------
+PRO preview_ascii_file, Event
+print, 'here'
+  FileName = getTextFieldValue(Event, 'plot_tab_input_file_text_field')
+  TITLE = 'Preview of the ASCII File: ' + FileName
+  ref_reduction_xdisplayFile,  FileName,$
+    TITLE       = title, $
+    DONE_BUTTON = 'Done with Preview of ASCii file'
 END
 

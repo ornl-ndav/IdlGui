@@ -290,12 +290,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
-;      file_name = $
-;        getTextFieldValue(Event,$
-;        'data_roi_selection_file_text_field')
-;      file_name = file_name[0]
-;      path = FILE_DIRNAME(file_name)
-;      check_create_output_folder, Event, PATH=path
+      ;      file_name = $
+      ;        getTextFieldValue(Event,$
+      ;        'data_roi_selection_file_text_field')
+      ;      file_name = file_name[0]
+      ;      path = FILE_DIRNAME(file_name)
+      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'roi'
     end
     
@@ -345,12 +345,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE Background Selection into a file ------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='data_back_save_button'): begin
-;      file_name = $
-;        getTextFieldValue(Event,$
-;        'data_back_d_selection_file_text_field')
-;      file_name = file_name[0]
-;      path = FILE_DIRNAME(file_name)
-;      check_create_output_folder, Event, PATH=path
+      ;      file_name = $
+      ;        getTextFieldValue(Event,$
+      ;        'data_back_d_selection_file_text_field')
+      ;      file_name = file_name[0]
+      ;      path = FILE_DIRNAME(file_name)
+      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateDataBackgroundROIFile, Event, 'back'
     end
     
@@ -791,12 +791,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE ROI Selection into a file -------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='norm_roi_save_button'): begin
-;      file_name = $
-;        getTextFieldValue(Event,$
-;        'norm_roi_selection_file_text_field')
-;      file_name = file_name[0]
-;      path = FILE_DIRNAME(file_name)
-;      check_create_output_folder, Event, PATH=path
+      ;      file_name = $
+      ;        getTextFieldValue(Event,$
+      ;        'norm_roi_selection_file_text_field')
+      ;      file_name = file_name[0]
+      ;      path = FILE_DIRNAME(file_name)
+      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateNormBackgroundROIFile, Event, 'roi'
     end
     
@@ -831,12 +831,12 @@ PRO MAIN_BASE_event, Event
     
     ;SAVE Background Selection into a file ------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='norm_back_save_button'): begin
-;      file_name = $
-;        getTextFieldValue(Event,$
-;        'norm_back_d_selection_file_text_field')
-;      file_name = file_name[0]
-;      path = FILE_DIRNAME(file_name)
-;      check_create_output_folder, Event, PATH=path
+      ;      file_name = $
+      ;        getTextFieldValue(Event,$
+      ;        'norm_back_d_selection_file_text_field')
+      ;      file_name = file_name[0]
+      ;      path = FILE_DIRNAME(file_name)
+      ;      check_create_output_folder, Event, PATH=path
       REFreduction_CreateNormBackgroundROIFile, Event, 'back'
     end
     
@@ -1660,12 +1660,12 @@ PRO MAIN_BASE_event, Event
     
     ;browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'plot_tab_browse_input_file_button'): BEGIN
-    plot_tab_browse_button, Event
+      plot_tab_browse_button, Event
     END
     
     ;PREVIEW of file
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_file_name_button'): begin
-      DisplayPreviewOfFile, Event ;_PlotOutputFiles
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_preview_button'): begin
+      preview_ascii_file, Event
     end
     
     ;REFRESH plot
