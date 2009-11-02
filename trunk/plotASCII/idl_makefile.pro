@@ -17,37 +17,14 @@ cd, IdlUtilitiesPath
 .run IDLxmlParser__define.pro
 .run checking_packages.pro
 
-;classes
-cd , CurrentFolder + '/Classes/'
-.run IDLxmlParser__define.pro
-.run IDLsendLogBook__define.pro
-
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
-
-;Build CLoop GUI
-cd, CurrentFolder + '/CLoopESGUI/'
-.run MakeGuiMainBase.pro
-.run make_gui_tab1.pro
-.run make_gui_tab2.pro
-.run make_gui_tab3.pro
 
 ;Build all procedures
 cd, CurrentFolder
 
 ;procedures
-.run cloopes_tab.pro
-.run cloopes_tab1.pro
-.run cloopes_srun.pro
-.run cloopes_browse_cl_file.pro
-.run cloopes_help.pro
-.run cloopes_input_parser.pro
-.run cloopes_run_jobs.pro
-.run cloopes_job_manager_splash_base.pro
-.run cloopes_tab2.pro
-.run cloopes_run_job_tab2.pro
 
 ;main functions
 .run MainBaseEvent.pro
-.run cloopes_eventcb.pro
-.run cloopes.pro
+.run plot_ascii.pro

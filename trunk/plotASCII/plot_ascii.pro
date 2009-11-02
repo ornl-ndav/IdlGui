@@ -37,7 +37,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;get the current folder
   CD, CURRENT = current_folder
   
-  file = OBJ_NEW('IDLxmlParser','.cloopes.cfg')
+  file = OBJ_NEW('IDLxmlParser','.plotASCII.cfg')
   
   ;******************************************************************************
   ;******************************************************************************
@@ -57,7 +57,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     sub_pkg_version:   ''}
   ;sub_pkg_version: python program that gives pkg v. of common libraries...etc
   my_package = REPLICATE(PACKAGE_REQUIRED_BASE,1)
-  my_package[0].driver           = 'elastic_scan'
+  my_package[0].driver           = ''
   my_package[0].version_required = ''
   
   ;*************************************************************************
@@ -65,9 +65,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;DEBUGGING
   sDEBUGGING = { tab: {main_tab: 0},$  ;0:step1, 1:logBook
-    path: '~/SVN/IdlGui/trunk/CLoopES/',$ ;path to CL file
-    input_text: '4056-4126'}
-  ; input_text: '1-2,4,[10,12-14,16],20,21,24-28,[30-35]'}
+    path: '~/SVN/IdlGui/trunk/plotASCII/'}
   ;******************************************************************************
   ;******************************************************************************
     
@@ -81,37 +79,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({ $
-    PrevReduceTabSelect: 0,$
     
     path: '~/',$
-    old_input_text: PTR_NEW(0L),$
-    old_help_text1: '',$
-    old_help_text2: '',$
-    
-    es_driver: my_package[0].driver,$
-    
-    job_manager_splash_draw: $
-    'CLoopES_images/job_manager_is_coming.png',$
-    ascii_path: '~/results/',$
-    ascii_input_path: '~/results/',$
-    
-    firefox: '/usr/bin/firefox',$
-    srun_web_page: 'https://neutronsr.us/applications/jobmonitor/'+$
-    'squeue.php?view=all',$
-    srun_driver: 'srun',$
-    sbatch_driver: 'sbatch',$
-    
-    column_sequence: PTR_NEW(0L),$
-    column_cl: PTR_NEW(0L),$
-    cl_array: STRARR(2),$
-    output_suffix: 'BASIS_',$
-    output_prefix: '.dat',$
-    
-    tab2_table: PTR_NEW(0L),$
-    column_file_name_tab2: PTR_NEW(0L),$
-    column_sequence_tab2: PTR_NEW(0L),$
-    
-    package_required_base: PTR_NEW(0L),$
     debugging:    debugging,$ ;yes or no
     debugging_structure: sDebugging,$
     ucams:        ucams,$
@@ -123,7 +92,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     MainBaseSize: [30,25,800,750]})
     
   MainBaseSize   = (*global).MainBaseSize
-  MainBaseTitle  = 'Command Line Looper for Elastic Scan (CLoopES)'
+  MainBaseTitle  = 'plot ASCII'
   MainBaseTitle += ' - ' + VERSION
   ;Build Main Base
   MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
@@ -140,8 +109,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
   
-  ;confirmation base
-  MakeGuiMainBase, MAIN_BASE, global
   
   WIDGET_CONTROL, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
@@ -160,10 +127,6 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;??????????????????????????????????????????????????????????????????????????????
   IF (DEBUGGING EQ 'yes' ) THEN BEGIN
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = sDEBUGGING.tab.main_tab
-    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='input_text_field')
-    WIDGET_CONTROL, id, SET_VALUE=sDebugging.input_text
   ENDIF
   ;??????????????????????????????????????????????????????????????????????????????
   
@@ -174,7 +137,7 @@ END
 
 ;-----------------------------------------------------------------------------
 ; Empty stub procedure used for autoloading.
-PRO cloopes, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO plot_ascii, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 END
 
