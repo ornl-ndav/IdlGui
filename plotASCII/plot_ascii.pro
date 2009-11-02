@@ -102,9 +102,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XOFFSET      = MainBaseSize[0],$
     YOFFSET      = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
-    SPACE        = 0,$
-    XPAD         = 0,$
-    YPAD         = 2)
+    /TLB_SIZE_EVENTS)
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
