@@ -42,6 +42,7 @@ PRO MAIN_BASE_event, Event
   CASE Event.id OF
   
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+      print, 'in main_idl'
     END
     
     ELSE:
