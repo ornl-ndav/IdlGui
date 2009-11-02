@@ -1658,6 +1658,14 @@ PRO MAIN_BASE_event, Event
     ;**PLOTS TAB*
     ;*************************************************************************
     
+    ;lin and log y-axis scale
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_lin'): BEGIN
+      rePlotAsciiData, Event
+    END
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_y_axis_log'): BEGIN
+      rePlotAsciiData, Event
+    END
+    
     ;browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'plot_tab_browse_input_file_button'): BEGIN
       plot_tab_browse_button, Event

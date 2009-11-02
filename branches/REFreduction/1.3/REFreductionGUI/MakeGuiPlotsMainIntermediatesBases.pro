@@ -35,13 +35,13 @@
 PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
 
   input_file = WIDGET_LABEL(PLOTS_BASE,$
-  VALUE = 'Input ASCII File',$
-  XOFFSET = 20,$
-  YOFFSET = 775)
-
+    VALUE = 'Input ASCII File',$
+    XOFFSET = 20,$
+    YOFFSET = 775)
+    
   main_base = WIDGET_BASE(PLOTS_BASE,$
-  /COLUMN)
-
+    /COLUMN)
+    
   row1 = WIDGET_BASE(main_base,$ ;--------------------------------------------
     /ROW)
     
@@ -62,10 +62,12 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
     
   lin = WIDGET_BUTTON(row2col1,$
     VALUE = 'Lin',$
+    /NO_RELEASE, $
     UNAME = 'plot_tab_y_axis_lin')
     
   log = WIDGET_BUTTON(row2col1,$
     VALUE = 'Log',$
+    /NO_RELEASE, $
     UNAME = 'plot_tab_y_axis_log')
     
   WIDGET_CONTROL, lin, /SET_BUTTON
@@ -77,37 +79,37 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
     /MOTION_EVENTS, $
     /BUTTON_EVENTS)
     
-    empty_space = WIDGET_LABEL(main_base,$
+  empty_space = WIDGET_LABEL(main_base,$
     VALUE = '')
     
-    row3 = WIDGET_BASE(main_base, $ ;||||||||||||||||||||||||||||||||||||||||||
+  row3 = WIDGET_BASE(main_base, $ ;||||||||||||||||||||||||||||||||||||||||||
     /COLUMN,$
     FRAME = 1)
     
-    empty = WIDGET_LABEL(row3,$
+  empty = WIDGET_LABEL(row3,$
     VALUE = '')
     
-    row3row2 = WIDGET_BASE(row3,$
+  row3row2 = WIDGET_BASE(row3,$
     /ROW)
     
-    browse = WIDGET_BUTTON(row3row2,$
+  browse = WIDGET_BUTTON(row3row2,$
     VALUE = '   BROWSE ...   ',$
     UNAME = 'plot_tab_browse_input_file_button')
     
-    text = WIDGET_TEXT(row3row2,$
+  text = WIDGET_TEXT(row3row2,$
     VALUE = '',$
     UNAME = 'plot_tab_input_file_text_field',$
     XSIZE = 145,$
     /EDITABLE)
     
-    load = WIDGET_BUTTON(row3row2,$
+  load = WIDGET_BUTTON(row3row2,$
     VALUE = '  LOAD FILE  ',$
     UNAME = 'plot_tab_load_file_button',$
     SENSITIVE = 0)
     
-    preview = WIDGET_BUTTON(row3row2,$
+  preview = WIDGET_BUTTON(row3row2,$
     VALUE = '  PREVIEW  ',$
     UNAME = 'plot_tab_preview_button',$
     SENSITIVE = 0)
-
+    
 END

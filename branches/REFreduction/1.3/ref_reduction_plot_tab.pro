@@ -281,12 +281,11 @@ PRO rePlotAsciiData, Event
     ;    Yminmax = [ymin,ymax]
     ;    (*global).Yminmax = Yminmax
     
-    ;   ;check which yaxis scale the user wants
-    ;   yaxis_type = getPlotTabYaxisScale(Event)
     ;   ;check which xaxis scale the user wants
     ;   xaxis_type = getPlotTabXaxisScale(Event)
     
-    yaxis_type = 'lin'
+    ;check which yaxis scale the user wants
+    yaxis_type = getPlotTabYaxisScale(Event)
     xaxis_type = 'lin'
     
     CASE (yaxis_type) OF
