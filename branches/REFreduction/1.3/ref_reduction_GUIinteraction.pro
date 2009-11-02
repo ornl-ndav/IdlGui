@@ -363,7 +363,6 @@ END
 
 ;------------------------------------------------------------------------------
 PRO plot_tab_widgets, Event, status
-
   uname = ['plot_tab_preview_button', $
     'plot_tab_load_file_button',$
     'refresh_plot_button',$
@@ -373,3 +372,14 @@ PRO plot_tab_widgets, Event, status
     ActivateWidget, Event, uname[i], status
   ENDFOR
 END
+
+;------------------------------------------------------------------------------
+PRO plot_tab_loading_widgets, Event, status
+  uname = ['plot_tab_preview_button', $
+    'plot_tab_load_file_button']
+  sz = N_ELEMENTS(uname)
+  FOR i=0, (sz-1) DO BEGIN
+    ActivateWidget, Event, uname[i], status
+  ENDFOR
+END
+

@@ -1672,6 +1672,16 @@ PRO MAIN_BASE_event, Event
       LoadAsciiFile, Event
     END
     
+    ;file name text field
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_input_file_text_field'): BEGIN
+      file_name = getTextFieldValue(Event,'plot_tab_input_file_text_field')
+      IF (FILE_TEST(file_name,/READ)) THEN BEGIN
+        plot_tab_loading_widgets, Event, 1
+      ENDIF ELSE BEGIN
+        plot_tab_loading_widgets, Event, 0
+      ENDELSE
+    END
+    
     ;PREVIEW of file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_preview_button'): begin
       preview_ascii_file, Event

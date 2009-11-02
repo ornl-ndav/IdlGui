@@ -99,6 +99,7 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
   text = WIDGET_TEXT(row3row2,$
     VALUE = '',$
     UNAME = 'plot_tab_input_file_text_field',$
+    /ALL_EVENTS, $
     XSIZE = 145,$
     /EDITABLE)
     
