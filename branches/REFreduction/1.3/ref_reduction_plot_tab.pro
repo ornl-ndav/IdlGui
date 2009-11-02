@@ -308,7 +308,7 @@ PRO rePlotAsciiData, Event
 ;            ENDIF ELSE BEGIN
               plot, Xarray, $
                 Yarray, $
-                color=250, $
+                color=FSC_COLOR('white'), $
                 PSYM=2, $
                 XTITLE=xLabel, $
                 YTITLE=yLabel
@@ -362,7 +362,7 @@ PRO rePlotAsciiData, Event
 ;            ENDIF ELSE BEGIN
             plot, Xarray, $
                 Yarray, $
-                color=250, $
+                color=FSC_COLOR('white'), $
                 PSYM=2, $
                 /YLOG, $
                 XTITLE=xLabel, $
@@ -388,7 +388,7 @@ PRO rePlotAsciiData, Event
 ;            ENDIF ELSE BEGIN
               plot, Xarray, $
                 Yarray, $
-                color=250, $
+                color=FSC_COLOR('white'), $
                 PSYM=2, $
                 /XLOG, $
                 /YLOG, $
@@ -402,7 +402,8 @@ PRO rePlotAsciiData, Event
       ELSE:
     ENDCASE
     
-    errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,color=100
+    errplot, Xarray,Yarray-SigmaYarray,Yarray+SigmaYarray,$
+    color=FSC_COLOR('yellow')
     
   ENDELSE
   

@@ -52,4 +52,5 @@ cd, CurrentFolder + '/utilities'
 .run logger.pro
 .run file_utilities.pro
 .run xdisplayfile.pro
+.run fsc_color.pro
 .run IDL3columnsASCIIparser__define.pro
