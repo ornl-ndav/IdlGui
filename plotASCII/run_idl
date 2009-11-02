@@ -1,6 +1,6 @@
-spawn, 'cp cloopes.cfg .cloopes.cfg'
+spawn, 'cp plotASCII.cfg .plotASCII.cfg'
 @idl_makefile.pro
-cloopes
+plot_ascii
 
 
 
