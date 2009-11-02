@@ -79,6 +79,18 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;define global variables
   global = PTR_NEW ({ $
+  
+    input_ascii_file: './REF_L_ascii_file.txt',$
+    xaxis: '',$
+    xaxis_units: '',$
+    yaxis: '',$
+    yaxis_units: '',$
+    
+    Xarray: PTR_NEW(0L), $
+    Xarray_untouched: PTR_NEW(0L), $
+    Yarray: PTR_NEW(0L), $
+    SigmaYarray: PTR_NEW(0L), $
+    
     
     path: '~/',$
     debugging:    debugging,$ ;yes or no
@@ -102,7 +114,13 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
     XOFFSET      = MainBaseSize[0],$
     YOFFSET      = MainBaseSize[1],$
     TITLE        = MainBaseTitle,$
+    /COLUMN, $
     /TLB_SIZE_EVENTS)
+    
+  plot = WIDGET_DRAW(MAIN_BASE,$
+    UNAME = 'main_draw',$
+    SCR_XSIZE    = MainBaseSize[2],$
+    SCR_YSIZE    = MainBaseSize[3])
     
   ;attach global structure with widget ID of widget main base widget ID
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
@@ -130,6 +148,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   
   ;send message to log current run of application
   logger, APPLICATION=application, VERSION=version, UCAMS=ucams
+  
+  plot_ascii_file, MAIN_BASE, global
   
 END
 
