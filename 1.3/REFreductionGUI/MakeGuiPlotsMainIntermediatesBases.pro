@@ -48,7 +48,7 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
   refresh = WIDGET_BUTTON(row1,$
     VALUE = '  REFRESH PLOT  ',$
     UNAME = 'refresh_plot_button',$
-    SENSITIVE = 1)
+    SENSITIVE = 0)
     
   row2 = WIDGET_BASE(main_base,$ ;--------------------------------------------
     /ROW)

@@ -48,14 +48,14 @@ PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
   refresh = WIDGET_BUTTON(row1,$
     VALUE = '  REFRESH PLOT  ',$
     UNAME = 'refresh_plot_button',$
-    SENSITIVE = 1)
+    SENSITIVE = 0)
     
   row2 = WIDGET_BASE(main_base,$ ;--------------------------------------------
     /ROW)
     
   row2col1 = WIDGET_BASE(row2,$ ;||||||||||||||||||||||||||||||||||||||||||||||
     /COLUMN,$
-    SENSITIVE = 1,$
+    SENSITIVE = 0,$
     /ALIGN_CENTER, $
     UNAME = 'plot_tab_y_axis_lin_log_base',$
     /EXCLUSIVE)

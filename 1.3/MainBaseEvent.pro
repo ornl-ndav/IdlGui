@@ -1684,7 +1684,8 @@ PRO MAIN_BASE_event, Event
     
     ;REFRESH plot
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
-      RefReduction_PlotMainDataReductionFileFirstTime, Event
+      rePlotAsciiData, Event
+    ;RefReduction_PlotMainDataReductionFileFirstTime, Event
     end
     
     ;**************************************************************************
