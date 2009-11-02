@@ -117,9 +117,9 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   ; Date Information
   ;==============================================================================
   ;Put date/time when user started application in first line of log book
-  time_stamp = GenerateReadableIsoTimeStamp()
-  message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
-  IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
+  ;time_stamp = GenerateReadableIsoTimeStamp()
+  ;message = '>>>>>>  Application started date/time: ' + time_stamp + '  <<<<<<'
+  ;IDLsendLogBook_putLogBookText_fromMainBase, MAIN_BASE, message
   
   IF (CHECKING_PACKAGES EQ 'yes') THEN BEGIN
     checking_packages_routine, MAIN_BASE, my_package, global
