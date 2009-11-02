@@ -179,6 +179,13 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     Yarray: PTR_NEW(0L), $
     SigmaYarray: PTR_NEW(0L), $
     Xarray_untouched: PTR_NEW(0L), $
+    plot_tab_left_click: 0b, $
+    xyminmax: FLTARR(4), $
+    old_xyminmax: FLTARR(4), $
+    Yminmax: FLTARR(2), $
+    plot_selection_style: { linestyle: 0,$ ;information about style of selection
+    color: 'blue',$
+    thick: 2},$
     
     archived_data_flag : 1,$
     archived_norm_flag : 1,$
