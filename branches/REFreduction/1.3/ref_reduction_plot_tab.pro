@@ -144,7 +144,7 @@ PRO LoadAsciiFile, Event
   file_name = getTextFieldValue(Event, 'plot_tab_input_file_text_field')
   
   loading_error = 0
-  CATCH,loading_error
+  ; CATCH,loading_error
   IF (loading_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     plot_tab_widgets, Event, 0
@@ -158,7 +158,7 @@ PRO LoadAsciiFile, Event
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
       no_error = 0
-      CATCH,no_error
+      ; CATCH,no_error
       IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         plot_tab_widgets, Event, 0
@@ -201,8 +201,6 @@ PRO LoadAsciiFile, Event
           ;Plot Data in widget_draw
           PlotAsciiData, Event, Xarray, Yarray, SigmaYarray
         ENDIF
-        ;file has been loaded with success
-        (*global).ascii_file_load_status = 1b
       ENDELSE
     ENDIF ELSE BEGIN
       plot_tab_widgets, Event, 0
@@ -248,7 +246,7 @@ PRO rePlotAsciiData, Event
   SigmaYarray = (*(*global).SigmaYarray)
   
   plot_error = 0
-  CATCH, plot_error
+  ;CATCH, plot_error
   IF (plot_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     text = ['Error while plotting the ASCII file.', $
@@ -268,26 +266,26 @@ PRO rePlotAsciiData, Event
     
     ;plot
     
-    ;    xyminmax = (*global).old_xyminmax
-    ;    x1 = xyminmax[0]
-    ;    y1 = xyminmax[1]
-    ;    x2 = xyminmax[2]
-    ;    y2 = xyminmax[3]
+    xyminmax = (*global).old_xyminmax
+    x1 = xyminmax[0]
+    y1 = xyminmax[1]
+    x2 = xyminmax[2]
+    y2 = xyminmax[3]
     
-    ;    zoom_on = 1
-    ;    IF (x2 EQ 0 AND y2 EQ 0) THEN zoom_on = 0
-    ;    IF (zoom_on) THEN BEGIN
-    ;      IF (x1 NE x2 AND $
-    ;        y1 NE y2) THEN zoom_on = 1
-    ;    ENDIF
+    zoom_on = 1
+    IF (x2 EQ 0 AND y2 EQ 0) THEN zoom_on = 0
+    IF (zoom_on) THEN BEGIN
+      IF (x1 NE x2 AND $
+        y1 NE y2) THEN zoom_on = 1
+    ENDIF
     
-    ;    IF (zoom_on) THEN BEGIN ;zoom
-    ;      ymin = MIN(FLOAT(Yarray),MAX=ymax)
-    ;    ENDIF ELSE BEGIN ;no zoom
-    ;      ymin = MIN([y1,y2],MAX=ymax)
-    ;    ENDELSE
-    ;    Yminmax = [ymin,ymax]
-    ;    (*global).Yminmax = Yminmax
+    IF (zoom_on) THEN BEGIN ;zoom
+      ymin = MIN(FLOAT(Yarray),MAX=ymax)
+    ENDIF ELSE BEGIN ;no zoom
+      ymin = MIN([y1,y2],MAX=ymax)
+    ENDELSE
+    Yminmax = [ymin,ymax]
+    (*global).Yminmax = Yminmax
     
     ;   ;check which xaxis scale the user wants
     ;   xaxis_type = getPlotTabXaxisScale(Event)
@@ -300,52 +298,52 @@ PRO rePlotAsciiData, Event
       'lin': BEGIN
         CASE (xaxis_type) OF
           'lin': BEGIN
-            ;            IF (zoom_on) THEN BEGIN
-            ;              xmin = MIN([x1,x2],MAX=xmax)
-            ;              ymin = MIN([y1,y2],MAX=ymax)
-            ;              plot, Xarray, $
-            ;                Yarray, $
-            ;                color=250, $
-            ;                PSYM=2, $
-            ;                XTITLE=xLabel, $
-            ;                YTITLE=yLabel,$
-            ;                XSTYLE=1,$
-            ;                YSTYLE=1,$
-            ;                XRANGE=[xmin,xmax], $
-            ;                YRANGE=[ymin,ymax]
-            ;            ENDIF ELSE BEGIN
-            plot, Xarray, $
-              Yarray, $
-              color=FSC_COLOR('white'), $
-              PSYM=2, $
-              XTITLE=xLabel, $
-              YTITLE=yLabel
-          ;            ENDELSE
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'log': BEGIN
-            ;            IF (zoom_on) THEN BEGIN
-            ;              xmin = MIN([x1,x2],MAX=xmax)
-            ;              ymin = MIN([y1,y2],MAX=ymax)
-            ;              plot, Xarray, $
-            ;                Yarray, $
-            ;                color=250, $
-            ;                PSYM=2, $
-            ;                XTITLE=xLabel, $
-            ;                YTITLE=yLabel,$
-            ;                /XLOG, $
-            ;                XSTYLE=1,$
-            ;                YSTYLE=1,$
-            ;                XRANGE=[xmin,xmax], $
-            ;                YRANGE=[ymin,ymax]
-            ;            ENDIF ELSE BEGIN
-            plot, Xarray, $
-              Yarray, $
-              color=250, $
-              PSYM=2, $
-              /XLOG, $
-              XTITLE=xLabel, $
-              YTITLE=yLabel
-          ;            ENDELSE
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                /XLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
@@ -353,56 +351,56 @@ PRO rePlotAsciiData, Event
       'log': BEGIN
         CASE (xaxis_type) OF
           'lin': BEGIN
-            ;            IF (zoom_on) THEN BEGIN
-            ;              xmin = MIN([x1,x2],MAX=xmax)
-            ;              ymin = MIN([y1,y2],MAX=ymax)
-            ;              plot, Xarray, $
-            ;                Yarray, $
-            ;                color=250, $
-            ;                PSYM=2, $
-            ;                XTITLE=xLabel, $
-            ;                YTITLE=yLabel,$
-            ;                /YLOG, $
-            ;                XSTYLE=1,$
-            ;                YSTYLE=1,$
-            ;                XRANGE=[xmin,xmax], $
-            ;                YRANGE=[ymin,ymax]
-            ;            ENDIF ELSE BEGIN
-            plot, Xarray, $
-              Yarray, $
-              color=FSC_COLOR('white'), $
-              PSYM=2, $
-              /YLOG, $
-              XTITLE=xLabel, $
-              YTITLE=yLabel
-          ;            ENDELSE
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /YLOG, $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                /YLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           'log': BEGIN
-            ;            IF (zoom_on) THEN BEGIN
-            ;              xmin = MIN([x1,x2],MAX=xmax)
-            ;              ymin = MIN([y1,y2],MAX=ymax)
-            ;              plot, Xarray, $
-            ;                Yarray, $
-            ;                color=250, $
-            ;                PSYM=2, $
-            ;                XTITLE=xLabel, $
-            ;                YTITLE=yLabel,$
-            ;                /XLOG, $
-            ;                /YLOG, $
-            ;                XSTYLE=1,$
-            ;                YSTYLE=1,$
-            ;                XRANGE=[xmin,xmax], $
-            ;                YRANGE=[ymin,ymax]
-            ;            ENDIF ELSE BEGIN
-            plot, Xarray, $
-              Yarray, $
-              color=FSC_COLOR('white'), $
-              PSYM=2, $
-              /XLOG, $
-              /YLOG, $
-              XTITLE=xLabel, $
-              YTITLE=yLabel
-          ;            ENDELSE
+            IF (zoom_on) THEN BEGIN
+              xmin = MIN([x1,x2],MAX=xmax)
+              ymin = MIN([y1,y2],MAX=ymax)
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $                
+                PSYM=2, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel,$
+                /XLOG, $
+                /YLOG, $
+                XSTYLE=1,$
+                YSTYLE=1,$
+                XRANGE=[xmin,xmax], $
+                YRANGE=[ymin,ymax]
+            ENDIF ELSE BEGIN
+              plot, Xarray, $
+                Yarray, $
+                color=FSC_COLOR('white'), $
+                PSYM=2, $
+                /XLOG, $
+                /YLOG, $
+                XTITLE=xLabel, $
+                YTITLE=yLabel
+            ENDELSE
           END
           ELSE:
         ENDCASE
@@ -418,6 +416,40 @@ PRO rePlotAsciiData, Event
   DEVICE, DECOMPOSED = 0
   
   plot_tab_widgets, Event, 1
+  
+  ;file has been loaded and plotted with success
+  (*global).ascii_file_load_status = 1b
+  
+  
+END
+
+;------------------------------------------------------------------------------
+PRO plot_zoom_selection_plot_tab, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  
+  xyminmax = (*global).xyminmax
+  
+  x1 = xyminmax[0]
+  y1 = xyminmax[1]
+  x2 = xyminmax[2]
+  y2 = xyminmax[3]
+  
+  plot_selection_style = (*global).plot_selection_style
+  color = plot_selection_style.color
+  linestyle = plot_selection_style.linestyle
+  thick = plot_selection_style.thick
+  
+  DEVICE, DECOMPOSED = 1
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'main_plot_draw')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  PLOTS, x1, y1, /DATA
+  PLOTS, x1, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x2, y2, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x2, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
+  PLOTS, x1, y1, /DATA, /CONTINUE, COLOR=FSC_COLOR(color)
   
 END
 

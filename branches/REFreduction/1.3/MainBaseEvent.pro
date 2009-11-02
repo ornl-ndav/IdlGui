@@ -1666,8 +1666,42 @@ PRO MAIN_BASE_event, Event
       rePlotAsciiData, Event
     END
     
+    ;main plot
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_draw'): BEGIN
+    
+      IF ((*global).ascii_file_load_status) THEN BEGIN ;we can interact with plot
+      
+        IF ((*global).plot_tab_left_click) THEN BEGIN ;moving mouse
+              rePlotAsciiData, Event ;_tab_plot
+              xyminmax = (*global).xyminmax
+              CURSOR, X, Y, /DATA, /NOWAIT
+              xyminmax[2] = X
+              xyminmax[3] = Y
+              (*global).xyminmax = xyminmax
+              plot_zoom_selection_plot_tab, Event
+        ENDIF
+        
+        IF (event.press EQ 1) THEN BEGIN ;left click
+          (*global).plot_tab_left_click = 1b
+              CURSOR, X, Y, /DATA
+              xyminmax = FLTARR(4)
+              xyminmax[0] = X
+              xyminmax[1] = Y
+              (*global).xyminmax = xyminmax
+        ENDIF
+        
+        IF (event.release EQ 1) THEN BEGIN ;release left click
+          (*global).plot_tab_left_click = 0b
+              (*global).old_xyminmax = (*global).xyminmax
+              rePlotAsciiData, Event ;_tab_plot
+        ENDIF
+        
+      ENDIF
+      
+    END
+    
     ;browse button
-    WIDGET_INFO(wWidget, FIND_BY_UNAME = 'plot_tab_browse_input_file_button'): BEGIN
+    WIDGET_INFO(wWidget, FIND_BY_UNAME  ='plot_tab_browse_input_file_button'): BEGIN
       plot_tab_browse_button, Event
       LoadAsciiFile, Event
     END
