@@ -61,16 +61,13 @@ PRO plot_tab_browse_button, Event
     putTextFieldValue, Event, 'plot_tab_input_file_text_field', $
       ascii_file_name, 0
       
-    ActivateWidget, Event, 'plot_tab_preview_button', 1
-    ActivateWidget, Event, 'plot_tab_load_file_button', 1
-    
   ;    (*global).ascii_path = new_path
-    
+      
   ;    putTextFieldValue, Event, 'plot_input_file_text_field', ascii_file_name
   ;    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
   ;    text = '-> Ascii file loaded: ' + ascii_file_name
   ;    IDLsendToGeek_addLogBookText, Event, text
-    
+      
   ;Load File
   ;    LoadAsciiFile, Event
   ENDIF ELSE BEGIN
@@ -150,11 +147,12 @@ PRO LoadAsciiFile, Event
   CATCH,loading_error
   IF (loading_error NE 0) THEN BEGIN
     CATCH,/CANCEL
+    plot_tab_widgets, Event, 0
+    putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
     text = ['Error while loading the ASCII file', $
       'File name: ' + file_name[0]]
     result = DIALOG_MESSAGE(text,/ERROR)
     ERASE
-    putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
     (*global).ascii_file_load_status = 0b
   ENDIF ELSE BEGIN
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
@@ -163,11 +161,12 @@ PRO LoadAsciiFile, Event
       CATCH,no_error
       IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
+        plot_tab_widgets, Event, 0
+        putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
         text = ['The ASCII file you are trying to load',$
           'does not have the right format']
         result = DIALOG_MESSAGE(text,/ERROR)
         ERASE
-        putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
         (*global).ascii_file_load_status = 0b
       ENDIF ELSE BEGIN
         sAscii = iAsciiFile->getData()
@@ -206,11 +205,12 @@ PRO LoadAsciiFile, Event
         (*global).ascii_file_load_status = 1b
       ENDELSE
     ENDIF ELSE BEGIN
+      plot_tab_widgets, Event, 0
+      putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
       text = ['Error while loading the ASCII file', $
         'File name: ' + file_name[0]]
       result = DIALOG_MESSAGE(text,/ERROR)
       ERASE
-      putTextFieldValue, event, 'plot_tab_input_file_text_field', ''
       (*global).ascii_file_load_status = 0b
     ENDELSE
   ENDELSE
@@ -416,6 +416,8 @@ PRO rePlotAsciiData, Event
   ENDELSE
   
   DEVICE, DECOMPOSED = 0
+  
+  plot_tab_widgets, Event, 1
   
 END
 

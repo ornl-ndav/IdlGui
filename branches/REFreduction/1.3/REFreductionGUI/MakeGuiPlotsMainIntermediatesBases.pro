@@ -55,7 +55,7 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
     
   row2col1 = WIDGET_BASE(row2,$ ;||||||||||||||||||||||||||||||||||||||||||||||
     /COLUMN,$
-    SENSITIVE = 1,$
+    SENSITIVE = 0,$
     /ALIGN_CENTER, $
     UNAME = 'plot_tab_y_axis_lin_log_base',$
     /EXCLUSIVE)
