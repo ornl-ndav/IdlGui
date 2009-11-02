@@ -9,6 +9,7 @@ cd, IdlUtilitiesPath
 ;procedures
 .run is.pro
 .run put.pro
+.run fsc_color.pro
 .run gui.pro
 .run system_utilities.pro
 .run time_utilities.pro
@@ -16,6 +17,7 @@ cd, IdlUtilitiesPath
 .run logger.pro
 .run IDLxmlParser__define.pro
 .run checking_packages.pro
+.run IDL3columnsASCIIparser__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -27,4 +29,5 @@ cd, CurrentFolder
 
 ;main functions
 .run MainBaseEvent.pro
+.run plot_ascii_eventcb.pro
 .run plot_ascii.pro
