@@ -170,6 +170,15 @@ FUNCTION getGlobal, INSTRUMENT=instrument, MINIversion=miniVersion
     
     dr_output_path : '~/results/', $
     plot_ascii_extension: '.txt', $
+    ascii_file_load_status: 0b, $ ;plot tab (ascii loaded or not)
+    xaxis: '',$
+    yaxis: '',$
+    xaxis_units: '',$
+    yaxis_units: '',$
+    Xarray: PTR_NEW(0L), $
+    Yarray: PTR_NEW(0L), $
+    SigmaYarray: PTR_NEW(0L), $
+    Xarray_untouched: PTR_NEW(0L), $
     
     archived_data_flag : 1,$
     archived_norm_flag : 1,$

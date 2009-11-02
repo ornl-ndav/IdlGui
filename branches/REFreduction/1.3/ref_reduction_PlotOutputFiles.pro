@@ -26,6 +26,7 @@ DEVICE, DECOMPOSED = 0
 loadct,5, /SILENT
 
 file_path    = getOutputPathFromButton(Event)
+
 file_name    = getOutputFileName(Event)
 FullFileName = STRING(file_path + file_name)
 

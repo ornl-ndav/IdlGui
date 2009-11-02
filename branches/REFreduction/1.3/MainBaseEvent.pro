@@ -1661,12 +1661,18 @@ PRO MAIN_BASE_event, Event
     ;browse button
     WIDGET_INFO(wWidget, FIND_BY_UNAME = 'plot_tab_browse_input_file_button'): BEGIN
       plot_tab_browse_button, Event
+      LoadAsciiFile, Event
     END
     
     ;PREVIEW of file
     WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_preview_button'): begin
       preview_ascii_file, Event
     end
+    
+    ;Load button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='plot_tab_load_file_button'): BEGIN
+      LoadAsciiFile, Event
+    END
     
     ;REFRESH plot
     WIDGET_INFO(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
