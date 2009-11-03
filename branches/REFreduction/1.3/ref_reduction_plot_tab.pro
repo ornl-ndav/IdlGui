@@ -144,7 +144,7 @@ PRO LoadAsciiFile, Event
   file_name = getTextFieldValue(Event, 'plot_tab_input_file_text_field')
   
   loading_error = 0
-  ; CATCH,loading_error
+  CATCH,loading_error
   IF (loading_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     plot_tab_widgets, Event, 0
@@ -158,7 +158,7 @@ PRO LoadAsciiFile, Event
     iAsciiFile = OBJ_NEW('IDL3columnsASCIIparser', file_name[0])
     IF (OBJ_VALID(iAsciiFile)) THEN BEGIN
       no_error = 0
-      ; CATCH,no_error
+      CATCH,no_error
       IF (no_error NE 0) THEN BEGIN
         CATCH,/CANCEL
         plot_tab_widgets, Event, 0
