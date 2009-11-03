@@ -32,10 +32,10 @@
 ;
 ;==============================================================================
 
-PRO plot_ascii_file, MAIN_BASE, global
+PRO plot_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
 
-  load_ascii_file, MAIN_BASE, global
-  PlotAsciiData, MAIN_BASE, global
+  load_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
+  PlotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
   
 END
 
@@ -60,7 +60,7 @@ PRO ParseDataStringArray, global, DataStringArray, Xarray, Yarray, SigmaYarray
     ENDCASE
     j++
   ENDWHILE
-
+  
   (*(*global).Xarray_untouched) = Xarray
   ;remove last element of each array
   sz = N_ELEMENTS(Xarray)
@@ -82,10 +82,16 @@ END
 
 ;------------------------------------------------------------------------------
 ;Load data
-PRO load_ascii_file, MAIN_BASE, global
+PRO load_ascii_file, MAIN_BASE=MAIN_BASE, EVENT=event
 
   ;indicate initialization with hourglass icon
   widget_control,/hourglass
+  
+  IF (N_ELEMENTS(EVENT) NE 0) THEN BEGIN
+    WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+  ENDELSE
   
   file_name = (*global).input_ascii_file
   
@@ -104,7 +110,7 @@ PRO load_ascii_file, MAIN_BASE, global
       Xarray      = STRARR(1)
       Yarray      = STRARR(1)
       SigmaYarray = STRARR(1)
-      ParseDataStringArray, global, $ 
+      ParseDataStringArray, global, $
         DataStringArray,$
         Xarray,$
         Yarray,$
@@ -127,9 +133,15 @@ END
 
 ;==============================================================================
 ;Plot Data in widget_draw
-PRO plotAsciiData, MAIN_BASE, global
+PRO plotAsciiData, MAIN_BASE=MAIN_BASE, EVENT=event
 
-  draw_id = widget_info(MAIN_BASE, find_by_uname='main_draw')
+  IF (N_ELEMENTS(MAIN_BASE) NE 0) THEN BEGIN
+    draw_id = widget_info(MAIN_BASE, find_by_uname='main_draw')
+    WIDGET_CONTROL, MAIN_BASE, GET_UVALUE=global
+  ENDIF ELSE BEGIN
+    draw_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_draw')
+    WIDGET_CONTROL, Event.top , GET_UVALUE=global
+  ENDELSE
   WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
   WSET,view_plot_id
   
