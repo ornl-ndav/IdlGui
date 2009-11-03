@@ -1672,28 +1672,38 @@ PRO MAIN_BASE_event, Event
       IF ((*global).ascii_file_load_status) THEN BEGIN ;we can interact with plot
       
         IF ((*global).plot_tab_left_click) THEN BEGIN ;moving mouse
-              rePlotAsciiData, Event ;_tab_plot
-              xyminmax = (*global).xyminmax
-              CURSOR, X, Y, /DATA, /NOWAIT
-              xyminmax[2] = X
-              xyminmax[3] = Y
-              (*global).xyminmax = xyminmax
-              plot_zoom_selection_plot_tab, Event
+          CURSOR, X, Y, /DEVICE, /NOWAIT
+          id = WIDGET_INFO(Event.top, FIND_BY_UNAME='main_plot_draw')
+          geometry = WIDGET_INFO(id,/GEOMETRY)
+          xsize = geometry.draw_xsize
+          ysize = geometry.draw_ysize
+          IF (X LE 0) THEN RETURN
+          IF (X GE xsize) THEN RETURN
+          IF (Y LE 0) THEN RETURN
+          IF (Y GE ysize) THEN RETURN
+          
+          rePlotAsciiData, Event ;_tab_plot
+          CURSOR, X, Y, /DATA, /NOWAIT
+          xyminmax = (*global).xyminmax
+          xyminmax[2] = X
+          xyminmax[3] = Y
+          (*global).xyminmax = xyminmax
+          plot_zoom_selection_plot_tab, Event
         ENDIF
         
         IF (event.press EQ 1) THEN BEGIN ;left click
           (*global).plot_tab_left_click = 1b
-              CURSOR, X, Y, /DATA
-              xyminmax = FLTARR(4)
-              xyminmax[0] = X
-              xyminmax[1] = Y
-              (*global).xyminmax = xyminmax
+          CURSOR, X, Y, /DATA
+          xyminmax = FLTARR(4)
+          xyminmax[0] = X
+          xyminmax[1] = Y
+          (*global).xyminmax = xyminmax
         ENDIF
         
         IF (event.release EQ 1) THEN BEGIN ;release left click
           (*global).plot_tab_left_click = 0b
-              (*global).old_xyminmax = (*global).xyminmax
-              rePlotAsciiData, Event ;_tab_plot
+          (*global).old_xyminmax = (*global).xyminmax
+          rePlotAsciiData, Event ;_tab_plot
         ENDIF
         
       ENDIF
