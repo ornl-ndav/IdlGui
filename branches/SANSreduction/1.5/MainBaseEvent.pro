@@ -385,6 +385,7 @@ PRO MAIN_BASE_event, Event
             MapBase, Event, uname='transmission_launcher_base', 1
             display_images, EVENT=event
             display_selection_images, Event=event
+            get_and_plot_tof_array, Event
           ENDIF
         ENDIF ELSE BEGIN
           MapBase, Event, uname='transmission_launcher_base', 0
@@ -416,6 +417,7 @@ PRO MAIN_BASE_event, Event
             MapBase, Event, uname='transmission_launcher_base', 1
             display_images, EVENT=event
             display_selection_images, Event=event
+            get_and_plot_tof_array, Event
           ENDIF
         ENDIF
       ENDELSE

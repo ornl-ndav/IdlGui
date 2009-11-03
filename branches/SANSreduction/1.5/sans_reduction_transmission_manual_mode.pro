@@ -297,7 +297,8 @@ PRO launch_transmission_manual_mode_base, main_event
   save_transmission_manual_step1_background,  Event=event, MAIN_BASE=wBase
   
   ;get TOF array
-  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
-  (*(*global_step1).tof_array) = tof_array
+  ;tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+  ;(*(*global_step1).tof_array) = tof_array
+  (*(*global_auto).tof_array) = (*(*global).tof_array)
   
 END

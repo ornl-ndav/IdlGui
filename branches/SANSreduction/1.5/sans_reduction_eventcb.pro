@@ -455,6 +455,38 @@ PRO MAIN_REALIZE, wWidget
   widget_control,hourglass=0
 END
 
+;------------------------------------------------------------------------------
+PRO get_and_plot_tof_array, Event
+
+  WIDGET_CONTROL, Event.top, GET_UVALUE=global
+  tof_array = getTOFarray(Event, (*global).data_nexus_file_name)
+  (*(*global).tof_array) = tof_array
+  
+  id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'counts_vs_tof_preview_plot')
+  WIDGET_CONTROL, id, GET_VALUE = id_value
+  WSET, id_value
+  
+  CASE (is_front_back_or_both_plot(Event)) OF
+    'front': BEGIN
+      DataArray = (*(*global).front_bank)
+    END
+    'back' : BEGIN
+      DataArray = (*(*global).back_bank)
+    END
+    'both': BEGIN
+      DataArray = (*(*global).both_banks)
+    END
+  ENDCASE
+  
+  counts = TOTAL(DataArray,2)
+  Counts = TOTAL(counts,2)
+  
+  tof = tof_array[0:N_ELEMENTS(tof_array)-2]
+  
+  PLOT, tof, counts  
+  
+END
+
 ;==============================================================================
 PRO sans_reduction_eventcb, event
 END
