@@ -333,18 +333,19 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     sensitive: 0}
     
   ;- Clear Selection ------------------------------------------------------------
-  XYoff = [0,20]
+  XYoff = [0,5]
   sClearSelection = { size: [sSelection.size[0]+XYoff[0],$
     sExclusionBase.size[1]+sExclusionBase.size[3]+ $
     XYoff[1],$
-    sSelection.size[2]],$
+    152],$
     value: 'RESET SELECTION',$
     uname: 'clear_selection_button',$
     sensitive: 0}
     
   ;- REFRESH Plot ---------------------------------------------------------------
-  XYoff = [0,30]
-  sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0],$
+  XYoff = [0,0]
+  sRefreshPlot = { size: [sClearSelection.size[0]+XYoff[0]+$
+  sClearSelection.size[2],$
     sClearSelection.size[1]+XYoff[1],$
     sClearSelection.size[2]],$
     value: 'REFRESH APPLICATION',$
@@ -600,7 +601,7 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
     ;Auto. Exclude Dead Tubes ;-----------------------------------
     auto_base = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
-      YOFFSET = 397,$
+      YOFFSET = 399,$
       SCR_XSIZE = 105,$
       /COLUMN,$
       ;/BASE_ALIGN_CENTER, $
@@ -1091,11 +1092,21 @@ PRO make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles, global
   ;Transmission and beam center calculation buttons
   IF ((*global).facility EQ 'SNS') THEN BEGIN
   
+    ;counts vs tof preview plot
+    IvsTOF = WIDGET_DRAW(wTab1Base,$
+    XOFFSET = 585,$
+    YOFFSET = 550,$
+    SCR_XSIZE = 500,$
+    SCR_YSIZE = 300,$
+    UNAME = 'counts_vs_tof_preview_plot')
+  
+  
+  
     Tran_BC_base = WIDGET_BASE(wTab1Base,$
       XOFFSET = 585,$
       YOFFSET = 730,$
       UNAME = 'transmission_launcher_base',$
-      MAP = 0,$
+      MAP = 1,$ ;REMOVE_ME (put 0 back)
       /ROW)
       
     ;Transmission calculation button
