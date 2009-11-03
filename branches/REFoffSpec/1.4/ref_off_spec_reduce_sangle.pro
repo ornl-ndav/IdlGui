@@ -41,7 +41,7 @@ FUNCTION retrieve_nexus_data, FullNexusName, spin_state, data
     RETURN,0
   ENDIF ELSE BEGIN
     fileID    = H5F_OPEN(FullNexusName)
-    data_path = '/entry-' + spin_stiate + '/bank1/data'
+    data_path = '/entry-' + spin_state + '/bank1/data'
     fieldID = H5D_OPEN(fileID,data_path)
     data = H5D_READ(fieldID)
     RETURN, 1
@@ -289,8 +289,10 @@ PRO display_reduce_step1_sangle_scale, $
 END
 
 ;-----------------------------------------------------------------------------
-PRO plot_selected_data_in_sangle_base, Event
+PRO plot_selected_data_in_sangle_base, Event, result
 
+  result = 0
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -312,6 +314,7 @@ PRO plot_selected_data_in_sangle_base, Event
   result = retrieve_nexus_data(s_full_nexus_file_name, $
     sangle_spin_state_selected, $
     data)
+    
   IF (result EQ 0) THEN RETURN
   
   tData = TOTAL(data,2)
@@ -338,6 +341,8 @@ PRO plot_selected_data_in_sangle_base, Event
   DEVICE, DECOMPOSED=0
   LOADCT, 5, /SILENT
   TVSCL, rtData, /DEVICE
+  
+  result = 1
   
 END
 
@@ -373,8 +378,10 @@ PRO replot_selected_data_in_sangle_base, Event
 END
 
 ;------------------------------------------------------------------------------
-PRO retrieve_tof_array_from_nexus, Event
+PRO retrieve_tof_array_from_nexus, Event, result
 
+  result = 0
+  
   ;get global structure
   WIDGET_CONTROL,Event.top,GET_UVALUE=global
   
@@ -396,6 +403,8 @@ PRO retrieve_tof_array_from_nexus, Event
   sz = N_ELEMENTS(tof)
   tof = tof[0:sz-2] ;remove last element
   (*(*global).sangle_tof) = tof
+  
+  result = 1
   
 END
 
