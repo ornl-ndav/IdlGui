@@ -50,6 +50,16 @@ PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
     UNAME = 'refresh_plot_button',$
     SENSITIVE = 0)
     
+      space = WIDGET_LABEL(row1,$
+  VALUE = '                  ')  
+    
+  label = WIDGET_LABEL(row1,$
+  VALUE = 'To ZOOM, Click first corner and release on opposite corner. ' + $
+  'Double click to reset zoom',$
+  UNAME = 'plot_tab_zoom_help_label',$
+  SENSITIVE = 0)
+    
+    
   row2 = WIDGET_BASE(main_base,$ ;--------------------------------------------
     /ROW)
     

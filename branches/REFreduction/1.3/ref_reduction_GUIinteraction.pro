@@ -366,6 +366,7 @@ PRO plot_tab_widgets, Event, status
   uname = ['plot_tab_preview_button', $
     'plot_tab_load_file_button',$
     'refresh_plot_button',$
+    'plot_tab_zoom_help_label', $
     'plot_tab_y_axis_lin_log_base']
   sz = N_ELEMENTS(uname)
   FOR i=0, (sz-1) DO BEGIN
